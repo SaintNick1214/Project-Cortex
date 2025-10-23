@@ -138,6 +138,11 @@ Cortex leverages [Convex](https://convex.dev), a reactive backend platform that 
 - **Type-safe** - Full TypeScript support
 - **Developer Experience** - Hot reload, time travel debugging
 
+**Flexible Deployment**: Cortex works with Convex however you run it:
+- ☁️ **Convex Cloud** (recommended) - Fully managed, no ops required
+- 💻 **Local Development** - `npx convex dev` for fast iteration
+- 🏢 **Self-Hosted** - Deploy Convex to your own infrastructure
+
 ### Embedding-Agnostic
 
 Unlike vector databases that lock you into their ecosystem, Cortex is **embedding-agnostic**:

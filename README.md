@@ -3,7 +3,7 @@
 > **Plug'n'play persistent memory for AI agents, powered by Convex**
 
 [![npm version](https://badge.fury.io/js/@cortex%2Fmemory.svg)](https://www.npmjs.com/package/@cortex/memory)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![Convex](https://img.shields.io/badge/Powered%20by-Convex-purple.svg)](https://convex.dev)
 
@@ -173,11 +173,14 @@ Cortex provides two deployment modes to fit your needs:
                      ▼
 ┌─────────────────────────────────────────────────────┐
 │            Your Convex Instance                      │
-│  (You manage, you pay Convex directly)              │
+│  • Convex Cloud (managed)                           │
+│  • Self-hosted (local or your infrastructure)       │
 └─────────────────────────────────────────────────────┘
 ```
 
 Perfect for getting started, prototyping, and self-managed deployments.
+
+> **Works with any Convex deployment** - Convex Cloud, localhost, or your own infrastructure
 
 ### Cloud Mode (Managed Service)
 
@@ -202,18 +205,22 @@ Perfect for getting started, prototyping, and self-managed deployments.
                      ▼
 ┌─────────────────────────────────────────────────────┐
 │            Your Convex Instance                      │
-│  (Your data stays in your Convex account)           │
+│  • Convex Cloud (managed)                           │
+│  • Self-hosted (local or your infrastructure)       │
 └─────────────────────────────────────────────────────┘
 ```
 
 Adds powerful management tools while your data remains in your Convex instance.
 
+> **Works with any Convex deployment** - Cloud mode features work regardless of where you run Convex
+
 **Key Design Decisions:**
 - **Built on Convex**: Leverages Convex's reactive backend for optimal performance
+- **Any Convex deployment**: Works with Convex Cloud, localhost, or self-hosted infrastructure
 - **Embedding-agnostic**: You provide vectors from any provider (OpenAI, Cohere, local models)
 - **Hybrid agents**: Start simple with string IDs, add structure when needed
 - **Flexible dimensions**: Support for any vector dimension (768, 1536, 3072+)
-- **Your data, your instance**: Whether direct or cloud mode, data lives in your Convex account
+- **Your data, your instance**: Whether direct or cloud mode, data lives in your Convex deployment
 - **Same API**: Switch between direct and cloud mode with a config change
 
 ## 📖 Documentation
@@ -313,7 +320,7 @@ const assistant = await openai.beta.assistants.create({
 - 💼 Enterprise features (SSO, audit logs, SLA)
 - 🚀 Organizations wanting managed optimization
 
-> **Important**: In both modes, your data stays in your Convex instance. Cortex Cloud never stores your memory data - it only provides tools to analyze and optimize it.
+> **Important**: Both modes work with any Convex deployment (Convex Cloud, localhost, or self-hosted). Your data always stays in your Convex instance - Cortex Cloud only provides management tools and analytics.
 
 ## 🛠️ Development
 
@@ -336,15 +343,22 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed development guidelines.
 
 ## 📄 License
 
-**Open Source Core**: MIT License
+**Open Source Core**: Apache License 2.0
 - The Cortex SDK is and will remain open source
 - Free for commercial use
+- Includes explicit patent grant and protection
 - See [LICENSE.md](./LICENSE.md) for details
 
 **Cortex Cloud**: Commercial service (coming soon)
 - Optional managed features and analytics
 - Free tier available
 - Pay for advanced features and support
+
+**Why Apache 2.0?**
+- Aligns with Convex (also Apache 2.0)
+- Explicit patent protection for users and contributors
+- Enterprise-friendly and legally clear
+- Same permissiveness as MIT with better legal protections
 
 Copyright © 2025 Nicholas Geil / Saint Nick LLC
 

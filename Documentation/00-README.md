@@ -217,7 +217,7 @@ See [Changelog](./11-reference/03-changelog.md) for full history.
 
 All documentation is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
-The Cortex code is licensed under [MIT](../LICENSE.md).
+The Cortex code is licensed under [Apache License 2.0](../LICENSE.md).
 
 ---
 
