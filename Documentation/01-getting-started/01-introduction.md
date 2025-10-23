@@ -1,6 +1,6 @@
 # Introduction to Cortex
 
-> **Last Updated**: 2025-01-29
+> **Last Updated**: 2025-10-23
 
 ## Welcome to Cortex
 

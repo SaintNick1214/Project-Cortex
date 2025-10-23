@@ -1,6 +1,6 @@
 # Core Concepts
 
-> **Last Updated**: 2025-01-29
+> **Last Updated**: 2025-10-23
 
 Understanding these core concepts will help you make the most of Cortex. This guide covers the fundamental building blocks of the system.
 
@@ -74,7 +74,7 @@ await cortex.memory.store('agent-1', {
 What the agent has done:
 ```typescript
 await cortex.memory.store('agent-1', {
-  content: 'Sent password reset email to user@example.com at 2025-01-29 10:30',
+  content: 'Sent password reset email to user@example.com at 2025-10-23 10:30',
   embedding: await embed('password reset action'),
   metadata: {
     importance: 'high',

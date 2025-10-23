@@ -154,8 +154,8 @@ This Code of Conduct is licensed under [CC BY 4.0](https://creativecommons.org/l
 ---
 
 **Version**: 1.0  
-**Last Updated**: 2025-01-29  
-**Effective Date**: 2025-01-29
+**Last Updated**: 2025-10-23  
+**Effective Date**: 2025-10-23
 
 ---
 

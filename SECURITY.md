@@ -346,7 +346,7 @@ _No vulnerabilities reported yet._
 
 ---
 
-**Last Updated**: 2025-01-29  
+**Last Updated**: 2025-10-23  
 **Version**: 1.0
 
 Thank you for helping keep Cortex and our community safe! 🔒

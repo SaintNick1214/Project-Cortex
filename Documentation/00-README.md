@@ -208,7 +208,7 @@ See [Documentation Guide](./10-contributing/04-documentation-guide.md) for contr
 
 Recent documentation additions:
 
-- **2025-01-29**: Initial documentation structure created
+- **2025-10-23**: Initial documentation structure created
 - More coming soon!
 
 See [Changelog](./11-reference/03-changelog.md) for full history.
@@ -221,7 +221,7 @@ The Cortex code is licensed under [Apache License 2.0](../LICENSE.md).
 
 ---
 
-**Last Updated**: 2025-01-29
+**Last Updated**: 2025-10-23
 
 ---
 

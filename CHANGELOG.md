@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Performance benchmarks
 - Migration tools from popular alternatives
 
-## [0.1.0] - 2025-01-29
+## [0.1.0] - 2025-10-23
 
 ### Added
 - Initial alpha release
@@ -30,14 +30,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive documentation structure
 - Code of Conduct and Contributing guidelines
 - Security policy and reporting procedures
-- MIT license
+- Apache License 2.0
 
 ### Architecture Decisions
-- Convex-only backend for optimal performance
-- No hosted service - deploy to your own Convex instance
-- Developer brings their own embeddings
+- Built on Convex backend for optimal performance
+- Two-tier model: Direct mode (open source) + Cloud mode (managed service)
+- Developer brings their own embeddings (embedding-agnostic)
 - Progressive enhancement for agent management
-- Code-based configuration (no external APIs)
+- Support for any Convex deployment (Cloud, localhost, self-hosted)
 
 ### Known Limitations
 - Alpha stability - API may change
@@ -53,7 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
-### [0.1.0] - 2025-01-29
+### [0.1.0] - 2025-10-23
 **Initial Alpha Release**
 
 The first public release of Cortex, bringing enterprise-grade persistent memory to AI agents. This release establishes the core architecture and API surface.
@@ -134,5 +134,5 @@ Found a bug? Want to request a feature? See [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ---
 
-**Last Updated**: 2025-01-29
+**Last Updated**: 2025-10-23
 

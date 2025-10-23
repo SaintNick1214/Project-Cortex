@@ -383,10 +383,10 @@ Cortex is in active development. We're building in public and iterating on the a
 - 🔜 First beta release
 
 **Roadmap:**
-- **Q1 2025**: Open source SDK beta (direct mode)
-- **Q2 2025**: Cortex Cloud private beta
-- **Q3 2025**: Public launch
-- **Q4 2025**: Enterprise features
+- **Q4 2025**: Open source SDK beta (direct mode)
+- **Q1 2026**: Cortex Cloud private beta
+- **Q2 2026**: Public launch
+- **Q3 2026**: Enterprise features
 
 Join our [Discord](https://discord.gg/cortex) to follow development and provide input!
 
