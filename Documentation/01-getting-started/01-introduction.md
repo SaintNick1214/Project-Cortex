@@ -58,15 +58,20 @@ AI agents need memory that is:
 Cortex solves all these problems with a single, unified system:
 
 ```typescript
-// That's it - full persistent memory in 3 lines
+// That's it - full persistent memory in one call
 const cortex = new Cortex({ convexUrl: process.env.CONVEX_URL });
 
-await cortex.memory.store('agent-1', {
-  content: 'User prefers dark mode',
-  embedding: await getEmbedding('User prefers dark mode'),
-  metadata: { importance: 'high', tags: ['preferences'] }
+// Store a conversation (ACID + Vector automatic)
+await cortex.memory.remember({
+  agentId: 'agent-1',
+  conversationId: 'conv-123',
+  userMessage: 'I prefer dark mode',
+  agentResponse: "I'll remember that!",
+  userId: 'user-1',
+  userName: 'User'
 });
 
+// Search works immediately
 const memories = await cortex.memory.search('agent-1', 
   'what are the user preferences?'
 );
@@ -163,10 +168,19 @@ const embedding = await cohere.embed({
 // Or local models
 const embedding = await localModel.encode(text);
 
-// Cortex doesn't care - just store it
-await cortex.memory.store(agentId, {
+// Cortex doesn't care - just store it (Layer 2 for system memories)
+await cortex.vector.store(agentId, {
   content: text,
-  embedding: embedding.data[0].embedding
+  contentType: 'raw',
+  embedding: embedding.data[0].embedding,
+  source: { type: 'system', timestamp: new Date() },
+  metadata: { importance: 50 }
+});
+
+// Or use Layer 3 for conversations
+await cortex.memory.remember({
+  agentId, conversationId, userMessage, agentResponse, userId, userName,
+  generateEmbedding: async (content) => embedding
 });
 ```
 
@@ -207,13 +221,21 @@ Every API is designed to be:
 Start simple, add complexity when needed:
 
 ```typescript
-// Day 1: Simple usage (direct mode)
-await cortex.memory.store('my-agent', { content: '...' });
+// Day 1: Simple usage (direct mode) - Layer 3 convenience
+await cortex.memory.remember({
+  agentId: 'my-agent',
+  conversationId: 'conv-1',
+  userMessage: 'Hello',
+  agentResponse: 'Hi there!',
+  userId: 'user-1',
+  userName: 'User'
+});
 
 // Day 30: Add structure when it helps
 await cortex.agents.register({
   id: 'my-agent',
-  metadata: { team: 'support', capabilities: [...] }
+  name: 'My Agent',
+  metadata: { team: 'support', capabilities: ['help'] }
 });
 
 // Day 90: Upgrade to cloud mode for analytics

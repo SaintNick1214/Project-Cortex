@@ -12,6 +12,14 @@ The Agent Management API provides methods for registering, configuring, and quer
 - **Simple Mode**: Just use string IDs (`'agent-1'`, `'support-agent'`)
 - **Registry Mode**: Optionally register agents for analytics, discovery, and configuration
 
+**Relationship to Three-Namespace Architecture:**
+- Agents work across all three layers:
+  - `cortex.conversations.*` (Layer 1) - Agents participate in conversations
+  - `cortex.vector.*` (Layer 2) - Agents own Vector memories
+  - `cortex.memory.*` (Layer 3) - Agents use convenience API
+- Agent registry (`cortex.agents.*`) is metadata only - doesn't affect storage layers
+- Registration enhances analytics but isn't required for functionality
+
 ---
 
 ## Hybrid Agent Management
@@ -20,6 +28,7 @@ The Agent Management API provides methods for registering, configuring, and quer
 
 ```typescript
 // Works immediately - no registration needed
+// Layer 3 - stores in ACID + Vector automatically
 await cortex.memory.remember({
   agentId: 'my-agent',  // Just a string ID
   conversationId: 'conv-123',
@@ -29,10 +38,10 @@ await cortex.memory.remember({
   userName: 'Alex'
 });
 
-// Search works
+// Search works (Layer 3 - searches Vector index)
 const memories = await cortex.memory.search('my-agent', 'hello');
 
-// That's it! No setup required.
+// That's it! No setup required - all three layers work.
 ```
 
 **Use when:**
@@ -580,11 +589,16 @@ await cortex.agents.register({
   metadata: { environment: 'production', team: 'support' }
 });
 
-// Experimental agents - simple IDs are fine
+// Experimental agents - simple IDs are fine (Layer 3)
 await cortex.memory.remember({
-  agentId: 'experiment-123',  // Not registered, works fine
-  ...
+  agentId: 'experiment-123',  // Not registered, still works
+  conversationId: 'conv-456',
+  userMessage: 'Test message',
+  agentResponse: 'Test response',
+  userId: 'test-user',
+  userName: 'Tester'
 });
+// All layers work without registration!
 ```
 
 ### 2. Use Meaningful IDs
@@ -604,12 +618,19 @@ await cortex.memory.remember({
 ### 3. Register When You Need Analytics
 
 ```typescript
-// Start simple
-await cortex.memory.remember({ agentId: 'my-agent', ... });
+// Start simple (Layer 3 - all layers work)
+await cortex.memory.remember({ 
+  agentId: 'my-agent',
+  conversationId: 'conv-123',
+  userMessage: 'Hello',
+  agentResponse: 'Hi',
+  userId: 'user-1',
+  userName: 'User'
+});
 
 // Later, when you need insights, register
 await cortex.agents.register({
-  id: 'my-agent',  // Same ID
+  id: 'my-agent',  // Same ID that already has memories
   name: 'My Agent',
   metadata: { team: 'experimental' }
 });
@@ -638,21 +659,37 @@ await cortex.agents.update('support-agent', {
 Agents can be used without registration, then registered later:
 
 ```typescript
-// Day 1: Simple usage
-await cortex.memory.remember({ agentId: 'agent-1', ... });
-await cortex.memory.remember({ agentId: 'agent-1', ... });
-// Works fine!
+// Day 1: Simple usage (Layer 3 - ACID + Vector automatic)
+await cortex.memory.remember({ 
+  agentId: 'agent-1', 
+  conversationId: 'conv-1',
+  userMessage: 'First message',
+  agentResponse: 'First response',
+  userId: 'user-1',
+  userName: 'User'
+});
+
+await cortex.memory.remember({ 
+  agentId: 'agent-1',
+  conversationId: 'conv-1',
+  userMessage: 'Second message',
+  agentResponse: 'Second response',
+  userId: 'user-1',
+  userName: 'User'
+});
+// Works fine! ACID + Vector populated automatically
 
 // Day 30: Register for better organization
 await cortex.agents.register({
-  id: 'agent-1',  // Same ID that already has memories
+  id: 'agent-1',  // Same ID that already has ACID + Vector data
   name: 'Sales Agent',
   metadata: { team: 'sales' }
 });
 
-// All existing memories are now associated with registered agent
+// All existing memories/conversations now associated with registered agent
 const stats = await cortex.analytics.getAgentStats('agent-1');
 console.log(`${stats.totalMemories} memories (created before registration)`);
+console.log(`${stats.conversationStats.totalConversations} conversations`);
 ```
 
 **No data migration needed** - registration is just metadata!
@@ -872,6 +909,7 @@ console.log('Fleet analysis:', analysis);
 
 **Agent Management is optional but powerful:**
 - ✅ Start with simple string IDs (zero configuration)
+- ✅ All three layers work immediately (ACID, Vector, Memory API)
 - ✅ Register when you need organization and analytics
 - ✅ Configure retention and behavior per agent
 - ✅ Search and discover agents by capabilities
@@ -880,11 +918,11 @@ console.log('Fleet analysis:', analysis);
 **Registration provides:**
 - Agent metadata (name, description, capabilities)
 - Team organization
-- Enhanced analytics
-- Custom configuration
-- Agent discovery
+- Enhanced analytics with agent context
+- Custom configuration (version retention, etc.)
+- Agent discovery by capabilities
 
-**But isn't required** - all core functionality works with simple IDs!
+**But isn't required** - all core functionality (Layer 1/2/3) works with simple IDs!
 
 ---
 

@@ -68,10 +68,19 @@ async function embed(text: string): Promise<number[]> {
 
 **Or use Cortex Cloud autoEmbed (recommended):**
 ```typescript
-// No embedding code needed!
-await cortex.memory.store(agentId, {
+// No embedding code needed! (Layer 3 for conversations)
+await cortex.memory.remember({
+  agentId, conversationId, userMessage, agentResponse, userId, userName,
+  autoEmbed: true  // Cortex Cloud handles embeddings automatically
+});
+
+// Or for system memories (Layer 2)
+await cortex.vector.store(agentId, {
   content: text,
-  autoEmbed: true  // Cortex Cloud handles it
+  contentType: 'raw',
+  source: { type: 'system', timestamp: new Date() },
+  autoEmbed: true,  // Cloud Mode
+  metadata: { importance: 50 }
 });
 ```
 
@@ -82,28 +91,31 @@ await cortex.memory.store(agentId, {
 Cortex automatically handles different dimensions:
 
 ```typescript
-// 384-dimensional embedding
-await cortex.memory.store('agent-1', {
+// 384-dimensional embedding (Layer 2 - explicit Vector storage)
+await cortex.vector.store('agent-1', {
   content: 'Small embedding memory',
   contentType: 'raw',
   embedding: await embedSmall(text),  // 384 dimensions
-  metadata: { dimension: 384 }
+  source: { type: 'system', timestamp: new Date() },
+  metadata: { importance: 30, dimension: 384 }
 });
 
-// 1536-dimensional embedding
-await cortex.memory.store('agent-1', {
+// 1536-dimensional embedding (Layer 2)
+await cortex.vector.store('agent-1', {
   content: 'Standard embedding memory',
   contentType: 'raw',
   embedding: await embedStandard(text),  // 1536 dimensions
-  metadata: { dimension: 1536 }
+  source: { type: 'system', timestamp: new Date() },
+  metadata: { importance: 50, dimension: 1536 }
 });
 
-// 3072-dimensional embedding
-await cortex.memory.store('agent-1', {
+// 3072-dimensional embedding (Layer 2)
+await cortex.vector.store('agent-1', {
   content: 'Large embedding memory',
   contentType: 'raw',
   embedding: await embedLarge(text),  // 3072 dimensions
-  metadata: { dimension: 3072 }
+  source: { type: 'system', timestamp: new Date() },
+  metadata: { importance: 70, dimension: 3072 }
 });
 ```
 
@@ -259,12 +271,19 @@ async function embed(text: string): Promise<number[]> {
   return result.data[0].embedding;
 }
 
-// Use everywhere
-await cortex.memory.store(agentId, {
+// Use everywhere (Layer 2 for system memories)
+await cortex.vector.store(agentId, {
   content: text,
   contentType: 'raw',
   embedding: await embed(text),
-  metadata: { dimension: DIMENSIONS }
+  source: { type: 'system', timestamp: new Date() },
+  metadata: { importance: 50, dimension: DIMENSIONS }
+});
+
+// Or for conversations (Layer 3)
+await cortex.memory.remember({
+  agentId, conversationId, userMessage, agentResponse, userId, userName,
+  generateEmbedding: async (content) => await embed(content)
 });
 ```
 
@@ -289,10 +308,12 @@ async function embedByImportance(
   }
 }
 
-await cortex.memory.store(agentId, {
+// Layer 2 - explicit Vector storage with importance-based embedding
+await cortex.vector.store(agentId, {
   content: text,
   contentType: 'raw',
   embedding: await embedByImportance(text, importance),
+  source: { type: 'system', timestamp: new Date() },
   metadata: { importance, dimension: getDimension(importance) }
 });
 ```
@@ -305,15 +326,16 @@ await cortex.memory.store(agentId, {
 Start small, upgrade important memories:
 
 ```typescript
-// Initially store with small embeddings
-const memory = await cortex.memory.store(agentId, {
+// Initially store with small embeddings (Layer 2)
+const memory = await cortex.vector.store(agentId, {
   content: text,
   contentType: 'raw',
   embedding: await embedSmall(text),  // 384
-  metadata: { dimension: 384 }
+  source: { type: 'system', timestamp: new Date() },
+  metadata: { importance: 50, dimension: 384 }
 });
 
-// If memory gets accessed frequently, upgrade
+// If memory gets accessed frequently, upgrade (Layer 3 update)
 if (memory.accessCount > 10) {
   await cortex.memory.update(agentId, memory.id, {
     embedding: await embedLarge(text),  // 3072
@@ -334,11 +356,19 @@ if (memory.accessCount > 10) {
 Let Cortex handle everything:
 
 ```typescript
-// No embedding code at all!
-await cortex.memory.store(agentId, {
+// No embedding code at all! (Layer 3 for conversations)
+await cortex.memory.remember({
+  agentId, conversationId, userMessage, agentResponse, userId, userName,
+  autoEmbed: true  // Cloud Mode handles everything
+});
+
+// Or for system memories (Layer 2)
+await cortex.vector.store(agentId, {
   content: text,
   contentType: 'raw',
-  autoEmbed: true  // Cloud Mode handles model selection, dimensions, optimization
+  source: { type: 'system', timestamp: new Date() },
+  autoEmbed: true,  // Cloud Mode handles model selection, dimensions, optimization
+  metadata: { importance: 50 }
 });
 
 // Cortex Cloud automatically:
@@ -452,12 +482,14 @@ async function downgradeDimensions(agentId: string) {
 ### 1. Document Your Dimension Choice
 
 ```typescript
-// Store dimension in metadata
-await cortex.memory.store(agentId, {
+// Store dimension in metadata (Layer 2 - system memory)
+await cortex.vector.store(agentId, {
   content: text,
   contentType: 'raw',
   embedding: await embed(text),
+  source: { type: 'system', timestamp: new Date() },
   metadata: {
+    importance: 50,
     dimension: 3072,
     embeddingModel: 'text-embedding-3-large',
     embeddingVersion: 'v3'  // Track model version
@@ -550,12 +582,14 @@ function reduceDimensions(
   return pca.predict([embedding])[0];
 }
 
-// Store with both (for flexibility)
-await cortex.memory.store(agentId, {
+// Store with both (for flexibility) - Layer 2
+await cortex.vector.store(agentId, {
   content: text,
   contentType: 'raw',
   embedding: largeEmbedding,  // 3072 for accuracy
+  source: { type: 'system', timestamp: new Date() },
   metadata: {
+    importance: 70,
     dimension: 3072,
     reducedEmbedding: reduceDimensions(largeEmbedding, 768)  // 768 for speed
   }

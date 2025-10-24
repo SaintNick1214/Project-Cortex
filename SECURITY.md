@@ -96,23 +96,23 @@ const cortex = new Cortex({
 
 ```typescript
 // ❌ DON'T: Trust user input directly
-await cortex.memory.store(userInput.agentId, {
-  content: userInput.content, // Could contain malicious data
-});
+await cortex.memory.remember(userInput);  // Could contain malicious data
 
 // ✅ DO: Validate and sanitize
 import { z } from 'zod';
 
-const MemoryInputSchema = z.object({
+const RememberInputSchema = z.object({
   agentId: z.string().regex(/^agent-[\w-]+$/),
-  content: z.string().max(10000),
-  metadata: z.object({
-    importance: z.enum(['low', 'medium', 'high']),
-  }),
+  conversationId: z.string(),
+  userMessage: z.string().max(10000),
+  agentResponse: z.string().max(10000),
+  userId: z.string(),
+  userName: z.string(),
+  importance: z.number().min(0).max(100),  // 0-100 scale
 });
 
-const validated = MemoryInputSchema.parse(userInput);
-await cortex.memory.store(validated.agentId, validated);
+const validated = RememberInputSchema.parse(userInput);
+await cortex.memory.remember(validated);
 ```
 
 #### 3. Implement Access Control
@@ -120,7 +120,7 @@ await cortex.memory.store(validated.agentId, validated);
 ```typescript
 // ❌ DON'T: Allow unrestricted access
 app.post('/api/memory', async (req, res) => {
-  await cortex.memory.store(req.body.agentId, req.body.memory);
+  await cortex.memory.remember(req.body);  // No auth check!
 });
 
 // ✅ DO: Verify user permissions
@@ -130,7 +130,15 @@ app.post('/api/memory', requireAuth, async (req, res) => {
     return res.status(403).json({ error: 'Forbidden' });
   }
   
-  await cortex.memory.store(req.body.agentId, req.body.memory);
+  // Store with Layer 3 remember()
+  await cortex.memory.remember({
+    agentId: req.body.agentId,
+    conversationId: req.body.conversationId,
+    userMessage: req.body.userMessage,
+    agentResponse: req.body.agentResponse,
+    userId: req.user.id,
+    userName: req.user.name
+  });
 });
 ```
 
@@ -143,14 +151,22 @@ const embedding = await openai.embeddings.create({
   input: userContent, // May contain PII
 });
 
-// Store securely
-await cortex.memory.store(agentId, {
+// Store securely (Layer 2 for system-generated content)
+await cortex.vector.store(agentId, {
   content: userContent,
+  contentType: 'raw',
   embedding: embedding.data[0].embedding,
+  source: { type: 'system', timestamp: new Date() },
   metadata: {
+    importance: 85,  // 0-100 scale (70-89 = high)
     // Don't leak user info in metadata
-    importance: 'high',
   },
+});
+
+// Or use Layer 3 for conversations (handles ACID + Vector)
+await cortex.memory.remember({
+  agentId, conversationId, userMessage, agentResponse, userId, userName,
+  generateEmbedding: async (content) => await openai.embeddings.create({...})
 });
 ```
 
@@ -173,12 +189,18 @@ app.use('/api/memory', memoryLimiter);
 
 ```typescript
 // Log security-relevant actions
-await cortex.memory.store(agentId, memory);
+const result = await cortex.memory.remember({
+  agentId, conversationId, userMessage, agentResponse, userId, userName
+});
 
+// Log to audit trail
 await auditLog.record({
-  action: 'MEMORY_STORE',
+  action: 'MEMORY_STORED',
   userId: req.user.id,
   agentId,
+  conversationId: result.conversation.conversationId,
+  acidMessageIds: result.conversation.messageIds,  // ACID layer
+  vectorMemoryIds: result.memories.map(m => m.id),  // Vector layer
   timestamp: new Date(),
   ip: req.ip,
 });

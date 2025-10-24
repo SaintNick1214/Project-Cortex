@@ -159,19 +159,36 @@ throw new CortexError(
 
 ```typescript
 // Example test
-describe('memory.store', () => {
-  it('should store a memory with embedding', async () => {
+describe('memory.remember', () => {
+  it('should store a conversation with ACID + Vector', async () => {
     const cortex = new Cortex({ convexUrl: testConvexUrl });
     
-    const memory = await cortex.memory.store('agent-1', {
-      content: 'Test memory',
-      embedding: [0.1, 0.2, 0.3],
-      metadata: { importance: 'medium' }
+    const result = await cortex.memory.remember({
+      agentId: 'agent-1',
+      conversationId: 'test-conv-1',
+      userMessage: 'Test message',
+      agentResponse: 'Test response',
+      userId: 'test-user',
+      userName: 'Tester',
+      importance: 50
+    });
+    
+    expect(result.conversation.messageIds).toHaveLength(2);
+    expect(result.memories).toHaveLength(2);
+    expect(result.memories[0].conversationRef).toBeDefined();
+  });
+  
+  it('should store system memory in Vector layer', async () => {
+    const memory = await cortex.vector.store('agent-1', {
+      content: 'Test system memory',
+      contentType: 'raw',
+      source: { type: 'system', timestamp: new Date() },
+      metadata: { importance: 50 }
     });
     
     expect(memory.id).toBeDefined();
     expect(memory.agentId).toBe('agent-1');
-    expect(memory.content).toBe('Test memory');
+    expect(memory.source.type).toBe('system');
   });
 });
 ```
@@ -317,14 +334,22 @@ Test complete workflows:
 ```typescript
 describe('chatbot memory workflow', () => {
   it('should remember user preferences across sessions', async () => {
-    // Store preference
-    await cortex.memory.store('agent-1', { ... });
+    // Store preference (Layer 3 - ACID + Vector)
+    await cortex.memory.remember({
+      agentId: 'agent-1',
+      conversationId: 'conv-1',
+      userMessage: 'I prefer email notifications',
+      agentResponse: "I'll remember that",
+      userId: 'user-1',
+      userName: 'User'
+    });
     
-    // New session
+    // New session - search (Layer 3 - searches Vector)
     const memories = await cortex.memory.search('agent-1', 'preference');
     
     // Verify retrieval
-    expect(memories[0].content).toContain('preference');
+    expect(memories[0].content).toContain('email notifications');
+    expect(memories[0].conversationRef).toBeDefined();  // Has ACID link
   });
 });
 ```
@@ -339,32 +364,35 @@ describe('chatbot memory workflow', () => {
 
 ```typescript
 /**
- * Stores a memory for a specific agent with semantic search capabilities.
+ * Stores a conversation with automatic ACID + Vector storage.
  * 
- * Memories are automatically indexed for fast retrieval. The embedding
- * parameter enables semantic search - provide a vector from your
- * embedding model of choice (OpenAI, Cohere, local, etc.).
+ * This is the recommended way to store conversation memories. It handles:
+ * - ACID storage (Layer 1) for immutable conversation history
+ * - Vector indexing (Layer 2) for searchable knowledge
+ * - Automatic linking via conversationRef
  * 
- * @param agentId - Unique identifier for the agent
- * @param entry - Memory content and metadata
- * @returns The stored memory with generated ID and timestamp
+ * @param params - Conversation details
+ * @returns Result with ACID message IDs and Vector memory entries
  * 
  * @example
  * ```typescript
- * const memory = await cortex.memory.store('agent-1', {
- *   content: 'User prefers dark mode',
- *   embedding: await openai.embeddings.create({
- *     model: 'text-embedding-3-large',
- *     input: 'User prefers dark mode'
- *   }),
- *   metadata: { importance: 'high', tags: ['preferences'] }
+ * const result = await cortex.memory.remember({
+ *   agentId: 'agent-1',
+ *   conversationId: 'conv-123',
+ *   userMessage: 'I prefer dark mode',
+ *   agentResponse: "I'll remember that!",
+ *   userId: 'user-1',
+ *   userName: 'Alex',
+ *   generateEmbedding: async (content) => await embed(content),
+ *   importance: 70,
+ *   tags: ['preferences']
  * });
+ * // Stores in ACID + creates Vector memories with conversationRef
  * ```
  */
-export async function storeMemory(
-  agentId: string,
-  entry: MemoryEntryInput
-): Promise<MemoryEntry> {
+export async function remember(
+  params: RememberParams
+): Promise<RememberResult> {
   // Implementation
 }
 ```
