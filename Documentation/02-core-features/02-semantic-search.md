@@ -9,10 +9,12 @@ AI-powered memory retrieval with multi-strategy fallback for robust results.
 Semantic search goes beyond keyword matching - it understands **meaning**. When you search for "what's the user's favorite color?", it finds memories about color preferences even if they don't contain the exact words "favorite color".
 
 **How it works with Cortex's hybrid architecture:**
-- Searches the **Vector Memory Index** (fast, searchable)
-- Returns memories with `conversationRef` links
+- Searches the **Vector Memory Index** (Layer 2)
+- Returns memories with `conversationRef` links to ACID (Layer 1)
 - Can optionally retrieve full conversation from **ACID store** for complete context
 - Embeddings are **optional** - falls back to text search if not provided
+
+**API Note:** This guide uses `cortex.memory.search()` (Layer 3 convenience API) which searches the Vector index and can optionally enrich with ACID conversations. For direct control, use `cortex.vector.search()` (Layer 2).
 
 ## How It Works
 
@@ -41,7 +43,7 @@ const query = "what are the user's dietary preferences?";
 // Generate embedding for the query (optional but preferred)
 const queryEmbedding = await embed(query);
 
-// Search agent's memories (filtered to specific user)
+// Search agent's memories (Layer 3 - searches Vector, can enrich with ACID)
 const memories = await cortex.memory.search('my-agent', query, {
   embedding: queryEmbedding,  // Optional: enables semantic search
   userId: 'user-123',  // Only search this user's context
@@ -59,6 +61,13 @@ memories.forEach((memory, i) => {
     console.log(`   Full context available: conv-${memory.conversationRef.conversationId}`);
   }
 });
+
+// Or get with ACID enrichment automatically (Layer 3 option)
+const enriched = await cortex.memory.search('my-agent', query, {
+  embedding: queryEmbedding,
+  userId: 'user-123',
+  enrichConversation: true  // Fetches ACID conversations too
+});
 ```
 
 ## Multi-Strategy Retrieval
@@ -70,10 +79,15 @@ Cortex uses **three progressive strategies** to ensure you always get results:
 Primary method using embeddings (when provided):
 
 ```typescript
-// Try semantic search first (requires embeddings)
+// Try semantic search first (Layer 3 - searches Vector index)
 const memories = await cortex.memory.search(agentId, query, {
   embedding: await embed(query),  // Vector similarity
   strategy: 'semantic'
+});
+
+// Or use Layer 2 directly for explicit control
+const vectorResults = await cortex.vector.search(agentId, query, {
+  embedding: await embed(query)
 });
 ```
 
@@ -95,6 +109,7 @@ Fallback to text-based search (always available, no embeddings needed):
 
 ```typescript
 // If semantic search returns nothing (or no embeddings), try keywords
+// Layer 3 - automatically falls back to keyword search
 if (memories.length === 0) {
   memories = await cortex.memory.search(agentId, query, {
     strategy: 'keyword'  // Text-based search (works without embeddings)
@@ -103,7 +118,7 @@ if (memories.length === 0) {
 
 // Or explicitly use text search (no embeddings required)
 const memories = await cortex.memory.search(agentId, query, {
-  // No embedding provided - uses text search
+  // No embedding provided - Layer 3 uses text search on Vector index
   strategy: 'keyword'
 });
 ```
@@ -148,22 +163,22 @@ if (memories.length === 0) {
 
 ### Automatic Multi-Strategy
 
-Cortex automatically tries strategies based on what you provide:
+Cortex (Layer 3) automatically tries strategies based on what you provide:
 
 ```typescript
 // With embedding - tries semantic → keyword → recent
 const memories = await cortex.memory.search(agentId, query, {
-  embedding: await embed(query)  // Enables semantic search
+  embedding: await embed(query)  // Enables semantic search on Vector index
 });
 
 // Without embedding - tries keyword → recent
 const memories = await cortex.memory.search(agentId, query);
-// No embedding - uses text search only
+// No embedding - uses text search on Vector index
 
-// Cortex internally does:
-// 1. Try semantic search (if embedding provided)
-// 2. If empty, try keyword search (always available)
-// 3. If still empty, return recent memories
+// Layer 3 (cortex.memory) internally does:
+// 1. Try semantic search on Vector (if embedding provided)
+// 2. If empty, try keyword search on Vector (always available)
+// 3. If still empty, return recent memories from Vector
 ```
 
 **Override automatic behavior:**

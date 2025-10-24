@@ -15,23 +15,25 @@ Every agent in Cortex gets its own private memory bank - a secure, isolated stor
 Each agent's memories are **completely isolated** from other agents:
 
 ```typescript
-// Agent 1 stores customer info
-await cortex.memory.store('support-agent', {
+// Agent 1 stores customer info (Layer 2 - system memory, no conversation)
+await cortex.vector.store('support-agent', {
   content: 'Customer ABC123 has VIP status with 24/7 support',
+  contentType: 'raw',
   embedding: await embed('Customer ABC123 VIP status'),
   userId: 'customer-abc123',  // Which customer
   source: {
     type: 'system',
     timestamp: new Date()
   },
+  // No conversationRef - system-generated
   metadata: { importance: 85, tags: ['customer', 'vip'] }
 });
 
-// Agent 2 cannot see it
+// Agent 2 cannot see it (Layer 3 convenience - delegates to Layer 2)
 const memories = await cortex.memory.search('sales-agent', 'VIP customers');
 // Returns: [] (empty - different agent)
 
-// Only Agent 1 can access
+// Only Agent 1 can access (Layer 3 convenience)
 const memories = await cortex.memory.search('support-agent', 'VIP customers');
 // Returns: [{ content: 'Customer ABC123 has VIP status...', ... }]
 ```
@@ -115,7 +117,20 @@ interface MemoryVersion {
 
 ## Architecture: ACID + Vector Hybrid
 
-Cortex uses a **two-layer storage architecture** for optimal performance and complete data preservation:
+Cortex uses a **two-layer storage architecture** for optimal performance and complete data preservation.
+
+**API Organization:**
+Cortex organizes operations into three namespaces:
+- `cortex.conversations.*` - Layer 1 (ACID operations)
+- `cortex.vector.*` - Layer 2 (Vector operations)
+- `cortex.memory.*` - Layer 3 (Convenience - handles both)
+
+**In this guide:**
+- Conversation examples use `cortex.memory.remember()` (Layer 3 - recommended)
+- System/tool examples use `cortex.vector.store()` (Layer 2 - explicit)
+- Retrieval/search uses `cortex.memory.*` (Layer 3 - convenience)
+
+For complete API details, see [Memory Operations API](../03-api-reference/02-memory-operations.md).
 
 ### Complete Lifecycle Example
 
@@ -134,11 +149,17 @@ const msg1 = await cortex.conversations.addMessage('conv-456', {
   timestamp: new Date('2025-04-03T10:00:00Z')
 });
 
-// Step 2: Index in Vector (with ref to ACID)
-const mem1 = await cortex.memory.store('agent-1', {
+// Step 2: Index in Vector (with ref to ACID) - Layer 2 explicit
+const mem1 = await cortex.vector.store('agent-1', {
   content: 'The password is Red',  // Raw text
   contentType: 'raw',
   embedding: await embed('The password is Red'),  // Optional
+  userId: 'user-1',
+  source: {
+    type: 'conversation',
+    userId: 'user-1',
+    timestamp: new Date('2025-04-03T10:00:00Z')
+  },
   conversationRef: {
     conversationId: 'conv-456',
     messageIds: ['msg-001']  // ← Links to ACID!
@@ -478,12 +499,14 @@ async function storeOrUpdate(
     });
   }
   
-  // Otherwise, create new memory
-  return await cortex.memory.store(agentId, {
+  // Otherwise, create new memory (Layer 2 - manual Vector storage)
+  return await cortex.vector.store(agentId, {
     content,
+    contentType: 'raw',
     embedding,
     userId,
     source: options.source,
+    conversationRef: options.conversationRef,  // Pass through if provided
     metadata: options.metadata
   });
 }
@@ -531,10 +554,12 @@ async function storeOrUpdateByTopic(
     });
   }
   
-  // Create new
-  return await cortex.memory.store(agentId, {
+  // Create new (Layer 2 - explicit Vector)
+  return await cortex.vector.store(agentId, {
     content,
+    contentType: 'raw',
     userId,
+    source: { type: 'conversation', userId, timestamp: new Date() },
     metadata: { tags: topicTags }
   });
 }
@@ -572,10 +597,12 @@ async function storeOrUpdateByKey(
     });
   }
   
-  // Create new
-  return await cortex.memory.store(agentId, {
+  // Create new (Layer 2 - explicit Vector)
+  return await cortex.vector.store(agentId, {
     content,
+    contentType: 'raw',
     userId,
+    source: { type: 'conversation', userId, timestamp: new Date() },
     metadata: { memoryKey }
   });
 }
@@ -724,8 +751,8 @@ const msg = await cortex.conversations.addMessage('conv-456', {
   timestamp: new Date()
 });
 
-// Step 2: Index in vector memory (searchable)
-const memory = await cortex.memory.store('my-agent', {
+// Step 2: Index in vector memory (searchable) - Layer 2 explicit
+const memory = await cortex.vector.store('my-agent', {
   content: 'User prefers to be called Alex, not Alexander',  // Raw
   contentType: 'raw',  // or 'summarized' if you extracted/processed
   embedding: await embed('User prefers Alex name'),  // Optional but preferred
@@ -816,17 +843,23 @@ await cortex.memory.remember({
 ### Retrieving Specific Memories
 
 ```typescript
-// Get by ID
+// Get by ID (Layer 3 - convenience)
 const memory = await cortex.memory.get('my-agent', 'mem_abc123xyz');
 
 console.log(memory.content); // "User prefers to be called Alex..."
 console.log(memory.accessCount); // Tracks how often accessed
+
+// With full ACID conversation context
+const enriched = await cortex.memory.get('my-agent', 'mem_abc123xyz', {
+  includeConversation: true
+});
+console.log(enriched.sourceMessages[0].text); // Original message from ACID
 ```
 
 ### Searching Memories
 
 ```typescript
-// Semantic search
+// Semantic search (Layer 3 - convenience, searches Vector index)
 const memories = await cortex.memory.search('my-agent', 
   'what does the user like to be called?',
   {
@@ -838,6 +871,13 @@ const memories = await cortex.memory.search('my-agent',
 
 // First result is the most relevant
 console.log(memories[0].content); // "User prefers to be called Alex..."
+
+// Or with ACID enrichment
+const enriched = await cortex.memory.search('my-agent', 'user name preference', {
+  embedding: await embed('user name preference'),
+  userId: 'user-123',
+  enrichConversation: true  // Include full ACID context
+});
 ```
 
 ### Counting Memories
@@ -928,10 +968,16 @@ const criticalBackup = await cortex.memory.export('agent-1', {
 When you update a memory, Cortex **automatically preserves the previous version**:
 
 ```typescript
-// Original memory
-await cortex.memory.store('my-agent', 'mem_abc123', {
-  content: 'The password is Blue',
-  metadata: { importance: 100, tags: ['security', 'password'] }
+// Original memory (use Layer 3 remember() for conversations)
+await cortex.memory.remember({
+  agentId: 'my-agent',
+  conversationId: 'conv-123',
+  userMessage: 'The password is Blue',
+  agentResponse: "I'll remember that password",
+  userId: 'user-1',
+  userName: 'User',
+  importance: 100,
+  tags: ['password', 'security']
 });
 
 // Update it (doesn't overwrite - creates new version!)
@@ -1315,14 +1361,18 @@ function determineImportance(content: string): number {
   return 50;
 }
 
-// Or explicitly set any value 0-100
-await cortex.memory.store('my-agent', {
+// Or explicitly set any value 0-100 (Layer 2 - system memories)
+await cortex.vector.store('my-agent', {
   content: 'System password is XYZ123',
+  contentType: 'raw',
+  source: { type: 'system', timestamp: new Date() },
   metadata: { importance: 100 } // Maximum importance
 });
 
-await cortex.memory.store('my-agent', {
+await cortex.vector.store('my-agent', {
   content: 'User mentioned they like sunny weather',
+  contentType: 'raw',
+  source: { type: 'system', timestamp: new Date() },
   metadata: { importance: 25 } // Low importance
 });
 ```
@@ -1422,10 +1472,13 @@ async function decayImportance(agentId: string, memoryId: string) {
 Tags help organize and filter memories:
 
 ```typescript
-// Store with tags
-await cortex.memory.store('support-agent', {
+// Store with tags (Layer 2 - tool result)
+await cortex.vector.store('support-agent', {
   content: 'Resolved ticket #456 by restarting the service',
+  contentType: 'raw',
+  source: { type: 'tool', timestamp: new Date() },
   metadata: {
+    importance: 75,
     tags: ['troubleshooting', 'resolution', 'restart', 'ticket-456']
   }
 });
@@ -1557,27 +1610,22 @@ async function handleUserMessage(
   userId: string,
   userName: string,
   userMessage: string,
+  agentResponse: string,
   conversationId: string
 ) {
-  // Always store what users tell you
-  const embedding = await embed(userMessage);
-  
-  await cortex.memory.store(agentId, {
-    content: userMessage,
-    embedding,
-    userId,  // Track who said this
-    source: {
-      type: 'conversation',
-      userId,
-      userName,
-      conversationId,
-      timestamp: new Date()
-    },
-    metadata: {
-      importance: determineImportance(userMessage),  // Returns 0-100
-      tags: extractTags(userMessage)
-    }
+  // Use Layer 3 remember() for conversations (recommended)
+  await cortex.memory.remember({
+    agentId,
+    conversationId,
+    userMessage,
+    agentResponse,
+    userId,
+    userName,
+    generateEmbedding: async (content) => await embed(content),
+    importance: determineImportance(userMessage),  // Returns 0-100
+    tags: extractTags(userMessage)
   });
+  // Handles ACID + Vector automatically with proper conversationRef
 }
 ```
 
@@ -1585,10 +1633,16 @@ async function handleUserMessage(
 
 ```typescript
 async function afterAgentAction(agentId: string, action: string, result: any) {
-  // Store what the agent did
-  await cortex.memory.store(agentId, {
+  // Store what the agent did (Layer 2 - tool-generated memory)
+  await cortex.vector.store(agentId, {
     content: `I ${action} and the result was: ${JSON.stringify(result)}`,
+    contentType: 'raw',
     embedding: await embed(`${action} result`),
+    source: {
+      type: 'tool',  // Tool execution result
+      timestamp: new Date()
+    },
+    // No conversationRef - tool-generated, not from conversation
     metadata: {
       importance: result.success ? 60 : 85,  // Higher if failed
       tags: ['agent-action', action],
@@ -1607,15 +1661,24 @@ async function buildContextForResponse(
   userId: string,
   query: string
 ) {
-  // Search relevant memories
+  // Search relevant memories (Layer 3 - searches Vector index)
   const queryEmbedding = await embed(query);
   
-  // Filter to this user's context
+  // Option 1: Fast (Vector only)
   const relevantMemories = await cortex.memory.search(agentId, query, {
     embedding: queryEmbedding,
     userId,  // Only memories related to this user
     limit: 5,
     minImportance: 50  // Only importance >= 50
+  });
+  
+  // Option 2: With full ACID context
+  const enriched = await cortex.memory.search(agentId, query, {
+    embedding: queryEmbedding,
+    userId,
+    limit: 5,
+    minImportance: 50,
+    enrichConversation: true  // Fetch ACID conversations too
   });
   
   // Build context string with source attribution
@@ -1737,13 +1800,16 @@ async function deleteAllUserData(userId: string) {
 Every update automatically preserves history:
 
 ```typescript
-// Version 1
-await cortex.memory.store('agent-1', {
-  content: 'The API endpoint is https://api.example.com/v1'
+// Version 1 (system memory - Layer 2 explicit)
+const v1 = await cortex.vector.store('agent-1', {
+  content: 'The API endpoint is https://api.example.com/v1',
+  contentType: 'raw',
+  source: { type: 'system', timestamp: new Date() },
+  metadata: { importance: 70, tags: ['config', 'api'] }
 });
 
-// Version 2 (update)
-await cortex.memory.update('agent-1', memoryId, {
+// Version 2 (update - Layer 3 delegates to Layer 2)
+await cortex.memory.update('agent-1', v1.id, {
   content: 'The API endpoint is https://api.example.com/v2'
 });
 
@@ -1840,14 +1906,16 @@ const volatile = await cortex.memory.search('agent-1', '*', {
 ```typescript
 // Scenario: Password changes multiple times
 
-// Initial
-await cortex.memory.store('agent-1', {
+// Initial (system memory - Layer 2)
+const initial = await cortex.vector.store('agent-1', {
   content: 'System password is Blue',
+  contentType: 'raw',
+  source: { type: 'system', timestamp: new Date() },
   metadata: { importance: 100, tags: ['security', 'password'], system: 'prod' }
 });
 
-// Update 1
-await cortex.memory.update('agent-1', memoryId, {
+// Update 1 (Layer 3 - delegates to Layer 2, creates version 2)
+await cortex.memory.update('agent-1', initial.id, {
   content: 'System password is Red (changed for security audit)',
   metadata: { 
     importance: 100,
@@ -1857,8 +1925,8 @@ await cortex.memory.update('agent-1', memoryId, {
   }
 });
 
-// Update 2
-await cortex.memory.update('agent-1', memoryId, {
+// Update 2 (Layer 3 - creates version 3)
+await cortex.memory.update('agent-1', initial.id, {
   content: 'System password is Green (changed after breach)',
   metadata: { 
     importance: 100,  // Critical - increased due to breach
@@ -1869,12 +1937,14 @@ await cortex.memory.update('agent-1', memoryId, {
 });
 
 // Now you can ask: "What was the password on October 20th?"
-const historical = await cortex.memory.getAtTimestamp('agent-1', memoryId,
+// Layer 3 - temporal query (delegates to Layer 2)
+const historical = await cortex.memory.getAtTimestamp('agent-1', initial.id,
   new Date('2025-10-20')
 );
 
 // Or: "Why did the password change?"
-const history = await cortex.memory.getHistory('agent-1', memoryId);
+// Layer 3 - version history (delegates to Layer 2)
+const history = await cortex.memory.getHistory('agent-1', initial.id);
 history.forEach(v => {
   console.log(`v${v.version}: ${v.content}`);
   console.log(`  Reason: ${v.metadata.changeReason || 'N/A'}`);
@@ -1916,11 +1986,14 @@ When storing multiple memories, use batch operations:
 ```typescript
 // ❌ Slow - one at a time
 for (const item of items) {
-  await cortex.memory.store(agentId, item);
+  await cortex.vector.store(agentId, item);  // Layer 2
 }
 
-// ✅ Fast - batch insert
-await cortex.memory.storeBatch(agentId, items);
+// ✅ Fast - batch insert (Layer 2 batch operation)
+await cortex.vector.storeBatch(agentId, items);
+
+// Or for conversations, use Layer 3 remember() with batch support
+await cortex.memory.rememberBatch(conversationExchanges);
 ```
 
 ### Embedding Strategy
@@ -1928,23 +2001,40 @@ await cortex.memory.storeBatch(agentId, items);
 Choose when to generate embeddings:
 
 ```typescript
+// For conversations: Use Layer 3 remember() with embedding options
+await cortex.memory.remember({
+  agentId, conversationId, userMessage, agentResponse, userId, userName,
+  generateEmbedding: async (content) => await embed(content)  // Best search
+});
+
+// For system memories: Layer 2 with embedding choices
+
 // Option 1: Always embed (best search, higher cost)
-await cortex.memory.store(agentId, {
+await cortex.vector.store(agentId, {
   content: text,
-  embedding: await embed(text)
+  contentType: 'raw',
+  embedding: await embed(text),
+  source: { type: 'system', timestamp: new Date() },
+  metadata: { importance: 50 }
 });
 
 // Option 2: Selective embedding (balanced)
-const shouldEmbed = importance === 'high' || tags.includes('searchable');
-await cortex.memory.store(agentId, {
+const shouldEmbed = importance >= 70 || tags.includes('searchable');
+await cortex.vector.store(agentId, {
   content: text,
-  embedding: shouldEmbed ? await embed(text) : undefined
+  contentType: 'raw',
+  embedding: shouldEmbed ? await embed(text) : undefined,
+  source: { type: 'system', timestamp: new Date() },
+  metadata: { importance }
 });
 
-// Option 3: Lazy embedding (store now, embed later)
-await cortex.memory.store(agentId, {
-  content: text
-  // No embedding - can add later via update
+// Option 3: Lazy embedding (store now, embed later via update)
+await cortex.vector.store(agentId, {
+  content: text,
+  contentType: 'raw',
+  source: { type: 'system', timestamp: new Date() },
+  // No embedding - can add later via cortex.memory.update()
+  metadata: { importance: 50 }
 });
 ```
 
@@ -1995,24 +2085,33 @@ Handle sensitive information carefully:
 
 ```typescript
 // ❌ Don't store plaintext secrets
-await cortex.memory.store(agentId, {
-  content: 'User password is: mysecretpass123' // BAD!
+await cortex.vector.store(agentId, {
+  content: 'User password is: mysecretpass123',  // BAD!
+  contentType: 'raw',
+  source: { type: 'system' }
 });
 
-// ✅ Store references or hashed versions
-await cortex.memory.store(agentId, {
+// ✅ Store references or hashed versions (Layer 2 - system memory)
+await cortex.vector.store(agentId, {
   content: 'User updated their password on 2025-10-23',
+  contentType: 'raw',
+  userId,
+  source: { type: 'system', timestamp: new Date() },
   metadata: {
-    importance: 'high',
+    importance: 95,
     tags: ['security', 'password-change'],
     passwordHash: hashPassword('mysecretpass123') // Store hash only
   }
 });
 
 // ✅ Or use secure storage for actual secrets
-await cortex.memory.store(agentId, {
+await cortex.vector.store(agentId, {
   content: 'User authentication credentials are stored in secure vault',
+  contentType: 'raw',
+  userId,
+  source: { type: 'system', timestamp: new Date() },
   metadata: {
+    importance: 100,
     vaultReference: 'vault://credentials/user-123'
   }
 });
@@ -2034,8 +2133,9 @@ async function storeMemoryWithAuth(
     throw new Error('Unauthorized: User does not own this agent');
   }
   
-  // Now safe to store
+  // Now safe to store (Layer 3 delegates to appropriate layer)
   return await cortex.memory.store(agentId, memory);
+  // Or use cortex.vector.store() for explicit Layer 2 control
 }
 ```
 
@@ -2067,17 +2167,23 @@ console.log({
 Updates don't overwrite - they create new versions:
 
 ```typescript
-// Original (v1)
-await cortex.memory.store('agent-1', {
-  content: 'The meeting is scheduled for Monday at 2 PM'
+// Original (v1) - For conversation, use Layer 3 remember()
+const result = await cortex.memory.remember({
+  agentId: 'agent-1',
+  conversationId: 'conv-123',
+  userMessage: 'Schedule meeting for Monday at 2 PM',
+  agentResponse: "I'll remember that",
+  userId,
+  userName
 });
+const memoryId = result.memories[0].id;
 
-// Reschedule (v2 - v1 preserved!)
+// Reschedule (v2 - v1 preserved!) - Layer 3 update
 await cortex.memory.update('agent-1', memoryId, {
   content: 'The meeting is scheduled for Tuesday at 3 PM'
 });
 
-// View complete history
+// View complete history (Layer 3 - delegates to Layer 2)
 const memory = await cortex.memory.get('agent-1', memoryId);
 console.log(`Current (v${memory.version}): ${memory.content}`);
 memory.previousVersions.forEach(v => {
@@ -2111,35 +2217,18 @@ const memory = await cortex.memory.get('agent-1', memoryId);
 Early in development, store liberally:
 
 ```typescript
-// ✅ Store all user messages
-await cortex.memory.store(agentId, {
-  content: userMessage,
-  embedding: await embed(userMessage),
-  userId: userId,
-  source: {
-    type: 'conversation',
-    userId,
-    userName: user.displayName,
-    conversationId,
-    timestamp: new Date()
-  },
-  metadata: { importance: 50 }  // Default medium
+// ✅ Store conversation exchanges (Layer 3 - recommended)
+await cortex.memory.remember({
+  agentId,
+  conversationId,
+  userMessage,
+  agentResponse,
+  userId,
+  userName: user.displayName,
+  generateEmbedding: async (content) => await embed(content),
+  importance: 50  // Default medium
 });
-
-// ✅ Store all agent responses
-await cortex.memory.store(agentId, {
-  content: `I told ${user.displayName}: ${agentResponse}`,
-  embedding: await embed(agentResponse),
-  userId: userId,  // Associate with the user
-  source: {
-    type: 'conversation',
-    userId,
-    userName: user.displayName,
-    conversationId,
-    timestamp: new Date()
-  },
-  metadata: { importance: 50 }  // Default medium
-});
+// Stores both messages in ACID + creates 2 Vector memories automatically
 ```
 
 Later, optimize based on usage patterns.
@@ -2183,13 +2272,20 @@ Make memories self-contained and clear:
 
 ```typescript
 // ❌ Vague
-await cortex.memory.store(agentId, {
-  content: 'User said yes'
+await cortex.vector.store(agentId, {
+  content: 'User said yes',
+  contentType: 'raw',
+  source: { type: 'system' }
 });
 
-// ✅ Clear and contextual
-await cortex.memory.store(agentId, {
-  content: 'User confirmed they want to receive weekly email newsletters on Mondays at 9 AM EST'
+// ✅ Clear and contextual (use remember() for conversations)
+await cortex.memory.remember({
+  agentId,
+  conversationId,
+  userMessage: 'Yes, I want weekly newsletters on Mondays at 9 AM EST',
+  agentResponse: "I'll set that up for you",
+  userId,
+  userName
 });
 ```
 
@@ -2206,12 +2302,15 @@ const TAG_CATEGORIES = {
   priority: ['urgent', 'normal', 'low']
 };
 
-// Apply consistently
-await cortex.memory.store(agentId, {
-  content: 'User requested password reset',
-  metadata: {
-    tags: ['user-input', 'security', 'pending', 'urgent']
-  }
+// Apply consistently (Layer 3 for conversation)
+await cortex.memory.remember({
+  agentId,
+  conversationId,
+  userMessage: 'I need to reset my password',
+  agentResponse: "I'll help you reset it",
+  userId,
+  userName,
+  tags: ['user-input', 'security', 'pending', 'urgent']
 });
 ```
 
@@ -2412,11 +2511,17 @@ async function confirmDeleteMyMemories(userId: string, confirmToken: string) {
 
 ```typescript
 // DON'T store the same info multiple times
-await cortex.memory.store(agentId, {
-  content: 'User email is user@example.com'
+await cortex.vector.store(agentId, {
+  content: 'User email is user@example.com',
+  contentType: 'raw',
+  source: { type: 'system' },
+  metadata: { importance: 60 }
 });
-await cortex.memory.store(agentId, {
-  content: 'The user\'s email address: user@example.com' // Duplicate!
+await cortex.vector.store(agentId, {
+  content: 'The user\'s email address: user@example.com',  // Duplicate!
+  contentType: 'raw',
+  source: { type: 'system' },
+  metadata: { importance: 60 }
 });
 ```
 
@@ -2430,13 +2535,16 @@ const existing = await cortex.memory.search(agentId, 'user email', {
 });
 
 if (existing.length === 0) {
-  // Store new memory
-  await cortex.memory.store(agentId, {
+  // Store new memory (Layer 2 - system/extracted info)
+  await cortex.vector.store(agentId, {
     content: 'User email is user@example.com',
-    metadata: { tags: ['email', 'contact'] }
+    contentType: 'raw',
+    userId,
+    source: { type: 'system', timestamp: new Date() },
+    metadata: { importance: 60, tags: ['email', 'contact'] }
   });
 } else {
-  // Update existing (creates v2, keeps v1 in history)
+  // Update existing (Layer 3 - creates v2, keeps v1 in history)
   await cortex.memory.update(agentId, existing[0].id, {
     content: 'User email is user@example.com (confirmed current)',
     metadata: { 
@@ -2453,28 +2561,39 @@ if (existing.length === 0) {
 
 ```typescript
 // DON'T create giant memories
-await cortex.memory.store(agentId, {
-  content: `User profile: ${JSON.stringify(massiveObject)}` // Too much!
+await cortex.vector.store(agentId, {
+  content: `User profile: ${JSON.stringify(massiveObject)}`,  // Too much!
+  contentType: 'raw',
+  source: { type: 'system' }
 });
 ```
 
 **Solution**: Break into logical pieces:
 
 ```typescript
-// Store discrete facts
-await cortex.memory.store(agentId, {
+// Store discrete facts (Layer 2 - extracted info)
+await cortex.vector.store(agentId, {
   content: 'User name is Alex Johnson',
-  metadata: { tags: ['profile', 'name'] }
+  contentType: 'raw',
+  userId,
+  source: { type: 'system', timestamp: new Date() },
+  metadata: { importance: 60, tags: ['profile', 'name'] }
 });
 
-await cortex.memory.store(agentId, {
+await cortex.vector.store(agentId, {
   content: 'User email is alex@example.com',
-  metadata: { tags: ['profile', 'email'] }
+  contentType: 'raw',
+  userId,
+  source: { type: 'system', timestamp: new Date() },
+  metadata: { importance: 60, tags: ['profile', 'email'] }
 });
 
-await cortex.memory.store(agentId, {
+await cortex.vector.store(agentId, {
   content: 'User prefers dark mode theme',
-  metadata: { tags: ['profile', 'preferences'] }
+  contentType: 'raw',
+  userId,
+  source: { type: 'system', timestamp: new Date() },
+  metadata: { importance: 50, tags: ['profile', 'preferences'] }
 });
 ```
 
@@ -2482,18 +2601,30 @@ await cortex.memory.store(agentId, {
 
 ```typescript
 // Semantic search won't work well without embeddings
-await cortex.memory.store(agentId, {
+await cortex.vector.store(agentId, {
   content: 'Important information',
-  // No embedding provided
+  contentType: 'raw',
+  source: { type: 'system' },
+  // No embedding provided - only text search will work
+  metadata: { importance: 70 }
 });
 ```
 
 **Solution**: Always include embeddings for searchable content:
 
 ```typescript
-await cortex.memory.store(agentId, {
+await cortex.vector.store(agentId, {
   content: 'Important information',
-  embedding: await embed('Important information')
+  contentType: 'raw',
+  embedding: await embed('Important information'),  // Enables semantic search
+  source: { type: 'system', timestamp: new Date() },
+  metadata: { importance: 70 }
+});
+
+// Or use Layer 3 remember() for conversations (auto-links to ACID)
+await cortex.memory.remember({
+  agentId, conversationId, userMessage, agentResponse, userId, userName,
+  generateEmbedding: async (content) => await embed(content)
 });
 ```
 
@@ -2553,25 +2684,31 @@ import { describe, it, expect } from 'vitest';
 
 describe('Agent Memory', () => {
   it('should isolate memories between agents', async () => {
-    // Store in agent-1
-    await cortex.memory.store('agent-1', {
-      content: 'Secret for agent 1'
+    // Store in agent-1 (Layer 2 - system memory for testing)
+    await cortex.vector.store('agent-1', {
+      content: 'Secret for agent 1',
+      contentType: 'raw',
+      source: { type: 'system', timestamp: new Date() },
+      metadata: { importance: 50 }
     });
     
-    // Try to access from agent-2
+    // Try to access from agent-2 (Layer 3 search)
     const memories = await cortex.memory.search('agent-2', 'secret');
     
     expect(memories).toHaveLength(0);
   });
   
   it('should track access count', async () => {
-    const stored = await cortex.memory.store('agent-1', {
-      content: 'Test memory'
+    const stored = await cortex.vector.store('agent-1', {
+      content: 'Test memory',
+      contentType: 'raw',
+      source: { type: 'system', timestamp: new Date() },
+      metadata: { importance: 50 }
     });
     
     expect(stored.accessCount).toBe(0);
     
-    // Access it
+    // Access it (Layer 3 - increments count)
     await cortex.memory.get('agent-1', stored.id);
     const accessed = await cortex.memory.get('agent-1', stored.id);
     

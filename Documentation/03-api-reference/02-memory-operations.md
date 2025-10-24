@@ -6,40 +6,93 @@ Complete API reference for agent memory operations.
 
 ## Overview
 
-The Memory Operations API provides methods for storing, retrieving, searching, and managing agent memories in the Vector Memory layer with automatic linking to ACID conversations.
+The Memory Operations API is organized into **three namespaces** corresponding to Cortex's architecture layers:
+
+```typescript
+// Layer 1: ACID Conversations (Immutable Source)
+cortex.conversations.*    // Raw conversation threads
+
+// Layer 2: Vector Index (Searchable Knowledge)
+cortex.vector.*          // Vector memory operations
+
+// Layer 3: Dual-Layer Convenience (Recommended)
+cortex.memory.*          // Works across both layers automatically
+```
 
 **Architecture Context:**
-- Operations work on **Vector Memory** (Layer 2)
-- Memories can reference **ACID Conversations** (Layer 1) via `conversationRef`
-- All operations support **universal filters**
-- Automatic **versioning** with configurable retention
+- **Layer 1** (ACID): Immutable conversation history, no retention limits
+- **Layer 2** (Vector): Searchable index with versioning and retention rules
+- **Layer 3** (Memory): Convenience layer that manages both automatically
 
-## Storage Flow: ACID First, Then Vector
+**Which namespace to use:**
+- 🎯 **Most developers**: Use `cortex.memory.*` (handles both layers)
+- 🔧 **Advanced control**: Use `cortex.conversations.*` and `cortex.vector.*` separately
+- 📊 **Analytics/debugging**: Mix all three as needed
 
-### Why This Order Matters
+## Three-Namespace Architecture
 
+### Layer 1: cortex.conversations.* (ACID)
+
+```typescript
+// Managing immutable conversation threads
+await cortex.conversations.create({ type: 'user-agent', participants: {...} });
+await cortex.conversations.addMessage(conversationId, message);
+await cortex.conversations.get(conversationId);
+await cortex.conversations.getHistory(conversationId, options);
+// Returns raw messages, no Vector index involved
+```
+
+### Layer 2: cortex.vector.* (Vector Index)
+
+```typescript
+// Managing searchable knowledge index
+await cortex.vector.store(agentId, vectorInput);  // Must provide conversationRef manually
+await cortex.vector.get(agentId, memoryId);
+await cortex.vector.search(agentId, query, options);
+await cortex.vector.update(agentId, memoryId, updates);
+// Direct Vector operations, you manage conversationRef
+```
+
+### Layer 3: cortex.memory.* (Dual-Layer Convenience)
+
+```typescript
+// High-level operations that manage both layers
+await cortex.memory.remember(params);  // Stores in ACID + creates Vector index
+await cortex.memory.get(agentId, memoryId, { includeConversation: true });
+await cortex.memory.search(agentId, query, { enrichConversation: true });
+// Handles both layers automatically
+```
+
+### Storage Flow Comparison
+
+**Manual (Layer 1 + Layer 2):**
 ```
 ┌─────────────────────────────────────────────┐
-│ Layer 1: ACID Conversations (Immutable)     │
-│ ↓ STORE HERE FIRST                          │
-│ conversation.addMessage() returns msg.id    │
+│ Layer 1: cortex.conversations.addMessage()  │
+│ Returns: msg.id                              │
 └────────────┬────────────────────────────────┘
-             │
-             │ msg.id used in conversationRef
+             │ Use msg.id in conversationRef
              ↓
 ┌─────────────────────────────────────────────┐
-│ Layer 2: Vector Memories (Searchable)       │
-│ ↓ THEN INDEX HERE                           │
-│ memory.store() with conversationRef         │
+│ Layer 2: cortex.vector.store()              │
+│ Provide conversationRef manually             │
 └─────────────────────────────────────────────┘
 ```
 
-### Manual Flow (2 steps)
+**Automatic (Layer 3):**
+```
+┌─────────────────────────────────────────────┐
+│ Layer 3: cortex.memory.remember()           │
+│ Handles both layers + linking automatically  │
+└─────────────────────────────────────────────┘
+```
+
+### Manual Flow (Layer 1 + Layer 2)
 
 **For conversation-based memories:**
 
 ```typescript
-// Step 1: Store raw message in ACID (Layer 1) - MUST BE FIRST
+// Step 1: Store raw message in ACID (Layer 1)
 const msg = await cortex.conversations.addMessage('conv-456', {
   role: 'user',
   text: 'The password is Blue',
@@ -48,21 +101,21 @@ const msg = await cortex.conversations.addMessage('conv-456', {
 });
 // Returns: { id: 'msg-789', ... }
 
-// Step 2: Index in Vector Memory (Layer 2) - references Step 1
-const memory = await cortex.memory.store('agent-1', {
+// Step 2: Index in Vector (Layer 2) - references Step 1
+const memory = await cortex.vector.store('agent-1', {
   content: 'The password is Blue',  // Raw or extracted
   contentType: 'raw',
   embedding: await embed('The password is Blue'),  // Optional
   userId: 'user-123',
   source: {
-    type: 'conversation',  // ← Indicates this came from a conversation
+    type: 'conversation',
     userId: 'user-123',
     userName: 'Alex Johnson',
     timestamp: new Date()
   },
-  conversationRef: {  // ← REQUIRED for conversations, links to ACID
+  conversationRef: {  // Links to ACID
     conversationId: 'conv-456',
-    messageIds: [msg.id]  // From Step 1's returned ID
+    messageIds: [msg.id]  // From Step 1
   },
   metadata: {
     importance: 100,
@@ -71,9 +124,9 @@ const memory = await cortex.memory.store('agent-1', {
 });
 ```
 
-### Helper Flow (1 step - recommended)
+### Convenience Flow (Layer 3 - recommended)
 
-**Use `remember()` to do both automatically:**
+**Use `cortex.memory.*` to handle both layers automatically:**
 
 ```typescript
 // Does both ACID + Vector in one call
@@ -86,10 +139,10 @@ const result = await cortex.memory.remember({
   userName: 'Alex'
 });
 
-// Automatically:
-// 1. Stored 2 messages in ACID (user + agent)
-// 2. Created 2 vector memories with conversationRef
-// 3. Linked everything together
+// Behind the scenes (Layer 3 does this):
+// 1. cortex.conversations.addMessage() × 2  (ACID Layer 1)
+// 2. cortex.vector.store() × 2              (Vector Layer 2)
+// 3. Links them via conversationRef
 ```
 
 ### Non-Conversation Memories
@@ -97,14 +150,22 @@ const result = await cortex.memory.remember({
 **For system/tool memories (no ACID conversation):**
 
 ```typescript
-// No Step 1 needed - just store in Vector
-const memory = await cortex.memory.store('agent-1', {
+// Option 1: Use Layer 2 directly
+const memory = await cortex.vector.store('agent-1', {
   content: 'Agent initialized successfully',
   contentType: 'raw',
   source: { type: 'system', timestamp: new Date() },
-  // No conversationRef - this isn't from a conversation
+  // No conversationRef - not from a conversation
   metadata: { importance: 30, tags: ['system', 'startup'] }
 });
+
+// Option 2: Use Layer 3 (also works for non-conversations)
+const memory = await cortex.memory.store('agent-1', {
+  content: 'Agent initialized successfully',
+  source: { type: 'system' },
+  metadata: { importance: 30 }
+});
+// Layer 3 detects source.type='system' and skips ACID storage
 ```
 
 ### conversationRef Rules
@@ -120,9 +181,95 @@ const memory = await cortex.memory.store('agent-1', {
 
 ---
 
-## Core Operations
+## Complete API Reference by Namespace
 
-### store()
+### Layer 1: cortex.conversations.* Operations
+
+| Operation | Purpose | Returns |
+|-----------|---------|---------|
+| `create(params)` | Create new conversation | Conversation |
+| `get(conversationId)` | Get conversation | Conversation |
+| `addMessage(conversationId, message)` | Add message to ACID | Message |
+| `getHistory(conversationId, options)` | Get message thread | Message[] |
+| `list(filters)` | List conversations | Conversation[] |
+| `search(query, filters)` | Search conversations | SearchResult[] |
+| `count(filters)` | Count conversations | number |
+| `export(filters, options)` | Export conversations | JSON/CSV |
+| `delete(conversationId)` | Delete conversation | DeletionResult |
+
+**See:** [Conversation Operations API](./06-conversation-operations.md)
+
+### Layer 2: cortex.vector.* Operations
+
+| Operation | Purpose | Returns |
+|-----------|---------|---------|
+| `store(agentId, input)` | Store vector memory | MemoryEntry |
+| `get(agentId, memoryId)` | Get vector memory | MemoryEntry |
+| `search(agentId, query, options)` | Search vector index | MemoryEntry[] |
+| `update(agentId, memoryId, updates)` | Update memory (creates version) | MemoryEntry |
+| `delete(agentId, memoryId)` | Delete from vector | DeletionResult |
+| `updateMany(agentId, filters, updates)` | Bulk update | UpdateResult |
+| `deleteMany(agentId, filters, options)` | Bulk delete | DeletionResult |
+| `count(agentId, filters)` | Count memories | number |
+| `list(agentId, options)` | List memories | ListResult |
+| `export(agentId, options)` | Export vector memories | JSON/CSV |
+| `archive(agentId, filters)` | Soft delete | ArchiveResult |
+| `getVersion(agentId, memoryId, version)` | Get specific version | MemoryVersion |
+| `getHistory(agentId, memoryId)` | Get version history | MemoryVersion[] |
+| `getAtTimestamp(agentId, memoryId, date)` | Temporal query | MemoryVersion |
+
+### Layer 3: cortex.memory.* Operations (Dual-Layer)
+
+| Operation | Purpose | Returns | Does |
+|-----------|---------|---------|------|
+| `remember(params)` | Store conversation | RememberResult | ACID + Vector |
+| `get(agentId, memoryId, options)` | Get memory + conversation | EnrichedMemory | Vector + optional ACID |
+| `search(agentId, query, options)` | Search + enrich | EnrichedMemory[] | Vector + optional ACID |
+| `store(agentId, input)` | Smart store | MemoryEntry | Detects layer automatically |
+| `update(agentId, memoryId, updates)` | Update memory | MemoryEntry | Vector (creates version) |
+| `delete(agentId, memoryId, options)` | Delete memory | DeletionResult | Vector only (preserves ACID) |
+| `forget(agentId, memoryId, options)` | Delete both layers | DeletionResult | Vector + optionally ACID |
+| *All vector operations* | Same as Layer 2 | Same | Convenience wrappers |
+
+**Key Differences:**
+
+| Operation | Layer 2 (cortex.vector.*) | Layer 3 (cortex.memory.*) |
+|-----------|---------------------------|---------------------------|
+| `remember()` | N/A | ✨ Unique - stores in both layers |
+| `get()` | Vector only | Can include ACID (`includeConversation`) |
+| `search()` | Vector only | Can enrich with ACID (`enrichConversation`) |
+| `delete()` | Vector only | Same (preserves ACID) |
+| `forget()` | N/A | ✨ Unique - deletes from both layers |
+| `store()` | Manual conversationRef | Smart - detects layer from source.type |
+| `update()` | Direct | Delegates to Layer 2 |
+| `updateMany()` | Direct | Delegates to Layer 2 |
+| `deleteMany()` | Direct | Delegates to Layer 2 |
+| `count()` | Direct | Delegates to Layer 2 |
+| `list()` | Direct | Delegates to Layer 2 |
+| `export()` | Direct | Delegates to Layer 2 |
+| `archive()` | Direct | Delegates to Layer 2 |
+| Version ops | Direct | Delegates to Layer 2 |
+
+**Layer 3 Unique Operations:**
+- `remember()` - Dual-layer storage
+- `forget()` - Dual-layer deletion
+- `get()` with `includeConversation` - Cross-layer retrieval
+- `search()` with `enrichConversation` - Cross-layer search
+
+**Layer 3 Delegations:**
+- Most operations are thin wrappers around `cortex.vector.*`
+- Convenience for not having to remember namespaces
+- Use `cortex.vector.*` directly if you prefer explicit control
+
+---
+
+## Core Operations (Layer 3: cortex.memory.*)
+
+> Note: Layer 3 operations are convenience wrappers. For direct control, use Layer 1 (`cortex.conversations.*`) and Layer 2 (`cortex.vector.*`) separately.
+
+### remember()
+
+**Layer 3 Operation** - Stores in both ACID and Vector automatically.
 
 Store a new memory for an agent.
 
@@ -395,50 +542,84 @@ await cortex.memory.remember({
 
 ### get()
 
-Retrieve a specific memory by ID.
+**Layer 3 Operation** - Get Vector memory with optional ACID conversation retrieval.
 
 **Signature:**
 ```typescript
 cortex.memory.get(
   agentId: string,
-  memoryId: string
-): Promise<MemoryEntry | null>
+  memoryId: string,
+  options?: GetOptions
+): Promise<MemoryEntry | EnrichedMemory | null>
 ```
 
 **Parameters:**
-- `agentId` (string) - Agent that owns the memory
-- `memoryId` (string) - Unique memory ID
+```typescript
+interface GetOptions {
+  includeConversation?: boolean;      // Fetch ACID conversation too (default: false)
+}
+```
 
 **Returns:**
-- `MemoryEntry` - Complete memory object with version history
-- `null` - If memory doesn't exist
+```typescript
+// Default (includeConversation: false)
+MemoryEntry | null
+
+// With includeConversation: true
+interface EnrichedMemory {
+  memory: MemoryEntry;                // Vector Layer 2 data
+  conversation?: Conversation;        // ACID Layer 1 data (if conversationRef exists)
+  sourceMessages?: Message[];         // Specific messages that informed this memory
+}
+```
 
 **Side Effects:**
 - Increments `accessCount`
 - Updates `lastAccessed` timestamp
 
-**Example:**
+**Example 1: Default (Vector only)**
 ```typescript
 const memory = await cortex.memory.get('agent-1', 'mem_abc123');
 
 if (memory) {
-  console.log(memory.content);
+  console.log(memory.content);  // Vector content
   console.log(`Version: ${memory.version}`);
-  console.log(`Accessed ${memory.accessCount} times`);
-  console.log(`Last accessed: ${memory.lastAccessed}`);
+  console.log(`conversationRef:`, memory.conversationRef);  // Reference only
+}
+```
+
+**Example 2: With ACID conversation**
+```typescript
+const enriched = await cortex.memory.get('agent-1', 'mem_abc123', {
+  includeConversation: true
+});
+
+if (enriched) {
+  // Layer 2 (Vector)
+  console.log('Vector content:', enriched.memory.content);
+  console.log('Version:', enriched.memory.version);
   
-  // Access version history
-  memory.previousVersions?.forEach(v => {
-    console.log(`v${v.version}: ${v.content} (${v.timestamp})`);
-  });
-  
-  // Get ACID source if available
-  if (memory.conversationRef) {
-    const conversation = await cortex.conversations.get(
-      memory.conversationRef.conversationId
-    );
+  // Layer 1 (ACID) - automatically fetched
+  if (enriched.conversation) {
+    console.log('Conversation ID:', enriched.conversation.conversationId);
+    console.log('Total messages:', enriched.conversation.messages.length);
+    console.log('Source message:', enriched.sourceMessages[0].text);
   }
 }
+```
+
+**Comparison:**
+```typescript
+// Layer 2 directly (fast, Vector only)
+const vectorMem = await cortex.vector.get('agent-1', 'mem_abc123');
+
+// Layer 3 default (same as Layer 2)
+const mem = await cortex.memory.get('agent-1', 'mem_abc123');
+
+// Layer 3 enriched (Vector + ACID)
+const enriched = await cortex.memory.get('agent-1', 'mem_abc123', {
+  includeConversation: true
+});
 ```
 
 **Errors:**
@@ -453,7 +634,7 @@ if (memory) {
 
 ### search()
 
-Search agent memories with semantic or text search.
+**Layer 3 Operation** - Search Vector index with optional ACID enrichment.
 
 **Signature:**
 ```typescript
@@ -461,12 +642,15 @@ cortex.memory.search(
   agentId: string,
   query: string,
   options?: SearchOptions
-): Promise<MemoryEntry[]>
+): Promise<MemoryEntry[] | EnrichedMemory[]>
 ```
 
 **Parameters:**
 ```typescript
 interface SearchOptions {
+  // Layer enrichment
+  enrichConversation?: boolean;       // Fetch ACID conversations (default: false)
+  
   // Semantic search
   embedding?: number[];               // Query vector (enables semantic search)
   
@@ -529,25 +713,55 @@ interface SearchResult extends MemoryEntry {
 }
 ```
 
-**Example:**
+**Example 1: Default (Vector only - fast)**
 ```typescript
-// Semantic search with filters
 const memories = await cortex.memory.search('agent-1', 'user preferences', {
   embedding: await embed('user preferences'),
   userId: 'user-123',
   tags: ['preferences'],
   minImportance: 50,
-  createdAfter: new Date('2025-10-01'),
-  limit: 10,
-  boostImportance: true
+  limit: 10
 });
 
 memories.forEach(m => {
-  console.log(`${m.content} (score: ${m.score}, importance: ${m.metadata.importance})`);
-  console.log(`  Strategy: ${m.strategy}`);
-  if (m.conversationRef) {
-    console.log(`  Source: ACID conversation ${m.conversationRef.conversationId}`);
+  console.log(`${m.content} (score: ${m.score})`);
+  console.log(`  conversationRef: ${m.conversationRef?.conversationId}`);  // Reference only
+});
+```
+
+**Example 2: With ACID enrichment**
+```typescript
+const enriched = await cortex.memory.search('agent-1', 'user preferences', {
+  embedding: await embed('user preferences'),
+  userId: 'user-123',
+  enrichConversation: true  // Fetch ACID conversations too
+});
+
+enriched.forEach(m => {
+  // Vector data
+  console.log('Vector content:', m.memory.content);
+  console.log('Score:', m.score);
+  
+  // ACID data (if conversationRef exists)
+  if (m.conversation) {
+    console.log('Full conversation:', m.conversation.messages.length, 'messages');
+    console.log('Source message:', m.sourceMessages[0].text);
   }
+});
+```
+
+**Comparison:**
+```typescript
+// Layer 2 directly (Vector only)
+const vectorResults = await cortex.vector.search('agent-1', query, options);
+
+// Layer 3 default (same as Layer 2, but can enrich)
+const results = await cortex.memory.search('agent-1', query, options);
+
+// Layer 3 enriched (Vector + ACID)
+const enriched = await cortex.memory.search('agent-1', query, {
+  ...options,
+  enrichConversation: true
 });
 ```
 
@@ -659,7 +873,7 @@ const result = await cortex.memory.updateMany('agent-1', {
   accessCount: { $gte: 10 }
 }, {
   metadata: {
-    importance: 75  // Bump to high
+    importance: 75  // Bump to high (70-89 range)
   }
 });
 
@@ -686,7 +900,7 @@ await cortex.memory.updateMany('agent-1', {
 
 ### delete()
 
-Delete a single memory by ID.
+**Layer 3 Operation** - Deletes from Vector only (preserves ACID).
 
 **Signature:**
 ```typescript
@@ -705,23 +919,42 @@ cortex.memory.delete(
 interface DeletionResult {
   deleted: number;                    // Always 1 if successful
   memoryId: string;
-  restorable: boolean;                // False for delete()
+  deletedFrom: 'vector' | 'both';    // What was deleted
+  restorable: boolean;                // True if ACID preserved
 }
 ```
 
 **Side Effects:**
-- Permanently deletes memory from Vector layer
-- Does NOT delete ACID conversation (if conversationRef exists)
-- Cannot be undone
+- Deletes memory from **Vector layer only**
+- **Preserves** ACID conversation (if conversationRef exists)
+- Restorable from ACID if needed
 
 **Example:**
 ```typescript
 const result = await cortex.memory.delete('agent-1', 'mem_abc123');
 
-console.log(`Deleted memory ${result.memoryId}`);
-console.log(`Restorable: ${result.restorable}`); // false
+console.log(`Deleted from: ${result.deletedFrom}`); // 'vector'
+console.log(`Restorable: ${result.restorable}`); // true (if had conversationRef)
 
-// ACID conversation still accessible if memory had conversationRef
+// ACID conversation still accessible
+if (result.restorable) {
+  // Can retrieve original message from ACID
+  const conversation = await cortex.conversations.get(conversationId);
+}
+```
+
+**Comparison:**
+```typescript
+// Layer 2 directly (Vector only, explicit)
+await cortex.vector.delete('agent-1', 'mem_abc123');
+
+// Layer 3 (same as Layer 2, but preserves ACID)
+await cortex.memory.delete('agent-1', 'mem_abc123');
+// Vector deleted, ACID preserved
+
+// Layer 3 forget() (delete from both - see below)
+await cortex.memory.forget('agent-1', 'mem_abc123', { deleteConversation: true });
+// Vector AND ACID deleted
 ```
 
 **Errors:**
@@ -730,6 +963,63 @@ console.log(`Restorable: ${result.restorable}`); // false
 
 **See Also:**
 - [Deleting Memories](../02-core-features/01-agent-memory.md#deleting-memories)
+
+---
+
+### forget()
+
+**Layer 3 Operation** - Delete from both Vector and ACID (complete removal).
+
+**Signature:**
+```typescript
+cortex.memory.forget(
+  agentId: string,
+  memoryId: string,
+  options?: ForgetOptions
+): Promise<ForgetResult>
+```
+
+**Parameters:**
+```typescript
+interface ForgetOptions {
+  deleteConversation?: boolean;       // Delete ACID conversation too (default: false)
+  deleteEntireConversation?: boolean; // Delete whole conversation vs just message (default: false)
+}
+```
+
+**Returns:**
+```typescript
+interface ForgetResult {
+  memoryDeleted: boolean;             // Vector deletion
+  conversationDeleted: boolean;       // ACID deletion
+  messagesDeleted: number;            // ACID messages deleted
+  restorable: boolean;                // False
+}
+```
+
+**Example:**
+```typescript
+// Delete memory + its source message from ACID
+const result = await cortex.memory.forget('agent-1', 'mem_abc123', {
+  deleteConversation: true
+});
+
+console.log(`Memory deleted from Vector: ${result.memoryDeleted}`);
+console.log(`ACID messages deleted: ${result.messagesDeleted}`);
+console.log(`Restorable: ${result.restorable}`); // false - gone from both layers
+
+// WARNING: Use carefully! This is permanent across both layers.
+```
+
+**Warning:** `forget()` is destructive. Use `delete()` to preserve ACID audit trail.
+
+**Use cases for `forget()`:**
+- User requests complete data deletion (GDPR)
+- Removing sensitive information completely
+- Test data cleanup
+
+**See Also:**
+- [GDPR Compliance](../02-core-features/01-agent-memory.md#pattern-5-user-data-deletion-gdpr)
 
 ---
 

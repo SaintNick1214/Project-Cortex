@@ -474,13 +474,16 @@ async function summarizeConversation(conversationId: string) {
     }
   });
   
-  // Store as agent memory for future reference
-  await cortex.memory.store(agentId, {
+  // Store as agent memory for future reference (Layer 2 - system-generated summary)
+  await cortex.vector.store(agentId, {
     content: `Conversation summary: ${summary}`,
+    contentType: 'summarized',
     embedding: await embed(summary),
+    source: { type: 'system', timestamp: new Date() },
+    conversationRef: { conversationId, messageIds: [] },  // Links to whole conversation
     metadata: {
-      tags: ['summary', 'conversation'],
-      conversationId
+      importance: 70,
+      tags: ['summary', 'conversation']
     }
   });
 }
@@ -582,8 +585,8 @@ async function handleReturningUser(userId: string, newMessage: string, agentId: 
     timestamp: new Date()
   });
   
-  // Also index in Vector Memory for searchability
-  await cortex.memory.store(agentId, {
+  // Also index in Vector Memory for searchability (Layer 2 explicit)
+  await cortex.vector.store(agentId, {
     content: newMessage,
     contentType: 'raw',
     embedding: await embed(newMessage),  // Optional
@@ -595,6 +598,9 @@ async function handleReturningUser(userId: string, newMessage: string, agentId: 
     },
     metadata: { importance: 50, tags: ['user-input'] }
   });
+  
+  // Or use Layer 3 remember() to do both ACID + Vector automatically
+  // await cortex.memory.remember({ agentId, conversationId, userMessage, agentResponse, userId, userName });
   
   return conversationId;
 }

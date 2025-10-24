@@ -10,12 +10,13 @@ Context chains enable agents to share context in hierarchical workflows. When a 
 
 **How Context Chains Fit in Cortex's Architecture:**
 
-Cortex has four entity types, each with a specific purpose:
+Cortex has four entity types accessed via four namespaces:
 
-1. **ACID Conversations** - Immutable message history (user ↔ agent chats)
-2. **Vector Memories** - Searchable knowledge index (references conversations via `conversationRef`)
-3. **User Profiles** - Shared user attributes (cross-agent state)
-4. **Context Chains** - Workflow coordination (task hierarchies)
+1. **ACID Conversations** - `cortex.conversations.*` - Immutable message history (user ↔ agent chats)
+2. **Vector Memories** - `cortex.vector.*` - Searchable knowledge index (references conversations)
+3. **Memory API** - `cortex.memory.*` - Convenience layer (ACID + Vector)
+4. **User Profiles** - `cortex.users.*` - Shared user attributes (cross-agent state)
+5. **Context Chains** - `cortex.contexts.*` - Workflow coordination (task hierarchies)
 
 **Context Chains are separate from conversations** - they track multi-agent workflows and task delegation, not chat history.
 
@@ -333,8 +334,8 @@ const context = await cortex.contexts.create({
   }
 });
 
-// Vector Memory (Layer 2: Knowledge index)
-await cortex.memory.store('supervisor-agent', {
+// Vector Memory (Layer 2: Knowledge index) - explicit Layer 2
+await cortex.vector.store('supervisor-agent', {
   content: 'Created refund workflow for $500',
   contentType: 'raw',
   userId: 'user-123',
@@ -738,8 +739,8 @@ const context = await cortex.contexts.create({
   }
 });
 
-// Link agent memories to this context
-await cortex.memory.store('manager-agent', {
+// Link agent memories to this context (Layer 2 - system memory)
+await cortex.vector.store('manager-agent', {
   content: 'Created approval workflow for $450.50 travel expense',
   contentType: 'raw',
   userId: 'emp-123',

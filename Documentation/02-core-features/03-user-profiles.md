@@ -23,11 +23,14 @@ await cortex.conversations.addMessage('conv-456', {
   userId: 'user-123'
 });
 
-// Vector Memory (agent-specific knowledge)
-await cortex.memory.store('agent-1', {
+// Vector Memory (agent-specific knowledge) - Layer 2
+await cortex.vector.store('agent-1', {
   content: 'Had a good conversation with user about pizza',
   contentType: 'summarized',
-  conversationRef: { conversationId: 'conv-456', messageIds: ['msg-045'] }
+  userId: 'user-123',
+  source: { type: 'conversation', userId: 'user-123', timestamp: new Date() },
+  conversationRef: { conversationId: 'conv-456', messageIds: ['msg-045'] },
+  metadata: { importance: 60, tags: ['conversation', 'food'] }
 });
 
 // User Profile (shared across all agents)
@@ -37,9 +40,12 @@ await cortex.users.update('user-123', {
 ```
 
 **Key Distinction:**
-- **Agent Memory**: Private to agent, references ACID conversations
-- **User Profile**: Shared across agents, no conversation references
-- **ACID Conversations**: Immutable source that memories can reference
+- **Layer 1 (ACID Conversations)**: `cortex.conversations.*` - Immutable message threads
+- **Layer 2 (Vector Memories)**: `cortex.vector.*` - Agent-private searchable index
+- **Layer 3 (Memory API)**: `cortex.memory.*` - Convenience layer (ACID + Vector)
+- **User Profiles**: `cortex.users.*` - Separate entity, shared across all agents
+
+User Profiles don't have conversationRef - they're not conversation-sourced.
 
 ## User Profile Structure
 

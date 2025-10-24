@@ -21,8 +21,8 @@ await cortex.a2a.send({
   importance: 85
 });
 
-// Option 2: Use agent memory directly (explicit)
-await cortex.memory.store('finance-agent', {
+// Option 2: Use Layer 2 directly (explicit Vector storage)
+await cortex.vector.store('finance-agent', {
   content: 'Asked HR Agent: What is the Q4 headcount budget?',
   contentType: 'raw',
   embedding: await embed('What is the Q4 headcount budget?'),  // Optional
@@ -31,7 +31,10 @@ await cortex.memory.store('finance-agent', {
     toAgent: 'hr-agent', 
     timestamp: new Date() 
   },
-  // No conversationRef - A2A doesn't come from user conversations
+  conversationRef: {  // A2A conversations ARE stored in ACID by default
+    conversationId: 'a2a-conv-789',
+    messageIds: ['a2a-msg-001']
+  },
   metadata: { importance: 85, tags: ['a2a', 'hr', 'budget'] }
 });
 ```
@@ -230,8 +233,8 @@ async function send(params) {
     ? await embed(params.message)
     : undefined;
   
-  // 3. Store in sender's Vector Memory (with ACID reference)
-  const senderMemory = await cortex.memory.store(params.from, {
+  // 3. Store in sender's Vector Memory (Layer 2 - with ACID reference)
+  const senderMemory = await cortex.vector.store(params.from, {
     content: `Sent to ${params.to}: ${params.message}`,
     contentType: 'raw',
     embedding,
@@ -253,8 +256,8 @@ async function send(params) {
     }
   });
   
-  // 4. Store in receiver's Vector Memory (with same ACID reference)
-  const receiverMemory = await cortex.memory.store(params.to, {
+  // 4. Store in receiver's Vector Memory (Layer 2 - with same ACID reference)
+  const receiverMemory = await cortex.vector.store(params.to, {
     content: `Received from ${params.from}: ${params.message}`,
     contentType: 'raw',
     embedding,
@@ -454,43 +457,45 @@ async function broadcast(params) {
     receiverMemoryIds: []
   };
   
-  // Store for sender (one memory referencing all recipients)
+  // Store for sender (one memory referencing all recipients) - Layer 2
   for (const recipient of params.to) {
-    const senderMem = await cortex.memory.store(params.from, {
+    const senderMem = await cortex.vector.store(params.from, {
       content: `Broadcast to ${recipient}: ${params.message}`,
+      contentType: 'raw',
+      userId: params.userId,
       source: {
         type: 'a2a',
         fromAgent: params.from,
         toAgent: recipient,
-        messageId,
-        broadcast: true,
         timestamp
       },
       metadata: {
         importance: params.importance || 60,
         tags: ['a2a', 'broadcast', 'sent', recipient, ...(params.metadata?.tags || [])],
         direction: 'outbound',
+        messageId,
         broadcastId: messageId,
         recipientCount: params.to.length
       }
     });
     results.senderMemoryIds.push(senderMem.id);
     
-    // Store for each receiver
-    const receiverMem = await cortex.memory.store(recipient, {
+    // Store for each receiver (Layer 2)
+    const receiverMem = await cortex.vector.store(recipient, {
       content: `Broadcast from ${params.from}: ${params.message}`,
+      contentType: 'raw',
+      userId: params.userId,
       source: {
         type: 'a2a',
         fromAgent: params.from,
         toAgent: recipient,
-        messageId,
-        broadcast: true,
         timestamp
       },
       metadata: {
         importance: params.importance || 60,
         tags: ['a2a', 'broadcast', 'received', params.from, ...(params.metadata?.tags || [])],
         direction: 'inbound',
+        messageId,
         broadcastId: messageId
       }
     });
