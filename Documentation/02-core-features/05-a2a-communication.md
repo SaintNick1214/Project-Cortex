@@ -15,33 +15,35 @@ A2A communication is **not a separate storage system** - it's a set of convenien
 
 // Option 1: Use A2A helper (convenient)
 await cortex.a2a.send({
-  from: 'finance-agent',
-  to: 'hr-agent',
-  message: 'What is the Q4 headcount budget?',
-  importance: 85
+  from: "finance-agent",
+  to: "hr-agent",
+  message: "What is the Q4 headcount budget?",
+  importance: 85,
 });
 
 // Option 2: Use Layer 2 directly (explicit Vector storage)
-await cortex.vector.store('finance-agent', {
-  content: 'Asked HR Agent: What is the Q4 headcount budget?',
-  contentType: 'raw',
-  embedding: await embed('What is the Q4 headcount budget?'),  // Optional
-  source: { 
-    type: 'a2a',  // ← Marks as inter-agent communication
-    toAgent: 'hr-agent', 
-    timestamp: new Date() 
+await cortex.vector.store("finance-agent", {
+  content: "Asked HR Agent: What is the Q4 headcount budget?",
+  contentType: "raw",
+  embedding: await embed("What is the Q4 headcount budget?"), // Optional
+  source: {
+    type: "a2a", // ← Marks as inter-agent communication
+    toAgent: "hr-agent",
+    timestamp: new Date(),
   },
-  conversationRef: {  // A2A conversations ARE stored in ACID by default
-    conversationId: 'a2a-conv-789',
-    messageIds: ['a2a-msg-001']
+  conversationRef: {
+    // A2A conversations ARE stored in ACID by default
+    conversationId: "a2a-conv-789",
+    messageIds: ["a2a-msg-001"],
   },
-  metadata: { importance: 85, tags: ['a2a', 'hr', 'budget'] }
+  metadata: { importance: 85, tags: ["a2a", "hr", "budget"] },
 });
 ```
 
 **Both approaches work!** A2A helpers just reduce code and handle bidirectional storage automatically.
 
 **How A2A fits in Cortex's architecture:**
+
 - **ACID Conversations** (Layer 1): Stores complete A2A message threads
 - **Vector Memories** (Layer 2): Searchable index with `source.type = 'a2a'`
 - **conversationRef**: Links Vector memories to ACID conversation (default behavior)
@@ -96,30 +98,30 @@ Under the hood, A2A uses the **full ACID + Vector hybrid architecture**:
   id: 'mem_abc123',
   agentId: 'finance-agent',        // Sender's memory
   userId: 'user-123',              // Optional: if about a specific user
-  
+
   content: 'Asked HR about budget',
   contentType: 'raw',
   embedding: [0.234, ...],         // Optional: for semantic search
-  
+
   source: {
     type: 'a2a',                    // ← This marks it as A2A!
     fromAgent: 'finance-agent',
     toAgent: 'hr-agent',
     timestamp: new Date()
   },
-  
+
   conversationRef: {                // ← Links to ACID A2A conversation!
     conversationId: 'a2a-conv-789',
     messageIds: ['a2a-msg-001']
   },
-  
+
   metadata: {
     importance: 85,                 // 0-100 scale
     tags: ['a2a', 'sent', 'hr-agent'],
     direction: 'outbound',
     messageId: 'a2a-msg-001'
   },
-  
+
   version: 1,
   createdAt: Date,
   updatedAt: Date
@@ -130,23 +132,23 @@ Under the hood, A2A uses the **full ACID + Vector hybrid architecture**:
   id: 'mem_def456',
   agentId: 'hr-agent',             // Receiver's memory
   userId: 'user-123',              // Same user context
-  
+
   content: 'Received from Finance about budget',
   contentType: 'raw',
   embedding: [0.234, ...],         // Same embedding (if provided)
-  
+
   source: {
     type: 'a2a',
     fromAgent: 'finance-agent',
     toAgent: 'hr-agent',
     timestamp: new Date()
   },
-  
+
   conversationRef: {                // ← Same ACID conversation!
     conversationId: 'a2a-conv-789',
     messageIds: ['a2a-msg-001']
   },
-  
+
   metadata: {
     importance: 85,
     tags: ['a2a', 'received', 'finance-agent'],
@@ -157,6 +159,7 @@ Under the hood, A2A uses the **full ACID + Vector hybrid architecture**:
 ```
 
 **Benefits of ACID + Vector for A2A:**
+
 - ✅ Complete A2A conversation history preserved in ACID (immutable, forever)
 - ✅ Fast searchable index in Vector Memory
 - ✅ Version retention on Vector, complete history in ACID
@@ -166,6 +169,7 @@ Under the hood, A2A uses the **full ACID + Vector hybrid architecture**:
 - ✅ Compliance and debugging made easy
 
 **When conversationRef might be omitted:**
+
 - Fire-and-forget notifications
 - Ephemeral status updates
 - Set `trackConversation: false` to opt-out
@@ -180,16 +184,16 @@ Send a message and automatically store in both agents:
 ```typescript
 // Stores in BOTH agents automatically
 const result = await cortex.a2a.send({
-  from: 'finance-agent',
-  to: 'hr-agent',
-  message: 'What is the Q4 headcount budget?',
-  importance: 85,  // 0-100 scale
-  userId: 'user-123',  // Optional: if related to a user
-  contextId: 'ctx-456',  // Optional: link to context chain
+  from: "finance-agent",
+  to: "hr-agent",
+  message: "What is the Q4 headcount budget?",
+  importance: 85, // 0-100 scale
+  userId: "user-123", // Optional: if related to a user
+  contextId: "ctx-456", // Optional: link to context chain
   metadata: {
-    tags: ['budget', 'headcount', 'q4'],
-    priority: 'urgent'
-  }
+    tags: ["budget", "headcount", "q4"],
+    priority: "urgent",
+  },
 });
 
 console.log(result);
@@ -202,89 +206,93 @@ console.log(result);
 ```
 
 **Under the Hood:**
+
 ```typescript
 // cortex.a2a.send() does this:
 async function send(params) {
   const messageId = generateId();
   const timestamp = new Date();
-  
+
   // 1. Get or create A2A conversation in ACID (default: track conversation)
-  const trackConversation = params.trackConversation !== false;  // Default: true
-  let conversationId, messageIds = [];
-  
+  const trackConversation = params.trackConversation !== false; // Default: true
+  let conversationId,
+    messageIds = [];
+
   if (trackConversation) {
     // Get existing A2A conversation or create new one
     conversationId = await getOrCreateA2AConversation(params.from, params.to);
-    
+
     // Add message to ACID conversation (immutable)
     const msg = await cortex.conversations.addMessage(conversationId, {
-      type: 'a2a',
+      type: "a2a",
       from: params.from,
       to: params.to,
       text: params.message,
-      timestamp
+      timestamp,
     });
-    
+
     messageIds = [msg.id];
   }
-  
+
   // 2. Optional: Generate embedding if autoEmbed enabled (Cloud Mode)
-  const embedding = params.autoEmbed 
-    ? await embed(params.message)
-    : undefined;
-  
+  const embedding = params.autoEmbed ? await embed(params.message) : undefined;
+
   // 3. Store in sender's Vector Memory (Layer 2 - with ACID reference)
   const senderMemory = await cortex.vector.store(params.from, {
     content: `Sent to ${params.to}: ${params.message}`,
-    contentType: 'raw',
+    contentType: "raw",
     embedding,
     userId: params.userId,
     source: {
-      type: 'a2a',
+      type: "a2a",
       fromAgent: params.from,
       toAgent: params.to,
-      timestamp
+      timestamp,
     },
-    conversationRef: conversationId ? { conversationId, messageIds } : undefined,
+    conversationRef: conversationId
+      ? { conversationId, messageIds }
+      : undefined,
     metadata: {
       importance: params.importance || 60,
-      tags: ['a2a', 'sent', params.to, ...(params.metadata?.tags || [])],
-      direction: 'outbound',
+      tags: ["a2a", "sent", params.to, ...(params.metadata?.tags || [])],
+      direction: "outbound",
       messageId,
       ...(params.contextId && { contextId: params.contextId }),
-      ...params.metadata
-    }
+      ...params.metadata,
+    },
   });
-  
+
   // 4. Store in receiver's Vector Memory (Layer 2 - with same ACID reference)
   const receiverMemory = await cortex.vector.store(params.to, {
     content: `Received from ${params.from}: ${params.message}`,
-    contentType: 'raw',
+    contentType: "raw",
     embedding,
     userId: params.userId,
     source: {
-      type: 'a2a',
+      type: "a2a",
       fromAgent: params.from,
       toAgent: params.to,
-      timestamp
+      timestamp,
     },
-    conversationRef: conversationId ? { conversationId, messageIds } : undefined,
+    conversationRef: conversationId
+      ? { conversationId, messageIds }
+      : undefined,
     metadata: {
       importance: params.importance || 60,
-      tags: ['a2a', 'received', params.from, ...(params.metadata?.tags || [])],
-      direction: 'inbound',
+      tags: ["a2a", "received", params.from, ...(params.metadata?.tags || [])],
+      direction: "inbound",
       messageId,
       ...(params.contextId && { contextId: params.contextId }),
-      ...params.metadata
-    }
+      ...params.metadata,
+    },
   });
-  
+
   return {
     messageId,
     sentAt: timestamp,
-    conversationId,  // ACID conversation ID
+    conversationId, // ACID conversation ID
     senderMemoryId: senderMemory.id,
-    receiverMemoryId: receiverMemory.id
+    receiverMemoryId: receiverMemory.id,
   };
 }
 
@@ -292,29 +300,30 @@ async function send(params) {
 async function getOrCreateA2AConversation(agent1: string, agent2: string) {
   // Look for existing conversation between these agents
   const existing = await cortex.conversations.search({
-    type: 'agent-agent',
-    participants: { $all: [agent1, agent2] }
+    type: "agent-agent",
+    participants: { $all: [agent1, agent2] },
   });
-  
+
   if (existing.length > 0) {
     return existing[0].conversationId;
   }
-  
+
   // Create new A2A conversation
   const conversation = await cortex.conversations.create({
-    type: 'agent-agent',
+    type: "agent-agent",
     participants: { agent1, agent2 },
-    metadata: { 
+    metadata: {
       createdBy: agent1,
-      firstMessageTimestamp: new Date()
-    }
+      firstMessageTimestamp: new Date(),
+    },
   });
-  
+
   return conversation.conversationId;
 }
 ```
 
 **Why use the helper:**
+
 - ✅ 40+ lines → 7 lines (handles ACID + Vector + linking)
 - ✅ Automatic bidirectional storage (both agents)
 - ✅ Automatic ACID conversation management
@@ -323,14 +332,15 @@ async function getOrCreateA2AConversation(agent1: string, agent2: string) {
 - ✅ Less code = fewer bugs
 
 **Opting out of conversation tracking:**
+
 ```typescript
 // For fire-and-forget notifications (no ACID tracking)
 await cortex.a2a.send({
-  from: 'agent-1',
-  to: 'agent-2',
-  message: 'FYI: Task completed',
-  trackConversation: false,  // Skip ACID storage
-  importance: 30  // Low importance notification
+  from: "agent-1",
+  to: "agent-2",
+  message: "FYI: Task completed",
+  trackConversation: false, // Skip ACID storage
+  importance: 30, // Low importance notification
 });
 
 // Stores in Vector Memory only (no conversationRef)
@@ -344,12 +354,12 @@ Send a request and wait for response with timeout:
 ```typescript
 // Send request and wait for response
 const response = await cortex.a2a.request({
-  from: 'finance-agent',
-  to: 'hr-agent',
-  message: 'What is the Q4 headcount budget?',
-  timeout: 30000,  // 30 seconds (default)
+  from: "finance-agent",
+  to: "hr-agent",
+  message: "What is the Q4 headcount budget?",
+  timeout: 30000, // 30 seconds (default)
   importance: 85,
-  retries: 2  // Auto-retry if timeout (default: 1)
+  retries: 2, // Auto-retry if timeout (default: 1)
 });
 
 console.log(response);
@@ -362,6 +372,7 @@ console.log(response);
 ```
 
 **Under the Hood:**
+
 ```typescript
 async function request(params) {
   // 1. Send the request
@@ -371,46 +382,49 @@ async function request(params) {
     message: params.message,
     importance: params.importance,
     metadata: {
-      messageType: 'request',
+      messageType: "request",
       requiresResponse: true,
-      requestTimeout: params.timeout
-    }
+      requestTimeout: params.timeout,
+    },
   });
-  
+
   // 2. Wait for response (polls receiver's outgoing messages)
   const startTime = Date.now();
   const timeout = params.timeout || 30000;
-  
+
   while (Date.now() - startTime < timeout) {
     // Check if receiver responded
-    const responses = await cortex.memory.search(params.to, '*', {
-      source: { type: 'a2a' },
-      metadata: { 
+    const responses = await cortex.memory.search(params.to, "*", {
+      source: { type: "a2a" },
+      metadata: {
         inReplyTo: sent.messageId,
-        messageType: 'response'
+        messageType: "response",
       },
-      limit: 1
+      limit: 1,
     });
-    
+
     if (responses.length > 0) {
       // Got response!
       return {
         response: responses[0].content,
         messageId: sent.messageId,
         respondedAt: responses[0].createdAt,
-        responseTime: Date.now() - startTime
+        responseTime: Date.now() - startTime,
       };
     }
-    
-    await sleep(100);  // Poll every 100ms
+
+    await sleep(100); // Poll every 100ms
   }
-  
+
   // Timeout
-  throw new A2ATimeoutError(`No response from ${params.to} within ${timeout}ms`);
+  throw new A2ATimeoutError(
+    `No response from ${params.to} within ${timeout}ms`,
+  );
 }
 ```
 
 **Why use the helper:**
+
 - ✅ Automatic polling
 - ✅ Timeout handling
 - ✅ Auto-retry on failure
@@ -424,13 +438,13 @@ Send to multiple agents efficiently:
 ```typescript
 // Broadcast to entire team
 const result = await cortex.a2a.broadcast({
-  from: 'ceo-agent',
-  to: ['finance-agent', 'hr-agent', 'ops-agent'],
-  message: 'Board meeting moved to Friday 3 PM',
+  from: "ceo-agent",
+  to: ["finance-agent", "hr-agent", "ops-agent"],
+  message: "Board meeting moved to Friday 3 PM",
   importance: 75,
   metadata: {
-    tags: ['announcement', 'meeting', 'urgent']
-  }
+    tags: ["announcement", "meeting", "urgent"],
+  },
 });
 
 console.log(result);
@@ -445,6 +459,7 @@ console.log(result);
 ```
 
 **Under the Hood:**
+
 ```typescript
 async function broadcast(params) {
   const messageId = generateId();
@@ -454,62 +469,76 @@ async function broadcast(params) {
     sentAt: timestamp,
     recipients: params.to,
     senderMemoryIds: [],
-    receiverMemoryIds: []
+    receiverMemoryIds: [],
   };
-  
+
   // Store for sender (one memory referencing all recipients) - Layer 2
   for (const recipient of params.to) {
     const senderMem = await cortex.vector.store(params.from, {
       content: `Broadcast to ${recipient}: ${params.message}`,
-      contentType: 'raw',
+      contentType: "raw",
       userId: params.userId,
       source: {
-        type: 'a2a',
+        type: "a2a",
         fromAgent: params.from,
         toAgent: recipient,
-        timestamp
+        timestamp,
       },
       metadata: {
         importance: params.importance || 60,
-        tags: ['a2a', 'broadcast', 'sent', recipient, ...(params.metadata?.tags || [])],
-        direction: 'outbound',
+        tags: [
+          "a2a",
+          "broadcast",
+          "sent",
+          recipient,
+          ...(params.metadata?.tags || []),
+        ],
+        direction: "outbound",
         messageId,
         broadcastId: messageId,
-        recipientCount: params.to.length
-      }
+        recipientCount: params.to.length,
+      },
     });
     results.senderMemoryIds.push(senderMem.id);
-    
+
     // Store for each receiver (Layer 2)
     const receiverMem = await cortex.vector.store(recipient, {
       content: `Broadcast from ${params.from}: ${params.message}`,
-      contentType: 'raw',
+      contentType: "raw",
       userId: params.userId,
       source: {
-        type: 'a2a',
+        type: "a2a",
         fromAgent: params.from,
         toAgent: recipient,
-        timestamp
+        timestamp,
       },
       metadata: {
         importance: params.importance || 60,
-        tags: ['a2a', 'broadcast', 'received', params.from, ...(params.metadata?.tags || [])],
-        direction: 'inbound',
+        tags: [
+          "a2a",
+          "broadcast",
+          "received",
+          params.from,
+          ...(params.metadata?.tags || []),
+        ],
+        direction: "inbound",
         messageId,
-        broadcastId: messageId
-      }
+        broadcastId: messageId,
+      },
     });
     results.receiverMemoryIds.push(receiverMem.id);
   }
-  
+
   return {
     ...results,
-    memoriesCreated: results.senderMemoryIds.length + results.receiverMemoryIds.length
+    memoriesCreated:
+      results.senderMemoryIds.length + results.receiverMemoryIds.length,
   };
 }
 ```
 
 **Why use the helper:**
+
 - ✅ 40+ lines of loop code → 1 function call
 - ✅ Automatic recipient tracking
 - ✅ Broadcast ID linking
@@ -522,8 +551,8 @@ Get chronological conversation between two agents - can use ACID or Vector:
 ```typescript
 // Option 1: Get from ACID (complete, unfiltered conversation)
 const acidConversation = await cortex.conversations.getA2AConversation(
-  'finance-agent',
-  'hr-agent'
+  "finance-agent",
+  "hr-agent",
 );
 
 console.log(acidConversation);
@@ -539,29 +568,29 @@ console.log(acidConversation);
 
 // Option 2: Get from Vector Memory (filtered, searchable)
 const conversation = await cortex.a2a.getConversation(
-  'finance-agent', 
-  'hr-agent',
+  "finance-agent",
+  "hr-agent",
   {
     // Time filtering
-    since: new Date('2025-10-01'),
-    until: new Date('2025-10-31'),
-    
+    since: new Date("2025-10-01"),
+    until: new Date("2025-10-31"),
+
     // Importance filtering
-    minImportance: 50,  // Skip trivial messages
-    
+    minImportance: 50, // Skip trivial messages
+
     // Topic filtering
-    tags: ['budget', 'approval'],
-    
+    tags: ["budget", "approval"],
+
     // User filtering (A2A about specific user)
-    userId: 'user-123',
-    
+    userId: "user-123",
+
     // Pagination
     limit: 50,
     offset: 0,
-    
+
     // Format
-    format: 'chronological'  // Default
-  }
+    format: "chronological", // Default
+  },
 );
 
 console.log(conversation);
@@ -590,84 +619,86 @@ const fullHistory = await cortex.conversations.get(conversation.conversationId);
 ```
 
 **Under the Hood:**
+
 ```typescript
 async function getConversation(agent1, agent2, filters = {}) {
   // Strategy 1: Try to get ACID conversation first (if exists)
   const acidConversation = await cortex.conversations.search({
-    type: 'agent-agent',
-    participants: { $all: [agent1, agent2] }
+    type: "agent-agent",
+    participants: { $all: [agent1, agent2] },
   });
-  
+
   const conversationId = acidConversation[0]?.conversationId;
-  
+
   if (conversationId && !filters.minImportance && !filters.tags) {
     // No filtering - return complete ACID conversation
     const full = await cortex.conversations.get(conversationId);
     return formatA2AConversation(full, filters);
   }
-  
+
   // Strategy 2: Query Vector Memory for filtered results
   // Get messages from agent1 to agent2
-  const sent = await cortex.memory.search(agent1, '*', {
-    source: { type: 'a2a' },
-    metadata: { 
-      direction: 'outbound',
-      toAgent: agent2
+  const sent = await cortex.memory.search(agent1, "*", {
+    source: { type: "a2a" },
+    metadata: {
+      direction: "outbound",
+      toAgent: agent2,
     },
     ...(filters.userId && { userId: filters.userId }),
     ...(filters.tags && { tags: filters.tags }),
     ...(filters.minImportance && { minImportance: filters.minImportance }),
     ...(filters.since && { createdAfter: filters.since }),
     ...(filters.until && { createdBefore: filters.until }),
-    limit: filters.limit || 1000
+    limit: filters.limit || 1000,
   });
-  
+
   // Get messages from agent2 to agent1
-  const received = await cortex.memory.search(agent1, '*', {
-    source: { type: 'a2a' },
-    metadata: { 
-      direction: 'inbound',
-      fromAgent: agent2
+  const received = await cortex.memory.search(agent1, "*", {
+    source: { type: "a2a" },
+    metadata: {
+      direction: "inbound",
+      fromAgent: agent2,
     },
     ...(filters.userId && { userId: filters.userId }),
     ...(filters.tags && { tags: filters.tags }),
     ...(filters.minImportance && { minImportance: filters.minImportance }),
     ...(filters.since && { createdAfter: filters.since }),
     ...(filters.until && { createdBefore: filters.until }),
-    limit: filters.limit || 1000
+    limit: filters.limit || 1000,
   });
-  
+
   // Combine and sort chronologically
   const allMessages = [...sent, ...received]
-    .map(m => ({
-      from: m.metadata.direction === 'outbound' ? agent1 : agent2,
-      to: m.metadata.direction === 'outbound' ? agent2 : agent1,
+    .map((m) => ({
+      from: m.metadata.direction === "outbound" ? agent1 : agent2,
+      to: m.metadata.direction === "outbound" ? agent2 : agent1,
       message: m.content,
       importance: m.metadata.importance,
       timestamp: m.createdAt,
       messageId: m.metadata.messageId,
       memoryId: m.id,
-      acidMessageId: m.conversationRef?.messageIds[0],  // Link to ACID
-      tags: m.metadata.tags
+      acidMessageId: m.conversationRef?.messageIds[0], // Link to ACID
+      tags: m.metadata.tags,
     }))
     .sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
-  
+
   return {
     participants: [agent1, agent2],
-    conversationId,  // ACID conversation ID (if exists)
+    conversationId, // ACID conversation ID (if exists)
     messageCount: allMessages.length,
     messages: allMessages,
     period: {
       start: allMessages[0]?.timestamp,
-      end: allMessages[allMessages.length - 1]?.timestamp
+      end: allMessages[allMessages.length - 1]?.timestamp,
     },
     tags: filters.tags,
-    canRetrieveFullHistory: !!conversationId  // Can get from ACID
+    canRetrieveFullHistory: !!conversationId, // Can get from ACID
   };
 }
 ```
 
 **Why use the helper:**
+
 - ✅ 50+ lines → 3 lines (handles ACID lookup + Vector filtering)
 - ✅ Automatic bidirectional querying
 - ✅ Chronological sorting
@@ -684,30 +715,30 @@ interface A2AHelper {
     from: string;
     to: string;
     message: string;
-    importance?: number;      // 0-100, default: 60
-    userId?: string;          // Optional: if A2A is about a user
-    contextId?: string;       // Optional: link to context chain
-    trackConversation?: boolean;  // Default: true (store in ACID)
-    autoEmbed?: boolean;      // Cloud Mode: auto-generate embeddings
+    importance?: number; // 0-100, default: 60
+    userId?: string; // Optional: if A2A is about a user
+    contextId?: string; // Optional: link to context chain
+    trackConversation?: boolean; // Default: true (store in ACID)
+    autoEmbed?: boolean; // Cloud Mode: auto-generate embeddings
     metadata?: {
       tags?: string[];
-      priority?: 'low' | 'normal' | 'high' | 'urgent';
+      priority?: "low" | "normal" | "high" | "urgent";
       [key: string]: any;
     };
   }): Promise<A2AMessage>;
-  
+
   // Request with timeout (synchronous request-response)
   request(params: {
     from: string;
     to: string;
     message: string;
-    timeout?: number;         // ms, default: 30000
+    timeout?: number; // ms, default: 30000
     importance?: number;
-    retries?: number;         // default: 1
+    retries?: number; // default: 1
     userId?: string;
     contextId?: string;
   }): Promise<A2AResponse>;
-  
+
   // Broadcast (one-to-many)
   broadcast(params: {
     from: string;
@@ -718,7 +749,7 @@ interface A2AHelper {
     contextId?: string;
     metadata?: any;
   }): Promise<A2ABroadcastResult>;
-  
+
   // Get conversation (rich filtering)
   getConversation(
     agent1: string,
@@ -731,8 +762,8 @@ interface A2AHelper {
       userId?: string;
       limit?: number;
       offset?: number;
-      format?: 'chronological';
-    }
+      format?: "chronological";
+    },
   ): Promise<A2AConversation>;
 }
 
@@ -746,24 +777,24 @@ interface A2AHelper {
 ```typescript
 // Simple one-way message
 await cortex.a2a.send({
-  from: 'sales-agent',
-  to: 'support-agent',
-  message: 'Customer is asking about enterprise pricing',
-  importance: 70
+  from: "sales-agent",
+  to: "support-agent",
+  message: "Customer is asking about enterprise pricing",
+  importance: 70,
 });
 
 // Sender sees:
-const sent = await cortex.memory.search('sales-agent', '*', {
-  source: { type: 'a2a' },
-  metadata: { direction: 'outbound', toAgent: 'support-agent' },
-  limit: 10
+const sent = await cortex.memory.search("sales-agent", "*", {
+  source: { type: "a2a" },
+  metadata: { direction: "outbound", toAgent: "support-agent" },
+  limit: 10,
 });
 
 // Receiver sees:
-const inbox = await cortex.memory.search('support-agent', '*', {
-  source: { type: 'a2a' },
-  metadata: { direction: 'inbound', fromAgent: 'sales-agent' },
-  limit: 10
+const inbox = await cortex.memory.search("support-agent", "*", {
+  source: { type: "a2a" },
+  metadata: { direction: "inbound", fromAgent: "sales-agent" },
+  limit: 10,
 });
 ```
 
@@ -776,15 +807,15 @@ async function askAboutBudget(fromAgent: string, toAgent: string) {
     const response = await cortex.a2a.request({
       from: fromAgent,
       to: toAgent,
-      message: 'What is your Q4 budget allocation?',
+      message: "What is your Q4 budget allocation?",
       timeout: 30000,
       importance: 85,
-      retries: 2  // Will retry twice if timeout
+      retries: 2, // Will retry twice if timeout
     });
-    
+
     console.log(`Response: ${response.response}`);
     console.log(`Response time: ${response.responseTime}ms`);
-    
+
     return response.response;
   } catch (error) {
     if (error instanceof A2ATimeoutError) {
@@ -799,19 +830,19 @@ async function askAboutBudget(fromAgent: string, toAgent: string) {
 // The receiving agent responds like this:
 async function handleIncomingRequests(agentId: string) {
   // Get pending requests (using memory filters!)
-  const requests = await cortex.memory.search(agentId, '*', {
-    source: { type: 'a2a' },
-    metadata: { 
-      messageType: 'request',
+  const requests = await cortex.memory.search(agentId, "*", {
+    source: { type: "a2a" },
+    metadata: {
+      messageType: "request",
       requiresResponse: true,
-      responded: { $ne: true }  // Not yet responded
-    }
+      responded: { $ne: true }, // Not yet responded
+    },
   });
-  
+
   for (const request of requests) {
     // Process and respond
     const response = await processRequest(request.content);
-    
+
     // Send response (links back to request)
     await cortex.a2a.send({
       from: agentId,
@@ -819,18 +850,18 @@ async function handleIncomingRequests(agentId: string) {
       message: response,
       importance: request.metadata.importance,
       metadata: {
-        messageType: 'response',
-        inReplyTo: request.metadata.messageId
-      }
+        messageType: "response",
+        inReplyTo: request.metadata.messageId,
+      },
     });
-    
+
     // Mark request as responded (update original memory)
     await cortex.memory.update(agentId, request.id, {
       metadata: {
         ...request.metadata,
         responded: true,
-        respondedAt: new Date()
-      }
+        respondedAt: new Date(),
+      },
     });
   }
 }
@@ -841,27 +872,27 @@ async function handleIncomingRequests(agentId: string) {
 ```typescript
 // Notify entire team
 const result = await cortex.a2a.broadcast({
-  from: 'manager-agent',
-  to: ['dev-agent-1', 'dev-agent-2', 'qa-agent', 'designer-agent'],
-  message: 'Sprint review meeting Friday at 2 PM',
+  from: "manager-agent",
+  to: ["dev-agent-1", "dev-agent-2", "qa-agent", "designer-agent"],
+  message: "Sprint review meeting Friday at 2 PM",
   importance: 70,
-  contextId: 'ctx-sprint-23',
+  contextId: "ctx-sprint-23",
   metadata: {
-    tags: ['meeting', 'sprint-review', 'team'],
-    meetingId: 'meeting-456'
-  }
+    tags: ["meeting", "sprint-review", "team"],
+    meetingId: "meeting-456",
+  },
 });
 
 console.log(`Broadcast sent to ${result.recipients.length} agents`);
 console.log(`Created ${result.memoriesCreated} memories`);
 
 // Each recipient can query their messages
-const myMessages = await cortex.memory.search('dev-agent-1', '*', {
-  source: { type: 'a2a' },
-  metadata: { 
+const myMessages = await cortex.memory.search("dev-agent-1", "*", {
+  source: { type: "a2a" },
+  metadata: {
     broadcast: true,
-    fromAgent: 'manager-agent'
-  }
+    fromAgent: "manager-agent",
+  },
 });
 ```
 
@@ -869,38 +900,31 @@ const myMessages = await cortex.memory.search('dev-agent-1', '*', {
 
 ```typescript
 // Get chronological conversation between two agents
-const convo = await cortex.a2a.getConversation(
-  'finance-agent',
-  'hr-agent',
-  {
-    since: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),  // Last 30 days
-    minImportance: 50,  // Skip low-importance messages
-    tags: ['budget'],  // Only budget-related
-    limit: 100
-  }
-);
+const convo = await cortex.a2a.getConversation("finance-agent", "hr-agent", {
+  since: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Last 30 days
+  minImportance: 50, // Skip low-importance messages
+  tags: ["budget"], // Only budget-related
+  limit: 100,
+});
 
 // Display as chat thread
-convo.messages.forEach(msg => {
+convo.messages.forEach((msg) => {
   console.log(`[${formatTime(msg.timestamp)}] ${msg.from} → ${msg.to}`);
   console.log(`  ${msg.message}`);
   console.log(`  Importance: ${msg.importance}/100`);
 });
 
 // Or use standard memory search for more control
-const customQuery = await cortex.memory.search('finance-agent', '*', {
-  source: { type: 'a2a' },
-  metadata: { 
-    $or: [
-      { toAgent: 'hr-agent' },
-      { fromAgent: 'hr-agent' }
-    ]
+const customQuery = await cortex.memory.search("finance-agent", "*", {
+  source: { type: "a2a" },
+  metadata: {
+    $or: [{ toAgent: "hr-agent" }, { fromAgent: "hr-agent" }],
   },
-  tags: ['budget'],
+  tags: ["budget"],
   minImportance: 50,
   createdAfter: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-  sortBy: 'createdAt',
-  sortOrder: 'asc'  // Chronological
+  sortBy: "createdAt",
+  sortOrder: "asc", // Chronological
 });
 ```
 
@@ -912,20 +936,20 @@ Since A2A uses agent memory, use standard memory queries:
 
 ```typescript
 // All A2A for an agent
-const allA2A = await cortex.memory.search('agent-1', '*', {
-  source: { type: 'a2a' }
+const allA2A = await cortex.memory.search("agent-1", "*", {
+  source: { type: "a2a" },
 });
 
 // Sent messages only
-const sent = await cortex.memory.search('agent-1', '*', {
-  source: { type: 'a2a' },
-  metadata: { direction: 'outbound' }
+const sent = await cortex.memory.search("agent-1", "*", {
+  source: { type: "a2a" },
+  metadata: { direction: "outbound" },
 });
 
 // Received messages only
-const received = await cortex.memory.search('agent-1', '*', {
-  source: { type: 'a2a' },
-  metadata: { direction: 'inbound' }
+const received = await cortex.memory.search("agent-1", "*", {
+  source: { type: "a2a" },
+  metadata: { direction: "inbound" },
 });
 ```
 
@@ -933,23 +957,23 @@ const received = await cortex.memory.search('agent-1', '*', {
 
 ```typescript
 // All communication with HR agent
-const withHR = await cortex.memory.search('finance-agent', '*', {
-  source: { type: 'a2a' },
+const withHR = await cortex.memory.search("finance-agent", "*", {
+  source: { type: "a2a" },
   metadata: {
     $or: [
-      { toAgent: 'hr-agent' },      // Sent to HR
-      { fromAgent: 'hr-agent' }      // Received from HR
-    ]
-  }
+      { toAgent: "hr-agent" }, // Sent to HR
+      { fromAgent: "hr-agent" }, // Received from HR
+    ],
+  },
 });
 
 // Sent to HR only
-const sentToHR = await cortex.memory.search('finance-agent', '*', {
-  source: { type: 'a2a' },
-  metadata: { 
-    direction: 'outbound',
-    toAgent: 'hr-agent'
-  }
+const sentToHR = await cortex.memory.search("finance-agent", "*", {
+  source: { type: "a2a" },
+  metadata: {
+    direction: "outbound",
+    toAgent: "hr-agent",
+  },
 });
 ```
 
@@ -957,16 +981,16 @@ const sentToHR = await cortex.memory.search('finance-agent', '*', {
 
 ```typescript
 // All budget-related A2A messages
-const budgetComms = await cortex.memory.search('finance-agent', '*', {
-  source: { type: 'a2a' },
-  tags: ['budget']
+const budgetComms = await cortex.memory.search("finance-agent", "*", {
+  source: { type: "a2a" },
+  tags: ["budget"],
 });
 
 // Urgent A2A messages
-const urgent = await cortex.memory.search('agent-1', '*', {
-  source: { type: 'a2a' },
+const urgent = await cortex.memory.search("agent-1", "*", {
+  source: { type: "a2a" },
   importance: { $gte: 85 },
-  metadata: { priority: 'urgent' }
+  metadata: { priority: "urgent" },
 });
 ```
 
@@ -974,15 +998,15 @@ const urgent = await cortex.memory.search('agent-1', '*', {
 
 ```typescript
 // Pending requests needing response
-const pending = await cortex.memory.search('hr-agent', '*', {
-  source: { type: 'a2a' },
-  metadata: { 
-    messageType: 'request',
+const pending = await cortex.memory.search("hr-agent", "*", {
+  source: { type: "a2a" },
+  metadata: {
+    messageType: "request",
     requiresResponse: true,
-    responded: { $ne: true }  // Not responded yet
+    responded: { $ne: true }, // Not responded yet
   },
-  sortBy: 'createdAt',
-  sortOrder: 'asc'  // Oldest first
+  sortBy: "createdAt",
+  sortOrder: "asc", // Oldest first
 });
 
 console.log(`${pending.length} pending requests`);
@@ -994,40 +1018,41 @@ console.log(`${pending.length} pending requests`);
 
 ```typescript
 // User requests refund (stored in ACID)
-const userMsg = await cortex.conversations.addMessage('conv-456', {
-  role: 'user',
-  text: 'I need a refund for order #789',
-  userId: 'customer-abc'
+const userMsg = await cortex.conversations.addMessage("conv-456", {
+  role: "user",
+  text: "I need a refund for order #789",
+  userId: "customer-abc",
 });
 
 // Create context for workflow
 const context = await cortex.contexts.create({
-  purpose: 'Process refund for order #789',
-  agentId: 'supervisor-agent',
-  userId: 'customer-abc',
+  purpose: "Process refund for order #789",
+  agentId: "supervisor-agent",
+  userId: "customer-abc",
   conversationRef: {
-    conversationId: 'conv-456',
-    messageIds: [userMsg.id]  // Links to ACID source
+    conversationId: "conv-456",
+    messageIds: [userMsg.id], // Links to ACID source
   },
-  data: { importance: 85, tags: ['refund', 'urgent'] }
+  data: { importance: 85, tags: ["refund", "urgent"] },
 });
 
 // Supervisor delegates via A2A (with full traceability)
 const result = await cortex.a2a.send({
-  from: 'supervisor-agent',
-  to: 'specialist-agent',
-  message: 'Please handle the customer refund for ticket #456',
+  from: "supervisor-agent",
+  to: "specialist-agent",
+  message: "Please handle the customer refund for ticket #456",
   importance: 85,
-  userId: 'customer-abc',  // User this is about
-  contextId: context.id,  // Links to workflow
-  conversationRef: {  // Links back to original user message!
-    conversationId: 'conv-456',
-    messageIds: [userMsg.id]
+  userId: "customer-abc", // User this is about
+  contextId: context.id, // Links to workflow
+  conversationRef: {
+    // Links back to original user message!
+    conversationId: "conv-456",
+    messageIds: [userMsg.id],
   },
   metadata: {
-    tags: ['delegation', 'refund', 'urgent'],
-    ticketId: 'TICKET-456'
-  }
+    tags: ["delegation", "refund", "urgent"],
+    ticketId: "TICKET-456",
+  },
 });
 
 // Now specialist has complete traceability:
@@ -1036,16 +1061,20 @@ const ctx = await cortex.contexts.get(context.id);
 
 // 2. Can see original user conversation from ACID
 if (ctx.conversationRef) {
-  const conversation = await cortex.conversations.get(ctx.conversationRef.conversationId);
-  const originalRequest = conversation.messages.find(m => m.id === userMsg.id);
-  console.log('Original user request:', originalRequest.text);
+  const conversation = await cortex.conversations.get(
+    ctx.conversationRef.conversationId,
+  );
+  const originalRequest = conversation.messages.find(
+    (m) => m.id === userMsg.id,
+  );
+  console.log("Original user request:", originalRequest.text);
 }
 
 // 3. Can query the delegation in their memory
-const delegations = await cortex.memory.search('specialist-agent', '*', {
-  source: { type: 'a2a' },
-  tags: ['delegation'],
-  metadata: { contextId: context.id }
+const delegations = await cortex.memory.search("specialist-agent", "*", {
+  source: { type: "a2a" },
+  tags: ["delegation"],
+  metadata: { contextId: context.id },
 });
 ```
 
@@ -1053,27 +1082,27 @@ const delegations = await cortex.memory.search('specialist-agent', '*', {
 
 ```typescript
 // Manager announces to team
-const team = ['agent-1', 'agent-2', 'agent-3'];
+const team = ["agent-1", "agent-2", "agent-3"];
 
 await cortex.a2a.broadcast({
-  from: 'manager-agent',
+  from: "manager-agent",
   to: team,
-  message: 'New policy: All refunds over $1000 require manager approval',
+  message: "New policy: All refunds over $1000 require manager approval",
   importance: 90,
   metadata: {
-    tags: ['policy', 'announcement', 'important'],
-    policyId: 'POL-789'
-  }
+    tags: ["policy", "announcement", "important"],
+    policyId: "POL-789",
+  },
 });
 
 // Each agent queries their announcements
-const announcements = await cortex.memory.search('agent-1', '*', {
-  source: { type: 'a2a' },
+const announcements = await cortex.memory.search("agent-1", "*", {
+  source: { type: "a2a" },
   metadata: { broadcast: true },
-  tags: ['announcement'],
-  sortBy: 'createdAt',
-  sortOrder: 'desc',
-  limit: 10
+  tags: ["announcement"],
+  sortBy: "createdAt",
+  sortOrder: "desc",
+  limit: 10,
 });
 ```
 
@@ -1085,50 +1114,54 @@ async function getCollaborationAudit(
   agent1: string,
   agent2: string,
   startDate: Date,
-  endDate: Date
+  endDate: Date,
 ) {
   // Get A2A conversation (from Vector Memory)
   const conversation = await cortex.a2a.getConversation(agent1, agent2, {
     since: startDate,
     until: endDate,
-    minImportance: 70  // Only important communications
+    minImportance: 70, // Only important communications
   });
-  
+
   // Optionally enrich with ACID conversation sources (if any A2A linked to user convos)
   const enriched = await Promise.all(
     conversation.messages.map(async (msg) => {
       const memory = await cortex.memory.get(agent1, msg.memoryId);
-      
+
       if (memory.conversationRef) {
         // This A2A was handling a user conversation
-        const userConvo = await cortex.conversations.get(memory.conversationRef.conversationId);
+        const userConvo = await cortex.conversations.get(
+          memory.conversationRef.conversationId,
+        );
         return {
           ...msg,
           originatedFromUser: true,
-          userConversation: userConvo.conversationId
+          userConversation: userConvo.conversationId,
         };
       }
-      
+
       return msg;
-    })
+    }),
   );
-  
+
   // Format for audit report
   return {
     agents: [agent1, agent2],
     period: { start: startDate, end: endDate },
     totalCommunications: conversation.messageCount,
-    criticalCommunications: conversation.messages.filter(m => m.importance >= 90).length,
-    userTriggered: enriched.filter(m => m.originatedFromUser).length,
-    topics: [...new Set(conversation.messages.flatMap(m => m.tags))],
-    timeline: enriched.map(m => ({
+    criticalCommunications: conversation.messages.filter(
+      (m) => m.importance >= 90,
+    ).length,
+    userTriggered: enriched.filter((m) => m.originatedFromUser).length,
+    topics: [...new Set(conversation.messages.flatMap((m) => m.tags))],
+    timeline: enriched.map((m) => ({
       timestamp: m.timestamp,
       from: m.from,
       to: m.to,
       summary: m.message.substring(0, 100),
       importance: m.importance,
-      userTriggered: m.originatedFromUser || false
-    }))
+      userTriggered: m.originatedFromUser || false,
+    })),
   };
 }
 ```
@@ -1139,36 +1172,38 @@ Sometimes you need more control - use memory API directly with full hybrid archi
 
 ```typescript
 // Complex semantic query across A2A messages
-const complexQuery = await cortex.memory.search('agent-1', 'budget approval', {
-  embedding: await embed('budget approval'),  // Semantic search
-  source: { type: 'a2a' },  // Only A2A
-  importance: { $gte: 80, $lte: 95 },  // Specific range
-  createdAfter: new Date('2025-10-01'),
-  accessCount: { $gte: 5 },  // Frequently referenced
-  version: { $gte: 2 },  // Has been updated
+const complexQuery = await cortex.memory.search("agent-1", "budget approval", {
+  embedding: await embed("budget approval"), // Semantic search
+  source: { type: "a2a" }, // Only A2A
+  importance: { $gte: 80, $lte: 95 }, // Specific range
+  createdAfter: new Date("2025-10-01"),
+  accessCount: { $gte: 5 }, // Frequently referenced
+  version: { $gte: 2 }, // Has been updated
   metadata: {
-    fromAgent: 'finance-agent',
-    priority: 'urgent',
+    fromAgent: "finance-agent",
+    priority: "urgent",
     responded: true,
-    contextId: 'ctx-budget-456'  // Part of budget workflow
-  }
+    contextId: "ctx-budget-456", // Part of budget workflow
+  },
 });
 
 // For each result, can access linked data
 for (const memory of complexQuery) {
-  console.log('A2A message:', memory.content);
-  console.log('Importance:', memory.metadata.importance);
-  
+  console.log("A2A message:", memory.content);
+  console.log("Importance:", memory.metadata.importance);
+
   // If linked to user conversation, get full ACID context
   if (memory.conversationRef) {
-    const conversation = await cortex.conversations.get(memory.conversationRef.conversationId);
-    console.log('Original user request:', conversation.messages[0].text);
+    const conversation = await cortex.conversations.get(
+      memory.conversationRef.conversationId,
+    );
+    console.log("Original user request:", conversation.messages[0].text);
   }
-  
+
   // If linked to workflow, get context
   if (memory.metadata.contextId) {
     const context = await cortex.contexts.get(memory.metadata.contextId);
-    console.log('Workflow purpose:', context.purpose);
+    console.log("Workflow purpose:", context.purpose);
   }
 }
 
@@ -1201,20 +1236,20 @@ const complex = await cortex.memory.search(agentId, query, {
 ```typescript
 // A2A importance guidelines
 const A2A_IMPORTANCE = {
-  CRITICAL_DECISION: 95,      // Major decisions, approvals
-  URGENT_REQUEST: 85,         // Time-sensitive requests
-  IMPORTANT_INFO: 75,         // Key information sharing
-  STANDARD_COLLAB: 60,        // Regular collaboration (default)
-  STATUS_UPDATE: 50,          // Routine updates
-  FYI: 40,                    // Nice-to-know information
-  NOTIFICATION: 30            // Low-priority notifications
+  CRITICAL_DECISION: 95, // Major decisions, approvals
+  URGENT_REQUEST: 85, // Time-sensitive requests
+  IMPORTANT_INFO: 75, // Key information sharing
+  STANDARD_COLLAB: 60, // Regular collaboration (default)
+  STATUS_UPDATE: 50, // Routine updates
+  FYI: 40, // Nice-to-know information
+  NOTIFICATION: 30, // Low-priority notifications
 };
 
 await cortex.a2a.send({
-  from: 'agent-1',
-  to: 'agent-2',
-  message: 'FYI: Report generated',
-  importance: A2A_IMPORTANCE.FYI
+  from: "agent-1",
+  to: "agent-2",
+  message: "FYI: Report generated",
+  importance: A2A_IMPORTANCE.FYI,
 });
 ```
 
@@ -1222,27 +1257,27 @@ await cortex.a2a.send({
 
 ```typescript
 await cortex.a2a.send({
-  from: 'agent-1',
-  to: 'agent-2',
-  message: 'Approved budget increase',
+  from: "agent-1",
+  to: "agent-2",
+  message: "Approved budget increase",
   importance: 90,
   metadata: {
     tags: [
-      'a2a',              // Already added automatically
-      'approval',         // Action type
-      'budget',           // Topic
-      'finance',          // Department
-      'urgent'            // Priority indicator
+      "a2a", // Already added automatically
+      "approval", // Action type
+      "budget", // Topic
+      "finance", // Department
+      "urgent", // Priority indicator
     ],
-    approvalType: 'budget',
-    approvedAmount: 50000
-  }
+    approvalType: "budget",
+    approvedAmount: 50000,
+  },
 });
 
 // Query by tags (using memory API)
-const approvals = await cortex.memory.search('agent-1', '*', {
-  source: { type: 'a2a' },
-  tags: ['approval', 'budget']
+const approvals = await cortex.memory.search("agent-1", "*", {
+  source: { type: "a2a" },
+  tags: ["approval", "budget"],
 });
 ```
 
@@ -1251,19 +1286,19 @@ const approvals = await cortex.memory.search('agent-1', '*', {
 ```typescript
 // Always link A2A to context when part of larger workflow
 const context = await cortex.contexts.create({
-  purpose: 'Process refund request',
-  agentId: 'supervisor-agent',
-  userId: 'user-123'
+  purpose: "Process refund request",
+  agentId: "supervisor-agent",
+  userId: "user-123",
 });
 
 // Delegate with context
 await cortex.a2a.send({
-  from: 'supervisor-agent',
-  to: 'finance-agent',
-  message: 'Please approve $500 refund',
+  from: "supervisor-agent",
+  to: "finance-agent",
+  message: "Please approve $500 refund",
   importance: 85,
-  userId: 'user-123',
-  contextId: context.id  // Link to workflow
+  userId: "user-123",
+  contextId: context.id, // Link to workflow
 });
 
 // Finance agent can access full context
@@ -1273,6 +1308,7 @@ const ctx = await cortex.contexts.get(context.id);
 ## When to Use Each Approach
 
 ### Use A2A Helpers When:
+
 - ✅ Simple send/receive
 - ✅ Request-response pattern
 - ✅ Broadcasting to multiple agents
@@ -1280,6 +1316,7 @@ const ctx = await cortex.contexts.get(context.id);
 - ✅ You want less code
 
 ### Use Memory API Directly When:
+
 - ✅ Complex queries (semantic search, multiple filters)
 - ✅ Bulk operations (updateMany, deleteMany)
 - ✅ Need full control
@@ -1291,18 +1328,18 @@ const ctx = await cortex.contexts.get(context.id);
 ```typescript
 // Send with helper
 await cortex.a2a.send({
-  from: 'agent-1',
-  to: 'agent-2',
-  message: 'Important update',
-  importance: 85
+  from: "agent-1",
+  to: "agent-2",
+  message: "Important update",
+  importance: 85,
 });
 
 // Query with memory API for complex filters
-const important = await cortex.memory.search('agent-2', 'update', {
-  embedding: await embed('update'),
-  source: { type: 'a2a' },
+const important = await cortex.memory.search("agent-2", "update", {
+  embedding: await embed("update"),
+  source: { type: "a2a" },
   importance: { $gte: 80 },
-  createdAfter: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+  createdAfter: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
 });
 ```
 
@@ -1311,17 +1348,20 @@ const important = await cortex.memory.search('agent-2', 'update', {
 > **Cloud Mode Only**: Enhanced A2A features with Cortex Cloud
 
 ### A2A Analytics Dashboard
+
 - Communication frequency between agent pairs
 - Average response times
 - Bottleneck identification
 - Collaboration graphs
 
 ### Smart Routing
+
 - AI suggests which agent to ask
 - Based on past communication patterns
 - Expertise detection
 
 ### Automated Summarization
+
 - Daily/weekly A2A summaries per agent
 - Topic clustering
 - Action item extraction
@@ -1334,20 +1374,20 @@ const important = await cortex.memory.search('agent-2', 'update', {
 // If requests timeout frequently
 try {
   const response = await cortex.a2a.request({
-    from: 'agent-1',
-    to: 'agent-2',
-    message: 'Complex query',
-    timeout: 60000,  // Increase timeout to 60s
-    retries: 3  // More retries
+    from: "agent-1",
+    to: "agent-2",
+    message: "Complex query",
+    timeout: 60000, // Increase timeout to 60s
+    retries: 3, // More retries
   });
 } catch (error) {
   if (error instanceof A2ATimeoutError) {
     // Fallback to async
     await cortex.a2a.send({
-      from: 'agent-1',
-      to: 'agent-2',
-      message: 'Complex query (respond when ready)',
-      metadata: { async: true }
+      from: "agent-1",
+      to: "agent-2",
+      message: "Complex query (respond when ready)",
+      metadata: { async: true },
     });
   }
 }
@@ -1357,30 +1397,32 @@ try {
 
 ```typescript
 // Search across all A2A messages semantically
-const results = await cortex.memory.search('agent-1', 
-  'did we discuss the budget increase?',
+const results = await cortex.memory.search(
+  "agent-1",
+  "did we discuss the budget increase?",
   {
-    embedding: await embed('budget increase discussion'),
-    source: { type: 'a2a' },
-    limit: 10
-  }
+    embedding: await embed("budget increase discussion"),
+    source: { type: "a2a" },
+    limit: 10,
+  },
 );
 
 // Find messages never responded to
-const unanswered = await cortex.memory.search('agent-1', '*', {
-  source: { type: 'a2a' },
+const unanswered = await cortex.memory.search("agent-1", "*", {
+  source: { type: "a2a" },
   metadata: {
-    messageType: 'request',
+    messageType: "request",
     requiresResponse: true,
-    responded: { $ne: true }
+    responded: { $ne: true },
   },
-  createdBefore: new Date(Date.now() - 24 * 60 * 60 * 1000)  // Over 24h old
+  createdBefore: new Date(Date.now() - 24 * 60 * 60 * 1000), // Over 24h old
 });
 ```
 
 ## Summary
 
 **A2A Communication is a convenience layer that:**
+
 - Reduces code by 60-80% for common patterns
 - Handles bidirectional storage automatically
 - Provides clean, semantic APIs
@@ -1389,6 +1431,7 @@ const unanswered = await cortex.memory.search('agent-1', '*', {
 - Integrates with full Cortex architecture (ACID, Vector, Contexts, Profiles)
 
 **Under the hood:**
+
 - Every A2A message is a vector memory with `source.type = 'a2a'`
 - Uses all memory features: versioning, universal filters, search, ACID refs, etc.
 - Can be queried using standard `cortex.memory` API
@@ -1398,6 +1441,7 @@ const unanswered = await cortex.memory.search('agent-1', '*', {
 - Helpers just add convenience, not limitations
 
 **Complete Architecture Integration:**
+
 ```
 ┌────────────────────────────────────────────────────┐
 │               ACID Conversations                    │
@@ -1428,6 +1472,7 @@ const unanswered = await cortex.memory.search('agent-1', '*', {
 ```
 
 **The Key Insight:**
+
 - A2A conversations ARE stored in ACID (by default)
 - Just like user conversations, but type='agent-agent'
 - Vector memories reference ACID via conversationRef

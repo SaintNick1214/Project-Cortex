@@ -161,6 +161,7 @@ Additional resources:
 ### Code Examples
 
 All code examples are:
+
 - **Copy-paste ready** - Run them directly
 - **TypeScript** - Fully typed
 - **Commented** - Explain the "why"
@@ -225,4 +226,3 @@ The Cortex code is licensed under [Apache License 2.0](../LICENSE.md).
 ---
 
 Ready to get started? Head to [Introduction](./01-getting-started/01-introduction.md) →
-

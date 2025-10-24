@@ -27,18 +27,18 @@ In Cortex, a **memory** is a piece of information that an agent stores for later
 
 ```typescript
 interface MemoryEntry {
-  id: string;                    // Unique identifier
-  agentId: string;               // Which agent owns this
-  content: string;               // The actual information
-  embedding?: number[];          // Vector for semantic search
+  id: string; // Unique identifier
+  agentId: string; // Which agent owns this
+  content: string; // The actual information
+  embedding?: number[]; // Vector for semantic search
   metadata: {
-    importance: 'low' | 'medium' | 'high';
-    tags: string[];              // Categorization
-    [key: string]: any;          // Custom metadata
+    importance: "low" | "medium" | "high";
+    tags: string[]; // Categorization
+    [key: string]: any; // Custom metadata
   };
-  createdAt: Date;              // When stored
-  lastAccessed?: Date;          // Last retrieval
-  accessCount: number;          // Usage tracking
+  createdAt: Date; // When stored
+  lastAccessed?: Date; // Last retrieval
+  accessCount: number; // Usage tracking
 }
 ```
 
@@ -46,62 +46,66 @@ interface MemoryEntry {
 
 **1. Conversation Memories**
 Information from user interactions:
+
 ```typescript
 // Use Layer 3 remember() for conversations (recommended)
 await cortex.memory.remember({
-  agentId: 'agent-1',
-  conversationId: 'conv-123',
-  userMessage: 'I work in San Francisco',
+  agentId: "agent-1",
+  conversationId: "conv-123",
+  userMessage: "I work in San Francisco",
   agentResponse: "That's great to know!",
-  userId: 'user-1',
-  userName: 'User',
-  importance: 60,  // 0-100 scale
-  tags: ['location', 'personal', 'user-info']
+  userId: "user-1",
+  userName: "User",
+  importance: 60, // 0-100 scale
+  tags: ["location", "personal", "user-info"],
 });
 ```
 
 **2. Knowledge Memories**
 Facts and information the agent learns:
+
 ```typescript
 // System-generated knowledge (Layer 2 - explicit Vector)
-await cortex.vector.store('agent-1', {
-  content: 'Product X costs $49.99 with a 20% discount for annual billing',
-  contentType: 'raw',
-  embedding: await embed('Product X pricing'),
-  source: { type: 'system', timestamp: new Date() },
+await cortex.vector.store("agent-1", {
+  content: "Product X costs $49.99 with a 20% discount for annual billing",
+  contentType: "raw",
+  embedding: await embed("Product X pricing"),
+  source: { type: "system", timestamp: new Date() },
   metadata: {
-    importance: 85,  // 0-100 scale (70-89 = high)
-    tags: ['pricing', 'product-x', 'business']
-  }
+    importance: 85, // 0-100 scale (70-89 = high)
+    tags: ["pricing", "product-x", "business"],
+  },
 });
 ```
 
 **3. Task Memories**
 What the agent has done:
+
 ```typescript
 // Tool result (Layer 2 - explicit Vector)
-await cortex.vector.store('agent-1', {
-  content: 'Sent password reset email to user@example.com at 2025-10-23 10:30',
-  contentType: 'raw',
-  embedding: await embed('password reset action'),
-  source: { type: 'tool', timestamp: new Date() },
+await cortex.vector.store("agent-1", {
+  content: "Sent password reset email to user@example.com at 2025-10-23 10:30",
+  contentType: "raw",
+  embedding: await embed("password reset action"),
+  source: { type: "tool", timestamp: new Date() },
   metadata: {
-    importance: 90,  // 0-100 scale (90-100 = critical)
-    tags: ['action', 'security', 'completed']
-  }
+    importance: 90, // 0-100 scale (90-100 = critical)
+    tags: ["action", "security", "completed"],
+  },
 });
 ```
 
 **4. Agent-to-Agent (A2A) Memories**
 Communications between agents:
+
 ```typescript
 // Use A2A helper (Layer 3 - handles ACID + Vector)
 await cortex.a2a.send({
-  from: 'finance-agent',
-  to: 'ceo-agent',
-  message: 'Received approval for $50k budget increase',
-  importance: 85,  // 0-100 scale (70-89 = high)
-  metadata: { tags: ['approval', 'budget'] }
+  from: "finance-agent",
+  to: "ceo-agent",
+  message: "Received approval for $50k budget increase",
+  importance: 85, // 0-100 scale (70-89 = high)
+  metadata: { tags: ["approval", "budget"] },
 });
 // Stores in A2A conversation (ACID) + both agents' Vector memories
 ```
@@ -129,23 +133,23 @@ await cortex.a2a.send({
 ```typescript
 // Store password (Layer 3 for conversation)
 const result = await cortex.memory.remember({
-  agentId: 'agent-1',
-  conversationId: 'conv-456',
-  userMessage: 'The password is Blue',
+  agentId: "agent-1",
+  conversationId: "conv-456",
+  userMessage: "The password is Blue",
   agentResponse: "I've saved that password",
-  userId: 'user-1',
-  userName: 'User',
-  importance: 100  // Critical
+  userId: "user-1",
+  userName: "User",
+  importance: 100, // Critical
 });
 const memoryId = result.memories[0].id;
 
 // Password changes (Layer 3 update - creates version 2)
-await cortex.memory.update('agent-1', memoryId, {
-  content: 'The password is Red'
+await cortex.memory.update("agent-1", memoryId, {
+  content: "The password is Red",
 });
 
 // Both versions are preserved!
-const memory = await cortex.memory.get('agent-1', memoryId);
+const memory = await cortex.memory.get("agent-1", memoryId);
 console.log(memory.content); // "The password is Red" (current)
 console.log(memory.version); // 2
 
@@ -154,6 +158,7 @@ console.log(memory.previousVersions[0]);
 ```
 
 **Why this is revolutionary:**
+
 - ✅ No data loss when information changes
 - ✅ Temporal conflict resolution
 - ✅ Complete audit trail
@@ -162,15 +167,16 @@ console.log(memory.previousVersions[0]);
 - ✅ Configurable retention (default: 10 versions)
 
 **Configuration:**
+
 ```typescript
 // Default: Keep last 10 versions
 const cortex = new Cortex({
-  defaultVersionRetention: 10
+  defaultVersionRetention: 10,
 });
 
 // Per-agent override
-await cortex.agents.configure('audit-agent', {
-  memoryVersionRetention: -1  // Keep all versions forever
+await cortex.agents.configure("audit-agent", {
+  memoryVersionRetention: -1, // Keep all versions forever
 });
 ```
 
@@ -179,59 +185,70 @@ await cortex.agents.configure('audit-agent', {
 Cortex uses a granular 0-100 importance scale for precise prioritization:
 
 **90-100** - Critical
+
 - Passwords, credentials (100)
 - Hard deadlines (95)
 - Security alerts (95)
 - Legal/compliance data (90)
 
 **70-89** - High
+
 - User requirements (80)
 - Important decisions (85)
 - Key preferences (75)
 - Task specifications (80)
 
 **40-69** - Medium (default: 50)
+
 - General preferences (60)
 - Conversation context (50)
 - Background information (45)
 - Routine data (50)
 
 **10-39** - Low
+
 - Casual observations (30)
 - Minor details (20)
 - Exploratory conversation (25)
 
 **0-9** - Trivial
+
 - Debug information (5)
 - Temporary data (0)
 
 ```typescript
 // Automatic scoring
-const importance = determineImportance(content);  // Returns 0-100
+const importance = determineImportance(content); // Returns 0-100
 
 // Or set explicitly (Layer 2 for system memories)
 await cortex.vector.store(agentId, {
-  content: 'Security code is 1234',
-  contentType: 'raw',
-  source: { type: 'system', timestamp: new Date() },
-  metadata: { importance: 100 }  // Critical
+  content: "Security code is 1234",
+  contentType: "raw",
+  source: { type: "system", timestamp: new Date() },
+  metadata: { importance: 100 }, // Critical
 });
 
 await cortex.vector.store(agentId, {
-  content: 'User likes coffee',
-  contentType: 'raw',
-  source: { type: 'system', timestamp: new Date() },
-  metadata: { importance: 40 }  // Medium-low
+  content: "User likes coffee",
+  contentType: "raw",
+  source: { type: "system", timestamp: new Date() },
+  metadata: { importance: 40 }, // Medium-low
 });
 
 // For conversations, use Layer 3 remember() with importance
 await cortex.memory.remember({
-  agentId, conversationId, userMessage, agentResponse, userId, userName,
-  importance: 100  // Set importance for the exchange
+  agentId,
+  conversationId,
+  userMessage,
+  agentResponse,
+  userId,
+  userName,
+  importance: 100, // Set importance for the exchange
 });
 ```
 
 **Benefits of 0-100 scale:**
+
 - Fine-grained control (not just 3 buckets)
 - Gradual importance adjustments
 - Better filtering and ranking
@@ -261,23 +278,25 @@ Perfect for getting started:
 ```typescript
 // Just use string identifiers (Layer 3 - works across all layers)
 await cortex.memory.remember({
-  agentId: 'customer-support-bot',
-  conversationId: 'conv-123',
-  userMessage: 'I prefer email updates',
+  agentId: "customer-support-bot",
+  conversationId: "conv-123",
+  userMessage: "I prefer email updates",
   agentResponse: "I'll remember that",
-  userId: 'user-1',
-  userName: 'User'
+  userId: "user-1",
+  userName: "User",
 });
 
-await cortex.memory.search('customer-support-bot', 'user preferences');
+await cortex.memory.search("customer-support-bot", "user preferences");
 ```
 
 **Pros:**
+
 - Zero ceremony
 - Works immediately
 - Maximum flexibility
 
 **Cons:**
+
 - No built-in analytics
 - No agent discovery
 - Manual coordination
@@ -289,33 +308,35 @@ Add when you need analytics and coordination:
 ```typescript
 // Register an agent with metadata
 await cortex.agents.register({
-  id: 'customer-support-bot',
-  name: 'Customer Support Bot',
-  description: 'Handles customer inquiries and issues',
+  id: "customer-support-bot",
+  name: "Customer Support Bot",
+  description: "Handles customer inquiries and issues",
   metadata: {
-    team: 'support',
-    capabilities: ['empathy', 'problem-solving', 'escalation'],
-    version: '2.1.0',
-    owner: 'support-team@company.com'
-  }
+    team: "support",
+    capabilities: ["empathy", "problem-solving", "escalation"],
+    version: "2.1.0",
+    owner: "support-team@company.com",
+  },
 });
 
 // Now you get enhanced analytics
-const stats = await cortex.analytics.getAgentStats('customer-support-bot');
+const stats = await cortex.analytics.getAgentStats("customer-support-bot");
 // { memoriesStored: 1543, avgAccessTime: '23ms', ... }
 
 // And agent discovery
-const supportAgents = await cortex.agents.search({ 
-  team: 'support' 
+const supportAgents = await cortex.agents.search({
+  team: "support",
 });
 ```
 
 **Pros:**
+
 - Rich analytics
 - Agent discovery
 - Better observability
 
 **When to use:**
+
 - Multiple agents
 - Need analytics
 - Team collaboration
@@ -326,23 +347,24 @@ Each agent's memories are **completely isolated**:
 
 ```typescript
 // Agent 1 stores a memory (Layer 2 - system memory)
-await cortex.vector.store('agent-1', {
-  content: 'Secret information for agent-1',
-  contentType: 'raw',
-  source: { type: 'system', timestamp: new Date() },
-  metadata: { importance: 90 }
+await cortex.vector.store("agent-1", {
+  content: "Secret information for agent-1",
+  contentType: "raw",
+  source: { type: "system", timestamp: new Date() },
+  metadata: { importance: 90 },
 });
 
 // Agent 2 cannot see it (Layer 3 search - searches agent-2's Vector memories)
-const memories = await cortex.memory.search('agent-2', 'secret');
+const memories = await cortex.memory.search("agent-2", "secret");
 // Returns: [] (empty - different agent)
 
 // Only agent-1 can access (Layer 3 search)
-const memories = await cortex.memory.search('agent-1', 'secret');
+const memories = await cortex.memory.search("agent-1", "secret");
 // Returns: [{ content: 'Secret information for agent-1', ... }]
 ```
 
 This ensures:
+
 - Data privacy
 - No accidental leakage
 - Clear boundaries
@@ -373,20 +395,27 @@ const embedding = await yourEmbeddingProvider.embed(text);
 // Cortex just stores and searches (Layer 2 for system memories)
 await cortex.vector.store(agentId, {
   content: text,
-  contentType: 'raw',
-  embedding: embedding,  // Your vectors
-  source: { type: 'system', timestamp: new Date() },
-  metadata: { importance: 50 }
+  contentType: "raw",
+  embedding: embedding, // Your vectors
+  source: { type: "system", timestamp: new Date() },
+  metadata: { importance: 50 },
 });
 
 // Or use Layer 3 for conversations with your embeddings
 await cortex.memory.remember({
-  agentId, conversationId, userMessage, agentResponse, userId, userName,
-  generateEmbedding: async (content) => await yourEmbeddingProvider.embed(content)
+  agentId,
+  conversationId,
+  userMessage,
+  agentResponse,
+  userId,
+  userName,
+  generateEmbedding: async (content) =>
+    await yourEmbeddingProvider.embed(content),
 });
 ```
 
 **Why this design?**
+
 - ✅ Use any embedding model
 - ✅ Optimize for your use case
 - ✅ Upgrade models independently
@@ -396,44 +425,47 @@ await cortex.memory.remember({
 ### Popular Embedding Providers
 
 **OpenAI**
+
 ```typescript
-import OpenAI from 'openai';
+import OpenAI from "openai";
 const openai = new OpenAI();
 
 const result = await openai.embeddings.create({
-  model: 'text-embedding-3-large',  // 3072 dimensions
-  input: text
+  model: "text-embedding-3-large", // 3072 dimensions
+  input: text,
 });
 
 const embedding = result.data[0].embedding;
 ```
 
 **Cohere**
+
 ```typescript
-import { CohereClient } from 'cohere-ai';
+import { CohereClient } from "cohere-ai";
 const cohere = new CohereClient();
 
 const result = await cohere.embed({
   texts: [text],
-  model: 'embed-english-v3.0',  // 1024 dimensions
-  inputType: 'search_document'
+  model: "embed-english-v3.0", // 1024 dimensions
+  inputType: "search_document",
 });
 
 const embedding = result.embeddings[0];
 ```
 
 **Local Models (Transformers.js)**
+
 ```typescript
-import { pipeline } from '@xenova/transformers';
+import { pipeline } from "@xenova/transformers";
 
 const extractor = await pipeline(
-  'feature-extraction',
-  'Xenova/all-MiniLM-L6-v2'  // 384 dimensions
+  "feature-extraction",
+  "Xenova/all-MiniLM-L6-v2", // 384 dimensions
 );
 
 const output = await extractor(text, {
-  pooling: 'mean',
-  normalize: true
+  pooling: "mean",
+  normalize: true,
 });
 
 const embedding = Array.from(output.data);
@@ -447,38 +479,38 @@ Cortex supports **any** vector dimension:
 // Small and fast (768 dimensions) - Layer 2 for system memories
 await cortex.vector.store(agentId, {
   content: text,
-  contentType: 'raw',
-  embedding: smallEmbedding,  // [768 numbers]
-  source: { type: 'system', timestamp: new Date() },
-  metadata: { importance: 50, dimension: 768 }
+  contentType: "raw",
+  embedding: smallEmbedding, // [768 numbers]
+  source: { type: "system", timestamp: new Date() },
+  metadata: { importance: 50, dimension: 768 },
 });
 
 // Balanced (1536 dimensions) - OpenAI default
 await cortex.vector.store(agentId, {
   content: text,
-  contentType: 'raw',
-  embedding: standardEmbedding,  // [1536 numbers]
-  source: { type: 'system', timestamp: new Date() },
-  metadata: { importance: 50, dimension: 1536 }
+  contentType: "raw",
+  embedding: standardEmbedding, // [1536 numbers]
+  source: { type: "system", timestamp: new Date() },
+  metadata: { importance: 50, dimension: 1536 },
 });
 
 // High accuracy (3072 dimensions)
 await cortex.vector.store(agentId, {
   content: text,
-  contentType: 'raw',
-  embedding: largeEmbedding,  // [3072 numbers]
-  source: { type: 'system', timestamp: new Date() },
-  metadata: { importance: 50, dimension: 3072 }
+  contentType: "raw",
+  embedding: largeEmbedding, // [3072 numbers]
+  source: { type: "system", timestamp: new Date() },
+  metadata: { importance: 50, dimension: 3072 },
 });
 ```
 
 **Tradeoffs:**
 
-| Dimensions | Speed | Accuracy | Cost | Use Case |
-|------------|-------|----------|------|----------|
-| 384-768    | Fast  | Good     | Low  | High-volume, real-time |
-| 1536       | Medium| Better   | Medium | General purpose |
-| 3072       | Slower| Best     | High | When accuracy is critical |
+| Dimensions | Speed  | Accuracy | Cost   | Use Case                  |
+| ---------- | ------ | -------- | ------ | ------------------------- |
+| 384-768    | Fast   | Good     | Low    | High-volume, real-time    |
+| 1536       | Medium | Better   | Medium | General purpose           |
+| 3072       | Slower | Best     | High   | When accuracy is critical |
 
 **Default Recommendation**: 3072 dimensions (OpenAI text-embedding-3-large) for the best accuracy. Scale down if you need faster search.
 
@@ -493,12 +525,13 @@ Cortex uses **multi-strategy search** for robust memory retrieval.
 Primary method - finds similar meanings:
 
 ```typescript
-const memories = await cortex.memory.search('agent-1', 
-  'what is the user\'s favorite color?',
+const memories = await cortex.memory.search(
+  "agent-1",
+  "what is the user's favorite color?",
   {
-    embedding: await embed('what is the user\'s favorite color?'),
-    limit: 10
-  }
+    embedding: await embed("what is the user's favorite color?"),
+    limit: 10,
+  },
 );
 ```
 
@@ -514,6 +547,7 @@ Fallback when vector search finds nothing:
 ```
 
 Useful for:
+
 - Exact term matching
 - Names and IDs
 - Technical terms
@@ -552,14 +586,14 @@ Fine-tune search behavior:
 
 ```typescript
 // Layer 3 search with filters
-await cortex.memory.search('agent-1', query, {
+await cortex.memory.search("agent-1", query, {
   embedding: await embed(query),
-  limit: 20,                           // Max results
-  minScore: 0.7,                       // Similarity threshold
-  tags: ['preferences'],               // Filter by tags
-  minImportance: 50,                   // Minimum importance (0-100 scale)
-  createdAfter: new Date('2025-01-01'),
-  createdBefore: new Date('2025-01-31')
+  limit: 20, // Max results
+  minScore: 0.7, // Similarity threshold
+  tags: ["preferences"], // Filter by tags
+  minImportance: 50, // Minimum importance (0-100 scale)
+  createdAfter: new Date("2025-01-01"),
+  createdBefore: new Date("2025-01-31"),
 });
 ```
 
@@ -573,20 +607,20 @@ await cortex.memory.search('agent-1', query, {
 
 ```typescript
 interface UserProfile {
-  id: string;                    // Unique user ID
-  displayName: string;           // How to address them
-  email?: string;                // Contact info
+  id: string; // Unique user ID
+  displayName: string; // How to address them
+  email?: string; // Contact info
   preferences: {
-    theme?: 'light' | 'dark';
+    theme?: "light" | "dark";
     language?: string;
     timezone?: string;
-    [key: string]: any;          // Custom preferences
+    [key: string]: any; // Custom preferences
   };
   metadata: {
-    tier?: 'free' | 'pro' | 'enterprise';
+    tier?: "free" | "pro" | "enterprise";
     signupDate?: Date;
     lastSeen?: Date;
-    [key: string]: any;          // Custom metadata
+    [key: string]: any; // Custom metadata
   };
 }
 ```
@@ -595,29 +629,29 @@ interface UserProfile {
 
 ```typescript
 // Create a user profile
-await cortex.users.update('user-123', {
-  displayName: 'Alice Johnson',
-  email: 'alice@example.com',
+await cortex.users.update("user-123", {
+  displayName: "Alice Johnson",
+  email: "alice@example.com",
   preferences: {
-    theme: 'dark',
-    language: 'en',
-    timezone: 'America/Los_Angeles'
+    theme: "dark",
+    language: "en",
+    timezone: "America/Los_Angeles",
   },
   metadata: {
-    tier: 'pro',
+    tier: "pro",
     signupDate: new Date(),
-    company: 'Acme Corp'
-  }
+    company: "Acme Corp",
+  },
 });
 
 // Update specific fields
-await cortex.users.update('user-123', {
+await cortex.users.update("user-123", {
   preferences: {
-    theme: 'light'  // Only updates theme
+    theme: "light", // Only updates theme
   },
   metadata: {
-    lastSeen: new Date()
-  }
+    lastSeen: new Date(),
+  },
 });
 ```
 
@@ -625,7 +659,7 @@ await cortex.users.update('user-123', {
 
 ```typescript
 // Get a user's profile
-const user = await cortex.users.get('user-123');
+const user = await cortex.users.get("user-123");
 
 // Use in agent interactions
 const greeting = `Hello ${user.displayName}! I see you prefer ${user.preferences.theme} mode.`;
@@ -637,13 +671,13 @@ User profiles are shared across all agents:
 
 ```typescript
 // Agent 1 stores user preference
-await cortex.users.update('user-123', {
-  preferences: { communicationStyle: 'formal' }
+await cortex.users.update("user-123", {
+  preferences: { communicationStyle: "formal" },
 });
 
 // Agent 2 can access it
-const user = await cortex.users.get('user-123');
-if (user.preferences.communicationStyle === 'formal') {
+const user = await cortex.users.get("user-123");
+if (user.preferences.communicationStyle === "formal") {
   response = formatFormal(response);
 }
 ```
@@ -657,6 +691,7 @@ if (user.preferences.communicationStyle === 'formal') {
 **Context chains** enable hierarchical context sharing in multi-agent systems.
 
 Think of it like a management hierarchy where:
+
 - Managers see their team's work
 - Teams share knowledge within their context
 - Everyone can access relevant historical context
@@ -665,13 +700,13 @@ Think of it like a management hierarchy where:
 
 ```typescript
 const context = await cortex.contexts.create({
-  purpose: 'Handle customer refund request',
-  agentId: 'supervisor-agent',
-  userId: 'user-123',
+  purpose: "Handle customer refund request",
+  agentId: "supervisor-agent",
+  userId: "user-123",
   metadata: {
-    ticketId: 'TICKET-456',
-    priority: 'high'
-  }
+    ticketId: "TICKET-456",
+    priority: "high",
+  },
 });
 
 // Returns: { id: 'ctx_abc123', ... }
@@ -682,13 +717,13 @@ const context = await cortex.contexts.create({
 ```typescript
 // Supervisor delegates to finance agent
 const financeContext = await cortex.contexts.create({
-  purpose: 'Process $500 refund',
-  agentId: 'finance-agent',
-  parentId: context.id,  // Link to parent
+  purpose: "Process $500 refund",
+  agentId: "finance-agent",
+  parentId: context.id, // Link to parent
   metadata: {
     amount: 500,
-    reason: 'defective product'
-  }
+    reason: "defective product",
+  },
 });
 ```
 
@@ -699,7 +734,7 @@ Any agent in the chain can see the complete hierarchy:
 ```typescript
 // Finance agent looks up the full context
 const fullContext = await cortex.contexts.get(financeContext.id, {
-  includeChain: true
+  includeChain: true,
 });
 
 console.log(fullContext);
@@ -750,7 +785,7 @@ Teams share context without exposing unrelated information.
 **Analytics** help you understand how agents use memory:
 
 ```typescript
-const stats = await cortex.analytics.getAgentStats('customer-bot');
+const stats = await cortex.analytics.getAgentStats("customer-bot");
 
 console.log(stats);
 // {
@@ -775,12 +810,12 @@ console.log(stats);
 Every memory tracks its usage:
 
 ```typescript
-const memory = await cortex.memory.get('agent-1', 'mem_123');
+const memory = await cortex.memory.get("agent-1", "mem_123");
 
 console.log({
-  accessCount: memory.accessCount,      // How many times accessed
-  lastAccessed: memory.lastAccessed,    // When last accessed
-  createdAt: memory.createdAt          // When created
+  accessCount: memory.accessCount, // How many times accessed
+  lastAccessed: memory.lastAccessed, // When last accessed
+  createdAt: memory.createdAt, // When created
 });
 ```
 
@@ -788,15 +823,15 @@ console.log({
 
 ```typescript
 // Find unused memories (potential cleanup)
-const unused = await cortex.analytics.findUnusedMemories('agent-1', {
-  olderThan: '30d',
-  maxAccessCount: 1
+const unused = await cortex.analytics.findUnusedMemories("agent-1", {
+  olderThan: "30d",
+  maxAccessCount: 1,
 });
 
 // Find hot memories (frequently accessed)
-const hot = await cortex.analytics.findHotMemories('agent-1', {
+const hot = await cortex.analytics.findHotMemories("agent-1", {
   minAccessCount: 10,
-  timeWindow: '7d'
+  timeWindow: "7d",
 });
 ```
 
@@ -879,8 +914,8 @@ await cortex.memory.remember({
   userId: req.user.id,
   userName: req.user.name,
   generateEmbedding: async (content) => await embed(content),
-  importance: 50,  // 0-100 scale (40-69 = medium)
-  tags: ['user-input']
+  importance: 50, // 0-100 scale (40-69 = medium)
+  tags: ["user-input"],
 });
 ```
 
@@ -888,14 +923,13 @@ await cortex.memory.remember({
 
 ```typescript
 // Before generating response, search relevant memories
-const memories = await cortex.memory.search(
-  agentId,
-  userMessage,
-  { embedding: await embed(userMessage), limit: 5 }
-);
+const memories = await cortex.memory.search(agentId, userMessage, {
+  embedding: await embed(userMessage),
+  limit: 5,
+});
 
 // Include memories in prompt
-const context = memories.map(m => m.content).join('\n');
+const context = memories.map((m) => m.content).join("\n");
 const prompt = `
 Context from memory:
 ${context}
@@ -916,14 +950,14 @@ const response = await llm.complete(prompt);
 // Or manually store agent action (Layer 2 - tool result)
 await cortex.vector.store(agentId, {
   content: `I told the user: ${agentResponse}`,
-  contentType: 'raw',
+  contentType: "raw",
   embedding: await embed(agentResponse),
   userId: req.user.id,
-  source: { type: 'tool', timestamp: new Date() },
+  source: { type: "tool", timestamp: new Date() },
   metadata: {
-    importance: 55,  // 0-100 scale
-    tags: ['agent-response']
-  }
+    importance: 55, // 0-100 scale
+    tags: ["agent-response"],
+  },
 });
 ```
 
@@ -941,4 +975,3 @@ Now that you understand the core concepts:
 ---
 
 **Questions?** Check the [FAQ](../11-reference/01-faq.md) or ask in [Discord](https://discord.gg/cortex).
-

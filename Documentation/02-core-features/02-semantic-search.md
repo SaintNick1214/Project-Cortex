@@ -9,6 +9,7 @@ AI-powered memory retrieval with multi-strategy fallback for robust results.
 Semantic search goes beyond keyword matching - it understands **meaning**. When you search for "what's the user's favorite color?", it finds memories about color preferences even if they don't contain the exact words "favorite color".
 
 **How it works with Cortex's hybrid architecture:**
+
 - Searches the **Vector Memory Index** (Layer 2)
 - Returns memories with `conversationRef` links to ACID (Layer 1)
 - Can optionally retrieve full conversation from **ACID store** for complete context
@@ -44,29 +45,33 @@ const query = "what are the user's dietary preferences?";
 const queryEmbedding = await embed(query);
 
 // Search agent's memories (Layer 3 - searches Vector, can enrich with ACID)
-const memories = await cortex.memory.search('my-agent', query, {
-  embedding: queryEmbedding,  // Optional: enables semantic search
-  userId: 'user-123',  // Only search this user's context
-  limit: 5
+const memories = await cortex.memory.search("my-agent", query, {
+  embedding: queryEmbedding, // Optional: enables semantic search
+  userId: "user-123", // Only search this user's context
+  limit: 5,
 });
 
 // Results ordered by relevance
 memories.forEach((memory, i) => {
   console.log(`${i + 1}. ${memory.content} (score: ${memory.score})`);
   console.log(`   Type: ${memory.contentType} (raw or summarized)`);
-  console.log(`   From: ${memory.source.userName} on ${memory.source.timestamp}`);
-  
+  console.log(
+    `   From: ${memory.source.userName} on ${memory.source.timestamp}`,
+  );
+
   // Optionally get full conversation context from ACID
   if (memory.conversationRef) {
-    console.log(`   Full context available: conv-${memory.conversationRef.conversationId}`);
+    console.log(
+      `   Full context available: conv-${memory.conversationRef.conversationId}`,
+    );
   }
 });
 
 // Or get with ACID enrichment automatically (Layer 3 option)
-const enriched = await cortex.memory.search('my-agent', query, {
+const enriched = await cortex.memory.search("my-agent", query, {
   embedding: queryEmbedding,
-  userId: 'user-123',
-  enrichConversation: true  // Fetches ACID conversations too
+  userId: "user-123",
+  enrichConversation: true, // Fetches ACID conversations too
 });
 ```
 
@@ -81,23 +86,25 @@ Primary method using embeddings (when provided):
 ```typescript
 // Try semantic search first (Layer 3 - searches Vector index)
 const memories = await cortex.memory.search(agentId, query, {
-  embedding: await embed(query),  // Vector similarity
-  strategy: 'semantic'
+  embedding: await embed(query), // Vector similarity
+  strategy: "semantic",
 });
 
 // Or use Layer 2 directly for explicit control
 const vectorResults = await cortex.vector.search(agentId, query, {
-  embedding: await embed(query)
+  embedding: await embed(query),
 });
 ```
 
 **When it works best:**
+
 - Complex queries with natural language
 - Finding related concepts ("car" matches "automobile")
 - Broad topic searches
 - When embeddings are available
 
 **When it struggles:**
+
 - Exact term matching (names, IDs, codes)
 - Very specific technical terms
 - Empty result set if no semantic match
@@ -112,18 +119,19 @@ Fallback to text-based search (always available, no embeddings needed):
 // Layer 3 - automatically falls back to keyword search
 if (memories.length === 0) {
   memories = await cortex.memory.search(agentId, query, {
-    strategy: 'keyword'  // Text-based search (works without embeddings)
+    strategy: "keyword", // Text-based search (works without embeddings)
   });
 }
 
 // Or explicitly use text search (no embeddings required)
 const memories = await cortex.memory.search(agentId, query, {
   // No embedding provided - Layer 3 uses text search on Vector index
-  strategy: 'keyword'
+  strategy: "keyword",
 });
 ```
 
 **How it works:**
+
 1. Extracts content words from query
 2. Removes stop words (the, and, is, etc.)
 3. Searches `content` field in Vector Memory Index
@@ -135,6 +143,7 @@ Matches: Any memory.content containing these words
 ```
 
 **When it works best:**
+
 - Exact term matching
 - Names, codes, specific identifiers
 - When embeddings not available
@@ -148,15 +157,16 @@ Final fallback - return recent context:
 ```typescript
 // If both strategies fail, get recent memories
 if (memories.length === 0) {
-  memories = await cortex.memory.search(agentId, '*', {
-    sortBy: 'createdAt',
-    sortOrder: 'desc',
-    limit: 20
+  memories = await cortex.memory.search(agentId, "*", {
+    sortBy: "createdAt",
+    sortOrder: "desc",
+    limit: 20,
   });
 }
 ```
 
 **When it works:**
+
 - User asking "what did we talk about?"
 - Browsing recent conversation
 - Finding context when nothing else works
@@ -168,7 +178,7 @@ Cortex (Layer 3) automatically tries strategies based on what you provide:
 ```typescript
 // With embedding - tries semantic → keyword → recent
 const memories = await cortex.memory.search(agentId, query, {
-  embedding: await embed(query)  // Enables semantic search on Vector index
+  embedding: await embed(query), // Enables semantic search on Vector index
 });
 
 // Without embedding - tries keyword → recent
@@ -187,14 +197,14 @@ const memories = await cortex.memory.search(agentId, query);
 // Force specific strategy
 const memories = await cortex.memory.search(agentId, query, {
   embedding: await embed(query),
-  strategy: 'semantic-only', // Don't fall back
-  allowEmpty: true            // OK to return empty results
+  strategy: "semantic-only", // Don't fall back
+  allowEmpty: true, // OK to return empty results
 });
 
 // Text-only search (no embeddings needed)
 const memories = await cortex.memory.search(agentId, query, {
-  strategy: 'keyword',  // Skip semantic even if embeddings exist
-  allowEmpty: false     // Fall back to recent if empty
+  strategy: "keyword", // Skip semantic even if embeddings exist
+  allowEmpty: false, // Fall back to recent if empty
 });
 ```
 
@@ -206,9 +216,9 @@ const memories = await cortex.memory.search(agentId, query, {
 
 ```typescript
 await cortex.memory.search(agentId, query, {
-  embedding: await embed(query),  // Vector for semantic search
-  limit: 10,                       // Max results (default: 20)
-  offset: 0,                       // Pagination offset
+  embedding: await embed(query), // Vector for semantic search
+  limit: 10, // Max results (default: 20)
+  offset: 0, // Pagination offset
 });
 ```
 
@@ -219,38 +229,38 @@ All filters from Agent Memory work in search:
 ```typescript
 await cortex.memory.search(agentId, query, {
   embedding: await embed(query),
-  
+
   // Filter by user (critical for multi-user agents)
-  userId: 'user-123',
-  
+  userId: "user-123",
+
   // Filter by tags
-  tags: ['preferences', 'user-info'],
-  tagMatch: 'any',  // 'any' or 'all'
-  
+  tags: ["preferences", "user-info"],
+  tagMatch: "any", // 'any' or 'all'
+
   // Filter by importance (0-100 scale)
-  importance: { $gte: 50 },  // Medium and above
+  importance: { $gte: 50 }, // Medium and above
   // or
-  minImportance: 50,  // Shorthand for $gte
-  
+  minImportance: 50, // Shorthand for $gte
+
   // Filter by date range
-  createdAfter: new Date('2025-10-01'),
-  createdBefore: new Date('2025-10-31'),
-  
+  createdAfter: new Date("2025-10-01"),
+  createdBefore: new Date("2025-10-31"),
+
   // Filter by access patterns
-  accessCount: { $gte: 5 },  // Frequently accessed
+  accessCount: { $gte: 5 }, // Frequently accessed
   lastAccessedAfter: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-  
+
   // Filter by version
-  version: { $gte: 2 },  // Only updated memories
-  
+  version: { $gte: 2 }, // Only updated memories
+
   // Filter by source type
-  'source.type': 'conversation',
-  
+  "source.type": "conversation",
+
   // Filter by custom metadata
   metadata: {
     reviewed: true,
-    priority: 'high'
-  }
+    priority: "high",
+  },
 });
 ```
 
@@ -259,22 +269,22 @@ await cortex.memory.search(agentId, query, {
 ```typescript
 await cortex.memory.search(agentId, query, {
   embedding: await embed(query),
-  
+
   // Minimum similarity score (0-1)
-  minScore: 0.75,  // Only results with >75% similarity
-  
+  minScore: 0.75, // Only results with >75% similarity
+
   // Boost by importance (0-100 scale)
-  boostImportance: true,  // Adds (importance/100) * 0.2 to score
-  
+  boostImportance: true, // Adds (importance/100) * 0.2 to score
+
   // Boost by recency
-  boostRecent: true,  // Recent memories get small boost
-  
+  boostRecent: true, // Recent memories get small boost
+
   // Boost by access count
-  boostPopular: true,  // Frequently accessed get small boost
-  
+  boostPopular: true, // Frequently accessed get small boost
+
   // Custom sorting
-  sortBy: 'score',  // or 'createdAt', 'accessCount', 'importance', 'updatedAt'
-  sortOrder: 'desc'
+  sortBy: "score", // or 'createdAt', 'accessCount', 'importance', 'updatedAt'
+  sortOrder: "desc",
 });
 ```
 
@@ -285,14 +295,14 @@ await cortex.memory.search(agentId, query, {
 const page1 = await cortex.memory.search(agentId, query, {
   embedding: await embed(query),
   limit: 20,
-  offset: 0
+  offset: 0,
 });
 
 // Get second page
 const page2 = await cortex.memory.search(agentId, query, {
   embedding: await embed(query),
   limit: 20,
-  offset: 20
+  offset: 20,
 });
 
 // Total count available
@@ -307,33 +317,33 @@ interface SearchResult {
   id: string;
   agentId: string;
   userId?: string;
-  
+
   // Content
   content: string;
-  contentType: 'raw' | 'summarized';
-  embedding?: number[];  // Optional
-  
+  contentType: "raw" | "summarized";
+  embedding?: number[]; // Optional
+
   // Source
   source: {
-    type: 'conversation' | 'system' | 'tool' | 'a2a';
+    type: "conversation" | "system" | "tool" | "a2a";
     userId?: string;
     userName?: string;
     timestamp: Date;
   };
-  
+
   // Conversation Reference (links to ACID source)
   conversationRef?: {
     conversationId: string;
     messageIds: string[];
   };
-  
+
   // Metadata
   metadata: {
-    importance: number;  // 0-100
+    importance: number; // 0-100
     tags: string[];
     [key: string]: any;
   };
-  
+
   // Tracking
   createdAt: Date;
   updatedAt: Date;
@@ -341,17 +351,17 @@ interface SearchResult {
   accessCount: number;
   version: number;
   previousVersions?: MemoryVersion[];
-  
+
   // Search-specific metadata
-  score: number;              // Similarity score (0-1)
-  strategy: 'semantic' | 'keyword' | 'recent';  // Which strategy found it
-  highlights?: string[];      // Matched text snippets
-  explanation?: string;       // Why this was matched (cloud mode)
+  score: number; // Similarity score (0-1)
+  strategy: "semantic" | "keyword" | "recent"; // Which strategy found it
+  highlights?: string[]; // Matched text snippets
+  explanation?: string; // Why this was matched (cloud mode)
 }
 ```
 
 > **Note**: Search returns complete `MemoryEntry` objects with additional search metadata (score, strategy, highlights).
-> 
+>
 > **ACID + Vector**: If `conversationRef` is present, you can retrieve the full original conversation from ACID storage using `cortex.conversations.get(conversationRef.conversationId)`.
 
 ## Advanced Search Patterns
@@ -364,16 +374,16 @@ Find memories with any of several tags for a specific user:
 // Find any issue-related memories for this user
 const memories = await cortex.memory.search(agentId, query, {
   embedding: await embed(query),
-  userId: 'user-123',  // Scope to user
-  tags: ['bug', 'issue', 'error'],  // OR logic
-  tagMatch: 'any'  // Match any tag (default)
+  userId: "user-123", // Scope to user
+  tags: ["bug", "issue", "error"], // OR logic
+  tagMatch: "any", // Match any tag (default)
 });
 
 // Or require ALL tags
 const memories = await cortex.memory.search(agentId, query, {
-  userId: 'user-123',
-  tags: ['preferences', 'verified'],
-  tagMatch: 'all'  // Must have both tags
+  userId: "user-123",
+  tags: ["preferences", "verified"],
+  tagMatch: "all", // Must have both tags
 });
 ```
 
@@ -392,7 +402,7 @@ const keywords = extractKeywords(query); // ['deadline', 'project', 'Q4']
 const memories = await cortex.memory.search(agentId, query, {
   embedding: queryEmbedding,
   keywords: keywords,
-  hybridWeight: 0.7  // 70% semantic, 30% keyword
+  hybridWeight: 0.7, // 70% semantic, 30% keyword
 });
 ```
 
@@ -404,25 +414,25 @@ Re-rank results based on additional context:
 // Initial search
 let memories = await cortex.memory.search(agentId, query, {
   embedding: await embed(query),
-  userId,  // Scoped to user
-  limit: 20  // Get more than needed
+  userId, // Scoped to user
+  limit: 20, // Get more than needed
 });
 
 // Re-rank based on conversation context
-const conversationTags = ['support', 'billing'];
+const conversationTags = ["support", "billing"];
 memories = memories
-  .map(m => ({
+  .map((m) => ({
     ...m,
     // Combine semantic score with context relevance and importance
-    contextScore: 
-      m.score * 0.5 +  // Semantic similarity
-      (m.metadata.tags.filter(t => conversationTags.includes(t)).length * 0.1) +  // Tag match
-      (m.metadata.importance / 100) * 0.2 +  // Importance boost
-      (m.accessCount > 5 ? 0.1 : 0) +  // Popularity boost
-      (isRecent(m.createdAt) ? 0.1 : 0)  // Recency boost
+    contextScore:
+      m.score * 0.5 + // Semantic similarity
+      m.metadata.tags.filter((t) => conversationTags.includes(t)).length * 0.1 + // Tag match
+      (m.metadata.importance / 100) * 0.2 + // Importance boost
+      (m.accessCount > 5 ? 0.1 : 0) + // Popularity boost
+      (isRecent(m.createdAt) ? 0.1 : 0), // Recency boost
   }))
   .sort((a, b) => b.contextScore - a.contextScore)
-  .slice(0, 5);  // Top 5 after re-ranking
+  .slice(0, 5); // Top 5 after re-ranking
 ```
 
 ### Pattern 4: Temporal Search
@@ -435,15 +445,15 @@ const thisWeek = await cortex.memory.search(agentId, query, {
   embedding: await embed(query),
   dateRange: {
     start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-    end: new Date()
-  }
+    end: new Date(),
+  },
 });
 
 // Memories before a specific date
 const before = await cortex.memory.search(agentId, query, {
   dateRange: {
-    end: new Date('2025-10-01')
-  }
+    end: new Date("2025-10-01"),
+  },
 });
 ```
 
@@ -456,25 +466,25 @@ Combine semantic similarity with importance:
 const critical = await cortex.memory.search(agentId, query, {
   embedding: await embed(query),
   userId,
-  importance: { $gte: 90 },  // Critical importance only
-  minScore: 0.75  // Still require good semantic match
+  importance: { $gte: 90 }, // Critical importance only
+  minScore: 0.75, // Still require good semantic match
 });
 
 // High-confidence + high-importance
 const highConfidence = await cortex.memory.search(agentId, query, {
   embedding: await embed(query),
   userId,
-  minScore: 0.85,  // 85%+ similarity
-  minImportance: 70,  // High importance (70+)
-  boostImportance: true  // Boost scores by importance
+  minScore: 0.85, // 85%+ similarity
+  minImportance: 70, // High importance (70+)
+  boostImportance: true, // Boost scores by importance
 });
 
 // Broad search across all importance levels
 const broadSearch = await cortex.memory.search(agentId, query, {
   embedding: await embed(query),
   userId,
-  minScore: 0.5,  // 50%+ similarity
-  minImportance: 0  // Include everything
+  minScore: 0.5, // 50%+ similarity
+  minImportance: 0, // Include everything
 });
 ```
 
@@ -495,7 +505,7 @@ for (const query of queries) {
 const embeddings = await embedBatch(queries);
 for (let i = 0; i < queries.length; i++) {
   await cortex.memory.search(agentId, queries[i], {
-    embedding: embeddings[i]
+    embedding: embeddings[i],
   });
 }
 ```
@@ -507,13 +517,13 @@ Don't retrieve more than you need:
 ```typescript
 // ❌ Wasteful
 const memories = await cortex.memory.search(agentId, query, {
-  limit: 100  // Getting 100 results...
+  limit: 100, // Getting 100 results...
 });
 const top3 = memories.slice(0, 3); // ...but only using 3
 
 // ✅ Efficient
 const memories = await cortex.memory.search(agentId, query, {
-  limit: 3  // Only get what you need
+  limit: 3, // Only get what you need
 });
 ```
 
@@ -524,12 +534,12 @@ Filter before searching when possible:
 ```typescript
 // ❌ Search everything, then filter
 const all = await cortex.memory.search(agentId, query, { limit: 100 });
-const highPriority = all.filter(m => m.metadata.importance === 'high');
+const highPriority = all.filter((m) => m.metadata.importance === "high");
 
 // ✅ Filter during search
 const highPriority = await cortex.memory.search(agentId, query, {
-  minImportance: 'high',
-  limit: 20
+  minImportance: "high",
+  limit: 20,
 });
 ```
 
@@ -537,26 +547,28 @@ const highPriority = await cortex.memory.search(agentId, query, {
 
 Different models for different needs:
 
-| Model | Dimensions | Speed | Accuracy | Cost | Best For |
-|-------|------------|-------|----------|------|----------|
-| text-embedding-3-small (OpenAI) | 1536 | Fast | Good | $ | General purpose |
-| text-embedding-3-large (OpenAI) | 3072 | Medium | Best | $$ | When accuracy critical |
-| embed-english-v3.0 (Cohere) | 1024 | Fast | Good | $ | English content |
-| all-MiniLM-L6-v2 (local) | 384 | Very Fast | Fair | Free | High-volume, cost-sensitive |
+| Model                           | Dimensions | Speed     | Accuracy | Cost | Best For                    |
+| ------------------------------- | ---------- | --------- | -------- | ---- | --------------------------- |
+| text-embedding-3-small (OpenAI) | 1536       | Fast      | Good     | $    | General purpose             |
+| text-embedding-3-large (OpenAI) | 3072       | Medium    | Best     | $$   | When accuracy critical      |
+| embed-english-v3.0 (Cohere)     | 1024       | Fast      | Good     | $    | English content             |
+| all-MiniLM-L6-v2 (local)        | 384        | Very Fast | Fair     | Free | High-volume, cost-sensitive |
 
 ### Choosing the Right Model
 
 **High-accuracy use cases** (customer support, medical, legal):
+
 ```typescript
 // Use large embeddings
 const embedding = await openai.embeddings.create({
-  model: 'text-embedding-3-large',
-  input: text
+  model: "text-embedding-3-large",
+  input: text,
 });
 // 3072 dimensions - best accuracy
 ```
 
 **High-volume use cases** (chat, social, gaming):
+
 ```typescript
 // Use smaller embeddings
 const embedding = await localModel.encode(text);
@@ -564,11 +576,12 @@ const embedding = await localModel.encode(text);
 ```
 
 **Balanced use cases** (most applications):
+
 ```typescript
 // Use standard embeddings
 const embedding = await openai.embeddings.create({
-  model: 'text-embedding-3-small',
-  input: text
+  model: "text-embedding-3-small",
+  input: text,
 });
 // 1536 dimensions - good balance
 ```
@@ -581,33 +594,35 @@ const embedding = await openai.embeddings.create({
 // Track search quality
 async function evaluateSearch(agentId: string, testCases: TestCase[]) {
   const results = [];
-  
+
   for (const test of testCases) {
     const memories = await cortex.memory.search(agentId, test.query, {
       embedding: await embed(test.query),
-      limit: 5
+      limit: 5,
     });
-    
+
     // Check if expected memory was found
-    const found = memories.some(m => m.id === test.expectedMemoryId);
-    const rank = memories.findIndex(m => m.id === test.expectedMemoryId) + 1;
-    
+    const found = memories.some((m) => m.id === test.expectedMemoryId);
+    const rank = memories.findIndex((m) => m.id === test.expectedMemoryId) + 1;
+
     results.push({
       query: test.query,
       found,
       rank,
-      topScore: memories[0]?.score
+      topScore: memories[0]?.score,
     });
   }
-  
+
   // Calculate metrics
-  const precision = results.filter(r => r.found).length / results.length;
-  const avgRank = results.filter(r => r.found).reduce((sum, r) => sum + r.rank, 0) / results.filter(r => r.found).length;
-  
+  const precision = results.filter((r) => r.found).length / results.length;
+  const avgRank =
+    results.filter((r) => r.found).reduce((sum, r) => sum + r.rank, 0) /
+    results.filter((r) => r.found).length;
+
   console.log({
     precision: `${(precision * 100).toFixed(1)}%`,
     avgRank: avgRank.toFixed(1),
-    totalTests: results.length
+    totalTests: results.length,
   });
 }
 ```
@@ -619,6 +634,7 @@ async function evaluateSearch(agentId: string, testCases: TestCase[]) {
 ### Search Analytics
 
 Track search performance:
+
 - Most common queries
 - Success rate by query type
 - Average result relevance
@@ -627,6 +643,7 @@ Track search performance:
 ### Auto-Optimization
 
 Cortex Cloud automatically optimizes:
+
 - Suggests better embedding models
 - Identifies poorly-tagged memories
 - Recommends importance adjustments
@@ -639,13 +656,13 @@ Understand why results were returned:
 ```typescript
 const memories = await cortex.memory.search(agentId, query, {
   embedding: await embed(query),
-  explainResults: true  // Cloud mode only
+  explainResults: true, // Cloud mode only
 });
 
-memories.forEach(m => {
+memories.forEach((m) => {
   console.log(m.explanation);
-  // "Matched because: 85% semantic similarity to query, 
-  //  contains keywords 'user' and 'preference', 
+  // "Matched because: 85% semantic similarity to query,
+  //  contains keywords 'user' and 'preference',
   //  tagged with 'user-info'"
 });
 ```
@@ -660,22 +677,23 @@ await cortex.memory.search(agentId, query);
 
 // ⚠️ Text search only, no user scope
 await cortex.memory.search(agentId, query, {
-  userId: userId  // Good - scoped, but uses text search
+  userId: userId, // Good - scoped, but uses text search
 });
 
 // ⚠️ Semantic search but not scoped
 await cortex.memory.search(agentId, query, {
-  embedding: await embed(query)  // Good - semantic, but searches all users
+  embedding: await embed(query), // Good - semantic, but searches all users
 });
 
 // ✅ Full semantic search with user context
 await cortex.memory.search(agentId, query, {
-  embedding: await embed(query),  // Best: semantic search
-  userId: userId  // Critical: scoped to user
+  embedding: await embed(query), // Best: semantic search
+  userId: userId, // Critical: scoped to user
 });
 ```
 
 **Progressive enhancement:**
+
 - Start: Text search (no embeddings) - works immediately
 - Add: Embeddings for semantic search - better results
 - Optimize: Summarized content - reduce storage
@@ -685,11 +703,12 @@ await cortex.memory.search(agentId, query, {
 
 ```typescript
 // ❌ Vague
-const memories = await cortex.memory.search(agentId, 'user');
+const memories = await cortex.memory.search(agentId, "user");
 
 // ✅ Specific
-const memories = await cortex.memory.search(agentId, 
-  'what are the user\'s dietary restrictions and food preferences?'
+const memories = await cortex.memory.search(
+  agentId,
+  "what are the user's dietary restrictions and food preferences?",
 );
 ```
 
@@ -698,12 +717,12 @@ const memories = await cortex.memory.search(agentId,
 ```typescript
 // For context building
 const context = await cortex.memory.search(agentId, query, {
-  limit: 5  // Just enough context, not overwhelming
+  limit: 5, // Just enough context, not overwhelming
 });
 
 // For comprehensive search
 const all = await cortex.memory.search(agentId, query, {
-  limit: 50  // When you need more coverage
+  limit: 50, // When you need more coverage
 });
 ```
 
@@ -713,11 +732,11 @@ const all = await cortex.memory.search(agentId, query, {
 // Narrow search with filters (all filters work together)
 const memories = await cortex.memory.search(agentId, query, {
   embedding: await embed(query),
-  userId,  // User scope
-  tags: ['high-priority'],
-  minImportance: 80,  // High importance (0-100)
-  createdAfter: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),  // Last 30 days
-  limit: 10
+  userId, // User scope
+  tags: ["high-priority"],
+  minImportance: 80, // High importance (0-100)
+  createdAfter: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Last 30 days
+  limit: 10,
 });
 ```
 
@@ -726,30 +745,30 @@ const memories = await cortex.memory.search(agentId, query, {
 ```typescript
 const memories = await cortex.memory.search(agentId, query, {
   embedding: await embed(query),
-  userId
+  userId,
 });
 
 if (memories.length === 0) {
   // Fallback strategy - broaden the search
   console.log("No specific memories found. Checking broader context...");
-  
+
   // Try without userId filter (general knowledge)
   let broader = await cortex.memory.search(agentId, query, {
     embedding: await embed(query),
     // No userId - search general knowledge
-    limit: 5
+    limit: 5,
   });
-  
+
   // Still nothing? Get recent context for this user
   if (broader.length === 0) {
-    broader = await cortex.memory.search(agentId, '*', {
+    broader = await cortex.memory.search(agentId, "*", {
       userId,
-      sortBy: 'createdAt',
-      sortOrder: 'desc',
-      limit: 10
+      sortBy: "createdAt",
+      sortOrder: "desc",
+      limit: 10,
     });
   }
-  
+
   // Use broader results as context
   memories = broader;
 }
@@ -763,50 +782,65 @@ Build context for LLM prompts with optional ACID enrichment:
 
 ```typescript
 async function buildPromptContext(
-  agentId: string, 
+  agentId: string,
   userId: string,
   userMessage: string,
-  enrichWithFullContext: boolean = false
+  enrichWithFullContext: boolean = false,
 ) {
   // Search vector memories for relevant knowledge
   const embedding = await embed(userMessage);
   const memories = await cortex.memory.search(agentId, userMessage, {
     embedding,
-    userId,  // Only this user's context
+    userId, // Only this user's context
     minScore: 0.7,
-    minImportance: 40,  // Skip trivial info
-    limit: 5
+    minImportance: 40, // Skip trivial info
+    limit: 5,
   });
-  
+
   // Optionally enrich with full ACID conversation context
   const enrichedMemories = enrichWithFullContext
-    ? await Promise.all(memories.map(async (m) => {
-        if (m.conversationRef) {
-          const conversation = await cortex.conversations.get(m.conversationRef.conversationId);
-          const messages = conversation.messages.filter(msg => 
-            m.conversationRef.messageIds.includes(msg.id)
-          );
+    ? await Promise.all(
+        memories.map(async (m) => {
+          if (m.conversationRef) {
+            const conversation = await cortex.conversations.get(
+              m.conversationRef.conversationId,
+            );
+            const messages = conversation.messages.filter((msg) =>
+              m.conversationRef.messageIds.includes(msg.id),
+            );
+            return {
+              summary: m.content, // From vector index
+              fullContext: messages.map((msg) => msg.text).join(" "), // From ACID
+              when: m.createdAt,
+            };
+          }
           return {
-            summary: m.content,  // From vector index
-            fullContext: messages.map(msg => msg.text).join(' '),  // From ACID
-            when: m.createdAt
+            summary: m.content,
+            fullContext: m.content,
+            when: m.createdAt,
           };
-        }
-        return { summary: m.content, fullContext: m.content, when: m.createdAt };
-      }))
-    : memories.map(m => ({ summary: m.content, fullContext: m.content, when: m.createdAt }));
-  
+        }),
+      )
+    : memories.map((m) => ({
+        summary: m.content,
+        fullContext: m.content,
+        when: m.createdAt,
+      }));
+
   // Format for LLM
-  const context = enrichedMemories.length > 0
-    ? `Relevant context from memory:\n${enrichedMemories.map(m => 
-        `- ${m.summary} (${formatDate(m.when)})`
-      ).join('\n')}`
-    : 'No specific prior context found.';
-  
+  const context =
+    enrichedMemories.length > 0
+      ? `Relevant context from memory:\n${enrichedMemories
+          .map((m) => `- ${m.summary} (${formatDate(m.when)})`)
+          .join("\n")}`
+      : "No specific prior context found.";
+
   return {
     systemPrompt: `You are a helpful assistant. ${context}`,
     userMessage,
-    fullContextAvailable: enrichedMemories.some(m => m.summary !== m.fullContext)
+    fullContextAvailable: enrichedMemories.some(
+      (m) => m.summary !== m.fullContext,
+    ),
   };
 }
 ```
@@ -816,29 +850,25 @@ async function buildPromptContext(
 Find specific facts:
 
 ```typescript
-async function retrieveFact(
-  agentId: string, 
-  userId: string,
-  question: string
-) {
+async function retrieveFact(agentId: string, userId: string, question: string) {
   const memories = await cortex.memory.search(agentId, question, {
     embedding: await embed(question),
-    userId,  // User-specific facts
+    userId, // User-specific facts
     limit: 1,
-    minScore: 0.8,  // High confidence threshold
-    minImportance: 50  // Skip low-importance info
+    minScore: 0.8, // High confidence threshold
+    minImportance: 50, // Skip low-importance info
   });
-  
+
   if (memories.length > 0 && memories[0].score > 0.8) {
     return {
       fact: memories[0].content,
       confidence: memories[0].score,
       source: memories[0].source,
       importance: memories[0].metadata.importance,
-      when: memories[0].createdAt
+      when: memories[0].createdAt,
     };
   }
-  
+
   return { fact: null, confidence: 0 };
 }
 ```
@@ -851,14 +881,14 @@ Find all related memories:
 async function findRelatedMemories(agentId: string, memoryId: string) {
   // Get the source memory
   const source = await cortex.memory.get(agentId, memoryId);
-  
+
   // Search for similar memories
   const related = await cortex.memory.search(agentId, source.content, {
     embedding: source.embedding,
     minScore: 0.7,
-    excludeIds: [memoryId]  // Don't include source
+    excludeIds: [memoryId], // Don't include source
   });
-  
+
   return related;
 }
 ```
@@ -869,50 +899,54 @@ Explore what agent knows about a topic:
 
 ```typescript
 async function exploreTopicArea(
-  agentId: string, 
-  userId: string | null,  // null = all users
-  topic: string
+  agentId: string,
+  userId: string | null, // null = all users
+  topic: string,
 ) {
   // Broad search
   const memories = await cortex.memory.search(agentId, topic, {
     embedding: await embed(topic),
-    ...(userId && { userId }),  // Filter to user if provided
+    ...(userId && { userId }), // Filter to user if provided
     limit: 50,
-    minScore: 0.6  // Lower threshold for exploration
+    minScore: 0.6, // Lower threshold for exploration
   });
-  
+
   // Group by tags
   const byTag = {};
-  memories.forEach(m => {
-    m.metadata.tags.forEach(tag => {
+  memories.forEach((m) => {
+    m.metadata.tags.forEach((tag) => {
       if (!byTag[tag]) byTag[tag] = [];
       byTag[tag].push(m);
     });
   });
-  
+
   // Group by user
   const byUser = {};
-  memories.forEach(m => {
-    const uid = m.userId || 'system';
+  memories.forEach((m) => {
+    const uid = m.userId || "system";
     if (!byUser[uid]) byUser[uid] = [];
     byUser[uid].push(m);
   });
-  
+
   // Group by importance range
   const byImportance = {
-    critical: memories.filter(m => m.metadata.importance >= 90),
-    high: memories.filter(m => m.metadata.importance >= 70 && m.metadata.importance < 90),
-    medium: memories.filter(m => m.metadata.importance >= 40 && m.metadata.importance < 70),
-    low: memories.filter(m => m.metadata.importance < 40)
+    critical: memories.filter((m) => m.metadata.importance >= 90),
+    high: memories.filter(
+      (m) => m.metadata.importance >= 70 && m.metadata.importance < 90,
+    ),
+    medium: memories.filter(
+      (m) => m.metadata.importance >= 40 && m.metadata.importance < 70,
+    ),
+    low: memories.filter((m) => m.metadata.importance < 40),
   };
-  
+
   // Return organized view
   return {
     total: memories.length,
     byTag,
     byUser,
     byImportance,
-    topMemories: memories.slice(0, 10)
+    topMemories: memories.slice(0, 10),
   };
 }
 ```
@@ -922,6 +956,7 @@ async function exploreTopicArea(
 ### Search Returns Irrelevant Results
 
 **Causes:**
+
 - Query embedding doesn't match content embeddings
 - Different embedding models used
 - Score threshold too low
@@ -933,13 +968,13 @@ async function exploreTopicArea(
 // 1. Increase score threshold
 const memories = await cortex.memory.search(agentId, query, {
   embedding: await embed(query),
-  minScore: 0.75  // Raise from default 0.5
+  minScore: 0.75, // Raise from default 0.5
 });
 
 // 2. Add tag filters
 const memories = await cortex.memory.search(agentId, query, {
   embedding: await embed(query),
-  tags: ['relevant-topic']  // Narrow scope
+  tags: ["relevant-topic"], // Narrow scope
 });
 
 // 3. Use same embedding model consistently
@@ -949,6 +984,7 @@ const memories = await cortex.memory.search(agentId, query, {
 ### Search is Too Slow
 
 **Causes:**
+
 - Too many memories to search
 - Large embedding dimensions
 - Complex filters
@@ -981,6 +1017,7 @@ cache.set(cacheKey, memories, { ttl: 60 }); // Cache for 60 seconds
 ### No Results Found
 
 **Causes:**
+
 - No matching memories exist
 - Query too specific
 - Score threshold too high
@@ -994,20 +1031,20 @@ if (memories.length === 0) {
   // Extract main concept
   const broader = simplifyQuery(query); // "user food preferences" → "food"
   memories = await cortex.memory.search(agentId, broader, {
-    embedding: await embed(broader)
+    embedding: await embed(broader),
   });
 }
 
 // 2. Lower score threshold
 const memories = await cortex.memory.search(agentId, query, {
   embedding: await embed(query),
-  minScore: 0.5  // Lower threshold
+  minScore: 0.5, // Lower threshold
 });
 
 // 3. Check if any memories exist
 const total = await cortex.memory.count(agentId);
 if (total === 0) {
-  console.log('Agent has no memories yet');
+  console.log("Agent has no memories yet");
 }
 ```
 
@@ -1021,28 +1058,27 @@ const searchTests = [
   {
     query: "what is the user's favorite food?",
     expectedContent: "User loves pizza",
-    minScore: 0.8
+    minScore: 0.8,
   },
   {
     query: "user dietary restrictions",
     expectedContent: "User is vegetarian",
-    minScore: 0.75
-  }
+    minScore: 0.75,
+  },
 ];
 
 // Run tests
 for (const test of searchTests) {
   const memories = await cortex.memory.search(agentId, test.query, {
     embedding: await embed(test.query),
-    limit: 5
+    limit: 5,
   });
-  
-  const found = memories.some(m => 
-    m.content.includes(test.expectedContent) && 
-    m.score >= test.minScore
+
+  const found = memories.some(
+    (m) => m.content.includes(test.expectedContent) && m.score >= test.minScore,
   );
-  
-  console.log(`${test.query}: ${found ? 'PASS' : 'FAIL'}`);
+
+  console.log(`${test.query}: ${found ? "PASS" : "FAIL"}`);
 }
 ```
 
@@ -1055,4 +1091,3 @@ for (const test of searchTests) {
 ---
 
 **Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
-

@@ -12,12 +12,14 @@
 **Cortex is currently in the design and early implementation phase.** We're building a production-ready memory system for AI agents, and we're doing it in public!
 
 **What this means:**
+
 - 📝 Architecture and documentation are actively being refined
 - 💻 Core SDK implementation is in progress
 - 🎯 API design is stabilizing but may still change
 - 🤝 Community input is shaping the direction
 
 **Want to contribute or follow along?**
+
 - 💬 [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) - Share ideas, ask questions, propose features
 - 🐛 [GitHub Issues](https://github.com/SaintNick1214/cortex/issues) - Report bugs, request features, track progress
 - 📖 [Documentation](./Documentation/00-README.md) - In-depth architecture and design decisions
@@ -137,19 +139,19 @@ Cortex is being designed with two deployment modes:
 ## 📊 How Cortex Compares
 
 | Feature           | Cortex | Pinecone | Weaviate | Redis |
-|-------------------|--------|----------|----------|-------|
-| Vector Search     | ✅    | ✅       | ✅      | ❌    |
-| ACID Transactions | ✅    | ❌       | ❌      | ❌    |
-| Real-time Updates | ✅    | ❌       | ❌      | ✅    |
-| Versioning        | ✅    | ❌       | ❌      | ❌    |
-| Temporal Queries  | ✅    | ❌       | ❌      | ❌    |
-| Serverless        | ✅    | ✅       | ❌      | ❌    |
-| Context Chains    | ✅    | ❌       | ❌      | ❌    |
-| Agent Management  | ✅    | ❌       | ❌      | ❌    |
-| User Profiles     | ✅    | ❌       | ❌      | ❌    |
-| Open Source Core  | ✅    | ❌       | ✅      | ✅    |
-| Self-Hostable     | ✅    | ❌       | ✅      | ✅    |
-| All-in-One        | ✅    | ❌       | ❌      | ❌    |
+| ----------------- | ------ | -------- | -------- | ----- |
+| Vector Search     | ✅     | ✅       | ✅       | ❌    |
+| ACID Transactions | ✅     | ❌       | ❌       | ❌    |
+| Real-time Updates | ✅     | ❌       | ❌       | ✅    |
+| Versioning        | ✅     | ❌       | ❌       | ❌    |
+| Temporal Queries  | ✅     | ❌       | ❌       | ❌    |
+| Serverless        | ✅     | ✅       | ❌       | ❌    |
+| Context Chains    | ✅     | ❌       | ❌       | ❌    |
+| Agent Management  | ✅     | ❌       | ❌       | ❌    |
+| User Profiles     | ✅     | ❌       | ❌       | ❌    |
+| Open Source Core  | ✅     | ❌       | ✅       | ✅    |
+| Self-Hostable     | ✅     | ❌       | ✅       | ✅    |
+| All-in-One        | ✅     | ❌       | ❌       | ❌    |
 
 ## 📖 Documentation
 
@@ -195,6 +197,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
 ## 🚦 Development Roadmap
 
 **Current Phase: Foundation (Q4 2025)**
+
 - ✅ Core architecture design
 - ✅ Documentation framework
 - 🔄 Convex schema implementation
@@ -203,6 +206,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
 - 🔜 Integration tests
 
 **Next Phases:**
+
 - **Q1 2026**: Alpha release (Direct Mode)
   - Core memory operations working
   - Basic agent management
@@ -228,6 +232,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
   - Enterprise features
 
 **Follow our progress:**
+
 - Check [Project Boards](https://github.com/SaintNick1214/cortex/projects) for current work
 - Read [Development Updates](https://github.com/SaintNick1214/cortex/discussions/categories/announcements) for milestone announcements
 - Join [Discord](https://discord.gg/cortex) for real-time development chat (coming soon)
@@ -243,17 +248,20 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
 ## 📄 License
 
 **Open Source Core**: Apache License 2.0
+
 - The Cortex SDK is and will remain open source
 - Free for commercial use
 - Includes explicit patent grant and protection
 - See [LICENSE.md](./LICENSE.md) for details
 
 **Cortex Cloud**: Commercial service (future)
+
 - Optional managed features and analytics
 - Free tier planned
 - Pay only for advanced features and support
 
 **Why Apache 2.0?**
+
 - Aligns with Convex (also Apache 2.0)
 - Explicit patent protection for users and contributors
 - Enterprise-friendly and legally clear
@@ -262,6 +270,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
 ## 🙏 Acknowledgments
 
 Cortex is built on the shoulders of giants:
+
 - [Convex](https://convex.dev) - The reactive backend platform powering Cortex
 - [Project Constellation](https://github.com/SaintNick1214/constellation) - The original inspiration for this system
 - The open source AI community - For pushing the boundaries of what's possible
@@ -271,6 +280,7 @@ Cortex is built on the shoulders of giants:
 Cortex was born out of building [Project Constellation](https://github.com/SaintNick1214/constellation), an enterprise multi-agent AI system for Microsoft Teams. While building Constellation, we realized the memory system we needed didn't exist - so we're extracting and open-sourcing it as Cortex.
 
 **What makes Cortex different:**
+
 - Designed for real-world production use (not a prototype)
 - Battle-tested patterns from building multi-agent systems
 - Built by developers who needed it, for developers who need it
@@ -292,7 +302,6 @@ Cortex was born out of building [Project Constellation](https://github.com/Saint
 
 Built with ❤️ for the AI agent community by [Nicholas Geil](https://github.com/SaintNick1214) / [Saint Nick LLC](https://saintnick.ai)
 
-*Cortex is in active development. Join [Discussions](https://github.com/SaintNick1214/cortex/discussions) to shape the future of AI agent memory.*
+_Cortex is in active development. Join [Discussions](https://github.com/SaintNick1214/cortex/discussions) to shape the future of AI agent memory._
 
 </div>
-

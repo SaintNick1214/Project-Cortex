@@ -229,12 +229,14 @@ limitations under the License.
 Cortex depends on the following open source packages:
 
 ### Convex
+
 - License: Functional Source License 1.1 with Apache 2.0 Future License (FSL-1.1-Apache-2.0)
 - Repository: https://github.com/get-convex/convex-js
 - Used for: Backend reactive database and functions
 - Note: Convex backend becomes Apache 2.0 after 2 years from each release
 
 ### TypeScript
+
 - License: Apache License 2.0
 - Repository: https://github.com/microsoft/TypeScript
 - Used for: Type safety and development tooling
@@ -261,6 +263,7 @@ Cortex is free for both personal and commercial use under the Apache License 2.0
 - Sell applications that include Cortex
 
 The main requirements are:
+
 1. Include the Apache License 2.0 text in your distribution
 2. State any significant changes you made
 3. Include copyright notices
@@ -285,6 +288,7 @@ This provides strong protection for both users and contributors.
 ## Contact
 
 For licensing questions or permissions:
+
 - Email: legal@cortexmemory.dev
 - Website: https://cortexmemory.dev
 

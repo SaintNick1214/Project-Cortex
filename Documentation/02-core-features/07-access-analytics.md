@@ -20,10 +20,10 @@ Cortex automatically tracks:
 interface MemoryAccessData {
   memoryId: string;
   agentId: string;
-  accessCount: number;          // Total times accessed
-  lastAccessed: Date;           // Most recent access
-  createdAt: Date;              // When memory was created
-  firstAccessed?: Date;         // First access (if different from creation)
+  accessCount: number; // Total times accessed
+  lastAccessed: Date; // Most recent access
+  createdAt: Date; // When memory was created
+  firstAccessed?: Date; // First access (if different from creation)
   averageRetrievalTime: number; // Performance metric
 }
 ```
@@ -34,13 +34,13 @@ Every `cortex.memory.get()` or `cortex.memory.search()` that returns a memory in
 
 ```typescript
 // Get a memory with access stats
-const memory = await cortex.memory.get('agent-1', 'mem_123');
+const memory = await cortex.memory.get("agent-1", "mem_123");
 
 console.log({
   content: memory.content,
-  accessCount: memory.accessCount,        // 45
-  lastAccessed: memory.lastAccessed,      // 2025-10-23T10:30:00Z
-  daysSinceCreation: daysSince(memory.createdAt)  // 30
+  accessCount: memory.accessCount, // 45
+  lastAccessed: memory.lastAccessed, // 2025-10-23T10:30:00Z
+  daysSinceCreation: daysSince(memory.createdAt), // 30
 });
 ```
 
@@ -50,7 +50,7 @@ console.log({
 
 ```typescript
 // Get stats for an agent
-const stats = await cortex.analytics.getAgentStats('support-agent');
+const stats = await cortex.analytics.getAgentStats("support-agent");
 
 console.log(stats);
 // {
@@ -59,20 +59,20 @@ console.log(stats);
 //   memoriesThisWeek: 89,
 //   memoriesThisMonth: 345,
 //   avgMemoriesPerDay: 12.3,
-//   
+//
 //   // Storage breakdown
 //   byContentType: {
 //     raw: 1234,        // 80%
 //     summarized: 309   // 20%
 //   },
-//   
+//
 //   bySourceType: {
 //     conversation: 1100,  // User conversations
 //     a2a: 234,           // Agent communications
 //     system: 156,        // System-generated
 //     tool: 53            // Tool executions
 //   },
-//   
+//
 //   // Search stats
 //   searchStats: {
 //     totalSearches: 3421,
@@ -81,7 +81,7 @@ console.log(stats);
 //     semanticSearches: 2567,  // With embeddings
 //     textSearches: 854        // Without embeddings
 //   },
-//   
+//
 //   // Memory health
 //   memoryHealth: {
 //     withEmbeddings: 1450,     // 94%
@@ -94,7 +94,7 @@ console.log(stats);
 //       low: 210          // 0-39
 //     }
 //   },
-//   
+//
 //   // Access patterns
 //   accessPatterns: {
 //     mostAccessed: [
@@ -104,7 +104,7 @@ console.log(stats);
 //     neverAccessed: 234,
 //     lastAccessedRecently: 1200
 //   },
-//   
+//
 //   // ACID Conversation Stats
 //   conversationStats: {
 //     totalConversations: 234,
@@ -120,7 +120,7 @@ console.log(stats);
 
 ```typescript
 // Get tag distribution across Vector Memories
-const tagStats = await cortex.analytics.getTagStats('support-agent');
+const tagStats = await cortex.analytics.getTagStats("support-agent");
 
 console.log(tagStats);
 // {
@@ -144,12 +144,12 @@ console.log(tagStats);
 
 ```typescript
 // Analyze growth over time
-const growth = await cortex.analytics.getGrowthTrends('support-agent', {
-  period: '30d',
-  interval: 'daily'
+const growth = await cortex.analytics.getGrowthTrends("support-agent", {
+  period: "30d",
+  interval: "daily",
 });
 
-growth.forEach(day => {
+growth.forEach((day) => {
   console.log(`${day.date}: ${day.memoriesAdded} memories added`);
 });
 ```
@@ -160,13 +160,13 @@ growth.forEach(day => {
 
 ```typescript
 // Memories that have never been accessed
-const unused = await cortex.memory.search('agent-1', '*', {
+const unused = await cortex.memory.search("agent-1", "*", {
   filter: {
     accessCount: 0,
-    createdBefore: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+    createdBefore: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
   },
-  sortBy: 'createdAt',
-  limit: 100
+  sortBy: "createdAt",
+  limit: 100,
 });
 
 console.log(`${unused.length} memories created 30+ days ago never accessed`);
@@ -174,31 +174,34 @@ console.log(`${unused.length} memories created 30+ days ago never accessed`);
 // Analyze by importance and source type
 const analysis = {
   byImportance: {
-    critical: unused.filter(m => m.metadata.importance >= 90).length,
-    high: unused.filter(m => m.metadata.importance >= 70 && m.metadata.importance < 90).length,
-    medium: unused.filter(m => m.metadata.importance >= 40 && m.metadata.importance < 70).length,
-    low: unused.filter(m => m.metadata.importance < 40).length
+    critical: unused.filter((m) => m.metadata.importance >= 90).length,
+    high: unused.filter(
+      (m) => m.metadata.importance >= 70 && m.metadata.importance < 90,
+    ).length,
+    medium: unused.filter(
+      (m) => m.metadata.importance >= 40 && m.metadata.importance < 70,
+    ).length,
+    low: unused.filter((m) => m.metadata.importance < 40).length,
   },
   bySourceType: {
-    conversation: unused.filter(m => m.source.type === 'conversation').length,
-    a2a: unused.filter(m => m.source.type === 'a2a').length,
-    system: unused.filter(m => m.source.type === 'system').length
+    conversation: unused.filter((m) => m.source.type === "conversation").length,
+    a2a: unused.filter((m) => m.source.type === "a2a").length,
+    system: unused.filter((m) => m.source.type === "system").length,
   },
-  withConversationRef: unused.filter(m => m.conversationRef).length
+  withConversationRef: unused.filter((m) => m.conversationRef).length,
 };
 
 // Safe to delete: low importance, no conversation ref
-const safeDeletion = unused.filter(m => 
-  m.metadata.importance < 30 && 
-  !m.conversationRef  // Not linked to ACID
+const safeDeletion = unused.filter(
+  (m) => m.metadata.importance < 30 && !m.conversationRef, // Not linked to ACID
 );
 
 for (const memory of safeDeletion) {
-  await cortex.memory.delete('agent-1', memory.id);
+  await cortex.memory.delete("agent-1", memory.id);
 }
 
 // Keep if has conversationRef (can retrieve from ACID if needed later)
-const keepForACID = unused.filter(m => m.conversationRef);
+const keepForACID = unused.filter((m) => m.conversationRef);
 console.log(`Keeping ${keepForACID.length} unused memories (have ACID source)`);
 ```
 
@@ -206,14 +209,14 @@ console.log(`Keeping ${keepForACID.length} unused memories (have ACID source)`);
 
 ```typescript
 // Most frequently accessed memories
-const hot = await cortex.memory.search('agent-1', '*', {
-  sortBy: 'accessCount',
-  sortOrder: 'desc',
-  limit: 10
+const hot = await cortex.memory.search("agent-1", "*", {
+  sortBy: "accessCount",
+  sortOrder: "desc",
+  limit: 10,
 });
 
-console.log('Most accessed memories:');
-hot.forEach(m => {
+console.log("Most accessed memories:");
+hot.forEach((m) => {
   console.log(`  ${m.accessCount} accesses: ${m.content.substring(0, 50)}...`);
 });
 ```
@@ -223,27 +226,24 @@ hot.forEach(m => {
 ```typescript
 // Find similar memories (potential duplicates)
 async function findDuplicateCandidates(agentId: string) {
-  const all = await cortex.memory.search(agentId, '*', { limit: 1000 });
-  
+  const all = await cortex.memory.search(agentId, "*", { limit: 1000 });
+
   const duplicates = [];
-  
+
   for (let i = 0; i < all.length; i++) {
     for (let j = i + 1; j < all.length; j++) {
-      const similarity = cosineSimilarity(
-        all[i].embedding,
-        all[j].embedding
-      );
-      
+      const similarity = cosineSimilarity(all[i].embedding, all[j].embedding);
+
       if (similarity > 0.95) {
         duplicates.push({
           memory1: all[i],
           memory2: all[j],
-          similarity
+          similarity,
         });
       }
     }
   }
-  
+
   return duplicates;
 }
 ```
@@ -254,19 +254,19 @@ async function findDuplicateCandidates(agentId: string) {
 
 ```typescript
 // Track search performance
-const searchMetrics = await cortex.analytics.getSearchMetrics('agent-1', {
-  period: '7d'
+const searchMetrics = await cortex.analytics.getSearchMetrics("agent-1", {
+  period: "7d",
 });
 
 console.log({
   totalSearches: searchMetrics.count,
-  avgSearchTime: searchMetrics.avgTime,  // ms
-  cacheHitRate: searchMetrics.cacheHitRate,  // %
+  avgSearchTime: searchMetrics.avgTime, // ms
+  cacheHitRate: searchMetrics.cacheHitRate, // %
   strategyBreakdown: {
-    semantic: searchMetrics.strategies.semantic,  // %
-    keyword: searchMetrics.strategies.keyword,    // %
-    recent: searchMetrics.strategies.recent       // %
-  }
+    semantic: searchMetrics.strategies.semantic, // %
+    keyword: searchMetrics.strategies.keyword, // %
+    recent: searchMetrics.strategies.recent, // %
+  },
 });
 ```
 
@@ -274,7 +274,7 @@ console.log({
 
 ```typescript
 // Storage usage across both layers
-const storage = await cortex.analytics.getStorageMetrics('agent-1');
+const storage = await cortex.analytics.getStorageMetrics("agent-1");
 
 console.log({
   // Vector Memory storage
@@ -283,33 +283,33 @@ console.log({
     estimatedSize: storage.vectorSizeBytes,
     withEmbeddings: storage.memoriesWithEmbeddings,
     withoutEmbeddings: storage.memoriesWithoutEmbeddings,
-    embeddingStorageSize: storage.embeddingBytes,  // Can be large with 3072-dim
+    embeddingStorageSize: storage.embeddingBytes, // Can be large with 3072-dim
     textStorageSize: storage.textBytes,
-    avgMemorySize: storage.avgVectorMemoryBytes
+    avgMemorySize: storage.avgVectorMemoryBytes,
   },
-  
+
   // ACID Conversation storage
   acidConversations: {
     userAgentCount: storage.userAgentConversations,
     a2aCount: storage.a2aConversations,
     totalMessages: storage.totalAcidMessages,
-    estimatedSize: storage.acidSizeBytes,  // Much smaller (no embeddings)
-    avgMessageSize: storage.avgAcidMessageBytes
+    estimatedSize: storage.acidSizeBytes, // Much smaller (no embeddings)
+    avgMessageSize: storage.avgAcidMessageBytes,
   },
-  
+
   // Savings from hybrid approach
   savings: {
-    vectorRetentionSavings: storage.deletedVersionsSize,  // Space saved from retention
-    acidPreservation: storage.acidPreservedMessages,  // Messages still in ACID after vector cleanup
-    estimatedMonthlyCost: storage.estimatedConvexCost  // Approx Convex storage cost
+    vectorRetentionSavings: storage.deletedVersionsSize, // Space saved from retention
+    acidPreservation: storage.acidPreservedMessages, // Messages still in ACID after vector cleanup
+    estimatedMonthlyCost: storage.estimatedConvexCost, // Approx Convex storage cost
   },
-  
+
   // Optimization opportunities
   recommendations: [
     `${storage.memoriesWithoutEmbeddings} memories could have embeddings added`,
     `${storage.rawContentCount} raw memories could be summarized (save ${storage.summarizationSavings} bytes)`,
-    `Vector retention cleanup saved ${storage.vectorRetentionSavings} bytes this month`
-  ]
+    `Vector retention cleanup saved ${storage.vectorRetentionSavings} bytes this month`,
+  ],
 });
 ```
 
@@ -318,7 +318,7 @@ console.log({
 ### Based on Access Patterns
 
 ```typescript
-const recommendations = await cortex.analytics.getRecommendations('agent-1');
+const recommendations = await cortex.analytics.getRecommendations("agent-1");
 
 console.log(recommendations);
 // [
@@ -374,6 +374,7 @@ console.log(recommendations);
 ### Visual Analytics Dashboard
 
 Interactive charts and graphs:
+
 - Memory growth over time (Vector + ACID separately)
 - Search performance trends (semantic vs text)
 - Tag distribution pie charts
@@ -385,6 +386,7 @@ Interactive charts and graphs:
 ### Predictive Analytics
 
 AI-powered predictions:
+
 - "Based on current growth, you'll hit 10K memories in 45 days"
 - "Search performance will degrade at 50K memories - consider optimization"
 - "This agent's memory pattern suggests splitting into 2 specialized agents"
@@ -394,6 +396,7 @@ AI-powered predictions:
 ### Cost Optimization
 
 Real-time cost tracking with hybrid architecture insights:
+
 - **Vector Memory costs**: Embeddings (largest), content, metadata
 - **ACID Conversation costs**: Messages (smaller, no embeddings)
 - **Total Convex costs**: Both layers combined
@@ -408,6 +411,7 @@ Real-time cost tracking with hybrid architecture insights:
 ### Alerts and Notifications
 
 Automated alerts:
+
 - Memory growth exceeds threshold
 - Search performance degrading
 - Unusual access patterns detected
@@ -423,23 +427,23 @@ Automated alerts:
 ```typescript
 // Track custom business metrics
 async function getCustomMetrics(agentId: string) {
-  const memories = await cortex.memory.search(agentId, '*', { limit: 10000 });
-  
+  const memories = await cortex.memory.search(agentId, "*", { limit: 10000 });
+
   return {
     // Customer satisfaction related
-    satisfactionMentions: memories.filter(m => 
-      m.metadata.tags.includes('satisfaction')
+    satisfactionMentions: memories.filter((m) =>
+      m.metadata.tags.includes("satisfaction"),
     ).length,
-    
+
     // Resolution efficiency
     avgResolutionTime: calculateAvg(
       memories
-        .filter(m => m.metadata.tags.includes('resolution'))
-        .map(m => m.metadata.resolutionTimeMinutes)
+        .filter((m) => m.metadata.tags.includes("resolution"))
+        .map((m) => m.metadata.resolutionTimeMinutes),
     ),
-    
+
     // Topic distribution
-    byTopic: groupBy(memories, m => m.metadata.primaryTopic)
+    byTopic: groupBy(memories, (m) => m.metadata.primaryTopic),
   };
 }
 ```
@@ -448,17 +452,17 @@ async function getCustomMetrics(agentId: string) {
 
 ```typescript
 // Export for external analysis
-const data = await cortex.analytics.export('agent-1', {
-  format: 'csv',  // or 'json'
-  metrics: ['accessCount', 'importance', 'tags', 'createdAt'],
+const data = await cortex.analytics.export("agent-1", {
+  format: "csv", // or 'json'
+  metrics: ["accessCount", "importance", "tags", "createdAt"],
   dateRange: {
-    start: new Date('2025-10-01'),
-    end: new Date('2025-10-31')
-  }
+    start: new Date("2025-10-01"),
+    end: new Date("2025-10-31"),
+  },
 });
 
 // Save or analyze
-await fs.writeFile('agent-analytics.csv', data);
+await fs.writeFile("agent-analytics.csv", data);
 ```
 
 ## Real-World Applications
@@ -468,22 +472,22 @@ await fs.writeFile('agent-analytics.csv', data);
 ```typescript
 async function optimizeAgent(agentId: string) {
   const stats = await cortex.analytics.getAgentStats(agentId);
-  
+
   // Too many memories?
   if (stats.totalMemories > 10000) {
-    console.log('Consider: Archive old, low-importance memories');
+    console.log("Consider: Archive old, low-importance memories");
     await archiveOldMemories(agentId);
   }
-  
+
   // Poor embedding coverage?
   if (stats.memoryHealth.withoutEmbeddings > 100) {
-    console.log('Consider: Add embeddings to improve search');
+    console.log("Consider: Add embeddings to improve search");
     await addMissingEmbeddings(agentId);
   }
-  
+
   // Slow searches?
   if (stats.searchStats.avgSearchTime > 100) {
-    console.log('Consider: Use smaller embedding dimensions or add indexes');
+    console.log("Consider: Use smaller embedding dimensions or add indexes");
   }
 }
 ```
@@ -494,48 +498,47 @@ async function optimizeAgent(agentId: string) {
 // Track return on investment for memory system (hybrid architecture)
 async function calculateMemoryROI(agentId: string) {
   const stats = await cortex.analytics.getAgentStats(agentId);
-  
+
   // Calculate costs (hybrid architecture)
   const vectorCost = {
-    storage: stats.vectorMemories * 0.001,  // $0.001 per memory
-    embeddings: stats.memoryHealth.withEmbeddings * 0.0001,  // $0.0001 per embedding/month
-    searches: stats.searchStats.totalSearches * 0.0001  // $0.0001 per search
+    storage: stats.vectorMemories * 0.001, // $0.001 per memory
+    embeddings: stats.memoryHealth.withEmbeddings * 0.0001, // $0.0001 per embedding/month
+    searches: stats.searchStats.totalSearches * 0.0001, // $0.0001 per search
   };
-  
+
   const acidCost = {
-    storage: stats.conversationStats.totalMessages * 0.0001,  // Much cheaper (no embeddings)
-    queries: stats.conversationStats.totalConversations * 0.00001  // Occasional retrieval
+    storage: stats.conversationStats.totalMessages * 0.0001, // Much cheaper (no embeddings)
+    queries: stats.conversationStats.totalConversations * 0.00001, // Occasional retrieval
   };
-  
-  const totalCosts = Object.values(vectorCost).reduce((a, b) => a + b, 0) +
-                     Object.values(acidCost).reduce((a, b) => a + b, 0);
-  
+
+  const totalCosts =
+    Object.values(vectorCost).reduce((a, b) => a + b, 0) +
+    Object.values(acidCost).reduce((a, b) => a + b, 0);
+
   // Calculate value
-  const timesSaved = stats.accessPatterns.mostAccessed.reduce(
-    (sum, m) => sum + m.count,
-    0
-  ) * 5;  // 5 seconds saved per access
-  
-  const valueDollars = (timesSaved / 3600) * 50;  // $50/hour value
-  
+  const timesSaved =
+    stats.accessPatterns.mostAccessed.reduce((sum, m) => sum + m.count, 0) * 5; // 5 seconds saved per access
+
+  const valueDollars = (timesSaved / 3600) * 50; // $50/hour value
+
   // Savings from hybrid architecture
-  const retentionSavings = stats.deletedVersionsCount * 0.001;  // Saved by retention
-  const acidPreservation = stats.acidPreservedMessages * 0.0001;  // Cost to keep in ACID
-  
+  const retentionSavings = stats.deletedVersionsCount * 0.001; // Saved by retention
+  const acidPreservation = stats.acidPreservedMessages * 0.0001; // Cost to keep in ACID
+
   return {
     costs: {
       vector: Object.values(vectorCost).reduce((a, b) => a + b, 0),
       acid: Object.values(acidCost).reduce((a, b) => a + b, 0),
-      total: totalCosts
+      total: totalCosts,
     },
     value: valueDollars,
     roi: ((valueDollars - totalCosts) / totalCosts) * 100,
     hybridBenefits: {
-      retentionSavings,  // Saved by Vector cleanup
-      acidPreservation,  // Cost to keep ACID (worth it for compliance)
-      netSavings: retentionSavings - acidPreservation,  // Usually positive!
-      compliance: 'Full audit trail preserved despite Vector retention'
-    }
+      retentionSavings, // Saved by Vector cleanup
+      acidPreservation, // Cost to keep ACID (worth it for compliance)
+      netSavings: retentionSavings - acidPreservation, // Usually positive!
+      compliance: "Full audit trail preserved despite Vector retention",
+    },
   };
 }
 ```
@@ -546,19 +549,19 @@ async function calculateMemoryROI(agentId: string) {
 
 ```typescript
 // Get complete analytics across all Cortex layers
-const fullAnalytics = await cortex.analytics.getCompleteStats('agent-1');
+const fullAnalytics = await cortex.analytics.getCompleteStats("agent-1");
 
 console.log(fullAnalytics);
 // {
 //   agent: { id: 'agent-1', name: '...', registeredAgents: true/false },
-//   
+//
 //   vectorMemories: {
 //     total: 1543,
 //     bySourceType: { conversation: 1100, a2a: 234, system: 156, tool: 53 },
 //     withEmbeddings: 1450,
 //     withConversationRef: 1234  // Linked to ACID
 //   },
-//   
+//
 //   acidConversations: {
 //     userAgent: 198,  // User conversations
 //     agentAgent: 36,  // A2A conversations
@@ -566,19 +569,19 @@ console.log(fullAnalytics);
 //     oldestConversation: Date,
 //     newestConversation: Date
 //   },
-//   
+//
 //   contextChains: {
 //     active: 12,
 //     completed: 89,
 //     totalContexts: 101
 //   },
-//   
+//
 //   searchPerformance: {
 //     avgSemanticSearchTime: 23,  // ms
 //     avgTextSearchTime: 8,  // ms (faster without vectors)
 //     cacheHitRate: 15  // %
 //   },
-//   
+//
 //   storageEfficiency: {
 //     vectorRetentionSavings: '8.4 MB/month',
 //     acidPreservationCost: '1.2 MB/month',
@@ -594,22 +597,28 @@ Track relationships between layers:
 
 ```typescript
 // Memories linked to conversations
-const linkedMemories = await cortex.analytics.getLinkedMemories('agent-1');
-console.log(`${linkedMemories.percentage}% of memories link to ACID conversations`);
+const linkedMemories = await cortex.analytics.getLinkedMemories("agent-1");
+console.log(
+  `${linkedMemories.percentage}% of memories link to ACID conversations`,
+);
 
 // Orphaned memories (no conversation ref)
-const orphaned = await cortex.analytics.getOrphanedMemories('agent-1');
+const orphaned = await cortex.analytics.getOrphanedMemories("agent-1");
 console.log(`${orphaned.count} memories without ACID source`);
 
 // Conversation utilization
-const convoUtilization = await cortex.analytics.getConversationUtilization('agent-1');
+const convoUtilization =
+  await cortex.analytics.getConversationUtilization("agent-1");
 // How many conversations have been indexed into Vector Memories
-console.log(`${convoUtilization.indexed}/${convoUtilization.total} conversations indexed`);
+console.log(
+  `${convoUtilization.indexed}/${convoUtilization.total} conversations indexed`,
+);
 ```
 
 ## Summary
 
 **Access Analytics tracks:**
+
 - ✅ Vector Memory usage (searches, access patterns, versions)
 - ✅ ACID Conversation metrics (message counts, types)
 - ✅ Storage efficiency (hybrid architecture savings)
@@ -620,6 +629,7 @@ console.log(`${convoUtilization.indexed}/${convoUtilization.total} conversations
 - ✅ conversationRef coverage (how many memories link to ACID)
 
 **Cloud Mode adds:**
+
 - Visual dashboards
 - Predictive analytics
 - Automated optimization recommendations
@@ -635,4 +645,3 @@ console.log(`${convoUtilization.indexed}/${convoUtilization.total} conversations
 ---
 
 **Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
-

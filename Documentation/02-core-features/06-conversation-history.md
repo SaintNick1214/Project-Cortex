@@ -15,6 +15,7 @@ Conversation history captures the complete thread of messages between users and 
 Cortex uses a **two-layer architecture**:
 
 **Layer 1: ACID Conversations** (Source of Truth)
+
 - Immutable message history
 - Append-only, never modified
 - Complete conversation threads
@@ -22,6 +23,7 @@ Cortex uses a **two-layer architecture**:
 - Legal/audit compliance
 
 **Layer 2: Vector Memories** (Searchable Index)
+
 - Fast searchable knowledge
 - Versioned with retention rules
 - References Layer 1 via `conversationRef`
@@ -103,6 +105,7 @@ const msg2 = await cortex.conversations.addMessage('conv-123', {
 ```
 
 **ACID Properties:**
+
 - **Atomicity**: Message fully stored or not at all
 - **Consistency**: Conversation always in valid state
 - **Isolation**: Concurrent messages don't interfere
@@ -148,21 +151,21 @@ Both are **immutable, append-only, kept forever**.
 
 ```typescript
 // Get recent messages from user-agent conversation
-const history = await cortex.conversations.getHistory('conv-123', {
-  limit: 50,  // Last 50 messages
-  order: 'desc'  // Most recent first
+const history = await cortex.conversations.getHistory("conv-123", {
+  limit: 50, // Last 50 messages
+  order: "desc", // Most recent first
 });
 
-history.forEach(msg => {
+history.forEach((msg) => {
   console.log(`${msg.role}: ${msg.content}`);
 });
 
 // Get A2A conversation history
-const a2aHistory = await cortex.conversations.getHistory('a2a-conv-789', {
-  limit: 50
+const a2aHistory = await cortex.conversations.getHistory("a2a-conv-789", {
+  limit: 50,
 });
 
-a2aHistory.forEach(msg => {
+a2aHistory.forEach((msg) => {
   console.log(`${msg.from} → ${msg.to}: ${msg.text}`);
 });
 ```
@@ -171,27 +174,27 @@ a2aHistory.forEach(msg => {
 
 ```typescript
 // Get user-agent conversation
-const conversation = await cortex.conversations.get('conv-123');
+const conversation = await cortex.conversations.get("conv-123");
 
 console.log({
   id: conversation.id,
-  type: conversation.type,  // 'user-agent'
+  type: conversation.type, // 'user-agent'
   userId: conversation.participants.userId,
   agentId: conversation.participants.agentId,
   messageCount: conversation.messageCount,
   createdAt: conversation.createdAt,
-  lastMessageAt: conversation.lastMessageAt
+  lastMessageAt: conversation.lastMessageAt,
 });
 
 // Get A2A conversation
-const a2aConvo = await cortex.conversations.get('a2a-conv-789');
+const a2aConvo = await cortex.conversations.get("a2a-conv-789");
 
 console.log({
   id: a2aConvo.id,
-  type: a2aConvo.type,  // 'agent-agent'
+  type: a2aConvo.type, // 'agent-agent'
   agent1: a2aConvo.participants.agent1,
   agent2: a2aConvo.participants.agent2,
-  messageCount: a2aConvo.messageCount
+  messageCount: a2aConvo.messageCount,
 });
 ```
 
@@ -202,10 +205,10 @@ console.log({
 ```typescript
 // The same filter patterns work:
 const filters = {
-  type: 'user-agent',  // or 'agent-agent'
-  'participants.userId': 'user-123',
-  createdAfter: new Date('2025-10-01'),
-  metadata: { channel: 'web' }
+  type: "user-agent", // or 'agent-agent'
+  "participants.userId": "user-123",
+  createdAfter: new Date("2025-10-01"),
+  metadata: { channel: "web" },
 };
 
 // List
@@ -225,6 +228,7 @@ await cortex.conversations.export(filters);
 ```
 
 **Supported Filters:**
+
 - `type` - 'user-agent' or 'agent-agent'
 - `participants.*` - userId, agentId, agent1, agent2
 - `createdBefore/After` - Date ranges
@@ -239,16 +243,16 @@ await cortex.conversations.export(filters);
 ```typescript
 // Create user-agent conversation
 const conversation = await cortex.conversations.create({
-  type: 'user-agent',  // Default
+  type: "user-agent", // Default
   participants: {
-    userId: 'user-123',
-    agentId: 'agent-1'
+    userId: "user-123",
+    agentId: "agent-1",
   },
   metadata: {
-    channel: 'web',
-    source: 'chat-widget',
-    tags: ['support']
-  }
+    channel: "web",
+    source: "chat-widget",
+    tags: ["support"],
+  },
 });
 
 console.log(conversation.id); // "conv_abc123"
@@ -256,15 +260,15 @@ console.log(conversation.type); // "user-agent"
 
 // Create A2A conversation (usually handled by cortex.a2a.send())
 const a2aConvo = await cortex.conversations.create({
-  type: 'agent-agent',
+  type: "agent-agent",
   participants: {
-    agent1: 'finance-agent',
-    agent2: 'hr-agent'
+    agent1: "finance-agent",
+    agent2: "hr-agent",
   },
   metadata: {
-    purpose: 'budget-coordination',
-    tags: ['a2a', 'budget']
-  }
+    purpose: "budget-coordination",
+    tags: ["a2a", "budget"],
+  },
 });
 
 console.log(a2aConvo.id); // "a2a-conv_xyz789"
@@ -276,32 +280,32 @@ console.log(a2aConvo.type); // "agent-agent"
 ```typescript
 // Get all user-agent conversations for a user
 const userConversations = await cortex.conversations.list({
-  type: 'user-agent',
-  'participants.userId': 'user-123',
-  sortBy: 'lastMessageAt',
-  sortOrder: 'desc',
-  limit: 20
+  type: "user-agent",
+  "participants.userId": "user-123",
+  sortBy: "lastMessageAt",
+  sortOrder: "desc",
+  limit: 20,
 });
 
 // Get A2A conversations for an agent
 const a2aConversations = await cortex.conversations.list({
-  type: 'agent-agent',
-  participants: { $contains: 'finance-agent' },  // Any conversation involving this agent
-  sortBy: 'lastMessageAt',
-  sortOrder: 'desc'
+  type: "agent-agent",
+  participants: { $contains: "finance-agent" }, // Any conversation involving this agent
+  sortBy: "lastMessageAt",
+  sortOrder: "desc",
 });
 
 // Get all conversations (both types)
 const allConversations = await cortex.conversations.list({
-  sortBy: 'lastMessageAt',
-  sortOrder: 'desc',
-  limit: 50
+  sortBy: "lastMessageAt",
+  sortOrder: "desc",
+  limit: 50,
 });
 
 // Filter by agent
 const withSupportAgent = await cortex.conversations.list({
-  type: 'user-agent',
-  'participants.agentId': 'support-agent'
+  type: "user-agent",
+  "participants.agentId": "support-agent",
 });
 ```
 
@@ -309,37 +313,43 @@ const withSupportAgent = await cortex.conversations.list({
 
 ```typescript
 // Search across user's conversation history
-const results = await cortex.conversations.search('user-123', 
-  'when did we discuss pricing?',
+const results = await cortex.conversations.search(
+  "user-123",
+  "when did we discuss pricing?",
   {
-    type: 'user-agent',  // Only user conversations
-    embedding: await embed('pricing discussion'),  // Optional
-    limit: 10
-  }
+    type: "user-agent", // Only user conversations
+    embedding: await embed("pricing discussion"), // Optional
+    limit: 10,
+  },
 );
 
-results.forEach(result => {
+results.forEach((result) => {
   console.log(`Found in conversation ${result.conversationId}:`);
   console.log(`  "${result.snippet}"`);
   console.log(`  Relevance: ${result.score}`);
 });
 
 // Search A2A conversations between agents
-const a2aResults = await cortex.conversations.search(null,  // No userId for A2A
-  'budget discussions',
+const a2aResults = await cortex.conversations.search(
+  null, // No userId for A2A
+  "budget discussions",
   {
-    type: 'agent-agent',
-    participants: { $contains: 'finance-agent' },
-    embedding: await embed('budget discussions'),
-    limit: 10
-  }
+    type: "agent-agent",
+    participants: { $contains: "finance-agent" },
+    embedding: await embed("budget discussions"),
+    limit: 10,
+  },
 );
 
 // Or use Vector Memory for semantic search across both types
-const vectorSearch = await cortex.memory.search('finance-agent', 'budget discussions', {
-  embedding: await embed('budget discussions'),
-  source: { type: { $in: ['conversation', 'a2a'] } }  // Both types
-});
+const vectorSearch = await cortex.memory.search(
+  "finance-agent",
+  "budget discussions",
+  {
+    embedding: await embed("budget discussions"),
+    source: { type: { $in: ["conversation", "a2a"] } }, // Both types
+  },
+);
 // Then retrieve full ACID conversations via conversationRef
 ```
 
@@ -351,14 +361,16 @@ const vectorSearch = await cortex.memory.search('finance-agent', 'budget discuss
 async function buildRecentContext(conversationId: string) {
   // Get last 10 messages from ACID store
   const history = await cortex.conversations.getHistory(conversationId, {
-    limit: 10
+    limit: 10,
   });
-  
+
   // Format for LLM
-  const context = history.map(msg => 
-    `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`
-  ).join('\n');
-  
+  const context = history
+    .map(
+      (msg) => `${msg.role === "user" ? "User" : "Assistant"}: ${msg.content}`,
+    )
+    .join("\n");
+
   return context;
 }
 
@@ -373,44 +385,44 @@ async function buildRelevantContext(
   agentId: string,
   userId: string,
   currentMessage: string,
-  conversationId: string
+  conversationId: string,
 ) {
   // Search vector memories for relevant knowledge
   const relevantMemories = await cortex.memory.search(agentId, currentMessage, {
-    embedding: await embed(currentMessage),  // Semantic search
+    embedding: await embed(currentMessage), // Semantic search
     userId,
-    limit: 5
+    limit: 5,
   });
-  
+
   // For each memory, can retrieve full conversation context
   const enriched = await Promise.all(
     relevantMemories.map(async (memory) => {
       if (memory.conversationRef) {
         // Get full conversation from ACID
         const conversation = await cortex.conversations.get(
-          memory.conversationRef.conversationId
+          memory.conversationRef.conversationId,
         );
-        
+
         // Get the specific message(s)
-        const sourceMessages = conversation.messages.filter(m => 
-          memory.conversationRef.messageIds.includes(m.id)
+        const sourceMessages = conversation.messages.filter((m) =>
+          memory.conversationRef.messageIds.includes(m.id),
         );
-        
+
         return {
-          summary: memory.content,  // From vector index
-          fullContext: sourceMessages.map(m => m.text).join(' '),  // From ACID
-          when: sourceMessages[0].timestamp
+          summary: memory.content, // From vector index
+          fullContext: sourceMessages.map((m) => m.text).join(" "), // From ACID
+          when: sourceMessages[0].timestamp,
         };
       }
-      
+
       return {
         summary: memory.content,
-        fullContext: memory.content,  // Non-conversation memory
-        when: memory.createdAt
+        fullContext: memory.content, // Non-conversation memory
+        when: memory.createdAt,
       };
-    })
+    }),
   );
-  
+
   return enriched;
 }
 
@@ -424,13 +436,13 @@ async function buildRelevantContext(
 ### Conversation Metrics
 
 ```typescript
-const conversation = await cortex.conversations.get('conv-123');
+const conversation = await cortex.conversations.get("conv-123");
 
 console.log({
   messageCount: conversation.messageCount,
   duration: conversation.lastMessageAt - conversation.createdAt,
   avgResponseTime: conversation.metadata.avgResponseTime,
-  userSatisfaction: conversation.metadata.satisfaction
+  userSatisfaction: conversation.metadata.satisfaction,
 });
 ```
 
@@ -439,14 +451,15 @@ console.log({
 ```typescript
 // Analyze user's conversation patterns
 const userConvs = await cortex.conversations.list({
-  userId: 'user-123'
+  userId: "user-123",
 });
 
 const stats = {
   totalConversations: userConvs.length,
   totalMessages: userConvs.reduce((sum, c) => sum + c.messageCount, 0),
-  avgMessagesPerConv: userConvs.reduce((sum, c) => sum + c.messageCount, 0) / userConvs.length,
-  mostActiveAgent: findMostFrequent(userConvs.map(c => c.agentId))
+  avgMessagesPerConv:
+    userConvs.reduce((sum, c) => sum + c.messageCount, 0) / userConvs.length,
+  mostActiveAgent: findMostFrequent(userConvs.map((c) => c.agentId)),
 };
 ```
 
@@ -459,32 +472,32 @@ Generate summaries of long conversations:
 ```typescript
 async function summarizeConversation(conversationId: string) {
   const history = await cortex.conversations.getHistory(conversationId);
-  
+
   // Extract key points
   const summary = await llm.complete({
     prompt: `Summarize this conversation:\n${formatHistory(history)}`,
-    maxTokens: 200
+    maxTokens: 200,
   });
-  
+
   // Store summary as metadata
   await cortex.conversations.update(conversationId, {
     metadata: {
       summary: summary,
-      summarizedAt: new Date()
-    }
+      summarizedAt: new Date(),
+    },
   });
-  
+
   // Store as agent memory for future reference (Layer 2 - system-generated summary)
   await cortex.vector.store(agentId, {
     content: `Conversation summary: ${summary}`,
-    contentType: 'summarized',
+    contentType: "summarized",
     embedding: await embed(summary),
-    source: { type: 'system', timestamp: new Date() },
-    conversationRef: { conversationId, messageIds: [] },  // Links to whole conversation
+    source: { type: "system", timestamp: new Date() },
+    conversationRef: { conversationId, messageIds: [] }, // Links to whole conversation
     metadata: {
       importance: 70,
-      tags: ['summary', 'conversation']
-    }
+      tags: ["summary", "conversation"],
+    },
   });
 }
 ```
@@ -496,19 +509,19 @@ Track conversation topics:
 ```typescript
 async function extractConversationTopics(conversationId: string) {
   const history = await cortex.conversations.getHistory(conversationId);
-  
+
   // Extract topics from messages
-  const allText = history.map(m => m.content).join(' ');
-  const topics = await extractTopics(allText);  // Your topic extraction
-  
+  const allText = history.map((m) => m.content).join(" ");
+  const topics = await extractTopics(allText); // Your topic extraction
+
   // Store as metadata
   await cortex.conversations.update(conversationId, {
     metadata: {
       topics,
-      topicsExtractedAt: new Date()
-    }
+      topicsExtractedAt: new Date(),
+    },
   });
-  
+
   return topics;
 }
 ```
@@ -519,18 +532,18 @@ Link related messages:
 
 ```typescript
 // Store message with thread reference
-await cortex.conversations.addMessage('conv-123', {
-  role: 'user',
-  content: 'Actually, about what I said earlier...',
-  userId: 'user-123',
+await cortex.conversations.addMessage("conv-123", {
+  role: "user",
+  content: "Actually, about what I said earlier...",
+  userId: "user-123",
   metadata: {
-    threadId: 'thread-456',  // Links to previous topic
-    referencesMessageId: 'msg-789'  // Specific message reference
-  }
+    threadId: "thread-456", // Links to previous topic
+    referencesMessageId: "msg-789", // Specific message reference
+  },
 });
 
 // Retrieve thread
-const thread = await cortex.conversations.getThread('conv-123', 'thread-456');
+const thread = await cortex.conversations.getThread("conv-123", "thread-456");
 ```
 
 ## Real-World Patterns
@@ -538,70 +551,75 @@ const thread = await cortex.conversations.getThread('conv-123', 'thread-456');
 ### Pattern: Multi-Session Continuity
 
 ```typescript
-async function handleReturningUser(userId: string, newMessage: string, agentId: string) {
+async function handleReturningUser(
+  userId: string,
+  newMessage: string,
+  agentId: string,
+) {
   // Find user's recent user-agent conversations
   const conversations = await cortex.conversations.list({
-    type: 'user-agent',
-    'participants.userId': userId,
-    'participants.agentId': agentId,
-    sortBy: 'lastMessageAt',
-    sortOrder: 'desc',
-    limit: 5
+    type: "user-agent",
+    "participants.userId": userId,
+    "participants.agentId": agentId,
+    sortBy: "lastMessageAt",
+    sortOrder: "desc",
+    limit: 5,
   });
-  
+
   // Check if continuing previous conversation
   const lastConv = conversations[0];
-  const timeSinceLast = lastConv 
+  const timeSinceLast = lastConv
     ? Date.now() - lastConv.lastMessageAt.getTime()
     : Infinity;
-  
+
   let conversationId;
-  if (timeSinceLast < 30 * 60 * 1000) {  // Less than 30 minutes
+  if (timeSinceLast < 30 * 60 * 1000) {
+    // Less than 30 minutes
     // Continue previous conversation
     conversationId = lastConv.id;
-    console.log('Continuing previous conversation');
+    console.log("Continuing previous conversation");
   } else {
     // Start new conversation
     const newConv = await cortex.conversations.create({
-      type: 'user-agent',
+      type: "user-agent",
       participants: {
         userId,
-        agentId
+        agentId,
       },
       metadata: {
-        channel: 'web',
-        sessionId: generateSessionId()
-      }
+        channel: "web",
+        sessionId: generateSessionId(),
+      },
     });
     conversationId = newConv.id;
-    console.log('Starting new conversation');
+    console.log("Starting new conversation");
   }
-  
+
   // Add message to ACID conversation (immutable)
   const msg = await cortex.conversations.addMessage(conversationId, {
-    role: 'user',
+    role: "user",
     content: newMessage,
     userId,
-    timestamp: new Date()
+    timestamp: new Date(),
   });
-  
+
   // Also index in Vector Memory for searchability (Layer 2 explicit)
   await cortex.vector.store(agentId, {
     content: newMessage,
-    contentType: 'raw',
-    embedding: await embed(newMessage),  // Optional
+    contentType: "raw",
+    embedding: await embed(newMessage), // Optional
     userId,
-    source: { type: 'conversation', userId, timestamp: new Date() },
+    source: { type: "conversation", userId, timestamp: new Date() },
     conversationRef: {
       conversationId,
-      messageIds: [msg.id]
+      messageIds: [msg.id],
     },
-    metadata: { importance: 50, tags: ['user-input'] }
+    metadata: { importance: 50, tags: ["user-input"] },
   });
-  
+
   // Or use Layer 3 remember() to do both ACID + Vector automatically
   // await cortex.memory.remember({ agentId, conversationId, userMessage, agentResponse, userId, userName });
-  
+
   return conversationId;
 }
 ```
@@ -612,28 +630,28 @@ async function handleReturningUser(userId: string, newMessage: string, agentId: 
 async function buildContextWindow(conversationId: string, maxTokens: number) {
   // Get all messages
   const messages = await cortex.conversations.getHistory(conversationId);
-  
+
   // Build context from newest to oldest until token limit
   const contextMessages = [];
   let tokenCount = 0;
-  
+
   for (let i = messages.length - 1; i >= 0; i--) {
     const msg = messages[i];
     const msgTokens = estimateTokens(msg.content);
-    
+
     if (tokenCount + msgTokens > maxTokens) {
-      break;  // Would exceed limit
+      break; // Would exceed limit
     }
-    
-    contextMessages.unshift(msg);  // Add to front
+
+    contextMessages.unshift(msg); // Add to front
     tokenCount += msgTokens;
   }
-  
+
   return {
     messages: contextMessages,
     tokenCount,
     totalMessages: messages.length,
-    includedMessages: contextMessages.length
+    includedMessages: contextMessages.length,
   };
 }
 ```
@@ -652,6 +670,7 @@ async function buildContextWindow(conversationId: string, maxTokens: number) {
 ### Auto-Summarization
 
 Automatic summaries of long conversations:
+
 - Daily summaries
 - Per-topic summaries
 - Key decision extraction
@@ -659,6 +678,7 @@ Automatic summaries of long conversations:
 ### Conversation Export
 
 Export full conversations for:
+
 - Compliance requirements
 - Training data
 - User data requests (GDPR)
@@ -671,30 +691,30 @@ Export full conversations for:
 ```typescript
 // User-agent conversation message
 await cortex.conversations.addMessage(conversationId, {
-  role: 'user',
+  role: "user",
   content: message,
   userId,
   timestamp: new Date(),
   metadata: {
-    channel: 'web',  // web, mobile, api, etc.
-    device: 'desktop',
+    channel: "web", // web, mobile, api, etc.
+    device: "desktop",
     ipAddress: req.ip,
-    userAgent: req.headers['user-agent'],
-    sessionId: 'session-123'
-  }
+    userAgent: req.headers["user-agent"],
+    sessionId: "session-123",
+  },
 });
 
 // A2A conversation message
 await cortex.conversations.addMessage(a2aConversationId, {
-  from: 'finance-agent',
-  to: 'hr-agent',
-  text: 'Budget request',
+  from: "finance-agent",
+  to: "hr-agent",
+  text: "Budget request",
   timestamp: new Date(),
   metadata: {
-    contextId: 'ctx-budget-456',
+    contextId: "ctx-budget-456",
     importance: 85,
-    priority: 'high'
-  }
+    priority: "high",
+  },
 });
 ```
 
@@ -704,26 +724,26 @@ await cortex.conversations.addMessage(a2aConversationId, {
 // Summarize and trim long conversations
 async function maintainConversation(conversationId: string) {
   const conversation = await cortex.conversations.get(conversationId);
-  
+
   if (conversation.messageCount > 100) {
     // Summarize older messages
     const older = await cortex.conversations.getHistory(conversationId, {
       limit: 50,
-      offset: 50  // Messages 50-100
+      offset: 50, // Messages 50-100
     });
-    
+
     const summary = await summarizeMessages(older);
-    
+
     // Store summary as first message
     await cortex.conversations.prependMessage(conversationId, {
-      role: 'system',
+      role: "system",
       content: `[Summary of previous discussion: ${summary}]`,
-      metadata: { type: 'summary' }
+      metadata: { type: "summary" },
     });
-    
+
     // Archive old messages
     await cortex.conversations.archiveMessages(conversationId, {
-      olderThan: older[older.length - 1].timestamp
+      olderThan: older[older.length - 1].timestamp,
     });
   }
 }
@@ -735,23 +755,23 @@ async function maintainConversation(conversationId: string) {
 // Redact sensitive information before storing in ACID
 function redactSensitive(content: string): string {
   return content
-    .replace(/\b\d{3}-\d{2}-\d{4}\b/g, '[SSN REDACTED]')
-    .replace(/\b\d{16}\b/g, '[CARD REDACTED]')
-    .replace(/password[:\s]+\S+/gi, 'password: [REDACTED]');
+    .replace(/\b\d{3}-\d{2}-\d{4}\b/g, "[SSN REDACTED]")
+    .replace(/\b\d{16}\b/g, "[CARD REDACTED]")
+    .replace(/password[:\s]+\S+/gi, "password: [REDACTED]");
 }
 
 // User-agent message
 await cortex.conversations.addMessage(conversationId, {
-  role: 'user',
+  role: "user",
   content: redactSensitive(userMessage),
-  userId
+  userId,
 });
 
 // A2A message (also redact if contains sensitive data)
 await cortex.conversations.addMessage(a2aConversationId, {
-  from: 'agent-1',
-  to: 'agent-2',
-  text: redactSensitive(message)  // Applies to A2A too
+  from: "agent-1",
+  to: "agent-2",
+  text: redactSensitive(message), // Applies to A2A too
 });
 
 // ACID is immutable - redact BEFORE storing!
@@ -760,6 +780,7 @@ await cortex.conversations.addMessage(a2aConversationId, {
 ## Summary
 
 **ACID Conversations are the source of truth for:**
+
 - ✅ User-agent conversations (chat history)
 - ✅ Agent-agent conversations (A2A communication)
 - ✅ Complete message threads (immutable, append-only)
@@ -767,12 +788,14 @@ await cortex.conversations.addMessage(a2aConversationId, {
 - ✅ Legal/compliance audit trails
 
 **Vector Memories reference conversations via conversationRef:**
+
 - ✅ Fast searchable knowledge index
 - ✅ Versioned with retention rules
 - ✅ Can always retrieve full ACID conversation
 - ✅ Best of both: fast search + complete history
 
 **Two conversation types:**
+
 - **user-agent**: User chatting with agent
 - **agent-agent**: Agent communicating with agent (A2A)
 
@@ -788,4 +811,3 @@ Both use same ACID storage, same immutability guarantees, same API patterns.
 ---
 
 **Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
-

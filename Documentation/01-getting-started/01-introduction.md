@@ -13,6 +13,7 @@ Building AI agents with persistent memory is **hard**:
 ### Traditional Approaches Fall Short
 
 **Vector Databases (Pinecone, Weaviate, Qdrant)**
+
 - ❌ Only handle embeddings, not complete memory systems
 - ❌ Require separate infrastructure for user data, conversations, metadata
 - ❌ Complex to set up and manage
@@ -20,6 +21,7 @@ Building AI agents with persistent memory is **hard**:
 - ❌ Expensive at scale
 
 **Simple Storage (Redis, PostgreSQL)**
+
 - ❌ No semantic search capabilities
 - ❌ Manual implementation of memory retrieval logic
 - ❌ No agent-specific memory isolation
@@ -27,6 +29,7 @@ Building AI agents with persistent memory is **hard**:
 - ❌ Requires custom indexing and optimization
 
 **LLM Framework Memory (LangChain, LlamaIndex)**
+
 - ❌ Tightly coupled to specific frameworks
 - ❌ Limited persistence options
 - ❌ Basic memory strategies only
@@ -34,6 +37,7 @@ Building AI agents with persistent memory is **hard**:
 - ❌ Difficult to migrate between frameworks
 
 **Custom Solutions**
+
 - ❌ Weeks or months of development time
 - ❌ Ongoing maintenance burden
 - ❌ Hard to scale and optimize
@@ -63,68 +67,79 @@ const cortex = new Cortex({ convexUrl: process.env.CONVEX_URL });
 
 // Store a conversation (ACID + Vector automatic)
 await cortex.memory.remember({
-  agentId: 'agent-1',
-  conversationId: 'conv-123',
-  userMessage: 'I prefer dark mode',
+  agentId: "agent-1",
+  conversationId: "conv-123",
+  userMessage: "I prefer dark mode",
   agentResponse: "I'll remember that!",
-  userId: 'user-1',
-  userName: 'User'
+  userId: "user-1",
+  userName: "User",
 });
 
 // Search works immediately
-const memories = await cortex.memory.search('agent-1', 
-  'what are the user preferences?'
+const memories = await cortex.memory.search(
+  "agent-1",
+  "what are the user preferences?",
 );
 ```
 
 ### Key Capabilities
 
 **🧠 Flexible Memory**
+
 - Remember ANY information without hardcoded topics or schemas
 - No predefined categories - agents learn naturally
 - Store text, embeddings, metadata, and relationships
 
 **🔒 Private Memory Banks**
+
 - Complete isolation between agents
 - Each agent has its own secure storage
 - No accidental data leakage
 
 **♾️ Long-term Persistence**
+
 - Memories last forever (no automatic expiration)
 - Survive restarts, deployments, and migrations
 - Built on Convex's durable backend
 
 **🔍 Semantic Search**
+
 - AI-powered understanding, not just keyword matching
 - Multi-strategy retrieval with intelligent fallbacks
 - Support for any embedding model (OpenAI, Cohere, local)
 
 **📊 Flexible Vector Dimensions**
+
 - Support 768, 1536, 3072, or any custom dimension
 - Choose the right model for your performance/accuracy tradeoff
 - Per-memory-entry flexibility
 
 **🔗 Context Chains**
+
 - Hierarchical context sharing for multi-agent systems
 - Manager agents can see subordinate contexts
 - No information silos
 
 **👥 User Profiles**
+
 - Rich user context and preferences
 - Cross-conversation memory
 - Personalization support
 
 **📈 Built-in Analytics**
+
 - Track memory access patterns
 - Understand what agents remember most
 - Optimize based on usage data
 
 **🎯 Hybrid Agent Management**
+
 - Start simple with string IDs
 - Add optional registry for advanced features
 - Progressive enhancement as your system grows
 
 **🚀 Zero Infrastructure**
+
 - No servers to manage
 - Automatic scaling
 - Deploy to your own Convex instance
@@ -144,6 +159,7 @@ Cortex leverages [Convex](https://convex.dev), a reactive backend platform that 
 - **Developer Experience** - Hot reload, time travel debugging
 
 **Flexible Deployment**: Cortex works with Convex however you run it:
+
 - ☁️ **Convex Cloud** (recommended) - Fully managed, no ops required
 - 💻 **Local Development** - `npx convex dev` for fast iteration
 - 🏢 **Self-Hosted** - Deploy Convex to your own infrastructure
@@ -155,14 +171,14 @@ Unlike vector databases that lock you into their ecosystem, Cortex is **embeddin
 ```typescript
 // Use OpenAI
 const embedding = await openai.embeddings.create({
-  model: 'text-embedding-3-large',
-  input: text
+  model: "text-embedding-3-large",
+  input: text,
 });
 
 // Or Cohere
 const embedding = await cohere.embed({
   texts: [text],
-  model: 'embed-english-v3.0'
+  model: "embed-english-v3.0",
 });
 
 // Or local models
@@ -171,16 +187,21 @@ const embedding = await localModel.encode(text);
 // Cortex doesn't care - just store it (Layer 2 for system memories)
 await cortex.vector.store(agentId, {
   content: text,
-  contentType: 'raw',
+  contentType: "raw",
   embedding: embedding.data[0].embedding,
-  source: { type: 'system', timestamp: new Date() },
-  metadata: { importance: 50 }
+  source: { type: "system", timestamp: new Date() },
+  metadata: { importance: 50 },
 });
 
 // Or use Layer 3 for conversations
 await cortex.memory.remember({
-  agentId, conversationId, userMessage, agentResponse, userId, userName,
-  generateEmbedding: async (content) => embedding
+  agentId,
+  conversationId,
+  userMessage,
+  agentResponse,
+  userId,
+  userName,
+  generateEmbedding: async (content) => embedding,
 });
 ```
 
@@ -211,6 +232,7 @@ Cortex is built on these core principles:
 ### 1. Developer Experience First
 
 Every API is designed to be:
+
 - **Intuitive** - Works the way you expect
 - **Typed** - Full TypeScript support
 - **Documented** - Clear examples and guides
@@ -223,28 +245,29 @@ Start simple, add complexity when needed:
 ```typescript
 // Day 1: Simple usage (direct mode) - Layer 3 convenience
 await cortex.memory.remember({
-  agentId: 'my-agent',
-  conversationId: 'conv-1',
-  userMessage: 'Hello',
-  agentResponse: 'Hi there!',
-  userId: 'user-1',
-  userName: 'User'
+  agentId: "my-agent",
+  conversationId: "conv-1",
+  userMessage: "Hello",
+  agentResponse: "Hi there!",
+  userId: "user-1",
+  userName: "User",
 });
 
 // Day 30: Add structure when it helps
 await cortex.agents.register({
-  id: 'my-agent',
-  name: 'My Agent',
-  metadata: { team: 'support', capabilities: ['help'] }
+  id: "my-agent",
+  name: "My Agent",
+  metadata: { team: "support", capabilities: ["help"] },
 });
 
 // Day 90: Upgrade to cloud mode for analytics
-const insights = await cortex.analytics.getAgentInsights('my-agent');
+const insights = await cortex.analytics.getAgentInsights("my-agent");
 ```
 
 ### 3. No Opinions on Embeddings
 
 You choose:
+
 - Which embedding model to use
 - When to generate embeddings
 - How to optimize for your use case
@@ -254,6 +277,7 @@ Cortex just stores and retrieves - you control the AI.
 ### 4. Data Ownership
 
 Your data, your infrastructure:
+
 - Data stays in your Convex account (both modes)
 - No external data processing
 - Full control and compliance
@@ -262,12 +286,14 @@ Your data, your infrastructure:
 ### 5. Two Deployment Options
 
 **Direct Mode (Open Source)**
+
 - Connect directly to your Convex instance
 - Full functionality
 - Self-managed
 - Free forever
 
 **Cloud Mode (Managed Service)**
+
 - Additional analytics and insights
 - Team collaboration features
 - Optimization recommendations
@@ -277,6 +303,7 @@ Your data, your infrastructure:
 ### 6. Production-Ready
 
 Built for real applications:
+
 - ACID transactions (via Convex)
 - Automatic scaling (via Convex)
 - Security best practices
@@ -340,27 +367,35 @@ Built for real applications:
 Cortex powers a wide range of AI applications:
 
 ### 1. Chatbots & Virtual Assistants
+
 Remember user preferences, conversation history, and context across sessions.
 
 ### 2. Customer Support Agents
+
 Maintain customer context, previous interactions, and issue history for personalized support.
 
 ### 3. Multi-Agent Systems
+
 Coordinate between specialized agents with hierarchical context sharing.
 
 ### 4. RAG Pipelines
+
 Store and retrieve relevant context for language model prompts with semantic search.
 
 ### 5. Personal AI Assistants
+
 Long-term memory of user habits, preferences, and information for personalized experiences.
 
 ### 6. Knowledge Management
+
 Organizational memory that grows over time, accessible to all agents.
 
 ### 7. Code Assistants
+
 Remember project structure, coding preferences, and past solutions.
 
 ### 8. Content Generation
+
 Store style guidelines, past content, and user feedback for consistent generation.
 
 ## What Cortex Is Not
@@ -379,7 +414,7 @@ To set clear expectations:
 Ready to add persistent memory to your AI agents?
 
 1. **[Install Cortex](./02-installation.md)** - Get set up in 5 minutes
-2. **[Quick Start](./03-five-minute-quickstart.md)** - Build your first memory-enabled agent  
+2. **[Quick Start](./03-five-minute-quickstart.md)** - Build your first memory-enabled agent
 3. **[Core Concepts](./04-core-concepts.md)** - Understand how Cortex works
 4. **[Recipes](../06-recipes/01-simple-chatbot.md)** - See real-world examples
 
@@ -401,4 +436,3 @@ Continue to [Installation](./02-installation.md) to get Cortex running in your p
 ---
 
 **Questions?** Check out the [FAQ](../11-reference/01-faq.md) or join our [Discord](https://discord.gg/cortex).
-

@@ -24,30 +24,35 @@ Thank you for your interest in contributing to Cortex! This document provides gu
 ### Development Setup
 
 1. **Fork and Clone**
+
    ```bash
    git clone https://github.com/SaintNick1214/cortex.git
    cd cortex
    ```
 
 2. **Install Dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set Up Convex**
+
    ```bash
    npx convex dev
    ```
-   
+
    This creates a local dev deployment. Follow the prompts to authenticate.
 
 4. **Configure Environment**
+
    ```bash
    cp .env.example .env.local
    # Edit .env.local with your Convex URL
    ```
 
 5. **Run Tests**
+
    ```bash
    npm test
    ```
@@ -105,7 +110,7 @@ export interface MemoryEntry {
 
 export async function storeMemory(
   agentId: string,
-  entry: Omit<MemoryEntry, 'id' | 'createdAt'>
+  entry: Omit<MemoryEntry, "id" | "createdAt">,
 ): Promise<MemoryEntry> {
   // Implementation
 }
@@ -134,19 +139,18 @@ export class CortexError extends Error {
   constructor(
     message: string,
     public code: string,
-    public context?: Record<string, unknown>
+    public context?: Record<string, unknown>,
   ) {
     super(message);
-    this.name = 'CortexError';
+    this.name = "CortexError";
   }
 }
 
 // Always provide context
-throw new CortexError(
-  'Failed to store memory',
-  'MEMORY_STORE_FAILED',
-  { agentId, memoryId }
-);
+throw new CortexError("Failed to store memory", "MEMORY_STORE_FAILED", {
+  agentId,
+  memoryId,
+});
 ```
 
 ### Testing
@@ -159,36 +163,36 @@ throw new CortexError(
 
 ```typescript
 // Example test
-describe('memory.remember', () => {
-  it('should store a conversation with ACID + Vector', async () => {
+describe("memory.remember", () => {
+  it("should store a conversation with ACID + Vector", async () => {
     const cortex = new Cortex({ convexUrl: testConvexUrl });
-    
+
     const result = await cortex.memory.remember({
-      agentId: 'agent-1',
-      conversationId: 'test-conv-1',
-      userMessage: 'Test message',
-      agentResponse: 'Test response',
-      userId: 'test-user',
-      userName: 'Tester',
-      importance: 50
+      agentId: "agent-1",
+      conversationId: "test-conv-1",
+      userMessage: "Test message",
+      agentResponse: "Test response",
+      userId: "test-user",
+      userName: "Tester",
+      importance: 50,
     });
-    
+
     expect(result.conversation.messageIds).toHaveLength(2);
     expect(result.memories).toHaveLength(2);
     expect(result.memories[0].conversationRef).toBeDefined();
   });
-  
-  it('should store system memory in Vector layer', async () => {
-    const memory = await cortex.vector.store('agent-1', {
-      content: 'Test system memory',
-      contentType: 'raw',
-      source: { type: 'system', timestamp: new Date() },
-      metadata: { importance: 50 }
+
+  it("should store system memory in Vector layer", async () => {
+    const memory = await cortex.vector.store("agent-1", {
+      content: "Test system memory",
+      contentType: "raw",
+      source: { type: "system", timestamp: new Date() },
+      metadata: { importance: 50 },
     });
-    
+
     expect(memory.id).toBeDefined();
-    expect(memory.agentId).toBe('agent-1');
-    expect(memory.source.type).toBe('system');
+    expect(memory.agentId).toBe("agent-1");
+    expect(memory.source.type).toBe("system");
   });
 });
 ```
@@ -204,6 +208,7 @@ git checkout -b fix/your-bug-fix
 ```
 
 Branch naming:
+
 - `feature/` - New features
 - `fix/` - Bug fixes
 - `docs/` - Documentation changes
@@ -252,6 +257,7 @@ Write clear commit messages following [Conventional Commits](https://www.convent
 ```
 
 Types:
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -261,6 +267,7 @@ Types:
 - `chore`: Build process or tooling changes
 
 Examples:
+
 ```
 feat(memory): add support for custom vector dimensions
 
@@ -278,6 +285,7 @@ git push origin feature/your-feature-name
 ```
 
 Then create a Pull Request on GitHub with:
+
 - Clear title and description
 - Reference related issues (`Fixes #123`)
 - Screenshots/videos if UI changes
@@ -305,10 +313,10 @@ Before submitting, ensure:
 Test individual functions in isolation:
 
 ```typescript
-describe('extractTags', () => {
-  it('should extract finance tags', () => {
-    const tags = extractTags('Budget review meeting');
-    expect(tags).toContain('finance');
+describe("extractTags", () => {
+  it("should extract finance tags", () => {
+    const tags = extractTags("Budget review meeting");
+    expect(tags).toContain("finance");
   });
 });
 ```
@@ -332,24 +340,24 @@ describe('memory integration', () => {
 Test complete workflows:
 
 ```typescript
-describe('chatbot memory workflow', () => {
-  it('should remember user preferences across sessions', async () => {
+describe("chatbot memory workflow", () => {
+  it("should remember user preferences across sessions", async () => {
     // Store preference (Layer 3 - ACID + Vector)
     await cortex.memory.remember({
-      agentId: 'agent-1',
-      conversationId: 'conv-1',
-      userMessage: 'I prefer email notifications',
+      agentId: "agent-1",
+      conversationId: "conv-1",
+      userMessage: "I prefer email notifications",
       agentResponse: "I'll remember that",
-      userId: 'user-1',
-      userName: 'User'
+      userId: "user-1",
+      userName: "User",
     });
-    
+
     // New session - search (Layer 3 - searches Vector)
-    const memories = await cortex.memory.search('agent-1', 'preference');
-    
+    const memories = await cortex.memory.search("agent-1", "preference");
+
     // Verify retrieval
-    expect(memories[0].content).toContain('email notifications');
-    expect(memories[0].conversationRef).toBeDefined();  // Has ACID link
+    expect(memories[0].content).toContain("email notifications");
+    expect(memories[0].conversationRef).toBeDefined(); // Has ACID link
   });
 });
 ```
@@ -362,18 +370,18 @@ describe('chatbot memory workflow', () => {
 - Include examples in comments
 - Explain "why" not "what"
 
-```typescript
+````typescript
 /**
  * Stores a conversation with automatic ACID + Vector storage.
- * 
+ *
  * This is the recommended way to store conversation memories. It handles:
  * - ACID storage (Layer 1) for immutable conversation history
  * - Vector indexing (Layer 2) for searchable knowledge
  * - Automatic linking via conversationRef
- * 
+ *
  * @param params - Conversation details
  * @returns Result with ACID message IDs and Vector memory entries
- * 
+ *
  * @example
  * ```typescript
  * const result = await cortex.memory.remember({
@@ -391,11 +399,11 @@ describe('chatbot memory workflow', () => {
  * ```
  */
 export async function remember(
-  params: RememberParams
+  params: RememberParams,
 ): Promise<RememberResult> {
   // Implementation
 }
-```
+````
 
 ### Markdown Documentation
 
@@ -418,33 +426,41 @@ Good bug reports include:
 7. **Screenshots**: If applicable
 
 **Template:**
+
 ```markdown
 ### Description
+
 Brief description of the bug
 
 ### Steps to Reproduce
+
 1. Initialize Cortex with...
 2. Call memory.store with...
 3. See error
 
 ### Expected Behavior
+
 What should happen
 
 ### Actual Behavior
+
 What actually happens
 
 ### Environment
+
 - OS: macOS 14.0
 - Node: v20.10.0
 - Cortex: v0.1.0
 - Convex: v1.8.0
 
 ### Code Sample
+
 \`\`\`typescript
 // Minimal reproduction
 \`\`\`
 
 ### Error Output
+
 \`\`\`
 Full error stack trace
 \`\`\`
@@ -465,6 +481,7 @@ For feature requests:
 ### Our Pledge
 
 We are committed to providing a welcoming and inclusive environment for all contributors, regardless of:
+
 - Experience level
 - Gender identity and expression
 - Sexual orientation
@@ -496,6 +513,7 @@ We are committed to providing a welcoming and inclusive environment for all cont
 ## 🏆 Recognition
 
 Contributors are recognized in:
+
 - [CHANGELOG.md](./CHANGELOG.md) for each release
 - GitHub contributors page
 - Annual contributor spotlight posts
@@ -512,6 +530,7 @@ Contributors are recognized in:
 By contributing, you agree that your contributions will be licensed under the Apache License 2.0.
 
 This includes:
+
 - **Copyright License**: You grant the project a license to use your code
 - **Patent License**: You grant a license to any patents covering your contribution
 - **Patent Retaliation**: If you sue over patents, your license terminates
@@ -521,4 +540,3 @@ This protects both contributors and users. See [LICENSE.md](./LICENSE.md) for fu
 ---
 
 Thank you for helping make Cortex better! 🎉
-

@@ -9,6 +9,7 @@ Complete API reference for configuring retention, purging, and governance rules 
 The Governance Policies API provides centralized control over data retention, purging, and compliance rules across all Cortex storage layers.
 
 **Governs:**
+
 - **Layer 1a** (Conversations) - Private conversation retention
 - **Layer 1b** (Immutable) - Shared immutable data versioning
 - **Layer 1c** (Mutable) - Shared mutable data lifecycle
@@ -16,6 +17,7 @@ The Governance Policies API provides centralized control over data retention, pu
 - **Layer 3** (Memory API) - Convenience layer policies
 
 **Key Features:**
+
 - Per-layer retention rules
 - Per-type/importance rules
 - Automatic enforcement
@@ -33,7 +35,7 @@ The Governance Policies API provides centralized control over data retention, pu
 interface GovernancePolicy {
   organizationId?: string;            // Optional: org-wide policy
   agentId?: string;                   // Optional: agent-specific override
-  
+
   // Layer 1a: Conversations
   conversations: {
     retention: {
@@ -46,7 +48,7 @@ interface GovernancePolicy {
       deleteInactiveAfter?: string;   // '1y', '90d'
     };
   };
-  
+
   // Layer 1b: Immutable
   immutable: {
     retention: {
@@ -61,7 +63,7 @@ interface GovernancePolicy {
       purgeUnusedAfter?: string;
     };
   };
-  
+
   // Layer 1c: Mutable
   mutable: {
     retention: {
@@ -73,7 +75,7 @@ interface GovernancePolicy {
       deleteUnaccessed After?: string;
     };
   };
-  
+
   // Layer 2: Vector
   vector: {
     retention: {
@@ -89,7 +91,7 @@ interface GovernancePolicy {
       deleteOrphaned: boolean;        // No conversationRef/immutableRef
     };
   };
-  
+
   // Cross-layer rules
   compliance: {
     mode: 'GDPR' | 'HIPAA' | 'SOC2' | 'FINRA' | 'Custom';
@@ -109,6 +111,7 @@ interface GovernancePolicy {
 Set governance policy for organization or agent.
 
 **Signature:**
+
 ```typescript
 cortex.governance.setPolicy(
   policy: GovernancePolicy
@@ -116,77 +119,78 @@ cortex.governance.setPolicy(
 ```
 
 **Example:**
+
 ```typescript
 // Organization-wide policy
 await cortex.governance.setPolicy({
-  organizationId: 'org-123',
-  
+  organizationId: "org-123",
+
   conversations: {
     retention: {
-      deleteAfter: '7y',  // GDPR compliance
-      archiveAfter: '1y',
-      purgeOnUserRequest: true
+      deleteAfter: "7y", // GDPR compliance
+      archiveAfter: "1y",
+      purgeOnUserRequest: true,
     },
     purging: {
       autoDelete: true,
-      deleteInactiveAfter: '2y'
-    }
+      deleteInactiveAfter: "2y",
+    },
   },
-  
+
   immutable: {
     retention: {
       defaultVersions: 20,
       byType: {
-        'audit-log': { versionsToKeep: -1 },  // Unlimited
-        'kb-article': { versionsToKeep: 50 },
-        'policy': { versionsToKeep: -1 },     // Unlimited
-        'agent-reasoning': { versionsToKeep: 10 }
-      }
+        "audit-log": { versionsToKeep: -1 }, // Unlimited
+        "kb-article": { versionsToKeep: 50 },
+        policy: { versionsToKeep: -1 }, // Unlimited
+        "agent-reasoning": { versionsToKeep: 10 },
+      },
     },
     purging: {
-      autoCleanupVersions: true
-    }
+      autoCleanupVersions: true,
+    },
   },
-  
+
   mutable: {
     retention: {
-      defaultTTL: null,  // No expiration
-      purgeInactiveAfter: '2y'
+      defaultTTL: null, // No expiration
+      purgeInactiveAfter: "2y",
     },
     purging: {
-      autoDelete: false
-    }
+      autoDelete: false,
+    },
   },
-  
+
   vector: {
     retention: {
       defaultVersions: 10,
       byImportance: [
-        { range: [0, 20], versions: 1 },      // Trivial: current only
-        { range: [21, 40], versions: 3 },     // Low: 3 versions
-        { range: [41, 70], versions: 10 },    // Medium: 10 versions
-        { range: [71, 89], versions: 20 },    // High: 20 versions
-        { range: [90, 100], versions: 30 }    // Critical: 30 versions
+        { range: [0, 20], versions: 1 }, // Trivial: current only
+        { range: [21, 40], versions: 3 }, // Low: 3 versions
+        { range: [41, 70], versions: 10 }, // Medium: 10 versions
+        { range: [71, 89], versions: 20 }, // High: 20 versions
+        { range: [90, 100], versions: 30 }, // Critical: 30 versions
       ],
       bySourceType: {
-        'conversation': 10,
-        'a2a': 15,
-        'system': 5,
-        'tool': 3
-      }
+        conversation: 10,
+        a2a: 15,
+        system: 5,
+        tool: 3,
+      },
     },
     purging: {
       autoCleanupVersions: true,
-      deleteOrphaned: false  // Keep even if refs broken
-    }
+      deleteOrphaned: false, // Keep even if refs broken
+    },
   },
-  
+
   compliance: {
-    mode: 'GDPR',
+    mode: "GDPR",
     dataRetentionYears: 7,
-    requireJustification: [90, 100],  // Critical data needs reason
-    auditLogging: true
-  }
+    requireJustification: [90, 100], // Critical data needs reason
+    auditLogging: true,
+  },
 });
 ```
 
@@ -197,6 +201,7 @@ await cortex.governance.setPolicy({
 Get current governance policy.
 
 **Signature:**
+
 ```typescript
 cortex.governance.getPolicy(
   scope?: {
@@ -207,18 +212,21 @@ cortex.governance.getPolicy(
 ```
 
 **Example:**
+
 ```typescript
 // Get org-wide policy
 const orgPolicy = await cortex.governance.getPolicy({
-  organizationId: 'org-123'
+  organizationId: "org-123",
 });
 
 // Get agent-specific policy (includes org defaults + overrides)
 const agentPolicy = await cortex.governance.getPolicy({
-  agentId: 'audit-agent'
+  agentId: "audit-agent",
 });
 
-console.log(`Vector retention for agent: ${agentPolicy.vector.retention.defaultVersions}`);
+console.log(
+  `Vector retention for agent: ${agentPolicy.vector.retention.defaultVersions}`,
+);
 ```
 
 ---
@@ -228,6 +236,7 @@ console.log(`Vector retention for agent: ${agentPolicy.vector.retention.defaultV
 Override policy for specific agent.
 
 **Signature:**
+
 ```typescript
 cortex.governance.setAgentOverride(
   agentId: string,
@@ -236,36 +245,37 @@ cortex.governance.setAgentOverride(
 ```
 
 **Example:**
+
 ```typescript
 // Audit agent needs unlimited retention
-await cortex.governance.setAgentOverride('audit-agent', {
+await cortex.governance.setAgentOverride("audit-agent", {
   vector: {
     retention: {
-      defaultVersions: -1,  // Unlimited
+      defaultVersions: -1, // Unlimited
       byImportance: [
-        { range: [0, 100], versions: -1 }  // All versions forever
-      ]
-    }
+        { range: [0, 100], versions: -1 }, // All versions forever
+      ],
+    },
   },
   immutable: {
     retention: {
-      defaultVersions: -1  // Unlimited
-    }
-  }
+      defaultVersions: -1, // Unlimited
+    },
+  },
 });
 
 // Temp agent needs minimal retention
-await cortex.governance.setAgentOverride('temp-agent', {
+await cortex.governance.setAgentOverride("temp-agent", {
   vector: {
     retention: {
-      defaultVersions: 1  // Current only
-    }
+      defaultVersions: 1, // Current only
+    },
   },
   conversations: {
     retention: {
-      deleteAfter: '7d'  // Delete after 7 days
-    }
-  }
+      deleteAfter: "7d", // Delete after 7 days
+    },
+  },
 });
 ```
 
@@ -276,7 +286,7 @@ await cortex.governance.setAgentOverride('temp-agent', {
 ### GDPR Template
 
 ```typescript
-const gdprPolicy = await cortex.governance.getTemplate('GDPR');
+const gdprPolicy = await cortex.governance.getTemplate("GDPR");
 
 // Applies:
 // - 7-year conversation retention
@@ -286,15 +296,15 @@ const gdprPolicy = await cortex.governance.getTemplate('GDPR');
 // - Justification for critical data
 
 await cortex.governance.setPolicy({
-  organizationId: 'org-123',
-  ...gdprPolicy
+  organizationId: "org-123",
+  ...gdprPolicy,
 });
 ```
 
 ### HIPAA Template
 
 ```typescript
-const hipaaPolicy = await cortex.governance.getTemplate('HIPAA');
+const hipaaPolicy = await cortex.governance.getTemplate("HIPAA");
 
 // Applies:
 // - 6-year retention minimum
@@ -304,15 +314,15 @@ const hipaaPolicy = await cortex.governance.getTemplate('HIPAA');
 // - Enhanced purge controls
 
 await cortex.governance.setPolicy({
-  organizationId: 'healthcare-org',
-  ...hipaaPolicy
+  organizationId: "healthcare-org",
+  ...hipaaPolicy,
 });
 ```
 
 ### SOC2 Template
 
 ```typescript
-const soc2Policy = await cortex.governance.getTemplate('SOC2');
+const soc2Policy = await cortex.governance.getTemplate("SOC2");
 
 // Applies:
 // - 7-year audit retention
@@ -348,8 +358,8 @@ await cortex.vector.update('agent-1', memoryId, {...});
 ```typescript
 // Trigger immediate policy enforcement
 const result = await cortex.governance.enforce({
-  layers: ['vector', 'immutable'],  // Which layers
-  rules: ['retention', 'purging']   // Which rules
+  layers: ["vector", "immutable"], // Which layers
+  rules: ["retention", "purging"], // Which rules
 });
 
 console.log(`Enforced retention: ${result.versionsDeleted} versions deleted`);
@@ -395,11 +405,11 @@ if (impact.costSavings > 50) {
 ```typescript
 // Generate compliance report
 const report = await cortex.governance.getComplianceReport({
-  organizationId: 'org-123',
+  organizationId: "org-123",
   period: {
-    start: new Date('2025-01-01'),
-    end: new Date('2025-10-31')
-  }
+    start: new Date("2025-01-01"),
+    end: new Date("2025-10-31"),
+  },
 });
 
 console.log(report);
@@ -442,19 +452,19 @@ console.log(report);
 
 ```typescript
 // Use compliance template as base
-const basePolicy = await cortex.governance.getTemplate('GDPR');
+const basePolicy = await cortex.governance.getTemplate("GDPR");
 
 // Customize as needed
 await cortex.governance.setPolicy({
-  organizationId: 'org-123',
+  organizationId: "org-123",
   ...basePolicy,
   vector: {
     ...basePolicy.vector,
     retention: {
       ...basePolicy.vector.retention,
-      defaultVersions: 15  // Override default
-    }
-  }
+      defaultVersions: 15, // Override default
+    },
+  },
 });
 ```
 
@@ -465,7 +475,7 @@ await cortex.governance.setPolicy({
 const impact = await cortex.governance.simulate(newPolicy);
 
 if (impact.versionsAffected > 1000) {
-  console.warn('Policy would delete significant data - review carefully');
+  console.warn("Policy would delete significant data - review carefully");
 }
 ```
 
@@ -475,15 +485,15 @@ if (impact.versionsAffected > 1000) {
 // Most agents use org policy
 // Only override for special cases
 
-await cortex.governance.setAgentOverride('audit-agent', {
+await cortex.governance.setAgentOverride("audit-agent", {
   // Unlimited retention for audit agent
-  vector: { retention: { defaultVersions: -1 } }
+  vector: { retention: { defaultVersions: -1 } },
 });
 
-await cortex.governance.setAgentOverride('temp-agent', {
+await cortex.governance.setAgentOverride("temp-agent", {
   // Minimal retention for temporary agent
   vector: { retention: { defaultVersions: 1 } },
-  conversations: { retention: { deleteAfter: '7d' } }
+  conversations: { retention: { deleteAfter: "7d" } },
 });
 ```
 
@@ -492,7 +502,7 @@ await cortex.governance.setAgentOverride('temp-agent', {
 ```typescript
 // Track what's being purged
 const stats = await cortex.governance.getEnforcementStats({
-  period: '30d'
+  period: "30d",
 });
 
 console.log(`Last 30 days:`);
@@ -508,6 +518,7 @@ console.log(`- Cost savings: $${stats.costSavings}`);
 ## Summary
 
 **Governance Policies provide:**
+
 - ✅ Centralized retention rules
 - ✅ Per-layer configuration
 - ✅ Compliance templates (GDPR, HIPAA, SOC2)
@@ -516,12 +527,14 @@ console.log(`- Cost savings: $${stats.costSavings}`);
 - ✅ Audit trail
 
 **Configuration Hierarchy:**
+
 1. Global defaults (Cortex defaults)
 2. Compliance template (GDPR, HIPAA, etc.)
 3. Organization policy
 4. Agent-specific overrides
 
 **Enterprise Value:**
+
 - Automatic compliance
 - Cost control at scale
 - No manual retention management
@@ -539,4 +552,3 @@ console.log(`- Cost savings: $${stats.costSavings}`);
 ---
 
 **Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
-

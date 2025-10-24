@@ -162,6 +162,7 @@ This Code of Conduct is licensed under [CC BY 4.0](https://creativecommons.org/l
 ## Summary
 
 **In short:**
+
 - Be kind, respectful, and professional
 - Welcome and help newcomers
 - Give constructive feedback
@@ -170,4 +171,3 @@ This Code of Conduct is licensed under [CC BY 4.0](https://creativecommons.org/l
 - Trust that reports will be handled fairly
 
 Thank you for helping make Cortex a welcoming community! 🎉
-

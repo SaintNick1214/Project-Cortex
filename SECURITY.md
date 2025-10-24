@@ -10,6 +10,7 @@ We release security updates for the following versions of Cortex:
 | < 0.1   | :x:                | Unsupported |
 
 **Note**: Cortex is currently in alpha. Once we reach 1.0, we will support:
+
 - Latest major version (security + features)
 - Previous major version (security only, for 6 months)
 
@@ -34,6 +35,7 @@ Report security vulnerabilities through one of these channels:
 Send an email to: **security@cortexmemory.dev**
 
 Include:
+
 - Type of vulnerability
 - Full description of the issue
 - Steps to reproduce
@@ -58,7 +60,7 @@ Key fingerprint: `[Fingerprint will be added]`
 1. **Acknowledgment**: Within 48 hours
 2. **Initial Assessment**: Within 5 business days
 3. **Updates**: Every 5-7 days until resolution
-4. **Fix Timeline**: 
+4. **Fix Timeline**:
    - Critical: 7-14 days
    - High: 14-30 days
    - Medium: 30-60 days
@@ -67,6 +69,7 @@ Key fingerprint: `[Fingerprint will be added]`
 ### Our Commitment
 
 We will:
+
 - Acknowledge your report within 48 hours
 - Keep you informed of our progress
 - Credit you in the security advisory (unless you prefer anonymity)
@@ -82,7 +85,7 @@ We will:
 ```typescript
 // ❌ DON'T: Expose Convex credentials in client-side code
 const cortex = new Cortex({
-  convexUrl: 'https://your-deployment.convex.cloud',
+  convexUrl: "https://your-deployment.convex.cloud",
   // Never put API keys in client-side code!
 });
 
@@ -96,10 +99,10 @@ const cortex = new Cortex({
 
 ```typescript
 // ❌ DON'T: Trust user input directly
-await cortex.memory.remember(userInput);  // Could contain malicious data
+await cortex.memory.remember(userInput); // Could contain malicious data
 
 // ✅ DO: Validate and sanitize
-import { z } from 'zod';
+import { z } from "zod";
 
 const RememberInputSchema = z.object({
   agentId: z.string().regex(/^agent-[\w-]+$/),
@@ -108,7 +111,7 @@ const RememberInputSchema = z.object({
   agentResponse: z.string().max(10000),
   userId: z.string(),
   userName: z.string(),
-  importance: z.number().min(0).max(100),  // 0-100 scale
+  importance: z.number().min(0).max(100), // 0-100 scale
 });
 
 const validated = RememberInputSchema.parse(userInput);
@@ -119,17 +122,17 @@ await cortex.memory.remember(validated);
 
 ```typescript
 // ❌ DON'T: Allow unrestricted access
-app.post('/api/memory', async (req, res) => {
-  await cortex.memory.remember(req.body);  // No auth check!
+app.post("/api/memory", async (req, res) => {
+  await cortex.memory.remember(req.body); // No auth check!
 });
 
 // ✅ DO: Verify user permissions
-app.post('/api/memory', requireAuth, async (req, res) => {
+app.post("/api/memory", requireAuth, async (req, res) => {
   // Verify user owns this agent
-  if (!await userOwnsAgent(req.user.id, req.body.agentId)) {
-    return res.status(403).json({ error: 'Forbidden' });
+  if (!(await userOwnsAgent(req.user.id, req.body.agentId))) {
+    return res.status(403).json({ error: "Forbidden" });
   }
-  
+
   // Store with Layer 3 remember()
   await cortex.memory.remember({
     agentId: req.body.agentId,
@@ -137,7 +140,7 @@ app.post('/api/memory', requireAuth, async (req, res) => {
     userMessage: req.body.userMessage,
     agentResponse: req.body.agentResponse,
     userId: req.user.id,
-    userName: req.user.name
+    userName: req.user.name,
   });
 });
 ```
@@ -174,15 +177,15 @@ await cortex.memory.remember({
 
 ```typescript
 // Protect against abuse with rate limiting
-import rateLimit from 'express-rate-limit';
+import rateLimit from "express-rate-limit";
 
 const memoryLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // Limit each IP to 100 requests per window
-  message: 'Too many requests, please try again later',
+  message: "Too many requests, please try again later",
 });
 
-app.use('/api/memory', memoryLimiter);
+app.use("/api/memory", memoryLimiter);
 ```
 
 #### 6. Audit Logging
@@ -190,17 +193,22 @@ app.use('/api/memory', memoryLimiter);
 ```typescript
 // Log security-relevant actions
 const result = await cortex.memory.remember({
-  agentId, conversationId, userMessage, agentResponse, userId, userName
+  agentId,
+  conversationId,
+  userMessage,
+  agentResponse,
+  userId,
+  userName,
 });
 
 // Log to audit trail
 await auditLog.record({
-  action: 'MEMORY_STORED',
+  action: "MEMORY_STORED",
   userId: req.user.id,
   agentId,
   conversationId: result.conversation.conversationId,
-  acidMessageIds: result.conversation.messageIds,  // ACID layer
-  vectorMemoryIds: result.memories.map(m => m.id),  // Vector layer
+  acidMessageIds: result.conversation.messageIds, // ACID layer
+  vectorMemoryIds: result.memories.map((m) => m.id), // Vector layer
   timestamp: new Date(),
   ip: req.ip,
 });
@@ -233,6 +241,7 @@ npm audit fix --force
 #### 3. Code Review
 
 All code changes must:
+
 - Pass automated security checks
 - Be reviewed by at least one maintainer
 - Include tests for security-relevant features
@@ -244,7 +253,8 @@ All code changes must:
 
 **Issue**: Agent memories must be properly isolated.
 
-**Mitigation**: 
+**Mitigation**:
+
 - Cortex enforces agent-level isolation at the database level
 - All queries filter by `agentId`
 - Cross-agent queries are explicitly blocked
@@ -254,6 +264,7 @@ All code changes must:
 **Issue**: Embeddings can potentially leak information about the original text.
 
 **Mitigation**:
+
 - Treat embeddings as sensitive data
 - Don't expose raw embeddings in APIs
 - Use proper access control
@@ -264,6 +275,7 @@ All code changes must:
 **Issue**: Search timing could potentially reveal information.
 
 **Mitigation**:
+
 - Search operations have consistent timing
 - Results are limited to authorized agents
 - Implement rate limiting
@@ -273,6 +285,7 @@ All code changes must:
 **Issue**: Cortex depends on Convex's security model.
 
 **Mitigation**:
+
 - Follow [Convex Security Best Practices](https://docs.convex.dev/security)
 - Use Convex authentication
 - Implement row-level security in Convex functions
@@ -291,6 +304,7 @@ All code changes must:
 ### Coordinated Disclosure
 
 We prefer coordinated disclosure:
+
 - We'll work with you on a disclosure timeline
 - We'll credit you in the advisory
 - We may request embargo until users can update
@@ -299,6 +313,7 @@ We prefer coordinated disclosure:
 ### Public Disclosure
 
 After a fix is deployed, we will:
+
 1. Publish a GitHub Security Advisory
 2. Release a patched version
 3. Update the CHANGELOG with security notes
@@ -372,4 +387,3 @@ _No vulnerabilities reported yet._
 **Version**: 1.0
 
 Thank you for helping keep Cortex and our community safe! 🔒
-
