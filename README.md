@@ -14,8 +14,10 @@ Cortex brings enterprise-grade persistent memory to any AI agent system. Built o
 - 🧠 **Flexible Memory** - Remember anything without hardcoded topics or schemas
 - 🔒 **Private Memory Banks** - Each agent has isolated, secure storage
 - ♾️ **Long-term Persistence** - Memories last forever with automatic indexing
+- ⏱️ **Automatic Versioning** - Updates preserve history, never lose data (10 versions default)
+- 🗄️ **ACID + Vector Hybrid** - Immutable conversation source + fast searchable index
 - 🔍 **Semantic Search** - AI-powered retrieval with multi-strategy fallback
-- 📊 **Vector Embeddings** - Support for any dimension (768, 1536, 3072+)
+- 📊 **Vector Embeddings** - Optional but preferred, support any dimension (768, 1536, 3072+)
 - 🔗 **Context Chains** - Hierarchical context sharing across agent teams
 - 👥 **User Profiles** - Rich user context and preferences
 - 📈 **Access Analytics** - Built-in tracking and insights
@@ -45,16 +47,38 @@ const cortex = new Cortex({
 await cortex.memory.store('agent-1', {
   content: 'User mentioned their dog is named Max',
   embedding: await getEmbedding('User mentioned their dog is named Max'),
-  metadata: { importance: 'medium', tags: ['pets', 'personal'] }
+  userId: 'user-123',
+  source: {
+    type: 'conversation',
+    userId: 'user-123',
+    userName: 'Alex',
+    timestamp: new Date()
+  },
+  metadata: { importance: 60, tags: ['pets', 'personal'] }
 });
 
-// Search memories
+// Search memories (filtered to specific user)
 const memories = await cortex.memory.search('agent-1', 
   'what is the user\'s dog name?',
-  { embedding: await getEmbedding('what is the user\'s dog name?') }
+  { 
+    embedding: await getEmbedding('what is the user\'s dog name?'),
+    userId: 'user-123'  // Only search this user's context
+  }
 );
 
 console.log(memories[0].content); // "User mentioned their dog is named Max"
+console.log(memories[0].source.userName); // "Alex"
+
+// ⏱️ Automatic versioning - updates preserve history
+await cortex.memory.update('agent-1', memories[0].id, {
+  content: 'User mentioned their dog Max passed away - now has a cat named Whiskers',
+});
+
+// View version history
+const updated = await cortex.memory.get('agent-1', memories[0].id);
+console.log(updated.version); // 2
+console.log(updated.previousVersions[0].content); // "User mentioned their dog is named Max"
+console.log(updated.content); // "...now has a cat named Whiskers"
 ```
 
 ### Cloud Mode (Managed Service)
@@ -216,8 +240,10 @@ Adds powerful management tools while your data remains in your Convex instance.
 
 **Key Design Decisions:**
 - **Built on Convex**: Leverages Convex's reactive backend for optimal performance
+- **ACID + Vector Hybrid**: Immutable conversation history + searchable memory index (linked via conversationRef)
 - **Any Convex deployment**: Works with Convex Cloud, localhost, or self-hosted infrastructure
-- **Embedding-agnostic**: You provide vectors from any provider (OpenAI, Cohere, local models)
+- **Embedding-agnostic**: Optional embeddings from any provider (OpenAI, Cohere, local models)
+- **Progressive enhancement**: Works with raw content (text search) or embeddings (semantic search)
 - **Hybrid agents**: Start simple with string IDs, add structure when needed
 - **Flexible dimensions**: Support for any vector dimension (768, 1536, 3072+)
 - **Your data, your instance**: Whether direct or cloud mode, data lives in your Convex deployment
@@ -291,6 +317,8 @@ const assistant = await openai.beta.assistants.create({
 | Vector Search | ✅ | ✅ | ✅ | ❌ |
 | ACID Transactions | ✅ | ❌ | ❌ | ❌ |
 | Real-time Updates | ✅ | ❌ | ❌ | ✅ |
+| Automatic Versioning | ✅ | ❌ | ❌ | ❌ |
+| Temporal Queries | ✅ | ❌ | ❌ | ❌ |
 | Serverless | ✅ | ✅ | ❌ | ❌ |
 | Context Chains | ✅ | ❌ | ❌ | ❌ |
 | Agent Management | ✅ | ❌ | ❌ | ❌ |

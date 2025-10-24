@@ -102,44 +102,114 @@ await cortex.memory.store('finance-agent', {
 ```
 ┌──────────┐       ┌──────────┐       ┌──────────┐       ┌──────────┐
 │ Created  │──────>│ Indexed  │──────>│ Accessed │──────>│ Archived │
+│  (v1)    │       │          │       │ count++  │       │          │
 └──────────┘       └──────────┘       └──────────┘       └──────────┘
      │                                       │                   │
      │                                       ▼                   ▼
      │                                 ┌──────────┐       ┌──────────┐
      └────────────────────────────────>│ Updated  │       │ Deleted  │
-                                       └──────────┘       └──────────┘
+                                       │  (v2+)   │       │          │
+                                       │ v1 saved │       └──────────┘
+                                       └──────────┘
 ```
 
-### Memory Importance
+### Memory Versioning (Automatic)
 
-Cortex supports three importance levels:
-
-**Low** - Casual information
-- Observations
-- Preferences about minor things
-- General conversation
-
-**Medium** (default) - Useful information
-- User preferences
-- Specific facts
-- Most day-to-day information
-
-**High** - Critical information
-- Passwords, credentials
-- Deadlines and commitments
-- Important decisions
-- Security-relevant data
+**Critical Feature**: When you update a memory, the old version is **automatically preserved**:
 
 ```typescript
-// Cortex can help determine importance
-const importance = determineImportance(content);
+// Store password
+await cortex.memory.store('agent-1', {
+  content: 'The password is Blue'
+});
 
-// Or you specify it explicitly
-await cortex.memory.store(agentId, {
-  content: 'Security code is 1234',
-  metadata: { importance: 'high' }
+// Password changes
+await cortex.memory.update('agent-1', memoryId, {
+  content: 'The password is Red'
+});
+
+// Both versions are preserved!
+const memory = await cortex.memory.get('agent-1', memoryId);
+console.log(memory.content); // "The password is Red" (current)
+console.log(memory.version); // 2
+
+console.log(memory.previousVersions[0]);
+// { version: 1, content: "The password is Blue", timestamp: ... }
+```
+
+**Why this is revolutionary:**
+- ✅ No data loss when information changes
+- ✅ Temporal conflict resolution
+- ✅ Complete audit trail
+- ✅ Can query "what was true on date X?"
+- ✅ Automatic - no code required
+- ✅ Configurable retention (default: 10 versions)
+
+**Configuration:**
+```typescript
+// Default: Keep last 10 versions
+const cortex = new Cortex({
+  defaultVersionRetention: 10
+});
+
+// Per-agent override
+await cortex.agents.configure('audit-agent', {
+  memoryVersionRetention: -1  // Keep all versions forever
 });
 ```
+
+### Memory Importance (0-100 Scale)
+
+Cortex uses a granular 0-100 importance scale for precise prioritization:
+
+**90-100** - Critical
+- Passwords, credentials (100)
+- Hard deadlines (95)
+- Security alerts (95)
+- Legal/compliance data (90)
+
+**70-89** - High
+- User requirements (80)
+- Important decisions (85)
+- Key preferences (75)
+- Task specifications (80)
+
+**40-69** - Medium (default: 50)
+- General preferences (60)
+- Conversation context (50)
+- Background information (45)
+- Routine data (50)
+
+**10-39** - Low
+- Casual observations (30)
+- Minor details (20)
+- Exploratory conversation (25)
+
+**0-9** - Trivial
+- Debug information (5)
+- Temporary data (0)
+
+```typescript
+// Automatic scoring
+const importance = determineImportance(content);  // Returns 0-100
+
+// Or set explicitly
+await cortex.memory.store(agentId, {
+  content: 'Security code is 1234',
+  metadata: { importance: 100 }  // Critical
+});
+
+await cortex.memory.store(agentId, {
+  content: 'User likes coffee',
+  metadata: { importance: 40 }  // Medium-low
+});
+```
+
+**Benefits of 0-100 scale:**
+- Fine-grained control (not just 3 buckets)
+- Gradual importance adjustments
+- Better filtering and ranking
+- More intuitive (100 = most important)
 
 ---
 

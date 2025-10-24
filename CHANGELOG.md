@@ -18,7 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Initial alpha release
-- Core memory operations (store, retrieve, search, delete)
+- Core memory operations (store, retrieve, search, delete, update)
+- **Automatic memory versioning** - Updates preserve history (default: 10 versions)
+- **Temporal queries** - Query memory state at any point in time
+- **Timestamps on all memories** - createdAt, updatedAt, lastAccessed
 - Hybrid agent management system (simple IDs + optional registry)
 - User profile management
 - Context chain support for hierarchical agent coordination
@@ -34,10 +37,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Architecture Decisions
 - Built on Convex backend for optimal performance
+- **ACID + Vector Hybrid**: Immutable conversation history + searchable memory index with conversationRef links
 - Two-tier model: Direct mode (open source) + Cloud mode (managed service)
-- Developer brings their own embeddings (embedding-agnostic)
-- Progressive enhancement for agent management
+- Developer brings their own embeddings (optional, embedding-agnostic)
+- Progressive enhancement: raw content → embeddings → summarization
 - Support for any Convex deployment (Cloud, localhost, self-hosted)
+- conversationRef preserves full context even after vector retention cleanup
 
 ### Known Limitations
 - Alpha stability - API may change

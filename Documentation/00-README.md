@@ -27,7 +27,6 @@ Deep dives into Cortex capabilities:
 - **[A2A Communication](./02-core-features/05-a2a-communication.md)** - Agent-to-agent memory tracking
 - **[Conversation History](./02-core-features/06-conversation-history.md)** - Persist message threads
 - **[Access Analytics](./02-core-features/07-access-analytics.md)** - Usage patterns and insights
-- **[Flexible Dimensions](./02-core-features/08-flexible-dimensions.md)** - Vector dimension strategies
 
 ### 📖 API Reference
 
@@ -90,7 +89,7 @@ Practical examples and patterns:
 Expert-level content:
 
 - **[Embedding Providers](./07-advanced-topics/01-embedding-providers.md)** - OpenAI, Cohere, local models
-- **[Dimension Strategies](./07-advanced-topics/02-dimension-strategies.md)** - When to use which dimensions
+- **[Dimension Strategies](./07-advanced-topics/02-dimension-strategies.md)** - Choosing vector dimensions and models
 - **[Custom Search Logic](./07-advanced-topics/03-custom-search-logic.md)** - Extend search behavior
 - **[Memory Pruning](./07-advanced-topics/04-memory-pruning.md)** - Strategic cleanup
 - **[Multi-Tenant](./07-advanced-topics/05-multi-tenant.md)** - Multi-tenant architecture
