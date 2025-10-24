@@ -47,48 +47,50 @@ cortex.immutable.store(
 
 ```typescript
 interface ImmutableEntry {
-  type: string;                       // Entity type: 'kb-article', 'policy', 'audit-log', 'feedback'
-  id: string;                         // Logical ID (versioned)
-  data: Record<string, any>;          // The actual data
-  userId?: string;                    // OPTIONAL: Links to user (enables GDPR cascade)
+  type: string; // Entity type: 'kb-article', 'policy', 'audit-log', 'feedback'
+  id: string; // Logical ID (versioned)
+  data: Record<string, any>; // The actual data
+  userId?: string; // OPTIONAL: Links to user (enables GDPR cascade)
   metadata?: {
     publishedBy?: string;
     tags?: string[];
-    importance?: number;              // 0-100
+    importance?: number; // 0-100
     [key: string]: any;
   };
 }
 ```
 
 **userId Field:**
+
 - **Optional** - Only include if this record belongs to a specific user
 - **Validated** - Must reference an existing user profile
 - **GDPR-enabled** - Allows `cortex.users.delete(userId, { cascade: true })` to find and delete this record
 - **Use cases**: User feedback, user-submitted content, user surveys, user audit logs
 
 **Examples:**
+
 ```typescript
 // With userId (user-generated content)
 await cortex.immutable.store({
-  type: 'feedback',
-  id: 'feedback-456',
-  userId: 'user-123',  // ← Links to user
+  type: "feedback",
+  id: "feedback-456",
+  userId: "user-123", // ← Links to user
   data: {
     rating: 5,
-    comment: 'Great service!',
-    submittedAt: new Date()
-  }
+    comment: "Great service!",
+    submittedAt: new Date(),
+  },
 });
 
 // Without userId (system content)
 await cortex.immutable.store({
-  type: 'kb-article',
-  id: 'refund-policy',
+  type: "kb-article",
+  id: "refund-policy",
   // No userId - not user-specific
   data: {
-    title: 'Refund Policy',
-    content: '...'
-  }
+    title: "Refund Policy",
+    content: "...",
+  },
 });
 ```
 
@@ -97,19 +99,19 @@ await cortex.immutable.store({
 ```typescript
 interface ImmutableRecord {
   type: string;
-  id: string;                         // Logical ID
-  version: number;                    // Version number
+  id: string; // Logical ID
+  version: number; // Version number
   data: Record<string, any>;
-  userId?: string;                    // OPTIONAL: User link (GDPR-enabled)
+  userId?: string; // OPTIONAL: User link (GDPR-enabled)
   metadata: any;
-  createdAt: Date;                    // When this version created
+  createdAt: Date; // When this version created
   previousVersions: ImmutableVersion[]; // Subject to retention
 }
 
 interface ImmutableVersion {
   version: number;
   data: any;
-  userId?: string;                    // User link (preserved in history)
+  userId?: string; // User link (preserved in history)
   metadata: any;
   timestamp: Date;
 }

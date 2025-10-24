@@ -59,7 +59,7 @@ interface MutableRecord {
   namespace: string;
   key: string;
   value: any;
-  userId?: string;                    // OPTIONAL: User link (GDPR-enabled)
+  userId?: string; // OPTIONAL: User link (GDPR-enabled)
   updatedAt: Date;
   createdAt: Date;
   accessCount: number;
@@ -94,7 +94,7 @@ const session = await cortex.mutable.set(
     lastActivity: new Date(),
     pagesViewed: 5,
   },
-  "user-123"  // ← Links to user (enables GDPR cascade)
+  "user-123", // ← Links to user (enables GDPR cascade)
 );
 
 console.log(session.userId); // "user-123"

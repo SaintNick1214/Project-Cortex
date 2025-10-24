@@ -16,12 +16,12 @@ When a user requests data deletion (GDPR "right to be forgotten"), a single API 
 
 ```typescript
 // Cortex Cloud: One call deletes from ALL stores with userId
-await cortex.users.delete('user-123', { cascade: true });
+await cortex.users.delete("user-123", { cascade: true });
 
 // Automatically deletes from:
 // ✅ User profile (immutable store, type='user')
 // ✅ Layer 1a (conversations.*) - All conversations with userId
-// ✅ Layer 1b (immutable.*) - All records with userId  
+// ✅ Layer 1b (immutable.*) - All records with userId
 // ✅ Layer 1c (mutable.*) - All keys with userId
 // ✅ Layer 2 (vector.*) - All memories with userId (across ALL agents)
 ```
@@ -40,33 +40,33 @@ async function deleteUserDataManually(userId: string) {
   for (const conv of conversations) {
     await cortex.conversations.delete(conv.id);
   }
-  
+
   // 2. Delete from immutable store (Layer 1b)
   const immutableRecords = await cortex.immutable.list({ userId });
   for (const record of immutableRecords) {
     await cortex.immutable.purge(record.type, record.id);
   }
-  
+
   // 3. Delete from mutable store (Layer 1c)
-  const namespaces = ['user-sessions', 'user-cache', 'user-prefs'];
+  const namespaces = ["user-sessions", "user-cache", "user-prefs"];
   for (const ns of namespaces) {
     await cortex.mutable.purgeMany(ns, { userId });
   }
-  
+
   // 4. Delete from vector memories (Layer 2)
   const agents = await cortex.agents.list();
   for (const agent of agents) {
     await cortex.memory.deleteMany(agent.id, { userId });
   }
-  
+
   // 5. Delete user profile
-  await cortex.immutable.purge('user', userId);
-  
+  await cortex.immutable.purge("user", userId);
+
   return { success: true };
 }
 
 // Usage
-await deleteUserDataManually('user-123');
+await deleteUserDataManually("user-123");
 // Works, but requires ~30 lines of code vs 1 line with Cloud
 ```
 
@@ -76,10 +76,10 @@ Provides user-friendly syntax for user profile management:
 
 ```typescript
 // Convenience
-await cortex.users.get('user-123');
+await cortex.users.get("user-123");
 
 // vs Equivalent
-await cortex.immutable.get('user', 'user-123');
+await cortex.immutable.get("user", "user-123");
 ```
 
 ### Under the Hood
@@ -88,15 +88,15 @@ User profiles are stored in **`cortex.immutable.*`** with `type='user'`:
 
 ```typescript
 // When you call:
-await cortex.users.update('user-123', {
-  data: { displayName: 'Alex', email: 'alex@example.com' }
+await cortex.users.update("user-123", {
+  data: { displayName: "Alex", email: "alex@example.com" },
 });
 
 // Cortex actually does:
 await cortex.immutable.store({
-  type: 'user',
-  id: 'user-123',
-  data: { displayName: 'Alex', email: 'alex@example.com' }
+  type: "user",
+  id: "user-123",
+  data: { displayName: "Alex", email: "alex@example.com" },
 });
 ```
 
@@ -125,15 +125,15 @@ Convenience APIs:
 
 **User Profiles vs Other Stores:**
 
-| Feature | cortex.users.* | cortex.immutable.* | cortex.mutable.* | cortex.vector.* |
-|---------|---------------|-------------------|-----------------|-----------------|
-| **Storage** | immutable (type='user') | immutable | mutable | vector index |
-| **Shared** | ✅ All agents | ✅ All agents | ✅ All agents | ❌ Per-agent |
-| **Versioning** | ✅ Auto (unlimited) | ✅ Auto (20 versions) | ❌ None | ✅ Auto (10 versions) |
-| **userId** | N/A (IS the user) | ✅ Optional | ✅ Optional | ✅ Optional |
-| **GDPR Cascade** | ✅ **ALL stores** | ❌ No | ❌ No | ❌ No |
-| **API** | `users.get(id)` | `immutable.get('user', id)` | `mutable.get('users', id)` | `vector.search(agentId, ...)` |
-| **Use Case** | User profiles | User feedback, submissions | User sessions, cache | Agent memories |
+| Feature          | cortex.users.\*         | cortex.immutable.\*         | cortex.mutable.\*          | cortex.vector.\*              |
+| ---------------- | ----------------------- | --------------------------- | -------------------------- | ----------------------------- |
+| **Storage**      | immutable (type='user') | immutable                   | mutable                    | vector index                  |
+| **Shared**       | ✅ All agents           | ✅ All agents               | ✅ All agents              | ❌ Per-agent                  |
+| **Versioning**   | ✅ Auto (unlimited)     | ✅ Auto (20 versions)       | ❌ None                    | ✅ Auto (10 versions)         |
+| **userId**       | N/A (IS the user)       | ✅ Optional                 | ✅ Optional                | ✅ Optional                   |
+| **GDPR Cascade** | ✅ **ALL stores**       | ❌ No                       | ❌ No                      | ❌ No                         |
+| **API**          | `users.get(id)`         | `immutable.get('user', id)` | `mutable.get('users', id)` | `vector.search(agentId, ...)` |
+| **Use Case**     | User profiles           | User feedback, submissions  | User sessions, cache       | Agent memories                |
 
 **Key Differences:**
 
@@ -167,11 +167,11 @@ cortex.users.get(
 ```typescript
 interface UserProfile {
   // Identity (REQUIRED)
-  id: string;                         // User ID
-  
+  id: string; // User ID
+
   // User Data (FLEXIBLE - structure is up to you!)
-  data: Record<string, any>;          // Any JSON-serializable data
-  
+  data: Record<string, any>; // Any JSON-serializable data
+
   // System fields (automatic)
   version: number;
   createdAt: Date;
@@ -190,30 +190,30 @@ interface UserVersion {
 
 ```typescript
 // Common convention (but not required)
-await cortex.users.update('user-123', {
+await cortex.users.update("user-123", {
   data: {
-    displayName: 'Alex Johnson',     // Display name
-    email: 'alex@example.com',        // Contact email
-    
+    displayName: "Alex Johnson", // Display name
+    email: "alex@example.com", // Contact email
+
     // Preferences (your structure)
     preferences: {
-      theme: 'dark',
-      language: 'en',
-      timezone: 'America/New_York',
-      communicationStyle: 'friendly',
+      theme: "dark",
+      language: "en",
+      timezone: "America/New_York",
+      communicationStyle: "friendly",
     },
-    
+
     // Metadata (your structure)
     metadata: {
-      tier: 'pro',
+      tier: "pro",
       signupDate: new Date(),
-      company: 'Acme Corp',
+      company: "Acme Corp",
     },
-    
+
     // Add ANY custom fields
-    customField1: 'value',
-    customField2: { nested: 'object' },
-  }
+    customField1: "value",
+    customField2: { nested: "object" },
+  },
 });
 ```
 
@@ -265,13 +265,13 @@ cortex.users.update(
 
 ```typescript
 interface UserProfileUpdate {
-  data: Record<string, any>;          // Flexible user data (any structure)
+  data: Record<string, any>; // Flexible user data (any structure)
 }
 
 interface UpdateOptions {
-  skipVersioning?: boolean;           // Don't create new version (default: false)
-  versionReason?: string;             // Why this update happened
-  merge?: boolean;                    // Merge with existing data (default: true)
+  skipVersioning?: boolean; // Don't create new version (default: false)
+  versionReason?: string; // Why this update happened
+  merge?: boolean; // Merge with existing data (default: true)
 }
 ```
 
@@ -394,15 +394,15 @@ cortex.users.delete(
 
 ```typescript
 interface DeleteOptions {
-  cascade?: boolean;                  // Delete from ALL stores with userId (default: false)
-  
+  cascade?: boolean; // Delete from ALL stores with userId (default: false)
+
   // Granular control (all default to true if cascade=true)
-  deleteFromConversations?: boolean;  // Layer 1a: conversations.*
-  deleteFromImmutable?: boolean;      // Layer 1b: immutable.* (excluding user profile)
-  deleteFromMutable?: boolean;        // Layer 1c: mutable.*
-  deleteFromVector?: boolean;         // Layer 2: vector.*
-  
-  auditReason?: string;               // Why deletion happened
+  deleteFromConversations?: boolean; // Layer 1a: conversations.*
+  deleteFromImmutable?: boolean; // Layer 1b: immutable.* (excluding user profile)
+  deleteFromMutable?: boolean; // Layer 1c: mutable.*
+  deleteFromVector?: boolean; // Layer 2: vector.*
+
+  auditReason?: string; // Why deletion happened
 }
 ```
 
@@ -418,22 +418,22 @@ interface DeleteResult {
   // Layer 1a: Conversations
   conversationsDeleted?: number;
   totalMessagesDeleted?: number;
-  
+
   // Layer 1b: Immutable (user-linked records)
   immutableRecordsDeleted?: number;
-  immutableTypes?: string[];          // Which types were affected
-  
+  immutableTypes?: string[]; // Which types were affected
+
   // Layer 1c: Mutable (user-linked keys)
   mutableRecordsDeleted?: number;
-  mutableNamespaces?: string[];       // Which namespaces were affected
-  
+  mutableNamespaces?: string[]; // Which namespaces were affected
+
   // Layer 2: Vector
   vectorMemoriesDeleted?: number;
   agentsAffected?: string[];
-  
+
   // Summary
-  totalRecordsDeleted: number;        // Sum across all stores
-  restorable: boolean;                // False if any Layer 1 data deleted
+  totalRecordsDeleted: number; // Sum across all stores
+  restorable: boolean; // False if any Layer 1 data deleted
 }
 ```
 
@@ -464,12 +464,12 @@ console.log(`Total messages: ${result.totalMessagesDeleted}`);
 
 // Layer 1b: Immutable (user-linked records like feedback, submissions)
 console.log(`Immutable records deleted: ${result.immutableRecordsDeleted}`);
-console.log(`Types affected: ${result.immutableTypes.join(', ')}`);
+console.log(`Types affected: ${result.immutableTypes.join(", ")}`);
 // e.g., ['feedback', 'survey-response', 'user-submission']
 
 // Layer 1c: Mutable (user-linked live data like preferences, sessions)
 console.log(`Mutable records deleted: ${result.mutableRecordsDeleted}`);
-console.log(`Namespaces affected: ${result.mutableNamespaces.join(', ')}`);
+console.log(`Namespaces affected: ${result.mutableNamespaces.join(", ")}`);
 // e.g., ['user-sessions', 'user-preferences', 'user-cache']
 
 // Layer 2: Vector
@@ -487,10 +487,10 @@ console.log(`Restorable: ${result.restorable}`); // false - complete deletion
 // Cortex Cloud: Delete user data but preserve conversation audit trail
 const result = await cortex.users.delete("user-123", {
   cascade: true,
-  deleteFromConversations: false,     // Keep Layer 1a for audit
-  deleteFromImmutable: true,          // Delete Layer 1b
-  deleteFromMutable: true,            // Delete Layer 1c
-  deleteFromVector: true,             // Delete Layer 2
+  deleteFromConversations: false, // Keep Layer 1a for audit
+  deleteFromImmutable: true, // Delete Layer 1b
+  deleteFromMutable: true, // Delete Layer 1c
+  deleteFromVector: true, // Delete Layer 2
   auditReason: "User account closure (preserve audit trail)",
 });
 
@@ -505,10 +505,10 @@ console.log(`Restorable: ${result.restorable}`); // true (conversations exist)
 // Cortex Cloud: Only delete mutable data (like sessions, cache)
 const result = await cortex.users.delete("user-123", {
   cascade: true,
-  deleteFromConversations: false,     // Preserve
-  deleteFromImmutable: false,         // Preserve
-  deleteFromMutable: true,            // DELETE (live data only)
-  deleteFromVector: false,            // Preserve
+  deleteFromConversations: false, // Preserve
+  deleteFromImmutable: false, // Preserve
+  deleteFromMutable: true, // DELETE (live data only)
+  deleteFromVector: false, // Preserve
   auditReason: "Session cleanup",
 });
 
@@ -524,32 +524,32 @@ async function deleteUserGDPR(userId: string) {
   const deletionLog = {
     userId,
     deletedAt: new Date(),
-    stores: {}
+    stores: {},
   };
-  
+
   // Layer 1a: Conversations
   const conversations = await cortex.conversations.list({ userId });
   for (const conv of conversations) {
     await cortex.conversations.delete(conv.id);
   }
   deletionLog.stores.conversations = conversations.length;
-  
+
   // Layer 1b: Immutable
   const immutableRecords = await cortex.immutable.list({ userId });
   for (const record of immutableRecords) {
     await cortex.immutable.purge(record.type, record.id);
   }
   deletionLog.stores.immutable = immutableRecords.length;
-  
+
   // Layer 1c: Mutable (must know namespaces)
-  const mutableNamespaces = ['user-sessions', 'user-cache', 'user-preferences'];
+  const mutableNamespaces = ["user-sessions", "user-cache", "user-preferences"];
   let mutableCount = 0;
   for (const ns of mutableNamespaces) {
     const result = await cortex.mutable.purgeMany(ns, { userId });
     mutableCount += result.deleted;
   }
   deletionLog.stores.mutable = mutableCount;
-  
+
   // Layer 2: Vector
   const agents = await cortex.agents.list();
   let vectorCount = 0;
@@ -558,29 +558,29 @@ async function deleteUserGDPR(userId: string) {
     vectorCount += result.deleted;
   }
   deletionLog.stores.vector = vectorCount;
-  
+
   // Delete user profile
-  await cortex.immutable.purge('user', userId);
+  await cortex.immutable.purge("user", userId);
   deletionLog.stores.profile = 1;
-  
+
   return deletionLog;
 }
 
 // Usage (Direct Mode)
-const result = await deleteUserGDPR('user-123');
+const result = await deleteUserGDPR("user-123");
 // Works! But requires ~40 lines of code vs 1 line with Cortex Cloud
 ```
 
 **Comparison:**
 
-| Feature | Direct Mode | Cortex Cloud |
-|---------|-------------|--------------|
-| **GDPR Compliant** | ✅ Yes (manual) | ✅ Yes (automatic) |
-| **Code Required** | ~40 lines | 1 line |
-| **Cascade Deletion** | Manual loops | Automatic |
-| **Audit Trail** | DIY | Included |
-| **Verification** | Manual | Automatic |
-| **Cost** | Free | Included in Cloud tiers |
+| Feature              | Direct Mode     | Cortex Cloud            |
+| -------------------- | --------------- | ----------------------- |
+| **GDPR Compliant**   | ✅ Yes (manual) | ✅ Yes (automatic)      |
+| **Code Required**    | ~40 lines       | 1 line                  |
+| **Cascade Deletion** | Manual loops    | Automatic               |
+| **Audit Trail**      | DIY             | Included                |
+| **Verification**     | Manual          | Automatic               |
+| **Cost**             | Free            | Included in Cloud tiers |
 
 **Errors:**
 

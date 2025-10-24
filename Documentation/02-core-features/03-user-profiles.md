@@ -26,7 +26,7 @@ User profiles exist for **ONE critical reason**: **GDPR-compliant cascade deleti
 
 ```typescript
 // Cortex Cloud: GDPR "right to be forgotten" - ONE call
-const result = await cortex.users.delete('user-123', { cascade: true });
+const result = await cortex.users.delete("user-123", { cascade: true });
 
 // Automatically deletes from:
 // ✅ User profile (immutable type='user')
@@ -67,10 +67,10 @@ Convenience API:
 
 ```typescript
 // Convenience
-await cortex.users.get('user-123');
+await cortex.users.get("user-123");
 
 // vs Equivalent
-await cortex.immutable.get('user', 'user-123');
+await cortex.immutable.get("user", "user-123");
 ```
 
 ## User Profile Structure
@@ -80,11 +80,11 @@ User profiles have a **flexible structure** - only `id` is required:
 ```typescript
 interface UserProfile {
   // Identity (REQUIRED)
-  id: string;                         // User ID
-  
+  id: string; // User ID
+
   // User Data (FLEXIBLE - any structure you want!)
-  data: Record<string, any>;          // Completely customizable
-  
+  data: Record<string, any>; // Completely customizable
+
   // System fields (automatic)
   version: number;
   createdAt: Date;
@@ -103,29 +103,29 @@ interface UserVersion {
 
 ```typescript
 // Common pattern for user data structure
-await cortex.users.update('user-123', {
+await cortex.users.update("user-123", {
   data: {
-    displayName: 'Alex Johnson',     // Display name
-    email: 'alex@example.com',        // Contact
-    
+    displayName: "Alex Johnson", // Display name
+    email: "alex@example.com", // Contact
+
     // Preferences (your structure)
     preferences: {
-      theme: 'dark',
-      language: 'en',
-      timezone: 'America/New_York',
-      communicationStyle: 'friendly'
+      theme: "dark",
+      language: "en",
+      timezone: "America/New_York",
+      communicationStyle: "friendly",
     },
-    
+
     // Metadata (your structure)
     metadata: {
-      tier: 'pro',
+      tier: "pro",
       signupDate: new Date(),
-      company: 'Acme Corp'
+      company: "Acme Corp",
     },
-    
+
     // Add ANY custom fields
-    customField: 'anything you want!'
-  }
+    customField: "anything you want!",
+  },
 });
 ```
 
@@ -521,7 +521,7 @@ async function handleDataDeletionRequest(userId: string) {
   // Cortex Cloud: One-click cascade deletion
   const result = await cortex.users.delete(userId, {
     cascade: true,
-    auditReason: "GDPR right to be forgotten request"
+    auditReason: "GDPR right to be forgotten request",
   });
 
   console.log(`GDPR deletion complete for user ${userId}`);
