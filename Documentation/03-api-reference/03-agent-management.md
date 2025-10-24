@@ -461,9 +461,9 @@ cortex.agents.unregister(
 **Parameters:**
 ```typescript
 interface UnregisterOptions {
-  deleteMemories?: boolean;           // Delete all agent's memories
-  deleteConversations?: boolean;      // Delete all conversations
-  preserveData?: boolean;             // Keep data, just remove registration (default)
+  deleteVectorMemories?: boolean;     // Delete from Layer 2 (Vector index)
+  deleteConversations?: boolean;      // Delete from Layer 1 (ACID)
+  preserveData?: boolean;             // Keep all layers, just remove registration (default: true)
 }
 ```
 
@@ -472,29 +472,45 @@ interface UnregisterOptions {
 interface UnregisterResult {
   agentId: string;
   unregisteredAt: Date;
-  memoriesDeleted?: number;
-  conversationsDeleted?: number;
-  dataPreserved: boolean;
+  
+  // Layer 2 (Vector) deletions
+  vectorMemoriesDeleted?: number;      // Vector memories removed
+  
+  // Layer 1 (ACID) deletions
+  conversationsDeleted?: number;       // Conversation entities removed
+  totalMessagesDeleted?: number;       // Total messages within those conversations
+  
+  dataPreserved: boolean;              // If any layers preserved
 }
 ```
 
 **Example:**
 ```typescript
-// Unregister but keep data
+// Unregister but keep all data (default)
 const result = await cortex.agents.unregister('old-agent', {
-  preserveData: true  // Keep memories and conversations
+  preserveData: true  // Keep Layer 1 (ACID) + Layer 2 (Vector)
 });
 
-console.log(`Unregistered ${result.agentId}, data preserved`);
+console.log(`Unregistered ${result.agentId}, all data preserved`);
 
-// Unregister and delete everything
+// Unregister and delete Vector memories only (preserve ACID audit trail)
+const cleaned = await cortex.agents.unregister('old-agent', {
+  deleteVectorMemories: true,   // Delete Layer 2
+  deleteConversations: false    // Preserve Layer 1 (ACID audit trail)
+});
+
+console.log(`Deleted ${cleaned.vectorMemoriesDeleted} Vector memories`);
+console.log(`Preserved ${cleaned.conversationsDeleted === 0} ACID conversations`);
+
+// Unregister and delete everything (both layers)
 const purged = await cortex.agents.unregister('temp-agent', {
-  deleteMemories: true,
-  deleteConversations: true
+  deleteVectorMemories: true,   // Delete Layer 2
+  deleteConversations: true     // Delete Layer 1
 });
 
-console.log(`Deleted ${purged.memoriesDeleted} memories`);
-console.log(`Deleted ${purged.conversationsDeleted} conversations`);
+console.log(`Layer 2: Deleted ${purged.vectorMemoriesDeleted} Vector memories`);
+console.log(`Layer 1: Deleted ${purged.conversationsDeleted} conversations`);
+console.log(`Layer 1: Deleted ${purged.totalMessagesDeleted} total messages`);
 ```
 
 **Errors:**
@@ -502,6 +518,12 @@ console.log(`Deleted ${purged.conversationsDeleted} conversations`);
 - `CortexError('DELETION_FAILED')` - Data deletion failed
 
 **Warning:** This doesn't prevent using the agent ID again. It just removes registry entry.
+
+**Layer Clarification:**
+- `deleteVectorMemories: true` - Removes from Layer 2 (Vector index)
+- `deleteConversations: true` - Removes from Layer 1 (ACID)
+- Default (`preserveData: true`) - Keeps both layers intact
+- Typical use: Delete Vector (Layer 2) but preserve ACID (Layer 1) for audit trail
 
 ---
 
@@ -762,10 +784,19 @@ await cortex.agents.updateMany({
 const result = await cortex.agents.unregisterMany({
   metadata: { environment: 'experimental' }
 }, {
-  preserveData: true  // Keep their memories
+  preserveData: true  // Keep Layer 1 (ACID) + Layer 2 (Vector)
 });
 
 console.log(`Unregistered ${result.count} experimental agents`);
+console.log(`Data preserved in both layers`);
+
+// Or clean up Vector but preserve ACID
+const cleaned = await cortex.agents.unregisterMany({
+  metadata: { environment: 'test' }
+}, {
+  deleteVectorMemories: true,   // Clean Layer 2
+  deleteConversations: false    // Preserve Layer 1 audit trail
+});
 ```
 
 ---
