@@ -119,15 +119,32 @@ interface MemoryVersion {
 
 Cortex uses a **two-layer storage architecture** for optimal performance and complete data preservation.
 
-**API Organization:**
-Cortex organizes operations into three namespaces:
-- `cortex.conversations.*` - Layer 1 (ACID operations)
-- `cortex.vector.*` - Layer 2 (Vector operations)
-- `cortex.memory.*` - Layer 3 (Convenience - handles both)
+**Complete API Organization:**
+
+```
+Layer 1: Three ACID Stores
+├── cortex.conversations.*  (Private, append-only conversations)
+├── cortex.immutable.*      (Shared, versioned knowledge)
+└── cortex.mutable.*        (Shared, live data)
+
+Layer 2: Vector Index
+└── cortex.vector.*         (Searchable, references Layer 1)
+
+Layer 3: Convenience
+└── cortex.memory.*         (Conversations + Vector helper)
+
+Additional APIs
+├── cortex.users.*          (User profiles)
+├── cortex.agents.*         (Agent registry)
+├── cortex.contexts.*       (Workflow coordination)
+├── cortex.a2a.*            (A2A helpers)
+└── cortex.governance.*     (Retention policies)
+```
 
 **In this guide:**
 - Conversation examples use `cortex.memory.remember()` (Layer 3 - recommended)
 - System/tool examples use `cortex.vector.store()` (Layer 2 - explicit)
+- Shared knowledge examples use `cortex.immutable.*` (Layer 1b) + optional Vector indexing
 - Retrieval/search uses `cortex.memory.*` (Layer 3 - convenience)
 
 For complete API details, see [Memory Operations API](../03-api-reference/02-memory-operations.md).

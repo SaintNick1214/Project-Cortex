@@ -6,28 +6,86 @@ Complete API reference for agent memory operations.
 
 ## Overview
 
-The Memory Operations API is organized into **three namespaces** corresponding to Cortex's architecture layers:
+The Memory Operations API is organized into **namespaces** corresponding to Cortex's complete architecture:
 
 ```typescript
-// Layer 1: ACID Conversations (Immutable Source)
-cortex.conversations.*    // Raw conversation threads
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Layer 1: Three ACID Stores (Immutable Sources of Truth)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+cortex.conversations.*   // Layer 1a: Private conversations
+cortex.immutable.*       // Layer 1b: Shared immutable data (versioned)
+cortex.mutable.*         // Layer 1c: Shared mutable data (current-value)
 
-// Layer 2: Vector Index (Searchable Knowledge)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Layer 2: Vector Index (Searchable, References Layer 1)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 cortex.vector.*          // Vector memory operations
 
-// Layer 3: Dual-Layer Convenience (Recommended)
-cortex.memory.*          // Works across both layers automatically
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Layer 3: Convenience API (Conversations + Vector)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+cortex.memory.*          // Dual-layer helper (recommended)
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Additional APIs
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+cortex.users.*           // User profiles
+cortex.agents.*          // Agent registry
+cortex.contexts.*        // Context chains
+cortex.a2a.*             // A2A helpers
+cortex.governance.*      // Retention policies
 ```
 
-**Architecture Context:**
-- **Layer 1** (ACID): Immutable conversation history, no retention limits
-- **Layer 2** (Vector): Searchable index with versioning and retention rules
-- **Layer 3** (Memory): Convenience layer that manages both automatically
+**Complete Architecture:**
 
-**Which namespace to use:**
-- 🎯 **Most developers**: Use `cortex.memory.*` (handles both layers)
-- 🔧 **Advanced control**: Use `cortex.conversations.*` and `cortex.vector.*` separately
-- 📊 **Analytics/debugging**: Mix all three as needed
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Layer 1: ACID Stores                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                               │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐ │
+│  │ Conversations   │  │  Immutable      │  │  Mutable    │ │
+│  │ (Private)       │  │  (Shared)       │  │  (Shared)   │ │
+│  │                 │  │                 │  │             │ │
+│  │ User↔Agent      │  │ KB Articles     │  │ Inventory   │ │
+│  │ Agent↔Agent     │  │ Policies        │  │ Config      │ │
+│  │                 │  │ Audit Logs      │  │ Counters    │ │
+│  │                 │  │ Versioned       │  │ Live Data   │ │
+│  └─────────────────┘  └─────────────────┘  └─────────────┘ │
+│  Append-only          Versioned             Current-value   │
+│  Purgeable            Purgeable             Mutable         │
+└───────────┬───────────────────┬─────────────────┬───────────┘
+            │                   │                 │
+            │ conversationRef   │ immutableRef    │ mutableRef
+            │                   │                 │
+            └───────────────────┴─────────────────┘
+                                │
+                                ↓
+┌─────────────────────────────────────────────────────────────┐
+│              Layer 2: Vector Index (Searchable)              │
+├─────────────────────────────────────────────────────────────┤
+│  Agent-private memories with embeddings                      │
+│  References Layer 1 stores via Ref fields                   │
+│  Versioned with retention rules                              │
+│  Optimized for semantic search                               │
+└───────────────────────────┬─────────────────────────────────┘
+                            │
+                            ↓
+┌─────────────────────────────────────────────────────────────┐
+│       Layer 3: Memory API (Convenience - Recommended)        │
+├─────────────────────────────────────────────────────────────┤
+│  cortex.memory.remember() → Conversations + Vector           │
+│  cortex.memory.get/search() → Vector + optional enrichment   │
+│  Single API for conversation workflows                       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Which layer/API to use:**
+- 🎯 **Conversations**: Use `cortex.memory.remember()` (Layer 3) or manual `cortex.conversations.*` + `cortex.vector.*`
+- 📚 **Shared Knowledge**: Use `cortex.immutable.*` (Layer 1b) + optional `cortex.vector.*` for search
+- 📊 **Live Data**: Use `cortex.mutable.*` (Layer 1c) directly
+- 🔍 **Search**: Use `cortex.memory.search()` (Layer 3) or `cortex.vector.search()` (Layer 2)
+- 🏛️ **Governance**: Use `cortex.governance.*` for all layers
 
 ## Three-Namespace Architecture
 
@@ -168,16 +226,26 @@ const memory = await cortex.memory.store('agent-1', {
 // Layer 3 detects source.type='system' and skips ACID storage
 ```
 
-### conversationRef Rules
+### Layer 1 Reference Rules
 
-| source.type | conversationRef | Why |
-|-------------|-----------------|-----|
-| `conversation` | **REQUIRED** | Must link to ACID user-agent conversation |
-| `a2a` | **REQUIRED (default)** | Must link to ACID agent-agent conversation |
-| `system` | **OMITTED** | Not from a conversation |
-| `tool` | **OMITTED** | Not from a conversation |
+| source.type | Typical Ref | Why |
+|-------------|-------------|-----|
+| `conversation` | **conversationRef** | Links to private conversation (Layer 1a) |
+| `a2a` | **conversationRef** | Links to A2A conversation (Layer 1a) |
+| `system` | **immutableRef** or none | May link to immutable data (Layer 1b) or standalone |
+| `tool` | **immutableRef** or none | May link to immutable audit log (Layer 1b) or standalone |
 
-**Exception:** Set `trackConversation: false` in A2A to opt-out of ACID storage.
+**Reference Types:**
+- **conversationRef** - Links to Layer 1a (private conversations)
+- **immutableRef** - Links to Layer 1b (shared knowledge/policies)
+- **mutableRef** - Links to Layer 1c (live data snapshot)
+- **None** - Standalone Vector memory (no Layer 1 source)
+
+**Notes:**
+- References are mutually exclusive (only one per memory)
+- All references are optional
+- conversationRef required for `source.type='conversation'` (unless opt-out)
+- immutableRef/mutableRef used when indexing shared data
 
 ---
 
@@ -302,12 +370,25 @@ interface MemoryInput {
     timestamp: Date;
   };
   
-  // ACID Link
-  // REQUIRED for source.type='conversation' or 'a2a' (default behavior)
-  // OMITTED for source.type='system' or 'tool'
-  conversationRef?: {
-    conversationId: string;           // Link to ACID conversation
-    messageIds: string[];             // Specific message(s) that informed this memory
+  // Layer 1 References (optional - link to ACID stores)
+  // ONE of these may be present (mutually exclusive)
+  
+  conversationRef?: {                 // Layer 1a: Private conversations
+    conversationId: string;           // Which conversation
+    messageIds: string[];             // Specific message(s)
+  };
+  
+  immutableRef?: {                    // Layer 1b: Shared immutable data
+    type: string;                     // Entity type
+    id: string;                       // Logical ID
+    version?: number;                 // Specific version (optional)
+  };
+  
+  mutableRef?: {                      // Layer 1c: Shared mutable data (snapshot)
+    namespace: string;
+    key: string;
+    snapshotValue: any;               // Value at indexing time
+    snapshotAt: Date;
   };
   
   // Metadata (required)
