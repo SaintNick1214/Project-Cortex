@@ -1,102 +1,128 @@
 # User Profiles
 
-> **Last Updated**: 2025-10-23
+> **Last Updated**: 2025-10-24
 
 Rich user context and preferences that persist across all agents and conversations.
 
 ## Overview
 
-User profiles provide a central place to store information about users that should be accessible across all agents. Instead of each agent remembering "user prefers dark mode" separately, it's stored once in the user profile and available everywhere.
+User profiles exist for **ONE critical reason**: **GDPR-compliant cascade deletion**. When a user requests data deletion, `cortex.users.delete(userId, { cascade: true })` automatically removes their data from **every store across all layers** that contains an explicit `userId` reference.
 
-## Core Concept
+**Secondary benefit:** Provides a semantic, user-friendly API for managing user data (`cortex.users.get()` instead of `cortex.immutable.get('user', ...)`).
 
-**The Three Data Layers:**
+**Under the hood:** User profiles are stored in `cortex.immutable.*` with `type='user'`. The `cortex.users.*` API is a specialized wrapper that adds cross-layer GDPR deletion capabilities.
 
-- **ACID Conversations** - Complete message history (immutable, forever)
-- **Vector Memories** - Searchable knowledge index (versioned, retention rules)
-- **User Profiles** - Shared user attributes (versioned, no retention limits)
+## Core Concept: GDPR Cascade Deletion
+
+The primary purpose of `cortex.users.*` is to enable **one-click deletion** of all user data across the entire system:
 
 ```typescript
-// ACID Conversation (immutable source)
-await cortex.conversations.addMessage("conv-456", {
-  role: "user",
-  text: "I love pizza",
-  userId: "user-123",
-});
+// GDPR "right to be forgotten" - ONE call
+const result = await cortex.users.delete('user-123', { cascade: true });
 
-// Vector Memory (agent-specific knowledge) - Layer 2
-await cortex.vector.store("agent-1", {
-  content: "Had a good conversation with user about pizza",
-  contentType: "summarized",
-  userId: "user-123",
-  source: { type: "conversation", userId: "user-123", timestamp: new Date() },
-  conversationRef: { conversationId: "conv-456", messageIds: ["msg-045"] },
-  metadata: { importance: 60, tags: ["conversation", "food"] },
-});
+// Automatically deletes from:
+// ✅ User profile (immutable type='user')
+// ✅ Layer 1a: All conversations with userId='user-123'
+// ✅ Layer 1b: All immutable records with userId='user-123'
+// ✅ Layer 1c: All mutable keys with userId='user-123'
+// ✅ Layer 2: All vector memories with userId='user-123' (across ALL agents)
 
-// User Profile (shared across all agents)
-await cortex.users.update("user-123", {
-  preferences: { favoriteFood: "pizza" },
-});
+console.log(`Total records deleted: ${result.totalRecordsDeleted}`);
+// Could be hundreds or thousands of records across all stores
 ```
 
-**Key Distinction:**
+**Why this matters:**
 
-- **Layer 1 (ACID Conversations)**: `cortex.conversations.*` - Immutable message threads
-- **Layer 2 (Vector Memories)**: `cortex.vector.*` - Agent-private searchable index
-- **Layer 3 (Memory API)**: `cortex.memory.*` - Convenience layer (ACID + Vector)
-- **User Profiles**: `cortex.users.*` - Separate entity, shared across all agents
+- ✅ GDPR compliance in one API call
+- ✅ No manual loops through agents/stores
+- ✅ Atomic deletion (all or nothing)
+- ✅ Complete audit trail
+- ✅ Granular control (can preserve certain layers)
 
-User Profiles don't have conversationRef - they're not conversation-sourced.
+**Architecture:**
+
+```
+Layer 1: ACID Stores (all support optional userId)
+├── conversations.* (userId: optional) ← GDPR cascade target
+├── immutable.* (userId: optional) ← USER PROFILES stored here + cascade target
+└── mutable.* (userId: optional) ← GDPR cascade target
+
+Layer 2: Vector Index (supports optional userId)
+└── vector.* (userId: optional) ← GDPR cascade target
+
+Convenience API:
+└── users.* (immutable wrapper + GDPR cascade engine)
+```
+
+**Secondary benefit - Semantic API:**
+
+```typescript
+// Convenience
+await cortex.users.get('user-123');
+
+// vs Equivalent
+await cortex.immutable.get('user', 'user-123');
+```
 
 ## User Profile Structure
 
+User profiles have a **flexible structure** - only `id` is required:
+
 ```typescript
 interface UserProfile {
-  // Identity
-  id: string; // Unique user ID
-  displayName: string; // How to address the user
-  email?: string; // Contact email
-
-  // Preferences
-  preferences: {
-    theme?: "light" | "dark";
-    language?: string; // 'en', 'es', 'fr', etc.
-    timezone?: string; // 'America/New_York', etc.
-    communicationStyle?: "formal" | "casual" | "friendly";
-    notifications?: boolean;
-    [key: string]: any; // Custom preferences
-  };
-
-  // Metadata
-  metadata: {
-    tier?: "free" | "pro" | "enterprise";
-    signupDate?: Date;
-    lastSeen?: Date;
-    company?: string;
-    department?: string;
-    [key: string]: any; // Custom metadata
-  };
-
-  // System fields (auto-managed)
-  createdAt: Date; // When profile created
-  updatedAt: Date; // Last modification
-  version: number; // Profile version
-  previousVersions?: ProfileVersion[]; // Version history
+  // Identity (REQUIRED)
+  id: string;                         // User ID
+  
+  // User Data (FLEXIBLE - any structure you want!)
+  data: Record<string, any>;          // Completely customizable
+  
+  // System fields (automatic)
+  version: number;
+  createdAt: Date;
+  updatedAt: Date;
+  previousVersions?: UserVersion[];
 }
 
-interface ProfileVersion {
+interface UserVersion {
   version: number;
-  displayName?: string;
-  email?: string;
-  preferences: any;
-  metadata: any;
-  timestamp: Date; // When this version was created
-  updatedBy?: string; // What triggered the update
+  data: Record<string, any>;
+  timestamp: Date;
 }
 ```
 
-> **Automatic Versioning**: Like memories, user profiles automatically preserve previous versions when updated. Track how user preferences change over time.
+**Suggested Convention** (but not enforced):
+
+```typescript
+// Common pattern for user data structure
+await cortex.users.update('user-123', {
+  data: {
+    displayName: 'Alex Johnson',     // Display name
+    email: 'alex@example.com',        // Contact
+    
+    // Preferences (your structure)
+    preferences: {
+      theme: 'dark',
+      language: 'en',
+      timezone: 'America/New_York',
+      communicationStyle: 'friendly'
+    },
+    
+    // Metadata (your structure)
+    metadata: {
+      tier: 'pro',
+      signupDate: new Date(),
+      company: 'Acme Corp'
+    },
+    
+    // Add ANY custom fields
+    customField: 'anything you want!'
+  }
+});
+```
+
+> **Automatic Versioning**: Like `immutable.*` stores, user profiles automatically preserve previous versions when updated. Track how user preferences change over time.
+
+> **Under the Hood**: `cortex.users.update()` calls `cortex.immutable.store()` with `type='user'`.
 
 ## Basic Operations
 
@@ -105,15 +131,15 @@ interface ProfileVersion {
 ```typescript
 // Create or update user profile
 await cortex.users.update("user-123", {
-  displayName: "Alex Johnson",
-  email: "alex@example.com",
-  preferences: {
-    theme: "dark",
-    language: "en",
-    timezone: "America/Los_Angeles",
-    communicationStyle: "friendly",
-  },
-  metadata: {
+  data: {
+    displayName: "Alex Johnson",
+    email: "alex@example.com",
+    preferences: {
+      theme: "dark",
+      language: "en",
+      timezone: "America/Los_Angeles",
+      communicationStyle: "friendly",
+    },
     tier: "pro",
     signupDate: new Date(),
     company: "Acme Corp",
@@ -127,9 +153,10 @@ await cortex.users.update("user-123", {
 // Get user profile
 const user = await cortex.users.get("user-123");
 
-console.log(user.displayName); // "Alex Johnson"
-console.log(user.preferences.theme); // "dark"
-console.log(user.metadata.tier); // "pro"
+console.log(user.data.displayName); // "Alex Johnson"
+console.log(user.data.preferences.theme); // "dark"
+console.log(user.data.tier); // "pro"
+console.log(user.version); // Version number
 ```
 
 ### Updating Profiles
@@ -139,36 +166,40 @@ Updates automatically preserve previous versions:
 ```typescript
 // Original profile
 await cortex.users.update("user-123", {
-  displayName: "Alex",
-  preferences: {
-    theme: "dark",
-    language: "en",
+  data: {
+    displayName: "Alex",
+    preferences: {
+      theme: "dark",
+      language: "en",
+    },
   },
 });
 
 // Update theme (creates v2, preserves v1)
 await cortex.users.update("user-123", {
-  preferences: {
-    theme: "light", // Only updates theme, keeps other preferences
+  data: {
+    preferences: {
+      theme: "light", // Only updates theme, merges with existing
+    },
   },
 });
 
 // Get current with history
 const user = await cortex.users.get("user-123");
 console.log(user.version); // 2
-console.log(user.preferences.theme); // 'light'
-console.log(user.previousVersions[0].preferences.theme); // 'dark'
+console.log(user.data.preferences.theme); // 'light'
+console.log(user.previousVersions[0].data.preferences.theme); // 'dark'
 
-// Update last seen (doesn't create new version for metadata-only updates)
+// Update last seen (skip versioning for routine stats)
 await cortex.users.update(
   "user-123",
   {
-    metadata: {
+    data: {
       lastSeen: new Date(),
     },
   },
   {
-    skipVersioning: true, // Don't version metadata-only updates
+    skipVersioning: true, // Don't create version for stats
   },
 );
 ```

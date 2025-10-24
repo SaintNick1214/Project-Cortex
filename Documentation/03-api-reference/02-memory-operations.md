@@ -86,7 +86,23 @@ cortex.governance.*      // Retention policies
 - 📚 **Shared Knowledge**: Use `cortex.immutable.*` (Layer 1b) + optional `cortex.vector.*` for search
 - 📊 **Live Data**: Use `cortex.mutable.*` (Layer 1c) directly
 - 🔍 **Search**: Use `cortex.memory.search()` (Layer 3) or `cortex.vector.search()` (Layer 2)
+- 👤 **User Profiles**: Use `cortex.users.*` (immutable wrapper + GDPR cascade)
 - 🏛️ **Governance**: Use `cortex.governance.*` for all layers
+
+**GDPR Compliance:**
+
+All stores support **optional `userId` field** to enable cascade deletion:
+
+```typescript
+// Stores with userId can be deleted via cortex.users.delete(userId, { cascade: true })
+await cortex.conversations.addMessage(convId, { userId: 'user-123', ... });
+await cortex.immutable.store({ type: 'feedback', id: 'fb-1', userId: 'user-123', ... });
+await cortex.mutable.set('sessions', 'sess-1', data, 'user-123');
+await cortex.vector.store('agent-1', { userId: 'user-123', ... });
+
+// One call deletes from ALL stores
+await cortex.users.delete('user-123', { cascade: true });
+```
 
 ## Three-Namespace Architecture
 

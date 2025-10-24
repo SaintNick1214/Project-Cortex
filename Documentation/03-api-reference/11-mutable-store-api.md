@@ -40,7 +40,8 @@ Set a key to a value (creates or overwrites).
 cortex.mutable.set(
   namespace: string,
   key: string,
-  value: any
+  value: any,
+  userId?: string
 ): Promise<MutableRecord>
 ```
 
@@ -49,6 +50,7 @@ cortex.mutable.set(
 - `namespace` (string) - Logical grouping (e.g., 'inventory', 'config', 'counters')
 - `key` (string) - Unique key within namespace
 - `value` (any) - JSON-serializable value
+- `userId` (string, optional) - Link to user (enables GDPR cascade). Must reference existing user.
 
 **Returns:**
 
@@ -57,6 +59,7 @@ interface MutableRecord {
   namespace: string;
   key: string;
   value: any;
+  userId?: string;                    // OPTIONAL: User link (GDPR-enabled)
   updatedAt: Date;
   createdAt: Date;
   accessCount: number;
@@ -64,14 +67,14 @@ interface MutableRecord {
 }
 ```
 
-**Example:**
+**Example 1: System data (no userId)**
 
 ```typescript
-// Set inventory quantity
+// Set inventory quantity (system-wide)
 const record = await cortex.mutable.set("inventory", "widget-qty", 100);
 
 console.log(record.value); // 100
-console.log(record.updatedAt); // Current time
+console.log(record.userId); // undefined (system data)
 
 // Update (overwrites)
 await cortex.mutable.set("inventory", "widget-qty", 95); // Now 95
@@ -79,11 +82,34 @@ await cortex.mutable.set("inventory", "widget-qty", 95); // Now 95
 // No version history - previous value (100) is gone!
 ```
 
+**Example 2: User-specific data (with userId)**
+
+```typescript
+// Set user session data (GDPR-enabled)
+const session = await cortex.mutable.set(
+  "user-sessions",
+  "session-abc123",
+  {
+    startedAt: new Date(),
+    lastActivity: new Date(),
+    pagesViewed: 5,
+  },
+  "user-123"  // ← Links to user (enables GDPR cascade)
+);
+
+console.log(session.userId); // "user-123"
+
+// When user requests deletion:
+await cortex.users.delete("user-123", { cascade: true });
+// This session is automatically deleted! ✅
+```
+
 **Errors:**
 
 - `CortexError('INVALID_NAMESPACE')` - Namespace is empty or invalid
 - `CortexError('INVALID_KEY')` - Key is empty or invalid
 - `CortexError('VALUE_TOO_LARGE')` - Value exceeds size limit
+- `CortexError('USER_NOT_FOUND')` - userId doesn't reference existing user
 - `CortexError('CONVEX_ERROR')` - Database error
 
 ---
@@ -482,7 +508,9 @@ await cortex.mutable.set("inventory", "featured-products", [
 
 // Atomically update array
 await cortex.mutable.update("inventory", "featured-products", (products) => {
-  return products.map((p) => (p.id === "prod-1" ? { ...p, stock: p.stock - 1 } : p));
+  return products.map((p) =>
+    p.id === "prod-1" ? { ...p, stock: p.stock - 1 } : p,
+  );
 });
 ```
 
@@ -574,16 +602,12 @@ await cortex.mutable.set(
   },
 );
 
-await cortex.mutable.set(
-  "grocery-stores",
-  "store-15:inventory:dairy:milk",
-  {
-    quantity: 50,
-    unit: "gallons",
-    price: 4.99,
-    supplier: "Dairy Fresh",
-  },
-);
+await cortex.mutable.set("grocery-stores", "store-15:inventory:dairy:milk", {
+  quantity: 50,
+  unit: "gallons",
+  price: 4.99,
+  supplier: "Dairy Fresh",
+});
 
 // Query all produce for store 15
 const produce = await cortex.mutable.list("grocery-stores", {
@@ -609,22 +633,42 @@ Use delimiters in namespaces for organizational hierarchy:
 
 ```typescript
 // Pattern: hierarchical:namespace with flat keys
-await cortex.mutable.set("grocery-stores:store-15:inventory", "produce-apples", {
-  quantity: 150,
-  price: 2.99,
-});
+await cortex.mutable.set(
+  "grocery-stores:store-15:inventory",
+  "produce-apples",
+  {
+    quantity: 150,
+    price: 2.99,
+  },
+);
 
-await cortex.mutable.set("grocery-stores:store-15:inventory", "produce-bananas", {
-  quantity: 200,
-  price: 1.49,
-});
+await cortex.mutable.set(
+  "grocery-stores:store-15:inventory",
+  "produce-bananas",
+  {
+    quantity: 200,
+    price: 1.49,
+  },
+);
 
-await cortex.mutable.set("grocery-stores:store-15:metrics", "daily-revenue", 12500);
-await cortex.mutable.set("grocery-stores:store-15:metrics", "customer-count", 450);
+await cortex.mutable.set(
+  "grocery-stores:store-15:metrics",
+  "daily-revenue",
+  12500,
+);
+await cortex.mutable.set(
+  "grocery-stores:store-15:metrics",
+  "customer-count",
+  450,
+);
 
 // Query entire namespace
-const storeInventory = await cortex.mutable.list("grocery-stores:store-15:inventory");
-const storeMetrics = await cortex.mutable.list("grocery-stores:store-15:metrics");
+const storeInventory = await cortex.mutable.list(
+  "grocery-stores:store-15:inventory",
+);
+const storeMetrics = await cortex.mutable.list(
+  "grocery-stores:store-15:metrics",
+);
 ```
 
 **Benefits:**
@@ -731,25 +775,17 @@ await cortex.mutable.set("grocery-stores", "store-15-meta", {
 });
 
 // Store inventory items individually with hierarchical keys
-await cortex.mutable.set(
-  "inventory",
-  "store-15:produce:apples",
-  {
-    quantity: 150,
-    price: 2.99,
-    unit: "lbs",
-  },
-);
+await cortex.mutable.set("inventory", "store-15:produce:apples", {
+  quantity: 150,
+  price: 2.99,
+  unit: "lbs",
+});
 
-await cortex.mutable.set(
-  "inventory",
-  "store-15:produce:bananas",
-  {
-    quantity: 200,
-    price: 1.49,
-    unit: "lbs",
-  },
-);
+await cortex.mutable.set("inventory", "store-15:produce:bananas", {
+  quantity: 200,
+  price: 1.49,
+  unit: "lbs",
+});
 
 // Store aggregated metrics separately
 await cortex.mutable.set("metrics", "store-15-daily", {
@@ -794,7 +830,12 @@ async function listByPrefix(namespace: string, ...prefixParts: string[]) {
 }
 
 // Get all produce for store 15
-const produce = await listByPrefix("grocery-stores", "store-15", "inventory", "produce");
+const produce = await listByPrefix(
+  "grocery-stores",
+  "store-15",
+  "inventory",
+  "produce",
+);
 
 // Get all inventory for store 15
 const inventory = await listByPrefix("grocery-stores", "store-15", "inventory");
@@ -802,12 +843,12 @@ const inventory = await listByPrefix("grocery-stores", "store-15", "inventory");
 
 ### Choosing the Right Pattern
 
-| Pattern                  | Best For                           | Query Performance | Update Performance | Complexity |
-| ------------------------ | ---------------------------------- | ----------------- | ------------------ | ---------- |
-| Hierarchical Keys        | Prefix queries, flat relationships | ⭐⭐⭐⭐⭐         | ⭐⭐⭐⭐⭐          | Low        |
-| Hierarchical Namespaces  | Organizational structure           | ⭐⭐⭐⭐           | ⭐⭐⭐⭐⭐          | Low        |
-| Nested Object Values     | Related data, small datasets       | ⭐⭐⭐             | ⭐⭐⭐              | Medium     |
-| Hybrid                   | Large systems, mixed access        | ⭐⭐⭐⭐⭐         | ⭐⭐⭐⭐⭐          | Medium     |
+| Pattern                 | Best For                           | Query Performance | Update Performance | Complexity |
+| ----------------------- | ---------------------------------- | ----------------- | ------------------ | ---------- |
+| Hierarchical Keys       | Prefix queries, flat relationships | ⭐⭐⭐⭐⭐        | ⭐⭐⭐⭐⭐         | Low        |
+| Hierarchical Namespaces | Organizational structure           | ⭐⭐⭐⭐          | ⭐⭐⭐⭐⭐         | Low        |
+| Nested Object Values    | Related data, small datasets       | ⭐⭐⭐            | ⭐⭐⭐             | Medium     |
+| Hybrid                  | Large systems, mixed access        | ⭐⭐⭐⭐⭐        | ⭐⭐⭐⭐⭐         | Medium     |
 
 **Recommendations:**
 
@@ -926,7 +967,9 @@ const produce = await cortex.mutable.list("inventory", {
 
 console.log(`Store 15 produce items: ${produce.records.length}`);
 produce.records.forEach((item) => {
-  console.log(`- ${item.key.split(":")[2]}: ${item.value.quantity} ${item.value.unit}`);
+  console.log(
+    `- ${item.key.split(":")[2]}: ${item.value.quantity} ${item.value.unit}`,
+  );
 });
 
 // Get ALL inventory for store 15
@@ -951,9 +994,7 @@ async function getChainwideInventory(department?: string) {
   const inventory: Record<string, number> = {};
 
   for (const storeId of allStores.storeIds) {
-    const prefix = department
-      ? `${storeId}:${department}:`
-      : `${storeId}:`;
+    const prefix = department ? `${storeId}:${department}:` : `${storeId}:`;
 
     const items = await cortex.mutable.list("inventory", {
       keyPrefix: prefix,
@@ -978,11 +1019,15 @@ console.log("Chain-wide produce:", chainProduce);
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 // Restock all produce for store 15
-async function restockDepartment(storeId: string, department: string, items: Record<string, number>) {
+async function restockDepartment(
+  storeId: string,
+  department: string,
+  items: Record<string, number>,
+) {
   await cortex.mutable.transaction(async (tx) => {
     for (const [itemName, quantity] of Object.entries(items)) {
       const key = `${storeId}:${department}:${itemName}`;
-      
+
       tx.update("inventory", key, (current) => ({
         ...current,
         quantity: current.quantity + quantity,
@@ -1007,13 +1052,17 @@ async function checkLowStock(storeId: string, threshold: number = 20) {
     keyPrefix: `${storeId}:`,
   });
 
-  const lowStock = inventory.records.filter((item) => item.value.quantity < threshold);
+  const lowStock = inventory.records.filter(
+    (item) => item.value.quantity < threshold,
+  );
 
   if (lowStock.length > 0) {
     console.log(`⚠️ Low stock alert for ${storeId}:`);
     lowStock.forEach((item) => {
       const [store, dept, product] = item.key.split(":");
-      console.log(`  - ${dept}/${product}: ${item.value.quantity} ${item.value.unit} remaining`);
+      console.log(
+        `  - ${dept}/${product}: ${item.value.quantity} ${item.value.unit} remaining`,
+      );
     });
   }
 
@@ -1152,16 +1201,16 @@ const apples = await cortex.mutable.get("inventory", "store-15:produce:apples");
 
 **Decision Matrix:**
 
-| Scenario | Recommended Pattern | Why |
-|----------|-------------------|-----|
-| Store metadata (< 50 fields) | Complex Object | Related data, atomic updates |
-| Product catalog (1000s of items) | Hierarchical Keys | Scalable, independent updates |
-| App configuration | Complex Object | Read/updated together |
-| Multi-tenant inventory | Hierarchical Keys | Per-tenant prefix queries |
-| Workflow state | Complex Object | State transitions are atomic |
-| Metrics/counters | Hierarchical Keys | Independent increments |
-| Small lists (< 100 items) | Complex Object (array) | Simple, atomic |
-| Large lists (> 1000 items) | Hierarchical Keys | Scalable queries |
+| Scenario                         | Recommended Pattern    | Why                           |
+| -------------------------------- | ---------------------- | ----------------------------- |
+| Store metadata (< 50 fields)     | Complex Object         | Related data, atomic updates  |
+| Product catalog (1000s of items) | Hierarchical Keys      | Scalable, independent updates |
+| App configuration                | Complex Object         | Read/updated together         |
+| Multi-tenant inventory           | Hierarchical Keys      | Per-tenant prefix queries     |
+| Workflow state                   | Complex Object         | State transitions are atomic  |
+| Metrics/counters                 | Hierarchical Keys      | Independent increments        |
+| Small lists (< 100 items)        | Complex Object (array) | Simple, atomic                |
+| Large lists (> 1000 items)       | Hierarchical Keys      | Scalable queries              |
 
 ### 6. Use TypeScript for Type Safety
 
@@ -1379,7 +1428,7 @@ await cortex.mutable.set("inventory", "store-15:produce:apples", {
 // Customer orders 10 lbs (atomic decrement with complex object)
 await cortex.mutable.update("inventory", "store-15:produce:apples", (item) => {
   if (item.quantity < 10) throw new Error("Out of stock");
-  
+
   return {
     ...item,
     quantity: item.quantity - 10,
@@ -1442,7 +1491,10 @@ await cortex.mutable.set("config", "app-settings", {
 
 // Agents check config (type-safe access)
 const config = await cortex.mutable.get("config", "app-settings");
-if (config.features.enableChat && activeChats < config.features.maxConcurrentChats) {
+if (
+  config.features.enableChat &&
+  activeChats < config.features.maxConcurrentChats
+) {
   // Accept new chat
 }
 
@@ -1518,7 +1570,11 @@ await cortex.mutable.set("workflows", "refund-request-12345", {
     initiator: "support-agent-1",
     currentAssignee: "manager-agent",
     history: [
-      { agentId: "support-agent-1", action: "initiated", timestamp: new Date() },
+      {
+        agentId: "support-agent-1",
+        action: "initiated",
+        timestamp: new Date(),
+      },
       { agentId: "support-agent-1", action: "verified", timestamp: new Date() },
     ],
   },
@@ -1526,29 +1582,35 @@ await cortex.mutable.set("workflows", "refund-request-12345", {
 });
 
 // Manager approves (atomic state transition)
-await cortex.mutable.update("workflows", "refund-request-12345", (workflow) => ({
-  ...workflow,
-  status: "approved",
-  workflow: {
-    ...workflow.workflow,
-    currentStep: "payment-processing",
-    completedSteps: [...workflow.workflow.completedSteps, "manager-approval"],
-    pendingSteps: workflow.workflow.pendingSteps.filter((s) => s !== "manager-approval"),
-  },
-  agents: {
-    ...workflow.agents,
-    currentAssignee: "finance-agent",
-    history: [
-      ...workflow.agents.history,
-      { agentId: "manager-agent", action: "approved", timestamp: new Date() },
-    ],
-  },
-  approvalDetails: {
-    approvedBy: "manager-agent",
-    approvedAt: new Date(),
-    amount: 299.99,
-  },
-}));
+await cortex.mutable.update(
+  "workflows",
+  "refund-request-12345",
+  (workflow) => ({
+    ...workflow,
+    status: "approved",
+    workflow: {
+      ...workflow.workflow,
+      currentStep: "payment-processing",
+      completedSteps: [...workflow.workflow.completedSteps, "manager-approval"],
+      pendingSteps: workflow.workflow.pendingSteps.filter(
+        (s) => s !== "manager-approval",
+      ),
+    },
+    agents: {
+      ...workflow.agents,
+      currentAssignee: "finance-agent",
+      history: [
+        ...workflow.agents.history,
+        { agentId: "manager-agent", action: "approved", timestamp: new Date() },
+      ],
+    },
+    approvalDetails: {
+      approvedBy: "manager-agent",
+      approvedAt: new Date(),
+      amount: 299.99,
+    },
+  }),
+);
 
 // Finance agent processes payment
 await cortex.mutable.update("workflows", "refund-request-12345", (workflow) => {
@@ -1562,7 +1624,10 @@ await cortex.mutable.update("workflows", "refund-request-12345", (workflow) => {
     workflow: {
       ...workflow.workflow,
       currentStep: "complete",
-      completedSteps: [...workflow.workflow.completedSteps, "payment-processing"],
+      completedSteps: [
+        ...workflow.workflow.completedSteps,
+        "payment-processing",
+      ],
       pendingSteps: [],
     },
     completedAt: new Date(),
