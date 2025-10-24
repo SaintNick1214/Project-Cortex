@@ -757,13 +757,13 @@ const originalMessage = conversation.messages.find(m =>
 console.log(originalMessage.text); // Full original message from ACID (never expires!)
 ```
 
-### Helper: Store from Conversation (Recommended)
+### Helper: remember() - Recommended
 
-Cortex provides a helper that handles both layers automatically:
+Cortex provides a friendly helper that handles both layers automatically:
 
 ```typescript
 // Stores in ACID + creates vector memory with reference
-const result = await cortex.memory.storeFromConversation({
+const result = await cortex.memory.remember({
   agentId: 'agent-1',
   conversationId: 'conv-456',
   userMessage: 'The password is Red',
@@ -785,6 +785,9 @@ const result = await cortex.memory.storeFromConversation({
     // OR return null for text-only search
   },
   
+  // Or use Cloud Mode (easiest!)
+  autoEmbed: true,  // Cortex Cloud handles everything
+  
   importance: 100,  // or use auto-detection
   tags: ['password', 'security']
 });
@@ -797,6 +800,17 @@ console.log(result);
 //     { id: 'mem-def', content: "I told Alex: I'll remember that!", conversationRef: {...} }
 //   ]
 // }
+
+// Friendly usage:
+await cortex.memory.remember({
+  agentId: 'agent-1',
+  conversationId: currentConvo,
+  userMessage: req.body.message,
+  agentResponse: response,
+  userId: req.user.id,
+  userName: req.user.name
+});
+// That's it!
 ```
 
 ### Retrieving Specific Memories
