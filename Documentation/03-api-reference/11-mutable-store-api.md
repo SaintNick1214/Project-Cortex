@@ -444,6 +444,597 @@ await cortex.mutable.update("state", "agents-available", (list) => [
 
 ---
 
+## Complex Data Types
+
+The Mutable Store supports **any JSON-serializable value**, not just primitives. You can store:
+
+### Storing Objects
+
+```typescript
+// Store complex configuration object
+await cortex.mutable.set("config", "email-settings", {
+  smtp: {
+    host: "smtp.example.com",
+    port: 587,
+    secure: true,
+  },
+  from: "noreply@example.com",
+  templates: {
+    welcome: "templates/welcome.html",
+    reset: "templates/reset.html",
+  },
+});
+
+// Retrieve and use
+const emailConfig = await cortex.mutable.get("config", "email-settings");
+sendEmail(emailConfig.smtp, emailConfig.from);
+```
+
+### Storing Arrays
+
+```typescript
+// Store product catalog
+await cortex.mutable.set("inventory", "featured-products", [
+  { id: "prod-1", name: "Widget A", price: 19.99, stock: 150 },
+  { id: "prod-2", name: "Widget B", price: 29.99, stock: 75 },
+  { id: "prod-3", name: "Widget C", price: 39.99, stock: 200 },
+]);
+
+// Atomically update array
+await cortex.mutable.update("inventory", "featured-products", (products) => {
+  return products.map((p) => (p.id === "prod-1" ? { ...p, stock: p.stock - 1 } : p));
+});
+```
+
+### Storing Nested Structures
+
+```typescript
+// Store complete store configuration
+await cortex.mutable.set("stores", "store-15", {
+  id: "store-15",
+  name: "Downtown Location",
+  address: {
+    street: "123 Main St",
+    city: "Springfield",
+    state: "IL",
+    zip: "62701",
+  },
+  hours: {
+    monday: { open: "09:00", close: "21:00" },
+    tuesday: { open: "09:00", close: "21:00" },
+    sunday: { open: "10:00", close: "18:00" },
+  },
+  departments: [
+    { name: "Produce", manager: "Alice" },
+    { name: "Dairy", manager: "Bob" },
+    { name: "Bakery", manager: "Carol" },
+  ],
+  metrics: {
+    revenue: 125000,
+    customersToday: 450,
+    averageTransaction: 67.5,
+  },
+});
+```
+
+### Size Considerations
+
+```typescript
+// ✅ Good: Reasonable size (< 100KB recommended)
+await cortex.mutable.set("config", "app-settings", {
+  theme: "dark",
+  language: "en",
+  notifications: true,
+  // ... dozens of settings
+});
+
+// ⚠️ Be careful: Very large objects (> 1MB)
+await cortex.mutable.set("cache", "entire-product-catalog", {
+  // Thousands of products...
+  // Consider breaking into multiple keys instead
+});
+
+// ✅ Better: Split large datasets
+await cortex.mutable.set("catalog", "page-1", products.slice(0, 100));
+await cortex.mutable.set("catalog", "page-2", products.slice(100, 200));
+await cortex.mutable.set("catalog", "page-3", products.slice(200, 300));
+```
+
+---
+
+## Hierarchical Data Patterns
+
+For hierarchical/relational data like "Produce" → "Inventory" → "Grocery Store 15" → "Grocery Stores", Cortex provides several patterns:
+
+### Pattern 1: Hierarchical Keys (Recommended for Queries)
+
+Use delimiters in keys to create hierarchies:
+
+```typescript
+// Pattern: namespace:key-with:delimiters
+await cortex.mutable.set(
+  "grocery-stores",
+  "store-15:inventory:produce:apples",
+  {
+    quantity: 150,
+    unit: "lbs",
+    price: 2.99,
+    supplier: "Local Farms",
+  },
+);
+
+await cortex.mutable.set(
+  "grocery-stores",
+  "store-15:inventory:produce:bananas",
+  {
+    quantity: 200,
+    unit: "lbs",
+    price: 1.49,
+    supplier: "Tropical Import Co",
+  },
+);
+
+await cortex.mutable.set(
+  "grocery-stores",
+  "store-15:inventory:dairy:milk",
+  {
+    quantity: 50,
+    unit: "gallons",
+    price: 4.99,
+    supplier: "Dairy Fresh",
+  },
+);
+
+// Query all produce for store 15
+const produce = await cortex.mutable.list("grocery-stores", {
+  keyPrefix: "store-15:inventory:produce:",
+});
+
+// Query all inventory for store 15
+const allInventory = await cortex.mutable.list("grocery-stores", {
+  keyPrefix: "store-15:inventory:",
+});
+```
+
+**Benefits:**
+
+- Easy prefix queries
+- Flat structure (no deep nesting)
+- Good performance
+- Easy to add/remove items
+
+### Pattern 2: Hierarchical Namespaces
+
+Use delimiters in namespaces for organizational hierarchy:
+
+```typescript
+// Pattern: hierarchical:namespace with flat keys
+await cortex.mutable.set("grocery-stores:store-15:inventory", "produce-apples", {
+  quantity: 150,
+  price: 2.99,
+});
+
+await cortex.mutable.set("grocery-stores:store-15:inventory", "produce-bananas", {
+  quantity: 200,
+  price: 1.49,
+});
+
+await cortex.mutable.set("grocery-stores:store-15:metrics", "daily-revenue", 12500);
+await cortex.mutable.set("grocery-stores:store-15:metrics", "customer-count", 450);
+
+// Query entire namespace
+const storeInventory = await cortex.mutable.list("grocery-stores:store-15:inventory");
+const storeMetrics = await cortex.mutable.list("grocery-stores:store-15:metrics");
+```
+
+**Benefits:**
+
+- Logical namespace organization
+- Clear separation of concerns
+- Easy to list all keys in a category
+
+### Pattern 3: Nested Object Values (Recommended for Related Data)
+
+Store hierarchy as nested object in value:
+
+```typescript
+// Store entire store hierarchy in one key
+await cortex.mutable.set("grocery-stores", "store-15", {
+  id: "store-15",
+  name: "Downtown Location",
+  inventory: {
+    produce: {
+      apples: { quantity: 150, price: 2.99, unit: "lbs" },
+      bananas: { quantity: 200, price: 1.49, unit: "lbs" },
+      oranges: { quantity: 100, price: 3.49, unit: "lbs" },
+    },
+    dairy: {
+      milk: { quantity: 50, price: 4.99, unit: "gallons" },
+      cheese: { quantity: 75, price: 6.99, unit: "lbs" },
+    },
+    bakery: {
+      bread: { quantity: 100, price: 3.99, unit: "loaves" },
+      donuts: { quantity: 200, price: 1.99, unit: "each" },
+    },
+  },
+  metrics: {
+    revenue: 12500,
+    customers: 450,
+    avgTransaction: 27.78,
+  },
+});
+
+// Update specific nested value atomically
+await cortex.mutable.update("grocery-stores", "store-15", (store) => ({
+  ...store,
+  inventory: {
+    ...store.inventory,
+    produce: {
+      ...store.inventory.produce,
+      apples: {
+        ...store.inventory.produce.apples,
+        quantity: store.inventory.produce.apples.quantity - 10,
+      },
+    },
+  },
+}));
+
+// Or use helper function
+async function updateNestedInventory(
+  storeId: string,
+  department: string,
+  item: string,
+  updates: Partial<any>,
+) {
+  await cortex.mutable.update("grocery-stores", storeId, (store) => ({
+    ...store,
+    inventory: {
+      ...store.inventory,
+      [department]: {
+        ...store.inventory[department],
+        [item]: {
+          ...store.inventory[department][item],
+          ...updates,
+        },
+      },
+    },
+  }));
+}
+
+await updateNestedInventory("store-15", "produce", "apples", { quantity: 140 });
+```
+
+**Benefits:**
+
+- Single atomic update for related data
+- Natural data representation
+- Smaller transaction scope
+- Easy to retrieve entire hierarchy
+
+**Trade-offs:**
+
+- Large objects can be slow to update
+- Need careful atomic updates
+- Harder to query subsets
+
+### Pattern 4: Hybrid (Recommended for Large Systems)
+
+Combine approaches for optimal performance:
+
+```typescript
+// Store metadata in nested object
+await cortex.mutable.set("grocery-stores", "store-15-meta", {
+  id: "store-15",
+  name: "Downtown Location",
+  address: { street: "123 Main St", city: "Springfield" },
+  departments: ["produce", "dairy", "bakery"],
+});
+
+// Store inventory items individually with hierarchical keys
+await cortex.mutable.set(
+  "inventory",
+  "store-15:produce:apples",
+  {
+    quantity: 150,
+    price: 2.99,
+    unit: "lbs",
+  },
+);
+
+await cortex.mutable.set(
+  "inventory",
+  "store-15:produce:bananas",
+  {
+    quantity: 200,
+    price: 1.49,
+    unit: "lbs",
+  },
+);
+
+// Store aggregated metrics separately
+await cortex.mutable.set("metrics", "store-15-daily", {
+  revenue: 12500,
+  customers: 450,
+  date: new Date().toISOString(),
+});
+```
+
+**Benefits:**
+
+- Optimal for large datasets
+- Fast queries and updates
+- Good separation of concerns
+- Scalable architecture
+
+### Helper Functions for Hierarchical Data
+
+```typescript
+// Parse hierarchical keys
+function parseKey(key: string): string[] {
+  return key.split(":");
+}
+
+function buildKey(...parts: string[]): string {
+  return parts.join(":");
+}
+
+// Example usage
+const key = buildKey("store-15", "inventory", "produce", "apples");
+await cortex.mutable.set("grocery-stores", key, { quantity: 150 });
+
+const parts = parseKey(key); // ["store-15", "inventory", "produce", "apples"]
+console.log(`Store: ${parts[0]}, Department: ${parts[2]}, Item: ${parts[3]}`);
+
+// Query helpers
+async function listByPrefix(namespace: string, ...prefixParts: string[]) {
+  const prefix = buildKey(...prefixParts);
+  return await cortex.mutable.list(namespace, {
+    keyPrefix: prefix,
+  });
+}
+
+// Get all produce for store 15
+const produce = await listByPrefix("grocery-stores", "store-15", "inventory", "produce");
+
+// Get all inventory for store 15
+const inventory = await listByPrefix("grocery-stores", "store-15", "inventory");
+```
+
+### Choosing the Right Pattern
+
+| Pattern                  | Best For                           | Query Performance | Update Performance | Complexity |
+| ------------------------ | ---------------------------------- | ----------------- | ------------------ | ---------- |
+| Hierarchical Keys        | Prefix queries, flat relationships | ⭐⭐⭐⭐⭐         | ⭐⭐⭐⭐⭐          | Low        |
+| Hierarchical Namespaces  | Organizational structure           | ⭐⭐⭐⭐           | ⭐⭐⭐⭐⭐          | Low        |
+| Nested Object Values     | Related data, small datasets       | ⭐⭐⭐             | ⭐⭐⭐              | Medium     |
+| Hybrid                   | Large systems, mixed access        | ⭐⭐⭐⭐⭐         | ⭐⭐⭐⭐⭐          | Medium     |
+
+**Recommendations:**
+
+- **Inventory systems**: Hierarchical Keys or Hybrid
+- **Configuration**: Nested Object Values
+- **Metrics/Analytics**: Hierarchical Keys
+- **Multi-tenant data**: Hierarchical Namespaces
+- **Small datasets (< 100 items)**: Nested Object Values
+- **Large datasets (> 1000 items)**: Hierarchical Keys + Hybrid
+
+### Complete Real-World Example: Grocery Store Chain
+
+Here's a comprehensive example using the **Hybrid pattern** for a multi-store inventory system:
+
+```typescript
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Setup: Initialize grocery store chain
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// Store chain metadata (nested object - small, related data)
+await cortex.mutable.set("chain", "metadata", {
+  name: "Fresh Foods Chain",
+  totalStores: 25,
+  headquarters: "Springfield, IL",
+  storeIds: ["store-1", "store-15", "store-23"],
+});
+
+// Store individual store configs (nested object per store)
+await cortex.mutable.set("stores", "store-15", {
+  id: "store-15",
+  name: "Downtown Location",
+  address: "123 Main St, Springfield",
+  manager: "Alice Johnson",
+  departments: ["produce", "dairy", "bakery", "meat"],
+  openHours: { open: "09:00", close: "21:00" },
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Inventory: Hierarchical keys (scalable, fast queries)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// Set initial inventory (hierarchical keys: store:dept:item)
+await cortex.mutable.set("inventory", "store-15:produce:apples", {
+  quantity: 150,
+  unit: "lbs",
+  price: 2.99,
+  supplier: "Local Farms",
+  lastRestocked: new Date(),
+});
+
+await cortex.mutable.set("inventory", "store-15:produce:bananas", {
+  quantity: 200,
+  unit: "lbs",
+  price: 1.49,
+  supplier: "Tropical Import",
+});
+
+await cortex.mutable.set("inventory", "store-15:dairy:milk", {
+  quantity: 50,
+  unit: "gallons",
+  price: 4.99,
+  supplier: "Dairy Fresh",
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Operations: Customer purchases (atomic updates)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// Customer buys 10 lbs of apples
+await cortex.mutable.update("inventory", "store-15:produce:apples", (item) => {
+  if (item.quantity < 10) {
+    throw new Error("Insufficient stock");
+  }
+  return {
+    ...item,
+    quantity: item.quantity - 10,
+  };
+});
+
+// Multi-item purchase (ACID transaction)
+await cortex.mutable.transaction(async (tx) => {
+  // Buy apples, bananas, and milk
+  tx.update("inventory", "store-15:produce:apples", (item) => ({
+    ...item,
+    quantity: item.quantity - 5,
+  }));
+
+  tx.update("inventory", "store-15:produce:bananas", (item) => ({
+    ...item,
+    quantity: item.quantity - 3,
+  }));
+
+  tx.update("inventory", "store-15:dairy:milk", (item) => ({
+    ...item,
+    quantity: item.quantity - 2,
+  }));
+
+  // Update store metrics
+  tx.update("metrics", "store-15-daily", (metrics) => ({
+    ...metrics,
+    sales: (metrics?.sales || 0) + 1,
+    revenue: (metrics?.revenue || 0) + 24.43, // Total purchase
+  }));
+
+  // All updates succeed together or fail together
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Queries: Get inventory by hierarchy level
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// Get all produce for store 15
+const produce = await cortex.mutable.list("inventory", {
+  keyPrefix: "store-15:produce:",
+});
+
+console.log(`Store 15 produce items: ${produce.records.length}`);
+produce.records.forEach((item) => {
+  console.log(`- ${item.key.split(":")[2]}: ${item.value.quantity} ${item.value.unit}`);
+});
+
+// Get ALL inventory for store 15
+const allInventory = await cortex.mutable.list("inventory", {
+  keyPrefix: "store-15:",
+});
+
+// Get specific item across all stores
+const allApples = await cortex.mutable.list("inventory", {
+  keyPrefix: "store-", // Gets all stores
+});
+const applesOnly = allApples.records.filter((r) => r.key.endsWith(":apples"));
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Aggregation: Chain-wide reports
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// Get total inventory across all stores
+async function getChainwideInventory(department?: string) {
+  const allStores = await cortex.mutable.get("chain", "metadata");
+
+  const inventory: Record<string, number> = {};
+
+  for (const storeId of allStores.storeIds) {
+    const prefix = department
+      ? `${storeId}:${department}:`
+      : `${storeId}:`;
+
+    const items = await cortex.mutable.list("inventory", {
+      keyPrefix: prefix,
+    });
+
+    items.records.forEach((record) => {
+      const itemName = record.key.split(":").pop()!;
+      inventory[itemName] = (inventory[itemName] || 0) + record.value.quantity;
+    });
+  }
+
+  return inventory;
+}
+
+// Total produce across all stores
+const chainProduce = await getChainwideInventory("produce");
+console.log("Chain-wide produce:", chainProduce);
+// { apples: 3750, bananas: 5000, oranges: 2100 }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Restocking: Bulk updates
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// Restock all produce for store 15
+async function restockDepartment(storeId: string, department: string, items: Record<string, number>) {
+  await cortex.mutable.transaction(async (tx) => {
+    for (const [itemName, quantity] of Object.entries(items)) {
+      const key = `${storeId}:${department}:${itemName}`;
+      
+      tx.update("inventory", key, (current) => ({
+        ...current,
+        quantity: current.quantity + quantity,
+        lastRestocked: new Date(),
+      }));
+    }
+  });
+}
+
+await restockDepartment("store-15", "produce", {
+  apples: 100,
+  bananas: 150,
+  oranges: 75,
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Low Stock Alerts
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+async function checkLowStock(storeId: string, threshold: number = 20) {
+  const inventory = await cortex.mutable.list("inventory", {
+    keyPrefix: `${storeId}:`,
+  });
+
+  const lowStock = inventory.records.filter((item) => item.value.quantity < threshold);
+
+  if (lowStock.length > 0) {
+    console.log(`⚠️ Low stock alert for ${storeId}:`);
+    lowStock.forEach((item) => {
+      const [store, dept, product] = item.key.split(":");
+      console.log(`  - ${dept}/${product}: ${item.value.quantity} ${item.value.unit} remaining`);
+    });
+  }
+
+  return lowStock;
+}
+
+await checkLowStock("store-15", 25);
+```
+
+**This example demonstrates:**
+
+- ✅ Complex objects as values (store metadata, inventory items)
+- ✅ Hierarchical keys for scalable queries (`store:dept:item`)
+- ✅ Nested objects for related configuration
+- ✅ Atomic transactions across multiple keys
+- ✅ Prefix-based queries for hierarchy traversal
+- ✅ Aggregation across hierarchies
+- ✅ Real-world business logic (purchases, restocking, alerts)
+
+---
+
 ## Best Practices
 
 ### 1. Use Descriptive Namespaces
@@ -508,6 +1099,137 @@ await cortex.mutable.transaction(async (tx) => {
 await cortex.mutable.update("inventory", "product-a", (qty) => qty - 1);
 await cortex.mutable.update("counters", "total-sales", (n) => n + 1);
 // Second could fail, leaving inconsistent state
+```
+
+### 5. Choose Appropriate Data Structure
+
+**Use Complex Objects When:**
+
+```typescript
+// ✅ Related data that changes together
+await cortex.mutable.set("stores", "store-15", {
+  name: "Downtown",
+  manager: "Alice",
+  address: { street: "123 Main", city: "Springfield" },
+  // All fields updated as a unit
+});
+
+// ✅ Small datasets (< 100 items)
+await cortex.mutable.set("config", "app-settings", {
+  theme: "dark",
+  language: "en",
+  features: { chat: true, voice: false },
+});
+
+// ✅ Configuration that's read together
+await cortex.mutable.set("email", "settings", {
+  smtp: { host: "...", port: 587 },
+  templates: { welcome: "...", reset: "..." },
+});
+```
+
+**Use Hierarchical Keys When:**
+
+```typescript
+// ✅ Large datasets (> 100 items)
+await cortex.mutable.set("inventory", "store-15:produce:apples", {...});
+await cortex.mutable.set("inventory", "store-15:produce:bananas", {...});
+// Can have thousands of products
+
+// ✅ Need prefix queries
+const produce = await cortex.mutable.list("inventory", {
+  keyPrefix: "store-15:produce:",
+});
+
+// ✅ Independent updates (no related data)
+await cortex.mutable.update("inventory", "store-15:dairy:milk", ...);
+// Doesn't affect produce or other items
+
+// ✅ Different access patterns
+const apples = await cortex.mutable.get("inventory", "store-15:produce:apples");
+// Fast direct access to single item
+```
+
+**Decision Matrix:**
+
+| Scenario | Recommended Pattern | Why |
+|----------|-------------------|-----|
+| Store metadata (< 50 fields) | Complex Object | Related data, atomic updates |
+| Product catalog (1000s of items) | Hierarchical Keys | Scalable, independent updates |
+| App configuration | Complex Object | Read/updated together |
+| Multi-tenant inventory | Hierarchical Keys | Per-tenant prefix queries |
+| Workflow state | Complex Object | State transitions are atomic |
+| Metrics/counters | Hierarchical Keys | Independent increments |
+| Small lists (< 100 items) | Complex Object (array) | Simple, atomic |
+| Large lists (> 1000 items) | Hierarchical Keys | Scalable queries |
+
+### 6. Use TypeScript for Type Safety
+
+Define interfaces for complex objects:
+
+```typescript
+// Define your data structures
+interface InventoryItem {
+  quantity: number;
+  unit: string;
+  price: number;
+  supplier: string;
+  sku: string;
+  lastRestocked: Date;
+}
+
+interface StoreConfig {
+  id: string;
+  name: string;
+  manager: string;
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    zip: string;
+  };
+  departments: string[];
+  openHours: {
+    open: string;
+    close: string;
+  };
+}
+
+// Type-safe operations
+async function setInventoryItem(
+  storeId: string,
+  department: string,
+  item: string,
+  data: InventoryItem,
+): Promise<void> {
+  const key = `${storeId}:${department}:${item}`;
+  await cortex.mutable.set("inventory", key, data);
+}
+
+async function getInventoryItem(
+  storeId: string,
+  department: string,
+  item: string,
+): Promise<InventoryItem | null> {
+  const key = `${storeId}:${department}:${item}`;
+  return await cortex.mutable.get("inventory", key);
+}
+
+// Usage is type-safe
+await setInventoryItem("store-15", "produce", "apples", {
+  quantity: 150,
+  unit: "lbs",
+  price: 2.99,
+  supplier: "Local Farms",
+  sku: "PROD-APL-001",
+  lastRestocked: new Date(),
+});
+
+const apples = await getInventoryItem("store-15", "produce", "apples");
+if (apples) {
+  console.log(apples.quantity); // TypeScript knows this is a number
+  // apples.invalidField // TypeScript error!
+}
 ```
 
 ---
@@ -640,46 +1362,108 @@ await cortex.mutable.purgeMany("state", {
 
 ## Use Cases
 
-### Use Case 1: Live Inventory
+### Use Case 1: Live Inventory (Complex Hierarchical Data)
 
 ```typescript
-// Initialize inventory
-await cortex.mutable.set("inventory", "widget-blue", 100);
-await cortex.mutable.set("inventory", "widget-red", 75);
-
-// Customer orders (atomic decrement)
-await cortex.mutable.update("inventory", "widget-blue", (qty) => {
-  if (qty <= 0) throw new Error("Out of stock");
-  return qty - 1;
+// Initialize inventory with complex objects and hierarchical keys
+await cortex.mutable.set("inventory", "store-15:produce:apples", {
+  quantity: 150,
+  unit: "lbs",
+  price: 2.99,
+  supplier: "Local Farms",
+  sku: "PROD-APL-001",
+  perishable: true,
+  expiryDate: new Date("2025-10-30"),
 });
 
-// Check availability
-const available = await cortex.mutable.get("inventory", "widget-blue");
-console.log(`${available} widgets available`);
+// Customer orders 10 lbs (atomic decrement with complex object)
+await cortex.mutable.update("inventory", "store-15:produce:apples", (item) => {
+  if (item.quantity < 10) throw new Error("Out of stock");
+  
+  return {
+    ...item,
+    quantity: item.quantity - 10,
+    lastSold: new Date(),
+  };
+});
 
-// Restock (atomic increment)
-await cortex.mutable.update("inventory", "widget-blue", (qty) => qty + 50);
+// Check availability with full details
+const apples = await cortex.mutable.get("inventory", "store-15:produce:apples");
+console.log(`${apples.quantity} ${apples.unit} available at $${apples.price}`);
+
+// Restock (atomic increment + update metadata)
+await cortex.mutable.update("inventory", "store-15:produce:apples", (item) => ({
+  ...item,
+  quantity: item.quantity + 50,
+  lastRestocked: new Date(),
+  supplier: "Local Farms", // Confirm supplier
+}));
+
+// Query all produce for this store
+const allProduce = await cortex.mutable.list("inventory", {
+  keyPrefix: "store-15:produce:",
+});
+
+console.log(`Store 15 has ${allProduce.total} produce items`);
 ```
 
-### Use Case 2: Live Configuration
+### Use Case 2: Live Configuration (Complex Nested Objects)
 
 ```typescript
-// Set configuration
-await cortex.mutable.set("config", "max-concurrent-chats", 5);
-await cortex.mutable.set(
-  "config",
-  "api-endpoint",
-  "https://api.example.com/v1",
-);
+// Set application configuration as nested object
+await cortex.mutable.set("config", "app-settings", {
+  api: {
+    endpoint: "https://api.example.com/v1",
+    timeout: 30000,
+    retries: 3,
+    rateLimits: {
+      perMinute: 60,
+      perHour: 1000,
+    },
+  },
+  features: {
+    enableChat: true,
+    enableVoice: false,
+    maxConcurrentChats: 5,
+    enableFileUpload: true,
+  },
+  notifications: {
+    email: true,
+    sms: false,
+    push: true,
+    channels: ["email", "push"],
+  },
+  security: {
+    sessionTimeout: 3600,
+    requireMFA: false,
+    allowedOrigins: ["https://app.example.com"],
+  },
+});
 
-// Agents check config
-const maxChats = await cortex.mutable.get("config", "max-concurrent-chats");
-if (activeChats < maxChats) {
+// Agents check config (type-safe access)
+const config = await cortex.mutable.get("config", "app-settings");
+if (config.features.enableChat && activeChats < config.features.maxConcurrentChats) {
   // Accept new chat
 }
 
-// Update config (immediate effect for all agents)
-await cortex.mutable.set("config", "max-concurrent-chats", 10);
+// Update specific nested value (atomic)
+await cortex.mutable.update("config", "app-settings", (cfg) => ({
+  ...cfg,
+  features: {
+    ...cfg.features,
+    maxConcurrentChats: 10, // Immediate effect for all agents
+  },
+}));
+
+// Or update API endpoint
+await cortex.mutable.update("config", "app-settings", (cfg) => ({
+  ...cfg,
+  api: {
+    ...cfg.api,
+    endpoint: "https://api.example.com/v2",
+    timeout: 60000, // Also increase timeout
+  },
+}));
 ```
 
 ### Use Case 3: Shared Counters
@@ -705,29 +1489,83 @@ const success = await cortex.mutable.get("counters", "successful-requests");
 console.log(`Success rate: ${((success / total) * 100).toFixed(1)}%`);
 ```
 
-### Use Case 4: Agent Collaboration State
+### Use Case 4: Agent Collaboration State (Complex Workflow)
 
 ```typescript
-// Track active campaign
-await cortex.mutable.set('state', 'active-campaign', {
-  id: 'camp-2025-q4',
-  name: 'Q4 Promotion',
-  startDate: '2025-10-01',
-  endDate: '2025-12-31',
-  participating agents: ['marketing-agent', 'sales-agent']
+// Track active workflow with complex state
+await cortex.mutable.set("workflows", "refund-request-12345", {
+  id: "refund-request-12345",
+  type: "refund",
+  status: "in-progress",
+  createdAt: new Date(),
+  customer: {
+    id: "user-123",
+    name: "Alex Johnson",
+    email: "alex@example.com",
+  },
+  order: {
+    orderId: "ORD-98765",
+    amount: 299.99,
+    items: ["Widget A", "Widget B"],
+    purchaseDate: new Date("2025-10-15"),
+  },
+  workflow: {
+    currentStep: "manager-approval",
+    completedSteps: ["initiated", "customer-verified"],
+    pendingSteps: ["manager-approval", "payment-processing", "complete"],
+  },
+  agents: {
+    initiator: "support-agent-1",
+    currentAssignee: "manager-agent",
+    history: [
+      { agentId: "support-agent-1", action: "initiated", timestamp: new Date() },
+      { agentId: "support-agent-1", action: "verified", timestamp: new Date() },
+    ],
+  },
+  notes: ["Customer reports defective product", "Original packaging intact"],
 });
 
-// Agents check current campaign
-const campaign = await cortex.mutable.get('state', 'active-campaign');
-if (campaign && Date.now() < new Date(campaign.endDate).getTime()) {
-  // Apply campaign logic
-}
+// Manager approves (atomic state transition)
+await cortex.mutable.update("workflows", "refund-request-12345", (workflow) => ({
+  ...workflow,
+  status: "approved",
+  workflow: {
+    ...workflow.workflow,
+    currentStep: "payment-processing",
+    completedSteps: [...workflow.workflow.completedSteps, "manager-approval"],
+    pendingSteps: workflow.workflow.pendingSteps.filter((s) => s !== "manager-approval"),
+  },
+  agents: {
+    ...workflow.agents,
+    currentAssignee: "finance-agent",
+    history: [
+      ...workflow.agents.history,
+      { agentId: "manager-agent", action: "approved", timestamp: new Date() },
+    ],
+  },
+  approvalDetails: {
+    approvedBy: "manager-agent",
+    approvedAt: new Date(),
+    amount: 299.99,
+  },
+}));
 
-// Update participating agents (atomic)
-await cortex.mutable.update('state', 'active-campaign', (camp) => {
+// Finance agent processes payment
+await cortex.mutable.update("workflows", "refund-request-12345", (workflow) => {
+  if (workflow.status !== "approved") {
+    throw new Error("Workflow not approved");
+  }
+
   return {
-    ...camp,
-    participatingAgents: [...camp.participatingAgents, 'support-agent']
+    ...workflow,
+    status: "completed",
+    workflow: {
+      ...workflow.workflow,
+      currentStep: "complete",
+      completedSteps: [...workflow.workflow.completedSteps, "payment-processing"],
+      pendingSteps: [],
+    },
+    completedAt: new Date(),
   };
 });
 ```
