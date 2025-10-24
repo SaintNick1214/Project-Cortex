@@ -6,18 +6,26 @@ Rich user context and preferences that persist across all agents and conversatio
 
 ## Overview
 
-User profiles exist for **ONE critical reason**: **GDPR-compliant cascade deletion**. When a user requests data deletion, `cortex.users.delete(userId, { cascade: true })` automatically removes their data from **every store across all layers** that contains an explicit `userId` reference.
+User profiles exist for **ONE critical reason**: **GDPR-compliant cascade deletion**.
+
+> **Cortex Cloud Feature**: Automatic cascade deletion is available in Cortex Cloud. Direct Mode can achieve GDPR compliance through manual deletion from each store.
+
+**Cortex Cloud:** One API call removes user data from every store across all layers that contains an explicit `userId` reference - `cortex.users.delete(userId, { cascade: true })`.
+
+**Direct Mode:** Achieves the same result through manual deletion loops (see Pattern 4 below for implementation).
 
 **Secondary benefit:** Provides a semantic, user-friendly API for managing user data (`cortex.users.get()` instead of `cortex.immutable.get('user', ...)`).
 
-**Under the hood:** User profiles are stored in `cortex.immutable.*` with `type='user'`. The `cortex.users.*` API is a specialized wrapper that adds cross-layer GDPR deletion capabilities.
+**Under the hood:** User profiles are stored in `cortex.immutable.*` with `type='user'`. The `cortex.users.*` API is a specialized wrapper that adds cross-layer GDPR deletion capabilities (Cloud Mode) or convenience methods (Direct Mode).
 
 ## Core Concept: GDPR Cascade Deletion
 
-The primary purpose of `cortex.users.*` is to enable **one-click deletion** of all user data across the entire system:
+> **Cortex Cloud Only**: Automatic cascade deletion requires Cortex Cloud connection.
+
+**Cortex Cloud** enables **one-click deletion** of all user data across the entire system:
 
 ```typescript
-// GDPR "right to be forgotten" - ONE call
+// Cortex Cloud: GDPR "right to be forgotten" - ONE call
 const result = await cortex.users.delete('user-123', { cascade: true });
 
 // Automatically deletes from:
@@ -31,13 +39,14 @@ console.log(`Total records deleted: ${result.totalRecordsDeleted}`);
 // Could be hundreds or thousands of records across all stores
 ```
 
-**Why this matters:**
+**Why Cortex Cloud cascade matters:**
 
-- ✅ GDPR compliance in one API call
-- ✅ No manual loops through agents/stores
-- ✅ Atomic deletion (all or nothing)
-- ✅ Complete audit trail
-- ✅ Granular control (can preserve certain layers)
+- ✅ **1 line of code** vs ~40 lines manual (saves development time)
+- ✅ **Atomic deletion** (all or nothing transaction)
+- ✅ **Complete audit trail** automatically generated
+- ✅ **Granular control** (preserve specific layers if needed)
+- ✅ **No missed stores** (automatic discovery)
+- ✅ **Enterprise-ready** compliance documentation
 
 **Architecture:**
 
@@ -505,24 +514,29 @@ async function handlePreferenceChange(userId: string, changes: any) {
 
 ### Pattern 4: GDPR Compliance
 
-Handle data deletion requests efficiently:
+**Cortex Cloud (Automatic):**
 
 ```typescript
 async function handleDataDeletionRequest(userId: string) {
-  // Delete with cascade - much more efficient!
+  // Cortex Cloud: One-click cascade deletion
   const result = await cortex.users.delete(userId, {
-    cascade: true, // Automatically deletes from all agents
+    cascade: true,
+    auditReason: "GDPR right to be forgotten request"
   });
 
   console.log(`GDPR deletion complete for user ${userId}`);
   console.log(`- Profile deleted: ${result.profileDeleted}`);
-  console.log(`- Memories deleted: ${result.memoriesDeleted}`);
+  console.log(`- Total records: ${result.totalRecordsDeleted}`);
   console.log(`- Agents affected: ${result.agentsAffected.join(", ")}`);
 
   return result;
+  // Done in 1 line! ✅
 }
+```
 
-// Or manual approach with universal filters
+**Direct Mode (Manual):**
+
+```typescript
 async function manualGDPRDeletion(userId: string) {
   const deletionLog = [];
 

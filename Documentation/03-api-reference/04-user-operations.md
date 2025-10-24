@@ -10,10 +10,12 @@ The User Operations API (`cortex.users.*`) exists for **ONE primary reason**: **
 
 ### Primary Feature: GDPR Cascade Deletion
 
+> **Cortex Cloud Only**: Automatic cascade deletion requires a Cortex Cloud connection. Direct Mode requires manual deletion from each store (see examples below).
+
 When a user requests data deletion (GDPR "right to be forgotten"), a single API call removes their data from **every store that contains an explicit `userId` reference**:
 
 ```typescript
-// One call deletes from ALL stores with userId
+// Cortex Cloud: One call deletes from ALL stores with userId
 await cortex.users.delete('user-123', { cascade: true });
 
 // Automatically deletes from:
@@ -25,6 +27,48 @@ await cortex.users.delete('user-123', { cascade: true });
 ```
 
 **No other API provides this cross-layer, cross-store cascade capability.**
+
+**Direct Mode Alternative:**
+
+Without Cortex Cloud, you can achieve GDPR compliance manually:
+
+```typescript
+// Direct Mode: Manual deletion from each store
+async function deleteUserDataManually(userId: string) {
+  // 1. Delete from conversations (Layer 1a)
+  const conversations = await cortex.conversations.list({ userId });
+  for (const conv of conversations) {
+    await cortex.conversations.delete(conv.id);
+  }
+  
+  // 2. Delete from immutable store (Layer 1b)
+  const immutableRecords = await cortex.immutable.list({ userId });
+  for (const record of immutableRecords) {
+    await cortex.immutable.purge(record.type, record.id);
+  }
+  
+  // 3. Delete from mutable store (Layer 1c)
+  const namespaces = ['user-sessions', 'user-cache', 'user-prefs'];
+  for (const ns of namespaces) {
+    await cortex.mutable.purgeMany(ns, { userId });
+  }
+  
+  // 4. Delete from vector memories (Layer 2)
+  const agents = await cortex.agents.list();
+  for (const agent of agents) {
+    await cortex.memory.deleteMany(agent.id, { userId });
+  }
+  
+  // 5. Delete user profile
+  await cortex.immutable.purge('user', userId);
+  
+  return { success: true };
+}
+
+// Usage
+await deleteUserDataManually('user-123');
+// Works, but requires ~30 lines of code vs 1 line with Cloud
+```
 
 ### Secondary Feature: Semantic Convenience
 
@@ -335,6 +379,8 @@ await cortex.users.update(
 
 Delete a user profile with optional cascade to delete all associated data.
 
+> **Cloud Mode Feature**: The `cascade` option requires Cortex Cloud. In Direct Mode, use manual deletion (see examples).
+
 **Signature:**
 
 ```typescript
@@ -401,10 +447,10 @@ console.log(`Profile deleted: ${result.profileDeleted}`);
 // User's memories in agents are preserved
 ```
 
-**Example 2: GDPR Cascade Deletion (Recommended)**
+**Example 2: GDPR Cascade Deletion (Cortex Cloud)**
 
 ```typescript
-// Delete profile + ALL data with explicit userId references
+// Cortex Cloud: Delete profile + ALL data with explicit userId references
 const result = await cortex.users.delete("user-123", {
   cascade: true,
   auditReason: "GDPR right to be forgotten request",
@@ -435,10 +481,10 @@ console.log(`Total records deleted: ${result.totalRecordsDeleted}`);
 console.log(`Restorable: ${result.restorable}`); // false - complete deletion
 ```
 
-**Example 3: Selective Cascade (Preserve ACID Conversations)**
+**Example 3: Selective Cascade (Cortex Cloud - Preserve Audit Trail)**
 
 ```typescript
-// Delete user data but preserve conversation audit trail
+// Cortex Cloud: Delete user data but preserve conversation audit trail
 const result = await cortex.users.delete("user-123", {
   cascade: true,
   deleteFromConversations: false,     // Keep Layer 1a for audit
@@ -453,10 +499,10 @@ console.log(`Other data deleted: ${result.totalRecordsDeleted}`);
 console.log(`Restorable: ${result.restorable}`); // true (conversations exist)
 ```
 
-**Example 4: Granular Control**
+**Example 4: Granular Control (Cortex Cloud)**
 
 ```typescript
-// Only delete mutable data (like sessions, cache)
+// Cortex Cloud: Only delete mutable data (like sessions, cache)
 const result = await cortex.users.delete("user-123", {
   cascade: true,
   deleteFromConversations: false,     // Preserve
@@ -469,6 +515,72 @@ const result = await cortex.users.delete("user-123", {
 console.log(`Mutable records deleted: ${result.mutableRecordsDeleted}`);
 console.log(`Everything else preserved`);
 ```
+
+**Example 5: Direct Mode Alternative (Manual GDPR Compliance)**
+
+```typescript
+// Direct Mode: Manually delete from each store
+async function deleteUserGDPR(userId: string) {
+  const deletionLog = {
+    userId,
+    deletedAt: new Date(),
+    stores: {}
+  };
+  
+  // Layer 1a: Conversations
+  const conversations = await cortex.conversations.list({ userId });
+  for (const conv of conversations) {
+    await cortex.conversations.delete(conv.id);
+  }
+  deletionLog.stores.conversations = conversations.length;
+  
+  // Layer 1b: Immutable
+  const immutableRecords = await cortex.immutable.list({ userId });
+  for (const record of immutableRecords) {
+    await cortex.immutable.purge(record.type, record.id);
+  }
+  deletionLog.stores.immutable = immutableRecords.length;
+  
+  // Layer 1c: Mutable (must know namespaces)
+  const mutableNamespaces = ['user-sessions', 'user-cache', 'user-preferences'];
+  let mutableCount = 0;
+  for (const ns of mutableNamespaces) {
+    const result = await cortex.mutable.purgeMany(ns, { userId });
+    mutableCount += result.deleted;
+  }
+  deletionLog.stores.mutable = mutableCount;
+  
+  // Layer 2: Vector
+  const agents = await cortex.agents.list();
+  let vectorCount = 0;
+  for (const agent of agents) {
+    const result = await cortex.memory.deleteMany(agent.id, { userId });
+    vectorCount += result.deleted;
+  }
+  deletionLog.stores.vector = vectorCount;
+  
+  // Delete user profile
+  await cortex.immutable.purge('user', userId);
+  deletionLog.stores.profile = 1;
+  
+  return deletionLog;
+}
+
+// Usage (Direct Mode)
+const result = await deleteUserGDPR('user-123');
+// Works! But requires ~40 lines of code vs 1 line with Cortex Cloud
+```
+
+**Comparison:**
+
+| Feature | Direct Mode | Cortex Cloud |
+|---------|-------------|--------------|
+| **GDPR Compliant** | ✅ Yes (manual) | ✅ Yes (automatic) |
+| **Code Required** | ~40 lines | 1 line |
+| **Cascade Deletion** | Manual loops | Automatic |
+| **Audit Trail** | DIY | Included |
+| **Verification** | Manual | Automatic |
+| **Cost** | Free | Included in Cloud tiers |
 
 **Errors:**
 
