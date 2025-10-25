@@ -24,7 +24,6 @@ The API Reference is organized by architectural layers:
   - Layer 3 convenience (`cortex.memory.*`)
   - Overview of all layers
   - `remember()`, `search()`, `get()`, `update()`, `delete()`
-  
 - **[Conversation Operations](./03-conversation-operations.md)** - Layer 1a (ACID)
   - Immutable conversation threads
   - Source of truth for all messages
@@ -35,11 +34,9 @@ The API Reference is organized by architectural layers:
 - **[User Operations](./04-user-operations.md)** - User profiles + GDPR
   - Shared user data across agents
   - One-click GDPR cascade deletion (Cloud Mode)
-  
 - **[Context Operations](./05-context-operations.md)** - Workflow coordination
   - Hierarchical task tracking
   - Multi-agent collaboration
-  
 - **[A2A Communication](./06-a2a-communication.md)** - Agent messaging
   - Inter-agent communication patterns
   - Requires pub/sub (BYO or Cloud-managed)
@@ -49,7 +46,6 @@ The API Reference is organized by architectural layers:
 - **[Immutable Store](./07-immutable-store-api.md)** - Layer 1b
   - Shared, versioned, immutable data
   - KB articles, policies, audit logs
-  
 - **[Mutable Store](./08-mutable-store-api.md)** - Layer 1c
   - Shared, mutable, current-value data
   - Inventory, config, counters
@@ -71,7 +67,7 @@ The API Reference is organized by architectural layers:
 ### 5-Minute Example
 
 ```typescript
-import { Cortex } from '@cortex-platform/sdk';
+import { Cortex } from "@cortex-platform/sdk";
 
 // 1. Initialize Cortex
 const cortex = new Cortex({
@@ -80,43 +76,39 @@ const cortex = new Cortex({
 
 // 2. Create a conversation
 const conversation = await cortex.conversations.create({
-  type: 'user-agent',
+  type: "user-agent",
   participants: {
-    userId: 'user-123',
-    agentId: 'support-agent',
+    userId: "user-123",
+    agentId: "support-agent",
   },
 });
 
 // 3. Store user-agent exchange (ACID + Vector automatically)
 const result = await cortex.memory.remember({
-  agentId: 'support-agent',
+  agentId: "support-agent",
   conversationId: conversation.conversationId,
-  userMessage: 'My password is Blue123',
+  userMessage: "My password is Blue123",
   agentResponse: "I'll remember that securely!",
-  userId: 'user-123',
-  userName: 'Alex Johnson',
+  userId: "user-123",
+  userName: "Alex Johnson",
   importance: 100,
-  tags: ['password', 'security'],
+  tags: ["password", "security"],
 });
 
 // 4. Search memories (semantic)
-const memories = await cortex.memory.search(
-  'support-agent',
-  'user password',
-  {
-    embedding: await embed('user password'),
-    userId: 'user-123',
-    minImportance: 70,
-  }
-);
+const memories = await cortex.memory.search("support-agent", "user password", {
+  embedding: await embed("user password"),
+  userId: "user-123",
+  minImportance: 70,
+});
 
-console.log('Found:', memories[0].content);  // "My password is Blue123"
+console.log("Found:", memories[0].content); // "My password is Blue123"
 
 // 5. User profile (shared across all agents)
-await cortex.users.update('user-123', {
+await cortex.users.update("user-123", {
   data: {
-    displayName: 'Alex Johnson',
-    preferences: { theme: 'dark' },
+    displayName: "Alex Johnson",
+    preferences: { theme: "dark" },
   },
 });
 
@@ -162,10 +154,10 @@ await cortex.users.update('user-123', {
 ```typescript
 // Define filters once
 const filters = {
-  userId: 'user-123',
-  tags: ['preferences'],
+  userId: "user-123",
+  tags: ["preferences"],
   minImportance: 50,
-  createdAfter: new Date('2025-10-01'),
+  createdAfter: new Date("2025-10-01"),
 };
 
 // Use everywhere
@@ -178,6 +170,7 @@ await cortex.memory.export(agentId, filters);
 ```
 
 **Supported Filters:**
+
 - `userId`, `tags`, `importance`, `createdBefore/After`
 - `accessCount`, `version`, `source.type`
 - Any `metadata.*` field
@@ -214,7 +207,7 @@ One call deletes from ALL stores with `userId`:
 
 ```typescript
 // Cloud Mode: One-click GDPR compliance
-await cortex.users.delete('user-123', { cascade: true });
+await cortex.users.delete("user-123", { cascade: true });
 
 // Automatically deletes from:
 // ✅ Conversations (Layer 1a)
@@ -234,13 +227,13 @@ await cortex.users.delete('user-123', { cascade: true });
 ```typescript
 // User sends message
 const conversation = await cortex.conversations.getOrCreate({
-  type: 'user-agent',
-  participants: { userId: req.user.id, agentId: 'chatbot' },
+  type: "user-agent",
+  participants: { userId: req.user.id, agentId: "chatbot" },
 });
 
 // Store exchange
 await cortex.memory.remember({
-  agentId: 'chatbot',
+  agentId: "chatbot",
   conversationId: conversation.conversationId,
   userMessage: req.body.message,
   agentResponse: response,
@@ -249,7 +242,7 @@ await cortex.memory.remember({
 });
 
 // Search for context
-const context = await cortex.memory.search('chatbot', req.body.message, {
+const context = await cortex.memory.search("chatbot", req.body.message, {
   embedding: await embed(req.body.message),
   userId: req.user.id,
   limit: 5,
@@ -261,17 +254,17 @@ const context = await cortex.memory.search('chatbot', req.body.message, {
 ```typescript
 // Create workflow context
 const context = await cortex.contexts.create({
-  purpose: 'Process refund request',
-  agentId: 'supervisor-agent',
-  userId: 'user-123',
+  purpose: "Process refund request",
+  agentId: "supervisor-agent",
+  userId: "user-123",
 });
 
 // Delegate via A2A
 await cortex.a2a.send({
-  from: 'supervisor-agent',
-  to: 'finance-agent',
-  message: 'Approve $500 refund',
-  userId: 'user-123',
+  from: "supervisor-agent",
+  to: "finance-agent",
+  message: "Approve $500 refund",
+  userId: "user-123",
   contextId: context.id,
   importance: 85,
 });
@@ -285,46 +278,46 @@ const ctx = await cortex.contexts.get(context.id);
 ```typescript
 // Store KB article (shared, versioned)
 await cortex.immutable.store({
-  type: 'kb-article',
-  id: 'refund-policy',
+  type: "kb-article",
+  id: "refund-policy",
   data: {
-    title: 'Refund Policy',
-    content: 'Refunds available within 30 days...',
+    title: "Refund Policy",
+    content: "Refunds available within 30 days...",
   },
   metadata: {
     importance: 90,
-    tags: ['policy', 'refunds'],
+    tags: ["policy", "refunds"],
   },
 });
 
 // Index for search (optional)
-await cortex.vector.store('kb-agent', {
-  content: 'Refund Policy: Refunds available within 30 days...',
+await cortex.vector.store("kb-agent", {
+  content: "Refund Policy: Refunds available within 30 days...",
   immutableRef: {
-    type: 'kb-article',
-    id: 'refund-policy',
+    type: "kb-article",
+    id: "refund-policy",
   },
-  metadata: { importance: 90, tags: ['policy'] },
+  metadata: { importance: 90, tags: ["policy"] },
 });
 
 // All agents can search
-const results = await cortex.memory.search('support-agent', 'refund policy');
+const results = await cortex.memory.search("support-agent", "refund policy");
 ```
 
 ### Pattern 4: Live Inventory
 
 ```typescript
 // Set inventory (mutable, no versioning)
-await cortex.mutable.set('inventory', 'widget-qty', 100);
+await cortex.mutable.set("inventory", "widget-qty", 100);
 
 // Customer orders (atomic decrement)
-await cortex.mutable.update('inventory', 'widget-qty', (qty) => {
-  if (qty < 10) throw new Error('Out of stock');
+await cortex.mutable.update("inventory", "widget-qty", (qty) => {
+  if (qty < 10) throw new Error("Out of stock");
   return qty - 10;
 });
 
 // Check availability
-const qty = await cortex.mutable.get('inventory', 'widget-qty');
+const qty = await cortex.mutable.get("inventory", "widget-qty");
 console.log(`${qty} available`);
 ```
 
@@ -353,10 +346,10 @@ All Cortex operations are async:
 
 ```typescript
 // ✅ Always use await
-const memory = await cortex.memory.get('agent-1', memoryId);
+const memory = await cortex.memory.get("agent-1", memoryId);
 
 // ❌ Don't forget await
-const memory = cortex.memory.get('agent-1', memoryId);  // Returns Promise!
+const memory = cortex.memory.get("agent-1", memoryId); // Returns Promise!
 ```
 
 ### Error Handling
@@ -365,7 +358,7 @@ All errors are catchable with type information:
 
 ```typescript
 try {
-  await cortex.memory.store('agent-1', data);
+  await cortex.memory.store("agent-1", data);
 } catch (error) {
   if (error instanceof CortexError) {
     console.log(`Error: ${error.code}`);
@@ -381,6 +374,7 @@ try {
 ### Direct Mode (Free, Open Source)
 
 **What you get:**
+
 - ✅ Full storage APIs (all layers)
 - ✅ All memory operations
 - ✅ Universal filters
@@ -388,6 +382,7 @@ try {
 - ✅ Complete flexibility
 
 **What you provide:**
+
 - Your Convex instance
 - Your embeddings (OpenAI, Cohere, local)
 - Agent execution infrastructure
@@ -411,6 +406,7 @@ await cortex.memory.store('agent-1', {
 ### Cloud Mode (Managed, Premium)
 
 **Additional features:**
+
 - ✅ **GDPR cascade** - One-click deletion across all stores
 - ✅ **Auto-embeddings** - No API keys needed
 - ✅ **Managed pub/sub** - Real-time A2A without infrastructure
@@ -509,6 +505,7 @@ Cortex separates **storage** (immutable source) from **search** (optimized index
 - **Layer 3**: Memory API - Convenience wrapper over Layers 1+2
 
 **Benefits:**
+
 - Retention on Vector doesn't lose ACID source
 - Can always retrieve full context
 - Fast search + complete audit trail
@@ -544,13 +541,13 @@ Granular importance for filtering and retention:
 - **0-9**: Trivial (debug logs)
 
 ```typescript
-await cortex.memory.store('agent-1', {
-  content: 'System password is XYZ',
-  metadata: { importance: 100 },  // Critical
+await cortex.memory.store("agent-1", {
+  content: "System password is XYZ",
+  metadata: { importance: 100 }, // Critical
 });
 
 // Search only important
-const important = await cortex.memory.search('agent-1', query, {
+const important = await cortex.memory.search("agent-1", query, {
   minImportance: 70,
 });
 ```
@@ -582,10 +579,10 @@ Updates create new versions, not overwrites:
 
 ```typescript
 // Every update preserves history
-await cortex.memory.update('agent-1', memoryId, { content: 'New value' });
+await cortex.memory.update("agent-1", memoryId, { content: "New value" });
 
 // Previous version still accessible
-const history = await cortex.memory.getHistory('agent-1', memoryId);
+const history = await cortex.memory.getHistory("agent-1", memoryId);
 ```
 
 ---
@@ -596,13 +593,29 @@ const history = await cortex.memory.getHistory('agent-1', memoryId);
 
 ```typescript
 // Store conversation (ACID + Vector)
-await cortex.memory.remember({ agentId, conversationId, userMessage, agentResponse, userId, userName });
+await cortex.memory.remember({
+  agentId,
+  conversationId,
+  userMessage,
+  agentResponse,
+  userId,
+  userName,
+});
 
 // Store system memory (Vector only)
-await cortex.vector.store(agentId, { content, source: { type: 'system' }, metadata });
+await cortex.vector.store(agentId, {
+  content,
+  source: { type: "system" },
+  metadata,
+});
 
 // Search
-await cortex.memory.search(agentId, query, { embedding, userId, minImportance, limit });
+await cortex.memory.search(agentId, query, {
+  embedding,
+  userId,
+  minImportance,
+  limit,
+});
 
 // Get
 await cortex.memory.get(agentId, memoryId, { includeConversation: true });
@@ -620,14 +633,16 @@ await cortex.memory.count(agentId, filters);
 await cortex.memory.list(agentId, { limit, offset, sortBy });
 
 // Export
-await cortex.memory.export(agentId, { userId, format: 'json' });
+await cortex.memory.export(agentId, { userId, format: "json" });
 ```
 
 ### User Operations
 
 ```typescript
 // Create/update
-await cortex.users.update(userId, { data: { displayName, email, preferences } });
+await cortex.users.update(userId, {
+  data: { displayName, email, preferences },
+});
 
 // Get
 await cortex.users.get(userId);
@@ -636,29 +651,39 @@ await cortex.users.get(userId);
 await cortex.users.delete(userId, { cascade: true });
 
 // Search
-await cortex.users.search({ data: { tier: 'pro' } });
+await cortex.users.search({ data: { tier: "pro" } });
 
 // Count
-await cortex.users.count({ createdAfter: new Date('2025-01-01') });
+await cortex.users.count({ createdAfter: new Date("2025-01-01") });
 ```
 
 ### Context Operations
 
 ```typescript
 // Create workflow
-const ctx = await cortex.contexts.create({ purpose, agentId, userId, parentId, data });
+const ctx = await cortex.contexts.create({
+  purpose,
+  agentId,
+  userId,
+  parentId,
+  data,
+});
 
 // Get with chain
 await cortex.contexts.get(contextId, { includeChain: true });
 
 // Update status
-await cortex.contexts.update(contextId, { status: 'completed', data });
+await cortex.contexts.update(contextId, { status: "completed", data });
 
 // Delete with children
 await cortex.contexts.delete(contextId, { cascadeChildren: true });
 
 // Search
-await cortex.contexts.search({ agentId, status: 'active', data: { importance: { $gte: 80 } } });
+await cortex.contexts.search({
+  agentId,
+  status: "active",
+  data: { importance: { $gte: 80 } },
+});
 ```
 
 ### A2A Communication
@@ -674,7 +699,11 @@ const response = await cortex.a2a.request({ from, to, message, timeout });
 await cortex.a2a.broadcast({ from, to: [agent1, agent2, agent3], message });
 
 // Get conversation
-await cortex.a2a.getConversation(agent1, agent2, { since, minImportance, tags });
+await cortex.a2a.getConversation(agent1, agent2, {
+  since,
+  minImportance,
+  tags,
+});
 ```
 
 ### Immutable Store
@@ -710,8 +739,8 @@ await cortex.mutable.update(namespace, key, (current) => current + 1);
 
 // Transaction
 await cortex.mutable.transaction(async (tx) => {
-  tx.update('inventory', 'product-a', (qty) => qty - 1);
-  tx.update('counters', 'sales', (n) => n + 1);
+  tx.update("inventory", "product-a", (qty) => qty - 1);
+  tx.update("counters", "sales", (n) => n + 1);
 });
 
 // Delete
@@ -759,19 +788,19 @@ Define filters once, reuse everywhere:
 
 ```typescript
 const oldDebugLogs = {
-  tags: ['debug'],
+  tags: ["debug"],
   importance: { $lte: 10 },
   createdBefore: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
 };
 
 // Preview
-const count = await cortex.memory.count('agent-1', oldDebugLogs);
+const count = await cortex.memory.count("agent-1", oldDebugLogs);
 
 // Export
-await cortex.memory.export('agent-1', { ...oldDebugLogs, format: 'json' });
+await cortex.memory.export("agent-1", { ...oldDebugLogs, format: "json" });
 
 // Delete
-await cortex.memory.deleteMany('agent-1', oldDebugLogs);
+await cortex.memory.deleteMany("agent-1", oldDebugLogs);
 ```
 
 ### 4. Handle Errors
@@ -780,7 +809,7 @@ Always catch and handle errors:
 
 ```typescript
 try {
-  await cortex.memory.store('agent-1', data);
+  await cortex.memory.store("agent-1", data);
 } catch (error) {
   if (error instanceof CortexError) {
     console.error(`Cortex error: ${error.code}`);
@@ -814,8 +843,8 @@ await cortex.immutable.store({
 ### Import
 
 ```typescript
-import { Cortex } from '@cortex-platform/sdk';
-import type { MemoryEntry, UserProfile, Context } from '@cortex-platform/sdk';
+import { Cortex } from "@cortex-platform/sdk";
+import type { MemoryEntry, UserProfile, Context } from "@cortex-platform/sdk";
 ```
 
 ### Initialize
@@ -828,7 +857,7 @@ const cortex = new Cortex({
 
 // Cloud Mode
 const cortex = new Cortex({
-  mode: 'cloud',
+  mode: "cloud",
   apiKey: process.env.CORTEX_CLOUD_KEY,
 });
 ```
@@ -852,7 +881,14 @@ cortex.governance.*      // Retention policies
 
 ```typescript
 // 1. Remember conversation
-await cortex.memory.remember({ agentId, conversationId, userMessage, agentResponse, userId, userName });
+await cortex.memory.remember({
+  agentId,
+  conversationId,
+  userMessage,
+  agentResponse,
+  userId,
+  userName,
+});
 
 // 2. Search memories
 await cortex.memory.search(agentId, query, { embedding, filters });
@@ -915,4 +951,3 @@ await cortex.contexts.create({ purpose, agentId, userId });
 ---
 
 **Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
-
