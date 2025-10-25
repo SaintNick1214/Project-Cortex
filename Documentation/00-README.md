@@ -33,14 +33,17 @@ Deep dives into Cortex capabilities:
 Complete API documentation:
 
 - **[Overview](./03-api-reference/01-overview.md)** - API conventions and patterns
-- **[Memory Operations](./03-api-reference/02-memory-operations.md)** - store, retrieve, search, delete
+- **[Memory Operations](./03-api-reference/02-memory-operations.md)** - Conversations, Vector, Memory APIs (all layers)
 - **[Agent Management](./03-api-reference/03-agent-management.md)** - Agent registry operations
-- **[User Operations](./03-api-reference/04-user-operations.md)** - User profile CRUD
-- **[Context Operations](./03-api-reference/05-context-operations.md)** - Context chain management
-- **[Search Operations](./03-api-reference/06-search-operations.md)** - Advanced search capabilities
-- **[Analytics Operations](./03-api-reference/07-analytics-operations.md)** - Metrics and insights
+- **[User Operations](./03-api-reference/04-user-operations.md)** - User profiles + GDPR cascade
+- **[Context Operations](./03-api-reference/05-context-operations.md)** - Workflow coordination
+- **[A2A Communication](./03-api-reference/06-a2a-communication.md)** - Agent-to-agent messaging helpers
+- **[Conversation Operations](./03-api-reference/07-conversation-operations.md)** - ACID conversation management
 - **[Types & Interfaces](./03-api-reference/08-types-interfaces.md)** - TypeScript definitions
 - **[Error Handling](./03-api-reference/09-error-handling.md)** - Error codes and debugging
+- **[Immutable Store](./03-api-reference/10-immutable-store-api.md)** - Shared versioned data (Layer 1b)
+- **[Mutable Store](./03-api-reference/11-mutable-store-api.md)** - Shared live data (Layer 1c)
+- **[Governance Policies](./03-api-reference/12-governance-policies-api.md)** - Retention and compliance
 
 ### 🏗️ Architecture
 

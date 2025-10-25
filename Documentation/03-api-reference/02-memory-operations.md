@@ -287,7 +287,7 @@ const memory = await cortex.memory.store("agent-1", {
 | `export(filters, options)`            | Export conversations    | JSON/CSV       |
 | `delete(conversationId)`              | Delete conversation     | DeletionResult |
 
-**See:** [Conversation Operations API](./06-conversation-operations.md)
+**See:** [Conversation Operations API](./07-conversation-operations.md)
 
 ### Layer 2: cortex.vector.\* Operations
 
