@@ -11,36 +11,140 @@ A2A communication is **not a separate storage system** - it's a set of convenien
 **A2A = Agent Memory with source.type = 'a2a'**
 
 ```typescript
-// These are equivalent:
-
-// Option 1: Use A2A helper (convenient)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Approach 1: A2A Helper (RECOMMENDED - 7 lines)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 await cortex.a2a.send({
   from: "finance-agent",
   to: "hr-agent",
   message: "What is the Q4 headcount budget?",
   importance: 85,
 });
+// Done! Handles ACID + both Vector memories automatically ✅
 
-// Option 2: Use Layer 2 directly (explicit Vector storage)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Approach 2: Layer 3 remember() (Better than manual - 20 lines)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Get/create A2A conversation
+const conversationId = await getOrCreateA2AConversation(
+  "finance-agent",
+  "hr-agent",
+);
+
+// Store in sender's memory (ACID + Vector)
+await cortex.memory.remember({
+  agentId: "finance-agent",
+  conversationId,
+  userMessage: "What is the Q4 budget?",
+  agentResponse: "[Sent to hr-agent]",
+  userId: "finance-agent", // Sender as "user"
+  userName: "Finance Agent",
+});
+
+// Store in receiver's memory (ACID + Vector)
+await cortex.memory.remember({
+  agentId: "hr-agent",
+  conversationId,
+  userMessage: "[From finance-agent]",
+  agentResponse: "What is the Q4 budget?",
+  userId: "finance-agent", // Sender as source
+  userName: "Finance Agent",
+});
+// Works, but awkward (remember() is for user-agent, not agent-agent)
+// Still need to manage conversationId manually
+// Have to call remember() twice (once per agent)
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Approach 3: Manual Layer 1 + Layer 2 (Most code - 50+ lines)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 1. Get or create A2A conversation in ACID (Layer 1a)
+let conversationId;
+const existing = await cortex.conversations.search({
+  type: "agent-agent",
+  participants: { $all: ["finance-agent", "hr-agent"] },
+});
+
+if (existing.length > 0) {
+  conversationId = existing[0].conversationId;
+} else {
+  const conv = await cortex.conversations.create({
+    type: "agent-agent",
+    participants: { agent1: "finance-agent", agent2: "hr-agent" },
+  });
+  conversationId = conv.conversationId;
+}
+
+// 2. Add message to ACID conversation
+const msg = await cortex.conversations.addMessage(conversationId, {
+  type: "a2a",
+  from: "finance-agent",
+  to: "hr-agent",
+  text: "What is the Q4 headcount budget?",
+  timestamp: new Date(),
+});
+
+// 3. Store in sender's Vector memory (Layer 2)
 await cortex.vector.store("finance-agent", {
-  content: "Asked HR Agent: What is the Q4 headcount budget?",
+  content: "Sent to hr-agent: What is the Q4 headcount budget?",
   contentType: "raw",
-  embedding: await embed("What is the Q4 headcount budget?"), // Optional
+  embedding: await embed("What is the Q4 headcount budget?"),
   source: {
-    type: "a2a", // ← Marks as inter-agent communication
+    type: "a2a",
+    fromAgent: "finance-agent",
     toAgent: "hr-agent",
     timestamp: new Date(),
   },
   conversationRef: {
-    // A2A conversations ARE stored in ACID by default
-    conversationId: "a2a-conv-789",
-    messageIds: ["a2a-msg-001"],
+    conversationId,
+    messageIds: [msg.id], // Links to ACID
   },
-  metadata: { importance: 85, tags: ["a2a", "hr", "budget"] },
+  metadata: {
+    importance: 85,
+    tags: ["a2a", "sent", "hr-agent"],
+    direction: "outbound",
+  },
 });
+
+// 4. Store in receiver's Vector memory (Layer 2)
+await cortex.vector.store("hr-agent", {
+  content: "Received from finance-agent: What is the Q4 headcount budget?",
+  contentType: "raw",
+  embedding: await embed("What is the Q4 headcount budget?"),
+  source: {
+    type: "a2a",
+    fromAgent: "finance-agent",
+    toAgent: "hr-agent",
+    timestamp: new Date(),
+  },
+  conversationRef: {
+    conversationId,
+    messageIds: [msg.id], // Same ACID message
+  },
+  metadata: {
+    importance: 85,
+    tags: ["a2a", "received", "finance-agent"],
+    direction: "inbound",
+  },
+});
+
+// That's 50+ lines vs 7 lines with cortex.a2a.send()! 😱
 ```
 
-**Both approaches work!** A2A helpers just reduce code and handle bidirectional storage automatically.
+**Code Reduction:**
+
+| Approach                     | Lines of Code | Handles ACID | Bidirectional          | Complexity |
+| ---------------------------- | ------------- | ------------ | ---------------------- | ---------- |
+| **cortex.a2a.send()**        | 7             | ✅ Automatic | ✅ Both agents         | Low        |
+| **cortex.memory.remember()** | ~20           | ✅ Automatic | ❌ One agent (call 2×) | Medium     |
+| **Manual (Layer 1+2)**       | 50+           | ⚠️ Manual    | ❌ One agent (call 2×) | High       |
+
+**Why cortex.a2a.send() is best for A2A:**
+
+- Handles ACID conversation management (creates/finds agent-agent conversations)
+- Stores in BOTH agents automatically (bidirectional)
+- Consistent metadata and tagging
+- One call instead of managing conversationId + 2× vector stores
+- 85% less code
 
 **How A2A fits in Cortex's architecture:**
 
