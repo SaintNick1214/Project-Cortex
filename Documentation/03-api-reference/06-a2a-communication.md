@@ -1535,10 +1535,10 @@ All A2A operation errors:
 
 ## Next Steps
 
-- **[Conversation Operations API](./07-conversation-operations.md)** - ACID conversation management
+- **[Conversation Operations API](./03-conversation-operations.md)** - ACID conversation management
 - **[Memory Operations API](./02-memory-operations.md)** - Underlying memory system
 - **[Context Operations API](./05-context-operations.md)** - Workflow coordination
-- **[Types & Interfaces](./08-types-interfaces.md)** - Complete TypeScript definitions
+- **[Types & Interfaces](./11-types-interfaces.md)** - Complete TypeScript definitions
 
 ---
 

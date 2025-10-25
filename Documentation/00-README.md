@@ -30,20 +30,31 @@ Deep dives into Cortex capabilities:
 
 ### 📖 API Reference
 
-Complete API documentation:
+Complete API documentation (organized by architectural layers):
 
+**Getting Started:**
 - **[Overview](./03-api-reference/01-overview.md)** - API conventions and patterns
-- **[Memory Operations](./03-api-reference/02-memory-operations.md)** - Conversations, Vector, Memory APIs (all layers)
-- **[Agent Management](./03-api-reference/03-agent-management.md)** - Agent registry operations
+
+**Core Memory System (Layers 1-3):**
+- **[Memory Operations](./03-api-reference/02-memory-operations.md)** - Layer 3 convenience + Layers 1-2 overview
+- **[Conversation Operations](./03-api-reference/03-conversation-operations.md)** - Layer 1a: ACID conversations
+
+**User & Coordination:**
 - **[User Operations](./03-api-reference/04-user-operations.md)** - User profiles + GDPR cascade
 - **[Context Operations](./03-api-reference/05-context-operations.md)** - Workflow coordination
-- **[A2A Communication](./03-api-reference/06-a2a-communication.md)** - Agent-to-agent messaging helpers
-- **[Conversation Operations](./03-api-reference/07-conversation-operations.md)** - ACID conversation management
-- **[Types & Interfaces](./03-api-reference/08-types-interfaces.md)** - TypeScript definitions
-- **[Error Handling](./03-api-reference/09-error-handling.md)** - Error codes and debugging
-- **[Immutable Store](./03-api-reference/10-immutable-store-api.md)** - Shared versioned data (Layer 1b)
-- **[Mutable Store](./03-api-reference/11-mutable-store-api.md)** - Shared live data (Layer 1c)
-- **[Governance Policies](./03-api-reference/12-governance-policies-api.md)** - Retention and compliance
+- **[A2A Communication](./03-api-reference/06-a2a-communication.md)** - Agent messaging patterns
+
+**Advanced Storage (Layer 1b-c):**
+- **[Immutable Store](./03-api-reference/07-immutable-store-api.md)** - Layer 1b: Shared versioned data
+- **[Mutable Store](./03-api-reference/08-mutable-store-api.md)** - Layer 1c: Shared live data
+
+**Supporting APIs:**
+- **[Agent Management](./03-api-reference/09-agent-management.md)** - Agent registry operations
+- **[Governance Policies](./03-api-reference/10-governance-policies-api.md)** - Retention and compliance
+
+**Reference:**
+- **[Types & Interfaces](./03-api-reference/11-types-interfaces.md)** - TypeScript definitions
+- **[Error Handling](./03-api-reference/12-error-handling.md)** - Error codes and debugging
 
 ### 🏗️ Architecture
 

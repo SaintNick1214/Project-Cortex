@@ -287,7 +287,7 @@ const memory = await cortex.memory.store("agent-1", {
 | `export(filters, options)`            | Export conversations    | JSON/CSV       |
 | `delete(conversationId)`              | Delete conversation     | DeletionResult |
 
-**See:** [Conversation Operations API](./07-conversation-operations.md)
+**See:** [Conversation Operations API](./03-conversation-operations.md)
 
 ### Layer 2: cortex.vector.\* Operations
 
@@ -1900,10 +1900,10 @@ All memory operation errors:
 
 ## Next Steps
 
-- **[Agent Management API](./03-agent-management.md)** - Agent registry operations
+- **[Agent Management API](./09-agent-management.md)** - Agent registry operations
 - **[User Operations API](./04-user-operations.md)** - User profile API
 - **[Context Operations API](./05-context-operations.md)** - Context chain API
-- **[Types & Interfaces](./08-types-interfaces.md)** - Complete TypeScript definitions
+- **[Types & Interfaces](./11-types-interfaces.md)** - Complete TypeScript definitions
 
 ---
 
