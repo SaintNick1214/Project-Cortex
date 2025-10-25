@@ -32,9 +32,9 @@ Layer 3: Memory API
 
 **Conversation Types:**
 
-| Type | Participants | Use Case |
-|------|--------------|----------|
-| `user-agent` | User + Agent | User chatting with AI agent |
+| Type          | Participants  | Use Case                                          |
+| ------------- | ------------- | ------------------------------------------------- |
+| `user-agent`  | User + Agent  | User chatting with AI agent                       |
 | `agent-agent` | Agent + Agent | A2A communication (managed by cortex.a2a helpers) |
 
 **Why Layer 1a Exists:**
@@ -65,11 +65,11 @@ cortex.conversations.create(
 ```typescript
 interface ConversationInput {
   // Type (REQUIRED)
-  type: 'user-agent' | 'agent-agent';
-  
+  type: "user-agent" | "agent-agent";
+
   // Participants (REQUIRED)
   participants: UserAgentParticipants | AgentAgentParticipants;
-  
+
   // Metadata (optional)
   metadata?: Record<string, any>;
 }
@@ -92,14 +92,14 @@ interface AgentAgentParticipants {
 ```typescript
 interface Conversation {
   conversationId: string;
-  type: 'user-agent' | 'agent-agent';
+  type: "user-agent" | "agent-agent";
   participants: UserAgentParticipants | AgentAgentParticipants;
-  
-  messages: Message[];                // Initially empty
-  messageCount: number;               // Initially 0
-  
+
+  messages: Message[]; // Initially empty
+  messageCount: number; // Initially 0
+
   metadata: Record<string, any>;
-  
+
   createdAt: Date;
   updatedAt: Date;
   lastMessageAt?: Date;
@@ -115,14 +115,14 @@ interface Conversation {
 
 ```typescript
 const conversation = await cortex.conversations.create({
-  type: 'user-agent',
+  type: "user-agent",
   participants: {
-    userId: 'user-123',
-    agentId: 'support-agent',
+    userId: "user-123",
+    agentId: "support-agent",
   },
   metadata: {
-    channel: 'web-chat',
-    source: 'website',
+    channel: "web-chat",
+    source: "website",
   },
 });
 
@@ -134,14 +134,14 @@ console.log(conversation.messageCount); // 0 (empty initially)
 
 ```typescript
 const a2aConvo = await cortex.conversations.create({
-  type: 'agent-agent',
+  type: "agent-agent",
   participants: {
-    agent1: 'finance-agent',
-    agent2: 'hr-agent',
+    agent1: "finance-agent",
+    agent2: "hr-agent",
   },
   metadata: {
-    createdBy: 'finance-agent',
-    purpose: 'budget-discussion',
+    createdBy: "finance-agent",
+    purpose: "budget-discussion",
   },
 });
 
@@ -178,8 +178,8 @@ cortex.conversations.get(
 
 ```typescript
 interface GetOptions {
-  includeMessages?: boolean;          // Include message array (default: true)
-  messageLimit?: number;              // Limit messages returned (default: all)
+  includeMessages?: boolean; // Include message array (default: true)
+  messageLimit?: number; // Limit messages returned (default: all)
 }
 ```
 
@@ -191,15 +191,15 @@ interface GetOptions {
 **Example:**
 
 ```typescript
-const conversation = await cortex.conversations.get('conv-123');
+const conversation = await cortex.conversations.get("conv-123");
 
 if (conversation) {
   console.log(`Conversation with ${conversation.participants.userId}`);
   console.log(`${conversation.messageCount} total messages`);
   console.log(`Last message: ${conversation.lastMessageAt}`);
-  
+
   // Access messages
-  conversation.messages.forEach(msg => {
+  conversation.messages.forEach((msg) => {
     console.log(`${msg.role}: ${msg.content}`);
   });
 }
@@ -229,19 +229,19 @@ cortex.conversations.addMessage(
 ```typescript
 interface MessageInput {
   // User-agent messages
-  role?: 'user' | 'agent' | 'system';
-  content?: string;                   // For user-agent
-  userId?: string;                    // If role='user'
-  agentId?: string;                   // If role='agent'
-  
+  role?: "user" | "agent" | "system";
+  content?: string; // For user-agent
+  userId?: string; // If role='user'
+  agentId?: string; // If role='agent'
+
   // Agent-agent messages (A2A)
-  type?: 'a2a';
-  from?: string;                      // For A2A
-  to?: string;                        // For A2A
-  text?: string;                      // For A2A
-  
+  type?: "a2a";
+  from?: string; // For A2A
+  to?: string; // For A2A
+  text?: string; // For A2A
+
   // Optional
-  timestamp?: Date;                   // Default: now
+  timestamp?: Date; // Default: now
   metadata?: Record<string, any>;
 }
 ```
@@ -250,20 +250,20 @@ interface MessageInput {
 
 ```typescript
 interface Message {
-  id: string;                         // Use this in conversationRef!
-  
+  id: string; // Use this in conversationRef!
+
   // User-agent fields
-  role?: 'user' | 'agent' | 'system';
+  role?: "user" | "agent" | "system";
   content?: string;
   userId?: string;
   agentId?: string;
-  
+
   // Agent-agent fields
-  type?: 'a2a';
+  type?: "a2a";
   from?: string;
   to?: string;
   text?: string;
-  
+
   timestamp: Date;
   metadata?: Record<string, any>;
 }
@@ -279,36 +279,36 @@ interface Message {
 
 ```typescript
 // User message
-const userMsg = await cortex.conversations.addMessage('conv-123', {
-  role: 'user',
-  content: 'What is my account balance?',
-  userId: 'user-123',
+const userMsg = await cortex.conversations.addMessage("conv-123", {
+  role: "user",
+  content: "What is my account balance?",
+  userId: "user-123",
   timestamp: new Date(),
 });
 
 console.log(userMsg.id); // 'msg-001' - use in conversationRef!
 
 // Agent response
-const agentMsg = await cortex.conversations.addMessage('conv-123', {
-  role: 'agent',
-  content: 'Your account balance is $1,234.56',
-  agentId: 'support-agent',
+const agentMsg = await cortex.conversations.addMessage("conv-123", {
+  role: "agent",
+  content: "Your account balance is $1,234.56",
+  agentId: "support-agent",
   timestamp: new Date(),
 });
 
 console.log(agentMsg.id); // 'msg-002'
 
 // Now create Vector memory referencing these ACID messages
-await cortex.vector.store('support-agent', {
-  content: 'User asked about balance, replied with $1,234.56',
-  contentType: 'summarized',
-  userId: 'user-123',
-  source: { type: 'conversation', userId: 'user-123', timestamp: new Date() },
+await cortex.vector.store("support-agent", {
+  content: "User asked about balance, replied with $1,234.56",
+  contentType: "summarized",
+  userId: "user-123",
+  source: { type: "conversation", userId: "user-123", timestamp: new Date() },
   conversationRef: {
-    conversationId: 'conv-123',
-    messageIds: [userMsg.id, agentMsg.id],  // ← Links to ACID!
+    conversationId: "conv-123",
+    messageIds: [userMsg.id, agentMsg.id], // ← Links to ACID!
   },
-  metadata: { importance: 70, tags: ['balance', 'query'] },
+  metadata: { importance: 70, tags: ["balance", "query"] },
 });
 ```
 
@@ -316,11 +316,11 @@ await cortex.vector.store('support-agent', {
 
 ```typescript
 // A2A message
-const a2aMsg = await cortex.conversations.addMessage('a2a-conv-789', {
-  type: 'a2a',
-  from: 'finance-agent',
-  to: 'hr-agent',
-  text: 'What is the Q4 headcount budget?',
+const a2aMsg = await cortex.conversations.addMessage("a2a-conv-789", {
+  type: "a2a",
+  from: "finance-agent",
+  to: "hr-agent",
+  text: "What is the Q4 headcount budget?",
   timestamp: new Date(),
 });
 
@@ -358,12 +358,12 @@ cortex.conversations.getHistory(
 
 ```typescript
 interface HistoryOptions {
-  limit?: number;                     // Max messages (default: 100)
-  offset?: number;                    // Skip N messages (default: 0)
-  order?: 'asc' | 'desc';            // Chronological order (default: 'desc')
-  since?: Date;                       // Messages after date
-  until?: Date;                       // Messages before date
-  roles?: ('user' | 'agent' | 'system')[]; // Filter by role (user-agent only)
+  limit?: number; // Max messages (default: 100)
+  offset?: number; // Skip N messages (default: 0)
+  order?: "asc" | "desc"; // Chronological order (default: 'desc')
+  since?: Date; // Messages after date
+  until?: Date; // Messages before date
+  roles?: ("user" | "agent" | "system")[]; // Filter by role (user-agent only)
 }
 ```
 
@@ -375,26 +375,26 @@ interface HistoryOptions {
 
 ```typescript
 // Get last 50 messages
-const recent = await cortex.conversations.getHistory('conv-123', {
+const recent = await cortex.conversations.getHistory("conv-123", {
   limit: 50,
-  order: 'desc',  // Most recent first
+  order: "desc", // Most recent first
 });
 
 // Get messages from specific date range
-const october = await cortex.conversations.getHistory('conv-123', {
-  since: new Date('2025-10-01'),
-  until: new Date('2025-10-31'),
-  order: 'asc',  // Chronological
+const october = await cortex.conversations.getHistory("conv-123", {
+  since: new Date("2025-10-01"),
+  until: new Date("2025-10-31"),
+  order: "asc", // Chronological
 });
 
 // Get only user messages
-const userMessages = await cortex.conversations.getHistory('conv-123', {
-  roles: ['user'],
+const userMessages = await cortex.conversations.getHistory("conv-123", {
+  roles: ["user"],
   limit: 20,
 });
 
 // Display conversation
-recent.forEach(msg => {
+recent.forEach((msg) => {
   if (msg.role) {
     console.log(`${msg.role}: ${msg.content}`);
   } else {
@@ -428,17 +428,17 @@ cortex.conversations.list(
 ```typescript
 interface ConversationFilters {
   // Type
-  type?: 'user-agent' | 'agent-agent';
-  
+  type?: "user-agent" | "agent-agent";
+
   // Participants
   userId?: string;
   agentId?: string;
-  'participants.agent1'?: string;     // For agent-agent
-  'participants.agent2'?: string;     // For agent-agent
-  
+  "participants.agent1"?: string; // For agent-agent
+  "participants.agent2"?: string; // For agent-agent
+
   // Metadata
   metadata?: Record<string, any>;
-  
+
   // Dates
   createdBefore?: Date;
   createdAfter?: Date;
@@ -446,17 +446,17 @@ interface ConversationFilters {
   updatedAfter?: Date;
   lastMessageBefore?: Date;
   lastMessageAfter?: Date;
-  
+
   // Message count
   messageCount?: number | RangeQuery;
 }
 
 interface ListOptions {
-  limit?: number;                     // Default: 50
-  offset?: number;                    // Default: 0
-  sortBy?: 'createdAt' | 'updatedAt' | 'lastMessageAt' | 'messageCount';
-  sortOrder?: 'asc' | 'desc';
-  includeMessages?: boolean;          // Include message arrays (default: false)
+  limit?: number; // Default: 50
+  offset?: number; // Default: 0
+  sortBy?: "createdAt" | "updatedAt" | "lastMessageAt" | "messageCount";
+  sortOrder?: "asc" | "desc";
+  includeMessages?: boolean; // Include message arrays (default: false)
 }
 
 interface ListResult {
@@ -477,9 +477,9 @@ interface ListResult {
 ```typescript
 // List all user-agent conversations
 const userConvos = await cortex.conversations.list({
-  type: 'user-agent',
-  sortBy: 'lastMessageAt',
-  sortOrder: 'desc',
+  type: "user-agent",
+  sortBy: "lastMessageAt",
+  sortOrder: "desc",
   limit: 50,
 });
 
@@ -487,22 +487,28 @@ console.log(`Found ${userConvos.total} conversations`);
 
 // List conversations for specific user
 const userHistory = await cortex.conversations.list({
-  userId: 'user-123',
-  sortBy: 'lastMessageAt',
-  sortOrder: 'desc',
+  userId: "user-123",
+  sortBy: "lastMessageAt",
+  sortOrder: "desc",
 });
 
 // List active conversations (recent messages)
 const active = await cortex.conversations.list({
-  lastMessageAfter: new Date(Date.now() - 24 * 60 * 60 * 1000),  // Last 24h
+  lastMessageAfter: new Date(Date.now() - 24 * 60 * 60 * 1000), // Last 24h
 });
 
 // List A2A conversations between two agents
 const a2aConvos = await cortex.conversations.list({
-  type: 'agent-agent',
+  type: "agent-agent",
   $or: [
-    { 'participants.agent1': 'finance-agent', 'participants.agent2': 'hr-agent' },
-    { 'participants.agent1': 'hr-agent', 'participants.agent2': 'finance-agent' },
+    {
+      "participants.agent1": "finance-agent",
+      "participants.agent2": "hr-agent",
+    },
+    {
+      "participants.agent1": "hr-agent",
+      "participants.agent2": "finance-agent",
+    },
   ],
 });
 ```
@@ -532,9 +538,9 @@ cortex.conversations.search(
 
 ```typescript
 interface SearchOptions extends ConversationFilters {
-  limit?: number;                     // Default: 20
-  searchIn?: 'content' | 'metadata' | 'both';  // Default: 'content'
-  matchMode?: 'contains' | 'exact' | 'fuzzy';  // Default: 'contains'
+  limit?: number; // Default: 20
+  searchIn?: "content" | "metadata" | "both"; // Default: 'content'
+  matchMode?: "contains" | "exact" | "fuzzy"; // Default: 'contains'
 }
 ```
 
@@ -543,9 +549,9 @@ interface SearchOptions extends ConversationFilters {
 ```typescript
 interface SearchResult {
   conversation: Conversation;
-  matchedMessages: Message[];         // Messages that matched query
-  score: number;                      // Relevance score
-  highlights?: string[];              // Matched snippets
+  matchedMessages: Message[]; // Messages that matched query
+  score: number; // Relevance score
+  highlights?: string[]; // Matched snippets
 }
 ```
 
@@ -553,24 +559,24 @@ interface SearchResult {
 
 ```typescript
 // Search for conversations about "refund"
-const results = await cortex.conversations.search('refund', {
-  type: 'user-agent',
-  userId: 'user-123',
+const results = await cortex.conversations.search("refund", {
+  type: "user-agent",
+  userId: "user-123",
   limit: 10,
 });
 
-results.forEach(result => {
+results.forEach((result) => {
   console.log(`Conversation: ${result.conversation.conversationId}`);
   console.log(`Matched messages: ${result.matchedMessages.length}`);
-  result.matchedMessages.forEach(msg => {
+  result.matchedMessages.forEach((msg) => {
     console.log(`  ${msg.role}: ${msg.content}`);
   });
 });
 
 // Search A2A conversations
-const a2aResults = await cortex.conversations.search('budget approval', {
-  type: 'agent-agent',
-  'participants.agent1': 'finance-agent',
+const a2aResults = await cortex.conversations.search("budget approval", {
+  type: "agent-agent",
+  "participants.agent1": "finance-agent",
 });
 ```
 
@@ -601,7 +607,7 @@ const total = await cortex.conversations.count();
 
 // Count for specific user
 const userCount = await cortex.conversations.count({
-  userId: 'user-123',
+  userId: "user-123",
 });
 
 // Count active (recent message) conversations
@@ -611,7 +617,7 @@ const active = await cortex.conversations.count({
 
 // Count A2A conversations
 const a2aCount = await cortex.conversations.count({
-  type: 'agent-agent',
+  type: "agent-agent",
 });
 ```
 
@@ -634,10 +640,10 @@ cortex.conversations.export(
 
 ```typescript
 interface ExportOptions {
-  format: 'json' | 'csv';
+  format: "json" | "csv";
   outputPath?: string;
-  includeMetadata?: boolean;          // Default: true
-  includeFullMessages?: boolean;      // Default: true
+  includeMetadata?: boolean; // Default: true
+  includeFullMessages?: boolean; // Default: true
 }
 ```
 
@@ -645,22 +651,28 @@ interface ExportOptions {
 
 ```typescript
 // Export all conversations for a user (GDPR)
-const userData = await cortex.conversations.export({
-  userId: 'user-123',
-}, {
-  format: 'json',
-  outputPath: 'exports/user-123-conversations.json',
-  includeFullMessages: true,
-});
+const userData = await cortex.conversations.export(
+  {
+    userId: "user-123",
+  },
+  {
+    format: "json",
+    outputPath: "exports/user-123-conversations.json",
+    includeFullMessages: true,
+  },
+);
 
 // Export conversations from date range
-await cortex.conversations.export({
-  createdAfter: new Date('2025-10-01'),
-  createdBefore: new Date('2025-10-31'),
-}, {
-  format: 'csv',
-  outputPath: 'exports/october-conversations.csv',
-});
+await cortex.conversations.export(
+  {
+    createdAfter: new Date("2025-10-01"),
+    createdBefore: new Date("2025-10-31"),
+  },
+  {
+    format: "csv",
+    outputPath: "exports/october-conversations.csv",
+  },
+);
 ```
 
 **Errors:**
@@ -692,14 +704,14 @@ interface DeletionResult {
   conversationId: string;
   messagesDeleted: number;
   deletedAt: Date;
-  restorable: boolean;                // Always false (permanent)
+  restorable: boolean; // Always false (permanent)
 }
 ```
 
 **Example:**
 
 ```typescript
-const result = await cortex.conversations.delete('conv-123');
+const result = await cortex.conversations.delete("conv-123");
 
 console.log(`Deleted conversation with ${result.messagesDeleted} messages`);
 console.log(`Restorable: ${result.restorable}`); // false - permanent!
@@ -734,14 +746,14 @@ cortex.conversations.deleteMany(
 interface DeleteManyOptions {
   dryRun?: boolean;
   requireConfirmation?: boolean;
-  confirmationThreshold?: number;     // Default: 10
+  confirmationThreshold?: number; // Default: 10
 }
 
 interface DeleteManyResult {
   deleted: number;
   conversationIds: string[];
   totalMessagesDeleted: number;
-  wouldDelete?: number;               // For dryRun
+  wouldDelete?: number; // For dryRun
 }
 ```
 
@@ -749,22 +761,25 @@ interface DeleteManyResult {
 
 ```typescript
 // Preview deletion
-const preview = await cortex.conversations.deleteMany({
-  userId: 'user-123',
-  lastMessageBefore: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
-}, {
-  dryRun: true,
-});
+const preview = await cortex.conversations.deleteMany(
+  {
+    userId: "user-123",
+    lastMessageBefore: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
+  },
+  {
+    dryRun: true,
+  },
+);
 
 console.log(`Would delete ${preview.wouldDelete} old conversations`);
 
 // Execute
 if (preview.wouldDelete < 100) {
   const result = await cortex.conversations.deleteMany({
-    userId: 'user-123',
+    userId: "user-123",
     lastMessageBefore: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
   });
-  
+
   console.log(`Deleted ${result.deleted} conversations`);
   console.log(`Total messages deleted: ${result.totalMessagesDeleted}`);
 }
@@ -790,7 +805,7 @@ cortex.conversations.getMessage(
 **Example:**
 
 ```typescript
-const msg = await cortex.conversations.getMessage('conv-123', 'msg-001');
+const msg = await cortex.conversations.getMessage("conv-123", "msg-001");
 
 console.log(msg.content);
 console.log(msg.timestamp);
@@ -815,16 +830,16 @@ cortex.conversations.getMessagesByIds(
 
 ```typescript
 // Get specific messages referenced by Vector memory
-const memory = await cortex.memory.get('agent-1', 'mem-123');
+const memory = await cortex.memory.get("agent-1", "mem-123");
 
 if (memory.conversationRef) {
   const sourceMessages = await cortex.conversations.getMessagesByIds(
     memory.conversationRef.conversationId,
-    memory.conversationRef.messageIds
+    memory.conversationRef.messageIds,
   );
-  
-  console.log('Original messages that informed this memory:');
-  sourceMessages.forEach(msg => console.log(msg.content));
+
+  console.log("Original messages that informed this memory:");
+  sourceMessages.forEach((msg) => console.log(msg.content));
 }
 ```
 
@@ -885,18 +900,18 @@ cortex.conversations.getOrCreate(
 ```typescript
 // Always get a conversation (creates if needed)
 const conversation = await cortex.conversations.getOrCreate({
-  type: 'user-agent',
+  type: "user-agent",
   participants: {
-    userId: 'user-123',
-    agentId: 'support-agent',
+    userId: "user-123",
+    agentId: "support-agent",
   },
 });
 
 // Use immediately
 await cortex.conversations.addMessage(conversation.conversationId, {
-  role: 'user',
-  content: 'Hello!',
-  userId: 'user-123',
+  role: "user",
+  content: "Hello!",
+  userId: "user-123",
 });
 ```
 
@@ -911,17 +926,17 @@ Conversations with `userId` are targets for GDPR cascade deletion:
 ```typescript
 // Create user conversation (GDPR-enabled)
 const convo = await cortex.conversations.create({
-  type: 'user-agent',
+  type: "user-agent",
   participants: {
-    userId: 'user-123',  // ← GDPR link
-    agentId: 'support-agent',
+    userId: "user-123", // ← GDPR link
+    agentId: "support-agent",
   },
 });
 
 // GDPR cascade deletion
-const result = await cortex.users.delete('user-123', {
+const result = await cortex.users.delete("user-123", {
   cascade: true,
-  deleteFromConversations: true,  // ← Deletes Layer 1a
+  deleteFromConversations: true, // ← Deletes Layer 1a
 });
 
 console.log(`Conversations deleted: ${result.conversationsDeleted}`);
@@ -932,14 +947,14 @@ console.log(`Total messages deleted: ${result.totalMessagesDeleted}`);
 
 ```typescript
 // Delete Vector memories but preserve ACID audit trail
-await cortex.users.delete('user-123', {
+await cortex.users.delete("user-123", {
   cascade: true,
-  deleteFromConversations: false,  // ← Preserve Layer 1a
-  deleteFromVector: true,            // Delete Layer 2
+  deleteFromConversations: false, // ← Preserve Layer 1a
+  deleteFromVector: true, // Delete Layer 2
 });
 
 // Conversations remain for compliance/audit
-const preserved = await cortex.conversations.list({ userId: 'user-123' });
+const preserved = await cortex.conversations.list({ userId: "user-123" });
 console.log(`${preserved.total} conversations preserved for audit`);
 ```
 
@@ -989,11 +1004,11 @@ await cortex.vector.store('agent-1', {
 // Instead, delete Vector memories (searchable index)
 
 // ✅ Good: Delete Vector, keep ACID
-await cortex.memory.delete('agent-1', 'mem-123');
+await cortex.memory.delete("agent-1", "mem-123");
 // Vector deleted, ACID preserved ✅
 
 // ⚠️ Caution: Delete ACID (breaks audit trail)
-await cortex.conversations.delete('conv-123');
+await cortex.conversations.delete("conv-123");
 // Permanent, unrestorable ❌
 ```
 
@@ -1001,20 +1016,20 @@ await cortex.conversations.delete('conv-123');
 
 ```typescript
 // ✅ Paginate large conversations
-const page1 = await cortex.conversations.getHistory('conv-123', {
+const page1 = await cortex.conversations.getHistory("conv-123", {
   limit: 50,
   offset: 0,
-  order: 'desc',
+  order: "desc",
 });
 
-const page2 = await cortex.conversations.getHistory('conv-123', {
+const page2 = await cortex.conversations.getHistory("conv-123", {
   limit: 50,
   offset: 50,
-  order: 'desc',
+  order: "desc",
 });
 
 // ❌ Don't load huge conversations at once
-const all = await cortex.conversations.get('conv-with-10k-messages');
+const all = await cortex.conversations.get("conv-with-10k-messages");
 // Could be slow!
 ```
 
@@ -1023,19 +1038,19 @@ const all = await cortex.conversations.get('conv-with-10k-messages');
 ```typescript
 // Add useful metadata
 await cortex.conversations.create({
-  type: 'user-agent',
+  type: "user-agent",
   participants: { userId, agentId },
   metadata: {
-    channel: 'web-chat',
-    source: 'website',
-    campaign: 'q4-promotion',
-    tags: ['support', 'billing'],
+    channel: "web-chat",
+    source: "website",
+    campaign: "q4-promotion",
+    tags: ["support", "billing"],
   },
 });
 
 // Query by metadata
 const campaignConvos = await cortex.conversations.list({
-  metadata: { campaign: 'q4-promotion' },
+  metadata: { campaign: "q4-promotion" },
 });
 ```
 
@@ -1048,43 +1063,46 @@ const campaignConvos = await cortex.conversations.list({
 ```typescript
 // Layer 3 handles ACID + Vector automatically
 const result = await cortex.memory.remember({
-  agentId: 'support-agent',
-  conversationId: 'conv-123',
-  userMessage: 'I need help',
-  agentResponse: 'How can I assist you?',
-  userId: 'user-123',
-  userName: 'Alex',
+  agentId: "support-agent",
+  conversationId: "conv-123",
+  userMessage: "I need help",
+  agentResponse: "How can I assist you?",
+  userId: "user-123",
+  userName: "Alex",
 });
 
 // Behind the scenes:
 // 1. Adds 2 messages to ACID conversation
 // 2. Creates 2 Vector memories with conversationRef
-console.log('ACID messages:', result.conversation.messageIds);
-console.log('Vector memories:', result.memories.map(m => m.id));
+console.log("ACID messages:", result.conversation.messageIds);
+console.log(
+  "Vector memories:",
+  result.memories.map((m) => m.id),
+);
 ```
 
 ### Pattern 2: Manual Layer 1 + Layer 2
 
 ```typescript
 // Step 1: Store in ACID (Layer 1a)
-const userMsg = await cortex.conversations.addMessage('conv-123', {
-  role: 'user',
-  content: 'What is my balance?',
-  userId: 'user-123',
+const userMsg = await cortex.conversations.addMessage("conv-123", {
+  role: "user",
+  content: "What is my balance?",
+  userId: "user-123",
 });
 
-const agentMsg = await cortex.conversations.addMessage('conv-123', {
-  role: 'agent',
-  content: '$1,234.56',
-  agentId: 'support-agent',
+const agentMsg = await cortex.conversations.addMessage("conv-123", {
+  role: "agent",
+  content: "$1,234.56",
+  agentId: "support-agent",
 });
 
 // Step 2: Index in Vector (Layer 2)
-await cortex.vector.store('support-agent', {
-  content: 'User asked about balance: $1,234.56',
-  contentType: 'summarized',
+await cortex.vector.store("support-agent", {
+  content: "User asked about balance: $1,234.56",
+  contentType: "summarized",
   conversationRef: {
-    conversationId: 'conv-123',
+    conversationId: "conv-123",
     messageIds: [userMsg.id, agentMsg.id],
   },
   metadata: { importance: 70 },
@@ -1096,9 +1114,9 @@ await cortex.vector.store('support-agent', {
 ```typescript
 // A2A helpers manage ACID conversations automatically
 await cortex.a2a.send({
-  from: 'finance-agent',
-  to: 'hr-agent',
-  message: 'What is the budget?',
+  from: "finance-agent",
+  to: "hr-agent",
+  message: "What is the budget?",
 });
 
 // Behind the scenes:
@@ -1111,20 +1129,20 @@ await cortex.a2a.send({
 
 ## Error Reference
 
-| Error Code | Description | Cause |
-|------------|-------------|-------|
-| `INVALID_CONVERSATION_ID` | Conversation ID invalid | Empty or malformed ID |
-| `CONVERSATION_NOT_FOUND` | Conversation doesn't exist | Invalid conversationId |
-| `INVALID_TYPE` | Type is invalid | Not 'user-agent' or 'agent-agent' |
-| `INVALID_PARTICIPANTS` | Participants malformed | Bad participant structure |
-| `INVALID_MESSAGE` | Message is malformed | Bad message structure |
-| `INVALID_QUERY` | Query is invalid | Empty query string |
-| `INVALID_FILTERS` | Filters malformed | Bad filter syntax |
-| `INVALID_PAGINATION` | Pagination params bad | Invalid limit/offset |
-| `INVALID_OPTIONS` | Options malformed | Bad option structure |
-| `DELETION_FAILED` | Delete failed | Database error |
-| `EXPORT_FAILED` | Export failed | File write error |
-| `CONVEX_ERROR` | Database error | Convex operation failed |
+| Error Code                | Description                | Cause                             |
+| ------------------------- | -------------------------- | --------------------------------- |
+| `INVALID_CONVERSATION_ID` | Conversation ID invalid    | Empty or malformed ID             |
+| `CONVERSATION_NOT_FOUND`  | Conversation doesn't exist | Invalid conversationId            |
+| `INVALID_TYPE`            | Type is invalid            | Not 'user-agent' or 'agent-agent' |
+| `INVALID_PARTICIPANTS`    | Participants malformed     | Bad participant structure         |
+| `INVALID_MESSAGE`         | Message is malformed       | Bad message structure             |
+| `INVALID_QUERY`           | Query is invalid           | Empty query string                |
+| `INVALID_FILTERS`         | Filters malformed          | Bad filter syntax                 |
+| `INVALID_PAGINATION`      | Pagination params bad      | Invalid limit/offset              |
+| `INVALID_OPTIONS`         | Options malformed          | Bad option structure              |
+| `DELETION_FAILED`         | Delete failed              | Database error                    |
+| `EXPORT_FAILED`           | Export failed              | File write error                  |
+| `CONVEX_ERROR`            | Database error             | Convex operation failed           |
 
 ---
 
@@ -1137,4 +1155,3 @@ await cortex.a2a.send({
 ---
 
 **Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
-

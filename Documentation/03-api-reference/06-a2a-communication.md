@@ -198,11 +198,13 @@ A2A Helpers:
 ### Direct Mode: Developer Manages Execution + Pub/Sub
 
 **What Cortex provides:**
+
 - Storage APIs (database operations)
 - Metadata conventions (messageType, inReplyTo, etc.)
 - Patterns for request-response
 
 **What YOU must provide:**
+
 - Agent execution infrastructure (how agents run)
 - Pub/sub infrastructure (your own Redis, RabbitMQ, etc.)
 - Agent subscription handlers (connecting agents to pub/sub)
@@ -210,7 +212,7 @@ A2A Helpers:
 **Example Setup (Direct Mode):**
 
 ```typescript
-import Redis from 'ioredis';  // Standard ioredis package
+import Redis from "ioredis"; // Standard ioredis package
 
 // 1. Your Redis instance
 const redis = new Redis(process.env.REDIS_URL);
@@ -226,90 +228,103 @@ async function runAgent(agentId: string) {
   redis.subscribe(`agent:${agentId}:inbox`, (err) => {
     if (err) throw err;
   });
-  
+
   // Handle incoming notifications
-  redis.on('message', async (channel, message) => {
+  redis.on("message", async (channel, message) => {
     const notification = JSON.parse(message);
-    
-    if (notification.type === 'a2a-request') {
+
+    if (notification.type === "a2a-request") {
       // 1. Fetch from Cortex storage
       const request = await cortex.memory.get(agentId, notification.memoryId);
-      
+
       // 2. Process with your agent logic
       const answer = await yourAgentLogic(request.content);
-      
+
       // 3. Store response in Cortex
       await cortex.a2a.send({
         from: agentId,
         to: notification.from,
         message: answer,
         metadata: {
-          messageType: 'response',
+          messageType: "response",
           inReplyTo: notification.messageId,
         },
       });
-      
+
       // 4. Publish response notification (your pub/sub)
       await redis.publish(
         `agent:${notification.from}:responses:${notification.messageId}`,
-        JSON.stringify({ response: answer })
+        JSON.stringify({ response: answer }),
       );
     }
   });
 }
 
 // 4. Manual request() implementation (you build this)
-async function manualRequest(from: string, to: string, message: string, timeout = 30000) {
+async function manualRequest(
+  from: string,
+  to: string,
+  message: string,
+  timeout = 30000,
+) {
   // Send via Cortex (stores in database)
   const sent = await cortex.a2a.send({
     from,
     to,
     message,
     metadata: {
-      messageType: 'request',
+      messageType: "request",
       requiresResponse: true,
     },
   });
-  
+
   // Publish notification (your pub/sub)
-  await redis.publish(`agent:${to}:inbox`, JSON.stringify({
-    type: 'a2a-request',
-    messageId: sent.messageId,
-    memoryId: sent.receiverMemoryId,
-    from,
-  }));
-  
+  await redis.publish(
+    `agent:${to}:inbox`,
+    JSON.stringify({
+      type: "a2a-request",
+      messageId: sent.messageId,
+      memoryId: sent.receiverMemoryId,
+      from,
+    }),
+  );
+
   // Wait for response (your pub/sub)
   return new Promise((resolve, reject) => {
     const channel = `agent:${from}:responses:${sent.messageId}`;
-    
+
     redis.subscribe(channel);
     const handler = (ch, msg) => {
       if (ch === channel) {
         redis.unsubscribe(channel);
-        redis.off('message', handler);
+        redis.off("message", handler);
         resolve(JSON.parse(msg));
       }
     };
-    redis.on('message', handler);
-    
+    redis.on("message", handler);
+
     setTimeout(() => {
       redis.unsubscribe(channel);
-      redis.off('message', handler);
-      reject(new Error('Timeout'));
+      redis.off("message", handler);
+      reject(new Error("Timeout"));
     }, timeout);
   });
 }
 
 // Start your agents
-runAgent('hr-agent');
-runAgent('finance-agent');
+runAgent("hr-agent");
+runAgent("finance-agent");
 
 // Use your manual request
-const response = await manualRequest('finance-agent', 'hr-agent', 'What is the budget?');
+const response = await manualRequest(
+  "finance-agent",
+  "hr-agent",
+  "What is the budget?",
+);
 ```
 
 **Key Points:**
+
 - Cortex provides **storage APIs** (database operations)
 - YOU provide **execution** (agent runners) + **pub/sub** (Redis/RabbitMQ)
 - YOU wire them together (subscriptions, notifications)
@@ -323,15 +338,15 @@ In Cloud Mode, Cortex will provide:
 
 ```typescript
 const cortex = new Cortex({
-  mode: 'cloud',
+  mode: "cloud",
   apiKey: process.env.CORTEX_CLOUD_KEY,
 });
 
 // request() works automatically
 const response = await cortex.a2a.request({
-  from: 'finance-agent',
-  to: 'hr-agent',
-  message: 'What is the budget?',
+  from: "finance-agent",
+  to: "hr-agent",
+  message: "What is the budget?",
 });
 // Cloud handles:
 // ✅ Pub/sub infrastructure (managed Redis)
@@ -795,7 +810,6 @@ const announcements = await cortex.memory.search("agent-1", "*", {
 - [Broadcast Communication](../02-core-features/05-a2a-communication.md#broadcast-one-to-many)
 
 ---
-
 
 ### getConversation()
 
