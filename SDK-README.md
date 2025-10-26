@@ -17,12 +17,15 @@ npm test
 
 ## 📦 Current Status
 
-### ✅ Layer 1a: Conversations (COMPLETE)
+### ✅ Layer 1a: Conversations (COMPLETE - All 9 Operations!)
 
-- **Schema**: `convex-dev/schema.ts` - conversations table with indexes
-- **Backend**: `convex-dev/conversations.ts` - Convex mutations/queries
-- **SDK**: `src/conversations/index.ts` - TypeScript API wrapper
-- **Tests**: `tests/conversations.test.ts` - 13 comprehensive E2E tests
+- **Schema**: `convex-dev/schema.ts` - conversations table with 6 indexes
+- **Backend**: `convex-dev/conversations.ts` - 9 Convex operations
+- **SDK**: `src/conversations/index.ts` - 9 TypeScript methods
+- **Tests**: `tests/conversations.test.ts` - 45 comprehensive E2E tests (100% passing)
+- **Interactive**: `tests/interactive-runner.ts` - Menu-driven debugging
+
+**Operations**: create, get, addMessage, list, count, delete, **getHistory**, **search**, **export**
 
 ### ⏳ Coming Next
 
@@ -180,6 +183,27 @@ const conversations = await cortex.conversations.list({
   limit: 10,
 });
 
+// Get paginated message history (NEW!)
+const history = await cortex.conversations.getHistory(conversation.conversationId, {
+  limit: 20,
+  sortOrder: "desc",  // Newest first
+});
+console.log(`Showing ${history.messages.length} of ${history.total} messages`);
+
+// Search conversations (NEW!)
+const results = await cortex.conversations.search({
+  query: "important keyword",
+  filters: { userId: "user-123", limit: 5 },
+});
+console.log(`Found ${results.length} conversations`);
+
+// Export for GDPR (NEW!)
+const exported = await cortex.conversations.export({
+  filters: { userId: "user-123" },
+  format: "json",
+  includeMetadata: true,
+});
+
 // Delete conversation (GDPR)
 await cortex.conversations.delete(conversation.conversationId);
 ```
@@ -330,7 +354,7 @@ This SDK is built layer-by-layer, with comprehensive tests for each layer before
 
 ## 📝 License
 
-MIT (to be confirmed)
+Apache License 2.0 - See [LICENSE.md](./LICENSE.md)
 
 ## 🔗 Links
 
