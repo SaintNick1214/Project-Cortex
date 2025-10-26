@@ -1,0 +1,53 @@
+# Source files (dist/ has compiled versions)
+src/
+tsconfig*.json
+
+# Tests and development
+tests/
+convex-dev/
+dev-docs/
+coverage/
+.env*
+jest.config.mjs
+*.test.ts
+*.debug.ts
+interactive-runner.ts
+
+# Development docs
+Internal Docs/
+dev-docs/
+
+# CI/CD
+.github/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Build tools
+node_modules/
+
+# Convex development
+convex.json
+
+# Documentation that doesn't need to ship
+Documentation/
+Quickstarts/
+examples/
+
+# GitHub Pages
+_config.yml
+Gemfile
+.nojekyll
+index.md
+
+# Misc
+.DS_Store
+Thumbs.db
+*.log
+

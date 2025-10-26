@@ -217,10 +217,11 @@ Works with any AI framework:
 
 ### Open Source
 
-Cortex is MIT licensed:
+Cortex is licensed under Apache License 2.0:
 
 - ✅ Free for commercial use
 - ✅ Modify and distribute freely
+- ✅ Explicit patent grant protection
 - ✅ No vendor lock-in
 - ✅ Community-driven development
 - ✅ Transparent roadmap

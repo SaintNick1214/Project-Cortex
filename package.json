@@ -1,9 +1,52 @@
 {
-  "name": "cortex-sdk",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@saintnick/cortex-sdk",
+  "version": "0.1.0",
+  "description": "AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management",
   "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.md",
+    "CHANGELOG.md"
+  ],
+  "keywords": [
+    "ai",
+    "agents",
+    "memory",
+    "convex",
+    "sdk",
+    "typescript",
+    "conversations",
+    "vector-search",
+    "llm",
+    "chatbot"
+  ],
+  "author": "Saint Nick LLC",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SaintNick1214/cortex-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SaintNick1214/cortex-sdk/issues"
+  },
+  "homepage": "https://github.com/SaintNick1214/cortex-sdk#readme",
   "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "build:watch": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "clean": "rimraf dist",
+    "prepublishOnly": "npm test && npm run build",
+    "prepack": "npm run build",
     "dev": "convex dev",
     "predev": "convex dev --until-success && convex dashboard",
     "logs": "convex logs",
@@ -14,7 +57,7 @@
     "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathIgnorePatterns=debug --coverage",
     "test:debug": "cross-env TEST_DEBUG=true TEST_VERBOSE=true TEST_INSPECT=true node --experimental-vm-modules node_modules/jest/bin/jest.js debug --runInBand"
   },
-  "dependencies": {
+  "peerDependencies": {
     "convex": "^1.28.0"
   },
   "devDependencies": {
@@ -30,8 +73,10 @@
     "eslint": "^9.37.0",
     "globals": "^16.4.0",
     "jest": "^29.7.0",
+    "rimraf": "^6.0.1",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
+    "tsup": "^8.5.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.2"
   }
