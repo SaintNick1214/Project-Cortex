@@ -12,6 +12,12 @@ import type {
   AddMessageInput,
   ListConversationsFilter,
   CountConversationsFilter,
+  GetHistoryOptions,
+  SearchConversationsInput,
+  ConversationSearchResult,
+  ExportConversationsOptions,
+  ExportResult,
+  Message,
 } from "../types";
 
 export class ConversationsAPI {
@@ -149,6 +155,97 @@ export class ConversationsAPI {
     });
 
     return result as { deleted: boolean };
+  }
+
+  /**
+   * Get paginated message history from a conversation
+   * 
+   * @example
+   * ```typescript
+   * const history = await cortex.conversations.getHistory('conv-abc123', {
+   *   limit: 20,
+   *   offset: 0,
+   *   sortOrder: 'desc',
+   * });
+   * ```
+   */
+  async getHistory(
+    conversationId: string,
+    options?: GetHistoryOptions
+  ): Promise<{
+    messages: Message[];
+    total: number;
+    hasMore: boolean;
+    conversationId: string;
+  }> {
+    const result = await this.client.query(api.conversations.getHistory, {
+      conversationId,
+      limit: options?.limit,
+      offset: options?.offset,
+      sortOrder: options?.sortOrder,
+    });
+
+    return result as {
+      messages: Message[];
+      total: number;
+      hasMore: boolean;
+      conversationId: string;
+    };
+  }
+
+  /**
+   * Search conversations by text query
+   * 
+   * @example
+   * ```typescript
+   * const results = await cortex.conversations.search({
+   *   query: 'password',
+   *   filters: {
+   *     userId: 'user-123',
+   *     limit: 5,
+   *   },
+   * });
+   * ```
+   */
+  async search(input: SearchConversationsInput): Promise<ConversationSearchResult[]> {
+    const result = await this.client.query(api.conversations.search, {
+      query: input.query,
+      type: input.filters?.type,
+      userId: input.filters?.userId,
+      agentId: input.filters?.agentId,
+      dateStart: input.filters?.dateRange?.start,
+      dateEnd: input.filters?.dateRange?.end,
+      limit: input.filters?.limit,
+    });
+
+    return result as ConversationSearchResult[];
+  }
+
+  /**
+   * Export conversations to JSON or CSV
+   * 
+   * @example
+   * ```typescript
+   * const exported = await cortex.conversations.export({
+   *   filters: { userId: 'user-123' },
+   *   format: 'json',
+   *   includeMetadata: true,
+   * });
+   * ```
+   */
+  async export(options: ExportConversationsOptions): Promise<ExportResult> {
+    const result = await this.client.query(api.conversations.exportConversations, {
+      userId: options.filters?.userId,
+      agentId: options.filters?.agentId,
+      conversationIds: options.filters?.conversationIds,
+      type: options.filters?.type,
+      dateStart: options.filters?.dateRange?.start,
+      dateEnd: options.filters?.dateRange?.end,
+      format: options.format,
+      includeMetadata: options.includeMetadata,
+    });
+
+    return result as ExportResult;
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

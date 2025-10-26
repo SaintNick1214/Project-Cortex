@@ -19,8 +19,8 @@ npm test
 
 ### ✅ Layer 1a: Conversations (COMPLETE)
 
-- **Schema**: `convex/schema.ts` - conversations table with indexes
-- **Backend**: `convex/conversations.ts` - Convex mutations/queries
+- **Schema**: `convex-dev/schema.ts` - conversations table with indexes
+- **Backend**: `convex-dev/conversations.ts` - Convex mutations/queries
 - **SDK**: `src/conversations/index.ts` - TypeScript API wrapper
 - **Tests**: `tests/conversations.test.ts` - 13 comprehensive E2E tests
 
@@ -47,7 +47,7 @@ npm test
                     ↓
 ┌─────────────────────────────────────────────┐
 │  Convex Backend                             │
-│  convex/                                    │
+│  convex-dev/                                │
 │  - schema.ts       (Table definitions)      │
 │  - conversations.ts (Mutations/Queries) ✅  │
 │  - immutable.ts    ⏳                       │
@@ -61,21 +61,66 @@ npm test
 ### Run Tests
 
 ```bash
-# All tests
+# All tests (fast, CI-ready)
 npm test
 
-# Watch mode (for development)
+# Watch mode (for development - auto-reruns on changes)
 npm run test:watch
+
+# Interactive mode (menu-driven, one-by-one testing) ⭐ NEW!
+npm run test:interactive
+
+# Debug mode (step-by-step validation with storage inspection)
+npm run test:debug
 
 # Coverage report
 npm run test:coverage
 ```
+
+⚠️ **Note**: Use `npm run` for custom scripts (e.g., `npm run test:watch`, NOT `npm test:watch`)
 
 ### Test Requirements
 
 - **Convex must be running**: `npm run dev` in one terminal
 - **Tests validate both SDK and storage**: Every test checks SDK response + Convex storage
 - **Coverage goal**: 80% minimum
+
+### Interactive Tests ⭐ NEW!
+
+Interactive mode provides a **menu-driven interface** for manual testing:
+
+```bash
+npm run test:interactive
+```
+
+Features:
+- 🎮 **Choose what to test** - Pick individual operations from a menu
+- 🧹 **Purge database** - Clean slate between tests
+- 📊 **Inspect storage** - See database state at any time
+- 🎯 **Track state** - Current conversation ID maintained between operations
+- 🔄 **Repeat operations** - Run the same test multiple times
+
+Perfect for:
+- Learning how the API works
+- Debugging specific operations
+- Manual validation workflows
+- Understanding state changes
+
+### Debug Tests
+
+Debug tests (`*.debug.test.ts`) provide automated step-by-step validation:
+
+```bash
+npm run test:debug
+```
+
+Output includes:
+- 🔥 Each operation as it happens
+- 📊 Storage inspection after each step
+- ✅ Detailed validation results
+- 🔍 Database state visibility
+
+**📖 Full Testing Guide**: See [dev-docs/QUICK-TEST-REFERENCE.md](./dev-docs/QUICK-TEST-REFERENCE.md)
 
 ### Test Pattern
 
@@ -143,8 +188,8 @@ await cortex.conversations.delete(conversation.conversationId);
 
 ### Adding a New API Layer
 
-1. **Schema** - Update `convex/schema.ts` with new table + indexes
-2. **Backend** - Create `convex/[name].ts` with mutations/queries
+1. **Schema** - Update `convex-dev/schema.ts` with new table + indexes
+2. **Backend** - Create `convex-dev/[name].ts` with mutations/queries
 3. **Types** - Add TypeScript types to `src/types/index.ts`
 4. **SDK** - Create `src/[name]/index.ts` with API wrapper
 5. **Tests** - Create `tests/[name].test.ts` with E2E tests
@@ -154,10 +199,10 @@ await cortex.conversations.delete(conversation.conversationId);
 
 ```bash
 # 1. Update schema
-# Add immutable table to convex/schema.ts
+# Add immutable table to convex-dev/schema.ts
 
 # 2. Create backend
-# Create convex/immutable.ts
+# Create convex-dev/immutable.ts
 
 # 3. Create SDK wrapper
 # Create src/immutable/index.ts
@@ -175,39 +220,52 @@ npm test
 ## 📁 Project Structure
 
 ```
-cortex-sdk/
-├── convex/              # Convex backend
-│   ├── _generated/      # Auto-generated (git-ignored)
-│   ├── schema.ts        # Table definitions
-│   ├── conversations.ts # Layer 1a backend ✅
-│   └── convex.config.ts # Convex configuration
-├── src/                 # SDK source code
+Project Cortex/          # ← Repository root = SDK root
+├── src/                 # SDK source code (ships to npm)
 │   ├── conversations/   # Layer 1a SDK ✅
 │   │   └── index.ts
 │   ├── types/           # TypeScript types
 │   │   └── index.ts
 │   └── index.ts         # Main SDK entry point
 ├── tests/               # E2E tests
-│   ├── conversations.test.ts ✅ (26 tests)
+│   ├── conversations.test.ts       ✅ (13 tests)
+│   ├── conversations.debug.test.ts # Debug validation
+│   ├── helpers/         # Test utilities
+│   │   ├── cleanup.ts   # Table purging
+│   │   ├── inspector.ts # Storage inspection
+│   │   └── debug.ts     # Debug logging
 │   └── README.md
-├── API-Development/     # 📊 API development tracking
-│   ├── 00-API-ROADMAP.md           # Overall progress
-│   ├── 01-layer-1a-conversations.md # ✅ Complete
-│   ├── 02-layer-1b-immutable-store.md # ⏳ Pending
-│   └── README.md
+├── convex-dev/          # Local Convex database (for testing)
+│   ├── _generated/      # Auto-generated (git-ignored)
+│   ├── schema.ts        # Table definitions
+│   └── conversations.ts # Layer 1a backend ✅
+├── dev-docs/            # SDK development documentation
+│   ├── API-Development/ # 📊 API development tracking
+│   │   ├── 00-API-ROADMAP.md           # Overall progress
+│   │   ├── 01-layer-1a-conversations.md # ✅ Complete
+│   │   └── 02-layer-1b-immutable-store.md # ⏳ Pending
+│   ├── TESTING-GUIDE.md           # Testing philosophy
+│   ├── QUICK-TEST-REFERENCE.md    # Test commands reference
+│   └── REORGANIZATION-COMPLETE.md # Structure changes
+├── Documentation/       # User-facing SDK documentation
+├── examples/            # Example projects
 ├── .env.local           # Local environment (git-ignored)
 ├── .env.test            # Test environment template
+├── convex.json          # Convex configuration
 ├── jest.config.mjs      # Jest configuration (ESM)
 ├── tsconfig.json        # TypeScript config
-├── package.json         # Dependencies
-└── README.md            # This file
+├── package.json         # Dependencies & scripts
+├── SDK-README.md        # This file (SDK-specific)
+└── README.md            # Project README
 ```
 
 ## 🔧 Scripts
 
 - `npm run dev` - Start Convex backend locally
 - `npm test` - Run all tests
-- `npm run test:watch` - Run tests in watch mode
+- `npm run test:watch` - Run tests in watch mode (auto-rerun)
+- `npm run test:interactive` - Interactive menu-driven testing ⭐ NEW!
+- `npm run test:debug` - Run debug tests with step-by-step validation
 - `npm run test:coverage` - Generate coverage report
 - `npm run lint` - Lint code
 
@@ -221,7 +279,7 @@ For complete architecture and API documentation, see:
 
 ## 🎯 Implementation Progress
 
-**📊 Detailed Progress Tracking**: See [API-Development/](./API-Development/) folder for complete API development status.
+**📊 Detailed Progress Tracking**: See [dev-docs/API-Development/](./dev-docs/API-Development/) folder for complete API development status.
 
 ### Completed ✅
 
