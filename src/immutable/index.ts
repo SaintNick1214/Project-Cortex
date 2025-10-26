@@ -189,5 +189,89 @@ export class ImmutableAPI {
       versionsDeleted: number;
     };
   }
+
+  /**
+   * Get version that was current at specific timestamp
+   * 
+   * @example
+   * ```typescript
+   * const policy = await cortex.immutable.getAtTimestamp(
+   *   'policy',
+   *   'refund-policy',
+   *   Date.parse('2025-01-01')
+   * );
+   * ```
+   */
+  async getAtTimestamp(
+    type: string,
+    id: string,
+    timestamp: number | Date
+  ): Promise<ImmutableVersionExpanded | null> {
+    const ts = typeof timestamp === 'number' ? timestamp : timestamp.getTime();
+    
+    const result = await this.client.query(api.immutable.getAtTimestamp, {
+      type,
+      id,
+      timestamp: ts,
+    });
+
+    return result as ImmutableVersionExpanded | null;
+  }
+
+  /**
+   * Bulk delete immutable entries matching filters
+   * 
+   * @example
+   * ```typescript
+   * const result = await cortex.immutable.purgeMany({ type: 'old-data', userId: 'user-123' });
+   * ```
+   */
+  async purgeMany(filter: {
+    type?: string;
+    userId?: string;
+  }): Promise<{
+    deleted: number;
+    totalVersionsDeleted: number;
+    entries: Array<{ type: string; id: string }>;
+  }> {
+    const result = await this.client.mutation(api.immutable.purgeMany, {
+      type: filter.type,
+      userId: filter.userId,
+    });
+
+    return result as {
+      deleted: number;
+      totalVersionsDeleted: number;
+      entries: Array<{ type: string; id: string }>;
+    };
+  }
+
+  /**
+   * Delete old versions while keeping recent ones
+   * 
+   * @example
+   * ```typescript
+   * await cortex.immutable.purgeVersions('kb-article', 'guide-123', 20); // Keep latest 20
+   * ```
+   */
+  async purgeVersions(
+    type: string,
+    id: string,
+    keepLatest: number
+  ): Promise<{
+    versionsPurged: number;
+    versionsRemaining: number;
+  }> {
+    const result = await this.client.mutation(api.immutable.purgeVersions, {
+      type,
+      id,
+      keepLatest,
+    });
+
+    return result as {
+      versionsPurged: number;
+      versionsRemaining: number;
+    };
+  }
 }
 

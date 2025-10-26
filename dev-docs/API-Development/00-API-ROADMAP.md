@@ -17,9 +17,9 @@ Each API goes through these phases:
 
 | Layer            | API                   | Status          | Schema | Backend | Types | SDK | Tests       | Docs | Ops |
 | ---------------- | --------------------- | --------------- | ------ | ------- | ----- | --- | ----------- | ---- | --- |
-| **Layer 1a**     | **Conversations**     | ✅ **COMPLETE** | ✅     | ✅      | ✅    | ✅  | ✅ 45 tests | ⏳   | 9/9 |
-| **Layer 1b**     | **Immutable Store**   | ✅ **COMPLETE** | ✅     | ✅      | ✅    | ✅  | ✅ 33 tests | ⏳   | 8/8 |
-| **Layer 1c**     | **Mutable Store**     | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/5 |
+| **Layer 1a**     | **Conversations**     | ✅ **COMPLETE** | ✅     | ✅      | ✅    | ✅  | ✅ 54 tests | ⏳   | 9/9 |
+| **Layer 1b**     | **Immutable Store**   | ✅ **COMPLETE** | ✅     | ✅      | ✅    | ✅  | ✅ 45 tests | ⏳   | 8/8 |
+| **Layer 1c**     | **Mutable Store**     | ✅ **COMPLETE** | ✅     | ✅      | ✅    | ✅  | ✅ 37 tests | ⏳   | 9/9 |
 | **Layer 2**      | **Memories (Vector)** | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/8 |
 | **Layer 3**      | **Memory API**        | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/5 |
 | **Coordination** | **Users**             | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/4 |
@@ -30,16 +30,16 @@ Each API goes through these phases:
 ## 📈 Statistics
 
 - **Total APIs**: 9
-- **Completed**: 2 (22%)
+- **Completed**: 3 (33%) ✅
 - **In Progress**: 0
-- **Pending**: 7
-- **Total Tests**: 78 (45 + 33)
-- **Total Operations**: 17/46 (37%)
+- **Pending**: 6
+- **Total Tests**: 136 (54 + 45 + 37)
+- **Total Operations**: 26/46 (57%)
 
 ## 🎉 Milestones
 
-- ✅ **Milestone 1**: Layer 1a (Conversations) - COMPLETE! (All 9 operations, 45 tests passing)
-- ⏳ **Milestone 2**: Complete Layer 1 (Conversations + Immutable + Mutable)
+- ✅ **Milestone 1**: Layer 1a (Conversations) - COMPLETE! (9 operations, 54 tests)
+- ✅ **Milestone 2**: Complete Layer 1 (All ACID Stores) - COMPLETE! (26 operations, 136 tests) 🎊
 - ⏳ **Milestone 3**: Complete Layer 2 (Vector Memory)
 - ⏳ **Milestone 4**: Complete Layer 3 (Memory Convenience API)
 - ⏳ **Milestone 5**: Complete Coordination APIs
@@ -58,12 +58,21 @@ Each API goes through these phases:
 
 ### Layer 1b: Immutable Store ✅
 - 8/8 operations implemented (100%)
-- 33/33 tests passing (100%)
+- 45/45 tests passing (100%)
 - Automatic versioning system
 - Complete version history tracking
 - Full-text search across entries
 - GDPR-compliant userId support
-- Interactive test menu (8 options)
+- Interactive test menu (11 options)
+
+### Layer 1c: Mutable Store ✅
+- 9/9 operations implemented (100%)
+- 37/37 tests passing (100%)
+- In-place updates (no versioning)
+- Atomic operations (increment/decrement)
+- Namespace isolation
+- Key prefix filtering
+- GDPR-compliant userId support
 
 ## 📝 Notes
 

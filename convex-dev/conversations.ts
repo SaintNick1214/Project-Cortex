@@ -131,6 +131,220 @@ export const deleteConversation = mutation({
   },
 });
 
+/**
+ * Delete many conversations matching filters
+ */
+export const deleteMany = mutation({
+  args: {
+    userId: v.optional(v.string()),
+    agentId: v.optional(v.string()),
+    type: v.optional(v.union(v.literal("user-agent"), v.literal("agent-agent"))),
+  },
+  handler: async (ctx, args) => {
+    let conversations = await ctx.db.query("conversations").collect();
+
+    // Apply filters
+    if (args.userId) {
+      conversations = conversations.filter((c) => c.participants.userId === args.userId);
+    }
+
+    if (args.agentId) {
+      conversations = conversations.filter(
+        (c) =>
+          c.participants.agentId === args.agentId ||
+          c.participants.agentIds?.includes(args.agentId!)
+      );
+    }
+
+    if (args.type) {
+      conversations = conversations.filter((c) => c.type === args.type);
+    }
+
+    let deleted = 0;
+    let totalMessagesDeleted = 0;
+
+    for (const conversation of conversations) {
+      totalMessagesDeleted += conversation.messageCount;
+      await ctx.db.delete(conversation._id);
+      deleted++;
+    }
+
+    return {
+      deleted,
+      totalMessagesDeleted,
+      conversationIds: conversations.map((c) => c.conversationId),
+    };
+  },
+});
+
+/**
+ * Get a specific message by ID from a conversation
+ */
+export const getMessage = query({
+  args: {
+    conversationId: v.string(),
+    messageId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const conversation = await ctx.db
+      .query("conversations")
+      .withIndex("by_conversationId", (q) => q.eq("conversationId", args.conversationId))
+      .first();
+
+    if (!conversation) {
+      return null;
+    }
+
+    const message = conversation.messages.find((m) => m.id === args.messageId);
+    return message || null;
+  },
+});
+
+/**
+ * Get multiple messages by their IDs
+ */
+export const getMessagesByIds = query({
+  args: {
+    conversationId: v.string(),
+    messageIds: v.array(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const conversation = await ctx.db
+      .query("conversations")
+      .withIndex("by_conversationId", (q) => q.eq("conversationId", args.conversationId))
+      .first();
+
+    if (!conversation) {
+      return [];
+    }
+
+    const messages = conversation.messages.filter((m) => args.messageIds.includes(m.id));
+    return messages;
+  },
+});
+
+/**
+ * Get or create a conversation (atomic)
+ */
+export const getOrCreate = mutation({
+  args: {
+    type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
+    participants: v.object({
+      userId: v.optional(v.string()),
+      agentId: v.optional(v.string()),
+      agentIds: v.optional(v.array(v.string())),
+    }),
+    metadata: v.optional(v.any()),
+  },
+  handler: async (ctx, args) => {
+    // Try to find existing
+    let existing = null;
+
+    if (args.type === "user-agent") {
+      if (!args.participants.userId || !args.participants.agentId) {
+        throw new Error("user-agent conversations require userId and agentId");
+      }
+
+      existing = await ctx.db
+        .query("conversations")
+        .withIndex("by_agent_user", (q) =>
+          q.eq("participants.agentId", args.participants.agentId!).eq("participants.userId", args.participants.userId!)
+        )
+        .filter((q) => q.eq(q.field("type"), "user-agent"))
+        .first();
+    } else {
+      // agent-agent
+      if (!args.participants.agentIds || args.participants.agentIds.length < 2) {
+        throw new Error("agent-agent conversations require at least 2 agentIds");
+      }
+
+      const conversations = await ctx.db
+        .query("conversations")
+        .filter((q) => q.eq(q.field("type"), "agent-agent"))
+        .collect();
+
+      const sortedInput = [...args.participants.agentIds].sort();
+      existing = conversations.find((c) => {
+        if (!c.participants.agentIds) return false;
+        const sorted = [...c.participants.agentIds].sort();
+        return sorted.length === sortedInput.length && sorted.every((id, i) => id === sortedInput[i]);
+      }) || null;
+    }
+
+    if (existing) {
+      return existing;
+    }
+
+    // Create new
+    const now = Date.now();
+    const conversationId = `conv-${now}-${Math.random().toString(36).substring(2, 11)}`;
+
+    const _id = await ctx.db.insert("conversations", {
+      conversationId,
+      type: args.type,
+      participants: args.participants,
+      messages: [],
+      messageCount: 0,
+      metadata: args.metadata || {},
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    return await ctx.db.get(_id);
+  },
+});
+
+/**
+ * Find an existing conversation by participants
+ */
+export const findConversation = query({
+  args: {
+    type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
+    userId: v.optional(v.string()),
+    agentId: v.optional(v.string()),
+    agentIds: v.optional(v.array(v.string())),
+  },
+  handler: async (ctx, args) => {
+    if (args.type === "user-agent") {
+      if (!args.userId || !args.agentId) {
+        return null;
+      }
+
+      // Find user-agent conversation
+      const conversation = await ctx.db
+        .query("conversations")
+        .withIndex("by_agent_user", (q) =>
+          q.eq("participants.agentId", args.agentId!).eq("participants.userId", args.userId!)
+        )
+        .filter((q) => q.eq(q.field("type"), "user-agent"))
+        .first();
+
+      return conversation || null;
+    } else {
+      // agent-agent conversation
+      if (!args.agentIds || args.agentIds.length < 2) {
+        return null;
+      }
+
+      // Find by matching agentIds array
+      const conversations = await ctx.db
+        .query("conversations")
+        .filter((q) => q.eq(q.field("type"), "agent-agent"))
+        .collect();
+
+      // Find conversation with exact same agents (any order)
+      const sortedInput = [...args.agentIds].sort();
+      const found = conversations.find((c) => {
+        if (!c.participants.agentIds) return false;
+        const sorted = [...c.participants.agentIds].sort();
+        return sorted.length === sortedInput.length && sorted.every((id, i) => id === sortedInput[i]);
+      });
+
+      return found || null;
+    }
+  },
+});
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Queries (Read Operations)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -47,7 +47,7 @@ if ($confirm -ne "y") {
 
 # Step 5: Git commit and tag
 Write-Host "`n📝 Step 5: Committing and tagging..." -ForegroundColor Yellow
-git add .
+git add package.json CHANGELOG.md src/ convex-dev/ tests/
 git commit -m "chore: release v$Version"
 git push origin main
 git tag -a "v$Version" -m "Release v$Version"

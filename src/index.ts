@@ -8,6 +8,7 @@
 import { ConvexClient } from "convex/browser";
 import { ConversationsAPI } from "./conversations";
 import { ImmutableAPI } from "./immutable";
+import { MutableAPI } from "./mutable";
 
 export interface CortexConfig {
   convexUrl: string;
@@ -22,6 +23,9 @@ export class Cortex {
   // Layer 1b: Immutable Store
   public immutable: ImmutableAPI;
 
+  // Layer 1c: Mutable Store
+  public mutable: MutableAPI;
+
   constructor(config: CortexConfig) {
     // Initialize Convex client
     this.client = new ConvexClient(config.convexUrl);
@@ -29,6 +33,7 @@ export class Cortex {
     // Initialize API modules
     this.conversations = new ConversationsAPI(this.client);
     this.immutable = new ImmutableAPI(this.client);
+    this.mutable = new MutableAPI(this.client);
   }
 
   /**

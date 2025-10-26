@@ -83,41 +83,71 @@ const MENU_OPTIONS = {
   "23": { label: "  🔄 Propagation: Add 5 msgs & verify", action: testConvPropagation },
   "24": { label: "  🏋️  Edge: 100+ messages", action: testConvManyMessages },
   "25": { label: "  🔗 Integration: Full workflow", action: testConvIntegration },
-  "29": { label: "  🎯 Run All Conversations Tests", action: runConversationsTests },
+  "26": { label: "  🗑️  deleteMany", action: testConvDeleteMany },
+  "27": { label: "  📧 getMessage", action: testConvGetMessage },
+  "28": { label: "  📧 getMessagesByIds", action: testConvGetMessagesByIds },
+  "29": { label: "  🔎 findConversation", action: testConvFindConversation },
+  "30": { label: "  🔄 getOrCreate", action: testConvGetOrCreate },
+  "39": { label: "  🎯 Run All Conversations Tests", action: runConversationsTests },
   
   // ═══════════════════════════════════════════════════════════════════════
   // Layer 1b: Immutable Store API
   // ═══════════════════════════════════════════════════════════════════════
-  "30": { label: "💾 Immutable Store API ───────────", action: showImmutableMenu },
-  "31": { label: "  💾 store (create/update)", action: testImmutableStore },
-  "32": { label: "  📖 get", action: testImmutableGet },
-  "33": { label: "  🔢 getVersion", action: testImmutableGetVersion },
-  "34": { label: "  📜 getHistory", action: testImmutableGetHistory },
-  "35": { label: "  📋 list", action: testImmutableList },
-  "36": { label: "  🔍 search", action: testImmutableSearch },
-  "37": { label: "  🔢 count", action: testImmutableCount },
-  "38": { label: "  🗑️  purge", action: testImmutablePurge },
-  "40": { label: "  🔄 Propagation: Update & verify", action: testImmPropagation },
-  "41": { label: "  🏋️  Edge: 25 versions", action: testImmManyVersions },
-  "42": { label: "  🔗 Integration: Full workflow", action: testImmIntegration },
-  "49": { label: "  🎯 Run All Immutable Tests", action: runImmutableTests },
+  "40": { label: "💾 Immutable Store API ───────────", action: showImmutableMenu },
+  "41": { label: "  💾 store (create/update)", action: testImmutableStore },
+  "42": { label: "  📖 get", action: testImmutableGet },
+  "43": { label: "  🔢 getVersion", action: testImmutableGetVersion },
+  "44": { label: "  📜 getHistory", action: testImmutableGetHistory },
+  "45": { label: "  📋 list", action: testImmutableList },
+  "46": { label: "  🔍 search", action: testImmutableSearch },
+  "47": { label: "  🔢 count", action: testImmutableCount },
+  "48": { label: "  🗑️  purge", action: testImmutablePurge },
+  "50": { label: "  🔄 Propagation: Update & verify", action: testImmPropagation },
+  "51": { label: "  🏋️  Edge: 25 versions", action: testImmManyVersions },
+  "52": { label: "  🔗 Integration: Full workflow", action: testImmIntegration },
+  "53": { label: "  ⏰ getAtTimestamp", action: testImmGetAtTimestamp },
+  "54": { label: "  🗑️  purgeMany", action: testImmPurgeMany },
+  "55": { label: "  🧹 purgeVersions", action: testImmPurgeVersions },
+  "59": { label: "  🎯 Run All Immutable Tests", action: runImmutableTests },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // Layer 1c: Mutable Store API  
+  // ═══════════════════════════════════════════════════════════════════════
+  "60": { label: "🔄 Mutable Store API ─────────────", action: showMutableMenu },
+  "61": { label: "  💾 set", action: testMutableSet },
+  "62": { label: "  📖 get", action: testMutableGet },
+  "63": { label: "  🔄 update", action: testMutableUpdate },
+  "64": { label: "  ➕ increment", action: testMutableIncrement },
+  "65": { label: "  ➖ decrement", action: testMutableDecrement },
+  "66": { label: "  📋 list", action: testMutableList },
+  "67": { label: "  🔢 count", action: testMutableCount },
+  "68": { label: "  ❓ exists", action: testMutableExists },
+  "69": { label: "  🗑️  delete", action: testMutableDelete },
+  "70": { label: "  🧹 purgeNamespace", action: testMutablePurgeNamespace },
+  "71": { label: "  🗑️  purgeMany", action: testMutablePurgeMany },
+  "79": { label: "  🎯 Run All Mutable Tests", action: runMutableTests },
   
   // ═══════════════════════════════════════════════════════════════════════
   // Run All
   // ═══════════════════════════════════════════════════════════════════════
-  "99": { label: "🎯 Run All Tests (Both Layers)", action: runAllTests },
+  "99": { label: "🎯 Run All Tests (All 3 Layers)", action: runAllTests },
   "0": { label: "❌ Exit", action: exit },
 };
 
 // Category placeholders (just show a message)
 async function showConversationsMenu() {
   console.log("\n💬 Conversations API");
-  console.log("Select individual tests (11-22) or run all (29)\n");
+  console.log("Core: 11-22 | Advanced: 23-30 | Run All: 39\n");
 }
 
 async function showImmutableMenu() {
   console.log("\n💾 Immutable Store API");
-  console.log("Select individual tests (31-38) or run all (39)\n");
+  console.log("Core: 41-48 | Advanced: 50-55 | Run All: 59\n");
+}
+
+async function showMutableMenu() {
+  console.log("\n🔄 Mutable Store API");
+  console.log("Core: 61-71 | Run All: 79\n");
 }
 
 // Test implementations
@@ -151,6 +181,30 @@ async function purgeAllDatabases() {
   currentImmutableType = null;
   currentImmutableId = null;
   console.log(`  ✅ Purged ${immutableDeleted} immutable entry/entries`);
+  
+  // Purge mutable
+  console.log("  Purging mutable store...");
+  const namespaces = [
+    "test", "inventory", "config", "counters", "sessions",
+    "temp", "purge-test", "count-test", "prefix-test", "user-data",
+    "propagation-test", "sync-test", "sync-test-unique", "rapid-test",
+    "large-test", "test-namespace_with.chars", "empty-test",
+    "concurrent", "integration-test", "acid-test", "overwrite-test",
+    "ns-a", "ns-b", "bulk-delete", "purge-ns-test", "bulk-mut-del",
+  ];
+  
+  let mutableDeleted = 0;
+  for (const ns of namespaces) {
+    try {
+      const result = await client.mutation(api.mutable.purgeNamespace, {
+        namespace: ns,
+      });
+      mutableDeleted += result.deleted;
+    } catch (error: any) {
+      // Namespace might not exist - that's fine
+    }
+  }
+  console.log(`  ✅ Purged ${mutableDeleted} mutable entry/entries`);
   
   console.log("\n✅ All databases clean\n");
 }
@@ -638,7 +692,7 @@ async function runImmutableTests() {
 }
 
 async function runAllTests() {
-  console.log("\n🎯 Running ALL tests for BOTH layers...\n");
+  console.log("\n🎯 Running ALL tests for ALL 3 LAYERS...\n");
   console.log("═".repeat(80));
 
   await purgeAllDatabases();
@@ -709,8 +763,31 @@ async function runAllTests() {
   await testImmutableCount();
   console.log("═".repeat(80));
 
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Layer 1c: Mutable Store Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  console.log("\n" + "═".repeat(80));
+  console.log("  LAYER 1C: MUTABLE STORE TESTS");
+  console.log("═".repeat(80) + "\n");
+
+  await testMutableSet();
+  console.log("═".repeat(80));
+
+  await testMutableGet();
+  console.log("═".repeat(80));
+
+  await testMutableIncrement();
+  console.log("═".repeat(80));
+
+  await testMutableList();
+  console.log("═".repeat(80));
+
+  await testMutableCount();
+  console.log("═".repeat(80));
+
   // Final validation
-  console.log("\n🔍 FINAL VALIDATION (BOTH LAYERS)\n");
+  console.log("\n🔍 FINAL VALIDATION (ALL 3 LAYERS)\n");
   console.log("═".repeat(80));
 
   // Layer 1a: Conversations
@@ -731,34 +808,36 @@ async function runAllTests() {
   console.log(`  Total entries: ${totalImmCount}`);
   console.log(`  KB articles: ${kbArticles.length}`);
 
+  // Layer 1c: Mutable
+  const inventoryCount = await cortex.mutable.count({ namespace: "inventory" });
+  const counterCount = await cortex.mutable.count({ namespace: "counters" });
+
+  console.log("\n📊 Layer 1c (Mutable Store):");
+  console.log(`  Inventory items: ${inventoryCount}`);
+  console.log(`  Counters: ${counterCount}`);
+
   console.log("\n✅ Expected:");
-  console.log("  Conversations:");
-  console.log("    - Total: 2 (1 user-agent + 1 agent-agent)");
-  console.log("    - By user: 1");
-  console.log("    - By agent: 2");
-  console.log("  Immutable:");
-  console.log("    - Total: 1 (test article)");
-  console.log("    - KB articles: 1");
+  console.log("  Conversations: Total=2, By user=1, By agent=2");
+  console.log("  Immutable: Total=1, KB articles=1");
+  console.log("  Mutable: Inventory & counters created");
 
   console.log("\n📊 Actual:");
-  console.log("  Conversations:");
-  console.log(`    - Total: ${totalConvCount} ${totalConvCount === 2 ? "✅" : "❌"}`);
-  console.log(`    - By user: ${userConvs.length} ${userConvs.length === 1 ? "✅" : "❌"}`);
-  console.log(`    - By agent: ${agentConvs.length} ${agentConvs.length === 2 ? "✅" : "❌"}`);
-  console.log("  Immutable:");
-  console.log(`    - Total: ${totalImmCount} ${totalImmCount === 1 ? "✅" : "❌"}`);
-  console.log(`    - KB articles: ${kbArticles.length} ${kbArticles.length === 1 ? "✅" : "❌"}`);
+  console.log(`  Conversations: ${totalConvCount === 2 && userConvs.length === 1 && agentConvs.length === 2 ? "✅ PASS" : "❌ FAIL"}`);
+  console.log(`  Immutable: ${totalImmCount === 1 && kbArticles.length === 1 ? "✅ PASS" : "❌ FAIL"}`);
+  console.log(`  Mutable: ${inventoryCount > 0 && counterCount > 0 ? "✅ PASS" : "❌ FAIL"}`);
 
   const allValid = 
     totalConvCount === 2 && 
     userConvs.length === 1 && 
     agentConvs.length === 2 &&
     totalImmCount === 1 &&
-    kbArticles.length === 1;
+    kbArticles.length === 1 &&
+    inventoryCount > 0 &&
+    counterCount > 0;
   
   console.log("\n" + "═".repeat(80));
   if (allValid) {
-    console.log("✅ ALL TESTS PASSED! Both layers working correctly.");
+    console.log("✅ ALL TESTS PASSED! All 3 layers working correctly.");
   } else {
     console.log("❌ SOME TESTS FAILED! Check counts above.");
   }
@@ -1072,6 +1151,147 @@ async function testConvManyMessages() {
   console.log();
 }
 
+async function testConvDeleteMany() {
+  console.log("\n🗑️  Testing: conversations.deleteMany()...");
+  
+  // Create multiple conversations
+  console.log("Creating 5 test conversations...");
+  for (let i = 1; i <= 5; i++) {
+    await cortex.conversations.create({
+      type: "user-agent",
+      participants: {
+        userId: `${TEST_USER_ID}-bulk`,
+        agentId: TEST_AGENT_ID,
+      },
+    });
+  }
+
+  const countBefore = await cortex.conversations.count({ userId: `${TEST_USER_ID}-bulk` });
+  console.log(`✅ Created ${countBefore} conversations`);
+
+  // Delete all
+  const result = await cortex.conversations.deleteMany({ userId: `${TEST_USER_ID}-bulk` });
+
+  console.log(`\n📥 Result:`);
+  console.log(`  Deleted: ${result.deleted}`);
+  console.log(`  Messages deleted: ${result.totalMessagesDeleted}`);
+
+  // Verify
+  const countAfter = await cortex.conversations.count({ userId: `${TEST_USER_ID}-bulk` });
+  console.log(`\n✅ Verification: ${countAfter === 0 ? "All deleted" : `${countAfter} remaining`}`);
+  console.log();
+}
+
+async function testConvGetMessage() {
+  if (!currentConversationId) {
+    console.log("\n⚠️  No current conversation. Create one first (option 11).\n");
+    return;
+  }
+
+  console.log(`\n📧 Testing: conversations.getMessage()...`);
+
+  // Get the conversation to find a message ID
+  const conv = await cortex.conversations.get(currentConversationId);
+  if (!conv || conv.messages.length === 0) {
+    console.log("⚠️  No messages in conversation. Add a message first (option 14).\n");
+    return;
+  }
+
+  const messageId = conv.messages[0].id;
+  console.log(`Looking for message: ${messageId}`);
+
+  const message = await cortex.conversations.getMessage(currentConversationId, messageId);
+
+  if (message) {
+    console.log(`\n📥 Found message:`);
+    console.log(`  ID: ${message.id}`);
+    console.log(`  Role: ${message.role}`);
+    console.log(`  Content: ${message.content.substring(0, 50)}...`);
+  } else {
+    console.log("\n❌ Message not found");
+  }
+  console.log();
+}
+
+async function testConvGetMessagesByIds() {
+  if (!currentConversationId) {
+    console.log("\n⚠️  No current conversation. Create one first (option 11).\n");
+    return;
+  }
+
+  console.log(`\n📧 Testing: conversations.getMessagesByIds()...`);
+
+  const conv = await cortex.conversations.get(currentConversationId);
+  if (!conv || conv.messages.length === 0) {
+    console.log("⚠️  No messages in conversation.\n");
+    return;
+  }
+
+  const messageIds = conv.messages.slice(0, 3).map((m) => m.id);
+  console.log(`Retrieving ${messageIds.length} messages...`);
+
+  const messages = await cortex.conversations.getMessagesByIds(currentConversationId, messageIds);
+
+  console.log(`\n📥 Retrieved ${messages.length} messages:`);
+  messages.forEach((msg, i) => {
+    console.log(`  ${i + 1}. [${msg.role}]: ${msg.content.substring(0, 40)}...`);
+  });
+  console.log();
+}
+
+async function testConvFindConversation() {
+  console.log(`\n🔎 Testing: conversations.findConversation()...`);
+
+  const found = await cortex.conversations.findConversation({
+    type: "user-agent",
+    userId: TEST_USER_ID,
+    agentId: TEST_AGENT_ID,
+  });
+
+  if (found) {
+    console.log(`\n📥 Found existing conversation:`);
+    console.log(`  ID: ${found.conversationId}`);
+    console.log(`  Messages: ${found.messageCount}`);
+    console.log(`  Created: ${new Date(found.createdAt).toISOString()}`);
+    currentConversationId = found.conversationId;
+  } else {
+    console.log(`\n⚠️  No existing conversation found for ${TEST_USER_ID} + ${TEST_AGENT_ID}`);
+  }
+  console.log();
+}
+
+async function testConvGetOrCreate() {
+  console.log(`\n🔄 Testing: conversations.getOrCreate()...`);
+  console.log("This will find existing or create new atomically\n");
+
+  const result = await cortex.conversations.getOrCreate({
+    type: "user-agent",
+    participants: {
+      userId: `${TEST_USER_ID}-getorcreate`,
+      agentId: TEST_AGENT_ID,
+    },
+  });
+
+  console.log(`📥 Result:`);
+  console.log(`  ID: ${result.conversationId}`);
+  console.log(`  Messages: ${result.messageCount}`);
+  console.log(`  ${result.messageCount === 0 ? "Created new" : "Found existing"}`);
+
+  currentConversationId = result.conversationId;
+
+  // Call again to demonstrate it returns same
+  const second = await cortex.conversations.getOrCreate({
+    type: "user-agent",
+    participants: {
+      userId: `${TEST_USER_ID}-getorcreate`,
+      agentId: TEST_AGENT_ID,
+    },
+  });
+
+  console.log(`\n✅ Second call returned same: ${second.conversationId === result.conversationId ? "Yes" : "No"}`);
+  console.log();
+}
+
 async function testConvIntegration() {
   console.log("\n🔗 Testing: Cross-Operation Integration...");
   console.log("Full workflow: create → add messages → verify in all APIs\n");
@@ -1258,6 +1478,99 @@ async function testImmManyVersions() {
   console.log();
 }
 
+async function testImmGetAtTimestamp() {
+  if (!currentImmutableType || !currentImmutableId) {
+    console.log("\n⚠️  No current entry. Run immutable.store first (option 41).\n");
+    return;
+  }
+
+  console.log(`\n⏰ Testing: immutable.getAtTimestamp()...`);
+
+  // Get history to find timestamps
+  const history = await cortex.immutable.getHistory(currentImmutableType, currentImmutableId);
+  
+  if (history.length === 0) {
+    console.log("⚠️  No history available.\n");
+    return;
+  }
+
+  // Try past, present, future
+  const past = history[0].timestamp - 1000;
+  const atV1 = history[0].timestamp;
+  const future = Date.now() + 10000;
+
+  console.log("\n📥 Testing different timestamps:");
+  
+  const beforeCreation = await cortex.immutable.getAtTimestamp(currentImmutableType, currentImmutableId, past);
+  console.log(`  Before creation: ${beforeCreation ? `v${beforeCreation.version}` : "null (didn't exist)"}`);
+
+  const atFirst = await cortex.immutable.getAtTimestamp(currentImmutableType, currentImmutableId, atV1);
+  console.log(`  At first version: ${atFirst ? `v${atFirst.version}` : "null"}`);
+
+  const inFuture = await cortex.immutable.getAtTimestamp(currentImmutableType, currentImmutableId, future);
+  console.log(`  In future: ${inFuture ? `v${inFuture.version} (current)` : "null"}`);
+  console.log();
+}
+
+async function testImmPurgeMany() {
+  console.log("\n🗑️  Testing: immutable.purgeMany()...");
+
+  // Create test entries
+  console.log("Creating 3 test entries...");
+  for (let i = 1; i <= 3; i++) {
+    await cortex.immutable.store({
+      type: "bulk-delete-test",
+      id: `entry-${i}`,
+      data: { value: i },
+    });
+  }
+
+  const countBefore = await cortex.immutable.count({ type: "bulk-delete-test" });
+  console.log(`✅ Created ${countBefore} entries`);
+
+  // Purge all
+  const result = await cortex.immutable.purgeMany({ type: "bulk-delete-test" });
+
+  console.log(`\n📥 Deleted:`);
+  console.log(`  Entries: ${result.deleted}`);
+  console.log(`  Total versions: ${result.totalVersionsDeleted}`);
+
+  const countAfter = await cortex.immutable.count({ type: "bulk-delete-test" });
+  console.log(`\n✅ Verification: ${countAfter === 0 ? "All deleted" : `${countAfter} remaining`}`);
+  console.log();
+}
+
+async function testImmPurgeVersions() {
+  console.log("\n🧹 Testing: immutable.purgeVersions()...");
+
+  const type = "version-retention";
+  const id = "test-entry";
+
+  // Create 10 versions
+  console.log("Creating 10 versions...");
+  for (let i = 1; i <= 10; i++) {
+    await cortex.immutable.store({
+      type,
+      id,
+      data: { iteration: i },
+    });
+  }
+
+  const before = await cortex.immutable.get(type, id);
+  console.log(`✅ Created ${before!.version} versions`);
+
+  // Keep only latest 5
+  const result = await cortex.immutable.purgeVersions(type, id, 5);
+
+  console.log(`\n📥 Purge result:`);
+  console.log(`  Versions purged: ${result.versionsPurged}`);
+  console.log(`  Versions remaining: ${result.versionsRemaining}`);
+
+  const after = await cortex.immutable.get(type, id);
+  console.log(`\n✅ Verification: ${after!.previousVersions.length + 1} versions remain`);
+  console.log();
+}
+
 async function testImmIntegration() {
   console.log("\n🔗 Testing: Cross-Operation Integration...");
   console.log("Full workflow: store → list → search → count consistency\n");
@@ -1336,6 +1649,211 @@ async function testImmIntegration() {
   console.log();
 }
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Layer 1c: Mutable Store Tests
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+async function testMutableSet() {
+  console.log("\n💾 Testing: mutable.set()...");
+  
+  const result = await cortex.mutable.set("inventory", "widget-qty", 100);
+  
+  console.log("📥 Result:");
+  console.log(`  Namespace: ${result.namespace}`);
+  console.log(`  Key: ${result.key}`);
+  console.log(`  Value: ${result.value}`);
+  console.log();
+}
+
+async function testMutableGet() {
+  console.log("\n📖 Testing: mutable.get()...");
+  
+  const value = await cortex.mutable.get("inventory", "widget-qty");
+  
+  console.log(`📥 Value: ${value !== null ? value : "null (key not found)"}`);
+  console.log();
+}
+
+async function testMutableUpdate() {
+  console.log("\n🔄 Testing: mutable.update()...");
+  
+  await cortex.mutable.set("counters", "test-counter", 0);
+  
+  const result = await cortex.mutable.update("counters", "test-counter", (current) => current + 10);
+  
+  console.log(`📥 Updated value: ${result.value}`);
+  console.log();
+}
+
+async function testMutableIncrement() {
+  console.log("\n➕ Testing: mutable.increment()...");
+  
+  await cortex.mutable.set("counters", "inc-test", 0);
+  await cortex.mutable.increment("counters", "inc-test", 5);
+  
+  const value = await cortex.mutable.get("counters", "inc-test");
+  console.log(`📥 After increment(5): ${value}`);
+  console.log();
+}
+
+async function testMutableDecrement() {
+  console.log("\n➖ Testing: mutable.decrement()...");
+  
+  await cortex.mutable.set("inventory", "dec-test", 100);
+  await cortex.mutable.decrement("inventory", "dec-test", 10);
+  
+  const value = await cortex.mutable.get("inventory", "dec-test");
+  console.log(`📥 After decrement(10): ${value}`);
+  console.log();
+}
+
+async function testMutableList() {
+  console.log("\n📋 Testing: mutable.list()...");
+  
+  const items = await cortex.mutable.list({ namespace: "inventory" });
+  
+  console.log(`\n📥 Found ${items.length} items in inventory:`);
+  items.slice(0, 5).forEach((item) => {
+    console.log(`  ${item.key}: ${JSON.stringify(item.value).substring(0, 40)}`);
+  });
+  console.log();
+}
+
+async function testMutableCount() {
+  console.log("\n🔢 Testing: mutable.count()...");
+  
+  const count = await cortex.mutable.count({ namespace: "inventory" });
+  
+  console.log(`📥 Count: ${count} items in inventory`);
+  console.log();
+}
+
+async function testMutableExists() {
+  console.log("\n❓ Testing: mutable.exists()...");
+  
+  const exists = await cortex.mutable.exists("inventory", "widget-qty");
+  
+  console.log(`📥 widget-qty exists: ${exists ? "Yes" : "No"}`);
+  console.log();
+}
+
+async function testMutableDelete() {
+  console.log("\n🗑️  Testing: mutable.delete()...");
+  
+  await cortex.mutable.set("temp", "delete-me", "temporary");
+  console.log("✅ Created temp/delete-me");
+  
+  await cortex.mutable.delete("temp", "delete-me");
+  console.log("✅ Deleted temp/delete-me");
+  
+  const exists = await cortex.mutable.exists("temp", "delete-me");
+  console.log(`✅ Verification: ${exists ? "Still exists (ERROR)" : "Deleted successfully"}`);
+  console.log();
+}
+
+async function testMutablePurgeNamespace() {
+  console.log("\n🧹 Testing: mutable.purgeNamespace()...");
+  
+  // Create test entries
+  await cortex.mutable.set("purge-ns-test", "key-1", 1);
+  await cortex.mutable.set("purge-ns-test", "key-2", 2);
+  
+  const countBefore = await cortex.mutable.count({ namespace: "purge-ns-test" });
+  console.log(`✅ Created ${countBefore} keys`);
+  
+  const result = await cortex.mutable.purgeNamespace("purge-ns-test");
+  
+  console.log(`📥 Deleted ${result.deleted} keys`);
+  
+  const countAfter = await cortex.mutable.count({ namespace: "purge-ns-test" });
+  console.log(`✅ Verification: ${countAfter === 0 ? "All deleted" : `${countAfter} remaining`}`);
+  console.log();
+}
+
+async function testMutablePurgeMany() {
+  console.log("\n🗑️  Testing: mutable.purgeMany()...");
+  
+  // Create test entries
+  await cortex.mutable.set("bulk-mut-del", "temp-1", "a");
+  await cortex.mutable.set("bulk-mut-del", "temp-2", "b");
+  await cortex.mutable.set("bulk-mut-del", "keep-1", "c");
+  
+  const countBefore = await cortex.mutable.count({ namespace: "bulk-mut-del" });
+  console.log(`✅ Created ${countBefore} keys`);
+  
+  const result = await cortex.mutable.purgeMany({
+    namespace: "bulk-mut-del",
+    keyPrefix: "temp-",
+  });
+  
+  console.log(`\n📥 Deleted ${result.deleted} keys with prefix "temp-"`);
+  console.log(`Keys deleted: ${result.keys.join(", ")}`);
+  
+  const countAfter = await cortex.mutable.count({
+    namespace: "bulk-mut-del",
+    keyPrefix: "temp-",
+  });
+  console.log(`\n✅ Verification: ${countAfter === 0 ? "All temp- keys deleted" : `${countAfter} remaining`}`);
+  console.log();
+}
+
+async function runMutableTests() {
+  console.log("\n🔄 Running all Mutable Store API tests...\n");
+  console.log("═".repeat(80));
+
+  await purgeAllDatabases();
+  console.log("═".repeat(80));
+
+  console.log("\n  CORE OPERATIONS\n");
+  console.log("═".repeat(80));
+
+  await testMutableSet();
+  console.log("═".repeat(80));
+
+  await testMutableGet();
+  console.log("═".repeat(80));
+
+  await testMutableUpdate();
+  console.log("═".repeat(80));
+
+  await testMutableIncrement();
+  console.log("═".repeat(80));
+
+  await testMutableDecrement();
+  console.log("═".repeat(80));
+
+  await testMutableList();
+  console.log("═".repeat(80));
+
+  await testMutableCount();
+  console.log("═".repeat(80));
+
+  await testMutableExists();
+  console.log("═".repeat(80));
+
+  await testMutableDelete();
+  console.log("═".repeat(80));
+
+  await testMutablePurgeNamespace();
+  console.log("═".repeat(80));
+
+  await testMutablePurgeMany();
+  console.log("═".repeat(80));
+
+  // Final validation
+  console.log("\n🔍 MUTABLE STORE VALIDATION\n");
+  console.log("═".repeat(80));
+
+  const inventoryCount = await cortex.mutable.count({ namespace: "inventory" });
+  const counterCount = await cortex.mutable.count({ namespace: "counters" });
+
+  console.log("📊 Results:");
+  console.log(`  Inventory items: ${inventoryCount}`);
+  console.log(`  Counters: ${counterCount}`);
+
+  console.log("\n✅ Mutable Store tests complete!\n");
+}
+
 function exit() {
   console.log("\n👋 Goodbye!\n");
   process.exit(0);
@@ -1374,31 +1892,58 @@ function displayMenu() {
   console.log("  23)   🔄 Propagation (5 msgs)");
   console.log("  24)   🏋️  Edge (100+ msgs)");
   console.log("  25)   🔗 Integration");
-  console.log("  29)   🎯 Run All");
+  console.log("     Advanced Operations:");
+  console.log("  26)   🗑️  deleteMany");
+  console.log("  27)   📧 getMessage");
+  console.log("  28)   📧 getMessagesByIds");
+  console.log("  29)   🔎 findConversation");
+  console.log("  30)   🔄 getOrCreate");
+  console.log("  39)   🎯 Run All");
   console.log();
 
   // Layer 1b
   console.log("  💾 LAYER 1B: IMMUTABLE STORE API");
-  console.log("  30) [Category Header]");
+  console.log("  40) [Category Header]");
   console.log("     Core Operations:");
-  console.log("  31)   💾 store (create/update)");
-  console.log("  32)   📖 get");
-  console.log("  33)   🔢 getVersion");
-  console.log("  34)   📜 getHistory");
-  console.log("  35)   📋 list");
-  console.log("  36)   🔍 search");
-  console.log("  37)   🔢 count");
-  console.log("  38)   🗑️  purge");
-  console.log("     Advanced Tests:");
-  console.log("  40)   🔄 Propagation (updates)");
-  console.log("  41)   🏋️  Edge (25 versions)");
-  console.log("  42)   🔗 Integration");
-  console.log("  49)   🎯 Run All");
+  console.log("  41)   💾 store");
+  console.log("  42)   📖 get");
+  console.log("  43)   🔢 getVersion");
+  console.log("  44)   📜 getHistory");
+  console.log("  45)   📋 list");
+  console.log("  46)   🔍 search");
+  console.log("  47)   🔢 count");
+  console.log("  48)   🗑️  purge");
+  console.log("     Advanced:");
+  console.log("  50)   🔄 Propagation");
+  console.log("  51)   🏋️  Edge (25 vers)");
+  console.log("  52)   🔗 Integration");
+  console.log("  53)   ⏰ getAtTimestamp");
+  console.log("  54)   🗑️  purgeMany");
+  console.log("  55)   🧹 purgeVersions");
+  console.log("  59)   🎯 Run All");
+  console.log();
+
+  // Layer 1c
+  console.log("  🔄 LAYER 1C: MUTABLE STORE API");
+  console.log("  60) [Category Header]");
+  console.log("     Operations:");
+  console.log("  61)   💾 set");
+  console.log("  62)   📖 get");
+  console.log("  63)   🔄 update");
+  console.log("  64)   ➕ increment");
+  console.log("  65)   ➖ decrement");
+  console.log("  66)   📋 list");
+  console.log("  67)   🔢 count");
+  console.log("  68)   ❓ exists");
+  console.log("  69)   🗑️  delete");
+  console.log("  70)   🧹 purgeNamespace");
+  console.log("  71)   🗑️  purgeMany");
+  console.log("  79)   🎯 Run All");
   console.log();
 
   // Global
   console.log("  🌐 GLOBAL");
-  console.log("  99) 🎯 Run All Tests (Both Layers)");
+  console.log("  99) 🎯 Run All Tests (All 3 Layers)");
   console.log("   0) ❌ Exit");
   console.log();
   console.log("═".repeat(80));

@@ -1181,6 +1181,216 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
   });
 
+  describe("Advanced Operations", () => {
+    describe("getAtTimestamp()", () => {
+      let type: string;
+      let id: string;
+      let v1Timestamp: number;
+      let v2Timestamp: number;
+      let v3Timestamp: number;
+
+      beforeAll(async () => {
+        type = "temporal-test";
+        id = "time-travel";
+
+        // Create v1
+        const v1 = await cortex.immutable.store({
+          type,
+          id,
+          data: { value: "v1", status: "draft" },
+        });
+        v1Timestamp = v1.updatedAt;
+
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        // Create v2
+        const v2 = await cortex.immutable.store({
+          type,
+          id,
+          data: { value: "v2", status: "review" },
+        });
+        v2Timestamp = v2.updatedAt;
+
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        // Create v3
+        const v3 = await cortex.immutable.store({
+          type,
+          id,
+          data: { value: "v3", status: "published" },
+        });
+        v3Timestamp = v3.updatedAt;
+      });
+
+      it("returns current version for future timestamp", async () => {
+        const future = Date.now() + 10000;
+        const result = await cortex.immutable.getAtTimestamp(type, id, future);
+
+        expect(result).not.toBeNull();
+        expect(result!.version).toBe(3);
+        expect(result!.data.value).toBe("v3");
+      });
+
+      it("returns correct version for timestamp between updates", async () => {
+        // At v1 timestamp, should get v1
+        const atV1 = await cortex.immutable.getAtTimestamp(type, id, v1Timestamp);
+        expect(atV1!.version).toBe(1);
+        expect(atV1!.data.value).toBe("v1");
+
+        // At v2 timestamp, should get v2
+        const atV2 = await cortex.immutable.getAtTimestamp(type, id, v2Timestamp);
+        expect(atV2!.version).toBe(2);
+        expect(atV2!.data.value).toBe("v2");
+
+        // At v3 timestamp, should get v3
+        const atV3 = await cortex.immutable.getAtTimestamp(type, id, v3Timestamp);
+        expect(atV3!.version).toBe(3);
+        expect(atV3!.data.value).toBe("v3");
+      });
+
+      it("returns null for timestamp before creation", async () => {
+        const past = v1Timestamp - 1000;
+        const result = await cortex.immutable.getAtTimestamp(type, id, past);
+
+        expect(result).toBeNull();
+      });
+
+      it("returns null for non-existent entry", async () => {
+        const result = await cortex.immutable.getAtTimestamp("type", "nonexistent", Date.now());
+
+        expect(result).toBeNull();
+      });
+    });
+
+    describe("purgeMany()", () => {
+      beforeAll(async () => {
+        // Create entries for bulk purge
+        for (let i = 1; i <= 5; i++) {
+          await cortex.immutable.store({
+            type: "bulk-purge-test",
+            id: `entry-${i}`,
+            data: { value: i },
+          });
+        }
+
+        for (let i = 1; i <= 3; i++) {
+          await cortex.immutable.store({
+            type: "bulk-purge-test",
+            id: `user-entry-${i}`,
+            userId: "user-purge-many",
+            data: { value: i },
+          });
+        }
+      });
+
+      it("deletes multiple entries by type", async () => {
+        const result = await cortex.immutable.purgeMany({ type: "bulk-purge-test" });
+
+        expect(result.deleted).toBeGreaterThanOrEqual(8);
+        expect(result.entries.length).toBe(result.deleted);
+
+        // Verify deletion
+        const remaining = await cortex.immutable.list({ type: "bulk-purge-test" });
+        expect(remaining.length).toBe(0);
+      });
+
+      it("deletes by userId filter", async () => {
+        // Create fresh user-specific entries
+        await cortex.immutable.store({
+          type: "user-data-unique",
+          id: "data-1",
+          userId: "user-purge-specific-unique",
+          data: { value: 1 },
+        });
+
+        await cortex.immutable.store({
+          type: "user-data-unique",
+          id: "data-2",
+          userId: "user-purge-specific-unique",
+          data: { value: 2 },
+        });
+
+        // Verify count before
+        const countBefore = await cortex.immutable.count({ userId: "user-purge-specific-unique" });
+        expect(countBefore).toBe(2);
+
+        const result = await cortex.immutable.purgeMany({ userId: "user-purge-specific-unique" });
+
+        expect(result.deleted).toBe(2);
+
+        // Verify deletion
+        const remaining = await cortex.immutable.list({ userId: "user-purge-specific-unique" });
+        expect(remaining.length).toBe(0);
+      });
+    });
+
+    describe("purgeVersions()", () => {
+      it("deletes old versions while keeping recent ones", async () => {
+        const type = "version-cleanup";
+        const id = "pruned-entry";
+
+        // Create 10 versions
+        for (let i = 1; i <= 10; i++) {
+          await cortex.immutable.store({
+            type,
+            id,
+            data: { iteration: i },
+          });
+        }
+
+        // Verify 10 versions exist
+        const before = await cortex.immutable.get(type, id);
+        expect(before!.version).toBe(10);
+        expect(before!.previousVersions).toHaveLength(9);
+
+        // Keep only latest 5
+        const result = await cortex.immutable.purgeVersions(type, id, 5);
+
+        expect(result.versionsPurged).toBe(5);
+        expect(result.versionsRemaining).toBe(5);
+
+        // Verify only 5 versions remain
+        const after = await cortex.immutable.get(type, id);
+        expect(after!.version).toBe(10); // Current version unchanged
+        expect(after!.previousVersions).toHaveLength(4); // 4 previous + 1 current = 5
+
+        // Old versions should be gone
+        const v1 = await cortex.immutable.getVersion(type, id, 1);
+        expect(v1).toBeNull();
+
+        // Recent versions should exist
+        const v10 = await cortex.immutable.getVersion(type, id, 10);
+        expect(v10).not.toBeNull();
+      });
+
+      it("returns 0 purged if already within limit", async () => {
+        const type = "no-purge-needed";
+        const id = "entry";
+
+        // Create only 3 versions
+        for (let i = 1; i <= 3; i++) {
+          await cortex.immutable.store({
+            type,
+            id,
+            data: { value: i },
+          });
+        }
+
+        // Try to keep 5 (more than exists)
+        const result = await cortex.immutable.purgeVersions(type, id, 5);
+
+        expect(result.versionsPurged).toBe(0);
+        expect(result.versionsRemaining).toBe(3);
+      });
+
+      it("throws error for non-existent entry", async () => {
+        await expect(
+          cortex.immutable.purgeVersions("type", "nonexistent", 5)
+        ).rejects.toThrow("IMMUTABLE_ENTRY_NOT_FOUND");
+      });
+    });
+  });
+
   describe("Type Isolation", () => {
     it("entries of different types are properly isolated", async () => {
       // Create entries with same ID but different types

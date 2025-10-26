@@ -158,6 +158,122 @@ export class ConversationsAPI {
   }
 
   /**
+   * Delete many conversations matching filters
+   * 
+   * @example
+   * ```typescript
+   * const result = await cortex.conversations.deleteMany({
+   *   userId: 'user-123',
+   *   type: 'user-agent',
+   * });
+   * ```
+   */
+  async deleteMany(filter: {
+    userId?: string;
+    agentId?: string;
+    type?: "user-agent" | "agent-agent";
+  }): Promise<{
+    deleted: number;
+    totalMessagesDeleted: number;
+    conversationIds: string[];
+  }> {
+    const result = await this.client.mutation(api.conversations.deleteMany, {
+      userId: filter.userId,
+      agentId: filter.agentId,
+      type: filter.type,
+    });
+
+    return result as {
+      deleted: number;
+      totalMessagesDeleted: number;
+      conversationIds: string[];
+    };
+  }
+
+  /**
+   * Get a specific message by ID
+   * 
+   * @example
+   * ```typescript
+   * const message = await cortex.conversations.getMessage('conv-123', 'msg-456');
+   * ```
+   */
+  async getMessage(conversationId: string, messageId: string): Promise<Message | null> {
+    const result = await this.client.query(api.conversations.getMessage, {
+      conversationId,
+      messageId,
+    });
+
+    return result as Message | null;
+  }
+
+  /**
+   * Get multiple messages by their IDs
+   * 
+   * @example
+   * ```typescript
+   * const messages = await cortex.conversations.getMessagesByIds('conv-123', ['msg-1', 'msg-2']);
+   * ```
+   */
+  async getMessagesByIds(conversationId: string, messageIds: string[]): Promise<Message[]> {
+    const result = await this.client.query(api.conversations.getMessagesByIds, {
+      conversationId,
+      messageIds,
+    });
+
+    return result as Message[];
+  }
+
+  /**
+   * Find an existing conversation by participants
+   * 
+   * @example
+   * ```typescript
+   * const existing = await cortex.conversations.findConversation({
+   *   type: 'user-agent',
+   *   userId: 'user-123',
+   *   agentId: 'agent-456',
+   * });
+   * ```
+   */
+  async findConversation(params: {
+    type: "user-agent" | "agent-agent";
+    userId?: string;
+    agentId?: string;
+    agentIds?: string[];
+  }): Promise<Conversation | null> {
+    const result = await this.client.query(api.conversations.findConversation, {
+      type: params.type,
+      userId: params.userId,
+      agentId: params.agentId,
+      agentIds: params.agentIds,
+    });
+
+    return result as Conversation | null;
+  }
+
+  /**
+   * Get or create a conversation (atomic)
+   * 
+   * @example
+   * ```typescript
+   * const conversation = await cortex.conversations.getOrCreate({
+   *   type: 'user-agent',
+   *   participants: { userId: 'user-123', agentId: 'agent-456' },
+   * });
+   * ```
+   */
+  async getOrCreate(input: CreateConversationInput): Promise<Conversation> {
+    const result = await this.client.mutation(api.conversations.getOrCreate, {
+      type: input.type,
+      participants: input.participants,
+      metadata: input.metadata,
+    });
+
+    return result as Conversation;
+  }
+
+  /**
    * Get paginated message history from a conversation
    * 
    * @example

@@ -112,5 +112,35 @@ export default defineSchema({
     .index("by_userId", ["userId"]) // GDPR cascade
     .index("by_created", ["createdAt"]), // Chronological
 
-  // TODO: Add remaining tables (mutable, memories, contexts, agents)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Layer 1c: Mutable Store (ACID, No Versioning, Shared)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  mutable: defineTable({
+    // Composite key: namespace + key
+    namespace: v.string(), // Logical grouping: 'inventory', 'config', 'counters', etc.
+    key: v.string(), // Unique key within namespace
+
+    // Value (flexible, mutable)
+    value: v.any(),
+
+    // GDPR support (optional)
+    userId: v.optional(v.string()), // Links to user for cascade deletion
+
+    // Metadata (optional)
+    metadata: v.optional(v.any()),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+
+    // Access tracking
+    accessCount: v.number(),
+    lastAccessed: v.optional(v.number()),
+  })
+    .index("by_namespace_key", ["namespace", "key"]) // Unique lookup
+    .index("by_namespace", ["namespace"]) // List by namespace
+    .index("by_userId", ["userId"]) // GDPR cascade
+    .index("by_updated", ["updatedAt"]), // Recent changes
+
+  // TODO: Add remaining tables (memories, contexts, agents)
 });

@@ -1189,6 +1189,298 @@ describe("Conversations API (Layer 1a)", () => {
     });
   });
 
+  describe("Advanced Operations", () => {
+    describe("deleteMany()", () => {
+      beforeAll(async () => {
+        // Create test conversations for bulk delete
+        for (let i = 1; i <= 5; i++) {
+          await cortex.conversations.create({
+            conversationId: `conv-bulk-delete-${i}`,
+            type: "user-agent",
+            participants: {
+              userId: "user-bulk-delete",
+              agentId: "agent-bulk-delete",
+            },
+          });
+        }
+      });
+
+      it("deletes multiple conversations by userId", async () => {
+        const result = await cortex.conversations.deleteMany({
+          userId: "user-bulk-delete",
+        });
+
+        expect(result.deleted).toBeGreaterThanOrEqual(5);
+        expect(result.conversationIds).toHaveLength(result.deleted);
+
+        // Verify deletion
+        const remaining = await cortex.conversations.list({
+          userId: "user-bulk-delete",
+        });
+        expect(remaining.length).toBe(0);
+      });
+
+      it("returns count of messages deleted", async () => {
+        // Create conversation with messages
+        const conv = await cortex.conversations.create({
+          type: "user-agent",
+          participants: {
+            userId: "user-delete-many-msgs",
+            agentId: "agent-test",
+          },
+        });
+
+        for (let i = 0; i < 5; i++) {
+          await cortex.conversations.addMessage({
+            conversationId: conv.conversationId,
+            message: { role: "user", content: `Message ${i}` },
+          });
+        }
+
+        const result = await cortex.conversations.deleteMany({
+          userId: "user-delete-many-msgs",
+        });
+
+        expect(result.totalMessagesDeleted).toBeGreaterThanOrEqual(5);
+      });
+    });
+
+    describe("getMessage()", () => {
+      let testConversationId: string;
+      let testMessageId: string;
+
+      beforeAll(async () => {
+        const conv = await cortex.conversations.create({
+          type: "user-agent",
+          participants: {
+            userId: "user-get-message",
+            agentId: "agent-get-message",
+          },
+        });
+        testConversationId = conv.conversationId;
+
+        const result = await cortex.conversations.addMessage({
+          conversationId: testConversationId,
+          message: {
+            role: "user",
+            content: "Specific message to retrieve",
+          },
+        });
+        testMessageId = result.messages[0].id;
+      });
+
+      it("retrieves specific message by ID", async () => {
+        const message = await cortex.conversations.getMessage(
+          testConversationId,
+          testMessageId
+        );
+
+        expect(message).not.toBeNull();
+        expect(message!.id).toBe(testMessageId);
+        expect(message!.content).toBe("Specific message to retrieve");
+      });
+
+      it("returns null for non-existent message", async () => {
+        const message = await cortex.conversations.getMessage(
+          testConversationId,
+          "msg-does-not-exist"
+        );
+
+        expect(message).toBeNull();
+      });
+
+      it("returns null for non-existent conversation", async () => {
+        const message = await cortex.conversations.getMessage(
+          "conv-does-not-exist",
+          testMessageId
+        );
+
+        expect(message).toBeNull();
+      });
+    });
+
+    describe("getMessagesByIds()", () => {
+      let testConversationId: string;
+      let messageIds: string[];
+
+      beforeAll(async () => {
+        const conv = await cortex.conversations.create({
+          type: "user-agent",
+          participants: {
+            userId: "user-get-messages",
+            agentId: "agent-get-messages",
+          },
+        });
+        testConversationId = conv.conversationId;
+
+        // Add 5 messages
+        messageIds = [];
+        for (let i = 1; i <= 5; i++) {
+          const result = await cortex.conversations.addMessage({
+            conversationId: testConversationId,
+            message: {
+              role: i % 2 === 0 ? "agent" : "user",
+              content: `Message ${i}`,
+            },
+          });
+          messageIds.push(result.messages[result.messages.length - 1].id);
+        }
+      });
+
+      it("retrieves multiple messages by IDs", async () => {
+        const messages = await cortex.conversations.getMessagesByIds(
+          testConversationId,
+          [messageIds[0], messageIds[2], messageIds[4]]
+        );
+
+        expect(messages).toHaveLength(3);
+        expect(messages.map((m) => m.id)).toContain(messageIds[0]);
+        expect(messages.map((m) => m.id)).toContain(messageIds[2]);
+        expect(messages.map((m) => m.id)).toContain(messageIds[4]);
+      });
+
+      it("returns empty array for non-existent conversation", async () => {
+        const messages = await cortex.conversations.getMessagesByIds(
+          "conv-does-not-exist",
+          messageIds
+        );
+
+        expect(messages).toEqual([]);
+      });
+
+      it("filters out non-existent message IDs", async () => {
+        const messages = await cortex.conversations.getMessagesByIds(
+          testConversationId,
+          [messageIds[0], "msg-fake", messageIds[1]]
+        );
+
+        expect(messages).toHaveLength(2);
+        expect(messages.map((m) => m.id)).toContain(messageIds[0]);
+        expect(messages.map((m) => m.id)).toContain(messageIds[1]);
+      });
+    });
+
+    describe("findConversation()", () => {
+      beforeAll(async () => {
+        await cortex.conversations.create({
+          type: "user-agent",
+          participants: {
+            userId: "user-find",
+            agentId: "agent-find",
+          },
+        });
+
+        await cortex.conversations.create({
+          type: "agent-agent",
+          participants: {
+            agentIds: ["agent-a", "agent-b"],
+          },
+        });
+      });
+
+      it("finds existing user-agent conversation", async () => {
+        const found = await cortex.conversations.findConversation({
+          type: "user-agent",
+          userId: "user-find",
+          agentId: "agent-find",
+        });
+
+        expect(found).not.toBeNull();
+        expect(found!.type).toBe("user-agent");
+        expect(found!.participants.userId).toBe("user-find");
+        expect(found!.participants.agentId).toBe("agent-find");
+      });
+
+      it("finds existing agent-agent conversation", async () => {
+        const found = await cortex.conversations.findConversation({
+          type: "agent-agent",
+          agentIds: ["agent-a", "agent-b"],
+        });
+
+        expect(found).not.toBeNull();
+        expect(found!.type).toBe("agent-agent");
+        expect(found!.participants.agentIds).toContain("agent-a");
+        expect(found!.participants.agentIds).toContain("agent-b");
+      });
+
+      it("finds agent-agent regardless of order", async () => {
+        const found = await cortex.conversations.findConversation({
+          type: "agent-agent",
+          agentIds: ["agent-b", "agent-a"], // Reversed order
+        });
+
+        expect(found).not.toBeNull();
+      });
+
+      it("returns null for non-existent conversation", async () => {
+        const found = await cortex.conversations.findConversation({
+          type: "user-agent",
+          userId: "user-nonexistent",
+          agentId: "agent-nonexistent",
+        });
+
+        expect(found).toBeNull();
+      });
+    });
+
+    describe("getOrCreate()", () => {
+      it("creates new conversation if doesn't exist", async () => {
+        const result = await cortex.conversations.getOrCreate({
+          type: "user-agent",
+          participants: {
+            userId: "user-get-or-create-new",
+            agentId: "agent-get-or-create-new",
+          },
+        });
+
+        expect(result.conversationId).toBeDefined();
+        expect(result.type).toBe("user-agent");
+        expect(result.messageCount).toBe(0);
+      });
+
+      it("returns existing conversation if found", async () => {
+        // First call creates
+        const first = await cortex.conversations.getOrCreate({
+          type: "user-agent",
+          participants: {
+            userId: "user-get-or-create-existing",
+            agentId: "agent-get-or-create-existing",
+          },
+        });
+
+        // Second call returns same
+        const second = await cortex.conversations.getOrCreate({
+          type: "user-agent",
+          participants: {
+            userId: "user-get-or-create-existing",
+            agentId: "agent-get-or-create-existing",
+          },
+        });
+
+        expect(second.conversationId).toBe(first.conversationId);
+        expect(second._id).toBe(first._id);
+      });
+
+      it("works with agent-agent conversations", async () => {
+        const first = await cortex.conversations.getOrCreate({
+          type: "agent-agent",
+          participants: {
+            agentIds: ["agent-x", "agent-y"],
+          },
+        });
+
+        const second = await cortex.conversations.getOrCreate({
+          type: "agent-agent",
+          participants: {
+            agentIds: ["agent-y", "agent-x"], // Different order
+          },
+        });
+
+        expect(second.conversationId).toBe(first.conversationId);
+      });
+    });
+  });
+
   describe("Cross-Operation Integration", () => {
     it("create → addMessage → list → search → export consistency", async () => {
       // Create with unique keyword
