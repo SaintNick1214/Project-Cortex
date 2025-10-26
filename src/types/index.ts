@@ -194,3 +194,47 @@ export interface CountImmutableFilter {
   userId?: string;
 }
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Mutable Store (Layer 1c)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export interface MutableRecord {
+  _id: string;
+  namespace: string;
+  key: string;
+  value: any;
+  userId?: string;
+  metadata?: Record<string, any>;
+  createdAt: number;
+  updatedAt: number;
+  accessCount: number;
+  lastAccessed?: number;
+}
+
+export interface SetMutableInput {
+  namespace: string;
+  key: string;
+  value: any;
+  userId?: string;
+  metadata?: Record<string, any>;
+}
+
+export interface UpdateMutableInput {
+  namespace: string;
+  key: string;
+  updater: (current: any) => any;
+}
+
+export interface ListMutableFilter {
+  namespace: string;
+  keyPrefix?: string;
+  userId?: string;
+  limit?: number;
+}
+
+export interface CountMutableFilter {
+  namespace: string;
+  userId?: string;
+  keyPrefix?: string;
+}
+

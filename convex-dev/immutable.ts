@@ -368,3 +368,161 @@ export const count = query({
   },
 });
 
+/**
+ * Get version that was current at specific timestamp
+ */
+export const getAtTimestamp = query({
+  args: {
+    type: v.string(),
+    id: v.string(),
+    timestamp: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const entry = await ctx.db
+      .query("immutable")
+      .withIndex("by_type_id", (q) => q.eq("type", args.type).eq("id", args.id))
+      .first();
+
+    if (!entry) {
+      return null;
+    }
+
+    // If timestamp is after current version, return current
+    if (args.timestamp >= entry.updatedAt) {
+      return {
+        type: entry.type,
+        id: entry.id,
+        version: entry.version,
+        data: entry.data,
+        userId: entry.userId,
+        metadata: entry.metadata,
+        timestamp: entry.updatedAt,
+        createdAt: entry.createdAt,
+      };
+    }
+
+    // Check if before creation
+    if (args.timestamp < entry.createdAt) {
+      return null; // Didn't exist yet
+    }
+
+    // Find the version that was current at that timestamp
+    // Iterate backwards through previousVersions
+    for (let i = entry.previousVersions.length - 1; i >= 0; i--) {
+      const prevVersion = entry.previousVersions[i];
+      if (args.timestamp >= prevVersion.timestamp) {
+        return {
+          type: entry.type,
+          id: entry.id,
+          version: prevVersion.version,
+          data: prevVersion.data,
+          userId: entry.userId,
+          metadata: prevVersion.metadata,
+          timestamp: prevVersion.timestamp,
+          createdAt: entry.createdAt,
+        };
+      }
+    }
+
+    // If we get here, it was during v1 (before any updates)
+    if (entry.previousVersions.length > 0) {
+      const firstVersion = entry.previousVersions[0];
+      return {
+        type: entry.type,
+        id: entry.id,
+        version: firstVersion.version,
+        data: firstVersion.data,
+        userId: entry.userId,
+        metadata: firstVersion.metadata,
+        timestamp: firstVersion.timestamp,
+        createdAt: entry.createdAt,
+      };
+    }
+
+    return null;
+  },
+});
+
+/**
+ * Bulk delete immutable entries
+ */
+export const purgeMany = mutation({
+  args: {
+    type: v.optional(v.string()),
+    userId: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    let entries = await ctx.db.query("immutable").collect();
+
+    // Apply filters
+    if (args.type) {
+      entries = entries.filter((e) => e.type === args.type);
+    }
+
+    if (args.userId) {
+      entries = entries.filter((e) => e.userId === args.userId);
+    }
+
+    let deleted = 0;
+    let totalVersionsDeleted = 0;
+
+    for (const entry of entries) {
+      totalVersionsDeleted += entry.version; // Current + previous
+      await ctx.db.delete(entry._id);
+      deleted++;
+    }
+
+    return {
+      deleted,
+      totalVersionsDeleted,
+      entries: entries.map((e) => ({ type: e.type, id: e.id })),
+    };
+  },
+});
+
+/**
+ * Delete old versions while keeping recent ones
+ */
+export const purgeVersions = mutation({
+  args: {
+    type: v.string(),
+    id: v.string(),
+    keepLatest: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const entry = await ctx.db
+      .query("immutable")
+      .withIndex("by_type_id", (q) => q.eq("type", args.type).eq("id", args.id))
+      .first();
+
+    if (!entry) {
+      throw new Error("IMMUTABLE_ENTRY_NOT_FOUND");
+    }
+
+    const totalVersions = entry.previousVersions.length + 1; // Previous + current
+
+    if (totalVersions <= args.keepLatest) {
+      // Nothing to purge
+      return {
+        versionsPurged: 0,
+        versionsRemaining: totalVersions,
+      };
+    }
+
+    // Calculate how many to remove
+    const toRemove = totalVersions - args.keepLatest;
+
+    // Remove oldest versions (keep latest N)
+    const updatedPreviousVersions = entry.previousVersions.slice(toRemove);
+
+    await ctx.db.patch(entry._id, {
+      previousVersions: updatedPreviousVersions,
+    });
+
+    return {
+      versionsPurged: toRemove,
+      versionsRemaining: args.keepLatest,
+    };
+  },
+});
+
