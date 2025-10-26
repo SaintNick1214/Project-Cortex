@@ -30,10 +30,10 @@ gh release create v0.1.0 --generate-notes
 
 ## 📦 Package Info
 
-**Name**: `@cortexmemory/cortex-sdk`  
+**Name**: `@cortexmemory/sdk`  
 **Current Version**: `0.1.0`  
 **Bundle Size**: 16.2 KB  
-**Install**: `npm install @cortexmemory/cortex-sdk`
+**Install**: `npm install @cortexmemory/sdk`
 
 ---
 
@@ -75,8 +75,8 @@ gh auth login
 5. GitHub release: `gh release create vX.Y.Z`
 
 ### After Release
-1. Verify on npm: `npm view @cortexmemory/cortex-sdk`
-2. Test install: `npm install @cortexmemory/cortex-sdk`
+1. Verify on npm: `npm view @cortexmemory/sdk`
+2. Test install: `npm install @cortexmemory/sdk`
 3. Check GitHub releases page
 
 ---
@@ -120,8 +120,8 @@ gh release list            # List releases
 gh release view vX.Y.Z     # View release
 
 # Verify
-npm view @cortexmemory/cortex-sdk          # View on npm
-npm view @cortexmemory/cortex-sdk version  # Check version
+npm view @cortexmemory/sdk          # View on npm
+npm view @cortexmemory/sdk version  # Check version
 ```
 
 ---
@@ -149,7 +149,7 @@ npm run build
 ### "Wrong version published"
 ```powershell
 # Within 72 hours:
-npm unpublish @cortexmemory/cortex-sdk@X.Y.Z
+npm unpublish @cortexmemory/sdk@X.Y.Z
 
 # Or better: publish patch
 # Update to X.Y.Z+1

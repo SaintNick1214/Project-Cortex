@@ -20,6 +20,10 @@ build/
 convex-dev/_generated/
 convex-dev/.env.local
 convex-dev/node_modules/
+# Compiled files (Convex compiles .ts itself, we only commit source .ts files)
+convex-dev/*.js
+convex-dev/*.d.ts
+convex-dev/*.map
 
 # IDE
 .vscode/

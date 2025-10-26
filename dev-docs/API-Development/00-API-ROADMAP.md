@@ -18,7 +18,7 @@ Each API goes through these phases:
 | Layer            | API                   | Status          | Schema | Backend | Types | SDK | Tests       | Docs | Ops |
 | ---------------- | --------------------- | --------------- | ------ | ------- | ----- | --- | ----------- | ---- | --- |
 | **Layer 1a**     | **Conversations**     | ✅ **COMPLETE** | ✅     | ✅      | ✅    | ✅  | ✅ 45 tests | ⏳   | 9/9 |
-| **Layer 1b**     | **Immutable Store**   | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/6 |
+| **Layer 1b**     | **Immutable Store**   | ✅ **COMPLETE** | ✅     | ✅      | ✅    | ✅  | ✅ 33 tests | ⏳   | 8/8 |
 | **Layer 1c**     | **Mutable Store**     | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/5 |
 | **Layer 2**      | **Memories (Vector)** | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/8 |
 | **Layer 3**      | **Memory API**        | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/5 |
@@ -30,9 +30,11 @@ Each API goes through these phases:
 ## 📈 Statistics
 
 - **Total APIs**: 9
-- **Completed**: 1 (11%)
+- **Completed**: 2 (22%)
 - **In Progress**: 0
-- **Pending**: 8
+- **Pending**: 7
+- **Total Tests**: 78 (45 + 33)
+- **Total Operations**: 17/46 (37%)
 
 ## 🎉 Milestones
 
@@ -53,6 +55,15 @@ Each API goes through these phases:
 - Full GDPR compliance (delete + export operations)
 - Pagination support for large conversations
 - Full-text search across conversations
+
+### Layer 1b: Immutable Store ✅
+- 8/8 operations implemented (100%)
+- 33/33 tests passing (100%)
+- Automatic versioning system
+- Complete version history tracking
+- Full-text search across entries
+- GDPR-compliant userId support
+- Interactive test menu (8 options)
 
 ## 📝 Notes
 

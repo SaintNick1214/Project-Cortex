@@ -2,7 +2,7 @@
 
 ## 🎯 Package Summary
 
-**Name**: `@cortexmemory/cortex-sdk`  
+**Name**: `@cortexmemory/sdk`  
 **Version**: `0.1.0`  
 **Description**: AI agent memory SDK built on Convex  
 **License**: Apache-2.0  
@@ -22,7 +22,7 @@
 ### Package Configuration ✅
 - [x] package.json configured for publishing
   - [x] Version: 0.1.0
-  - [x] Scoped name: @cortexmemory/cortex-sdk
+  - [x] Scoped name: @cortexmemory/sdk
   - [x] Dual exports (CJS + ESM)
   - [x] TypeScript definitions
   - [x] Proper entry points
@@ -165,7 +165,7 @@ npm login            # If not already logged in
 npm publish --access public
 
 # 5. Verify
-npm view @cortexmemory/cortex-sdk
+npm view @cortexmemory/sdk
 ```
 
 ### Automated Release (Future)

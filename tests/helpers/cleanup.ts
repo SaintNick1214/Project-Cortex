@@ -8,7 +8,7 @@ import { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 
 export class TestCleanup {
-  constructor(private client: ConvexClient) {}
+  constructor(protected client: ConvexClient) {}
 
   /**
    * Purge all conversations from the database

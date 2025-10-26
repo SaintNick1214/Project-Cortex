@@ -117,3 +117,80 @@ export interface ExportResult {
   exportedAt: number;
 }
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Immutable Store (Layer 1b)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export interface ImmutableEntry {
+  type: string;
+  id: string;
+  data: Record<string, any>;
+  userId?: string;
+  metadata?: {
+    publishedBy?: string;
+    tags?: string[];
+    importance?: number;
+    [key: string]: any;
+  };
+}
+
+export interface ImmutableRecord {
+  _id: string;
+  type: string;
+  id: string;
+  data: Record<string, any>;
+  userId?: string;
+  version: number;
+  previousVersions: ImmutableVersion[];
+  metadata?: {
+    publishedBy?: string;
+    tags?: string[];
+    importance?: number;
+    [key: string]: any;
+  };
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface ImmutableVersion {
+  version: number;
+  data: Record<string, any>;
+  timestamp: number;
+  metadata?: Record<string, any>;
+}
+
+export interface ImmutableVersionExpanded {
+  type: string;
+  id: string;
+  version: number;
+  data: Record<string, any>;
+  userId?: string;
+  metadata?: Record<string, any>;
+  timestamp: number;
+  createdAt: number;
+}
+
+export interface ListImmutableFilter {
+  type?: string;
+  userId?: string;
+  limit?: number;
+}
+
+export interface SearchImmutableInput {
+  query: string;
+  type?: string;
+  userId?: string;
+  limit?: number;
+}
+
+export interface ImmutableSearchResult {
+  entry: ImmutableRecord;
+  score: number;
+  highlights: string[];
+}
+
+export interface CountImmutableFilter {
+  type?: string;
+  userId?: string;
+}
+

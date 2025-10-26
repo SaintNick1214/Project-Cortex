@@ -1,6 +1,6 @@
 {
-  "name": "@cortexmemory/cortex-sdk",
-  "version": "0.1.0",
+  "name": "@cortexmemory/sdk",
+  "version": "0.2.0",
   "description": "AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -47,6 +47,7 @@
     "clean": "rimraf dist",
     "prepublishOnly": "npm test && npm run build",
     "prepack": "npm run build",
+    "release": "pwsh -File scripts/release.ps1",
     "dev": "convex dev",
     "predev": "convex dev --until-success && convex dashboard",
     "logs": "convex logs",
