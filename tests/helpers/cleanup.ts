@@ -1,6 +1,6 @@
 /**
  * Test Cleanup Helpers
- * 
+ *
  * Utilities for purging tables and ensuring clean test state
  */
 
@@ -15,10 +15,10 @@ export class TestCleanup {
    */
   async purgeConversations(): Promise<{ deleted: number }> {
     console.log("🧹 Purging conversations table...");
-    
+
     // Get all conversations
     const conversations = await this.client.query(api.conversations.list, {});
-    
+
     // Delete each one (ignore errors if already deleted)
     let deleted = 0;
     for (const conversation of conversations) {
@@ -34,7 +34,7 @@ export class TestCleanup {
         }
       }
     }
-    
+
     console.log(`✅ Purged ${deleted} conversations`);
     return { deleted };
   }
@@ -66,4 +66,3 @@ export class TestCleanup {
     };
   }
 }
-

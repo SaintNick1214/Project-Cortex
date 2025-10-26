@@ -1,12 +1,12 @@
 /**
  * Cortex SDK - Conversations API E2E Tests (DEBUG MODE)
- * 
+ *
  * Enhanced test suite with:
  * - Table cleanup before all tests
  * - Storage inspection after each operation
  * - Step-by-step execution support
  * - Verbose logging
- * 
+ *
  * Run with: TEST_DEBUG=true TEST_VERBOSE=true npm test conversations.debug
  */
 
@@ -99,7 +99,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
       logStep(4, "Compare SDK result with storage");
       const comparison = await inspector.compareWithStorage(
         result.conversationId,
-        result
+        result,
       );
       expect(comparison.matches).toBe(true);
 
@@ -162,7 +162,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
             userId: "user-2",
             agentId: "agent-2",
           },
-        })
+        }),
       ).rejects.toThrow("CONVERSATION_ALREADY_EXISTS");
 
       debugLog("Error", "Duplicate correctly rejected");
@@ -242,10 +242,10 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
 
       // Verify chronological order
       expect(updated3.messages[0].timestamp).toBeLessThan(
-        updated3.messages[1].timestamp
+        updated3.messages[1].timestamp,
       );
       expect(updated3.messages[1].timestamp).toBeLessThan(
-        updated3.messages[2].timestamp
+        updated3.messages[2].timestamp,
       );
 
       debugLog("Validation", "✅ All messages present in order");
@@ -311,7 +311,10 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
         userId: "user-list-debug",
       });
 
-      debugLog("Result", `Found ${conversations.length} conversations for user-list-debug`);
+      debugLog(
+        "Result",
+        `Found ${conversations.length} conversations for user-list-debug`,
+      );
       expect(conversations.length).toBeGreaterThanOrEqual(2);
 
       conversations.forEach((conv, idx) => {
@@ -363,12 +366,19 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
       await inspector.inspectConversation(conversation.conversationId);
 
       logStep(2, "Delete the conversation");
-      const result = await cortex.conversations.delete(conversation.conversationId);
+      const result = await cortex.conversations.delete(
+        conversation.conversationId,
+      );
       expect(result.deleted).toBe(true);
-      debugLog("Deleted", `Conversation ${conversation.conversationId} removed`);
+      debugLog(
+        "Deleted",
+        `Conversation ${conversation.conversationId} removed`,
+      );
 
       logStep(3, "Verify it's gone from SDK");
-      const retrieved = await cortex.conversations.get(conversation.conversationId);
+      const retrieved = await cortex.conversations.get(
+        conversation.conversationId,
+      );
       expect(retrieved).toBeNull();
       debugLog("Verification", "SDK confirms deletion");
 
@@ -397,4 +407,3 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
     });
   });
 });
-

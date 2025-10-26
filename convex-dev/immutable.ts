@@ -1,13 +1,12 @@
 /**
  * Cortex SDK - Immutable Store API (Layer 1b)
- * 
+ *
  * ACID-compliant versioned immutable storage for shared data
  * Types: kb-article, policy, audit-log, feedback, user, etc.
  */
 
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Mutations (Write Operations)
@@ -165,7 +164,7 @@ export const getVersion = query({
 
     // Look in previousVersions
     const previousVersion = entry.previousVersions.find(
-      (v) => v.version === args.version
+      (v) => v.version === args.version,
     );
 
     if (!previousVersion) {
@@ -266,7 +265,9 @@ export const list = query({
 
     // Post-filter if needed
     if (args.userId && args.type) {
-      return entries.filter((e) => e.userId === args.userId && e.type === args.type);
+      return entries.filter(
+        (e) => e.userId === args.userId && e.type === args.type,
+      );
     }
 
     return entries;
@@ -307,21 +308,27 @@ export const search = query({
     for (const entry of allEntries) {
       // Search in data (convert to string for searching)
       const dataString = JSON.stringify(entry.data).toLowerCase();
-      
+
       if (dataString.includes(searchQuery)) {
         // Calculate score (simple: 1.0 if matches)
         const score = 1.0;
 
         // Extract highlights
         const highlights: string[] = [];
-        
+
         // Try to find readable highlights from data
         if (typeof entry.data === "object" && entry.data !== null) {
           for (const [key, value] of Object.entries(entry.data)) {
-            if (typeof value === "string" && value.toLowerCase().includes(searchQuery)) {
+            if (
+              typeof value === "string" &&
+              value.toLowerCase().includes(searchQuery)
+            ) {
               const index = value.toLowerCase().indexOf(searchQuery);
               const start = Math.max(0, index - 30);
-              const end = Math.min(value.length, index + searchQuery.length + 30);
+              const end = Math.min(
+                value.length,
+                index + searchQuery.length + 30,
+              );
               highlights.push(value.substring(start, end));
             }
           }
@@ -525,4 +532,3 @@ export const purgeVersions = mutation({
     };
   },
 });
-

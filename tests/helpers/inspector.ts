@@ -1,6 +1,6 @@
 /**
  * Storage Inspector
- * 
+ *
  * Utilities for inspecting Convex storage state during tests
  */
 
@@ -27,12 +27,16 @@ export class StorageInspector {
     console.log(`📊 CONVERSATION INSPECTION: ${conversationId}`);
     console.log("=".repeat(80));
     console.log(`Type:          ${conversation.type}`);
-    console.log(`Created:       ${new Date(conversation.createdAt).toISOString()}`);
-    console.log(`Updated:       ${new Date(conversation.updatedAt).toISOString()}`);
+    console.log(
+      `Created:       ${new Date(conversation.createdAt).toISOString()}`,
+    );
+    console.log(
+      `Updated:       ${new Date(conversation.updatedAt).toISOString()}`,
+    );
     console.log(`Message Count: ${conversation.messageCount}`);
     console.log(`\nParticipants:`);
     console.log(JSON.stringify(conversation.participants, null, 2));
-    
+
     if (conversation.metadata) {
       console.log(`\nMetadata:`);
       console.log(JSON.stringify(conversation.metadata, null, 2));
@@ -40,9 +44,13 @@ export class StorageInspector {
 
     console.log(`\nMessages (${conversation.messages.length}):`);
     conversation.messages.forEach((msg, idx) => {
-      console.log(`  [${idx + 1}] ${msg.role} (${new Date(msg.timestamp).toISOString()})`);
+      console.log(
+        `  [${idx + 1}] ${msg.role} (${new Date(msg.timestamp).toISOString()})`,
+      );
       console.log(`      ID: ${msg.id}`);
-      console.log(`      Content: ${msg.content.substring(0, 60)}${msg.content.length > 60 ? "..." : ""}`);
+      console.log(
+        `      Content: ${msg.content.substring(0, 60)}${msg.content.length > 60 ? "..." : ""}`,
+      );
       if (msg.agentId) {
         console.log(`      Agent: ${msg.agentId}`);
       }
@@ -80,7 +88,10 @@ export class StorageInspector {
   /**
    * Compare SDK result with storage
    */
-  async compareWithStorage(conversationId: string, sdkResult: any): Promise<{
+  async compareWithStorage(
+    conversationId: string,
+    sdkResult: any,
+  ): Promise<{
     matches: boolean;
     differences: string[];
   }> {
@@ -98,7 +109,7 @@ export class StorageInspector {
     // Compare key fields
     if (sdkResult.conversationId !== stored.conversationId) {
       differences.push(
-        `conversationId: SDK=${sdkResult.conversationId}, Storage=${stored.conversationId}`
+        `conversationId: SDK=${sdkResult.conversationId}, Storage=${stored.conversationId}`,
       );
     }
 
@@ -108,13 +119,13 @@ export class StorageInspector {
 
     if (sdkResult.messageCount !== stored.messageCount) {
       differences.push(
-        `messageCount: SDK=${sdkResult.messageCount}, Storage=${stored.messageCount}`
+        `messageCount: SDK=${sdkResult.messageCount}, Storage=${stored.messageCount}`,
       );
     }
 
     if (sdkResult.messages.length !== stored.messages.length) {
       differences.push(
-        `messages.length: SDK=${sdkResult.messages.length}, Storage=${stored.messages.length}`
+        `messages.length: SDK=${sdkResult.messages.length}, Storage=${stored.messages.length}`,
       );
     }
 
@@ -151,4 +162,3 @@ export class StorageInspector {
     console.log("=".repeat(80) + "\n");
   }
 }
-

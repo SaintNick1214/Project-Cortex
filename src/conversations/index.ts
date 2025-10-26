@@ -1,6 +1,6 @@
 /**
  * Cortex SDK - Conversations API
- * 
+ *
  * Layer 1a: ACID-compliant immutable conversation storage
  */
 
@@ -25,7 +25,7 @@ export class ConversationsAPI {
 
   /**
    * Create a new conversation
-   * 
+   *
    * @example
    * ```typescript
    * const conversation = await cortex.conversations.create({
@@ -39,7 +39,8 @@ export class ConversationsAPI {
    */
   async create(input: CreateConversationInput): Promise<Conversation> {
     // Auto-generate conversationId if not provided
-    const conversationId = input.conversationId || this.generateConversationId();
+    const conversationId =
+      input.conversationId || this.generateConversationId();
 
     const result = await this.client.mutation(api.conversations.create, {
       conversationId,
@@ -53,7 +54,7 @@ export class ConversationsAPI {
 
   /**
    * Get a conversation by ID
-   * 
+   *
    * @example
    * ```typescript
    * const conversation = await cortex.conversations.get('conv-abc123');
@@ -69,7 +70,7 @@ export class ConversationsAPI {
 
   /**
    * Add a message to a conversation
-   * 
+   *
    * @example
    * ```typescript
    * await cortex.conversations.addMessage({
@@ -101,7 +102,7 @@ export class ConversationsAPI {
 
   /**
    * List conversations with optional filters
-   * 
+   *
    * @example
    * ```typescript
    * const conversations = await cortex.conversations.list({
@@ -123,7 +124,7 @@ export class ConversationsAPI {
 
   /**
    * Count conversations
-   * 
+   *
    * @example
    * ```typescript
    * const count = await cortex.conversations.count({
@@ -143,23 +144,26 @@ export class ConversationsAPI {
 
   /**
    * Delete a conversation (for GDPR/cleanup)
-   * 
+   *
    * @example
    * ```typescript
    * await cortex.conversations.delete('conv-abc123');
    * ```
    */
   async delete(conversationId: string): Promise<{ deleted: boolean }> {
-    const result = await this.client.mutation(api.conversations.deleteConversation, {
-      conversationId,
-    });
+    const result = await this.client.mutation(
+      api.conversations.deleteConversation,
+      {
+        conversationId,
+      },
+    );
 
     return result as { deleted: boolean };
   }
 
   /**
    * Delete many conversations matching filters
-   * 
+   *
    * @example
    * ```typescript
    * const result = await cortex.conversations.deleteMany({
@@ -192,13 +196,16 @@ export class ConversationsAPI {
 
   /**
    * Get a specific message by ID
-   * 
+   *
    * @example
    * ```typescript
    * const message = await cortex.conversations.getMessage('conv-123', 'msg-456');
    * ```
    */
-  async getMessage(conversationId: string, messageId: string): Promise<Message | null> {
+  async getMessage(
+    conversationId: string,
+    messageId: string,
+  ): Promise<Message | null> {
     const result = await this.client.query(api.conversations.getMessage, {
       conversationId,
       messageId,
@@ -209,13 +216,16 @@ export class ConversationsAPI {
 
   /**
    * Get multiple messages by their IDs
-   * 
+   *
    * @example
    * ```typescript
    * const messages = await cortex.conversations.getMessagesByIds('conv-123', ['msg-1', 'msg-2']);
    * ```
    */
-  async getMessagesByIds(conversationId: string, messageIds: string[]): Promise<Message[]> {
+  async getMessagesByIds(
+    conversationId: string,
+    messageIds: string[],
+  ): Promise<Message[]> {
     const result = await this.client.query(api.conversations.getMessagesByIds, {
       conversationId,
       messageIds,
@@ -226,7 +236,7 @@ export class ConversationsAPI {
 
   /**
    * Find an existing conversation by participants
-   * 
+   *
    * @example
    * ```typescript
    * const existing = await cortex.conversations.findConversation({
@@ -254,7 +264,7 @@ export class ConversationsAPI {
 
   /**
    * Get or create a conversation (atomic)
-   * 
+   *
    * @example
    * ```typescript
    * const conversation = await cortex.conversations.getOrCreate({
@@ -275,7 +285,7 @@ export class ConversationsAPI {
 
   /**
    * Get paginated message history from a conversation
-   * 
+   *
    * @example
    * ```typescript
    * const history = await cortex.conversations.getHistory('conv-abc123', {
@@ -287,7 +297,7 @@ export class ConversationsAPI {
    */
   async getHistory(
     conversationId: string,
-    options?: GetHistoryOptions
+    options?: GetHistoryOptions,
   ): Promise<{
     messages: Message[];
     total: number;
@@ -311,7 +321,7 @@ export class ConversationsAPI {
 
   /**
    * Search conversations by text query
-   * 
+   *
    * @example
    * ```typescript
    * const results = await cortex.conversations.search({
@@ -323,7 +333,9 @@ export class ConversationsAPI {
    * });
    * ```
    */
-  async search(input: SearchConversationsInput): Promise<ConversationSearchResult[]> {
+  async search(
+    input: SearchConversationsInput,
+  ): Promise<ConversationSearchResult[]> {
     const result = await this.client.query(api.conversations.search, {
       query: input.query,
       type: input.filters?.type,
@@ -339,7 +351,7 @@ export class ConversationsAPI {
 
   /**
    * Export conversations to JSON or CSV
-   * 
+   *
    * @example
    * ```typescript
    * const exported = await cortex.conversations.export({
@@ -350,16 +362,19 @@ export class ConversationsAPI {
    * ```
    */
   async export(options: ExportConversationsOptions): Promise<ExportResult> {
-    const result = await this.client.query(api.conversations.exportConversations, {
-      userId: options.filters?.userId,
-      agentId: options.filters?.agentId,
-      conversationIds: options.filters?.conversationIds,
-      type: options.filters?.type,
-      dateStart: options.filters?.dateRange?.start,
-      dateEnd: options.filters?.dateRange?.end,
-      format: options.format,
-      includeMetadata: options.includeMetadata,
-    });
+    const result = await this.client.query(
+      api.conversations.exportConversations,
+      {
+        userId: options.filters?.userId,
+        agentId: options.filters?.agentId,
+        conversationIds: options.filters?.conversationIds,
+        type: options.filters?.type,
+        dateStart: options.filters?.dateRange?.start,
+        dateEnd: options.filters?.dateRange?.end,
+        format: options.format,
+        includeMetadata: options.includeMetadata,
+      },
+    );
 
     return result as ExportResult;
   }
@@ -380,4 +395,3 @@ export class ConversationsAPI {
     return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
   }
 }
-

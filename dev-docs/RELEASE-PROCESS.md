@@ -8,12 +8,12 @@ Complete guide for releasing Cortex SDK versions to npm and GitHub.
 
 ```json
 {
-  "name": "@cortexmemory/sdk",  // Scoped package
-  "version": "0.1.0",                // Semantic versioning
+  "name": "@cortexmemory/sdk", // Scoped package
+  "version": "0.1.0", // Semantic versioning
   "description": "AI agent memory SDK built on Convex",
-  "main": "./dist/index.js",         // CommonJS entry
-  "module": "./dist/index.mjs",      // ESM entry
-  "types": "./dist/index.d.ts",      // TypeScript definitions
+  "main": "./dist/index.js", // CommonJS entry
+  "module": "./dist/index.mjs", // ESM entry
+  "types": "./dist/index.d.ts", // TypeScript definitions
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
@@ -21,19 +21,8 @@ Complete guide for releasing Cortex SDK versions to npm and GitHub.
       "types": "./dist/index.d.ts"
     }
   },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE.md"
-  ],
-  "keywords": [
-    "ai",
-    "agents",
-    "memory",
-    "convex",
-    "sdk",
-    "typescript"
-  ],
+  "files": ["dist", "README.md", "LICENSE.md"],
+  "keywords": ["ai", "agents", "memory", "convex", "sdk", "typescript"],
   "author": "Saint Nick LLC",
   "license": "Apache-2.0",
   "repository": {
@@ -60,6 +49,7 @@ Complete guide for releasing Cortex SDK versions to npm and GitHub.
 ### 3. Create .npmignore
 
 Files to exclude from npm package:
+
 ```
 # Source files (dist/ has compiled versions)
 src/
@@ -132,24 +122,28 @@ node_modules/
 ## 📝 Pre-Release Checklist
 
 ### Code Quality
+
 - [ ] All tests passing (`npm test`)
 - [ ] No linter errors (`npm run lint`)
 - [ ] Coverage > 80% (`npm run test:coverage`)
 - [ ] TypeScript compiles (`tsc --noEmit`)
 
 ### Documentation
+
 - [ ] README.md updated with current version
 - [ ] CHANGELOG.md updated with new features
 - [ ] API documentation complete
 - [ ] Examples work
 
 ### Package Files
+
 - [ ] package.json version bumped
 - [ ] LICENSE.md present
 - [ ] .npmignore configured
 - [ ] Build scripts tested
 
 ### Testing
+
 - [ ] Automated tests pass
 - [ ] Interactive tests validated
 - [ ] Build output tested (`npm pack` and test the .tgz)
@@ -328,15 +322,15 @@ MAJOR.MINOR.PATCH
 
 ### Version Milestones
 
-| Version | Features | Status |
-|---------|----------|--------|
-| **v0.1.0** | Layer 1a (Conversations) | 🎯 Next |
-| v0.2.0 | Layer 1b (Immutable Store) | ⏳ |
-| v0.3.0 | Layer 1c (Mutable Store) | ⏳ |
-| v0.4.0 | Layer 2 (Vector Memory) | ⏳ |
-| v0.5.0 | Layer 3 (Memory API) | ⏳ |
-| v0.6.0 | Coordination APIs | ⏳ |
-| v1.0.0 | Production Release | ⏳ |
+| Version    | Features                   | Status  |
+| ---------- | -------------------------- | ------- |
+| **v0.1.0** | Layer 1a (Conversations)   | 🎯 Next |
+| v0.2.0     | Layer 1b (Immutable Store) | ⏳      |
+| v0.3.0     | Layer 1c (Mutable Store)   | ⏳      |
+| v0.4.0     | Layer 2 (Vector Memory)    | ⏳      |
+| v0.5.0     | Layer 3 (Memory API)       | ⏳      |
+| v0.6.0     | Coordination APIs          | ⏳      |
+| v1.0.0     | Production Release         | ⏳      |
 
 ---
 
@@ -378,7 +372,8 @@ Migration Guide: N/A (initial release)
 **Recommended**: Use scoped package `@cortexmemory/sdk`
 
 **Benefits**:
-- Namespace protection (no one else can use @saintnick/*)
+
+- Namespace protection (no one else can use @saintnick/\*)
 - Professional appearance
 - Can have public and private packages under same scope
 - Free for public packages
@@ -418,9 +413,9 @@ npm publish --access restricted
 ```json
 // package.json
 {
-  "main": "./dist/index.js",      // CommonJS (require)
-  "module": "./dist/index.mjs",   // ESM (import)
-  "types": "./dist/index.d.ts",   // TypeScript
+  "main": "./dist/index.js", // CommonJS (require)
+  "module": "./dist/index.mjs", // ESM (import)
+  "types": "./dist/index.d.ts", // TypeScript
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
@@ -432,6 +427,7 @@ npm publish --access restricted
 ```
 
 **Why dual build?**
+
 - Some users still use CommonJS (require)
 - Modern tools prefer ESM (import)
 - Supporting both maximizes compatibility
@@ -456,27 +452,32 @@ npm install --save-dev tsup
 ## 📄 Required Files for Publishing
 
 ### 1. package.json (Updated)
+
 - ✅ Correct version
 - ✅ Proper entry points
 - ✅ Keywords for discoverability
 - ✅ Repository links
 
 ### 2. README.md
+
 - ✅ Installation instructions
 - ✅ Quick start example
 - ✅ API overview
 - ✅ Links to documentation
 
 ### 3. LICENSE.md
+
 - ✅ Apache License 2.0
 
 ### 4. CHANGELOG.md
+
 ```markdown
 # Changelog
 
 ## [0.1.0] - 2025-10-26
 
 ### Added
+
 - Complete Conversations API (Layer 1a)
 - 9 operations: create, get, addMessage, list, count, delete, getHistory, search, export
 - TypeScript SDK with full type safety
@@ -484,6 +485,7 @@ npm install --save-dev tsup
 - Interactive test runner
 
 ### Features
+
 - User-agent and agent-agent conversation types
 - Append-only immutable message history
 - Paginated message retrieval
@@ -492,6 +494,7 @@ npm install --save-dev tsup
 ```
 
 ### 5. .npmignore
+
 - ✅ Exclude source files (ship only dist/)
 - ✅ Exclude tests
 - ✅ Exclude dev docs
@@ -503,6 +506,7 @@ npm install --save-dev tsup
 ### Manual Steps
 
 1. **Create Tag Locally**
+
    ```bash
    git tag -a v0.1.0 -m "Release v0.1.0"
    git push origin v0.1.0
@@ -526,28 +530,28 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - uses: actions/setup-node@v3
         with:
-          node-version: '18'
-          registry-url: 'https://registry.npmjs.org'
-      
+          node-version: "18"
+          registry-url: "https://registry.npmjs.org"
+
       - run: npm ci
       - run: npm test
       - run: npm run build
-      
+
       - name: Publish to npm
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      
+
       - name: Create GitHub Release
         uses: actions/create-release@v1
         env:
@@ -573,6 +577,7 @@ Cortex SDK v0.1.0 includes the complete **Conversations API** (Layer 1a) - ACID-
 ## ✨ Features
 
 ### Conversation Management
+
 - ✅ Create user-agent and agent-agent conversations
 - ✅ Append messages (immutable, ordered)
 - ✅ Retrieve conversations by ID
@@ -581,6 +586,7 @@ Cortex SDK v0.1.0 includes the complete **Conversations API** (Layer 1a) - ACID-
 - ✅ Delete conversations (GDPR compliant)
 
 ### New in v0.1.0
+
 - 📜 **Paginated message history** - Retrieve messages in chunks
 - 🔍 **Full-text search** - Find conversations by keywords
 - 💾 **JSON/CSV export** - GDPR data portability
@@ -597,37 +603,37 @@ npm install @cortexmemory/sdk
 import { Cortex } from '@cortexmemory/sdk';
 
 const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL,
+convexUrl: process.env.CONVEX_URL,
 });
 
 // Create conversation
 const conv = await cortex.conversations.create({
-  type: 'user-agent',
-  participants: {
-    userId: 'user-123',
-    agentId: 'agent-456',
-  },
+type: 'user-agent',
+participants: {
+userId: 'user-123',
+agentId: 'agent-456',
+},
 });
 
 // Add message
 await cortex.conversations.addMessage({
-  conversationId: conv.conversationId,
-  message: {
-    role: 'user',
-    content: 'Hello, agent!',
-  },
+conversationId: conv.conversationId,
+message: {
+role: 'user',
+content: 'Hello, agent!',
+},
 });
 
 // Search conversations
 const results = await cortex.conversations.search({
-  query: 'password',
-  filters: { userId: 'user-123' },
+query: 'password',
+filters: { userId: 'user-123' },
 });
 
 // Export for GDPR
 const exported = await cortex.conversations.export({
-  filters: { userId: 'user-123' },
-  format: 'json',
+filters: { userId: 'user-123' },
+format: 'json',
 });
 \`\`\`
 
@@ -746,18 +752,21 @@ npm link @cortexmemory/sdk
 ## 📢 Post-Release Checklist
 
 ### Immediate
+
 - [ ] Verify package appears on npm
 - [ ] Test installation from npm
 - [ ] Verify GitHub release is visible
 - [ ] Check documentation links work
 
 ### Communication
+
 - [ ] Tweet/announce on social media
 - [ ] Post in relevant communities
 - [ ] Update project website
 - [ ] Notify early users
 
 ### Follow-up
+
 - [ ] Monitor for issues
 - [ ] Respond to questions
 - [ ] Plan next version
@@ -811,6 +820,7 @@ gh release create v0.2.0 --title "v0.2.0 - Immutable Store" --notes "..."
 ### Recommended Tools
 
 **Semantic Release** (Automated versioning):
+
 ```bash
 npm install --save-dev semantic-release
 
@@ -822,6 +832,7 @@ npm install --save-dev semantic-release
 ```
 
 **Release-It** (Interactive release tool):
+
 ```bash
 npm install --save-dev release-it
 
@@ -872,7 +883,8 @@ node -e "import('@cortexmemory/sdk').then(m => console.log(m))"
 
 ### Issue: "No permission to publish"
 
-**Solution**: 
+**Solution**:
+
 ```bash
 npm login
 npm publish --access public
@@ -881,6 +893,7 @@ npm publish --access public
 ### Issue: "prepublishOnly failed"
 
 **Solution**: Ensure tests pass locally first
+
 ```bash
 npm test
 npm run build
@@ -922,14 +935,17 @@ Size: ~100KB (before compression)
 ## 🎓 Learning Resources
 
 ### npm Publishing
+
 - [npm Docs: Publishing Packages](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry)
 - [Creating and Publishing Scoped Packages](https://docs.npmjs.com/creating-and-publishing-scoped-public-packages)
 
 ### GitHub Releases
+
 - [GitHub Docs: Releases](https://docs.github.com/en/repositories/releasing-projects-on-github)
 - [GitHub CLI: Release Commands](https://cli.github.com/manual/gh_release)
 
 ### Semantic Versioning
+
 - [Semver.org](https://semver.org/)
 - [npm Docs: Semantic Versioning](https://docs.npmjs.com/about-semantic-versioning)
 
@@ -951,4 +967,3 @@ Follow these steps in order:
 10. ✅ Publish to npm
 
 **Let's do this!** 🚀
-

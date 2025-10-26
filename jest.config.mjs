@@ -1,15 +1,11 @@
 /** @type {import('jest').Config} */
 export default {
-  preset: 'ts-jest/presets/default-esm',
-  testEnvironment: 'node',
-  roots: ['<rootDir>/tests'],
-  testMatch: ['**/*.test.ts'],
-  setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
-  collectCoverageFrom: [
-    'src/**/*.ts',
-    '!src/**/*.d.ts',
-    '!src/**/index.ts',
-  ],
+  preset: "ts-jest/presets/default-esm",
+  testEnvironment: "node",
+  roots: ["<rootDir>/tests"],
+  testMatch: ["**/*.test.ts"],
+  setupFilesAfterEnv: ["<rootDir>/tests/setup.ts"],
+  collectCoverageFrom: ["src/**/*.ts", "!src/**/*.d.ts", "!src/**/index.ts"],
   coverageThreshold: {
     global: {
       branches: 80,
@@ -19,23 +15,23 @@ export default {
     },
   },
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
-    '^(\\.{1,2}/.*)\\.js$': '$1',
+    "^@/(.*)$": "<rootDir>/src/$1",
+    "^(\\.{1,2}/.*)\\.js$": "$1",
   },
   testTimeout: 30000, // 30 seconds for Convex operations
   forceExit: true, // Exit after tests complete (helps with Convex client cleanup)
-  extensionsToTreatAsEsm: ['.ts'],
+  extensionsToTreatAsEsm: [".ts"],
   transform: {
-    '^.+\\.tsx?$': ['ts-jest', {
-      useESM: true,
-      tsconfig: {
-        module: 'ESNext',
-        moduleResolution: 'node',
+    "^.+\\.tsx?$": [
+      "ts-jest",
+      {
+        useESM: true,
+        tsconfig: {
+          module: "ESNext",
+          moduleResolution: "node",
+        },
       },
-    }],
+    ],
   },
-  transformIgnorePatterns: [
-    'node_modules/(?!convex)',
-  ],
+  transformIgnorePatterns: ["node_modules/(?!convex)"],
 };
-

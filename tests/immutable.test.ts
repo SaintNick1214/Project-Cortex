@@ -1,6 +1,6 @@
 /**
  * E2E Tests: Immutable Store API (Layer 1b)
- * 
+ *
  * Tests validate:
  * - SDK API calls
  * - Convex mutations/queries
@@ -18,7 +18,7 @@ class ImmutableTestCleanup extends TestCleanup {
   async purgeImmutable(): Promise<number> {
     console.log("🧹 Purging immutable table...");
     const entries = await this.client.query(api.immutable.list, {});
-    
+
     let deleted = 0;
     for (const entry of entries) {
       try {
@@ -42,7 +42,9 @@ class ImmutableTestCleanup extends TestCleanup {
   async verifyImmutableEmpty(): Promise<void> {
     const count = await this.client.query(api.immutable.count, {});
     if (count > 0) {
-      console.warn(`⚠️  Warning: Immutable table not empty (${count} entries remaining)`);
+      console.warn(
+        `⚠️  Warning: Immutable table not empty (${count} entries remaining)`,
+      );
     } else {
       console.log("✅ Immutable table is empty");
     }
@@ -207,7 +209,10 @@ describe("Immutable Store API (Layer 1b)", () => {
       });
 
       // Retrieve it
-      const retrieved = await cortex.immutable.get("kb-article", "shipping-policy");
+      const retrieved = await cortex.immutable.get(
+        "kb-article",
+        "shipping-policy",
+      );
 
       expect(retrieved).not.toBeNull();
       expect(retrieved!.type).toBe("kb-article");
@@ -267,7 +272,11 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
 
     it("retrieves specific version", async () => {
-      const v1 = await cortex.immutable.getVersion("kb-article", "terms-of-service", 1);
+      const v1 = await cortex.immutable.getVersion(
+        "kb-article",
+        "terms-of-service",
+        1,
+      );
 
       expect(v1).not.toBeNull();
       expect(v1!.version).toBe(1);
@@ -275,7 +284,11 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
 
     it("retrieves middle version", async () => {
-      const v2 = await cortex.immutable.getVersion("kb-article", "terms-of-service", 2);
+      const v2 = await cortex.immutable.getVersion(
+        "kb-article",
+        "terms-of-service",
+        2,
+      );
 
       expect(v2).not.toBeNull();
       expect(v2!.version).toBe(2);
@@ -283,7 +296,11 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
 
     it("retrieves current version", async () => {
-      const v3 = await cortex.immutable.getVersion("kb-article", "terms-of-service", 3);
+      const v3 = await cortex.immutable.getVersion(
+        "kb-article",
+        "terms-of-service",
+        3,
+      );
 
       expect(v3).not.toBeNull();
       expect(v3!.version).toBe(3);
@@ -291,13 +308,21 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
 
     it("returns null for non-existent version", async () => {
-      const v99 = await cortex.immutable.getVersion("kb-article", "terms-of-service", 99);
+      const v99 = await cortex.immutable.getVersion(
+        "kb-article",
+        "terms-of-service",
+        99,
+      );
 
       expect(v99).toBeNull();
     });
 
     it("returns null for non-existent entry", async () => {
-      const result = await cortex.immutable.getVersion("kb-article", "does-not-exist", 1);
+      const result = await cortex.immutable.getVersion(
+        "kb-article",
+        "does-not-exist",
+        1,
+      );
 
       expect(result).toBeNull();
     });
@@ -319,10 +344,13 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
 
     it("retrieves all versions in order", async () => {
-      const history = await cortex.immutable.getHistory("audit-log", "system-changes");
+      const history = await cortex.immutable.getHistory(
+        "audit-log",
+        "system-changes",
+      );
 
       expect(history).toHaveLength(5);
-      
+
       // Check versions are in order
       for (let i = 0; i < history.length; i++) {
         expect(history[i].version).toBe(i + 1);
@@ -331,7 +359,10 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
 
     it("includes all version metadata", async () => {
-      const history = await cortex.immutable.getHistory("audit-log", "system-changes");
+      const history = await cortex.immutable.getHistory(
+        "audit-log",
+        "system-changes",
+      );
 
       history.forEach((version) => {
         expect(version.type).toBe("audit-log");
@@ -342,7 +373,10 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
 
     it("returns empty array for non-existent entry", async () => {
-      const history = await cortex.immutable.getHistory("audit-log", "does-not-exist");
+      const history = await cortex.immutable.getHistory(
+        "audit-log",
+        "does-not-exist",
+      );
 
       expect(history).toEqual([]);
     });
@@ -600,7 +634,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
     it("throws error for non-existent entry", async () => {
       await expect(
-        cortex.immutable.purge("temp-data", "does-not-exist")
+        cortex.immutable.purge("temp-data", "does-not-exist"),
       ).rejects.toThrow("IMMUTABLE_ENTRY_NOT_FOUND");
     });
   });
@@ -664,7 +698,9 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       expect(entry!.version).toBe(2);
       expect(entry!.previousVersions).toHaveLength(1);
-      expect(entry!.previousVersions[0].timestamp).toBeLessThan(entry!.updatedAt);
+      expect(entry!.previousVersions[0].timestamp).toBeLessThan(
+        entry!.updatedAt,
+      );
     });
   });
 
@@ -708,7 +744,9 @@ describe("Immutable Store API (Layer 1b)", () => {
       });
 
       expect(stored!.version).toBe(final!.version);
-      expect(stored!.previousVersions.length).toBe(final!.previousVersions.length);
+      expect(stored!.previousVersions.length).toBe(
+        final!.previousVersions.length,
+      );
     });
   });
 
@@ -996,7 +1034,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       const retrieved = await cortex.immutable.get(
         "test-type_with.special-chars",
-        "test-id_123.456-789"
+        "test-id_123.456-789",
       );
       expect(retrieved).not.toBeNull();
     });
@@ -1013,7 +1051,7 @@ describe("Immutable Store API (Layer 1b)", () => {
             type,
             id,
             data: { value: i },
-          })
+          }),
         );
       }
 
@@ -1108,7 +1146,7 @@ describe("Immutable Store API (Layer 1b)", () => {
           },
         });
         versions.push(result);
-        
+
         // Small delay to ensure distinct timestamps
         await new Promise((resolve) => setTimeout(resolve, 10));
       }
@@ -1133,7 +1171,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       // Verify they're in chronological order
       for (let i = 1; i < fullHistory.length; i++) {
         expect(fullHistory[i].timestamp).toBeGreaterThanOrEqual(
-          fullHistory[i - 1].timestamp
+          fullHistory[i - 1].timestamp,
         );
       }
     });
@@ -1233,17 +1271,29 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       it("returns correct version for timestamp between updates", async () => {
         // At v1 timestamp, should get v1
-        const atV1 = await cortex.immutable.getAtTimestamp(type, id, v1Timestamp);
+        const atV1 = await cortex.immutable.getAtTimestamp(
+          type,
+          id,
+          v1Timestamp,
+        );
         expect(atV1!.version).toBe(1);
         expect(atV1!.data.value).toBe("v1");
 
         // At v2 timestamp, should get v2
-        const atV2 = await cortex.immutable.getAtTimestamp(type, id, v2Timestamp);
+        const atV2 = await cortex.immutable.getAtTimestamp(
+          type,
+          id,
+          v2Timestamp,
+        );
         expect(atV2!.version).toBe(2);
         expect(atV2!.data.value).toBe("v2");
 
         // At v3 timestamp, should get v3
-        const atV3 = await cortex.immutable.getAtTimestamp(type, id, v3Timestamp);
+        const atV3 = await cortex.immutable.getAtTimestamp(
+          type,
+          id,
+          v3Timestamp,
+        );
         expect(atV3!.version).toBe(3);
         expect(atV3!.data.value).toBe("v3");
       });
@@ -1256,7 +1306,11 @@ describe("Immutable Store API (Layer 1b)", () => {
       });
 
       it("returns null for non-existent entry", async () => {
-        const result = await cortex.immutable.getAtTimestamp("type", "nonexistent", Date.now());
+        const result = await cortex.immutable.getAtTimestamp(
+          "type",
+          "nonexistent",
+          Date.now(),
+        );
 
         expect(result).toBeNull();
       });
@@ -1284,13 +1338,17 @@ describe("Immutable Store API (Layer 1b)", () => {
       });
 
       it("deletes multiple entries by type", async () => {
-        const result = await cortex.immutable.purgeMany({ type: "bulk-purge-test" });
+        const result = await cortex.immutable.purgeMany({
+          type: "bulk-purge-test",
+        });
 
         expect(result.deleted).toBeGreaterThanOrEqual(8);
         expect(result.entries.length).toBe(result.deleted);
 
         // Verify deletion
-        const remaining = await cortex.immutable.list({ type: "bulk-purge-test" });
+        const remaining = await cortex.immutable.list({
+          type: "bulk-purge-test",
+        });
         expect(remaining.length).toBe(0);
       });
 
@@ -1311,15 +1369,21 @@ describe("Immutable Store API (Layer 1b)", () => {
         });
 
         // Verify count before
-        const countBefore = await cortex.immutable.count({ userId: "user-purge-specific-unique" });
+        const countBefore = await cortex.immutable.count({
+          userId: "user-purge-specific-unique",
+        });
         expect(countBefore).toBe(2);
 
-        const result = await cortex.immutable.purgeMany({ userId: "user-purge-specific-unique" });
+        const result = await cortex.immutable.purgeMany({
+          userId: "user-purge-specific-unique",
+        });
 
         expect(result.deleted).toBe(2);
 
         // Verify deletion
-        const remaining = await cortex.immutable.list({ userId: "user-purge-specific-unique" });
+        const remaining = await cortex.immutable.list({
+          userId: "user-purge-specific-unique",
+        });
         expect(remaining.length).toBe(0);
       });
     });
@@ -1385,7 +1449,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       it("throws error for non-existent entry", async () => {
         await expect(
-          cortex.immutable.purgeVersions("type", "nonexistent", 5)
+          cortex.immutable.purgeVersions("type", "nonexistent", 5),
         ).rejects.toThrow("IMMUTABLE_ENTRY_NOT_FOUND");
       });
     });
@@ -1428,4 +1492,3 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
   });
 });
-

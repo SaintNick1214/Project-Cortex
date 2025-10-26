@@ -10,7 +10,7 @@ npm test && npm run build
 
 # Commit version bump
 git add package.json CHANGELOG-SDK.md
-git commit -m "chore: release v0.1.0"  
+git commit -m "chore: release v0.1.0"
 git push
 
 # Tag and push
@@ -40,18 +40,21 @@ gh release create v0.1.0 --generate-notes
 ## 🔑 First-Time Setup
 
 ### npm Account
+
 ```powershell
 npm login
 npm whoami  # Verify
 ```
 
 ### GitHub CLI
+
 ```powershell
 winget install GitHub.cli
 gh auth login
 ```
 
 ### npm Token (for CI/CD)
+
 1. Visit: https://www.npmjs.com/settings/YOUR_USERNAME/tokens
 2. Generate New Token → Automation
 3. Copy token
@@ -62,12 +65,14 @@ gh auth login
 ## 📝 Version Bump Process
 
 ### Before Release
+
 1. Update `package.json` version
 2. Update `CHANGELOG-SDK.md`
 3. Run tests: `npm test`
 4. Run build: `npm run build`
 
 ### Release
+
 1. Commit changes
 2. Create tag: `git tag -a vX.Y.Z -m "..."`
 3. Push: `git push --tags`
@@ -75,6 +80,7 @@ gh auth login
 5. GitHub release: `gh release create vX.Y.Z`
 
 ### After Release
+
 1. Verify on npm: `npm view @cortexmemory/sdk`
 2. Test install: `npm install @cortexmemory/sdk`
 3. Check GitHub releases page
@@ -129,24 +135,28 @@ npm view @cortexmemory/sdk version  # Check version
 ## 🐛 Quick Fixes
 
 ### "Permission denied"
+
 ```powershell
 npm login
 npm whoami
 ```
 
 ### "Tests failed"
+
 ```powershell
 npm test
 # Fix errors, then retry
 ```
 
 ### "Build failed"
+
 ```powershell
 npm run clean
 npm run build
 ```
 
 ### "Wrong version published"
+
 ```powershell
 # Within 72 hours:
 npm unpublish @cortexmemory/sdk@X.Y.Z
@@ -161,12 +171,14 @@ npm publish --access public
 ## 📋 Files Created for Release
 
 ### Configuration
+
 - [x] `package.json` - Updated with publish metadata
 - [x] `tsconfig.build.json` - Build configuration
 - [x] `tsconfig.esm.json` - ESM configuration
 - [x] `.npmignore` - Exclude dev files
 
 ### Documentation
+
 - [x] `CHANGELOG-SDK.md` - Version history
 - [x] `dev-docs/RELEASE-PROCESS.md` - Complete guide
 - [x] `dev-docs/RELEASE-V0.1.0-GUIDE.md` - This release
@@ -174,6 +186,7 @@ npm publish --access public
 - [x] `dev-docs/RELEASE-QUICK-REF.md` - This file
 
 ### Automation
+
 - [x] `.github/workflows/publish.yml` - Auto-publish on tag
 
 ---
@@ -183,6 +196,7 @@ npm publish --access public
 **Everything is prepared and tested.**
 
 When ready:
+
 1. Read [RELEASE-V0.1.0-GUIDE.md](./RELEASE-V0.1.0-GUIDE.md)
 2. Follow the steps
 3. Publish your first npm package!
@@ -192,4 +206,3 @@ When ready:
 ---
 
 **Questions?** See [RELEASE-PROCESS.md](./RELEASE-PROCESS.md) for detailed explanations.
-

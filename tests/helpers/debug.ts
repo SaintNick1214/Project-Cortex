@@ -1,6 +1,6 @@
 /**
  * Test Debug Utilities
- * 
+ *
  * Enable debug mode for step-by-step test execution
  */
 
@@ -66,7 +66,7 @@ export function logStep(stepNumber: number, description: string): void {
 export function logResult(
   testName: string,
   passed: boolean,
-  details?: string
+  details?: string,
 ): void {
   if (!DEBUG_CONFIG.enabled) return;
 
@@ -116,4 +116,3 @@ export function disableDebugMode(): void {
   DEBUG_CONFIG.verboseLogging = false;
   DEBUG_CONFIG.inspectStorage = false;
 }
-

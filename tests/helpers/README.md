@@ -5,6 +5,7 @@ Utilities for debugging, inspecting, and validating E2E tests with step-by-step 
 ## 📦 Utilities
 
 ### 1. TestCleanup (`cleanup.ts`)
+
 Manages test data cleanup and table purging.
 
 ```typescript
@@ -24,6 +25,7 @@ console.log(`${state.count} conversations in storage`);
 ```
 
 ### 2. StorageInspector (`inspector.ts`)
+
 Deep inspection of Convex storage with detailed output.
 
 ```typescript
@@ -38,16 +40,14 @@ await inspector.inspectConversation("conv-abc123");
 await inspector.inspectAllConversations();
 
 // Compare SDK result with storage
-const comparison = await inspector.compareWithStorage(
-  "conv-abc123",
-  sdkResult
-);
+const comparison = await inspector.compareWithStorage("conv-abc123", sdkResult);
 
 // Print statistics
 await inspector.printStats();
 ```
 
 **Example Output:**
+
 ```
 ================================================================================
 📊 CONVERSATION INSPECTION: conv-abc123
@@ -78,6 +78,7 @@ Messages (3):
 ```
 
 ### 3. Debug Mode (`debug.ts`)
+
 Enable step-by-step test execution with pausing and verbose logging.
 
 ```typescript
@@ -98,14 +99,15 @@ const result = await cortex.conversations.create({ ... });
 await pause("Review the conversation above");
 
 // Verbose debug logging
-debugLog("SDK Response", "Conversation created", { 
-  conversationId: result.conversationId 
+debugLog("SDK Response", "Conversation created", {
+  conversationId: result.conversationId
 });
 ```
 
 ## 🎯 Use Cases
 
 ### Use Case 1: Regular Fast Tests
+
 Default behavior - no cleanup between tests, runs quickly.
 
 ```typescript
@@ -129,6 +131,7 @@ describe("Conversations API", () => {
 ```
 
 ### Use Case 2: Debug Mode with Inspection
+
 Step through tests with detailed inspection.
 
 ```typescript
@@ -162,6 +165,7 @@ describe("Conversations API - DEBUG", () => {
 ```
 
 ### Use Case 3: Manual Step-Through
+
 Pause between every test for manual validation.
 
 ```typescript
@@ -211,6 +215,7 @@ TEST_DEBUG=true npm test conversations.debug
 ## 📊 Storage Inspection Examples
 
 ### Inspect After Create
+
 ```typescript
 const conversation = await cortex.conversations.create({
   type: "user-agent",
@@ -222,6 +227,7 @@ await inspector.inspectConversation(conversation.conversationId);
 ```
 
 ### Inspect After Multiple Messages
+
 ```typescript
 await cortex.conversations.addMessage({ ... }); // Message 1
 await cortex.conversations.addMessage({ ... }); // Message 2
@@ -232,6 +238,7 @@ await inspector.inspectConversation(conversationId);
 ```
 
 ### Compare Before/After
+
 ```typescript
 // Before
 await inspector.printStats();
@@ -317,6 +324,7 @@ When writing tests, ensure:
 ## 📖 Complete Example
 
 See `tests/conversations.debug.test.ts` for a complete example with:
+
 - ✅ Table cleanup before all tests
 - ✅ Step-by-step execution
 - ✅ Storage inspection after each operation
@@ -327,6 +335,7 @@ See `tests/conversations.debug.test.ts` for a complete example with:
 ## 🔍 Troubleshooting
 
 ### Tests failing with "table not empty"
+
 ```typescript
 // Add cleanup to beforeAll
 beforeAll(async () => {
@@ -336,6 +345,7 @@ beforeAll(async () => {
 ```
 
 ### Want to see what's in storage
+
 ```typescript
 // Add inspection
 await inspector.inspectAllConversations();
@@ -343,6 +353,7 @@ await inspector.printStats();
 ```
 
 ### Need to debug a specific test
+
 ```typescript
 // Add debug logging
 enableDebugMode({ verboseLogging: true });
@@ -354,7 +365,7 @@ await pause("Check storage now");
 ---
 
 **Next Steps:**
+
 1. Use these helpers in all Layer 1 tests
 2. Create similar helpers for Layer 2 (memories) when ready
 3. Extend for Layer 3 (memory API) validation
-

@@ -30,6 +30,7 @@ Third release completes **all Layer 1 ACID Stores** with 9 new operations!
 #### Added
 
 **Conversations Advanced Operations**:
+
 - `deleteMany()` - Bulk delete conversations with filters
 - `getMessage()` - Retrieve specific message by ID
 - `getMessagesByIds()` - Batch retrieve multiple messages
@@ -37,11 +38,13 @@ Third release completes **all Layer 1 ACID Stores** with 9 new operations!
 - `getOrCreate()` - Atomic get-or-create pattern
 
 **Immutable Advanced Operations**:
+
 - `getAtTimestamp()` - Temporal queries (what was the value at specific time)
 - `purgeMany()` - Bulk delete entries with filters
 - `purgeVersions()` - Version retention enforcement (keep latest N)
 
 **Mutable Store Complete (Layer 1c)**:
+
 - `set()`, `get()`, `update()`, `delete()` - Core CRUD
 - `increment()`, `decrement()` - Atomic numeric operations
 - `getRecord()` - Get full record with metadata
@@ -49,11 +52,13 @@ Third release completes **all Layer 1 ACID Stores** with 9 new operations!
 - `purgeNamespace()`, `purgeMany()` - Bulk deletion
 
 #### Enhanced Testing
+
 - **Total tests**: 162 (69 conversations + 55 immutable + 38 mutable)
 - **New tests**: +26 from v0.2.0
 - **Coverage**: ~96%
 
 #### Features
+
 - ✅ Complete ACID foundation (all 3 stores)
 - ✅ Temporal queries
 - ✅ Bulk operations
@@ -73,6 +78,7 @@ Second release adds complete **Immutable Store API** (Layer 1b) with automatic v
 #### Added
 
 **Immutable Store API (Layer 1b)**:
+
 - `store()` - Store versioned immutable data
 - `get()` - Get current version
 - `getVersion()` - Get specific historical version
@@ -83,6 +89,7 @@ Second release adds complete **Immutable Store API** (Layer 1b) with automatic v
 - `purge()` - Delete entry (GDPR)
 
 #### Changed
+
 - **Package name**: Renamed from `@cortexmemory/cortex-sdk` to `@cortexmemory/sdk`
 - **Total tests**: 99 (54 conversations + 45 immutable)
 - **Interactive menu**: Reorganized into categories
@@ -98,6 +105,7 @@ First public release of Cortex SDK with complete **Conversations API** (Layer 1a
 #### Added
 
 **Conversations API (Layer 1a)**:
+
 - `create()` - Create conversations
 - `get()` - Retrieve by ID
 - `addMessage()` - Append messages
@@ -106,6 +114,7 @@ First public release of Cortex SDK with complete **Conversations API** (Layer 1a
 - `getHistory()` - Paginated messages
 
 #### Features
+
 - ✅ 9 operations, 45 tests
 - ✅ User-agent and agent-agent conversation types
 - ✅ ACID guarantees

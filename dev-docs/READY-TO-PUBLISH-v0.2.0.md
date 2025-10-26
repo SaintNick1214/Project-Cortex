@@ -9,11 +9,13 @@
 ## 🎯 Quick Publish
 
 ### One Command (Automated):
+
 ```powershell
 npm run release
 ```
 
 This runs the automated release script that:
+
 1. Tests (99 tests)
 2. Builds
 3. Confirms with you
@@ -30,6 +32,7 @@ This runs the automated release script that:
 ### Major Features
 
 #### 1. Immutable Store API (Layer 1b) ⭐
+
 - `store()` - Automatic versioning
 - `get()`, `getVersion()`, `getHistory()` - Version retrieval
 - `list()`, `search()`, `count()` - Filtering & search
@@ -38,17 +41,20 @@ This runs the automated release script that:
 **Use cases**: KB articles, policies, audit logs, user feedback
 
 #### 2. Package Rename
+
 - **Old**: `@cortexmemory/cortex-sdk`
 - **New**: `@cortexmemory/sdk` ✨
 
 Cleaner, aligns with future packages (@cortexmemory/api, @cortexmemory/cli)
 
 #### 3. Enhanced Testing
+
 - **Total tests**: 99 (up from 45)
 - **New categories**: State propagation, edge cases, integration
 - **Coverage**: ~95%
 
 #### 4. Interactive Test Runner
+
 - **30 menu options** (organized by layer)
 - **Advanced tests**: Propagation, edge cases, integration workflows
 - **Category runners**: Test each layer separately
@@ -57,25 +63,27 @@ Cleaner, aligns with future packages (@cortexmemory/api, @cortexmemory/cli)
 
 ## 📊 Release Stats
 
-| Metric | v0.1.0 | v0.2.0 | Change |
-|--------|--------|--------|--------|
-| **APIs** | 1 | 2 | +100% |
-| **Operations** | 9 | 17 | +89% |
-| **Tests** | 45 | 99 | +120% |
+| Metric           | v0.1.0                   | v0.2.0            | Change  |
+| ---------------- | ------------------------ | ----------------- | ------- |
+| **APIs**         | 1                        | 2                 | +100%   |
+| **Operations**   | 9                        | 17                | +89%    |
+| **Tests**        | 45                       | 99                | +120%   |
 | **Package Name** | @cortexmemory/cortex-sdk | @cortexmemory/sdk | Renamed |
-| **Bundle Size** | 16.2 KB | ~16.5 KB | +2% |
+| **Bundle Size**  | 16.2 KB                  | ~16.5 KB          | +2%     |
 
 ---
 
 ## ✅ Pre-Flight Checks
 
 ### Code Quality ✅
+
 - [x] 99/99 tests passing
 - [x] No linter errors
 - [x] TypeScript compiles
 - [x] forceExit prevents Jest hang
 
 ### Package ✅
+
 - [x] Version: 0.2.0
 - [x] Name: @cortexmemory/sdk
 - [x] CHANGELOG updated
@@ -83,6 +91,7 @@ Cleaner, aligns with future packages (@cortexmemory/api, @cortexmemory/cli)
 - [x] Test installation verified
 
 ### Git ✅
+
 - [x] All changes saved
 - [x] On main branch
 - [x] Ready to commit
@@ -92,11 +101,13 @@ Cleaner, aligns with future packages (@cortexmemory/api, @cortexmemory/cli)
 ## 🚀 Publish Commands
 
 ### Option 1: Automated (Recommended)
+
 ```powershell
 npm run release
 ```
 
 ### Option 2: Manual
+
 ```powershell
 # Test & build
 npm test && npm run build
@@ -122,6 +133,7 @@ gh release create v0.2.0 --title "v0.2.0 - Immutable Store API" --generate-notes
 For users upgrading from v0.1.0:
 
 ### Update Package Name
+
 ```bash
 # Uninstall old
 npm uninstall @cortexmemory/cortex-sdk
@@ -131,12 +143,13 @@ npm install @cortexmemory/sdk
 ```
 
 ### Update Imports
+
 ```typescript
 // Old
-import { Cortex } from '@cortexmemory/cortex-sdk';
+import { Cortex } from "@cortexmemory/cortex-sdk";
 
 // New
-import { Cortex } from '@cortexmemory/sdk';
+import { Cortex } from "@cortexmemory/sdk";
 ```
 
 **That's it!** All APIs remain the same.
@@ -146,6 +159,7 @@ import { Cortex } from '@cortexmemory/sdk';
 ## 🎊 After Publishing
 
 ### Verify
+
 ```powershell
 # Check npm
 npm view @cortexmemory/sdk
@@ -158,7 +172,9 @@ node -e "import('@cortexmemory/sdk').then(m => console.log('✅', m.Cortex))"
 ```
 
 ### Announce
+
 Update:
+
 - Twitter/X
 - GitHub README
 - Dev.to blog (optional)
@@ -168,6 +184,7 @@ Update:
 ## 📚 Documentation
 
 All documentation has been updated:
+
 - ✅ CHANGELOG-SDK.md - v0.2.0 notes
 - ✅ Package.json - version 0.2.0, name @cortexmemory/sdk
 - ✅ All release guides - new package name
@@ -190,7 +207,7 @@ All documentation has been updated:
    npm notice name: @cortexmemory/sdk
    npm notice version: 0.2.0
    npm notice filename: cortexmemory-sdk-0.2.0.tgz
-   
+
 Ready to publish v0.2.0? (y/n): y
 
 📝 Step 5: Committing and tagging...
@@ -227,4 +244,3 @@ The script handles everything and shows progress at each step. 🚀
 
 **Status**: ✅ **READY TO PUBLISH v0.2.0**  
 **Command**: `npm run release`
-

@@ -81,12 +81,18 @@ blockquote p:first-child strong {
 }
 
 /* Heading anchors */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
 
-h1:first-child, h2:first-child {
+h1:first-child,
+h2:first-child {
   margin-top: 0;
 }
 
@@ -120,10 +126,9 @@ li {
   .quick-links {
     flex-direction: column;
   }
-  
+
   .button {
     text-align: center;
     display: block;
   }
 }
-

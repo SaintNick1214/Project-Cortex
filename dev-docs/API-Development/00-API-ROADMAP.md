@@ -48,6 +48,7 @@ Each API goes through these phases:
 ## 🌟 Achievements
 
 ### Layer 1a: Conversations ✅
+
 - 9/9 operations implemented (100%)
 - 45/45 tests passing (100%)
 - Interactive test runner with menu-driven debugging
@@ -57,6 +58,7 @@ Each API goes through these phases:
 - Full-text search across conversations
 
 ### Layer 1b: Immutable Store ✅
+
 - 8/8 operations implemented (100%)
 - 45/45 tests passing (100%)
 - Automatic versioning system
@@ -66,6 +68,7 @@ Each API goes through these phases:
 - Interactive test menu (11 options)
 
 ### Layer 1c: Mutable Store ✅
+
 - 9/9 operations implemented (100%)
 - 37/37 tests passing (100%)
 - In-place updates (no versioning)

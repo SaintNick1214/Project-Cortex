@@ -1,6 +1,6 @@
 /**
  * Cortex SDK - Mutable Store API
- * 
+ *
  * Layer 1c: ACID-compliant mutable storage for live data
  */
 
@@ -19,7 +19,7 @@ export class MutableAPI {
 
   /**
    * Set a key to a value (creates or overwrites)
-   * 
+   *
    * @example
    * ```typescript
    * await cortex.mutable.set('inventory', 'widget-qty', 100);
@@ -30,7 +30,7 @@ export class MutableAPI {
     key: string,
     value: any,
     userId?: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, any>,
   ): Promise<MutableRecord> {
     const result = await this.client.mutation(api.mutable.set, {
       namespace,
@@ -45,7 +45,7 @@ export class MutableAPI {
 
   /**
    * Get current value for a key
-   * 
+   *
    * @example
    * ```typescript
    * const qty = await cortex.mutable.get('inventory', 'widget-qty');
@@ -62,14 +62,17 @@ export class MutableAPI {
 
   /**
    * Get full record (including metadata)
-   * 
+   *
    * @example
    * ```typescript
    * const record = await cortex.mutable.getRecord('inventory', 'widget-qty');
    * console.log(record.updatedAt, record.accessCount);
    * ```
    */
-  async getRecord(namespace: string, key: string): Promise<MutableRecord | null> {
+  async getRecord(
+    namespace: string,
+    key: string,
+  ): Promise<MutableRecord | null> {
     const result = await this.client.query(api.mutable.get, {
       namespace,
       key,
@@ -80,7 +83,7 @@ export class MutableAPI {
 
   /**
    * Atomic update using updater function
-   * 
+   *
    * @example
    * ```typescript
    * await cortex.mutable.update('inventory', 'widget-qty', (qty) => qty - 10);
@@ -89,7 +92,7 @@ export class MutableAPI {
   async update(
     namespace: string,
     key: string,
-    updater: (current: any) => any
+    updater: (current: any) => any,
   ): Promise<MutableRecord> {
     // Get current value
     const current = await this.get(namespace, key);
@@ -110,13 +113,17 @@ export class MutableAPI {
 
   /**
    * Increment a numeric value
-   * 
+   *
    * @example
    * ```typescript
    * await cortex.mutable.increment('counters', 'total-sales', 1);
    * ```
    */
-  async increment(namespace: string, key: string, amount: number = 1): Promise<MutableRecord> {
+  async increment(
+    namespace: string,
+    key: string,
+    amount: number = 1,
+  ): Promise<MutableRecord> {
     const result = await this.client.mutation(api.mutable.update, {
       namespace,
       key,
@@ -129,13 +136,17 @@ export class MutableAPI {
 
   /**
    * Decrement a numeric value
-   * 
+   *
    * @example
    * ```typescript
    * await cortex.mutable.decrement('inventory', 'widget-qty', 10);
    * ```
    */
-  async decrement(namespace: string, key: string, amount: number = 1): Promise<MutableRecord> {
+  async decrement(
+    namespace: string,
+    key: string,
+    amount: number = 1,
+  ): Promise<MutableRecord> {
     const result = await this.client.mutation(api.mutable.update, {
       namespace,
       key,
@@ -148,7 +159,7 @@ export class MutableAPI {
 
   /**
    * Check if key exists
-   * 
+   *
    * @example
    * ```typescript
    * if (await cortex.mutable.exists('inventory', 'widget-qty')) { ... }
@@ -165,7 +176,7 @@ export class MutableAPI {
 
   /**
    * List keys in namespace
-   * 
+   *
    * @example
    * ```typescript
    * const items = await cortex.mutable.list({
@@ -187,7 +198,7 @@ export class MutableAPI {
 
   /**
    * Count keys in namespace
-   * 
+   *
    * @example
    * ```typescript
    * const count = await cortex.mutable.count({ namespace: 'inventory' });
@@ -205,13 +216,16 @@ export class MutableAPI {
 
   /**
    * Delete a key
-   * 
+   *
    * @example
    * ```typescript
    * await cortex.mutable.delete('inventory', 'discontinued-item');
    * ```
    */
-  async delete(namespace: string, key: string): Promise<{ deleted: boolean; namespace: string; key: string }> {
+  async delete(
+    namespace: string,
+    key: string,
+  ): Promise<{ deleted: boolean; namespace: string; key: string }> {
     const result = await this.client.mutation(api.mutable.deleteKey, {
       namespace,
       key,
@@ -222,13 +236,15 @@ export class MutableAPI {
 
   /**
    * Purge all keys in a namespace
-   * 
+   *
    * @example
    * ```typescript
    * await cortex.mutable.purgeNamespace('temp-cache');
    * ```
    */
-  async purgeNamespace(namespace: string): Promise<{ deleted: number; namespace: string }> {
+  async purgeNamespace(
+    namespace: string,
+  ): Promise<{ deleted: number; namespace: string }> {
     const result = await this.client.mutation(api.mutable.purgeNamespace, {
       namespace,
     });
@@ -238,7 +254,7 @@ export class MutableAPI {
 
   /**
    * Bulk delete keys matching filters
-   * 
+   *
    * @example
    * ```typescript
    * await cortex.mutable.purgeMany({
@@ -269,4 +285,3 @@ export class MutableAPI {
     };
   }
 }
-

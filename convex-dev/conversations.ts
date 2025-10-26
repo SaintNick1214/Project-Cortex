@@ -1,6 +1,6 @@
 /**
  * Cortex SDK - Conversations API (Layer 1a)
- * 
+ *
  * ACID-compliant immutable conversation storage
  * Two types: user-agent, agent-agent
  */
@@ -33,15 +33,22 @@ export const create = mutation({
         throw new Error("user-agent conversations require userId and agentId");
       }
     } else if (args.type === "agent-agent") {
-      if (!args.participants.agentIds || args.participants.agentIds.length < 2) {
-        throw new Error("agent-agent conversations require at least 2 agentIds");
+      if (
+        !args.participants.agentIds ||
+        args.participants.agentIds.length < 2
+      ) {
+        throw new Error(
+          "agent-agent conversations require at least 2 agentIds",
+        );
       }
     }
 
     // Check if conversation already exists
     const existing = await ctx.db
       .query("conversations")
-      .withIndex("by_conversationId", (q) => q.eq("conversationId", args.conversationId))
+      .withIndex("by_conversationId", (q) =>
+        q.eq("conversationId", args.conversationId),
+      )
       .first();
 
     if (existing) {
@@ -84,7 +91,9 @@ export const addMessage = mutation({
     // Get conversation
     const conversation = await ctx.db
       .query("conversations")
-      .withIndex("by_conversationId", (q) => q.eq("conversationId", args.conversationId))
+      .withIndex("by_conversationId", (q) =>
+        q.eq("conversationId", args.conversationId),
+      )
       .first();
 
     if (!conversation) {
@@ -118,7 +127,9 @@ export const deleteConversation = mutation({
   handler: async (ctx, args) => {
     const conversation = await ctx.db
       .query("conversations")
-      .withIndex("by_conversationId", (q) => q.eq("conversationId", args.conversationId))
+      .withIndex("by_conversationId", (q) =>
+        q.eq("conversationId", args.conversationId),
+      )
       .first();
 
     if (!conversation) {
@@ -138,21 +149,25 @@ export const deleteMany = mutation({
   args: {
     userId: v.optional(v.string()),
     agentId: v.optional(v.string()),
-    type: v.optional(v.union(v.literal("user-agent"), v.literal("agent-agent"))),
+    type: v.optional(
+      v.union(v.literal("user-agent"), v.literal("agent-agent")),
+    ),
   },
   handler: async (ctx, args) => {
     let conversations = await ctx.db.query("conversations").collect();
 
     // Apply filters
     if (args.userId) {
-      conversations = conversations.filter((c) => c.participants.userId === args.userId);
+      conversations = conversations.filter(
+        (c) => c.participants.userId === args.userId,
+      );
     }
 
     if (args.agentId) {
       conversations = conversations.filter(
         (c) =>
           c.participants.agentId === args.agentId ||
-          c.participants.agentIds?.includes(args.agentId!)
+          c.participants.agentIds?.includes(args.agentId!),
       );
     }
 
@@ -188,7 +203,9 @@ export const getMessage = query({
   handler: async (ctx, args) => {
     const conversation = await ctx.db
       .query("conversations")
-      .withIndex("by_conversationId", (q) => q.eq("conversationId", args.conversationId))
+      .withIndex("by_conversationId", (q) =>
+        q.eq("conversationId", args.conversationId),
+      )
       .first();
 
     if (!conversation) {
@@ -211,14 +228,18 @@ export const getMessagesByIds = query({
   handler: async (ctx, args) => {
     const conversation = await ctx.db
       .query("conversations")
-      .withIndex("by_conversationId", (q) => q.eq("conversationId", args.conversationId))
+      .withIndex("by_conversationId", (q) =>
+        q.eq("conversationId", args.conversationId),
+      )
       .first();
 
     if (!conversation) {
       return [];
     }
 
-    const messages = conversation.messages.filter((m) => args.messageIds.includes(m.id));
+    const messages = conversation.messages.filter((m) =>
+      args.messageIds.includes(m.id),
+    );
     return messages;
   },
 });
@@ -248,14 +269,21 @@ export const getOrCreate = mutation({
       existing = await ctx.db
         .query("conversations")
         .withIndex("by_agent_user", (q) =>
-          q.eq("participants.agentId", args.participants.agentId!).eq("participants.userId", args.participants.userId!)
+          q
+            .eq("participants.agentId", args.participants.agentId!)
+            .eq("participants.userId", args.participants.userId!),
         )
         .filter((q) => q.eq(q.field("type"), "user-agent"))
         .first();
     } else {
       // agent-agent
-      if (!args.participants.agentIds || args.participants.agentIds.length < 2) {
-        throw new Error("agent-agent conversations require at least 2 agentIds");
+      if (
+        !args.participants.agentIds ||
+        args.participants.agentIds.length < 2
+      ) {
+        throw new Error(
+          "agent-agent conversations require at least 2 agentIds",
+        );
       }
 
       const conversations = await ctx.db
@@ -264,11 +292,15 @@ export const getOrCreate = mutation({
         .collect();
 
       const sortedInput = [...args.participants.agentIds].sort();
-      existing = conversations.find((c) => {
-        if (!c.participants.agentIds) return false;
-        const sorted = [...c.participants.agentIds].sort();
-        return sorted.length === sortedInput.length && sorted.every((id, i) => id === sortedInput[i]);
-      }) || null;
+      existing =
+        conversations.find((c) => {
+          if (!c.participants.agentIds) return false;
+          const sorted = [...c.participants.agentIds].sort();
+          return (
+            sorted.length === sortedInput.length &&
+            sorted.every((id, i) => id === sortedInput[i])
+          );
+        }) || null;
     }
 
     if (existing) {
@@ -314,7 +346,9 @@ export const findConversation = query({
       const conversation = await ctx.db
         .query("conversations")
         .withIndex("by_agent_user", (q) =>
-          q.eq("participants.agentId", args.agentId!).eq("participants.userId", args.userId!)
+          q
+            .eq("participants.agentId", args.agentId!)
+            .eq("participants.userId", args.userId!),
         )
         .filter((q) => q.eq(q.field("type"), "user-agent"))
         .first();
@@ -337,7 +371,10 @@ export const findConversation = query({
       const found = conversations.find((c) => {
         if (!c.participants.agentIds) return false;
         const sorted = [...c.participants.agentIds].sort();
-        return sorted.length === sortedInput.length && sorted.every((id, i) => id === sortedInput[i]);
+        return (
+          sorted.length === sortedInput.length &&
+          sorted.every((id, i) => id === sortedInput[i])
+        );
       });
 
       return found || null;
@@ -359,7 +396,9 @@ export const get = query({
   handler: async (ctx, args) => {
     const conversation = await ctx.db
       .query("conversations")
-      .withIndex("by_conversationId", (q) => q.eq("conversationId", args.conversationId))
+      .withIndex("by_conversationId", (q) =>
+        q.eq("conversationId", args.conversationId),
+      )
       .first();
 
     if (!conversation) {
@@ -375,7 +414,9 @@ export const get = query({
  */
 export const list = query({
   args: {
-    type: v.optional(v.union(v.literal("user-agent"), v.literal("agent-agent"))),
+    type: v.optional(
+      v.union(v.literal("user-agent"), v.literal("agent-agent")),
+    ),
     userId: v.optional(v.string()),
     agentId: v.optional(v.string()),
     limit: v.optional(v.number()),
@@ -388,7 +429,9 @@ export const list = query({
       conversations = await ctx.db
         .query("conversations")
         .withIndex("by_agent_user", (q) =>
-          q.eq("participants.agentId", args.agentId!).eq("participants.userId", args.userId!)
+          q
+            .eq("participants.agentId", args.agentId!)
+            .eq("participants.userId", args.userId!),
         )
         .order("desc")
         .take(args.limit || 100);
@@ -402,7 +445,9 @@ export const list = query({
       // Get user-agent conversations (index lookup - fast)
       const userAgentConvs = await ctx.db
         .query("conversations")
-        .withIndex("by_agent", (q) => q.eq("participants.agentId", args.agentId!))
+        .withIndex("by_agent", (q) =>
+          q.eq("participants.agentId", args.agentId!),
+        )
         .order("desc")
         .take(args.limit || 100);
 
@@ -411,9 +456,9 @@ export const list = query({
         .query("conversations")
         .filter((q) => q.eq(q.field("type"), "agent-agent"))
         .collect();
-      
+
       const agentAgentConvs = allConvs.filter((c) =>
-        c.participants.agentIds?.includes(args.agentId!)
+        c.participants.agentIds?.includes(args.agentId!),
       );
 
       // Combine and deduplicate (by _id), then sort and limit
@@ -451,7 +496,9 @@ export const count = query({
   args: {
     userId: v.optional(v.string()),
     agentId: v.optional(v.string()),
-    type: v.optional(v.union(v.literal("user-agent"), v.literal("agent-agent"))),
+    type: v.optional(
+      v.union(v.literal("user-agent"), v.literal("agent-agent")),
+    ),
   },
   handler: async (ctx, args) => {
     const conversations = await ctx.db.query("conversations").collect();
@@ -466,7 +513,7 @@ export const count = query({
       filtered = filtered.filter(
         (c) =>
           c.participants.agentId === args.agentId ||
-          c.participants.agentIds?.includes(args.agentId!)
+          c.participants.agentIds?.includes(args.agentId!),
       );
     }
 
@@ -491,7 +538,9 @@ export const getHistory = query({
   handler: async (ctx, args) => {
     const conversation = await ctx.db
       .query("conversations")
-      .withIndex("by_conversationId", (q) => q.eq("conversationId", args.conversationId))
+      .withIndex("by_conversationId", (q) =>
+        q.eq("conversationId", args.conversationId),
+      )
       .first();
 
     if (!conversation) {
@@ -528,7 +577,9 @@ export const getHistory = query({
 export const search = query({
   args: {
     query: v.string(),
-    type: v.optional(v.union(v.literal("user-agent"), v.literal("agent-agent"))),
+    type: v.optional(
+      v.union(v.literal("user-agent"), v.literal("agent-agent")),
+    ),
     userId: v.optional(v.string()),
     agentId: v.optional(v.string()),
     dateStart: v.optional(v.number()),
@@ -550,7 +601,8 @@ export const search = query({
     for (const conversation of allConversations) {
       // Apply filters
       if (args.type && conversation.type !== args.type) continue;
-      if (args.userId && conversation.participants.userId !== args.userId) continue;
+      if (args.userId && conversation.participants.userId !== args.userId)
+        continue;
       if (args.agentId) {
         const hasAgent =
           conversation.participants.agentId === args.agentId ||
@@ -562,7 +614,7 @@ export const search = query({
 
       // Search in messages
       const matchedMessages = conversation.messages.filter((msg: any) =>
-        msg.content.toLowerCase().includes(searchQuery)
+        msg.content.toLowerCase().includes(searchQuery),
       );
 
       if (matchedMessages.length > 0) {
@@ -570,15 +622,13 @@ export const search = query({
         const score = matchedMessages.length / conversation.messageCount;
 
         // Extract highlights
-        const highlights = matchedMessages
-          .slice(0, 3)
-          .map((msg: any) => {
-            const content = msg.content;
-            const index = content.toLowerCase().indexOf(searchQuery);
-            const start = Math.max(0, index - 30);
-            const end = Math.min(content.length, index + searchQuery.length + 30);
-            return content.substring(start, end);
-          });
+        const highlights = matchedMessages.slice(0, 3).map((msg: any) => {
+          const content = msg.content;
+          const index = content.toLowerCase().indexOf(searchQuery);
+          const start = Math.max(0, index - 30);
+          const end = Math.min(content.length, index + searchQuery.length + 30);
+          return content.substring(start, end);
+        });
 
         results.push({
           conversation,
@@ -607,7 +657,9 @@ export const exportConversations = query({
     userId: v.optional(v.string()),
     agentId: v.optional(v.string()),
     conversationIds: v.optional(v.array(v.string())),
-    type: v.optional(v.union(v.literal("user-agent"), v.literal("agent-agent"))),
+    type: v.optional(
+      v.union(v.literal("user-agent"), v.literal("agent-agent")),
+    ),
     dateStart: v.optional(v.number()),
     dateEnd: v.optional(v.number()),
     format: v.union(v.literal("json"), v.literal("csv")),
@@ -619,19 +671,21 @@ export const exportConversations = query({
     // Apply filters
     if (args.conversationIds && args.conversationIds.length > 0) {
       conversations = conversations.filter((c) =>
-        args.conversationIds!.includes(c.conversationId)
+        args.conversationIds!.includes(c.conversationId),
       );
     }
 
     if (args.userId) {
-      conversations = conversations.filter((c) => c.participants.userId === args.userId);
+      conversations = conversations.filter(
+        (c) => c.participants.userId === args.userId,
+      );
     }
 
     if (args.agentId) {
       conversations = conversations.filter(
         (c) =>
           c.participants.agentId === args.agentId ||
-          c.participants.agentIds?.includes(args.agentId!)
+          c.participants.agentIds?.includes(args.agentId!),
       );
     }
 
@@ -640,7 +694,9 @@ export const exportConversations = query({
     }
 
     if (args.dateStart) {
-      conversations = conversations.filter((c) => c.createdAt >= args.dateStart!);
+      conversations = conversations.filter(
+        (c) => c.createdAt >= args.dateStart!,
+      );
     }
 
     if (args.dateEnd) {
@@ -716,4 +772,3 @@ export const exportConversations = query({
     }
   },
 });
-

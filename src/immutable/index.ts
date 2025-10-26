@@ -1,6 +1,6 @@
 /**
  * Cortex SDK - Immutable Store API
- * 
+ *
  * Layer 1b: ACID-compliant versioned immutable storage for shared data
  */
 
@@ -21,7 +21,7 @@ export class ImmutableAPI {
 
   /**
    * Store immutable data (creates v1 or increments version if exists)
-   * 
+   *
    * @example
    * ```typescript
    * const record = await cortex.immutable.store({
@@ -48,7 +48,7 @@ export class ImmutableAPI {
 
   /**
    * Get current version of an immutable entry
-   * 
+   *
    * @example
    * ```typescript
    * const article = await cortex.immutable.get('kb-article', 'refund-policy');
@@ -65,7 +65,7 @@ export class ImmutableAPI {
 
   /**
    * Get a specific version of an immutable entry
-   * 
+   *
    * @example
    * ```typescript
    * const v1 = await cortex.immutable.getVersion('kb-article', 'refund-policy', 1);
@@ -74,7 +74,7 @@ export class ImmutableAPI {
   async getVersion(
     type: string,
     id: string,
-    version: number
+    version: number,
   ): Promise<ImmutableVersionExpanded | null> {
     const result = await this.client.query(api.immutable.getVersion, {
       type,
@@ -87,14 +87,17 @@ export class ImmutableAPI {
 
   /**
    * Get all versions of an immutable entry
-   * 
+   *
    * @example
    * ```typescript
    * const history = await cortex.immutable.getHistory('kb-article', 'refund-policy');
    * console.log(`${history.length} versions`);
    * ```
    */
-  async getHistory(type: string, id: string): Promise<ImmutableVersionExpanded[]> {
+  async getHistory(
+    type: string,
+    id: string,
+  ): Promise<ImmutableVersionExpanded[]> {
     const result = await this.client.query(api.immutable.getHistory, {
       type,
       id,
@@ -105,7 +108,7 @@ export class ImmutableAPI {
 
   /**
    * List immutable entries with optional filters
-   * 
+   *
    * @example
    * ```typescript
    * const articles = await cortex.immutable.list({
@@ -126,7 +129,7 @@ export class ImmutableAPI {
 
   /**
    * Search immutable entries by text query
-   * 
+   *
    * @example
    * ```typescript
    * const results = await cortex.immutable.search({
@@ -148,7 +151,7 @@ export class ImmutableAPI {
 
   /**
    * Count immutable entries
-   * 
+   *
    * @example
    * ```typescript
    * const count = await cortex.immutable.count({
@@ -167,7 +170,7 @@ export class ImmutableAPI {
 
   /**
    * Delete (purge) an immutable entry and all its versions
-   * 
+   *
    * @example
    * ```typescript
    * await cortex.immutable.purge('feedback', 'feedback-123');
@@ -175,8 +178,13 @@ export class ImmutableAPI {
    */
   async purge(
     type: string,
-    id: string
-  ): Promise<{ deleted: boolean; type: string; id: string; versionsDeleted: number }> {
+    id: string,
+  ): Promise<{
+    deleted: boolean;
+    type: string;
+    id: string;
+    versionsDeleted: number;
+  }> {
     const result = await this.client.mutation(api.immutable.purge, {
       type,
       id,
@@ -192,7 +200,7 @@ export class ImmutableAPI {
 
   /**
    * Get version that was current at specific timestamp
-   * 
+   *
    * @example
    * ```typescript
    * const policy = await cortex.immutable.getAtTimestamp(
@@ -205,10 +213,10 @@ export class ImmutableAPI {
   async getAtTimestamp(
     type: string,
     id: string,
-    timestamp: number | Date
+    timestamp: number | Date,
   ): Promise<ImmutableVersionExpanded | null> {
-    const ts = typeof timestamp === 'number' ? timestamp : timestamp.getTime();
-    
+    const ts = typeof timestamp === "number" ? timestamp : timestamp.getTime();
+
     const result = await this.client.query(api.immutable.getAtTimestamp, {
       type,
       id,
@@ -220,16 +228,13 @@ export class ImmutableAPI {
 
   /**
    * Bulk delete immutable entries matching filters
-   * 
+   *
    * @example
    * ```typescript
    * const result = await cortex.immutable.purgeMany({ type: 'old-data', userId: 'user-123' });
    * ```
    */
-  async purgeMany(filter: {
-    type?: string;
-    userId?: string;
-  }): Promise<{
+  async purgeMany(filter: { type?: string; userId?: string }): Promise<{
     deleted: number;
     totalVersionsDeleted: number;
     entries: Array<{ type: string; id: string }>;
@@ -248,7 +253,7 @@ export class ImmutableAPI {
 
   /**
    * Delete old versions while keeping recent ones
-   * 
+   *
    * @example
    * ```typescript
    * await cortex.immutable.purgeVersions('kb-article', 'guide-123', 20); // Keep latest 20
@@ -257,7 +262,7 @@ export class ImmutableAPI {
   async purgeVersions(
     type: string,
     id: string,
-    keepLatest: number
+    keepLatest: number,
   ): Promise<{
     versionsPurged: number;
     versionsRemaining: number;
@@ -274,4 +279,3 @@ export class ImmutableAPI {
     };
   }
 }
-
