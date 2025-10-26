@@ -26,7 +26,7 @@ Complete checklist for releasing Cortex SDK v0.1.0 to npm and GitHub.
 ### 🎯 Ready to Release!
 
 Package details:
-- Name: `@cortexmemory/cortex-sdk`
+- Name: `@cortexmemory/sdk`
 - Version: `0.1.0`
 - Size: 16.2 KB (gzipped)
 - Files: 8 (dist/ + docs)
@@ -151,7 +151,7 @@ Cortex SDK v0.1.0 includes the complete Conversations API (Layer 1a).
 
 ### Installation
 \`\`\`bash
-npm install @cortexmemory/cortex-sdk
+npm install @cortexmemory/sdk
 \`\`\`
 
 See [documentation](https://github.com/SaintNick1214/Project-Cortex#readme) for details."
@@ -198,21 +198,21 @@ npm publish --dry-run
 npm publish --access public
 
 # Expected output:
-# + @cortexmemory/cortex-sdk@0.1.0
+# + @cortexmemory/sdk@0.1.0
 ```
 
 **Verify Publication**:
 
 ```powershell
 # View package on npm
-npm view @cortexmemory/cortex-sdk
+npm view @cortexmemory/sdk
 
 # Check version
-npm view @cortexmemory/cortex-sdk version
+npm view @cortexmemory/sdk version
 # Should show: 0.1.0
 
 # View all versions
-npm view @cortexmemory/cortex-sdk versions
+npm view @cortexmemory/sdk versions
 ```
 
 ---
@@ -230,16 +230,16 @@ cd C:\temp\test-cortex-install
 npm init -y
 
 # Install your published package
-npm install @cortexmemory/cortex-sdk
+npm install @cortexmemory/sdk
 
 # Verify installation
-ls node_modules/@cortexmemory/cortex-sdk/
+ls node_modules/@cortexmemory/sdk/
 ```
 
 **Test import** (create `test.js`):
 
 ```javascript
-import { Cortex } from '@cortexmemory/cortex-sdk';
+import { Cortex } from '@cortexmemory/sdk';
 
 console.log('✅ Import successful!');
 console.log('Cortex class:', typeof Cortex);
@@ -257,16 +257,16 @@ node test.js
 
 ```powershell
 # 1. Check npm page
-# Visit: https://www.npmjs.com/package/@cortexmemory/cortex-sdk
+# Visit: https://www.npmjs.com/package/@cortexmemory/sdk
 
 # 2. Check GitHub release
 # Visit: https://github.com/SaintNick1214/Project-Cortex/releases/tag/v0.1.0
 
 # 3. Test installation from npm
-npm install @cortexmemory/cortex-sdk
+npm install @cortexmemory/sdk
 
 # 4. Check package stats
-npm view @cortexmemory/cortex-sdk --json
+npm view @cortexmemory/sdk --json
 ```
 
 ---
@@ -293,7 +293,7 @@ npm publish --access public
 
 **Solution**: Use scoped package (already done!)
 ```json
-"name": "@cortexmemory/cortex-sdk"  // ✅ Scoped
+"name": "@cortexmemory/sdk"  // ✅ Scoped
 ```
 
 ---
@@ -359,7 +359,7 @@ npm publish --access public
 ### Immediate Actions
 
 1. **Verify on npm**:
-   - Visit: https://www.npmjs.com/package/@cortexmemory/cortex-sdk
+   - Visit: https://www.npmjs.com/package/@cortexmemory/sdk
    - Check version shows 0.1.0
    - Check README displays correctly
    - Test "Try on RunKit" if available
@@ -375,10 +375,10 @@ npm publish --access public
    mkdir C:\temp\fresh-test
    cd C:\temp\fresh-test
    npm init -y
-   npm install @cortexmemory/cortex-sdk
+   npm install @cortexmemory/sdk
    
    # Test import
-   node -e "import('@cortexmemory/cortex-sdk').then(m => console.log('Works!', m.Cortex))"
+   node -e "import('@cortexmemory/sdk').then(m => console.log('Works!', m.Cortex))"
    ```
 
 ### Optional: Announce the Release
@@ -394,7 +394,7 @@ AI agent memory management built on @convex_dev
 ✅ TypeScript support
 ✅ GDPR compliant
 
-npm install @cortexmemory/cortex-sdk
+npm install @cortexmemory/sdk
 
 Docs: github.com/SaintNick1214/Project-Cortex
 ```
@@ -418,9 +418,9 @@ Write a blog post about:
 
 Your release is successful when:
 
-- [ ] `npm view @cortexmemory/cortex-sdk version` returns `0.1.0`
-- [ ] `npm install @cortexmemory/cortex-sdk` works
-- [ ] Import works: `import { Cortex } from '@cortexmemory/cortex-sdk'`
+- [ ] `npm view @cortexmemory/sdk version` returns `0.1.0`
+- [ ] `npm install @cortexmemory/sdk` works
+- [ ] Import works: `import { Cortex } from '@cortexmemory/sdk'`
 - [ ] GitHub release is visible at /releases/tag/v0.1.0
 - [ ] GitHub shows "Latest" badge on v0.1.0
 - [ ] README renders correctly on npm website
@@ -432,7 +432,7 @@ Your release is successful when:
 
 ### npm Package Page
 
-**URL**: https://www.npmjs.com/package/@cortexmemory/cortex-sdk
+**URL**: https://www.npmjs.com/package/@cortexmemory/sdk
 
 **Should show**:
 - Version: 0.1.0
@@ -487,7 +487,7 @@ After publishing v0.1.0, for v0.2.0:
 ### If You Need to Unpublish
 ```powershell
 # Within 72 hours of publishing
-npm unpublish @cortexmemory/cortex-sdk@0.1.0
+npm unpublish @cortexmemory/sdk@0.1.0
 
 # Fix issues, then republish
 npm publish --access public

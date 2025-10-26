@@ -1,8 +1,8 @@
 # Layer 1b: Immutable Store API
 
-**Status**: ⏳ **PENDING**  
-**Started**: TBD  
-**Target Completion**: TBD
+**Status**: ✅ **COMPLETE** (All 8 operations)  
+**Completed**: October 26, 2025  
+**Test Coverage**: 33 tests passing
 
 ---
 
@@ -19,48 +19,69 @@ Versioned immutable data storage for user profiles, knowledge base articles, and
 - ✅ Search across entries
 - ✅ GDPR cascade deletion support (via userId field)
 
-## 📋 TODO
+## ✅ Implementation Status
 
-### Schema
+| Component | Status | Location | Lines | Operations |
+|-----------|--------|----------|-------|------------|
+| Schema | ✅ Complete | `convex-dev/schema.ts` | ~40 | 1 table, 4 indexes |
+| Backend | ✅ Complete | `convex-dev/immutable.ts` | ~330 | 8 operations |
+| Types | ✅ Complete | `src/types/index.ts` | ~70 | 7 interfaces |
+| SDK | ✅ Complete | `src/immutable/index.ts` | ~200 | 8 methods |
+| Tests | ✅ Complete | `tests/immutable.test.ts` | ~480 | 33 tests |
+| Interactive | ✅ Complete | `tests/interactive-runner.ts` | ~200 | 8 menu options |
 
-- [ ] Define `immutable` table
-- [ ] Add indexes: `by_type_id`, `by_userId`, `by_type`, `by_created`
-- [ ] Define version retention policy
+## 📋 Implementation Checklist
 
-### Backend (Convex)
+### Schema ✅
 
-- [ ] `store` - Create/update entry with versioning
-- [ ] `get` - Retrieve entry by type + id
-- [ ] `getVersion` - Get specific version
-- [ ] `list` - List entries with filters
-- [ ] `count` - Count entries
-- [ ] `delete` - Delete entry (GDPR)
+- [x] Define `immutable` table
+- [x] Add indexes: `by_type_id`, `by_userId`, `by_type`, `by_created`
+- [x] Define version retention policy (in previousVersions array)
 
-### Types
+### Backend (Convex) ✅
 
-- [ ] `ImmutableEntry` interface
-- [ ] `ImmutableVersion` interface
-- [ ] `StoreImmutableInput` interface
-- [ ] `ListImmutableFilter` interface
+- [x] `store` - Create/update entry with versioning
+- [x] `get` - Retrieve entry by type + id
+- [x] `getVersion` - Get specific version
+- [x] `getHistory` - Get all versions
+- [x] `list` - List entries with filters
+- [x] `search` - Full-text search
+- [x] `count` - Count entries
+- [x] `purge` - Delete entry (GDPR)
 
-### SDK
+### Types ✅
 
-- [ ] `cortex.immutable.store(type, id, data)`
-- [ ] `cortex.immutable.get(type, id)`
-- [ ] `cortex.immutable.getVersion(type, id, version)`
-- [ ] `cortex.immutable.list(filter)`
-- [ ] `cortex.immutable.count(filter)`
-- [ ] `cortex.immutable.delete(type, id)`
+- [x] `ImmutableEntry` interface
+- [x] `ImmutableRecord` interface
+- [x] `ImmutableVersion` interface
+- [x] `ImmutableVersionExpanded` interface
+- [x] `ListImmutableFilter` interface
+- [x] `SearchImmutableInput` interface
+- [x] `CountImmutableFilter` interface
 
-### Tests
+### SDK ✅
 
-- [ ] Store operations (create, update with versioning)
-- [ ] Retrieval operations
-- [ ] Version history validation
-- [ ] List and count operations
-- [ ] Delete operations
-- [ ] GDPR cascade validation
-- [ ] Storage validation
+- [x] `cortex.immutable.store(entry)`
+- [x] `cortex.immutable.get(type, id)`
+- [x] `cortex.immutable.getVersion(type, id, version)`
+- [x] `cortex.immutable.getHistory(type, id)`
+- [x] `cortex.immutable.list(filter)`
+- [x] `cortex.immutable.search(input)`
+- [x] `cortex.immutable.count(filter)`
+- [x] `cortex.immutable.purge(type, id)`
+
+### Tests ✅
+
+- [x] Store operations (create, update with versioning) - 4 tests
+- [x] Retrieval operations - 3 tests
+- [x] Version operations - 5 tests
+- [x] Version history validation - 3 tests
+- [x] List and count operations - 7 tests
+- [x] Search operations - 5 tests
+- [x] Delete operations - 2 tests
+- [x] Versioning behavior - 2 tests
+- [x] GDPR cascade validation - 1 test
+- [x] Storage validation - 1 test
 
 ## 🗄️ Planned Schema
 

@@ -8,7 +8,7 @@ Complete guide for releasing Cortex SDK versions to npm and GitHub.
 
 ```json
 {
-  "name": "@cortexmemory/cortex-sdk",  // Scoped package
+  "name": "@cortexmemory/sdk",  // Scoped package
   "version": "0.1.0",                // Semantic versioning
   "description": "AI agent memory SDK built on Convex",
   "main": "./dist/index.js",         // CommonJS entry
@@ -251,13 +251,13 @@ gh release create v0.1.0 \
 ## Installation
 
 \`\`\`bash
-npm install @cortexmemory/cortex-sdk
+npm install @cortexmemory/sdk
 \`\`\`
 
 ## Quick Start
 
 \`\`\`typescript
-import { Cortex } from '@cortexmemory/cortex-sdk';
+import { Cortex } from '@cortexmemory/sdk';
 
 const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL,
@@ -299,13 +299,13 @@ npm publish --dry-run
 
 # 4. Publish to npm
 npm publish --access public
-# For scoped packages (@cortexmemory/cortex-sdk)
+# For scoped packages (@cortexmemory/sdk)
 
 # 5. Verify publication
-npm view @cortexmemory/cortex-sdk
+npm view @cortexmemory/sdk
 
 # 6. Test installation
-npm install @cortexmemory/cortex-sdk
+npm install @cortexmemory/sdk
 ```
 
 ---
@@ -375,7 +375,7 @@ Migration Guide: N/A (initial release)
 
 ### Package Scope
 
-**Recommended**: Use scoped package `@cortexmemory/cortex-sdk`
+**Recommended**: Use scoped package `@cortexmemory/sdk`
 
 **Benefits**:
 - Namespace protection (no one else can use @saintnick/*)
@@ -588,13 +588,13 @@ Cortex SDK v0.1.0 includes the complete **Conversations API** (Layer 1a) - ACID-
 ## 📦 Installation
 
 \`\`\`bash
-npm install @cortexmemory/cortex-sdk
+npm install @cortexmemory/sdk
 \`\`\`
 
 ## 🚀 Quick Start
 
 \`\`\`typescript
-import { Cortex } from '@cortexmemory/cortex-sdk';
+import { Cortex } from '@cortexmemory/sdk';
 
 const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL,
@@ -723,7 +723,7 @@ npm install ../Project\ Cortex/cortexmemory-cortex-sdk-0.1.0.tgz
 
 # 4. Test importing
 # Create test.js:
-# import { Cortex } from '@cortexmemory/cortex-sdk';
+# import { Cortex } from '@cortexmemory/sdk';
 # console.log('Import works!', Cortex);
 
 node test.js
@@ -736,7 +736,7 @@ node test.js
 npm link
 
 # In test project
-npm link @cortexmemory/cortex-sdk
+npm link @cortexmemory/sdk
 
 # Now you can import and test
 ```
@@ -837,29 +837,29 @@ npx release-it
 
 ```bash
 # View on npm
-npm view @cortexmemory/cortex-sdk
+npm view @cortexmemory/sdk
 
 # Check versions
-npm view @cortexmemory/cortex-sdk versions
+npm view @cortexmemory/sdk versions
 
 # See latest
-npm view @cortexmemory/cortex-sdk version
+npm view @cortexmemory/sdk version
 
 # View full metadata
-npm view @cortexmemory/cortex-sdk --json
+npm view @cortexmemory/sdk --json
 ```
 
 ### Test Installation
 
 ```bash
 # In new directory
-npm install @cortexmemory/cortex-sdk
+npm install @cortexmemory/sdk
 
 # Verify files
-ls node_modules/@cortexmemory/cortex-sdk/
+ls node_modules/@cortexmemory/sdk/
 
 # Test import
-node -e "import('@cortexmemory/cortex-sdk').then(m => console.log(m))"
+node -e "import('@cortexmemory/sdk').then(m => console.log(m))"
 ```
 
 ---
@@ -868,7 +868,7 @@ node -e "import('@cortexmemory/cortex-sdk').then(m => console.log(m))"
 
 ### Issue: "Package name already taken"
 
-**Solution**: Use scoped package `@cortexmemory/cortex-sdk`
+**Solution**: Use scoped package `@cortexmemory/sdk`
 
 ### Issue: "No permission to publish"
 
@@ -897,7 +897,7 @@ npm run build
 ### What Gets Published
 
 ```
-@cortexmemory/cortex-sdk/
+@cortexmemory/sdk/
 ├── dist/                    # Compiled code
 │   ├── index.js            # CommonJS
 │   ├── index.mjs           # ESM

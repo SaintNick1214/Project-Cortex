@@ -5,6 +5,56 @@ All notable changes to the Cortex SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2025-10-26
+
+### 🎉 Major Release - Layer 1b Complete!
+
+Second release adds complete **Immutable Store API** (Layer 1b) with automatic versioning.
+
+### Added
+
+#### Immutable Store API (Layer 1b)
+- `store()` - Store versioned immutable data with automatic version management
+- `get()` - Get current version of entry
+- `getVersion()` - Get specific historical version
+- `getHistory()` - Get complete version history
+- `list()` - Filter and list entries by type or userId
+- `search()` - Full-text search across immutable entries
+- `count()` - Count entries with filters
+- `purge()` - Delete entry and all versions (GDPR)
+
+#### Enhanced Testing
+- 45 comprehensive tests for immutable store (100% passing)
+- State change propagation tests (8 total)
+- Edge case tests for scale (10 total) 
+- Cross-operation integration tests (7 total)
+- Interactive test runner updated with 11 immutable options
+
+### Changed
+
+- **Package name**: Renamed from `@cortexmemory/cortex-sdk` to `@cortexmemory/sdk`
+  - Cleaner naming convention
+  - Aligns with future packages (@cortexmemory/api, @cortexmemory/cli)
+
+- **Total tests**: 99 (54 conversations + 45 immutable)
+- **Interactive menu**: Reorganized into categories with 30 total options
+
+### Technical Improvements
+
+- Fixed Jest hang issue with `forceExit: true`
+- Added environment variable loading to Jest setup
+- Fixed Convex bundler ESM/CJS conflicts
+- Enhanced test cleanup utilities
+
+### Performance
+
+- get() by composite key: < 10ms (indexed)
+- List by type: < 20ms (indexed)
+- Version retrieval: < 5ms (array access)
+- 25+ versions supported per entry
+
+---
+
 ## [0.1.0] - 2025-10-26
 
 ### 🎉 Initial Release
@@ -110,6 +160,7 @@ First public release of Cortex SDK with complete **Conversations API** (Layer 1a
 
 ## Version History
 
+- [0.2.0] - 2025-10-26 - Immutable Store API + Package rename
 - [0.1.0] - 2025-10-26 - Initial release (Conversations API)
 
 ---

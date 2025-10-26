@@ -69,5 +69,48 @@ export default defineSchema({
     .index("by_agent_user", ["participants.agentId", "participants.userId"]) // Specific pair
     .index("by_created", ["createdAt"]), // Chronological ordering
 
-  // TODO: Add remaining tables (immutable, mutable, memories, contexts, agents)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Layer 1b: Immutable Store (ACID, Versioned, Shared)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  immutable: defineTable({
+    // Identity (composite key: type + id)
+    type: v.string(), // Entity type: 'kb-article', 'policy', 'audit-log', 'feedback', 'user'
+    id: v.string(), // Type-specific logical ID
+
+    // Data (flexible, immutable once stored)
+    data: v.any(),
+
+    // GDPR support (optional)
+    userId: v.optional(v.string()), // Links to user for cascade deletion
+
+    // Versioning
+    version: v.number(), // Current version number (starts at 1)
+    previousVersions: v.array(
+      v.object({
+        version: v.number(),
+        data: v.any(),
+        timestamp: v.number(),
+        metadata: v.optional(v.any()),
+      })
+    ),
+
+    // Metadata (flexible)
+    metadata: v.optional(
+      v.object({
+        publishedBy: v.optional(v.string()),
+        tags: v.optional(v.array(v.string())),
+        importance: v.optional(v.number()),
+      })
+    ),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_type_id", ["type", "id"]) // Unique lookup
+    .index("by_type", ["type"]) // List by type
+    .index("by_userId", ["userId"]) // GDPR cascade
+    .index("by_created", ["createdAt"]), // Chronological
+
+  // TODO: Add remaining tables (mutable, memories, contexts, agents)
 });

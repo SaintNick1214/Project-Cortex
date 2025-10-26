@@ -4,6 +4,7 @@ export default {
   testEnvironment: 'node',
   roots: ['<rootDir>/tests'],
   testMatch: ['**/*.test.ts'],
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/**/*.d.ts',
@@ -22,6 +23,7 @@ export default {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
   testTimeout: 30000, // 30 seconds for Convex operations
+  forceExit: true, // Exit after tests complete (helps with Convex client cleanup)
   extensionsToTreatAsEsm: ['.ts'],
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {

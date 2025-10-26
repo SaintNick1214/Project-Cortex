@@ -936,5 +936,366 @@ describe("Conversations API (Layer 1a)", () => {
       });
     });
   });
+
+  describe("State Change Propagation", () => {
+    it("message additions propagate to all read operations", async () => {
+      // Create conversation
+      const conv = await cortex.conversations.create({
+        type: "user-agent",
+        participants: {
+          userId: "user-propagation-test",
+          agentId: "agent-propagation-test",
+        },
+      });
+
+      // Verify initial state in all operations
+      let retrieved = await cortex.conversations.get(conv.conversationId);
+      expect(retrieved!.messageCount).toBe(0);
+
+      let list = await cortex.conversations.list({
+        userId: "user-propagation-test",
+      });
+      expect(list[0].messageCount).toBe(0);
+
+      // Add message
+      await cortex.conversations.addMessage({
+        conversationId: conv.conversationId,
+        message: {
+          role: "user",
+          content: "Test message with keyword PROPAGATE",
+        },
+      });
+
+      // Verify change in get()
+      retrieved = await cortex.conversations.get(conv.conversationId);
+      expect(retrieved!.messageCount).toBe(1);
+      expect(retrieved!.messages[0].content).toContain("PROPAGATE");
+
+      // Verify change in list()
+      list = await cortex.conversations.list({
+        userId: "user-propagation-test",
+      });
+      expect(list[0].messageCount).toBe(1);
+
+      // Verify in search()
+      const searchResults = await cortex.conversations.search({
+        query: "PROPAGATE",
+      });
+      expect(searchResults.some((r) => r.conversation.conversationId === conv.conversationId)).toBe(true);
+
+      // Verify in getHistory()
+      const history = await cortex.conversations.getHistory(conv.conversationId);
+      expect(history.messages).toHaveLength(1);
+
+      // Add more messages
+      for (let i = 2; i <= 5; i++) {
+        await cortex.conversations.addMessage({
+          conversationId: conv.conversationId,
+          message: {
+            role: i % 2 === 0 ? "agent" : "user",
+            content: `Message ${i}`,
+          },
+        });
+      }
+
+      // All operations should see 5 messages
+      retrieved = await cortex.conversations.get(conv.conversationId);
+      expect(retrieved!.messageCount).toBe(5);
+
+      const finalHistory = await cortex.conversations.getHistory(conv.conversationId);
+      expect(finalHistory.messages).toHaveLength(5);
+
+      const finalList = await cortex.conversations.list({
+        userId: "user-propagation-test",
+      });
+      expect(finalList[0].messageCount).toBe(5);
+    });
+
+    it("deletion propagates to all read operations", async () => {
+      // Create conversation
+      const conv = await cortex.conversations.create({
+        conversationId: "conv-deletion-propagation",
+        type: "user-agent",
+        participants: {
+          userId: "user-delete-test",
+          agentId: "agent-delete-test",
+        },
+      });
+
+      // Add messages
+      await cortex.conversations.addMessage({
+        conversationId: conv.conversationId,
+        message: { role: "user", content: "Message 1" },
+      });
+
+      // Verify exists in all operations
+      let get = await cortex.conversations.get(conv.conversationId);
+      expect(get).not.toBeNull();
+
+      let list = await cortex.conversations.list({ userId: "user-delete-test" });
+      expect(list.some((c) => c.conversationId === conv.conversationId)).toBe(true);
+
+      let count = await cortex.conversations.count({ userId: "user-delete-test" });
+      expect(count).toBeGreaterThanOrEqual(1);
+
+      // Delete conversation
+      await cortex.conversations.delete(conv.conversationId);
+
+      // Verify deleted in all operations
+      get = await cortex.conversations.get(conv.conversationId);
+      expect(get).toBeNull();
+
+      list = await cortex.conversations.list({ userId: "user-delete-test" });
+      expect(list.some((c) => c.conversationId === conv.conversationId)).toBe(false);
+
+      const countAfter = await cortex.conversations.count({ userId: "user-delete-test" });
+      expect(countAfter).toBe(count - 1);
+    });
+  });
+
+  describe("Edge Cases", () => {
+    it("handles conversation with many messages (100+)", async () => {
+      const conv = await cortex.conversations.create({
+        type: "user-agent",
+        participants: {
+          userId: "user-many-messages",
+          agentId: "agent-many-messages",
+        },
+      });
+
+      // Add 100 messages
+      for (let i = 1; i <= 100; i++) {
+        await cortex.conversations.addMessage({
+          conversationId: conv.conversationId,
+          message: {
+            role: i % 2 === 0 ? "agent" : "user",
+            content: `Message ${i}`,
+          },
+        });
+      }
+
+      // Get should have all 100
+      const retrieved = await cortex.conversations.get(conv.conversationId);
+      expect(retrieved!.messageCount).toBe(100);
+      expect(retrieved!.messages).toHaveLength(100);
+
+      // Pagination should work
+      const page1 = await cortex.conversations.getHistory(conv.conversationId, {
+        limit: 20,
+        offset: 0,
+      });
+      expect(page1.messages).toHaveLength(20);
+
+      const page2 = await cortex.conversations.getHistory(conv.conversationId, {
+        limit: 20,
+        offset: 20,
+      });
+      expect(page2.messages).toHaveLength(20);
+
+      // Messages should be different
+      expect(page1.messages[0].content).not.toBe(page2.messages[0].content);
+    });
+
+    it("handles empty message content", async () => {
+      const conv = await cortex.conversations.create({
+        type: "user-agent",
+        participants: {
+          userId: "user-empty-test",
+          agentId: "agent-empty-test",
+        },
+      });
+
+      const result = await cortex.conversations.addMessage({
+        conversationId: conv.conversationId,
+        message: {
+          role: "user",
+          content: "",
+        },
+      });
+
+      expect(result.messages[0].content).toBe("");
+    });
+
+    it("handles very long message content", async () => {
+      const conv = await cortex.conversations.create({
+        type: "user-agent",
+        participants: {
+          userId: "user-long-test",
+          agentId: "agent-long-test",
+        },
+      });
+
+      // 10KB message
+      const longContent = "A".repeat(10000);
+
+      const result = await cortex.conversations.addMessage({
+        conversationId: conv.conversationId,
+        message: {
+          role: "user",
+          content: longContent,
+        },
+      });
+
+      expect(result.messages[0].content).toHaveLength(10000);
+
+      const retrieved = await cortex.conversations.get(conv.conversationId);
+      expect(retrieved!.messages[0].content).toHaveLength(10000);
+    });
+
+    it("handles special characters in conversationId", async () => {
+      const specialId = "conv_test-123.special-chars";
+
+      const conv = await cortex.conversations.create({
+        conversationId: specialId,
+        type: "user-agent",
+        participants: {
+          userId: "user-special",
+          agentId: "agent-special",
+        },
+      });
+
+      expect(conv.conversationId).toBe(specialId);
+
+      const retrieved = await cortex.conversations.get(specialId);
+      expect(retrieved).not.toBeNull();
+    });
+
+    it("handles concurrent message additions", async () => {
+      const conv = await cortex.conversations.create({
+        type: "user-agent",
+        participants: {
+          userId: "user-concurrent-edge",
+          agentId: "agent-concurrent-edge",
+        },
+      });
+
+      // Add 20 messages concurrently
+      const promises = Array.from({ length: 20 }, (_, i) =>
+        cortex.conversations.addMessage({
+          conversationId: conv.conversationId,
+          message: {
+            role: i % 2 === 0 ? "user" : "agent",
+            content: `Concurrent message ${i}`,
+          },
+        })
+      );
+
+      await Promise.all(promises);
+
+      // All 20 should be stored
+      const final = await cortex.conversations.get(conv.conversationId);
+      expect(final!.messageCount).toBe(20);
+      expect(final!.messages).toHaveLength(20);
+    });
+  });
+
+  describe("Cross-Operation Integration", () => {
+    it("create → addMessage → list → search → export consistency", async () => {
+      // Create with unique keyword
+      const conv = await cortex.conversations.create({
+        type: "user-agent",
+        participants: {
+          userId: "user-integration-test",
+          agentId: "agent-integration-test",
+        },
+        metadata: {
+          testKeyword: "INTEGRATION_TEST_MARKER",
+        },
+      });
+
+      // Add message with unique content
+      await cortex.conversations.addMessage({
+        conversationId: conv.conversationId,
+        message: {
+          role: "user",
+          content: "This message contains UNIQUE_SEARCH_TERM for testing",
+        },
+      });
+
+      // Verify in list
+      const listResults = await cortex.conversations.list({
+        userId: "user-integration-test",
+      });
+      expect(listResults.some((c) => c.conversationId === conv.conversationId)).toBe(true);
+      expect(listResults.find((c) => c.conversationId === conv.conversationId)?.messageCount).toBe(1);
+
+      // Verify in search
+      const searchResults = await cortex.conversations.search({
+        query: "UNIQUE_SEARCH_TERM",
+      });
+      expect(searchResults.some((r) => r.conversation.conversationId === conv.conversationId)).toBe(true);
+
+      // Verify in count
+      const count = await cortex.conversations.count({
+        userId: "user-integration-test",
+      });
+      expect(count).toBeGreaterThanOrEqual(1);
+
+      // Verify in export
+      const exported = await cortex.conversations.export({
+        filters: { userId: "user-integration-test" },
+        format: "json",
+      });
+      const parsed = JSON.parse(exported.data);
+      expect(parsed.some((c: any) => c.conversationId === conv.conversationId)).toBe(true);
+
+      // Add more messages
+      await cortex.conversations.addMessage({
+        conversationId: conv.conversationId,
+        message: { role: "agent", content: "Response" },
+      });
+
+      // All operations should see 2 messages now
+      const updatedGet = await cortex.conversations.get(conv.conversationId);
+      expect(updatedGet!.messageCount).toBe(2);
+
+      const updatedList = await cortex.conversations.list({
+        userId: "user-integration-test",
+      });
+      expect(updatedList.find((c) => c.conversationId === conv.conversationId)?.messageCount).toBe(2);
+    });
+
+    it("search results update as messages are added", async () => {
+      const conv = await cortex.conversations.create({
+        type: "user-agent",
+        participants: {
+          userId: "user-search-update",
+          agentId: "agent-search-update",
+        },
+      });
+
+      // Initially no matches for "password"
+      let results = await cortex.conversations.search({ query: "password" });
+      expect(results.some((r) => r.conversation.conversationId === conv.conversationId)).toBe(false);
+
+      // Add message with "password"
+      await cortex.conversations.addMessage({
+        conversationId: conv.conversationId,
+        message: {
+          role: "user",
+          content: "What is the password for the account?",
+        },
+      });
+
+      // Should now find it
+      results = await cortex.conversations.search({ query: "password" });
+      expect(results.some((r) => r.conversation.conversationId === conv.conversationId)).toBe(true);
+      expect(results.find((r) => r.conversation.conversationId === conv.conversationId)?.matchedMessages.length).toBe(1);
+
+      // Add another message with "password"
+      await cortex.conversations.addMessage({
+        conversationId: conv.conversationId,
+        message: {
+          role: "agent",
+          content: "The password is reset123",
+        },
+      });
+
+      // Should find 2 matched messages
+      results = await cortex.conversations.search({ query: "password" });
+      const thisResult = results.find((r) => r.conversation.conversationId === conv.conversationId);
+      expect(thisResult?.matchedMessages.length).toBe(2);
+    });
+  });
 });
 

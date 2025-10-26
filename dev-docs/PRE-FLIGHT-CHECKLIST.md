@@ -4,7 +4,7 @@ Final verification before publishing to npm and creating GitHub release.
 
 ## ✅ Package Metadata
 
-- [x] **Name**: `@cortexmemory/cortex-sdk` (scoped)
+- [x] **Name**: `@cortexmemory/sdk` (scoped)
 - [x] **Version**: `0.1.0`
 - [x] **License**: `Apache-2.0` ✅ (matches LICENSE.md)
 - [x] **Description**: Accurate and compelling
@@ -143,7 +143,7 @@ gh release create v0.1.0 --generate-notes
 
 ## 📊 What You're Publishing
 
-**Package**: `@cortexmemory/cortex-sdk@0.1.0`  
+**Package**: `@cortexmemory/sdk@0.1.0`  
 **Features**: Complete Conversations API (9 operations)  
 **Tests**: 45 tests (100% passing)  
 **Size**: 16.2 KB  
