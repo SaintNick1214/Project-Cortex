@@ -2,7 +2,7 @@
 
 ## 🎯 Package Summary
 
-**Name**: `@saintnick/cortex-sdk`  
+**Name**: `@cortexmemory/cortex-sdk`  
 **Version**: `0.1.0`  
 **Description**: AI agent memory SDK built on Convex  
 **License**: Apache-2.0  
@@ -22,7 +22,7 @@
 ### Package Configuration ✅
 - [x] package.json configured for publishing
   - [x] Version: 0.1.0
-  - [x] Scoped name: @saintnick/cortex-sdk
+  - [x] Scoped name: @cortexmemory/cortex-sdk
   - [x] Dual exports (CJS + ESM)
   - [x] TypeScript definitions
   - [x] Proper entry points
@@ -155,7 +155,7 @@ git push origin v0.1.0
 gh release create v0.1.0 --title "v0.1.0 - Conversations API" --generate-notes
 
 ## Option B: Manual
-# Visit: https://github.com/SaintNick1214/cortex-sdk/releases/new
+# Visit: https://github.com/SaintNick1214/Project-Cortex/releases/new
 # Choose tag: v0.1.0
 # Click: Generate release notes
 # Click: Publish release
@@ -165,7 +165,7 @@ npm login            # If not already logged in
 npm publish --access public
 
 # 5. Verify
-npm view @saintnick/cortex-sdk
+npm view @cortexmemory/cortex-sdk
 ```
 
 ### Automated Release (Future)
