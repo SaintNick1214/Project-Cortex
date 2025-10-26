@@ -1,14 +1,14 @@
 /**
  * Cortex SDK - Convex Schema
- * 
+ *
  * Layer 1: ACID Stores
  * - conversations (Layer 1a) - Immutable conversation history
  * - immutable (Layer 1b) - Versioned immutable data
  * - mutable (Layer 1c) - Live operational data
- * 
+ *
  * Layer 2: Vector Index
  * - memories - Searchable knowledge with embeddings
- * 
+ *
  * Coordination:
  * - contexts - Hierarchical context chains
  * - agents - Agent registry (optional)
@@ -42,14 +42,18 @@ export default defineSchema({
     messages: v.array(
       v.object({
         id: v.string(), // Message ID
-        role: v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
+        role: v.union(
+          v.literal("user"),
+          v.literal("agent"),
+          v.literal("system"),
+        ),
         content: v.string(),
         timestamp: v.number(),
 
         // Optional fields
         agentId: v.optional(v.string()), // Which agent sent this
         metadata: v.optional(v.any()), // Flexible metadata
-      })
+      }),
     ),
 
     // Statistics
@@ -91,7 +95,7 @@ export default defineSchema({
         data: v.any(),
         timestamp: v.number(),
         metadata: v.optional(v.any()),
-      })
+      }),
     ),
 
     // Metadata (flexible)
@@ -100,7 +104,7 @@ export default defineSchema({
         publishedBy: v.optional(v.string()),
         tags: v.optional(v.array(v.string())),
         importance: v.optional(v.number()),
-      })
+      }),
     ),
 
     // Timestamps

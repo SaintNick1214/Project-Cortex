@@ -1,6 +1,6 @@
 /**
  * Cortex SDK - Mutable Store API (Layer 1c)
- * 
+ *
  * ACID-compliant mutable storage for live, frequently-changing data
  * Namespaces: inventory, config, counters, sessions, state, etc.
  */
@@ -30,7 +30,7 @@ export const set = mutation({
     const existing = await ctx.db
       .query("mutable")
       .withIndex("by_namespace_key", (q) =>
-        q.eq("namespace", args.namespace).eq("key", args.key)
+        q.eq("namespace", args.namespace).eq("key", args.key),
       )
       .first();
 
@@ -39,7 +39,8 @@ export const set = mutation({
       await ctx.db.patch(existing._id, {
         value: args.value,
         userId: args.userId !== undefined ? args.userId : existing.userId,
-        metadata: args.metadata !== undefined ? args.metadata : existing.metadata,
+        metadata:
+          args.metadata !== undefined ? args.metadata : existing.metadata,
         updatedAt: now,
       });
 
@@ -76,7 +77,7 @@ export const update = mutation({
       v.literal("increment"),
       v.literal("decrement"),
       v.literal("append"),
-      v.literal("custom")
+      v.literal("custom"),
     ),
     operand: v.optional(v.any()),
   },
@@ -84,7 +85,7 @@ export const update = mutation({
     const existing = await ctx.db
       .query("mutable")
       .withIndex("by_namespace_key", (q) =>
-        q.eq("namespace", args.namespace).eq("key", args.key)
+        q.eq("namespace", args.namespace).eq("key", args.key),
       )
       .first();
 
@@ -135,7 +136,7 @@ export const deleteKey = mutation({
     const entry = await ctx.db
       .query("mutable")
       .withIndex("by_namespace_key", (q) =>
-        q.eq("namespace", args.namespace).eq("key", args.key)
+        q.eq("namespace", args.namespace).eq("key", args.key),
       )
       .first();
 
@@ -233,7 +234,7 @@ export const get = query({
     const entry = await ctx.db
       .query("mutable")
       .withIndex("by_namespace_key", (q) =>
-        q.eq("namespace", args.namespace).eq("key", args.key)
+        q.eq("namespace", args.namespace).eq("key", args.key),
       )
       .first();
 
@@ -253,7 +254,7 @@ export const exists = query({
     const entry = await ctx.db
       .query("mutable")
       .withIndex("by_namespace_key", (q) =>
-        q.eq("namespace", args.namespace).eq("key", args.key)
+        q.eq("namespace", args.namespace).eq("key", args.key),
       )
       .first();
 
@@ -319,4 +320,3 @@ export const count = query({
     return entries.length;
   },
 });
-

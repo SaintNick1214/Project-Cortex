@@ -1,6 +1,6 @@
 /**
  * Cortex SDK - Main Entry Point
- * 
+ *
  * Open-source SDK for AI agents with persistent memory
  * Built on Convex for reactive TypeScript queries
  */
@@ -46,4 +46,3 @@ export class Cortex {
 
 // Re-export types
 export * from "./types";
-

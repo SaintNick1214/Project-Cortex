@@ -5,6 +5,7 @@
 The repository has been reorganized from a messy nested structure to a clean, flat structure:
 
 ### Before (Messy)
+
 ```
 Project Cortex/
 └── cortex-sdk/
@@ -16,6 +17,7 @@ Project Cortex/
 ```
 
 ### After (Clean)
+
 ```
 Project Cortex/              ← Repo root = SDK root
 ├── src/                     ← SDK source
@@ -30,15 +32,15 @@ Project Cortex/              ← Repo root = SDK root
 
 ## Files Moved
 
-| Old Location | New Location | Purpose |
-|--------------|--------------|---------|
-| `cortex-sdk/cortex-sdk/src/` | `src/` | SDK source code |
-| `cortex-sdk/cortex-sdk/tests/` | `tests/` | E2E tests |
-| `cortex-sdk/cortex-sdk/convex/` | `convex-dev/` | Local Convex DB |
+| Old Location                             | New Location                | Purpose          |
+| ---------------------------------------- | --------------------------- | ---------------- |
+| `cortex-sdk/cortex-sdk/src/`             | `src/`                      | SDK source code  |
+| `cortex-sdk/cortex-sdk/tests/`           | `tests/`                    | E2E tests        |
+| `cortex-sdk/cortex-sdk/convex/`          | `convex-dev/`               | Local Convex DB  |
 | `cortex-sdk/cortex-sdk/API-Development/` | `dev-docs/API-Development/` | Development docs |
-| `cortex-sdk/cortex-sdk/TESTING-GUIDE.md` | `dev-docs/TESTING-GUIDE.md` | Testing guide |
-| `cortex-sdk/cortex-sdk/README.md` | `SDK-README.md` | SDK readme |
-| `cortex-sdk/cortex-sdk/package.json` | `package.json` | Root package |
+| `cortex-sdk/cortex-sdk/TESTING-GUIDE.md` | `dev-docs/TESTING-GUIDE.md` | Testing guide    |
+| `cortex-sdk/cortex-sdk/README.md`        | `SDK-README.md`             | SDK readme       |
+| `cortex-sdk/cortex-sdk/package.json`     | `package.json`              | Root package     |
 
 ## What Got Updated
 
@@ -59,16 +61,19 @@ npm run dev
 ```
 
 When prompted:
+
 - Choose: **"Start without an account (run Convex locally)"**
 - Name: **"cortex-sdk-local"**
 - Confirm: **Yes**
 
 This will:
+
 1. Generate `convex-dev/_generated/` folder with API types
 2. Create `.env.local` with `CONVEX_URL` and `CONVEX_DEPLOYMENT`
 3. Start the local Convex database
 
 Then tests will work:
+
 ```powershell
 npm test
 ```
@@ -76,21 +81,25 @@ npm test
 ## Benefits of New Structure
 
 ### ✅ Clarity
+
 - **Root = SDK** - No confusion about what this repo is
 - **convex-dev/** - Clearly marked as development/testing database
 - **dev-docs/** - Separate from user-facing `Documentation/`
 
 ### ✅ Simplicity
+
 - No double-nesting
 - Flat structure at root
 - Easy to navigate
 
 ### ✅ Professionalism
+
 - Standard npm package layout
 - Follows open-source conventions
 - Ready for publishing to npm
 
 ### ✅ Development
+
 - `src/` ships to npm
 - `tests/` are dev dependencies
 - `convex-dev/` is gitignored
@@ -116,16 +125,16 @@ The Convex schema and functions (`convex-dev/schema.ts`, `convex-dev/conversatio
 
 ## Directory Guide
 
-| Directory | Purpose | In Git? | Ships to npm? |
-|-----------|---------|---------|---------------|
-| `src/` | SDK source code | ✅ Yes | ✅ Yes |
-| `tests/` | E2E tests | ✅ Yes | ❌ No (devDeps) |
-| `convex-dev/` | Local Convex DB for testing | ⚠️ Partial* | ❌ No |
-| `dev-docs/` | SDK development documentation | ✅ Yes | ❌ No |
-| `Documentation/` | User-facing SDK docs | ✅ Yes | ✅ Yes (or docs site) |
-| `examples/` | Example projects | ✅ Yes | ❌ No |
+| Directory        | Purpose                       | In Git?      | Ships to npm?         |
+| ---------------- | ----------------------------- | ------------ | --------------------- |
+| `src/`           | SDK source code               | ✅ Yes       | ✅ Yes                |
+| `tests/`         | E2E tests                     | ✅ Yes       | ❌ No (devDeps)       |
+| `convex-dev/`    | Local Convex DB for testing   | ⚠️ Partial\* | ❌ No                 |
+| `dev-docs/`      | SDK development documentation | ✅ Yes       | ❌ No                 |
+| `Documentation/` | User-facing SDK docs          | ✅ Yes       | ✅ Yes (or docs site) |
+| `examples/`      | Example projects              | ✅ Yes       | ❌ No                 |
 
-*Only schema/functions are in git, not `_generated/` or `.env.local`
+\*Only schema/functions are in git, not `_generated/` or `.env.local`
 
 ## Scripts
 
@@ -157,4 +166,3 @@ npm run logs             # View Convex logs
 **Last Updated**: October 25, 2025  
 **Reorganized By**: AI Assistant  
 **Approved By**: User
-

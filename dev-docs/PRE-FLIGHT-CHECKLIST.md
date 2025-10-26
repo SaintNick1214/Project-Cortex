@@ -27,6 +27,7 @@ Final verification before publishing to npm and creating GitHub release.
 ## ✅ Package Contents
 
 ### Included (8 files, 16.2 KB)
+
 - [x] `dist/index.cjs` - CommonJS bundle
 - [x] `dist/index.js` - ESM bundle
 - [x] `dist/index.d.ts` - TypeScript definitions (ESM)
@@ -37,6 +38,7 @@ Final verification before publishing to npm and creating GitHub release.
 - [x] `package.json` - Metadata
 
 ### Correctly Excluded
+
 - [x] `src/` - Source TypeScript (dist/ has compiled)
 - [x] `tests/` - Test files
 - [x] `convex-dev/` - Development database
@@ -108,6 +110,7 @@ Final verification before publishing to npm and creating GitHub release.
 ### Cannot Undo
 
 Once published to npm:
+
 - ⚠️ Cannot delete version (only within 72 hours)
 - ⚠️ Cannot rename package
 - ⚠️ Cannot change version number
@@ -155,4 +158,3 @@ gh release create v0.1.0 --generate-notes
 **Status**: 🟢 **READY FOR RELEASE!**
 
 All systems go! 🚀
-

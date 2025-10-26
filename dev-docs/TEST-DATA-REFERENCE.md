@@ -5,14 +5,18 @@ This document ensures that **interactive tests use identical data** to the autom
 ## Test User/Agent IDs
 
 ### Automated Tests
+
 Each test uses unique IDs to avoid conflicts:
+
 - `user-123`, `agent-456` (basic creation test)
 - `user-msg-test`, `agent-msg-test` (message test)
 - `user-get-test`, `agent-get-test` (get test)
 - etc.
 
 ### Interactive Tests
+
 Uses consistent IDs across all operations:
+
 - `TEST_USER_ID = "user-test-interactive"`
 - `TEST_AGENT_ID = "agent-test-interactive"`
 
@@ -21,6 +25,7 @@ Uses consistent IDs across all operations:
 ### 1. conversations.create (user-agent)
 
 #### Automated Test
+
 ```typescript
 const result = await cortex.conversations.create({
   type: "user-agent",
@@ -35,12 +40,13 @@ const result = await cortex.conversations.create({
 ```
 
 #### Interactive Test (Option 3)
+
 ```typescript
 const input = {
   type: "user-agent",
   participants: {
-    userId: TEST_USER_ID,      // "user-test-interactive"
-    agentId: TEST_AGENT_ID,     // "agent-test-interactive"
+    userId: TEST_USER_ID, // "user-test-interactive"
+    agentId: TEST_AGENT_ID, // "agent-test-interactive"
   },
   metadata: {
     source: "interactive-runner",
@@ -55,6 +61,7 @@ const input = {
 ### 2. conversations.create (agent-agent)
 
 #### Automated Test
+
 ```typescript
 const result = await cortex.conversations.create({
   type: "agent-agent",
@@ -65,11 +72,16 @@ const result = await cortex.conversations.create({
 ```
 
 #### Interactive Test (Option 4)
+
 ```typescript
 const input = {
   type: "agent-agent",
   participants: {
-    agentIds: [TEST_AGENT_ID, "agent-target-interactive", "agent-observer-interactive"],
+    agentIds: [
+      TEST_AGENT_ID,
+      "agent-target-interactive",
+      "agent-observer-interactive",
+    ],
   },
 };
 ```
@@ -81,6 +93,7 @@ const input = {
 ### 3. conversations.get
 
 #### Automated Test
+
 ```typescript
 const created = await cortex.conversations.create({
   type: "user-agent",
@@ -94,6 +107,7 @@ const retrieved = await cortex.conversations.get(created.conversationId);
 ```
 
 #### Interactive Test (Option 5)
+
 ```typescript
 // Uses currentConversationId from previous create operation
 const result = await cortex.conversations.get(currentConversationId);
@@ -106,6 +120,7 @@ const result = await cortex.conversations.get(currentConversationId);
 ### 4. conversations.addMessage
 
 #### Automated Test
+
 ```typescript
 const updated = await cortex.conversations.addMessage({
   conversationId: conversation.conversationId,
@@ -120,11 +135,12 @@ const updated = await cortex.conversations.addMessage({
 ```
 
 #### Interactive Test (Option 6) ✅ FIXED
+
 ```typescript
 const input = {
   conversationId: currentConversationId,
   message: {
-    role: "user",  // ✅ Fixed from "assistant" to "user"
+    role: "user", // ✅ Fixed from "assistant" to "user"
     content: "Hello, agent! This is a test message added interactively.",
     metadata: {
       source: "interactive-runner",
@@ -143,6 +159,7 @@ const input = {
 ### 5. conversations.list (by user)
 
 #### Automated Test
+
 ```typescript
 const conversations = await cortex.conversations.list({
   userId: "user-list-test",
@@ -152,9 +169,10 @@ expect(conversations.length).toBeGreaterThanOrEqual(2);
 ```
 
 #### Interactive Test (Option 7) ✅ FIXED
+
 ```typescript
 const conversations = await cortex.conversations.list({
-  userId: TEST_USER_ID,  // "user-test-interactive"
+  userId: TEST_USER_ID, // "user-test-interactive"
 });
 
 console.log(`Found ${conversations.length} conversation(s)`);
@@ -170,6 +188,7 @@ console.log(`Found ${conversations.length} conversation(s)`);
 ### 6. conversations.list (by agent)
 
 #### Automated Test
+
 ```typescript
 const conversations = await cortex.conversations.list({
   agentId: "agent-list-test",
@@ -179,9 +198,10 @@ expect(conversations.length).toBeGreaterThanOrEqual(1);
 ```
 
 #### Interactive Test (Option 8) ✅ FIXED
+
 ```typescript
 const conversations = await cortex.conversations.list({
-  agentId: TEST_AGENT_ID,  // "agent-test-interactive"
+  agentId: TEST_AGENT_ID, // "agent-test-interactive"
 });
 
 console.log(`Found ${conversations.length} conversation(s)`);
@@ -196,6 +216,7 @@ console.log(`Found ${conversations.length} conversation(s)`);
 ### 7. conversations.count
 
 #### Automated Test
+
 ```typescript
 const count = await cortex.conversations.count({
   userId: "user-count-test",
@@ -205,9 +226,10 @@ expect(count).toBeGreaterThan(0);
 ```
 
 #### Interactive Test (Option 9) ✅ FIXED
+
 ```typescript
 const count = await cortex.conversations.count({
-  userId: TEST_USER_ID,  // "user-test-interactive"
+  userId: TEST_USER_ID, // "user-test-interactive"
 });
 
 console.log(`Count: ${count}`);
@@ -223,6 +245,7 @@ console.log(`Count: ${count}`);
 ### 8. conversations.delete
 
 #### Automated Test
+
 ```typescript
 await cortex.conversations.delete(conversation.conversationId);
 
@@ -232,6 +255,7 @@ expect(retrieved).toBeNull();
 ```
 
 #### Interactive Test (Option 10)
+
 ```typescript
 await cortex.conversations.delete(currentConversationId);
 
@@ -253,21 +277,21 @@ try {
 ## Message Role Reference
 
 ### Valid Message Roles
+
 From the schema:
+
 ```typescript
-role: v.union(
-  v.literal("user"),
-  v.literal("agent"),
-  v.literal("system")
-)
+role: v.union(v.literal("user"), v.literal("agent"), v.literal("system"));
 ```
 
 ✅ Valid:
+
 - `"user"` - Messages from users
 - `"agent"` - Messages from agents
 - `"system"` - System messages
 
 ❌ Invalid:
+
 - `"assistant"` - ❌ Not in schema (common mistake from OpenAI API patterns)
 - `"function"` - ❌ Not in schema
 - `"tool"` - ❌ Not in schema
@@ -277,6 +301,7 @@ role: v.union(
 ## Participants Structure Reference
 
 ### User-Agent Conversations
+
 ```typescript
 participants: {
   userId: string,
@@ -285,6 +310,7 @@ participants: {
 ```
 
 ### Agent-Agent Conversations
+
 ```typescript
 participants: {
   agentIds: string[],  // Must have 2+ agents
@@ -292,6 +318,7 @@ participants: {
 ```
 
 ❌ **Common Mistakes**:
+
 - Using `initiatorAgentId` and `targetAgentId` (doesn't exist in schema)
 - Using only 1 agent in `agentIds` (must be 2+)
 
@@ -300,16 +327,20 @@ participants: {
 ## Bugs Fixed by Interactive Testing
 
 ### Bug #1: Agent-Agent Structure
+
 **Found**: First run of interactive test option 4  
 **Error**: `ArgumentValidationError: Object contains extra field 'initiatorAgentId'`  
 **Fix**: Changed from:
+
 ```typescript
 participants: {
   initiatorAgentId: "agent-1",
   targetAgentId: "agent-2",
 }
 ```
+
 To:
+
 ```typescript
 participants: {
   agentIds: ["agent-1", "agent-2"],
@@ -317,16 +348,20 @@ participants: {
 ```
 
 ### Bug #2: Message Role "assistant"
+
 **Found**: Interactive test option 6  
 **Error**: `ArgumentValidationError: Value does not match validator. Value: "assistant"`  
 **Fix**: Changed from:
+
 ```typescript
 message: {
   role: "assistant",  // ❌
   content: "...",
 }
 ```
+
 To:
+
 ```typescript
 message: {
   role: "user",  // ✅ or "agent" or "system"
@@ -335,31 +370,39 @@ message: {
 ```
 
 ### Bug #3: List Returns Array, Not Object
+
 **Found**: Interactive test option 7 (Run All Tests)  
 **Error**: `TypeError: Cannot read properties of undefined (reading 'length')`  
 **Fix**: Changed from:
+
 ```typescript
 const result = await cortex.conversations.list({ userId: "..." });
-console.log(result.conversations.length);  // ❌ result.conversations is undefined
+console.log(result.conversations.length); // ❌ result.conversations is undefined
 ```
+
 To:
+
 ```typescript
 const conversations = await cortex.conversations.list({ userId: "..." });
-console.log(conversations.length);  // ✅ SDK returns array directly
+console.log(conversations.length); // ✅ SDK returns array directly
 ```
 
 ### Bug #4: Count Returns Number, Not Object
+
 **Found**: Interactive test option 9 (Run All Tests)  
 **Error**: Would have failed with `TypeError: Cannot read properties of undefined (reading 'count')`  
 **Fix**: Changed from:
+
 ```typescript
 const result = await cortex.conversations.count({ userId: "..." });
-console.log(result.count);  // ❌ result.count is undefined
+console.log(result.count); // ❌ result.count is undefined
 ```
+
 To:
+
 ```typescript
 const count = await cortex.conversations.count({ userId: "..." });
-console.log(count);  // ✅ SDK returns number directly
+console.log(count); // ✅ SDK returns number directly
 ```
 
 ---
@@ -367,18 +410,21 @@ console.log(count);  // ✅ SDK returns number directly
 ## Testing Strategy
 
 ### Automated Tests
+
 - **Purpose**: CI/CD, regression testing, coverage
 - **Pattern**: Create unique IDs per test to avoid conflicts
 - **Speed**: Fast (all tests run in ~5 seconds)
 - **Verification**: Jest assertions + storage inspection
 
 ### Interactive Tests
+
 - **Purpose**: Manual debugging, learning, step-by-step validation
 - **Pattern**: Reuse same IDs, maintain state between operations
 - **Speed**: Manual (as fast as you can type)
 - **Verification**: Visual inspection + storage inspector
 
 ### Complementary Approach
+
 1. **Use automated tests** for development and CI/CD
 2. **Use interactive tests** when:
    - Something fails and you need to debug
@@ -408,14 +454,13 @@ This ensures the interactive runner always matches real-world usage patterns fro
 
 Quick reference for correct return types:
 
-| Method | Return Type | Example |
-|--------|-------------|---------|
-| `create()` | `Promise<Conversation>` | `const conv = await create(...)` |
-| `get()` | `Promise<Conversation \| null>` | `const conv = await get(id)` |
-| `addMessage()` | `Promise<Conversation>` | `const conv = await addMessage(...)` |
-| `list()` | `Promise<Conversation[]>` | `const convs = await list(...)` ⚠️ Array! |
-| `count()` | `Promise<number>` | `const n = await count(...)` ⚠️ Number! |
-| `delete()` | `Promise<void>` | `await delete(id)` |
+| Method         | Return Type                     | Example                                   |
+| -------------- | ------------------------------- | ----------------------------------------- |
+| `create()`     | `Promise<Conversation>`         | `const conv = await create(...)`          |
+| `get()`        | `Promise<Conversation \| null>` | `const conv = await get(id)`              |
+| `addMessage()` | `Promise<Conversation>`         | `const conv = await addMessage(...)`      |
+| `list()`       | `Promise<Conversation[]>`       | `const convs = await list(...)` ⚠️ Array! |
+| `count()`      | `Promise<number>`               | `const n = await count(...)` ⚠️ Number!   |
+| `delete()`     | `Promise<void>`                 | `await delete(id)`                        |
 
 ⚠️ **Common Mistakes**: Expecting `list()` to return `{ conversations: [...] }` or `count()` to return `{ count: 5 }`. Both return primitive types directly!
-

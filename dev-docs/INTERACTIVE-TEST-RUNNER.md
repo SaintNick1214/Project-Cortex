@@ -89,6 +89,7 @@ The runner tracks the **current conversation ID** between operations:
 ```
 
 This means:
+
 - After creating a conversation, operations like `get`, `addMessage`, and `delete` automatically use the current conversation ID
 - You don't need to copy/paste IDs manually
 - The ID persists across operations until you delete the conversation or purge the database
@@ -96,11 +97,13 @@ This means:
 ### 📊 Automatic Storage Inspection
 
 After operations that modify data, the runner automatically:
+
 1. Shows the SDK response
 2. Queries the database to show the stored result
 3. Validates that the data was correctly stored
 
 Example output after creating a conversation:
+
 ```
 ➕ Testing: conversations.create (user-agent)...
 
@@ -142,6 +145,7 @@ Conversation: conv-20250101-abc123
 ### 🧹 Database Purging
 
 The **Purge Database** option:
+
 - Lists all conversations in the database
 - Deletes them one by one
 - Verifies the table is empty
@@ -152,6 +156,7 @@ Safe to run at any time!
 ### 🔄 Repeatability
 
 You can run the same operation multiple times:
+
 - Create multiple conversations
 - Add multiple messages
 - List conversations repeatedly (see how the list grows)
@@ -162,6 +167,7 @@ You can run the same operation multiple times:
 ### 🐛 Debugging
 
 When a test fails or behavior is unexpected:
+
 1. Run the interactive runner
 2. Purge the database
 3. Reproduce the exact steps that cause the issue
@@ -171,6 +177,7 @@ When a test fails or behavior is unexpected:
 ### 📚 Learning
 
 New to the Cortex SDK?
+
 1. Run each operation one at a time
 2. See the exact input and output
 3. Inspect how data is stored
@@ -179,6 +186,7 @@ New to the Cortex SDK?
 ### ✅ Manual Validation
 
 Need to manually verify a specific scenario?
+
 1. Set up the exact state you want
 2. Run the operation
 3. Inspect the results
@@ -187,6 +195,7 @@ Need to manually verify a specific scenario?
 ### 🧪 Experimentation
 
 Want to try something out?
+
 - Modify the test data in `interactive-runner.ts`
 - Run your custom scenario
 - See the results immediately
@@ -205,6 +214,7 @@ The Interactive Test Runner is a TypeScript script (`tests/interactive-runner.ts
 7. **Loops** back to the menu
 
 Each operation uses:
+
 - **Cortex SDK** for the API call
 - **TestCleanup** for database purging
 - **StorageInspector** for viewing database state
@@ -224,10 +234,10 @@ const MENU_OPTIONS = {
 // Add the test function
 async function myCustomTest() {
   console.log("\n🎯 Running my custom test...");
-  
+
   // Your test logic here
   const result = await cortex.conversations.create({ ... });
-  
+
   console.log("Result:", JSON.stringify(result, null, 2));
 }
 ```
@@ -236,23 +246,24 @@ Then restart the runner and your option will appear!
 
 ## Comparison with Other Test Modes
 
-| Feature | Interactive | test:debug | test:watch | npm test |
-|---------|------------|------------|------------|----------|
-| Speed | 🐢 Manual | 🐢 Slow | ⚡ Fast | ⚡ Fast |
-| Control | ✅ Full | ❌ None | ❌ None | ❌ None |
-| Learning | ✅ Best | ✅ Good | ❌ Poor | ❌ Poor |
-| CI/CD | ❌ No | ❌ No | ❌ No | ✅ Yes |
-| Debugging | ✅ Best | ✅ Good | ✅ OK | ❌ Poor |
-| Inspection | ✅ On-demand | ✅ Auto | ❌ None | ❌ None |
-| Repeatability | ✅ Yes | ❌ No* | ✅ Yes | ✅ Yes |
+| Feature       | Interactive  | test:debug | test:watch | npm test |
+| ------------- | ------------ | ---------- | ---------- | -------- |
+| Speed         | 🐢 Manual    | 🐢 Slow    | ⚡ Fast    | ⚡ Fast  |
+| Control       | ✅ Full      | ❌ None    | ❌ None    | ❌ None  |
+| Learning      | ✅ Best      | ✅ Good    | ❌ Poor    | ❌ Poor  |
+| CI/CD         | ❌ No        | ❌ No      | ❌ No      | ✅ Yes   |
+| Debugging     | ✅ Best      | ✅ Good    | ✅ OK      | ❌ Poor  |
+| Inspection    | ✅ On-demand | ✅ Auto    | ❌ None    | ❌ None  |
+| Repeatability | ✅ Yes       | ❌ No\*    | ✅ Yes     | ✅ Yes   |
 
-*Debug tests run once and exit
+\*Debug tests run once and exit
 
 ## Tips
 
 ### 💡 Use Between Code Changes
 
 The Interactive Runner is perfect for TDD:
+
 1. Write a new API operation in the SDK
 2. Add it to the interactive runner menu
 3. Test it manually with the runner
@@ -262,6 +273,7 @@ The Interactive Runner is perfect for TDD:
 ### 💡 Combine with Watch Mode
 
 Run both simultaneously:
+
 - **Terminal 1**: `npm run dev` (Convex)
 - **Terminal 2**: `npm run test:watch` (automated tests)
 - **Terminal 3**: `npm run test:interactive` (manual testing)
@@ -271,6 +283,7 @@ Make a code change → watch tests run → manually verify with interactive runn
 ### 💡 Inspect After Every Operation
 
 Get in the habit of inspecting the database after each operation:
+
 1. Run an operation
 2. Select "Inspect Database State"
 3. Verify the data looks correct
@@ -281,6 +294,7 @@ This catches issues immediately!
 ### 💡 Use Option 11 for Smoke Testing
 
 **Option 11** (Run All Tests) is great for:
+
 - Quick smoke test of all operations
 - Verifying everything still works after changes
 - Generating test data for inspection
@@ -291,6 +305,7 @@ This catches issues immediately!
 ### "Cannot find module" error
 
 Make sure you've installed dependencies:
+
 ```powershell
 npm install
 ```
@@ -298,6 +313,7 @@ npm install
 ### "CONVEX_URL not set" error
 
 The runner needs Convex to be running:
+
 ```powershell
 npm run dev
 ```
@@ -307,6 +323,7 @@ Then try the interactive runner again in a new terminal.
 ### Operations fail with network errors
 
 Check that Convex is still running in the other terminal. If it stopped, restart it:
+
 ```powershell
 npm run dev
 ```
@@ -343,7 +360,7 @@ The script is well-commented and easy to extend. Feel free to modify it for your
 **Happy Testing!** 🎉
 
 For questions or issues, check:
+
 - `dev-docs/QUICK-TEST-REFERENCE.md` - All test modes
 - `dev-docs/TESTING-GUIDE.md` - Testing philosophy
 - `tests/README.md` - Test infrastructure
-

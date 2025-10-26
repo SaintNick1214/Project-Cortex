@@ -13,6 +13,7 @@
 ## 📊 What Was Implemented
 
 ### Core Operations (Existed)
+
 1. ✅ `create()` - Create user-agent or agent-agent conversations
 2. ✅ `get()` - Retrieve conversation by ID
 3. ✅ `addMessage()` - Append messages (immutable)
@@ -21,6 +22,7 @@
 6. ✅ `delete()` - GDPR-compliant deletion
 
 ### New Operations (Just Added)
+
 7. ✅ `getHistory()` - Paginated message retrieval ⭐ NEW!
 8. ✅ `search()` - Full-text search ⭐ NEW!
 9. ✅ `export()` - JSON/CSV export ⭐ NEW!
@@ -31,18 +33,18 @@
 
 ### Automated Tests: 45 tests
 
-| Category | Tests | Status |
-|----------|-------|--------|
-| Create Operations | 6 | ✅ All pass |
-| Retrieval Operations | 2 | ✅ All pass |
-| Message Operations | 4 | ✅ All pass |
-| List Operations | 6 | ✅ All pass |
-| Count Operations | 4 | ✅ All pass |
-| Delete Operations | 2 | ✅ All pass |
-| Storage Validation | 2 | ✅ All pass |
+| Category                  | Tests | Status             |
+| ------------------------- | ----- | ------------------ |
+| Create Operations         | 6     | ✅ All pass        |
+| Retrieval Operations      | 2     | ✅ All pass        |
+| Message Operations        | 4     | ✅ All pass        |
+| List Operations           | 6     | ✅ All pass        |
+| Count Operations          | 4     | ✅ All pass        |
+| Delete Operations         | 2     | ✅ All pass        |
+| Storage Validation        | 2     | ✅ All pass        |
 | **getHistory Operations** | **6** | ✅ **All pass** ⭐ |
-| **search Operations** | **6** | ✅ **All pass** ⭐ |
-| **export Operations** | **7** | ✅ **All pass** ⭐ |
+| **search Operations**     | **6** | ✅ **All pass** ⭐ |
+| **export Operations**     | **7** | ✅ **All pass** ⭐ |
 
 ### Interactive Tests: 13 menu options
 
@@ -68,13 +70,13 @@
 
 The interactive test runner found **5 critical bugs** during development:
 
-| # | Bug | Severity | Impact |
-|---|-----|----------|--------|
-| 1 | Agent-agent used wrong structure (`initiatorAgentId`) | 🔴 High | Would crash on agent-agent create |
-| 2 | Message role "assistant" not in schema | 🔴 High | Would crash on addMessage |
-| 3 | list() return type misunderstood | 🟡 Medium | Would crash accessing `.conversations` |
-| 4 | count() return type misunderstood | 🟡 Medium | Would crash accessing `.count` |
-| 5 | list(agentId) missing agent-agent conversations | 🔴 **Critical** | Data loss - missing results |
+| #   | Bug                                                   | Severity        | Impact                                 |
+| --- | ----------------------------------------------------- | --------------- | -------------------------------------- |
+| 1   | Agent-agent used wrong structure (`initiatorAgentId`) | 🔴 High         | Would crash on agent-agent create      |
+| 2   | Message role "assistant" not in schema                | 🔴 High         | Would crash on addMessage              |
+| 3   | list() return type misunderstood                      | 🟡 Medium       | Would crash accessing `.conversations` |
+| 4   | count() return type misunderstood                     | 🟡 Medium       | Would crash accessing `.count`         |
+| 5   | list(agentId) missing agent-agent conversations       | 🔴 **Critical** | Data loss - missing results            |
 
 **All bugs were caught by interactive testing before production!** 🎯
 
@@ -87,17 +89,19 @@ The interactive test runner found **5 critical bugs** during development:
 **Why**: Conversations can have hundreds of messages. You need pagination!
 
 **Features**:
+
 - ✅ Configurable limit (default: 50)
 - ✅ Offset-based pagination
 - ✅ Ascending (oldest first) or descending (newest first)
 - ✅ `hasMore` flag for infinite scroll
 
 **Example**:
+
 ```typescript
 // Get last 10 messages
 const history = await cortex.conversations.getHistory(conversationId, {
   limit: 10,
-  sortOrder: "desc",  // Newest first
+  sortOrder: "desc", // Newest first
 });
 
 console.log(`Showing ${history.messages.length} of ${history.total} messages`);
@@ -115,6 +119,7 @@ if (history.hasMore) {
 **Why**: Find conversations containing specific keywords or phrases.
 
 **Features**:
+
 - ✅ Case-insensitive text matching
 - ✅ Filters by userId, agentId, type, date range
 - ✅ Relevance scoring (based on match count)
@@ -122,6 +127,7 @@ if (history.hasMore) {
 - ✅ Sorted by relevance
 
 **Example**:
+
 ```typescript
 const results = await cortex.conversations.search({
   query: "password",
@@ -150,6 +156,7 @@ results.forEach((result) => {
 **Why**: GDPR right to data portability + backups
 
 **Features**:
+
 - ✅ JSON format (structured, complete)
 - ✅ CSV format (spreadsheet-compatible)
 - ✅ Flexible filtering (userId, agentId, conversationIds, type, date range)
@@ -157,6 +164,7 @@ results.forEach((result) => {
 - ✅ Export timestamp tracking
 
 **Example (JSON)**:
+
 ```typescript
 const exported = await cortex.conversations.export({
   filters: { userId: "user-123" },
@@ -170,6 +178,7 @@ fs.writeFileSync("user-data.json", exported.data);
 ```
 
 **Example (CSV)**:
+
 ```typescript
 const exported = await cortex.conversations.export({
   filters: { agentId: "agent-456", type: "user-agent" },
@@ -191,15 +200,15 @@ console.log(exported.data);
 
 ## 📈 Code Metrics
 
-| File | Lines | Purpose |
-|------|-------|---------|
-| `convex-dev/schema.ts` | ~50 | 1 table, 6 indexes |
-| `convex-dev/conversations.ts` | ~500 | 9 backend operations |
-| `src/types/index.ts` | ~120 | 10 TypeScript interfaces |
-| `src/conversations/index.ts` | ~250 | 9 SDK methods |
-| `tests/conversations.test.ts` | ~940 | 45 automated tests |
-| `tests/interactive-runner.ts` | ~500 | 13 interactive tests |
-| **Total** | **~2,360** | Complete Layer 1a |
+| File                          | Lines      | Purpose                  |
+| ----------------------------- | ---------- | ------------------------ |
+| `convex-dev/schema.ts`        | ~50        | 1 table, 6 indexes       |
+| `convex-dev/conversations.ts` | ~500       | 9 backend operations     |
+| `src/types/index.ts`          | ~120       | 10 TypeScript interfaces |
+| `src/conversations/index.ts`  | ~250       | 9 SDK methods            |
+| `tests/conversations.test.ts` | ~940       | 45 automated tests       |
+| `tests/interactive-runner.ts` | ~500       | 13 interactive tests     |
+| **Total**                     | **~2,360** | Complete Layer 1a        |
 
 **Test-to-Code Ratio**: 1.6:1 (excellent!)
 
@@ -211,17 +220,17 @@ console.log(exported.data);
 
 From `Documentation/03-api-reference/02-memory-operations.md`:
 
-| Documented Operation | Implemented | Tested | Status |
-|---------------------|-------------|--------|--------|
-| `create()` | ✅ | ✅ | Complete |
-| `get()` | ✅ | ✅ | Complete |
-| `addMessage()` | ✅ | ✅ | Complete |
-| `getHistory()` | ✅ | ✅ | Complete |
-| `list()` | ✅ | ✅ | Complete |
-| `search()` | ✅ | ✅ | Complete |
-| `count()` | ✅ | ✅ | Complete |
-| `export()` | ✅ | ✅ | Complete |
-| `delete()` | ✅ | ✅ | Complete |
+| Documented Operation | Implemented | Tested | Status   |
+| -------------------- | ----------- | ------ | -------- |
+| `create()`           | ✅          | ✅     | Complete |
+| `get()`              | ✅          | ✅     | Complete |
+| `addMessage()`       | ✅          | ✅     | Complete |
+| `getHistory()`       | ✅          | ✅     | Complete |
+| `list()`             | ✅          | ✅     | Complete |
+| `search()`           | ✅          | ✅     | Complete |
+| `count()`            | ✅          | ✅     | Complete |
+| `export()`           | ✅          | ✅     | Complete |
+| `delete()`           | ✅          | ✅     | Complete |
 
 **Result**: 9/9 operations (100%) ✅
 
@@ -232,21 +241,24 @@ From `Documentation/03-api-reference/02-memory-operations.md`:
 ### Backend Optimizations
 
 **list(agentId) - Hybrid Query**:
+
 ```typescript
 // Combines index lookup (fast) + scan (necessary)
-const userAgentConvs = await db.query("conversations")
+const userAgentConvs = await db
+  .query("conversations")
   .withIndex("by_agent", (q) => q.eq("participants.agentId", agentId))
-  .collect();  // Fast - uses index
+  .collect(); // Fast - uses index
 
 const agentAgentConvs = allConversations.filter((c) =>
-  c.participants.agentIds?.includes(agentId)
-);  // Necessary - agentIds is array
+  c.participants.agentIds?.includes(agentId),
+); // Necessary - agentIds is array
 
 // Combine, deduplicate, sort
 const combined = [...userAgentConvs, ...agentAgentConvs];
 ```
 
 **search() - Scoring Algorithm**:
+
 ```typescript
 // Score = matched messages / total messages
 const score = matchedMessages.length / conversation.messageCount;
@@ -261,6 +273,7 @@ const highlights = matchedMessages.map((msg) => {
 ### SDK Design Patterns
 
 **Consistent Return Types**:
+
 - `create()`, `get()`, `addMessage()` → `Conversation` (object)
 - `list()` → `Conversation[]` (array)
 - `count()` → `number` (primitive)
@@ -270,6 +283,7 @@ const highlights = matchedMessages.map((msg) => {
 - `export()` → `ExportResult` (object)
 
 **Auto-generated IDs**:
+
 ```typescript
 const conversationId = input.conversationId || this.generateConversationId();
 const messageId = input.message.id || this.generateMessageId();
@@ -292,6 +306,7 @@ const messageId = input.message.id || this.generateMessageId();
 The interactive test runner proved **invaluable**:
 
 **Workflow**:
+
 1. Run `npm run test:interactive`
 2. Select operation from menu
 3. See detailed input/output/storage inspection
@@ -299,6 +314,7 @@ The interactive test runner proved **invaluable**:
 5. Found 5 bugs before production!
 
 **Key Feature**: Final validation after "Run All Tests":
+
 ```
 📊 Actual:
   - Total: 2 ✅
@@ -434,6 +450,7 @@ Following the proven workflow:
 ## 🌟 Key Achievements
 
 ### Technical
+
 - ✅ All 9 operations fully implemented
 - ✅ 45 comprehensive tests (100% passing)
 - ✅ ACID properties validated
@@ -442,6 +459,7 @@ Following the proven workflow:
 - ✅ ESM compatibility achieved
 
 ### Testing Innovation
+
 - ✅ Interactive test runner created
 - ✅ Menu-driven debugging system
 - ✅ Automatic result validation
@@ -449,6 +467,7 @@ Following the proven workflow:
 - ✅ Complete storage inspection tools
 
 ### Documentation
+
 - ✅ Comprehensive API documentation
 - ✅ Test reference guides
 - ✅ Interactive testing guide
@@ -465,17 +484,20 @@ Following the proven workflow:
 ## 📦 Deliverables
 
 ### Code
+
 - ✅ `convex-dev/schema.ts` (50 lines)
 - ✅ `convex-dev/conversations.ts` (500 lines)
 - ✅ `src/types/index.ts` (120 lines)
 - ✅ `src/conversations/index.ts` (250 lines)
 
 ### Tests
+
 - ✅ `tests/conversations.test.ts` (940 lines, 45 tests)
 - ✅ `tests/interactive-runner.ts` (500 lines, 13 options)
 - ✅ `tests/helpers/` (cleanup, inspector, debug)
 
 ### Documentation
+
 - ✅ `dev-docs/API-Development/01-layer-1a-conversations.md`
 - ✅ `dev-docs/TESTING-GUIDE.md`
 - ✅ `dev-docs/QUICK-TEST-REFERENCE.md`
@@ -499,4 +521,3 @@ Following the proven workflow:
 **Status**: ✅ **Layer 1a COMPLETE AND PRODUCTION READY!**
 
 **Next**: Layer 1b (Immutable Store) 🚀
-

@@ -3,6 +3,7 @@
 ## 🎯 What We Built
 
 A comprehensive testing system that lets you:
+
 1. ✅ **Purge tables before tests** - Start with clean slate
 2. ✅ **Inspect storage after each operation** - See exactly what's stored
 3. ✅ **Step through tests individually** - Validate each test manually
@@ -17,12 +18,14 @@ npm test
 ```
 
 **Features:**
+
 - Fast execution (~2 seconds)
 - Purges table before suite
 - All 26 tests pass
 - Perfect for CI/CD
 
 **Output:**
+
 ```
 🧹 Purging conversations table before tests...
 ✅ Purged 0 conversations
@@ -34,7 +37,7 @@ PASS tests/conversations.test.ts
       ✓ creates a user-agent conversation (28 ms)
       ✓ creates an agent-agent conversation (13 ms)
       ...
-    
+
 Test Suites: 1 passed, 1 total
 Tests:       26 passed, 26 total
 ```
@@ -50,6 +53,7 @@ npm run test:debug
 ```
 
 **Features:**
+
 - ✅ Detailed storage inspection
 - ✅ Step-by-step logging
 - ✅ Compare SDK with storage
@@ -57,6 +61,7 @@ npm run test:debug
 - ✅ Warm fuzzy feelings! 🤗
 
 **Example Output:**
+
 ```
 🐛🐛🐛🐛🐛🐛🐛🐛🐛🐛🐛🐛🐛🐛🐛🐛🐛🐛🐛🐛
 🐛 DEBUG MODE ENABLED
@@ -145,6 +150,7 @@ enableDebugMode({
 ```
 
 Then run:
+
 ```bash
 npm run test:debug
 ```
@@ -154,6 +160,7 @@ Now the test will pause after each test and wait for you to press ENTER!
 ## 📊 What Gets Inspected
 
 ### 1. Table Cleanup (Before All Tests)
+
 ```
 🧹 Purging conversations table before tests...
 ✅ Purged 5 conversations
@@ -161,6 +168,7 @@ Now the test will pause after each test and wait for you to press ENTER!
 ```
 
 ### 2. After Each Create
+
 ```
 ================================================================================
 📊 CONVERSATION INSPECTION: conv-abc123
@@ -173,6 +181,7 @@ Participants:  { userId: "user-123", agentId: "agent-456" }
 ```
 
 ### 3. After Adding Messages
+
 ```
 ================================================================================
 📊 CONVERSATION INSPECTION: conv-abc123
@@ -184,12 +193,12 @@ Messages (3):
       ID: msg-1
       Content: Hello, agent! This is message 1.
       Metadata: {"sentiment":"positive"}
-  
+
   [2] agent (2025-10-26T10:30:02.000Z)
       ID: msg-2
       Agent: agent-msg-debug
       Content: Hi! This is message 2 from the agent.
-  
+
   [3] user (2025-10-26T10:30:03.000Z)
       ID: msg-3
       Content: Great! This is message 3.
@@ -197,6 +206,7 @@ Messages (3):
 ```
 
 ### 4. Storage Statistics
+
 ```
 ================================================================================
 📊 STORAGE STATISTICS
@@ -208,11 +218,13 @@ Agent-Agent Conversations: 2
 ```
 
 ### 5. Compare SDK with Storage
+
 ```
 ✅ SDK result matches storage for conv-abc123
 ```
 
 OR if there's a mismatch:
+
 ```
 ❌ Differences found for conv-abc123:
    - messageCount: SDK=3, Storage=2
@@ -255,20 +267,22 @@ tests/
 ### Developing a New Test
 
 1. **Write the test in debug mode**
+
    ```typescript
    it("should do something", async () => {
      logStep(1, "Call SDK");
      const result = await cortex.conversations.create({ ... });
-     
+
      logStep(2, "Inspect storage");
      await inspector.inspectConversation(result.conversationId);
-     
+
      logStep(3, "Validate");
      expect(result.conversationId).toBeDefined();
    });
    ```
 
 2. **Run in debug mode**
+
    ```bash
    npm run test:debug
    ```
@@ -282,10 +296,10 @@ tests/
    ```typescript
    it("should do something", async () => {
      const result = await cortex.conversations.create({ ... });
-     
+
      // Validate SDK
      expect(result.conversationId).toBeDefined();
-     
+
      // Validate storage
      const stored = await client.query(api.conversations.get, {
        conversationId: result.conversationId
@@ -306,12 +320,14 @@ Every test now validates:
 ## 🎉 Benefits
 
 ### For Development
+
 - 🔍 **See exactly what's stored** - No guessing
 - 🐛 **Debug failing tests easily** - Inspect storage state
 - ✅ **Validate manually** - Step through each operation
 - 🧹 **Clean slate every time** - No test pollution
 
 ### For Production
+
 - ⚡ **Fast execution** - Tests run in ~2 seconds
 - 🤖 **CI/CD ready** - Reliable, repeatable
 - 📊 **High coverage** - 26 tests covering all operations
@@ -320,11 +336,13 @@ Every test now validates:
 ## 📖 Next Steps
 
 1. **Run fast tests** to ensure everything works:
+
    ```bash
    npm test
    ```
 
 2. **Run debug tests** to see storage inspection:
+
    ```bash
    npm run test:debug
    ```
@@ -338,10 +356,10 @@ Every test now validates:
 **You now have the warm fuzzies! 🤗**
 
 Every test:
+
 - ✅ Starts with empty table
 - ✅ Shows you exactly what's in storage
 - ✅ Compares SDK with storage
 - ✅ Validates data consistency
 
 **No more wondering what's actually stored!** 🎯
-

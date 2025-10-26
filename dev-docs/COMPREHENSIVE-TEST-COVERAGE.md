@@ -16,11 +16,11 @@ Time:        ~7 seconds
 
 ### Breakdown by Layer
 
-| Layer | Tests | Coverage |
-|-------|-------|----------|
-| **Layer 1a: Conversations** | 54 | Core + Advanced |
-| **Layer 1b: Immutable Store** | 45 | Core + Advanced |
-| **Total** | **99** | **Comprehensive** |
+| Layer                         | Tests  | Coverage          |
+| ----------------------------- | ------ | ----------------- |
+| **Layer 1a: Conversations**   | 54     | Core + Advanced   |
+| **Layer 1b: Immutable Store** | 45     | Core + Advanced   |
+| **Total**                     | **99** | **Comprehensive** |
 
 ---
 
@@ -29,6 +29,7 @@ Time:        ~7 seconds
 ### Layer 1a: Conversations API (54 tests)
 
 #### Core Operations (25 tests)
+
 - **create()** - 6 tests
   - ✅ User-agent conversations
   - ✅ Agent-agent conversations
@@ -96,10 +97,12 @@ Time:        ~7 seconds
   - ✅ Filter by date range
 
 #### State Change Propagation (2 tests) ⭐
+
 - ✅ Message additions propagate to all read operations
 - ✅ Deletion propagates to all read operations
 
 #### Edge Cases (5 tests) ⭐
+
 - ✅ Handles 100+ messages
 - ✅ Handles empty content
 - ✅ Handles 10KB content
@@ -107,6 +110,7 @@ Time:        ~7 seconds
 - ✅ Handles concurrent additions (20 parallel)
 
 #### Cross-Operation Integration (2 tests) ⭐
+
 - ✅ create → addMessage → list → search → export consistency
 - ✅ Search results update as messages are added
 
@@ -115,6 +119,7 @@ Time:        ~7 seconds
 ### Layer 1b: Immutable Store API (45 tests)
 
 #### Core Operations (24 tests)
+
 - **store()** - 4 tests
   - ✅ Creates version 1
   - ✅ Increments version
@@ -197,48 +202,59 @@ Time:        ~7 seconds
 ## 🎯 What These Tests Validate
 
 ### State Change Propagation (8 tests total)
+
 Tests that verify changes appear immediately in all APIs:
 
 **Conversations**:
+
 - Add messages → all APIs see new count
 - Delete conversation → disappears from all APIs
 - Search updates as content changes
 
 **Immutable**:
+
 - Update entry → current version changes in all APIs
 - Search reflects new content, not old
 - Historical versions remain accessible
 - List/count update as entries are added/removed
 
 ### Edge Cases (10 tests total)
+
 Tests that verify the system handles extreme scenarios:
 
 **Scale**:
+
 - ✅ 100+ messages in conversation
 - ✅ 25+ versions in immutable entry
 - ✅ 1000-item arrays in data
 
 **Size**:
+
 - ✅ Empty content/data
 - ✅ 10KB content/data
 
 **Concurrency**:
+
 - ✅ 20 parallel message additions
 - ✅ 10 parallel version updates
 
 **Special Cases**:
+
 - ✅ Special characters in IDs/types
 - ✅ Empty objects
 
 ### Cross-Operation Integration (7 tests total)
+
 Tests that verify operations work together correctly:
 
 **Full Workflows**:
+
 - ✅ create → add → list → search → export (conversations)
 - ✅ store → list → search → count (immutable)
 - ✅ Update → verify all APIs reflect changes
 
 **Consistency Checks**:
+
 - ✅ Count matches list.length
 - ✅ Search finds what get() has
 - ✅ History reflects all changes
@@ -287,6 +303,7 @@ All 99 automated tests have **interactive equivalents**:
 ## 🎓 Test Patterns Used
 
 ### 1. State Verification Pattern
+
 ```typescript
 // Before change
 const before = await cortex.immutable.get(type, id);
@@ -300,10 +317,11 @@ const afterGet = await cortex.immutable.get(type, id);
 expect(afterGet.version).toBe(2);
 
 const afterList = await cortex.immutable.list({ type });
-expect(afterList.find(e => e.id === id)?.version).toBe(2);
+expect(afterList.find((e) => e.id === id)?.version).toBe(2);
 ```
 
 ### 2. Cross-Operation Consistency Pattern
+
 ```typescript
 // Create
 const created = await cortex.conversations.create({ ... });
@@ -316,6 +334,7 @@ expect((await cortex.conversations.search({ query })).some(r => r.conversation.i
 ```
 
 ### 3. Before/After Pattern
+
 ```typescript
 // Measure before
 const countBefore = await cortex.immutable.count({ type });
@@ -329,6 +348,7 @@ expect(countAfter).toBe(countBefore + 1);
 ```
 
 ### 4. Historical Preservation Pattern
+
 ```typescript
 // Create v1
 await cortex.immutable.store({ type, id, data: v1Data });
@@ -348,31 +368,34 @@ expect(historical.data).toEqual(v1Data);
 
 ## ✅ Test Quality Metrics
 
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| Code Coverage | 80% | ~95% | ✅ Exceeded |
-| Edge Cases | 5+ | 10 | ✅ Exceeded |
-| Integration Tests | 3+ | 7 | ✅ Exceeded |
-| Propagation Tests | 2+ | 8 | ✅ Exceeded |
-| State Validation | All ops | All ops | ✅ Complete |
+| Metric            | Target  | Actual  | Status      |
+| ----------------- | ------- | ------- | ----------- |
+| Code Coverage     | 80%     | ~95%    | ✅ Exceeded |
+| Edge Cases        | 5+      | 10      | ✅ Exceeded |
+| Integration Tests | 3+      | 7       | ✅ Exceeded |
+| Propagation Tests | 2+      | 8       | ✅ Exceeded |
+| State Validation  | All ops | All ops | ✅ Complete |
 
 ---
 
 ## 🚀 How to Run
 
 ### All Tests
+
 ```powershell
 npm test
 # 99 tests, ~7 seconds
 ```
 
 ### By Layer
+
 ```powershell
 npm test conversations  # 54 tests
 npm test immutable      # 45 tests
 ```
 
 ### Interactive
+
 ```powershell
 npm run test:interactive
 
@@ -383,6 +406,7 @@ npm run test:interactive
 ```
 
 ### Specific Categories
+
 ```powershell
 # Run just propagation tests
 npm test -- -t "propagation"
@@ -399,23 +423,29 @@ npm test -- -t "integration"
 ## 🎯 What Makes This Comprehensive
 
 ### 1. Multi-Operation Validation
+
 Every state change is verified across **all** operations:
+
 - get(), list(), search(), count(), export(), getHistory()
 
 ### 2. Real-World Scenarios
+
 - 100+ messages (real chatbots have this)
 - 25+ versions (KB articles get updated frequently)
 - Concurrent operations (multiple users/agents)
 - Large data (10KB is common)
 
 ### 3. Edge Case Coverage
+
 - Empty data
 - Special characters
 - Race conditions
 - Pagination with large datasets
 
 ### 4. Integration Testing
+
 Not just isolated operations - tests full workflows:
+
 - Create → Update → Search → Export
 - Store → List → Count → Delete
 
@@ -447,6 +477,7 @@ describe("[Category]", () => {
 ## 🎊 Coverage Achievements
 
 **99 tests cover**:
+
 - ✅ All 17 operations (9 conversations + 8 immutable)
 - ✅ All success paths
 - ✅ All error paths
@@ -465,4 +496,3 @@ describe("[Category]", () => {
 **Status**: ✅ **PRODUCTION-READY TEST SUITE**
 
 Both Layer 1a and Layer 1b have comprehensive, real-world test coverage that catches bugs before production!
-

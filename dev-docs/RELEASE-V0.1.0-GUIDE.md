@@ -5,12 +5,14 @@ Complete checklist for releasing Cortex SDK v0.1.0 to npm and GitHub.
 ## 📋 Pre-Release Checklist
 
 ### ✅ Code Quality (DONE)
+
 - [x] All 45 tests passing
-- [x] No linter errors  
+- [x] No linter errors
 - [x] TypeScript compiles
 - [x] Coverage > 80%
 
 ### ✅ Package Setup (DONE)
+
 - [x] package.json updated to v0.1.0
 - [x] Build scripts configured (tsup)
 - [x] .npmignore created
@@ -18,6 +20,7 @@ Complete checklist for releasing Cortex SDK v0.1.0 to npm and GitHub.
 - [x] Build tested successfully
 
 ### ✅ Documentation (READY)
+
 - [x] README.md comprehensive
 - [x] LICENSE.md present
 - [x] API docs complete
@@ -26,6 +29,7 @@ Complete checklist for releasing Cortex SDK v0.1.0 to npm and GitHub.
 ### 🎯 Ready to Release!
 
 Package details:
+
 - Name: `@cortexmemory/sdk`
 - Version: `0.1.0`
 - Size: 16.2 KB (gzipped)
@@ -54,6 +58,7 @@ npm pack --dry-run
 ```
 
 **Expected output**:
+
 ```
 Tests: 45 passed, 45 total
 Package size: ~16 KB
@@ -67,6 +72,7 @@ Total files: 8
 The file `CHANGELOG-SDK.md` is already created with v0.1.0 notes.
 
 **Verify it looks good**:
+
 ```powershell
 cat CHANGELOG-SDK.md
 ```
@@ -239,14 +245,15 @@ ls node_modules/@cortexmemory/sdk/
 **Test import** (create `test.js`):
 
 ```javascript
-import { Cortex } from '@cortexmemory/sdk';
+import { Cortex } from "@cortexmemory/sdk";
 
-console.log('✅ Import successful!');
-console.log('Cortex class:', typeof Cortex);
-console.log('Package loaded correctly!');
+console.log("✅ Import successful!");
+console.log("Cortex class:", typeof Cortex);
+console.log("Package loaded correctly!");
 ```
 
 Run:
+
 ```powershell
 node test.js
 ```
@@ -278,6 +285,7 @@ npm view @cortexmemory/sdk --json
 **Cause**: Not logged in to npm or wrong account
 
 **Solution**:
+
 ```powershell
 npm logout
 npm login
@@ -292,6 +300,7 @@ npm publish --access public
 **Cause**: Unscoped name might be taken
 
 **Solution**: Use scoped package (already done!)
+
 ```json
 "name": "@cortexmemory/sdk"  // ✅ Scoped
 ```
@@ -303,6 +312,7 @@ npm publish --access public
 **Cause**: Tests failed or build failed
 
 **Solution**:
+
 ```powershell
 # Run tests manually
 npm test
@@ -321,6 +331,7 @@ npm publish --access public
 **Cause**: Build didn't run or failed
 
 **Solution**:
+
 ```powershell
 # Clean and rebuild
 npm run clean
@@ -345,6 +356,7 @@ npm publish --access public
 4. Package will publish
 
 **Or use automation token**:
+
 ```powershell
 # Create automation token on npm website
 # Then:
@@ -370,13 +382,14 @@ npm publish --access public
    - Verify release notes are correct
 
 3. **Test Real Installation**:
+
    ```powershell
    # Fresh install from npm
    mkdir C:\temp\fresh-test
    cd C:\temp\fresh-test
    npm init -y
    npm install @cortexmemory/sdk
-   
+
    # Test import
    node -e "import('@cortexmemory/sdk').then(m => console.log('Works!', m.Cortex))"
    ```
@@ -384,6 +397,7 @@ npm publish --access public
 ### Optional: Announce the Release
 
 **Twitter/X**:
+
 ```
 🎉 Cortex SDK v0.1.0 is now live!
 
@@ -401,12 +415,14 @@ Docs: github.com/SaintNick1214/Project-Cortex
 
 **Dev.to / Medium** (optional):
 Write a blog post about:
+
 - Why you built it
 - Key features
 - How it works
 - Getting started
 
 **Reddit** (optional):
+
 - r/typescript
 - r/node
 - r/javascript
@@ -435,6 +451,7 @@ Your release is successful when:
 **URL**: https://www.npmjs.com/package/@cortexmemory/sdk
 
 **Should show**:
+
 - Version: 0.1.0
 - Weekly downloads: 0 (for now!)
 - License: Apache-2.0
@@ -447,6 +464,7 @@ Your release is successful when:
 **URL**: https://github.com/SaintNick1214/Project-Cortex/releases/tag/v0.1.0
 
 **Should show**:
+
 - Release title: v0.1.0 - Conversations API
 - Release notes with features
 - Assets: Source code (zip, tar.gz)
@@ -473,18 +491,21 @@ After publishing v0.1.0, for v0.2.0:
 ## 💡 Tips
 
 ### Before Publishing
+
 - ✅ Test the package locally (`npm pack` and install the .tgz)
 - ✅ Check bundle size is reasonable
 - ✅ Verify all required files are included
 - ✅ Run tests one more time
 
 ### After Publishing
+
 - ✅ Test installation immediately
 - ✅ Check package page renders correctly
 - ✅ Keep an eye on npm for first few hours
 - ✅ Be ready to publish a patch if needed (v0.1.1)
 
 ### If You Need to Unpublish
+
 ```powershell
 # Within 72 hours of publishing
 npm unpublish @cortexmemory/sdk@0.1.0
@@ -518,4 +539,3 @@ npm publish --access public          # 10. Publish to npm
 **Ready to release v0.1.0!** 🚀
 
 Follow the steps above in order, and you'll have your first published npm package!
-

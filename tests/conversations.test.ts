@@ -1,6 +1,6 @@
 /**
  * Cortex SDK - Conversations API E2E Tests
- * 
+ *
  * Tests the complete Layer 1a implementation:
  * - SDK API calls
  * - Convex mutations/queries
@@ -91,7 +91,11 @@ describe("Conversations API (Layer 1a)", () => {
 
       // Validate SDK response
       expect(result.type).toBe("agent-agent");
-      expect(result.participants.agentIds).toEqual(["agent-1", "agent-2", "agent-3"]);
+      expect(result.participants.agentIds).toEqual([
+        "agent-1",
+        "agent-2",
+        "agent-3",
+      ]);
       expect(result.messageCount).toBe(0);
 
       // Validate storage
@@ -146,7 +150,7 @@ describe("Conversations API (Layer 1a)", () => {
             userId: "user-2",
             agentId: "agent-2",
           },
-        })
+        }),
       ).rejects.toThrow("CONVERSATION_ALREADY_EXISTS");
     });
 
@@ -158,7 +162,7 @@ describe("Conversations API (Layer 1a)", () => {
             userId: "user-1",
             // Missing agentId
           },
-        })
+        }),
       ).rejects.toThrow("user-agent conversations require userId and agentId");
     });
 
@@ -169,8 +173,10 @@ describe("Conversations API (Layer 1a)", () => {
           participants: {
             agentIds: ["agent-1"], // Only one agent
           },
-        })
-      ).rejects.toThrow("agent-agent conversations require at least 2 agentIds");
+        }),
+      ).rejects.toThrow(
+        "agent-agent conversations require at least 2 agentIds",
+      );
     });
   });
 
@@ -291,8 +297,12 @@ describe("Conversations API (Layer 1a)", () => {
       expect(final.messages[2].content).toBe("Third message");
 
       // Validate chronological order
-      expect(final.messages[0].timestamp).toBeLessThan(final.messages[1].timestamp);
-      expect(final.messages[1].timestamp).toBeLessThan(final.messages[2].timestamp);
+      expect(final.messages[0].timestamp).toBeLessThan(
+        final.messages[1].timestamp,
+      );
+      expect(final.messages[1].timestamp).toBeLessThan(
+        final.messages[2].timestamp,
+      );
 
       // Validate storage
       const stored = await client.query(api.conversations.get, {
@@ -334,7 +344,7 @@ describe("Conversations API (Layer 1a)", () => {
             role: "user",
             content: "Test",
           },
-        })
+        }),
       ).rejects.toThrow("CONVERSATION_NOT_FOUND");
     });
   });
@@ -476,11 +486,15 @@ describe("Conversations API (Layer 1a)", () => {
       });
 
       // Delete it
-      const result = await cortex.conversations.delete(conversation.conversationId);
+      const result = await cortex.conversations.delete(
+        conversation.conversationId,
+      );
       expect(result.deleted).toBe(true);
 
       // Verify it's gone
-      const retrieved = await cortex.conversations.get(conversation.conversationId);
+      const retrieved = await cortex.conversations.get(
+        conversation.conversationId,
+      );
       expect(retrieved).toBeNull();
 
       // Verify storage
@@ -492,7 +506,7 @@ describe("Conversations API (Layer 1a)", () => {
 
     it("throws error for non-existent conversation", async () => {
       await expect(
-        cortex.conversations.delete("conv-does-not-exist")
+        cortex.conversations.delete("conv-does-not-exist"),
       ).rejects.toThrow("CONVERSATION_NOT_FOUND");
     });
   });
@@ -532,7 +546,7 @@ describe("Conversations API (Layer 1a)", () => {
       // Isolation: Messages are in chronological order
       for (let i = 1; i < final!.messages.length; i++) {
         expect(final!.messages[i].timestamp).toBeGreaterThanOrEqual(
-          final!.messages[i - 1].timestamp
+          final!.messages[i - 1].timestamp,
         );
       }
 
@@ -621,10 +635,13 @@ describe("Conversations API (Layer 1a)", () => {
     });
 
     it("supports ascending order (oldest first)", async () => {
-      const history = await cortex.conversations.getHistory(testConversationId, {
-        sortOrder: "asc",
-        limit: 3,
-      });
+      const history = await cortex.conversations.getHistory(
+        testConversationId,
+        {
+          sortOrder: "asc",
+          limit: 3,
+        },
+      );
 
       expect(history.messages[0].content).toBe("Message 1");
       expect(history.messages[1].content).toBe("Message 2");
@@ -632,10 +649,13 @@ describe("Conversations API (Layer 1a)", () => {
     });
 
     it("supports descending order (newest first)", async () => {
-      const history = await cortex.conversations.getHistory(testConversationId, {
-        sortOrder: "desc",
-        limit: 3,
-      });
+      const history = await cortex.conversations.getHistory(
+        testConversationId,
+        {
+          sortOrder: "desc",
+          limit: 3,
+        },
+      );
 
       expect(history.messages[0].content).toBe("Message 10");
       expect(history.messages[1].content).toBe("Message 9");
@@ -643,9 +663,12 @@ describe("Conversations API (Layer 1a)", () => {
     });
 
     it("handles edge case: offset beyond messages", async () => {
-      const history = await cortex.conversations.getHistory(testConversationId, {
-        offset: 100,
-      });
+      const history = await cortex.conversations.getHistory(
+        testConversationId,
+        {
+          offset: 100,
+        },
+      );
 
       expect(history.messages).toHaveLength(0);
       expect(history.hasMore).toBe(false);
@@ -653,7 +676,7 @@ describe("Conversations API (Layer 1a)", () => {
 
     it("throws error for non-existent conversation", async () => {
       await expect(
-        cortex.conversations.getHistory("conv-does-not-exist")
+        cortex.conversations.getHistory("conv-does-not-exist"),
       ).rejects.toThrow("CONVERSATION_NOT_FOUND");
     });
   });
@@ -735,11 +758,11 @@ describe("Conversations API (Layer 1a)", () => {
       });
 
       expect(results.length).toBeGreaterThanOrEqual(2);
-      
+
       // All results should contain "password"
       results.forEach((result) => {
         const hasMatch = result.matchedMessages.some((msg) =>
-          msg.content.toLowerCase().includes("password")
+          msg.content.toLowerCase().includes("password"),
         );
         expect(hasMatch).toBe(true);
       });
@@ -755,7 +778,9 @@ describe("Conversations API (Layer 1a)", () => {
 
       expect(results.length).toBe(2); // conv-search-1 and conv-search-2
       results.forEach((result) => {
-        expect(result.conversation.participants.userId).toBe("user-search-test");
+        expect(result.conversation.participants.userId).toBe(
+          "user-search-test",
+        );
       });
     });
 
@@ -981,10 +1006,16 @@ describe("Conversations API (Layer 1a)", () => {
       const searchResults = await cortex.conversations.search({
         query: "PROPAGATE",
       });
-      expect(searchResults.some((r) => r.conversation.conversationId === conv.conversationId)).toBe(true);
+      expect(
+        searchResults.some(
+          (r) => r.conversation.conversationId === conv.conversationId,
+        ),
+      ).toBe(true);
 
       // Verify in getHistory()
-      const history = await cortex.conversations.getHistory(conv.conversationId);
+      const history = await cortex.conversations.getHistory(
+        conv.conversationId,
+      );
       expect(history.messages).toHaveLength(1);
 
       // Add more messages
@@ -1002,7 +1033,9 @@ describe("Conversations API (Layer 1a)", () => {
       retrieved = await cortex.conversations.get(conv.conversationId);
       expect(retrieved!.messageCount).toBe(5);
 
-      const finalHistory = await cortex.conversations.getHistory(conv.conversationId);
+      const finalHistory = await cortex.conversations.getHistory(
+        conv.conversationId,
+      );
       expect(finalHistory.messages).toHaveLength(5);
 
       const finalList = await cortex.conversations.list({
@@ -1032,10 +1065,16 @@ describe("Conversations API (Layer 1a)", () => {
       let get = await cortex.conversations.get(conv.conversationId);
       expect(get).not.toBeNull();
 
-      let list = await cortex.conversations.list({ userId: "user-delete-test" });
-      expect(list.some((c) => c.conversationId === conv.conversationId)).toBe(true);
+      let list = await cortex.conversations.list({
+        userId: "user-delete-test",
+      });
+      expect(list.some((c) => c.conversationId === conv.conversationId)).toBe(
+        true,
+      );
 
-      let count = await cortex.conversations.count({ userId: "user-delete-test" });
+      let count = await cortex.conversations.count({
+        userId: "user-delete-test",
+      });
       expect(count).toBeGreaterThanOrEqual(1);
 
       // Delete conversation
@@ -1046,9 +1085,13 @@ describe("Conversations API (Layer 1a)", () => {
       expect(get).toBeNull();
 
       list = await cortex.conversations.list({ userId: "user-delete-test" });
-      expect(list.some((c) => c.conversationId === conv.conversationId)).toBe(false);
+      expect(list.some((c) => c.conversationId === conv.conversationId)).toBe(
+        false,
+      );
 
-      const countAfter = await cortex.conversations.count({ userId: "user-delete-test" });
+      const countAfter = await cortex.conversations.count({
+        userId: "user-delete-test",
+      });
       expect(countAfter).toBe(count - 1);
     });
   });
@@ -1177,7 +1220,7 @@ describe("Conversations API (Layer 1a)", () => {
             role: i % 2 === 0 ? "user" : "agent",
             content: `Concurrent message ${i}`,
           },
-        })
+        }),
       );
 
       await Promise.all(promises);
@@ -1272,7 +1315,7 @@ describe("Conversations API (Layer 1a)", () => {
       it("retrieves specific message by ID", async () => {
         const message = await cortex.conversations.getMessage(
           testConversationId,
-          testMessageId
+          testMessageId,
         );
 
         expect(message).not.toBeNull();
@@ -1283,7 +1326,7 @@ describe("Conversations API (Layer 1a)", () => {
       it("returns null for non-existent message", async () => {
         const message = await cortex.conversations.getMessage(
           testConversationId,
-          "msg-does-not-exist"
+          "msg-does-not-exist",
         );
 
         expect(message).toBeNull();
@@ -1292,7 +1335,7 @@ describe("Conversations API (Layer 1a)", () => {
       it("returns null for non-existent conversation", async () => {
         const message = await cortex.conversations.getMessage(
           "conv-does-not-exist",
-          testMessageId
+          testMessageId,
         );
 
         expect(message).toBeNull();
@@ -1330,7 +1373,7 @@ describe("Conversations API (Layer 1a)", () => {
       it("retrieves multiple messages by IDs", async () => {
         const messages = await cortex.conversations.getMessagesByIds(
           testConversationId,
-          [messageIds[0], messageIds[2], messageIds[4]]
+          [messageIds[0], messageIds[2], messageIds[4]],
         );
 
         expect(messages).toHaveLength(3);
@@ -1342,7 +1385,7 @@ describe("Conversations API (Layer 1a)", () => {
       it("returns empty array for non-existent conversation", async () => {
         const messages = await cortex.conversations.getMessagesByIds(
           "conv-does-not-exist",
-          messageIds
+          messageIds,
         );
 
         expect(messages).toEqual([]);
@@ -1351,7 +1394,7 @@ describe("Conversations API (Layer 1a)", () => {
       it("filters out non-existent message IDs", async () => {
         const messages = await cortex.conversations.getMessagesByIds(
           testConversationId,
-          [messageIds[0], "msg-fake", messageIds[1]]
+          [messageIds[0], "msg-fake", messageIds[1]],
         );
 
         expect(messages).toHaveLength(2);
@@ -1508,14 +1551,23 @@ describe("Conversations API (Layer 1a)", () => {
       const listResults = await cortex.conversations.list({
         userId: "user-integration-test",
       });
-      expect(listResults.some((c) => c.conversationId === conv.conversationId)).toBe(true);
-      expect(listResults.find((c) => c.conversationId === conv.conversationId)?.messageCount).toBe(1);
+      expect(
+        listResults.some((c) => c.conversationId === conv.conversationId),
+      ).toBe(true);
+      expect(
+        listResults.find((c) => c.conversationId === conv.conversationId)
+          ?.messageCount,
+      ).toBe(1);
 
       // Verify in search
       const searchResults = await cortex.conversations.search({
         query: "UNIQUE_SEARCH_TERM",
       });
-      expect(searchResults.some((r) => r.conversation.conversationId === conv.conversationId)).toBe(true);
+      expect(
+        searchResults.some(
+          (r) => r.conversation.conversationId === conv.conversationId,
+        ),
+      ).toBe(true);
 
       // Verify in count
       const count = await cortex.conversations.count({
@@ -1529,7 +1581,9 @@ describe("Conversations API (Layer 1a)", () => {
         format: "json",
       });
       const parsed = JSON.parse(exported.data);
-      expect(parsed.some((c: any) => c.conversationId === conv.conversationId)).toBe(true);
+      expect(
+        parsed.some((c: any) => c.conversationId === conv.conversationId),
+      ).toBe(true);
 
       // Add more messages
       await cortex.conversations.addMessage({
@@ -1544,7 +1598,10 @@ describe("Conversations API (Layer 1a)", () => {
       const updatedList = await cortex.conversations.list({
         userId: "user-integration-test",
       });
-      expect(updatedList.find((c) => c.conversationId === conv.conversationId)?.messageCount).toBe(2);
+      expect(
+        updatedList.find((c) => c.conversationId === conv.conversationId)
+          ?.messageCount,
+      ).toBe(2);
     });
 
     it("search results update as messages are added", async () => {
@@ -1558,7 +1615,11 @@ describe("Conversations API (Layer 1a)", () => {
 
       // Initially no matches for "password"
       let results = await cortex.conversations.search({ query: "password" });
-      expect(results.some((r) => r.conversation.conversationId === conv.conversationId)).toBe(false);
+      expect(
+        results.some(
+          (r) => r.conversation.conversationId === conv.conversationId,
+        ),
+      ).toBe(false);
 
       // Add message with "password"
       await cortex.conversations.addMessage({
@@ -1571,8 +1632,16 @@ describe("Conversations API (Layer 1a)", () => {
 
       // Should now find it
       results = await cortex.conversations.search({ query: "password" });
-      expect(results.some((r) => r.conversation.conversationId === conv.conversationId)).toBe(true);
-      expect(results.find((r) => r.conversation.conversationId === conv.conversationId)?.matchedMessages.length).toBe(1);
+      expect(
+        results.some(
+          (r) => r.conversation.conversationId === conv.conversationId,
+        ),
+      ).toBe(true);
+      expect(
+        results.find(
+          (r) => r.conversation.conversationId === conv.conversationId,
+        )?.matchedMessages.length,
+      ).toBe(1);
 
       // Add another message with "password"
       await cortex.conversations.addMessage({
@@ -1585,9 +1654,10 @@ describe("Conversations API (Layer 1a)", () => {
 
       // Should find 2 matched messages
       results = await cortex.conversations.search({ query: "password" });
-      const thisResult = results.find((r) => r.conversation.conversationId === conv.conversationId);
+      const thisResult = results.find(
+        (r) => r.conversation.conversationId === conv.conversationId,
+      );
       expect(thisResult?.matchedMessages.length).toBe(2);
     });
   });
 });
-

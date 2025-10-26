@@ -54,21 +54,27 @@ Cortex brings enterprise-grade persistent memory to any AI agent system. Built o
 Explore our comprehensive documentation:
 
 ### 🚀 [Getting Started](./Documentation/01-getting-started/01-introduction)
+
 Start here if you're new to Cortex
 
 ### ✨ [Core Features](./Documentation/02-core-features/01-agent-memory)
+
 Deep dives into Cortex capabilities
 
 ### 📖 [API Reference](./Documentation/03-api-reference/02-memory-operations)
+
 Complete API documentation
 
 ### 🏗️ [Architecture](./Documentation/04-architecture/01-system-overview)
+
 Understanding how Cortex works
 
 ### 🍳 [Recipes](./Documentation/06-recipes/01-simple-chatbot)
+
 Practical examples and patterns
 
 ### 🎓 [Advanced Topics](./Documentation/07-advanced-topics/02-dimension-strategies)
+
 Expert-level content
 
 ## 🤝 Get Involved
@@ -99,4 +105,3 @@ See [CONTRIBUTING](./CONTRIBUTING) for detailed contribution guidelines.
 Built with ❤️ for the AI agent community
 
 </div>
-

@@ -97,6 +97,7 @@ npm run test:interactive
 ```
 
 Features:
+
 - 🎮 **Choose what to test** - Pick individual operations from a menu
 - 🧹 **Purge database** - Clean slate between tests
 - 📊 **Inspect storage** - See database state at any time
@@ -104,6 +105,7 @@ Features:
 - 🔄 **Repeat operations** - Run the same test multiple times
 
 Perfect for:
+
 - Learning how the API works
 - Debugging specific operations
 - Manual validation workflows
@@ -118,6 +120,7 @@ npm run test:debug
 ```
 
 Output includes:
+
 - 🔥 Each operation as it happens
 - 📊 Storage inspection after each step
 - ✅ Detailed validation results
@@ -184,10 +187,13 @@ const conversations = await cortex.conversations.list({
 });
 
 // Get paginated message history (NEW!)
-const history = await cortex.conversations.getHistory(conversation.conversationId, {
-  limit: 20,
-  sortOrder: "desc",  // Newest first
-});
+const history = await cortex.conversations.getHistory(
+  conversation.conversationId,
+  {
+    limit: 20,
+    sortOrder: "desc", // Newest first
+  },
+);
 console.log(`Showing ${history.messages.length} of ${history.total} messages`);
 
 // Search conversations (NEW!)

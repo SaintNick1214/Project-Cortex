@@ -1,6 +1,6 @@
 /**
  * E2E Tests: Mutable Store API (Layer 1c)
- * 
+ *
  * Tests validate:
  * - SDK API calls
  * - Convex mutations/queries
@@ -18,13 +18,13 @@ import { TestCleanup } from "./helpers";
 class MutableTestCleanup extends TestCleanup {
   async purgeMutable(): Promise<number> {
     console.log("🧹 Purging mutable table...");
-    
+
     // Purge ALL known test namespaces
     const namespaces = [
       "test",
-      "inventory", 
-      "config", 
-      "counters", 
+      "inventory",
+      "config",
+      "counters",
       "sessions",
       "temp",
       "purge-test",
@@ -48,7 +48,7 @@ class MutableTestCleanup extends TestCleanup {
       "purge-ns-test",
       "bulk-mut-del",
     ];
-    
+
     let deleted = 0;
     for (const ns of namespaces) {
       try {
@@ -78,7 +78,9 @@ class MutableTestCleanup extends TestCleanup {
     }
 
     if (totalCount > 0) {
-      console.warn(`⚠️  Warning: Mutable table not empty (${totalCount} entries remaining)`);
+      console.warn(
+        `⚠️  Warning: Mutable table not empty (${totalCount} entries remaining)`,
+      );
     } else {
       console.log("✅ Mutable table is empty");
     }
@@ -156,7 +158,7 @@ describe("Mutable Store API (Layer 1c)", () => {
         "sessions",
         "session-123",
         { active: true },
-        "user-mutable-test"
+        "user-mutable-test",
       );
 
       expect(result.userId).toBe("user-mutable-test");
@@ -202,7 +204,7 @@ describe("Mutable Store API (Layer 1c)", () => {
       const result = await cortex.mutable.update(
         "inventory",
         "widget-update",
-        (current) => current - 10
+        (current) => current - 10,
       );
 
       expect(result.value).toBe(90);
@@ -215,18 +217,29 @@ describe("Mutable Store API (Layer 1c)", () => {
     it("handles null values in updater", async () => {
       // Update non-existent key (current will be null)
       await expect(
-        cortex.mutable.update("counters", "non-existent", (current) => current + 1)
+        cortex.mutable.update(
+          "counters",
+          "non-existent",
+          (current) => current + 1,
+        ),
       ).rejects.toThrow("MUTABLE_KEY_NOT_FOUND");
     });
 
     it("supports complex object updates", async () => {
-      await cortex.mutable.set("config", "settings", { count: 0, enabled: false });
+      await cortex.mutable.set("config", "settings", {
+        count: 0,
+        enabled: false,
+      });
 
-      const result = await cortex.mutable.update("config", "settings", (current) => ({
-        ...current,
-        count: current.count + 1,
-        enabled: true,
-      }));
+      const result = await cortex.mutable.update(
+        "config",
+        "settings",
+        (current) => ({
+          ...current,
+          count: current.count + 1,
+          enabled: true,
+        }),
+      );
 
       expect(result.value.count).toBe(1);
       expect(result.value.enabled).toBe(true);
@@ -237,7 +250,11 @@ describe("Mutable Store API (Layer 1c)", () => {
     it("increments numeric value", async () => {
       await cortex.mutable.set("counters", "total-sales", 0);
 
-      const result = await cortex.mutable.increment("counters", "total-sales", 1);
+      const result = await cortex.mutable.increment(
+        "counters",
+        "total-sales",
+        1,
+      );
       expect(result.value).toBe(1);
 
       await cortex.mutable.increment("counters", "total-sales", 5);
@@ -248,7 +265,11 @@ describe("Mutable Store API (Layer 1c)", () => {
     it("decrements numeric value", async () => {
       await cortex.mutable.set("inventory", "stock-decrement", 100);
 
-      const result = await cortex.mutable.decrement("inventory", "stock-decrement", 10);
+      const result = await cortex.mutable.decrement(
+        "inventory",
+        "stock-decrement",
+        10,
+      );
       expect(result.value).toBe(90);
 
       await cortex.mutable.decrement("inventory", "stock-decrement", 20);
@@ -310,8 +331,18 @@ describe("Mutable Store API (Layer 1c)", () => {
     });
 
     it("filters by userId", async () => {
-      await cortex.mutable.set("sessions", "sess-1", { active: true }, "user-list-test");
-      await cortex.mutable.set("sessions", "sess-2", { active: false }, "user-list-test");
+      await cortex.mutable.set(
+        "sessions",
+        "sess-1",
+        { active: true },
+        "user-list-test",
+      );
+      await cortex.mutable.set(
+        "sessions",
+        "sess-2",
+        { active: false },
+        "user-list-test",
+      );
 
       const userSessions = await cortex.mutable.list({
         namespace: "sessions",
@@ -392,7 +423,7 @@ describe("Mutable Store API (Layer 1c)", () => {
 
     it("throws error for non-existent key", async () => {
       await expect(
-        cortex.mutable.delete("temp", "does-not-exist")
+        cortex.mutable.delete("temp", "does-not-exist"),
       ).rejects.toThrow("MUTABLE_KEY_NOT_FOUND");
     });
   });
@@ -425,8 +456,18 @@ describe("Mutable Store API (Layer 1c)", () => {
         await cortex.mutable.set("bulk-delete", "temp-1", "a");
         await cortex.mutable.set("bulk-delete", "temp-2", "b");
         await cortex.mutable.set("bulk-delete", "keep-1", "c");
-        await cortex.mutable.set("bulk-delete", "user-1", "d", "user-purge-many");
-        await cortex.mutable.set("bulk-delete", "user-2", "e", "user-purge-many");
+        await cortex.mutable.set(
+          "bulk-delete",
+          "user-1",
+          "d",
+          "user-purge-many",
+        );
+        await cortex.mutable.set(
+          "bulk-delete",
+          "user-2",
+          "e",
+          "user-purge-many",
+        );
       });
 
       it("deletes by key prefix", async () => {
@@ -572,7 +613,11 @@ describe("Mutable Store API (Layer 1c)", () => {
         data: `Item ${i}`,
       }));
 
-      const result = await cortex.mutable.set("large-test", "big-array", largeArray);
+      const result = await cortex.mutable.set(
+        "large-test",
+        "big-array",
+        largeArray,
+      );
 
       expect(result.value).toHaveLength(1000);
 
@@ -584,13 +629,16 @@ describe("Mutable Store API (Layer 1c)", () => {
       const result = await cortex.mutable.set(
         "test-namespace_with.chars",
         "test-key_123.456-789",
-        "special"
+        "special",
       );
 
       expect(result.namespace).toBe("test-namespace_with.chars");
       expect(result.key).toBe("test-key_123.456-789");
 
-      const retrieved = await cortex.mutable.get("test-namespace_with.chars", "test-key_123.456-789");
+      const retrieved = await cortex.mutable.get(
+        "test-namespace_with.chars",
+        "test-key_123.456-789",
+      );
       expect(retrieved).toBe("special");
     });
 
@@ -600,7 +648,9 @@ describe("Mutable Store API (Layer 1c)", () => {
       await cortex.mutable.set("empty-test", "empty-array", []);
 
       expect(await cortex.mutable.get("empty-test", "empty-string")).toBe("");
-      expect(await cortex.mutable.get("empty-test", "empty-object")).toEqual({});
+      expect(await cortex.mutable.get("empty-test", "empty-object")).toEqual(
+        {},
+      );
       expect(await cortex.mutable.get("empty-test", "empty-array")).toEqual([]);
     });
 
@@ -610,8 +660,8 @@ describe("Mutable Store API (Layer 1c)", () => {
       // 10 concurrent increments
       await Promise.all(
         Array.from({ length: 10 }, () =>
-          cortex.mutable.increment("concurrent", "counter", 1)
-        )
+          cortex.mutable.increment("concurrent", "counter", 1),
+        ),
       );
 
       const final = await cortex.mutable.get("concurrent", "counter");
@@ -694,8 +744,18 @@ describe("Mutable Store API (Layer 1c)", () => {
   describe("GDPR Compliance", () => {
     it("supports userId for cascade deletion", async () => {
       // Create user-specific data
-      await cortex.mutable.set("sessions", "user-session-1", { active: true }, "user-gdpr-mutable");
-      await cortex.mutable.set("cache", "user-cache-1", { data: "cached" }, "user-gdpr-mutable");
+      await cortex.mutable.set(
+        "sessions",
+        "user-session-1",
+        { active: true },
+        "user-gdpr-mutable",
+      );
+      await cortex.mutable.set(
+        "cache",
+        "user-cache-1",
+        { data: "cached" },
+        "user-gdpr-mutable",
+      );
 
       // Count user entries
       const sessionCount = await cortex.mutable.count({
@@ -777,4 +837,3 @@ describe("Mutable Store API (Layer 1c)", () => {
     });
   });
 });
-

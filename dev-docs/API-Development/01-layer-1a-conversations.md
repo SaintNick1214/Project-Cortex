@@ -15,14 +15,14 @@ ACID-compliant immutable conversation storage supporting two conversation types:
 
 ## ✅ Implementation Status
 
-| Component | Status      | Location                      | Lines | Operations |
-| --------- | ----------- | ----------------------------- | ----- | ---------- |
-| Schema    | ✅ Complete | `convex-dev/schema.ts`            | ~50   | 1 table, 6 indexes |
-| Backend   | ✅ Complete | `convex-dev/conversations.ts`     | ~500  | 9 operations |
-| Types     | ✅ Complete | `src/types/index.ts`          | ~120  | 10 interfaces |
-| SDK       | ✅ Complete | `src/conversations/index.ts`  | ~250  | 9 methods |
-| Tests     | ✅ Complete | `tests/conversations.test.ts` | ~940  | 45 tests |
-| Interactive | ✅ Complete | `tests/interactive-runner.ts` | ~500 | 13 menu options |
+| Component   | Status      | Location                      | Lines | Operations         |
+| ----------- | ----------- | ----------------------------- | ----- | ------------------ |
+| Schema      | ✅ Complete | `convex-dev/schema.ts`        | ~50   | 1 table, 6 indexes |
+| Backend     | ✅ Complete | `convex-dev/conversations.ts` | ~500  | 9 operations       |
+| Types       | ✅ Complete | `src/types/index.ts`          | ~120  | 10 interfaces      |
+| SDK         | ✅ Complete | `src/conversations/index.ts`  | ~250  | 9 methods          |
+| Tests       | ✅ Complete | `tests/conversations.test.ts` | ~940  | 45 tests           |
+| Interactive | ✅ Complete | `tests/interactive-runner.ts` | ~500  | 13 menu options    |
 
 ## 🗄️ Schema
 
@@ -246,7 +246,7 @@ Get paginated message history from a conversation.
 const history = await cortex.conversations.getHistory("conv-abc123", {
   limit: 20,
   offset: 0,
-  sortOrder: "desc",  // Newest first
+  sortOrder: "desc", // Newest first
 });
 ```
 

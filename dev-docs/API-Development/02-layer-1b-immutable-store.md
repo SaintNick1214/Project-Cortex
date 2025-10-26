@@ -21,14 +21,14 @@ Versioned immutable data storage for user profiles, knowledge base articles, and
 
 ## ✅ Implementation Status
 
-| Component | Status | Location | Lines | Operations |
-|-----------|--------|----------|-------|------------|
-| Schema | ✅ Complete | `convex-dev/schema.ts` | ~40 | 1 table, 4 indexes |
-| Backend | ✅ Complete | `convex-dev/immutable.ts` | ~330 | 8 operations |
-| Types | ✅ Complete | `src/types/index.ts` | ~70 | 7 interfaces |
-| SDK | ✅ Complete | `src/immutable/index.ts` | ~200 | 8 methods |
-| Tests | ✅ Complete | `tests/immutable.test.ts` | ~480 | 33 tests |
-| Interactive | ✅ Complete | `tests/interactive-runner.ts` | ~200 | 8 menu options |
+| Component   | Status      | Location                      | Lines | Operations         |
+| ----------- | ----------- | ----------------------------- | ----- | ------------------ |
+| Schema      | ✅ Complete | `convex-dev/schema.ts`        | ~40   | 1 table, 4 indexes |
+| Backend     | ✅ Complete | `convex-dev/immutable.ts`     | ~330  | 8 operations       |
+| Types       | ✅ Complete | `src/types/index.ts`          | ~70   | 7 interfaces       |
+| SDK         | ✅ Complete | `src/immutable/index.ts`      | ~200  | 8 methods          |
+| Tests       | ✅ Complete | `tests/immutable.test.ts`     | ~480  | 33 tests           |
+| Interactive | ✅ Complete | `tests/interactive-runner.ts` | ~200  | 8 menu options     |
 
 ## 📋 Implementation Checklist
 
