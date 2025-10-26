@@ -68,3 +68,52 @@ export interface CountConversationsFilter {
   agentId?: string;
 }
 
+export interface GetHistoryOptions {
+  limit?: number;
+  offset?: number;
+  sortOrder?: "asc" | "desc";
+}
+
+export interface SearchConversationsInput {
+  query: string;
+  filters?: {
+    type?: ConversationType;
+    userId?: string;
+    agentId?: string;
+    dateRange?: {
+      start?: number;
+      end?: number;
+    };
+    limit?: number;
+  };
+}
+
+export interface ConversationSearchResult {
+  conversation: Conversation;
+  matchedMessages: Message[];
+  highlights: string[];
+  score: number;
+}
+
+export interface ExportConversationsOptions {
+  filters?: {
+    userId?: string;
+    agentId?: string;
+    conversationIds?: string[];
+    type?: ConversationType;
+    dateRange?: {
+      start?: number;
+      end?: number;
+    };
+  };
+  format: "json" | "csv";
+  includeMetadata?: boolean;
+}
+
+export interface ExportResult {
+  format: "json" | "csv";
+  data: string;
+  count: number;
+  exportedAt: number;
+}
+

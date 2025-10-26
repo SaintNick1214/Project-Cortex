@@ -1,8 +1,8 @@
 # Layer 1a: Conversations API
 
-**Status**: ✅ **COMPLETE**  
+**Status**: ✅ **COMPLETE** (All 9 operations)  
 **Completed**: October 26, 2025  
-**Test Coverage**: 26 tests passing
+**Test Coverage**: 45 tests passing
 
 ---
 
@@ -15,13 +15,14 @@ ACID-compliant immutable conversation storage supporting two conversation types:
 
 ## ✅ Implementation Status
 
-| Component | Status      | Location                      | Lines |
-| --------- | ----------- | ----------------------------- | ----- |
-| Schema    | ✅ Complete | `convex/schema.ts`            | ~50   |
-| Backend   | ✅ Complete | `convex/conversations.ts`     | ~250  |
-| Types     | ✅ Complete | `src/types/index.ts`          | ~50   |
-| SDK       | ✅ Complete | `src/conversations/index.ts`  | ~150  |
-| Tests     | ✅ Complete | `tests/conversations.test.ts` | ~650  |
+| Component | Status      | Location                      | Lines | Operations |
+| --------- | ----------- | ----------------------------- | ----- | ---------- |
+| Schema    | ✅ Complete | `convex-dev/schema.ts`            | ~50   | 1 table, 6 indexes |
+| Backend   | ✅ Complete | `convex-dev/conversations.ts`     | ~500  | 9 operations |
+| Types     | ✅ Complete | `src/types/index.ts`          | ~120  | 10 interfaces |
+| SDK       | ✅ Complete | `src/conversations/index.ts`  | ~250  | 9 methods |
+| Tests     | ✅ Complete | `tests/conversations.test.ts` | ~940  | 45 tests |
+| Interactive | ✅ Complete | `tests/interactive-runner.ts` | ~500 | 13 menu options |
 
 ## 🗄️ Schema
 
@@ -209,9 +210,144 @@ Delete a conversation (for GDPR/cleanup).
 await cortex.conversations.delete("conv-abc123");
 ```
 
+---
+
+### `cortex.conversations.getHistory(conversationId, options?)`
+
+Get paginated message history from a conversation.
+
+**Input:**
+
+```typescript
+{
+  conversationId: string,
+  options?: {
+    limit?: number,       // Default: 50
+    offset?: number,      // Default: 0
+    sortOrder?: "asc" | "desc",  // Default: "asc"
+  }
+}
+```
+
+**Returns:**
+
+```typescript
+{
+  messages: Message[],
+  total: number,
+  hasMore: boolean,
+  conversationId: string,
+}
+```
+
+**Example:**
+
+```typescript
+const history = await cortex.conversations.getHistory("conv-abc123", {
+  limit: 20,
+  offset: 0,
+  sortOrder: "desc",  // Newest first
+});
+```
+
+---
+
+### `cortex.conversations.search(input)`
+
+Search conversations by text query.
+
+**Input:**
+
+```typescript
+{
+  query: string,
+  filters?: {
+    type?: ConversationType,
+    userId?: string,
+    agentId?: string,
+    dateRange?: {
+      start?: number,
+      end?: number,
+    },
+    limit?: number,  // Default: 10
+  }
+}
+```
+
+**Returns:** `ConversationSearchResult[]`
+
+```typescript
+{
+  conversation: Conversation,
+  matchedMessages: Message[],
+  highlights: string[],
+  score: number,
+}
+```
+
+**Example:**
+
+```typescript
+const results = await cortex.conversations.search({
+  query: "password",
+  filters: {
+    userId: "user-123",
+    limit: 5,
+  },
+});
+```
+
+---
+
+### `cortex.conversations.export(options)`
+
+Export conversations to JSON or CSV.
+
+**Input:**
+
+```typescript
+{
+  filters?: {
+    userId?: string,
+    agentId?: string,
+    conversationIds?: string[],
+    type?: ConversationType,
+    dateRange?: {
+      start?: number,
+      end?: number,
+    },
+  },
+  format: "json" | "csv",
+  includeMetadata?: boolean,
+}
+```
+
+**Returns:**
+
+```typescript
+{
+  format: "json" | "csv",
+  data: string,
+  count: number,
+  exportedAt: number,
+}
+```
+
+**Example:**
+
+```typescript
+const exported = await cortex.conversations.export({
+  filters: { userId: "user-123" },
+  format: "json",
+  includeMetadata: true,
+});
+```
+
+---
+
 ## 🧪 Test Coverage
 
-**Total Tests**: 26 passing
+**Total Tests**: 45 passing (100% of operations)
 
 ### Test Categories
 
@@ -240,7 +376,7 @@ await cortex.conversations.delete("conv-abc123");
 
 - ✅ Lists all conversations
 - ✅ Filters by userId
-- ✅ Filters by agentId
+- ✅ Filters by agentId (includes agent-agent with agentIds)
 - ✅ Filters by type
 - ✅ Combines filters (userId + agentId)
 - ✅ Respects limit parameter
@@ -249,7 +385,7 @@ await cortex.conversations.delete("conv-abc123");
 
 - ✅ Counts all conversations
 - ✅ Counts by userId
-- ✅ Counts by agentId
+- ✅ Counts by agentId (includes agent-agent with agentIds)
 - ✅ Counts by type
 
 #### 6. Delete Operations (2 tests)
@@ -261,6 +397,34 @@ await cortex.conversations.delete("conv-abc123");
 
 - ✅ Validates ACID properties
 - ✅ Validates index usage
+
+#### 8. getHistory Operations (6 tests) ⭐ NEW!
+
+- ✅ Retrieves all messages by default
+- ✅ Paginates messages with limit and offset
+- ✅ Supports ascending order (oldest first)
+- ✅ Supports descending order (newest first)
+- ✅ Handles edge case: offset beyond messages
+- ✅ Throws error for non-existent conversation
+
+#### 9. search Operations (6 tests) ⭐ NEW!
+
+- ✅ Finds conversations containing search query
+- ✅ Filters by userId
+- ✅ Includes highlights from matched messages
+- ✅ Calculates relevance scores
+- ✅ Returns empty array when no matches
+- ✅ Respects limit parameter
+
+#### 10. export Operations (7 tests) ⭐ NEW!
+
+- ✅ Exports to JSON format
+- ✅ Exports to CSV format
+- ✅ Includes metadata when requested
+- ✅ Excludes metadata when not requested
+- ✅ Filters by conversation IDs
+- ✅ Filters by type
+- ✅ Filters by date range
 
 ## ✅ ACID Properties Validated
 
@@ -277,6 +441,9 @@ await cortex.conversations.delete("conv-abc123");
 - ✅ Custom ID support
 - ✅ Flexible metadata
 - ✅ Indexed queries for performance
+- ✅ Paginated message retrieval (getHistory)
+- ✅ Full-text conversation search
+- ✅ JSON/CSV export (GDPR compliance)
 - ✅ GDPR-compliant deletion
 - ✅ Type-safe TypeScript API
 - ✅ Comprehensive error handling
@@ -343,26 +510,31 @@ Each will follow the same pattern:
 
 ## 📊 Code Statistics
 
-- **Total Lines**: ~1,150
-- **Schema**: 50 lines
-- **Backend**: 250 lines
-- **Types**: 50 lines
-- **SDK**: 150 lines
-- **Tests**: 650 lines
+- **Total Lines**: ~1,810
+- **Schema**: 50 lines (1 table, 6 indexes)
+- **Backend**: 500 lines (9 operations)
+- **Types**: 120 lines (10 interfaces)
+- **SDK**: 250 lines (9 methods)
+- **Tests**: 940 lines (45 tests)
+- **Interactive**: 500 lines (13 menu options)
 
-**Test-to-Code Ratio**: 2.6:1 (excellent coverage!)
+**Test-to-Code Ratio**: 1.6:1 (excellent coverage!)  
+**Operations Implemented**: 9/9 (100%)
 
 ## 🔗 Files
 
-- Schema: `convex/schema.ts`
-- Backend: `convex/conversations.ts`
-- Types: `src/types/index.ts`
-- SDK: `src/conversations/index.ts`
-- Tests: `tests/conversations.test.ts`
+- Schema: `convex-dev/schema.ts`
+- Backend: `convex-dev/conversations.ts` (9 operations)
+- Types: `src/types/index.ts` (10 interfaces)
+- SDK: `src/conversations/index.ts` (9 methods)
+- Tests: `tests/conversations.test.ts` (45 tests)
+- Interactive: `tests/interactive-runner.ts` (13 menu options)
 - Main Export: `src/index.ts`
 
 ---
 
 **Completed**: October 26, 2025  
-**Status**: ✅ Production Ready  
+**Status**: ✅ Production Ready (All 9 operations implemented & tested)  
+**Test Results**: 45/45 passing ✅  
+**Bugs Found & Fixed**: 5 (via interactive testing)  
 **Next**: Layer 1b (Immutable Store)

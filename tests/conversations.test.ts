@@ -390,7 +390,8 @@ describe("Conversations API (Layer 1a)", () => {
         agentId: "agent-list-1",
       });
 
-      expect(conversations.length).toBeGreaterThanOrEqual(1);
+      // Should find both user-agent (conv-list-1) and agent-agent (conv-list-3)
+      expect(conversations.length).toBe(2);
       conversations.forEach((conv) => {
         const hasAgent =
           conv.participants.agentId === "agent-list-1" ||
@@ -559,6 +560,380 @@ describe("Conversations API (Layer 1a)", () => {
 
       // Should be fast with proper indexing
       expect(duration).toBeLessThan(1000); // < 1 second
+    });
+  });
+
+  describe("getHistory()", () => {
+    let testConversationId: string;
+
+    beforeAll(async () => {
+      // Create conversation with multiple messages
+      const conversation = await cortex.conversations.create({
+        type: "user-agent",
+        participants: {
+          userId: "user-history-test",
+          agentId: "agent-history-test",
+        },
+      });
+      testConversationId = conversation.conversationId;
+
+      // Add 10 messages
+      for (let i = 1; i <= 10; i++) {
+        await cortex.conversations.addMessage({
+          conversationId: testConversationId,
+          message: {
+            role: i % 2 === 0 ? "agent" : "user",
+            content: `Message ${i}`,
+          },
+        });
+      }
+    });
+
+    it("retrieves all messages by default", async () => {
+      const history = await cortex.conversations.getHistory(testConversationId);
+
+      expect(history.messages).toHaveLength(10);
+      expect(history.total).toBe(10);
+      expect(history.hasMore).toBe(false);
+      expect(history.conversationId).toBe(testConversationId);
+    });
+
+    it("paginates messages with limit and offset", async () => {
+      const page1 = await cortex.conversations.getHistory(testConversationId, {
+        limit: 3,
+        offset: 0,
+      });
+
+      expect(page1.messages).toHaveLength(3);
+      expect(page1.messages[0].content).toBe("Message 1");
+      expect(page1.messages[2].content).toBe("Message 3");
+      expect(page1.total).toBe(10);
+      expect(page1.hasMore).toBe(true);
+
+      const page2 = await cortex.conversations.getHistory(testConversationId, {
+        limit: 3,
+        offset: 3,
+      });
+
+      expect(page2.messages).toHaveLength(3);
+      expect(page2.messages[0].content).toBe("Message 4");
+      expect(page2.hasMore).toBe(true);
+    });
+
+    it("supports ascending order (oldest first)", async () => {
+      const history = await cortex.conversations.getHistory(testConversationId, {
+        sortOrder: "asc",
+        limit: 3,
+      });
+
+      expect(history.messages[0].content).toBe("Message 1");
+      expect(history.messages[1].content).toBe("Message 2");
+      expect(history.messages[2].content).toBe("Message 3");
+    });
+
+    it("supports descending order (newest first)", async () => {
+      const history = await cortex.conversations.getHistory(testConversationId, {
+        sortOrder: "desc",
+        limit: 3,
+      });
+
+      expect(history.messages[0].content).toBe("Message 10");
+      expect(history.messages[1].content).toBe("Message 9");
+      expect(history.messages[2].content).toBe("Message 8");
+    });
+
+    it("handles edge case: offset beyond messages", async () => {
+      const history = await cortex.conversations.getHistory(testConversationId, {
+        offset: 100,
+      });
+
+      expect(history.messages).toHaveLength(0);
+      expect(history.hasMore).toBe(false);
+    });
+
+    it("throws error for non-existent conversation", async () => {
+      await expect(
+        cortex.conversations.getHistory("conv-does-not-exist")
+      ).rejects.toThrow("CONVERSATION_NOT_FOUND");
+    });
+  });
+
+  describe("search()", () => {
+    beforeAll(async () => {
+      // Create test conversations with searchable content
+      const conv1 = await cortex.conversations.create({
+        conversationId: "conv-search-1",
+        type: "user-agent",
+        participants: {
+          userId: "user-search-test",
+          agentId: "agent-search-test",
+        },
+      });
+
+      await cortex.conversations.addMessage({
+        conversationId: conv1.conversationId,
+        message: {
+          role: "user",
+          content: "What is the password for the system?",
+        },
+      });
+
+      await cortex.conversations.addMessage({
+        conversationId: conv1.conversationId,
+        message: {
+          role: "agent",
+          content: "The password is Blue123!",
+        },
+      });
+
+      const conv2 = await cortex.conversations.create({
+        conversationId: "conv-search-2",
+        type: "user-agent",
+        participants: {
+          userId: "user-search-test",
+          agentId: "agent-search-test",
+        },
+      });
+
+      await cortex.conversations.addMessage({
+        conversationId: conv2.conversationId,
+        message: {
+          role: "user",
+          content: "Tell me about the weather today",
+        },
+      });
+
+      await cortex.conversations.addMessage({
+        conversationId: conv2.conversationId,
+        message: {
+          role: "agent",
+          content: "The weather is sunny with no password required!",
+        },
+      });
+
+      const conv3 = await cortex.conversations.create({
+        conversationId: "conv-search-3",
+        type: "user-agent",
+        participants: {
+          userId: "user-search-other",
+          agentId: "agent-search-test",
+        },
+      });
+
+      await cortex.conversations.addMessage({
+        conversationId: conv3.conversationId,
+        message: {
+          role: "user",
+          content: "This conversation has no password mentions at all.",
+        },
+      });
+    });
+
+    it("finds conversations containing search query", async () => {
+      const results = await cortex.conversations.search({
+        query: "password",
+      });
+
+      expect(results.length).toBeGreaterThanOrEqual(2);
+      
+      // All results should contain "password"
+      results.forEach((result) => {
+        const hasMatch = result.matchedMessages.some((msg) =>
+          msg.content.toLowerCase().includes("password")
+        );
+        expect(hasMatch).toBe(true);
+      });
+    });
+
+    it("filters by userId", async () => {
+      const results = await cortex.conversations.search({
+        query: "password",
+        filters: {
+          userId: "user-search-test",
+        },
+      });
+
+      expect(results.length).toBe(2); // conv-search-1 and conv-search-2
+      results.forEach((result) => {
+        expect(result.conversation.participants.userId).toBe("user-search-test");
+      });
+    });
+
+    it("includes highlights from matched messages", async () => {
+      const results = await cortex.conversations.search({
+        query: "password",
+        filters: { limit: 1 },
+      });
+
+      expect(results[0].highlights.length).toBeGreaterThan(0);
+      results[0].highlights.forEach((highlight) => {
+        expect(highlight.toLowerCase()).toContain("password");
+      });
+    });
+
+    it("calculates relevance scores", async () => {
+      const results = await cortex.conversations.search({
+        query: "password",
+      });
+
+      // All results should have scores
+      results.forEach((result) => {
+        expect(result.score).toBeGreaterThan(0);
+        expect(result.score).toBeLessThanOrEqual(1);
+      });
+
+      // Results should be sorted by score (descending)
+      for (let i = 1; i < results.length; i++) {
+        expect(results[i].score).toBeLessThanOrEqual(results[i - 1].score);
+      }
+    });
+
+    it("returns empty array when no matches", async () => {
+      const results = await cortex.conversations.search({
+        query: "nonexistent-query-xyz",
+      });
+
+      expect(results).toEqual([]);
+    });
+
+    it("respects limit parameter", async () => {
+      const results = await cortex.conversations.search({
+        query: "password",
+        filters: { limit: 1 },
+      });
+
+      expect(results.length).toBeLessThanOrEqual(1);
+    });
+  });
+
+  describe("export()", () => {
+    beforeAll(async () => {
+      // Create test conversations for export
+      await cortex.conversations.create({
+        conversationId: "conv-export-1",
+        type: "user-agent",
+        participants: {
+          userId: "user-export-test",
+          agentId: "agent-export-test",
+        },
+        metadata: { campaign: "summer-2025" },
+      });
+
+      await cortex.conversations.create({
+        conversationId: "conv-export-2",
+        type: "agent-agent",
+        participants: {
+          agentIds: ["agent-export-test", "agent-export-other"],
+        },
+        metadata: { priority: "high" },
+      });
+    });
+
+    it("exports to JSON format", async () => {
+      const exported = await cortex.conversations.export({
+        filters: { userId: "user-export-test" },
+        format: "json",
+        includeMetadata: true,
+      });
+
+      expect(exported.format).toBe("json");
+      expect(exported.count).toBeGreaterThanOrEqual(1);
+      expect(exported.exportedAt).toBeGreaterThan(0);
+      expect(exported.data).toBeTruthy();
+
+      // Validate JSON is parseable
+      const parsed = JSON.parse(exported.data);
+      expect(Array.isArray(parsed)).toBe(true);
+      expect(parsed.length).toBe(exported.count);
+    });
+
+    it("exports to CSV format", async () => {
+      const exported = await cortex.conversations.export({
+        filters: { agentId: "agent-export-test" },
+        format: "csv",
+        includeMetadata: false,
+      });
+
+      expect(exported.format).toBe("csv");
+      expect(exported.count).toBeGreaterThanOrEqual(2);
+      expect(exported.data).toBeTruthy();
+
+      // Validate CSV structure
+      const lines = exported.data.split("\n");
+      expect(lines[0]).toContain("conversationId");
+      expect(lines[0]).toContain("type");
+      expect(lines.length).toBe(exported.count + 1); // Header + data rows
+    });
+
+    it("includes metadata when requested", async () => {
+      const withMetadata = await cortex.conversations.export({
+        filters: { conversationIds: ["conv-export-1"] },
+        format: "json",
+        includeMetadata: true,
+      });
+
+      const parsed = JSON.parse(withMetadata.data);
+      expect(parsed[0].metadata).toBeDefined();
+      expect(parsed[0].metadata.campaign).toBe("summer-2025");
+    });
+
+    it("excludes metadata when not requested", async () => {
+      const withoutMetadata = await cortex.conversations.export({
+        filters: { conversationIds: ["conv-export-1"] },
+        format: "json",
+        includeMetadata: false,
+      });
+
+      const parsed = JSON.parse(withoutMetadata.data);
+      expect(parsed[0].metadata).toBeUndefined();
+    });
+
+    it("filters by conversation IDs", async () => {
+      const exported = await cortex.conversations.export({
+        filters: {
+          conversationIds: ["conv-export-1", "conv-export-2"],
+        },
+        format: "json",
+      });
+
+      expect(exported.count).toBe(2);
+      const parsed = JSON.parse(exported.data);
+      const ids = parsed.map((c: any) => c.conversationId);
+      expect(ids).toContain("conv-export-1");
+      expect(ids).toContain("conv-export-2");
+    });
+
+    it("filters by type", async () => {
+      const exported = await cortex.conversations.export({
+        filters: { type: "agent-agent" },
+        format: "json",
+      });
+
+      const parsed = JSON.parse(exported.data);
+      parsed.forEach((conv: any) => {
+        expect(conv.type).toBe("agent-agent");
+      });
+    });
+
+    it("filters by date range", async () => {
+      const now = Date.now();
+      const oneHourAgo = now - 60 * 60 * 1000;
+
+      const exported = await cortex.conversations.export({
+        filters: {
+          dateRange: {
+            start: oneHourAgo,
+            end: now,
+          },
+        },
+        format: "json",
+      });
+
+      const parsed = JSON.parse(exported.data);
+      parsed.forEach((conv: any) => {
+        expect(conv.createdAt).toBeGreaterThanOrEqual(oneHourAgo);
+        expect(conv.createdAt).toBeLessThanOrEqual(now);
+      });
     });
   });
 });
