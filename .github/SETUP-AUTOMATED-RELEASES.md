@@ -128,11 +128,18 @@ npm version: 0.5.0
 → Skip (already published) ⏭️
 ```
 
+**How it works**:
+- Workflow runs on **every push to main** (not just package.json changes)
+- Version check job always runs (5 seconds)
+- Publish job only runs if version differs from npm
+
 **Benefits**:
+- ✅ Runs on every push (provides immediate feedback)
 - ✅ Works with multiple commits in one push
-- ✅ No dependency on git history
+- ✅ No dependency on git history or file changes
 - ✅ Can retry failed publishes (just re-push)
 - ✅ Prevents accidental duplicate publishes
+- ✅ Safe to push docs/fixes without triggering publish
 
 ### Automatic Workflow
 

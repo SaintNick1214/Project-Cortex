@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "package.json"
+  # No paths filter - let version detection decide whether to publish
 
 jobs:
   check-version:
