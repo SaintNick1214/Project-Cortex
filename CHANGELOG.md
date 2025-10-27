@@ -21,6 +21,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.4.1] - 2025-10-27
+
+#### 🔧 Patch Release - Automated Publishing
+
+Minor patch to test automated GitHub Action publishing workflow.
+
+#### Added
+- GitHub Action workflow for automated npm publishing
+- Automated release documentation
+
+#### Changed
+- Updated release process to support both automated and manual workflows
+
+**Total**: Still 54 operations, 201 tests (no API changes)
+
+---
+
 ### [0.4.0] - 2025-10-26
 
 #### 🎉 Major Release - Vector Memory (Layer 2)!
