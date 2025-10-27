@@ -22,23 +22,22 @@ jobs:
       - name: Check if version changed
         id: check
         run: |
-          # Get current version
+          # Get current version from package.json
           CURRENT_VERSION=$(node -p "require('./package.json').version")
-          echo "Current version: $CURRENT_VERSION"
+          echo "📦 Package version: $CURRENT_VERSION"
 
-          # Get previous version (if commit exists)
-          git show HEAD~1:package.json > prev-package.json 2>/dev/null || echo '{"version":"0.0.0"}' > prev-package.json
-          PREVIOUS_VERSION=$(node -p "require('./prev-package.json').version")
-          echo "Previous version: $PREVIOUS_VERSION"
+          # Get published version from npm (or 0.0.0 if not published yet)
+          NPM_VERSION=$(npm view @cortexmemory/sdk version 2>/dev/null || echo "0.0.0")
+          echo "📚 npm version: $NPM_VERSION"
 
-          # Check if changed
-          if [ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]; then
+          # Compare versions (publish if package.json > npm)
+          if [ "$CURRENT_VERSION" != "$NPM_VERSION" ]; then
             echo "changed=true" >> $GITHUB_OUTPUT
             echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
-            echo "✅ Version changed: $PREVIOUS_VERSION → $CURRENT_VERSION"
+            echo "✅ New version detected: $NPM_VERSION → $CURRENT_VERSION"
           else
             echo "changed=false" >> $GITHUB_OUTPUT
-            echo "⏭️  Version unchanged, skipping publish"
+            echo "⏭️  Already published at $CURRENT_VERSION, skipping"
           fi
 
   publish:
