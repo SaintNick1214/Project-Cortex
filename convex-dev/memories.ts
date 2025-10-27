@@ -518,6 +518,25 @@ export const deleteMany = mutation({
 });
 
 /**
+ * Purge ALL memories (test environments only - no agent filtering)
+ * WARNING: This deletes ALL memories in the database
+ */
+export const purgeAll = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const allMemories = await ctx.db.query("memories").collect();
+    
+    let deleted = 0;
+    for (const memory of allMemories) {
+      await ctx.db.delete(memory._id);
+      deleted++;
+    }
+    
+    return { deleted };
+  },
+});
+
+/**
  * Export memories
  */
 export const exportMemories = query({

@@ -1043,29 +1043,27 @@ describe("Memory Convenience API (Layer 3)", () => {
           // Should find the relevant fact (semantic match, not keyword)
           expect(results.length).toBeGreaterThan(0);
 
-          // Find the first result that contains the expected content
-          // (semantic search order can vary slightly between runs)
-          const found = results.find((r) =>
-            r.content.toLowerCase().includes(search.expectInContent.toLowerCase()),
-          );
-
-          // If not found, log what we did find for debugging
-          if (!found) {
-            console.log(`  ⚠ Query: "${search.query}" - Expected "${search.expectInContent}" not found in top ${results.length} results:`);
+          // Validate the TOP result (results[0]) contains the expected content
+          // This ensures semantic search ranks the most relevant result first
+          const topResult = results[0];
+          
+          // If top result doesn't match, log for debugging
+          if (!topResult.content.toLowerCase().includes(search.expectInContent.toLowerCase())) {
+            console.log(`  ⚠ Query: "${search.query}" - Top result doesn't contain "${search.expectInContent}":`);
             results.slice(0, 3).forEach((r, i) => {
-              console.log(`    ${i + 1}. "${r.content.substring(0, 80)}..." (score: ${r._score?.toFixed(3)})`);
+              const hasMatch = r.content.toLowerCase().includes(search.expectInContent.toLowerCase()) ? "✓ MATCH" : "";
+              console.log(`    ${i + 1}. "${r.content.substring(0, 80)}..." (score: ${r._score?.toFixed(3)}) ${hasMatch}`);
             });
           }
 
-          // Validate we found the expected memory
-          expect(found).toBeDefined();
-          expect(found!.content.toLowerCase()).toContain(
+          // Strict validation: Top result MUST contain expected content
+          expect(topResult.content.toLowerCase()).toContain(
             search.expectInContent.toLowerCase(),
           );
 
           // Log for visibility
           console.log(
-            `  ✓ Query: "${search.query}" → Found: "${found!.content.substring(0, 60)}..." (score: ${found!._score?.toFixed(3) || "N/A"})`,
+            `  ✓ Query: "${search.query}" → Top result: "${topResult.content.substring(0, 60)}..." (score: ${topResult._score?.toFixed(3) || "N/A"})`,
           );
         }
       }, 60000); // 60s timeout for API calls

@@ -40,44 +40,20 @@ export class TestCleanup {
   }
 
   /**
-   * Purge all memories for test agents from the database
-   * This uses the deleteMany mutation for efficient cleanup
+   * Purge ALL memories from the database (no filtering)
+   * Safe for test environments with no real data retention requirements
    */
   async purgeMemories(): Promise<{ deleted: number }> {
-    console.log("🧹 Purging memories for all test agents...");
+    console.log("🧹 Purging ALL memories from database...");
 
-    // Common test agent IDs used across all test files
-    const testAgentIds = [
-      "agent-test-l3",      // memory.test.ts
-      "test-agent-1",       // various tests
-      "test-agent-2",       // various tests  
-      "test-agent-3",       // potential future tests
-      "another-test-agent", // conversations tests
-      "agent-vector-test",  // potential vector tests
-      "agent-test",         // vector.test.ts
-      "agent-test-2",       // vector.test.ts
-      "agent-store",        // vector.test.ts
-      "agent-search",       // vector.test.ts
-    ];
-
-    let totalDeleted = 0;
-    for (const agentId of testAgentIds) {
-      try {
-        const result = await this.client.mutation(api.memories.deleteMany, {
-          agentId,
-        });
-        if (result.deleted > 0) {
-          console.log(`  - Deleted ${result.deleted} memories for ${agentId}`);
-          totalDeleted += result.deleted;
-        }
-      } catch (error: any) {
-        // Ignore errors (agent might not have memories)
-        continue;
-      }
+    try {
+      const result = await this.client.mutation(api.memories.purgeAll, {});
+      console.log(`✅ Purged ${result.deleted} total memories`);
+      return { deleted: result.deleted };
+    } catch (error: any) {
+      console.error("❌ Failed to purge memories:", error.message);
+      return { deleted: 0 };
     }
-
-    console.log(`✅ Purged ${totalDeleted} total memories`);
-    return { deleted: totalDeleted };
   }
 
   /**
