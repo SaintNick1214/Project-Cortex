@@ -149,6 +149,7 @@ const MENU_OPTIONS = {
   "69": { label: "  🗑️  delete", action: testMutableDelete },
   "70": { label: "  🧹 purgeNamespace", action: testMutablePurgeNamespace },
   "71": { label: "  🗑️  purgeMany", action: testMutablePurgeMany },
+  "72": { label: "  ⚛️  transaction", action: testMutableTransaction },
   "79": { label: "  🎯 Run All Mutable Tests", action: runMutableTests },
 
   // ═══════════════════════════════════════════════════════════════════════
@@ -2070,6 +2071,67 @@ async function testMutablePurgeMany() {
   console.log();
 }
 
+async function testMutableTransaction() {
+  console.log("\n⚛️  Testing: mutable.transaction()...");
+  console.log("Atomic multi-key operations - inventory transfer example\n");
+
+  // Setup
+  await cortex.mutable.set("inventory", "product-a", 100);
+  await cortex.mutable.set("inventory", "product-b", 50);
+  await cortex.mutable.set("counters", "sales", 0);
+
+  console.log("Initial state:");
+  console.log("  product-a: 100");
+  console.log("  product-b: 50");
+  console.log("  sales counter: 0");
+
+  // Execute transaction: sell 10 units of product-a
+  const result = await cortex.mutable.transaction([
+    { op: "decrement", namespace: "inventory", key: "product-a", amount: 10 },
+    { op: "increment", namespace: "counters", key: "sales", amount: 1 },
+    { op: "set", namespace: "state", key: "last-sale", value: Date.now() },
+  ]);
+
+  console.log(`\n📥 Transaction result:`);
+  console.log(`  Success: ${result.success}`);
+  console.log(`  Operations executed: ${result.operationsExecuted}`);
+
+  // Verify
+  const productA = await cortex.mutable.get("inventory", "product-a");
+  const sales = await cortex.mutable.get("counters", "sales");
+  const lastSale = await cortex.mutable.get("state", "last-sale");
+
+  console.log(`\n✅ Final state:`);
+  console.log(`  product-a: ${productA} (should be 90)`);
+  console.log(`  sales: ${sales} (should be > 0)`);
+  console.log(`  last-sale: ${lastSale ? "recorded" : "not recorded"}`);
+
+  // Test inventory transfer
+  console.log(`\n🔄 Testing inventory transfer...`);
+  await cortex.mutable.set("transfer-test", "source", 100);
+  await cortex.mutable.set("transfer-test", "destination", 0);
+
+  await cortex.mutable.transaction([
+    { op: "decrement", namespace: "transfer-test", key: "source", amount: 25 },
+    {
+      op: "increment",
+      namespace: "transfer-test",
+      key: "destination",
+      amount: 25,
+    },
+  ]);
+
+  const source = await cortex.mutable.get("transfer-test", "source");
+  const dest = await cortex.mutable.get("transfer-test", "destination");
+
+  console.log(`  Source: ${source} (should be 75)`);
+  console.log(`  Destination: ${dest} (should be 25)`);
+  console.log(
+    `  ✅ Transfer ${source === 75 && dest === 25 ? "successful" : "FAILED"}`,
+  );
+  console.log();
+}
+
 async function runMutableTests() {
   console.log("\n🔄 Running all Mutable Store API tests...\n");
   console.log("═".repeat(80));
@@ -2211,6 +2273,7 @@ function displayMenu() {
   console.log("  69)   🗑️  delete");
   console.log("  70)   🧹 purgeNamespace");
   console.log("  71)   🗑️  purgeMany");
+  console.log("  72)   ⚛️  transaction");
   console.log("  79)   🎯 Run All");
   console.log();
 

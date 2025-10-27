@@ -235,6 +235,21 @@ export class MutableAPI {
   }
 
   /**
+   * Purge a key (alias for delete - for API consistency)
+   *
+   * @example
+   * ```typescript
+   * await cortex.mutable.purge('inventory', 'discontinued-item');
+   * ```
+   */
+  async purge(
+    namespace: string,
+    key: string,
+  ): Promise<{ deleted: boolean; namespace: string; key: string }> {
+    return this.delete(namespace, key);
+  }
+
+  /**
    * Purge all keys in a namespace
    *
    * @example
@@ -250,6 +265,42 @@ export class MutableAPI {
     });
 
     return result as { deleted: number; namespace: string };
+  }
+
+  /**
+   * Execute multiple operations atomically
+   *
+   * @example
+   * ```typescript
+   * await cortex.mutable.transaction([
+   *   { op: 'increment', namespace: 'counters', key: 'sales', amount: 1 },
+   *   { op: 'decrement', namespace: 'inventory', key: 'widget-qty', amount: 1 },
+   *   { op: 'set', namespace: 'state', key: 'last-sale', value: Date.now() },
+   * ]);
+   * ```
+   */
+  async transaction(
+    operations: Array<{
+      op: "set" | "update" | "delete" | "increment" | "decrement";
+      namespace: string;
+      key: string;
+      value?: any;
+      amount?: number;
+    }>,
+  ): Promise<{
+    success: boolean;
+    operationsExecuted: number;
+    results: any[];
+  }> {
+    const result = await this.client.mutation(api.mutable.transaction, {
+      operations,
+    });
+
+    return result as {
+      success: boolean;
+      operationsExecuted: number;
+      results: any[];
+    };
   }
 
   /**
