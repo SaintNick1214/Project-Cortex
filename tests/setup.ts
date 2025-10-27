@@ -6,7 +6,7 @@
 
 // Global timeout for closing connections
 // This ensures Jest exits even if some cleanup is slow
-afterAll(() => {
+afterAll(async () => {
   // Give Convex clients time to close gracefully
-  return new Promise((resolve) => setTimeout(resolve, 100));
+  return await new Promise((resolve) => setTimeout(resolve, 100));
 });

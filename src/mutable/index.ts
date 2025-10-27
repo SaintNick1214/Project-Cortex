@@ -4,18 +4,16 @@
  * Layer 1c: ACID-compliant mutable storage for live data
  */
 
-import { ConvexClient } from "convex/browser";
+import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type {
-  MutableRecord,
-  SetMutableInput,
-  UpdateMutableInput,
-  ListMutableFilter,
   CountMutableFilter,
+  ListMutableFilter,
+  MutableRecord,
 } from "../types";
 
 export class MutableAPI {
-  constructor(private client: ConvexClient) {}
+  constructor(private readonly client: ConvexClient) {}
 
   /**
    * Set a key to a value (creates or overwrites)
@@ -28,9 +26,9 @@ export class MutableAPI {
   async set(
     namespace: string,
     key: string,
-    value: any,
+    value: unknown,
     userId?: string,
-    metadata?: Record<string, any>,
+    metadata?: Record<string, unknown>,
   ): Promise<MutableRecord> {
     const result = await this.client.mutation(api.mutable.set, {
       namespace,
@@ -51,7 +49,7 @@ export class MutableAPI {
    * const qty = await cortex.mutable.get('inventory', 'widget-qty');
    * ```
    */
-  async get(namespace: string, key: string): Promise<any | null> {
+  async get(namespace: string, key: string): Promise<unknown | null> {
     const result = await this.client.query(api.mutable.get, {
       namespace,
       key,
@@ -92,7 +90,7 @@ export class MutableAPI {
   async update(
     namespace: string,
     key: string,
-    updater: (current: any) => any,
+    updater: (current: unknown) => unknown,
   ): Promise<MutableRecord> {
     // Get current value
     const current = await this.get(namespace, key);
@@ -122,7 +120,7 @@ export class MutableAPI {
   async increment(
     namespace: string,
     key: string,
-    amount: number = 1,
+    amount = 1,
   ): Promise<MutableRecord> {
     const result = await this.client.mutation(api.mutable.update, {
       namespace,
@@ -145,7 +143,7 @@ export class MutableAPI {
   async decrement(
     namespace: string,
     key: string,
-    amount: number = 1,
+    amount = 1,
   ): Promise<MutableRecord> {
     const result = await this.client.mutation(api.mutable.update, {
       namespace,
@@ -246,7 +244,7 @@ export class MutableAPI {
     namespace: string,
     key: string,
   ): Promise<{ deleted: boolean; namespace: string; key: string }> {
-    return this.delete(namespace, key);
+    return await this.delete(namespace, key);
   }
 
   /**
@@ -284,13 +282,13 @@ export class MutableAPI {
       op: "set" | "update" | "delete" | "increment" | "decrement";
       namespace: string;
       key: string;
-      value?: any;
+      value?: unknown;
       amount?: number;
     }>,
   ): Promise<{
     success: boolean;
     operationsExecuted: number;
-    results: any[];
+    results: unknown[];
   }> {
     const result = await this.client.mutation(api.mutable.transaction, {
       operations,
@@ -299,7 +297,7 @@ export class MutableAPI {
     return result as {
       success: boolean;
       operationsExecuted: number;
-      results: any[];
+      results: unknown[];
     };
   }
 

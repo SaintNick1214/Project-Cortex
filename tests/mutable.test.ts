@@ -55,18 +55,21 @@ class MutableTestCleanup extends TestCleanup {
     ];
 
     let deleted = 0;
+
     for (const ns of namespaces) {
       try {
         const result = await this.client.mutation(api.mutable.purgeNamespace, {
           namespace: ns,
         });
+
         deleted += result.deleted;
-      } catch (error: any) {
+      } catch (_error: unknown) {
         // Namespace might not exist - that's fine
       }
     }
 
     console.log(`✅ Purged ${deleted} mutable entries`);
+
     return deleted;
   }
 
@@ -79,6 +82,7 @@ class MutableTestCleanup extends TestCleanup {
       const count = await this.client.query(api.mutable.count, {
         namespace: ns,
       });
+
       totalCount += count;
     }
 
@@ -99,6 +103,7 @@ describe("Mutable Store API (Layer 1c)", () => {
 
   beforeAll(async () => {
     const convexUrl = process.env.CONVEX_URL;
+
     if (!convexUrl) {
       throw new Error("CONVEX_URL not set");
     }
@@ -216,6 +221,7 @@ describe("Mutable Store API (Layer 1c)", () => {
 
       // Verify in storage
       const value = await cortex.mutable.get("inventory", "widget-update");
+
       expect(value).toBe(90);
     });
 
@@ -260,10 +266,12 @@ describe("Mutable Store API (Layer 1c)", () => {
         "total-sales",
         1,
       );
+
       expect(result.value).toBe(1);
 
       await cortex.mutable.increment("counters", "total-sales", 5);
       const final = await cortex.mutable.get("counters", "total-sales");
+
       expect(final).toBe(6);
     });
 
@@ -275,10 +283,12 @@ describe("Mutable Store API (Layer 1c)", () => {
         "stock-decrement",
         10,
       );
+
       expect(result.value).toBe(90);
 
       await cortex.mutable.decrement("inventory", "stock-decrement", 20);
       const final = await cortex.mutable.get("inventory", "stock-decrement");
+
       expect(final).toBe(70);
     });
 
@@ -286,6 +296,7 @@ describe("Mutable Store API (Layer 1c)", () => {
       await cortex.mutable.set("counters", "from-zero", null);
 
       const result = await cortex.mutable.increment("counters", "from-zero", 1);
+
       expect(result.value).toBe(1);
     });
   });
@@ -297,11 +308,13 @@ describe("Mutable Store API (Layer 1c)", () => {
 
     it("returns true for existing key", async () => {
       const exists = await cortex.mutable.exists("test", "exists-test");
+
       expect(exists).toBe(true);
     });
 
     it("returns false for non-existent key", async () => {
       const exists = await cortex.mutable.exists("test", "does-not-exist");
+
       expect(exists).toBe(false);
     });
   });
@@ -415,14 +428,17 @@ describe("Mutable Store API (Layer 1c)", () => {
 
       // Verify exists
       const before = await cortex.mutable.get("temp", "delete-test");
+
       expect(before).toBe("value");
 
       // Delete
       const result = await cortex.mutable.delete("temp", "delete-test");
+
       expect(result.deleted).toBe(true);
 
       // Verify deleted
       const after = await cortex.mutable.get("temp", "delete-test");
+
       expect(after).toBeNull();
     });
 
@@ -442,14 +458,17 @@ describe("Mutable Store API (Layer 1c)", () => {
 
       // Verify count
       const before = await cortex.mutable.count({ namespace: "purge-test" });
+
       expect(before).toBeGreaterThanOrEqual(3);
 
       // Purge namespace
       const result = await cortex.mutable.purgeNamespace("purge-test");
+
       expect(result.deleted).toBeGreaterThanOrEqual(3);
 
       // Verify empty
       const after = await cortex.mutable.count({ namespace: "purge-test" });
+
       expect(after).toBe(0);
     });
   });
@@ -492,12 +511,15 @@ describe("Mutable Store API (Layer 1c)", () => {
 
         // Verify all operations executed
         const sales = await cortex.mutable.get("counters", "total-sales");
+
         expect(sales).toBeGreaterThan(0);
 
         const inventory = await cortex.mutable.get("inventory", "product-a");
+
         expect(inventory).toBeLessThan(100);
 
         const lastSale = await cortex.mutable.get("state", "last-sale");
+
         expect(lastSale).toBeDefined();
       });
 
@@ -541,12 +563,15 @@ describe("Mutable Store API (Layer 1c)", () => {
 
         // Verify final state
         const key1 = await cortex.mutable.get("mix-test", "key-1");
+
         expect(key1).toBeNull(); // Deleted
 
         const key2 = await cortex.mutable.get("mix-test", "key-2");
+
         expect(key2).toBe(17); // 20 - 3
 
         const key3 = await cortex.mutable.get("mix-test", "key-3");
+
         expect(key3).toBe(30); // Created
       });
 
@@ -608,6 +633,7 @@ describe("Mutable Store API (Layer 1c)", () => {
           namespace: "bulk-delete",
           keyPrefix: "temp-",
         });
+
         expect(remaining.length).toBe(0);
       });
 
@@ -624,6 +650,7 @@ describe("Mutable Store API (Layer 1c)", () => {
           namespace: "bulk-delete",
           userId: "user-purge-many",
         });
+
         expect(remaining.length).toBe(0);
       });
     });
@@ -639,14 +666,17 @@ describe("Mutable Store API (Layer 1c)", () => {
 
       // Verify in get()
       let value = await cortex.mutable.get(ns, key);
+
       expect(value).toBe(0);
 
       // Verify in exists()
       let exists = await cortex.mutable.exists(ns, key);
+
       expect(exists).toBe(true);
 
       // Verify in list()
       let list = await cortex.mutable.list({ namespace: ns });
+
       expect(list.some((e) => e.key === key)).toBe(true);
 
       // Update value
@@ -659,6 +689,7 @@ describe("Mutable Store API (Layer 1c)", () => {
       // Verify in list() (updated value)
       list = await cortex.mutable.list({ namespace: ns });
       const entry = list.find((e) => e.key === key);
+
       expect(entry!.value).toBe(10);
 
       // Delete
@@ -681,7 +712,7 @@ describe("Mutable Store API (Layer 1c)", () => {
       // Start fresh - purge namespace first
       try {
         await cortex.mutable.purgeNamespace(ns);
-      } catch (e) {
+      } catch (_e) {
         // Namespace might not exist yet
       }
 
@@ -693,6 +724,7 @@ describe("Mutable Store API (Layer 1c)", () => {
       // Verify count matches list
       const count1 = await cortex.mutable.count({ namespace: ns });
       const list1 = await cortex.mutable.list({ namespace: ns });
+
       expect(count1).toBe(list1.length);
       expect(count1).toBe(3);
 
@@ -701,6 +733,7 @@ describe("Mutable Store API (Layer 1c)", () => {
 
       const count2 = await cortex.mutable.count({ namespace: ns });
       const list2 = await cortex.mutable.list({ namespace: ns });
+
       expect(count2).toBe(list2.length);
       expect(count2).toBe(4);
 
@@ -709,6 +742,7 @@ describe("Mutable Store API (Layer 1c)", () => {
 
       const count3 = await cortex.mutable.count({ namespace: ns });
       const list3 = await cortex.mutable.list({ namespace: ns });
+
       expect(count3).toBe(list3.length);
       expect(count3).toBe(3);
     });
@@ -727,6 +761,7 @@ describe("Mutable Store API (Layer 1c)", () => {
       }
 
       const final = await cortex.mutable.get(ns, key);
+
       expect(final).toBe(20);
     });
 
@@ -745,6 +780,7 @@ describe("Mutable Store API (Layer 1c)", () => {
       expect(result.value).toHaveLength(1000);
 
       const retrieved = await cortex.mutable.get("large-test", "big-array");
+
       expect(retrieved).toHaveLength(1000);
     });
 
@@ -762,6 +798,7 @@ describe("Mutable Store API (Layer 1c)", () => {
         "test-namespace_with.chars",
         "test-key_123.456-789",
       );
+
       expect(retrieved).toBe("special");
     });
 
@@ -782,12 +819,15 @@ describe("Mutable Store API (Layer 1c)", () => {
 
       // 10 concurrent increments
       await Promise.all(
-        Array.from({ length: 10 }, () =>
-          cortex.mutable.increment("concurrent", "counter", 1),
+        Array.from(
+          { length: 10 },
+          async () =>
+            await cortex.mutable.increment("concurrent", "counter", 1),
         ),
       );
 
       const final = await cortex.mutable.get("concurrent", "counter");
+
       expect(final).toBeGreaterThan(0);
       expect(final).toBeLessThanOrEqual(10);
     });
@@ -803,6 +843,7 @@ describe("Mutable Store API (Layer 1c)", () => {
 
       // Get
       let value = await cortex.mutable.get(ns, key);
+
       expect(value.status).toBe("initial");
 
       // Update
@@ -815,11 +856,13 @@ describe("Mutable Store API (Layer 1c)", () => {
       // List
       const list = await cortex.mutable.list({ namespace: ns });
       const entry = list.find((e) => e.key === key);
+
       expect(entry!.value.status).toBe("updated");
       expect(entry!.value.count).toBe(1);
 
       // Count
       const count = await cortex.mutable.count({ namespace: ns });
+
       expect(count).toBeGreaterThanOrEqual(1);
 
       // Delete
@@ -830,9 +873,11 @@ describe("Mutable Store API (Layer 1c)", () => {
       expect(value).toBeNull();
 
       const exists = await cortex.mutable.exists(ns, key);
+
       expect(exists).toBe(false);
 
       const listAfter = await cortex.mutable.list({ namespace: ns });
+
       expect(listAfter.some((e) => e.key === key)).toBe(false);
     });
 
@@ -871,7 +916,7 @@ describe("Mutable Store API (Layer 1c)", () => {
       // Clean namespace first
       try {
         await cortex.mutable.purgeNamespace(ns);
-      } catch (e) {
+      } catch (_e) {
         // Namespace might not exist
       }
 
@@ -880,6 +925,7 @@ describe("Mutable Store API (Layer 1c)", () => {
       await cortex.mutable.set(ns, "key-2", 20);
 
       const countBefore = await cortex.mutable.count({ namespace: ns });
+
       expect(countBefore).toBe(2);
 
       // Transaction: update, create, delete
@@ -891,16 +937,20 @@ describe("Mutable Store API (Layer 1c)", () => {
 
       // Verify changes in all operations
       const listAfter = await cortex.mutable.list({ namespace: ns });
+
       expect(listAfter.length).toBe(2); // key-1, key-3 (key-2 deleted)
       expect(listAfter.some((e) => e.key === "key-2")).toBe(false);
 
       const countAfter = await cortex.mutable.count({ namespace: ns });
+
       expect(countAfter).toBe(2);
 
       const key1 = await cortex.mutable.get(ns, "key-1");
+
       expect(key1).toBe(15); // 10 + 5
 
       const key3 = await cortex.mutable.get(ns, "key-3");
+
       expect(key3).toBe(30);
     });
 
@@ -912,10 +962,14 @@ describe("Mutable Store API (Layer 1c)", () => {
 
       // 10 concurrent increments
       await Promise.all(
-        Array.from({ length: 10 }, () => cortex.mutable.increment(ns, key, 1)),
+        Array.from(
+          { length: 10 },
+          async () => await cortex.mutable.increment(ns, key, 1),
+        ),
       );
 
       const final = await cortex.mutable.get(ns, key);
+
       // Due to potential race conditions, exact value may vary
       // But should be > 0 and <= 10
       expect(final).toBeGreaterThan(0);
@@ -972,7 +1026,7 @@ describe("Mutable Store API (Layer 1c)", () => {
       const key = "test-key";
 
       // Create
-      const created = await cortex.mutable.set(ns, key, 0);
+      const _created = await cortex.mutable.set(ns, key, 0);
 
       // Update 10 times
       for (let i = 1; i <= 10; i++) {
@@ -995,6 +1049,7 @@ describe("Mutable Store API (Layer 1c)", () => {
 
       // Durability: Value persists
       const retrieved = await cortex.mutable.get(ns, key);
+
       expect(retrieved).toBe(10);
     });
 
@@ -1010,10 +1065,12 @@ describe("Mutable Store API (Layer 1c)", () => {
 
       // Only current value exists
       const value = await cortex.mutable.get(ns, key);
+
       expect(value).toBe("second");
 
       // No way to get "first" - it's gone!
       const record = await cortex.mutable.getRecord(ns, key);
+
       expect(record!.value).toBe("second");
       // No previousVersions field!
     });

@@ -1,0 +1,130 @@
+
+> @cortexmemory/sdk@0.5.1 lint
+> tsc --project tsconfig.lint.json --noEmit && eslint . --report-unused-disable-directives --max-warnings 0
+
+
+C:\Users\nicho\OneDrive - Saint Nick LLC\Project Cortex\convex-dev\conversations.ts
+   35:16  warning  Unnecessary conditional, comparison is always true, since `"agent-agent" === "agent-agent"` is true  @typescript-eslint/no-unnecessary-condition
+   67:7   warning  Unsafe assignment of an `any` value                                                                  @typescript-eslint/no-unsafe-assignment
+  324:7   warning  Unsafe assignment of an `any` value                                                                  @typescript-eslint/no-unsafe-assignment
+  623:66  warning  Unexpected any. Specify a different type                                                             @typescript-eslint/no-explicit-any
+  624:9   warning  Unsafe call of a(n) `any` typed value                                                                @typescript-eslint/no-unsafe-call
+  624:9   warning  Unsafe call of a(n) `any` typed value                                                                @typescript-eslint/no-unsafe-call
+  624:13  warning  Unsafe member access .content on an `any` value                                                      @typescript-eslint/no-unsafe-member-access
+  624:35  warning  Unsafe member access .includes on an `any` value                                                     @typescript-eslint/no-unsafe-member-access
+  632:66  warning  Unexpected any. Specify a different type                                                             @typescript-eslint/no-explicit-any
+  633:17  warning  Unsafe assignment of an `any` value                                                                  @typescript-eslint/no-unsafe-assignment
+  634:17  warning  Unsafe assignment of an `any` value                                                                  @typescript-eslint/no-unsafe-assignment
+  634:25  warning  Unsafe call of a(n) `any` typed value                                                                @typescript-eslint/no-unsafe-call
+  634:25  warning  Unsafe call of a(n) `any` typed value                                                                @typescript-eslint/no-unsafe-call
+  634:33  warning  Unsafe member access .toLowerCase on an `any` value                                                  @typescript-eslint/no-unsafe-member-access
+  634:47  warning  Unsafe member access .indexOf on an `any` value                                                      @typescript-eslint/no-unsafe-member-access
+  636:40  warning  Unsafe member access .length on an `any` value                                                       @typescript-eslint/no-unsafe-member-access
+  638:11  warning  Unsafe return of a value of type `any`                                                               @typescript-eslint/no-unsafe-return
+  638:18  warning  Unsafe call of a(n) `any` typed value                                                                @typescript-eslint/no-unsafe-call
+  638:26  warning  Unsafe member access .substring on an `any` value                                                    @typescript-eslint/no-unsafe-member-access
+  644:11  warning  Unsafe assignment of type `any[]` to a variable of type `string[]`                                   @typescript-eslint/no-unsafe-assignment
+  728:11  warning  Unsafe assignment of an `any` value                                                                  @typescript-eslint/no-unsafe-assignment
+  728:24  warning  Unexpected any. Specify a different type                                                             @typescript-eslint/no-explicit-any
+  728:29  warning  Unsafe member access .metadata on an `any` value                                                     @typescript-eslint/no-unsafe-member-access
+
+C:\Users\nicho\OneDrive - Saint Nick LLC\Project Cortex\convex-dev\immutable.ts
+   44:11  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+   52:9   warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+   55:9   warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+   65:9   warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+   69:9   warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+  157:9   warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+  178:7   warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+  180:7   warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+  211:9   warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+  213:9   warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+  222:9   warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+  404:9   warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+  427:11  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+  429:11  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+  444:9   warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+  446:9   warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+
+C:\Users\nicho\OneDrive - Saint Nick LLC\Project Cortex\convex-dev\memories.ts
+  180:40  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  180:49  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  181:13  warning  Unsafe return of a value of type `any`              @typescript-eslint/no-unsafe-return
+  181:13  warning  Unsafe call of a(n) `any` typed value               @typescript-eslint/no-unsafe-call
+  181:13  warning  Unsafe call of a(n) `any` typed value               @typescript-eslint/no-unsafe-call
+  181:15  warning  Unsafe member access .similar on an `any` value     @typescript-eslint/no-unsafe-member-access
+  182:15  warning  Unsafe member access .eq on an `any` value          @typescript-eslint/no-unsafe-member-access
+  185:23  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  187:13  warning  Unsafe call of a(n) `any` typed value               @typescript-eslint/no-unsafe-call
+  187:19  warning  Unsafe member access .message on an `any` value     @typescript-eslint/no-unsafe-member-access
+  680:22  warning  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  683:17  warning  Unsafe member access .importance on an `any` value  @typescript-eslint/no-unsafe-member-access
+  687:17  warning  Unsafe member access .tags on an `any` value        @typescript-eslint/no-unsafe-member-access
+
+C:\Users\nicho\OneDrive - Saint Nick LLC\Project Cortex\convex-dev\mutable.ts
+   40:9   warning  Unsafe assignment of an `any` value                                                        @typescript-eslint/no-unsafe-assignment
+   42:9   warning  Unsafe assignment of an `any` value                                                        @typescript-eslint/no-unsafe-assignment
+   53:9   warning  Unsafe assignment of an `any` value                                                        @typescript-eslint/no-unsafe-assignment
+   55:9   warning  Unsafe assignment of an `any` value                                                        @typescript-eslint/no-unsafe-assignment
+   96:9   warning  Unsafe assignment of an `any` value                                                        @typescript-eslint/no-unsafe-assignment
+  101:9   warning  Unsafe assignment of an `any` value                                                        @typescript-eslint/no-unsafe-assignment
+  108:23  warning  Unsafe spread of an `any` value in an array                                                @typescript-eslint/no-unsafe-assignment
+  114:9   warning  Unsafe assignment of an `any` value                                                        @typescript-eslint/no-unsafe-assignment
+  119:7   warning  Unsafe assignment of an `any` value                                                        @typescript-eslint/no-unsafe-assignment
+  219:13  warning  Unsafe assignment of an `any` value                                                        @typescript-eslint/no-unsafe-assignment
+  228:13  warning  Unsafe assignment of an `any` value                                                        @typescript-eslint/no-unsafe-assignment
+  247:13  warning  Unsafe assignment of an `any` value                                                        @typescript-eslint/no-unsafe-assignment
+  250:11  warning  Unsafe assignment of an `any` value                                                        @typescript-eslint/no-unsafe-assignment
+  255:11  warning  Unsafe assignment of an `any` value                                                        @typescript-eslint/no-unsafe-assignment
+  259:11  warning  Unsafe assignment of an `any` value                                                        @typescript-eslint/no-unsafe-assignment
+  263:18  warning  Unnecessary conditional, comparison is always true, since `"delete" === "delete"` is true  @typescript-eslint/no-unnecessary-condition
+
+C:\Users\nicho\OneDrive - Saint Nick LLC\Project Cortex\scripts\cleanup-test-data.ts
+  0:0  error  Parsing error: "parserOptions.project" has been provided for @typescript-eslint/parser.
+The file was not found in any of the provided project(s): scripts\cleanup-test-data.ts
+
+C:\Users\nicho\OneDrive - Saint Nick LLC\Project Cortex\scripts\post-build-esm.js
+  0:0  error  Parsing error: "parserOptions.project" has been provided for @typescript-eslint/parser.
+The file was not found in any of the provided project(s): scripts\post-build-esm.js
+
+C:\Users\nicho\OneDrive - Saint Nick LLC\Project Cortex\src\index.ts
+  53:5  error  Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator  @typescript-eslint/no-floating-promises
+
+C:\Users\nicho\OneDrive - Saint Nick LLC\Project Cortex\src\memory\index.ts
+  328:13  warning  Unsafe assignment of an `any` value               @typescript-eslint/no-unsafe-assignment
+  336:13  warning  Unsafe assignment of an `any` value               @typescript-eslint/no-unsafe-assignment
+  336:30  warning  Unsafe call of a(n) `any` typed value             @typescript-eslint/no-unsafe-call
+  336:43  warning  Unsafe member access .messages on an `any` value  @typescript-eslint/no-unsafe-member-access
+  336:63  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  337:55  warning  Unsafe member access .id on an `any` value        @typescript-eslint/no-unsafe-member-access
+  342:9   warning  Unsafe assignment of an `any` value               @typescript-eslint/no-unsafe-assignment
+  343:9   warning  Unsafe assignment of an `any` value               @typescript-eslint/no-unsafe-assignment
+
+C:\Users\nicho\OneDrive - Saint Nick LLC\Project Cortex\tests\conversations.debug.test.ts
+  17:3  error    'DEBUG_CONFIG' is defined but never used. Allowed unused vars must match /^_/u                                                                                      @typescript-eslint/no-unused-vars
+  63:5  warning  Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator  @typescript-eslint/no-floating-promises
+
+C:\Users\nicho\OneDrive - Saint Nick LLC\Project Cortex\tests\conversations.test.ts
+  41:5  warning  Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator  @typescript-eslint/no-floating-promises
+
+C:\Users\nicho\OneDrive - Saint Nick LLC\Project Cortex\tests\interactive-runner.ts
+   359:14  error    'error' is defined but never used. Allowed unused caught errors must match /^_/u                                                                                    @typescript-eslint/no-unused-vars
+   391:14  error    'error' is defined but never used. Allowed unused caught errors must match /^_/u                                                                                    @typescript-eslint/no-unused-vars
+   553:7   warning  Unnecessary conditional, value is always truthy                                                                                                                     @typescript-eslint/no-unnecessary-condition
+   590:7   warning  Unnecessary conditional, value is always truthy                                                                                                                     @typescript-eslint/no-unnecessary-condition
+  1268:29  error    'i' is defined but never used. Allowed unused args must match /^_/u                                                                                                 @typescript-eslint/no-unused-vars
+  3484:10  warning  Unnecessary conditional, value is always truthy                                                                                                                     @typescript-eslint/no-unnecessary-condition
+  3490:9   warning  Unnecessary conditional, value is always truthy                                                                                                                     @typescript-eslint/no-unnecessary-condition
+  3536:1   warning  Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator  @typescript-eslint/no-floating-promises
+
+C:\Users\nicho\OneDrive - Saint Nick LLC\Project Cortex\tests\memory.test.ts
+   78:5  warning  Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator  @typescript-eslint/no-floating-promises
+  492:9  error    'testConversationId' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                       @typescript-eslint/no-unused-vars
+
+C:\Users\nicho\OneDrive - Saint Nick LLC\Project Cortex\tests\mutable.test.ts
+   66:16  error  'error' is defined but never used. Allowed unused caught errors must match /^_/u  @typescript-eslint/no-unused-vars
+  715:16  error  'e' is defined but never used. Allowed unused caught errors must match /^_/u      @typescript-eslint/no-unused-vars
+  917:16  error  'e' is defined but never used. Allowed unused caught errors must match /^_/u      @typescript-eslint/no-unused-vars
+
+Γ£û 95 problems (11 errors, 84 warnings)
+

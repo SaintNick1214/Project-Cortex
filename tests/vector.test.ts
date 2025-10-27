@@ -21,6 +21,7 @@ describe("Vector Memory API (Layer 2)", () => {
 
   beforeAll(async () => {
     const convexUrl = process.env.CONVEX_URL;
+
     if (!convexUrl) {
       throw new Error("CONVEX_URL not set");
     }
@@ -129,6 +130,7 @@ describe("Vector Memory API (Layer 2)", () => {
           tags: ["test"],
         },
       });
+
       testMemoryId = memory.memoryId;
     });
 
@@ -257,6 +259,7 @@ describe("Vector Memory API (Layer 2)", () => {
       const hasAgent2Memory = results.some((m) =>
         m.content.includes("agent-2"),
       );
+
       expect(hasAgent2Memory).toBe(false);
     });
   });
@@ -342,14 +345,17 @@ describe("Vector Memory API (Layer 2)", () => {
 
       // Verify exists
       const before = await cortex.vector.get("agent-test", memory.memoryId);
+
       expect(before).not.toBeNull();
 
       // Delete
       const result = await cortex.vector.delete("agent-test", memory.memoryId);
+
       expect(result.deleted).toBe(true);
 
       // Verify deleted
       const after = await cortex.vector.get("agent-test", memory.memoryId);
+
       expect(after).toBeNull();
     });
 
@@ -461,6 +467,7 @@ describe("Vector Memory API (Layer 2)", () => {
           source: { type: "system" },
           metadata: { importance: 50, tags: ["test"] },
         });
+
         memoryId = memory.memoryId;
       });
 
@@ -478,6 +485,7 @@ describe("Vector Memory API (Layer 2)", () => {
 
       it("preserves previous versions", async () => {
         const history = await cortex.vector.getHistory("agent-test", memoryId);
+
         expect(history).toHaveLength(2);
         expect(history[0].content).toBe("Original content");
         expect(history[1].content).toBe("Updated content");
@@ -494,6 +502,7 @@ describe("Vector Memory API (Layer 2)", () => {
           source: { type: "system" },
           metadata: { importance: 50, tags: [] },
         });
+
         memoryId = m.memoryId;
 
         await cortex.vector.update("agent-test", memoryId, {
@@ -506,13 +515,16 @@ describe("Vector Memory API (Layer 2)", () => {
 
       it("retrieves specific version", async () => {
         const v1 = await cortex.vector.getVersion("agent-test", memoryId, 1);
+
         expect(v1).not.toBeNull();
         expect(v1!.content).toBe("Version 1");
 
         const v2 = await cortex.vector.getVersion("agent-test", memoryId, 2);
+
         expect(v2!.content).toBe("Version 2");
 
         const v3 = await cortex.vector.getVersion("agent-test", memoryId, 3);
+
         expect(v3!.content).toBe("Version 3");
       });
     });
@@ -552,6 +564,7 @@ describe("Vector Memory API (Layer 2)", () => {
         expect(result.count).toBeGreaterThan(0);
 
         const parsed = JSON.parse(result.data);
+
         expect(Array.isArray(parsed)).toBe(true);
       });
 
@@ -613,6 +626,7 @@ describe("Vector Memory API (Layer 2)", () => {
 
         // Verify archived (should still exist but tagged)
         const archived = await cortex.vector.get("agent-test", memory.memoryId);
+
         expect(archived).not.toBeNull();
         expect(archived!.tags).toContain("archived");
         expect(archived!.importance).toBeLessThanOrEqual(10);
@@ -631,6 +645,7 @@ describe("Vector Memory API (Layer 2)", () => {
           source: { type: "system" },
           metadata: { importance: 50, tags: [] },
         });
+
         memoryId = m.memoryId;
         v1Timestamp = m.createdAt;
 
@@ -639,6 +654,7 @@ describe("Vector Memory API (Layer 2)", () => {
         const v2 = await cortex.vector.update("agent-test", memoryId, {
           content: "Temporal v2",
         });
+
         v2Timestamp = v2.updatedAt;
       });
 
@@ -648,6 +664,7 @@ describe("Vector Memory API (Layer 2)", () => {
           memoryId,
           v1Timestamp,
         );
+
         expect(atV1!.content).toBe("Temporal v1");
 
         const atV2 = await cortex.vector.getAtTimestamp(
@@ -655,6 +672,7 @@ describe("Vector Memory API (Layer 2)", () => {
           memoryId,
           v2Timestamp,
         );
+
         expect(atV2!.content).toBe("Temporal v2");
       });
     });

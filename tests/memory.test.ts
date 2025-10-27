@@ -20,7 +20,9 @@ const openai = process.env.OPENAI_API_KEY
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 async function generateEmbedding(text: string): Promise<number[]> {
-  if (!openai) throw new Error("OpenAI not configured");
+  if (!openai) {
+    throw new Error("OpenAI not configured");
+  }
 
   const response = await openai.embeddings.create({
     model: "text-embedding-3-small",
@@ -35,7 +37,9 @@ async function summarizeConversation(
   userMessage: string,
   agentResponse: string,
 ): Promise<string | null> {
-  if (!openai) throw new Error("OpenAI not configured");
+  if (!openai) {
+    throw new Error("OpenAI not configured");
+  }
 
   const response = await openai.chat.completions.create({
     model: "gpt-4o-mini",
@@ -91,6 +95,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         type: "user-agent",
         participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
+
       testConversationId = conv.conversationId;
     });
 
@@ -112,6 +117,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await client.query(api.conversations.get, {
         conversationId: testConversationId,
       });
+
       expect(conv).not.toBeNull();
       expect(conv!.messages.length).toBeGreaterThanOrEqual(2);
 
@@ -120,6 +126,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         agentId: TEST_AGENT_ID,
         memoryId: result.memories[0].memoryId,
       });
+
       expect(memory1).not.toBeNull();
       expect(memory1!.conversationRef).toBeDefined();
       expect(memory1!.conversationRef!.conversationId).toBe(testConversationId);
@@ -137,6 +144,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
       // Check user memory
       const userMemory = result.memories[0];
+
       expect(userMemory.conversationRef).toBeDefined();
       expect(userMemory.conversationRef!.messageIds).toContain(
         result.conversation.messageIds[0],
@@ -144,6 +152,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
       // Check agent memory
       const agentMemory = result.memories[1];
+
       expect(agentMemory.conversationRef).toBeDefined();
       expect(agentMemory.conversationRef!.messageIds).toContain(
         result.conversation.messageIds[1],
@@ -152,8 +161,9 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     it("handles embedding generation callback", async () => {
       let callCount = 0;
-      const mockEmbed = async (content: string) => {
+      const mockEmbed = async (_content: string) => {
         callCount++;
+
         return [0.1, 0.2, 0.3]; // Mock embedding
       };
 
@@ -177,8 +187,9 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     it("handles content extraction callback", async () => {
       let callCount = 0;
-      const mockExtract = async (user: string, agent: string) => {
+      const mockExtract = async (_user: string, _agent: string) => {
         callCount++;
+
         return `Extracted: ${user}`;
       };
 
@@ -250,6 +261,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         type: "user-agent",
         participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
+
       testConversationId = conv.conversationId;
 
       const result = await cortex.memory.remember({
@@ -260,6 +272,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
       });
+
       testMemoryId = result.memories[0].memoryId;
     });
 
@@ -272,10 +285,12 @@ describe("Memory Convenience API (Layer 3)", () => {
 
       // Verify vector deleted
       const memory = await cortex.vector.get(TEST_AGENT_ID, testMemoryId);
+
       expect(memory).toBeNull();
 
       // Verify ACID preserved
       const conv = await cortex.conversations.get(testConversationId);
+
       expect(conv).not.toBeNull();
     });
 
@@ -291,10 +306,12 @@ describe("Memory Convenience API (Layer 3)", () => {
 
       // Verify vector deleted
       const memory = await cortex.vector.get(TEST_AGENT_ID, testMemoryId);
+
       expect(memory).toBeNull();
 
       // Verify ACID deleted
       const conv = await cortex.conversations.get(testConversationId);
+
       expect(conv).toBeNull();
     });
 
@@ -314,6 +331,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         type: "user-agent",
         participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
+
       testConversationId = conv.conversationId;
 
       const result = await cortex.memory.remember({
@@ -324,6 +342,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
       });
+
       testMemoryId = result.memories[0].memoryId;
     });
 
@@ -346,7 +365,8 @@ describe("Memory Convenience API (Layer 3)", () => {
       expect(result).toHaveProperty("conversation");
       expect(result).toHaveProperty("sourceMessages");
 
-      const enriched = result as any;
+      const enriched = result as unknown;
+
       expect(enriched.memory.memoryId).toBe(testMemoryId);
       expect(enriched.conversation.conversationId).toBe(testConversationId);
       expect(enriched.sourceMessages).toHaveLength(1);
@@ -371,11 +391,12 @@ describe("Memory Convenience API (Layer 3)", () => {
 
       expect(result).toBeDefined();
       expect(result).toHaveProperty("memory");
-      expect((result as any).conversation).toBeUndefined();
+      expect((result as unknown).conversation).toBeUndefined();
     });
 
     it("returns null for non-existent memory", async () => {
       const result = await cortex.memory.get(TEST_AGENT_ID, "non-existent");
+
       expect(result).toBeNull();
     });
   });
@@ -388,6 +409,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         type: "user-agent",
         participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
+
       testConversationId = conv.conversationId;
 
       // Create multiple memories
@@ -429,7 +451,8 @@ describe("Memory Convenience API (Layer 3)", () => {
 
       expect(results.length).toBeGreaterThan(0);
 
-      const enriched = results[0] as any;
+      const enriched = results[0] as unknown;
+
       expect(enriched).toHaveProperty("memory");
       expect(enriched).toHaveProperty("conversation");
       expect(enriched).toHaveProperty("sourceMessages");
@@ -451,8 +474,8 @@ describe("Memory Convenience API (Layer 3)", () => {
       expect(results.length).toBeGreaterThan(0);
 
       // Some should have conversations, some shouldn't
-      const withConv = results.filter((r: any) => r.conversation);
-      const withoutConv = results.filter((r: any) => !r.conversation);
+      const withConv = results.filter((r: unknown) => r.conversation);
+      const withoutConv = results.filter((r: unknown) => !r.conversation);
 
       // Both types should exist
       expect(withConv.length + withoutConv.length).toBe(results.length);
@@ -470,13 +493,14 @@ describe("Memory Convenience API (Layer 3)", () => {
   });
 
   describe("store() with smart detection", () => {
-    let testConversationId: string;
+    let _testConversationId: string;
 
     beforeAll(async () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
+
       testConversationId = conv.conversationId;
     });
 
@@ -778,12 +802,13 @@ describe("Memory Convenience API (Layer 3)", () => {
       expect(searchResults.length).toBeGreaterThan(0);
 
       // Find the result - check both enriched and non-enriched structures
-      const enrichedSearch = searchResults.find((r: any) => {
+      const enrichedSearch = searchResults.find((r: unknown) => {
         const content = r.memory?.content || r.content;
+
         return (
           content?.includes("Integration test") || content?.includes("password")
         );
-      }) as any;
+      }) as unknown;
 
       expect(enrichedSearch).toBeDefined();
       expect(
@@ -795,7 +820,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         TEST_AGENT_ID,
         remembered.memories[0].memoryId,
         { includeConversation: true },
-      )) as any;
+      )) as unknown;
 
       expect(enrichedGet.memory).toBeDefined();
       expect(enrichedGet.conversation).toBeDefined();
@@ -814,6 +839,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const convStillExists = await cortex.conversations.get(
         conv.conversationId,
       );
+
       expect(convStillExists).not.toBeNull();
     });
 
@@ -846,9 +872,11 @@ describe("Memory Convenience API (Layer 3)", () => {
         TEST_AGENT_ID,
         remembered.memories[0].memoryId,
       );
+
       expect(memory).toBeNull();
 
       const conversation = await cortex.conversations.get(conv.conversationId);
+
       expect(conversation).toBeNull();
     });
   });
@@ -885,11 +913,13 @@ describe("Memory Convenience API (Layer 3)", () => {
       const afterACID = await client.query(api.conversations.get, {
         conversationId: conv.conversationId,
       });
+
       expect(afterACID!.messageCount).toBe(beforeMessageCount + 2);
 
       const afterVector = await client.query(api.memories.count, {
         agentId: TEST_AGENT_ID,
       });
+
       expect(afterVector).toBe(beforeVector + 2);
     });
 
@@ -918,10 +948,12 @@ describe("Memory Convenience API (Layer 3)", () => {
         TEST_AGENT_ID,
         remembered.memories[0].memoryId,
       );
+
       expect(vectorMemory).toBeNull();
 
       // ACID preserved
       const acidConv = await cortex.conversations.get(conv.conversationId);
+
       expect(acidConv).not.toBeNull();
       expect(acidConv!.messages.length).toBeGreaterThanOrEqual(2);
     });
@@ -933,21 +965,22 @@ describe("Memory Convenience API (Layer 3)", () => {
 
   describe("Advanced: Real-World Embedding & Recall", () => {
     // Skip if no API key
-    const shouldRun = !!openai;
+    const shouldRun = Boolean(openai);
 
     (shouldRun ? describe : describe.skip)("with OpenAI", () => {
       let conversationId: string;
-      let storedMemories: { fact: string; memoryId: string }[] = [];
+      const storedMemories: Array<{ fact: string; memoryId: string }> = [];
 
       beforeAll(async () => {
         // Clean up any stale test data from previous runs
         await cleanup.purgeAll();
-        
+
         // Create conversation
         const conv = await cortex.conversations.create({
           type: "user-agent",
           participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
         });
+
         conversationId = conv.conversationId;
       });
 
@@ -990,7 +1023,7 @@ describe("Memory Convenience API (Layer 3)", () => {
             agentResponse: conv.agent,
             userId: TEST_USER_ID,
             userName: "Alex Johnson",
-            generateEmbedding: generateEmbedding,
+            generateEmbedding,
             extractContent: summarizeConversation,
             importance: conv.fact === "api-password" ? 100 : 70,
             tags: [conv.fact, "customer-support"],
@@ -1038,7 +1071,7 @@ describe("Memory Convenience API (Layer 3)", () => {
               userId: TEST_USER_ID,
               limit: 10, // Get more results to handle edge cases in similarity scoring
             },
-          )) as any[];
+          )) as unknown[];
 
           // Should find the relevant fact (semantic match, not keyword)
           expect(results.length).toBeGreaterThan(0);
@@ -1046,13 +1079,26 @@ describe("Memory Convenience API (Layer 3)", () => {
           // Validate the TOP result (results[0]) contains the expected content
           // This ensures semantic search ranks the most relevant result first
           const topResult = results[0];
-          
+
           // If top result doesn't match, log for debugging
-          if (!topResult.content.toLowerCase().includes(search.expectInContent.toLowerCase())) {
-            console.log(`  ⚠ Query: "${search.query}" - Top result doesn't contain "${search.expectInContent}":`);
+          if (
+            !topResult.content
+              .toLowerCase()
+              .includes(search.expectInContent.toLowerCase())
+          ) {
+            console.log(
+              `  ⚠ Query: "${search.query}" - Top result doesn't contain "${search.expectInContent}":`,
+            );
             results.slice(0, 3).forEach((r, i) => {
-              const hasMatch = r.content.toLowerCase().includes(search.expectInContent.toLowerCase()) ? "✓ MATCH" : "";
-              console.log(`    ${i + 1}. "${r.content.substring(0, 80)}..." (score: ${r._score?.toFixed(3)}) ${hasMatch}`);
+              const hasMatch = r.content
+                .toLowerCase()
+                .includes(search.expectInContent.toLowerCase())
+                ? "✓ MATCH"
+                : "";
+
+              console.log(
+                `    ${i + 1}. "${r.content.substring(0, 80)}..." (score: ${r._score?.toFixed(3)}) ${hasMatch}`,
+              );
             });
           }
 
@@ -1077,7 +1123,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
         expect(results.length).toBeGreaterThan(0);
 
-        const enriched = results[0] as any;
+        const enriched = results[0] as unknown;
 
         // Check if it's enriched structure (has .memory)
         if (enriched.memory) {
@@ -1124,6 +1170,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         // Summarized content should be concise
         const original =
           "My name is Alexander Johnson and I prefer to be called Alex";
+
         expect(memory!.content.length).toBeLessThan(original.length * 1.5);
         expect(memory!.content.toLowerCase()).toContain("alex");
 
@@ -1141,7 +1188,7 @@ describe("Memory Convenience API (Layer 3)", () => {
             ),
             userId: TEST_USER_ID,
           },
-        )) as any[];
+        )) as unknown[];
 
         expect(results.length).toBeGreaterThan(0);
 
@@ -1149,10 +1196,12 @@ describe("Memory Convenience API (Layer 3)", () => {
         const resultsWithScores = results.filter(
           (r) => r._score !== undefined && !isNaN(r._score),
         );
+
         expect(resultsWithScores.length).toBeGreaterThan(0);
 
         resultsWithScores.forEach((result) => {
           const score = result._score;
+
           expect(score).toBeGreaterThanOrEqual(0);
           expect(score).toBeLessThanOrEqual(1);
           console.log(

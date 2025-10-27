@@ -173,11 +173,14 @@ export const search = query({
       // Semantic search with vector similarity
       // Try vector index first (production), fallback to manual similarity (local dev)
       try {
+        // Note: .similar() API is only available in managed Convex, not local dev
+        // TypeScript doesn't recognize it, so we use type assertion
         results = await ctx.db
           .query("memories")
-          .withIndex("by_embedding", (q) =>
-            q.similar("embedding", args.embedding, args.limit || 20)
-             .eq("agentId", args.agentId)
+          .withIndex("by_embedding" as any, (q: any) =>
+            q
+              .similar("embedding", args.embedding, args.limit || 20)
+              .eq("agentId", args.agentId),
           )
           .collect();
       } catch (error: any) {
@@ -430,6 +433,7 @@ export const getVersion = query({
     const prevVersion = memory.previousVersions.find(
       (v) => v.version === args.version,
     );
+
     return prevVersion
       ? {
           memoryId: memory.memoryId,
@@ -514,6 +518,7 @@ export const deleteMany = mutation({
     }
 
     let deleted = 0;
+
     for (const memory of memories) {
       await ctx.db.delete(memory._id);
       deleted++;
@@ -529,7 +534,7 @@ export const deleteMany = mutation({
 /**
  * Purge ALL memories (test environments only - no agent filtering)
  * WARNING: This deletes ALL memories in the database
- * 
+ *
  * SECURITY: Only enabled in test/dev environments
  * - Checks CONVEX_SITE_URL to prevent production misuse
  * - Local dev: localhost/127.0.0.1 URLs allowed
@@ -541,25 +546,32 @@ export const purgeAll = mutation({
   handler: async (ctx) => {
     // Security check: Only allow in test/dev environments
     const siteUrl = process.env.CONVEX_SITE_URL || "";
-    const isLocal = siteUrl.includes("localhost") || siteUrl.includes("127.0.0.1");
-    const isDevDeployment = siteUrl.includes(".convex.site") || siteUrl.includes("dev-") || siteUrl.includes("convex.cloud");
-    const isTestEnv = process.env.NODE_ENV === "test" || process.env.CONVEX_ENVIRONMENT === "test";
-    
+    const isLocal =
+      siteUrl.includes("localhost") || siteUrl.includes("127.0.0.1");
+    const isDevDeployment =
+      siteUrl.includes(".convex.site") ||
+      siteUrl.includes("dev-") ||
+      siteUrl.includes("convex.cloud");
+    const isTestEnv =
+      process.env.NODE_ENV === "test" ||
+      process.env.CONVEX_ENVIRONMENT === "test";
+
     if (!isLocal && !isDevDeployment && !isTestEnv) {
       throw new Error(
         "PURGE_DISABLED_IN_PRODUCTION: purgeAll is only available in test/dev environments. " +
-        "Use deleteMany with specific agentId for targeted deletions."
+          "Use deleteMany with specific agentId for targeted deletions.",
       );
     }
 
     const allMemories = await ctx.db.query("memories").collect();
-    
+
     let deleted = 0;
+
     for (const memory of allMemories) {
       await ctx.db.delete(memory._id);
       deleted++;
     }
-    
+
     return { deleted };
   },
 });
@@ -605,35 +617,32 @@ export const exportMemories = query({
         count: memories.length,
         exportedAt: Date.now(),
       };
-    } else {
-      const headers = [
-        "memoryId",
-        "content",
-        "sourceType",
-        "importance",
-        "tags",
-        "createdAt",
-      ];
-      const rows = memories.map((m) => [
-        m.memoryId,
-        m.content.replace(/,/g, ";"),
-        m.sourceType,
-        m.importance.toString(),
-        m.tags.join(";"),
-        new Date(m.createdAt).toISOString(),
-      ]);
-
-      const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join(
-        "\n",
-      );
-
-      return {
-        format: "csv",
-        data: csv,
-        count: memories.length,
-        exportedAt: Date.now(),
-      };
     }
+    const headers = [
+      "memoryId",
+      "content",
+      "sourceType",
+      "importance",
+      "tags",
+      "createdAt",
+    ];
+    const rows = memories.map((m) => [
+      m.memoryId,
+      m.content.replace(/,/g, ";"),
+      m.sourceType,
+      m.importance.toString(),
+      m.tags.join(";"),
+      new Date(m.createdAt).toISOString(),
+    ]);
+
+    const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+
+    return {
+      format: "csv",
+      data: csv,
+      count: memories.length,
+      exportedAt: Date.now(),
+    };
   },
 });
 
@@ -670,6 +679,7 @@ export const updateMany = mutation({
     }
 
     let updated = 0;
+
     for (const memory of memories) {
       const patches: any = { updatedAt: Date.now() };
 
@@ -771,6 +781,7 @@ export const getAtTimestamp = query({
     // Find version that was current at timestamp
     for (let i = memory.previousVersions.length - 1; i >= 0; i--) {
       const prevVersion = memory.previousVersions[i];
+
       if (args.timestamp >= prevVersion.timestamp) {
         return {
           memoryId: memory.memoryId,
