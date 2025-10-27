@@ -192,12 +192,21 @@ export const search = query({
           const withScores = vectorResults
             .filter((m) => m.embedding && m.embedding.length > 0)
             .map((m) => {
+              // Validate dimension matching (critical for correct similarity)
+              if (m.embedding!.length !== args.embedding!.length) {
+                // Skip embeddings with mismatched dimensions
+                return {
+                  ...m,
+                  _score: -1, // Will be filtered out
+                };
+              }
+
               // Cosine similarity calculation
               let dotProduct = 0;
               let normA = 0;
               let normB = 0;
 
-              for (let i = 0; i < Math.min(args.embedding!.length, m.embedding!.length); i++) {
+              for (let i = 0; i < args.embedding!.length; i++) {
                 dotProduct += args.embedding![i] * m.embedding![i];
                 normA += args.embedding![i] * args.embedding![i];
                 normB += m.embedding![i] * m.embedding![i];
@@ -212,7 +221,7 @@ export const search = query({
                 _score: similarity,
               };
             })
-            .filter((m) => !isNaN(m._score)) // Filter out any NaN scores
+            .filter((m) => !isNaN(m._score) && m._score >= 0) // Filter out NaN and dimension mismatches
             .sort((a, b) => b._score - a._score) // Sort by similarity (highest first)
             .slice(0, args.limit || 20);
 
@@ -520,10 +529,29 @@ export const deleteMany = mutation({
 /**
  * Purge ALL memories (test environments only - no agent filtering)
  * WARNING: This deletes ALL memories in the database
+ * 
+ * SECURITY: Only enabled in test/dev environments
+ * - Checks CONVEX_SITE_URL to prevent production misuse
+ * - Local dev: localhost/127.0.0.1 URLs allowed
+ * - Test deployments: dev-* deployment names allowed
+ * - Production: Explicitly blocked
  */
 export const purgeAll = mutation({
   args: {},
   handler: async (ctx) => {
+    // Security check: Only allow in test/dev environments
+    const siteUrl = process.env.CONVEX_SITE_URL || "";
+    const isLocal = siteUrl.includes("localhost") || siteUrl.includes("127.0.0.1");
+    const isDevDeployment = siteUrl.includes(".convex.site") || siteUrl.includes("dev-");
+    const isTestEnv = process.env.NODE_ENV === "test" || process.env.CONVEX_ENVIRONMENT === "test";
+    
+    if (!isLocal && !isDevDeployment && !isTestEnv) {
+      throw new Error(
+        "PURGE_DISABLED_IN_PRODUCTION: purgeAll is only available in test/dev environments. " +
+        "Use deleteMany with specific agentId for targeted deletions."
+      );
+    }
+
     const allMemories = await ctx.db.query("memories").collect();
     
     let deleted = 0;
