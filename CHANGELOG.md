@@ -21,6 +21,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.4.3] - 2025-10-27
+
+#### 🔧 Patch Release - Deploy Backend in CI
+
+Adds Convex backend deployment to GitHub Action workflow so tests run against deployed functions.
+
+#### Fixed
+- Added `npx convex deploy` step to GitHub Action workflow
+- Backend functions now deployed before tests run
+- Tests now run against actual deployed backend
+
+**Total**: 54 operations, 201 tests (no API changes)
+
+---
+
 ### [0.4.2] - 2025-10-27
 
 #### 🔧 Patch Release - Fix Automated Workflow
