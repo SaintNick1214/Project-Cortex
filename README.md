@@ -246,6 +246,20 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
 - **Flexible Access Control**: Implement your own auth layer on top
 - **Open Source Core**: Audit the code yourself - full transparency
 
+## 📦 Publishing Releases
+
+Cortex SDK uses **dual release workflows**:
+
+**🤖 Automated** (Production - recommended):
+- Bump version in `package.json` → Push to `main` → GitHub Action publishes automatically
+- Full details: [RELEASE-GUIDE.md](./RELEASE-GUIDE.md)
+
+**💻 Manual** (Beta/hotfix - full control):
+- Run `npm run release` for interactive publishing
+- See: [scripts/release.ps1](./scripts/release.ps1)
+
+**Setup**: [.github/SETUP-AUTOMATED-RELEASES.md](.github/SETUP-AUTOMATED-RELEASES.md)
+
 ## 📄 License
 
 **Open Source Core**: Apache License 2.0
