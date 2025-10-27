@@ -98,6 +98,7 @@ Complete dual-layer orchestration with automatic ACID + Vector management! **All
 #### Changed
 
 - Updated GitHub Action workflow to support OPENAI_API_KEY
+- **Improved version detection**: Now compares with npm registry instead of git history (handles multi-commit pushes)
 - Enhanced test setup to load .env.local for API keys
 - Fixed cosine similarity calculation (handle zero vectors, no NaN)
 - Interactive test menu expanded (11 new options)

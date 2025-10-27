@@ -113,6 +113,27 @@ You need to configure 3 secrets in your GitHub repository:
 
 ## 🚀 How It Works
 
+### Version Detection (Smart!)
+
+The workflow compares `package.json` version with the **published npm version**:
+
+```bash
+# Checks npm registry (not git history)
+Package version: 0.5.0
+npm version: 0.4.6
+→ Publish! ✅
+
+Package version: 0.5.0  
+npm version: 0.5.0
+→ Skip (already published) ⏭️
+```
+
+**Benefits**:
+- ✅ Works with multiple commits in one push
+- ✅ No dependency on git history
+- ✅ Can retry failed publishes (just re-push)
+- ✅ Prevents accidental duplicate publishes
+
 ### Automatic Workflow
 
 ```bash
