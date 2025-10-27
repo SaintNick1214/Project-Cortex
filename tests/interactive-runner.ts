@@ -153,9 +153,33 @@ const MENU_OPTIONS = {
   "79": { label: "  🎯 Run All Mutable Tests", action: runMutableTests },
 
   // ═══════════════════════════════════════════════════════════════════════
+  // Layer 2: Vector Memory API
+  // ═══════════════════════════════════════════════════════════════════════
+  "80": { label: "🧠 Vector Memory API ─────────────", action: showVectorMenu },
+  "81": { label: "  💾 store", action: testVectorStore },
+  "82": { label: "  📖 get", action: testVectorGet },
+  "83": { label: "  🔍 search (keyword)", action: testVectorSearch },
+  "84": { label: "  📋 list", action: testVectorList },
+  "85": { label: "  🔢 count", action: testVectorCount },
+  "86": { label: "  🗑️  delete", action: testVectorDelete },
+  "87": { label: "  ✏️  update", action: testVectorUpdate },
+  "88": {
+    label: "  📦 Advanced Operations ───────",
+    action: showVectorAdvancedMenu,
+  },
+  "881": { label: "    📝 updateMany", action: testVectorUpdateMany },
+  "882": { label: "    🗑️  deleteMany", action: testVectorDeleteMany },
+  "883": { label: "    📤 export", action: testVectorExport },
+  "884": { label: "    🗄️  archive", action: testVectorArchive },
+  "885": { label: "    🕒 getVersion", action: testVectorGetVersion },
+  "886": { label: "    📜 getHistory", action: testVectorGetHistory },
+  "887": { label: "    ⏰ getAtTimestamp", action: testVectorGetAtTimestamp },
+  "89": { label: "  🎯 Run All Vector Tests", action: runVectorTests },
+
+  // ═══════════════════════════════════════════════════════════════════════
   // Run All
   // ═══════════════════════════════════════════════════════════════════════
-  "99": { label: "🎯 Run All Tests (All 3 Layers)", action: runAllTests },
+  "99": { label: "🎯 Run All Tests (All 4 Layers)", action: runAllTests },
   "0": { label: "❌ Exit", action: exit },
 };
 
@@ -173,6 +197,11 @@ async function showImmutableMenu() {
 async function showMutableMenu() {
   console.log("\n🔄 Mutable Store API");
   console.log("Core: 61-71 | Run All: 79\n");
+}
+
+async function showVectorMenu() {
+  console.log("\n🧠 Vector Memory API (All 14 Operations)");
+  console.log("Core: 81-87 | Advanced: 881-887 | Run All: 89\n");
 }
 
 // Test implementations
@@ -250,6 +279,37 @@ async function purgeAllDatabases() {
     }
   }
   console.log(`  ✅ Purged ${mutableDeleted} mutable entry/entries`);
+
+  // Purge vector memories
+  console.log("  Purging vector memories...");
+  const testAgents = [
+    TEST_AGENT_ID,
+    "agent-test",
+    "agent-test-2",
+    "agent-search",
+    "agent-store",
+  ];
+  let memoryDeleted = 0;
+
+  for (const agentId of testAgents) {
+    try {
+      const memories = await client.query(api.memories.list, { agentId });
+      for (const memory of memories) {
+        try {
+          await client.mutation(api.memories.deleteMemory, {
+            agentId,
+            memoryId: memory.memoryId,
+          });
+          memoryDeleted++;
+        } catch (error: any) {
+          if (error.message?.includes("MEMORY_NOT_FOUND")) continue;
+        }
+      }
+    } catch (error: any) {
+      // Agent might not have memories
+    }
+  }
+  console.log(`  ✅ Purged ${memoryDeleted} memory/memories`);
 
   console.log("\n✅ All databases clean\n");
 }
@@ -2132,6 +2192,374 @@ async function testMutableTransaction() {
   console.log();
 }
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Layer 2: Vector Memory Tests
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+let currentMemoryId: string | null = null;
+
+async function testVectorStore() {
+  console.log("\n💾 Testing: vector.store()...");
+
+  const result = await cortex.vector.store(TEST_AGENT_ID, {
+    content: "User prefers dark mode for UI",
+    contentType: "raw",
+    source: { type: "conversation", userId: TEST_USER_ID },
+    metadata: {
+      importance: 70,
+      tags: ["preferences", "ui"],
+    },
+  });
+
+  currentMemoryId = result.memoryId;
+
+  console.log("📥 Result:");
+  console.log(`  Memory ID: ${result.memoryId}`);
+  console.log(`  Content: ${result.content}`);
+  console.log(`  Importance: ${result.importance}`);
+  console.log(`  Tags: ${result.tags.join(", ")}`);
+  console.log(`\n🎯 Current memory: ${currentMemoryId}`);
+  console.log();
+}
+
+async function testVectorGet() {
+  if (!currentMemoryId) {
+    console.log(
+      "\n⚠️  No current memory. Run vector.store first (option 81).\n",
+    );
+    return;
+  }
+
+  console.log(`\n📖 Testing: vector.get()...`);
+
+  const result = await cortex.vector.get(TEST_AGENT_ID, currentMemoryId);
+
+  if (result) {
+    console.log("📥 Retrieved:");
+    console.log(`  ID: ${result.memoryId}`);
+    console.log(`  Content: ${result.content}`);
+    console.log(`  Source: ${result.sourceType}`);
+    console.log(`  Tags: ${result.tags.join(", ")}`);
+  } else {
+    console.log("❌ Memory not found");
+  }
+  console.log();
+}
+
+async function testVectorSearch() {
+  console.log("\n🔍 Testing: vector.search()...");
+
+  const results = await cortex.vector.search(TEST_AGENT_ID, "preferences");
+
+  console.log(`📥 Found ${results.length} memories matching "preferences"`);
+  results.forEach((m, i) => {
+    console.log(`\n  [${i + 1}] ${m.content.substring(0, 60)}...`);
+    console.log(`      Tags: ${m.tags.join(", ")}`);
+    console.log(`      Importance: ${m.importance}`);
+  });
+  console.log();
+}
+
+async function testVectorList() {
+  console.log("\n📋 Testing: vector.list()...");
+
+  const results = await cortex.vector.list({
+    agentId: TEST_AGENT_ID,
+    limit: 10,
+  });
+
+  console.log(`📥 Found ${results.length} memories for ${TEST_AGENT_ID}`);
+  results.forEach((m, i) => {
+    console.log(`  ${i + 1}. ${m.content.substring(0, 50)}...`);
+  });
+  console.log();
+}
+
+async function testVectorCount() {
+  console.log("\n🔢 Testing: vector.count()...");
+
+  const count = await cortex.vector.count({
+    agentId: TEST_AGENT_ID,
+  });
+
+  console.log(`📥 Count: ${count} memories`);
+  console.log();
+}
+
+async function testVectorDelete() {
+  if (!currentMemoryId) {
+    console.log(
+      "\n⚠️  No current memory. Run vector.store first (option 81).\n",
+    );
+    return;
+  }
+
+  console.log(`\n🗑️  Testing: vector.delete()...`);
+
+  await cortex.vector.delete(TEST_AGENT_ID, currentMemoryId);
+
+  console.log("✅ Memory deleted");
+
+  // Verify
+  const check = await cortex.vector.get(TEST_AGENT_ID, currentMemoryId);
+  console.log(
+    `✅ Verification: ${check === null ? "Deleted" : "Still exists (ERROR)"}`,
+  );
+
+  currentMemoryId = null;
+  console.log();
+}
+
+async function testVectorUpdate() {
+  if (!currentMemoryId) {
+    console.log(
+      "\n⚠️  No current memory. Run vector.store first (option 81).\n",
+    );
+    return;
+  }
+
+  console.log(`\n✏️  Testing: vector.update()...`);
+
+  const updated = await cortex.vector.update(TEST_AGENT_ID, currentMemoryId, {
+    content: "Updated content (version 2)",
+    importance: 90,
+    tags: ["updated", "test"],
+  });
+
+  console.log(`✅ Updated (version ${updated.version})`);
+  console.log(`   Content: ${updated.content}`);
+  console.log(`   Importance: ${updated.importance}`);
+  console.log(`   Tags: ${updated.tags.join(", ")}`);
+  console.log(`   Previous versions: ${updated.previousVersions.length}`);
+  console.log();
+}
+
+async function testVectorUpdateMany() {
+  console.log(`\n📝 Testing: vector.updateMany()...`);
+
+  // Create test memories
+  for (let i = 1; i <= 3; i++) {
+    await cortex.vector.store(TEST_AGENT_ID, {
+      content: `Bulk update test ${i}`,
+      contentType: "raw",
+      source: { type: "system", timestamp: Date.now() },
+      metadata: { importance: 30, tags: ["bulk-test"] },
+    });
+  }
+
+  const result = await cortex.vector.updateMany(
+    { agentId: TEST_AGENT_ID, sourceType: "system" },
+    { importance: 80 },
+  );
+
+  console.log(`✅ Updated ${result.updated} memories`);
+  console.log(`   Memory IDs: ${result.memoryIds.slice(0, 3).join(", ")}...`);
+  console.log();
+}
+
+async function testVectorDeleteMany() {
+  console.log(`\n🗑️  Testing: vector.deleteMany()...`);
+
+  // Create test memories
+  for (let i = 1; i <= 5; i++) {
+    await cortex.vector.store(TEST_AGENT_ID, {
+      content: `Bulk delete test ${i}`,
+      contentType: "raw",
+      source: { type: "system", timestamp: Date.now() },
+      userId: "user-bulk-delete-test",
+      metadata: { importance: 10, tags: ["delete-test"] },
+    });
+  }
+
+  const result = await cortex.vector.deleteMany({
+    agentId: TEST_AGENT_ID,
+    userId: "user-bulk-delete-test",
+  });
+
+  console.log(`✅ Deleted ${result.deleted} memories`);
+  console.log(`   Memory IDs: ${result.memoryIds.slice(0, 3).join(", ")}...`);
+  console.log();
+}
+
+async function testVectorExport() {
+  console.log(`\n📤 Testing: vector.export()...`);
+
+  const jsonExport = await cortex.vector.export({
+    agentId: TEST_AGENT_ID,
+    format: "json",
+  });
+
+  console.log(`✅ Exported ${jsonExport.count} memories (JSON)`);
+  console.log(`   Format: ${jsonExport.format}`);
+  console.log(`   Data length: ${jsonExport.data.length} characters`);
+
+  const csvExport = await cortex.vector.export({
+    agentId: TEST_AGENT_ID,
+    format: "csv",
+  });
+
+  console.log(`✅ Exported ${csvExport.count} memories (CSV)`);
+  console.log(`   First line: ${csvExport.data.split("\n")[0]}`);
+  console.log();
+}
+
+async function testVectorArchive() {
+  console.log(`\n🗄️  Testing: vector.archive()...`);
+
+  const memory = await cortex.vector.store(TEST_AGENT_ID, {
+    content: "Archive test memory",
+    contentType: "raw",
+    source: { type: "system", timestamp: Date.now() },
+    metadata: { importance: 50, tags: ["archive-test"] },
+  });
+
+  const result = await cortex.vector.archive(TEST_AGENT_ID, memory.memoryId);
+
+  console.log(`✅ Archived memory ${memory.memoryId}`);
+  console.log(`   Archived: ${result.archived}`);
+  console.log(`   Restorable: ${result.restorable}`);
+
+  // Verify archive
+  const archived = await cortex.vector.get(TEST_AGENT_ID, memory.memoryId);
+  console.log(`✅ Verification: tags=${archived!.tags.join(", ")}`);
+  console.log(`✅ Verification: importance=${archived!.importance}`);
+  console.log();
+}
+
+async function testVectorGetVersion() {
+  if (!currentMemoryId) {
+    console.log(
+      "\n⚠️  No current memory. Run vector.store and vector.update first.\n",
+    );
+    return;
+  }
+
+  console.log(`\n🕒 Testing: vector.getVersion()...`);
+
+  const v1 = await cortex.vector.getVersion(TEST_AGENT_ID, currentMemoryId, 1);
+  console.log(`✅ Version 1: ${v1?.content || "Not found"}`);
+
+  const v2 = await cortex.vector.getVersion(TEST_AGENT_ID, currentMemoryId, 2);
+  console.log(`✅ Version 2: ${v2?.content || "Not found"}`);
+
+  console.log();
+}
+
+async function testVectorGetHistory() {
+  if (!currentMemoryId) {
+    console.log(
+      "\n⚠️  No current memory. Run vector.store and vector.update first.\n",
+    );
+    return;
+  }
+
+  console.log(`\n📜 Testing: vector.getHistory()...`);
+
+  const history = await cortex.vector.getHistory(
+    TEST_AGENT_ID,
+    currentMemoryId,
+  );
+
+  console.log(`✅ Found ${history.length} versions:`);
+  history.forEach((v) => {
+    console.log(`   v${v.version}: ${v.content.substring(0, 50)}...`);
+  });
+  console.log();
+}
+
+async function testVectorGetAtTimestamp() {
+  if (!currentMemoryId) {
+    console.log(
+      "\n⚠️  No current memory. Run vector.store and vector.update first.\n",
+    );
+    return;
+  }
+
+  console.log(`\n⏰ Testing: vector.getAtTimestamp()...`);
+
+  const memory = await cortex.vector.get(TEST_AGENT_ID, currentMemoryId);
+  if (!memory) {
+    console.log("Memory not found");
+    return;
+  }
+
+  const atCreation = await cortex.vector.getAtTimestamp(
+    TEST_AGENT_ID,
+    currentMemoryId,
+    memory.createdAt,
+  );
+
+  console.log(`✅ At creation (${new Date(memory.createdAt).toISOString()}):`);
+  console.log(`   Content: ${atCreation?.content.substring(0, 50)}...`);
+  console.log(`   Version: ${atCreation?.version}`);
+
+  const now = await cortex.vector.getAtTimestamp(
+    TEST_AGENT_ID,
+    currentMemoryId,
+    Date.now(),
+  );
+
+  console.log(`✅ Current version:`);
+  console.log(`   Content: ${now?.content.substring(0, 50)}...`);
+  console.log(`   Version: ${now?.version}`);
+  console.log();
+}
+
+async function showVectorAdvancedMenu() {
+  console.log("\n📦 Vector Advanced Operations");
+  console.log("   Use options 881-887 to test advanced operations");
+  console.log();
+}
+
+async function runVectorTests() {
+  console.log("\n🧠 Running all Vector Memory API tests...\n");
+  console.log("═".repeat(80));
+
+  await purgeAllDatabases();
+  console.log("═".repeat(80));
+
+  await testVectorStore();
+  console.log("═".repeat(80));
+
+  await testVectorGet();
+  console.log("═".repeat(80));
+
+  await testVectorSearch();
+  console.log("═".repeat(80));
+
+  await testVectorList();
+  console.log("═".repeat(80));
+
+  await testVectorCount();
+  console.log("═".repeat(80));
+
+  await testVectorUpdate();
+  console.log("═".repeat(80));
+
+  await testVectorUpdateMany();
+  console.log("═".repeat(80));
+
+  await testVectorDeleteMany();
+  console.log("═".repeat(80));
+
+  await testVectorExport();
+  console.log("═".repeat(80));
+
+  await testVectorArchive();
+  console.log("═".repeat(80));
+
+  await testVectorGetVersion();
+  console.log("═".repeat(80));
+
+  await testVectorGetHistory();
+  console.log("═".repeat(80));
+
+  await testVectorGetAtTimestamp();
+  console.log("═".repeat(80));
+
+  console.log("\n✅ All 14 Vector Memory operations tested!\n");
+}
+
 async function runMutableTests() {
   console.log("\n🔄 Running all Mutable Store API tests...\n");
   console.log("═".repeat(80));
@@ -2277,9 +2705,31 @@ function displayMenu() {
   console.log("  79)   🎯 Run All");
   console.log();
 
+  // Layer 2
+  console.log("  🧠 LAYER 2: VECTOR MEMORY API (14 operations)");
+  console.log("  80) [Category Header]");
+  console.log("     Core Operations:");
+  console.log("  81)   💾 store");
+  console.log("  82)   📖 get");
+  console.log("  83)   🔍 search");
+  console.log("  84)   📋 list");
+  console.log("  85)   🔢 count");
+  console.log("  86)   🗑️  delete");
+  console.log("  87)   ✏️  update");
+  console.log("     Advanced Operations:");
+  console.log("  881)  📝 updateMany");
+  console.log("  882)  🗑️  deleteMany");
+  console.log("  883)  📤 export");
+  console.log("  884)  🗄️  archive");
+  console.log("  885)  🕒 getVersion");
+  console.log("  886)  📜 getHistory");
+  console.log("  887)  ⏰ getAtTimestamp");
+  console.log("  89)   🎯 Run All (14 tests)");
+  console.log();
+
   // Global
   console.log("  🌐 GLOBAL");
-  console.log("  99) 🎯 Run All Tests (All 3 Layers)");
+  console.log("  99) 🎯 Run All Tests (All 4 Layers)");
   console.log("   0) ❌ Exit");
   console.log();
   console.log("═".repeat(80));

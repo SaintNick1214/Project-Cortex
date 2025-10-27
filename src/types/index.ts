@@ -237,3 +237,106 @@ export interface CountMutableFilter {
   userId?: string;
   keyPrefix?: string;
 }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Vector Memory (Layer 2)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export type SourceType = "conversation" | "system" | "tool" | "a2a";
+export type ContentType = "raw" | "summarized";
+
+export interface ConversationRef {
+  conversationId: string;
+  messageIds: string[];
+}
+
+export interface ImmutableRef {
+  type: string;
+  id: string;
+  version?: number;
+}
+
+export interface MutableRef {
+  namespace: string;
+  key: string;
+  snapshotValue: any;
+  snapshotAt: number;
+}
+
+export interface MemoryMetadata {
+  importance: number; // 0-100
+  tags: string[];
+  [key: string]: any;
+}
+
+export interface MemoryVersion {
+  version: number;
+  content: string;
+  embedding?: number[];
+  timestamp: number;
+}
+
+export interface MemoryEntry {
+  _id: string;
+  memoryId: string;
+  agentId: string;
+  userId?: string;
+  content: string;
+  contentType: ContentType;
+  embedding?: number[];
+  sourceType: SourceType;
+  sourceUserId?: string;
+  sourceUserName?: string;
+  sourceTimestamp: number;
+  conversationRef?: ConversationRef;
+  immutableRef?: ImmutableRef;
+  mutableRef?: MutableRef;
+  importance: number;
+  tags: string[];
+  version: number;
+  previousVersions: MemoryVersion[];
+  createdAt: number;
+  updatedAt: number;
+  lastAccessed?: number;
+  accessCount: number;
+}
+
+export interface StoreMemoryInput {
+  content: string;
+  contentType: ContentType;
+  embedding?: number[];
+  userId?: string;
+  source: {
+    type: SourceType;
+    userId?: string;
+    userName?: string;
+    timestamp?: number;
+  };
+  conversationRef?: ConversationRef;
+  immutableRef?: ImmutableRef;
+  mutableRef?: MutableRef;
+  metadata: MemoryMetadata;
+}
+
+export interface SearchMemoriesOptions {
+  embedding?: number[];
+  userId?: string;
+  tags?: string[];
+  sourceType?: SourceType;
+  minImportance?: number;
+  limit?: number;
+  minScore?: number;
+}
+
+export interface ListMemoriesFilter {
+  agentId: string;
+  userId?: string;
+  sourceType?: SourceType;
+  limit?: number;
+}
+
+export interface CountMemoriesFilter {
+  agentId: string;
+  userId?: string;
+  sourceType?: SourceType;
+}

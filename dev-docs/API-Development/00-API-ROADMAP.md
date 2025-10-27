@@ -15,32 +15,32 @@ Each API goes through these phases:
 
 ## 📊 Overall Progress
 
-| Layer            | API                   | Status          | Schema | Backend | Types | SDK | Tests       | Docs | Ops |
-| ---------------- | --------------------- | --------------- | ------ | ------- | ----- | --- | ----------- | ---- | --- |
-| **Layer 1a**     | **Conversations**     | ✅ **COMPLETE** | ✅     | ✅      | ✅    | ✅  | ✅ 54 tests | ⏳   | 9/9 |
-| **Layer 1b**     | **Immutable Store**   | ✅ **COMPLETE** | ✅     | ✅      | ✅    | ✅  | ✅ 45 tests | ⏳   | 8/8 |
-| **Layer 1c**     | **Mutable Store**     | ✅ **COMPLETE** | ✅     | ✅      | ✅    | ✅  | ✅ 37 tests | ⏳   | 9/9 |
-| **Layer 2**      | **Memories (Vector)** | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/8 |
-| **Layer 3**      | **Memory API**        | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/5 |
-| **Coordination** | **Users**             | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/4 |
-| **Coordination** | **Contexts**          | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/6 |
-| **Coordination** | **Agents**            | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/5 |
-| **Coordination** | **A2A Communication** | ⏳ Pending      | N/A    | N/A     | ⏳    | ⏳  | ⏳          | ⏳   | 0/3 |
+| Layer            | API                   | Status          | Schema | Backend | Types | SDK | Tests       | Docs | Ops   |
+| ---------------- | --------------------- | --------------- | ------ | ------- | ----- | --- | ----------- | ---- | ----- |
+| **Layer 1a**     | **Conversations**     | ✅ **COMPLETE** | ✅     | ✅      | ✅    | ✅  | ✅ 69 tests | ⏳   | 14/14 |
+| **Layer 1b**     | **Immutable Store**   | ✅ **COMPLETE** | ✅     | ✅      | ✅    | ✅  | ✅ 54 tests | ⏳   | 11/11 |
+| **Layer 1c**     | **Mutable Store**     | ✅ **COMPLETE** | ✅     | ✅      | ✅    | ✅  | ✅ 45 tests | ⏳   | 15/15 |
+| **Layer 2**      | **Memories (Vector)** | ✅ **COMPLETE** | ✅     | ✅      | ✅    | ✅  | ✅ 33 tests | ⏳   | 14/14 |
+| **Layer 3**      | **Memory API**        | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/5   |
+| **Coordination** | **Users**             | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/4   |
+| **Coordination** | **Contexts**          | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/6   |
+| **Coordination** | **Agents**            | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/5   |
+| **Coordination** | **A2A Communication** | ⏳ Pending      | N/A    | N/A     | ⏳    | ⏳  | ⏳          | ⏳   | 0/3   |
 
 ## 📈 Statistics
 
 - **Total APIs**: 9
-- **Completed**: 3 (33%) ✅
+- **Completed**: 4 (44%) ✅
 - **In Progress**: 0
-- **Pending**: 6
-- **Total Tests**: 136 (54 + 45 + 37)
-- **Total Operations**: 26/46 (57%)
+- **Pending**: 5
+- **Total Tests**: 201 (69 + 54 + 45 + 33)
+- **Total Operations**: 54/87 (62%)
 
 ## 🎉 Milestones
 
-- ✅ **Milestone 1**: Layer 1a (Conversations) - COMPLETE! (9 operations, 54 tests)
-- ✅ **Milestone 2**: Complete Layer 1 (All ACID Stores) - COMPLETE! (26 operations, 136 tests) 🎊
-- ⏳ **Milestone 3**: Complete Layer 2 (Vector Memory)
+- ✅ **Milestone 1**: Layer 1a (Conversations) - COMPLETE! (14 operations, 69 tests)
+- ✅ **Milestone 2**: Complete Layer 1 (All ACID Stores) - COMPLETE! (40 operations, 168 tests) 🎊
+- ✅ **Milestone 3**: Complete Layer 2 (Vector Memory) - COMPLETE! (14 operations, 33 tests) 🎊
 - ⏳ **Milestone 4**: Complete Layer 3 (Memory Convenience API)
 - ⏳ **Milestone 5**: Complete Coordination APIs
 - ⏳ **Milestone 6**: v1.0.0 Release
@@ -69,13 +69,29 @@ Each API goes through these phases:
 
 ### Layer 1c: Mutable Store ✅
 
-- 9/9 operations implemented (100%)
-- 37/37 tests passing (100%)
+- 15/15 operations implemented (100%)
+- 45/45 tests passing (100%)
 - In-place updates (no versioning)
 - Atomic operations (increment/decrement)
+- transaction() for multi-key operations
 - Namespace isolation
-- Key prefix filtering
+- Helper methods documented
 - GDPR-compliant userId support
+
+### Layer 2: Vector Memory ✅
+
+- 14/14 operations implemented (100%)
+- 33/33 tests passing (100%)
+- Semantic search with embeddings
+- Keyword search (no embeddings required)
+- Hybrid search capability
+- Agent-private memory isolation
+- Layer 1 references (conversation/immutable/mutable)
+- Versioning with history
+- Bulk operations (updateMany, deleteMany)
+- Temporal queries (getAtTimestamp)
+- Export (JSON/CSV)
+- Archive (soft delete)
 
 ## 📝 Notes
 
