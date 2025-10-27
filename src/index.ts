@@ -10,6 +10,7 @@ import { ConversationsAPI } from "./conversations";
 import { ImmutableAPI } from "./immutable";
 import { MutableAPI } from "./mutable";
 import { VectorAPI } from "./vector";
+import { MemoryAPI } from "./memory";
 
 export interface CortexConfig {
   convexUrl: string;
@@ -30,6 +31,9 @@ export class Cortex {
   // Layer 2: Vector Memory
   public vector: VectorAPI;
 
+  // Layer 3: Memory Convenience API
+  public memory: MemoryAPI;
+
   constructor(config: CortexConfig) {
     // Initialize Convex client
     this.client = new ConvexClient(config.convexUrl);
@@ -39,6 +43,7 @@ export class Cortex {
     this.immutable = new ImmutableAPI(this.client);
     this.mutable = new MutableAPI(this.client);
     this.vector = new VectorAPI(this.client);
+    this.memory = new MemoryAPI(this.client);
   }
 
   /**

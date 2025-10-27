@@ -340,3 +340,71 @@ export interface CountMemoriesFilter {
   userId?: string;
   sourceType?: SourceType;
 }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Layer 3: Memory Convenience API
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export interface RememberParams {
+  agentId: string;
+  conversationId: string;
+  userMessage: string;
+  agentResponse: string;
+  userId: string;
+  userName: string;
+
+  // Optional extraction
+  extractContent?: (
+    userMessage: string,
+    agentResponse: string,
+  ) => Promise<string | null>;
+
+  // Optional embedding
+  generateEmbedding?: (content: string) => Promise<number[] | null>;
+
+  // Cloud Mode options
+  autoEmbed?: boolean;
+  autoSummarize?: boolean;
+
+  // Metadata
+  importance?: number;
+  tags?: string[];
+}
+
+export interface RememberResult {
+  conversation: {
+    messageIds: string[];
+    conversationId: string;
+  };
+  memories: MemoryEntry[];
+}
+
+export interface ForgetOptions {
+  deleteConversation?: boolean; // Delete ACID conversation too
+  deleteEntireConversation?: boolean; // Delete whole conversation vs just messages
+}
+
+export interface ForgetResult {
+  memoryDeleted: boolean;
+  conversationDeleted: boolean;
+  messagesDeleted: number;
+  restorable: boolean;
+}
+
+export interface GetMemoryOptions {
+  includeConversation?: boolean; // Fetch ACID conversation
+}
+
+export interface EnrichedMemory {
+  memory: MemoryEntry;
+  conversation?: Conversation;
+  sourceMessages?: Message[];
+}
+
+export interface SearchMemoryOptions extends SearchMemoriesOptions {
+  enrichConversation?: boolean; // Fetch ACID for each result
+}
+
+export type EnrichedSearchResult = EnrichedMemory & {
+  score?: number;
+};

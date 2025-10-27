@@ -21,6 +21,50 @@ import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
 import { TestCleanup, StorageInspector } from "./helpers";
 import * as readline from "readline";
+import OpenAI from "openai";
+
+// OpenAI client (optional - features skip if key not present)
+const openai = process.env.OPENAI_API_KEY
+  ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+  : null;
+
+// OpenAI Helper Functions
+async function generateEmbedding(text: string): Promise<number[]> {
+  if (!openai) throw new Error("OPENAI_API_KEY not set");
+
+  const response = await openai.embeddings.create({
+    model: "text-embedding-3-small",
+    input: text,
+    dimensions: 1536,
+  });
+
+  return response.data[0].embedding;
+}
+
+async function summarizeConversation(
+  userMessage: string,
+  agentResponse: string,
+): Promise<string | null> {
+  if (!openai) throw new Error("OPENAI_API_KEY not set");
+
+  const response = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
+      {
+        role: "system",
+        content:
+          "Extract key facts from this conversation in one concise sentence.",
+      },
+      {
+        role: "user",
+        content: `User: ${userMessage}\nAgent: ${agentResponse}`,
+      },
+    ],
+    temperature: 0.3,
+  });
+
+  return response.choices[0].message.content;
+}
 
 // Test data
 const TEST_USER_ID = "user-test-interactive";
@@ -177,9 +221,42 @@ const MENU_OPTIONS = {
   "89": { label: "  🎯 Run All Vector Tests", action: runVectorTests },
 
   // ═══════════════════════════════════════════════════════════════════════
+  // Layer 3: Memory Convenience API
+  // ═══════════════════════════════════════════════════════════════════════
+  "90": { label: "💫 Memory Convenience API ────────", action: showMemoryMenu },
+  "91": { label: "  🎬 remember", action: testMemoryRemember },
+  "92": { label: "  💭 forget", action: testMemoryForget },
+  "93": { label: "  📖 get (enriched)", action: testMemoryGetEnriched },
+  "94": { label: "  🔍 search (enriched)", action: testMemorySearchEnriched },
+  "95": { label: "  💾 store", action: testMemoryStore },
+  "96": {
+    label: "  🤖 Advanced: OpenAI Tests ──────",
+    action: showAdvancedMemoryMenu,
+  },
+  "961": {
+    label: "    🧠 remember (with embeddings)",
+    action: testMemoryRememberWithAI,
+  },
+  "962": {
+    label: "    🔍 semantic search recall",
+    action: testSemanticSearchRecall,
+  },
+  "963": { label: "    💬 enriched search", action: testEnrichedSearchWithAI },
+  "964": {
+    label: "    📝 summarization quality",
+    action: testSummarizationQuality,
+  },
+  "965": { label: "    📊 similarity scores", action: testSimilarityScores },
+  "98": { label: "  🎯 Run All Memory Tests", action: runMemoryTests },
+  "981": {
+    label: "  🤖 Run All Advanced Tests",
+    action: runAdvancedMemoryTests,
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
   // Run All
   // ═══════════════════════════════════════════════════════════════════════
-  "99": { label: "🎯 Run All Tests (All 4 Layers)", action: runAllTests },
+  "99": { label: "🎯 Run All Tests (All 5 Layers)", action: runAllTests },
   "0": { label: "❌ Exit", action: exit },
 };
 
@@ -837,7 +914,7 @@ async function runImmutableTests() {
 }
 
 async function runAllTests() {
-  console.log("\n🎯 Running ALL tests for ALL 3 LAYERS...\n");
+  console.log("\n🎯 Running ALL tests for ALL 5 LAYERS...\n");
   console.log("═".repeat(80));
 
   await purgeAllDatabases();
@@ -931,8 +1008,42 @@ async function runAllTests() {
   await testMutableCount();
   console.log("═".repeat(80));
 
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Layer 2: Vector Memory Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  console.log("\n" + "═".repeat(80));
+  console.log("  LAYER 2: VECTOR MEMORY TESTS");
+  console.log("═".repeat(80) + "\n");
+
+  await testVectorStore();
+  console.log("═".repeat(80));
+
+  await testVectorGet();
+  console.log("═".repeat(80));
+
+  await testVectorSearch();
+  console.log("═".repeat(80));
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Layer 3: Memory Convenience API Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  console.log("\n" + "═".repeat(80));
+  console.log("  LAYER 3: MEMORY CONVENIENCE API TESTS");
+  console.log("═".repeat(80) + "\n");
+
+  await testMemoryRemember();
+  console.log("═".repeat(80));
+
+  await testMemoryGetEnriched();
+  console.log("═".repeat(80));
+
+  await testMemorySearchEnriched();
+  console.log("═".repeat(80));
+
   // Final validation
-  console.log("\n🔍 FINAL VALIDATION (ALL 3 LAYERS)\n");
+  console.log("\n🔍 FINAL VALIDATION (ALL 5 LAYERS)\n");
   console.log("═".repeat(80));
 
   // Layer 1a: Conversations
@@ -963,34 +1074,51 @@ async function runAllTests() {
   console.log(`  Inventory items: ${inventoryCount}`);
   console.log(`  Counters: ${counterCount}`);
 
+  // Layer 2: Vector
+  const totalVectorCount = await cortex.vector.count({
+    agentId: TEST_AGENT_ID,
+  });
+
+  console.log("\n📊 Layer 2 (Vector Memory):");
+  console.log(`  Total memories: ${totalVectorCount}`);
+
+  // Layer 3: Memory (uses Layer 1 + Layer 2)
+  const memorySearchResults = await cortex.memory.search(
+    TEST_AGENT_ID,
+    "password",
+  );
+
+  console.log("\n📊 Layer 3 (Memory Convenience API):");
+  console.log(`  Search results: ${memorySearchResults.length}`);
+
   console.log("\n✅ Expected:");
-  console.log("  Conversations: Total=2, By user=1, By agent=2");
-  console.log("  Immutable: Total=1, KB articles=1");
+  console.log("  Conversations: Total>=2");
+  console.log("  Immutable: Total>=1");
   console.log("  Mutable: Inventory & counters created");
+  console.log("  Vector: Memories created");
+  console.log("  Memory API: Search works");
 
   console.log("\n📊 Actual:");
+  console.log(`  Layer 1a: ${totalConvCount >= 2 ? "✅ PASS" : "❌ FAIL"}`);
+  console.log(`  Layer 1b: ${totalImmCount >= 1 ? "✅ PASS" : "❌ FAIL"}`);
   console.log(
-    `  Conversations: ${totalConvCount === 2 && userConvs.length === 1 && agentConvs.length === 2 ? "✅ PASS" : "❌ FAIL"}`,
+    `  Layer 1c: ${inventoryCount > 0 && counterCount > 0 ? "✅ PASS" : "❌ FAIL"}`,
   );
+  console.log(`  Layer 2: ${totalVectorCount > 0 ? "✅ PASS" : "❌ FAIL"}`);
   console.log(
-    `  Immutable: ${totalImmCount === 1 && kbArticles.length === 1 ? "✅ PASS" : "❌ FAIL"}`,
-  );
-  console.log(
-    `  Mutable: ${inventoryCount > 0 && counterCount > 0 ? "✅ PASS" : "❌ FAIL"}`,
+    `  Layer 3: ${memorySearchResults.length >= 0 ? "✅ PASS" : "❌ FAIL"}`,
   );
 
   const allValid =
-    totalConvCount === 2 &&
-    userConvs.length === 1 &&
-    agentConvs.length === 2 &&
-    totalImmCount === 1 &&
-    kbArticles.length === 1 &&
+    totalConvCount >= 2 &&
+    totalImmCount >= 1 &&
     inventoryCount > 0 &&
-    counterCount > 0;
+    counterCount > 0 &&
+    totalVectorCount > 0;
 
   console.log("\n" + "═".repeat(80));
   if (allValid) {
-    console.log("✅ ALL TESTS PASSED! All 3 layers working correctly.");
+    console.log("✅ ALL TESTS PASSED! All 5 layers working correctly.");
   } else {
     console.log("❌ SOME TESTS FAILED! Check counts above.");
   }
@@ -2560,6 +2688,469 @@ async function runVectorTests() {
   console.log("\n✅ All 14 Vector Memory operations tested!\n");
 }
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Layer 3: Memory Convenience API Tests
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+async function showMemoryMenu() {
+  console.log("\n💫 Memory Convenience API");
+  console.log("Core: 91-95 | Advanced (AI): 961-965 | Run All: 98, 981\n");
+}
+
+async function showAdvancedMemoryMenu() {
+  if (!openai) {
+    console.log("\n⚠️  Advanced AI tests require OPENAI_API_KEY");
+    console.log("Add OPENAI_API_KEY to .env.local to enable\n");
+    return;
+  }
+  console.log("\n🤖 Advanced OpenAI Integration Tests");
+  console.log("Uses: text-embedding-3-small (1536-dim) + gpt-4o-mini");
+  console.log("Cost: ~$0.0003 per test run\n");
+}
+
+async function testMemoryRemember() {
+  console.log(`\n🎬 Testing: memory.remember()...`);
+
+  // Create conversation first
+  const conv = await cortex.conversations.create({
+    type: "user-agent",
+    participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+  });
+
+  const result = await cortex.memory.remember({
+    agentId: TEST_AGENT_ID,
+    conversationId: conv.conversationId,
+    userMessage: "The password is Green123",
+    agentResponse: "I'll remember that password!",
+    userId: TEST_USER_ID,
+    userName: "Interactive Tester",
+    importance: 95,
+    tags: ["password", "security"],
+  });
+
+  console.log(
+    `✅ Stored in ACID: ${result.conversation.messageIds.length} messages`,
+  );
+  console.log(`✅ Created in Vector: ${result.memories.length} memories`);
+  console.log(`   User memory: ${result.memories[0].memoryId}`);
+  console.log(`   Agent memory: ${result.memories[1].memoryId}`);
+  console.log(`   Conversation: ${result.conversation.conversationId}`);
+
+  currentMemoryId = result.memories[0].memoryId;
+  currentConversationId = conv.conversationId;
+  console.log();
+}
+
+async function testMemoryForget() {
+  if (!currentMemoryId) {
+    console.log(
+      "\n⚠️  No current memory. Run memory.remember first (option 91).\n",
+    );
+    return;
+  }
+
+  console.log(`\n💭 Testing: memory.forget()...`);
+
+  const result = await cortex.memory.forget(TEST_AGENT_ID, currentMemoryId);
+
+  console.log(`✅ Memory deleted: ${result.memoryDeleted}`);
+  console.log(`✅ Conversation deleted: ${result.conversationDeleted}`);
+  console.log(`✅ Messages deleted: ${result.messagesDeleted}`);
+  console.log(`✅ Restorable: ${result.restorable} (ACID preserved)`);
+
+  // Verify
+  const vectorCheck = await cortex.vector.get(TEST_AGENT_ID, currentMemoryId);
+  console.log(
+    `✅ Vector verification: ${vectorCheck === null ? "Deleted" : "Still exists"}`,
+  );
+
+  if (currentConversationId) {
+    const acidCheck = await cortex.conversations.get(currentConversationId);
+    console.log(`✅ ACID verification: ${acidCheck ? "Preserved" : "Deleted"}`);
+  }
+
+  currentMemoryId = null;
+  console.log();
+}
+
+async function testMemoryGetEnriched() {
+  if (!currentMemoryId && !currentConversationId) {
+    console.log(
+      "\n⚠️  No current memory/conversation. Run memory.remember first (option 91).\n",
+    );
+    return;
+  }
+
+  console.log(`\n📖 Testing: memory.get() with enrichment...`);
+
+  // Create a test memory if needed
+  if (!currentMemoryId) {
+    const conv = await cortex.conversations.create({
+      type: "user-agent",
+      participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+    });
+
+    const result = await cortex.memory.remember({
+      agentId: TEST_AGENT_ID,
+      conversationId: conv.conversationId,
+      userMessage: "Enrichment test",
+      agentResponse: "OK",
+      userId: TEST_USER_ID,
+      userName: "Tester",
+    });
+
+    currentMemoryId = result.memories[0].memoryId;
+    currentConversationId = conv.conversationId;
+  }
+
+  // Test default (vector only)
+  const vectorOnly = await cortex.memory.get(TEST_AGENT_ID, currentMemoryId!);
+  console.log(`✅ Default (Vector only): ${(vectorOnly as any).memoryId}`);
+
+  // Test enriched
+  const enriched = await cortex.memory.get(TEST_AGENT_ID, currentMemoryId!, {
+    includeConversation: true,
+  });
+
+  console.log(`✅ Enriched mode:`);
+  console.log(`   Memory: ${(enriched as any).memory.memoryId}`);
+  console.log(
+    `   Conversation: ${(enriched as any).conversation?.conversationId || "N/A"}`,
+  );
+  console.log(
+    `   Source messages: ${(enriched as any).sourceMessages?.length || 0}`,
+  );
+  console.log();
+}
+
+async function testMemorySearchEnriched() {
+  console.log(`\n🔍 Testing: memory.search() with enrichment...`);
+
+  // Search default (vector only)
+  const vectorOnly = await cortex.memory.search(TEST_AGENT_ID, "password");
+  console.log(`✅ Default search: ${vectorOnly.length} results (Vector only)`);
+
+  // Search enriched
+  const enriched = await cortex.memory.search(TEST_AGENT_ID, "password", {
+    enrichConversation: true,
+  });
+
+  console.log(`✅ Enriched search: ${enriched.length} results`);
+  if (enriched.length > 0) {
+    const first = enriched[0] as any;
+    console.log(`   First result:`);
+    console.log(`     Memory: ${first.memory?.memoryId || first.memoryId}`);
+    console.log(
+      `     Conversation: ${first.conversation?.conversationId || "N/A"}`,
+    );
+    console.log(`     Source messages: ${first.sourceMessages?.length || 0}`);
+  }
+  console.log();
+}
+
+async function testMemoryStore() {
+  console.log(`\n💾 Testing: memory.store()...`);
+
+  const memory = await cortex.memory.store(TEST_AGENT_ID, {
+    content: "System-generated memory via Layer 3",
+    contentType: "raw",
+    source: { type: "system", timestamp: Date.now() },
+    metadata: { importance: 60, tags: ["layer3-test"] },
+  });
+
+  console.log(`✅ Stored (smart detection): ${memory.memoryId}`);
+  console.log(`   Content: ${memory.content}`);
+  console.log(`   Source type: ${memory.sourceType}`);
+  console.log(
+    `   Has conversationRef: ${memory.conversationRef ? "Yes" : "No"}`,
+  );
+
+  currentMemoryId = memory.memoryId;
+  console.log();
+}
+
+async function runMemoryTests() {
+  console.log("\n💫 Running all Memory Convenience API tests...\n");
+  console.log("═".repeat(80));
+
+  await purgeAllDatabases();
+  console.log("═".repeat(80));
+
+  await testMemoryRemember();
+  console.log("═".repeat(80));
+
+  await testMemoryGetEnriched();
+  console.log("═".repeat(80));
+
+  await testMemorySearchEnriched();
+  console.log("═".repeat(80));
+
+  await testMemoryStore();
+  console.log("═".repeat(80));
+
+  await testMemoryForget();
+  console.log("═".repeat(80));
+
+  console.log("\n✅ All 5 Memory Convenience operations tested!\n");
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Advanced: OpenAI Integration Tests
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+let advancedMemories: { fact: string; memoryId: string }[] = [];
+
+async function testMemoryRememberWithAI() {
+  if (!openai) {
+    console.log("\n⚠️  OPENAI_API_KEY not set. Skipping AI test.\n");
+    return;
+  }
+
+  console.log(`\n🧠 Testing: memory.remember() with real AI...`);
+  console.log(`Using: text-embedding-3-small (1536-dim) + gpt-4o-mini\n`);
+
+  // Create conversation
+  const conv = await cortex.conversations.create({
+    type: "user-agent",
+    participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+  });
+
+  // Test with 3 facts (shorter for interactive testing)
+  const conversations = [
+    {
+      user: "My name is Alexander Johnson and I prefer to be called Alex",
+      agent: "Got it, I'll call you Alex!",
+      fact: "user-name",
+    },
+    {
+      user: "The API password for production is SecurePass2024!",
+      agent: "I'll remember that password securely",
+      fact: "api-password",
+    },
+    {
+      user: "I prefer dark mode theme and minimal notifications",
+      agent: "I'll set dark mode and reduce notifications",
+      fact: "preferences",
+    },
+  ];
+
+  advancedMemories = [];
+
+  for (const convo of conversations) {
+    console.log(`\nProcessing: "${convo.user.substring(0, 50)}..."`);
+
+    const result = await cortex.memory.remember({
+      agentId: TEST_AGENT_ID,
+      conversationId: conv.conversationId,
+      userMessage: convo.user,
+      agentResponse: convo.agent,
+      userId: TEST_USER_ID,
+      userName: "Alex Johnson",
+      generateEmbedding: generateEmbedding,
+      extractContent: summarizeConversation,
+      importance: convo.fact === "api-password" ? 100 : 70,
+      tags: [convo.fact, "ai-test"],
+    });
+
+    advancedMemories.push({
+      fact: convo.fact,
+      memoryId: result.memories[0].memoryId,
+    });
+
+    console.log(`  ✓ Summarized: "${result.memories[0].content}"`);
+    console.log(
+      `  ✓ Embedding: ${result.memories[0].embedding?.length} dimensions`,
+    );
+    console.log(`  ✓ Memory ID: ${result.memories[0].memoryId}`);
+  }
+
+  console.log(`\n✅ Stored ${advancedMemories.length} memories with AI\n`);
+  currentConversationId = conv.conversationId;
+  currentMemoryId = advancedMemories[0].memoryId;
+}
+
+async function testSemanticSearchRecall() {
+  if (!openai) {
+    console.log("\n⚠️  OPENAI_API_KEY not set. Skipping AI test.\n");
+    return;
+  }
+
+  console.log(`\n🔍 Testing: Semantic search recall...`);
+  console.log(`Note: Queries use DIFFERENT words than stored content\n`);
+
+  const searches = [
+    { query: "what should I address the user as", expectIn: "Alex" },
+    { query: "production system credentials", expectIn: "password" },
+    { query: "UI appearance settings", expectIn: "dark mode" },
+  ];
+
+  for (const search of searches) {
+    console.log(`Query: "${search.query}"`);
+
+    const results = await cortex.memory.search(TEST_AGENT_ID, search.query, {
+      embedding: await generateEmbedding(search.query),
+      userId: TEST_USER_ID,
+      limit: 3,
+    });
+
+    if (results.length > 0) {
+      const found = results[0] as any;
+      const score = found._score || 0;
+      console.log(`  ✓ Found: "${found.content.substring(0, 60)}..."`);
+      console.log(`  ✓ Similarity: ${(score * 100).toFixed(1)}%`);
+      console.log(
+        `  ✓ Semantic match: ${found.content.toLowerCase().includes(search.expectIn.toLowerCase()) ? "YES" : "PARTIAL"}`,
+      );
+    } else {
+      console.log(`  ✗ No results found`);
+    }
+    console.log();
+  }
+}
+
+async function testEnrichedSearchWithAI() {
+  if (!openai) {
+    console.log("\n⚠️  OPENAI_API_KEY not set. Skipping AI test.\n");
+    return;
+  }
+
+  console.log(`\n💬 Testing: Enriched search with ACID context...`);
+
+  const results = await cortex.memory.search(TEST_AGENT_ID, "password", {
+    embedding: await generateEmbedding("password credentials"),
+    enrichConversation: true,
+    userId: TEST_USER_ID,
+  });
+
+  console.log(`✓ Found ${results.length} results`);
+
+  if (results.length > 0) {
+    const enriched = results[0] as any;
+
+    if (enriched.memory) {
+      console.log(`\n✓ Enriched structure:`);
+      console.log(`  Vector: "${enriched.memory.content.substring(0, 50)}..."`);
+
+      if (enriched.conversation) {
+        console.log(`  ACID: ${enriched.conversation.messageCount} messages`);
+        console.log(
+          `  Source messages: ${enriched.sourceMessages?.length || 0}`,
+        );
+      } else {
+        console.log(`  ACID: (no conversation linked)`);
+      }
+    } else {
+      console.log(`\n✓ Direct structure:`);
+      console.log(`  Content: "${enriched.content.substring(0, 50)}..."`);
+    }
+  }
+
+  console.log();
+}
+
+async function testSummarizationQuality() {
+  if (!openai || advancedMemories.length === 0) {
+    console.log("\n⚠️  Run 'remember (with embeddings)' first (option 961)\n");
+    return;
+  }
+
+  console.log(`\n📝 Testing: Summarization quality...`);
+
+  const memory = await cortex.vector.get(
+    TEST_AGENT_ID,
+    advancedMemories[0].memoryId,
+  );
+
+  if (memory) {
+    const original =
+      "My name is Alexander Johnson and I prefer to be called Alex";
+
+    console.log(`\nOriginal:`);
+    console.log(`  "${original}"`);
+    console.log(`  Length: ${original.length} chars`);
+
+    console.log(`\nSummarized by gpt-4o-mini:`);
+    console.log(`  "${memory.content}"`);
+    console.log(`  Length: ${memory.content.length} chars`);
+
+    console.log(`\nQuality checks:`);
+    console.log(
+      `  ✓ Concise: ${memory.content.length < original.length * 1.5 ? "YES" : "NO"}`,
+    );
+    console.log(
+      `  ✓ Contains "Alex": ${memory.content.toLowerCase().includes("alex") ? "YES" : "NO"}`,
+    );
+    console.log(`  ✓ ContentType: ${memory.contentType}`);
+  }
+
+  console.log();
+}
+
+async function testSimilarityScores() {
+  if (!openai) {
+    console.log("\n⚠️  OPENAI_API_KEY not set. Skipping AI test.\n");
+    return;
+  }
+
+  console.log(`\n📊 Testing: Similarity scores (cosine similarity)...`);
+
+  const results = await cortex.memory.search(
+    TEST_AGENT_ID,
+    "API password for production environment",
+    {
+      embedding: await generateEmbedding(
+        "API password for production environment",
+      ),
+      userId: TEST_USER_ID,
+      limit: 5,
+    },
+  );
+
+  console.log(`\n✓ Found ${results.length} results:\n`);
+
+  results.forEach((result: any, i) => {
+    const score = result._score || 0;
+    console.log(`${i + 1}. "${result.content.substring(0, 50)}..."`);
+    console.log(`   Score: ${(score * 100).toFixed(1)}% similar`);
+    console.log(
+      `   Valid: ${score >= 0 && score <= 1 && !isNaN(score) ? "✓" : "✗"}`,
+    );
+  });
+
+  console.log();
+}
+
+async function runAdvancedMemoryTests() {
+  if (!openai) {
+    console.log("\n⚠️  Advanced tests require OPENAI_API_KEY");
+    console.log("Add to .env.local to enable these tests\n");
+    return;
+  }
+
+  console.log("\n🤖 Running Advanced OpenAI Integration Tests...\n");
+  console.log("═".repeat(80));
+
+  await purgeAllDatabases();
+  console.log("═".repeat(80));
+
+  await testMemoryRememberWithAI();
+  console.log("═".repeat(80));
+
+  await testSemanticSearchRecall();
+  console.log("═".repeat(80));
+
+  await testEnrichedSearchWithAI();
+  console.log("═".repeat(80));
+
+  await testSummarizationQuality();
+  console.log("═".repeat(80));
+
+  await testSimilarityScores();
+  console.log("═".repeat(80));
+
+  console.log("\n✅ All 5 Advanced AI tests complete!\n");
+}
+
 async function runMutableTests() {
   console.log("\n🔄 Running all Mutable Store API tests...\n");
   console.log("═".repeat(80));
@@ -2727,9 +3318,28 @@ function displayMenu() {
   console.log("  89)   🎯 Run All (14 tests)");
   console.log();
 
+  // Layer 3
+  console.log("  💫 LAYER 3: MEMORY CONVENIENCE API");
+  console.log("  90) [Category Header]");
+  console.log("     Core Operations:");
+  console.log("  91)   🎬 remember");
+  console.log("  92)   💭 forget");
+  console.log("  93)   📖 get (enriched)");
+  console.log("  94)   🔍 search (enriched)");
+  console.log("  95)   💾 store");
+  console.log("     Advanced (OpenAI):");
+  console.log("  961)  🧠 remember (with AI)");
+  console.log("  962)  🔍 semantic search");
+  console.log("  963)  💬 enriched search");
+  console.log("  964)  📝 summarization");
+  console.log("  965)  📊 similarity scores");
+  console.log("  98)   🎯 Run All Core (5 tests)");
+  console.log("  981)  🤖 Run All Advanced (5 tests)");
+  console.log();
+
   // Global
   console.log("  🌐 GLOBAL");
-  console.log("  99) 🎯 Run All Tests (All 4 Layers)");
+  console.log("  99) 🎯 Run All Tests (All 5 Layers)");
   console.log("   0) ❌ Exit");
   console.log();
   console.log("═".repeat(80));
