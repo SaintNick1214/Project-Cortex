@@ -21,6 +21,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.4.2] - 2025-10-27
+
+#### 🔧 Patch Release - Fix Automated Workflow
+
+Fixes GitHub Action workflow to generate Convex code before running tests.
+
+#### Fixed
+- Added `npx convex codegen` step to GitHub Action workflow
+- Tests now run properly in CI/CD environment
+
+**Total**: 54 operations, 201 tests (no API changes)
+
+---
+
 ### [0.4.1] - 2025-10-27
 
 #### 🔧 Patch Release - Automated Publishing
