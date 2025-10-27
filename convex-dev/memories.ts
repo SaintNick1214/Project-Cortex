@@ -542,7 +542,7 @@ export const purgeAll = mutation({
     // Security check: Only allow in test/dev environments
     const siteUrl = process.env.CONVEX_SITE_URL || "";
     const isLocal = siteUrl.includes("localhost") || siteUrl.includes("127.0.0.1");
-    const isDevDeployment = siteUrl.includes(".convex.site") || siteUrl.includes("dev-");
+    const isDevDeployment = siteUrl.includes(".convex.site") || siteUrl.includes("dev-") || siteUrl.includes("convex.cloud");
     const isTestEnv = process.env.NODE_ENV === "test" || process.env.CONVEX_ENVIRONMENT === "test";
     
     if (!isLocal && !isDevDeployment && !isTestEnv) {
