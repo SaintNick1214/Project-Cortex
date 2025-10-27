@@ -152,7 +152,8 @@ npm publish --tag beta
 ### For GitHub Action (Automated)
 
 - [ ] `NPM_TOKEN` secret configured
-- [ ] `CONVEX_URL` secret configured (optional)
+- [ ] `CONVEX_URL` secret configured
+- [ ] `CONVEX_DEPLOY_KEY` secret configured
 - [ ] On `main` branch
 - [ ] Ready to auto-publish (can't cancel mid-flight)
 
@@ -258,7 +259,9 @@ npm run release
 ```bash
 # 1. Setup secrets (one-time)
 # https://github.com/SaintNick1214/Project-Cortex/settings/secrets/actions
-# Add: NPM_TOKEN
+# Add: NPM_TOKEN (for npm publish)
+# Add: CONVEX_URL (for tests)
+# Add: CONVEX_DEPLOY_KEY (for Convex auth)
 
 # 2. Push to main
 git add .
@@ -346,13 +349,15 @@ For a major release like v0.4.0, **GitHub Action is recommended**.
 - **GitHub Action**: Can't cancel mid-publish (by design for safety)
 - **Local Script**: Press Ctrl+C before confirming
 
-### Q: Do I need both secrets?
+### Q: What secrets do I need?
 
-**A**:
-- `NPM_TOKEN`: **Required** (for publishing)
-- `CONVEX_URL`: **Optional** (for running tests in CI)
+**A**: 3 secrets total:
 
-If you skip `CONVEX_URL`, tests will be skipped in GitHub Action (still safe to publish).
+1. **`NPM_TOKEN`**: **Required** (for publishing to npm)
+2. **`CONVEX_URL`**: **Required** (for running tests in CI)
+3. **`CONVEX_DEPLOY_KEY`**: **Required** (for Convex authentication in tests)
+
+All 3 are needed for the GitHub Action to work properly. Without them, the workflow will fail at the test or publish step.
 
 ---
 

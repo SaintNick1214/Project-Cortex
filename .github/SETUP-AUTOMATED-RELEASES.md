@@ -7,7 +7,7 @@
 
 ## 🔐 Required Secrets
 
-You need to configure 2 secrets in your GitHub repository:
+You need to configure 3 secrets in your GitHub repository:
 
 ### 1. NPM_TOKEN (Required)
 
@@ -33,9 +33,9 @@ You need to configure 2 secrets in your GitHub repository:
    - Value: `npm_xxxxxxxxxxxxxxxxxxxxxxxxxxxx` (paste your token)
    - Click **"Add secret"**
 
-### 2. CONVEX_URL (Optional, for tests)
+### 2. CONVEX_URL (Required for tests)
 
-**Purpose**: Run tests in GitHub Actions
+**Purpose**: Tell tests which Convex deployment to use
 
 **Steps**:
 
@@ -43,7 +43,7 @@ You need to configure 2 secrets in your GitHub repository:
    ```bash
    # Get from your .env.local or Convex dashboard
    echo $CONVEX_URL
-   # Should look like: https://your-deployment.convex.cloud
+   # Should look like: https://happy-animal-123.convex.cloud
    ```
 
 2. **Add to GitHub**:
@@ -51,6 +51,32 @@ You need to configure 2 secrets in your GitHub repository:
    - Click **"New repository secret"**
    - Name: `CONVEX_URL`
    - Value: Your Convex deployment URL
+   - Click **"Add secret"**
+
+### 3. CONVEX_DEPLOY_KEY (Required for tests)
+
+**Purpose**: Authenticate to Convex for running tests (admin access)
+
+**Steps**:
+
+1. **Get Convex Deploy Key**:
+   ```bash
+   # Option A: From your local .env.local
+   cat .env.local | grep CONVEX_DEPLOY_KEY
+   # CONVEX_DEPLOY_KEY=prod:happy-animal-123|xxxxxxxxxxxxx
+   
+   # Option B: From Convex dashboard
+   # 1. Go to: https://dashboard.convex.dev/
+   # 2. Select your deployment
+   # 3. Settings → Deploy Key
+   # 4. Copy the deploy key
+   ```
+
+2. **Add to GitHub**:
+   - Go to: `https://github.com/SaintNick1214/Project-Cortex/settings/secrets/actions`
+   - Click **"New repository secret"**
+   - Name: `CONVEX_DEPLOY_KEY`
+   - Value: `prod:happy-animal-123|xxxxxxxxxxxxx` (paste your deploy key)
    - Click **"Add secret"**
 
 **Note**: `GITHUB_TOKEN` is automatically provided by GitHub Actions (no setup needed)
@@ -228,10 +254,16 @@ npm run release
 npm login  # If not logged in
 # OR visit: https://www.npmjs.com/settings/YOUR_USERNAME/tokens
 
-# Step 2: Add to GitHub
+# Step 2: Get Convex credentials
+# From .env.local or Convex dashboard:
+# - CONVEX_URL (deployment URL)
+# - CONVEX_DEPLOY_KEY (admin key)
+
+# Step 3: Add to GitHub
 # Go to: https://github.com/SaintNick1214/Project-Cortex/settings/secrets/actions
-# Add: NPM_TOKEN (required)
-# Add: CONVEX_URL (optional, for tests)
+# Add: NPM_TOKEN (required for publishing)
+# Add: CONVEX_URL (required for tests)
+# Add: CONVEX_DEPLOY_KEY (required for tests)
 ```
 
 ### 2. Test the Workflow

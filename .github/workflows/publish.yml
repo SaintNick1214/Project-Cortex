@@ -66,6 +66,7 @@ jobs:
         run: npm test
         env:
           CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
       - name: Build package
         run: npm run build

@@ -275,8 +275,9 @@ Limitations:
 **Before first automated release**:
 
 - [ ] Create npm automation token
-- [ ] Add `NPM_TOKEN` to GitHub secrets
-- [ ] (Optional) Add `CONVEX_URL` to GitHub secrets
+- [ ] Add `NPM_TOKEN` to GitHub secrets (npm publishing)
+- [ ] Add `CONVEX_URL` to GitHub secrets (test deployment URL)
+- [ ] Add `CONVEX_DEPLOY_KEY` to GitHub secrets (Convex admin auth)
 - [ ] Test workflow with version bump
 - [ ] Monitor first publish
 
