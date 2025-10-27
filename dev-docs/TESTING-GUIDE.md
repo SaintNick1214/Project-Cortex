@@ -293,6 +293,7 @@ tests/
    - Check message order, timestamps, etc.
 
 4. **Once confident, simplify for production**
+
    ```typescript
    it("should do something", async () => {
      const result = await cortex.conversations.create({ ... });
