@@ -21,7 +21,7 @@ Each API goes through these phases:
 | **Layer 1b**     | **Immutable Store**   | ✅ **COMPLETE** | ✅     | ✅      | ✅    | ✅  | ✅ 54 tests | ⏳   | 11/11 |
 | **Layer 1c**     | **Mutable Store**     | ✅ **COMPLETE** | ✅     | ✅      | ✅    | ✅  | ✅ 45 tests | ⏳   | 15/15 |
 | **Layer 2**      | **Memories (Vector)** | ✅ **COMPLETE** | ✅     | ✅      | ✅    | ✅  | ✅ 33 tests | ⏳   | 14/14 |
-| **Layer 3**      | **Memory API**        | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/5   |
+| **Layer 3**      | **Memory API**        | ✅ **COMPLETE** | N/A    | N/A     | ✅    | ✅  | ✅ 35 tests | ✅   | 16/17 |
 | **Coordination** | **Users**             | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/4   |
 | **Coordination** | **Contexts**          | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/6   |
 | **Coordination** | **Agents**            | ⏳ Pending      | ⏳     | ⏳      | ⏳    | ⏳  | ⏳          | ⏳   | 0/5   |
@@ -30,19 +30,23 @@ Each API goes through these phases:
 ## 📈 Statistics
 
 - **Total APIs**: 9
-- **Completed**: 4 (44%) ✅
+- **Completed**: 5 (56%) ✅
 - **In Progress**: 0
-- **Pending**: 5
-- **Total Tests**: 201 (69 + 54 + 45 + 33)
-- **Total Operations**: 54/87 (62%)
+- **Pending**: 4
+- **Total Tests**: 236 (69 + 54 + 45 + 33 + 35)
+- **Total Operations**: 70/104 (67%)
+  - Layer 1: 40/40 ✅
+  - Layer 2: 14/14 ✅
+  - Layer 3: 16/17 ✅ (smartStore deferred)
+  - Coordination: 0/33 ⏳
 
 ## 🎉 Milestones
 
 - ✅ **Milestone 1**: Layer 1a (Conversations) - COMPLETE! (14 operations, 69 tests)
 - ✅ **Milestone 2**: Complete Layer 1 (All ACID Stores) - COMPLETE! (40 operations, 168 tests) 🎊
 - ✅ **Milestone 3**: Complete Layer 2 (Vector Memory) - COMPLETE! (14 operations, 33 tests) 🎊
-- ⏳ **Milestone 4**: Complete Layer 3 (Memory Convenience API)
-- ⏳ **Milestone 5**: Complete Coordination APIs
+- ✅ **Milestone 4**: Complete Layer 3 (Memory Convenience API) - COMPLETE! (16 operations, 35 tests) 🎊
+- ⏳ **Milestone 5**: Complete Coordination APIs (4 remaining)
 - ⏳ **Milestone 6**: v1.0.0 Release
 
 ## 🌟 Achievements
@@ -92,6 +96,22 @@ Each API goes through these phases:
 - Temporal queries (getAtTimestamp)
 - Export (JSON/CSV)
 - Archive (soft delete)
+
+### Layer 3: Memory Convenience API ✅
+
+- 16/17 operations implemented (94%)
+- 35/35 tests passing (100%)
+- **Unique operations** (5):
+  - ✅ `remember()` - Dual-layer storage (ACID + Vector)
+  - ✅ `forget()` - Dual-layer deletion
+  - ✅ `get()` with enrichment - Fetch ACID context
+  - ✅ `search()` with enrichment - Enrich results
+  - ✅ `store()` - Smart layer detection
+- **Delegations** (11): All thin wrappers implemented
+- **Deferred**: `smartStore()` (auto create vs update) → v0.6.0
+- Dual-layer orchestration working
+- Enrichment capabilities complete
+- Interactive menu (5 options)
 
 ## 📝 Notes
 

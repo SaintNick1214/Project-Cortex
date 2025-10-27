@@ -84,6 +84,31 @@ You need to configure 3 secrets in your GitHub repository:
 
 **Note**: `GITHUB_TOKEN` is automatically provided by GitHub Actions (no setup needed)
 
+### 4. OPENAI_API_KEY (Optional for advanced tests)
+
+**Purpose**: Enable real embedding and LLM integration tests in CI/CD
+
+**Steps**:
+
+1. **Get OpenAI API Key**:
+
+   ```bash
+   # Visit: https://platform.openai.com/api-keys
+   # Create new API key
+   # Copy: sk-proj-xxxxxxxxxxxxx
+   ```
+
+2. **Add to GitHub**:
+   - Go to: `https://github.com/SaintNick1214/Project-Cortex/settings/secrets/actions`
+   - Click **"New repository secret"**
+   - Name: `OPENAI_API_KEY`
+   - Value: `sk-proj-xxxxxxxxxxxxx` (paste your API key)
+   - Click **"Add secret"**
+
+**Note**: Tests will automatically skip advanced embedding tests if this key is not present. It's optional but recommended for validating real-world AI scenarios.
+
+**Cost**: ~$0.0002 per test run (negligible)
+
 ---
 
 ## 🚀 How It Works

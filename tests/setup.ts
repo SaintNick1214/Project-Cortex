@@ -6,7 +6,10 @@
 import dotenv from "dotenv";
 import { resolve } from "path";
 
-// Load .env.test for test environment
+// Load .env.local first (for local development with real API keys)
+dotenv.config({ path: resolve(process.cwd(), ".env.local") });
+
+// Load .env.test (can override .env.local values)
 dotenv.config({ path: resolve(process.cwd(), ".env.test") });
 
 // Verify CONVEX_URL is set
