@@ -21,6 +21,93 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.5.0] - 2025-10-27
+
+#### 🎉 Major Release - Memory Convenience API (Layer 3)!
+
+Complete dual-layer orchestration with automatic ACID + Vector management! **All 16 Layer 3 operations plus advanced AI validation.**
+
+#### Added
+
+**Memory Convenience API (Layer 3)** - ALL 16 operations:
+
+**Core Dual-Layer Operations (5)**:
+
+- `remember()` - Store conversation in ACID + Vector automatically (one call does both!)
+- `forget()` - Delete from Vector + optionally ACID (dual-layer deletion)
+- `get()` with enrichment - Retrieve memory with optional ACID conversation context
+- `search()` with enrichment - Search with optional ACID enrichment (batch fetch)
+- `store()` - Smart layer detection (validates conversationRef requirements)
+
+**Delegations (11)**:
+
+- `update()`, `delete()`, `list()`, `count()` - Core operations
+- `updateMany()`, `deleteMany()` - Bulk operations
+- `export()`, `archive()` - Data management
+- `getVersion()`, `getHistory()`, `getAtTimestamp()` - Version operations
+
+**Advanced AI Integration Tests (5)**:
+
+- Real embedding validation (text-embedding-3-small, 1536-dim)
+- Real LLM summarization (gpt-4o-mini)
+- Semantic search recall (finds content with different wording)
+- Enrichment validation (dual-layer retrieval)
+- Cosine similarity scoring (0-1 range validation)
+
+#### Features
+
+**Dual-Layer Orchestration**:
+
+- One API call stores in both ACID and Vector
+- Automatic conversationRef linking
+- Embedding generation callback support
+- Content extraction/summarization callback support
+- Eliminates manual dual-layer management
+
+**Enrichment Capabilities**:
+
+- `get()` can fetch full ACID conversation context
+- `search()` can batch-enrich results with ACID data
+- Access both summarized (Vector) and original (ACID) content
+- Graceful handling of missing conversations
+
+**Developer Experience**:
+
+- Friendly API (`remember`/`forget` vs `store`/`delete`)
+- Consistent namespace (`cortex.memory.*`)
+- All Layer 2 operations accessible via delegations
+- No need to remember which layer to use
+
+**Real AI Validation**:
+
+- Tested with OpenAI text-embedding-3-small (1536-dim)
+- Tested with OpenAI gpt-4o-mini (summarization)
+- Semantic search proven with real embeddings
+- Cosine similarity calculation validated
+- Cost: ~$0.0003 per test run (affordable for CI/CD)
+
+#### Enhanced Testing
+
+- +40 tests for Layer 3 (40/40 passing)
+- +5 advanced AI integration tests (with real OpenAI)
+- Dual-layer orchestration validated
+- Enrichment capabilities tested
+- Semantic search with real embeddings proven
+- **Total tests**: 241 (69 + 54 + 45 + 33 + 35 + 5)
+
+#### Changed
+
+- Updated GitHub Action workflow to support OPENAI_API_KEY
+- Enhanced test setup to load .env.local for API keys
+- Fixed cosine similarity calculation (handle zero vectors, no NaN)
+- Interactive test menu expanded (11 new options)
+
+**Total**: 70 operations (40 L1 + 14 L2 + 16 L3), 241 tests, 100% passing
+
+**What this means**: Complete foundation for AI agent memory with proven real-world AI integration!
+
+---
+
 ### [0.4.5] - 2025-10-27
 
 #### 🔧 Patch Release - Skip Redundant Tests in Publish
