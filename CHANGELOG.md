@@ -21,6 +21,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.4.5] - 2025-10-27
+
+#### 🔧 Patch Release - Skip Redundant Tests in Publish
+
+Optimizes GitHub Action workflow to skip duplicate test runs during npm publish.
+
+#### Fixed
+- Added `--ignore-scripts` to npm publish command
+- Skips `prepublishOnly` hook (tests already run in dedicated step)
+- Faster publish, avoids timeout issues
+- Tests still run (just once, not twice)
+
+**Total**: 54 operations, 201 tests (no API changes)
+
+---
+
 ### [0.4.4] - 2025-10-27
 
 #### 🔧 Patch Release - Fix Deploy Command
