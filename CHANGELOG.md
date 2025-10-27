@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Optimizes GitHub Action workflow to skip duplicate test runs during npm publish.
 
 #### Fixed
+
 - Added `--ignore-scripts` to npm publish command
 - Skips `prepublishOnly` hook (tests already run in dedicated step)
 - Faster publish, avoids timeout issues
@@ -44,6 +45,7 @@ Optimizes GitHub Action workflow to skip duplicate test runs during npm publish.
 Corrects Convex deploy command syntax in GitHub Action workflow.
 
 #### Fixed
+
 - Fixed `convex deploy` command to use correct environment variable names
 - Uses `CONVEX_DEPLOYMENT` instead of `CONVEX_URL` for deploy
 - Added `--yes` flag to skip confirmation in CI
@@ -59,6 +61,7 @@ Corrects Convex deploy command syntax in GitHub Action workflow.
 Adds Convex backend deployment to GitHub Action workflow so tests run against deployed functions.
 
 #### Fixed
+
 - Added `npx convex deploy` step to GitHub Action workflow
 - Backend functions now deployed before tests run
 - Tests now run against actual deployed backend
@@ -74,6 +77,7 @@ Adds Convex backend deployment to GitHub Action workflow so tests run against de
 Fixes GitHub Action workflow to generate Convex code before running tests.
 
 #### Fixed
+
 - Added `npx convex codegen` step to GitHub Action workflow
 - Tests now run properly in CI/CD environment
 
@@ -88,10 +92,12 @@ Fixes GitHub Action workflow to generate Convex code before running tests.
 Minor patch to test automated GitHub Action publishing workflow.
 
 #### Added
+
 - GitHub Action workflow for automated npm publishing
 - Automated release documentation
 
 #### Changed
+
 - Updated release process to support both automated and manual workflows
 
 **Total**: Still 54 operations, 201 tests (no API changes)

@@ -16,10 +16,11 @@ You need to configure 3 secrets in your GitHub repository:
 **Steps**:
 
 1. **Create npm Access Token**:
+
    ```bash
    # Login to npm (if not already)
    npm login
-   
+
    # Or create token on npmjs.com:
    # → Profile → Access Tokens → Generate New Token
    # → Type: "Automation" (for CI/CD)
@@ -40,6 +41,7 @@ You need to configure 3 secrets in your GitHub repository:
 **Steps**:
 
 1. **Get Convex URL**:
+
    ```bash
    # Get from your .env.local or Convex dashboard
    echo $CONVEX_URL
@@ -60,11 +62,12 @@ You need to configure 3 secrets in your GitHub repository:
 **Steps**:
 
 1. **Get Convex Deploy Key**:
+
    ```bash
    # Option A: From your local .env.local
    cat .env.local | grep CONVEX_DEPLOY_KEY
    # CONVEX_DEPLOY_KEY=prod:happy-animal-123|xxxxxxxxxxxxx
-   
+
    # Option B: From Convex dashboard
    # 1. Go to: https://dashboard.convex.dev/
    # 2. Select your deployment
@@ -120,11 +123,13 @@ git push origin main
 ### Trigger Conditions
 
 **ONLY triggers when**:
+
 - ✅ Push to `main` branch
 - ✅ `package.json` file modified
 - ✅ Version in package.json actually changed (not just file touched)
 
 **Will NOT trigger when**:
+
 - ❌ Push to other branches
 - ❌ package.json unchanged
 - ❌ Only other files changed
@@ -133,6 +138,7 @@ git push origin main
 ### What Happens
 
 **Job 1: check-version** (1-2 seconds)
+
 ```bash
 ✅ Checkout code
 ✅ Compare package.json version with previous commit
@@ -140,6 +146,7 @@ git push origin main
 ```
 
 **Job 2: publish** (3-5 minutes, only if version changed)
+
 ```bash
 ✅ Checkout code
 ✅ Setup Node.js 20
@@ -174,6 +181,7 @@ git push origin main
 ```
 
 **Pros**:
+
 - ✅ Fully automated (no manual steps)
 - ✅ Consistent environment (Ubuntu, Node 20)
 - ✅ Secure (secrets in GitHub)
@@ -182,6 +190,7 @@ git push origin main
 - ✅ Prevents dirty builds
 
 **Cons**:
+
 - ⏱️ Takes 3-5 minutes to run
 - ❌ Can't cancel mid-publish
 - ❌ Harder to debug failures
@@ -195,12 +204,14 @@ npm run release
 ```
 
 **Pros**:
+
 - ✅ Immediate feedback
 - ✅ Full control (can abort anytime)
 - ✅ Easy debugging
 - ✅ Manual confirmation step
 
 **Cons**:
+
 - ❌ Depends on local environment
 - ❌ Requires local npm/gh credentials
 - ❌ Risk of dirty builds
@@ -213,6 +224,7 @@ npm run release
 **For Cortex SDK**, use BOTH:
 
 ### Production Releases (v0.4.0, v0.5.0, v1.0.0)
+
 ```bash
 # Update version in package.json
 # Update CHANGELOG.md
@@ -224,6 +236,7 @@ git push origin main
 ```
 
 ### Development/Beta Releases
+
 ```bash
 # Update version to beta
 "version": "0.4.0-beta.1"
@@ -233,6 +246,7 @@ npm run release
 ```
 
 ### Hotfix Releases
+
 ```bash
 # Quick fix
 "version": "0.4.1"
@@ -269,6 +283,7 @@ npm login  # If not logged in
 ### 2. Test the Workflow
 
 **Option A: Dry run (safe)**
+
 ```bash
 # Temporarily change version
 "version": "0.4.0-test.1"
@@ -283,6 +298,7 @@ git push origin test-publish
 ```
 
 **Option B: Real release (v0.4.0)**
+
 ```bash
 # Version already at 0.4.0 in package.json
 # Just push to main
@@ -296,11 +312,13 @@ git push origin main
 ### 3. Monitor Workflow
 
 **Watch it run**:
+
 - Go to: `https://github.com/SaintNick1214/Project-Cortex/actions`
 - Click on the running workflow
 - Watch real-time logs
 
 **Expected timeline**:
+
 - Tests: ~2 minutes
 - Build: ~30 seconds
 - Publish: ~30 seconds
@@ -311,6 +329,7 @@ git push origin main
 ## 🔧 Workflow Features
 
 ### Smart Detection
+
 ```yaml
 # Only runs when version ACTUALLY changes
 # Compares current vs previous commit
@@ -319,23 +338,26 @@ PREVIOUS_VERSION → "0.3.1"
 # Result: Publish triggered ✅
 
 CURRENT_VERSION → "0.4.0"
-PREVIOUS_VERSION → "0.4.0"  
+PREVIOUS_VERSION → "0.4.0"
 # Result: Skipped (no change) ⏭️
 ```
 
 ### Safety Checks
+
 - ✅ All 201 tests must pass
 - ✅ Build must succeed
 - ✅ Package verification before publish
 - ✅ Provenance enabled (npm security)
 
 ### Automatic Tagging
+
 - ✅ Creates `v0.4.0` git tag
 - ✅ Pushes to GitHub
 - ✅ Creates GitHub release
 - ✅ Links to CHANGELOG.md
 
 ### Verification
+
 - ✅ Waits for npm registry to update
 - ✅ Verifies package is live
 - ✅ Shows package URLs
@@ -409,4 +431,3 @@ Before pushing v0.4.0:
 ---
 
 **Status**: ✅ **Automated workflow ready! Setup secrets and push to trigger.** 🚀
-
