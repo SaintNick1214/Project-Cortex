@@ -223,6 +223,137 @@ await cortex.mutable.update("config", "api-settings", (current) => {
 
 ---
 
+### increment()
+
+Atomically increment a numeric value (convenience helper).
+
+**Signature:**
+
+```typescript
+cortex.mutable.increment(
+  namespace: string,
+  key: string,
+  amount?: number
+): Promise<MutableRecord>
+```
+
+**Parameters:**
+
+- `namespace` (string) - Namespace
+- `key` (string) - Key
+- `amount` (number, optional) - Amount to increment (default: 1)
+
+**Returns:**
+
+- `MutableRecord` - Updated record with incremented value
+
+**Example:**
+
+```typescript
+// Initialize counter
+await cortex.mutable.set("counters", "page-views", 0);
+
+// Increment by 1 (default)
+await cortex.mutable.increment("counters", "page-views");
+
+// Increment by custom amount
+await cortex.mutable.increment("counters", "page-views", 10);
+
+const views = await cortex.mutable.get("counters", "page-views");
+console.log(`Total views: ${views}`); // 11
+```
+
+**Note:** This is a convenience wrapper around `update()`. For more control, use `update()` directly.
+
+---
+
+### decrement()
+
+Atomically decrement a numeric value (convenience helper).
+
+**Signature:**
+
+```typescript
+cortex.mutable.decrement(
+  namespace: string,
+  key: string,
+  amount?: number
+): Promise<MutableRecord>
+```
+
+**Parameters:**
+
+- `namespace` (string) - Namespace
+- `key` (string) - Key
+- `amount` (number, optional) - Amount to decrement (default: 1)
+
+**Returns:**
+
+- `MutableRecord` - Updated record with decremented value
+
+**Example:**
+
+```typescript
+// Initialize inventory
+await cortex.mutable.set("inventory", "widget-qty", 100);
+
+// Customer order (decrement)
+await cortex.mutable.decrement("inventory", "widget-qty", 5);
+
+const remaining = await cortex.mutable.get("inventory", "widget-qty");
+console.log(`Remaining: ${remaining}`); // 95
+```
+
+---
+
+### getRecord()
+
+Get full record with metadata (not just the value).
+
+**Signature:**
+
+```typescript
+cortex.mutable.getRecord(
+  namespace: string,
+  key: string
+): Promise<MutableRecord | null>
+```
+
+**Returns:**
+
+```typescript
+interface MutableRecord {
+  namespace: string;
+  key: string;
+  value: any;
+  userId?: string;
+  metadata?: any;
+  createdAt: Date;
+  updatedAt: Date;
+  accessCount: number;
+  lastAccessed?: Date;
+}
+```
+
+**Example:**
+
+```typescript
+// get() returns value only
+const value = await cortex.mutable.get("config", "timeout");
+console.log(value); // 30
+
+// getRecord() returns full record with metadata
+const record = await cortex.mutable.getRecord("config", "timeout");
+console.log(record.value); // 30
+console.log(record.createdAt); // 2025-10-26T...
+console.log(record.updatedAt); // 2025-10-26T...
+console.log(record.accessCount); // 15
+```
+
+**Use when:** You need access to timestamps, accessCount, or metadata.
+
+---
+
 ### delete()
 
 Delete a key.
