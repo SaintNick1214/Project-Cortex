@@ -5,30 +5,28 @@
  * Recommended API for most use cases.
  */
 
-import { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import type { ConvexClient } from "convex/browser";
 import { ConversationsAPI } from "../conversations";
 import { VectorAPI } from "../vector";
 import {
-  RememberParams,
-  RememberResult,
-  ForgetOptions,
-  ForgetResult,
-  GetMemoryOptions,
-  EnrichedMemory,
-  SearchMemoryOptions,
-  MemoryEntry,
-  ListMemoriesFilter,
-  CountMemoriesFilter,
-  MemoryVersion,
-  SourceType,
-  StoreMemoryInput,
+  type CountMemoriesFilter,
+  type EnrichedMemory,
+  type ForgetOptions,
+  type ForgetResult,
+  type GetMemoryOptions,
+  type ListMemoriesFilter,
+  type MemoryEntry,
+  type RememberParams,
+  type RememberResult,
+  type SearchMemoryOptions,
+  type SourceType,
+  type StoreMemoryInput,
 } from "../types";
 
 export class MemoryAPI {
-  private client: ConvexClient;
-  private conversations: ConversationsAPI;
-  private vector: VectorAPI;
+  private readonly client: ConvexClient;
+  private readonly conversations: ConversationsAPI;
+  private readonly vector: VectorAPI;
 
   constructor(client: ConvexClient) {
     this.client = client;
@@ -81,7 +79,7 @@ export class MemoryAPI {
 
     // Step 3: Extract content (if provided)
     let userContent = params.userMessage;
-    let agentContent = params.agentResponse;
+    const agentContent = params.agentResponse;
     let contentType: "raw" | "summarized" = "raw";
 
     if (params.extractContent) {
@@ -89,6 +87,7 @@ export class MemoryAPI {
         params.userMessage,
         params.agentResponse,
       );
+
       if (extracted) {
         userContent = extracted;
         contentType = "summarized";
@@ -197,6 +196,7 @@ export class MemoryAPI {
         const conv = await this.conversations.get(
           memory.conversationRef.conversationId,
         );
+
         messagesDeleted = conv?.messageCount || 0;
 
         // Delete entire conversation
@@ -310,8 +310,10 @@ export class MemoryAPI {
     );
 
     const conversations = new Map();
+
     for (const convId of conversationIds) {
       const conv = await this.conversations.get(convId);
+
       if (conv) {
         conversations.set(convId, conv);
       }
@@ -326,6 +328,7 @@ export class MemoryAPI {
       const conversation = conversations.get(
         memory.conversationRef.conversationId,
       );
+
       if (!conversation) {
         return { memory };
       }
@@ -366,7 +369,7 @@ export class MemoryAPI {
     }
 
     // Delegate to vector
-    return this.vector.store(agentId, input);
+    return await this.vector.store(agentId, input);
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -386,7 +389,7 @@ export class MemoryAPI {
       tags?: string[];
     },
   ): Promise<MemoryEntry> {
-    return this.vector.update(agentId, memoryId, updates);
+    return await this.vector.update(agentId, memoryId, updates);
   }
 
   /**
@@ -396,21 +399,21 @@ export class MemoryAPI {
     agentId: string,
     memoryId: string,
   ): Promise<{ deleted: boolean; memoryId: string }> {
-    return this.vector.delete(agentId, memoryId);
+    return await this.vector.delete(agentId, memoryId);
   }
 
   /**
    * List memories (delegates to vector.list)
    */
   async list(filter: ListMemoriesFilter): Promise<MemoryEntry[]> {
-    return this.vector.list(filter);
+    return await this.vector.list(filter);
   }
 
   /**
    * Count memories (delegates to vector.count)
    */
   async count(filter: CountMemoriesFilter): Promise<number> {
-    return this.vector.count(filter);
+    return await this.vector.count(filter);
   }
 
   /**
@@ -427,7 +430,7 @@ export class MemoryAPI {
       tags?: string[];
     },
   ): Promise<{ updated: number; memoryIds: string[] }> {
-    return this.vector.updateMany(filter, updates);
+    return await this.vector.updateMany(filter, updates);
   }
 
   /**
@@ -438,7 +441,7 @@ export class MemoryAPI {
     userId?: string;
     sourceType?: SourceType;
   }): Promise<{ deleted: number; memoryIds: string[] }> {
-    return this.vector.deleteMany(filter);
+    return await this.vector.deleteMany(filter);
   }
 
   /**
@@ -455,7 +458,7 @@ export class MemoryAPI {
     count: number;
     exportedAt: number;
   }> {
-    return this.vector.export(options);
+    return await this.vector.export(options);
   }
 
   /**
@@ -465,7 +468,7 @@ export class MemoryAPI {
     agentId: string,
     memoryId: string,
   ): Promise<{ archived: boolean; memoryId: string; restorable: boolean }> {
-    return this.vector.archive(agentId, memoryId);
+    return await this.vector.archive(agentId, memoryId);
   }
 
   /**
@@ -482,7 +485,7 @@ export class MemoryAPI {
     embedding?: number[];
     timestamp: number;
   } | null> {
-    return this.vector.getVersion(agentId, memoryId, version);
+    return await this.vector.getVersion(agentId, memoryId, version);
   }
 
   /**
@@ -500,7 +503,7 @@ export class MemoryAPI {
       timestamp: number;
     }>
   > {
-    return this.vector.getHistory(agentId, memoryId);
+    return await this.vector.getHistory(agentId, memoryId);
   }
 
   /**
@@ -517,6 +520,6 @@ export class MemoryAPI {
     embedding?: number[];
     timestamp: number;
   } | null> {
-    return this.vector.getAtTimestamp(agentId, memoryId, timestamp);
+    return await this.vector.getAtTimestamp(agentId, memoryId, timestamp);
   }
 }

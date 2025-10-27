@@ -45,22 +45,21 @@ export const set = mutation({
       });
 
       return await ctx.db.get(existing._id);
-    } else {
-      // Create new
-      const _id = await ctx.db.insert("mutable", {
-        namespace: args.namespace,
-        key: args.key,
-        value: args.value,
-        userId: args.userId,
-        metadata: args.metadata,
-        createdAt: now,
-        updatedAt: now,
-        accessCount: 0,
-        lastAccessed: undefined,
-      });
-
-      return await ctx.db.get(_id);
     }
+    // Create new
+    const _id = await ctx.db.insert("mutable", {
+      namespace: args.namespace,
+      key: args.key,
+      value: args.value,
+      userId: args.userId,
+      metadata: args.metadata,
+      createdAt: now,
+      updatedAt: now,
+      accessCount: 0,
+      lastAccessed: undefined,
+    });
+
+    return await ctx.db.get(_id);
   },
 });
 
@@ -168,6 +167,7 @@ export const purgeNamespace = mutation({
       .collect();
 
     let deleted = 0;
+
     for (const entry of entries) {
       await ctx.db.delete(entry._id);
       deleted++;
@@ -229,6 +229,7 @@ export const transaction = mutation({
             updatedAt: now,
             accessCount: 0,
           });
+
           results.push(await ctx.db.get(_id));
         }
       } else if (
@@ -243,6 +244,7 @@ export const transaction = mutation({
         }
 
         let newValue = existing.value;
+
         if (operation.op === "increment") {
           newValue = (existing.value || 0) + (operation.amount || 1);
         } else if (operation.op === "decrement") {
@@ -305,6 +307,7 @@ export const purgeMany = mutation({
     }
 
     let deleted = 0;
+
     for (const entry of entries) {
       await ctx.db.delete(entry._id);
       deleted++;

@@ -4,20 +4,20 @@
  * Layer 1b: ACID-compliant versioned immutable storage for shared data
  */
 
-import { ConvexClient } from "convex/browser";
+import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type {
+  CountImmutableFilter,
   ImmutableEntry,
   ImmutableRecord,
+  ImmutableSearchResult,
   ImmutableVersionExpanded,
   ListImmutableFilter,
   SearchImmutableInput,
-  ImmutableSearchResult,
-  CountImmutableFilter,
 } from "../types";
 
 export class ImmutableAPI {
-  constructor(private client: ConvexClient) {}
+  constructor(private readonly client: ConvexClient) {}
 
   /**
    * Store immutable data (creates v1 or increments version if exists)

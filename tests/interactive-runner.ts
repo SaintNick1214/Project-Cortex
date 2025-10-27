@@ -19,7 +19,7 @@ dotenv.config({ path: join(__dirname, "..", ".env.test") });
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
-import { TestCleanup, StorageInspector } from "./helpers";
+import { StorageInspector, TestCleanup } from "./helpers";
 import * as readline from "readline";
 import OpenAI from "openai";
 
@@ -30,7 +30,9 @@ const openai = process.env.OPENAI_API_KEY
 
 // OpenAI Helper Functions
 async function generateEmbedding(text: string): Promise<number[]> {
-  if (!openai) throw new Error("OPENAI_API_KEY not set");
+  if (!openai) {
+    throw new Error("OPENAI_API_KEY not set");
+  }
 
   const response = await openai.embeddings.create({
     model: "text-embedding-3-small",
@@ -45,7 +47,9 @@ async function summarizeConversation(
   userMessage: string,
   agentResponse: string,
 ): Promise<string | null> {
-  if (!openai) throw new Error("OPENAI_API_KEY not set");
+  if (!openai) {
+    throw new Error("OPENAI_API_KEY not set");
+  }
 
   const response = await openai.chat.completions.create({
     model: "gpt-4o-mini",
@@ -82,6 +86,7 @@ let inspector: StorageInspector;
 // Initialize
 async function initialize() {
   const convexUrl = process.env.CONVEX_URL;
+
   if (!convexUrl) {
     console.error("\n❌ CONVEX_URL not set in environment");
     console.error("\n💡 Make sure you have either:");
@@ -288,6 +293,7 @@ async function purgeAllDatabases() {
   // Purge conversations
   console.log("  Purging conversations...");
   const convDeleted = await cleanup.purgeConversations();
+
   await cleanup.verifyConversationsEmpty();
   currentConversationId = null;
   console.log(`  ✅ Purged ${convDeleted.deleted} conversation(s)`);
@@ -296,6 +302,7 @@ async function purgeAllDatabases() {
   console.log("  Purging immutable store...");
   const entries = await client.query(api.immutable.list, {});
   let immutableDeleted = 0;
+
   for (const entry of entries) {
     try {
       await client.mutation(api.immutable.purge, {
@@ -303,7 +310,7 @@ async function purgeAllDatabases() {
         id: entry.id,
       });
       immutableDeleted++;
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error.message?.includes("IMMUTABLE_ENTRY_NOT_FOUND")) {
         continue;
       }
@@ -345,13 +352,15 @@ async function purgeAllDatabases() {
   ];
 
   let mutableDeleted = 0;
+
   for (const ns of namespaces) {
     try {
       const result = await client.mutation(api.mutable.purgeNamespace, {
         namespace: ns,
       });
+
       mutableDeleted += result.deleted;
-    } catch (error: any) {
+    } catch (_error: unknown) {
       // Namespace might not exist - that's fine
     }
   }
@@ -371,6 +380,7 @@ async function purgeAllDatabases() {
   for (const agentId of testAgents) {
     try {
       const memories = await client.query(api.memories.list, { agentId });
+
       for (const memory of memories) {
         try {
           await client.mutation(api.memories.deleteMemory, {
@@ -378,11 +388,13 @@ async function purgeAllDatabases() {
             memoryId: memory.memoryId,
           });
           memoryDeleted++;
-        } catch (error: any) {
-          if (error.message?.includes("MEMORY_NOT_FOUND")) continue;
+        } catch (error: unknown) {
+          if (error.message?.includes("MEMORY_NOT_FOUND")) {
+            continue;
+          }
         }
       }
-    } catch (error: any) {
+    } catch (_error: unknown) {
       // Agent might not have memories
     }
   }
@@ -422,6 +434,7 @@ async function testCreateUserAgent() {
   console.log("📤 Input:", JSON.stringify(input, null, 2));
 
   const result = await cortex.conversations.create(input);
+
   currentConversationId = result.conversationId;
 
   console.log("\n📥 Result:", JSON.stringify(result, null, 2));
@@ -450,6 +463,7 @@ async function testCreateAgentAgent() {
   console.log("📤 Input:", JSON.stringify(input, null, 2));
 
   const result = await cortex.conversations.create(input);
+
   currentConversationId = result.conversationId;
 
   console.log("\n📥 Result:", JSON.stringify(result, null, 2));
@@ -466,6 +480,7 @@ async function testGet() {
     console.log(
       "\n⚠️  No current conversation ID. Create a conversation first (option 3 or 4).\n",
     );
+
     return;
   }
 
@@ -482,6 +497,7 @@ async function testAddMessage() {
     console.log(
       "\n⚠️  No current conversation ID. Create a conversation first (option 3 or 4).\n",
     );
+
     return;
   }
 
@@ -528,6 +544,7 @@ async function testListByUser() {
   // Validate: all conversations should include this userId
   console.log("\n🔍 Validation:");
   let allValid = true;
+
   conversations.forEach((conv, i) => {
     const hasUser = conv.participants.userId === TEST_USER_ID;
 
@@ -562,6 +579,7 @@ async function testListByAgent() {
   // Validate: all conversations should include this agentId
   console.log("\n🔍 Validation:");
   let allValid = true;
+
   conversations.forEach((conv, i) => {
     const hasAgent =
       conv.participants.agentId === TEST_AGENT_ID ||
@@ -601,6 +619,7 @@ async function testGetHistory() {
     console.log(
       "\n⚠️  No current conversation ID. Create a conversation first (option 3 or 4).\n",
     );
+
     return;
   }
 
@@ -696,6 +715,7 @@ async function testExportJSON() {
 
   // Parse and show sample
   const parsed = JSON.parse(exported.data);
+
   if (parsed.length > 0) {
     console.log(`\n  Sample (first conversation):`);
     console.log(
@@ -729,6 +749,7 @@ async function testExportCSV() {
 
   // Show CSV preview
   const lines = exported.data.split("\n");
+
   console.log(`\n  CSV Preview (first 5 lines):`);
   lines.slice(0, 5).forEach((line, i) => {
     console.log(
@@ -745,6 +766,7 @@ async function testDelete() {
     console.log(
       "\n⚠️  No current conversation ID. Create a conversation first (option 3 or 4).\n",
     );
+
     return;
   }
 
@@ -761,7 +783,7 @@ async function testDelete() {
   try {
     await cortex.conversations.get(currentConversationId);
     console.log("❌ ERROR: Conversation still exists!");
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error.message?.includes("CONVERSATION_NOT_FOUND")) {
       console.log("✅ Verified: Conversation no longer exists");
     } else {
@@ -960,9 +982,9 @@ async function runAllTests() {
   // Layer 1b: Immutable Store Tests
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  console.log("\n" + "═".repeat(80));
+  console.log(`\n${"═".repeat(80)}`);
   console.log("  LAYER 1B: IMMUTABLE STORE TESTS");
-  console.log("═".repeat(80) + "\n");
+  console.log(`${"═".repeat(80)}\n`);
 
   await testImmutableStore();
   console.log("═".repeat(80));
@@ -989,9 +1011,9 @@ async function runAllTests() {
   // Layer 1c: Mutable Store Tests
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  console.log("\n" + "═".repeat(80));
+  console.log(`\n${"═".repeat(80)}`);
   console.log("  LAYER 1C: MUTABLE STORE TESTS");
-  console.log("═".repeat(80) + "\n");
+  console.log(`${"═".repeat(80)}\n`);
 
   await testMutableSet();
   console.log("═".repeat(80));
@@ -1012,9 +1034,9 @@ async function runAllTests() {
   // Layer 2: Vector Memory Tests
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  console.log("\n" + "═".repeat(80));
+  console.log(`\n${"═".repeat(80)}`);
   console.log("  LAYER 2: VECTOR MEMORY TESTS");
-  console.log("═".repeat(80) + "\n");
+  console.log(`${"═".repeat(80)}\n`);
 
   await testVectorStore();
   console.log("═".repeat(80));
@@ -1029,9 +1051,9 @@ async function runAllTests() {
   // Layer 3: Memory Convenience API Tests
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  console.log("\n" + "═".repeat(80));
+  console.log(`\n${"═".repeat(80)}`);
   console.log("  LAYER 3: MEMORY CONVENIENCE API TESTS");
-  console.log("═".repeat(80) + "\n");
+  console.log(`${"═".repeat(80)}\n`);
 
   await testMemoryRemember();
   console.log("═".repeat(80));
@@ -1116,7 +1138,7 @@ async function runAllTests() {
     counterCount > 0 &&
     totalVectorCount > 0;
 
-  console.log("\n" + "═".repeat(80));
+  console.log(`\n${"═".repeat(80)}`);
   if (allValid) {
     console.log("✅ ALL TESTS PASSED! All 5 layers working correctly.");
   } else {
@@ -1152,6 +1174,7 @@ async function testImmutableStore() {
   console.log("📤 Input:", JSON.stringify(entry, null, 2));
 
   const result = await cortex.immutable.store(entry);
+
   currentImmutableType = result.type;
   currentImmutableId = result.id;
 
@@ -1173,6 +1196,7 @@ async function testImmutableGet() {
     console.log(
       "\n⚠️  No current entry. Run immutable.store first (option 16).\n",
     );
+
     return;
   }
 
@@ -1203,6 +1227,7 @@ async function testImmutableGetVersion() {
     console.log(
       "\n⚠️  No current entry. Run immutable.store first (option 16).\n",
     );
+
     return;
   }
 
@@ -1231,6 +1256,7 @@ async function testImmutableGetHistory() {
     console.log(
       "\n⚠️  No current entry. Run immutable.store first (option 16).\n",
     );
+
     return;
   }
 
@@ -1245,12 +1271,12 @@ async function testImmutableGetHistory() {
 
   console.log(`\n📥 Found ${history.length} version(s)`);
 
-  history.forEach((version, i) => {
+  history.forEach((version, _i) => {
     console.log(`\n  Version ${version.version}:`);
     console.log(`    Timestamp: ${new Date(version.timestamp).toISOString()}`);
     console.log(
       `    Data:`,
-      JSON.stringify(version.data).substring(0, 100) + "...",
+      `${JSON.stringify(version.data).substring(0, 100)}...`,
     );
   });
   console.log();
@@ -1307,6 +1333,7 @@ async function testImmutablePurge() {
     console.log(
       "\n⚠️  No current entry. Run immutable.store first (option 31).\n",
     );
+
     return;
   }
 
@@ -1328,6 +1355,7 @@ async function testImmutablePurge() {
     currentImmutableType,
     currentImmutableId,
   );
+
   if (check === null) {
     console.log("  ✅ Verified: Entry no longer exists");
   } else {
@@ -1357,6 +1385,7 @@ async function testConvPropagation() {
       agentId: TEST_AGENT_ID,
     },
   });
+
   currentConversationId = conv.conversationId;
 
   console.log(`✅ Created: ${conv.conversationId}`);
@@ -1376,11 +1405,13 @@ async function testConvPropagation() {
 
   // Verify in get()
   const retrieved = await cortex.conversations.get(conv.conversationId);
+
   console.log(`\n✅ get() shows ${retrieved!.messageCount} messages`);
 
   // Verify in list()
   const list = await cortex.conversations.list({ userId: TEST_USER_ID });
   const inList = list.find((c) => c.conversationId === conv.conversationId);
+
   console.log(`✅ list() shows ${inList?.messageCount} messages`);
 
   // Verify in search()
@@ -1390,12 +1421,14 @@ async function testConvPropagation() {
   const inSearch = searchResults.find(
     (r) => r.conversation.conversationId === conv.conversationId,
   );
+
   console.log(
     `✅ search() found with ${inSearch?.matchedMessages.length} matched messages`,
   );
 
   // Verify in getHistory()
   const history = await cortex.conversations.getHistory(conv.conversationId);
+
   console.log(`✅ getHistory() returned ${history.messages.length} messages`);
 
   console.log("\n🎯 Validation:");
@@ -1430,6 +1463,7 @@ async function testConvManyMessages() {
       agentId: TEST_AGENT_ID,
     },
   });
+
   currentConversationId = conv.conversationId;
 
   console.log(`✅ Created: ${conv.conversationId}`);
@@ -1453,6 +1487,7 @@ async function testConvManyMessages() {
 
   // Get full conversation
   const retrieved = await cortex.conversations.get(conv.conversationId);
+
   console.log(`\n✅ get() returned ${retrieved!.messageCount} messages`);
 
   // Test pagination
@@ -1461,6 +1496,7 @@ async function testConvManyMessages() {
     offset: 0,
     sortOrder: "asc",
   });
+
   console.log(
     `✅ getHistory(limit: 20, offset: 0) returned ${page1.messages.length} messages`,
   );
@@ -1471,6 +1507,7 @@ async function testConvManyMessages() {
     offset: 20,
     sortOrder: "asc",
   });
+
   console.log(
     `✅ getHistory(limit: 20, offset: 20) returned ${page2.messages.length} messages`,
   );
@@ -1503,6 +1540,7 @@ async function testConvDeleteMany() {
   const countBefore = await cortex.conversations.count({
     userId: `${TEST_USER_ID}-bulk`,
   });
+
   console.log(`✅ Created ${countBefore} conversations`);
 
   // Delete all
@@ -1518,6 +1556,7 @@ async function testConvDeleteMany() {
   const countAfter = await cortex.conversations.count({
     userId: `${TEST_USER_ID}-bulk`,
   });
+
   console.log(
     `\n✅ Verification: ${countAfter === 0 ? "All deleted" : `${countAfter} remaining`}`,
   );
@@ -1529,6 +1568,7 @@ async function testConvGetMessage() {
     console.log(
       "\n⚠️  No current conversation. Create one first (option 11).\n",
     );
+
     return;
   }
 
@@ -1536,14 +1576,17 @@ async function testConvGetMessage() {
 
   // Get the conversation to find a message ID
   const conv = await cortex.conversations.get(currentConversationId);
+
   if (!conv || conv.messages.length === 0) {
     console.log(
       "⚠️  No messages in conversation. Add a message first (option 14).\n",
     );
+
     return;
   }
 
   const messageId = conv.messages[0].id;
+
   console.log(`Looking for message: ${messageId}`);
 
   const message = await cortex.conversations.getMessage(
@@ -1567,18 +1610,22 @@ async function testConvGetMessagesByIds() {
     console.log(
       "\n⚠️  No current conversation. Create one first (option 11).\n",
     );
+
     return;
   }
 
   console.log(`\n📧 Testing: conversations.getMessagesByIds()...`);
 
   const conv = await cortex.conversations.get(currentConversationId);
+
   if (!conv || conv.messages.length === 0) {
     console.log("⚠️  No messages in conversation.\n");
+
     return;
   }
 
   const messageIds = conv.messages.slice(0, 3).map((m) => m.id);
+
   console.log(`Retrieving ${messageIds.length} messages...`);
 
   const messages = await cortex.conversations.getMessagesByIds(
@@ -1669,6 +1716,7 @@ async function testConvIntegration() {
       testMarker: "INTEGRATION_TEST",
     },
   });
+
   currentConversationId = conv.conversationId;
   console.log(`✅ Step 1: Created conversation ${conv.conversationId}`);
 
@@ -1684,10 +1732,12 @@ async function testConvIntegration() {
 
   // Verify in all operations
   const get = await cortex.conversations.get(conv.conversationId);
+
   console.log(`✅ Step 3: get() returned messageCount: ${get!.messageCount}`);
 
   const list = await cortex.conversations.list({ userId: TEST_USER_ID });
   const inList = list.some((c) => c.conversationId === conv.conversationId);
+
   console.log(
     `✅ Step 4: list() ${inList ? "found" : "did not find"} conversation`,
   );
@@ -1698,11 +1748,13 @@ async function testConvIntegration() {
   const inSearch = search.some(
     (r) => r.conversation.conversationId === conv.conversationId,
   );
+
   console.log(
     `✅ Step 5: search() ${inSearch ? "found" : "did not find"} conversation`,
   );
 
   const count = await cortex.conversations.count({ userId: TEST_USER_ID });
+
   console.log(`✅ Step 6: count() returned ${count}`);
 
   const exported = await cortex.conversations.export({
@@ -1711,8 +1763,9 @@ async function testConvIntegration() {
   });
   const parsed = JSON.parse(exported.data);
   const inExport = parsed.some(
-    (c: any) => c.conversationId === conv.conversationId,
+    (c: unknown) => c.conversationId === conv.conversationId,
   );
+
   console.log(
     `✅ Step 7: export() ${inExport ? "included" : "did not include"} conversation`,
   );
@@ -1748,6 +1801,7 @@ async function testImmPropagation() {
       content: "This is a draft document",
     },
   });
+
   currentImmutableType = type;
   currentImmutableId = id;
 
@@ -1756,6 +1810,7 @@ async function testImmPropagation() {
   // Verify in search
   let searchResults = await cortex.immutable.search({ query: "draft" });
   const foundDraft = searchResults.some((r) => r.entry.id === id);
+
   console.log(
     `✅ Step 2: search("draft") ${foundDraft ? "found" : "did not find"} entry`,
   );
@@ -1774,6 +1829,7 @@ async function testImmPropagation() {
 
   // Verify get() shows new version
   const current = await cortex.immutable.get(type, id);
+
   console.log(
     `✅ Step 4: get() returned v${current!.version} with status "${current!.data.status}"`,
   );
@@ -1781,6 +1837,7 @@ async function testImmPropagation() {
   // Verify search finds new keyword
   searchResults = await cortex.immutable.search({ query: "published" });
   const foundPublished = searchResults.some((r) => r.entry.id === id);
+
   console.log(
     `✅ Step 5: search("published") ${foundPublished ? "found" : "did not find"} entry`,
   );
@@ -1788,12 +1845,14 @@ async function testImmPropagation() {
   // Verify search doesn't find old keyword
   const draftResults = await cortex.immutable.search({ query: "draft" });
   const stillHasDraft = draftResults.some((r) => r.entry.id === id);
+
   console.log(
     `✅ Step 6: search("draft") ${stillHasDraft ? "still found" : "no longer finds"} entry`,
   );
 
   // Verify getVersion(1) still has old data
   const historicalV1 = await cortex.immutable.getVersion(type, id, 1);
+
   console.log(
     `✅ Step 7: getVersion(1) still has status "${historicalV1!.data.status}"`,
   );
@@ -1845,6 +1904,7 @@ async function testImmManyVersions() {
 
   // Get current
   const current = await cortex.immutable.get(type, id);
+
   console.log(
     `\n✅ get() returned v${current!.version} with iteration ${current!.data.iteration}`,
   );
@@ -1854,6 +1914,7 @@ async function testImmManyVersions() {
 
   // Get history
   const history = await cortex.immutable.getHistory(type, id);
+
   console.log(`✅ getHistory() returned ${history.length} versions`);
 
   // Spot check specific versions
@@ -1885,6 +1946,7 @@ async function testImmGetAtTimestamp() {
     console.log(
       "\n⚠️  No current entry. Run immutable.store first (option 41).\n",
     );
+
     return;
   }
 
@@ -1898,6 +1960,7 @@ async function testImmGetAtTimestamp() {
 
   if (history.length === 0) {
     console.log("⚠️  No history available.\n");
+
     return;
   }
 
@@ -1913,6 +1976,7 @@ async function testImmGetAtTimestamp() {
     currentImmutableId,
     past,
   );
+
   console.log(
     `  Before creation: ${beforeCreation ? `v${beforeCreation.version}` : "null (didn't exist)"}`,
   );
@@ -1922,6 +1986,7 @@ async function testImmGetAtTimestamp() {
     currentImmutableId,
     atV1,
   );
+
   console.log(
     `  At first version: ${atFirst ? `v${atFirst.version}` : "null"}`,
   );
@@ -1931,6 +1996,7 @@ async function testImmGetAtTimestamp() {
     currentImmutableId,
     future,
   );
+
   console.log(
     `  In future: ${inFuture ? `v${inFuture.version} (current)` : "null"}`,
   );
@@ -1953,6 +2019,7 @@ async function testImmPurgeMany() {
   const countBefore = await cortex.immutable.count({
     type: "bulk-delete-test",
   });
+
   console.log(`✅ Created ${countBefore} entries`);
 
   // Purge all
@@ -1963,6 +2030,7 @@ async function testImmPurgeMany() {
   console.log(`  Total versions: ${result.totalVersionsDeleted}`);
 
   const countAfter = await cortex.immutable.count({ type: "bulk-delete-test" });
+
   console.log(
     `\n✅ Verification: ${countAfter === 0 ? "All deleted" : `${countAfter} remaining`}`,
   );
@@ -1986,6 +2054,7 @@ async function testImmPurgeVersions() {
   }
 
   const before = await cortex.immutable.get(type, id);
+
   console.log(`✅ Created ${before!.version} versions`);
 
   // Keep only latest 5
@@ -1996,6 +2065,7 @@ async function testImmPurgeVersions() {
   console.log(`  Versions remaining: ${result.versionsRemaining}`);
 
   const after = await cortex.immutable.get(type, id);
+
   console.log(
     `\n✅ Verification: ${after!.previousVersions.length + 1} versions remain`,
   );
@@ -2018,6 +2088,7 @@ async function testImmIntegration() {
       content: "This entry contains UNIQUE_IMM_KEYWORD for testing",
     },
   });
+
   currentImmutableType = type;
   currentImmutableId = id;
 
@@ -2026,6 +2097,7 @@ async function testImmIntegration() {
   // Step 2: Verify in list
   const list1 = await cortex.immutable.list({ type });
   const inList = list1.some((e) => e.id === id);
+
   console.log(`✅ Step 2: list() ${inList ? "found" : "did not find"} entry`);
 
   // Step 3: Verify in search
@@ -2034,12 +2106,14 @@ async function testImmIntegration() {
     type,
   });
   const inSearch1 = search1.some((r) => r.entry.id === id);
+
   console.log(
     `✅ Step 3: search() ${inSearch1 ? "found" : "did not find"} entry`,
   );
 
   // Step 4: Count
   const count1 = await cortex.immutable.count({ type });
+
   console.log(`✅ Step 4: count() returned ${count1}`);
 
   // Step 5: Update content (remove old keyword, add new)
@@ -2057,6 +2131,7 @@ async function testImmIntegration() {
   // Step 6: List should still show it
   const list2 = await cortex.immutable.list({ type });
   const stillInList = list2.some((e) => e.id === id);
+
   console.log(
     `✅ Step 6: list() still ${stillInList ? "shows" : "does not show"} entry`,
   );
@@ -2067,6 +2142,7 @@ async function testImmIntegration() {
     type,
   });
   const foundOld = searchOld.some((r) => r.entry.id === id);
+
   console.log(
     `✅ Step 7: search("UNIQUE_IMM_KEYWORD") ${foundOld ? "still found (BAD)" : "no longer finds (GOOD)"}`,
   );
@@ -2077,12 +2153,14 @@ async function testImmIntegration() {
     type,
   });
   const foundNew = searchNew.some((r) => r.entry.id === id);
+
   console.log(
     `✅ Step 8: search("DIFFERENT_KEYWORD") ${foundNew ? "found (GOOD)" : "did not find (BAD)"}`,
   );
 
   // Step 9: Count should be unchanged
   const count2 = await cortex.immutable.count({ type });
+
   console.log(`✅ Step 9: count() unchanged at ${count2}`);
 
   console.log("\n🎯 Validation:");
@@ -2144,6 +2222,7 @@ async function testMutableIncrement() {
   await cortex.mutable.increment("counters", "inc-test", 5);
 
   const value = await cortex.mutable.get("counters", "inc-test");
+
   console.log(`📥 After increment(5): ${value}`);
   console.log();
 }
@@ -2155,6 +2234,7 @@ async function testMutableDecrement() {
   await cortex.mutable.decrement("inventory", "dec-test", 10);
 
   const value = await cortex.mutable.get("inventory", "dec-test");
+
   console.log(`📥 After decrement(10): ${value}`);
   console.log();
 }
@@ -2201,6 +2281,7 @@ async function testMutableDelete() {
   console.log("✅ Deleted temp/delete-me");
 
   const exists = await cortex.mutable.exists("temp", "delete-me");
+
   console.log(
     `✅ Verification: ${exists ? "Still exists (ERROR)" : "Deleted successfully"}`,
   );
@@ -2217,6 +2298,7 @@ async function testMutablePurgeNamespace() {
   const countBefore = await cortex.mutable.count({
     namespace: "purge-ns-test",
   });
+
   console.log(`✅ Created ${countBefore} keys`);
 
   const result = await cortex.mutable.purgeNamespace("purge-ns-test");
@@ -2224,6 +2306,7 @@ async function testMutablePurgeNamespace() {
   console.log(`📥 Deleted ${result.deleted} keys`);
 
   const countAfter = await cortex.mutable.count({ namespace: "purge-ns-test" });
+
   console.log(
     `✅ Verification: ${countAfter === 0 ? "All deleted" : `${countAfter} remaining`}`,
   );
@@ -2239,6 +2322,7 @@ async function testMutablePurgeMany() {
   await cortex.mutable.set("bulk-mut-del", "keep-1", "c");
 
   const countBefore = await cortex.mutable.count({ namespace: "bulk-mut-del" });
+
   console.log(`✅ Created ${countBefore} keys`);
 
   const result = await cortex.mutable.purgeMany({
@@ -2253,6 +2337,7 @@ async function testMutablePurgeMany() {
     namespace: "bulk-mut-del",
     keyPrefix: "temp-",
   });
+
   console.log(
     `\n✅ Verification: ${countAfter === 0 ? "All temp- keys deleted" : `${countAfter} remaining`}`,
   );
@@ -2355,6 +2440,7 @@ async function testVectorGet() {
     console.log(
       "\n⚠️  No current memory. Run vector.store first (option 81).\n",
     );
+
     return;
   }
 
@@ -2419,6 +2505,7 @@ async function testVectorDelete() {
     console.log(
       "\n⚠️  No current memory. Run vector.store first (option 81).\n",
     );
+
     return;
   }
 
@@ -2430,6 +2517,7 @@ async function testVectorDelete() {
 
   // Verify
   const check = await cortex.vector.get(TEST_AGENT_ID, currentMemoryId);
+
   console.log(
     `✅ Verification: ${check === null ? "Deleted" : "Still exists (ERROR)"}`,
   );
@@ -2443,6 +2531,7 @@ async function testVectorUpdate() {
     console.log(
       "\n⚠️  No current memory. Run vector.store first (option 81).\n",
     );
+
     return;
   }
 
@@ -2549,6 +2638,7 @@ async function testVectorArchive() {
 
   // Verify archive
   const archived = await cortex.vector.get(TEST_AGENT_ID, memory.memoryId);
+
   console.log(`✅ Verification: tags=${archived!.tags.join(", ")}`);
   console.log(`✅ Verification: importance=${archived!.importance}`);
   console.log();
@@ -2559,15 +2649,18 @@ async function testVectorGetVersion() {
     console.log(
       "\n⚠️  No current memory. Run vector.store and vector.update first.\n",
     );
+
     return;
   }
 
   console.log(`\n🕒 Testing: vector.getVersion()...`);
 
   const v1 = await cortex.vector.getVersion(TEST_AGENT_ID, currentMemoryId, 1);
+
   console.log(`✅ Version 1: ${v1?.content || "Not found"}`);
 
   const v2 = await cortex.vector.getVersion(TEST_AGENT_ID, currentMemoryId, 2);
+
   console.log(`✅ Version 2: ${v2?.content || "Not found"}`);
 
   console.log();
@@ -2578,6 +2671,7 @@ async function testVectorGetHistory() {
     console.log(
       "\n⚠️  No current memory. Run vector.store and vector.update first.\n",
     );
+
     return;
   }
 
@@ -2600,14 +2694,17 @@ async function testVectorGetAtTimestamp() {
     console.log(
       "\n⚠️  No current memory. Run vector.store and vector.update first.\n",
     );
+
     return;
   }
 
   console.log(`\n⏰ Testing: vector.getAtTimestamp()...`);
 
   const memory = await cortex.vector.get(TEST_AGENT_ID, currentMemoryId);
+
   if (!memory) {
     console.log("Memory not found");
+
     return;
   }
 
@@ -2701,6 +2798,7 @@ async function showAdvancedMemoryMenu() {
   if (!openai) {
     console.log("\n⚠️  Advanced AI tests require OPENAI_API_KEY");
     console.log("Add OPENAI_API_KEY to .env.local to enable\n");
+
     return;
   }
   console.log("\n🤖 Advanced OpenAI Integration Tests");
@@ -2746,6 +2844,7 @@ async function testMemoryForget() {
     console.log(
       "\n⚠️  No current memory. Run memory.remember first (option 91).\n",
     );
+
     return;
   }
 
@@ -2760,12 +2859,14 @@ async function testMemoryForget() {
 
   // Verify
   const vectorCheck = await cortex.vector.get(TEST_AGENT_ID, currentMemoryId);
+
   console.log(
     `✅ Vector verification: ${vectorCheck === null ? "Deleted" : "Still exists"}`,
   );
 
   if (currentConversationId) {
     const acidCheck = await cortex.conversations.get(currentConversationId);
+
     console.log(`✅ ACID verification: ${acidCheck ? "Preserved" : "Deleted"}`);
   }
 
@@ -2778,6 +2879,7 @@ async function testMemoryGetEnriched() {
     console.log(
       "\n⚠️  No current memory/conversation. Run memory.remember first (option 91).\n",
     );
+
     return;
   }
 
@@ -2804,21 +2906,22 @@ async function testMemoryGetEnriched() {
   }
 
   // Test default (vector only)
-  const vectorOnly = await cortex.memory.get(TEST_AGENT_ID, currentMemoryId!);
-  console.log(`✅ Default (Vector only): ${(vectorOnly as any).memoryId}`);
+  const vectorOnly = await cortex.memory.get(TEST_AGENT_ID, currentMemoryId);
+
+  console.log(`✅ Default (Vector only): ${(vectorOnly as unknown).memoryId}`);
 
   // Test enriched
-  const enriched = await cortex.memory.get(TEST_AGENT_ID, currentMemoryId!, {
+  const enriched = await cortex.memory.get(TEST_AGENT_ID, currentMemoryId, {
     includeConversation: true,
   });
 
   console.log(`✅ Enriched mode:`);
-  console.log(`   Memory: ${(enriched as any).memory.memoryId}`);
+  console.log(`   Memory: ${(enriched as unknown).memory.memoryId}`);
   console.log(
-    `   Conversation: ${(enriched as any).conversation?.conversationId || "N/A"}`,
+    `   Conversation: ${(enriched as unknown).conversation?.conversationId || "N/A"}`,
   );
   console.log(
-    `   Source messages: ${(enriched as any).sourceMessages?.length || 0}`,
+    `   Source messages: ${(enriched as unknown).sourceMessages?.length || 0}`,
   );
   console.log();
 }
@@ -2828,6 +2931,7 @@ async function testMemorySearchEnriched() {
 
   // Search default (vector only)
   const vectorOnly = await cortex.memory.search(TEST_AGENT_ID, "password");
+
   console.log(`✅ Default search: ${vectorOnly.length} results (Vector only)`);
 
   // Search enriched
@@ -2837,7 +2941,8 @@ async function testMemorySearchEnriched() {
 
   console.log(`✅ Enriched search: ${enriched.length} results`);
   if (enriched.length > 0) {
-    const first = enriched[0] as any;
+    const first = enriched[0] as unknown;
+
     console.log(`   First result:`);
     console.log(`     Memory: ${first.memory?.memoryId || first.memoryId}`);
     console.log(
@@ -2898,11 +3003,12 @@ async function runMemoryTests() {
 // Advanced: OpenAI Integration Tests
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-let advancedMemories: { fact: string; memoryId: string }[] = [];
+let advancedMemories: Array<{ fact: string; memoryId: string }> = [];
 
 async function testMemoryRememberWithAI() {
   if (!openai) {
     console.log("\n⚠️  OPENAI_API_KEY not set. Skipping AI test.\n");
+
     return;
   }
 
@@ -2946,7 +3052,7 @@ async function testMemoryRememberWithAI() {
       agentResponse: convo.agent,
       userId: TEST_USER_ID,
       userName: "Alex Johnson",
-      generateEmbedding: generateEmbedding,
+      generateEmbedding,
       extractContent: summarizeConversation,
       importance: convo.fact === "api-password" ? 100 : 70,
       tags: [convo.fact, "ai-test"],
@@ -2972,6 +3078,7 @@ async function testMemoryRememberWithAI() {
 async function testSemanticSearchRecall() {
   if (!openai) {
     console.log("\n⚠️  OPENAI_API_KEY not set. Skipping AI test.\n");
+
     return;
   }
 
@@ -2994,8 +3101,9 @@ async function testSemanticSearchRecall() {
     });
 
     if (results.length > 0) {
-      const found = results[0] as any;
+      const found = results[0] as unknown;
       const score = found._score || 0;
+
       console.log(`  ✓ Found: "${found.content.substring(0, 60)}..."`);
       console.log(`  ✓ Similarity: ${(score * 100).toFixed(1)}%`);
       console.log(
@@ -3011,6 +3119,7 @@ async function testSemanticSearchRecall() {
 async function testEnrichedSearchWithAI() {
   if (!openai) {
     console.log("\n⚠️  OPENAI_API_KEY not set. Skipping AI test.\n");
+
     return;
   }
 
@@ -3025,7 +3134,7 @@ async function testEnrichedSearchWithAI() {
   console.log(`✓ Found ${results.length} results`);
 
   if (results.length > 0) {
-    const enriched = results[0] as any;
+    const enriched = results[0] as unknown;
 
     if (enriched.memory) {
       console.log(`\n✓ Enriched structure:`);
@@ -3051,6 +3160,7 @@ async function testEnrichedSearchWithAI() {
 async function testSummarizationQuality() {
   if (!openai || advancedMemories.length === 0) {
     console.log("\n⚠️  Run 'remember (with embeddings)' first (option 961)\n");
+
     return;
   }
 
@@ -3089,6 +3199,7 @@ async function testSummarizationQuality() {
 async function testSimilarityScores() {
   if (!openai) {
     console.log("\n⚠️  OPENAI_API_KEY not set. Skipping AI test.\n");
+
     return;
   }
 
@@ -3108,8 +3219,9 @@ async function testSimilarityScores() {
 
   console.log(`\n✓ Found ${results.length} results:\n`);
 
-  results.forEach((result: any, i) => {
+  results.forEach((result: unknown, i) => {
     const score = result._score || 0;
+
     console.log(`${i + 1}. "${result.content.substring(0, 50)}..."`);
     console.log(`   Score: ${(score * 100).toFixed(1)}% similar`);
     console.log(
@@ -3124,6 +3236,7 @@ async function runAdvancedMemoryTests() {
   if (!openai) {
     console.log("\n⚠️  Advanced tests require OPENAI_API_KEY");
     console.log("Add to .env.local to enable these tests\n");
+
     return;
   }
 
@@ -3358,13 +3471,13 @@ function displayMenu() {
 }
 
 // Get user input
-function getUserChoice(): Promise<string> {
+async function getUserChoice(): Promise<string> {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
   });
 
-  return new Promise((resolve) => {
+  return await new Promise((resolve) => {
     rl.question("\n👉 Select an option: ", (answer) => {
       rl.close();
       resolve(answer.trim());
@@ -3383,7 +3496,7 @@ async function mainLoop() {
     if (option) {
       try {
         await option.action();
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.log("\n❌ Error:", error.message);
         console.log(error.stack);
         console.log();
@@ -3399,6 +3512,7 @@ async function mainLoop() {
           input: process.stdin,
           output: process.stdout,
         });
+
         rl.question("\nPress Enter to continue...", () => {
           rl.close();
           resolve(null);
@@ -3417,7 +3531,7 @@ async function start() {
   try {
     await initialize();
     await mainLoop();
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("\n❌ Fatal error:", error.message);
     console.error(error.stack);
     process.exit(1);

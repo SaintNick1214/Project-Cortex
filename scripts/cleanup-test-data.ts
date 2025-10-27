@@ -12,7 +12,8 @@ import { resolve } from "path";
 // Load environment
 dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
 
-const convexUrl = process.argv[2] || process.env.LOCAL_CONVEX_URL || process.env.CONVEX_URL;
+const convexUrl =
+  process.argv[2] || process.env.LOCAL_CONVEX_URL || process.env.CONVEX_URL;
 
 if (!convexUrl) {
   console.error("❌ No Convex URL provided");
@@ -30,7 +31,7 @@ async function cleanup() {
     // Get all conversations
     const conversations = await client.query(api.conversations.list, {});
     console.log(`📋 Found ${conversations.length} conversations`);
-    
+
     for (const conv of conversations) {
       try {
         await client.mutation(api.conversations.deleteConversation, {
@@ -40,7 +41,7 @@ async function cleanup() {
         // Ignore if already deleted
       }
     }
-    
+
     // Get all memories from common test agent IDs
     const testAgentIds = [
       "agent-test-l3",
@@ -50,14 +51,14 @@ async function cleanup() {
       "another-test-agent",
       "agent-vector-test",
     ];
-    
+
     let totalMemories = 0;
     for (const agentId of testAgentIds) {
       try {
         const memories = await client.query(api.memories.list, { agentId });
         totalMemories += memories.length;
         console.log(`📝 Found ${memories.length} memories for ${agentId}`);
-        
+
         for (const memory of memories) {
           try {
             await client.mutation(api.memories.deleteMemory, {
@@ -72,11 +73,10 @@ async function cleanup() {
         // Agent might not exist
       }
     }
-    
+
     console.log(`\n✅ Cleanup complete!`);
     console.log(`   - Deleted ${conversations.length} conversations`);
     console.log(`   - Deleted ${totalMemories} memories`);
-    
   } catch (error) {
     console.error("❌ Cleanup failed:", error);
     process.exit(1);
@@ -86,4 +86,3 @@ async function cleanup() {
 }
 
 cleanup().then(() => process.exit(0));
-

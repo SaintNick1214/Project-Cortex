@@ -50,12 +50,12 @@ OPENAI_API_KEY=sk-...
 
 ### Test Commands
 
-| Command | Description | Use Case |
-|---------|-------------|----------|
-| `npm test` | Auto-detect mode | Default development |
-| `npm run test:local` | Force LOCAL mode | Rapid iteration |
-| `npm run test:managed` | Force MANAGED mode | Production testing |
-| `npm run test:both` | Run both sequentially | CI/CD validation |
+| Command                | Description           | Use Case            |
+| ---------------------- | --------------------- | ------------------- |
+| `npm test`             | Auto-detect mode      | Default development |
+| `npm run test:local`   | Force LOCAL mode      | Rapid iteration     |
+| `npm run test:managed` | Force MANAGED mode    | Production testing  |
+| `npm run test:both`    | Run both sequentially | CI/CD validation    |
 
 ### Automatic Mode Selection
 
@@ -64,7 +64,7 @@ The test framework automatically selects the appropriate deployment:
 ```typescript
 // Environment detection logic (tests/env.ts)
 const testMode = process.env.CONVEX_TEST_MODE || "auto";
-const hasLocalConfig = !!(process.env.LOCAL_CONVEX_URL);
+const hasLocalConfig = !!process.env.LOCAL_CONVEX_URL;
 const hasManagedConfig = !!(process.env.CONVEX_URL && !isLocalhost(CONVEX_URL));
 
 // Priority order:
@@ -85,8 +85,9 @@ if (args.embedding && args.embedding.length > 0) {
     results = await ctx.db
       .query("memories")
       .withIndex("by_embedding", (q) =>
-        q.similar("embedding", args.embedding, args.limit || 20)
-         .eq("agentId", args.agentId)
+        q
+          .similar("embedding", args.embedding, args.limit || 20)
+          .eq("agentId", args.agentId),
       )
       .collect();
   } catch (error: any) {
@@ -97,12 +98,12 @@ if (args.embedding && args.embedding.length > 0) {
         .query("memories")
         .withIndex("by_agentId", (q) => q.eq("agentId", args.agentId))
         .collect();
-      
+
       // Calculate and sort by similarity score
       results = vectorResults
-        .map(m => ({
+        .map((m) => ({
           ...m,
-          _score: cosineSimilarity(args.embedding, m.embedding)
+          _score: cosineSimilarity(args.embedding, m.embedding),
         }))
         .sort((a, b) => b._score - a._score)
         .slice(0, args.limit || 20);
@@ -116,6 +117,7 @@ if (args.embedding && args.embedding.length > 0) {
 ## Test Results
 
 ### Local Mode (`npm run test:local`)
+
 ```
 🧪 Testing against LOCAL Convex: http://127.0.0.1:3210
    Note: Vector search (.similar()) not supported in local mode
@@ -126,12 +128,14 @@ Time: ~40s
 ```
 
 ✅ **Achievements:**
+
 - Manual cosine similarity fallback working
 - All vector search tests passing
 - Realistic similarity scores (0.37-0.68 range)
 - Proper edge case handling
 
 ### Managed Mode (`npm run test:managed`)
+
 ```
 🧪 Testing against MANAGED Convex: https://expert-buffalo-268.convex.cloud
    Note: Vector search fully supported in managed mode
@@ -142,21 +146,22 @@ Time: ~30s (faster due to optimized indexing)
 ```
 
 ✅ **Achievements:**
+
 - Database-level vector indexing
 - Production-ready performance
 - All tests passing with optimized queries
 
 ## Key Differences
 
-| Feature | Local Convex | Managed Convex |
-|---------|-------------|----------------|
-| **Vector Search API** | ❌ `.similar()` not supported | ✅ Fully supported |
-| **Similarity Calculation** | ✅ Manual (JavaScript) | ✅ Optimized (DB-level) |
-| **Performance** | Slower (O(N) scan) | Faster (indexed search) |
-| **Test Time** | ~40 seconds | ~30 seconds |
-| **Setup** | `npx convex dev --local` | Cloud deployment |
-| **Data Persistence** | `~/.convex/` directory | Cloud database |
-| **Use Case** | Development | Production testing |
+| Feature                    | Local Convex                  | Managed Convex          |
+| -------------------------- | ----------------------------- | ----------------------- |
+| **Vector Search API**      | ❌ `.similar()` not supported | ✅ Fully supported      |
+| **Similarity Calculation** | ✅ Manual (JavaScript)        | ✅ Optimized (DB-level) |
+| **Performance**            | Slower (O(N) scan)            | Faster (indexed search) |
+| **Test Time**              | ~40 seconds                   | ~30 seconds             |
+| **Setup**                  | `npx convex dev --local`      | Cloud deployment        |
+| **Data Persistence**       | `~/.convex/` directory        | Cloud database          |
+| **Use Case**               | Development                   | Production testing      |
 
 ## CI/CD Integration
 
@@ -196,31 +201,37 @@ jobs:
 ### Required GitHub Secrets
 
 **For managed testing:**
+
 - `CONVEX_URL`: Your managed deployment URL
 - `CONVEX_DEPLOY_KEY`: Deployment authentication
 - `OPENAI_API_KEY`: For embedding tests (optional)
 
 **Local testing:**
+
 - No secrets required (runs automatically)
 
 ## Benefits
 
 ### 1. Environment Parity Validation
+
 - Ensures code works across both development and production
 - Catches environment-specific bugs early
 - Validates fallback mechanisms
 
 ### 2. Performance Comparison
+
 - Quantifies performance differences
 - Validates optimization strategies
 - Helps identify bottlenecks
 
 ### 3. Development Flexibility
+
 - Local testing for rapid iteration
 - Managed testing for production validation
 - Both modes available in CI/CD
 
 ### 4. Cost Optimization
+
 - Local testing doesn't consume cloud resources
 - Managed testing validates production performance
 - Run both to ensure complete coverage
@@ -228,16 +239,19 @@ jobs:
 ## Troubleshooting
 
 ### Issue: "r.similar is not a function"
+
 - **Status:** Expected in local mode
 - **Solution:** Code automatically falls back to manual similarity
 - **Action:** No action needed
 
 ### Issue: Slow local tests
+
 - **Cause:** Manual similarity calculation is O(N)
 - **Solution:** Use `npm run test:managed` for faster tests
 - **Note:** This is a known limitation of local Convex
 
 ### Issue: CONVEX_URL not configured
+
 - **Solution:** Set either `LOCAL_CONVEX_URL` or `CONVEX_URL` in `.env.local`
 - **Example:**
   ```bash
@@ -267,6 +281,7 @@ jobs:
 ## Summary
 
 The dual testing strategy successfully:
+
 - ✅ Validates code across both deployment types
 - ✅ Provides automatic fallback for unsupported features
 - ✅ Enables flexible development workflows
@@ -274,4 +289,3 @@ The dual testing strategy successfully:
 - ✅ Maintains 99.6% test coverage (240/241 tests passing)
 
 Both bugs reported have been **fully resolved and validated** through comprehensive dual-environment testing.
-

@@ -29,6 +29,7 @@ describe("Conversations API (Layer 1a)", () => {
     // 🧹 Purge conversations table before all tests
     console.log("\n🧹 Purging conversations table before tests...");
     const result = await cleanup.purgeConversations();
+
     console.log(`✅ Purged ${result.deleted} conversations\n`);
 
     // Verify empty (warn if not, but don't fail - parallel tests might create data)
@@ -36,7 +37,7 @@ describe("Conversations API (Layer 1a)", () => {
   });
 
   afterAll(async () => {
-    await cortex.close();
+    cortex.close();
     client.close();
   });
 
@@ -205,6 +206,7 @@ describe("Conversations API (Layer 1a)", () => {
 
     it("returns null for non-existent conversation", async () => {
       const result = await cortex.conversations.get("conv-does-not-exist");
+
       expect(result).toBeNull();
     });
   });
@@ -381,6 +383,7 @@ describe("Conversations API (Layer 1a)", () => {
 
     it("lists all conversations (no filter)", async () => {
       const conversations = await cortex.conversations.list();
+
       expect(conversations.length).toBeGreaterThan(0);
     });
 
@@ -406,6 +409,7 @@ describe("Conversations API (Layer 1a)", () => {
         const hasAgent =
           conv.participants.agentId === "agent-list-1" ||
           conv.participants.agentIds?.includes("agent-list-1");
+
         expect(hasAgent).toBe(true);
       });
     });
@@ -446,6 +450,7 @@ describe("Conversations API (Layer 1a)", () => {
   describe("count()", () => {
     it("counts all conversations", async () => {
       const count = await cortex.conversations.count();
+
       expect(count).toBeGreaterThan(0);
     });
 
@@ -489,18 +494,21 @@ describe("Conversations API (Layer 1a)", () => {
       const result = await cortex.conversations.delete(
         conversation.conversationId,
       );
+
       expect(result.deleted).toBe(true);
 
       // Verify it's gone
       const retrieved = await cortex.conversations.get(
         conversation.conversationId,
       );
+
       expect(retrieved).toBeNull();
 
       // Verify storage
       const stored = await client.query(api.conversations.get, {
         conversationId: conversation.conversationId,
       });
+
       expect(stored).toBeNull();
     });
 
@@ -589,6 +597,7 @@ describe("Conversations API (Layer 1a)", () => {
           agentId: "agent-history-test",
         },
       });
+
       testConversationId = conversation.conversationId;
 
       // Add 10 messages
@@ -764,6 +773,7 @@ describe("Conversations API (Layer 1a)", () => {
         const hasMatch = result.matchedMessages.some((msg) =>
           msg.content.toLowerCase().includes("password"),
         );
+
         expect(hasMatch).toBe(true);
       });
     });
@@ -868,6 +878,7 @@ describe("Conversations API (Layer 1a)", () => {
 
       // Validate JSON is parseable
       const parsed = JSON.parse(exported.data);
+
       expect(Array.isArray(parsed)).toBe(true);
       expect(parsed.length).toBe(exported.count);
     });
@@ -885,6 +896,7 @@ describe("Conversations API (Layer 1a)", () => {
 
       // Validate CSV structure
       const lines = exported.data.split("\n");
+
       expect(lines[0]).toContain("conversationId");
       expect(lines[0]).toContain("type");
       expect(lines.length).toBe(exported.count + 1); // Header + data rows
@@ -898,6 +910,7 @@ describe("Conversations API (Layer 1a)", () => {
       });
 
       const parsed = JSON.parse(withMetadata.data);
+
       expect(parsed[0].metadata).toBeDefined();
       expect(parsed[0].metadata.campaign).toBe("summer-2025");
     });
@@ -910,6 +923,7 @@ describe("Conversations API (Layer 1a)", () => {
       });
 
       const parsed = JSON.parse(withoutMetadata.data);
+
       expect(parsed[0].metadata).toBeUndefined();
     });
 
@@ -923,7 +937,8 @@ describe("Conversations API (Layer 1a)", () => {
 
       expect(exported.count).toBe(2);
       const parsed = JSON.parse(exported.data);
-      const ids = parsed.map((c: any) => c.conversationId);
+      const ids = parsed.map((c: unknown) => c.conversationId);
+
       expect(ids).toContain("conv-export-1");
       expect(ids).toContain("conv-export-2");
     });
@@ -935,7 +950,8 @@ describe("Conversations API (Layer 1a)", () => {
       });
 
       const parsed = JSON.parse(exported.data);
-      parsed.forEach((conv: any) => {
+
+      parsed.forEach((conv: unknown) => {
         expect(conv.type).toBe("agent-agent");
       });
     });
@@ -955,7 +971,8 @@ describe("Conversations API (Layer 1a)", () => {
       });
 
       const parsed = JSON.parse(exported.data);
-      parsed.forEach((conv: any) => {
+
+      parsed.forEach((conv: unknown) => {
         expect(conv.createdAt).toBeGreaterThanOrEqual(oneHourAgo);
         expect(conv.createdAt).toBeLessThanOrEqual(now);
       });
@@ -975,11 +992,13 @@ describe("Conversations API (Layer 1a)", () => {
 
       // Verify initial state in all operations
       let retrieved = await cortex.conversations.get(conv.conversationId);
+
       expect(retrieved!.messageCount).toBe(0);
 
       let list = await cortex.conversations.list({
         userId: "user-propagation-test",
       });
+
       expect(list[0].messageCount).toBe(0);
 
       // Add message
@@ -1006,6 +1025,7 @@ describe("Conversations API (Layer 1a)", () => {
       const searchResults = await cortex.conversations.search({
         query: "PROPAGATE",
       });
+
       expect(
         searchResults.some(
           (r) => r.conversation.conversationId === conv.conversationId,
@@ -1016,6 +1036,7 @@ describe("Conversations API (Layer 1a)", () => {
       const history = await cortex.conversations.getHistory(
         conv.conversationId,
       );
+
       expect(history.messages).toHaveLength(1);
 
       // Add more messages
@@ -1036,11 +1057,13 @@ describe("Conversations API (Layer 1a)", () => {
       const finalHistory = await cortex.conversations.getHistory(
         conv.conversationId,
       );
+
       expect(finalHistory.messages).toHaveLength(5);
 
       const finalList = await cortex.conversations.list({
         userId: "user-propagation-test",
       });
+
       expect(finalList[0].messageCount).toBe(5);
     });
 
@@ -1063,18 +1086,21 @@ describe("Conversations API (Layer 1a)", () => {
 
       // Verify exists in all operations
       let get = await cortex.conversations.get(conv.conversationId);
+
       expect(get).not.toBeNull();
 
       let list = await cortex.conversations.list({
         userId: "user-delete-test",
       });
+
       expect(list.some((c) => c.conversationId === conv.conversationId)).toBe(
         true,
       );
 
-      let count = await cortex.conversations.count({
+      const count = await cortex.conversations.count({
         userId: "user-delete-test",
       });
+
       expect(count).toBeGreaterThanOrEqual(1);
 
       // Delete conversation
@@ -1092,6 +1118,7 @@ describe("Conversations API (Layer 1a)", () => {
       const countAfter = await cortex.conversations.count({
         userId: "user-delete-test",
       });
+
       expect(countAfter).toBe(count - 1);
     });
   });
@@ -1119,6 +1146,7 @@ describe("Conversations API (Layer 1a)", () => {
 
       // Get should have all 100
       const retrieved = await cortex.conversations.get(conv.conversationId);
+
       expect(retrieved!.messageCount).toBe(100);
       expect(retrieved!.messages).toHaveLength(100);
 
@@ -1127,12 +1155,14 @@ describe("Conversations API (Layer 1a)", () => {
         limit: 20,
         offset: 0,
       });
+
       expect(page1.messages).toHaveLength(20);
 
       const page2 = await cortex.conversations.getHistory(conv.conversationId, {
         limit: 20,
         offset: 20,
       });
+
       expect(page2.messages).toHaveLength(20);
 
       // Messages should be different
@@ -1182,6 +1212,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(result.messages[0].content).toHaveLength(10000);
 
       const retrieved = await cortex.conversations.get(conv.conversationId);
+
       expect(retrieved!.messages[0].content).toHaveLength(10000);
     });
 
@@ -1200,6 +1231,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(conv.conversationId).toBe(specialId);
 
       const retrieved = await cortex.conversations.get(specialId);
+
       expect(retrieved).not.toBeNull();
     });
 
@@ -1213,20 +1245,23 @@ describe("Conversations API (Layer 1a)", () => {
       });
 
       // Add 20 messages concurrently
-      const promises = Array.from({ length: 20 }, (_, i) =>
-        cortex.conversations.addMessage({
-          conversationId: conv.conversationId,
-          message: {
-            role: i % 2 === 0 ? "user" : "agent",
-            content: `Concurrent message ${i}`,
-          },
-        }),
+      const promises = Array.from(
+        { length: 20 },
+        async (_, i) =>
+          await cortex.conversations.addMessage({
+            conversationId: conv.conversationId,
+            message: {
+              role: i % 2 === 0 ? "user" : "agent",
+              content: `Concurrent message ${i}`,
+            },
+          }),
       );
 
       await Promise.all(promises);
 
       // All 20 should be stored
       const final = await cortex.conversations.get(conv.conversationId);
+
       expect(final!.messageCount).toBe(20);
       expect(final!.messages).toHaveLength(20);
     });
@@ -1260,6 +1295,7 @@ describe("Conversations API (Layer 1a)", () => {
         const remaining = await cortex.conversations.list({
           userId: "user-bulk-delete",
         });
+
         expect(remaining.length).toBe(0);
       });
 
@@ -1300,6 +1336,7 @@ describe("Conversations API (Layer 1a)", () => {
             agentId: "agent-get-message",
           },
         });
+
         testConversationId = conv.conversationId;
 
         const result = await cortex.conversations.addMessage({
@@ -1309,6 +1346,7 @@ describe("Conversations API (Layer 1a)", () => {
             content: "Specific message to retrieve",
           },
         });
+
         testMessageId = result.messages[0].id;
       });
 
@@ -1354,6 +1392,7 @@ describe("Conversations API (Layer 1a)", () => {
             agentId: "agent-get-messages",
           },
         });
+
         testConversationId = conv.conversationId;
 
         // Add 5 messages
@@ -1366,6 +1405,7 @@ describe("Conversations API (Layer 1a)", () => {
               content: `Message ${i}`,
             },
           });
+
           messageIds.push(result.messages[result.messages.length - 1].id);
         }
       });
@@ -1551,6 +1591,7 @@ describe("Conversations API (Layer 1a)", () => {
       const listResults = await cortex.conversations.list({
         userId: "user-integration-test",
       });
+
       expect(
         listResults.some((c) => c.conversationId === conv.conversationId),
       ).toBe(true);
@@ -1563,6 +1604,7 @@ describe("Conversations API (Layer 1a)", () => {
       const searchResults = await cortex.conversations.search({
         query: "UNIQUE_SEARCH_TERM",
       });
+
       expect(
         searchResults.some(
           (r) => r.conversation.conversationId === conv.conversationId,
@@ -1573,6 +1615,7 @@ describe("Conversations API (Layer 1a)", () => {
       const count = await cortex.conversations.count({
         userId: "user-integration-test",
       });
+
       expect(count).toBeGreaterThanOrEqual(1);
 
       // Verify in export
@@ -1581,8 +1624,9 @@ describe("Conversations API (Layer 1a)", () => {
         format: "json",
       });
       const parsed = JSON.parse(exported.data);
+
       expect(
-        parsed.some((c: any) => c.conversationId === conv.conversationId),
+        parsed.some((c: unknown) => c.conversationId === conv.conversationId),
       ).toBe(true);
 
       // Add more messages
@@ -1593,11 +1637,13 @@ describe("Conversations API (Layer 1a)", () => {
 
       // All operations should see 2 messages now
       const updatedGet = await cortex.conversations.get(conv.conversationId);
+
       expect(updatedGet!.messageCount).toBe(2);
 
       const updatedList = await cortex.conversations.list({
         userId: "user-integration-test",
       });
+
       expect(
         updatedList.find((c) => c.conversationId === conv.conversationId)
           ?.messageCount,
@@ -1615,6 +1661,7 @@ describe("Conversations API (Layer 1a)", () => {
 
       // Initially no matches for "password"
       let results = await cortex.conversations.search({ query: "password" });
+
       expect(
         results.some(
           (r) => r.conversation.conversationId === conv.conversationId,
@@ -1657,6 +1704,7 @@ describe("Conversations API (Layer 1a)", () => {
       const thisResult = results.find(
         (r) => r.conversation.conversationId === conv.conversationId,
       );
+
       expect(thisResult?.matchedMessages.length).toBe(2);
     });
   });

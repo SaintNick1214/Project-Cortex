@@ -17,7 +17,7 @@ export interface CortexConfig {
 }
 
 export class Cortex {
-  private client: ConvexClient;
+  private readonly client: ConvexClient;
 
   // Layer 1a: Conversations
   public conversations: ConversationsAPI;
@@ -49,10 +49,10 @@ export class Cortex {
   /**
    * Close the connection to Convex
    */
-  async close(): Promise<void> {
-    this.client.close();
+  close(): void {
+    void this.client.close();
   }
 }
 
 // Re-export types
-export * from "./types";
+export type * from "./types";
