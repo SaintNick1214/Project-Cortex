@@ -146,5 +146,92 @@ export default defineSchema({
     .index("by_userId", ["userId"]) // GDPR cascade
     .index("by_updated", ["updatedAt"]), // Recent changes
 
-  // TODO: Add remaining tables (memories, contexts, agents)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Layer 2: Vector Memory (Searchable, Agent-Private, Versioned)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  memories: defineTable({
+    // Identity
+    memoryId: v.string(), // Unique ID for this memory
+    agentId: v.string(), // Agent-private isolation
+
+    // Content
+    content: v.string(),
+    contentType: v.union(v.literal("raw"), v.literal("summarized")),
+    embedding: v.optional(v.array(v.float64())), // Optional for keyword-only
+
+    // Source (flattened for indexing performance)
+    sourceType: v.union(
+      v.literal("conversation"),
+      v.literal("system"),
+      v.literal("tool"),
+      v.literal("a2a"),
+    ),
+    sourceUserId: v.optional(v.string()),
+    sourceUserName: v.optional(v.string()),
+    sourceTimestamp: v.number(),
+
+    // GDPR support
+    userId: v.optional(v.string()), // For cascade deletion
+
+    // References to Layer 1 (mutually exclusive, all optional)
+    conversationRef: v.optional(
+      v.object({
+        conversationId: v.string(),
+        messageIds: v.array(v.string()),
+      }),
+    ),
+
+    immutableRef: v.optional(
+      v.object({
+        type: v.string(),
+        id: v.string(),
+        version: v.optional(v.number()),
+      }),
+    ),
+
+    mutableRef: v.optional(
+      v.object({
+        namespace: v.string(),
+        key: v.string(),
+        snapshotValue: v.any(),
+        snapshotAt: v.number(),
+      }),
+    ),
+
+    // Metadata
+    importance: v.number(), // 0-100 (flattened for filtering)
+    tags: v.array(v.string()), // Flattened for filtering
+
+    // Versioning (like immutable)
+    version: v.number(),
+    previousVersions: v.array(
+      v.object({
+        version: v.number(),
+        content: v.string(),
+        embedding: v.optional(v.array(v.float64())),
+        timestamp: v.number(),
+      }),
+    ),
+
+    // Timestamps & Access
+    createdAt: v.number(),
+    updatedAt: v.number(),
+    lastAccessed: v.optional(v.number()),
+    accessCount: v.number(),
+  })
+    .index("by_agentId", ["agentId"]) // Agent's memories
+    .index("by_memoryId", ["memoryId"]) // Unique lookup
+    .index("by_userId", ["userId"]) // GDPR cascade
+    .index("by_agent_created", ["agentId", "createdAt"]) // Chronological
+    .searchIndex("by_content", {
+      searchField: "content",
+      filterFields: ["agentId", "sourceType", "userId"],
+    })
+    .vectorIndex("by_embedding", {
+      vectorField: "embedding",
+      dimensions: 1536, // Default: OpenAI text-embedding-3-small
+      filterFields: ["agentId", "userId"], // Pre-filter for performance
+    }),
+
+  // TODO: Add remaining tables (contexts, agents)
 });

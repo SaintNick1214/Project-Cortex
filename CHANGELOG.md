@@ -21,6 +21,80 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.4.0] - 2025-10-26
+
+#### 🎉 Major Release - Vector Memory (Layer 2)!
+
+Complete semantic search and vector memory implementation! **All 14 Layer 2 operations.**
+
+#### Added
+
+**Vector Memory API (Layer 2)** - ALL 14 operations:
+
+**Core Operations (6)**:
+
+- `store()` - Store agent-private memories with optional embeddings
+- `get()` - Retrieve memory by ID with agent isolation
+- `search()` - Hybrid search (semantic with vectors OR keyword without)
+- `delete()` - Delete memories with permission checks
+- `list()` - List memories with filters (sourceType, userId)
+- `count()` - Count memories
+
+**Advanced Operations (5)**:
+
+- `update()` - Update memory content/metadata (creates versions)
+- `getVersion()` - Retrieve specific version
+- `getHistory()` - Get complete version history
+- `deleteMany()` - Bulk delete with filters
+- `export()` - Export to JSON/CSV for GDPR
+
+**Optional Operations (3)**:
+
+- `updateMany()` - Bulk update importance/tags
+- `archive()` - Soft delete (restorable)
+- `getAtTimestamp()` - Temporal queries (time-travel)
+
+#### Features
+
+**Semantic Search**:
+
+- Bring your own embeddings (OpenAI, Cohere, local, etc.)
+- Optional embeddings (keyword search works without)
+- Hybrid search capability (vector + text)
+- Support 384-3072 dimensions
+
+**Agent Isolation**:
+
+- Private memory per agent
+- Permission checks on all operations
+- No cross-agent data leakage
+
+**Layer 1 Integration**:
+
+- Reference conversations (conversationRef)
+- Reference immutable knowledge (immutableRef)
+- Reference mutable data (mutableRef)
+- Standalone memories (no ref)
+
+**Versioning**:
+
+- Like immutable, updates create versions
+- Version history accessible
+- Temporal queries (what was it on X date)
+
+#### Enhanced Testing
+
+- +33 tests for Layer 2 (33/33 passing)
+- Agent isolation validated
+- Hybrid search tested
+- Versioning validated
+- Bulk operations tested
+- **Total tests**: 201 (69 + 54 + 45 + 33)
+
+**Total**: 54 operations, 201 tests, 100% passing
+
+---
+
 ### [0.3.1] - 2025-10-26
 
 #### 🎊 Patch Release - 100% Layer 1 Complete!
