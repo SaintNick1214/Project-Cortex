@@ -63,9 +63,9 @@ jobs:
         run: npm ci
 
       - name: Deploy Convex backend
-        run: npx convex deploy --cmd-url-env-var-name CONVEX_URL --cmd-deploy-key-env-var-name CONVEX_DEPLOY_KEY
+        run: npx convex deploy --yes
         env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_URL }}
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
       - name: Generate Convex types

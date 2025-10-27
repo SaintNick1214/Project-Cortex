@@ -21,6 +21,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.4.4] - 2025-10-27
+
+#### 🔧 Patch Release - Fix Deploy Command
+
+Corrects Convex deploy command syntax in GitHub Action workflow.
+
+#### Fixed
+- Fixed `convex deploy` command to use correct environment variable names
+- Uses `CONVEX_DEPLOYMENT` instead of `CONVEX_URL` for deploy
+- Added `--yes` flag to skip confirmation in CI
+
+**Total**: 54 operations, 201 tests (no API changes)
+
+---
+
 ### [0.4.3] - 2025-10-27
 
 #### 🔧 Patch Release - Deploy Backend in CI
