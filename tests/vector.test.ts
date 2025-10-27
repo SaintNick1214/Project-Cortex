@@ -14,69 +14,10 @@ import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
 import { TestCleanup } from "./helpers";
 
-// Extend TestCleanup for memories table
-class VectorTestCleanup extends TestCleanup {
-  async purgeMemories(): Promise<number> {
-    console.log("🧹 Purging memories table...");
-
-    // Get all memories (we'll use test agent IDs)
-    const testAgents = [
-      "agent-test",
-      "agent-test-2",
-      "agent-store",
-      "agent-search",
-    ];
-    let deleted = 0;
-
-    for (const agentId of testAgents) {
-      const memories = await this.client.query(api.memories.list, {
-        agentId,
-      });
-
-      for (const memory of memories) {
-        try {
-          await this.client.mutation(api.memories.deleteMemory, {
-            agentId,
-            memoryId: memory.memoryId,
-          });
-          deleted++;
-        } catch (error: any) {
-          if (error.message?.includes("MEMORY_NOT_FOUND")) {
-            continue;
-          }
-        }
-      }
-    }
-
-    console.log(`✅ Purged ${deleted} memories`);
-    return deleted;
-  }
-
-  async verifyMemoriesEmpty(): Promise<void> {
-    const testAgents = ["agent-test", "agent-test-2"];
-    let totalCount = 0;
-
-    for (const agentId of testAgents) {
-      const count = await this.client.query(api.memories.count, {
-        agentId,
-      });
-      totalCount += count;
-    }
-
-    if (totalCount > 0) {
-      console.warn(
-        `⚠️  Warning: Memories table not empty (${totalCount} entries remaining)`,
-      );
-    } else {
-      console.log("✅ Memories table is empty");
-    }
-  }
-}
-
 describe("Vector Memory API (Layer 2)", () => {
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: VectorTestCleanup;
+  let cleanup: TestCleanup;
 
   beforeAll(async () => {
     const convexUrl = process.env.CONVEX_URL;
@@ -86,14 +27,14 @@ describe("Vector Memory API (Layer 2)", () => {
 
     cortex = new Cortex({ convexUrl });
     client = new ConvexClient(convexUrl);
-    cleanup = new VectorTestCleanup(client);
+    cleanup = new TestCleanup(client);
 
-    // Clean table before tests
-    await cleanup.purgeMemories();
-    await cleanup.verifyMemoriesEmpty();
+    // Clean all test data before tests
+    await cleanup.purgeAll();
   });
 
   afterAll(async () => {
+    await cleanup.purgeAll();
     await client.close();
   });
 

@@ -40,6 +40,60 @@ export class TestCleanup {
   }
 
   /**
+   * Purge all memories for test agents from the database
+   * This uses the deleteMany mutation for efficient cleanup
+   */
+  async purgeMemories(): Promise<{ deleted: number }> {
+    console.log("🧹 Purging memories for all test agents...");
+
+    // Common test agent IDs used across all test files
+    const testAgentIds = [
+      "agent-test-l3",      // memory.test.ts
+      "test-agent-1",       // various tests
+      "test-agent-2",       // various tests  
+      "test-agent-3",       // potential future tests
+      "another-test-agent", // conversations tests
+      "agent-vector-test",  // potential vector tests
+      "agent-test",         // vector.test.ts
+      "agent-test-2",       // vector.test.ts
+      "agent-store",        // vector.test.ts
+      "agent-search",       // vector.test.ts
+    ];
+
+    let totalDeleted = 0;
+    for (const agentId of testAgentIds) {
+      try {
+        const result = await this.client.mutation(api.memories.deleteMany, {
+          agentId,
+        });
+        if (result.deleted > 0) {
+          console.log(`  - Deleted ${result.deleted} memories for ${agentId}`);
+          totalDeleted += result.deleted;
+        }
+      } catch (error: any) {
+        // Ignore errors (agent might not have memories)
+        continue;
+      }
+    }
+
+    console.log(`✅ Purged ${totalDeleted} total memories`);
+    return { deleted: totalDeleted };
+  }
+
+  /**
+   * Purge all test data (conversations + memories)
+   */
+  async purgeAll(): Promise<{ conversations: number; memories: number }> {
+    const convResult = await this.purgeConversations();
+    const memResult = await this.purgeMemories();
+    
+    return {
+      conversations: convResult.deleted,
+      memories: memResult.deleted,
+    };
+  }
+
+  /**
    * Verify conversations table is empty
    */
   async verifyConversationsEmpty(): Promise<boolean> {
