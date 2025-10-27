@@ -21,6 +21,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.3.1] - 2025-10-26
+
+#### 🎊 Patch Release - 100% Layer 1 Complete!
+
+Adds `transaction()` - the final missing operation! **All 40 documented Layer 1 operations now implemented.**
+
+#### Added
+
+- `transaction()` - ACID multi-key transactions for mutable store
+  - Execute multiple operations atomically (all succeed or all fail)
+  - Supports: set, update, delete, increment, decrement
+  - Perfect for inventory transfers, order processing, etc.
+
+#### Enhanced Testing
+
+- +6 transaction tests (atomicity, mixed operations, transfers, integration)
+- +2 cross-layer integration tests
+- **Total tests**: 168 (69 conversations + 54 immutable + 45 mutable)
+
+**Status**: ✅ **100% of documented Layer 1 operations implemented!** (40/40)
+
+---
+
 ### [0.3.0] - 2025-10-26
 
 #### 🎉 Major Release - Complete Layer 1!

@@ -181,6 +181,106 @@ export const purgeNamespace = mutation({
 });
 
 /**
+ * Execute multiple operations atomically
+ */
+export const transaction = mutation({
+  args: {
+    operations: v.array(
+      v.object({
+        op: v.union(
+          v.literal("set"),
+          v.literal("update"),
+          v.literal("delete"),
+          v.literal("increment"),
+          v.literal("decrement"),
+        ),
+        namespace: v.string(),
+        key: v.string(),
+        value: v.optional(v.any()),
+        amount: v.optional(v.number()),
+      }),
+    ),
+  },
+  handler: async (ctx, args) => {
+    const results = [];
+
+    for (const operation of args.operations) {
+      const existing = await ctx.db
+        .query("mutable")
+        .withIndex("by_namespace_key", (q) =>
+          q.eq("namespace", operation.namespace).eq("key", operation.key),
+        )
+        .first();
+
+      if (operation.op === "set") {
+        if (existing) {
+          await ctx.db.patch(existing._id, {
+            value: operation.value,
+            updatedAt: Date.now(),
+          });
+          results.push(await ctx.db.get(existing._id));
+        } else {
+          const now = Date.now();
+          const _id = await ctx.db.insert("mutable", {
+            namespace: operation.namespace,
+            key: operation.key,
+            value: operation.value,
+            createdAt: now,
+            updatedAt: now,
+            accessCount: 0,
+          });
+          results.push(await ctx.db.get(_id));
+        }
+      } else if (
+        operation.op === "update" ||
+        operation.op === "increment" ||
+        operation.op === "decrement"
+      ) {
+        if (!existing) {
+          throw new Error(
+            `MUTABLE_KEY_NOT_FOUND: ${operation.namespace}/${operation.key}`,
+          );
+        }
+
+        let newValue = existing.value;
+        if (operation.op === "increment") {
+          newValue = (existing.value || 0) + (operation.amount || 1);
+        } else if (operation.op === "decrement") {
+          newValue = (existing.value || 0) - (operation.amount || 1);
+        } else {
+          // update with provided value
+          newValue = operation.value;
+        }
+
+        await ctx.db.patch(existing._id, {
+          value: newValue,
+          updatedAt: Date.now(),
+        });
+        results.push(await ctx.db.get(existing._id));
+      } else if (operation.op === "delete") {
+        if (!existing) {
+          throw new Error(
+            `MUTABLE_KEY_NOT_FOUND: ${operation.namespace}/${operation.key}`,
+          );
+        }
+        await ctx.db.delete(existing._id);
+        results.push({
+          deleted: true,
+          namespace: operation.namespace,
+          key: operation.key,
+        });
+      }
+    }
+
+    return {
+      success: true,
+      operationsExecuted: args.operations.length,
+      results,
+    };
+  },
+});
+
+/**
  * Bulk delete keys matching filters
  */
 export const purgeMany = mutation({
