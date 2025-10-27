@@ -11,6 +11,7 @@ This directory contains automated CI/CD workflows for the Cortex SDK.
 **Trigger**: Automatic when `package.json` version changes on `main` branch
 
 **What it does**:
+
 1. ✅ Detects version changes
 2. ✅ Runs all 201 tests
 3. ✅ Builds package
@@ -20,6 +21,7 @@ This directory contains automated CI/CD workflows for the Cortex SDK.
 7. ✅ Verifies publish
 
 **Required Secrets**:
+
 - `NPM_TOKEN` (required) - npm authentication token
 - `CONVEX_URL` (optional) - for running tests in CI
 
@@ -61,12 +63,14 @@ npm run release
 ## 🔐 Security
 
 **Secrets are stored securely**:
+
 - Managed in GitHub repository settings
 - Never exposed in logs
 - Scoped to specific workflows
 - Rotatable anytime
 
 **Provenance enabled**:
+
 - npm packages include signed provenance
 - Verifiable build attestation
 - Enhanced supply chain security
@@ -76,10 +80,12 @@ npm run release
 ## 📊 Workflow Status
 
 View workflow runs:
+
 - **All workflows**: https://github.com/SaintNick1214/Project-Cortex/actions
 - **Publish workflow**: https://github.com/SaintNick1214/Project-Cortex/actions/workflows/publish.yml
 
 **Expected timeline**:
+
 - Version detection: ~5 seconds
 - Tests: ~2 minutes
 - Build: ~30 seconds
@@ -93,6 +99,7 @@ View workflow runs:
 ### Workflow doesn't trigger
 
 **Check**:
+
 - Did you push to `main` branch?
 - Did `package.json` version actually change?
 - Is the commit on `main` (not other branch)?
@@ -100,6 +107,7 @@ View workflow runs:
 ### Tests fail in CI
 
 **Check**:
+
 - Do tests pass locally? (`npm test`)
 - Is `CONVEX_URL` secret configured?
 - Is Convex deployment accessible?
@@ -107,6 +115,7 @@ View workflow runs:
 ### Publish fails
 
 **Check**:
+
 - Is `NPM_TOKEN` secret configured correctly?
 - Is the token still valid? (npm tokens can expire)
 - Does the package name already exist at this version?
@@ -114,6 +123,7 @@ View workflow runs:
 ### Git tag fails
 
 **Check**:
+
 - Does tag already exist? (`git tag -l`)
 - Are there git permission issues?
 
@@ -121,11 +131,12 @@ View workflow runs:
 
 ## 📝 Workflow Files
 
-| File | Purpose | Trigger |
-|------|---------|---------|
+| File          | Purpose               | Trigger                |
+| ------------- | --------------------- | ---------------------- |
 | `publish.yml` | Automated npm publish | Version change on main |
 
 **Future workflows** (planned):
+
 - `test.yml` - Run tests on all PRs
 - `lint.yml` - Code quality checks
 - `docs.yml` - Deploy documentation
@@ -210,4 +221,3 @@ npm pack --dry-run
 ---
 
 **Questions?** See [SETUP-AUTOMATED-RELEASES.md](./SETUP-AUTOMATED-RELEASES.md) or ask in [Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).
-

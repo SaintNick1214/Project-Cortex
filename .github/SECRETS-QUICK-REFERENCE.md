@@ -15,6 +15,7 @@ Add these at: https://github.com/SaintNick1214/Project-Cortex/settings/secrets/a
 **Type**: npm Automation Token
 
 **Get it**:
+
 ```bash
 # Visit: https://www.npmjs.com/settings/YOUR_USERNAME/tokens
 # Click: "Generate New Token"
@@ -23,6 +24,7 @@ Add these at: https://github.com/SaintNick1214/Project-Cortex/settings/secrets/a
 ```
 
 **Add to GitHub**:
+
 ```
 Name:  NPM_TOKEN
 Value: npm_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -36,6 +38,7 @@ Value: npm_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 **Type**: URL
 
 **Get it**:
+
 ```bash
 # Option A: From your local .env.local file
 cat .env.local | grep CONVEX_URL
@@ -48,6 +51,7 @@ cat .env.local | grep CONVEX_URL
 ```
 
 **Add to GitHub**:
+
 ```
 Name:  CONVEX_URL
 Value: https://happy-animal-123.convex.cloud
@@ -61,6 +65,7 @@ Value: https://happy-animal-123.convex.cloud
 **Type**: Deploy Key (admin access)
 
 **Get it**:
+
 ```bash
 # Option A: From your local .env.local file
 cat .env.local | grep CONVEX_DEPLOY_KEY
@@ -74,6 +79,7 @@ cat .env.local | grep CONVEX_DEPLOY_KEY
 ```
 
 **Add to GitHub**:
+
 ```
 Name:  CONVEX_DEPLOY_KEY
 Value: prod:happy-animal-123|xxxxxxxxxxxxxxxxx
@@ -116,6 +122,7 @@ npm login
 **Click**: "New repository secret" (3 times, one for each)
 
 **Add**:
+
 ```
 1. NPM_TOKEN          = npm_xxxxx...
 2. CONVEX_URL         = https://happy-animal-123.convex.cloud
@@ -133,9 +140,10 @@ After adding secrets, verify they're set:
 **Go to**: https://github.com/SaintNick1214/Project-Cortex/settings/secrets/actions
 
 **You should see**:
+
 ```
 ✅ NPM_TOKEN          (Updated X ago)
-✅ CONVEX_URL         (Updated X ago)  
+✅ CONVEX_URL         (Updated X ago)
 ✅ CONVEX_DEPLOY_KEY  (Updated X ago)
 ```
 
@@ -184,7 +192,8 @@ git push origin main
 
 ### "npm publish failed - 401 Unauthorized"
 
-**Fix**: 
+**Fix**:
+
 - Check `NPM_TOKEN` secret is correct
 - Verify token hasn't expired
 - Regenerate token if needed
@@ -197,11 +206,11 @@ git push origin main
 
 ## 📝 Where to Get Credentials
 
-| Secret | Source 1 | Source 2 |
-|--------|----------|----------|
-| `NPM_TOKEN` | https://npmjs.com/settings/tokens | `npm token create` |
-| `CONVEX_URL` | `.env.local` file | Convex dashboard |
-| `CONVEX_DEPLOY_KEY` | `.env.local` file | Convex dashboard → Settings |
+| Secret              | Source 1                          | Source 2                    |
+| ------------------- | --------------------------------- | --------------------------- |
+| `NPM_TOKEN`         | https://npmjs.com/settings/tokens | `npm token create`          |
+| `CONVEX_URL`        | `.env.local` file                 | Convex dashboard            |
+| `CONVEX_DEPLOY_KEY` | `.env.local` file                 | Convex dashboard → Settings |
 
 ---
 
@@ -238,4 +247,3 @@ git push origin main
 **Status**: ✅ **Add these 3 secrets, then you're ready for automated releases!** 🚀
 
 **Setup URL**: https://github.com/SaintNick1214/Project-Cortex/settings/secrets/actions
-

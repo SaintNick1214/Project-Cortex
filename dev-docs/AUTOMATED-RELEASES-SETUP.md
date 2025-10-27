@@ -12,6 +12,7 @@
 **File**: `.github/workflows/publish.yml`
 
 **Features**:
+
 - ✅ Triggers on version change in `package.json`
 - ✅ Smart detection (only if version actually changed)
 - ✅ Runs all 201 tests
@@ -22,6 +23,7 @@
 - ✅ Verifies publish success
 
 **Workflow Jobs**:
+
 ```yaml
 Job 1: check-version
   → Compares current vs previous package.json version
@@ -41,6 +43,7 @@ Job 2: publish (only if version changed)
 **File**: `.github/SETUP-AUTOMATED-RELEASES.md`
 
 **Contains**:
+
 - ✅ Step-by-step secret configuration
 - ✅ npm token creation guide
 - ✅ Convex URL setup
@@ -52,6 +55,7 @@ Job 2: publish (only if version changed)
 **File**: `RELEASE-GUIDE.md`
 
 **Contains**:
+
 - ✅ Comparison of automated vs manual
 - ✅ Recommended workflows by scenario
 - ✅ Complete examples
@@ -63,6 +67,7 @@ Job 2: publish (only if version changed)
 **File**: `.github/WORKFLOWS-README.md`
 
 **Contains**:
+
 - ✅ Overview of all workflows
 - ✅ Quick start guide
 - ✅ Troubleshooting
@@ -73,6 +78,7 @@ Job 2: publish (only if version changed)
 **File**: `README.md`
 
 **Added**:
+
 - ✅ Publishing Releases section
 - ✅ Links to release documentation
 - ✅ Quick reference for both methods
@@ -85,36 +91,36 @@ Job 2: publish (only if version changed)
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│ Developer: Edit package.json                             │
+│ Developer: Edit package.json                            │
 │ "version": "0.4.0" → "0.5.0"                            │
 └───────────────────┬─────────────────────────────────────┘
                     │
                     ↓
 ┌─────────────────────────────────────────────────────────┐
-│ Developer: git push origin main                          │
+│ Developer: git push origin main                         │
 └───────────────────┬─────────────────────────────────────┘
                     │
                     ↓
 ┌─────────────────────────────────────────────────────────┐
-│ GitHub: Detects package.json change                      │
-│ Triggers: publish.yml workflow                           │
+│ GitHub: Detects package.json change                     │
+│ Triggers: publish.yml workflow                          │
 └───────────────────┬─────────────────────────────────────┘
                     │
                     ↓
 ┌─────────────────────────────────────────────────────────┐
-│ Job 1: check-version                                     │
+│ Job 1: check-version                                    │
 │ ✅ Compares v0.4.0 vs v0.5.0                            │
 │ ✅ Outputs: version-changed=true                        │
 └───────────────────┬─────────────────────────────────────┘
                     │
                     ↓
 ┌─────────────────────────────────────────────────────────┐
-│ Job 2: publish                                           │
-│ ✅ npm ci                                                │
+│ Job 2: publish                                          │
+│ ✅ npm ci                                               │
 │ ✅ npm test (201 tests)                                 │
-│ ✅ npm run build                                         │
+│ ✅ npm run build                                        │
 │ ✅ npm publish --access public                          │
-│ ✅ git tag -a v0.5.0                                     │
+│ ✅ git tag -a v0.5.0                                    │
 │ ✅ gh release create v0.5.0                             │
 │ ✅ npm view @cortexmemory/sdk version                   │
 └───────────────────┬─────────────────────────────────────┘
@@ -134,6 +140,7 @@ Job 2: publish (only if version changed)
 **Required**:
 
 1. **Create npm token**:
+
    ```bash
    # Login to npmjs.com
    # Go to: https://www.npmjs.com/settings/YOUR_USERNAME/tokens
@@ -205,24 +212,20 @@ npm run release
 ### Your Automated Workflow (publish.yml)
 
 ```yaml
-Trigger:
-  ✅ Push to main
+Trigger: ✅ Push to main
   ✅ package.json modified
   ✅ Version actually changed
 
-Process:
-  ✅ Check version changed → Run tests → Build → Publish → Tag → Release
+Process: ✅ Check version changed → Run tests → Build → Publish → Tag → Release
 
-Benefits:
-  ✅ Consistent environment
+Benefits: ✅ Consistent environment
   ✅ Full audit trail
   ✅ Team-friendly
   ✅ Secure (GitHub secrets)
   ✅ Automatic tagging
   ✅ Can't publish dirty builds
 
-Limitations:
-  ⏱️ Takes 3-4 minutes
+Limitations: ⏱️ Takes 3-4 minutes
   ❌ Can't cancel mid-publish
   ❌ Requires GitHub secrets setup
 ```
@@ -257,15 +260,19 @@ Limitations:
 **Choose based on scenario**:
 
 ### Production Releases (v0.x.0)
+
 → **Use GitHub Action** (automated, trackable)
 
 ### Patch Releases (v0.x.1)
+
 → **Either** (automated for consistency, manual for speed)
 
 ### Beta Releases (v0.x.0-beta.1)
+
 → **Use Local Script** (manual control)
 
 ### Hotfixes (urgent v0.x.1)
+
 → **Use Local Script** (fastest)
 
 ---
@@ -320,6 +327,7 @@ RELEASE-GUIDE.md                    ← Complete release guide
 ## 🎊 Summary
 
 **You now have**:
+
 1. ✅ Automated GitHub Action for production releases
 2. ✅ Manual PowerShell script for quick releases
 3. ✅ Complete setup documentation
@@ -327,6 +335,7 @@ RELEASE-GUIDE.md                    ← Complete release guide
 5. ✅ Best practices and troubleshooting
 
 **To publish v0.4.0**:
+
 1. Setup `NPM_TOKEN` secret (one-time)
 2. Push to main
 3. Watch GitHub Action publish automatically!
@@ -336,4 +345,3 @@ RELEASE-GUIDE.md                    ← Complete release guide
 ---
 
 **Status**: ✅ **Dual release workflows ready! Choose your preferred method.** 🚀
-
