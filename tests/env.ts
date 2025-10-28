@@ -20,6 +20,8 @@ dotenv.config({ path: resolve(process.cwd(), ".env.test") });
 dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
 
 // Determine which Convex deployment to test against
+// Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+// This file just configures the environment for each individual test run
 const testMode = process.env.CONVEX_TEST_MODE || "auto"; // "local", "managed", or "auto"
 const hasLocalConfig = Boolean(
   process.env.LOCAL_CONVEX_URL || process.env.LOCAL_CONVEX_DEPLOYMENT,
@@ -31,11 +33,8 @@ const hasManagedConfig = Boolean(
 );
 
 // Configure CONVEX_URL based on test mode
-if (
-  testMode === "local" ||
-  (testMode === "auto" && hasLocalConfig && !hasManagedConfig)
-) {
-  // Use local Convex
+if (testMode === "local") {
+  // Explicit local mode
   if (process.env.LOCAL_CONVEX_URL) {
     process.env.CONVEX_URL = process.env.LOCAL_CONVEX_URL;
   }
@@ -43,22 +42,36 @@ if (
   console.log(
     `   Note: Vector search (.similar()) not supported in local mode\n`,
   );
-} else if (
-  testMode === "managed" ||
-  (testMode === "auto" && hasManagedConfig)
-) {
-  // Use managed Convex (CONVEX_URL already set)
+} else if (testMode === "managed") {
+  // Explicit managed mode (CONVEX_URL already set)
   console.log(`\n🧪 Testing against MANAGED Convex: ${process.env.CONVEX_URL}`);
   console.log(`   Note: Vector search fully supported in managed mode\n`);
-} else if (testMode === "auto" && hasLocalConfig) {
-  // Default to local if both are present (for backward compatibility)
-  if (process.env.LOCAL_CONVEX_URL) {
-    process.env.CONVEX_URL = process.env.LOCAL_CONVEX_URL;
+} else if (testMode === "auto") {
+  // Auto mode - detect which config is available
+  // Note: If both configs are present, the test-runner.mjs script will run tests twice
+  if (hasLocalConfig && !hasManagedConfig) {
+    // Only local config present
+    if (process.env.LOCAL_CONVEX_URL) {
+      process.env.CONVEX_URL = process.env.LOCAL_CONVEX_URL;
+    }
+    console.log(`\n🧪 Testing against LOCAL Convex: ${process.env.CONVEX_URL}`);
+    console.log(
+      `   Note: Vector search (.similar()) not supported in local mode\n`,
+    );
+  } else if (hasManagedConfig && !hasLocalConfig) {
+    // Only managed config present
+    console.log(`\n🧪 Testing against MANAGED Convex: ${process.env.CONVEX_URL}`);
+    console.log(`   Note: Vector search fully supported in managed mode\n`);
+  } else if (hasLocalConfig && hasManagedConfig) {
+    // Both configs present - should not happen if using test-runner.mjs
+    // Default to local for backward compatibility if run directly
+    if (process.env.LOCAL_CONVEX_URL) {
+      process.env.CONVEX_URL = process.env.LOCAL_CONVEX_URL;
+    }
+    console.log(`\n⚠️  Both local and managed configs detected in auto mode`);
+    console.log(`   Using LOCAL by default. Use 'npm test' to run both suites.`);
+    console.log(`   Or set CONVEX_TEST_MODE=local|managed explicitly.\n`);
   }
-  console.log(`\n🧪 Testing against LOCAL Convex: ${process.env.CONVEX_URL}`);
-  console.log(
-    `   Tip: Set CONVEX_TEST_MODE=managed to test against managed deployment\n`,
-  );
 }
 
 // Verify CONVEX_URL is set

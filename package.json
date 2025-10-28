@@ -52,7 +52,7 @@
     "predev": "convex dev --until-success && convex dashboard",
     "logs": "convex logs",
     "lint": "tsc --project tsconfig.lint.json --noEmit && eslint . --report-unused-disable-directives",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathIgnorePatterns=debug --runInBand",
+    "test": "node scripts/test-runner.mjs",
     "test:local": "cross-env CONVEX_TEST_MODE=local node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathIgnorePatterns=debug --runInBand",
     "test:managed": "cross-env CONVEX_TEST_MODE=managed node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathIgnorePatterns=debug --runInBand",
     "test:both": "npm run test:local && npm run test:managed",

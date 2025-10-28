@@ -28,11 +28,11 @@ class ImmutableTestCleanup extends TestCleanup {
           id: entry.id,
         });
         deleted++;
-      } catch (error: unknown) {
-        if (error.message?.includes("IMMUTABLE_ENTRY_NOT_FOUND")) {
+      } catch (err: any) {
+        if (err.message?.includes("IMMUTABLE_ENTRY_NOT_FOUND")) {
           continue;
         }
-        throw error;
+        throw err;
       }
     }
 
@@ -116,7 +116,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
     it("increments version for existing entry", async () => {
       // Create v1
-      const _v1 = await cortex.immutable.store({
+      const v1 = await cortex.immutable.store({
         type: "kb-article",
         id: "warranty-policy",
         data: {
@@ -1273,7 +1273,7 @@ describe("Immutable Store API (Layer 1b)", () => {
         id = "time-travel";
 
         // Create v1
-        const _v1 = await cortex.immutable.store({
+        const v1 = await cortex.immutable.store({
           type,
           id,
           data: { value: "v1", status: "draft" },
