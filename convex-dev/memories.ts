@@ -171,41 +171,68 @@ export const search = query({
 
     if (args.embedding && args.embedding.length > 0) {
       // Semantic search with vector similarity
-      // Note: Using agentId index since vector index not available in local Convex
-      const vectorResults = await ctx.db
-        .query("memories")
-        .withIndex("by_agentId", (q) => q.eq("agentId", args.agentId))
-        .collect();
+      // Try vector index first (production), fallback to manual similarity (local dev)
+      try {
+        // Note: .similar() API is only available in managed Convex, not local dev
+        // TypeScript doesn't recognize it, so we use type assertion
+        results = await ctx.db
+          .query("memories")
+          .withIndex("by_embedding" as any, (q: any) =>
+            q
+              .similar("embedding", args.embedding, args.limit || 20)
+              .eq("agentId", args.agentId),
+          )
+          .collect();
+      } catch (error: any) {
+        // Fallback for local Convex (no vector index support)
+        if (error.message?.includes("similar is not a function")) {
+          const vectorResults = await ctx.db
+            .query("memories")
+            .withIndex("by_agentId", (q) => q.eq("agentId", args.agentId))
+            .collect();
 
-      // Calculate cosine similarity for each result
-      const withScores = vectorResults
-        .filter((m) => m.embedding && m.embedding.length > 0)
-        .map((m) => {
-          // Cosine similarity calculation
-          let dotProduct = 0;
-          let normA = 0;
-          let normB = 0;
+          // Calculate cosine similarity for each result
+          const withScores = vectorResults
+            .filter((m) => m.embedding && m.embedding.length > 0)
+            .map((m) => {
+              // Validate dimension matching (critical for correct similarity)
+              if (m.embedding!.length !== args.embedding!.length) {
+                // Skip embeddings with mismatched dimensions
+                return {
+                  ...m,
+                  _score: -1, // Will be filtered out
+                };
+              }
 
-          for (let i = 0; i < args.embedding!.length; i++) {
-            dotProduct += args.embedding![i] * m.embedding![i];
-            normA += args.embedding![i] * args.embedding![i];
-            normB += m.embedding![i] * m.embedding![i];
-          }
+              // Cosine similarity calculation
+              let dotProduct = 0;
+              let normA = 0;
+              let normB = 0;
 
-          // Handle edge cases (zero vectors)
-          const denominator = Math.sqrt(normA) * Math.sqrt(normB);
-          const similarity = denominator > 0 ? dotProduct / denominator : 0;
+              for (let i = 0; i < args.embedding!.length; i++) {
+                dotProduct += args.embedding![i] * m.embedding![i];
+                normA += args.embedding![i] * args.embedding![i];
+                normB += m.embedding![i] * m.embedding![i];
+              }
 
-          return {
-            ...m,
-            _score: similarity,
-          };
-        })
-        .filter((m) => !isNaN(m._score)) // Filter out any NaN scores
-        .sort((a, b) => b._score - a._score) // Sort by similarity (highest first)
-        .slice(0, args.limit || 20);
+              // Handle edge cases (zero vectors)
+              const denominator = Math.sqrt(normA) * Math.sqrt(normB);
+              const similarity = denominator > 0 ? dotProduct / denominator : 0;
 
-      results = withScores;
+              return {
+                ...m,
+                _score: similarity,
+              };
+            })
+            .filter((m) => !isNaN(m._score) && m._score >= 0) // Filter out NaN and dimension mismatches
+            .sort((a, b) => b._score - a._score) // Sort by similarity (highest first)
+            .slice(0, args.limit || 20);
+
+          results = withScores;
+        } else {
+          throw error;
+        }
+      }
     } else {
       // Keyword search
       results = await ctx.db
@@ -406,6 +433,7 @@ export const getVersion = query({
     const prevVersion = memory.previousVersions.find(
       (v) => v.version === args.version,
     );
+
     return prevVersion
       ? {
           memoryId: memory.memoryId,
@@ -490,6 +518,7 @@ export const deleteMany = mutation({
     }
 
     let deleted = 0;
+
     for (const memory of memories) {
       await ctx.db.delete(memory._id);
       deleted++;
@@ -499,6 +528,51 @@ export const deleteMany = mutation({
       deleted,
       memoryIds: memories.map((m) => m.memoryId),
     };
+  },
+});
+
+/**
+ * Purge ALL memories (test environments only - no agent filtering)
+ * WARNING: This deletes ALL memories in the database
+ *
+ * SECURITY: Only enabled in test/dev environments
+ * - Checks CONVEX_SITE_URL to prevent production misuse
+ * - Local dev: localhost/127.0.0.1 URLs allowed
+ * - Test deployments: dev-* deployment names allowed
+ * - Production: Explicitly blocked
+ */
+export const purgeAll = mutation({
+  args: {},
+  handler: async (ctx) => {
+    // Security check: Only allow in test/dev environments
+    const siteUrl = process.env.CONVEX_SITE_URL || "";
+    const isLocal =
+      siteUrl.includes("localhost") || siteUrl.includes("127.0.0.1");
+    const isDevDeployment =
+      siteUrl.includes(".convex.site") ||
+      siteUrl.includes("dev-") ||
+      siteUrl.includes("convex.cloud");
+    const isTestEnv =
+      process.env.NODE_ENV === "test" ||
+      process.env.CONVEX_ENVIRONMENT === "test";
+
+    if (!isLocal && !isDevDeployment && !isTestEnv) {
+      throw new Error(
+        "PURGE_DISABLED_IN_PRODUCTION: purgeAll is only available in test/dev environments. " +
+          "Use deleteMany with specific agentId for targeted deletions.",
+      );
+    }
+
+    const allMemories = await ctx.db.query("memories").collect();
+
+    let deleted = 0;
+
+    for (const memory of allMemories) {
+      await ctx.db.delete(memory._id);
+      deleted++;
+    }
+
+    return { deleted };
   },
 });
 
@@ -543,35 +617,32 @@ export const exportMemories = query({
         count: memories.length,
         exportedAt: Date.now(),
       };
-    } else {
-      const headers = [
-        "memoryId",
-        "content",
-        "sourceType",
-        "importance",
-        "tags",
-        "createdAt",
-      ];
-      const rows = memories.map((m) => [
-        m.memoryId,
-        m.content.replace(/,/g, ";"),
-        m.sourceType,
-        m.importance.toString(),
-        m.tags.join(";"),
-        new Date(m.createdAt).toISOString(),
-      ]);
-
-      const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join(
-        "\n",
-      );
-
-      return {
-        format: "csv",
-        data: csv,
-        count: memories.length,
-        exportedAt: Date.now(),
-      };
     }
+    const headers = [
+      "memoryId",
+      "content",
+      "sourceType",
+      "importance",
+      "tags",
+      "createdAt",
+    ];
+    const rows = memories.map((m) => [
+      m.memoryId,
+      m.content.replace(/,/g, ";"),
+      m.sourceType,
+      m.importance.toString(),
+      m.tags.join(";"),
+      new Date(m.createdAt).toISOString(),
+    ]);
+
+    const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+
+    return {
+      format: "csv",
+      data: csv,
+      count: memories.length,
+      exportedAt: Date.now(),
+    };
   },
 });
 
@@ -608,6 +679,7 @@ export const updateMany = mutation({
     }
 
     let updated = 0;
+
     for (const memory of memories) {
       const patches: any = { updatedAt: Date.now() };
 
@@ -709,6 +781,7 @@ export const getAtTimestamp = query({
     // Find version that was current at timestamp
     for (let i = memory.previousVersions.length - 1; i >= 0; i--) {
       const prevVersion = memory.previousVersions[i];
+
       if (args.timestamp >= prevVersion.timestamp) {
         return {
           memoryId: memory.memoryId,

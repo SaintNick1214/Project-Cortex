@@ -213,6 +213,7 @@ export const getMessage = query({
     }
 
     const message = conversation.messages.find((m) => m.id === args.messageId);
+
     return message || null;
   },
 });
@@ -240,6 +241,7 @@ export const getMessagesByIds = query({
     const messages = conversation.messages.filter((m) =>
       args.messageIds.includes(m.id),
     );
+
     return messages;
   },
 });
@@ -270,8 +272,8 @@ export const getOrCreate = mutation({
         .query("conversations")
         .withIndex("by_agent_user", (q) =>
           q
-            .eq("participants.agentId", args.participants.agentId!)
-            .eq("participants.userId", args.participants.userId!),
+            .eq("participants.agentId", args.participants.agentId)
+            .eq("participants.userId", args.participants.userId),
         )
         .filter((q) => q.eq(q.field("type"), "user-agent"))
         .first();
@@ -292,10 +294,14 @@ export const getOrCreate = mutation({
         .collect();
 
       const sortedInput = [...args.participants.agentIds].sort();
+
       existing =
         conversations.find((c) => {
-          if (!c.participants.agentIds) return false;
+          if (!c.participants.agentIds) {
+            return false;
+          }
           const sorted = [...c.participants.agentIds].sort();
+
           return (
             sorted.length === sortedInput.length &&
             sorted.every((id, i) => id === sortedInput[i])
@@ -347,38 +353,40 @@ export const findConversation = query({
         .query("conversations")
         .withIndex("by_agent_user", (q) =>
           q
-            .eq("participants.agentId", args.agentId!)
-            .eq("participants.userId", args.userId!),
+            .eq("participants.agentId", args.agentId)
+            .eq("participants.userId", args.userId),
         )
         .filter((q) => q.eq(q.field("type"), "user-agent"))
         .first();
 
       return conversation || null;
-    } else {
-      // agent-agent conversation
-      if (!args.agentIds || args.agentIds.length < 2) {
-        return null;
-      }
-
-      // Find by matching agentIds array
-      const conversations = await ctx.db
-        .query("conversations")
-        .filter((q) => q.eq(q.field("type"), "agent-agent"))
-        .collect();
-
-      // Find conversation with exact same agents (any order)
-      const sortedInput = [...args.agentIds].sort();
-      const found = conversations.find((c) => {
-        if (!c.participants.agentIds) return false;
-        const sorted = [...c.participants.agentIds].sort();
-        return (
-          sorted.length === sortedInput.length &&
-          sorted.every((id, i) => id === sortedInput[i])
-        );
-      });
-
-      return found || null;
     }
+    // agent-agent conversation
+    if (!args.agentIds || args.agentIds.length < 2) {
+      return null;
+    }
+
+    // Find by matching agentIds array
+    const conversations = await ctx.db
+      .query("conversations")
+      .filter((q) => q.eq(q.field("type"), "agent-agent"))
+      .collect();
+
+    // Find conversation with exact same agents (any order)
+    const sortedInput = [...args.agentIds].sort();
+    const found = conversations.find((c) => {
+      if (!c.participants.agentIds) {
+        return false;
+      }
+      const sorted = [...c.participants.agentIds].sort();
+
+      return (
+        sorted.length === sortedInput.length &&
+        sorted.every((id, i) => id === sortedInput[i])
+      );
+    });
+
+    return found || null;
   },
 });
 
@@ -430,15 +438,15 @@ export const list = query({
         .query("conversations")
         .withIndex("by_agent_user", (q) =>
           q
-            .eq("participants.agentId", args.agentId!)
-            .eq("participants.userId", args.userId!),
+            .eq("participants.agentId", args.agentId)
+            .eq("participants.userId", args.userId),
         )
         .order("desc")
         .take(args.limit || 100);
     } else if (args.userId) {
       conversations = await ctx.db
         .query("conversations")
-        .withIndex("by_user", (q) => q.eq("participants.userId", args.userId!))
+        .withIndex("by_user", (q) => q.eq("participants.userId", args.userId))
         .order("desc")
         .take(args.limit || 100);
     } else if (args.agentId) {
@@ -446,7 +454,7 @@ export const list = query({
       const userAgentConvs = await ctx.db
         .query("conversations")
         .withIndex("by_agent", (q) =>
-          q.eq("participants.agentId", args.agentId!),
+          q.eq("participants.agentId", args.agentId),
         )
         .order("desc")
         .take(args.limit || 100);
@@ -464,6 +472,7 @@ export const list = query({
       // Combine and deduplicate (by _id), then sort and limit
       const combined = [...userAgentConvs, ...agentAgentConvs];
       const uniqueMap = new Map(combined.map((c) => [c._id, c]));
+
       conversations = Array.from(uniqueMap.values())
         .sort((a, b) => b.createdAt - a.createdAt)
         .slice(0, args.limit || 100);
@@ -552,7 +561,7 @@ export const getHistory = query({
     const sortOrder = args.sortOrder || "asc";
 
     // Get messages (already sorted in storage as append-only)
-    let messages = conversation.messages;
+    let { messages } = conversation;
 
     // Reverse if descending (newest first)
     if (sortOrder === "desc") {
@@ -592,25 +601,35 @@ export const search = query({
 
     const searchQuery = args.query.toLowerCase();
     const results: Array<{
-      conversation: any;
-      matchedMessages: any[];
+      conversation: unknown;
+      matchedMessages: unknown[];
       highlights: string[];
       score: number;
     }> = [];
 
     for (const conversation of allConversations) {
       // Apply filters
-      if (args.type && conversation.type !== args.type) continue;
-      if (args.userId && conversation.participants.userId !== args.userId)
+      if (args.type && conversation.type !== args.type) {
         continue;
+      }
+      if (args.userId && conversation.participants.userId !== args.userId) {
+        continue;
+      }
       if (args.agentId) {
         const hasAgent =
           conversation.participants.agentId === args.agentId ||
           conversation.participants.agentIds?.includes(args.agentId);
-        if (!hasAgent) continue;
+
+        if (!hasAgent) {
+          continue;
+        }
       }
-      if (args.dateStart && conversation.createdAt < args.dateStart) continue;
-      if (args.dateEnd && conversation.createdAt > args.dateEnd) continue;
+      if (args.dateStart && conversation.createdAt < args.dateStart) {
+        continue;
+      }
+      if (args.dateEnd && conversation.createdAt > args.dateEnd) {
+        continue;
+      }
 
       // Search in messages
       const matchedMessages = conversation.messages.filter((msg: any) =>
@@ -623,10 +642,11 @@ export const search = query({
 
         // Extract highlights
         const highlights = matchedMessages.slice(0, 3).map((msg: any) => {
-          const content = msg.content;
+          const { content } = msg;
           const index = content.toLowerCase().indexOf(searchQuery);
           const start = Math.max(0, index - 30);
           const end = Math.min(content.length, index + searchQuery.length + 30);
+
           return content.substring(start, end);
         });
 
@@ -706,7 +726,7 @@ export const exportConversations = query({
     // Format data
     if (args.format === "json") {
       const data = conversations.map((c) => {
-        const exported: any = {
+        const exported: unknown = {
           conversationId: c.conversationId,
           type: c.type,
           participants: c.participants,
@@ -717,7 +737,7 @@ export const exportConversations = query({
         };
 
         if (args.includeMetadata && c.metadata) {
-          exported.metadata = c.metadata;
+          (exported as any).metadata = c.metadata;
         }
 
         return exported;
@@ -729,46 +749,45 @@ export const exportConversations = query({
         count: conversations.length,
         exportedAt: Date.now(),
       };
-    } else {
-      // CSV format
-      const headers = [
-        "conversationId",
-        "type",
-        "participants",
-        "messageCount",
-        "createdAt",
-        "updatedAt",
+    }
+    // CSV format
+    const headers = [
+      "conversationId",
+      "type",
+      "participants",
+      "messageCount",
+      "createdAt",
+      "updatedAt",
+    ];
+
+    if (args.includeMetadata) {
+      headers.push("metadata");
+    }
+
+    const rows = conversations.map((c) => {
+      const row = [
+        c.conversationId,
+        c.type,
+        JSON.stringify(c.participants),
+        c.messageCount.toString(),
+        new Date(c.createdAt).toISOString(),
+        new Date(c.updatedAt).toISOString(),
       ];
 
       if (args.includeMetadata) {
-        headers.push("metadata");
+        row.push(JSON.stringify(c.metadata || {}));
       }
 
-      const rows = conversations.map((c) => {
-        const row = [
-          c.conversationId,
-          c.type,
-          JSON.stringify(c.participants),
-          c.messageCount.toString(),
-          new Date(c.createdAt).toISOString(),
-          new Date(c.updatedAt).toISOString(),
-        ];
+      return row.join(",");
+    });
 
-        if (args.includeMetadata) {
-          row.push(JSON.stringify(c.metadata || {}));
-        }
+    const csv = [headers.join(","), ...rows].join("\n");
 
-        return row.join(",");
-      });
-
-      const csv = [headers.join(","), ...rows].join("\n");
-
-      return {
-        format: "csv",
-        data: csv,
-        count: conversations.length,
-        exportedAt: Date.now(),
-      };
-    }
+    return {
+      format: "csv",
+      data: csv,
+      count: conversations.length,
+      exportedAt: Date.now(),
+    };
   },
 });

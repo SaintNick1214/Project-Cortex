@@ -14,14 +14,13 @@ import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
 import {
-  TestCleanup,
   StorageInspector,
-  enableDebugMode,
-  logStep,
-  logSection,
+  TestCleanup,
   debugLog,
+  enableDebugMode,
+  logSection,
+  logStep,
   pause,
-  DEBUG_CONFIG,
 } from "./helpers";
 
 describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
@@ -59,7 +58,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
 
   afterAll(async () => {
     logSection("TEST SUITE CLEANUP");
-    await cortex.close();
+    cortex.close();
     client.close();
   });
 
@@ -101,6 +100,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
         result.conversationId,
         result,
       );
+
       expect(comparison.matches).toBe(true);
 
       logStep(5, "Print storage statistics");
@@ -330,18 +330,21 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
 
       logStep(1, "Count all");
       const totalCount = await cortex.conversations.count();
+
       debugLog("Count", `Total conversations: ${totalCount}`);
 
       logStep(2, "Count by userId");
       const userCount = await cortex.conversations.count({
         userId: "user-list-debug",
       });
+
       debugLog("Count", `User conversations: ${userCount}`);
 
       logStep(3, "Count by type");
       const userAgentCount = await cortex.conversations.count({
         type: "user-agent",
       });
+
       debugLog("Count", `User-agent conversations: ${userAgentCount}`);
 
       await inspector.printStats();
@@ -369,6 +372,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
       const result = await cortex.conversations.delete(
         conversation.conversationId,
       );
+
       expect(result.deleted).toBe(true);
       debugLog(
         "Deleted",
@@ -379,6 +383,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
       const retrieved = await cortex.conversations.get(
         conversation.conversationId,
       );
+
       expect(retrieved).toBeNull();
       debugLog("Verification", "SDK confirms deletion");
 
@@ -386,6 +391,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
       const stored = await client.query(api.conversations.get, {
         conversationId: conversation.conversationId,
       });
+
       expect(stored).toBeNull();
       debugLog("Verification", "Storage confirms deletion");
 
@@ -401,9 +407,9 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
       await inspector.inspectAllConversations();
       await inspector.printStats();
 
-      console.log("\n" + "🎉".repeat(40));
+      console.log(`\n${"🎉".repeat(40)}`);
       console.log("All debug tests complete!");
-      console.log("🎉".repeat(40) + "\n");
+      console.log(`${"🎉".repeat(40)}\n`);
     });
   });
 });

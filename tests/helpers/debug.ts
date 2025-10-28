@@ -26,11 +26,13 @@ export const DEBUG_CONFIG: DebugConfig = {
  * Pause execution and wait for user input
  */
 export async function pause(message?: string): Promise<void> {
-  if (!DEBUG_CONFIG.pauseAfterEachTest) return;
+  if (!DEBUG_CONFIG.pauseAfterEachTest) {
+    return;
+  }
 
-  console.log("\n" + "⏸️ ".repeat(40));
+  console.log(`\n${"⏸️ ".repeat(40)}`);
   console.log(message || "⏸️  Test paused. Press ENTER to continue...");
-  console.log("⏸️ ".repeat(40) + "\n");
+  console.log(`${"⏸️ ".repeat(40)}\n`);
 
   // In a real terminal, you'd use readline here
   // For Jest, we'll use a simple timeout instead
@@ -40,8 +42,14 @@ export async function pause(message?: string): Promise<void> {
 /**
  * Log verbose debug information
  */
-export function debugLog(category: string, message: string, data?: any): void {
-  if (!DEBUG_CONFIG.verboseLogging) return;
+export function debugLog(
+  category: string,
+  message: string,
+  data?: unknown,
+): void {
+  if (!DEBUG_CONFIG.verboseLogging) {
+    return;
+  }
 
   console.log(`\n🔍 [${category}] ${message}`);
   if (data) {
@@ -53,9 +61,11 @@ export function debugLog(category: string, message: string, data?: any): void {
  * Log test step
  */
 export function logStep(stepNumber: number, description: string): void {
-  if (!DEBUG_CONFIG.enabled) return;
+  if (!DEBUG_CONFIG.enabled) {
+    return;
+  }
 
-  console.log("\n" + "=".repeat(80));
+  console.log(`\n${"=".repeat(80)}`);
   console.log(`📝 STEP ${stepNumber}: ${description}`);
   console.log("=".repeat(80));
 }
@@ -68,9 +78,12 @@ export function logResult(
   passed: boolean,
   details?: string,
 ): void {
-  if (!DEBUG_CONFIG.enabled) return;
+  if (!DEBUG_CONFIG.enabled) {
+    return;
+  }
 
   const icon = passed ? "✅" : "❌";
+
   console.log(`\n${icon} ${testName}`);
   if (details) {
     console.log(`   ${details}`);
@@ -81,11 +94,13 @@ export function logResult(
  * Log section separator
  */
 export function logSection(title: string): void {
-  if (!DEBUG_CONFIG.enabled) return;
+  if (!DEBUG_CONFIG.enabled) {
+    return;
+  }
 
-  console.log("\n" + "━".repeat(80));
+  console.log(`\n${"━".repeat(80)}`);
   console.log(`  ${title}`);
-  console.log("━".repeat(80) + "\n");
+  console.log(`${"━".repeat(80)}\n`);
 }
 
 /**
@@ -97,14 +112,14 @@ export function enableDebugMode(config?: Partial<DebugConfig>): void {
     ...config,
   });
 
-  console.log("\n" + "🐛".repeat(40));
+  console.log(`\n${"🐛".repeat(40)}`);
   console.log("🐛 DEBUG MODE ENABLED");
   console.log("🐛".repeat(40));
   console.log("Configuration:");
   console.log(`  - Pause after each test: ${DEBUG_CONFIG.pauseAfterEachTest}`);
   console.log(`  - Verbose logging: ${DEBUG_CONFIG.verboseLogging}`);
   console.log(`  - Inspect storage: ${DEBUG_CONFIG.inspectStorage}`);
-  console.log("🐛".repeat(40) + "\n");
+  console.log(`${"🐛".repeat(40)}\n`);
 }
 
 /**

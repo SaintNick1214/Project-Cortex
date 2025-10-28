@@ -14,7 +14,7 @@ export interface Message {
   content: string;
   timestamp: number;
   agentId?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface Conversation {
@@ -28,7 +28,7 @@ export interface Conversation {
   };
   messages: Message[];
   messageCount: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   createdAt: number;
   updatedAt: number;
 }
@@ -41,7 +41,7 @@ export interface CreateConversationInput {
     agentId?: string;
     agentIds?: string[];
   };
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface AddMessageInput {
@@ -51,7 +51,7 @@ export interface AddMessageInput {
     role: "user" | "agent" | "system";
     content: string;
     agentId?: string;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
   };
 }
 
@@ -124,13 +124,13 @@ export interface ExportResult {
 export interface ImmutableEntry {
   type: string;
   id: string;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   userId?: string;
   metadata?: {
     publishedBy?: string;
     tags?: string[];
     importance?: number;
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 
@@ -138,7 +138,7 @@ export interface ImmutableRecord {
   _id: string;
   type: string;
   id: string;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   userId?: string;
   version: number;
   previousVersions: ImmutableVersion[];
@@ -146,7 +146,7 @@ export interface ImmutableRecord {
     publishedBy?: string;
     tags?: string[];
     importance?: number;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   createdAt: number;
   updatedAt: number;
@@ -154,18 +154,18 @@ export interface ImmutableRecord {
 
 export interface ImmutableVersion {
   version: number;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   timestamp: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface ImmutableVersionExpanded {
   type: string;
   id: string;
   version: number;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   userId?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   timestamp: number;
   createdAt: number;
 }
@@ -202,9 +202,9 @@ export interface MutableRecord {
   _id: string;
   namespace: string;
   key: string;
-  value: any;
+  value: unknown;
   userId?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   createdAt: number;
   updatedAt: number;
   accessCount: number;
@@ -214,15 +214,15 @@ export interface MutableRecord {
 export interface SetMutableInput {
   namespace: string;
   key: string;
-  value: any;
+  value: unknown;
   userId?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface UpdateMutableInput {
   namespace: string;
   key: string;
-  updater: (current: any) => any;
+  updater: (current: unknown) => unknown;
 }
 
 export interface ListMutableFilter {
@@ -259,14 +259,14 @@ export interface ImmutableRef {
 export interface MutableRef {
   namespace: string;
   key: string;
-  snapshotValue: any;
+  snapshotValue: unknown;
   snapshotAt: number;
 }
 
 export interface MemoryMetadata {
   importance: number; // 0-100
   tags: string[];
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface MemoryVersion {

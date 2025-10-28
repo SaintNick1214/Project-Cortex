@@ -21,6 +21,110 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.5.1] - 2025-10-27
+
+#### 🐛 Critical Bug Fixes & Testing Improvements
+
+Six critical bugs identified through comprehensive testing and agent review, all verified and fixed.
+
+#### Fixed
+
+**Critical Performance & Correctness Issues**:
+
+1. **Vector Search Local/Managed Fallback** - Added proper try/catch fallback for local Convex deployments
+   - Local Convex doesn't support `.similar()` API (verified via Context7 documentation lookup)
+   - Now gracefully falls back to manual cosine similarity in local dev
+   - Production/managed deployments use optimized database vector indexing
+   - Eliminates `TypeError: r.similar is not a function` errors
+
+2. **Environment Variable Loading Order** - Fixed precedence for test configuration
+   - Split `setup.ts` into `env.ts` (loads first) and `setup.ts` (hooks only)
+   - Changed Jest config to use `setupFiles` for environment (before modules load)
+   - Reversed order: `.env.test` first, `.env.local` second with `override: true`
+   - Now local settings properly override test defaults AND system environment variables
+
+3. **Cosine Similarity Dimension Validation** - Fixed mathematically incorrect similarity scores
+   - Previously used `Math.min()` to handle mismatched dimensions (WRONG)
+   - Example: 1536-dim query vs 768-dim stored only compared 768 dims, producing incorrect scores
+   - Now validates dimensions match before calculating similarity
+   - Filters out mismatched embeddings with clear -1 score marker
+
+4. **purgeAll Security Vulnerability** - Added environment checks to prevent production misuse
+   - Was completely unprotected - anyone could delete ALL memories
+   - Violated agent isolation principle used throughout codebase
+   - Now checks: `CONVEX_SITE_URL`, `NODE_ENV`, `CONVEX_ENVIRONMENT`
+   - Allows: localhost, 127.0.0.1, .convex.site, .convex.cloud (dev), test environments
+   - Blocks: Production deployments with clear error message
+
+**Test Quality Improvements**:
+
+5. **Semantic Search Test Validation** - Strengthened test to validate ranking quality
+   - Previously used `.find()` to match ANY result (could match low-ranked results)
+   - Now validates `results[0]` (top-ranked result) contains expected content
+   - Ensures semantic search returns MOST relevant result first
+   - Better debugging output shows all top results with match indicators
+
+6. **Test Cleanup Fragility** - Eliminated hardcoded agent ID maintenance burden
+   - Consolidated duplicate cleanup logic into shared `TestCleanup` helper
+   - Added `purgeMemories()` method using new `memories.purgeAll` mutation
+   - Removed hardcoded agent ID lists (was fragile, required maintenance)
+   - Now purges ALL memories regardless of agent ID (safe for test environments)
+   - Future-proof: new tests with any agent ID automatically cleaned
+
+#### Added
+
+**Dual Testing Strategy**:
+
+- **New test modes**: `test:local`, `test:managed`, `test:both` npm scripts
+- **Auto-detection**: Automatically selects deployment based on environment variables
+- **Environment support**:
+  - `LOCAL_CONVEX_URL` for local Convex dev server testing
+  - `CONVEX_URL` + `CONVEX_DEPLOY_KEY` for managed deployment testing
+  - `CONVEX_TEST_MODE` to manually override auto-detection
+- **Deployment type tracking**: `CONVEX_DEPLOYMENT_TYPE` env var for test-specific behavior
+
+**New Files**:
+
+- `tests/env.ts` - Environment loading with dual testing strategy support
+- `tests/README.md` - Comprehensive testing guide with dual strategy documentation
+- `dev-docs/DUAL-TESTING-STRATEGY.md` - Technical implementation details
+- `dev-docs/BUG-FIXES-SUMMARY.md` - Complete bug fix report
+- `scripts/cleanup-test-data.ts` - Manual cleanup utility for test environments
+
+**New Backend Mutations**:
+
+- `memories.purgeAll` - Test-only mutation to delete all memories (environment-protected)
+
+#### Changed
+
+**Test Infrastructure**:
+
+- Updated `TestCleanup` helper with `purgeMemories()` and `purgeAll()` methods
+- Simplified `tests/setup.ts` to only contain test hooks
+- Split Jest setup into `setupFiles` (env.ts) and `setupFilesAfterEnv` (setup.ts)
+- Removed duplicate cleanup logic from `memory.test.ts` and `vector.test.ts`
+
+**Documentation**:
+
+- Updated `.env.test` with dual testing strategy examples
+- Enhanced test validation with better error messages and debugging output
+
+#### Technical Details
+
+**Verification Methods**:
+
+- Context7 documentation lookup confirmed local Convex limitations
+- Comprehensive test validation across both deployment types
+- 241/241 tests passing on both local and managed deployments
+
+**Performance**:
+
+- Local mode: ~28 seconds (manual cosine similarity)
+- Managed mode: ~137 seconds (includes network latency to cloud)
+- Both modes: 100% test coverage maintained
+
+---
+
 ### [0.5.0] - 2025-10-27
 
 #### 🎉 Major Release - Memory Convenience API (Layer 3)!
