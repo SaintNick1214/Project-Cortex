@@ -1,82 +1,158 @@
-# Cortex SDK - E2E Tests
+# Cortex SDK Testing Guide
 
-## Overview
+## Dual Testing Strategy
 
-This directory contains comprehensive end-to-end tests for the Cortex SDK. Each test validates:
+The Cortex SDK supports testing against both **local** and **managed** Convex deployments to validate functionality differences and ensure compatibility across environments.
 
-1. **SDK API** - TypeScript interface works correctly
-2. **Convex Backend** - Mutations and queries execute properly
-3. **Storage Validation** - Data is stored correctly in Convex
+### Environment Configuration
 
-## Running Tests
+Configure your `.env.local` file with the appropriate variables:
 
 ```bash
-# Install dependencies
-npm install
+# Local Convex (for development)
+LOCAL_CONVEX_DEPLOYMENT=anonymous:anonymous-cortex-sdk-local
+LOCAL_CONVEX_URL=http://127.0.0.1:3210
 
-# Run all tests
-npm test
+# Managed Convex (for production-like testing)
+CONVEX_URL=https://your-deployment.convex.cloud
+CONVEX_DEPLOY_KEY=your_deploy_key_here
 
-# Watch mode (for development)
-npm run test:watch
-
-# Coverage report
-npm run test:coverage
+# Optional: OpenAI API key for embedding tests
+OPENAI_API_KEY=sk-...
 ```
 
-## Test Structure
+### Test Commands
 
-Each API layer has its own test file:
+#### Run All Tests (Auto-detect environment)
 
-- `conversations.test.ts` - Layer 1a (ACID conversations)
-- `immutable.test.ts` - Layer 1b (Immutable store) - TODO
-- `mutable.test.ts` - Layer 1c (Mutable store) - TODO
-- `memories.test.ts` - Layer 2 (Vector memory) - TODO
-- `memory-api.test.ts` - Layer 3 (Memory convenience API) - TODO
+```bash
+npm test
+```
 
-## Prerequisites
+**Smart Dual Testing Behavior:**
+- If **only local** config present → runs local tests
+- If **only managed** config present → runs managed tests
+- If **both configs** present → runs **BOTH** test suites sequentially (local then managed)
+- This ensures comprehensive testing across all available environments
 
-- Convex must be running locally: `npm run dev`
-- Tests use `CONVEX_URL` environment variable (defaults to `http://127.0.0.1:3210`)
+#### Test Against Local Convex
 
-## Test Patterns
+```bash
+npm run test:local
+```
 
-### Storage Validation
+- Uses `LOCAL_CONVEX_URL`
+- **Note:** Vector search (`.similar()`) is NOT supported in local mode
+- Falls back to manual cosine similarity calculation
+- Ideal for rapid development iterations
 
-Every test validates both SDK response AND Convex storage:
+#### Test Against Managed Convex
+
+```bash
+npm run test:managed
+```
+
+- Uses `CONVEX_URL`
+- **Full vector search support** with `.similar()` API
+- Tests production-like environment
+- Validates optimized database vector indexing
+
+#### Test Both Environments Sequentially (Explicit)
+
+```bash
+npm run test:both
+```
+
+- Explicitly runs `test:local` first, then `test:managed`
+- Alternative to `npm test` when you want to force both test suites to run
+- Validates compatibility across both deployment types
+- Catches environment-specific issues
+- **Note:** `npm test` automatically does this if both configs are detected
+
+### Key Differences
+
+| Feature                      | Local Convex       | Managed Convex        |
+| ---------------------------- | ------------------ | --------------------- |
+| Vector Search (`.similar()`) | ❌ Not supported   | ✅ Fully supported    |
+| Cosine Similarity            | ✅ Manual fallback | ✅ Optimized DB-level |
+| Performance                  | Slower (in-memory) | Faster (indexed)      |
+| Startup Time                 | Fast               | Requires deployment   |
+| Best For                     | Development        | Production testing    |
+
+### GitHub Actions
+
+For CI/CD, configure secrets:
+
+**Local Testing (always available):**
+
+- Runs automatically with local Convex backend
+
+**Managed Testing (requires secrets):**
+
+- `CONVEX_URL`: Your managed deployment URL
+- `CONVEX_DEPLOY_KEY`: Deployment authentication key
+
+Example workflow:
+
+```yaml
+- name: Test against local Convex
+  run: npm run test:local
+
+- name: Test against managed Convex
+  run: npm run test:managed
+  env:
+    CONVEX_URL: ${{ secrets.CONVEX_URL }}
+    CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+```
+
+### Manual Test Mode Selection
+
+You can also manually override the test mode:
+
+```bash
+# Force local mode
+CONVEX_TEST_MODE=local npm test
+
+# Force managed mode
+CONVEX_TEST_MODE=managed npm test
+```
+
+### Deployment Type Detection
+
+Tests automatically detect the deployment type and adjust behavior:
 
 ```typescript
-// Create via SDK
-const result = await cortex.conversations.create({ ... });
+// In test code
+const isLocal = process.env.CONVEX_DEPLOYMENT_TYPE === "local";
+const isManaged = process.env.CONVEX_DEPLOYMENT_TYPE === "managed";
 
-// Validate SDK response
-expect(result.conversationId).toBeDefined();
-
-// Validate Convex storage
-const stored = await client.query(api.conversations.get, {
-  conversationId: result.conversationId,
-});
-expect(stored).toMatchObject({ ... });
+// Skip tests that require managed Convex features
+if (isLocal) {
+  test.skip("vector search with .similar() API", () => {
+    // This test requires managed Convex
+  });
+}
 ```
 
-### ACID Properties
+### Troubleshooting
 
-Tests verify:
+**Issue:** Tests fail with "CONVEX_URL not configured"
 
-- **Atomicity** - All operations complete or fail together
-- **Consistency** - Data constraints are maintained
-- **Isolation** - Operations don't interfere
-- **Durability** - Data persists correctly
+- **Solution:** Set either `LOCAL_CONVEX_URL` or `CONVEX_URL` in `.env.local`
 
-## Coverage Goals
+**Issue:** "r.similar is not a function" error in local tests
 
-- **80%** minimum coverage for all metrics
-- **100%** coverage for critical paths (GDPR, cascade operations)
+- **Expected:** This is normal - local Convex doesn't support `.similar()`
+- **Solution:** The code automatically falls back to manual cosine similarity
 
-## Current Status
+**Issue:** Slow test performance in local mode
 
-✅ Layer 1a (Conversations) - Complete with 13 test cases
-⏳ Layer 1b (Immutable) - Pending
-⏳ Layer 1c (Mutable) - Pending
-⏳ Layer 2 (Memories) - Pending
-⏳ Layer 3 (Memory API) - Pending
+- **Expected:** Manual similarity calculation is slower than indexed search
+- **Solution:** Use `npm run test:managed` for production-like performance
+
+## Additional Test Commands
+
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage` - Generate coverage report
+- `npm run test:debug` - Run tests with detailed logging
+- `npm run test:interactive` - Interactive test runner

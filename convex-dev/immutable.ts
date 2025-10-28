@@ -57,22 +57,21 @@ export const store = mutation({
       });
 
       return await ctx.db.get(existing._id);
-    } else {
-      // Create: Version 1
-      const _id = await ctx.db.insert("immutable", {
-        type: args.type,
-        id: args.id,
-        data: args.data,
-        userId: args.userId,
-        version: 1,
-        previousVersions: [],
-        metadata: args.metadata,
-        createdAt: now,
-        updatedAt: now,
-      });
-
-      return await ctx.db.get(_id);
     }
+    // Create: Version 1
+    const _id = await ctx.db.insert("immutable", {
+      type: args.type,
+      id: args.id,
+      data: args.data,
+      userId: args.userId,
+      version: 1,
+      previousVersions: [],
+      metadata: args.metadata,
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    return await ctx.db.get(_id);
   },
 });
 
@@ -253,7 +252,7 @@ export const list = query({
     } else if (args.userId) {
       entries = await ctx.db
         .query("immutable")
-        .withIndex("by_userId", (q) => q.eq("userId", args.userId!))
+        .withIndex("by_userId", (q) => q.eq("userId", args.userId))
         .order("desc")
         .take(args.limit || 100);
     } else {
@@ -300,7 +299,7 @@ export const search = query({
 
     const searchQuery = args.query.toLowerCase();
     const results: Array<{
-      entry: any;
+      entry: unknown;
       score: number;
       highlights: string[];
     }> = [];
@@ -318,7 +317,7 @@ export const search = query({
 
         // Try to find readable highlights from data
         if (typeof entry.data === "object" && entry.data !== null) {
-          for (const [key, value] of Object.entries(entry.data)) {
+          for (const [_key, value] of Object.entries(entry.data)) {
             if (
               typeof value === "string" &&
               value.toLowerCase().includes(searchQuery)
@@ -329,6 +328,7 @@ export const search = query({
                 value.length,
                 index + searchQuery.length + 30,
               );
+
               highlights.push(value.substring(start, end));
             }
           }
@@ -417,6 +417,7 @@ export const getAtTimestamp = query({
     // Iterate backwards through previousVersions
     for (let i = entry.previousVersions.length - 1; i >= 0; i--) {
       const prevVersion = entry.previousVersions[i];
+
       if (args.timestamp >= prevVersion.timestamp) {
         return {
           type: entry.type,
@@ -434,6 +435,7 @@ export const getAtTimestamp = query({
     // If we get here, it was during v1 (before any updates)
     if (entry.previousVersions.length > 0) {
       const firstVersion = entry.previousVersions[0];
+
       return {
         type: entry.type,
         id: entry.id,

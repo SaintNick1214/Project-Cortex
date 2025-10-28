@@ -4,24 +4,24 @@
  * Layer 1a: ACID-compliant immutable conversation storage
  */
 
-import { ConvexClient } from "convex/browser";
+import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type {
-  Conversation,
-  CreateConversationInput,
   AddMessageInput,
-  ListConversationsFilter,
-  CountConversationsFilter,
-  GetHistoryOptions,
-  SearchConversationsInput,
+  Conversation,
   ConversationSearchResult,
+  CountConversationsFilter,
+  CreateConversationInput,
   ExportConversationsOptions,
   ExportResult,
+  GetHistoryOptions,
+  ListConversationsFilter,
   Message,
+  SearchConversationsInput,
 } from "../types";
 
 export class ConversationsAPI {
-  constructor(private client: ConvexClient) {}
+  constructor(private readonly client: ConvexClient) {}
 
   /**
    * Create a new conversation

@@ -4,18 +4,18 @@
  * Layer 2: Searchable agent-private memories with embeddings
  */
 
-import { ConvexClient } from "convex/browser";
+import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type {
-  MemoryEntry,
-  StoreMemoryInput,
-  SearchMemoriesOptions,
-  ListMemoriesFilter,
   CountMemoriesFilter,
+  ListMemoriesFilter,
+  MemoryEntry,
+  SearchMemoriesOptions,
+  StoreMemoryInput,
 } from "../types";
 
 export class VectorAPI {
-  constructor(private client: ConvexClient) {}
+  constructor(private readonly client: ConvexClient) {}
 
   /**
    * Store a vector memory

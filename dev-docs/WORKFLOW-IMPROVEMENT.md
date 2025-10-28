@@ -14,7 +14,7 @@
 # Get version from current commit
 CURRENT_VERSION=$(node -p "require('./package.json').version")
 
-# Get version from previous commit  
+# Get version from previous commit
 git show HEAD~1:package.json > prev-package.json
 PREVIOUS_VERSION=$(node -p "require('./prev-package.json').version")
 
@@ -27,6 +27,7 @@ fi
 ### Why It Failed
 
 **Scenario**:
+
 ```bash
 Commit 1: package.json (0.4.6 → 0.5.0)
 Commit 2: CHANGELOG.md (add v0.5.0 section)
@@ -39,6 +40,7 @@ Workflow runs on Commit 2:
 ```
 
 **Problems**:
+
 - ❌ Fails with multi-commit pushes
 - ❌ Depends on git history order
 - ❌ Can't retry failed publishes
@@ -66,6 +68,7 @@ fi
 ### Why It Works
 
 **Scenario 1: Normal release**
+
 ```bash
 package.json: 0.5.0
 npm registry: 0.4.6
@@ -73,6 +76,7 @@ npm registry: 0.4.6
 ```
 
 **Scenario 2: Multi-commit push**
+
 ```bash
 Commit 1: Bump version to 0.5.0
 Commit 2: Update CHANGELOG
@@ -85,6 +89,7 @@ All pushed together:
 ```
 
 **Scenario 3: Already published**
+
 ```bash
 package.json: 0.5.0
 npm registry: 0.5.0
@@ -92,13 +97,14 @@ npm registry: 0.5.0
 ```
 
 **Scenario 4: Retry failed publish**
+
 ```bash
 First push: Failed to publish (network error)
   package.json: 0.5.0
   npm registry: 0.4.6
 
 Fix issue and re-push (same commits):
-  package.json: 0.5.0  
+  package.json: 0.5.0
   npm registry: 0.4.6
   → Publish! ✅ (can retry without version bump)
 ```
@@ -131,14 +137,14 @@ Fix issue and re-push (same commits):
 
 ## 📊 Comparison
 
-| Feature | Git-Based (Old) | npm-Based (New) |
-|---------|----------------|-----------------|
-| **Multi-commit push** | ❌ Fails | ✅ Works |
-| **Retry failed publish** | ❌ Need version bump | ✅ Just re-push |
-| **Idempotent** | ❌ No | ✅ Yes |
-| **Rebase safe** | ❌ Can break | ✅ Works |
-| **Clear intent** | ⚠️  Git diff | ✅ "Not yet published" |
-| **Prevents duplicates** | ⚠️  Usually | ✅ Always |
+| Feature                  | Git-Based (Old)      | npm-Based (New)        |
+| ------------------------ | -------------------- | ---------------------- |
+| **Multi-commit push**    | ❌ Fails             | ✅ Works               |
+| **Retry failed publish** | ❌ Need version bump | ✅ Just re-push        |
+| **Idempotent**           | ❌ No                | ✅ Yes                 |
+| **Rebase safe**          | ❌ Can break         | ✅ Works               |
+| **Clear intent**         | ⚠️ Git diff          | ✅ "Not yet published" |
+| **Prevents duplicates**  | ⚠️ Usually           | ✅ Always              |
 
 ---
 
@@ -149,6 +155,7 @@ Fix issue and re-push (same commits):
 **File**: `.github/workflows/publish.yml`
 
 **Before**:
+
 ```bash
 # Compare HEAD vs HEAD~1 (git-based)
 PREVIOUS_VERSION=$(node -p "require('./prev-package.json').version")
@@ -156,6 +163,7 @@ if [ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]; then
 ```
 
 **After**:
+
 ```bash
 # Compare package.json vs npm registry (registry-based)
 NPM_VERSION=$(npm view @cortexmemory/sdk version 2>/dev/null || echo "0.0.0")
@@ -249,11 +257,13 @@ fi
 ### Expected Results
 
 **Before any publish**:
+
 - Package: 0.5.0
 - npm: 0.4.6
 - Result: Would publish ✅
 
 **After publish succeeds**:
+
 - Package: 0.5.0
 - npm: 0.5.0
 - Result: Would skip ✅
@@ -279,11 +289,13 @@ fi
 ## 🚀 Ready for v0.5.0
 
 **With this fix**, the v0.5.0 release will work correctly even though:
+
 - Version bump was in earlier commit
-- CHANGELOG update was in later commit  
+- CHANGELOG update was in later commit
 - Both pushed together
 
 **The workflow will**:
+
 1. See package.json: 0.5.0
 2. Check npm registry: 0.4.6 (or whatever is currently published)
 3. Compare: Different → Publish! ✅
@@ -291,4 +303,3 @@ fi
 ---
 
 **Status**: ✅ **Workflow improved - Ready for reliable automated publishing!**
-

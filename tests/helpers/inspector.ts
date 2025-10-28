@@ -4,11 +4,11 @@
  * Utilities for inspecting Convex storage state during tests
  */
 
-import { ConvexClient } from "convex/browser";
+import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 
 export class StorageInspector {
-  constructor(private client: ConvexClient) {}
+  constructor(private readonly client: ConvexClient) {}
 
   /**
    * Print a detailed view of a conversation
@@ -20,10 +20,11 @@ export class StorageInspector {
 
     if (!conversation) {
       console.log(`❌ Conversation ${conversationId} not found`);
+
       return;
     }
 
-    console.log("\n" + "=".repeat(80));
+    console.log(`\n${"=".repeat(80)}`);
     console.log(`📊 CONVERSATION INSPECTION: ${conversationId}`);
     console.log("=".repeat(80));
     console.log(`Type:          ${conversation.type}`);
@@ -58,7 +59,7 @@ export class StorageInspector {
         console.log(`      Metadata: ${JSON.stringify(msg.metadata)}`);
       }
     });
-    console.log("=".repeat(80) + "\n");
+    console.log(`${"=".repeat(80)}\n`);
   }
 
   /**
@@ -67,7 +68,7 @@ export class StorageInspector {
   async inspectAllConversations(): Promise<void> {
     const conversations = await this.client.query(api.conversations.list, {});
 
-    console.log("\n" + "=".repeat(80));
+    console.log(`\n${"=".repeat(80)}`);
     console.log(`📊 ALL CONVERSATIONS (${conversations.length})`);
     console.log("=".repeat(80));
 
@@ -82,7 +83,7 @@ export class StorageInspector {
         console.log(`    Created: ${new Date(conv.createdAt).toISOString()}`);
       });
     }
-    console.log("\n" + "=".repeat(80) + "\n");
+    console.log(`\n${"=".repeat(80)}\n`);
   }
 
   /**
@@ -103,6 +104,7 @@ export class StorageInspector {
 
     if (!stored) {
       differences.push("Conversation not found in storage");
+
       return { matches: false, differences };
     }
 
@@ -153,12 +155,12 @@ export class StorageInspector {
       type: "agent-agent",
     });
 
-    console.log("\n" + "=".repeat(80));
+    console.log(`\n${"=".repeat(80)}`);
     console.log("📊 STORAGE STATISTICS");
     console.log("=".repeat(80));
     console.log(`Total Conversations:      ${total}`);
     console.log(`User-Agent Conversations: ${userAgent}`);
     console.log(`Agent-Agent Conversations: ${agentAgent}`);
-    console.log("=".repeat(80) + "\n");
+    console.log(`${"=".repeat(80)}\n`);
   }
 }

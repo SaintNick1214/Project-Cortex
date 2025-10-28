@@ -20,6 +20,7 @@ class ImmutableTestCleanup extends TestCleanup {
     const entries = await this.client.query(api.immutable.list, {});
 
     let deleted = 0;
+
     for (const entry of entries) {
       try {
         await this.client.mutation(api.immutable.purge, {
@@ -27,20 +28,22 @@ class ImmutableTestCleanup extends TestCleanup {
           id: entry.id,
         });
         deleted++;
-      } catch (error: any) {
-        if (error.message?.includes("IMMUTABLE_ENTRY_NOT_FOUND")) {
+      } catch (err: any) {
+        if (err.message?.includes("IMMUTABLE_ENTRY_NOT_FOUND")) {
           continue;
         }
-        throw error;
+        throw err;
       }
     }
 
     console.log(`✅ Purged ${deleted} immutable entries`);
+
     return deleted;
   }
 
   async verifyImmutableEmpty(): Promise<void> {
     const count = await this.client.query(api.immutable.count, {});
+
     if (count > 0) {
       console.warn(
         `⚠️  Warning: Immutable table not empty (${count} entries remaining)`,
@@ -58,6 +61,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
   beforeAll(async () => {
     const convexUrl = process.env.CONVEX_URL;
+
     if (!convexUrl) {
       throw new Error("CONVEX_URL not set");
     }
@@ -173,7 +177,7 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
 
     it("preserves metadata across versions", async () => {
-      const v1 = await cortex.immutable.store({
+      const _v1 = await cortex.immutable.store({
         type: "policy",
         id: "privacy-policy",
         data: { content: "v1" },
@@ -223,6 +227,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
     it("returns null for non-existent entry", async () => {
       const result = await cortex.immutable.get("kb-article", "does-not-exist");
+
       expect(result).toBeNull();
     });
 
@@ -496,6 +501,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       // All results should contain "refund"
       results.forEach((result) => {
         const dataString = JSON.stringify(result.entry.data).toLowerCase();
+
         expect(dataString).toContain("refund");
       });
     });
@@ -618,6 +624,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       // Verify it exists
       const before = await cortex.immutable.get("temp-data", "delete-test");
+
       expect(before).not.toBeNull();
       expect(before!.version).toBe(3);
 
@@ -629,6 +636,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       // Verify deletion
       const after = await cortex.immutable.get("temp-data", "delete-test");
+
       expect(after).toBeNull();
     });
 
@@ -658,11 +666,13 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       // Get current (should be v10)
       const current = await cortex.immutable.get(type, id);
+
       expect(current!.version).toBe(10);
       expect(current!.previousVersions).toHaveLength(9);
 
       // Get all history
       const history = await cortex.immutable.getHistory(type, id);
+
       expect(history).toHaveLength(10);
 
       // Verify each version
@@ -710,7 +720,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       const id = "acid-entry";
 
       // Create entry
-      const created = await cortex.immutable.store({
+      const _created = await cortex.immutable.store({
         type,
         id,
         data: { value: "initial" },
@@ -804,13 +814,16 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       // Verify v1 in all operations
       let current = await cortex.immutable.get(type, id);
+
       expect(current!.version).toBe(1);
       expect(current!.data.status).toBe("draft");
 
       let history = await cortex.immutable.getHistory(type, id);
+
       expect(history).toHaveLength(1);
 
       let searchResults = await cortex.immutable.search({ query: "draft" });
+
       expect(searchResults.some((r) => r.entry.id === id)).toBe(true);
 
       // Update to v2
@@ -841,10 +854,12 @@ describe("Immutable Store API (Layer 1b)", () => {
       // Old search should NOT find it
       const draftResults = await cortex.immutable.search({ query: "draft" });
       const hasDraft = draftResults.some((r) => r.entry.id === id);
+
       expect(hasDraft).toBe(false); // "draft" no longer in current version
 
       // getVersion(1) should still have old data
       const v1 = await cortex.immutable.getVersion(type, id, 1);
+
       expect(v1!.data.status).toBe("draft");
     });
 
@@ -866,10 +881,12 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       // List should show 2
       let list = await cortex.immutable.list({ type });
+
       expect(list.length).toBe(2);
 
       // Count should show 2
       let count = await cortex.immutable.count({ type });
+
       expect(count).toBe(2);
 
       // Add third entry
@@ -916,6 +933,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       // Search for "apple" - should find it
       let results = await cortex.immutable.search({ query: "apple" });
+
       expect(results.some((r) => r.entry.id === id)).toBe(true);
 
       // Search for "orange" - should NOT find it
@@ -961,12 +979,14 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       // Get current - should be v25
       const current = await cortex.immutable.get(type, id);
+
       expect(current!.version).toBe(25);
       expect(current!.data.iteration).toBe(25);
       expect(current!.previousVersions).toHaveLength(24);
 
       // Get history - should have all 25
       const history = await cortex.immutable.getHistory(type, id);
+
       expect(history).toHaveLength(25);
 
       // Verify each version
@@ -977,12 +997,15 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       // Get specific versions
       const v1 = await cortex.immutable.getVersion(type, id, 1);
+
       expect(v1!.data.iteration).toBe(1);
 
       const v10 = await cortex.immutable.getVersion(type, id, 10);
+
       expect(v10!.data.iteration).toBe(10);
 
       const v25 = await cortex.immutable.getVersion(type, id, 25);
+
       expect(v25!.data.iteration).toBe(25);
     });
 
@@ -997,6 +1020,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       expect(result.version).toBe(1);
 
       const retrieved = await cortex.immutable.get("empty-test", "empty-data");
+
       expect(retrieved!.data).toEqual({});
     });
 
@@ -1019,6 +1043,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       expect(result.data.items).toHaveLength(1000);
 
       const retrieved = await cortex.immutable.get("large-test", "large-data");
+
       expect(retrieved!.data.items).toHaveLength(1000);
     });
 
@@ -1036,6 +1061,7 @@ describe("Immutable Store API (Layer 1b)", () => {
         "test-type_with.special-chars",
         "test-id_123.456-789",
       );
+
       expect(retrieved).not.toBeNull();
     });
 
@@ -1045,6 +1071,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       // Perform 10 rapid updates
       const promises = [];
+
       for (let i = 1; i <= 10; i++) {
         promises.push(
           cortex.immutable.store({
@@ -1059,6 +1086,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       // Should have a version (might not be exactly 10 due to race conditions)
       const final = await cortex.immutable.get(type, id);
+
       expect(final!.version).toBeGreaterThan(0);
       expect(final!.version).toBeLessThanOrEqual(10);
     });
@@ -1082,6 +1110,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       // Verify in list
       const listResults = await cortex.immutable.list({ type });
       const inList = listResults.some((e) => e.id === testId);
+
       expect(inList).toBe(true);
 
       // Verify in search
@@ -1090,10 +1119,12 @@ describe("Immutable Store API (Layer 1b)", () => {
         type,
       });
       const inSearch = searchResults.some((r) => r.entry.id === testId);
+
       expect(inSearch).toBe(true);
 
       // Verify in count
       const count = await cortex.immutable.count({ type });
+
       expect(count).toBeGreaterThanOrEqual(1);
 
       // Update the entry
@@ -1108,6 +1139,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       // List should still show it
       const listAfter = await cortex.immutable.list({ type });
+
       expect(listAfter.some((e) => e.id === testId)).toBe(true);
 
       // Search for old keyword should NOT find it
@@ -1115,6 +1147,7 @@ describe("Immutable Store API (Layer 1b)", () => {
         query: "FINDME",
         type,
       });
+
       expect(searchOld.some((r) => r.entry.id === testId)).toBe(false);
 
       // Search for new content should find it
@@ -1122,10 +1155,12 @@ describe("Immutable Store API (Layer 1b)", () => {
         query: "Updated",
         type,
       });
+
       expect(searchNew.some((r) => r.entry.id === testId)).toBe(true);
 
       // Count should be unchanged
       const countAfter = await cortex.immutable.count({ type });
+
       expect(countAfter).toBe(count);
     });
 
@@ -1135,6 +1170,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       // Create 15 versions with different searchable content
       const versions = [];
+
       for (let i = 1; i <= 15; i++) {
         const result = await cortex.immutable.store({
           type,
@@ -1145,6 +1181,7 @@ describe("Immutable Store API (Layer 1b)", () => {
             timestamp: Date.now(),
           },
         });
+
         versions.push(result);
 
         // Small delay to ensure distinct timestamps
@@ -1153,12 +1190,14 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       // Current should be v15
       const current = await cortex.immutable.get(type, id);
+
       expect(current!.version).toBe(15);
       expect(current!.data.version).toBe(15);
 
       // Should be able to get ANY historical version
       for (let v = 1; v <= 15; v++) {
         const historical = await cortex.immutable.getVersion(type, id, v);
+
         expect(historical).not.toBeNull();
         expect(historical!.version).toBe(v);
         expect(historical!.data.version).toBe(v);
@@ -1166,6 +1205,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       // Full history should have all 15
       const fullHistory = await cortex.immutable.getHistory(type, id);
+
       expect(fullHistory).toHaveLength(15);
 
       // Verify they're in chronological order
@@ -1199,6 +1239,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       });
 
       let current = await cortex.immutable.get(type, id);
+
       expect(current!.metadata?.tags).toContain("initial");
       expect(current!.metadata?.importance).toBe(50);
 
@@ -1237,6 +1278,7 @@ describe("Immutable Store API (Layer 1b)", () => {
           id,
           data: { value: "v1", status: "draft" },
         });
+
         v1Timestamp = v1.updatedAt;
 
         await new Promise((resolve) => setTimeout(resolve, 50));
@@ -1247,6 +1289,7 @@ describe("Immutable Store API (Layer 1b)", () => {
           id,
           data: { value: "v2", status: "review" },
         });
+
         v2Timestamp = v2.updatedAt;
 
         await new Promise((resolve) => setTimeout(resolve, 50));
@@ -1257,6 +1300,7 @@ describe("Immutable Store API (Layer 1b)", () => {
           id,
           data: { value: "v3", status: "published" },
         });
+
         v3Timestamp = v3.updatedAt;
       });
 
@@ -1276,6 +1320,7 @@ describe("Immutable Store API (Layer 1b)", () => {
           id,
           v1Timestamp,
         );
+
         expect(atV1!.version).toBe(1);
         expect(atV1!.data.value).toBe("v1");
 
@@ -1285,6 +1330,7 @@ describe("Immutable Store API (Layer 1b)", () => {
           id,
           v2Timestamp,
         );
+
         expect(atV2!.version).toBe(2);
         expect(atV2!.data.value).toBe("v2");
 
@@ -1294,6 +1340,7 @@ describe("Immutable Store API (Layer 1b)", () => {
           id,
           v3Timestamp,
         );
+
         expect(atV3!.version).toBe(3);
         expect(atV3!.data.value).toBe("v3");
       });
@@ -1349,6 +1396,7 @@ describe("Immutable Store API (Layer 1b)", () => {
         const remaining = await cortex.immutable.list({
           type: "bulk-purge-test",
         });
+
         expect(remaining.length).toBe(0);
       });
 
@@ -1372,6 +1420,7 @@ describe("Immutable Store API (Layer 1b)", () => {
         const countBefore = await cortex.immutable.count({
           userId: "user-purge-specific-unique",
         });
+
         expect(countBefore).toBe(2);
 
         const result = await cortex.immutable.purgeMany({
@@ -1384,6 +1433,7 @@ describe("Immutable Store API (Layer 1b)", () => {
         const remaining = await cortex.immutable.list({
           userId: "user-purge-specific-unique",
         });
+
         expect(remaining.length).toBe(0);
       });
     });
@@ -1404,6 +1454,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
         // Verify 10 versions exist
         const before = await cortex.immutable.get(type, id);
+
         expect(before!.version).toBe(10);
         expect(before!.previousVersions).toHaveLength(9);
 
@@ -1415,15 +1466,18 @@ describe("Immutable Store API (Layer 1b)", () => {
 
         // Verify only 5 versions remain
         const after = await cortex.immutable.get(type, id);
+
         expect(after!.version).toBe(10); // Current version unchanged
         expect(after!.previousVersions).toHaveLength(4); // 4 previous + 1 current = 5
 
         // Old versions should be gone
         const v1 = await cortex.immutable.getVersion(type, id, 1);
+
         expect(v1).toBeNull();
 
         // Recent versions should exist
         const v10 = await cortex.immutable.getVersion(type, id, 10);
+
         expect(v10).not.toBeNull();
       });
 
@@ -1472,21 +1526,26 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       // Get should return correct type
       const typeA = await cortex.immutable.get("type-a", "shared-id");
+
       expect(typeA!.data.source).toBe("type-a");
 
       const typeB = await cortex.immutable.get("type-b", "shared-id");
+
       expect(typeB!.data.source).toBe("type-b");
 
       // List by type should be isolated
       const listA = await cortex.immutable.list({ type: "type-a" });
+
       expect(listA.every((e) => e.type === "type-a")).toBe(true);
 
       const listB = await cortex.immutable.list({ type: "type-b" });
+
       expect(listB.every((e) => e.type === "type-b")).toBe(true);
 
       // Count by type should be isolated
       const countA = await cortex.immutable.count({ type: "type-a" });
       const countB = await cortex.immutable.count({ type: "type-b" });
+
       expect(countA).toBeGreaterThanOrEqual(1);
       expect(countB).toBeGreaterThanOrEqual(1);
     });
