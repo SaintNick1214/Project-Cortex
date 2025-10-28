@@ -91,7 +91,7 @@ export class StorageInspector {
    */
   async compareWithStorage(
     conversationId: string,
-    sdkResult: unknown,
+    sdkResult: any,
   ): Promise<{
     matches: boolean;
     differences: string[];

@@ -937,7 +937,7 @@ describe("Conversations API (Layer 1a)", () => {
 
       expect(exported.count).toBe(2);
       const parsed = JSON.parse(exported.data);
-      const ids = parsed.map((c: unknown) => c.conversationId);
+      const ids = parsed.map((c: any) => c.conversationId);
 
       expect(ids).toContain("conv-export-1");
       expect(ids).toContain("conv-export-2");
@@ -951,7 +951,7 @@ describe("Conversations API (Layer 1a)", () => {
 
       const parsed = JSON.parse(exported.data);
 
-      parsed.forEach((conv: unknown) => {
+      parsed.forEach((conv: any) => {
         expect(conv.type).toBe("agent-agent");
       });
     });
@@ -972,7 +972,7 @@ describe("Conversations API (Layer 1a)", () => {
 
       const parsed = JSON.parse(exported.data);
 
-      parsed.forEach((conv: unknown) => {
+      parsed.forEach((conv: any) => {
         expect(conv.createdAt).toBeGreaterThanOrEqual(oneHourAgo);
         expect(conv.createdAt).toBeLessThanOrEqual(now);
       });
@@ -1626,7 +1626,7 @@ describe("Conversations API (Layer 1a)", () => {
       const parsed = JSON.parse(exported.data);
 
       expect(
-        parsed.some((c: unknown) => c.conversationId === conv.conversationId),
+        parsed.some((c: any) => c.conversationId === conv.conversationId),
       ).toBe(true);
 
       // Add more messages

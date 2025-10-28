@@ -160,7 +160,7 @@ describe("Mutable Store API (Layer 1c)", () => {
       const result = await cortex.mutable.set("config", "app-settings", config);
 
       expect(result.value).toEqual(config);
-      expect(result.value.api.endpoint).toBe("https://api.example.com");
+      expect((result.value as any).api.endpoint).toBe("https://api.example.com");
     });
 
     it("stores with userId for GDPR compliance", async () => {
@@ -214,7 +214,7 @@ describe("Mutable Store API (Layer 1c)", () => {
       const result = await cortex.mutable.update(
         "inventory",
         "widget-update",
-        (current) => current - 10,
+        (current: any) => current - 10,
       );
 
       expect(result.value).toBe(90);
@@ -231,7 +231,7 @@ describe("Mutable Store API (Layer 1c)", () => {
         cortex.mutable.update(
           "counters",
           "non-existent",
-          (current) => current + 1,
+          (current: any) => current + 1,
         ),
       ).rejects.toThrow("MUTABLE_KEY_NOT_FOUND");
     });
@@ -245,15 +245,15 @@ describe("Mutable Store API (Layer 1c)", () => {
       const result = await cortex.mutable.update(
         "config",
         "settings",
-        (current) => ({
+        (current: any) => ({
           ...current,
           count: current.count + 1,
           enabled: true,
         }),
       );
 
-      expect(result.value.count).toBe(1);
-      expect(result.value.enabled).toBe(true);
+      expect((result.value as any).count).toBe(1);
+      expect((result.value as any).enabled).toBe(true);
     });
   });
 
@@ -844,10 +844,10 @@ describe("Mutable Store API (Layer 1c)", () => {
       // Get
       let value = await cortex.mutable.get(ns, key);
 
-      expect(value.status).toBe("initial");
+      expect((value as any).status).toBe("initial");
 
       // Update
-      await cortex.mutable.update(ns, key, (current) => ({
+      await cortex.mutable.update(ns, key, (current: any) => ({
         ...current,
         status: "updated",
         count: current.count + 1,
@@ -857,8 +857,8 @@ describe("Mutable Store API (Layer 1c)", () => {
       const list = await cortex.mutable.list({ namespace: ns });
       const entry = list.find((e) => e.key === key);
 
-      expect(entry!.value.status).toBe("updated");
-      expect(entry!.value.count).toBe(1);
+      expect((entry!.value as any).status).toBe("updated");
+      expect((entry!.value as any).count).toBe(1);
 
       // Count
       const count = await cortex.mutable.count({ namespace: ns });

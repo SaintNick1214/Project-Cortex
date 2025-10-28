@@ -29,8 +29,11 @@ OPENAI_API_KEY=sk-...
 npm test
 ```
 
-- Automatically selects LOCAL or MANAGED based on available configuration
-- Defaults to LOCAL if both are configured
+**Smart Dual Testing Behavior:**
+- If **only local** config present → runs local tests
+- If **only managed** config present → runs managed tests
+- If **both configs** present → runs **BOTH** test suites sequentially (local then managed)
+- This ensures comprehensive testing across all available environments
 
 #### Test Against Local Convex
 
@@ -54,16 +57,17 @@ npm run test:managed
 - Tests production-like environment
 - Validates optimized database vector indexing
 
-#### Test Both Environments Sequentially
+#### Test Both Environments Sequentially (Explicit)
 
 ```bash
 npm run test:both
 ```
 
-- Runs `test:local` first, then `test:managed`
+- Explicitly runs `test:local` first, then `test:managed`
+- Alternative to `npm test` when you want to force both test suites to run
 - Validates compatibility across both deployment types
 - Catches environment-specific issues
-- **Recommended for CI/CD pipelines**
+- **Note:** `npm test` automatically does this if both configs are detected
 
 ### Key Differences
 
