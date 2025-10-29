@@ -1,6 +1,6 @@
 # Semantic Search
 
-> **Last Updated**: 2025-10-23
+> **Last Updated**: 2025-10-28
 
 AI-powered memory retrieval with multi-strategy fallback for robust results.
 
@@ -85,13 +85,13 @@ Primary method using embeddings (when provided):
 
 ```typescript
 // Try semantic search first (Layer 3 - searches Vector index)
-const memories = await cortex.memory.search(agentId, query, {
+const memories = await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query), // Vector similarity
   strategy: "semantic",
 });
 
 // Or use Layer 2 directly for explicit control
-const vectorResults = await cortex.vector.search(agentId, query, {
+const vectorResults = await cortex.vector.search(memorySpaceId, query, {
   embedding: await embed(query),
 });
 ```
@@ -118,13 +118,13 @@ Fallback to text-based search (always available, no embeddings needed):
 // If semantic search returns nothing (or no embeddings), try keywords
 // Layer 3 - automatically falls back to keyword search
 if (memories.length === 0) {
-  memories = await cortex.memory.search(agentId, query, {
+  memories = await cortex.memory.search(memorySpaceId, query, {
     strategy: "keyword", // Text-based search (works without embeddings)
   });
 }
 
 // Or explicitly use text search (no embeddings required)
-const memories = await cortex.memory.search(agentId, query, {
+const memories = await cortex.memory.search(memorySpaceId, query, {
   // No embedding provided - Layer 3 uses text search on Vector index
   strategy: "keyword",
 });
@@ -177,7 +177,7 @@ Cortex (Layer 3) automatically tries strategies based on what you provide:
 
 ```typescript
 // With embedding - tries semantic → keyword → recent
-const memories = await cortex.memory.search(agentId, query, {
+const memories = await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query), // Enables semantic search on Vector index
 });
 
@@ -195,14 +195,14 @@ const memories = await cortex.memory.search(agentId, query);
 
 ```typescript
 // Force specific strategy
-const memories = await cortex.memory.search(agentId, query, {
+const memories = await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query),
   strategy: "semantic-only", // Don't fall back
   allowEmpty: true, // OK to return empty results
 });
 
 // Text-only search (no embeddings needed)
-const memories = await cortex.memory.search(agentId, query, {
+const memories = await cortex.memory.search(memorySpaceId, query, {
   strategy: "keyword", // Skip semantic even if embeddings exist
   allowEmpty: false, // Fall back to recent if empty
 });
@@ -215,7 +215,7 @@ const memories = await cortex.memory.search(agentId, query, {
 ### Basic Options
 
 ```typescript
-await cortex.memory.search(agentId, query, {
+await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query), // Vector for semantic search
   limit: 10, // Max results (default: 20)
   offset: 0, // Pagination offset
@@ -227,7 +227,7 @@ await cortex.memory.search(agentId, query, {
 All filters from Agent Memory work in search:
 
 ```typescript
-await cortex.memory.search(agentId, query, {
+await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query),
 
   // Filter by user (critical for multi-user agents)
@@ -267,7 +267,7 @@ await cortex.memory.search(agentId, query, {
 ### Scoring & Ranking
 
 ```typescript
-await cortex.memory.search(agentId, query, {
+await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query),
 
   // Minimum similarity score (0-1)
@@ -292,14 +292,14 @@ await cortex.memory.search(agentId, query, {
 
 ```typescript
 // Get first page
-const page1 = await cortex.memory.search(agentId, query, {
+const page1 = await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query),
   limit: 20,
   offset: 0,
 });
 
 // Get second page
-const page2 = await cortex.memory.search(agentId, query, {
+const page2 = await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query),
   limit: 20,
   offset: 20,
@@ -315,7 +315,7 @@ console.log(`Found ${page1.total} total memories`);
 interface SearchResult {
   // The memory (same as MemoryEntry)
   id: string;
-  agentId: string;
+  memorySpaceId: string;
   userId?: string;
 
   // Content
@@ -372,7 +372,7 @@ Find memories with any of several tags for a specific user:
 
 ```typescript
 // Find any issue-related memories for this user
-const memories = await cortex.memory.search(agentId, query, {
+const memories = await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query),
   userId: "user-123", // Scope to user
   tags: ["bug", "issue", "error"], // OR logic
@@ -380,7 +380,7 @@ const memories = await cortex.memory.search(agentId, query, {
 });
 
 // Or require ALL tags
-const memories = await cortex.memory.search(agentId, query, {
+const memories = await cortex.memory.search(memorySpaceId, query, {
   userId: "user-123",
   tags: ["preferences", "verified"],
   tagMatch: "all", // Must have both tags
@@ -399,7 +399,7 @@ const queryEmbedding = await embed(query);
 const keywords = extractKeywords(query); // ['deadline', 'project', 'Q4']
 
 // Hybrid search
-const memories = await cortex.memory.search(agentId, query, {
+const memories = await cortex.memory.search(memorySpaceId, query, {
   embedding: queryEmbedding,
   keywords: keywords,
   hybridWeight: 0.7, // 70% semantic, 30% keyword
@@ -412,7 +412,7 @@ Re-rank results based on additional context:
 
 ```typescript
 // Initial search
-let memories = await cortex.memory.search(agentId, query, {
+let memories = await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query),
   userId, // Scoped to user
   limit: 20, // Get more than needed
@@ -441,7 +441,7 @@ Find memories from specific time periods:
 
 ```typescript
 // Memories from this week
-const thisWeek = await cortex.memory.search(agentId, query, {
+const thisWeek = await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query),
   dateRange: {
     start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
@@ -450,7 +450,7 @@ const thisWeek = await cortex.memory.search(agentId, query, {
 });
 
 // Memories before a specific date
-const before = await cortex.memory.search(agentId, query, {
+const before = await cortex.memory.search(memorySpaceId, query, {
   dateRange: {
     end: new Date("2025-10-01"),
   },
@@ -463,7 +463,7 @@ Combine semantic similarity with importance:
 
 ```typescript
 // Critical information only
-const critical = await cortex.memory.search(agentId, query, {
+const critical = await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query),
   userId,
   importance: { $gte: 90 }, // Critical importance only
@@ -471,7 +471,7 @@ const critical = await cortex.memory.search(agentId, query, {
 });
 
 // High-confidence + high-importance
-const highConfidence = await cortex.memory.search(agentId, query, {
+const highConfidence = await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query),
   userId,
   minScore: 0.85, // 85%+ similarity
@@ -480,7 +480,7 @@ const highConfidence = await cortex.memory.search(agentId, query, {
 });
 
 // Broad search across all importance levels
-const broadSearch = await cortex.memory.search(agentId, query, {
+const broadSearch = await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query),
   userId,
   minScore: 0.5, // 50%+ similarity
@@ -498,7 +498,7 @@ Embeddings are expensive - cache and reuse:
 // ❌ Slow - generate embedding every time
 for (const query of queries) {
   const embedding = await embed(query);
-  await cortex.memory.search(agentId, query, { embedding });
+  await cortex.memory.search(memorySpaceId, query, { embedding });
 }
 
 // ✅ Fast - batch embeddings
@@ -516,13 +516,13 @@ Don't retrieve more than you need:
 
 ```typescript
 // ❌ Wasteful
-const memories = await cortex.memory.search(agentId, query, {
+const memories = await cortex.memory.search(memorySpaceId, query, {
   limit: 100, // Getting 100 results...
 });
 const top3 = memories.slice(0, 3); // ...but only using 3
 
 // ✅ Efficient
-const memories = await cortex.memory.search(agentId, query, {
+const memories = await cortex.memory.search(memorySpaceId, query, {
   limit: 3, // Only get what you need
 });
 ```
@@ -533,11 +533,11 @@ Filter before searching when possible:
 
 ```typescript
 // ❌ Search everything, then filter
-const all = await cortex.memory.search(agentId, query, { limit: 100 });
+const all = await cortex.memory.search(memorySpaceId, query, { limit: 100 });
 const highPriority = all.filter((m) => m.metadata.importance === "high");
 
 // ✅ Filter during search
-const highPriority = await cortex.memory.search(agentId, query, {
+const highPriority = await cortex.memory.search(memorySpaceId, query, {
   minImportance: "high",
   limit: 20,
 });
@@ -592,7 +592,7 @@ const embedding = await openai.embeddings.create({
 
 ```typescript
 // Track search quality
-async function evaluateSearch(agentId: string, testCases: TestCase[]) {
+async function evaluateSearch(memorySpaceId: string, testCases: TestCase[]) {
   const results = [];
 
   for (const test of testCases) {
@@ -654,7 +654,7 @@ Cortex Cloud automatically optimizes:
 Understand why results were returned:
 
 ```typescript
-const memories = await cortex.memory.search(agentId, query, {
+const memories = await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query),
   explainResults: true, // Cloud mode only
 });
@@ -676,17 +676,17 @@ memories.forEach((m) => {
 await cortex.memory.search(agentId, query);
 
 // ⚠️ Text search only, no user scope
-await cortex.memory.search(agentId, query, {
+await cortex.memory.search(memorySpaceId, query, {
   userId: userId, // Good - scoped, but uses text search
 });
 
 // ⚠️ Semantic search but not scoped
-await cortex.memory.search(agentId, query, {
+await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query), // Good - semantic, but searches all users
 });
 
 // ✅ Full semantic search with user context
-await cortex.memory.search(agentId, query, {
+await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query), // Best: semantic search
   userId: userId, // Critical: scoped to user
 });
@@ -716,12 +716,12 @@ const memories = await cortex.memory.search(
 
 ```typescript
 // For context building
-const context = await cortex.memory.search(agentId, query, {
+const context = await cortex.memory.search(memorySpaceId, query, {
   limit: 5, // Just enough context, not overwhelming
 });
 
 // For comprehensive search
-const all = await cortex.memory.search(agentId, query, {
+const all = await cortex.memory.search(memorySpaceId, query, {
   limit: 50, // When you need more coverage
 });
 ```
@@ -730,7 +730,7 @@ const all = await cortex.memory.search(agentId, query, {
 
 ```typescript
 // Narrow search with filters (all filters work together)
-const memories = await cortex.memory.search(agentId, query, {
+const memories = await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query),
   userId, // User scope
   tags: ["high-priority"],
@@ -743,7 +743,7 @@ const memories = await cortex.memory.search(agentId, query, {
 ### 5. Handle Empty Results
 
 ```typescript
-const memories = await cortex.memory.search(agentId, query, {
+const memories = await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query),
   userId,
 });
@@ -753,7 +753,7 @@ if (memories.length === 0) {
   console.log("No specific memories found. Checking broader context...");
 
   // Try without userId filter (general knowledge)
-  let broader = await cortex.memory.search(agentId, query, {
+  let broader = await cortex.memory.search(memorySpaceId, query, {
     embedding: await embed(query),
     // No userId - search general knowledge
     limit: 5,
@@ -782,7 +782,7 @@ Build context for LLM prompts with optional ACID enrichment:
 
 ```typescript
 async function buildPromptContext(
-  agentId: string,
+  memorySpaceId: string,
   userId: string,
   userMessage: string,
   enrichWithFullContext: boolean = false,
@@ -850,7 +850,11 @@ async function buildPromptContext(
 Find specific facts:
 
 ```typescript
-async function retrieveFact(agentId: string, userId: string, question: string) {
+async function retrieveFact(
+  memorySpaceId: string,
+  userId: string,
+  question: string,
+) {
   const memories = await cortex.memory.search(agentId, question, {
     embedding: await embed(question),
     userId, // User-specific facts
@@ -878,7 +882,7 @@ async function retrieveFact(agentId: string, userId: string, question: string) {
 Find all related memories:
 
 ```typescript
-async function findRelatedMemories(agentId: string, memoryId: string) {
+async function findRelatedMemories(memorySpaceId: string, memoryId: string) {
   // Get the source memory
   const source = await cortex.memory.get(agentId, memoryId);
 
@@ -899,7 +903,7 @@ Explore what agent knows about a topic:
 
 ```typescript
 async function exploreTopicArea(
-  agentId: string,
+  memorySpaceId: string,
   userId: string | null, // null = all users
   topic: string,
 ) {
@@ -966,13 +970,13 @@ async function exploreTopicArea(
 
 ```typescript
 // 1. Increase score threshold
-const memories = await cortex.memory.search(agentId, query, {
+const memories = await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query),
   minScore: 0.75, // Raise from default 0.5
 });
 
 // 2. Add tag filters
-const memories = await cortex.memory.search(agentId, query, {
+const memories = await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query),
   tags: ["relevant-topic"], // Narrow scope
 });
@@ -994,7 +998,7 @@ const memories = await cortex.memory.search(agentId, query, {
 
 ```typescript
 // 1. Reduce search scope with filters
-const memories = await cortex.memory.search(agentId, query, {
+const memories = await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query),
   tags: ['recent'],  // Narrow to subset
   dateRange: {
@@ -1010,7 +1014,7 @@ const cacheKey = `search:${agentId}:${query}`;
 const cached = cache.get(cacheKey);
 if (cached) return cached;
 
-const memories = await cortex.memory.search(agentId, query, {...});
+const memories = await cortex.memory.search(memorySpaceId, query, {...});
 cache.set(cacheKey, memories, { ttl: 60 }); // Cache for 60 seconds
 ```
 
@@ -1036,7 +1040,7 @@ if (memories.length === 0) {
 }
 
 // 2. Lower score threshold
-const memories = await cortex.memory.search(agentId, query, {
+const memories = await cortex.memory.search(memorySpaceId, query, {
   embedding: await embed(query),
   minScore: 0.5, // Lower threshold
 });

@@ -6,12 +6,10 @@
 
 When `testMode === 'auto'` and **both** `hasLocalConfig` and `hasManagedConfig` were true:
 
-1. First condition (line 28): `testMode === "auto" && hasLocalConfig && !hasManagedConfig` 
+1. First condition (line 28): `testMode === "auto" && hasLocalConfig && !hasManagedConfig`
    - Result: **FALSE** (because `!hasManagedConfig` is false)
-   
 2. Second condition (line 35): `testMode === "auto" && hasManagedConfig`
    - Result: **TRUE** ✅ (matches and executes)
-   
 3. Third condition (line 39): `testMode === "auto" && hasLocalConfig`
    - Result: **NEVER REACHED** (dead code)
 
@@ -22,10 +20,11 @@ When `testMode === 'auto'` and **both** `hasLocalConfig` and `hasManagedConfig` 
 ### 1. Created Smart Test Runner (`scripts/test-runner.mjs`)
 
 A new orchestration script that:
+
 - Detects available Convex configurations (local and/or managed)
 - Automatically runs appropriate test suite(s) based on availability:
   - **Local only** → runs local tests
-  - **Managed only** → runs managed tests  
+  - **Managed only** → runs managed tests
   - **Both present** → runs **BOTH** test suites sequentially
 - Respects explicit `CONVEX_TEST_MODE` overrides
 - Provides clear console output showing which tests are running
@@ -34,11 +33,13 @@ A new orchestration script that:
 ### 2. Updated Package.json
 
 Changed the default `test` command from:
+
 ```json
 "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathIgnorePatterns=debug --runInBand"
 ```
 
 To:
+
 ```json
 "test": "node scripts/test-runner.mjs"
 ```
@@ -48,19 +49,22 @@ This makes `npm test` automatically use the smart dual testing behavior.
 ### 3. Simplified `tests/env.ts`
 
 Restructured the conditional logic to:
+
 - Remove all unreachable code paths
 - Handle each mode explicitly (local, managed, auto)
 - Provide clear warnings if both configs are detected in auto mode when run directly
 - Direct users to use `npm test` for proper dual testing
 
 **Key fix:** The auto mode now has clear, reachable branches for:
+
 - Local only
-- Managed only  
+- Managed only
 - Both (with warning to use test runner)
 
 ### 4. Updated Documentation (`tests/README.md`)
 
 Updated the testing guide to clearly explain:
+
 - Smart dual testing behavior of `npm test`
 - When both configs are present, both test suites run automatically
 - Relationship between `npm test` and `npm run test:both`
@@ -69,16 +73,17 @@ Updated the testing guide to clearly explain:
 
 The solution now correctly implements the dual testing strategy:
 
-| Scenario | Expected Behavior | Implementation |
-|----------|------------------|----------------|
-| Only local vars present | Run local tests | ✅ test-runner.mjs detects and runs local |
-| Only managed vars present | Run managed tests | ✅ test-runner.mjs detects and runs managed |
-| Both vars present | Run BOTH test suites | ✅ test-runner.mjs runs local then managed |
-| Explicit mode set | Run specified mode | ✅ Honors CONVEX_TEST_MODE override |
+| Scenario                  | Expected Behavior    | Implementation                              |
+| ------------------------- | -------------------- | ------------------------------------------- |
+| Only local vars present   | Run local tests      | ✅ test-runner.mjs detects and runs local   |
+| Only managed vars present | Run managed tests    | ✅ test-runner.mjs detects and runs managed |
+| Both vars present         | Run BOTH test suites | ✅ test-runner.mjs runs local then managed  |
+| Explicit mode set         | Run specified mode   | ✅ Honors CONVEX_TEST_MODE override         |
 
 ## No More Dead Code ✅
 
 All conditional branches in `tests/env.ts` are now reachable:
+
 - ✅ `testMode === "local"` - explicit local mode
 - ✅ `testMode === "managed"` - explicit managed mode
 - ✅ `testMode === "auto" && hasLocalConfig && !hasManagedConfig` - local only
@@ -88,16 +93,19 @@ All conditional branches in `tests/env.ts` are now reachable:
 ## Usage Examples
 
 ### Developer with only local setup:
+
 ```bash
 npm test  # Automatically runs local tests only
 ```
 
 ### Developer with only managed setup:
+
 ```bash
 npm test  # Automatically runs managed tests only
 ```
 
 ### Developer with both setups (most common in CI/CD):
+
 ```bash
 npm test  # Automatically runs BOTH test suites
 # Output:
@@ -109,6 +117,7 @@ npm test  # Automatically runs BOTH test suites
 ```
 
 ### Explicit mode selection (still supported):
+
 ```bash
 npm run test:local     # Force local only
 npm run test:managed   # Force managed only
@@ -125,9 +134,9 @@ npm run test:both      # Explicit both (same as npm test with both configs)
 ## Result
 
 The dual testing system now works exactly as intended:
+
 - ✅ No dead code
 - ✅ Automatic detection of available configs
 - ✅ Runs all available test suites when both are present
 - ✅ Clear, maintainable code structure
 - ✅ Comprehensive documentation
-

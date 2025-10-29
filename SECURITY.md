@@ -105,7 +105,7 @@ await cortex.memory.remember(userInput); // Could contain malicious data
 import { z } from "zod";
 
 const RememberInputSchema = z.object({
-  agentId: z.string().regex(/^agent-[\w-]+$/),
+  memorySpaceId: z.string().regex(/^agent-[\w-]+$/),
   conversationId: z.string(),
   userMessage: z.string().max(10000),
   agentResponse: z.string().max(10000),
@@ -135,7 +135,7 @@ app.post("/api/memory", requireAuth, async (req, res) => {
 
   // Store with Layer 3 remember()
   await cortex.memory.remember({
-    agentId: req.body.agentId,
+    memorySpaceId: req.body.agentId,
     conversationId: req.body.conversationId,
     userMessage: req.body.userMessage,
     agentResponse: req.body.agentResponse,

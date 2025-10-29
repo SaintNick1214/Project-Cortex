@@ -1,6 +1,6 @@
 # Agent Registry
 
-> **Last Updated**: 2025-10-25
+> **Last Updated**: 2025-10-28
 
 Optional agent registry architecture for enhanced features and analytics.
 
@@ -47,7 +47,7 @@ The agent registry is **completely optional** - Cortex works with simple string 
 ```typescript
 {
   _id: Id<"agents">,
-  agentId: string,  // Unique identifier (can be anything)
+  memorySpaceId: string,  // Unique identifier (can be anything)
 
   // Metadata
   name: string,
@@ -199,7 +199,7 @@ export const register = mutation({
 
     // Create registration
     const agentId = await ctx.db.insert("agents", {
-      agentId: args.id,
+      memorySpaceId: args.id,
       name: args.name,
       description: args.description,
       capabilities: args.capabilities || [],
@@ -224,7 +224,7 @@ export const register = mutation({
 ```typescript
 export const update = mutation({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     updates: v.any(),
   },
   handler: async (ctx, args) => {
@@ -252,7 +252,7 @@ export const update = mutation({
 ```typescript
 export const unregister = mutation({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     deleteData: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
@@ -325,7 +325,7 @@ export const storeMemory = mutation({
 
 ```typescript
 export const computeStats = mutation({
-  args: { agentId: v.string() },
+  args: { memorySpaceId: v.string() },
   handler: async (ctx, args) => {
     // Count memories
     const memories = await ctx.db
@@ -574,7 +574,7 @@ export const enforceRetention = mutation({
 ```typescript
 // Before operations, optionally verify registration
 export const store = mutation({
-  args: { agentId: v.string(), ... },
+  args: { memorySpaceId: v.string(), ... },
   handler: async (ctx, args) => {
     // Optional: Check if agent exists
     const agent = await ctx.db
@@ -595,7 +595,7 @@ export const store = mutation({
 
     // Store memory (works with or without registration)
     return await ctx.db.insert("memories", {
-      agentId: args.agentId,  // String ID works either way
+      memorySpaceId: args.agentId,  // String ID works either way
       ...
     });
   },
@@ -608,7 +608,7 @@ export const store = mutation({
 // Convex doesn't enforce foreign keys
 // This is valid even if agent not registered:
 await ctx.db.insert("memories", {
-  agentId: "unregistered-agent",  // ✅ Works!
+  memorySpaceId: "unregistered-agent",  // ✅ Works!
   content: "Test",
   ...
 });
@@ -662,7 +662,7 @@ for (const agent of ['agent-1', 'agent-2']) {
 ```typescript
 // Track usage for billing (Cloud Mode)
 {
-  agentId: "support-agent",
+  memorySpaceId: "support-agent",
   stats: {
     totalMemories: 50000,
     memoryStorageBytes: 1200000000,  // 1.2 GB
@@ -726,7 +726,7 @@ export const enforceLimit = mutation({
 // Cache agent registrations
 const agentCache = new Map<string, Agent>();
 
-async function getAgentCached(ctx: any, agentId: string) {
+async function getAgentCached(ctx: any, memorySpaceId: string) {
   if (agentCache.has(agentId)) {
     return agentCache.get(agentId);
   }

@@ -1,30 +1,38 @@
 # Mutable Store API
 
-> **Last Updated**: 2025-10-24
+> **Last Updated**: 2025-10-28
 
 Complete API reference for shared mutable data with ACID transaction guarantees.
 
 ## Overview
 
-The Mutable Store API (Layer 1c) provides methods for storing shared, mutable data across all agents. Designed for live, frequently-changing data like inventory, counters, live documentation, and shared state.
+The Mutable Store API (Layer 1c) provides methods for storing **TRULY SHARED** mutable data across ALL memory spaces. This layer has **NO memorySpace scoping** - it's globally shared just like Layer 1b (Immutable).
+
+**Critical Distinction:**
+
+- ❌ **NO memorySpaceId parameter** - This layer is shared across ALL spaces
+- ✅ Accessible from any memory space
+- ✅ Perfect for: Inventory, config, counters, live shared state
 
 **Key Characteristics:**
 
-- ✅ **Shared** - All agents can access
-- ✅ **Mutable** - Designed to be updated
+- ✅ **TRULY Shared** - ALL memory spaces can access
+- ✅ **NO Isolation** - Not scoped to memorySpace (unlike L1a, L2, L3)
+- ✅ **Mutable** - Designed to be updated in-place
 - ✅ **ACID** - Atomic transactions
-- ✅ **Current-value** - No version history
+- ✅ **Current-value** - No version history (by design)
 - ✅ **Fast** - Optimized for frequent updates
 - ✅ **Purgeable** - Can delete keys
 
 **Comparison to Other Stores:**
 
-| Feature    | Conversations (1a) | Immutable (1b) | Mutable (1c)  | Vector (2)   |
-| ---------- | ------------------ | -------------- | ------------- | ------------ |
-| Privacy    | Private            | Shared         | Shared        | Private      |
-| Versioning | N/A (append)       | Auto           | **None**      | Auto         |
-| Updates    | Append only        | New version    | **In-place**  | New version  |
-| Use Case   | Chats              | Knowledge      | **Live data** | Search index |
+| Feature    | Conversations (1a) | Immutable (1b)   | Mutable (1c)     | Vector (2)       | Facts (3)        |
+| ---------- | ------------------ | ---------------- | ---------------- | ---------------- | ---------------- |
+| Scoping    | memorySpace        | **NO scoping**   | **NO scoping**   | memorySpace      | memorySpace      |
+| Privacy    | Private to space   | **TRULY Shared** | **TRULY Shared** | Private to space | Private to space |
+| Versioning | N/A (append)       | Auto             | **None**         | Auto             | Auto             |
+| Updates    | Append only        | New version      | **In-place**     | New version      | New version      |
+| Use Case   | Chats              | KB, policies     | **Live data**    | Search index     | Extracted facts  |
 
 ---
 
@@ -1861,6 +1869,58 @@ async function restoreMutableNamespace(backupId: string) {
   }
 }
 ```
+
+---
+
+## Graph-Lite Capabilities
+
+Mutable records can participate in the graph structure via userId:
+
+**Mutable Record as Graph Node:**
+
+- Represents live/current state data
+- Can be linked to users for GDPR compliance
+
+**Edges:**
+
+- `userId` to User (optional, for user-specific data)
+- `mutableRef` from Memories (snapshots of mutable state)
+
+**Graph Pattern:**
+
+```typescript
+// User → Mutable Records (via userId)
+const userSessions = await cortex.mutable.list('user-sessions', {
+  userId: 'user-123'
+});
+
+const userPreferences = await cortex.mutable.get('user-preferences', 'user-123-prefs');
+
+// Memory → Mutable (via mutableRef - snapshot)
+await cortex.vector.store('agent-1', {
+  content: 'Config changed to value X',
+  mutableRef: {
+    namespace: 'config',
+    key: 'api-endpoint',
+    snapshotValue: 'https://api.example.com/v2',
+    snapshotAt: new Date()
+  }
+});
+
+// Graph:
+User-123
+  └──[userId]──> Mutable: user-sessions/session-abc
+  └──[userId]──> Mutable: user-cache/cache-xyz
+
+Memory-def
+  └──[mutableRef]──> Mutable: config/api-endpoint (snapshot at time T)
+```
+
+**Note:** Mutable data changes frequently, so `mutableRef` stores snapshots (value at time of reference), not live links.
+
+**GDPR:** Mutable records with userId are included in cascade deletion traversal.
+
+**Learn more:** [Graph-Lite Traversal](../07-advanced-topics/01-graph-lite-traversal.md)
 
 ---
 

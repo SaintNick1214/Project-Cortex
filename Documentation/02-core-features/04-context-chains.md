@@ -1,12 +1,14 @@
-# Context Chains
+# Context Chains: Hierarchical Graph Traversal
 
-> **Last Updated**: 2025-10-23
+> **Last Updated**: 2025-10-28
 
-Hierarchical context sharing for multi-agent coordination and knowledge propagation.
+Hierarchical context sharing for multi-agent coordination via graph-like parent-child relationships.
 
 ## Overview
 
-Context chains enable agents to share context in hierarchical workflows. When a supervisor agent delegates to specialized agents, everyone can access the complete context chain without repeatedly passing information back and forth.
+Context chains are Cortex's **hierarchical graph structure** for multi-agent workflows. Think of them as a tree graph where each node is a workflow task and edges represent parent-child delegation.
+
+When a supervisor agent delegates to specialized agents, everyone can access the complete graph chain (ancestors, siblings, descendants) without repeatedly passing information back and forth.
 
 **How Context Chains Fit in Cortex's Architecture:**
 
@@ -48,6 +50,40 @@ User: "Create a marketing campaign for Q4"
 
 Everyone has the full picture.
 
+## Graph Structure
+
+Context chains form a **directed acyclic graph (DAG)** where:
+
+**Nodes:** Context entities (workflow tasks)  
+**Edges:** Parent-child relationships (via `parentId` and `childIds`)  
+**Traversal:** Walking the graph to access ancestors, descendants, siblings
+
+```
+Root Context (Node: ctx-001, depth=0)
+  │
+  ├──[PARENT_OF]──> Child Context (Node: ctx-002, depth=1)
+  │                      │
+  │                      └──[HANDLED_BY]──> Agent: finance-agent
+  │
+  ├──[PARENT_OF]──> Child Context (Node: ctx-003, depth=1)
+  │                      │
+  │                      └──[HANDLED_BY]──> Agent: customer-agent
+  │
+  └──[PARENT_OF]──> Child Context (Node: ctx-004, depth=1)
+                         │
+                         └──[HANDLED_BY]──> Agent: crm-agent
+```
+
+**Graph Operations:**
+
+- `includeChain: true` - Traverse entire graph from any node
+- `getChildren()` - Follow edges downward (1-hop or recursive)
+- `getRoot()` - Walk edges upward to root (N-hops)
+
+**Performance:** Context hierarchies typically 1-5 levels deep, queries complete in 50-200ms using Cortex's Graph-Lite capabilities.
+
+**When to add graph DB:** If context hierarchies exceed 10 levels or need complex pattern matching, consider [Graph Database Integration](../07-advanced-topics/02-graph-database-integration.md).
+
 ## Core Concepts
 
 ### Context Structure
@@ -64,7 +100,7 @@ interface Context {
   description?: string; // Detailed description
 
   // Ownership
-  agentId: string; // Agent that created this
+  memorySpaceId: string; // Which memory space // Agent that created this
   userId?: string; // User this relates to
 
   // Hierarchy
@@ -119,7 +155,7 @@ interface ContextVersion {
 // Supervisor agent creates root context (optionally linked to conversation)
 const context = await cortex.contexts.create({
   purpose: "Process customer refund request",
-  agentId: "supervisor-agent",
+  memorySpaceId: "supervisor-agent-space",
   userId: "user-123",
 
   // Optional: Link to the conversation that triggered this workflow
@@ -161,7 +197,7 @@ if (context.conversationRef) {
 // Delegate to finance agent
 const financeContext = await cortex.contexts.create({
   purpose: "Approve and process $500 refund",
-  agentId: "finance-agent",
+  memorySpaceId: "finance-agent-space",
   userId: "user-123", // Same user as parent
   parentId: context.id, // Link to parent
 
@@ -180,7 +216,7 @@ const financeContext = await cortex.contexts.create({
 // Delegate to customer relations agent
 const customerContext = await cortex.contexts.create({
   purpose: "Send apology email and offer discount",
-  agentId: "customer-relations-agent",
+  memorySpaceId: "customer-relations-agent-space",
   userId: "user-123",
   parentId: context.id,
   conversationRef: context.conversationRef, // Same source conversation
@@ -256,7 +292,7 @@ Use universal filters to find contexts:
 ```typescript
 // Find active contexts for an agent
 const activeContexts = await cortex.contexts.search({
-  agentId: "finance-agent",
+  memorySpaceId: "finance-agent-space",
   status: "active",
 });
 
@@ -328,7 +364,7 @@ const msg = await cortex.conversations.addMessage("conv-456", {
 // Context Chain (Layer 4: Workflow coordination)
 const context = await cortex.contexts.create({
   purpose: "Process $500 refund",
-  agentId: "supervisor-agent",
+  memorySpaceId: "supervisor-agent-space",
   userId: "user-123",
   conversationRef: {
     conversationId: "conv-456",
@@ -382,7 +418,7 @@ const userMsg = await cortex.conversations.addMessage("conv-789", {
 // Create root context linked to conversation
 const rootContext = await cortex.contexts.create({
   purpose: "Build quarterly financial report",
-  agentId: "ceo-agent",
+  memorySpaceId: "ceo-agent-space",
   userId: "user-cfo",
   conversationRef: {
     conversationId: "conv-789",
@@ -400,17 +436,17 @@ const rootContext = await cortex.contexts.create({
 const contexts = await Promise.all([
   cortex.contexts.create({
     purpose: "Gather revenue data",
-    agentId: "finance-agent",
+    memorySpaceId: "finance-agent-space",
     parentId: rootContext.id,
   }),
   cortex.contexts.create({
     purpose: "Compile expense reports",
-    agentId: "accounting-agent",
+    memorySpaceId: "accounting-agent-space",
     parentId: rootContext.id,
   }),
   cortex.contexts.create({
     purpose: "Create visualizations",
-    agentId: "analytics-agent",
+    memorySpaceId: "analytics-agent-space",
     parentId: rootContext.id,
   }),
 ]);
@@ -430,14 +466,14 @@ Multi-step approvals with context:
 // Request created
 const request = await cortex.contexts.create({
   purpose: "Approve $10K budget increase",
-  agentId: "requestor-agent",
+  memorySpaceId: "requestor-agent-space",
   data: { amount: 10000, department: "engineering" },
 });
 
 // Manager reviews (with full context)
 const managerReview = await cortex.contexts.create({
   purpose: "Manager review of budget request",
-  agentId: "manager-agent",
+  memorySpaceId: "manager-agent-space",
   parentId: request.id,
   data: { approved: true, notes: "Looks reasonable" },
 });
@@ -445,7 +481,7 @@ const managerReview = await cortex.contexts.create({
 // Finance approves (sees full chain)
 const financeApproval = await cortex.contexts.create({
   purpose: "Finance approval",
-  agentId: "finance-agent",
+  memorySpaceId: "finance-agent-space",
   parentId: managerReview.id,
   data: { approved: true, allocated: true },
 });
@@ -468,7 +504,7 @@ Share knowledge within a context:
 // Create shared context
 const projectContext = await cortex.contexts.create({
   purpose: 'Build new feature X',
-  agentId: 'pm-agent',
+  memorySpaceId: 'pm-agent-space',
   userId: 'pm-user-id',
   data: {
     importance: 85,  // High priority project
@@ -503,7 +539,7 @@ const knowledge = await cortex.contexts.getKnowledge(projectContext.id);
 ```typescript
 // The same filters work for:
 const filters = {
-  agentId: "finance-agent",
+  memorySpaceId: "finance-agent-space",
   status: "active",
   userId: "user-123",
   data: { importance: { $gte: 80 } },
@@ -560,7 +596,7 @@ const refundContexts = await cortex.contexts.search({
 
 // Find contexts by agent and importance
 const agentContexts = await cortex.contexts.search({
-  agentId: "finance-agent",
+  memorySpaceId: "finance-agent-space",
   status: "active",
   data: { importance: { $gte: 70 } },
 });
@@ -593,9 +629,9 @@ const REFUND_CONTEXT_TEMPLATE = {
   purpose: "Process customer refund",
   requiredData: ["amount", "reason", "customerId"],
   childrenTemplates: [
-    { purpose: "Approve refund", agentId: "finance-agent" },
-    { purpose: "Issue refund", agentId: "billing-agent" },
-    { purpose: "Notify customer", agentId: "customer-agent" },
+    { purpose: "Approve refund", memorySpaceId: "finance-agent-space" },
+    { purpose: "Issue refund", memorySpaceId: "billing-agent-space" },
+    { purpose: "Notify customer", memorySpaceId: "customer-agent-space" },
   ],
 };
 
@@ -603,7 +639,7 @@ const REFUND_CONTEXT_TEMPLATE = {
 async function createRefundWorkflow(data: any) {
   const root = await cortex.contexts.create({
     purpose: REFUND_CONTEXT_TEMPLATE.purpose,
-    agentId: "supervisor-agent",
+    memorySpaceId: "supervisor-agent-space",
     data,
   });
 
@@ -693,7 +729,7 @@ const stats = {
 
 // Count contexts per agent
 const agentContextCount = await cortex.contexts.count({
-  agentId: "finance-agent",
+  memorySpaceId: "finance-agent-space",
 });
 
 // Find bottlenecks (blocked contexts)
@@ -741,7 +777,7 @@ await cortex.contexts.create({
 // Include context-specific information
 const context = await cortex.contexts.create({
   purpose: "Approve expense report",
-  agentId: "manager-agent",
+  memorySpaceId: "manager-agent-space",
   userId: "emp-123", // Employee who submitted
   conversationRef: {
     conversationId: "conv-expense-123",

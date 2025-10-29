@@ -1,6 +1,6 @@
 # User Operations API
 
-> **Last Updated**: 2025-10-24
+> **Last Updated**: 2025-10-28
 
 Complete API reference for user profile management.
 
@@ -125,15 +125,15 @@ Convenience APIs:
 
 **User Profiles vs Other Stores:**
 
-| Feature          | cortex.users.\*         | cortex.immutable.\*         | cortex.mutable.\*          | cortex.vector.\*              |
-| ---------------- | ----------------------- | --------------------------- | -------------------------- | ----------------------------- |
-| **Storage**      | immutable (type='user') | immutable                   | mutable                    | vector index                  |
-| **Shared**       | ✅ All agents           | ✅ All agents               | ✅ All agents              | ❌ Per-agent                  |
-| **Versioning**   | ✅ Auto (unlimited)     | ✅ Auto (20 versions)       | ❌ None                    | ✅ Auto (10 versions)         |
-| **userId**       | N/A (IS the user)       | ✅ Optional                 | ✅ Optional                | ✅ Optional                   |
-| **GDPR Cascade** | ✅ **ALL stores**       | ❌ No                       | ❌ No                      | ❌ No                         |
-| **API**          | `users.get(id)`         | `immutable.get('user', id)` | `mutable.get('users', id)` | `vector.search(agentId, ...)` |
-| **Use Case**     | User profiles           | User feedback, submissions  | User sessions, cache       | Agent memories                |
+| Feature          | cortex.users.\*         | cortex.immutable.\*         | cortex.mutable.\*          | cortex.vector.\*                    |
+| ---------------- | ----------------------- | --------------------------- | -------------------------- | ----------------------------------- |
+| **Storage**      | immutable (type='user') | immutable                   | mutable                    | vector index                        |
+| **Shared**       | ✅ All agents           | ✅ All agents               | ✅ All agents              | ❌ Per-agent                        |
+| **Versioning**   | ✅ Auto (unlimited)     | ✅ Auto (20 versions)       | ❌ None                    | ✅ Auto (10 versions)               |
+| **userId**       | N/A (IS the user)       | ✅ Optional                 | ✅ Optional                | ✅ Optional                         |
+| **GDPR Cascade** | ✅ **ALL stores**       | ❌ No                       | ❌ No                      | ❌ No                               |
+| **API**          | `users.get(id)`         | `immutable.get('user', id)` | `mutable.get('users', id)` | `vector.search(memorySpaceId, ...)` |
+| **Use Case**     | User profiles           | User feedback, submissions  | User sessions, cache       | Memory space memories               |
 
 **Key Differences:**
 
@@ -1369,7 +1369,7 @@ async function getUserMemoriesAcrossAgents(userId: string) {
 
     if (memories.length > 0) {
       allMemories.push({
-        agentId: agent.id,
+        memorySpaceId: agent.id, // Note: Old agent registry pattern
         agentName: agent.name,
         memories: memories,
       });
@@ -1954,6 +1954,62 @@ async function handleGDPRDeletion(userId: string) {
   return result;
 }
 ```
+
+---
+
+## Graph-Lite Capabilities
+
+Users are universal graph nodes - everything in Cortex can link to a user:
+
+**User as Graph Hub:**
+
+- Central node connecting all user-related data across the system
+
+**Incoming Edges (What Links To Users):**
+
+- `userId` from Conversations (user's chat history)
+- `userId` from Contexts (user's workflows)
+- `userId` from Memories (user-specific knowledge across all agents)
+- `userId` from Facts (facts about the user)
+- `userId` from Immutable records (user feedback, submissions)
+- `userId` from Mutable records (user sessions, preferences)
+
+**Graph Query - Complete User Data:**
+
+```typescript
+// GDPR export = complete graph traversal from user node
+async function getUserDataGraph(userId: string) {
+  return {
+    profile: await cortex.users.get(userId),
+    conversations: await cortex.conversations.list({ userId }),
+    contexts: await cortex.contexts.list({ userId }),
+    immutableRecords: await cortex.immutable.list({ userId }),
+    mutableRecords: await cortex.mutable.list("*", { userId }),
+    memories: await getAllMemoriesForUser(userId), // Across all agents
+    facts: await cortex.immutable.list({ type: "fact", userId }),
+  };
+}
+
+// Result: Complete graph of all user data across all Cortex layers
+```
+
+**GDPR Cascade as Graph Operation:**
+
+The `delete({ cascade: true })` operation traverses the entire graph from the user node and deletes all connected entities with userId:
+
+```
+User-123 (delete this node)
+  ↓ cascade follows all userId edges
+  ├──> Conversation-1, Conversation-2, ... (delete)
+  ├──> Context-1, Context-2, ... (delete)
+  ├──> Memory-1, Memory-2, ... (delete across ALL agents)
+  ├──> Fact-1, Fact-2, ... (delete)
+  └──> All other entities with userId='user-123' (delete)
+```
+
+**Performance:** GDPR cascade for typical user (100-1000 connected entities) completes in 1-3 seconds (Cloud Mode).
+
+**Learn more:** [Graph-Lite Traversal](../07-advanced-topics/01-graph-lite-traversal.md)
 
 ---
 

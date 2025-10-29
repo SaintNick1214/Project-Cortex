@@ -60,7 +60,9 @@ if (testMode === "local") {
     );
   } else if (hasManagedConfig && !hasLocalConfig) {
     // Only managed config present
-    console.log(`\n🧪 Testing against MANAGED Convex: ${process.env.CONVEX_URL}`);
+    console.log(
+      `\n🧪 Testing against MANAGED Convex: ${process.env.CONVEX_URL}`,
+    );
     console.log(`   Note: Vector search fully supported in managed mode\n`);
   } else if (hasLocalConfig && hasManagedConfig) {
     // Both configs present - should not happen if using test-runner.mjs
@@ -69,7 +71,9 @@ if (testMode === "local") {
       process.env.CONVEX_URL = process.env.LOCAL_CONVEX_URL;
     }
     console.log(`\n⚠️  Both local and managed configs detected in auto mode`);
-    console.log(`   Using LOCAL by default. Use 'npm test' to run both suites.`);
+    console.log(
+      `   Using LOCAL by default. Use 'npm test' to run both suites.`,
+    );
     console.log(`   Or set CONVEX_TEST_MODE=local|managed explicitly.\n`);
   }
 }

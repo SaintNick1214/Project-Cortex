@@ -1,6 +1,6 @@
 # Conversation History
 
-> **Last Updated**: 2025-10-23
+> **Last Updated**: 2025-10-28
 
 Persistent message storage and conversation replay for contextual agent interactions.
 
@@ -96,7 +96,7 @@ console.log(msg1.id); // 'msg-001' - use this in conversationRef!
 const msg2 = await cortex.conversations.addMessage('conv-123', {
   role: 'agent',
   content: 'The weather is sunny and 72°F.',
-  agentId: 'agent-1',
+  memorySpaceId: 'agent-1',
   timestamp: new Date()
 });
 
@@ -122,7 +122,7 @@ Cortex stores TWO types of conversations in ACID:
   type: 'user-agent',
   participants: {
     userId: 'user-123',
-    agentId: 'agent-1'
+    memorySpaceId: 'agent-1'
   },
   messages: [
     { id: 'msg-001', role: 'user', text: '...', timestamp: T1 },
@@ -180,7 +180,7 @@ console.log({
   id: conversation.id,
   type: conversation.type, // 'user-agent'
   userId: conversation.participants.userId,
-  agentId: conversation.participants.agentId,
+  memorySpaceId: conversation.participants.agentId,
   messageCount: conversation.messageCount,
   createdAt: conversation.createdAt,
   lastMessageAt: conversation.lastMessageAt,
@@ -246,7 +246,7 @@ const conversation = await cortex.conversations.create({
   type: "user-agent", // Default
   participants: {
     userId: "user-123",
-    agentId: "agent-1",
+    memorySpaceId: "agent-1",
   },
   metadata: {
     channel: "web",
@@ -382,7 +382,7 @@ async function buildRecentContext(conversationId: string) {
 
 ```typescript
 async function buildRelevantContext(
-  agentId: string,
+  memorySpaceId: string,
   userId: string,
   currentMessage: string,
   conversationId: string,
@@ -554,7 +554,7 @@ const thread = await cortex.conversations.getThread("conv-123", "thread-456");
 async function handleReturningUser(
   userId: string,
   newMessage: string,
-  agentId: string,
+  memorySpaceId: string,
 ) {
   // Find user's recent user-agent conversations
   const conversations = await cortex.conversations.list({

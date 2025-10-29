@@ -160,7 +160,9 @@ describe("Mutable Store API (Layer 1c)", () => {
       const result = await cortex.mutable.set("config", "app-settings", config);
 
       expect(result.value).toEqual(config);
-      expect((result.value as any).api.endpoint).toBe("https://api.example.com");
+      expect((result.value as any).api.endpoint).toBe(
+        "https://api.example.com",
+      );
     });
 
     it("stores with userId for GDPR compliance", async () => {
