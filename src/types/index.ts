@@ -13,18 +13,20 @@ export interface Message {
   role: "user" | "agent" | "system";
   content: string;
   timestamp: number;
-  agentId?: string;
+  participantId?: string; // Hive Mode: which participant sent this
   metadata?: Record<string, unknown>;
 }
 
 export interface Conversation {
   _id: string;
   conversationId: string;
+  memorySpaceId: string; // NEW: Memory space isolation
+  participantId?: string; // NEW: Hive Mode tracking
   type: ConversationType;
   participants: {
     userId?: string;
-    agentId?: string;
-    agentIds?: string[];
+    participantId?: string; // Hive Mode
+    memorySpaceIds?: string[]; // Collaboration Mode (agent-agent)
   };
   messages: Message[];
   messageCount: number;
@@ -35,11 +37,13 @@ export interface Conversation {
 
 export interface CreateConversationInput {
   conversationId?: string; // Auto-generated if not provided
+  memorySpaceId: string; // NEW: Required
+  participantId?: string; // NEW: Hive Mode
   type: ConversationType;
   participants: {
     userId?: string;
-    agentId?: string;
-    agentIds?: string[];
+    participantId?: string;
+    memorySpaceIds?: string[];
   };
   metadata?: Record<string, unknown>;
 }
@@ -50,7 +54,7 @@ export interface AddMessageInput {
     id?: string; // Auto-generated if not provided
     role: "user" | "agent" | "system";
     content: string;
-    agentId?: string;
+    participantId?: string; // Updated for Hive Mode
     metadata?: Record<string, unknown>;
   };
 }
@@ -58,14 +62,14 @@ export interface AddMessageInput {
 export interface ListConversationsFilter {
   type?: ConversationType;
   userId?: string;
-  agentId?: string;
+  memorySpaceId?: string; // Updated
   limit?: number;
 }
 
 export interface CountConversationsFilter {
   type?: ConversationType;
   userId?: string;
-  agentId?: string;
+  memorySpaceId?: string; // Updated
 }
 
 export interface GetHistoryOptions {
@@ -79,7 +83,7 @@ export interface SearchConversationsInput {
   filters?: {
     type?: ConversationType;
     userId?: string;
-    agentId?: string;
+    memorySpaceId?: string; // Updated
     dateRange?: {
       start?: number;
       end?: number;
@@ -98,7 +102,7 @@ export interface ConversationSearchResult {
 export interface ExportConversationsOptions {
   filters?: {
     userId?: string;
-    agentId?: string;
+    memorySpaceId?: string; // Updated
     conversationIds?: string[];
     type?: ConversationType;
     dateRange?: {
@@ -279,7 +283,8 @@ export interface MemoryVersion {
 export interface MemoryEntry {
   _id: string;
   memoryId: string;
-  agentId: string;
+  memorySpaceId: string; // Updated
+  participantId?: string; // NEW: Hive Mode
   userId?: string;
   content: string;
   contentType: ContentType;
@@ -329,15 +334,17 @@ export interface SearchMemoriesOptions {
 }
 
 export interface ListMemoriesFilter {
-  agentId: string;
+  memorySpaceId: string; // Updated
   userId?: string;
+  participantId?: string; // NEW: Filter by participant (Hive Mode)
   sourceType?: SourceType;
   limit?: number;
 }
 
 export interface CountMemoriesFilter {
-  agentId: string;
+  memorySpaceId: string; // Updated
   userId?: string;
+  participantId?: string; // NEW: Filter by participant (Hive Mode)
   sourceType?: SourceType;
 }
 
@@ -346,7 +353,8 @@ export interface CountMemoriesFilter {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 export interface RememberParams {
-  agentId: string;
+  memorySpaceId: string; // Updated
+  participantId?: string; // NEW: Hive Mode tracking
   conversationId: string;
   userMessage: string;
   agentResponse: string;
@@ -408,3 +416,133 @@ export interface SearchMemoryOptions extends SearchMemoriesOptions {
 export type EnrichedSearchResult = EnrichedMemory & {
   score?: number;
 };
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Layer 3: Facts Store (NEW)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export interface FactRecord {
+  _id: string;
+  factId: string;
+  memorySpaceId: string;
+  participantId?: string;
+  fact: string;
+  category?: string;
+  confidence?: number;
+  entities?: string[];
+  relations?: Array<{
+    subject: string;
+    predicate: string;
+    object: string;
+    confidence?: number;
+  }>;
+  conversationRef?: {
+    conversationId: string;
+    messageIds: string[];
+  };
+  userId?: string;
+  metadata: {
+    tags: string[];
+    importance: number;
+    extractedBy?: string;
+    extractedAt?: number;
+  };
+  version: number;
+  previousVersions: Array<{
+    version: number;
+    fact: string;
+    timestamp: number;
+    metadata?: Record<string, unknown>;
+  }>;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface StoreFactParams {
+  memorySpaceId: string;
+  participantId?: string;
+  fact: string;
+  category?: string;
+  confidence?: number;
+  entities?: string[];
+  relations?: Array<{
+    subject: string;
+    predicate: string;
+    object: string;
+    confidence?: number;
+  }>;
+  conversationRef?: {
+    conversationId: string;
+    messageIds: string[];
+  };
+  userId?: string;
+  metadata?: {
+    tags?: string[];
+    importance?: number;
+    extractedBy?: string;
+  };
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Memory Spaces Registry (NEW)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export interface MemorySpace {
+  _id: string;
+  memorySpaceId: string;
+  name?: string;
+  type: "personal" | "team" | "project" | "custom";
+  participants: Array<{
+    id: string;
+    type: string;
+    joinedAt: number;
+  }>;
+  metadata: Record<string, unknown>;
+  status: "active" | "archived";
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface RegisterMemorySpaceParams {
+  memorySpaceId: string;
+  name?: string;
+  type: "personal" | "team" | "project" | "custom";
+  participants?: Array<{
+    id: string;
+    type: string;
+  }>;
+  metadata?: Record<string, unknown>;
+}
+
+export interface MemorySpaceStats {
+  memorySpaceId: string;
+  totalMemories: number;
+  totalConversations: number;
+  totalFacts: number;
+  totalMessages: number;
+  storage: {
+    conversationsBytes: number;
+    memoriesBytes: number;
+    factsBytes: number;
+    totalBytes: number;
+  };
+  avgSearchTime?: string;
+  topTags: string[];
+  importanceBreakdown: {
+    critical: number;
+    high: number;
+    medium: number;
+    low: number;
+    trivial: number;
+  };
+  participants?: Array<{
+    participantId: string;
+    memoriesStored: number;
+    conversationsStored: number;
+    factsExtracted: number;
+    firstActive: number;
+    lastActive: number;
+    avgImportance: number;
+    topTags: string[];
+  }>;
+}

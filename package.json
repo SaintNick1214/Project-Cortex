@@ -49,6 +49,7 @@
     "prepack": "npm run build",
     "release": "pwsh -File scripts/release.ps1",
     "dev": "convex dev",
+    "dev:local": "node scripts/dev-local.mjs",
     "predev": "convex dev --until-success && convex dashboard",
     "logs": "convex logs",
     "lint": "tsc --project tsconfig.lint.json --noEmit && eslint . --report-unused-disable-directives",

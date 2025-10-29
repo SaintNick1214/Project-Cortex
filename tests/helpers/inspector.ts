@@ -52,8 +52,8 @@ export class StorageInspector {
       console.log(
         `      Content: ${msg.content.substring(0, 60)}${msg.content.length > 60 ? "..." : ""}`,
       );
-      if (msg.agentId) {
-        console.log(`      Agent: ${msg.agentId}`);
+      if (msg.participantId) {
+        console.log(`      Participant: ${msg.participantId}`);
       }
       if (msg.metadata) {
         console.log(`      Metadata: ${JSON.stringify(msg.metadata)}`);
