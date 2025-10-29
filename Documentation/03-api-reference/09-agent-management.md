@@ -1,26 +1,41 @@
 # Agent Management API
 
-> **Last Updated**: 2025-10-24
+> **Last Updated**: 2025-10-28
 
-Complete API reference for agent management operations.
+> ⚠️ **IMPORTANT:** The Agent Management API is being superseded by [Memory Space Operations](./13-memory-space-operations.md). While agent-based terminology remains supported for backwards compatibility, new applications should use memory spaces.
+>
+> **Migration Path:**
+>
+> - `agentId` → `memorySpaceId` (fundamental change)
+> - `cortex.agents.*` → `cortex.memorySpaces.*` (new API)
+> - See [Memory Spaces Guide](../02-core-features/01-memory-spaces.md) for details
+
+Complete API reference for agent management operations (legacy model).
 
 ## Overview
 
-The Agent Management API provides methods for registering, configuring, and querying agents. Cortex uses a **hybrid approach** - agents work with simple string IDs out of the box, with optional registration for enhanced features.
+The Agent Management API provides methods for registering, configuring, and querying agents in the legacy agent-centric model.
+
+**⚠️ New Architecture:** Cortex now uses **Memory Spaces** as the fundamental isolation boundary, not agents. Multiple agents/tools can share one memory space (Hive Mode), or operate in separate spaces (Collaboration Mode).
+
+**Hybrid Approach (Legacy Model):**
 
 **Key Concept:**
 
 - **Simple Mode**: Just use string IDs (`'agent-1'`, `'support-agent'`)
 - **Registry Mode**: Optionally register agents for analytics, discovery, and configuration
 
-**Relationship to Three-Namespace Architecture:**
+**Relationship to Four-Layer Architecture:**
 
-- Agents work across all three layers:
-  - `cortex.conversations.*` (Layer 1) - Agents participate in conversations
-  - `cortex.vector.*` (Layer 2) - Agents own Vector memories
-  - `cortex.memory.*` (Layer 3) - Agents use convenience API
-- Agent registry (`cortex.agents.*`) is metadata only - doesn't affect storage layers
-- Registration enhances analytics but isn't required for functionality
+- **Legacy:** Agents were used across all layers
+- **New Model:** Memory Spaces replace agents as isolation boundary
+  - Layer 1a: Conversations (memorySpace-scoped)
+  - Layer 2: Vector memories (memorySpace-scoped)
+  - Layer 3: Facts (memorySpace-scoped)
+  - Layer 4: Convenience API (memorySpace-scoped)
+- **Migration:** Where you used `agentId`, now use `memorySpaceId`
+- **Hive Mode:** Multiple agents can share one memorySpace
+- Agent registry is now optional metadata (analytics only)
 
 ---
 
@@ -1001,6 +1016,54 @@ const analysis = {
 
 console.log("Fleet analysis:", analysis);
 ```
+
+---
+
+## Graph-Lite Capabilities
+
+Agents are graph nodes representing AI assistants or human operators:
+
+**Agent as Graph Node:**
+
+- Owns memories (via agentId)
+- Handles contexts (via agentId)
+- Participates in A2A communication (via fromAgent/toAgent)
+
+**Edges:**
+
+- `agentId` from Memories (agent → memories, 1-to-many)
+- `agentId` from Contexts (agent → contexts, 1-to-many)
+- A2A messages create agent-to-agent edges (SENT_TO/RECEIVED_FROM)
+
+**Graph Queries:**
+
+```typescript
+// Agent → Memories
+const agentMemories = await cortex.memory.search('agent-1', '*');
+
+// Agent → Contexts
+const agentContexts = await cortex.contexts.search({ agentId: 'agent-1' });
+
+// Agent → Agent (collaboration graph via A2A)
+const collaborations = await cortex.memory.search('agent-1', '*', {
+  source: { type: 'a2a' },
+  metadata: { direction: 'outbound' }
+});
+
+const partners = collaborations.map(m => m.metadata.toAgent);
+
+// Build agent network
+{
+  agent: 'agent-1',
+  memories: 1543,
+  activeContexts: 12,
+  collaborators: ['agent-2', 'agent-3', 'agent-5']
+}
+```
+
+**Performance:** Agent-scoped queries are highly optimized (agentId is primary index). Typical queries: 10-30ms.
+
+**Learn more:** [Graph-Lite Traversal](../07-advanced-topics/01-graph-lite-traversal.md)
 
 ---
 

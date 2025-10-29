@@ -1,6 +1,6 @@
 # Performance
 
-> **Last Updated**: 2025-10-25
+> **Last Updated**: 2025-10-28
 
 Optimization techniques, scaling strategies, and performance characteristics of Cortex on Convex.
 
@@ -124,7 +124,7 @@ const results = await ctx.db
 ```typescript
 export const listPaginated = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     cursor: v.optional(v.number()), // Timestamp cursor
     limit: v.number(),
   },
@@ -177,7 +177,7 @@ do {
 // Simpler but slower for large offsets
 export const listOffset = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     offset: v.number(),
     limit: v.number(),
   },
@@ -282,14 +282,14 @@ for (const item of items) {
 
 // ✅ Fast: Batch mutation
 export const storeBatch = mutation({
-  args: { agentId: v.string(), items: v.array(v.any()) },
+  args: { memorySpaceId: v.string(), items: v.array(v.any()) },
   handler: async (ctx, args) => {
     const ids = [];
 
     // All inserts in single transaction
     for (const item of args.items) {
       const id = await ctx.db.insert("memories", {
-        agentId: args.agentId,
+        memorySpaceId: args.agentId,
         ...item,
         version: 1,
         previousVersions: [],
@@ -319,14 +319,14 @@ await cortex.memory.storeBatch("agent-1", items);
 ```typescript
 // ❌ Sequential: Slow
 const memories = await cortex.memory.search("agent-1", query);
-const contexts = await cortex.contexts.list({ agentId: "agent-1" });
+const contexts = await cortex.contexts.list({ memorySpaceId: "agent-1" });
 const user = await cortex.users.get("user-123");
 // 3× latency
 
 // ✅ Parallel: Fast
 const [memories, contexts, user] = await Promise.all([
   cortex.memory.search("agent-1", query),
-  cortex.contexts.list({ agentId: "agent-1" }),
+  cortex.contexts.list({ memorySpaceId: "agent-1" }),
   cortex.users.get("user-123"),
 ]);
 // 1× latency ✅
@@ -574,7 +574,7 @@ export const search = query({
     // Log slow queries
     if (latency > 100) {
       console.warn(`Slow search: ${latency}ms`, {
-        agentId: args.agentId,
+        memorySpaceId: args.agentId,
         resultCount: results.length,
       });
     }
@@ -589,7 +589,7 @@ export const search = query({
 ```typescript
 // Track storage growth
 export const getStorageStats = query({
-  args: { agentId: v.string() },
+  args: { memorySpaceId: v.string() },
   handler: async (ctx, args) => {
     const memories = await ctx.db
       .query("memories")

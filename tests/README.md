@@ -30,6 +30,7 @@ npm test
 ```
 
 **Smart Dual Testing Behavior:**
+
 - If **only local** config present → runs local tests
 - If **only managed** config present → runs managed tests
 - If **both configs** present → runs **BOTH** test suites sequentially (local then managed)

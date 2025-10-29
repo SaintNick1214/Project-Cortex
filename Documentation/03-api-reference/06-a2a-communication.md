@@ -1,6 +1,6 @@
 # A2A Communication API
 
-> **Last Updated**: 2025-10-24
+> **Last Updated**: 2025-10-28
 
 Complete API reference for agent-to-agent communication helpers.
 
@@ -50,7 +50,7 @@ const conversationId = await getOrCreateA2AConversation(
 
 // Store in sender's memory (ACID + Vector)
 await cortex.memory.remember({
-  agentId: "finance-agent",
+  memorySpaceId: "finance-agent-space",
   conversationId,
   userMessage: "What is the Q4 budget?",
   agentResponse: "[Sent to hr-agent]",
@@ -60,7 +60,7 @@ await cortex.memory.remember({
 
 // Store in receiver's memory (ACID + Vector)
 await cortex.memory.remember({
-  agentId: "hr-agent",
+  memorySpaceId: "hr-agent-space",
   conversationId,
   userMessage: "[From finance-agent]",
   agentResponse: "What is the Q4 budget?",
@@ -223,9 +223,9 @@ const cortex = new Cortex({
 });
 
 // 3. YOUR agent execution + subscription logic
-async function runAgent(agentId: string) {
-  // Subscribe to agent's inbox channel
-  redis.subscribe(`agent:${agentId}:inbox`, (err) => {
+async function runAgent(memorySpaceId: string) {
+  // Subscribe to memory space's inbox channel
+  redis.subscribe(`memoryspace:${memorySpaceId}:inbox`, (err) => {
     if (err) throw err;
   });
 
@@ -235,14 +235,17 @@ async function runAgent(agentId: string) {
 
     if (notification.type === "a2a-request") {
       // 1. Fetch from Cortex storage
-      const request = await cortex.memory.get(agentId, notification.memoryId);
+      const request = await cortex.memory.get(
+        memorySpaceId,
+        notification.memoryId,
+      );
 
       // 2. Process with your agent logic
       const answer = await yourAgentLogic(request.content);
 
       // 3. Store response in Cortex
       await cortex.a2a.send({
-        from: agentId,
+        from: memorySpaceId,
         to: notification.from,
         message: answer,
         metadata: {
@@ -468,7 +471,7 @@ await cortex.users.delete("user-123", { cascade: true });
 // A2A as part of larger workflow
 const context = await cortex.contexts.create({
   purpose: "Process refund for order #789",
-  agentId: "supervisor-agent",
+  memorySpaceId: "supervisor-agent-space",
   userId: "user-123",
 });
 
@@ -636,8 +639,8 @@ const response = await cortex.a2a.request({
 
 ```typescript
 // If you need to manually check for requests (batch processing)
-async function handleIncomingRequests(agentId: string) {
-  const requests = await cortex.memory.search(agentId, "*", {
+async function handleIncomingRequests(memorySpaceId: string) {
+  const requests = await cortex.memory.search(memorySpaceId, "*", {
     source: { type: "a2a" },
     metadata: {
       messageType: "request",
@@ -661,7 +664,7 @@ async function handleIncomingRequests(agentId: string) {
       },
     });
 
-    await cortex.memory.update(agentId, request.id, {
+    await cortex.memory.update(memorySpaceId, request.id, {
       metadata: { responded: true, respondedAt: new Date() },
     });
   }
@@ -1051,7 +1054,7 @@ console.log(`Sent: ${sentCount}, Received: ${receivedCount}`);
 // Create workflow context
 const context = await cortex.contexts.create({
   purpose: "Process refund request",
-  agentId: "supervisor-agent",
+  memorySpaceId: "supervisor-agent-space",
   userId: "user-123",
 });
 
@@ -1088,7 +1091,7 @@ const userMsg = await cortex.conversations.addMessage("conv-456", {
 // Create context linked to conversation
 const context = await cortex.contexts.create({
   purpose: "Handle user refund request",
-  agentId: "support-agent",
+  memorySpaceId: "support-agent-space",
   userId: "user-123",
   conversationRef: {
     conversationId: "conv-456",
@@ -1150,7 +1153,7 @@ const userMsg = await cortex.conversations.addMessage("conv-456", {
 // 2. Workflow context (linked to conversation)
 const context = await cortex.contexts.create({
   purpose: "Process refund",
-  agentId: "supervisor-agent",
+  memorySpaceId: "supervisor-agent-space",
   userId: "user-123",
   conversationRef: {
     conversationId: "conv-456",
@@ -1189,11 +1192,14 @@ const userConvo = await cortex.conversations.get(
 
 ```typescript
 // Analyze communication patterns
-async function analyzeA2ACommunication(agentId: string, period: number = 30) {
+async function analyzeA2ACommunication(
+  memorySpaceId: string,
+  period: number = 30,
+) {
   const since = new Date(Date.now() - period * 24 * 60 * 60 * 1000);
 
   // All A2A in period
-  const allA2A = await cortex.memory.search(agentId, "*", {
+  const allA2A = await cortex.memory.search(memorySpaceId, "*", {
     source: { type: "a2a" },
     createdAfter: since,
   });
@@ -1272,7 +1278,7 @@ When you use A2A helpers, messages are stored as standard Vector memories with s
 ```typescript
 // Sender's memory
 interface A2ASenderMemory extends MemoryEntry {
-  agentId: string; // Sender
+  memorySpaceId: string; // Sender's memory space
   content: string; // 'Sent to {recipient}: {message}'
 
   source: {
@@ -1419,7 +1425,7 @@ const approvals = await cortex.memory.search("agent-1", "*", {
 // Always link A2A to context when part of workflow
 const context = await cortex.contexts.create({
   purpose: "Process refund",
-  agentId: "supervisor-agent",
+  memorySpaceId: "supervisor-agent-space",
 });
 
 await cortex.a2a.send({
@@ -1523,6 +1529,78 @@ async function askWithFallback(from: string, to: string, message: string) {
 - Daily/weekly A2A summaries per agent
 - Topic extraction and clustering
 - Action item detection
+
+---
+
+## Graph-Lite Capabilities
+
+A2A communication creates an **agent collaboration graph**:
+
+**Graph Structure:**
+
+- Nodes: Agents
+- Edges: Messages (with properties: direction, importance, timestamp)
+
+**A2A as Directed Graph:**
+
+```
+finance-agent
+  ├──[SENT_TO {importance: 85}]──> hr-agent
+  ├──[SENT_TO {importance: 90}]──> legal-agent
+  ├──[RECEIVED_FROM]<──────────── ceo-agent
+  └──[SENT_TO]────────────────────> ops-agent
+```
+
+**Graph Queries via Memory API:**
+
+```typescript
+// 1-hop: Direct collaborators
+const sent = await cortex.memory.search('finance-agent', '*', {
+  source: { type: 'a2a' },
+  metadata: { direction: 'outbound' }
+});
+
+const directCollaborators = new Set(sent.map(m => m.metadata.toAgent));
+
+// 2-hop: Collaborator's collaborators
+const secondDegree = new Set();
+for (const agent of directCollaborators) {
+  const their Connections = await cortex.memory.search(agent, '*', {
+    source: { type: 'a2a' },
+    metadata: { direction: 'outbound' }
+  });
+
+  theirConnections.forEach(m => {
+    if (m.metadata.toAgent !== 'finance-agent') {
+      secondDegree.add(m.metadata.toAgent);
+    }
+  });
+}
+
+// Build weighted graph (edge weights = message count + importance)
+const edges = new Map();
+sent.forEach(m => {
+  const partner = m.metadata.toAgent;
+  const current = edges.get(partner) || { count: 0, avgImportance: 0 };
+
+  edges.set(partner, {
+    count: current.count + 1,
+    avgImportance: (current.avgImportance * current.count + m.metadata.importance) / (current.count + 1)
+  });
+});
+```
+
+**Performance:**
+
+- 1-hop (direct collaborators): 20-50ms
+- 2-hop (network expansion): 100-200ms
+- 3-hop: 200-400ms (consider graph DB for frequent deep queries)
+
+**Network Analysis:**
+
+For advanced graph analytics (community detection, centrality, influence metrics), consider integrating a graph database:
+
+**Learn more:** [Graph Database Integration](../07-advanced-topics/02-graph-database-integration.md)
 
 ---
 

@@ -1,6 +1,6 @@
 # Vector Embeddings
 
-> **Last Updated**: 2025-10-25
+> **Last Updated**: 2025-10-28
 
 Embedding strategy, dimension choices, and integration with Convex vector search.
 
@@ -257,7 +257,7 @@ const results = await cortex.memory.search("agent-1", "user preferences", {
 ```typescript
 {
   _id: "mem_abc123",
-  agentId: "agent-1",
+  memorySpaceId: "agent-1",
   content: "User prefers dark mode",
   embedding: [
     0.123456,
@@ -660,7 +660,10 @@ await cortex.memory.update("agent-1", "mem-123", {
 
 ```typescript
 // Embed only important memories
-async function storeWithSelectiveEmbedding(agentId: string, data: MemoryInput) {
+async function storeWithSelectiveEmbedding(
+  memorySpaceId: string,
+  data: MemoryInput,
+) {
   const shouldEmbed = data.metadata.importance >= 70;
 
   await cortex.memory.store(agentId, {
@@ -680,7 +683,7 @@ async function storeWithSelectiveEmbedding(agentId: string, data: MemoryInput) {
 
 ```typescript
 // Generate multiple query variations
-async function expandedSearch(agentId: string, query: string) {
+async function expandedSearch(memorySpaceId: string, query: string) {
   const variations = [
     query,
     `user ${query}`,
@@ -721,7 +724,7 @@ async function expandedSearch(agentId: string, query: string) {
 
 ```typescript
 // Use LLM to improve query
-async function semanticQuery(agentId: string, userQuery: string) {
+async function semanticQuery(memorySpaceId: string, userQuery: string) {
   // Rewrite for better search
   const improved = await llm.complete({
     prompt: `Rewrite this query for semantic search: "${userQuery}"`,
@@ -791,7 +794,7 @@ async function semanticQuery(agentId: string, userQuery: string) {
 ```typescript
 // Store user message with embedding
 await cortex.memory.remember({
-  agentId: "chatbot",
+  memorySpaceId: "chatbot",
   conversationId: "conv-123",
   userMessage: req.body.message,
   agentResponse: response,

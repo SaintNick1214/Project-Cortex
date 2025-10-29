@@ -1,6 +1,6 @@
 # Security & Privacy
 
-> **Last Updated**: 2025-10-25
+> **Last Updated**: 2025-10-28
 
 Data protection, access control, GDPR compliance, and security best practices.
 
@@ -84,7 +84,7 @@ const userAMemories = await cortex.memory.search('agent-1', 'preferences', {
 ```typescript
 // Cortex SDK enforces ownership
 class CortexSDK {
-  async get(agentId: string, memoryId: string) {
+  async get(memorySpaceId: string, memoryId: string) {
     const memory = await this.client.query(api.memories.get, {
       agentId,
       memoryId,
@@ -105,7 +105,7 @@ class CortexSDK {
 ```typescript
 // Server-side validation
 export const get = query({
-  args: { agentId: v.string(), memoryId: v.id("memories") },
+  args: { memorySpaceId: v.string(), memoryId: v.id("memories") },
   handler: async (ctx, args) => {
     const memory = await ctx.db.get(args.memoryId);
 
@@ -129,7 +129,7 @@ export const get = query({
 // Add authentication layer
 async function storeMemoryWithAuth(
   userId: string,
-  agentId: string,
+  memorySpaceId: string,
   data: MemoryInput,
 ) {
   // Verify user owns this agent
@@ -407,14 +407,18 @@ memory.previousVersions.forEach((v) => {
 ```typescript
 // Log all deletions
 export const deleteWithAudit = mutation({
-  args: { agentId: v.string(), memoryId: v.id("memories"), reason: v.string() },
+  args: {
+    memorySpaceId: v.string(),
+    memoryId: v.id("memories"),
+    reason: v.string(),
+  },
   handler: async (ctx, args) => {
     const memory = await ctx.db.get(args.memoryId);
 
     // Log deletion (immutable audit log)
     await ctx.db.insert("auditLogs", {
       action: "DELETE_MEMORY",
-      agentId: args.agentId,
+      memorySpaceId: args.agentId,
       memoryId: args.memoryId,
       content: memory.content, // Preserve for audit
       reason: args.reason,
@@ -464,7 +468,7 @@ await cortex.users.delete(userId, { cascade: true });
 async function getUserMemories(
   requestingUserId: string,
   targetUserId: string,
-  agentId: string,
+  memorySpaceId: string,
 ) {
   // Verify access
   if (requestingUserId !== targetUserId) {
@@ -534,7 +538,7 @@ async function getUserMemories(
 ```typescript
 export const store = mutation({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     content: v.string(),
     metadata: v.any(),
   },
@@ -741,7 +745,7 @@ await ctx.db
 // Validate types
 export const query = query({
   args: {
-    agentId: v.string(), // ← Type validation
+    memorySpaceId: v.string(), // ← Type validation
     filters: v.object({
       importance: v.number(), // ← Must be number
     }),
@@ -795,7 +799,7 @@ async function rateLimitedSearch(userId: string, ...args) {
 ```typescript
 // Don't give agents more access than needed
 async function getRelevantContext(
-  agentId: string,
+  memorySpaceId: string,
   userId: string,
   query: string,
 ) {
@@ -868,7 +872,7 @@ async function deleteUserData(userId: string, requestedBy: string) {
 // Check permissions before operations
 async function storeMemoryWithACL(
   userId: string,
-  agentId: string,
+  memorySpaceId: string,
   data: MemoryInput,
 ) {
   // Check: Does user own this agent?

@@ -1,6 +1,6 @@
 # Search Strategy
 
-> **Last Updated**: 2025-10-25
+> **Last Updated**: 2025-10-28
 
 Multi-strategy search implementation: semantic, keyword, temporal, and hybrid approaches.
 
@@ -84,7 +84,7 @@ const results = await ctx.db
 ```typescript
 export const semanticSearch = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     embedding: v.array(v.float64()),
     filters: v.any(),
   },
@@ -166,7 +166,7 @@ const results = await ctx.db
 ```typescript
 export const keywordSearch = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     keywords: v.string(),
     filters: v.any(),
   },
@@ -232,7 +232,7 @@ const results = await ctx.db
 ```typescript
 export const recentSearch = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     filters: v.any(),
   },
   handler: async (ctx, args) => {
@@ -273,7 +273,7 @@ export const recentSearch = query({
 ```typescript
 export const autoSearch = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     query: v.string(),
     embedding: v.optional(v.array(v.float64())),
     filters: v.any(),
@@ -286,7 +286,7 @@ export const autoSearch = query({
     } else if (args.query && args.query.length > 0) {
       // Has query: Use keyword
       return await ctx.runQuery("memories:keywordSearch", {
-        agentId: args.agentId,
+        memorySpaceId: args.agentId,
         keywords: args.query,
         filters: args.filters,
       });
@@ -305,7 +305,7 @@ Combine multiple strategies for best results:
 ```typescript
 export const hybridSearch = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     query: v.string(),
     embedding: v.array(v.float64()),
     filters: v.any(),
@@ -313,14 +313,14 @@ export const hybridSearch = query({
   handler: async (ctx, args) => {
     // 1. Semantic search (top 20)
     const semantic = await ctx.runQuery("memories:semanticSearch", {
-      agentId: args.agentId,
+      memorySpaceId: args.agentId,
       embedding: args.embedding,
       filters: { limit: 20 },
     });
 
     // 2. Keyword search (top 20)
     const keyword = await ctx.runQuery("memories:keywordSearch", {
-      agentId: args.agentId,
+      memorySpaceId: args.agentId,
       keywords: args.query,
       filters: { limit: 20 },
     });
@@ -446,7 +446,7 @@ function applyPopularityBoost(results: any[]) {
 ```typescript
 export const search = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     query: v.string(),
     embedding: v.optional(v.array(v.float64())),
     filters: v.any(),
@@ -695,7 +695,7 @@ function calculateFinalScore(
 ```typescript
 export const search = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     query: v.string(),
     embedding: v.optional(v.array(v.float64())),
     filters: v.any(),
@@ -810,7 +810,7 @@ export const cachedSearch = query({
 ```typescript
 // Get recent relevant context for conversation
 async function getConversationContext(
-  agentId: string,
+  memorySpaceId: string,
   userId: string,
   currentMessage: string,
 ) {
@@ -849,7 +849,7 @@ async function findAnswer(query: string) {
 
 ```typescript
 // Complex search with multiple criteria
-async function advancedSearch(agentId: string, criteria: any) {
+async function advancedSearch(memorySpaceId: string, criteria: any) {
   const embedding = await embed(criteria.query);
 
   const results = await cortex.memory.search(agentId, criteria.query, {
@@ -878,7 +878,7 @@ async function advancedSearch(agentId: string, criteria: any) {
 
 ```typescript
 async function searchWithFallback(
-  agentId: string,
+  memorySpaceId: string,
   query: string,
   embedding?: number[],
 ) {

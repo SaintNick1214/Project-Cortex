@@ -1,6 +1,6 @@
 # Types & Interfaces
 
-> **Last Updated**: 2025-10-24
+> **Last Updated**: 2025-10-28
 
 Complete TypeScript type definitions for all Cortex APIs.
 
@@ -70,7 +70,7 @@ interface Conversation {
 
 interface UserAgentParticipants {
   userId: string;
-  agentId: string;
+  memorySpaceId: string;
 }
 
 interface AgentAgentParticipants {
@@ -85,7 +85,7 @@ interface Message {
   role?: "user" | "agent" | "system";
   content?: string;
   userId?: string;
-  agentId?: string;
+  memorySpaceId?: string;
 
   // Agent-agent messages (A2A)
   type?: "a2a";
@@ -160,7 +160,7 @@ interface MutableRecord {
 interface MemoryEntry {
   // Identity
   id: string;
-  agentId: string;
+  memorySpaceId: string;
   userId?: string;
 
   // Content
@@ -269,7 +269,7 @@ interface MemoryInput {
 }
 
 interface RememberParams {
-  agentId: string;
+  memorySpaceId: string;
   conversationId: string;
   userMessage: string;
   agentResponse: string;
@@ -355,7 +355,7 @@ interface Context {
   description?: string;
 
   // Ownership
-  agentId: string;
+  memorySpaceId: string;
   userId?: string;
 
   // Hierarchy
@@ -384,7 +384,7 @@ interface Context {
 
 interface ContextInput {
   purpose: string;
-  agentId: string;
+  memorySpaceId: string;
   parentId?: string;
   userId?: string;
   conversationRef?: ConversationRef;
@@ -608,7 +608,7 @@ interface ConversationFilters {
 
   // Participants
   userId?: string;
-  agentId?: string;
+  memorySpaceId?: string;
   "participants.agent1"?: string;
   "participants.agent2"?: string;
 
@@ -633,7 +633,7 @@ interface ConversationFilters {
 ```typescript
 interface ContextFilters {
   // Identity
-  agentId?: string;
+  memorySpaceId?: string;
   userId?: string;
 
   // Hierarchy
@@ -914,7 +914,7 @@ interface EnrichedMemory {
 ```typescript
 interface GovernancePolicy {
   organizationId?: string;
-  agentId?: string;
+  memorySpaceId?: string;
 
   // Layer 1a: Conversations
   conversations: {
@@ -1113,12 +1113,12 @@ interface CortexConfig {
 
   // Callbacks
   onBeforeStore?: (
-    agentId: string,
+    memorySpaceId: string,
     entry: MemoryInput,
   ) => Promise<StoreDecision>;
-  onAfterRetrieve?: (agentId: string, memory: MemoryEntry) => void;
+  onAfterRetrieve?: (memorySpaceId: string, memory: MemoryEntry) => void;
   onVersionCreated?: (
-    agentId: string,
+    memorySpaceId: string,
     memoryId: string,
     newVersion: MemoryVersion,
     oldVersion?: MemoryVersion,
@@ -1203,7 +1203,7 @@ function isMemoryEntry(obj: any): obj is MemoryEntry {
   return (
     typeof obj === "object" &&
     "id" in obj &&
-    "agentId" in obj &&
+    "memorySpaceId" in obj &&
     "content" in obj &&
     "source" in obj &&
     "metadata" in obj
@@ -1231,7 +1231,7 @@ function isContext(obj: any): obj is Context {
     typeof obj === "object" &&
     "id" in obj &&
     "purpose" in obj &&
-    "agentId" in obj &&
+    "memorySpaceId" in obj &&
     "status" in obj
   );
 }
