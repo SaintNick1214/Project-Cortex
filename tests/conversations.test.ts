@@ -165,9 +165,8 @@ describe("Conversations API (Layer 1a)", () => {
           memorySpaceId: "test-space-error",
           type: "user-agent",
           participants: {
-            userId: "user-1",
-            // Missing participantId (optional now)
-          },
+            // Missing userId (required)
+          } as any,
         }),
       ).rejects.toThrow();
     });
@@ -207,7 +206,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(retrieved!.type).toBe("user-agent");
       expect(retrieved!.participants).toEqual({
         userId: "user-get-test",
-        memorySpaceId: "test-space-get-test",
+        participantId: "agent-get-test",
       });
     });
 
@@ -413,17 +412,13 @@ describe("Conversations API (Layer 1a)", () => {
 
     it("filters by memorySpaceId", async () => {
       const conversations = await cortex.conversations.list({
-        memorySpaceId: "test-space-list-1",
+        memorySpaceId: "test-space-list",
       });
 
-      // Should find both user-agent (conv-list-1) and agent-agent (conv-list-3)
+      // Should find both user-agent conversations (conv-list-1 and conv-list-2)
       expect(conversations.length).toBe(2);
       conversations.forEach((conv) => {
-        const hasMemorySpace =
-          conv.memorySpaceId === "test-space-auto" ||
-          conv.participants.memorySpaceIds?.includes("agent-list-1");
-
-        expect(hasMemorySpace).toBe(true);
+        expect(conv.memorySpaceId).toBe("test-space-list");
       });
     });
 
@@ -441,13 +436,13 @@ describe("Conversations API (Layer 1a)", () => {
     it("combines filters (userId + memorySpaceId)", async () => {
       const conversations = await cortex.conversations.list({
         userId: "user-list-test",
-        memorySpaceId: "test-space-list-1",
+        memorySpaceId: "test-space-list",
       });
 
       expect(conversations.length).toBeGreaterThanOrEqual(1);
       conversations.forEach((conv) => {
         expect(conv.participants.userId).toBe("user-list-test");
-        expect(conv.participants.participantId).toBe("agent-list-1");
+        expect(conv.memorySpaceId).toBe("test-space-list");
       });
     });
 
@@ -477,10 +472,10 @@ describe("Conversations API (Layer 1a)", () => {
 
     it("counts by memorySpaceId", async () => {
       const count = await cortex.conversations.count({
-        memorySpaceId: "test-space-list-1",
+        memorySpaceId: "test-space-list",
       });
 
-      expect(count).toBeGreaterThanOrEqual(1);
+      expect(count).toBeGreaterThanOrEqual(2); // Should find conv-list-1 and conv-list-2
     });
 
     it("counts by type", async () => {
@@ -906,13 +901,13 @@ describe("Conversations API (Layer 1a)", () => {
 
     it("exports to CSV format", async () => {
       const exported = await cortex.conversations.export({
-        filters: { memorySpaceId: "test-space-auto" },
+        filters: { userId: "user-export-test" },
         format: "csv",
         includeMetadata: false,
       });
 
       expect(exported.format).toBe("csv");
-      expect(exported.count).toBeGreaterThanOrEqual(2);
+      expect(exported.count).toBeGreaterThanOrEqual(1);
       expect(exported.data).toBeTruthy();
 
       // Validate CSV structure

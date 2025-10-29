@@ -309,6 +309,7 @@ export interface MemoryEntry {
 export interface StoreMemoryInput {
   content: string;
   contentType: ContentType;
+  participantId?: string; // NEW: Hive Mode tracking
   embedding?: number[];
   userId?: string;
   source: {
@@ -426,34 +427,25 @@ export interface FactRecord {
   factId: string;
   memorySpaceId: string;
   participantId?: string;
-  fact: string;
-  category?: string;
-  confidence?: number;
-  entities?: string[];
-  relations?: Array<{
-    subject: string;
-    predicate: string;
-    object: string;
-    confidence?: number;
-  }>;
-  conversationRef?: {
-    conversationId: string;
-    messageIds: string[];
+  fact: string; // The fact statement
+  factType: "preference" | "identity" | "knowledge" | "relationship" | "event" | "custom";
+  subject?: string; // Primary entity
+  predicate?: string; // Relationship type
+  object?: string; // Secondary entity
+  confidence: number; // 0-100
+  sourceType: "conversation" | "system" | "tool" | "manual";
+  sourceRef?: {
+    conversationId?: string;
+    messageIds?: string[];
+    memoryId?: string;
   };
-  userId?: string;
-  metadata: {
-    tags: string[];
-    importance: number;
-    extractedBy?: string;
-    extractedAt?: number;
-  };
+  metadata?: any;
+  tags: string[];
+  validFrom?: number;
+  validUntil?: number;
   version: number;
-  previousVersions: Array<{
-    version: number;
-    fact: string;
-    timestamp: number;
-    metadata?: Record<string, unknown>;
-  }>;
+  supersededBy?: string; // factId of newer version
+  supersedes?: string; // factId of previous version
   createdAt: number;
   updatedAt: number;
 }
@@ -462,25 +454,51 @@ export interface StoreFactParams {
   memorySpaceId: string;
   participantId?: string;
   fact: string;
-  category?: string;
+  factType: "preference" | "identity" | "knowledge" | "relationship" | "event" | "custom";
+  subject?: string;
+  predicate?: string;
+  object?: string;
+  confidence: number;
+  sourceType: "conversation" | "system" | "tool" | "manual";
+  sourceRef?: {
+    conversationId?: string;
+    messageIds?: string[];
+    memoryId?: string;
+  };
+  metadata?: any;
+  tags?: string[];
+  validFrom?: number;
+  validUntil?: number;
+}
+
+export interface ListFactsFilter {
+  memorySpaceId: string;
+  factType?: "preference" | "identity" | "knowledge" | "relationship" | "event" | "custom";
+  subject?: string;
+  tags?: string[];
+  includeSuperseded?: boolean;
+  limit?: number;
+}
+
+export interface CountFactsFilter {
+  memorySpaceId: string;
+  factType?: "preference" | "identity" | "knowledge" | "relationship" | "event" | "custom";
+  includeSuperseded?: boolean;
+}
+
+export interface SearchFactsOptions {
+  factType?: "preference" | "identity" | "knowledge" | "relationship" | "event" | "custom";
+  minConfidence?: number;
+  tags?: string[];
+  limit?: number;
+}
+
+export interface UpdateFactInput {
+  fact?: string;
   confidence?: number;
-  entities?: string[];
-  relations?: Array<{
-    subject: string;
-    predicate: string;
-    object: string;
-    confidence?: number;
-  }>;
-  conversationRef?: {
-    conversationId: string;
-    messageIds: string[];
-  };
-  userId?: string;
-  metadata?: {
-    tags?: string[];
-    importance?: number;
-    extractedBy?: string;
-  };
+  tags?: string[];
+  validUntil?: number;
+  metadata?: any;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

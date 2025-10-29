@@ -34,6 +34,7 @@ export class VectorAPI {
   async store(memorySpaceId: string, input: StoreMemoryInput): Promise<MemoryEntry> {
     const result = await this.client.mutation(api.memories.store, {
       memorySpaceId,
+      participantId: input.participantId, // NEW: Hive Mode
       content: input.content,
       contentType: input.contentType,
       embedding: input.embedding,

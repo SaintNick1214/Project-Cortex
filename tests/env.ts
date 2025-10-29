@@ -27,9 +27,10 @@ const hasLocalConfig = Boolean(
   process.env.LOCAL_CONVEX_URL || process.env.LOCAL_CONVEX_DEPLOYMENT,
 );
 const hasManagedConfig = Boolean(
-  process.env.CONVEX_URL &&
-    !process.env.CONVEX_URL.includes("localhost") &&
-    !process.env.CONVEX_URL.includes("127.0.0.1"),
+  process.env.CLOUD_CONVEX_URL ||
+    (process.env.CONVEX_URL &&
+      !process.env.CONVEX_URL.includes("localhost") &&
+      !process.env.CONVEX_URL.includes("127.0.0.1")),
 );
 
 // Configure CONVEX_URL based on test mode
@@ -43,7 +44,10 @@ if (testMode === "local") {
     `   Note: Vector search (.similar()) not supported in local mode\n`,
   );
 } else if (testMode === "managed") {
-  // Explicit managed mode (CONVEX_URL already set)
+  // Explicit managed mode - prefer CLOUD_CONVEX_URL if set
+  if (process.env.CLOUD_CONVEX_URL) {
+    process.env.CONVEX_URL = process.env.CLOUD_CONVEX_URL;
+  }
   console.log(`\n🧪 Testing against MANAGED Convex: ${process.env.CONVEX_URL}`);
   console.log(`   Note: Vector search fully supported in managed mode\n`);
 } else if (testMode === "auto") {
@@ -59,7 +63,10 @@ if (testMode === "local") {
       `   Note: Vector search (.similar()) not supported in local mode\n`,
     );
   } else if (hasManagedConfig && !hasLocalConfig) {
-    // Only managed config present
+    // Only managed config present - prefer CLOUD_CONVEX_URL if set
+    if (process.env.CLOUD_CONVEX_URL) {
+      process.env.CONVEX_URL = process.env.CLOUD_CONVEX_URL;
+    }
     console.log(
       `\n🧪 Testing against MANAGED Convex: ${process.env.CONVEX_URL}`,
     );
