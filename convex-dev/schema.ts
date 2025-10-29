@@ -2,16 +2,22 @@
  * Cortex SDK - Convex Schema
  *
  * Layer 1: ACID Stores
- * - conversations (Layer 1a) - Immutable conversation history
- * - immutable (Layer 1b) - Versioned immutable data
- * - mutable (Layer 1c) - Live operational data
+ * - conversations (Layer 1a) - Immutable conversation history (memorySpace-scoped)
+ * - immutable (Layer 1b) - Versioned immutable data (TRULY shared, NO memorySpace)
+ * - mutable (Layer 1c) - Live operational data (TRULY shared, NO memorySpace)
  *
  * Layer 2: Vector Index
- * - memories - Searchable knowledge with embeddings
+ * - memories - Searchable knowledge with embeddings (memorySpace-scoped)
+ *
+ * Layer 3: Facts Store
+ * - facts - LLM-extracted facts (memorySpace-scoped, versioned)
+ *
+ * Layer 4: Convenience APIs (SDK only, no schema)
  *
  * Coordination:
- * - contexts - Hierarchical context chains
- * - agents - Agent registry (optional)
+ * - contexts - Hierarchical context chains (memorySpace-scoped, cross-space support)
+ * - memorySpaces - Memory space registry (Hive/Collaboration modes)
+ * - agents - DEPRECATED: Use memorySpaces instead
  */
 
 import { defineSchema, defineTable } from "convex/server";
@@ -25,17 +31,21 @@ export default defineSchema({
     // Identity
     conversationId: v.string(), // Unique ID (e.g., "conv-abc123")
 
-    // Type: user-agent (user ↔ agent) or agent-agent (agent ↔ agent)
+    // Memory Space (NEW - fundamental isolation boundary)
+    memorySpaceId: v.string(), // Which memory space owns this conversation
+    participantId: v.optional(v.string()), // Hive Mode: which participant created this
+
+    // Type: user-agent (user ↔ participant) or agent-agent (space ↔ space)
     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
 
     // Participants (based on type)
     participants: v.object({
       // user-agent conversations
       userId: v.optional(v.string()),
-      agentId: v.optional(v.string()),
+      participantId: v.optional(v.string()), // Hive Mode tracking
 
-      // agent-agent conversations
-      agentIds: v.optional(v.array(v.string())),
+      // agent-agent conversations (Collaboration Mode - cross-space)
+      memorySpaceIds: v.optional(v.array(v.string())), // Both spaces involved
     }),
 
     // Messages (append-only, immutable)
@@ -51,7 +61,7 @@ export default defineSchema({
         timestamp: v.number(),
 
         // Optional fields
-        agentId: v.optional(v.string()), // Which agent sent this
+        participantId: v.optional(v.string()), // Which participant sent this (Hive Mode)
         metadata: v.optional(v.any()), // Flexible metadata
       }),
     ),
@@ -67,10 +77,10 @@ export default defineSchema({
     updatedAt: v.number(),
   })
     .index("by_conversationId", ["conversationId"]) // Unique lookup
+    .index("by_memorySpace", ["memorySpaceId"]) // NEW: Memory space's conversations
     .index("by_type", ["type"]) // List by type
     .index("by_user", ["participants.userId"]) // User's conversations
-    .index("by_agent", ["participants.agentId"]) // Agent's conversations
-    .index("by_agent_user", ["participants.agentId", "participants.userId"]) // Specific pair
+    .index("by_memorySpace_user", ["memorySpaceId", "participants.userId"]) // NEW: Space + user
     .index("by_created", ["createdAt"]), // Chronological ordering
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -147,16 +157,21 @@ export default defineSchema({
     .index("by_updated", ["updatedAt"]), // Recent changes
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // Layer 2: Vector Memory (Searchable, Agent-Private, Versioned)
+  // Layer 2: Vector Memory (Searchable, memorySpace-scoped, Versioned)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   memories: defineTable({
     // Identity
     memoryId: v.string(), // Unique ID for this memory
-    agentId: v.string(), // Agent-private isolation
+    memorySpaceId: v.string(), // NEW: Memory space isolation (was agentId)
+    participantId: v.optional(v.string()), // NEW: Hive Mode participant tracking
 
     // Content
     content: v.string(),
-    contentType: v.union(v.literal("raw"), v.literal("summarized")),
+    contentType: v.union(
+      v.literal("raw"),
+      v.literal("summarized"),
+      v.literal("fact"), // NEW: For facts indexed in vector layer
+    ),
     embedding: v.optional(v.array(v.float64())), // Optional for keyword-only
 
     // Source (flattened for indexing performance)
@@ -165,6 +180,7 @@ export default defineSchema({
       v.literal("system"),
       v.literal("tool"),
       v.literal("a2a"),
+      v.literal("fact-extraction"), // NEW: For facts
     ),
     sourceUserId: v.optional(v.string()),
     sourceUserName: v.optional(v.string()),
@@ -198,6 +214,14 @@ export default defineSchema({
       }),
     ),
 
+    // NEW: Reference to Layer 3 fact
+    factsRef: v.optional(
+      v.object({
+        factId: v.string(),
+        version: v.optional(v.number()),
+      }),
+    ),
+
     // Metadata
     importance: v.number(), // 0-100 (flattened for filtering)
     tags: v.array(v.string()), // Flattened for filtering
@@ -219,19 +243,212 @@ export default defineSchema({
     lastAccessed: v.optional(v.number()),
     accessCount: v.number(),
   })
-    .index("by_agentId", ["agentId"]) // Agent's memories
+    .index("by_memorySpace", ["memorySpaceId"]) // NEW: Memory space's memories
     .index("by_memoryId", ["memoryId"]) // Unique lookup
     .index("by_userId", ["userId"]) // GDPR cascade
-    .index("by_agent_created", ["agentId", "createdAt"]) // Chronological
+    .index("by_memorySpace_created", ["memorySpaceId", "createdAt"]) // NEW: Chronological
+    .index("by_memorySpace_userId", ["memorySpaceId", "userId"]) // NEW: Space + user
+    .index("by_participantId", ["participantId"]) // NEW: Hive Mode tracking
     .searchIndex("by_content", {
       searchField: "content",
-      filterFields: ["agentId", "sourceType", "userId"],
+      filterFields: ["memorySpaceId", "sourceType", "userId", "participantId"], // Updated filters
     })
     .vectorIndex("by_embedding", {
       vectorField: "embedding",
       dimensions: 1536, // Default: OpenAI text-embedding-3-small
-      filterFields: ["agentId", "userId"], // Pre-filter for performance
+      filterFields: ["memorySpaceId", "userId", "participantId"], // Updated: memorySpace isolation
     }),
 
-  // TODO: Add remaining tables (contexts, agents)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Layer 3: Facts Store (NEW - memorySpace-scoped, Versioned)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  facts: defineTable({
+    // Identity
+    factId: v.string(), // Unique ID for this fact
+    memorySpaceId: v.string(), // Memory space isolation
+    participantId: v.optional(v.string()), // Hive Mode: which participant extracted this
+
+    // Fact content
+    fact: v.string(), // The extracted fact text
+    category: v.optional(v.string()), // Type: preference, attribute, event, decision, relationship
+    confidence: v.optional(v.number()), // LLM confidence (0-1)
+
+    // Optional: Entities and relations (for graph integration)
+    entities: v.optional(v.array(v.string())),
+    relations: v.optional(
+      v.array(
+        v.object({
+          subject: v.string(),
+          predicate: v.string(),
+          object: v.string(),
+          confidence: v.optional(v.number()),
+        }),
+      ),
+    ),
+
+    // Source conversation reference
+    conversationRef: v.optional(
+      v.object({
+        conversationId: v.string(),
+        messageIds: v.array(v.string()),
+      }),
+    ),
+
+    // GDPR support
+    userId: v.optional(v.string()),
+
+    // Metadata
+    metadata: v.object({
+      tags: v.array(v.string()),
+      importance: v.number(), // 0-100
+      extractedBy: v.optional(v.string()), // LLM model used
+      extractedAt: v.optional(v.number()),
+    }),
+
+    // Versioning (automatic)
+    version: v.number(),
+    previousVersions: v.array(
+      v.object({
+        version: v.number(),
+        fact: v.string(),
+        timestamp: v.number(),
+        metadata: v.optional(v.any()),
+      }),
+    ),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_factId", ["factId"]) // Unique lookup
+    .index("by_memorySpace", ["memorySpaceId"]) // Memory space's facts
+    .index("by_memorySpace_category", ["memorySpaceId", "category"]) // Filter by category
+    .index("by_memorySpace_userId", ["memorySpaceId", "userId"]) // Space + user
+    .index("by_userId", ["userId"]) // GDPR cascade
+    .index("by_participantId", ["participantId"]) // Hive Mode tracking
+    .index("by_created", ["createdAt"]), // Chronological
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Memory Spaces Registry (Hive/Collaboration Mode Management)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  memorySpaces: defineTable({
+    // Identity
+    memorySpaceId: v.string(), // Unique memory space ID
+    name: v.optional(v.string()), // Human-readable name
+    type: v.union(
+      v.literal("personal"),
+      v.literal("team"),
+      v.literal("project"),
+      v.literal("custom"),
+    ),
+
+    // Participants (for Hive Mode)
+    participants: v.array(
+      v.object({
+        id: v.string(), // Participant ID (e.g., 'cursor', 'claude', 'my-bot')
+        type: v.string(), // 'ai-tool', 'human', 'ai-agent', 'system'
+        joinedAt: v.number(),
+      }),
+    ),
+
+    // Metadata (flexible)
+    metadata: v.any(),
+
+    // Status
+    status: v.union(v.literal("active"), v.literal("archived")),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_memorySpaceId", ["memorySpaceId"]) // Unique lookup
+    .index("by_status", ["status"]) // Filter active/archived
+    .index("by_type", ["type"]) // Filter by type
+    .index("by_created", ["createdAt"]), // Chronological
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Contexts (Hierarchical Coordination, memorySpace-scoped with cross-space support)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  contexts: defineTable({
+    // Identity
+    contextId: v.string(), // Unique ID
+    memorySpaceId: v.string(), // NEW: Which memory space owns this context
+
+    // Purpose
+    purpose: v.string(), // What this context is for
+
+    // Hierarchy
+    parentId: v.optional(v.string()), // Parent context (can be cross-space)
+    rootId: v.optional(v.string()), // Root context
+    depth: v.number(), // 0 for root, increments with depth
+    childIds: v.array(v.string()), // Child contexts
+
+    // Status
+    status: v.union(
+      v.literal("active"),
+      v.literal("completed"),
+      v.literal("cancelled"),
+      v.literal("blocked"),
+    ),
+
+    // Source conversation (optional)
+    conversationRef: v.optional(
+      v.object({
+        conversationId: v.string(),
+        messageIds: v.optional(v.array(v.string())),
+      }),
+    ),
+
+    // User association (GDPR)
+    userId: v.optional(v.string()),
+
+    // Participants (for tracking)
+    participants: v.array(v.string()), // Memory spaces or participants involved
+
+    // Cross-space access control
+    grantedAccess: v.optional(
+      v.array(
+        v.object({
+          memorySpaceId: v.string(), // Which space has access
+          scope: v.string(), // 'read-only', 'context-only', etc.
+          grantedAt: v.number(),
+        }),
+      ),
+    ),
+
+    // Data (flexible)
+    data: v.optional(v.any()),
+
+    // Metadata
+    metadata: v.optional(v.any()),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+    completedAt: v.optional(v.number()),
+  })
+    .index("by_contextId", ["contextId"]) // Unique lookup
+    .index("by_memorySpace", ["memorySpaceId"]) // NEW: Space's contexts
+    .index("by_parentId", ["parentId"]) // Child lookup
+    .index("by_rootId", ["rootId"]) // All contexts in tree
+    .index("by_status", ["status"]) // Filter by status
+    .index("by_memorySpace_status", ["memorySpaceId", "status"]) // NEW
+    .index("by_userId", ["userId"]) // GDPR cascade
+    .index("by_created", ["createdAt"]), // Chronological
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Agents Registry (DEPRECATED - Use memorySpaces instead)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  agents: defineTable({
+    // Note: This table is deprecated in favor of memorySpaces
+    // Keeping for backward compatibility during migration
+    agentId: v.string(),
+    name: v.string(),
+    description: v.optional(v.string()),
+    metadata: v.optional(v.any()),
+    registeredAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_agentId", ["agentId"])
+    .index("by_registered", ["registeredAt"]),
 });
