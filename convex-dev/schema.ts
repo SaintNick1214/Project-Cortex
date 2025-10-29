@@ -269,52 +269,49 @@ export default defineSchema({
     participantId: v.optional(v.string()), // Hive Mode: which participant extracted this
 
     // Fact content
-    fact: v.string(), // The extracted fact text
-    category: v.optional(v.string()), // Type: preference, attribute, event, decision, relationship
-    confidence: v.optional(v.number()), // LLM confidence (0-1)
-
-    // Optional: Entities and relations (for graph integration)
-    entities: v.optional(v.array(v.string())),
-    relations: v.optional(
-      v.array(
-        v.object({
-          subject: v.string(),
-          predicate: v.string(),
-          object: v.string(),
-          confidence: v.optional(v.number()),
-        }),
-      ),
+    fact: v.string(), // The fact statement
+    factType: v.union(
+      v.literal("preference"),
+      v.literal("identity"),
+      v.literal("knowledge"),
+      v.literal("relationship"),
+      v.literal("event"),
+      v.literal("custom"),
     ),
 
-    // Source conversation reference
-    conversationRef: v.optional(
+    // Triple structure (subject-predicate-object)
+    subject: v.optional(v.string()), // Primary entity (e.g., "user-123")
+    predicate: v.optional(v.string()), // Relationship (e.g., "prefers", "works_at")
+    object: v.optional(v.string()), // Secondary entity (e.g., "dark mode")
+
+    // Quality & Source
+    confidence: v.number(), // 0-100: extraction confidence
+    sourceType: v.union(
+      v.literal("conversation"),
+      v.literal("system"),
+      v.literal("tool"),
+      v.literal("manual"),
+    ),
+    sourceRef: v.optional(
       v.object({
-        conversationId: v.string(),
-        messageIds: v.array(v.string()),
+        conversationId: v.optional(v.string()),
+        messageIds: v.optional(v.array(v.string())),
+        memoryId: v.optional(v.string()),
       }),
     ),
 
-    // GDPR support
-    userId: v.optional(v.string()),
+    // Metadata & Tags
+    metadata: v.optional(v.any()),
+    tags: v.array(v.string()),
 
-    // Metadata
-    metadata: v.object({
-      tags: v.array(v.string()),
-      importance: v.number(), // 0-100
-      extractedBy: v.optional(v.string()), // LLM model used
-      extractedAt: v.optional(v.number()),
-    }),
+    // Temporal validity
+    validFrom: v.optional(v.number()),
+    validUntil: v.optional(v.number()),
 
-    // Versioning (automatic)
+    // Versioning (creates immutable chain)
     version: v.number(),
-    previousVersions: v.array(
-      v.object({
-        version: v.number(),
-        fact: v.string(),
-        timestamp: v.number(),
-        metadata: v.optional(v.any()),
-      }),
-    ),
+    supersededBy: v.optional(v.string()), // factId of newer version
+    supersedes: v.optional(v.string()), // factId this replaces
 
     // Timestamps
     createdAt: v.number(),
@@ -322,11 +319,12 @@ export default defineSchema({
   })
     .index("by_factId", ["factId"]) // Unique lookup
     .index("by_memorySpace", ["memorySpaceId"]) // Memory space's facts
-    .index("by_memorySpace_category", ["memorySpaceId", "category"]) // Filter by category
-    .index("by_memorySpace_userId", ["memorySpaceId", "userId"]) // Space + user
-    .index("by_userId", ["userId"]) // GDPR cascade
+    .index("by_memorySpace_subject", ["memorySpaceId", "subject"]) // Entity-centric queries
     .index("by_participantId", ["participantId"]) // Hive Mode tracking
-    .index("by_created", ["createdAt"]), // Chronological
+    .searchIndex("by_content", {
+      searchField: "fact",
+      filterFields: ["memorySpaceId", "factType"],
+    }),
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Memory Spaces Registry (Hive/Collaboration Mode Management)

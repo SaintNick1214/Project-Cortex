@@ -1,5 +1,9 @@
 # Cortex SDK Testing Guide
 
+> **Quick Start**: See [DEV-QUICK-START.md](../dev-docs/DEV-QUICK-START.md) for fast setup
+> 
+> **Full Guide**: See [DEV-WORKFLOW-GUIDE.md](../dev-docs/DEV-WORKFLOW-GUIDE.md) for comprehensive documentation
+
 ## Dual Testing Strategy
 
 The Cortex SDK supports testing against both **local** and **managed** Convex deployments to validate functionality differences and ensure compatibility across environments.
@@ -14,12 +18,17 @@ LOCAL_CONVEX_DEPLOYMENT=anonymous:anonymous-cortex-sdk-local
 LOCAL_CONVEX_URL=http://127.0.0.1:3210
 
 # Managed Convex (for production-like testing)
-CONVEX_URL=https://your-deployment.convex.cloud
-CONVEX_DEPLOY_KEY=your_deploy_key_here
+CLOUD_CONVEX_URL=https://your-deployment.convex.cloud
+CLOUD_CONVEX_DEPLOY_KEY=dev:your-deployment|your-key-here
+
+# Active deployment (set automatically by dev-runner.mjs)
+CONVEX_URL=http://127.0.0.1:3210  # or your cloud URL
 
 # Optional: OpenAI API key for embedding tests
 OPENAI_API_KEY=sk-...
 ```
+
+**Note**: The new workflow uses `CLOUD_CONVEX_URL` and `CLOUD_CONVEX_DEPLOY_KEY` to distinguish cloud configuration from the active `CONVEX_URL`.
 
 ### Test Commands
 

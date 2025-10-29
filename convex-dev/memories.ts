@@ -105,8 +105,8 @@ export const deleteMemory = mutation({
       throw new Error("MEMORY_NOT_FOUND");
     }
 
-    // Verify agent owns this memory
-    if (memory.agentId !== args.agentId) {
+    // Verify memorySpace owns this memory
+    if (memory.memorySpaceId !== args.memorySpaceId) {
       throw new Error("PERMISSION_DENIED");
     }
 
@@ -138,8 +138,8 @@ export const get = query({
       return null;
     }
 
-    // Verify agent owns this memory
-    if (memory.agentId !== args.agentId) {
+    // Verify memorySpace owns this memory
+    if (memory.memorySpaceId !== args.memorySpaceId) {
       return null; // Permission denied (silent)
     }
 
@@ -182,7 +182,7 @@ export const search = query({
           .withIndex("by_embedding" as any, (q: any) =>
             q
               .similar("embedding", args.embedding, args.limit || 20)
-              .eq("agentId", args.agentId),
+              .eq("memorySpaceId", args.memorySpaceId),
           )
           .collect();
       } catch (error: any) {
@@ -240,7 +240,7 @@ export const search = query({
       results = await ctx.db
         .query("memories")
         .withSearchIndex("by_content", (q) =>
-          q.search("content", args.query).eq("agentId", args.agentId),
+          q.search("content", args.query).eq("memorySpaceId", args.memorySpaceId),
         )
         .take(args.limit || 20);
     }
@@ -371,7 +371,7 @@ export const update = mutation({
       throw new Error("MEMORY_NOT_FOUND");
     }
 
-    if (memory.agentId !== args.agentId) {
+    if (memory.memorySpaceId !== args.memorySpaceId) {
       throw new Error("PERMISSION_DENIED");
     }
 
@@ -420,7 +420,7 @@ export const getVersion = query({
       .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
       .first();
 
-    if (!memory || memory.agentId !== args.agentId) {
+    if (!memory || memory.memorySpaceId !== args.memorySpaceId) {
       return null;
     }
 
@@ -464,7 +464,7 @@ export const getHistory = query({
       .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
       .first();
 
-    if (!memory || memory.agentId !== args.agentId) {
+    if (!memory || memory.memorySpaceId !== args.memorySpaceId) {
       return [];
     }
 
@@ -563,7 +563,7 @@ export const purgeAll = mutation({
     if (!isLocal && !isDevDeployment && !isTestEnv) {
       throw new Error(
         "PURGE_DISABLED_IN_PRODUCTION: purgeAll is only available in test/dev environments. " +
-          "Use deleteMany with specific agentId for targeted deletions.",
+          "Use deleteMany with specific memorySpaceId for targeted deletions.",
       );
     }
 
@@ -724,7 +724,7 @@ export const archive = mutation({
       throw new Error("MEMORY_NOT_FOUND");
     }
 
-    if (memory.agentId !== args.agentId) {
+    if (memory.memorySpaceId !== args.memorySpaceId) {
       throw new Error("PERMISSION_DENIED");
     }
 
@@ -762,7 +762,7 @@ export const getAtTimestamp = query({
       .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
       .first();
 
-    if (!memory || memory.agentId !== args.agentId) {
+    if (!memory || memory.memorySpaceId !== args.memorySpaceId) {
       return null;
     }
 

@@ -29,9 +29,10 @@ const hasLocalConfig = Boolean(
   process.env.LOCAL_CONVEX_URL || process.env.LOCAL_CONVEX_DEPLOYMENT,
 );
 const hasManagedConfig = Boolean(
-  process.env.CONVEX_URL &&
-    !process.env.CONVEX_URL.includes("localhost") &&
-    !process.env.CONVEX_URL.includes("127.0.0.1"),
+  process.env.CLOUD_CONVEX_URL ||
+    (process.env.CONVEX_URL &&
+      !process.env.CONVEX_URL.includes("localhost") &&
+      !process.env.CONVEX_URL.includes("127.0.0.1")),
 );
 
 // Get additional Jest args passed to this script

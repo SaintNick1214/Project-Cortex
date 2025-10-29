@@ -282,7 +282,7 @@ export const getOrCreate = mutation({
         .query("conversations")
         .withIndex("by_memorySpace_user", (q) =>
           q
-            .eq("memorySpaceId", args.memorySpaceId)
+            .eq("memorySpaceId", args.memorySpaceId!)
             .eq("participants.userId", args.participants.userId),
         )
         .filter((q) => q.eq(q.field("type"), "user-agent"))
@@ -365,7 +365,7 @@ export const findConversation = query({
         .query("conversations")
         .withIndex("by_memorySpace_user", (q) =>
           q
-            .eq("memorySpaceId", args.memorySpaceId)
+            .eq("memorySpaceId", args.memorySpaceId!)
             .eq("participants.userId", args.userId),
         )
         .filter((q) => q.eq(q.field("type"), "user-agent"))
@@ -451,7 +451,7 @@ export const list = query({
         .query("conversations")
         .withIndex("by_memorySpace_user", (q) =>
           q
-            .eq("memorySpaceId", args.memorySpaceId)
+            .eq("memorySpaceId", args.memorySpaceId!)
             .eq("participants.userId", args.userId),
         )
         .order("desc")
@@ -460,7 +460,7 @@ export const list = query({
       // Memory space only (Hive Mode: all conversations in space)
       conversations = await ctx.db
         .query("conversations")
-        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId!))
         .order("desc")
         .take(args.limit || 100);
     } else if (args.userId) {
@@ -509,7 +509,7 @@ export const count = query({
     if (args.memorySpaceId) {
       conversations = await ctx.db
         .query("conversations")
-        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId!))
         .collect();
     } else {
       conversations = await ctx.db.query("conversations").collect();
@@ -597,7 +597,7 @@ export const search = query({
     if (args.memorySpaceId) {
       allConversations = await ctx.db
         .query("conversations")
-        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId!))
         .collect();
     } else {
       allConversations = await ctx.db.query("conversations").collect();
@@ -687,7 +687,7 @@ export const exportConversations = query({
     if (args.memorySpaceId) {
       conversations = await ctx.db
         .query("conversations")
-        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId!))
         .collect();
     } else {
       conversations = await ctx.db.query("conversations").collect();
