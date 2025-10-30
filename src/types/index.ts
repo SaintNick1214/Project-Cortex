@@ -428,7 +428,13 @@ export interface FactRecord {
   memorySpaceId: string;
   participantId?: string;
   fact: string; // The fact statement
-  factType: "preference" | "identity" | "knowledge" | "relationship" | "event" | "custom";
+  factType:
+    | "preference"
+    | "identity"
+    | "knowledge"
+    | "relationship"
+    | "event"
+    | "custom";
   subject?: string; // Primary entity
   predicate?: string; // Relationship type
   object?: string; // Secondary entity
@@ -454,7 +460,13 @@ export interface StoreFactParams {
   memorySpaceId: string;
   participantId?: string;
   fact: string;
-  factType: "preference" | "identity" | "knowledge" | "relationship" | "event" | "custom";
+  factType:
+    | "preference"
+    | "identity"
+    | "knowledge"
+    | "relationship"
+    | "event"
+    | "custom";
   subject?: string;
   predicate?: string;
   object?: string;
@@ -473,7 +485,13 @@ export interface StoreFactParams {
 
 export interface ListFactsFilter {
   memorySpaceId: string;
-  factType?: "preference" | "identity" | "knowledge" | "relationship" | "event" | "custom";
+  factType?:
+    | "preference"
+    | "identity"
+    | "knowledge"
+    | "relationship"
+    | "event"
+    | "custom";
   subject?: string;
   tags?: string[];
   includeSuperseded?: boolean;
@@ -482,12 +500,24 @@ export interface ListFactsFilter {
 
 export interface CountFactsFilter {
   memorySpaceId: string;
-  factType?: "preference" | "identity" | "knowledge" | "relationship" | "event" | "custom";
+  factType?:
+    | "preference"
+    | "identity"
+    | "knowledge"
+    | "relationship"
+    | "event"
+    | "custom";
   includeSuperseded?: boolean;
 }
 
 export interface SearchFactsOptions {
-  factType?: "preference" | "identity" | "knowledge" | "relationship" | "event" | "custom";
+  factType?:
+    | "preference"
+    | "identity"
+    | "knowledge"
+    | "relationship"
+    | "event"
+    | "custom";
   minConfidence?: number;
   tags?: string[];
   limit?: number;

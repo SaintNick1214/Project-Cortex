@@ -157,7 +157,9 @@ async function main() {
       console.error("\n❌ LOCAL mode requested but configuration not found");
       console.error("   Add to .env.local:");
       console.error("   LOCAL_CONVEX_URL=http://127.0.0.1:3210");
-      console.error("   LOCAL_CONVEX_DEPLOYMENT=anonymous:anonymous-cortex-sdk-local\n");
+      console.error(
+        "   LOCAL_CONVEX_DEPLOYMENT=anonymous:anonymous-cortex-sdk-local\n",
+      );
       process.exit(1);
     }
     mode = "local";
@@ -187,9 +189,13 @@ async function main() {
       console.error("\nConfigure at least one deployment mode in .env.local:");
       console.error("\n  LOCAL (for development):");
       console.error("    LOCAL_CONVEX_URL=http://127.0.0.1:3210");
-      console.error("    LOCAL_CONVEX_DEPLOYMENT=anonymous:anonymous-cortex-sdk-local");
+      console.error(
+        "    LOCAL_CONVEX_DEPLOYMENT=anonymous:anonymous-cortex-sdk-local",
+      );
       console.error("\n  CLOUD (for managed deployment):");
-      console.error("    CLOUD_CONVEX_URL=https://your-deployment.convex.cloud");
+      console.error(
+        "    CLOUD_CONVEX_URL=https://your-deployment.convex.cloud",
+      );
       console.error('    CLOUD_CONVEX_DEPLOY_KEY="your-deploy-key"');
       console.error("\nThen run:");
       console.error("  npm run dev:local   → for local development");
@@ -203,10 +209,12 @@ async function main() {
 
   // Set up environment variables for SDK and tests
   if (useLocal) {
-    process.env.CONVEX_URL = process.env.LOCAL_CONVEX_URL || "http://127.0.0.1:3210";
+    process.env.CONVEX_URL =
+      process.env.LOCAL_CONVEX_URL || "http://127.0.0.1:3210";
     process.env.CONVEX_DEPLOYMENT = process.env.LOCAL_CONVEX_DEPLOYMENT;
   } else {
-    process.env.CONVEX_URL = process.env.CLOUD_CONVEX_URL || process.env.CONVEX_URL;
+    process.env.CONVEX_URL =
+      process.env.CLOUD_CONVEX_URL || process.env.CONVEX_URL;
     process.env.CONVEX_DEPLOY_KEY = process.env.CLOUD_CONVEX_DEPLOY_KEY;
   }
 
@@ -224,7 +232,9 @@ async function main() {
     console.log(`\n📝 Mode: ${mode.toUpperCase()}`);
     console.log(`🌐 URL: ${process.env.CONVEX_URL}`);
     console.log("\n💡 Available commands (in another terminal):");
-    console.log("   npm run test              → run tests against active deployment");
+    console.log(
+      "   npm run test              → run tests against active deployment",
+    );
     console.log("   npm run test:interactive  → interactive test runner");
     console.log("   npm run logs              → view deployment logs");
     if (useLocal) {
@@ -277,4 +287,3 @@ main().catch((error) => {
   console.error("❌ Dev runner failed:", error);
   process.exit(1);
 });
-

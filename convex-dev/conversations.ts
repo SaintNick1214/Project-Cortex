@@ -165,7 +165,9 @@ export const deleteMany = mutation({
     if (args.memorySpaceId) {
       conversations = await ctx.db
         .query("conversations")
-        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId!))
+        .withIndex("by_memorySpace", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId!),
+        )
         .collect();
     } else {
       conversations = await ctx.db.query("conversations").collect();
@@ -460,7 +462,9 @@ export const list = query({
       // Memory space only (Hive Mode: all conversations in space)
       conversations = await ctx.db
         .query("conversations")
-        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId!))
+        .withIndex("by_memorySpace", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId!),
+        )
         .order("desc")
         .take(args.limit || 100);
     } else if (args.userId) {
@@ -509,7 +513,9 @@ export const count = query({
     if (args.memorySpaceId) {
       conversations = await ctx.db
         .query("conversations")
-        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId!))
+        .withIndex("by_memorySpace", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId!),
+        )
         .collect();
     } else {
       conversations = await ctx.db.query("conversations").collect();
@@ -593,11 +599,13 @@ export const search = query({
   handler: async (ctx, args) => {
     // Get conversations (use index if memorySpace provided)
     let allConversations;
-    
+
     if (args.memorySpaceId) {
       allConversations = await ctx.db
         .query("conversations")
-        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId!))
+        .withIndex("by_memorySpace", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId!),
+        )
         .collect();
     } else {
       allConversations = await ctx.db.query("conversations").collect();
@@ -682,12 +690,14 @@ export const exportConversations = query({
   },
   handler: async (ctx, args) => {
     let conversations;
-    
+
     // Use index if memorySpaceId provided
     if (args.memorySpaceId) {
       conversations = await ctx.db
         .query("conversations")
-        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId!))
+        .withIndex("by_memorySpace", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId!),
+        )
         .collect();
     } else {
       conversations = await ctx.db.query("conversations").collect();

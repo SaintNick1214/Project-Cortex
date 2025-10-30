@@ -49,7 +49,9 @@ export const create = mutation({
       // Child context - find parent
       parentContext = await ctx.db
         .query("contexts")
-        .withIndex("by_contextId", (q: any) => q.eq("contextId", args.parentId!))
+        .withIndex("by_contextId", (q: any) =>
+          q.eq("contextId", args.parentId!),
+        )
         .first();
 
       if (!parentContext) {
@@ -195,7 +197,10 @@ export const deleteContext = mutation({
 /**
  * Helper: Recursive delete
  */
-async function deleteContextRecursive(ctx: any, contextId: string): Promise<number> {
+async function deleteContextRecursive(
+  ctx: any,
+  contextId: string,
+): Promise<number> {
   const context = await ctx.db
     .query("contexts")
     .withIndex("by_contextId", (q: any) => q.eq("contextId", contextId))
@@ -329,7 +334,9 @@ async function buildContextChain(ctx: any, context: any) {
   const root = context.rootId
     ? await ctx.db
         .query("contexts")
-        .withIndex("by_contextId", (q: any) => q.eq("contextId", context.rootId))
+        .withIndex("by_contextId", (q: any) =>
+          q.eq("contextId", context.rootId),
+        )
         .first()
     : context;
 
@@ -337,33 +344,35 @@ async function buildContextChain(ctx: any, context: any) {
   const parent = context.parentId
     ? await ctx.db
         .query("contexts")
-        .withIndex("by_contextId", (q: any) => q.eq("contextId", context.parentId))
+        .withIndex("by_contextId", (q: any) =>
+          q.eq("contextId", context.parentId),
+        )
         .first()
     : null;
 
-    // Get children
-    const children = await Promise.all(
-      context.childIds.map((id: string) =>
-        ctx.db
-          .query("contexts")
-          .withIndex("by_contextId", (q: any) => q.eq("contextId", id))
-          .first(),
-      ),
-    );
+  // Get children
+  const children = await Promise.all(
+    context.childIds.map((id: string) =>
+      ctx.db
+        .query("contexts")
+        .withIndex("by_contextId", (q: any) => q.eq("contextId", id))
+        .first(),
+    ),
+  );
 
-    // Get siblings
-    const siblings = parent
-      ? await Promise.all(
-          parent.childIds
-            .filter((id: string) => id !== context.contextId)
-            .map((id: string) =>
-              ctx.db
-                .query("contexts")
-                .withIndex("by_contextId", (q: any) => q.eq("contextId", id))
-                .first(),
-            ),
-        )
-      : [];
+  // Get siblings
+  const siblings = parent
+    ? await Promise.all(
+        parent.childIds
+          .filter((id: string) => id !== context.contextId)
+          .map((id: string) =>
+            ctx.db
+              .query("contexts")
+              .withIndex("by_contextId", (q: any) => q.eq("contextId", id))
+              .first(),
+          ),
+      )
+    : [];
 
   // Get ancestors
   const ancestors: any[] = [];
@@ -374,7 +383,9 @@ async function buildContextChain(ctx: any, context: any) {
     node = node.parentId
       ? await ctx.db
           .query("contexts")
-          .withIndex("by_contextId", (q: any) => q.eq("contextId", node.parentId))
+          .withIndex("by_contextId", (q: any) =>
+            q.eq("contextId", node.parentId),
+          )
           .first()
       : null;
   }
@@ -424,7 +435,9 @@ export const list = query({
     } else if (args.memorySpaceId) {
       contexts = await ctx.db
         .query("contexts")
-        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId!))
+        .withIndex("by_memorySpace", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId!),
+        )
         .take(args.limit || 100);
     } else if (args.status) {
       contexts = await ctx.db
@@ -483,7 +496,9 @@ export const count = query({
     if (args.memorySpaceId) {
       contexts = await ctx.db
         .query("contexts")
-        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId!))
+        .withIndex("by_memorySpace", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId!),
+        )
         .collect();
     } else {
       contexts = await ctx.db.query("contexts").collect();
@@ -657,7 +672,9 @@ export const search = query({
     if (args.memorySpaceId) {
       contexts = await ctx.db
         .query("contexts")
-        .withIndex("by_memorySpace", (q: any) => q.eq("memorySpaceId", args.memorySpaceId!))
+        .withIndex("by_memorySpace", (q: any) =>
+          q.eq("memorySpaceId", args.memorySpaceId!),
+        )
         .take(args.limit || 100);
     } else {
       contexts = await ctx.db
@@ -712,4 +729,3 @@ export const purgeAll = mutation({
     return { deleted: allContexts.length };
   },
 });
-

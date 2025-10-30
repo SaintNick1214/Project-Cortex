@@ -37,10 +37,10 @@ The `dev-runner.mjs` script automatically detects your configuration and starts 
 
 ### What Each Mode Does
 
-| Mode | Convex Server | Dashboard | Vector Search | Best For |
-|------|---------------|-----------|---------------|----------|
-| **LOCAL** | Starts local server | Opens local dashboard | ❌ Not supported | Rapid iteration, debugging |
-| **CLOUD** | Connects to managed | Opens cloud dashboard | ✅ Full support | Vector search testing, production-like |
+| Mode      | Convex Server       | Dashboard             | Vector Search    | Best For                               |
+| --------- | ------------------- | --------------------- | ---------------- | -------------------------------------- |
+| **LOCAL** | Starts local server | Opens local dashboard | ❌ Not supported | Rapid iteration, debugging             |
+| **CLOUD** | Connects to managed | Opens cloud dashboard | ✅ Full support  | Vector search testing, production-like |
 
 ---
 
@@ -58,7 +58,7 @@ LOCAL_CONVEX_DEPLOYMENT=anonymous:anonymous-cortex-sdk-local
 LOCAL_CONVEX_URL=http://127.0.0.1:3210
 
 # =============================================================================
-# CLOUD DEVELOPMENT  
+# CLOUD DEVELOPMENT
 # =============================================================================
 CLOUD_CONVEX_URL=https://your-deployment.convex.cloud
 CLOUD_CONVEX_DEPLOY_KEY=dev:your-deployment|your-key-here
@@ -79,7 +79,7 @@ CONVEX_URL=http://127.0.0.1:3210
 
 1. **Sign up for Convex**: https://www.convex.dev
 2. **Create a project** in the Convex dashboard
-3. **Get your deployment URL**: 
+3. **Get your deployment URL**:
    - Format: `https://your-deployment.convex.cloud`
 4. **Generate a deploy key**:
    - Go to Settings → Deploy Keys
@@ -135,7 +135,8 @@ CONVEX_DEPLOYMENT=anonymous:anonymous-cortex-sdk-local
 CONVEX_URL=http://127.0.0.1:3210
 ```
 
-**Usage**: 
+**Usage**:
+
 - `npm run dev` uses local by default
 - `npm run dev:cloud` switches to cloud
 - Tests run against both automatically
@@ -149,6 +150,7 @@ CONVEX_URL=http://127.0.0.1:3210
 ### 🚀 Auto Mode: `npm run dev`
 
 **Behavior**:
+
 1. Detects available configuration in `.env.local`
 2. Prefers LOCAL if available, falls back to CLOUD
 3. Starts Convex dev server
@@ -156,6 +158,7 @@ CONVEX_URL=http://127.0.0.1:3210
 5. Watches for changes
 
 **Example Output**:
+
 ```
 🔍 Detecting available Convex configurations...
    Local config: ✅ Found
@@ -193,24 +196,29 @@ CONVEX_URL=http://127.0.0.1:3210
 **Explicit local development only**
 
 **Requirements**:
+
 - `LOCAL_CONVEX_URL` must be set in `.env.local`
 - Local Convex dev server available
 
 **Starts**:
+
 - Local anonymous Convex deployment
 - Local dashboard at `http://127.0.0.1:3210`
 
 **Limitations**:
+
 - ❌ No vector search (`.similar()` not available)
 - ❌ No production-like features
 
 **Best For**:
+
 - Fast iteration cycles
 - Basic CRUD operations
 - Conversation management
 - Debugging
 
 **Example**:
+
 ```bash
 npm run dev:local
 # Opens: http://127.0.0.1:3210/_admin
@@ -221,26 +229,31 @@ npm run dev:local
 **Explicit managed deployment only**
 
 **Requirements**:
+
 - `CLOUD_CONVEX_URL` must be set in `.env.local`
 - `CLOUD_CONVEX_DEPLOY_KEY` must be set
 - Active Convex cloud deployment
 
 **Starts**:
+
 - Connection to managed Convex deployment
 - Cloud dashboard for your deployment
 
 **Features**:
+
 - ✅ Full vector search support
 - ✅ Production-like environment
 - ✅ All Convex features enabled
 
 **Best For**:
+
 - Testing vector/semantic search
 - Production-readiness verification
 - Advanced features testing
 - Performance testing
 
 **Example**:
+
 ```bash
 npm run dev:cloud
 # Opens: https://dashboard.convex.dev
@@ -254,15 +267,15 @@ Tests automatically adapt to your configuration and can run against both deploym
 
 ### Test Commands
 
-| Command | Behavior |
-|---------|----------|
-| `npm test` | Auto-detect: runs against available deployment(s) |
-| `npm run test:local` | Force local tests only |
-| `npm run test:managed` | Force cloud tests only |
-| `npm run test:both` | Explicitly run both suites |
-| `npm run test:interactive` | Interactive test runner (uses CONVEX_URL) |
-| `npm run test:interactive:local` | Interactive runner against local |
-| `npm run test:interactive:cloud` | Interactive runner against cloud |
+| Command                          | Behavior                                          |
+| -------------------------------- | ------------------------------------------------- |
+| `npm test`                       | Auto-detect: runs against available deployment(s) |
+| `npm run test:local`             | Force local tests only                            |
+| `npm run test:managed`           | Force cloud tests only                            |
+| `npm run test:both`              | Explicitly run both suites                        |
+| `npm run test:interactive`       | Interactive test runner (uses CONVEX_URL)         |
+| `npm run test:interactive:local` | Interactive runner against local                  |
+| `npm run test:interactive:cloud` | Interactive runner against cloud                  |
 
 ### Dual Testing Strategy
 
@@ -303,11 +316,11 @@ npm test
 
 The test runner (`scripts/test-runner.mjs`) automatically detects:
 
-| LOCAL Config | CLOUD Config | Test Behavior |
-|--------------|--------------|---------------|
-| ✅ Present | ❌ Not present | Runs LOCAL tests only |
-| ❌ Not present | ✅ Present | Runs CLOUD tests only |
-| ✅ Present | ✅ Present | Runs BOTH test suites |
+| LOCAL Config   | CLOUD Config   | Test Behavior             |
+| -------------- | -------------- | ------------------------- |
+| ✅ Present     | ❌ Not present | Runs LOCAL tests only     |
+| ❌ Not present | ✅ Present     | Runs CLOUD tests only     |
+| ✅ Present     | ✅ Present     | Runs BOTH test suites     |
 | ❌ Not present | ❌ Not present | ❌ Error: No config found |
 
 ### Override Auto-Detection
@@ -318,7 +331,7 @@ Force specific test mode with `CONVEX_TEST_MODE`:
 # Force local even if both configs present
 CONVEX_TEST_MODE=local npm test
 
-# Force managed even if both configs present  
+# Force managed even if both configs present
 CONVEX_TEST_MODE=managed npm test
 ```
 
@@ -331,6 +344,7 @@ CONVEX_TEST_MODE=managed npm test
 **Goal**: Fast iteration on SDK features without vector search
 
 **Setup**:
+
 ```env
 # .env.local
 LOCAL_CONVEX_URL=http://127.0.0.1:3210
@@ -339,6 +353,7 @@ CONVEX_URL=http://127.0.0.1:3210
 ```
 
 **Workflow**:
+
 ```bash
 # Start development
 npm run dev
@@ -353,11 +368,13 @@ npm run logs:local
 ```
 
 **Advantages**:
+
 - ⚡ Instant deployment (no network latency)
 - 🔒 Private (no data sent to cloud)
 - 💰 Free (no cloud resources)
 
 **Limitations**:
+
 - ❌ No vector search testing
 - ❌ Some features behave differently
 
@@ -368,6 +385,7 @@ npm run logs:local
 **Goal**: Test vector search and production-like features
 
 **Setup**:
+
 ```env
 # .env.local
 CLOUD_CONVEX_URL=https://expert-buffalo-268.convex.cloud
@@ -376,6 +394,7 @@ CONVEX_URL=https://expert-buffalo-268.convex.cloud
 ```
 
 **Workflow**:
+
 ```bash
 # Start cloud development
 npm run dev:cloud
@@ -390,11 +409,13 @@ npm run logs:cloud
 ```
 
 **Advantages**:
+
 - ✅ Full vector search support
 - ✅ Production-like environment
 - ✅ All features enabled
 
 **Trade-offs**:
+
 - ⏱️ Network latency on deploys
 - 💰 Uses cloud resources
 
@@ -405,6 +426,7 @@ npm run logs:cloud
 **Goal**: Fast local iteration + cloud verification
 
 **Setup**:
+
 ```env
 # .env.local - BOTH configurations
 LOCAL_CONVEX_DEPLOYMENT=anonymous:anonymous-cortex-sdk-local
@@ -438,6 +460,7 @@ npm run test:interactive:cloud
 ```
 
 **Why This Works**:
+
 1. **Local first** → fast iteration, no network latency
 2. **Cloud verification** → ensures production features work
 3. **Dual testing** → confidence in both environments
@@ -467,6 +490,7 @@ npm run test:interactive
 ```
 
 **Interactive Runner Features**:
+
 - 📝 Step-by-step guided testing
 - 🔍 Storage inspection tools
 - 🧹 Automatic cleanup
@@ -482,6 +506,7 @@ npm run test:interactive
 **Problem**: `.env.local` is missing or incomplete
 
 **Solution**:
+
 ```bash
 # Create .env.local with at least one configuration:
 
@@ -508,6 +533,7 @@ EOF
 **Problem**: Ran `npm run dev:local` without LOCAL config
 
 **Solution**:
+
 ```env
 # Add to .env.local:
 LOCAL_CONVEX_URL=http://127.0.0.1:3210
@@ -521,10 +547,12 @@ LOCAL_CONVEX_DEPLOYMENT=anonymous:anonymous-cortex-sdk-local
 **Problem**: Ran `npm run dev:cloud` without CLOUD config
 
 **Solution**:
+
 1. Go to https://dashboard.convex.dev
 2. Create a project
 3. Get deployment URL and deploy key
 4. Add to `.env.local`:
+
 ```env
 CLOUD_CONVEX_URL=https://your-deployment.convex.cloud
 CLOUD_CONVEX_DEPLOY_KEY=dev:your-deployment|your-key
@@ -539,6 +567,7 @@ CLOUD_CONVEX_DEPLOY_KEY=dev:your-deployment|your-key
 **Expected**: Local Convex doesn't support vector search
 
 **Solutions**:
+
 - **Option A**: Switch to cloud mode
   ```bash
   npm run dev:cloud
@@ -546,9 +575,9 @@ CLOUD_CONVEX_DEPLOY_KEY=dev:your-deployment|your-key
   ```
 - **Option B**: Skip vector tests in local mode
   ```javascript
-  const isLocal = process.env.CONVEX_DEPLOYMENT_TYPE === 'local';
+  const isLocal = process.env.CONVEX_DEPLOYMENT_TYPE === "local";
   if (isLocal) {
-    console.log('Skipping vector search test in local mode');
+    console.log("Skipping vector search test in local mode");
     return;
   }
   ```
@@ -560,6 +589,7 @@ CLOUD_CONVEX_DEPLOY_KEY=dev:your-deployment|your-key
 **Problem**: Environment not loaded properly
 
 **Solution**:
+
 ```bash
 # Ensure .env.local exists and has CONVEX_URL
 cat .env.local | grep CONVEX_URL
@@ -578,6 +608,7 @@ echo "CONVEX_URL=http://127.0.0.1:3210" >> .env.local
 **Problem**: Want to switch from local to cloud (or vice versa)
 
 **Solution**:
+
 ```bash
 # Stop current dev server (Ctrl+C)
 
@@ -588,6 +619,7 @@ npm run dev:cloud   # Switch to cloud
 ```
 
 **Pro Tip**: Keep both configs in `.env.local` and switch with commands:
+
 ```bash
 # Quick local → cloud → local workflow
 npm run dev:local   # Morning: fast iteration
@@ -606,6 +638,7 @@ npm run dev:local   # Back to local
 **Vision**: Run **both** local and cloud simultaneously in separate processes.
 
 **Planned Commands**:
+
 ```bash
 # Start both deployments
 npm run dev:dual
@@ -618,6 +651,7 @@ npm run dev:dual
 ```
 
 **Benefits**:
+
 - Test local and cloud simultaneously
 - Compare behavior in real-time
 - Catch environment-specific bugs faster
@@ -630,15 +664,15 @@ npm run dev:dual
 
 ### Quick Reference Card
 
-| I Want To... | Command | Config Required |
-|-------------|---------|-----------------|
-| Start development (any) | `npm run dev` | LOCAL or CLOUD |
-| Force local development | `npm run dev:local` | LOCAL only |
-| Force cloud development | `npm run dev:cloud` | CLOUD only |
-| Run tests | `npm test` | LOCAL or CLOUD |
-| Interactive testing | `npm run test:interactive` | CONVEX_URL set |
-| View logs | `npm run logs` | Active deployment |
-| Test vector search | `npm run test:managed` | CLOUD required |
+| I Want To...            | Command                    | Config Required   |
+| ----------------------- | -------------------------- | ----------------- |
+| Start development (any) | `npm run dev`              | LOCAL or CLOUD    |
+| Force local development | `npm run dev:local`        | LOCAL only        |
+| Force cloud development | `npm run dev:cloud`        | CLOUD only        |
+| Run tests               | `npm test`                 | LOCAL or CLOUD    |
+| Interactive testing     | `npm run test:interactive` | CONVEX_URL set    |
+| View logs               | `npm run logs`             | Active deployment |
+| Test vector search      | `npm run test:managed`     | CLOUD required    |
 
 ### Configuration Checklist
 
@@ -650,10 +684,10 @@ npm run dev:dual
 
 ### When to Use Each Mode
 
-| Mode | Use When... |
-|------|-------------|
-| **LOCAL** | Rapid iteration, debugging, basic features |
-| **CLOUD** | Vector search, production features, final testing |
+| Mode       | Use When...                                              |
+| ---------- | -------------------------------------------------------- |
+| **LOCAL**  | Rapid iteration, debugging, basic features               |
+| **CLOUD**  | Vector search, production features, final testing        |
 | **HYBRID** | Daily development (local iteration + cloud verification) |
 
 ---
@@ -666,6 +700,7 @@ npm run dev:dual
 4. **Deploy to cloud**: When ready, switch to `npm run dev:cloud` for final testing
 
 **Need Help?**
+
 - 📖 [Architecture Docs](../Documentation/04-architecture/01-system-overview.md)
 - 🐛 [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
 - 💬 [Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions)
@@ -673,4 +708,3 @@ npm run dev:dual
 ---
 
 **Happy Coding! 🚀**
-

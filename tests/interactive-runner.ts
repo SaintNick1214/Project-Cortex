@@ -381,7 +381,7 @@ async function purgeAllDatabases() {
   } catch (_error: unknown) {
     // Purge might fail if no data
   }
-  
+
   console.log(`  ✅ Purged ${memoryDeleted} memory/memories`);
 
   console.log("\n✅ All databases clean\n");
@@ -570,7 +570,9 @@ async function testListByMemorySpace() {
     const hasMemorySpace = conv.memorySpaceId === TEST_MEMSPACE_ID;
 
     if (hasMemorySpace) {
-      console.log(`  ✅ Conversation ${i + 1}: In memory space ${TEST_MEMSPACE_ID}`);
+      console.log(
+        `  ✅ Conversation ${i + 1}: In memory space ${TEST_MEMSPACE_ID}`,
+      );
     } else {
       console.log(`  ❌ Conversation ${i + 1}: Wrong memory space`);
       allValid = false;
@@ -2524,11 +2526,15 @@ async function testVectorUpdate() {
 
   console.log(`\n✏️  Testing: vector.update()...`);
 
-  const updated = await cortex.vector.update(TEST_MEMSPACE_ID, currentMemoryId, {
-    content: "Updated content (version 2)",
-    importance: 90,
-    tags: ["updated", "test"],
-  });
+  const updated = await cortex.vector.update(
+    TEST_MEMSPACE_ID,
+    currentMemoryId,
+    {
+      content: "Updated content (version 2)",
+      importance: 90,
+      tags: ["updated", "test"],
+    },
+  );
 
   console.log(`✅ Updated (version ${updated.version})`);
   console.log(`   Content: ${updated.content}`);
@@ -2642,11 +2648,19 @@ async function testVectorGetVersion() {
 
   console.log(`\n🕒 Testing: vector.getVersion()...`);
 
-  const v1 = await cortex.vector.getVersion(TEST_MEMSPACE_ID, currentMemoryId, 1);
+  const v1 = await cortex.vector.getVersion(
+    TEST_MEMSPACE_ID,
+    currentMemoryId,
+    1,
+  );
 
   console.log(`✅ Version 1: ${v1?.content || "Not found"}`);
 
-  const v2 = await cortex.vector.getVersion(TEST_MEMSPACE_ID, currentMemoryId, 2);
+  const v2 = await cortex.vector.getVersion(
+    TEST_MEMSPACE_ID,
+    currentMemoryId,
+    2,
+  );
 
   console.log(`✅ Version 2: ${v2?.content || "Not found"}`);
 
@@ -2846,7 +2860,10 @@ async function testMemoryForget() {
   console.log(`✅ Restorable: ${result.restorable} (ACID preserved)`);
 
   // Verify
-  const vectorCheck = await cortex.vector.get(TEST_MEMSPACE_ID, currentMemoryId);
+  const vectorCheck = await cortex.vector.get(
+    TEST_MEMSPACE_ID,
+    currentMemoryId,
+  );
 
   console.log(
     `✅ Vector verification: ${vectorCheck === null ? "Deleted" : "Still exists"}`,
@@ -2878,7 +2895,10 @@ async function testMemoryGetEnriched() {
     const conv = await cortex.conversations.create({
       type: "user-agent",
       memorySpaceId: TEST_MEMSPACE_ID,
-    participants: { userId: TEST_USER_ID, participantId: TEST_PARTICIPANT_ID },
+      participants: {
+        userId: TEST_USER_ID,
+        participantId: TEST_PARTICIPANT_ID,
+      },
     });
 
     const result = await cortex.memory.remember({

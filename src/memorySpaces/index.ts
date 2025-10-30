@@ -33,10 +33,11 @@ export class MemorySpacesAPI {
    */
   async register(params: RegisterMemorySpaceParams): Promise<MemorySpace> {
     const now = Date.now();
-    const participants = params.participants?.map((p) => ({
-      ...p,
-      joinedAt: now,
-    })) || [];
+    const participants =
+      params.participants?.map((p) => ({
+        ...p,
+        joinedAt: now,
+      })) || [];
 
     const result = await this.client.mutation(api.memorySpaces.register, {
       memorySpaceId: params.memorySpaceId,
@@ -179,10 +180,13 @@ export class MemorySpacesAPI {
     memorySpaceId: string,
     participantId: string,
   ): Promise<MemorySpace> {
-    const result = await this.client.mutation(api.memorySpaces.removeParticipant, {
-      memorySpaceId,
-      participantId,
-    });
+    const result = await this.client.mutation(
+      api.memorySpaces.removeParticipant,
+      {
+        memorySpaceId,
+        participantId,
+      },
+    );
 
     return result as MemorySpace;
   }
@@ -248,4 +252,3 @@ export class MemorySpacesAPI {
     return result as MemorySpace[];
   }
 }
-
