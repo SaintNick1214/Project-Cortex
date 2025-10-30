@@ -720,4 +720,302 @@ describe("Vector Memory API (Layer 2)", () => {
       expect(stored!.createdAt).toBeGreaterThan(0);
     });
   });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // v0.6.1 Field-by-Field Validation Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Field-by-Field Validation (v0.6.1)", () => {
+    it("store() preserves all input fields", async () => {
+      const INPUT = {
+        content: "Complete field test",
+        contentType: "raw" as const,
+        participantId: "tool-test",
+        userId: "user-field-test",
+        source: {
+          type: "tool" as const,
+          userId: "user-field-test",
+          userName: "Field Test User",
+        },
+        conversationRef: {
+          conversationId: "conv-field-test",
+          messageIds: ["msg-1", "msg-2"],
+        },
+        metadata: {
+          importance: 85,
+          tags: ["field-test", "validation"],
+        },
+      };
+
+      const result = await cortex.vector.store("memspace-test", INPUT);
+
+      // Field-by-field validation
+      expect(result.memoryId).toBeDefined();
+      expect(result.memorySpaceId).toBe("memspace-test");
+      expect(result.content).toBe(INPUT.content);
+      expect(result.contentType).toBe(INPUT.contentType);
+      expect(result.participantId).toBe(INPUT.participantId);
+      expect(result.userId).toBe(INPUT.userId);
+      expect(result.sourceType).toBe(INPUT.source.type);
+      expect(result.sourceUserId).toBe(INPUT.source.userId);
+      expect(result.sourceUserName).toBe(INPUT.source.userName);
+      expect(result.importance).toBe(INPUT.metadata.importance);
+      expect(result.tags).toEqual(INPUT.metadata.tags);
+      expect(result.conversationRef).toBeDefined();
+      expect(result.conversationRef!.conversationId).toBe(
+        INPUT.conversationRef.conversationId,
+      );
+      expect(result.conversationRef!.messageIds).toEqual(
+        INPUT.conversationRef.messageIds,
+      );
+
+      // Verify in database
+      const stored = await cortex.vector.get("memspace-test", result.memoryId);
+      expect(stored).toEqual(result);
+    });
+
+    it("get() returns exact stored data", async () => {
+      const INPUT = {
+        content: "Get validation test",
+        contentType: "summarized" as const,
+        participantId: "agent-test",
+        userId: "user-get-test",
+        source: { type: "conversation" as const, userId: "user-get-test" },
+        metadata: { importance: 92, tags: ["get-test"] },
+      };
+
+      const stored = await cortex.vector.store("memspace-test", INPUT);
+      const retrieved = await cortex.vector.get(
+        "memspace-test",
+        stored.memoryId,
+      );
+
+      // All fields should match
+      expect(retrieved!.memoryId).toBe(stored.memoryId);
+      expect(retrieved!.content).toBe(INPUT.content);
+      expect(retrieved!.contentType).toBe(INPUT.contentType);
+      expect(retrieved!.participantId).toBe(INPUT.participantId);
+      expect(retrieved!.userId).toBe(INPUT.userId);
+      expect(retrieved!.importance).toBe(INPUT.metadata.importance);
+      expect(retrieved!.tags).toEqual(INPUT.metadata.tags);
+    });
+
+    it("update() preserves non-updated fields", async () => {
+      const original = await cortex.vector.store("memspace-test", {
+        content: "Original content",
+        contentType: "raw",
+        participantId: "tool-update",
+        userId: "user-update",
+        source: { type: "tool", userId: "user-update" },
+        metadata: { importance: 50, tags: ["original", "tag"] },
+      });
+
+      const updated = await cortex.vector.update(
+        "memspace-test",
+        original.memoryId,
+        {
+          content: "Updated content",
+          importance: 80,
+          tags: ["original", "tag", "updated"],
+        },
+      );
+
+      // Updated fields changed
+      expect(updated.content).toBe("Updated content");
+      expect(updated.importance).toBe(80);
+      expect(updated.tags).toContain("updated");
+
+      // Non-updated fields preserved
+      expect(updated.participantId).toBe(original.participantId);
+      expect(updated.userId).toBe(original.userId);
+      expect(updated.contentType).toBe(original.contentType);
+    });
+
+    it("list() returns all fields for each memory", async () => {
+      const mem1 = await cortex.vector.store("memspace-list-test", {
+        content: "List test 1",
+        contentType: "raw",
+        participantId: "tool-list",
+        userId: "user-list",
+        source: { type: "tool", userId: "user-list" },
+        metadata: { importance: 70, tags: ["list-field-test"] },
+      });
+
+      const results = await cortex.vector.list({
+        memorySpaceId: "memspace-list-test",
+      });
+
+      const found = results.find((r) => r.memoryId === mem1.memoryId);
+
+      expect(found).toBeDefined();
+      expect(found!.content).toBe(mem1.content);
+      expect(found!.participantId).toBe(mem1.participantId);
+      expect(found!.userId).toBe(mem1.userId);
+      expect(found!.importance).toBe(mem1.importance);
+      expect(found!.tags).toEqual(mem1.tags);
+    });
+
+    it("search() returns all fields for each result", async () => {
+      await cortex.vector.store("memspace-search-test", {
+        content: "FIELD_SEARCH_MARKER searchable content",
+        contentType: "raw",
+        participantId: "tool-search",
+        userId: "user-search",
+        source: { type: "tool", userId: "user-search" },
+        metadata: { importance: 88, tags: ["search-field-test"] },
+      });
+
+      const results = await cortex.vector.search(
+        "memspace-search-test",
+        "FIELD_SEARCH_MARKER",
+        { limit: 10 },
+      );
+
+      const found = results.find((r) =>
+        r.content.includes("FIELD_SEARCH_MARKER"),
+      );
+
+      expect(found).toBeDefined();
+      expect(found!.participantId).toBe("tool-search");
+      expect(found!.userId).toBe("user-search");
+      expect(found!.importance).toBe(88);
+      expect(found!.tags).toContain("search-field-test");
+    });
+
+    it("conversationRef structure preserved through all operations", async () => {
+      const conversationRefWithMessages = {
+        conversationId: "conv-ref-test",
+        messageIds: ["msg-a", "msg-b", "msg-c"],
+      };
+
+      const memory = await cortex.vector.store("memspace-test", {
+        content: "Conversation ref test",
+        contentType: "raw",
+        source: { type: "conversation", userId: "user-ref" },
+        conversationRef: conversationRefWithMessages,
+        metadata: { importance: 50, tags: [] },
+      });
+
+      // Verify structure preserved
+      expect(memory.conversationRef).toBeDefined();
+      expect(memory.conversationRef!.conversationId).toBe(
+        conversationRefWithMessages.conversationId,
+      );
+      expect(memory.conversationRef!.messageIds).toEqual(
+        conversationRefWithMessages.messageIds,
+      );
+
+      // Verify after retrieval
+      const retrieved = await cortex.vector.get(
+        "memspace-test",
+        memory.memoryId,
+      );
+
+      expect(retrieved!.conversationRef!.conversationId).toBe(
+        conversationRefWithMessages.conversationId,
+      );
+      expect(retrieved!.conversationRef!.messageIds).toEqual(
+        conversationRefWithMessages.messageIds,
+      );
+    });
+
+    it("source information preserved correctly", async () => {
+      const source = {
+        type: "conversation" as const,
+        userId: "user-source",
+        userName: "Source User",
+      };
+
+      const memory = await cortex.vector.store("memspace-test", {
+        content: "Source test",
+        contentType: "raw",
+        source,
+        metadata: { importance: 50, tags: [] },
+      });
+
+      expect(memory.sourceType).toBe(source.type);
+      expect(memory.sourceUserId).toBe(source.userId);
+      expect(memory.sourceUserName).toBe(source.userName);
+
+      const retrieved = await cortex.vector.get(
+        "memspace-test",
+        memory.memoryId,
+      );
+
+      expect(retrieved!.sourceType).toBe(source.type);
+      expect(retrieved!.sourceUserId).toBe(source.userId);
+      expect(retrieved!.sourceUserName).toBe(source.userName);
+    });
+
+    it("embedding preserved when provided", async () => {
+      const embedding = Array.from({ length: 1536 }, () => Math.random());
+
+      const memory = await cortex.vector.store("memspace-test", {
+        content: "Embedding test",
+        contentType: "raw",
+        source: { type: "system" },
+        embedding,
+        metadata: { importance: 50, tags: [] },
+      });
+
+      expect(memory.embedding).toBeDefined();
+      expect(memory.embedding).toHaveLength(1536);
+
+      const retrieved = await cortex.vector.get(
+        "memspace-test",
+        memory.memoryId,
+      );
+
+      expect(retrieved!.embedding).toBeDefined();
+      expect(retrieved!.embedding).toHaveLength(1536);
+      // Check a few values match
+      expect(retrieved!.embedding![0]).toBe(embedding[0]);
+      expect(retrieved!.embedding![100]).toBe(embedding[100]);
+    });
+
+    it("version and timestamps preserved", async () => {
+      const memory = await cortex.vector.store("memspace-test", {
+        content: "Version test",
+        contentType: "raw",
+        source: { type: "system" },
+        metadata: { importance: 50, tags: [] },
+      });
+
+      expect(memory.version).toBe(1);
+      expect(memory.createdAt).toBeGreaterThan(0);
+      expect(memory.updatedAt).toBeDefined();
+      expect(memory.previousVersions).toEqual([]);
+
+      const retrieved = await cortex.vector.get(
+        "memspace-test",
+        memory.memoryId,
+      );
+
+      expect(retrieved!.version).toBe(memory.version);
+      expect(retrieved!.createdAt).toBe(memory.createdAt);
+      expect(retrieved!.updatedAt).toBe(memory.updatedAt);
+    });
+
+    it("count() accurate across all operations", async () => {
+      const countBefore = await cortex.vector.count({
+        memorySpaceId: "memspace-count-test",
+      });
+
+      // Create 5 memories
+      for (let i = 0; i < 5; i++) {
+        await cortex.vector.store("memspace-count-test", {
+          content: `Count test ${i}`,
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: ["count-test"] },
+        });
+      }
+
+      const countAfter = await cortex.vector.count({
+        memorySpaceId: "memspace-count-test",
+      });
+
+      expect(countAfter).toBe(countBefore + 5);
+    });
+  });
 });
