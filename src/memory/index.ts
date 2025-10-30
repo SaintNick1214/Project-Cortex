@@ -109,6 +109,7 @@ export class MemoryAPI {
     const userMemory = await this.vector.store(params.memorySpaceId, {
       content: userContent,
       contentType,
+      participantId: params.participantId, // Hive Mode tracking
       embedding: userEmbedding,
       userId: params.userId,
       source: {
@@ -131,6 +132,7 @@ export class MemoryAPI {
     const agentMemory = await this.vector.store(params.memorySpaceId, {
       content: agentContent,
       contentType,
+      participantId: params.participantId, // Hive Mode tracking
       embedding: agentEmbedding,
       userId: params.userId,
       source: {
