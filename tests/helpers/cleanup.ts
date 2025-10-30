@@ -62,15 +62,85 @@ export class TestCleanup {
   }
 
   /**
-   * Purge all test data (conversations + memories)
+   * Purge facts from the database
    */
-  async purgeAll(): Promise<{ conversations: number; memories: number }> {
+  async purgeFacts(): Promise<{ deleted: number }> {
+    console.log("🧹 Purging facts table...");
+
+    try {
+      const result = await this.client.mutation(api.facts.purgeAll, {});
+
+      console.log(`✅ Purged ${result.deleted} facts`);
+
+      return { deleted: result.deleted };
+    } catch (err: any) {
+      console.error("❌ Failed to purge facts:", err.message);
+
+      return { deleted: 0 };
+    }
+  }
+
+  /**
+   * Purge contexts from the database
+   */
+  async purgeContexts(): Promise<{ deleted: number }> {
+    console.log("🧹 Purging contexts table...");
+
+    try {
+      const result = await this.client.mutation(api.contexts.purgeAll, {});
+
+      console.log(`✅ Purged ${result.deleted} contexts`);
+
+      return { deleted: result.deleted };
+    } catch (err: any) {
+      console.error("❌ Failed to purge contexts:", err.message);
+
+      return { deleted: 0 };
+    }
+  }
+
+  /**
+   * Purge memory spaces from the database
+   */
+  async purgeMemorySpaces(): Promise<{ deleted: number }> {
+    console.log("🧹 Purging memorySpaces table...");
+
+    try {
+      const result = await this.client.mutation(api.memorySpaces.purgeAll, {});
+
+      console.log(`✅ Purged ${result.deleted} memory spaces`);
+
+      return { deleted: result.deleted };
+    } catch (err: any) {
+      console.error("❌ Failed to purge memory spaces:", err.message);
+
+      return { deleted: 0 };
+    }
+  }
+
+  /**
+   * Purge all test data (all tables)
+   */
+  async purgeAll(): Promise<{
+    conversations: number;
+    memories: number;
+    facts: number;
+    contexts: number;
+    memorySpaces: number;
+  }> {
+    // Order matters: delete in reverse dependency order
     const convResult = await this.purgeConversations();
     const memResult = await this.purgeMemories();
+    const factsResult = await this.purgeFacts();
+    const contextsResult = await this.purgeContexts();
+    const spacesResult = await this.purgeMemorySpaces();
 
     return {
       conversations: convResult.deleted,
       memories: memResult.deleted,
+      facts: factsResult.deleted,
+      contexts: contextsResult.deleted,
+      memorySpaces: spacesResult.deleted,
     };
   }
 

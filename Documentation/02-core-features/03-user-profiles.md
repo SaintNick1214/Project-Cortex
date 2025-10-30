@@ -1,6 +1,6 @@
 # User Profiles
 
-> **Last Updated**: 2025-10-24
+> **Last Updated**: 2025-10-28
 
 Rich user context and preferences that persist across all agents and conversations.
 
@@ -264,7 +264,11 @@ async function handleGDPRDeletion(userId: string, requestedBy: string) {
 ### Access User Preferences
 
 ```typescript
-async function respondToUser(agentId: string, userId: string, message: string) {
+async function respondToUser(
+  memorySpaceId: string,
+  userId: string,
+  message: string,
+) {
   // Get user profile
   const user = await cortex.users.get(userId);
 
@@ -560,7 +564,7 @@ async function manualGDPRDeletion(userId: string) {
 
     if (result.deleted > 0) {
       deletionLog.push({
-        agentId: agent.id,
+        memorySpaceId: agent.id,
         deleted: result.deleted,
       });
     }

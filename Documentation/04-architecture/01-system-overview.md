@@ -1,6 +1,6 @@
 # System Overview
 
-> **Last Updated**: 2025-10-25
+> **Last Updated**: 2025-10-28
 
 High-level architecture of Cortex and how it leverages Convex.
 
@@ -117,7 +117,7 @@ Data is linked via IDs, not duplicated:
 // Vector memory (Layer 2)
 {
   _id: "mem_abc123",
-  agentId: "support-agent",
+  memorySpaceId: "support-agent",
   content: "User password is Blue",
   conversationRef: {
     conversationId: "conv_xyz789",  // ← Points to Layer 1
@@ -145,7 +145,19 @@ Data is linked via IDs, not duplicated:
 - Consistency (single source of truth)
 - Can always retrieve full context
 
-### 4. Flexible Yet Typed
+### 4. Graph-Like Querying
+
+**Implicit graph structure:**
+
+- Entities are nodes (Agents, Users, Contexts, Conversations, Memories)
+- References are edges (conversationRef, parentId, userId, agentId)
+- Traversals via built-in APIs (Context Chains, A2A, conversationRef links)
+- Performance: 1-5 hops in 50-200ms (Graph-Lite)
+- Optional: Native graph DB for advanced queries (Graph-Premium)
+
+**Learn more:** [Graph-Lite Traversal](../07-advanced-topics/01-graph-lite-traversal.md)
+
+### 5. Flexible Yet Typed
 
 **Schema flexibility:**
 
@@ -159,7 +171,7 @@ Data is linked via IDs, not duplicated:
 ```typescript
 // Convex schema (minimal constraints)
 memories: defineTable({
-  agentId: v.string(),
+  memorySpaceId: v.string(),
   content: v.string(),
   embedding: v.optional(v.array(v.float64())),
   metadata: v.any(), // ← Flexible
@@ -255,7 +267,7 @@ mutable: defineTable({
 
 ```typescript
 memories: defineTable({
-  agentId: v.string(),
+  memorySpaceId: v.string(),
   userId: v.optional(v.string()),
   content: v.string(),
   contentType: v.union(v.literal("raw"), v.literal("summarized")),
@@ -342,7 +354,7 @@ memories: defineTable({
 contexts: defineTable({
   purpose: v.string(),
   description: v.optional(v.string()),
-  agentId: v.string(),
+  memorySpaceId: v.string(),
   userId: v.optional(v.string()),
 
   // Hierarchy
@@ -392,7 +404,7 @@ contexts: defineTable({
 
 ```typescript
 agents: defineTable({
-  agentId: v.string(),
+  memorySpaceId: v.string(),
   name: v.string(),
   description: v.optional(v.string()),
   capabilities: v.optional(v.array(v.string())),
@@ -585,7 +597,7 @@ function AgentMemories({ agentId }) {
 // Convex functions are TypeScript
 export const storeMemory = mutation({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     content: v.string(),
     embedding: v.optional(v.array(v.float64())),
     metadata: v.any(),

@@ -1,16 +1,23 @@
 # Immutable Store API
 
-> **Last Updated**: 2025-10-24
+> **Last Updated**: 2025-10-28
 
 Complete API reference for shared immutable data storage with automatic versioning.
 
 ## Overview
 
-The Immutable Store API (Layer 1b) provides methods for storing shared, immutable data across all agents. Unlike conversations (agent-private), immutable data is globally accessible and designed for knowledge bases, policies, audit logs, and reference data.
+The Immutable Store API (Layer 1b) provides methods for storing **TRULY SHARED** immutable data across ALL memory spaces. This layer has **NO memorySpace scoping** - it's the only layer that is globally shared.
+
+**Critical Distinction:**
+
+- ❌ **NO memorySpaceId parameter** - This layer is shared across ALL spaces
+- ✅ Accessible from any memory space
+- ✅ Perfect for: KB articles, policies, org docs, shared knowledge
 
 **Key Characteristics:**
 
-- ✅ **Shared** - All agents can access
+- ✅ **TRULY Shared** - ALL memory spaces can access
+- ✅ **NO Isolation** - Not scoped to memorySpace (unlike L1a, L2, L3)
 - ✅ **Immutable** - Can't edit once stored
 - ✅ **Versioned** - Automatic version tracking
 - ✅ **Append-only** - New versions append, old preserved
@@ -19,13 +26,14 @@ The Immutable Store API (Layer 1b) provides methods for storing shared, immutabl
 
 **Comparison to Other Stores:**
 
-| Feature    | Conversations (1a) | Immutable (1b) | Mutable (1c) | Vector (2)   |
-| ---------- | ------------------ | -------------- | ------------ | ------------ |
-| Privacy    | Private            | Shared         | Shared       | Private      |
-| Mutability | Immutable          | Immutable      | Mutable      | Mutable      |
-| Versioning | N/A (append)       | Auto           | No           | Auto         |
-| Retention  | 7 years            | 20 versions    | N/A          | 10 versions  |
-| Use Case   | Chats              | Knowledge      | Live data    | Search index |
+| Feature    | Conversations (1a) | Immutable (1b)   | Mutable (1c)     | Vector (2)       | Facts (3)        |
+| ---------- | ------------------ | ---------------- | ---------------- | ---------------- | ---------------- |
+| Scoping    | memorySpace        | **NO scoping**   | **NO scoping**   | memorySpace      | memorySpace      |
+| Privacy    | Private to space   | **TRULY Shared** | **TRULY Shared** | Private to space | Private to space |
+| Mutability | Immutable          | Immutable        | Mutable          | Mutable          | Immutable        |
+| Versioning | N/A (append)       | Auto             | No               | Auto             | Auto             |
+| Retention  | 7 years            | 20 versions      | N/A              | 10 versions      | Unlimited        |
+| Use Case   | Chats              | KB, policies     | Live data        | Search index     | Extracted facts  |
 
 ---
 
@@ -985,6 +993,56 @@ const auditLogs = await cortex.immutable.list({
   limit: 100,
 });
 ```
+
+---
+
+## Graph-Lite Capabilities
+
+Immutable records can be graph nodes (especially Facts and KB Articles):
+
+**Immutable Record as Graph Node:**
+
+- Shared across all agents (unlike memories which are agent-private)
+- Referenced by vector memories via `immutableRef`
+
+**Edges:**
+
+- `immutableRef` from Memories (many-to-one)
+- `userId` to User (if user-generated content)
+- `conversationRef` to Conversation (if derived from conversation)
+
+**Graph Pattern - Facts:**
+
+```typescript
+// Fact → User (via userId)
+const userFacts = await cortex.immutable.list({
+  type: 'fact',
+  userId: 'user-123'
+});
+
+// Memory → Fact (via immutableRef)
+const factMemories = await cortex.memory.search('agent-1', '*', {
+  immutableRef: { type: 'fact', id: 'fact-abc123' }
+});
+
+// Fact → Conversation (via conversationRef)
+const fact = await cortex.immutable.get('fact', 'fact-abc123');
+if (fact.conversationRef) {
+  const sourceConvo = await cortex.conversations.get(
+    fact.conversationRef.conversationId
+  );
+}
+
+// Complete graph:
+Fact-abc123
+  ├──[userId]──────────> User-123
+  ├──[conversationRef]──> Conversation-456
+  └──[referenced by]<──── Memory-xyz (via immutableRef)
+```
+
+**Use Case:** Facts with entity relationships can be synced to graph databases for knowledge graph construction.
+
+**Learn more:** [Graph Database Integration](../07-advanced-topics/02-graph-database-integration.md)
 
 ---
 

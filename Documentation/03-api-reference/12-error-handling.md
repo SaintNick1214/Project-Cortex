@@ -1,6 +1,6 @@
 # Error Handling
 
-> **Last Updated**: 2025-10-24
+> **Last Updated**: 2025-10-28
 
 Complete guide to error handling, debugging, and troubleshooting in Cortex.
 
@@ -42,7 +42,7 @@ try {
 
 | Code                          | Description                  | Common Causes                     | Solution                         |
 | ----------------------------- | ---------------------------- | --------------------------------- | -------------------------------- |
-| `INVALID_AGENT_ID`            | Agent ID is invalid          | Empty string, null, wrong format  | Provide valid agentId            |
+| `INVALID_MEMORYSPACE_ID`      | Memory space ID is invalid   | Empty string, null, wrong format  | Provide valid memorySpaceId      |
 | `INVALID_CONTENT`             | Content is invalid           | Empty string, > 100KB             | Check content size and format    |
 | `INVALID_IMPORTANCE`          | Importance out of range      | Not 0-100                         | Use value between 0-100          |
 | `INVALID_EMBEDDING_DIMENSION` | Embedding dimension mismatch | Wrong vector size                 | Check embedding model dimensions |
@@ -137,7 +137,7 @@ try {
 | `INVALID_CONVERSATION_ID` | Conversation ID invalid    | Empty, malformed                  | Provide valid ID            |
 | `CONVERSATION_NOT_FOUND`  | Conversation doesn't exist | Invalid ID, deleted               | Verify conversation exists  |
 | `INVALID_TYPE`            | Type is invalid            | Not 'user-agent' or 'agent-agent' | Use valid type              |
-| `INVALID_PARTICIPANTS`    | Participants malformed     | Missing userId/agentId            | Check participant structure |
+| `INVALID_PARTICIPANTS`    | Participants malformed     | Missing userId/memorySpaceId      | Check participant structure |
 | `INVALID_MESSAGE`         | Message is malformed       | Missing required fields           | Check message structure     |
 | `INVALID_QUERY`           | Query is invalid           | Empty query string                | Provide non-empty query     |
 
@@ -147,14 +147,14 @@ try {
 try {
   await cortex.conversations.create({
     type: "user-to-agent", // ❌ Invalid type!
-    participants: { userId: "user-123", agentId: "agent-1" },
+    participants: { userId: "user-123", memorySpaceId: "user-123-personal" },
   });
 } catch (error) {
   if (error.code === "INVALID_TYPE") {
     // Fix type
     await cortex.conversations.create({
       type: "user-agent", // ✅ Correct
-      participants: { userId: "user-123", agentId: "agent-1" },
+      participants: { userId: "user-123", memorySpaceId: "user-123-personal" },
     });
   }
 }
@@ -299,7 +299,7 @@ try {
 
 ```typescript
 async function storeWithRetry(
-  agentId: string,
+  memorySpaceId: string,
   entry: MemoryInput,
   maxRetries = 3,
 ): Promise<MemoryEntry> {
@@ -307,7 +307,7 @@ async function storeWithRetry(
 
   for (let i = 0; i < maxRetries; i++) {
     try {
-      return await cortex.memory.store(agentId, entry);
+      return await cortex.memory.store(memorySpaceId, entry);
     } catch (error) {
       lastError = error;
 
@@ -329,7 +329,7 @@ async function storeWithRetry(
 ### Pattern 2: Validation Before Operation
 
 ```typescript
-async function safeStore(agentId: string, entry: MemoryInput) {
+async function safeStore(memorySpaceId: string, entry: MemoryInput) {
   // Validate before calling
   if (!entry.content || entry.content.length === 0) {
     throw new Error("Content cannot be empty");
@@ -344,7 +344,7 @@ async function safeStore(agentId: string, entry: MemoryInput) {
   }
 
   // Now safe to store
-  return await cortex.memory.store(agentId, entry);
+  return await cortex.memory.store(memorySpaceId, entry);
 }
 ```
 
@@ -352,13 +352,13 @@ async function safeStore(agentId: string, entry: MemoryInput) {
 
 ```typescript
 async function searchWithFallback(
-  agentId: string,
+  memorySpaceId: string,
   query: string,
   embedding?: number[],
 ) {
   try {
     // Try semantic search first
-    return await cortex.memory.search(agentId, query, {
+    return await cortex.memory.search(memorySpaceId, query, {
       embedding,
       strategy: "semantic",
       limit: 10,
@@ -367,7 +367,7 @@ async function searchWithFallback(
     if (error.code === "INVALID_EMBEDDING_DIMENSION") {
       // Fall back to keyword search
       console.warn("Semantic search failed, using keyword");
-      return await cortex.memory.search(agentId, query, {
+      return await cortex.memory.search(memorySpaceId, query, {
         strategy: "keyword",
         limit: 10,
       });
@@ -381,11 +381,11 @@ async function searchWithFallback(
 
 ```typescript
 async function getMemoryWithFallback(
-  agentId: string,
+  memorySpaceId: string,
   memoryId: string,
 ): Promise<MemoryEntry | null> {
   try {
-    return await cortex.memory.get(agentId, memoryId);
+    return await cortex.memory.get(memorySpaceId, memoryId);
   } catch (error) {
     if (error.code === "MEMORY_NOT_FOUND") {
       // Memory was deleted - return null gracefully
@@ -408,7 +408,10 @@ async function getMemoryWithFallback(
 ### Pattern 5: Error Aggregation
 
 ```typescript
-async function bulkOperationWithErrors(agentId: string, items: MemoryInput[]) {
+async function bulkOperationWithErrors(
+  memorySpaceId: string,
+  items: MemoryInput[],
+) {
   const results = {
     successful: [] as MemoryEntry[],
     failed: [] as { item: MemoryInput; error: CortexError }[],
@@ -416,7 +419,7 @@ async function bulkOperationWithErrors(agentId: string, items: MemoryInput[]) {
 
   for (const item of items) {
     try {
-      const memory = await cortex.memory.store(agentId, item);
+      const memory = await cortex.memory.store(memorySpaceId, item);
       results.successful.push(memory);
     } catch (error) {
       if (error instanceof CortexError) {
@@ -471,13 +474,13 @@ catch (error) {
 ### Strategy 3: Verify Data Integrity
 
 ```typescript
-async function debugMemory(agentId: string, memoryId: string) {
+async function debugMemory(memorySpaceId: string, memoryId: string) {
   try {
-    const memory = await cortex.memory.get(agentId, memoryId);
+    const memory = await cortex.memory.get(memorySpaceId, memoryId);
 
     console.log("Memory found:", {
       id: memory.id,
-      agentId: memory.agentId,
+      memorySpaceId: memory.memorySpaceId,
       version: memory.version,
       hasEmbedding: !!memory.embedding,
       embeddingDimension: memory.embedding?.length,
@@ -508,26 +511,26 @@ async function debugMemory(agentId: string, memoryId: string) {
 
 ```typescript
 // Start broad, narrow down
-async function debugSearch(agentId: string) {
+async function debugSearch(memorySpaceId: string) {
   // 1. Get total count
-  const total = await cortex.memory.count(agentId);
+  const total = await cortex.memory.count(memorySpaceId);
   console.log(`Total memories: ${total}`);
 
   // 2. Filter by source
-  const conversations = await cortex.memory.count(agentId, {
+  const conversations = await cortex.memory.count(memorySpaceId, {
     "source.type": "conversation",
   });
   console.log(`Conversation memories: ${conversations}`);
 
   // 3. Add user filter
-  const userConversations = await cortex.memory.count(agentId, {
+  const userConversations = await cortex.memory.count(memorySpaceId, {
     "source.type": "conversation",
     userId: "user-123",
   });
   console.log(`User-123 conversations: ${userConversations}`);
 
   // 4. Add importance
-  const important = await cortex.memory.count(agentId, {
+  const important = await cortex.memory.count(memorySpaceId, {
     "source.type": "conversation",
     userId: "user-123",
     minImportance: 70,
@@ -738,7 +741,7 @@ catch (error) {
       message: error.message,
       details: error.details,
       operation: 'memory.store',
-      agentId: 'agent-1',
+      memorySpaceId: 'user-123-personal',
       timestamp: new Date(),
     });
   }
@@ -764,14 +767,14 @@ await cortex.memory.deleteMany("agent-1", filters);
 ### 5. Handle Pagination Errors
 
 ```typescript
-async function getAllMemories(agentId: string) {
+async function getAllMemories(memorySpaceId: string) {
   const allMemories = [];
   let offset = 0;
   const limit = 100;
 
   while (true) {
     try {
-      const page = await cortex.memory.list(agentId, {
+      const page = await cortex.memory.list(memorySpaceId, {
         limit,
         offset,
       });
@@ -853,12 +856,12 @@ memories.memories.forEach((m) => {
 });
 
 // Try different strategies
-const semantic = await cortex.memory.search(agentId, query, {
+const semantic = await cortex.memory.search(memorySpaceId, query, {
   strategy: "semantic",
   embedding,
 });
 
-const keyword = await cortex.memory.search(agentId, query, {
+const keyword = await cortex.memory.search(memorySpaceId, query, {
   strategy: "keyword",
 });
 

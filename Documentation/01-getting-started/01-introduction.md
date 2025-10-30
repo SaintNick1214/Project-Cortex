@@ -1,6 +1,6 @@
 # Introduction to Cortex
 
-> **Last Updated**: 2025-10-23
+> **Last Updated**: 2025-10-28
 
 ## Welcome to Cortex
 
@@ -67,7 +67,8 @@ const cortex = new Cortex({ convexUrl: process.env.CONVEX_URL });
 
 // Store a conversation (ACID + Vector automatic)
 await cortex.memory.remember({
-  agentId: "agent-1",
+  memorySpaceId: "user-1-personal", // Memory space (isolation boundary)
+  participantId: "my-agent", // Which tool/agent (optional, for Hive Mode)
   conversationId: "conv-123",
   userMessage: "I prefer dark mode",
   agentResponse: "I'll remember that!",
@@ -77,7 +78,7 @@ await cortex.memory.remember({
 
 // Search works immediately
 const memories = await cortex.memory.search(
-  "agent-1",
+  "user-1-personal",
   "what are the user preferences?",
 );
 ```
@@ -90,13 +91,23 @@ const memories = await cortex.memory.search(
 - No predefined categories - agents learn naturally
 - Store text, embeddings, metadata, and relationships
 
-**🔒 Private Memory Banks**
+**🔒 Memory Space Isolation**
 
-- Complete isolation between agents
-- Each agent has its own secure storage
+- Complete isolation per memory space
+- Flexible: One space per user, per team, or per project
+- Hive Mode: Multiple tools share one space (MCP integration)
+- Collaboration Mode: Separate spaces with secure cross-space access
 - No accidental data leakage
 
-**♾️ Long-term Persistence**
+**♾️ Infinite Context**
+
+- Never run out of context again
+- Recall from millions of past messages via retrieval
+- Up to 99% token reduction vs traditional accumulation
+- Works with any LLM (smaller models perform like SOTA with perfect memory)
+- Ephemeral conversations + permanent facts
+
+**📁 Long-term Persistence**
 
 - Memories last forever (no automatic expiration)
 - Survive restarts, deployments, and migrations
@@ -132,11 +143,49 @@ const memories = await cortex.memory.search(
 - Understand what agents remember most
 - Optimize based on usage data
 
-**🎯 Hybrid Agent Management**
+**🐝 Hive Mode (Multi-Tool Memory)**
+
+- Multiple AI tools share one memory space
+- Single write, all tools benefit (zero duplication)
+- Perfect for MCP: Cursor + Claude + custom tools
+- Cross-application memory that follows you everywhere
+- Participant tracking (know who stored what)
+
+**🤝 Collaboration Mode (Multi-Agent Systems)**
+
+- Agents in separate memory spaces
+- Secure communication via A2A protocol
+- Context chains for limited cross-space access
+- Perfect for autonomous agents and enterprise workflows
+- Complete isolation with controlled delegation
+
+**🎯 Flexible Memory Space Management**
 
 - Start simple with string IDs
-- Add optional registry for advanced features
+- Add optional registry for analytics and tracking
 - Progressive enhancement as your system grows
+- One space per user, team, or project
+
+**🕸️ Graph-Like Architecture**
+
+- Implicit graph structure with nodes and edges
+- Built-in graph traversals (Context Chains, A2A patterns)
+- Optional graph database integration for advanced queries
+- Query relationships: "Who communicated with whom about what?"
+
+**🧠 LLM Fact Extraction (Optional)**
+
+- Automatic extraction of salient facts from conversations
+- 60-90% storage and token savings
+- Configurable (DIY or Cloud Mode auto-extraction)
+- Facts stored as versioned, searchable knowledge
+
+**🔌 MCP Server (Cross-Application Memory)**
+
+- Free: Local MCP server for tool integration
+- Premium: Cloud-hosted endpoint with advanced features
+- Works with Cursor, Claude Desktop, and custom tools
+- Your AI memory follows you everywhere
 
 **🚀 Zero Infrastructure**
 
@@ -185,7 +234,7 @@ const embedding = await cohere.embed({
 const embedding = await localModel.encode(text);
 
 // Cortex doesn't care - just store it (Layer 2 for system memories)
-await cortex.vector.store(agentId, {
+await cortex.vector.store(memorySpaceId, {
   content: text,
   contentType: "raw",
   embedding: embedding.data[0].embedding,
@@ -193,9 +242,9 @@ await cortex.vector.store(agentId, {
   metadata: { importance: 50 },
 });
 
-// Or use Layer 3 for conversations
+// Or use Layer 4 for conversations
 await cortex.memory.remember({
-  agentId,
+  memorySpaceId,
   conversationId,
   userMessage,
   agentResponse,
@@ -244,9 +293,9 @@ Every API is designed to be:
 Start simple, add complexity when needed:
 
 ```typescript
-// Day 1: Simple usage (direct mode) - Layer 3 convenience
+// Day 1: Simple usage (direct mode) - Layer 4 convenience
 await cortex.memory.remember({
-  agentId: "my-agent",
+  memorySpaceId: "user-1-personal",
   conversationId: "conv-1",
   userMessage: "Hello",
   agentResponse: "Hi there!",
@@ -255,10 +304,12 @@ await cortex.memory.remember({
 });
 
 // Day 30: Add structure when it helps
-await cortex.agents.register({
-  id: "my-agent",
-  name: "My Agent",
-  metadata: { team: "support", capabilities: ["help"] },
+await cortex.memorySpaces.register({
+  id: "user-1-personal",
+  name: "User 1's Personal Space",
+  type: "personal",
+  participants: ["my-agent", "cursor", "claude"],
+  metadata: { owner: "user-1" },
 });
 
 // Day 90: Upgrade to cloud mode for analytics
@@ -403,8 +454,9 @@ Store style guidelines, past content, and user feedback for consistent generatio
 
 To set clear expectations:
 
-- **Not an LLM** - Cortex doesn't generate text or embeddings
+- **Not an LLM** - Cortex doesn't generate text or embeddings (but Cloud Mode can generate embeddings for you)
 - **Not a vector database** - It's a complete memory system (uses vector search internally)
+- **Not a native graph database** - But provides graph-like querying and optional graph DB integration
 - **Not a Convex replacement** - It's built on top of Convex, enhancing it for AI use cases
 - **Not framework-specific** - Works with any AI framework
 - **Not opinionated about AI** - You choose your models and strategies

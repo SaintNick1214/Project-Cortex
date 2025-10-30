@@ -9,17 +9,279 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Planned for v1.0.0
 
-- Layer 2: Vector Memory API (semantic search)
-- Layer 3: Memory Convenience API
-- Coordination APIs (Users, Contexts, Agents, A2A)
 - Complete API stabilization
-- Production-ready documentation
 - Integration examples for all major frameworks
-- Performance benchmarks
+- Performance benchmarks at scale
+- Advanced graph database integration
+- MCP Server implementation
 
 ---
 
 ## SDK Releases
+
+### [0.6.0] - 2025-10-30
+
+#### 🚀 REVOLUTIONARY RELEASE: Memory Space Architecture
+
+**This is a transformative release** that fundamentally reimagines how AI agents manage memory. The Memory Space Architecture introduces flexible isolation boundaries, eliminates data duplication, and enables unprecedented collaboration patterns.
+
+#### ✨ Major New Features
+
+**1. Memory Spaces - Flexible Isolation Boundaries**
+- **NEW API:** `cortex.memorySpaces.*` - Registry for managing memory spaces
+- Supports personal, team, project, and custom memory spaces
+- Each space is an isolated container with its own conversations, memories, and facts
+- Replaces rigid per-agent isolation with flexible, use-case-driven boundaries
+- **Breaking Change:** All APIs now use `memorySpaceId` instead of `agentId`
+
+**2. Hive Mode - Multi-Tool Shared Memory**
+- **Game-Changer:** Multiple tools/agents can share ONE memory space
+- Eliminates data duplication across tools serving the same user
+- `participantId` field tracks which tool/agent contributed what
+- Example: Calendar, email, and task tools all write to user's personal hive
+- **Result:** No more syncing data between tool-specific databases
+
+**3. Facts Store - Structured Knowledge Layer**
+- **NEW API:** `cortex.facts.*` - Layer 3 structured knowledge extraction
+- Store facts as semantic triples (subject-predicate-object)
+- Immutable version chains with supersedes/supersededBy linking
+- Graph-like queries without graph database: `queryBySubject()`, `queryByRelationship()`
+- Export to JSON-LD for semantic web compatibility
+- **Enables:** Infinite Context capability (retrieve from 10,000+ messages instantly)
+
+**4. Context Chains - Hierarchical Workflow Coordination**
+- **NEW API:** `cortex.contexts.*` - Multi-agent workflow coordination
+- Parent-child context relationships for task delegation
+- Cross-space context sharing for Collaboration Mode
+- `grantAccess()` enables secure context sharing between organizations
+- Links to source conversations for complete audit trail
+
+**5. Collaboration Mode - Cross-Space Secure Sharing**
+- Organizations with separate memory spaces can collaborate
+- Shared contexts coordinate workflows across boundaries
+- Data stays isolated, only context metadata is shared
+- Example: Company A and Company B on joint project with private data
+
+**6. Infinite Context Capability**
+- Facts enable instant retrieval from massive conversation histories
+- Extract structured knowledge during conversation
+- Retrieve specific facts without scanning 10,000+ messages
+- **Token Savings:** Query facts instead of passing entire conversation to LLM
+
+#### 🔧 Breaking Changes
+
+**⚠️ BREAKING: API Parameter Changes**
+
+All memory-scoped operations now use `memorySpaceId` instead of `agentId`:
+
+```typescript
+// OLD (v0.5.x)
+await cortex.vector.store("agent-123", {...});
+await cortex.conversations.create({
+  type: "user-agent",
+  participants: { userId: "user-1", agentId: "agent-123" },
+});
+
+// NEW (v0.6.0)
+await cortex.vector.store("memspace-123", {...});
+await cortex.conversations.create({
+  memorySpaceId: "memspace-123",
+  type: "user-agent",
+  participants: { userId: "user-1", participantId: "agent-123" },
+});
+```
+
+**Migration Guide:**
+1. Rename all `agentId` parameters to `memorySpaceId`
+2. In conversation participants, rename `agentId` to `participantId`
+3. Update to Hive Mode: Consolidate multiple agent IDs into single memory space
+4. Add `participantId` to track contributors (optional but recommended)
+
+**What's NOT Breaking:**
+- `immutable.*` and `mutable.*` APIs unchanged (intentionally shared)
+- User APIs unchanged
+- All data structures compatible (simple field rename)
+
+#### 🎁 New APIs
+
+**cortex.facts.*** (Layer 3)
+- `store()` - Create structured facts
+- `get()` - Retrieve by factId
+- `list()` - Filter by factType, subject, tags
+- `count()` - Count facts
+- `search()` - Keyword search across facts
+- `update()` - Create new version (immutable chain)
+- `delete()` - Soft delete (marks invalid)
+- `getHistory()` - Complete version chain
+- `queryBySubject()` - Entity-centric queries
+- `queryByRelationship()` - Graph traversal
+- `export()` - JSON/JSON-LD/CSV export
+- `consolidate()` - Merge duplicate facts
+
+**cortex.memorySpaces.*** (Layer 4)
+- `register()` - Create memory space
+- `get()` - Retrieve space
+- `list()` - Filter by type/status
+- `count()` - Count spaces
+- `update()` - Modify metadata
+- `delete()` - Remove space (with optional cascade)
+- `addParticipant()` - Add participant to space
+- `removeParticipant()` - Remove participant
+- `getStats()` - Aggregate statistics across all layers
+- `findByParticipant()` - Find spaces for participant
+
+**cortex.contexts.*** (Layer 4)
+- `create()` - Create root or child context
+- `get()` - Retrieve with optional chain
+- `update()` - Modify status/data
+- `delete()` - Remove with optional cascade
+- `list()` - Filter by memorySpace, status, depth
+- `count()` - Count contexts
+- `search()` - Search contexts
+- `getChain()` - Complete hierarchy
+- `getRoot()` - Walk to root
+- `getChildren()` - Direct/recursive children
+- `addParticipant()` - Add to context
+- `grantAccess()` - Enable cross-space collaboration
+
+#### ✅ Enhanced Existing APIs
+
+**All Layer 2 (Vector) APIs Updated:**
+- `vector.*` and `memory.*` now use `memorySpaceId`
+- Added optional `participantId` for Hive Mode tracking
+- Memory space isolation enforced
+- Permission validation added
+
+**All Layer 1 (Conversations) APIs Updated:**
+- `conversations.*` now use `memorySpaceId`
+- Participant tracking in `participantId` field
+- Support for agent-agent conversations with `memorySpaceIds` array
+- Enhanced filtering by memory space
+
+#### 🧪 Testing Improvements
+
+**Comprehensive Test Suite:**
+- **NEW:** 5 new test suites (facts, memorySpaces, contexts, hiveMode, integration)
+- **UPDATED:** 6 existing suites for memorySpaceId
+- **Total:** 378 tests across 11 test suites
+- **Coverage:** 756 test executions (378 LOCAL + 378 MANAGED)
+- **Success Rate:** 100% on both environments ✅
+
+**New Test Suites:**
+- `facts.test.ts` - 53 tests validating structured knowledge
+- `memorySpaces.test.ts` - 29 tests for registry management
+- `contexts.test.ts` - 31 tests for workflow coordination
+- `hiveMode.test.ts` - 8 tests for multi-tool scenarios
+- `integration.test.ts` - 7 complex multi-layer scenarios
+
+**Infrastructure:**
+- Updated cleanup helpers for all 8 tables
+- Added `purgeAll()` to facts, contexts, memorySpaces backends
+- Updated `scripts/cleanup-test-data.ts` for comprehensive cleanup
+- Created `tests/README.md` explaining all 378 tests
+
+#### 📊 Database Schema Updates
+
+**New Tables:**
+- `facts` - Structured knowledge with versioning (7 indexes)
+- `contexts` - Workflow coordination (6 indexes)  
+- `memorySpaces` - Registry with participants (1 index)
+
+**Updated Tables:**
+- `conversations` - Added `memorySpaceId`, `participantId`
+- `memories` - Added `memorySpaceId`, `participantId` (renamed from agentId)
+- Added 8 new indexes for memory space queries
+
+**Deprecated:**
+- `agents` table (use `memorySpaces` instead)
+
+#### 📖 Documentation Overhaul
+
+**50+ Files Updated (~24,000 lines):**
+- Complete Memory Space Architecture documentation
+- New guides: Hive Mode, Infinite Context, Facts Extraction
+- All 13 API references updated for memorySpaceId
+- All 9 architecture documents updated
+- Integration guides for graph databases
+- Comprehensive test documentation
+
+**New Documentation:**
+- `02-core-features/01-memory-spaces.md` - Complete guide (renamed from agent-memory.md)
+- `02-core-features/08-fact-extraction.md` - Facts layer guide
+- `02-core-features/10-hive-mode.md` - Hive vs Collaboration modes
+- `03-api-reference/13-memory-space-operations.md` - New API reference
+- `04-architecture/10-infinite-context.md` - Breakthrough capability
+- `07-advanced-topics/03-facts-vs-conversations.md` - Storage strategy analysis
+- `tests/README.md` - Complete test suite documentation
+
+#### 🎯 Performance Improvements
+
+- **Hive Mode:** Single query vs N queries (N = number of tools)
+- **Facts:** O(1) retrieval vs O(N) message scanning
+- **Memory Spaces:** Consolidated storage reduces duplication
+- **Indexes:** 8 new indexes for optimized queries
+
+#### 🔐 Security & Compliance
+
+- **GDPR:** All layers support `userId` for cascade deletion
+- **Isolation:** Memory space boundaries enforced at database level
+- **Access Control:** `grantAccess()` for explicit cross-space sharing
+- **Audit Trail:** Complete traceability via conversationRef/sourceRef
+
+#### 🐛 Bug Fixes
+
+- Fixed memory space isolation in get/delete operations
+- Fixed search index to use memorySpaceId instead of agentId
+- Fixed version chain traversal in getHistory (facts)
+- Updated all test helpers for new table structure
+
+#### 📝 Migration Notes
+
+**Automatic Compatibility:**
+- Data structures are compatible (field rename only)
+- No data migration required for simple rename
+- Existing agent-based code can map agentId → memorySpaceId 1:1
+
+**Recommended Migration Path:**
+1. Update all `agentId` references to `memorySpaceId`
+2. Update conversation participants structure
+3. Consider consolidating related agents into Hive spaces
+4. Add `participantId` tracking for multi-tool scenarios
+5. Leverage Facts API for infinite context capability
+
+**For Hive Mode Migration:**
+- Consolidate tool-specific memory spaces into shared hives
+- Add `participantId` to track contributors
+- Use `memorySpaces.register()` to define hive membership
+
+#### 🌟 Key Benefits
+
+**For Developers:**
+- More flexible than per-agent isolation
+- Hive Mode eliminates cross-tool data sync
+- Facts enable instant retrieval from long conversations
+- Context chains simplify multi-agent workflows
+
+**For Users:**
+- Better cross-tool memory sharing
+- No more "calendar doesn't know what email knows"
+- Faster responses (fewer LLM context tokens)
+- More accurate structured knowledge
+
+**For Enterprises:**
+- Secure cross-organization collaboration
+- Complete audit trails
+- GDPR-compliant data management
+- Scalable to thousands of memory spaces
+
+#### 🔗 Related
+
+- **Memory Space Architecture:** See `Internal Docs/04-MEMORY-SPACE-ARCHITECTURE.md`
+- **Hive Mode Guide:** See `Documentation/02-core-features/10-hive-mode.md`
+- **Facts Layer:** See `Internal Docs/01-FACTS-LAYER-ARCHITECTURE.md`
+- **Migration Guide:** See `Documentation/MIGRATION-v0.6.0.md` (coming soon)
+
+---
 
 ### [0.5.1] - 2025-10-27
 

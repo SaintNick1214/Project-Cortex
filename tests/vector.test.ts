@@ -6,7 +6,7 @@
  * - Convex mutations/queries
  * - Storage validation
  * - Semantic search
- * - Agent isolation
+ * - Memory space isolation
  */
 
 import { Cortex } from "../src";
@@ -41,7 +41,7 @@ describe("Vector Memory API (Layer 2)", () => {
 
   describe("store()", () => {
     it("stores memory without embedding (keyword search only)", async () => {
-      const result = await cortex.vector.store("agent-store", {
+      const result = await cortex.vector.store("memspace-test", {
         content: "User prefers dark mode",
         contentType: "raw",
         source: { type: "system" },
@@ -52,7 +52,7 @@ describe("Vector Memory API (Layer 2)", () => {
       });
 
       expect(result.memoryId).toMatch(/^mem-/);
-      expect(result.agentId).toBe("agent-store");
+      expect(result.memorySpaceId).toBe("memspace-test");
       expect(result.content).toBe("User prefers dark mode");
       expect(result.embedding).toBeUndefined();
       expect(result.importance).toBe(60);
@@ -65,7 +65,7 @@ describe("Vector Memory API (Layer 2)", () => {
       // Mock embedding (1536 dimensions)
       const mockEmbedding = Array.from({ length: 1536 }, () => Math.random());
 
-      const result = await cortex.vector.store("agent-store", {
+      const result = await cortex.vector.store("memspace-test", {
         content: "User password is Blue123",
         contentType: "raw",
         embedding: mockEmbedding,
@@ -82,7 +82,7 @@ describe("Vector Memory API (Layer 2)", () => {
     });
 
     it("stores memory with conversationRef", async () => {
-      const result = await cortex.vector.store("agent-store", {
+      const result = await cortex.vector.store("memspace-test", {
         content: "User asked about refunds",
         contentType: "summarized",
         source: { type: "conversation", userId: "user-1" },
@@ -102,7 +102,7 @@ describe("Vector Memory API (Layer 2)", () => {
     });
 
     it("stores memory with userId for GDPR", async () => {
-      const result = await cortex.vector.store("agent-store", {
+      const result = await cortex.vector.store("memspace-test", {
         content: "User-specific data",
         contentType: "raw",
         userId: "user-gdpr",
@@ -121,7 +121,7 @@ describe("Vector Memory API (Layer 2)", () => {
     let testMemoryId: string;
 
     beforeAll(async () => {
-      const memory = await cortex.vector.store("agent-test", {
+      const memory = await cortex.vector.store("memspace-test", {
         content: "Test memory for retrieval",
         contentType: "raw",
         source: { type: "system" },
@@ -135,7 +135,7 @@ describe("Vector Memory API (Layer 2)", () => {
     });
 
     it("retrieves existing memory", async () => {
-      const result = await cortex.vector.get("agent-test", testMemoryId);
+      const result = await cortex.vector.get("memspace-test", testMemoryId);
 
       expect(result).not.toBeNull();
       expect(result!.memoryId).toBe(testMemoryId);
@@ -144,25 +144,25 @@ describe("Vector Memory API (Layer 2)", () => {
 
     it("returns null for non-existent memory", async () => {
       const result = await cortex.vector.get(
-        "agent-test",
+        "memspace-test",
         "mem-does-not-exist",
       );
 
       expect(result).toBeNull();
     });
 
-    it("returns null for memory owned by different agent", async () => {
-      // Try to access agent-test's memory from agent-test-2
-      const result = await cortex.vector.get("agent-test-2", testMemoryId);
+    it("returns null for memory owned by different memory space", async () => {
+      // Try to access memspace-test's memory from memspace-test-2
+      const result = await cortex.vector.get("memspace-test-2", testMemoryId);
 
-      expect(result).toBeNull(); // Permission denied (agent isolation)
+      expect(result).toBeNull(); // Permission denied (memory space isolation)
     });
   });
 
   describe("search()", () => {
     beforeAll(async () => {
       // Create searchable memories
-      await cortex.vector.store("agent-search", {
+      await cortex.vector.store("memspace-test", {
         content: "User prefers dark mode for the interface",
         contentType: "raw",
         source: { type: "conversation", userId: "user-1" },
@@ -172,7 +172,7 @@ describe("Vector Memory API (Layer 2)", () => {
         },
       });
 
-      await cortex.vector.store("agent-search", {
+      await cortex.vector.store("memspace-test", {
         content: "The password for admin account is Secret123",
         contentType: "raw",
         source: { type: "conversation", userId: "user-1" },
@@ -182,7 +182,7 @@ describe("Vector Memory API (Layer 2)", () => {
         },
       });
 
-      await cortex.vector.store("agent-search", {
+      await cortex.vector.store("memspace-test", {
         content: "System started successfully at 10:00 AM",
         contentType: "raw",
         source: { type: "system" },
@@ -194,7 +194,7 @@ describe("Vector Memory API (Layer 2)", () => {
     });
 
     it("finds memories using keyword search", async () => {
-      const results = await cortex.vector.search("agent-search", "password");
+      const results = await cortex.vector.search("memspace-test", "password");
 
       expect(results.length).toBeGreaterThan(0);
       expect(results.some((m) => m.content.includes("password"))).toBe(true);
@@ -202,7 +202,7 @@ describe("Vector Memory API (Layer 2)", () => {
 
     it("filters by userId", async () => {
       // Search for content that exists in user-1's memories
-      const results = await cortex.vector.search("agent-search", "dark mode", {
+      const results = await cortex.vector.search("memspace-test", "dark mode", {
         userId: "user-1",
       });
 
@@ -213,7 +213,7 @@ describe("Vector Memory API (Layer 2)", () => {
     });
 
     it("filters by tags", async () => {
-      const results = await cortex.vector.search("agent-search", "system", {
+      const results = await cortex.vector.search("memspace-test", "system", {
         tags: ["system"],
       });
 
@@ -224,7 +224,7 @@ describe("Vector Memory API (Layer 2)", () => {
     });
 
     it("filters by minImportance", async () => {
-      const results = await cortex.vector.search("agent-search", "password", {
+      const results = await cortex.vector.search("memspace-test", "password", {
         minImportance: 90,
       });
 
@@ -234,7 +234,7 @@ describe("Vector Memory API (Layer 2)", () => {
     });
 
     it("respects limit parameter", async () => {
-      const results = await cortex.vector.search("agent-search", "user", {
+      const results = await cortex.vector.search("memspace-test", "user", {
         limit: 1,
       });
 
@@ -243,7 +243,7 @@ describe("Vector Memory API (Layer 2)", () => {
 
     it("isolates by agent (agent-1 doesn't see agent-2's memories)", async () => {
       // Store memory for agent-test-2
-      await cortex.vector.store("agent-test-2", {
+      await cortex.vector.store("memspace-test-2", {
         content: "Private information for agent-2",
         contentType: "raw",
         source: { type: "system" },
@@ -254,7 +254,7 @@ describe("Vector Memory API (Layer 2)", () => {
       });
 
       // agent-search shouldn't find it
-      const results = await cortex.vector.search("agent-search", "private");
+      const results = await cortex.vector.search("memspace-test", "private");
 
       const hasAgent2Memory = results.some((m) =>
         m.content.includes("agent-2"),
@@ -267,7 +267,7 @@ describe("Vector Memory API (Layer 2)", () => {
   describe("list()", () => {
     beforeAll(async () => {
       for (let i = 1; i <= 5; i++) {
-        await cortex.vector.store("agent-test", {
+        await cortex.vector.store("memspace-test", {
           content: `Memory ${i}`,
           contentType: "raw",
           source: { type: i % 2 === 0 ? "conversation" : "system" },
@@ -281,18 +281,18 @@ describe("Vector Memory API (Layer 2)", () => {
 
     it("lists all memories for agent", async () => {
       const results = await cortex.vector.list({
-        agentId: "agent-test",
+        memorySpaceId: "memspace-test",
       });
 
       expect(results.length).toBeGreaterThanOrEqual(5);
       results.forEach((memory) => {
-        expect(memory.agentId).toBe("agent-test");
+        expect(memory.memorySpaceId).toBe("memspace-test");
       });
     });
 
     it("filters by sourceType", async () => {
       const results = await cortex.vector.list({
-        agentId: "agent-test",
+        memorySpaceId: "memspace-test",
         sourceType: "conversation",
       });
 
@@ -303,7 +303,7 @@ describe("Vector Memory API (Layer 2)", () => {
 
     it("respects limit parameter", async () => {
       const results = await cortex.vector.list({
-        agentId: "agent-test",
+        memorySpaceId: "memspace-test",
         limit: 2,
       });
 
@@ -314,7 +314,7 @@ describe("Vector Memory API (Layer 2)", () => {
   describe("count()", () => {
     it("counts all memories for agent", async () => {
       const count = await cortex.vector.count({
-        agentId: "agent-test",
+        memorySpaceId: "memspace-test",
       });
 
       expect(count).toBeGreaterThan(0);
@@ -322,7 +322,7 @@ describe("Vector Memory API (Layer 2)", () => {
 
     it("counts by sourceType", async () => {
       const count = await cortex.vector.count({
-        agentId: "agent-test",
+        memorySpaceId: "memspace-test",
         sourceType: "system",
       });
 
@@ -333,7 +333,7 @@ describe("Vector Memory API (Layer 2)", () => {
   describe("delete()", () => {
     it("deletes a memory", async () => {
       // Create memory
-      const memory = await cortex.vector.store("agent-test", {
+      const memory = await cortex.vector.store("memspace-test", {
         content: "Memory to delete",
         contentType: "raw",
         source: { type: "system" },
@@ -344,29 +344,29 @@ describe("Vector Memory API (Layer 2)", () => {
       });
 
       // Verify exists
-      const before = await cortex.vector.get("agent-test", memory.memoryId);
+      const before = await cortex.vector.get("memspace-test", memory.memoryId);
 
       expect(before).not.toBeNull();
 
       // Delete
-      const result = await cortex.vector.delete("agent-test", memory.memoryId);
+      const result = await cortex.vector.delete("memspace-test", memory.memoryId);
 
       expect(result.deleted).toBe(true);
 
       // Verify deleted
-      const after = await cortex.vector.get("agent-test", memory.memoryId);
+      const after = await cortex.vector.get("memspace-test", memory.memoryId);
 
       expect(after).toBeNull();
     });
 
     it("throws error for non-existent memory", async () => {
       await expect(
-        cortex.vector.delete("agent-test", "mem-does-not-exist"),
+        cortex.vector.delete("memspace-test", "mem-does-not-exist"),
       ).rejects.toThrow("MEMORY_NOT_FOUND");
     });
 
-    it("prevents deleting other agent's memories", async () => {
-      const memory = await cortex.vector.store("agent-test", {
+    it("prevents deleting other memory space's memories", async () => {
+      const memory = await cortex.vector.store("memspace-test", {
         content: "Protected memory",
         contentType: "raw",
         source: { type: "system" },
@@ -374,15 +374,15 @@ describe("Vector Memory API (Layer 2)", () => {
       });
 
       await expect(
-        cortex.vector.delete("agent-test-2", memory.memoryId),
+        cortex.vector.delete("memspace-test-2", memory.memoryId),
       ).rejects.toThrow("PERMISSION_DENIED");
     });
   });
 
-  describe("Agent Isolation", () => {
+  describe("Memory Space Isolation", () => {
     it("each agent has private memory space", async () => {
       // Store for agent-1
-      await cortex.vector.store("agent-test", {
+      await cortex.vector.store("memspace-test", {
         content: "Agent 1 private data",
         contentType: "raw",
         source: { type: "system" },
@@ -390,7 +390,7 @@ describe("Vector Memory API (Layer 2)", () => {
       });
 
       // Store for agent-2
-      await cortex.vector.store("agent-test-2", {
+      await cortex.vector.store("memspace-test-2", {
         content: "Agent 2 private data",
         contentType: "raw",
         source: { type: "system" },
@@ -399,10 +399,10 @@ describe("Vector Memory API (Layer 2)", () => {
 
       // Each agent only sees their own
       const agent1Memories = await cortex.vector.list({
-        agentId: "agent-test",
+        memorySpaceId: "memspace-test",
       });
       const agent2Memories = await cortex.vector.list({
-        agentId: "agent-test-2",
+        memorySpaceId: "memspace-test-2",
       });
 
       const agent1HasAgent2Data = agent1Memories.some((m) =>
@@ -419,7 +419,7 @@ describe("Vector Memory API (Layer 2)", () => {
 
   describe("GDPR Compliance", () => {
     it("supports userId for cascade deletion", async () => {
-      await cortex.vector.store("agent-test", {
+      await cortex.vector.store("memspace-test", {
         content: "User-specific memory 1",
         contentType: "raw",
         userId: "user-gdpr",
@@ -427,7 +427,7 @@ describe("Vector Memory API (Layer 2)", () => {
         metadata: { importance: 60, tags: [] },
       });
 
-      await cortex.vector.store("agent-test", {
+      await cortex.vector.store("memspace-test", {
         content: "User-specific memory 2",
         contentType: "raw",
         userId: "user-gdpr",
@@ -437,7 +437,7 @@ describe("Vector Memory API (Layer 2)", () => {
 
       // Count user memories
       const count = await cortex.vector.count({
-        agentId: "agent-test",
+        memorySpaceId: "memspace-test",
         userId: "user-gdpr",
       });
 
@@ -445,7 +445,7 @@ describe("Vector Memory API (Layer 2)", () => {
 
       // List user memories
       const memories = await cortex.vector.list({
-        agentId: "agent-test",
+        memorySpaceId: "memspace-test",
         userId: "user-gdpr",
       });
 
@@ -461,7 +461,7 @@ describe("Vector Memory API (Layer 2)", () => {
       let memoryId: string;
 
       beforeAll(async () => {
-        const memory = await cortex.vector.store("agent-test", {
+        const memory = await cortex.vector.store("memspace-test", {
           content: "Original content",
           contentType: "raw",
           source: { type: "system" },
@@ -472,7 +472,7 @@ describe("Vector Memory API (Layer 2)", () => {
       });
 
       it("updates memory and creates new version", async () => {
-        const result = await cortex.vector.update("agent-test", memoryId, {
+        const result = await cortex.vector.update("memspace-test", memoryId, {
           content: "Updated content",
           importance: 80,
         });
@@ -484,7 +484,7 @@ describe("Vector Memory API (Layer 2)", () => {
       });
 
       it("preserves previous versions", async () => {
-        const history = await cortex.vector.getHistory("agent-test", memoryId);
+        const history = await cortex.vector.getHistory("memspace-test", memoryId);
 
         expect(history).toHaveLength(2);
         expect(history[0].content).toBe("Original content");
@@ -496,7 +496,7 @@ describe("Vector Memory API (Layer 2)", () => {
       let memoryId: string;
 
       beforeAll(async () => {
-        const m = await cortex.vector.store("agent-test", {
+        const m = await cortex.vector.store("memspace-test", {
           content: "Version 1",
           contentType: "raw",
           source: { type: "system" },
@@ -505,25 +505,25 @@ describe("Vector Memory API (Layer 2)", () => {
 
         memoryId = m.memoryId;
 
-        await cortex.vector.update("agent-test", memoryId, {
+        await cortex.vector.update("memspace-test", memoryId, {
           content: "Version 2",
         });
-        await cortex.vector.update("agent-test", memoryId, {
+        await cortex.vector.update("memspace-test", memoryId, {
           content: "Version 3",
         });
       });
 
       it("retrieves specific version", async () => {
-        const v1 = await cortex.vector.getVersion("agent-test", memoryId, 1);
+        const v1 = await cortex.vector.getVersion("memspace-test", memoryId, 1);
 
         expect(v1).not.toBeNull();
         expect(v1!.content).toBe("Version 1");
 
-        const v2 = await cortex.vector.getVersion("agent-test", memoryId, 2);
+        const v2 = await cortex.vector.getVersion("memspace-test", memoryId, 2);
 
         expect(v2!.content).toBe("Version 2");
 
-        const v3 = await cortex.vector.getVersion("agent-test", memoryId, 3);
+        const v3 = await cortex.vector.getVersion("memspace-test", memoryId, 3);
 
         expect(v3!.content).toBe("Version 3");
       });
@@ -532,7 +532,7 @@ describe("Vector Memory API (Layer 2)", () => {
     describe("deleteMany()", () => {
       beforeAll(async () => {
         for (let i = 1; i <= 5; i++) {
-          await cortex.vector.store("agent-test", {
+          await cortex.vector.store("memspace-test", {
             content: `Bulk delete test ${i}`,
             contentType: "raw",
             source: { type: "system" },
@@ -544,7 +544,7 @@ describe("Vector Memory API (Layer 2)", () => {
 
       it("deletes multiple memories by filter", async () => {
         const result = await cortex.vector.deleteMany({
-          agentId: "agent-test",
+          memorySpaceId: "memspace-test",
           userId: "user-bulk-delete",
         });
 
@@ -556,7 +556,7 @@ describe("Vector Memory API (Layer 2)", () => {
     describe("export()", () => {
       it("exports to JSON format", async () => {
         const result = await cortex.vector.export({
-          agentId: "agent-test",
+          memorySpaceId: "memspace-test",
           format: "json",
         });
 
@@ -570,7 +570,7 @@ describe("Vector Memory API (Layer 2)", () => {
 
       it("exports to CSV format", async () => {
         const result = await cortex.vector.export({
-          agentId: "agent-test",
+          memorySpaceId: "memspace-test",
           format: "csv",
         });
 
@@ -583,7 +583,7 @@ describe("Vector Memory API (Layer 2)", () => {
     describe("updateMany()", () => {
       beforeAll(async () => {
         for (let i = 1; i <= 3; i++) {
-          await cortex.vector.store("agent-test", {
+          await cortex.vector.store("memspace-test", {
             content: `Update many test ${i}`,
             contentType: "raw",
             source: { type: "system" },
@@ -595,7 +595,7 @@ describe("Vector Memory API (Layer 2)", () => {
       it("updates multiple memories", async () => {
         const result = await cortex.vector.updateMany(
           {
-            agentId: "agent-test",
+            memorySpaceId: "memspace-test",
             sourceType: "system",
           },
           {
@@ -609,7 +609,7 @@ describe("Vector Memory API (Layer 2)", () => {
 
     describe("archive()", () => {
       it("archives a memory (soft delete)", async () => {
-        const memory = await cortex.vector.store("agent-test", {
+        const memory = await cortex.vector.store("memspace-test", {
           content: "Archive test",
           contentType: "raw",
           source: { type: "system" },
@@ -617,7 +617,7 @@ describe("Vector Memory API (Layer 2)", () => {
         });
 
         const result = await cortex.vector.archive(
-          "agent-test",
+          "memspace-test",
           memory.memoryId,
         );
 
@@ -625,7 +625,7 @@ describe("Vector Memory API (Layer 2)", () => {
         expect(result.restorable).toBe(true);
 
         // Verify archived (should still exist but tagged)
-        const archived = await cortex.vector.get("agent-test", memory.memoryId);
+        const archived = await cortex.vector.get("memspace-test", memory.memoryId);
 
         expect(archived).not.toBeNull();
         expect(archived!.tags).toContain("archived");
@@ -639,7 +639,7 @@ describe("Vector Memory API (Layer 2)", () => {
       let v2Timestamp: number;
 
       beforeAll(async () => {
-        const m = await cortex.vector.store("agent-test", {
+        const m = await cortex.vector.store("memspace-test", {
           content: "Temporal v1",
           contentType: "raw",
           source: { type: "system" },
@@ -651,7 +651,7 @@ describe("Vector Memory API (Layer 2)", () => {
 
         await new Promise((resolve) => setTimeout(resolve, 100));
 
-        const v2 = await cortex.vector.update("agent-test", memoryId, {
+        const v2 = await cortex.vector.update("memspace-test", memoryId, {
           content: "Temporal v2",
         });
 
@@ -660,7 +660,7 @@ describe("Vector Memory API (Layer 2)", () => {
 
       it("returns version at specific timestamp", async () => {
         const atV1 = await cortex.vector.getAtTimestamp(
-          "agent-test",
+          "memspace-test",
           memoryId,
           v1Timestamp,
         );
@@ -668,7 +668,7 @@ describe("Vector Memory API (Layer 2)", () => {
         expect(atV1!.content).toBe("Temporal v1");
 
         const atV2 = await cortex.vector.getAtTimestamp(
-          "agent-test",
+          "memspace-test",
           memoryId,
           v2Timestamp,
         );
@@ -680,7 +680,7 @@ describe("Vector Memory API (Layer 2)", () => {
 
   describe("Storage Validation", () => {
     it("validates memory structure", async () => {
-      const memory = await cortex.vector.store("agent-test", {
+      const memory = await cortex.vector.store("memspace-test", {
         content: "Validation test",
         contentType: "raw",
         source: { type: "system" },
@@ -696,7 +696,7 @@ describe("Vector Memory API (Layer 2)", () => {
 
       // Verify all fields stored correctly
       const stored = await client.query(api.memories.get, {
-        agentId: "agent-test",
+        memorySpaceId: "memspace-test",
         memoryId: memory.memoryId,
       });
 

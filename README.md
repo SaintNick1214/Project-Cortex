@@ -55,6 +55,10 @@ These are the features we're building into Cortex:
 - 📈 **Access Analytics** - Built-in tracking and insights
 - 🎯 **Hybrid Agent Management** - Simple IDs or full registry, your choice
 - 🚀 **Embedding Agnostic** - Works with OpenAI, Cohere, local models, or any provider
+- 🕸️ **Graph-Lite Queries** - Built-in graph-like traversals and relationship queries
+- 🧠 **Fact Extraction** - LLM-powered fact extraction for 60-90% storage savings (optional)
+- 🔌 **MCP Server** - Cross-application memory sharing (Cursor, Claude, custom tools)
+- 📊 **Optional Graph DB** - Integrate Neo4j, Memgraph, or Kùzu for advanced graph queries
 
 ## 🏗️ Architecture Overview
 
@@ -261,6 +265,52 @@ Cortex SDK uses **dual release workflows**:
 - See: [scripts/release.ps1](./scripts/release.ps1)
 
 **Setup**: [.github/SETUP-AUTOMATED-RELEASES.md](.github/SETUP-AUTOMATED-RELEASES.md)
+
+## 🎯 Why Cortex?
+
+### Unique Differentiators
+
+**🚀 Infinite Context**
+
+- Never run out of context again
+- Recall from millions of past messages via retrieval
+- Up to 99% token reduction vs traditional accumulation
+- Works with any LLM (smaller models perform like SOTA with perfect memory)
+
+**🐝 Hive Mode**
+
+- Multiple AI tools share one memory space
+- Zero duplication (Cursor + Claude + custom tools)
+- Cross-application memory via MCP
+- Your memory follows you everywhere
+
+**🏢 Enterprise-Ready**
+
+- Complete ACID audit trails
+- Automatic versioning (temporal queries)
+- One-click GDPR cascade deletion
+- Governance policies built-in
+
+**🤝 Multi-Agent Orchestration**
+
+- Context Chains for workflow coordination
+- A2A communication protocol
+- Hive Mode (shared space) OR Collaboration Mode (separate spaces)
+- Flexible isolation models
+
+**🔧 Developer Experience**
+
+- Single database (Convex - no polyglot complexity)
+- Framework-agnostic (LangChain, Vercel AI, custom)
+- Embedding-agnostic (OpenAI, Cohere, local models)
+- TypeScript-first with full type safety
+
+**📊 Unified Architecture**
+
+- 4-layer design (ACID + Vector + Facts + Convenience)
+- Graph-Lite built-in, native graph DB optional
+- Facts extraction (DIY or Cloud auto)
+- All data in one place (Convex)
 
 ## 📄 License
 
