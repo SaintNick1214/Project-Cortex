@@ -1,6 +1,6 @@
 # Access Analytics
 
-> **Last Updated**: 2025-10-23
+> **Last Updated**: 2025-10-28
 
 Track and analyze how agents use memory to optimize performance and understand patterns.
 
@@ -19,7 +19,7 @@ Cortex automatically tracks:
 ```typescript
 interface MemoryAccessData {
   memoryId: string;
-  agentId: string;
+  memorySpaceId: string;
   accessCount: number; // Total times accessed
   lastAccessed: Date; // Most recent access
   createdAt: Date; // When memory was created
@@ -225,7 +225,7 @@ hot.forEach((m) => {
 
 ```typescript
 // Find similar memories (potential duplicates)
-async function findDuplicateCandidates(agentId: string) {
+async function findDuplicateCandidates(memorySpaceId: string) {
   const all = await cortex.memory.search(agentId, "*", { limit: 1000 });
 
   const duplicates = [];
@@ -426,7 +426,7 @@ Automated alerts:
 
 ```typescript
 // Track custom business metrics
-async function getCustomMetrics(agentId: string) {
+async function getCustomMetrics(memorySpaceId: string) {
   const memories = await cortex.memory.search(agentId, "*", { limit: 10000 });
 
   return {
@@ -470,7 +470,7 @@ await fs.writeFile("agent-analytics.csv", data);
 ### Optimizing Agent Performance
 
 ```typescript
-async function optimizeAgent(agentId: string) {
+async function optimizeAgent(memorySpaceId: string) {
   const stats = await cortex.analytics.getAgentStats(agentId);
 
   // Too many memories?
@@ -496,7 +496,7 @@ async function optimizeAgent(agentId: string) {
 
 ```typescript
 // Track return on investment for memory system (hybrid architecture)
-async function calculateMemoryROI(agentId: string) {
+async function calculateMemoryROI(memorySpaceId: string) {
   const stats = await cortex.analytics.getAgentStats(agentId);
 
   // Calculate costs (hybrid architecture)

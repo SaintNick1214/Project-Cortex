@@ -65,7 +65,7 @@ describe("Memory Convenience API (Layer 3)", () => {
   let client: ConvexClient;
   let cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-  const TEST_AGENT_ID = "agent-test-l3";
+  const TEST_MEMSPACE_ID = "memspace-test-l3";
   const TEST_USER_ID = "user-test-l3";
   const TEST_USER_NAME = "Test User";
 
@@ -93,7 +93,8 @@ describe("Memory Convenience API (Layer 3)", () => {
       // Create a conversation for testing
       const conv = await cortex.conversations.create({
         type: "user-agent",
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+        memorySpaceId: TEST_MEMSPACE_ID,
+        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
       });
 
       testConversationId = conv.conversationId;
@@ -101,7 +102,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     it("stores both messages in ACID and creates 2 vector memories", async () => {
       const result = await cortex.memory.remember({
-        agentId: TEST_AGENT_ID,
+        memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: testConversationId,
         userMessage: "The password is Blue",
         agentResponse: "I'll remember that password!",
@@ -123,7 +124,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
       // Verify Vector storage
       const memory1 = await client.query(api.memories.get, {
-        agentId: TEST_AGENT_ID,
+        memorySpaceId: TEST_MEMSPACE_ID,
         memoryId: result.memories[0].memoryId,
       });
 
@@ -134,7 +135,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     it("links vector memories to ACID messages via conversationRef", async () => {
       const result = await cortex.memory.remember({
-        agentId: TEST_AGENT_ID,
+        memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: testConversationId,
         userMessage: "Remember this important fact",
         agentResponse: "Got it!",
@@ -168,7 +169,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       };
 
       const result = await cortex.memory.remember({
-        agentId: TEST_AGENT_ID,
+        memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: testConversationId,
         userMessage: "Test embedding",
         agentResponse: "Embedded!",
@@ -194,7 +195,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       };
 
       const result = await cortex.memory.remember({
-        agentId: TEST_AGENT_ID,
+        memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: testConversationId,
         userMessage: "Long user message with lots of detail",
         agentResponse: "Short response",
@@ -215,7 +216,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     it("applies importance and tags to memories", async () => {
       const result = await cortex.memory.remember({
-        agentId: TEST_AGENT_ID,
+        memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: testConversationId,
         userMessage: "Critical password information",
         agentResponse: "Stored securely",
@@ -238,7 +239,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     it("defaults to importance=50 when not specified", async () => {
       const result = await cortex.memory.remember({
-        agentId: TEST_AGENT_ID,
+        memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: testConversationId,
         userMessage: "Regular message",
         agentResponse: "OK",
@@ -259,13 +260,14 @@ describe("Memory Convenience API (Layer 3)", () => {
       // Create conversation and memory
       const conv = await cortex.conversations.create({
         type: "user-agent",
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+        memorySpaceId: TEST_MEMSPACE_ID,
+        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
       });
 
       testConversationId = conv.conversationId;
 
       const result = await cortex.memory.remember({
-        agentId: TEST_AGENT_ID,
+        memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: testConversationId,
         userMessage: "Memory to forget",
         agentResponse: "Noted",
@@ -277,14 +279,14 @@ describe("Memory Convenience API (Layer 3)", () => {
     });
 
     it("deletes from vector by default", async () => {
-      const result = await cortex.memory.forget(TEST_AGENT_ID, testMemoryId);
+      const result = await cortex.memory.forget(TEST_MEMSPACE_ID, testMemoryId);
 
       expect(result.memoryDeleted).toBe(true);
       expect(result.conversationDeleted).toBe(false);
       expect(result.restorable).toBe(true); // ACID preserved
 
       // Verify vector deleted
-      const memory = await cortex.vector.get(TEST_AGENT_ID, testMemoryId);
+      const memory = await cortex.vector.get(TEST_MEMSPACE_ID, testMemoryId);
 
       expect(memory).toBeNull();
 
@@ -295,7 +297,7 @@ describe("Memory Convenience API (Layer 3)", () => {
     });
 
     it("deletes from both layers when deleteConversation=true", async () => {
-      const result = await cortex.memory.forget(TEST_AGENT_ID, testMemoryId, {
+      const result = await cortex.memory.forget(TEST_MEMSPACE_ID, testMemoryId, {
         deleteConversation: true,
         deleteEntireConversation: true,
       });
@@ -305,7 +307,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       expect(result.restorable).toBe(false); // Both layers deleted
 
       // Verify vector deleted
-      const memory = await cortex.vector.get(TEST_AGENT_ID, testMemoryId);
+      const memory = await cortex.vector.get(TEST_MEMSPACE_ID, testMemoryId);
 
       expect(memory).toBeNull();
 
@@ -317,7 +319,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     it("throws error for non-existent memory", async () => {
       await expect(
-        cortex.memory.forget(TEST_AGENT_ID, "non-existent"),
+        cortex.memory.forget(TEST_MEMSPACE_ID, "non-existent"),
       ).rejects.toThrow("MEMORY_NOT_FOUND");
     });
   });
@@ -329,13 +331,14 @@ describe("Memory Convenience API (Layer 3)", () => {
     beforeAll(async () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+        memorySpaceId: TEST_MEMSPACE_ID,
+        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
       });
 
       testConversationId = conv.conversationId;
 
       const result = await cortex.memory.remember({
-        agentId: TEST_AGENT_ID,
+        memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: testConversationId,
         userMessage: "Enrichment test message",
         agentResponse: "Understood",
@@ -347,7 +350,7 @@ describe("Memory Convenience API (Layer 3)", () => {
     });
 
     it("returns vector only by default", async () => {
-      const result = await cortex.memory.get(TEST_AGENT_ID, testMemoryId);
+      const result = await cortex.memory.get(TEST_MEMSPACE_ID, testMemoryId);
 
       expect(result).toBeDefined();
       expect(result).toHaveProperty("memoryId");
@@ -356,7 +359,7 @@ describe("Memory Convenience API (Layer 3)", () => {
     });
 
     it("enriches with ACID when includeConversation=true", async () => {
-      const result = (await cortex.memory.get(TEST_AGENT_ID, testMemoryId, {
+      const result = (await cortex.memory.get(TEST_MEMSPACE_ID, testMemoryId, {
         includeConversation: true,
       })) as any;
 
@@ -374,7 +377,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     it("handles missing conversation gracefully", async () => {
       // Create memory without conversation
-      const standaloneMemory = await cortex.vector.store(TEST_AGENT_ID, {
+      const standaloneMemory = await cortex.vector.store(TEST_MEMSPACE_ID, {
         content: "Standalone memory",
         contentType: "raw",
         source: { type: "system", timestamp: Date.now() },
@@ -382,7 +385,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       });
 
       const result = await cortex.memory.get(
-        TEST_AGENT_ID,
+        TEST_MEMSPACE_ID,
         standaloneMemory.memoryId,
         {
           includeConversation: true,
@@ -395,7 +398,7 @@ describe("Memory Convenience API (Layer 3)", () => {
     });
 
     it("returns null for non-existent memory", async () => {
-      const result = await cortex.memory.get(TEST_AGENT_ID, "non-existent");
+      const result = await cortex.memory.get(TEST_MEMSPACE_ID, "non-existent");
 
       expect(result).toBeNull();
     });
@@ -407,14 +410,15 @@ describe("Memory Convenience API (Layer 3)", () => {
     beforeAll(async () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+        memorySpaceId: TEST_MEMSPACE_ID,
+        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
       });
 
       testConversationId = conv.conversationId;
 
       // Create multiple memories
       await cortex.memory.remember({
-        agentId: TEST_AGENT_ID,
+        memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: testConversationId,
         userMessage: "The password for admin is Secret123",
         agentResponse: "I've stored that password",
@@ -425,7 +429,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       });
 
       await cortex.memory.remember({
-        agentId: TEST_AGENT_ID,
+        memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: testConversationId,
         userMessage: "User prefers dark mode",
         agentResponse: "Noted",
@@ -437,7 +441,7 @@ describe("Memory Convenience API (Layer 3)", () => {
     });
 
     it("returns vector only by default", async () => {
-      const results = await cortex.memory.search(TEST_AGENT_ID, "password");
+      const results = await cortex.memory.search(TEST_MEMSPACE_ID, "password");
 
       expect(results.length).toBeGreaterThan(0);
       expect(results[0]).toHaveProperty("memoryId");
@@ -445,7 +449,7 @@ describe("Memory Convenience API (Layer 3)", () => {
     });
 
     it("enriches all results when enrichConversation=true", async () => {
-      const results = await cortex.memory.search(TEST_AGENT_ID, "password", {
+      const results = await cortex.memory.search(TEST_MEMSPACE_ID, "password", {
         enrichConversation: true,
       });
 
@@ -460,14 +464,14 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     it("handles mixed results (some with conv, some without)", async () => {
       // Add standalone memory
-      await cortex.vector.store(TEST_AGENT_ID, {
+      await cortex.vector.store(TEST_MEMSPACE_ID, {
         content: "Standalone password note",
         contentType: "raw",
         source: { type: "system", timestamp: Date.now() },
         metadata: { importance: 50, tags: ["password"] },
       });
 
-      const results = await cortex.memory.search(TEST_AGENT_ID, "password", {
+      const results = await cortex.memory.search(TEST_MEMSPACE_ID, "password", {
         enrichConversation: true,
       });
 
@@ -482,7 +486,7 @@ describe("Memory Convenience API (Layer 3)", () => {
     });
 
     it("preserves search relevance order after enrichment", async () => {
-      const results = await cortex.memory.search(TEST_AGENT_ID, "password", {
+      const results = await cortex.memory.search(TEST_MEMSPACE_ID, "password", {
         enrichConversation: true,
         limit: 10,
       });
@@ -498,7 +502,8 @@ describe("Memory Convenience API (Layer 3)", () => {
     beforeAll(async () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+        memorySpaceId: TEST_MEMSPACE_ID,
+        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
       });
 
       _testConversationId = conv.conversationId;
@@ -506,7 +511,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     it("requires conversationRef for source.type=conversation", async () => {
       await expect(
-        cortex.memory.store(TEST_AGENT_ID, {
+        cortex.memory.store(TEST_MEMSPACE_ID, {
           content: "Conversation memory",
           contentType: "raw",
           source: {
@@ -521,7 +526,7 @@ describe("Memory Convenience API (Layer 3)", () => {
     });
 
     it("allows standalone for source.type=system", async () => {
-      const memory = await cortex.memory.store(TEST_AGENT_ID, {
+      const memory = await cortex.memory.store(TEST_MEMSPACE_ID, {
         content: "System memory",
         contentType: "raw",
         source: { type: "system", timestamp: Date.now() },
@@ -533,7 +538,7 @@ describe("Memory Convenience API (Layer 3)", () => {
     });
 
     it("delegates to vector.store correctly", async () => {
-      const memory = await cortex.memory.store(TEST_AGENT_ID, {
+      const memory = await cortex.memory.store(TEST_MEMSPACE_ID, {
         content: "Test storage",
         contentType: "raw",
         source: { type: "tool", timestamp: Date.now() },
@@ -542,7 +547,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
       // Verify in vector storage
       const stored = await client.query(api.memories.get, {
-        agentId: TEST_AGENT_ID,
+        memorySpaceId: TEST_MEMSPACE_ID,
         memoryId: memory.memoryId,
       });
 
@@ -558,7 +563,7 @@ describe("Memory Convenience API (Layer 3)", () => {
   describe("Delegations", () => {
     describe("update()", () => {
       it("delegates to vector.update()", async () => {
-        const memory = await cortex.vector.store(TEST_AGENT_ID, {
+        const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
           content: "Original",
           contentType: "raw",
           source: { type: "system", timestamp: Date.now() },
@@ -566,7 +571,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         });
 
         const updated = await cortex.memory.update(
-          TEST_AGENT_ID,
+          TEST_MEMSPACE_ID,
           memory.memoryId,
           {
             content: "Updated",
@@ -581,7 +586,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     describe("delete()", () => {
       it("delegates to vector.delete()", async () => {
-        const memory = await cortex.vector.store(TEST_AGENT_ID, {
+        const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
           content: "To delete",
           contentType: "raw",
           source: { type: "system", timestamp: Date.now() },
@@ -589,7 +594,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         });
 
         const result = await cortex.memory.delete(
-          TEST_AGENT_ID,
+          TEST_MEMSPACE_ID,
           memory.memoryId,
         );
 
@@ -600,14 +605,14 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     describe("list()", () => {
       it("delegates to vector.list()", async () => {
-        await cortex.vector.store(TEST_AGENT_ID, {
+        await cortex.vector.store(TEST_MEMSPACE_ID, {
           content: "List test",
           contentType: "raw",
           source: { type: "system", timestamp: Date.now() },
           metadata: { importance: 50, tags: [] },
         });
 
-        const results = await cortex.memory.list({ agentId: TEST_AGENT_ID });
+        const results = await cortex.memory.list({ memorySpaceId: TEST_MEMSPACE_ID });
 
         expect(results.length).toBeGreaterThan(0);
       });
@@ -615,7 +620,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     describe("count()", () => {
       it("delegates to vector.count()", async () => {
-        const count = await cortex.memory.count({ agentId: TEST_AGENT_ID });
+        const count = await cortex.memory.count({ memorySpaceId: TEST_MEMSPACE_ID });
 
         expect(typeof count).toBe("number");
         expect(count).toBeGreaterThanOrEqual(0);
@@ -625,7 +630,7 @@ describe("Memory Convenience API (Layer 3)", () => {
     describe("updateMany()", () => {
       it("delegates to vector.updateMany()", async () => {
         for (let i = 0; i < 3; i++) {
-          await cortex.vector.store(TEST_AGENT_ID, {
+          await cortex.vector.store(TEST_MEMSPACE_ID, {
             content: `Bulk update ${i}`,
             contentType: "raw",
             source: { type: "system", timestamp: Date.now() },
@@ -634,7 +639,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         }
 
         const result = await cortex.memory.updateMany(
-          { agentId: TEST_AGENT_ID, sourceType: "system" },
+          { memorySpaceId: TEST_MEMSPACE_ID, sourceType: "system" },
           { importance: 80 },
         );
 
@@ -645,7 +650,7 @@ describe("Memory Convenience API (Layer 3)", () => {
     describe("deleteMany()", () => {
       it("delegates to vector.deleteMany()", async () => {
         for (let i = 0; i < 3; i++) {
-          await cortex.vector.store(TEST_AGENT_ID, {
+          await cortex.vector.store(TEST_MEMSPACE_ID, {
             content: `Bulk delete ${i}`,
             contentType: "raw",
             userId: "user-bulk",
@@ -655,7 +660,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         }
 
         const result = await cortex.memory.deleteMany({
-          agentId: TEST_AGENT_ID,
+          memorySpaceId: TEST_MEMSPACE_ID,
           userId: "user-bulk",
         });
 
@@ -666,7 +671,7 @@ describe("Memory Convenience API (Layer 3)", () => {
     describe("export()", () => {
       it("delegates to vector.export()", async () => {
         const result = await cortex.memory.export({
-          agentId: TEST_AGENT_ID,
+          memorySpaceId: TEST_MEMSPACE_ID,
           format: "json",
         });
 
@@ -677,7 +682,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     describe("archive()", () => {
       it("delegates to vector.archive()", async () => {
-        const memory = await cortex.vector.store(TEST_AGENT_ID, {
+        const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
           content: "To archive",
           contentType: "raw",
           source: { type: "system", timestamp: Date.now() },
@@ -685,7 +690,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         });
 
         const result = await cortex.memory.archive(
-          TEST_AGENT_ID,
+          TEST_MEMSPACE_ID,
           memory.memoryId,
         );
 
@@ -696,19 +701,19 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     describe("getVersion()", () => {
       it("delegates to vector.getVersion()", async () => {
-        const memory = await cortex.vector.store(TEST_AGENT_ID, {
+        const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
           content: "V1",
           contentType: "raw",
           source: { type: "system", timestamp: Date.now() },
           metadata: { importance: 50, tags: [] },
         });
 
-        await cortex.vector.update(TEST_AGENT_ID, memory.memoryId, {
+        await cortex.vector.update(TEST_MEMSPACE_ID, memory.memoryId, {
           content: "V2",
         });
 
         const v1 = await cortex.memory.getVersion(
-          TEST_AGENT_ID,
+          TEST_MEMSPACE_ID,
           memory.memoryId,
           1,
         );
@@ -720,19 +725,19 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     describe("getHistory()", () => {
       it("delegates to vector.getHistory()", async () => {
-        const memory = await cortex.vector.store(TEST_AGENT_ID, {
+        const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
           content: "V1",
           contentType: "raw",
           source: { type: "system", timestamp: Date.now() },
           metadata: { importance: 50, tags: [] },
         });
 
-        await cortex.vector.update(TEST_AGENT_ID, memory.memoryId, {
+        await cortex.vector.update(TEST_MEMSPACE_ID, memory.memoryId, {
           content: "V2",
         });
 
         const history = await cortex.memory.getHistory(
-          TEST_AGENT_ID,
+          TEST_MEMSPACE_ID,
           memory.memoryId,
         );
 
@@ -744,7 +749,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     describe("getAtTimestamp()", () => {
       it("delegates to vector.getAtTimestamp()", async () => {
-        const memory = await cortex.vector.store(TEST_AGENT_ID, {
+        const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
           content: "Temporal",
           contentType: "raw",
           source: { type: "system", timestamp: Date.now() },
@@ -752,7 +757,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         });
 
         const atCreation = await cortex.memory.getAtTimestamp(
-          TEST_AGENT_ID,
+          TEST_MEMSPACE_ID,
           memory.memoryId,
           memory.createdAt,
         );
@@ -772,12 +777,13 @@ describe("Memory Convenience API (Layer 3)", () => {
       // Create conversation
       const conv = await cortex.conversations.create({
         type: "user-agent",
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+        memorySpaceId: TEST_MEMSPACE_ID,
+        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
       });
 
       // Remember
       const remembered = await cortex.memory.remember({
-        agentId: TEST_AGENT_ID,
+        memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: conv.conversationId,
         userMessage: "Integration test: password is XYZ",
         agentResponse: "Stored!",
@@ -791,7 +797,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
       // Search with enrichment
       const searchResults = await cortex.memory.search(
-        TEST_AGENT_ID,
+        TEST_MEMSPACE_ID,
         "password",
         {
           enrichConversation: true,
@@ -817,7 +823,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
       // Get with enrichment
       const enrichedGet = (await cortex.memory.get(
-        TEST_AGENT_ID,
+        TEST_MEMSPACE_ID,
         remembered.memories[0].memoryId,
         { includeConversation: true },
       )) as any;
@@ -828,7 +834,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
       // Forget (preserve ACID)
       const forgot = await cortex.memory.forget(
-        TEST_AGENT_ID,
+        TEST_MEMSPACE_ID,
         remembered.memories[0].memoryId,
       );
 
@@ -846,11 +852,12 @@ describe("Memory Convenience API (Layer 3)", () => {
     it("forget with deleteConversation removes from both layers", async () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+        memorySpaceId: TEST_MEMSPACE_ID,
+        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
       });
 
       const remembered = await cortex.memory.remember({
-        agentId: TEST_AGENT_ID,
+        memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: conv.conversationId,
         userMessage: "To be completely forgotten",
         agentResponse: "OK",
@@ -859,7 +866,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       });
 
       const forgot = await cortex.memory.forget(
-        TEST_AGENT_ID,
+        TEST_MEMSPACE_ID,
         remembered.memories[0].memoryId,
         { deleteConversation: true, deleteEntireConversation: true },
       );
@@ -869,7 +876,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
       // Verify both layers deleted
       const memory = await cortex.vector.get(
-        TEST_AGENT_ID,
+        TEST_MEMSPACE_ID,
         remembered.memories[0].memoryId,
       );
 
@@ -889,7 +896,8 @@ describe("Memory Convenience API (Layer 3)", () => {
     it("remember() creates data in both ACID and Vector", async () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+        memorySpaceId: TEST_MEMSPACE_ID,
+        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
       });
 
       const beforeACID = await client.query(api.conversations.get, {
@@ -898,11 +906,11 @@ describe("Memory Convenience API (Layer 3)", () => {
       const beforeMessageCount = beforeACID!.messageCount;
 
       const beforeVector = await client.query(api.memories.count, {
-        agentId: TEST_AGENT_ID,
+        memorySpaceId: TEST_MEMSPACE_ID,
       });
 
       await cortex.memory.remember({
-        agentId: TEST_AGENT_ID,
+        memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: conv.conversationId,
         userMessage: "Test",
         agentResponse: "OK",
@@ -917,7 +925,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       expect(afterACID!.messageCount).toBe(beforeMessageCount + 2);
 
       const afterVector = await client.query(api.memories.count, {
-        agentId: TEST_AGENT_ID,
+        memorySpaceId: TEST_MEMSPACE_ID,
       });
 
       expect(afterVector).toBe(beforeVector + 2);
@@ -926,11 +934,12 @@ describe("Memory Convenience API (Layer 3)", () => {
     it("delete() removes from Vector only, preserves ACID", async () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+        memorySpaceId: TEST_MEMSPACE_ID,
+        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
       });
 
       const remembered = await cortex.memory.remember({
-        agentId: TEST_AGENT_ID,
+        memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: conv.conversationId,
         userMessage: "Delete test",
         agentResponse: "OK",
@@ -939,13 +948,13 @@ describe("Memory Convenience API (Layer 3)", () => {
       });
 
       await cortex.memory.delete(
-        TEST_AGENT_ID,
+        TEST_MEMSPACE_ID,
         remembered.memories[0].memoryId,
       );
 
       // Vector deleted
       const vectorMemory = await cortex.vector.get(
-        TEST_AGENT_ID,
+        TEST_MEMSPACE_ID,
         remembered.memories[0].memoryId,
       );
 
@@ -978,7 +987,8 @@ describe("Memory Convenience API (Layer 3)", () => {
         // Create conversation
         const conv = await cortex.conversations.create({
           type: "user-agent",
-          participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+          memorySpaceId: TEST_MEMSPACE_ID,
+        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
         });
 
         conversationId = conv.conversationId;
@@ -1017,7 +1027,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         // Store each with embeddings and summarization
         for (const conv of conversations) {
           const result = await cortex.memory.remember({
-            agentId: TEST_AGENT_ID,
+            memorySpaceId: TEST_MEMSPACE_ID,
             conversationId,
             userMessage: conv.user,
             agentResponse: conv.agent,
@@ -1064,7 +1074,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
         for (const search of searches) {
           const results = (await cortex.memory.search(
-            TEST_AGENT_ID,
+            TEST_MEMSPACE_ID,
             search.query,
             {
               embedding: await generateEmbedding(search.query),
@@ -1115,7 +1125,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       }, 60000); // 60s timeout for API calls
 
       it("enriches search results with full conversation context", async () => {
-        const results = await cortex.memory.search(TEST_AGENT_ID, "password", {
+        const results = await cortex.memory.search(TEST_MEMSPACE_ID, "password", {
           embedding: await generateEmbedding("password credentials"),
           enrichConversation: true,
           userId: TEST_USER_ID,
@@ -1160,7 +1170,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       it("validates summarization quality", async () => {
         // Get a summarized memory
         const memory = await cortex.vector.get(
-          TEST_AGENT_ID,
+          TEST_MEMSPACE_ID,
           storedMemories[0].memoryId,
         );
 
@@ -1180,7 +1190,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
       it("similarity scores are realistic (0-1 range)", async () => {
         const results = (await cortex.memory.search(
-          TEST_AGENT_ID,
+          TEST_MEMSPACE_ID,
           "API password for production environment",
           {
             embedding: await generateEmbedding(

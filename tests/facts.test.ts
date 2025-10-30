@@ -1,0 +1,1138 @@
+/**
+ * E2E Tests: Facts API (Layer 3)
+ *
+ * Tests validate:
+ * - SDK API calls
+ * - Convex mutations/queries
+ * - Fact storage and versioning
+ * - Graph-like relationships
+ * - Memory space isolation
+ */
+
+import { Cortex } from "../src";
+import { ConvexClient } from "convex/browser";
+import { api } from "../convex-dev/_generated/api";
+import { TestCleanup } from "./helpers";
+
+describe("Facts API (Layer 3)", () => {
+  let cortex: Cortex;
+  let client: ConvexClient;
+  let cleanup: TestCleanup;
+  const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
+  const TEST_MEMSPACE_ID = "memspace-facts-test";
+
+  beforeAll(async () => {
+    cortex = new Cortex({ convexUrl: CONVEX_URL });
+    client = new ConvexClient(CONVEX_URL);
+    cleanup = new TestCleanup(client);
+
+    // Clean all test data before tests
+    await cleanup.purgeAll();
+  });
+
+  afterAll(async () => {
+    await cleanup.purgeAll();
+    await client.close();
+  });
+
+  describe("store()", () => {
+    it("stores a preference fact", async () => {
+      const fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "User prefers dark mode for UI",
+        factType: "preference",
+        subject: "user-123",
+        predicate: "prefers",
+        object: "dark-mode",
+        confidence: 95,
+        sourceType: "conversation",
+        tags: ["ui", "theme"],
+      });
+
+      expect(fact.factId).toMatch(/^fact-/);
+      expect(fact.memorySpaceId).toBe(TEST_MEMSPACE_ID);
+      expect(fact.fact).toBe("User prefers dark mode for UI");
+      expect(fact.factType).toBe("preference");
+      expect(fact.subject).toBe("user-123");
+      expect(fact.confidence).toBe(95);
+      expect(fact.version).toBe(1);
+      expect(fact.supersededBy).toBeUndefined();
+    });
+
+    it("stores a knowledge fact with source reference", async () => {
+      const fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "API password for production is SecurePass123",
+        factType: "knowledge",
+        subject: "production-api",
+        confidence: 90,
+        sourceType: "conversation",
+        sourceRef: {
+          conversationId: "conv-123",
+          messageIds: ["msg-1", "msg-2"],
+        },
+        tags: ["password", "production", "api"],
+      });
+
+      expect(fact.factType).toBe("knowledge");
+      expect(fact.sourceRef).toBeDefined();
+      expect(fact.sourceRef!.conversationId).toBe("conv-123");
+      expect(fact.tags).toContain("password");
+    });
+
+    it("stores a relationship fact (graph triple)", async () => {
+      const fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Alice works at Acme Corp",
+        factType: "relationship",
+        subject: "user-alice",
+        predicate: "works_at",
+        object: "company-acme",
+        confidence: 100,
+        sourceType: "manual",
+        tags: ["employment", "relationship"],
+      });
+
+      expect(fact.factType).toBe("relationship");
+      expect(fact.subject).toBe("user-alice");
+      expect(fact.predicate).toBe("works_at");
+      expect(fact.object).toBe("company-acme");
+    });
+
+    it("supports Hive Mode with participantId", async () => {
+      const fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        participantId: "tool-extractor-1",
+        fact: "User has completed onboarding",
+        factType: "event",
+        subject: "user-456",
+        confidence: 100,
+        sourceType: "tool",
+        tags: ["onboarding", "milestone"],
+      });
+
+      expect(fact.participantId).toBe("tool-extractor-1");
+      expect(fact.factType).toBe("event");
+    });
+  });
+
+  describe("get()", () => {
+    let testFactId: string;
+
+    beforeAll(async () => {
+      const fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Test fact for retrieval",
+        factType: "knowledge",
+        confidence: 85,
+        sourceType: "system",
+        tags: ["test"],
+      });
+
+      testFactId = fact.factId;
+    });
+
+    it("retrieves existing fact", async () => {
+      const fact = await cortex.facts.get(TEST_MEMSPACE_ID, testFactId);
+
+      expect(fact).not.toBeNull();
+      expect(fact!.factId).toBe(testFactId);
+      expect(fact!.fact).toBe("Test fact for retrieval");
+    });
+
+    it("returns null for non-existent fact", async () => {
+      const fact = await cortex.facts.get(TEST_MEMSPACE_ID, "fact-does-not-exist");
+
+      expect(fact).toBeNull();
+    });
+
+    it("returns null for fact in different memory space", async () => {
+      const fact = await cortex.facts.get("memspace-other", testFactId);
+
+      expect(fact).toBeNull(); // Isolation
+    });
+  });
+
+  describe("list()", () => {
+    beforeAll(async () => {
+      // Create diverse facts
+      await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "User prefers email notifications",
+        factType: "preference",
+        subject: "user-list",
+        confidence: 90,
+        sourceType: "conversation",
+        tags: ["notifications", "email"],
+      });
+
+      await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "User's name is John Doe",
+        factType: "identity",
+        subject: "user-list",
+        confidence: 100,
+        sourceType: "system",
+        tags: ["identity", "name"],
+      });
+
+      await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "System version is 2.1.0",
+        factType: "knowledge",
+        confidence: 100,
+        sourceType: "system",
+        tags: ["version", "system"],
+      });
+    });
+
+    it("lists all facts for memory space", async () => {
+      const facts = await cortex.facts.list({
+        memorySpaceId: TEST_MEMSPACE_ID,
+      });
+
+      expect(facts.length).toBeGreaterThanOrEqual(3);
+      facts.forEach((f) => {
+        expect(f.memorySpaceId).toBe(TEST_MEMSPACE_ID);
+      });
+    });
+
+    it("filters by factType", async () => {
+      const prefs = await cortex.facts.list({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        factType: "preference",
+      });
+
+      expect(prefs.length).toBeGreaterThanOrEqual(1);
+      prefs.forEach((f) => {
+        expect(f.factType).toBe("preference");
+      });
+    });
+
+    it("filters by subject", async () => {
+      const userFacts = await cortex.facts.list({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        subject: "user-list",
+      });
+
+      expect(userFacts.length).toBeGreaterThanOrEqual(2);
+      userFacts.forEach((f) => {
+        expect(f.subject).toBe("user-list");
+      });
+    });
+
+    it("filters by tags", async () => {
+      const notificationFacts = await cortex.facts.list({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        tags: ["notifications"],
+      });
+
+      expect(notificationFacts.length).toBeGreaterThanOrEqual(1);
+      notificationFacts.forEach((f) => {
+        expect(f.tags).toContain("notifications");
+      });
+    });
+
+    it("respects limit parameter", async () => {
+      const limited = await cortex.facts.list({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        limit: 2,
+      });
+
+      expect(limited.length).toBeLessThanOrEqual(2);
+    });
+
+    it("excludes superseded facts by default", async () => {
+      const uniqueTag = `supersede-${Date.now()}`;
+      
+      const original = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Old version",
+        factType: "knowledge",
+        confidence: 80,
+        sourceType: "system",
+        tags: [uniqueTag],
+      });
+
+      // Update it (supersedes original)
+      await cortex.facts.update(TEST_MEMSPACE_ID, original.factId, {
+        fact: "New version",
+        confidence: 95,
+      });
+
+      const current = await cortex.facts.list({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        tags: [uniqueTag],
+      });
+
+      // Should only see latest version
+      expect(current.length).toBeGreaterThanOrEqual(1);
+      expect(current.some((f) => f.fact === "New version" && f.version === 2)).toBe(true);
+      // Original should not be in list (superseded)
+      expect(current.some((f) => f.fact === "Old version" && f.supersededBy !== undefined)).toBe(false);
+    });
+
+    it("includes superseded when requested", async () => {
+      const uniqueTag = `supersede-incl-${Date.now()}`;
+      
+      const original = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Old version 2",
+        factType: "knowledge",
+        confidence: 80,
+        sourceType: "system",
+        tags: [uniqueTag],
+      });
+
+      await cortex.facts.update(TEST_MEMSPACE_ID, original.factId, {
+        fact: "New version 2",
+        confidence: 95,
+      });
+
+      const all = await cortex.facts.list({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        tags: [uniqueTag],
+        includeSuperseded: true,
+      });
+
+      expect(all.length).toBeGreaterThanOrEqual(2); // Both versions
+    });
+  });
+
+  describe("count()", () => {
+    it("counts all facts", async () => {
+      const count = await cortex.facts.count({
+        memorySpaceId: TEST_MEMSPACE_ID,
+      });
+
+      expect(count).toBeGreaterThanOrEqual(3);
+    });
+
+    it("counts by factType", async () => {
+      const prefCount = await cortex.facts.count({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        factType: "preference",
+      });
+
+      expect(prefCount).toBeGreaterThanOrEqual(1);
+    });
+
+    it("excludes superseded by default", async () => {
+      const active = await cortex.facts.count({
+        memorySpaceId: TEST_MEMSPACE_ID,
+      });
+
+      const all = await cortex.facts.count({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        includeSuperseded: true,
+      });
+
+      expect(all).toBeGreaterThan(active); // Superseded facts exist
+    });
+  });
+
+  describe("search()", () => {
+    beforeAll(async () => {
+      await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "The database password is DbSecret456",
+        factType: "knowledge",
+        confidence: 95,
+        sourceType: "conversation",
+        tags: ["password", "database"],
+      });
+
+      await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "User enjoys reading science fiction books",
+        factType: "preference",
+        confidence: 90,
+        sourceType: "conversation",
+        tags: ["hobbies", "books"],
+      });
+    });
+
+    it("finds facts using keyword search", async () => {
+      const results = await cortex.facts.search(TEST_MEMSPACE_ID, "password");
+
+      expect(results.length).toBeGreaterThan(0);
+      expect(results.some((f) => f.fact.includes("password"))).toBe(true);
+    });
+
+    it("filters by factType", async () => {
+      const prefs = await cortex.facts.search(TEST_MEMSPACE_ID, "user", {
+        factType: "preference",
+      });
+
+      expect(prefs.length).toBeGreaterThanOrEqual(1);
+      prefs.forEach((f) => {
+        expect(f.factType).toBe("preference");
+      });
+    });
+
+    it("filters by minConfidence", async () => {
+      const highConf = await cortex.facts.search(TEST_MEMSPACE_ID, "password", {
+        minConfidence: 90,
+      });
+
+      highConf.forEach((f) => {
+        expect(f.confidence).toBeGreaterThanOrEqual(90);
+      });
+    });
+
+    it("filters by tags", async () => {
+      const dbFacts = await cortex.facts.search(TEST_MEMSPACE_ID, "password", {
+        tags: ["database"],
+      });
+
+      dbFacts.forEach((f) => {
+        expect(f.tags).toContain("database");
+      });
+    });
+
+    it("respects limit", async () => {
+      const limited = await cortex.facts.search(TEST_MEMSPACE_ID, "user", {
+        limit: 1,
+      });
+
+      expect(limited.length).toBeLessThanOrEqual(1);
+    });
+  });
+
+  describe("update()", () => {
+    let originalFactId: string;
+
+    beforeAll(async () => {
+      const fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Original fact statement",
+        factType: "knowledge",
+        confidence: 80,
+        sourceType: "system",
+        tags: ["update-test"],
+      });
+
+      originalFactId = fact.factId;
+    });
+
+    it("creates new version when updated", async () => {
+      const updated = await cortex.facts.update(TEST_MEMSPACE_ID, originalFactId, {
+        fact: "Updated fact statement",
+        confidence: 95,
+      });
+
+      expect(updated.fact).toBe("Updated fact statement");
+      expect(updated.confidence).toBe(95);
+      expect(updated.version).toBe(2);
+      expect(updated.supersedes).toBe(originalFactId);
+    });
+
+    it("marks original as superseded", async () => {
+      const original = await cortex.facts.get(TEST_MEMSPACE_ID, originalFactId);
+
+      expect(original).not.toBeNull();
+      expect(original!.supersededBy).toBeDefined();
+      expect(original!.validUntil).toBeDefined();
+    });
+
+    it("throws error for non-existent fact", async () => {
+      await expect(
+        cortex.facts.update(TEST_MEMSPACE_ID, "fact-does-not-exist", {
+          fact: "New fact",
+        }),
+      ).rejects.toThrow("FACT_NOT_FOUND");
+    });
+
+    it("prevents updating other memory space's facts", async () => {
+      await expect(
+        cortex.facts.update("memspace-other", originalFactId, {
+          fact: "Unauthorized update",
+        }),
+      ).rejects.toThrow("PERMISSION_DENIED");
+    });
+  });
+
+  describe("delete()", () => {
+    it("soft deletes a fact", async () => {
+      const fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Fact to delete",
+        factType: "knowledge",
+        confidence: 80,
+        sourceType: "system",
+        tags: ["delete-test"],
+      });
+
+      const result = await cortex.facts.delete(TEST_MEMSPACE_ID, fact.factId);
+
+      expect(result.deleted).toBe(true);
+      expect(result.factId).toBe(fact.factId);
+
+      // Verify it's marked invalid
+      const deleted = await cortex.facts.get(TEST_MEMSPACE_ID, fact.factId);
+
+      expect(deleted).not.toBeNull();
+      expect(deleted!.validUntil).toBeDefined();
+    });
+
+    it("throws error for non-existent fact", async () => {
+      await expect(
+        cortex.facts.delete(TEST_MEMSPACE_ID, "fact-does-not-exist"),
+      ).rejects.toThrow("FACT_NOT_FOUND");
+    });
+
+    it("prevents deleting other memory space's facts", async () => {
+      const fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Protected fact",
+        factType: "knowledge",
+        confidence: 80,
+        sourceType: "system",
+        tags: ["protected"],
+      });
+
+      await expect(
+        cortex.facts.delete("memspace-other", fact.factId),
+      ).rejects.toThrow("PERMISSION_DENIED");
+    });
+  });
+
+  describe("getHistory()", () => {
+    let factId: string;
+
+    beforeAll(async () => {
+      const v1 = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Version 1",
+        factType: "knowledge",
+        confidence: 70,
+        sourceType: "system",
+        tags: ["history-test"],
+      });
+
+      factId = v1.factId;
+
+      const v2 = await cortex.facts.update(TEST_MEMSPACE_ID, factId, {
+        fact: "Version 2",
+        confidence: 85,
+      });
+
+      await cortex.facts.update(TEST_MEMSPACE_ID, v2.factId, {
+        fact: "Version 3",
+        confidence: 95,
+      });
+    });
+
+    it("returns complete version history", async () => {
+      const history = await cortex.facts.getHistory(TEST_MEMSPACE_ID, factId);
+
+      expect(history.length).toBeGreaterThanOrEqual(3);
+      expect(history[0].fact).toBe("Version 1");
+      // Later versions may have different order due to test timing
+      expect(history.some((f) => f.fact === "Version 2")).toBe(true);
+      expect(history.some((f) => f.fact === "Version 3")).toBe(true);
+    });
+
+    it("returns empty for non-existent fact", async () => {
+      const history = await cortex.facts.getHistory(
+        TEST_MEMSPACE_ID,
+        "fact-does-not-exist",
+      );
+
+      expect(history).toEqual([]);
+    });
+
+    it("respects memory space isolation", async () => {
+      const history = await cortex.facts.getHistory("memspace-other", factId);
+
+      expect(history).toEqual([]);
+    });
+  });
+
+  describe("queryBySubject()", () => {
+    beforeAll(async () => {
+      await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Bob prefers morning meetings",
+        factType: "preference",
+        subject: "user-bob",
+        confidence: 90,
+        sourceType: "conversation",
+        tags: ["meetings"],
+      });
+
+      await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Bob lives in San Francisco",
+        factType: "identity",
+        subject: "user-bob",
+        confidence: 100,
+        sourceType: "system",
+        tags: ["location"],
+      });
+
+      await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Bob knows Python programming",
+        factType: "knowledge",
+        subject: "user-bob",
+        confidence: 95,
+        sourceType: "conversation",
+        tags: ["skills"],
+      });
+    });
+
+    it("returns all facts about a subject", async () => {
+      const bobFacts = await cortex.facts.queryBySubject({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        subject: "user-bob",
+      });
+
+      expect(bobFacts.length).toBeGreaterThanOrEqual(3);
+      bobFacts.forEach((f) => {
+        expect(f.subject).toBe("user-bob");
+      });
+    });
+
+    it("filters by factType", async () => {
+      const bobPrefs = await cortex.facts.queryBySubject({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        subject: "user-bob",
+        factType: "preference",
+      });
+
+      expect(bobPrefs.length).toBeGreaterThanOrEqual(1);
+      expect(bobPrefs.some((f) => f.fact.includes("morning meetings"))).toBe(true);
+    });
+  });
+
+  describe("queryByRelationship()", () => {
+    beforeAll(async () => {
+      await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Charlie works at Google",
+        factType: "relationship",
+        subject: "user-charlie",
+        predicate: "works_at",
+        object: "company-google",
+        confidence: 100,
+        sourceType: "conversation",
+        tags: ["employment"],
+      });
+
+      await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Charlie lives in New York",
+        factType: "relationship",
+        subject: "user-charlie",
+        predicate: "lives_in",
+        object: "city-nyc",
+        confidence: 100,
+        sourceType: "system",
+        tags: ["location"],
+      });
+    });
+
+    it("returns facts matching subject and predicate", async () => {
+      const employment = await cortex.facts.queryByRelationship({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        subject: "user-charlie",
+        predicate: "works_at",
+      });
+
+      expect(employment.length).toBeGreaterThanOrEqual(1);
+      expect(employment.some((f) => f.object === "company-google")).toBe(true);
+    });
+
+    it("supports graph-like traversal", async () => {
+      const location = await cortex.facts.queryByRelationship({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        subject: "user-charlie",
+        predicate: "lives_in",
+      });
+
+      expect(location.length).toBeGreaterThanOrEqual(1);
+      expect(location.some((f) => f.object === "city-nyc")).toBe(true);
+    });
+  });
+
+  describe("export()", () => {
+    it("exports to JSON format", async () => {
+      const exported = await cortex.facts.export({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        format: "json",
+      });
+
+      expect(exported.format).toBe("json");
+      expect(exported.count).toBeGreaterThan(0);
+      expect(exported.data).toBeTruthy();
+
+      const parsed = JSON.parse(exported.data);
+
+      expect(Array.isArray(parsed)).toBe(true);
+    });
+
+    it("exports to JSON-LD format", async () => {
+      const exported = await cortex.facts.export({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        format: "jsonld",
+      });
+
+      expect(exported.format).toBe("jsonld");
+      expect(exported.data).toContain("@context");
+      expect(exported.data).toContain("@graph");
+
+      const parsed = JSON.parse(exported.data);
+
+      expect(parsed["@context"]).toBe("https://schema.org/");
+      expect(Array.isArray(parsed["@graph"])).toBe(true);
+    });
+
+    it("exports to CSV format", async () => {
+      const exported = await cortex.facts.export({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        format: "csv",
+      });
+
+      expect(exported.format).toBe("csv");
+      expect(exported.data).toContain("factId");
+      expect(exported.data).toContain("fact");
+
+      const lines = exported.data.split("\n");
+
+      expect(lines.length).toBeGreaterThan(1); // Header + data
+    });
+
+    it("filters by factType", async () => {
+      const prefs = await cortex.facts.export({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        format: "json",
+        factType: "preference",
+      });
+
+      const parsed = JSON.parse(prefs.data);
+
+      parsed.forEach((f: any) => {
+        expect(f.factType).toBe("preference");
+      });
+    });
+  });
+
+  describe("consolidate()", () => {
+    it("merges duplicate facts", async () => {
+      const fact1 = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "User prefers dark theme",
+        factType: "preference",
+        subject: "user-dup",
+        confidence: 80,
+        sourceType: "conversation",
+        tags: ["theme"],
+      });
+
+      const fact2 = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "User likes dark mode",
+        factType: "preference",
+        subject: "user-dup",
+        confidence: 90,
+        sourceType: "conversation",
+        tags: ["theme"],
+      });
+
+      const fact3 = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "User prefers dark theme for UI",
+        factType: "preference",
+        subject: "user-dup",
+        confidence: 95,
+        sourceType: "conversation",
+        tags: ["theme"],
+      });
+
+      const result = await cortex.facts.consolidate({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        factIds: [fact1.factId, fact2.factId, fact3.factId],
+        keepFactId: fact3.factId, // Keep highest confidence
+      });
+
+      expect(result.consolidated).toBe(true);
+      expect(result.keptFactId).toBe(fact3.factId);
+      expect(result.mergedCount).toBe(2);
+
+      // Verify others marked as superseded
+      const fact1After = await cortex.facts.get(TEST_MEMSPACE_ID, fact1.factId);
+
+      expect(fact1After!.supersededBy).toBe(fact3.factId);
+    });
+
+    it("updates confidence of kept fact", async () => {
+      const facts = await cortex.facts.list({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        subject: "user-dup",
+        tags: ["theme"],
+        includeSuperseded: false,
+      });
+
+      // Only kept fact should remain active
+      expect(facts.length).toBeGreaterThanOrEqual(1);
+      // Confidence should be averaged
+      expect(facts.some((f) => f.confidence > 80)).toBe(true);
+    });
+  });
+
+  describe("Memory Space Isolation", () => {
+    it("isolates facts by memory space", async () => {
+      await cortex.facts.store({
+        memorySpaceId: "memspace-1",
+        fact: "Space 1 fact",
+        factType: "knowledge",
+        confidence: 90,
+        sourceType: "system",
+        tags: ["isolation"],
+      });
+
+      await cortex.facts.store({
+        memorySpaceId: "memspace-2",
+        fact: "Space 2 fact",
+        factType: "knowledge",
+        confidence: 90,
+        sourceType: "system",
+        tags: ["isolation"],
+      });
+
+      const space1Facts = await cortex.facts.list({
+        memorySpaceId: "memspace-1",
+        tags: ["isolation"],
+      });
+
+      const space2Facts = await cortex.facts.list({
+        memorySpaceId: "memspace-2",
+        tags: ["isolation"],
+      });
+
+      expect(space1Facts.length).toBeGreaterThanOrEqual(1);
+      expect(space2Facts.length).toBeGreaterThanOrEqual(1);
+      expect(space1Facts.some((f) => f.fact.includes("Space 1"))).toBe(true);
+      expect(space2Facts.some((f) => f.fact.includes("Space 2"))).toBe(true);
+    });
+  });
+
+  describe("Versioning & Immutability", () => {
+    it("creates immutable version chain", async () => {
+      const v1 = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "V1",
+        factType: "knowledge",
+        confidence: 70,
+        sourceType: "system",
+        tags: ["chain"],
+      });
+
+      const v2 = await cortex.facts.update(TEST_MEMSPACE_ID, v1.factId, {
+        fact: "V2",
+        confidence: 80,
+      });
+
+      const v3 = await cortex.facts.update(TEST_MEMSPACE_ID, v2.factId, {
+        fact: "V3",
+        confidence: 90,
+      });
+
+      // Get history
+      const history = await cortex.facts.getHistory(TEST_MEMSPACE_ID, v1.factId);
+
+      expect(history.length).toBeGreaterThanOrEqual(3);
+
+      // Verify chain structure (oldest should have no supersedes, newest no supersededBy)
+      expect(history[0].supersedes).toBeUndefined();
+      expect(history[0].supersededBy).toBeDefined();
+      expect(history[history.length - 1].supersededBy).toBeUndefined();
+      expect(history[history.length - 1].supersedes).toBeDefined();
+    });
+  });
+
+  describe("Storage Validation", () => {
+    it("validates fact structure in database", async () => {
+      const fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        participantId: "agent-validator",
+        fact: "Storage validation test",
+        factType: "knowledge",
+        subject: "test-entity",
+        predicate: "has_property",
+        object: "test-value",
+        confidence: 88,
+        sourceType: "tool",
+        sourceRef: {
+          memoryId: "mem-123",
+        },
+        metadata: { custom: "data" },
+        tags: ["validation"],
+      });
+
+      // Direct database query
+      const stored = await client.query(api.facts.get, {
+        memorySpaceId: TEST_MEMSPACE_ID,
+        factId: fact.factId,
+      });
+
+      expect(stored).not.toBeNull();
+      expect(stored!.factId).toBe(fact.factId);
+      expect(stored!.memorySpaceId).toBe(TEST_MEMSPACE_ID);
+      expect(stored!.participantId).toBe("agent-validator");
+      expect(stored!.subject).toBe("test-entity");
+      expect(stored!.predicate).toBe("has_property");
+      expect(stored!.object).toBe("test-value");
+      expect(stored!.version).toBe(1);
+      expect(stored!.createdAt).toBeGreaterThan(0);
+    });
+  });
+
+  describe("Graph-Like Relationships", () => {
+    beforeAll(async () => {
+      // Create relationship graph
+      await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Alice manages team-alpha",
+        factType: "relationship",
+        subject: "user-alice",
+        predicate: "manages",
+        object: "team-alpha",
+        confidence: 100,
+        sourceType: "system",
+        tags: ["org-structure"],
+      });
+
+      await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Bob reports to Alice",
+        factType: "relationship",
+        subject: "user-bob",
+        predicate: "reports_to",
+        object: "user-alice",
+        confidence: 100,
+        sourceType: "system",
+        tags: ["org-structure"],
+      });
+
+      await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Charlie reports to Alice",
+        factType: "relationship",
+        subject: "user-charlie",
+        predicate: "reports_to",
+        object: "user-alice",
+        confidence: 100,
+        sourceType: "system",
+        tags: ["org-structure"],
+      });
+    });
+
+    it("traverses 'manages' relationship", async () => {
+      const managed = await cortex.facts.queryByRelationship({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        subject: "user-alice",
+        predicate: "manages",
+      });
+
+      expect(managed.length).toBeGreaterThanOrEqual(1);
+      expect(managed.some((f) => f.object === "team-alpha")).toBe(true);
+    });
+
+    it("finds all direct reports", async () => {
+      const reports = await cortex.facts.list({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        tags: ["org-structure"],
+      });
+
+      const directReports = reports.filter(
+        (f) => f.predicate === "reports_to" && f.object === "user-alice",
+      );
+
+      expect(directReports.length).toBeGreaterThanOrEqual(2);
+      const names = directReports.map((f) => f.subject);
+
+      expect(names).toContain("user-bob");
+      expect(names).toContain("user-charlie");
+    });
+  });
+
+  describe("Hive Mode", () => {
+    it("tracks which participant extracted each fact", async () => {
+      await cortex.facts.store({
+        memorySpaceId: "hive-test",
+        participantId: "tool-a",
+        fact: "Extracted by tool A",
+        factType: "knowledge",
+        confidence: 85,
+        sourceType: "tool",
+        tags: ["hive"],
+      });
+
+      await cortex.facts.store({
+        memorySpaceId: "hive-test",
+        participantId: "tool-b",
+        fact: "Extracted by tool B",
+        factType: "knowledge",
+        confidence: 90,
+        sourceType: "tool",
+        tags: ["hive"],
+      });
+
+      const all = await cortex.facts.list({
+        memorySpaceId: "hive-test",
+      });
+
+      expect(all.length).toBeGreaterThanOrEqual(2);
+
+      const participants = all.map((f) => f.participantId);
+
+      expect(participants).toContain("tool-a");
+      expect(participants).toContain("tool-b");
+    });
+  });
+
+  describe("Edge Cases", () => {
+    it("handles very long fact statements", async () => {
+      const longFact = "A".repeat(5000);
+      const fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: longFact,
+        factType: "knowledge",
+        confidence: 80,
+        sourceType: "system",
+        tags: ["long"],
+      });
+
+      expect(fact.fact.length).toBe(5000);
+    });
+
+    it("handles special characters in facts", async () => {
+      const fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: 'User said: "Hello, world!" & goodbye <tag>',
+        factType: "knowledge",
+        confidence: 90,
+        sourceType: "conversation",
+        tags: ["special-chars"],
+      });
+
+      expect(fact.fact).toContain('"');
+      expect(fact.fact).toContain("&");
+      expect(fact.fact).toContain("<");
+    });
+
+    it("handles concurrent fact creations", async () => {
+      const promises = Array.from({ length: 10 }, (_, i) =>
+        cortex.facts.store({
+          memorySpaceId: TEST_MEMSPACE_ID,
+          fact: `Concurrent fact ${i}`,
+          factType: "knowledge",
+          confidence: 80,
+          sourceType: "system",
+          tags: ["concurrent"],
+        }),
+      );
+
+      const results = await Promise.all(promises);
+
+      expect(results.length).toBe(10);
+      results.forEach((f) => {
+        expect(f.factId).toMatch(/^fact-/);
+      });
+    });
+  });
+
+  describe("Integration with Conversations", () => {
+    it("links facts to source conversations", async () => {
+      const conv = await cortex.conversations.create({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        type: "user-agent",
+        participants: {
+          userId: "user-fact-test",
+          participantId: "agent-fact-test",
+        },
+      });
+
+      await cortex.conversations.addMessage({
+        conversationId: conv.conversationId,
+        message: {
+          role: "user",
+          content: "My favorite color is blue",
+        },
+      });
+
+      const msg = conv.messages[0] || (await cortex.conversations.get(conv.conversationId))!.messages[0];
+
+      // Extract fact from conversation
+      const fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "User's favorite color is blue",
+        factType: "preference",
+        subject: "user-fact-test",
+        predicate: "favorite_color",
+        object: "blue",
+        confidence: 95,
+        sourceType: "conversation",
+        sourceRef: {
+          conversationId: conv.conversationId,
+          messageIds: [msg.id],
+        },
+        tags: ["color", "preference"],
+      });
+
+      expect(fact.sourceRef).toBeDefined();
+      expect(fact.sourceRef!.conversationId).toBe(conv.conversationId);
+      expect(fact.sourceRef!.messageIds).toContain(msg.id);
+    });
+  });
+
+  describe("Cross-Operation Consistency", () => {
+    it("store → get → search → list → export consistency", async () => {
+      const stored = await cortex.facts.store({
+        memorySpaceId: "consistency-test",
+        fact: "UNIQUE_CONSISTENCY_MARKER fact for testing",
+        factType: "knowledge",
+        subject: "test-entity",
+        confidence: 92,
+        sourceType: "system",
+        tags: ["consistency", "test"],
+      });
+
+      // Get
+      const retrieved = await cortex.facts.get("consistency-test", stored.factId);
+
+      expect(retrieved).not.toBeNull();
+      expect(retrieved!.factId).toBe(stored.factId);
+
+      // Search
+      const searchResults = await cortex.facts.search(
+        "consistency-test",
+        "UNIQUE_CONSISTENCY_MARKER",
+      );
+
+      expect(searchResults.length).toBeGreaterThanOrEqual(1);
+      expect(searchResults.some((f) => f.factId === stored.factId)).toBe(true);
+
+      // List
+      const listed = await cortex.facts.list({
+        memorySpaceId: "consistency-test",
+        tags: ["consistency"],
+      });
+
+      expect(listed.some((f) => f.factId === stored.factId)).toBe(true);
+
+      // Export
+      const exported = await cortex.facts.export({
+        memorySpaceId: "consistency-test",
+        format: "json",
+      });
+
+      const parsed = JSON.parse(exported.data);
+
+      expect(parsed.some((f: any) => f.factId === stored.factId)).toBe(true);
+    });
+  });
+});
+

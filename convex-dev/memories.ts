@@ -17,9 +17,10 @@ import { mutation, query } from "./_generated/server";
  */
 export const store = mutation({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(), // Updated
+    participantId: v.optional(v.string()), // NEW: Hive Mode
     content: v.string(),
-    contentType: v.union(v.literal("raw"), v.literal("summarized")),
+    contentType: v.union(v.literal("raw"), v.literal("summarized"), v.literal("fact")), // Added fact
     embedding: v.optional(v.array(v.float64())),
     sourceType: v.union(
       v.literal("conversation"),
@@ -60,7 +61,8 @@ export const store = mutation({
 
     const _id = await ctx.db.insert("memories", {
       memoryId,
-      agentId: args.agentId,
+      memorySpaceId: args.memorySpaceId, // Updated
+      participantId: args.participantId, // NEW
       content: args.content,
       contentType: args.contentType,
       embedding: args.embedding,
@@ -90,7 +92,7 @@ export const store = mutation({
  */
 export const deleteMemory = mutation({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(), // Updated
     memoryId: v.string(),
   },
   handler: async (ctx, args) => {
@@ -103,8 +105,8 @@ export const deleteMemory = mutation({
       throw new Error("MEMORY_NOT_FOUND");
     }
 
-    // Verify agent owns this memory
-    if (memory.agentId !== args.agentId) {
+    // Verify memorySpace owns this memory
+    if (memory.memorySpaceId !== args.memorySpaceId) {
       throw new Error("PERMISSION_DENIED");
     }
 
@@ -123,7 +125,7 @@ export const deleteMemory = mutation({
  */
 export const get = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     memoryId: v.string(),
   },
   handler: async (ctx, args) => {
@@ -136,8 +138,8 @@ export const get = query({
       return null;
     }
 
-    // Verify agent owns this memory
-    if (memory.agentId !== args.agentId) {
+    // Verify memorySpace owns this memory
+    if (memory.memorySpaceId !== args.memorySpaceId) {
       return null; // Permission denied (silent)
     }
 
@@ -150,7 +152,7 @@ export const get = query({
  */
 export const search = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(), // Updated
     query: v.string(),
     embedding: v.optional(v.array(v.float64())),
     userId: v.optional(v.string()),
@@ -180,7 +182,7 @@ export const search = query({
           .withIndex("by_embedding" as any, (q: any) =>
             q
               .similar("embedding", args.embedding, args.limit || 20)
-              .eq("agentId", args.agentId),
+              .eq("memorySpaceId", args.memorySpaceId),
           )
           .collect();
       } catch (error: any) {
@@ -188,7 +190,7 @@ export const search = query({
         if (error.message?.includes("similar is not a function")) {
           const vectorResults = await ctx.db
             .query("memories")
-            .withIndex("by_agentId", (q) => q.eq("agentId", args.agentId))
+            .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
             .collect();
 
           // Calculate cosine similarity for each result
@@ -238,7 +240,7 @@ export const search = query({
       results = await ctx.db
         .query("memories")
         .withSearchIndex("by_content", (q) =>
-          q.search("content", args.query).eq("agentId", args.agentId),
+          q.search("content", args.query).eq("memorySpaceId", args.memorySpaceId),
         )
         .take(args.limit || 20);
     }
@@ -274,7 +276,7 @@ export const search = query({
  */
 export const list = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(), // Updated
     userId: v.optional(v.string()),
     sourceType: v.optional(
       v.union(
@@ -282,6 +284,7 @@ export const list = query({
         v.literal("system"),
         v.literal("tool"),
         v.literal("a2a"),
+        v.literal("fact-extraction"), // NEW
       ),
     ),
     limit: v.optional(v.number()),
@@ -289,7 +292,7 @@ export const list = query({
   handler: async (ctx, args) => {
     let memories = await ctx.db
       .query("memories")
-      .withIndex("by_agentId", (q) => q.eq("agentId", args.agentId))
+      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId)) // Updated
       .order("desc")
       .take(args.limit || 100);
 
@@ -311,7 +314,7 @@ export const list = query({
  */
 export const count = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(), // Updated
     userId: v.optional(v.string()),
     sourceType: v.optional(
       v.union(
@@ -319,13 +322,14 @@ export const count = query({
         v.literal("system"),
         v.literal("tool"),
         v.literal("a2a"),
+        v.literal("fact-extraction"), // NEW
       ),
     ),
   },
   handler: async (ctx, args) => {
     let memories = await ctx.db
       .query("memories")
-      .withIndex("by_agentId", (q) => q.eq("agentId", args.agentId))
+      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId)) // Updated
       .collect();
 
     // Apply filters
@@ -350,7 +354,7 @@ export const count = query({
  */
 export const update = mutation({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     memoryId: v.string(),
     content: v.optional(v.string()),
     embedding: v.optional(v.array(v.float64())),
@@ -367,7 +371,7 @@ export const update = mutation({
       throw new Error("MEMORY_NOT_FOUND");
     }
 
-    if (memory.agentId !== args.agentId) {
+    if (memory.memorySpaceId !== args.memorySpaceId) {
       throw new Error("PERMISSION_DENIED");
     }
 
@@ -406,7 +410,7 @@ export const update = mutation({
  */
 export const getVersion = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     memoryId: v.string(),
     version: v.number(),
   },
@@ -416,7 +420,7 @@ export const getVersion = query({
       .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
       .first();
 
-    if (!memory || memory.agentId !== args.agentId) {
+    if (!memory || memory.memorySpaceId !== args.memorySpaceId) {
       return null;
     }
 
@@ -451,7 +455,7 @@ export const getVersion = query({
  */
 export const getHistory = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     memoryId: v.string(),
   },
   handler: async (ctx, args) => {
@@ -460,7 +464,7 @@ export const getHistory = query({
       .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
       .first();
 
-    if (!memory || memory.agentId !== args.agentId) {
+    if (!memory || memory.memorySpaceId !== args.memorySpaceId) {
       return [];
     }
 
@@ -490,7 +494,7 @@ export const getHistory = query({
  */
 export const deleteMany = mutation({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(), // Updated
     userId: v.optional(v.string()),
     sourceType: v.optional(
       v.union(
@@ -504,7 +508,7 @@ export const deleteMany = mutation({
   handler: async (ctx, args) => {
     let memories = await ctx.db
       .query("memories")
-      .withIndex("by_agentId", (q) => q.eq("agentId", args.agentId))
+      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
       .collect();
 
     if (args.userId) {
@@ -559,7 +563,7 @@ export const purgeAll = mutation({
     if (!isLocal && !isDevDeployment && !isTestEnv) {
       throw new Error(
         "PURGE_DISABLED_IN_PRODUCTION: purgeAll is only available in test/dev environments. " +
-          "Use deleteMany with specific agentId for targeted deletions.",
+          "Use deleteMany with specific memorySpaceId for targeted deletions.",
       );
     }
 
@@ -581,7 +585,7 @@ export const purgeAll = mutation({
  */
 export const exportMemories = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(), // Updated
     userId: v.optional(v.string()),
     format: v.union(v.literal("json"), v.literal("csv")),
     includeEmbeddings: v.optional(v.boolean()),
@@ -589,7 +593,7 @@ export const exportMemories = query({
   handler: async (ctx, args) => {
     let memories = await ctx.db
       .query("memories")
-      .withIndex("by_agentId", (q) => q.eq("agentId", args.agentId))
+      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
       .collect();
 
     if (args.userId) {
@@ -651,7 +655,7 @@ export const exportMemories = query({
  */
 export const updateMany = mutation({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(), // Updated
     userId: v.optional(v.string()),
     sourceType: v.optional(
       v.union(
@@ -667,7 +671,7 @@ export const updateMany = mutation({
   handler: async (ctx, args) => {
     let memories = await ctx.db
       .query("memories")
-      .withIndex("by_agentId", (q) => q.eq("agentId", args.agentId))
+      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
       .collect();
 
     if (args.userId) {
@@ -707,7 +711,7 @@ export const updateMany = mutation({
  */
 export const archive = mutation({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     memoryId: v.string(),
   },
   handler: async (ctx, args) => {
@@ -720,7 +724,7 @@ export const archive = mutation({
       throw new Error("MEMORY_NOT_FOUND");
     }
 
-    if (memory.agentId !== args.agentId) {
+    if (memory.memorySpaceId !== args.memorySpaceId) {
       throw new Error("PERMISSION_DENIED");
     }
 
@@ -748,7 +752,7 @@ export const archive = mutation({
  */
 export const getAtTimestamp = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     memoryId: v.string(),
     timestamp: v.number(),
   },
@@ -758,7 +762,7 @@ export const getAtTimestamp = query({
       .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
       .first();
 
-    if (!memory || memory.agentId !== args.agentId) {
+    if (!memory || memory.memorySpaceId !== args.memorySpaceId) {
       return null;
     }
 

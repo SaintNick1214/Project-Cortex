@@ -1,6 +1,6 @@
 # Conversation Operations API
 
-> **Last Updated**: 2025-10-24
+> **Last Updated**: 2025-10-28
 
 Complete API reference for ACID conversation management (Layer 1a).
 
@@ -77,7 +77,8 @@ interface ConversationInput {
 // For user-agent conversations
 interface UserAgentParticipants {
   userId: string;
-  agentId: string;
+  memorySpaceId: string; // Which memory space this conversation belongs to
+  participantId?: string; // Optional: For Hive Mode tracking
 }
 
 // For agent-agent conversations (A2A)
@@ -118,7 +119,8 @@ const conversation = await cortex.conversations.create({
   type: "user-agent",
   participants: {
     userId: "user-123",
-    agentId: "support-agent",
+    memorySpaceId: "support-bot-space",
+    participantId: "support-agent",
   },
   metadata: {
     channel: "web-chat",
@@ -232,7 +234,7 @@ interface MessageInput {
   role?: "user" | "agent" | "system";
   content?: string; // For user-agent
   userId?: string; // If role='user'
-  agentId?: string; // If role='agent'
+  participantId?: string; // If role='agent' (participant in Hive Mode)
 
   // Agent-agent messages (A2A)
   type?: "a2a";
@@ -256,7 +258,7 @@ interface Message {
   role?: "user" | "agent" | "system";
   content?: string;
   userId?: string;
-  agentId?: string;
+  participantId?: string; // Hive Mode tracking
 
   // Agent-agent fields
   type?: "a2a";
@@ -292,7 +294,7 @@ console.log(userMsg.id); // 'msg-001' - use in conversationRef!
 const agentMsg = await cortex.conversations.addMessage("conv-123", {
   role: "agent",
   content: "Your account balance is $1,234.56",
-  agentId: "support-agent",
+  participantId: "support-agent", // Hive Mode
   timestamp: new Date(),
 });
 
@@ -432,7 +434,7 @@ interface ConversationFilters {
 
   // Participants
   userId?: string;
-  agentId?: string;
+  participantId?: string; // Hive Mode tracking
   "participants.agent1"?: string; // For agent-agent
   "participants.agent2"?: string; // For agent-agent
 
@@ -863,7 +865,8 @@ cortex.conversations.findConversation(
 // Find existing user-agent conversation
 const existing = await cortex.conversations.findConversation({
   userId: 'user-123',
-  agentId: 'support-agent',
+  memorySpaceId: 'support-bot-space',
+  participantId: 'support-agent',
 });
 
 if (existing) {
@@ -903,7 +906,8 @@ const conversation = await cortex.conversations.getOrCreate({
   type: "user-agent",
   participants: {
     userId: "user-123",
-    agentId: "support-agent",
+    memorySpaceId: "support-bot-space",
+    participantId: "support-agent",
   },
 });
 
@@ -929,7 +933,7 @@ const convo = await cortex.conversations.create({
   type: "user-agent",
   participants: {
     userId: "user-123", // ← GDPR link
-    agentId: "support-agent",
+    participantId: "support-agent", // Hive Mode
   },
 });
 
@@ -968,7 +972,7 @@ console.log(`${preserved.total} conversations preserved for audit`);
 // ✅ Create at start of session
 const conversation = await cortex.conversations.getOrCreate({
   type: 'user-agent',
-  participants: { userId, agentId },
+  participants: { userId, memorySpaceId, participantId },
 });
 
 // Then use throughout session
@@ -1039,7 +1043,7 @@ const all = await cortex.conversations.get("conv-with-10k-messages");
 // Add useful metadata
 await cortex.conversations.create({
   type: "user-agent",
-  participants: { userId, agentId },
+  participants: { userId, memorySpaceId, participantId },
   metadata: {
     channel: "web-chat",
     source: "website",
@@ -1063,7 +1067,7 @@ const campaignConvos = await cortex.conversations.list({
 ```typescript
 // Layer 3 handles ACID + Vector automatically
 const result = await cortex.memory.remember({
-  agentId: "support-agent",
+  participantId: "support-agent", // Hive Mode
   conversationId: "conv-123",
   userMessage: "I need help",
   agentResponse: "How can I assist you?",
@@ -1094,7 +1098,7 @@ const userMsg = await cortex.conversations.addMessage("conv-123", {
 const agentMsg = await cortex.conversations.addMessage("conv-123", {
   role: "agent",
   content: "$1,234.56",
-  agentId: "support-agent",
+  participantId: "support-agent", // Hive Mode
 });
 
 // Step 2: Index in Vector (Layer 2)
@@ -1124,6 +1128,49 @@ await cortex.a2a.send({
 // 2. Adds message to ACID
 // 3. Stores in both agents' Vector memories with conversationRef
 ```
+
+---
+
+## Graph-Lite Capabilities
+
+Conversations serve as central graph nodes connecting users, agents, contexts, and memories:
+
+**Conversation as Graph Hub:**
+
+- Connects user to agent (via participants)
+- Referenced by memories (via conversationRef)
+- Referenced by facts (via conversationRef)
+- Referenced by contexts (via conversationRef)
+
+**Graph Patterns:**
+
+```typescript
+// User → Conversations (1-hop)
+const convos = await cortex.conversations.list({ userId: 'user-123' });
+
+// Conversation → Contexts (reverse lookup)
+const contexts = await cortex.contexts.search({
+  'conversationRef.conversationId': 'conv-456'
+});
+
+// Conversation → Memories (reverse lookup)
+const memories = await cortex.memory.search('agent-1', '*', {
+  'conversationRef.conversationId': 'conv-456'
+});
+
+// Complete graph from conversation
+{
+  conversation: 'conv-456',
+  user: 'user-123',
+  agent: 'agent-1',
+  triggeredWorkflows: contexts,
+  generatedMemories: memories
+}
+```
+
+**Performance:** Conversations are efficiently indexed by userId and memorySpaceId. Finding related entities within a memory space typically takes 20-80ms.
+
+**Learn more:** [Graph-Lite Traversal](../07-advanced-topics/01-graph-lite-traversal.md)
 
 ---
 

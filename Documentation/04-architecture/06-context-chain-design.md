@@ -1,6 +1,6 @@
 # Context Chain Design
 
-> **Last Updated**: 2025-10-25
+> **Last Updated**: 2025-10-28
 
 Architecture of hierarchical context chains for multi-agent workflow coordination.
 
@@ -51,7 +51,7 @@ Root Context (depth=0)
   description: "Review and approve customer refund request",
 
   // Ownership
-  agentId: "finance-agent",    // Agent working on this
+  memorySpaceId: "finance-agent",    // Agent working on this
   userId: "user-123",          // User this relates to (GDPR-enabled)
 
   // Children tracking
@@ -108,7 +108,7 @@ Root Context (depth=0)
 export const create = mutation({
   args: {
     purpose: v.string(),
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     userId: v.optional(v.string()),
     parentId: v.optional(v.id("contexts")),
     data: v.any(),
@@ -140,7 +140,7 @@ export const create = mutation({
     // Create context
     const contextId = await ctx.db.insert("contexts", {
       purpose: args.purpose,
-      agentId: args.agentId,
+      memorySpaceId: args.agentId,
       userId: args.userId,
       parentId: args.parentId,
       rootId: rootId || contextId, // Self if root
@@ -407,7 +407,7 @@ console.log(inheritedData);
 export const addParticipantToChain = mutation({
   args: {
     contextId: v.id("contexts"),
-    agentId: v.string(),
+    memorySpaceId: v.string(),
   },
   handler: async (ctx, args) => {
     const context = await ctx.db.get(args.contextId);
@@ -447,7 +447,7 @@ export const addParticipantToChain = mutation({
 export const createFromConversation = mutation({
   args: {
     purpose: v.string(),
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     conversationId: v.id("conversations"),
     messageIds: v.array(v.string()),
     userId: v.string(),
@@ -455,7 +455,7 @@ export const createFromConversation = mutation({
   handler: async (ctx, args) => {
     const contextId = await ctx.db.insert("contexts", {
       purpose: args.purpose,
-      agentId: args.agentId,
+      memorySpaceId: args.agentId,
       userId: args.userId,
 
       // Link to conversation
@@ -526,7 +526,7 @@ export const getWithConversation = query({
 // Store memory with context reference
 export const storeWithContext = mutation({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     content: v.string(),
     contextId: v.id("contexts"),
     metadata: v.any(),
@@ -536,7 +536,7 @@ export const storeWithContext = mutation({
 
     // Store memory with contextId in metadata
     const memoryId = await ctx.db.insert("memories", {
-      agentId: args.agentId,
+      memorySpaceId: args.agentId,
       content: args.content,
       contentType: "raw",
       source: { type: "tool", timestamp: Date.now() },
@@ -622,7 +622,7 @@ async function createSequentialWorkflow(purpose: string, steps: any[]) {
   for (const step of steps) {
     const stepId = await ctx.db.insert("contexts", {
       purpose: step.purpose,
-      agentId: step.agentId,
+      memorySpaceId: step.agentId,
       parentId: root,
       rootId: root,
       depth: 1,
@@ -650,14 +650,14 @@ async function createApprovalChain(request: any) {
   // Level 1: Request
   const requestCtx = await createContext({
     purpose: "Expense approval request",
-    agentId: "employee-agent",
+    memorySpaceId: "employee-agent",
     data: { amount: request.amount },
   });
 
   // Level 2: Manager review
   const managerCtx = await createContext({
     purpose: "Manager review",
-    agentId: "manager-agent",
+    memorySpaceId: "manager-agent",
     parentId: requestCtx, // ← Nested
     data: { approved: null }, // To be filled
   });
@@ -665,7 +665,7 @@ async function createApprovalChain(request: any) {
   // Level 3: Finance approval
   const financeCtx = await createContext({
     purpose: "Finance approval",
-    agentId: "finance-agent",
+    memorySpaceId: "finance-agent",
     parentId: managerCtx, // ← Nested deeper
     data: { allocated: null },
   });
@@ -689,7 +689,7 @@ async function createParallelWorkflow(purpose: string, tasks: any[]) {
     tasks.map((task) =>
       createContext({
         purpose: task.purpose,
-        agentId: task.agentId,
+        memorySpaceId: task.agentId,
         parentId: root,
         data: task.data,
       }),
@@ -709,7 +709,7 @@ async function createParallelWorkflow(purpose: string, tasks: any[]) {
 ```typescript
 // Get all active workflows for an agent
 export const getActiveWorkflows = query({
-  args: { agentId: v.string() },
+  args: { memorySpaceId: v.string() },
   handler: async (ctx, args) => {
     return await ctx.db
       .query("contexts")
@@ -833,7 +833,7 @@ export const cleanupOrphans = mutation({
 // Create context for user
 const context = await createContext({
   purpose: "Handle user request",
-  agentId: "support-agent",
+  memorySpaceId: "support-agent",
   userId: "user-123", // ← GDPR-enabled
 });
 

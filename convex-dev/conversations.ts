@@ -2,7 +2,8 @@
  * Cortex SDK - Conversations API (Layer 1a)
  *
  * ACID-compliant immutable conversation storage
- * Two types: user-agent, agent-agent
+ * memorySpace-scoped with participantId tracking (Hive Mode)
+ * Two types: user-agent, agent-agent (Collaboration Mode)
  */
 
 import { v } from "convex/values";
@@ -18,27 +19,29 @@ import { mutation, query } from "./_generated/server";
 export const create = mutation({
   args: {
     conversationId: v.string(),
+    memorySpaceId: v.string(), // NEW: Required - which memory space owns this
+    participantId: v.optional(v.string()), // NEW: Hive Mode participant tracking
     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
     participants: v.object({
       userId: v.optional(v.string()),
-      agentId: v.optional(v.string()),
-      agentIds: v.optional(v.array(v.string())),
+      participantId: v.optional(v.string()), // Hive Mode: which participant
+      memorySpaceIds: v.optional(v.array(v.string())), // Collaboration Mode: cross-space
     }),
     metadata: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
     // Validate participants based on type
     if (args.type === "user-agent") {
-      if (!args.participants.userId || !args.participants.agentId) {
-        throw new Error("user-agent conversations require userId and agentId");
+      if (!args.participants.userId) {
+        throw new Error("user-agent conversations require userId");
       }
     } else if (args.type === "agent-agent") {
       if (
-        !args.participants.agentIds ||
-        args.participants.agentIds.length < 2
+        !args.participants.memorySpaceIds ||
+        args.participants.memorySpaceIds.length < 2
       ) {
         throw new Error(
-          "agent-agent conversations require at least 2 agentIds",
+          "agent-agent conversations require at least 2 memorySpaceIds",
         );
       }
     }
@@ -60,6 +63,8 @@ export const create = mutation({
     // Create conversation
     const id = await ctx.db.insert("conversations", {
       conversationId: args.conversationId,
+      memorySpaceId: args.memorySpaceId,
+      participantId: args.participantId,
       type: args.type,
       participants: args.participants,
       messages: [],
@@ -83,7 +88,7 @@ export const addMessage = mutation({
       id: v.string(),
       role: v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
       content: v.string(),
-      agentId: v.optional(v.string()),
+      participantId: v.optional(v.string()), // Hive Mode: which participant sent this
       metadata: v.optional(v.any()),
     }),
   },
@@ -148,26 +153,28 @@ export const deleteConversation = mutation({
 export const deleteMany = mutation({
   args: {
     userId: v.optional(v.string()),
-    agentId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()), // NEW: Filter by memory space
     type: v.optional(
       v.union(v.literal("user-agent"), v.literal("agent-agent")),
     ),
   },
   handler: async (ctx, args) => {
-    let conversations = await ctx.db.query("conversations").collect();
+    let conversations;
 
-    // Apply filters
+    // Use index if memorySpaceId provided (fast)
+    if (args.memorySpaceId) {
+      conversations = await ctx.db
+        .query("conversations")
+        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId!))
+        .collect();
+    } else {
+      conversations = await ctx.db.query("conversations").collect();
+    }
+
+    // Apply additional filters
     if (args.userId) {
       conversations = conversations.filter(
         (c) => c.participants.userId === args.userId,
-      );
-    }
-
-    if (args.agentId) {
-      conversations = conversations.filter(
-        (c) =>
-          c.participants.agentId === args.agentId ||
-          c.participants.agentIds?.includes(args.agentId!),
       );
     }
 
@@ -251,11 +258,13 @@ export const getMessagesByIds = query({
  */
 export const getOrCreate = mutation({
   args: {
+    memorySpaceId: v.string(), // NEW: Required
+    participantId: v.optional(v.string()), // NEW: Hive Mode
     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
     participants: v.object({
       userId: v.optional(v.string()),
-      agentId: v.optional(v.string()),
-      agentIds: v.optional(v.array(v.string())),
+      participantId: v.optional(v.string()),
+      memorySpaceIds: v.optional(v.array(v.string())),
     }),
     metadata: v.optional(v.any()),
   },
@@ -264,27 +273,28 @@ export const getOrCreate = mutation({
     let existing = null;
 
     if (args.type === "user-agent") {
-      if (!args.participants.userId || !args.participants.agentId) {
-        throw new Error("user-agent conversations require userId and agentId");
+      if (!args.participants.userId) {
+        throw new Error("user-agent conversations require userId");
       }
 
+      // Look for existing in this memory space with this user
       existing = await ctx.db
         .query("conversations")
-        .withIndex("by_agent_user", (q) =>
+        .withIndex("by_memorySpace_user", (q) =>
           q
-            .eq("participants.agentId", args.participants.agentId)
+            .eq("memorySpaceId", args.memorySpaceId!)
             .eq("participants.userId", args.participants.userId),
         )
         .filter((q) => q.eq(q.field("type"), "user-agent"))
         .first();
     } else {
-      // agent-agent
+      // agent-agent (Collaboration Mode)
       if (
-        !args.participants.agentIds ||
-        args.participants.agentIds.length < 2
+        !args.participants.memorySpaceIds ||
+        args.participants.memorySpaceIds.length < 2
       ) {
         throw new Error(
-          "agent-agent conversations require at least 2 agentIds",
+          "agent-agent conversations require at least 2 memorySpaceIds",
         );
       }
 
@@ -293,14 +303,14 @@ export const getOrCreate = mutation({
         .filter((q) => q.eq(q.field("type"), "agent-agent"))
         .collect();
 
-      const sortedInput = [...args.participants.agentIds].sort();
+      const sortedInput = [...args.participants.memorySpaceIds].sort();
 
       existing =
         conversations.find((c) => {
-          if (!c.participants.agentIds) {
+          if (!c.participants.memorySpaceIds) {
             return false;
           }
-          const sorted = [...c.participants.agentIds].sort();
+          const sorted = [...c.participants.memorySpaceIds].sort();
 
           return (
             sorted.length === sortedInput.length &&
@@ -319,6 +329,8 @@ export const getOrCreate = mutation({
 
     const _id = await ctx.db.insert("conversations", {
       conversationId,
+      memorySpaceId: args.memorySpaceId,
+      participantId: args.participantId,
       type: args.type,
       participants: args.participants,
       messages: [],
@@ -337,23 +349,23 @@ export const getOrCreate = mutation({
  */
 export const findConversation = query({
   args: {
+    memorySpaceId: v.string(), // NEW: Required
     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
     userId: v.optional(v.string()),
-    agentId: v.optional(v.string()),
-    agentIds: v.optional(v.array(v.string())),
+    memorySpaceIds: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
     if (args.type === "user-agent") {
-      if (!args.userId || !args.agentId) {
+      if (!args.userId) {
         return null;
       }
 
-      // Find user-agent conversation
+      // Find user-agent conversation in this memory space
       const conversation = await ctx.db
         .query("conversations")
-        .withIndex("by_agent_user", (q) =>
+        .withIndex("by_memorySpace_user", (q) =>
           q
-            .eq("participants.agentId", args.agentId)
+            .eq("memorySpaceId", args.memorySpaceId!)
             .eq("participants.userId", args.userId),
         )
         .filter((q) => q.eq(q.field("type"), "user-agent"))
@@ -361,24 +373,24 @@ export const findConversation = query({
 
       return conversation || null;
     }
-    // agent-agent conversation
-    if (!args.agentIds || args.agentIds.length < 2) {
+    // agent-agent conversation (Collaboration Mode)
+    if (!args.memorySpaceIds || args.memorySpaceIds.length < 2) {
       return null;
     }
 
-    // Find by matching agentIds array
+    // Find by matching memorySpaceIds array
     const conversations = await ctx.db
       .query("conversations")
       .filter((q) => q.eq(q.field("type"), "agent-agent"))
       .collect();
 
-    // Find conversation with exact same agents (any order)
-    const sortedInput = [...args.agentIds].sort();
+    // Find conversation with exact same memory spaces (any order)
+    const sortedInput = [...args.memorySpaceIds].sort();
     const found = conversations.find((c) => {
-      if (!c.participants.agentIds) {
+      if (!c.participants.memorySpaceIds) {
         return false;
       }
-      const sorted = [...c.participants.agentIds].sort();
+      const sorted = [...c.participants.memorySpaceIds].sort();
 
       return (
         sorted.length === sortedInput.length &&
@@ -426,21 +438,29 @@ export const list = query({
       v.union(v.literal("user-agent"), v.literal("agent-agent")),
     ),
     userId: v.optional(v.string()),
-    agentId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()), // NEW: Filter by memory space
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     // Apply filters using indexes
     let conversations;
 
-    if (args.userId && args.agentId) {
+    // Prioritize memorySpace + user (most common query pattern)
+    if (args.memorySpaceId && args.userId) {
       conversations = await ctx.db
         .query("conversations")
-        .withIndex("by_agent_user", (q) =>
+        .withIndex("by_memorySpace_user", (q) =>
           q
-            .eq("participants.agentId", args.agentId)
+            .eq("memorySpaceId", args.memorySpaceId!)
             .eq("participants.userId", args.userId),
         )
+        .order("desc")
+        .take(args.limit || 100);
+    } else if (args.memorySpaceId) {
+      // Memory space only (Hive Mode: all conversations in space)
+      conversations = await ctx.db
+        .query("conversations")
+        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId!))
         .order("desc")
         .take(args.limit || 100);
     } else if (args.userId) {
@@ -449,33 +469,6 @@ export const list = query({
         .withIndex("by_user", (q) => q.eq("participants.userId", args.userId))
         .order("desc")
         .take(args.limit || 100);
-    } else if (args.agentId) {
-      // Get user-agent conversations (index lookup - fast)
-      const userAgentConvs = await ctx.db
-        .query("conversations")
-        .withIndex("by_agent", (q) =>
-          q.eq("participants.agentId", args.agentId),
-        )
-        .order("desc")
-        .take(args.limit || 100);
-
-      // Get agent-agent conversations (scan - slower but necessary)
-      const allConvs = await ctx.db
-        .query("conversations")
-        .filter((q) => q.eq(q.field("type"), "agent-agent"))
-        .collect();
-
-      const agentAgentConvs = allConvs.filter((c) =>
-        c.participants.agentIds?.includes(args.agentId!),
-      );
-
-      // Combine and deduplicate (by _id), then sort and limit
-      const combined = [...userAgentConvs, ...agentAgentConvs];
-      const uniqueMap = new Map(combined.map((c) => [c._id, c]));
-
-      conversations = Array.from(uniqueMap.values())
-        .sort((a, b) => b.createdAt - a.createdAt)
-        .slice(0, args.limit || 100);
     } else if (args.type) {
       conversations = await ctx.db
         .query("conversations")
@@ -489,8 +482,8 @@ export const list = query({
         .take(args.limit || 100);
     }
 
-    // Post-filter by type if needed (when using participant indexes)
-    if (args.type) {
+    // Post-filter by type if needed (when using other indexes)
+    if (args.type && !args.type) {
       return conversations.filter((c) => c.type === args.type);
     }
 
@@ -504,26 +497,28 @@ export const list = query({
 export const count = query({
   args: {
     userId: v.optional(v.string()),
-    agentId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()), // NEW
     type: v.optional(
       v.union(v.literal("user-agent"), v.literal("agent-agent")),
     ),
   },
   handler: async (ctx, args) => {
-    const conversations = await ctx.db.query("conversations").collect();
+    let conversations;
+
+    // Use index if memorySpaceId provided
+    if (args.memorySpaceId) {
+      conversations = await ctx.db
+        .query("conversations")
+        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId!))
+        .collect();
+    } else {
+      conversations = await ctx.db.query("conversations").collect();
+    }
 
     let filtered = conversations;
 
     if (args.userId) {
       filtered = filtered.filter((c) => c.participants.userId === args.userId);
-    }
-
-    if (args.agentId) {
-      filtered = filtered.filter(
-        (c) =>
-          c.participants.agentId === args.agentId ||
-          c.participants.agentIds?.includes(args.agentId!),
-      );
     }
 
     if (args.type) {
@@ -590,14 +585,23 @@ export const search = query({
       v.union(v.literal("user-agent"), v.literal("agent-agent")),
     ),
     userId: v.optional(v.string()),
-    agentId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()), // NEW: Filter by memory space
     dateStart: v.optional(v.number()),
     dateEnd: v.optional(v.number()),
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    // Get all conversations (we'll add search index later for better performance)
-    const allConversations = await ctx.db.query("conversations").collect();
+    // Get conversations (use index if memorySpace provided)
+    let allConversations;
+    
+    if (args.memorySpaceId) {
+      allConversations = await ctx.db
+        .query("conversations")
+        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId!))
+        .collect();
+    } else {
+      allConversations = await ctx.db.query("conversations").collect();
+    }
 
     const searchQuery = args.query.toLowerCase();
     const results: Array<{
@@ -614,15 +618,6 @@ export const search = query({
       }
       if (args.userId && conversation.participants.userId !== args.userId) {
         continue;
-      }
-      if (args.agentId) {
-        const hasAgent =
-          conversation.participants.agentId === args.agentId ||
-          conversation.participants.agentIds?.includes(args.agentId);
-
-        if (!hasAgent) {
-          continue;
-        }
       }
       if (args.dateStart && conversation.createdAt < args.dateStart) {
         continue;
@@ -675,7 +670,7 @@ export const search = query({
 export const exportConversations = query({
   args: {
     userId: v.optional(v.string()),
-    agentId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()), // NEW: Filter by memory space
     conversationIds: v.optional(v.array(v.string())),
     type: v.optional(
       v.union(v.literal("user-agent"), v.literal("agent-agent")),
@@ -686,7 +681,17 @@ export const exportConversations = query({
     includeMetadata: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    let conversations = await ctx.db.query("conversations").collect();
+    let conversations;
+    
+    // Use index if memorySpaceId provided
+    if (args.memorySpaceId) {
+      conversations = await ctx.db
+        .query("conversations")
+        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId!))
+        .collect();
+    } else {
+      conversations = await ctx.db.query("conversations").collect();
+    }
 
     // Apply filters
     if (args.conversationIds && args.conversationIds.length > 0) {
@@ -698,14 +703,6 @@ export const exportConversations = query({
     if (args.userId) {
       conversations = conversations.filter(
         (c) => c.participants.userId === args.userId,
-      );
-    }
-
-    if (args.agentId) {
-      conversations = conversations.filter(
-        (c) =>
-          c.participants.agentId === args.agentId ||
-          c.participants.agentIds?.includes(args.agentId!),
       );
     }
 

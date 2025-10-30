@@ -1,6 +1,6 @@
 # Core Concepts
 
-> **Last Updated**: 2025-10-23
+> **Last Updated**: 2025-10-28
 
 Understanding these core concepts will help you make the most of Cortex. This guide covers the fundamental building blocks of the system.
 
@@ -8,14 +8,365 @@ Understanding these core concepts will help you make the most of Cortex. This gu
 
 ## Table of Contents
 
+- [Memory Spaces](#memory-spaces)
+- [Hive Mode vs Collaboration Mode](#hive-mode-vs-collaboration-mode)
+- [Infinite Context](#infinite-context)
 - [Memory](#memory)
-- [Agents](#agents)
 - [Embeddings](#embeddings)
 - [Search Strategies](#search-strategies)
 - [User Profiles](#user-profiles)
 - [Context Chains](#context-chains)
 - [Analytics](#analytics)
 - [Data Flow](#data-flow)
+- [Graph-Like Architecture](#graph-like-architecture)
+
+---
+
+## Memory Spaces
+
+### What is a Memory Space?
+
+A **memory space** is the fundamental isolation boundary in Cortex. Think of it as a private namespace where memories, facts, and conversations are stored.
+
+**Previous term:** We used to call these "agents" - but that was confusing because multiple agents (or tools) can share one memory space!
+
+```typescript
+interface MemorySpace {
+  id: string; // e.g., "user-123-personal" or "team-engineering"
+  name?: string; // Human-readable name
+  type: "personal" | "team" | "project"; // Organization type
+  participants: string[]; // Who operates in this space (Hive Mode)
+  createdAt: Date;
+}
+```
+
+### Key Concept: Memory Space = Isolation Boundary
+
+```typescript
+// Every memory operation requires a memorySpaceId
+await cortex.memory.remember({
+  memorySpaceId: "user-123-personal", // ← Isolation boundary
+  participantId: "cursor", // ← Who is storing this (optional)
+  conversationId: "conv-123",
+  userMessage: "I prefer TypeScript",
+  agentResponse: "Noted!",
+  userId: "user-123",
+  userName: "User",
+});
+```
+
+**What's isolated per memory space:**
+
+- ✅ Layer 1a: Conversations (raw message history)
+- ✅ Layer 2: Vector memories (embeddings + search)
+- ✅ Layer 3: Facts (LLM-extracted knowledge)
+- ✅ Layer 4: Convenience API results
+
+**What's shared across ALL memory spaces:**
+
+- ✅ Layer 1b: Immutable Store (policies, KB, org docs)
+- ✅ Layer 1c: Mutable Store (config, inventory, counters)
+- ✅ User profiles
+- ✅ Agent/Participant registry
+
+### Why Memory Spaces?
+
+**Before (Agent-Centric):**
+
+- Problem: Each agent had separate memories
+- Issue: Cursor stores "User prefers TypeScript"
+- Issue: Claude can't see it (different agent)
+- Result: User repeats preferences to every tool ❌
+
+**After (Memory-Space-Centric):**
+
+- Solution: Tools share a memory space
+- Cursor stores in `user-123-personal`
+- Claude reads from `user-123-personal`
+- Result: Memory follows user across tools ✅
+
+### Creating Memory Spaces
+
+**Option 1: Implicit Creation (Recommended)**
+
+```typescript
+// Just use memorySpaceId - space created automatically
+await cortex.memory.remember({
+  memorySpaceId: "user-123-personal", // Created on first use
+  conversationId: "conv-123",
+  userMessage: "Hello",
+  agentResponse: "Hi!",
+  userId: "user-123",
+  userName: "Alice",
+});
+```
+
+**Option 2: Explicit Registration (For Analytics)**
+
+```typescript
+// Register space for rich metadata and analytics
+await cortex.memorySpaces.register({
+  id: "user-123-personal",
+  name: "Alice's Personal Space",
+  type: "personal",
+  participants: ["cursor", "claude", "custom-bot"],
+  metadata: {
+    owner: "user-123",
+    created: new Date(),
+  },
+});
+
+// Now you get enhanced analytics
+const stats = await cortex.analytics.getMemorySpaceStats("user-123-personal");
+// { memoriesStored: 543, participants: 3, avgAccessTime: '12ms', ... }
+```
+
+---
+
+## Hive Mode vs Collaboration Mode
+
+Cortex supports two architectural patterns for multi-agent/multi-tool systems:
+
+### Hive Mode: Shared Memory Space
+
+**Multiple participants share ONE memory space.**
+
+```typescript
+// Cursor stores memory
+await cortex.memory.remember({
+  memorySpaceId: "user-123-personal", // Shared space
+  participantId: "cursor", // Who stored it
+  userMessage: "I prefer dark mode",
+  agentResponse: "Noted!",
+  userId: "user-123",
+  userName: "Alice",
+});
+
+// Claude reads from SAME space
+const memories = await cortex.memory.search("user-123-personal", "preferences");
+// Returns: [{ content: "User prefers dark mode", participantId: "cursor", ... }]
+```
+
+**Characteristics:**
+
+- ✅ **Single write** - One tool stores, all tools benefit
+- ✅ **Zero duplication** - One copy of each memory
+- ✅ **Consistent state** - Everyone sees the same data
+- ✅ **Participant tracking** - `participantId` shows who stored what
+- ✅ **Perfect for:** MCP integrations, personal AI assistants, tool ecosystems
+
+**Use Cases:**
+
+- Personal AI across Cursor, Claude Desktop, Notion AI
+- Team workspace where all bots share memory
+- Cross-application memory (MCP servers)
+- Single user with multiple AI tools
+
+### Collaboration Mode: Separate Memory Spaces
+
+**Each participant has SEPARATE memory space, communicates via A2A.**
+
+```typescript
+// Finance agent stores in its own space
+await cortex.memory.remember({
+  memorySpaceId: "finance-agent-space", // Finance's space
+  conversationId: "conv-123",
+  userMessage: "Approve $50k budget",
+  agentResponse: "Approved",
+  userId: "user-123",
+  userName: "CFO",
+});
+
+// Send message to HR agent (dual-write to BOTH spaces)
+await cortex.a2a.send({
+  from: "finance-agent",
+  to: "hr-agent",
+  message: "Budget approved for hiring",
+  importance: 85,
+  metadata: { tags: ["approval", "hiring"] },
+});
+// Automatically stored in BOTH finance-agent-space AND hr-agent-space
+```
+
+**Characteristics:**
+
+- ✅ **Dual-write** - A2A messages stored in both spaces
+- ✅ **Complete isolation** - Each space is independent
+- ✅ **No conflicts** - Separate memories can't conflict
+- ✅ **GDPR compliant** - Delete one space without affecting others
+- ✅ **Perfect for:** Autonomous agents, enterprise workflows, strict isolation needs
+
+**Use Cases:**
+
+- Autonomous agent swarms (each agent independent)
+- Enterprise systems (strict data boundaries)
+- Multi-tenant systems (customer isolation)
+- Regulated industries (audit requirements)
+
+### Comparison Table
+
+| Aspect                   | Hive Mode           | Collaboration Mode       |
+| ------------------------ | ------------------- | ------------------------ |
+| **Memory Spaces**        | 1 shared space      | N separate spaces        |
+| **Storage**              | Single write        | Dual-write (A2A)         |
+| **Consistency**          | Always consistent   | Eventually consistent    |
+| **Isolation**            | None (by design)    | Complete                 |
+| **Use Case**             | Personal AI tools   | Autonomous agents        |
+| **Participant Tracking** | Via `participantId` | Via `fromAgent/toAgent`  |
+| **Example**              | Cursor + Claude     | Finance agent + HR agent |
+
+### Cross-MemorySpace Access (Context Chains)
+
+Even in Collaboration Mode, spaces can grant **limited** access via context chains:
+
+```typescript
+// Supervisor creates context and delegates
+const context = await cortex.contexts.create({
+  purpose: "Process refund request",
+  memorySpaceId: "supervisor-space",
+  userId: "user-123",
+});
+
+// Specialist can access supervisor's context (read-only)
+const fullContext = await cortex.contexts.get(context.id, {
+  includeChain: true,
+  requestingSpace: "specialist-space", // Cross-space access
+});
+
+// specialist-space can read:
+// ✅ The context chain (hierarchy)
+// ✅ Referenced conversations (only those in context)
+// ❌ Supervisor's other memories (isolated)
+```
+
+**Security Model:**
+
+- Context chains grant **limited** read access
+- Only context-referenced data accessible
+- Audit trail for all cross-space reads
+- Prevents memory poisoning
+
+---
+
+## Infinite Context
+
+**The Breakthrough:** Never run out of context again.
+
+### The Problem
+
+Traditional AI chatbots accumulate conversation history:
+
+```typescript
+// Traditional approach (accumulation)
+const conversation = {
+  messages: [
+    { role: "user", content: "Hi, I prefer TypeScript" },
+    { role: "assistant", content: "Noted!" },
+    // ... 500 more exchanges ...
+    { role: "user", content: "What languages do I prefer?" },
+    { role: "assistant", content: "???" }, // Message #1 was truncated!
+  ],
+};
+
+// Token cost: 500 messages × 50 tokens = 25,000 tokens per request
+// Eventually: Exceeds model's context window (128K, 200K, etc.)
+```
+
+### The Solution: Retrieval-Based Context
+
+Instead of sending all history, **retrieve only relevant memories**:
+
+```typescript
+// Cortex approach (retrieval)
+async function respondToUser(userMessage: string, memorySpaceId: string) {
+  // 1. Retrieve relevant context from ALL past conversations
+  const relevantContext = await cortex.memory.search(
+    memorySpaceId,
+    userMessage,
+    {
+      embedding: await embed(userMessage),
+      limit: 10, // Top 10 most relevant facts/memories
+    },
+  );
+
+  // 2. LLM call with ONLY relevant context
+  const response = await llm.complete({
+    messages: [
+      {
+        role: "system",
+        content: `Relevant Context:\n${relevantContext.map((m) => m.content).join("\n")}`,
+      },
+      { role: "user", content: userMessage }, // Current message only
+    ],
+  });
+
+  // 3. Store exchange (adds to knowledge pool)
+  await cortex.memory.remember({
+    memorySpaceId,
+    conversationId: `ephemeral-${Date.now()}`, // New conversation each time
+    userMessage,
+    agentResponse: response,
+    userId: "user-123",
+    userName: "User",
+    extractFacts: true, // Auto-extract for future retrieval
+  });
+
+  return response;
+}
+```
+
+### Key Benefits
+
+**1. Unlimited History**
+
+- Can recall from 1,000,000+ past messages
+- Token cost stays constant (only retrieve top-K)
+- Never hit context window limits
+
+**2. 99% Token Reduction**
+
+- Traditional: 50,000 tokens (accumulated)
+- Infinite Context: 400 tokens (retrieved)
+- Savings: $1.50 → $0.012 per request (GPT-4)
+
+**3. Works with Any Model**
+
+- Smaller, cheaper models can have "infinite" memory
+- Retrieval is faster than large context windows
+- Legacy models perform like SOTA with perfect retrieval
+
+**4. Perfect Recall**
+
+- Semantic search finds relevant info from years ago
+- Importance-weighted (critical facts prioritized)
+- 3-tier strategy (facts + summaries + raw when needed)
+
+### 3-Tier Retrieval
+
+```typescript
+// Tier 1: Facts (most efficient)
+const facts = await cortex.memory.search(memorySpaceId, query, {
+  contentType: "fact",
+  limit: 10,
+});
+// 10 facts × 8 tokens = 80 tokens
+
+// Tier 2: Summaries (more detail)
+const summaries = await cortex.memory.search(memorySpaceId, query, {
+  contentType: "summarized",
+  limit: 3,
+});
+// 3 summaries × 75 tokens = 225 tokens
+
+// Tier 3: Raw (full detail, selective)
+const critical = facts.filter((f) => f.metadata.importance >= 90);
+const raw = await fetchRawForFacts(critical.slice(0, 2));
+// 2 conversations × 50 tokens = 100 tokens
+
+// Total: 405 tokens vs 20,000+ tokens accumulated!
+```
+
+**Learn more:** [Infinite Context Architecture](../04-architecture/10-infinite-context.md)
 
 ---
 
@@ -23,16 +374,17 @@ Understanding these core concepts will help you make the most of Cortex. This gu
 
 ### What is Memory?
 
-In Cortex, a **memory** is a piece of information that an agent stores for later retrieval. It consists of:
+In Cortex, a **memory** is a piece of information stored in a memory space for later retrieval. It consists of:
 
 ```typescript
 interface MemoryEntry {
   id: string; // Unique identifier
-  agentId: string; // Which agent owns this
+  memorySpaceId: string; // Which space owns this
+  participantId?: string; // Who stored it (Hive Mode)
   content: string; // The actual information
   embedding?: number[]; // Vector for semantic search
   metadata: {
-    importance: "low" | "medium" | "high";
+    importance: number; // 0-100 scale
     tags: string[]; // Categorization
     [key: string]: any; // Custom metadata
   };
@@ -48,82 +400,84 @@ interface MemoryEntry {
 Information from user interactions:
 
 ```typescript
-// Use Layer 3 remember() for conversations (recommended)
+// Use Layer 4 remember() for conversations (recommended)
 await cortex.memory.remember({
-  agentId: "agent-1",
+  memorySpaceId: "user-123-personal",
   conversationId: "conv-123",
   userMessage: "I work in San Francisco",
   agentResponse: "That's great to know!",
-  userId: "user-1",
-  userName: "User",
+  userId: "user-123",
+  userName: "Alice",
   importance: 60, // 0-100 scale
   tags: ["location", "personal", "user-info"],
 });
 ```
 
 **2. Knowledge Memories**
-Facts and information the agent learns:
+Facts and information:
 
 ```typescript
 // System-generated knowledge (Layer 2 - explicit Vector)
-await cortex.vector.store("agent-1", {
+await cortex.vector.store("user-123-personal", {
   content: "Product X costs $49.99 with a 20% discount for annual billing",
   contentType: "raw",
   embedding: await embed("Product X pricing"),
   source: { type: "system", timestamp: new Date() },
   metadata: {
-    importance: 85, // 0-100 scale (70-89 = high)
+    importance: 85,
     tags: ["pricing", "product-x", "business"],
   },
 });
 ```
 
 **3. Task Memories**
-What the agent has done:
+What was done:
 
 ```typescript
 // Tool result (Layer 2 - explicit Vector)
-await cortex.vector.store("agent-1", {
-  content: "Sent password reset email to user@example.com at 2025-10-23 10:30",
+await cortex.vector.store("support-bot-space", {
+  content: "Sent password reset email to user@example.com at 2025-10-28 10:30",
   contentType: "raw",
   embedding: await embed("password reset action"),
   source: { type: "tool", timestamp: new Date() },
   metadata: {
-    importance: 90, // 0-100 scale (90-100 = critical)
+    importance: 90,
     tags: ["action", "security", "completed"],
   },
 });
 ```
 
-**4. Agent-to-Agent (A2A) Memories**
-Communications between agents:
+**4. Participant-to-Participant (Hive Mode)**
+Communications within a shared space:
 
 ```typescript
-// Use A2A helper (Layer 3 - handles ACID + Vector)
+// In Hive Mode, participants can signal each other
+await cortex.memory.remember({
+  memorySpaceId: "team-workspace",
+  participantId: "finance-bot",
+  conversationId: "internal-comm",
+  userMessage: "[From hr-bot] New hire approved",
+  agentResponse: "Budget allocated for salary",
+  userId: "system",
+  userName: "System",
+  importance: 85,
+  tags: ["internal", "coordination"],
+});
+```
+
+**5. Agent-to-Agent (Collaboration Mode)**
+Communications between separate spaces:
+
+```typescript
+// Use A2A helper (Layer 4 - handles dual-write)
 await cortex.a2a.send({
   from: "finance-agent",
   to: "ceo-agent",
   message: "Received approval for $50k budget increase",
-  importance: 85, // 0-100 scale (70-89 = high)
+  importance: 85,
   metadata: { tags: ["approval", "budget"] },
 });
-// Stores in A2A conversation (ACID) + both agents' Vector memories
-```
-
-### Memory Lifecycle
-
-```
-┌──────────┐       ┌──────────┐       ┌──────────┐       ┌──────────┐
-│ Created  │──────>│ Indexed  │──────>│ Accessed │──────>│ Archived │
-│  (v1)    │       │          │       │ count++  │       │          │
-└──────────┘       └──────────┘       └──────────┘       └──────────┘
-     │                                       │                   │
-     │                                       ▼                   ▼
-     │                                 ┌──────────┐       ┌──────────┐
-     └────────────────────────────────>│ Updated  │       │ Deleted  │
-                                       │  (v2+)   │       │          │
-                                       │ v1 saved │       └──────────┘
-                                       └──────────┘
+// Stores in BOTH finance-agent-space AND ceo-agent-space
 ```
 
 ### Memory Versioning (Automatic)
@@ -131,25 +485,25 @@ await cortex.a2a.send({
 **Critical Feature**: When you update a memory, the old version is **automatically preserved**:
 
 ```typescript
-// Store password (Layer 3 for conversation)
+// Store password (Layer 4 for conversation)
 const result = await cortex.memory.remember({
-  agentId: "agent-1",
+  memorySpaceId: "user-123-personal",
   conversationId: "conv-456",
   userMessage: "The password is Blue",
   agentResponse: "I've saved that password",
-  userId: "user-1",
-  userName: "User",
+  userId: "user-123",
+  userName: "Alice",
   importance: 100, // Critical
 });
 const memoryId = result.memories[0].id;
 
-// Password changes (Layer 3 update - creates version 2)
-await cortex.memory.update("agent-1", memoryId, {
+// Password changes (Layer 4 update - creates version 2)
+await cortex.memory.update("user-123-personal", memoryId, {
   content: "The password is Red",
 });
 
 // Both versions are preserved!
-const memory = await cortex.memory.get("agent-1", memoryId);
+const memory = await cortex.memory.get("user-123-personal", memoryId);
 console.log(memory.content); // "The password is Red" (current)
 console.log(memory.version); // 2
 
@@ -165,20 +519,6 @@ console.log(memory.previousVersions[0]);
 - ✅ Can query "what was true on date X?"
 - ✅ Automatic - no code required
 - ✅ Configurable retention (default: 10 versions)
-
-**Configuration:**
-
-```typescript
-// Default: Keep last 10 versions
-const cortex = new Cortex({
-  defaultVersionRetention: 10,
-});
-
-// Per-agent override
-await cortex.agents.configure("audit-agent", {
-  memoryVersionRetention: -1, // Keep all versions forever
-});
-```
 
 ### Memory Importance (0-100 Scale)
 
@@ -220,147 +560,38 @@ Cortex uses a granular 0-100 importance scale for precise prioritization:
 // Automatic scoring
 const importance = determineImportance(content); // Returns 0-100
 
-// Or set explicitly (Layer 2 for system memories)
-await cortex.vector.store(agentId, {
-  content: "Security code is 1234",
-  contentType: "raw",
-  source: { type: "system", timestamp: new Date() },
-  metadata: { importance: 100 }, // Critical
-});
-
-await cortex.vector.store(agentId, {
-  content: "User likes coffee",
-  contentType: "raw",
-  source: { type: "system", timestamp: new Date() },
-  metadata: { importance: 40 }, // Medium-low
-});
-
-// For conversations, use Layer 3 remember() with importance
+// Or set explicitly
 await cortex.memory.remember({
-  agentId,
+  memorySpaceId: "user-123-personal",
   conversationId,
-  userMessage,
-  agentResponse,
-  userId,
-  userName,
-  importance: 100, // Set importance for the exchange
+  userMessage: "Security code is 1234",
+  agentResponse: "Saved securely",
+  userId: "user-123",
+  userName: "Alice",
+  importance: 100, // Critical
 });
 ```
 
-**Benefits of 0-100 scale:**
+### Memory Space Isolation
 
-- Fine-grained control (not just 3 buckets)
-- Gradual importance adjustments
-- Better filtering and ranking
-- More intuitive (100 = most important)
-
----
-
-## Agents
-
-### What is an Agent?
-
-An **agent** in Cortex is any entity that stores and retrieves memories. It could be:
-
-- A chatbot
-- A specialized AI assistant (HR, Finance, Code Assistant)
-- A background task processor
-- A human operator (in human-in-the-loop systems)
-
-### Hybrid Agent Management
-
-Cortex uses a **hybrid approach** - start simple, add structure when needed.
-
-#### Level 1: Simple String IDs
-
-Perfect for getting started:
+Each memory space's memories are **completely isolated**:
 
 ```typescript
-// Just use string identifiers (Layer 3 - works across all layers)
-await cortex.memory.remember({
-  agentId: "customer-support-bot",
-  conversationId: "conv-123",
-  userMessage: "I prefer email updates",
-  agentResponse: "I'll remember that",
-  userId: "user-1",
-  userName: "User",
-});
-
-await cortex.memory.search("customer-support-bot", "user preferences");
-```
-
-**Pros:**
-
-- Zero ceremony
-- Works immediately
-- Maximum flexibility
-
-**Cons:**
-
-- No built-in analytics
-- No agent discovery
-- Manual coordination
-
-#### Level 2: Agent Registry
-
-Add when you need analytics and coordination:
-
-```typescript
-// Register an agent with metadata
-await cortex.agents.register({
-  id: "customer-support-bot",
-  name: "Customer Support Bot",
-  description: "Handles customer inquiries and issues",
-  metadata: {
-    team: "support",
-    capabilities: ["empathy", "problem-solving", "escalation"],
-    version: "2.1.0",
-    owner: "support-team@company.com",
-  },
-});
-
-// Now you get enhanced analytics
-const stats = await cortex.analytics.getAgentStats("customer-support-bot");
-// { memoriesStored: 1543, avgAccessTime: '23ms', ... }
-
-// And agent discovery
-const supportAgents = await cortex.agents.search({
-  team: "support",
-});
-```
-
-**Pros:**
-
-- Rich analytics
-- Agent discovery
-- Better observability
-
-**When to use:**
-
-- Multiple agents
-- Need analytics
-- Team collaboration
-
-### Agent Isolation
-
-Each agent's memories are **completely isolated**:
-
-```typescript
-// Agent 1 stores a memory (Layer 2 - system memory)
-await cortex.vector.store("agent-1", {
-  content: "Secret information for agent-1",
+// Cursor stores in user-123-personal
+await cortex.vector.store("user-123-personal", {
+  content: "Secret information for Alice",
   contentType: "raw",
   source: { type: "system", timestamp: new Date() },
   metadata: { importance: 90 },
 });
 
-// Agent 2 cannot see it (Layer 3 search - searches agent-2's Vector memories)
-const memories = await cortex.memory.search("agent-2", "secret");
-// Returns: [] (empty - different agent)
+// Bob's space cannot see it
+const memories = await cortex.memory.search("user-456-personal", "secret");
+// Returns: [] (empty - different memory space)
 
-// Only agent-1 can access (Layer 3 search)
-const memories = await cortex.memory.search("agent-1", "secret");
-// Returns: [{ content: 'Secret information for agent-1', ... }]
+// Only Alice's space can access
+const memories = await cortex.memory.search("user-123-personal", "secret");
+// Returns: [{ content: 'Secret information for Alice', ... }]
 ```
 
 This ensures:
@@ -386,14 +617,16 @@ This ensures:
 
 ### Embedding-Agnostic Design
 
-Cortex **does not generate embeddings** - you bring your own:
+The **Cortex SDK does not generate embeddings** - you bring your own provider, or use Cortex Cloud for automatic generation.
+
+**Direct Mode (SDK):**
 
 ```typescript
 // Choose your provider
 const embedding = await yourEmbeddingProvider.embed(text);
 
-// Cortex just stores and searches (Layer 2 for system memories)
-await cortex.vector.store(agentId, {
+// Cortex SDK stores and searches
+await cortex.vector.store(memorySpaceId, {
   content: text,
   contentType: "raw",
   embedding: embedding, // Your vectors
@@ -401,9 +634,9 @@ await cortex.vector.store(agentId, {
   metadata: { importance: 50 },
 });
 
-// Or use Layer 3 for conversations with your embeddings
+// Or use Layer 4 for conversations with your embeddings
 await cortex.memory.remember({
-  agentId,
+  memorySpaceId,
   conversationId,
   userMessage,
   agentResponse,
@@ -414,12 +647,29 @@ await cortex.memory.remember({
 });
 ```
 
+**Cloud Mode (Managed):**
+
+```typescript
+// Cortex Cloud generates embeddings automatically
+await cortex.memory.remember({
+  memorySpaceId,
+  conversationId,
+  userMessage,
+  agentResponse,
+  userId,
+  userName,
+  autoEmbed: true, // ← Cloud Mode generates embeddings for you
+  // No embedding provider needed!
+});
+```
+
 **Why this design?**
 
-- ✅ Use any embedding model
+- ✅ **Direct Mode:** Use any embedding model (OpenAI, Cohere, local)
+- ✅ **Cloud Mode:** Zero-config automatic embeddings
 - ✅ Optimize for your use case
 - ✅ Upgrade models independently
-- ✅ No vendor lock-in
+- ✅ No vendor lock-in (can switch between modes)
 - ✅ Fine-tune for your domain
 
 ### Popular Embedding Providers
@@ -460,8 +710,8 @@ import { pipeline } from "@xenova/transformers";
 
 const extractor = await pipeline(
   "feature-extraction",
-  "Xenova/all-MiniLM-L6-v2", // 384 dimensions
-);
+  "Xenova/all-MiniLM-L6-v2",
+); // 384 dimensions
 
 const output = await extractor(text, {
   pooling: "mean",
@@ -476,8 +726,8 @@ const embedding = Array.from(output.data);
 Cortex supports **any** vector dimension:
 
 ```typescript
-// Small and fast (768 dimensions) - Layer 2 for system memories
-await cortex.vector.store(agentId, {
+// Small and fast (768 dimensions)
+await cortex.vector.store(memorySpaceId, {
   content: text,
   contentType: "raw",
   embedding: smallEmbedding, // [768 numbers]
@@ -486,7 +736,7 @@ await cortex.vector.store(agentId, {
 });
 
 // Balanced (1536 dimensions) - OpenAI default
-await cortex.vector.store(agentId, {
+await cortex.vector.store(memorySpaceId, {
   content: text,
   contentType: "raw",
   embedding: standardEmbedding, // [1536 numbers]
@@ -495,7 +745,7 @@ await cortex.vector.store(agentId, {
 });
 
 // High accuracy (3072 dimensions)
-await cortex.vector.store(agentId, {
+await cortex.vector.store(memorySpaceId, {
   content: text,
   contentType: "raw",
   embedding: largeEmbedding, // [3072 numbers]
@@ -526,7 +776,7 @@ Primary method - finds similar meanings:
 
 ```typescript
 const memories = await cortex.memory.search(
-  "agent-1",
+  "user-123-personal",
   "what is the user's favorite color?",
   {
     embedding: await embed("what is the user's favorite color?"),
@@ -585,8 +835,8 @@ User Query
 Fine-tune search behavior:
 
 ```typescript
-// Layer 3 search with filters
-await cortex.memory.search("agent-1", query, {
+// Layer 4 search with filters
+await cortex.memory.search("user-123-personal", query, {
   embedding: await embed(query),
   limit: 20, // Max results
   minScore: 0.7, // Similarity threshold
@@ -594,6 +844,7 @@ await cortex.memory.search("agent-1", query, {
   minImportance: 50, // Minimum importance (0-100 scale)
   createdAfter: new Date("2025-01-01"),
   createdBefore: new Date("2025-01-31"),
+  participantId: "cursor", // Only from cursor (Hive Mode)
 });
 ```
 
@@ -603,7 +854,7 @@ await cortex.memory.search("agent-1", query, {
 
 ### What are User Profiles?
 
-**User profiles** store information about users across all agents and conversations.
+**User profiles** store information about users across all memory spaces and conversations.
 
 ```typescript
 interface UserProfile {
@@ -665,17 +916,17 @@ const user = await cortex.users.get("user-123");
 const greeting = `Hello ${user.displayName}! I see you prefer ${user.preferences.theme} mode.`;
 ```
 
-### Cross-Agent User Context
+### Cross-MemorySpace User Context
 
-User profiles are shared across all agents:
+User profiles are shared across all memory spaces:
 
 ```typescript
-// Agent 1 stores user preference
+// In user-123-personal space
 await cortex.users.update("user-123", {
   preferences: { communicationStyle: "formal" },
 });
 
-// Agent 2 can access it
+// In team-engineering space (different memory space)
 const user = await cortex.users.get("user-123");
 if (user.preferences.communicationStyle === "formal") {
   response = formatFormal(response);
@@ -688,12 +939,13 @@ if (user.preferences.communicationStyle === "formal") {
 
 ### What are Context Chains?
 
-**Context chains** enable hierarchical context sharing in multi-agent systems.
+**Context chains** enable hierarchical context sharing in multi-agent systems and enable **cross-memorySpace** access with security controls.
 
 Think of it like a management hierarchy where:
 
-- Managers see their team's work
+- Supervisors see their team's work
 - Teams share knowledge within their context
+- Specialists can access supervisor context (limited)
 - Everyone can access relevant historical context
 
 ### Creating a Context
@@ -701,7 +953,7 @@ Think of it like a management hierarchy where:
 ```typescript
 const context = await cortex.contexts.create({
   purpose: "Handle customer refund request",
-  agentId: "supervisor-agent",
+  memorySpaceId: "supervisor-space",
   userId: "user-123",
   metadata: {
     ticketId: "TICKET-456",
@@ -715,10 +967,10 @@ const context = await cortex.contexts.create({
 ### Creating Child Contexts
 
 ```typescript
-// Supervisor delegates to finance agent
+// Supervisor delegates to finance agent (different memory space)
 const financeContext = await cortex.contexts.create({
   purpose: "Process $500 refund",
-  agentId: "finance-agent",
+  memorySpaceId: "finance-agent-space", // Different space!
   parentId: context.id, // Link to parent
   metadata: {
     amount: 500,
@@ -727,51 +979,64 @@ const financeContext = await cortex.contexts.create({
 });
 ```
 
-### Accessing Full Context
+### Cross-MemorySpace Access
 
-Any agent in the chain can see the complete hierarchy:
+Context chains enable **limited** cross-space access:
 
 ```typescript
-// Finance agent looks up the full context
+// Finance agent accesses supervisor context (different space)
 const fullContext = await cortex.contexts.get(financeContext.id, {
   includeChain: true,
+  requestingSpace: "finance-agent-space", // Declares who's asking
 });
 
 console.log(fullContext);
 // {
-//   current: { purpose: 'Process $500 refund', ... },
-//   parent: { purpose: 'Handle customer refund request', ... },
-//   root: { purpose: 'Handle customer refund request', ... },
+//   current: { purpose: 'Process $500 refund', memorySpaceId: 'finance-agent-space' },
+//   parent: { purpose: 'Handle customer refund request', memorySpaceId: 'supervisor-space' },
+//   root: { purpose: 'Handle customer refund request', memorySpaceId: 'supervisor-space' },
 //   children: [],
 //   depth: 2
 // }
+
+// Finance agent can read:
+// ✅ Context hierarchy (structure)
+// ✅ Conversations referenced in context
+// ❌ Supervisor's other memories (isolated)
 ```
+
+**Security Model:**
+
+- Context chains grant **read-only** cross-space access
+- Only context-referenced data accessible
+- Audit trail for all cross-space reads
+- Prevents memory poisoning
 
 ### Context Chain Visualization
 
 ```
-Root Context (Supervisor)
+Root Context (Supervisor Space)
   "Handle customer refund request"
         │
-        ├─> Child Context (Finance)
+        ├─> Child Context (Finance Space)
         │   "Process $500 refund"
         │
-        └─> Child Context (Customer Relations)
+        └─> Child Context (Customer Relations Space)
             "Send apology email"
 ```
 
 ### Use Cases
 
-**1. Hierarchical Agents**
-Manager agents delegate to worker agents with shared context.
+**1. Hierarchical Multi-Agent Systems**
+Supervisor agents delegate to worker agents with shared context (cross-space).
 
 **2. Task Decomposition**
 Break complex tasks into subtasks while maintaining context.
 
 **3. Audit Trails**
-Track the full history of how a task was handled.
+Track the full history of how a task was handled across spaces.
 
-**4. Knowledge Sharing**
+**4. Secure Knowledge Sharing**
 Teams share context without exposing unrelated information.
 
 ---
@@ -782,16 +1047,17 @@ Teams share context without exposing unrelated information.
 
 ### What are Analytics?
 
-**Analytics** help you understand how agents use memory:
+**Analytics** help you understand how memory spaces are used:
 
 ```typescript
-const stats = await cortex.analytics.getAgentStats("customer-bot");
+const stats = await cortex.analytics.getMemorySpaceStats("user-123-personal");
 
 console.log(stats);
 // {
 //   totalMemories: 15432,
 //   memoriesThisWeek: 234,
 //   avgSearchTime: '23ms',
+//   participants: ['cursor', 'claude', 'custom-bot'],
 //   topTags: ['preferences', 'support', 'product-info'],
 //   accessPatterns: {
 //     mostAccessed: [{ id: 'mem_123', count: 45 }, ...],
@@ -810,7 +1076,7 @@ console.log(stats);
 Every memory tracks its usage:
 
 ```typescript
-const memory = await cortex.memory.get("agent-1", "mem_123");
+const memory = await cortex.memory.get("user-123-personal", "mem_123");
 
 console.log({
   accessCount: memory.accessCount, // How many times accessed
@@ -823,13 +1089,13 @@ console.log({
 
 ```typescript
 // Find unused memories (potential cleanup)
-const unused = await cortex.analytics.findUnusedMemories("agent-1", {
+const unused = await cortex.analytics.findUnusedMemories("user-123-personal", {
   olderThan: "30d",
   maxAccessCount: 1,
 });
 
 // Find hot memories (frequently accessed)
-const hot = await cortex.analytics.findHotMemories("agent-1", {
+const hot = await cortex.analytics.findHotMemories("user-123-personal", {
   minAccessCount: 10,
   timeWindow: "7d",
 });
@@ -850,14 +1116,16 @@ const hot = await cortex.analytics.findHotMemories("agent-1", {
 ┌────────────────────────────────────────────────────────────┐
 │                 Your Application                            │
 │  • Generate embedding (your provider)                       │
-│  • Call cortex.memory.remember()                              │
+│  • Call cortex.memory.remember()                            │
+│  • Specify memorySpaceId                                    │
 └────────────────────┬───────────────────────────────────────┘
                      │
                      ▼
 ┌────────────────────────────────────────────────────────────┐
 │                   Cortex Layer                              │
 │  • Validate input                                           │
-│  • Add metadata (timestamps, IDs)                          │
+│  • Add metadata (timestamps, IDs)                           │
+│  • Route to correct memory space                            │
 │  • Store in Convex                                          │
 └────────────────────┬───────────────────────────────────────┘
                      │
@@ -866,6 +1134,7 @@ const hot = await cortex.analytics.findHotMemories("agent-1", {
 │                  Convex Backend                             │
 │  • ACID transaction                                         │
 │  • Index embedding for vector search                        │
+│  • Isolate by memorySpaceId                                 │
 │  • Store in durable storage                                 │
 │  • Trigger real-time updates                                │
 └─────────────────────────────────────────────────────────────┘
@@ -874,6 +1143,7 @@ const hot = await cortex.analytics.findHotMemories("agent-1", {
                      ▼
 ┌────────────────────────────────────────────────────────────┐
 │              Memory Available for Search                    │
+│         (within memorySpaceId boundary)                     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -882,13 +1152,13 @@ const hot = await cortex.analytics.findHotMemories("agent-1", {
 ```
 User Query → Generate Embedding → Cortex Search →
   │
-  ├─> Vector Search (Convex)
+  ├─> Vector Search (Convex - filtered by memorySpaceId)
   │   └─> Returns matches by similarity
   │
-  ├─> Keyword Search (Convex)
+  ├─> Keyword Search (Convex - filtered by memorySpaceId)
   │   └─> Returns matches by text
   │
-  └─> Recent Memories (Convex)
+  └─> Recent Memories (Convex - filtered by memorySpaceId)
       └─> Returns by timestamp
 
 → Combine & Rank → Return to Application → Present to User
@@ -896,68 +1166,194 @@ User Query → Generate Embedding → Cortex Search →
 
 ---
 
-## Common Patterns
+## Graph-Like Architecture
 
-### Pattern 1: Store on User Message
+Cortex is built on a **document-oriented database** (Convex) but provides **graph-like querying** through references and relationships.
+
+### Your Data IS a Graph
+
+Every entity in Cortex is a graph node:
+
+- **Memory Spaces** - Isolation boundaries
+- **Participants** - Agents/tools in a space (Hive Mode)
+- **Users** - End users, customers
+- **Contexts** - Workflow tasks, hierarchies
+- **Conversations** - Message threads
+- **Memories** - Knowledge entries
+- **Facts** - Extracted knowledge (Layer 3)
+
+References between documents are graph edges:
+
+- `conversationRef` → Links Memory to Conversation
+- `parentId` → Links Context to Parent Context (cross-space)
+- `userId` → Links anything to User
+- `memorySpaceId` → Links Memory/Context to Space
+- `participantId` → Links Memory to Participant (Hive Mode)
+- `fromAgent/toAgent` → Links A2A Messages between Spaces
+
+### Built-In Graph Traversals
+
+**Context Chain Navigation:**
 
 ```typescript
-// User sends message - use Layer 3 remember() for conversations
+// Get complete context hierarchy (graph walk)
+const chain = await cortex.contexts.get(contextId, {
+  includeChain: true, // ← Graph traversal!
+});
+
+console.log("Parent:", chain.parent.purpose); // 1-hop up
+console.log("Root:", chain.root.purpose); // N-hops to root
+console.log("Children:", chain.children.length); // 1-hop down
+```
+
+**Memory Space Communication Graph:**
+
+```typescript
+// Get A2A conversation (relationship graph between spaces)
+const conversation = await cortex.a2a.getConversation(
+  "finance-agent",
+  "hr-agent",
+);
+
+// Shows communication edges between memory spaces
+conversation.messages.forEach((msg) => {
+  console.log(`${msg.from} → ${msg.to}: ${msg.message}`);
+});
+```
+
+**Conversation Tracing:**
+
+```typescript
+// Memory → Conversation link (reference graph)
+const memory = await cortex.memory.get("user-123-personal", memoryId, {
+  includeConversation: true, // ← Follow conversationRef
+});
+
+console.log("Source conversation:", memory.conversation.conversationId);
+console.log("Source messages:", memory.sourceMessages);
+```
+
+**Participant Activity Graph (Hive Mode):**
+
+```typescript
+// See which participants stored what
+const memories = await cortex.memory.list("team-workspace", {
+  participantId: "cursor", // Filter by participant
+});
+
+// Analyze participant activity
+const participants = [...new Set(memories.map((m) => m.participantId))];
+console.log("Active participants:", participants);
+```
+
+### Performance Characteristics
+
+| Hops | Query Type             | Latency  | Use Case                |
+| ---- | ---------------------- | -------- | ----------------------- |
+| 1-2  | Direct relationships   | 10-50ms  | Most queries            |
+| 3-5  | Context hierarchies    | 50-200ms | Workflows, audit trails |
+| 6+   | Deep traversals (rare) | 200ms+   | Consider graph DB       |
+
+### When to Add a Graph Database
+
+**Graph-Lite** (built-in) handles 90% of use cases. Add a native graph database when you need:
+
+- Deep traversals (6+ hops) with <100ms latency
+- Complex pattern matching ("Find all paths between A and B")
+- Graph algorithms (PageRank, centrality, shortest path)
+- Dense relationship networks (social graphs, knowledge graphs)
+
+**Options:**
+
+- **DIY:** Integrate Neo4j, Memgraph, or Kùzu yourself (documented patterns)
+- **Cloud Mode:** Graph-Premium (fully managed, zero DevOps)
+
+**Learn more:** [Graph-Lite Traversal](../07-advanced-topics/01-graph-lite-traversal.md)
+
+---
+
+## Common Patterns
+
+### Pattern 1: Store on User Message (Hive Mode)
+
+```typescript
+// User sends message - store in shared memory space
 const userMessage = req.body.message;
 const agentResponse = await generateResponse(userMessage);
 
-// Store the exchange (ACID + Vector automatic)
+// Store the exchange
 await cortex.memory.remember({
-  agentId,
+  memorySpaceId: "user-123-personal", // Shared space
+  participantId: "cursor", // Which tool is storing
   conversationId: req.conversationId,
   userMessage,
   agentResponse,
   userId: req.user.id,
   userName: req.user.name,
   generateEmbedding: async (content) => await embed(content),
-  importance: 50, // 0-100 scale (40-69 = medium)
+  importance: 50,
   tags: ["user-input"],
 });
 ```
 
-### Pattern 2: Search Before Response
+### Pattern 2: Search Before Response (Infinite Context)
 
 ```typescript
-// Before generating response, search relevant memories
-const memories = await cortex.memory.search(agentId, userMessage, {
+// Retrieve relevant context before generating response
+const memories = await cortex.memory.search("user-123-personal", userMessage, {
   embedding: await embed(userMessage),
-  limit: 5,
+  limit: 10, // Top 10 most relevant
 });
 
 // Include memories in prompt
 const context = memories.map((m) => m.content).join("\n");
 const prompt = `
-Context from memory:
+Relevant Context:
 ${context}
 
 User: ${userMessage}
-Agent:
+Assistant:
 `;
 
 const response = await llm.complete(prompt);
 ```
 
-### Pattern 3: Store Agent Response
+### Pattern 3: Cross-Space Collaboration
 
 ```typescript
-// Pattern: Store entire exchange with remember()
-// (Already shown in Pattern 1 above - remember() stores both messages)
+// Finance agent sends message to HR agent (separate spaces)
+await cortex.a2a.send({
+  from: "finance-agent",
+  to: "hr-agent",
+  message: "Budget approved for hiring",
+  importance: 85,
+  metadata: { tags: ["approval", "hiring"] },
+});
+// Automatically stored in BOTH spaces (Collaboration Mode)
 
-// Or manually store agent action (Layer 2 - tool result)
-await cortex.vector.store(agentId, {
-  content: `I told the user: ${agentResponse}`,
-  contentType: "raw",
-  embedding: await embed(agentResponse),
-  userId: req.user.id,
-  source: { type: "tool", timestamp: new Date() },
-  metadata: {
-    importance: 55, // 0-100 scale
-    tags: ["agent-response"],
-  },
+// HR agent can retrieve
+const messages = await cortex.a2a.getConversation("hr-agent", "finance-agent");
+```
+
+### Pattern 4: Hive Mode Coordination
+
+```typescript
+// In team workspace, participants coordinate
+await cortex.memory.remember({
+  memorySpaceId: "team-engineering",
+  participantId: "code-reviewer-bot",
+  conversationId: "internal-comm",
+  userMessage: "[From deployment-bot] Build ready for review",
+  agentResponse: "Starting code review",
+  userId: "system",
+  userName: "System",
+  importance: 80,
+  tags: ["coordination", "review"],
+});
+
+// Other participants see it immediately
+const updates = await cortex.memory.search("team-engineering", "code review", {
+  limit: 5,
 });
 ```
 
@@ -970,7 +1366,9 @@ Now that you understand the core concepts:
 1. **[See Examples](../06-recipes/01-simple-chatbot.md)** - Real-world implementations
 2. **[API Reference](../03-api-reference/02-memory-operations.md)** - Complete API documentation
 3. **[Architecture](../04-architecture/01-system-overview.md)** - Deep dive into how it works
-4. **[Advanced Topics](../07-advanced-topics/01-embedding-providers.md)** - Optimization and scaling
+4. **[Advanced Topics](../07-advanced-topics/01-graph-lite-traversal.md)** - Graph queries, fact extraction, and optimization
+5. **[Hive Mode Guide](../02-core-features/10-hive-mode.md)** - Master multi-tool memory sharing
+6. **[Infinite Context](../04-architecture/10-infinite-context.md)** - Never run out of context again
 
 ---
 

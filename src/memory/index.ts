@@ -69,10 +69,10 @@ export class MemoryAPI {
     // Step 2: Store agent response in ACID
     const agentMsg = await this.conversations.addMessage({
       conversationId: params.conversationId,
-      message: {
+      message:       {
         role: "agent",
         content: params.agentResponse,
-        agentId: params.agentId,
+        participantId: params.participantId, // Updated
         metadata: {},
       },
     });
@@ -106,7 +106,7 @@ export class MemoryAPI {
     }
 
     // Step 5: Store user message in Vector with conversationRef
-    const userMemory = await this.vector.store(params.agentId, {
+    const userMemory = await this.vector.store(params.memorySpaceId, {
       content: userContent,
       contentType,
       embedding: userEmbedding,
@@ -128,7 +128,7 @@ export class MemoryAPI {
     });
 
     // Step 6: Store agent response in Vector with conversationRef
-    const agentMemory = await this.vector.store(params.agentId, {
+    const agentMemory = await this.vector.store(params.memorySpaceId, {
       content: agentContent,
       contentType,
       embedding: agentEmbedding,
@@ -421,7 +421,7 @@ export class MemoryAPI {
    */
   async updateMany(
     filter: {
-      agentId: string;
+      memorySpaceId: string;
       userId?: string;
       sourceType?: SourceType;
     },
@@ -437,7 +437,7 @@ export class MemoryAPI {
    * Delete many memories (delegates to vector.deleteMany)
    */
   async deleteMany(filter: {
-    agentId: string;
+    memorySpaceId: string;
     userId?: string;
     sourceType?: SourceType;
   }): Promise<{ deleted: number; memoryIds: string[] }> {
@@ -448,7 +448,7 @@ export class MemoryAPI {
    * Export memories (delegates to vector.export)
    */
   async export(options: {
-    agentId: string;
+    memorySpaceId: string;
     userId?: string;
     format: "json" | "csv";
     includeEmbeddings?: boolean;

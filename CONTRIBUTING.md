@@ -101,7 +101,7 @@ cortex/
 // Good
 export interface MemoryEntry {
   id: string;
-  agentId: string;
+  memorySpaceId: string;
   content: string;
   embedding: number[];
   metadata: MemoryMetadata;
@@ -109,14 +109,14 @@ export interface MemoryEntry {
 }
 
 export async function storeMemory(
-  agentId: string,
+  memorySpaceId: string,
   entry: Omit<MemoryEntry, "id" | "createdAt">,
 ): Promise<MemoryEntry> {
   // Implementation
 }
 
 // Bad
-export function storeMemory(agentId: any, entry: any): any {
+export function storeMemory(memorySpaceId: any, entry: any): any {
   // Implementation
 }
 ```
@@ -168,7 +168,7 @@ describe("memory.remember", () => {
     const cortex = new Cortex({ convexUrl: testConvexUrl });
 
     const result = await cortex.memory.remember({
-      agentId: "agent-1",
+      memorySpaceId: "agent-1",
       conversationId: "test-conv-1",
       userMessage: "Test message",
       agentResponse: "Test response",
@@ -344,7 +344,7 @@ describe("chatbot memory workflow", () => {
   it("should remember user preferences across sessions", async () => {
     // Store preference (Layer 3 - ACID + Vector)
     await cortex.memory.remember({
-      agentId: "agent-1",
+      memorySpaceId: "agent-1",
       conversationId: "conv-1",
       userMessage: "I prefer email notifications",
       agentResponse: "I'll remember that",
@@ -385,7 +385,7 @@ describe("chatbot memory workflow", () => {
  * @example
  * ```typescript
  * const result = await cortex.memory.remember({
- *   agentId: 'agent-1',
+ *   memorySpaceId: 'agent-1',
  *   conversationId: 'conv-123',
  *   userMessage: 'I prefer dark mode',
  *   agentResponse: "I'll remember that!",

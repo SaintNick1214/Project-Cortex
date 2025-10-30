@@ -31,9 +31,10 @@ export class VectorAPI {
    * });
    * ```
    */
-  async store(agentId: string, input: StoreMemoryInput): Promise<MemoryEntry> {
+  async store(memorySpaceId: string, input: StoreMemoryInput): Promise<MemoryEntry> {
     const result = await this.client.mutation(api.memories.store, {
-      agentId,
+      memorySpaceId,
+      participantId: input.participantId, // NEW: Hive Mode
       content: input.content,
       contentType: input.contentType,
       embedding: input.embedding,
@@ -59,9 +60,9 @@ export class VectorAPI {
    * const memory = await cortex.vector.get('agent-1', 'mem-abc123');
    * ```
    */
-  async get(agentId: string, memoryId: string): Promise<MemoryEntry | null> {
+  async get(memorySpaceId: string, memoryId: string): Promise<MemoryEntry | null> {
     const result = await this.client.query(api.memories.get, {
-      agentId,
+      memorySpaceId,
       memoryId,
     });
 
@@ -80,12 +81,12 @@ export class VectorAPI {
    * ```
    */
   async search(
-    agentId: string,
+    memorySpaceId: string,
     query: string,
     options?: SearchMemoriesOptions,
   ): Promise<MemoryEntry[]> {
     const result = await this.client.query(api.memories.search, {
-      agentId,
+      memorySpaceId,
       query,
       embedding: options?.embedding,
       userId: options?.userId,
@@ -107,11 +108,11 @@ export class VectorAPI {
    * ```
    */
   async delete(
-    agentId: string,
+    memorySpaceId: string,
     memoryId: string,
   ): Promise<{ deleted: boolean; memoryId: string }> {
     const result = await this.client.mutation(api.memories.deleteMemory, {
-      agentId,
+      memorySpaceId,
       memoryId,
     });
 
@@ -132,7 +133,7 @@ export class VectorAPI {
    */
   async list(filter: ListMemoriesFilter): Promise<MemoryEntry[]> {
     const result = await this.client.query(api.memories.list, {
-      agentId: filter.agentId,
+      memorySpaceId: filter.memorySpaceId,
       userId: filter.userId,
       sourceType: filter.sourceType,
       limit: filter.limit,
@@ -154,7 +155,7 @@ export class VectorAPI {
    */
   async count(filter: CountMemoriesFilter): Promise<number> {
     const result = await this.client.query(api.memories.count, {
-      agentId: filter.agentId,
+      memorySpaceId: filter.memorySpaceId,
       userId: filter.userId,
       sourceType: filter.sourceType,
     });
@@ -174,7 +175,7 @@ export class VectorAPI {
    * ```
    */
   async update(
-    agentId: string,
+    memorySpaceId: string,
     memoryId: string,
     updates: {
       content?: string;
@@ -184,7 +185,7 @@ export class VectorAPI {
     },
   ): Promise<MemoryEntry> {
     const result = await this.client.mutation(api.memories.update, {
-      agentId,
+      memorySpaceId,
       memoryId,
       content: updates.content,
       embedding: updates.embedding,
@@ -204,7 +205,7 @@ export class VectorAPI {
    * ```
    */
   async getVersion(
-    agentId: string,
+    memorySpaceId: string,
     memoryId: string,
     version: number,
   ): Promise<{
@@ -215,7 +216,7 @@ export class VectorAPI {
     timestamp: number;
   } | null> {
     const result = await this.client.query(api.memories.getVersion, {
-      agentId,
+      memorySpaceId,
       memoryId,
       version,
     });
@@ -238,7 +239,7 @@ export class VectorAPI {
    * ```
    */
   async getHistory(
-    agentId: string,
+    memorySpaceId: string,
     memoryId: string,
   ): Promise<
     Array<{
@@ -250,7 +251,7 @@ export class VectorAPI {
     }>
   > {
     const result = await this.client.query(api.memories.getHistory, {
-      agentId,
+      memorySpaceId,
       memoryId,
     });
 
@@ -275,12 +276,12 @@ export class VectorAPI {
    * ```
    */
   async deleteMany(filter: {
-    agentId: string;
+    memorySpaceId: string;
     userId?: string;
     sourceType?: "conversation" | "system" | "tool" | "a2a";
   }): Promise<{ deleted: number; memoryIds: string[] }> {
     const result = await this.client.mutation(api.memories.deleteMany, {
-      agentId: filter.agentId,
+      memorySpaceId: filter.memorySpaceId,
       userId: filter.userId,
       sourceType: filter.sourceType,
     });
@@ -300,7 +301,7 @@ export class VectorAPI {
    * ```
    */
   async export(options: {
-    agentId: string;
+    memorySpaceId: string;
     userId?: string;
     format: "json" | "csv";
     includeEmbeddings?: boolean;
@@ -311,7 +312,7 @@ export class VectorAPI {
     exportedAt: number;
   }> {
     const result = await this.client.query(api.memories.exportMemories, {
-      agentId: options.agentId,
+      memorySpaceId: options.memorySpaceId,
       userId: options.userId,
       format: options.format,
       includeEmbeddings: options.includeEmbeddings,
@@ -340,7 +341,7 @@ export class VectorAPI {
    */
   async updateMany(
     filter: {
-      agentId: string;
+      memorySpaceId: string;
       userId?: string;
       sourceType?: "conversation" | "system" | "tool" | "a2a";
     },
@@ -350,7 +351,7 @@ export class VectorAPI {
     },
   ): Promise<{ updated: number; memoryIds: string[] }> {
     const result = await this.client.mutation(api.memories.updateMany, {
-      agentId: filter.agentId,
+      memorySpaceId: filter.memorySpaceId,
       userId: filter.userId,
       sourceType: filter.sourceType,
       importance: updates.importance,
@@ -369,11 +370,11 @@ export class VectorAPI {
    * ```
    */
   async archive(
-    agentId: string,
+    memorySpaceId: string,
     memoryId: string,
   ): Promise<{ archived: boolean; memoryId: string; restorable: boolean }> {
     const result = await this.client.mutation(api.memories.archive, {
-      agentId,
+      memorySpaceId,
       memoryId,
     });
 
@@ -393,7 +394,7 @@ export class VectorAPI {
    * ```
    */
   async getAtTimestamp(
-    agentId: string,
+    memorySpaceId: string,
     memoryId: string,
     timestamp: number | Date,
   ): Promise<{
@@ -406,7 +407,7 @@ export class VectorAPI {
     const ts = typeof timestamp === "number" ? timestamp : timestamp.getTime();
 
     const result = await this.client.query(api.memories.getAtTimestamp, {
-      agentId,
+      memorySpaceId,
       memoryId,
       timestamp: ts,
     });

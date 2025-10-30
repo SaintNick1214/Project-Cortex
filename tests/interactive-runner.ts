@@ -72,8 +72,12 @@ async function summarizeConversation(
 
 // Test data
 const TEST_USER_ID = "user-test-interactive";
-const TEST_AGENT_ID = "agent-test-interactive";
+const TEST_MEMSPACE_ID = "memspace-interactive"; // Updated for Memory Space Architecture
+const TEST_PARTICIPANT_ID = "agent-test-interactive"; // For Hive Mode tracking
 let currentConversationId: string | null = null;
+let currentMemoryId: string | null = null;
+let currentFactId: string | null = null;
+let currentContextId: string | null = null;
 let currentImmutableType: string | null = null;
 let currentImmutableId: string | null = null;
 
@@ -125,7 +129,7 @@ const MENU_OPTIONS = {
   "13": { label: "  📖 get", action: testGet },
   "14": { label: "  💬 addMessage", action: testAddMessage },
   "15": { label: "  📋 list (by user)", action: testListByUser },
-  "16": { label: "  📋 list (by agent)", action: testListByAgent },
+  "16": { label: "  📋 list (by memorySpace)", action: testListByMemorySpace },
   "17": { label: "  🔢 count", action: testCount },
   "18": { label: "  📜 getHistory", action: testGetHistory },
   "19": { label: "  🔍 search", action: testSearch },
@@ -368,36 +372,16 @@ async function purgeAllDatabases() {
 
   // Purge vector memories
   console.log("  Purging vector memories...");
-  const testAgents = [
-    TEST_AGENT_ID,
-    "agent-test",
-    "agent-test-2",
-    "agent-search",
-    "agent-store",
-  ];
+  // Use purgeAll for efficiency (updated for Memory Space Architecture)
   let memoryDeleted = 0;
 
-  for (const agentId of testAgents) {
-    try {
-      const memories = await client.query(api.memories.list, { agentId });
-
-      for (const memory of memories) {
-        try {
-          await client.mutation(api.memories.deleteMemory, {
-            agentId,
-            memoryId: memory.memoryId,
-          });
-          memoryDeleted++;
-        } catch (error: unknown) {
-          if (error.message?.includes("MEMORY_NOT_FOUND")) {
-            continue;
-          }
-        }
-      }
-    } catch (_error: unknown) {
-      // Agent might not have memories
-    }
+  try {
+    const result = await client.mutation(api.memories.purgeAll, {});
+    memoryDeleted = result.deleted;
+  } catch (_error: unknown) {
+    // Purge might fail if no data
   }
+  
   console.log(`  ✅ Purged ${memoryDeleted} memory/memories`);
 
   console.log("\n✅ All databases clean\n");
@@ -422,9 +406,10 @@ async function testCreateUserAgent() {
 
   const input = {
     type: "user-agent" as const,
+    memorySpaceId: TEST_MEMSPACE_ID,
     participants: {
       userId: TEST_USER_ID,
-      agentId: TEST_AGENT_ID,
+      participantId: TEST_PARTICIPANT_ID,
     },
     metadata: {
       source: "interactive-runner",
@@ -450,12 +435,13 @@ async function testCreateAgentAgent() {
   console.log("\n➕ Testing: conversations.create (agent-agent)...");
 
   const input = {
+    memorySpaceId: TEST_MEMSPACE_ID,
     type: "agent-agent" as const,
     participants: {
-      agentIds: [
-        TEST_AGENT_ID,
-        "agent-target-interactive",
-        "agent-observer-interactive",
+      memorySpaceIds: [
+        TEST_MEMSPACE_ID,
+        "memspace-target-interactive",
+        "memspace-observer-interactive",
       ],
     },
   };
@@ -564,39 +550,37 @@ async function testListByUser() {
   console.log();
 }
 
-async function testListByAgent() {
+async function testListByMemorySpace() {
   console.log(
-    `\n📋 Testing: conversations.list({ agentId: "${TEST_AGENT_ID}" })...`,
+    `\n📋 Testing: conversations.list({ memorySpaceId: "${TEST_MEMSPACE_ID}" })...`,
   );
 
   const conversations = await cortex.conversations.list({
-    agentId: TEST_AGENT_ID,
+    memorySpaceId: TEST_MEMSPACE_ID,
   });
 
   console.log(`\n📥 Found ${conversations.length} conversation(s)`);
   console.log("Result:", JSON.stringify(conversations, null, 2));
 
-  // Validate: all conversations should include this agentId
+  // Validate: all conversations should be in this memorySpace
   console.log("\n🔍 Validation:");
   let allValid = true;
 
   conversations.forEach((conv, i) => {
-    const hasAgent =
-      conv.participants.agentId === TEST_AGENT_ID ||
-      conv.participants.agentIds?.includes(TEST_AGENT_ID);
+    const hasMemorySpace = conv.memorySpaceId === TEST_MEMSPACE_ID;
 
-    if (hasAgent) {
-      console.log(`  ✅ Conversation ${i + 1}: Contains ${TEST_AGENT_ID}`);
+    if (hasMemorySpace) {
+      console.log(`  ✅ Conversation ${i + 1}: In memory space ${TEST_MEMSPACE_ID}`);
     } else {
-      console.log(`  ❌ Conversation ${i + 1}: Missing ${TEST_AGENT_ID}`);
+      console.log(`  ❌ Conversation ${i + 1}: Wrong memory space`);
       allValid = false;
     }
   });
 
   if (allValid) {
-    console.log("✅ All conversations contain the agent");
+    console.log("✅ All conversations in correct memory space");
   } else {
-    console.log("❌ Some conversations don't contain the agent");
+    console.log("❌ Some conversations in wrong memory space");
   }
   console.log();
 }
@@ -735,7 +719,7 @@ async function testExportCSV() {
 
   const exported = await cortex.conversations.export({
     filters: {
-      agentId: TEST_AGENT_ID,
+      participantId: TEST_PARTICIPANT_ID,
     },
     format: "csv",
     includeMetadata: false,
@@ -857,7 +841,7 @@ async function runConversationsTests() {
   const totalCount = await cortex.conversations.count();
   const userConvs = await cortex.conversations.list({ userId: TEST_USER_ID });
   const agentConvs = await cortex.conversations.list({
-    agentId: TEST_AGENT_ID,
+    memorySpaceId: TEST_MEMSPACE_ID,
   });
 
   console.log("📊 Results:");
@@ -1072,7 +1056,7 @@ async function runAllTests() {
   const totalConvCount = await cortex.conversations.count();
   const userConvs = await cortex.conversations.list({ userId: TEST_USER_ID });
   const agentConvs = await cortex.conversations.list({
-    agentId: TEST_AGENT_ID,
+    memorySpaceId: TEST_MEMSPACE_ID,
   });
 
   console.log("📊 Layer 1a (Conversations):");
@@ -1098,7 +1082,7 @@ async function runAllTests() {
 
   // Layer 2: Vector
   const totalVectorCount = await cortex.vector.count({
-    agentId: TEST_AGENT_ID,
+    memorySpaceId: TEST_MEMSPACE_ID,
   });
 
   console.log("\n📊 Layer 2 (Vector Memory):");
@@ -1106,7 +1090,7 @@ async function runAllTests() {
 
   // Layer 3: Memory (uses Layer 1 + Layer 2)
   const memorySearchResults = await cortex.memory.search(
-    TEST_AGENT_ID,
+    TEST_MEMSPACE_ID,
     "password",
   );
 
@@ -1380,9 +1364,10 @@ async function testConvPropagation() {
   // Create conversation
   const conv = await cortex.conversations.create({
     type: "user-agent",
+    memorySpaceId: TEST_MEMSPACE_ID,
     participants: {
       userId: TEST_USER_ID,
-      agentId: TEST_AGENT_ID,
+      participantId: TEST_PARTICIPANT_ID,
     },
   });
 
@@ -1458,9 +1443,10 @@ async function testConvManyMessages() {
   // Create conversation
   const conv = await cortex.conversations.create({
     type: "user-agent",
+    memorySpaceId: TEST_MEMSPACE_ID,
     participants: {
       userId: TEST_USER_ID,
-      agentId: TEST_AGENT_ID,
+      participantId: TEST_PARTICIPANT_ID,
     },
   });
 
@@ -1532,7 +1518,7 @@ async function testConvDeleteMany() {
       type: "user-agent",
       participants: {
         userId: `${TEST_USER_ID}-bulk`,
-        agentId: TEST_AGENT_ID,
+        participantId: TEST_PARTICIPANT_ID,
       },
     });
   }
@@ -1648,7 +1634,7 @@ async function testConvFindConversation() {
   const found = await cortex.conversations.findConversation({
     type: "user-agent",
     userId: TEST_USER_ID,
-    agentId: TEST_AGENT_ID,
+    memorySpaceId: TEST_MEMSPACE_ID,
   });
 
   if (found) {
@@ -1659,7 +1645,7 @@ async function testConvFindConversation() {
     currentConversationId = found.conversationId;
   } else {
     console.log(
-      `\n⚠️  No existing conversation found for ${TEST_USER_ID} + ${TEST_AGENT_ID}`,
+      `\n⚠️  No existing conversation found for ${TEST_USER_ID} + ${TEST_MEMSPACE_ID}`,
     );
   }
   console.log();
@@ -1673,7 +1659,7 @@ async function testConvGetOrCreate() {
     type: "user-agent",
     participants: {
       userId: `${TEST_USER_ID}-getorcreate`,
-      agentId: TEST_AGENT_ID,
+      participantId: TEST_PARTICIPANT_ID,
     },
   });
 
@@ -1691,7 +1677,7 @@ async function testConvGetOrCreate() {
     type: "user-agent",
     participants: {
       userId: `${TEST_USER_ID}-getorcreate`,
-      agentId: TEST_AGENT_ID,
+      participantId: TEST_PARTICIPANT_ID,
     },
   });
 
@@ -1708,9 +1694,10 @@ async function testConvIntegration() {
   // Create
   const conv = await cortex.conversations.create({
     type: "user-agent",
+    memorySpaceId: TEST_MEMSPACE_ID,
     participants: {
       userId: TEST_USER_ID,
-      agentId: TEST_AGENT_ID,
+      participantId: TEST_PARTICIPANT_ID,
     },
     metadata: {
       testMarker: "INTEGRATION_TEST",
@@ -2409,12 +2396,12 @@ async function testMutableTransaction() {
 // Layer 2: Vector Memory Tests
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-let currentMemoryId: string | null = null;
+// currentMemoryId now declared at top with other globals
 
 async function testVectorStore() {
   console.log("\n💾 Testing: vector.store()...");
 
-  const result = await cortex.vector.store(TEST_AGENT_ID, {
+  const result = await cortex.vector.store(TEST_MEMSPACE_ID, {
     content: "User prefers dark mode for UI",
     contentType: "raw",
     source: { type: "conversation", userId: TEST_USER_ID },
@@ -2446,7 +2433,7 @@ async function testVectorGet() {
 
   console.log(`\n📖 Testing: vector.get()...`);
 
-  const result = await cortex.vector.get(TEST_AGENT_ID, currentMemoryId);
+  const result = await cortex.vector.get(TEST_MEMSPACE_ID, currentMemoryId);
 
   if (result) {
     console.log("📥 Retrieved:");
@@ -2463,7 +2450,7 @@ async function testVectorGet() {
 async function testVectorSearch() {
   console.log("\n🔍 Testing: vector.search()...");
 
-  const results = await cortex.vector.search(TEST_AGENT_ID, "preferences");
+  const results = await cortex.vector.search(TEST_MEMSPACE_ID, "preferences");
 
   console.log(`📥 Found ${results.length} memories matching "preferences"`);
   results.forEach((m, i) => {
@@ -2478,11 +2465,11 @@ async function testVectorList() {
   console.log("\n📋 Testing: vector.list()...");
 
   const results = await cortex.vector.list({
-    agentId: TEST_AGENT_ID,
+    memorySpaceId: TEST_MEMSPACE_ID,
     limit: 10,
   });
 
-  console.log(`📥 Found ${results.length} memories for ${TEST_AGENT_ID}`);
+  console.log(`📥 Found ${results.length} memories for ${TEST_MEMSPACE_ID}`);
   results.forEach((m, i) => {
     console.log(`  ${i + 1}. ${m.content.substring(0, 50)}...`);
   });
@@ -2493,7 +2480,7 @@ async function testVectorCount() {
   console.log("\n🔢 Testing: vector.count()...");
 
   const count = await cortex.vector.count({
-    agentId: TEST_AGENT_ID,
+    memorySpaceId: TEST_MEMSPACE_ID,
   });
 
   console.log(`📥 Count: ${count} memories`);
@@ -2511,12 +2498,12 @@ async function testVectorDelete() {
 
   console.log(`\n🗑️  Testing: vector.delete()...`);
 
-  await cortex.vector.delete(TEST_AGENT_ID, currentMemoryId);
+  await cortex.vector.delete(TEST_MEMSPACE_ID, currentMemoryId);
 
   console.log("✅ Memory deleted");
 
   // Verify
-  const check = await cortex.vector.get(TEST_AGENT_ID, currentMemoryId);
+  const check = await cortex.vector.get(TEST_MEMSPACE_ID, currentMemoryId);
 
   console.log(
     `✅ Verification: ${check === null ? "Deleted" : "Still exists (ERROR)"}`,
@@ -2537,7 +2524,7 @@ async function testVectorUpdate() {
 
   console.log(`\n✏️  Testing: vector.update()...`);
 
-  const updated = await cortex.vector.update(TEST_AGENT_ID, currentMemoryId, {
+  const updated = await cortex.vector.update(TEST_MEMSPACE_ID, currentMemoryId, {
     content: "Updated content (version 2)",
     importance: 90,
     tags: ["updated", "test"],
@@ -2556,7 +2543,7 @@ async function testVectorUpdateMany() {
 
   // Create test memories
   for (let i = 1; i <= 3; i++) {
-    await cortex.vector.store(TEST_AGENT_ID, {
+    await cortex.vector.store(TEST_MEMSPACE_ID, {
       content: `Bulk update test ${i}`,
       contentType: "raw",
       source: { type: "system", timestamp: Date.now() },
@@ -2565,7 +2552,7 @@ async function testVectorUpdateMany() {
   }
 
   const result = await cortex.vector.updateMany(
-    { agentId: TEST_AGENT_ID, sourceType: "system" },
+    { memorySpaceId: TEST_MEMSPACE_ID, sourceType: "system" },
     { importance: 80 },
   );
 
@@ -2579,7 +2566,7 @@ async function testVectorDeleteMany() {
 
   // Create test memories
   for (let i = 1; i <= 5; i++) {
-    await cortex.vector.store(TEST_AGENT_ID, {
+    await cortex.vector.store(TEST_MEMSPACE_ID, {
       content: `Bulk delete test ${i}`,
       contentType: "raw",
       source: { type: "system", timestamp: Date.now() },
@@ -2589,7 +2576,7 @@ async function testVectorDeleteMany() {
   }
 
   const result = await cortex.vector.deleteMany({
-    agentId: TEST_AGENT_ID,
+    memorySpaceId: TEST_MEMSPACE_ID,
     userId: "user-bulk-delete-test",
   });
 
@@ -2602,7 +2589,7 @@ async function testVectorExport() {
   console.log(`\n📤 Testing: vector.export()...`);
 
   const jsonExport = await cortex.vector.export({
-    agentId: TEST_AGENT_ID,
+    memorySpaceId: TEST_MEMSPACE_ID,
     format: "json",
   });
 
@@ -2611,7 +2598,7 @@ async function testVectorExport() {
   console.log(`   Data length: ${jsonExport.data.length} characters`);
 
   const csvExport = await cortex.vector.export({
-    agentId: TEST_AGENT_ID,
+    memorySpaceId: TEST_MEMSPACE_ID,
     format: "csv",
   });
 
@@ -2623,21 +2610,21 @@ async function testVectorExport() {
 async function testVectorArchive() {
   console.log(`\n🗄️  Testing: vector.archive()...`);
 
-  const memory = await cortex.vector.store(TEST_AGENT_ID, {
+  const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
     content: "Archive test memory",
     contentType: "raw",
     source: { type: "system", timestamp: Date.now() },
     metadata: { importance: 50, tags: ["archive-test"] },
   });
 
-  const result = await cortex.vector.archive(TEST_AGENT_ID, memory.memoryId);
+  const result = await cortex.vector.archive(TEST_MEMSPACE_ID, memory.memoryId);
 
   console.log(`✅ Archived memory ${memory.memoryId}`);
   console.log(`   Archived: ${result.archived}`);
   console.log(`   Restorable: ${result.restorable}`);
 
   // Verify archive
-  const archived = await cortex.vector.get(TEST_AGENT_ID, memory.memoryId);
+  const archived = await cortex.vector.get(TEST_MEMSPACE_ID, memory.memoryId);
 
   console.log(`✅ Verification: tags=${archived!.tags.join(", ")}`);
   console.log(`✅ Verification: importance=${archived!.importance}`);
@@ -2655,11 +2642,11 @@ async function testVectorGetVersion() {
 
   console.log(`\n🕒 Testing: vector.getVersion()...`);
 
-  const v1 = await cortex.vector.getVersion(TEST_AGENT_ID, currentMemoryId, 1);
+  const v1 = await cortex.vector.getVersion(TEST_MEMSPACE_ID, currentMemoryId, 1);
 
   console.log(`✅ Version 1: ${v1?.content || "Not found"}`);
 
-  const v2 = await cortex.vector.getVersion(TEST_AGENT_ID, currentMemoryId, 2);
+  const v2 = await cortex.vector.getVersion(TEST_MEMSPACE_ID, currentMemoryId, 2);
 
   console.log(`✅ Version 2: ${v2?.content || "Not found"}`);
 
@@ -2678,7 +2665,7 @@ async function testVectorGetHistory() {
   console.log(`\n📜 Testing: vector.getHistory()...`);
 
   const history = await cortex.vector.getHistory(
-    TEST_AGENT_ID,
+    TEST_MEMSPACE_ID,
     currentMemoryId,
   );
 
@@ -2700,7 +2687,7 @@ async function testVectorGetAtTimestamp() {
 
   console.log(`\n⏰ Testing: vector.getAtTimestamp()...`);
 
-  const memory = await cortex.vector.get(TEST_AGENT_ID, currentMemoryId);
+  const memory = await cortex.vector.get(TEST_MEMSPACE_ID, currentMemoryId);
 
   if (!memory) {
     console.log("Memory not found");
@@ -2709,7 +2696,7 @@ async function testVectorGetAtTimestamp() {
   }
 
   const atCreation = await cortex.vector.getAtTimestamp(
-    TEST_AGENT_ID,
+    TEST_MEMSPACE_ID,
     currentMemoryId,
     memory.createdAt,
   );
@@ -2719,7 +2706,7 @@ async function testVectorGetAtTimestamp() {
   console.log(`   Version: ${atCreation?.version}`);
 
   const now = await cortex.vector.getAtTimestamp(
-    TEST_AGENT_ID,
+    TEST_MEMSPACE_ID,
     currentMemoryId,
     Date.now(),
   );
@@ -2812,11 +2799,12 @@ async function testMemoryRemember() {
   // Create conversation first
   const conv = await cortex.conversations.create({
     type: "user-agent",
-    participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+    memorySpaceId: TEST_MEMSPACE_ID,
+    participants: { userId: TEST_USER_ID, participantId: TEST_PARTICIPANT_ID },
   });
 
   const result = await cortex.memory.remember({
-    agentId: TEST_AGENT_ID,
+    memorySpaceId: TEST_MEMSPACE_ID,
     conversationId: conv.conversationId,
     userMessage: "The password is Green123",
     agentResponse: "I'll remember that password!",
@@ -2850,7 +2838,7 @@ async function testMemoryForget() {
 
   console.log(`\n💭 Testing: memory.forget()...`);
 
-  const result = await cortex.memory.forget(TEST_AGENT_ID, currentMemoryId);
+  const result = await cortex.memory.forget(TEST_MEMSPACE_ID, currentMemoryId);
 
   console.log(`✅ Memory deleted: ${result.memoryDeleted}`);
   console.log(`✅ Conversation deleted: ${result.conversationDeleted}`);
@@ -2858,7 +2846,7 @@ async function testMemoryForget() {
   console.log(`✅ Restorable: ${result.restorable} (ACID preserved)`);
 
   // Verify
-  const vectorCheck = await cortex.vector.get(TEST_AGENT_ID, currentMemoryId);
+  const vectorCheck = await cortex.vector.get(TEST_MEMSPACE_ID, currentMemoryId);
 
   console.log(
     `✅ Vector verification: ${vectorCheck === null ? "Deleted" : "Still exists"}`,
@@ -2889,11 +2877,12 @@ async function testMemoryGetEnriched() {
   if (!currentMemoryId) {
     const conv = await cortex.conversations.create({
       type: "user-agent",
-      participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+      memorySpaceId: TEST_MEMSPACE_ID,
+    participants: { userId: TEST_USER_ID, participantId: TEST_PARTICIPANT_ID },
     });
 
     const result = await cortex.memory.remember({
-      agentId: TEST_AGENT_ID,
+      participantId: TEST_PARTICIPANT_ID,
       conversationId: conv.conversationId,
       userMessage: "Enrichment test",
       agentResponse: "OK",
@@ -2906,12 +2895,12 @@ async function testMemoryGetEnriched() {
   }
 
   // Test default (vector only)
-  const vectorOnly = await cortex.memory.get(TEST_AGENT_ID, currentMemoryId);
+  const vectorOnly = await cortex.memory.get(TEST_MEMSPACE_ID, currentMemoryId);
 
   console.log(`✅ Default (Vector only): ${(vectorOnly as unknown).memoryId}`);
 
   // Test enriched
-  const enriched = await cortex.memory.get(TEST_AGENT_ID, currentMemoryId, {
+  const enriched = await cortex.memory.get(TEST_MEMSPACE_ID, currentMemoryId, {
     includeConversation: true,
   });
 
@@ -2930,12 +2919,12 @@ async function testMemorySearchEnriched() {
   console.log(`\n🔍 Testing: memory.search() with enrichment...`);
 
   // Search default (vector only)
-  const vectorOnly = await cortex.memory.search(TEST_AGENT_ID, "password");
+  const vectorOnly = await cortex.memory.search(TEST_MEMSPACE_ID, "password");
 
   console.log(`✅ Default search: ${vectorOnly.length} results (Vector only)`);
 
   // Search enriched
-  const enriched = await cortex.memory.search(TEST_AGENT_ID, "password", {
+  const enriched = await cortex.memory.search(TEST_MEMSPACE_ID, "password", {
     enrichConversation: true,
   });
 
@@ -2956,7 +2945,7 @@ async function testMemorySearchEnriched() {
 async function testMemoryStore() {
   console.log(`\n💾 Testing: memory.store()...`);
 
-  const memory = await cortex.memory.store(TEST_AGENT_ID, {
+  const memory = await cortex.memory.store(TEST_MEMSPACE_ID, {
     content: "System-generated memory via Layer 3",
     contentType: "raw",
     source: { type: "system", timestamp: Date.now() },
@@ -3018,7 +3007,8 @@ async function testMemoryRememberWithAI() {
   // Create conversation
   const conv = await cortex.conversations.create({
     type: "user-agent",
-    participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+    memorySpaceId: TEST_MEMSPACE_ID,
+    participants: { userId: TEST_USER_ID, participantId: TEST_PARTICIPANT_ID },
   });
 
   // Test with 3 facts (shorter for interactive testing)
@@ -3046,7 +3036,7 @@ async function testMemoryRememberWithAI() {
     console.log(`\nProcessing: "${convo.user.substring(0, 50)}..."`);
 
     const result = await cortex.memory.remember({
-      agentId: TEST_AGENT_ID,
+      participantId: TEST_PARTICIPANT_ID,
       conversationId: conv.conversationId,
       userMessage: convo.user,
       agentResponse: convo.agent,
@@ -3094,7 +3084,7 @@ async function testSemanticSearchRecall() {
   for (const search of searches) {
     console.log(`Query: "${search.query}"`);
 
-    const results = await cortex.memory.search(TEST_AGENT_ID, search.query, {
+    const results = await cortex.memory.search(TEST_MEMSPACE_ID, search.query, {
       embedding: await generateEmbedding(search.query),
       userId: TEST_USER_ID,
       limit: 3,
@@ -3125,7 +3115,7 @@ async function testEnrichedSearchWithAI() {
 
   console.log(`\n💬 Testing: Enriched search with ACID context...`);
 
-  const results = await cortex.memory.search(TEST_AGENT_ID, "password", {
+  const results = await cortex.memory.search(TEST_MEMSPACE_ID, "password", {
     embedding: await generateEmbedding("password credentials"),
     enrichConversation: true,
     userId: TEST_USER_ID,
@@ -3167,7 +3157,7 @@ async function testSummarizationQuality() {
   console.log(`\n📝 Testing: Summarization quality...`);
 
   const memory = await cortex.vector.get(
-    TEST_AGENT_ID,
+    TEST_MEMSPACE_ID,
     advancedMemories[0].memoryId,
   );
 
@@ -3206,7 +3196,7 @@ async function testSimilarityScores() {
   console.log(`\n📊 Testing: Similarity scores (cosine similarity)...`);
 
   const results = await cortex.memory.search(
-    TEST_AGENT_ID,
+    TEST_MEMSPACE_ID,
     "API password for production environment",
     {
       embedding: await generateEmbedding(

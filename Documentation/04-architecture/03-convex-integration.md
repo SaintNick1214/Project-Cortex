@@ -1,6 +1,6 @@
 # Convex Integration
 
-> **Last Updated**: 2025-10-25
+> **Last Updated**: 2025-10-28
 
 How Cortex leverages Convex features for persistent memory, vector search, and real-time updates.
 
@@ -30,7 +30,7 @@ import { query } from "./_generated/server";
 import { v } from "convex/values";
 
 export const get = query({
-  args: { agentId: v.string(), memoryId: v.id("memories") },
+  args: { memorySpaceId: v.string(), memoryId: v.id("memories") },
   handler: async (ctx, args) => {
     const memory = await ctx.db.get(args.memoryId);
 
@@ -50,7 +50,7 @@ export const get = query({
 
 export const search = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     query: v.string(),
     embedding: v.optional(v.array(v.float64())),
     filters: v.any(),
@@ -102,7 +102,7 @@ import { v } from "convex/values";
 
 export const store = mutation({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     content: v.string(),
     contentType: v.union(v.literal("raw"), v.literal("summarized")),
     embedding: v.optional(v.array(v.float64())),
@@ -127,7 +127,7 @@ export const store = mutation({
 
 export const update = mutation({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     memoryId: v.id("memories"),
     updates: v.any(),
   },
@@ -197,7 +197,7 @@ import { v } from "convex/values";
 
 export const storeWithEmbedding = action({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     content: v.string(),
     metadata: v.any(),
   },
@@ -230,7 +230,7 @@ export const storeWithEmbedding = action({
 
 export const publishA2ANotification = action({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     notification: v.any(),
   },
   handler: async (ctx, args) => {
@@ -268,13 +268,13 @@ const memory = await cortex.memory.get("agent-1", "mem_abc");
 
 // Becomes Convex query
 await client.query(api.memories.get, {
-  agentId: "agent-1",
+  memorySpaceId: "agent-1",
   memoryId: "mem_abc",
 });
 
 // Reactive in UI
 const { data: memory } = useQuery(api.memories.get, {
-  agentId: "agent-1",
+  memorySpaceId: "agent-1",
   memoryId: "mem_abc",
 });
 // ↑ Auto-updates when memory changes!
@@ -303,7 +303,7 @@ await cortex.memory.store("agent-1", data);
 
 // Becomes Convex mutation
 await client.mutation(api.memories.store, {
-  agentId: "agent-1",
+  memorySpaceId: "agent-1",
   ...data,
 });
 ```
@@ -339,7 +339,7 @@ await cortex.memory.store('agent-1', {
 
 // Convex action (Cloud Mode backend)
 export const storeWithAutoEmbed = action({
-  args: { agentId: v.string(), content: v.string(), ... },
+  args: { memorySpaceId: v.string(), content: v.string(), ... },
   handler: async (ctx, args) => {
     // Call OpenAI
     const embedding = await generateEmbedding(args.content);
@@ -369,7 +369,7 @@ export const storeWithAutoEmbed = action({
 ```typescript
 // convex/schema.ts
 memories: defineTable({
-  agentId: v.string(),
+  memorySpaceId: v.string(),
   content: v.string(),
   embedding: v.optional(v.array(v.float64())),
   // ...
@@ -386,7 +386,7 @@ memories: defineTable({
 // convex/memories.ts
 export const semanticSearch = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     embedding: v.array(v.float64()),
     userId: v.optional(v.string()),
     limit: v.number(),
@@ -427,7 +427,7 @@ export const semanticSearch = query({
 // convex/schema.ts
 memories: defineTable({
   content: v.string(),
-  agentId: v.string(),
+  memorySpaceId: v.string(),
   userId: v.optional(v.string()),
   // ...
 }).searchIndex("by_content", {
@@ -442,7 +442,7 @@ memories: defineTable({
 // convex/memories.ts
 export const keywordSearch = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     keywords: v.string(),
     userId: v.optional(v.string()),
     limit: v.number(),
@@ -501,7 +501,7 @@ export const addMessage = mutation({
 ```typescript
 // All mutations are transactional
 export const remember = mutation({
-  args: { agentId: v.string(), conversationId: v.id("conversations"), userMessage: v.string(), agentResponse: v.string() },
+  args: { memorySpaceId: v.string(), conversationId: v.id("conversations"), userMessage: v.string(), agentResponse: v.string() },
   handler: async (ctx, args) => {
     // Step 1: Add to conversation (ACID)
     const userMsgId = await ctx.db.insert("messages", { ... });
@@ -603,7 +603,7 @@ import { ConvexClient } from "convex/browser";
 const client = new ConvexClient(process.env.CONVEX_URL);
 
 // Subscribe to query results
-client.onUpdate(api.memories.list, { agentId: "agent-1" }, (memories) => {
+client.onUpdate(api.memories.list, { memorySpaceId: "agent-1" }, (memories) => {
   console.log(`Agent now has ${memories.length} memories`);
   // Called every time data changes!
 });
@@ -626,7 +626,7 @@ The `remember()` helper coordinates multiple mutations:
 ```typescript
 // SDK call
 await cortex.memory.remember({
-  agentId: 'agent-1',
+  memorySpaceId: 'agent-1',
   conversationId: 'conv-123',
   userMessage: 'Hello',
   agentResponse: 'Hi!',
@@ -657,14 +657,14 @@ export const remember = mutation({
         id: generateId(),
         role: "agent",
         content: args.agentResponse,
-        agentId: args.agentId,
+        memorySpaceId: args.agentId,
         timestamp: Date.now(),
       },
     });
 
     // 3. Create vector memory (Layer 2)
     const memoryId = await ctx.db.insert("memories", {
-      agentId: args.agentId,
+      memorySpaceId: args.agentId,
       userId: args.userId,
       content: `${args.userName}: ${args.userMessage}\nAgent: ${args.agentResponse}`,
       contentType: "summarized",
@@ -840,7 +840,7 @@ const client = new ConvexClient(process.env.CONVEX_URL);
 client.onUpdate(
   api.memories.list,
   {
-    agentId: "hr-agent",
+    memorySpaceId: "hr-agent",
     filters: {
       "source.type": "a2a",
       "metadata.direction": "inbound",
@@ -872,7 +872,7 @@ client.onUpdate(
 ```typescript
 export const list = query({
   args: {
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     limit: v.number(),
     offset: v.number(),
   },
@@ -967,13 +967,13 @@ import { Id, Doc } from "./_generated/dataModel";
 
 // Type-safe function calls
 const memory: Doc<"memories"> = await client.query(api.memories.get, {
-  agentId: "agent-1",
+  memorySpaceId: "agent-1",
   memoryId: "mem_abc" as Id<"memories">,
 });
 
 // Type errors caught at compile-time
 await client.query(api.memories.get, {
-  agentId: 123, // ❌ TypeScript error: number not assignable to string
+  memorySpaceId: 123, // ❌ TypeScript error: number not assignable to string
   memoryId: "mem_abc",
 });
 ```
@@ -986,7 +986,10 @@ import { MemoryEntry } from "@cortex-platform/sdk";
 
 // Convex Doc<"memories"> → Cortex MemoryEntry
 class CortexSDK {
-  async get(agentId: string, memoryId: string): Promise<MemoryEntry | null> {
+  async get(
+    memorySpaceId: string,
+    memoryId: string,
+  ): Promise<MemoryEntry | null> {
     const doc = await this.client.query(api.memories.get, {
       agentId,
       memoryId: memoryId as Id<"memories">,
@@ -999,7 +1002,7 @@ class CortexSDK {
   private toMemoryEntry(doc: Doc<"memories">): MemoryEntry {
     return {
       id: doc._id,
-      agentId: doc.agentId,
+      memorySpaceId: doc.agentId,
       userId: doc.userId,
       content: doc.content,
       contentType: doc.contentType,

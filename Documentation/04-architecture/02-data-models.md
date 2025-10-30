@@ -1,6 +1,6 @@
 # Data Models
 
-> **Last Updated**: 2025-10-25
+> **Last Updated**: 2025-10-28
 
 Detailed Convex schema definitions, indexes, and data structures for all Cortex tables.
 
@@ -91,7 +91,7 @@ export default defineSchema({
 
   // Layer 2: Vector Memories
   memories: defineTable({
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     userId: v.optional(v.string()),
     content: v.string(),
     contentType: v.union(v.literal("raw"), v.literal("summarized")),
@@ -161,7 +161,7 @@ export default defineSchema({
   contexts: defineTable({
     purpose: v.string(),
     description: v.optional(v.string()),
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     userId: v.optional(v.string()),
 
     parentId: v.optional(v.string()),
@@ -206,7 +206,7 @@ export default defineSchema({
 
   // Optional: Agent Registry
   agents: defineTable({
-    agentId: v.string(),
+    memorySpaceId: v.string(),
     name: v.string(),
     description: v.optional(v.string()),
     capabilities: v.optional(v.array(v.string())),
@@ -237,7 +237,7 @@ export default defineSchema({
   // User-agent participants
   participants: {
     userId: string;
-    agentId: string;
+    memorySpaceId: string;
   } | {
     // Agent-agent participants
     agent1: string;
@@ -533,7 +533,7 @@ const storeItems = all.filter((r) => r.key.startsWith("store-15:"));
 ```typescript
 {
   _id: Id<"memories">,
-  agentId: string,
+  memorySpaceId: string,
   userId?: string,
 
   content: string,
@@ -662,7 +662,7 @@ await ctx.db
   _id: Id<"contexts">,
   purpose: string,
   description?: string,
-  agentId: string,
+  memorySpaceId: string,
   userId?: string,
 
   // Hierarchy
@@ -750,7 +750,7 @@ await ctx.db
 ```typescript
 {
   _id: Id<"agents">,
-  agentId: string,  // Unique agent identifier
+  memorySpaceId: string,  // Unique agent identifier
   name: string,
   description?: string,
   capabilities?: string[],
@@ -888,7 +888,7 @@ await ctx.db.query("agents").collect();
 // Memory metadata
 {
   _id: "mem_pqr",
-  agentId: "finance-agent",
+  memorySpaceId: "finance-agent",
   metadata: {
     contextId: "ctx_stu",  // ← Links to workflow
   }
@@ -898,7 +898,7 @@ await ctx.db.query("agents").collect();
 {
   _id: "ctx_stu",
   purpose: "Approve budget increase",
-  agentId: "supervisor-agent",
+  memorySpaceId: "supervisor-agent",
 }
 
 // Relationship: memories ← contexts (one-to-many)
@@ -1089,7 +1089,7 @@ All tables support optional `userId` field:
 ```typescript
 // Conversations
 {
-  participants: { userId: "user-123", agentId: "agent-1" }
+  participants: { userId: "user-123", memorySpaceId: "agent-1" }
   // ↑ Queryable via index
 }
 

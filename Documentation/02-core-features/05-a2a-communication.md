@@ -1,6 +1,6 @@
 # Agent-to-Agent (A2A) Communication
 
-> **Last Updated**: 2025-10-23
+> **Last Updated**: 2025-10-28
 
 Convenience helpers for inter-agent communication built on top of Agent Memory.
 
@@ -1523,6 +1523,108 @@ const unanswered = await cortex.memory.search("agent-1", "*", {
 });
 ```
 
+## A2A as Agent Communication Graph
+
+Agent-to-agent communication creates a **directed graph of agent relationships**:
+
+**Nodes:** Agents  
+**Edges:** Messages (with properties: direction, timestamp, importance, content)
+
+### Visualizing the Communication Graph
+
+```
+finance-agent
+  │
+  ├──[SENT_TO {importance: 85, timestamp: T1}]──> hr-agent
+  │
+  ├──[SENT_TO {importance: 90}]──────────────────> legal-agent
+  │
+  ├──[RECEIVED_FROM {importance: 75}]<───────────── ceo-agent
+  │
+  └──[SENT_TO {importance: 70}]──────────────────> ops-agent
+```
+
+### Graph Query Examples
+
+**Find direct collaborators (1-hop):**
+
+```typescript
+const sentTo = await cortex.memory.search("finance-agent", "*", {
+  source: { type: "a2a" },
+  metadata: { direction: "outbound" },
+});
+
+const collaborators = new Set(sentTo.map((m) => m.metadata.toAgent));
+console.log("Direct collaborators:", Array.from(collaborators));
+// ['hr-agent', 'legal-agent', 'ops-agent']
+```
+
+**Find 2nd-degree connections (2-hop):**
+
+```typescript
+const secondDegree = new Set();
+
+for (const agent of collaborators) {
+  const theirConnections = await cortex.memory.search(agent, "*", {
+    source: { type: "a2a" },
+    metadata: { direction: "outbound" },
+  });
+
+  theirConnections.forEach((m) => {
+    if (m.metadata.toAgent !== "finance-agent") {
+      secondDegree.add(m.metadata.toAgent);
+    }
+  });
+}
+
+console.log("2nd-degree network:", Array.from(secondDegree));
+```
+
+**Build weighted collaboration graph:**
+
+```typescript
+async function buildCollaborationGraph(agentId: string) {
+  const a2a = await cortex.memory.search(agentId, "*", {
+    source: { type: "a2a" },
+    metadata: { direction: "outbound" },
+  });
+
+  // Count messages and avg importance per edge
+  const edges = new Map();
+
+  a2a.forEach((m) => {
+    const partner = m.metadata.toAgent;
+    const current = edges.get(partner) || { count: 0, totalImportance: 0 };
+
+    edges.set(partner, {
+      count: current.count + 1,
+      totalImportance: current.totalImportance + m.metadata.importance,
+      avgImportance:
+        (current.totalImportance + m.metadata.importance) / (current.count + 1),
+    });
+  });
+
+  return Array.from(edges.entries()).map(([partner, stats]) => ({
+    from: agentId,
+    to: partner,
+    weight: stats.count,
+    avgImportance: stats.avgImportance,
+  }));
+}
+
+// Result: Weighted graph edges for visualization or analysis
+```
+
+### Graph-Lite Performance
+
+A2A queries are graph traversals:
+
+- 1-hop (direct collaborators): 20-50ms ✅
+- 2-hop (collaborator's collaborators): 100-200ms ✅
+- 3-hop: 200-400ms ⚠️ (consider graph DB if common)
+
+For advanced agent network analysis (community detection, influence metrics), see [Graph Database Integration](../07-advanced-topics/02-graph-database-integration.md).
+
 ## Summary
 
 **A2A Communication is a convenience layer that:**
@@ -1533,6 +1635,7 @@ const unanswered = await cortex.memory.search("agent-1", "*", {
 - Uses agent memory underneath (Vector Memory layer, no separate storage)
 - Works alongside direct memory access when needed
 - Integrates with full Cortex architecture (ACID, Vector, Contexts, Profiles)
+- **Forms an agent communication graph** (queryable via Graph-Lite or native graph DB)
 
 **Under the hood:**
 

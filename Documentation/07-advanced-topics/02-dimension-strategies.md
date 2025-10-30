@@ -1,6 +1,6 @@
 # Vector Dimension Strategies
 
-> **Last Updated**: 2025-10-23
+> **Last Updated**: 2025-10-28
 
 Strategic guidance for choosing embedding models and vector dimensions for optimal performance.
 
@@ -72,7 +72,7 @@ async function embed(text: string): Promise<number[]> {
 ```typescript
 // No embedding code needed! (Layer 3 for conversations)
 await cortex.memory.remember({
-  agentId,
+  memorySpaceId,
   conversationId,
   userMessage,
   agentResponse,
@@ -82,7 +82,7 @@ await cortex.memory.remember({
 });
 
 // Or for system memories (Layer 2)
-await cortex.vector.store(agentId, {
+await cortex.vector.store(memorySpaceId, {
   content: text,
   contentType: "raw",
   source: { type: "system", timestamp: new Date() },
@@ -279,7 +279,7 @@ async function embed(text: string): Promise<number[]> {
 }
 
 // Use everywhere (Layer 2 for system memories)
-await cortex.vector.store(agentId, {
+await cortex.vector.store(memorySpaceId, {
   content: text,
   contentType: "raw",
   embedding: await embed(text),
@@ -289,7 +289,7 @@ await cortex.vector.store(agentId, {
 
 // Or for conversations (Layer 3)
 await cortex.memory.remember({
-  agentId,
+  memorySpaceId,
   conversationId,
   userMessage,
   agentResponse,
@@ -321,7 +321,7 @@ async function embedByImportance(
 }
 
 // Layer 2 - explicit Vector storage with importance-based embedding
-await cortex.vector.store(agentId, {
+await cortex.vector.store(memorySpaceId, {
   content: text,
   contentType: "raw",
   embedding: await embedByImportance(text, importance),
@@ -339,7 +339,7 @@ Start small, upgrade important memories:
 
 ```typescript
 // Initially store with small embeddings (Layer 2)
-const memory = await cortex.vector.store(agentId, {
+const memory = await cortex.vector.store(memorySpaceId, {
   content: text,
   contentType: "raw",
   embedding: await embedSmall(text), // 384
@@ -370,7 +370,7 @@ Let Cortex handle everything:
 ```typescript
 // No embedding code at all! (Layer 3 for conversations)
 await cortex.memory.remember({
-  agentId,
+  memorySpaceId,
   conversationId,
   userMessage,
   agentResponse,
@@ -380,7 +380,7 @@ await cortex.memory.remember({
 });
 
 // Or for system memories (Layer 2)
-await cortex.vector.store(agentId, {
+await cortex.vector.store(memorySpaceId, {
   content: text,
   contentType: "raw",
   source: { type: "system", timestamp: new Date() },
@@ -442,8 +442,8 @@ Normalized scores (considers dimension):
 
 ```typescript
 // Re-embed existing memories with larger dimensions
-async function upgradeDimensions(agentId: string) {
-  const memories = await cortex.memory.search(agentId, "*", {
+async function upgradeDimensions(memorySpaceId: string) {
+  const memories = await cortex.memory.search(memorySpaceId, "*", {
     metadata: { dimension: 384 },
     limit: 1000,
   });
@@ -453,7 +453,7 @@ async function upgradeDimensions(agentId: string) {
   for (const memory of memories) {
     const newEmbedding = await embedLarge(memory.content);
 
-    await cortex.memory.update(agentId, memory.id, {
+    await cortex.memory.update(memorySpaceId, memory.id, {
       embedding: newEmbedding,
       metadata: {
         ...memory.metadata,
@@ -471,8 +471,8 @@ async function upgradeDimensions(agentId: string) {
 
 ```typescript
 // Reduce dimensions for cost savings
-async function downgradeDimensions(agentId: string) {
-  const lowImportance = await cortex.memory.search(agentId, "*", {
+async function downgradeDimensions(memorySpaceId: string) {
+  const lowImportance = await cortex.memory.search(memorySpaceId, "*", {
     filter: {
       importance: { $lte: 30 }, // Low importance (0-30)
       dimension: 3072,
@@ -482,7 +482,7 @@ async function downgradeDimensions(agentId: string) {
   for (const memory of lowImportance) {
     const smallerEmbedding = await embedSmall(memory.content);
 
-    await cortex.memory.update(agentId, memory.id, {
+    await cortex.memory.update(memorySpaceId, memory.id, {
       embedding: smallerEmbedding,
       metadata: {
         ...memory.metadata,
@@ -500,7 +500,7 @@ async function downgradeDimensions(agentId: string) {
 
 ```typescript
 // Store dimension in metadata (Layer 2 - system memory)
-await cortex.vector.store(agentId, {
+await cortex.vector.store(memorySpaceId, {
   content: text,
   contentType: "raw",
   embedding: await embed(text),
@@ -600,7 +600,7 @@ function reduceDimensions(
 }
 
 // Store with both (for flexibility) - Layer 2
-await cortex.vector.store(agentId, {
+await cortex.vector.store(memorySpaceId, {
   content: text,
   contentType: "raw",
   embedding: largeEmbedding, // 3072 for accuracy

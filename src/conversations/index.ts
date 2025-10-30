@@ -29,10 +29,11 @@ export class ConversationsAPI {
    * @example
    * ```typescript
    * const conversation = await cortex.conversations.create({
+   *   memorySpaceId: 'user-123-personal',
    *   type: 'user-agent',
    *   participants: {
    *     userId: 'user-123',
-   *     agentId: 'agent-456',
+   *     participantId: 'my-bot',
    *   },
    * });
    * ```
@@ -44,6 +45,8 @@ export class ConversationsAPI {
 
     const result = await this.client.mutation(api.conversations.create, {
       conversationId,
+      memorySpaceId: input.memorySpaceId,
+      participantId: input.participantId,
       type: input.type,
       participants: input.participants,
       metadata: input.metadata,
@@ -92,7 +95,7 @@ export class ConversationsAPI {
         id: messageId,
         role: input.message.role,
         content: input.message.content,
-        agentId: input.message.agentId,
+        participantId: input.message.participantId, // Updated for Hive Mode
         metadata: input.message.metadata,
       },
     });
@@ -115,7 +118,7 @@ export class ConversationsAPI {
     const result = await this.client.query(api.conversations.list, {
       type: filter?.type,
       userId: filter?.userId,
-      agentId: filter?.agentId,
+      memorySpaceId: filter?.memorySpaceId, // Updated
       limit: filter?.limit,
     });
 
@@ -128,7 +131,7 @@ export class ConversationsAPI {
    * @example
    * ```typescript
    * const count = await cortex.conversations.count({
-   *   agentId: 'agent-456',
+   *   memorySpaceId: 'user-123-personal',
    * });
    * ```
    */
@@ -136,7 +139,7 @@ export class ConversationsAPI {
     const result = await this.client.query(api.conversations.count, {
       type: filter?.type,
       userId: filter?.userId,
-      agentId: filter?.agentId,
+      memorySpaceId: filter?.memorySpaceId, // Updated
     });
 
     return result;
@@ -167,6 +170,7 @@ export class ConversationsAPI {
    * @example
    * ```typescript
    * const result = await cortex.conversations.deleteMany({
+   *   memorySpaceId: 'user-123-personal',
    *   userId: 'user-123',
    *   type: 'user-agent',
    * });
@@ -174,7 +178,7 @@ export class ConversationsAPI {
    */
   async deleteMany(filter: {
     userId?: string;
-    agentId?: string;
+    memorySpaceId?: string; // Updated
     type?: "user-agent" | "agent-agent";
   }): Promise<{
     deleted: number;
@@ -183,7 +187,7 @@ export class ConversationsAPI {
   }> {
     const result = await this.client.mutation(api.conversations.deleteMany, {
       userId: filter.userId,
-      agentId: filter.agentId,
+      memorySpaceId: filter.memorySpaceId, // Updated
       type: filter.type,
     });
 
@@ -240,23 +244,23 @@ export class ConversationsAPI {
    * @example
    * ```typescript
    * const existing = await cortex.conversations.findConversation({
+   *   memorySpaceId: 'user-123-personal',
    *   type: 'user-agent',
    *   userId: 'user-123',
-   *   agentId: 'agent-456',
    * });
    * ```
    */
   async findConversation(params: {
+    memorySpaceId: string; // NEW: Required
     type: "user-agent" | "agent-agent";
     userId?: string;
-    agentId?: string;
-    agentIds?: string[];
+    memorySpaceIds?: string[]; // For agent-agent (Collaboration Mode)
   }): Promise<Conversation | null> {
     const result = await this.client.query(api.conversations.findConversation, {
+      memorySpaceId: params.memorySpaceId,
       type: params.type,
       userId: params.userId,
-      agentId: params.agentId,
-      agentIds: params.agentIds,
+      memorySpaceIds: params.memorySpaceIds,
     });
 
     return result as Conversation | null;
@@ -268,13 +272,16 @@ export class ConversationsAPI {
    * @example
    * ```typescript
    * const conversation = await cortex.conversations.getOrCreate({
+   *   memorySpaceId: 'user-123-personal',
    *   type: 'user-agent',
-   *   participants: { userId: 'user-123', agentId: 'agent-456' },
+   *   participants: { userId: 'user-123', participantId: 'my-bot' },
    * });
    * ```
    */
   async getOrCreate(input: CreateConversationInput): Promise<Conversation> {
     const result = await this.client.mutation(api.conversations.getOrCreate, {
+      memorySpaceId: input.memorySpaceId,
+      participantId: input.participantId,
       type: input.type,
       participants: input.participants,
       metadata: input.metadata,
@@ -340,7 +347,7 @@ export class ConversationsAPI {
       query: input.query,
       type: input.filters?.type,
       userId: input.filters?.userId,
-      agentId: input.filters?.agentId,
+      memorySpaceId: input.filters?.memorySpaceId, // Updated
       dateStart: input.filters?.dateRange?.start,
       dateEnd: input.filters?.dateRange?.end,
       limit: input.filters?.limit,
@@ -355,7 +362,7 @@ export class ConversationsAPI {
    * @example
    * ```typescript
    * const exported = await cortex.conversations.export({
-   *   filters: { userId: 'user-123' },
+   *   filters: { memorySpaceId: 'user-123-personal', userId: 'user-123' },
    *   format: 'json',
    *   includeMetadata: true,
    * });
@@ -366,7 +373,7 @@ export class ConversationsAPI {
       api.conversations.exportConversations,
       {
         userId: options.filters?.userId,
-        agentId: options.filters?.agentId,
+        memorySpaceId: options.filters?.memorySpaceId, // Updated
         conversationIds: options.filters?.conversationIds,
         type: options.filters?.type,
         dateStart: options.filters?.dateRange?.start,

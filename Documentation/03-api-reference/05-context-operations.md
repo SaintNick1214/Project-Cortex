@@ -1,6 +1,6 @@
 # Context Operations API
 
-> **Last Updated**: 2025-10-24
+> **Last Updated**: 2025-10-28
 
 Complete API reference for context chain management and multi-agent workflow coordination.
 
@@ -63,7 +63,7 @@ cortex.contexts.create(
 ```typescript
 interface ContextInput {
   purpose: string; // What this context is for (REQUIRED)
-  agentId: string; // Agent creating this context (REQUIRED)
+  memorySpaceId: string; // Memory space creating this context (REQUIRED)
 
   // Hierarchy
   parentId?: string; // Parent context (omit for root)
@@ -104,7 +104,7 @@ interface Context {
   description?: string;
 
   // Ownership
-  agentId: string;
+  memorySpaceId: string; // Which memory space
   userId?: string;
 
   // Hierarchy
@@ -147,7 +147,7 @@ interface ContextVersion {
 
 - If `parentId` provided: Updates parent's `childIds` array
 - If `parentId` provided: Inherits `rootId` and increments `depth`
-- Adds `agentId` to `participants` list
+- Adds `memorySpaceId` to `participants` list
 
 **Example 1: Create root context (linked to conversation)**
 
@@ -162,7 +162,7 @@ const msg = await cortex.conversations.addMessage("conv-456", {
 // Create root context for the workflow
 const root = await cortex.contexts.create({
   purpose: "Process customer refund request",
-  agentId: "supervisor-agent",
+  memorySpaceId: "supervisor-agent-space",
   userId: "user-123", // GDPR-enabled
   conversationRef: {
     conversationId: "conv-456",
@@ -188,7 +188,7 @@ console.log(root.rootId); // 'ctx_abc123' (self)
 // Delegate to finance agent
 const child = await cortex.contexts.create({
   purpose: "Approve and process $500 refund",
-  agentId: "finance-agent",
+  memorySpaceId: "finance-agent-space",
   parentId: root.id, // Links to parent
   userId: "user-123",
   conversationRef: root.conversationRef, // Inherit conversation link
@@ -471,7 +471,7 @@ cortex.contexts.search(
 ```typescript
 interface ContextFilters {
   // Identity
-  agentId?: string;
+  memorySpaceId?: string; // Filter by memory space
   userId?: string;
 
   // Hierarchy
@@ -522,7 +522,7 @@ interface SearchOptions {
 ```typescript
 // Find active contexts for an agent
 const active = await cortex.contexts.search({
-  agentId: "finance-agent",
+  memorySpaceId: "finance-agent-space",
   status: "active",
 });
 
@@ -641,7 +641,7 @@ const completed = await cortex.contexts.count({ status: "completed" });
 
 // Count for agent
 const agentContexts = await cortex.contexts.count({
-  agentId: "finance-agent",
+  memorySpaceId: "finance-agent-space",
 });
 
 // Count urgent contexts
@@ -867,7 +867,7 @@ cortex.contexts.getRoot(
 const root = await cortex.contexts.getRoot("ctx_deeply_nested_child");
 
 console.log("Original purpose:", root.purpose);
-console.log("Started by:", root.agentId);
+console.log("Started by:", root.memorySpaceId);
 console.log("Conversation:", root.conversationRef?.conversationId);
 ```
 
@@ -951,7 +951,7 @@ Add an agent to a context's participant list.
 ```typescript
 cortex.contexts.addParticipant(
   contextId: string,
-  agentId: string
+  participantId: string
 ): Promise<Context>
 ```
 
@@ -977,7 +977,7 @@ Remove an agent from a context's participant list.
 ```typescript
 cortex.contexts.removeParticipant(
   contextId: string,
-  agentId: string
+  participantId: string
 ): Promise<Context>
 ```
 
@@ -1096,7 +1096,7 @@ All filter options that work across context operations:
 ```typescript
 interface ContextFilters {
   // Identity
-  agentId?: string;
+  memorySpaceId?: string; // Filter by memory space
   userId?: string;
 
   // Hierarchy
@@ -1157,7 +1157,7 @@ const msg = await cortex.conversations.addMessage("conv-789", {
 // Create root context linked to conversation
 const root = await cortex.contexts.create({
   purpose: "Build quarterly financial report",
-  agentId: "ceo-agent",
+  memorySpaceId: "ceo-agent-space",
   userId: "user-cfo",
   conversationRef: {
     conversationId: "conv-789",
@@ -1175,7 +1175,7 @@ const root = await cortex.contexts.create({
 // Decompose into subtasks (all inherit conversation link)
 await cortex.contexts.create({
   purpose: "Gather revenue data",
-  agentId: "finance-agent",
+  memorySpaceId: "finance-agent-space",
   parentId: root.id,
   userId: "user-cfo",
   conversationRef: root.conversationRef, // Same source
@@ -1183,7 +1183,7 @@ await cortex.contexts.create({
 
 await cortex.contexts.create({
   purpose: "Compile expense reports",
-  agentId: "accounting-agent",
+  memorySpaceId: "accounting-agent-space",
   parentId: root.id,
   userId: "user-cfo",
   conversationRef: root.conversationRef,
@@ -1256,7 +1256,7 @@ const contextMemories = await cortex.memory.search("finance-agent", "*", {
 // Supervisor creates workflow
 const workflow = await cortex.contexts.create({
   purpose: "Launch marketing campaign",
-  agentId: "supervisor-agent",
+  memorySpaceId: "supervisor-agent-space",
   data: {
     campaignName: "Q4 Sale",
     importance: 80,
@@ -1377,23 +1377,95 @@ await cortex.contexts.deleteMany({
 
 ---
 
+## Graph-Lite Capabilities
+
+Contexts form a hierarchical graph (tree structure) for workflow coordination:
+
+**Context as Graph Node:**
+
+- Represents a workflow task or sub-task
+- Part of directed acyclic graph (DAG) structure
+
+**Edges:**
+
+- `parentId` → Parent context (upward edge)
+- `childIds` → Child contexts (downward edges)
+- `conversationRef` → Originating conversation (source edge)
+- `userId` → Related user
+- `memorySpaceId` → Owning memory space
+
+**Graph Operations:**
+
+```typescript
+// Tree traversal (built-in)
+const chain = await cortex.contexts.get(contextId, {
+  includeChain: true  // ← Multi-hop graph walk
+});
+
+// Nodes accessed in this graph query:
+chain.current     // This node
+chain.parent      // 1-hop up
+chain.root        // N-hops to root
+chain.ancestors   // All nodes on path to root
+chain.children    // 1-hop down
+chain.siblings    // Lateral (parent's other children)
+chain.descendants // All nodes below (recursive)
+
+// Example graph structure:
+Root (depth=0)
+ ├── Child-1 (depth=1)
+ │   ├── Grandchild-1 (depth=2)
+ │   └── Grandchild-2 (depth=2)
+ ├── Child-2 (depth=1)
+ └── Child-3 (depth=1)
+     └── Grandchild-3 (depth=2)
+```
+
+**Graph Queries:**
+
+```typescript
+// Find all root workflows (depth=0 nodes)
+const roots = await cortex.contexts.search({ depth: 0 });
+
+// Find all child nodes of a parent
+const children = await cortex.contexts.search({ parentId: "ctx-001" });
+
+// Find entire workflow tree (all nodes with same rootId)
+const workflowTree = await cortex.contexts.search({ rootId: "ctx-root" });
+
+// Find workflows triggered by conversation (traverse conversationRef edge)
+const workflowsFromConvo = await cortex.contexts.search({
+  "conversationRef.conversationId": "conv-456",
+});
+```
+
+**Performance:**
+
+- Context hierarchy traversal: 50-150ms for typical depth (1-5 levels)
+- Entire workflow tree: 100-300ms for <50 contexts
+- Deep hierarchies (>10 levels): Consider graph database for <100ms queries
+
+**Learn more:** [Graph-Lite Traversal](../07-advanced-topics/01-graph-lite-traversal.md)
+
+---
+
 ## Error Reference
 
 All context operation errors:
 
-| Error Code           | Description                  | Cause                                          |
-| -------------------- | ---------------------------- | ---------------------------------------------- |
-| `INVALID_PURPOSE`    | Purpose is invalid           | Empty or malformed purpose                     |
-| `INVALID_AGENT_ID`   | Agent ID is invalid          | Empty or malformed agentId                     |
-| `CONTEXT_NOT_FOUND`  | Context doesn't exist        | Invalid contextId                              |
-| `PARENT_NOT_FOUND`   | Parent context doesn't exist | Invalid parentId                               |
-| `USER_NOT_FOUND`     | User doesn't exist           | userId doesn't reference existing user         |
-| `HAS_CHILDREN`       | Context has children         | Can't delete parent without cascade            |
-| `INVALID_STATUS`     | Status is invalid            | Not one of: active/completed/cancelled/blocked |
-| `INVALID_FILTERS`    | Filters malformed            | Bad filter syntax                              |
-| `INVALID_PAGINATION` | Pagination params bad        | Invalid limit/offset                           |
-| `DELETION_FAILED`    | Delete failed                | Database error                                 |
-| `CONVEX_ERROR`       | Database error               | Convex operation failed                        |
+| Error Code               | Description                  | Cause                                          |
+| ------------------------ | ---------------------------- | ---------------------------------------------- |
+| `INVALID_PURPOSE`        | Purpose is invalid           | Empty or malformed purpose                     |
+| `INVALID_MEMORYSPACE_ID` | Memory space ID is invalid   | Empty or malformed memorySpaceId               |
+| `CONTEXT_NOT_FOUND`      | Context doesn't exist        | Invalid contextId                              |
+| `PARENT_NOT_FOUND`       | Parent context doesn't exist | Invalid parentId                               |
+| `USER_NOT_FOUND`         | User doesn't exist           | userId doesn't reference existing user         |
+| `HAS_CHILDREN`           | Context has children         | Can't delete parent without cascade            |
+| `INVALID_STATUS`         | Status is invalid            | Not one of: active/completed/cancelled/blocked |
+| `INVALID_FILTERS`        | Filters malformed            | Bad filter syntax                              |
+| `INVALID_PAGINATION`     | Pagination params bad        | Invalid limit/offset                           |
+| `DELETION_FAILED`        | Delete failed                | Database error                                 |
+| `CONVEX_ERROR`           | Database error               | Convex operation failed                        |
 
 **See Also:**
 

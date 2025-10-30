@@ -1,6 +1,6 @@
 # Governance Policies API
 
-> **Last Updated**: 2025-10-24
+> **Last Updated**: 2025-10-28
 
 Complete API reference for configuring retention, purging, and governance rules across all Cortex layers.
 
@@ -34,7 +34,7 @@ The Governance Policies API provides centralized control over data retention, pu
 ```typescript
 interface GovernancePolicy {
   organizationId?: string;            // Optional: org-wide policy
-  agentId?: string;                   // Optional: agent-specific override
+  memorySpaceId?: string;             // Optional: memory-space-specific override
 
   // Layer 1a: Conversations
   conversations: {
@@ -206,7 +206,7 @@ Get current governance policy.
 cortex.governance.getPolicy(
   scope?: {
     organizationId?: string;
-    agentId?: string;
+    memorySpaceId?: string;
   }
 ): Promise<GovernancePolicy>
 ```
@@ -221,7 +221,7 @@ const orgPolicy = await cortex.governance.getPolicy({
 
 // Get agent-specific policy (includes org defaults + overrides)
 const agentPolicy = await cortex.governance.getPolicy({
-  agentId: "audit-agent",
+  memorySpaceId: "audit-agent-space",
 });
 
 console.log(
@@ -239,7 +239,7 @@ Override policy for specific agent.
 
 ```typescript
 cortex.governance.setAgentOverride(
-  agentId: string,
+  memorySpaceId: string,
   overrides: Partial<GovernancePolicy>
 ): Promise<void>
 ```
