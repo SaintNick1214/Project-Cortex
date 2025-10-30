@@ -141,7 +141,10 @@ describe("Facts API (Layer 3)", () => {
     });
 
     it("returns null for non-existent fact", async () => {
-      const fact = await cortex.facts.get(TEST_MEMSPACE_ID, "fact-does-not-exist");
+      const fact = await cortex.facts.get(
+        TEST_MEMSPACE_ID,
+        "fact-does-not-exist",
+      );
 
       expect(fact).toBeNull();
     });
@@ -244,7 +247,7 @@ describe("Facts API (Layer 3)", () => {
 
     it("excludes superseded facts by default", async () => {
       const uniqueTag = `supersede-${Date.now()}`;
-      
+
       const original = await cortex.facts.store({
         memorySpaceId: TEST_MEMSPACE_ID,
         fact: "Old version",
@@ -267,14 +270,20 @@ describe("Facts API (Layer 3)", () => {
 
       // Should only see latest version
       expect(current.length).toBeGreaterThanOrEqual(1);
-      expect(current.some((f) => f.fact === "New version" && f.version === 2)).toBe(true);
+      expect(
+        current.some((f) => f.fact === "New version" && f.version === 2),
+      ).toBe(true);
       // Original should not be in list (superseded)
-      expect(current.some((f) => f.fact === "Old version" && f.supersededBy !== undefined)).toBe(false);
+      expect(
+        current.some(
+          (f) => f.fact === "Old version" && f.supersededBy !== undefined,
+        ),
+      ).toBe(false);
     });
 
     it("includes superseded when requested", async () => {
       const uniqueTag = `supersede-incl-${Date.now()}`;
-      
+
       const original = await cortex.facts.store({
         memorySpaceId: TEST_MEMSPACE_ID,
         fact: "Old version 2",
@@ -416,10 +425,14 @@ describe("Facts API (Layer 3)", () => {
     });
 
     it("creates new version when updated", async () => {
-      const updated = await cortex.facts.update(TEST_MEMSPACE_ID, originalFactId, {
-        fact: "Updated fact statement",
-        confidence: 95,
-      });
+      const updated = await cortex.facts.update(
+        TEST_MEMSPACE_ID,
+        originalFactId,
+        {
+          fact: "Updated fact statement",
+          confidence: 95,
+        },
+      );
 
       expect(updated.fact).toBe("Updated fact statement");
       expect(updated.confidence).toBe(95);
@@ -602,7 +615,9 @@ describe("Facts API (Layer 3)", () => {
       });
 
       expect(bobPrefs.length).toBeGreaterThanOrEqual(1);
-      expect(bobPrefs.some((f) => f.fact.includes("morning meetings"))).toBe(true);
+      expect(bobPrefs.some((f) => f.fact.includes("morning meetings"))).toBe(
+        true,
+      );
     });
   });
 
@@ -840,7 +855,10 @@ describe("Facts API (Layer 3)", () => {
       });
 
       // Get history
-      const history = await cortex.facts.getHistory(TEST_MEMSPACE_ID, v1.factId);
+      const history = await cortex.facts.getHistory(
+        TEST_MEMSPACE_ID,
+        v1.factId,
+      );
 
       expect(history.length).toBeGreaterThanOrEqual(3);
 
@@ -1063,7 +1081,9 @@ describe("Facts API (Layer 3)", () => {
         },
       });
 
-      const msg = conv.messages[0] || (await cortex.conversations.get(conv.conversationId))!.messages[0];
+      const msg =
+        conv.messages[0] ||
+        (await cortex.conversations.get(conv.conversationId))!.messages[0];
 
       // Extract fact from conversation
       const fact = await cortex.facts.store({
@@ -1101,7 +1121,10 @@ describe("Facts API (Layer 3)", () => {
       });
 
       // Get
-      const retrieved = await cortex.facts.get("consistency-test", stored.factId);
+      const retrieved = await cortex.facts.get(
+        "consistency-test",
+        stored.factId,
+      );
 
       expect(retrieved).not.toBeNull();
       expect(retrieved!.factId).toBe(stored.factId);
@@ -1135,4 +1158,3 @@ describe("Facts API (Layer 3)", () => {
     });
   });
 });
-

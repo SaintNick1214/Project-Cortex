@@ -69,7 +69,7 @@ export class MemoryAPI {
     // Step 2: Store agent response in ACID
     const agentMsg = await this.conversations.addMessage({
       conversationId: params.conversationId,
-      message:       {
+      message: {
         role: "agent",
         content: params.agentResponse,
         participantId: params.participantId, // Updated

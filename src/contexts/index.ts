@@ -147,7 +147,10 @@ export class ContextsAPI {
    * });
    * ```
    */
-  async update(contextId: string, updates: UpdateContextParams): Promise<Context> {
+  async update(
+    contextId: string,
+    updates: UpdateContextParams,
+  ): Promise<Context> {
     const result = await this.client.mutation(api.contexts.update, {
       contextId,
       status: updates.status,
@@ -316,7 +319,10 @@ export class ContextsAPI {
    * await cortex.contexts.addParticipant('ctx-123', 'legal-agent-space');
    * ```
    */
-  async addParticipant(contextId: string, participantId: string): Promise<Context> {
+  async addParticipant(
+    contextId: string,
+    participantId: string,
+  ): Promise<Context> {
     const result = await this.client.mutation(api.contexts.addParticipant, {
       contextId,
       participantId,
@@ -347,4 +353,3 @@ export class ContextsAPI {
     return result as Context;
   }
 }
-

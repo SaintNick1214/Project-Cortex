@@ -297,10 +297,14 @@ describe("Memory Convenience API (Layer 3)", () => {
     });
 
     it("deletes from both layers when deleteConversation=true", async () => {
-      const result = await cortex.memory.forget(TEST_MEMSPACE_ID, testMemoryId, {
-        deleteConversation: true,
-        deleteEntireConversation: true,
-      });
+      const result = await cortex.memory.forget(
+        TEST_MEMSPACE_ID,
+        testMemoryId,
+        {
+          deleteConversation: true,
+          deleteEntireConversation: true,
+        },
+      );
 
       expect(result.memoryDeleted).toBe(true);
       expect(result.conversationDeleted).toBe(true);
@@ -612,7 +616,9 @@ describe("Memory Convenience API (Layer 3)", () => {
           metadata: { importance: 50, tags: [] },
         });
 
-        const results = await cortex.memory.list({ memorySpaceId: TEST_MEMSPACE_ID });
+        const results = await cortex.memory.list({
+          memorySpaceId: TEST_MEMSPACE_ID,
+        });
 
         expect(results.length).toBeGreaterThan(0);
       });
@@ -620,7 +626,9 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     describe("count()", () => {
       it("delegates to vector.count()", async () => {
-        const count = await cortex.memory.count({ memorySpaceId: TEST_MEMSPACE_ID });
+        const count = await cortex.memory.count({
+          memorySpaceId: TEST_MEMSPACE_ID,
+        });
 
         expect(typeof count).toBe("number");
         expect(count).toBeGreaterThanOrEqual(0);
@@ -988,7 +996,10 @@ describe("Memory Convenience API (Layer 3)", () => {
         const conv = await cortex.conversations.create({
           type: "user-agent",
           memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
+          participants: {
+            userId: TEST_USER_ID,
+            participantId: "agent-test-l3",
+          },
         });
 
         conversationId = conv.conversationId;
@@ -1125,11 +1136,15 @@ describe("Memory Convenience API (Layer 3)", () => {
       }, 60000); // 60s timeout for API calls
 
       it("enriches search results with full conversation context", async () => {
-        const results = await cortex.memory.search(TEST_MEMSPACE_ID, "password", {
-          embedding: await generateEmbedding("password credentials"),
-          enrichConversation: true,
-          userId: TEST_USER_ID,
-        });
+        const results = await cortex.memory.search(
+          TEST_MEMSPACE_ID,
+          "password",
+          {
+            embedding: await generateEmbedding("password credentials"),
+            enrichConversation: true,
+            userId: TEST_USER_ID,
+          },
+        );
 
         expect(results.length).toBeGreaterThan(0);
 

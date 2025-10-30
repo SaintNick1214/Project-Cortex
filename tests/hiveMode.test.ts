@@ -69,9 +69,9 @@ describe("Hive Mode", () => {
         memorySpaceId: HIVE_SPACE,
       });
 
-      expect(allConvs.some((c) => c.conversationId === conv.conversationId)).toBe(
-        true,
-      );
+      expect(
+        allConvs.some((c) => c.conversationId === conv.conversationId),
+      ).toBe(true);
     });
   });
 
@@ -175,7 +175,9 @@ describe("Hive Mode", () => {
       expect(allFacts.length).toBeGreaterThanOrEqual(3);
 
       // Verify different participants
-      const extractors = new Set(allFacts.map((f) => f.participantId).filter(Boolean));
+      const extractors = new Set(
+        allFacts.map((f) => f.participantId).filter(Boolean),
+      );
 
       expect(extractors.size).toBeGreaterThanOrEqual(3);
     });
@@ -378,4 +380,3 @@ describe("Hive Mode", () => {
     });
   });
 });
-

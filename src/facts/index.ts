@@ -230,7 +230,13 @@ export class FactsAPI {
   async queryBySubject(filter: {
     memorySpaceId: string;
     subject: string;
-    factType?: "preference" | "identity" | "knowledge" | "relationship" | "event" | "custom";
+    factType?:
+      | "preference"
+      | "identity"
+      | "knowledge"
+      | "relationship"
+      | "event"
+      | "custom";
   }): Promise<FactRecord[]> {
     const result = await this.client.query(api.facts.queryBySubject, {
       memorySpaceId: filter.memorySpaceId,
@@ -281,7 +287,13 @@ export class FactsAPI {
   async export(options: {
     memorySpaceId: string;
     format: "json" | "jsonld" | "csv";
-    factType?: "preference" | "identity" | "knowledge" | "relationship" | "event" | "custom";
+    factType?:
+      | "preference"
+      | "identity"
+      | "knowledge"
+      | "relationship"
+      | "event"
+      | "custom";
   }): Promise<{
     format: string;
     data: string;
@@ -336,4 +348,3 @@ export class FactsAPI {
     };
   }
 }
-

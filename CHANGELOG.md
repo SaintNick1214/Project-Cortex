@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### ✨ Major New Features
 
 **1. Memory Spaces - Flexible Isolation Boundaries**
+
 - **NEW API:** `cortex.memorySpaces.*` - Registry for managing memory spaces
 - Supports personal, team, project, and custom memory spaces
 - Each space is an isolated container with its own conversations, memories, and facts
@@ -35,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking Change:** All APIs now use `memorySpaceId` instead of `agentId`
 
 **2. Hive Mode - Multi-Tool Shared Memory**
+
 - **Game-Changer:** Multiple tools/agents can share ONE memory space
 - Eliminates data duplication across tools serving the same user
 - `participantId` field tracks which tool/agent contributed what
@@ -42,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Result:** No more syncing data between tool-specific databases
 
 **3. Facts Store - Structured Knowledge Layer**
+
 - **NEW API:** `cortex.facts.*` - Layer 3 structured knowledge extraction
 - Store facts as semantic triples (subject-predicate-object)
 - Immutable version chains with supersedes/supersededBy linking
@@ -50,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Enables:** Infinite Context capability (retrieve from 10,000+ messages instantly)
 
 **4. Context Chains - Hierarchical Workflow Coordination**
+
 - **NEW API:** `cortex.contexts.*` - Multi-agent workflow coordination
 - Parent-child context relationships for task delegation
 - Cross-space context sharing for Collaboration Mode
@@ -57,12 +61,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Links to source conversations for complete audit trail
 
 **5. Collaboration Mode - Cross-Space Secure Sharing**
+
 - Organizations with separate memory spaces can collaborate
 - Shared contexts coordinate workflows across boundaries
 - Data stays isolated, only context metadata is shared
 - Example: Company A and Company B on joint project with private data
 
 **6. Infinite Context Capability**
+
 - Facts enable instant retrieval from massive conversation histories
 - Extract structured knowledge during conversation
 - Retrieve specific facts without scanning 10,000+ messages
@@ -92,19 +98,22 @@ await cortex.conversations.create({
 ```
 
 **Migration Guide:**
+
 1. Rename all `agentId` parameters to `memorySpaceId`
 2. In conversation participants, rename `agentId` to `participantId`
 3. Update to Hive Mode: Consolidate multiple agent IDs into single memory space
 4. Add `participantId` to track contributors (optional but recommended)
 
 **What's NOT Breaking:**
+
 - `immutable.*` and `mutable.*` APIs unchanged (intentionally shared)
 - User APIs unchanged
 - All data structures compatible (simple field rename)
 
 #### 🎁 New APIs
 
-**cortex.facts.*** (Layer 3)
+**cortex.facts.\*** (Layer 3)
+
 - `store()` - Create structured facts
 - `get()` - Retrieve by factId
 - `list()` - Filter by factType, subject, tags
@@ -118,7 +127,8 @@ await cortex.conversations.create({
 - `export()` - JSON/JSON-LD/CSV export
 - `consolidate()` - Merge duplicate facts
 
-**cortex.memorySpaces.*** (Layer 4)
+**cortex.memorySpaces.\*** (Layer 4)
+
 - `register()` - Create memory space
 - `get()` - Retrieve space
 - `list()` - Filter by type/status
@@ -130,7 +140,8 @@ await cortex.conversations.create({
 - `getStats()` - Aggregate statistics across all layers
 - `findByParticipant()` - Find spaces for participant
 
-**cortex.contexts.*** (Layer 4)
+**cortex.contexts.\*** (Layer 4)
+
 - `create()` - Create root or child context
 - `get()` - Retrieve with optional chain
 - `update()` - Modify status/data
@@ -147,12 +158,14 @@ await cortex.conversations.create({
 #### ✅ Enhanced Existing APIs
 
 **All Layer 2 (Vector) APIs Updated:**
+
 - `vector.*` and `memory.*` now use `memorySpaceId`
 - Added optional `participantId` for Hive Mode tracking
 - Memory space isolation enforced
 - Permission validation added
 
 **All Layer 1 (Conversations) APIs Updated:**
+
 - `conversations.*` now use `memorySpaceId`
 - Participant tracking in `participantId` field
 - Support for agent-agent conversations with `memorySpaceIds` array
@@ -161,6 +174,7 @@ await cortex.conversations.create({
 #### 🧪 Testing Improvements
 
 **Comprehensive Test Suite:**
+
 - **NEW:** 5 new test suites (facts, memorySpaces, contexts, hiveMode, integration)
 - **UPDATED:** 6 existing suites for memorySpaceId
 - **Total:** 378 tests across 11 test suites
@@ -168,6 +182,7 @@ await cortex.conversations.create({
 - **Success Rate:** 100% on both environments ✅
 
 **New Test Suites:**
+
 - `facts.test.ts` - 53 tests validating structured knowledge
 - `memorySpaces.test.ts` - 29 tests for registry management
 - `contexts.test.ts` - 31 tests for workflow coordination
@@ -175,6 +190,7 @@ await cortex.conversations.create({
 - `integration.test.ts` - 7 complex multi-layer scenarios
 
 **Infrastructure:**
+
 - Updated cleanup helpers for all 8 tables
 - Added `purgeAll()` to facts, contexts, memorySpaces backends
 - Updated `scripts/cleanup-test-data.ts` for comprehensive cleanup
@@ -183,21 +199,25 @@ await cortex.conversations.create({
 #### 📊 Database Schema Updates
 
 **New Tables:**
+
 - `facts` - Structured knowledge with versioning (7 indexes)
-- `contexts` - Workflow coordination (6 indexes)  
+- `contexts` - Workflow coordination (6 indexes)
 - `memorySpaces` - Registry with participants (1 index)
 
 **Updated Tables:**
+
 - `conversations` - Added `memorySpaceId`, `participantId`
 - `memories` - Added `memorySpaceId`, `participantId` (renamed from agentId)
 - Added 8 new indexes for memory space queries
 
 **Deprecated:**
+
 - `agents` table (use `memorySpaces` instead)
 
 #### 📖 Documentation Overhaul
 
 **50+ Files Updated (~24,000 lines):**
+
 - Complete Memory Space Architecture documentation
 - New guides: Hive Mode, Infinite Context, Facts Extraction
 - All 13 API references updated for memorySpaceId
@@ -206,6 +226,7 @@ await cortex.conversations.create({
 - Comprehensive test documentation
 
 **New Documentation:**
+
 - `02-core-features/01-memory-spaces.md` - Complete guide (renamed from agent-memory.md)
 - `02-core-features/08-fact-extraction.md` - Facts layer guide
 - `02-core-features/10-hive-mode.md` - Hive vs Collaboration modes
@@ -238,11 +259,13 @@ await cortex.conversations.create({
 #### 📝 Migration Notes
 
 **Automatic Compatibility:**
+
 - Data structures are compatible (field rename only)
 - No data migration required for simple rename
 - Existing agent-based code can map agentId → memorySpaceId 1:1
 
 **Recommended Migration Path:**
+
 1. Update all `agentId` references to `memorySpaceId`
 2. Update conversation participants structure
 3. Consider consolidating related agents into Hive spaces
@@ -250,6 +273,7 @@ await cortex.conversations.create({
 5. Leverage Facts API for infinite context capability
 
 **For Hive Mode Migration:**
+
 - Consolidate tool-specific memory spaces into shared hives
 - Add `participantId` to track contributors
 - Use `memorySpaces.register()` to define hive membership
@@ -257,18 +281,21 @@ await cortex.conversations.create({
 #### 🌟 Key Benefits
 
 **For Developers:**
+
 - More flexible than per-agent isolation
 - Hive Mode eliminates cross-tool data sync
 - Facts enable instant retrieval from long conversations
 - Context chains simplify multi-agent workflows
 
 **For Users:**
+
 - Better cross-tool memory sharing
 - No more "calendar doesn't know what email knows"
 - Faster responses (fewer LLM context tokens)
 - More accurate structured knowledge
 
 **For Enterprises:**
+
 - Secure cross-organization collaboration
 - Complete audit trails
 - GDPR-compliant data management

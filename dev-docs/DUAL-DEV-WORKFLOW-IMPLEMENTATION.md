@@ -6,8 +6,9 @@
 ## 🎯 Goal
 
 Enable developers to work seamlessly with both local and cloud Convex deployments:
+
 - **Local**: Fast iteration without vector search
-- **Cloud**: Full features including vector search  
+- **Cloud**: Full features including vector search
 - **Dual**: Automatic testing against both environments
 
 ## ✅ What Was Implemented
@@ -17,6 +18,7 @@ Enable developers to work seamlessly with both local and cloud Convex deployment
 **Purpose**: Orchestrate development workflows for local, cloud, or auto-detected modes.
 
 **Features**:
+
 - ✅ Auto-detects available configurations (local vs cloud)
 - ✅ Starts appropriate Convex dev server
 - ✅ Opens dashboard automatically
@@ -25,6 +27,7 @@ Enable developers to work seamlessly with both local and cloud Convex deployment
 - ✅ Handles graceful shutdown
 
 **Usage**:
+
 ```bash
 npm run dev         # Auto-detect (prefers local)
 npm run dev:local   # Force local
@@ -36,20 +39,24 @@ npm run dev:cloud   # Force cloud
 **New Commands Added**:
 
 #### Development
+
 - `dev` → Smart auto-detection (replaces old `predev` + `dev`)
 - `dev:local` → Explicit local development
 - `dev:cloud` → Explicit cloud development
 
 #### Logs
+
 - `logs` → View deployment logs
 - `logs:local` → View local logs specifically
 - `logs:cloud` → View cloud logs specifically
 
 #### Testing (Enhanced)
+
 - `test:interactive:local` → Interactive runner against local
 - `test:interactive:cloud` → Interactive runner against cloud
 
 **Removed**:
+
 - Old `predev` script (was problematic with `&&` blocking)
 
 ### 3. Environment Configuration Updates
@@ -57,6 +64,7 @@ npm run dev:cloud   # Force cloud
 #### `.env.local` (Enhanced Structure)
 
 **Before** (old format):
+
 ```env
 LOCAL_CONVEX_DEPLOYMENT=anonymous:anonymous-cortex-sdk-local
 LOCAL_CONVEX_URL=http://127.0.0.1:3210
@@ -69,6 +77,7 @@ CONVEX_URL=http://127.0.0.1:3210
 ```
 
 **After** (new format):
+
 ```env
 # =============================================================================
 # LOCAL DEVELOPMENT
@@ -90,6 +99,7 @@ CONVEX_URL=http://127.0.0.1:3210
 ```
 
 **Key Changes**:
+
 - ✅ Clear sections with headers
 - ✅ Cloud config ENABLED by default
 - ✅ Comments explain auto-management
@@ -107,12 +117,14 @@ CONVEX_URL=http://127.0.0.1:3210
 #### `tests/env.ts` (Enhanced)
 
 **Changes**:
+
 - ✅ Detects `CLOUD_CONVEX_URL` in addition to `CONVEX_URL`
 - ✅ Prefers `CLOUD_CONVEX_URL` when in managed mode
 - ✅ Sets `CONVEX_URL` correctly based on mode
 - ✅ Maintains backward compatibility
 
 **Logic Flow**:
+
 ```
 1. Load .env.test (defaults)
 2. Load .env.local (overrides)
@@ -126,6 +138,7 @@ CONVEX_URL=http://127.0.0.1:3210
 #### `scripts/test-runner.mjs` (Enhanced)
 
 **Changes**:
+
 - ✅ Detects `CLOUD_CONVEX_URL` for managed config check
 - ✅ Consistent with `tests/env.ts` detection logic
 - ✅ Runs both test suites when both configs present
@@ -278,27 +291,28 @@ npm run test:interactive
 
 ## 📊 Comparison: Before vs After
 
-| Aspect | Before | After |
-|--------|--------|-------|
-| **Start Dev** | `npm run dev` (with buggy predev) | `npm run dev` (smart detection) |
-| **Local Dev** | `npm run dev` (implicit) | `npm run dev:local` (explicit) |
-| **Cloud Dev** | Manual setup | `npm run dev:cloud` (one command) |
-| **Config** | Comments, unclear | Sections, documented |
-| **Cloud Setup** | Commented out | Enabled by default |
-| **Logs** | `npm run logs` only | `logs`, `logs:local`, `logs:cloud` |
-| **Testing** | Auto-detect only | Auto + explicit modes |
-| **Interactive** | One mode | Local, cloud, or auto |
-| **Documentation** | Scattered | Centralized + quick ref |
+| Aspect            | Before                            | After                              |
+| ----------------- | --------------------------------- | ---------------------------------- |
+| **Start Dev**     | `npm run dev` (with buggy predev) | `npm run dev` (smart detection)    |
+| **Local Dev**     | `npm run dev` (implicit)          | `npm run dev:local` (explicit)     |
+| **Cloud Dev**     | Manual setup                      | `npm run dev:cloud` (one command)  |
+| **Config**        | Comments, unclear                 | Sections, documented               |
+| **Cloud Setup**   | Commented out                     | Enabled by default                 |
+| **Logs**          | `npm run logs` only               | `logs`, `logs:local`, `logs:cloud` |
+| **Testing**       | Auto-detect only                  | Auto + explicit modes              |
+| **Interactive**   | One mode                          | Local, cloud, or auto              |
+| **Documentation** | Scattered                         | Centralized + quick ref            |
 
 ## 🎓 Architecture Decisions
 
-### Why Separate LOCAL_* and CLOUD_* Variables?
+### Why Separate LOCAL*\* and CLOUD*\* Variables?
 
 **Problem**: Using one `CONVEX_URL` means you have to manually edit `.env.local` to switch modes.
 
 **Solution**: Define both, let scripts switch between them.
 
 **Benefits**:
+
 1. ✅ No manual editing to switch modes
 2. ✅ Easy to see both configs at a glance
 3. ✅ Tests can run against both without reconfiguration
@@ -311,6 +325,7 @@ npm run test:interactive
 **Solution**: Auto-detect prefers local (faster), falls back to cloud.
 
 **Benefits**:
+
 1. ✅ Fast default for daily work (local)
 2. ✅ Still works if only cloud configured
 3. ✅ Can override with explicit commands
@@ -322,6 +337,7 @@ npm run test:interactive
 **Solution**: `CONVEX_URL` is the "active" deployment, set by dev-runner.
 
 **Benefits**:
+
 1. ✅ Backward compatible
 2. ✅ Tests don't need to know which mode
 3. ✅ SDK code unchanged
@@ -330,7 +346,8 @@ npm run test:interactive
 
 **Problem**: `predev: "convex dev --until-success && convex dashboard"` blocks.
 
-**Explanation**: 
+**Explanation**:
+
 - `convex dev --until-success` waits for success
 - `&&` means next command waits for previous to exit
 - `convex dev` never exits (runs forever)
@@ -383,12 +400,14 @@ npm run test:interactive
 ## 📝 Files Changed
 
 ### Created:
+
 - `scripts/dev-runner.mjs` (270 lines)
 - `dev-docs/DEV-WORKFLOW-GUIDE.md` (800+ lines)
 - `dev-docs/DEV-QUICK-START.md` (250+ lines)
 - `dev-docs/DUAL-DEV-WORKFLOW-IMPLEMENTATION.md` (this file)
 
 ### Modified:
+
 - `package.json` (updated scripts section)
 - `.env.local` (restructured with sections)
 - `.env.test` (converted to template)
@@ -425,11 +444,12 @@ All success criteria met:
 ✅ **Testing**: Automatic dual testing when both configured  
 ✅ **Documentation**: Comprehensive + quick reference  
 ✅ **Backward Compatible**: Old configs still work  
-✅ **No Breaking Changes**: Existing workflows unchanged  
+✅ **No Breaking Changes**: Existing workflows unchanged
 
 ## 📞 Support
 
 **Questions?** See:
+
 - [DEV-QUICK-START.md](./DEV-QUICK-START.md) - Fast answers
 - [DEV-WORKFLOW-GUIDE.md](./DEV-WORKFLOW-GUIDE.md) - Deep dive
 - [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues) - Bug reports
@@ -440,4 +460,3 @@ All success criteria met:
 **Implementation Complete**: October 29, 2025  
 **Implemented By**: AI Assistant (Cursor + Claude Sonnet 4.5)  
 **Status**: ✅ Ready for Use
-

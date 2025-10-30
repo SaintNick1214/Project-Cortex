@@ -349,7 +349,10 @@ describe("Vector Memory API (Layer 2)", () => {
       expect(before).not.toBeNull();
 
       // Delete
-      const result = await cortex.vector.delete("memspace-test", memory.memoryId);
+      const result = await cortex.vector.delete(
+        "memspace-test",
+        memory.memoryId,
+      );
 
       expect(result.deleted).toBe(true);
 
@@ -484,7 +487,10 @@ describe("Vector Memory API (Layer 2)", () => {
       });
 
       it("preserves previous versions", async () => {
-        const history = await cortex.vector.getHistory("memspace-test", memoryId);
+        const history = await cortex.vector.getHistory(
+          "memspace-test",
+          memoryId,
+        );
 
         expect(history).toHaveLength(2);
         expect(history[0].content).toBe("Original content");
@@ -625,7 +631,10 @@ describe("Vector Memory API (Layer 2)", () => {
         expect(result.restorable).toBe(true);
 
         // Verify archived (should still exist but tagged)
-        const archived = await cortex.vector.get("memspace-test", memory.memoryId);
+        const archived = await cortex.vector.get(
+          "memspace-test",
+          memory.memoryId,
+        );
 
         expect(archived).not.toBeNull();
         expect(archived!.tags).toContain("archived");

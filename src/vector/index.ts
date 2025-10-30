@@ -31,7 +31,10 @@ export class VectorAPI {
    * });
    * ```
    */
-  async store(memorySpaceId: string, input: StoreMemoryInput): Promise<MemoryEntry> {
+  async store(
+    memorySpaceId: string,
+    input: StoreMemoryInput,
+  ): Promise<MemoryEntry> {
     const result = await this.client.mutation(api.memories.store, {
       memorySpaceId,
       participantId: input.participantId, // NEW: Hive Mode
@@ -60,7 +63,10 @@ export class VectorAPI {
    * const memory = await cortex.vector.get('agent-1', 'mem-abc123');
    * ```
    */
-  async get(memorySpaceId: string, memoryId: string): Promise<MemoryEntry | null> {
+  async get(
+    memorySpaceId: string,
+    memoryId: string,
+  ): Promise<MemoryEntry | null> {
     const result = await this.client.query(api.memories.get, {
       memorySpaceId,
       memoryId,

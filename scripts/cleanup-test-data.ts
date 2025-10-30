@@ -117,7 +117,10 @@ async function cleanup() {
     console.log("💾 Purging immutable store...");
     try {
       if ((api.immutable as any).purgeAll) {
-        const result = await client.mutation((api.immutable as any).purgeAll, {});
+        const result = await client.mutation(
+          (api.immutable as any).purgeAll,
+          {},
+        );
         stats.immutable = result.deleted;
         console.log(`   ✅ Deleted ${stats.immutable} immutable entries`);
       } else {
@@ -172,12 +175,22 @@ async function cleanup() {
     console.log("✅ CLEANUP COMPLETE!");
     console.log(`${"=".repeat(60)}`);
     console.log(`📊 Summary:`);
-    console.log(`   Conversations:   ${stats.conversations.toString().padStart(6)}`);
+    console.log(
+      `   Conversations:   ${stats.conversations.toString().padStart(6)}`,
+    );
     console.log(`   Memories:        ${stats.memories.toString().padStart(6)}`);
-    console.log(`   Facts:           ${stats.facts.toString().padStart(6)} (NEW)`);
-    console.log(`   Contexts:        ${stats.contexts.toString().padStart(6)} (NEW)`);
-    console.log(`   Memory Spaces:   ${stats.memorySpaces.toString().padStart(6)} (NEW)`);
-    console.log(`   Immutable:       ${stats.immutable.toString().padStart(6)}`);
+    console.log(
+      `   Facts:           ${stats.facts.toString().padStart(6)} (NEW)`,
+    );
+    console.log(
+      `   Contexts:        ${stats.contexts.toString().padStart(6)} (NEW)`,
+    );
+    console.log(
+      `   Memory Spaces:   ${stats.memorySpaces.toString().padStart(6)} (NEW)`,
+    );
+    console.log(
+      `   Immutable:       ${stats.immutable.toString().padStart(6)}`,
+    );
     console.log(`   Mutable:         ${stats.mutable.toString().padStart(6)}`);
     console.log(`   ${"─".repeat(26)}`);
     console.log(`   TOTAL DELETED:   ${total.toString().padStart(6)}`);

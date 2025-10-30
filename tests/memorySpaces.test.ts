@@ -264,7 +264,9 @@ describe("Memory Spaces Registry API", () => {
       );
 
       expect(updated.participants).toHaveLength(2);
-      expect(updated.participants.some((p) => p.id === "agent-helper")).toBe(true);
+      expect(updated.participants.some((p) => p.id === "agent-helper")).toBe(
+        true,
+      );
     });
 
     it("throws error for duplicate participant", async () => {
@@ -573,4 +575,3 @@ describe("Memory Spaces Registry API", () => {
     });
   });
 });
-
