@@ -113,7 +113,7 @@ Cortex is being designed with two deployment modes:
                      │ (using your Convex credentials)
                      ▼
 ┌─────────────────────────────────────────────────────┐
-│            Your Convex Instance                      │
+│            Your Convex Instance                     │
 │  • Convex Cloud (managed)                           │
 │  • Self-hosted (local or your infrastructure)       │
 └─────────────────────────────────────────────────────┘
