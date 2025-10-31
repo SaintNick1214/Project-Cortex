@@ -449,4 +449,42 @@ export default defineSchema({
   })
     .index("by_agentId", ["agentId"])
     .index("by_registered", ["registeredAt"]),
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Graph Sync Queue (Real-time Graph Database Synchronization)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  graphSyncQueue: defineTable({
+    // Entity identification
+    table: v.string(), // "memories", "facts", "contexts", "conversations", etc.
+    entityId: v.string(), // Cortex entity ID
+
+    // Operation type
+    operation: v.union(
+      v.literal("insert"),
+      v.literal("update"),
+      v.literal("delete"),
+    ),
+
+    // Entity data (full object for sync)
+    entity: v.optional(v.any()), // Null for deletes
+
+    // Sync status
+    synced: v.boolean(),
+    syncedAt: v.optional(v.number()),
+
+    // Retry tracking
+    failedAttempts: v.optional(v.number()),
+    lastError: v.optional(v.string()),
+
+    // Priority (for ordering)
+    priority: v.optional(v.string()), // "high", "normal", "low"
+
+    // Timestamps
+    createdAt: v.number(),
+  })
+    .index("by_synced", ["synced"]) // Get unsynced items (reactive query!)
+    .index("by_table", ["table"]) // Filter by entity type
+    .index("by_table_entity", ["table", "entityId"]) // Unique lookup
+    .index("by_priority", ["priority", "synced"]) // Priority-based processing
+    .index("by_created", ["createdAt"]), // Chronological
 });

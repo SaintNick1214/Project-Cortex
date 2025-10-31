@@ -594,3 +594,132 @@ export interface MemorySpaceStats {
     topTags: string[];
   }>;
 }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Graph Integration Options (syncToGraph pattern across all APIs)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Standard graph sync option
+ * Follows existing SDK pattern (autoEmbed, deleteConversation, etc.)
+ */
+export interface GraphSyncOption {
+  /** Sync this operation to graph database (if graph configured) */
+  syncToGraph?: boolean;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Layer 1a: Conversations API Options
+// ────────────────────────────────────────────────────────────────────────────
+
+export interface CreateConversationOptions extends GraphSyncOption {}
+
+export interface AddMessageOptions extends GraphSyncOption {}
+
+export interface UpdateConversationOptions extends GraphSyncOption {}
+
+export interface DeleteConversationOptions extends GraphSyncOption {}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Layer 1b: Immutable API Options
+// ────────────────────────────────────────────────────────────────────────────
+
+export interface StoreImmutableOptions extends GraphSyncOption {}
+
+export interface UpdateImmutableOptions extends GraphSyncOption {}
+
+export interface DeleteImmutableOptions extends GraphSyncOption {}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Layer 1c: Mutable API Options
+// ────────────────────────────────────────────────────────────────────────────
+
+export interface SetMutableOptions extends GraphSyncOption {}
+
+export interface UpdateMutableOptions extends GraphSyncOption {}
+
+export interface DeleteMutableOptions extends GraphSyncOption {}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Layer 2: Vector API Options
+// ────────────────────────────────────────────────────────────────────────────
+
+export interface StoreMemoryOptions extends GraphSyncOption {}
+
+export interface UpdateMemoryOptions extends GraphSyncOption {}
+
+export interface DeleteMemoryOptions extends GraphSyncOption {}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Layer 3: Facts API Options
+// ────────────────────────────────────────────────────────────────────────────
+
+export interface StoreFactOptions extends GraphSyncOption {}
+
+export interface UpdateFactOptions extends GraphSyncOption {}
+
+export interface DeleteFactOptions extends GraphSyncOption {}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Layer 4: Contexts API Options
+// ────────────────────────────────────────────────────────────────────────────
+
+export interface CreateContextOptions extends GraphSyncOption {}
+
+export interface UpdateContextOptions extends GraphSyncOption {}
+
+export interface DeleteContextOptions extends GraphSyncOption {}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Layer 4: Memory Spaces API Options
+// ────────────────────────────────────────────────────────────────────────────
+
+export interface RegisterMemorySpaceOptions extends GraphSyncOption {}
+
+export interface UnregisterMemorySpaceOptions extends GraphSyncOption {}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Convenience: Memory API Options
+// ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Options for memory.remember() convenience method
+ * Defaults to syncToGraph: true if graph is configured
+ */
+export interface RememberOptions extends GraphSyncOption {
+  /** Extract facts from conversation (default: false) */
+  extractFacts?: boolean;
+
+  /** Custom extraction function */
+  extractContent?: (
+    userMessage: string,
+    agentResponse: string,
+  ) => Promise<string | null>;
+
+  /** Custom embedding function */
+  generateEmbedding?: (content: string) => Promise<number[] | null>;
+
+  /** Cloud Mode options */
+  autoEmbed?: boolean;
+  autoSummarize?: boolean;
+}
+
+/**
+ * Extended forget options with graph sync
+ * Defaults to syncToGraph: true if graph is configured
+ */
+export interface ExtendedForgetOptions extends ForgetOptions, GraphSyncOption {}
+
+/**
+ * Options for memory recall with graph enrichment
+ */
+export interface RecallOptions extends GraphSyncOption {
+  /** Use graph for enrichment (default: true if graph configured) */
+  enrichWithGraph?: boolean;
+
+  /** Maximum depth for graph traversal enrichment */
+  maxEnrichmentDepth?: number;
+
+  /** Include full conversation history */
+  includeConversation?: boolean;
+}

@@ -8,16 +8,24 @@ import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type {
   CountImmutableFilter,
+  DeleteImmutableOptions,
   ImmutableEntry,
   ImmutableRecord,
   ImmutableSearchResult,
   ImmutableVersionExpanded,
   ListImmutableFilter,
   SearchImmutableInput,
+  StoreImmutableOptions,
+  UpdateImmutableOptions,
 } from "../types";
+import type { GraphAdapter } from "../graph/types";
+import { deleteImmutableFromGraph } from "../graph";
 
 export class ImmutableAPI {
-  constructor(private readonly client: ConvexClient) {}
+  constructor(
+    private readonly client: ConvexClient,
+    private readonly graphAdapter?: GraphAdapter,
+  ) {}
 
   /**
    * Store immutable data (creates v1 or increments version if exists)
@@ -34,7 +42,7 @@ export class ImmutableAPI {
    * });
    * ```
    */
-  async store(entry: ImmutableEntry): Promise<ImmutableRecord> {
+  async store(entry: ImmutableEntry, options?: StoreImmutableOptions): Promise<ImmutableRecord> {
     const result = await this.client.mutation(api.immutable.store, {
       type: entry.type,
       id: entry.id,
@@ -42,6 +50,22 @@ export class ImmutableAPI {
       userId: entry.userId,
       metadata: entry.metadata,
     });
+
+    // Sync to graph if requested (facts are handled specially in FactsAPI)
+    if (options?.syncToGraph && this.graphAdapter && entry.type !== "fact") {
+      try {
+        const nodeId = await this.graphAdapter.createNode({
+          label: "Immutable",
+          properties: {
+            immutableType: entry.type,
+            immutableId: entry.id,
+            ...(result as ImmutableRecord),
+          },
+        });
+      } catch (error) {
+        console.warn("Failed to sync immutable to graph:", error);
+      }
+    }
 
     return result as ImmutableRecord;
   }

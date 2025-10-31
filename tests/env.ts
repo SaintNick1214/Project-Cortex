@@ -100,3 +100,34 @@ process.env.CONVEX_DEPLOYMENT_TYPE =
   process.env.CONVEX_URL.includes("127.0.0.1")
     ? "local"
     : "managed";
+
+// ============================================================================
+// Graph Database Configuration (Optional)
+// ============================================================================
+// Load graph database connection settings for graph integration tests
+
+// Check if graph database testing is enabled
+const graphTestingEnabled = Boolean(
+  process.env.NEO4J_URI || process.env.MEMGRAPH_URI,
+);
+
+if (graphTestingEnabled) {
+  console.log("\n📊 Graph database testing ENABLED");
+
+  if (process.env.NEO4J_URI) {
+    console.log(`   Neo4j: ${process.env.NEO4J_URI}`);
+  }
+
+  if (process.env.MEMGRAPH_URI) {
+    console.log(`   Memgraph: ${process.env.MEMGRAPH_URI}`);
+  }
+
+  console.log();
+} else {
+  console.log("\n📊 Graph database testing DISABLED (no graph DB URIs configured)");
+  console.log("   To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local");
+  console.log("   See: Documentation/07-advanced-topics/05-graph-database-setup.md\n");
+}
+
+// Store graph testing status for tests
+process.env.GRAPH_TESTING_ENABLED = graphTestingEnabled ? "true" : "false";

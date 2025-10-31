@@ -8,12 +8,20 @@ import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type {
   CountMutableFilter,
+  DeleteMutableOptions,
   ListMutableFilter,
   MutableRecord,
+  SetMutableOptions,
+  UpdateMutableOptions,
 } from "../types";
+import type { GraphAdapter } from "../graph/types";
+import { deleteMutableFromGraph } from "../graph";
 
 export class MutableAPI {
-  constructor(private readonly client: ConvexClient) {}
+  constructor(
+    private readonly client: ConvexClient,
+    private readonly graphAdapter?: GraphAdapter,
+  ) {}
 
   /**
    * Set a key to a value (creates or overwrites)
@@ -29,6 +37,7 @@ export class MutableAPI {
     value: unknown,
     userId?: string,
     metadata?: Record<string, unknown>,
+    options?: SetMutableOptions,
   ): Promise<MutableRecord> {
     const result = await this.client.mutation(api.mutable.set, {
       namespace,
@@ -37,6 +46,18 @@ export class MutableAPI {
       userId,
       metadata,
     });
+
+    // Sync to graph if requested (mutable data in graph is rare, but supported)
+    if (options?.syncToGraph && this.graphAdapter) {
+      try {
+        await this.graphAdapter.createNode({
+          label: "Mutable",
+          properties: { namespace, key, value, userId, metadata },
+        });
+      } catch (error) {
+        console.warn("Failed to sync mutable to graph:", error);
+      }
+    }
 
     return result as MutableRecord;
   }
@@ -223,11 +244,21 @@ export class MutableAPI {
   async delete(
     namespace: string,
     key: string,
+    options?: DeleteMutableOptions,
   ): Promise<{ deleted: boolean; namespace: string; key: string }> {
     const result = await this.client.mutation(api.mutable.deleteKey, {
       namespace,
       key,
     });
+
+    // Delete from graph
+    if (options?.syncToGraph && this.graphAdapter) {
+      try {
+        await deleteMutableFromGraph(namespace, key, this.graphAdapter);
+      } catch (error) {
+        console.warn("Failed to delete mutable from graph:", error);
+      }
+    }
 
     return result as { deleted: boolean; namespace: string; key: string };
   }

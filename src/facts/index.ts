@@ -7,16 +7,28 @@
 import { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type {
-  FactRecord,
-  StoreFactParams,
-  ListFactsFilter,
   CountFactsFilter,
+  DeleteFactOptions,
+  FactRecord,
+  ListFactsFilter,
   SearchFactsOptions,
+  StoreFactOptions,
+  StoreFactParams,
   UpdateFactInput,
+  UpdateFactOptions,
 } from "../types";
+import type { GraphAdapter } from "../graph/types";
+import {
+  syncFactToGraph,
+  syncFactRelationships,
+  deleteFactFromGraph,
+} from "../graph";
 
 export class FactsAPI {
-  constructor(private client: ConvexClient) {}
+  constructor(
+    private client: ConvexClient,
+    private graphAdapter?: GraphAdapter,
+  ) {}
 
   /**
    * Store a new fact
@@ -34,7 +46,7 @@ export class FactsAPI {
    * });
    * ```
    */
-  async store(params: StoreFactParams): Promise<FactRecord> {
+  async store(params: StoreFactParams, options?: StoreFactOptions): Promise<FactRecord> {
     const result = await this.client.mutation(api.facts.store, {
       memorySpaceId: params.memorySpaceId,
       participantId: params.participantId,
@@ -51,6 +63,16 @@ export class FactsAPI {
       validFrom: params.validFrom,
       validUntil: params.validUntil,
     });
+
+    // Sync to graph if requested
+    if (options?.syncToGraph && this.graphAdapter) {
+      try {
+        const nodeId = await syncFactToGraph(result as FactRecord, this.graphAdapter);
+        await syncFactRelationships(result as FactRecord, nodeId, this.graphAdapter);
+      } catch (error) {
+        console.warn("Failed to sync fact to graph:", error);
+      }
+    }
 
     return result as FactRecord;
   }
@@ -161,6 +183,7 @@ export class FactsAPI {
     memorySpaceId: string,
     factId: string,
     updates: UpdateFactInput,
+    options?: UpdateFactOptions,
   ): Promise<FactRecord> {
     const result = await this.client.mutation(api.facts.update, {
       memorySpaceId,
@@ -171,6 +194,18 @@ export class FactsAPI {
       validUntil: updates.validUntil,
       metadata: updates.metadata,
     });
+
+    // Update in graph if requested
+    if (options?.syncToGraph && this.graphAdapter) {
+      try {
+        const nodes = await this.graphAdapter.findNodes("Fact", { factId }, 1);
+        if (nodes.length > 0) {
+          await this.graphAdapter.updateNode(nodes[0].id!, updates);
+        }
+      } catch (error) {
+        console.warn("Failed to update fact in graph:", error);
+      }
+    }
 
     return result as FactRecord;
   }
@@ -186,11 +221,21 @@ export class FactsAPI {
   async delete(
     memorySpaceId: string,
     factId: string,
+    options?: DeleteFactOptions,
   ): Promise<{ deleted: boolean; factId: string }> {
     const result = await this.client.mutation(api.facts.deleteFact, {
       memorySpaceId,
       factId,
     });
+
+    // Delete from graph with Entity orphan cleanup
+    if (options?.syncToGraph && this.graphAdapter) {
+      try {
+        await deleteFactFromGraph(factId, this.graphAdapter, true);
+      } catch (error) {
+        console.warn("Failed to delete fact from graph:", error);
+      }
+    }
 
     return result as { deleted: boolean; factId: string };
   }
