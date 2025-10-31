@@ -1,6 +1,6 @@
 # Semantic Search
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2025-10-30
 
 AI-powered memory retrieval with multi-strategy fallback for robust results.
 
@@ -1086,10 +1086,71 @@ for (const test of searchTests) {
 }
 ```
 
+## Integration with Facts Layer
+
+Cortex automatically extracts and indexes structured facts during `memory.remember()`, making them available in search results:
+
+```typescript
+// Remember with automatic fact extraction
+const result = await cortex.memory.remember({
+  memorySpaceId: "agent-1",
+  conversationId: "conv-123",
+  userMessage: "I prefer dark mode and I'm from San Francisco",
+  agentResponse: "Got it!",
+  userId: "user-123",
+  userName: "Alex",
+  
+  // Extract facts for structured knowledge
+  extractFacts: async (userMsg, agentMsg) => {
+    return [
+      {
+        fact: "User prefers dark mode",
+        factType: "preference",
+        confidence: 95,
+        tags: ["ui"],
+      },
+      {
+        fact: "User is from San Francisco",
+        factType: "identity",
+        confidence: 98,
+        tags: ["location"],
+      },
+    ];
+  },
+});
+
+// Search returns memories WITH extracted facts
+const memories = await cortex.memory.search("agent-1", "user preferences", {
+  embedding: await embed("user preferences"),
+  enrichConversation: true,  // Facts automatically included
+});
+
+memories.forEach(memory => {
+  console.log(`Memory: ${memory.memory.content}`);
+  
+  // Access extracted facts
+  if (memory.facts) {
+    memory.facts.forEach(fact => {
+      console.log(`  Fact: ${fact.fact} (${fact.confidence}% confidence)`);
+    });
+  }
+});
+```
+
+**Benefits of fact integration:**
+
+- **Structured knowledge**: Facts are normalized and queryable
+- **Higher precision**: Search "user preferences" finds preference-type facts
+- **Confidence scoring**: Filter by extraction confidence (0-100)
+- **Cross-referencing**: Facts link back to source conversations via `sourceRef`
+
+See **[Fact Integration](./11-fact-integration.md)** for complete documentation on automatic fact extraction in Memory API.
+
 ## Next Steps
 
 - **[User Profiles](./03-user-profiles.md)** - Manage user context across agents
 - **[Context Chains](./04-context-chains.md)** - Hierarchical agent coordination
+- **[Fact Integration](./11-fact-integration.md)** - Extract structured knowledge from conversations
 - **[API Reference](../03-api-reference/06-search-operations.md)** - Complete search API
 
 ---
