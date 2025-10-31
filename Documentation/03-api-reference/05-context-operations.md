@@ -193,19 +193,22 @@ console.log(root.rootId); // 'ctx_abc123' (self)
 
 ```typescript
 // Same as above, but sync to graph database
-const root = await cortex.contexts.create({
-  purpose: "Process customer refund request",
-  memorySpaceId: "supervisor-agent-space",
-  userId: "user-123",
-  conversationRef: {
-    conversationId: "conv-456",
-    messageIds: [msg.id],
+const root = await cortex.contexts.create(
+  {
+    purpose: "Process customer refund request",
+    memorySpaceId: "supervisor-agent-space",
+    userId: "user-123",
+    conversationRef: {
+      conversationId: "conv-456",
+      messageIds: [msg.id],
+    },
+    data: {
+      importance: 85,
+      tags: ["refund", "customer-service", "ticket-456"],
+    },
   },
-  data: {
-    importance: 85,
-    tags: ["refund", "customer-service", "ticket-456"],
-  },
-}, { syncToGraph: true }); // ← Syncs to graph!
+  { syncToGraph: true },
+); // ← Syncs to graph!
 
 // Now queryable via graph for multi-hop queries
 ```
@@ -1516,12 +1519,15 @@ Context chains integrate with graph databases for advanced queries:
 await cortex.contexts.create(params, { syncToGraph: true });
 
 // Query via graph for multi-hop traversal
-const hierarchy = await graphAdapter.query(`
+const hierarchy = await graphAdapter.query(
+  `
   MATCH (root:Context {contextId: $contextId})
   MATCH path = (root)<-[:CHILD_OF*0..10]-(descendants:Context)
   RETURN descendants
   ORDER BY descendants.depth
-`, { contextId: root.contextId });
+`,
+  { contextId: root.contextId },
+);
 
 // Result: Entire hierarchy in single query (<10ms)!
 ```

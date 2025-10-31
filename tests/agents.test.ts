@@ -31,7 +31,9 @@ describe("Agents API (Coordination Layer)", () => {
 
     if (neo4jUri && neo4jUsername && neo4jPassword) {
       try {
-        console.log("\n🔗 Graph database configured - testing with graph integration");
+        console.log(
+          "\n🔗 Graph database configured - testing with graph integration",
+        );
         graphAdapter = new CypherGraphAdapter();
         await graphAdapter.connect({
           uri: neo4jUri,
@@ -48,8 +50,12 @@ describe("Agents API (Coordination Layer)", () => {
         console.warn("   Tests will run without graph support\n");
       }
     } else {
-      console.log("\n📝 No graph configuration - testing without graph integration");
-      console.log("   (Set NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD to enable)\n");
+      console.log(
+        "\n📝 No graph configuration - testing without graph integration",
+      );
+      console.log(
+        "   (Set NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD to enable)\n",
+      );
     }
 
     // Initialize SDK with optional graph adapter
@@ -80,8 +86,10 @@ describe("Agents API (Coordination Layer)", () => {
       const allAgents = await client.query(api.agents.list, {});
       for (const agent of allAgents) {
         try {
-          await client.mutation(api.agents.unregister, { agentId: agent.agentId });
-        } catch (error) {
+          await client.mutation(api.agents.unregister, {
+            agentId: agent.agentId,
+          });
+        } catch (_error) {
           // Ignore errors, agent may already be deleted
         }
       }
@@ -177,7 +185,9 @@ describe("Agents API (Coordination Layer)", () => {
     });
 
     it("returns null for unregistered agent", async () => {
-      const result = await cortex.agents.get("non-existent-agent-" + Date.now());
+      const result = await cortex.agents.get(
+        "non-existent-agent-" + Date.now(),
+      );
       expect(result).toBeNull();
     });
 
@@ -332,8 +342,14 @@ describe("Agents API (Coordination Layer)", () => {
       await cortex.agents.register({ id: agentId, name: "Cascade Test" });
 
       // Register memory spaces
-      await cortex.memorySpaces.register({ memorySpaceId: space1, type: "personal" });
-      await cortex.memorySpaces.register({ memorySpaceId: space2, type: "personal" });
+      await cortex.memorySpaces.register({
+        memorySpaceId: space1,
+        type: "personal",
+      });
+      await cortex.memorySpaces.register({
+        memorySpaceId: space2,
+        type: "personal",
+      });
 
       // Create data in space 1 with participantId
       await cortex.conversations.create({
@@ -369,7 +385,9 @@ describe("Agents API (Coordination Layer)", () => {
       // Verify setup
       const memories1 = await cortex.vector.list({ memorySpaceId: space1 });
       const memories2 = await cortex.vector.list({ memorySpaceId: space2 });
-      console.log(`  ℹ️  Setup: ${memories1.length} memories in space1, ${memories2.length} in space2`);
+      console.log(
+        `  ℹ️  Setup: ${memories1.length} memories in space1, ${memories2.length} in space2`,
+      );
 
       // Create graph node if available
       if (graphAdapter) {
@@ -417,12 +435,12 @@ describe("Agents API (Coordination Layer)", () => {
       expect(agent).toBeNull();
 
       // Verify memories are deleted in both spaces
-      const remainingMemories1 = (await cortex.vector.list({ memorySpaceId: space1 })).filter(
-        (m) => m.participantId === agentId,
-      );
-      const remainingMemories2 = (await cortex.vector.list({ memorySpaceId: space2 })).filter(
-        (m) => m.participantId === agentId,
-      );
+      const remainingMemories1 = (
+        await cortex.vector.list({ memorySpaceId: space1 })
+      ).filter((m) => m.participantId === agentId);
+      const remainingMemories2 = (
+        await cortex.vector.list({ memorySpaceId: space2 })
+      ).filter((m) => m.participantId === agentId);
       expect(remainingMemories1).toHaveLength(0);
       expect(remainingMemories2).toHaveLength(0);
 
@@ -494,7 +512,10 @@ describe("Agents API (Coordination Layer)", () => {
       const spaceId = "space-unreg-" + Date.now();
 
       // DON'T register the agent - just create data with participantId
-      await cortex.memorySpaces.register({ memorySpaceId: spaceId, type: "personal" });
+      await cortex.memorySpaces.register({
+        memorySpaceId: spaceId,
+        type: "personal",
+      });
 
       await cortex.vector.store(spaceId, {
         content: "Memory from unregistered agent",
@@ -508,9 +529,9 @@ describe("Agents API (Coordination Layer)", () => {
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Verify memory exists
-      const beforeMemories = (await cortex.vector.list({ memorySpaceId: spaceId })).filter(
-        (m) => m.participantId === agentId,
-      );
+      const beforeMemories = (
+        await cortex.vector.list({ memorySpaceId: spaceId })
+      ).filter((m) => m.participantId === agentId);
       expect(beforeMemories.length).toBeGreaterThanOrEqual(1);
 
       // CASCADE DELETE (without registration)
@@ -523,9 +544,9 @@ describe("Agents API (Coordination Layer)", () => {
       expect(result.totalDeleted).toBeGreaterThanOrEqual(1);
 
       // Verify memories are gone
-      const afterMemories = (await cortex.vector.list({ memorySpaceId: spaceId })).filter(
-        (m) => m.participantId === agentId,
-      );
+      const afterMemories = (
+        await cortex.vector.list({ memorySpaceId: spaceId })
+      ).filter((m) => m.participantId === agentId);
       expect(afterMemories).toHaveLength(0);
 
       console.log(
@@ -540,9 +561,12 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("edge cases", () => {
     it("handles unregistering non-existent agent gracefully", async () => {
-      const result = await cortex.agents.unregister("non-existent-" + Date.now(), {
-        cascade: true,
-      });
+      const result = await cortex.agents.unregister(
+        "non-existent-" + Date.now(),
+        {
+          cascade: true,
+        },
+      );
 
       expect(result.totalDeleted).toBe(0);
     });
@@ -575,7 +599,10 @@ describe("Agents API (Coordination Layer)", () => {
       await cortex.agents.register({ id: agentId, name: "Stats Agent" });
 
       // Create data
-      await cortex.memorySpaces.register({ memorySpaceId: spaceId, type: "personal" });
+      await cortex.memorySpaces.register({
+        memorySpaceId: spaceId,
+        type: "personal",
+      });
 
       await cortex.vector.store(spaceId, {
         content: "Test memory 1",
@@ -606,4 +633,3 @@ describe("Agents API (Coordination Layer)", () => {
     });
   });
 });
-

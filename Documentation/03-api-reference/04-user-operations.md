@@ -47,15 +47,15 @@ await cortex.users.delete("user-123", { cascade: true });
 
 **Free SDK vs Cloud Mode:**
 
-| Feature | Free SDK | Cloud Mode |
-|---------|----------|------------|
-| **Cascade Deletion** | ✅ Full implementation | ✅ Same implementation |
-| **Graph Support** | ✅ Works with DIY adapter | ✅ Managed, zero-config |
-| **Verification** | ✅ Best-effort checks | ✅ Cryptographic proof |
-| **Rollback** | ✅ Transaction-like rollback | ✅ Same + audit trail |
-| **Legal Certificate** | ❌ None | ✅ Compliance document |
-| **GDPR Liability** | ❌ User responsible | ✅ Cortex liable |
-| **Support** | Community | Priority + SLA |
+| Feature               | Free SDK                     | Cloud Mode              |
+| --------------------- | ---------------------------- | ----------------------- |
+| **Cascade Deletion**  | ✅ Full implementation       | ✅ Same implementation  |
+| **Graph Support**     | ✅ Works with DIY adapter    | ✅ Managed, zero-config |
+| **Verification**      | ✅ Best-effort checks        | ✅ Cryptographic proof  |
+| **Rollback**          | ✅ Transaction-like rollback | ✅ Same + audit trail   |
+| **Legal Certificate** | ❌ None                      | ✅ Compliance document  |
+| **GDPR Liability**    | ❌ User responsible          | ✅ Cortex liable        |
+| **Support**           | Community                    | Priority + SLA          |
 
 The free SDK provides the **technical capability**, Cloud Mode provides the **legal guarantees**.
 
@@ -70,18 +70,22 @@ The SDK implements cascade deletion using a three-phase approach:
 ```typescript
 // Example: Full cascade deletion with verification
 const result = await cortex.users.delete("user-123", {
-  cascade: true,   // Enable cascade across all layers
-  verify: true,    // Verify completeness after deletion (default)
-  dryRun: false,   // Preview without deleting (optional)
+  cascade: true, // Enable cascade across all layers
+  verify: true, // Verify completeness after deletion (default)
+  dryRun: false, // Preview without deleting (optional)
 });
 
 // Result includes detailed breakdown
-console.log(`Deleted ${result.totalDeleted} records across ${result.deletedLayers.length} layers`);
+console.log(
+  `Deleted ${result.totalDeleted} records across ${result.deletedLayers.length} layers`,
+);
 console.log(`Conversations: ${result.conversationsDeleted}`);
 console.log(`Vector memories: ${result.vectorMemoriesDeleted}`);
 console.log(`Facts: ${result.factsDeleted}`);
-console.log(`Graph nodes: ${result.graphNodesDeleted || 'N/A (no adapter)'}`);
-console.log(`Verification: ${result.verification.complete ? 'Complete' : 'Issues found'}`);
+console.log(`Graph nodes: ${result.graphNodesDeleted || "N/A (no adapter)"}`);
+console.log(
+  `Verification: ${result.verification.complete ? "Complete" : "Issues found"}`,
+);
 ```
 
 **Graph Integration:**
@@ -437,9 +441,9 @@ cortex.users.delete(
 
 ```typescript
 interface DeleteOptions {
-  cascade?: boolean;  // Delete from ALL stores with userId (default: false)
-  verify?: boolean;   // Verify deletion completeness (default: true)
-  dryRun?: boolean;   // Preview what would be deleted without actually deleting (default: false)
+  cascade?: boolean; // Delete from ALL stores with userId (default: false)
+  verify?: boolean; // Verify deletion completeness (default: true)
+  dryRun?: boolean; // Preview what would be deleted without actually deleting (default: false)
 }
 ```
 
@@ -466,8 +470,8 @@ interface UserDeleteResult {
   };
 
   // Summary
-  totalDeleted: number;        // Sum of all deleted records
-  deletedLayers: string[];     // Which layers were affected
+  totalDeleted: number; // Sum of all deleted records
+  deletedLayers: string[]; // Which layers were affected
 }
 ```
 
@@ -503,12 +507,16 @@ const result = await cortex.users.delete("user-123", {
 
 // Per-layer breakdown
 console.log(`Conversations deleted: ${result.conversationsDeleted}`);
-console.log(`  Messages in those conversations: ${result.conversationMessagesDeleted}`);
+console.log(
+  `  Messages in those conversations: ${result.conversationMessagesDeleted}`,
+);
 console.log(`Immutable records deleted: ${result.immutableRecordsDeleted}`);
 console.log(`Mutable keys deleted: ${result.mutableKeysDeleted}`);
 console.log(`Vector memories deleted: ${result.vectorMemoriesDeleted}`);
 console.log(`Facts deleted: ${result.factsDeleted}`);
-console.log(`Graph nodes deleted: ${result.graphNodesDeleted || 'N/A (no graph)'}`);
+console.log(
+  `Graph nodes deleted: ${result.graphNodesDeleted || "N/A (no graph)"}`,
+);
 
 // Summary
 console.log(`Total records deleted: ${result.totalDeleted}`);
@@ -519,7 +527,7 @@ if (result.verification.complete) {
   console.log("✅ Deletion verified - no orphaned records");
 } else {
   console.warn("⚠️ Verification issues:");
-  result.verification.issues.forEach(issue => console.warn(`  - ${issue}`));
+  result.verification.issues.forEach((issue) => console.warn(`  - ${issue}`));
 }
 ```
 
@@ -529,10 +537,12 @@ if (result.verification.complete) {
 // Preview what would be deleted without actually deleting
 const preview = await cortex.users.delete("user-123", {
   cascade: true,
-  dryRun: true,  // Just preview, don't delete
+  dryRun: true, // Just preview, don't delete
 });
 
-console.log(`Would delete ${preview.totalDeleted} records across ${preview.deletedLayers.length} layers`);
+console.log(
+  `Would delete ${preview.totalDeleted} records across ${preview.deletedLayers.length} layers`,
+);
 console.log(`Conversations: ${preview.conversationsDeleted}`);
 console.log(`Vector memories: ${preview.vectorMemoriesDeleted}`);
 console.log(`Facts: ${preview.factsDeleted}`);

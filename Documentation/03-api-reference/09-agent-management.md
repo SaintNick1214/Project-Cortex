@@ -534,9 +534,9 @@ cortex.agents.unregister(
 
 ```typescript
 interface UnregisterAgentOptions {
-  cascade?: boolean;  // Delete all data where participantId = agentId (default: false)
-  verify?: boolean;   // Verify deletion completeness (default: true)
-  dryRun?: boolean;   // Preview what would be deleted (default: false)
+  cascade?: boolean; // Delete all data where participantId = agentId (default: false)
+  verify?: boolean; // Verify deletion completeness (default: true)
+  dryRun?: boolean; // Preview what would be deleted (default: false)
 }
 ```
 
@@ -563,13 +563,14 @@ interface UnregisterAgentResult {
   // Summary
   totalDeleted: number;
   deletedLayers: string[];
-  memorySpacesAffected: string[];  // Which memory spaces had data
+  memorySpacesAffected: string[]; // Which memory spaces had data
 }
 ```
 
 **Implementation:**
 
 Uses three-phase cascade deletion (same pattern as users API):
+
 1. **Collection**: Query all memory spaces for records where participantId = agentId
 2. **Backup**: Create rollback snapshots
 3. **Execution**: Delete in reverse dependency order (facts → memories → conversations → graph → registration)
@@ -598,14 +599,18 @@ const result = await cortex.agents.unregister("old-agent", {
 
 // Per-layer breakdown
 console.log(`Conversations deleted: ${result.conversationsDeleted}`);
-console.log(`  Messages in those conversations: ${result.conversationMessagesDeleted}`);
+console.log(
+  `  Messages in those conversations: ${result.conversationMessagesDeleted}`,
+);
 console.log(`Memories deleted: ${result.memoriesDeleted}`);
 console.log(`Facts deleted: ${result.factsDeleted}`);
-console.log(`Graph nodes deleted: ${result.graphNodesDeleted || 'N/A'}`);
+console.log(`Graph nodes deleted: ${result.graphNodesDeleted || "N/A"}`);
 
 // Summary
 console.log(`Total deleted: ${result.totalDeleted}`);
-console.log(`Memory spaces affected: ${result.memorySpacesAffected.join(", ")}`);
+console.log(
+  `Memory spaces affected: ${result.memorySpacesAffected.join(", ")}`,
+);
 console.log(`Layers: ${result.deletedLayers.join(", ")}`);
 
 // Verification
@@ -613,7 +618,7 @@ if (result.verification.complete) {
   console.log("✅ Deletion verified - no orphaned records");
 } else {
   console.warn("⚠️ Verification issues:");
-  result.verification.issues.forEach(issue => console.warn(`  - ${issue}`));
+  result.verification.issues.forEach((issue) => console.warn(`  - ${issue}`));
 }
 ```
 
@@ -645,12 +650,12 @@ console.log(`Agent still registered: ${agent !== null}`); // true
 // Day 1: Create data (no registration)
 await cortex.memory.remember({
   memorySpaceId: "space-1",
-  participantId: "agent-xyz",  // ← Agent never registered
+  participantId: "agent-xyz", // ← Agent never registered
   conversationId: "conv-1",
   userMessage: "Hello",
   agentResponse: "Hi",
   userId: "user-1",
-  userName: "User"
+  userName: "User",
 });
 
 // Day 30: Delete all agent data (works without registration!)
@@ -660,23 +665,26 @@ const result = await cortex.agents.unregister("agent-xyz", {
 
 // ✅ Deletes memories even though agent was never registered
 // ✅ Queries by participantId field in data, not registration
-console.log(`Deleted ${result.memoriesDeleted} memories from unregistered agent`);
+console.log(
+  `Deleted ${result.memoriesDeleted} memories from unregistered agent`,
+);
 ```
 
 **Cascade Deletion: Users vs Agents**
 
-| Feature | cortex.users.delete() | cortex.agents.unregister() |
-|---------|----------------------|---------------------------|
-| **Filter key** | userId | participantId |
-| **Scope** | Across all layers | Across all memory spaces |
-| **Purpose** | GDPR compliance | Convenience (cleanup) |
-| **Required** | Legal requirement | Optional feature |
-| **Registration** | Works even if no user profile | Works even if never registered |
-| **Query logic** | `WHERE userId = X` | `WHERE participantId = X` |
-| **Orphan detection** | ✅ Included | ✅ Included |
-| **Rollback** | ✅ Transaction-like | ✅ Transaction-like |
+| Feature              | cortex.users.delete()         | cortex.agents.unregister()     |
+| -------------------- | ----------------------------- | ------------------------------ |
+| **Filter key**       | userId                        | participantId                  |
+| **Scope**            | Across all layers             | Across all memory spaces       |
+| **Purpose**          | GDPR compliance               | Convenience (cleanup)          |
+| **Required**         | Legal requirement             | Optional feature               |
+| **Registration**     | Works even if no user profile | Works even if never registered |
+| **Query logic**      | `WHERE userId = X`            | `WHERE participantId = X`      |
+| **Orphan detection** | ✅ Included                   | ✅ Included                    |
+| **Rollback**         | ✅ Transaction-like           | ✅ Transaction-like            |
 
 **Why both exist:**
+
 - **Users**: GDPR compliance requires deleting by userId (users exist across agents)
 - **Agents**: Convenience requires deleting by participantId (agents create data in spaces)
 

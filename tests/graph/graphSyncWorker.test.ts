@@ -6,7 +6,11 @@
  */
 
 import { Cortex } from "../../src";
-import { CypherGraphAdapter, GraphSyncWorker, initializeGraphSchema } from "../../src/graph";
+import {
+  CypherGraphAdapter,
+  GraphSyncWorker,
+  initializeGraphSchema,
+} from "../../src/graph";
 import type { GraphAdapter } from "../../src";
 
 // Check if graph testing is enabled
@@ -64,7 +68,7 @@ describeIfEnabled("Graph Sync Worker", () => {
       });
 
       // Give worker time to start (async)
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await new Promise((resolve) => setTimeout(resolve, 200));
 
       // Worker should be running
       const worker = cortex.getGraphSyncWorker();
@@ -117,7 +121,7 @@ describeIfEnabled("Graph Sync Worker", () => {
     beforeEach(async () => {
       // Unique memory space ID for each test
       testMemorySpaceId = `${memorySpaceId}-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
-      
+
       cortex = new Cortex({
         convexUrl: CONVEX_URL,
         graph: {
@@ -126,11 +130,14 @@ describeIfEnabled("Graph Sync Worker", () => {
         },
       });
 
-      await cortex.memorySpaces.register({
-        memorySpaceId: testMemorySpaceId,
-        name: "Worker Test Space",
-        type: "personal",
-      }, { syncToGraph: true });
+      await cortex.memorySpaces.register(
+        {
+          memorySpaceId: testMemorySpaceId,
+          name: "Worker Test Space",
+          type: "personal",
+        },
+        { syncToGraph: true },
+      );
     });
 
     afterEach(async () => {
@@ -156,21 +163,27 @@ describeIfEnabled("Graph Sync Worker", () => {
       await worker.start();
 
       // Create memory (will queue for sync due to syncToGraph option)
-      const memory = await cortex.vector.store(testMemorySpaceId, {
-        content: "Test memory for worker",
-        contentType: "raw",
-        source: { type: "system" },
-        metadata: {
-          importance: 75,
-          tags: ["test", "worker"],
+      const memory = await cortex.vector.store(
+        testMemorySpaceId,
+        {
+          content: "Test memory for worker",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: {
+            importance: 75,
+            tags: ["test", "worker"],
+          },
         },
-      }, { syncToGraph: true });
+        { syncToGraph: true },
+      );
 
       // Give worker time to process (reactive callback should fire quickly)
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Verify memory was synced to graph
-      const memoryNodes = await graphAdapter.findNodes("Memory", { memoryId: memory.memoryId });
+      const memoryNodes = await graphAdapter.findNodes("Memory", {
+        memoryId: memory.memoryId,
+      });
       expect(memoryNodes.length).toBe(1);
       expect(memoryNodes[0].properties.content).toContain("Test memory");
     });
@@ -186,29 +199,36 @@ describeIfEnabled("Graph Sync Worker", () => {
       await worker.start();
 
       // Create fact (should sync + extract entities)
-      const fact = await cortex.facts.store({
-        memorySpaceId: testMemorySpaceId,
-        fact: "Bob works at TechCorp",
-        factType: "relationship",
-        subject: "Bob",
-        predicate: "works_at",
-        object: "TechCorp",
-        confidence: 95,
-        sourceType: "system",
-        tags: ["employment"],
-      }, { syncToGraph: true });
+      const fact = await cortex.facts.store(
+        {
+          memorySpaceId: testMemorySpaceId,
+          fact: "Bob works at TechCorp",
+          factType: "relationship",
+          subject: "Bob",
+          predicate: "works_at",
+          object: "TechCorp",
+          confidence: 95,
+          sourceType: "system",
+          tags: ["employment"],
+        },
+        { syncToGraph: true },
+      );
 
       // Wait for worker
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
       // Verify fact synced
-      const factNodes = await graphAdapter.findNodes("Fact", { factId: fact.factId });
+      const factNodes = await graphAdapter.findNodes("Fact", {
+        factId: fact.factId,
+      });
       expect(factNodes.length).toBe(1);
 
       // Verify entities extracted
       const bobNode = await graphAdapter.findNodes("Entity", { name: "Bob" });
-      const techCorpNode = await graphAdapter.findNodes("Entity", { name: "TechCorp" });
-      
+      const techCorpNode = await graphAdapter.findNodes("Entity", {
+        name: "TechCorp",
+      });
+
       expect(bobNode.length).toBe(1);
       expect(techCorpNode.length).toBe(1);
 
@@ -231,33 +251,46 @@ describeIfEnabled("Graph Sync Worker", () => {
       await worker.start();
 
       // Create root context
-      const root = await cortex.contexts.create({
-        purpose: "Root workflow",
-        memorySpaceId: testMemorySpaceId,
-      }, { syncToGraph: true });
+      const root = await cortex.contexts.create(
+        {
+          purpose: "Root workflow",
+          memorySpaceId: testMemorySpaceId,
+        },
+        { syncToGraph: true },
+      );
 
       // Create child context
-      const child = await cortex.contexts.create({
-        purpose: "Child task",
-        memorySpaceId: testMemorySpaceId,
-        parentId: root.contextId,
-      }, { syncToGraph: true });
+      const child = await cortex.contexts.create(
+        {
+          purpose: "Child task",
+          memorySpaceId: testMemorySpaceId,
+          parentId: root.contextId,
+        },
+        { syncToGraph: true },
+      );
 
       // Wait for worker
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
       // Verify both synced
-      const rootNode = await graphAdapter.findNodes("Context", { contextId: root.contextId });
-      const childNode = await graphAdapter.findNodes("Context", { contextId: child.contextId });
+      const rootNode = await graphAdapter.findNodes("Context", {
+        contextId: root.contextId,
+      });
+      const childNode = await graphAdapter.findNodes("Context", {
+        contextId: child.contextId,
+      });
 
       expect(rootNode.length).toBe(1);
       expect(childNode.length).toBe(1);
 
       // Verify hierarchy relationship
-      const hierarchy = await graphAdapter.query(`
+      const hierarchy = await graphAdapter.query(
+        `
         MATCH (child:Context {contextId: $childId})-[:CHILD_OF]->(parent:Context {contextId: $parentId})
         RETURN parent, child
-      `, { childId: child.contextId, parentId: root.contextId });
+      `,
+        { childId: child.contextId, parentId: root.contextId },
+      );
 
       expect(hierarchy.count).toBe(1);
     });
@@ -272,25 +305,32 @@ describeIfEnabled("Graph Sync Worker", () => {
       await worker.start();
 
       // Create conversation
-      const conv = await cortex.conversations.create({
-        memorySpaceId: testMemorySpaceId,
-        type: "user-agent",
-        participants: { userId: "user-test", participantId: "agent-test" },
-      }, { syncToGraph: true });
+      const conv = await cortex.conversations.create(
+        {
+          memorySpaceId: testMemorySpaceId,
+          type: "user-agent",
+          participants: { userId: "user-test", participantId: "agent-test" },
+        },
+        { syncToGraph: true },
+      );
 
       // Create memory referencing conversation
-      const memory = await cortex.vector.store(testMemorySpaceId, {
-        content: "Test memory",
-        contentType: "raw",
-        source: { type: "system" },
-        conversationRef: {
-          conversationId: conv.conversationId,
-          messageIds: [],
+      const memory = await cortex.vector.store(
+        testMemorySpaceId,
+        {
+          content: "Test memory",
+          contentType: "raw",
+          source: { type: "system" },
+          conversationRef: {
+            conversationId: conv.conversationId,
+            messageIds: [],
+          },
+          metadata: { importance: 50, tags: [] },
         },
-        metadata: { importance: 50, tags: [] },
-      }, { syncToGraph: true });
+        { syncToGraph: true },
+      );
 
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
       // Verify both synced
       let memoryCount = await graphAdapter.countNodes("Memory");
@@ -299,9 +339,11 @@ describeIfEnabled("Graph Sync Worker", () => {
       expect(convCount).toBe(1);
 
       // Delete memory (should trigger orphan cleanup of conversation)
-      await cortex.vector.delete(testMemorySpaceId, memory.memoryId, { syncToGraph: true });
+      await cortex.vector.delete(testMemorySpaceId, memory.memoryId, {
+        syncToGraph: true,
+      });
 
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Longer wait for delete processing
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // Longer wait for delete processing
 
       // Memory should be deleted
       memoryCount = await graphAdapter.countNodes("Memory");
@@ -320,7 +362,7 @@ describeIfEnabled("Graph Sync Worker", () => {
 
     beforeEach(async () => {
       testMemorySpaceId = `metrics-test-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
-      
+
       cortex = new Cortex({
         convexUrl: CONVEX_URL,
         graph: {
@@ -329,11 +371,14 @@ describeIfEnabled("Graph Sync Worker", () => {
         },
       });
 
-      await cortex.memorySpaces.register({
-        memorySpaceId: testMemorySpaceId,
-        name: "Metrics Test Space",
-        type: "personal",
-      }, { syncToGraph: true });
+      await cortex.memorySpaces.register(
+        {
+          memorySpaceId: testMemorySpaceId,
+          name: "Metrics Test Space",
+          type: "personal",
+        },
+        { syncToGraph: true },
+      );
     });
 
     afterEach(() => {
@@ -359,22 +404,30 @@ describeIfEnabled("Graph Sync Worker", () => {
       expect(initialMetrics.failureCount).toBe(0);
 
       // Create some data
-      await cortex.vector.store(testMemorySpaceId, {
-        content: "Metrics test 1",
-        contentType: "raw",
-        source: { type: "system" },
-        metadata: { importance: 50, tags: [] },
-      }, { syncToGraph: true });
+      await cortex.vector.store(
+        testMemorySpaceId,
+        {
+          content: "Metrics test 1",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
+        },
+        { syncToGraph: true },
+      );
 
-      await cortex.vector.store(testMemorySpaceId, {
-        content: "Metrics test 2",
-        contentType: "raw",
-        source: { type: "system" },
-        metadata: { importance: 50, tags: [] },
-      }, { syncToGraph: true });
+      await cortex.vector.store(
+        testMemorySpaceId,
+        {
+          content: "Metrics test 2",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
+        },
+        { syncToGraph: true },
+      );
 
       // Wait longer for processing (worker processes reactively)
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 3000));
 
       const finalMetrics = worker.getMetrics();
       expect(finalMetrics.totalProcessed).toBeGreaterThan(0);
@@ -406,4 +459,3 @@ describeIfEnabled("Graph Sync Worker", () => {
     });
   });
 });
-

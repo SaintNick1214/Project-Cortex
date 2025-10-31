@@ -177,10 +177,7 @@ async function measureNativeGraphTraversal(
 /**
  * Run the performance comparison
  */
-async function runPerformanceComparison(
-  adapter: GraphAdapter,
-  dbName: string,
-) {
+async function runPerformanceComparison(adapter: GraphAdapter, dbName: string) {
   console.log(`\n${"=".repeat(60)}`);
   console.log(`Performance Comparison with ${dbName}`);
   console.log(`${"=".repeat(60)}\n`);
@@ -245,9 +242,7 @@ async function runPerformanceComparison(
       );
 
       const speedup =
-        nativeGraphMs > 0
-          ? (graphLiteMs / nativeGraphMs).toFixed(1)
-          : "∞";
+        nativeGraphMs > 0 ? (graphLiteMs / nativeGraphMs).toFixed(1) : "∞";
       const winner: "Graph-Lite" | "Native Graph" | "Tie" =
         graphLiteMs < nativeGraphMs * 0.9
           ? "Graph-Lite"
@@ -273,9 +268,7 @@ async function runPerformanceComparison(
     // ============================================================================
     console.log("📊 Performance Summary");
     console.log(`${"─".repeat(60)}`);
-    console.log(
-      "Operation           | Graph-Lite | Native | Speedup | Winner",
-    );
+    console.log("Operation           | Graph-Lite | Native | Speedup | Winner");
     console.log(`${"─".repeat(60)}`);
 
     for (const result of results) {
@@ -303,7 +296,9 @@ async function runPerformanceComparison(
     console.log(
       `  - Native Graph wins: ${results.filter((r) => r.winner === "Native Graph").length}/${results.length}`,
     );
-    console.log(`  - Dataset: ${dataset.contexts.length} contexts, ${dataset.memories.length} memories, ${dataset.facts.length} facts`);
+    console.log(
+      `  - Dataset: ${dataset.contexts.length} contexts, ${dataset.memories.length} memories, ${dataset.facts.length} facts`,
+    );
     console.log(`  - Sync Time: ${syncTime}ms\n`);
 
     console.log(`✅ Performance comparison complete for ${dbName}!\n`);
@@ -319,7 +314,9 @@ async function runPerformanceComparison(
  * Main execution
  */
 async function main() {
-  console.log("\n╔═══════════════════════════════════════════════════════════╗");
+  console.log(
+    "\n╔═══════════════════════════════════════════════════════════╗",
+  );
   console.log("║  Cortex Graph Integration - Performance Comparison       ║");
   console.log("╚═══════════════════════════════════════════════════════════╝");
 
@@ -340,9 +337,13 @@ async function main() {
     console.log("\n⚠️  Neo4j tests skipped (NEO4J_URI not set)");
   }
 
-  console.log("\n╔═══════════════════════════════════════════════════════════╗");
+  console.log(
+    "\n╔═══════════════════════════════════════════════════════════╗",
+  );
   console.log("║  Performance Comparison Complete!                         ║");
-  console.log("╚═══════════════════════════════════════════════════════════╝\n");
+  console.log(
+    "╚═══════════════════════════════════════════════════════════╝\n",
+  );
 
   console.log("📝 Conclusion:");
   console.log("   ✓ Native graph shows clear advantages for multi-hop queries");
@@ -362,4 +363,3 @@ main()
     console.error("Proof failed:", error);
     process.exit(1);
   });
-

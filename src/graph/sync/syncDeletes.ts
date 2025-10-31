@@ -133,11 +133,7 @@ export async function deleteConversationFromGraph(
   enableOrphanCleanup: boolean = true,
 ): Promise<DeleteResult> {
   // Find conversation node
-  const nodeId = await findGraphNodeId(
-    "Conversation",
-    conversationId,
-    adapter,
-  );
+  const nodeId = await findGraphNodeId("Conversation", conversationId, adapter);
   if (!nodeId) {
     return { deletedNodes: [], deletedEdges: [], orphanIslands: [] };
   }
@@ -245,4 +241,3 @@ export async function deleteMutableFromGraph(
     orphanIslands: [],
   };
 }
-

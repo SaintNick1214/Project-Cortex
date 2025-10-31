@@ -238,10 +238,9 @@ export class GraphSyncWorker {
       }
 
       // Mark as synced
-      await this.client.mutation(
-        "graphSync:markSynced" as any,
-        { id: item._id },
-      );
+      await this.client.mutation("graphSync:markSynced" as any, {
+        id: item._id,
+      });
 
       // Update metrics
       this.metrics.totalProcessed++;
@@ -266,13 +265,10 @@ export class GraphSyncWorker {
       }
     } catch (error) {
       // Mark as failed
-      await this.client.mutation(
-        "graphSync:markFailed" as any,
-        {
-          id: item._id,
-          error: error instanceof Error ? error.message : String(error),
-        },
-      );
+      await this.client.mutation("graphSync:markFailed" as any, {
+        id: item._id,
+        error: error instanceof Error ? error.message : String(error),
+      });
 
       this.metrics.totalProcessed++;
       this.metrics.failureCount++;
@@ -315,11 +311,7 @@ export class GraphSyncWorker {
 
       case "conversations": {
         const nodeId = await syncConversationToGraph(item.entity, this.adapter);
-        await syncConversationRelationships(
-          item.entity,
-          nodeId,
-          this.adapter,
-        );
+        await syncConversationRelationships(item.entity, nodeId, this.adapter);
         break;
       }
 
@@ -363,4 +355,3 @@ export class GraphSyncWorker {
     }
   }
 }
-

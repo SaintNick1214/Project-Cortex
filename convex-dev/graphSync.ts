@@ -158,7 +158,9 @@ export const getHighPriorityItems = query({
   handler: async (ctx, args) => {
     return await ctx.db
       .query("graphSyncQueue")
-      .withIndex("by_priority", (q) => q.eq("priority", "high").eq("synced", false))
+      .withIndex("by_priority", (q) =>
+        q.eq("priority", "high").eq("synced", false),
+      )
       .order("desc")
       .take(args.limit);
   },
@@ -245,10 +247,7 @@ export const clearSyncedItems = mutation({
     const items = await ctx.db
       .query("graphSyncQueue")
       .filter((q) =>
-        q.and(
-          q.eq(q.field("synced"), true),
-          q.lt(q.field("syncedAt"), cutoff),
-        ),
+        q.and(q.eq(q.field("synced"), true), q.lt(q.field("syncedAt"), cutoff)),
       )
       .collect();
 
@@ -259,4 +258,3 @@ export const clearSyncedItems = mutation({
     return { deleted: items.length };
   },
 });
-

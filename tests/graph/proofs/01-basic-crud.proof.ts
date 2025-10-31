@@ -90,7 +90,9 @@ async function testBasicCRUD(
     console.log(`  ✓ Retrieved node in ${time2}ms`);
     console.log(`    - Label: ${agent1.label}`);
     console.log(`    - Name: ${agent1.properties.name}`);
-    console.log(`    - Capabilities: ${agent1.properties.capabilities?.join(", ")}\n`);
+    console.log(
+      `    - Capabilities: ${agent1.properties.capabilities?.join(", ")}\n`,
+    );
 
     // ============================================================================
     // Test 3: Update Node
@@ -148,7 +150,9 @@ async function testBasicCRUD(
     const time5 = Date.now() - startTime5;
     console.log(`  ✓ Found ${agents.length} agents in ${time5}ms`);
     for (const agent of agents) {
-      console.log(`    - ${agent.properties.name} (${agent.properties.agentId})`);
+      console.log(
+        `    - ${agent.properties.name} (${agent.properties.agentId})`,
+      );
     }
     console.log();
 
@@ -167,7 +171,9 @@ async function testBasicCRUD(
     const time6 = Date.now() - startTime6;
     console.log(`  ✓ Found ${connected.length} connected nodes in ${time6}ms`);
     for (const node of connected) {
-      console.log(`    - ${node.label}: ${node.properties.name || node.properties.userId}`);
+      console.log(
+        `    - ${node.label}: ${node.properties.name || node.properties.userId}`,
+      );
     }
     console.log();
 
@@ -188,7 +194,9 @@ async function testBasicCRUD(
       console.log(`  ✓ Found path in ${time7}ms`);
       console.log(`    - Length: ${path.length} hop(s)`);
       console.log(`    - Nodes: ${path.nodes.map((n) => n.label).join(" → ")}`);
-      console.log(`    - Relationships: ${path.relationships.map((r) => r.type).join(" → ")}\n`);
+      console.log(
+        `    - Relationships: ${path.relationships.map((r) => r.type).join(" → ")}\n`,
+      );
     } else {
       console.log(`  ✗ No path found in ${time7}ms\n`);
     }
@@ -257,7 +265,17 @@ async function testBasicCRUD(
     // Summary
     // ============================================================================
     console.log("📊 Summary");
-    const totalTime = time1 + time2 + time3 + time4 + time5 + time6 + time7 + time8 + time9 + time10;
+    const totalTime =
+      time1 +
+      time2 +
+      time3 +
+      time4 +
+      time5 +
+      time6 +
+      time7 +
+      time8 +
+      time9 +
+      time10;
     console.log(`  Total time: ${totalTime}ms`);
     console.log(`  Average operation: ${Math.round(totalTime / 10)}ms\n`);
 
@@ -272,7 +290,9 @@ async function testBasicCRUD(
  * Main execution
  */
 async function main() {
-  console.log("\n╔═══════════════════════════════════════════════════════════╗");
+  console.log(
+    "\n╔═══════════════════════════════════════════════════════════╗",
+  );
   console.log("║  Cortex Graph Database Integration - Basic CRUD Proof    ║");
   console.log("╚═══════════════════════════════════════════════════════════╝");
 
@@ -310,9 +330,13 @@ async function main() {
     console.log("\n⚠️  Memgraph tests skipped (MEMGRAPH_URI not set)");
   }
 
-  console.log("\n╔═══════════════════════════════════════════════════════════╗");
+  console.log(
+    "\n╔═══════════════════════════════════════════════════════════╗",
+  );
   console.log("║  Proof Complete!                                          ║");
-  console.log("╚═══════════════════════════════════════════════════════════╝\n");
+  console.log(
+    "╚═══════════════════════════════════════════════════════════╝\n",
+  );
 
   console.log("📝 Next Steps:");
   console.log("   1. Run: npm run proof:sync-workflow");
@@ -330,4 +354,3 @@ main()
     console.error("Proof failed:", error);
     process.exit(1);
   });
-

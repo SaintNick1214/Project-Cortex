@@ -6,11 +6,7 @@
 
 import type { GraphAdapter } from "../types";
 import type { Context } from "../../contexts";
-import type {
-  Conversation,
-  MemoryEntry,
-  FactRecord,
-} from "../../types";
+import type { Conversation, MemoryEntry, FactRecord } from "../../types";
 import {
   findGraphNodeId,
   ensureUserNode,
@@ -340,11 +336,7 @@ export async function syncFactRelationships(
   }
 
   if (fact.object) {
-    const objectNodeId = await ensureEntityNode(
-      fact.object,
-      "object",
-      adapter,
-    );
+    const objectNodeId = await ensureEntityNode(fact.object, "object", adapter);
 
     await adapter.createEdge({
       type: "MENTIONS",
@@ -360,12 +352,22 @@ export async function syncFactRelationships(
   // If we have a predicate, create a typed relationship between subject and object
   if (fact.subject && fact.object && fact.predicate) {
     // Find entity nodes by name (entities use name as unique identifier)
-    const subjectNodes = await adapter.findNodes("Entity", { name: fact.subject }, 1);
-    const objectNodes = await adapter.findNodes("Entity", { name: fact.object }, 1);
+    const subjectNodes = await adapter.findNodes(
+      "Entity",
+      { name: fact.subject },
+      1,
+    );
+    const objectNodes = await adapter.findNodes(
+      "Entity",
+      { name: fact.object },
+      1,
+    );
 
     if (subjectNodes.length > 0 && objectNodes.length > 0) {
       // Create relationship with predicate as type (e.g., WORKS_AT, KNOWS)
-      const relationshipType = fact.predicate.toUpperCase().replace(/\s+/g, "_");
+      const relationshipType = fact.predicate
+        .toUpperCase()
+        .replace(/\s+/g, "_");
 
       await adapter.createEdge({
         type: relationshipType,
@@ -476,7 +478,7 @@ export async function syncA2ARelationships(
   // Note: A2A metadata is stored in custom fields, not in a metadata object
   const toMemorySpace = (memory as any).toMemorySpace;
   const fromMemorySpace = (memory as any).fromMemorySpace;
-  
+
   if (!toMemorySpace || !fromMemorySpace) {
     return;
   }
@@ -487,11 +489,7 @@ export async function syncA2ARelationships(
     fromMemorySpace,
     adapter,
   );
-  const toNodeId = await findGraphNodeId(
-    "MemorySpace",
-    toMemorySpace,
-    adapter,
-  );
+  const toNodeId = await findGraphNodeId("MemorySpace", toMemorySpace, adapter);
 
   if (!fromNodeId || !toNodeId) {
     return;
@@ -510,4 +508,3 @@ export async function syncA2ARelationships(
     },
   });
 }
-

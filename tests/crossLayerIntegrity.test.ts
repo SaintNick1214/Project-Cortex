@@ -146,7 +146,9 @@ describe("Cross-Layer Reference Integrity", () => {
 
       // Validate: Referenced conversation exists
       if (fact.sourceRef?.conversationId) {
-        const conv = await cortex.conversations.get(fact.sourceRef.conversationId);
+        const conv = await cortex.conversations.get(
+          fact.sourceRef.conversationId,
+        );
         expect(conv).not.toBeNull();
         expect(conv!.conversationId).toBe(fact.sourceRef.conversationId);
       }
@@ -271,9 +273,9 @@ describe("Cross-Layer Reference Integrity", () => {
       // Validate: Parent exists
       const actualParent = await cortex.contexts.get(child.parentId!);
       expect(actualParent).not.toBeNull();
-      
+
       // Type guard to check if it's a Context (not ContextChain)
-      if (actualParent && 'contextId' in actualParent) {
+      if (actualParent && "contextId" in actualParent) {
         expect(actualParent.contextId).toBe(parent.contextId);
         expect(actualParent.childIds).toContain(child.contextId);
       }
@@ -305,7 +307,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const updatedParent = await cortex.contexts.get(parent.contextId);
 
       // Validate: Parent knows about both children
-      if (updatedParent && 'childIds' in updatedParent) {
+      if (updatedParent && "childIds" in updatedParent) {
         expect(updatedParent.childIds).toContain(child1.contextId);
         expect(updatedParent.childIds).toContain(child2.contextId);
         expect(updatedParent.childIds).toHaveLength(2);
@@ -602,4 +604,3 @@ describe("Cross-Layer Reference Integrity", () => {
     });
   });
 });
-

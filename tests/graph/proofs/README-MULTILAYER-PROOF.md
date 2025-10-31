@@ -9,9 +9,11 @@ All other proofs tested **graph database mechanics** (CRUD, sync, traversal). Th
 ## What It Demonstrates
 
 ### The Core Question
+
 **"How does graph integration improve the context provided to an AI agent when retrieving memories across L2 (Vector) + L3 (Facts)?"**
 
 ### The Answer
+
 **Graph integration transforms isolated L2+L3 results into a CONNECTED knowledge network with provenance, relationships, and discovery capabilities.**
 
 ---
@@ -87,19 +89,23 @@ Result: 2 memories + 0 facts + 4 enrichments = 6 pieces
 ### Dataset Created
 
 **L1a: Conversations**
+
 - 2 conversations (Alice, Bob)
 - About TypeScript API project at Acme Corp
 
 **L4: Contexts**
+
 - 1 root context: "Help with Acme Corp TypeScript API project"
 - 2 child contexts: Architecture review, Database strategy
 - Full hierarchy with parent/child relationships
 
 **L2: Vector Memories**
+
 - 3 memories stored
 - Tagged with: alice, bob, typescript, acme, database
 
 **L3: Facts**
+
 - 6 facts with entity relationships:
   - Alice works at Acme Corp
   - Bob works at Acme Corp
@@ -109,6 +115,7 @@ Result: 2 memories + 0 facts + 4 enrichments = 6 pieces
   - Acme Corp builds Customer Portals
 
 **Graph Sync:**
+
 - 22 nodes created
 - 49 relationships created
 - Full knowledge network established
@@ -118,6 +125,7 @@ Result: 2 memories + 0 facts + 4 enrichments = 6 pieces
 **Query**: "alice typescript"
 
 #### WITHOUT Graph (Baseline)
+
 - **L2 Results**: 2 memories
   1. "Alice is working on a TypeScript API project at Acme Corp"
   2. "Bob is collaborating with Alice on TypeScript API database integration"
@@ -127,6 +135,7 @@ Result: 2 memories + 0 facts + 4 enrichments = 6 pieces
 - **Limitations**: No connections, no provenance, no discovery
 
 #### WITH Graph (Enhanced)
+
 - **L2 Results**: Same 2 memories
 - **L3 Results**: Same 0 facts
 - **✨ Graph Enrichment**:
@@ -143,11 +152,14 @@ Result: 2 memories + 0 facts + 4 enrichments = 6 pieces
 ## What Graph Enrichment Provides
 
 ### 1. Provenance Discovery
+
 **Without Graph:**
+
 - Memory: "Alice is working on TypeScript..."
 - Source: Unknown
 
 **With Graph:**
+
 - Memory: "Alice is working on TypeScript..."
 - → REFERENCES → Conversation: conv-xxx
 - → TRIGGERED_BY → Context: "Help with Acme Corp TypeScript API project"
@@ -155,20 +167,26 @@ Result: 2 memories + 0 facts + 4 enrichments = 6 pieces
 - **Full audit trail!**
 
 ### 2. Context Chain Reconstruction
+
 **Without Graph:**
+
 - Context: Isolated
 
 **With Graph:**
+
 - Context: "Database integration strategy"
 - → CHILD_OF → "Help with Acme Corp TypeScript API project" (root)
 - → Siblings: "TypeScript API architecture review"
 - **Full workflow hierarchy!**
 
 ### 3. Entity Network Discovery
+
 **Without Graph:**
+
 - Fact: "Alice uses TypeScript" (isolated)
 
 **With Graph:**
+
 - Fact: "Alice uses TypeScript"
 - → MENTIONS → Alice
 - → Alice → KNOWS → Bob
@@ -177,10 +195,13 @@ Result: 2 memories + 0 facts + 4 enrichments = 6 pieces
 - **Knowledge network discovered!**
 
 ### 4. Cross-Layer Connections
+
 **Without Graph:**
+
 - L2 and L3 are separate silos
 
 **With Graph:**
+
 - Memory → SOURCED_FROM → Fact
 - Fact → EXTRACTED_FROM → Conversation
 - Context → TRIGGERED_BY → Conversation
@@ -192,27 +213,33 @@ Result: 2 memories + 0 facts + 4 enrichments = 6 pieces
 ## Performance Analysis
 
 ### Overhead
+
 - Base queries (L2 + L3): 1-8ms
 - Graph enrichment: 90ms
 - **Total**: ~100ms
 - **Overhead**: Acceptable for 2-5x more context!
 
 ### Scalability
+
 Small dataset (14 entities):
+
 - Graph enrichment: 90ms
 - Acceptable
 
 Large dataset (1000s entities):
+
 - Graph queries remain <100ms (indexed)
 - Still acceptable for enrichment
 
 ### When Graph Wins
+
 - **Deep hierarchies**: 3+ levels of contexts
 - **Rich entity networks**: 10+ interconnected facts
 - **Complex workflows**: Multi-step processes
 - **Knowledge discovery**: Finding indirect connections
 
 ### When Graph-Lite Suffices
+
 - **Simple 1-2 hop queries**: Direct parent/child
 - **Small datasets**: <50 entities
 - **Known relationships**: Explicit references only
@@ -222,24 +249,31 @@ Large dataset (1000s entities):
 ## Key Insights
 
 ### 1. Graph Doesn't Replace L2+L3
+
 Graph **enhances** the retrieval process:
+
 - L2 (Vector) still does semantic search
 - L3 (Facts) still stores structured knowledge
 - **Graph CONNECTS them** and discovers related information
 
 ### 2. Enrichment is Selective
+
 You don't always need graph enrichment:
+
 - Quick queries: L2 alone is fast
 - Deep analysis: L2 + L3 + Graph for full context
 - **Use graph when you need connections and provenance**
 
 ### 3. Performance Trade-off is Reasonable
+
 - +90ms for 2x more context
 - Agent can decide: fast (L2 only) vs rich (L2+L3+Graph)
 - **Worth it for complex reasoning tasks**
 
 ### 4. The Real Power: Discovery
+
 Graph finds things you didn't explicitly search for:
+
 - "Alice uses TypeScript" → Discovers "Bob uses TypeScript"
 - "Memory about Alice" → Discovers full context chain
 - "Fact about project" → Discovers all participants
@@ -260,12 +294,14 @@ Graph finds things you didn't explicitly search for:
 ### Why This Matters
 
 **Before Graph:**
+
 - Agent gets isolated memories and facts
 - No understanding of relationships
 - No workflow context
 - No provenance trail
 
 **After Graph:**
+
 - Agent gets connected knowledge network
 - Understands relationships (Alice knows Bob)
 - Sees full workflow (context chains)
@@ -280,6 +316,7 @@ Graph finds things you didn't explicitly search for:
 ### For Application Developers
 
 **Use Graph Integration When:**
+
 - Building complex multi-agent workflows
 - Need provenance and audit trails
 - Working with knowledge graphs
@@ -287,6 +324,7 @@ Graph finds things you didn't explicitly search for:
 - Entity relationship queries
 
 **Stick with Graph-Lite When:**
+
 - Simple conversational AI
 - Flat context structures
 - Small datasets
@@ -295,6 +333,7 @@ Graph finds things you didn't explicitly search for:
 ### For Cortex SDK Users
 
 **The proof shows that graph integration is valuable when:**
+
 1. You need to understand HOW pieces of knowledge connect
 2. You want to discover RELATED knowledge automatically
 3. You need PROVENANCE trails for compliance/debugging
@@ -308,6 +347,7 @@ Graph finds things you didn't explicitly search for:
 ## Next Steps
 
 ### Extend This Proof
+
 - [ ] Add vector embeddings for semantic search (L2)
 - [ ] Show fact discovery through entity relationships (L3)
 - [ ] Demonstrate knowledge path queries
@@ -315,6 +355,7 @@ Graph finds things you didn't explicitly search for:
 - [ ] Show graph algorithm usage (centrality, PageRank)
 
 ### Real-World Application
+
 Use this pattern in your retrieval logic:
 
 ```typescript
@@ -322,18 +363,18 @@ async function enrichedRetrieval(query: string) {
   // Step 1: Base retrieval (L2 + L3)
   const memories = await cortex.vector.search(memorySpaceId, query);
   const facts = await cortex.facts.search(memorySpaceId, query);
-  
+
   // Step 2: Graph enrichment (optional, based on query complexity)
   if (needsDeepContext) {
     for (const memory of memories) {
       memory.enrichment = await enrichWithGraph(memory, graphAdapter);
     }
-    
+
     for (const fact of facts) {
       fact.enrichment = await enrichWithGraph(fact, graphAdapter);
     }
   }
-  
+
   return { memories, facts, enriched: needsDeepContext };
 }
 ```
@@ -348,9 +389,8 @@ async function enrichedRetrieval(query: string) {
 ✅ Discovers connections between layers  
 ✅ Reconstructs provenance and workflows  
 ✅ Acceptable performance overhead  
-✅ Real value for complex use cases  
+✅ Real value for complex use cases
 
 **The graph integration is not just technically working - it's ACTUALLY USEFUL for improving AI agent context!**
 
 This is the proof that matters most. 🎯
-

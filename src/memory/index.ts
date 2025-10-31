@@ -72,7 +72,7 @@ export class MemoryAPI {
     const factsToDelete = allFacts.filter(
       (fact) =>
         fact.sourceRef?.memoryId === memoryId ||
-        (conversationId && fact.sourceRef?.conversationId === conversationId)
+        (conversationId && fact.sourceRef?.conversationId === conversationId),
     );
 
     const deletedFactIds: string[] = [];
@@ -105,16 +105,21 @@ export class MemoryAPI {
     const factsToArchive = allFacts.filter(
       (fact) =>
         fact.sourceRef?.memoryId === memoryId ||
-        (conversationId && fact.sourceRef?.conversationId === conversationId)
+        (conversationId && fact.sourceRef?.conversationId === conversationId),
     );
 
     const archivedFactIds: string[] = [];
     for (const fact of factsToArchive) {
       try {
-        await this.facts.update(memorySpaceId, fact.factId, {
-          validUntil: Date.now(),
-          tags: [...(fact.tags || []), 'archived'],
-        }, { syncToGraph });
+        await this.facts.update(
+          memorySpaceId,
+          fact.factId,
+          {
+            validUntil: Date.now(),
+            tags: [...(fact.tags || []), "archived"],
+          },
+          { syncToGraph },
+        );
         archivedFactIds.push(fact.factId);
       } catch (error) {
         console.warn("Failed to archive linked fact:", error);
@@ -140,7 +145,7 @@ export class MemoryAPI {
     return allFacts.filter(
       (fact) =>
         fact.sourceRef?.memoryId === memoryId ||
-        (conversationId && fact.sourceRef?.conversationId === conversationId)
+        (conversationId && fact.sourceRef?.conversationId === conversationId),
     );
   }
 
@@ -168,7 +173,10 @@ export class MemoryAPI {
    * await cortex.memory.remember(params, { syncToGraph: false });
    * ```
    */
-  async remember(params: RememberParams, options?: RememberOptions): Promise<RememberResult> {
+  async remember(
+    params: RememberParams,
+    options?: RememberOptions,
+  ): Promise<RememberResult> {
     const now = Date.now();
 
     // Step 1: Store user message in ACID
@@ -221,53 +229,62 @@ export class MemoryAPI {
     }
 
     // Determine if we should sync to graph (default: true if configured)
-    const shouldSyncToGraph = options?.syncToGraph !== false && this.graphAdapter !== undefined;
+    const shouldSyncToGraph =
+      options?.syncToGraph !== false && this.graphAdapter !== undefined;
 
     // Step 5: Store user message in Vector with conversationRef
-    const userMemory = await this.vector.store(params.memorySpaceId, {
-      content: userContent,
-      contentType,
-      participantId: params.participantId, // Hive Mode tracking
-      embedding: userEmbedding,
-      userId: params.userId,
-      source: {
-        type: "conversation",
+    const userMemory = await this.vector.store(
+      params.memorySpaceId,
+      {
+        content: userContent,
+        contentType,
+        participantId: params.participantId, // Hive Mode tracking
+        embedding: userEmbedding,
         userId: params.userId,
-        userName: params.userName,
-        timestamp: now,
+        source: {
+          type: "conversation",
+          userId: params.userId,
+          userName: params.userName,
+          timestamp: now,
+        },
+        conversationRef: {
+          conversationId: params.conversationId,
+          messageIds: [userMsg.messages[userMsg.messages.length - 1].id],
+        },
+        metadata: {
+          importance: params.importance || 50,
+          tags: params.tags || [],
+        },
       },
-      conversationRef: {
-        conversationId: params.conversationId,
-        messageIds: [userMsg.messages[userMsg.messages.length - 1].id],
-      },
-      metadata: {
-        importance: params.importance || 50,
-        tags: params.tags || [],
-      },
-    }, { syncToGraph: shouldSyncToGraph });
+      { syncToGraph: shouldSyncToGraph },
+    );
 
     // Step 6: Store agent response in Vector with conversationRef
-    const agentMemory = await this.vector.store(params.memorySpaceId, {
-      content: agentContent,
-      contentType,
-      participantId: params.participantId, // Hive Mode tracking
-      embedding: agentEmbedding,
-      userId: params.userId,
-      source: {
-        type: "conversation",
+    const agentMemory = await this.vector.store(
+      params.memorySpaceId,
+      {
+        content: agentContent,
+        contentType,
+        participantId: params.participantId, // Hive Mode tracking
+        embedding: agentEmbedding,
         userId: params.userId,
-        userName: params.userName,
-        timestamp: now + 1,
+        source: {
+          type: "conversation",
+          userId: params.userId,
+          userName: params.userName,
+          timestamp: now + 1,
+        },
+        conversationRef: {
+          conversationId: params.conversationId,
+          messageIds: [agentMsg.messages[agentMsg.messages.length - 1].id],
+        },
+        metadata: {
+          importance: params.importance || 50,
+          tags: params.tags || [],
+        },
       },
-      conversationRef: {
-        conversationId: params.conversationId,
-        messageIds: [agentMsg.messages[agentMsg.messages.length - 1].id],
-      },
-      metadata: {
-        importance: params.importance || 50,
-        tags: params.tags || [],
-      },
-    }, { syncToGraph: shouldSyncToGraph });
+      { syncToGraph: shouldSyncToGraph },
+    );
 
     // Step 7: Extract and store facts (if extraction function provided)
     const extractedFacts: FactRecord[] = [];
@@ -282,27 +299,30 @@ export class MemoryAPI {
         if (factsToStore && factsToStore.length > 0) {
           for (const factData of factsToStore) {
             try {
-              const storedFact = await this.facts.store({
-                memorySpaceId: params.memorySpaceId,
-                participantId: params.participantId,
-                fact: factData.fact,
-                factType: factData.factType,
-                subject: factData.subject || params.userId,
-                predicate: factData.predicate,
-                object: factData.object,
-                confidence: factData.confidence,
-                sourceType: "conversation",
-                sourceRef: {
-                  conversationId: params.conversationId,
-                  messageIds: [
-                    userMsg.messages[userMsg.messages.length - 1].id,
-                    agentMsg.messages[agentMsg.messages.length - 1].id,
-                  ],
-                  memoryId: userMemory.memoryId,
+              const storedFact = await this.facts.store(
+                {
+                  memorySpaceId: params.memorySpaceId,
+                  participantId: params.participantId,
+                  fact: factData.fact,
+                  factType: factData.factType,
+                  subject: factData.subject || params.userId,
+                  predicate: factData.predicate,
+                  object: factData.object,
+                  confidence: factData.confidence,
+                  sourceType: "conversation",
+                  sourceRef: {
+                    conversationId: params.conversationId,
+                    messageIds: [
+                      userMsg.messages[userMsg.messages.length - 1].id,
+                      agentMsg.messages[agentMsg.messages.length - 1].id,
+                    ],
+                    memoryId: userMemory.memoryId,
+                  },
+                  tags: factData.tags || params.tags || [],
                 },
-                tags: factData.tags || params.tags || [],
-              }, { syncToGraph: shouldSyncToGraph });
-              
+                { syncToGraph: shouldSyncToGraph },
+              );
+
               extractedFacts.push(storedFact);
             } catch (error) {
               console.warn("Failed to store fact:", error);
@@ -360,10 +380,13 @@ export class MemoryAPI {
     }
 
     // Determine if we should sync to graph (default: true if configured)
-    const shouldSyncToGraph = options?.syncToGraph !== false && this.graphAdapter !== undefined;
+    const shouldSyncToGraph =
+      options?.syncToGraph !== false && this.graphAdapter !== undefined;
 
     // Delete from vector (with graph cascade)
-    await this.vector.delete(agentId, memoryId, { syncToGraph: shouldSyncToGraph });
+    await this.vector.delete(agentId, memoryId, {
+      syncToGraph: shouldSyncToGraph,
+    });
 
     // Cascade delete associated facts
     const { count: factsDeleted, factIds } = await this.cascadeDeleteFacts(
@@ -443,7 +466,7 @@ export class MemoryAPI {
       const conv = await this.conversations.get(
         memory.conversationRef.conversationId,
       );
-      
+
       conversation = conv ?? undefined;
 
       if (conversation) {
@@ -549,7 +572,9 @@ export class MemoryAPI {
 
       // Add conversation
       if (memory.conversationRef) {
-        const conversation = conversations.get(memory.conversationRef.conversationId);
+        const conversation = conversations.get(
+          memory.conversationRef.conversationId,
+        );
         if (conversation) {
           result.conversation = conversation;
           result.sourceMessages = conversation.messages.filter((m: any) =>
@@ -562,13 +587,14 @@ export class MemoryAPI {
       const relatedFacts = [
         ...(factsByMemoryId.get(memory.memoryId) || []),
         ...(memory.conversationRef
-          ? factsByConversationId.get(memory.conversationRef.conversationId) || []
+          ? factsByConversationId.get(memory.conversationRef.conversationId) ||
+            []
           : []),
       ];
 
       // Deduplicate facts by factId
       const uniqueFacts = Array.from(
-        new Map(relatedFacts.map(f => [f.factId, f])).values()
+        new Map(relatedFacts.map((f) => [f.factId, f])).values(),
       );
 
       if (uniqueFacts.length > 0) {
@@ -599,7 +625,10 @@ export class MemoryAPI {
    * });
    * ```
    */
-  async store(agentId: string, input: StoreMemoryInput): Promise<StoreMemoryResult> {
+  async store(
+    agentId: string,
+    input: StoreMemoryInput,
+  ): Promise<StoreMemoryResult> {
     // Validate conversationRef requirement
     if (input.source.type === "conversation" && !input.conversationRef) {
       throw new Error(
@@ -619,23 +648,26 @@ export class MemoryAPI {
       if (factsToStore && factsToStore.length > 0) {
         for (const factData of factsToStore) {
           try {
-            const storedFact = await this.facts.store({
-              memorySpaceId: agentId,
-              participantId: input.participantId,
-              fact: factData.fact,
-              factType: factData.factType,
-              subject: factData.subject || input.userId,
-              predicate: factData.predicate,
-              object: factData.object,
-              confidence: factData.confidence,
-              sourceType: input.source.type,
-              sourceRef: {
-                conversationId: input.conversationRef?.conversationId,
-                messageIds: input.conversationRef?.messageIds,
-                memoryId: memory.memoryId,
+            const storedFact = await this.facts.store(
+              {
+                memorySpaceId: agentId,
+                participantId: input.participantId,
+                fact: factData.fact,
+                factType: factData.factType,
+                subject: factData.subject || input.userId,
+                predicate: factData.predicate,
+                object: factData.object,
+                confidence: factData.confidence,
+                sourceType: input.source.type,
+                sourceRef: {
+                  conversationId: input.conversationRef?.conversationId,
+                  messageIds: input.conversationRef?.messageIds,
+                  memoryId: memory.memoryId,
+                },
+                tags: factData.tags || input.metadata.tags || [],
               },
-              tags: factData.tags || input.metadata.tags || [],
-            }, { syncToGraph: true });
+              { syncToGraph: true },
+            );
 
             extractedFacts.push(storedFact);
           } catch (error) {
@@ -676,7 +708,12 @@ export class MemoryAPI {
     // Re-extract facts if content changed and reextract requested
     if (options?.reextractFacts && updates.content && options.extractFacts) {
       // Delete old facts first
-      await this.cascadeDeleteFacts(agentId, memoryId, undefined, options.syncToGraph);
+      await this.cascadeDeleteFacts(
+        agentId,
+        memoryId,
+        undefined,
+        options.syncToGraph,
+      );
 
       // Extract new facts
       const factsToStore = await options.extractFacts(updates.content);
@@ -684,22 +721,25 @@ export class MemoryAPI {
       if (factsToStore && factsToStore.length > 0) {
         for (const factData of factsToStore) {
           try {
-            const storedFact = await this.facts.store({
-              memorySpaceId: agentId,
-              fact: factData.fact,
-              factType: factData.factType,
-              subject: factData.subject || updatedMemory.userId,
-              predicate: factData.predicate,
-              object: factData.object,
-              confidence: factData.confidence,
-              sourceType: updatedMemory.sourceType,
-              sourceRef: {
-                conversationId: updatedMemory.conversationRef?.conversationId,
-                messageIds: updatedMemory.conversationRef?.messageIds,
-                memoryId: updatedMemory.memoryId,
+            const storedFact = await this.facts.store(
+              {
+                memorySpaceId: agentId,
+                fact: factData.fact,
+                factType: factData.factType,
+                subject: factData.subject || updatedMemory.userId,
+                predicate: factData.predicate,
+                object: factData.object,
+                confidence: factData.confidence,
+                sourceType: updatedMemory.sourceType,
+                sourceRef: {
+                  conversationId: updatedMemory.conversationRef?.conversationId,
+                  messageIds: updatedMemory.conversationRef?.messageIds,
+                  memoryId: updatedMemory.memoryId,
+                },
+                tags: factData.tags || updatedMemory.tags || [],
               },
-              tags: factData.tags || updatedMemory.tags || [],
-            }, { syncToGraph: options.syncToGraph });
+              { syncToGraph: options.syncToGraph },
+            );
 
             factsReextracted.push(storedFact);
           } catch (error) {
@@ -711,7 +751,8 @@ export class MemoryAPI {
 
     return {
       memory: updatedMemory,
-      factsReextracted: factsReextracted.length > 0 ? factsReextracted : undefined,
+      factsReextracted:
+        factsReextracted.length > 0 ? factsReextracted : undefined,
     };
   }
 
@@ -729,7 +770,8 @@ export class MemoryAPI {
       throw new Error("MEMORY_NOT_FOUND");
     }
 
-    const shouldSyncToGraph = options?.syncToGraph !== false && this.graphAdapter !== undefined;
+    const shouldSyncToGraph =
+      options?.syncToGraph !== false && this.graphAdapter !== undefined;
     const shouldCascade = options?.cascadeDeleteFacts !== false; // Default: true
 
     // Delete facts if cascade enabled
@@ -748,7 +790,9 @@ export class MemoryAPI {
     }
 
     // Delete from vector
-    await this.vector.delete(agentId, memoryId, { syncToGraph: shouldSyncToGraph });
+    await this.vector.delete(agentId, memoryId, {
+      syncToGraph: shouldSyncToGraph,
+    });
 
     return {
       deleted: true,
@@ -761,7 +805,9 @@ export class MemoryAPI {
   /**
    * List memories with optional fact enrichment
    */
-  async list(filter: ListMemoriesFilter): Promise<MemoryEntry[] | EnrichedMemory[]> {
+  async list(
+    filter: ListMemoriesFilter,
+  ): Promise<MemoryEntry[] | EnrichedMemory[]> {
     const memories = await this.vector.list(filter);
 
     if (!filter.enrichFacts) {
@@ -821,7 +867,7 @@ export class MemoryAPI {
     });
 
     const affectedFacts = allFacts.filter((fact) =>
-      result.memoryIds.includes(fact.sourceRef?.memoryId || '')
+      result.memoryIds.includes(fact.sourceRef?.memoryId || ""),
     );
 
     return {
@@ -893,7 +939,7 @@ export class MemoryAPI {
     // Add facts to each memory
     const enrichedData = data.map((memory: any) => {
       const relatedFacts = facts.filter(
-        (fact) => fact.sourceRef?.memoryId === memory.memoryId
+        (fact) => fact.sourceRef?.memoryId === memory.memoryId,
       );
 
       return {
@@ -917,10 +963,7 @@ export class MemoryAPI {
   /**
    * Archive a memory and mark associated facts as expired
    */
-  async archive(
-    agentId: string,
-    memoryId: string,
-  ): Promise<ArchiveResult> {
+  async archive(agentId: string, memoryId: string): Promise<ArchiveResult> {
     const memory = await this.vector.get(agentId, memoryId);
 
     if (!memory) {

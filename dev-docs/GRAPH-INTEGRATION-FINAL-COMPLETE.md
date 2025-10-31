@@ -74,7 +74,7 @@ Successfully implemented **complete, production-ready graph database integration
 
 3. **Type System** (25 interfaces)
    - GraphSyncOption base
-   - *Options for all APIs
+   - \*Options for all APIs
    - Follows SDK conventions
    - Backward compatible
 
@@ -102,14 +102,17 @@ Successfully implemented **complete, production-ready graph database integration
 
 ```typescript
 import { Cortex } from "@cortexmemory/sdk";
-import { CypherGraphAdapter, initializeGraphSchema } from "@cortexmemory/sdk/graph";
+import {
+  CypherGraphAdapter,
+  initializeGraphSchema,
+} from "@cortexmemory/sdk/graph";
 
 // 1. Setup graph database
 const graphAdapter = new CypherGraphAdapter();
 await graphAdapter.connect({
   uri: "bolt://localhost:7687",
   username: "neo4j",
-  password: "cortex-dev-password"
+  password: "cortex-dev-password",
 });
 
 // 2. Initialize schema
@@ -120,8 +123,8 @@ const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL!,
   graph: {
     adapter: graphAdapter,
-    orphanCleanup: true
-  }
+    orphanCleanup: true,
+  },
 });
 ```
 
@@ -135,12 +138,12 @@ await cortex.memory.remember({
   userMessage: "Alice works at Acme Corp using TypeScript",
   agentResponse: "Interesting! Tell me more about your work.",
   userId: "alice",
-  userName: "Alice"
+  userName: "Alice",
 });
 
 // Behind the scenes:
 // ✅ Stores in L1a (conversations)
-// ✅ Stores in L2 (vector memory) 
+// ✅ Stores in L2 (vector memory)
 // ✅ Syncs memory to graph
 // ✅ Syncs conversation to graph
 // ✅ Creates all relationships
@@ -151,16 +154,24 @@ await cortex.memory.remember({
 
 ```typescript
 // Opt-in to graph sync
-await cortex.vector.store(memorySpaceId, {
-  content: "Important data",
-  // ...
-}, { syncToGraph: true });
+await cortex.vector.store(
+  memorySpaceId,
+  {
+    content: "Important data",
+    // ...
+  },
+  { syncToGraph: true },
+);
 
 // Opt-out of graph sync
-await cortex.vector.store(memorySpaceId, {
-  content: "Ephemeral data",
-  // ...
-}, { syncToGraph: false });
+await cortex.vector.store(
+  memorySpaceId,
+  {
+    content: "Ephemeral data",
+    // ...
+  },
+  { syncToGraph: false },
+);
 ```
 
 ### Usage Pattern 3: Delete with Orphan Cleanup
@@ -169,7 +180,7 @@ await cortex.vector.store(memorySpaceId, {
 // Forget memory with cascade
 await cortex.memory.forget("agent-1", "mem-123", {
   deleteConversation: true,
-  syncToGraph: true  // Default
+  syncToGraph: true, // Default
 });
 
 // What happens:
@@ -217,12 +228,14 @@ RESULT: Multi-layer data + graph enrichment = Rich context!
 **Query**: "alice typescript"
 
 **Traditional (L2+L3 only)**:
+
 - 2 isolated results
 - No connections
 - No provenance
 - ~8ms
 
 **With Graph (L2+L3+Graph)**:
+
 - 2 base results
 - +4 enriched discoveries
 - Full provenance trails
@@ -238,6 +251,7 @@ RESULT: Multi-layer data + graph enrichment = Rich context!
 ## 📈 Final Statistics
 
 ### Implementation
+
 - **Files Created**: 35+
 - **Lines Written**: ~7,200
 - **APIs Updated**: 8/8 (100%)
@@ -248,6 +262,7 @@ RESULT: Multi-layer data + graph enrichment = Rich context!
 - **Documentation**: 15+
 
 ### Quality
+
 - **Linter Errors**: 0
 - **Test Pass Rate**: 100% (15/15 + 7/7)
 - **Type Safety**: 100%
@@ -255,6 +270,7 @@ RESULT: Multi-layer data + graph enrichment = Rich context!
 - **Backward Compatible**: ✅ YES
 
 ### Performance
+
 - **Sync Speed**: ~300 entities/sec
 - **Query Speed**: 4ms for 7-hop traversal
 - **Enrichment Overhead**: +90ms for 2x context
@@ -267,6 +283,7 @@ RESULT: Multi-layer data + graph enrichment = Rich context!
 ### 1. Complete Multi-Layer Integration
 
 Graph now connects ALL layers:
+
 - L1a (Conversations) ↔ Graph
 - L2 (Vector Memory) ↔ Graph
 - L3 (Facts) ↔ Graph
@@ -277,12 +294,14 @@ Graph now connects ALL layers:
 ### 2. Sophisticated Orphan Detection
 
 Handles complex scenarios:
+
 - Simple orphans (no references)
 - Circular references (A→B, B→A)
 - Orphan islands (circular groups with no external refs)
 - Self-references
 
 **Protection**:
+
 - BFS with visited tracking
 - Max depth limits
 - Deletion context
@@ -353,11 +372,12 @@ npx tsx tests/graph/proofs/07-multilayer-retrieval.proof.ts
 ✅ Auto-sync in convenience APIs  
 ✅ Manual sync in low-level APIs  
 ✅ Delete cascading with cleanup  
-✅ Backward compatible  
+✅ Backward compatible
 
 **Implementation Stats**:
+
 - 35+ files created
-- ~7,200 lines written  
+- ~7,200 lines written
 - 8 APIs fully updated
 - 15+ methods enhanced
 - 25 type interfaces added
@@ -372,4 +392,3 @@ npx tsx tests/graph/proofs/07-multilayer-retrieval.proof.ts
 **Supervised by**: Nicholas Geil  
 **Project**: Cortex SDK - Graph Database Integration  
 **Status**: ✅ COMPLETE & PRODUCTION READY
-

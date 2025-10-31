@@ -10,6 +10,7 @@ Complete API reference for the Facts layer (Layer 3) - structured knowledge extr
 The Facts API (`cortex.facts.*`) provides structured knowledge storage with versioning, relationships, and temporal validity. Facts are memory-space scoped and can be automatically extracted from conversations or stored manually.
 
 **Key Features:**
+
 - ✅ Structured fact storage (subject-predicate-object triples)
 - ✅ Confidence scoring (0-100)
 - ✅ Temporal validity (validFrom/validUntil)
@@ -35,6 +36,7 @@ Graph: Facts sync to graph with entity extraction
 Store a new fact with metadata and relationships.
 
 **Signature:**
+
 ```typescript
 cortex.facts.store(
   params: StoreFactParams,
@@ -45,34 +47,36 @@ cortex.facts.store(
 **New in v0.7.0**: `options` parameter with `syncToGraph` support for graph database integration.
 
 **Parameters:**
+
 ```typescript
 interface StoreFactParams {
   memorySpaceId: string;
-  participantId?: string;           // Hive Mode tracking
-  fact: string;                     // Human-readable fact statement
-  factType: FactType;               // Category of fact
-  subject?: string;                 // Primary entity
-  predicate?: string;               // Relationship type
-  object?: string;                  // Secondary entity
-  confidence: number;               // 0-100 extraction confidence
+  participantId?: string; // Hive Mode tracking
+  fact: string; // Human-readable fact statement
+  factType: FactType; // Category of fact
+  subject?: string; // Primary entity
+  predicate?: string; // Relationship type
+  object?: string; // Secondary entity
+  confidence: number; // 0-100 extraction confidence
   sourceType: "conversation" | "system" | "tool" | "manual";
   sourceRef?: {
     conversationId?: string;
     messageIds?: string[];
-    memoryId?: string;              // Link to memory
+    memoryId?: string; // Link to memory
   };
   metadata?: any;
   tags?: string[];
-  validFrom?: number;               // Temporal validity start
-  validUntil?: number;              // Temporal validity end
+  validFrom?: number; // Temporal validity start
+  validUntil?: number; // Temporal validity end
 }
 
 interface StoreFactOptions {
-  syncToGraph?: boolean;            // Sync to graph DB (default: true if configured)
+  syncToGraph?: boolean; // Sync to graph DB (default: true if configured)
 }
 ```
 
 **Example:**
+
 ```typescript
 const fact = await cortex.facts.store({
   memorySpaceId: "agent-1",
@@ -91,7 +95,7 @@ const fact = await cortex.facts.store({
   tags: ["ui", "settings"],
 });
 
-console.log(fact.factId);  // "fact-1730123456789-abc123"
+console.log(fact.factId); // "fact-1730123456789-abc123"
 ```
 
 ### `facts.get()`
@@ -99,6 +103,7 @@ console.log(fact.factId);  // "fact-1730123456789-abc123"
 Retrieve a fact by ID.
 
 **Signature:**
+
 ```typescript
 async get(
   memorySpaceId: string,
@@ -107,13 +112,14 @@ async get(
 ```
 
 **Example:**
+
 ```typescript
 const fact = await cortex.facts.get("agent-1", "fact-123");
 
 if (fact) {
-  console.log(fact.fact);        // "User prefers dark mode"
-  console.log(fact.confidence);  // 95
-  console.log(fact.version);     // 1
+  console.log(fact.fact); // "User prefers dark mode"
+  console.log(fact.confidence); // 95
+  console.log(fact.version); // 1
 }
 ```
 
@@ -122,23 +128,26 @@ if (fact) {
 List facts with filters.
 
 **Signature:**
+
 ```typescript
 async list(filter: ListFactsFilter): Promise<FactRecord[]>
 ```
 
 **Parameters:**
+
 ```typescript
 interface ListFactsFilter {
   memorySpaceId: string;
-  factType?: FactType;              // Filter by type
-  subject?: string;                 // Filter by subject entity
-  tags?: string[];                  // Filter by tags
-  includeSuperseded?: boolean;      // Include old versions (default: false)
-  limit?: number;                   // Max results (default: 100)
+  factType?: FactType; // Filter by type
+  subject?: string; // Filter by subject entity
+  tags?: string[]; // Filter by tags
+  includeSuperseded?: boolean; // Include old versions (default: false)
+  limit?: number; // Max results (default: 100)
 }
 ```
 
 **Example:**
+
 ```typescript
 // All user preferences
 const preferences = await cortex.facts.list({
@@ -160,6 +169,7 @@ const uiFacts = await cortex.facts.list({
 Search facts with text matching.
 
 **Signature:**
+
 ```typescript
 async search(
   memorySpaceId: string,
@@ -169,16 +179,18 @@ async search(
 ```
 
 **Parameters:**
+
 ```typescript
 interface SearchFactsOptions {
   factType?: FactType;
-  minConfidence?: number;           // Filter by confidence threshold
+  minConfidence?: number; // Filter by confidence threshold
   tags?: string[];
   limit?: number;
 }
 ```
 
 **Example:**
+
 ```typescript
 const foodFacts = await cortex.facts.search("agent-1", "food preferences", {
   factType: "preference",
@@ -186,7 +198,7 @@ const foodFacts = await cortex.facts.search("agent-1", "food preferences", {
   limit: 10,
 });
 
-foodFacts.forEach(fact => {
+foodFacts.forEach((fact) => {
   console.log(`${fact.fact} (${fact.confidence}% confidence)`);
 });
 ```
@@ -196,6 +208,7 @@ foodFacts.forEach(fact => {
 Update a fact (creates new version).
 
 **Signature:**
+
 ```typescript
 async update(
   memorySpaceId: string,
@@ -206,13 +219,14 @@ async update(
 ```
 
 **Parameters:**
+
 ```typescript
 interface UpdateFactInput {
-  fact?: string;                    // New fact statement
-  confidence?: number;              // Updated confidence
-  tags?: string[];                  // Updated tags
-  validUntil?: number;              // Set expiration
-  metadata?: any;                   // Updated metadata
+  fact?: string; // New fact statement
+  confidence?: number; // Updated confidence
+  tags?: string[]; // Updated tags
+  validUntil?: number; // Set expiration
+  metadata?: any; // Updated metadata
 }
 
 interface UpdateFactOptions {
@@ -221,6 +235,7 @@ interface UpdateFactOptions {
 ```
 
 **Example:**
+
 ```typescript
 // Update confidence based on validation
 const updated = await cortex.facts.update("agent-1", "fact-123", {
@@ -230,7 +245,7 @@ const updated = await cortex.facts.update("agent-1", "fact-123", {
 
 // Mark fact as expiring
 const expiring = await cortex.facts.update("agent-1", "fact-456", {
-  validUntil: Date.now() + 30 * 24 * 60 * 60 * 1000,  // 30 days
+  validUntil: Date.now() + 30 * 24 * 60 * 60 * 1000, // 30 days
 });
 ```
 
@@ -239,6 +254,7 @@ const expiring = await cortex.facts.update("agent-1", "fact-456", {
 Delete a fact (soft delete - marks as superseded).
 
 **Signature:**
+
 ```typescript
 async delete(
   memorySpaceId: string,
@@ -248,9 +264,10 @@ async delete(
 ```
 
 **Example:**
+
 ```typescript
 await cortex.facts.delete("agent-1", "fact-123", {
-  syncToGraph: true,  // Remove from graph DB
+  syncToGraph: true, // Remove from graph DB
 });
 ```
 
@@ -259,11 +276,13 @@ await cortex.facts.delete("agent-1", "fact-123", {
 Count facts matching filters.
 
 **Signature:**
+
 ```typescript
 async count(filter: CountFactsFilter): Promise<number>
 ```
 
 **Parameters:**
+
 ```typescript
 interface CountFactsFilter {
   memorySpaceId: string;
@@ -273,6 +292,7 @@ interface CountFactsFilter {
 ```
 
 **Example:**
+
 ```typescript
 const totalPreferences = await cortex.facts.count({
   memorySpaceId: "agent-1",
@@ -289,6 +309,7 @@ console.log(`Found ${totalPreferences} user preferences`);
 Get all facts about a specific entity.
 
 **Signature:**
+
 ```typescript
 async queryBySubject(filter: {
   memorySpaceId: string;
@@ -298,6 +319,7 @@ async queryBySubject(filter: {
 ```
 
 **Example:**
+
 ```typescript
 // All facts about a user
 const userFacts = await cortex.facts.queryBySubject({
@@ -318,6 +340,7 @@ const preferences = await cortex.facts.queryBySubject({
 Get facts with specific relationship (graph traversal).
 
 **Signature:**
+
 ```typescript
 async queryByRelationship(filter: {
   memorySpaceId: string;
@@ -327,6 +350,7 @@ async queryByRelationship(filter: {
 ```
 
 **Example:**
+
 ```typescript
 // Where does user work?
 const workPlaces = await cortex.facts.queryByRelationship({
@@ -350,6 +374,7 @@ const preferences = await cortex.facts.queryByRelationship({
 Get complete version history for a fact.
 
 **Signature:**
+
 ```typescript
 async getHistory(
   memorySpaceId: string,
@@ -358,10 +383,11 @@ async getHistory(
 ```
 
 **Example:**
+
 ```typescript
 const history = await cortex.facts.getHistory("agent-1", "fact-123");
 
-history.forEach(version => {
+history.forEach((version) => {
   console.log(`v${version.version}: ${version.fact} (${version.confidence}%)`);
   console.log(`  Updated: ${new Date(version.updatedAt).toISOString()}`);
 });
@@ -374,6 +400,7 @@ history.forEach(version => {
 Export facts in various formats.
 
 **Signature:**
+
 ```typescript
 async export(options: {
   memorySpaceId: string;
@@ -388,6 +415,7 @@ async export(options: {
 ```
 
 **Example:**
+
 ```typescript
 // Export all facts as JSON
 const jsonExport = await cortex.facts.export({
@@ -414,6 +442,7 @@ const csvExport = await cortex.facts.export({
 Merge duplicate facts.
 
 **Signature:**
+
 ```typescript
 async consolidate(params: {
   memorySpaceId: string;
@@ -427,12 +456,13 @@ async consolidate(params: {
 ```
 
 **Example:**
+
 ```typescript
 // Found duplicate facts about same preference
 const result = await cortex.facts.consolidate({
   memorySpaceId: "agent-1",
   factIds: ["fact-1", "fact-2", "fact-3"],
-  keepFactId: "fact-1",  // Keep this one, merge others
+  keepFactId: "fact-1", // Keep this one, merge others
 });
 
 console.log(`Consolidated ${result.mergedCount} duplicate facts`);
@@ -453,14 +483,16 @@ const result = await cortex.memory.remember({
   agentResponse: "Interesting!",
   userId: "user-123",
   userName: "Alex",
-  extractFacts: async (user, agent) => [{
-    fact: "User is a developer",
-    factType: "identity",
-    confidence: 95,
-  }],
+  extractFacts: async (user, agent) => [
+    {
+      fact: "User is a developer",
+      factType: "identity",
+      confidence: 95,
+    },
+  ],
 });
 
-console.log(result.facts);  // Extracted facts returned
+console.log(result.facts); // Extracted facts returned
 ```
 
 ### Automatic Enrichment
@@ -468,12 +500,12 @@ console.log(result.facts);  // Extracted facts returned
 ```typescript
 // Facts included in search results
 const memories = await cortex.memory.search("agent-1", "user info", {
-  enrichConversation: true,  // Facts automatically included
+  enrichConversation: true, // Facts automatically included
 });
 
-memories.forEach(m => {
+memories.forEach((m) => {
   console.log(`Memory: ${m.memory.content}`);
-  m.facts?.forEach(f => {
+  m.facts?.forEach((f) => {
     console.log(`  Fact: ${f.fact}`);
   });
 });
@@ -526,13 +558,13 @@ interface FactRecord {
 ### FactType
 
 ```typescript
-type FactType = 
-  | "preference"      // User likes/dislikes
-  | "identity"        // Who/what someone is
-  | "knowledge"       // Information/skills  
-  | "relationship"    // Connections between entities
-  | "event"           // Time-based occurrences
-  | "custom";         // Domain-specific
+type FactType =
+  | "preference" // User likes/dislikes
+  | "identity" // Who/what someone is
+  | "knowledge" // Information/skills
+  | "relationship" // Connections between entities
+  | "event" // Time-based occurrences
+  | "custom"; // Domain-specific
 ```
 
 ## Best Practices
@@ -544,7 +576,7 @@ type FactType =
 await cortex.facts.store({
   memorySpaceId: "agent-1",
   fact: "User prefers email notifications",
-  factType: "preference",  // Correct
+  factType: "preference", // Correct
   confidence: 90,
 });
 
@@ -552,7 +584,7 @@ await cortex.facts.store({
 await cortex.facts.store({
   memorySpaceId: "agent-1",
   fact: "User prefers email",
-  factType: "identity",  // Should be "preference"
+  factType: "identity", // Should be "preference"
   confidence: 90,
 });
 ```
@@ -570,7 +602,7 @@ await cortex.facts.store({
   sourceRef: {
     conversationId: "conv-123",
     messageIds: ["msg-1"],
-    memoryId: "mem-456",  // Enables fact retrieval via memory
+    memoryId: "mem-456", // Enables fact retrieval via memory
   },
 });
 ```
@@ -587,12 +619,12 @@ await cortex.facts.store({
 
 await cortex.facts.store({
   fact: "User said their name is Alex",
-  confidence: 99,  // Direct quote
+  confidence: 99, // Direct quote
 });
 
 await cortex.facts.store({
   fact: "User might prefer dark themes",
-  confidence: 55,  // Inference from behavior
+  confidence: 55, // Inference from behavior
 });
 ```
 
@@ -606,7 +638,7 @@ await cortex.facts.store({
   factType: "relationship",
   confidence: 100,
   validFrom: Date.now(),
-  validUntil: Date.now() + 365 * 24 * 60 * 60 * 1000,  // 1 year
+  validUntil: Date.now() + 365 * 24 * 60 * 60 * 1000, // 1 year
   tags: ["subscription"],
 });
 ```
@@ -653,10 +685,10 @@ async function getUserProfile(memorySpaceId: string, userId: string) {
   });
 
   return {
-    identity: allFacts.filter(f => f.factType === "identity"),
-    preferences: allFacts.filter(f => f.factType === "preference"),
-    knowledge: allFacts.filter(f => f.factType === "knowledge"),
-    relationships: allFacts.filter(f => f.factType === "relationship"),
+    identity: allFacts.filter((f) => f.factType === "identity"),
+    preferences: allFacts.filter((f) => f.factType === "preference"),
+    knowledge: allFacts.filter((f) => f.factType === "knowledge"),
+    relationships: allFacts.filter((f) => f.factType === "relationship"),
   };
 }
 ```
@@ -667,18 +699,18 @@ async function getUserProfile(memorySpaceId: string, userId: string) {
 async function searchWithFactContext(
   memorySpaceId: string,
   query: string,
-  userId: string
+  userId: string,
 ) {
   // Search memories with fact enrichment
   const memories = await cortex.memory.search(memorySpaceId, query, {
     userId,
-    enrichConversation: true,  // Includes facts
+    enrichConversation: true, // Includes facts
   });
 
   // Filter to high-confidence facts only
-  return memories.map(m => ({
+  return memories.map((m) => ({
     memory: m.memory.content,
-    facts: m.facts?.filter(f => f.confidence >= 80) || [],
+    facts: m.facts?.filter((f) => f.confidence >= 80) || [],
   }));
 }
 ```
@@ -694,12 +726,12 @@ async function getActiveFacts(memorySpaceId: string, userId: string) {
 
   const now = Date.now();
 
-  return allFacts.filter(fact => {
-    const isActive = 
+  return allFacts.filter((fact) => {
+    const isActive =
       (!fact.validFrom || fact.validFrom <= now) &&
       (!fact.validUntil || fact.validUntil > now) &&
       !fact.supersededBy;
-    
+
     return isActive;
   });
 }
@@ -736,9 +768,7 @@ for (const factData of facts) {
 }
 
 // ✅ Fast: Parallel storage
-await Promise.all(
-  facts.map(factData => cortex.facts.store(factData))
-);
+await Promise.all(facts.map((factData) => cortex.facts.store(factData)));
 ```
 
 ### 2. Use Filters Effectively
@@ -746,7 +776,7 @@ await Promise.all(
 ```typescript
 // ❌ Inefficient: Get all, filter in memory
 const all = await cortex.facts.list({ memorySpaceId: "agent-1", limit: 10000 });
-const preferences = all.filter(f => f.factType === "preference");
+const preferences = all.filter((f) => f.factType === "preference");
 
 // ✅ Efficient: Filter in query
 const preferences = await cortex.facts.list({
@@ -761,12 +791,12 @@ const preferences = await cortex.facts.list({
 // ❌ Inefficient: Separate queries
 const memories = await cortex.memory.search("agent-1", query);
 const facts = await Promise.all(
-  memories.map(m => cortex.facts.queryBySubject({ subject: m.userId }))
+  memories.map((m) => cortex.facts.queryBySubject({ subject: m.userId })),
 );
 
 // ✅ Efficient: Single enriched query
 const enriched = await cortex.memory.search("agent-1", query, {
-  enrichConversation: true,  // Facts included automatically
+  enrichConversation: true, // Facts included automatically
 });
 ```
 
@@ -780,4 +810,3 @@ const enriched = await cortex.memory.search("agent-1", query, {
 ---
 
 **Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
-

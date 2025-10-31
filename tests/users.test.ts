@@ -32,7 +32,9 @@ describe("Users API (Coordination Layer)", () => {
 
     if (neo4jUri && neo4jUsername && neo4jPassword) {
       try {
-        console.log("\n🔗 Graph database configured - testing with graph integration");
+        console.log(
+          "\n🔗 Graph database configured - testing with graph integration",
+        );
         graphAdapter = new CypherGraphAdapter();
         await graphAdapter.connect({
           uri: neo4jUri,
@@ -42,12 +44,19 @@ describe("Users API (Coordination Layer)", () => {
         hasGraphSupport = true;
         console.log("✅ Graph adapter initialized\n");
       } catch (error) {
-        console.warn("⚠️  Graph adapter configuration found but initialization failed:", error);
+        console.warn(
+          "⚠️  Graph adapter configuration found but initialization failed:",
+          error,
+        );
         console.warn("   Tests will run without graph support\n");
       }
     } else {
-      console.log("\n📝 No graph configuration - testing without graph integration");
-      console.log("   (Set NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD to enable)\n");
+      console.log(
+        "\n📝 No graph configuration - testing without graph integration",
+      );
+      console.log(
+        "   (Set NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD to enable)\n",
+      );
     }
 
     // Initialize SDK with optional graph adapter
@@ -71,24 +80,27 @@ describe("Users API (Coordination Layer)", () => {
     await cleanup.purgeConversations();
     await cleanup.purgeMemories();
     await cleanup.purgeFacts();
-    
+
     // Clean graph if available
     if (graphAdapter) {
       try {
-        await graphAdapter.query("MATCH (n) WHERE n.userId IS NOT NULL DETACH DELETE n", {});
+        await graphAdapter.query(
+          "MATCH (n) WHERE n.userId IS NOT NULL DETACH DELETE n",
+          {},
+        );
         console.log("✅ Purged graph test data");
       } catch (error) {
         console.warn("⚠️  Failed to purge graph data:", error);
       }
     }
-    
+
     console.log("✅ Purged all test data\n");
   });
 
   afterAll(async () => {
     cortex.close();
     await client.close();
-    
+
     // Close graph adapter connection if it exists
     if (graphAdapter) {
       try {
@@ -107,7 +119,7 @@ describe("Users API (Coordination Layer)", () => {
     it("creates a user profile", async () => {
       // Use unique ID for each test run to avoid version accumulation
       const userId = "test-user-create-" + Date.now();
-      
+
       const result = await cortex.users.update(userId, {
         displayName: "Alice",
         email: "alice@example.com",
@@ -140,10 +152,10 @@ describe("Users API (Coordination Layer)", () => {
 
     it("retrieves a user profile", async () => {
       const userId = "test-user-get-" + Date.now();
-      
+
       // Create user first
       await cortex.users.update(userId, { displayName: "Alice" });
-      
+
       // Then retrieve it
       const result = await cortex.users.get(userId);
 
@@ -155,13 +167,13 @@ describe("Users API (Coordination Layer)", () => {
 
     it("updates a user profile and increments version", async () => {
       const userId = "test-user-update-" + Date.now();
-      
+
       // Create initial version
       await cortex.users.update(userId, {
         displayName: "Alice",
         email: "alice@example.com",
       });
-      
+
       // Update to create version 2
       const result = await cortex.users.update(userId, {
         displayName: "Alice Johnson",
@@ -198,11 +210,11 @@ describe("Users API (Coordination Layer)", () => {
       const userId1 = "test-user-list-1-" + Date.now();
       const userId2 = "test-user-list-2-" + Date.now();
       const userId3 = "test-user-list-3-" + Date.now();
-      
+
       await cortex.users.update(userId1, { name: "Bob" });
       await cortex.users.update(userId2, { name: "Charlie" });
       await cortex.users.update(userId3, { name: "Dave" });
-      
+
       const results = await cortex.users.list();
 
       expect(results.length).toBeGreaterThanOrEqual(3);
@@ -229,13 +241,15 @@ describe("Users API (Coordination Layer)", () => {
     it("returns true for existing user", async () => {
       const userId = "test-user-exists-" + Date.now();
       await cortex.users.update(userId, { name: "Exists Test" });
-      
+
       const exists = await cortex.users.exists(userId);
       expect(exists).toBe(true);
     });
 
     it("returns false for non-existent user", async () => {
-      const exists = await cortex.users.exists("non-existent-user-" + Date.now());
+      const exists = await cortex.users.exists(
+        "non-existent-user-" + Date.now(),
+      );
       expect(exists).toBe(false);
     });
   });
@@ -247,12 +261,12 @@ describe("Users API (Coordination Layer)", () => {
   describe("getVersion() and getHistory()", () => {
     it("retrieves specific version", async () => {
       const userId = "version-test-user-" + Date.now();
-      
+
       // Create user with multiple versions
       await cortex.users.update(userId, { name: "Version 1" });
       await cortex.users.update(userId, { name: "Version 2" });
       await cortex.users.update(userId, { name: "Version 3" });
-      
+
       const v1 = await cortex.users.getVersion(userId, 1);
       const v2 = await cortex.users.getVersion(userId, 2);
       const v3 = await cortex.users.getVersion(userId, 3);
@@ -272,34 +286,40 @@ describe("Users API (Coordination Layer)", () => {
 
     it("retrieves version history", async () => {
       const userId = "version-history-user-" + Date.now();
-      
+
       // Create user with multiple versions
       await cortex.users.update(userId, { name: "Version 1" });
-      await new Promise(resolve => setTimeout(resolve, 10)); // Small delay
+      await new Promise((resolve) => setTimeout(resolve, 10)); // Small delay
       await cortex.users.update(userId, { name: "Version 2" });
-      await new Promise(resolve => setTimeout(resolve, 10)); // Small delay
+      await new Promise((resolve) => setTimeout(resolve, 10)); // Small delay
       await cortex.users.update(userId, { name: "Version 3" });
-      await new Promise(resolve => setTimeout(resolve, 50)); // Wait for final persist
-      
+      await new Promise((resolve) => setTimeout(resolve, 50)); // Wait for final persist
+
       const history = await cortex.users.getHistory(userId);
 
       // Debug: Log actual order
-      console.log(`  Version history order: ${history.map(h => h.version).join(', ')}`);
-      console.log(`  First version: ${history[0].version}, data: ${history[0].data.name}`);
-      console.log(`  Last version: ${history[history.length - 1].version}, data: ${history[history.length - 1].data.name}`);
+      console.log(
+        `  Version history order: ${history.map((h) => h.version).join(", ")}`,
+      );
+      console.log(
+        `  First version: ${history[0].version}, data: ${history[0].data.name}`,
+      );
+      console.log(
+        `  Last version: ${history[history.length - 1].version}, data: ${history[history.length - 1].data.name}`,
+      );
 
       expect(history).toHaveLength(3);
-      
+
       // The backend should sort descending (newest first)
       // But let's test what we actually get
-      const versions = history.map(h => h.version).sort((a, b) => b - a);
+      const versions = history.map((h) => h.version).sort((a, b) => b - a);
       expect(versions).toEqual([3, 2, 1]);
-      
+
       // Find each version regardless of order
-      const v1 = history.find(h => h.version === 1);
-      const v2 = history.find(h => h.version === 2);
-      const v3 = history.find(h => h.version === 3);
-      
+      const v1 = history.find((h) => h.version === 1);
+      const v2 = history.find((h) => h.version === 2);
+      const v3 = history.find((h) => h.version === 3);
+
       expect(v1).toBeDefined();
       expect(v1!.data.name).toBe("Version 1");
       expect(v2).toBeDefined();
@@ -310,12 +330,12 @@ describe("Users API (Coordination Layer)", () => {
 
     it("retrieves version at timestamp", async () => {
       const userId = "version-timestamp-user-" + Date.now();
-      
+
       // Create user with multiple versions
       await cortex.users.update(userId, { name: "Version 1" });
       await cortex.users.update(userId, { name: "Version 2" });
       await cortex.users.update(userId, { name: "Version 3" });
-      
+
       const now = new Date();
       const result = await cortex.users.getAtTimestamp(userId, now);
 
@@ -393,7 +413,7 @@ describe("Users API (Coordination Layer)", () => {
           memorySpaceId: CASCADE_SPACE_ID,
           type: "personal",
         });
-      } catch (error) {
+      } catch (_error) {
         // May already exist
       }
 
@@ -414,14 +434,27 @@ describe("Users API (Coordination Layer)", () => {
       await new Promise((resolve) => setTimeout(resolve, 200));
 
       // Verify test data was created before deletion
-      const verifyImmutable = await cortex.immutable.list({ userId: CASCADE_USER_ID });
-      console.log(`  ℹ️  Setup verification: ${verifyImmutable.length} immutable records with userId`);
-      
-      const verifyConvos = await cortex.conversations.list({ userId: CASCADE_USER_ID });
-      console.log(`  ℹ️  Setup verification: ${verifyConvos.length} conversations`);
-      
-      const verifyVector = await cortex.vector.list({ memorySpaceId: CASCADE_SPACE_ID, userId: CASCADE_USER_ID });
-      console.log(`  ℹ️  Setup verification: ${verifyVector.length} vector memories`);
+      const verifyImmutable = await cortex.immutable.list({
+        userId: CASCADE_USER_ID,
+      });
+      console.log(
+        `  ℹ️  Setup verification: ${verifyImmutable.length} immutable records with userId`,
+      );
+
+      const verifyConvos = await cortex.conversations.list({
+        userId: CASCADE_USER_ID,
+      });
+      console.log(
+        `  ℹ️  Setup verification: ${verifyConvos.length} conversations`,
+      );
+
+      const verifyVector = await cortex.vector.list({
+        memorySpaceId: CASCADE_SPACE_ID,
+        userId: CASCADE_USER_ID,
+      });
+      console.log(
+        `  ℹ️  Setup verification: ${verifyVector.length} vector memories`,
+      );
 
       // Create a graph node if graph is available
       if (graphAdapter) {
@@ -434,19 +467,21 @@ describe("Users API (Coordination Layer)", () => {
               createdAt: Date.now(),
             },
           });
-          console.log(`  ✅ Created graph node for cascade test (ID: ${nodeId})`);
-          
+          console.log(
+            `  ✅ Created graph node for cascade test (ID: ${nodeId})`,
+          );
+
           // Verify graph node was created using direct query
           const verifyGraph = await graphAdapter.query(
             "MATCH (n {userId: $userId}) RETURN n, count(n) as count",
-            { userId: CASCADE_USER_ID }
+            { userId: CASCADE_USER_ID },
           );
           console.log(`  ℹ️  Graph query result:`, verifyGraph);
-          
+
           // Also try querying by label
           const verifyByLabel = await graphAdapter.query(
             "MATCH (n:User) WHERE n.userId = $userId RETURN n",
-            { userId: CASCADE_USER_ID }
+            { userId: CASCADE_USER_ID },
           );
           console.log(`  ℹ️  Graph query by label result:`, verifyByLabel);
         } catch (error) {
@@ -471,12 +506,14 @@ describe("Users API (Coordination Layer)", () => {
       if (graphAdapter) {
         expect(result.graphNodesDeleted).toBeGreaterThanOrEqual(1);
         expect(result.deletedLayers).toContain("graph");
-        console.log(`  ✅ Graph cascade: Deleted ${result.graphNodesDeleted} nodes`);
-        
+        console.log(
+          `  ✅ Graph cascade: Deleted ${result.graphNodesDeleted} nodes`,
+        );
+
         // Verify graph node is actually deleted
         const graphResult = await graphAdapter.query(
           "MATCH (n {userId: $userId}) RETURN count(n) as count",
-          { userId: CASCADE_USER_ID }
+          { userId: CASCADE_USER_ID },
         );
         // GraphQueryResult has a .records property
         expect(graphResult.records[0]?.count || 0).toBe(0);
@@ -515,7 +552,7 @@ describe("Users API (Coordination Layer)", () => {
   describe("delete() - dry run mode", () => {
     it("previews deletion without actually deleting", async () => {
       const userId = "dry-run-test-user-" + Date.now();
-      
+
       // Create user with data
       await cortex.users.update(userId, { name: "Dry Run Test" });
 
@@ -554,7 +591,10 @@ describe("Users API (Coordination Layer)", () => {
       if (hasGraphSupport) {
         // With graph adapter, verification should be complete (or have other issues)
         if (!result.verification.complete) {
-          console.log("  ℹ️  Verification issues found:", result.verification.issues);
+          console.log(
+            "  ℹ️  Verification issues found:",
+            result.verification.issues,
+          );
         }
       } else {
         // Without graph adapter, should warn about manual cleanup
@@ -587,10 +627,10 @@ describe("Users API (Coordination Layer)", () => {
     it("exports users as JSON", async () => {
       const userId1 = "export-user-json-1-" + Date.now();
       const userId2 = "export-user-json-2-" + Date.now();
-      
+
       await cortex.users.update(userId1, { name: "Export 1" });
       await cortex.users.update(userId2, { name: "Export 2" });
-      
+
       const result = await cortex.users.export({
         format: "json",
       });
@@ -605,7 +645,7 @@ describe("Users API (Coordination Layer)", () => {
     it("exports users as CSV", async () => {
       const userId = "export-user-csv-" + Date.now();
       await cortex.users.update(userId, { name: "Export CSV" });
-      
+
       const result = await cortex.users.export({
         format: "csv",
       });
@@ -684,7 +724,7 @@ describe("Users API (Coordination Layer)", () => {
           memorySpaceId: INTEGRATION_SPACE_ID,
           type: "personal",
         });
-      } catch (error) {
+      } catch (_error) {
         // May already exist
       }
 
@@ -747,11 +787,11 @@ describe("Users API (Coordination Layer)", () => {
       // Verify graph deletion if available
       if (hasGraphSupport && graphAdapter) {
         expect(result.graphNodesDeleted).toBeGreaterThanOrEqual(1);
-        
+
         // Verify graph node is gone
         const graphResult = await graphAdapter.query(
           "MATCH (n {userId: $userId}) RETURN count(n) as count",
-          { userId: INTEGRATION_USER_ID }
+          { userId: INTEGRATION_USER_ID },
         );
         // GraphQueryResult has a .records property
         expect(graphResult.records[0]?.count || 0).toBe(0);
@@ -773,9 +813,10 @@ describe("Users API (Coordination Layer)", () => {
       const user = await cortex.users.get(INTEGRATION_USER_ID);
       expect(user).toBeNull();
 
-      console.log(`  ✅ Integration test complete: Deleted from ${result.deletedLayers.length} layers`);
+      console.log(
+        `  ✅ Integration test complete: Deleted from ${result.deletedLayers.length} layers`,
+      );
       console.log(`     Layers: ${result.deletedLayers.join(", ")}`);
     });
   });
 });
-
