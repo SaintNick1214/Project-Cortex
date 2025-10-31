@@ -76,8 +76,6 @@ const TEST_MEMSPACE_ID = "memspace-interactive"; // Updated for Memory Space Arc
 const TEST_PARTICIPANT_ID = "agent-test-interactive"; // For Hive Mode tracking
 let currentConversationId: string | null = null;
 let currentMemoryId: string | null = null;
-let currentFactId: string | null = null;
-let currentContextId: string | null = null;
 let currentImmutableType: string | null = null;
 let currentImmutableId: string | null = null;
 
@@ -315,7 +313,7 @@ async function purgeAllDatabases() {
       });
       immutableDeleted++;
     } catch (error: unknown) {
-      if (error.message?.includes("IMMUTABLE_ENTRY_NOT_FOUND")) {
+      if (error instanceof Error && error.message?.includes("IMMUTABLE_ENTRY_NOT_FOUND")) {
         continue;
       }
     }
@@ -770,10 +768,10 @@ async function testDelete() {
     await cortex.conversations.get(currentConversationId);
     console.log("❌ ERROR: Conversation still exists!");
   } catch (error: unknown) {
-    if (error.message?.includes("CONVERSATION_NOT_FOUND")) {
+    if (error instanceof Error && error.message?.includes("CONVERSATION_NOT_FOUND")) {
       console.log("✅ Verified: Conversation no longer exists");
     } else {
-      console.log("⚠️  Unexpected error:", error.message);
+      console.log("⚠️  Unexpected error:", error instanceof Error ? error.message : String(error));
     }
   }
 
@@ -812,7 +810,7 @@ async function runConversationsTests() {
   await testCreateAgentAgent();
   console.log("═".repeat(80));
 
-  await testListByAgent();
+  // await testListByAgent(); // Deprecated - using memory spaces now
   console.log("═".repeat(80));
 
   await testSearch();
@@ -949,7 +947,7 @@ async function runAllTests() {
   await testCreateAgentAgent();
   console.log("═".repeat(80));
 
-  await testListByAgent();
+  // await testListByAgent(); // Deprecated - using memory spaces now
   console.log("═".repeat(80));
 
   await testSearch();
@@ -1518,6 +1516,7 @@ async function testConvDeleteMany() {
   for (let i = 1; i <= 5; i++) {
     await cortex.conversations.create({
       type: "user-agent",
+      memorySpaceId: TEST_MEMSPACE_ID,
       participants: {
         userId: `${TEST_USER_ID}-bulk`,
         participantId: TEST_PARTICIPANT_ID,
@@ -1659,6 +1658,7 @@ async function testConvGetOrCreate() {
 
   const result = await cortex.conversations.getOrCreate({
     type: "user-agent",
+    memorySpaceId: TEST_MEMSPACE_ID,
     participants: {
       userId: `${TEST_USER_ID}-getorcreate`,
       participantId: TEST_PARTICIPANT_ID,
@@ -1677,6 +1677,7 @@ async function testConvGetOrCreate() {
   // Call again to demonstrate it returns same
   const second = await cortex.conversations.getOrCreate({
     type: "user-agent",
+    memorySpaceId: TEST_MEMSPACE_ID,
     participants: {
       userId: `${TEST_USER_ID}-getorcreate`,
       participantId: TEST_PARTICIPANT_ID,
@@ -1752,7 +1753,7 @@ async function testConvIntegration() {
   });
   const parsed = JSON.parse(exported.data);
   const inExport = parsed.some(
-    (c: unknown) => c.conversationId === conv.conversationId,
+    (c: any) => c.conversationId === conv.conversationId,
   );
 
   console.log(
@@ -2197,7 +2198,7 @@ async function testMutableUpdate() {
   const result = await cortex.mutable.update(
     "counters",
     "test-counter",
-    (current) => current + 10,
+    (current: number) => current + 10,
   );
 
   console.log(`📥 Updated value: ${result.value}`);
@@ -2819,6 +2820,7 @@ async function testMemoryRemember() {
 
   const result = await cortex.memory.remember({
     memorySpaceId: TEST_MEMSPACE_ID,
+    participantId: TEST_PARTICIPANT_ID,
     conversationId: conv.conversationId,
     userMessage: "The password is Green123",
     agentResponse: "I'll remember that password!",
@@ -2902,6 +2904,7 @@ async function testMemoryGetEnriched() {
     });
 
     const result = await cortex.memory.remember({
+      memorySpaceId: TEST_MEMSPACE_ID,
       participantId: TEST_PARTICIPANT_ID,
       conversationId: conv.conversationId,
       userMessage: "Enrichment test",
@@ -2917,7 +2920,7 @@ async function testMemoryGetEnriched() {
   // Test default (vector only)
   const vectorOnly = await cortex.memory.get(TEST_MEMSPACE_ID, currentMemoryId);
 
-  console.log(`✅ Default (Vector only): ${(vectorOnly as unknown).memoryId}`);
+  console.log(`✅ Default (Vector only): ${(vectorOnly as any).memoryId}`);
 
   // Test enriched
   const enriched = await cortex.memory.get(TEST_MEMSPACE_ID, currentMemoryId, {
@@ -2925,12 +2928,12 @@ async function testMemoryGetEnriched() {
   });
 
   console.log(`✅ Enriched mode:`);
-  console.log(`   Memory: ${(enriched as unknown).memory.memoryId}`);
+  console.log(`   Memory: ${(enriched as any).memory.memoryId}`);
   console.log(
-    `   Conversation: ${(enriched as unknown).conversation?.conversationId || "N/A"}`,
+    `   Conversation: ${(enriched as any).conversation?.conversationId || "N/A"}`,
   );
   console.log(
-    `   Source messages: ${(enriched as unknown).sourceMessages?.length || 0}`,
+    `   Source messages: ${(enriched as any).sourceMessages?.length || 0}`,
   );
   console.log();
 }
@@ -2950,7 +2953,7 @@ async function testMemorySearchEnriched() {
 
   console.log(`✅ Enriched search: ${enriched.length} results`);
   if (enriched.length > 0) {
-    const first = enriched[0] as unknown;
+    const first = enriched[0] as any;
 
     console.log(`   First result:`);
     console.log(`     Memory: ${first.memory?.memoryId || first.memoryId}`);
@@ -2965,21 +2968,21 @@ async function testMemorySearchEnriched() {
 async function testMemoryStore() {
   console.log(`\n💾 Testing: memory.store()...`);
 
-  const memory = await cortex.memory.store(TEST_MEMSPACE_ID, {
+  const result = await cortex.memory.store(TEST_MEMSPACE_ID, {
     content: "System-generated memory via Layer 3",
     contentType: "raw",
     source: { type: "system", timestamp: Date.now() },
     metadata: { importance: 60, tags: ["layer3-test"] },
   });
 
-  console.log(`✅ Stored (smart detection): ${memory.memoryId}`);
-  console.log(`   Content: ${memory.content}`);
-  console.log(`   Source type: ${memory.sourceType}`);
+  console.log(`✅ Stored (smart detection): ${result.memory.memoryId}`);
+  console.log(`   Content: ${result.memory.content}`);
+  console.log(`   Source type: ${result.memory.sourceType}`);
   console.log(
-    `   Has conversationRef: ${memory.conversationRef ? "Yes" : "No"}`,
+    `   Has conversationRef: ${result.memory.conversationRef ? "Yes" : "No"}`,
   );
 
-  currentMemoryId = memory.memoryId;
+  currentMemoryId = result.memory.memoryId;
   console.log();
 }
 
@@ -3056,6 +3059,7 @@ async function testMemoryRememberWithAI() {
     console.log(`\nProcessing: "${convo.user.substring(0, 50)}..."`);
 
     const result = await cortex.memory.remember({
+      memorySpaceId: TEST_MEMSPACE_ID,
       participantId: TEST_PARTICIPANT_ID,
       conversationId: conv.conversationId,
       userMessage: convo.user,
@@ -3111,7 +3115,7 @@ async function testSemanticSearchRecall() {
     });
 
     if (results.length > 0) {
-      const found = results[0] as unknown;
+      const found = results[0] as any;
       const score = found._score || 0;
 
       console.log(`  ✓ Found: "${found.content.substring(0, 60)}..."`);
@@ -3144,7 +3148,7 @@ async function testEnrichedSearchWithAI() {
   console.log(`✓ Found ${results.length} results`);
 
   if (results.length > 0) {
-    const enriched = results[0] as unknown;
+    const enriched = results[0] as any;
 
     if (enriched.memory) {
       console.log(`\n✓ Enriched structure:`);
@@ -3229,7 +3233,7 @@ async function testSimilarityScores() {
 
   console.log(`\n✓ Found ${results.length} results:\n`);
 
-  results.forEach((result: unknown, i) => {
+  results.forEach((result: any, i) => {
     const score = result._score || 0;
 
     console.log(`${i + 1}. "${result.content.substring(0, 50)}..."`);
@@ -3507,8 +3511,10 @@ async function mainLoop() {
       try {
         await option.action();
       } catch (error: unknown) {
-        console.log("\n❌ Error:", error.message);
-        console.log(error.stack);
+        console.log("\n❌ Error:", error instanceof Error ? error.message : String(error));
+        if (error instanceof Error && error.stack) {
+          console.log(error.stack);
+        }
         console.log();
       }
     } else {
@@ -3542,11 +3548,13 @@ async function start() {
     await initialize();
     await mainLoop();
   } catch (error: unknown) {
-    console.error("\n❌ Fatal error:", error.message);
-    console.error(error.stack);
+    console.error("\n❌ Fatal error:", error instanceof Error ? error.message : String(error));
+    if (error instanceof Error && error.stack) {
+      console.error(error.stack);
+    }
     process.exit(1);
   }
 }
 
 // Run it
-start();
+void start();

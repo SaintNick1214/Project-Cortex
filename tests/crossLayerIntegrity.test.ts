@@ -26,7 +26,7 @@ describe("Cross-Layer Reference Integrity", () => {
 
   afterAll(async () => {
     await cleanup.purgeAll();
-    client.close();
+    await client.close();
   });
 
   describe("Conversation References", () => {

@@ -59,7 +59,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
   afterAll(async () => {
     logSection("TEST SUITE CLEANUP");
     cortex.close();
-    client.close();
+    await client.close();
   });
 
   describe("create() - Step-by-Step", () => {

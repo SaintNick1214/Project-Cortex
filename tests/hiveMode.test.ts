@@ -283,7 +283,7 @@ describe("Hive Mode", () => {
       });
 
       // 2. Agent delegates to calendar tool (creates context)
-      const context = await cortex.contexts.create({
+      const _context = await cortex.contexts.create({
         purpose: "Retrieve weekly schedule",
         memorySpaceId: HIVE_SPACE,
         conversationRef: {

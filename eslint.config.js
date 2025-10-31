@@ -22,6 +22,7 @@ export default [
       "**/.parcel-cache/**",
       "**/test-output.txt",
       "scripts/**/*", // Exclude scripts from linting
+      "examples/**/*", // Exclude examples from linting
       "*.txt", // Exclude text files
     ],
   },
@@ -150,6 +151,33 @@ export default [
       "@typescript-eslint/no-unsafe-argument": "off",
       "@typescript-eslint/no-unsafe-return": "off",
       "@typescript-eslint/no-floating-promises": "warn",
+    },
+  },
+
+  // Convex backend (relaxed for Convex framework's dynamic types)
+  {
+    files: ["convex-dev/**/*.ts"],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        project: "./tsconfig.json",
+      },
+      globals: {
+        ...globals.node,
+      },
+    },
+    plugins: {
+      "@typescript-eslint": tseslint,
+    },
+    rules: {
+      "no-console": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-unnecessary-condition": "off",
     },
   },
 
