@@ -39,8 +39,8 @@ export interface Context {
     scope: string;
     grantedAt: number;
   }>;
-  data?: any;
-  metadata?: any;
+  data?: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
   createdAt: number;
   updatedAt: number;
   completedAt?: number;
@@ -65,13 +65,13 @@ export interface CreateContextParams {
     conversationId: string;
     messageIds?: string[];
   };
-  data?: any;
+  data?: Record<string, unknown>;
   status?: "active" | "completed" | "cancelled" | "blocked";
 }
 
 export interface UpdateContextParams {
   status?: "active" | "completed" | "cancelled" | "blocked";
-  data?: any;
+  data?: Record<string, unknown>;
   completedAt?: number;
 }
 

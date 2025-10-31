@@ -102,6 +102,7 @@ export interface ConversationSearchResult {
 export interface ExportConversationsOptions {
   filters?: {
     userId?: string;
+    participantId?: string; // Hive Mode filter
     memorySpaceId?: string; // Updated
     conversationIds?: string[];
     type?: ConversationType;
@@ -538,7 +539,7 @@ export interface FactRecord {
     messageIds?: string[];
     memoryId?: string;
   };
-  metadata?: any;
+  metadata?: Record<string, unknown>;
   tags: string[];
   validFrom?: number;
   validUntil?: number;
@@ -570,7 +571,7 @@ export interface StoreFactParams {
     messageIds?: string[];
     memoryId?: string;
   };
-  metadata?: any;
+  metadata?: Record<string, unknown>;
   tags?: string[];
   validFrom?: number;
   validUntil?: number;
@@ -621,7 +622,7 @@ export interface UpdateFactInput {
   confidence?: number;
   tags?: string[];
   validUntil?: number;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

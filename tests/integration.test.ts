@@ -417,7 +417,8 @@ describe("Complex Integration Tests", () => {
 
       // Beta can see shared context
       expect(chain.root.contextId).toBe(projectContext.contextId);
-      expect(chain.root.data.projectName).toBe("Joint API Platform");
+      expect(chain.root.data).toBeDefined();
+      expect((chain.root.data as any).projectName).toBe("Joint API Platform");
 
       // But facts are isolated
       expect(acmeFacts.some((f) => f.fact.includes("Beta Inc"))).toBe(false);

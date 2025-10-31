@@ -25,7 +25,7 @@ describe("GDPR: Cascade Deletion", () => {
 
   afterAll(async () => {
     await cleanup.purgeAll();
-    client.close();
+    await client.close();
   });
 
   describe("Memory Space Cascade Deletion", () => {

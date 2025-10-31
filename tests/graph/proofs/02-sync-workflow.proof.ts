@@ -343,7 +343,7 @@ async function runSyncWorkflow(adapter: GraphAdapter, dbName: string) {
     await cortex.vector.delete(memorySpace.memorySpaceId, memory.memoryId);
     await cortex.facts.delete(memorySpace.memorySpaceId, fact.factId);
     await cortex.conversations.delete(conversation.conversationId);
-    await cortex.memorySpaces.unregister(memorySpace.memorySpaceId);
+    // Note: memorySpaces don't have unregister method - they're managed differently
     console.log("  ✓ Cortex data cleaned up\n");
   } catch (error) {
     console.error(`❌ Sync workflow failed:`, error);

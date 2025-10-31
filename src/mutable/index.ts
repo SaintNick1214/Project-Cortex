@@ -107,16 +107,16 @@ export class MutableAPI {
    * await cortex.mutable.update('inventory', 'widget-qty', (qty) => qty - 10);
    * ```
    */
-  async update(
+  async update<T = unknown>(
     namespace: string,
     key: string,
-    updater: (current: unknown) => unknown,
+    updater: (current: T) => T,
   ): Promise<MutableRecord> {
     // Get current value
     const current = await this.get(namespace, key);
 
     // Apply updater function
-    const newValue = updater(current);
+    const newValue = updater(current as T);
 
     // Set new value using custom operation
     const result = await this.client.mutation(api.mutable.update, {
