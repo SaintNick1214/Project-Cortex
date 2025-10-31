@@ -102,6 +102,7 @@ export interface ConversationSearchResult {
 export interface ExportConversationsOptions {
   filters?: {
     userId?: string;
+    participantId?: string; // Hive Mode filter
     memorySpaceId?: string; // Updated
     conversationIds?: string[];
     type?: ConversationType;
@@ -532,13 +533,13 @@ export interface FactRecord {
   predicate?: string; // Relationship type
   object?: string; // Secondary entity
   confidence: number; // 0-100
-  sourceType: "conversation" | "system" | "tool" | "manual";
+  sourceType: "conversation" | "system" | "tool" | "manual" | "a2a";
   sourceRef?: {
     conversationId?: string;
     messageIds?: string[];
     memoryId?: string;
   };
-  metadata?: any;
+  metadata?: Record<string, unknown>;
   tags: string[];
   validFrom?: number;
   validUntil?: number;
@@ -564,13 +565,13 @@ export interface StoreFactParams {
   predicate?: string;
   object?: string;
   confidence: number;
-  sourceType: "conversation" | "system" | "tool" | "manual";
+  sourceType: "conversation" | "system" | "tool" | "manual" | "a2a";
   sourceRef?: {
     conversationId?: string;
     messageIds?: string[];
     memoryId?: string;
   };
-  metadata?: any;
+  metadata?: Record<string, unknown>;
   tags?: string[];
   validFrom?: number;
   validUntil?: number;
@@ -621,7 +622,7 @@ export interface UpdateFactInput {
   confidence?: number;
   tags?: string[];
   validUntil?: number;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

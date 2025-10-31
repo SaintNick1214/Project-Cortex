@@ -5,17 +5,9 @@
  */
 
 import type { GraphAdapter } from "../types";
-import type { Context } from "../../contexts";
-import type {
-  Conversation,
-  MemoryEntry,
-  FactRecord,
-  MemorySpace,
-} from "../../types";
 import {
   deleteWithOrphanCleanup,
   createDeletionContext,
-  canRunOrphanCleanup,
   ORPHAN_RULES,
   type DeleteResult,
 } from "./orphanDetection";

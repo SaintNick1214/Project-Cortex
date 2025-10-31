@@ -11,12 +11,10 @@ import type {
   MemorySpaceStats,
   RegisterMemorySpaceOptions,
   RegisterMemorySpaceParams,
-  UnregisterMemorySpaceOptions,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
 import {
   syncMemorySpaceToGraph,
-  deleteMemorySpaceFromGraph,
 } from "../graph";
 
 export class MemorySpacesAPI {

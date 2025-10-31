@@ -35,7 +35,7 @@ describe("Parameter Propagation: memory.remember()", () => {
 
   afterAll(async () => {
     await cleanup.purgeAll();
-    client.close();
+    await client.close();
   });
 
   describe("Propagation to Vector Layer", () => {
@@ -483,7 +483,7 @@ describe("Parameter Propagation: memory.forget()", () => {
 
   afterAll(async () => {
     await cleanup.purgeAll();
-    client.close();
+    await client.close();
   });
 
   it("deleteConversation option propagates correctly", async () => {

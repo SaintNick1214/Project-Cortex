@@ -79,7 +79,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
   afterAll(async () => {
     await cleanup.purgeAll();
-    client.close();
+    await client.close();
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -530,19 +530,20 @@ describe("Memory Convenience API (Layer 3)", () => {
     });
 
     it("allows standalone for source.type=system", async () => {
-      const memory = await cortex.memory.store(TEST_MEMSPACE_ID, {
+      const result = await cortex.memory.store(TEST_MEMSPACE_ID, {
         content: "System memory",
         contentType: "raw",
         source: { type: "system", timestamp: Date.now() },
         metadata: { importance: 50, tags: [] },
       });
 
-      expect(memory).toBeDefined();
-      expect(memory.conversationRef).toBeUndefined();
+      expect(result).toBeDefined();
+      expect(result.memory).toBeDefined();
+      expect(result.memory.conversationRef).toBeUndefined();
     });
 
     it("delegates to vector.store correctly", async () => {
-      const memory = await cortex.memory.store(TEST_MEMSPACE_ID, {
+      const result = await cortex.memory.store(TEST_MEMSPACE_ID, {
         content: "Test storage",
         contentType: "raw",
         source: { type: "tool", timestamp: Date.now() },
@@ -552,7 +553,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       // Verify in vector storage
       const stored = await client.query(api.memories.get, {
         memorySpaceId: TEST_MEMSPACE_ID,
-        memoryId: memory.memoryId,
+        memoryId: result.memory.memoryId,
       });
 
       expect(stored).not.toBeNull();
@@ -574,7 +575,7 @@ describe("Memory Convenience API (Layer 3)", () => {
           metadata: { importance: 50, tags: [] },
         });
 
-        const updated = await cortex.memory.update(
+        const result = await cortex.memory.update(
           TEST_MEMSPACE_ID,
           memory.memoryId,
           {
@@ -583,8 +584,8 @@ describe("Memory Convenience API (Layer 3)", () => {
           },
         );
 
-        expect(updated.content).toBe("Updated");
-        expect(updated.importance).toBe(80);
+        expect(result.memory.content).toBe("Updated");
+        expect(result.memory.importance).toBe(80);
       });
     });
 

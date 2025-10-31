@@ -153,7 +153,7 @@ What specific aspects would you like to dive deeper into?
 
   describe("Complete Multi-Layer Cascade", () => {
     let rememberResult: any;
-    let extractedFacts: any[] = [];
+    const extractedFacts: any[] = [];
 
     it("should store complex conversation through memory.remember()", async () => {
       // This tests the ENTIRE cascade through all layers

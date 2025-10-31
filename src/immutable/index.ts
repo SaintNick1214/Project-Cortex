@@ -8,7 +8,6 @@ import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type {
   CountImmutableFilter,
-  DeleteImmutableOptions,
   ImmutableEntry,
   ImmutableRecord,
   ImmutableSearchResult,
@@ -16,10 +15,8 @@ import type {
   ListImmutableFilter,
   SearchImmutableInput,
   StoreImmutableOptions,
-  UpdateImmutableOptions,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
-import { deleteImmutableFromGraph } from "../graph";
 
 export class ImmutableAPI {
   constructor(
@@ -54,7 +51,7 @@ export class ImmutableAPI {
     // Sync to graph if requested (facts are handled specially in FactsAPI)
     if (options?.syncToGraph && this.graphAdapter && entry.type !== "fact") {
       try {
-        const nodeId = await this.graphAdapter.createNode({
+        await this.graphAdapter.createNode({
           label: "Immutable",
           properties: {
             immutableType: entry.type,

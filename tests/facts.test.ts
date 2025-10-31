@@ -849,7 +849,7 @@ describe("Facts API (Layer 3)", () => {
         confidence: 80,
       });
 
-      const v3 = await cortex.facts.update(TEST_MEMSPACE_ID, v2.factId, {
+      const _v3 = await cortex.facts.update(TEST_MEMSPACE_ID, v2.factId, {
         fact: "V3",
         confidence: 90,
       });

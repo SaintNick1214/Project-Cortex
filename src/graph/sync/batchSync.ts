@@ -4,6 +4,9 @@
  * Functions for initial bulk sync of Cortex data to graph database
  */
 
+/* eslint-disable no-console */
+// Console logging is intentional for batch sync progress tracking
+
 import type { Cortex } from "../..";
 import type { GraphAdapter } from "../types";
 import {

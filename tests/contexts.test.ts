@@ -10,7 +10,7 @@
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
-import { api } from "../convex-dev/_generated/api";
+// api is available via setupCortex if needed
 import { TestCleanup } from "./helpers";
 
 describe("Context Chains API", () => {
@@ -189,8 +189,9 @@ describe("Context Chains API", () => {
         data: { step: 2, progress: "50%" },
       });
 
-      expect(updated.data.step).toBe(2);
-      expect(updated.data.progress).toBe("50%");
+      expect(updated.data).toBeDefined();
+      expect((updated.data as any).step).toBe(2);
+      expect((updated.data as any).progress).toBe("50%");
     });
   });
 

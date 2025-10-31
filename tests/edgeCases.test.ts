@@ -25,7 +25,7 @@ describe("Edge Cases: Extreme Values", () => {
 
   afterAll(async () => {
     await cleanup.purgeAll();
-    client.close();
+    await client.close();
   });
 
   describe("Large Content", () => {

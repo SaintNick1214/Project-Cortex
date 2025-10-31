@@ -18,17 +18,25 @@ describe("Memory API with Fact Integration", () => {
   const testUserName = "Test User";
 
   beforeAll(async () => {
+    cortex = new Cortex({ convexUrl: process.env.CONVEX_URL || "" });
     const client = new ConvexClient(process.env.CONVEX_URL || "");
-    cortex = new Cortex({ client });
     cleanup = new TestCleanup(client);
   });
 
   afterAll(async () => {
-    await cleanup.cleanup();
+    await cleanup.purgeAll();
   });
 
   test("remember() should extract and store facts when extractFacts callback provided", async () => {
-    const extractFacts = async (userMsg: string, agentMsg: string) => {
+    // Create conversation first
+    await cortex.conversations.create({
+      conversationId: testConversationId,
+      type: "user-agent",
+      memorySpaceId: testMemorySpaceId,
+      participants: { userId: testUserId, participantId: "agent-test" },
+    });
+
+    const extractFacts = async (_userMsg: string, _agentMsg: string) => {
       return [
         {
           fact: "User prefers dark mode",
@@ -58,12 +66,17 @@ describe("Memory API with Fact Integration", () => {
     expect(result.facts[0].confidence).toBe(95);
     expect(result.facts[0].sourceRef?.memoryId).toBeDefined();
     expect(result.facts[0].sourceRef?.conversationId).toBe(testConversationId);
-
-    // Clean up
-    cleanup.track(testMemorySpaceId, testConversationId);
   });
 
   test("remember() should handle fact extraction errors gracefully", async () => {
+    // Create conversation first
+    await cortex.conversations.create({
+      conversationId: `${testConversationId}-error`,
+      type: "user-agent",
+      memorySpaceId: testMemorySpaceId,
+      participants: { userId: testUserId, participantId: "agent-test" },
+    });
+
     const extractFacts = async () => {
       throw new Error("Extraction failed");
     };
@@ -81,11 +94,17 @@ describe("Memory API with Fact Integration", () => {
     // Should still succeed with empty facts array
     expect(result.memories.length).toBe(2);
     expect(result.facts.length).toBe(0);
-
-    cleanup.track(testMemorySpaceId, `${testConversationId}-error`);
   });
 
   test("forget() should cascade delete associated facts", async () => {
+    // Create conversation first
+    await cortex.conversations.create({
+      conversationId: `${testConversationId}-delete`,
+      type: "user-agent",
+      memorySpaceId: testMemorySpaceId,
+      participants: { userId: testUserId, participantId: "agent-test" },
+    });
+
     const extractFacts = async () => [
       {
         fact: "Test fact for deletion",
@@ -118,11 +137,17 @@ describe("Memory API with Fact Integration", () => {
     expect(forgetResult.factsDeleted).toBe(1);
     expect(forgetResult.factIds.length).toBe(1);
     expect(forgetResult.factIds[0]).toBe(rememberResult.facts[0].factId);
-
-    cleanup.track(testMemorySpaceId, `${testConversationId}-delete`);
   });
 
   test("get() should enrich memory with associated facts", async () => {
+    // Create conversation first
+    await cortex.conversations.create({
+      conversationId: `${testConversationId}-get`,
+      type: "user-agent",
+      memorySpaceId: testMemorySpaceId,
+      participants: { userId: testUserId, participantId: "agent-test" },
+    });
+
     const extractFacts = async () => [
       {
         fact: "User loves TypeScript",
@@ -157,11 +182,17 @@ describe("Memory API with Fact Integration", () => {
       expect(enriched.facts!.length).toBeGreaterThan(0);
       expect(enriched.facts![0].fact).toBe("User loves TypeScript");
     }
-
-    cleanup.track(testMemorySpaceId, `${testConversationId}-get`);
   });
 
   test("search() should enrich results with facts", async () => {
+    // Create conversation first
+    await cortex.conversations.create({
+      conversationId: `${testConversationId}-search`,
+      type: "user-agent",
+      memorySpaceId: testMemorySpaceId,
+      participants: { userId: testUserId, participantId: "agent-test" },
+    });
+
     const extractFacts = async () => [
       {
         fact: "User is from San Francisco",
@@ -197,11 +228,17 @@ describe("Memory API with Fact Integration", () => {
       expect(firstResult.facts).toBeDefined();
       expect(firstResult.facts!.length).toBeGreaterThan(0);
     }
-
-    cleanup.track(testMemorySpaceId, `${testConversationId}-search`);
   });
 
   test("multiple facts should be extracted from single conversation", async () => {
+    // Create conversation first
+    await cortex.conversations.create({
+      conversationId: `${testConversationId}-multi`,
+      type: "user-agent",
+      memorySpaceId: testMemorySpaceId,
+      participants: { userId: testUserId, participantId: "agent-test" },
+    });
+
     const extractFacts = async () => [
       {
         fact: "User is a software engineer",
@@ -241,11 +278,17 @@ describe("Memory API with Fact Integration", () => {
       "relationship",
       "knowledge",
     ]);
-
-    cleanup.track(testMemorySpaceId, `${testConversationId}-multi`);
   });
 
   test("facts should maintain sourceRef links to memories and conversations", async () => {
+    // Create conversation first
+    await cortex.conversations.create({
+      conversationId: `${testConversationId}-sourceref`,
+      type: "user-agent",
+      memorySpaceId: testMemorySpaceId,
+      participants: { userId: testUserId, participantId: "agent-test" },
+    });
+
     const extractFacts = async () => [
       {
         fact: "User prefers blue theme",
@@ -268,11 +311,9 @@ describe("Memory API with Fact Integration", () => {
     const fact = result.facts[0];
     expect(fact.sourceRef).toBeDefined();
     expect(fact.sourceRef?.memoryId).toBe(result.memories[0].memoryId);
-    expect(fact.sourceRef?.conversationId).toBe(testConversationId);
+    expect(fact.sourceRef?.conversationId).toBe(`${testConversationId}-sourceref`);
     expect(fact.sourceRef?.messageIds).toBeDefined();
     expect(fact.sourceRef?.messageIds!.length).toBe(2); // User + agent messages
-
-    cleanup.track(testMemorySpaceId, `${testConversationId}-sourceref`);
   });
 });
 

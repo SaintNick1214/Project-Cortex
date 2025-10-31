@@ -14,7 +14,6 @@ import type {
   SearchMemoriesOptions,
   StoreMemoryInput,
   StoreMemoryOptions,
-  UpdateMemoryOptions,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
 import {
