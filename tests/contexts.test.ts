@@ -223,9 +223,9 @@ describe("Context Chains API", () => {
         parentId: root.contextId,
       });
 
-      await expect(
-        cortex.contexts.delete(root.contextId),
-      ).rejects.toThrow("HAS_CHILDREN");
+      await expect(cortex.contexts.delete(root.contextId)).rejects.toThrow(
+        "HAS_CHILDREN",
+      );
     });
 
     it("deletes with cascade", async () => {
@@ -532,7 +532,9 @@ describe("Context Chains API", () => {
       expect(updated.grantedAccess).toBeDefined();
       expect(updated.grantedAccess!.length).toBeGreaterThanOrEqual(1);
       expect(
-        updated.grantedAccess!.some((g) => g.memorySpaceId === "company-b-space"),
+        updated.grantedAccess!.some(
+          (g) => g.memorySpaceId === "company-b-space",
+        ),
       ).toBe(true);
     });
   });
@@ -618,4 +620,3 @@ describe("Context Chains API", () => {
     });
   });
 });
-

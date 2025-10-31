@@ -6,6 +6,17 @@
 
 import { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
+import type { GraphAdapter } from "../graph/types";
+import {
+  syncContextToGraph,
+  syncContextRelationships,
+  deleteContextFromGraph,
+} from "../graph";
+import type {
+  CreateContextOptions,
+  UpdateContextOptions,
+  DeleteContextOptions,
+} from "../types";
 
 export interface Context {
   _id: string;
@@ -81,7 +92,10 @@ export interface CountContextsFilter {
 }
 
 export class ContextsAPI {
-  constructor(private client: ConvexClient) {}
+  constructor(
+    private client: ConvexClient,
+    private graphAdapter?: GraphAdapter,
+  ) {}
 
   /**
    * Create a new context
@@ -99,7 +113,7 @@ export class ContextsAPI {
    * });
    * ```
    */
-  async create(params: CreateContextParams): Promise<Context> {
+  async create(params: CreateContextParams, options?: CreateContextOptions): Promise<Context> {
     const result = await this.client.mutation(api.contexts.create, {
       purpose: params.purpose,
       memorySpaceId: params.memorySpaceId,
@@ -109,6 +123,16 @@ export class ContextsAPI {
       data: params.data,
       status: params.status,
     });
+
+    // Sync to graph if requested
+    if (options?.syncToGraph && this.graphAdapter) {
+      try {
+        const nodeId = await syncContextToGraph(result as Context, this.graphAdapter);
+        await syncContextRelationships(result as Context, nodeId, this.graphAdapter);
+      } catch (error) {
+        console.warn("Failed to sync context to graph:", error);
+      }
+    }
 
     return result as Context;
   }
@@ -147,13 +171,29 @@ export class ContextsAPI {
    * });
    * ```
    */
-  async update(contextId: string, updates: UpdateContextParams): Promise<Context> {
+  async update(
+    contextId: string,
+    updates: UpdateContextParams,
+    options?: UpdateContextOptions,
+  ): Promise<Context> {
     const result = await this.client.mutation(api.contexts.update, {
       contextId,
       status: updates.status,
       data: updates.data,
       completedAt: updates.completedAt,
     });
+
+    // Update in graph if requested
+    if (options?.syncToGraph && this.graphAdapter) {
+      try {
+        const nodes = await this.graphAdapter.findNodes("Context", { contextId }, 1);
+        if (nodes.length > 0) {
+          await this.graphAdapter.updateNode(nodes[0].id!, updates);
+        }
+      } catch (error) {
+        console.warn("Failed to update context in graph:", error);
+      }
+    }
 
     return result as Context;
   }
@@ -168,7 +208,7 @@ export class ContextsAPI {
    */
   async delete(
     contextId: string,
-    options?: { cascadeChildren?: boolean },
+    options?: DeleteContextOptions & { cascadeChildren?: boolean },
   ): Promise<{
     deleted: boolean;
     contextId: string;
@@ -178,6 +218,15 @@ export class ContextsAPI {
       contextId,
       cascadeChildren: options?.cascadeChildren,
     });
+
+    // Delete from graph with orphan cleanup
+    if (options?.syncToGraph && this.graphAdapter) {
+      try {
+        await deleteContextFromGraph(contextId, this.graphAdapter, true);
+      } catch (error) {
+        console.warn("Failed to delete context from graph:", error);
+      }
+    }
 
     return result as {
       deleted: boolean;
@@ -316,7 +365,10 @@ export class ContextsAPI {
    * await cortex.contexts.addParticipant('ctx-123', 'legal-agent-space');
    * ```
    */
-  async addParticipant(contextId: string, participantId: string): Promise<Context> {
+  async addParticipant(
+    contextId: string,
+    participantId: string,
+  ): Promise<Context> {
     const result = await this.client.mutation(api.contexts.addParticipant, {
       contextId,
       participantId,
@@ -347,4 +399,3 @@ export class ContextsAPI {
     return result as Context;
   }
 }
-

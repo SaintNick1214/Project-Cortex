@@ -8,14 +8,26 @@ import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type {
   CountMemoriesFilter,
+  DeleteMemoryOptions,
   ListMemoriesFilter,
   MemoryEntry,
   SearchMemoriesOptions,
   StoreMemoryInput,
+  StoreMemoryOptions,
+  UpdateMemoryOptions,
 } from "../types";
+import type { GraphAdapter } from "../graph/types";
+import {
+  syncMemoryToGraph,
+  syncMemoryRelationships,
+  deleteMemoryFromGraph,
+} from "../graph";
 
 export class VectorAPI {
-  constructor(private readonly client: ConvexClient) {}
+  constructor(
+    private readonly client: ConvexClient,
+    private readonly graphAdapter?: GraphAdapter,
+  ) {}
 
   /**
    * Store a vector memory
@@ -29,9 +41,18 @@ export class VectorAPI {
    *   source: { type: 'conversation', userId: 'user-123' },
    *   metadata: { importance: 70, tags: ['preferences'] },
    * });
+   *
+   * // With graph sync
+   * const memory = await cortex.vector.store('agent-1', data, {
+   *   syncToGraph: true
+   * });
    * ```
    */
-  async store(memorySpaceId: string, input: StoreMemoryInput): Promise<MemoryEntry> {
+  async store(
+    memorySpaceId: string,
+    input: StoreMemoryInput,
+    options?: StoreMemoryOptions,
+  ): Promise<MemoryEntry> {
     const result = await this.client.mutation(api.memories.store, {
       memorySpaceId,
       participantId: input.participantId, // NEW: Hive Mode
@@ -49,6 +70,17 @@ export class VectorAPI {
       tags: input.metadata.tags,
     });
 
+    // Sync to graph if requested and configured
+    if (options?.syncToGraph && this.graphAdapter) {
+      try {
+        const nodeId = await syncMemoryToGraph(result as MemoryEntry, this.graphAdapter);
+        await syncMemoryRelationships(result as MemoryEntry, nodeId, this.graphAdapter);
+      } catch (error) {
+        // Log but don't fail - graph sync is non-critical
+        console.warn("Failed to sync memory to graph:", error);
+      }
+    }
+
     return result as MemoryEntry;
   }
 
@@ -60,7 +92,10 @@ export class VectorAPI {
    * const memory = await cortex.vector.get('agent-1', 'mem-abc123');
    * ```
    */
-  async get(memorySpaceId: string, memoryId: string): Promise<MemoryEntry | null> {
+  async get(
+    memorySpaceId: string,
+    memoryId: string,
+  ): Promise<MemoryEntry | null> {
     const result = await this.client.query(api.memories.get, {
       memorySpaceId,
       memoryId,
@@ -105,16 +140,31 @@ export class VectorAPI {
    * @example
    * ```typescript
    * await cortex.vector.delete('agent-1', 'mem-abc123');
+   *
+   * // With graph sync and orphan cleanup
+   * await cortex.vector.delete('agent-1', 'mem-abc123', {
+   *   syncToGraph: true
+   * });
    * ```
    */
   async delete(
     memorySpaceId: string,
     memoryId: string,
+    options?: DeleteMemoryOptions,
   ): Promise<{ deleted: boolean; memoryId: string }> {
     const result = await this.client.mutation(api.memories.deleteMemory, {
       memorySpaceId,
       memoryId,
     });
+
+    // Delete from graph with orphan cleanup
+    if (options?.syncToGraph && this.graphAdapter) {
+      try {
+        await deleteMemoryFromGraph(memoryId, this.graphAdapter, true);
+      } catch (error) {
+        console.warn("Failed to delete memory from graph:", error);
+      }
+    }
 
     return result as { deleted: boolean; memoryId: string };
   }
