@@ -8,10 +8,17 @@
 import type { ConvexClient } from "convex/browser";
 import { ConversationsAPI } from "../conversations";
 import { VectorAPI } from "../vector";
+import { FactsAPI } from "../facts";
 import {
+  type ArchiveResult,
   type CountMemoriesFilter,
+  type DeleteManyResult,
+  type DeleteMemoryOptions,
+  type DeleteMemoryResult,
   type EnrichedMemory,
+  type ExportMemoriesOptions,
   type ExtendedForgetOptions,
+  type FactRecord,
   type ForgetOptions,
   type ForgetResult,
   type GetMemoryOptions,
@@ -23,6 +30,10 @@ import {
   type SearchMemoryOptions,
   type SourceType,
   type StoreMemoryInput,
+  type StoreMemoryResult,
+  type UpdateManyResult,
+  type UpdateMemoryOptions,
+  type UpdateMemoryResult,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
 
@@ -30,6 +41,7 @@ export class MemoryAPI {
   private readonly client: ConvexClient;
   private readonly conversations: ConversationsAPI;
   private readonly vector: VectorAPI;
+  private readonly facts: FactsAPI;
   private readonly graphAdapter?: GraphAdapter;
 
   constructor(client: ConvexClient, graphAdapter?: GraphAdapter) {
@@ -37,6 +49,100 @@ export class MemoryAPI {
     this.graphAdapter = graphAdapter;
     this.conversations = new ConversationsAPI(client, graphAdapter);
     this.vector = new VectorAPI(client, graphAdapter);
+    this.facts = new FactsAPI(client, graphAdapter);
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Helper Methods for Fact Operations
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * Helper: Find and cascade delete facts linked to a memory
+   */
+  private async cascadeDeleteFacts(
+    memorySpaceId: string,
+    memoryId: string,
+    conversationId?: string,
+    syncToGraph?: boolean,
+  ): Promise<{ count: number; factIds: string[] }> {
+    const allFacts = await this.facts.list({
+      memorySpaceId,
+      limit: 10000,
+    });
+
+    const factsToDelete = allFacts.filter(
+      (fact) =>
+        fact.sourceRef?.memoryId === memoryId ||
+        (conversationId && fact.sourceRef?.conversationId === conversationId)
+    );
+
+    const deletedFactIds: string[] = [];
+    for (const fact of factsToDelete) {
+      try {
+        await this.facts.delete(memorySpaceId, fact.factId, { syncToGraph });
+        deletedFactIds.push(fact.factId);
+      } catch (error) {
+        console.warn("Failed to delete linked fact:", error);
+      }
+    }
+
+    return { count: deletedFactIds.length, factIds: deletedFactIds };
+  }
+
+  /**
+   * Helper: Archive facts (mark as expired)
+   */
+  private async archiveFacts(
+    memorySpaceId: string,
+    memoryId: string,
+    conversationId?: string,
+    syncToGraph?: boolean,
+  ): Promise<{ count: number; factIds: string[] }> {
+    const allFacts = await this.facts.list({
+      memorySpaceId,
+      limit: 10000,
+    });
+
+    const factsToArchive = allFacts.filter(
+      (fact) =>
+        fact.sourceRef?.memoryId === memoryId ||
+        (conversationId && fact.sourceRef?.conversationId === conversationId)
+    );
+
+    const archivedFactIds: string[] = [];
+    for (const fact of factsToArchive) {
+      try {
+        await this.facts.update(memorySpaceId, fact.factId, {
+          validUntil: Date.now(),
+          tags: [...(fact.tags || []), 'archived'],
+        }, { syncToGraph });
+        archivedFactIds.push(fact.factId);
+      } catch (error) {
+        console.warn("Failed to archive linked fact:", error);
+      }
+    }
+
+    return { count: archivedFactIds.length, factIds: archivedFactIds };
+  }
+
+  /**
+   * Helper: Fetch facts for a memory or conversation
+   */
+  private async fetchFactsForMemory(
+    memorySpaceId: string,
+    memoryId: string,
+    conversationId?: string,
+  ): Promise<FactRecord[]> {
+    const allFacts = await this.facts.list({
+      memorySpaceId,
+      limit: 10000,
+    });
+
+    return allFacts.filter(
+      (fact) =>
+        fact.sourceRef?.memoryId === memoryId ||
+        (conversationId && fact.sourceRef?.conversationId === conversationId)
+    );
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -164,6 +270,48 @@ export class MemoryAPI {
       },
     }, { syncToGraph: shouldSyncToGraph });
 
+    // Step 7: Extract and store facts (if extraction function provided)
+    let extractedFacts: FactRecord[] = [];
+
+    if (params.extractFacts) {
+      const factsToStore = await params.extractFacts(
+        params.userMessage,
+        params.agentResponse,
+      );
+
+      if (factsToStore && factsToStore.length > 0) {
+        for (const factData of factsToStore) {
+          try {
+            const storedFact = await this.facts.store({
+              memorySpaceId: params.memorySpaceId,
+              participantId: params.participantId,
+              fact: factData.fact,
+              factType: factData.factType,
+              subject: factData.subject || params.userId,
+              predicate: factData.predicate,
+              object: factData.object,
+              confidence: factData.confidence,
+              sourceType: "conversation",
+              sourceRef: {
+                conversationId: params.conversationId,
+                messageIds: [
+                  userMsg.messages[userMsg.messages.length - 1].id,
+                  agentMsg.messages[agentMsg.messages.length - 1].id,
+                ],
+                memoryId: userMemory.memoryId,
+              },
+              tags: factData.tags || params.tags || [],
+            }, { syncToGraph: shouldSyncToGraph });
+            
+            extractedFacts.push(storedFact);
+          } catch (error) {
+            console.warn("Failed to store fact:", error);
+            // Continue with other facts
+          }
+        }
+      }
+    }
+
     return {
       conversation: {
         messageIds: [
@@ -173,6 +321,7 @@ export class MemoryAPI {
         conversationId: params.conversationId,
       },
       memories: [userMemory, agentMemory],
+      facts: extractedFacts,
     };
   }
 
@@ -212,6 +361,14 @@ export class MemoryAPI {
     // Delete from vector (with graph cascade)
     await this.vector.delete(agentId, memoryId, { syncToGraph: shouldSyncToGraph });
 
+    // Cascade delete associated facts
+    const { count: factsDeleted, factIds } = await this.cascadeDeleteFacts(
+      agentId,
+      memoryId,
+      memory.conversationRef?.conversationId,
+      shouldSyncToGraph,
+    );
+
     let conversationDeleted = false;
     let messagesDeleted = 0;
 
@@ -241,6 +398,8 @@ export class MemoryAPI {
       memoryDeleted: true,
       conversationDeleted,
       messagesDeleted,
+      factsDeleted,
+      factIds,
       restorable: !options?.deleteConversation, // Restorable if ACID preserved
     };
   }
@@ -272,29 +431,34 @@ export class MemoryAPI {
       return memory;
     }
 
-    // Enrich with ACID if conversationRef exists
-    if (!memory.conversationRef) {
-      return { memory }; // No conversation to enrich
+    // Fetch conversation if exists
+    let conversation = undefined;
+    let sourceMessages = undefined;
+
+    if (memory.conversationRef) {
+      conversation = await this.conversations.get(
+        memory.conversationRef.conversationId,
+      );
+
+      if (conversation) {
+        sourceMessages = conversation.messages.filter((m) =>
+          memory.conversationRef!.messageIds.includes(m.id),
+        );
+      }
     }
 
-    // Fetch conversation
-    const conversation = await this.conversations.get(
-      memory.conversationRef.conversationId,
-    );
-
-    if (!conversation) {
-      return { memory }; // Conversation deleted or missing
-    }
-
-    // Extract source messages
-    const sourceMessages = conversation.messages.filter((m) =>
-      memory.conversationRef!.messageIds.includes(m.id),
+    // Fetch associated facts
+    const relatedFacts = await this.fetchFactsForMemory(
+      agentId,
+      memoryId,
+      memory.conversationRef?.conversationId,
     );
 
     return {
       memory,
       conversation,
       sourceMessages,
+      facts: relatedFacts.length > 0 ? relatedFacts : undefined,
     };
   }
 
@@ -347,36 +511,72 @@ export class MemoryAPI {
       }
     }
 
-    // Enrich results
+    // Batch fetch all facts for this memory space
+    const allFacts = await this.facts.list({
+      memorySpaceId: agentId,
+      limit: 10000,
+    });
+
+    // Create lookup maps for efficient fact matching
+    const factsByMemoryId = new Map<string, FactRecord[]>();
+    const factsByConversationId = new Map<string, FactRecord[]>();
+
+    for (const fact of allFacts) {
+      if (fact.sourceRef?.memoryId) {
+        if (!factsByMemoryId.has(fact.sourceRef.memoryId)) {
+          factsByMemoryId.set(fact.sourceRef.memoryId, []);
+        }
+        factsByMemoryId.get(fact.sourceRef.memoryId)!.push(fact);
+      }
+
+      if (fact.sourceRef?.conversationId) {
+        if (!factsByConversationId.has(fact.sourceRef.conversationId)) {
+          factsByConversationId.set(fact.sourceRef.conversationId, []);
+        }
+        factsByConversationId.get(fact.sourceRef.conversationId)!.push(fact);
+      }
+    }
+
+    // Enrich results with conversations AND facts
     const enriched: EnrichedMemory[] = memories.map((memory) => {
-      if (!memory.conversationRef) {
-        return { memory };
+      const result: EnrichedMemory = { memory };
+
+      // Add conversation
+      if (memory.conversationRef) {
+        const conversation = conversations.get(memory.conversationRef.conversationId);
+        if (conversation) {
+          result.conversation = conversation;
+          result.sourceMessages = conversation.messages.filter((m: any) =>
+            memory.conversationRef!.messageIds.includes(m.id),
+          );
+        }
       }
 
-      const conversation = conversations.get(
-        memory.conversationRef.conversationId,
+      // Add facts
+      const relatedFacts = [
+        ...(factsByMemoryId.get(memory.memoryId) || []),
+        ...(memory.conversationRef
+          ? factsByConversationId.get(memory.conversationRef.conversationId) || []
+          : []),
+      ];
+
+      // Deduplicate facts by factId
+      const uniqueFacts = Array.from(
+        new Map(relatedFacts.map(f => [f.factId, f])).values()
       );
 
-      if (!conversation) {
-        return { memory };
+      if (uniqueFacts.length > 0) {
+        result.facts = uniqueFacts;
       }
 
-      const sourceMessages = conversation.messages.filter((m: any) =>
-        memory.conversationRef!.messageIds.includes(m.id),
-      );
-
-      return {
-        memory,
-        conversation,
-        sourceMessages,
-      };
+      return result;
     });
 
     return enriched;
   }
 
   /**
-   * Store memory with smart layer detection
+   * Store memory with smart layer detection and optional fact extraction
    *
    * @example
    * ```typescript
@@ -385,10 +585,15 @@ export class MemoryAPI {
    *   contentType: 'raw',
    *   source: { type: 'system' },
    *   metadata: { importance: 60, tags: ['preferences'] },
+   *   extractFacts: async (content) => [{
+   *     fact: 'User prefers dark mode',
+   *     factType: 'preference',
+   *     confidence: 90,
+   *   }],
    * });
    * ```
    */
-  async store(agentId: string, input: StoreMemoryInput): Promise<MemoryEntry> {
+  async store(agentId: string, input: StoreMemoryInput): Promise<StoreMemoryResult> {
     // Validate conversationRef requirement
     if (input.source.type === "conversation" && !input.conversationRef) {
       throw new Error(
@@ -396,8 +601,48 @@ export class MemoryAPI {
       );
     }
 
-    // Delegate to vector
-    return await this.vector.store(agentId, input);
+    // Store memory
+    const memory = await this.vector.store(agentId, input);
+
+    // Extract and store facts if callback provided
+    let extractedFacts: FactRecord[] = [];
+
+    if (input.extractFacts) {
+      const factsToStore = await input.extractFacts(input.content);
+
+      if (factsToStore && factsToStore.length > 0) {
+        for (const factData of factsToStore) {
+          try {
+            const storedFact = await this.facts.store({
+              memorySpaceId: agentId,
+              participantId: input.participantId,
+              fact: factData.fact,
+              factType: factData.factType,
+              subject: factData.subject || input.userId,
+              predicate: factData.predicate,
+              object: factData.object,
+              confidence: factData.confidence,
+              sourceType: input.source.type,
+              sourceRef: {
+                conversationId: input.conversationRef?.conversationId,
+                messageIds: input.conversationRef?.messageIds,
+                memoryId: memory.memoryId,
+              },
+              tags: factData.tags || input.metadata.tags || [],
+            }, { syncToGraph: true });
+
+            extractedFacts.push(storedFact);
+          } catch (error) {
+            console.warn("Failed to store fact:", error);
+          }
+        }
+      }
+    }
+
+    return {
+      memory,
+      facts: extractedFacts,
+    };
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -405,7 +650,7 @@ export class MemoryAPI {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /**
-   * Update a memory (delegates to vector.update)
+   * Update a memory with optional fact re-extraction
    */
   async update(
     agentId: string,
@@ -416,25 +661,128 @@ export class MemoryAPI {
       importance?: number;
       tags?: string[];
     },
-  ): Promise<MemoryEntry> {
-    return await this.vector.update(agentId, memoryId, updates);
+    options?: UpdateMemoryOptions,
+  ): Promise<UpdateMemoryResult> {
+    const updatedMemory = await this.vector.update(agentId, memoryId, updates);
+
+    let factsReextracted: FactRecord[] = [];
+
+    // Re-extract facts if content changed and reextract requested
+    if (options?.reextractFacts && updates.content && options.extractFacts) {
+      // Delete old facts first
+      await this.cascadeDeleteFacts(agentId, memoryId, undefined, options.syncToGraph);
+
+      // Extract new facts
+      const factsToStore = await options.extractFacts(updates.content);
+
+      if (factsToStore && factsToStore.length > 0) {
+        for (const factData of factsToStore) {
+          try {
+            const storedFact = await this.facts.store({
+              memorySpaceId: agentId,
+              fact: factData.fact,
+              factType: factData.factType,
+              subject: factData.subject || updatedMemory.userId,
+              predicate: factData.predicate,
+              object: factData.object,
+              confidence: factData.confidence,
+              sourceType: updatedMemory.sourceType,
+              sourceRef: {
+                conversationId: updatedMemory.conversationRef?.conversationId,
+                messageIds: updatedMemory.conversationRef?.messageIds,
+                memoryId: updatedMemory.memoryId,
+              },
+              tags: factData.tags || updatedMemory.tags || [],
+            }, { syncToGraph: options.syncToGraph });
+
+            factsReextracted.push(storedFact);
+          } catch (error) {
+            console.warn("Failed to re-extract fact:", error);
+          }
+        }
+      }
+    }
+
+    return {
+      memory: updatedMemory,
+      factsReextracted: factsReextracted.length > 0 ? factsReextracted : undefined,
+    };
   }
 
   /**
-   * Delete a memory from Vector only (preserves ACID)
+   * Delete a memory with cascade delete of facts
    */
   async delete(
     agentId: string,
     memoryId: string,
-  ): Promise<{ deleted: boolean; memoryId: string }> {
-    return await this.vector.delete(agentId, memoryId);
+    options?: DeleteMemoryOptions,
+  ): Promise<DeleteMemoryResult> {
+    const memory = await this.vector.get(agentId, memoryId);
+
+    if (!memory) {
+      throw new Error("MEMORY_NOT_FOUND");
+    }
+
+    const shouldSyncToGraph = options?.syncToGraph !== false && this.graphAdapter !== undefined;
+    const shouldCascade = options?.cascadeDeleteFacts !== false; // Default: true
+
+    // Delete facts if cascade enabled
+    let factsDeleted = 0;
+    let factIds: string[] = [];
+
+    if (shouldCascade) {
+      const result = await this.cascadeDeleteFacts(
+        agentId,
+        memoryId,
+        memory.conversationRef?.conversationId,
+        shouldSyncToGraph,
+      );
+      factsDeleted = result.count;
+      factIds = result.factIds;
+    }
+
+    // Delete from vector
+    await this.vector.delete(agentId, memoryId, { syncToGraph: shouldSyncToGraph });
+
+    return {
+      deleted: true,
+      memoryId,
+      factsDeleted,
+      factIds,
+    };
   }
 
   /**
-   * List memories (delegates to vector.list)
+   * List memories with optional fact enrichment
    */
-  async list(filter: ListMemoriesFilter): Promise<MemoryEntry[]> {
-    return await this.vector.list(filter);
+  async list(filter: ListMemoriesFilter): Promise<MemoryEntry[] | EnrichedMemory[]> {
+    const memories = await this.vector.list(filter);
+
+    if (!filter.enrichFacts) {
+      return memories;
+    }
+
+    // Batch fetch facts
+    const allFacts = await this.facts.list({
+      memorySpaceId: filter.memorySpaceId,
+      limit: 10000,
+    });
+
+    const factsByMemoryId = new Map<string, FactRecord[]>();
+
+    for (const fact of allFacts) {
+      if (fact.sourceRef?.memoryId) {
+        if (!factsByMemoryId.has(fact.sourceRef.memoryId)) {
+          factsByMemoryId.set(fact.sourceRef.memoryId, []);
+        }
+        factsByMemoryId.get(fact.sourceRef.memoryId)!.push(fact);
+      }
+    }
+
+    return memories.map((memory) => ({
+      memory,
+      facts: factsByMemoryId.get(memory.memoryId),
+    }));
   }
 
   /**
@@ -445,7 +793,7 @@ export class MemoryAPI {
   }
 
   /**
-   * Update many memories (delegates to vector.updateMany)
+   * Update many memories and track affected facts
    */
   async updateMany(
     filter: {
@@ -457,46 +805,138 @@ export class MemoryAPI {
       importance?: number;
       tags?: string[];
     },
-  ): Promise<{ updated: number; memoryIds: string[] }> {
-    return await this.vector.updateMany(filter, updates);
+  ): Promise<UpdateManyResult> {
+    const result = await this.vector.updateMany(filter, updates);
+
+    // Count facts that reference updated memories
+    const allFacts = await this.facts.list({
+      memorySpaceId: filter.memorySpaceId,
+      limit: 10000,
+    });
+
+    const affectedFacts = allFacts.filter((fact) =>
+      result.memoryIds.includes(fact.sourceRef?.memoryId || '')
+    );
+
+    return {
+      ...result,
+      factsAffected: affectedFacts.length,
+    };
   }
 
   /**
-   * Delete many memories (delegates to vector.deleteMany)
+   * Delete many memories with batch cascade delete of facts
    */
   async deleteMany(filter: {
     memorySpaceId: string;
     userId?: string;
     sourceType?: SourceType;
-  }): Promise<{ deleted: number; memoryIds: string[] }> {
-    return await this.vector.deleteMany(filter);
+  }): Promise<DeleteManyResult> {
+    // Get all memories to delete
+    const memories = await this.vector.list(filter);
+
+    let totalFactsDeleted = 0;
+    const allFactIds: string[] = [];
+
+    // Cascade delete facts for each memory
+    for (const memory of memories) {
+      const { count, factIds } = await this.cascadeDeleteFacts(
+        filter.memorySpaceId,
+        memory.memoryId,
+        memory.conversationRef?.conversationId,
+        true,
+      );
+      totalFactsDeleted += count;
+      allFactIds.push(...factIds);
+    }
+
+    // Delete memories
+    const result = await this.vector.deleteMany(filter);
+
+    return {
+      ...result,
+      factsDeleted: totalFactsDeleted,
+      factIds: allFactIds,
+    };
   }
 
   /**
-   * Export memories (delegates to vector.export)
+   * Export memories with optional fact inclusion
    */
-  async export(options: {
-    memorySpaceId: string;
-    userId?: string;
-    format: "json" | "csv";
-    includeEmbeddings?: boolean;
-  }): Promise<{
+  async export(options: ExportMemoriesOptions): Promise<{
     format: string;
     data: string;
     count: number;
     exportedAt: number;
   }> {
-    return await this.vector.export(options);
+    const result = await this.vector.export(options);
+
+    if (!options.includeFacts) {
+      return result;
+    }
+
+    // Fetch all facts for this memory space
+    const facts = await this.facts.list({
+      memorySpaceId: options.memorySpaceId,
+      limit: 10000,
+    });
+
+    // Parse existing export data
+    const data = JSON.parse(result.data);
+
+    // Add facts to each memory
+    const enrichedData = data.map((memory: any) => {
+      const relatedFacts = facts.filter(
+        (fact) => fact.sourceRef?.memoryId === memory.memoryId
+      );
+
+      return {
+        ...memory,
+        facts: relatedFacts.map((f) => ({
+          factId: f.factId,
+          fact: f.fact,
+          factType: f.factType,
+          confidence: f.confidence,
+          tags: f.tags,
+        })),
+      };
+    });
+
+    return {
+      ...result,
+      data: JSON.stringify(enrichedData, null, 2),
+    };
   }
 
   /**
-   * Archive a memory (delegates to vector.archive)
+   * Archive a memory and mark associated facts as expired
    */
   async archive(
     agentId: string,
     memoryId: string,
-  ): Promise<{ archived: boolean; memoryId: string; restorable: boolean }> {
-    return await this.vector.archive(agentId, memoryId);
+  ): Promise<ArchiveResult> {
+    const memory = await this.vector.get(agentId, memoryId);
+
+    if (!memory) {
+      throw new Error("MEMORY_NOT_FOUND");
+    }
+
+    // Archive facts (mark as expired, not deleted)
+    const { count: factsArchived, factIds } = await this.archiveFacts(
+      agentId,
+      memoryId,
+      memory.conversationRef?.conversationId,
+      true,
+    );
+
+    // Archive memory
+    const result = await this.vector.archive(agentId, memoryId);
+
+    return {
+      ...result,
+      factsArchived,
+      factIds,
+    };
   }
 
   /**

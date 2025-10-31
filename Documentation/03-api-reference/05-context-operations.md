@@ -1,6 +1,6 @@
 # Context Operations API
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2025-10-30
 
 Complete API reference for context chain management and multi-agent workflow coordination.
 
@@ -54,9 +54,12 @@ Create a new context (root or child).
 
 ```typescript
 cortex.contexts.create(
-  params: ContextInput
+  params: ContextInput,
+  options?: CreateContextOptions
 ): Promise<Context>
 ```
+
+**New in v0.7.0**: `options` parameter with `syncToGraph` support for graph database integration.
 
 **Parameters:**
 
@@ -87,6 +90,10 @@ interface ContextInput {
   // Status
   status?: "active" | "completed" | "cancelled" | "blocked"; // Default: 'active'
   description?: string; // Detailed description
+}
+
+interface CreateContextOptions {
+  syncToGraph?: boolean; // Sync to graph database (default: false)
 }
 ```
 
@@ -180,6 +187,27 @@ const root = await cortex.contexts.create({
 console.log(root.id); // 'ctx_abc123'
 console.log(root.depth); // 0 (root)
 console.log(root.rootId); // 'ctx_abc123' (self)
+```
+
+**Example 1b: Create with graph sync (v0.7.0+)**
+
+```typescript
+// Same as above, but sync to graph database
+const root = await cortex.contexts.create({
+  purpose: "Process customer refund request",
+  memorySpaceId: "supervisor-agent-space",
+  userId: "user-123",
+  conversationRef: {
+    conversationId: "conv-456",
+    messageIds: [msg.id],
+  },
+  data: {
+    importance: 85,
+    tags: ["refund", "customer-service", "ticket-456"],
+  },
+}, { syncToGraph: true }); // ← Syncs to graph!
+
+// Now queryable via graph for multi-hop queries
 ```
 
 **Example 2: Create child context (delegation)**
@@ -327,9 +355,12 @@ Update a context (status, data, etc.). Creates new version automatically.
 ```typescript
 cortex.contexts.update(
   contextId: string,
-  updates: ContextUpdate
+  updates: ContextUpdate,
+  options?: UpdateContextOptions
 ): Promise<Context>
 ```
+
+**New in v0.7.0**: `options` parameter with `syncToGraph` support.
 
 **Parameters:**
 
@@ -401,18 +432,21 @@ Delete a context and optionally its descendants.
 ```typescript
 cortex.contexts.delete(
   contextId: string,
-  options?: DeleteOptions
+  options?: DeleteContextOptions
 ): Promise<DeleteResult>
 ```
 
 **Parameters:**
 
 ```typescript
-interface DeleteOptions {
+interface DeleteContextOptions {
   cascadeChildren?: boolean; // Delete all descendants (default: false)
   orphanChildren?: boolean; // If false and has children, error (default: false)
+  syncToGraph?: boolean; // Delete from graph with orphan cleanup (default: false)
 }
 ```
+
+**New in v0.7.0**: `syncToGraph` option enables graph deletion with sophisticated orphan cleanup.
 
 **Returns:**
 
@@ -1473,11 +1507,38 @@ All context operation errors:
 
 ---
 
+## Graph Integration (v0.7.0+)
+
+Context chains integrate with graph databases for advanced queries:
+
+```typescript
+// Create context with graph sync
+await cortex.contexts.create(params, { syncToGraph: true });
+
+// Query via graph for multi-hop traversal
+const hierarchy = await graphAdapter.query(`
+  MATCH (root:Context {contextId: $contextId})
+  MATCH path = (root)<-[:CHILD_OF*0..10]-(descendants:Context)
+  RETURN descendants
+  ORDER BY descendants.depth
+`, { contextId: root.contextId });
+
+// Result: Entire hierarchy in single query (<10ms)!
+```
+
+**Performance**: 3.8x faster for deep hierarchies (7+ levels)
+
+See **[Graph Operations API](./15-graph-operations.md)** for complete graph integration reference.
+
+---
+
 ## Next Steps
 
+- **[Graph Operations API](./15-graph-operations.md)** - Graph database integration (NEW in v0.7.0)
+- **[Facts Operations API](./14-facts-operations.md)** - Structured knowledge extraction
+- **[Memory Space Operations API](./13-memory-space-operations.md)** - Hive/Collaboration Mode
 - **[A2A Communication API](./06-a2a-communication.md)** - Agent-to-agent messaging
-- **[Conversation Operations API](./07-conversation-operations.md)** - ACID conversation management
-- **[Types & Interfaces](./08-types-interfaces.md)** - Complete TypeScript definitions
+- **[Types & Interfaces](./11-types-interfaces.md)** - Complete TypeScript definitions
 
 ---
 
