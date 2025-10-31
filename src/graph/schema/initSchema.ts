@@ -4,6 +4,9 @@
  * Creates constraints and indexes for optimal graph database performance
  */
 
+/* eslint-disable no-console */
+// Console logging is intentional for schema initialization progress tracking
+
 import type { GraphAdapter } from "../types";
 import { GraphDatabaseError } from "../types";
 

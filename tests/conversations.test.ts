@@ -38,7 +38,7 @@ describe("Conversations API (Layer 1a)", () => {
 
   afterAll(async () => {
     cortex.close();
-    client.close();
+    await client.close();
   });
 
   describe("create()", () => {

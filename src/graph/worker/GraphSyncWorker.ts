@@ -5,6 +5,9 @@
  * Subscribes to sync queue and automatically syncs entities when queue changes.
  */
 
+/* eslint-disable no-console */
+// Console logging is intentional for sync worker monitoring and debugging
+
 import { ConvexClient } from "convex/browser";
 import type { GraphAdapter } from "../types";
 import {

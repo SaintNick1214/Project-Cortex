@@ -5,6 +5,9 @@
  * using the Bolt protocol and Cypher query language.
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return */
+// Neo4j driver types use `any` extensively - these are external library limitations
+
 import neo4j, { Driver, Session, Integer } from "neo4j-driver";
 import type {
   GraphAdapter,

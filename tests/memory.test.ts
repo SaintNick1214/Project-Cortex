@@ -79,7 +79,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
   afterAll(async () => {
     await cleanup.purgeAll();
-    client.close();
+    await client.close();
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
