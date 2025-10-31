@@ -47,8 +47,9 @@ Complete API documentation (organized by architectural layers):
 
 **User & Coordination:**
 
-- **[User Operations](./03-api-reference/04-user-operations.md)** - User profiles + GDPR cascade
-- **[Context Operations](./03-api-reference/05-context-operations.md)** - Workflow coordination
+- **[User Operations](./03-api-reference/04-user-operations.md)** - User profiles + GDPR cascade ✅
+- **[Agent Management](./03-api-reference/09-agent-management.md)** - Agent registry + cleanup ✅
+- **[Context Operations](./03-api-reference/05-context-operations.md)** - Workflow coordination ✅
 - **[A2A Communication](./03-api-reference/06-a2a-communication.md)** - Agent messaging patterns
 
 **Advanced Storage (Layer 1b-c):**
@@ -58,11 +59,10 @@ Complete API documentation (organized by architectural layers):
 
 **Supporting APIs:**
 
-- **[Agent Management](./03-api-reference/09-agent-management.md)** - Agent registry operations
 - **[Governance Policies](./03-api-reference/10-governance-policies-api.md)** - Retention and compliance
-- **[Memory Space Operations](./03-api-reference/13-memory-space-operations.md)** - Hive/Collaboration Mode management
-- **[Facts Operations](./03-api-reference/14-facts-operations.md)** - Structured knowledge extraction and storage
-- **[Graph Operations](./03-api-reference/15-graph-operations.md)** - ✨ **NEW in v0.7.0** - Graph database integration
+- **[Memory Space Operations](./03-api-reference/13-memory-space-operations.md)** - Hive/Collaboration Mode management ✅
+- **[Facts Operations](./03-api-reference/14-facts-operations.md)** - Structured knowledge extraction and storage ✅
+- **[Graph Operations](./03-api-reference/15-graph-operations.md)** - Graph database integration ✅
 
 **Reference:**
 

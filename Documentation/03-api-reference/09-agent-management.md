@@ -14,16 +14,31 @@ Complete API reference for agent management operations (legacy model).
 
 ## Overview
 
-The Agent Management API provides methods for registering, configuring, and querying agents in the legacy agent-centric model.
+The Agent Management API provides **optional metadata registration** for agent discovery, analytics, and team organization, plus **convenient cascade deletion** by participantId across all memory spaces.
 
 **⚠️ New Architecture:** Cortex now uses **Memory Spaces** as the fundamental isolation boundary, not agents. Multiple agents/tools can share one memory space (Hive Mode), or operate in separate spaces (Collaboration Mode).
 
-**Hybrid Approach (Legacy Model):**
+### Two Key Features
+
+**1. Optional Registry (Metadata Layer)**
+
+- Agents work without registration - just use string IDs
+- Registration provides: discovery, analytics, team organization
+- Purely optional enhancement
+
+**2. Cascade Deletion by participantId (Convenience)**
+
+- Delete all agent data across ALL memory spaces in one call
+- Filters by `participantId` field in data (not userId)
+- Works even if agent was never registered
+- Similar to users API but for agent cleanup, not GDPR
+
+**Hybrid Approach:**
 
 **Key Concept:**
 
 - **Simple Mode**: Just use string IDs (`'agent-1'`, `'support-agent'`)
-- **Registry Mode**: Optionally register agents for analytics, discovery, and configuration
+- **Registry Mode**: Optionally register agents for analytics, discovery, and cascade deletion
 
 **Relationship to Four-Layer Architecture:**
 
@@ -502,90 +517,207 @@ await cortex.agents.configure("support-agent", {
 
 ### unregister()
 
-Remove agent from registry.
+Remove agent from registry with optional cascade deletion by participantId.
+
+> **Cascade Deletion**: Fully implemented in SDK with graph orphan detection. Filters by `participantId` across ALL memory spaces.
 
 **Signature:**
 
 ```typescript
 cortex.agents.unregister(
   agentId: string,
-  options?: UnregisterOptions
-): Promise<UnregisterResult>
+  options?: UnregisterAgentOptions
+): Promise<UnregisterAgentResult>
 ```
 
 **Parameters:**
 
 ```typescript
-interface UnregisterOptions {
-  deleteVectorMemories?: boolean; // Delete from Layer 2 (Vector index)
-  deleteConversations?: boolean; // Delete from Layer 1 (ACID)
-  preserveData?: boolean; // Keep all layers, just remove registration (default: true)
+interface UnregisterAgentOptions {
+  cascade?: boolean;  // Delete all data where participantId = agentId (default: false)
+  verify?: boolean;   // Verify deletion completeness (default: true)
+  dryRun?: boolean;   // Preview what would be deleted (default: false)
 }
 ```
 
 **Returns:**
 
 ```typescript
-interface UnregisterResult {
+interface UnregisterAgentResult {
   agentId: string;
-  unregisteredAt: Date;
+  unregisteredAt: number;
 
-  // Layer 2 (Vector) deletions
-  vectorMemoriesDeleted?: number; // Vector memories removed
+  // Per-layer deletion counts
+  conversationsDeleted: number;
+  conversationMessagesDeleted: number;
+  memoriesDeleted: number;
+  factsDeleted: number;
+  graphNodesDeleted?: number;
 
-  // Layer 1 (ACID) deletions
-  conversationsDeleted?: number; // Conversation entities removed
-  totalMessagesDeleted?: number; // Total messages within those conversations
+  // Verification
+  verification: {
+    complete: boolean;
+    issues: string[];
+  };
 
-  dataPreserved: boolean; // If any layers preserved
+  // Summary
+  totalDeleted: number;
+  deletedLayers: string[];
+  memorySpacesAffected: string[];  // Which memory spaces had data
 }
 ```
 
-**Example:**
+**Implementation:**
+
+Uses three-phase cascade deletion (same pattern as users API):
+1. **Collection**: Query all memory spaces for records where participantId = agentId
+2. **Backup**: Create rollback snapshots
+3. **Execution**: Delete in reverse dependency order (facts → memories → conversations → graph → registration)
+
+If any deletion fails, automatically rolls back all changes.
+
+**Example 1: Simple Unregister (keep data)**
 
 ```typescript
-// Unregister but keep all data (default)
-const result = await cortex.agents.unregister("old-agent", {
-  preserveData: true, // Keep Layer 1 (ACID) + Layer 2 (Vector)
-});
+// Remove from registry, keep all memories/conversations
+const result = await cortex.agents.unregister("old-agent");
 
-console.log(`Unregistered ${result.agentId}, all data preserved`);
-
-// Unregister and delete Vector memories only (preserve ACID audit trail)
-const cleaned = await cortex.agents.unregister("old-agent", {
-  deleteVectorMemories: true, // Delete Layer 2
-  deleteConversations: false, // Preserve Layer 1 (ACID audit trail)
-});
-
-console.log(`Deleted ${cleaned.vectorMemoriesDeleted} Vector memories`);
-console.log(
-  `Preserved ${cleaned.conversationsDeleted === 0} ACID conversations`,
-);
-
-// Unregister and delete everything (both layers)
-const purged = await cortex.agents.unregister("temp-agent", {
-  deleteVectorMemories: true, // Delete Layer 2
-  deleteConversations: true, // Delete Layer 1
-});
-
-console.log(`Layer 2: Deleted ${purged.vectorMemoriesDeleted} Vector memories`);
-console.log(`Layer 1: Deleted ${purged.conversationsDeleted} conversations`);
-console.log(`Layer 1: Deleted ${purged.totalMessagesDeleted} total messages`);
+console.log(`Unregistered ${result.agentId}`);
+console.log(`Total deleted: ${result.totalDeleted}`); // 1 (just registration)
+console.log(`Data preserved: memories still accessible with agentId string`);
 ```
+
+**Example 2: Cascade Delete by participantId**
+
+```typescript
+// Delete registration + ALL data where participantId = agentId
+const result = await cortex.agents.unregister("old-agent", {
+  cascade: true,
+  verify: true,
+});
+
+// Per-layer breakdown
+console.log(`Conversations deleted: ${result.conversationsDeleted}`);
+console.log(`  Messages in those conversations: ${result.conversationMessagesDeleted}`);
+console.log(`Memories deleted: ${result.memoriesDeleted}`);
+console.log(`Facts deleted: ${result.factsDeleted}`);
+console.log(`Graph nodes deleted: ${result.graphNodesDeleted || 'N/A'}`);
+
+// Summary
+console.log(`Total deleted: ${result.totalDeleted}`);
+console.log(`Memory spaces affected: ${result.memorySpacesAffected.join(", ")}`);
+console.log(`Layers: ${result.deletedLayers.join(", ")}`);
+
+// Verification
+if (result.verification.complete) {
+  console.log("✅ Deletion verified - no orphaned records");
+} else {
+  console.warn("⚠️ Verification issues:");
+  result.verification.issues.forEach(issue => console.warn(`  - ${issue}`));
+}
+```
+
+**Example 3: Dry Run (Preview)**
+
+```typescript
+// Preview what would be deleted
+const preview = await cortex.agents.unregister("agent-123", {
+  cascade: true,
+  dryRun: true,
+});
+
+console.log(`Would delete ${preview.totalDeleted} records`);
+console.log(`Across ${preview.memorySpacesAffected.length} memory spaces`);
+console.log(`Memories: ${preview.memoriesDeleted}`);
+console.log(`Conversations: ${preview.conversationsDeleted}`);
+
+// Agent still exists after dry run
+const agent = await cortex.agents.get("agent-123");
+console.log(`Agent still registered: ${agent !== null}`); // true
+```
+
+**Example 4: Cascade Without Registration**
+
+```typescript
+// Agent never registered, but created data with participantId
+// (This is the key difference from users API!)
+
+// Day 1: Create data (no registration)
+await cortex.memory.remember({
+  memorySpaceId: "space-1",
+  participantId: "agent-xyz",  // ← Agent never registered
+  conversationId: "conv-1",
+  userMessage: "Hello",
+  agentResponse: "Hi",
+  userId: "user-1",
+  userName: "User"
+});
+
+// Day 30: Delete all agent data (works without registration!)
+const result = await cortex.agents.unregister("agent-xyz", {
+  cascade: true,
+});
+
+// ✅ Deletes memories even though agent was never registered
+// ✅ Queries by participantId field in data, not registration
+console.log(`Deleted ${result.memoriesDeleted} memories from unregistered agent`);
+```
+
+**Cascade Deletion: Users vs Agents**
+
+| Feature | cortex.users.delete() | cortex.agents.unregister() |
+|---------|----------------------|---------------------------|
+| **Filter key** | userId | participantId |
+| **Scope** | Across all layers | Across all memory spaces |
+| **Purpose** | GDPR compliance | Convenience (cleanup) |
+| **Required** | Legal requirement | Optional feature |
+| **Registration** | Works even if no user profile | Works even if never registered |
+| **Query logic** | `WHERE userId = X` | `WHERE participantId = X` |
+| **Orphan detection** | ✅ Included | ✅ Included |
+| **Rollback** | ✅ Transaction-like | ✅ Transaction-like |
+
+**Why both exist:**
+- **Users**: GDPR compliance requires deleting by userId (users exist across agents)
+- **Agents**: Convenience requires deleting by participantId (agents create data in spaces)
+
+**Key insight**: An agent's `participantId` appears in the data they create (memories, conversations, facts). Cascade deletion queries this field, regardless of registration status.
 
 **Errors:**
 
-- `CortexError('AGENT_NOT_REGISTERED')` - Agent not in registry
-- `CortexError('DELETION_FAILED')` - Data deletion failed
+- `AgentCascadeDeletionError` - Cascade deletion failed (after rollback)
+- `CortexError('AGENT_NOT_REGISTERED')` - Agent not in registry (simple mode only)
 
-**Warning:** This doesn't prevent using the agent ID again. It just removes registry entry.
+**Warning:** This doesn't prevent using the agent ID again. It just removes registry entry and optionally deletes data.
 
-**Layer Clarification:**
+**Graph Integration:**
 
-- `deleteVectorMemories: true` - Removes from Layer 2 (Vector index)
-- `deleteConversations: true` - Removes from Layer 1 (ACID)
-- Default (`preserveData: true`) - Keeps both layers intact
-- Typical use: Delete Vector (Layer 2) but preserve ACID (Layer 1) for audit trail
+Cascade deletion includes graph nodes if you provide a graph adapter:
+
+```typescript
+import { CypherGraphAdapter } from "@cortex-platform/sdk/graph";
+
+// Configure graph adapter (DIY in free SDK)
+const graphAdapter = new CypherGraphAdapter();
+await graphAdapter.connect({
+  uri: process.env.NEO4J_URI,
+  username: process.env.NEO4J_USER,
+  password: process.env.NEO4J_PASSWORD,
+});
+
+// Initialize Cortex with graph
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL,
+  graph: {
+    adapter: graphAdapter,
+    orphanCleanup: true,
+  },
+});
+
+// Now cascade includes graph with orphan detection!
+await cortex.agents.unregister("agent-123", { cascade: true });
+// ✅ Deletes from memories, conversations, facts, AND graph
+// ✅ Includes orphan island detection
+```
 
 ---
 

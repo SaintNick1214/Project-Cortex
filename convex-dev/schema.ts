@@ -436,20 +436,35 @@ export default defineSchema({
     .index("by_created", ["createdAt"]), // Chronological
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // Agents Registry (DEPRECATED - Use memorySpaces instead)
+  // Agents Registry (Optional Metadata Layer)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   agents: defineTable({
-    // Note: This table is deprecated in favor of memorySpaces
-    // Keeping for backward compatibility during migration
-    agentId: v.string(),
-    name: v.string(),
-    description: v.optional(v.string()),
-    metadata: v.optional(v.any()),
+    // Identity
+    agentId: v.string(), // Unique agent identifier
+
+    // Metadata
+    name: v.string(), // Display name
+    description: v.optional(v.string()), // What this agent does
+    metadata: v.optional(v.any()), // Flexible metadata (team, capabilities, etc.)
+
+    // Configuration
+    config: v.optional(v.any()), // Agent-specific configuration
+
+    // Status
+    status: v.union(
+      v.literal("active"),
+      v.literal("inactive"),
+      v.literal("archived"),
+    ),
+
+    // Timestamps
     registeredAt: v.number(),
     updatedAt: v.number(),
+    lastActive: v.optional(v.number()), // Last time agent created data
   })
-    .index("by_agentId", ["agentId"])
-    .index("by_registered", ["registeredAt"]),
+    .index("by_agentId", ["agentId"]) // Unique lookup
+    .index("by_status", ["status"]) // Filter by status
+    .index("by_registered", ["registeredAt"]), // Chronological ordering
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Graph Sync Queue (Real-time Graph Database Synchronization)
