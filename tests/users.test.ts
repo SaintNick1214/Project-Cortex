@@ -413,7 +413,7 @@ describe("Users API (Coordination Layer)", () => {
           memorySpaceId: CASCADE_SPACE_ID,
           type: "personal",
         });
-      } catch (error) {
+      } catch (_error) {
         // May already exist
       }
 
@@ -724,7 +724,7 @@ describe("Users API (Coordination Layer)", () => {
           memorySpaceId: INTEGRATION_SPACE_ID,
           type: "personal",
         });
-      } catch (error) {
+      } catch (_error) {
         // May already exist
       }
 

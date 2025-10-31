@@ -52,15 +52,13 @@ export const list = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    let query = ctx.db
+    const query = ctx.db
       .query("immutable")
       .withIndex("by_type", (q) => q.eq("type", "user"));
 
-    if (args.limit) {
-      query = query.take(args.limit);
-    }
-
-    const entries = await query.collect();
+    const entries = args.limit
+      ? await query.take(args.limit)
+      : await query.collect();
 
     return entries.map((entry) => ({
       id: entry.id,

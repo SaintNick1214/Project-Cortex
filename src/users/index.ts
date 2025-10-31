@@ -293,7 +293,7 @@ export class UsersAPI {
    * console.log(`Total users: ${total}`);
    * ```
    */
-  async count(filters?: UserFilters): Promise<number> {
+  async count(_filters?: UserFilters): Promise<number> {
     return await this.client.query(api.immutable.count, {
       type: "user",
     });
@@ -543,7 +543,7 @@ export class UsersAPI {
           userId,
         });
         allMutableKeys.push(...(keys as MutableRecord[]));
-      } catch (error) {
+      } catch (_error) {
         // Namespace might not exist, skip
         continue;
       }
@@ -575,7 +575,7 @@ export class UsersAPI {
             userId,
           });
           allMemories.push(...(memories as MemoryEntry[]));
-        } catch (error) {
+        } catch (_error) {
           continue;
         }
       }
@@ -606,7 +606,7 @@ export class UsersAPI {
             this.factReferencesUser(f, userId),
           );
           allFacts.push(...userFacts);
-        } catch (error) {
+        } catch (_error) {
           continue;
         }
       }
@@ -620,7 +620,7 @@ export class UsersAPI {
   /**
    * Check if fact references user
    */
-  private factReferencesUser(fact: FactRecord, userId: string): boolean {
+  private factReferencesUser(fact: FactRecord, _userId: string): boolean {
     // Check if fact references user in source ref or metadata
     if (fact.sourceRef?.conversationId) {
       // Would need to check if conversation belongs to user
@@ -1042,7 +1042,7 @@ export class UsersAPI {
             userId,
           });
           count += spaceCount;
-        } catch (error) {
+        } catch (_error) {
           continue;
         }
       }
@@ -1071,7 +1071,7 @@ export class UsersAPI {
             this.factReferencesUser(f, userId),
           );
           count += userFacts.length;
-        } catch (error) {
+        } catch (_error) {
           continue;
         }
       }
