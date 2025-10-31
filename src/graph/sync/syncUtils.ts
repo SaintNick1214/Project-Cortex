@@ -243,7 +243,11 @@ export async function ensureParticipantNode(
   adapter: GraphAdapter,
 ): Promise<string> {
   // Try to find existing node
-  const existingId = await findGraphNodeId("Participant", participantId, adapter);
+  const existingId = await findGraphNodeId(
+    "Participant",
+    participantId,
+    adapter,
+  );
   if (existingId) {
     return existingId;
   }
@@ -288,11 +292,14 @@ export async function ensureEntityNode(
     });
   } catch (error) {
     // If creation failed due to constraint (race condition), try finding again
-    const retryNodes = await adapter.findNodes("Entity", { name: entityName }, 1);
+    const retryNodes = await adapter.findNodes(
+      "Entity",
+      { name: entityName },
+      1,
+    );
     if (retryNodes.length > 0) {
       return retryNodes[0].id!;
     }
     throw error;
   }
 }
-

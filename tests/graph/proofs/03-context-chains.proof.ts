@@ -146,7 +146,7 @@ async function runContextChainsProof(adapter: GraphAdapter, dbName: string) {
     // Phase 2: Create Deep Context Hierarchy in Cortex
     // ============================================================================
     console.log("📝 Phase 2: Create Deep Context Hierarchy (7 levels)");
-    
+
     // Register memory space
     const memorySpace = await cortex.memorySpaces.register({
       memorySpaceId,
@@ -156,7 +156,9 @@ async function runContextChainsProof(adapter: GraphAdapter, dbName: string) {
     console.log(`  ✓ Memory Space: ${memorySpace.memorySpaceId}`);
 
     const contexts = await createDeepHierarchy(cortex, memorySpaceId);
-    console.log(`  ✓ Created ${contexts.length} contexts (depth 0-${contexts.length - 1})\n`);
+    console.log(
+      `  ✓ Created ${contexts.length} contexts (depth 0-${contexts.length - 1})\n`,
+    );
 
     // ============================================================================
     // Phase 3: Sync to Graph
@@ -179,7 +181,9 @@ async function runContextChainsProof(adapter: GraphAdapter, dbName: string) {
     // ============================================================================
     // Phase 4: Performance Comparison
     // ============================================================================
-    console.log("🏁 Phase 4: Performance Comparison (Graph-Lite vs Native Graph)");
+    console.log(
+      "🏁 Phase 4: Performance Comparison (Graph-Lite vs Native Graph)",
+    );
 
     // Graph-Lite traversal (sequential Convex queries)
     console.log("\n  📊 Graph-Lite Traversal (Convex):");
@@ -192,7 +196,7 @@ async function runContextChainsProof(adapter: GraphAdapter, dbName: string) {
 
     // Native Graph traversal (single query)
     console.log("\n  📊 Native Graph Traversal:");
-    
+
     const graphResult = await traverseWithGraph(adapter, contexts[0].contextId);
     console.log(`    ✓ Found ${graphResult.contexts.length} contexts`);
     console.log(`    ⏱️  Time: ${graphResult.timeMs}ms`);
@@ -205,8 +209,12 @@ async function runContextChainsProof(adapter: GraphAdapter, dbName: string) {
     // Phase 5: Verify Completeness
     // ============================================================================
     console.log("\n✅ Phase 5: Verify Completeness");
-    console.log(`  ✓ Graph-Lite found ${graphLiteResult.contexts.length} contexts`);
-    console.log(`  ✓ Native Graph found ${graphResult.contexts.length} contexts`);
+    console.log(
+      `  ✓ Graph-Lite found ${graphLiteResult.contexts.length} contexts`,
+    );
+    console.log(
+      `  ✓ Native Graph found ${graphResult.contexts.length} contexts`,
+    );
     console.log(
       `  ✓ Results match: ${graphLiteResult.contexts.length === graphResult.contexts.length}`,
     );
@@ -227,11 +235,13 @@ async function runContextChainsProof(adapter: GraphAdapter, dbName: string) {
     // Cleanup
     // ============================================================================
     console.log("🧹 Cleanup");
-    
+
     // Note: Leaving test data in place for manual inspection
     // You can clean up by deleting the memory space in Neo4j Browser:
     // MATCH (n:MemorySpace {memorySpaceId: '${memorySpaceId}'}) DETACH DELETE n
-    console.log(`  ~ Leaving test data for inspection (memorySpaceId: ${memorySpaceId})`);
+    console.log(
+      `  ~ Leaving test data for inspection (memorySpaceId: ${memorySpaceId})`,
+    );
     console.log(`  ~ Clear manually if needed\n`);
   } catch (error) {
     console.error(`❌ Context chains proof failed:`, error);
@@ -245,7 +255,9 @@ async function runContextChainsProof(adapter: GraphAdapter, dbName: string) {
  * Main execution
  */
 async function main() {
-  console.log("\n╔═══════════════════════════════════════════════════════════╗");
+  console.log(
+    "\n╔═══════════════════════════════════════════════════════════╗",
+  );
   console.log("║  Cortex Graph Integration - Context Chains Proof         ║");
   console.log("╚═══════════════════════════════════════════════════════════╝");
 
@@ -266,9 +278,13 @@ async function main() {
     console.log("\n⚠️  Neo4j tests skipped (NEO4J_URI not set)");
   }
 
-  console.log("\n╔═══════════════════════════════════════════════════════════╗");
+  console.log(
+    "\n╔═══════════════════════════════════════════════════════════╗",
+  );
   console.log("║  Context Chains Proof Complete!                           ║");
-  console.log("╚═══════════════════════════════════════════════════════════╝\n");
+  console.log(
+    "╚═══════════════════════════════════════════════════════════╝\n",
+  );
 
   console.log("📝 Key Findings:");
   console.log("   ✓ Deep hierarchies (7+ levels) sync perfectly");
@@ -287,4 +303,3 @@ main()
     console.error("Proof failed:", error);
     process.exit(1);
   });
-

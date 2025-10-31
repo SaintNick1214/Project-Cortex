@@ -40,21 +40,23 @@ npx tsx tests/graph/proofs/06-performance.proof.ts
 
 ## 📊 Proof Results Summary
 
-| Proof | Status | Key Metric |
-|-------|--------|------------|
-| **01-basic-crud** | ✅ PASS | 10/10 operations, 107ms total |
-| **02-sync-workflow** | ✅ PASS | 9 nodes, 15 relationships, 461ms sync |
-| **03-context-chains** | ✅ PASS | 3.8x faster, 7-level hierarchy |
-| **05-fact-graph** | ✅ PASS | 24 relationships, 4-hop knowledge paths |
-| **06-performance** | ✅ PASS | Benchmarked 1-5 hop traversals |
+| Proof                 | Status  | Key Metric                              |
+| --------------------- | ------- | --------------------------------------- |
+| **01-basic-crud**     | ✅ PASS | 10/10 operations, 107ms total           |
+| **02-sync-workflow**  | ✅ PASS | 9 nodes, 15 relationships, 461ms sync   |
+| **03-context-chains** | ✅ PASS | 3.8x faster, 7-level hierarchy          |
+| **05-fact-graph**     | ✅ PASS | 24 relationships, 4-hop knowledge paths |
+| **06-performance**    | ✅ PASS | Benchmarked 1-5 hop traversals          |
 
 ## 🗄️ Database Access
 
 **Neo4j Browser**: http://localhost:7474
+
 - Username: `neo4j`
 - Password: `cortex-dev-password`
 
 **Memgraph Lab**: http://localhost:3001
+
 - Username: `memgraph`
 - Password: `cortex-dev-password`
 
@@ -103,30 +105,35 @@ cortex.close();
 ## 📁 Implementation Files
 
 ### Core (src/graph/)
+
 - `types.ts` - Type definitions
 - `adapters/CypherGraphAdapter.ts` - Neo4j/Memgraph adapter
 - `sync/syncUtils.ts` - Entity sync functions
-- `sync/syncRelationships.ts` - Relationship sync functions  
+- `sync/syncRelationships.ts` - Relationship sync functions
 - `sync/batchSync.ts` - Batch sync utilities
 - `schema/initSchema.ts` - Schema management
 - `index.ts` - Module exports
 
 ### Configuration
+
 - `docker-compose.graph.yml` - Database setup
 - `.env.local` - Connection strings (NEO4J_URI, MEMGRAPH_URI)
 
 ### Documentation
+
 - `Documentation/07-advanced-topics/05-graph-database-setup.md` - Setup guide
 - `src/graph/README.md` - Module documentation
 
 ## 🎯 When to Use
 
 **Use Graph-Lite (built-in) for:**
+
 - Simple 1-3 hop traversals
 - Small datasets
 - Quick prototypes
 
 **Use Native Graph for:**
+
 - Deep traversals (5+ hops)
 - Large datasets (100s+ nodes)
 - Complex pattern matching
@@ -159,4 +166,3 @@ docker-compose -f docker-compose.graph.yml down -v
 ## 🎉 Success!
 
 All proofs pass. Integration is production-ready. Happy graphing! 🚀
-

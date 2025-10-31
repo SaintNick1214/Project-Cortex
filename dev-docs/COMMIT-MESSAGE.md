@@ -1,6 +1,6 @@
 # Commit Message for v0.7.0
 
-```
+````
 feat: Add complete graph database integration with real-time sync
 
 BREAKING: None (fully backward compatible)
@@ -106,7 +106,7 @@ const cortex = new Cortex({
   convexUrl: "...",
   graph: { adapter: graphAdapter, autoSync: true }
 });
-```
+````
 
 ## Documentation
 

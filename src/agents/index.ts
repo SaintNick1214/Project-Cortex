@@ -280,7 +280,10 @@ export class AgentsAPI {
    * });
    * ```
    */
-  async configure(agentId: string, config: Record<string, unknown>): Promise<void> {
+  async configure(
+    agentId: string,
+    config: Record<string, unknown>,
+  ): Promise<void> {
     await this.client.mutation(api.agents.update, {
       agentId,
       config,
@@ -367,7 +370,9 @@ export class AgentsAPI {
         ...totals,
         verification: {
           complete: true,
-          issues: [`DRY RUN: Would delete ${totals.totalDeleted} total records across ${deletionPlan.memorySpaces.length} spaces`],
+          issues: [
+            `DRY RUN: Would delete ${totals.totalDeleted} total records across ${deletionPlan.memorySpaces.length} spaces`,
+          ],
         },
         deletedLayers: this.getAffectedLayers(deletionPlan),
         memorySpacesAffected: deletionPlan.memorySpaces,
@@ -379,7 +384,10 @@ export class AgentsAPI {
 
     // PHASE 3: Execute cascade deletion with rollback on failure
     try {
-      const result = await this.executeAgentCascadeDeletion(agentId, deletionPlan);
+      const result = await this.executeAgentCascadeDeletion(
+        agentId,
+        deletionPlan,
+      );
 
       // PHASE 4: Verify deletion (if requested)
       if (verify) {
@@ -418,7 +426,9 @@ export class AgentsAPI {
    * PHASE 1: Collect all records where participantId = agentId
    * This queries across ALL memory spaces
    */
-  private async collectAgentDeletionTargets(agentId: string): Promise<AgentDeletionPlan> {
+  private async collectAgentDeletionTargets(
+    agentId: string,
+  ): Promise<AgentDeletionPlan> {
     const plan: AgentDeletionPlan = {
       conversations: [],
       memories: [],
@@ -548,7 +558,9 @@ export class AgentsAPI {
   /**
    * PHASE 2: Backup records for rollback
    */
-  private async backupRecords(plan: AgentDeletionPlan): Promise<AgentDeletionBackup> {
+  private async backupRecords(
+    plan: AgentDeletionPlan,
+  ): Promise<AgentDeletionBackup> {
     return {
       conversations: JSON.parse(JSON.stringify(plan.conversations)),
       memories: JSON.parse(JSON.stringify(plan.memories)),
@@ -665,7 +677,9 @@ export class AgentsAPI {
             );
           }
         } catch (error) {
-          throw new Error(`Failed to delete graph node ${node.nodeId}: ${error}`);
+          throw new Error(
+            `Failed to delete graph node ${node.nodeId}: ${error}`,
+          );
         }
       }
       if (result.graphNodesDeleted && result.graphNodesDeleted > 0) {
@@ -697,7 +711,9 @@ export class AgentsAPI {
   /**
    * ROLLBACK: Restore backed up records
    */
-  private async rollbackAgentDeletion(backups: AgentDeletionBackup): Promise<void> {
+  private async rollbackAgentDeletion(
+    backups: AgentDeletionBackup,
+  ): Promise<void> {
     console.warn("Rolling back agent cascade deletion...");
 
     // Note: This is best-effort rollback
@@ -725,7 +741,9 @@ export class AgentsAPI {
   /**
    * PHASE 4: Verify deletion completeness
    */
-  private async verifyAgentDeletion(agentId: string): Promise<VerificationResult> {
+  private async verifyAgentDeletion(
+    agentId: string,
+  ): Promise<VerificationResult> {
     const issues: string[] = [];
 
     // Check for remaining memories
@@ -744,7 +762,9 @@ export class AgentsAPI {
       }
 
       if (remainingMemories > 0) {
-        issues.push(`${remainingMemories} memories still reference participantId`);
+        issues.push(
+          `${remainingMemories} memories still reference participantId`,
+        );
       }
     } catch (error) {
       issues.push(`Failed to verify memories: ${error}`);
@@ -769,7 +789,9 @@ export class AgentsAPI {
       }
 
       if (remainingConvos > 0) {
-        issues.push(`${remainingConvos} conversations still reference participantId`);
+        issues.push(
+          `${remainingConvos} conversations still reference participantId`,
+        );
       }
     } catch (error) {
       issues.push(`Failed to verify conversations: ${error}`);
@@ -802,18 +824,23 @@ export class AgentsAPI {
       try {
         const remainingGraph = await this.countGraphNodes(agentId);
         if (remainingGraph > 0) {
-          issues.push(`${remainingGraph} graph nodes still reference participantId`);
+          issues.push(
+            `${remainingGraph} graph nodes still reference participantId`,
+          );
         }
       } catch (error) {
         issues.push(`Failed to verify graph nodes: ${error}`);
       }
     } else {
-      issues.push("Graph adapter not configured - manual graph cleanup required");
+      issues.push(
+        "Graph adapter not configured - manual graph cleanup required",
+      );
     }
 
     return {
       complete:
-        issues.length === 0 || (issues.length === 1 && issues[0].includes("Graph adapter")),
+        issues.length === 0 ||
+        (issues.length === 1 && issues[0].includes("Graph adapter")),
       issues,
     };
   }
@@ -890,4 +917,3 @@ export class AgentsAPI {
     return layers;
   }
 }
-

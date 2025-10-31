@@ -131,7 +131,7 @@ describe("Memory API with Fact Integration", () => {
     const forgetResult = await cortex.memory.forget(
       testMemorySpaceId,
       memoryId,
-      { deleteConversation: false }
+      { deleteConversation: false },
     );
 
     expect(forgetResult.factsDeleted).toBe(1);
@@ -170,14 +170,12 @@ describe("Memory API with Fact Integration", () => {
     const memoryId = rememberResult.memories[0].memoryId;
 
     // Get with enrichment
-    const enriched = await cortex.memory.get(
-      testMemorySpaceId,
-      memoryId,
-      { includeConversation: true }
-    );
+    const enriched = await cortex.memory.get(testMemorySpaceId, memoryId, {
+      includeConversation: true,
+    });
 
     expect(enriched).toBeDefined();
-    if ('facts' in enriched!) {
+    if ("facts" in enriched!) {
       expect(enriched.facts).toBeDefined();
       expect(enriched.facts!.length).toBeGreaterThan(0);
       expect(enriched.facts![0].fact).toBe("User loves TypeScript");
@@ -218,13 +216,13 @@ describe("Memory API with Fact Integration", () => {
       {
         enrichConversation: true,
         userId: testUserId,
-      }
+      },
     );
 
     expect(results.length).toBeGreaterThan(0);
     const firstResult = results[0];
-    
-    if ('facts' in firstResult) {
+
+    if ("facts" in firstResult) {
       expect(firstResult.facts).toBeDefined();
       expect(firstResult.facts!.length).toBeGreaterThan(0);
     }
@@ -273,7 +271,7 @@ describe("Memory API with Fact Integration", () => {
     });
 
     expect(result.facts.length).toBe(3);
-    expect(result.facts.map(f => f.factType)).toEqual([
+    expect(result.facts.map((f) => f.factType)).toEqual([
       "identity",
       "relationship",
       "knowledge",
@@ -311,9 +309,10 @@ describe("Memory API with Fact Integration", () => {
     const fact = result.facts[0];
     expect(fact.sourceRef).toBeDefined();
     expect(fact.sourceRef?.memoryId).toBe(result.memories[0].memoryId);
-    expect(fact.sourceRef?.conversationId).toBe(`${testConversationId}-sourceref`);
+    expect(fact.sourceRef?.conversationId).toBe(
+      `${testConversationId}-sourceref`,
+    );
     expect(fact.sourceRef?.messageIds).toBeDefined();
     expect(fact.sourceRef?.messageIds!.length).toBe(2); // User + agent messages
   });
 });
-

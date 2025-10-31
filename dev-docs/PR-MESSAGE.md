@@ -6,7 +6,7 @@ This PR adds **complete graph database integration** to Cortex SDK, enabling adv
 
 **Implementation**: 9+ hours, 45+ files, ~9,000 lines  
 **Testing**: 29/29 tests passing (100%)  
-**Status**: Production-ready, fully backward compatible  
+**Status**: Production-ready, fully backward compatible
 
 ---
 
@@ -42,9 +42,9 @@ const cortex = new Cortex({
     autoSync: true, // ← Auto-start worker
     syncWorkerOptions: {
       batchSize: 100,
-      verbose: true
-    }
-  }
+      verbose: true,
+    },
+  },
 });
 
 // Use normally - syncs automatically!
@@ -59,10 +59,12 @@ await cortex.memory.remember(params);
 Graph enriches L2 (Vector) + L3 (Facts) retrieval:
 
 **Without Graph**:
+
 - Query returns: 2 isolated results
 - No connections
 
 **With Graph**:
+
 - Query returns: 2 base results
 - Graph adds: +4 connected pieces
 - **Result**: 2-5x more context with provenance!
@@ -76,6 +78,7 @@ Graph enriches L2 (Vector) + L3 (Facts) retrieval:
 ### Test Coverage: 29/29 Passing ✅
 
 **Unit Tests** (15/15):
+
 - GraphAdapter CRUD operations
 - Connection management
 - Query execution
@@ -84,6 +87,7 @@ Graph enriches L2 (Vector) + L3 (Facts) retrieval:
 - Both Neo4j and Memgraph
 
 **E2E Tests** (14/14):
+
 - Complete multi-layer cascade (L1a → L2 → L3 → L4 → Graph)
 - Storage validation per layer
 - Retrieval validation per layer
@@ -92,6 +96,7 @@ Graph enriches L2 (Vector) + L3 (Facts) retrieval:
 - Cross-layer consistency
 
 **Proofs** (7/7):
+
 1. Basic CRUD
 2. Sync workflow
 3. Context chains (3.8x speedup!)
@@ -103,6 +108,7 @@ Graph enriches L2 (Vector) + L3 (Facts) retrieval:
 ### Validation Results
 
 **E2E Test Proves**:
+
 - ✅ L1a: 2 messages (3,142 chars) stored and retrieved
 - ✅ L2: 2 memories with metadata stored and retrieved
 - ✅ L3: 5 facts with entities stored and retrieved
@@ -117,23 +123,27 @@ Graph enriches L2 (Vector) + L3 (Facts) retrieval:
 ### Added Files (43):
 
 **Core Graph Module** (src/graph/):
+
 - types.ts - Complete type system
 - adapters/CypherGraphAdapter.ts - Neo4j/Memgraph adapter
-- sync/* - Entity/relationship sync, orphan detection, deletes
+- sync/\* - Entity/relationship sync, orphan detection, deletes
 - schema/initSchema.ts - Schema management
 - worker/GraphSyncWorker.ts - Real-time sync ✨
 - index.ts - Module exports
 
 **Convex Integration**:
+
 - convex-dev/graphSync.ts - Sync queue ✨
 - convex-dev/schema.ts - graphSyncQueue table
 
 **Tests & Proofs**:
+
 - tests/graph/graphAdapter.test.ts - Unit tests
 - tests/graph/end-to-end-multilayer.test.ts - E2E validation
-- tests/graph/proofs/* - 7 comprehensive proofs
+- tests/graph/proofs/\* - 7 comprehensive proofs
 
 **Documentation** (15+):
+
 - Documentation/07-advanced-topics/05-graph-database-setup.md
 - src/graph/README.md
 - dev-docs/E2E-TEST-RESULTS.md
@@ -141,18 +151,22 @@ Graph enriches L2 (Vector) + L3 (Facts) retrieval:
 - And more...
 
 **Examples**:
+
 - examples/graph-realtime-sync.ts
 
 **Config**:
+
 - docker-compose.graph.yml
 
 ### Modified Files (9):
 
 **SDK Core**:
+
 - src/index.ts - GraphConfig, worker integration, exports
 - src/types/index.ts - 25 new option interfaces
 
 **All APIs Enhanced**:
+
 - src/conversations/index.ts - syncToGraph options
 - src/vector/index.ts - syncToGraph options
 - src/facts/index.ts - syncToGraph options
@@ -163,6 +177,7 @@ Graph enriches L2 (Vector) + L3 (Facts) retrieval:
 - src/memory/index.ts - Auto-sync, cascade forget
 
 **Documentation**:
+
 - README.md - Graph features announced
 - CHANGELOG.md - v0.7.0 entry
 
@@ -173,12 +188,14 @@ Graph enriches L2 (Vector) + L3 (Facts) retrieval:
 ### Orphan Detection (Circular-Safe)
 
 Handles complex scenarios safely:
+
 - Simple orphans (no references)
 - Circular references (A→B, B→A)
 - Orphan islands (circular groups with no external refs)
 - Self-references
 
 **Algorithm**:
+
 - BFS with visited tracking
 - Max depth protection (10 hops)
 - Deletion context tracking
@@ -211,7 +228,7 @@ client.onUpdate(
     for (const item of items) {
       await syncToGraph(item);
     }
-  }
+  },
 );
 ```
 
@@ -220,8 +237,9 @@ client.onUpdate(
 ## 📈 Performance
 
 **From Comprehensive Testing**:
+
 - Sync: ~300 entities/second
-- Query: 4ms for 7-hop traversal  
+- Query: 4ms for 7-hop traversal
 - Enrichment: +90ms for 2-5x context
 - Real-time lag: <1s
 - Speedup: 3.8x for deep queries
@@ -233,6 +251,7 @@ client.onUpdate(
 **None!** Fully backward compatible.
 
 Graph integration is completely optional:
+
 - Existing code works unchanged
 - Zero overhead if graph not configured
 - Opt-in via configuration
@@ -250,7 +269,7 @@ const cortex = new Cortex({ convexUrl: "..." });
 // After (adds graph)
 const cortex = new Cortex({
   convexUrl: "...",
-  graph: { adapter: graphAdapter, autoSync: true }
+  graph: { adapter: graphAdapter, autoSync: true },
 });
 ```
 
@@ -259,11 +278,13 @@ const cortex = new Cortex({
 ## 📚 Documentation
 
 ### Quick Start
+
 1. [Graph Database Setup](./Documentation/07-advanced-topics/05-graph-database-setup.md) - <5 min setup
 2. [Real-Time Sync Example](./examples/graph-realtime-sync.ts) - Usage demo
 3. [Module README](./src/graph/README.md) - API reference
 
 ### Detailed Guides
+
 - [Graph Integration Guide](./Documentation/07-advanced-topics/02-graph-database-integration.md)
 - [E2E Test Results](./dev-docs/E2E-TEST-RESULTS.md)
 - [Complete Summary](./GRAPH-INTEGRATION-FINAL.md)
@@ -273,6 +294,7 @@ const cortex = new Cortex({
 ## 🎯 Use Cases
 
 **When to Use Graph Integration**:
+
 - Deep context chains (5+ levels)
 - Knowledge graphs with entities
 - Multi-hop reasoning needs
@@ -280,6 +302,7 @@ const cortex = new Cortex({
 - Complex multi-agent systems
 
 **When Graph-Lite Suffices**:
+
 - Simple 1-3 hop queries
 - Small datasets (<50 entities)
 - Basic hierarchies
@@ -304,6 +327,7 @@ const cortex = new Cortex({
 ## 🙏 Review Notes
 
 This is a **substantial addition** (~9,000 lines) but:
+
 - ✅ Well-tested (29 passing tests)
 - ✅ Well-documented (15+ files)
 - ✅ Backward compatible
@@ -319,4 +343,3 @@ This is a **substantial addition** (~9,000 lines) but:
 **Lines**: ~9,000 added  
 **Tests**: 100% passing  
 **Status**: Production-ready 🚀
-

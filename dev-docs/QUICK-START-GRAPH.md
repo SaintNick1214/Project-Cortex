@@ -36,7 +36,10 @@ npx tsx tests/graph/proofs/05-fact-graph.proof.ts
 ## 💻 Use In Your Code
 
 ```typescript
-import { CypherGraphAdapter, initializeGraphSchema } from "@cortexmemory/sdk/graph";
+import {
+  CypherGraphAdapter,
+  initializeGraphSchema,
+} from "@cortexmemory/sdk/graph";
 
 const graph = new CypherGraphAdapter();
 await graph.connect({
@@ -50,7 +53,7 @@ await initializeGraphSchema(graph);
 // Create nodes
 const nodeId = await graph.createNode({
   label: "Context",
-  properties: { contextId: "ctx-001", purpose: "Test" }
+  properties: { contextId: "ctx-001", purpose: "Test" },
 });
 
 // Query
@@ -66,10 +69,9 @@ const connected = await graph.traverse({
 ## 📖 Documentation
 
 - **Setup**: `Documentation/07-advanced-topics/05-graph-database-setup.md`
-- **API**: `src/graph/README.md`  
+- **API**: `src/graph/README.md`
 - **Results**: `GRAPH-INTEGRATION-COMPLETE-FINAL.md`
 
 ## 🎉 You're Done!
 
 Everything is implemented, tested, and working. Start using it! 🚀
-

@@ -39,7 +39,10 @@ export class ImmutableAPI {
    * });
    * ```
    */
-  async store(entry: ImmutableEntry, options?: StoreImmutableOptions): Promise<ImmutableRecord> {
+  async store(
+    entry: ImmutableEntry,
+    options?: StoreImmutableOptions,
+  ): Promise<ImmutableRecord> {
     const result = await this.client.mutation(api.immutable.store, {
       type: entry.type,
       id: entry.id,

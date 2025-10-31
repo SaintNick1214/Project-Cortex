@@ -289,13 +289,17 @@ async function runFactGraphProof(adapter: GraphAdapter, dbName: string) {
     console.log(`  - Entities: ${entityCount}`);
     console.log(`  - MENTIONS relationships: ${mentionsCount}`);
     console.log(`  - Total relationships: ${relationshipCount}`);
-    console.log(`  - Knowledge density: ${(relationshipCount / entityCount).toFixed(2)} rels/entity\n`);
+    console.log(
+      `  - Knowledge density: ${(relationshipCount / entityCount).toFixed(2)} rels/entity\n`,
+    );
 
     // ============================================================================
     // Cleanup
     // ============================================================================
     console.log("🧹 Cleanup");
-    console.log(`  ~ Leaving test data for inspection (memorySpaceId: ${memorySpaceId})`);
+    console.log(
+      `  ~ Leaving test data for inspection (memorySpaceId: ${memorySpaceId})`,
+    );
     console.log(`  ~ Clear manually if needed\n`);
   } catch (error) {
     console.error(`❌ Fact graph proof failed:`, error);
@@ -309,7 +313,9 @@ async function runFactGraphProof(adapter: GraphAdapter, dbName: string) {
  * Main execution
  */
 async function main() {
-  console.log("\n╔═══════════════════════════════════════════════════════════╗");
+  console.log(
+    "\n╔═══════════════════════════════════════════════════════════╗",
+  );
   console.log("║  Cortex Graph Integration - Fact Knowledge Graph Proof   ║");
   console.log("╚═══════════════════════════════════════════════════════════╝");
 
@@ -330,9 +336,13 @@ async function main() {
     console.log("\n⚠️  Neo4j tests skipped (NEO4J_URI not set)");
   }
 
-  console.log("\n╔═══════════════════════════════════════════════════════════╗");
+  console.log(
+    "\n╔═══════════════════════════════════════════════════════════╗",
+  );
   console.log("║  Fact Knowledge Graph Proof Complete!                     ║");
-  console.log("╚═══════════════════════════════════════════════════════════╝\n");
+  console.log(
+    "╚═══════════════════════════════════════════════════════════╝\n",
+  );
 
   console.log("📝 Key Findings:");
   console.log("   ✓ Facts connected through shared entities");
@@ -352,4 +362,3 @@ main()
     console.error("Proof failed:", error);
     process.exit(1);
   });
-

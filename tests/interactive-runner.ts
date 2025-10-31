@@ -313,7 +313,10 @@ async function purgeAllDatabases() {
       });
       immutableDeleted++;
     } catch (error: unknown) {
-      if (error instanceof Error && error.message?.includes("IMMUTABLE_ENTRY_NOT_FOUND")) {
+      if (
+        error instanceof Error &&
+        error.message?.includes("IMMUTABLE_ENTRY_NOT_FOUND")
+      ) {
         continue;
       }
     }
@@ -768,10 +771,16 @@ async function testDelete() {
     await cortex.conversations.get(currentConversationId);
     console.log("❌ ERROR: Conversation still exists!");
   } catch (error: unknown) {
-    if (error instanceof Error && error.message?.includes("CONVERSATION_NOT_FOUND")) {
+    if (
+      error instanceof Error &&
+      error.message?.includes("CONVERSATION_NOT_FOUND")
+    ) {
       console.log("✅ Verified: Conversation no longer exists");
     } else {
-      console.log("⚠️  Unexpected error:", error instanceof Error ? error.message : String(error));
+      console.log(
+        "⚠️  Unexpected error:",
+        error instanceof Error ? error.message : String(error),
+      );
     }
   }
 
@@ -3511,7 +3520,10 @@ async function mainLoop() {
       try {
         await option.action();
       } catch (error: unknown) {
-        console.log("\n❌ Error:", error instanceof Error ? error.message : String(error));
+        console.log(
+          "\n❌ Error:",
+          error instanceof Error ? error.message : String(error),
+        );
         if (error instanceof Error && error.stack) {
           console.log(error.stack);
         }
@@ -3548,7 +3560,10 @@ async function start() {
     await initialize();
     await mainLoop();
   } catch (error: unknown) {
-    console.error("\n❌ Fatal error:", error instanceof Error ? error.message : String(error));
+    console.error(
+      "\n❌ Fatal error:",
+      error instanceof Error ? error.message : String(error),
+    );
     if (error instanceof Error && error.stack) {
       console.error(error.stack);
     }

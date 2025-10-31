@@ -143,7 +143,11 @@ async function createPerformanceIndexes(adapter: GraphAdapter): Promise<void> {
     // Context indexes
     { label: "Context", property: "status", name: "context_status" },
     { label: "Context", property: "depth", name: "context_depth" },
-    { label: "Context", property: "memorySpaceId", name: "context_memory_space" },
+    {
+      label: "Context",
+      property: "memorySpaceId",
+      name: "context_memory_space",
+    },
     { label: "Context", property: "userId", name: "context_user" },
     { label: "Context", property: "parentId", name: "context_parent" },
 
@@ -223,7 +227,9 @@ export async function verifyGraphSchema(adapter: GraphAdapter): Promise<{
       cypher: "SHOW INDEXES",
     });
 
-    const constraints = constraintsResult.records.map((r) => r.name || "unknown");
+    const constraints = constraintsResult.records.map(
+      (r) => r.name || "unknown",
+    );
     const indexes = indexesResult.records.map((r) => r.name || "unknown");
 
     // Check for required constraints
@@ -320,4 +326,3 @@ export async function dropGraphSchema(adapter: GraphAdapter): Promise<void> {
     );
   }
 }
-

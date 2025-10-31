@@ -192,7 +192,9 @@ async function runAgentNetworkProof(adapter: GraphAdapter, dbName: string) {
     }
 
     const syncTime = Date.now() - syncStart;
-    console.log(`  ✓ Synced ${agents.length} agents and ${communications.length} communications in ${syncTime}ms\n`);
+    console.log(
+      `  ✓ Synced ${agents.length} agents and ${communications.length} communications in ${syncTime}ms\n`,
+    );
 
     // ============================================================================
     // Phase 4: Network Analysis Queries
@@ -240,7 +242,7 @@ async function runAgentNetworkProof(adapter: GraphAdapter, dbName: string) {
 
     // Query 3: Find path between two agents
     console.log("\n  📊 Query 3: Communication Path (Supervisor → Legal)");
-    
+
     // Note: shortestPath doesn't work on Memgraph, use simple traversal
     const paths = await adapter.query(
       `
@@ -294,7 +296,9 @@ async function runAgentNetworkProof(adapter: GraphAdapter, dbName: string) {
 
     console.log(`    Top communication pairs:`);
     for (const record of frequency.records) {
-      console.log(`      ${record.sender} → ${record.receiver}: ${record.messageCount} messages`);
+      console.log(
+        `      ${record.sender} → ${record.receiver}: ${record.messageCount} messages`,
+      );
     }
 
     // Query 6: Network statistics
@@ -306,7 +310,9 @@ async function runAgentNetworkProof(adapter: GraphAdapter, dbName: string) {
     console.log(`    - Agents: ${nodeCount}`);
     console.log(`    - Communications: ${edgeCount}`);
     console.log(`    - Memories stored: ${memoryCount}`);
-    console.log(`    - Avg connections per agent: ${(edgeCount / nodeCount).toFixed(2)}`);
+    console.log(
+      `    - Avg connections per agent: ${(edgeCount / nodeCount).toFixed(2)}`,
+    );
 
     console.log(`\n✅ All agent network tests passed for ${dbName}!\n`);
 
@@ -315,7 +321,9 @@ async function runAgentNetworkProof(adapter: GraphAdapter, dbName: string) {
     // ============================================================================
     console.log("🧹 Cleanup");
     console.log(`  ~ Leaving test data for inspection`);
-    console.log(`  ~ ${agents.length} agents, ${communications.length} communications\n`);
+    console.log(
+      `  ~ ${agents.length} agents, ${communications.length} communications\n`,
+    );
   } catch (error) {
     console.error(`❌ Agent network proof failed:`, error);
     throw error;
@@ -328,7 +336,9 @@ async function runAgentNetworkProof(adapter: GraphAdapter, dbName: string) {
  * Main execution
  */
 async function main() {
-  console.log("\n╔═══════════════════════════════════════════════════════════╗");
+  console.log(
+    "\n╔═══════════════════════════════════════════════════════════╗",
+  );
   console.log("║  Cortex Graph Integration - Agent Network Proof          ║");
   console.log("╚═══════════════════════════════════════════════════════════╝");
 
@@ -349,9 +359,13 @@ async function main() {
     console.log("\n⚠️  Neo4j tests skipped (NEO4J_URI not set)");
   }
 
-  console.log("\n╔═══════════════════════════════════════════════════════════╗");
+  console.log(
+    "\n╔═══════════════════════════════════════════════════════════╗",
+  );
   console.log("║  Agent Network Proof Complete!                            ║");
-  console.log("╚═══════════════════════════════════════════════════════════╝\n");
+  console.log(
+    "╚═══════════════════════════════════════════════════════════╝\n",
+  );
 
   console.log("📝 Key Findings:");
   console.log("   ✓ Agent communication networks queryable");
@@ -371,4 +385,3 @@ main()
     console.error("Proof failed:", error);
     process.exit(1);
   });
-

@@ -1,6 +1,6 @@
 /**
  * Parameter Propagation Tests (v0.6.1)
- * 
+ *
  * Critical tests to ensure wrapper functions properly propagate parameters
  * to underlying layer functions. Prevents bugs like the participantId issue.
  */
@@ -306,13 +306,15 @@ describe("Parameter Propagation: memory.remember()", () => {
       });
 
       expect(enriched).not.toBeNull();
-      
+
       // Type guard for EnrichedMemory
-      if (enriched && 'conversation' in enriched) {
+      if (enriched && "conversation" in enriched) {
         expect(enriched.conversation).toBeDefined();
         expect(enriched.sourceMessages).toBeDefined();
         expect(enriched.sourceMessages!.length).toBeGreaterThan(0);
-        expect(enriched.conversation!.conversationId).toBe(getTestConversationId);
+        expect(enriched.conversation!.conversationId).toBe(
+          getTestConversationId,
+        );
       } else {
         fail("Expected enriched memory with conversation");
       }
@@ -328,14 +330,17 @@ describe("Parameter Propagation: memory.remember()", () => {
       );
 
       expect(notEnriched).not.toBeNull();
-      expect('conversation' in notEnriched!).toBe(false);
+      expect("conversation" in notEnriched!).toBe(false);
     });
 
     it("default (no options) doesn't include conversation", async () => {
-      const defaultGet = await cortex.memory.get(TEST_MEMSPACE_ID, testMemoryId);
+      const defaultGet = await cortex.memory.get(
+        TEST_MEMSPACE_ID,
+        testMemoryId,
+      );
 
       expect(defaultGet).not.toBeNull();
-      expect('conversation' in defaultGet!).toBe(false);
+      expect("conversation" in defaultGet!).toBe(false);
     });
   });
 
@@ -375,7 +380,7 @@ describe("Parameter Propagation: memory.remember()", () => {
 
       // EVERY result should have conversation
       results.forEach((r) => {
-        if ('conversation' in r) {
+        if ("conversation" in r) {
           expect(r.conversation).toBeDefined();
           expect(r.sourceMessages).toBeDefined();
           expect(r.conversation!.conversationId).toBeDefined();
@@ -396,7 +401,7 @@ describe("Parameter Propagation: memory.remember()", () => {
       expect(results.length).toBeGreaterThan(0);
 
       results.forEach((r) => {
-        expect('conversation' in r).toBe(false);
+        expect("conversation" in r).toBe(false);
       });
     });
 
@@ -553,4 +558,3 @@ describe("Parameter Propagation: memory.forget()", () => {
     expect(convCheck).not.toBeNull();
   });
 });
-

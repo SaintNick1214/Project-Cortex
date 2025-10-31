@@ -175,7 +175,9 @@ describeIfEnabled("Graph Adapter (Neo4j)", () => {
         properties: { value: 42 },
       });
 
-      const result = await adapter.query("MATCH (n:QueryTest) RETURN n LIMIT 1");
+      const result = await adapter.query(
+        "MATCH (n:QueryTest) RETURN n LIMIT 1",
+      );
 
       expect(result.count).toBeGreaterThanOrEqual(1);
       expect(result.records.length).toBeGreaterThanOrEqual(1);
@@ -261,8 +263,18 @@ describeIfEnabled("Graph Adapter (Neo4j)", () => {
       const n1 = await adapter.createNode({ label: "Node", properties: {} });
       const n2 = await adapter.createNode({ label: "Node", properties: {} });
 
-      await adapter.createEdge({ type: "REL1", from: n1, to: n2, properties: {} });
-      await adapter.createEdge({ type: "REL2", from: n2, to: n1, properties: {} });
+      await adapter.createEdge({
+        type: "REL1",
+        from: n1,
+        to: n2,
+        properties: {},
+      });
+      await adapter.createEdge({
+        type: "REL2",
+        from: n2,
+        to: n1,
+        properties: {},
+      });
 
       const total = await adapter.countEdges();
       expect(total).toBe(2);
@@ -333,4 +345,3 @@ describeIfEnabled("Graph Adapter (Memgraph)", () => {
     });
   });
 });
-

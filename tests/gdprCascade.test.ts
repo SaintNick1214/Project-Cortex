@@ -266,7 +266,7 @@ describe("GDPR: Cascade Deletion", () => {
     it("deleteMany removes ALL matching memories by userId", async () => {
       const USER_ID = "user-bulk-gdpr-test";
       const MEMORY_IDS: string[] = [];
-      
+
       // Create 100 memories with specific userId
       for (let i = 0; i < 100; i++) {
         const mem = await cortex.vector.store(TEST_MEMSPACE_ID, {
@@ -424,7 +424,10 @@ describe("GDPR: Cascade Deletion", () => {
       });
 
       // Delete v1 (soft delete - marks as invalid)
-      const deleteResult = await cortex.facts.delete(TEST_MEMSPACE_ID, v1.factId);
+      const deleteResult = await cortex.facts.delete(
+        TEST_MEMSPACE_ID,
+        v1.factId,
+      );
       expect(deleteResult.deleted).toBe(true);
 
       // Validate: v1 marked invalid (not null - it's soft deleted)
@@ -480,7 +483,10 @@ describe("GDPR: Cascade Deletion", () => {
 
       // Delete all (soft delete - marks as invalid)
       for (const fact of factsAboutSubject) {
-        const deleteResult = await cortex.facts.delete(TEST_MEMSPACE_ID, fact.factId);
+        const deleteResult = await cortex.facts.delete(
+          TEST_MEMSPACE_ID,
+          fact.factId,
+        );
         expect(deleteResult.deleted).toBe(true);
       }
 
@@ -544,4 +550,3 @@ describe("GDPR: Cascade Deletion", () => {
     });
   });
 });
-

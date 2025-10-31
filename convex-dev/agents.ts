@@ -34,7 +34,13 @@ export const get = query({
  */
 export const list = query({
   args: {
-    status: v.optional(v.union(v.literal("active"), v.literal("inactive"), v.literal("archived"))),
+    status: v.optional(
+      v.union(
+        v.literal("active"),
+        v.literal("inactive"),
+        v.literal("archived"),
+      ),
+    ),
     limit: v.optional(v.number()),
     offset: v.optional(v.number()),
   },
@@ -53,7 +59,10 @@ export const list = query({
     if (args.offset) {
       // Skip first N results
       const allResults = await query.collect();
-      const sliced = allResults.slice(args.offset, args.offset + (args.limit || 100));
+      const sliced = allResults.slice(
+        args.offset,
+        args.offset + (args.limit || 100),
+      );
       return sliced;
     }
 
@@ -70,7 +79,13 @@ export const list = query({
  */
 export const count = query({
   args: {
-    status: v.optional(v.union(v.literal("active"), v.literal("inactive"), v.literal("archived"))),
+    status: v.optional(
+      v.union(
+        v.literal("active"),
+        v.literal("inactive"),
+        v.literal("archived"),
+      ),
+    ),
   },
   handler: async (ctx, args) => {
     let agents;
@@ -122,13 +137,12 @@ export const computeStats = query({
     // Count conversations where agent is participant
     const conversations = await ctx.db
       .query("conversations")
-      .filter(
-        (q) =>
-          q.or(
-            q.eq(q.field("participants.participantId"), args.agentId),
-            // Check if agentId is in memorySpaceIds array (for agent-agent convos)
-            q.eq(q.field("memorySpaceId"), args.agentId),
-          ),
+      .filter((q) =>
+        q.or(
+          q.eq(q.field("participants.participantId"), args.agentId),
+          // Check if agentId is in memorySpaceIds array (for agent-agent convos)
+          q.eq(q.field("memorySpaceId"), args.agentId),
+        ),
       )
       .collect();
 
@@ -148,7 +162,8 @@ export const computeStats = query({
       ...facts.map((f) => f.updatedAt),
     ];
 
-    const lastActive = allTimestamps.length > 0 ? Math.max(...allTimestamps) : undefined;
+    const lastActive =
+      allTimestamps.length > 0 ? Math.max(...allTimestamps) : undefined;
 
     return {
       totalMemories: memories.length,
@@ -215,7 +230,11 @@ export const update = mutation({
     metadata: v.optional(v.any()),
     config: v.optional(v.any()),
     status: v.optional(
-      v.union(v.literal("active"), v.literal("inactive"), v.literal("archived")),
+      v.union(
+        v.literal("active"),
+        v.literal("inactive"),
+        v.literal("archived"),
+      ),
     ),
   },
   handler: async (ctx, args) => {
@@ -282,4 +301,3 @@ export const unregister = mutation({
  * This approach provides better control and error handling than a single
  * complex backend mutation.
  */
-
