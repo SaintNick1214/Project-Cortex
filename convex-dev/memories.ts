@@ -20,7 +20,11 @@ export const store = mutation({
     memorySpaceId: v.string(), // Updated
     participantId: v.optional(v.string()), // NEW: Hive Mode
     content: v.string(),
-    contentType: v.union(v.literal("raw"), v.literal("summarized"), v.literal("fact")), // Added fact
+    contentType: v.union(
+      v.literal("raw"),
+      v.literal("summarized"),
+      v.literal("fact"),
+    ), // Added fact
     embedding: v.optional(v.array(v.float64())),
     sourceType: v.union(
       v.literal("conversation"),
@@ -190,7 +194,9 @@ export const search = query({
         if (error.message?.includes("similar is not a function")) {
           const vectorResults = await ctx.db
             .query("memories")
-            .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+            .withIndex("by_memorySpace", (q) =>
+              q.eq("memorySpaceId", args.memorySpaceId),
+            )
             .collect();
 
           // Calculate cosine similarity for each result
@@ -240,7 +246,9 @@ export const search = query({
       results = await ctx.db
         .query("memories")
         .withSearchIndex("by_content", (q) =>
-          q.search("content", args.query).eq("memorySpaceId", args.memorySpaceId),
+          q
+            .search("content", args.query)
+            .eq("memorySpaceId", args.memorySpaceId),
         )
         .take(args.limit || 20);
     }
@@ -292,7 +300,9 @@ export const list = query({
   handler: async (ctx, args) => {
     let memories = await ctx.db
       .query("memories")
-      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId)) // Updated
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      ) // Updated
       .order("desc")
       .take(args.limit || 100);
 
@@ -329,7 +339,9 @@ export const count = query({
   handler: async (ctx, args) => {
     let memories = await ctx.db
       .query("memories")
-      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId)) // Updated
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      ) // Updated
       .collect();
 
     // Apply filters
@@ -508,7 +520,9 @@ export const deleteMany = mutation({
   handler: async (ctx, args) => {
     let memories = await ctx.db
       .query("memories")
-      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
       .collect();
 
     if (args.userId) {
@@ -593,7 +607,9 @@ export const exportMemories = query({
   handler: async (ctx, args) => {
     let memories = await ctx.db
       .query("memories")
-      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
       .collect();
 
     if (args.userId) {
@@ -671,7 +687,9 @@ export const updateMany = mutation({
   handler: async (ctx, args) => {
     let memories = await ctx.db
       .query("memories")
-      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
       .collect();
 
     if (args.userId) {

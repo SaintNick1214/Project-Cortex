@@ -38,7 +38,9 @@ export const register = mutation({
     // Check if already exists
     const existing = await ctx.db
       .query("memorySpaces")
-      .withIndex("by_memorySpaceId", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+      .withIndex("by_memorySpaceId", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
       .first();
 
     if (existing) {
@@ -75,7 +77,9 @@ export const update = mutation({
   handler: async (ctx, args) => {
     const space = await ctx.db
       .query("memorySpaces")
-      .withIndex("by_memorySpaceId", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+      .withIndex("by_memorySpaceId", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
       .first();
 
     if (!space) {
@@ -108,7 +112,9 @@ export const addParticipant = mutation({
   handler: async (ctx, args) => {
     const space = await ctx.db
       .query("memorySpaces")
-      .withIndex("by_memorySpaceId", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+      .withIndex("by_memorySpaceId", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
       .first();
 
     if (!space) {
@@ -140,7 +146,9 @@ export const removeParticipant = mutation({
   handler: async (ctx, args) => {
     const space = await ctx.db
       .query("memorySpaces")
-      .withIndex("by_memorySpaceId", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+      .withIndex("by_memorySpaceId", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
       .first();
 
     if (!space) {
@@ -171,7 +179,9 @@ export const deleteSpace = mutation({
   handler: async (ctx, args) => {
     const space = await ctx.db
       .query("memorySpaces")
-      .withIndex("by_memorySpaceId", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+      .withIndex("by_memorySpaceId", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
       .first();
 
     if (!space) {
@@ -182,7 +192,9 @@ export const deleteSpace = mutation({
       // Delete all conversations
       const conversations = await ctx.db
         .query("conversations")
-        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+        .withIndex("by_memorySpace", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId),
+        )
         .collect();
 
       for (const conv of conversations) {
@@ -192,7 +204,9 @@ export const deleteSpace = mutation({
       // Delete all memories
       const memories = await ctx.db
         .query("memories")
-        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+        .withIndex("by_memorySpace", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId),
+        )
         .collect();
 
       for (const mem of memories) {
@@ -202,7 +216,9 @@ export const deleteSpace = mutation({
       // Delete all facts
       const facts = await ctx.db
         .query("facts")
-        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+        .withIndex("by_memorySpace", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId),
+        )
         .collect();
 
       for (const fact of facts) {
@@ -235,7 +251,9 @@ export const get = query({
   handler: async (ctx, args) => {
     const space = await ctx.db
       .query("memorySpaces")
-      .withIndex("by_memorySpaceId", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+      .withIndex("by_memorySpaceId", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
       .first();
 
     return space || null;
@@ -317,7 +335,9 @@ export const getStats = query({
   handler: async (ctx, args) => {
     const space = await ctx.db
       .query("memorySpaces")
-      .withIndex("by_memorySpaceId", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+      .withIndex("by_memorySpaceId", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
       .first();
 
     if (!space) {
@@ -327,28 +347,36 @@ export const getStats = query({
     // Count conversations
     const conversationCount = await ctx.db
       .query("conversations")
-      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
       .collect()
       .then((c) => c.length);
 
     // Count memories
     const memoryCount = await ctx.db
       .query("memories")
-      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
       .collect()
       .then((m) => m.length);
 
     // Count facts
     const factCount = await ctx.db
       .query("facts")
-      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
       .collect()
       .then((f) => f.filter((fact) => fact.supersededBy === undefined).length); // Active facts only
 
     // Calculate total messages
     const conversations = await ctx.db
       .query("conversations")
-      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
       .collect();
 
     const messageCount = conversations.reduce(
@@ -429,4 +457,3 @@ export const purgeAll = mutation({
     return { deleted: allSpaces.length };
   },
 });
-

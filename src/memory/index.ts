@@ -11,27 +11,32 @@ import { VectorAPI } from "../vector";
 import {
   type CountMemoriesFilter,
   type EnrichedMemory,
+  type ExtendedForgetOptions,
   type ForgetOptions,
   type ForgetResult,
   type GetMemoryOptions,
   type ListMemoriesFilter,
   type MemoryEntry,
+  type RememberOptions,
   type RememberParams,
   type RememberResult,
   type SearchMemoryOptions,
   type SourceType,
   type StoreMemoryInput,
 } from "../types";
+import type { GraphAdapter } from "../graph/types";
 
 export class MemoryAPI {
   private readonly client: ConvexClient;
   private readonly conversations: ConversationsAPI;
   private readonly vector: VectorAPI;
+  private readonly graphAdapter?: GraphAdapter;
 
-  constructor(client: ConvexClient) {
+  constructor(client: ConvexClient, graphAdapter?: GraphAdapter) {
     this.client = client;
-    this.conversations = new ConversationsAPI(client);
-    this.vector = new VectorAPI(client);
+    this.graphAdapter = graphAdapter;
+    this.conversations = new ConversationsAPI(client, graphAdapter);
+    this.vector = new VectorAPI(client, graphAdapter);
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -41,19 +46,24 @@ export class MemoryAPI {
   /**
    * Remember a conversation exchange (stores in both ACID and Vector)
    *
+   * Auto-syncs to graph if configured (default: true)
+   *
    * @example
    * ```typescript
    * await cortex.memory.remember({
-   *   agentId: 'agent-1',
+   *   memorySpaceId: 'agent-1',
    *   conversationId: 'conv-123',
    *   userMessage: 'The password is Blue',
    *   agentResponse: "I'll remember that!",
    *   userId: 'user-1',
    *   userName: 'Alex',
    * });
+   *
+   * // Disable graph sync
+   * await cortex.memory.remember(params, { syncToGraph: false });
    * ```
    */
-  async remember(params: RememberParams): Promise<RememberResult> {
+  async remember(params: RememberParams, options?: RememberOptions): Promise<RememberResult> {
     const now = Date.now();
 
     // Step 1: Store user message in ACID
@@ -69,7 +79,7 @@ export class MemoryAPI {
     // Step 2: Store agent response in ACID
     const agentMsg = await this.conversations.addMessage({
       conversationId: params.conversationId,
-      message:       {
+      message: {
         role: "agent",
         content: params.agentResponse,
         participantId: params.participantId, // Updated
@@ -105,10 +115,14 @@ export class MemoryAPI {
         (await params.generateEmbedding(agentContent)) || undefined;
     }
 
+    // Determine if we should sync to graph (default: true if configured)
+    const shouldSyncToGraph = options?.syncToGraph !== false && this.graphAdapter !== undefined;
+
     // Step 5: Store user message in Vector with conversationRef
     const userMemory = await this.vector.store(params.memorySpaceId, {
       content: userContent,
       contentType,
+      participantId: params.participantId, // Hive Mode tracking
       embedding: userEmbedding,
       userId: params.userId,
       source: {
@@ -125,12 +139,13 @@ export class MemoryAPI {
         importance: params.importance || 50,
         tags: params.tags || [],
       },
-    });
+    }, { syncToGraph: shouldSyncToGraph });
 
     // Step 6: Store agent response in Vector with conversationRef
     const agentMemory = await this.vector.store(params.memorySpaceId, {
       content: agentContent,
       contentType,
+      participantId: params.participantId, // Hive Mode tracking
       embedding: agentEmbedding,
       userId: params.userId,
       source: {
@@ -147,7 +162,7 @@ export class MemoryAPI {
         importance: params.importance || 50,
         tags: params.tags || [],
       },
-    });
+    }, { syncToGraph: shouldSyncToGraph });
 
     return {
       conversation: {
@@ -164,17 +179,25 @@ export class MemoryAPI {
   /**
    * Forget a memory (delete from Vector and optionally ACID)
    *
+   * Auto-syncs to graph if configured (default: true)
+   *
    * @example
    * ```typescript
    * await cortex.memory.forget('agent-1', 'mem-123', {
    *   deleteConversation: true,
+   * });
+   *
+   * // Disable graph sync
+   * await cortex.memory.forget('agent-1', 'mem-123', {
+   *   deleteConversation: true,
+   *   syncToGraph: false,
    * });
    * ```
    */
   async forget(
     agentId: string,
     memoryId: string,
-    options?: ForgetOptions,
+    options?: ExtendedForgetOptions,
   ): Promise<ForgetResult> {
     // Get the memory first
     const memory = await this.vector.get(agentId, memoryId);
@@ -183,8 +206,11 @@ export class MemoryAPI {
       throw new Error("MEMORY_NOT_FOUND");
     }
 
-    // Delete from vector
-    await this.vector.delete(agentId, memoryId);
+    // Determine if we should sync to graph (default: true if configured)
+    const shouldSyncToGraph = options?.syncToGraph !== false && this.graphAdapter !== undefined;
+
+    // Delete from vector (with graph cascade)
+    await this.vector.delete(agentId, memoryId, { syncToGraph: shouldSyncToGraph });
 
     let conversationDeleted = false;
     let messagesDeleted = 0;
@@ -199,8 +225,10 @@ export class MemoryAPI {
 
         messagesDeleted = conv?.messageCount || 0;
 
-        // Delete entire conversation
-        await this.conversations.delete(memory.conversationRef.conversationId);
+        // Delete entire conversation (with graph cascade)
+        await this.conversations.delete(memory.conversationRef.conversationId, {
+          syncToGraph: shouldSyncToGraph,
+        });
         conversationDeleted = true;
       } else {
         // Delete specific messages (not implemented in Layer 1a yet)

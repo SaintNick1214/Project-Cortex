@@ -141,7 +141,10 @@ describe("Facts API (Layer 3)", () => {
     });
 
     it("returns null for non-existent fact", async () => {
-      const fact = await cortex.facts.get(TEST_MEMSPACE_ID, "fact-does-not-exist");
+      const fact = await cortex.facts.get(
+        TEST_MEMSPACE_ID,
+        "fact-does-not-exist",
+      );
 
       expect(fact).toBeNull();
     });
@@ -244,7 +247,7 @@ describe("Facts API (Layer 3)", () => {
 
     it("excludes superseded facts by default", async () => {
       const uniqueTag = `supersede-${Date.now()}`;
-      
+
       const original = await cortex.facts.store({
         memorySpaceId: TEST_MEMSPACE_ID,
         fact: "Old version",
@@ -267,14 +270,20 @@ describe("Facts API (Layer 3)", () => {
 
       // Should only see latest version
       expect(current.length).toBeGreaterThanOrEqual(1);
-      expect(current.some((f) => f.fact === "New version" && f.version === 2)).toBe(true);
+      expect(
+        current.some((f) => f.fact === "New version" && f.version === 2),
+      ).toBe(true);
       // Original should not be in list (superseded)
-      expect(current.some((f) => f.fact === "Old version" && f.supersededBy !== undefined)).toBe(false);
+      expect(
+        current.some(
+          (f) => f.fact === "Old version" && f.supersededBy !== undefined,
+        ),
+      ).toBe(false);
     });
 
     it("includes superseded when requested", async () => {
       const uniqueTag = `supersede-incl-${Date.now()}`;
-      
+
       const original = await cortex.facts.store({
         memorySpaceId: TEST_MEMSPACE_ID,
         fact: "Old version 2",
@@ -416,10 +425,14 @@ describe("Facts API (Layer 3)", () => {
     });
 
     it("creates new version when updated", async () => {
-      const updated = await cortex.facts.update(TEST_MEMSPACE_ID, originalFactId, {
-        fact: "Updated fact statement",
-        confidence: 95,
-      });
+      const updated = await cortex.facts.update(
+        TEST_MEMSPACE_ID,
+        originalFactId,
+        {
+          fact: "Updated fact statement",
+          confidence: 95,
+        },
+      );
 
       expect(updated.fact).toBe("Updated fact statement");
       expect(updated.confidence).toBe(95);
@@ -602,7 +615,9 @@ describe("Facts API (Layer 3)", () => {
       });
 
       expect(bobPrefs.length).toBeGreaterThanOrEqual(1);
-      expect(bobPrefs.some((f) => f.fact.includes("morning meetings"))).toBe(true);
+      expect(bobPrefs.some((f) => f.fact.includes("morning meetings"))).toBe(
+        true,
+      );
     });
   });
 
@@ -840,7 +855,10 @@ describe("Facts API (Layer 3)", () => {
       });
 
       // Get history
-      const history = await cortex.facts.getHistory(TEST_MEMSPACE_ID, v1.factId);
+      const history = await cortex.facts.getHistory(
+        TEST_MEMSPACE_ID,
+        v1.factId,
+      );
 
       expect(history.length).toBeGreaterThanOrEqual(3);
 
@@ -1063,7 +1081,9 @@ describe("Facts API (Layer 3)", () => {
         },
       });
 
-      const msg = conv.messages[0] || (await cortex.conversations.get(conv.conversationId))!.messages[0];
+      const msg =
+        conv.messages[0] ||
+        (await cortex.conversations.get(conv.conversationId))!.messages[0];
 
       // Extract fact from conversation
       const fact = await cortex.facts.store({
@@ -1101,7 +1121,10 @@ describe("Facts API (Layer 3)", () => {
       });
 
       // Get
-      const retrieved = await cortex.facts.get("consistency-test", stored.factId);
+      const retrieved = await cortex.facts.get(
+        "consistency-test",
+        stored.factId,
+      );
 
       expect(retrieved).not.toBeNull();
       expect(retrieved!.factId).toBe(stored.factId);
@@ -1134,5 +1157,312 @@ describe("Facts API (Layer 3)", () => {
       expect(parsed.some((f: any) => f.factId === stored.factId)).toBe(true);
     });
   });
-});
 
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // v0.6.1 Field-by-Field Validation Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Field-by-Field Validation (v0.6.1)", () => {
+    it("store() preserves all input fields", async () => {
+      const INPUT = {
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Complete field validation fact",
+        factType: "knowledge" as const,
+        subject: "user-field-test",
+        predicate: "has_preference",
+        object: "dark-mode",
+        confidence: 88,
+        sourceType: "conversation" as const,
+        participantId: "agent-field-test",
+        sourceRef: {
+          conversationId: "conv-field-123",
+          memoryId: "mem-field-456",
+        },
+        tags: ["field-test", "validation", "complete"],
+      };
+
+      const result = await cortex.facts.store(INPUT);
+
+      // Field-by-field validation
+      expect(result.factId).toBeDefined();
+      expect(result.memorySpaceId).toBe(INPUT.memorySpaceId);
+      expect(result.fact).toBe(INPUT.fact);
+      expect(result.factType).toBe(INPUT.factType);
+      expect(result.subject).toBe(INPUT.subject);
+      expect(result.predicate).toBe(INPUT.predicate);
+      expect(result.object).toBe(INPUT.object);
+      expect(result.confidence).toBe(INPUT.confidence);
+      expect(result.sourceType).toBe(INPUT.sourceType);
+      expect(result.participantId).toBe(INPUT.participantId);
+      expect(result.tags).toEqual(INPUT.tags);
+      expect(result.sourceRef).toBeDefined();
+      expect(result.sourceRef!.conversationId).toBe(
+        INPUT.sourceRef.conversationId,
+      );
+      expect(result.sourceRef!.memoryId).toBe(INPUT.sourceRef.memoryId);
+
+      // Verify in database
+      const stored = await cortex.facts.get(TEST_MEMSPACE_ID, result.factId);
+      expect(stored).toEqual(result);
+    });
+
+    it("get() returns exact stored data", async () => {
+      const INPUT = {
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Get validation fact",
+        factType: "preference" as const,
+        subject: "user-get-validation",
+        confidence: 92,
+        sourceType: "manual" as const,
+        participantId: "tool-get-test",
+        tags: ["get-validation"],
+      };
+
+      const stored = await cortex.facts.store(INPUT);
+      const retrieved = await cortex.facts.get(TEST_MEMSPACE_ID, stored.factId);
+
+      // All fields should match
+      expect(retrieved!.factId).toBe(stored.factId);
+      expect(retrieved!.fact).toBe(INPUT.fact);
+      expect(retrieved!.factType).toBe(INPUT.factType);
+      expect(retrieved!.subject).toBe(INPUT.subject);
+      expect(retrieved!.confidence).toBe(INPUT.confidence);
+      expect(retrieved!.sourceType).toBe(INPUT.sourceType);
+      expect(retrieved!.participantId).toBe(INPUT.participantId);
+      expect(retrieved!.tags).toEqual(INPUT.tags);
+    });
+
+    it("update() creates new version with all original fields", async () => {
+      const v1 = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Original fact version",
+        factType: "knowledge",
+        subject: "user-update-validation",
+        predicate: "original_predicate",
+        confidence: 70,
+        sourceType: "system",
+        participantId: "agent-update-test",
+        tags: ["update-test", "v1"],
+      });
+
+      const v2 = await cortex.facts.update(TEST_MEMSPACE_ID, v1.factId, {
+        fact: "Updated fact version",
+        confidence: 90,
+        tags: ["update-test", "v2"],
+      });
+
+      // Updated fields changed
+      expect(v2.fact).toBe("Updated fact version");
+      expect(v2.confidence).toBe(90);
+      expect(v2.tags).toContain("v2");
+
+      // Original fields preserved
+      expect(v2.factType).toBe(v1.factType);
+      expect(v2.subject).toBe(v1.subject);
+      expect(v2.predicate).toBe(v1.predicate);
+      expect(v2.participantId).toBe(v1.participantId);
+      expect(v2.sourceType).toBe(v1.sourceType);
+
+      // Version chain maintained
+      expect(v2.supersedes).toBe(v1.factId);
+    });
+
+    it("list() returns all fields for each fact", async () => {
+      const fact1 = await cortex.facts.store({
+        memorySpaceId: "facts-list-validation",
+        fact: "List validation fact",
+        factType: "identity",
+        subject: "user-list-valid",
+        confidence: 85,
+        sourceType: "system",
+        participantId: "tool-list-valid",
+        tags: ["list-field-validation"],
+      });
+
+      const results = await cortex.facts.list({
+        memorySpaceId: "facts-list-validation",
+      });
+
+      const found = results.find((r) => r.factId === fact1.factId);
+
+      expect(found).toBeDefined();
+      expect(found!.fact).toBe(fact1.fact);
+      expect(found!.factType).toBe(fact1.factType);
+      expect(found!.subject).toBe(fact1.subject);
+      expect(found!.confidence).toBe(fact1.confidence);
+      expect(found!.participantId).toBe(fact1.participantId);
+      expect(found!.tags).toEqual(fact1.tags);
+    });
+
+    it("search() returns all fields for each result", async () => {
+      await cortex.facts.store({
+        memorySpaceId: "facts-search-validation",
+        fact: "FACT_SEARCH_MARKER searchable fact content",
+        factType: "knowledge",
+        subject: "user-search-valid",
+        confidence: 88,
+        sourceType: "conversation",
+        participantId: "agent-search-valid",
+        tags: ["search-field-validation"],
+      });
+
+      const results = await cortex.facts.search(
+        "facts-search-validation",
+        "FACT_SEARCH_MARKER",
+        { limit: 10 },
+      );
+
+      const found = results.find((r) => r.fact.includes("FACT_SEARCH_MARKER"));
+
+      expect(found).toBeDefined();
+      expect(found!.factType).toBe("knowledge");
+      expect(found!.subject).toBe("user-search-valid");
+      expect(found!.confidence).toBe(88);
+      expect(found!.participantId).toBe("agent-search-valid");
+      expect(found!.tags).toContain("search-field-validation");
+    });
+
+    it("queryBySubject() preserves all fields", async () => {
+      const SUBJECT = "user-query-by-subject";
+
+      const fact1 = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "First fact about subject",
+        factType: "preference",
+        subject: SUBJECT,
+        predicate: "prefers",
+        object: "coffee",
+        confidence: 90,
+        sourceType: "conversation",
+        participantId: "tool-query-subject",
+        tags: ["query-subject-test"],
+      });
+
+      const results = await cortex.facts.queryBySubject({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        subject: SUBJECT,
+      });
+
+      const found = results.find((r) => r.factId === fact1.factId);
+
+      expect(found).toBeDefined();
+      expect(found!.fact).toBe(fact1.fact);
+      expect(found!.predicate).toBe(fact1.predicate);
+      expect(found!.object).toBe(fact1.object);
+      expect(found!.confidence).toBe(fact1.confidence);
+      expect(found!.participantId).toBe(fact1.participantId);
+    });
+
+    it("sourceRef structure preserved", async () => {
+      const sourceRef = {
+        conversationId: "conv-source-ref",
+        memoryId: "mem-source-ref",
+      };
+
+      const fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Fact with source reference",
+        factType: "knowledge",
+        subject: "user-source-ref",
+        confidence: 95,
+        sourceType: "conversation",
+        sourceRef,
+      });
+
+      expect(fact.sourceRef).toBeDefined();
+      expect(fact.sourceRef!.conversationId).toBe(sourceRef.conversationId);
+      expect(fact.sourceRef!.memoryId).toBe(sourceRef.memoryId);
+
+      // Verify after retrieval
+      const retrieved = await cortex.facts.get(TEST_MEMSPACE_ID, fact.factId);
+
+      expect(retrieved!.sourceRef!.conversationId).toBe(
+        sourceRef.conversationId,
+      );
+      expect(retrieved!.sourceRef!.memoryId).toBe(sourceRef.memoryId);
+    });
+
+    it("version chain fields maintained", async () => {
+      const v1 = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Version 1",
+        factType: "knowledge",
+        subject: "user-version-chain",
+        confidence: 70,
+        sourceType: "system",
+      });
+
+      const v2 = await cortex.facts.update(TEST_MEMSPACE_ID, v1.factId, {
+        fact: "Version 2",
+        confidence: 80,
+      });
+
+      const v3 = await cortex.facts.update(TEST_MEMSPACE_ID, v2.factId, {
+        fact: "Version 3",
+        confidence: 90,
+      });
+
+      // Check v1
+      const stored1 = await cortex.facts.get(TEST_MEMSPACE_ID, v1.factId);
+      expect(stored1!.version).toBe(1);
+      expect(stored1!.supersededBy).toBe(v2.factId);
+      expect(stored1!.supersedes).toBeUndefined();
+
+      // Check v2
+      const stored2 = await cortex.facts.get(TEST_MEMSPACE_ID, v2.factId);
+      expect(stored2!.version).toBe(2);
+      expect(stored2!.supersedes).toBe(v1.factId);
+      expect(stored2!.supersededBy).toBe(v3.factId);
+
+      // Check v3
+      const stored3 = await cortex.facts.get(TEST_MEMSPACE_ID, v3.factId);
+      expect(stored3!.version).toBe(3);
+      expect(stored3!.supersedes).toBe(v2.factId);
+      expect(stored3!.supersededBy).toBeUndefined();
+    });
+
+    it("timestamps preserved correctly", async () => {
+      const fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Timestamp test fact",
+        factType: "knowledge",
+        subject: "user-timestamp",
+        confidence: 80,
+        sourceType: "system",
+      });
+
+      expect(fact.createdAt).toBeGreaterThan(0);
+      expect(fact.updatedAt).toBeDefined();
+
+      const retrieved = await cortex.facts.get(TEST_MEMSPACE_ID, fact.factId);
+
+      expect(retrieved!.createdAt).toBe(fact.createdAt);
+      expect(retrieved!.updatedAt).toBe(fact.updatedAt);
+    });
+
+    it("count() accurate across all operations", async () => {
+      const countBefore = await cortex.facts.count({
+        memorySpaceId: "facts-count-validation",
+      });
+
+      // Create 5 facts
+      for (let i = 0; i < 5; i++) {
+        await cortex.facts.store({
+          memorySpaceId: "facts-count-validation",
+          fact: `Count validation fact ${i}`,
+          factType: "knowledge",
+          subject: `user-count-${i}`,
+          confidence: 80,
+          sourceType: "system",
+          tags: ["count-validation"],
+        });
+      }
+
+      const countAfter = await cortex.facts.count({
+        memorySpaceId: "facts-count-validation",
+      });
+
+      expect(countAfter).toBe(countBefore + 5);
+    });
+  });
+});

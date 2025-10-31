@@ -8,12 +8,22 @@ import { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type {
   MemorySpace,
-  RegisterMemorySpaceParams,
   MemorySpaceStats,
+  RegisterMemorySpaceOptions,
+  RegisterMemorySpaceParams,
+  UnregisterMemorySpaceOptions,
 } from "../types";
+import type { GraphAdapter } from "../graph/types";
+import {
+  syncMemorySpaceToGraph,
+  deleteMemorySpaceFromGraph,
+} from "../graph";
 
 export class MemorySpacesAPI {
-  constructor(private client: ConvexClient) {}
+  constructor(
+    private client: ConvexClient,
+    private graphAdapter?: GraphAdapter,
+  ) {}
 
   /**
    * Register a new memory space
@@ -31,12 +41,13 @@ export class MemorySpacesAPI {
    * });
    * ```
    */
-  async register(params: RegisterMemorySpaceParams): Promise<MemorySpace> {
+  async register(params: RegisterMemorySpaceParams, options?: RegisterMemorySpaceOptions): Promise<MemorySpace> {
     const now = Date.now();
-    const participants = params.participants?.map((p) => ({
-      ...p,
-      joinedAt: now,
-    })) || [];
+    const participants =
+      params.participants?.map((p) => ({
+        ...p,
+        joinedAt: now,
+      })) || [];
 
     const result = await this.client.mutation(api.memorySpaces.register, {
       memorySpaceId: params.memorySpaceId,
@@ -45,6 +56,15 @@ export class MemorySpacesAPI {
       participants,
       metadata: params.metadata,
     });
+
+    // Sync to graph if requested
+    if (options?.syncToGraph && this.graphAdapter) {
+      try {
+        await syncMemorySpaceToGraph(result as MemorySpace, this.graphAdapter);
+      } catch (error) {
+        console.warn("Failed to sync memory space to graph:", error);
+      }
+    }
 
     return result as MemorySpace;
   }
@@ -179,10 +199,13 @@ export class MemorySpacesAPI {
     memorySpaceId: string,
     participantId: string,
   ): Promise<MemorySpace> {
-    const result = await this.client.mutation(api.memorySpaces.removeParticipant, {
-      memorySpaceId,
-      participantId,
-    });
+    const result = await this.client.mutation(
+      api.memorySpaces.removeParticipant,
+      {
+        memorySpaceId,
+        participantId,
+      },
+    );
 
     return result as MemorySpace;
   }
@@ -248,4 +271,3 @@ export class MemorySpacesAPI {
     return result as MemorySpace[];
   }
 }
-

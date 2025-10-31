@@ -122,13 +122,15 @@ export const update = mutation({
       subject: existing.subject,
       predicate: existing.predicate,
       object: existing.object,
-      confidence: args.confidence !== undefined ? args.confidence : existing.confidence,
+      confidence:
+        args.confidence !== undefined ? args.confidence : existing.confidence,
       sourceType: existing.sourceType,
       sourceRef: existing.sourceRef,
       metadata: args.metadata || existing.metadata,
       tags: args.tags || existing.tags,
       validFrom: existing.validFrom,
-      validUntil: args.validUntil !== undefined ? args.validUntil : existing.validUntil,
+      validUntil:
+        args.validUntil !== undefined ? args.validUntil : existing.validUntil,
       version: existing.version + 1,
       supersedes: existing.factId, // Link to previous
       supersededBy: undefined,
@@ -233,7 +235,9 @@ export const list = query({
   handler: async (ctx, args) => {
     let facts = await ctx.db
       .query("facts")
-      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
       .order("desc")
       .take(args.limit || 100);
 
@@ -282,7 +286,9 @@ export const count = query({
   handler: async (ctx, args) => {
     let facts = await ctx.db
       .query("facts")
-      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
       .collect();
 
     // Filter out superseded by default
@@ -370,7 +376,7 @@ export const getHistory = query({
 
     // Build version chain - start from given fact and go both directions
     const history: any[] = [];
-    
+
     // First, go backward to find oldest version
     let oldest = fact;
     while (oldest.supersedes) {
@@ -378,24 +384,24 @@ export const getHistory = query({
         .query("facts")
         .withIndex("by_factId", (q) => q.eq("factId", oldest.supersedes!))
         .first();
-      
+
       if (previous) {
         oldest = previous;
       } else {
         break;
       }
     }
-    
+
     // Now go forward from oldest to build complete chain
     history.push(oldest);
     let current = oldest;
-    
+
     while (current.supersededBy) {
       const next = await ctx.db
         .query("facts")
         .withIndex("by_factId", (q) => q.eq("factId", current.supersededBy!))
         .first();
-      
+
       if (next) {
         history.push(next);
         current = next;
@@ -463,9 +469,7 @@ export const queryByRelationship = query({
       .collect();
 
     return facts.filter(
-      (f) =>
-        f.predicate === args.predicate &&
-        f.supersededBy === undefined,
+      (f) => f.predicate === args.predicate && f.supersededBy === undefined,
     );
   },
 });
@@ -491,7 +495,9 @@ export const exportFacts = query({
   handler: async (ctx, args) => {
     let facts = await ctx.db
       .query("facts")
-      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
       .collect();
 
     // Filter superseded
@@ -526,7 +532,9 @@ export const exportFacts = query({
           confidence: f.confidence,
           factType: f.factType,
           dateCreated: new Date(f.createdAt).toISOString(),
-          validFrom: f.validFrom ? new Date(f.validFrom).toISOString() : undefined,
+          validFrom: f.validFrom
+            ? new Date(f.validFrom).toISOString()
+            : undefined,
           validThrough: f.validUntil
             ? new Date(f.validUntil).toISOString()
             : undefined,
@@ -679,4 +687,3 @@ export const purgeAll = mutation({
     return { deleted: allFacts.length };
   },
 });
-

@@ -133,7 +133,11 @@ describe("Collaboration Mode", () => {
 
       // Org B can also see (via granted access)
       // In real implementation, this would check access control
-      expect((orgAView as any).grantedAccess?.some((g: any) => g.memorySpaceId === ORG_B_SPACE)).toBe(true);
+      expect(
+        (orgAView as any).grantedAccess?.some(
+          (g: any) => g.memorySpaceId === ORG_B_SPACE,
+        ),
+      ).toBe(true);
     });
 
     it("creates child contexts in different spaces", async () => {
@@ -230,7 +234,11 @@ describe("Collaboration Mode", () => {
       });
 
       // 2. Company A grants access to Company B
-      await cortex.contexts.grantAccess(campaign.contextId, ORG_B_SPACE, "collaborate");
+      await cortex.contexts.grantAccess(
+        campaign.contextId,
+        ORG_B_SPACE,
+        "collaborate",
+      );
 
       // 3. Company A adds their internal task
       const orgATask = await cortex.contexts.create({
@@ -285,7 +293,9 @@ describe("Collaboration Mode", () => {
       expect(orgAFacts.some((f) => f.fact.includes("ad platform"))).toBe(false);
 
       expect(orgBFacts.some((f) => f.fact.includes("ad platform"))).toBe(true);
-      expect(orgBFacts.some((f) => f.fact.includes("social media"))).toBe(false);
+      expect(orgBFacts.some((f) => f.fact.includes("social media"))).toBe(
+        false,
+      );
 
       // Result: Shared workflow coordination, isolated data
     });
@@ -394,9 +404,11 @@ describe("Collaboration Mode", () => {
       const context = await cortex.contexts.get(sharedProject.contextId);
 
       expect((context as any).grantedAccess).toBeDefined();
-      expect((context as any).grantedAccess.some((g: any) => g.memorySpaceId === companyY)).toBe(
-        true,
-      );
+      expect(
+        (context as any).grantedAccess.some(
+          (g: any) => g.memorySpaceId === companyY,
+        ),
+      ).toBe(true);
     });
   });
 
@@ -410,7 +422,11 @@ describe("Collaboration Mode", () => {
       });
 
       // Grant access to Org B
-      await cortex.contexts.grantAccess(root.contextId, ORG_B_SPACE, "collaborate");
+      await cortex.contexts.grantAccess(
+        root.contextId,
+        ORG_B_SPACE,
+        "collaborate",
+      );
 
       // Org A creates their task
       const orgATask = await cortex.contexts.create({
@@ -433,9 +449,9 @@ describe("Collaboration Mode", () => {
       // Can see each other as siblings
       const chainA = await cortex.contexts.getChain(orgATask.contextId);
 
-      expect(chainA.siblings.some((s) => s.contextId === orgBTask.contextId)).toBe(
-        true,
-      );
+      expect(
+        chainA.siblings.some((s) => s.contextId === orgBTask.contextId),
+      ).toBe(true);
     });
   });
 
@@ -458,7 +474,11 @@ describe("Collaboration Mode", () => {
         data: { projectName: "Joint Initiative" },
       });
 
-      await cortex.contexts.grantAccess(context.contextId, ORG_B_SPACE, "read-only");
+      await cortex.contexts.grantAccess(
+        context.contextId,
+        ORG_B_SPACE,
+        "read-only",
+      );
 
       // Org B can see context
       const sharedCtx = await cortex.contexts.get(context.contextId);
@@ -466,7 +486,9 @@ describe("Collaboration Mode", () => {
       expect((sharedCtx as any).data.projectName).toBe("Joint Initiative");
 
       // But Org B CANNOT see Org A's facts
-      const orgBFactView = await cortex.facts.list({ memorySpaceId: ORG_B_SPACE });
+      const orgBFactView = await cortex.facts.list({
+        memorySpaceId: ORG_B_SPACE,
+      });
 
       expect(orgBFactView.some((f) => f.fact.includes("$10M"))).toBe(false);
 
@@ -474,4 +496,3 @@ describe("Collaboration Mode", () => {
     });
   });
 });
-

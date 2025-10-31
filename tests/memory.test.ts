@@ -297,10 +297,14 @@ describe("Memory Convenience API (Layer 3)", () => {
     });
 
     it("deletes from both layers when deleteConversation=true", async () => {
-      const result = await cortex.memory.forget(TEST_MEMSPACE_ID, testMemoryId, {
-        deleteConversation: true,
-        deleteEntireConversation: true,
-      });
+      const result = await cortex.memory.forget(
+        TEST_MEMSPACE_ID,
+        testMemoryId,
+        {
+          deleteConversation: true,
+          deleteEntireConversation: true,
+        },
+      );
 
       expect(result.memoryDeleted).toBe(true);
       expect(result.conversationDeleted).toBe(true);
@@ -612,7 +616,9 @@ describe("Memory Convenience API (Layer 3)", () => {
           metadata: { importance: 50, tags: [] },
         });
 
-        const results = await cortex.memory.list({ memorySpaceId: TEST_MEMSPACE_ID });
+        const results = await cortex.memory.list({
+          memorySpaceId: TEST_MEMSPACE_ID,
+        });
 
         expect(results.length).toBeGreaterThan(0);
       });
@@ -620,7 +626,9 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     describe("count()", () => {
       it("delegates to vector.count()", async () => {
-        const count = await cortex.memory.count({ memorySpaceId: TEST_MEMSPACE_ID });
+        const count = await cortex.memory.count({
+          memorySpaceId: TEST_MEMSPACE_ID,
+        });
 
         expect(typeof count).toBe("number");
         expect(count).toBeGreaterThanOrEqual(0);
@@ -966,6 +974,65 @@ describe("Memory Convenience API (Layer 3)", () => {
       expect(acidConv).not.toBeNull();
       expect(acidConv!.messages.length).toBeGreaterThanOrEqual(2);
     });
+
+    it("remember() propagates participantId to vector memories (Hive Mode)", async () => {
+      // CRITICAL TEST: Validates participantId flows from remember() to vector layer
+      // This test catches the bug where participantId wasn't passed to vector.store()
+      
+      const PARTICIPANT = "tool-calendar-test";
+      
+      const conv = await cortex.conversations.create({
+        type: "user-agent",
+        memorySpaceId: TEST_MEMSPACE_ID,
+        participants: { userId: TEST_USER_ID, participantId: PARTICIPANT },
+      });
+
+      const result = await cortex.memory.remember({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        participantId: PARTICIPANT, // ← Hive Mode: specify participant
+        conversationId: conv.conversationId,
+        userMessage: "Test message from tool",
+        agentResponse: "Processed by tool",
+        userId: TEST_USER_ID,
+        userName: TEST_USER_NAME,
+        importance: 85,
+        tags: ["hive-test"],
+      });
+
+      // ✅ CRITICAL: Verify participantId propagated to BOTH vector memories
+      const userMemory = await cortex.vector.get(
+        TEST_MEMSPACE_ID,
+        result.memories[0].memoryId,
+      );
+
+      expect(userMemory).not.toBeNull();
+      expect(userMemory!.participantId).toBe(PARTICIPANT); // ← Catches bug if missing
+      expect(userMemory!.memorySpaceId).toBe(TEST_MEMSPACE_ID);
+      expect(userMemory!.importance).toBe(85);
+      expect(userMemory!.tags).toContain("hive-test");
+
+      const agentMemory = await cortex.vector.get(
+        TEST_MEMSPACE_ID,
+        result.memories[1].memoryId,
+      );
+
+      expect(agentMemory).not.toBeNull();
+      expect(agentMemory!.participantId).toBe(PARTICIPANT); // ← Catches bug if missing
+      expect(agentMemory!.memorySpaceId).toBe(TEST_MEMSPACE_ID);
+
+      // ✅ VERIFY: Can filter memories by participant
+      const allMemories = await cortex.vector.list({
+        memorySpaceId: TEST_MEMSPACE_ID,
+      });
+
+      const participantMemories = allMemories.filter(
+        (m) => m.participantId === PARTICIPANT,
+      );
+
+      expect(participantMemories.length).toBeGreaterThanOrEqual(2);
+      
+      // ✅ HIVE MODE SUCCESS: Participant tracking works through remember()
+    });
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -988,7 +1055,10 @@ describe("Memory Convenience API (Layer 3)", () => {
         const conv = await cortex.conversations.create({
           type: "user-agent",
           memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
+          participants: {
+            userId: TEST_USER_ID,
+            participantId: "agent-test-l3",
+          },
         });
 
         conversationId = conv.conversationId;
@@ -1125,11 +1195,15 @@ describe("Memory Convenience API (Layer 3)", () => {
       }, 60000); // 60s timeout for API calls
 
       it("enriches search results with full conversation context", async () => {
-        const results = await cortex.memory.search(TEST_MEMSPACE_ID, "password", {
-          embedding: await generateEmbedding("password credentials"),
-          enrichConversation: true,
-          userId: TEST_USER_ID,
-        });
+        const results = await cortex.memory.search(
+          TEST_MEMSPACE_ID,
+          "password",
+          {
+            embedding: await generateEmbedding("password credentials"),
+            enrichConversation: true,
+            userId: TEST_USER_ID,
+          },
+        );
 
         expect(results.length).toBeGreaterThan(0);
 

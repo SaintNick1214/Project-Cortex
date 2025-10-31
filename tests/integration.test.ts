@@ -67,7 +67,10 @@ describe("Complex Integration Tests", () => {
       const conversation = await cortex.conversations.create({
         memorySpaceId: "support-agent-space",
         type: "user-agent",
-        participants: { userId: "user-vip-123", participantId: "agent-support" },
+        participants: {
+          userId: "user-vip-123",
+          participantId: "agent-support",
+        },
       });
 
       const userMessage = await cortex.conversations.addMessage({
@@ -425,7 +428,9 @@ describe("Complex Integration Tests", () => {
 
       expect((rootCtx as any).grantedAccess).toBeDefined();
       expect(
-        (rootCtx as any).grantedAccess.some((g: any) => g.memorySpaceId === companyB),
+        (rootCtx as any).grantedAccess.some(
+          (g: any) => g.memorySpaceId === companyB,
+        ),
       ).toBe(true);
 
       // V4: Facts support graph queries
@@ -535,7 +540,9 @@ describe("Complex Integration Tests", () => {
       const factWithContext = userProfile[0];
 
       expect(factWithContext.sourceRef).toBeDefined();
-      expect(factWithContext.sourceRef!.conversationId).toBe(conv.conversationId);
+      expect(factWithContext.sourceRef!.conversationId).toBe(
+        conv.conversationId,
+      );
 
       // Can retrieve full conversation if needed
       const fullConv = await cortex.conversations.get(conv.conversationId);
@@ -606,8 +613,13 @@ describe("Complex Integration Tests", () => {
       // In production: cortex.users.delete(TARGET_USER, { cascade: true })
       // For test: Manually verify user filtering works
 
-      const userConvs = await cortex.conversations.list({ userId: TARGET_USER });
-      const userMemories = await cortex.vector.list({ memorySpaceId: GDPR_SPACE, userId: TARGET_USER });
+      const userConvs = await cortex.conversations.list({
+        userId: TARGET_USER,
+      });
+      const userMemories = await cortex.vector.list({
+        memorySpaceId: GDPR_SPACE,
+        userId: TARGET_USER,
+      });
       const userContexts = await cortex.contexts.list({ userId: TARGET_USER });
 
       expect(userConvs.length).toBeGreaterThanOrEqual(1);
@@ -651,7 +663,10 @@ describe("Complex Integration Tests", () => {
       expect(fact2.supersedes).toBe(fact1.factId);
 
       // Get history
-      const history = await cortex.facts.getHistory(VERSION_SPACE, fact1.factId);
+      const history = await cortex.facts.getHistory(
+        VERSION_SPACE,
+        fact1.factId,
+      );
 
       expect(history.length).toBeGreaterThanOrEqual(2);
       expect(history[0].fact).toContain("email");
@@ -731,9 +746,11 @@ describe("Complex Integration Tests", () => {
       // Conversations
       const convResults = await cortex.conversations.search({ query: keyword });
 
-      expect(convResults.some((c) => c.conversation.conversationId === conv.conversationId)).toBe(
-        true,
-      );
+      expect(
+        convResults.some(
+          (c) => c.conversation.conversationId === conv.conversationId,
+        ),
+      ).toBe(true);
 
       // Memories
       const memResults = await cortex.vector.search(SEARCH_SPACE, keyword);
@@ -750,9 +767,9 @@ describe("Complex Integration Tests", () => {
         memorySpaceId: SEARCH_SPACE,
       });
 
-      expect(
-        contextResults.some((c) => c.purpose.includes(keyword)),
-      ).toBe(true);
+      expect(contextResults.some((c) => c.purpose.includes(keyword))).toBe(
+        true,
+      );
 
       // ✅ Comprehensive search across all 4 layers
     });
@@ -814,4 +831,3 @@ describe("Complex Integration Tests", () => {
     });
   });
 });
-

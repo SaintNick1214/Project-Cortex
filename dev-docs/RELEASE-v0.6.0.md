@@ -9,36 +9,45 @@ This release fundamentally reimagines how AI agents manage memory, introducing *
 ## 🎯 What This Solves
 
 ### Problem 1: Tool Isolation Creates Data Silos
+
 **Before v0.6.0:**
+
 - Calendar tool stores "meeting at 9 AM" → agent-calendar database
 - Email tool needs same info → must query agent-calendar or duplicate data
 - Task tool also needs it → another query or more duplication
 - **Result:** N tools = N databases with duplicate data + sync nightmares
 
 **With v0.6.0 Hive Mode:**
+
 - All tools write to ONE memory space: `user-alice-personal`
 - Calendar, email, tasks all share the SAME memory pool
 - Single query retrieves everything
 - **Result:** Zero duplication, zero syncing, instant access
 
 ### Problem 2: Can't Collaborate Across Organizations
+
 **Before v0.6.0:**
+
 - Company A and Company B each have agent memory
 - Joint project requires sharing → no secure way to do it
 - **Result:** Email everything or build custom integration
 
 **With v0.6.0 Collaboration Mode:**
+
 - Each company has its own memory space (data isolated)
 - Share workflow contexts via `grantAccess()`
 - **Result:** Coordinate on projects while keeping data private
 
 ### Problem 3: Can't Scale to 10,000+ Message Conversations
+
 **Before v0.6.0:**
+
 - Must pass entire conversation history to LLM for context
 - 10,000 messages = millions of tokens = expensive + slow
 - **Result:** Context window limitations
 
 **With v0.6.0 Facts + Infinite Context:**
+
 - Extract structured facts during conversation
 - Query facts instead of scanning messages
 - Retrieve "user's favorite color" from fact store (instant)
@@ -55,13 +64,13 @@ This release fundamentally reimagines how AI agents manage memory, introducing *
 ```typescript
 // Register a Hive for user's personal tools
 await cortex.memorySpaces.register({
-  memorySpaceId: 'user-alice-personal',
-  type: 'personal',
+  memorySpaceId: "user-alice-personal",
+  type: "personal",
   participants: [
-    { id: 'user-alice', type: 'user' },
-    { id: 'tool-calendar', type: 'tool' },
-    { id: 'tool-email', type: 'tool' },
-    { id: 'tool-tasks', type: 'tool' },
+    { id: "user-alice", type: "user" },
+    { id: "tool-calendar", type: "tool" },
+    { id: "tool-email", type: "tool" },
+    { id: "tool-tasks", type: "tool" },
   ],
 });
 
@@ -69,6 +78,7 @@ await cortex.memorySpaces.register({
 ```
 
 **Supports:**
+
 - Personal spaces (user's tools)
 - Team spaces (department memory)
 - Project spaces (temporary collaborations)
@@ -98,6 +108,7 @@ const meetings = await cortex.facts.search('user-alice-personal', 'meeting');
 ```
 
 **Benefits:**
+
 - **Zero Duplication:** Store once, access everywhere
 - **Instant Sync:** All tools see updates immediately
 - **Participant Tracking:** Know who contributed what
@@ -110,28 +121,29 @@ const meetings = await cortex.facts.search('user-alice-personal', 'meeting');
 ```typescript
 // Extract structured fact from conversation
 await cortex.facts.store({
-  memorySpaceId: 'user-alice-personal',
-  fact: 'Alice works at Acme Corporation',
-  factType: 'relationship',
-  subject: 'user-alice',
-  predicate: 'works_at',
-  object: 'company-acme',
+  memorySpaceId: "user-alice-personal",
+  fact: "Alice works at Acme Corporation",
+  factType: "relationship",
+  subject: "user-alice",
+  predicate: "works_at",
+  object: "company-acme",
   confidence: 100,
-  sourceType: 'conversation',
-  sourceRef: { conversationId: 'conv-456', messageIds: ['msg-123'] },
-  tags: ['employment', 'identity'],
+  sourceType: "conversation",
+  sourceRef: { conversationId: "conv-456", messageIds: ["msg-123"] },
+  tags: ["employment", "identity"],
 });
 
 // Later: Instant retrieval (no message scanning)
 const employment = await cortex.facts.queryByRelationship({
-  memorySpaceId: 'user-alice-personal',
-  subject: 'user-alice',
-  predicate: 'works_at',
+  memorySpaceId: "user-alice-personal",
+  subject: "user-alice",
+  predicate: "works_at",
 });
 // ✅ Returns "company-acme" instantly from 10,000+ message history
 ```
 
 **Features:**
+
 - **Semantic Triples:** Subject-Predicate-Object structure
 - **Versioning:** Immutable chains track fact evolution
 - **Graph Queries:** Traverse relationships without graph DB
@@ -139,6 +151,7 @@ const employment = await cortex.facts.queryByRelationship({
 - **Consolidation:** Merge duplicate facts intelligently
 
 **Enables Infinite Context:**
+
 - Extract facts during conversation
 - Query facts instead of messages
 - **Token Savings:** 100x reduction for long conversations
@@ -150,16 +163,16 @@ const employment = await cortex.facts.queryByRelationship({
 ```typescript
 // User makes request
 const rootContext = await cortex.contexts.create({
-  purpose: 'Process $500 refund request',
-  memorySpaceId: 'support-agent-space',
-  conversationRef: { conversationId: 'conv-789', messageIds: ['msg-456'] },
-  data: { amount: 500, ticketId: 'TICKET-123' },
+  purpose: "Process $500 refund request",
+  memorySpaceId: "support-agent-space",
+  conversationRef: { conversationId: "conv-789", messageIds: ["msg-456"] },
+  data: { amount: 500, ticketId: "TICKET-123" },
 });
 
 // Delegate to finance (different space)
 const financeContext = await cortex.contexts.create({
-  purpose: 'Approve $500 refund',
-  memorySpaceId: 'finance-agent-space', // ✅ Cross-space delegation
+  purpose: "Approve $500 refund",
+  memorySpaceId: "finance-agent-space", // ✅ Cross-space delegation
   parentId: rootContext.contextId,
 });
 
@@ -170,6 +183,7 @@ console.log(chain.root.data.amount); // 500
 ```
 
 **Features:**
+
 - **Hierarchical:** Parent-child relationships
 - **Cross-Space:** Collaborate across memory space boundaries
 - **Traceable:** Links to originating conversations
@@ -180,21 +194,23 @@ console.log(chain.root.data.amount); // 500
 ```typescript
 // Company A creates project context
 const project = await cortex.contexts.create({
-  purpose: 'Joint Product Launch',
-  memorySpaceId: 'company-a-space',
-  data: { budget: 500000, timeline: '6 months' },
+  purpose: "Joint Product Launch",
+  memorySpaceId: "company-a-space",
+  data: { budget: 500000, timeline: "6 months" },
 });
 
 // Grant access to Company B
 await cortex.contexts.grantAccess(
   project.contextId,
-  'company-b-space',
-  'collaborate',
+  "company-b-space",
+  "collaborate",
 );
 
 // Company B can see context, but NOT Company A's facts
 const sharedContext = await cortex.contexts.get(project.contextId);
-const companyAFacts = await cortex.facts.list({ memorySpaceId: 'company-a-space' });
+const companyAFacts = await cortex.facts.list({
+  memorySpaceId: "company-a-space",
+});
 // ✅ Context shared, data isolated
 ```
 
@@ -241,18 +257,18 @@ await cortex.conversations.create({
 
 ## 📊 Stats
 
-| Metric | Count |
-|--------|-------|
-| **New APIs** | 3 (Facts, Contexts, Memory Spaces) |
-| **New Backend Functions** | 40+ |
-| **New SDK Methods** | 55+ |
-| **New Tests** | 183 tests (5 new suites) |
-| **Test Coverage** | 378/378 (100%) ✅ |
-| **Both Environments** | 756/756 (100%) ✅ |
-| **Files Changed** | 115+ |
-| **Lines Changed** | ~45,000 |
-| **Documentation** | 50+ files updated |
-| **New Tables** | 3 (facts, contexts, memorySpaces) |
+| Metric                    | Count                              |
+| ------------------------- | ---------------------------------- |
+| **New APIs**              | 3 (Facts, Contexts, Memory Spaces) |
+| **New Backend Functions** | 40+                                |
+| **New SDK Methods**       | 55+                                |
+| **New Tests**             | 183 tests (5 new suites)           |
+| **Test Coverage**         | 378/378 (100%) ✅                  |
+| **Both Environments**     | 756/756 (100%) ✅                  |
+| **Files Changed**         | 115+                               |
+| **Lines Changed**         | ~45,000                            |
+| **Documentation**         | 50+ files updated                  |
+| **New Tables**            | 3 (facts, contexts, memorySpaces)  |
 
 ---
 
@@ -374,7 +390,7 @@ Test Suites: 11 passed, 11 total (LOCAL)
 Tests:       378 passed, 378 total (LOCAL)
 ✅ LOCAL tests completed successfully
 
-Test Suites: 11 passed, 11 total (MANAGED)  
+Test Suites: 11 passed, 11 total (MANAGED)
 Tests:       378 passed, 378 total (MANAGED)
 ✅ MANAGED tests completed successfully
 
@@ -386,6 +402,7 @@ Tests:       378 passed, 378 total (MANAGED)
 ## 📖 Documentation
 
 **Complete guides for every new feature:**
+
 - [Memory Spaces](Documentation/02-core-features/01-memory-spaces.md)
 - [Hive Mode](Documentation/02-core-features/10-hive-mode.md)
 - [Facts Extraction](Documentation/02-core-features/08-fact-extraction.md)
@@ -394,6 +411,7 @@ Tests:       378 passed, 378 total (MANAGED)
 - [Test Suite Guide](tests/README.md) - Explains all 378 tests
 
 **Updated API references:**
+
 - [Memory Operations](Documentation/03-api-reference/02-memory-operations.md)
 - [Conversation Operations](Documentation/03-api-reference/03-conversation-operations.md)
 - [Facts Operations](Documentation/03-api-reference/14-facts-operations.md) 🆕
@@ -405,12 +423,14 @@ Tests:       378 passed, 378 total (MANAGED)
 ## 🎉 What's Next
 
 **v0.7.0 (Coming Soon):**
+
 - MCP Server implementation
 - Advanced graph database integration
 - Performance benchmarks
 - Additional integrations
 
 **v1.0.0 (Roadmap):**
+
 - API stabilization
 - Production examples
 - Framework integrations
@@ -436,4 +456,3 @@ This release represents **10-12 weeks** of intensive development compressed into
 ---
 
 **Ready to upgrade?** Update to v0.6.0 and unlock Hive Mode, Facts, and Infinite Context! 🚀
-
