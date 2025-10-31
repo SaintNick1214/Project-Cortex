@@ -512,7 +512,7 @@ describe("Memory Spaces Registry API", () => {
 
   describe("Storage Validation", () => {
     it("validates memory space structure in database", async () => {
-      const space = await cortex.memorySpaces.register({
+      const _space = await cortex.memorySpaces.register({
         memorySpaceId: "validation-space",
         name: "Validation Test",
         type: "custom",

@@ -532,7 +532,7 @@ export interface FactRecord {
   predicate?: string; // Relationship type
   object?: string; // Secondary entity
   confidence: number; // 0-100
-  sourceType: "conversation" | "system" | "tool" | "manual";
+  sourceType: "conversation" | "system" | "tool" | "manual" | "a2a";
   sourceRef?: {
     conversationId?: string;
     messageIds?: string[];
@@ -564,7 +564,7 @@ export interface StoreFactParams {
   predicate?: string;
   object?: string;
   confidence: number;
-  sourceType: "conversation" | "system" | "tool" | "manual";
+  sourceType: "conversation" | "system" | "tool" | "manual" | "a2a";
   sourceRef?: {
     conversationId?: string;
     messageIds?: string[];

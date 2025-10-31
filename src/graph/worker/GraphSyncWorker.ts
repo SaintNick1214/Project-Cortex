@@ -6,7 +6,6 @@
  */
 
 import { ConvexClient } from "convex/browser";
-import type { FunctionReference } from "convex/server";
 import type { GraphAdapter } from "../types";
 import {
   syncMemoryToGraph,

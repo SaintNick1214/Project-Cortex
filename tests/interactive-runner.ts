@@ -76,8 +76,6 @@ const TEST_MEMSPACE_ID = "memspace-interactive"; // Updated for Memory Space Arc
 const TEST_PARTICIPANT_ID = "agent-test-interactive"; // For Hive Mode tracking
 let currentConversationId: string | null = null;
 let currentMemoryId: string | null = null;
-let currentFactId: string | null = null;
-let currentContextId: string | null = null;
 let currentImmutableType: string | null = null;
 let currentImmutableId: string | null = null;
 

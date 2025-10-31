@@ -600,7 +600,7 @@ describe("Complex Integration Tests", () => {
       });
 
       // Layer 4: Create context
-      const context = await cortex.contexts.create({
+      const _context = await cortex.contexts.create({
         purpose: "Handle user request",
         memorySpaceId: GDPR_SPACE,
         userId: TARGET_USER,
@@ -673,17 +673,17 @@ describe("Complex Integration Tests", () => {
       expect(history.some((f) => f.fact.includes("SMS"))).toBe(true);
 
       // Contexts also track changes in metadata
-      const context = await cortex.contexts.create({
+      const _context = await cortex.contexts.create({
         purpose: "Track preference changes",
         memorySpaceId: VERSION_SPACE,
         data: { notification: "email" },
       });
 
-      await cortex.contexts.update(context.contextId, {
+      await cortex.contexts.update(_context.contextId, {
         data: { notification: "sms", updatedReason: "user changed preference" },
       });
 
-      const updatedContext = await cortex.contexts.get(context.contextId);
+      const updatedContext = await cortex.contexts.get(_context.contextId);
 
       expect((updatedContext as any).data.notification).toBe("sms");
 
@@ -734,7 +734,7 @@ describe("Complex Integration Tests", () => {
       });
 
       // Store in context
-      const context = await cortex.contexts.create({
+      const _context = await cortex.contexts.create({
         purpose: `Context with ${keyword}`,
         memorySpaceId: SEARCH_SPACE,
       });

@@ -19,7 +19,7 @@ import {
   initializeGraphSchema,
   initialGraphSync,
 } from "../../../src/graph";
-import type { GraphAdapter, Context } from "../../../src";
+import type { GraphAdapter } from "../../../src";
 
 const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
 const NEO4J_CONFIG = {
