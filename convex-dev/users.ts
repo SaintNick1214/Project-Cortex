@@ -24,7 +24,9 @@ export const get = query({
   handler: async (ctx, args) => {
     const entry = await ctx.db
       .query("immutable")
-      .withIndex("by_type_id", (q) => q.eq("type", "user").eq("id", args.userId))
+      .withIndex("by_type_id", (q) =>
+        q.eq("type", "user").eq("id", args.userId),
+      )
       .first();
 
     if (!entry) {
@@ -50,7 +52,9 @@ export const list = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    let query = ctx.db.query("immutable").withIndex("by_type", (q) => q.eq("type", "user"));
+    let query = ctx.db
+      .query("immutable")
+      .withIndex("by_type", (q) => q.eq("type", "user"));
 
     if (args.limit) {
       query = query.take(args.limit);
@@ -96,7 +100,9 @@ export const getVersion = query({
   handler: async (ctx, args) => {
     const entry = await ctx.db
       .query("immutable")
-      .withIndex("by_type_id", (q) => q.eq("type", "user").eq("id", args.userId))
+      .withIndex("by_type_id", (q) =>
+        q.eq("type", "user").eq("id", args.userId),
+      )
       .first();
 
     if (!entry) {
@@ -113,7 +119,9 @@ export const getVersion = query({
     }
 
     // Check previous versions
-    const previousVersion = entry.previousVersions.find((v) => v.version === args.version);
+    const previousVersion = entry.previousVersions.find(
+      (v) => v.version === args.version,
+    );
 
     if (!previousVersion) {
       return null;
@@ -138,7 +146,9 @@ export const getHistory = query({
   handler: async (ctx, args) => {
     const entry = await ctx.db
       .query("immutable")
-      .withIndex("by_type_id", (q) => q.eq("type", "user").eq("id", args.userId))
+      .withIndex("by_type_id", (q) =>
+        q.eq("type", "user").eq("id", args.userId),
+      )
       .first();
 
     if (!entry) {
@@ -176,7 +186,9 @@ export const getAtTimestamp = query({
   handler: async (ctx, args) => {
     const entry = await ctx.db
       .query("immutable")
-      .withIndex("by_type_id", (q) => q.eq("type", "user").eq("id", args.userId))
+      .withIndex("by_type_id", (q) =>
+        q.eq("type", "user").eq("id", args.userId),
+      )
       .first();
 
     if (!entry) {
@@ -242,7 +254,9 @@ export const deleteUserProfile = mutation({
   handler: async (ctx, args) => {
     const entry = await ctx.db
       .query("immutable")
-      .withIndex("by_type_id", (q) => q.eq("type", "user").eq("id", args.userId))
+      .withIndex("by_type_id", (q) =>
+        q.eq("type", "user").eq("id", args.userId),
+      )
       .first();
 
     if (!entry) {
@@ -269,7 +283,9 @@ export const exists = query({
   handler: async (ctx, args) => {
     const entry = await ctx.db
       .query("immutable")
-      .withIndex("by_type_id", (q) => q.eq("type", "user").eq("id", args.userId))
+      .withIndex("by_type_id", (q) =>
+        q.eq("type", "user").eq("id", args.userId),
+      )
       .first();
 
     return entry !== null;
@@ -300,4 +316,3 @@ export const exists = query({
  * This architecture also works for both free SDK (with DIY graph) and
  * Cloud Mode (with managed graph), following our "same code, different context" principle.
  */
-

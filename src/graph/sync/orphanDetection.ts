@@ -185,9 +185,7 @@ export async function detectOrphan(
 
     return {
       isOrphan: true,
-      reason: islandCheck.isIsland
-        ? "Circular orphan island"
-        : "No references",
+      reason: islandCheck.isIsland ? "Circular orphan island" : "No references",
       referencedBy: [],
       partOfCircularIsland: islandCheck.isIsland,
       islandNodes: islandCheck.islandNodes,
@@ -195,8 +193,11 @@ export async function detectOrphan(
   }
 
   // Has external references - check if they're "anchor" types
-  const anchorLabels =
-    rule?.keepIfReferencedBy || ["Memory", "Fact", "Context"];
+  const anchorLabels = rule?.keepIfReferencedBy || [
+    "Memory",
+    "Fact",
+    "Context",
+  ];
   const hasAnchorRef = externalRefs.some((r) =>
     anchorLabels.includes(r.refererLabel),
   );
@@ -424,4 +425,3 @@ export async function canRunOrphanCleanup(
     return false;
   }
 }
-

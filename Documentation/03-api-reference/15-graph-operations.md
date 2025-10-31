@@ -48,14 +48,17 @@ See [Graph Database Setup Guide](../07-advanced-topics/05-graph-database-setup.m
 
 ```typescript
 import { Cortex } from "@cortexmemory/sdk";
-import { CypherGraphAdapter, initializeGraphSchema } from "@cortexmemory/sdk/graph";
+import {
+  CypherGraphAdapter,
+  initializeGraphSchema,
+} from "@cortexmemory/sdk/graph";
 
 // 1. Setup graph adapter
 const graphAdapter = new CypherGraphAdapter();
 await graphAdapter.connect({
   uri: "bolt://localhost:7687",
   username: "neo4j",
-  password: "your-password"
+  password: "your-password",
 });
 
 // 2. Initialize schema (one-time)
@@ -66,14 +69,14 @@ const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL!,
   graph: {
     adapter: graphAdapter,
-    orphanCleanup: true,   // Enable orphan detection (default: true)
-    autoSync: true,         // Auto-start sync worker (default: false)
+    orphanCleanup: true, // Enable orphan detection (default: true)
+    autoSync: true, // Auto-start sync worker (default: false)
     syncWorkerOptions: {
       batchSize: 100,
       retryAttempts: 3,
-      verbose: false
-    }
-  }
+      verbose: false,
+    },
+  },
 });
 ```
 
@@ -94,7 +97,7 @@ const adapter = new CypherGraphAdapter();
 await adapter.connect({
   uri: "bolt://localhost:7687",
   username: "neo4j",
-  password: "password"
+  password: "password",
 });
 ```
 
@@ -108,8 +111,8 @@ const nodeId = await adapter.createNode({
   properties: {
     memoryId: "mem-123",
     content: "User prefers dark mode",
-    importance: 85
-  }
+    importance: 85,
+  },
 });
 ```
 
@@ -124,8 +127,8 @@ const edgeId = await adapter.createEdge({
   to: conversationNodeId,
   properties: {
     messageIds: ["msg-1", "msg-2"],
-    createdAt: Date.now()
-  }
+    createdAt: Date.now(),
+  },
 });
 ```
 
@@ -134,12 +137,15 @@ const edgeId = await adapter.createEdge({
 Execute Cypher query.
 
 ```typescript
-const result = await adapter.query(`
+const result = await adapter.query(
+  `
   MATCH (m:Memory)-[:REFERENCES]->(c:Conversation)
   WHERE m.importance >= $minImportance
   RETURN m, c
   LIMIT 10
-`, { minImportance: 80 });
+`,
+  { minImportance: 80 },
+);
 
 for (const record of result.records) {
   console.log(record.m.properties, record.c.properties);
@@ -155,7 +161,7 @@ const connected = await adapter.traverse({
   startId: nodeId,
   relationshipTypes: ["CHILD_OF", "PARENT_OF"],
   maxDepth: 5,
-  direction: "BOTH"
+  direction: "BOTH",
 });
 
 console.log(`Found ${connected.length} connected nodes`);
@@ -169,13 +175,15 @@ Find shortest path between nodes.
 const path = await adapter.findPath({
   fromId: aliceNodeId,
   toId: bobNodeId,
-  maxHops: 10
+  maxHops: 10,
 });
 
 if (path) {
   console.log(`Path length: ${path.length} hops`);
-  console.log(`Nodes: ${path.nodes.map(n => n.label).join(" → ")}`);
-  console.log(`Relationships: ${path.relationships.map(r => r.type).join(" → ")}`);
+  console.log(`Nodes: ${path.nodes.map((n) => n.label).join(" → ")}`);
+  console.log(
+    `Relationships: ${path.relationships.map((r) => r.type).join(" → ")}`,
+  );
 }
 ```
 
@@ -197,7 +205,7 @@ await cortex.memory.remember({
   userMessage: "Alice works at Acme Corp",
   agentResponse: "Got it!",
   userId: "alice",
-  userName: "Alice"
+  userName: "Alice",
 });
 // ✅ Automatically synced to graph!
 
@@ -209,20 +217,20 @@ await cortex.memory.remember(params, { syncToGraph: false });
 
 ```typescript
 // Explicit opt-in via syncToGraph option
-await cortex.vector.store(memorySpaceId, data, { 
-  syncToGraph: true 
+await cortex.vector.store(memorySpaceId, data, {
+  syncToGraph: true,
 });
 
-await cortex.facts.store(params, { 
-  syncToGraph: true 
+await cortex.facts.store(params, {
+  syncToGraph: true,
 });
 
-await cortex.contexts.create(params, { 
-  syncToGraph: true 
+await cortex.contexts.create(params, {
+  syncToGraph: true,
 });
 
-await cortex.conversations.create(input, { 
-  syncToGraph: true 
+await cortex.conversations.create(input, {
+  syncToGraph: true,
 });
 ```
 
@@ -231,13 +239,13 @@ await cortex.conversations.create(input, {
 Direct sync control for power users.
 
 ```typescript
-import { 
+import {
   syncMemoryToGraph,
   syncFactToGraph,
   syncContextToGraph,
   syncMemoryRelationships,
   syncFactRelationships,
-  syncContextRelationships
+  syncContextRelationships,
 } from "@cortexmemory/sdk/graph";
 
 // Manual sync workflow
@@ -261,11 +269,11 @@ const cortex = new Cortex({
     adapter: graphAdapter,
     autoSync: true, // ← Auto-start worker!
     syncWorkerOptions: {
-      batchSize: 100,        // Items per batch
-      retryAttempts: 3,      // Retry failures
-      verbose: true          // Enable logging
-    }
-  }
+      batchSize: 100, // Items per batch
+      retryAttempts: 3, // Retry failures
+      verbose: true, // Enable logging
+    },
+  },
 });
 ```
 
@@ -304,7 +312,7 @@ import { GraphSyncWorker } from "@cortexmemory/sdk/graph";
 // Create worker manually
 const worker = new GraphSyncWorker(client, graphAdapter, {
   batchSize: 50,
-  verbose: true
+  verbose: true,
 });
 
 // Start worker
@@ -318,7 +326,9 @@ await cortex.memory.remember(params);
 // Monitor
 setInterval(() => {
   const metrics = worker.getMetrics();
-  console.log(`Processed: ${metrics.totalProcessed}, Queue: ${metrics.queueSize}`);
+  console.log(
+    `Processed: ${metrics.totalProcessed}, Queue: ${metrics.queueSize}`,
+  );
 }, 5000);
 
 // Stop worker
@@ -337,7 +347,7 @@ All delete operations support sophisticated orphan cleanup:
 // Delete memory - checks if conversation becomes orphaned
 await cortex.memory.forget("agent-1", "mem-123", {
   deleteConversation: true,
-  syncToGraph: true // Enables orphan cleanup
+  syncToGraph: true, // Enables orphan cleanup
 });
 
 // What happens:
@@ -375,6 +385,7 @@ Memory M2 → Conversation C1
 ```
 
 **Orphan Rules**:
+
 - Conversation: Deleted if no Memory/Fact/Context references it
 - Entity: Deleted if no Fact mentions it
 - User: Never auto-deleted
@@ -433,15 +444,20 @@ await dropGraphSchema(adapter);
 const memory = await cortex.vector.get(memorySpaceId, memoryId);
 
 // Find related facts via conversation
-const relatedFacts = await adapter.query(`
+const relatedFacts = await adapter.query(
+  `
   MATCH (m:Memory {memoryId: $memoryId})
   MATCH (m)-[:REFERENCES]->(conv:Conversation)
   MATCH (conv)<-[:EXTRACTED_FROM]-(f:Fact)
   RETURN f.fact as fact, f.confidence as confidence
   ORDER BY f.confidence DESC
-`, { memoryId });
+`,
+  { memoryId },
+);
 
-console.log(`Memory enrichment: 1 memory → ${relatedFacts.count} related facts`);
+console.log(
+  `Memory enrichment: 1 memory → ${relatedFacts.count} related facts`,
+);
 // Enrichment factor: 5x more context!
 ```
 
@@ -456,7 +472,10 @@ const coworkers = await adapter.query(`
   RETURN DISTINCT coworker.name as name
 `);
 
-console.log("Alice's coworkers:", coworkers.records.map(r => r.name));
+console.log(
+  "Alice's coworkers:",
+  coworkers.records.map((r) => r.name),
+);
 ```
 
 ### Pattern 3: Knowledge Path Discovery
@@ -482,12 +501,15 @@ if (path.count > 0) {
 
 ```typescript
 // Get full context hierarchy via graph
-const chain = await adapter.query(`
+const chain = await adapter.query(
+  `
   MATCH (current:Context {contextId: $contextId})
   MATCH path = (current)-[:CHILD_OF*0..10]->(ancestors:Context)
   RETURN ancestors
   ORDER BY ancestors.depth
-`, { contextId });
+`,
+  { contextId },
+);
 
 console.log("Full context chain:");
 for (const record of chain.records) {
@@ -500,7 +522,8 @@ for (const record of chain.records) {
 
 ```typescript
 // Trace fact back to source conversation
-const provenance = await adapter.query(`
+const provenance = await adapter.query(
+  `
   MATCH (f:Fact {factId: $factId})
   MATCH (f)-[:EXTRACTED_FROM]->(conv:Conversation)
   MATCH (conv)<-[:TRIGGERED_BY]-(ctx:Context)
@@ -508,7 +531,9 @@ const provenance = await adapter.query(`
   RETURN conv.conversationId as conversation,
          ctx.purpose as context,
          user.userId as user
-`, { factId });
+`,
+  { factId },
+);
 
 console.log("Fact provenance:");
 console.log("  Conversation:", provenance.records[0].conversation);
@@ -671,7 +696,9 @@ await cortex.conversations.delete(id, { syncToGraph: true });
 
 ```typescript
 await cortex.vector.store(memorySpaceId, input, { syncToGraph: true });
-await cortex.vector.update(memorySpaceId, memoryId, updates, { syncToGraph: true });
+await cortex.vector.update(memorySpaceId, memoryId, updates, {
+  syncToGraph: true,
+});
 await cortex.vector.delete(memorySpaceId, memoryId, { syncToGraph: true });
 ```
 
@@ -679,7 +706,9 @@ await cortex.vector.delete(memorySpaceId, memoryId, { syncToGraph: true });
 
 ```typescript
 await cortex.facts.store(params, { syncToGraph: true });
-await cortex.facts.update(memorySpaceId, factId, updates, { syncToGraph: true });
+await cortex.facts.update(memorySpaceId, factId, updates, {
+  syncToGraph: true,
+});
 await cortex.facts.delete(memorySpaceId, factId, { syncToGraph: true });
 ```
 
@@ -709,7 +738,7 @@ await cortex.memory.remember(params, { syncToGraph: false });
 // Forget with cascade
 await cortex.memory.forget(memorySpaceId, memoryId, {
   deleteConversation: true,
-  syncToGraph: true  // Orphan cleanup enabled
+  syncToGraph: true, // Orphan cleanup enabled
 });
 ```
 
@@ -727,12 +756,12 @@ const result = await initialGraphSync(cortex, adapter, {
     memorySpaces: 1000,
     contexts: 5000,
     memories: 10000,
-    facts: 5000
+    facts: 5000,
   },
   syncRelationships: true,
   onProgress: (entity, current, total) => {
     console.log(`Syncing ${entity}: ${current}/${total}`);
-  }
+  },
 });
 
 console.log("Sync complete:");
@@ -750,13 +779,13 @@ console.log("  Duration:", result.duration, "ms");
 
 ### Query Performance
 
-| Query Type | Graph-Lite (Convex) | Native Graph | When to Use |
-|------------|---------------------|--------------|-------------|
-| 1-hop traversal | 3-10ms | 10-25ms | Graph-Lite |
-| 3-hop traversal | 10-50ms | 4-10ms | Native Graph |
-| 7-hop traversal | 50-200ms | 4-15ms | Native Graph |
-| Pattern matching | Not feasible | 10-100ms | Native Graph only |
-| Entity networks | Not feasible | 20-50ms | Native Graph only |
+| Query Type       | Graph-Lite (Convex) | Native Graph | When to Use       |
+| ---------------- | ------------------- | ------------ | ----------------- |
+| 1-hop traversal  | 3-10ms              | 10-25ms      | Graph-Lite        |
+| 3-hop traversal  | 10-50ms             | 4-10ms       | Native Graph      |
+| 7-hop traversal  | 50-200ms            | 4-15ms       | Native Graph      |
+| Pattern matching | Not feasible        | 10-100ms     | Native Graph only |
+| Entity networks  | Not feasible        | 20-50ms      | Native Graph only |
 
 ### Sync Performance
 
@@ -775,7 +804,7 @@ console.log("  Duration:", result.duration, "ms");
 try {
   await adapter.connect(config);
 } catch (error) {
-  if (error.code === 'CONNECTION_ERROR') {
+  if (error.code === "CONNECTION_ERROR") {
     console.error("Failed to connect to graph database");
     // Fall back to Graph-Lite or disable graph features
   }
@@ -797,7 +826,7 @@ await cortex.vector.store(data, { syncToGraph: true });
 try {
   const result = await adapter.query(cypherQuery);
 } catch (error) {
-  if (error.name === 'GraphQueryError') {
+  if (error.name === "GraphQueryError") {
     console.error("Query failed:", error.query);
   }
 }
@@ -824,7 +853,7 @@ await adapter.createNode({ ... }); // Graph could succeed but Convex fail
 // ✅ Enable auto-sync, use convenience APIs
 const cortex = new Cortex({
   convexUrl: "...",
-  graph: { adapter, autoSync: true }
+  graph: { adapter, autoSync: true },
 });
 
 await cortex.memory.remember(params);
@@ -838,11 +867,11 @@ await cortex.memory.remember(params);
 const worker = cortex.getGraphSyncWorker();
 if (worker) {
   const metrics = worker.getMetrics();
-  
+
   if (metrics.queueSize > 1000) {
     console.warn("Sync queue backing up!");
   }
-  
+
   if (metrics.failureCount > 100) {
     console.error("High failure rate, check graph connection");
   }
@@ -860,7 +889,10 @@ const related = await adapter.query(`
 
 // ✅ But fetch full data from Convex
 for (const record of related.records) {
-  const fullFact = await cortex.facts.get(memorySpaceId, record.f.properties.factId);
+  const fullFact = await cortex.facts.get(
+    memorySpaceId,
+    record.f.properties.factId,
+  );
   // Full data with all versions from Convex
 }
 ```
@@ -880,7 +912,7 @@ import type {
   TraversalConfig,
   ShortestPathConfig,
   SyncHealthMetrics,
-  GraphSyncWorkerOptions
+  GraphSyncWorkerOptions,
 } from "@cortexmemory/sdk";
 ```
 
@@ -889,6 +921,7 @@ import type {
 ## Examples
 
 Complete examples in:
+
 - `examples/graph-realtime-sync.ts` - Real-time worker usage
 - `tests/graph/proofs/07-multilayer-retrieval.proof.ts` - Multi-layer enhancement
 - `tests/graph/end-to-end-multilayer.test.ts` - Complete validation
@@ -922,4 +955,3 @@ Complete examples in:
 ---
 
 **Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
-

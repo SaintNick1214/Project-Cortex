@@ -67,6 +67,7 @@ Cortex provides a complete memory system for AI agents:
 Complete implementation of coordination layer APIs with powerful cascade deletion:
 
 **Users API (`cortex.users.*`)** - GDPR Compliance
+
 - User profile management with automatic versioning
 - **GDPR cascade deletion by userId** across all layers
 - Works in free SDK (DIY graph) and Cloud Mode (managed + legal guarantees)
@@ -75,6 +76,7 @@ Complete implementation of coordination layer APIs with powerful cascade deletio
 - 23/23 tests passing on LOCAL and MANAGED
 
 **Agents API (`cortex.agents.*`)** - Optional Registry
+
 - Optional metadata registration for discovery and analytics
 - **Cascade deletion by participantId** across all memory spaces
 - Works even if agent was never registered
@@ -84,15 +86,15 @@ Complete implementation of coordination layer APIs with powerful cascade deletio
 
 ```typescript
 // GDPR cascade deletion by userId
-await cortex.users.delete("user-123", { 
-  cascade: true,  // Deletes across ALL layers
-  verify: true    // Checks for orphaned records
+await cortex.users.delete("user-123", {
+  cascade: true, // Deletes across ALL layers
+  verify: true, // Checks for orphaned records
 });
 
 // Agent cleanup by participantId
 await cortex.agents.unregister("agent-xyz", {
-  cascade: true,  // Deletes across ALL memory spaces
-  verify: true    // Includes graph orphan detection
+  cascade: true, // Deletes across ALL memory spaces
+  verify: true, // Includes graph orphan detection
 });
 ```
 
@@ -135,6 +137,7 @@ await cortex.memory.remember({
 ```
 
 **When to use:**
+
 - Deep context chains (5+ levels)
 - Knowledge graphs with entity relationships
 - Multi-hop reasoning (Alice → Company → Bob → Technology)

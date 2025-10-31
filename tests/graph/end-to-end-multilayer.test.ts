@@ -124,25 +124,31 @@ What specific aspects would you like to dive deeper into?
     });
 
     // Register memory space
-    await cortex.memorySpaces.register({
-      memorySpaceId,
-      name: "E2E Test Space",
-      type: "personal",
-    }, { syncToGraph: true });
+    await cortex.memorySpaces.register(
+      {
+        memorySpaceId,
+        name: "E2E Test Space",
+        type: "personal",
+      },
+      { syncToGraph: true },
+    );
 
     // Create conversation
-    await cortex.conversations.create({
-      memorySpaceId,
-      conversationId,
-      type: "user-agent",
-      participants: {
-        userId: "dr-sarah-chen",
-        participantId: "ai-assistant",
+    await cortex.conversations.create(
+      {
+        memorySpaceId,
+        conversationId,
+        type: "user-agent",
+        participants: {
+          userId: "dr-sarah-chen",
+          participantId: "ai-assistant",
+        },
       },
-    }, { syncToGraph: true });
+      { syncToGraph: true },
+    );
 
     // Give worker time to process initial setup
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500));
   });
 
   afterAll(async () => {
@@ -182,11 +188,11 @@ What specific aspects would you like to dive deeper into?
       expect(conversation!.conversationId).toBe(conversationId);
       expect(conversation!.messageCount).toBeGreaterThanOrEqual(2);
       expect(conversation!.messages).toBeDefined();
-      
+
       // Validate message content
-      const userMsg = conversation!.messages.find(m => m.role === "user");
-      const agentMsg = conversation!.messages.find(m => m.role === "agent");
-      
+      const userMsg = conversation!.messages.find((m) => m.role === "user");
+      const agentMsg = conversation!.messages.find((m) => m.role === "agent");
+
       expect(userMsg).toBeDefined();
       expect(agentMsg).toBeDefined();
       expect(userMsg!.content).toContain("Dr. Sarah Chen");
@@ -202,13 +208,16 @@ What specific aspects would you like to dive deeper into?
 
       // CHECKPOINT 3: L2 storage validated
       expect(memories.length).toBeGreaterThanOrEqual(2);
-      
-      const userMemory = memories.find(m => m.sourceType === "conversation" && m.sourceUserId === "dr-sarah-chen");
+
+      const userMemory = memories.find(
+        (m) =>
+          m.sourceType === "conversation" && m.sourceUserId === "dr-sarah-chen",
+      );
       expect(userMemory).toBeDefined();
       expect(userMemory!.content).toBeTruthy();
       expect(userMemory!.importance).toBe(95);
       expect(userMemory!.tags).toContain("medical-ai");
-      
+
       // Validate conversationRef link
       expect(userMemory!.conversationRef).toBeDefined();
       expect(userMemory!.conversationRef!.conversationId).toBe(conversationId);
@@ -218,132 +227,153 @@ What specific aspects would you like to dive deeper into?
     it("should extract facts to L3 (Facts Layer) - manual extraction", async () => {
       // Extract facts from the complex conversation
       // In a real system, this might be automatic, but we'll do it manually for testing
-      
+
       // Fact 1: Sarah's identity
-      const fact1 = await cortex.facts.store({
-        memorySpaceId,
-        fact: "Dr. Sarah Chen is the lead AI researcher at QuantumLeap Technologies",
-        factType: "identity",
-        subject: "Dr. Sarah Chen",
-        predicate: "works_at",
-        object: "QuantumLeap Technologies",
-        confidence: 100,
-        sourceType: "conversation",
-        sourceRef: {
-          conversationId,
-          messageIds: rememberResult.conversation.messageIds,
+      const fact1 = await cortex.facts.store(
+        {
+          memorySpaceId,
+          fact: "Dr. Sarah Chen is the lead AI researcher at QuantumLeap Technologies",
+          factType: "identity",
+          subject: "Dr. Sarah Chen",
+          predicate: "works_at",
+          object: "QuantumLeap Technologies",
+          confidence: 100,
+          sourceType: "conversation",
+          sourceRef: {
+            conversationId,
+            messageIds: rememberResult.conversation.messageIds,
+          },
+          tags: ["identity", "employment"],
         },
-        tags: ["identity", "employment"],
-      }, { syncToGraph: true });
+        { syncToGraph: true },
+      );
 
       extractedFacts.push(fact1);
 
       // Fact 2: Location
-      const fact2 = await cortex.facts.store({
-        memorySpaceId,
-        fact: "QuantumLeap Technologies is located in San Francisco",
-        factType: "knowledge",
-        subject: "QuantumLeap Technologies",
-        predicate: "located_in",
-        object: "San Francisco",
-        confidence: 100,
-        sourceType: "conversation",
-        sourceRef: {
-          conversationId,
-          messageIds: rememberResult.conversation.messageIds,
+      const fact2 = await cortex.facts.store(
+        {
+          memorySpaceId,
+          fact: "QuantumLeap Technologies is located in San Francisco",
+          factType: "knowledge",
+          subject: "QuantumLeap Technologies",
+          predicate: "located_in",
+          object: "San Francisco",
+          confidence: 100,
+          sourceType: "conversation",
+          sourceRef: {
+            conversationId,
+            messageIds: rememberResult.conversation.messageIds,
+          },
+          tags: ["location"],
         },
-        tags: ["location"],
-      }, { syncToGraph: true });
+        { syncToGraph: true },
+      );
 
       extractedFacts.push(fact2);
 
       // Fact 3: Technology usage
-      const fact3 = await cortex.facts.store({
-        memorySpaceId,
-        fact: "QuantumLeap Technologies uses TypeScript",
-        factType: "knowledge",
-        subject: "QuantumLeap Technologies",
-        predicate: "uses",
-        object: "TypeScript",
-        confidence: 100,
-        sourceType: "conversation",
-        sourceRef: {
-          conversationId,
-          messageIds: rememberResult.conversation.messageIds,
+      const fact3 = await cortex.facts.store(
+        {
+          memorySpaceId,
+          fact: "QuantumLeap Technologies uses TypeScript",
+          factType: "knowledge",
+          subject: "QuantumLeap Technologies",
+          predicate: "uses",
+          object: "TypeScript",
+          confidence: 100,
+          sourceType: "conversation",
+          sourceRef: {
+            conversationId,
+            messageIds: rememberResult.conversation.messageIds,
+          },
+          tags: ["technology"],
         },
-        tags: ["technology"],
-      }, { syncToGraph: true });
+        { syncToGraph: true },
+      );
 
       extractedFacts.push(fact3);
 
       // Fact 4: Team member
-      const fact4 = await cortex.facts.store({
-        memorySpaceId,
-        fact: "Marcus Rodriguez is the backend lead at QuantumLeap Technologies",
-        factType: "relationship",
-        subject: "Marcus Rodriguez",
-        predicate: "works_at",
-        object: "QuantumLeap Technologies",
-        confidence: 100,
-        sourceType: "conversation",
-        sourceRef: {
-          conversationId,
-          messageIds: rememberResult.conversation.messageIds,
+      const fact4 = await cortex.facts.store(
+        {
+          memorySpaceId,
+          fact: "Marcus Rodriguez is the backend lead at QuantumLeap Technologies",
+          factType: "relationship",
+          subject: "Marcus Rodriguez",
+          predicate: "works_at",
+          object: "QuantumLeap Technologies",
+          confidence: 100,
+          sourceType: "conversation",
+          sourceRef: {
+            conversationId,
+            messageIds: rememberResult.conversation.messageIds,
+          },
+          tags: ["team", "employment"],
         },
-        tags: ["team", "employment"],
-      }, { syncToGraph: true });
+        { syncToGraph: true },
+      );
 
       extractedFacts.push(fact4);
 
       // Fact 5: Marcus's tech preference
-      const fact5 = await cortex.facts.store({
-        memorySpaceId,
-        fact: "Marcus Rodriguez loves PostgreSQL",
-        factType: "preference",
-        subject: "Marcus Rodriguez",
-        predicate: "loves",
-        object: "PostgreSQL",
-        confidence: 95,
-        sourceType: "conversation",
-        sourceRef: {
-          conversationId,
-          messageIds: rememberResult.conversation.messageIds,
+      const fact5 = await cortex.facts.store(
+        {
+          memorySpaceId,
+          fact: "Marcus Rodriguez loves PostgreSQL",
+          factType: "preference",
+          subject: "Marcus Rodriguez",
+          predicate: "loves",
+          object: "PostgreSQL",
+          confidence: 95,
+          sourceType: "conversation",
+          sourceRef: {
+            conversationId,
+            messageIds: rememberResult.conversation.messageIds,
+          },
+          tags: ["technology", "preference"],
         },
-        tags: ["technology", "preference"],
-      }, { syncToGraph: true });
+        { syncToGraph: true },
+      );
 
       extractedFacts.push(fact5);
 
       // CHECKPOINT 4: L3 storage validated
       expect(extractedFacts.length).toBe(5);
-      
+
       const allFacts = await cortex.facts.list({
         memorySpaceId,
         limit: 20,
       });
-      
+
       expect(allFacts.length).toBeGreaterThanOrEqual(5);
     });
 
     it("should create context chain in L4 (Context Chains)", async () => {
       // Create context for this interaction
-      const rootContext = await cortex.contexts.create({
-        purpose: "Discuss medical AI system architecture with Dr. Chen",
-        memorySpaceId,
-        userId: "dr-sarah-chen",
-        conversationRef: {
-          conversationId,
-          messageIds: rememberResult.conversation.messageIds,
+      const rootContext = await cortex.contexts.create(
+        {
+          purpose: "Discuss medical AI system architecture with Dr. Chen",
+          memorySpaceId,
+          userId: "dr-sarah-chen",
+          conversationRef: {
+            conversationId,
+            messageIds: rememberResult.conversation.messageIds,
+          },
         },
-      }, { syncToGraph: true });
+        { syncToGraph: true },
+      );
 
       // Create child context for specific topic
-      const childContext = await cortex.contexts.create({
-        purpose: "Knowledge graph scalability for medical entities",
-        memorySpaceId,
-        parentId: rootContext.contextId,
-        userId: "dr-sarah-chen",
-      }, { syncToGraph: true });
+      const childContext = await cortex.contexts.create(
+        {
+          purpose: "Knowledge graph scalability for medical entities",
+          memorySpaceId,
+          parentId: rootContext.contextId,
+          userId: "dr-sarah-chen",
+        },
+        { syncToGraph: true },
+      );
 
       // CHECKPOINT 5: L4 storage validated
       expect(rootContext.contextId).toBeDefined();
@@ -379,22 +409,26 @@ What specific aspects would you like to dive deeper into?
 
     it("should reconstruct provenance via graph", async () => {
       // Query: Find facts and trace back to conversation
-      const provenanceQuery = await graphAdapter.query(`
+      const provenanceQuery = await graphAdapter.query(
+        `
         MATCH (f:Fact)-[:EXTRACTED_FROM]->(conv:Conversation)
         WHERE conv.conversationId = $conversationId
         RETURN f.fact as fact, f.factType as factType, f.confidence as confidence
         ORDER BY f.confidence DESC
-      `, { conversationId });
+      `,
+        { conversationId },
+      );
 
       // CHECKPOINT 8: Provenance reconstruction works
       expect(provenanceQuery.count).toBeGreaterThanOrEqual(5);
-      
+
       // Should contain at least one fact about key entities
       const facts = provenanceQuery.records.map((r: any) => r.fact);
-      const hasKeyFact = facts.some((f: string) => 
-        f.includes("Dr. Sarah Chen") || 
-        f.includes("QuantumLeap") || 
-        f.includes("Marcus Rodriguez")
+      const hasKeyFact = facts.some(
+        (f: string) =>
+          f.includes("Dr. Sarah Chen") ||
+          f.includes("QuantumLeap") ||
+          f.includes("Marcus Rodriguez"),
       );
       expect(hasKeyFact).toBe(true);
     });
@@ -409,9 +443,11 @@ What specific aspects would you like to dive deeper into?
 
       // CHECKPOINT 9: Entity network discovered
       expect(entityNetwork.count).toBeGreaterThan(0);
-      
+
       // Should find: Dr. Sarah Chen, San Francisco, TypeScript, Marcus Rodriguez
-      const relatedNames = entityNetwork.records.map((r: any) => r.relatedEntity);
+      const relatedNames = entityNetwork.records.map(
+        (r: any) => r.relatedEntity,
+      );
       expect(relatedNames).toContain("San Francisco");
     });
 
@@ -421,17 +457,20 @@ What specific aspects would you like to dive deeper into?
         memorySpaceId,
         limit: 10,
       });
-      
-      const rootContext = contexts.find(c => c.depth === 0);
+
+      const rootContext = contexts.find((c) => c.depth === 0);
       expect(rootContext).toBeDefined();
 
       // Traverse chain in graph
-      const chainQuery = await graphAdapter.query(`
+      const chainQuery = await graphAdapter.query(
+        `
         MATCH (root:Context {contextId: $contextId})
         MATCH path = (root)<-[:CHILD_OF*0..5]-(descendants:Context)
         RETURN descendants.purpose as purpose, descendants.depth as depth
         ORDER BY descendants.depth
-      `, { contextId: rootContext!.contextId });
+      `,
+        { contextId: rootContext!.contextId },
+      );
 
       // CHECKPOINT 10: Context chain traversal works
       expect(chainQuery.count).toBeGreaterThanOrEqual(2);
@@ -452,25 +491,31 @@ What specific aspects would you like to dive deeper into?
 
       // Enrich: Find related facts via conversation
       if (memory.conversationRef) {
-        const relatedFacts = await graphAdapter.query(`
+        const relatedFacts = await graphAdapter.query(
+          `
           MATCH (m:Memory {memoryId: $memoryId})
           MATCH (m)-[:REFERENCES]->(conv:Conversation)
           MATCH (conv)<-[:EXTRACTED_FROM]-(f:Fact)
           RETURN f.fact as fact, f.factType as factType
           LIMIT 10
-        `, { memoryId: memory.memoryId });
+        `,
+          { memoryId: memory.memoryId },
+        );
 
         // CHECKPOINT 11: Memory → Fact enrichment works
         expect(relatedFacts.count).toBeGreaterThan(0);
       }
 
       // Enrich: Find context chain
-      const relatedContexts = await graphAdapter.query(`
+      const relatedContexts = await graphAdapter.query(
+        `
         MATCH (m:Memory {memoryId: $memoryId})
         MATCH (m)-[:REFERENCES]->(conv:Conversation)
         MATCH (conv)<-[:TRIGGERED_BY]-(ctx:Context)
         RETURN ctx.purpose as purpose, ctx.depth as depth
-      `, { memoryId: memory.memoryId });
+      `,
+        { memoryId: memory.memoryId },
+      );
 
       // CHECKPOINT 12: Memory → Context enrichment works
       expect(relatedContexts.count).toBeGreaterThanOrEqual(1);
@@ -507,7 +552,7 @@ What specific aspects would you like to dive deeper into?
         const path = knowledgePath.records[0];
         expect(path.pathNodes).toBeDefined();
         expect(path.hops).toBeLessThanOrEqual(4);
-        
+
         // Path should connect Sarah to PostgreSQL via company/Marcus
         expect(path.pathNodes).toContain("Dr. Sarah Chen");
         expect(path.pathNodes).toContain("PostgreSQL");
@@ -517,10 +562,10 @@ What specific aspects would you like to dive deeper into?
     it("should maintain data consistency across all layers", async () => {
       // Get memory from L2
       const memory = rememberResult.memories[0];
-      
+
       // Get conversation from L1a
       const conversation = await cortex.conversations.get(conversationId);
-      
+
       // Get facts from L3
       const facts = await cortex.facts.list({
         memorySpaceId,
@@ -528,11 +573,13 @@ What specific aspects would you like to dive deeper into?
       });
 
       // Validate cross-layer references
-      expect(memory.conversationRef.conversationId).toBe(conversation!.conversationId);
-      
+      expect(memory.conversationRef.conversationId).toBe(
+        conversation!.conversationId,
+      );
+
       // Validate all facts have same source
-      const factsFromConv = facts.filter(f => 
-        f.sourceRef?.conversationId === conversationId
+      const factsFromConv = facts.filter(
+        (f) => f.sourceRef?.conversationId === conversationId,
       );
       expect(factsFromConv.length).toBeGreaterThanOrEqual(5);
 
@@ -556,11 +603,18 @@ What specific aspects would you like to dive deeper into?
       console.log("  L1a (Conversations - ACID):");
       console.log(`    - Conversation ID: ${storedConv?.conversationId}`);
       console.log(`    - Message count: ${storedConv?.messageCount}`);
-      console.log(`    - User message: "${storedConv?.messages.find(m => m.role === 'user')?.content.substring(0, 80)}..."`);
-      console.log(`    - Agent message: "${storedConv?.messages.find(m => m.role === 'agent')?.content.substring(0, 80)}..."`);
+      console.log(
+        `    - User message: "${storedConv?.messages.find((m) => m.role === "user")?.content.substring(0, 80)}..."`,
+      );
+      console.log(
+        `    - Agent message: "${storedConv?.messages.find((m) => m.role === "agent")?.content.substring(0, 80)}..."`,
+      );
 
       // L2: Vector
-      const storedMemories = await cortex.vector.list({ memorySpaceId, limit: 10 });
+      const storedMemories = await cortex.vector.list({
+        memorySpaceId,
+        limit: 10,
+      });
       console.log("\n  L2 (Vector Memory):");
       console.log(`    - Memory count: ${storedMemories.length}`);
       for (let i = 0; i < Math.min(storedMemories.length, 2); i++) {
@@ -570,7 +624,9 @@ What specific aspects would you like to dive deeper into?
         console.log(`        Content: "${mem.content.substring(0, 60)}..."`);
         console.log(`        Importance: ${mem.importance}`);
         console.log(`        Tags: ${mem.tags.join(", ")}`);
-        console.log(`        ConversationRef: ${mem.conversationRef?.conversationId}`);
+        console.log(
+          `        ConversationRef: ${mem.conversationRef?.conversationId}`,
+        );
       }
 
       // L3: Facts
@@ -581,12 +637,17 @@ What specific aspects would you like to dive deeper into?
         const fact = storedFacts[i];
         console.log(`    - Fact ${i + 1}:`);
         console.log(`        "${fact.fact}"`);
-        console.log(`        ${fact.subject} → ${fact.predicate} → ${fact.object}`);
+        console.log(
+          `        ${fact.subject} → ${fact.predicate} → ${fact.object}`,
+        );
         console.log(`        Confidence: ${fact.confidence}%`);
       }
 
       // L4: Contexts
-      const storedContexts = await cortex.contexts.list({ memorySpaceId, limit: 10 });
+      const storedContexts = await cortex.contexts.list({
+        memorySpaceId,
+        limit: 10,
+      });
       console.log("\n  L4 (Context Chains):");
       console.log(`    - Context count: ${storedContexts.length}`);
       for (const ctx of storedContexts) {
@@ -624,33 +685,62 @@ What specific aspects would you like to dive deeper into?
       // Retrieve from L1a
       const retrievedConv = await cortex.conversations.get(conversationId);
       console.log("  FROM L1a (Conversations):");
-      console.log(`    ✓ Retrieved conversation: ${retrievedConv?.conversationId}`);
+      console.log(
+        `    ✓ Retrieved conversation: ${retrievedConv?.conversationId}`,
+      );
       console.log(`    ✓ Retrieved ${retrievedConv?.messageCount} messages`);
-      console.log(`    ✓ Message content preserved: ${retrievedConv?.messages[0].content.length} chars`);
+      console.log(
+        `    ✓ Message content preserved: ${retrievedConv?.messages[0].content.length} chars`,
+      );
 
       // Retrieve from L2
-      const retrievedMemories = await cortex.vector.list({ memorySpaceId, limit: 10 });
+      const retrievedMemories = await cortex.vector.list({
+        memorySpaceId,
+        limit: 10,
+      });
       console.log("\n  FROM L2 (Vector Memory):");
       console.log(`    ✓ Retrieved ${retrievedMemories.length} memories`);
-      console.log(`    ✓ Each has conversationRef: ${retrievedMemories.every(m => m.conversationRef)}`);
-      console.log(`    ✓ Each has importance: ${retrievedMemories.every(m => m.importance > 0)}`);
-      console.log(`    ✓ Each has tags: ${retrievedMemories.every(m => m.tags.length > 0)}`);
+      console.log(
+        `    ✓ Each has conversationRef: ${retrievedMemories.every((m) => m.conversationRef)}`,
+      );
+      console.log(
+        `    ✓ Each has importance: ${retrievedMemories.every((m) => m.importance > 0)}`,
+      );
+      console.log(
+        `    ✓ Each has tags: ${retrievedMemories.every((m) => m.tags.length > 0)}`,
+      );
 
       // Retrieve from L3
-      const retrievedFacts = await cortex.facts.list({ memorySpaceId, limit: 20 });
+      const retrievedFacts = await cortex.facts.list({
+        memorySpaceId,
+        limit: 20,
+      });
       console.log("\n  FROM L3 (Facts):");
       console.log(`    ✓ Retrieved ${retrievedFacts.length} facts`);
       console.log(`    ✓ Fact 1: "${retrievedFacts[0]?.fact}"`);
-      console.log(`    ✓ Has relationships: ${retrievedFacts.filter(f => f.subject && f.predicate && f.object).length}/${retrievedFacts.length}`);
-      console.log(`    ✓ Has source refs: ${retrievedFacts.filter(f => f.sourceRef).length}/${retrievedFacts.length}`);
+      console.log(
+        `    ✓ Has relationships: ${retrievedFacts.filter((f) => f.subject && f.predicate && f.object).length}/${retrievedFacts.length}`,
+      );
+      console.log(
+        `    ✓ Has source refs: ${retrievedFacts.filter((f) => f.sourceRef).length}/${retrievedFacts.length}`,
+      );
 
       // Retrieve from L4
-      const retrievedContexts = await cortex.contexts.list({ memorySpaceId, limit: 10 });
+      const retrievedContexts = await cortex.contexts.list({
+        memorySpaceId,
+        limit: 10,
+      });
       console.log("\n  FROM L4 (Context Chains):");
       console.log(`    ✓ Retrieved ${retrievedContexts.length} contexts`);
-      console.log(`    ✓ Root context: "${retrievedContexts.find(c => c.depth === 0)?.purpose}"`);
-      console.log(`    ✓ Child context: "${retrievedContexts.find(c => c.depth === 1)?.purpose}"`);
-      console.log(`    ✓ Hierarchy intact: ${retrievedContexts.some(c => c.parentId)}`);
+      console.log(
+        `    ✓ Root context: "${retrievedContexts.find((c) => c.depth === 0)?.purpose}"`,
+      );
+      console.log(
+        `    ✓ Child context: "${retrievedContexts.find((c) => c.depth === 1)?.purpose}"`,
+      );
+      console.log(
+        `    ✓ Hierarchy intact: ${retrievedContexts.some((c) => c.parentId)}`,
+      );
 
       // Retrieve from Graph
       const retrievedGraphFacts = await graphAdapter.query(`
@@ -661,8 +751,12 @@ What specific aspects would you like to dive deeper into?
       `);
       console.log("\n  FROM GRAPH (Via Queries):");
       console.log(`    ✓ Retrieved ${retrievedGraphFacts.count} fact nodes`);
-      console.log(`    ✓ Retrieved ${retrievedGraphEntities.count} entity nodes`);
-      console.log(`    ✓ Entities: ${retrievedGraphEntities.records.map((r: any) => r.name).join(", ")}`);
+      console.log(
+        `    ✓ Retrieved ${retrievedGraphEntities.count} entity nodes`,
+      );
+      console.log(
+        `    ✓ Entities: ${retrievedGraphEntities.records.map((r: any) => r.name).join(", ")}`,
+      );
 
       // Graph enrichment example
       const enrichedExample = await graphAdapter.query(`
@@ -677,9 +771,12 @@ What specific aspects would you like to dive deeper into?
       if (enrichedExample.count > 0) {
         const ex = enrichedExample.records[0];
         console.log(`    ✓ Memory ${ex.memoryId as string}`);
-        console.log(`    ✓   Links to conversation: ${ex.conversationId as string}`);
+        console.log(
+          `    ✓   Links to conversation: ${ex.conversationId as string}`,
+        );
         console.log(`    ✓   Which has ${ex.relatedFacts} related facts`);
-        console.log(`    ✓   (This is the graph enrichment value!)`);}
+        console.log(`    ✓   (This is the graph enrichment value!)`);
+      }
 
       console.log("\n" + "═".repeat(70));
       console.log("COMPREHENSIVE VALIDATION CHECKLIST");
@@ -694,7 +791,7 @@ What specific aspects would you like to dive deeper into?
           containsRelationships: true,
           expected: "✅ PASS",
         },
-        
+
         l1a_conversations: {
           description: "L1a: ACID conversation storage",
           stored: null as any,
@@ -703,7 +800,7 @@ What specific aspects would you like to dive deeper into?
           hasAgentMessage: false,
           expected: "✅ PASS",
         },
-        
+
         l2_vector: {
           description: "L2: Vector memory with conversationRef",
           stored: null as any,
@@ -713,7 +810,7 @@ What specific aspects would you like to dive deeper into?
           hasTags: false,
           expected: "✅ PASS",
         },
-        
+
         l3_facts: {
           description: "L3: Extracted facts with entities",
           stored: null as any,
@@ -723,7 +820,7 @@ What specific aspects would you like to dive deeper into?
           hasConfidence: false,
           expected: "✅ PASS",
         },
-        
+
         l4_contexts: {
           description: "L4: Context chain with hierarchy",
           stored: null as any,
@@ -732,7 +829,7 @@ What specific aspects would you like to dive deeper into?
           hasConversationRef: false,
           expected: "✅ PASS",
         },
-        
+
         graph_nodes: {
           description: "Graph: All entity nodes created",
           memorySpaceNodes: 0,
@@ -744,7 +841,7 @@ What specific aspects would you like to dive deeper into?
           totalNodes: 0,
           expected: "✅ PASS",
         },
-        
+
         graph_relationships: {
           description: "Graph: All relationships created",
           totalEdges: 0,
@@ -754,7 +851,7 @@ What specific aspects would you like to dive deeper into?
           hasEntityToEntity: false,
           expected: "✅ PASS",
         },
-        
+
         graph_provenance: {
           description: "Graph: Provenance trails reconstructable",
           canTraceMemoryToConversation: false,
@@ -762,7 +859,7 @@ What specific aspects would you like to dive deeper into?
           canTraceContextToConversation: false,
           expected: "✅ PASS",
         },
-        
+
         graph_discovery: {
           description: "Graph: Knowledge discovery working",
           canFindCoworkers: false,
@@ -770,7 +867,7 @@ What specific aspects would you like to dive deeper into?
           canFindEntityNetwork: false,
           expected: "✅ PASS",
         },
-        
+
         performance: {
           description: "Performance: Acceptable latency",
           storeTimeMs: 0,
@@ -788,119 +885,157 @@ What specific aspects would you like to dive deeper into?
       const conv = await cortex.conversations.get(conversationId);
       checklist.l1a_conversations.stored = conv !== null;
       checklist.l1a_conversations.messageCount = conv?.messageCount || 0;
-      checklist.l1a_conversations.hasUserMessage = conv?.messages.some(m => m.role === "user") || false;
-      checklist.l1a_conversations.hasAgentMessage = conv?.messages.some(m => m.role === "agent") || false;
+      checklist.l1a_conversations.hasUserMessage =
+        conv?.messages.some((m) => m.role === "user") || false;
+      checklist.l1a_conversations.hasAgentMessage =
+        conv?.messages.some((m) => m.role === "agent") || false;
 
       // L2 validation
       const memories = await cortex.vector.list({ memorySpaceId, limit: 10 });
       checklist.l2_vector.stored = memories.length > 0;
       checklist.l2_vector.memoryCount = memories.length;
-      checklist.l2_vector.hasConversationRef = memories.some(m => m.conversationRef !== undefined);
-      checklist.l2_vector.hasImportance = memories.some(m => m.importance > 0);
-      checklist.l2_vector.hasTags = memories.some(m => m.tags.length > 0);
+      checklist.l2_vector.hasConversationRef = memories.some(
+        (m) => m.conversationRef !== undefined,
+      );
+      checklist.l2_vector.hasImportance = memories.some(
+        (m) => m.importance > 0,
+      );
+      checklist.l2_vector.hasTags = memories.some((m) => m.tags.length > 0);
 
       // L3 validation
       const facts = await cortex.facts.list({ memorySpaceId, limit: 20 });
       checklist.l3_facts.stored = facts.length > 0;
       checklist.l3_facts.factCount = facts.length;
-      checklist.l3_facts.hasSubjectPredicateObject = facts.some(f => f.subject && f.predicate && f.object);
-      checklist.l3_facts.hasSourceRef = facts.some(f => f.sourceRef !== undefined);
-      checklist.l3_facts.hasConfidence = facts.every(f => f.confidence > 0);
+      checklist.l3_facts.hasSubjectPredicateObject = facts.some(
+        (f) => f.subject && f.predicate && f.object,
+      );
+      checklist.l3_facts.hasSourceRef = facts.some(
+        (f) => f.sourceRef !== undefined,
+      );
+      checklist.l3_facts.hasConfidence = facts.every((f) => f.confidence > 0);
 
       // L4 validation
       const contexts = await cortex.contexts.list({ memorySpaceId, limit: 10 });
       checklist.l4_contexts.stored = contexts.length > 0;
       checklist.l4_contexts.contextCount = contexts.length;
-      checklist.l4_contexts.hasHierarchy = contexts.some(c => c.depth > 0);
-      checklist.l4_contexts.hasConversationRef = contexts.some(c => c.conversationRef !== undefined);
+      checklist.l4_contexts.hasHierarchy = contexts.some((c) => c.depth > 0);
+      checklist.l4_contexts.hasConversationRef = contexts.some(
+        (c) => c.conversationRef !== undefined,
+      );
 
       // Graph nodes validation
-      checklist.graph_nodes.memorySpaceNodes = await graphAdapter.countNodes("MemorySpace");
-      checklist.graph_nodes.conversationNodes = await graphAdapter.countNodes("Conversation");
-      checklist.graph_nodes.memoryNodes = await graphAdapter.countNodes("Memory");
+      checklist.graph_nodes.memorySpaceNodes =
+        await graphAdapter.countNodes("MemorySpace");
+      checklist.graph_nodes.conversationNodes =
+        await graphAdapter.countNodes("Conversation");
+      checklist.graph_nodes.memoryNodes =
+        await graphAdapter.countNodes("Memory");
       checklist.graph_nodes.factNodes = await graphAdapter.countNodes("Fact");
-      checklist.graph_nodes.contextNodes = await graphAdapter.countNodes("Context");
-      checklist.graph_nodes.entityNodes = await graphAdapter.countNodes("Entity");
+      checklist.graph_nodes.contextNodes =
+        await graphAdapter.countNodes("Context");
+      checklist.graph_nodes.entityNodes =
+        await graphAdapter.countNodes("Entity");
       checklist.graph_nodes.totalNodes = await graphAdapter.countNodes();
 
       // Graph relationships validation
-      checklist.graph_relationships.totalEdges = await graphAdapter.countEdges();
-      
+      checklist.graph_relationships.totalEdges =
+        await graphAdapter.countEdges();
+
       const memToConv = await graphAdapter.query(`
         MATCH (m:Memory)-[:REFERENCES]->(c:Conversation) RETURN count(*) as count
       `);
-      checklist.graph_relationships.hasMemoryToConversation = memToConv.records[0]?.count > 0;
+      checklist.graph_relationships.hasMemoryToConversation =
+        memToConv.records[0]?.count > 0;
 
       const factToEntity = await graphAdapter.query(`
         MATCH (f:Fact)-[:MENTIONS]->(e:Entity) RETURN count(*) as count
       `);
-      checklist.graph_relationships.hasFactToEntity = factToEntity.records[0]?.count > 0;
+      checklist.graph_relationships.hasFactToEntity =
+        factToEntity.records[0]?.count > 0;
 
       const contextHierarchy = await graphAdapter.query(`
         MATCH (c:Context)-[:CHILD_OF]->(p:Context) RETURN count(*) as count
       `);
-      checklist.graph_relationships.hasContextHierarchy = contextHierarchy.records[0]?.count > 0;
+      checklist.graph_relationships.hasContextHierarchy =
+        contextHierarchy.records[0]?.count > 0;
 
       const entityToEntity = await graphAdapter.query(`
         MATCH (e1:Entity)-[r:WORKS_AT|LOVES|USES]-(e2:Entity) RETURN count(*) as count
       `);
-      checklist.graph_relationships.hasEntityToEntity = entityToEntity.records[0]?.count > 0;
+      checklist.graph_relationships.hasEntityToEntity =
+        entityToEntity.records[0]?.count > 0;
 
       // Provenance validation
       const memProvenance = await graphAdapter.query(`
         MATCH (m:Memory)-[:REFERENCES]->(c:Conversation) RETURN count(*) as count
       `);
-      checklist.graph_provenance.canTraceMemoryToConversation = memProvenance.records[0]?.count > 0;
+      checklist.graph_provenance.canTraceMemoryToConversation =
+        memProvenance.records[0]?.count > 0;
 
       const factProvenance = await graphAdapter.query(`
         MATCH (f:Fact)-[:EXTRACTED_FROM]->(c:Conversation) RETURN count(*) as count
       `);
-      checklist.graph_provenance.canTraceFactToConversation = factProvenance.records[0]?.count > 0;
+      checklist.graph_provenance.canTraceFactToConversation =
+        factProvenance.records[0]?.count > 0;
 
       const contextProvenance = await graphAdapter.query(`
         MATCH (ctx:Context)-[:TRIGGERED_BY]->(c:Conversation) RETURN count(*) as count
       `);
-      checklist.graph_provenance.canTraceContextToConversation = contextProvenance.records[0]?.count > 0;
+      checklist.graph_provenance.canTraceContextToConversation =
+        contextProvenance.records[0]?.count > 0;
 
       // Discovery validation
       const coworkers = await graphAdapter.query(`
         MATCH (company:Entity {name: 'QuantumLeap Technologies'})<-[:WORKS_AT]-(person:Entity)
         RETURN count(DISTINCT person) as count
       `);
-      checklist.graph_discovery.canFindCoworkers = coworkers.records[0]?.count > 1;
+      checklist.graph_discovery.canFindCoworkers =
+        coworkers.records[0]?.count > 1;
 
       const paths = await graphAdapter.query(`
         MATCH path = (sarah:Entity {name: 'Dr. Sarah Chen'})-[*1..4]-(other:Entity)
         RETURN count(DISTINCT other) as count
       `);
-      checklist.graph_discovery.canFindKnowledgePaths = paths.records[0]?.count > 0;
+      checklist.graph_discovery.canFindKnowledgePaths =
+        paths.records[0]?.count > 0;
 
       const network = await graphAdapter.query(`
         MATCH (e:Entity)-[r]-(related:Entity)
         RETURN count(DISTINCT related) as count
       `);
-      checklist.graph_discovery.canFindEntityNetwork = network.records[0]?.count > 0;
+      checklist.graph_discovery.canFindEntityNetwork =
+        network.records[0]?.count > 0;
 
       // Performance
       checklist.performance.totalTimeMs = Date.now() - startTime;
 
       // Print checklist
       console.log("📋 INPUT VALIDATION");
-      console.log(`  Length: ${checklist.input.userMessageLength + checklist.input.agentResponseLength} chars`);
+      console.log(
+        `  Length: ${checklist.input.userMessageLength + checklist.input.agentResponseLength} chars`,
+      );
       console.log(`  Contains entities: ${checklist.input.containsEntities}`);
       console.log(`  Status: ${checklist.input.expected}\n`);
 
       console.log("📋 L1a: CONVERSATIONS (ACID)");
       console.log(`  Stored: ${checklist.l1a_conversations.stored}`);
-      console.log(`  Message count: ${checklist.l1a_conversations.messageCount}`);
-      console.log(`  Has user message: ${checklist.l1a_conversations.hasUserMessage}`);
-      console.log(`  Has agent message: ${checklist.l1a_conversations.hasAgentMessage}`);
+      console.log(
+        `  Message count: ${checklist.l1a_conversations.messageCount}`,
+      );
+      console.log(
+        `  Has user message: ${checklist.l1a_conversations.hasUserMessage}`,
+      );
+      console.log(
+        `  Has agent message: ${checklist.l1a_conversations.hasAgentMessage}`,
+      );
       console.log(`  Status: ${checklist.l1a_conversations.expected}\n`);
 
       console.log("📋 L2: VECTOR MEMORY");
       console.log(`  Stored: ${checklist.l2_vector.stored}`);
       console.log(`  Memory count: ${checklist.l2_vector.memoryCount}`);
-      console.log(`  Has conversationRef: ${checklist.l2_vector.hasConversationRef}`);
+      console.log(
+        `  Has conversationRef: ${checklist.l2_vector.hasConversationRef}`,
+      );
       console.log(`  Has importance: ${checklist.l2_vector.hasImportance}`);
       console.log(`  Has tags: ${checklist.l2_vector.hasTags}`);
       console.log(`  Status: ${checklist.l2_vector.expected}\n`);
@@ -908,7 +1043,9 @@ What specific aspects would you like to dive deeper into?
       console.log("📋 L3: FACTS");
       console.log(`  Stored: ${checklist.l3_facts.stored}`);
       console.log(`  Fact count: ${checklist.l3_facts.factCount}`);
-      console.log(`  Has subject-predicate-object: ${checklist.l3_facts.hasSubjectPredicateObject}`);
+      console.log(
+        `  Has subject-predicate-object: ${checklist.l3_facts.hasSubjectPredicateObject}`,
+      );
       console.log(`  Has source ref: ${checklist.l3_facts.hasSourceRef}`);
       console.log(`  Has confidence: ${checklist.l3_facts.hasConfidence}`);
       console.log(`  Status: ${checklist.l3_facts.expected}\n`);
@@ -917,12 +1054,18 @@ What specific aspects would you like to dive deeper into?
       console.log(`  Stored: ${checklist.l4_contexts.stored}`);
       console.log(`  Context count: ${checklist.l4_contexts.contextCount}`);
       console.log(`  Has hierarchy: ${checklist.l4_contexts.hasHierarchy}`);
-      console.log(`  Has conversation ref: ${checklist.l4_contexts.hasConversationRef}`);
+      console.log(
+        `  Has conversation ref: ${checklist.l4_contexts.hasConversationRef}`,
+      );
       console.log(`  Status: ${checklist.l4_contexts.expected}\n`);
 
       console.log("📋 GRAPH: NODES");
-      console.log(`  MemorySpace nodes: ${checklist.graph_nodes.memorySpaceNodes}`);
-      console.log(`  Conversation nodes: ${checklist.graph_nodes.conversationNodes}`);
+      console.log(
+        `  MemorySpace nodes: ${checklist.graph_nodes.memorySpaceNodes}`,
+      );
+      console.log(
+        `  Conversation nodes: ${checklist.graph_nodes.conversationNodes}`,
+      );
       console.log(`  Memory nodes: ${checklist.graph_nodes.memoryNodes}`);
       console.log(`  Fact nodes: ${checklist.graph_nodes.factNodes}`);
       console.log(`  Context nodes: ${checklist.graph_nodes.contextNodes}`);
@@ -932,27 +1075,49 @@ What specific aspects would you like to dive deeper into?
 
       console.log("📋 GRAPH: RELATIONSHIPS");
       console.log(`  Total edges: ${checklist.graph_relationships.totalEdges}`);
-      console.log(`  Memory → Conversation: ${checklist.graph_relationships.hasMemoryToConversation}`);
-      console.log(`  Fact → Entity: ${checklist.graph_relationships.hasFactToEntity}`);
-      console.log(`  Context hierarchy: ${checklist.graph_relationships.hasContextHierarchy}`);
-      console.log(`  Entity → Entity: ${checklist.graph_relationships.hasEntityToEntity}`);
+      console.log(
+        `  Memory → Conversation: ${checklist.graph_relationships.hasMemoryToConversation}`,
+      );
+      console.log(
+        `  Fact → Entity: ${checklist.graph_relationships.hasFactToEntity}`,
+      );
+      console.log(
+        `  Context hierarchy: ${checklist.graph_relationships.hasContextHierarchy}`,
+      );
+      console.log(
+        `  Entity → Entity: ${checklist.graph_relationships.hasEntityToEntity}`,
+      );
       console.log(`  Status: ${checklist.graph_relationships.expected}\n`);
 
       console.log("📋 GRAPH: PROVENANCE");
-      console.log(`  Memory → Conversation: ${checklist.graph_provenance.canTraceMemoryToConversation}`);
-      console.log(`  Fact → Conversation: ${checklist.graph_provenance.canTraceFactToConversation}`);
-      console.log(`  Context → Conversation: ${checklist.graph_provenance.canTraceContextToConversation}`);
+      console.log(
+        `  Memory → Conversation: ${checklist.graph_provenance.canTraceMemoryToConversation}`,
+      );
+      console.log(
+        `  Fact → Conversation: ${checklist.graph_provenance.canTraceFactToConversation}`,
+      );
+      console.log(
+        `  Context → Conversation: ${checklist.graph_provenance.canTraceContextToConversation}`,
+      );
       console.log(`  Status: ${checklist.graph_provenance.expected}\n`);
 
       console.log("📋 GRAPH: KNOWLEDGE DISCOVERY");
-      console.log(`  Can find coworkers: ${checklist.graph_discovery.canFindCoworkers}`);
-      console.log(`  Can find knowledge paths: ${checklist.graph_discovery.canFindKnowledgePaths}`);
-      console.log(`  Can find entity network: ${checklist.graph_discovery.canFindEntityNetwork}`);
+      console.log(
+        `  Can find coworkers: ${checklist.graph_discovery.canFindCoworkers}`,
+      );
+      console.log(
+        `  Can find knowledge paths: ${checklist.graph_discovery.canFindKnowledgePaths}`,
+      );
+      console.log(
+        `  Can find entity network: ${checklist.graph_discovery.canFindEntityNetwork}`,
+      );
       console.log(`  Status: ${checklist.graph_discovery.expected}\n`);
 
       console.log("📋 PERFORMANCE");
       console.log(`  Total time: ${checklist.performance.totalTimeMs}ms`);
-      console.log(`  Status: ${checklist.performance.totalTimeMs < 2000 ? "✅ PASS" : "⚠️  SLOW"}\n`);
+      console.log(
+        `  Status: ${checklist.performance.totalTimeMs < 2000 ? "✅ PASS" : "⚠️  SLOW"}\n`,
+      );
 
       console.log("═".repeat(70));
       console.log("🎉 ALL VALIDATIONS PASSED!");
@@ -965,9 +1130,10 @@ What specific aspects would you like to dive deeper into?
       expect(checklist.l4_contexts.stored).toBe(true);
       expect(checklist.graph_nodes.totalNodes).toBeGreaterThan(10);
       expect(checklist.graph_relationships.totalEdges).toBeGreaterThan(10);
-      expect(checklist.graph_provenance.canTraceMemoryToConversation).toBe(true);
+      expect(checklist.graph_provenance.canTraceMemoryToConversation).toBe(
+        true,
+      );
       expect(checklist.graph_discovery.canFindEntityNetwork).toBe(true);
     });
   });
 });
-

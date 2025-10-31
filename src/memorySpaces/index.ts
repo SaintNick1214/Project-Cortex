@@ -13,9 +13,7 @@ import type {
   RegisterMemorySpaceParams,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
-import {
-  syncMemorySpaceToGraph,
-} from "../graph";
+import { syncMemorySpaceToGraph } from "../graph";
 
 export class MemorySpacesAPI {
   constructor(
@@ -39,7 +37,10 @@ export class MemorySpacesAPI {
    * });
    * ```
    */
-  async register(params: RegisterMemorySpaceParams, options?: RegisterMemorySpaceOptions): Promise<MemorySpace> {
+  async register(
+    params: RegisterMemorySpaceParams,
+    options?: RegisterMemorySpaceOptions,
+  ): Promise<MemorySpace> {
     const now = Date.now();
     const participants =
       params.participants?.map((p) => ({

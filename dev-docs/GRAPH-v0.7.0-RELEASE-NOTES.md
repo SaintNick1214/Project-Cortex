@@ -17,11 +17,13 @@ This landmark release adds comprehensive graph database integration to Cortex SD
 ### 1. Graph Database Support
 
 **Supported Databases**:
+
 - ✅ Neo4j Community Edition (100% compatible)
 - ✅ Memgraph (80% compatible)
 - 🔄 Single codebase works with both!
 
 **Quick Start**:
+
 ```bash
 # Start graph database (< 5 minutes)
 docker-compose -f docker-compose.graph.yml up -d neo4j
@@ -44,12 +46,14 @@ const cortex = new Cortex({
 ### 2. Real-Time Synchronization ✨
 
 **Reactive sync worker** (NOT polling):
+
 - Automatically syncs when data changes
 - <1 second lag
 - Retry logic for failures
 - Health metrics
 
 **Auto-Sync in Convenience APIs**:
+
 ```typescript
 await cortex.memory.remember({
   memorySpaceId: "agent-1",
@@ -57,7 +61,7 @@ await cortex.memory.remember({
   userMessage: "Alice works at Acme Corp",
   agentResponse: "Got it!",
   userId: "alice",
-  userName: "Alice"
+  userName: "Alice",
 });
 
 // Behind the scenes:
@@ -68,9 +72,10 @@ await cortex.memory.remember({
 ```
 
 **Manual Sync in Low-Level APIs**:
+
 ```typescript
-await cortex.vector.store(memorySpaceId, data, { 
-  syncToGraph: true 
+await cortex.vector.store(memorySpaceId, data, {
+  syncToGraph: true,
 });
 ```
 
@@ -79,11 +84,13 @@ await cortex.vector.store(memorySpaceId, data, {
 **The Value Proposition**:
 
 Query "alice typescript" returns:
+
 - **Base (L2+L3)**: 2 isolated results
 - **With Graph**: +4 connected discoveries
 - **Total**: 2-5x more context!
 
 **What Graph Adds**:
+
 - 🔍 Entity relationships (Alice → Company → Bob)
 - 📚 Context chain reconstruction (full workflow)
 - 🔗 Provenance trails (memory → conversation → source)
@@ -94,22 +101,25 @@ Query "alice typescript" returns:
 ### 4. Sophisticated Orphan Cleanup
 
 **Handles**:
+
 - Simple orphans (no references)
 - Circular references (A→B, B→A)
 - Orphan islands (circular groups)
 - Self-references
 
 **Algorithm**:
+
 - BFS with visited tracking
 - Max depth protection
 - Entity-specific rules
 - Safe recursive deletion
 
 **Example**:
+
 ```typescript
 await cortex.memory.forget("agent-1", "mem-123", {
   deleteConversation: true,
-  syncToGraph: true
+  syncToGraph: true,
 });
 
 // ✅ Deletes memory
@@ -121,6 +131,7 @@ await cortex.memory.forget("agent-1", "mem-123", {
 ### 5. Knowledge Graph Queries
 
 **Entity Relationships**:
+
 ```cypher
 // Find who works at same company as Alice
 MATCH (alice:Entity {name: 'Alice'})-[:WORKS_AT]->(company)
@@ -129,6 +140,7 @@ RETURN coworker
 ```
 
 **Multi-Hop Paths**:
+
 ```cypher
 // Find connection: Alice → Company → Bob → Technology
 MATCH path = (alice:Entity {name: 'Alice'})-[*1..4]-(tech:Entity {name: 'TypeScript'})
@@ -136,6 +148,7 @@ RETURN path
 ```
 
 **Provenance Trails**:
+
 ```cypher
 // Trace fact back to source conversation
 MATCH (f:Fact)-[:EXTRACTED_FROM]->(conv:Conversation)
@@ -150,12 +163,14 @@ RETURN ctx, conv
 ### Complete Validation ✅
 
 **29/29 Tests Passing**:
+
 - 15 unit tests (GraphAdapter operations)
 - 14 E2E tests (complete multi-layer stack)
 - Validated on both LOCAL and MANAGED Convex
 - Neo4j (100%), Memgraph (80%)
 
 **7 Comprehensive Proofs**:
+
 1. Basic CRUD (10 operations)
 2. Sync workflow (9 nodes, 15 rels)
 3. Context chains (3.8x speedup)
@@ -165,6 +180,7 @@ RETURN ctx, conv
 7. **Multi-layer enhancement** (2-5x enrichment) ⭐
 
 **E2E Validation**:
+
 - Complex 3,142-char medical AI conversation
 - Cascades through L1a → L2 → L3 → L4 → Graph
 - Creates: 18 nodes, 39 relationships
@@ -201,7 +217,7 @@ await cortex.memory.remember(params);
 // With graph - one config change
 const cortex = new Cortex({
   convexUrl: "...",
-  graph: { adapter: graph }
+  graph: { adapter: graph },
 });
 await cortex.memory.remember(params);
 // ✅ Auto-syncs to graph!
@@ -212,6 +228,7 @@ await cortex.memory.remember(params);
 ## 📈 Performance
 
 **From Comprehensive Testing**:
+
 - **Sync**: ~300 entities/second
 - **Queries**: 4ms for 7-hop traversal
 - **Enrichment**: +90ms for 2-5x context
@@ -219,6 +236,7 @@ await cortex.memory.remember(params);
 - **Speedup**: 3.8x for deep hierarchies
 
 **Recommendation**:
+
 - Graph-Lite (built-in): 1-3 hops, small datasets
 - Native Graph: 4+ hops, large datasets, complex patterns
 
@@ -227,6 +245,7 @@ await cortex.memory.remember(params);
 ## 📦 Dependencies
 
 **Added**:
+
 - `neo4j-driver` ^5.15.0 (official driver, 78 packages)
 
 ---
@@ -234,6 +253,7 @@ await cortex.memory.remember(params);
 ## 📚 Documentation
 
 **New Documentation** (15+ files):
+
 - [Setup Guide](./Documentation/07-advanced-topics/05-graph-database-setup.md) - Quick start
 - [Module README](./src/graph/README.md) - API reference
 - [E2E Test Results](./dev-docs/E2E-TEST-RESULTS.md) - Validation details
@@ -241,6 +261,7 @@ await cortex.memory.remember(params);
 - Architecture docs, proof results, examples
 
 **Updated**:
+
 - README.md - Graph features highlighted
 - CHANGELOG.md - Complete v0.7.0 entry
 
@@ -303,7 +324,7 @@ const network = await graphAdapter.query(`
 
 **Implementation**: 9+ hours of focused development  
 **Testing**: Comprehensive validation suite  
-**Documentation**: 15+ detailed guides  
+**Documentation**: 15+ detailed guides
 
 Special thanks to Convex team for reactive query patterns and Neo4j community for graph database excellence.
 
@@ -340,4 +361,3 @@ docker-compose -f docker-compose.graph.yml up -d neo4j
 **🎉 Cortex v0.7.0 is ready for production use!**
 
 Questions? See [documentation](./GRAPH-INTEGRATION-FINAL.md) or [open an issue](https://github.com/SaintNick1214/cortex/issues).
-

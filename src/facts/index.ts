@@ -46,7 +46,10 @@ export class FactsAPI {
    * });
    * ```
    */
-  async store(params: StoreFactParams, options?: StoreFactOptions): Promise<FactRecord> {
+  async store(
+    params: StoreFactParams,
+    options?: StoreFactOptions,
+  ): Promise<FactRecord> {
     const result = await this.client.mutation(api.facts.store, {
       memorySpaceId: params.memorySpaceId,
       participantId: params.participantId,
@@ -67,8 +70,15 @@ export class FactsAPI {
     // Sync to graph if requested
     if (options?.syncToGraph && this.graphAdapter) {
       try {
-        const nodeId = await syncFactToGraph(result as FactRecord, this.graphAdapter);
-        await syncFactRelationships(result as FactRecord, nodeId, this.graphAdapter);
+        const nodeId = await syncFactToGraph(
+          result as FactRecord,
+          this.graphAdapter,
+        );
+        await syncFactRelationships(
+          result as FactRecord,
+          nodeId,
+          this.graphAdapter,
+        );
       } catch (error) {
         console.warn("Failed to sync fact to graph:", error);
       }

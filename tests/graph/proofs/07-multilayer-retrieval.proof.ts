@@ -157,7 +157,8 @@ async function createMultiLayerDataset(cortex: Cortex, memorySpaceId: string) {
   });
 
   const memory2 = await cortex.vector.store(memorySpaceId, {
-    content: "Bob is collaborating with Alice on TypeScript API database integration",
+    content:
+      "Bob is collaborating with Alice on TypeScript API database integration",
     contentType: "summarized",
     userId: "bob",
     source: {
@@ -295,7 +296,11 @@ async function createMultiLayerDataset(cortex: Cortex, memorySpaceId: string) {
 /**
  * Query WITHOUT Graph (baseline - separate L2 and L3 queries)
  */
-async function queryWithoutGraph(cortex: Cortex, memorySpaceId: string, query: string) {
+async function queryWithoutGraph(
+  cortex: Cortex,
+  memorySpaceId: string,
+  query: string,
+) {
   console.log(`\n  🔍 Querying: "${query}"`);
   const startTime = Date.now();
 
@@ -316,10 +321,11 @@ async function queryWithoutGraph(cortex: Cortex, memorySpaceId: string, query: s
     limit: 10,
   });
 
-  const relevantFacts = l3Facts.filter((f) =>
-    f.tags.some((tag) => query.toLowerCase().includes(tag)) ||
-    f.subject?.toLowerCase().includes(query.toLowerCase()) ||
-    f.object?.toLowerCase().includes(query.toLowerCase()),
+  const relevantFacts = l3Facts.filter(
+    (f) =>
+      f.tags.some((tag) => query.toLowerCase().includes(tag)) ||
+      f.subject?.toLowerCase().includes(query.toLowerCase()) ||
+      f.object?.toLowerCase().includes(query.toLowerCase()),
   );
 
   const timeMs = Date.now() - startTime;
@@ -359,10 +365,11 @@ async function queryWithGraph(
     limit: 10,
   });
 
-  const relevantFacts = l3Facts.filter((f) =>
-    f.tags.some((tag) => query.toLowerCase().includes(tag)) ||
-    f.subject?.toLowerCase().includes(query.toLowerCase()) ||
-    f.object?.toLowerCase().includes(query.toLowerCase()),
+  const relevantFacts = l3Facts.filter(
+    (f) =>
+      f.tags.some((tag) => query.toLowerCase().includes(tag)) ||
+      f.subject?.toLowerCase().includes(query.toLowerCase()) ||
+      f.object?.toLowerCase().includes(query.toLowerCase()),
   );
 
   // Step 2: GRAPH ENRICHMENT - This is the new value-add!
@@ -537,7 +544,9 @@ async function runMultiLayerProof(adapter: GraphAdapter, dbName: string) {
     console.log(`    - Contexts: ${dataset.contexts.length}`);
     console.log(`    - Memories (L2): ${dataset.memories.length}`);
     console.log(`    - Facts (L3): ${dataset.facts.length}`);
-    console.log(`    - Total entities: ${dataset.conversations.length + dataset.contexts.length + dataset.memories.length + dataset.facts.length}\n`);
+    console.log(
+      `    - Total entities: ${dataset.conversations.length + dataset.contexts.length + dataset.memories.length + dataset.facts.length}\n`,
+    );
 
     // ============================================================================
     // Phase 3: Sync to Graph
@@ -578,13 +587,17 @@ async function runMultiLayerProof(adapter: GraphAdapter, dbName: string) {
     // Verify graph structure
     const nodeCount = await adapter.countNodes();
     const edgeCount = await adapter.countEdges();
-    console.log(`  ✓ Graph created: ${nodeCount} nodes, ${edgeCount} relationships\n`);
+    console.log(
+      `  ✓ Graph created: ${nodeCount} nodes, ${edgeCount} relationships\n`,
+    );
 
     // ============================================================================
     // Phase 4: Query WITHOUT Graph (Baseline)
     // ============================================================================
     console.log("═".repeat(70));
-    console.log("🔍 Phase 5: BASELINE RETRIEVAL (L2 + L3, No Graph Enrichment)");
+    console.log(
+      "🔍 Phase 5: BASELINE RETRIEVAL (L2 + L3, No Graph Enrichment)",
+    );
     console.log("═".repeat(70));
 
     const baselineResult = await queryWithoutGraph(
@@ -604,13 +617,17 @@ async function runMultiLayerProof(adapter: GraphAdapter, dbName: string) {
     for (const fact of baselineResult.facts) {
       console.log(`      - "${fact.fact}" (confidence: ${fact.confidence}%)`);
       if (fact.subject && fact.predicate && fact.object) {
-        console.log(`        (${fact.subject} → ${fact.predicate} → ${fact.object})`);
+        console.log(
+          `        (${fact.subject} → ${fact.predicate} → ${fact.object})`,
+        );
       }
     }
 
     console.log(`\n  ⏱️  Query Time: ${baselineResult.timeMs}ms`);
     console.log(`  📦 Total Results: ${baselineResult.totalResults}`);
-    console.log(`  ⚠️  Limitation: Results are ISOLATED - no connections shown\n`);
+    console.log(
+      `  ⚠️  Limitation: Results are ISOLATED - no connections shown\n`,
+    );
 
     // ============================================================================
     // Phase 5: Query WITH Graph (Enhanced)
@@ -633,36 +650,51 @@ async function runMultiLayerProof(adapter: GraphAdapter, dbName: string) {
     console.log(`\n  ✨ GRAPH ENRICHMENT (the value-add):`);
 
     if (enhancedResult.enrichment.relatedConversations.length > 0) {
-      console.log(`\n    🗨️  Related Conversations: ${enhancedResult.enrichment.relatedConversations.length}`);
+      console.log(
+        `\n    🗨️  Related Conversations: ${enhancedResult.enrichment.relatedConversations.length}`,
+      );
       for (const convId of enhancedResult.enrichment.relatedConversations) {
         console.log(`      - ${convId}`);
       }
     }
 
     if (enhancedResult.enrichment.relatedContexts.length > 0) {
-      console.log(`\n    🎯 Related Contexts: ${enhancedResult.enrichment.relatedContexts.length}`);
+      console.log(
+        `\n    🎯 Related Contexts: ${enhancedResult.enrichment.relatedContexts.length}`,
+      );
       for (const ctxId of enhancedResult.enrichment.relatedContexts) {
         console.log(`      - ${ctxId}`);
       }
     }
 
     if (enhancedResult.enrichment.discoveredFacts.length > 0) {
-      console.log(`\n    🔎 Discovered Facts (via entity network): ${enhancedResult.enrichment.discoveredFacts.length}`);
-      for (const discovered of enhancedResult.enrichment.discoveredFacts.slice(0, 3)) {
+      console.log(
+        `\n    🔎 Discovered Facts (via entity network): ${enhancedResult.enrichment.discoveredFacts.length}`,
+      );
+      for (const discovered of enhancedResult.enrichment.discoveredFacts.slice(
+        0,
+        3,
+      )) {
         console.log(`      - "${discovered.fact}" (${discovered.confidence}%)`);
-        console.log(`        via shared entities: ${discovered.sharedEntities?.join(", ")}`);
+        console.log(
+          `        via shared entities: ${discovered.sharedEntities?.join(", ")}`,
+        );
       }
     }
 
     if (enhancedResult.enrichment.entityNetwork.length > 0) {
-      console.log(`\n    🕸️  Entity Network: ${enhancedResult.enrichment.entityNetwork.length} connections`);
+      console.log(
+        `\n    🕸️  Entity Network: ${enhancedResult.enrichment.entityNetwork.length} connections`,
+      );
       for (const rel of enhancedResult.enrichment.entityNetwork.slice(0, 5)) {
         console.log(`      - ${rel.relationship} → ${rel.relatedEntity}`);
       }
     }
 
     if (enhancedResult.enrichment.contextChains.length > 0) {
-      console.log(`\n    📚 Context Chains: ${enhancedResult.enrichment.contextChains.length}`);
+      console.log(
+        `\n    📚 Context Chains: ${enhancedResult.enrichment.contextChains.length}`,
+      );
       for (const chain of enhancedResult.enrichment.contextChains.slice(0, 2)) {
         console.log(`      Current: ${chain.current}`);
         if (chain.ancestors && chain.ancestors.length > 0) {
@@ -675,7 +707,9 @@ async function runMultiLayerProof(adapter: GraphAdapter, dbName: string) {
     }
 
     if (enhancedResult.enrichment.provenanceTrails.length > 0) {
-      console.log(`\n    🔍 Provenance Trails: ${enhancedResult.enrichment.provenanceTrails.length}`);
+      console.log(
+        `\n    🔍 Provenance Trails: ${enhancedResult.enrichment.provenanceTrails.length}`,
+      );
       for (const prov of enhancedResult.enrichment.provenanceTrails) {
         if (prov.conversationId) {
           console.log(`      - Extracted from: ${prov.conversationId}`);
@@ -689,8 +723,12 @@ async function runMultiLayerProof(adapter: GraphAdapter, dbName: string) {
       }
     }
 
-    console.log(`\n  ⏱️  Base Query Time: ${enhancedResult.totalTimeMs - enhancedResult.enrichmentTimeMs}ms`);
-    console.log(`  ⏱️  Graph Enrichment Time: ${enhancedResult.enrichmentTimeMs}ms`);
+    console.log(
+      `\n  ⏱️  Base Query Time: ${enhancedResult.totalTimeMs - enhancedResult.enrichmentTimeMs}ms`,
+    );
+    console.log(
+      `  ⏱️  Graph Enrichment Time: ${enhancedResult.enrichmentTimeMs}ms`,
+    );
     console.log(`  ⏱️  Total Time: ${enhancedResult.totalTimeMs}ms`);
     console.log(`  📦 Baseline Results: ${enhancedResult.baselineResults}`);
     console.log(`  📦 Enriched Results: ${enhancedResult.enrichedResults}`);
@@ -701,7 +739,6 @@ async function runMultiLayerProof(adapter: GraphAdapter, dbName: string) {
     console.log(`  🚀 Enrichment Factor: ${enrichmentFactor}x more context!\n`);
 
     return enhancedResult;
-
   } catch (error) {
     console.error(`❌ Multi-layer proof failed:`, error);
     throw error;
@@ -714,11 +751,21 @@ async function runMultiLayerProof(adapter: GraphAdapter, dbName: string) {
  * Main execution
  */
 async function main() {
-  console.log("\n╔═══════════════════════════════════════════════════════════════════╗");
-  console.log("║  Cortex Graph Integration - Multi-Layer Retrieval Enhancement    ║");
-  console.log("║                                                                   ║");
-  console.log("║  THE CRITICAL PROOF: Shows how Graph enhances L2 + L3 retrieval  ║");
-  console.log("╚═══════════════════════════════════════════════════════════════════╝");
+  console.log(
+    "\n╔═══════════════════════════════════════════════════════════════════╗",
+  );
+  console.log(
+    "║  Cortex Graph Integration - Multi-Layer Retrieval Enhancement    ║",
+  );
+  console.log(
+    "║                                                                   ║",
+  );
+  console.log(
+    "║  THE CRITICAL PROOF: Shows how Graph enhances L2 + L3 retrieval  ║",
+  );
+  console.log(
+    "╚═══════════════════════════════════════════════════════════════════╝",
+  );
 
   // Test with Neo4j
   if (process.env.NEO4J_URI) {
@@ -737,9 +784,15 @@ async function main() {
     console.log("\n⚠️  Neo4j tests skipped (NEO4J_URI not set)");
   }
 
-  console.log("\n╔═══════════════════════════════════════════════════════════════════╗");
-  console.log("║  Multi-Layer Retrieval Proof Complete!                           ║");
-  console.log("╚═══════════════════════════════════════════════════════════════════╝\n");
+  console.log(
+    "\n╔═══════════════════════════════════════════════════════════════════╗",
+  );
+  console.log(
+    "║  Multi-Layer Retrieval Proof Complete!                           ║",
+  );
+  console.log(
+    "╚═══════════════════════════════════════════════════════════════════╝\n",
+  );
 
   console.log("📝 KEY FINDINGS:");
   console.log("   ✓ L2 (Vector) + L3 (Facts) provide baseline context");
@@ -764,4 +817,3 @@ main()
     console.error("Proof failed:", error);
     process.exit(1);
   });
-

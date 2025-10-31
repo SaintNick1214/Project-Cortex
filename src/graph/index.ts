@@ -37,4 +37,3 @@ export type {
   GraphSyncWorkerOptions,
   SyncHealthMetrics,
 } from "./worker/GraphSyncWorker";
-

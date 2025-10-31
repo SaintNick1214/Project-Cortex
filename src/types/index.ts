@@ -325,7 +325,13 @@ export interface StoreMemoryInput {
   metadata: MemoryMetadata;
   extractFacts?: (content: string) => Promise<Array<{
     fact: string;
-    factType: "preference" | "identity" | "knowledge" | "relationship" | "event" | "custom";
+    factType:
+      | "preference"
+      | "identity"
+      | "knowledge"
+      | "relationship"
+      | "event"
+      | "custom";
     subject?: string;
     predicate?: string;
     object?: string;
@@ -388,7 +394,13 @@ export interface RememberParams {
     agentResponse: string,
   ) => Promise<Array<{
     fact: string;
-    factType: "preference" | "identity" | "knowledge" | "relationship" | "event" | "custom";
+    factType:
+      | "preference"
+      | "identity"
+      | "knowledge"
+      | "relationship"
+      | "event"
+      | "custom";
     subject?: string;
     predicate?: string;
     object?: string;
@@ -495,7 +507,13 @@ export interface UpdateMemoryOptions extends GraphSyncOption {
   reextractFacts?: boolean; // Default: false
   extractFacts?: (content: string) => Promise<Array<{
     fact: string;
-    factType: "preference" | "identity" | "knowledge" | "relationship" | "event" | "custom";
+    factType:
+      | "preference"
+      | "identity"
+      | "knowledge"
+      | "relationship"
+      | "event"
+      | "custom";
     subject?: string;
     predicate?: string;
     object?: string;

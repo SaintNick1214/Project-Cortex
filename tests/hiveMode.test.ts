@@ -449,7 +449,9 @@ describe("Hive Mode", () => {
       // Can identify who created what
       PARTICIPANTS.forEach((participant) => {
         const participantMems = allMemories.filter(
-          (m) => m.participantId === participant && m.tags?.includes("multi-participant"),
+          (m) =>
+            m.participantId === participant &&
+            m.tags?.includes("multi-participant"),
         );
         expect(participantMems.length).toBeGreaterThanOrEqual(1);
         expect(participantMems[0].content).toContain(participant);
@@ -600,7 +602,7 @@ describe("Hive Mode", () => {
       expect(ctx).toBeDefined();
       expect(ctx.memorySpaceId).toBe(HIVE_SPACE);
       expect(ctx.userId).toBe("user-alice");
-      
+
       // Verify the memory space has multiple participants
       const space = await cortex.memorySpaces.get(HIVE_SPACE);
       expect(space!.participants.length).toBeGreaterThanOrEqual(3);

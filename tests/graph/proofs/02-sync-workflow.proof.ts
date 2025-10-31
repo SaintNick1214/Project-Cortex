@@ -165,7 +165,10 @@ async function runSyncWorkflow(adapter: GraphAdapter, dbName: string) {
     const startSync = Date.now();
 
     // Sync memory space
-    const memorySpaceNodeId = await syncMemorySpaceToGraph(memorySpace, adapter);
+    const memorySpaceNodeId = await syncMemorySpaceToGraph(
+      memorySpace,
+      adapter,
+    );
     console.log(`  ✓ Synced Memory Space (${memorySpaceNodeId})`);
 
     // Sync conversation
@@ -173,7 +176,11 @@ async function runSyncWorkflow(adapter: GraphAdapter, dbName: string) {
       conversation,
       adapter,
     );
-    await syncConversationRelationships(conversation, conversationNodeId, adapter);
+    await syncConversationRelationships(
+      conversation,
+      conversationNodeId,
+      adapter,
+    );
     console.log(`  ✓ Synced Conversation + relationships`);
 
     // Sync contexts
@@ -232,14 +239,21 @@ async function runSyncWorkflow(adapter: GraphAdapter, dbName: string) {
       if (rootContext) {
         const connected = await adapter.traverse({
           startId: rootContext.id!,
-          relationshipTypes: ["PARENT_OF", "CHILD_OF", "TRIGGERED_BY", "INVOLVES"],
+          relationshipTypes: [
+            "PARENT_OF",
+            "CHILD_OF",
+            "TRIGGERED_BY",
+            "INVOLVES",
+          ],
           maxDepth: 3,
         });
         console.log(
           `  🚶 Traversal from root context: ${connected.length} connected nodes`,
         );
         for (const node of connected.slice(0, 5)) {
-          console.log(`    - ${node.label}: ${JSON.stringify(node.properties).substring(0, 60)}...`);
+          console.log(
+            `    - ${node.label}: ${JSON.stringify(node.properties).substring(0, 60)}...`,
+          );
         }
         console.log();
       }
@@ -357,7 +371,9 @@ async function runSyncWorkflow(adapter: GraphAdapter, dbName: string) {
  * Main execution
  */
 async function main() {
-  console.log("\n╔═══════════════════════════════════════════════════════════╗");
+  console.log(
+    "\n╔═══════════════════════════════════════════════════════════╗",
+  );
   console.log("║  Cortex Graph Integration - Sync Workflow Proof          ║");
   console.log("╚═══════════════════════════════════════════════════════════╝");
 
@@ -378,9 +394,13 @@ async function main() {
     console.log("\n⚠️  Neo4j tests skipped (NEO4J_URI not set)");
   }
 
-  console.log("\n╔═══════════════════════════════════════════════════════════╗");
+  console.log(
+    "\n╔═══════════════════════════════════════════════════════════╗",
+  );
   console.log("║  Sync Workflow Complete!                                  ║");
-  console.log("╚═══════════════════════════════════════════════════════════╝\n");
+  console.log(
+    "╚═══════════════════════════════════════════════════════════╝\n",
+  );
 
   console.log("📝 Key Takeaways:");
   console.log("   ✓ Cortex data successfully synced to graph database");
@@ -400,4 +420,3 @@ main()
     console.error("Proof failed:", error);
     process.exit(1);
   });
-

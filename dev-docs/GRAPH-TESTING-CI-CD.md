@@ -14,7 +14,7 @@
 ```typescript
 // In tests/env.ts
 const graphTestingEnabled = Boolean(
-  process.env.NEO4J_URI || process.env.MEMGRAPH_URI
+  process.env.NEO4J_URI || process.env.MEMGRAPH_URI,
 );
 process.env.GRAPH_TESTING_ENABLED = graphTestingEnabled ? "true" : "false";
 
@@ -36,9 +36,10 @@ describeIfEnabled("Graph Adapter (Neo4j)", () => {
 ### Scenario 1: No Graph Database (Default)
 
 **Environment**: GitHub Actions, no graph DB configured  
-**Environment Variables**: NEO4J_URI and MEMGRAPH_URI not set  
+**Environment Variables**: NEO4J_URI and MEMGRAPH_URI not set
 
 **What Happens**:
+
 ```
 📊 Graph database testing DISABLED (no graph DB URIs configured)
    To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
@@ -54,9 +55,10 @@ Tests:       39 skipped, 0 passed, 39 total
 ### Scenario 2: With Graph Database
 
 **Environment**: Local dev or CI with graph DB  
-**Environment Variables**: NEO4J_URI=bolt://localhost:7687  
+**Environment Variables**: NEO4J_URI=bolt://localhost:7687
 
 **What Happens**:
+
 ```
 📊 Graph database testing ENABLED
    Neo4j: bolt://localhost:7687
@@ -78,9 +80,10 @@ Tests:       5 skipped, 34 passed, 39 total
 **Setup**: No configuration needed  
 **Behavior**: Graph tests auto-skip  
 **CI Time**: Fast (no graph DB startup)  
-**Cost**: Free  
+**Cost**: Free
 
 **Use when**:
+
 - Graph is optional feature
 - Users can test locally if using graph
 - CI focuses on core Cortex features
@@ -95,7 +98,7 @@ name: Test with Graph
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     services:
       neo4j:
         image: neo4j:5-community
@@ -108,18 +111,18 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-      
+          node-version: "22"
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run all tests (including graph)
         env:
           NEO4J_URI: bolt://localhost:7687
@@ -133,11 +136,13 @@ jobs:
 ### Option 3: Cloud Graph DB (For Production CI)
 
 **Setup**:
+
 - Use Neo4j Aura free tier
 - Or Memgraph Cloud free tier
 - Store connection string in GitHub Secrets
 
 **GitHub Actions**:
+
 ```yaml
 - name: Run all tests
   env:
@@ -148,7 +153,7 @@ jobs:
 ```
 
 **Pros**: Persistent graph database  
-**Cons**: Requires cloud account  
+**Cons**: Requires cloud account
 
 ---
 
@@ -157,12 +162,14 @@ jobs:
 ### ✅ Smart Defaults Work Perfectly
 
 **Without configuration**:
+
 - Graph tests skip automatically
 - CI passes
 - Zero configuration needed
 - Users who don't use graph aren't affected
 
 **With configuration**:
+
 - Set NEO4J_URI in environment
 - Graph tests run automatically
 - Full validation
@@ -176,12 +183,14 @@ jobs:
 ### For CI/CD Pipelines
 
 **Default (no graph)**:
+
 ```yaml
 # No setup needed - graph tests auto-skip
 - run: npm test
 ```
 
 **With graph (Docker)**:
+
 ```yaml
 services:
   neo4j:
@@ -200,6 +209,7 @@ steps:
 ```
 
 **With graph (Cloud)**:
+
 ```yaml
 - run: npm test
   env:
@@ -215,6 +225,7 @@ steps:
 **We were smart!** ✅
 
 All graph tests use the `describeIfEnabled` pattern which:
+
 - Automatically detects graph database availability
 - Skips gracefully if not configured
 - Runs fully if configured
@@ -225,10 +236,10 @@ All graph tests use the `describeIfEnabled` pattern which:
 
 ---
 
-**Recommendation**: 
+**Recommendation**:
+
 - Default CI: Let graph tests skip (fast, free, works)
 - Advanced CI: Add Neo4j Docker service (complete coverage)
 - Production CI: Use cloud graph DB (persistent)
 
 All three approaches work with existing test infrastructure!
-

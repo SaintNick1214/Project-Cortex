@@ -55,12 +55,12 @@ async methodName(args): Promise<Result> {
 // AFTER
 async methodName(args, options?: MethodOptions): Promise<Result> {
   const result = await this.client.mutation(api.table.method, args);
-  
+
   // NEW: Graph sync if requested and configured
   if (options?.syncToGraph && this.graphAdapter) {
     await syncEntityToGraph(result, this.graphAdapter);
   }
-  
+
   return result;
 }
 ```
@@ -76,4 +76,3 @@ async methodName(args, options?: MethodOptions): Promise<Result> {
 7. Update documentation
 
 **Estimated time remaining**: 20-30 hours of focused implementation
-

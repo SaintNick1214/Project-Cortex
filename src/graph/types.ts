@@ -138,10 +138,18 @@ export interface QueryStatistics {
  */
 export interface GraphOperation {
   /** Operation type */
-  type: 'CREATE_NODE' | 'UPDATE_NODE' | 'DELETE_NODE' | 'CREATE_EDGE' | 'DELETE_EDGE';
+  type:
+    | "CREATE_NODE"
+    | "UPDATE_NODE"
+    | "DELETE_NODE"
+    | "CREATE_EDGE"
+    | "DELETE_EDGE";
 
   /** Operation data */
-  data: GraphNode | GraphEdge | { id: string; properties?: Record<string, any> };
+  data:
+    | GraphNode
+    | GraphEdge
+    | { id: string; properties?: Record<string, any> };
 }
 
 /**
@@ -158,7 +166,7 @@ export interface TraversalConfig {
   maxDepth: number;
 
   /** Optional direction: 'OUTGOING', 'INCOMING', or 'BOTH' */
-  direction?: 'OUTGOING' | 'INCOMING' | 'BOTH';
+  direction?: "OUTGOING" | "INCOMING" | "BOTH";
 
   /** Optional filter predicate (Cypher WHERE clause) */
   filter?: string;
@@ -184,7 +192,7 @@ export interface ShortestPathConfig {
   relationshipTypes?: string[];
 
   /** Optional direction */
-  direction?: 'OUTGOING' | 'INCOMING' | 'BOTH';
+  direction?: "OUTGOING" | "INCOMING" | "BOTH";
 }
 
 /**
@@ -390,7 +398,7 @@ export class GraphDatabaseError extends Error {
     public readonly cause?: Error,
   ) {
     super(message);
-    this.name = 'GraphDatabaseError';
+    this.name = "GraphDatabaseError";
     Object.setPrototypeOf(this, GraphDatabaseError.prototype);
   }
 }
@@ -400,8 +408,8 @@ export class GraphDatabaseError extends Error {
  */
 export class GraphConnectionError extends GraphDatabaseError {
   constructor(message: string, cause?: Error) {
-    super(message, 'CONNECTION_ERROR', cause);
-    this.name = 'GraphConnectionError';
+    super(message, "CONNECTION_ERROR", cause);
+    this.name = "GraphConnectionError";
     Object.setPrototypeOf(this, GraphConnectionError.prototype);
   }
 }
@@ -415,8 +423,8 @@ export class GraphQueryError extends GraphDatabaseError {
     public readonly query?: string,
     cause?: Error,
   ) {
-    super(message, 'QUERY_ERROR', cause);
-    this.name = 'GraphQueryError';
+    super(message, "QUERY_ERROR", cause);
+    this.name = "GraphQueryError";
     Object.setPrototypeOf(this, GraphQueryError.prototype);
   }
 }
@@ -425,13 +433,9 @@ export class GraphQueryError extends GraphDatabaseError {
  * Error thrown when a node or edge is not found
  */
 export class GraphNotFoundError extends GraphDatabaseError {
-  constructor(
-    resourceType: 'node' | 'edge' | 'path',
-    identifier: string,
-  ) {
-    super(`${resourceType} not found: ${identifier}`, 'NOT_FOUND');
-    this.name = 'GraphNotFoundError';
+  constructor(resourceType: "node" | "edge" | "path", identifier: string) {
+    super(`${resourceType} not found: ${identifier}`, "NOT_FOUND");
+    this.name = "GraphNotFoundError";
     Object.setPrototypeOf(this, GraphNotFoundError.prototype);
   }
 }
-

@@ -105,7 +105,10 @@ export class UsersAPI {
    * });
    * ```
    */
-  async update(userId: string, data: Record<string, unknown>): Promise<UserProfile> {
+  async update(
+    userId: string,
+    data: Record<string, unknown>,
+  ): Promise<UserProfile> {
     const result = await this.client.mutation(api.immutable.store, {
       type: "user",
       id: userId,
@@ -196,7 +199,9 @@ export class UsersAPI {
         ...totals,
         verification: {
           complete: true,
-          issues: [`DRY RUN: Would delete ${totals.totalDeleted} total records`],
+          issues: [
+            `DRY RUN: Would delete ${totals.totalDeleted} total records`,
+          ],
         },
         deletedLayers: this.getAffectedLayers(deletionPlan),
       };
@@ -306,7 +311,10 @@ export class UsersAPI {
    * const v1 = await cortex.users.getVersion('user-123', 1);
    * ```
    */
-  async getVersion(userId: string, version: number): Promise<UserVersion | null> {
+  async getVersion(
+    userId: string,
+    version: number,
+  ): Promise<UserVersion | null> {
     const result = await this.client.query(api.immutable.getVersion, {
       type: "user",
       id: userId,
@@ -357,7 +365,10 @@ export class UsersAPI {
    * );
    * ```
    */
-  async getAtTimestamp(userId: string, timestamp: Date): Promise<UserVersion | null> {
+  async getAtTimestamp(
+    userId: string,
+    timestamp: Date,
+  ): Promise<UserVersion | null> {
     const result = await this.client.query(api.immutable.getAtTimestamp, {
       type: "user",
       id: userId,
@@ -630,7 +641,7 @@ export class UsersAPI {
     }
 
     try {
-      // Query graph for all nodes with userId property  
+      // Query graph for all nodes with userId property
       // Return both the node and its ID using the appropriate ID function
       const result = await this.graphAdapter.query(
         `MATCH (n {userId: $userId}) RETURN elementId(n) as id, labels(n) as labels`,
@@ -659,7 +670,9 @@ export class UsersAPI {
       mutable: JSON.parse(JSON.stringify(plan.mutable)),
       vector: JSON.parse(JSON.stringify(plan.vector)),
       facts: JSON.parse(JSON.stringify(plan.facts)),
-      userProfile: plan.userProfile ? JSON.parse(JSON.stringify(plan.userProfile)) : null,
+      userProfile: plan.userProfile
+        ? JSON.parse(JSON.stringify(plan.userProfile))
+        : null,
     };
   }
 
@@ -809,7 +822,9 @@ export class UsersAPI {
             );
           }
         } catch (error) {
-          throw new Error(`Failed to delete graph node ${node.nodeId}: ${error}`);
+          throw new Error(
+            `Failed to delete graph node ${node.nodeId}: ${error}`,
+          );
         }
       }
       if (result.graphNodesDeleted && result.graphNodesDeleted > 0) {
@@ -870,7 +885,9 @@ export class UsersAPI {
       try {
         // Note: Restoring conversations is complex due to message IDs
         // In production, this would use a dedicated restore API
-        console.warn(`Conversation ${conversation.conversationId} requires manual restoration`);
+        console.warn(
+          `Conversation ${conversation.conversationId} requires manual restoration`,
+        );
       } catch (error) {
         console.error("Failed to restore conversation:", error);
       }
@@ -926,7 +943,9 @@ export class UsersAPI {
       }
     }
 
-    console.warn("Rollback completed (best-effort, some records may require manual restoration)");
+    console.warn(
+      "Rollback completed (best-effort, some records may require manual restoration)",
+    );
   }
 
   /**
@@ -953,7 +972,9 @@ export class UsersAPI {
         userId,
       });
       if (remainingImmutable > 0) {
-        issues.push(`${remainingImmutable} immutable records still reference userId`);
+        issues.push(
+          `${remainingImmutable} immutable records still reference userId`,
+        );
       }
     } catch (error) {
       issues.push(`Failed to verify immutable records: ${error}`);
@@ -963,7 +984,9 @@ export class UsersAPI {
     try {
       const remainingVector = await this.countVectorMemories(userId);
       if (remainingVector > 0) {
-        issues.push(`${remainingVector} vector memories still reference userId`);
+        issues.push(
+          `${remainingVector} vector memories still reference userId`,
+        );
       }
     } catch (error) {
       issues.push(`Failed to verify vector memories: ${error}`);
@@ -990,11 +1013,15 @@ export class UsersAPI {
         issues.push(`Failed to verify graph nodes: ${error}`);
       }
     } else {
-      issues.push("Graph adapter not configured - manual graph cleanup required");
+      issues.push(
+        "Graph adapter not configured - manual graph cleanup required",
+      );
     }
 
     return {
-      complete: issues.length === 0 || (issues.length === 1 && issues[0].includes("Graph adapter")),
+      complete:
+        issues.length === 0 ||
+        (issues.length === 1 && issues[0].includes("Graph adapter")),
       issues,
     };
   }
@@ -1138,4 +1165,3 @@ export class UsersAPI {
     return layers;
   }
 }
-

@@ -113,7 +113,10 @@ export class ContextsAPI {
    * });
    * ```
    */
-  async create(params: CreateContextParams, options?: CreateContextOptions): Promise<Context> {
+  async create(
+    params: CreateContextParams,
+    options?: CreateContextOptions,
+  ): Promise<Context> {
     const result = await this.client.mutation(api.contexts.create, {
       purpose: params.purpose,
       memorySpaceId: params.memorySpaceId,
@@ -127,8 +130,15 @@ export class ContextsAPI {
     // Sync to graph if requested
     if (options?.syncToGraph && this.graphAdapter) {
       try {
-        const nodeId = await syncContextToGraph(result as Context, this.graphAdapter);
-        await syncContextRelationships(result as Context, nodeId, this.graphAdapter);
+        const nodeId = await syncContextToGraph(
+          result as Context,
+          this.graphAdapter,
+        );
+        await syncContextRelationships(
+          result as Context,
+          nodeId,
+          this.graphAdapter,
+        );
       } catch (error) {
         console.warn("Failed to sync context to graph:", error);
       }
@@ -186,7 +196,11 @@ export class ContextsAPI {
     // Update in graph if requested
     if (options?.syncToGraph && this.graphAdapter) {
       try {
-        const nodes = await this.graphAdapter.findNodes("Context", { contextId }, 1);
+        const nodes = await this.graphAdapter.findNodes(
+          "Context",
+          { contextId },
+          1,
+        );
         if (nodes.length > 0) {
           await this.graphAdapter.updateNode(nodes[0].id!, updates);
         }
