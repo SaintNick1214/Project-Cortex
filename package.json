@@ -1,6 +1,6 @@
 {
   "name": "@cortexmemory/sdk",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -96,5 +96,8 @@
     "tsup": "^8.5.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "neo4j-driver": "^6.0.0"
   }
 }

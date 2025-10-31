@@ -8,10 +8,13 @@ import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type {
   AddMessageInput,
+  AddMessageOptions,
   Conversation,
   ConversationSearchResult,
   CountConversationsFilter,
   CreateConversationInput,
+  CreateConversationOptions,
+  DeleteConversationOptions,
   ExportConversationsOptions,
   ExportResult,
   GetHistoryOptions,
@@ -19,9 +22,18 @@ import type {
   Message,
   SearchConversationsInput,
 } from "../types";
+import type { GraphAdapter } from "../graph/types";
+import {
+  syncConversationToGraph,
+  syncConversationRelationships,
+  deleteConversationFromGraph,
+} from "../graph";
 
 export class ConversationsAPI {
-  constructor(private readonly client: ConvexClient) {}
+  constructor(
+    private readonly client: ConvexClient,
+    private readonly graphAdapter?: GraphAdapter,
+  ) {}
 
   /**
    * Create a new conversation
@@ -38,7 +50,7 @@ export class ConversationsAPI {
    * });
    * ```
    */
-  async create(input: CreateConversationInput): Promise<Conversation> {
+  async create(input: CreateConversationInput, options?: CreateConversationOptions): Promise<Conversation> {
     // Auto-generate conversationId if not provided
     const conversationId =
       input.conversationId || this.generateConversationId();
@@ -51,6 +63,16 @@ export class ConversationsAPI {
       participants: input.participants,
       metadata: input.metadata,
     });
+
+    // Sync to graph if requested
+    if (options?.syncToGraph && this.graphAdapter) {
+      try {
+        const nodeId = await syncConversationToGraph(result as Conversation, this.graphAdapter);
+        await syncConversationRelationships(result as Conversation, nodeId, this.graphAdapter);
+      } catch (error) {
+        console.warn("Failed to sync conversation to graph:", error);
+      }
+    }
 
     return result as Conversation;
   }
@@ -85,7 +107,7 @@ export class ConversationsAPI {
    * });
    * ```
    */
-  async addMessage(input: AddMessageInput): Promise<Conversation> {
+  async addMessage(input: AddMessageInput, options?: AddMessageOptions): Promise<Conversation> {
     // Auto-generate message ID if not provided
     const messageId = input.message.id || this.generateMessageId();
 
@@ -99,6 +121,21 @@ export class ConversationsAPI {
         metadata: input.message.metadata,
       },
     });
+
+    // Update in graph if requested (conversation already synced, just update properties)
+    if (options?.syncToGraph && this.graphAdapter) {
+      try {
+        const nodes = await this.graphAdapter.findNodes("Conversation", { conversationId: input.conversationId }, 1);
+        if (nodes.length > 0) {
+          await this.graphAdapter.updateNode(nodes[0].id!, {
+            messageCount: (result as Conversation).messageCount,
+            updatedAt: (result as Conversation).updatedAt,
+          });
+        }
+      } catch (error) {
+        console.warn("Failed to update conversation in graph:", error);
+      }
+    }
 
     return result as Conversation;
   }
@@ -153,13 +190,22 @@ export class ConversationsAPI {
    * await cortex.conversations.delete('conv-abc123');
    * ```
    */
-  async delete(conversationId: string): Promise<{ deleted: boolean }> {
+  async delete(conversationId: string, options?: DeleteConversationOptions): Promise<{ deleted: boolean }> {
     const result = await this.client.mutation(
       api.conversations.deleteConversation,
       {
         conversationId,
       },
     );
+
+    // Delete from graph
+    if (options?.syncToGraph && this.graphAdapter) {
+      try {
+        await deleteConversationFromGraph(conversationId, this.graphAdapter, true);
+      } catch (error) {
+        console.warn("Failed to delete conversation from graph:", error);
+      }
+    }
 
     return result as { deleted: boolean };
   }
