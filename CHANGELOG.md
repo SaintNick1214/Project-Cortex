@@ -19,6 +19,116 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.7.1] - 2025-10-31
+
+#### 🔗 Facts Layer Integration into Memory API
+
+**Complete integration of the Facts layer across all Memory API operations**, creating a unified three-layer pipeline: ACID → Vector → Facts.
+
+#### ✨ New Features
+
+**1. Automatic Fact Extraction**
+
+- **NEW:** `extractFacts` callback in `memory.remember()` - Automatically extracts and stores structured facts during conversation storage
+- **NEW:** `extractFacts` callback in `memory.store()` - Direct memory storage with fact extraction
+- Facts are automatically linked to source memories and conversations via `sourceRef.memoryId`
+- Complete error handling - extraction failures don't break memory storage
+
+**2. Cascade Delete System**
+
+- **UPDATED:** `memory.forget()` - Now cascade deletes associated facts with audit trail
+- **UPDATED:** `memory.delete()` - Cascade deletes facts by default (configurable via `cascadeDeleteFacts` option)
+- **UPDATED:** `memory.deleteMany()` - Batch cascade delete with complete factId tracking
+- **UPDATED:** `memory.archive()` - Marks facts as expired instead of deleting
+- All delete operations return `factsDeleted` count and `factIds` array for compliance logging
+
+**3. Automatic Fact Enrichment**
+
+- **UPDATED:** `memory.get()` - Includes related facts when `includeConversation: true`
+- **UPDATED:** `memory.search()` - Batch enriches results with facts using efficient lookup maps
+- **UPDATED:** `memory.list()` - Optional fact enrichment via `enrichFacts: true` flag
+- **UPDATED:** `memory.export()` - Includes facts in JSON exports when `includeFacts: true`
+
+**4. Fact Impact Tracking**
+
+- **UPDATED:** `memory.update()` - Supports fact re-extraction via `reextractFacts` option
+- **UPDATED:** `memory.updateMany()` - Returns `factsAffected` count for impact analysis
+
+#### 📊 Type Additions
+
+**New Result Types:**
+- `RememberResult` - Added `facts: FactRecord[]`
+- `ForgetResult` - Added `factsDeleted: number` and `factIds: string[]`
+- `DeleteMemoryResult` - New interface with fact tracking
+- `DeleteManyResult` - New interface with batch fact tracking
+- `ArchiveResult` - New interface with fact archival tracking
+- `UpdateManyResult` - New interface with fact impact tracking
+- `StoreMemoryResult` - New interface with extracted facts
+- `UpdateMemoryResult` - New interface with re-extracted facts
+
+**Updated Types:**
+- `EnrichedMemory` - Added `facts?: FactRecord[]`
+- `RememberParams` - Added `extractFacts` callback
+- `StoreMemoryInput` - Added `extractFacts` callback
+- `ListMemoriesFilter` - Added `enrichFacts?: boolean`
+- `ExportMemoriesOptions` - Added `includeFacts?: boolean`
+
+**New Options Interfaces:**
+- `DeleteMemoryOptions` - With `cascadeDeleteFacts` flag
+- `UpdateMemoryOptions` - With `reextractFacts` and `extractFacts` callback
+
+#### 🏗️ Architecture Improvements
+
+**Helper Methods:**
+- `cascadeDeleteFacts()` - Finds and deletes facts linked to memory/conversation
+- `archiveFacts()` - Marks facts as expired for soft delete
+- `fetchFactsForMemory()` - Efficient fact retrieval
+
+**SourceRef Enhancement:**
+- Facts now store `memoryId` in addition to `conversationId` for bidirectional linking
+- Enables efficient fact lookup by memory or conversation
+
+#### 📚 Documentation
+
+**New Guides:**
+- `Documentation/02-core-features/11-fact-integration.md` - Complete integration guide
+- `Documentation/03-api-reference/14-facts-operations.md` - Full Facts API reference
+
+**Updated Guides:**
+- `Documentation/02-core-features/02-semantic-search.md` - Added fact integration section
+- `Documentation/00-README.md` - Updated navigation and changelog
+
+#### 🧪 Testing
+
+**New Test Suite:**
+- `tests/memory-facts-integration.test.ts` - Comprehensive fact integration tests
+  - Fact extraction during `remember()`
+  - Error handling for failed extractions
+  - Cascade delete validation
+  - Fact enrichment in `get()` and `search()`
+  - Multiple fact extraction
+  - SourceRef linking verification
+
+#### 🔄 Backward Compatibility
+
+✅ **Zero breaking changes**
+- All fact operations are optional
+- Existing code works without modifications
+- Facts only extracted when callback provided
+- Cascade delete can be disabled via options
+- No performance impact when facts not used
+
+#### 🎯 Impact
+
+This release completes the three-layer memory architecture, enabling:
+- **Structured knowledge extraction** from unstructured conversations
+- **Automatic fact lifecycle management** (create, read, update, delete)
+- **Complete audit trails** for compliance and debugging
+- **Enhanced retrieval** with fact-based context enrichment
+- **Consistent API** - facts integrated across all 11+ memory operations
+
+---
+
 ### [0.7.0] - 2025-10-31
 
 #### 🎉 MAJOR RELEASE: Graph Database Integration (Phase 1 & 2)

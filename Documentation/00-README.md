@@ -20,15 +20,17 @@ Start here if you're new to Cortex:
 
 Deep dives into Cortex capabilities:
 
-- **[Agent Memory](./02-core-features/01-agent-memory.md)** - Private memory banks for each agent
+- **[Memory Spaces](./02-core-features/01-memory-spaces.md)** - Isolated memory banks for agents
 - **[Semantic Search](./02-core-features/02-semantic-search.md)** - AI-powered memory retrieval
 - **[User Profiles](./02-core-features/03-user-profiles.md)** - Store and manage user context
 - **[Context Chains](./02-core-features/04-context-chains.md)** - Hierarchical agent coordination
 - **[A2A Communication](./02-core-features/05-a2a-communication.md)** - Agent-to-agent memory tracking
 - **[Conversation History](./02-core-features/06-conversation-history.md)** - Persist message threads
 - **[Access Analytics](./02-core-features/07-access-analytics.md)** - Usage patterns and insights
-- **[Fact Extraction](./02-core-features/08-fact-extraction.md)** - LLM-powered fact extraction for efficiency
+- **[Fact Extraction](./02-core-features/08-fact-extraction.md)** - Storage trade-offs: facts vs conversations
 - **[MCP Server](./02-core-features/09-mcp-server.md)** - Cross-application memory sharing
+- **[Hive Mode](./02-core-features/10-hive-mode.md)** - Multi-participant agent coordination
+- **[Fact Integration](./02-core-features/11-fact-integration.md)** - Automatic fact extraction in Memory API
 
 ### 📖 API Reference
 
@@ -58,6 +60,9 @@ Complete API documentation (organized by architectural layers):
 
 - **[Agent Management](./03-api-reference/09-agent-management.md)** - Agent registry operations
 - **[Governance Policies](./03-api-reference/10-governance-policies-api.md)** - Retention and compliance
+- **[Memory Space Operations](./03-api-reference/13-memory-space-operations.md)** - Hive/Collaboration Mode management
+- **[Facts Operations](./03-api-reference/14-facts-operations.md)** - Structured knowledge extraction and storage
+- **[Graph Operations](./03-api-reference/15-graph-operations.md)** - ✨ **NEW in v0.7.0** - Graph database integration
 
 **Reference:**
 
@@ -113,8 +118,9 @@ Expert-level content:
 **Graph Capabilities:**
 
 - **[Graph-Lite Traversal](./07-advanced-topics/01-graph-lite-traversal.md)** - Built-in graph queries and relationship navigation
-- **[Graph Database Integration](./07-advanced-topics/02-graph-database-integration.md)** - DIY setup for Neo4j, Memgraph, Kùzu
+- **[Graph Database Integration](./07-advanced-topics/02-graph-database-integration.md)** - Complete integration guide for Neo4j, Memgraph
 - **[Graph Database Selection](./07-advanced-topics/04-graph-database-selection.md)** - Compare graph DB options
+- **[Graph Database Setup](./07-advanced-topics/05-graph-database-setup.md)** - ✨ **NEW** Quick setup guide (<5 minutes)
 
 **Storage Optimization:**
 
@@ -242,6 +248,17 @@ See [Documentation Guide](./10-contributing/04-documentation-guide.md) for contr
 
 Recent documentation additions:
 
+- **2025-10-31**: 🎉 **v0.7.0 - Graph Database Integration**
+  - Complete graph database support (Neo4j, Memgraph)
+  - Real-time sync worker with reactive queries
+  - syncToGraph option across all APIs
+  - Multi-layer context enrichment (2-5x more context!)
+  - Sophisticated orphan detection
+  - New: [Graph Operations API](./03-api-reference/15-graph-operations.md)
+  - New: [Graph Database Setup Guide](./07-advanced-topics/05-graph-database-setup.md)
+  - Updated: All API docs with syncToGraph options
+
+- **2025-10-30**: Complete Facts layer integration into Memory API with automatic extraction, cascade delete, and enrichment
 - **2025-10-28**: Graph-Lite capabilities, Graph DB integration guides, Fact Extraction, MCP Server documentation
 - **2025-10-23**: Initial documentation structure created
 
@@ -255,7 +272,7 @@ The Cortex code is licensed under [Apache License 2.0](../LICENSE.md).
 
 ---
 
-**Last Updated**: 2025-10-23
+**Last Updated**: 2025-10-31
 
 ---
 

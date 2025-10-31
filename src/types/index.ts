@@ -322,6 +322,15 @@ export interface StoreMemoryInput {
   immutableRef?: ImmutableRef;
   mutableRef?: MutableRef;
   metadata: MemoryMetadata;
+  extractFacts?: (content: string) => Promise<Array<{
+    fact: string;
+    factType: "preference" | "identity" | "knowledge" | "relationship" | "event" | "custom";
+    subject?: string;
+    predicate?: string;
+    object?: string;
+    confidence: number;
+    tags?: string[];
+  }> | null>;
 }
 
 export interface SearchMemoriesOptions {
@@ -340,6 +349,7 @@ export interface ListMemoriesFilter {
   participantId?: string; // NEW: Filter by participant (Hive Mode)
   sourceType?: SourceType;
   limit?: number;
+  enrichFacts?: boolean; // NEW: Include facts in results
 }
 
 export interface CountMemoriesFilter {
@@ -371,6 +381,20 @@ export interface RememberParams {
   // Optional embedding
   generateEmbedding?: (content: string) => Promise<number[] | null>;
 
+  // Optional fact extraction
+  extractFacts?: (
+    userMessage: string,
+    agentResponse: string,
+  ) => Promise<Array<{
+    fact: string;
+    factType: "preference" | "identity" | "knowledge" | "relationship" | "event" | "custom";
+    subject?: string;
+    predicate?: string;
+    object?: string;
+    confidence: number;
+    tags?: string[];
+  }> | null>;
+
   // Cloud Mode options
   autoEmbed?: boolean;
   autoSummarize?: boolean;
@@ -386,6 +410,7 @@ export interface RememberResult {
     conversationId: string;
   };
   memories: MemoryEntry[];
+  facts: FactRecord[];
 }
 
 export interface ForgetOptions {
@@ -397,6 +422,8 @@ export interface ForgetResult {
   memoryDeleted: boolean;
   conversationDeleted: boolean;
   messagesDeleted: number;
+  factsDeleted: number;
+  factIds: string[];
   restorable: boolean;
 }
 
@@ -408,6 +435,7 @@ export interface EnrichedMemory {
   memory: MemoryEntry;
   conversation?: Conversation;
   sourceMessages?: Message[];
+  facts?: FactRecord[];
 }
 
 export interface SearchMemoryOptions extends SearchMemoriesOptions {
@@ -417,6 +445,71 @@ export interface SearchMemoryOptions extends SearchMemoriesOptions {
 export type EnrichedSearchResult = EnrichedMemory & {
   score?: number;
 };
+
+// Additional result types for memory operations with fact tracking
+export interface DeleteMemoryResult {
+  deleted: boolean;
+  memoryId: string;
+  factsDeleted: number;
+  factIds: string[];
+}
+
+export interface DeleteManyResult {
+  deleted: number;
+  memoryIds: string[];
+  factsDeleted: number;
+  factIds: string[];
+}
+
+export interface ArchiveResult {
+  archived: boolean;
+  memoryId: string;
+  restorable: boolean;
+  factsArchived: number;
+  factIds: string[];
+}
+
+export interface UpdateManyResult {
+  updated: number;
+  memoryIds: string[];
+  factsAffected: number;
+}
+
+export interface StoreMemoryResult {
+  memory: MemoryEntry;
+  facts: FactRecord[];
+}
+
+export interface UpdateMemoryResult {
+  memory: MemoryEntry;
+  factsReextracted?: FactRecord[];
+}
+
+// Options interfaces for memory operations with fact integration
+export interface DeleteMemoryOptions extends GraphSyncOption {
+  cascadeDeleteFacts?: boolean; // Default: true
+}
+
+export interface UpdateMemoryOptions extends GraphSyncOption {
+  reextractFacts?: boolean; // Default: false
+  extractFacts?: (content: string) => Promise<Array<{
+    fact: string;
+    factType: "preference" | "identity" | "knowledge" | "relationship" | "event" | "custom";
+    subject?: string;
+    predicate?: string;
+    object?: string;
+    confidence: number;
+    tags?: string[];
+  }> | null>;
+}
+
+export interface ExportMemoriesOptions {
+  memorySpaceId: string;
+  userId?: string;
+  format: "json" | "csv";
+  includeEmbeddings?: boolean;
+  includeFacts?: boolean; // NEW: Include facts in export
+}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Layer 3: Facts Store (NEW)
