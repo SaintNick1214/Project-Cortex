@@ -690,6 +690,189 @@ export interface MemorySpaceStats {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Coordination: Agents Registry API (Optional Metadata)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export interface AgentRegistration {
+  id: string;
+  name: string;
+  description?: string;
+  metadata?: Record<string, unknown>;
+  config?: Record<string, unknown>;
+}
+
+export interface RegisteredAgent {
+  id: string;
+  name: string;
+  description?: string;
+  metadata: Record<string, unknown>;
+  config: Record<string, unknown>;
+  status: "active" | "inactive" | "archived";
+  registeredAt: number;
+  updatedAt: number;
+  lastActive?: number;
+  stats?: AgentStats;
+}
+
+export interface AgentStats {
+  totalMemories: number;
+  totalConversations: number;
+  totalFacts: number;
+  memorySpacesActive: number;
+  lastActive?: number;
+}
+
+export interface AgentFilters {
+  metadata?: Record<string, unknown>;
+  name?: string;
+  capabilities?: string[];
+  status?: "active" | "inactive" | "archived";
+  registeredAfter?: number;
+  registeredBefore?: number;
+  limit?: number;
+  offset?: number;
+  sortBy?: "name" | "registeredAt" | "lastActive";
+  sortOrder?: "asc" | "desc";
+}
+
+export interface UnregisterAgentOptions {
+  /** Enable cascade deletion by participantId across all memory spaces (default: false) */
+  cascade?: boolean;
+  /** Run verification after deletion (default: true) */
+  verify?: boolean;
+  /** Preview what would be deleted without actually deleting (default: false) */
+  dryRun?: boolean;
+}
+
+export interface UnregisterAgentResult {
+  agentId: string;
+  unregisteredAt: number;
+
+  // Per-layer counts
+  conversationsDeleted: number;
+  conversationMessagesDeleted: number;
+  memoriesDeleted: number;
+  factsDeleted: number;
+  graphNodesDeleted?: number;
+
+  // Verification
+  verification: {
+    complete: boolean;
+    issues: string[];
+  };
+
+  // Summary
+  totalDeleted: number;
+  deletedLayers: string[];
+  memorySpacesAffected: string[];
+}
+
+export interface AgentDeletionPlan {
+  conversations: Conversation[];
+  memories: MemoryEntry[];
+  facts: FactRecord[];
+  graph: Array<{ nodeId: string; labels: string[] }>;
+  agentRegistration: RegisteredAgent | null;
+  memorySpaces: string[]; // Which spaces were affected
+}
+
+export interface AgentDeletionBackup {
+  conversations: Conversation[];
+  memories: MemoryEntry[];
+  facts: FactRecord[];
+  agentRegistration: RegisteredAgent | null;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Coordination: User Operations API
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export interface UserProfile {
+  id: string;
+  data: Record<string, unknown>;
+  version: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface UserVersion {
+  version: number;
+  data: Record<string, unknown>;
+  timestamp: number;
+}
+
+export interface DeleteUserOptions {
+  /** Enable cascade deletion across all layers (default: false) */
+  cascade?: boolean;
+  /** Run verification after deletion (default: true) */
+  verify?: boolean;
+  /** Preview what would be deleted without actually deleting (default: false) */
+  dryRun?: boolean;
+}
+
+export interface UserDeleteResult {
+  userId: string;
+  deletedAt: number;
+
+  // Per-layer counts
+  conversationsDeleted: number;
+  conversationMessagesDeleted: number;
+  immutableRecordsDeleted: number;
+  mutableKeysDeleted: number;
+  vectorMemoriesDeleted: number;
+  factsDeleted: number;
+  graphNodesDeleted?: number; // Optional if graph not configured
+
+  // Verification
+  verification: {
+    complete: boolean;
+    issues: string[];
+  };
+
+  // Summary
+  totalDeleted: number;
+  deletedLayers: string[];
+}
+
+export interface DeletionPlan {
+  conversations: Conversation[];
+  immutable: ImmutableRecord[];
+  mutable: MutableRecord[];
+  vector: MemoryEntry[];
+  facts: FactRecord[];
+  graph: Array<{ nodeId: string; labels: string[] }>;
+  userProfile: UserProfile | null;
+}
+
+export interface DeletionBackup {
+  conversations: Conversation[];
+  immutable: ImmutableRecord[];
+  mutable: MutableRecord[];
+  vector: MemoryEntry[];
+  facts: FactRecord[];
+  userProfile: UserProfile | null;
+}
+
+export interface VerificationResult {
+  complete: boolean;
+  issues: string[];
+}
+
+export interface ListUsersFilter {
+  limit?: number;
+  offset?: number;
+}
+
+export interface UserFilters {
+  limit?: number;
+}
+
+export interface ExportUsersOptions {
+  filters?: UserFilters;
+  format: "json" | "csv";
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Graph Integration Options (syncToGraph pattern across all APIs)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

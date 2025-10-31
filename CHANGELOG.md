@@ -19,6 +19,289 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.8.0] - 2025-10-31
+
+#### 🆕 Coordination Layer APIs - Users & Agents
+
+**Complete implementation of `cortex.users.*` and `cortex.agents.*` Coordination Layer APIs** with cascade deletion across all layers/spaces, graph orphan detection, and comprehensive testing.
+
+#### ✨ New Features
+
+**1. Full User CRUD Operations**
+
+- **NEW:** `cortex.users.get(userId)` - Retrieve user profile by ID
+- **NEW:** `cortex.users.update(userId, data)` - Create or update user profile (automatic versioning)
+- **NEW:** `cortex.users.delete(userId, options)` - Delete user profile with optional cascade
+- **NEW:** `cortex.users.list(filters)` - List user profiles with pagination
+- **NEW:** `cortex.users.search(filters)` - Search user profiles
+- **NEW:** `cortex.users.count(filters)` - Count user profiles
+- **NEW:** `cortex.users.exists(userId)` - Check if user profile exists
+- **NEW:** `cortex.users.export(options)` - Export user profiles (JSON/CSV)
+
+**2. Version Operations**
+
+- **NEW:** `cortex.users.getVersion(userId, version)` - Retrieve specific version of user profile
+- **NEW:** `cortex.users.getHistory(userId)` - Get complete version history
+- **NEW:** `cortex.users.getAtTimestamp(userId, timestamp)` - Time-travel queries
+
+**3. GDPR Cascade Deletion (Same Code for Free SDK & Cloud Mode)**
+
+- **NEW:** Three-phase cascade deletion: Collection → Backup → Execution with rollback
+- **Deletes from ALL layers with userId**:
+  - ✅ Conversations (Layer 1a)
+  - ✅ Immutable records (Layer 1b)
+  - ✅ Mutable keys (Layer 1c)
+  - ✅ Vector memories (Layer 2)
+  - ✅ Facts (Layer 3)
+  - ✅ **Graph nodes** (when adapter configured)
+  - ✅ User profile (deleted last)
+- **Transaction-like rollback** - Automatic rollback on failure with best-effort restoration
+- **Verification step** - Checks for orphaned records after deletion
+- **Dry run mode** - Preview deletions without executing
+- **Graph orphan detection** - Uses `deleteWithOrphanCleanup()` for proper orphan island detection
+- **Detailed reporting** - Per-layer deletion counts and affected layers list
+
+**4. Free SDK vs Cloud Mode Architecture**
+
+- **Same Code**: Full cascade deletion implemented in open-source SDK
+- **Free SDK**: Works when user provides graph adapter (DIY setup)
+- **Cloud Mode Adds**: Legal certificates, GDPR liability guarantees, managed graph adapter, compliance audit trail
+- **Graph Integration**: Cascade includes graph nodes when adapter configured
+- **Orphan Cleanup**: Automatically detects and removes orphan islands during cascade
+
+#### 📊 Type Additions
+
+**New Interfaces:**
+- `UserProfile` - User profile with version and timestamps
+- `UserVersion` - Historical version snapshot
+- `DeleteUserOptions` - Cascade, verify, and dry run options
+- `UserDeleteResult` - Comprehensive deletion report with per-layer counts
+- `DeletionPlan` - Collection phase result
+- `DeletionBackup` - Rollback snapshots
+- `VerificationResult` - Post-deletion verification
+- `ListUsersFilter`, `UserFilters`, `ExportUsersOptions`
+
+**New Error Class:**
+- `CascadeDeletionError` - Thrown on cascade deletion failures (after rollback)
+
+#### 🏗️ Architecture
+
+**Convex Backend:**
+- **NEW:** `convex-dev/users.ts` - Backend queries/mutations for user operations
+- Delegates to `immutable.*` with `type='user'`
+- Cascade deletion orchestrated in SDK layer for better control
+
+**SDK Layer:**
+- **NEW:** `src/users/index.ts` - UsersAPI class with 1000+ lines
+- **NEW:** Integration with graph orphan detection system
+- **UPDATED:** `src/index.ts` - Added `users` property to Cortex class
+- **UPDATED:** `src/types/index.ts` - Added 9 user-related type definitions
+
+#### 🧪 Testing
+
+**Comprehensive Test Suite:**
+- **NEW:** `tests/users.test.ts` - 23 E2E tests covering all operations
+- **Tests cover**:
+  - All CRUD operations with storage validation
+  - Version operations (getVersion, getHistory, getAtTimestamp)
+  - Simple deletion (profile only)
+  - Full cascade deletion across all layers
+  - **Graph integration** (automatic when env vars set)
+  - Dry run mode
+  - Verification with/without graph adapter
+  - Export (JSON & CSV)
+  - Edge cases (non-existent users, concurrent updates)
+  - Integration with other APIs
+- **Graph testing**: Automatically detects NEO4J_URI env vars and tests graph cascade
+- **All tests pass**: 23/23 on both LOCAL and MANAGED environments
+
+**Test Results:**
+```
+✅ Graph cascade: Deleted 1 nodes
+✅ Integration test complete: Deleted from 4 layers
+   Layers: vector, conversations, graph, user-profile
+🎉 SUCCESS: All test suites passed!
+   ✅ Local tests: PASSED (23 tests)
+   ✅ Managed tests: PASSED (23 tests)
+```
+
+#### 📚 Documentation
+
+**UPDATED:** `Documentation/03-api-reference/04-user-operations.md`
+- Complete API reference for all user operations
+- Clear free SDK vs Cloud Mode differentiation
+- Graph integration examples with DIY adapter setup
+- Implementation details (three-phase approach)
+- Multiple code examples for each operation
+
+#### 🎯 Key Achievements
+
+**Free SDK vs Cloud Mode Strategy Validated:**
+- ✅ Same code works for both free and managed deployments
+- ✅ Graph cascade works with DIY adapter (free) or managed adapter (Cloud)
+- ✅ Differentiation is legal guarantees, not technical restrictions
+- ✅ Orphan detection included in free SDK
+
+**Production Ready:**
+- ✅ 23 comprehensive E2E tests (100% passing)
+- ✅ Storage validation for all operations
+- ✅ Graph integration tested with both Neo4j and Memgraph
+- ✅ Transaction-like rollback on failures
+- ✅ Orphan detection and island cleanup
+- ✅ No linter errors
+
+#### 🆕 Agents API - Optional Registry with Cascade Deletion
+
+**Complete implementation of `cortex.agents.*` API** for optional metadata registration and convenient cascade deletion by participantId.
+
+#### ✨ New Features (Agents API)
+
+**1. Agent Registry Operations (8 operations)**
+
+- **NEW:** `cortex.agents.register(agent)` - Register agent with metadata, capabilities, team info
+- **NEW:** `cortex.agents.get(agentId)` - Get registered agent by ID (returns null if not registered)
+- **NEW:** `cortex.agents.list(filters)` - List agents with pagination and status filters
+- **NEW:** `cortex.agents.search(filters)` - Search by metadata, capabilities, team
+- **NEW:** `cortex.agents.count(filters)` - Count registered agents
+- **NEW:** `cortex.agents.update(agentId, updates)` - Update agent metadata
+- **NEW:** `cortex.agents.configure(agentId, config)` - Configure agent settings
+- **NEW:** `cortex.agents.exists(agentId)` - Check if agent is registered
+- **NEW:** `cortex.agents.unregister(agentId, options)` - Remove from registry with optional cascade
+
+**2. Cascade Deletion by participantId (Convenience Feature)**
+
+- **NEW:** Delete all agent data across ALL memory spaces in one call
+- **Filters by participantId** (not userId) - queries actual data field
+- **Works even if agent never registered** - queries data, not registry
+- **Three-phase deletion**: Collection → Backup → Execution with rollback
+- **Deletes from**:
+  - ✅ Conversations (where participantId in participants)
+  - ✅ Memories (where participantId matches)
+  - ✅ Facts (where participantId matches)
+  - ✅ Graph nodes (where participantId property matches)
+  - ✅ Agent registration (deleted last)
+- **Transaction-like rollback** - Automatic rollback on failure
+- **Verification step** - Checks for orphaned records across all spaces
+- **Dry run mode** - Preview deletions without executing
+- **Graph orphan detection** - Uses `deleteWithOrphanCleanup()` for proper island cleanup
+- **Cross-space summary** - Reports which memory spaces were affected
+
+**3. Agent Statistics**
+
+- **NEW:** Automatic stat computation from actual data (memories, conversations, facts)
+- Returns: total memories, conversations, facts, active memory spaces, last active time
+- Works for registered and unregistered agents
+
+**4. Optional by Design**
+
+- Agents work without registration (just use string IDs)
+- Registration provides: discovery, analytics, team organization, cascade deletion
+- Metadata-only layer - doesn't affect core functionality
+
+#### 📊 Type Additions (Agents API)
+
+**New Interfaces:**
+- `AgentRegistration` - Registration parameters with metadata/config
+- `RegisteredAgent` - Complete agent record with stats
+- `AgentStats` - Statistics computed from actual data
+- `AgentFilters` - Search/filter parameters with metadata matching
+- `UnregisterAgentOptions` - Cascade, verify, and dry run options
+- `UnregisterAgentResult` - Comprehensive deletion report with space tracking
+- `AgentDeletionPlan` - Collection phase result with affected spaces
+- `AgentDeletionBackup` - Rollback snapshots
+
+**New Error Class:**
+- `AgentCascadeDeletionError` - Thrown on cascade deletion failures (after rollback)
+
+#### 🏗️ Architecture (Agents API)
+
+**Convex Backend:**
+- **NEW:** Updated `convex-dev/schema.ts` - Full agents table with status, metadata, config
+- **NEW:** `convex-dev/agents.ts` - Backend queries/mutations (8 operations)
+- Separate storage from users (dedicated agents table)
+- Cascade deletion orchestrated in SDK layer
+
+**SDK Layer:**
+- **NEW:** `src/agents/index.ts` - AgentsAPI class (~500 lines)
+- **NEW:** Integration with graph orphan detection system
+- **UPDATED:** `src/index.ts` - Added `agents` property to Cortex class
+- **UPDATED:** `src/types/index.ts` - Added 9 agent-related type definitions
+
+#### 🧪 Testing (Agents API)
+
+**Comprehensive Test Suite:**
+- **NEW:** `tests/agents.test.ts` - 20 E2E tests covering all operations
+- **Tests cover**:
+  - All registry operations (register, get, list, search, count, update, configure, exists)
+  - Simple unregister (no cascade)
+  - Full cascade deletion across multiple memory spaces
+  - **Cascade without registration** (proves participantId-based queries work)
+  - **Graph integration** (automatic when env vars set)
+  - Dry run mode
+  - Verification with/without graph adapter
+  - Statistics computation
+  - Edge cases (non-existent agents, no data, etc.)
+- **Graph testing**: Automatically detects NEO4J_URI env vars and tests graph cascade
+- **All tests pass**: 20/20 on both LOCAL and MANAGED environments
+
+**Test Results:**
+```
+✅ Created graph node for cascade test
+✅ Graph node deleted
+✅ Cascade complete: Deleted from 2 spaces
+   Layers: memories, conversations, graph, agent-registration
+✅ Cascade works without registration (queries by participantId in data)
+🎉 SUCCESS: All test suites passed!
+   ✅ Local tests: PASSED (20 tests)
+   ✅ Managed tests: PASSED (20 tests)
+```
+
+#### 📚 Documentation (Agents API)
+
+**UPDATED:** `Documentation/03-api-reference/09-agent-management.md`
+- Complete API reference for all agent operations
+- Cascade deletion implementation details
+- Comparison table: users (userId) vs agents (participantId)
+- Graph integration examples
+- 4 comprehensive code examples including cascade without registration
+
+**UPDATED:** `Documentation/00-README.md`
+- Added Agent Management to coordination section
+- Marked as complete with checkmarks
+
+**UPDATED:** `Documentation/03-api-reference/01-overview.md`
+- Added Agent Management API to navigation
+- Marked Users and Agents as complete
+
+**UPDATED:** `README.md`
+- Added "What's New in v0.8.0" section for both APIs
+- Updated features list with completion status
+
+#### 🎯 Key Achievements (Combined Users + Agents)
+
+**Cascade Deletion Patterns:**
+- ✅ **Users API**: Cascade by `userId` for GDPR compliance
+- ✅ **Agents API**: Cascade by `participantId` for convenience cleanup
+- ✅ Both use three-phase deletion with rollback
+- ✅ Both include graph orphan detection
+- ✅ Both work regardless of registration status
+
+**Production Ready:**
+- ✅ 43 comprehensive E2E tests (23 users + 20 agents) - 100% passing
+- ✅ Storage validation for all operations
+- ✅ Graph integration tested with both Neo4j and Memgraph
+- ✅ Transaction-like rollback on failures
+- ✅ Orphan detection and island cleanup
+- ✅ No linter errors
+
+#### 🔗 Related Issues
+
+- Implements Coordination Layer Users and Agents APIs from roadmap
+- Closes gap: 4 pending APIs → 1 pending API (only A2A Communication remaining)
+- Progress: 89% of APIs complete (8/9)
+
+---
+
 ### [0.7.1] - 2025-10-31
 
 #### 🔗 Facts Layer Integration into Memory API
