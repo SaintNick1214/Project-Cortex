@@ -89,7 +89,7 @@ describe("Agents API (Coordination Layer)", () => {
           await client.mutation(api.agents.unregister, {
             agentId: agent.agentId,
           });
-        } catch (error) {
+        } catch (_error) {
           // Ignore errors, agent may already be deleted
         }
       }
