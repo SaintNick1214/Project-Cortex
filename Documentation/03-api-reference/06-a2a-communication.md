@@ -335,7 +335,7 @@ const response = await manualRequest(
 
 ### Cloud Mode: Cortex Manages Everything
 
-> **Cloud Feature**: Cloud Mode messaging layer is planned but not yet implemented.
+> **Cloud Feature**: Cloud Mode messaging layer provides managed pub/sub infrastructure (planned).
 
 In Cloud Mode, Cortex will provide:
 

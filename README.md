@@ -39,26 +39,62 @@ Traditional memory solutions force you to choose between vector databases (Pinec
 
 A unified memory system that gives you everything in one package - production-ready memory that scales automatically, works with any LLM framework, supports any embedding provider, and requires zero infrastructure management.
 
-## ✨ Planned Features
+## ✨ Features
 
-These are the features we're building into Cortex:
+Cortex provides a complete memory system for AI agents:
 
-- 🧠 **Flexible Memory** - Remember anything without hardcoded topics or schemas
-- 🔒 **Private Memory Banks** - Each agent has isolated, secure storage
-- ♾️ **Long-term Persistence** - Memories last forever with automatic indexing
-- ⏱️ **Automatic Versioning** - Updates preserve history, never lose data (10 versions default)
-- 🗄️ **ACID + Vector Hybrid** - Immutable conversation source + fast searchable index
-- 🔍 **Semantic Search** - AI-powered retrieval with multi-strategy fallback
-- 📊 **Vector Embeddings** - Optional but preferred, support any dimension (768, 1536, 3072+)
-- 🔗 **Context Chains** - Hierarchical context sharing across agent teams
-- 👥 **User Profiles** - Rich user context and preferences
-- 📈 **Access Analytics** - Built-in tracking and insights
-- 🎯 **Hybrid Agent Management** - Simple IDs or full registry, your choice
-- 🚀 **Embedding Agnostic** - Works with OpenAI, Cohere, local models, or any provider
-- 🕸️ **Graph-Lite Queries** - Built-in graph-like traversals and relationship queries
-- 🧠 **Fact Extraction** - LLM-powered fact extraction for 60-90% storage savings (optional)
-- 🔌 **MCP Server** - Cross-application memory sharing (Cursor, Claude, custom tools)
-- 📊 **Graph Database Integration** - ✨ **NEW in v0.7.0** - Neo4j/Memgraph support for advanced multi-hop queries and knowledge graphs
+- 🧠 **Flexible Memory** - Remember anything without hardcoded topics or schemas ✅
+- 🔒 **Memory Space Isolation** - Flexible boundaries (per user, team, or project) ✅
+- ♾️ **Long-term Persistence** - Memories last forever with automatic indexing ✅
+- ⏱️ **Automatic Versioning** - Updates preserve history, never lose data (10 versions default) ✅
+- 🗄️ **ACID + Vector Hybrid** - Immutable conversation source + fast searchable index ✅
+- 🔍 **Semantic Search** - AI-powered retrieval with multi-strategy fallback ✅
+- 📊 **Vector Embeddings** - Optional but preferred, support any dimension (768, 1536, 3072+) ✅
+- 🔗 **Context Chains** - Hierarchical context sharing across memory spaces ✅
+- 👥 **User Profiles** - Rich user context with GDPR cascade deletion ✅
+- 📈 **Access Analytics** - Built-in statistics and insights ✅
+- 🎯 **Agent Registry** - Optional metadata for discovery and cascade cleanup ✅
+- 🚀 **Embedding Agnostic** - Works with OpenAI, Cohere, local models, or any provider ✅
+- 🕸️ **Graph Database Integration** - Neo4j/Memgraph support with orphan detection ✅
+- 🧠 **Fact Extraction** - LLM-powered fact extraction for 60-90% storage savings ✅
+- 🔌 **MCP Server** - Cross-application memory sharing (planned)
+- 💬 **A2A Communication** - Inter-space messaging helpers (planned)
+
+## ✨ What's New in v0.8.0
+
+### Users & Agents APIs - GDPR Compliance & Cascade Deletion
+
+Complete implementation of coordination layer APIs with powerful cascade deletion:
+
+**Users API (`cortex.users.*`)** - GDPR Compliance
+- User profile management with automatic versioning
+- **GDPR cascade deletion by userId** across all layers
+- Works in free SDK (DIY graph) and Cloud Mode (managed + legal guarantees)
+- Deletes from: conversations, immutable, mutable, vector, facts, graph
+- Transaction-like rollback on failures
+- 23/23 tests passing on LOCAL and MANAGED
+
+**Agents API (`cortex.agents.*`)** - Optional Registry
+- Optional metadata registration for discovery and analytics
+- **Cascade deletion by participantId** across all memory spaces
+- Works even if agent was never registered
+- Deletes from: conversations, memories, facts, graph
+- Graph orphan detection included
+- 20/20 tests passing on LOCAL and MANAGED
+
+```typescript
+// GDPR cascade deletion by userId
+await cortex.users.delete("user-123", { 
+  cascade: true,  // Deletes across ALL layers
+  verify: true    // Checks for orphaned records
+});
+
+// Agent cleanup by participantId
+await cortex.agents.unregister("agent-xyz", {
+  cascade: true,  // Deletes across ALL memory spaces
+  verify: true    // Includes graph orphan detection
+});
+```
 
 ## ✨ What's New in v0.7.0
 

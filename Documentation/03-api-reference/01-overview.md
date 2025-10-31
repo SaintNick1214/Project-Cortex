@@ -39,10 +39,15 @@ The API Reference is organized by architectural layers:
 
 ### **User & Coordination**
 
-- **[User Operations](./04-user-operations.md)** - User profiles + GDPR
+- **[User Operations](./04-user-operations.md)** - User profiles + GDPR ✅
   - Shared user data across all memory spaces
-  - One-click GDPR cascade deletion (Cloud Mode)
-- **[Context Operations](./05-context-operations.md)** - Workflow coordination
+  - GDPR cascade deletion by userId (SDK + Cloud Mode)
+  - Version history and time-travel queries
+- **[Agent Management](./09-agent-management.md)** - Agent registry + cleanup ✅
+  - Optional metadata registration for discovery
+  - Cascade deletion by participantId across all spaces
+  - Statistics and analytics
+- **[Context Operations](./05-context-operations.md)** - Workflow coordination ✅
   - Hierarchical task tracking
   - Multi-agent collaboration
   - Cross-memorySpace delegation
