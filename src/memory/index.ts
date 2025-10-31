@@ -19,7 +19,6 @@ import {
   type ExportMemoriesOptions,
   type ExtendedForgetOptions,
   type FactRecord,
-  type ForgetOptions,
   type ForgetResult,
   type GetMemoryOptions,
   type ListMemoriesFilter,
@@ -271,44 +270,49 @@ export class MemoryAPI {
     }, { syncToGraph: shouldSyncToGraph });
 
     // Step 7: Extract and store facts (if extraction function provided)
-    let extractedFacts: FactRecord[] = [];
+    const extractedFacts: FactRecord[] = [];
 
     if (params.extractFacts) {
-      const factsToStore = await params.extractFacts(
-        params.userMessage,
-        params.agentResponse,
-      );
+      try {
+        const factsToStore = await params.extractFacts(
+          params.userMessage,
+          params.agentResponse,
+        );
 
-      if (factsToStore && factsToStore.length > 0) {
-        for (const factData of factsToStore) {
-          try {
-            const storedFact = await this.facts.store({
-              memorySpaceId: params.memorySpaceId,
-              participantId: params.participantId,
-              fact: factData.fact,
-              factType: factData.factType,
-              subject: factData.subject || params.userId,
-              predicate: factData.predicate,
-              object: factData.object,
-              confidence: factData.confidence,
-              sourceType: "conversation",
-              sourceRef: {
-                conversationId: params.conversationId,
-                messageIds: [
-                  userMsg.messages[userMsg.messages.length - 1].id,
-                  agentMsg.messages[agentMsg.messages.length - 1].id,
-                ],
-                memoryId: userMemory.memoryId,
-              },
-              tags: factData.tags || params.tags || [],
-            }, { syncToGraph: shouldSyncToGraph });
-            
-            extractedFacts.push(storedFact);
-          } catch (error) {
-            console.warn("Failed to store fact:", error);
-            // Continue with other facts
+        if (factsToStore && factsToStore.length > 0) {
+          for (const factData of factsToStore) {
+            try {
+              const storedFact = await this.facts.store({
+                memorySpaceId: params.memorySpaceId,
+                participantId: params.participantId,
+                fact: factData.fact,
+                factType: factData.factType,
+                subject: factData.subject || params.userId,
+                predicate: factData.predicate,
+                object: factData.object,
+                confidence: factData.confidence,
+                sourceType: "conversation",
+                sourceRef: {
+                  conversationId: params.conversationId,
+                  messageIds: [
+                    userMsg.messages[userMsg.messages.length - 1].id,
+                    agentMsg.messages[agentMsg.messages.length - 1].id,
+                  ],
+                  memoryId: userMemory.memoryId,
+                },
+                tags: factData.tags || params.tags || [],
+              }, { syncToGraph: shouldSyncToGraph });
+              
+              extractedFacts.push(storedFact);
+            } catch (error) {
+              console.warn("Failed to store fact:", error);
+              // Continue with other facts
+            }
           }
         }
+      } catch (error) {
+        console.warn("Failed to extract facts:", error);
+        // Continue without facts - don't fail the entire remember operation
       }
     }
 
@@ -436,9 +440,11 @@ export class MemoryAPI {
     let sourceMessages = undefined;
 
     if (memory.conversationRef) {
-      conversation = await this.conversations.get(
+      const conv = await this.conversations.get(
         memory.conversationRef.conversationId,
       );
+      
+      conversation = conv ?? undefined;
 
       if (conversation) {
         sourceMessages = conversation.messages.filter((m) =>
@@ -605,7 +611,7 @@ export class MemoryAPI {
     const memory = await this.vector.store(agentId, input);
 
     // Extract and store facts if callback provided
-    let extractedFacts: FactRecord[] = [];
+    const extractedFacts: FactRecord[] = [];
 
     if (input.extractFacts) {
       const factsToStore = await input.extractFacts(input.content);
@@ -665,7 +671,7 @@ export class MemoryAPI {
   ): Promise<UpdateMemoryResult> {
     const updatedMemory = await this.vector.update(agentId, memoryId, updates);
 
-    let factsReextracted: FactRecord[] = [];
+    const factsReextracted: FactRecord[] = [];
 
     // Re-extract facts if content changed and reextract requested
     if (options?.reextractFacts && updates.content && options.extractFacts) {

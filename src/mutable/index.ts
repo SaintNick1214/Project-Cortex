@@ -12,7 +12,6 @@ import type {
   ListMutableFilter,
   MutableRecord,
   SetMutableOptions,
-  UpdateMutableOptions,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
 import { deleteMutableFromGraph } from "../graph";

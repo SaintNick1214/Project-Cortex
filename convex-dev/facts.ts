@@ -37,6 +37,7 @@ export const store = mutation({
       v.literal("system"),
       v.literal("tool"),
       v.literal("manual"),
+      v.literal("a2a"),
     ),
     sourceRef: v.optional(
       v.object({

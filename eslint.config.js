@@ -22,6 +22,7 @@ export default [
       "**/.parcel-cache/**",
       "**/test-output.txt",
       "scripts/**/*", // Exclude scripts from linting
+      "examples/**/*", // Exclude examples from linting
       "*.txt", // Exclude text files
     ],
   },

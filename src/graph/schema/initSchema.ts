@@ -119,7 +119,7 @@ async function createUniqueConstraints(adapter: GraphAdapter): Promise<void> {
       });
 
       console.log(`    ✓ ${constraint.label}.${constraint.property}`);
-    } catch (error) {
+    } catch (_error) {
       // Constraint may already exist, which is fine
       console.log(
         `    ~ ${constraint.label}.${constraint.property} (already exists)`,
@@ -189,7 +189,7 @@ async function createPerformanceIndexes(adapter: GraphAdapter): Promise<void> {
       });
 
       console.log(`    ✓ ${index.label}.${index.property}`);
-    } catch (error) {
+    } catch (_error) {
       // Index may already exist or not supported by the database
       console.log(
         `    ~ ${index.label}.${index.property} (already exists or not supported)`,

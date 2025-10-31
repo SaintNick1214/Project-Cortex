@@ -10,7 +10,7 @@
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
-import { api } from "../convex-dev/_generated/api";
+// api is available via setupCortex if needed
 import { TestCleanup } from "./helpers";
 
 describe("Context Chains API", () => {

@@ -61,7 +61,7 @@ describe("GDPR: Cascade Deletion", () => {
         sourceType: "system",
       });
 
-      const ctx = await cortex.contexts.create({
+      const _ctx = await cortex.contexts.create({
         purpose: "Test context for cascade",
         memorySpaceId: SPACE,
         userId: "test-user",
