@@ -50,7 +50,10 @@ export class ConversationsAPI {
    * });
    * ```
    */
-  async create(input: CreateConversationInput, options?: CreateConversationOptions): Promise<Conversation> {
+  async create(
+    input: CreateConversationInput,
+    options?: CreateConversationOptions,
+  ): Promise<Conversation> {
     // Auto-generate conversationId if not provided
     const conversationId =
       input.conversationId || this.generateConversationId();
@@ -67,8 +70,15 @@ export class ConversationsAPI {
     // Sync to graph if requested
     if (options?.syncToGraph && this.graphAdapter) {
       try {
-        const nodeId = await syncConversationToGraph(result as Conversation, this.graphAdapter);
-        await syncConversationRelationships(result as Conversation, nodeId, this.graphAdapter);
+        const nodeId = await syncConversationToGraph(
+          result as Conversation,
+          this.graphAdapter,
+        );
+        await syncConversationRelationships(
+          result as Conversation,
+          nodeId,
+          this.graphAdapter,
+        );
       } catch (error) {
         console.warn("Failed to sync conversation to graph:", error);
       }
@@ -107,7 +117,10 @@ export class ConversationsAPI {
    * });
    * ```
    */
-  async addMessage(input: AddMessageInput, options?: AddMessageOptions): Promise<Conversation> {
+  async addMessage(
+    input: AddMessageInput,
+    options?: AddMessageOptions,
+  ): Promise<Conversation> {
     // Auto-generate message ID if not provided
     const messageId = input.message.id || this.generateMessageId();
 
@@ -125,7 +138,11 @@ export class ConversationsAPI {
     // Update in graph if requested (conversation already synced, just update properties)
     if (options?.syncToGraph && this.graphAdapter) {
       try {
-        const nodes = await this.graphAdapter.findNodes("Conversation", { conversationId: input.conversationId }, 1);
+        const nodes = await this.graphAdapter.findNodes(
+          "Conversation",
+          { conversationId: input.conversationId },
+          1,
+        );
         if (nodes.length > 0) {
           await this.graphAdapter.updateNode(nodes[0].id!, {
             messageCount: (result as Conversation).messageCount,
@@ -190,7 +207,10 @@ export class ConversationsAPI {
    * await cortex.conversations.delete('conv-abc123');
    * ```
    */
-  async delete(conversationId: string, options?: DeleteConversationOptions): Promise<{ deleted: boolean }> {
+  async delete(
+    conversationId: string,
+    options?: DeleteConversationOptions,
+  ): Promise<{ deleted: boolean }> {
     const result = await this.client.mutation(
       api.conversations.deleteConversation,
       {
@@ -201,7 +221,11 @@ export class ConversationsAPI {
     // Delete from graph
     if (options?.syncToGraph && this.graphAdapter) {
       try {
-        await deleteConversationFromGraph(conversationId, this.graphAdapter, true);
+        await deleteConversationFromGraph(
+          conversationId,
+          this.graphAdapter,
+          true,
+        );
       } catch (error) {
         console.warn("Failed to delete conversation from graph:", error);
       }

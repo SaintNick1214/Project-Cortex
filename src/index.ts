@@ -17,7 +17,10 @@ import { ContextsAPI } from "./contexts";
 import { UsersAPI } from "./users";
 import { AgentsAPI } from "./agents";
 import type { GraphAdapter } from "./graph/types";
-import { GraphSyncWorker, type GraphSyncWorkerOptions } from "./graph/worker/GraphSyncWorker";
+import {
+  GraphSyncWorker,
+  type GraphSyncWorkerOptions,
+} from "./graph/worker/GraphSyncWorker";
 
 /**
  * Graph database configuration
@@ -138,5 +141,8 @@ export type * from "./types";
 
 // Re-export graph types and classes
 export type * from "./graph/types";
-export type { GraphSyncWorkerOptions, SyncHealthMetrics } from "./graph/worker/GraphSyncWorker";
+export type {
+  GraphSyncWorkerOptions,
+  SyncHealthMetrics,
+} from "./graph/worker/GraphSyncWorker";
 export { GraphSyncWorker } from "./graph/worker/GraphSyncWorker";

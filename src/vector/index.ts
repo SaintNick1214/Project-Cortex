@@ -72,8 +72,15 @@ export class VectorAPI {
     // Sync to graph if requested and configured
     if (options?.syncToGraph && this.graphAdapter) {
       try {
-        const nodeId = await syncMemoryToGraph(result as MemoryEntry, this.graphAdapter);
-        await syncMemoryRelationships(result as MemoryEntry, nodeId, this.graphAdapter);
+        const nodeId = await syncMemoryToGraph(
+          result as MemoryEntry,
+          this.graphAdapter,
+        );
+        await syncMemoryRelationships(
+          result as MemoryEntry,
+          nodeId,
+          this.graphAdapter,
+        );
       } catch (error) {
         // Log but don't fail - graph sync is non-critical
         console.warn("Failed to sync memory to graph:", error);

@@ -380,10 +380,7 @@ Line 4`;
 
       // Validate: All retrievable
       for (const mem of results) {
-        const stored = await cortex.vector.get(
-          TEST_MEMSPACE_ID,
-          mem.memoryId,
-        );
+        const stored = await cortex.vector.get(TEST_MEMSPACE_ID, mem.memoryId);
         expect(stored).not.toBeNull();
       }
     });
@@ -519,7 +516,7 @@ Line 4`;
   describe("Bulk Operations Scale", () => {
     it("handles bulk deletion of many memories", async () => {
       const BULK_USER_ID = "user-bulk-delete-test";
-      
+
       // Create 50 memories
       const memories = await Promise.all(
         Array.from({ length: 50 }, (_, i) =>
@@ -568,12 +565,9 @@ Line 4`;
         limit: 200,
       });
 
-      const listTestMems = results.filter((r) =>
-        r.tags?.includes("list-test"),
-      );
+      const listTestMems = results.filter((r) => r.tags?.includes("list-test"));
 
       expect(listTestMems.length).toBeGreaterThanOrEqual(100);
     });
   });
 });
-

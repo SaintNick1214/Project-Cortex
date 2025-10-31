@@ -114,7 +114,11 @@ tsx tests/graph/proofs/01-basic-crud.proof.ts
 
 ```typescript
 import { Cortex } from "@cortexmemory/sdk";
-import { CypherGraphAdapter, initializeGraphSchema, initialGraphSync } from "@cortexmemory/sdk/graph";
+import {
+  CypherGraphAdapter,
+  initializeGraphSchema,
+  initialGraphSync,
+} from "@cortexmemory/sdk/graph";
 
 // Initialize Cortex
 const cortex = new Cortex({
@@ -142,7 +146,11 @@ const result = await initialGraphSync(cortex, graphAdapter, {
 console.log("Sync complete:", result);
 
 // Query the graph
-const contexts = await graphAdapter.findNodes("Context", { status: "active" }, 10);
+const contexts = await graphAdapter.findNodes(
+  "Context",
+  { status: "active" },
+  10,
+);
 console.log("Active contexts:", contexts);
 
 // Traverse relationships
@@ -173,7 +181,6 @@ await graphAdapter.disconnect();
   - GraphAdapter unit tests (both Neo4j and Memgraph)
   - Sync functions tests
   - End-to-end integration tests
-  
 - **Proof Demonstrations** (`tests/graph/proofs/`)
   - ✅ 01-basic-crud.proof.ts (DONE)
   - 02-sync-workflow.proof.ts (demonstrates full Cortex → Graph sync)
@@ -241,13 +248,13 @@ await graphAdapter.disconnect();
 
 Expected performance (based on architecture):
 
-| Operation | Graph-Lite (Convex) | Native Graph |
-|-----------|---------------------|--------------|
-| 1-hop traversal | 50-100ms | 5-10ms |
-| 3-hop traversal | 200-500ms | 20-30ms |
-| 5-hop traversal | 500-1000ms | 30-50ms |
-| 10-hop traversal | 2000ms+ | 50-80ms |
-| Pattern matching | Not feasible | 50-200ms |
+| Operation        | Graph-Lite (Convex) | Native Graph |
+| ---------------- | ------------------- | ------------ |
+| 1-hop traversal  | 50-100ms            | 5-10ms       |
+| 3-hop traversal  | 200-500ms           | 20-30ms      |
+| 5-hop traversal  | 500-1000ms          | 30-50ms      |
+| 10-hop traversal | 2000ms+             | 50-80ms      |
+| Pattern matching | Not feasible        | 50-200ms     |
 
 **Result:** 10-20x faster for multi-hop queries! ✨
 
@@ -258,4 +265,3 @@ See implementation plan in `graph-database-integration.plan.md`.
 ## License
 
 Apache 2.0 (SDK) - Graph databases have their own licenses (Neo4j: GPL, Memgraph: BSL)
-

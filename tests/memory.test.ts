@@ -979,9 +979,9 @@ describe("Memory Convenience API (Layer 3)", () => {
     it("remember() propagates participantId to vector memories (Hive Mode)", async () => {
       // CRITICAL TEST: Validates participantId flows from remember() to vector layer
       // This test catches the bug where participantId wasn't passed to vector.store()
-      
+
       const PARTICIPANT = "tool-calendar-test";
-      
+
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
@@ -1031,7 +1031,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       );
 
       expect(participantMemories.length).toBeGreaterThanOrEqual(2);
-      
+
       // ✅ HIVE MODE SUCCESS: Participant tracking works through remember()
     });
   });

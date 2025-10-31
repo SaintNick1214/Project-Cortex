@@ -38,11 +38,7 @@ export interface BatchSyncOptions {
   syncRelationships?: boolean;
 
   /** Progress callback */
-  onProgress?: (
-    entity: string,
-    current: number,
-    total: number,
-  ) => void;
+  onProgress?: (entity: string, current: number, total: number) => void;
 }
 
 export interface BatchSyncResult {
@@ -217,7 +213,7 @@ async function syncContexts(
   const errors: Array<{ entity: string; id: string; error: string }> = [];
 
   try {
-    // List all contexts  
+    // List all contexts
     const contexts = await cortex.contexts.list({ limit });
 
     for (let i = 0; i < contexts.length; i++) {
@@ -446,4 +442,3 @@ async function syncFacts(
 
   return { stats, errors };
 }
-

@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # Neo4j Community Edition
@@ -8,19 +8,19 @@ services:
     image: neo4j:5-community
     container_name: cortex-neo4j
     ports:
-      - "7474:7474"  # HTTP (Browser UI)
-      - "7687:7687"  # Bolt (Query Protocol)
+      - "7474:7474" # HTTP (Browser UI)
+      - "7687:7687" # Bolt (Query Protocol)
     environment:
       # Authentication
       - NEO4J_AUTH=neo4j/cortex-dev-password
-      
+
       # Plugins
       - NEO4J_PLUGINS=["apoc"]
-      
+
       # Memory settings (adjust based on your system)
       - NEO4J_dbms_memory_heap_max__size=2G
       - NEO4J_dbms_memory_pagecache_size=1G
-      
+
       # Accept license
       - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
     volumes:
@@ -29,7 +29,11 @@ services:
       - neo4j-import:/var/lib/neo4j/import
       - neo4j-plugins:/plugins
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:7474 || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:7474 || exit 1",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -42,8 +46,8 @@ services:
     image: memgraph/memgraph:latest
     container_name: cortex-memgraph
     ports:
-      - "7688:7687"  # Bolt (mapped to 7688 on host to avoid Neo4j conflict)
-      - "3001:3000"  # Memgraph Lab UI (mapped to 3001 on host)
+      - "7688:7687" # Bolt (mapped to 7688 on host to avoid Neo4j conflict)
+      - "3001:3000" # Memgraph Lab UI (mapped to 3001 on host)
     environment:
       # Authentication (Memgraph 2.0+)
       - MEMGRAPH_USER=memgraph
@@ -54,7 +58,11 @@ services:
       - memgraph-etc:/etc/memgraph
     command: ["--bolt-port=7687", "--log-level=WARNING"]
     healthcheck:
-      test: ["CMD-SHELL", "echo 'RETURN 1;' | mgconsole --host 127.0.0.1 --port 7687 --username memgraph --password cortex-dev-password || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "echo 'RETURN 1;' | mgconsole --host 127.0.0.1 --port 7687 --username memgraph --password cortex-dev-password || exit 1",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -70,7 +78,7 @@ volumes:
     name: cortex-neo4j-import
   neo4j-plugins:
     name: cortex-neo4j-plugins
-  
+
   # Memgraph volumes
   memgraph-data:
     name: cortex-memgraph-data
@@ -82,4 +90,3 @@ volumes:
 networks:
   default:
     name: cortex-graph-network
-

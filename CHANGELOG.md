@@ -72,6 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### 📊 Type Additions
 
 **New Interfaces:**
+
 - `UserProfile` - User profile with version and timestamps
 - `UserVersion` - Historical version snapshot
 - `DeleteUserOptions` - Cascade, verify, and dry run options
@@ -82,16 +83,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `ListUsersFilter`, `UserFilters`, `ExportUsersOptions`
 
 **New Error Class:**
+
 - `CascadeDeletionError` - Thrown on cascade deletion failures (after rollback)
 
 #### 🏗️ Architecture
 
 **Convex Backend:**
+
 - **NEW:** `convex-dev/users.ts` - Backend queries/mutations for user operations
 - Delegates to `immutable.*` with `type='user'`
 - Cascade deletion orchestrated in SDK layer for better control
 
 **SDK Layer:**
+
 - **NEW:** `src/users/index.ts` - UsersAPI class with 1000+ lines
 - **NEW:** Integration with graph orphan detection system
 - **UPDATED:** `src/index.ts` - Added `users` property to Cortex class
@@ -100,6 +104,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### 🧪 Testing
 
 **Comprehensive Test Suite:**
+
 - **NEW:** `tests/users.test.ts` - 23 E2E tests covering all operations
 - **Tests cover**:
   - All CRUD operations with storage validation
@@ -116,6 +121,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **All tests pass**: 23/23 on both LOCAL and MANAGED environments
 
 **Test Results:**
+
 ```
 ✅ Graph cascade: Deleted 1 nodes
 ✅ Integration test complete: Deleted from 4 layers
@@ -128,6 +134,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### 📚 Documentation
 
 **UPDATED:** `Documentation/03-api-reference/04-user-operations.md`
+
 - Complete API reference for all user operations
 - Clear free SDK vs Cloud Mode differentiation
 - Graph integration examples with DIY adapter setup
@@ -137,12 +144,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### 🎯 Key Achievements
 
 **Free SDK vs Cloud Mode Strategy Validated:**
+
 - ✅ Same code works for both free and managed deployments
 - ✅ Graph cascade works with DIY adapter (free) or managed adapter (Cloud)
 - ✅ Differentiation is legal guarantees, not technical restrictions
 - ✅ Orphan detection included in free SDK
 
 **Production Ready:**
+
 - ✅ 23 comprehensive E2E tests (100% passing)
 - ✅ Storage validation for all operations
 - ✅ Graph integration tested with both Neo4j and Memgraph
@@ -201,6 +210,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### 📊 Type Additions (Agents API)
 
 **New Interfaces:**
+
 - `AgentRegistration` - Registration parameters with metadata/config
 - `RegisteredAgent` - Complete agent record with stats
 - `AgentStats` - Statistics computed from actual data
@@ -211,17 +221,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `AgentDeletionBackup` - Rollback snapshots
 
 **New Error Class:**
+
 - `AgentCascadeDeletionError` - Thrown on cascade deletion failures (after rollback)
 
 #### 🏗️ Architecture (Agents API)
 
 **Convex Backend:**
+
 - **NEW:** Updated `convex-dev/schema.ts` - Full agents table with status, metadata, config
 - **NEW:** `convex-dev/agents.ts` - Backend queries/mutations (8 operations)
 - Separate storage from users (dedicated agents table)
 - Cascade deletion orchestrated in SDK layer
 
 **SDK Layer:**
+
 - **NEW:** `src/agents/index.ts` - AgentsAPI class (~500 lines)
 - **NEW:** Integration with graph orphan detection system
 - **UPDATED:** `src/index.ts` - Added `agents` property to Cortex class
@@ -230,6 +243,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### 🧪 Testing (Agents API)
 
 **Comprehensive Test Suite:**
+
 - **NEW:** `tests/agents.test.ts` - 20 E2E tests covering all operations
 - **Tests cover**:
   - All registry operations (register, get, list, search, count, update, configure, exists)
@@ -245,6 +259,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **All tests pass**: 20/20 on both LOCAL and MANAGED environments
 
 **Test Results:**
+
 ```
 ✅ Created graph node for cascade test
 ✅ Graph node deleted
@@ -259,6 +274,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### 📚 Documentation (Agents API)
 
 **UPDATED:** `Documentation/03-api-reference/09-agent-management.md`
+
 - Complete API reference for all agent operations
 - Cascade deletion implementation details
 - Comparison table: users (userId) vs agents (participantId)
@@ -266,20 +282,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 4 comprehensive code examples including cascade without registration
 
 **UPDATED:** `Documentation/00-README.md`
+
 - Added Agent Management to coordination section
 - Marked as complete with checkmarks
 
 **UPDATED:** `Documentation/03-api-reference/01-overview.md`
+
 - Added Agent Management API to navigation
 - Marked Users and Agents as complete
 
 **UPDATED:** `README.md`
+
 - Added "What's New in v0.8.0" section for both APIs
 - Updated features list with completion status
 
 #### 🎯 Key Achievements (Combined Users + Agents)
 
 **Cascade Deletion Patterns:**
+
 - ✅ **Users API**: Cascade by `userId` for GDPR compliance
 - ✅ **Agents API**: Cascade by `participantId` for convenience cleanup
 - ✅ Both use three-phase deletion with rollback
@@ -287,6 +307,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ✅ Both work regardless of registration status
 
 **Production Ready:**
+
 - ✅ 43 comprehensive E2E tests (23 users + 20 agents) - 100% passing
 - ✅ Storage validation for all operations
 - ✅ Graph integration tested with both Neo4j and Memgraph
@@ -340,6 +361,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### 📊 Type Additions
 
 **New Result Types:**
+
 - `RememberResult` - Added `facts: FactRecord[]`
 - `ForgetResult` - Added `factsDeleted: number` and `factIds: string[]`
 - `DeleteMemoryResult` - New interface with fact tracking
@@ -350,6 +372,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `UpdateMemoryResult` - New interface with re-extracted facts
 
 **Updated Types:**
+
 - `EnrichedMemory` - Added `facts?: FactRecord[]`
 - `RememberParams` - Added `extractFacts` callback
 - `StoreMemoryInput` - Added `extractFacts` callback
@@ -357,12 +380,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `ExportMemoriesOptions` - Added `includeFacts?: boolean`
 
 **New Options Interfaces:**
+
 - `DeleteMemoryOptions` - With `cascadeDeleteFacts` flag
 - `UpdateMemoryOptions` - With `reextractFacts` and `extractFacts` callback
 
 #### 🧹 Code Quality & Linting
 
 **Complete ESLint Error Resolution:**
+
 - **FIXED:** All 38 TypeScript compilation errors resolved
   - Type safety improvements for `SourceType` (added "a2a" support)
   - Null/undefined handling in conversation enrichment
@@ -374,12 +399,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Improved type safety with `Record<string, unknown>` for metadata fields
 
 **Type Safety Improvements:**
+
 - Enhanced Context types: `data` and `metadata` now properly typed
 - Added generic type parameter to `mutable.update<T>()` for type-safe updates
 - Improved fact metadata typing across all interfaces
 - Neo4j driver interactions properly annotated as external library code
 
 **Test Suite Validation:**
+
 - ✅ All 19 test suites passing (534 tests total)
 - ✅ E2E multi-layer graph integration tests passing
 - ✅ Both local and managed test environments verified
@@ -388,27 +415,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### 🏗️ Architecture Improvements
 
 **Helper Methods:**
+
 - `cascadeDeleteFacts()` - Finds and deletes facts linked to memory/conversation
 - `archiveFacts()` - Marks facts as expired for soft delete
 - `fetchFactsForMemory()` - Efficient fact retrieval
 
 **SourceRef Enhancement:**
+
 - Facts now store `memoryId` in addition to `conversationId` for bidirectional linking
 - Enables efficient fact lookup by memory or conversation
 
 #### 📚 Documentation
 
 **New Guides:**
+
 - `Documentation/02-core-features/11-fact-integration.md` - Complete integration guide
 - `Documentation/03-api-reference/14-facts-operations.md` - Full Facts API reference
 
 **Updated Guides:**
+
 - `Documentation/02-core-features/02-semantic-search.md` - Added fact integration section
 - `Documentation/00-README.md` - Updated navigation and changelog
 
 #### 🧪 Testing
 
 **New Test Suite:**
+
 - `tests/memory-facts-integration.test.ts` - Comprehensive fact integration tests
   - Fact extraction during `remember()`
   - Error handling for failed extractions
@@ -420,6 +452,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### 🔄 Backward Compatibility
 
 ✅ **Zero breaking changes**
+
 - All fact operations are optional
 - Existing code works without modifications
 - Facts only extracted when callback provided
@@ -429,6 +462,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### 🎯 Impact
 
 This release completes the three-layer memory architecture, enabling:
+
 - **Structured knowledge extraction** from unstructured conversations
 - **Automatic fact lifecycle management** (create, read, update, delete)
 - **Complete audit trails** for compliance and debugging
@@ -487,6 +521,7 @@ This release completes the three-layer memory architecture, enabling:
 #### 🎯 Value Proposition Validated
 
 **Multi-Layer Retrieval Enhancement (Proof #7):**
+
 - Query "alice typescript" returns 2 base results (L2 + L3)
 - Graph enrichment discovers: +4 connected pieces (conversations, contexts, entity network)
 - **Enrichment Factor:** 2-5x more context for <100ms overhead
@@ -496,12 +531,14 @@ This release completes the three-layer memory architecture, enabling:
 #### 📊 Testing & Validation
 
 **Comprehensive Test Coverage:**
+
 - ✅ **29/29 Tests Passing** (15 unit tests + 14 E2E tests)
 - ✅ **7 Comprehensive Proofs** (basic CRUD, sync workflow, context chains, fact graphs, performance, agent networks, multi-layer enhancement)
 - ✅ **Validated on:** Neo4j Community (100%), Memgraph (80%)
 - ✅ **Both Convex Modes:** LOCAL and MANAGED deployments
 
 **End-to-End Multi-Layer Test:**
+
 - Complex 3,142-character realistic input
 - Validates complete cascade: L1a → L2 → L3 → L4 → Graph
 - Proves: Storage, retrieval, relationships, provenance, discovery
@@ -510,11 +547,13 @@ This release completes the three-layer memory architecture, enabling:
 #### 🏗️ Infrastructure
 
 **Development Setup:**
+
 - **Docker Compose:** Neo4j + Memgraph ready in <5 minutes
 - **Environment Variables:** Clean configuration pattern
 - **Documentation:** 15+ comprehensive documents (setup, integration, proofs, architecture)
 
 **Code Quality:**
+
 - Zero critical linter errors (2 non-critical warnings)
 - Full TypeScript type safety
 - Production-grade error handling
@@ -523,13 +562,29 @@ This release completes the three-layer memory architecture, enabling:
 #### 🔧 API Changes
 
 **New Exports:**
+
 ```typescript
 // Graph module
 export { CypherGraphAdapter } from "@cortexmemory/sdk/graph";
-export { initializeGraphSchema, verifyGraphSchema } from "@cortexmemory/sdk/graph";
-export { syncMemoryToGraph, syncFactToGraph, syncContextToGraph } from "@cortexmemory/sdk/graph";
-export { deleteMemoryFromGraph, deleteFactFromGraph } from "@cortexmemory/sdk/graph";
-export type { GraphAdapter, GraphNode, GraphEdge, GraphPath } from "@cortexmemory/sdk";
+export {
+  initializeGraphSchema,
+  verifyGraphSchema,
+} from "@cortexmemory/sdk/graph";
+export {
+  syncMemoryToGraph,
+  syncFactToGraph,
+  syncContextToGraph,
+} from "@cortexmemory/sdk/graph";
+export {
+  deleteMemoryFromGraph,
+  deleteFactFromGraph,
+} from "@cortexmemory/sdk/graph";
+export type {
+  GraphAdapter,
+  GraphNode,
+  GraphEdge,
+  GraphPath,
+} from "@cortexmemory/sdk";
 
 // Enhanced Cortex config
 export interface CortexConfig {
@@ -542,23 +597,29 @@ export interface CortexConfig {
 ```
 
 **Enhanced API Methods:**
+
 ```typescript
 // All methods now support syncToGraph option
 await cortex.vector.store(memorySpaceId, data, { syncToGraph: true });
 await cortex.facts.store(params, { syncToGraph: true });
 await cortex.contexts.create(params, { syncToGraph: true });
 await cortex.memory.remember(params, { syncToGraph: true }); // Default: true if graph configured
-await cortex.memory.forget(memoryId, { syncToGraph: true, deleteConversation: true }); // With cascade
+await cortex.memory.forget(memoryId, {
+  syncToGraph: true,
+  deleteConversation: true,
+}); // With cascade
 ```
 
 #### 📦 Dependencies
 
 **Added:**
+
 - `neo4j-driver` ^5.15.0 - Official Neo4j/Memgraph driver (78 packages)
 
 #### 📚 Documentation
 
 **New Documentation:**
+
 - `Documentation/07-advanced-topics/05-graph-database-setup.md` - Quick setup guide
 - `src/graph/README.md` - Module documentation and API reference
 - `dev-docs/E2E-TEST-RESULTS.md` - Complete test validation results
@@ -566,18 +627,21 @@ await cortex.memory.forget(memoryId, { syncToGraph: true, deleteConversation: tr
 - 10+ additional architecture and proof documentation files
 
 **Updated Documentation:**
+
 - `Documentation/07-advanced-topics/02-graph-database-integration.md` - Integration patterns
 - `Documentation/07-advanced-topics/04-graph-database-selection.md` - Database comparison
 
 #### 📈 Performance Characteristics
 
 **From Comprehensive Testing:**
+
 - **Sync Speed:** ~300 entities/second in batch mode
 - **Query Speed:** 4ms for 7-hop traversal (vs 15ms sequential Convex queries)
 - **Enrichment Overhead:** +90ms for 2-5x more context
 - **Speedup:** 3.8x faster for deep hierarchies (7+ levels)
 
 **Recommendation:**
+
 - Use Graph-Lite (built-in) for 1-3 hop queries and small datasets
 - Use Native Graph for 4+ hop queries, large datasets, and complex patterns
 
@@ -602,7 +666,7 @@ await cortex.memory.remember(params); // Works as before
 // Add graph with one config change
 const cortex = new Cortex({
   convexUrl: "...",
-  graph: { adapter: graphAdapter } // NEW - optional
+  graph: { adapter: graphAdapter }, // NEW - optional
 });
 await cortex.memory.remember(params); // Now auto-syncs to graph!
 ```
@@ -631,6 +695,7 @@ await cortex.memory.remember(params); // Now auto-syncs to graph!
 #### 🎯 Use Cases
 
 **When to Use Graph Integration:**
+
 - Deep context chains (5+ levels)
 - Knowledge graphs with entity relationships
 - Multi-hop reasoning requirements
@@ -639,6 +704,7 @@ await cortex.memory.remember(params); // Now auto-syncs to graph!
 - Large-scale fact databases (100s+ facts)
 
 **When Graph-Lite Suffices:**
+
 - Simple 1-3 hop queries
 - Small datasets (<50 entities)
 - Basic hierarchies

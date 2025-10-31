@@ -53,8 +53,7 @@ export class CypherGraphAdapter implements GraphAdapter {
         neo4j.auth.basic(config.username, config.password),
         {
           maxConnectionPoolSize: config.maxConnectionPoolSize || 50,
-          connectionAcquisitionTimeout:
-            config.connectionTimeout || 60000, // 60 seconds
+          connectionAcquisitionTimeout: config.connectionTimeout || 60000, // 60 seconds
           maxTransactionRetryTime: 30000, // 30 seconds
         },
       );
@@ -149,7 +148,10 @@ export class CypherGraphAdapter implements GraphAdapter {
 
       return result.records[0].get("id");
     } catch (error) {
-      throw this.handleError(error, `Failed to create node with label ${node.label}`);
+      throw this.handleError(
+        error,
+        `Failed to create node with label ${node.label}`,
+      );
     } finally {
       await session.close();
     }
@@ -495,7 +497,9 @@ export class CypherGraphAdapter implements GraphAdapter {
       return result.records.map((record) => ({
         id: record.get("id"),
         label: (record.get("labels") as string[])[0] || "Node",
-        properties: this.deserializeProperties(record.get("connected").properties),
+        properties: this.deserializeProperties(
+          record.get("connected").properties,
+        ),
       }));
     } catch (error) {
       throw this.handleError(
@@ -569,16 +573,18 @@ export class CypherGraphAdapter implements GraphAdapter {
       }
 
       // Extract relationships from path
-      const relationships: GraphEdge[] = pathObj.segments.map((segment: any) => {
-        const rel = segment.relationship;
-        return {
-          id: rel.elementId,
-          type: rel.type,
-          from: segment.start.elementId,
-          to: segment.end.elementId,
-          properties: this.deserializeProperties(rel.properties),
-        };
-      });
+      const relationships: GraphEdge[] = pathObj.segments.map(
+        (segment: any) => {
+          const rel = segment.relationship;
+          return {
+            id: rel.elementId,
+            type: rel.type,
+            from: segment.start.elementId,
+            to: segment.end.elementId,
+            properties: this.deserializeProperties(rel.properties),
+          };
+        },
+      );
 
       return {
         nodes,
@@ -618,7 +624,10 @@ export class CypherGraphAdapter implements GraphAdapter {
           }
 
           case "UPDATE_NODE": {
-            const data = op.data as { id: string; properties: Record<string, any> };
+            const data = op.data as {
+              id: string;
+              properties: Record<string, any>;
+            };
             const idFunc = this.getIdFunction();
             await tx.run(
               `MATCH (n) WHERE ${idFunc}(n) = $id SET n += $properties`,
@@ -633,10 +642,9 @@ export class CypherGraphAdapter implements GraphAdapter {
           case "DELETE_NODE": {
             const data = op.data as { id: string };
             const idFunc = this.getIdFunction();
-            await tx.run(
-              `MATCH (n) WHERE ${idFunc}(n) = $id DETACH DELETE n`,
-              { id: data.id },
-            );
+            await tx.run(`MATCH (n) WHERE ${idFunc}(n) = $id DETACH DELETE n`, {
+              id: data.id,
+            });
             break;
           }
 
@@ -662,10 +670,9 @@ export class CypherGraphAdapter implements GraphAdapter {
           case "DELETE_EDGE": {
             const data = op.data as { id: string };
             const idFunc = this.getIdFunction();
-            await tx.run(
-              `MATCH ()-[r]->() WHERE ${idFunc}(r) = $id DELETE r`,
-              { id: data.id },
-            );
+            await tx.run(`MATCH ()-[r]->() WHERE ${idFunc}(r) = $id DELETE r`, {
+              id: data.id,
+            });
             break;
           }
         }
@@ -826,8 +833,7 @@ export class CypherGraphAdapter implements GraphAdapter {
       throw error;
     }
 
-    const message =
-      error instanceof Error ? error.message : String(error);
+    const message = error instanceof Error ? error.message : String(error);
 
     throw new GraphDatabaseError(
       `${context}: ${message}`,
@@ -836,4 +842,3 @@ export class CypherGraphAdapter implements GraphAdapter {
     );
   }
 }
-

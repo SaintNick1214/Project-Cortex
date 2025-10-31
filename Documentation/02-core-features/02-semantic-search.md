@@ -1099,7 +1099,7 @@ const result = await cortex.memory.remember({
   agentResponse: "Got it!",
   userId: "user-123",
   userName: "Alex",
-  
+
   // Extract facts for structured knowledge
   extractFacts: async (userMsg, agentMsg) => {
     return [
@@ -1122,15 +1122,15 @@ const result = await cortex.memory.remember({
 // Search returns memories WITH extracted facts
 const memories = await cortex.memory.search("agent-1", "user preferences", {
   embedding: await embed("user preferences"),
-  enrichConversation: true,  // Facts automatically included
+  enrichConversation: true, // Facts automatically included
 });
 
-memories.forEach(memory => {
+memories.forEach((memory) => {
   console.log(`Memory: ${memory.memory.content}`);
-  
+
   // Access extracted facts
   if (memory.facts) {
-    memory.facts.forEach(fact => {
+    memory.facts.forEach((fact) => {
       console.log(`  Fact: ${fact.fact} (${fact.confidence}% confidence)`);
     });
   }
