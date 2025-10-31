@@ -10,12 +10,12 @@ The User Operations API (`cortex.users.*`) exists for **ONE primary reason**: **
 
 ### Primary Feature: GDPR Cascade Deletion
 
-> **Cortex Cloud Only**: Automatic cascade deletion requires a Cortex Cloud connection. Direct Mode requires manual deletion from each store (see examples below).
+> **Available in SDK**: Full cascade deletion is implemented in the open-source SDK. Cloud Mode adds legal guarantees, certificates, and managed graph integration.
 
 When a user requests data deletion (GDPR "right to be forgotten"), a single API call removes their data from **every store that contains an explicit `userId` reference**:
 
 ```typescript
-// Cortex Cloud: One call deletes from ALL stores with userId
+// SDK (Free) & Cloud Mode: One call deletes from ALL stores with userId
 await cortex.users.delete("user-123", { cascade: true });
 
 // Automatically deletes from:
@@ -23,52 +23,95 @@ await cortex.users.delete("user-123", { cascade: true });
 // ✅ Layer 1a (conversations.*) - All conversations with userId
 // ✅ Layer 1b (immutable.*) - All records with userId
 // ✅ Layer 1c (mutable.*) - All keys with userId
-// ✅ Layer 2 (vector.*) - All memories with userId (across ALL agents)
+// ✅ Layer 2 (vector.*) - All memories with userId (across ALL memory spaces)
+// ✅ Layer 3 (facts.*) - All facts referencing userId
+// ✅ Graph (if adapter configured) - All nodes with userId property
 ```
 
 **No other API provides this cross-layer, cross-store cascade capability.**
 
-**Direct Mode Alternative:**
+**Key Principle: Same Code, Different Context**
 
-Without Cortex Cloud, you can achieve GDPR compliance manually:
+- **Free SDK**: Full cascade implementation works when you provide graph adapter (DIY setup)
+- **Cloud Mode**: Same code, but adds legal certificates, guarantees, managed graph, and liability
+
+**What Cloud Mode Adds:**
+
+- **Legal Certificate of Deletion** - Compliance audit document for legal teams
+- **GDPR Liability Guarantee** - Cortex assumes legal responsibility
+- **Managed Graph Adapter** - Zero configuration, always works (no DIY setup)
+- **Compliance Audit Trail** - Immutable timestamped log of all deletions
+- **Verification Report** - Cryptographically signed proof that nothing was missed
+- **Insurance/Indemnification** - If deletion is incomplete, Cortex is liable
+- **Priority Support** - Expert help if issues arise
+
+**Free SDK vs Cloud Mode:**
+
+| Feature | Free SDK | Cloud Mode |
+|---------|----------|------------|
+| **Cascade Deletion** | ✅ Full implementation | ✅ Same implementation |
+| **Graph Support** | ✅ Works with DIY adapter | ✅ Managed, zero-config |
+| **Verification** | ✅ Best-effort checks | ✅ Cryptographic proof |
+| **Rollback** | ✅ Transaction-like rollback | ✅ Same + audit trail |
+| **Legal Certificate** | ❌ None | ✅ Compliance document |
+| **GDPR Liability** | ❌ User responsible | ✅ Cortex liable |
+| **Support** | Community | Priority + SLA |
+
+The free SDK provides the **technical capability**, Cloud Mode provides the **legal guarantees**.
+
+**Implementation Details:**
+
+The SDK implements cascade deletion using a three-phase approach:
+
+1. **Collection Phase**: Gather all records to delete across all layers
+2. **Backup Phase**: Create rollback snapshots of all records
+3. **Deletion Phase**: Delete in reverse dependency order with automatic rollback on failure
 
 ```typescript
-// Direct Mode: Manual deletion from each store
-async function deleteUserDataManually(userId: string) {
-  // 1. Delete from conversations (Layer 1a)
-  const conversations = await cortex.conversations.list({ userId });
-  for (const conv of conversations) {
-    await cortex.conversations.delete(conv.id);
-  }
+// Example: Full cascade deletion with verification
+const result = await cortex.users.delete("user-123", {
+  cascade: true,   // Enable cascade across all layers
+  verify: true,    // Verify completeness after deletion (default)
+  dryRun: false,   // Preview without deleting (optional)
+});
 
-  // 2. Delete from immutable store (Layer 1b)
-  const immutableRecords = await cortex.immutable.list({ userId });
-  for (const record of immutableRecords) {
-    await cortex.immutable.purge(record.type, record.id);
-  }
-
-  // 3. Delete from mutable store (Layer 1c)
-  const namespaces = ["user-sessions", "user-cache", "user-prefs"];
-  for (const ns of namespaces) {
-    await cortex.mutable.purgeMany(ns, { userId });
-  }
-
-  // 4. Delete from vector memories (Layer 2)
-  const agents = await cortex.agents.list();
-  for (const agent of agents) {
-    await cortex.memory.deleteMany(agent.id, { userId });
-  }
-
-  // 5. Delete user profile
-  await cortex.immutable.purge("user", userId);
-
-  return { success: true };
-}
-
-// Usage
-await deleteUserDataManually("user-123");
-// Works, but requires ~30 lines of code vs 1 line with Cloud
+// Result includes detailed breakdown
+console.log(`Deleted ${result.totalDeleted} records across ${result.deletedLayers.length} layers`);
+console.log(`Conversations: ${result.conversationsDeleted}`);
+console.log(`Vector memories: ${result.vectorMemoriesDeleted}`);
+console.log(`Facts: ${result.factsDeleted}`);
+console.log(`Graph nodes: ${result.graphNodesDeleted || 'N/A (no adapter)'}`);
+console.log(`Verification: ${result.verification.complete ? 'Complete' : 'Issues found'}`);
 ```
+
+**Graph Integration:**
+
+Cascade deletion includes graph nodes if you provide a graph adapter:
+
+```typescript
+import { CypherGraphAdapter } from "@cortex-platform/sdk/graph";
+
+// Configure graph adapter (DIY in free SDK)
+const graphAdapter = new CypherGraphAdapter({
+  uri: process.env.NEO4J_URI,
+  username: process.env.NEO4J_USER,
+  password: process.env.NEO4J_PASSWORD,
+});
+
+// Initialize Cortex with graph
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL,
+  graph: {
+    adapter: graphAdapter,
+  },
+});
+
+// Now cascade deletion includes graph!
+await cortex.users.delete("user-123", { cascade: true });
+// Deletes from Convex (conversations, immutable, mutable, vector, facts) AND graph
+```
+
+In Cloud Mode, the graph adapter is provided and managed automatically.
 
 ### Secondary Feature: Semantic Convenience
 
@@ -377,9 +420,9 @@ await cortex.users.update(
 
 ### delete()
 
-Delete a user profile with optional cascade to delete all associated data.
+Delete a user profile with optional cascade to delete all associated data across all layers.
 
-> **Cloud Mode Feature**: The `cascade` option requires Cortex Cloud. In Direct Mode, use manual deletion (see examples).
+> **Fully Implemented in SDK**: Cascade deletion with verification and rollback is available in the free SDK. Cloud Mode adds legal certificates and guarantees.
 
 **Signature:**
 
@@ -387,116 +430,136 @@ Delete a user profile with optional cascade to delete all associated data.
 cortex.users.delete(
   userId: string,
   options?: DeleteOptions
-): Promise<DeleteResult>
+): Promise<UserDeleteResult>
 ```
 
 **Parameters:**
 
 ```typescript
 interface DeleteOptions {
-  cascade?: boolean; // Delete from ALL stores with userId (default: false)
-
-  // Granular control (all default to true if cascade=true)
-  deleteFromConversations?: boolean; // Layer 1a: conversations.*
-  deleteFromImmutable?: boolean; // Layer 1b: immutable.* (excluding user profile)
-  deleteFromMutable?: boolean; // Layer 1c: mutable.*
-  deleteFromVector?: boolean; // Layer 2: vector.*
-
-  auditReason?: string; // Why deletion happened
+  cascade?: boolean;  // Delete from ALL stores with userId (default: false)
+  verify?: boolean;   // Verify deletion completeness (default: true)
+  dryRun?: boolean;   // Preview what would be deleted without actually deleting (default: false)
 }
 ```
 
 **Returns:**
 
 ```typescript
-interface DeleteResult {
-  profileDeleted: boolean;
+interface UserDeleteResult {
   userId: string;
-  deletedAt: Date;
-  auditReason?: string;
+  deletedAt: number;
 
-  // Layer 1a: Conversations
-  conversationsDeleted?: number;
-  totalMessagesDeleted?: number;
+  // Per-layer deletion counts
+  conversationsDeleted: number;
+  conversationMessagesDeleted: number;
+  immutableRecordsDeleted: number;
+  mutableKeysDeleted: number;
+  vectorMemoriesDeleted: number;
+  factsDeleted: number;
+  graphNodesDeleted?: number; // Undefined if no graph adapter
 
-  // Layer 1b: Immutable (user-linked records)
-  immutableRecordsDeleted?: number;
-  immutableTypes?: string[]; // Which types were affected
-
-  // Layer 1c: Mutable (user-linked keys)
-  mutableRecordsDeleted?: number;
-  mutableNamespaces?: string[]; // Which namespaces were affected
-
-  // Layer 2: Vector
-  vectorMemoriesDeleted?: number;
-  agentsAffected?: string[];
+  // Verification results
+  verification: {
+    complete: boolean;
+    issues: string[]; // Any problems found during verification
+  };
 
   // Summary
-  totalRecordsDeleted: number; // Sum across all stores
-  restorable: boolean; // False if any Layer 1 data deleted
+  totalDeleted: number;        // Sum of all deleted records
+  deletedLayers: string[];     // Which layers were affected
 }
 ```
 
-**Example 1: Delete profile only**
+**Implementation Details:**
+
+The SDK uses a three-phase approach for cascade deletion:
+
+1. **Collection Phase**: Gathers all records to delete across all layers (conversations, immutable, mutable, vector, facts, graph)
+2. **Backup Phase**: Creates rollback snapshots of all records in case deletion fails
+3. **Deletion Phase**: Deletes in reverse dependency order (facts → vector → mutable → immutable → conversations → graph → user profile)
+
+If any deletion fails, the SDK automatically rolls back all changes using the backups.
+
+**Example 1: Delete profile only (no cascade)**
 
 ```typescript
-// Delete just the profile
+// Delete just the user profile (default behavior)
 const result = await cortex.users.delete("user-123");
 
-console.log(`Profile deleted: ${result.profileDeleted}`);
-// User's memories in agents are preserved
+console.log(`Deleted at: ${new Date(result.deletedAt)}`);
+console.log(`Total deleted: ${result.totalDeleted}`); // 1 (just the profile)
+console.log(`Layers affected: ${result.deletedLayers}`); // ['user-profile']
 ```
 
-**Example 2: GDPR Cascade Deletion (Cortex Cloud)**
+**Example 2: GDPR Cascade Deletion (SDK & Cloud)**
 
 ```typescript
-// Cortex Cloud: Delete profile + ALL data with explicit userId references
+// Delete profile + ALL data with explicit userId references
 const result = await cortex.users.delete("user-123", {
   cascade: true,
-  auditReason: "GDPR right to be forgotten request",
+  verify: true, // Verify nothing was missed (default)
 });
 
-console.log(`Profile deleted: ${result.profileDeleted}`);
-
-// Layer 1a: Conversations
+// Per-layer breakdown
 console.log(`Conversations deleted: ${result.conversationsDeleted}`);
-console.log(`Total messages: ${result.totalMessagesDeleted}`);
-
-// Layer 1b: Immutable (user-linked records like feedback, submissions)
+console.log(`  Messages in those conversations: ${result.conversationMessagesDeleted}`);
 console.log(`Immutable records deleted: ${result.immutableRecordsDeleted}`);
-console.log(`Types affected: ${result.immutableTypes.join(", ")}`);
-// e.g., ['feedback', 'survey-response', 'user-submission']
-
-// Layer 1c: Mutable (user-linked live data like preferences, sessions)
-console.log(`Mutable records deleted: ${result.mutableRecordsDeleted}`);
-console.log(`Namespaces affected: ${result.mutableNamespaces.join(", ")}`);
-// e.g., ['user-sessions', 'user-preferences', 'user-cache']
-
-// Layer 2: Vector
+console.log(`Mutable keys deleted: ${result.mutableKeysDeleted}`);
 console.log(`Vector memories deleted: ${result.vectorMemoriesDeleted}`);
-console.log(`Agents affected: ${result.agentsAffected.join(", ")}`);
+console.log(`Facts deleted: ${result.factsDeleted}`);
+console.log(`Graph nodes deleted: ${result.graphNodesDeleted || 'N/A (no graph)'}`);
 
 // Summary
-console.log(`Total records deleted: ${result.totalRecordsDeleted}`);
-console.log(`Restorable: ${result.restorable}`); // false - complete deletion
+console.log(`Total records deleted: ${result.totalDeleted}`);
+console.log(`Layers affected: ${result.deletedLayers.join(", ")}`);
+
+// Verification
+if (result.verification.complete) {
+  console.log("✅ Deletion verified - no orphaned records");
+} else {
+  console.warn("⚠️ Verification issues:");
+  result.verification.issues.forEach(issue => console.warn(`  - ${issue}`));
+}
 ```
 
-**Example 3: Selective Cascade (Cortex Cloud - Preserve Audit Trail)**
+**Example 3: Dry Run (Preview Without Deleting)**
 
 ```typescript
-// Cortex Cloud: Delete user data but preserve conversation audit trail
-const result = await cortex.users.delete("user-123", {
+// Preview what would be deleted without actually deleting
+const preview = await cortex.users.delete("user-123", {
   cascade: true,
-  deleteFromConversations: false, // Keep Layer 1a for audit
-  deleteFromImmutable: true, // Delete Layer 1b
-  deleteFromMutable: true, // Delete Layer 1c
-  deleteFromVector: true, // Delete Layer 2
-  auditReason: "User account closure (preserve audit trail)",
+  dryRun: true,  // Just preview, don't delete
 });
 
-console.log(`Conversations preserved: ${result.conversationsDeleted === 0}`);
-console.log(`Other data deleted: ${result.totalRecordsDeleted}`);
-console.log(`Restorable: ${result.restorable}`); // true (conversations exist)
+console.log(`Would delete ${preview.totalDeleted} records across ${preview.deletedLayers.length} layers`);
+console.log(`Conversations: ${preview.conversationsDeleted}`);
+console.log(`Vector memories: ${preview.vectorMemoriesDeleted}`);
+console.log(`Facts: ${preview.factsDeleted}`);
+
+// User still exists after dry run
+const user = await cortex.users.get("user-123");
+console.log(`User still exists: ${user !== null}`); // true
+```
+
+**Example 4: Automatic Rollback on Failure**
+
+```typescript
+try {
+  // If any deletion fails, everything is rolled back automatically
+  const result = await cortex.users.delete("user-123", {
+    cascade: true,
+  });
+  console.log("Deletion successful!");
+} catch (error) {
+  if (error instanceof CascadeDeletionError) {
+    console.error("Deletion failed and was rolled back:");
+    console.error(error.message);
+    // All deleted records have been restored
+    const user = await cortex.users.get("user-123");
+    console.log(`User restored: ${user !== null}`); // true
+  }
+}
 ```
 
 **Example 4: Granular Control (Cortex Cloud)**

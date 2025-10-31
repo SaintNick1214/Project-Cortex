@@ -14,6 +14,7 @@ import { MemoryAPI } from "./memory";
 import { FactsAPI } from "./facts";
 import { MemorySpacesAPI } from "./memorySpaces";
 import { ContextsAPI } from "./contexts";
+import { UsersAPI } from "./users";
 import type { GraphAdapter } from "./graph/types";
 import { GraphSyncWorker, type GraphSyncWorkerOptions } from "./graph/worker/GraphSyncWorker";
 
@@ -73,6 +74,9 @@ export class Cortex {
   // Layer 4: Memory Convenience API
   public memory: MemoryAPI;
 
+  // Coordination: User Management
+  public users: UsersAPI;
+
   constructor(config: CortexConfig) {
     // Initialize Convex client
     this.client = new ConvexClient(config.convexUrl);
@@ -89,6 +93,7 @@ export class Cortex {
     this.contexts = new ContextsAPI(this.client, graphAdapter);
     this.memorySpaces = new MemorySpacesAPI(this.client, graphAdapter);
     this.memory = new MemoryAPI(this.client, graphAdapter);
+    this.users = new UsersAPI(this.client, graphAdapter);
 
     // Start graph sync worker if enabled
     if (config.graph?.autoSync && graphAdapter) {

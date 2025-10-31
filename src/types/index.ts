@@ -690,6 +690,95 @@ export interface MemorySpaceStats {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Coordination: User Operations API
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export interface UserProfile {
+  id: string;
+  data: Record<string, unknown>;
+  version: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface UserVersion {
+  version: number;
+  data: Record<string, unknown>;
+  timestamp: number;
+}
+
+export interface DeleteUserOptions {
+  /** Enable cascade deletion across all layers (default: false) */
+  cascade?: boolean;
+  /** Run verification after deletion (default: true) */
+  verify?: boolean;
+  /** Preview what would be deleted without actually deleting (default: false) */
+  dryRun?: boolean;
+}
+
+export interface UserDeleteResult {
+  userId: string;
+  deletedAt: number;
+
+  // Per-layer counts
+  conversationsDeleted: number;
+  conversationMessagesDeleted: number;
+  immutableRecordsDeleted: number;
+  mutableKeysDeleted: number;
+  vectorMemoriesDeleted: number;
+  factsDeleted: number;
+  graphNodesDeleted?: number; // Optional if graph not configured
+
+  // Verification
+  verification: {
+    complete: boolean;
+    issues: string[];
+  };
+
+  // Summary
+  totalDeleted: number;
+  deletedLayers: string[];
+}
+
+export interface DeletionPlan {
+  conversations: Conversation[];
+  immutable: ImmutableRecord[];
+  mutable: MutableRecord[];
+  vector: MemoryEntry[];
+  facts: FactRecord[];
+  graph: Array<{ nodeId: string; labels: string[] }>;
+  userProfile: UserProfile | null;
+}
+
+export interface DeletionBackup {
+  conversations: Conversation[];
+  immutable: ImmutableRecord[];
+  mutable: MutableRecord[];
+  vector: MemoryEntry[];
+  facts: FactRecord[];
+  userProfile: UserProfile | null;
+}
+
+export interface VerificationResult {
+  complete: boolean;
+  issues: string[];
+}
+
+export interface ListUsersFilter {
+  limit?: number;
+  offset?: number;
+}
+
+export interface UserFilters {
+  limit?: number;
+}
+
+export interface ExportUsersOptions {
+  filters?: UserFilters;
+  format: "json" | "csv";
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Graph Integration Options (syncToGraph pattern across all APIs)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

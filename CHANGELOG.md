@@ -19,6 +19,144 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.8.0] - 2025-10-31
+
+#### 🆕 Users API - GDPR Cascade Deletion
+
+**Complete implementation of `cortex.users.*` Coordination Layer API** with full GDPR compliance capabilities.
+
+#### ✨ New Features
+
+**1. Full User CRUD Operations**
+
+- **NEW:** `cortex.users.get(userId)` - Retrieve user profile by ID
+- **NEW:** `cortex.users.update(userId, data)` - Create or update user profile (automatic versioning)
+- **NEW:** `cortex.users.delete(userId, options)` - Delete user profile with optional cascade
+- **NEW:** `cortex.users.list(filters)` - List user profiles with pagination
+- **NEW:** `cortex.users.search(filters)` - Search user profiles
+- **NEW:** `cortex.users.count(filters)` - Count user profiles
+- **NEW:** `cortex.users.exists(userId)` - Check if user profile exists
+- **NEW:** `cortex.users.export(options)` - Export user profiles (JSON/CSV)
+
+**2. Version Operations**
+
+- **NEW:** `cortex.users.getVersion(userId, version)` - Retrieve specific version of user profile
+- **NEW:** `cortex.users.getHistory(userId)` - Get complete version history
+- **NEW:** `cortex.users.getAtTimestamp(userId, timestamp)` - Time-travel queries
+
+**3. GDPR Cascade Deletion (Same Code for Free SDK & Cloud Mode)**
+
+- **NEW:** Three-phase cascade deletion: Collection → Backup → Execution with rollback
+- **Deletes from ALL layers with userId**:
+  - ✅ Conversations (Layer 1a)
+  - ✅ Immutable records (Layer 1b)
+  - ✅ Mutable keys (Layer 1c)
+  - ✅ Vector memories (Layer 2)
+  - ✅ Facts (Layer 3)
+  - ✅ **Graph nodes** (when adapter configured)
+  - ✅ User profile (deleted last)
+- **Transaction-like rollback** - Automatic rollback on failure with best-effort restoration
+- **Verification step** - Checks for orphaned records after deletion
+- **Dry run mode** - Preview deletions without executing
+- **Graph orphan detection** - Uses `deleteWithOrphanCleanup()` for proper orphan island detection
+- **Detailed reporting** - Per-layer deletion counts and affected layers list
+
+**4. Free SDK vs Cloud Mode Architecture**
+
+- **Same Code**: Full cascade deletion implemented in open-source SDK
+- **Free SDK**: Works when user provides graph adapter (DIY setup)
+- **Cloud Mode Adds**: Legal certificates, GDPR liability guarantees, managed graph adapter, compliance audit trail
+- **Graph Integration**: Cascade includes graph nodes when adapter configured
+- **Orphan Cleanup**: Automatically detects and removes orphan islands during cascade
+
+#### 📊 Type Additions
+
+**New Interfaces:**
+- `UserProfile` - User profile with version and timestamps
+- `UserVersion` - Historical version snapshot
+- `DeleteUserOptions` - Cascade, verify, and dry run options
+- `UserDeleteResult` - Comprehensive deletion report with per-layer counts
+- `DeletionPlan` - Collection phase result
+- `DeletionBackup` - Rollback snapshots
+- `VerificationResult` - Post-deletion verification
+- `ListUsersFilter`, `UserFilters`, `ExportUsersOptions`
+
+**New Error Class:**
+- `CascadeDeletionError` - Thrown on cascade deletion failures (after rollback)
+
+#### 🏗️ Architecture
+
+**Convex Backend:**
+- **NEW:** `convex-dev/users.ts` - Backend queries/mutations for user operations
+- Delegates to `immutable.*` with `type='user'`
+- Cascade deletion orchestrated in SDK layer for better control
+
+**SDK Layer:**
+- **NEW:** `src/users/index.ts` - UsersAPI class with 1000+ lines
+- **NEW:** Integration with graph orphan detection system
+- **UPDATED:** `src/index.ts` - Added `users` property to Cortex class
+- **UPDATED:** `src/types/index.ts` - Added 9 user-related type definitions
+
+#### 🧪 Testing
+
+**Comprehensive Test Suite:**
+- **NEW:** `tests/users.test.ts` - 23 E2E tests covering all operations
+- **Tests cover**:
+  - All CRUD operations with storage validation
+  - Version operations (getVersion, getHistory, getAtTimestamp)
+  - Simple deletion (profile only)
+  - Full cascade deletion across all layers
+  - **Graph integration** (automatic when env vars set)
+  - Dry run mode
+  - Verification with/without graph adapter
+  - Export (JSON & CSV)
+  - Edge cases (non-existent users, concurrent updates)
+  - Integration with other APIs
+- **Graph testing**: Automatically detects NEO4J_URI env vars and tests graph cascade
+- **All tests pass**: 23/23 on both LOCAL and MANAGED environments
+
+**Test Results:**
+```
+✅ Graph cascade: Deleted 1 nodes
+✅ Integration test complete: Deleted from 4 layers
+   Layers: vector, conversations, graph, user-profile
+🎉 SUCCESS: All test suites passed!
+   ✅ Local tests: PASSED (23 tests)
+   ✅ Managed tests: PASSED (23 tests)
+```
+
+#### 📚 Documentation
+
+**UPDATED:** `Documentation/03-api-reference/04-user-operations.md`
+- Complete API reference for all user operations
+- Clear free SDK vs Cloud Mode differentiation
+- Graph integration examples with DIY adapter setup
+- Implementation details (three-phase approach)
+- Multiple code examples for each operation
+
+#### 🎯 Key Achievements
+
+**Free SDK vs Cloud Mode Strategy Validated:**
+- ✅ Same code works for both free and managed deployments
+- ✅ Graph cascade works with DIY adapter (free) or managed adapter (Cloud)
+- ✅ Differentiation is legal guarantees, not technical restrictions
+- ✅ Orphan detection included in free SDK
+
+**Production Ready:**
+- ✅ 23 comprehensive E2E tests (100% passing)
+- ✅ Storage validation for all operations
+- ✅ Graph integration tested with both Neo4j and Memgraph
+- ✅ Transaction-like rollback on failures
+- ✅ Orphan detection and island cleanup
+- ✅ No linter errors
+
+#### 🔗 Related Issues
+
+- Implements Coordination Layer Users API from roadmap
+- Closes gap: 4 pending APIs → 3 pending APIs (users, agents, a2a, governance)
+
+---
+
 ### [0.7.1] - 2025-10-31
 
 #### 🔗 Facts Layer Integration into Memory API
