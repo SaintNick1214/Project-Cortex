@@ -99,23 +99,20 @@ jobs:
           git push origin "v$VERSION"
 
       - name: Create GitHub Release
-        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ needs.check-version.outputs.new-version }}
-          release_name: v${{ needs.check-version.outputs.new-version }}
-          body: |
-            ## Release v${{ needs.check-version.outputs.new-version }}
+          VERSION: ${{ needs.check-version.outputs.new-version }}
+        run: |
+          gh release create "v$VERSION" \
+            --title "v$VERSION" \
+            --notes "## Release v$VERSION
 
-            See [CHANGELOG.md](https://github.com/SaintNick1214/Project-Cortex/blob/main/CHANGELOG.md) for details.
+          See [CHANGELOG.md](https://github.com/SaintNick1214/Project-Cortex/blob/main/CHANGELOG.md) for details.
 
-            ### Install
-            ```bash
-            npm install @cortexmemory/sdk@${{ needs.check-version.outputs.new-version }}
-            ```
-          draft: false
-          prerelease: false
+          ### Install
+          \`\`\`bash
+          npm install @cortexmemory/sdk@$VERSION
+          \`\`\`"
 
       - name: Verify npm publish
         run: |
