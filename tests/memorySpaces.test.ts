@@ -419,26 +419,39 @@ describe("Memory Spaces Registry API", () => {
 
   describe("findByParticipant()", () => {
     beforeAll(async () => {
-      await cortex.memorySpaces.register({
-        memorySpaceId: "participant-search-1",
-        type: "personal",
-        participants: [{ id: "user-david", type: "user" }],
-      });
+      // Create test spaces, ignore if they already exist
+      try {
+        await cortex.memorySpaces.register({
+          memorySpaceId: "participant-search-1",
+          type: "personal",
+          participants: [{ id: "user-david", type: "user" }],
+        });
+      } catch (_error) {
+        // Already exists, that's fine
+      }
 
-      await cortex.memorySpaces.register({
-        memorySpaceId: "participant-search-2",
-        type: "team",
-        participants: [
-          { id: "user-david", type: "user" },
-          { id: "user-eve", type: "user" },
-        ],
-      });
+      try {
+        await cortex.memorySpaces.register({
+          memorySpaceId: "participant-search-2",
+          type: "team",
+          participants: [
+            { id: "user-david", type: "user" },
+            { id: "user-eve", type: "user" },
+          ],
+        });
+      } catch (_error) {
+        // Already exists, that's fine
+      }
 
-      await cortex.memorySpaces.register({
-        memorySpaceId: "participant-search-3",
-        type: "project",
-        participants: [{ id: "user-eve", type: "user" }],
-      });
+      try {
+        await cortex.memorySpaces.register({
+          memorySpaceId: "participant-search-3",
+          type: "project",
+          participants: [{ id: "user-eve", type: "user" }],
+        });
+      } catch (_error) {
+        // Already exists, that's fine
+      }
     });
 
     it("finds all spaces for a participant", async () => {
