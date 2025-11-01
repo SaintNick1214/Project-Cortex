@@ -175,14 +175,14 @@ export class UsersAPI {
         mutableKeysDeleted: 0,
         vectorMemoriesDeleted: 0,
         factsDeleted: 0,
-        ...(this.graphAdapter ? { graphNodesDeleted: 0 } : {}),
+        graphNodesDeleted: 0,
         verification: {
           complete: true,
           issues: [],
         },
         totalDeleted: dryRun ? 0 : 1,
         deletedLayers: dryRun ? [] : ["user-profile"],
-      } as UserDeleteResult;
+      };
     }
 
     // PHASE 1: Collect all records (verification)
@@ -692,7 +692,7 @@ export class UsersAPI {
       mutableKeysDeleted: 0,
       vectorMemoriesDeleted: 0,
       factsDeleted: 0,
-      ...(this.graphAdapter ? { graphNodesDeleted: 0 } : {}),
+      graphNodesDeleted: 0,
       verification: {
         complete: false,
         issues: [],
