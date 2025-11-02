@@ -16,7 +16,9 @@ const require = createRequire(import.meta.url);
  */
 export async function commandExists(command: string): Promise<boolean> {
   return new Promise((resolve) => {
-    const child = spawn('which', [command], { shell: true });
+    // Use platform-specific command (which for Unix, where for Windows)
+    const cmd = process.platform === 'win32' ? 'where' : 'which';
+    const child = spawn(cmd, [command]);
     child.on('close', (code) => resolve(code === 0));
   });
 }
@@ -32,7 +34,6 @@ export async function execCommand(
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, {
       ...options,
-      shell: true,
       env: { ...process.env, ...options.env },
     });
 
@@ -68,7 +69,6 @@ export async function execCommandLive(
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, {
       ...options,
-      shell: true,
       stdio: 'inherit',
       env: { ...process.env, ...options.env },
     });

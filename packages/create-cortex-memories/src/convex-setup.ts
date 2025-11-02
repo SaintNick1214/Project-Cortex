@@ -28,15 +28,18 @@ export async function setupNewConvex(projectPath: string): Promise<ConvexConfig>
   try {
     // Run convex dev --once --until-success
     // This will prompt user to login if needed and create a project
-    const convexCommand = hasConvex ? 'convex' : 'npx convex';
-    
     spinner.stop();
     console.log(pc.dim('   Running Convex setup (this may prompt for login)...'));
     console.log(pc.dim('   Follow the prompts to create your Convex project\n'));
 
+    const command = hasConvex ? 'convex' : 'npx';
+    const args = hasConvex 
+      ? ['dev', '--once', '--until-success']
+      : ['convex', 'dev', '--once', '--until-success'];
+
     const exitCode = await execCommandLive(
-      convexCommand,
-      ['dev', '--once', '--until-success'],
+      command,
+      args,
       { cwd: projectPath }
     );
 
@@ -158,7 +161,7 @@ export async function setupLocalConvex(): Promise<ConvexConfig> {
   
   console.log(pc.green('   ✓ Local Convex configured'));
   console.log(pc.dim(`   URL: ${localUrl}`));
-  console.log(pc.dim('   Run "npx convex dev --local" to start the local server'));
+  console.log(pc.dim('   Deployment will happen automatically in the next step'));
 
   return {
     convexUrl: localUrl,
@@ -168,10 +171,14 @@ export async function setupLocalConvex(): Promise<ConvexConfig> {
 
 /**
  * Deploy Cortex backend functions to Convex
+ * @param projectPath - Path to the project
+ * @param config - Convex configuration
+ * @param isLocal - Whether this is a local deployment
  */
 export async function deployConvexBackend(
   projectPath: string,
-  config: ConvexConfig
+  config: ConvexConfig,
+  isLocal: boolean = false
 ): Promise<void> {
   console.log(pc.cyan('\n🚀 Deploying Cortex backend to Convex...'));
 
@@ -180,18 +187,36 @@ export async function deployConvexBackend(
   try {
     // Check if convex CLI is available
     const hasConvex = await commandExists('convex');
-    const convexCommand = hasConvex ? 'convex' : 'npx convex';
+    
+    // Build command and args based on whether convex is installed globally
+    let command: string;
+    let args: string[];
+    
+    if (hasConvex) {
+      command = 'convex';
+      args = ['dev', '--once', '--until-success'];
+    } else {
+      command = 'npx';
+      args = ['convex', 'dev', '--once', '--until-success'];
+    }
+    
+    if (isLocal) {
+      args.push('--local');
+    }
 
     // Set environment for deployment
     const env = {
+      ...process.env,
       CONVEX_URL: config.convexUrl,
       ...(config.deployKey && { CONVEX_DEPLOY_KEY: config.deployKey }),
+      // Enable agent mode for non-interactive deployment
+      ...(isLocal && { CONVEX_AGENT_MODE: 'anonymous' }),
     };
 
     // Run convex dev --once to deploy the schema and functions
     const result = await execCommand(
-      convexCommand,
-      ['dev', '--once', '--until-success'],
+      command,
+      args,
       { cwd: projectPath, env }
     );
 
@@ -201,8 +226,12 @@ export async function deployConvexBackend(
       throw new Error('Failed to deploy Cortex backend');
     }
 
-    spinner.succeed('Cortex backend deployed successfully');
-    console.log(pc.dim('   All functions and schema are now available'));
+    spinner.succeed('Backend deployed to Convex');
+    if (isLocal) {
+      console.log(pc.dim('   Local Convex is now running at ' + config.convexUrl));
+    } else {
+      console.log(pc.dim('   All functions and schema are deployed'));
+    }
   } catch (error) {
     spinner.fail('Deployment failed');
     throw error;

@@ -4,17 +4,20 @@
   "description": "AI agent with Cortex Memory SDK",
   "type": "module",
   "scripts": {
-    "dev": "convex dev",
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "dev": "node dev-runner.mjs",
+    "build": "tsc && npm run build:convex",
+    "build:convex": "convex deploy",
+    "start": "tsx --env-file=.env.local src/index.ts"
   },
   "dependencies": {
     "@cortexmemory/sdk": "^0.8.0",
-    "convex": "^1.28.0"
+    "convex": "^1.28.0",
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.0",
+    "tsx": "^4.20.0"
   }
 }
 
