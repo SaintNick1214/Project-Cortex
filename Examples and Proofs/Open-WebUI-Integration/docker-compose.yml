@@ -1,0 +1,157 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # Cortex Bridge (Node.js Service)
+  # ============================================
+  cortex-bridge:
+    build:
+      context: ./src/cortex-bridge
+      dockerfile: Dockerfile
+    container_name: cortex-bridge
+    ports:
+      - "3000:3000"
+    environment:
+      # Convex
+      - CONVEX_URL=${CONVEX_URL}
+      
+      # OpenAI (for embeddings)
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      
+      # Server config
+      - PORT=3000
+      - HOST=0.0.0.0
+      - NODE_ENV=${NODE_ENV:-production}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      
+      # Feature flags
+      - ENABLE_FACTS_EXTRACTION=${ENABLE_FACTS_EXTRACTION:-true}
+      - ENABLE_CONTEXT_CHAINS=${ENABLE_CONTEXT_CHAINS:-true}
+      - ENABLE_MULTI_AGENT=${ENABLE_MULTI_AGENT:-true}
+    volumes:
+      # Logs persistence
+      - cortex-logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - cortex-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # ============================================
+  # Open WebUI (Frontend + Backend)
+  # NOTE: This is a reference configuration
+  # In production, you'd use the official Open WebUI image
+  # and mount the middleware as a volume
+  # ============================================
+  # open-webui:
+  #   image: ghcr.io/open-webui/open-webui:latest
+  #   container_name: open-webui
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     # Cortex Integration
+  #     - CORTEX_BRIDGE_URL=http://cortex-bridge:3000
+  #     - ENABLE_CORTEX_MEMORY=true
+  #     
+  #     # Database
+  #     - DATABASE_URL=${DATABASE_URL:-sqlite:///app/backend/data/webui.db}
+  #     
+  #     # Security
+  #     - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
+  #     - WEBUI_JWT_SECRET_KEY=${WEBUI_JWT_SECRET_KEY}
+  #     
+  #     # LLM Providers
+  #     - OPENAI_API_KEY=${OPENAI_API_KEY}
+  #     - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+  #     - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+  #   volumes:
+  #     # Persistent data
+  #     - open-webui-data:/app/backend/data
+  #     
+  #     # Custom middleware
+  #     - ./src/openwebui-middleware:/app/backend/custom
+  #   depends_on:
+  #     cortex-bridge:
+  #       condition: service_healthy
+  #   restart: unless-stopped
+  #   networks:
+  #     - cortex-network
+
+  # ============================================
+  # PostgreSQL (Production Database)
+  # Optional: Use for production instead of SQLite
+  # ============================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-openwebui}
+      - POSTGRES_USER=${POSTGRES_USER:-openwebui}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - cortex-network
+    profiles:
+      - production
+
+  # ============================================
+  # Redis (Optional: Caching & Rate Limiting)
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    networks:
+      - cortex-network
+    profiles:
+      - production
+
+  # ============================================
+  # Nginx (Reverse Proxy for Production)
+  # ============================================
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      cortex-bridge:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - cortex-network
+    profiles:
+      - production
+
+volumes:
+  open-webui-data:
+    driver: local
+  cortex-logs:
+    driver: local
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+
+networks:
+  cortex-network:
+    driver: bridge
+    name: cortex-network
+
