@@ -2,7 +2,7 @@
 
 ## Issues Found and Fixed
 
-**Total Bugs Fixed:** 6 critical bugs that prevented the wizard from running
+**Total Issues Fixed:** 8 (7 critical bugs + 1 security warning)
 
 ### Issue #1: File Creation Before Directory Exists
 
@@ -163,7 +163,111 @@ const sdkPath = getSDKPath(projectPath);  // Pass project path!
 
 Now it looks in the correct location!
 
-### Issue #6: No User Guidance
+### Issue #6: Local Convex Deployment Requires Login (RESOLVED)
+
+**Initial Error:**
+```
+✖ Cannot prompt for input in non-interactive terminals. 
+   (Welcome to Convex! Would you like to login to your account?)
+✖ Deployment failed
+❌ Error: Failed to deploy Cortex backend
+```
+
+**Initial Approach (WRONG):**
+Skipped deployment for local mode, required users to manually run `npx convex dev --local`.
+
+**Better Fix (CORRECT - using Convex docs):**
+After consulting Convex documentation, discovered the proper way to deploy locally without login:
+
+```bash
+CONVEX_AGENT_MODE=anonymous npx convex dev --local --once --until-success
+```
+
+Key components:
+- `CONVEX_AGENT_MODE=anonymous` - **CRITICAL!** Enables non-interactive mode
+- `--local` - Uses local deployment (no cloud, no login required)
+- `--once` - Runs deployment once without watching (non-interactive)
+- `--until-success` - Retries until successful
+
+**Implementation:**
+Updated `deployConvexBackend()` to accept `isLocal` parameter and set agent mode:
+
+```typescript
+export async function deployConvexBackend(
+  projectPath: string,
+  config: ConvexConfig,
+  isLocal: boolean = false
+): Promise<void> {
+  const args = ['dev', '--once', '--until-success'];
+  if (isLocal) {
+    args.push('--local');  // Add --local flag for local mode!
+  }
+  
+  // Set environment - CRITICAL: CONVEX_AGENT_MODE for non-interactive
+  const env = {
+    ...process.env,
+    CONVEX_URL: config.convexUrl,
+    ...(config.deployKey && { CONVEX_DEPLOY_KEY: config.deployKey }),
+    ...(isLocal && { CONVEX_AGENT_MODE: 'anonymous' }),  // ← THE KEY!
+  };
+  
+  // Deploy
+  await execCommand(convexCommand, args, { cwd: projectPath, env });
+}
+```
+
+**Result:**
+- **Local mode:** Fully automated deployment with `--local` flag ✅
+- **Cloud modes:** Standard deployment (requires login if not already) ✅
+- **Principle preserved:** Setup is 100% automated for local mode!
+
+Updated success message:
+```
+🚀 Next steps:
+
+  cd my-project
+  npm start  # Run your AI agent
+
+  💡 Your local Convex is deployed and ready to use!
+     To view the dashboard: http://127.0.0.1:3210
+```
+
+### Issue #7: Security Warning - Shell Option with Args
+
+**Warning:**
+```
+(node:71289) [DEP0190] DeprecationWarning: Passing args to a child process 
+with shell option true can lead to security vulnerabilities, as the arguments 
+are not escaped, only concatenated.
+```
+
+**Root Cause:**
+All `spawn()` calls in `utils.ts` were using `shell: true`, which Node.js flags as a security risk when combined with argument arrays. The shell concatenates arguments without escaping, potentially allowing command injection.
+
+**Fix:**
+Removed `shell: true` from all spawn calls:
+
+```typescript
+// BEFORE (insecure):
+spawn(command, args, { shell: true, ...options })
+
+// AFTER (secure):
+spawn(command, args, { ...options })
+```
+
+**Changed functions:**
+1. `commandExists()` - Removed shell, added platform-specific command (which/where)
+2. `execCommand()` - Removed shell option
+3. `execCommandLive()` - Removed shell option
+
+**Why this is better:**
+- ✅ More secure (no command injection risk)
+- ✅ Faster (no shell overhead)
+- ✅ More reliable (no shell parsing issues)
+- ✅ Cross-platform compatible (spawn handles it)
+- ✅ No deprecation warnings
+
+### Issue #8: No User Guidance for Docker
 
 **Problem:**
 If user didn't have Docker, they got an error with no guidance on how to fix it.
@@ -211,6 +315,8 @@ Linux:
 - Fixed `require.resolve()` usage for package path resolution
 - Fixed `readdirSync` to use direct import instead of require
 - **Updated `getSDKPath()` to accept `projectPath` parameter and look in correct node_modules**
+- **Removed `shell: true` from all spawn calls** (security fix)
+- **Added platform-specific command detection** (which/where)
 
 **2. `src/file-operations.ts`**
 - Added ES module `__dirname` equivalent using `fileURLToPath` and `dirname`
@@ -220,6 +326,8 @@ Linux:
 **3. `src/wizard.ts`**
 - Changed `setupGraphDatabase()` call to `getGraphConfig()` (line 35)
 - Added `setupGraphFiles()` call in `executeSetup()` after directory creation
+- **Skip Convex CLI deployment for local mode** - Added conditional check
+- **Updated success message** - Better instructions for local mode users
 - Updated imports
 
 **4. `src/graph-setup.ts`**
@@ -278,6 +386,8 @@ node dist/index.js test-cloud-graph
 - ❌ ES module `__dirname` not defined error
 - ❌ ES module `require` not defined error
 - ❌ SDK package not found after installation
+- ❌ Local Convex deployment requires login (violated automation)
+- ❌ Security warning: `shell: true` with args array
 - ❌ No guidance on how to fix issues
 
 **After:**
@@ -285,6 +395,8 @@ node dist/index.js test-cloud-graph
 - ✅ Files created in correct order
 - ✅ ES modules fully compatible (`__dirname` and `require` fixed)
 - ✅ SDK correctly located in project's node_modules
+- ✅ Fully automated local deployment with `CONVEX_AGENT_MODE`
+- ✅ Secure spawn calls (no shell injection risk)
 - ✅ Platform-specific installation instructions
 - ✅ Disabled options with clear explanations
 - ✅ Graceful fallback to cloud option

@@ -252,8 +252,12 @@ async function executeSetup(config: WizardConfig): Promise<void> {
     await createConvexJson(config.projectPath);
     backendSpinner.succeed('Cortex backend deployed');
 
-    // Deploy to Convex
-    await deployConvexBackend(config.projectPath, convexConfig);
+    // Deploy to Convex (all modes now supported)
+    await deployConvexBackend(
+      config.projectPath, 
+      convexConfig, 
+      config.convexSetupType === 'local'
+    );
 
     // Setup graph database if enabled
     if (config.graphEnabled && config.graphType !== 'skip') {
@@ -305,10 +309,14 @@ function showSuccessMessage(config: WizardConfig): void {
   }
   
   if (config.convexSetupType === 'local') {
-    console.log(pc.cyan('  npm run dev') + pc.dim('        # Start Convex'));
+    console.log(pc.cyan('  npm run dev') + pc.dim('   # Start Convex in watch mode'));
+    console.log(pc.dim('  (Then in another terminal)'));
+    console.log(pc.cyan('  npm start') + pc.dim('      # Run your AI agent'));
+    console.log(pc.dim('\n  💡 Dashboard: http://127.0.0.1:3210'));
+  } else {
+    console.log(pc.cyan('  npm start') + pc.dim('  # Run your AI agent'));
+    console.log(pc.dim(`\n  💡 Dashboard: ${config.convexUrl?.replace('/api', '')}`));
   }
-  
-  console.log(pc.cyan('  npm start') + pc.dim('          # Run your AI agent'));
 
   console.log(pc.bold('\n📚 Learn more:\n'));
   console.log(pc.dim('  Documentation: https://github.com/SaintNick1214/Project-Cortex/tree/main/Documentation'));

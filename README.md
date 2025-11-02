@@ -126,8 +126,7 @@ The interactive wizard will guide you through:
 
 ```bash
 cd my-ai-agent
-npm run dev  # Start Convex
-npm start    # Run your agent
+npm start  # Run your agent - Convex is already deployed!
 ```
 
 ### Your First Memory

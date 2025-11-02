@@ -8,17 +8,27 @@ This directory contains automated CI/CD workflows for the Cortex SDK.
 
 ### publish.yml - Automated npm Publishing
 
-**Trigger**: Automatic when `package.json` version changes on `main` branch
+**Trigger**: Automatic when version changes on `main` branch
 
 **What it does**:
 
-1. ✅ Detects version changes
-2. ✅ Runs all 201 tests
+**For SDK (@cortexmemory/sdk):**
+1. ✅ Detects SDK version changes in `package.json`
+2. ✅ Runs all tests
 3. ✅ Builds package
 4. ✅ Publishes to npm
 5. ✅ Creates git tag
 6. ✅ Creates GitHub release
 7. ✅ Verifies publish
+
+**For Wizard (create-cortex-memories):**
+1. ✅ Detects wizard version changes in `packages/create-cortex-memories/package.json`
+2. ✅ Builds wizard package
+3. ✅ Runs smoke tests
+4. ✅ Publishes to npm (after SDK publishes)
+5. ✅ Verifies publish
+
+**Publishing Order**: SDK first, then wizard (since wizard depends on SDK)
 
 **Required Secrets**:
 
@@ -33,20 +43,54 @@ This directory contains automated CI/CD workflows for the Cortex SDK.
 
 ### Automated Release (Recommended)
 
+**Releasing SDK only:**
 ```bash
-# 1. Update version
-# package.json: "version": "0.5.0"
+# 1. Update SDK version
+# package.json: "version": "0.8.1"
 
 # 2. Update changelog
-# CHANGELOG.md: Add v0.5.0 section
+# CHANGELOG.md: Add v0.8.1 section
 
 # 3. Commit and push
 git add package.json CHANGELOG.md
-git commit -m "chore: release v0.5.0"
+git commit -m "chore: release v0.8.1"
 git push origin main
 
-# 4. GitHub Action publishes automatically!
+# 4. GitHub Action publishes SDK automatically!
+```
+
+**Releasing both SDK and wizard:**
+```bash
+# 1. Update both versions
+# package.json: "version": "0.8.1"
+# packages/create-cortex-memories/package.json: "version": "0.1.0"
+
+# 2. Update changelog
+# CHANGELOG.md: Add v0.8.1 section (documents both)
+
+# 3. Commit and push
+git add package.json packages/create-cortex-memories/package.json CHANGELOG.md
+git commit -m "chore: release v0.8.1 with create-cortex-memories v0.1.0"
+git push origin main
+
+# 4. GitHub Action publishes both packages!
+# SDK publishes first, then wizard
 # Watch: https://github.com/SaintNick1214/Project-Cortex/actions
+```
+
+**Releasing wizard only:**
+```bash
+# 1. Update wizard version
+# packages/create-cortex-memories/package.json: "version": "0.1.1"
+
+# 2. Update changelog (mention wizard update)
+
+# 3. Commit and push
+git add packages/create-cortex-memories/package.json CHANGELOG.md
+git commit -m "chore: release create-cortex-memories v0.1.1"
+git push origin main
+
+# 4. GitHub Action publishes wizard only (SDK skipped)
 ```
 
 ### Manual Release (Alternative)

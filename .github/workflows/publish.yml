@@ -10,20 +10,22 @@ jobs:
   check-version:
     runs-on: ubuntu-latest
     outputs:
-      version-changed: ${{ steps.check.outputs.changed }}
-      new-version: ${{ steps.check.outputs.version }}
+      sdk-version-changed: ${{ steps.check-sdk.outputs.changed }}
+      sdk-new-version: ${{ steps.check-sdk.outputs.version }}
+      wizard-version-changed: ${{ steps.check-wizard.outputs.changed }}
+      wizard-new-version: ${{ steps.check-wizard.outputs.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 2
 
-      - name: Check if version changed
-        id: check
+      - name: Check SDK version
+        id: check-sdk
         run: |
           # Get current version from package.json
           CURRENT_VERSION=$(node -p "require('./package.json').version")
-          echo "📦 Package version: $CURRENT_VERSION"
+          echo "📦 SDK version: $CURRENT_VERSION"
 
           # Get published version from npm (or 0.0.0 if not published yet)
           NPM_VERSION=$(npm view @cortexmemory/sdk version 2>/dev/null || echo "0.0.0")
@@ -33,15 +35,36 @@ jobs:
           if [ "$CURRENT_VERSION" != "$NPM_VERSION" ]; then
             echo "changed=true" >> $GITHUB_OUTPUT
             echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
-            echo "✅ New version detected: $NPM_VERSION → $CURRENT_VERSION"
+            echo "✅ New SDK version detected: $NPM_VERSION → $CURRENT_VERSION"
           else
             echo "changed=false" >> $GITHUB_OUTPUT
-            echo "⏭️  Already published at $CURRENT_VERSION, skipping"
+            echo "⏭️  SDK already published at $CURRENT_VERSION, skipping"
           fi
 
-  publish:
+      - name: Check create-cortex-memories version
+        id: check-wizard
+        run: |
+          # Get current version from package.json
+          CURRENT_VERSION=$(node -p "require('./packages/create-cortex-memories/package.json').version")
+          echo "📦 Wizard version: $CURRENT_VERSION"
+
+          # Get published version from npm (or 0.0.0 if not published yet)
+          NPM_VERSION=$(npm view create-cortex-memories version 2>/dev/null || echo "0.0.0")
+          echo "📚 npm version: $NPM_VERSION"
+
+          # Compare versions (publish if package.json > npm)
+          if [ "$CURRENT_VERSION" != "$NPM_VERSION" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+            echo "✅ New wizard version detected: $NPM_VERSION → $CURRENT_VERSION"
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "⏭️  Wizard already published at $CURRENT_VERSION, skipping"
+          fi
+
+  publish-sdk:
     needs: check-version
-    if: needs.check-version.outputs.version-changed == 'true'
+    if: needs.check-version.outputs.sdk-version-changed == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -92,7 +115,7 @@ jobs:
 
       - name: Create Git Tag
         run: |
-          VERSION=${{ needs.check-version.outputs.new-version }}
+          VERSION=${{ needs.check-version.outputs.sdk-new-version }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag -a "v$VERSION" -m "Release v$VERSION"
@@ -101,7 +124,7 @@ jobs:
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ needs.check-version.outputs.new-version }}
+          VERSION: ${{ needs.check-version.outputs.sdk-new-version }}
         run: |
           gh release create "v$VERSION" \
             --title "v$VERSION" \
@@ -109,7 +132,12 @@ jobs:
 
           See [CHANGELOG.md](https://github.com/SaintNick1214/Project-Cortex/blob/main/CHANGELOG.md) for details.
 
-          ### Install
+          ### Quick Start
+          \`\`\`bash
+          npm create cortex-memories@latest my-ai-agent
+          \`\`\`
+
+          ### Install SDK Only
           \`\`\`bash
           npm install @cortexmemory/sdk@$VERSION
           \`\`\`"
@@ -119,16 +147,81 @@ jobs:
           echo "Waiting for npm registry to update..."
           sleep 10
           npm view @cortexmemory/sdk version
-          echo "✅ Published successfully!"
+          echo "✅ SDK published successfully!"
 
       - name: Post-publish summary
         run: |
-          VERSION=${{ needs.check-version.outputs.new-version }}
+          VERSION=${{ needs.check-version.outputs.sdk-new-version }}
           echo "════════════════════════════════════════════════════════════"
-          echo "  ✅ RELEASE COMPLETE!"
+          echo "  ✅ SDK PUBLISHED!"
           echo "════════════════════════════════════════════════════════════"
           echo ""
           echo "📦 Package: @cortexmemory/sdk@$VERSION"
           echo "📚 npm: https://www.npmjs.com/package/@cortexmemory/sdk"
           echo "🐙 GitHub: https://github.com/SaintNick1214/Project-Cortex/releases/tag/v$VERSION"
+          echo ""
+
+  publish-wizard:
+    needs: [check-version, publish-sdk]
+    if: needs.check-version.outputs.wizard-version-changed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: |
+          cd packages/create-cortex-memories
+          npm install
+
+      - name: Build package
+        run: |
+          cd packages/create-cortex-memories
+          npm run build
+
+      - name: Run smoke tests
+        run: |
+          cd packages/create-cortex-memories
+          ./test-smoke.sh
+
+      - name: Verify package contents
+        run: |
+          cd packages/create-cortex-memories
+          npm pack --dry-run
+
+      - name: Publish to npm
+        run: |
+          cd packages/create-cortex-memories
+          npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Verify npm publish
+        run: |
+          echo "Waiting for npm registry to update..."
+          sleep 10
+          npm view create-cortex-memories version
+          echo "✅ Wizard published successfully!"
+
+      - name: Post-publish summary
+        run: |
+          VERSION=${{ needs.check-version.outputs.wizard-new-version }}
+          echo "════════════════════════════════════════════════════════════"
+          echo "  ✅ WIZARD PUBLISHED!"
+          echo "════════════════════════════════════════════════════════════"
+          echo ""
+          echo "📦 Package: create-cortex-memories@$VERSION"
+          echo "📚 npm: https://www.npmjs.com/package/create-cortex-memories"
+          echo ""
+          echo "🚀 Try it: npm create cortex-memories@latest my-agent"
           echo ""
