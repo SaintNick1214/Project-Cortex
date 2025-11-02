@@ -6,7 +6,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![Convex](https://img.shields.io/badge/Powered%20by-Convex-purple.svg)](https://convex.dev)
 [![Status](https://img.shields.io/badge/Status-In%20Development-yellow.svg)](https://github.com/SaintNick1214/cortex/discussions)
-[![Socket Badge](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.3.1)](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.3.1)
+[![Socket Badge](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.8.1)](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.8.1)
 
 ## 🚧 Project Status: In Active Development
 
@@ -97,6 +97,75 @@ await cortex.agents.unregister("agent-xyz", {
   verify: true, // Includes graph orphan detection
 });
 ```
+
+## 🚀 Quick Start
+
+Get started with Cortex in under 5 minutes:
+
+### Create Your First Cortex Project
+
+```bash
+npm create cortex-memories@latest my-ai-agent
+```
+
+The interactive wizard will guide you through:
+- **Project Setup** - Choose new project or add to existing
+- **Convex Configuration** - Local development, new cloud database, or existing database
+- **Graph Database** - Optional Neo4j/Memgraph integration
+- **Automatic Setup** - Installs dependencies and deploys backend functions
+
+### What Gets Set Up
+
+✅ Cortex SDK with TypeScript support  
+✅ Convex backend functions (deployed automatically)  
+✅ Environment configuration (.env.local)  
+✅ Example code to get you started  
+✅ Optional graph database integration  
+
+### Start Building
+
+```bash
+cd my-ai-agent
+npm run dev  # Start Convex
+npm start    # Run your agent
+```
+
+### Your First Memory
+
+```typescript
+import { Cortex } from "@cortexmemory/sdk";
+
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!
+});
+
+// Store a memory
+await cortex.memory.remember({
+  memorySpaceId: "my-agent",
+  conversationId: "conv-1",
+  userMessage: "I prefer dark mode",
+  agentResponse: "Got it! I'll remember that.",
+  userId: "user-123",
+  userName: "User"
+});
+
+// Search your memories
+const results = await cortex.memory.search(
+  "my-agent",
+  "what are the user's preferences?"
+);
+```
+
+**That's it!** Your AI agent now has persistent memory.
+
+### Adding to Existing Project
+
+```bash
+cd your-existing-project
+npm create cortex-memories@latest .
+```
+
+---
 
 ## ✨ What's New in v0.7.0
 

@@ -1,0 +1,47 @@
+{
+  "name": "create-cortex-memories",
+  "version": "0.1.0",
+  "description": "Interactive CLI to scaffold Cortex Memory SDK projects with Convex backend",
+  "type": "module",
+  "bin": {
+    "create-cortex-memories": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "cortex",
+    "memory",
+    "ai",
+    "convex",
+    "scaffold",
+    "cli",
+    "create"
+  ],
+  "author": "Saint Nick LLC",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SaintNick1214/Project-Cortex.git",
+    "directory": "packages/create-cortex-memories"
+  },
+  "dependencies": {
+    "prompts": "^2.4.2",
+    "picocolors": "^1.0.0",
+    "ora": "^8.0.1",
+    "fs-extra": "^11.2.0"
+  },
+  "devDependencies": {
+    "@types/prompts": "^2.4.9",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  }
+}
+
