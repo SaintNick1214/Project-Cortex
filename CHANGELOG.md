@@ -19,6 +19,80 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.8.1] - 2025-11-02
+
+#### 🎉 Create Cortex Memories - Interactive Setup Wizard
+
+**Major improvement to developer onboarding experience!** Introduced `npm create cortex-memories` - an interactive CLI wizard that sets up complete Cortex projects in under 5 minutes.
+
+#### ✨ New Features
+
+**1. Interactive Setup Wizard**
+
+- **NEW:** `create-cortex-memories` npm package for zero-friction project scaffolding
+- Interactive prompts guide through entire setup process
+- Three Convex setup options:
+  - Local development (immediate start, no account needed)
+  - New cloud database (with automatic Convex account setup)
+  - Existing database (connect to your deployment)
+- Optional graph database configuration (Neo4j/Memgraph)
+- Automatic dependency installation and backend deployment
+
+**2. Improved Package Distribution**
+
+- **FIXED:** `convex-dev/` backend functions now included in published npm package
+- Backend functions automatically copied to user's project during setup
+- No more manual file copying or configuration needed
+
+**3. Enhanced Documentation**
+
+- **NEW:** Prominent Quick Start section in README
+- Step-by-step getting started guide
+- Clear examples for first memory storage and search
+- Instructions for adding to existing projects
+
+#### 🏗️ What Gets Installed
+
+When running `npm create cortex-memories@latest`:
+- Cortex SDK with full TypeScript support
+- Complete Convex backend functions (schema, queries, mutations)
+- Environment configuration (.env.local)
+- Example code demonstrating core features
+- Optional graph database docker-compose setup
+- Project README with next steps
+
+#### 📦 Package Structure
+
+**New Package:**
+- `create-cortex-memories` - Interactive CLI wizard
+
+**Updated Package:**
+- `@cortexmemory/sdk@0.8.1` - Now includes `convex-dev/` folder
+
+#### 🚀 Usage
+
+```bash
+# Create new project
+npm create cortex-memories@latest my-ai-agent
+
+# Add to existing project
+npm create cortex-memories@latest .
+```
+
+#### 🎯 Developer Experience
+
+This release dramatically simplifies the getting started experience:
+- **Before:** Manual setup, copying files, configuring Convex, reading docs
+- **After:** One command, interactive wizard, automatic setup, ready to code
+
+Perfect for:
+- New users trying Cortex for the first time
+- Rapid prototyping and proof-of-concepts
+- Workshop and tutorial scenarios
+- Adding Cortex to existing projects
+
+---
+
 ### [0.8.0] - 2025-10-31
 
 #### 🆕 Coordination Layer APIs - Users & Agents
