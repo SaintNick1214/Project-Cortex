@@ -141,15 +141,33 @@ export async function copyTemplate(
   console.log(pc.dim(`   Found at: ${templatePath}`));
   console.log(pc.dim(`   Copying to: ${targetPath}`));
   
-  // Copy template files
-  await fs.copy(templatePath, targetPath, {
-    overwrite: false,
-    errorOnExist: false,
-    filter: (src) => {
-      // Skip node_modules and dist if they exist in template
-      return !src.includes('node_modules') && !src.includes('dist');
-    },
-  });
+  // List what's in the template
+  const templateFiles = await fs.readdir(templatePath, { recursive: true });
+  console.log(pc.dim(`   Template has ${templateFiles.length} items`));
+  
+  // Copy template files  
+  console.log(pc.dim(`   Starting fs.copy...`));
+  
+  try {
+    await fs.copy(templatePath, targetPath, {
+      overwrite: true,
+      errorOnExist: false,
+      filter: (src, dest) => {
+        const relativeSrc = path.relative(templatePath, src) || '.';
+        // Only skip if node_modules/dist are IN the template itself (not in the source path)
+        const skip = relativeSrc.includes('node_modules') || relativeSrc.includes('dist');
+        
+        console.log(pc.dim(`     Filter: ${relativeSrc} -> ${skip ? 'SKIP' : 'COPY'}`));
+        
+        return !skip;
+      },
+    });
+    
+    console.log(pc.dim(`   fs.copy completed`));
+  } catch (error) {
+    console.error(pc.red(`   fs.copy error: ${error}`));
+    throw new Error(`fs.copy failed: ${error}`);
+  }
   
   // Verify key files were copied
   const keyFiles = ['package.json', 'src/index.ts', 'tsconfig.json'];
