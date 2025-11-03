@@ -19,15 +19,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
-### [0.8.1] - 2025-11-02
+### [0.8.2] - 2025-11-02
 
-#### 🎉 Create Cortex Memories - Interactive Setup Wizard
+#### 🎉 Create Cortex Memories - Interactive Setup Wizard + SDK Fix
 
 **Major improvement to developer onboarding experience!** Introduced `npm create cortex-memories` - an interactive CLI wizard that sets up complete Cortex projects in under 5 minutes.
 
 #### ✨ New Features
 
-**1. Interactive Setup Wizard**
+**1. Improved Memory API - Auto-Conversation Creation**
+
+- **FIXED:** `memory.remember()` now automatically creates conversations if they don't exist
+- No longer requires manual `conversations.create()` before first use
+- True "convenience layer" behavior - handles 100% of stack automatically
+- **NEW:** 5 comprehensive tests for auto-conversation creation behavior
+- Validates auto-creation, reuse of existing, default participantId, explicit participantId, multiple calls
+
+**Before:**
+```typescript
+// Required 2 steps
+await cortex.conversations.create({ ... });  // Manual step
+await cortex.memory.remember({ ... });
+```
+
+**After:**
+```typescript
+// Just one step - conversation auto-created!
+await cortex.memory.remember({ ... });
+```
+
+**2. Interactive Setup Wizard**
 
 - **NEW:** `create-cortex-memories` npm package for zero-friction project scaffolding
 - Interactive prompts guide through entire setup process
@@ -72,11 +93,11 @@ When running `npm create cortex-memories@latest`:
 #### 🚀 Usage
 
 ```bash
-# Create new project
-npm create cortex-memories@latest my-ai-agent
+# Create new project (wizard will prompt for name)
+npm create cortex-memories
 
-# Add to existing project
-npm create cortex-memories@latest .
+# Or specify name directly
+npm create cortex-memories my-ai-agent
 ```
 
 #### 🎯 Developer Experience

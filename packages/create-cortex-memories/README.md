@@ -7,14 +7,22 @@ Interactive CLI to scaffold projects with Cortex Memory SDK and Convex backend.
 ### Create a New Project
 
 ```bash
-npm create cortex-memories@latest my-ai-agent
+npm create cortex-memories
+```
+
+The wizard will prompt for your project name.
+
+Or specify it directly:
+```bash
+npm create cortex-memories my-ai-agent
 ```
 
 ### Add to Existing Project
 
 ```bash
 cd your-existing-project
-npm create cortex-memories@latest .
+npm create cortex-memories
+# Choose current directory when prompted
 ```
 
 ## What It Does
@@ -34,8 +42,9 @@ The wizard will guide you through:
 ## After Setup
 
 ```bash
-cd my-ai-agent
-npm run dev
+cd my-cortex-agent  # Or whatever name you chose
+npm run dev         # Terminal 1: Start Convex
+npm start           # Terminal 2: Run your agent
 ```
 
 Your AI agent now has persistent memory powered by Cortex!
