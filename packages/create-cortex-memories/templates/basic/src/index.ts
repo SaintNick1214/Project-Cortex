@@ -43,15 +43,12 @@ async function main() {
     console.log(`✓ Found ${results.length} relevant memories:`);
     results.forEach((memory, i) => {
       console.log(`\n${i + 1}. ${memory.content}`);
-      console.log(`   Importance: ${memory.metadata.importance}`);
+      console.log(`   Importance: ${memory.importance}`);
     });
 
     // Get conversation history
     console.log('\n📜 Getting conversation history...');
-    const conversation = await cortex.conversations.get(
-      memorySpaceId,
-      conversationId
-    );
+    const conversation = await cortex.conversations.get(conversationId);
     
     if (conversation) {
       console.log(`✓ Conversation has ${conversation.messages.length} messages`);
