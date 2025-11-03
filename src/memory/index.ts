@@ -179,7 +179,28 @@ export class MemoryAPI {
   ): Promise<RememberResult> {
     const now = Date.now();
 
-    // Step 1: Store user message in ACID
+    // Step 1: Ensure conversation exists (auto-create if needed)
+    const existingConversation = await this.conversations.get(
+      params.conversationId,
+    );
+
+    if (!existingConversation) {
+      // Auto-create conversation with sensible defaults
+      await this.conversations.create(
+        {
+          memorySpaceId: params.memorySpaceId,
+          conversationId: params.conversationId,
+          type: 'user-agent',
+          participants: {
+            userId: params.userId,
+            participantId: params.participantId || 'agent',
+          },
+        },
+        { syncToGraph: options?.syncToGraph !== false && this.graphAdapter !== undefined },
+      );
+    }
+
+    // Step 2: Store user message in ACID
     const userMsg = await this.conversations.addMessage({
       conversationId: params.conversationId,
       message: {
@@ -189,7 +210,7 @@ export class MemoryAPI {
       },
     });
 
-    // Step 2: Store agent response in ACID
+    // Step 3: Store agent response in ACID
     const agentMsg = await this.conversations.addMessage({
       conversationId: params.conversationId,
       message: {
@@ -200,7 +221,7 @@ export class MemoryAPI {
       },
     });
 
-    // Step 3: Extract content (if provided)
+    // Step 4: Extract content (if provided)
     let userContent = params.userMessage;
     const agentContent = params.agentResponse;
     let contentType: "raw" | "summarized" = "raw";
@@ -217,7 +238,7 @@ export class MemoryAPI {
       }
     }
 
-    // Step 4: Generate embeddings (if provided)
+    // Step 5: Generate embeddings (if provided)
     let userEmbedding: number[] | undefined;
     let agentEmbedding: number[] | undefined;
 
@@ -232,7 +253,7 @@ export class MemoryAPI {
     const shouldSyncToGraph =
       options?.syncToGraph !== false && this.graphAdapter !== undefined;
 
-    // Step 5: Store user message in Vector with conversationRef
+    // Step 6: Store user message in Vector with conversationRef
     const userMemory = await this.vector.store(
       params.memorySpaceId,
       {
@@ -259,7 +280,7 @@ export class MemoryAPI {
       { syncToGraph: shouldSyncToGraph },
     );
 
-    // Step 6: Store agent response in Vector with conversationRef
+    // Step 7: Store agent response in Vector with conversationRef
     const agentMemory = await this.vector.store(
       params.memorySpaceId,
       {
@@ -286,7 +307,7 @@ export class MemoryAPI {
       { syncToGraph: shouldSyncToGraph },
     );
 
-    // Step 7: Extract and store facts (if extraction function provided)
+    // Step 8: Extract and store facts (if extraction function provided)
     const extractedFacts: FactRecord[] = [];
 
     if (params.extractFacts) {

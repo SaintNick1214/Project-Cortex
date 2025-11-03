@@ -4,22 +4,24 @@ AI agent with persistent memory powered by [Cortex Memory SDK](https://github.co
 
 ## Getting Started
 
-### 1. Install Dependencies
+Your Convex backend functions are deployed and configured!
 
-```bash
-npm install
-```
+### For Local Development
 
-### 2. Start Convex
-
+**Terminal 1** - Start Convex:
 ```bash
 npm run dev
 ```
+Leave this running. It watches for changes and keeps Convex server active.
 
-This will start the Convex development server and deploy your backend functions.
+**Terminal 2** - Run your agent:
+```bash
+npm start
+```
 
-### 3. Run Your Agent
+### For Cloud Deployments
 
+Your Convex is already running in the cloud, so just:
 ```bash
 npm start
 ```

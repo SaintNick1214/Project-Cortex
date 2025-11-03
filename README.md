@@ -6,7 +6,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![Convex](https://img.shields.io/badge/Powered%20by-Convex-purple.svg)](https://convex.dev)
 [![Status](https://img.shields.io/badge/Status-In%20Development-yellow.svg)](https://github.com/SaintNick1214/cortex/discussions)
-[![Socket Badge](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.8.1)](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.8.1)
+[![Socket Badge](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.8.2)](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.8.2)
 
 ## 🚧 Project Status: In Active Development
 
@@ -105,7 +105,7 @@ Get started with Cortex in under 5 minutes:
 ### Create Your First Cortex Project
 
 ```bash
-npm create cortex-memories@latest my-ai-agent
+npm create cortex-memories
 ```
 
 The interactive wizard will guide you through:
@@ -125,9 +125,9 @@ The interactive wizard will guide you through:
 ### Start Building
 
 ```bash
-cd my-ai-agent
-npm run dev  # Start Convex
-npm start    # Run your agent
+cd my-cortex-agent  # Or whatever name you chose
+npm run dev         # Terminal 1: Start Convex
+npm start           # Terminal 2: Run your agent
 ```
 
 ### Your First Memory
@@ -162,7 +162,8 @@ const results = await cortex.memory.search(
 
 ```bash
 cd your-existing-project
-npm create cortex-memories@latest .
+npm create cortex-memories
+# Select current directory when prompted
 ```
 
 ---
@@ -317,15 +318,17 @@ Cortex is being designed with two deployment modes:
 
 ## 📖 Documentation
 
-Dive deep into our architecture and design decisions:
+### Getting Started
+- [Installation Guide](./Documentation/01-getting-started/02-installation.md) - Multiple installation methods
+- [Five-Minute Quickstart](./Documentation/01-getting-started/03-five-minute-quickstart.md) - Build your first agent
+- [Core Concepts](./Documentation/01-getting-started/04-core-concepts.md) - Understand the fundamentals
+- [Configuration](./Documentation/01-getting-started/05-configuration.md) - Customize Cortex
 
-- [Documentation Home](./Documentation/00-README.md)
-- [Getting Started Guide](./Documentation/01-getting-started/01-introduction.md)
-- [Core Concepts](./Documentation/01-getting-started/04-core-concepts.md)
-- [API Reference](./Documentation/03-api-reference/01-overview.md)
-- [System Architecture](./Documentation/04-architecture/01-system-overview.md)
-- [Recipes & Examples](./Documentation/06-recipes/01-simple-chatbot.md)
-- [Migration from Constellation](./Documentation/09-migration-guides/01-from-constellation.md)
+### Reference
+- [Documentation Home](./Documentation/00-README.md) - Complete documentation index
+- [API Reference](./Documentation/03-api-reference/01-overview.md) - Full API documentation
+- [System Architecture](./Documentation/04-architecture/01-system-overview.md) - How it works
+- [Recipes & Examples](./Documentation/06-recipes/01-simple-chatbot.md) - Real-world patterns
 
 ## 🤝 Get Involved
 
