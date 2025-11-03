@@ -242,9 +242,17 @@ async function executeSetup(config: WizardConfig): Promise<void> {
     if (result.code !== 0) {
       installSpinner.fail('Failed to install dependencies');
       console.error(pc.red(result.stderr));
+      console.error(pc.dim('stdout:'), result.stdout);
       throw new Error('npm install failed');
     }
     installSpinner.succeed('Dependencies installed');
+    
+    // Debug: Verify SDK was actually installed
+    const sdkCheck = fs.existsSync(path.join(config.projectPath, 'node_modules', '@cortexmemory', 'sdk'));
+    if (!sdkCheck) {
+      console.warn(pc.yellow('⚠️  Warning: SDK not found in node_modules after install'));
+      console.log(pc.dim('   This may cause backend deployment to fail'));
+    }
 
     // Deploy Cortex backend
     const backendSpinner = ora('Deploying Cortex backend functions...').start();
