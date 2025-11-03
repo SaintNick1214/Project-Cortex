@@ -1,0 +1,14 @@
+# Include templates with dotfiles
+!templates/**/.gitignore
+!templates/**/.vscode
+
+# Exclude development files
+src/
+test-project/
+test-smoke.sh
+TESTING.md
+tsconfig.json
+eslint.config.js
+node_modules/
+*.log
+

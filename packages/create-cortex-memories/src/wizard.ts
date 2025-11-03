@@ -209,11 +209,15 @@ async function executeSetup(config: WizardConfig): Promise<void> {
     // Create project directory
     await fs.ensureDir(config.projectPath);
 
-    // Copy template files
-    if (config.installationType === 'new') {
+    // Copy template files (check if package.json exists)
+    const needsTemplate = !fs.existsSync(path.join(config.projectPath, 'package.json'));
+    
+    if (needsTemplate || config.installationType === 'new') {
       const spinner = ora('Creating project files...').start();
       await copyTemplate('basic', config.projectPath, config.projectName);
       spinner.succeed('Project files created');
+    } else {
+      console.log(pc.dim('   Using existing project files'));
     }
 
     // Setup Convex

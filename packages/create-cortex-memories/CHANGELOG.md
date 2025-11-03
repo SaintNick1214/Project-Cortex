@@ -2,6 +2,21 @@
 
 All notable changes to the create-cortex-memories wizard will be documented in this file.
 
+## [0.1.4] - 2025-11-02
+
+### Fixed
+
+**Critical:**
+- **FIXED:** Template files not copied when adding to existing directory with partial files
+- Now checks if package.json exists and copies template if missing
+- Prevents "SDK not found" error when directory has leftover config files from failed runs
+
+**Debugging:**
+- Added logging to show template path resolution
+- Added verification that key files were actually copied
+- Better error messages showing exact paths
+- SDK installation verification with helpful warnings
+
 ## [0.1.3] - 2025-11-02
 
 ### Fixed
