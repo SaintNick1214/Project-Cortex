@@ -15,10 +15,10 @@ Cortex is designed to work with minimal configuration, but offers extensive cust
 The absolute minimum to use Cortex:
 
 ```typescript
-import { Cortex } from '@cortexmemory/sdk';
+import { Cortex } from "@cortexmemory/sdk";
 
 const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL!
+  convexUrl: process.env.CONVEX_URL!,
 });
 ```
 
@@ -50,17 +50,19 @@ CONVEX_URL=http://127.0.0.1:3210
 
 ```typescript
 const cortex = new Cortex({
-  convexUrl: 'http://127.0.0.1:3210'
+  convexUrl: "http://127.0.0.1:3210",
 });
 ```
 
 **Use for:**
+
 - Rapid development
 - Testing
 - Learning
 - No internet needed
 
 **Limitations:**
+
 - No vector search (`.similar()` not available)
 - Data stored locally in `~/.convex/`
 - Not for production
@@ -75,11 +77,12 @@ CONVEX_DEPLOY_KEY=dev:your-deployment|your-key
 
 ```typescript
 const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL!
+  convexUrl: process.env.CONVEX_URL!,
 });
 ```
 
 **Use for:**
+
 - Production deployments
 - Vector search features
 - Team collaboration
@@ -98,15 +101,18 @@ No additional configuration needed. Cortex works great without a graph database.
 Enable advanced relationship queries by adding a graph database:
 
 ```typescript
-import { Cortex } from '@cortexmemory/sdk';
-import { CypherGraphAdapter, initializeGraphSchema } from '@cortexmemory/sdk/graph';
+import { Cortex } from "@cortexmemory/sdk";
+import {
+  CypherGraphAdapter,
+  initializeGraphSchema,
+} from "@cortexmemory/sdk/graph";
 
 // 1. Setup graph adapter
 const graphAdapter = new CypherGraphAdapter();
 await graphAdapter.connect({
-  uri: process.env.NEO4J_URI || 'bolt://localhost:7687',
-  username: process.env.NEO4J_USERNAME || 'neo4j',
-  password: process.env.NEO4J_PASSWORD || 'password',
+  uri: process.env.NEO4J_URI || "bolt://localhost:7687",
+  username: process.env.NEO4J_USERNAME || "neo4j",
+  password: process.env.NEO4J_PASSWORD || "password",
 });
 
 // 2. Initialize schema
@@ -117,7 +123,7 @@ const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL!,
   graph: {
     adapter: graphAdapter,
-    orphanCleanup: true,  // Automatic cleanup
+    orphanCleanup: true, // Automatic cleanup
   },
 });
 ```
@@ -146,9 +152,9 @@ interface CortexConfig {
 
   /** Optional graph database integration */
   graph?: {
-    adapter: GraphAdapter;      // Graph database adapter
-    orphanCleanup?: boolean;    // Auto-cleanup orphaned nodes
-    autoSync?: boolean;         // Auto-sync worker (coming soon)
+    adapter: GraphAdapter; // Graph database adapter
+    orphanCleanup?: boolean; // Auto-cleanup orphaned nodes
+    autoSync?: boolean; // Auto-sync worker (coming soon)
   };
 }
 ```
@@ -156,8 +162,11 @@ interface CortexConfig {
 ### Example: Full Configuration
 
 ```typescript
-import { Cortex } from '@cortexmemory/sdk';
-import { CypherGraphAdapter, initializeGraphSchema } from '@cortexmemory/sdk/graph';
+import { Cortex } from "@cortexmemory/sdk";
+import {
+  CypherGraphAdapter,
+  initializeGraphSchema,
+} from "@cortexmemory/sdk/graph";
 
 // Setup graph (optional)
 const graphAdapter = new CypherGraphAdapter();
@@ -229,7 +238,7 @@ Configure default behavior for memory operations:
 
 ```typescript
 // In your code
-const DEFAULT_MEMORY_SPACE = 'my-agent';
+const DEFAULT_MEMORY_SPACE = "my-agent";
 const DEFAULT_IMPORTANCE = 50;
 
 await cortex.memory.remember({
@@ -250,15 +259,11 @@ await cortex.memory.remember({
 Customize search behavior:
 
 ```typescript
-const results = await cortex.memory.search(
-  memorySpaceId,
-  query,
-  {
-    limit: 10,                    // Max results
-    minImportance: 30,            // Filter by importance
-    includeContent: true,         // Include full content
-  }
-);
+const results = await cortex.memory.search(memorySpaceId, query, {
+  limit: 10, // Max results
+  minImportance: 30, // Filter by importance
+  includeContent: true, // Include full content
+});
 ```
 
 ### Conversation Limits
@@ -269,11 +274,11 @@ Manage conversation size:
 await cortex.conversations.create({
   memorySpaceId,
   conversationId,
-  type: 'user-agent',
-  participants: { userId, participantId: 'my-agent' },
+  type: "user-agent",
+  participants: { userId, participantId: "my-agent" },
   metadata: {
-    maxMessages: 1000,           // Limit conversation size
-    autoArchive: true,           // Archive when limit reached
+    maxMessages: 1000, // Limit conversation size
+    autoArchive: true, // Archive when limit reached
   },
 });
 ```
@@ -289,15 +294,15 @@ npm install openai
 ```
 
 ```typescript
-import OpenAI from 'openai';
+import OpenAI from "openai";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 const generateEmbedding = async (text: string) => {
   const result = await openai.embeddings.create({
-    model: 'text-embedding-3-small',  // 1536 dimensions
+    model: "text-embedding-3-small", // 1536 dimensions
     input: text,
   });
   return result.data[0].embedding;
@@ -311,7 +316,7 @@ npm install cohere-ai
 ```
 
 ```typescript
-import { CohereClient } from 'cohere-ai';
+import { CohereClient } from "cohere-ai";
 
 const cohere = new CohereClient({
   token: process.env.COHERE_API_KEY,
@@ -320,8 +325,8 @@ const cohere = new CohereClient({
 const generateEmbedding = async (text: string) => {
   const result = await cohere.embed({
     texts: [text],
-    model: 'embed-english-v3.0',
-    inputType: 'search_document',
+    model: "embed-english-v3.0",
+    inputType: "search_document",
   });
   return result.embeddings[0];
 };
@@ -334,16 +339,16 @@ npm install @xenova/transformers
 ```
 
 ```typescript
-import { pipeline } from '@xenova/transformers';
+import { pipeline } from "@xenova/transformers";
 
 const embedder = await pipeline(
-  'feature-extraction',
-  'Xenova/all-MiniLM-L6-v2'
+  "feature-extraction",
+  "Xenova/all-MiniLM-L6-v2",
 );
 
 const generateEmbedding = async (text: string) => {
   const result = await embedder(text, {
-    pooling: 'mean',
+    pooling: "mean",
     normalize: true,
   });
   return Array.from(result.data);
@@ -393,15 +398,15 @@ Cortex doesn't handle auth directly - integrate with your existing auth system:
 
 ```typescript
 // Example with Clerk
-import { auth } from '@clerk/nextjs';
+import { auth } from "@clerk/nextjs";
 
 export async function chatAction(message: string) {
   const { userId } = auth();
-  
+
   if (!userId) {
-    throw new Error('Unauthorized');
+    throw new Error("Unauthorized");
   }
-  
+
   // Use authenticated userId
   await cortex.memory.remember({
     memorySpaceId: `user-${userId}`,
@@ -423,7 +428,7 @@ Ensure users can only access their own memories:
 const memorySpaceId = `user-${authenticatedUserId}`;
 
 // Bad: Shared memory space (unless intentional)
-const memorySpaceId = 'global';
+const memorySpaceId = "global";
 ```
 
 ### Sensitive Data
@@ -437,8 +442,8 @@ await cortex.memory.remember({
   conversationId,
   userMessage: message,
   agentResponse: response,
-  userId: hash(actualUserId),  // Hash PII
-  userName: 'User',            // Generic name
+  userId: hash(actualUserId), // Hash PII
+  userName: "User", // Generic name
 });
 ```
 
@@ -450,8 +455,8 @@ await cortex.memory.remember({
 
 ```typescript
 // Enable verbose logging in development
-if (process.env.NODE_ENV === 'development') {
-  console.log('Cortex initialized:', {
+if (process.env.NODE_ENV === "development") {
+  console.log("Cortex initialized:", {
     convexUrl: process.env.CONVEX_URL,
     hasGraph: !!graphAdapter,
   });
@@ -462,13 +467,13 @@ if (process.env.NODE_ENV === 'development') {
 
 ```typescript
 // Use proper logging library
-import { logger } from './logger';
+import { logger } from "./logger";
 
 try {
   await cortex.memory.remember(data);
-  logger.info('Memory stored', { memorySpaceId });
+  logger.info("Memory stored", { memorySpaceId });
 } catch (error) {
-  logger.error('Failed to store memory', { error, memorySpaceId });
+  logger.error("Failed to store memory", { error, memorySpaceId });
 }
 ```
 
@@ -486,7 +491,7 @@ const cortex = new Cortex({
 
 // Bad: Hardcoded values
 const cortex = new Cortex({
-  convexUrl: 'https://my-deployment.convex.cloud',  // Don't do this!
+  convexUrl: "https://my-deployment.convex.cloud", // Don't do this!
 });
 ```
 
@@ -495,12 +500,12 @@ const cortex = new Cortex({
 ```typescript
 function validateConfig() {
   if (!process.env.CONVEX_URL) {
-    throw new Error('CONVEX_URL is required');
+    throw new Error("CONVEX_URL is required");
   }
-  
-  if (process.env.NODE_ENV === 'production') {
+
+  if (process.env.NODE_ENV === "production") {
     if (!process.env.CONVEX_DEPLOY_KEY) {
-      console.warn('CONVEX_DEPLOY_KEY not set');
+      console.warn("CONVEX_DEPLOY_KEY not set");
     }
   }
 }
@@ -535,7 +540,7 @@ await cortex.memory.remember(...);
 
 ```typescript
 // Cleanup on app shutdown
-process.on('SIGTERM', () => {
+process.on("SIGTERM", () => {
   cortex.close();
   graphAdapter?.disconnect();
   process.exit(0);
@@ -553,4 +558,3 @@ process.on('SIGTERM', () => {
 ---
 
 **Questions?** See [FAQ](../11-reference/01-faq.md) or ask in [Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).
-

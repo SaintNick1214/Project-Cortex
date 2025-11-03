@@ -1,572 +1,670 @@
 # Technology Stack - Open WebUI + Cortex Integration
 
-> **Complete breakdown of technologies, frameworks, and tools used in this integration**
+> **Complete breakdown of every technology in the integrated system**
 
 ## Table of Contents
-- [Frontend Stack](#frontend-stack)
-- [Backend Stack](#backend-stack)
-- [Memory System Stack](#memory-system-stack)
-- [Deployment Stack](#deployment-stack)
+
+- [Overview](#overview)
+- [Open WebUI Stack](#open-webui-stack)
+- [Cortex Stack](#cortex-stack)
+- [Integration Layer](#integration-layer)
 - [Development Tools](#development-tools)
-- [Optional Components](#optional-components)
+- [Production Stack](#production-stack)
 
 ---
 
-## Frontend Stack
+## Overview
 
-### Open WebUI Frontend (Svelte)
+This integration combines three major technology stacks:
 
-**Core Framework:**
-- **Svelte 4.x** - Reactive JavaScript framework with compiler-based approach
-- **SvelteKit** - Full-stack framework for Svelte applications
-- **TypeScript** - Type-safe JavaScript for better developer experience
-
-**UI Components:**
-- **Tailwind CSS 3.x** - Utility-first CSS framework
-- **DaisyUI** - Tailwind CSS component library
-- **Heroicons** - Beautiful hand-crafted SVG icons
-
-**Build Tools:**
-- **Vite 5.x** - Next-generation frontend build tool
-- **PostCSS** - CSS transformations
-- **Autoprefixer** - Automatic vendor prefixes
-
-**State Management:**
-- **Svelte Stores** - Built-in reactive state management
-- **Context API** - Component-level state sharing
-
-**HTTP Client:**
-- **Fetch API** - Native browser HTTP client
-- **WebSocket API** - Real-time bidirectional communication
-
-### Frontend Modifications for Cortex
-
-**Minimal Changes Required:**
-- Optional context chain selector component
-- Optional facts viewer sidebar
-- Optional multi-agent switcher dropdown
-- Performance metrics display (optional)
-
-**Why Minimal?**
-The beauty of this integration is that **Open WebUI's frontend requires little to no modification**. All Cortex functionality is accessible through the existing chat interface, with optional UI enhancements for advanced features.
-
----
-
-## Backend Stack
-
-### Open WebUI Backend (Python/FastAPI)
-
-**Web Framework:**
-- **FastAPI 0.110+** - Modern, fast web framework for building APIs
-- **Pydantic 2.x** - Data validation using Python type annotations
-- **Uvicorn** - Lightning-fast ASGI server
-
-**Database (UI State Only):**
-- **SQLite** (default) - Embedded SQL database for development
-- **PostgreSQL 15+** (production) - Enterprise-grade relational database
-- **SQLAlchemy 2.x** - Python SQL toolkit and ORM
-
-**Authentication:**
-- **Python-Jose** - JWT token handling
-- **Passlib** - Password hashing
-- **BCrypt** - Secure password hashing algorithm
-
-**LLM Integration:**
-- **OpenAI Python SDK** - OpenAI API client
-- **Anthropic SDK** - Claude API client
-- **LiteLLM** - Universal LLM API wrapper (supports 100+ providers)
-
-**HTTP Client:**
-- **HTTPX** - Modern HTTP client for Python
-- **Requests** - Fallback HTTP library
-
-**Utilities:**
-- **Python-dotenv** - Environment variable management
-- **APScheduler** - Background task scheduling (optional)
-
-### Cortex Bridge Service (Node.js)
-
-**Runtime:**
-- **Node.js 18+ LTS** - JavaScript runtime
-- **TypeScript 5.x** - Type-safe development
-
-**Web Framework:**
-- **Express 4.x** - Minimal web framework for API endpoints
-- **Cors** - Cross-origin resource sharing middleware
-- **Body-parser** - Request body parsing
-
-**Cortex Integration:**
-- **@cortexmemory/sdk 0.8.0** - Official Cortex SDK
-- **Convex 1.28.0+** - Peer dependency for Cortex
-
-**Communication:**
-- **HTTP/REST** - Primary communication protocol
-- **gRPC** (optional) - High-performance RPC for production
-
-**Utilities:**
-- **Dotenv** - Environment configuration
-- **Winston** - Structured logging
-- **Axios** - HTTP client for external APIs
-
----
-
-## Memory System Stack
-
-### Cortex SDK (@cortexmemory/sdk)
-
-**Version:** 0.8.0  
-**License:** Apache 2.0  
-**Language:** TypeScript
-
-**Core Dependencies:**
-```json
-{
-  "convex": "^1.28.0",         // Backend platform
-  "neo4j-driver": "^6.0.0"     // Optional graph database
-}
 ```
-
-**Key Features Used:**
-- Layer 1 (Conversations) - ACID transaction layer
-- Layer 2 (Vector Memory) - Semantic search
-- Layer 3 (Facts) - Structured knowledge extraction
-- Layer 4 (Memory API) - Convenience wrapper
-- User Management - Profile and GDPR compliance
-- Context Chains - Hierarchical workflows
-- Agent Registry - Multi-agent coordination
-- Memory Spaces - Isolation boundaries
-
-### Convex Backend
-
-**Platform:** Convex Cloud or Self-Hosted  
-**Version:** Latest stable  
-**Language:** TypeScript
-
-**Features Used:**
-- ACID transactions
-- Real-time subscriptions
-- Automatic indexing
-- Vector search (via Convex indexes)
-- WebSocket connections
-- Reactive queries
-
-**Deployment Options:**
-1. **Convex Cloud** (Recommended)
-   - Managed hosting
-   - Automatic scaling
-   - Built-in CDN
-   - Free tier available
-
-2. **Self-Hosted**
-   - Docker container
-   - Full control
-   - Custom infrastructure
-   - No vendor lock-in
-
-### Vector Embeddings
-
-**Embedding Providers (Pick One):**
-
-1. **OpenAI Embeddings** (Recommended)
-   - Model: `text-embedding-3-small` (1536 dimensions)
-   - Model: `text-embedding-3-large` (3072 dimensions)
-   - Cost: $0.02 per 1M tokens
-   - Quality: Excellent
-
-2. **Cohere Embeddings**
-   - Model: `embed-english-v3.0`
-   - Dimensions: 1024
-   - Quality: Excellent
-   - Good for multi-language
-
-3. **Local Models** (Self-Hosted)
-   - Sentence Transformers (HuggingFace)
-   - Models: `all-MiniLM-L6-v2` (384 dim)
-   - Cost: Free (compute only)
-   - Privacy: Complete control
-
-**Embedding Generation:**
-```typescript
-// Handled by Cortex Bridge
-import OpenAI from 'openai';
-
-async function generateEmbedding(text: string): Promise<number[]> {
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-  const response = await openai.embeddings.create({
-    model: 'text-embedding-3-small',
-    input: text,
-  });
-  return response.data[0].embedding;
-}
+┌──────────────────────────────────────────────────────────────┐
+│                    COMPLETE TECH STACK                        │
+├──────────────────────────────────────────────────────────────┤
+│                                                               │
+│  ┌────────────────┐  ┌─────────────┐  ┌─────────────────┐  │
+│  │  Open WebUI    │  │  Integration│  │  Cortex Stack   │  │
+│  │                │  │  Layer      │  │                 │  │
+│  │  Svelte        │◄─┤  HTTP API   ├─►│  Node.js        │  │
+│  │  Python        │  │  Bridge     │  │  TypeScript     │  │
+│  │  FastAPI       │  │  Express    │  │  Convex         │  │
+│  └────────────────┘  └─────────────┘  └─────────────────┘  │
+│                                                               │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Deployment Stack
+## Open WebUI Stack
 
-### Containerization
+### Frontend Technologies
 
-**Docker:**
-- **Engine:** Docker 24.x+
-- **Compose:** Docker Compose v2.x
+#### Core Framework
 
-**Containers:**
-1. **open-webui** - Open WebUI frontend + backend
-2. **cortex-bridge** - Node.js Cortex service
-3. **postgres** (optional) - Production database for UI state
+**Svelte 4.x**
 
-**Docker Compose Structure:**
-```yaml
-version: '3.8'
-services:
-  open-webui:
-    image: ghcr.io/open-webui/open-webui:latest
-    depends_on:
-      - cortex-bridge
-    environment:
-      - CORTEX_BRIDGE_URL=http://cortex-bridge:3000
-    volumes:
-      - ./middleware:/app/custom
-    
-  cortex-bridge:
-    build: ./cortex-bridge
-    environment:
-      - CONVEX_URL=${CONVEX_URL}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-    
-  postgres:
-    image: postgres:15-alpine
-    environment:
-      - POSTGRES_DB=openwebui
+- Compiler-based reactive framework
+- No virtual DOM (compiles to vanilla JavaScript)
+- Reactive assignments (`$:`)
+- Component-scoped styling
+- **Why**: Lightweight, fast, simple component model
+
+**SvelteKit**
+
+- Full-stack framework built on Svelte
+- File-based routing (`src/routes/`)
+- Server-side rendering (SSR)
+- API endpoints in `+server.js`
+- **Version**: Latest (1.x)
+
+**TypeScript 5.x**
+
+- Type-safe JavaScript
+- Interface definitions
+- Auto-completion in IDEs
+- **Usage**: Frontend code, API clients
+
+#### UI & Styling
+
+**Tailwind CSS 3.x**
+
+- Utility-first CSS framework
+- JIT (Just-In-Time) compiler
+- Custom configuration for Open WebUI theme
+- **File**: `tailwind.config.js`
+
+**DaisyUI**
+
+- Component library built on Tailwind
+- Pre-styled components (buttons, cards, modals)
+- Theme system
+- **Usage**: Base UI components
+
+**Iconify**
+
+- Unified icon framework
+- Multiple icon sets (Material Icons, FontAwesome, etc.)
+- **Usage**: UI icons throughout app
+
+#### Build Tools
+
+**Vite 5.x**
+
+- Next-generation frontend tooling
+- Fast hot module replacement (HMR)
+- Optimized production builds
+- Plugin ecosystem
+- **Config**: `vite.config.js`
+
+**PostCSS**
+
+- CSS transformation tool
+- Plugins: Autoprefixer, TailwindCSS
+- **Config**: `postcss.config.js`
+
+### Backend Technologies
+
+#### Core Framework
+
+**Python 3.11+**
+
+- Modern Python with latest features
+- Type hints support
+- Async/await native support
+- **Min Version**: 3.11
+
+**FastAPI 0.110.0+**
+
+- Modern Python web framework
+- Automatic OpenAPI docs generation
+- Native async support
+- Pydantic validation
+- **Why**: High performance, async, easy integration
+
+**Uvicorn**
+
+- ASGI server for FastAPI
+- High-performance async server
+- **Usage**: Runs FastAPI application
+
+#### Database
+
+**SQLAlchemy 2.x**
+
+- Python ORM (Object-Relational Mapping)
+- Supports multiple databases
+- Async support via `asyncio`
+- Migration system
+
+**PostgreSQL 15** (Production)
+
+- Relational database
+- ACID compliant
+- JSON support for metadata
+- **Usage**: User data, chat history, settings
+
+**SQLite** (Development)
+
+- File-based database
+- Zero configuration
+- **Usage**: Local development only
+
+**Alembic**
+
+- Database migration tool for SQLAlchemy
+- Version control for database schema
+- **Usage**: Schema changes over time
+
+#### API Communication
+
+**httpx 0.25.0+**
+
+- Modern async HTTP client for Python
+- HTTP/2 support
+- Connection pooling
+- **Usage**: Calls to Cortex Bridge
+
+**Pydantic 2.x**
+
+- Data validation using Python type hints
+- JSON schema generation
+- **Usage**: Request/response models
+
+#### Authentication & Security
+
+**python-jose**
+
+- JavaScript Object Signing and Encryption for Python
+- JWT token handling
+- **Usage**: User authentication tokens
+
+**passlib**
+
+- Password hashing library
+- bcrypt algorithm support
+- **Usage**: Secure password storage
+
+**python-multipart**
+
+- Multipart form data parsing
+- File upload handling
+- **Usage**: File attachments in chat
+
+---
+
+## Cortex Stack
+
+### Cortex Bridge (Node.js Service)
+
+#### Runtime & Framework
+
+**Node.js 18+**
+
+- LTS version for stability
+- ESM (ES Modules) support
+- Native fetch API
+- **Min Version**: 18.0.0
+
+**Express 4.18+**
+
+- Minimalist web framework
+- Middleware support
+- Route handling
+- **Usage**: HTTP API server
+
+#### HTTP & CORS
+
+**cors 2.8+**
+
+- Cross-Origin Resource Sharing middleware
+- Configurable origins
+- **Usage**: Allow Open WebUI to call bridge
+
+**dotenv 16.3+**
+
+- Environment variable loading
+- `.env` file support
+- **Usage**: Configuration management
+
+#### Logging
+
+**winston 3.11+**
+
+- Flexible logging library
+- Multiple transports (console, file)
+- Log levels (error, warn, info, debug)
+- **Usage**: Bridge activity logging
+
+### Cortex SDK
+
+#### Core
+
+**Cortex SDK (TypeScript)**
+
+- Location: `../../dist/index.js` (local build)
+- Language: TypeScript compiled to JavaScript
+- **Provides**: Memory, Contexts, Facts, Agents APIs
+
+**Convex 1.28+**
+
+- Backend-as-a-Service
+- Real-time database
+- Serverless functions
+- **Usage**: Cortex data storage
+
+#### Embeddings
+
+**OpenAI API 4.20+**
+
+- Text embedding generation
+- Model: `text-embedding-3-small` or `text-embedding-3-large`
+- **Usage**: Semantic search vectors
+
+**Node.js OpenAI Client**
+
+- Official OpenAI SDK for Node.js
+- Streaming support
+- **Package**: `openai`
+
+---
+
+## Integration Layer
+
+### Cortex Bridge API
+
+**Port**: 3000 (configurable)
+
+**Endpoints**:
+
+- `POST /api/memory/remember` - Store conversation
+- `POST /api/memory/recall` - Search memories
+- `GET /api/users/:userId` - Get user profile
+- `POST /api/contexts/create` - Create context
+- `GET /api/facts/:memorySpaceId` - Query facts
+- `POST /api/agents/register` - Register agent
+
+**Protocol**: HTTP/HTTPS  
+**Format**: JSON  
+**Auth**: Optional (can add API key middleware)
+
+### Python Client Module
+
+**File**: `backend/apps/cortex/client.py`
+
+```python
+import httpx
+from typing import List, Optional
+from pydantic import BaseModel
+
+class Memory(BaseModel):
+    text: str
+    similarity: float
+    timestamp: str
+
+class CortexClient:
+    def __init__(self, bridge_url: str):
+        self.bridge_url = bridge_url
+        self.client = httpx.AsyncClient(timeout=30.0)
+
+    async def recall_memories(
+        self, user_id: str, query: str, limit: int = 5
+    ) -> List[Memory]:
+        """Retrieve relevant memories"""
+        response = await self.client.post(
+            f"{self.bridge_url}/api/memory/recall",
+            json={"userId": user_id, "query": query, "limit": limit}
+        )
+        return [Memory(**m) for m in response.json()["memories"]]
 ```
 
-### Networking
+**Dependencies**:
 
-**Internal Network:**
-- Docker bridge network
-- Service discovery via container names
-- No external exposure for bridge service
-
-**External Ports:**
-- `8080` - Open WebUI web interface
-- `5432` - PostgreSQL (optional, for external tools)
-
-### Reverse Proxy (Production)
-
-**Options:**
-1. **Nginx** - Lightweight, high-performance
-2. **Traefik** - Docker-native with automatic SSL
-3. **Caddy** - Automatic HTTPS
-
-**Configuration Example (Nginx):**
-```nginx
-server {
-    listen 443 ssl http2;
-    server_name chat.example.com;
-    
-    ssl_certificate /etc/ssl/cert.pem;
-    ssl_certificate_key /etc/ssl/key.pem;
-    
-    location / {
-        proxy_pass http://localhost:8080;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-    }
-}
-```
+- `httpx` - Async HTTP client
+- `pydantic` - Data validation
 
 ---
 
 ## Development Tools
 
+### Version Control
+
+**Git**
+
+- Source control
+- Branch management
+- **Branch**: `cortex-integration` (feature branch)
+
+**GitHub**
+
+- Remote repository
+- Issue tracking
+- Pull requests
+
 ### Code Quality
 
-**Linting:**
-- **ESLint** - JavaScript/TypeScript linter
-- **Pylint** - Python linter
-- **Prettier** - Code formatter
+**ESLint** (JavaScript/TypeScript)
 
-**Type Checking:**
-- **TypeScript Compiler** - Static type checking
-- **Mypy** - Python type checker
+- Linting for JavaScript/TypeScript code
+- Config: `.eslintrc.js`
+
+**Prettier**
+
+- Code formatter
+- Consistent code style
+- Auto-format on save
+
+**Black** (Python)
+
+- Python code formatter
+- PEP 8 compliant
+- **Usage**: Format backend code
+
+**mypy** (Python)
+
+- Static type checker for Python
+- Type hint validation
+- **Usage**: Catch type errors
 
 ### Testing
 
-**Backend Testing:**
-- **Pytest** - Python test framework
-- **Jest** - JavaScript test framework
-- **Supertest** - HTTP API testing
+**Pytest** (Python)
 
-**Integration Testing:**
-- **Playwright** - End-to-end browser testing
-- **Docker Compose** - Integration test environments
+- Testing framework for Python
+- Fixtures support
+- **Usage**: Backend tests
 
-### Monitoring
+**Playwright** (JavaScript)
 
-**Logging:**
-- **Winston** (Node.js) - Structured logging
-- **Loguru** (Python) - Beautiful logging
-- **JSON logs** - Machine-parseable format
-
-**Metrics:**
-- **Prometheus** (optional) - Time-series metrics
-- **Grafana** (optional) - Metrics visualization
-
-**Tracing:**
-- **OpenTelemetry** (optional) - Distributed tracing
-- **Jaeger** (optional) - Trace visualization
+- End-to-end testing
+- Browser automation
+- **Usage**: Frontend E2E tests
 
 ### Development Environment
 
-**Required:**
-- Node.js 18+ LTS
-- Python 3.11+
-- Docker Desktop
-- Git
+**VS Code** (Recommended)
 
-**Recommended:**
-- VS Code with extensions:
-  - ESLint
-  - Prettier
-  - Python
-  - Docker
+- Extensions:
   - Svelte for VS Code
+  - Python
+  - Prettier
+  - ESLint
+  - Tailwind CSS IntelliSense
+
+**Cursor** (Alternative)
+
+- AI-powered IDE
+- Same extensions as VS Code
 
 ---
 
-## Optional Components
+## Production Stack
 
-### Graph Database (Future - Feature D)
+### Container Orchestration
 
-**Neo4j:**
-- Version: 5.x Community or Enterprise
-- Purpose: Advanced relationship queries
-- Deployment: Docker container
-- Connection: Bolt protocol (port 7687)
+#### Docker
 
-**Memgraph:**
-- Version: 2.x
-- Purpose: High-performance alternative to Neo4j
-- Deployment: Docker container
-- Connection: Bolt protocol compatible
+**Docker 24.0+**
 
-**Usage:**
-```typescript
-import { CypherGraphAdapter } from '@cortexmemory/sdk/graph';
+- Container platform
+- Image building
+- **Why**: Consistent environments
 
-const graph = new CypherGraphAdapter();
-await graph.connect({
-  uri: 'bolt://localhost:7687',
-  username: 'neo4j',
-  password: 'password'
-});
+**Docker Compose**
 
-const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL!,
-  graph: { adapter: graph }
-});
+- Multi-container orchestration
+- Service definition
+- **File**: `docker-compose.full.yml`
+
+```yaml
+version: "3.8"
+
+services:
+  cortex-bridge:
+    build: ./src/cortex-bridge
+    image: cortex-bridge:latest
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - CONVEX_URL=${CONVEX_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:latest
+    # Modified to include Cortex integration
+    build: ./open-webui-fork
+    restart: unless-stopped
+    depends_on:
+      - cortex-bridge
+      - postgresql
+
+  postgresql:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=openwebui
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
 ```
 
-### Message Queue (High Scale)
+### Infrastructure
 
-**For enterprise deployments:**
+#### Reverse Proxy
 
-**Redis:**
-- Version: 7.x
-- Purpose: Job queue, caching, rate limiting
-- Deployment: Docker or managed service
+**Nginx** (Optional)
 
-**RabbitMQ:**
-- Version: 3.12+
-- Purpose: Message broker for async tasks
-- Use case: Background fact extraction
-
-### Load Balancer (Production)
-
-**HAProxy:**
-- Layer 4/7 load balancing
-- Health checks
+- HTTP reverse proxy
+- Load balancing
 - SSL termination
+- **Usage**: Production deployment
 
-**AWS ALB / GCP Load Balancer:**
-- Managed load balancing
-- Auto-scaling integration
-- Built-in SSL/TLS
+#### Monitoring
 
----
+**Prometheus** (Optional)
 
-## Technology Decision Rationale
+- Metrics collection
+- Time-series database
+- **Usage**: Performance monitoring
 
-### Why Svelte? (Open WebUI's Choice)
-- ✅ Smaller bundle sizes than React/Vue
-- ✅ True reactivity without virtual DOM
-- ✅ Excellent performance
-- ✅ Growing ecosystem
+**Grafana** (Optional)
 
-### Why FastAPI? (Open WebUI's Choice)
-- ✅ Modern Python async support
-- ✅ Automatic OpenAPI documentation
-- ✅ Great performance (comparable to Node.js)
-- ✅ Type hints with Pydantic
-
-### Why Node.js for Cortex Bridge?
-- ✅ Cortex SDK is TypeScript-first
-- ✅ Excellent async/await support
-- ✅ Large ecosystem for HTTP servers
-- ✅ Easy deployment
-
-### Why Convex for Cortex?
-- ✅ ACID transactions out of the box
-- ✅ Real-time subscriptions built-in
-- ✅ Automatic scaling
-- ✅ TypeScript-first platform
-- ✅ No infrastructure management
-- ✅ Excellent developer experience
-
-### Why Docker Compose?
-- ✅ Single-command deployment
-- ✅ Reproducible environments
-- ✅ Easy local development
-- ✅ Production-ready
-- ✅ No complex orchestration needed
+- Metrics visualization
+- Dashboards
+- **Usage**: Monitoring UI
 
 ---
 
-## Version Requirements
+## Environment Configuration
 
-### Minimum Versions
+### Development Environment
 
-| Component | Version | Reason |
-|-----------|---------|--------|
-| Node.js | 18.0.0+ | ES modules, native fetch |
-| Python | 3.11+ | Modern async, type hints |
-| Docker | 24.0+ | Compose v2 features |
-| Convex | 1.28.0+ | Required by Cortex SDK |
-| TypeScript | 5.0+ | Latest type system features |
-
-### Recommended Versions
-
-| Component | Version | Reason |
-|-----------|---------|--------|
-| Node.js | 20.x LTS | Latest stable LTS |
-| Python | 3.11 | Performance improvements |
-| Docker | Latest stable | Security patches |
-| PostgreSQL | 15.x | Performance, JSON support |
-
----
-
-## Package Size Overview
-
-### Production Bundle Sizes
-
-**Open WebUI Frontend:**
-- Initial JS: ~500 KB (gzipped)
-- CSS: ~50 KB (gzipped)
-- Fonts/Icons: ~100 KB
-
-**Cortex Bridge:**
-- Node.js runtime: ~50 MB
-- Dependencies: ~100 MB
-- Total container: ~150 MB
-
-**Docker Images:**
-- Open WebUI: ~2 GB
-- Cortex Bridge: ~200 MB
-- PostgreSQL: ~200 MB
-- Total: ~2.4 GB
-
----
-
-## Environment Variables Reference
-
-### Required
+**File**: `.env.local`
 
 ```bash
-# Convex
-CONVEX_URL=https://your-deployment.convex.cloud
+# Convex (local development)
+CONVEX_URL=http://127.0.0.1:3210
 
-# OpenAI (for embeddings)
-OPENAI_API_KEY=sk-...
+# OpenAI
+OPENAI_API_KEY=sk-your-dev-key
 
-# Open WebUI
-OPENWEBUI_SECRET_KEY=random-secret-key
+# Cortex Bridge
+CORTEX_BRIDGE_URL=http://localhost:3000
+ENABLE_CORTEX_MEMORY=true
 
-# LLM Provider (pick one)
-OPENAI_API_KEY=sk-...
-# OR
-ANTHROPIC_API_KEY=sk-ant-...
-# OR
-OLLAMA_BASE_URL=http://localhost:11434
+# Open WebUI Database (development)
+DATABASE_URL=sqlite:///./data/webui.db
+
+# Open WebUI Settings
+WEBUI_SECRET_KEY=dev-secret-key
+WEBUI_JWT_SECRET_KEY=dev-jwt-secret
 ```
 
-### Optional
+### Production Environment
+
+**File**: `.env.production`
 
 ```bash
-# PostgreSQL (production)
-DATABASE_URL=postgresql://user:pass@localhost:5432/openwebui
+# Convex (production deployment)
+CONVEX_URL=https://your-project.convex.cloud
 
-# Redis (caching)
-REDIS_URL=redis://localhost:6379
+# OpenAI
+OPENAI_API_KEY=sk-your-production-key
 
-# Monitoring
-SENTRY_DSN=https://...
+# Cortex Bridge
+CORTEX_BRIDGE_URL=http://cortex-bridge:3000
+ENABLE_CORTEX_MEMORY=true
 
-# Feature flags
-ENABLE_FACTS_EXTRACTION=true
-ENABLE_GRAPH_DATABASE=false
+# Open WebUI Database (production)
+DATABASE_URL=postgresql://user:pass@postgresql:5432/openwebui
+
+# Security
+WEBUI_SECRET_KEY=<long-random-string>
+WEBUI_JWT_SECRET_KEY=<long-random-string>
+
+# Performance
+NODE_ENV=production
+WORKERS=4
 ```
 
 ---
 
-## Development vs Production
+## Dependency Management
 
-### Development Stack
+### JavaScript/TypeScript (Cortex Bridge)
 
-**Optimized for:**
-- Fast iteration
-- Easy debugging
-- Local testing
+**File**: `src/cortex-bridge/package.json`
 
-**Components:**
-- SQLite for UI state
-- Local Convex deployment
-- Docker Compose
-- Hot reloading
-- Debug logging
+```json
+{
+  "type": "module",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "openai": "^4.20.0",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "typescript": "^5.3.0"
+  }
+}
+```
 
-### Production Stack
+### Python (Open WebUI Backend)
 
-**Optimized for:**
-- Performance
-- Reliability
-- Scalability
+**File**: `backend/requirements.txt`
 
-**Components:**
-- PostgreSQL for UI state
-- Convex Cloud
-- Kubernetes (optional)
-- Load balancer
-- Monitoring stack
-- SSL/TLS
-- Log aggregation
+```
+fastapi==0.110.0
+uvicorn[standard]==0.27.0
+sqlalchemy==2.0.25
+alembic==1.13.1
+httpx==0.25.2
+pydantic==2.5.3
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+psycopg2-binary==2.9.9  # PostgreSQL driver
+redis==5.0.1
+```
+
+**Additional for Cortex Integration**:
+
+```
+# Add to requirements.txt
+python-dotenv==1.0.0
+```
+
+### Svelte (Open WebUI Frontend)
+
+**File**: `package.json`
+
+```json
+{
+  "devDependencies": {
+    "@sveltejs/adapter-node": "^2.0.0",
+    "@sveltejs/kit": "^2.0.0",
+    "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "svelte": "^4.2.0",
+    "typescript": "^5.3.0",
+    "vite": "^5.0.0",
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.32",
+    "autoprefixer": "^10.4.16"
+  },
+  "dependencies": {
+    "daisyui": "^4.4.0",
+    "@iconify/svelte": "^3.1.0"
+  }
+}
+```
 
 ---
 
-## Summary
+## Version Compatibility Matrix
 
-This integration uses a **modern, production-ready stack** that combines:
+| Component  | Minimum Version | Recommended | Notes                 |
+| ---------- | --------------- | ----------- | --------------------- |
+| Node.js    | 18.0.0          | 20.x LTS    | ESM support required  |
+| Python     | 3.11            | 3.12        | Type hints, async     |
+| Docker     | 24.0            | Latest      | BuildKit support      |
+| PostgreSQL | 13              | 15          | JSON support          |
+| Redis      | 6               | 7           | Optional, for caching |
 
-1. **Open WebUI** - Proven chat interface with 30K+ stars
-2. **Cortex SDK** - Enterprise memory system built on Convex
-3. **Node.js Bridge** - TypeScript-first integration layer
-4. **Docker Compose** - Simple, reproducible deployment
+---
 
-The result is a **complete solution** that's:
-- ✅ Easy to deploy (one command)
-- ✅ Production-ready (ACID, scaling, monitoring)
-- ✅ Developer-friendly (TypeScript, OpenAPI, hot reload)
-- ✅ Enterprise-grade (GDPR, versioning, analytics)
+## Installation Commands
 
-Next: [03-FEATURES-DEMONSTRATED.md](./03-FEATURES-DEMONSTRATED.md) - Deep dive into Cortex features
+### Complete Setup (All Components)
 
+```bash
+# 1. Clone Open WebUI
+cd "Examples and Proofs/Open-WebUI-Integration"
+git clone https://github.com/open-webui/open-webui.git open-webui-fork
+cd open-webui-fork
+git checkout -b cortex-integration
+
+# 2. Install Python dependencies (Backend)
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+
+# 3. Install Node dependencies (Frontend)
+cd ../
+npm install
+
+# 4. Install Cortex Bridge dependencies
+cd ../src/cortex-bridge
+npm install
+
+# 5. Setup environment
+cd ../../
+cp env.example .env.local
+# Edit .env.local with your configuration
+
+# 6. Build Cortex SDK (if not already built)
+cd ../../..  # Back to project root
+npm run build
+```
+
+---
+
+## Next Steps
+
+- **Features Documentation** → [03-FEATURES-DEMONSTRATED.md](03-FEATURES-DEMONSTRATED.md)
+- **Integration Steps** → [04-INTEGRATION-GUIDE.md](04-INTEGRATION-GUIDE.md)
+- **Visual Components** → [06-VISUAL-COMPONENTS.md](06-VISUAL-COMPONENTS.md)
+- **Deployment** → [09-DEPLOYMENT.md](09-DEPLOYMENT.md)

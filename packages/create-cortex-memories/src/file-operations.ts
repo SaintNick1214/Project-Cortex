@@ -2,12 +2,12 @@
  * File operations for copying Cortex backend functions
  */
 
-import fs from 'fs-extra';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import { getSDKPath } from './utils.js';
-import pc from 'picocolors';
+import fs from "fs-extra";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+import { getSDKPath } from "./utils.js";
+import pc from "picocolors";
 
 // ES module equivalents of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -19,35 +19,39 @@ const __dirname = dirname(__filename);
 export async function deployCortexBackend(projectPath: string): Promise<void> {
   // Look for SDK in the newly created project's node_modules
   const sdkPath = getSDKPath(projectPath);
-  
+
   if (!sdkPath) {
     // Debug: Check what's actually in node_modules
-    const nodeModulesPath = path.join(projectPath, 'node_modules', '@cortexmemory');
+    const nodeModulesPath = path.join(
+      projectPath,
+      "node_modules",
+      "@cortexmemory",
+    );
     const exists = fs.existsSync(nodeModulesPath);
-    
+
     throw new Error(
       `Could not locate @cortexmemory/sdk package. ` +
-      `Checked: ${path.join(projectPath, 'node_modules', '@cortexmemory', 'sdk')} ` +
-      `(@cortexmemory folder exists: ${exists})`
+        `Checked: ${path.join(projectPath, "node_modules", "@cortexmemory", "sdk")} ` +
+        `(@cortexmemory folder exists: ${exists})`,
     );
   }
 
-  const convexDevPath = path.join(sdkPath, 'convex-dev');
-  const targetConvexPath = path.join(projectPath, 'convex');
+  const convexDevPath = path.join(sdkPath, "convex-dev");
+  const targetConvexPath = path.join(projectPath, "convex");
 
   // Check if convex-dev exists in SDK
   if (!fs.existsSync(convexDevPath)) {
     throw new Error(
       `Convex backend functions not found at ${convexDevPath}. ` +
-      'Please ensure you are using @cortexmemory/sdk v0.8.1 or later.'
+        "Please ensure you are using @cortexmemory/sdk v0.8.1 or later.",
     );
   }
 
   // Check if target convex/ folder exists
   const convexExists = fs.existsSync(targetConvexPath);
-  
+
   if (convexExists) {
-    console.log(pc.yellow('⚠️  Existing convex/ folder detected'));
+    console.log(pc.yellow("⚠️  Existing convex/ folder detected"));
     // In a real implementation, we'd prompt the user here
     // For now, we'll backup and overwrite
     const backupPath = path.join(projectPath, `convex.backup.${Date.now()}`);
@@ -56,7 +60,7 @@ export async function deployCortexBackend(projectPath: string): Promise<void> {
   }
 
   // Copy all files from convex-dev to convex
-  console.log(pc.dim('   Copying Cortex backend functions...'));
+  console.log(pc.dim("   Copying Cortex backend functions..."));
   await fs.copy(convexDevPath, targetConvexPath, {
     overwrite: true,
     errorOnExist: false,
@@ -64,45 +68,47 @@ export async function deployCortexBackend(projectPath: string): Promise<void> {
 
   // List of critical files to verify
   const criticalFiles = [
-    'schema.ts',
-    'conversations.ts',
-    'immutable.ts',
-    'mutable.ts',
-    'memories.ts',
-    'facts.ts',
-    'contexts.ts',
-    'memorySpaces.ts',
-    'users.ts',
-    'agents.ts',
-    'graphSync.ts',
+    "schema.ts",
+    "conversations.ts",
+    "immutable.ts",
+    "mutable.ts",
+    "memories.ts",
+    "facts.ts",
+    "contexts.ts",
+    "memorySpaces.ts",
+    "users.ts",
+    "agents.ts",
+    "graphSync.ts",
   ];
 
   // Verify all critical files were copied
   const missingFiles = criticalFiles.filter(
-    (file) => !fs.existsSync(path.join(targetConvexPath, file))
+    (file) => !fs.existsSync(path.join(targetConvexPath, file)),
   );
 
   if (missingFiles.length > 0) {
     throw new Error(
-      `Failed to copy some backend functions: ${missingFiles.join(', ')}`
+      `Failed to copy some backend functions: ${missingFiles.join(", ")}`,
     );
   }
 
-  console.log(pc.green(`   ✓ Copied ${criticalFiles.length} backend functions`));
+  console.log(
+    pc.green(`   ✓ Copied ${criticalFiles.length} backend functions`),
+  );
 }
 
 /**
  * Create or update convex.json configuration
  */
 export async function createConvexJson(projectPath: string): Promise<void> {
-  const convexJsonPath = path.join(projectPath, 'convex.json');
-  
+  const convexJsonPath = path.join(projectPath, "convex.json");
+
   const convexConfig = {
-    functions: 'convex/',
+    functions: "convex/",
   };
 
   await fs.writeJson(convexJsonPath, convexConfig, { spaces: 2 });
-  console.log(pc.dim('   Created convex.json'));
+  console.log(pc.dim("   Created convex.json"));
 }
 
 /**
@@ -111,16 +117,22 @@ export async function createConvexJson(projectPath: string): Promise<void> {
 export async function copyTemplate(
   templateName: string,
   targetPath: string,
-  projectName: string
+  projectName: string,
 ): Promise<void> {
   // When running from npm/npx, templates are relative to the package root
   // Try multiple possible locations
   const possiblePaths = [
-    path.join(__dirname, '..', 'templates', templateName),  // From dist/
-    path.join(__dirname, '../..', 'templates', templateName),  // From dist/subdir
-    path.join(process.cwd(), 'node_modules', 'create-cortex-memories', 'templates', templateName),  // From installed package
+    path.join(__dirname, "..", "templates", templateName), // From dist/
+    path.join(__dirname, "../..", "templates", templateName), // From dist/subdir
+    path.join(
+      process.cwd(),
+      "node_modules",
+      "create-cortex-memories",
+      "templates",
+      templateName,
+    ), // From installed package
   ];
-  
+
   let templatePath: string | null = null;
   for (const tryPath of possiblePaths) {
     if (fs.existsSync(tryPath)) {
@@ -128,58 +140,65 @@ export async function copyTemplate(
       break;
     }
   }
-  
+
   console.log(pc.dim(`   Looking for template...`));
-  
+
   if (!templatePath) {
     throw new Error(
       `Template ${templateName} not found. Tried:\n` +
-      possiblePaths.map(p => `  - ${p}`).join('\n')
+        possiblePaths.map((p) => `  - ${p}`).join("\n"),
     );
   }
 
   console.log(pc.dim(`   Found at: ${templatePath}`));
   console.log(pc.dim(`   Copying to: ${targetPath}`));
-  
+
   // List what's in the template
   const templateFiles = await fs.readdir(templatePath, { recursive: true });
   console.log(pc.dim(`   Template has ${templateFiles.length} items`));
-  
-  // Copy template files  
+
+  // Copy template files
   console.log(pc.dim(`   Starting fs.copy...`));
-  
+
   try {
     await fs.copy(templatePath, targetPath, {
       overwrite: true,
       errorOnExist: false,
       filter: (src, dest) => {
-        const relativeSrc = path.relative(templatePath, src) || '.';
+        const relativeSrc = path.relative(templatePath, src) || ".";
         // Only skip if node_modules/dist are IN the template itself (not in the source path)
-        const skip = relativeSrc.includes('node_modules') || relativeSrc.includes('dist');
-        
-        console.log(pc.dim(`     Filter: ${relativeSrc} -> ${skip ? 'SKIP' : 'COPY'}`));
-        
+        const skip =
+          relativeSrc.includes("node_modules") || relativeSrc.includes("dist");
+
+        console.log(
+          pc.dim(`     Filter: ${relativeSrc} -> ${skip ? "SKIP" : "COPY"}`),
+        );
+
         return !skip;
       },
     });
-    
+
     console.log(pc.dim(`   fs.copy completed`));
   } catch (error) {
     console.error(pc.red(`   fs.copy error: ${error}`));
     throw new Error(`fs.copy failed: ${error}`);
   }
-  
+
   // Verify key files were copied
-  const keyFiles = ['package.json', 'src/index.ts', 'tsconfig.json'];
-  const missing = keyFiles.filter(f => !fs.existsSync(path.join(targetPath, f)));
+  const keyFiles = ["package.json", "src/index.ts", "tsconfig.json"];
+  const missing = keyFiles.filter(
+    (f) => !fs.existsSync(path.join(targetPath, f)),
+  );
   if (missing.length > 0) {
-    throw new Error(`Failed to copy template files: ${missing.join(', ')} not found`);
+    throw new Error(
+      `Failed to copy template files: ${missing.join(", ")} not found`,
+    );
   }
 
   // Replace template variables in package.json
-  const packageJsonPath = path.join(targetPath, 'package.json');
+  const packageJsonPath = path.join(targetPath, "package.json");
   if (fs.existsSync(packageJsonPath)) {
-    let packageJson = await fs.readFile(packageJsonPath, 'utf-8');
+    let packageJson = await fs.readFile(packageJsonPath, "utf-8");
     packageJson = packageJson.replace(/\{\{PROJECT_NAME\}\}/g, projectName);
     await fs.writeFile(packageJsonPath, packageJson);
   }
@@ -189,8 +208,8 @@ export async function copyTemplate(
  * Create .gitignore if it doesn't exist
  */
 export async function ensureGitignore(projectPath: string): Promise<void> {
-  const gitignorePath = path.join(projectPath, '.gitignore');
-  
+  const gitignorePath = path.join(projectPath, ".gitignore");
+
   const gitignoreContent = `# Dependencies
 node_modules/
 
@@ -225,7 +244,6 @@ yarn-error.log*
 
   if (!fs.existsSync(gitignorePath)) {
     await fs.writeFile(gitignorePath, gitignoreContent);
-    console.log(pc.dim('   Created .gitignore'));
+    console.log(pc.dim("   Created .gitignore"));
   }
 }
-

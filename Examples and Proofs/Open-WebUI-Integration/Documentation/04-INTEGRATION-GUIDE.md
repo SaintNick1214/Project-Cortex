@@ -1,23 +1,25 @@
 # Integration Guide - Open WebUI + Cortex
 
-> **Step-by-step guide to integrating Cortex memory into Open WebUI**
+> **Step-by-Step: Modify Open WebUI to Use Cortex Memory**
 
-This guide walks you through the complete integration process, from initial setup to production deployment.
+This guide walks through the complete integration process, from forking Open WebUI to deploying the Cortex-enabled version.
 
 ## Table of Contents
+
+- [Prerequisites](#prerequisites)
 - [Phase 1: Setup](#phase-1-setup)
-- [Phase 2: Memory Hooks](#phase-2-memory-hooks)
-- [Phase 3: Feature Integration](#phase-3-feature-integration)
-- [Phase 4: Testing](#phase-4-testing)
-- [Phase 5: Production Deployment](#phase-5-production-deployment)
+- [Phase 2: Backend Integration](#phase-2-backend-integration)
+- [Phase 3: Frontend Visual Components](#phase-3-frontend-visual-components)
+- [Phase 4: Demo Pages](#phase-4-demo-pages)
+- [Phase 5: Testing](#phase-5-testing)
+- [Phase 6: Production Deployment](#phase-6-production-deployment)
 
 ---
 
-## Phase 1: Setup
+## Prerequisites
 
-### Step 1.1: Prerequisites
+### Required Software
 
-**Required Software:**
 ```bash
 # Check versions
 node --version    # Should be 18.0.0+
@@ -26,820 +28,941 @@ docker --version  # Should be 24.0+
 git --version     # Any recent version
 ```
 
-**Required Accounts:**
-- Convex account (free tier: [convex.dev](https://convex.dev))
-- OpenAI API key (for embeddings)
-- LLM provider API key (OpenAI, Anthropic, or local Ollama)
+### Required Accounts & Keys
 
-### Step 1.2: Clone and Directory Setup
+- ✅ Convex account (free tier: convex.dev)
+- ✅ OpenAI API key (for embeddings)
+- ✅ LLM provider API key (OpenAI/Anthropic) or local Ollama
+
+### Skills Required
+
+- Python (FastAPI, async/await)
+- JavaScript/TypeScript (Svelte basics)
+- Docker basics
+- Git basics
+
+---
+
+## Phase 1: Setup
+
+### Step 1.1: Fork and Clone Open WebUI
 
 ```bash
-# Clone the Cortex repository
-git clone https://github.com/SaintNick1214/Project-Cortex.git
-cd Project-Cortex
-
 # Navigate to integration directory
 cd "Examples and Proofs/Open-WebUI-Integration"
 
-# Create necessary directories
-mkdir -p src/cortex-bridge src/openwebui-middleware data
+# Clone Open WebUI
+git clone https://github.com/open-webui/open-webui.git open-webui-fork
+cd open-webui-fork
+
+# Create integration branch
+git checkout -b cortex-integration
+
+# Verify structure
+ls -la
+# Should see: backend/, src/, package.json, etc.
 ```
 
-### Step 1.3: Environment Configuration
-
-Create `.env` file:
+### Step 1.2: Start Cortex Bridge
 
 ```bash
-# Copy template
+# In separate terminal, start Cortex Bridge
+cd "../src/cortex-bridge"
+
+# Install dependencies
+npm install
+
+# Create .env if doesn't exist
+cp ../../.env.local .env
+
+# Start bridge
+node server.js
+
+# Should see:
+# ✓ Loaded Cortex SDK from local build
+# 🚀 Cortex Bridge ready at http://localhost:3000
+```
+
+### Step 1.3: Configure Environment
+
+**File**: `open-webui-fork/.env`
+
+```bash
+# Copy example
 cp .env.example .env
 
-# Edit with your values
-nano .env
-```
-
-**Required Environment Variables:**
-```bash
-# ============================================
-# CONVEX CONFIGURATION
-# ============================================
-CONVEX_URL=https://your-deployment.convex.cloud
-
-# ============================================
-# OPENAI (for embeddings)
-# ============================================
-OPENAI_API_KEY=sk-...
-
-# ============================================
-# LLM PROVIDER (choose one or more)
-# ============================================
-# Option 1: OpenAI
-OPENAI_API_KEY=sk-...
-
-# Option 2: Anthropic Claude
-ANTHROPIC_API_KEY=sk-ant-...
-
-# Option 3: Local Ollama
-OLLAMA_BASE_URL=http://localhost:11434
-
-# ============================================
-# OPEN WEBUI CONFIGURATION
-# ============================================
-WEBUI_SECRET_KEY=$(openssl rand -hex 32)
-WEBUI_JWT_SECRET_KEY=$(openssl rand -hex 32)
-
-# Database (SQLite for dev, PostgreSQL for prod)
-DATABASE_URL=sqlite:///data/webui.db
-
-# ============================================
-# CORTEX BRIDGE CONFIGURATION
-# ============================================
-CORTEX_BRIDGE_PORT=3000
-CORTEX_BRIDGE_HOST=0.0.0.0
-
-# ============================================
-# FEATURE FLAGS
-# ============================================
-ENABLE_FACTS_EXTRACTION=true
-ENABLE_CONTEXT_CHAINS=true
-ENABLE_MULTI_AGENT=true
-ENABLE_USER_PROFILES=true
-```
-
-### Step 1.4: Deploy Cortex Schema to Convex
-
-```bash
-# Install Convex CLI globally
-npm install -g convex
-
-# Navigate to Convex directory
-cd ../../convex-dev
-
-# Login to Convex
-convex login
-
-# Initialize (first time only)
-convex dev  # Press Ctrl+C after deployment URL appears
-
-# Or deploy to production
-convex deploy --prod
-
-# Copy deployment URL to .env file
-# CONVEX_URL=https://your-deployment.convex.cloud
-
-# Return to integration directory
-cd "../Examples and Proofs/Open-WebUI-Integration"
-```
-
-### Step 1.5: Verify Setup
-
-```bash
-# Test Convex connection
-curl -X POST $CONVEX_URL \
-  -H "Content-Type: application/json" \
-  -d '{"path":"conversations/list","args":{}}'
-
-# Should return: {"data":[],"status":"success"}
+# Add Cortex configuration
+echo "" >> .env
+echo "# Cortex Integration" >> .env
+echo "CORTEX_BRIDGE_URL=http://localhost:3000" >> .env
+echo "ENABLE_CORTEX_MEMORY=true" >> .env
 ```
 
 ---
 
-## Phase 2: Memory Hooks
+## Phase 2: Backend Integration
 
-This phase creates the bridge between Open WebUI and Cortex.
+### Step 2.1: Add Configuration
 
-### Step 2.1: Create Cortex Bridge Service
+**File**: `open-webui-fork/backend/config.py`
 
-**Create `src/cortex-bridge/package.json`:**
-```json
-{
-  "name": "cortex-bridge",
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
-  },
-  "dependencies": {
-    "@cortexmemory/sdk": "^0.8.0",
-    "convex": "^1.28.0",
-    "express": "^4.18.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "openai": "^4.20.0",
-    "winston": "^3.11.0"
-  }
-}
+**Add at end of file:**
+
+```python
+####################################
+# CORTEX INTEGRATION
+####################################
+
+CORTEX_BRIDGE_URL = os.environ.get("CORTEX_BRIDGE_URL", "")
+ENABLE_CORTEX_MEMORY = os.environ.get("ENABLE_CORTEX_MEMORY", "false").lower() == "true"
+
+# Log configuration
+if ENABLE_CORTEX_MEMORY:
+    log.info(f"Cortex Memory ENABLED - Bridge URL: {CORTEX_BRIDGE_URL}")
+else:
+    log.info("Cortex Memory DISABLED")
 ```
 
-**Create `src/cortex-bridge/server.js`:**
-```javascript
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { Cortex } from '@cortexmemory/sdk';
-import OpenAI from 'openai';
-import winston from 'winston';
+### Step 2.2: Create Cortex Client Module
 
-dotenv.config();
+**File**: `open-webui-fork/backend/apps/cortex/__init__.py`
 
-// Initialize logger
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.json(),
-  transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ filename: 'cortex-bridge.log' })
-  ]
-});
-
-// Initialize Cortex
-const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL
-});
-
-// Initialize OpenAI for embeddings
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
-
-// Initialize Express
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-// ============================================
-// MEMORY OPERATIONS
-// ============================================
-
-/**
- * Store a conversation in Cortex
- */
-app.post('/api/memory/remember', async (req, res) => {
-  try {
-    const {
-      userId,
-      conversationId,
-      userMessage,
-      agentResponse,
-      contextId,
-      participantId,
-      metadata
-    } = req.body;
-
-    // Generate embedding for semantic search
-    const embedding = await generateEmbedding(userMessage);
-
-    // Store in Cortex
-    const result = await cortex.memory.remember({
-      memorySpaceId: userId,
-      conversationId: conversationId || `conv-${Date.now()}`,
-      userMessage,
-      agentResponse: agentResponse || null,
-      userId,
-      embedding,
-      contextId,
-      participantId: participantId || 'default',
-      importance: 5,
-      extractFacts: process.env.ENABLE_FACTS_EXTRACTION === 'true',
-      metadata: {
-        ...metadata,
-        timestamp: new Date().toISOString()
-      }
-    });
-
-    logger.info('Memory stored', { conversationId: result.conversationId });
-    
-    res.json({
-      success: true,
-      conversationId: result.conversationId,
-      memoryId: result.memoryId
-    });
-  } catch (error) {
-    logger.error('Error storing memory', { error: error.message });
-    res.status(500).json({ error: error.message });
-  }
-});
-
-/**
- * Recall memories from Cortex
- */
-app.post('/api/memory/recall', async (req, res) => {
-  try {
-    const {
-      userId,
-      query,
-      limit = 10,
-      contextId,
-      participantId
-    } = req.body;
-
-    // Generate query embedding
-    const embedding = await generateEmbedding(query);
-
-    // Recall from Cortex
-    const memories = await cortex.memory.recall({
-      memorySpaceId: userId,
-      query,
-      embedding,
-      limit,
-      contextId,
-      participantId,
-      includeEmbedding: false
-    });
-
-    logger.info('Memories recalled', {
-      userId,
-      count: memories.length
-    });
-
-    res.json({
-      success: true,
-      memories,
-      count: memories.length
-    });
-  } catch (error) {
-    logger.error('Error recalling memories', { error: error.message });
-    res.status(500).json({ error: error.message });
-  }
-});
-
-/**
- * Update conversation with agent response
- */
-app.post('/api/memory/update-response', async (req, res) => {
-  try {
-    const { conversationId, agentResponse } = req.body;
-
-    await cortex.conversations.update({
-      conversationId,
-      agentResponse
-    });
-
-    logger.info('Conversation updated', { conversationId });
-    
-    res.json({ success: true });
-  } catch (error) {
-    logger.error('Error updating conversation', { error: error.message });
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// ============================================
-// USER MANAGEMENT
-// ============================================
-
-app.post('/api/users/create', async (req, res) => {
-  try {
-    const { userId, name, email, metadata } = req.body;
-
-    await cortex.users.create({
-      userId,
-      name,
-      email,
-      metadata
-    });
-
-    logger.info('User created', { userId });
-    res.json({ success: true });
-  } catch (error) {
-    logger.error('Error creating user', { error: error.message });
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.get('/api/users/:userId', async (req, res) => {
-  try {
-    const user = await cortex.users.get(req.params.userId);
-    res.json({ success: true, user });
-  } catch (error) {
-    res.status(404).json({ error: 'User not found' });
-  }
-});
-
-// ============================================
-// CONTEXT CHAINS
-// ============================================
-
-app.post('/api/contexts/create', async (req, res) => {
-  try {
-    const { name, description, memorySpaceId, parentId, metadata } = req.body;
-
-    const context = await cortex.contexts.create({
-      name,
-      description,
-      memorySpaceId,
-      parentId,
-      metadata
-    });
-
-    logger.info('Context created', { contextId: context.contextId });
-    res.json({ success: true, context });
-  } catch (error) {
-    logger.error('Error creating context', { error: error.message });
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.get('/api/contexts/:memorySpaceId', async (req, res) => {
-  try {
-    const contexts = await cortex.contexts.list(req.params.memorySpaceId);
-    res.json({ success: true, contexts });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// ============================================
-// FACTS
-// ============================================
-
-app.get('/api/facts/:memorySpaceId', async (req, res) => {
-  try {
-    const { contextId, limit = 50 } = req.query;
-
-    const facts = await cortex.facts.query({
-      memorySpaceId: req.params.memorySpaceId,
-      contextId,
-      limit: parseInt(limit)
-    });
-
-    res.json({ success: true, facts });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// ============================================
-// AGENTS
-// ============================================
-
-app.post('/api/agents/register', async (req, res) => {
-  try {
-    const { agentId, name, capabilities, metadata } = req.body;
-
-    await cortex.agents.register({
-      agentId,
-      name,
-      capabilities,
-      metadata
-    });
-
-    logger.info('Agent registered', { agentId });
-    res.json({ success: true });
-  } catch (error) {
-    logger.error('Error registering agent', { error: error.message });
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.get('/api/agents', async (req, res) => {
-  try {
-    const agents = await cortex.agents.list();
-    res.json({ success: true, agents });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// ============================================
-// UTILITIES
-// ============================================
-
-async function generateEmbedding(text) {
-  try {
-    const response = await openai.embeddings.create({
-      model: 'text-embedding-3-small',
-      input: text
-    });
-    return response.data[0].embedding;
-  } catch (error) {
-    logger.error('Error generating embedding', { error: error.message });
-    throw error;
-  }
-}
-
-// Health check
-app.get('/health', (req, res) => {
-  res.json({
-    status: 'healthy',
-    cortex: cortex ? 'connected' : 'disconnected',
-    timestamp: new Date().toISOString()
-  });
-});
-
-// Start server
-const PORT = process.env.CORTEX_BRIDGE_PORT || 3000;
-app.listen(PORT, () => {
-  logger.info(`Cortex Bridge running on port ${PORT}`);
-  console.log(`🚀 Cortex Bridge ready at http://localhost:${PORT}`);
-});
+```python
+"""Cortex integration module for Open WebUI"""
 ```
 
-### Step 2.2: Create Open WebUI Middleware
+**File**: `open-webui-fork/backend/apps/cortex/client.py`
 
-**Create `src/openwebui-middleware/cortex_integration.py`:**
 ```python
 """
-Open WebUI Middleware for Cortex Integration
-Intercepts chat requests and adds Cortex memory operations
+Cortex Client
+Async HTTP client for Cortex Bridge communication
 """
 
-import os
 import httpx
 import logging
-from typing import Optional, Dict, List, Any
-from fastapi import HTTPException
+from typing import List, Optional, Dict, Any
+from pydantic import BaseModel, Field
 
-logger = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
-CORTEX_BRIDGE_URL = os.getenv("CORTEX_BRIDGE_URL", "http://cortex-bridge:3000")
+
+class Memory(BaseModel):
+    """Memory recall result"""
+    text: str
+    similarity: float
+    timestamp: str
+    conversation_id: str
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
+class MemoryResponse(BaseModel):
+    """Response from remember endpoint"""
+    memory_id: str
+    conversation_id: str
+    facts_extracted: int = 0
+    success: bool = True
+
 
 class CortexClient:
-    """Client for communicating with Cortex Bridge"""
-    
-    def __init__(self, bridge_url: str = CORTEX_BRIDGE_URL):
+    """
+    Client for communicating with Cortex Bridge
+    Provides Python interface to Cortex SDK
+    """
+
+    def __init__(self, bridge_url: str):
         self.bridge_url = bridge_url
         self.client = httpx.AsyncClient(timeout=30.0)
-    
+        log.info(f"CortexClient initialized: {bridge_url}")
+
+    async def close(self):
+        """Close HTTP client"""
+        await self.client.aclose()
+
+    async def health_check(self) -> bool:
+        """Check if bridge is responding"""
+        try:
+            response = await self.client.get(f"{self.bridge_url}/health")
+            return response.status_code == 200
+        except Exception as e:
+            log.error(f"Cortex Bridge health check failed: {e}")
+            return False
+
+    async def recall_memories(
+        self,
+        user_id: str,
+        query: str,
+        limit: int = 5,
+        context_id: Optional[str] = None
+    ) -> List[Memory]:
+        """
+        Retrieve relevant memories for a query
+
+        Args:
+            user_id: User identifier
+            query: Search query text
+            limit: Maximum memories to return
+            context_id: Optional context to scope search
+
+        Returns:
+            List of Memory objects with similarity scores
+        """
+        try:
+            payload = {
+                "userId": user_id,
+                "query": query,
+                "limit": limit
+            }
+
+            if context_id:
+                payload["contextId"] = context_id
+
+            response = await self.client.post(
+                f"{self.bridge_url}/api/memory/recall",
+                json=payload
+            )
+
+            response.raise_for_status()
+            data = response.json()
+
+            memories = [Memory(**m) for m in data.get("memories", [])]
+            log.debug(f"Recalled {len(memories)} memories for query: {query[:50]}...")
+
+            return memories
+
+        except Exception as e:
+            log.error(f"Error recalling memories: {e}")
+            return []
+
     async def remember(
         self,
         user_id: str,
         conversation_id: str,
         user_message: str,
-        agent_response: Optional[str] = None,
+        agent_response: str,
         context_id: Optional[str] = None,
-        participant_id: Optional[str] = None,
+        extract_facts: bool = True,
         metadata: Optional[Dict] = None
-    ) -> Dict:
-        """Store a conversation in Cortex"""
+    ) -> Optional[MemoryResponse]:
+        """
+        Store conversation in Cortex
+
+        Args:
+            user_id: User identifier
+            conversation_id: Conversation identifier
+            user_message: User's message text
+            agent_response: AI agent's response
+            context_id: Optional context
+            extract_facts: Whether to extract facts
+            metadata: Additional metadata
+
+        Returns:
+            MemoryResponse with memory_id and facts count
+        """
         try:
+            payload = {
+                "userId": user_id,
+                "conversationId": conversation_id,
+                "userMessage": user_message,
+                "agentResponse": agent_response,
+                "extractFacts": extract_facts,
+                "metadata": metadata or {}
+            }
+
+            if context_id:
+                payload["contextId"] = context_id
+
             response = await self.client.post(
                 f"{self.bridge_url}/api/memory/remember",
-                json={
-                    "userId": user_id,
-                    "conversationId": conversation_id,
-                    "userMessage": user_message,
-                    "agentResponse": agent_response,
-                    "contextId": context_id,
-                    "participantId": participant_id,
-                    "metadata": metadata or {}
-                }
+                json=payload
             )
-            response.raise_for_status()
-            return response.json()
-        except Exception as e:
-            logger.error(f"Error storing memory: {e}")
-            raise HTTPException(status_code=500, detail=str(e))
-    
-    async def recall(
-        self,
-        user_id: str,
-        query: str,
-        limit: int = 10,
-        context_id: Optional[str] = None,
-        participant_id: Optional[str] = None
-    ) -> List[Dict]:
-        """Recall memories from Cortex"""
-        try:
-            response = await self.client.post(
-                f"{self.bridge_url}/api/memory/recall",
-                json={
-                    "userId": user_id,
-                    "query": query,
-                    "limit": limit,
-                    "contextId": context_id,
-                    "participantId": participant_id
-                }
-            )
+
             response.raise_for_status()
             data = response.json()
-            return data.get("memories", [])
+
+            result = MemoryResponse(**data)
+            log.debug(f"Stored memory: {result.memory_id}")
+
+            return result
+
         except Exception as e:
-            logger.error(f"Error recalling memories: {e}")
-            return []  # Fallback to empty
-    
-    async def update_response(
-        self,
-        conversation_id: str,
-        agent_response: str
-    ) -> None:
-        """Update conversation with agent response"""
-        try:
-            response = await self.client.post(
-                f"{self.bridge_url}/api/memory/update-response",
-                json={
-                    "conversationId": conversation_id,
-                    "agentResponse": agent_response
-                }
-            )
-            response.raise_for_status()
-        except Exception as e:
-            logger.error(f"Error updating response: {e}")
-    
-    async def create_user(
-        self,
-        user_id: str,
-        name: str,
-        email: str,
-        metadata: Optional[Dict] = None
-    ) -> None:
-        """Create user profile in Cortex"""
-        try:
-            response = await self.client.post(
-                f"{self.bridge_url}/api/users/create",
-                json={
-                    "userId": user_id,
-                    "name": name,
-                    "email": email,
-                    "metadata": metadata or {}
-                }
-            )
-            response.raise_for_status()
-        except Exception as e:
-            logger.error(f"Error creating user: {e}")
-    
-    async def register_agent(
-        self,
-        agent_id: str,
-        name: str,
-        capabilities: List[str],
-        metadata: Optional[Dict] = None
-    ) -> None:
-        """Register an agent in Cortex"""
-        try:
-            response = await self.client.post(
-                f"{self.bridge_url}/api/agents/register",
-                json={
-                    "agentId": agent_id,
-                    "name": name,
-                    "capabilities": capabilities,
-                    "metadata": metadata or {}
-                }
-            )
-            response.raise_for_status()
-        except Exception as e:
-            logger.error(f"Error registering agent: {e}")
+            log.error(f"Error storing memory: {e}")
+            return None
+
+
+def build_context_from_memories(memories: List[Memory]) -> str:
+    """
+    Build context injection text from recalled memories
+
+    Args:
+        memories: List of Memory objects
+
+    Returns:
+        Formatted context string for system prompt
+    """
+    if not memories:
+        return ""
+
+    context_lines = [
+        "\n## Relevant Context from Previous Conversations\n",
+        "Use this information to provide more personalized and contextual responses:\n"
+    ]
+
+    for i, memory in enumerate(memories, 1):
+        context_lines.append(
+            f"{i}. {memory.text} "
+            f"(from conversation on {memory.timestamp}, "
+            f"similarity: {int(memory.similarity * 100)}%)"
+        )
+
+    return "\n".join(context_lines)
+
 
 # Global client instance
-cortex_client = CortexClient()
+# Will be initialized in main.py
+cortex_client: Optional[CortexClient] = None
 
-def build_context_prompt(memories: List[Dict], user_message: str) -> str:
-    """Build enriched prompt with Cortex memories"""
-    if not memories:
-        return user_message
-    
-    context = "# Relevant Context from Memory:\n\n"
-    for i, memory in enumerate(memories, 1):
-        context += f"{i}. {memory.get('content', '')}\n"
-        if 'timestamp' in memory:
-            context += f"   (from {memory['timestamp']})\n"
-        context += "\n"
-    
-    context += f"\n# Current Question:\n{user_message}\n"
-    return context
+
+def initialize_cortex(bridge_url: str) -> CortexClient:
+    """Initialize global Cortex client"""
+    global cortex_client
+    cortex_client = CortexClient(bridge_url)
+    return cortex_client
 ```
 
-### Step 2.3: Integrate Middleware into Open WebUI
+### Step 2.3: Initialize Client in Main
 
-**Modify Open WebUI's chat endpoint** (typically in `backend/apps/webui/routers/chats.py`):
+**File**: `open-webui-fork/backend/main.py`
+
+**Add after imports:**
 
 ```python
-from .cortex_integration import cortex_client, build_context_prompt
+from apps.cortex.client import initialize_cortex
+from config import CORTEX_BRIDGE_URL, ENABLE_CORTEX_MEMORY
+```
 
+**Add before `app = FastAPI(...)` line:**
+
+```python
+# Initialize Cortex if enabled
+if ENABLE_CORTEX_MEMORY and CORTEX_BRIDGE_URL:
+    initialize_cortex(CORTEX_BRIDGE_URL)
+    log.info("Cortex integration initialized")
+```
+
+### Step 2.4: Modify Chat Router
+
+**File**: `open-webui-fork/backend/apps/webui/routers/chats.py`
+
+**Add imports at top:**
+
+```python
+from apps.cortex.client import cortex_client, build_context_from_memories
+from config import ENABLE_CORTEX_MEMORY
+```
+
+**Find the main chat endpoint (usually `@router.post("/chat")` or similar)**
+
+**Modify to add Cortex integration:**
+
+```python
 @router.post("/chat")
-async def chat_endpoint(
+async def chat(
     request: ChatRequest,
     user: User = Depends(get_current_user)
 ):
-    """Chat endpoint with Cortex memory integration"""
-    
-    # 1. Store user message in Cortex
-    conversation_result = await cortex_client.remember(
-        user_id=user.id,
-        conversation_id=request.conversation_id or f"conv-{int(time.time())}",
-        user_message=request.message,
-        context_id=request.context_id,
-        participant_id=request.model_id,
-        metadata={
-            "model": request.model_id,
-            "temperature": request.temperature,
-            "ip_address": request.client.host
-        }
-    )
-    
-    conversation_id = conversation_result["conversationId"]
-    
-    # 2. Recall relevant context from Cortex
-    memories = await cortex_client.recall(
-        user_id=user.id,
-        query=request.message,
-        limit=10,
-        context_id=request.context_id,
-        participant_id=request.model_id
-    )
-    
-    # 3. Build enriched prompt with context
-    enriched_prompt = build_context_prompt(memories, request.message)
-    
-    # 4. Call LLM with enriched prompt
-    response = await llm_client.generate(
-        model=request.model_id,
-        prompt=enriched_prompt,
-        temperature=request.temperature
-    )
-    
-    # 5. Update conversation with agent response
-    await cortex_client.update_response(
-        conversation_id=conversation_id,
-        agent_response=response
-    )
-    
-    # 6. Return response to user
-    return {"response": response, "conversation_id": conversation_id}
+    """
+    Chat endpoint with Cortex memory integration
+    """
+
+    # Initialize response metadata
+    cortex_data = {}
+
+    # CORTEX INTEGRATION: Recall relevant memories
+    if ENABLE_CORTEX_MEMORY and cortex_client:
+        try:
+            # Recall memories for context
+            memories = await cortex_client.recall_memories(
+                user_id=user.id,
+                query=request.message,
+                limit=5,
+                context_id=request.context_id if hasattr(request, 'context_id') else None
+            )
+
+            if memories:
+                # Augment system prompt with memories
+                context_injection = build_context_from_memories(memories)
+
+                if not request.system_prompt:
+                    request.system_prompt = ""
+
+                request.system_prompt = f"{request.system_prompt}\n{context_injection}"
+
+                # Store metadata for response
+                cortex_data = {
+                    "memoriesRecalled": len(memories),
+                    "similarityScores": [m.similarity for m in memories],
+                    "memories": [
+                        {
+                            "text": m.text[:100] + "..." if len(m.text) > 100 else m.text,
+                            "similarity": m.similarity,
+                            "timestamp": m.timestamp
+                        }
+                        for m in memories
+                    ]
+                }
+
+                log.info(f"Recalled {len(memories)} memories for user {user.id}")
+
+        except Exception as e:
+            log.error(f"Error recalling memories: {e}")
+            # Continue without memories on error
+
+    # Call LLM with enhanced context
+    # (existing LLM call code here)
+    response = await call_llm_api(request)  # Your existing function
+
+    # CORTEX INTEGRATION: Store conversation
+    if ENABLE_CORTEX_MEMORY and cortex_client:
+        try:
+            memory_result = await cortex_client.remember(
+                user_id=user.id,
+                conversation_id=request.chat_id or f"chat_{user.id}_{int(time.time())}",
+                user_message=request.message,
+                agent_response=response.text,
+                context_id=request.context_id if hasattr(request, 'context_id') else None,
+                extract_facts=True,
+                metadata={
+                    "model": request.model,
+                    "timestamp": datetime.utcnow().isoformat()
+                }
+            )
+
+            if memory_result:
+                cortex_data.update({
+                    "memoryId": memory_result.memory_id,
+                    "factsExtracted": memory_result.facts_extracted
+                })
+
+                log.info(f"Stored memory: {memory_result.memory_id}")
+
+        except Exception as e:
+            log.error(f"Error storing memory: {e}")
+            # Continue even if storage fails
+
+    # Add Cortex metadata to response
+    if cortex_data:
+        if not hasattr(response, 'cortex'):
+            response.cortex = cortex_data
+        else:
+            response.cortex.update(cortex_data)
+
+    return response
+```
+
+### Step 2.5: Update Requirements
+
+**File**: `open-webui-fork/backend/requirements.txt`
+
+**Add:**
+
+```
+httpx>=0.25.2
+```
+
+### Step 2.6: Test Backend Integration
+
+```bash
+# From open-webui-fork directory
+cd backend
+
+# Create venv if not exists
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Install requirements
+pip install -r requirements.txt
+
+# Start backend
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
+# Should see in logs:
+# INFO: Cortex integration initialized
+# INFO: Cortex Memory ENABLED - Bridge URL: http://localhost:3000
+```
+
+**Test in another terminal:**
+
+```bash
+# Check health
+curl http://localhost:8000/health
+
+# Should include Cortex status
 ```
 
 ---
 
-## Phase 3: Feature Integration
+## Phase 3: Frontend Visual Components
 
-### Step 3.1: Context Chain Selector
+### Step 3.1: Create Cortex Store
 
-Add UI component for selecting context (optional enhancement):
+**File**: `open-webui-fork/src/lib/stores/cortex.ts`
 
-**Create `src/openwebui-middleware/context_routes.py`:**
-```python
-from fastapi import APIRouter, Depends
-from .cortex_integration import cortex_client
+```typescript
+import { writable, derived } from "svelte/store";
 
-router = APIRouter(prefix="/api/cortex/contexts", tags=["contexts"])
+export interface Memory {
+  text: string;
+  similarity: number;
+  timestamp: string;
+}
 
-@router.get("/")
-async def list_contexts(user: User = Depends(get_current_user)):
-    """List all contexts for user"""
-    response = await httpx.get(
-        f"{CORTEX_BRIDGE_URL}/api/contexts/{user.id}"
-    )
-    return response.json()
+export interface CortexData {
+  memoriesRecalled: number;
+  similarityScores: number[];
+  memories: Memory[];
+  memoryId?: string;
+  factsExtracted?: number;
+  enabled: boolean;
+}
 
-@router.post("/")
-async def create_context(
-    name: str,
-    description: str,
-    parent_id: Optional[str] = None,
-    user: User = Depends(get_current_user)
-):
-    """Create new context"""
-    response = await httpx.post(
-        f"{CORTEX_BRIDGE_URL}/api/contexts/create",
-        json={
-            "name": name,
-            "description": description,
-            "memorySpaceId": user.id,
-            "parentId": parent_id
-        }
-    )
-    return response.json()
+export interface CortexState {
+  recentMemories: Memory[];
+  activeContext: string | null;
+  factsCount: number;
+  enabled: boolean;
+}
+
+// Create writable store
+function createCortexStore() {
+  const { subscribe, set, update } = writable<CortexState>({
+    recentMemories: [],
+    activeContext: null,
+    factsCount: 0,
+    enabled: true,
+  });
+
+  return {
+    subscribe,
+    setMemories: (memories: Memory[]) => {
+      update((state) => ({
+        ...state,
+        recentMemories: memories,
+      }));
+    },
+    setContext: (context: string | null) => {
+      update((state) => ({
+        ...state,
+        activeContext: context,
+      }));
+    },
+    incrementFacts: (count: number = 1) => {
+      update((state) => ({
+        ...state,
+        factsCount: state.factsCount + count,
+      }));
+    },
+    toggle: () => {
+      update((state) => ({
+        ...state,
+        enabled: !state.enabled,
+      }));
+    },
+    reset: () => {
+      set({
+        recentMemories: [],
+        activeContext: null,
+        factsCount: 0,
+        enabled: true,
+      });
+    },
+  };
+}
+
+export const cortexStore = createCortexStore();
 ```
 
-### Step 3.2: Facts Viewer
+### Step 3.2: Create Memory Badge Component
 
-**Create `src/openwebui-middleware/facts_routes.py`:**
-```python
-@router.get("/api/cortex/facts")
-async def get_facts(
-    context_id: Optional[str] = None,
-    limit: int = 50,
-    user: User = Depends(get_current_user)
-):
-    """Get extracted facts"""
-    response = await httpx.get(
-        f"{CORTEX_BRIDGE_URL}/api/facts/{user.id}",
-        params={"contextId": context_id, "limit": limit}
-    )
-    return response.json()
+**File**: `open-webui-fork/src/lib/components/cortex/MemoryBadge.svelte`
+
+```svelte
+<script lang="ts">
+  export let memoriesRecalled: number = 0;
+  export let similarityScores: number[] = [];
+  export let memories: any[] = [];
+
+  let showTooltip = false;
+
+  function formatSimilarity(score: number): string {
+    return `${Math.round(score * 100)}%`;
+  }
+</script>
+
+{#if memoriesRecalled > 0}
+  <div
+    class="memory-badge"
+    on:mouseenter={() => showTooltip = true}
+    on:mouseleave={() => showTooltip = false}
+  >
+    <span class="icon">🧠</span>
+    <span class="count">{memoriesRecalled} memories</span>
+    {#if similarityScores.length > 0}
+      <span class="similarity">
+        ({formatSimilarity(similarityScores[0])} match)
+      </span>
+    {/if}
+
+    {#if showTooltip && memories.length > 0}
+      <div class="tooltip">
+        <div class="tooltip-header">Memories Used:</div>
+        {#each memories.slice(0, 3) as memory, i}
+          <div class="tooltip-item">
+            <div class="tooltip-text">{memory.text}</div>
+            <div class="tooltip-similarity">
+              {formatSimilarity(memory.similarity)} similarity
+            </div>
+          </div>
+        {/each}
+      </div>
+    {/if}
+  </div>
+{/if}
+
+<style>
+  .memory-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .memory-badge:hover {
+    transform: scale(1.05);
+  }
+
+  .icon {
+    font-size: 1rem;
+  }
+
+  .similarity {
+    opacity: 0.9;
+    font-size: 0.8125rem;
+  }
+
+  .tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    margin-bottom: 0.5rem;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.95);
+    border-radius: 0.5rem;
+    min-width: 300px;
+    max-width: 400px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+
+  .tooltip-header {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #667eea;
+  }
+
+  .tooltip-item {
+    padding: 0.5rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .tooltip-text {
+    font-size: 0.875rem;
+    line-height: 1.4;
+    margin-bottom: 0.25rem;
+  }
+
+  .tooltip-similarity {
+    font-size: 0.75rem;
+    color: #a8b3cf;
+  }
+</style>
 ```
 
-### Step 3.3: Multi-Agent Switcher
+### Step 3.3: Modify Response Message Component
 
-**Register agents on startup:**
-```python
-# In Open WebUI startup
-await cortex_client.register_agent(
-    agent_id="gpt-4",
-    name="GPT-4",
-    capabilities=["reasoning", "coding", "analysis"],
-    metadata={"provider": "openai"}
-)
+**File**: `open-webui-fork/src/lib/components/chat/Messages/ResponseMessage.svelte`
 
-await cortex_client.register_agent(
-    agent_id="claude-3-opus",
-    name="Claude 3 Opus",
-    capabilities=["reasoning", "writing"],
-    metadata={"provider": "anthropic"}
-)
+**Add import:**
+
+```svelte
+<script>
+  // ... existing imports
+  import MemoryBadge from '$lib/components/cortex/MemoryBadge.svelte';
+
+  // ... existing props
+  export let cortexData = null;
+</script>
+```
+
+**Add badge after message content:**
+
+```svelte
+<!-- Message content -->
+<div class="message-content">
+  {@html formattedContent}
+</div>
+
+<!-- Cortex badges -->
+{#if cortexData}
+  <div class="cortex-indicators">
+    <MemoryBadge
+      memoriesRecalled={cortexData.memoriesRecalled || 0}
+      similarityScores={cortexData.similarityScores || []}
+      memories={cortexData.memories || []}
+    />
+
+    {#if cortexData.factsExtracted > 0}
+      <div class="facts-badge">
+        💡 {cortexData.factsExtracted} facts extracted
+      </div>
+    {/if}
+  </div>
+{/if}
+```
+
+**Add styles:**
+
+```svelte
+<style>
+  .cortex-indicators {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .facts-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+  }
+</style>
 ```
 
 ---
 
-## Phase 4: Testing
+## Phase 4: Demo Pages
 
-### Step 4.1: Unit Tests
+### Step 4.1: Create Memory Demo Page
 
-**Test Cortex Bridge:**
-```bash
-cd src/cortex-bridge
-npm test
-```
+**File**: `open-webui-fork/src/routes/cortex/demos/memory/+page.svelte`
 
-**Test Open WebUI Middleware:**
-```bash
-cd src/openwebui-middleware
-pytest tests/
-```
+```svelte
+<script>
+  import { onMount } from 'svelte';
+  import Chat from '$lib/components/chat/Chat.svelte';
 
-### Step 4.2: Integration Tests
+  let memories = [];
+  let searchQuery = '';
+  let searchResults = [];
 
-```bash
-# Start services
-docker-compose up -d
+  async function searchMemories() {
+    // Call backend API to search memories
+    const response = await fetch('/api/cortex/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: searchQuery })
+    });
 
-# Run integration tests
-npm run test:integration
+    searchResults = await response.json();
+  }
 
-# Test endpoints
-curl -X POST http://localhost:3000/api/memory/remember \
-  -H "Content-Type: application/json" \
-  -d '{
-    "userId": "test-user",
-    "conversationId": "test-conv",
-    "userMessage": "Hello Cortex!"
-  }'
-```
+  onMount(() => {
+    // Load recent memories
+  });
+</script>
 
-### Step 4.3: End-to-End Tests
+<div class="demo-page">
+  <h1>Memory Demo</h1>
+  <p>Chat naturally and watch memories accumulate. Search semantic
 
-```bash
-# Use Playwright or similar
-npx playwright test e2e/chat-with-memory.spec.ts
+ally to see relevant recalls.</p>
+
+  <div class="demo-layout">
+    <div class="chat-section">
+      <Chat demoMode="memory" />
+    </div>
+
+    <div class="memory-panel">
+      <h2>Memory Search</h2>
+      <div class="search-box">
+        <input
+          type="text"
+          bind:value={searchQuery}
+          placeholder="Search memories..."
+        />
+        <button on:click={searchMemories}>Search</button>
+      </div>
+
+      {#if searchResults.length > 0}
+        <div class="results">
+          {#each searchResults as result}
+            <div class="result-item">
+              <div class="result-text">{result.text}</div>
+              <div class="result-score">{Math.round(result.similarity * 100)}% match</div>
+            </div>
+          {/each}
+        </div>
+      {/if}
+    </div>
+  </div>
+</div>
+
+<style>
+  .demo-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .demo-layout {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .memory-panel {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .search-box {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+
+  .search-box input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+  }
+
+  .result-item {
+    padding: 1rem;
+    margin: 0.5rem 0;
+    background: #f5f5f5;
+    border-radius: 0.25rem;
+  }
+
+  .result-score {
+    font-size: 0.875rem;
+    color: #667eea;
+    margin-top: 0.25rem;
+  }
+</style>
 ```
 
 ---
 
-## Phase 5: Production Deployment
+## Phase 5: Testing
 
-See [06-DEPLOYMENT.md](./06-DEPLOYMENT.md) for detailed production deployment instructions.
+### Test Checklist
+
+```bash
+# 1. Backend Health
+curl http://localhost:8000/health
+
+# 2. Cortex Bridge Health
+curl http://localhost:3000/health
+
+# 3. Memory Storage
+# Send a chat message and check logs for:
+# "Stored memory: mem_..."
+
+# 4. Memory Recall
+# Send follow-up question and check logs for:
+# "Recalled X memories for query..."
+
+# 5. Visual Indicators
+# Open browser, chat, and verify you see:
+# - 🧠 badges on responses
+# - Hover tooltips work
+# - Sidebar updates
+```
 
 ---
 
-## Troubleshooting
+## Phase 6: Production Deployment
 
-See [09-TROUBLESHOOTING.md](./09-TROUBLESHOOTING.md) for common issues and solutions.
+### Docker Compose Setup
+
+**File**: `docker-compose.full.yml` (in integration root)
+
+```yaml
+version: "3.8"
+
+services:
+  cortex-bridge:
+    build: ./src/cortex-bridge
+    environment:
+      - CONVEX_URL=${CONVEX_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    ports:
+      - "3000:3000"
+
+  open-webui:
+    build: ./open-webui-fork
+    environment:
+      - CORTEX_BRIDGE_URL=http://cortex-bridge:3000
+      - ENABLE_CORTEX_MEMORY=true
+      - DATABASE_URL=postgresql://user:pass@postgres:5432/openwebui
+    ports:
+      - "8080:8080"
+    depends_on:
+      - cortex-bridge
+      - postgres
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=openwebui
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+```
+
+**Deploy:**
+
+```bash
+docker-compose -f docker-compose.full.yml up -d
+```
 
 ---
 
 ## Next Steps
 
-- **[05-API-INTEGRATION.md](./05-API-INTEGRATION.md)** - Detailed API usage
-- **[06-DEPLOYMENT.md](./06-DEPLOYMENT.md)** - Production deployment
-- **[07-USAGE-EXAMPLES.md](./07-USAGE-EXAMPLES.md)** - Real-world scenarios
-
+- **Backend Details** → [05-BACKEND-INTEGRATION.md](05-BACKEND-INTEGRATION.md)
+- **Visual Components** → [06-VISUAL-COMPONENTS.md](06-VISUAL-COMPONENTS.md)
+- **Demo Pages** → [07-DEMO-PAGES.md](07-DEMO-PAGES.md)
+- **Deployment** → [09-DEPLOYMENT.md](09-DEPLOYMENT.md)

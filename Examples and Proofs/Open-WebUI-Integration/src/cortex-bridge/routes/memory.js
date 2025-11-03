@@ -3,9 +3,9 @@
  * Handles remember, recall, and forget operations
  */
 
-import express from 'express';
-import logger from '../utils/logger.js';
-import { generateEmbedding } from '../utils/embeddings.js';
+import express from "express";
+import logger from "../utils/logger.js";
+import { generateEmbedding } from "../utils/embeddings.js";
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ export function createMemoryRoutes(cortex) {
    * POST /api/memory/remember
    * Store a conversation in Cortex with automatic embedding
    */
-  router.post('/remember', async (req, res) => {
+  router.post("/remember", async (req, res) => {
     try {
       const {
         userId,
@@ -28,24 +28,24 @@ export function createMemoryRoutes(cortex) {
         participantId,
         importance,
         extractFacts,
-        metadata
+        metadata,
       } = req.body;
 
       // Validation
       if (!userId || !userMessage) {
         return res.status(400).json({
           success: false,
-          error: 'userId and userMessage are required'
+          error: "userId and userMessage are required",
         });
       }
 
       // Generate embedding for semantic search
       const embedding = await generateEmbedding(userMessage);
 
-      logger.info('Storing memory', {
+      logger.info("Storing memory", {
         userId,
-        conversationId: conversationId || 'auto-generated',
-        hasResponse: !!agentResponse
+        conversationId: conversationId || "auto-generated",
+        hasResponse: !!agentResponse,
       });
 
       // Store in Cortex
@@ -57,36 +57,38 @@ export function createMemoryRoutes(cortex) {
         userId,
         embedding,
         contextId,
-        participantId: participantId || 'default',
+        participantId: participantId || "default",
         importance: importance || 5,
-        extractFacts: extractFacts !== undefined ? extractFacts : 
-                      process.env.ENABLE_FACTS_EXTRACTION === 'true',
+        extractFacts:
+          extractFacts !== undefined
+            ? extractFacts
+            : process.env.ENABLE_FACTS_EXTRACTION === "true",
         metadata: {
           ...metadata,
           timestamp: new Date().toISOString(),
-          source: 'openwebui'
-        }
+          source: "openwebui",
+        },
       });
 
-      logger.info('Memory stored successfully', {
+      logger.info("Memory stored successfully", {
         conversationId: result.conversationId,
-        memoryId: result.memoryId
+        memoryId: result.memoryId,
       });
 
       res.json({
         success: true,
         conversationId: result.conversationId,
         memoryId: result.memoryId,
-        extractedFacts: result.extractedFacts?.length || 0
+        extractedFacts: result.extractedFacts?.length || 0,
       });
     } catch (error) {
-      logger.error('Error storing memory', {
+      logger.error("Error storing memory", {
         error: error.message,
-        stack: error.stack
+        stack: error.stack,
       });
       res.status(500).json({
         success: false,
-        error: error.message
+        error: error.message,
       });
     }
   });
@@ -95,7 +97,7 @@ export function createMemoryRoutes(cortex) {
    * POST /api/memory/recall
    * Semantic search for relevant memories
    */
-  router.post('/recall', async (req, res) => {
+  router.post("/recall", async (req, res) => {
     try {
       const {
         userId,
@@ -105,24 +107,24 @@ export function createMemoryRoutes(cortex) {
         participantId,
         minImportance,
         startDate,
-        endDate
+        endDate,
       } = req.body;
 
       // Validation
       if (!userId || !query) {
         return res.status(400).json({
           success: false,
-          error: 'userId and query are required'
+          error: "userId and query are required",
         });
       }
 
       // Generate query embedding
       const embedding = await generateEmbedding(query);
 
-      logger.info('Recalling memories', {
+      logger.info("Recalling memories", {
         userId,
         query: query.substring(0, 50),
-        limit
+        limit,
       });
 
       // Recall from Cortex
@@ -136,27 +138,27 @@ export function createMemoryRoutes(cortex) {
         minImportance,
         startDate: startDate ? new Date(startDate) : undefined,
         endDate: endDate ? new Date(endDate) : undefined,
-        includeEmbedding: false
+        includeEmbedding: false,
       });
 
-      logger.info('Memories recalled', {
+      logger.info("Memories recalled", {
         userId,
-        count: memories.length
+        count: memories.length,
       });
 
       res.json({
         success: true,
         memories,
-        count: memories.length
+        count: memories.length,
       });
     } catch (error) {
-      logger.error('Error recalling memories', {
+      logger.error("Error recalling memories", {
         error: error.message,
-        stack: error.stack
+        stack: error.stack,
       });
       res.status(500).json({
         success: false,
-        error: error.message
+        error: error.message,
       });
     }
   });
@@ -165,7 +167,7 @@ export function createMemoryRoutes(cortex) {
    * POST /api/memory/update-response
    * Update conversation with agent response after LLM generation
    */
-  router.post('/update-response', async (req, res) => {
+  router.post("/update-response", async (req, res) => {
     try {
       const { conversationId, agentResponse } = req.body;
 
@@ -173,29 +175,29 @@ export function createMemoryRoutes(cortex) {
       if (!conversationId || !agentResponse) {
         return res.status(400).json({
           success: false,
-          error: 'conversationId and agentResponse are required'
+          error: "conversationId and agentResponse are required",
         });
       }
 
-      logger.info('Updating conversation response', { conversationId });
+      logger.info("Updating conversation response", { conversationId });
 
       // Update in Cortex
       await cortex.conversations.update({
         conversationId,
-        agentResponse
+        agentResponse,
       });
 
-      logger.info('Conversation updated', { conversationId });
+      logger.info("Conversation updated", { conversationId });
 
       res.json({ success: true });
     } catch (error) {
-      logger.error('Error updating conversation', {
+      logger.error("Error updating conversation", {
         error: error.message,
-        stack: error.stack
+        stack: error.stack,
       });
       res.status(500).json({
         success: false,
-        error: error.message
+        error: error.message,
       });
     }
   });
@@ -204,44 +206,45 @@ export function createMemoryRoutes(cortex) {
    * DELETE /api/memory/forget
    * Delete a memory with optional cascade to facts and conversation
    */
-  router.delete('/forget', async (req, res) => {
+  router.delete("/forget", async (req, res) => {
     try {
-      const { memorySpaceId, memoryId, deleteFacts, deleteConversation } = req.body;
+      const { memorySpaceId, memoryId, deleteFacts, deleteConversation } =
+        req.body;
 
       // Validation
       if (!memorySpaceId || !memoryId) {
         return res.status(400).json({
           success: false,
-          error: 'memorySpaceId and memoryId are required'
+          error: "memorySpaceId and memoryId are required",
         });
       }
 
-      logger.info('Forgetting memory', { memorySpaceId, memoryId });
+      logger.info("Forgetting memory", { memorySpaceId, memoryId });
 
       const result = await cortex.memory.forget(memorySpaceId, memoryId, {
         deleteFacts: deleteFacts !== undefined ? deleteFacts : true,
-        deleteConversation: deleteConversation || false
+        deleteConversation: deleteConversation || false,
       });
 
-      logger.info('Memory forgotten', {
+      logger.info("Memory forgotten", {
         memoryId,
-        factsDeleted: result.factsDeleted
+        factsDeleted: result.factsDeleted,
       });
 
       res.json({
         success: true,
         memoryDeleted: result.memoryDeleted,
         factsDeleted: result.factsDeleted,
-        conversationDeleted: result.conversationDeleted
+        conversationDeleted: result.conversationDeleted,
       });
     } catch (error) {
-      logger.error('Error forgetting memory', {
+      logger.error("Error forgetting memory", {
         error: error.message,
-        stack: error.stack
+        stack: error.stack,
       });
       res.status(500).json({
         success: false,
-        error: error.message
+        error: error.message,
       });
     }
   });
@@ -250,4 +253,3 @@ export function createMemoryRoutes(cortex) {
 }
 
 export default createMemoryRoutes;
-

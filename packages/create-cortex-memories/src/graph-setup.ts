@@ -2,21 +2,21 @@
  * Graph database setup
  */
 
-import fs from 'fs-extra';
-import path from 'path';
-import prompts from 'prompts';
-import type { GraphConfig } from './types.js';
-import pc from 'picocolors';
-import ora from 'ora';
-import { createGraphDockerCompose } from './env-generator.js';
-import { execCommand } from './utils.js';
+import fs from "fs-extra";
+import path from "path";
+import prompts from "prompts";
+import type { GraphConfig } from "./types.js";
+import pc from "picocolors";
+import ora from "ora";
+import { createGraphDockerCompose } from "./env-generator.js";
+import { execCommand } from "./utils.js";
 
 /**
  * Check if Docker is installed
  */
 async function checkDockerInstalled(): Promise<boolean> {
   try {
-    const result = await execCommand('docker', ['--version'], {});
+    const result = await execCommand("docker", ["--version"], {});
     return result.code === 0;
   } catch {
     return false;
@@ -27,82 +27,111 @@ async function checkDockerInstalled(): Promise<boolean> {
  * Show Docker installation instructions
  */
 function showDockerInstructions(): void {
-  console.log(pc.yellow('\n⚠️  Docker Desktop is not installed\n'));
-  console.log(pc.bold('To use local graph database, please install Docker Desktop:\n'));
-  
+  console.log(pc.yellow("\n⚠️  Docker Desktop is not installed\n"));
+  console.log(
+    pc.bold("To use local graph database, please install Docker Desktop:\n"),
+  );
+
   const platform = process.platform;
-  if (platform === 'darwin') {
-    console.log(pc.cyan('macOS:'));
-    console.log(pc.dim('  1. Download Docker Desktop: https://www.docker.com/products/docker-desktop'));
-    console.log(pc.dim('  2. Install and start Docker Desktop'));
-    console.log(pc.dim('  3. Run the wizard again\n'));
-  } else if (platform === 'win32') {
-    console.log(pc.cyan('Windows:'));
-    console.log(pc.dim('  1. Download Docker Desktop: https://www.docker.com/products/docker-desktop'));
-    console.log(pc.dim('  2. Install and start Docker Desktop'));
-    console.log(pc.dim('  3. Run the wizard again\n'));
+  if (platform === "darwin") {
+    console.log(pc.cyan("macOS:"));
+    console.log(
+      pc.dim(
+        "  1. Download Docker Desktop: https://www.docker.com/products/docker-desktop",
+      ),
+    );
+    console.log(pc.dim("  2. Install and start Docker Desktop"));
+    console.log(pc.dim("  3. Run the wizard again\n"));
+  } else if (platform === "win32") {
+    console.log(pc.cyan("Windows:"));
+    console.log(
+      pc.dim(
+        "  1. Download Docker Desktop: https://www.docker.com/products/docker-desktop",
+      ),
+    );
+    console.log(pc.dim("  2. Install and start Docker Desktop"));
+    console.log(pc.dim("  3. Run the wizard again\n"));
   } else {
-    console.log(pc.cyan('Linux:'));
-    console.log(pc.dim('  1. Install Docker Engine: https://docs.docker.com/engine/install/'));
-    console.log(pc.dim('  2. Install Docker Compose: https://docs.docker.com/compose/install/'));
-    console.log(pc.dim('  3. Run the wizard again\n'));
+    console.log(pc.cyan("Linux:"));
+    console.log(
+      pc.dim(
+        "  1. Install Docker Engine: https://docs.docker.com/engine/install/",
+      ),
+    );
+    console.log(
+      pc.dim(
+        "  2. Install Docker Compose: https://docs.docker.com/compose/install/",
+      ),
+    );
+    console.log(pc.dim("  3. Run the wizard again\n"));
   }
-  
-  console.log(pc.dim('Or choose "Cloud/Existing instance" to use a remote graph database.\n'));
+
+  console.log(
+    pc.dim(
+      'Or choose "Cloud/Existing instance" to use a remote graph database.\n',
+    ),
+  );
 }
 
 /**
  * Get graph database configuration (prompts only, no file creation)
  */
 export async function getGraphConfig(): Promise<GraphConfig | null> {
-  console.log(pc.cyan('\n🕸️  Graph Database Setup (Optional)'));
-  console.log(pc.dim('   Graph databases enable advanced relationship queries'));
-  console.log(pc.dim('   This is optional and can be configured later\n'));
+  console.log(pc.cyan("\n🕸️  Graph Database Setup (Optional)"));
+  console.log(
+    pc.dim("   Graph databases enable advanced relationship queries"),
+  );
+  console.log(pc.dim("   This is optional and can be configured later\n"));
 
   const { enableGraph } = await prompts({
-    type: 'confirm',
-    name: 'enableGraph',
-    message: 'Enable graph database integration?',
+    type: "confirm",
+    name: "enableGraph",
+    message: "Enable graph database integration?",
     initial: false,
   });
 
   if (!enableGraph) {
-    console.log(pc.dim('   Skipping graph database setup'));
+    console.log(pc.dim("   Skipping graph database setup"));
     return null;
   }
 
   const { graphType } = await prompts({
-    type: 'select',
-    name: 'graphType',
-    message: 'Which graph database would you like to use?',
+    type: "select",
+    name: "graphType",
+    message: "Which graph database would you like to use?",
     choices: [
-      { title: 'Neo4j (Most popular, enterprise-ready)', value: 'neo4j' },
-      { title: 'Memgraph (High-performance, analytics-focused)', value: 'memgraph' },
-      { title: 'Skip for now', value: 'skip' },
+      { title: "Neo4j (Most popular, enterprise-ready)", value: "neo4j" },
+      {
+        title: "Memgraph (High-performance, analytics-focused)",
+        value: "memgraph",
+      },
+      { title: "Skip for now", value: "skip" },
     ],
     initial: 0,
   });
 
-  if (!graphType || graphType === 'skip') {
+  if (!graphType || graphType === "skip") {
     return null;
   }
 
   // Check for Docker if user wants local deployment
   const hasDocker = await checkDockerInstalled();
-  
+
   const deploymentChoices = [
-    { title: 'Local (Docker Compose)', value: 'local', disabled: !hasDocker },
-    { title: 'Cloud/Existing instance', value: 'cloud' },
+    { title: "Local (Docker Compose)", value: "local", disabled: !hasDocker },
+    { title: "Cloud/Existing instance", value: "cloud" },
   ];
 
   if (!hasDocker) {
-    console.log(pc.yellow('   ⚠️  Docker not detected - local deployment unavailable'));
+    console.log(
+      pc.yellow("   ⚠️  Docker not detected - local deployment unavailable"),
+    );
   }
 
   const { deploymentType } = await prompts({
-    type: 'select',
-    name: 'deploymentType',
-    message: `How would you like to run ${graphType === 'neo4j' ? 'Neo4j' : 'Memgraph'}?`,
+    type: "select",
+    name: "deploymentType",
+    message: `How would you like to run ${graphType === "neo4j" ? "Neo4j" : "Memgraph"}?`,
     choices: deploymentChoices,
     initial: hasDocker ? 0 : 1,
   });
@@ -112,20 +141,20 @@ export async function getGraphConfig(): Promise<GraphConfig | null> {
   }
 
   // If local was selected but Docker isn't installed, show instructions
-  if (deploymentType === 'local' && !hasDocker) {
+  if (deploymentType === "local" && !hasDocker) {
     showDockerInstructions();
     return null;
   }
 
   let config: GraphConfig;
 
-  if (deploymentType === 'local') {
+  if (deploymentType === "local") {
     config = await getLocalGraphConfig(graphType);
   } else {
     config = await getCloudGraphConfig(graphType);
   }
 
-  console.log(pc.green('\n   ✓ Graph database configured'));
+  console.log(pc.green("\n   ✓ Graph database configured"));
   console.log(pc.dim(`   Type: ${config.type}`));
   console.log(pc.dim(`   URI: ${config.uri}`));
 
@@ -137,10 +166,10 @@ export async function getGraphConfig(): Promise<GraphConfig | null> {
  */
 export async function setupGraphFiles(
   projectPath: string,
-  config: GraphConfig
+  config: GraphConfig,
 ): Promise<void> {
   // Only create docker-compose for local deployments
-  if (config.uri.includes('localhost') || config.uri.includes('127.0.0.1')) {
+  if (config.uri.includes("localhost") || config.uri.includes("127.0.0.1")) {
     await createGraphDockerCompose(projectPath, config.type);
   }
 }
@@ -149,26 +178,30 @@ export async function setupGraphFiles(
  * Get local graph database configuration
  */
 async function getLocalGraphConfig(
-  graphType: 'neo4j' | 'memgraph'
+  graphType: "neo4j" | "memgraph",
 ): Promise<GraphConfig> {
   const defaultPort = 7687;
-  const defaultPassword = 'cortex-password';
+  const defaultPassword = "cortex-password";
 
-  console.log(pc.cyan(`\n   Local ${graphType} will be configured with Docker Compose`));
-  console.log(pc.dim(`   To start: docker-compose -f docker-compose.graph.yml up -d\n`));
+  console.log(
+    pc.cyan(`\n   Local ${graphType} will be configured with Docker Compose`),
+  );
+  console.log(
+    pc.dim(`   To start: docker-compose -f docker-compose.graph.yml up -d\n`),
+  );
 
-  if (graphType === 'neo4j') {
-    console.log(pc.dim('   Neo4j Browser: http://localhost:7474'));
-    console.log(pc.dim('   Bolt: bolt://localhost:7687\n'));
+  if (graphType === "neo4j") {
+    console.log(pc.dim("   Neo4j Browser: http://localhost:7474"));
+    console.log(pc.dim("   Bolt: bolt://localhost:7687\n"));
   } else {
-    console.log(pc.dim('   Memgraph Lab: http://localhost:3000'));
-    console.log(pc.dim('   Bolt: bolt://localhost:7687\n'));
+    console.log(pc.dim("   Memgraph Lab: http://localhost:3000"));
+    console.log(pc.dim("   Bolt: bolt://localhost:7687\n"));
   }
 
   return {
     type: graphType,
     uri: `bolt://localhost:${defaultPort}`,
-    username: graphType === 'neo4j' ? 'neo4j' : 'memgraph',
+    username: graphType === "neo4j" ? "neo4j" : "memgraph",
     password: defaultPassword,
   };
 }
@@ -176,42 +209,44 @@ async function getLocalGraphConfig(
 /**
  * Get cloud/existing graph database configuration
  */
-async function getCloudGraphConfig(graphType: 'neo4j' | 'memgraph'): Promise<GraphConfig> {
-  console.log(pc.cyan('\n   Enter your graph database connection details:'));
+async function getCloudGraphConfig(
+  graphType: "neo4j" | "memgraph",
+): Promise<GraphConfig> {
+  console.log(pc.cyan("\n   Enter your graph database connection details:"));
 
   const response = await prompts([
     {
-      type: 'text',
-      name: 'uri',
-      message: 'Database URI (e.g., bolt://localhost:7687):',
-      initial: 'bolt://localhost:7687',
+      type: "text",
+      name: "uri",
+      message: "Database URI (e.g., bolt://localhost:7687):",
+      initial: "bolt://localhost:7687",
       validate: (value) => {
-        if (!value) return 'URI is required';
-        if (!value.startsWith('bolt://') && !value.startsWith('neo4j://')) {
-          return 'URI must start with bolt:// or neo4j://';
+        if (!value) return "URI is required";
+        if (!value.startsWith("bolt://") && !value.startsWith("neo4j://")) {
+          return "URI must start with bolt:// or neo4j://";
         }
         return true;
       },
     },
     {
-      type: 'text',
-      name: 'username',
-      message: 'Username:',
-      initial: graphType === 'neo4j' ? 'neo4j' : 'memgraph',
+      type: "text",
+      name: "username",
+      message: "Username:",
+      initial: graphType === "neo4j" ? "neo4j" : "memgraph",
     },
     {
-      type: 'password',
-      name: 'password',
-      message: 'Password:',
+      type: "password",
+      name: "password",
+      message: "Password:",
     },
   ]);
 
   if (!response.uri || !response.username || !response.password) {
-    throw new Error('All connection details are required');
+    throw new Error("All connection details are required");
   }
 
-  console.log(pc.green('   ✓ Connection details saved'));
-  console.log(pc.dim('   Connection will be tested when you start your app'));
+  console.log(pc.green("   ✓ Connection details saved"));
+  console.log(pc.dim("   Connection will be tested when you start your app"));
 
   return {
     type: graphType,
@@ -225,10 +260,10 @@ async function getCloudGraphConfig(graphType: 'neo4j' | 'memgraph'): Promise<Gra
  * Add graph database dependencies to package.json
  */
 export async function addGraphDependencies(projectPath: string): Promise<void> {
-  const packageJsonPath = path.join(projectPath, 'package.json');
-  
+  const packageJsonPath = path.join(projectPath, "package.json");
+
   if (!fs.existsSync(packageJsonPath)) {
-    throw new Error('package.json not found');
+    throw new Error("package.json not found");
   }
 
   const packageJson = await fs.readJson(packageJsonPath);
@@ -238,10 +273,10 @@ export async function addGraphDependencies(projectPath: string): Promise<void> {
     packageJson.dependencies = {};
   }
 
-  if (!packageJson.dependencies['neo4j-driver']) {
-    packageJson.dependencies['neo4j-driver'] = '^6.0.0';
+  if (!packageJson.dependencies["neo4j-driver"]) {
+    packageJson.dependencies["neo4j-driver"] = "^6.0.0";
     await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 });
-    console.log(pc.dim('   Added neo4j-driver to dependencies'));
+    console.log(pc.dim("   Added neo4j-driver to dependencies"));
   }
 }
 
@@ -249,7 +284,7 @@ export async function addGraphDependencies(projectPath: string): Promise<void> {
  * Create example graph initialization file
  */
 export async function createGraphExample(projectPath: string): Promise<void> {
-  const examplePath = path.join(projectPath, 'src', 'graph-init.example.ts');
+  const examplePath = path.join(projectPath, "src", "graph-init.example.ts");
 
   const exampleCode = `/**
  * Graph Database Initialization Example
@@ -316,6 +351,7 @@ async function main() {
 
   await fs.ensureDir(path.dirname(examplePath));
   await fs.writeFile(examplePath, exampleCode);
-  console.log(pc.dim(`   Created example: ${path.relative(projectPath, examplePath)}`));
+  console.log(
+    pc.dim(`   Created example: ${path.relative(projectPath, examplePath)}`),
+  );
 }
-

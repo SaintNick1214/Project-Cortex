@@ -2,11 +2,11 @@
  * Utility functions for create-cortex-memories
  */
 
-import { spawn } from 'child_process';
-import { existsSync, readdirSync } from 'fs';
-import path from 'path';
-import { createRequire } from 'module';
-import { fileURLToPath } from 'url';
+import { spawn } from "child_process";
+import { existsSync, readdirSync } from "fs";
+import path from "path";
+import { createRequire } from "module";
+import { fileURLToPath } from "url";
 
 // Create require function for ES modules
 const require = createRequire(import.meta.url);
@@ -17,9 +17,9 @@ const require = createRequire(import.meta.url);
 export async function commandExists(command: string): Promise<boolean> {
   return new Promise((resolve) => {
     // Use platform-specific command (which for Unix, where for Windows)
-    const cmd = process.platform === 'win32' ? 'where' : 'which';
+    const cmd = process.platform === "win32" ? "where" : "which";
     const child = spawn(cmd, [command]);
-    child.on('close', (code) => resolve(code === 0));
+    child.on("close", (code) => resolve(code === 0));
   });
 }
 
@@ -29,7 +29,7 @@ export async function commandExists(command: string): Promise<boolean> {
 export async function execCommand(
   command: string,
   args: string[],
-  options: { cwd?: string; env?: NodeJS.ProcessEnv } = {}
+  options: { cwd?: string; env?: NodeJS.ProcessEnv } = {},
 ): Promise<{ stdout: string; stderr: string; code: number }> {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, {
@@ -37,22 +37,22 @@ export async function execCommand(
       env: { ...process.env, ...options.env },
     });
 
-    let stdout = '';
-    let stderr = '';
+    let stdout = "";
+    let stderr = "";
 
-    child.stdout?.on('data', (data) => {
+    child.stdout?.on("data", (data) => {
       stdout += data.toString();
     });
 
-    child.stderr?.on('data', (data) => {
+    child.stderr?.on("data", (data) => {
       stderr += data.toString();
     });
 
-    child.on('error', (error) => {
+    child.on("error", (error) => {
       reject(error);
     });
 
-    child.on('close', (code) => {
+    child.on("close", (code) => {
       resolve({ stdout, stderr, code: code ?? 1 });
     });
   });
@@ -64,20 +64,20 @@ export async function execCommand(
 export async function execCommandLive(
   command: string,
   args: string[],
-  options: { cwd?: string; env?: NodeJS.ProcessEnv } = {}
+  options: { cwd?: string; env?: NodeJS.ProcessEnv } = {},
 ): Promise<number> {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, {
       ...options,
-      stdio: 'inherit',
+      stdio: "inherit",
       env: { ...process.env, ...options.env },
     });
 
-    child.on('error', (error) => {
+    child.on("error", (error) => {
       reject(error);
     });
 
-    child.on('close', (code) => {
+    child.on("close", (code) => {
       resolve(code ?? 1);
     });
   });
@@ -98,7 +98,7 @@ export function isDirectoryEmpty(dirPath: string): boolean {
     return true;
   }
   const files = readdirSync(dirPath);
-  return files.length === 0 || (files.length === 1 && files[0] === '.git');
+  return files.length === 0 || (files.length === 1 && files[0] === ".git");
 }
 
 /**
@@ -109,14 +109,19 @@ export function getSDKPath(projectPath?: string): string | null {
   try {
     // If projectPath provided, look in that project's node_modules
     if (projectPath) {
-      const sdkPath = path.join(projectPath, 'node_modules', '@cortexmemory', 'sdk');
+      const sdkPath = path.join(
+        projectPath,
+        "node_modules",
+        "@cortexmemory",
+        "sdk",
+      );
       if (existsSync(sdkPath)) {
         return sdkPath;
       }
     }
-    
+
     // Fallback: use require.resolve from current location
-    const sdkPackageJson = require.resolve('@cortexmemory/sdk/package.json');
+    const sdkPackageJson = require.resolve("@cortexmemory/sdk/package.json");
     return path.dirname(sdkPackageJson);
   } catch {
     return null;
@@ -127,6 +132,5 @@ export function getSDKPath(projectPath?: string): string | null {
  * Parse Convex URL to determine if it's local or cloud
  */
 export function isLocalConvexUrl(url: string): boolean {
-  return url.includes('localhost') || url.includes('127.0.0.1');
+  return url.includes("localhost") || url.includes("127.0.0.1");
 }
-

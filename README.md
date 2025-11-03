@@ -109,6 +109,7 @@ npm create cortex-memories
 ```
 
 The interactive wizard will guide you through:
+
 - **Project Setup** - Choose new project or add to existing
 - **Convex Configuration** - Local development, new cloud database, or existing database
 - **Graph Database** - Optional Neo4j/Memgraph integration
@@ -120,7 +121,7 @@ The interactive wizard will guide you through:
 ✅ Convex backend functions (deployed automatically)  
 ✅ Environment configuration (.env.local)  
 ✅ Example code to get you started  
-✅ Optional graph database integration  
+✅ Optional graph database integration
 
 ### Start Building
 
@@ -136,7 +137,7 @@ npm start           # Terminal 2: Run your agent
 import { Cortex } from "@cortexmemory/sdk";
 
 const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL!
+  convexUrl: process.env.CONVEX_URL!,
 });
 
 // Store a memory
@@ -146,13 +147,13 @@ await cortex.memory.remember({
   userMessage: "I prefer dark mode",
   agentResponse: "Got it! I'll remember that.",
   userId: "user-123",
-  userName: "User"
+  userName: "User",
 });
 
 // Search your memories
 const results = await cortex.memory.search(
   "my-agent",
-  "what are the user's preferences?"
+  "what are the user's preferences?",
 );
 ```
 
@@ -319,12 +320,14 @@ Cortex is being designed with two deployment modes:
 ## 📖 Documentation
 
 ### Getting Started
+
 - [Installation Guide](./Documentation/01-getting-started/02-installation.md) - Multiple installation methods
 - [Five-Minute Quickstart](./Documentation/01-getting-started/03-five-minute-quickstart.md) - Build your first agent
 - [Core Concepts](./Documentation/01-getting-started/04-core-concepts.md) - Understand the fundamentals
 - [Configuration](./Documentation/01-getting-started/05-configuration.md) - Customize Cortex
 
 ### Reference
+
 - [Documentation Home](./Documentation/00-README.md) - Complete documentation index
 - [API Reference](./Documentation/03-api-reference/01-overview.md) - Full API documentation
 - [System Architecture](./Documentation/04-architecture/01-system-overview.md) - How it works

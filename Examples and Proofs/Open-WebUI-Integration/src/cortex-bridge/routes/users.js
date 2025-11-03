@@ -3,8 +3,8 @@
  * Handles user profiles and GDPR compliance
  */
 
-import express from 'express';
-import logger from '../utils/logger.js';
+import express from "express";
+import logger from "../utils/logger.js";
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ export function createUserRoutes(cortex) {
    * POST /api/users/create
    * Create a new user profile
    */
-  router.post('/create', async (req, res) => {
+  router.post("/create", async (req, res) => {
     try {
       const { userId, name, email, metadata } = req.body;
 
@@ -24,30 +24,30 @@ export function createUserRoutes(cortex) {
       if (!userId || !name || !email) {
         return res.status(400).json({
           success: false,
-          error: 'userId, name, and email are required'
+          error: "userId, name, and email are required",
         });
       }
 
-      logger.info('Creating user profile', { userId, name });
+      logger.info("Creating user profile", { userId, name });
 
       await cortex.users.create({
         userId,
         name,
         email,
-        metadata: metadata || {}
+        metadata: metadata || {},
       });
 
-      logger.info('User created successfully', { userId });
+      logger.info("User created successfully", { userId });
 
       res.json({ success: true, userId });
     } catch (error) {
-      logger.error('Error creating user', {
+      logger.error("Error creating user", {
         error: error.message,
-        stack: error.stack
+        stack: error.stack,
       });
       res.status(500).json({
         success: false,
-        error: error.message
+        error: error.message,
       });
     }
   });
@@ -56,33 +56,33 @@ export function createUserRoutes(cortex) {
    * GET /api/users/:userId
    * Get user profile by ID
    */
-  router.get('/:userId', async (req, res) => {
+  router.get("/:userId", async (req, res) => {
     try {
       const { userId } = req.params;
 
-      logger.debug('Fetching user profile', { userId });
+      logger.debug("Fetching user profile", { userId });
 
       const user = await cortex.users.get(userId);
 
       if (!user) {
         return res.status(404).json({
           success: false,
-          error: 'User not found'
+          error: "User not found",
         });
       }
 
       res.json({
         success: true,
-        user
+        user,
       });
     } catch (error) {
-      logger.error('Error fetching user', {
+      logger.error("Error fetching user", {
         error: error.message,
-        userId: req.params.userId
+        userId: req.params.userId,
       });
       res.status(500).json({
         success: false,
-        error: error.message
+        error: error.message,
       });
     }
   });
@@ -91,34 +91,34 @@ export function createUserRoutes(cortex) {
    * PUT /api/users/:userId
    * Update user profile
    */
-  router.put('/:userId', async (req, res) => {
+  router.put("/:userId", async (req, res) => {
     try {
       const { userId } = req.params;
       const { name, email, metadata } = req.body;
 
-      logger.info('Updating user profile', { userId });
+      logger.info("Updating user profile", { userId });
 
       const user = await cortex.users.update({
         userId,
         name,
         email,
-        metadata
+        metadata,
       });
 
-      logger.info('User updated successfully', { userId });
+      logger.info("User updated successfully", { userId });
 
       res.json({
         success: true,
-        user
+        user,
       });
     } catch (error) {
-      logger.error('Error updating user', {
+      logger.error("Error updating user", {
         error: error.message,
-        userId: req.params.userId
+        userId: req.params.userId,
       });
       res.status(500).json({
         success: false,
-        error: error.message
+        error: error.message,
       });
     }
   });
@@ -127,40 +127,40 @@ export function createUserRoutes(cortex) {
    * DELETE /api/users/:userId
    * GDPR-compliant cascade deletion
    */
-  router.delete('/:userId', async (req, res) => {
+  router.delete("/:userId", async (req, res) => {
     try {
       const { userId } = req.params;
       const { cascade = false, verify = true } = req.body;
 
-      logger.warn('Deleting user (GDPR)', {
+      logger.warn("Deleting user (GDPR)", {
         userId,
         cascade,
-        verify
+        verify,
       });
 
       const result = await cortex.users.delete(userId, {
         cascade,
-        verify
+        verify,
       });
 
-      logger.info('User deleted', {
+      logger.info("User deleted", {
         userId,
         totalDeleted: result.totalDeleted,
-        layers: result.deletedLayers
+        layers: result.deletedLayers,
       });
 
       res.json({
         success: true,
-        result
+        result,
       });
     } catch (error) {
-      logger.error('Error deleting user', {
+      logger.error("Error deleting user", {
         error: error.message,
-        userId: req.params.userId
+        userId: req.params.userId,
       });
       res.status(500).json({
         success: false,
-        error: error.message
+        error: error.message,
       });
     }
   });
@@ -169,4 +169,3 @@ export function createUserRoutes(cortex) {
 }
 
 export default createUserRoutes;
-
