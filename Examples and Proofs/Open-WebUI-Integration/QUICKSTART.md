@@ -62,7 +62,6 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
-pip install httpx  # For Cortex client
 
 # Set environment
 export CORTEX_BRIDGE_URL=http://localhost:3000
