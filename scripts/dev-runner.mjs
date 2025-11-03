@@ -77,7 +77,6 @@ function startConvexDev(mode, useLocal) {
     const child = spawn("npx", ["convex", ...convexArgs], {
       env: process.env,
       stdio: "inherit",
-      shell: true,
       cwd: projectRoot,
     });
 
@@ -119,7 +118,6 @@ function openDashboard(mode, useLocal) {
     const child = spawn("npx", ["convex", ...dashboardArgs], {
       env: process.env,
       stdio: "inherit",
-      shell: true,
       cwd: projectRoot,
       detached: false,
     });
@@ -256,7 +254,6 @@ async function main() {
     const watchChild = spawn("npx", ["convex", ...watchArgs], {
       env: process.env,
       stdio: "inherit",
-      shell: true,
       cwd: projectRoot,
     });
 
