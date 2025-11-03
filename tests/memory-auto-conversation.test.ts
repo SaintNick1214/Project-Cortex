@@ -6,7 +6,6 @@
 
 import { Cortex } from "../src/index.js";
 import { ConvexClient } from "convex/browser";
-import { api } from "../convex-dev/_generated/api.js";
 import { TestCleanup } from "./helpers/cleanup.js";
 
 describe("Memory API - Auto-Conversation Creation", () => {
@@ -32,7 +31,7 @@ describe("Memory API - Auto-Conversation Creation", () => {
     await cleanup.purgeConversations();
     await cleanup.purgeMemories();
     cortex.close();
-    client.close();
+    await client.close();
   });
 
   test("remember() auto-creates conversation if it doesn't exist", async () => {
