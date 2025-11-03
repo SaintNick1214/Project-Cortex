@@ -2,6 +2,14 @@
 
 All notable changes to the create-cortex-memories wizard will be documented in this file.
 
+## [0.1.2] - 2025-11-02
+
+### Fixed
+
+**Critical:**
+- **FIXED:** Binary not executable after npm install (added chmod +x to build step)
+- This was preventing `npm create cortex-memories` from working after v0.1.1 publish
+
 ## [0.1.1] - 2025-11-02
 
 ### Fixed
