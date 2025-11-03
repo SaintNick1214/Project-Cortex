@@ -109,7 +109,7 @@ if (hasGraphConfig && hasDockerCompose) {
       resolve();
     });
     
-    dockerUp.on('error', (err) => {
+    dockerUp.on('error', () => {
       console.log('   ⚠️  docker-compose command not found');
       console.log('   💡 Install Docker Desktop: https://docker.com/products/docker-desktop');
       resolve();

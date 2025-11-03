@@ -3,6 +3,9 @@
  * 
  * This is a simple example to get you started with Cortex.
  * Your AI agent now has persistent memory!
+ * 
+ * Note: This is a template file. TypeScript errors about missing '@cortexmemory/sdk'
+ * are expected and will be resolved when dependencies are installed in your project.
  */
 
 import { Cortex } from '@cortexmemory/sdk';
@@ -41,7 +44,7 @@ async function main() {
     );
     
     console.log(`✓ Found ${results.length} relevant memories:`);
-    results.forEach((result, i) => {
+    results.forEach((result: any, i: number) => {
       // Handle both MemoryEntry and EnrichedMemory formats
       const memory = 'memory' in result ? result.memory : result;
       console.log(`\n${i + 1}. ${memory.content}`);
