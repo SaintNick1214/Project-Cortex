@@ -2,6 +2,15 @@
 
 All notable changes to the create-cortex-memories wizard will be documented in this file.
 
+## [0.1.3] - 2025-11-02
+
+### Fixed
+
+**Debugging:**
+- Added debug logging to verify SDK installation
+- Better error message showing exact path checked
+- Helps diagnose npm install issues
+
 ## [0.1.2] - 2025-11-02
 
 ### Fixed
