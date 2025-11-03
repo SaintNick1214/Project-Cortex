@@ -48,7 +48,7 @@ export function createMemoryRoutes(cortex) {
         hasResponse: !!agentResponse,
       });
 
-      // Store in Cortex
+      // Store in Cortex (extractFacts parameter removed - not supported by SDK)
       const result = await cortex.memory.remember({
         memorySpaceId: userId,
         conversationId: conversationId || `conv-${Date.now()}`,
@@ -59,10 +59,6 @@ export function createMemoryRoutes(cortex) {
         contextId,
         participantId: participantId || "default",
         importance: importance || 5,
-        extractFacts:
-          extractFacts !== undefined
-            ? extractFacts
-            : process.env.ENABLE_FACTS_EXTRACTION === "true",
         metadata: {
           ...metadata,
           timestamp: new Date().toISOString(),
@@ -77,9 +73,10 @@ export function createMemoryRoutes(cortex) {
 
       res.json({
         success: true,
-        conversationId: result.conversationId,
-        memoryId: result.memoryId,
-        extractedFacts: result.extractedFacts?.length || 0,
+        memory_id: result.memoryId || "",
+        conversation_id: result.conversationId || "",
+        facts_extracted: result.extractedFacts?.length || 0,
+        storage_location: "convex"
       });
     } catch (error) {
       logger.error("Error storing memory", {
@@ -127,29 +124,96 @@ export function createMemoryRoutes(cortex) {
         limit,
       });
 
-      // Recall from Cortex
-      const memories = await cortex.memory.recall({
-        memorySpaceId: userId,
-        query,
-        embedding,
-        limit: parseInt(limit),
-        contextId,
-        participantId,
-        minImportance,
-        startDate: startDate ? new Date(startDate) : undefined,
-        endDate: endDate ? new Date(endDate) : undefined,
-        includeEmbedding: false,
+      // Query multiple Cortex layers for comprehensive results
+      logger.info("Querying all Cortex layers", { userId, query, limit });
+      
+      const layerResults = {
+        vector: [],
+        facts: [],
+        conversations: []
+      };
+      
+      // Layer 2: Vector semantic search (primary)
+      try {
+        const vectorResults = await cortex.memory.search(userId, query, {
+          limit: parseInt(limit)
+        });
+        layerResults.vector = vectorResults || [];
+        logger.info(`Layer 2 (Vector): ${layerResults.vector.length} results`);
+      } catch (error) {
+        logger.error("Vector search failed:", error.message);
+      }
+      
+      // Layer 1: Direct conversation search (if available)
+      try {
+        const convos = await cortex.conversations.list(userId, {
+          limit: parseInt(limit)
+        });
+        layerResults.conversations = convos || [];
+        logger.info(`Layer 1 (ACID): ${layerResults.conversations.length} conversations`);
+      } catch (error) {
+        logger.debug("Conversation list not available:", error.message);
+      }
+      
+      // Layer 3: Facts search (if facts exist)
+      try {
+        const facts = await cortex.facts.list({
+          memorySpaceId: userId,
+          limit: Math.min(parseInt(limit), 10)
+        });
+        layerResults.facts = facts || [];
+        logger.info(`Layer 3 (Facts): ${layerResults.facts.length} facts`);
+      } catch (error) {
+        logger.debug("Facts search not available:", error.message);
+      }
+
+      // Combine and format all results with layer attribution
+      const allMemories = [];
+      
+      // Add vector results
+      layerResults.vector.forEach(m => {
+        allMemories.push({
+          text: m.content || m.text || "",
+          similarity: m.similarity || 0.85,
+          timestamp: new Date(m.createdAt || m._creationTime).toISOString(),
+          conversation_id: m.conversationRef?.conversationId || "",
+          memory_id: m.memoryId || m._id,
+          layer: "Vector (L2)",
+          metadata: m.metadata || {}
+        });
+      });
+      
+      // Add facts as memories
+      layerResults.facts.forEach(f => {
+        allMemories.push({
+          text: `FACT: ${f.content || f.value || JSON.stringify(f)}`,
+          similarity: 0.90, // Facts are highly relevant
+          timestamp: new Date(f.createdAt || f._creationTime).toISOString(),
+          conversation_id: "",
+          memory_id: f.factId || f._id,
+          layer: "Facts (L3)",
+          metadata: { factType: f.factType || 'extracted' }
+        });
       });
 
-      logger.info("Memories recalled", {
+      logger.info("Total memories across all layers", {
         userId,
-        count: memories.length,
+        vector: layerResults.vector.length,
+        facts: layerResults.facts.length,
+        conversations: layerResults.conversations.length,
+        total: allMemories.length
       });
 
       res.json({
         success: true,
-        memories,
-        count: memories.length,
+        memories: allMemories,
+        count: allMemories.length,
+        layerBreakdown: {
+          "Layer 1 (ACID)": layerResults.conversations.length,
+          "Layer 2 (Vector)": layerResults.vector.length,
+          "Layer 3 (Facts)": layerResults.facts.length,
+          "Layer 4 (Graph)": 0  // Not implemented in this proof
+        }
       });
     } catch (error) {
       logger.error("Error recalling memories", {

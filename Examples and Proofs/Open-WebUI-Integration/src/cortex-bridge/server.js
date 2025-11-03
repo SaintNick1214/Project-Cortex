@@ -44,15 +44,13 @@ try {
   }
 }
 
-import logger from "./utils/logger.js";
-import { createMemoryRoutes } from "./routes/memory.js";
-import { createUserRoutes } from "./routes/users.js";
-import { createContextRoutes } from "./routes/contexts.js";
-import { createFactsRoutes } from "./routes/facts.js";
-import { createAgentRoutes } from "./routes/agents.js";
-
-// Load environment variables
-dotenv.config();
+// Simple console logger (routes will be imported after env is loaded)
+const logger = {
+  info: (...args) => console.log('[INFO]', ...args),
+  warn: (...args) => console.warn('[WARN]', ...args),
+  error: (...args) => console.error('[ERROR]', ...args),
+  debug: (...args) => console.log('[DEBUG]', ...args)
+};
 
 // Validate required environment variables
 if (!process.env.CONVEX_URL) {
@@ -75,6 +73,15 @@ const cortex = new Cortex({
 });
 
 logger.info("Cortex SDK initialized successfully");
+
+// Import routes AFTER environment is loaded (dynamic imports to avoid early OpenAI init)
+logger.info("Loading route modules...");
+const { createMemoryRoutes } = await import("./routes/memory.js");
+const { createUserRoutes } = await import("./routes/users.js");
+const { createContextRoutes } = await import("./routes/contexts.js");
+const { createFactsRoutes } = await import("./routes/facts.js");
+const { createAgentRoutes } = await import("./routes/agents.js");
+logger.info("✓ All routes loaded");
 
 // Initialize Express app
 const app = express();
