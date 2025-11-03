@@ -41,7 +41,9 @@ async function main() {
     );
     
     console.log(`✓ Found ${results.length} relevant memories:`);
-    results.forEach((memory, i) => {
+    results.forEach((result, i) => {
+      // Handle both MemoryEntry and EnrichedMemory formats
+      const memory = 'memory' in result ? result.memory : result;
       console.log(`\n${i + 1}. ${memory.content}`);
       console.log(`   Importance: ${memory.importance}`);
     });
