@@ -1,6 +1,6 @@
 {
   "name": "create-cortex-memories",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Interactive CLI to scaffold Cortex Memory SDK projects with Convex backend",
   "type": "module",
   "bin": {
@@ -11,7 +11,7 @@
     "templates"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && chmod +x dist/index.js",
     "dev": "tsc --watch",
     "lint": "eslint . --report-unused-disable-directives",
     "test": "./test-smoke.sh",
