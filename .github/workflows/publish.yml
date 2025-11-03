@@ -162,7 +162,7 @@ jobs:
           echo ""
 
   publish-wizard:
-    needs: [check-version, publish-sdk]
+    needs: check-version
     if: needs.check-version.outputs.wizard-version-changed == 'true'
     runs-on: ubuntu-latest
     permissions:
