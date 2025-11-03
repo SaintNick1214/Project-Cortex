@@ -113,12 +113,34 @@ export async function copyTemplate(
   targetPath: string,
   projectName: string
 ): Promise<void> {
-  const templatePath = path.join(__dirname, '..', 'templates', templateName);
+  // When running from npm/npx, templates are relative to the package root
+  // Try multiple possible locations
+  const possiblePaths = [
+    path.join(__dirname, '..', 'templates', templateName),  // From dist/
+    path.join(__dirname, '../..', 'templates', templateName),  // From dist/subdir
+    path.join(process.cwd(), 'node_modules', 'create-cortex-memories', 'templates', templateName),  // From installed package
+  ];
   
-  if (!fs.existsSync(templatePath)) {
-    throw new Error(`Template ${templateName} not found at ${templatePath}`);
+  let templatePath: string | null = null;
+  for (const tryPath of possiblePaths) {
+    if (fs.existsSync(tryPath)) {
+      templatePath = tryPath;
+      break;
+    }
+  }
+  
+  console.log(pc.dim(`   Looking for template...`));
+  
+  if (!templatePath) {
+    throw new Error(
+      `Template ${templateName} not found. Tried:\n` +
+      possiblePaths.map(p => `  - ${p}`).join('\n')
+    );
   }
 
+  console.log(pc.dim(`   Found at: ${templatePath}`));
+  console.log(pc.dim(`   Copying to: ${targetPath}`));
+  
   // Copy template files
   await fs.copy(templatePath, targetPath, {
     overwrite: false,
@@ -128,6 +150,13 @@ export async function copyTemplate(
       return !src.includes('node_modules') && !src.includes('dist');
     },
   });
+  
+  // Verify key files were copied
+  const keyFiles = ['package.json', 'src/index.ts', 'tsconfig.json'];
+  const missing = keyFiles.filter(f => !fs.existsSync(path.join(targetPath, f)));
+  if (missing.length > 0) {
+    throw new Error(`Failed to copy template files: ${missing.join(', ')} not found`);
+  }
 
   // Replace template variables in package.json
   const packageJsonPath = path.join(targetPath, 'package.json');
