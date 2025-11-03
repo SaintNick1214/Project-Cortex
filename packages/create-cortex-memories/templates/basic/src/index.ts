@@ -21,7 +21,7 @@ async function main() {
   const conversationId = 'conversation-1';
 
   try {
-    // Store a memory
+    // Store a memory (remember() auto-creates conversation if needed!)
     console.log('💾 Storing a memory...');
     await cortex.memory.remember({
       memorySpaceId,
