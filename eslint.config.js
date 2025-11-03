@@ -23,6 +23,8 @@ export default [
       "**/test-output.txt",
       "scripts/**/*", // Exclude scripts from linting
       "examples/**/*", // Exclude examples from linting
+      "Examples and Proofs/**/*", // Exclude example integrations
+      "packages/**/*", // Exclude all packages (wizard has its own linting)
       "*.txt", // Exclude text files
     ],
   },

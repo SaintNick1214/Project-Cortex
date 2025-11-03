@@ -59,13 +59,24 @@ await cortex.memory.remember({ ... });
 - Optional graph database configuration (Neo4j/Memgraph)
 - Automatic dependency installation and backend deployment
 
-**2. Improved Package Distribution**
+**2. Interactive Setup Wizard Updates (create-cortex-memories@0.1.1)**
+
+- **FIXED:** Template code now correctly accesses `memory.importance` (not `memory.metadata.importance`)
+- **FIXED:** Conversations API signature (`conversations.get(conversationId)`)
+- **FIXED:** Docker Compose v2 compatibility (removed obsolete `version` field)
+- **FIXED:** Clean exit handling (no more exit code 254)
+- **NEW:** Auto-start graph database with `npm run dev`
+- **NEW:** Docker daemon detection before attempting container start
+- **NEW:** ESLint configuration and prepublish checks
+- Better error messages for all Docker failure scenarios
+
+**3. Improved Package Distribution**
 
 - **FIXED:** `convex-dev/` backend functions now included in published npm package
 - Backend functions automatically copied to user's project during setup
 - No more manual file copying or configuration needed
 
-**3. Enhanced Documentation**
+**4. Enhanced Documentation**
 
 - **NEW:** Prominent Quick Start section in README
 - Step-by-step getting started guide
@@ -85,10 +96,10 @@ When running `npm create cortex-memories@latest`:
 #### 📦 Package Structure
 
 **New Package:**
-- `create-cortex-memories` - Interactive CLI wizard
+- `create-cortex-memories@0.1.1` - Interactive CLI wizard with bug fixes
 
 **Updated Package:**
-- `@cortexmemory/sdk@0.8.1` - Now includes `convex-dev/` folder
+- `@cortexmemory/sdk@0.8.2` - Auto-conversation creation + `convex-dev/` folder included
 
 #### 🚀 Usage
 

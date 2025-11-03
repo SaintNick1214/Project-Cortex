@@ -1,6 +1,6 @@
 {
   "name": "create-cortex-memories",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Interactive CLI to scaffold Cortex Memory SDK projects with Convex backend",
   "type": "module",
   "bin": {
@@ -13,7 +13,9 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "prepublishOnly": "npm run build"
+    "lint": "eslint . --report-unused-disable-directives",
+    "test": "./test-smoke.sh",
+    "prepublishOnly": "npm run lint && npm run build && npm test"
   },
   "keywords": [
     "cortex",
@@ -41,7 +43,8 @@
     "@types/prompts": "^2.4.9",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.0.0",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.0",
+    "eslint": "^9.39.0"
   }
 }
 
