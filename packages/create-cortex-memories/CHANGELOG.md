@@ -2,6 +2,22 @@
 
 All notable changes to the create-cortex-memories wizard will be documented in this file.
 
+## [0.1.5] - 2025-11-02
+
+### Fixed
+
+**Critical - ROOT CAUSE:**
+- **FIXED:** Filter function was checking absolute path (includes 'node_modules'), excluding ALL files!
+- Now uses `path.relative()` to check only the relative path within template
+- This was preventing any template files from being copied
+- **CHANGED:** `overwrite: true` to avoid silent failures
+
+**Debugging:**
+- Verbose logging showing every file and filter decision
+- Shows template item count before copy
+- Better error messages with exact paths
+- Verification that key files were copied
+
 ## [0.1.4] - 2025-11-02
 
 ### Fixed
