@@ -93,9 +93,7 @@ export async function createGraphDockerCompose(
   let dockerCompose = '';
 
   if (graphType === 'neo4j') {
-    dockerCompose = `version: '3.8'
-
-services:
+    dockerCompose = `services:
   neo4j:
     image: neo4j:5-community
     container_name: cortex-neo4j
@@ -116,9 +114,7 @@ volumes:
   neo4j_logs:
 `;
   } else if (graphType === 'memgraph') {
-    dockerCompose = `version: '3.8'
-
-services:
+    dockerCompose = `services:
   memgraph:
     image: memgraph/memgraph-platform:latest
     container_name: cortex-memgraph
