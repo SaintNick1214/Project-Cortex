@@ -21,8 +21,14 @@ export async function deployCortexBackend(projectPath: string): Promise<void> {
   const sdkPath = getSDKPath(projectPath);
   
   if (!sdkPath) {
+    // Debug: Check what's actually in node_modules
+    const nodeModulesPath = path.join(projectPath, 'node_modules', '@cortexmemory');
+    const exists = fs.existsSync(nodeModulesPath);
+    
     throw new Error(
-      'Could not locate @cortexmemory/sdk package. Please ensure it is installed.'
+      `Could not locate @cortexmemory/sdk package. ` +
+      `Checked: ${path.join(projectPath, 'node_modules', '@cortexmemory', 'sdk')} ` +
+      `(@cortexmemory folder exists: ${exists})`
     );
   }
 
