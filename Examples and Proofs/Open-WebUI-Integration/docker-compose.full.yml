@@ -1,0 +1,136 @@
+version: "3.8"
+
+services:
+  # ===========================================
+  # Cortex Bridge (Node.js Service)
+  # ===========================================
+  cortex-bridge:
+    build:
+      context: ./src/cortex-bridge
+      dockerfile: Dockerfile
+    container_name: cortex-bridge
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Convex
+      - CONVEX_URL=${CONVEX_URL}
+
+      # OpenAI for embeddings
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+
+      # Server config
+      - PORT=3000
+      - HOST=0.0.0.0
+      - NODE_ENV=${NODE_ENV:-production}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+
+      # Feature flags
+      - ENABLE_FACTS_EXTRACTION=${ENABLE_FACTS_EXTRACTION:-true}
+      - ENABLE_CONTEXT_CHAINS=${ENABLE_CONTEXT_CHAINS:-true}
+      - ENABLE_MULTI_AGENT=${ENABLE_MULTI_AGENT:-true}
+    volumes:
+      # Mount built Cortex SDK
+      - ../../dist:/app/cortex-sdk:ro
+      # Logs
+      - cortex-logs:/app/logs
+    networks:
+      - cortex-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ===========================================
+  # Open WebUI (Modified with Cortex)
+  # ===========================================
+  open-webui:
+    build:
+      context: ./open-webui-fork
+      dockerfile: Dockerfile
+    container_name: open-webui
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      # Cortex Integration
+      - CORTEX_BRIDGE_URL=http://cortex-bridge:3000
+      - ENABLE_CORTEX_MEMORY=true
+      - CORTEX_TIMEOUT=30
+      - CORTEX_MAX_RETRIES=3
+      - CORTEX_MIN_SIMILARITY=0.7
+
+      # Database
+      - DATABASE_URL=${DATABASE_URL:-postgresql://openwebui:${DB_PASSWORD}@postgres:5432/openwebui}
+
+      # Security
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
+      - WEBUI_JWT_SECRET_KEY=${WEBUI_JWT_SECRET_KEY}
+
+      # LLM Providers
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-}
+
+      # Environment
+      - ENV=${ENV:-prod}
+    volumes:
+      - open-webui-data:/app/backend/data
+    networks:
+      - cortex-network
+    depends_on:
+      cortex-bridge:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  # ===========================================
+  # PostgreSQL (Open WebUI Database)
+  # ===========================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=openwebui
+      - POSTGRES_USER=openwebui
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - cortex-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openwebui"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ===========================================
+  # Redis (Caching)
+  # ===========================================
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - cortex-network
+
+volumes:
+  cortex-logs:
+    driver: local
+  open-webui-data:
+    driver: local
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+
+networks:
+  cortex-network:
+    driver: bridge

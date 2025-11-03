@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Validates auto-creation, reuse of existing, default participantId, explicit participantId, multiple calls
 
 **Before:**
+
 ```typescript
 // Required 2 steps
 await cortex.conversations.create({ ... });  // Manual step
@@ -43,6 +44,7 @@ await cortex.memory.remember({ ... });
 ```
 
 **After:**
+
 ```typescript
 // Just one step - conversation auto-created!
 await cortex.memory.remember({ ... });
@@ -86,6 +88,7 @@ await cortex.memory.remember({ ... });
 #### 🏗️ What Gets Installed
 
 When running `npm create cortex-memories@latest`:
+
 - Cortex SDK with full TypeScript support
 - Complete Convex backend functions (schema, queries, mutations)
 - Environment configuration (.env.local)
@@ -96,9 +99,11 @@ When running `npm create cortex-memories@latest`:
 #### 📦 Package Structure
 
 **New Package:**
+
 - `create-cortex-memories@0.1.1` - Interactive CLI wizard with bug fixes
 
 **Updated Package:**
+
 - `@cortexmemory/sdk@0.8.2` - Auto-conversation creation + `convex-dev/` folder included
 
 #### 🚀 Usage
@@ -114,10 +119,12 @@ npm create cortex-memories my-ai-agent
 #### 🎯 Developer Experience
 
 This release dramatically simplifies the getting started experience:
+
 - **Before:** Manual setup, copying files, configuring Convex, reading docs
 - **After:** One command, interactive wizard, automatic setup, ready to code
 
 Perfect for:
+
 - New users trying Cortex for the first time
 - Rapid prototyping and proof-of-concepts
 - Workshop and tutorial scenarios

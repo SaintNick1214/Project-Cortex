@@ -7,12 +7,14 @@ All notable changes to the create-cortex-memories wizard will be documented in t
 ### Fixed
 
 **Critical - ROOT CAUSE:**
+
 - **FIXED:** Filter function was checking absolute path (includes 'node_modules'), excluding ALL files!
 - Now uses `path.relative()` to check only the relative path within template
 - This was preventing any template files from being copied
 - **CHANGED:** `overwrite: true` to avoid silent failures
 
 **Debugging:**
+
 - Verbose logging showing every file and filter decision
 - Shows template item count before copy
 - Better error messages with exact paths
@@ -23,11 +25,13 @@ All notable changes to the create-cortex-memories wizard will be documented in t
 ### Fixed
 
 **Critical:**
+
 - **FIXED:** Template files not copied when adding to existing directory with partial files
 - Now checks if package.json exists and copies template if missing
 - Prevents "SDK not found" error when directory has leftover config files from failed runs
 
 **Debugging:**
+
 - Added logging to show template path resolution
 - Added verification that key files were actually copied
 - Better error messages showing exact paths
@@ -38,6 +42,7 @@ All notable changes to the create-cortex-memories wizard will be documented in t
 ### Fixed
 
 **Debugging:**
+
 - Added debug logging to verify SDK installation
 - Better error message showing exact path checked
 - Helps diagnose npm install issues
@@ -47,6 +52,7 @@ All notable changes to the create-cortex-memories wizard will be documented in t
 ### Fixed
 
 **Critical:**
+
 - **FIXED:** Binary not executable after npm install (added chmod +x to build step)
 - This was preventing `npm create cortex-memories` from working after v0.1.1 publish
 
@@ -55,18 +61,21 @@ All notable changes to the create-cortex-memories wizard will be documented in t
 ### Fixed
 
 **Template Improvements:**
+
 - Fixed `memory.importance` access (was incorrectly `memory.metadata.importance`)
 - Fixed `conversations.get()` signature (removed extra parameter)
 - Added type annotations to fix implicit `any` warnings
 - Added comment explaining template TypeScript errors are expected
 
 **Docker Compose:**
+
 - Removed obsolete `version: '3.8'` field (Docker Compose v2 compatibility)
 - Improved error detection and messages
 - Added pre-check for Docker daemon running
 - Better handling of container name conflicts
 
 **Development Experience:**
+
 - Auto-start graph database when running `npm run dev`
 - Auto-stop graph database on Ctrl+C
 - Fixed exit code 254 issue (SIGINT double-execution)
@@ -74,6 +83,7 @@ All notable changes to the create-cortex-memories wizard will be documented in t
 - Graceful handling when containers already running
 
 **Code Quality:**
+
 - Added ESLint configuration
 - Added lint script with prepublish check
 - Added smoke tests to prepublish
@@ -91,6 +101,7 @@ All notable changes to the create-cortex-memories wizard will be documented in t
 ### Added
 
 **Initial Release:**
+
 - Interactive CLI wizard for Cortex project setup
 - Three Convex setup modes (local/new cloud/existing)
 - Optional graph database integration (Neo4j/Memgraph)
@@ -103,6 +114,7 @@ All notable changes to the create-cortex-memories wizard will be documented in t
 - Comprehensive error handling
 
 **Features:**
+
 - `npm create cortex-memories` - Zero-config project creation
 - Auto-detects configuration options
 - Platform-aware (macOS/Windows/Linux)
@@ -112,7 +124,7 @@ All notable changes to the create-cortex-memories wizard will be documented in t
 - Smoke test suite
 
 **Documentation:**
+
 - README with usage examples
 - TESTING guide with manual test scenarios
 - Inline code documentation
-

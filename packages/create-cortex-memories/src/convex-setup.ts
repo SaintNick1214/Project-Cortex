@@ -2,61 +2,63 @@
  * Convex setup handlers
  */
 
-import fs from 'fs-extra';
-import path from 'path';
-import prompts from 'prompts';
-import { execCommand, execCommandLive, commandExists } from './utils.js';
-import type { ConvexConfig } from './types.js';
-import pc from 'picocolors';
-import ora from 'ora';
+import fs from "fs-extra";
+import path from "path";
+import prompts from "prompts";
+import { execCommand, execCommandLive, commandExists } from "./utils.js";
+import type { ConvexConfig } from "./types.js";
+import pc from "picocolors";
+import ora from "ora";
 
 /**
  * Setup new Convex database (cloud)
  */
-export async function setupNewConvex(projectPath: string): Promise<ConvexConfig> {
-  console.log(pc.cyan('\n📦 Setting up new Convex database...'));
-  
+export async function setupNewConvex(
+  projectPath: string,
+): Promise<ConvexConfig> {
+  console.log(pc.cyan("\n📦 Setting up new Convex database..."));
+
   // Check if convex CLI is available
-  const hasConvex = await commandExists('convex');
-  
+  const hasConvex = await commandExists("convex");
+
   if (!hasConvex) {
-    console.log(pc.yellow('   Convex CLI not found globally, will use npx'));
+    console.log(pc.yellow("   Convex CLI not found globally, will use npx"));
   }
 
-  const spinner = ora('Initializing Convex...').start();
+  const spinner = ora("Initializing Convex...").start();
 
   try {
     // Run convex dev --once --until-success
     // This will prompt user to login if needed and create a project
     spinner.stop();
-    console.log(pc.dim('   Running Convex setup (this may prompt for login)...'));
-    console.log(pc.dim('   Follow the prompts to create your Convex project\n'));
-
-    const command = hasConvex ? 'convex' : 'npx';
-    const args = hasConvex 
-      ? ['dev', '--once', '--until-success']
-      : ['convex', 'dev', '--once', '--until-success'];
-
-    const exitCode = await execCommandLive(
-      command,
-      args,
-      { cwd: projectPath }
+    console.log(
+      pc.dim("   Running Convex setup (this may prompt for login)..."),
     );
+    console.log(
+      pc.dim("   Follow the prompts to create your Convex project\n"),
+    );
+
+    const command = hasConvex ? "convex" : "npx";
+    const args = hasConvex
+      ? ["dev", "--once", "--until-success"]
+      : ["convex", "dev", "--once", "--until-success"];
+
+    const exitCode = await execCommandLive(command, args, { cwd: projectPath });
 
     if (exitCode !== 0) {
       throw new Error(`Convex setup failed with exit code ${exitCode}`);
     }
 
     // Read the generated .env.local to get CONVEX_URL
-    const envLocalPath = path.join(projectPath, '.env.local');
-    let convexUrl = '';
-    let deployKey = '';
+    const envLocalPath = path.join(projectPath, ".env.local");
+    let convexUrl = "";
+    let deployKey = "";
 
     if (fs.existsSync(envLocalPath)) {
-      const envContent = await fs.readFile(envLocalPath, 'utf-8');
+      const envContent = await fs.readFile(envLocalPath, "utf-8");
       const urlMatch = envContent.match(/CONVEX_URL=(.+)/);
       const keyMatch = envContent.match(/CONVEX_DEPLOY_KEY=(.+)/);
-      
+
       if (urlMatch) {
         convexUrl = urlMatch[1].trim();
       }
@@ -68,19 +70,19 @@ export async function setupNewConvex(projectPath: string): Promise<ConvexConfig>
     if (!convexUrl) {
       // Fallback: prompt user for URL
       const response = await prompts({
-        type: 'text',
-        name: 'url',
-        message: 'Enter your Convex deployment URL:',
-        validate: (value) => 
-          value.includes('convex.cloud') || value.includes('convex.site')
+        type: "text",
+        name: "url",
+        message: "Enter your Convex deployment URL:",
+        validate: (value) =>
+          value.includes("convex.cloud") || value.includes("convex.site")
             ? true
-            : 'Please enter a valid Convex URL',
+            : "Please enter a valid Convex URL",
       });
 
       convexUrl = response.url;
     }
 
-    console.log(pc.green('\n   ✓ Convex database configured'));
+    console.log(pc.green("\n   ✓ Convex database configured"));
     console.log(pc.dim(`   URL: ${convexUrl}`));
 
     return {
@@ -97,46 +99,47 @@ export async function setupNewConvex(projectPath: string): Promise<ConvexConfig>
  * Setup with existing Convex database
  */
 export async function setupExistingConvex(): Promise<ConvexConfig> {
-  console.log(pc.cyan('\n📦 Configuring existing Convex database...'));
+  console.log(pc.cyan("\n📦 Configuring existing Convex database..."));
 
   const response = await prompts([
     {
-      type: 'text',
-      name: 'convexUrl',
-      message: 'Enter your Convex deployment URL:',
+      type: "text",
+      name: "convexUrl",
+      message: "Enter your Convex deployment URL:",
       validate: (value) => {
-        if (!value) return 'URL is required';
-        if (!value.startsWith('http')) return 'Please enter a valid URL';
+        if (!value) return "URL is required";
+        if (!value.startsWith("http")) return "Please enter a valid URL";
         return true;
       },
     },
     {
-      type: 'text',
-      name: 'deployKey',
-      message: 'Enter your Convex deploy key (optional, press Enter to skip):',
+      type: "text",
+      name: "deployKey",
+      message: "Enter your Convex deploy key (optional, press Enter to skip):",
     },
   ]);
 
   if (!response.convexUrl) {
-    throw new Error('Convex URL is required');
+    throw new Error("Convex URL is required");
   }
 
   // Validate connection
-  const spinner = ora('Validating Convex connection...').start();
-  
+  const spinner = ora("Validating Convex connection...").start();
+
   try {
     // Try to query the deployment
     // Note: This is a simple check - in production we might want to test with the actual client
-    const isValid = response.convexUrl.includes('convex.cloud') || 
-                    response.convexUrl.includes('convex.site') ||
-                    response.convexUrl.includes('localhost');
-    
+    const isValid =
+      response.convexUrl.includes("convex.cloud") ||
+      response.convexUrl.includes("convex.site") ||
+      response.convexUrl.includes("localhost");
+
     if (!isValid) {
-      spinner.fail('Invalid Convex URL format');
-      throw new Error('Invalid Convex URL');
+      spinner.fail("Invalid Convex URL format");
+      throw new Error("Invalid Convex URL");
     }
 
-    spinner.succeed('Convex connection validated');
+    spinner.succeed("Convex connection validated");
     console.log(pc.dim(`   URL: ${response.convexUrl}`));
 
     return {
@@ -144,7 +147,7 @@ export async function setupExistingConvex(): Promise<ConvexConfig> {
       deployKey: response.deployKey || undefined,
     };
   } catch (error) {
-    spinner.fail('Failed to validate Convex connection');
+    spinner.fail("Failed to validate Convex connection");
     throw error;
   }
 }
@@ -153,19 +156,27 @@ export async function setupExistingConvex(): Promise<ConvexConfig> {
  * Setup local Convex for development
  */
 export async function setupLocalConvex(): Promise<ConvexConfig> {
-  console.log(pc.cyan('\n📦 Configuring local Convex...'));
-  console.log(pc.yellow('   ⚠️  Note: Local Convex does not support vector search'));
-  console.log(pc.dim('   Use for rapid development, switch to cloud for production features\n'));
+  console.log(pc.cyan("\n📦 Configuring local Convex..."));
+  console.log(
+    pc.yellow("   ⚠️  Note: Local Convex does not support vector search"),
+  );
+  console.log(
+    pc.dim(
+      "   Use for rapid development, switch to cloud for production features\n",
+    ),
+  );
 
-  const localUrl = 'http://127.0.0.1:3210';
-  
-  console.log(pc.green('   ✓ Local Convex configured'));
+  const localUrl = "http://127.0.0.1:3210";
+
+  console.log(pc.green("   ✓ Local Convex configured"));
   console.log(pc.dim(`   URL: ${localUrl}`));
-  console.log(pc.dim('   Deployment will happen automatically in the next step'));
+  console.log(
+    pc.dim("   Deployment will happen automatically in the next step"),
+  );
 
   return {
     convexUrl: localUrl,
-    deployment: 'anonymous:anonymous-local',
+    deployment: "anonymous:anonymous-local",
   };
 }
 
@@ -178,30 +189,30 @@ export async function setupLocalConvex(): Promise<ConvexConfig> {
 export async function deployConvexBackend(
   projectPath: string,
   config: ConvexConfig,
-  isLocal: boolean = false
+  isLocal: boolean = false,
 ): Promise<void> {
-  console.log(pc.cyan('\n🚀 Deploying Cortex backend to Convex...'));
+  console.log(pc.cyan("\n🚀 Deploying Cortex backend to Convex..."));
 
-  const spinner = ora('Deploying functions...').start();
+  const spinner = ora("Deploying functions...").start();
 
   try {
     // Check if convex CLI is available
-    const hasConvex = await commandExists('convex');
-    
+    const hasConvex = await commandExists("convex");
+
     // Build command and args based on whether convex is installed globally
     let command: string;
     let args: string[];
-    
+
     if (hasConvex) {
-      command = 'convex';
-      args = ['dev', '--once', '--until-success'];
+      command = "convex";
+      args = ["dev", "--once", "--until-success"];
     } else {
-      command = 'npx';
-      args = ['convex', 'dev', '--once', '--until-success'];
+      command = "npx";
+      args = ["convex", "dev", "--once", "--until-success"];
     }
-    
+
     if (isLocal) {
-      args.push('--local');
+      args.push("--local");
     }
 
     // Set environment for deployment
@@ -210,31 +221,28 @@ export async function deployConvexBackend(
       CONVEX_URL: config.convexUrl,
       ...(config.deployKey && { CONVEX_DEPLOY_KEY: config.deployKey }),
       // Enable agent mode for non-interactive deployment
-      ...(isLocal && { CONVEX_AGENT_MODE: 'anonymous' }),
+      ...(isLocal && { CONVEX_AGENT_MODE: "anonymous" }),
     };
 
     // Run convex dev --once to deploy the schema and functions
-    const result = await execCommand(
-      command,
-      args,
-      { cwd: projectPath, env }
-    );
+    const result = await execCommand(command, args, { cwd: projectPath, env });
 
     if (result.code !== 0) {
-      spinner.fail('Deployment failed');
+      spinner.fail("Deployment failed");
       console.error(pc.red(result.stderr));
-      throw new Error('Failed to deploy Cortex backend');
+      throw new Error("Failed to deploy Cortex backend");
     }
 
-    spinner.succeed('Backend deployed to Convex');
+    spinner.succeed("Backend deployed to Convex");
     if (isLocal) {
-      console.log(pc.dim('   Local Convex is now running at ' + config.convexUrl));
+      console.log(
+        pc.dim("   Local Convex is now running at " + config.convexUrl),
+      );
     } else {
-      console.log(pc.dim('   All functions and schema are deployed'));
+      console.log(pc.dim("   All functions and schema are deployed"));
     }
   } catch (error) {
-    spinner.fail('Deployment failed');
+    spinner.fail("Deployment failed");
     throw error;
   }
 }
-

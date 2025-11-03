@@ -190,13 +190,16 @@ export class MemoryAPI {
         {
           memorySpaceId: params.memorySpaceId,
           conversationId: params.conversationId,
-          type: 'user-agent',
+          type: "user-agent",
           participants: {
             userId: params.userId,
-            participantId: params.participantId || 'agent',
+            participantId: params.participantId || "agent",
           },
         },
-        { syncToGraph: options?.syncToGraph !== false && this.graphAdapter !== undefined },
+        {
+          syncToGraph:
+            options?.syncToGraph !== false && this.graphAdapter !== undefined,
+        },
       );
     }
 

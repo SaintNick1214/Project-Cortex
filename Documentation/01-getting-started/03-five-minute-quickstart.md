@@ -15,22 +15,27 @@ npm create cortex-memories
 The interactive wizard will ask:
 
 **Question 1:** Project name
+
 - Default: `my-first-agent`
 - Press Enter to accept
 
 **Question 2:** Convex setup
+
 - Choose: **"Local development (fast, no account needed)"**
 - This lets you start immediately
 
 **Question 3:** Graph database
+
 - Choose: **No** (not needed for quickstart)
 - You can add this later
 
 **Question 4:** Confirm setup
+
 - Review the summary
 - Press Enter to proceed
 
 The wizard will:
+
 - ✅ Create project structure
 - ✅ Install dependencies
 - ✅ Deploy Convex backend
@@ -46,6 +51,7 @@ npm run dev
 ```
 
 You should see:
+
 ```
 ✔ Started running a deployment locally at http://127.0.0.1:3210
 ✔ Convex functions ready!
@@ -65,6 +71,7 @@ npm start
 ```
 
 You should see:
+
 ```
 🧠 Cortex Memory SDK - Example
 ================================
@@ -77,6 +84,7 @@ You should see:
 ```
 
 **Congratulations!** Your AI agent just:
+
 - Stored a memory in Cortex
 - Retrieved it using search
 - All with persistent storage
@@ -88,27 +96,27 @@ You should see:
 Let's look at the code that ran (`src/index.ts`):
 
 ```typescript
-import { Cortex } from '@cortexmemory/sdk';
+import { Cortex } from "@cortexmemory/sdk";
 
 // Initialize Cortex
 const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL!  // From .env.local
+  convexUrl: process.env.CONVEX_URL!, // From .env.local
 });
 
 // Store a memory
 await cortex.memory.remember({
-  memorySpaceId: 'my-first-agent',     // Isolation boundary
-  conversationId: 'conversation-1',     // Conversation ID
-  userMessage: 'I prefer dark mode',    // What user said
-  agentResponse: 'Got it!',             // What agent said
-  userId: 'user-123',                   // User identifier
-  userName: 'User',                     // User name
+  memorySpaceId: "my-first-agent", // Isolation boundary
+  conversationId: "conversation-1", // Conversation ID
+  userMessage: "I prefer dark mode", // What user said
+  agentResponse: "Got it!", // What agent said
+  userId: "user-123", // User identifier
+  userName: "User", // User name
 });
 
 // Search memories
 const results = await cortex.memory.search(
-  'my-first-agent',
-  'what are the user preferences?'
+  "my-first-agent",
+  "what are the user preferences?",
 );
 ```
 
@@ -130,18 +138,18 @@ Edit `src/index.ts` to experiment:
 ```typescript
 // Try different messages
 await cortex.memory.remember({
-  memorySpaceId: 'my-first-agent',
-  conversationId: 'conversation-2',
-  userMessage: 'My name is Alice and I love TypeScript',
-  agentResponse: 'Nice to meet you, Alice!',
-  userId: 'alice',
-  userName: 'Alice',
+  memorySpaceId: "my-first-agent",
+  conversationId: "conversation-2",
+  userMessage: "My name is Alice and I love TypeScript",
+  agentResponse: "Nice to meet you, Alice!",
+  userId: "alice",
+  userName: "Alice",
 });
 
 // Search with different queries
 const results = await cortex.memory.search(
-  'my-first-agent',
-  'what is the user\'s name?'
+  "my-first-agent",
+  "what is the user's name?",
 );
 ```
 
@@ -152,6 +160,7 @@ const results = await cortex.memory.search(
 Open the Convex dashboard: **http://127.0.0.1:3210**
 
 You'll see:
+
 - **conversations** table - All conversation threads
 - **memories** table - Searchable memory index
 - **immutable** table - Versioned message history
@@ -167,23 +176,23 @@ npm install openai
 ```
 
 ```typescript
-import OpenAI from 'openai';
+import OpenAI from "openai";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 await cortex.memory.remember({
-  memorySpaceId: 'my-first-agent',
-  conversationId: 'conv-1',
-  userMessage: 'I love machine learning',
-  agentResponse: 'That\'s awesome!',
-  userId: 'user-1',
-  userName: 'User',
+  memorySpaceId: "my-first-agent",
+  conversationId: "conv-1",
+  userMessage: "I love machine learning",
+  agentResponse: "That's awesome!",
+  userId: "user-1",
+  userName: "User",
   // Add embedding generation
   generateEmbedding: async (text) => {
     const result = await openai.embeddings.create({
-      model: 'text-embedding-3-small',
+      model: "text-embedding-3-small",
       input: text,
     });
     return result.data[0].embedding;
@@ -198,8 +207,8 @@ await cortex.memory.remember({
 Now that you understand the basics, build a real chatbot:
 
 ```typescript
-import { Cortex } from '@cortexmemory/sdk';
-import OpenAI from 'openai';
+import { Cortex } from "@cortexmemory/sdk";
+import OpenAI from "openai";
 
 const cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -207,31 +216,29 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 async function chat(userId: string, message: string) {
   const memorySpaceId = `user-${userId}`;
   const conversationId = `conv-${Date.now()}`;
-  
+
   // Search relevant memories
-  const context = await cortex.memory.search(
-    memorySpaceId,
-    message,
-    { limit: 5 }
-  );
-  
+  const context = await cortex.memory.search(memorySpaceId, message, {
+    limit: 5,
+  });
+
   // Build prompt with context
   const systemPrompt = `You are a helpful assistant.
   
 Here's what you remember about this user:
-${context.map(m => m.content).join('\n')}`;
-  
+${context.map((m) => m.content).join("\n")}`;
+
   // Generate response
   const response = await openai.chat.completions.create({
-    model: 'gpt-4',
+    model: "gpt-4",
     messages: [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: message },
+      { role: "system", content: systemPrompt },
+      { role: "user", content: message },
     ],
   });
-  
+
   const agentMessage = response.choices[0].message.content;
-  
+
   // Store this interaction
   await cortex.memory.remember({
     memorySpaceId,
@@ -239,14 +246,14 @@ ${context.map(m => m.content).join('\n')}`;
     userMessage: message,
     agentResponse: agentMessage,
     userId,
-    userName: 'User',
+    userName: "User",
   });
-  
+
   return agentMessage;
 }
 
 // Use it
-const reply = await chat('alice', 'What did I tell you about my preferences?');
+const reply = await chat("alice", "What did I tell you about my preferences?");
 console.log(reply);
 ```
 
@@ -263,6 +270,7 @@ Sign up at [convex.dev](https://convex.dev) (free tier available)
 ### 2. Create a Project
 
 In the Convex dashboard:
+
 - Click "New Project"
 - Follow the setup wizard
 - Copy your deployment URL
@@ -358,4 +366,3 @@ Open an issue: [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/i
 ---
 
 **Ready to dive deeper?** Continue to [Core Concepts](./04-core-concepts.md) →
-

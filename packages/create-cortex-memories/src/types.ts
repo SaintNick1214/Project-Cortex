@@ -5,12 +5,12 @@
 export interface WizardConfig {
   projectName: string;
   projectPath: string;
-  installationType: 'new' | 'existing';
-  convexSetupType: 'new' | 'existing' | 'local';
+  installationType: "new" | "existing";
+  convexSetupType: "new" | "existing" | "local";
   convexUrl?: string;
   deployKey?: string;
   graphEnabled: boolean;
-  graphType?: 'neo4j' | 'memgraph' | 'skip';
+  graphType?: "neo4j" | "memgraph" | "skip";
   graphUri?: string;
   graphUsername?: string;
   graphPassword?: string;
@@ -23,9 +23,8 @@ export interface ConvexConfig {
 }
 
 export interface GraphConfig {
-  type: 'neo4j' | 'memgraph';
+  type: "neo4j" | "memgraph";
   uri: string;
   username: string;
   password: string;
 }
-

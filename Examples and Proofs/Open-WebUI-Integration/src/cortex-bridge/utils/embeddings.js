@@ -3,12 +3,12 @@
  * Handles OpenAI embedding generation with caching and error handling
  */
 
-import OpenAI from 'openai';
-import logger from './logger.js';
+import OpenAI from "openai";
+import logger from "./logger.js";
 
 // Initialize OpenAI client
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 // Simple in-memory cache for embeddings
@@ -22,39 +22,42 @@ const CACHE_TTL = 3600000; // 1 hour
  * @param {string} model - Embedding model (default: text-embedding-3-small)
  * @returns {Promise<number[]>} Embedding vector
  */
-export async function generateEmbedding(text, model = 'text-embedding-3-small') {
+export async function generateEmbedding(
+  text,
+  model = "text-embedding-3-small",
+) {
   if (!text || text.trim().length === 0) {
-    throw new Error('Text cannot be empty');
+    throw new Error("Text cannot be empty");
   }
 
   // Check cache
   const cacheKey = `${model}:${text}`;
   const cached = embeddingCache.get(cacheKey);
-  
+
   if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-    logger.debug('Embedding cache hit', { textLength: text.length });
+    logger.debug("Embedding cache hit", { textLength: text.length });
     return cached.embedding;
   }
 
   try {
-    logger.debug('Generating embedding', { 
+    logger.debug("Generating embedding", {
       textLength: text.length,
-      model 
+      model,
     });
 
     const startTime = Date.now();
-    
+
     const response = await openai.embeddings.create({
       model,
-      input: text
+      input: text,
     });
 
     const embedding = response.data[0].embedding;
     const duration = Date.now() - startTime;
 
-    logger.debug('Embedding generated', { 
+    logger.debug("Embedding generated", {
       dimension: embedding.length,
-      duration: `${duration}ms`
+      duration: `${duration}ms`,
     });
 
     // Cache the result
@@ -66,15 +69,15 @@ export async function generateEmbedding(text, model = 'text-embedding-3-small') 
 
     embeddingCache.set(cacheKey, {
       embedding,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
 
     return embedding;
   } catch (error) {
-    logger.error('Error generating embedding', {
+    logger.error("Error generating embedding", {
       error: error.message,
       textLength: text.length,
-      model
+      model,
     });
     throw error;
   }
@@ -86,39 +89,42 @@ export async function generateEmbedding(text, model = 'text-embedding-3-small') 
  * @param {string} model - Embedding model
  * @returns {Promise<number[][]>} Array of embedding vectors
  */
-export async function generateEmbeddings(texts, model = 'text-embedding-3-small') {
+export async function generateEmbeddings(
+  texts,
+  model = "text-embedding-3-small",
+) {
   if (!texts || texts.length === 0) {
     return [];
   }
 
   try {
-    logger.debug('Generating batch embeddings', { 
+    logger.debug("Generating batch embeddings", {
       count: texts.length,
-      model 
+      model,
     });
 
     const startTime = Date.now();
-    
+
     const response = await openai.embeddings.create({
       model,
-      input: texts
+      input: texts,
     });
 
-    const embeddings = response.data.map(item => item.embedding);
+    const embeddings = response.data.map((item) => item.embedding);
     const duration = Date.now() - startTime;
 
-    logger.debug('Batch embeddings generated', { 
+    logger.debug("Batch embeddings generated", {
       count: embeddings.length,
       duration: `${duration}ms`,
-      avgPerText: `${(duration / texts.length).toFixed(2)}ms`
+      avgPerText: `${(duration / texts.length).toFixed(2)}ms`,
     });
 
     return embeddings;
   } catch (error) {
-    logger.error('Error generating batch embeddings', {
+    logger.error("Error generating batch embeddings", {
       error: error.message,
       count: texts.length,
-      model
+      model,
     });
     throw error;
   }
@@ -130,7 +136,7 @@ export async function generateEmbeddings(texts, model = 'text-embedding-3-small'
 export function clearCache() {
   const size = embeddingCache.size;
   embeddingCache.clear();
-  logger.info('Embedding cache cleared', { entriesCleared: size });
+  logger.info("Embedding cache cleared", { entriesCleared: size });
 }
 
 /**
@@ -140,7 +146,7 @@ export function getCacheStats() {
   return {
     size: embeddingCache.size,
     maxSize: CACHE_MAX_SIZE,
-    ttl: CACHE_TTL
+    ttl: CACHE_TTL,
   };
 }
 
@@ -148,6 +154,5 @@ export default {
   generateEmbedding,
   generateEmbeddings,
   clearCache,
-  getCacheStats
+  getCacheStats,
 };
-
