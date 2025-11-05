@@ -1,0 +1,81 @@
+{
+  "name": "@cortexmemory/vercel-ai-provider",
+  "version": "0.1.0",
+  "description": "Vercel AI SDK provider with automatic Cortex memory integration",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "keywords": [
+    "ai",
+    "vercel",
+    "ai-sdk",
+    "memory",
+    "cortex",
+    "nextjs",
+    "llm",
+    "openai",
+    "anthropic",
+    "streaming",
+    "chat",
+    "conversation"
+  ],
+  "author": "Saint Nick LLC",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SaintNick1214/Project-Cortex.git",
+    "directory": "packages/vercel-ai-provider"
+  },
+  "bugs": {
+    "url": "https://github.com/SaintNick1214/Project-Cortex/issues"
+  },
+  "homepage": "https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider#readme",
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "build:watch": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "clean": "rimraf dist",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "tsc --noEmit && eslint src --ext .ts",
+    "prepublishOnly": "npm run lint && npm test && npm run build"
+  },
+  "peerDependencies": {
+    "ai": "^3.0.0",
+    "convex": "^1.28.2"
+  },
+  "dependencies": {
+    "@cortexmemory/sdk": "file:../../"
+  },
+  "devDependencies": {
+    "@ai-sdk/openai": "^0.0.66",
+    "@ai-sdk/anthropic": "^0.0.53",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.7.0",
+    "rimraf": "^6.0.0",
+    "ts-jest": "^29.2.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+

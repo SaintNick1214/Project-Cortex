@@ -1,0 +1,30 @@
+{
+  "name": "cortex-next-chat-example",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@cortexmemory/vercel-ai-provider": "^0.1.0",
+    "@cortexmemory/sdk": "^0.9.0",
+    "ai": "^3.4.0",
+    "@ai-sdk/openai": "^0.0.66",
+    "convex": "^1.28.2",
+    "next": "15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5",
+    "eslint": "^8",
+    "eslint-config-next": "15.0.0"
+  }
+}
+

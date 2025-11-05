@@ -26,6 +26,8 @@ import {
   type RememberOptions,
   type RememberParams,
   type RememberResult,
+  type RememberStreamParams,
+  type RememberStreamResult,
   type SearchMemoryOptions,
   type SourceType,
   type StoreMemoryInput,
@@ -35,6 +37,7 @@ import {
   type UpdateMemoryResult,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
+import { consumeStream } from "./streamUtils";
 
 export class MemoryAPI {
   private readonly client: ConvexClient;
@@ -370,6 +373,98 @@ export class MemoryAPI {
       },
       memories: [userMemory, agentMemory],
       facts: extractedFacts,
+    };
+  }
+
+  /**
+   * Remember a conversation exchange from a streaming response
+   *
+   * This method consumes a stream (ReadableStream or AsyncIterable) and stores
+   * the conversation in both ACID and Vector layers once the stream completes.
+   *
+   * Auto-syncs to graph if configured (default: true)
+   *
+   * @param params - Stream parameters including responseStream
+   * @param options - Optional remember options
+   * @returns Promise with remember result and full response text
+   *
+   * @example
+   * ```typescript
+   * // With ReadableStream
+   * const stream = response.body; // From fetch or AI SDK
+   * const result = await cortex.memory.rememberStream({
+   *   memorySpaceId: 'agent-1',
+   *   conversationId: 'conv-123',
+   *   userMessage: 'What is the weather?',
+   *   responseStream: stream,
+   *   userId: 'user-1',
+   *   userName: 'Alex',
+   * });
+   * console.log('Full response:', result.fullResponse);
+   *
+   * // With AsyncIterable (e.g., OpenAI streaming)
+   * async function* streamGenerator() {
+   *   yield 'The ';
+   *   yield 'weather ';
+   *   yield 'is sunny.';
+   * }
+   * const result = await cortex.memory.rememberStream({
+   *   memorySpaceId: 'agent-1',
+   *   conversationId: 'conv-123',
+   *   userMessage: 'What is the weather?',
+   *   responseStream: streamGenerator(),
+   *   userId: 'user-1',
+   *   userName: 'Alex',
+   * });
+   * ```
+   */
+  async rememberStream(
+    params: RememberStreamParams,
+    options?: RememberOptions,
+  ): Promise<RememberStreamResult> {
+    // Step 1: Consume the stream to get the full response text
+    let agentResponse: string;
+
+    try {
+      agentResponse = await consumeStream(params.responseStream);
+    } catch (error) {
+      throw new Error(
+        `Failed to consume response stream: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+
+    // Step 2: Validate we got some content
+    if (!agentResponse || agentResponse.trim().length === 0) {
+      throw new Error(
+        "Response stream completed but produced no content. Cannot store empty response.",
+      );
+    }
+
+    // Step 3: Use the existing remember() method with the complete response
+    const rememberResult = await this.remember(
+      {
+        memorySpaceId: params.memorySpaceId,
+        participantId: params.participantId,
+        conversationId: params.conversationId,
+        userMessage: params.userMessage,
+        agentResponse: agentResponse,
+        userId: params.userId,
+        userName: params.userName,
+        extractContent: params.extractContent,
+        generateEmbedding: params.generateEmbedding,
+        extractFacts: params.extractFacts,
+        autoEmbed: params.autoEmbed,
+        autoSummarize: params.autoSummarize,
+        importance: params.importance,
+        tags: params.tags,
+      },
+      options,
+    );
+
+    // Step 4: Return the result with the full response
+    return {
+      ...rememberResult,
+      fullResponse: agentResponse,
     };
   }
 

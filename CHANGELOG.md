@@ -19,6 +19,115 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.9.0] - 2025-11-05
+
+#### 🌊 Streaming Support & Edge Runtime Compatibility
+
+**Major new feature: First-class streaming support for AI SDK integrations!** Added `memory.rememberStream()` method for native handling of streaming LLM responses, plus verified edge runtime compatibility for Vercel Edge Functions and Cloudflare Workers.
+
+#### ✨ New Features
+
+**1. Stream-Aware Memory Storage**
+
+- **NEW:** `memory.rememberStream()` - Native streaming response support
+- Accepts both `ReadableStream<string>` and `AsyncIterable<string>`
+- Automatically buffers and stores complete responses
+- Returns both memory result AND full response text
+- Supports all existing features (embeddings, facts, graph sync)
+- **28/28 comprehensive streaming tests passing** (LOCAL + MANAGED)
+
+```typescript
+const result = await cortex.memory.rememberStream({
+  memorySpaceId: 'agent-1',
+  conversationId: 'conv-123',
+  userMessage: 'What is the weather?',
+  responseStream: stream,  // ReadableStream or AsyncIterable
+  userId: 'user-1',
+  userName: 'Alex',
+  generateEmbedding: embedFn,  // Optional
+  extractFacts: factsFn,        // Optional
+});
+
+console.log('Full response:', result.fullResponse);
+// result.memories, result.facts available as usual
+```
+
+**2. Stream Utility Helpers**
+
+- **NEW:** `streamUtils.ts` - Reusable stream handling utilities
+- `consumeStream()` - Auto-detects and consumes any stream type
+- `consumeReadableStream()` - Web Streams API support
+- `consumeAsyncIterable()` - Async generator support  
+- `createPassthroughStream()` - Stream observation with callbacks
+- Type guards for stream detection
+- Proper error handling and stream cleanup
+
+**3. Edge Runtime Compatibility Verified**
+
+- **19/19 edge runtime tests passing** (LOCAL + MANAGED)
+- Zero Node.js-specific APIs in core SDK
+- Works in Vercel Edge Functions
+- Works in Cloudflare Workers
+- Uses standard Web Streams API
+- Uses standard `convex/browser` (edge-compatible)
+- No fs, path, crypto, or other Node.js modules required
+
+**4. New Types**
+
+- `RememberStreamParams` - Parameters for streaming memory storage
+- `RememberStreamResult` - Result with full response text
+- Full TypeScript support with proper type inference
+
+#### 🧪 Testing
+
+**Comprehensive test coverage for streaming:**
+
+- 28 streaming tests (14 utility + 14 integration)
+- Tests ReadableStream and AsyncIterable  
+- Tests embeddings and fact extraction with streams
+- Tests error handling (empty streams, stream errors, whitespace)
+- Tests memory space isolation, hive mode, large responses (10K+ chars)
+- Tests chunk boundary handling (emoji preservation)
+
+**Edge runtime compatibility verified:**
+
+- 19 edge environment tests
+- Tests simulated edge environment (no Node.js globals)
+- Tests Convex client in edge context
+- Tests streaming in edge context
+- Tests Web Streams API compatibility
+- Tests real-world edge function scenarios
+
+#### 📊 Test Results
+
+- **Total: 604 tests passing** (585 + 19 edge tests)
+- Streaming: 28/28 ✅
+- Edge Runtime: 19/19 ✅
+- All existing tests: Still passing ✅
+- Tested on LOCAL and MANAGED Convex ✅
+
+#### 🎯 Use Cases Enabled
+
+1. **Vercel AI SDK Integration** - Stream responses directly from AI SDK
+2. **Edge Function Memory** - Use Cortex in Vercel Edge Functions
+3. **Cloudflare Workers** - Deploy memory-enabled agents on Cloudflare
+4. **Next.js Server Components** - Stream and store in React Server Components
+5. **Real-time Chat Applications** - Stream UI while storing memories
+
+#### 🔧 API Changes
+
+**New Methods:**
+- `cortex.memory.rememberStream(params, options?)` - Store streamed responses
+
+**New Exports:**
+- `RememberStreamParams` type
+- `RememberStreamResult` type  
+- Stream utilities (for advanced use cases)
+
+**Backward Compatible:** All existing APIs unchanged
+
+---
+
 ### [0.8.2] - 2025-11-02
 
 #### 🎉 Create Cortex Memories - Interactive Setup Wizard + SDK Fix

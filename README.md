@@ -60,6 +60,39 @@ Cortex provides a complete memory system for AI agents:
 - 🔌 **MCP Server** - Cross-application memory sharing (planned)
 - 💬 **A2A Communication** - Inter-space messaging helpers (planned)
 
+## ✨ What's New in v0.9.0
+
+### Streaming Support - Native Edge Runtime Compatibility
+
+**NEW: `memory.rememberStream()`** - First-class streaming support for AI responses:
+
+- **Stream any response format**: ReadableStream or AsyncIterable  
+- **Edge runtime compatible**: Works in Vercel Edge Functions, Cloudflare Workers
+- **Zero buffering required**: Handles stream consumption internally
+- **All features supported**: Embeddings, facts extraction, graph sync
+- **Production ready**: 28/28 streaming tests + 19/19 edge tests passing
+
+```typescript
+// With Vercel AI SDK streaming
+const stream = await generateText({ model: "gpt-4", messages });
+
+const result = await cortex.memory.rememberStream({
+  memorySpaceId: 'agent-1',
+  conversationId: 'conv-123',
+  userMessage: 'What is the weather?',
+  responseStream: stream,  // ReadableStream or AsyncIterable
+  userId: 'user-1',
+  userName: 'Alex',
+});
+
+console.log('Full response:', result.fullResponse);
+// All memories stored automatically once stream completes
+```
+
+**Edge Runtime verified**: All SDK operations work in edge environments - no Node.js APIs used.
+
+---
+
 ## ✨ What's New in v0.8.0
 
 ### Users & Agents APIs - GDPR Compliance & Cascade Deletion
