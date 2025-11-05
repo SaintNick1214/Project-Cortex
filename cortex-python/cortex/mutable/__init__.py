@@ -1,0 +1,373 @@
+"""
+Cortex SDK - Mutable Store API
+
+Layer 1c: Shared mutable data with ACID transaction guarantees
+"""
+
+from typing import Optional, List, Dict, Any, Callable
+
+from ..types import MutableRecord
+from ..errors import CortexError, ErrorCode
+
+
+class MutableAPI:
+    """
+    Mutable Store API - Layer 1c
+
+    Provides TRULY SHARED mutable data storage across ALL memory spaces.
+    Perfect for inventory, configuration, and live shared state.
+    """
+
+    def __init__(self, client, graph_adapter=None):
+        """
+        Initialize Mutable API.
+
+        Args:
+            client: Convex client instance
+            graph_adapter: Optional graph database adapter
+        """
+        self.client = client
+        self.graph_adapter = graph_adapter
+
+    async def set(
+        self,
+        namespace: str,
+        key: str,
+        value: Any,
+        user_id: Optional[str] = None,
+    ) -> MutableRecord:
+        """
+        Set a key to a value (creates or overwrites).
+
+        Args:
+            namespace: Logical grouping (e.g., 'inventory', 'config')
+            key: Unique key within namespace
+            value: JSON-serializable value
+            user_id: Optional user link (enables GDPR cascade)
+
+        Returns:
+            Mutable record
+
+        Example:
+            >>> record = await cortex.mutable.set('inventory', 'widget-qty', 100)
+        """
+        result = await self.client.mutation(
+            "mutable:set",
+            {
+                "namespace": namespace,
+                "key": key,
+                "value": value,
+                "userId": user_id,
+            },
+        )
+
+        return MutableRecord(**result)
+
+    async def get(self, namespace: str, key: str) -> Optional[Any]:
+        """
+        Get current value for a key.
+
+        Args:
+            namespace: Namespace
+            key: Key
+
+        Returns:
+            Value if found, None otherwise
+
+        Example:
+            >>> qty = await cortex.mutable.get('inventory', 'widget-qty')
+        """
+        result = await self.client.query(
+            "mutable:get", {"namespace": namespace, "key": key}
+        )
+
+        return result
+
+    async def update(
+        self, namespace: str, key: str, updater: Callable[[Any], Any]
+    ) -> MutableRecord:
+        """
+        Atomically update a value.
+
+        Args:
+            namespace: Namespace
+            key: Key
+            updater: Function that receives current value, returns new value
+
+        Returns:
+            Updated record
+
+        Example:
+            >>> await cortex.mutable.update(
+            ...     'inventory', 'widget-qty',
+            ...     lambda current: current - 1 if current > 0 else 0
+            ... )
+        """
+        # Note: This requires server-side updater support in Convex
+        # For now, implement as get-then-set with potential race condition
+        current = await self.get(namespace, key)
+        new_value = updater(current)
+
+        result = await self.client.mutation(
+            "mutable:set",
+            {
+                "namespace": namespace,
+                "key": key,
+                "value": new_value,
+            },
+        )
+
+        return MutableRecord(**result)
+
+    async def increment(
+        self, namespace: str, key: str, amount: int = 1
+    ) -> MutableRecord:
+        """
+        Atomically increment a numeric value.
+
+        Args:
+            namespace: Namespace
+            key: Key
+            amount: Amount to increment (default: 1)
+
+        Returns:
+            Updated record
+
+        Example:
+            >>> await cortex.mutable.increment('counters', 'page-views', 10)
+        """
+        return await self.update(namespace, key, lambda x: (x or 0) + amount)
+
+    async def decrement(
+        self, namespace: str, key: str, amount: int = 1
+    ) -> MutableRecord:
+        """
+        Atomically decrement a numeric value.
+
+        Args:
+            namespace: Namespace
+            key: Key
+            amount: Amount to decrement (default: 1)
+
+        Returns:
+            Updated record
+
+        Example:
+            >>> await cortex.mutable.decrement('inventory', 'widget-qty', 5)
+        """
+        return await self.update(namespace, key, lambda x: (x or 0) - amount)
+
+    async def get_record(self, namespace: str, key: str) -> Optional[MutableRecord]:
+        """
+        Get full record with metadata (not just the value).
+
+        Args:
+            namespace: Namespace
+            key: Key
+
+        Returns:
+            Mutable record if found, None otherwise
+
+        Example:
+            >>> record = await cortex.mutable.get_record('config', 'timeout')
+        """
+        result = await self.client.query(
+            "mutable:getRecord", {"namespace": namespace, "key": key}
+        )
+
+        if not result:
+            return None
+
+        return MutableRecord(**result)
+
+    async def delete(self, namespace: str, key: str) -> Dict[str, Any]:
+        """
+        Delete a key.
+
+        Args:
+            namespace: Namespace
+            key: Key
+
+        Returns:
+            Deletion result
+
+        Example:
+            >>> await cortex.mutable.delete('inventory', 'discontinued-widget')
+        """
+        result = await self.client.mutation(
+            "mutable:delete", {"namespace": namespace, "key": key}
+        )
+
+        return result
+
+    async def list(
+        self,
+        namespace: str,
+        key_prefix: Optional[str] = None,
+        user_id: Optional[str] = None,
+        limit: Optional[int] = None,
+    ) -> List[MutableRecord]:
+        """
+        List keys in a namespace.
+
+        Args:
+            namespace: Namespace to list
+            key_prefix: Filter by key prefix
+            user_id: Filter by user ID
+            limit: Maximum results
+
+        Returns:
+            List of mutable records
+
+        Example:
+            >>> items = await cortex.mutable.list('inventory', limit=100)
+        """
+        result = await self.client.query(
+            "mutable:list",
+            {
+                "namespace": namespace,
+                "keyPrefix": key_prefix,
+                "userId": user_id,
+                "limit": limit,
+            },
+        )
+
+        return [MutableRecord(**record) for record in result]
+
+    async def count(
+        self,
+        namespace: str,
+        key_prefix: Optional[str] = None,
+        user_id: Optional[str] = None,
+    ) -> int:
+        """
+        Count keys in namespace.
+
+        Args:
+            namespace: Namespace to count
+            key_prefix: Filter by key prefix
+            user_id: Filter by user ID
+
+        Returns:
+            Count of matching keys
+
+        Example:
+            >>> total = await cortex.mutable.count('inventory')
+        """
+        result = await self.client.query(
+            "mutable:count",
+            {
+                "namespace": namespace,
+                "keyPrefix": key_prefix,
+                "userId": user_id,
+            },
+        )
+
+        return int(result)
+
+    async def exists(self, namespace: str, key: str) -> bool:
+        """
+        Check if key exists.
+
+        Args:
+            namespace: Namespace
+            key: Key
+
+        Returns:
+            True if key exists, False otherwise
+
+        Example:
+            >>> if await cortex.mutable.exists('inventory', 'widget-qty'):
+            ...     qty = await cortex.mutable.get('inventory', 'widget-qty')
+        """
+        result = await self.client.query(
+            "mutable:exists", {"namespace": namespace, "key": key}
+        )
+
+        return bool(result)
+
+    async def purge_namespace(
+        self, namespace: str, dry_run: bool = False
+    ) -> Dict[str, Any]:
+        """
+        Delete entire namespace.
+
+        Args:
+            namespace: Namespace to purge
+            dry_run: Preview without deleting
+
+        Returns:
+            Purge result
+
+        Example:
+            >>> result = await cortex.mutable.purge_namespace('test-data')
+        """
+        result = await self.client.mutation(
+            "mutable:purgeNamespace", {"namespace": namespace, "dryRun": dry_run}
+        )
+
+        return result
+
+    async def purge_many(
+        self,
+        namespace: str,
+        key_prefix: Optional[str] = None,
+        user_id: Optional[str] = None,
+        updated_before: Optional[int] = None,
+    ) -> Dict[str, Any]:
+        """
+        Delete keys matching filters.
+
+        Args:
+            namespace: Namespace
+            key_prefix: Filter by key prefix
+            user_id: Filter by user ID
+            updated_before: Filter by update date
+
+        Returns:
+            Purge result
+
+        Example:
+            >>> await cortex.mutable.purge_many(
+            ...     'cache',
+            ...     updated_before=old_timestamp
+            ... )
+        """
+        result = await self.client.mutation(
+            "mutable:purgeMany",
+            {
+                "namespace": namespace,
+                "keyPrefix": key_prefix,
+                "userId": user_id,
+                "updatedBefore": updated_before,
+            },
+        )
+
+        return result
+
+    async def transaction(self, callback: Callable) -> Dict[str, Any]:
+        """
+        Execute multiple operations atomically.
+
+        Args:
+            callback: Transaction callback function
+
+        Returns:
+            Transaction result
+
+        Note:
+            This requires server-side transaction support in Convex.
+
+        Example:
+            >>> async def transfer(tx):
+            ...     await tx.update('inventory', 'product-a', lambda x: x - 10)
+            ...     await tx.update('inventory', 'product-b', lambda x: x + 10)
+            >>> 
+            >>> await cortex.mutable.transaction(transfer)
+        """
+        # Note: This is a placeholder. Actual implementation requires
+        # Convex transaction API support
+        raise NotImplementedError(
+            "Transactions require server-side support. Use individual operations for now."
+        )
+

@@ -426,6 +426,67 @@ export interface RememberResult {
   facts: FactRecord[];
 }
 
+/**
+ * Parameters for rememberStream()
+ * 
+ * Similar to RememberParams but accepts streaming response instead of complete string
+ */
+export interface RememberStreamParams {
+  memorySpaceId: string;
+  participantId?: string; // Hive Mode tracking
+  conversationId: string;
+  userMessage: string;
+  responseStream: ReadableStream<string> | AsyncIterable<string>;
+  userId: string;
+  userName: string;
+
+  // Optional extraction
+  extractContent?: (
+    userMessage: string,
+    agentResponse: string,
+  ) => Promise<string | null>;
+
+  // Optional embedding
+  generateEmbedding?: (content: string) => Promise<number[] | null>;
+
+  // Optional fact extraction
+  extractFacts?: (
+    userMessage: string,
+    agentResponse: string,
+  ) => Promise<Array<{
+    fact: string;
+    factType:
+      | "preference"
+      | "identity"
+      | "knowledge"
+      | "relationship"
+      | "event"
+      | "custom";
+    subject?: string;
+    predicate?: string;
+    object?: string;
+    confidence: number;
+    tags?: string[];
+  }> | null>;
+
+  // Cloud Mode options
+  autoEmbed?: boolean;
+  autoSummarize?: boolean;
+
+  // Metadata
+  importance?: number;
+  tags?: string[];
+}
+
+/**
+ * Result from rememberStream()
+ * 
+ * Includes the standard RememberResult plus the complete response text
+ */
+export interface RememberStreamResult extends RememberResult {
+  fullResponse: string; // The complete text from the stream
+}
+
 export interface ForgetOptions {
   deleteConversation?: boolean; // Delete ACID conversation too
   deleteEntireConversation?: boolean; // Delete whole conversation vs just messages

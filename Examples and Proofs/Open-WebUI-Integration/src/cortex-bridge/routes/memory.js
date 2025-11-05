@@ -313,6 +313,41 @@ export function createMemoryRoutes(cortex) {
     }
   });
 
+  /**
+   * DELETE /api/memory/clear/:userId
+   * Clear all memories for a user
+   */
+  router.delete("/clear/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params;
+
+      logger.info("Clearing all memories for user", { userId });
+
+      // Call Cortex to delete all user memories
+      // Note: Cortex SDK may not have a direct "delete all" method
+      // This is a placeholder for GDPR compliance functionality
+      
+      // For demo, just return success
+      // In production, implement: await cortex.users.deleteAllData(userId)
+      
+      res.json({
+        success: true,
+        message: `All memories cleared for user ${userId}`,
+        userId,
+        note: "Demo mode - actual deletion not implemented"
+      });
+    } catch (error) {
+      logger.error("Error clearing memories", {
+        error: error.message,
+        stack: error.stack,
+      });
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  });
+
   return router;
 }
 
