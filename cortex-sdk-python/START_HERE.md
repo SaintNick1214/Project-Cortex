@@ -10,22 +10,25 @@
 → Read [README.md](./README.md) for quick start and installation
 
 ### 🎓 **Want to Learn?**
-→ Read [PYTHON_SDK_GUIDE.md](./PYTHON_SDK_GUIDE.md) for comprehensive guide
+→ Read [Developer Guide](./docs/guides/developer-guide.md) for comprehensive guide
 
 ### 🔄 **Coming from TypeScript?**
-→ Read [TYPESCRIPT_TO_PYTHON_MIGRATION.md](./TYPESCRIPT_TO_PYTHON_MIGRATION.md)
+→ Read [Migration Guide](./docs/guides/migration-guide.md)
 
 ### 💻 **Want to See Code?**
 → Check [examples/](./examples/) for 4 working applications
 
 ### 🧪 **Want to Test?**
-→ Run `pytest` after `pip install -e ".[dev]"`
+→ Read [Testing Guide](../dev-docs/python-sdk-testing.md) then run `pytest`
 
 ### 📊 **Want Technical Details?**
-→ Read [IMPLEMENTATION_SUMMARY.md](./IMPLEMENTATION_SUMMARY.md)
+→ Read [Implementation Summary](../dev-docs/python-sdk-implementation.md)
 
-### 🎉 **Want the Big Picture?**
-→ Read [PYTHON_SDK_COMPLETE.md](./PYTHON_SDK_COMPLETE.md) (this summary!)
+### 🏗️ **Want Architecture Overview?**
+→ Read [Architecture](./docs/architecture.md)
+
+### 📚 **Want All Documentation?**
+→ See [Documentation Index](./docs/README.md)
 
 ---
 
@@ -132,23 +135,28 @@ asyncio.run(main())
 
 ---
 
-## 📖 **Documentation Index**
+## 📖 **Documentation Structure**
 
-1. **README.md** - Start here for installation and quick start
-2. **PYTHON_SDK_GUIDE.md** - Complete developer guide with patterns
-3. **TYPESCRIPT_TO_PYTHON_MIGRATION.md** - Translation guide
-4. **IMPLEMENTATION_SUMMARY.md** - Technical implementation details
-5. **OVERVIEW.md** - High-level architecture overview
-6. **PYTHON_SDK_COMPLETE.md** - Achievement summary
-7. **START_HERE.md** - This navigation guide
-8. **CHANGELOG.md** - Version history
-9. **LICENSE.md** - Apache 2.0
+### In cortex-sdk-python/ (Public)
+- **README.md** - Quick start and installation
+- **START_HERE.md** - This navigation guide
+- **docs/**
+  - **README.md** - Documentation index
+  - **architecture.md** - SDK architecture
+  - **guides/**
+    - **developer-guide.md** - Complete Python developer guide
+    - **migration-guide.md** - TypeScript to Python migration
 
-Plus shared TypeScript documentation (all applicable to Python):
-- API Reference (15 files)
-- Core Features (11 files)
-- Architecture (10 files)
-- Advanced Topics (6 files)
+### In dev-docs/ (Development)
+- **python-sdk-testing.md** - Testing guide for contributors
+- **python-sdk-implementation.md** - Implementation technical details
+- **python-sdk-completion-report.md** - Project completion summary
+
+### In Documentation/ (Shared with TypeScript)
+- **03-api-reference/** - Complete API documentation (15 files)
+- **02-core-features/** - Feature guides (11 files)
+- **04-architecture/** - Architecture guides (10 files)
+- **07-advanced-topics/** - Advanced topics (6 files)
 
 ---
 

@@ -7,7 +7,7 @@ Layer 1a: ACID-compliant immutable conversation storage
 import time
 import random
 import string
-from typing import Optional, List
+from typing import Optional, List, Dict, Any, Literal
 
 from ..types import (
     Conversation,
@@ -22,6 +22,7 @@ from ..types import (
     ConversationType,
 )
 from ..errors import CortexError, ErrorCode
+from .._utils import filter_none_values, convert_convex_response
 
 
 class ConversationsAPI:
@@ -75,18 +76,18 @@ class ConversationsAPI:
 
         result = await self.client.mutation(
             "conversations:create",
-            {
+            filter_none_values({
                 "conversationId": conversation_id,
                 "memorySpaceId": input.memory_space_id,
                 "participantId": input.participant_id,
                 "type": input.type,
-                "participants": {
+                "participants": filter_none_values({
                     "userId": input.participants.user_id,
                     "participantId": input.participants.participant_id,
                     "memorySpaceIds": input.participants.memory_space_ids,
-                },
+                }),
                 "metadata": input.metadata,
-            },
+            }),
         )
 
         # Sync to graph if requested
@@ -99,7 +100,7 @@ class ConversationsAPI:
             except Exception as error:
                 print(f"Warning: Failed to sync conversation to graph: {error}")
 
-        return Conversation(**result)
+        return Conversation(**convert_convex_response(result))
 
     async def get(self, conversation_id: str) -> Optional[Conversation]:
         """
@@ -121,7 +122,7 @@ class ConversationsAPI:
         if not result:
             return None
 
-        return Conversation(**result)
+        return Conversation(**convert_convex_response(result))
 
     async def add_message(
         self, input: AddMessageInput, options: Optional[AddMessageOptions] = None
@@ -150,16 +151,16 @@ class ConversationsAPI:
 
         result = await self.client.mutation(
             "conversations:addMessage",
-            {
+            filter_none_values({
                 "conversationId": input.conversation_id,
-                "message": {
+                "message": filter_none_values({
                     "id": message_id,
                     "role": input.role,
                     "content": input.content,
                     "participantId": input.participant_id,
                     "metadata": input.metadata,
-                },
-            },
+                }),
+            }),
         )
 
         # Update in graph if requested
@@ -179,7 +180,7 @@ class ConversationsAPI:
             except Exception as error:
                 print(f"Warning: Failed to update conversation in graph: {error}")
 
-        return Conversation(**result)
+        return Conversation(**convert_convex_response(result))
 
     async def list(
         self,
@@ -208,15 +209,15 @@ class ConversationsAPI:
         """
         result = await self.client.query(
             "conversations:list",
-            {
+            filter_none_values({
                 "type": type,
                 "userId": user_id,
                 "memorySpaceId": memory_space_id,
                 "limit": limit,
-            },
+            }),
         )
 
-        return [Conversation(**conv) for conv in result]
+        return [Conversation(**convert_convex_response(conv)) for conv in result]
 
     async def count(
         self,
@@ -242,11 +243,11 @@ class ConversationsAPI:
         """
         result = await self.client.query(
             "conversations:count",
-            {
+            filter_none_values({
                 "type": type,
                 "userId": user_id,
                 "memorySpaceId": memory_space_id,
-            },
+            }),
         )
 
         return int(result)
@@ -268,7 +269,7 @@ class ConversationsAPI:
             >>> await cortex.conversations.delete('conv-abc123')
         """
         result = await self.client.mutation(
-            "conversations:deleteConversation", {"conversationId": conversation_id}
+            "conversations:deleteConversation", filter_none_values({"conversationId": conversation_id})
         )
 
         # Delete from graph
@@ -309,11 +310,11 @@ class ConversationsAPI:
         """
         result = await self.client.mutation(
             "conversations:deleteMany",
-            {
+            filter_none_values({
                 "userId": user_id,
                 "memorySpaceId": memory_space_id,
                 "type": type,
-            },
+            }),
         )
 
         return result
@@ -336,13 +337,13 @@ class ConversationsAPI:
         """
         result = await self.client.query(
             "conversations:getMessage",
-            {"conversationId": conversation_id, "messageId": message_id},
+            filter_none_values({"conversationId": conversation_id, "messageId": message_id}),
         )
 
         if not result:
             return None
 
-        return Message(**result)
+        return Message(**convert_convex_response(result))
 
     async def get_messages_by_ids(
         self, conversation_id: str, message_ids: List[str]
@@ -364,10 +365,10 @@ class ConversationsAPI:
         """
         result = await self.client.query(
             "conversations:getMessagesByIds",
-            {"conversationId": conversation_id, "messageIds": message_ids},
+            filter_none_values({"conversationId": conversation_id, "messageIds": message_ids}),
         )
 
-        return [Message(**msg) for msg in result]
+        return [Message(**convert_convex_response(msg)) for msg in result]
 
     async def find_conversation(
         self,
@@ -397,18 +398,18 @@ class ConversationsAPI:
         """
         result = await self.client.query(
             "conversations:findConversation",
-            {
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "type": type,
                 "userId": user_id,
                 "memorySpaceIds": memory_space_ids,
-            },
+            }),
         )
 
         if not result:
             return None
 
-        return Conversation(**result)
+        return Conversation(**convert_convex_response(result))
 
     async def get_or_create(self, input: CreateConversationInput) -> Conversation:
         """
@@ -434,20 +435,20 @@ class ConversationsAPI:
         """
         result = await self.client.mutation(
             "conversations:getOrCreate",
-            {
+            filter_none_values({
                 "memorySpaceId": input.memory_space_id,
                 "participantId": input.participant_id,
                 "type": input.type,
-                "participants": {
+                "participants": filter_none_values({
                     "userId": input.participants.user_id,
                     "participantId": input.participants.participant_id,
                     "memorySpaceIds": input.participants.memory_space_ids,
-                },
+                }),
                 "metadata": input.metadata,
-            },
+            }),
         )
 
-        return Conversation(**result)
+        return Conversation(**convert_convex_response(result))
 
     async def get_history(
         self,
@@ -478,16 +479,16 @@ class ConversationsAPI:
         """
         result = await self.client.query(
             "conversations:getHistory",
-            {
+            filter_none_values({
                 "conversationId": conversation_id,
                 "limit": limit,
                 "offset": offset,
                 "sortOrder": sort_order,
-            },
+            }),
         )
 
         # Convert messages to Message objects
-        result["messages"] = [Message(**msg) for msg in result.get("messages", [])]
+        result["messages"] = [Message(**convert_convex_response(msg)) for msg in result.get("messages", [])]
         return result
 
     async def search(
@@ -524,7 +525,7 @@ class ConversationsAPI:
         """
         result = await self.client.query(
             "conversations:search",
-            {
+            filter_none_values({
                 "query": query,
                 "type": type,
                 "userId": user_id,
@@ -532,10 +533,10 @@ class ConversationsAPI:
                 "dateStart": date_start,
                 "dateEnd": date_end,
                 "limit": limit,
-            },
+            }),
         )
 
-        return [ConversationSearchResult(**item) for item in result]
+        return [ConversationSearchResult(**convert_convex_response(item)) for item in result]
 
     async def export(
         self,
@@ -574,7 +575,7 @@ class ConversationsAPI:
         """
         result = await self.client.query(
             "conversations:exportConversations",
-            {
+            filter_none_values({
                 "userId": user_id,
                 "memorySpaceId": memory_space_id,
                 "conversationIds": conversation_ids,
@@ -583,10 +584,10 @@ class ConversationsAPI:
                 "dateEnd": date_end,
                 "format": format,
                 "includeMetadata": include_metadata,
-            },
+            }),
         )
 
-        return ExportResult(**result)
+        return ExportResult(**convert_convex_response(result))
 
     # Helper methods
 

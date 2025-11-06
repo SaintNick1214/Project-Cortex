@@ -47,7 +47,10 @@ async def test_add_message(cortex_client, test_memory_space_id, test_conversatio
 
     assert conversation.message_count == 1
     assert len(conversation.messages) == 1
-    assert conversation.messages[0].content == "Hello!"
+    # After conversion, messages are dicts
+    msg = conversation.messages[0]
+    msg_content = msg["content"] if isinstance(msg, dict) else msg.content
+    assert msg_content == "Hello!"
 
 
 @pytest.mark.asyncio

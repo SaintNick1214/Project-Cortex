@@ -5,7 +5,7 @@ Layer 4: High-level helpers that orchestrate Layer 1 (ACID) and Layer 2 (Vector)
 """
 
 import time
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Union, Tuple
 
 from ..types import (
     RememberParams,
@@ -128,6 +128,11 @@ class MemoryAPI:
             ),
             AddMessageOptions(sync_to_graph=should_sync_to_graph),
         )
+        
+        # Extract message IDs from the conversation responses
+        # user_msg and agent_msg are Conversation objects with messages as dict list
+        user_message_id = user_msg.messages[-1]["id"] if isinstance(user_msg.messages[-1], dict) else user_msg.messages[-1].id
+        agent_message_id = agent_msg.messages[-1]["id"] if isinstance(agent_msg.messages[-1], dict) else agent_msg.messages[-1].id
 
         # Step 4: Extract content if provided
         user_content = params.user_message
@@ -169,7 +174,7 @@ class MemoryAPI:
                 ),
                 conversation_ref=ConversationRef(
                     conversation_id=params.conversation_id,
-                    message_ids=[user_msg.messages[-1].id],
+                    message_ids=[user_message_id],
                 ),
                 metadata=MemoryMetadata(
                     importance=params.importance or 50, tags=params.tags or []
@@ -194,7 +199,7 @@ class MemoryAPI:
                 ),
                 conversation_ref=ConversationRef(
                     conversation_id=params.conversation_id,
-                    message_ids=[agent_msg.messages[-1].id],
+                    message_ids=[agent_message_id],
                 ),
                 metadata=MemoryMetadata(
                     importance=params.importance or 50, tags=params.tags or []
@@ -231,8 +236,8 @@ class MemoryAPI:
                                     source_ref=FactSourceRef(
                                         conversation_id=params.conversation_id,
                                         message_ids=[
-                                            user_msg.messages[-1].id,
-                                            agent_msg.messages[-1].id,
+                                            user_message_id,
+                                            agent_message_id,
                                         ],
                                         memory_id=user_memory.memory_id,
                                     ),
@@ -248,7 +253,7 @@ class MemoryAPI:
 
         return RememberResult(
             conversation={
-                "messageIds": [user_msg.messages[-1].id, agent_msg.messages[-1].id],
+                "messageIds": [user_message_id, agent_message_id],
                 "conversationId": params.conversation_id,
             },
             memories=[user_memory, agent_memory],
@@ -298,10 +303,13 @@ class MemoryAPI:
         )
 
         # Cascade delete associated facts
+        conv_id = None
+        if memory.conversation_ref:
+            conv_id = memory.conversation_ref["conversation_id"] if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
         facts_deleted, fact_ids = await self._cascade_delete_facts(
             memory_space_id,
             memory_id,
-            memory.conversation_ref.conversation_id if memory.conversation_ref else None,
+            conv_id,
             should_sync_to_graph,
         )
 
@@ -310,19 +318,21 @@ class MemoryAPI:
 
         # Optionally delete from ACID
         if opts.delete_conversation and memory.conversation_ref:
+            conv_id = memory.conversation_ref["conversation_id"] if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
             if opts.delete_entire_conversation:
-                conv = await self.conversations.get(memory.conversation_ref.conversation_id)
+                conv = await self.conversations.get(conv_id)
                 messages_deleted = conv.message_count if conv else 0
 
                 from ..types import DeleteConversationOptions
 
                 await self.conversations.delete(
-                    memory.conversation_ref.conversation_id,
+                    conv_id,
                     DeleteConversationOptions(sync_to_graph=should_sync_to_graph),
                 )
                 conversation_deleted = True
             else:
-                messages_deleted = len(memory.conversation_ref.message_ids)
+                msg_ids = memory.conversation_ref["message_ids"] if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.message_ids
+                messages_deleted = len(msg_ids)
 
         return ForgetResult(
             memory_deleted=True,
@@ -338,7 +348,7 @@ class MemoryAPI:
         memory_space_id: str,
         memory_id: str,
         include_conversation: bool = False,
-    ) -> Optional[MemoryEntry | EnrichedMemory]:
+    ) -> Optional[Union[MemoryEntry, EnrichedMemory]]:
         """
         Get memory with optional ACID enrichment.
 
@@ -369,18 +379,24 @@ class MemoryAPI:
         source_messages = None
 
         if memory.conversation_ref:
-            conv = await self.conversations.get(memory.conversation_ref.conversation_id)
+            # conversation_ref is a dict after conversion
+            conv_id = memory.conversation_ref["conversation_id"] if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
+            conv = await self.conversations.get(conv_id)
             if conv:
                 conversation = conv
+                msg_ids = memory.conversation_ref["message_ids"] if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.message_ids
                 source_messages = [
                     msg
                     for msg in conv.messages
-                    if msg.id in memory.conversation_ref.message_ids
+                    if (msg["id"] if isinstance(msg, dict) else msg.id) in msg_ids
                 ]
 
         # Fetch associated facts
+        conv_id = None
+        if memory.conversation_ref:
+            conv_id = memory.conversation_ref["conversation_id"] if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
         related_facts = await self._fetch_facts_for_memory(
-            memory_space_id, memory_id, memory.conversation_ref.conversation_id if memory.conversation_ref else None
+            memory_space_id, memory_id, conv_id
         )
 
         return EnrichedMemory(
@@ -395,7 +411,7 @@ class MemoryAPI:
         memory_space_id: str,
         query: str,
         options: Optional[SearchOptions] = None,
-    ) -> List[MemoryEntry | EnrichedMemory]:
+    ) -> List[Union[MemoryEntry, EnrichedMemory]]:
         """
         Search memories with optional ACID enrichment.
 
@@ -693,10 +709,13 @@ class MemoryAPI:
         fact_ids = []
 
         if should_cascade:
+            conv_id = None
+            if memory.conversation_ref:
+                conv_id = memory.conversation_ref["conversation_id"] if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
             facts_deleted, fact_ids = await self._cascade_delete_facts(
                 memory_space_id,
                 memory_id,
-                memory.conversation_ref.conversation_id if memory.conversation_ref else None,
+                conv_id,
                 should_sync_to_graph,
             )
 
@@ -724,7 +743,7 @@ class MemoryAPI:
         source_type: Optional[SourceType] = None,
         limit: Optional[int] = None,
         enrich_facts: bool = False,
-    ) -> List[MemoryEntry]:
+    ) -> List[Union[MemoryEntry, EnrichedMemory]]:
         """List memories (delegates to vector.list)."""
         return await self.vector.list(
             memory_space_id, user_id, participant_id, source_type, limit, enrich_facts
@@ -834,7 +853,7 @@ class MemoryAPI:
         memory_id: str,
         conversation_id: Optional[str],
         sync_to_graph: Optional[bool],
-    ) -> tuple[int, List[str]]:
+    ) -> Tuple[int, List[str]]:
         """Helper: Find and cascade delete facts linked to a memory."""
         all_facts = await self.facts.list(memory_space_id, limit=10000)
 

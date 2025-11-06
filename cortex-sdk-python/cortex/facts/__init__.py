@@ -15,6 +15,7 @@ from ..types import (
     FactType,
 )
 from ..errors import CortexError, ErrorCode
+from .._utils import filter_none_values
 
 
 class FactsAPI:
@@ -158,14 +159,14 @@ class FactsAPI:
         """
         result = await self.client.query(
             "facts:list",
-            {
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "factType": fact_type,
                 "subject": subject,
                 "tags": tags,
                 "includeSuperseded": include_superseded,
                 "limit": limit,
-            },
+            }),
         )
 
         return [FactRecord(**fact) for fact in result]
