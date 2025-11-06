@@ -18,6 +18,7 @@ if env_file.exists():
     load_dotenv(env_file)
 
 from cortex import Cortex, CortexConfig
+from tests.helpers import TestCleanup, embeddings_available
 
 
 @pytest.fixture(scope="session")
@@ -121,4 +122,63 @@ def test_conversation_id():
     import time
     import random
     return f"test-conv-{int(time.time())}-{random.randint(1000, 9999)}"
+
+
+@pytest.fixture
+async def cleanup_helper(cortex_client) -> TestCleanup:
+    """
+    Fixture providing TestCleanup instance for test data cleanup.
+    
+    Usage:
+        async def test_something(cortex_client, cleanup_helper):
+            # ... create test data ...
+            await cleanup_helper.purge_all()
+    """
+    return TestCleanup(cortex_client)
+
+
+@pytest.fixture
+async def direct_convex_client(cortex_client):
+    """
+    Fixture providing direct access to AsyncConvexClient for storage validation.
+    
+    Usage:
+        async def test_something(cortex_client, direct_convex_client):
+            result = await cortex_client.conversations.create(...)
+            stored = await direct_convex_client.query("conversations:get", {...})
+            assert stored is not None
+    """
+    return cortex_client.client
+
+
+@pytest.fixture
+def test_ids():
+    """
+    Fixture providing multiple unique test IDs at once.
+    
+    Returns:
+        Dictionary with various test IDs
+    """
+    import time
+    import random
+    timestamp = int(time.time() * 1000)
+    rand = random.randint(1000, 9999)
+    
+    return {
+        "user_id": f"test-user-{timestamp}-{rand}",
+        "memory_space_id": f"test-space-{timestamp}-{rand}",
+        "conversation_id": f"test-conv-{timestamp}-{rand}",
+        "agent_id": f"test-agent-{timestamp}-{rand}",
+    }
+
+
+@pytest.fixture
+def embeddings_available_fixture():
+    """
+    Fixture that checks if embeddings can be generated.
+    
+    Returns:
+        True if OPENAI_API_KEY is set, False otherwise
+    """
+    return embeddings_available()
 
