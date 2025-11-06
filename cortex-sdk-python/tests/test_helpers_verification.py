@@ -72,8 +72,8 @@ async def test_cleanup_memories(cortex_client, test_ids):
     result = await cortex_client.vector.get(memory_space_id, mem_id)
     assert result is not None
 
-    # Purge memories (this will only purge those with test prefix)
-    count = await cleanup.purge_memories(memory_space_id, prefix="mem-")
+    # Purge memories (delete_all=True deletes all memories in the space)
+    count = await cleanup.purge_memories(memory_space_id, delete_all=True)
     print(f"✓ Purged {count} test memory/memories")
 
 
@@ -89,8 +89,8 @@ async def test_cleanup_facts(cortex_client, test_ids):
         # Note: The actual API signature might differ
         # This is just verifying the cleanup helper works
         
-        # Purge facts
-        count = await cleanup.purge_facts(memory_space_id, prefix="fact-")
+        # Purge facts (delete_all=True deletes all facts in the space)
+        count = await cleanup.purge_facts(memory_space_id, delete_all=True)
         print(f"✓ Purged {count} test fact(s)")
     except Exception as e:
         # Facts API might not be fully tested yet, skip for now

@@ -16,6 +16,7 @@ from ..types import (
     DeleteContextOptions,
 )
 from ..errors import CortexError, ErrorCode
+from .._utils import filter_none_values
 
 
 class ContextsAPI:
@@ -279,12 +280,12 @@ class ContextsAPI:
         """
         result = await self.client.query(
             "contexts:list",
-            {
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "status": status,
                 "limit": limit,
-                "offset": offset,
-            },
+                # Note: offset not supported by backend yet
+            }),
         )
 
         result["contexts"] = [Context(**ctx) for ctx in result.get("contexts", [])]

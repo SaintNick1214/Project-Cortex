@@ -14,6 +14,7 @@ from ..types import (
     MemorySpaceStatus,
 )
 from ..errors import CortexError, ErrorCode
+from .._utils import filter_none_values
 
 
 class MemorySpacesAPI:
@@ -138,13 +139,13 @@ class MemorySpacesAPI:
         """
         result = await self.client.query(
             "memorySpaces:list",
-            {
+            filter_none_values({
                 "type": type,
                 "status": status,
                 "participant": participant,
                 "limit": limit,
-                "offset": offset,
-            },
+                # Note: offset not supported by backend yet
+            }),
         )
 
         result["spaces"] = [MemorySpace(**s) for s in result.get("spaces", [])]

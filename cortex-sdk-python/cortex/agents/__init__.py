@@ -16,6 +16,7 @@ from ..types import (
     VerificationResult,
 )
 from ..errors import CortexError, ErrorCode, AgentCascadeDeletionError
+from .._utils import filter_none_values
 
 
 class AgentsAPI:
@@ -132,7 +133,8 @@ class AgentsAPI:
             >>> page1 = await cortex.agents.list(limit=50, offset=0)
         """
         result = await self.client.query(
-            "agents:list", {"limit": limit, "offset": offset, "sortBy": sort_by}
+            "agents:list", filter_none_values({"limit": limit, "sortBy": sort_by})
+            # Note: offset not supported by backend yet
         )
 
         result["agents"] = [RegisteredAgent(**a) for a in result.get("agents", [])]
