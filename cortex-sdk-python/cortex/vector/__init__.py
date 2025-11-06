@@ -15,6 +15,7 @@ from ..types import (
     SourceType,
 )
 from ..errors import CortexError, ErrorCode
+from .._utils import filter_none_values, convert_convex_response
 
 
 class VectorAPI:
@@ -65,7 +66,7 @@ class VectorAPI:
         """
         result = await self.client.mutation(
             "memories:store",
-            {
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "participantId": input.participant_id,
                 "content": input.content,
@@ -104,7 +105,7 @@ class VectorAPI:
                 ),
                 "importance": input.metadata.importance,
                 "tags": input.metadata.tags,
-            },
+            }),
         )
 
         # Sync to graph if requested
@@ -117,7 +118,7 @@ class VectorAPI:
             except Exception as error:
                 print(f"Warning: Failed to sync memory to graph: {error}")
 
-        return MemoryEntry(**result)
+        return MemoryEntry(**convert_convex_response(result))
 
     async def get(
         self, memory_space_id: str, memory_id: str
@@ -136,13 +137,13 @@ class VectorAPI:
             >>> memory = await cortex.vector.get('agent-1', 'mem-abc123')
         """
         result = await self.client.query(
-            "memories:get", {"memorySpaceId": memory_space_id, "memoryId": memory_id}
+            "memories:get", filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id})
         )
 
         if not result:
             return None
 
-        return MemoryEntry(**result)
+        return MemoryEntry(**convert_convex_response(result))
 
     async def search(
         self,
@@ -172,7 +173,7 @@ class VectorAPI:
 
         result = await self.client.query(
             "memories:search",
-            {
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "query": query,
                 "embedding": opts.embedding,
@@ -181,10 +182,10 @@ class VectorAPI:
                 "sourceType": opts.source_type,
                 "minImportance": opts.min_importance,
                 "limit": opts.limit,
-            },
+            }),
         )
 
-        return [MemoryEntry(**mem) for mem in result]
+        return [MemoryEntry(**convert_convex_response(mem)) for mem in result]
 
     async def update(
         self,
@@ -211,13 +212,24 @@ class VectorAPI:
             ...     {'content': 'Updated content', 'importance': 80}
             ... )
         """
+        # Convex expects flat parameters, not an 'updates' object
+        params = {
+            "memorySpaceId": memory_space_id,
+            "memoryId": memory_id,
+        }
+        # Add update fields directly (not nested in 'updates')
+        if "content" in updates:
+            params["content"] = updates["content"]
+        if "embedding" in updates:
+            params["embedding"] = updates["embedding"]
+        if "importance" in updates:
+            params["importance"] = updates["importance"]
+        if "tags" in updates:
+            params["tags"] = updates["tags"]
+        
         result = await self.client.mutation(
             "memories:update",
-            {
-                "memorySpaceId": memory_space_id,
-                "memoryId": memory_id,
-                "updates": updates,
-            },
+            filter_none_values(params),
         )
 
         # Sync to graph if requested
@@ -229,7 +241,7 @@ class VectorAPI:
             except Exception as error:
                 print(f"Warning: Failed to sync memory update to graph: {error}")
 
-        return MemoryEntry(**result)
+        return MemoryEntry(**convert_convex_response(result))
 
     async def delete(
         self,
@@ -252,8 +264,8 @@ class VectorAPI:
             >>> await cortex.vector.delete('agent-1', 'mem-abc123')
         """
         result = await self.client.mutation(
-            "memories:delete",
-            {"memorySpaceId": memory_space_id, "memoryId": memory_id},
+            "memories:deleteMemory",  # Correct function name
+            filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
         )
 
         # Delete from graph with orphan cleanup
@@ -295,11 +307,11 @@ class VectorAPI:
         """
         result = await self.client.mutation(
             "memories:updateMany",
-            {
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "filters": filters,
                 "updates": updates,
-            },
+            }),
         )
 
         return result
@@ -325,7 +337,7 @@ class VectorAPI:
         """
         result = await self.client.mutation(
             "memories:deleteMany",
-            {"memorySpaceId": memory_space_id, "filters": filters},
+            filter_none_values({"memorySpaceId": memory_space_id, "filters": filters}),
         )
 
         return result
@@ -354,12 +366,12 @@ class VectorAPI:
         """
         result = await self.client.query(
             "memories:count",
-            {
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "userId": user_id,
                 "participantId": participant_id,
                 "sourceType": source_type,
-            },
+            }),
         )
 
         return int(result)
@@ -394,19 +406,20 @@ class VectorAPI:
             ...     limit=50
             ... )
         """
+        # Convex list doesn't support enrichFacts parameter
         result = await self.client.query(
             "memories:list",
-            {
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "userId": user_id,
                 "participantId": participant_id,
                 "sourceType": source_type,
                 "limit": limit,
-                "enrichFacts": enrich_facts,
-            },
+                # enrichFacts not supported in Convex function
+            }),
         )
 
-        return [MemoryEntry(**mem) for mem in result]
+        return [MemoryEntry(**convert_convex_response(mem)) for mem in result]
 
     async def export(
         self,
@@ -438,13 +451,13 @@ class VectorAPI:
         """
         result = await self.client.query(
             "memories:export",
-            {
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "userId": user_id,
                 "format": format,
                 "includeEmbeddings": include_embeddings,
                 "includeFacts": include_facts,
-            },
+            }),
         )
 
         return result
@@ -467,7 +480,7 @@ class VectorAPI:
         """
         result = await self.client.mutation(
             "memories:archive",
-            {"memorySpaceId": memory_space_id, "memoryId": memory_id},
+            filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
         )
 
         return result
@@ -491,11 +504,11 @@ class VectorAPI:
         """
         result = await self.client.query(
             "memories:getVersion",
-            {
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "memoryId": memory_id,
                 "version": version,
-            },
+            }),
         )
 
         return result
@@ -518,7 +531,7 @@ class VectorAPI:
         """
         result = await self.client.query(
             "memories:getHistory",
-            {"memorySpaceId": memory_space_id, "memoryId": memory_id},
+            filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
         )
 
         return result
@@ -544,11 +557,11 @@ class VectorAPI:
         """
         result = await self.client.query(
             "memories:getAtTimestamp",
-            {
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "memoryId": memory_id,
                 "timestamp": timestamp,
-            },
+            }),
         )
 
         return result

@@ -6,10 +6,7 @@ Neo4j/Memgraph adapter using the official Neo4j Python driver
 
 from typing import Optional, List, Dict, Any
 
-try:
-    from neo4j import AsyncGraphDatabase
-except ImportError:
-    AsyncGraphDatabase = None
+from neo4j import AsyncGraphDatabase
 
 from ...types import (
     GraphNode,
@@ -43,7 +40,6 @@ class CypherGraphAdapter:
             config: Connection configuration
 
         Raises:
-            ImportError: If neo4j package is not installed
             CortexError: If connection fails
 
         Example:
@@ -56,12 +52,6 @@ class CypherGraphAdapter:
             ...     )
             ... )
         """
-        if AsyncGraphDatabase is None:
-            raise ImportError(
-                "The 'neo4j' package is required for graph integration. "
-                "Install it with: pip install neo4j"
-            )
-
         try:
             self.driver = AsyncGraphDatabase.driver(
                 config.uri,

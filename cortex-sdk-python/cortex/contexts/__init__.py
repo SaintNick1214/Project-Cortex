@@ -4,7 +4,7 @@ Cortex SDK - Contexts API
 Coordination Layer: Context chain management for multi-agent workflow coordination
 """
 
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Literal, Union
 
 from ..types import (
     Context,
@@ -98,7 +98,7 @@ class ContextsAPI:
         context_id: str,
         include_chain: bool = False,
         include_conversation: bool = False,
-    ) -> Optional[Context | ContextWithChain]:
+    ) -> Optional[Union[Context, ContextWithChain]]:
         """
         Retrieve a context by ID with optional chain traversal.
 
@@ -219,7 +219,7 @@ class ContextsAPI:
         status: Optional[ContextStatus] = None,
         limit: int = 50,
         include_chain: bool = False,
-    ) -> List[Context | ContextWithChain]:
+    ) -> List[Union[Context, ContextWithChain]]:
         """
         Search contexts with filters.
 

@@ -4,10 +4,11 @@ Cortex SDK - Mutable Store API
 Layer 1c: Shared mutable data with ACID transaction guarantees
 """
 
-from typing import Optional, List, Dict, Any, Callable
+from typing import Optional, List, Dict, Any, Callable, Literal
 
 from ..types import MutableRecord
 from ..errors import CortexError, ErrorCode
+from .._utils import filter_none_values, convert_convex_response
 
 
 class MutableAPI:
@@ -53,15 +54,15 @@ class MutableAPI:
         """
         result = await self.client.mutation(
             "mutable:set",
-            {
+            filter_none_values({
                 "namespace": namespace,
                 "key": key,
                 "value": value,
                 "userId": user_id,
-            },
+            }),
         )
 
-        return MutableRecord(**result)
+        return MutableRecord(**convert_convex_response(result))
 
     async def get(self, namespace: str, key: str) -> Optional[Any]:
         """
@@ -78,7 +79,7 @@ class MutableAPI:
             >>> qty = await cortex.mutable.get('inventory', 'widget-qty')
         """
         result = await self.client.query(
-            "mutable:get", {"namespace": namespace, "key": key}
+            "mutable:get", filter_none_values({"namespace": namespace, "key": key})
         )
 
         return result
@@ -110,14 +111,14 @@ class MutableAPI:
 
         result = await self.client.mutation(
             "mutable:set",
-            {
+            filter_none_values({
                 "namespace": namespace,
                 "key": key,
                 "value": new_value,
-            },
+            }),
         )
 
-        return MutableRecord(**result)
+        return MutableRecord(**convert_convex_response(result))
 
     async def increment(
         self, namespace: str, key: str, amount: int = 1
@@ -172,13 +173,13 @@ class MutableAPI:
             >>> record = await cortex.mutable.get_record('config', 'timeout')
         """
         result = await self.client.query(
-            "mutable:getRecord", {"namespace": namespace, "key": key}
+            "mutable:getRecord", filter_none_values({"namespace": namespace, "key": key})
         )
 
         if not result:
             return None
 
-        return MutableRecord(**result)
+        return MutableRecord(**convert_convex_response(result))
 
     async def delete(self, namespace: str, key: str) -> Dict[str, Any]:
         """
@@ -195,7 +196,7 @@ class MutableAPI:
             >>> await cortex.mutable.delete('inventory', 'discontinued-widget')
         """
         result = await self.client.mutation(
-            "mutable:delete", {"namespace": namespace, "key": key}
+            "mutable:delete", filter_none_values({"namespace": namespace, "key": key})
         )
 
         return result
@@ -224,15 +225,15 @@ class MutableAPI:
         """
         result = await self.client.query(
             "mutable:list",
-            {
+            filter_none_values({
                 "namespace": namespace,
                 "keyPrefix": key_prefix,
                 "userId": user_id,
                 "limit": limit,
-            },
+            }),
         )
 
-        return [MutableRecord(**record) for record in result]
+        return [MutableRecord(**convert_convex_response(record)) for record in result]
 
     async def count(
         self,
@@ -256,11 +257,11 @@ class MutableAPI:
         """
         result = await self.client.query(
             "mutable:count",
-            {
+            filter_none_values({
                 "namespace": namespace,
                 "keyPrefix": key_prefix,
                 "userId": user_id,
-            },
+            }),
         )
 
         return int(result)
@@ -281,7 +282,7 @@ class MutableAPI:
             ...     qty = await cortex.mutable.get('inventory', 'widget-qty')
         """
         result = await self.client.query(
-            "mutable:exists", {"namespace": namespace, "key": key}
+            "mutable:exists", filter_none_values({"namespace": namespace, "key": key})
         )
 
         return bool(result)
@@ -303,7 +304,7 @@ class MutableAPI:
             >>> result = await cortex.mutable.purge_namespace('test-data')
         """
         result = await self.client.mutation(
-            "mutable:purgeNamespace", {"namespace": namespace, "dryRun": dry_run}
+            "mutable:purgeNamespace", filter_none_values({"namespace": namespace, "dryRun": dry_run})
         )
 
         return result
@@ -335,12 +336,12 @@ class MutableAPI:
         """
         result = await self.client.mutation(
             "mutable:purgeMany",
-            {
+            filter_none_values({
                 "namespace": namespace,
                 "keyPrefix": key_prefix,
                 "userId": user_id,
                 "updatedBefore": updated_before,
-            },
+            }),
         )
 
         return result

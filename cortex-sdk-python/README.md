@@ -313,14 +313,26 @@ pytest tests/test_memory.py -v
 
 ## 📖 Documentation
 
-- [Full Documentation](../Documentation/00-README.md) - Complete documentation (shared with TypeScript SDK)
-- [API Reference](../Documentation/03-api-reference/01-overview.md) - Detailed API documentation
-- [Python Examples](./examples/) - Python-specific examples
+### Quick Links
+- **[START HERE](./START_HERE.md)** - Navigation guide for all documentation
+- **[Developer Guide](./docs/guides/developer-guide.md)** - Comprehensive Python guide
+- **[Migration Guide](./docs/guides/migration-guide.md)** - TypeScript to Python migration
+- **[Testing Guide](../dev-docs/python-sdk-testing.md)** - How to test the SDK
+- **[Examples](./examples/)** - 4 working applications
+
+### Shared Documentation
+- **[API Reference](../Documentation/03-api-reference/01-overview.md)** - Complete API documentation
+- **[Core Features](../Documentation/02-core-features/)** - Feature guides
+- **[Architecture](../Documentation/04-architecture/)** - System architecture
+- **[Advanced Topics](../Documentation/07-advanced-topics/)** - Graph DB, facts, etc.
 
 ## 🔒 Requirements
 
-- Python 3.10 or higher
-- Convex deployment (cloud or self-hosted)
+- **Python 3.12 or 3.13** (tested on both versions)
+- **Convex backend** running (local, cloud, or self-hosted)
+  - Use existing `.env.local` configuration
+  - LOCAL: `npm run dev:local` from project root
+  - MANAGED: Already running at https://expert-buffalo-268.convex.cloud
 
 **Optional:**
 - Neo4j or Memgraph (for graph integration)

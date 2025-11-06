@@ -6,6 +6,16 @@ import pytest
 import os
 import asyncio
 from typing import AsyncGenerator
+from pathlib import Path
+
+# Load environment variables from .env.local in project root
+from dotenv import load_dotenv
+
+# Load from project root .env.local
+project_root = Path(__file__).parent.parent.parent
+env_file = project_root / ".env.local"
+if env_file.exists():
+    load_dotenv(env_file)
 
 from cortex import Cortex, CortexConfig
 
@@ -24,8 +34,16 @@ async def cortex_client() -> AsyncGenerator[Cortex, None]:
     Fixture for Cortex client.
 
     Automatically initializes and cleans up Cortex instance for tests.
+    Uses CONVEX_URL from environment (.env.local is auto-loaded above).
     """
-    convex_url = os.getenv("CONVEX_URL", "http://localhost:3210")
+    # Get CONVEX_URL from environment (loaded from .env.local)
+    convex_url = os.getenv("CONVEX_URL")
+    
+    if not convex_url:
+        pytest.fail(
+            "CONVEX_URL not set. Make sure .env.local exists in project root "
+            "or set CONVEX_URL environment variable."
+        )
 
     config = CortexConfig(convex_url=convex_url)
     client = Cortex(config)

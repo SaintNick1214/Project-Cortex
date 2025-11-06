@@ -4,7 +4,7 @@ Cortex SDK - Memory Spaces API
 Memory space management for Hive and Collaboration modes
 """
 
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Literal
 
 from ..types import (
     MemorySpace,

@@ -7,13 +7,10 @@ Main entry point for the Cortex SDK providing access to all memory operations.
 import asyncio
 from typing import Optional
 
-try:
-    from convex import ConvexClient
-except ImportError:
-    # Graceful degradation if convex not installed
-    ConvexClient = None  # type: ignore
+from convex import ConvexClient
 
 from .types import CortexConfig, GraphConfig
+from ._convex_async import AsyncConvexClient
 from .conversations import ConversationsAPI
 from .immutable import ImmutableAPI
 from .mutable import MutableAPI
@@ -60,16 +57,10 @@ class Cortex:
         Args:
             config: Cortex configuration including Convex URL and optional graph config
 
-        Raises:
-            ImportError: If convex package is not installed
         """
-        if ConvexClient is None:
-            raise ImportError(
-                "The 'convex' package is required. Install it with: pip install convex"
-            )
-
-        # Initialize Convex client
-        self.client = ConvexClient(config.convex_url)
+        # Initialize Convex client (sync) and wrap for async API
+        sync_client = ConvexClient(config.convex_url)
+        self.client = AsyncConvexClient(sync_client)
 
         # Get graph adapter if configured
         graph_adapter = config.graph.adapter if config.graph else None

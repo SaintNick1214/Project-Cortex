@@ -14,6 +14,7 @@ from ..types import (
     VerificationResult,
 )
 from ..errors import CortexError, ErrorCode, CascadeDeletionError
+from .._utils import filter_none_values, convert_convex_response
 
 
 class UsersAPI:
@@ -54,7 +55,7 @@ class UsersAPI:
             >>> if user:
             ...     print(user.data['displayName'])
         """
-        result = await self.client.query("immutable:get", {"type": "user", "id": user_id})
+        result = await self.client.query("immutable:get", filter_none_values({"type": "user", "id": user_id}))
 
         if not result:
             return None
@@ -222,7 +223,7 @@ class UsersAPI:
             ... )
         """
         result = await self.client.query(
-            "users:search", {"filters": filters, "limit": limit}
+            "users:search", filter_none_values({"filters": filters, "limit": limit})
         )
 
         return [
@@ -251,7 +252,7 @@ class UsersAPI:
             >>> page1 = await cortex.users.list(limit=50, offset=0)
         """
         result = await self.client.query(
-            "users:list", {"limit": limit, "offset": offset}
+            "users:list", filter_none_values({"limit": limit, "offset": offset})
         )
 
         result["users"] = [
@@ -280,7 +281,7 @@ class UsersAPI:
         Example:
             >>> total = await cortex.users.count()
         """
-        result = await self.client.query("users:count", {"filters": filters})
+        result = await self.client.query("users:count", filter_none_values({"filters": filters}))
 
         return int(result)
 
@@ -351,8 +352,17 @@ class UsersAPI:
         if not existing:
             raise CortexError(ErrorCode.USER_NOT_FOUND, f"User {user_id} not found")
 
-        # Deep merge
-        merged_data = {**existing.data, **updates}
+        # Deep merge - recursively merge nested dicts
+        def deep_merge(base: Dict, override: Dict) -> Dict:
+            result = base.copy()
+            for key, value in override.items():
+                if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+                    result[key] = deep_merge(result[key], value)
+                else:
+                    result[key] = value
+            return result
+
+        merged_data = deep_merge(existing.data, updates)
 
         return await self.update(user_id, merged_data)
 
@@ -371,13 +381,13 @@ class UsersAPI:
 
         # Collect conversations
         conversations = await self.client.query(
-            "conversations:list", {"userId": user_id, "limit": 10000}
+            "conversations:list", filter_none_values({"userId": user_id, "limit": 10000})
         )
         plan["conversations"] = conversations
 
         # Collect immutable records
         immutable = await self.client.query(
-            "immutable:list", {"userId": user_id, "limit": 10000}
+            "immutable:list", filter_none_values({"userId": user_id, "limit": 10000})
         )
         plan["immutable"] = immutable
 
@@ -494,14 +504,14 @@ class UsersAPI:
 
         # Check conversations
         conv_count = await self.client.query(
-            "conversations:count", {"userId": user_id}
+            "conversations:count", filter_none_values({"userId": user_id})
         )
         if conv_count > 0:
             issues.append(f"Found {conv_count} remaining conversations")
 
         # Check immutable
         immutable_count = await self.client.query(
-            "immutable:count", {"userId": user_id}
+            "immutable:count", filter_none_values({"userId": user_id})
         )
         if immutable_count > 0:
             issues.append(f"Found {immutable_count} remaining immutable records")
@@ -541,7 +551,7 @@ class UsersAPI:
         """
         result = await self.client.mutation(
             "users:updateMany",
-            {"filters": filters, "updates": updates, "dryRun": dry_run},
+            filter_none_values({"filters": filters, "updates": updates, "dryRun": dry_run}),
         )
 
         return result
@@ -572,7 +582,7 @@ class UsersAPI:
         """
         result = await self.client.mutation(
             "users:deleteMany",
-            {"filters": filters, "cascade": cascade, "dryRun": dry_run},
+            filter_none_values({"filters": filters, "cascade": cascade, "dryRun": dry_run}),
         )
 
         return result
@@ -607,13 +617,13 @@ class UsersAPI:
         """
         result = await self.client.query(
             "users:export",
-            {
+            filter_none_values({
                 "filters": filters,
                 "format": format,
                 "includeMemories": include_memories,
                 "includeConversations": include_conversations,
                 "includeVersionHistory": include_version_history,
-            },
+            }),
         )
 
         return result
@@ -635,7 +645,7 @@ class UsersAPI:
             >>> v1 = await cortex.users.get_version('user-123', 1)
         """
         result = await self.client.query(
-            "immutable:getVersion", {"type": "user", "id": user_id, "version": version}
+            "immutable:getVersion", filter_none_values({"type": "user", "id": user_id, "version": version})
         )
 
         if not result:
@@ -661,7 +671,7 @@ class UsersAPI:
             >>> history = await cortex.users.get_history('user-123')
         """
         result = await self.client.query(
-            "immutable:getHistory", {"type": "user", "id": user_id}
+            "immutable:getHistory", filter_none_values({"type": "user", "id": user_id})
         )
 
         return [
@@ -689,7 +699,7 @@ class UsersAPI:
         """
         result = await self.client.query(
             "immutable:getAtTimestamp",
-            {"type": "user", "id": user_id, "timestamp": timestamp},
+            filter_none_values({"type": "user", "id": user_id, "timestamp": timestamp}),
         )
 
         if not result:
