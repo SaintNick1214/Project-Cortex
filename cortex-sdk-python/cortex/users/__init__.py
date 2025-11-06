@@ -243,19 +243,28 @@ class UsersAPI:
 
         Args:
             limit: Maximum results
-            offset: Number of results to skip
+            offset: Number of results to skip (not currently supported by backend)
 
         Returns:
             List result with pagination info
 
         Example:
-            >>> page1 = await cortex.users.list(limit=50, offset=0)
+            >>> page1 = await cortex.users.list(limit=50)
         """
+        # Note: offset is not supported by the Convex backend yet
         result = await self.client.query(
-            "users:list", filter_none_values({"limit": limit, "offset": offset})
+            "users:list", filter_none_values({"limit": limit})
         )
 
-        result["users"] = [
+        # Handle if result is a list or dict
+        if isinstance(result, list):
+            # Convex returned list directly
+            users = result
+        else:
+            # Convex returned dict with users key
+            users = result.get("users", [])
+
+        user_profiles = [
             UserProfile(
                 id=u["id"],
                 data=u["data"],
@@ -263,10 +272,11 @@ class UsersAPI:
                 created_at=u["createdAt"],
                 updated_at=u["updatedAt"],
             )
-            for u in result.get("users", [])
+            for u in users
         ]
 
-        return result
+        # Return dict format for consistency
+        return {"users": user_profiles}
 
     async def count(self, filters: Optional[Dict[str, Any]] = None) -> int:
         """

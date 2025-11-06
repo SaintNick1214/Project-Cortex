@@ -482,7 +482,7 @@ class ConversationsAPI:
             filter_none_values({
                 "conversationId": conversation_id,
                 "limit": limit,
-                "offset": offset,
+                # Note: offset not supported by backend yet
                 "sortOrder": sort_order,
             }),
         )
