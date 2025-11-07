@@ -336,6 +336,34 @@ class RememberResult:
 
 
 @dataclass
+class RememberStreamParams:
+    """Parameters for remember_stream() - streaming variant of remember()."""
+    memory_space_id: str
+    conversation_id: str
+    user_message: str
+    response_stream: Any  # AsyncIterable[str] - async generator or iterator
+    user_id: str
+    user_name: str
+    participant_id: Optional[str] = None
+    importance: Optional[int] = None
+    tags: Optional[List[str]] = None
+    extract_content: Optional[Callable[[str, str], Any]] = None
+    generate_embedding: Optional[Callable[[str], Any]] = None
+    extract_facts: Optional[Callable[[str, str], Any]] = None
+    auto_embed: Optional[bool] = None
+    auto_summarize: Optional[bool] = None
+
+
+@dataclass
+class RememberStreamResult:
+    """Result from remember_stream() including full streamed response."""
+    conversation: Dict[str, Any]  # messageIds and conversationId
+    memories: List[MemoryEntry]
+    facts: List[FactRecord]
+    full_response: str  # Complete text from consumed stream
+
+
+@dataclass
 class EnrichedMemory:
     """Memory with enriched conversation and facts."""
     memory: MemoryEntry

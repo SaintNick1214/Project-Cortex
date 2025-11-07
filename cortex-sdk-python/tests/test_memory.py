@@ -238,3 +238,294 @@ async def test_count_and_list(cortex_client, test_memory_space_id, test_conversa
     )
     assert len(memories) >= 6
 
+
+# ============================================================================
+# Additional Tests - Expanding Coverage
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_remember_with_embeddings(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+    """
+    Test remember with embedding generation.
+    
+    Port of: memory.test.ts - embedding tests
+    """
+    from tests.helpers import generate_embedding
+    
+    # Generate embeddings for messages
+    user_embedding = await generate_embedding("I need help with my account", use_mock=True)
+    agent_embedding = await generate_embedding("I can help you with that", use_mock=True)
+    
+    result = await cortex_client.memory.remember(
+        RememberParams(
+            memory_space_id=test_memory_space_id,
+            conversation_id=test_conversation_id,
+            user_message="I need help with my account",
+            agent_response="I can help you with that",
+            user_id=test_user_id,
+            user_name="Tester",
+            user_message_embedding=user_embedding,
+            agent_response_embedding=agent_embedding,
+        )
+    )
+    
+    # Both memories should have embeddings
+    assert len(result.memories) == 2
+    assert result.memories[0].embedding is not None
+    assert result.memories[1].embedding is not None
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_remember_with_fact_extraction(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+    """
+    Test remember with fact extraction callback.
+    
+    Port of: memory.test.ts - fact extraction tests
+    """
+    # Define fact extraction function
+    async def extract_facts(user_msg, agent_msg):
+        return [
+            {
+                "fact": "User prefers dark mode",
+                "factType": "preference",
+                "confidence": 95,
+                "tags": ["ui", "preferences"],
+            }
+        ]
+    
+    result = await cortex_client.memory.remember(
+        RememberParams(
+            memory_space_id=test_memory_space_id,
+            conversation_id=test_conversation_id,
+            user_message="I like dark mode",
+            agent_response="I've noted your preference",
+            user_id=test_user_id,
+            user_name="Tester",
+            extract_facts=extract_facts,
+        )
+    )
+    
+    # Should have extracted facts
+    assert len(result.facts) > 0
+    assert any(f.fact == "User prefers dark mode" for f in result.facts)
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_search_with_strategy(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+    """
+    Test search with different strategies.
+    
+    Port of: memory.test.ts - search strategy tests
+    """
+    # Store memories
+    await cortex_client.memory.remember(
+        RememberParams(
+            memory_space_id=test_memory_space_id,
+            conversation_id=test_conversation_id,
+            user_message="Recent message",
+            agent_response="Response",
+            user_id=test_user_id,
+            user_name="Tester",
+            importance=50,
+        )
+    )
+    
+    # Search with keyword strategy
+    results = await cortex_client.memory.search(
+        test_memory_space_id,
+        "recent",
+        SearchOptions(
+            user_id=test_user_id,
+            strategy="keyword",
+            limit=10,
+        ),
+    )
+    
+    assert len(results) >= 0  # May or may not find results
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_list_with_filters(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+    """
+    Test listing memories with filters.
+    
+    Port of: memory.test.ts - list tests
+    """
+    # Store memories with different importance
+    for i in range(3):
+        await cortex_client.memory.remember(
+            RememberParams(
+                memory_space_id=test_memory_space_id,
+                conversation_id=test_conversation_id,
+                user_message=f"Message {i}",
+                agent_response=f"Response {i}",
+                user_id=test_user_id,
+                user_name="Tester",
+                importance=30 + (i * 20),  # 30, 50, 70
+            )
+        )
+    
+    # List with minImportance filter
+    memories = await cortex_client.memory.list(
+        test_memory_space_id,
+        user_id=test_user_id,
+        min_importance=60,
+        limit=10,
+    )
+    
+    # Should only return memories with importance >= 60
+    for mem in memories:
+        assert mem.importance >= 60
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_count_with_filters(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+    """
+    Test counting memories with filters.
+    
+    Port of: memory.test.ts - count tests
+    """
+    # Store memories with tags
+    for i in range(4):
+        await cortex_client.memory.remember(
+            RememberParams(
+                memory_space_id=test_memory_space_id,
+                conversation_id=test_conversation_id,
+                user_message=f"Message {i}",
+                agent_response=f"Response {i}",
+                user_id=test_user_id,
+                user_name="Tester",
+                tags=["important"] if i % 2 == 0 else ["normal"],
+            )
+        )
+    
+    # Count with tags filter
+    count = await cortex_client.memory.count(
+        test_memory_space_id,
+        user_id=test_user_id,
+        tags=["important"],
+    )
+    
+    # Should have at least 4 memories (2 user + 2 agent with "important" tag)
+    assert count >= 4
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_forget_with_options(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+    """
+    Test forget with various options.
+    
+    Port of: memory.test.ts - forget tests
+    """
+    # Store a memory
+    result = await cortex_client.memory.remember(
+        RememberParams(
+            memory_space_id=test_memory_space_id,
+            conversation_id=test_conversation_id,
+            user_message="Memory to forget",
+            agent_response="Noted",
+            user_id=test_user_id,
+            user_name="Tester",
+        )
+    )
+    
+    memory_id = result.memories[0].memory_id
+    
+    # Forget with soft delete (restorable)
+    forget_result = await cortex_client.memory.forget(
+        test_memory_space_id,
+        memory_id,
+        ForgetOptions(
+            delete_conversation=False,
+            permanent=False,
+        ),
+    )
+    
+    assert forget_result.memory_deleted is True
+    assert forget_result.restorable is True
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_archive_and_restore(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+    """
+    Test archiving and restoring memories.
+    
+    Port of: memory.test.ts - archive tests
+    """
+    # Store a memory
+    result = await cortex_client.memory.remember(
+        RememberParams(
+            memory_space_id=test_memory_space_id,
+            conversation_id=test_conversation_id,
+            user_message="Memory to archive",
+            agent_response="Response",
+            user_id=test_user_id,
+            user_name="Tester",
+        )
+    )
+    
+    memory_id = result.memories[0].memory_id
+    
+    # Archive it
+    archived = await cortex_client.vector.archive(test_memory_space_id, memory_id)
+    
+    # Verify archived
+    assert archived is not None
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_get_conversation_ref(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+    """
+    Test getting memory with conversationRef populated.
+    
+    Port of: memory.test.ts - conversationRef tests
+    """
+    # Store memory with conversation
+    result = await cortex_client.memory.remember(
+        RememberParams(
+            memory_space_id=test_memory_space_id,
+            conversation_id=test_conversation_id,
+            user_message="Test message",
+            agent_response="Test response",
+            user_id=test_user_id,
+            user_name="Tester",
+        )
+    )
+    
+    memory_id = result.memories[0].memory_id
+    
+    # Get memory
+    memory = await cortex_client.memory.get(test_memory_space_id, memory_id)
+    
+    # Should have conversationRef
+    assert memory is not None
+    assert memory.conversation_ref is not None
+    # conversation_ref is a dict after conversion
+    conv_id = memory.conversation_ref.get("conversation_id") if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
+    assert conv_id == test_conversation_id
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)
+

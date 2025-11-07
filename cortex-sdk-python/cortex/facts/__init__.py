@@ -15,7 +15,7 @@ from ..types import (
     FactType,
 )
 from ..errors import CortexError, ErrorCode
-from .._utils import filter_none_values
+from .._utils import filter_none_values, convert_convex_response
 
 
 class FactsAPI:
@@ -64,7 +64,7 @@ class FactsAPI:
         """
         result = await self.client.mutation(
             "facts:store",
-            {
+            filter_none_values({
                 "memorySpaceId": params.memory_space_id,
                 "participantId": params.participant_id,
                 "fact": params.fact,
@@ -87,7 +87,7 @@ class FactsAPI:
                 "tags": params.tags or [],
                 "validFrom": params.valid_from,
                 "validUntil": params.valid_until,
-            },
+            }),
         )
 
         # Sync to graph if requested
@@ -100,7 +100,7 @@ class FactsAPI:
             except Exception as error:
                 print(f"Warning: Failed to sync fact to graph: {error}")
 
-        return FactRecord(**result)
+        return FactRecord(**convert_convex_response(result))
 
     async def get(
         self, memory_space_id: str, fact_id: str
@@ -125,7 +125,7 @@ class FactsAPI:
         if not result:
             return None
 
-        return FactRecord(**result)
+        return FactRecord(**convert_convex_response(result))
 
     async def list(
         self,
@@ -169,7 +169,7 @@ class FactsAPI:
             }),
         )
 
-        return [FactRecord(**fact) for fact in result]
+        return [FactRecord(**convert_convex_response(fact)) for fact in result]
 
     async def search(
         self,
@@ -213,7 +213,7 @@ class FactsAPI:
             },
         )
 
-        return [FactRecord(**fact) for fact in result]
+        return [FactRecord(**convert_convex_response(fact)) for fact in result]
 
     async def update(
         self,
@@ -258,7 +258,7 @@ class FactsAPI:
             except Exception as error:
                 print(f"Warning: Failed to sync fact update to graph: {error}")
 
-        return FactRecord(**result)
+        return FactRecord(**convert_convex_response(result))
 
     async def delete(
         self,
@@ -360,7 +360,7 @@ class FactsAPI:
             },
         )
 
-        return [FactRecord(**fact) for fact in result]
+        return [FactRecord(**convert_convex_response(fact)) for fact in result]
 
     async def query_by_relationship(
         self, memory_space_id: str, subject: str, predicate: str
@@ -390,7 +390,7 @@ class FactsAPI:
             },
         )
 
-        return [FactRecord(**fact) for fact in result]
+        return [FactRecord(**convert_convex_response(fact)) for fact in result]
 
     async def get_history(
         self, memory_space_id: str, fact_id: str
@@ -412,7 +412,7 @@ class FactsAPI:
             "facts:getHistory", {"memorySpaceId": memory_space_id, "factId": fact_id}
         )
 
-        return [FactRecord(**v) for v in result]
+        return [FactRecord(**convert_convex_response(v)) for v in result]
 
     async def export(
         self,

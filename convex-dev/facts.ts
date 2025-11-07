@@ -26,6 +26,7 @@ export const store = mutation({
       v.literal("knowledge"),
       v.literal("relationship"),
       v.literal("event"),
+      v.literal("observation"),
       v.literal("custom"),
     ),
     subject: v.optional(v.string()), // Primary entity (e.g., "user-123")
