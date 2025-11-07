@@ -276,6 +276,7 @@ export default defineSchema({
       v.literal("knowledge"),
       v.literal("relationship"),
       v.literal("event"),
+      v.literal("observation"),
       v.literal("custom"),
     ),
 

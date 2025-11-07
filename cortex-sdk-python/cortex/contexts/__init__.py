@@ -16,7 +16,7 @@ from ..types import (
     DeleteContextOptions,
 )
 from ..errors import CortexError, ErrorCode
-from .._utils import filter_none_values
+from .._utils import filter_none_values, convert_convex_response
 
 
 class ContextsAPI:
@@ -63,7 +63,7 @@ class ContextsAPI:
         """
         result = await self.client.mutation(
             "contexts:create",
-            {
+            filter_none_values({
                 "purpose": params.purpose,
                 "memorySpaceId": params.memory_space_id,
                 "parentId": params.parent_id,
@@ -79,7 +79,7 @@ class ContextsAPI:
                 "data": params.data,
                 "status": params.status,
                 "description": params.description,
-            },
+            }),
         )
 
         # Sync to graph if requested
@@ -92,7 +92,7 @@ class ContextsAPI:
             except Exception as error:
                 print(f"Warning: Failed to sync context to graph: {error}")
 
-        return Context(**result)
+        return Context(**convert_convex_response(result))
 
     async def get(
         self,
@@ -130,9 +130,9 @@ class ContextsAPI:
             return None
 
         if include_chain:
-            return ContextWithChain(**result)
+            return ContextWithChain(**convert_convex_response(result))
 
-        return Context(**result)
+        return Context(**convert_convex_response(result))
 
     async def update(
         self,
@@ -170,7 +170,7 @@ class ContextsAPI:
             except Exception as error:
                 print(f"Warning: Failed to sync context update to graph: {error}")
 
-        return Context(**result)
+        return Context(**convert_convex_response(result))
 
     async def delete(
         self, context_id: str, options: Optional[DeleteContextOptions] = None
@@ -354,7 +354,7 @@ class ContextsAPI:
         """
         result = await self.client.query("contexts:getRoot", {"contextId": context_id})
 
-        return Context(**result)
+        return Context(**convert_convex_response(result))
 
     async def get_children(
         self,
@@ -416,7 +416,7 @@ class ContextsAPI:
             {"contextId": context_id, "participantId": participant_id},
         )
 
-        return Context(**result)
+        return Context(**convert_convex_response(result))
 
     async def remove_participant(self, context_id: str, participant_id: str) -> Context:
         """
@@ -437,7 +437,7 @@ class ContextsAPI:
             {"contextId": context_id, "participantId": participant_id},
         )
 
-        return Context(**result)
+        return Context(**convert_convex_response(result))
 
     async def get_by_conversation(self, conversation_id: str) -> List[Context]:
         """

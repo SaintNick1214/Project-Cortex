@@ -10,6 +10,8 @@ from typing import Optional, List, Dict, Any, Union, Tuple
 from ..types import (
     RememberParams,
     RememberResult,
+    RememberStreamParams,
+    RememberStreamResult,
     RememberOptions,
     MemoryEntry,
     EnrichedMemory,
@@ -258,6 +260,94 @@ class MemoryAPI:
             },
             memories=[user_memory, agent_memory],
             facts=extracted_facts,
+        )
+
+    async def remember_stream(
+        self, params, options: Optional[RememberOptions] = None
+    ):
+        """
+        Remember a conversation exchange from a streaming response.
+
+        This method consumes a stream (AsyncIterable) and stores the conversation
+        in both ACID and Vector layers once the stream completes.
+
+        Auto-syncs to graph if configured (default: true).
+
+        Args:
+            params: RememberStreamParams with stream parameters
+            options: Optional remember options
+
+        Returns:
+            RememberStreamResult with remember result and full response text
+
+        Raises:
+            Exception: If stream consumption fails or produces no content
+
+        Example:
+            >>> # With async generator
+            >>> async def stream_response():
+            ...     yield "The "
+            ...     yield "weather "
+            ...     yield "is sunny."
+            >>> 
+            >>> from cortex.types import RememberStreamParams
+            >>> result = await cortex.memory.remember_stream(
+            ...     RememberStreamParams(
+            ...         memory_space_id='agent-1',
+            ...         conversation_id='conv-123',
+            ...         user_message='What is the weather?',
+            ...         response_stream=stream_response(),
+            ...         user_id='user-1',
+            ...         user_name='Alex'
+            ...     )
+            ... )
+            >>> print(result.full_response)  # "The weather is sunny."
+        """
+        from .stream_utils import consume_stream
+        from ..types import RememberStreamResult
+
+        # Step 1: Consume the stream to get the full response text
+        try:
+            agent_response = await consume_stream(params.response_stream)
+        except Exception as error:
+            raise Exception(
+                f"Failed to consume response stream: {str(error)}"
+            ) from error
+
+        # Step 2: Validate we got some content
+        if not agent_response or agent_response.strip() == "":
+            raise Exception(
+                "Response stream completed but produced no content. "
+                "Cannot store empty response."
+            )
+
+        # Step 3: Use the existing remember() method with the complete response
+        remember_result = await self.remember(
+            RememberParams(
+                memory_space_id=params.memory_space_id,
+                participant_id=params.participant_id,
+                conversation_id=params.conversation_id,
+                user_message=params.user_message,
+                agent_response=agent_response,
+                user_id=params.user_id,
+                user_name=params.user_name,
+                extract_content=params.extract_content,
+                generate_embedding=params.generate_embedding,
+                extract_facts=params.extract_facts,
+                auto_embed=params.auto_embed,
+                auto_summarize=params.auto_summarize,
+                importance=params.importance,
+                tags=params.tags,
+            ),
+            options,
+        )
+
+        # Step 4: Return the result with the full response
+        return RememberStreamResult(
+            conversation=remember_result.conversation,
+            memories=remember_result.memories,
+            facts=remember_result.facts,
+            full_response=agent_response,
         )
 
     async def forget(

@@ -436,6 +436,101 @@ export class UsersAPI {
     return JSON.stringify(users, null, 2);
   }
 
+  /**
+   * Bulk update multiple users
+   *
+   * @param userIds - Array of user IDs to update
+   * @param updates - Updates to apply to all users
+   * @param options - Update options
+   * @returns Update result
+   *
+   * @example
+   * ```typescript
+   * const result = await cortex.users.updateMany(
+   *   ['user-1', 'user-2', 'user-3'],
+   *   { data: { status: 'active' } }
+   * );
+   * console.log(`Updated ${result.updated} users`);
+   * ```
+   */
+  async updateMany(
+    userIds: string[],
+    updates: { data: Record<string, any> },
+    options?: { skipVersioning?: boolean; dryRun?: boolean },
+  ): Promise<{ updated: number; userIds: string[] }> {
+    if (options?.dryRun) {
+      return {
+        updated: 0,
+        userIds: userIds,
+      };
+    }
+
+    const results: string[] = [];
+
+    for (const userId of userIds) {
+      try {
+        const user = await this.get(userId);
+        if (user) {
+          await this.update(userId, updates, options);
+          results.push(userId);
+        }
+      } catch (e) {
+        // Continue on error
+        continue;
+      }
+    }
+
+    return {
+      updated: results.length,
+      userIds: results,
+    };
+  }
+
+  /**
+   * Bulk delete multiple users
+   *
+   * @param userIds - Array of user IDs to delete
+   * @param options - Delete options
+   * @returns Delete result
+   *
+   * @example
+   * ```typescript
+   * const result = await cortex.users.deleteMany(
+   *   ['user-1', 'user-2', 'user-3'],
+   *   { cascade: true }
+   * );
+   * console.log(`Deleted ${result.deleted} users`);
+   * ```
+   */
+  async deleteMany(
+    userIds: string[],
+    options?: { cascade?: boolean; dryRun?: boolean },
+  ): Promise<{ deleted: number; userIds: string[] }> {
+    if (options?.dryRun) {
+      return {
+        deleted: 0,
+        userIds: userIds,
+      };
+    }
+
+    const results: string[] = [];
+
+    for (const userId of userIds) {
+      try {
+        await this.delete(userId, options);
+        results.push(userId);
+      } catch (e) {
+        // Continue if user doesn't exist
+        continue;
+      }
+    }
+
+    return {
+      deleted: results.length,
+      userIds: results,
+    };
+  }
+
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Private Helper Methods - Cascade Deletion Implementation
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

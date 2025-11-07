@@ -77,6 +77,8 @@ from .types import (
 from .types import (
     RememberParams,
     RememberResult,
+    RememberStreamParams,
+    RememberStreamResult,
     RememberOptions,
     EnrichedMemory,
     ForgetOptions,
@@ -209,6 +211,8 @@ __all__ = [
     # Layer 4 Types
     "RememberParams",
     "RememberResult",
+    "RememberStreamParams",
+    "RememberStreamResult",
     "RememberOptions",
     "EnrichedMemory",
     "ForgetOptions",

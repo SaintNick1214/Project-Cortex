@@ -196,7 +196,7 @@ class MutableAPI:
             >>> await cortex.mutable.delete('inventory', 'discontinued-widget')
         """
         result = await self.client.mutation(
-            "mutable:delete", filter_none_values({"namespace": namespace, "key": key})
+            "mutable:deleteKey", filter_none_values({"namespace": namespace, "key": key})
         )
 
         return result
@@ -304,7 +304,8 @@ class MutableAPI:
             >>> result = await cortex.mutable.purge_namespace('test-data')
         """
         result = await self.client.mutation(
-            "mutable:purgeNamespace", filter_none_values({"namespace": namespace, "dryRun": dry_run})
+            "mutable:purgeNamespace", filter_none_values({"namespace": namespace})
+            # Note: dryRun not supported by backend yet
         )
 
         return result

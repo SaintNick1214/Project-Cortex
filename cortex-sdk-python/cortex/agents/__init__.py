@@ -16,7 +16,7 @@ from ..types import (
     VerificationResult,
 )
 from ..errors import CortexError, ErrorCode, AgentCascadeDeletionError
-from .._utils import filter_none_values
+from .._utils import filter_none_values, convert_convex_response
 
 
 class AgentsAPI:
@@ -60,16 +60,16 @@ class AgentsAPI:
         """
         result = await self.client.mutation(
             "agents:register",
-            {
-                "id": agent.id,
+            filter_none_values({
+                "agentId": agent.id,
                 "name": agent.name,
                 "description": agent.description,
                 "metadata": agent.metadata or {},
                 "config": agent.config or {},
-            },
+            }),
         )
 
-        return RegisteredAgent(**result)
+        return RegisteredAgent(**convert_convex_response(result))
 
     async def get(self, agent_id: str) -> Optional[RegisteredAgent]:
         """
@@ -89,7 +89,7 @@ class AgentsAPI:
         if not result:
             return None
 
-        return RegisteredAgent(**result)
+        return RegisteredAgent(**convert_convex_response(result))
 
     async def search(
         self, filters: Optional[Dict[str, Any]] = None, limit: int = 50
@@ -137,8 +137,9 @@ class AgentsAPI:
             # Note: offset not supported by backend yet
         )
 
-        result["agents"] = [RegisteredAgent(**a) for a in result.get("agents", [])]
-        return result
+        # Convert list response if needed
+        agents_list = result if isinstance(result, list) else result.get("agents", result)
+        return [RegisteredAgent(**convert_convex_response(a)) for a in agents_list]
 
     async def count(self, filters: Optional[Dict[str, Any]] = None) -> int:
         """

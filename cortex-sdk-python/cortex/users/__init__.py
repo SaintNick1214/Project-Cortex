@@ -222,10 +222,12 @@ class UsersAPI:
             ...     limit=100
             ... )
         """
+        # Client-side implementation using immutable:list (like TypeScript SDK)
         result = await self.client.query(
-            "users:search", filter_none_values({"filters": filters, "limit": limit})
+            "immutable:list", filter_none_values({"type": "user", "limit": limit})
         )
 
+        # Map immutable records to UserProfile objects
         return [
             UserProfile(
                 id=u["id"],
@@ -540,62 +542,84 @@ class UsersAPI:
         print("Warning: Rollback not fully implemented - manual recovery may be needed")
 
     async def update_many(
-        self, filters: Dict[str, Any], updates: Dict[str, Any], dry_run: bool = False
+        self,
+        user_ids: List[str],
+        updates: Dict[str, Any],
+        skip_versioning: bool = False,
     ) -> Dict[str, Any]:
         """
-        Bulk update user profiles matching filters.
+        Bulk update multiple users.
 
         Args:
-            filters: Filter criteria
-            updates: Updates to apply
-            dry_run: Preview without updating
+            user_ids: List of user IDs to update
+            updates: Updates to apply to all users
+            skip_versioning: Skip creating new versions
 
         Returns:
-            Update result
+            Update result with count and user IDs
 
         Example:
-            >>> await cortex.users.update_many(
-            ...     {'data.tier': 'pro'},
-            ...     {'preferences': {'newFeatureEnabled': True}}
+            >>> result = await cortex.users.update_many(
+            ...     ['user-1', 'user-2', 'user-3'],
+            ...     {'status': 'active'}
             ... )
+            >>> print(f"Updated {result['updated']} users")
         """
-        result = await self.client.mutation(
-            "users:updateMany",
-            filter_none_values({"filters": filters, "updates": updates, "dryRun": dry_run}),
-        )
+        # Client-side implementation (like TypeScript SDK)
+        results = []
 
-        return result
+        for user_id in user_ids:
+            try:
+                user = await self.get(user_id)
+                if user:
+                    await self.update(user_id, updates)
+                    results.append(user_id)
+            except Exception:
+                # Continue on error
+                continue
+
+        return {
+            "updated": len(results),
+            "user_ids": results,
+        }
 
     async def delete_many(
         self,
-        filters: Dict[str, Any],
+        user_ids: List[str],
         cascade: bool = False,
-        dry_run: bool = False,
     ) -> Dict[str, Any]:
         """
-        Bulk delete user profiles matching filters.
+        Bulk delete multiple users.
 
         Args:
-            filters: Filter criteria
+            user_ids: List of user IDs to delete
             cascade: Enable cascade deletion
-            dry_run: Preview without deleting
 
         Returns:
-            Deletion result
+            Deletion result with count and user IDs
 
         Example:
             >>> result = await cortex.users.delete_many(
-            ...     {'data.tier': 'free', 'data.lastSeen': {'$lte': old_date}},
-            ...     cascade=True,
-            ...     dry_run=True
+            ...     ['user-1', 'user-2', 'user-3'],
+            ...     cascade=True
             ... )
+            >>> print(f"Deleted {result['deleted']} users")
         """
-        result = await self.client.mutation(
-            "users:deleteMany",
-            filter_none_values({"filters": filters, "cascade": cascade, "dryRun": dry_run}),
-        )
+        # Client-side implementation (like TypeScript SDK)
+        results = []
 
-        return result
+        for user_id in user_ids:
+            try:
+                await self.delete(user_id, DeleteUserOptions(cascade=cascade))
+                results.append(user_id)
+            except Exception:
+                # Continue if user doesn't exist
+                continue
+
+        return {
+            "deleted": len(results),
+            "user_ids": results,
+        }
 
     async def export(
         self,
@@ -625,18 +649,42 @@ class UsersAPI:
             ...     include_memories=True
             ... )
         """
-        result = await self.client.query(
-            "users:export",
-            filter_none_values({
-                "filters": filters,
-                "format": format,
-                "includeMemories": include_memories,
-                "includeConversations": include_conversations,
-                "includeVersionHistory": include_version_history,
-            }),
-        )
-
-        return result
+        # Client-side implementation (like TypeScript SDK)
+        import json
+        
+        # Get users using list()
+        users_result = await self.list(limit=1000)  # Get all users
+        users = users_result.get("users", [])
+        
+        if format == "csv":
+            # CSV export
+            import csv
+            import io
+            output = io.StringIO()
+            writer = csv.DictWriter(output, fieldnames=["id", "version", "createdAt", "updatedAt", "data"])
+            writer.writeheader()
+            for u in users:
+                writer.writerow({
+                    "id": u.id,
+                    "version": u.version,
+                    "createdAt": u.created_at,
+                    "updatedAt": u.updated_at,
+                    "data": json.dumps(u.data),
+                })
+            return output.getvalue()
+        
+        # JSON export (default)
+        export_data = [
+            {
+                "id": u.id,
+                "data": u.data,
+                "version": u.version,
+                "created_at": u.created_at,
+                "updated_at": u.updated_at,
+            }
+            for u in users
+        ]
+        return json.dumps(export_data, indent=2, default=str)
 
     async def get_version(
         self, user_id: str, version: int

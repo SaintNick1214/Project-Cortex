@@ -105,7 +105,8 @@ class MemorySpacesAPI:
         """
         result = await self.client.query(
             "memorySpaces:get",
-            {"memorySpaceId": memory_space_id, "includeStats": include_stats},
+            {"memorySpaceId": memory_space_id},
+            # Note: includeStats not supported by backend yet
         )
 
         if not result:
