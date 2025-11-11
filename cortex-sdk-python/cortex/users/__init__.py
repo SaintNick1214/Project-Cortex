@@ -410,7 +410,6 @@ class UsersAPI:
         # Collect vector memories
         # Problem: Spaces may not be registered, so we need to find memories differently
         # Solution: Collect memory space IDs from conversations (those ARE collected)
-        print(f"\n[DEBUG] Collecting memories for user {user_id}")
         
         # Get memory space IDs from user's conversations
         memory_space_ids_to_check = set()
@@ -429,8 +428,6 @@ class UsersAPI:
                     memory_space_ids_to_check.add(space_id)
         except:
             pass
-        
-        print(f"[DEBUG] Will check {len(memory_space_ids_to_check)} unique memory spaces")
         
         # Store space IDs for deletion phase
         plan["vector"] = list(memory_space_ids_to_check)
@@ -472,15 +469,12 @@ class UsersAPI:
         messages_deleted = 0
 
         # Delete vector memories using spaces from plan
-        print(f"\n[DEBUG] Deleting memories for user {user_id} from {len(plan.get('vector', []))} spaces")
-        
         vector_deleted = 0
         deleted_memory_ids = []
         
         # Use the space IDs collected in plan phase
         for space_id in plan.get("vector", []):
             try:
-                print(f"[DEBUG] Attempting deleteMany for space: {space_id}")
                 # Use deleteMany to bulk delete user's memories in this space
                 result = await self.client.mutation(
                     "memories:deleteMany",
@@ -490,13 +484,8 @@ class UsersAPI:
                 if deleted_count > 0:
                     vector_deleted += deleted_count
                     deleted_memory_ids.extend(result.get("memoryIds", []))
-                    print(f"[DEBUG] Deleted {deleted_count} memories from space {space_id}")
-                else:
-                    print(f"[DEBUG] No memories found in space {space_id}")
-            except Exception as e:
-                print(f"[DEBUG] Error deleting from space {space_id}: {e}")
-        
-        print(f"[DEBUG] Total memories deleted: {vector_deleted}")
+            except Exception:
+                pass  # Continue with other spaces
         
         if vector_deleted > 0:
             deleted_layers.append("vector")

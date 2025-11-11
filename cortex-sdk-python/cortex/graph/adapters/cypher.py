@@ -108,11 +108,11 @@ class CypherGraphAdapter:
 
         async with self.driver.session() as session:
             result = await session.run(
-                f"CREATE (n:{node.label} $props) RETURN elementId(n) as id",
+                f"CREATE (n:{node.label} $props) RETURN id(n) as id",
                 props=node.properties,
             )
             record = await result.single()
-            return record["id"]
+            return str(record["id"])
 
     async def update_node(self, node_id: str, properties: Dict[str, Any]) -> None:
         """
@@ -137,7 +137,7 @@ class CypherGraphAdapter:
             await session.run(
                 f"""
                 MATCH (n)
-                WHERE elementId(n) = $nodeId
+                WHERE id(n) = $nodeId
                 SET {set_clauses}
                 """,
                 nodeId=node_id,
@@ -163,7 +163,7 @@ class CypherGraphAdapter:
             await session.run(
                 """
                 MATCH (n)
-                WHERE elementId(n) = $nodeId
+                WHERE id(n) = $nodeId
                 DETACH DELETE n
                 """,
                 nodeId=node_id,
@@ -200,15 +200,15 @@ class CypherGraphAdapter:
             result = await session.run(
                 f"""
                 MATCH (a), (b)
-                WHERE elementId(a) = $from AND elementId(b) = $to
+                WHERE id(a) = $from AND id(b) = $to
                 CREATE (a)-[r:{edge.type} {props_clause}]->(b)
-                RETURN elementId(r) as id
+                RETURN id(r) as id
                 """,
                 **{"from": edge.from_node, "to": edge.to_node, "props": edge.properties or {}},
             )
 
             record = await result.single()
-            return record["id"] if record else ""
+            return str(record["id"]) if record else ""
 
     async def delete_edge(self, edge_id: str) -> None:
         """
@@ -229,7 +229,7 @@ class CypherGraphAdapter:
             await session.run(
                 """
                 MATCH ()-[r]-()
-                WHERE elementId(r) = $edgeId
+                WHERE id(r) = $edgeId
                 DELETE r
                 """,
                 edgeId=edge_id,
@@ -301,8 +301,8 @@ class CypherGraphAdapter:
         result = await self.query(
             f"""
             MATCH (n:{label})
-            WHERE {where_str}
-            RETURN elementId(n) as id, labels(n) as labels, properties(n) as properties
+            {"WHERE " + where_str if where_str else ""}
+            RETURN id(n) as id, labels(n) as labels, properties(n) as properties
             LIMIT {limit}
             """,
             properties,
@@ -312,7 +312,7 @@ class CypherGraphAdapter:
             GraphNode(
                 label=record["labels"][0] if record["labels"] else label,
                 properties=record["properties"],
-                id=record["id"],
+                id=str(record["id"]),
             )
             for record in result.records
         ]
@@ -345,9 +345,9 @@ class CypherGraphAdapter:
         result = await self.query(
             f"""
             MATCH (start)
-            WHERE elementId(start) = $startId
+            WHERE id(start) = $startId
             MATCH (start){direction}[:{rel_types_str}*1..{config.max_depth}]{direction}(connected)
-            RETURN DISTINCT elementId(connected) as id, labels(connected) as labels, properties(connected) as properties
+            RETURN DISTINCT id(connected) as id, labels(connected) as labels, properties(connected) as properties
             """,
             {"startId": config.start_id},
         )
@@ -356,7 +356,7 @@ class CypherGraphAdapter:
             GraphNode(
                 label=record["labels"][0] if record["labels"] else "",
                 properties=record["properties"],
-                id=record["id"],
+                id=str(record["id"]),
             )
             for record in result.records
         ]
@@ -393,11 +393,11 @@ class CypherGraphAdapter:
         result = await self.query(
             f"""
             MATCH (start), (end)
-            WHERE elementId(start) = $fromId AND elementId(end) = $toId
+            WHERE id(start) = $fromId AND id(end) = $toId
             MATCH path = shortestPath((start)-{rel_filter}-(end))
             RETURN 
-                [node IN nodes(path) | {{id: elementId(node), label: labels(node)[0], properties: properties(node)}}] as nodes,
-                [rel IN relationships(path) | {{id: elementId(rel), type: type(rel), properties: properties(rel)}}] as relationships,
+                [node IN nodes(path) | {{id: id(node), label: labels(node)[0], properties: properties(node)}}] as nodes,
+                [rel IN relationships(path) | {{id: id(rel), type: type(rel), properties: properties(rel)}}] as relationships,
                 length(path) as length
             LIMIT 1
             """,
@@ -410,13 +410,13 @@ class CypherGraphAdapter:
         record = result.records[0]
 
         return GraphPath(
-            nodes=[GraphNode(**n) for n in record["nodes"]],
+            nodes=[GraphNode(**{**n, "id": str(n["id"])}) for n in record["nodes"]],
             relationships=[
                 GraphEdge(
                     type=r["type"],
                     from_node="",  # Not included in result
                     to_node="",  # Not included in result
-                    id=r["id"],
+                    id=str(r["id"]),
                     properties=r.get("properties"),
                 )
                 for r in record["relationships"]
