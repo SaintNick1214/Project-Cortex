@@ -471,7 +471,7 @@ export class UsersAPI {
       try {
         const user = await this.get(userId);
         if (user) {
-          await this.update(userId, updates, options);
+          await this.update(userId, updates.data);
           results.push(userId);
         }
       } catch (e) {

@@ -403,17 +403,55 @@ class UsersAPI:
         )
         plan["immutable"] = immutable
 
-        # Collect mutable records (need to query all namespaces)
-        # This is a simplified version - actual implementation would query known namespaces
+        # Skip mutable collection for now - backend requires namespace parameter
+        # Would need to know all namespaces upfront to query
         plan["mutable"] = []
 
-        # Collect vector memories (need to query all memory spaces)
-        # This is simplified - actual implementation would query all memory spaces
-        plan["vector"] = []
+        # Collect vector memories
+        # Problem: Spaces may not be registered, so we need to find memories differently
+        # Solution: Collect memory space IDs from conversations (those ARE collected)
+        print(f"\n[DEBUG] Collecting memories for user {user_id}")
+        
+        # Get memory space IDs from user's conversations
+        memory_space_ids_to_check = set()
+        for conv in plan["conversations"]:
+            space_id = conv.get("memorySpaceId")
+            if space_id:
+                memory_space_ids_to_check.add(space_id)
+        
+        # Also add any registered spaces
+        try:
+            all_spaces = await self.client.query("memorySpaces:list", filter_none_values({"limit": 10000}))
+            spaces_list = all_spaces if isinstance(all_spaces, list) else all_spaces.get("spaces", [])
+            for space in spaces_list:
+                space_id = space.get("memorySpaceId")
+                if space_id:
+                    memory_space_ids_to_check.add(space_id)
+        except:
+            pass
+        
+        print(f"[DEBUG] Will check {len(memory_space_ids_to_check)} unique memory spaces")
+        
+        # Store space IDs for deletion phase
+        plan["vector"] = list(memory_space_ids_to_check)
 
-        # Collect facts
-        # This is simplified - actual implementation would query all memory spaces
-        plan["facts"] = []
+        # Collect facts (query by userId across all memory spaces)
+        all_facts = []
+        for space in spaces_list:
+            space_id = space.get("memorySpaceId")
+            if space_id:
+                try:
+                    facts = await self.client.query(
+                        "facts:list",
+                        filter_none_values({"memorySpaceId": space_id, "limit": 10000})
+                    )
+                    fact_list = facts if isinstance(facts, list) else facts.get("facts", [])
+                    # Filter for this user
+                    user_facts = [f for f in fact_list if f.get("userId") == user_id or f.get("sourceUserId") == user_id]
+                    all_facts.extend(user_facts)
+                except:
+                    pass  # Space might not have facts
+        plan["facts"] = all_facts
 
         return plan
 
@@ -433,23 +471,82 @@ class UsersAPI:
         conversations_deleted = 0
         messages_deleted = 0
 
-        # Delete facts
-        facts_deleted = len(plan.get("facts", []))
-        if facts_deleted > 0:
-            deleted_layers.append("facts")
-
-        # Delete vector memories
-        vector_deleted = len(plan.get("vector", []))
+        # Delete vector memories using spaces from plan
+        print(f"\n[DEBUG] Deleting memories for user {user_id} from {len(plan.get('vector', []))} spaces")
+        
+        vector_deleted = 0
+        deleted_memory_ids = []
+        
+        # Use the space IDs collected in plan phase
+        for space_id in plan.get("vector", []):
+            try:
+                print(f"[DEBUG] Attempting deleteMany for space: {space_id}")
+                # Use deleteMany to bulk delete user's memories in this space
+                result = await self.client.mutation(
+                    "memories:deleteMany",
+                    filter_none_values({"memorySpaceId": space_id, "userId": user_id})
+                )
+                deleted_count = result.get("deleted", 0)
+                if deleted_count > 0:
+                    vector_deleted += deleted_count
+                    deleted_memory_ids.extend(result.get("memoryIds", []))
+                    print(f"[DEBUG] Deleted {deleted_count} memories from space {space_id}")
+                else:
+                    print(f"[DEBUG] No memories found in space {space_id}")
+            except Exception as e:
+                print(f"[DEBUG] Error deleting from space {space_id}: {e}")
+        
+        print(f"[DEBUG] Total memories deleted: {vector_deleted}")
+        
         if vector_deleted > 0:
             deleted_layers.append("vector")
 
-        # Delete mutable
-        mutable_deleted = len(plan.get("mutable", []))
+        # Delete facts
+        facts_deleted = 0
+        for fact in plan.get("facts", []):
+            try:
+                # Handle both camelCase and snake_case field names
+                memory_space_id = fact.get("memorySpaceId") or fact.get("memory_space_id")
+                fact_id = fact.get("factId") or fact.get("fact_id")
+                
+                await self.client.mutation(
+                    "facts:deleteFact",
+                    filter_none_values({"memorySpaceId": memory_space_id, "factId": fact_id}),
+                )
+                facts_deleted += 1
+            except Exception as error:
+                print(f"Warning: Failed to delete fact {fact.get('factId', fact.get('fact_id', 'unknown'))}: {error}")
+        
+        if facts_deleted > 0:
+            deleted_layers.append("facts")
+
+        # Delete mutable keys
+        mutable_deleted = 0
+        for mutable_key in plan.get("mutable", []):
+            try:
+                await self.client.mutation(
+                    "mutable:deleteKey",
+                    {"namespace": mutable_key["namespace"], "key": mutable_key["key"]},
+                )
+                mutable_deleted += 1
+            except Exception as error:
+                print(f"Warning: Failed to delete mutable key: {error}")
+        
         if mutable_deleted > 0:
             deleted_layers.append("mutable")
 
-        # Delete immutable
-        immutable_deleted = len(plan.get("immutable", []))
+        # Delete immutable records
+        immutable_deleted = 0
+        for record in plan.get("immutable", []):
+            try:
+                await self.client.mutation(
+                    "immutable:purge",
+                    {"type": record["type"], "id": record["id"]},
+                )
+                immutable_deleted += 1
+            except Exception as error:
+                print(f"Warning: Failed to delete immutable record: {error}")
+        
         if immutable_deleted > 0:
             deleted_layers.append("immutable")
 

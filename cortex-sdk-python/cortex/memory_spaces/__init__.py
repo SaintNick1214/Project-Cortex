@@ -14,7 +14,7 @@ from ..types import (
     MemorySpaceStatus,
 )
 from ..errors import CortexError, ErrorCode
-from .._utils import filter_none_values
+from .._utils import filter_none_values, convert_convex_response
 
 
 class MemorySpacesAPI:
@@ -64,13 +64,13 @@ class MemorySpacesAPI:
         """
         result = await self.client.mutation(
             "memorySpaces:register",
-            {
+            filter_none_values({
                 "memorySpaceId": params.memory_space_id,
                 "name": params.name,
                 "type": params.type,
                 "participants": params.participants,
                 "metadata": params.metadata or {},
-            },
+            }),
         )
 
         # Sync to graph if requested
@@ -82,7 +82,7 @@ class MemorySpacesAPI:
             except Exception as error:
                 print(f"Warning: Failed to sync memory space to graph: {error}")
 
-        return MemorySpace(**result)
+        return MemorySpace(**convert_convex_response(result))
 
     async def get(
         self, memory_space_id: str, include_stats: bool = False
@@ -112,7 +112,7 @@ class MemorySpacesAPI:
         if not result:
             return None
 
-        return MemorySpace(**result)
+        return MemorySpace(**convert_convex_response(result))
 
     async def list(
         self,
@@ -149,8 +149,13 @@ class MemorySpacesAPI:
             }),
         )
 
-        result["spaces"] = [MemorySpace(**s) for s in result.get("spaces", [])]
-        return result
+        # Handle list or dict response
+        if isinstance(result, list):
+            spaces = [MemorySpace(**convert_convex_response(s)) for s in result]
+            return {"spaces": spaces}
+        else:
+            result["spaces"] = [MemorySpace(**convert_convex_response(s)) for s in result.get("spaces", [])]
+            return result
 
     async def search(
         self,
@@ -176,10 +181,10 @@ class MemorySpacesAPI:
         """
         result = await self.client.query(
             "memorySpaces:search",
-            {"query": query, "type": type, "status": status, "limit": limit},
+            filter_none_values({"query": query, "type": type, "status": status, "limit": limit}),
         )
 
-        return [MemorySpace(**space) for space in result]
+        return [MemorySpace(**convert_convex_response(space)) for space in result]
 
     async def update(
         self, memory_space_id: str, updates: Dict[str, Any]
@@ -201,10 +206,10 @@ class MemorySpacesAPI:
             ... )
         """
         result = await self.client.mutation(
-            "memorySpaces:update", {"memorySpaceId": memory_space_id, "updates": updates}
+            "memorySpaces:update", filter_none_values({"memorySpaceId": memory_space_id, "updates": updates})
         )
 
-        return MemorySpace(**result)
+        return MemorySpace(**convert_convex_response(result))
 
     async def update_participants(
         self,
@@ -231,10 +236,10 @@ class MemorySpacesAPI:
         """
         result = await self.client.mutation(
             "memorySpaces:updateParticipants",
-            {"memorySpaceId": memory_space_id, "add": add, "remove": remove},
+            filter_none_values({"memorySpaceId": memory_space_id, "add": add, "remove": remove}),
         )
 
-        return MemorySpace(**result)
+        return MemorySpace(**convert_convex_response(result))
 
     async def archive(
         self,
@@ -261,10 +266,10 @@ class MemorySpacesAPI:
         """
         result = await self.client.mutation(
             "memorySpaces:archive",
-            {"memorySpaceId": memory_space_id, "reason": reason, "metadata": metadata},
+            filter_none_values({"memorySpaceId": memory_space_id, "reason": reason, "metadata": metadata}),
         )
 
-        return MemorySpace(**result)
+        return MemorySpace(**convert_convex_response(result))
 
     async def reactivate(self, memory_space_id: str) -> MemorySpace:
         """
@@ -283,13 +288,13 @@ class MemorySpacesAPI:
             "memorySpaces:reactivate", {"memorySpaceId": memory_space_id}
         )
 
-        return MemorySpace(**result)
+        return MemorySpace(**convert_convex_response(result))
 
     async def delete(
         self,
         memory_space_id: str,
-        cascade: bool,
-        reason: str,
+        cascade: bool = True,
+        reason: Optional[str] = None,
         confirm_id: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
@@ -323,13 +328,13 @@ class MemorySpacesAPI:
             raise CortexError(ErrorCode.INVALID_INPUT, "confirm_id must match memory_space_id")
 
         result = await self.client.mutation(
-            "memorySpaces:delete",
-            {
+            "memorySpaces:deleteSpace",
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "cascade": cascade,
                 "reason": reason,
                 "confirmId": confirm_id,
-            },
+            }),
         )
 
         return result
@@ -360,12 +365,39 @@ class MemorySpacesAPI:
         """
         result = await self.client.query(
             "memorySpaces:getStats",
-            {
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
-                "timeWindow": time_window,
-                "includeParticipants": include_participants,
-            },
+                # Note: timeWindow and includeParticipants not supported by backend yet
+            }),
         )
 
-        return MemorySpaceStats(**result)
+        return MemorySpaceStats(**convert_convex_response(result))
+
+    async def count(
+        self,
+        type: Optional[MemorySpaceType] = None,
+        status: Optional[MemorySpaceStatus] = None,
+    ) -> int:
+        """
+        Count memory spaces matching filters.
+        
+        Args:
+            type: Filter by type
+            status: Filter by status
+        
+        Returns:
+            Count of matching memory spaces
+        
+        Example:
+            >>> total = await cortex.memory_spaces.count(type='personal')
+        """
+        result = await self.client.query(
+            "memorySpaces:count",
+            filter_none_values({
+                "type": type,
+                "status": status,
+            }),
+        )
+        
+        return int(result)
 

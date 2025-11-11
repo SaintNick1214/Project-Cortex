@@ -15,6 +15,7 @@ from ..types import (
     A2ABroadcastResult,
 )
 from ..errors import CortexError, ErrorCode, A2ATimeoutError
+from .._utils import filter_none_values
 
 
 class A2AAPI:
@@ -61,7 +62,7 @@ class A2AAPI:
         """
         result = await self.client.mutation(
             "a2a:send",
-            {
+            filter_none_values({
                 "from": params.from_agent,
                 "to": params.to_agent,
                 "message": params.message,
@@ -71,7 +72,7 @@ class A2AAPI:
                 "trackConversation": params.track_conversation,
                 "autoEmbed": params.auto_embed,
                 "metadata": params.metadata,
-            },
+            }),
         )
 
         return A2AMessage(**result)
@@ -110,7 +111,7 @@ class A2AAPI:
         """
         result = await self.client.mutation(
             "a2a:request",
-            {
+            filter_none_values({
                 "from": params.from_agent,
                 "to": params.to_agent,
                 "message": params.message,
@@ -119,7 +120,7 @@ class A2AAPI:
                 "userId": params.user_id,
                 "contextId": params.context_id,
                 "importance": params.importance,
-            },
+            }),
         )
 
         if result.get("timeout"):
@@ -155,7 +156,7 @@ class A2AAPI:
         """
         result = await self.client.mutation(
             "a2a:broadcast",
-            {
+            filter_none_values({
                 "from": params.from_agent,
                 "to": params.to_agents,
                 "message": params.message,
@@ -164,7 +165,7 @@ class A2AAPI:
                 "importance": params.importance,
                 "trackConversation": params.track_conversation,
                 "metadata": params.metadata,
-            },
+            }),
         )
 
         return A2ABroadcastResult(**result)
@@ -206,7 +207,7 @@ class A2AAPI:
         """
         result = await self.client.query(
             "a2a:getConversation",
-            {
+            filter_none_values({
                 "agent1": agent1,
                 "agent2": agent2,
                 "since": since,
@@ -215,7 +216,7 @@ class A2AAPI:
                 "tags": tags,
                 "userId": user_id,
                 "limit": limit,
-            },
+            }),
         )
 
         return result

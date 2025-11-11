@@ -33,10 +33,8 @@ async def test_register_memory_space(cortex_client, test_ids):
         RegisterMemorySpaceParams(
             memory_space_id=memory_space_id,
             name="Test Memory Space",
-            description="Space for testing",
             type="personal",
-            owner_id=test_ids["user_id"],
-            metadata={"environment": "test"},
+            metadata={"environment": "test", "owner": test_ids["user_id"]},
         )
     )
     
@@ -59,18 +57,24 @@ async def test_register_shared_memory_space(cortex_client, test_ids):
     """
     memory_space_id = test_ids["memory_space_id"]
     
+    import time
+    now = int(time.time() * 1000)
     result = await cortex_client.memory_spaces.register(
-        RegisterMemorySpaceParams(
-            memory_space_id=memory_space_id,
-            name="Shared Space",
-            type="shared",
-            participants=["agent-1", "agent-2", "agent-3"],
-            metadata={"mode": "hive"},
+            RegisterMemorySpaceParams(
+                memory_space_id=memory_space_id,
+                name="Shared Space",
+                type="team",
+                participants=[
+                    {"id": "agent-1", "type": "agent", "joinedAt": now},
+                    {"id": "agent-2", "type": "agent", "joinedAt": now},
+                    {"id": "agent-3", "type": "agent", "joinedAt": now},
+                ],
+                metadata={"mode": "hive"},
+            )
         )
-    )
     
     # Validate result
-    assert result.type == "shared"
+    assert result.type == "team"
     assert len(result.participants) >= 3
     
     # Cleanup
@@ -183,7 +187,7 @@ async def test_list_filter_by_type(cortex_client, test_ids):
         RegisterMemorySpaceParams(
             memory_space_id=shared_id,
             name="Shared Space",
-            type="shared",
+                type="team",
         )
     )
     

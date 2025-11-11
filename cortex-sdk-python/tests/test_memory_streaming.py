@@ -7,7 +7,7 @@ Tests the streaming variant of remember() that consumes AsyncIterable streams.
 import pytest
 import asyncio
 from cortex import Cortex, CortexConfig, RememberStreamParams
-from cortex.types import FactRecord
+from cortex.types import FactRecord, RegisterMemorySpaceParams
 
 
 # Helper to create async generator for testing
@@ -59,16 +59,21 @@ class TestMemoryStreaming:
     @pytest.fixture(autouse=True)
     async def setup(self):
         """Set up test environment."""
+        import time
+        import random
         self.convex_url = "http://127.0.0.1:3210"  # Local Convex dev server
         self.cortex = Cortex(CortexConfig(convex_url=self.convex_url))
-        self.test_space_id = "test-streaming-space"
+        # Use unique ID per test to avoid conflicts
+        self.test_space_id = f"test-streaming-{int(time.time() * 1000)}-{random.randint(1000, 9999)}"
         
         # Register memory space
-        await self.cortex.memory_spaces.register({
-            "memorySpaceId": self.test_space_id,
-            "name": "Test Streaming Space",
-            "type": "custom",
-        })
+        await self.cortex.memory_spaces.register(
+            RegisterMemorySpaceParams(
+                memory_space_id=self.test_space_id,
+                name="Test Streaming Space",
+                type="custom",
+            )
+        )
         
         yield
         
@@ -252,9 +257,9 @@ class TestMemoryStreaming:
         assert len(result.memories) == 2
         # Check that metadata was applied
         memory = result.memories[0]
-        assert memory.metadata["importance"] == 80
-        assert "important" in memory.metadata["tags"]
-        assert "weather" in memory.metadata["tags"]
+        assert memory.importance == 80
+        assert "important" in memory.tags
+        assert "weather" in memory.tags
 
     async def test_stream_with_participant_id(self):
         """Test streaming with participant_id for Hive Mode."""
@@ -328,7 +333,8 @@ class TestMemoryStreaming:
         
         # Verify message content
         agent_message = conversation.messages[1]
-        assert agent_message.content == "The weather is sunny today."
+        content = agent_message.get("content") if isinstance(agent_message, dict) else agent_message.content
+        assert content == "The weather is sunny today."
 
         # Verify we can search for the memory
         memories = await self.cortex.memory.search(
@@ -345,15 +351,20 @@ class TestMemoryStreamingEdgeCases:
     @pytest.fixture(autouse=True)
     async def setup(self):
         """Set up test environment."""
+        import time
+        import random
         self.convex_url = "http://127.0.0.1:3210"
         self.cortex = Cortex(CortexConfig(convex_url=self.convex_url))
-        self.test_space_id = "test-streaming-edge"
+        # Use unique ID per test to avoid conflicts
+        self.test_space_id = f"test-streaming-edge-{int(time.time() * 1000)}-{random.randint(1000, 9999)}"
         
-        await self.cortex.memory_spaces.register({
-            "memorySpaceId": self.test_space_id,
-            "name": "Test Streaming Edge Cases",
-            "type": "custom",
-        })
+        await self.cortex.memory_spaces.register(
+            RegisterMemorySpaceParams(
+                memory_space_id=self.test_space_id,
+                name="Test Streaming Edge Cases",
+                type="custom",
+            )
+        )
         
         yield
         

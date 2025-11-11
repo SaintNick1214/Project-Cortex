@@ -1,5 +1,20 @@
 """
 Pytest configuration and fixtures for Cortex SDK tests
+
+Supports dual-deployment testing strategy:
+- LOCAL: Test against local Convex dev server (http://127.0.0.1:3210)
+- MANAGED: Test against managed Convex deployment (cloud)
+- AUTO: Auto-detect and use available deployment(s)
+
+Set via environment variable:
+    export CONVEX_TEST_MODE=local    # Test LOCAL only
+    export CONVEX_TEST_MODE=managed  # Test MANAGED only
+    export CONVEX_TEST_MODE=auto     # Auto-detect (default)
+
+Or use the test runner script:
+    python scripts/run-python-tests.py --mode=local
+    python scripts/run-python-tests.py --mode=managed
+    python scripts/run-python-tests.py --mode=both
 """
 
 import pytest
@@ -15,7 +30,36 @@ from dotenv import load_dotenv
 project_root = Path(__file__).parent.parent.parent
 env_file = project_root / ".env.local"
 if env_file.exists():
-    load_dotenv(env_file)
+    load_dotenv(env_file, override=True)
+
+# Configure CONVEX_URL based on test mode (like TypeScript SDK)
+test_mode = os.getenv("CONVEX_TEST_MODE", "auto")
+has_local_config = bool(os.getenv("LOCAL_CONVEX_URL"))
+has_managed_config = bool(os.getenv("CLOUD_CONVEX_URL"))
+
+if test_mode == "local":
+    if os.getenv("LOCAL_CONVEX_URL"):
+        os.environ["CONVEX_URL"] = os.getenv("LOCAL_CONVEX_URL")
+    print(f"\n🧪 [Python SDK] Testing against LOCAL Convex: {os.getenv('CONVEX_URL')}")
+    print("   Note: Vector search not supported in local mode\n")
+elif test_mode == "managed":
+    if os.getenv("CLOUD_CONVEX_URL"):
+        os.environ["CONVEX_URL"] = os.getenv("CLOUD_CONVEX_URL")
+    print(f"\n🧪 [Python SDK] Testing against MANAGED Convex: {os.getenv('CONVEX_URL')}")
+    print("   Note: Vector search fully supported in managed mode\n")
+elif test_mode == "auto":
+    # Auto-detect which deployment is available
+    if has_local_config and not has_managed_config:
+        os.environ["CONVEX_URL"] = os.getenv("LOCAL_CONVEX_URL")
+        print(f"\n🧪 [Python SDK] Auto-detected LOCAL Convex: {os.getenv('CONVEX_URL')}")
+    elif has_managed_config and not has_local_config:
+        os.environ["CONVEX_URL"] = os.getenv("CLOUD_CONVEX_URL")
+        print(f"\n🧪 [Python SDK] Auto-detected MANAGED Convex: {os.getenv('CONVEX_URL')}")
+    elif has_local_config and has_managed_config:
+        # Both present - default to LOCAL (test runner will handle dual testing)
+        os.environ["CONVEX_URL"] = os.getenv("LOCAL_CONVEX_URL")
+        print(f"\n⚠️  [Python SDK] Both configs detected, defaulting to LOCAL: {os.getenv('CONVEX_URL')}")
+        print("   Use 'python scripts/run-python-tests.py' to run both suites\n")
 
 from cortex import Cortex, CortexConfig
 from tests.helpers import TestCleanup, embeddings_available

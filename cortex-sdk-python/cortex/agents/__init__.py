@@ -69,7 +69,18 @@ class AgentsAPI:
             }),
         )
 
-        return RegisteredAgent(**convert_convex_response(result))
+        # Manually construct to handle field name differences
+        return RegisteredAgent(
+            id=result.get("agentId"),
+            name=result.get("name"),
+            status=result.get("status"),
+            registered_at=result.get("registeredAt"),
+            updated_at=result.get("updatedAt"),
+            metadata=result.get("metadata", {}),
+            config=result.get("config", {}),
+            description=result.get("description"),
+            last_active=result.get("lastActive"),
+        )
 
     async def get(self, agent_id: str) -> Optional[RegisteredAgent]:
         """
@@ -84,12 +95,23 @@ class AgentsAPI:
         Example:
             >>> agent = await cortex.agents.get('support-agent')
         """
-        result = await self.client.query("agents:get", {"agentId": agent_id})
+        result = await self.client.query("agents:get", filter_none_values({"agentId": agent_id}))
 
         if not result:
             return None
 
-        return RegisteredAgent(**convert_convex_response(result))
+        # Manually construct to handle field name differences
+        return RegisteredAgent(
+            id=result.get("agentId"),
+            name=result.get("name"),
+            status=result.get("status"),
+            registered_at=result.get("registeredAt"),
+            updated_at=result.get("updatedAt"),
+            metadata=result.get("metadata", {}),
+            config=result.get("config", {}),
+            description=result.get("description"),
+            last_active=result.get("lastActive"),
+        )
 
     async def search(
         self, filters: Optional[Dict[str, Any]] = None, limit: int = 50
@@ -110,10 +132,24 @@ class AgentsAPI:
             ... )
         """
         result = await self.client.query(
-            "agents:search", {"filters": filters, "limit": limit}
+            "agents:search", filter_none_values({"filters": filters, "limit": limit})
         )
 
-        return [RegisteredAgent(**agent) for agent in result]
+        # Manually construct to handle field name differences
+        return [
+            RegisteredAgent(
+                id=a.get("agentId"),
+                name=a.get("name"),
+                status=a.get("status"),
+                registered_at=a.get("registeredAt"),
+                updated_at=a.get("updatedAt"),
+                metadata=a.get("metadata", {}),
+                config=a.get("config", {}),
+                description=a.get("description"),
+                last_active=a.get("lastActive"),
+            )
+            for a in result
+        ]
 
     async def list(
         self, limit: int = 50, offset: int = 0, sort_by: str = "name"
@@ -133,13 +169,42 @@ class AgentsAPI:
             >>> page1 = await cortex.agents.list(limit=50, offset=0)
         """
         result = await self.client.query(
-            "agents:list", filter_none_values({"limit": limit, "sortBy": sort_by})
-            # Note: offset not supported by backend yet
+            "agents:list", filter_none_values({"limit": limit})
+            # Note: offset and sortBy not supported by backend yet
         )
 
         # Convert list response if needed
         agents_list = result if isinstance(result, list) else result.get("agents", result)
-        return [RegisteredAgent(**convert_convex_response(a)) for a in agents_list]
+        return [
+            RegisteredAgent(
+                id=a.get("agentId"),
+                name=a.get("name"),
+                status=a.get("status"),
+                registered_at=a.get("registeredAt"),
+                updated_at=a.get("updatedAt"),
+                metadata=a.get("metadata", {}),
+                config=a.get("config", {}),
+                description=a.get("description"),
+                last_active=a.get("lastActive"),
+            )
+            for a in agents_list
+        ]
+
+    async def get_stats(self, agent_id: str) -> Dict[str, Any]:
+        """
+        Get agent statistics (memory count, conversation count, etc.).
+        
+        Args:
+            agent_id: Agent ID
+        
+        Returns:
+            Agent statistics
+        
+        Example:
+            >>> stats = await cortex.agents.get_stats('support-agent')
+        """
+        result = await self.client.query("agents:computeStats", filter_none_values({"agentId": agent_id}))
+        return result
 
     async def count(self, filters: Optional[Dict[str, Any]] = None) -> int:
         """
@@ -154,7 +219,7 @@ class AgentsAPI:
         Example:
             >>> total = await cortex.agents.count()
         """
-        result = await self.client.query("agents:count", {"filters": filters})
+        result = await self.client.query("agents:count", filter_none_values({}))
 
         return int(result)
 
@@ -177,11 +242,23 @@ class AgentsAPI:
             ...     {'metadata': {'version': '2.2.0'}}
             ... )
         """
+        # Flatten updates into top-level parameters
         result = await self.client.mutation(
-            "agents:update", {"agentId": agent_id, "updates": updates}
+            "agents:update", filter_none_values({"agentId": agent_id, **updates})
         )
 
-        return RegisteredAgent(**result)
+        # Manually construct to handle field name differences
+        return RegisteredAgent(
+            id=result.get("agentId"),
+            name=result.get("name"),
+            status=result.get("status"),
+            registered_at=result.get("registeredAt"),
+            updated_at=result.get("updatedAt"),
+            metadata=result.get("metadata", {}),
+            config=result.get("config", {}),
+            description=result.get("description"),
+            last_active=result.get("lastActive"),
+        )
 
     async def configure(
         self, agent_id: str, config: Dict[str, Any]
@@ -200,7 +277,7 @@ class AgentsAPI:
             ... )
         """
         await self.client.mutation(
-            "agents:configure", {"agentId": agent_id, "config": config}
+            "agents:configure", filter_none_values({"agentId": agent_id, "config": config})
         )
 
     async def unregister(
@@ -233,7 +310,7 @@ class AgentsAPI:
 
         if not opts.cascade:
             # Simple unregistration - just remove from registry
-            await self.client.mutation("agents:unregister", {"agentId": agent_id})
+            await self.client.mutation("agents:unregister", filter_none_values({"agentId": agent_id}))
 
             return UnregisterAgentResult(
                 agent_id=agent_id,
@@ -323,7 +400,7 @@ class AgentsAPI:
 
         # Delete agent registration
         try:
-            await self.client.mutation("agents:unregister", {"agentId": agent_id})
+            await self.client.mutation("agents:unregister", filter_none_values({"agentId": agent_id}))
             deleted_layers.append("agent-registration")
         except:
             pass  # Agent might not be registered
