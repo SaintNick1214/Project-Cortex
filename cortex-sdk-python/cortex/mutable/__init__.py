@@ -106,8 +106,10 @@ class MutableAPI:
         """
         # Note: This requires server-side updater support in Convex
         # For now, implement as get-then-set with potential race condition
-        current = await self.get(namespace, key)
-        new_value = updater(current)
+        current_record = await self.get(namespace, key)
+        # Extract the value from the record
+        current_value = current_record.get("value") if isinstance(current_record, dict) else current_record.value if current_record else None
+        new_value = updater(current_value)
 
         result = await self.client.mutation(
             "mutable:set",

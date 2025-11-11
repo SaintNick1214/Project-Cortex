@@ -108,7 +108,13 @@ class ImmutableAPI:
         if not result:
             return None
 
-        return ImmutableVersion(**convert_convex_response(result))
+        # Manually construct to handle field name differences
+        return ImmutableVersion(
+            version=result.get("version"),
+            data=result.get("data"),
+            timestamp=result.get("createdAt"),
+            metadata=result.get("metadata"),
+        )
 
     async def get_history(self, type: str, id: str) -> List[ImmutableVersion]:
         """
@@ -128,7 +134,16 @@ class ImmutableAPI:
             "immutable:getHistory", filter_none_values({"type": type, "id": id})
         )
 
-        return [ImmutableVersion(**convert_convex_response(v)) for v in result]
+        # Manually construct to handle field name differences
+        return [
+            ImmutableVersion(
+                version=v.get("version"),
+                data=v.get("data"),
+                timestamp=v.get("createdAt"),
+                metadata=v.get("metadata"),
+            )
+            for v in result
+        ]
 
     async def get_at_timestamp(
         self, type: str, id: str, timestamp: int

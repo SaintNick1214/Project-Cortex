@@ -78,7 +78,7 @@ class ContextsAPI:
                 ),
                 "data": params.data,
                 "status": params.status,
-                "description": params.description,
+                # Note: description not supported by backend - put in data instead
             }),
         )
 
@@ -92,7 +92,25 @@ class ContextsAPI:
             except Exception as error:
                 print(f"Warning: Failed to sync context to graph: {error}")
 
-        return Context(**convert_convex_response(result))
+        # Manually construct to handle field name differences
+        return Context(
+            id=result.get("contextId"),
+            memory_space_id=result.get("memorySpaceId"),
+            purpose=result.get("purpose"),
+            status=result.get("status"),
+            depth=result.get("depth", 0),
+            child_ids=result.get("childIds", []),
+            participants=result.get("participants", []),
+            data=result.get("data", {}),
+            created_at=result.get("createdAt"),
+            updated_at=result.get("updatedAt"),
+            version=result.get("version", 1),
+            root_id=result.get("rootId"),
+            parent_id=result.get("parentId"),
+            user_id=result.get("userId"),
+            conversation_ref=result.get("conversationRef"),
+            completed_at=result.get("completedAt"),
+        )
 
     async def get(
         self,
@@ -119,11 +137,11 @@ class ContextsAPI:
         """
         result = await self.client.query(
             "contexts:get",
-            {
+            filter_none_values({
                 "contextId": context_id,
                 "includeChain": include_chain,
-                "includeConversation": include_conversation,
-            },
+                # Note: includeConversation not supported by backend yet
+            }),
         )
 
         if not result:
@@ -132,7 +150,25 @@ class ContextsAPI:
         if include_chain:
             return ContextWithChain(**convert_convex_response(result))
 
-        return Context(**convert_convex_response(result))
+        # Manually construct to handle field name differences
+        return Context(
+            id=result.get("contextId"),
+            memory_space_id=result.get("memorySpaceId"),
+            purpose=result.get("purpose"),
+            status=result.get("status"),
+            depth=result.get("depth", 0),
+            child_ids=result.get("childIds", []),
+            participants=result.get("participants", []),
+            data=result.get("data", {}),
+            created_at=result.get("createdAt"),
+            updated_at=result.get("updatedAt"),
+            version=result.get("version", 1),
+            root_id=result.get("rootId"),
+            parent_id=result.get("parentId"),
+            user_id=result.get("userId"),
+            conversation_ref=result.get("conversationRef"),
+            completed_at=result.get("completedAt"),
+        )
 
     async def update(
         self,
@@ -157,8 +193,9 @@ class ContextsAPI:
             ...     {'status': 'completed', 'data': {'result': 'success'}}
             ... )
         """
+        # Flatten updates into top-level parameters
         result = await self.client.mutation(
-            "contexts:update", {"contextId": context_id, "updates": updates}
+            "contexts:update", filter_none_values({"contextId": context_id, **updates})
         )
 
         # Sync to graph if requested
@@ -170,7 +207,25 @@ class ContextsAPI:
             except Exception as error:
                 print(f"Warning: Failed to sync context update to graph: {error}")
 
-        return Context(**convert_convex_response(result))
+        # Manually construct to handle field name differences
+        return Context(
+            id=result.get("contextId"),
+            memory_space_id=result.get("memorySpaceId"),
+            purpose=result.get("purpose"),
+            status=result.get("status"),
+            depth=result.get("depth", 0),
+            child_ids=result.get("childIds", []),
+            participants=result.get("participants", []),
+            data=result.get("data", {}),
+            created_at=result.get("createdAt"),
+            updated_at=result.get("updatedAt"),
+            version=result.get("version", 1),
+            root_id=result.get("rootId"),
+            parent_id=result.get("parentId"),
+            user_id=result.get("userId"),
+            conversation_ref=result.get("conversationRef"),
+            completed_at=result.get("completedAt"),
+        )
 
     async def delete(
         self, context_id: str, options: Optional[DeleteContextOptions] = None
@@ -194,12 +249,12 @@ class ContextsAPI:
         opts = options or DeleteContextOptions()
 
         result = await self.client.mutation(
-            "contexts:delete",
-            {
+            "contexts:deleteContext",
+            filter_none_values({
                 "contextId": context_id,
                 "cascadeChildren": opts.cascade_children,
-                "orphanChildren": opts.orphan_children,
-            },
+                # Note: orphanChildren not supported by backend
+            }),
         )
 
         # Delete from graph
@@ -242,19 +297,40 @@ class ContextsAPI:
         """
         result = await self.client.query(
             "contexts:search",
-            {
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "userId": user_id,
                 "status": status,
                 "limit": limit,
-                "includeChain": include_chain,
-            },
+                # Note: includeChain not supported by backend
+            }),
         )
 
         if include_chain:
             return [ContextWithChain(**ctx) for ctx in result]
 
-        return [Context(**ctx) for ctx in result]
+        # Manually construct contexts
+        return [
+            Context(
+                id=ctx.get("contextId"),
+                memory_space_id=ctx.get("memorySpaceId"),
+                purpose=ctx.get("purpose"),
+                status=ctx.get("status"),
+                depth=ctx.get("depth", 0),
+                child_ids=ctx.get("childIds", []),
+                participants=ctx.get("participants", []),
+                data=ctx.get("data", {}),
+                created_at=ctx.get("createdAt"),
+                updated_at=ctx.get("updatedAt"),
+                version=ctx.get("version", 1),
+                root_id=ctx.get("rootId"),
+                parent_id=ctx.get("parentId"),
+                user_id=ctx.get("userId"),
+                conversation_ref=ctx.get("conversationRef"),
+                completed_at=ctx.get("completedAt"),
+            )
+            for ctx in result
+        ]
 
     async def list(
         self,
@@ -288,8 +364,41 @@ class ContextsAPI:
             }),
         )
 
-        result["contexts"] = [Context(**ctx) for ctx in result.get("contexts", [])]
-        return result
+        # Handle list or dict response
+        if isinstance(result, list):
+            contexts_list = result
+        else:
+            contexts_list = result.get("contexts", [])
+        
+        # Manually construct contexts
+        contexts = [
+            Context(
+                id=ctx.get("contextId"),
+                memory_space_id=ctx.get("memorySpaceId"),
+                purpose=ctx.get("purpose"),
+                status=ctx.get("status"),
+                depth=ctx.get("depth", 0),
+                child_ids=ctx.get("childIds", []),
+                participants=ctx.get("participants", []),
+                data=ctx.get("data", {}),
+                created_at=ctx.get("createdAt"),
+                updated_at=ctx.get("updatedAt"),
+                version=ctx.get("version", 1),
+                root_id=ctx.get("rootId"),
+                parent_id=ctx.get("parentId"),
+                user_id=ctx.get("userId"),
+                conversation_ref=ctx.get("conversationRef"),
+                completed_at=ctx.get("completedAt"),
+            )
+            for ctx in contexts_list
+        ]
+        
+        # Return in expected format
+        if isinstance(result, list):
+            return {"contexts": contexts}
+        else:
+            result["contexts"] = contexts
+            return result
 
     async def count(
         self,
@@ -313,11 +422,11 @@ class ContextsAPI:
         """
         result = await self.client.query(
             "contexts:count",
-            {
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "userId": user_id,
                 "status": status,
-            },
+            }),
         )
 
         return int(result)
@@ -335,7 +444,7 @@ class ContextsAPI:
         Example:
             >>> chain = await cortex.contexts.get_chain('ctx-child')
         """
-        result = await self.client.query("contexts:getChain", {"contextId": context_id})
+        result = await self.client.query("contexts:getChain", filter_none_values({"contextId": context_id}))
 
         return result
 
@@ -352,9 +461,27 @@ class ContextsAPI:
         Example:
             >>> root = await cortex.contexts.get_root('ctx-deeply-nested-child')
         """
-        result = await self.client.query("contexts:getRoot", {"contextId": context_id})
+        result = await self.client.query("contexts:getRoot", filter_none_values({"contextId": context_id}))
 
-        return Context(**convert_convex_response(result))
+        # Manually construct to handle field name differences
+        return Context(
+            id=result.get("contextId"),
+            memory_space_id=result.get("memorySpaceId"),
+            purpose=result.get("purpose"),
+            status=result.get("status"),
+            depth=result.get("depth", 0),
+            child_ids=result.get("childIds", []),
+            participants=result.get("participants", []),
+            data=result.get("data", {}),
+            created_at=result.get("createdAt"),
+            updated_at=result.get("updatedAt"),
+            version=result.get("version", 1),
+            root_id=result.get("rootId"),
+            parent_id=result.get("parentId"),
+            user_id=result.get("userId"),
+            conversation_ref=result.get("conversationRef"),
+            completed_at=result.get("completedAt"),
+        )
 
     async def get_children(
         self,
@@ -378,10 +505,31 @@ class ContextsAPI:
         """
         result = await self.client.query(
             "contexts:getChildren",
-            {"contextId": context_id, "status": status, "recursive": recursive},
+            filter_none_values({"contextId": context_id, "status": status, "recursive": recursive}),
         )
 
-        return [Context(**ctx) for ctx in result]
+        # Manually construct contexts
+        return [
+            Context(
+                id=ctx.get("contextId"),
+                memory_space_id=ctx.get("memorySpaceId"),
+                purpose=ctx.get("purpose"),
+                status=ctx.get("status"),
+                depth=ctx.get("depth", 0),
+                child_ids=ctx.get("childIds", []),
+                participants=ctx.get("participants", []),
+                data=ctx.get("data", {}),
+                created_at=ctx.get("createdAt"),
+                updated_at=ctx.get("updatedAt"),
+                version=ctx.get("version", 1),
+                root_id=ctx.get("rootId"),
+                parent_id=ctx.get("parentId"),
+                user_id=ctx.get("userId"),
+                conversation_ref=ctx.get("conversationRef"),
+                completed_at=ctx.get("completedAt"),
+            )
+            for ctx in result
+        ]
 
     async def find_orphaned(self) -> List[Context]:
         """
@@ -395,7 +543,28 @@ class ContextsAPI:
         """
         result = await self.client.query("contexts:findOrphaned", {})
 
-        return [Context(**ctx) for ctx in result]
+        # Manually construct contexts
+        return [
+            Context(
+                id=ctx.get("contextId"),
+                memory_space_id=ctx.get("memorySpaceId"),
+                purpose=ctx.get("purpose"),
+                status=ctx.get("status"),
+                depth=ctx.get("depth", 0),
+                child_ids=ctx.get("childIds", []),
+                participants=ctx.get("participants", []),
+                data=ctx.get("data", {}),
+                created_at=ctx.get("createdAt"),
+                updated_at=ctx.get("updatedAt"),
+                version=ctx.get("version", 1),
+                root_id=ctx.get("rootId"),
+                parent_id=ctx.get("parentId"),
+                user_id=ctx.get("userId"),
+                conversation_ref=ctx.get("conversationRef"),
+                completed_at=ctx.get("completedAt"),
+            )
+            for ctx in result
+        ]
 
     async def add_participant(self, context_id: str, participant_id: str) -> Context:
         """
@@ -416,7 +585,25 @@ class ContextsAPI:
             {"contextId": context_id, "participantId": participant_id},
         )
 
-        return Context(**convert_convex_response(result))
+        # Manually construct to handle field name differences
+        return Context(
+            id=result.get("contextId"),
+            memory_space_id=result.get("memorySpaceId"),
+            purpose=result.get("purpose"),
+            status=result.get("status"),
+            depth=result.get("depth", 0),
+            child_ids=result.get("childIds", []),
+            participants=result.get("participants", []),
+            data=result.get("data", {}),
+            created_at=result.get("createdAt"),
+            updated_at=result.get("updatedAt"),
+            version=result.get("version", 1),
+            root_id=result.get("rootId"),
+            parent_id=result.get("parentId"),
+            user_id=result.get("userId"),
+            conversation_ref=result.get("conversationRef"),
+            completed_at=result.get("completedAt"),
+        )
 
     async def remove_participant(self, context_id: str, participant_id: str) -> Context:
         """
@@ -437,7 +624,25 @@ class ContextsAPI:
             {"contextId": context_id, "participantId": participant_id},
         )
 
-        return Context(**convert_convex_response(result))
+        # Manually construct to handle field name differences
+        return Context(
+            id=result.get("contextId"),
+            memory_space_id=result.get("memorySpaceId"),
+            purpose=result.get("purpose"),
+            status=result.get("status"),
+            depth=result.get("depth", 0),
+            child_ids=result.get("childIds", []),
+            participants=result.get("participants", []),
+            data=result.get("data", {}),
+            created_at=result.get("createdAt"),
+            updated_at=result.get("updatedAt"),
+            version=result.get("version", 1),
+            root_id=result.get("rootId"),
+            parent_id=result.get("parentId"),
+            user_id=result.get("userId"),
+            conversation_ref=result.get("conversationRef"),
+            completed_at=result.get("completedAt"),
+        )
 
     async def get_by_conversation(self, conversation_id: str) -> List[Context]:
         """
@@ -453,10 +658,31 @@ class ContextsAPI:
             >>> contexts = await cortex.contexts.get_by_conversation('conv-456')
         """
         result = await self.client.query(
-            "contexts:getByConversation", {"conversationId": conversation_id}
+            "contexts:getByConversation", filter_none_values({"conversationId": conversation_id})
         )
 
-        return [Context(**ctx) for ctx in result]
+        # Manually construct contexts
+        return [
+            Context(
+                id=ctx.get("contextId"),
+                memory_space_id=ctx.get("memorySpaceId"),
+                purpose=ctx.get("purpose"),
+                status=ctx.get("status"),
+                depth=ctx.get("depth", 0),
+                child_ids=ctx.get("childIds", []),
+                participants=ctx.get("participants", []),
+                data=ctx.get("data", {}),
+                created_at=ctx.get("createdAt"),
+                updated_at=ctx.get("updatedAt"),
+                version=ctx.get("version", 1),
+                root_id=ctx.get("rootId"),
+                parent_id=ctx.get("parentId"),
+                user_id=ctx.get("userId"),
+                conversation_ref=ctx.get("conversationRef"),
+                completed_at=ctx.get("completedAt"),
+            )
+            for ctx in result
+        ]
 
     async def update_many(
         self, filters: Dict[str, Any], updates: Dict[str, Any], dry_run: bool = False
@@ -480,7 +706,7 @@ class ContextsAPI:
         """
         result = await self.client.mutation(
             "contexts:updateMany",
-            {"filters": filters, "updates": updates, "dryRun": dry_run},
+            filter_none_values({"filters": filters, "updates": updates, "dryRun": dry_run}),
         )
 
         return result
@@ -510,11 +736,11 @@ class ContextsAPI:
         """
         result = await self.client.mutation(
             "contexts:deleteMany",
-            {
+            filter_none_values({
                 "filters": filters,
                 "cascadeChildren": cascade_children,
                 "dryRun": dry_run,
-            },
+            }),
         )
 
         return result
@@ -577,7 +803,7 @@ class ContextsAPI:
             >>> v1 = await cortex.contexts.get_version('ctx-abc123', 1)
         """
         result = await self.client.query(
-            "contexts:getVersion", {"contextId": context_id, "version": version}
+            "contexts:getVersion", filter_none_values({"contextId": context_id, "version": version})
         )
 
         return result
@@ -596,7 +822,7 @@ class ContextsAPI:
             >>> history = await cortex.contexts.get_history('ctx-abc123')
         """
         result = await self.client.query(
-            "contexts:getHistory", {"contextId": context_id}
+            "contexts:getHistory", filter_none_values({"contextId": context_id})
         )
 
         return result
@@ -621,7 +847,7 @@ class ContextsAPI:
         """
         result = await self.client.query(
             "contexts:getAtTimestamp",
-            {"contextId": context_id, "timestamp": timestamp},
+            filter_none_values({"contextId": context_id, "timestamp": timestamp}),
         )
 
         return result

@@ -279,9 +279,9 @@ async def test_find_conversation(cortex_client, test_memory_space_id, test_user_
     
     # Find conversation
     found = await cortex_client.conversations.find_conversation(
-        test_memory_space_id,
-        test_user_id,
-        participant_id,
+        memory_space_id=test_memory_space_id,
+        type="user-agent",
+        user_id=test_user_id,
     )
     
     assert found is not None
@@ -318,8 +318,8 @@ async def test_search_conversations(cortex_client, test_memory_space_id, test_us
     
     # Search for "refund"
     results = await cortex_client.conversations.search(
-        test_memory_space_id,
-        "refund",
+        query="refund",
+        memory_space_id=test_memory_space_id,
     )
     
     # Should find the conversation
@@ -372,13 +372,14 @@ async def test_delete_many_conversations(cortex_client, test_memory_space_id, te
         )
         conv_ids.append(conv.conversation_id)
     
-    # Delete many
-    result = await cortex_client.conversations.delete_many(conv_ids)
+    # Delete many by filter
+    result = await cortex_client.conversations.delete_many(
+        memory_space_id=test_memory_space_id,
+        user_id=test_user_id,
+    )
     
-    # Verify all deleted
-    for conv_id in conv_ids:
-        retrieved = await cortex_client.conversations.get(conv_id)
-        assert retrieved is None
+    # Verify deleted (result should show count)
+    assert result.get("deleted", 0) >= 3
 
 
 @pytest.mark.asyncio

@@ -27,10 +27,13 @@ async def test_store_creates_version_1(cortex_client):
     
     Port of: immutable.test.ts - line 83
     """
+    import time
+    unique_id = f"refund-policy-test-{int(time.time() * 1000)}"
+    
     result = await cortex_client.immutable.store(
         ImmutableEntry(
             type="test-kb-article",
-            id="refund-policy-test",
+            id=unique_id,
             data={
                 "title": "Refund Policy",
                 "content": "Refunds available within 30 days",
@@ -44,13 +47,13 @@ async def test_store_creates_version_1(cortex_client):
     
     # Validate result
     assert result.type == "test-kb-article"
-    assert result.id == "refund-policy-test"
+    assert result.id == unique_id
     assert result.version == 1
     assert result.data["title"] == "Refund Policy"
     assert len(result.previous_versions) == 0
     
     # Cleanup
-    await cortex_client.immutable.purge("test-kb-article", "refund-policy-test")
+    await cortex_client.immutable.purge("test-kb-article", unique_id)
 
 
 @pytest.mark.asyncio
@@ -60,11 +63,14 @@ async def test_store_creates_version_2_on_update(cortex_client):
     
     Port of: immutable.test.ts - versioning tests
     """
+    import time
+    unique_id = f"test-doc-{int(time.time() * 1000)}"
+    
     # Create version 1
     v1 = await cortex_client.immutable.store(
         ImmutableEntry(
             type="test-article",
-            id="test-doc",
+            id=unique_id,
             data={"content": "Version 1"},
         )
     )
@@ -75,17 +81,19 @@ async def test_store_creates_version_2_on_update(cortex_client):
     v2 = await cortex_client.immutable.store(
         ImmutableEntry(
             type="test-article",
-            id="test-doc",
+            id=unique_id,
             data={"content": "Version 2"},
         )
     )
     
     assert v2.version == 2
     assert v2.data["content"] == "Version 2"
-    assert 1 in v2.previous_versions
+    # previous_versions is list of version objects with {version, data, timestamp}
+    version_numbers = [v.get("version") if isinstance(v, dict) else v.version for v in v2.previous_versions]
+    assert 1 in version_numbers
     
     # Cleanup
-    await cortex_client.immutable.purge("test-article", "test-doc")
+    await cortex_client.immutable.purge("test-article", unique_id)
 
 
 # ============================================================================
@@ -352,9 +360,10 @@ async def test_search_immutable(cortex_client):
     results = await cortex_client.immutable.search("Python")
     
     # Should find the Python article
+    # Backend returns {entry, score, highlights} format
     assert len(results) > 0
     found_python = any(
-        "Python" in str((r.get("data") if isinstance(r, dict) else r.data))
+        "Python" in str(r.get("entry", {}).get("data", {}))
         for r in results
     )
     assert found_python

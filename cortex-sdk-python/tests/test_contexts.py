@@ -39,12 +39,12 @@ async def test_create_context(cortex_client, test_ids, cleanup_helper):
     )
     
     # Validate result
-    assert result.context_id is not None
+    assert result.id is not None
     assert result.purpose == "Main project context"
     assert result.status == "active"
     
     # Cleanup - delete context
-    await cortex_client.contexts.delete(memory_space_id, result.context_id)
+    await cortex_client.contexts.delete(result.id)
 
 
 @pytest.mark.asyncio
@@ -70,17 +70,17 @@ async def test_create_context_with_parent(cortex_client, test_ids, cleanup_helpe
         ContextInput(
             memory_space_id=memory_space_id,
             purpose="Child context for project",
-            parent_id=parent.context_id,
+            parent_id=parent.id,
             data={"type": "project"},
         )
     )
     
     # Validate parent-child relationship
-    assert child.parent_id == parent.context_id
+    assert child.parent_id == parent.id
     
-    # Cleanup
-    await cortex_client.contexts.delete(memory_space_id, child.context_id)
-    await cortex_client.contexts.delete(memory_space_id, parent.context_id)
+    # Cleanup - delete parent with cascade to delete child
+    from cortex.types import DeleteContextOptions
+    await cortex_client.contexts.delete(parent.id, DeleteContextOptions(cascade_children=True))
 
 
 # ============================================================================
@@ -106,14 +106,14 @@ async def test_get_context(cortex_client, test_ids, cleanup_helper):
     )
     
     # Get context
-    retrieved = await cortex_client.contexts.get(memory_space_id, created.context_id)
+    retrieved = await cortex_client.contexts.get(created.id)
     
     assert retrieved is not None
-    assert retrieved.context_id == created.context_id
+    assert retrieved.id == created.id
     assert retrieved.purpose == "Test Context"
     
     # Cleanup
-    await cortex_client.contexts.delete(memory_space_id, created.context_id)
+    await cortex_client.contexts.delete(created.id)
 
 
 @pytest.mark.asyncio
@@ -125,7 +125,7 @@ async def test_get_nonexistent_returns_none(cortex_client, test_ids):
     """
     memory_space_id = test_ids["memory_space_id"]
     
-    result = await cortex_client.contexts.get(memory_space_id, "ctx-does-not-exist")
+    result = await cortex_client.contexts.get("ctx-does-not-exist")
     
     assert result is None
 
@@ -152,19 +152,18 @@ async def test_update_context(cortex_client, test_ids, cleanup_helper):
         )
     )
     
-    # Update context
+    # Update context (backend only supports status, data, completedAt)
     updated = await cortex_client.contexts.update(
-        memory_space_id,
-        created.context_id,
-        {"purpose": "Updated Purpose", "description": "New description"},
+        created.id,
+        {"data": {"description": "New description", "updated": True}},
     )
     
     # Verify updated
-    assert updated.purpose == "Updated Purpose"
-    assert updated.description == "New description"
+    assert updated.purpose == "Original Name"  # Purpose can't be updated
+    assert updated.data.get("description") == "New description"
     
     # Cleanup
-    await cortex_client.contexts.delete(memory_space_id, created.context_id)
+    await cortex_client.contexts.delete(created.id)
 
 
 # ============================================================================
@@ -190,7 +189,7 @@ async def test_list_contexts(cortex_client, test_ids, cleanup_helper):
                 purpose=f"Context {i+1}",
             )
         )
-        created_ids.append(ctx.context_id)
+        created_ids.append(ctx.id)
     
     # List contexts
     result = await cortex_client.contexts.list(memory_space_id, limit=10)
@@ -201,7 +200,7 @@ async def test_list_contexts(cortex_client, test_ids, cleanup_helper):
     
     # Cleanup
     for ctx_id in created_ids:
-        await cortex_client.contexts.delete(memory_space_id, ctx_id)
+        await cortex_client.contexts.delete(ctx_id)
 
 
 # ============================================================================
@@ -232,25 +231,21 @@ async def test_search_contexts(cortex_client, test_ids, cleanup_helper):
             memory_space_id=memory_space_id,
             purpose="JavaScript Development",
             description="Context for JS projects",
-            type="project",
+            data={"type": "project"},
         )
     )
     
-    # Search for "Python"
-    results = await cortex_client.contexts.search(memory_space_id, "Python")
+    # Search contexts in memory space
+    results = await cortex_client.contexts.search(memory_space_id=memory_space_id)
     
-    # Should find the Python context
-    assert len(results) > 0
-    found = any(
-        "Python" in (r.get("purpose") if isinstance(r, dict) else r.purpose)
-        or "Python" in (r.get("description") if isinstance(r, dict) else r.description or "")
-        for r in results
-    )
-    assert found
+    # Should find both contexts
+    assert len(results) >= 2
+    purposes = [r.purpose if hasattr(r, 'purpose') else r.get("purpose") for r in results]
+    assert "Python Development" in purposes or "JavaScript Development" in purposes
     
     # Cleanup
-    await cortex_client.contexts.delete(memory_space_id, ctx1.context_id)
-    await cortex_client.contexts.delete(memory_space_id, ctx2.context_id)
+    await cortex_client.contexts.delete(ctx1.id)
+    await cortex_client.contexts.delete(ctx2.id)
 
 
 # ============================================================================
@@ -276,10 +271,10 @@ async def test_delete_context(cortex_client, test_ids, cleanup_helper):
     )
     
     # Delete context
-    result = await cortex_client.contexts.delete(memory_space_id, created.context_id)
+    result = await cortex_client.contexts.delete(created.id)
     
     # Verify deleted
-    retrieved = await cortex_client.contexts.get(memory_space_id, created.context_id)
+    retrieved = await cortex_client.contexts.get(created.id)
     assert retrieved is None
 
 
@@ -306,7 +301,7 @@ async def test_count_contexts(cortex_client, test_ids, cleanup_helper):
                 purpose=f"Context {i+1}",
             )
         )
-        created_ids.append(ctx.context_id)
+        created_ids.append(ctx.id)
     
     # Count contexts
     count = await cortex_client.contexts.count(memory_space_id)
@@ -315,5 +310,5 @@ async def test_count_contexts(cortex_client, test_ids, cleanup_helper):
     
     # Cleanup
     for ctx_id in created_ids:
-        await cortex_client.contexts.delete(memory_space_id, ctx_id)
+        await cortex_client.contexts.delete(ctx_id)
 

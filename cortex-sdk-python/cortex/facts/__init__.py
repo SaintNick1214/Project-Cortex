@@ -203,14 +203,14 @@ class FactsAPI:
         """
         result = await self.client.query(
             "facts:search",
-            {
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "query": query,
                 "factType": fact_type,
                 "minConfidence": min_confidence,
                 "tags": tags,
                 "limit": limit,
-            },
+            }),
         )
 
         return [FactRecord(**convert_convex_response(fact)) for fact in result]
@@ -242,11 +242,11 @@ class FactsAPI:
         """
         result = await self.client.mutation(
             "facts:update",
-            {
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "factId": fact_id,
-                "updates": updates,
-            },
+                **updates,  # Flatten updates into top level
+            }),
         )
 
         # Sync to graph if requested
@@ -281,7 +281,7 @@ class FactsAPI:
             >>> await cortex.facts.delete('agent-1', 'fact-123')
         """
         result = await self.client.mutation(
-            "facts:delete", {"memorySpaceId": memory_space_id, "factId": fact_id}
+            "facts:deleteFact", {"memorySpaceId": memory_space_id, "factId": fact_id}
         )
 
         # Delete from graph
@@ -320,11 +320,11 @@ class FactsAPI:
         """
         result = await self.client.query(
             "facts:count",
-            {
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "factType": fact_type,
                 "includeSuperseded": include_superseded,
-            },
+            }),
         )
 
         return int(result)
