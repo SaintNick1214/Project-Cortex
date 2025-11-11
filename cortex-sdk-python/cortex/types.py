@@ -426,6 +426,7 @@ class Context:
     description: Optional[str] = None
     completed_at: Optional[int] = None
     previous_versions: Optional[List[ContextVersion]] = None
+    granted_access: Optional[List[Dict[str, Any]]] = None
 
 
 @dataclass

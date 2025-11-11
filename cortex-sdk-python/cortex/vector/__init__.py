@@ -78,27 +78,27 @@ class VectorAPI:
                 "userId": input.user_id,
                 "conversationRef": (
                     {
-                        "conversationId": input.conversation_ref.conversation_id,
-                        "messageIds": input.conversation_ref.message_ids,
+                        "conversationId": input.conversation_ref.get("conversationId") if isinstance(input.conversation_ref, dict) else input.conversation_ref.conversation_id,
+                        "messageIds": (input.conversation_ref.get("messageIds") if isinstance(input.conversation_ref, dict) else input.conversation_ref.message_ids) or [],
                     }
                     if input.conversation_ref
                     else None
                 ),
                 "immutableRef": (
                     {
-                        "type": input.immutable_ref.type,
-                        "id": input.immutable_ref.id,
-                        "version": input.immutable_ref.version,
+                        "type": input.immutable_ref.get("type") if isinstance(input.immutable_ref, dict) else input.immutable_ref.type,
+                        "id": input.immutable_ref.get("id") if isinstance(input.immutable_ref, dict) else input.immutable_ref.id,
+                        "version": input.immutable_ref.get("version") if isinstance(input.immutable_ref, dict) else input.immutable_ref.version,
                     }
                     if input.immutable_ref
                     else None
                 ),
                 "mutableRef": (
                     {
-                        "namespace": input.mutable_ref.namespace,
-                        "key": input.mutable_ref.key,
-                        "snapshotValue": input.mutable_ref.snapshot_value,
-                        "snapshotAt": input.mutable_ref.snapshot_at,
+                        "namespace": input.mutable_ref.get("namespace") if isinstance(input.mutable_ref, dict) else input.mutable_ref.namespace,
+                        "key": input.mutable_ref.get("key") if isinstance(input.mutable_ref, dict) else input.mutable_ref.key,
+                        "snapshotValue": input.mutable_ref.get("snapshotValue") if isinstance(input.mutable_ref, dict) else input.mutable_ref.snapshot_value,
+                        "snapshotAt": input.mutable_ref.get("snapshotAt") if isinstance(input.mutable_ref, dict) else input.mutable_ref.snapshot_at,
                     }
                     if input.mutable_ref
                     else None

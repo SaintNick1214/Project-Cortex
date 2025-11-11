@@ -76,9 +76,9 @@ class FactsAPI:
                 "sourceType": params.source_type,
                 "sourceRef": (
                     {
-                        "conversationId": params.source_ref.conversation_id,
-                        "messageIds": params.source_ref.message_ids,
-                        "memoryId": params.source_ref.memory_id,
+                        "conversationId": params.source_ref.get("conversationId") if isinstance(params.source_ref, dict) else params.source_ref.conversation_id,
+                        "messageIds": (params.source_ref.get("messageIds") if isinstance(params.source_ref, dict) else params.source_ref.message_ids) or [],
+                        "memoryId": params.source_ref.get("memoryId") if isinstance(params.source_ref, dict) else params.source_ref.memory_id,
                     }
                     if params.source_ref
                     else None
@@ -353,11 +353,11 @@ class FactsAPI:
         """
         result = await self.client.query(
             "facts:queryBySubject",
-            {
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "subject": subject,
                 "factType": fact_type,
-            },
+            }),
         )
 
         return [FactRecord(**convert_convex_response(fact)) for fact in result]

@@ -70,8 +70,8 @@ class ContextsAPI:
                 "userId": params.user_id,
                 "conversationRef": (
                     {
-                        "conversationId": params.conversation_ref.conversation_id,
-                        "messageIds": params.conversation_ref.message_ids,
+                        "conversationId": params.conversation_ref.get("conversationId") if isinstance(params.conversation_ref, dict) else params.conversation_ref.conversation_id,
+                        "messageIds": params.conversation_ref.get("messageIds") if isinstance(params.conversation_ref, dict) else params.conversation_ref.message_ids,
                     }
                     if params.conversation_ref
                     else None
@@ -110,6 +110,7 @@ class ContextsAPI:
             user_id=result.get("userId"),
             conversation_ref=result.get("conversationRef"),
             completed_at=result.get("completedAt"),
+            granted_access=result.get("grantedAccess"),
         )
 
     async def get(
@@ -168,6 +169,7 @@ class ContextsAPI:
             user_id=result.get("userId"),
             conversation_ref=result.get("conversationRef"),
             completed_at=result.get("completedAt"),
+            granted_access=result.get("grantedAccess"),
         )
 
     async def update(
@@ -225,6 +227,7 @@ class ContextsAPI:
             user_id=result.get("userId"),
             conversation_ref=result.get("conversationRef"),
             completed_at=result.get("completedAt"),
+            granted_access=result.get("grantedAccess"),
         )
 
     async def delete(
@@ -328,6 +331,7 @@ class ContextsAPI:
                 user_id=ctx.get("userId"),
                 conversation_ref=ctx.get("conversationRef"),
                 completed_at=ctx.get("completedAt"),
+                granted_access=ctx.get("grantedAccess"),
             )
             for ctx in result
         ]
@@ -389,6 +393,7 @@ class ContextsAPI:
                 user_id=ctx.get("userId"),
                 conversation_ref=ctx.get("conversationRef"),
                 completed_at=ctx.get("completedAt"),
+                granted_access=ctx.get("grantedAccess"),
             )
             for ctx in contexts_list
         ]
@@ -448,6 +453,57 @@ class ContextsAPI:
 
         return result
 
+    async def grant_access(
+        self, context_id: str, target_memory_space_id: str, scope: str = "read-only"
+    ) -> Context:
+        """
+        Grant access to a context from another memory space (Collaboration Mode).
+        
+        Args:
+            context_id: Context ID
+            target_memory_space_id: Memory space to grant access to
+            scope: Access scope ('read-only', 'collaborate', 'full-access')
+        
+        Returns:
+            Updated context with granted access
+        
+        Example:
+            >>> await cortex.contexts.grant_access(
+            ...     'ctx-abc123',
+            ...     'partner-space',
+            ...     'collaborate'
+            ... )
+        """
+        result = await self.client.mutation(
+            "contexts:grantAccess",
+            filter_none_values({
+                "contextId": context_id,
+                "targetMemorySpaceId": target_memory_space_id,
+                "scope": scope,
+            }),
+        )
+        
+        # Manually construct to handle field name differences
+        return Context(
+            id=result.get("contextId"),
+            memory_space_id=result.get("memorySpaceId"),
+            purpose=result.get("purpose"),
+            status=result.get("status"),
+            depth=result.get("depth", 0),
+            child_ids=result.get("childIds", []),
+            participants=result.get("participants", []),
+            data=result.get("data", {}),
+            created_at=result.get("createdAt"),
+            updated_at=result.get("updatedAt"),
+            version=result.get("version", 1),
+            root_id=result.get("rootId"),
+            parent_id=result.get("parentId"),
+            user_id=result.get("userId"),
+            conversation_ref=result.get("conversationRef"),
+            completed_at=result.get("completedAt"),
+            granted_access=result.get("grantedAccess"),
+        )
+
     async def get_root(self, context_id: str) -> Context:
         """
         Get the root context of a chain.
@@ -481,6 +537,7 @@ class ContextsAPI:
             user_id=result.get("userId"),
             conversation_ref=result.get("conversationRef"),
             completed_at=result.get("completedAt"),
+            granted_access=result.get("grantedAccess"),
         )
 
     async def get_children(
@@ -527,6 +584,7 @@ class ContextsAPI:
                 user_id=ctx.get("userId"),
                 conversation_ref=ctx.get("conversationRef"),
                 completed_at=ctx.get("completedAt"),
+                granted_access=ctx.get("grantedAccess"),
             )
             for ctx in result
         ]
@@ -562,6 +620,7 @@ class ContextsAPI:
                 user_id=ctx.get("userId"),
                 conversation_ref=ctx.get("conversationRef"),
                 completed_at=ctx.get("completedAt"),
+                granted_access=ctx.get("grantedAccess"),
             )
             for ctx in result
         ]
@@ -603,6 +662,7 @@ class ContextsAPI:
             user_id=result.get("userId"),
             conversation_ref=result.get("conversationRef"),
             completed_at=result.get("completedAt"),
+            granted_access=result.get("grantedAccess"),
         )
 
     async def remove_participant(self, context_id: str, participant_id: str) -> Context:
@@ -642,6 +702,7 @@ class ContextsAPI:
             user_id=result.get("userId"),
             conversation_ref=result.get("conversationRef"),
             completed_at=result.get("completedAt"),
+            granted_access=result.get("grantedAccess"),
         )
 
     async def get_by_conversation(self, conversation_id: str) -> List[Context]:
@@ -680,6 +741,7 @@ class ContextsAPI:
                 user_id=ctx.get("userId"),
                 conversation_ref=ctx.get("conversationRef"),
                 completed_at=ctx.get("completedAt"),
+                granted_access=ctx.get("grantedAccess"),
             )
             for ctx in result
         ]
