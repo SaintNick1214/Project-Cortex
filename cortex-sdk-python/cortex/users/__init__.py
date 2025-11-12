@@ -419,6 +419,7 @@ class UsersAPI:
                 memory_space_ids_to_check.add(space_id)
         
         # Also add any registered spaces
+        spaces_list = []
         try:
             all_spaces = await self.client.query("memorySpaces:list", filter_none_values({"limit": 10000}))
             spaces_list = all_spaces if isinstance(all_spaces, list) else all_spaces.get("spaces", [])

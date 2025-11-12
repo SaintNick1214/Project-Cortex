@@ -35,7 +35,7 @@ describe("Facts API - Comprehensive Filter Coverage", () => {
     // Cleanup test facts (best-effort - ignore errors)
     try {
       await cortex.memorySpaces.delete(TEST_MEMSPACE_ID, { cascade: true });
-    } catch (e) {
+    } catch (_e) {
       // Ignore cleanup errors
     }
   });
@@ -320,7 +320,7 @@ describe("Facts API - Comprehensive Filter Coverage", () => {
       const spaceId = `${TEST_MEMSPACE_ID}-observation-regression`;
 
       // Store observation fact (this always worked)
-      const obsFact = await cortex.facts.store({
+      const _obsFact = await cortex.facts.store({
         memorySpaceId: spaceId,
         factType: "observation",
         fact: "User observed clicking signup button",

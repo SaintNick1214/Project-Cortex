@@ -26,12 +26,12 @@ describe("Cross-Space Boundary Testing", () => {
     // Cleanup
     try {
       await cortex.memorySpaces.delete(SPACE_A, { cascade: true });
-    } catch (e) {
+    } catch (_e) {
       // Ignore
     }
     try {
       await cortex.memorySpaces.delete(SPACE_B, { cascade: true });
-    } catch (e) {
+    } catch (_e) {
       // Ignore
     }
   });
@@ -71,9 +71,9 @@ describe("Cross-Space Boundary Testing", () => {
         // If succeeds, should fail validation
         const check = await cortex.vector.get(SPACE_A, memA.memoryId);
         expect(check!.content).toBe("Space A content"); // Not changed
-      } catch (e) {
+      } catch (_e) {
         // Expected - permission denied
-        expect(e).toBeDefined();
+        expect(_e).toBeDefined();
       }
     });
 
@@ -88,7 +88,7 @@ describe("Cross-Space Boundary Testing", () => {
       // Attempt to delete from space B
       try {
         await cortex.vector.delete(SPACE_B, memA.memoryId);
-      } catch (e) {
+      } catch (_e) {
         // Expected
       }
 
@@ -261,7 +261,7 @@ describe("Cross-Space Boundary Testing", () => {
       });
 
       const countA = await cortex.conversations.count({ memorySpaceId: SPACE_A });
-      const countB = await cortex.conversations.count({ memorySpaceId: SPACE_B });
+      const _countB = await cortex.conversations.count({ memorySpaceId: SPACE_B });
 
       expect(countA).toBeGreaterThanOrEqual(1);
       // countB may or may not be 0 depending on other tests
@@ -414,7 +414,7 @@ describe("Cross-Space Boundary Testing", () => {
       });
 
       const countA = await cortex.facts.count({ memorySpaceId: SPACE_A });
-      const countB = await cortex.facts.count({ memorySpaceId: SPACE_B });
+      const _countB = await cortex.facts.count({ memorySpaceId: SPACE_B });
 
       expect(countA).toBeGreaterThanOrEqual(1);
       // Count B should not include space A facts
@@ -475,7 +475,7 @@ describe("Cross-Space Boundary Testing", () => {
       });
 
       const countA = await cortex.contexts.count({ memorySpaceId: SPACE_A });
-      const countB = await cortex.contexts.count({ memorySpaceId: SPACE_B });
+      const _countB = await cortex.contexts.count({ memorySpaceId: SPACE_B });
 
       expect(countA).toBeGreaterThanOrEqual(1);
       // Space B count should not include space A
@@ -550,7 +550,7 @@ describe("Cross-Space Boundary Testing", () => {
           type: "project",
           name: "Stats A",
         });
-      } catch (e) {
+      } catch (_e) {
         // Already registered
       }
 
@@ -567,7 +567,7 @@ describe("Cross-Space Boundary Testing", () => {
           type: "project",
           name: "Stats B",
         });
-      } catch (e) {
+      } catch (_e) {
         // Already registered
       }
 
@@ -661,7 +661,7 @@ describe("Cross-Space Boundary Testing", () => {
         metadata: { importance: 50, tags: [] },
       });
 
-      const memB = await cortex.vector.store(SPACE_B, {
+      const _memB = await cortex.vector.store(SPACE_B, {
         content: "User data B",
         contentType: "raw",
         userId,
@@ -693,7 +693,7 @@ describe("Cross-Space Boundary Testing", () => {
       // Delete parent without cascade children
       try {
         await cortex.contexts.delete(parentA.contextId);
-      } catch (e) {
+      } catch (_e) {
         // May fail due to having children
       }
 
@@ -1060,8 +1060,8 @@ describe("Cross-Space Boundary Testing", () => {
       try {
         await cortex.vector.list({ memorySpaceId: "" });
         // May return empty or throw
-      } catch (e) {
-        expect(e).toBeDefined();
+      } catch (_e) {
+        expect(_e).toBeDefined();
       }
     });
 
@@ -1082,7 +1082,7 @@ describe("Cross-Space Boundary Testing", () => {
         name: "Temp",
       });
 
-      const mem = await cortex.vector.store(tempSpace, {
+      const _mem = await cortex.vector.store(tempSpace, {
         content: "Temp memory",
         contentType: "raw",
         source: { type: "system" },
@@ -1187,7 +1187,7 @@ describe("Cross-Space Boundary Testing", () => {
       });
 
       // Child in space B
-      const childB = await cortex.contexts.create({
+      const _childB = await cortex.contexts.create({
         memorySpaceId: SPACE_B,
         userId: TEST_USER_ID,
         purpose: "Child B",
@@ -1264,8 +1264,8 @@ describe("Cross-Space Boundary Testing", () => {
       expect(checkA!.importance).toBe(90);
 
       // Space B unchanged
-      const checkB = await cortex.vector.get(SPACE_B, memB.memoryId);
-      expect(checkB!.importance).toBe(50);
+      const _checkB = await cortex.vector.get(SPACE_B, memB.memoryId);
+      expect(_checkB!.importance).toBe(50);
     });
 
     it("export() only exports from specified space", async () => {
@@ -1363,7 +1363,7 @@ describe("Cross-Space Boundary Testing", () => {
       await cortex.users.delete(userId, { cascade: true });
 
       // Both spaces should be cleaned
-      const checkB = await cortex.vector.get(SPACE_B, memB.memoryId);
+      const _checkB = await cortex.vector.get(SPACE_B, memB.memoryId);
       // May or may not be null depending on implementation
     });
   });
@@ -1565,7 +1565,7 @@ describe("Cross-Space Boundary Testing", () => {
           type: "project",
           name: "Independent A",
         });
-      } catch (e) {
+      } catch (_e) {
         // Already exists
       }
       try {
@@ -1574,7 +1574,7 @@ describe("Cross-Space Boundary Testing", () => {
           type: "project",
           name: "Independent B",
         });
-      } catch (e) {
+      } catch (_e) {
         // Already exists
       }
 
@@ -1615,7 +1615,7 @@ describe("Cross-Space Boundary Testing", () => {
           type: "project",
           name: "Stats Space B",
         });
-      } catch (e) {
+      } catch (_e) {
         // Already exists
       }
 
@@ -1643,7 +1643,7 @@ describe("Cross-Space Boundary Testing", () => {
           type: "project",
           name: "Stats B",
         });
-      } catch (e) {
+      } catch (_e) {
         // Already exists
       }
 

@@ -27,7 +27,7 @@ describe("Contexts API - Comprehensive Filter Coverage", () => {
     // Cleanup test contexts (best-effort)
     try {
       await cortex.memorySpaces.delete(TEST_MEMSPACE_ID, { cascade: true });
-    } catch (e) {
+    } catch (_e) {
       // Ignore cleanup errors
     }
   });
@@ -183,7 +183,7 @@ describe("Contexts API - Comprehensive Filter Coverage", () => {
       const otherUser = "other-user";
 
       // Create active context for target user
-      const targetCtx = await cortex.contexts.create({
+      const _targetCtx = await cortex.contexts.create({
         memorySpaceId: spaceId,
         userId: targetUser,
         purpose: "Target active context",
@@ -309,7 +309,7 @@ describe("Contexts API - Comprehensive Filter Coverage", () => {
       });
 
       // Create active child context
-      const activeChild = await cortex.contexts.create({
+      const _activeChild = await cortex.contexts.create({
         memorySpaceId: spaceId,
         userId,
         purpose: "Active child context",

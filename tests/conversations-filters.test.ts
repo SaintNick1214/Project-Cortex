@@ -27,7 +27,7 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
     // Cleanup test conversations (best-effort)
     try {
       await cortex.memorySpaces.delete(TEST_MEMSPACE_ID, { cascade: true });
-    } catch (e) {
+    } catch (_e) {
       // Ignore cleanup errors
     }
   });
@@ -243,7 +243,7 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
       const targetUser = "combine-user";
 
       // Create user-agent conversation with target user
-      const targetConv = await cortex.conversations.create({
+      const _targetConv = await cortex.conversations.create({
         memorySpaceId: spaceId,
         type: "user-agent",
         participants: { userId: targetUser },

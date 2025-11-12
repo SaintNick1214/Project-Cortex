@@ -673,7 +673,7 @@ export class AgentsAPI {
             (result.graphNodesDeleted || 0) + deleteResult.deletedNodes.length;
 
           if (deleteResult.orphanIslands.length > 0) {
-            console.log(
+            console.warn(
               `  ℹ️  Deleted ${deleteResult.orphanIslands.length} orphan islands during agent cascade`,
             );
           }
