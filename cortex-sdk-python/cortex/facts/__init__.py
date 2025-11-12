@@ -439,12 +439,12 @@ class FactsAPI:
             ... )
         """
         result = await self.client.query(
-            "facts:export",
-            {
+            "facts:exportFacts",
+            filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "format": format,
                 "factType": fact_type,
-            },
+            }),
         )
 
         return result
