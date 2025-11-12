@@ -24,7 +24,7 @@ describe("Statistics Consistency Testing", () => {
     // Cleanup
     try {
       await cortex.memorySpaces.delete(BASE_ID, { cascade: true });
-    } catch (e) {
+    } catch (_e) {
       // Ignore
     }
   });
@@ -1636,7 +1636,7 @@ describe("Statistics Consistency Testing", () => {
         sourceType: "manual",
       });
 
-      const before = await cortex.memorySpaces.getStats(spaceId);
+      const _before = await cortex.memorySpaces.getStats(spaceId);
 
       // Delete with cascade
       await cortex.memorySpaces.delete(spaceId, { cascade: true });

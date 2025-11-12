@@ -14,8 +14,8 @@ import { Cortex } from "../src/index";
 
 // State definitions from schema
 const CONTEXT_STATUSES = ["active", "completed", "cancelled", "blocked"] as const;
-const MEMORYSPACE_STATUSES = ["active", "archived"] as const;
-const AGENT_STATUSES = ["active", "inactive", "archived"] as const;
+const _MEMORYSPACE_STATUSES = ["active", "archived"] as const;
+const _AGENT_STATUSES = ["active", "inactive", "archived"] as const;
 
 // Valid transitions
 const CONTEXT_TRANSITIONS = [
@@ -27,7 +27,7 @@ const CONTEXT_TRANSITIONS = [
   ["completed", "active"], // Reopen
 ] as const;
 
-const MEMORYSPACE_TRANSITIONS = [
+const _MEMORYSPACE_TRANSITIONS = [
   ["active", "archived"],
   // Note: reactivate() goes archived -> active
 ] as const;
@@ -51,7 +51,7 @@ describe("State Transition Testing", () => {
     // Cleanup all test spaces
     try {
       await cortex.memorySpaces.delete(BASE_ID, { cascade: true });
-    } catch (e) {
+    } catch (_e) {
       // Ignore cleanup errors
     }
   });
@@ -399,7 +399,7 @@ describe("State Transition Testing", () => {
       };
 
       // Register with metadata
-      const space = await cortex.memorySpaces.register({
+      const _space = await cortex.memorySpaces.register({
         memorySpaceId: spaceId,
         type: "project",
         name: "Metadata test",
@@ -536,7 +536,7 @@ describe("State Transition Testing", () => {
     it("inactive agent preserves metadata", async () => {
       const agentId = `agent-preserve-${Date.now()}`;
 
-      const agent = await cortex.agents.register({
+      const _agent = await cortex.agents.register({
         id: agentId,
         name: "Capability test agent",
         description: "Test agent with capabilities",

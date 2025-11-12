@@ -25,7 +25,7 @@ describe("Parameter Combination Testing", () => {
     // Cleanup
     try {
       await cortex.memorySpaces.delete(BASE_ID, { cascade: true });
-    } catch (e) {
+    } catch (_e) {
       // Ignore
     }
   });
@@ -569,8 +569,8 @@ describe("Parameter Combination Testing", () => {
         userName: "Test User",
         importance: 95,
         tags: ["important", "remember"],
-        extractContent: async (user, agent) => `${user} - ${agent}`,
-        extractFacts: async (user, agent) => [
+        extractContent: async (_user, _agent) => `${_user} - ${_agent}`,
+        extractFacts: async (_user, _agent) => [
           {
             fact: "Extracted fact",
             factType: "knowledge",
@@ -643,7 +643,7 @@ describe("Parameter Combination Testing", () => {
         userId: TEST_USER_ID,
         userName: "Test User",
         importance: 70,
-        extractContent: async (user, agent) => `Summary: ${user.substring(0, 10)}...`,
+        extractContent: async (_user, _agent) => `Summary: ${_user.substring(0, 10)}...`,
       });
 
       expect(result.memories[0].importance).toBe(70);
@@ -659,7 +659,7 @@ describe("Parameter Combination Testing", () => {
         userId: TEST_USER_ID,
         userName: "Test User",
         tags: ["profile", "identity"],
-        extractFacts: async (user, agent) => [
+        extractFacts: async (_user, _agent) => [
           {
             fact: "User is a developer",
             factType: "identity",
@@ -682,7 +682,7 @@ describe("Parameter Combination Testing", () => {
         agentResponse: "Good to know",
         userId: TEST_USER_ID,
         userName: "Test User",
-        extractFacts: async (user, agent) => [
+        extractFacts: async (_user, _agent) => [
           {
             fact: "User likes pizza",
             factType: "preference",
@@ -703,8 +703,8 @@ describe("Parameter Combination Testing", () => {
         agentResponse: "Full response",
         userId: TEST_USER_ID,
         userName: "Test User",
-        extractContent: async (user, agent) => `${user} / ${agent}`,
-        extractFacts: async (user, agent) => [
+        extractContent: async (_user, _agent) => `${_user} / ${_agent}`,
+        extractFacts: async (_user, _agent) => [
           {
             fact: "Callback extracted fact",
             factType: "knowledge",
@@ -1155,9 +1155,9 @@ describe("Parameter Combination Testing", () => {
           metadata: { importance: 50, tags: [] },
         } as any);
         // May succeed with defaults or fail
-      } catch (e) {
+      } catch (_e) {
         // Expected to require userId for conversation source
-        expect(e).toBeDefined();
+        expect(_e).toBeDefined();
       }
     });
 
@@ -1172,9 +1172,9 @@ describe("Parameter Combination Testing", () => {
 
         // If allowed, should clamp to 100
         expect(result.importance).toBeLessThanOrEqual(100);
-      } catch (e) {
+      } catch (_e) {
         // Or reject
-        expect(e).toBeDefined();
+        expect(_e).toBeDefined();
       }
     });
 
@@ -1188,8 +1188,8 @@ describe("Parameter Combination Testing", () => {
         });
 
         expect(result.importance).toBeGreaterThanOrEqual(0);
-      } catch (e) {
-        expect(e).toBeDefined();
+      } catch (_e) {
+        expect(_e).toBeDefined();
       }
     });
 
@@ -1203,8 +1203,8 @@ describe("Parameter Combination Testing", () => {
           confidence: 150,
           sourceType: "manual",
         });
-      } catch (e) {
-        expect(e).toBeDefined();
+      } catch (_e) {
+        expect(_e).toBeDefined();
       }
     });
 
@@ -1218,8 +1218,8 @@ describe("Parameter Combination Testing", () => {
           confidence: -20,
           sourceType: "manual",
         });
-      } catch (e) {
-        expect(e).toBeDefined();
+      } catch (_e) {
+        expect(_e).toBeDefined();
       }
     });
 
@@ -1240,8 +1240,8 @@ describe("Parameter Combination Testing", () => {
 
         // May be allowed (callee handles logic) or rejected
         expect(result).toBeDefined();
-      } catch (e) {
-        expect(e).toBeDefined();
+      } catch (_e) {
+        expect(_e).toBeDefined();
       }
     });
   });
@@ -1398,8 +1398,8 @@ describe("Parameter Combination Testing", () => {
         agentResponse: "That's great!",
         userId: TEST_USER_ID,
         userName: "Test User",
-        extractContent: async (user, agent) => "Extracted: TypeScript + Google",
-        extractFacts: async (user, agent) => [
+        extractContent: async (_user, _agent) => "Extracted: TypeScript + Google",
+        extractFacts: async (_user, _agent) => [
           {
             fact: "User loves TypeScript",
             factType: "preference",
@@ -1557,7 +1557,7 @@ describe("Parameter Combination Testing", () => {
           metadata: { importance: 50, tags: [] },
         });
         // May succeed or fail based on implementation
-      } catch (e) {
+      } catch (_e) {
         // Expected if strict dimension checking
       }
     });
@@ -1915,7 +1915,7 @@ describe("Parameter Combination Testing", () => {
         },
       });
 
-      const merged = await cortex.users.update(userId, {
+      const _merged = await cortex.users.update(userId, {
         preferences: {
           language: "en",
           notifications: { push: true },

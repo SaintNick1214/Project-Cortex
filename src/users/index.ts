@@ -474,7 +474,7 @@ export class UsersAPI {
           await this.update(userId, updates.data);
           results.push(userId);
         }
-      } catch (e) {
+      } catch (_e) {
         // Continue on error
         continue;
       }
@@ -519,7 +519,7 @@ export class UsersAPI {
       try {
         await this.delete(userId, options);
         results.push(userId);
-      } catch (e) {
+      } catch (_e) {
         // Continue if user doesn't exist
         continue;
       }
@@ -912,7 +912,7 @@ export class UsersAPI {
 
           // Log orphan islands if any were found and deleted
           if (deleteResult.orphanIslands.length > 0) {
-            console.log(
+            console.warn(
               `  ℹ️  Deleted ${deleteResult.orphanIslands.length} orphan islands during user cascade`,
             );
           }

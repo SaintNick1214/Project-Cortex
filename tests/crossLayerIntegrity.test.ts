@@ -1265,9 +1265,9 @@ describe("Cross-Layer Reference Integrity", () => {
       try {
         await cortex.contexts.delete(parent.contextId);
         // If it succeeds, check child is orphaned or deleted
-      } catch (e) {
+      } catch (_e) {
         // Expected - HAS_CHILDREN error
-        expect(e).toBeDefined();
+        expect(_e).toBeDefined();
       }
 
       // Child should still exist
@@ -1470,7 +1470,7 @@ describe("Cross-Layer Reference Integrity", () => {
           data: { parentId: ctx2.contextId },
         });
         // If allowed, hierarchy should detect it
-      } catch (e) {
+      } catch (_e) {
         // Expected - circular reference prevented
       }
 

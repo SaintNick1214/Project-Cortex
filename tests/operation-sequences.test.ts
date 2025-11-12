@@ -23,7 +23,7 @@ describe("Operation Sequence Validation", () => {
     // Cleanup
     try {
       await cortex.memorySpaces.delete(BASE_ID, { cascade: true });
-    } catch (e) {
+    } catch (_e) {
       // Ignore
     }
   });
@@ -1138,7 +1138,7 @@ describe("Operation Sequence Validation", () => {
         await cortex.vector.update(spaceId, mem.memoryId, {
           importance: 9999, // Out of range but may be accepted
         } as any);
-      } catch (e) {
+      } catch (_e) {
         // Expected to fail
       }
 
@@ -1162,7 +1162,7 @@ describe("Operation Sequence Validation", () => {
       // Attempt delete with wrong space (should fail)
       try {
         await cortex.vector.delete("wrong-space", mem.memoryId);
-      } catch (e) {
+      } catch (_e) {
         // Expected
       }
 
@@ -1381,7 +1381,7 @@ describe("Operation Sequence Validation", () => {
       // Try invalid operation (should fail)
       try {
         await cortex.vector.update("wrong-space", mem.memoryId, { content: "Hacked" });
-      } catch (e) {
+      } catch (_e) {
         // Expected
       }
 
