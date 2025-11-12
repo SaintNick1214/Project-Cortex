@@ -239,7 +239,7 @@ export class AgentsAPI {
    */
   async update(
     agentId: string,
-    updates: Partial<AgentRegistration>,
+    updates: Partial<AgentRegistration> & { status?: string },
   ): Promise<RegisteredAgent> {
     const result = await this.client.mutation(api.agents.update, {
       agentId,
@@ -247,6 +247,7 @@ export class AgentsAPI {
       description: updates.description,
       metadata: updates.metadata,
       config: updates.config,
+      status: (updates as any).status,
     });
 
     if (!result) {

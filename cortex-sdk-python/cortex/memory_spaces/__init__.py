@@ -205,8 +205,11 @@ class MemorySpacesAPI:
             ...     {'name': "Alice's Updated Space"}
             ... )
         """
+        # Flatten updates - backend expects direct fields, not an updates dict
+        mutation_args = {"memorySpaceId": memory_space_id}
+        mutation_args.update(updates)
         result = await self.client.mutation(
-            "memorySpaces:update", filter_none_values({"memorySpaceId": memory_space_id, "updates": updates})
+            "memorySpaces:update", filter_none_values(mutation_args)
         )
 
         return MemorySpace(**convert_convex_response(result))

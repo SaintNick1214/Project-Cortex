@@ -72,9 +72,9 @@ class VectorAPI:
                 "content": input.content,
                 "contentType": input.content_type,
                 "embedding": input.embedding,
-                "sourceType": input.source.type,
-                "sourceUserId": input.source.user_id,
-                "sourceUserName": input.source.user_name,
+            "sourceType": input.source.get("type") if isinstance(input.source, dict) else input.source.type,
+            "sourceUserId": input.source.get("userId") if isinstance(input.source, dict) else getattr(input.source, "user_id", None),
+            "sourceUserName": input.source.get("userName") if isinstance(input.source, dict) else getattr(input.source, "user_name", None),
                 "userId": input.user_id,
                 "conversationRef": (
                     {
@@ -103,8 +103,8 @@ class VectorAPI:
                     if input.mutable_ref
                     else None
                 ),
-                "importance": input.metadata.importance,
-                "tags": input.metadata.tags,
+            "importance": input.metadata.get("importance") if isinstance(input.metadata, dict) else input.metadata.importance,
+            "tags": input.metadata.get("tags") if isinstance(input.metadata, dict) else input.metadata.tags,
             }),
         )
 
