@@ -97,3 +97,4 @@ async def consume_stream(stream: Any) -> str:
             "(e.g., async generator or async iterator)"
         )
 
+

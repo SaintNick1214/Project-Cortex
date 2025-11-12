@@ -152,25 +152,29 @@ class AgentsAPI:
         ]
 
     async def list(
-        self, limit: int = 50, offset: int = 0, sort_by: str = "name"
-    ) -> Dict[str, Any]:
+        self, 
+        status: Optional[str] = None,
+        limit: int = 50, 
+        offset: int = 0, 
+        sort_by: str = "name"
+    ) -> List[RegisteredAgent]:
         """
         List all registered agents with pagination.
 
         Args:
+            status: Filter by status (active, inactive, archived)
             limit: Maximum results
             offset: Number of results to skip
             sort_by: Sort field
 
         Returns:
-            List result with pagination info
+            List of registered agents
 
         Example:
-            >>> page1 = await cortex.agents.list(limit=50, offset=0)
+            >>> page1 = await cortex.agents.list(status="active", limit=50)
         """
         result = await self.client.query(
-            "agents:list", filter_none_values({"limit": limit})
-            # Note: offset and sortBy not supported by backend yet
+            "agents:list", filter_none_values({"status": status, "limit": limit, "offset": offset})
         )
 
         # Convert list response if needed

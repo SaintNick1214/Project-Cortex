@@ -71,7 +71,7 @@ class ContextsAPI:
                 "conversationRef": (
                     {
                         "conversationId": params.conversation_ref.get("conversationId") if isinstance(params.conversation_ref, dict) else params.conversation_ref.conversation_id,
-                        "messageIds": params.conversation_ref.get("messageIds") if isinstance(params.conversation_ref, dict) else params.conversation_ref.message_ids,
+                        "messageIds": (params.conversation_ref.get("messageIds") if isinstance(params.conversation_ref, dict) else getattr(params.conversation_ref, "message_ids", None)) or [],
                     }
                     if params.conversation_ref
                     else None
