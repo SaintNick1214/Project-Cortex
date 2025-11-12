@@ -487,7 +487,7 @@ export const list = query({
     }
 
     // Post-filter by type if needed (when using other indexes)
-    if (args.type && !args.type) {
+    if (args.type && (args.memorySpaceId || args.userId)) {
       return conversations.filter((c) => c.type === args.type);
     }
 

@@ -291,6 +291,7 @@ export class FactsAPI {
       | "knowledge"
       | "relationship"
       | "event"
+      | "observation"
       | "custom";
   }): Promise<FactRecord[]> {
     const result = await this.client.query(api.facts.queryBySubject, {

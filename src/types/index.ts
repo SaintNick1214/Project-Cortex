@@ -326,12 +326,13 @@ export interface StoreMemoryInput {
   extractFacts?: (content: string) => Promise<Array<{
     fact: string;
     factType:
-      | "preference"
-      | "identity"
-      | "knowledge"
-      | "relationship"
-      | "event"
-      | "custom";
+  | "preference"
+  | "identity"
+  | "knowledge"
+  | "relationship"
+  | "event"
+  | "observation"
+  | "custom";
     subject?: string;
     predicate?: string;
     object?: string;
@@ -395,12 +396,13 @@ export interface RememberParams {
   ) => Promise<Array<{
     fact: string;
     factType:
-      | "preference"
-      | "identity"
-      | "knowledge"
-      | "relationship"
-      | "event"
-      | "custom";
+  | "preference"
+  | "identity"
+  | "knowledge"
+  | "relationship"
+  | "event"
+  | "observation"
+  | "custom";
     subject?: string;
     predicate?: string;
     object?: string;
@@ -456,12 +458,13 @@ export interface RememberStreamParams {
   ) => Promise<Array<{
     fact: string;
     factType:
-      | "preference"
-      | "identity"
-      | "knowledge"
-      | "relationship"
-      | "event"
-      | "custom";
+  | "preference"
+  | "identity"
+  | "knowledge"
+  | "relationship"
+  | "event"
+  | "observation"
+  | "custom";
     subject?: string;
     predicate?: string;
     object?: string;
@@ -569,12 +572,13 @@ export interface UpdateMemoryOptions extends GraphSyncOption {
   extractFacts?: (content: string) => Promise<Array<{
     fact: string;
     factType:
-      | "preference"
-      | "identity"
-      | "knowledge"
-      | "relationship"
-      | "event"
-      | "custom";
+  | "preference"
+  | "identity"
+  | "knowledge"
+  | "relationship"
+  | "event"
+  | "observation"
+  | "custom";
     subject?: string;
     predicate?: string;
     object?: string;
@@ -602,12 +606,13 @@ export interface FactRecord {
   participantId?: string;
   fact: string; // The fact statement
   factType:
-    | "preference"
-    | "identity"
-    | "knowledge"
-    | "relationship"
-    | "event"
-    | "custom";
+  | "preference"
+  | "identity"
+  | "knowledge"
+  | "relationship"
+  | "event"
+  | "observation"
+  | "custom";
   subject?: string; // Primary entity
   predicate?: string; // Relationship type
   object?: string; // Secondary entity
@@ -634,12 +639,13 @@ export interface StoreFactParams {
   participantId?: string;
   fact: string;
   factType:
-    | "preference"
-    | "identity"
-    | "knowledge"
-    | "relationship"
-    | "event"
-    | "custom";
+  | "preference"
+  | "identity"
+  | "knowledge"
+  | "relationship"
+  | "event"
+  | "observation"
+  | "custom";
   subject?: string;
   predicate?: string;
   object?: string;
@@ -659,12 +665,13 @@ export interface StoreFactParams {
 export interface ListFactsFilter {
   memorySpaceId: string;
   factType?:
-    | "preference"
-    | "identity"
-    | "knowledge"
-    | "relationship"
-    | "event"
-    | "custom";
+  | "preference"
+  | "identity"
+  | "knowledge"
+  | "relationship"
+  | "event"
+  | "observation"
+  | "custom";
   subject?: string;
   tags?: string[];
   includeSuperseded?: boolean;
@@ -674,23 +681,25 @@ export interface ListFactsFilter {
 export interface CountFactsFilter {
   memorySpaceId: string;
   factType?:
-    | "preference"
-    | "identity"
-    | "knowledge"
-    | "relationship"
-    | "event"
-    | "custom";
+  | "preference"
+  | "identity"
+  | "knowledge"
+  | "relationship"
+  | "event"
+  | "observation"
+  | "custom";
   includeSuperseded?: boolean;
 }
 
 export interface SearchFactsOptions {
   factType?:
-    | "preference"
-    | "identity"
-    | "knowledge"
-    | "relationship"
-    | "event"
-    | "custom";
+  | "preference"
+  | "identity"
+  | "knowledge"
+  | "relationship"
+  | "event"
+  | "observation"
+  | "custom";
   minConfidence?: number;
   tags?: string[];
   limit?: number;

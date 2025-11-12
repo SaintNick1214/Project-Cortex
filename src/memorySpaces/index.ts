@@ -210,6 +210,48 @@ export class MemorySpacesAPI {
   }
 
   /**
+   * Archive memory space (marks as inactive but preserves data)
+   *
+   * @example
+   * ```typescript
+   * await cortex.memorySpaces.archive('project-apollo', {
+   *   reason: 'Project completed successfully'
+   * });
+   * ```
+   */
+  async archive(
+    memorySpaceId: string,
+    options?: {
+      reason?: string;
+      metadata?: Record<string, any>;
+    },
+  ): Promise<MemorySpace> {
+    const result = await this.client.mutation(api.memorySpaces.archive, {
+      memorySpaceId,
+      reason: options?.reason,
+      metadata: options?.metadata,
+    });
+
+    return result as MemorySpace;
+  }
+
+  /**
+   * Reactivate archived memory space
+   *
+   * @example
+   * ```typescript
+   * await cortex.memorySpaces.reactivate('project-apollo');
+   * ```
+   */
+  async reactivate(memorySpaceId: string): Promise<MemorySpace> {
+    const result = await this.client.mutation(api.memorySpaces.reactivate, {
+      memorySpaceId,
+    });
+
+    return result as MemorySpace;
+  }
+
+  /**
    * Delete memory space
    *
    * @example

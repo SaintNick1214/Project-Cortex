@@ -15,7 +15,7 @@ from ..types import (
     A2ABroadcastResult,
 )
 from ..errors import CortexError, ErrorCode, A2ATimeoutError
-from .._utils import filter_none_values
+from .._utils import filter_none_values, convert_convex_response
 
 
 class A2AAPI:
@@ -75,7 +75,7 @@ class A2AAPI:
             }),
         )
 
-        return A2AMessage(**result)
+        return A2AMessage(**convert_convex_response(result))
 
     async def request(self, params: A2ARequestParams) -> A2AResponse:
         """
@@ -130,7 +130,7 @@ class A2AAPI:
                 params.timeout,
             )
 
-        return A2AResponse(**result)
+        return A2AResponse(**convert_convex_response(result))
 
     async def broadcast(self, params: A2ABroadcastParams) -> A2ABroadcastResult:
         """
@@ -168,7 +168,7 @@ class A2AAPI:
             }),
         )
 
-        return A2ABroadcastResult(**result)
+        return A2ABroadcastResult(**convert_convex_response(result))
 
     async def get_conversation(
         self,
