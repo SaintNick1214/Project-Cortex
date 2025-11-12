@@ -349,6 +349,7 @@ export class FactsAPI {
       | "knowledge"
       | "relationship"
       | "event"
+      | "observation"
       | "custom";
   }): Promise<{
     format: string;

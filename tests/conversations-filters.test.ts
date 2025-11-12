@@ -24,8 +24,12 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
   });
 
   afterAll(async () => {
-    // Cleanup test conversations
-    await cortex.memorySpaces.delete(TEST_MEMSPACE_ID, { cascade: true });
+    // Cleanup test conversations (best-effort)
+    try {
+      await cortex.memorySpaces.delete(TEST_MEMSPACE_ID, { cascade: true });
+    } catch (e) {
+      // Ignore cleanup errors
+    }
   });
 
   describe.each(ALL_CONVERSATION_TYPES)("Type: %s", (convType) => {
@@ -270,10 +274,8 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
       expect(results.length).toBeGreaterThanOrEqual(1);
       results.forEach((conv: any) => {
         expect(conv.type).toBe("user-agent");
-        // Check userId is in participants
-        expect(
-          conv.participants.some((p: any) => p.userId === targetUser)
-        ).toBe(true);
+        // Check userId is in participants (participants is an object, not array)
+        expect(conv.participants.userId).toBe(targetUser);
       });
     });
 
