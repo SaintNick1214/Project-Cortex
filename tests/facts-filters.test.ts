@@ -207,7 +207,7 @@ describe("Facts API - Comprehensive Filter Coverage", () => {
       });
     });
 
-    it.skip(`exportFacts() should filter by factType="${factType}"`, async () => {
+    it(`exportFacts() should filter by factType="${factType}"`, async () => {
       const spaceId = `${TEST_MEMSPACE_ID}-export-${factType}`;
 
       // Store target fact
@@ -233,21 +233,24 @@ describe("Facts API - Comprehensive Filter Coverage", () => {
       }
 
       // Execute: Export with factType filter (JSON format)
-      // Note: exportFacts not implemented in TypeScript SDK - test skipped
-      // const exportData = await cortex.facts.exportFacts(spaceId, "json", {
-      //   factType: factType as any,
-      // });
+      const exportData = await cortex.facts.export({
+        memorySpaceId: spaceId,
+        format: "json",
+        factType: factType as any,
+      });
 
-      // Validate (skipped - not implemented)
-      // expect(exportData).toBeTruthy();
-      // expect(typeof exportData).toBe("string");
+      // Validate
+      expect(exportData).toBeTruthy();
+      expect(exportData.format).toBe("json");
+      expect(typeof exportData.data).toBe("string");
+      expect(exportData.count).toBeGreaterThanOrEqual(1);
 
       // Parse JSON and validate factType
-      // const facts = JSON.parse(exportData);
-      // expect(facts.length).toBeGreaterThanOrEqual(1);
-      // facts.forEach((fact: any) => {
-      //   expect(fact.factType).toBe(factType);
-      // });
+      const facts = JSON.parse(exportData.data);
+      expect(facts.length).toBeGreaterThanOrEqual(1);
+      facts.forEach((fact: any) => {
+        expect(fact.factType).toBe(factType);
+      });
     });
   });
 
@@ -358,11 +361,14 @@ describe("Facts API - Comprehensive Filter Coverage", () => {
       });
       expect(subjectResults.length).toBeGreaterThanOrEqual(1);
 
-      // Test export (skip - not implemented in TypeScript SDK yet)
-      // const exportData = await cortex.facts.exportFacts(spaceId, "json", {
-      //   factType: "observation",
-      // });
-      // expect(exportData).toBeTruthy();
+      // Test export
+      const exportData = await cortex.facts.export({
+        memorySpaceId: spaceId,
+        format: "json",
+        factType: "observation",
+      });
+      expect(exportData).toBeTruthy();
+      expect(exportData.count).toBeGreaterThanOrEqual(1);
     });
 
     it("should combine factType filter with other filters", async () => {
