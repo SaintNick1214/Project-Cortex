@@ -217,11 +217,11 @@ export class AgentsAPI {
       description: r.description,
       metadata: r.metadata ?? {},
       config: r.config ?? {},
-      status: r.status,
+      status: r.status as "active" | "inactive" | "archived",
       registeredAt: r.registeredAt,
       updatedAt: r.updatedAt,
       lastActive: r.lastActive,
-    }));
+    })) as RegisteredAgent[];
   }
 
   /**
@@ -273,7 +273,8 @@ export class AgentsAPI {
       description: updates.description,
       metadata: updates.metadata,
       config: updates.config,
-      status: (updates as { status?: string }).status,
+      status: (updates as { status?: "active" | "inactive" | "archived" })
+        .status,
     });
 
     if (!result) {
@@ -572,10 +573,13 @@ export class AgentsAPI {
         { participantId: agentId },
       );
 
-      return result.records.map((record: Neo4jNodeRecord) => ({
-        nodeId: record.id,
-        labels: record.labels,
-      }));
+      return result.records.map((record) => {
+        const node = record as unknown as Neo4jNodeRecord;
+        return {
+          nodeId: node.id,
+          labels: node.labels,
+        };
+      });
     } catch (error) {
       console.warn("Failed to query graph nodes:", error);
       return [];
@@ -597,7 +601,7 @@ export class AgentsAPI {
       agentRegistration: plan.agentRegistration
         ? (JSON.parse(
             JSON.stringify(plan.agentRegistration),
-          ) as ConvexAgentRecord)
+          ) as unknown as RegisteredAgent)
         : null,
     };
   }
@@ -889,7 +893,7 @@ export class AgentsAPI {
         `MATCH (n {participantId: $participantId}) RETURN count(n) as count`,
         { participantId: agentId },
       );
-      const record = result.records[0] as Neo4jCountRecord | undefined;
+      const record = result.records[0] as unknown as Neo4jCountRecord | undefined;
       return record?.count ?? 0;
     } catch (error) {
       console.warn("Failed to count graph nodes:", error);

@@ -5,6 +5,7 @@ Tests for Memory API (Layer 4 convenience)
 import pytest
 
 from cortex import RememberParams, SearchOptions, ForgetOptions, CortexError
+from tests.helpers import embeddings_available
 
 
 @pytest.mark.asyncio
@@ -525,4 +526,3 @@ async def test_get_conversation_ref(cortex_client, test_memory_space_id, test_co
     
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
-

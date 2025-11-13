@@ -61,7 +61,7 @@ Based on your `.env.local`:
 ```bash
 # LOCAL Configuration
 LOCAL_CONVEX_URL=http://127.0.0.1:3210
-LOCAL_CONVEX_DEPLOYMENT=local:local-nicholasgeil-local_convex_81fb7
+LOCAL_CONVEX_DEPLOYMENT=local:local-nicholasgeil-local_convex_d760b
 
 # MANAGED Configuration
 CLOUD_CONVEX_URL=https://expert-buffalo-268.convex.cloud

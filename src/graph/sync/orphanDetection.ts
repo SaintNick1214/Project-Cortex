@@ -158,6 +158,12 @@ export async function detectOrphan(
   }
 
   // Find all incoming references (nodes pointing TO this node)
+  type ReferenceRecord = {
+    referrerId: string;
+    refererLabel: string;
+    relationshipType: string;
+  };
+  
   const incoming = await adapter.query(
     `
     MATCH (referrer)-[r]->(target)
@@ -170,7 +176,7 @@ export async function detectOrphan(
   );
 
   // Filter to external references (not being deleted, not self-reference)
-  const externalRefs = incoming.records.filter(
+  const externalRefs = (incoming.records as unknown as ReferenceRecord[]).filter(
     (r) =>
       !deletionContext.deletedNodeIds.has(r.referrerId) &&
       r.referrerId !== nodeId,
@@ -263,6 +269,8 @@ async function checkCircularIsland(
       visited.add(current);
 
       // Find all neighbors (undirected - both incoming and outgoing)
+      type NeighborRecord = { neighborId: string; neighborLabel: string };
+      
       const neighbors = await adapter.query(
         `
         MATCH (n)--(neighbor)
@@ -273,7 +281,7 @@ async function checkCircularIsland(
         { currentId: current },
       );
 
-      for (const neighbor of neighbors.records) {
+      for (const neighbor of neighbors.records as unknown as NeighborRecord[]) {
         // Skip if being deleted
         if (deletionContext.deletedNodeIds.has(neighbor.neighborId)) {
           continue;
@@ -329,6 +337,8 @@ export async function deleteWithOrphanCleanup(
   deletionContext.deletedNodeIds.add(nodeId);
 
   // 1. Get all nodes this node references (outgoing edges)
+  type ReferencedNodeRecord = { refId: string; refLabel: string; edgeId: string };
+  
   const referencedNodes = await adapter.query(
     `
     MATCH (n)-[r]->(referenced)
@@ -344,7 +354,7 @@ export async function deleteWithOrphanCleanup(
   await adapter.deleteNode(nodeId, true);
 
   // 3. Check each referenced node for orphan status
-  for (const ref of referencedNodes.records) {
+  for (const ref of referencedNodes.records as unknown as ReferencedNodeRecord[]) {
     const orphanCheck = await detectOrphan(
       ref.refId,
       ref.refLabel,

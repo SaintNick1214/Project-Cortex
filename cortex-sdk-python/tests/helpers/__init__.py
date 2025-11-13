@@ -9,7 +9,7 @@ This module provides utilities for:
 """
 
 from .cleanup import TestCleanup
-from .embeddings import generate_embedding, embeddings_available
+from .embeddings import generate_embedding, embeddings_available, summarize_conversation
 from .storage import (
     validate_conversation_storage,
     validate_memory_storage,
@@ -31,6 +31,7 @@ __all__ = [
     "TestCleanup",
     "generate_embedding",
     "embeddings_available",
+    "summarize_conversation",
     "validate_conversation_storage",
     "validate_memory_storage",
     "validate_fact_storage",

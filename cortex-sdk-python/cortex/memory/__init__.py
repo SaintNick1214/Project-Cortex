@@ -532,11 +532,12 @@ class MemoryAPI:
             return memories
 
         # Batch fetch conversations
-        conversation_ids = set(
-            mem.conversation_ref.conversation_id
-            for mem in memories
-            if mem.conversation_ref
-        )
+        conversation_ids = set()
+        for mem in memories:
+            if mem.conversation_ref:
+                conv_id = mem.conversation_ref.get("conversation_id") if isinstance(mem.conversation_ref, dict) else mem.conversation_ref.conversation_id
+                if conv_id:
+                    conversation_ids.add(conv_id)
 
         conversations = {}
         for conv_id in conversation_ids:
@@ -568,22 +569,23 @@ class MemoryAPI:
 
             # Add conversation
             if memory.conversation_ref:
-                conv = conversations.get(memory.conversation_ref.conversation_id)
+                conv_id = memory.conversation_ref.get("conversation_id") if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
+                conv = conversations.get(conv_id)
                 if conv:
                     result.conversation = conv
+                    message_ids = memory.conversation_ref.get("message_ids") if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.message_ids
                     result.source_messages = [
                         msg
                         for msg in conv.messages
-                        if msg.id in memory.conversation_ref.message_ids
+                        if (msg.get("id") if isinstance(msg, dict) else msg.id) in message_ids
                     ]
 
             # Add facts
             related_facts = facts_by_memory_id.get(memory.memory_id, [])
             if memory.conversation_ref:
+                conv_id = memory.conversation_ref.get("conversation_id") if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
                 related_facts.extend(
-                    facts_by_conversation_id.get(
-                        memory.conversation_ref.conversation_id, []
-                    )
+                    facts_by_conversation_id.get(conv_id, [])
                 )
 
             # Deduplicate facts

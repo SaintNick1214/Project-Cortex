@@ -389,7 +389,7 @@ CONVEX_TEST_MODE=managed pytest tests/ -v
 
 ### Test Coverage
 
-- **574 tests** covering all APIs
+- **579 tests** covering all APIs (includes 5 OpenAI integration tests)
 - **71% code coverage** (actively increasing)
 - **100% pass rate** on both local and managed environments
 
@@ -400,7 +400,7 @@ CONVEX_TEST_MODE=managed pytest tests/ -v
 | **LOCAL**   | ✅ ACID, ❌ Vector search | ⚡ 2-3 min | Fast iteration  |
 | **MANAGED** | ✅ ACID, ✅ Vector search | 🌐 15 min  | Full validation |
 
-**Note:** TypeScript SDK has 1062 tests (includes 5 advanced OpenAI embedding tests not ported to Python).
+**Note:** Both SDKs now include 5 OpenAI integration tests (skipped without OPENAI_API_KEY).
 
 ## 🤝 Contributing
 
