@@ -195,14 +195,18 @@ async def test_generate_embedding_with_mock():
 
 @pytest.mark.asyncio
 async def test_generate_embedding_consistency():
-    """Test that same text generates same mock embedding."""
+    """Test that same text generates same mock embedding (not real embeddings)."""
     text = "Consistent test text"
 
-    embedding1 = await generate_embedding(text, use_mock=True)
-    embedding2 = await generate_embedding(text, use_mock=True)
+    # Use mock embeddings for consistency test
+    # Real OpenAI embeddings are not deterministic and may vary slightly between calls
+    from tests.helpers.embeddings import generate_mock_embedding
+    
+    embedding1 = generate_mock_embedding(text)
+    embedding2 = generate_mock_embedding(text)
 
     assert embedding1 == embedding2
-    print("✓ Mock embeddings are consistent")
+    print("✓ Mock embeddings are consistent (deterministic)")
 
 
 @pytest.mark.asyncio

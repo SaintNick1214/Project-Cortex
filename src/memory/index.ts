@@ -11,6 +11,7 @@ import { VectorAPI } from "../vector";
 import { FactsAPI } from "../facts";
 import {
   type ArchiveResult,
+  type Conversation,
   type CountMemoriesFilter,
   type DeleteManyResult,
   type DeleteMemoryOptions,
@@ -23,6 +24,7 @@ import {
   type GetMemoryOptions,
   type ListMemoriesFilter,
   type MemoryEntry,
+  type Message,
   type RememberOptions,
   type RememberParams,
   type RememberResult,
@@ -39,17 +41,9 @@ import {
 import type { GraphAdapter } from "../graph/types";
 import { consumeStream } from "./streamUtils";
 
-// Type for conversation message
-interface ConversationMessage {
-  id: string;
-  role: string;
-  content: string;
-  timestamp: number;
-}
-
 // Type for conversation with messages
 interface ConversationWithMessages {
-  messages: ConversationMessage[];
+  messages: Message[];
   [key: string]: unknown;
 }
 
@@ -709,10 +703,9 @@ export class MemoryAPI {
           memory.conversationRef.conversationId,
         ) as ConversationWithMessages | undefined;
         if (conversation) {
-          result.conversation = conversation;
-          result.sourceMessages = conversation.messages.filter(
-            (m: ConversationMessage) =>
-              memory.conversationRef!.messageIds.includes(m.id),
+          result.conversation = conversation as unknown as Conversation;
+          result.sourceMessages = conversation.messages.filter((m: Message) =>
+            memory.conversationRef!.messageIds.includes(m.id),
           );
         }
       }
@@ -799,7 +792,7 @@ export class MemoryAPI {
                   memoryId: memory.memoryId,
                 },
                 tags:
-                  factData.tags.length > 0
+                  factData.tags && factData.tags.length > 0
                     ? factData.tags
                     : input.metadata.tags,
               },
@@ -874,7 +867,7 @@ export class MemoryAPI {
                   memoryId: updatedMemory.memoryId,
                 },
                 tags:
-                  factData.tags.length > 0 ? factData.tags : updatedMemory.tags,
+                  factData.tags && factData.tags.length > 0 ? factData.tags : updatedMemory.tags,
               },
               { syncToGraph: options.syncToGraph },
             );

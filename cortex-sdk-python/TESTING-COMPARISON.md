@@ -10,37 +10,32 @@ Both SDKs implement **identical dual-testing infrastructure** for testing agains
 
 | Metric                | TypeScript SDK | Python SDK | Difference          |
 | --------------------- | -------------- | ---------- | ------------------- |
-| **Total Tests**       | 1,062          | 574        | -488 tests          |
+| **Total Tests**       | 1,062          | 579        | -483 tests          |
 | **Passing (LOCAL)**   | 1,056          | 574        | TS has more         |
-| **Skipped (LOCAL)**   | 6              | 0          | See breakdown below |
-| **Pass Rate**         | 99.4%          | 100%       | Both excellent      |
+| **Skipped (LOCAL)**   | 6              | 5          | Both skip OpenAI    |
+| **Pass Rate**         | 99.4%          | 99.1%      | Both excellent      |
 | **Test Time (LOCAL)** | ~60 sec        | ~23 sec    | Python 2.6x faster  |
 
 ---
 
 ## Why Different Test Counts?
 
-### TypeScript Has More Tests (+488)
+### TypeScript Has More Tests (+483)
 
-The TypeScript SDK has additional tests that were **intentionally not ported** to Python:
+The TypeScript SDK has additional tests beyond the core API tests:
 
-1. **5 OpenAI Advanced Tests** (in `memory.test.ts`)
+1. **5 OpenAI Advanced Tests** (in `memory.test.ts`) - ✅ **NOW PORTED TO PYTHON!**
    - Real embedding generation (OpenAI API)
    - Semantic search validation
-   - GPT-4 summarization quality
+   - GPT-4o-mini summarization quality
    - Similarity score validation
    - Enriched context retrieval
+   
 2. **Other Extras** (~483 more tests)
    - More comprehensive edge cases
    - Additional integration scenarios
    - Extended validation tests
-
-### Why Not Ported?
-
-- **Cost:** OpenAI tests require paid API calls
-- **Speed:** Would slow down Python test suite significantly
-- **Coverage:** Core functionality already tested without OpenAI dependency
-- **Philosophy:** Python SDK focuses on core API parity, not exhaustive integration tests
+   - Historical test cases not yet ported
 
 ---
 
@@ -67,7 +62,7 @@ The TypeScript SDK has additional tests that were **intentionally not ported** t
 - GPT-4 summarization
 - Production-like semantic search
 
-**Python Equivalent:** ❌ Not ported (intentional decision)
+**Python Equivalent:** ✅ **NOW PORTED!** (in `test_memory.py::TestMemoryAdvancedOpenAI`)
 
 ### 2. One `users.merge()` Test
 
@@ -287,7 +282,7 @@ has_managed_config = bool(os.getenv("CLOUD_CONVEX_URL"))
 | **Single invocation**     | ✅ Jest runs once                | ✅ pytest runs once    | Expected                  |
 | **LOCAL vector search**   | ❌ Skipped                       | ❌ Not available       | Convex limitation         |
 | **MANAGED vector search** | ✅ Full support                  | ✅ Full support        | Both work                 |
-| **OpenAI tests**          | ✅ 5 tests (skipped without key) | ❌ Not ported          | Intentional               |
+| **OpenAI tests**          | ✅ 5 tests (skipped without key) | ✅ 5 tests (skipped without key) | Full parity achieved      |
 | **`users.merge()`**       | ❌ Not implemented               | ✅ Implemented         | Python-only feature       |
 
 ---

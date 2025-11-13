@@ -76,8 +76,9 @@ def convert_convex_response(data: Any) -> Any:
     if isinstance(data, dict):
         converted = {}
         for key, value in data.items():
-            # Skip Convex internal fields except _id
-            if key.startswith("_") and key != "_id":
+            # Skip Convex internal fields except _id and _score
+            # _score is added by vector search for similarity ranking
+            if key.startswith("_") and key not in ("_id", "_score"):
                 continue
             
             # Convert key to snake_case

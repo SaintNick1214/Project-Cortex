@@ -221,6 +221,8 @@ class MemoryEntry:
     immutable_ref: Optional[ImmutableRef] = None
     mutable_ref: Optional[MutableRef] = None
     last_accessed: Optional[int] = None
+    _score: Optional[float] = None  # Similarity score from vector search (managed mode only)
+    score: Optional[float] = None  # Alias for _score
 
 
 @dataclass

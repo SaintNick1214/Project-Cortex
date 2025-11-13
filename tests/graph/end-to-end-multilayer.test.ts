@@ -941,48 +941,50 @@ What specific aspects would you like to dive deeper into?
       checklist.graph_relationships.totalEdges =
         await graphAdapter.countEdges();
 
+      type CountRecord = { count: number };
+      
       const memToConv = await graphAdapter.query(`
         MATCH (m:Memory)-[:REFERENCES]->(c:Conversation) RETURN count(*) as count
       `);
       checklist.graph_relationships.hasMemoryToConversation =
-        memToConv.records[0]?.count > 0;
+        (memToConv.records[0] as unknown as CountRecord).count > 0;
 
       const factToEntity = await graphAdapter.query(`
         MATCH (f:Fact)-[:MENTIONS]->(e:Entity) RETURN count(*) as count
       `);
       checklist.graph_relationships.hasFactToEntity =
-        factToEntity.records[0]?.count > 0;
+        (factToEntity.records[0] as unknown as CountRecord).count > 0;
 
       const contextHierarchy = await graphAdapter.query(`
         MATCH (c:Context)-[:CHILD_OF]->(p:Context) RETURN count(*) as count
       `);
       checklist.graph_relationships.hasContextHierarchy =
-        contextHierarchy.records[0]?.count > 0;
+        (contextHierarchy.records[0] as unknown as CountRecord).count > 0;
 
       const entityToEntity = await graphAdapter.query(`
         MATCH (e1:Entity)-[r:WORKS_AT|LOVES|USES]-(e2:Entity) RETURN count(*) as count
       `);
       checklist.graph_relationships.hasEntityToEntity =
-        entityToEntity.records[0]?.count > 0;
+        (entityToEntity.records[0] as unknown as CountRecord).count > 0;
 
       // Provenance validation
       const memProvenance = await graphAdapter.query(`
         MATCH (m:Memory)-[:REFERENCES]->(c:Conversation) RETURN count(*) as count
       `);
       checklist.graph_provenance.canTraceMemoryToConversation =
-        memProvenance.records[0]?.count > 0;
+        (memProvenance.records[0] as unknown as CountRecord).count > 0;
 
       const factProvenance = await graphAdapter.query(`
         MATCH (f:Fact)-[:EXTRACTED_FROM]->(c:Conversation) RETURN count(*) as count
       `);
       checklist.graph_provenance.canTraceFactToConversation =
-        factProvenance.records[0]?.count > 0;
+        (factProvenance.records[0] as unknown as CountRecord).count > 0;
 
       const contextProvenance = await graphAdapter.query(`
         MATCH (ctx:Context)-[:TRIGGERED_BY]->(c:Conversation) RETURN count(*) as count
       `);
       checklist.graph_provenance.canTraceContextToConversation =
-        contextProvenance.records[0]?.count > 0;
+        (contextProvenance.records[0] as unknown as CountRecord).count > 0;
 
       // Discovery validation
       const coworkers = await graphAdapter.query(`
@@ -990,21 +992,21 @@ What specific aspects would you like to dive deeper into?
         RETURN count(DISTINCT person) as count
       `);
       checklist.graph_discovery.canFindCoworkers =
-        coworkers.records[0]?.count > 1;
+        (coworkers.records[0] as unknown as CountRecord).count > 1;
 
       const paths = await graphAdapter.query(`
         MATCH path = (sarah:Entity {name: 'Dr. Sarah Chen'})-[*1..4]-(other:Entity)
         RETURN count(DISTINCT other) as count
       `);
       checklist.graph_discovery.canFindKnowledgePaths =
-        paths.records[0]?.count > 0;
+        (paths.records[0] as unknown as CountRecord).count > 0;
 
       const network = await graphAdapter.query(`
         MATCH (e:Entity)-[r]-(related:Entity)
         RETURN count(DISTINCT related) as count
       `);
       checklist.graph_discovery.canFindEntityNetwork =
-        network.records[0]?.count > 0;
+        (network.records[0] as unknown as CountRecord).count > 0;
 
       // Performance
       checklist.performance.totalTimeMs = Date.now() - startTime;

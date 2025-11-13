@@ -117,3 +117,62 @@ async def generate_embeddings_batch(
 
     return embeddings
 
+
+async def summarize_conversation(
+    user_message: str, agent_response: str
+) -> Optional[str]:
+    """
+    Summarize a conversation using GPT-4o-mini.
+    
+    Extracts key facts from the conversation in one concise sentence.
+    Returns None if OpenAI API not available.
+    
+    Args:
+        user_message: The user's message
+        agent_response: The agent's response
+        
+    Returns:
+        Summarized content as a string, or None if API unavailable
+        
+    Example:
+        >>> summary = await summarize_conversation(
+        ...     "My name is Alexander Johnson and I prefer to be called Alex",
+        ...     "Got it, I'll call you Alex!"
+        ... )
+        >>> print(summary)  # "User prefers to be called Alex"
+    """
+    api_key = os.getenv("OPENAI_API_KEY")
+
+    if not api_key:
+        return None
+
+    try:
+        from openai import OpenAI
+
+        client = OpenAI(api_key=api_key)
+
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Extract key facts from this conversation in one concise sentence.",
+                },
+                {
+                    "role": "user",
+                    "content": f"User: {user_message}\nAgent: {agent_response}",
+                },
+            ],
+            temperature=0.3,
+        )
+
+        return response.choices[0].message.content
+
+    except ImportError:
+        # OpenAI package not installed
+        return None
+
+    except Exception as e:
+        # API call failed
+        return None
+

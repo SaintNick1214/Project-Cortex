@@ -24,16 +24,6 @@ import type {
   FactRecord,
 } from "../types";
 
-// Type for Convex user query results
-interface ConvexUserRecord {
-  userId: string;
-  data?: Record<string, unknown>;
-  preferences?: Record<string, unknown>;
-  metadata?: Record<string, unknown>;
-  createdAt: number;
-  updatedAt: number;
-  version: number;
-}
 
 // Type for Neo4j record results (reused from agents)
 interface Neo4jNodeRecord {
@@ -766,10 +756,13 @@ export class UsersAPI {
       );
 
       // GraphQueryResult has a .records property
-      return result.records.map((record: Neo4jNodeRecord) => ({
-        nodeId: record.id,
-        labels: record.labels,
-      }));
+      return result.records.map((record) => {
+        const node = record as unknown as Neo4jNodeRecord;
+        return {
+          nodeId: node.id,
+          labels: node.labels,
+        };
+      });
     } catch (error) {
       console.warn("Failed to query graph nodes:", error);
       return [];
@@ -792,7 +785,7 @@ export class UsersAPI {
       vector: JSON.parse(JSON.stringify(plan.vector)) as MemoryEntry[],
       facts: JSON.parse(JSON.stringify(plan.facts)) as FactRecord[],
       userProfile: plan.userProfile
-        ? (JSON.parse(JSON.stringify(plan.userProfile)) as ConvexUserRecord)
+        ? (JSON.parse(JSON.stringify(plan.userProfile)) as unknown as UserProfile)
         : null,
     };
   }
@@ -1217,7 +1210,7 @@ export class UsersAPI {
         { userId },
       );
       // GraphQueryResult has a .records property
-      const record = result.records[0] as Neo4jCountRecord | undefined;
+      const record = result.records[0] as unknown as Neo4jCountRecord | undefined;
       return record?.count ?? 0;
     } catch (error) {
       console.warn("Failed to count graph nodes:", error);
