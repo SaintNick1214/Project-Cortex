@@ -53,6 +53,7 @@ export async function consumeReadableStream(
   const chunks: string[] = [];
 
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     while (true) {
       const { done, value } = await reader.read();
 
@@ -60,7 +61,7 @@ export async function consumeReadableStream(
         break;
       }
 
-      if (value !== undefined) {
+      if (value) {
         chunks.push(value);
       }
     }
@@ -98,7 +99,7 @@ export async function consumeAsyncIterable(
 
   try {
     for await (const chunk of iterable) {
-      if (chunk !== undefined) {
+      if (chunk) {
         chunks.push(chunk);
       }
     }

@@ -132,11 +132,12 @@ export async function detectOrphan(
   deletionContext: DeletionContext,
   adapter: GraphAdapter,
 ): Promise<OrphanCheckResult> {
-  const rules = deletionContext.orphanRules || ORPHAN_RULES;
-  const rule = rules[nodeLabel];
+  const rules = deletionContext.orphanRules ?? ORPHAN_RULES;
+  const rule: OrphanRule | undefined = rules[nodeLabel];
 
   // Rule 1: Never delete certain node types
-  if (rule?.neverDelete) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (rule !== undefined && rule.neverDelete) {
     return {
       isOrphan: false,
       reason: "Never delete rule",
@@ -146,7 +147,8 @@ export async function detectOrphan(
   }
 
   // Rule 2: Only delete if explicitly requested (not cascaded)
-  if (rule?.explicitOnly) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (rule !== undefined && rule.explicitOnly) {
     return {
       isOrphan: false,
       reason: "Explicit delete only",
@@ -193,11 +195,11 @@ export async function detectOrphan(
   }
 
   // Has external references - check if they're "anchor" types
-  const anchorLabels = rule?.keepIfReferencedBy || [
-    "Memory",
-    "Fact",
-    "Context",
-  ];
+  const defaultAnchors: string[] = ["Memory", "Fact", "Context"];
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const anchorLabels: string[] = rule
+    ? rule.keepIfReferencedBy || defaultAnchors
+    : defaultAnchors;
   const hasAnchorRef = externalRefs.some((r) =>
     anchorLabels.includes(r.refererLabel),
   );

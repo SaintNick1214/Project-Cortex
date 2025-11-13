@@ -338,6 +338,64 @@ pytest tests/test_memory.py -v
 - Neo4j or Memgraph (for graph integration)
 - Redis (for A2A pub/sub)
 
+## 🧪 Testing
+
+The Python SDK has **full dual-testing infrastructure** (identical to TypeScript SDK):
+
+### Quick Test Commands (mirrors TypeScript SDK)
+
+```bash
+# Auto-detect and run appropriate suite(s) - like "npm test"
+make test
+
+# Run LOCAL tests only - like "npm run test:local"
+make test-local
+
+# Run MANAGED tests only - like "npm run test:managed"  
+make test-managed
+
+# Explicitly run BOTH suites - like "npm run test:both"
+make test-both
+```
+
+### Alternative: Direct Script Usage
+
+```bash
+# Auto-detect (runs BOTH if both configs present)
+python scripts/run-python-tests.py
+
+# Explicit modes
+python scripts/run-python-tests.py --mode=local
+python scripts/run-python-tests.py --mode=managed
+python scripts/run-python-tests.py --mode=both
+```
+
+### Raw pytest (single suite only)
+
+```bash
+# Runs one suite based on auto-detection (defaults to LOCAL if both present)
+pytest tests/ -v
+
+# With explicit mode
+CONVEX_TEST_MODE=local pytest tests/ -v
+CONVEX_TEST_MODE=managed pytest tests/ -v
+```
+
+### Test Coverage
+
+- **574 tests** covering all APIs
+- **71% code coverage** (actively increasing)
+- **100% pass rate** on both local and managed environments
+
+### Test Environments
+
+| Environment | Features | Speed | Use Case |
+|-------------|----------|-------|----------|
+| **LOCAL** | ✅ ACID, ❌ Vector search | ⚡ 2-3 min | Fast iteration |
+| **MANAGED** | ✅ ACID, ✅ Vector search | 🌐 15 min | Full validation |
+
+**Note:** TypeScript SDK has 1062 tests (includes 5 advanced OpenAI embedding tests not ported to Python).
+
 ## 🤝 Contributing
 
 We welcome contributions! The Python SDK follows the same architecture as the TypeScript SDK.

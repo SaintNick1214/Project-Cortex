@@ -35,7 +35,7 @@ interface SyncQueueItem {
   table: string;
   entityId: string;
   operation: "insert" | "update" | "delete";
-  entity?: any;
+  entity?: Record<string, unknown>;
   synced: boolean;
   syncedAt?: number;
   failedAttempts?: number;
@@ -163,7 +163,7 @@ export class GraphSyncWorker {
     this.unsubscribe = this.client.onUpdate(
       // Note: In a real app, import from generated API
       // For now, we'll use a type assertion
-      "graphSync:getUnsyncedItems" as any,
+      "graphSync:getUnsyncedItems" as unknown as string,
       { limit: this.options.batchSize },
       async (items: SyncQueueItem[]) => {
         if (!this.running) return;
@@ -238,7 +238,7 @@ export class GraphSyncWorker {
       }
 
       // Mark as synced
-      await this.client.mutation("graphSync:markSynced" as any, {
+      await this.client.mutation("graphSync:markSynced" as unknown as string, {
         id: item._id,
       });
 
@@ -265,7 +265,7 @@ export class GraphSyncWorker {
       }
     } catch (error) {
       // Mark as failed
-      await this.client.mutation("graphSync:markFailed" as any, {
+      await this.client.mutation("graphSync:markFailed" as unknown as string, {
         id: item._id,
         error: error instanceof Error ? error.message : String(error),
       });

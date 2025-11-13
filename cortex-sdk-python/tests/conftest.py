@@ -59,7 +59,10 @@ elif test_mode == "auto":
         # Both present - default to LOCAL (test runner will handle dual testing)
         os.environ["CONVEX_URL"] = os.getenv("LOCAL_CONVEX_URL")
         print(f"\n⚠️  [Python SDK] Both configs detected, defaulting to LOCAL: {os.getenv('CONVEX_URL')}")
-        print("   Use 'python scripts/run-python-tests.py' to run both suites\n")
+        print("   To run BOTH suites (like TypeScript 'npm test'):")
+        print("     make test                              # Using Makefile (recommended)")
+        print("     python scripts/run-python-tests.py     # Using script directly")
+        print("     ./test                                 # Using wrapper script\n")
 
 from cortex import Cortex, CortexConfig
 from tests.helpers import TestCleanup, embeddings_available

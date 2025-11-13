@@ -23,6 +23,28 @@ import type {
   MemoryEntry,
   FactRecord,
 } from "../types";
+
+// Type for Convex user query results
+interface ConvexUserRecord {
+  userId: string;
+  data?: Record<string, unknown>;
+  preferences?: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
+  createdAt: number;
+  updatedAt: number;
+  version: number;
+}
+
+// Type for Neo4j record results (reused from agents)
+interface Neo4jNodeRecord {
+  id: string;
+  labels: string[];
+}
+
+// Type for Neo4j count results
+interface Neo4jCountRecord {
+  count: number;
+}
 import type { GraphAdapter } from "../graph/types";
 import {
   deleteWithOrphanCleanup,
@@ -86,7 +108,7 @@ export class UsersAPI {
 
     return {
       id: result.id,
-      data: result.data,
+      data: (result.data as Record<string, unknown> | undefined) ?? {},
       version: result.version,
       createdAt: result.createdAt,
       updatedAt: result.updatedAt,
@@ -121,7 +143,7 @@ export class UsersAPI {
 
     return {
       id: result.id,
-      data: result.data,
+      data: (result.data as Record<string, unknown> | undefined) ?? {},
       version: result.version,
       createdAt: result.createdAt,
       updatedAt: result.updatedAt,
@@ -327,7 +349,7 @@ export class UsersAPI {
 
     return {
       version: result.version,
-      data: result.data,
+      data: (result.data as Record<string, unknown> | undefined) ?? {},
       timestamp: result.timestamp,
     };
   }
@@ -349,7 +371,7 @@ export class UsersAPI {
 
     return result.map((v) => ({
       version: v.version,
-      data: v.data,
+      data: (v.data as Record<string, unknown> | undefined) ?? {},
       timestamp: v.timestamp,
     }));
   }
@@ -381,7 +403,7 @@ export class UsersAPI {
 
     return {
       version: result.version,
-      data: result.data,
+      data: (result.data as Record<string, unknown> | undefined) ?? {},
       timestamp: result.timestamp,
     };
   }
@@ -433,7 +455,7 @@ export class UsersAPI {
     }
 
     // JSON export (default)
-    return JSON.stringify(users, null, 2);
+    return JSON.stringify(users as UserProfile[], null, 2);
   }
 
   /**
@@ -455,7 +477,7 @@ export class UsersAPI {
    */
   async updateMany(
     userIds: string[],
-    updates: { data: Record<string, any> },
+    updates: { data: Record<string, unknown> },
     options?: { skipVersioning?: boolean; dryRun?: boolean },
   ): Promise<{ updated: number; userIds: string[] }> {
     if (options?.dryRun) {
@@ -744,9 +766,9 @@ export class UsersAPI {
       );
 
       // GraphQueryResult has a .records property
-      return result.records.map((record: any) => ({
+      return result.records.map((record: Neo4jNodeRecord) => ({
         nodeId: record.id,
-        labels: record.labels || [],
+        labels: record.labels,
       }));
     } catch (error) {
       console.warn("Failed to query graph nodes:", error);
@@ -760,13 +782,13 @@ export class UsersAPI {
   private async backupRecords(plan: DeletionPlan): Promise<DeletionBackup> {
     // Create deep copies of all records for potential rollback
     return {
-      conversations: JSON.parse(JSON.stringify(plan.conversations)),
-      immutable: JSON.parse(JSON.stringify(plan.immutable)),
-      mutable: JSON.parse(JSON.stringify(plan.mutable)),
-      vector: JSON.parse(JSON.stringify(plan.vector)),
-      facts: JSON.parse(JSON.stringify(plan.facts)),
+      conversations: JSON.parse(JSON.stringify(plan.conversations)) as Conversation[],
+      immutable: JSON.parse(JSON.stringify(plan.immutable)) as ImmutableRecord[],
+      mutable: JSON.parse(JSON.stringify(plan.mutable)) as MutableRecord[],
+      vector: JSON.parse(JSON.stringify(plan.vector)) as MemoryEntry[],
+      facts: JSON.parse(JSON.stringify(plan.facts)) as FactRecord[],
       userProfile: plan.userProfile
-        ? JSON.parse(JSON.stringify(plan.userProfile))
+        ? (JSON.parse(JSON.stringify(plan.userProfile)) as ConvexUserRecord)
         : null,
     };
   }
@@ -1191,7 +1213,8 @@ export class UsersAPI {
         { userId },
       );
       // GraphQueryResult has a .records property
-      return (result.records[0] as any)?.count || 0;
+      const record = result.records[0] as Neo4jCountRecord | undefined;
+      return record?.count ?? 0;
     } catch (error) {
       console.warn("Failed to count graph nodes:", error);
       return 0;
