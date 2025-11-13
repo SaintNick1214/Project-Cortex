@@ -102,7 +102,7 @@ describe("Cross-Layer Reference Integrity", () => {
       expect(conv!.conversationId).toBe(convNew.conversationId);
 
       // Verify all referenced message IDs exist in conversation
-      if (userMem!.conversationRef!.messageIds) {
+      if (userMem!.conversationRef!.messageIds.length > 0) {
         userMem!.conversationRef!.messageIds.forEach((msgId) => {
           const msgExists = conv!.messages.some((m) => m.id === msgId);
           expect(msgExists).toBe(true);
@@ -2104,6 +2104,7 @@ describe("Cross-Layer Reference Integrity", () => {
       current = facts[facts.length - 1];
       steps = 0;
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       while (current && current.supersedes && steps < 10) {
         const prev = await cortex.facts.get(TEST_MEMSPACE_ID, current.supersedes);
         expect(prev).not.toBeNull();

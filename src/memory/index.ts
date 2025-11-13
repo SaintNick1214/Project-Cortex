@@ -39,6 +39,20 @@ import {
 import type { GraphAdapter } from "../graph/types";
 import { consumeStream } from "./streamUtils";
 
+// Type for conversation message
+interface ConversationMessage {
+  id: string;
+  role: string;
+  content: string;
+  timestamp: number;
+}
+
+// Type for conversation with messages
+interface ConversationWithMessages {
+  messages: ConversationMessage[];
+  [key: string]: unknown;
+}
+
 export class MemoryAPI {
   private readonly client: ConvexClient;
   private readonly conversations: ConversationsAPI;
@@ -114,12 +128,12 @@ export class MemoryAPI {
     const archivedFactIds: string[] = [];
     for (const fact of factsToArchive) {
       try {
-        await this.facts.update(
+          await this.facts.update(
           memorySpaceId,
           fact.factId,
           {
             validUntil: Date.now(),
-            tags: [...(fact.tags || []), "archived"],
+            tags: [...fact.tags, "archived"],
           },
           { syncToGraph },
         );
@@ -693,10 +707,10 @@ export class MemoryAPI {
       if (memory.conversationRef) {
         const conversation = conversations.get(
           memory.conversationRef.conversationId,
-        );
+        ) as ConversationWithMessages | undefined;
         if (conversation) {
           result.conversation = conversation;
-          result.sourceMessages = conversation.messages.filter((m: any) =>
+          result.sourceMessages = conversation.messages.filter((m: ConversationMessage) =>
             memory.conversationRef!.messageIds.includes(m.id),
           );
         }
@@ -783,7 +797,7 @@ export class MemoryAPI {
                   messageIds: input.conversationRef?.messageIds,
                   memoryId: memory.memoryId,
                 },
-                tags: factData.tags || input.metadata.tags || [],
+                tags: factData.tags.length > 0 ? factData.tags : input.metadata.tags,
               },
               { syncToGraph: true },
             );
@@ -855,7 +869,7 @@ export class MemoryAPI {
                   messageIds: updatedMemory.conversationRef?.messageIds,
                   memoryId: updatedMemory.memoryId,
                 },
-                tags: factData.tags || updatedMemory.tags || [],
+                tags: factData.tags.length > 0 ? factData.tags : updatedMemory.tags,
               },
               { syncToGraph: options.syncToGraph },
             );
@@ -1053,10 +1067,10 @@ export class MemoryAPI {
     });
 
     // Parse existing export data
-    const data = JSON.parse(result.data);
+    const data = JSON.parse(result.data) as MemoryEntry[];
 
     // Add facts to each memory
-    const enrichedData = data.map((memory: any) => {
+    const enrichedData = data.map((memory: MemoryEntry) => {
       const relatedFacts = facts.filter(
         (fact) => fact.sourceRef?.memoryId === memory.memoryId,
       );

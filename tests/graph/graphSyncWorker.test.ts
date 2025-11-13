@@ -48,6 +48,7 @@ describeIfEnabled("Graph Sync Worker", () => {
 
   describe("Worker Lifecycle", () => {
     afterEach(() => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (cortex) {
         cortex.close();
       }
@@ -141,9 +142,11 @@ describeIfEnabled("Graph Sync Worker", () => {
     });
 
     afterEach(async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (worker) {
         worker.stop();
       }
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (cortex) {
         cortex.close();
       }
@@ -382,9 +385,11 @@ describeIfEnabled("Graph Sync Worker", () => {
     });
 
     afterEach(() => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (worker) {
         worker.stop();
       }
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (cortex) {
         cortex.close();
       }

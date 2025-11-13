@@ -324,6 +324,7 @@ describeIfEnabled("Graph Adapter (Memgraph)", () => {
   });
 
   afterAll(async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (adapter) {
       await adapter.clearDatabase();
       await adapter.disconnect();

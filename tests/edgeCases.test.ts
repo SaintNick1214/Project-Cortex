@@ -565,7 +565,7 @@ Line 4`;
         limit: 200,
       });
 
-      const listTestMems = results.filter((r) => r.tags?.includes("list-test"));
+      const listTestMems = results.filter((r) => r.tags.includes("list-test"));
 
       expect(listTestMems.length).toBeGreaterThanOrEqual(100);
     });

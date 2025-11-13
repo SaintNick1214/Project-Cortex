@@ -554,7 +554,7 @@ describe("State Transition Testing", () => {
       expect(inactive).not.toBeNull();
       
       // Metadata should be preserved
-      expect(inactive!.metadata?.capabilities).toEqual([
+      expect(inactive!.metadata.capabilities).toEqual([
         "code",
         "analysis",
         "testing",
@@ -566,7 +566,7 @@ describe("State Transition Testing", () => {
       });
 
       const reactivated = await cortex.agents.get(agentId);
-      expect(reactivated!.metadata?.capabilities).toEqual([
+      expect(reactivated!.metadata.capabilities).toEqual([
         "code",
         "analysis",
         "testing",

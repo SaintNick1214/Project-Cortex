@@ -435,7 +435,7 @@ describe("Hive Mode", () => {
 
       const uniqueParticipants = new Set(
         allMemories
-          .filter((m) => m.tags?.includes("multi-participant"))
+          .filter((m) => m.tags.includes("multi-participant"))
           .map((m) => m.participantId)
           .filter(Boolean),
       );
@@ -451,7 +451,7 @@ describe("Hive Mode", () => {
         const participantMems = allMemories.filter(
           (m) =>
             m.participantId === participant &&
-            m.tags?.includes("multi-participant"),
+            m.tags.includes("multi-participant"),
         );
         expect(participantMems.length).toBeGreaterThanOrEqual(1);
         expect(participantMems[0].content).toContain(participant);
@@ -487,7 +487,7 @@ describe("Hive Mode", () => {
       });
 
       const rememberTestMems = allMemories.filter((m) =>
-        m.tags?.includes("remember-test"),
+        m.tags.includes("remember-test"),
       );
 
       expect(rememberTestMems.length).toBeGreaterThanOrEqual(
@@ -576,7 +576,7 @@ describe("Hive Mode", () => {
       );
 
       const distinguishResults = results.filter((r) =>
-        r.tags?.includes("distinguish-test"),
+        r.tags.includes("distinguish-test"),
       );
 
       expect(distinguishResults.length).toBeGreaterThanOrEqual(2);
