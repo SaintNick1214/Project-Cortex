@@ -34,6 +34,7 @@ def filter_none_values(args: dict) -> dict:
 ```
 
 **Applied to modules:**
+
 - ✅ `conversations/__init__.py` - All 9 query/mutation calls
 - ✅ `immutable/__init__.py` - All 9 query/mutation calls
 - ✅ `mutable/__init__.py` - All 10 query/mutation calls
@@ -58,6 +59,7 @@ def filter_none_values(args: dict) -> dict:
 **File**: `tests/test_00_basic.py`
 
 5 tests to verify setup:
+
 1. ✅ Environment variables loaded
 2. ✅ All modules import
 3. ✅ Convex package installed
@@ -67,6 +69,7 @@ def filter_none_values(args: dict) -> dict:
 ## Current Test Status
 
 **Last Run Result:**
+
 ```
 4 passed, 1 failed
 
@@ -78,6 +81,7 @@ def filter_none_values(args: dict) -> dict:
 ```
 
 **The Error:**
+
 ```
 ArgumentValidationError: Value does not match validator.
 Path: .memorySpaceId
@@ -99,12 +103,12 @@ Validator: v.string()
    ```bash
    pytest tests/test_00_basic.py -v -s
    ```
-   
 3. **Should see:** 5/5 passing
 
 ### Then
 
 4. **Run full test suite:**
+
    ```bash
    pytest -v
    ```
@@ -200,6 +204,7 @@ pytest -v
 ## Progress Summary
 
 **Completed:**
+
 - ✅ AsyncConvexClient wrapper
 - ✅ filter_none_values utility
 - ✅ Applied to 4/10 core modules (conversations, immutable, mutable, vector)
@@ -209,6 +214,7 @@ pytest -v
 - ✅ Python 3.12/3.13 support
 
 **Remaining:**
+
 - ⏳ Apply filter to 6 more modules
 - ⏳ Run full test suite
 - ⏳ Fix any edge cases
@@ -220,4 +226,3 @@ pytest -v
 **Last Updated**: 2025-11-06  
 **Status**: Major fixes applied, partial testing working  
 **Next**: Apply filter_none_values to remaining 6 modules
-

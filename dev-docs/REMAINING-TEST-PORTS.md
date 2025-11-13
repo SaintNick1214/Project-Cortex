@@ -10,6 +10,7 @@
 ### 1. test_conversations.py (15 → 69, +54 tests)
 
 **Missing scenarios from conversations.test.ts:**
+
 - Custom conversationId acceptance
 - Duplicate conversationId error handling
 - Invalid participant combinations
@@ -40,6 +41,7 @@
 ### 2. test_immutable.py (13 → 54, +41 tests)
 
 **Missing from immutable.test.ts:**
+
 - Version conflict resolution
 - Concurrent version creation
 - Version retention limits
@@ -62,6 +64,7 @@
 ### 3. test_facts.py (14 → 63, +49 tests)
 
 **Missing from facts.test.ts:**
+
 - Subject-predicate-object queries
 - Confidence threshold filtering
 - Graph triple validation
@@ -84,6 +87,7 @@
 ### 4. test_memory.py (18 → 41, +23 tests)
 
 **Missing from memory.test.ts:**
+
 - Complex remember scenarios
 - Fact extraction callbacks (more variations)
 - Auto-summarization
@@ -102,6 +106,7 @@
 ### 5. test_vector.py (24 → 43, +19 tests)
 
 **Missing from vector.test.ts:**
+
 - Embedding generation edge cases
 - Vector search ranking
 - Similar memory deduplication
@@ -119,6 +124,7 @@
 ### 6. test_integration.py (6 → 20, +14 tests)
 
 **Missing integration scenarios:**
+
 - Multi-layer data flow
 - Transaction-like operations
 - Rollback scenarios
@@ -130,6 +136,7 @@
 ## Implementation Plan
 
 All expansions will:
+
 - Follow TypeScript test structure exactly
 - Include all assertions
 - Handle dict/object access patterns
@@ -146,4 +153,3 @@ All expansions will:
 - Integration expansion: ~700 lines
 
 **Total**: ~10,000 lines of test code to add
-

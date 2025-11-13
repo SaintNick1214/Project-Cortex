@@ -718,23 +718,29 @@ interface RememberStreamParams {
   responseStream: ReadableStream<string> | AsyncIterable<string>; // Stream to consume
   userId: string;
   userName: string;
-  
+
   // Optional - Hive Mode
   participantId?: string;
-  
+
   // Optional - Content processing
-  extractContent?: (userMsg: string, agentResp: string) => Promise<string | null>;
-  
+  extractContent?: (
+    userMsg: string,
+    agentResp: string,
+  ) => Promise<string | null>;
+
   // Optional - Embeddings
   generateEmbedding?: (content: string) => Promise<number[] | null>;
-  
+
   // Optional - Fact extraction
-  extractFacts?: (userMsg: string, agentResp: string) => Promise<FactData[] | null>;
-  
+  extractFacts?: (
+    userMsg: string,
+    agentResp: string,
+  ) => Promise<FactData[] | null>;
+
   // Optional - Cloud Mode
   autoEmbed?: boolean;
   autoSummarize?: boolean;
-  
+
   // Optional - Metadata
   importance?: number;
   tags?: string[];
@@ -756,7 +762,7 @@ interface RememberStreamResult {
   };
   memories: MemoryEntry[];
   facts: FactRecord[];
-  
+
   // Plus streaming-specific
   fullResponse: string; // Complete text from consumed stream
 }
@@ -765,46 +771,46 @@ interface RememberStreamResult {
 **Example 1: Vercel AI SDK**
 
 ```typescript
-import { streamText } from 'ai';
-import { openai } from '@ai-sdk/openai';
+import { streamText } from "ai";
+import { openai } from "@ai-sdk/openai";
 
 const response = await streamText({
-  model: openai('gpt-4'),
-  messages: [{ role: 'user', content: 'What is AI?' }],
+  model: openai("gpt-4"),
+  messages: [{ role: "user", content: "What is AI?" }],
 });
 
 const result = await cortex.memory.rememberStream({
-  memorySpaceId: 'ai-tutor',
-  conversationId: 'lesson-1',
-  userMessage: 'What is AI?',
+  memorySpaceId: "ai-tutor",
+  conversationId: "lesson-1",
+  userMessage: "What is AI?",
   responseStream: response.textStream, // ReadableStream
-  userId: 'student-123',
-  userName: 'Alice',
+  userId: "student-123",
+  userName: "Alice",
 });
 
-console.log('Full response:', result.fullResponse);
-console.log('Memories stored:', result.memories.length); // 2 (user + agent)
+console.log("Full response:", result.fullResponse);
+console.log("Memories stored:", result.memories.length); // 2 (user + agent)
 ```
 
 **Example 2: OpenAI SDK (AsyncIterable)**
 
 ```typescript
-import OpenAI from 'openai';
+import OpenAI from "openai";
 
 const openai = new OpenAI();
 const stream = await openai.chat.completions.create({
-  model: 'gpt-4',
-  messages: [{ role: 'user', content: 'Hello!' }],
+  model: "gpt-4",
+  messages: [{ role: "user", content: "Hello!" }],
   stream: true,
 });
 
 const result = await cortex.memory.rememberStream({
-  memorySpaceId: 'chat-bot',
-  conversationId: 'conv-789',
-  userMessage: 'Hello!',
+  memorySpaceId: "chat-bot",
+  conversationId: "conv-789",
+  userMessage: "Hello!",
   responseStream: stream, // AsyncIterable
-  userId: 'user-456',
-  userName: 'Bob',
+  userId: "user-456",
+  userName: "Bob",
 });
 ```
 
@@ -812,65 +818,69 @@ const result = await cortex.memory.rememberStream({
 
 ```typescript
 const result = await cortex.memory.rememberStream({
-  memorySpaceId: 'smart-bot',
-  conversationId: 'conv-999',
-  userMessage: 'My favorite color is blue',
+  memorySpaceId: "smart-bot",
+  conversationId: "conv-999",
+  userMessage: "My favorite color is blue",
   responseStream: stream,
-  userId: 'user-789',
-  userName: 'Charlie',
-  
+  userId: "user-789",
+  userName: "Charlie",
+
   // Generate embeddings
   generateEmbedding: async (text) => {
     const { embedding } = await embed({
-      model: openai.embedding('text-embedding-3-small'),
+      model: openai.embedding("text-embedding-3-small"),
       value: text,
     });
     return embedding;
   },
-  
+
   // Extract facts
   extractFacts: async (userMsg, agentResp) => {
-    return [{
-      fact: "User's favorite color is blue",
-      factType: 'preference',
-      confidence: 95,
-      subject: 'user',
-      predicate: 'favoriteColor',
-      object: 'blue',
-    }];
+    return [
+      {
+        fact: "User's favorite color is blue",
+        factType: "preference",
+        confidence: 95,
+        subject: "user",
+        predicate: "favoriteColor",
+        object: "blue",
+      },
+    ];
   },
 });
 
-console.log('Response:', result.fullResponse);
-console.log('Facts:', result.facts); // Extracted facts
+console.log("Response:", result.fullResponse);
+console.log("Facts:", result.facts); // Extracted facts
 ```
 
 **Example 4: Edge Runtime (Vercel Edge Functions)**
 
 ```typescript
 // app/api/chat/route.ts
-export const runtime = 'edge';
+export const runtime = "edge";
 
 export async function POST(req: Request) {
   const { message } = await req.json();
-  
+
   const response = await streamText({
-    model: openai('gpt-4'),
-    messages: [{ role: 'user', content: message }],
+    model: openai("gpt-4"),
+    messages: [{ role: "user", content: message }],
   });
-  
+
   // Store in background (works in edge runtime!)
-  cortex.memory.rememberStream({
-    memorySpaceId: 'edge-chat',
-    conversationId: 'conv-' + Date.now(),
-    userMessage: message,
-    responseStream: response.textStream,
-    userId: req.headers.get('x-user-id') || 'anonymous',
-    userName: 'User',
-  }).catch(error => {
-    console.error('Memory failed:', error);
-  });
-  
+  cortex.memory
+    .rememberStream({
+      memorySpaceId: "edge-chat",
+      conversationId: "conv-" + Date.now(),
+      userMessage: message,
+      responseStream: response.textStream,
+      userId: req.headers.get("x-user-id") || "anonymous",
+      userName: "User",
+    })
+    .catch((error) => {
+      console.error("Memory failed:", error);
+    });
+
   // Return stream to client
   return response.toAIStreamResponse();
 }

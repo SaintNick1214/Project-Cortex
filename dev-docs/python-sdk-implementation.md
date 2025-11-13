@@ -46,6 +46,7 @@
 ### Dataclasses vs TypeScript Interfaces
 
 **TypeScript:**
+
 ```typescript
 interface RememberParams {
   memorySpaceId: string;
@@ -60,6 +61,7 @@ interface RememberParams {
 ```
 
 **Python:**
+
 ```python
 @dataclass
 class RememberParams:
@@ -86,6 +88,7 @@ class RememberParams:
 Both TypeScript and Python use native async/await:
 
 **TypeScript:**
+
 ```typescript
 async function remember(params: RememberParams): Promise<RememberResult> {
   const result = await this.client.mutation("memories:store", {...});
@@ -94,6 +97,7 @@ async function remember(params: RememberParams): Promise<RememberResult> {
 ```
 
 **Python:**
+
 ```python
 async def remember(self, params: RememberParams) -> RememberResult:
     result = await self.client.mutation("memories:store", {...})
@@ -105,11 +109,13 @@ async def remember(self, params: RememberParams) -> RememberResult:
 The Python SDK uses the same pattern as TypeScript:
 
 **Query (Read):**
+
 ```python
 result = await self.client.query("memories:get", {"memoryId": memory_id})
 ```
 
 **Mutation (Write):**
+
 ```python
 result = await self.client.mutation("memories:store", {...})
 ```
@@ -129,7 +135,7 @@ class CypherGraphAdapter:
             config.uri,
             auth=(config.username, config.password)
         )
-    
+
     async def query(self, cypher: str, params: dict) -> GraphQueryResult:
         async with self.driver.session() as session:
             result = await session.run(cypher, params)
@@ -148,19 +154,19 @@ async def delete(self, user_id: str, options: DeleteUserOptions) -> UserDeleteRe
     if options.cascade:
         # Phase 1: Collection
         plan = await self._collect_deletion_plan(user_id)
-        
+
         # Phase 2: Backup (for rollback)
         backup = await self._create_deletion_backup(plan)
-        
+
         # Phase 3: Execute deletion with rollback on failure
         try:
             result = await self._execute_deletion(plan, user_id)
-            
+
             # Verify if requested
             if options.verify:
                 verification = await self._verify_deletion(user_id)
                 result.verification = verification
-            
+
             return result
         except Exception as e:
             # Rollback on failure
@@ -350,4 +356,3 @@ Any breaking changes in TypeScript SDK should be reflected in Python SDK:
 ---
 
 **Last Updated**: 2025-11-06
-

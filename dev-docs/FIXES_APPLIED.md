@@ -7,10 +7,12 @@
 **Problem**: Used Python 3.10+ union syntax (`Type1 | Type2`) which isn't compatible with Python 3.10.
 
 **Files Fixed**:
+
 - ✅ `cortex/memory/__init__.py` - 4 locations
 - ✅ `cortex/contexts/__init__.py` - 2 locations
 
 **Changes**:
+
 ```python
 # ❌ Before (Python 3.10+ only)
 -> Optional[MemoryEntry | EnrichedMemory]
@@ -26,9 +28,11 @@
 **Problem**: Used `tuple[int, List[str]]` which requires Python 3.9+, but we should use `Tuple` from typing for better compatibility.
 
 **Files Fixed**:
+
 - ✅ `cortex/memory/__init__.py`
 
 **Changes**:
+
 ```python
 # ❌ Before
 -> tuple[int, List[str]]
@@ -45,6 +49,7 @@ from typing import Union, Tuple
 **Problem**: Missing `Literal`, `Dict`, `Any`, `Union` imports in some modules.
 
 **Files Fixed**:
+
 - ✅ `cortex/conversations/__init__.py` - Added `Literal`, `Dict`, `Any`
 - ✅ `cortex/immutable/__init__.py` - Added `Literal`
 - ✅ `cortex/mutable/__init__.py` - Added `Literal`
@@ -80,6 +85,7 @@ tuple[int, str]        # Use Tuple instead
 The Python SDK currently expects a `convex` package that doesn't exist yet on PyPI.
 
 **Current State**:
+
 ```python
 try:
     from convex import ConvexClient
@@ -89,6 +95,7 @@ except ImportError:
 
 **For Testing**:
 You'll need to either:
+
 - Wait for official Convex Python client
 - Create a mock ConvexClient for testing
 - Use the TypeScript SDK with a Python bridge (temporary)
@@ -98,6 +105,7 @@ You'll need to either:
 Tests will fail without a real Convex deployment and client.
 
 **To Run Tests**:
+
 ```bash
 # 1. Install package
 cd cortex-sdk-python
@@ -116,6 +124,7 @@ pytest -v
 ### 3. Expected Test Failures
 
 Until the Convex Python client is available, tests will fail with:
+
 - `ImportError: convex package not found`
 - Or if mocked: Runtime errors when calling Convex mutations/queries
 
@@ -138,15 +147,15 @@ Create `tests/mocks/convex_mock.py`:
 ```python
 class MockConvexClient:
     """Mock Convex client for testing."""
-    
+
     async def mutation(self, name: str, args: dict):
         """Mock mutation."""
         return {"id": "test-id", **args}
-    
+
     async def query(self, name: str, args: dict):
         """Mock query."""
         return []
-    
+
     async def close(self):
         """Mock close."""
         pass
@@ -195,6 +204,7 @@ pytest
 ## Documentation Updated
 
 The testing guide has been updated to reflect these requirements:
+
 - `dev-docs/python-sdk-testing.md` - Complete testing guide
 - Includes environment setup from `.env.local`
 - Covers LOCAL and MANAGED Convex testing
@@ -204,4 +214,3 @@ The testing guide has been updated to reflect these requirements:
 
 **Fixes applied**: 2025-11-06
 **Status**: Ready for testing once Convex Python client is available
-

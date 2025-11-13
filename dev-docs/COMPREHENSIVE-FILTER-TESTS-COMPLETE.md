@@ -11,12 +11,14 @@
 ### Tests Created
 
 **Python SDK**: 90 new filter tests
+
 - `test_facts_filters.py`: 43 tests (35 parametrized + 8 edge cases)
 - `test_conversations_filters.py`: 15 tests (6 parametrized + 9 edge cases)
 - `test_contexts_filters.py`: 16 tests (8 parametrized + 8 edge cases)
 - `test_memory_spaces_filters.py`: 16 tests (6 parametrized + 10 edge cases)
 
 **TypeScript SDK**: 90 new filter tests
+
 - `facts-filters.test.ts`: 43 tests (35 parametrized + 8 edge cases)
 - `conversations-filters.test.ts`: 15 tests (6 parametrized + 9 edge cases)
 - `contexts-filters.test.ts`: 16 tests (8 parametrized + 8 edge cases)
@@ -27,21 +29,25 @@
 ### Coverage Achieved
 
 #### Facts API
+
 - **7 factTypes** × **5 operations** = **35 parametrized tests** per SDK
 - Operations covered: list, count, search, queryBySubject, exportFacts
 - Enums tested: preference, identity, knowledge, relationship, event, observation, custom
 
 #### Conversations API
+
 - **2 types** × **3 operations** = **6 parametrized tests** per SDK
 - Operations covered: list, count, search
 - Enums tested: user-agent, agent-agent
 
 #### Contexts API
+
 - **4 statuses** × **2 operations** = **8 parametrized tests** per SDK
 - Operations covered: list, count
 - Enums tested: active, completed, cancelled, blocked
 
 #### Memory Spaces API
+
 - **(4 types + 2 statuses)** × **1 operation** = **6 parametrized tests** per SDK
 - Operations covered: list
 - Type enums tested: personal, team, project, custom
@@ -52,11 +58,13 @@
 ### The "observation" Bug (Fixed)
 
 **Original Issue**:
+
 - `"observation"` was in schema and `store` mutation
 - Missing from 5 query function validators
 - Users got `ArgumentValidationError` when filtering by observation
 
 **How New Tests Prevent This**:
+
 1. Parametrized tests include "observation" in enum array
 2. Tests run for ALL enum values × ALL operations
 3. Any missing enum in validator causes immediate test failure
@@ -65,6 +73,7 @@
 ### Regression Test Coverage
 
 Each SDK has explicit regression tests:
+
 - `test_observation_regression()` (Python)
 - `"REGRESSION: 'observation' factType should work in all operations"` (TypeScript)
 
@@ -101,6 +110,7 @@ describe.each(ALL_FACT_TYPES)("FactType: %s", (factType) => {
 ### Edge Case Tests
 
 Each API has edge case tests for:
+
 - Empty results (filter with no matches)
 - Multiple results
 - Combining enum filter with other parameters
@@ -130,21 +140,25 @@ Each API has edge case tests for:
 ## Files Modified
 
 ### Backend (Convex)
+
 - `convex-dev/facts.ts`: Added `v.literal("observation")` to 5 query function validators
 
 ### Python SDK Tests
+
 - `cortex-sdk-python/tests/test_facts_filters.py` (NEW)
 - `cortex-sdk-python/tests/test_conversations_filters.py` (NEW)
 - `cortex-sdk-python/tests/test_contexts_filters.py` (NEW)
 - `cortex-sdk-python/tests/test_memory_spaces_filters.py` (NEW)
 
 ### TypeScript SDK Tests
+
 - `tests/facts-filters.test.ts` (NEW)
 - `tests/conversations-filters.test.ts` (NEW)
 - `tests/contexts-filters.test.ts` (NEW)
 - `tests/memory-spaces-filters.test.ts` (NEW)
 
 ### Documentation
+
 - `dev-docs/ENUM-FILTER-TESTING-GUIDE.md` (NEW)
 - `dev-docs/FACTS-OBSERVATION-BUG-FIX.md` (NEW)
 - `dev-docs/FILTER-TESTS-REGRESSION-VERIFICATION.md` (NEW)
@@ -154,24 +168,26 @@ Each API has edge case tests for:
 ## Impact Assessment
 
 ### Before Filter Tests
+
 - **Coverage**: Only 1 enum value tested per operation (e.g., only "preference")
 - **Bug Detection**: Manual testing or user reports (weeks/months)
 - **Enum Consistency**: No automated validation
 
 ### After Filter Tests
+
 - **Coverage**: 100% of enum values tested across ALL operations
 - **Bug Detection**: Immediate on test run (seconds)
 - **Enum Consistency**: Guaranteed by parametrized tests
 
 ### Metrics
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Enum values tested | 1 per API | ALL values | 7x for facts API |
-| Operations tested | Some | ALL with enums | 100% coverage |
-| Bug detection time | Weeks | Seconds | 604,800x faster |
-| False positives | N/A | 0% | Perfect |
-| Maintenance burden | High | Low | Auto-expanding |
+| Metric             | Before    | After          | Improvement      |
+| ------------------ | --------- | -------------- | ---------------- |
+| Enum values tested | 1 per API | ALL values     | 7x for facts API |
+| Operations tested  | Some      | ALL with enums | 100% coverage    |
+| Bug detection time | Weeks     | Seconds        | 604,800x faster  |
+| False positives    | N/A       | 0%             | Perfect          |
+| Maintenance burden | High      | Low            | Auto-expanding   |
 
 ## Success Criteria (All Met)
 
@@ -189,16 +205,19 @@ Each API has edge case tests for:
 ## New Total Test Counts
 
 ### Python SDK
+
 - **Before**: 409 tests
 - **Added**: 90 filter tests
 - **After**: 499 tests (+22%)
 
-### TypeScript SDK  
+### TypeScript SDK
+
 - **Before**: ~500 tests
 - **Added**: 90 filter tests
 - **After**: ~590 tests (+18%)
 
 ### Combined
+
 - **Total tests**: ~1,089 tests
 - **New filter tests**: 180 tests
 - **Filter coverage**: 100% for all enum-based filters
@@ -214,7 +233,7 @@ Add to GitHub Actions workflow:
     # Python
     cd cortex-sdk-python
     pytest tests/test_*_filters.py -v
-    
+
     # TypeScript
     cd ..
     npm test -- tests/*-filters.test.ts
@@ -225,16 +244,19 @@ This ensures all filter tests run on every commit, catching enum inconsistencies
 ## Future Enhancements
 
 ### Short Term
+
 - Add filter tests for any new APIs with enum parameters
 - Update test arrays when new enum values are added
 - Add to pre-commit hooks
 
 ### Medium Term
+
 - Automated enum consistency checker script
 - Shared enum constants across schema/functions
 - CI/CD validation before deployment
 
 ### Long Term
+
 - Code generation from schema enums
 - Automated test generation for new enums
 - IDE plugins for enum consistency warnings
@@ -288,4 +310,3 @@ The comprehensive enum-based filter testing implementation is complete. Both SDK
 **Implemented By**: AI Assistant  
 **Project**: Cortex Memory System  
 **Repository**: Project-Cortex
-

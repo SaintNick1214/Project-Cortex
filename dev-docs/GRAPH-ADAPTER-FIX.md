@@ -3,6 +3,7 @@
 ## Issue Identified
 
 The graph tests were failing with:
+
 ```
 neo4j.exceptions.CypherSyntaxError: Invalid input 'elementId': expected an expression...
 ```
@@ -10,6 +11,7 @@ neo4j.exceptions.CypherSyntaxError: Invalid input 'elementId': expected an expre
 ## Root Cause
 
 The `CypherGraphAdapter` was using `elementId()` function, which is:
+
 - **Neo4j 5+** feature only
 - **Not supported** in older Neo4j versions or Memgraph
 - **Invalid syntax** in the test environment
@@ -19,6 +21,7 @@ The `CypherGraphAdapter` was using `elementId()` function, which is:
 Replaced ALL `elementId()` calls with `id()` which is universally supported:
 
 ### Files Modified
+
 - `cortex/graph/adapters/cypher.py`
 
 ### Changes Made
@@ -50,11 +53,12 @@ Neo4j's `id()` function returns **integers**, but our API contract expects **str
 ### Additional Fix
 
 **Empty WHERE clause** in `find_nodes()`:
+
 ```python
 # Before
 where_clause = "WHERE " + " AND ".join(where_parts) if where_parts else ""
 
-# After  
+# After
 where_clause = ("WHERE " + " AND ".join(where_parts)) if where_parts else ""
 ```
 
@@ -63,6 +67,7 @@ This prevents generating invalid Cypher like `MATCH (n) WHERE RETURN...`
 ## Compatibility
 
 The `id()` function works with:
+
 - ✅ Neo4j 3.x
 - ✅ Neo4j 4.x
 - ✅ Neo4j 5.x
@@ -72,6 +77,7 @@ The `id()` function works with:
 ## Testing
 
 After these fixes, all 12 graph tests should pass:
+
 ```bash
 pytest tests/graph/test_graph_adapter.py -v
 ```
@@ -82,9 +88,9 @@ Expected: **12/12 passing** ✅
 
 ### Neo4j ID Functions
 
-| Function | Support | Use Case |
-|----------|---------|----------|
-| `id()` | Universal | Legacy integer IDs |
+| Function      | Support       | Use Case             |
+| ------------- | ------------- | -------------------- |
+| `id()`        | Universal     | Legacy integer IDs   |
 | `elementId()` | Neo4j 5+ only | New string-based IDs |
 
 For maximum compatibility with all Cypher databases, `id()` is the correct choice.
@@ -99,6 +105,7 @@ The graph adapter is now compatible with Neo4j 3.x, 4.x, 5.x, and Memgraph.
 ## Running Graph Tests
 
 ### Prerequisites
+
 Set up a Neo4j or Memgraph instance and configure environment variables:
 
 ```bash
@@ -114,10 +121,10 @@ export MEMGRAPH_PASSWORD="your-password"
 ```
 
 ### Run Tests
+
 ```bash
 cd cortex-sdk-python
 pytest tests/graph/test_graph_adapter.py -v
 ```
 
 **If no graph database is configured**, tests will be automatically skipped (not failed).
-

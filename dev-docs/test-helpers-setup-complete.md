@@ -9,10 +9,12 @@ All test helper utilities have been created and are ready for verification testi
 ### 1. Helper Utilities
 
 #### `/cortex-sdk-python/tests/helpers/__init__.py`
+
 - Exports all helper utilities
 - Clean module interface
 
 #### `/cortex-sdk-python/tests/helpers/cleanup.py`
+
 - `TestCleanup` class for purging test data
 - Methods:
   - `purge_conversations(memory_space_id, prefix)` - Purge test conversations
@@ -26,6 +28,7 @@ All test helper utilities have been created and are ready for verification testi
   - `verify_empty(memory_space_id, prefix)` - Verify no test data remains
 
 #### `/cortex-sdk-python/tests/helpers/embeddings.py`
+
 - `embeddings_available()` - Check if OPENAI_API_KEY is set
 - `generate_embedding(text, dimensions, use_mock)` - Generate embeddings
   - Uses OpenAI API if available
@@ -35,12 +38,14 @@ All test helper utilities have been created and are ready for verification testi
 - `generate_mock_embedding(text, dimensions)` - Generate mock embedding
 
 #### `/cortex-sdk-python/tests/helpers/storage.py`
+
 - `validate_conversation_storage(cortex_client, conversation_id, expected_data)` - Validate conversation in Convex
 - `validate_memory_storage(cortex_client, memory_space_id, memory_id, expected_data)` - Validate memory in Convex
 - `validate_fact_storage(cortex_client, memory_space_id, fact_id, expected_data)` - Validate fact in Convex
 - `validate_user_storage(cortex_client, user_id, expected_data)` - Validate user in Convex
 
 Each validation function returns:
+
 ```python
 {
     "exists": bool,       # True if item exists in storage
@@ -51,6 +56,7 @@ Each validation function returns:
 ```
 
 #### `/cortex-sdk-python/tests/helpers/generators.py`
+
 - `generate_test_user_id()` - Generate unique test user ID
 - `generate_test_memory_space_id()` - Generate unique test memory space ID
 - `generate_test_conversation_id()` - Generate unique test conversation ID
@@ -102,6 +108,7 @@ def embeddings_available_fixture():
 Complete test suite with 25+ tests:
 
 **Cleanup Helper Tests (6 tests):**
+
 - `test_cleanup_conversations` - Create, verify, purge, verify empty
 - `test_cleanup_memories` - Create, verify, purge, verify empty
 - `test_cleanup_facts` - Create, verify, purge, verify empty
@@ -110,18 +117,21 @@ Complete test suite with 25+ tests:
 - `test_cleanup_all` - Create mixed data, purge all, verify empty
 
 **Embeddings Helper Tests (4 tests):**
+
 - `test_embeddings_available` - Check if API available
 - `test_generate_embedding_with_mock` - Generate 1536-dim mock vector
 - `test_generate_embedding_consistency` - Same text = same embedding
 - `test_generate_embedding_with_api_if_available` - Real OpenAI embedding
 
 **Storage Validation Tests (4 tests):**
+
 - `test_validate_conversation_storage` - Create conversation, validate storage
 - `test_validate_memory_storage` - Create memory, validate storage
 - `test_validate_user_storage` - Create user, validate storage
 - `test_validate_storage_with_expected_data` - Validate with expected fields
 
 **Generator Tests (6 tests):**
+
 - `test_generate_unique_user_ids` - IDs are unique
 - `test_generate_unique_memory_space_ids` - IDs are unique
 - `test_generate_unique_conversation_ids` - IDs are unique
@@ -130,6 +140,7 @@ Complete test suite with 25+ tests:
 - `test_test_ids_fixture` - Fixture provides all IDs
 
 **Integration Tests (2 tests):**
+
 - `test_direct_convex_client_access` - Direct Convex queries work
 - `test_all_helpers_summary` - Summary showing all helpers work
 
@@ -151,28 +162,32 @@ pytest tests/test_helpers_verification.py -v -s
 ## What Each Helper Does
 
 ### TestCleanup
+
 Cleans up test data across all layers. Use in test cleanup phase or when tests fail.
 
 **Example usage:**
+
 ```python
 async def test_something(cortex_client, cleanup_helper):
     memory_space_id = "test-space-123"
-    
+
     # ... create test data ...
-    
+
     # Cleanup after test
     await cleanup_helper.purge_memory_space(memory_space_id)
 ```
 
 ### Embeddings
+
 Generate embeddings for testing semantic search. Falls back to mock embeddings if no API key.
 
 **Example usage:**
+
 ```python
 async def test_semantic_search(cortex_client):
     # Generate embedding (uses mock if API unavailable)
     embedding = await generate_embedding("Test content", use_mock=True)
-    
+
     # Store memory with embedding
     await cortex_client.vector.store(space_id, {
         "content": "Test content",
@@ -181,39 +196,43 @@ async def test_semantic_search(cortex_client):
 ```
 
 ### Storage Validation
+
 Verify SDK responses match Convex storage. Useful for ensuring data persistence.
 
 **Example usage:**
+
 ```python
 async def test_create_memory(cortex_client):
     # Create via SDK
     memory = await cortex_client.vector.store(space_id, input_data)
-    
+
     # Validate in storage
     validation = await validate_memory_storage(
-        cortex_client, 
-        space_id, 
+        cortex_client,
+        space_id,
         memory.memory_id,
         expected_data={"content": "Test content"}
     )
-    
+
     assert validation["exists"]
     assert validation["matches"]
 ```
 
 ### Generators
+
 Generate unique test IDs and sample data. Prevents ID collisions in tests.
 
 **Example usage:**
+
 ```python
 def test_something(test_ids):
     # Use fixture for multiple IDs
     user_id = test_ids["user_id"]
     space_id = test_ids["memory_space_id"]
-    
+
     # Or generate specific IDs
     conv_id = generate_test_conversation_id()
-    
+
     # Generate sample data
     memory_input = create_test_memory_input(
         content="Test memory",
@@ -224,6 +243,7 @@ def test_something(test_ids):
 ## Next Steps
 
 1. **Verify Helpers Work** ✅ (Now)
+
    ```bash
    pytest tests/test_helpers_verification.py -v
    ```
@@ -244,11 +264,12 @@ def test_something(test_ids):
 ✅ conftest.py updated with 4 new fixtures  
 ✅ 25+ verification tests created  
 ✅ No linting errors  
-⏳ Verification tests run and pass  
+⏳ Verification tests run and pass
 
 ## Files Summary
 
 **Created:**
+
 - `tests/helpers/__init__.py`
 - `tests/helpers/cleanup.py` (335 lines)
 - `tests/helpers/embeddings.py` (120 lines)
@@ -257,6 +278,7 @@ def test_something(test_ids):
 - `tests/test_helpers_verification.py` (450+ lines)
 
 **Updated:**
+
 - `tests/conftest.py` (added 4 fixtures)
 
 **Total:** 6 new files, 1 updated, ~1,400 lines of helper code
@@ -278,24 +300,24 @@ from tests.helpers import (
 async def test_store_memory_with_embedding(cortex_client, cleanup_helper, test_ids):
     """Test storing memory with embedding."""
     memory_space_id = test_ids["memory_space_id"]
-    
+
     # Generate embedding
     embedding = await generate_embedding("Test content", use_mock=True)
-    
+
     # Create memory with embedding
     memory_input = create_test_memory_input(content="Test content")
     memory_input["embedding"] = embedding
-    
+
     memory = await cortex_client.vector.store(memory_space_id, memory_input)
-    
+
     # Validate storage
     validation = await validate_memory_storage(
-        cortex_client, 
-        memory_space_id, 
+        cortex_client,
+        memory_space_id,
         memory.memory_id
     )
     assert validation["exists"]
-    
+
     # Cleanup
     await cleanup_helper.purge_memories(memory_space_id)
 ```
@@ -305,4 +327,3 @@ async def test_store_memory_with_embedding(cortex_client, cleanup_helper, test_i
 **Status**: ✅ **Test Helpers Setup Complete - Ready for Verification**  
 **Date**: 2025-11-06  
 **Next**: Run `pytest tests/test_helpers_verification.py -v` to verify helpers work
-

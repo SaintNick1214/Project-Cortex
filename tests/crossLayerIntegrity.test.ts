@@ -631,7 +631,7 @@ describe("Cross-Layer Reference Integrity", () => {
       // Validate ref resolves
       const resolved = await cortex.immutable.get(
         memory.immutableRef!.type,
-        memory.immutableRef!.id
+        memory.immutableRef!.id,
       );
 
       expect(resolved).not.toBeNull();
@@ -679,7 +679,10 @@ describe("Cross-Layer Reference Integrity", () => {
         content: "Source memory",
         contentType: "raw",
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         metadata: { importance: 50, tags: [] },
       });
 
@@ -697,12 +700,17 @@ describe("Cross-Layer Reference Integrity", () => {
       });
 
       // Validate conversation ref
-      const convCheck = await cortex.conversations.get(fact.sourceRef!.conversationId!);
+      const convCheck = await cortex.conversations.get(
+        fact.sourceRef!.conversationId!,
+      );
       expect(convCheck).not.toBeNull();
       expect(convCheck!.conversationId).toBe(conv.conversationId);
 
       // Validate memory ref
-      const memCheck = await cortex.vector.get(TEST_MEMSPACE_ID, fact.sourceRef!.memoryId!);
+      const memCheck = await cortex.vector.get(
+        TEST_MEMSPACE_ID,
+        fact.sourceRef!.memoryId!,
+      );
       expect(memCheck).not.toBeNull();
       expect(memCheck!.memoryId).toBe(memory.memoryId);
     });
@@ -723,11 +731,16 @@ describe("Cross-Layer Reference Integrity", () => {
         memorySpaceId: TEST_MEMSPACE_ID,
         userId: TEST_USER_ID,
         purpose: "Test context with conversation",
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
       });
 
       // Validate conversation exists
-      const convCheck = await cortex.conversations.get(ctx.conversationRef!.conversationId);
+      const convCheck = await cortex.conversations.get(
+        ctx.conversationRef!.conversationId,
+      );
       expect(convCheck).not.toBeNull();
       expect(convCheck!.messages.length).toBeGreaterThanOrEqual(1);
     });
@@ -743,7 +756,10 @@ describe("Cross-Layer Reference Integrity", () => {
         content: "Will be orphaned",
         contentType: "raw",
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         metadata: { importance: 50, tags: [] },
       });
 
@@ -751,9 +767,14 @@ describe("Cross-Layer Reference Integrity", () => {
       await cortex.conversations.delete(conv.conversationId);
 
       // Memory still exists but ref is orphaned
-      const memCheck = await cortex.vector.get(TEST_MEMSPACE_ID, memory.memoryId);
+      const memCheck = await cortex.vector.get(
+        TEST_MEMSPACE_ID,
+        memory.memoryId,
+      );
       expect(memCheck).not.toBeNull();
-      expect(memCheck!.conversationRef!.conversationId).toBe(conv.conversationId);
+      expect(memCheck!.conversationRef!.conversationId).toBe(
+        conv.conversationId,
+      );
 
       // Attempt to resolve ref fails
       const convCheck = await cortex.conversations.get(conv.conversationId);
@@ -991,7 +1012,10 @@ describe("Cross-Layer Reference Integrity", () => {
         content: "Memory with all refs",
         contentType: "raw",
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         immutableRef: { type: "config", id: immutable.id, version: 1 },
         mutableRef: {
           namespace: "test-ns",
@@ -1008,7 +1032,7 @@ describe("Cross-Layer Reference Integrity", () => {
       );
       const immCheck = await cortex.immutable.get(
         memory.immutableRef!.type,
-        memory.immutableRef!.id
+        memory.immutableRef!.id,
       );
       const mutCheck = await cortex.mutable.get(
         memory.mutableRef!.namespace,
@@ -1041,7 +1065,10 @@ describe("Cross-Layer Reference Integrity", () => {
       });
 
       // Validate memory ref
-      const memCheck = await cortex.vector.get(TEST_MEMSPACE_ID, fact.sourceRef!.memoryId!);
+      const memCheck = await cortex.vector.get(
+        TEST_MEMSPACE_ID,
+        fact.sourceRef!.memoryId!,
+      );
       expect(memCheck).not.toBeNull();
       expect(memCheck!.memoryId).toBe(memory.memoryId);
     });
@@ -1112,7 +1139,10 @@ describe("Cross-Layer Reference Integrity", () => {
       });
 
       // Memory still references v1
-      const memCheck = await cortex.vector.get(TEST_MEMSPACE_ID, memory.memoryId);
+      const memCheck = await cortex.vector.get(
+        TEST_MEMSPACE_ID,
+        memory.memoryId,
+      );
       expect(memCheck!.immutableRef!.version).toBe(1);
 
       // V1 is still retrievable
@@ -1142,11 +1172,17 @@ describe("Cross-Layer Reference Integrity", () => {
       await cortex.mutable.set("snapshot-ns", "snapshot-key", "updated");
 
       // Memory snapshot still shows original
-      const memCheck = await cortex.vector.get(TEST_MEMSPACE_ID, memory.memoryId);
+      const memCheck = await cortex.vector.get(
+        TEST_MEMSPACE_ID,
+        memory.memoryId,
+      );
       expect(memCheck!.mutableRef!.snapshotValue).toBe("original");
 
       // Current value is updated
-      const currentValue = await cortex.mutable.get("snapshot-ns", "snapshot-key");
+      const currentValue = await cortex.mutable.get(
+        "snapshot-ns",
+        "snapshot-key",
+      );
       expect(currentValue).toBe("updated");
     });
 
@@ -1164,7 +1200,10 @@ describe("Cross-Layer Reference Integrity", () => {
             content: `Memory ${i} from conversation`,
             contentType: "raw",
             source: { type: "conversation", userId: TEST_USER_ID },
-            conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+            conversationRef: {
+              conversationId: conv.conversationId,
+              messageIds: [],
+            },
             metadata: { importance: 50, tags: [] },
           }),
         ),
@@ -1177,7 +1216,9 @@ describe("Cross-Layer Reference Integrity", () => {
 
       // Conversation should be retrievable from any memory
       for (const mem of memories) {
-        const convCheck = await cortex.conversations.get(mem.conversationRef!.conversationId);
+        const convCheck = await cortex.conversations.get(
+          mem.conversationRef!.conversationId,
+        );
         expect(convCheck).not.toBeNull();
         expect(convCheck!.conversationId).toBe(conv.conversationId);
       }
@@ -1201,13 +1242,20 @@ describe("Cross-Layer Reference Integrity", () => {
         confidence: 90,
       });
 
-      const history = await cortex.facts.getHistory(TEST_MEMSPACE_ID, fact1.factId);
+      const history = await cortex.facts.getHistory(
+        TEST_MEMSPACE_ID,
+        fact1.factId,
+      );
 
       expect(history.length).toBeGreaterThanOrEqual(1);
 
       // Should include the fact chain (implementation dependent)
       const factIds = new Set(history.map((f) => f.factId));
-      expect(factIds.has(fact1.factId) || factIds.has(fact2.factId) || factIds.has(fact3.factId)).toBe(true);
+      expect(
+        factIds.has(fact1.factId) ||
+          factIds.has(fact2.factId) ||
+          factIds.has(fact3.factId),
+      ).toBe(true);
     });
 
     it("context grantedAccess references are valid", async () => {
@@ -1239,7 +1287,11 @@ describe("Cross-Layer Reference Integrity", () => {
 
       // Validate granted access
       if ((ctxCheck as any).grantedAccess) {
-        expect((ctxCheck as any).grantedAccess.some((g: any) => g.memorySpaceId === spaceB)).toBe(true);
+        expect(
+          (ctxCheck as any).grantedAccess.some(
+            (g: any) => g.memorySpaceId === spaceB,
+          ),
+        ).toBe(true);
       }
 
       // Validate space B exists
@@ -1365,7 +1417,10 @@ describe("Cross-Layer Reference Integrity", () => {
       expect(factCheck!.sourceRef!.memoryId).toBe(memory.memoryId);
 
       // But memory doesn't exist
-      const memCheck = await cortex.vector.get(TEST_MEMSPACE_ID, memory.memoryId);
+      const memCheck = await cortex.vector.get(
+        TEST_MEMSPACE_ID,
+        memory.memoryId,
+      );
       expect(memCheck).toBeNull();
     });
 
@@ -1380,7 +1435,10 @@ describe("Cross-Layer Reference Integrity", () => {
         memorySpaceId: TEST_MEMSPACE_ID,
         userId: TEST_USER_ID,
         purpose: "Context with conversation ref",
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
       });
 
       // Delete conversation
@@ -1389,7 +1447,9 @@ describe("Cross-Layer Reference Integrity", () => {
       // Context persists with orphaned ref
       const ctxCheck = await cortex.contexts.get(ctx.contextId);
       expect(ctxCheck).not.toBeNull();
-      expect((ctxCheck as any).conversationRef!.conversationId).toBe(conv.conversationId);
+      expect((ctxCheck as any).conversationRef!.conversationId).toBe(
+        conv.conversationId,
+      );
     });
 
     it("immutable version history maintains complete reference chain", async () => {
@@ -1435,7 +1495,10 @@ describe("Cross-Layer Reference Integrity", () => {
         content: "Memory with ref",
         contentType: "raw",
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         metadata: { importance: 50, tags: [] },
       });
 
@@ -1444,7 +1507,9 @@ describe("Cross-Layer Reference Integrity", () => {
 
       // References still valid
       const memCheck = await cortex.vector.get(spaceId, memory.memoryId);
-      const convCheck = await cortex.conversations.get(memCheck!.conversationRef!.conversationId);
+      const convCheck = await cortex.conversations.get(
+        memCheck!.conversationRef!.conversationId,
+      );
 
       expect(convCheck).not.toBeNull();
       expect(convCheck!.conversationId).toBe(conv.conversationId);
@@ -1502,7 +1567,10 @@ describe("Cross-Layer Reference Integrity", () => {
         content: "Memory",
         contentType: "raw",
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         metadata: { importance: 50, tags: [] },
       });
 
@@ -1580,19 +1648,28 @@ describe("Cross-Layer Reference Integrity", () => {
         content: "V1",
         contentType: "raw",
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         metadata: { importance: 50, tags: [] },
       });
 
       // Update multiple times
-      await cortex.vector.update(TEST_MEMSPACE_ID, mem.memoryId, { content: "V2" });
-      await cortex.vector.update(TEST_MEMSPACE_ID, mem.memoryId, { content: "V3" });
+      await cortex.vector.update(TEST_MEMSPACE_ID, mem.memoryId, {
+        content: "V2",
+      });
+      await cortex.vector.update(TEST_MEMSPACE_ID, mem.memoryId, {
+        content: "V3",
+      });
 
       const current = await cortex.vector.get(TEST_MEMSPACE_ID, mem.memoryId);
 
       // conversationRef preserved through all versions
       expect(current!.conversationRef).toBeDefined();
-      expect(current!.conversationRef!.conversationId).toBe(conv.conversationId);
+      expect(current!.conversationRef!.conversationId).toBe(
+        conv.conversationId,
+      );
       expect(current!.version).toBe(3);
 
       // Previous versions may or may not include conversationRef depending on implementation
@@ -1657,8 +1734,13 @@ describe("Cross-Layer Reference Integrity", () => {
       });
 
       // All refs should resolve
-      const convCheck = await cortex.conversations.get(fact.sourceRef!.conversationId!);
-      const memCheck = await cortex.vector.get(TEST_MEMSPACE_ID, fact.sourceRef!.memoryId!);
+      const convCheck = await cortex.conversations.get(
+        fact.sourceRef!.conversationId!,
+      );
+      const memCheck = await cortex.vector.get(
+        TEST_MEMSPACE_ID,
+        fact.sourceRef!.memoryId!,
+      );
 
       expect(convCheck).not.toBeNull();
       expect(memCheck).not.toBeNull();
@@ -1682,12 +1764,17 @@ describe("Cross-Layer Reference Integrity", () => {
         userId: TEST_USER_ID,
         purpose: "Child with both refs",
         parentId: parent.contextId,
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
       });
 
       // Both refs should resolve
       const parentCheck = await cortex.contexts.get(child.parentId!);
-      const convCheck = await cortex.conversations.get(child.conversationRef!.conversationId);
+      const convCheck = await cortex.conversations.get(
+        child.conversationRef!.conversationId,
+      );
 
       expect(parentCheck).not.toBeNull();
       expect(convCheck).not.toBeNull();
@@ -1718,7 +1805,10 @@ describe("Cross-Layer Reference Integrity", () => {
 
       // Fact ref still valid
       const factCheck = await cortex.facts.get(TEST_MEMSPACE_ID, fact.factId);
-      const memCheck = await cortex.vector.get(TEST_MEMSPACE_ID, factCheck!.sourceRef!.memoryId!);
+      const memCheck = await cortex.vector.get(
+        TEST_MEMSPACE_ID,
+        factCheck!.sourceRef!.memoryId!,
+      );
 
       expect(memCheck).not.toBeNull();
       expect(memCheck!.content).toBe("Updated"); // Ref points to latest
@@ -1738,7 +1828,10 @@ describe("Cross-Layer Reference Integrity", () => {
             content: `Memory ${i}`,
             contentType: "raw",
             source: { type: "conversation", userId: TEST_USER_ID },
-            conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+            conversationRef: {
+              conversationId: conv.conversationId,
+              messageIds: [],
+            },
             metadata: { importance: 50, tags: [] },
           }),
         ),
@@ -1749,9 +1842,14 @@ describe("Cross-Layer Reference Integrity", () => {
 
       // All memories persist with orphaned refs
       for (const mem of memories) {
-        const memCheck = await cortex.vector.get(TEST_MEMSPACE_ID, mem.memoryId);
+        const memCheck = await cortex.vector.get(
+          TEST_MEMSPACE_ID,
+          mem.memoryId,
+        );
         expect(memCheck).not.toBeNull();
-        expect(memCheck!.conversationRef!.conversationId).toBe(conv.conversationId);
+        expect(memCheck!.conversationRef!.conversationId).toBe(
+          conv.conversationId,
+        );
       }
     });
 
@@ -1876,7 +1974,10 @@ describe("Cross-Layer Reference Integrity", () => {
         content: "Reference test",
         contentType: "raw",
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         metadata: { importance: 50, tags: [] },
       });
 
@@ -1887,8 +1988,13 @@ describe("Cross-Layer Reference Integrity", () => {
       });
 
       // Memory ref still valid
-      const memCheck = await cortex.vector.get(TEST_MEMSPACE_ID, memory.memoryId);
-      const convCheck = await cortex.conversations.get(memCheck!.conversationRef!.conversationId);
+      const memCheck = await cortex.vector.get(
+        TEST_MEMSPACE_ID,
+        memory.memoryId,
+      );
+      const convCheck = await cortex.conversations.get(
+        memCheck!.conversationRef!.conversationId,
+      );
 
       expect(convCheck).not.toBeNull();
       expect(convCheck!.messages.length).toBeGreaterThanOrEqual(1);
@@ -1914,7 +2020,10 @@ describe("Cross-Layer Reference Integrity", () => {
         content: "Memory with all refs",
         contentType: "raw",
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         immutableRef: {
           type: "data",
           id: immutable.id,
@@ -1946,7 +2055,10 @@ describe("Cross-Layer Reference Integrity", () => {
         memorySpaceId: TEST_MEMSPACE_ID,
         userId: TEST_USER_ID,
         purpose: "Context with refs",
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         data: { factId: fact.factId, memoryId: memory.memoryId },
       });
 
@@ -1954,7 +2066,10 @@ describe("Cross-Layer Reference Integrity", () => {
       const convCheck = await cortex.conversations.get(conv.conversationId);
       const immCheck = await cortex.immutable.get("data", immutable.id);
       const mutCheck = await cortex.mutable.get("multi-ns", "multi-key");
-      const memCheck = await cortex.vector.get(TEST_MEMSPACE_ID, memory.memoryId);
+      const memCheck = await cortex.vector.get(
+        TEST_MEMSPACE_ID,
+        memory.memoryId,
+      );
       const factCheck = await cortex.facts.get(TEST_MEMSPACE_ID, fact.factId);
       const ctxCheck = await cortex.contexts.get(ctx.contextId);
 
@@ -2014,7 +2129,10 @@ describe("Cross-Layer Reference Integrity", () => {
         content: "Will have orphaned ref",
         contentType: "raw",
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         metadata: { importance: 50, tags: [] },
       });
 
@@ -2022,7 +2140,10 @@ describe("Cross-Layer Reference Integrity", () => {
       await cortex.memorySpaces.delete(spaceToDelete, { cascade: true });
 
       // Memory in surviving space still exists
-      const memCheck = await cortex.vector.get(survivingSpace, orphanMemory.memoryId);
+      const memCheck = await cortex.vector.get(
+        survivingSpace,
+        orphanMemory.memoryId,
+      );
       expect(memCheck).not.toBeNull();
 
       // But its conversation ref is orphaned
@@ -2081,9 +2202,13 @@ describe("Cross-Layer Reference Integrity", () => {
 
       // Create 4 more versions
       for (let i = 2; i <= 5; i++) {
-        currentFact = await cortex.facts.update(TEST_MEMSPACE_ID, currentFact.factId, {
-          fact: `V${i}`,
-        });
+        currentFact = await cortex.facts.update(
+          TEST_MEMSPACE_ID,
+          currentFact.factId,
+          {
+            fact: `V${i}`,
+          },
+        );
         facts.push(currentFact);
       }
 
@@ -2092,7 +2217,10 @@ describe("Cross-Layer Reference Integrity", () => {
       let steps = 0;
 
       while (current && current.supersededBy && steps < 10) {
-        const next = await cortex.facts.get(TEST_MEMSPACE_ID, current.supersededBy);
+        const next = await cortex.facts.get(
+          TEST_MEMSPACE_ID,
+          current.supersededBy,
+        );
         expect(next).not.toBeNull();
         current = next;
         steps++;
@@ -2106,7 +2234,10 @@ describe("Cross-Layer Reference Integrity", () => {
 
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       while (current && current.supersedes && steps < 10) {
-        const prev = await cortex.facts.get(TEST_MEMSPACE_ID, current.supersedes);
+        const prev = await cortex.facts.get(
+          TEST_MEMSPACE_ID,
+          current.supersedes,
+        );
         expect(prev).not.toBeNull();
         current = prev!;
         steps++;
@@ -2131,7 +2262,10 @@ describe("Cross-Layer Reference Integrity", () => {
         memorySpaceId: spaceB,
         userId: TEST_USER_ID,
         purpose: "Cross-space context",
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
       });
 
       // Grant access
@@ -2157,7 +2291,10 @@ describe("Cross-Layer Reference Integrity", () => {
         content: "Export test",
         contentType: "raw",
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         metadata: { importance: 50, tags: ["export"] },
       });
 
@@ -2168,11 +2305,15 @@ describe("Cross-Layer Reference Integrity", () => {
       });
 
       const parsed = JSON.parse(exported.data);
-      const exportedMemory = parsed.find((m: any) => m.memoryId === memory.memoryId);
+      const exportedMemory = parsed.find(
+        (m: any) => m.memoryId === memory.memoryId,
+      );
 
       // conversationRef may or may not be in export depending on format
       if (exportedMemory.conversationRef) {
-        expect(exportedMemory.conversationRef.conversationId).toBe(conv.conversationId);
+        expect(exportedMemory.conversationRef.conversationId).toBe(
+          conv.conversationId,
+        );
       }
     });
   });

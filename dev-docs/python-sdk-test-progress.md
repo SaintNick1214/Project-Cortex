@@ -14,20 +14,23 @@
 ### ✅ What's Working (18 tests)
 
 **Basic Tests (5/5)** ✅
+
 - test_environment_variables
-- test_imports  
+- test_imports
 - test_convex_client_import
 - test_cortex_initialization
 - test_convex_connection
 
 **Conversation Tests (1/6)**
+
 - test_create_conversation ✅
-- test_get_conversation ✅  
+- test_get_conversation ✅
 - test_list_conversations ✅
 - test_count_conversations ✅
 - test_get_or_create ✅
 
 **User Tests (6/10)**
+
 - test_create_user_profile ✅
 - test_get_user_profile ✅
 - test_update_user_profile ✅
@@ -39,14 +42,17 @@
 ### ❌ Current Failures (11 tests)
 
 **Memory Tests (9 tests)** - All failing due to same issue
+
 - Error: `AttributeError: 'dict' object has no attribute 'id'`
-- Line: `user_msg.messages[-1].id` 
+- Line: `user_msg.messages[-1].id`
 - Fix: Extract message IDs from dict (already applied!)
 
 **Conversation Tests (1 test)**
+
 - test_add_message - Similar dict vs object issue
 
 **User Tests (1 test)**
+
 - test_merge_user_profile - Logic error (merge not deep merging)
 
 ## 🔧 Fixes Applied
@@ -87,6 +93,7 @@ def filter_none_values(args: dict) -> dict:
 ```
 
 Applied to all query/mutation calls in:
+
 - conversations (all 14 calls)
 - immutable (all 9 calls)
 - mutable (all 10 calls)
@@ -95,7 +102,7 @@ Applied to all query/mutation calls in:
 
 ### 4. ✅ Message ID Extraction Fix
 
-Fixed memory/__init__.py to extract IDs from dict:
+Fixed memory/**init**.py to extract IDs from dict:
 
 ```python
 user_message_id = user_msg.messages[-1]["id"] if isinstance(user_msg.messages[-1], dict) else user_msg.messages[-1].id
@@ -103,13 +110,13 @@ user_message_id = user_msg.messages[-1]["id"] if isinstance(user_msg.messages[-1
 
 ## 📈 Progress Timeline
 
-| Stage | Passing | Coverage | Key Achievement |
-|-------|---------|----------|-----------------|
-| Initial | 0/29 (0%) | 0% | Import errors |
-| After AsyncClient | 4/5 (80%) | 46% | Basic connectivity |
-| After filter_none | 12/29 (41%) | 47% | Validation errors fixed |
-| After convert_convex | 18/29 (62%) | 51% | Field naming fixed |
-| **Current** | **18/29 (62%)** | **51%** | Most core tests passing |
+| Stage                | Passing         | Coverage | Key Achievement         |
+| -------------------- | --------------- | -------- | ----------------------- |
+| Initial              | 0/29 (0%)       | 0%       | Import errors           |
+| After AsyncClient    | 4/5 (80%)       | 46%      | Basic connectivity      |
+| After filter_none    | 12/29 (41%)     | 47%      | Validation errors fixed |
+| After convert_convex | 18/29 (62%)     | 51%      | Field naming fixed      |
+| **Current**          | **18/29 (62%)** | **51%**  | Most core tests passing |
 
 ## 🎯 Remaining Issues
 
@@ -120,6 +127,7 @@ user_message_id = user_msg.messages[-1]["id"] if isinstance(user_msg.messages[-1
 **Problem**: After `convert_convex_response()`, nested objects (like messages) are still dicts
 
 **Solution Applied**: Access dict keys instead of attributes
+
 - Changed `user_msg.messages[-1].id` → `user_msg.messages[-1]["id"]`
 
 ### Issue 2: Merge Logic
@@ -135,6 +143,7 @@ user_message_id = user_msg.messages[-1]["id"] if isinstance(user_msg.messages[-1
 ### Immediate (5 min)
 
 1. **Run tests again** to verify message ID fix:
+
    ```bash
    pytest tests/test_memory.py::test_remember_basic -v -s
    ```
@@ -159,7 +168,7 @@ Then tackle edge cases and remaining issues.
 
 1. **Convex Python client is sync** - Need async wrapper
 2. **Convex returns camelCase** - Need conversion to snake_case
-3. **Convex adds internal fields** - Need filtering (_creationTime, etc.)
+3. **Convex adds internal fields** - Need filtering (\_creationTime, etc.)
 4. **Convex rejects None** - Must omit optional params, not pass null
 5. **Converted responses are dicts** - Access with `["key"]` not `.key`
 
@@ -171,7 +180,7 @@ Then tackle edge cases and remaining issues.
 ✅ **Environment loading working**  
 ✅ **Python 3.12/3.13 compatible**  
 ✅ **Async/await throughout**  
-✅ **Type conversion working**  
+✅ **Type conversion working**
 
 The Python SDK is **functional** and most core operations work!
 
@@ -180,4 +189,3 @@ The Python SDK is **functional** and most core operations work!
 **Last Run**: 2025-11-06  
 **Status**: 18/29 passing (62%), actively debugging  
 **Next**: Fix remaining 11 tests
-

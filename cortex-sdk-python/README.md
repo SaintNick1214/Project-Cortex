@@ -35,7 +35,7 @@ async def main():
     cortex = Cortex(CortexConfig(
         convex_url="https://your-deployment.convex.cloud"
     ))
-    
+
     # Remember a conversation
     result = await cortex.memory.remember(
         RememberParams(
@@ -47,16 +47,16 @@ async def main():
             user_name="User"
         )
     )
-    
+
     # Search your memories
     results = await cortex.memory.search(
         "my-agent",
         "what are the user's preferences?"
     )
-    
+
     for memory in results:
         print(f"Found: {memory.content}")
-    
+
     # Clean up
     await cortex.close()
 
@@ -236,6 +236,7 @@ await cortex.a2a.send(
 The Python SDK maintains API compatibility with the TypeScript SDK. Here's how to translate:
 
 **TypeScript:**
+
 ```typescript
 const cortex = new Cortex({ convexUrl: process.env.CONVEX_URL });
 
@@ -252,6 +253,7 @@ const result = await cortex.memory.remember({
 ```
 
 **Python:**
+
 ```python
 cortex = Cortex(CortexConfig(convex_url=os.getenv("CONVEX_URL")))
 
@@ -270,6 +272,7 @@ result = await cortex.memory.remember(
 ```
 
 **Key Differences:**
+
 - camelCase → snake_case for parameters and methods
 - Objects → dataclasses or named parameters
 - Same structure, same capabilities, native Python
@@ -278,20 +281,20 @@ result = await cortex.memory.remember(
 
 All TypeScript APIs are available in Python:
 
-| API Module | Description | Methods |
-|------------|-------------|---------|
-| `cortex.memory.*` | Layer 4: Memory convenience API | 14 methods |
-| `cortex.conversations.*` | Layer 1a: ACID conversations | 13 methods |
-| `cortex.immutable.*` | Layer 1b: Shared immutable data | 9 methods |
-| `cortex.mutable.*` | Layer 1c: Shared mutable data | 12 methods |
-| `cortex.vector.*` | Layer 2: Vector index | 13 methods |
-| `cortex.facts.*` | Layer 3: Facts store | 10 methods |
-| `cortex.contexts.*` | Coordination: Context chains | 17 methods |
-| `cortex.users.*` | Coordination: User profiles + GDPR | 11 methods |
-| `cortex.agents.*` | Coordination: Agent registry | 8 methods |
-| `cortex.memory_spaces.*` | Coordination: Memory spaces | 9 methods |
-| `cortex.a2a.*` | Helpers: A2A communication | 4 methods |
-| `cortex.graph.*` | Graph database integration | ~20 methods |
+| API Module               | Description                        | Methods     |
+| ------------------------ | ---------------------------------- | ----------- |
+| `cortex.memory.*`        | Layer 4: Memory convenience API    | 14 methods  |
+| `cortex.conversations.*` | Layer 1a: ACID conversations       | 13 methods  |
+| `cortex.immutable.*`     | Layer 1b: Shared immutable data    | 9 methods   |
+| `cortex.mutable.*`       | Layer 1c: Shared mutable data      | 12 methods  |
+| `cortex.vector.*`        | Layer 2: Vector index              | 13 methods  |
+| `cortex.facts.*`         | Layer 3: Facts store               | 10 methods  |
+| `cortex.contexts.*`      | Coordination: Context chains       | 17 methods  |
+| `cortex.users.*`         | Coordination: User profiles + GDPR | 11 methods  |
+| `cortex.agents.*`        | Coordination: Agent registry       | 8 methods   |
+| `cortex.memory_spaces.*` | Coordination: Memory spaces        | 9 methods   |
+| `cortex.a2a.*`           | Helpers: A2A communication         | 4 methods   |
+| `cortex.graph.*`         | Graph database integration         | ~20 methods |
 
 **Total: ~140 methods** - Full feature parity with TypeScript SDK!
 
@@ -314,6 +317,7 @@ pytest tests/test_memory.py -v
 ## 📖 Documentation
 
 ### Quick Links
+
 - **[START HERE](./START_HERE.md)** - Navigation guide for all documentation
 - **[Developer Guide](./docs/guides/developer-guide.md)** - Comprehensive Python guide
 - **[Migration Guide](./docs/guides/migration-guide.md)** - TypeScript to Python migration
@@ -321,6 +325,7 @@ pytest tests/test_memory.py -v
 - **[Examples](./examples/)** - 4 working applications
 
 ### Shared Documentation
+
 - **[API Reference](../Documentation/03-api-reference/01-overview.md)** - Complete API documentation
 - **[Core Features](../Documentation/02-core-features/)** - Feature guides
 - **[Architecture](../Documentation/04-architecture/)** - System architecture
@@ -335,6 +340,7 @@ pytest tests/test_memory.py -v
   - MANAGED: Already running at https://expert-buffalo-268.convex.cloud
 
 **Optional:**
+
 - Neo4j or Memgraph (for graph integration)
 - Redis (for A2A pub/sub)
 
@@ -351,7 +357,7 @@ make test
 # Run LOCAL tests only - like "npm run test:local"
 make test-local
 
-# Run MANAGED tests only - like "npm run test:managed"  
+# Run MANAGED tests only - like "npm run test:managed"
 make test-managed
 
 # Explicitly run BOTH suites - like "npm run test:both"
@@ -389,10 +395,10 @@ CONVEX_TEST_MODE=managed pytest tests/ -v
 
 ### Test Environments
 
-| Environment | Features | Speed | Use Case |
-|-------------|----------|-------|----------|
-| **LOCAL** | ✅ ACID, ❌ Vector search | ⚡ 2-3 min | Fast iteration |
-| **MANAGED** | ✅ ACID, ✅ Vector search | 🌐 15 min | Full validation |
+| Environment | Features                  | Speed      | Use Case        |
+| ----------- | ------------------------- | ---------- | --------------- |
+| **LOCAL**   | ✅ ACID, ❌ Vector search | ⚡ 2-3 min | Fast iteration  |
+| **MANAGED** | ✅ ACID, ✅ Vector search | 🌐 15 min  | Full validation |
 
 **Note:** TypeScript SDK has 1062 tests (includes 5 advanced OpenAI embedding tests not ported to Python).
 
@@ -428,4 +434,3 @@ Apache License 2.0 - Same as the TypeScript SDK
 **Built with ❤️ for the AI agent community**
 
 Python port by [Saint Nick LLC](https://saintnick.ai) | Original SDK by [Nicholas Geil](https://github.com/SaintNick1214)
-

@@ -145,7 +145,10 @@ describe("Parameter Combination Testing", () => {
         content: "Conv + Immut refs",
         contentType: "raw",
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         immutableRef: { type: "combo", id: immutable.id, version: 1 },
         metadata: { importance: 50, tags: [] },
       });
@@ -167,7 +170,10 @@ describe("Parameter Combination Testing", () => {
         content: "Conv + Mut refs",
         contentType: "raw",
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         mutableRef: {
           namespace: "combo-ns",
           key: "combo-key",
@@ -220,7 +226,10 @@ describe("Parameter Combination Testing", () => {
         contentType: "raw",
         embedding: Array.from({ length: 1536 }, () => Math.random()),
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         metadata: { importance: 50, tags: [] },
       });
 
@@ -460,7 +469,15 @@ describe("Parameter Combination Testing", () => {
     });
 
     it("all factType values with different param combinations", async () => {
-      const factTypes: Array<"preference" | "identity" | "knowledge" | "relationship" | "event" | "observation" | "custom"> = [
+      const factTypes: Array<
+        | "preference"
+        | "identity"
+        | "knowledge"
+        | "relationship"
+        | "event"
+        | "observation"
+        | "custom"
+      > = [
         "preference",
         "identity",
         "knowledge",
@@ -643,7 +660,8 @@ describe("Parameter Combination Testing", () => {
         userId: TEST_USER_ID,
         userName: "Test User",
         importance: 70,
-        extractContent: async (_user, _agent) => `Summary: ${_user.substring(0, 10)}...`,
+        extractContent: async (_user, _agent) =>
+          `Summary: ${_user.substring(0, 10)}...`,
       });
 
       expect(result.memories[0].importance).toBe(70);
@@ -745,7 +763,10 @@ describe("Parameter Combination Testing", () => {
         purpose: "Context with all params",
         status: "active",
         parentId: parent.contextId,
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         data: {
           taskId: "task-123",
           priority: "high",
@@ -780,11 +801,8 @@ describe("Parameter Combination Testing", () => {
         purpose: "Parent",
       });
 
-      const statuses: Array<"active" | "completed" | "cancelled" | "blocked"> = [
-        "active",
-        "completed",
-        "blocked",
-      ];
+      const statuses: Array<"active" | "completed" | "cancelled" | "blocked"> =
+        ["active", "completed", "blocked"];
 
       for (const status of statuses) {
         const result = await cortex.contexts.create({
@@ -811,7 +829,10 @@ describe("Parameter Combination Testing", () => {
         memorySpaceId: BASE_ID,
         userId: TEST_USER_ID,
         purpose: "Context with conv and data",
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         data: {
           linked: true,
           conversationId: conv.conversationId,
@@ -823,12 +844,8 @@ describe("Parameter Combination Testing", () => {
     });
 
     it("status variations with data", async () => {
-      const statuses: Array<"active" | "completed" | "cancelled" | "blocked"> = [
-        "active",
-        "completed",
-        "cancelled",
-        "blocked",
-      ];
+      const statuses: Array<"active" | "completed" | "cancelled" | "blocked"> =
+        ["active", "completed", "cancelled", "blocked"];
 
       for (const status of statuses) {
         const result = await cortex.contexts.create({
@@ -881,7 +898,10 @@ describe("Parameter Combination Testing", () => {
         content: "With refs",
         contentType: "raw",
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         metadata: { importance: 50, tags: [] },
       });
 
@@ -970,7 +990,10 @@ describe("Parameter Combination Testing", () => {
         memorySpaceId: BASE_ID,
         userId: TEST_USER_ID,
         purpose: "Context with conv ref",
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
       });
 
       const updated = await cortex.contexts.update(ctx.contextId, {
@@ -1333,7 +1356,10 @@ describe("Parameter Combination Testing", () => {
         userId: TEST_USER_ID,
         purpose: "Complex child",
         parentId: parent.contextId,
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         data: {
           taskId: "task-456",
           inheritedFrom: parent.contextId,
@@ -1359,7 +1385,10 @@ describe("Parameter Combination Testing", () => {
         contentType: "raw",
         embedding,
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         metadata: {
           importance: 88,
           tags: ["embedded"],
@@ -1398,7 +1427,8 @@ describe("Parameter Combination Testing", () => {
         agentResponse: "That's great!",
         userId: TEST_USER_ID,
         userName: "Test User",
-        extractContent: async (_user, _agent) => "Extracted: TypeScript + Google",
+        extractContent: async (_user, _agent) =>
+          "Extracted: TypeScript + Google",
         extractFacts: async (_user, _agent) => [
           {
             fact: "User loves TypeScript",
@@ -1429,7 +1459,7 @@ describe("Parameter Combination Testing", () => {
   describe("Parameter Validation Edge Cases", () => {
     it("empty string parameters", async () => {
       const result = await cortex.vector.store(BASE_ID, {
-        content: "",  // Empty content
+        content: "", // Empty content
         contentType: "raw",
         source: { type: "system" },
         metadata: { importance: 50, tags: [] },
@@ -1573,7 +1603,10 @@ describe("Parameter Combination Testing", () => {
         content: "Conversation source with ref",
         contentType: "raw",
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         metadata: { importance: 50, tags: [] },
       });
 
@@ -1703,7 +1736,9 @@ describe("Parameter Combination Testing", () => {
       expect(result.memories[0].userId).toBe(userId);
 
       // Conversation should reference userId
-      const conv = await cortex.conversations.get(result.conversation.conversationId);
+      const conv = await cortex.conversations.get(
+        result.conversation.conversationId,
+      );
       expect(conv!.participants.userId).toBe(userId);
     });
   });
@@ -2018,9 +2053,7 @@ describe("Parameter Combination Testing", () => {
           memorySpaceId: spaceId,
           type,
           name: `${type} space`,
-          participants: [
-            { id: "user-1", type: "user" },
-          ],
+          participants: [{ id: "user-1", type: "user" }],
         });
 
         expect(result.type).toBe(type);
@@ -2061,9 +2094,15 @@ describe("Parameter Combination Testing", () => {
       });
 
       expect(result.participants).toHaveLength(3);
-      expect(result.participants.some((p: any) => p.type === "user")).toBe(true);
-      expect(result.participants.some((p: any) => p.type === "agent")).toBe(true);
-      expect(result.participants.some((p: any) => p.type === "tool")).toBe(true);
+      expect(result.participants.some((p: any) => p.type === "user")).toBe(
+        true,
+      );
+      expect(result.participants.some((p: any) => p.type === "agent")).toBe(
+        true,
+      );
+      expect(result.participants.some((p: any) => p.type === "tool")).toBe(
+        true,
+      );
     });
   });
 
@@ -2171,7 +2210,10 @@ describe("Parameter Combination Testing", () => {
         },
       });
 
-      const results = await cortex.vector.search(BASE_ID, "SEARCHABLE_UNIQUE_TERM");
+      const results = await cortex.vector.search(
+        BASE_ID,
+        "SEARCHABLE_UNIQUE_TERM",
+      );
 
       const found = results.find((m) => m.memoryId === mem.memoryId);
       expect(found).toBeDefined();
@@ -2226,7 +2268,9 @@ describe("Parameter Combination Testing", () => {
 
       // Update all
       const toUpdate = await cortex.vector.list({ memorySpaceId: BASE_ID });
-      const filteredUpdate = toUpdate.filter((m) => m.tags.includes("batch-update"));
+      const filteredUpdate = toUpdate.filter((m) =>
+        m.tags.includes("batch-update"),
+      );
       for (const mem of filteredUpdate) {
         await cortex.vector.update(BASE_ID, mem.memoryId, { importance: 95 });
       }
@@ -2253,7 +2297,9 @@ describe("Parameter Combination Testing", () => {
 
       // Delete by tag
       const toDelete = await cortex.vector.list({ memorySpaceId: BASE_ID });
-      const filteredDelete = toDelete.filter((m) => m.tags.includes("batch-delete"));
+      const filteredDelete = toDelete.filter((m) =>
+        m.tags.includes("batch-delete"),
+      );
       for (const mem of filteredDelete) {
         await cortex.vector.delete(BASE_ID, mem.memoryId);
       }
@@ -2265,7 +2311,9 @@ describe("Parameter Combination Testing", () => {
       const remaining = await cortex.vector.list({
         memorySpaceId: BASE_ID,
       });
-      const filteredRemaining = remaining.filter((m) => m.tags.includes("batch-delete"));
+      const filteredRemaining = remaining.filter((m) =>
+        m.tags.includes("batch-delete"),
+      );
       expect(filteredRemaining).toHaveLength(0);
     });
 
@@ -2304,4 +2352,3 @@ describe("Parameter Combination Testing", () => {
     });
   });
 });
-

@@ -51,10 +51,10 @@
 
 ```javascript
 // Backend expects:
-participants: v.array(v.object({id, joinedAt, type}))
+participants: v.array(v.object({ id, joinedAt, type }));
 
 // Python SDK sends:
-participants: None  // ❌ Fails validation
+participants: None; // ❌ Fails validation
 ```
 
 **Fix**: Backend should accept `null`/`undefined` for optional participants
@@ -62,6 +62,7 @@ participants: None  // ❌ Fails validation
 ### Issue 2: Unsupported Parameters
 
 **Backend rejects extra parameters**:
+
 - `includeStats` in memorySpaces:get
 - `dryRun` in mutable:purgeNamespace
 - `offset` in multiple list functions (already fixed in SDK)
@@ -71,6 +72,7 @@ participants: None  // ❌ Fails validation
 ### Issue 3: Missing Bulk Operations
 
 **Users & Conversations missing batch operations**:
+
 - updateMany
 - deleteMany
 
@@ -78,15 +80,15 @@ participants: None  // ❌ Fails validation
 
 ## Impact Summary
 
-| Issue | Tests Affected | Priority |
-|-------|---------------|----------|
-| Agents API missing | 8 | Medium |
-| Contexts API broken | 11 | High |
-| Memory Spaces validation | 9 | **Critical** |
-| Facts API broken | 11 | High |
-| Missing bulk operations | 8 | Medium |
-| Missing search/export | 4 | Low |
-| Parameter mismatches | 8 | Medium |
+| Issue                    | Tests Affected | Priority     |
+| ------------------------ | -------------- | ------------ |
+| Agents API missing       | 8              | Medium       |
+| Contexts API broken      | 11             | High         |
+| Memory Spaces validation | 9              | **Critical** |
+| Facts API broken         | 11             | High         |
+| Missing bulk operations  | 8              | Medium       |
+| Missing search/export    | 4              | Low          |
+| Parameter mismatches     | 8              | Medium       |
 
 ## Quick Wins (High Impact, Low Effort)
 
@@ -106,21 +108,24 @@ participants: None  // ❌ Fails validation
 ✅ **Mutable Storage** - 83% functional  
 ✅ **Test Helpers** - 100% functional  
 ✅ **Integration Tests** - 57% passing  
-✅ **GDPR Cascade** - 78% passing  
+✅ **GDPR Cascade** - 78% passing
 
 ## Backend Completion Roadmap
 
 ### Week 1: Quick Wins
+
 - Fix memorySpaces participants validation
 - Remove unsupported parameters from SDK
 - **Result**: 137/185 tests passing (74%)
 
 ### Week 2-3: Implement Contexts & Agents
+
 - Implement Contexts API backend
-- Implement Agents API backend  
+- Implement Agents API backend
 - **Result**: 156/185 tests passing (84%)
 
 ### Week 4-5: Implement Facts & Advanced Features
+
 - Fix Facts API backend
 - Add bulk operations (updateMany, deleteMany)
 - Add search/export functions
@@ -142,7 +147,6 @@ participants: None  // ❌ Fails validation
 **Report Created**: 2025-11-06  
 **Python SDK Version**: 0.8.2  
 **Tests Created**: 185  
-**Documentation**: Complete  
+**Documentation**: Complete
 
 See `dev-docs/BACKEND_PARITY_MISMATCHES.md` for detailed breakdown.
-

@@ -13,7 +13,7 @@ python scripts/run-python-tests.py
 # Test against LOCAL Convex only
 python scripts/run-python-tests.py --mode=local
 
-# Test against MANAGED Convex only  
+# Test against MANAGED Convex only
 python scripts/run-python-tests.py --mode=managed
 
 # Explicitly test BOTH deployments
@@ -26,12 +26,14 @@ python scripts/run-python-tests.py --mode=local -v -k test_memory
 ### How It Works
 
 **Environment Detection:**
+
 - Reads `.env.local` from project root
 - Detects `LOCAL_CONVEX_URL` (local deployment)
 - Detects `CLOUD_CONVEX_URL` (managed deployment)
 - Sets `CONVEX_URL` based on `CONVEX_TEST_MODE`
 
 **Test Modes:**
+
 1. **local**: Tests against LOCAL Convex (`http://127.0.0.1:3210`)
    - Fast iteration
    - No vector search support
@@ -61,7 +63,7 @@ Based on your `.env.local`:
 LOCAL_CONVEX_URL=http://127.0.0.1:3210
 LOCAL_CONVEX_DEPLOYMENT=local:local-nicholasgeil-local_convex_81fb7
 
-# MANAGED Configuration  
+# MANAGED Configuration
 CLOUD_CONVEX_URL=https://expert-buffalo-268.convex.cloud
 CLOUD_CONVEX_DEPLOY_KEY=dev:expert-buffalo-268|...
 
@@ -115,34 +117,36 @@ CONVEX_TEST_MODE=managed pytest -v
 
 ### Comparison with TypeScript SDK
 
-| Feature | TypeScript SDK | Python SDK |
-|---------|---------------|-----------|
+| Feature              | TypeScript SDK           | Python SDK                   |
+| -------------------- | ------------------------ | ---------------------------- |
 | Dual testing support | ✅ Yes (test-runner.mjs) | ✅ Yes (run-python-tests.py) |
-| Auto-detection | ✅ Yes | ✅ Yes |
-| Test mode env var | `CONVEX_TEST_MODE` | `CONVEX_TEST_MODE` |
-| Local config | `LOCAL_CONVEX_URL` | `LOCAL_CONVEX_URL` |
-| Managed config | `CLOUD_CONVEX_URL` | `CLOUD_CONVEX_URL` |
-| Dual suite execution | ✅ `npm test` | ✅ `--mode=both` |
+| Auto-detection       | ✅ Yes                   | ✅ Yes                       |
+| Test mode env var    | `CONVEX_TEST_MODE`       | `CONVEX_TEST_MODE`           |
+| Local config         | `LOCAL_CONVEX_URL`       | `LOCAL_CONVEX_URL`           |
+| Managed config       | `CLOUD_CONVEX_URL`       | `CLOUD_CONVEX_URL`           |
+| Dual suite execution | ✅ `npm test`            | ✅ `--mode=both`             |
 
 Both SDKs now have **feature parity** for deployment testing! 🎉
 
 ### Why Dual Testing?
 
 **LOCAL Benefits:**
+
 - ⚡ Fast iteration (no network latency)
 - 🔒 Privacy (no data leaves your machine)
 - 💰 No cloud costs
 - 🐛 Easy debugging with local Convex logs
 
 **MANAGED Benefits:**
+
 - ✅ Full vector search support (semantic similarity)
 - 🌐 Production-like environment
 - 📊 Real performance characteristics
 - 🔍 Tests embeddings and advanced features
 
 **Testing BOTH ensures:**
+
 - Code works in both environments
 - No environment-specific bugs
 - Vector search features work correctly
 - Backend schema is properly deployed everywhere
-

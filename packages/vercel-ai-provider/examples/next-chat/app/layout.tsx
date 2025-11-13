@@ -1,9 +1,9 @@
-import type { Metadata } from 'next';
-import './globals.css';
+import type { Metadata } from "next";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: 'Cortex Memory Chat',
-  description: 'Chat with persistent memory powered by Cortex',
+  title: "Cortex Memory Chat",
+  description: "Chat with persistent memory powered by Cortex",
 };
 
 export default function RootLayout({
@@ -17,4 +17,3 @@ export default function RootLayout({
     </html>
   );
 }
-

@@ -23,9 +23,11 @@ Note: search() and export() already existed in TypeScript SDK
 ## Files Modified
 
 ### TypeScript SDK
+
 1. ✅ `src/users/index.ts` - Added updateMany() and deleteMany()
 
 ### Python SDK
+
 2. ✅ `cortex-sdk-python/cortex/users/__init__.py` - Updated all 4 functions
 3. ✅ `cortex-sdk-python/tests/test_users.py` - Updated all 4 tests
 
@@ -34,6 +36,7 @@ Note: search() and export() already existed in TypeScript SDK
 ### search() - Client-Side
 
 **TypeScript** (already existed):
+
 ```typescript
 async search(filters: UserFilters): Promise<UserProfile[]> {
   const results = await this.client.query(api.immutable.list, {
@@ -45,6 +48,7 @@ async search(filters: UserFilters): Promise<UserProfile[]> {
 ```
 
 **Python** (updated):
+
 ```python
 async def search(self, filters=None, limit=50):
     result = await self.client.query("immutable:list", {
@@ -57,10 +61,11 @@ async def search(self, filters=None, limit=50):
 ### export() - Client-Side
 
 **TypeScript** (already existed):
+
 ```typescript
 async export(options?: ExportUsersOptions): Promise<string> {
   const users = await this.list(options?.filters);
-  
+
   if (options?.format === "csv") {
     // CSV formatting
   }
@@ -69,11 +74,12 @@ async export(options?: ExportUsersOptions): Promise<string> {
 ```
 
 **Python** (updated):
+
 ```python
 async def export(self, filters=None, format="json"):
     users_result = await self.list(limit=1000)
     users = users_result.get("users", [])
-    
+
     if format == "csv":
         # CSV export using csv module
     return json.dumps(export_data, indent=2)
@@ -82,6 +88,7 @@ async def export(self, filters=None, format="json"):
 ### updateMany() - Client-Side Loop
 
 **TypeScript** (newly added):
+
 ```typescript
 async updateMany(
   userIds: string[],
@@ -100,6 +107,7 @@ async updateMany(
 ```
 
 **Python** (updated):
+
 ```python
 async def update_many(self, user_ids, updates, skip_versioning=False):
     results = []
@@ -114,6 +122,7 @@ async def update_many(self, user_ids, updates, skip_versioning=False):
 ### deleteMany() - Client-Side Loop
 
 **TypeScript** (newly added):
+
 ```typescript
 async deleteMany(
   userIds: string[],
@@ -133,6 +142,7 @@ async deleteMany(
 ```
 
 **Python** (updated):
+
 ```python
 async def delete_many(self, user_ids, cascade=False):
     results = []
@@ -164,6 +174,7 @@ All 4 tests updated to use client-side implementations:
 **After**: 132/185 passing (71%) ✅
 
 **Fixed tests**:
+
 - test_search_users ✅
 - test_export_users ✅
 - test_update_many_users ✅
@@ -178,23 +189,23 @@ All 4 tests updated to use client-side implementations:
 
 ### Users API - 100% Complete ✅
 
-| Function | TS SDK | Python SDK | Backend | Tests |
-|----------|--------|------------|---------|-------|
-| get() | ✅ | ✅ | immutable:get | ✅ |
-| update() | ✅ | ✅ | immutable:store | ✅ |
-| delete() | ✅ | ✅ | Custom cascade | ✅ |
-| list() | ✅ | ✅ | immutable:list | ✅ |
-| count() | ✅ | ✅ | immutable:count | ✅ |
-| exists() | ✅ | ✅ | immutable:get | ✅ |
-| getVersion() | ✅ | ✅ | immutable:getVersion | ✅ |
-| getHistory() | ✅ | ✅ | immutable:getHistory | ✅ |
-| getAtTimestamp() | ✅ | ✅ | immutable:getAtTimestamp | ✅ |
-| getOrCreate() | ✅ | ✅ | get + update | ✅ |
-| merge() | ✅ | ✅ | Custom merge | ✅ |
-| **search()** | ✅ | ✅ | **Client-side** | ✅ |
-| **export()** | ✅ | ✅ | **Client-side** | ✅ |
-| **updateMany()** | ✅ NEW | ✅ | **Client-side** | ✅ |
-| **deleteMany()** | ✅ NEW | ✅ | **Client-side** | ✅ |
+| Function         | TS SDK | Python SDK | Backend                  | Tests |
+| ---------------- | ------ | ---------- | ------------------------ | ----- |
+| get()            | ✅     | ✅         | immutable:get            | ✅    |
+| update()         | ✅     | ✅         | immutable:store          | ✅    |
+| delete()         | ✅     | ✅         | Custom cascade           | ✅    |
+| list()           | ✅     | ✅         | immutable:list           | ✅    |
+| count()          | ✅     | ✅         | immutable:count          | ✅    |
+| exists()         | ✅     | ✅         | immutable:get            | ✅    |
+| getVersion()     | ✅     | ✅         | immutable:getVersion     | ✅    |
+| getHistory()     | ✅     | ✅         | immutable:getHistory     | ✅    |
+| getAtTimestamp() | ✅     | ✅         | immutable:getAtTimestamp | ✅    |
+| getOrCreate()    | ✅     | ✅         | get + update             | ✅    |
+| merge()          | ✅     | ✅         | Custom merge             | ✅    |
+| **search()**     | ✅     | ✅         | **Client-side**          | ✅    |
+| **export()**     | ✅     | ✅         | **Client-side**          | ✅    |
+| **updateMany()** | ✅ NEW | ✅         | **Client-side**          | ✅    |
+| **deleteMany()** | ✅ NEW | ✅         | **Client-side**          | ✅    |
 
 **Total**: 14/14 functions (100%) ✅
 
@@ -220,4 +231,3 @@ source .venv/bin/activate && pytest tests/test_users.py -v
 **Date**: 2025-11-06  
 **Impact**: +4 tests passing (128 → 132, 71%)  
 **Next**: Run full test suite to see overall improvement
-

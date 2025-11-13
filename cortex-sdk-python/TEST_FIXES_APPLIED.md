@@ -12,11 +12,13 @@ Fixed the most common test failures. **93 tests now passing** (50% of 185 tests)
 **Fixed in**: test_vector.py, test_edge_cases.py, test_integration.py, test_gdpr_cascade.py, test_a2a.py
 
 **Before**:
+
 ```python
 source=MemorySource(type="system")  # ❌ Missing timestamp
 ```
 
 **After**:
+
 ```python
 import time
 source=MemorySource(type="system", timestamp=int(time.time() * 1000))  # ✅
@@ -28,6 +30,7 @@ source=MemorySource(type="system", timestamp=int(time.time() * 1000))  # ✅
 **Fixed in**: test_agents.py
 
 **Before**:
+
 ```python
 AgentRegistration(
     participant_id=agent_id,  # ❌ Wrong parameter
@@ -37,6 +40,7 @@ AgentRegistration(
 ```
 
 **After**:
+
 ```python
 AgentRegistration(
     id=agent_id,              # ✅ Correct
@@ -51,6 +55,7 @@ AgentRegistration(
 **Fixed in**: test_contexts.py
 
 **Before**:
+
 ```python
 ContextInput(
     memory_space_id=space_id,
@@ -60,6 +65,7 @@ ContextInput(
 ```
 
 **After**:
+
 ```python
 ContextInput(
     memory_space_id=space_id,
@@ -74,6 +80,7 @@ ContextInput(
 **Fixed in**: test_mutable.py
 
 **Before**:
+
 ```python
 await cortex_client.mutable.set(
     memory_space_id,   # ❌ Extra parameter
@@ -84,6 +91,7 @@ await cortex_client.mutable.set(
 ```
 
 **After**:
+
 ```python
 await cortex_client.mutable.set(
     "namespace",      # ✅ Correct
@@ -98,11 +106,13 @@ await cortex_client.mutable.set(
 **Fixed in**: test_vector.py
 
 **Before**:
+
 ```python
 assert updated.previous_versions == [1]  # ❌ Not just numbers
 ```
 
 **After**:
+
 ```python
 assert len(updated.previous_versions) >= 1  # ✅ Check length instead
 ```
@@ -113,11 +123,13 @@ assert len(updated.previous_versions) >= 1  # ✅ Check length instead
 **Fixed in**: test_vector.py
 
 **Before**:
+
 ```python
 assert retrieved.version == 1  # ❌ Might be dict
 ```
 
 **After**:
+
 ```python
 version = retrieved.get("version") if isinstance(retrieved, dict) else retrieved.version
 assert version == 1  # ✅ Handle both
@@ -138,7 +150,7 @@ assert version == 1  # ✅ Handle both
 6. ✅ test_agents.py - AgentRegistration parameters
 7. ✅ test_contexts.py - ContextInput parameters
 8. ✅ test_mutable.py - API signatures
-9. ✅ tests/helpers/__init__.py - Added generate_test_agent_id export
+9. ✅ tests/helpers/**init**.py - Added generate_test_agent_id export
 10. ✅ test_immutable.py - Type names and API signatures
 11. ✅ test_facts.py - Type name (StoreFactParams)
 
@@ -147,6 +159,7 @@ assert version == 1  # ✅ Handle both
 ### Missing Backend Functions (Can Skip)
 
 These Convex functions don't exist yet:
+
 - `users:search` - Search not implemented
 - `users:updateMany` - Bulk update not implemented
 - `users:deleteMany` - Bulk delete not implemented
@@ -158,6 +171,7 @@ These Convex functions don't exist yet:
 ### API Parameter Mismatches (Need Investigation)
 
 Some tests use parameters that don't match the actual API:
+
 - `RememberParams` - Check if it has `user_message_embedding` parameter
 - `MemoryAPI.list()` - Check if it has `min_importance` parameter
 - `MemoryAPI.count()` - Check if it has `tags` parameter
@@ -187,14 +201,13 @@ source .venv/bin/activate && pytest -v
 ✅ **Mutable API signatures** - Fixed 15 tests  
 ✅ **previousVersions assertions** - Fixed 3 tests  
 ✅ **Dict vs object access** - Fixed 5 tests  
-✅ **Type name imports** - Fixed 3 tests  
+✅ **Type name imports** - Fixed 3 tests
 
 **Total Fixed**: ~67 tests  
-**Now Passing**: Expected ~130-140 tests (70%)  
+**Now Passing**: Expected ~130-140 tests (70%)
 
 ---
 
 **Status**: ✅ **Common Issues Fixed - Ready for Next Test Run**  
 **Date**: 2025-11-06  
 **Next**: Run `pytest -v` to see improved results
-

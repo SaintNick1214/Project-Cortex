@@ -128,7 +128,7 @@ export class MemoryAPI {
     const archivedFactIds: string[] = [];
     for (const fact of factsToArchive) {
       try {
-          await this.facts.update(
+        await this.facts.update(
           memorySpaceId,
           fact.factId,
           {
@@ -710,8 +710,9 @@ export class MemoryAPI {
         ) as ConversationWithMessages | undefined;
         if (conversation) {
           result.conversation = conversation;
-          result.sourceMessages = conversation.messages.filter((m: ConversationMessage) =>
-            memory.conversationRef!.messageIds.includes(m.id),
+          result.sourceMessages = conversation.messages.filter(
+            (m: ConversationMessage) =>
+              memory.conversationRef!.messageIds.includes(m.id),
           );
         }
       }
@@ -797,7 +798,10 @@ export class MemoryAPI {
                   messageIds: input.conversationRef?.messageIds,
                   memoryId: memory.memoryId,
                 },
-                tags: factData.tags.length > 0 ? factData.tags : input.metadata.tags,
+                tags:
+                  factData.tags.length > 0
+                    ? factData.tags
+                    : input.metadata.tags,
               },
               { syncToGraph: true },
             );
@@ -869,7 +873,8 @@ export class MemoryAPI {
                   messageIds: updatedMemory.conversationRef?.messageIds,
                   memoryId: updatedMemory.memoryId,
                 },
-                tags: factData.tags.length > 0 ? factData.tags : updatedMemory.tags,
+                tags:
+                  factData.tags.length > 0 ? factData.tags : updatedMemory.tags,
               },
               { syncToGraph: options.syncToGraph },
             );

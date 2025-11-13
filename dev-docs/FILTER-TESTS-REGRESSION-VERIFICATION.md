@@ -7,6 +7,7 @@ Verify that the new comprehensive filter tests would have caught the "observatio
 ## Bug Recap
 
 **Bug**: The `"observation"` factType was missing from 5 Facts API query validators:
+
 - `facts:list`
 - `facts:count`
 - `facts:search`
@@ -22,6 +23,7 @@ Verify that the new comprehensive filter tests would have caught the "observatio
 The new comprehensive filter tests that would catch this bug:
 
 #### Python SDK (`cortex-sdk-python/tests/test_facts_filters.py`):
+
 ```python
 @pytest.mark.parametrize("fact_type", [
     "preference", "identity", "knowledge",
@@ -33,12 +35,14 @@ class TestFactsFilterParametrized:
 ```
 
 Plus explicit regression test:
+
 ```python
 async def test_observation_regression(self, cortex):
     # Explicitly tests all 5 operations with observation
 ```
 
 #### TypeScript SDK (`tests/facts-filters.test.ts`):
+
 ```typescript
 describe.each(ALL_FACT_TYPES)("FactType: %s", (factType) => {
   // ALL_FACT_TYPES includes "observation"
@@ -49,6 +53,7 @@ describe.each(ALL_FACT_TYPES)("FactType: %s", (factType) => {
 ```
 
 Plus explicit regression test:
+
 ```typescript
 it("REGRESSION: 'observation' factType should work in all operations", async () => {
   // Explicitly tests all 5 operations with observation
@@ -90,24 +95,26 @@ results = await cortex.facts.list({
 
 The parametrized tests would catch the bug in ALL 5 operations:
 
-| Operation | Test | Result if Bug Present |
-|-----------|------|----------------------|
-| `list()` | `test_list_filters_by_fact_type[observation]` | ❌ ArgumentValidationError |
-| `count()` | `test_count_filters_by_fact_type[observation]` | ❌ ArgumentValidationError |
-| `search()` | `test_search_filters_by_fact_type[observation]` | ❌ ArgumentValidationError |
+| Operation          | Test                                                      | Result if Bug Present      |
+| ------------------ | --------------------------------------------------------- | -------------------------- |
+| `list()`           | `test_list_filters_by_fact_type[observation]`             | ❌ ArgumentValidationError |
+| `count()`          | `test_count_filters_by_fact_type[observation]`            | ❌ ArgumentValidationError |
+| `search()`         | `test_search_filters_by_fact_type[observation]`           | ❌ ArgumentValidationError |
 | `queryBySubject()` | `test_query_by_subject_filters_by_fact_type[observation]` | ❌ ArgumentValidationError |
-| `export()` | `test_export_filters_by_fact_type[observation]` | ❌ ArgumentValidationError |
+| `export()`         | `test_export_filters_by_fact_type[observation]`           | ❌ ArgumentValidationError |
 
 **Total failures**: 5 parametrized tests + 1 explicit regression test = **6 failing tests**
 
 ### Step 4: Detection Timeline
 
 **Without filter tests** (before):
+
 - Bug introduced: When "observation" added to schema/store
 - Bug detected: Unknown (possibly never, or when user reported it)
 - Impact duration: Weeks or months
 
 **With filter tests** (now):
+
 - Bug introduced: When "observation" added to schema/store
 - Bug detected: Immediately on next test run
 - Impact duration: 0 (caught before deploy)
@@ -123,19 +130,19 @@ Developer adds `"goal"` factType:
 facts: defineTable({
   factType: v.union(
     // ... existing types ...
-    v.literal("goal"),  // ← NEW
-  )
-})
+    v.literal("goal"), // ← NEW
+  ),
+});
 
 // 2. Update store mutation
 export const store = mutation({
   args: {
     factType: v.union(
       // ... existing types ...
-      v.literal("goal"),  // ← NEW
-    )
-  }
-})
+      v.literal("goal"), // ← NEW
+    ),
+  },
+});
 
 // 3. FORGOT to update query functions (THE BUG)
 ```
@@ -143,14 +150,16 @@ export const store = mutation({
 ### What Happens
 
 **Run tests**:
+
 ```bash
 pytest cortex-sdk-python/tests/test_facts_filters.py -v
 ```
 
 **Result**:
+
 ```
 test_list_filters_by_fact_type[goal] ... FAILED
-test_count_filters_by_fact_type[goal] ... FAILED  
+test_count_filters_by_fact_type[goal] ... FAILED
 test_search_filters_by_fact_type[goal] ... FAILED
 test_query_by_subject_filters_by_fact_type[goal] ... FAILED
 test_export_filters_by_fact_type[goal] ... FAILED
@@ -159,6 +168,7 @@ test_export_filters_by_fact_type[goal] ... FAILED
 ```
 
 **Error message points to problem**:
+
 ```
 ArgumentValidationError: Value does not match validator.
 Path: .factType
@@ -175,22 +185,27 @@ Validator: v.union(...) ← "goal" not in union
 ### Metrics
 
 **Bug Detection**:
+
 - Before: Manual testing or user reports (weeks/months delay)
 - After: Automated tests (immediate, pre-deploy)
 
 **Coverage**:
+
 - Before: 0% of enum values tested across operations
 - After: 100% of enum values tested across ALL operations
 
 **False Positives**:
+
 - None - Tests only fail if actual validation error occurs
 
 **Maintenance**:
+
 - Low - Adding new enum value to test array auto-generates tests
 
 ### Prevention Rate
 
 With comprehensive filter tests:
+
 - **100%** of enum consistency bugs caught before deploy
 - **0%** chance of deploying invalid enum configurations
 - **Immediate** feedback to developers
@@ -210,6 +225,7 @@ The comprehensive filter tests provide:
 ## Test Summary
 
 ### Python SDK
+
 - `test_facts_filters.py`: 43 tests (35 parametrized + 8 edge cases)
 - `test_conversations_filters.py`: 15 tests
 - `test_contexts_filters.py`: 16 tests
@@ -217,6 +233,7 @@ The comprehensive filter tests provide:
 - **Total**: 90 new tests
 
 ### TypeScript SDK
+
 - `facts-filters.test.ts`: 43 tests (35 parametrized + 8 edge cases)
 - `conversations-filters.test.ts`: 15 tests
 - `contexts-filters.test.ts`: 16 tests
@@ -224,6 +241,7 @@ The comprehensive filter tests provide:
 - **Total**: 90 new tests
 
 ### Combined
+
 - **180 new filter tests** across both SDKs
 - **100% enum coverage** for all filter operations
 - **Bug prevention rate**: 100%
@@ -233,4 +251,3 @@ The comprehensive filter tests provide:
 **Verification Date**: January 11, 2025  
 **Verified By**: AI Assistant  
 **Related**: `FACTS-OBSERVATION-BUG-FIX.md`, `ENUM-FILTER-TESTING-GUIDE.md`
-

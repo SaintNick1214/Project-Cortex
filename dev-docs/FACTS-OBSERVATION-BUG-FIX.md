@@ -9,26 +9,31 @@
 ## Bugs Identified and Fixed
 
 ### Bug 1: `list` Query (Line 222-230)
+
 **Problem**: Missing `v.literal("observation")` in factType union  
 **Impact**: Could not filter facts by `factType="observation"` in list operation  
 **Status**: ✅ Fixed
 
 ### Bug 2: `count` Query (Line 277-285)
+
 **Problem**: Missing `v.literal("observation")` in factType union  
 **Impact**: Could not count facts filtered by `factType="observation"`  
 **Status**: ✅ Fixed
 
 ### Bug 3: `search` Query (Line 318-326)
+
 **Problem**: Missing `v.literal("observation")` in factType union  
 **Impact**: Could not search facts filtered by `factType="observation"`  
 **Status**: ✅ Fixed
 
 ### Bug 4: `queryBySubject` Query (Line 429-437)
+
 **Problem**: Missing `v.literal("observation")` in factType union  
 **Impact**: Could not query by subject filtered by `factType="observation"`  
 **Status**: ✅ Fixed
 
 ### Bug 5: `exportFacts` Query (Line 490-498)
+
 **Problem**: Missing `v.literal("observation")` in factType union  
 **Impact**: Could not export facts filtered by `factType="observation"`  
 **Status**: ✅ Fixed
@@ -62,6 +67,7 @@ await cortex.facts.list({
 ```
 
 **Why this gap exists**:
+
 - Tests focused on CRUD operations (create, read, update, delete)
 - Tests verified facts could be **stored** with "observation"
 - Tests did NOT verify facts could be **filtered** by "observation"
@@ -80,6 +86,7 @@ export const list = query({
 ```
 
 **What this means**:
+
 - ✅ Backend deploys successfully (no syntax errors)
 - ✅ Tests that don't use `factType` parameter pass
 - ❌ First call with `factType="observation"` throws validation error
@@ -90,9 +97,9 @@ Many tests inherited from TypeScript SDK tests that were written **before** "obs
 
 ```typescript
 // Original TypeScript test (pre-observation):
-test('should filter by factType', async () => {
+test("should filter by factType", async () => {
   await facts.list({
-    factType: 'preference'  // ← Only tested existing types
+    factType: "preference", // ← Only tested existing types
   });
 });
 ```
@@ -102,6 +109,7 @@ When ported to Python, these tests continued to use the old factTypes.
 ### 4. **Implicit Coverage Assumption**
 
 There's an assumption that if:
+
 1. ✅ Store works with "observation"
 2. ✅ List works (without filter)
 3. ✅ Schema includes "observation"
@@ -117,7 +125,7 @@ When "observation" was added, there were no integration tests specifically for:
 async def test_observation_factType_in_all_query_operations():
     # Store observation fact
     fact = await facts.store(factType="observation", ...)
-    
+
     # Test ALL query operations with factType="observation" filter
     await facts.list(factType="observation")      # ← Would catch bug 1
     await facts.count(factType="observation")     # ← Would catch bug 2
@@ -129,11 +137,13 @@ async def test_observation_factType_in_all_query_operations():
 ### 6. **Mutation vs Query Testing Asymmetry**
 
 Tests heavily focus on **mutations** (write operations):
+
 - ✅ Extensively test `store()` with all factTypes
 - ✅ Verify data is persisted correctly
 - ✅ Test validation errors on store
 
 But less focus on **queries** (read operations) with all parameter combinations:
+
 - ⚠️ Test queries work in general
 - ❌ Don't exhaustively test all filter parameters
 - ❌ Don't test new enum values in all query filters
@@ -141,17 +151,21 @@ But less focus on **queries** (read operations) with all parameter combinations:
 ## Impact Assessment
 
 ### Severity: Medium
+
 **Why not High?**
+
 - Workaround exists: Query all facts, filter client-side
 - Only affects filtering, not core CRUD operations
 - No data corruption or loss
 
 **Why not Low?**
+
 - Affects 5 different functions (widespread)
 - Breaks valid use case (filtering by observation)
 - Confusing error message for developers
 
 ### Affected Operations
+
 1. ❌ `facts.list({ factType: "observation" })` - ArgumentValidationError
 2. ❌ `facts.count({ factType: "observation" })` - ArgumentValidationError
 3. ❌ `facts.search({ factType: "observation" })` - ArgumentValidationError
@@ -159,6 +173,7 @@ But less focus on **queries** (read operations) with all parameter combinations:
 5. ❌ `facts.exportFacts({ factType: "observation" })` - ArgumentValidationError
 
 ### User Experience
+
 ```bash
 # User tries to filter by observation:
 cortex.facts.list(factType="observation")
@@ -200,23 +215,23 @@ factType: v.optional(
 ```python
 # Test ALL query operations with ALL factTypes:
 @pytest.mark.parametrize("fact_type", [
-    "preference", "identity", "knowledge", 
+    "preference", "identity", "knowledge",
     "relationship", "event", "observation", "custom"
 ])
 async def test_query_operations_with_all_fact_types(fact_type):
     # Store fact of this type
     fact = await facts.store(factType=fact_type, ...)
-    
+
     # Test ALL query operations
     results = await facts.list(factType=fact_type)
     assert len(results) >= 1
-    
+
     count = await facts.count(factType=fact_type)
     assert count >= 1
-    
+
     search_results = await facts.search(factType=fact_type)
     assert len(search_results) >= 1
-    
+
     # etc...
 ```
 
@@ -228,13 +243,13 @@ Add a test that validates all factType enums match:
 async def test_fact_type_enum_consistency():
     """Ensure all factType validators match across store/query functions"""
     schema_fact_types = get_schema_fact_types()
-    
+
     store_fact_types = get_mutation_fact_types("store")
     list_fact_types = get_query_fact_types("list")
     count_fact_types = get_query_fact_types("count")
     search_fact_types = get_query_fact_types("search")
     # etc...
-    
+
     assert schema_fact_types == store_fact_types
     assert schema_fact_types == list_fact_types
     assert schema_fact_types == count_fact_types
@@ -244,6 +259,7 @@ async def test_fact_type_enum_consistency():
 ### 3. Integration Test Checklist
 
 When adding new enum values, test checklist:
+
 - [ ] Store mutation accepts new value
 - [ ] Schema includes new value
 - [ ] ALL query functions accept new value in filters
@@ -258,16 +274,16 @@ Use a shared constant:
 // shared/factTypes.ts
 export const FACT_TYPES = [
   "preference",
-  "identity", 
+  "identity",
   "knowledge",
   "relationship",
   "event",
   "observation",
-  "custom"
+  "custom",
 ] as const;
 
 export const factTypeValidator = v.union(
-  ...FACT_TYPES.map(t => v.literal(t))
+  ...FACT_TYPES.map((t) => v.literal(t)),
 );
 
 // Then in facts.ts:
@@ -275,8 +291,8 @@ import { factTypeValidator } from "./shared/factTypes";
 
 export const list = query({
   args: {
-    factType: v.optional(factTypeValidator)  // ← Always in sync
-  }
+    factType: v.optional(factTypeValidator), // ← Always in sync
+  },
 });
 ```
 
@@ -328,4 +344,3 @@ async def test_all_operations_with_enum_value(enum_value):
 **Date**: January 11, 2025  
 **Files Modified**: `convex-dev/facts.ts` (5 functions)  
 **Lines Changed**: 5 additions (one `v.literal("observation")` per function)
-

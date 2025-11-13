@@ -48,7 +48,10 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
         targetConv = await cortex.conversations.create({
           memorySpaceId: spaceId,
           type: "agent-agent",
-          participants: { participantId: "agent-a", memorySpaceIds: ["a1", "a2"] },
+          participants: {
+            participantId: "agent-a",
+            memorySpaceIds: ["a1", "a2"],
+          },
         });
       }
 
@@ -57,7 +60,10 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
         await cortex.conversations.create({
           memorySpaceId: spaceId,
           type: "agent-agent",
-          participants: { participantId: "noise-a", memorySpaceIds: ["n1", "n2"] },
+          participants: {
+            participantId: "noise-a",
+            memorySpaceIds: ["n1", "n2"],
+          },
         });
       } else {
         await cortex.conversations.create({
@@ -103,12 +109,18 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
         await cortex.conversations.create({
           memorySpaceId: spaceId,
           type: "agent-agent",
-          participants: { participantId: "count-a1", memorySpaceIds: ["a1", "a2"] },
+          participants: {
+            participantId: "count-a1",
+            memorySpaceIds: ["a1", "a2"],
+          },
         });
         await cortex.conversations.create({
           memorySpaceId: spaceId,
           type: "agent-agent",
-          participants: { participantId: "count-a2", memorySpaceIds: ["a1", "a2"] },
+          participants: {
+            participantId: "count-a2",
+            memorySpaceIds: ["a1", "a2"],
+          },
         });
       }
 
@@ -117,7 +129,10 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
         await cortex.conversations.create({
           memorySpaceId: spaceId,
           type: "agent-agent",
-          participants: { participantId: "noise", memorySpaceIds: ["n1", "n2"] },
+          participants: {
+            participantId: "noise",
+            memorySpaceIds: ["n1", "n2"],
+          },
         });
       } else {
         await cortex.conversations.create({
@@ -150,7 +165,10 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
         targetConv = await cortex.conversations.create({
           memorySpaceId: spaceId,
           type: "agent-agent",
-          participants: { participantId: "search-a", memorySpaceIds: ["s1", "s2"] },
+          participants: {
+            participantId: "search-a",
+            memorySpaceIds: ["s1", "s2"],
+          },
         });
       }
 
@@ -222,9 +240,9 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
       });
       expect(uaResults.length).toBeGreaterThanOrEqual(1);
       expect(uaResults.every((c: any) => c.type === "user-agent")).toBe(true);
-      expect(uaResults.some((c: any) => c.conversationId === uaConv.conversationId)).toBe(
-        true
-      );
+      expect(
+        uaResults.some((c: any) => c.conversationId === uaConv.conversationId),
+      ).toBe(true);
 
       // List agent-agent
       const aaResults = await cortex.conversations.list({
@@ -233,9 +251,9 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
       });
       expect(aaResults.length).toBeGreaterThanOrEqual(1);
       expect(aaResults.every((c: any) => c.type === "agent-agent")).toBe(true);
-      expect(aaResults.some((c: any) => c.conversationId === aaConv.conversationId)).toBe(
-        true
-      );
+      expect(
+        aaResults.some((c: any) => c.conversationId === aaConv.conversationId),
+      ).toBe(true);
     });
 
     it("should combine type filter with userId filter", async () => {
@@ -260,7 +278,10 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
       await cortex.conversations.create({
         memorySpaceId: spaceId,
         type: "agent-agent",
-        participants: { participantId: "agent-a", memorySpaceIds: ["a1", "a2"] },
+        participants: {
+          participantId: "agent-a",
+          memorySpaceIds: ["a1", "a2"],
+        },
       });
 
       // Execute: Combine type + userId filters
@@ -296,7 +317,10 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
         await cortex.conversations.create({
           memorySpaceId: spaceId,
           type: "agent-agent",
-          participants: { participantId: `count-all-a-${i}`, memorySpaceIds: ["a1", "a2"] },
+          participants: {
+            participantId: `count-all-a-${i}`,
+            memorySpaceIds: ["a1", "a2"],
+          },
         });
       }
 
@@ -347,4 +371,3 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
     });
   });
 });
-

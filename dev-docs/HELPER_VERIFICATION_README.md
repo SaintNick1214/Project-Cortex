@@ -76,21 +76,25 @@ cat helper-test-results.txt
 ### Test Individual Helpers
 
 **Test cleanup helper:**
+
 ```bash
 pytest tests/test_helpers_verification.py::test_cleanup_conversations -v -s
 ```
 
 **Test embeddings helper:**
+
 ```bash
 pytest tests/test_helpers_verification.py::test_generate_embedding_with_mock -v -s
 ```
 
 **Test storage validation:**
+
 ```bash
 pytest tests/test_helpers_verification.py::test_validate_conversation_storage -v -s
 ```
 
 **Test generators:**
+
 ```bash
 pytest tests/test_helpers_verification.py::test_generate_unique_user_ids -v
 ```
@@ -102,6 +106,7 @@ pytest tests/test_helpers_verification.py::test_generate_unique_user_ids -v
 **Purpose**: Clean up test data after tests run
 
 **Key Methods:**
+
 - `purge_conversations(memory_space_id)` - Remove test conversations
 - `purge_memories(memory_space_id)` - Remove test memories
 - `purge_facts(memory_space_id)` - Remove test facts
@@ -109,6 +114,7 @@ pytest tests/test_helpers_verification.py::test_generate_unique_user_ids -v
 - `purge_all()` - Remove all test data
 
 **Usage:**
+
 ```python
 async def test_something(cortex_client, cleanup_helper):
     # ... test code ...
@@ -120,11 +126,13 @@ async def test_something(cortex_client, cleanup_helper):
 **Purpose**: Generate embeddings for testing semantic search
 
 **Key Functions:**
+
 - `embeddings_available()` - Check if OpenAI API available
 - `generate_embedding(text, use_mock=True)` - Generate embedding vector
 - `generate_mock_embedding(text)` - Deterministic mock embeddings
 
 **Usage:**
+
 ```python
 async def test_with_embeddings():
     embedding = await generate_embedding("test", use_mock=True)
@@ -136,16 +144,18 @@ async def test_with_embeddings():
 **Purpose**: Verify SDK responses match Convex storage
 
 **Key Functions:**
+
 - `validate_conversation_storage(client, conv_id, expected_data)`
 - `validate_memory_storage(client, space_id, mem_id, expected_data)`
 - `validate_fact_storage(client, space_id, fact_id, expected_data)`
 - `validate_user_storage(client, user_id, expected_data)`
 
 **Usage:**
+
 ```python
 async def test_create(cortex_client):
     conv = await cortex_client.conversations.create(...)
-    
+
     validation = await validate_conversation_storage(
         cortex_client, conv.conversation_id
     )
@@ -157,6 +167,7 @@ async def test_create(cortex_client):
 **Purpose**: Generate unique test IDs and sample data
 
 **Key Functions:**
+
 - `generate_test_user_id()` - Unique user ID
 - `generate_test_memory_space_id()` - Unique space ID
 - `generate_test_conversation_id()` - Unique conversation ID
@@ -164,6 +175,7 @@ async def test_create(cortex_client):
 - `create_test_fact_input()` - Sample fact data
 
 **Usage:**
+
 ```python
 def test_something(test_ids):
     user_id = test_ids["user_id"]  # From fixture
@@ -174,6 +186,7 @@ def test_something(test_ids):
 ## Fixtures Available in conftest.py
 
 ### cleanup_helper
+
 ```python
 async def test_something(cortex_client, cleanup_helper):
     # cleanup_helper is TestCleanup instance
@@ -181,6 +194,7 @@ async def test_something(cortex_client, cleanup_helper):
 ```
 
 ### direct_convex_client
+
 ```python
 async def test_something(cortex_client, direct_convex_client):
     # Query Convex storage directly
@@ -188,6 +202,7 @@ async def test_something(cortex_client, direct_convex_client):
 ```
 
 ### test_ids
+
 ```python
 def test_something(test_ids):
     # test_ids is dict with:
@@ -198,6 +213,7 @@ def test_something(test_ids):
 ```
 
 ### embeddings_available_fixture
+
 ```python
 def test_something(embeddings_available_fixture):
     if embeddings_available_fixture:
@@ -211,6 +227,7 @@ def test_something(embeddings_available_fixture):
 ### Issue: Import errors for helpers
 
 **Solution**: Make sure you're in the project directory and venv is activated
+
 ```bash
 cd cortex-sdk-python
 source .venv/bin/activate
@@ -219,6 +236,7 @@ source .venv/bin/activate
 ### Issue: CONVEX_URL not set
 
 **Solution**: Make sure `.env.local` exists in project root
+
 ```bash
 ls ../../../.env.local  # From cortex-sdk-python directory
 ```
@@ -226,6 +244,7 @@ ls ../../../.env.local  # From cortex-sdk-python directory
 ### Issue: Tests fail with connection errors
 
 **Solution**: Make sure Convex backend is running
+
 ```bash
 # In another terminal
 cd /Users/SaintNick/Documents/Cortex/Project-Cortex
@@ -235,6 +254,7 @@ npm run dev:local
 ### Issue: Some tests skip
 
 **Solution**: This is expected if:
+
 - OPENAI_API_KEY not set (embeddings tests skip)
 - Facts API not fully implemented (facts cleanup skips)
 
@@ -261,11 +281,13 @@ Once helpers are verified (tests pass):
 ## Files Location
 
 All helper files are in:
+
 ```
 /Users/SaintNick/Documents/Cortex/Project-Cortex/cortex-sdk-python/tests/helpers/
 ```
 
 Verification tests:
+
 ```
 /Users/SaintNick/Documents/Cortex/Project-Cortex/cortex-sdk-python/tests/test_helpers_verification.py
 ```
@@ -273,6 +295,7 @@ Verification tests:
 ## Documentation
 
 Full documentation:
+
 - `/dev-docs/test-helpers-setup-complete.md` - Complete setup guide
 - `/dev-docs/python-sdk-test-porting-guide.md` - Test porting instructions
 - `/dev-docs/python-sdk-test-parity-analysis.md` - Test gap analysis
@@ -283,4 +306,3 @@ Full documentation:
 **Date**: 2025-11-06  
 **Action**: Run `./run-helper-tests.sh` to verify helpers work  
 **Next**: Begin porting ~571 tests from TypeScript to Python
-

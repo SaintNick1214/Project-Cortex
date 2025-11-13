@@ -11,11 +11,11 @@ Hive Mode enables multiple agents/tools to share a single memory space, creating
 ```typescript
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: 'shared-workspace', // Same across apps
+  memorySpaceId: "shared-workspace", // Same across apps
   userId: currentUser.id,
-  
+
   hiveMode: {
-    participantId: 'web-assistant', // Identify this agent
+    participantId: "web-assistant", // Identify this agent
   },
 });
 ```
@@ -38,16 +38,16 @@ const cortexMemory = createCortexMemory({
 ```typescript
 // Agent A
 const agentA = createCortexMemory({
-  memorySpaceId: 'team-workspace',
-  userId: 'user-123',
-  hiveMode: { participantId: 'analyzer' },
+  memorySpaceId: "team-workspace",
+  userId: "user-123",
+  hiveMode: { participantId: "analyzer" },
 });
 
 // Agent B
 const agentB = createCortexMemory({
-  memorySpaceId: 'team-workspace',
-  userId: 'user-123',
-  hiveMode: { participantId: 'writer' },
+  memorySpaceId: "team-workspace",
+  userId: "user-123",
+  hiveMode: { participantId: "writer" },
 });
 
 // Both see all memories, but can filter by participant
@@ -61,4 +61,3 @@ const agentB = createCortexMemory({
 - 📍 Participant tracking
 
 See examples/hive-mode for complete implementation.
-

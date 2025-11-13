@@ -27,10 +27,10 @@ import asyncio
 
 class AsyncConvexClient:
     """Async wrapper around synchronous ConvexClient."""
-    
+
     def __init__(self, sync_client):
         self._sync_client = sync_client
-    
+
     async def query(self, name: str, args: dict) -> Any:
         """Run query in thread pool to avoid blocking event loop."""
         loop = asyncio.get_event_loop()
@@ -38,7 +38,7 @@ class AsyncConvexClient:
             None,
             lambda: self._sync_client.query(name, args)
         )
-    
+
     async def mutation(self, name: str, args: dict) -> Any:
         """Run mutation in thread pool to avoid blocking event loop."""
         loop = asyncio.get_event_loop()
@@ -59,16 +59,17 @@ class Cortex:
     def __init__(self, config):
         # Create sync client
         sync_client = ConvexClient(config.convex_url)
-        
+
         # Wrap for async API
         self.client = AsyncConvexClient(sync_client)
-        
+
         # Rest of initialization...
 ```
 
 ### Why This Works
 
 **Benefits:**
+
 - ✅ Provides async/await API to match TypeScript SDK
 - ✅ Doesn't block the event loop
 - ✅ Runs Convex calls in thread pool
@@ -76,12 +77,14 @@ class Cortex:
 - ✅ No changes needed to API modules
 
 **Trade-offs:**
+
 - ⚠️ Small overhead from thread pool execution
 - ⚠️ Not true async I/O (but Python's convex client is sync anyway)
 
 ### Alternative Considered
 
 We could have made the entire SDK synchronous, but that would:
+
 - ❌ Break API parity with TypeScript SDK
 - ❌ Not work well with async Python frameworks (FastAPI, etc.)
 - ❌ Make the API feel un-Pythonic for modern async code
@@ -132,4 +135,3 @@ The rest of our SDK would work without changes.
 **Implementation**: 2025-11-06  
 **Status**: Working solution for sync→async wrapping  
 **Performance**: Good for I/O-bound operations
-

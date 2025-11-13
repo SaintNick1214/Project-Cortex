@@ -695,34 +695,36 @@ Cortex provides first-class support for streaming LLM responses through `memory.
 ### Why Streaming Matters
 
 **Without streaming support:**
+
 ```typescript
 // ❌ Manual buffering required
-let fullResponse = '';
+let fullResponse = "";
 for await (const chunk of stream) {
   fullResponse += chunk;
   // Send to UI...
 }
 // Now manually store
 await cortex.memory.remember({
-  userMessage: 'Hello',
+  userMessage: "Hello",
   agentResponse: fullResponse, // Had to buffer manually
   // ...
 });
 ```
 
 **With `rememberStream()`:**
+
 ```typescript
 // ✅ Automatic buffering and storage
 const result = await cortex.memory.rememberStream({
-  memorySpaceId: 'agent-1',
-  conversationId: 'conv-123',
-  userMessage: 'Hello',
+  memorySpaceId: "agent-1",
+  conversationId: "conv-123",
+  userMessage: "Hello",
   responseStream: stream, // Pass the stream directly
-  userId: 'user-1',
-  userName: 'Alex',
+  userId: "user-1",
+  userName: "Alex",
 });
 
-console.log('Stored:', result.fullResponse);
+console.log("Stored:", result.fullResponse);
 // Memories, facts, and conversation all stored automatically
 ```
 
@@ -736,22 +738,22 @@ Standard Web Streams API - works in browsers and edge runtimes:
 
 ```typescript
 // From Vercel AI SDK
-import { streamText } from 'ai';
-import { openai } from '@ai-sdk/openai';
+import { streamText } from "ai";
+import { openai } from "@ai-sdk/openai";
 
 const response = await streamText({
-  model: openai('gpt-4'),
-  messages: [{ role: 'user', content: 'What is AI?' }],
+  model: openai("gpt-4"),
+  messages: [{ role: "user", content: "What is AI?" }],
 });
 
 // response.textStream is a ReadableStream<string>
 const result = await cortex.memory.rememberStream({
-  memorySpaceId: 'my-agent',
-  conversationId: 'conv-456',
-  userMessage: 'What is AI?',
+  memorySpaceId: "my-agent",
+  conversationId: "conv-456",
+  userMessage: "What is AI?",
   responseStream: response.textStream, // ReadableStream
-  userId: 'user-1',
-  userName: 'User',
+  userId: "user-1",
+  userName: "User",
 });
 ```
 
@@ -761,24 +763,24 @@ Standard JavaScript async iterables:
 
 ```typescript
 // From OpenAI SDK (non-Vercel)
-import OpenAI from 'openai';
+import OpenAI from "openai";
 
 const openai = new OpenAI();
 
 const stream = await openai.chat.completions.create({
-  model: 'gpt-4',
-  messages: [{ role: 'user', content: 'Hello!' }],
+  model: "gpt-4",
+  messages: [{ role: "user", content: "Hello!" }],
   stream: true,
 });
 
 // OpenAI SDK returns AsyncIterable
 const result = await cortex.memory.rememberStream({
-  memorySpaceId: 'my-agent',
-  conversationId: 'conv-789',
-  userMessage: 'Hello!',
+  memorySpaceId: "my-agent",
+  conversationId: "conv-789",
+  userMessage: "Hello!",
   responseStream: stream, // AsyncIterable
-  userId: 'user-1',
-  userName: 'User',
+  userId: "user-1",
+  userName: "User",
 });
 ```
 
@@ -788,20 +790,20 @@ You can also create custom async generators:
 
 ```typescript
 async function* generateResponse() {
-  yield 'Hello ';
+  yield "Hello ";
   await delay(100);
-  yield 'from ';
+  yield "from ";
   await delay(100);
-  yield 'custom generator!';
+  yield "custom generator!";
 }
 
 const result = await cortex.memory.rememberStream({
-  memorySpaceId: 'my-agent',
-  conversationId: 'conv-custom',
-  userMessage: 'Say hello',
+  memorySpaceId: "my-agent",
+  conversationId: "conv-custom",
+  userMessage: "Say hello",
   responseStream: generateResponse(), // Custom AsyncIterable
-  userId: 'user-1',
-  userName: 'User',
+  userId: "user-1",
+  userName: "User",
 });
 ```
 
@@ -813,12 +815,12 @@ const result = await cortex.memory.rememberStream({
 
 ```typescript
 const result = await cortex.memory.rememberStream({
-  memorySpaceId: 'agent-1',
-  conversationId: 'conv-123',
-  userMessage: 'What is the capital of France?',
+  memorySpaceId: "agent-1",
+  conversationId: "conv-123",
+  userMessage: "What is the capital of France?",
   responseStream: stream,
-  userId: 'user-1',
-  userName: 'User',
+  userId: "user-1",
+  userName: "User",
   generateEmbedding: async (text) => {
     // Your embedding function (OpenAI, Cohere, local, etc.)
     return await embed(text);
@@ -830,54 +832,59 @@ const result = await cortex.memory.rememberStream({
 
 ```typescript
 const result = await cortex.memory.rememberStream({
-  memorySpaceId: 'agent-1',
-  conversationId: 'conv-123',
-  userMessage: 'My favorite color is blue',
+  memorySpaceId: "agent-1",
+  conversationId: "conv-123",
+  userMessage: "My favorite color is blue",
   responseStream: stream,
-  userId: 'user-1',
-  userName: 'User',
+  userId: "user-1",
+  userName: "User",
   extractFacts: async (userMsg, agentResp) => {
     // Extract structured facts from the conversation
-    return [{
-      fact: "User's favorite color is blue",
-      factType: 'preference',
-      confidence: 95,
-      subject: 'user',
-      predicate: 'favoriteColor',
-      object: 'blue',
-    }];
+    return [
+      {
+        fact: "User's favorite color is blue",
+        factType: "preference",
+        confidence: 95,
+        subject: "user",
+        predicate: "favoriteColor",
+        object: "blue",
+      },
+    ];
   },
 });
 
-console.log('Facts extracted:', result.facts);
+console.log("Facts extracted:", result.facts);
 ```
 
 #### With Graph Sync
 
 ```typescript
-const result = await cortex.memory.rememberStream({
-  memorySpaceId: 'agent-1',
-  conversationId: 'conv-123',
-  userMessage: 'Alice knows Bob',
-  responseStream: stream,
-  userId: 'user-1',
-  userName: 'User',
-}, {
-  syncToGraph: true, // Sync to Neo4j/Memgraph
-});
+const result = await cortex.memory.rememberStream(
+  {
+    memorySpaceId: "agent-1",
+    conversationId: "conv-123",
+    userMessage: "Alice knows Bob",
+    responseStream: stream,
+    userId: "user-1",
+    userName: "User",
+  },
+  {
+    syncToGraph: true, // Sync to Neo4j/Memgraph
+  },
+);
 ```
 
 #### With Hive Mode
 
 ```typescript
 const result = await cortex.memory.rememberStream({
-  memorySpaceId: 'shared-space',
-  conversationId: 'conv-123',
-  userMessage: 'Coordinate with other agents',
+  memorySpaceId: "shared-space",
+  conversationId: "conv-123",
+  userMessage: "Coordinate with other agents",
   responseStream: stream,
-  userId: 'user-1',
-  userName: 'User',
-  participantId: 'assistant-a', // Track which agent responded
+  userId: "user-1",
+  userName: "User",
+  participantId: "assistant-a", // Track which agent responded
 });
 ```
 
@@ -887,27 +894,27 @@ const result = await cortex.memory.rememberStream({
 
 ```typescript
 // app/api/chat/route.ts (Vercel Edge Function)
-export const runtime = 'edge';
+export const runtime = "edge";
 
 export async function POST(req: Request) {
   const { message } = await req.json();
-  
+
   // Generate streaming response
   const aiResponse = await streamText({
-    model: openai('gpt-4'),
-    messages: [{ role: 'user', content: message }],
+    model: openai("gpt-4"),
+    messages: [{ role: "user", content: message }],
   });
-  
+
   // Store with streaming (works in edge!)
   const result = await cortex.memory.rememberStream({
-    memorySpaceId: 'edge-agent',
-    conversationId: 'conv-' + Date.now(),
+    memorySpaceId: "edge-agent",
+    conversationId: "conv-" + Date.now(),
     userMessage: message,
     responseStream: aiResponse.textStream,
-    userId: req.headers.get('x-user-id') || 'anonymous',
-    userName: 'User',
+    userId: req.headers.get("x-user-id") || "anonymous",
+    userName: "User",
   });
-  
+
   // Return streaming response to client
   return aiResponse.toAIStreamResponse();
 }
@@ -926,7 +933,7 @@ interface RememberStreamResult {
   };
   memories: MemoryEntry[];     // Stored vector memories
   facts: FactRecord[];         // Extracted facts (if enabled)
-  
+
   // Plus streaming-specific
   fullResponse: string;        // Complete text from stream
 }
@@ -945,23 +952,23 @@ console.log('Facts extracted:', result.facts.length);
 ```typescript
 try {
   const result = await cortex.memory.rememberStream({
-    memorySpaceId: 'agent-1',
-    conversationId: 'conv-123',
-    userMessage: 'Test',
+    memorySpaceId: "agent-1",
+    conversationId: "conv-123",
+    userMessage: "Test",
     responseStream: potentiallyFailingStream,
-    userId: 'user-1',
-    userName: 'User',
+    userId: "user-1",
+    userName: "User",
   });
 } catch (error) {
-  if (error.message.includes('stream')) {
+  if (error.message.includes("stream")) {
     // Stream-specific error
-    console.error('Stream failed:', error);
-  } else if (error.message.includes('no content')) {
+    console.error("Stream failed:", error);
+  } else if (error.message.includes("no content")) {
     // Empty stream
-    console.error('Stream produced no content');
+    console.error("Stream produced no content");
   } else {
     // Other errors (storage, etc.)
-    console.error('Storage failed:', error);
+    console.error("Storage failed:", error);
   }
 }
 ```
@@ -969,19 +976,22 @@ try {
 ### Performance Characteristics
 
 **Stream Consumption:**
+
 - No blocking - stream is consumed as fast as possible
 - Minimal memory overhead - chunks buffered in array
 - Large responses supported (10K+ characters tested)
 
 **Storage Operations:**
+
 - Storage happens AFTER stream completes
 - Non-blocking relative to client response
 - Same performance as `remember()` for storage
 
 **Use Cases:**
+
 - ✅ Real-time chat applications
 - ✅ Next.js API routes with streaming
-- ✅ Vercel Edge Functions  
+- ✅ Vercel Edge Functions
 - ✅ Cloudflare Workers
 - ✅ Server-Sent Events (SSE)
 - ✅ WebSocket responses
@@ -991,37 +1001,40 @@ try {
 If you're currently using `remember()` with manual stream buffering:
 
 **Before:**
+
 ```typescript
 // Manual buffering
-let fullResponse = '';
+let fullResponse = "";
 for await (const chunk of stream) {
   fullResponse += chunk;
 }
 
 await cortex.memory.remember({
-  memorySpaceId: 'agent-1',
-  conversationId: 'conv-123',
-  userMessage: 'Hello',
+  memorySpaceId: "agent-1",
+  conversationId: "conv-123",
+  userMessage: "Hello",
   agentResponse: fullResponse,
-  userId: 'user-1',
-  userName: 'User',
+  userId: "user-1",
+  userName: "User",
 });
 ```
 
 **After:**
+
 ```typescript
 // Automatic handling
 const result = await cortex.memory.rememberStream({
-  memorySpaceId: 'agent-1',
-  conversationId: 'conv-123',
-  userMessage: 'Hello',
+  memorySpaceId: "agent-1",
+  conversationId: "conv-123",
+  userMessage: "Hello",
   responseStream: stream, // Pass stream directly
-  userId: 'user-1',
-  userName: 'User',
+  userId: "user-1",
+  userName: "User",
 });
 ```
 
 **Benefits:**
+
 - ✅ Less code (no manual buffering)
 - ✅ Better error handling (built-in)
 - ✅ Type safety (TypeScript types included)

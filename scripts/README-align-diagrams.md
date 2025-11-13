@@ -103,10 +103,12 @@ This will process all `.md` files in the `Documentation/` directory.
 ## Development
 
 The script is written in TypeScript and requires:
+
 - Node.js
 - TypeScript (`ts-node`)
 
 Run with:
+
 ```bash
 npx ts-node --esm scripts/align-diagrams.ts
 ```
@@ -131,4 +133,3 @@ If the result looks good, process the entire directory:
 ```bash
 npx ts-node --esm scripts/align-diagrams.ts --all
 ```
-

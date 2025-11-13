@@ -18,6 +18,7 @@ pip install convex
 ```
 
 **What is it?**
+
 - ✅ Official Python client library for Convex
 - ✅ Developed by Convex, Inc.
 - ✅ Written in Python, JavaScript, and Rust
@@ -25,6 +26,7 @@ pip install convex
 - ✅ Apache-2.0 license
 
 **What it does:**
+
 - Connects to Convex backend servers
 - Executes queries, mutations, and actions
 - Handles authentication
@@ -70,6 +72,7 @@ NEO4J_PASSWORD=cortex-dev-password
 ### 1. ✅ Removed Incorrect "Not Available" Comments
 
 **Files Updated:**
+
 - `cortex/client.py` - Removed try/except suggesting convex not available
 - `cortex/graph/adapters/cypher.py` - Removed try/except for neo4j
 - Updated all documentation references
@@ -104,6 +107,7 @@ python-dotenv>=1.0  # For loading .env.local
 **File**: `dev-docs/python-sdk-testing.md`
 
 **Key Updates:**
+
 - ✅ Clarified convex client vs backend server
 - ✅ Explained .env.local is auto-loaded
 - ✅ Noted backend might already be running
@@ -121,6 +125,7 @@ pytest
 ```
 
 That's it! The tests will:
+
 1. Auto-load `.env.local` from project root
 2. Read `CONVEX_URL=http://127.0.0.1:3210`
 3. Connect to the running backend
@@ -154,10 +159,11 @@ pytest
 ### Potential Issues
 
 1. **Backend Not Responding**
+
    ```bash
    # Test if backend is up
    curl http://127.0.0.1:3210
-   
+
    # If not, start it
    npm run dev:local
    ```
@@ -186,6 +192,7 @@ pytest
 - ✅ **License**: Apache-2.0 (same as us)
 
 **Usage:**
+
 ```python
 from convex import ConvexClient
 
@@ -216,11 +223,11 @@ messages = client.query("messages:list")
 
 ## Summary of Corrections
 
-| What I Said | Reality | Correction |
-|-------------|---------|------------|
-| "convex package not available" | ✅ Available on PyPI | Updated all docs |
-| "Need to wait for release" | ✅ Released Dec 2024 | Removed wait notes |
-| "Create mock client" | ❌ Not needed | Use real client |
+| What I Said                    | Reality                     | Correction               |
+| ------------------------------ | --------------------------- | ------------------------ |
+| "convex package not available" | ✅ Available on PyPI        | Updated all docs         |
+| "Need to wait for release"     | ✅ Released Dec 2024        | Removed wait notes       |
+| "Create mock client"           | ❌ Not needed               | Use real client          |
 | "Backend needs to be launched" | ⚠️ Might already be running | Added verification steps |
 
 ## Current Status
@@ -229,21 +236,24 @@ messages = client.query("messages:list")
 ✅ **Backend**: Configured in .env.local  
 ✅ **Tests**: Will auto-load environment  
 ✅ **Dependencies**: All properly listed  
-✅ **Documentation**: Corrected and clarified  
+✅ **Documentation**: Corrected and clarified
 
 ## Next Steps to Run Tests
 
 1. **Verify backend is running:**
+
    ```bash
    curl http://127.0.0.1:3210
    ```
 
 2. **If not running, start it:**
+
    ```bash
    npm run dev:local
    ```
 
 3. **Run tests:**
+
    ```bash
    cd cortex-sdk-python
    source .venv/bin/activate
@@ -257,4 +267,3 @@ messages = client.query("messages:list")
 **Last Updated**: 2025-11-06  
 **Status**: Ready to test with real Convex backend  
 **Blocker Removed**: convex package IS available!
-

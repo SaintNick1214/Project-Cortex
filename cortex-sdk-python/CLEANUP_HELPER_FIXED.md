@@ -17,6 +17,7 @@ Updated cleanup helper to use **memory_space_id** filtering instead of ID prefix
 #### 1. Conversations Cleanup
 
 **Before**:
+
 ```python
 # Wrong - looked for conversation IDs starting with "test-"
 async def purge_conversations(memory_space_id, prefix="test-"):
@@ -24,6 +25,7 @@ async def purge_conversations(memory_space_id, prefix="test-"):
 ```
 
 **After**:
+
 ```python
 # Correct - filters by memory_space_id
 async def purge_conversations(memory_space_id, memory_space_prefix="test-"):
@@ -37,6 +39,7 @@ async def purge_conversations(memory_space_id, memory_space_prefix="test-"):
 #### 2. Memories, Facts, Immutable Cleanup
 
 **Before**:
+
 ```python
 # Wrong - looked for specific ID prefixes
 async def purge_memories(memory_space_id, prefix="mem-test-"):
@@ -44,6 +47,7 @@ async def purge_memories(memory_space_id, prefix="mem-test-"):
 ```
 
 **After**:
+
 ```python
 # Correct - delete_all parameter
 async def purge_memories(memory_space_id, delete_all=True):
@@ -56,6 +60,7 @@ async def purge_memories(memory_space_id, delete_all=True):
 #### 3. Verify Empty - Now Shows Counts
 
 **Before**:
+
 ```python
 # Only returned boolean flags
 return {
@@ -66,6 +71,7 @@ return {
 ```
 
 **After**:
+
 ```python
 # Returns counts AND empty flags
 return {
@@ -80,6 +86,7 @@ return {
 ## Updated API
 
 ### purge_conversations()
+
 ```python
 await cleanup.purge_conversations(memory_space_id)
 # Deletes ALL conversations in the memory space
@@ -89,6 +96,7 @@ await cleanup.purge_conversations()
 ```
 
 ### purge_memories()
+
 ```python
 await cleanup.purge_memories(memory_space_id, delete_all=True)
 # Deletes ALL memories in the space
@@ -98,9 +106,11 @@ await cleanup.purge_memories(memory_space_id, delete_all=False)
 ```
 
 ### purge_facts(), purge_immutable()
+
 Same pattern - `delete_all` parameter (default: True)
 
 ### purge_mutable()
+
 ```python
 await cleanup.purge_mutable(memory_space_id, key_prefix=None)
 # Deletes ALL mutable records in the space
@@ -110,6 +120,7 @@ await cleanup.purge_mutable(memory_space_id, key_prefix="test-")
 ```
 
 ### verify_empty()
+
 ```python
 result = await cleanup.verify_empty(memory_space_id)
 # Returns:
@@ -131,6 +142,7 @@ source .venv/bin/activate && pytest tests/test_manual_cleanup_verification.py::t
 ```
 
 This test:
+
 1. ✅ Creates test data (conversation, memory, user)
 2. ✅ Verifies data exists
 3. ✅ Runs cleanup
@@ -146,6 +158,7 @@ source .venv/bin/activate && pytest tests/test_manual_cleanup_verification.py::t
 ```
 
 Shows:
+
 - All conversations in a memory space
 - All memories
 - All facts
@@ -167,6 +180,7 @@ pytest tests/test_manual_cleanup_verification.py -v -s
 ```
 
 Expected output:
+
 ```
 📝 STEP 1: Creating test data...
   ✓ Created conversation: conv-1234567890-abc123
@@ -175,7 +189,7 @@ Expected output:
 
 🔍 STEP 2: Verifying data exists...
   ✓ Conversation exists
-  ✓ Memory exists  
+  ✓ Memory exists
   ✓ User exists
 
 🧹 STEP 3: Running cleanup...
@@ -209,11 +223,10 @@ Expected output:
 ✅ **Facts**: Now has delete_all option (default: delete everything)  
 ✅ **Immutable**: Now has delete_all option (default: delete everything)  
 ✅ **Mutable**: Now has key_prefix option (None = delete all)  
-✅ **verify_empty()**: Now shows counts, not just boolean flags  
+✅ **verify_empty()**: Now shows counts, not just boolean flags
 
 ---
 
 **Status**: ✅ **Cleanup Helper Fixed - Ready for Manual Verification**  
 **Test**: `pytest tests/test_manual_cleanup_verification.py -v -s`  
 **Date**: 2025-11-06
-

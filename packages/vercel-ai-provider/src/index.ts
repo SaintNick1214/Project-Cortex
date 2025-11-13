@@ -1,24 +1,24 @@
 /**
  * Cortex Memory Provider for Vercel AI SDK
- * 
+ *
  * @example
  * ```typescript
  * import { createCortexMemory } from '@cortexmemory/vercel-ai-provider';
  * import { streamText } from 'ai';
  * import { openai } from '@ai-sdk/openai';
- * 
+ *
  * const cortexMemory = createCortexMemory({
  *   convexUrl: process.env.CONVEX_URL!,
  *   memorySpaceId: 'my-agent',
  *   userId: 'user-123',
  * });
- * 
+ *
  * // Use the augmented model
  * const result = await streamText({
  *   model: cortexMemory(openai('gpt-4')),
  *   messages: [{ role: 'user', content: 'What did I tell you about my name?' }],
  * });
- * 
+ *
  * // Manual memory control
  * const memories = await cortexMemory.search('my preferences');
  * ```
@@ -44,22 +44,22 @@ import { createLogger } from "./types";
 
 /**
  * Create a Cortex Memory-augmented model factory
- * 
+ *
  * @param config - Cortex memory configuration
  * @returns Model factory function with manual memory control methods
- * 
+ *
  * @example
  * ```typescript
  * import { createCortexMemory } from '@cortexmemory/vercel-ai-provider';
  * import { streamText } from 'ai';
  * import { openai } from '@ai-sdk/openai';
- * 
+ *
  * const cortexMemory = createCortexMemory({
  *   convexUrl: process.env.CONVEX_URL!,
  *   memorySpaceId: 'my-chatbot',
  *   userId: () => getCurrentUserId(), // Can be async function
  *   userName: 'User',
- *   
+ *
  *   // Optional: Embedding provider
  *   embeddingProvider: {
  *     generate: async (text) => {
@@ -71,13 +71,13 @@ import { createLogger } from "./types";
  *     },
  *   },
  * });
- * 
+ *
  * // Use with streamText
  * const result = await streamText({
  *   model: cortexMemory(openai('gpt-4')),
  *   messages,
  * });
- * 
+ *
  * // Or manually control memory
  * const memories = await cortexMemory.search('user preferences');
  * await cortexMemory.remember('My name is Alice', 'Nice to meet you!');
@@ -166,8 +166,7 @@ export function createCortexMemory(
           const generateEmbedding =
             options?.generateEmbedding || config.embeddingProvider?.generate;
 
-          const extractFacts =
-            options?.extractFacts || config.extractFacts;
+          const extractFacts = options?.extractFacts || config.extractFacts;
 
           await cortex.memory.remember(
             {
@@ -196,7 +195,9 @@ export function createCortexMemory(
         }
       },
 
-      getMemories: async (options?: { limit?: number }): Promise<MemoryEntry[]> => {
+      getMemories: async (options?: {
+        limit?: number;
+      }): Promise<MemoryEntry[]> => {
         logger.debug("Getting all memories");
 
         try {
@@ -258,4 +259,3 @@ export type {
 } from "./types";
 
 export { CortexMemoryProvider } from "./provider";
-

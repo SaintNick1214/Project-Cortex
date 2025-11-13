@@ -17,7 +17,7 @@ describe("Edge Runtime Compatibility", () => {
       // Cortex should be instantiable without Node.js-specific APIs
       // Edge runtimes don't have process.cwd, __dirname, __filename, fs, path, etc.
       expect(() => new Cortex({ convexUrl: CONVEX_URL })).not.toThrow();
-      
+
       // Verify the SDK exports are available
       expect(Cortex).toBeDefined();
       expect(typeof Cortex).toBe("function");
@@ -412,4 +412,3 @@ describe("Edge Runtime: Real-world Scenarios", () => {
     });
   });
 });
-

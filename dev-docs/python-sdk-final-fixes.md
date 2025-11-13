@@ -27,14 +27,14 @@ Created `cortex/_convex_async.py` - an async wrapper that runs sync operations i
 class AsyncConvexClient:
     def __init__(self, sync_client):
         self._sync_client = sync_client
-    
+
     async def query(self, name: str, args: dict):
         loop = asyncio.get_event_loop()
         return await loop.run_in_executor(
             None,
             lambda: self._sync_client.query(name, args)
         )
-    
+
     async def mutation(self, name: str, args: dict):
         loop = asyncio.get_event_loop()
         return await loop.run_in_executor(
@@ -44,6 +44,7 @@ class AsyncConvexClient:
 ```
 
 **Benefits:**
+
 - ✅ Provides async API matching TypeScript SDK
 - ✅ Doesn't block event loop
 - ✅ Works with async Python frameworks (FastAPI, etc.)
@@ -54,6 +55,7 @@ class AsyncConvexClient:
 ### 1. ✅ Async Wrapper
 
 **Files:**
+
 - Created `cortex/_convex_async.py` - Async wrapper for sync Convex client
 - Updated `cortex/client.py` - Use AsyncConvexClient wrapper
 
@@ -62,6 +64,7 @@ class AsyncConvexClient:
 Fixed Python 3.12/3.13 compatibility:
 
 **Files:**
+
 - `cortex/memory/__init__.py` - `Type1 | Type2` → `Union[Type1, Type2]`
 - `cortex/contexts/__init__.py` - Added `Union` imports
 - `cortex/conversations/__init__.py` - Added missing `Literal`, `Dict`, `Any`
@@ -70,12 +73,14 @@ Fixed Python 3.12/3.13 compatibility:
 ### 3. ✅ Environment Loading
 
 **Files:**
+
 - `tests/conftest.py` - Auto-load `.env.local` from project root
 - `requirements-dev.txt` - Added `python-dotenv>=1.0`
 
 ### 4. ✅ Dependencies
 
 **Files:**
+
 - `requirements.txt` - Added `convex>=0.5.0`
 - `requirements-dev.txt` - Added `convex>=0.5.0` and `python-dotenv>=1.0`
 - `pyproject.toml` - Added `convex>=0.5.0` to dependencies
@@ -84,6 +89,7 @@ Fixed Python 3.12/3.13 compatibility:
 ### 5. ✅ Python Version Support
 
 **Files:**
+
 - `pyproject.toml` - Changed to `python_requires=">=3.12"`
 - `setup.py` - Changed to `python_requires=">=3.12"`
 - Classifiers updated to show 3.12 and 3.13 support
@@ -92,6 +98,7 @@ Fixed Python 3.12/3.13 compatibility:
 ### 6. ✅ Documentation
 
 **Files:**
+
 - `dev-docs/python-sdk-testing.md` - Complete testing guide with Convex launch
 - `dev-docs/python-sdk-clarifications.md` - Corrections about convex availability
 - `dev-docs/python-sdk-async-wrapper.md` - Technical explanation of async wrapper
@@ -101,6 +108,7 @@ Fixed Python 3.12/3.13 compatibility:
 ### 7. ✅ Test Infrastructure
 
 **Files:**
+
 - `tests/test_00_basic.py` - Basic connectivity tests to run first
 - Updated `tests/conftest.py` - Better environment loading and error messages
 - Test scripts for multi-version testing
@@ -145,6 +153,7 @@ pytest -v
 ### ✅ Basic Tests (test_00_basic.py)
 
 All 5 tests should pass:
+
 1. Environment variables loaded
 2. All modules import successfully
 3. Convex package is installed
@@ -154,6 +163,7 @@ All 5 tests should pass:
 ### ✅ API Tests
 
 After basic tests pass:
+
 - `test_conversations.py` - Create, get, list conversations
 - `test_memory.py` - Remember, search, update memories
 - `test_users.py` - User profiles, GDPR cascade deletion
@@ -164,6 +174,7 @@ After basic tests pass:
 
 **Symptom:** Connection refused  
 **Solution:**
+
 ```bash
 cd /Users/SaintNick/Documents/Cortex/Project-Cortex
 npm run dev:local
@@ -205,7 +216,6 @@ cortex-sdk-python/
    ```bash
    pytest tests/test_00_basic.py -v -s
    ```
-   
 2. **If they pass**, the SDK setup is correct
 
 3. **If they fail**, check:
@@ -231,4 +241,3 @@ All other fixes (dependencies, environment loading, type annotations) support th
 **Last Updated**: 2025-11-06  
 **Critical Fix**: AsyncConvexClient wrapper  
 **Status**: Ready for testing
-

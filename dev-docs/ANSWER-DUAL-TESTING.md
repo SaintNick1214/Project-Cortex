@@ -68,25 +68,25 @@ pytest -v
 
 **Same as TypeScript SDK:**
 
-| Variable | Purpose | Value in Your .env.local |
-|----------|---------|-------------------------|
-| `LOCAL_CONVEX_URL` | Local development server | `http://127.0.0.1:3210` ✅ |
-| `CLOUD_CONVEX_URL` | Managed cloud deployment | `https://expert-buffalo-268.convex.cloud` ✅ |
-| `CONVEX_TEST_MODE` | Which to test: local/managed/both/auto | Set at runtime |
-| `CONVEX_URL` | Active URL (auto-set based on mode) | Currently LOCAL |
+| Variable           | Purpose                                | Value in Your .env.local                     |
+| ------------------ | -------------------------------------- | -------------------------------------------- |
+| `LOCAL_CONVEX_URL` | Local development server               | `http://127.0.0.1:3210` ✅                   |
+| `CLOUD_CONVEX_URL` | Managed cloud deployment               | `https://expert-buffalo-268.convex.cloud` ✅ |
+| `CONVEX_TEST_MODE` | Which to test: local/managed/both/auto | Set at runtime                               |
+| `CONVEX_URL`       | Active URL (auto-set based on mode)    | Currently LOCAL                              |
 
 ### Feature Parity Matrix
 
-| Feature | TypeScript SDK | Python SDK | Status |
-|---------|---------------|-----------|--------|
+| Feature                   | TypeScript SDK            | Python SDK                    | Status      |
+| ------------------------- | ------------------------- | ----------------------------- | ----------- |
 | Test orchestration script | `scripts/test-runner.mjs` | `scripts/run-python-tests.py` | ✅ Complete |
-| Environment configuration | `tests/env.ts` | `tests/conftest.py` | ✅ Complete |
-| Auto-detection | ✅ Yes | ✅ Yes | ✅ Complete |
-| LOCAL testing | ✅ Yes | ✅ Yes | ✅ Complete |
-| MANAGED testing | ✅ Yes | ✅ Yes | ✅ Complete |
-| Dual testing (both) | ✅ Yes | ✅ Yes | ✅ Complete |
-| Test mode env var | `CONVEX_TEST_MODE` | `CONVEX_TEST_MODE` | ✅ Complete |
-| Config detection | AUTO | AUTO | ✅ Complete |
+| Environment configuration | `tests/env.ts`            | `tests/conftest.py`           | ✅ Complete |
+| Auto-detection            | ✅ Yes                    | ✅ Yes                        | ✅ Complete |
+| LOCAL testing             | ✅ Yes                    | ✅ Yes                        | ✅ Complete |
+| MANAGED testing           | ✅ Yes                    | ✅ Yes                        | ✅ Complete |
+| Dual testing (both)       | ✅ Yes                    | ✅ Yes                        | ✅ Complete |
+| Test mode env var         | `CONVEX_TEST_MODE`        | `CONVEX_TEST_MODE`            | ✅ Complete |
+| Config detection          | AUTO                      | AUTO                          | ✅ Complete |
 
 **Result**: ✅ **100% Feature Parity!**
 
@@ -135,12 +135,14 @@ cd cortex-sdk-python
 pytest -v
 ```
 
-**Behavior**: 
+**Behavior**:
+
 - Detects BOTH LOCAL and MANAGED configs
 - Defaults to LOCAL (for backward compatibility)
 - Prints warning: "Use run-python-tests.py to run both suites"
 
 **Output**:
+
 ```
 ⚠️  [Python SDK] Both configs detected, defaulting to LOCAL: http://127.0.0.1:3210
    Use 'python scripts/run-python-tests.py' to run both suites
@@ -154,6 +156,7 @@ python scripts/run-python-tests.py --mode=local
 ```
 
 **Output**:
+
 ```
 🔍 [Python SDK] Detecting available Convex configurations...
    Local config (LOCAL_CONVEX_URL): ✅ Found
@@ -177,6 +180,7 @@ python scripts/run-python-tests.py --mode=managed
 ```
 
 **Output**:
+
 ```
 ============================================================
 🚀 Running MANAGED tests...
@@ -195,6 +199,7 @@ python scripts/run-python-tests.py --mode=both
 ```
 
 **Output**:
+
 ```
 🎯 Both configurations detected - running DUAL TEST SUITE
    Tests will run against both local AND managed environments
@@ -220,7 +225,7 @@ python scripts/run-python-tests.py --mode=both
 
 ## You're Right About Deployment Issues!
 
-You said: *"local and managed ts tests function, so i don't believe there are any deployment related issues"*
+You said: _"local and managed ts tests function, so i don't believe there are any deployment related issues"_
 
 **You're 100% correct!** ✅
 
@@ -267,4 +272,3 @@ This will show if vector search tests pass on MANAGED but fail on LOCAL (expecte
 ✅ **100% feature parity**
 
 You can now test Python SDK the same way you test TypeScript SDK! 🚀
-

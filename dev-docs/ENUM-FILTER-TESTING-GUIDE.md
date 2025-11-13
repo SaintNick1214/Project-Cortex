@@ -5,6 +5,7 @@
 ### The "observation" Bug
 
 In January 2025, we discovered that the `"observation"` factType was missing from 5 Facts API query function validators, despite being present in:
+
 - The schema definition
 - The `store` mutation
 
@@ -16,7 +17,7 @@ This bug demonstrated the need for **comprehensive enum filter testing**.
 
 ## Testing Strategy
 
-###  1. Parametrized Tests for Complete Coverage
+### 1. Parametrized Tests for Complete Coverage
 
 Test **every enum value** in **every filter operation**:
 
@@ -47,6 +48,7 @@ describe.each(ALL_FACT_TYPES)("FactType: %s", (factType) => {
 ### 2. Edge Case Tests
 
 In addition to parametrized tests, test:
+
 - Empty results (filter with no matches)
 - Multiple results
 - Combining enum filter with other parameters
@@ -57,6 +59,7 @@ In addition to parametrized tests, test:
 For each API with enum filters, test ALL operations that accept the enum:
 
 **Facts API Example**:
+
 - `list()` with `factType` filter ✓
 - `count()` with `factType` filter ✓
 - `search()` with `factType` filter ✓
@@ -64,15 +67,18 @@ For each API with enum filters, test ALL operations that accept the enum:
 - `exportFacts()` with `factType` filter ✓
 
 **Conversations API Example**:
+
 - `list()` with `type` filter ✓
 - `count()` with `type` filter ✓
 - `search()` with `type` filter ✓
 
 **Contexts API Example**:
+
 - `list()` with `status` filter ✓
 - `count()` with `status` filter ✓
 
 **Memory Spaces API Example**:
+
 - `list()` with `type` filter ✓
 - `list()` with `status` filter ✓
 
@@ -81,19 +87,21 @@ For each API with enum filters, test ALL operations that accept the enum:
 When adding a new enum value, ensure it's added to ALL of these locations:
 
 ### 1. Schema Definition
+
 ```typescript
 // convex-dev/schema.ts
 facts: defineTable({
   factType: v.union(
     v.literal("preference"),
     // ... other values ...
-    v.literal("NEW_VALUE"),  // ← Add here
+    v.literal("NEW_VALUE"), // ← Add here
     v.literal("custom"),
   ),
-})
+});
 ```
 
 ### 2. Mutation Validators
+
 ```typescript
 // convex-dev/facts.ts
 export const store = mutation({
@@ -101,37 +109,41 @@ export const store = mutation({
     factType: v.union(
       v.literal("preference"),
       // ... other values ...
-      v.literal("NEW_VALUE"),  // ← Add here
+      v.literal("NEW_VALUE"), // ← Add here
       v.literal("custom"),
     ),
   },
-})
+});
 ```
 
 ### 3. ALL Query Function Validators
+
 ```typescript
 // convex-dev/facts.ts
 export const list = query({
   args: {
-    factType: v.optional(v.union(
-      v.literal("preference"),
-      // ... other values ...
-      v.literal("NEW_VALUE"),  // ← Add here
-      v.literal("custom"),
-    )),
+    factType: v.optional(
+      v.union(
+        v.literal("preference"),
+        // ... other values ...
+        v.literal("NEW_VALUE"), // ← Add here
+        v.literal("custom"),
+      ),
+    ),
   },
-})
+});
 
 // Repeat for: count, search, queryBySubject, exportFacts
 ```
 
 ### 4. SDK Type Definitions
+
 ```typescript
 // TypeScript SDK
 export type FactType =
   | "preference"
   // ... other values ...
-  | "NEW_VALUE"  // ← Add here
+  | "NEW_VALUE" // ← Add here
   | "custom";
 ```
 
@@ -146,6 +158,7 @@ FactType = Literal[
 ```
 
 ### 5. Test Arrays
+
 ```python
 # Python tests
 ALL_FACT_TYPES = [
@@ -161,7 +174,7 @@ ALL_FACT_TYPES = [
 const ALL_FACT_TYPES = [
   "preference",
   // ... other values ...
-  "NEW_VALUE",  // ← Add here
+  "NEW_VALUE", // ← Add here
   "custom",
 ] as const;
 ```
@@ -169,6 +182,7 @@ const ALL_FACT_TYPES = [
 ## File Organization
 
 ### Python SDK Tests
+
 ```
 cortex-sdk-python/tests/
 ├── test_facts_filters.py          # 43 tests (35 parametrized + 8 edge cases)
@@ -178,6 +192,7 @@ cortex-sdk-python/tests/
 ```
 
 ### TypeScript SDK Tests
+
 ```
 tests/
 ├── facts-filters.test.ts           # 43 tests (35 parametrized + 8 edge cases)
@@ -189,6 +204,7 @@ tests/
 ## How Parametrized Tests Work
 
 ### Python (`@pytest.mark.parametrize`)
+
 ```python
 @pytest.mark.parametrize("fact_type", ["preference", "identity", "knowledge"])
 async def test_example(cortex, fact_type):
@@ -200,16 +216,20 @@ async def test_example(cortex, fact_type):
 ```
 
 ### TypeScript (`describe.each` / `test.each`)
+
 ```typescript
-describe.each(["preference", "identity", "knowledge"])("Type: %s", (factType) => {
-  it("should work", () => {
-    // This test runs 3 times:
-    // 1. Type: preference - should work
-    // 2. Type: identity - should work
-    // 3. Type: knowledge - should work
-    expect(["preference", "identity", "knowledge"]).toContain(factType);
-  });
-});
+describe.each(["preference", "identity", "knowledge"])(
+  "Type: %s",
+  (factType) => {
+    it("should work", () => {
+      // This test runs 3 times:
+      // 1. Type: preference - should work
+      // 2. Type: identity - should work
+      // 3. Type: knowledge - should work
+      expect(["preference", "identity", "knowledge"]).toContain(factType);
+    });
+  },
+);
 ```
 
 ## Test Validation Pattern
@@ -240,26 +260,33 @@ assert target_fact_id in [f["fact_id"] for f in results]
 ## Benefits of This Approach
 
 ### 1. Early Detection
+
 Catches enum inconsistencies immediately when new values are added.
 
 ### 2. Comprehensive Coverage
+
 Tests every enum value in every operation, not just one example.
 
 ### 3. Regression Protection
+
 New enum values have automatic test coverage via parametrized tests.
 
 ### 4. Clear Failures
+
 When a test fails, you know exactly which enum value and which operation has the problem:
+
 ```
 FAILED test_facts_filters.py::TestFactsFilterParametrized::test_list_filters_by_fact_type[observation]
 ```
 
 ### 5. Low Maintenance
+
 Adding a new enum value to the test array automatically creates tests for all operations.
 
 ## CI/CD Integration
 
 ### Pre-Commit Hook (Recommended)
+
 ```bash
 # .git/hooks/pre-commit
 #!/bin/bash
@@ -275,6 +302,7 @@ fi
 ```
 
 ### GitHub Actions
+
 ```yaml
 # .github/workflows/test.yml
 - name: Run Enum Filter Tests
@@ -286,22 +314,27 @@ fi
 ## Common Pitfalls
 
 ### 1. Forgetting Query Functions
+
 ✗ Update schema and `store` mutation only  
 ✓ Update ALL query functions that accept the enum
 
 ### 2. Testing Only One Example
+
 ✗ Test `factType="preference"` only  
 ✓ Use parametrized tests to test ALL values
 
 ### 3. Not Testing New Values
+
 ✗ Add enum, assume it works  
 ✓ Add to test array, verify all operations work
 
 ### 4. Testing Backend Without SDKs
+
 ✗ Backend works, but SDK types not updated  
 ✓ Test both backend and SDK in sync
 
 ### 5. Manual Test Updates
+
 ✗ Manually add test for each new enum value  
 ✓ Add to test array, parametrized tests auto-generate
 
@@ -314,6 +347,7 @@ fi
 ## Summary
 
 **When adding a new enum value:**
+
 1. ✓ Update schema
 2. ✓ Update mutation validator
 3. ✓ Update ALL query function validators
@@ -328,4 +362,3 @@ fi
 **Created**: January 11, 2025  
 **Author**: AI Assistant  
 **Related**: `FACTS-OBSERVATION-BUG-FIX.md`, Test files in `tests/` and `cortex-sdk-python/tests/`
-

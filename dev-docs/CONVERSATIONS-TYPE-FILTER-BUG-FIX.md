@@ -12,7 +12,8 @@
 ```typescript
 // BEFORE (BROKEN):
 // Post-filter by type if needed (when using other indexes)
-if (args.type && !args.type) {  // ← This condition is ALWAYS FALSE!
+if (args.type && !args.type) {
+  // ← This condition is ALWAYS FALSE!
   return conversations.filter((c) => c.type === args.type);
 }
 ```
@@ -20,7 +21,8 @@ if (args.type && !args.type) {  // ← This condition is ALWAYS FALSE!
 **Logic Error**: `args.type && !args.type` can never be true. This is a contradiction.
 
 **Impact**: When `conversations.list()` is called with:
-- `type` + `memorySpaceId`, OR  
+
+- `type` + `memorySpaceId`, OR
 - `type` + `userId`
 
 The type filter is completely ignored. All conversations in the memory space/for the user are returned, regardless of type.
@@ -44,7 +46,7 @@ if (args.type && (args.memorySpaceId || args.userId)) {
 The backend uses different indexes depending on which filters are provided:
 
 1. **memorySpaceId + userId**: Uses `by_memorySpace_user` index
-2. **memorySpaceId only**: Uses `by_memorySpace` index  
+2. **memorySpaceId only**: Uses `by_memorySpace` index
 3. **userId only**: Uses `by_user` index
 4. **type only**: Uses `by_type` index
 5. **No filters**: Scans all
@@ -103,6 +105,7 @@ assert all(c.type == "user-agent" for c in results)
 ```
 
 **Test Failure Message**:
+
 ```
 AssertionError: All results should be user-agent, got agent-agent
 ```
@@ -112,21 +115,24 @@ This immediately pointed to the type filter not working.
 ## Impact Assessment
 
 ### Severity: High
+
 - Affects ALL users combining type filter with memorySpaceId or userId
 - Silent data leak (returns wrong conversations)
 - No error thrown - just wrong results
 
 ### Affected Operations
+
 - `conversations.list({ type: "X", memorySpaceId: "Y" })` ❌
-- `conversations.list({ type: "X", userId: "Y" })` ❌  
+- `conversations.list({ type: "X", userId: "Y" })` ❌
 - `conversations.list({ type: "X" })` ✅ (works - uses by_type index directly)
 
 ### User Experience Before Fix
+
 ```typescript
 // User wants only user-agent conversations in a space:
 const userConvs = await cortex.conversations.list({
   type: "user-agent",
-  memorySpaceId: "my-space"
+  memorySpaceId: "my-space",
 });
 
 // Expected: Only user-agent conversations
@@ -141,7 +147,7 @@ const userConvs = await cortex.conversations.list({
 ```typescript
 // conversations.ts - line 624-626
 if (args.type && conversation.type !== args.type) {
-  continue;  // ✅ Correctly filters
+  continue; // ✅ Correctly filters
 }
 ```
 
@@ -150,11 +156,13 @@ if (args.type && conversation.type !== args.type) {
 This bug demonstrates why the comprehensive filter tests are critical:
 
 ### Before Filter Tests
+
 - Bug introduced: Unknown when
 - Bug detected: Never (or user reports weeks/months later)
 - Impact: Silent wrong results in production
 
 ### With Filter Tests
+
 - Bug introduced: N/A (would be caught immediately)
 - Bug detected: First test run after introducing bug
 - Impact: 0 (caught before deployment)
@@ -186,4 +194,3 @@ pytest tests/test_conversations_filters.py -v
 **Fixed**: January 11, 2025  
 **File Modified**: `convex-dev/conversations.ts` (1 line)  
 **Test**: `tests/test_conversations_filters.py`
-

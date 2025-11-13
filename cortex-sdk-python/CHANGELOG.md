@@ -10,27 +10,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added - Initial Python SDK Release
 
 #### Core Infrastructure
+
 - Main Cortex client class with graph integration support
 - Complete type system with 50+ dataclasses
 - Structured error handling with all error codes
 - Async/await throughout matching TypeScript SDK
 
 #### Layer 1 (ACID Stores)
+
 - ConversationsAPI - 13 methods for immutable conversation threads
 - ImmutableAPI - 9 methods for shared versioned data
 - MutableAPI - 12 methods for shared live data with atomic updates
 
 #### Layer 2 (Vector Index)
+
 - VectorAPI - 13 methods for searchable memories with embeddings
 - Semantic search support
 - Versioning and retention
 
 #### Layer 3 (Facts)
+
 - FactsAPI - 10 methods for structured knowledge extraction
 - Support for all fact types (preference, identity, knowledge, relationship, event)
 - Temporal validity and confidence scoring
 
 #### Layer 4 (Convenience & Coordination)
+
 - MemoryAPI - 14 methods as high-level convenience wrapper
 - ContextsAPI - 17 methods for hierarchical workflow coordination
 - UsersAPI - 11 methods with full GDPR cascade deletion
@@ -38,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MemorySpacesAPI - 9 methods for memory space management
 
 #### Graph Integration
+
 - CypherGraphAdapter for Neo4j and Memgraph
 - Graph sync utilities for all entities
 - Orphan detection and cleanup
@@ -45,11 +51,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Schema initialization and management
 
 #### A2A Communication
+
 - A2AAPI - 4 methods for agent-to-agent messaging
 - Send, request, broadcast operations
 - Conversation retrieval
 
 #### Testing & Documentation
+
 - Pytest configuration and fixtures
 - Example tests for memory, conversations, and users
 - 4 complete example applications
@@ -58,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TypeScript to Python migration guide
 
 #### Package Distribution
+
 - PyPI-ready package configuration
 - setup.py and pyproject.toml
 - Type stubs (py.typed marker)
@@ -96,18 +105,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Future] - Planned Features
 
 ### Integrations
+
 - LangChain memory adapter
 - FastAPI middleware
 - Django integration
 - Flask extension
 
 ### Enhancements
+
 - Connection pooling
 - Bulk operation optimizations
 - Async context managers
 - Sync wrapper utility class
 
 ### Documentation
+
 - Sphinx-generated API docs
 - Video tutorials
 - Jupyter notebooks
@@ -116,4 +128,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 For the complete history including TypeScript SDK changes, see: ../CHANGELOG.md
-

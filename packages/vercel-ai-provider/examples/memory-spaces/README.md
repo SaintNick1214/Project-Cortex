@@ -3,6 +3,7 @@
 Multi-tenant SaaS application with isolated memory per tenant.
 
 ## Features
+
 - 🏢 Team/organization isolation
 - 👤 Per-user memory spaces
 - 🔒 Data isolation and security
@@ -18,4 +19,3 @@ const cortexMemory = createCortexMemory({
 ```
 
 Perfect for SaaS applications with multiple customers.
-
