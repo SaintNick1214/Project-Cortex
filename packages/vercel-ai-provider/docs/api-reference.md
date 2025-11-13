@@ -9,37 +9,35 @@ Creates a memory-augmented model factory with manual memory control methods.
 ### Signature
 
 ```typescript
-function createCortexMemory(
-  config: CortexMemoryConfig
-): CortexMemoryModel
+function createCortexMemory(config: CortexMemoryConfig): CortexMemoryModel;
 ```
 
 ### Parameters
 
 #### CortexMemoryConfig
 
-| Property | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| `convexUrl` | string | ✅ | - | Convex deployment URL |
-| `memorySpaceId` | string | ✅ | - | Memory space for isolation |
-| `userId` | string \| () => string\|Promise<string> | ✅ | - | User ID (static or function) |
-| `userName` | string | ❌ | 'User' | Display name for user |
-| `conversationId` | string \| () => string | ❌ | auto-generated | Conversation ID |
-| `embeddingProvider` | object | ❌ | undefined | Custom embedding provider |
-| `memorySearchLimit` | number | ❌ | 5 | Max memories to retrieve |
-| `minMemoryRelevance` | number | ❌ | 0.7 | Min relevance score (0-1) |
-| `enableMemorySearch` | boolean | ❌ | true | Auto-search before generation |
-| `enableMemoryStorage` | boolean | ❌ | true | Auto-store after generation |
-| `contextInjectionStrategy` | 'system'\|'user' | ❌ | 'system' | Where to inject context |
-| `customContextBuilder` | function | ❌ | undefined | Custom context formatter |
-| `enableFactExtraction` | boolean | ❌ | false | Extract facts from conversations |
-| `extractFacts` | function | ❌ | undefined | Custom fact extraction |
-| `enableGraphMemory` | boolean | ❌ | false | Sync to graph database |
-| `hiveMode` | object | ❌ | undefined | Cross-app memory config |
-| `defaultImportance` | number | ❌ | 50 | Default importance (0-100) |
-| `defaultTags` | string[] | ❌ | [] | Default tags |
-| `debug` | boolean | ❌ | false | Enable debug logging |
-| `logger` | object | ❌ | console | Custom logger |
+| Property                   | Type                                    | Required | Default        | Description                      |
+| -------------------------- | --------------------------------------- | -------- | -------------- | -------------------------------- |
+| `convexUrl`                | string                                  | ✅       | -              | Convex deployment URL            |
+| `memorySpaceId`            | string                                  | ✅       | -              | Memory space for isolation       |
+| `userId`                   | string \| () => string\|Promise<string> | ✅       | -              | User ID (static or function)     |
+| `userName`                 | string                                  | ❌       | 'User'         | Display name for user            |
+| `conversationId`           | string \| () => string                  | ❌       | auto-generated | Conversation ID                  |
+| `embeddingProvider`        | object                                  | ❌       | undefined      | Custom embedding provider        |
+| `memorySearchLimit`        | number                                  | ❌       | 5              | Max memories to retrieve         |
+| `minMemoryRelevance`       | number                                  | ❌       | 0.7            | Min relevance score (0-1)        |
+| `enableMemorySearch`       | boolean                                 | ❌       | true           | Auto-search before generation    |
+| `enableMemoryStorage`      | boolean                                 | ❌       | true           | Auto-store after generation      |
+| `contextInjectionStrategy` | 'system'\|'user'                        | ❌       | 'system'       | Where to inject context          |
+| `customContextBuilder`     | function                                | ❌       | undefined      | Custom context formatter         |
+| `enableFactExtraction`     | boolean                                 | ❌       | false          | Extract facts from conversations |
+| `extractFacts`             | function                                | ❌       | undefined      | Custom fact extraction           |
+| `enableGraphMemory`        | boolean                                 | ❌       | false          | Sync to graph database           |
+| `hiveMode`                 | object                                  | ❌       | undefined      | Cross-app memory config          |
+| `defaultImportance`        | number                                  | ❌       | 50             | Default importance (0-100)       |
+| `defaultTags`              | string[]                                | ❌       | []             | Default tags                     |
+| `debug`                    | boolean                                 | ❌       | false          | Enable debug logging             |
+| `logger`                   | object                                  | ❌       | console        | Custom logger                    |
 
 ### Returns
 
@@ -51,10 +49,14 @@ A function that wraps language models + manual memory methods:
 interface CortexMemoryModel {
   // Model wrapping
   (model: LanguageModelV1): LanguageModelV1;
-  
+
   // Manual memory methods
   search(query: string, options?: SearchOptions): Promise<MemoryEntry[]>;
-  remember(userMsg: string, agentResp: string, options?: RememberOptions): Promise<void>;
+  remember(
+    userMsg: string,
+    agentResp: string,
+    options?: RememberOptions,
+  ): Promise<void>;
   getMemories(options?: { limit?: number }): Promise<MemoryEntry[]>;
   clearMemories(options?: ClearOptions): Promise<number>;
   getConfig(): Readonly<CortexMemoryConfig>;
@@ -72,16 +74,18 @@ const wrappedModel = cortexMemory(underlyingModel);
 ### Examples
 
 ```typescript
-import { openai } from '@ai-sdk/openai';
-import { anthropic } from '@ai-sdk/anthropic';
-import { google } from '@ai-sdk/google';
+import { openai } from "@ai-sdk/openai";
+import { anthropic } from "@ai-sdk/anthropic";
+import { google } from "@ai-sdk/google";
 
-const cortexMemory = createCortexMemory({ /* config */ });
+const cortexMemory = createCortexMemory({
+  /* config */
+});
 
 // Wrap any AI SDK provider
-const gpt4 = cortexMemory(openai('gpt-4'));
-const claude = cortexMemory(anthropic('claude-3-opus'));
-const gemini = cortexMemory(google('gemini-pro'));
+const gpt4 = cortexMemory(openai("gpt-4"));
+const claude = cortexMemory(anthropic("claude-3-opus"));
+const gemini = cortexMemory(google("gemini-pro"));
 
 // Use with AI SDK functions
 await streamText({ model: gpt4, messages });
@@ -111,10 +115,10 @@ async search(
 **Example:**
 
 ```typescript
-const memories = await cortexMemory.search('user preferences', {
+const memories = await cortexMemory.search("user preferences", {
   limit: 10,
   minScore: 0.8,
-  tags: ['important'],
+  tags: ["important"],
 });
 
 console.log(memories);
@@ -142,12 +146,12 @@ async remember(
 
 ```typescript
 await cortexMemory.remember(
-  'My favorite color is blue',
-  'I will remember that!',
+  "My favorite color is blue",
+  "I will remember that!",
   {
-    conversationId: 'conv-123',
+    conversationId: "conv-123",
     generateEmbedding: async (text) => await embed(text),
-  }
+  },
 );
 ```
 
@@ -194,7 +198,7 @@ console.log(`Deleted ${deleted} memories`);
 // Clear specific user's memories
 await cortexMemory.clearMemories({
   confirm: true,
-  userId: 'user-123',
+  userId: "user-123",
 });
 ```
 
@@ -226,9 +230,9 @@ interface MemoryEntry {
   embedding?: number[];
   userId?: string;
   participantId?: string;
-  sourceType: 'conversation' | 'system' | 'tool' | 'a2a';
+  sourceType: "conversation" | "system" | "tool" | "a2a";
   metadata: {
-    importance: number;  // 0-100
+    importance: number; // 0-100
     tags: string[];
   };
   createdAt: number;
@@ -242,4 +246,3 @@ interface MemoryEntry {
 - [Memory Spaces](./memory-spaces.md)
 - [Hive Mode](./hive-mode.md)
 - [Migration from mem0](./migration-from-mem0.md)
-

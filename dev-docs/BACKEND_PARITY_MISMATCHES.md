@@ -7,7 +7,7 @@ Analysis of Python SDK test failures reveals **backend parity gaps** preventing 
 **Test Results**: 126 passing / 185 total (68%)  
 **Backend Issues**: 59 failing tests  
 **Missing Functions**: ~50 backend functions  
-**Parameter Mismatches**: ~15 validation issues  
+**Parameter Mismatches**: ~15 validation issues
 
 ---
 
@@ -20,7 +20,7 @@ All agent functions appear to be missing or have wrong signatures:
 ```
 ❌ agents:register - Could not find public function
 ❌ agents:get - Could not find public function
-❌ agents:list - Could not find public function  
+❌ agents:list - Could not find public function
 ❌ agents:unregister - Could not find public function
 ❌ agents:getStats - Could not find public function
 ❌ agents:count - Could not find public function
@@ -63,7 +63,7 @@ Memory spaces backend has validation issues:
 
 ❌ memorySpaces:get - ArgumentValidationError
    Object contains extra field `includeStats` not in validator
-   
+
 ❌ memorySpaces:list - ArgumentValidationError (participants issue)
 ❌ memorySpaces:delete - ArgumentValidationError (participants issue)
 ❌ memorySpaces:count - ArgumentValidationError (participants issue)
@@ -82,7 +82,7 @@ All fact functions have issues:
 
 ```
 ❌ facts:store - ArgumentValidationError
-❌ facts:get - Server Error  
+❌ facts:get - Server Error
 ❌ facts:list - Server Error
 ❌ facts:search - Server Error
 ❌ facts:update - Server Error
@@ -169,6 +169,7 @@ Most functions work, but delete operations missing:
 ### RegisterMemorySpaceParams - participants Cannot Be Null
 
 **Error**:
+
 ```
 ArgumentValidationError: Value does not match validator.
 Path: .participants
@@ -179,6 +180,7 @@ Validator: v.array(v.object({id: v.string(), joinedAt: v.float64(), type: v.stri
 **Issue**: Backend expects `participants` to be an array, but Python SDK allows None  
 **Affected**: All memorySpaces:register calls  
 **Solution**: Either:
+
 1. Backend should accept null/undefined for participants
 2. Python SDK should provide empty array [] instead of None
 
@@ -187,6 +189,7 @@ Validator: v.array(v.object({id: v.string(), joinedAt: v.float64(), type: v.stri
 ### memorySpaces:get - includeStats Not Supported
 
 **Error**:
+
 ```
 ArgumentValidationError: Object contains extra field `includeStats`
 Object: {includeStats: false, memorySpaceId: "..."}
@@ -202,6 +205,7 @@ Validator: v.object({memorySpaceId: v.string()})
 ### mutable:purgeNamespace - dryRun Not Supported
 
 **Error**:
+
 ```
 ArgumentValidationError: Object contains extra field `dryRun`
 Object: {dryRun: false, namespace: "..."}
@@ -217,6 +221,7 @@ Validator: v.object({namespace: v.string()})
 ### RegisterMemorySpaceParams - description Field
 
 **Error**:
+
 ```
 TypeError: RegisterMemorySpaceParams.__init__() got an unexpected keyword argument 'description'
 ```
@@ -232,6 +237,7 @@ TypeError: RegisterMemorySpaceParams.__init__() got an unexpected keyword argume
 ### RememberParams - user_message_embedding
 
 **Error**:
+
 ```
 TypeError: RememberParams.__init__() got an unexpected keyword argument 'user_message_embedding'
 ```
@@ -242,6 +248,7 @@ TypeError: RememberParams.__init__() got an unexpected keyword argument 'user_me
 ### MemoryAPI.list() - min_importance
 
 **Error**:
+
 ```
 TypeError: MemoryAPI.list() got an unexpected keyword argument 'min_importance'
 ```
@@ -252,6 +259,7 @@ TypeError: MemoryAPI.list() got an unexpected keyword argument 'min_importance'
 ### MemoryAPI.count() - tags
 
 **Error**:
+
 ```
 TypeError: MemoryAPI.count() got an unexpected keyword argument 'tags'
 ```
@@ -262,6 +270,7 @@ TypeError: MemoryAPI.count() got an unexpected keyword argument 'tags'
 ### ForgetOptions - permanent
 
 **Error**:
+
 ```
 TypeError: ForgetOptions.__init__() got an unexpected keyword argument 'permanent'
 ```
@@ -276,6 +285,7 @@ TypeError: ForgetOptions.__init__() got an unexpected keyword argument 'permanen
 ### ImmutableVersion - created_at vs createdAt
 
 **Error**:
+
 ```
 TypeError: ImmutableVersion.__init__() got an unexpected keyword argument 'created_at'
 ```
@@ -293,6 +303,7 @@ TypeError: ImmutableVersion.__init__() got an unexpected keyword argument 'creat
 ### Mutable.update() - Updater Function Issue
 
 **Error**:
+
 ```
 TypeError: 'dict' object is not callable
 ```
@@ -306,6 +317,7 @@ TypeError: 'dict' object is not callable
 ## Summary by Category
 
 ### Fully Working APIs ✅
+
 - **Conversations** - Core CRUD (create, get, list, count, addMessage, delete, export)
 - **Memory** - Core operations (remember, get, search, list, count, update, delete, forget)
 - **Users** - Core CRUD (get, update, delete, list, count, exists, merge, getOrCreate)
@@ -314,12 +326,14 @@ TypeError: 'dict' object is not callable
 - **Mutable** - Most operations (set, get, list, count, exists)
 
 ### Partially Working APIs ⚠️
+
 - **Conversations** - Missing: getHistory, findConversation, search, deleteMany
 - **Users** - Missing: search, updateMany, deleteMany, export
 - **Mutable** - Missing: delete, purgeNamespace (dryRun)
 - **Immutable** - Issues: getVersion, getHistory (type mismatch), search
 
 ### Not Working APIs ❌
+
 - **Agents** - All functions missing/broken (0/8 working)
 - **Contexts** - All functions broken (0/11 working)
 - **Memory Spaces** - All functions broken (0/9 working)
@@ -331,36 +345,43 @@ TypeError: 'dict' object is not callable
 ## Recommendations
 
 ### Priority 1: Fix Memory Spaces API
+
 **Impact**: 9 tests  
 **Issue**: participants validation too strict  
 **Fix**: Backend should accept null/undefined for participants, or Python SDK should use empty array
 
 ### Priority 2: Implement Agents API
+
 **Impact**: 8 tests  
 **Complexity**: High - entire API missing  
 **Benefit**: Enables agent discovery and coordination
 
-### Priority 3: Fix Contexts API  
+### Priority 3: Fix Contexts API
+
 **Impact**: 11 tests  
 **Issue**: Parameter validation errors  
 **Fix**: Review backend parameter requirements
 
 ### Priority 4: Fix Facts API
+
 **Impact**: 11 tests  
 **Issue**: Backend errors  
 **Fix**: Review backend implementation
 
 ### Priority 5: Add Missing Conversation Functions
+
 **Impact**: 4 tests  
 **Functions**: getHistory, findConversation, search, deleteMany  
 **Benefit**: Advanced conversation features
 
 ### Priority 6: Add Missing User Functions
+
 **Impact**: 4 tests  
 **Functions**: search, updateMany, deleteMany, export  
 **Benefit**: Bulk operations and search
 
 ### Priority 7: Clean Up Parameter Issues
+
 **Impact**: ~10 tests  
 **Fix**: Remove unsupported parameters from Python SDK or add to backend
 
@@ -376,19 +397,19 @@ TypeError: 'dict' object is not callable
 
 ##Backend Function Completeness Matrix
 
-| API | Total Functions | Working | Missing | % Complete |
-|-----|----------------|---------|---------|------------|
-| Conversations | 13 | 9 | 4 | 69% |
-| Memory | 14 | 14 | 0 | 100% ✅ |
-| Users | 11 | 7 | 4 | 64% |
-| Vector | 13 | 13 | 0 | 100% ✅ |
-| Immutable | 9 | 7 | 2 | 78% |
-| Mutable | 12 | 10 | 2 | 83% |
-| Facts | 10 | 0 | 10 | 0% ❌ |
-| Contexts | 17 | 0 | 17 | 0% ❌ |
-| Agents | 8 | 0 | 8 | 0% ❌ |
-| Memory Spaces | 9 | 0 | 9 | 0% ❌ |
-| **Total** | **116** | **60** | **56** | **52%** |
+| API           | Total Functions | Working | Missing | % Complete |
+| ------------- | --------------- | ------- | ------- | ---------- |
+| Conversations | 13              | 9       | 4       | 69%        |
+| Memory        | 14              | 14      | 0       | 100% ✅    |
+| Users         | 11              | 7       | 4       | 64%        |
+| Vector        | 13              | 13      | 0       | 100% ✅    |
+| Immutable     | 9               | 7       | 2       | 78%        |
+| Mutable       | 12              | 10      | 2       | 83%        |
+| Facts         | 10              | 0       | 10      | 0% ❌      |
+| Contexts      | 17              | 0       | 17      | 0% ❌      |
+| Agents        | 8               | 0       | 8       | 0% ❌      |
+| Memory Spaces | 9               | 0       | 9       | 0% ❌      |
+| **Total**     | **116**         | **60**  | **56**  | **52%**    |
 
 ---
 
@@ -404,8 +425,8 @@ This report documents all backend parity issues discovered during Python SDK tes
 ---
 
 **Next Actions**:
+
 1. Share this report with backend team
 2. Prioritize implementation of missing functions
 3. Fix parameter validation issues
 4. Rerun tests as backend is completed
-

@@ -1,6 +1,6 @@
 /**
  * Stream Utility Helpers
- * 
+ *
  * Utilities for consuming and handling streaming responses in the Memory API.
  * Supports both Web Streams API (ReadableStream) and AsyncIterable.
  */
@@ -35,11 +35,11 @@ export function isAsyncIterable(
 
 /**
  * Consume a ReadableStream and return the complete text
- * 
+ *
  * @param stream - ReadableStream to consume
  * @returns Promise resolving to the complete text
  * @throws Error if stream reading fails
- * 
+ *
  * @example
  * ```typescript
  * const stream = new ReadableStream({...});
@@ -78,11 +78,11 @@ export async function consumeReadableStream(
 
 /**
  * Consume an AsyncIterable and return the complete text
- * 
+ *
  * @param iterable - AsyncIterable to consume
  * @returns Promise resolving to the complete text
  * @throws Error if iteration fails
- * 
+ *
  * @example
  * ```typescript
  * async function* generator() {
@@ -114,19 +114,19 @@ export async function consumeAsyncIterable(
 
 /**
  * Consume any supported stream type and return the complete text
- * 
+ *
  * Automatically detects the stream type and uses the appropriate consumer.
- * 
+ *
  * @param stream - ReadableStream or AsyncIterable to consume
  * @returns Promise resolving to the complete text
  * @throws Error if stream type is unsupported or consumption fails
- * 
+ *
  * @example
  * ```typescript
  * // Works with ReadableStream
  * const stream1 = new ReadableStream({...});
  * const text1 = await consumeStream(stream1);
- * 
+ *
  * // Works with AsyncIterable
  * async function* gen() { yield "test"; }
  * const text2 = await consumeStream(gen());
@@ -148,15 +148,15 @@ export async function consumeStream(
 
 /**
  * Create a passthrough stream that collects chunks while forwarding them
- * 
+ *
  * Useful for observing stream content without interrupting the flow.
  * The onComplete callback receives the full text after the stream ends.
- * 
+ *
  * @param onChunk - Optional callback called for each chunk
  * @param onComplete - Optional callback called with full text when stream ends
  * @param onError - Optional callback called if stream errors
  * @returns TransformStream that can be piped
- * 
+ *
  * @example
  * ```typescript
  * const originalStream = getStreamFromSomewhere();
@@ -201,11 +201,7 @@ export function createPassthroughStream(
         } catch (error) {
           console.warn("Error in onComplete callback:", error);
           if (onError) {
-            onError(
-              error instanceof Error
-                ? error
-                : new Error(String(error)),
-            );
+            onError(error instanceof Error ? error : new Error(String(error)));
           }
         }
       }
@@ -223,4 +219,3 @@ export function createPassthroughStream(
     },
   });
 }
-

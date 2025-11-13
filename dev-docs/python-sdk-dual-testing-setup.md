@@ -7,6 +7,7 @@
 **Answer**: Currently testing against **LOCAL** Convex (`http://127.0.0.1:3210`)
 
 From `.env.local` line 66:
+
 ```bash
 CONVEX_URL=http://127.0.0.1:3210
 ```
@@ -22,6 +23,7 @@ The Python SDK now has the same dual-testing capability as the TypeScript SDK.
 ### Setup
 
 You have BOTH deployments configured in `.env.local`:
+
 ```bash
 # LOCAL Convex (line 22)
 LOCAL_CONVEX_URL=http://127.0.0.1:3210
@@ -66,6 +68,7 @@ CONVEX_TEST_MODE=managed pytest -v
 ### Test Output Examples
 
 **LOCAL Testing:**
+
 ```
 🔍 [Python SDK] Detecting available Convex configurations...
    Local config (LOCAL_CONVEX_URL): ✅ Found
@@ -83,6 +86,7 @@ CONVEX_TEST_MODE=managed pytest -v
 ```
 
 **MANAGED Testing:**
+
 ```
 ============================================================
 🚀 Running MANAGED tests...
@@ -95,6 +99,7 @@ CONVEX_TEST_MODE=managed pytest -v
 ```
 
 **DUAL Testing:**
+
 ```
 🎯 Both configurations detected - running DUAL TEST SUITE
    Tests will run against both local AND managed environments
@@ -111,15 +116,15 @@ CONVEX_TEST_MODE=managed pytest -v
 
 ## Feature Parity with TypeScript SDK
 
-| Feature | TypeScript | Python | Status |
-|---------|-----------|--------|--------|
-| Dual testing support | ✅ | ✅ | Complete |
-| Auto-detection | ✅ | ✅ | Complete |
-| Test mode env var | `CONVEX_TEST_MODE` | `CONVEX_TEST_MODE` | Complete |
-| Local config var | `LOCAL_CONVEX_URL` | `LOCAL_CONVEX_URL` | Complete |
-| Managed config var | `CLOUD_CONVEX_URL` | `CLOUD_CONVEX_URL` | Complete |
-| Test orchestration script | `test-runner.mjs` | `run-python-tests.py` | Complete |
-| Environment setup | `tests/env.ts` | `tests/conftest.py` | Complete |
+| Feature                   | TypeScript         | Python                | Status   |
+| ------------------------- | ------------------ | --------------------- | -------- |
+| Dual testing support      | ✅                 | ✅                    | Complete |
+| Auto-detection            | ✅                 | ✅                    | Complete |
+| Test mode env var         | `CONVEX_TEST_MODE` | `CONVEX_TEST_MODE`    | Complete |
+| Local config var          | `LOCAL_CONVEX_URL` | `LOCAL_CONVEX_URL`    | Complete |
+| Managed config var        | `CLOUD_CONVEX_URL` | `CLOUD_CONVEX_URL`    | Complete |
+| Test orchestration script | `test-runner.mjs`  | `run-python-tests.py` | Complete |
+| Environment setup         | `tests/env.ts`     | `tests/conftest.py`   | Complete |
 
 **Result**: ✅ **100% Feature Parity!**
 
@@ -143,9 +148,10 @@ Based on `.env.local`:
 
 ### You're Right About Deployment!
 
-You said: *"local and managed ts tests function, so i don't believe there are any deployment related issues"*
+You said: _"local and managed ts tests function, so i don't believe there are any deployment related issues"_
 
 **You're absolutely correct!** The issues I was seeing are **NOT** deployment issues - they're:
+
 1. ✅ **Parameter mismatches** - FIXED (filter_none_values everywhere)
 2. ✅ **Field name mappings** - FIXED (manual construction)
 3. ✅ **Test expectations** - FIXED (20+ tests updated)
@@ -171,6 +177,7 @@ python scripts/run-python-tests.py --mode=both
 ```
 
 This will show:
+
 - If vector search tests pass on MANAGED
 - If there are any environment-specific issues
 - Whether the 79% pass rate is consistent
@@ -183,4 +190,3 @@ This will show:
 4. ✅ `dev-docs/python-sdk-dual-testing-setup.md` - This guide
 
 The Python SDK now has **complete testing parity** with the TypeScript SDK! 🚀
-

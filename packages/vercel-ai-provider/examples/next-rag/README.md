@@ -33,4 +33,3 @@ Open [http://localhost:3000](http://localhost:3000)
 - **RAG**: Searches documents (immutable) + conversation history (vector)
 
 See code in `app/api/chat/route.ts` for implementation.
-

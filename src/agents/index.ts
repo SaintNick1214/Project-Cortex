@@ -589,11 +589,15 @@ export class AgentsAPI {
     plan: AgentDeletionPlan,
   ): Promise<AgentDeletionBackup> {
     return {
-      conversations: JSON.parse(JSON.stringify(plan.conversations)) as Conversation[],
+      conversations: JSON.parse(
+        JSON.stringify(plan.conversations),
+      ) as Conversation[],
       memories: JSON.parse(JSON.stringify(plan.memories)) as MemoryEntry[],
       facts: JSON.parse(JSON.stringify(plan.facts)) as FactRecord[],
       agentRegistration: plan.agentRegistration
-        ? (JSON.parse(JSON.stringify(plan.agentRegistration)) as ConvexAgentRecord)
+        ? (JSON.parse(
+            JSON.stringify(plan.agentRegistration),
+          ) as ConvexAgentRecord)
         : null,
     };
   }

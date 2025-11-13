@@ -61,28 +61,31 @@ cortex/
 ## Key Design Decisions
 
 ### Type Safety
+
 - Uses Python dataclasses for all types
 - Full type hints throughout
 - Pydantic for complex validation
 - Protocol for GraphAdapter interface
 
 ### Async-First
+
 - Native Python async/await
 - All operations are async
 - Matches TypeScript SDK pattern
 - asyncio.gather for parallel operations
 
 ### Error Handling
+
 - Structured CortexError with codes
 - 50+ error codes defined
 - Type guards for error checking
 - Matches TypeScript error system
 
 ### Graph Integration
+
 - Optional Neo4j/Memgraph support
 - Async Neo4j Python driver
 - Auto-sync capabilities
 - Orphan detection on deletions
 
 For detailed implementation notes, see the [Developer Guide](./guides/developer-guide.md).
-

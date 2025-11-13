@@ -782,8 +782,12 @@ export class UsersAPI {
   private async backupRecords(plan: DeletionPlan): Promise<DeletionBackup> {
     // Create deep copies of all records for potential rollback
     return {
-      conversations: JSON.parse(JSON.stringify(plan.conversations)) as Conversation[],
-      immutable: JSON.parse(JSON.stringify(plan.immutable)) as ImmutableRecord[],
+      conversations: JSON.parse(
+        JSON.stringify(plan.conversations),
+      ) as Conversation[],
+      immutable: JSON.parse(
+        JSON.stringify(plan.immutable),
+      ) as ImmutableRecord[],
       mutable: JSON.parse(JSON.stringify(plan.mutable)) as MutableRecord[],
       vector: JSON.parse(JSON.stringify(plan.vector)) as MemoryEntry[],
       facts: JSON.parse(JSON.stringify(plan.facts)) as FactRecord[],

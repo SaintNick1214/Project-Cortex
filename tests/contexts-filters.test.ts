@@ -13,7 +13,12 @@ import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
 import { Cortex } from "../src/index";
 
 // All valid context statuses
-const ALL_CONTEXT_STATUSES = ["active", "completed", "cancelled", "blocked"] as const;
+const ALL_CONTEXT_STATUSES = [
+  "active",
+  "completed",
+  "cancelled",
+  "blocked",
+] as const;
 
 describe("Contexts API - Comprehensive Filter Coverage", () => {
   let cortex: Cortex;
@@ -152,7 +157,9 @@ describe("Contexts API - Comprehensive Filter Coverage", () => {
         memorySpaceId: spaceId,
         status: "active",
       });
-      expect(activeResults.some((c: any) => c.contextId === ctx.contextId)).toBe(true);
+      expect(
+        activeResults.some((c: any) => c.contextId === ctx.contextId),
+      ).toBe(true);
 
       // Update to completed
       const updatedCtx = await cortex.contexts.update(ctx.contextId, {
@@ -165,16 +172,18 @@ describe("Contexts API - Comprehensive Filter Coverage", () => {
         memorySpaceId: spaceId,
         status: "completed",
       });
-      expect(completedResults.some((c: any) => c.contextId === ctx.contextId)).toBe(true);
+      expect(
+        completedResults.some((c: any) => c.contextId === ctx.contextId),
+      ).toBe(true);
 
       // Verify it's NOT in active list anymore
       const activeResultsAfter = await cortex.contexts.list({
         memorySpaceId: spaceId,
         status: "active",
       });
-      expect(activeResultsAfter.some((c: any) => c.contextId === ctx.contextId)).toBe(
-        false
-      );
+      expect(
+        activeResultsAfter.some((c: any) => c.contextId === ctx.contextId),
+      ).toBe(false);
     });
 
     it("should combine status filter with userId filter", async () => {
@@ -246,7 +255,9 @@ describe("Contexts API - Comprehensive Filter Coverage", () => {
         expect(results.length).toBeGreaterThanOrEqual(1);
         expect(results.every((c: any) => c.status === status)).toBe(true);
         expect(
-          results.some((c: any) => c.contextId === contextsByStatus[status].contextId)
+          results.some(
+            (c: any) => c.contextId === contextsByStatus[status].contextId,
+          ),
         ).toBe(true);
       }
     });
@@ -345,4 +356,3 @@ describe("Contexts API - Comprehensive Filter Coverage", () => {
     });
   });
 });
-

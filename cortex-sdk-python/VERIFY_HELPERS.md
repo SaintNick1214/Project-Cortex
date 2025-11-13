@@ -15,6 +15,7 @@ pytest tests/test_helpers_verification.py -v -s
 ## What Was Created
 
 ### Helper Modules (5 files)
+
 - ✅ `tests/helpers/__init__.py` - Module exports
 - ✅ `tests/helpers/cleanup.py` - TestCleanup class (335 lines)
 - ✅ `tests/helpers/embeddings.py` - Embedding generation (120 lines)
@@ -22,6 +23,7 @@ pytest tests/test_helpers_verification.py -v -s
 - ✅ `tests/helpers/generators.py` - Data generators (170 lines)
 
 ### Tests & Fixtures
+
 - ✅ `tests/test_helpers_verification.py` - 25+ verification tests (450+ lines)
 - ✅ `tests/conftest.py` - Added 4 new fixtures
 
@@ -40,26 +42,31 @@ Expected: 20-25 tests pass (some may skip if dependencies missing)
 ## Run Individual Test Categories
 
 ### Test Cleanup Helpers
+
 ```bash
 source .venv/bin/activate && pytest tests/test_helpers_verification.py -k "cleanup" -v
 ```
 
 ### Test Embeddings Helpers
+
 ```bash
 source .venv/bin/activate && pytest tests/test_helpers_verification.py -k "embedding" -v
 ```
 
 ### Test Storage Validation
+
 ```bash
 source .venv/bin/activate && pytest tests/test_helpers_verification.py -k "storage" -v
 ```
 
 ### Test Generators
+
 ```bash
 source .venv/bin/activate && pytest tests/test_helpers_verification.py -k "generate" -v
 ```
 
 ### Test Summary
+
 ```bash
 source .venv/bin/activate && pytest tests/test_helpers_verification.py::test_all_helpers_summary -v -s
 ```
@@ -67,6 +74,7 @@ source .venv/bin/activate && pytest tests/test_helpers_verification.py::test_all
 ## Expected Results
 
 ### Should Pass (20-23 tests)
+
 - ✅ All cleanup tests (6 tests)
 - ✅ All generator tests (6 tests)
 - ✅ All storage validation tests (4 tests)
@@ -75,6 +83,7 @@ source .venv/bin/activate && pytest tests/test_helpers_verification.py::test_all
 - ✅ Summary test
 
 ### May Skip (2-5 tests)
+
 - ⏩ Real OpenAI embedding test (if no OPENAI_API_KEY)
 - ⏩ Facts cleanup test (if facts API not fully implemented)
 
@@ -110,6 +119,7 @@ tests/test_helpers_verification.py::test_all_helpers_summary PASSED
 ## Troubleshooting
 
 ### Issue: CONVEX_URL not set
+
 ```bash
 # Check .env.local exists
 ls ../.env.local
@@ -119,6 +129,7 @@ cat ../.env.local | grep CONVEX_URL
 ```
 
 ### Issue: Convex backend not running
+
 ```bash
 # Start Convex in another terminal
 cd /Users/SaintNick/Documents/Cortex/Project-Cortex
@@ -126,6 +137,7 @@ npm run dev:local
 ```
 
 ### Issue: Import errors
+
 ```bash
 # Reinstall dependencies
 source .venv/bin/activate
@@ -135,11 +147,13 @@ pip install -e ".[dev]"
 ## Quick Test - Single Helper
 
 Test just the cleanup helper:
+
 ```bash
 source .venv/bin/activate && pytest tests/test_helpers_verification.py::test_cleanup_conversations -v -s
 ```
 
 Test just the generators:
+
 ```bash
 source .venv/bin/activate && pytest tests/test_helpers_verification.py::test_generate_unique_user_ids -v -s
 ```
@@ -171,6 +185,7 @@ Once tests pass:
 ## Documentation
 
 Full guides:
+
 - `dev-docs/test-helpers-setup-complete.md` - Complete setup guide
 - `dev-docs/test-helpers-implementation-summary.md` - Implementation details
 - `dev-docs/HELPER_VERIFICATION_README.md` - Quick reference
@@ -178,4 +193,3 @@ Full guides:
 ---
 
 **Action Required**: Run `source .venv/bin/activate && pytest tests/test_helpers_verification.py -v -s`
-

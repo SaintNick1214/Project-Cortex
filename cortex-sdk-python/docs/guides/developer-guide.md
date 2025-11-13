@@ -52,7 +52,7 @@ async def main():
     cortex = Cortex(CortexConfig(
         convex_url=os.getenv("CONVEX_URL")
     ))
-    
+
     # Use the API
     result = await cortex.memory.remember(
         RememberParams(
@@ -64,7 +64,7 @@ async def main():
             user_name="User"
         )
     )
-    
+
     # Clean up
     await cortex.close()
 
@@ -82,16 +82,16 @@ from cortex import Cortex as AsyncCortex, CortexConfig
 
 class SyncCortex:
     """Synchronous wrapper around async Cortex."""
-    
+
     def __init__(self, config: CortexConfig):
         self._cortex = AsyncCortex(config)
         self._loop = asyncio.get_event_loop()
-    
+
     def remember(self, params):
         return self._loop.run_until_complete(
             self._cortex.memory.remember(params)
         )
-    
+
     def close(self):
         self._loop.run_until_complete(self._cortex.close())
 
@@ -137,7 +137,7 @@ except CortexError as e:
     print(f"Error code: {e.code}")
     print(f"Message: {e.message}")
     print(f"Details: {e.details}")
-    
+
     # Handle specific errors
     if e.code == ErrorCode.INVALID_IMPORTANCE:
         # Fix and retry
@@ -227,7 +227,7 @@ async def handle_request():
 ## Support
 
 For Python-specific questions:
+
 - 🐛 [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
 - 💬 [Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions)
 - 📧 support@cortexmemory.dev
-

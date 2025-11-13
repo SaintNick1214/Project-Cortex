@@ -3,6 +3,7 @@
 ## Problem
 
 Multiple list() methods were passing `offset` parameter to Convex backend, but the backend doesn't support it yet. This caused:
+
 - Silent failures in cleanup helpers (caught by try/except)
 - ArgumentValidationError in Convex logs
 - Users not being purged ("Purged users: 0")
@@ -17,7 +18,8 @@ Validator: v.object({limit: v.optional(v.float64())})
 
 ## Files Fixed (5 files)
 
-### 1. ✅ cortex/users/__init__.py
+### 1. ✅ cortex/users/**init**.py
+
 ```python
 # Before
 result = await self.client.query(
@@ -31,7 +33,8 @@ result = await self.client.query(
 )
 ```
 
-### 2. ✅ cortex/conversations/__init__.py
+### 2. ✅ cortex/conversations/**init**.py
+
 ```python
 # Before
 result = await self.client.query(
@@ -56,7 +59,8 @@ result = await self.client.query(
 )
 ```
 
-### 3. ✅ cortex/memory_spaces/__init__.py
+### 3. ✅ cortex/memory_spaces/**init**.py
+
 ```python
 # Before
 result = await self.client.query(
@@ -83,7 +87,8 @@ result = await self.client.query(
 )
 ```
 
-### 4. ✅ cortex/contexts/__init__.py
+### 4. ✅ cortex/contexts/**init**.py
+
 ```python
 # Before
 result = await self.client.query(
@@ -108,7 +113,8 @@ result = await self.client.query(
 )
 ```
 
-### 5. ✅ cortex/agents/__init__.py
+### 5. ✅ cortex/agents/**init**.py
+
 ```python
 # Before
 result = await self.client.query(
@@ -125,11 +131,13 @@ result = await self.client.query(
 ## Additional Improvements
 
 ### Added Missing Imports
+
 - ✅ `cortex/agents/__init__.py` - Added `filter_none_values` import
 - ✅ `cortex/memory_spaces/__init__.py` - Added `filter_none_values` import
 - ✅ `cortex/contexts/__init__.py` - Added `filter_none_values` import
 
 ### Improved Error Handling
+
 - ✅ Now uses `filter_none_values()` to remove None values
 - ✅ Added comments explaining offset not supported
 - ✅ Kept offset parameter for future compatibility
@@ -137,11 +145,13 @@ result = await self.client.query(
 ## Impact on Cleanup Helper
 
 **Before Fix**:
+
 - `purge_users()` failed silently → returned 0
 - Convex logs showed ArgumentValidationError
 - Test users remained in database
 
 **After Fix**:
+
 - `purge_users()` now works correctly
 - No Convex errors
 - Test users are properly deleted
@@ -155,6 +165,7 @@ source .venv/bin/activate && pytest tests/test_helpers_verification.py -v -s
 ```
 
 **Expected**:
+
 - ✅ No Convex ArgumentValidationError in logs
 - ✅ "Purged users: 1" (not 0)
 - ✅ All cleanup operations work correctly
@@ -166,6 +177,7 @@ source .venv/bin/activate && pytest tests/test_manual_cleanup_verification.py::t
 ```
 
 **Expected**:
+
 - ✅ "Purged users: 1"
 - ✅ "✓ User deleted" (not "⚠ User still exists")
 
@@ -174,11 +186,10 @@ source .venv/bin/activate && pytest tests/test_manual_cleanup_verification.py::t
 **Fixed**: 5 offset parameters across 5 API modules  
 **Added**: 3 missing filter_none_values imports  
 **Impact**: Cleanup helper now works correctly for all layers  
-**Result**: No more Convex ArgumentValidationError  
+**Result**: No more Convex ArgumentValidationError
 
 ---
 
 **Status**: ✅ **All Offset Issues Fixed - Cleanup Fully Functional**  
 **Date**: 2025-11-06  
 **Next**: Verify with test runs (should see users being deleted now)
-

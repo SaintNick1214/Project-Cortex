@@ -6,25 +6,27 @@ This guide helps you migrate from the TypeScript SDK to the Python SDK. The APIs
 
 ## Quick Reference
 
-| Aspect | TypeScript | Python |
-|--------|-----------|--------|
-| **Case** | camelCase | snake_case |
-| **Objects** | `{ key: value }` | `ClassName(key=value)` |
-| **Types** | `interface` | `@dataclass` |
-| **Null** | `null` / `undefined` | `None` |
-| **Arrays** | `string[]` | `List[str]` |
-| **Optional** | `string \| undefined` | `Optional[str]` |
-| **Async** | `async/await` | `async/await` (same!) |
-| **Imports** | `import { x } from "y"` | `from y import x` |
+| Aspect       | TypeScript              | Python                 |
+| ------------ | ----------------------- | ---------------------- |
+| **Case**     | camelCase               | snake_case             |
+| **Objects**  | `{ key: value }`        | `ClassName(key=value)` |
+| **Types**    | `interface`             | `@dataclass`           |
+| **Null**     | `null` / `undefined`    | `None`                 |
+| **Arrays**   | `string[]`              | `List[str]`            |
+| **Optional** | `string \| undefined`   | `Optional[str]`        |
+| **Async**    | `async/await`           | `async/await` (same!)  |
+| **Imports**  | `import { x } from "y"` | `from y import x`      |
 
 ## Installation
 
 **TypeScript:**
+
 ```bash
 npm install @cortexmemory/sdk
 ```
 
 **Python:**
+
 ```bash
 pip install cortex-memory
 ```
@@ -32,6 +34,7 @@ pip install cortex-memory
 ## Initialization
 
 **TypeScript:**
+
 ```typescript
 import { Cortex } from "@cortexmemory/sdk";
 
@@ -41,6 +44,7 @@ const cortex = new Cortex({
 ```
 
 **Python:**
+
 ```python
 from cortex import Cortex, CortexConfig
 
@@ -54,6 +58,7 @@ cortex = Cortex(
 ### Remember
 
 **TypeScript:**
+
 ```typescript
 const result = await cortex.memory.remember({
   memorySpaceId: "agent-1",
@@ -68,6 +73,7 @@ const result = await cortex.memory.remember({
 ```
 
 **Python:**
+
 ```python
 result = await cortex.memory.remember(
     RememberParams(
@@ -86,6 +92,7 @@ result = await cortex.memory.remember(
 ### Search
 
 **TypeScript:**
+
 ```typescript
 const results = await cortex.memory.search("agent-1", "preferences", {
   embedding: await embed("preferences"),
@@ -96,6 +103,7 @@ const results = await cortex.memory.search("agent-1", "preferences", {
 ```
 
 **Python:**
+
 ```python
 results = await cortex.memory.search(
     "agent-1",
@@ -112,6 +120,7 @@ results = await cortex.memory.search(
 ### Update
 
 **TypeScript:**
+
 ```typescript
 await cortex.memory.update("agent-1", memoryId, {
   content: "Updated content",
@@ -120,6 +129,7 @@ await cortex.memory.update("agent-1", memoryId, {
 ```
 
 **Python:**
+
 ```python
 await cortex.memory.update(
     "agent-1",
@@ -131,6 +141,7 @@ await cortex.memory.update(
 ## Conversations
 
 **TypeScript:**
+
 ```typescript
 const conversation = await cortex.conversations.create({
   type: "user-agent",
@@ -143,6 +154,7 @@ const conversation = await cortex.conversations.create({
 ```
 
 **Python:**
+
 ```python
 conversation = await cortex.conversations.create(
     CreateConversationInput(
@@ -159,6 +171,7 @@ conversation = await cortex.conversations.create(
 ## User Operations
 
 **TypeScript:**
+
 ```typescript
 await cortex.users.update("user-123", {
   data: {
@@ -173,6 +186,7 @@ const result = await cortex.users.delete("user-123", {
 ```
 
 **Python:**
+
 ```python
 await cortex.users.update(
     "user-123",
@@ -191,6 +205,7 @@ result = await cortex.users.delete(
 ## Context Operations
 
 **TypeScript:**
+
 ```typescript
 const context = await cortex.contexts.create({
   purpose: "Process refund",
@@ -201,6 +216,7 @@ const context = await cortex.contexts.create({
 ```
 
 **Python:**
+
 ```python
 context = await cortex.contexts.create(
     ContextInput(
@@ -215,6 +231,7 @@ context = await cortex.contexts.create(
 ## A2A Communication
 
 **TypeScript:**
+
 ```typescript
 await cortex.a2a.send({
   from: "agent-1",
@@ -225,6 +242,7 @@ await cortex.a2a.send({
 ```
 
 **Python:**
+
 ```python
 await cortex.a2a.send(
     A2ASendParams(
@@ -239,8 +257,12 @@ await cortex.a2a.send(
 ## Graph Integration
 
 **TypeScript:**
+
 ```typescript
-import { CypherGraphAdapter, initializeGraphSchema } from "@cortexmemory/sdk/graph";
+import {
+  CypherGraphAdapter,
+  initializeGraphSchema,
+} from "@cortexmemory/sdk/graph";
 
 const graphAdapter = new CypherGraphAdapter();
 await graphAdapter.connect({
@@ -260,6 +282,7 @@ const cortex = new Cortex({
 ```
 
 **Python:**
+
 ```python
 from cortex import Cortex, CortexConfig, GraphConfig, GraphConnectionConfig
 from cortex.graph import CypherGraphAdapter, initialize_graph_schema
@@ -286,6 +309,7 @@ cortex = Cortex(
 ## Error Handling
 
 **TypeScript:**
+
 ```typescript
 try {
   await cortex.memory.store("agent-1", data);
@@ -297,6 +321,7 @@ try {
 ```
 
 **Python:**
+
 ```python
 from cortex import CortexError
 
@@ -309,6 +334,7 @@ except CortexError as error:
 ## Type System
 
 **TypeScript:**
+
 ```typescript
 interface MemoryEntry {
   id: string;
@@ -319,6 +345,7 @@ interface MemoryEntry {
 ```
 
 **Python:**
+
 ```python
 from dataclasses import dataclass
 from typing import List
@@ -334,6 +361,7 @@ class MemoryEntry:
 ## Callbacks
 
 **TypeScript:**
+
 ```typescript
 await cortex.memory.remember({
   // ... params
@@ -344,6 +372,7 @@ await cortex.memory.remember({
 ```
 
 **Python:**
+
 ```python
 async def extract_content(user_msg: str, agent_msg: str) -> str:
     return await summarize(user_msg + agent_msg)
@@ -358,19 +387,20 @@ await cortex.memory.remember(
 
 ## Complete API Mapping
 
-| TypeScript Method | Python Method | Notes |
-|------------------|---------------|-------|
-| `cortex.memory.remember()` | `cortex.memory.remember()` | Same name |
-| `cortex.memory.search()` | `cortex.memory.search()` | Same name |
-| `cortex.users.delete()` | `cortex.users.delete()` | Same name |
-| `cortex.conversations.create()` | `cortex.conversations.create()` | Same name |
-| `cortex.contexts.getChain()` | `cortex.contexts.get_chain()` | snake_case |
-| `cortex.a2a.send()` | `cortex.a2a.send()` | Same name |
-| All ~140 methods | All ~140 methods | 100% coverage |
+| TypeScript Method               | Python Method                   | Notes         |
+| ------------------------------- | ------------------------------- | ------------- |
+| `cortex.memory.remember()`      | `cortex.memory.remember()`      | Same name     |
+| `cortex.memory.search()`        | `cortex.memory.search()`        | Same name     |
+| `cortex.users.delete()`         | `cortex.users.delete()`         | Same name     |
+| `cortex.conversations.create()` | `cortex.conversations.create()` | Same name     |
+| `cortex.contexts.getChain()`    | `cortex.contexts.get_chain()`   | snake_case    |
+| `cortex.a2a.send()`             | `cortex.a2a.send()`             | Same name     |
+| All ~140 methods                | All ~140 methods                | 100% coverage |
 
 ## Testing
 
 **TypeScript:**
+
 ```typescript
 import { describe, it, expect } from "@jest/globals";
 
@@ -383,6 +413,7 @@ describe("Memory", () => {
 ```
 
 **Python:**
+
 ```python
 import pytest
 
@@ -453,4 +484,3 @@ async with create_cortex_client(config) as cortex:
 - Check [Examples](./examples/)
 - Review [API Documentation](../Documentation/03-api-reference/)
 - Join [Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions)
-

@@ -11,6 +11,7 @@ The Cortex Python SDK is now complete with **100% API parity** with the TypeScri
 ### **41 Implementation Files | ~5,000 Lines of Code | 140+ API Methods**
 
 #### Core Package (13 API Modules)
+
 1. ✅ **ConversationsAPI** - Layer 1a ACID conversations (13 methods)
 2. ✅ **ImmutableAPI** - Layer 1b shared immutable data (9 methods)
 3. ✅ **MutableAPI** - Layer 1c shared mutable data (12 methods)
@@ -26,18 +27,21 @@ The Cortex Python SDK is now complete with **100% API parity** with the TypeScri
 13. ✅ **Main Client** - Cortex class with all integrations
 
 #### Type System
+
 - ✅ 50+ dataclasses matching TypeScript interfaces
 - ✅ Full type hints for IDE support
 - ✅ Pydantic validation for complex types
 - ✅ Protocol for GraphAdapter
 
 #### Error Handling
+
 - ✅ CortexError base class
 - ✅ 50+ error codes defined
 - ✅ Specialized exceptions (A2ATimeoutError, CascadeDeletionError)
 - ✅ Type guards for error checking
 
 #### Graph Database Integration
+
 - ✅ CypherGraphAdapter (Neo4j async driver)
 - ✅ Schema initialization
 - ✅ Sync utilities for all entities
@@ -45,18 +49,21 @@ The Cortex Python SDK is now complete with **100% API parity** with the TypeScri
 - ✅ GraphSyncWorker for real-time sync
 
 #### Testing Infrastructure
+
 - ✅ Pytest configuration
 - ✅ Async test fixtures
 - ✅ Example tests (conversations, memory, users)
 - ✅ Support for LOCAL and MANAGED Convex
 
 #### Examples (4 Complete Applications)
+
 - ✅ `simple_chatbot.py` - Basic chatbot with memory
 - ✅ `fact_extraction.py` - Structured knowledge extraction
 - ✅ `graph_integration.py` - Neo4j integration
 - ✅ `multi_agent.py` - Multi-agent coordination
 
 #### Documentation (5 Comprehensive Guides)
+
 - ✅ **README.md** - Quick start (PyPI-ready)
 - ✅ **PYTHON_SDK_GUIDE.md** - Complete developer guide
 - ✅ **TYPESCRIPT_TO_PYTHON_MIGRATION.md** - Migration guide
@@ -64,6 +71,7 @@ The Cortex Python SDK is now complete with **100% API parity** with the TypeScri
 - ✅ **OVERVIEW.md** - High-level overview
 
 #### Package Configuration
+
 - ✅ pyproject.toml - Modern Python packaging
 - ✅ setup.py - Distribution configuration
 - ✅ MANIFEST.in - Package manifest
@@ -77,19 +85,19 @@ The Cortex Python SDK is now complete with **100% API parity** with the TypeScri
 
 ## 🎯 100% Feature Parity
 
-| Feature | TypeScript SDK | Python SDK | Status |
-|---------|---------------|------------|--------|
-| **Total Methods** | 140+ | 140+ | ✅ 100% |
-| **Layer 1 APIs** | 3 modules | 3 modules | ✅ 100% |
-| **Layer 2 API** | VectorAPI | VectorAPI | ✅ 100% |
-| **Layer 3 API** | FactsAPI | FactsAPI | ✅ 100% |
-| **Layer 4 APIs** | 5 modules | 5 modules | ✅ 100% |
-| **Graph Integration** | Full | Full | ✅ 100% |
-| **GDPR Cascade** | Full | Full | ✅ 100% |
-| **Agent Cascade** | Full | Full | ✅ 100% |
-| **Type System** | Interfaces | Dataclasses | ✅ 100% |
-| **Error Handling** | 50+ codes | 50+ codes | ✅ 100% |
-| **Documentation** | Complete | Complete | ✅ 100% |
+| Feature               | TypeScript SDK | Python SDK  | Status  |
+| --------------------- | -------------- | ----------- | ------- |
+| **Total Methods**     | 140+           | 140+        | ✅ 100% |
+| **Layer 1 APIs**      | 3 modules      | 3 modules   | ✅ 100% |
+| **Layer 2 API**       | VectorAPI      | VectorAPI   | ✅ 100% |
+| **Layer 3 API**       | FactsAPI       | FactsAPI    | ✅ 100% |
+| **Layer 4 APIs**      | 5 modules      | 5 modules   | ✅ 100% |
+| **Graph Integration** | Full           | Full        | ✅ 100% |
+| **GDPR Cascade**      | Full           | Full        | ✅ 100% |
+| **Agent Cascade**     | Full           | Full        | ✅ 100% |
+| **Type System**       | Interfaces     | Dataclasses | ✅ 100% |
+| **Error Handling**    | 50+ codes      | 50+ codes   | ✅ 100% |
+| **Documentation**     | Complete       | Complete    | ✅ 100% |
 
 ---
 
@@ -114,7 +122,7 @@ async def main():
     cortex = Cortex(CortexConfig(
         convex_url=os.getenv("CONVEX_URL", "http://localhost:3210")
     ))
-    
+
     # Remember a conversation
     result = await cortex.memory.remember(
         RememberParams(
@@ -126,13 +134,13 @@ async def main():
             user_name="User"
         )
     )
-    
+
     print(f"✅ Stored {len(result.memories)} memories")
-    
+
     # Search
     results = await cortex.memory.search("my-agent", "preferences")
     print(f"🔍 Found {len(results)} relevant memories")
-    
+
     # Clean up
     await cortex.close()
 
@@ -166,21 +174,25 @@ pytest tests/test_memory.py -v
 ### Layer 1: ACID Stores
 
 **Conversations** (13 methods)
+
 - `create()`, `get()`, `add_message()`, `list()`, `count()`, `delete()`, `delete_many()`
 - `get_message()`, `get_messages_by_ids()`, `find_conversation()`, `get_or_create()`
 - `get_history()`, `search()`, `export()`
 
 **Immutable** (9 methods)
+
 - `store()`, `get()`, `get_version()`, `get_history()`, `get_at_timestamp()`
 - `list()`, `search()`, `count()`, `purge()`, `purge_many()`, `purge_versions()`
 
 **Mutable** (12 methods)
+
 - `set()`, `get()`, `update()`, `increment()`, `decrement()`, `get_record()`
 - `delete()`, `list()`, `count()`, `exists()`, `purge_namespace()`, `purge_many()`
 
 ### Layer 2: Vector Index
 
 **Vector** (13 methods)
+
 - `store()`, `get()`, `search()`, `update()`, `delete()`
 - `update_many()`, `delete_many()`, `count()`, `list()`, `export()`, `archive()`
 - `get_version()`, `get_history()`, `get_at_timestamp()`
@@ -188,54 +200,65 @@ pytest tests/test_memory.py -v
 ### Layer 3: Facts Store
 
 **Facts** (10 methods)
+
 - `store()`, `get()`, `list()`, `search()`, `update()`, `delete()`, `count()`
 - `query_by_subject()`, `query_by_relationship()`, `get_history()`, `export()`, `consolidate()`
 
 ### Layer 4: Convenience & Coordination
 
 **Memory** (14 methods) - Primary Interface
+
 - `remember()`, `forget()`, `get()`, `search()`, `store()`, `update()`, `delete()`
 - `list()`, `count()`, `update_many()`, `delete_many()`, `export()`, `archive()`
 - `get_version()`, `get_history()`, `get_at_timestamp()`
 
 **Contexts** (17 methods)
+
 - `create()`, `get()`, `update()`, `delete()`, `search()`, `list()`, `count()`
 - `update_many()`, `delete_many()`, `export()`
 - `get_chain()`, `get_root()`, `get_children()`, `find_orphaned()`
 - `add_participant()`, `remove_participant()`, `get_by_conversation()`
 
 **Users** (11 methods) - GDPR Critical
+
 - `get()`, `update()`, `delete()` (with cascade!)
 - `search()`, `list()`, `count()`, `update_many()`, `delete_many()`, `export()`
 - `get_version()`, `get_history()`, `get_at_timestamp()`, `exists()`, `get_or_create()`, `merge()`
 
 **Agents** (8 methods)
+
 - `register()`, `get()`, `search()`, `list()`, `count()`, `update()`, `configure()`, `unregister()`
 
 **Memory Spaces** (9 methods)
+
 - `register()`, `get()`, `list()`, `search()`, `update()`, `update_participants()`
 - `archive()`, `reactivate()`, `delete()`, `get_stats()`
 
 ### Helpers
 
 **A2A** (4 methods)
+
 - `send()`, `request()`, `broadcast()`, `get_conversation()`
 
 ### Graph Integration (~20 methods)
 
 **CypherGraphAdapter**
+
 - `connect()`, `disconnect()`, `create_node()`, `update_node()`, `delete_node()`
 - `create_edge()`, `delete_edge()`, `query()`, `find_nodes()`, `traverse()`, `find_path()`
 
 **Sync Utilities**
+
 - `sync_memory_to_graph()`, `sync_conversation_to_graph()`, `sync_fact_to_graph()`, `sync_context_to_graph()`
 - `delete_memory_from_graph()`, `delete_conversation_from_graph()`, etc.
 - `delete_with_orphan_cleanup()`
 
 **Schema Management**
+
 - `initialize_graph_schema()`, `verify_graph_schema()`, `drop_graph_schema()`
 
 **Sync Worker**
+
 - `GraphSyncWorker` class with `start()`, `stop()`, `get_metrics()`
 
 ---
@@ -243,9 +266,11 @@ pytest tests/test_memory.py -v
 ## 🎓 Documentation Provided
 
 ### Quick Start
+
 - **README.md** - Installation, quick start, feature overview
 
 ### Developer Guides
+
 - **PYTHON_SDK_GUIDE.md** - Complete Python developer guide
   - Type system
   - Error handling
@@ -254,6 +279,7 @@ pytest tests/test_memory.py -v
   - Common patterns
 
 ### Migration
+
 - **TYPESCRIPT_TO_PYTHON_MIGRATION.md** - Complete translation guide
   - Side-by-side code examples
   - Parameter name mappings
@@ -261,14 +287,17 @@ pytest tests/test_memory.py -v
   - All 140+ methods mapped
 
 ### Technical
+
 - **IMPLEMENTATION_SUMMARY.md** - Technical implementation details
 - **OVERVIEW.md** - High-level architecture overview
 
 ### Package
+
 - **CHANGELOG.md** - Version history
 - **LICENSE.md** - Apache 2.0 license
 
 ### Shared Documentation
+
 - All TypeScript SDK documentation applies (15+ guides, 2000+ lines)
 - API reference documentation (100% applicable to Python)
 
@@ -337,6 +366,7 @@ cortex = Cortex(CortexConfig(
 ## 📊 Statistics
 
 ### Code Metrics
+
 - **Total Files**: 41
 - **Total Lines**: ~5,000
 - **API Methods**: 140+
@@ -347,6 +377,7 @@ cortex = Cortex(CortexConfig(
 - **Documentation Files**: 9
 
 ### Implementation Time
+
 - **Phase 1** (Core): ✅ Complete
 - **Phase 2** (Layer 1): ✅ Complete
 - **Phase 3** (Layer 2): ✅ Complete
@@ -364,12 +395,14 @@ cortex = Cortex(CortexConfig(
 ### Immediate (Developer Preview)
 
 1. **Test Against Live Convex**
+
    ```bash
    export CONVEX_URL="https://your-deployment.convex.cloud"
    pytest
    ```
 
 2. **Try Examples**
+
    ```bash
    python examples/simple_chatbot.py
    python examples/fact_extraction.py
@@ -401,6 +434,7 @@ cortex = Cortex(CortexConfig(
 ### Medium-Term (v1.0)
 
 1. **Publish to PyPI**
+
    ```bash
    python -m build
    twine upload dist/*
@@ -704,4 +738,3 @@ The Python SDK is **complete and ready** for:
 ---
 
 **🐍 The Python SDK is here! Full TypeScript parity, native Python experience!** 🎉
-

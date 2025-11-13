@@ -2,12 +2,13 @@
  * Chat Page - Main UI
  */
 
-'use client';
+"use client";
 
-import { useChat } from 'ai/react';
+import { useChat } from "ai/react";
 
 export default function ChatPage() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat();
+  const { messages, input, handleInputChange, handleSubmit, isLoading } =
+    useChat();
 
   return (
     <div className="flex flex-col h-screen max-w-2xl mx-auto p-4">
@@ -32,23 +33,21 @@ export default function ChatPage() {
             </ul>
           </div>
         )}
-        
+
         {messages.map((message) => (
           <div
             key={message.id}
             className={`p-4 rounded-lg ${
-              message.role === 'user'
-                ? 'bg-blue-100 ml-8'
-                : 'bg-gray-100 mr-8'
+              message.role === "user" ? "bg-blue-100 ml-8" : "bg-gray-100 mr-8"
             }`}
           >
             <div className="font-semibold mb-1">
-              {message.role === 'user' ? '👤 You' : '🤖 Assistant'}
+              {message.role === "user" ? "👤 You" : "🤖 Assistant"}
             </div>
             <div className="whitespace-pre-wrap">{message.content}</div>
           </div>
         ))}
-        
+
         {isLoading && (
           <div className="bg-gray-100 mr-8 p-4 rounded-lg">
             <div className="font-semibold mb-1">🤖 Assistant</div>
@@ -79,9 +78,9 @@ export default function ChatPage() {
 
       {/* Memory Info */}
       <div className="mt-4 text-xs text-gray-500 text-center">
-        💡 Your conversations are stored with Cortex Memory. Refresh the page and the AI will remember you!
+        💡 Your conversations are stored with Cortex Memory. Refresh the page
+        and the AI will remember you!
       </div>
     </div>
   );
 }
-

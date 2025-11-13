@@ -6,7 +6,7 @@ import type { Logger } from "./types";
 
 /**
  * Create a passthrough transform stream that observes chunks
- * 
+ *
  * This allows us to collect the full response while still streaming to the client
  */
 export function createObservableStream(
@@ -33,9 +33,7 @@ export function createObservableStream(
       } catch (error) {
         logger?.error("Error in stream transform:", error);
         if (onError) {
-          onError(
-            error instanceof Error ? error : new Error(String(error)),
-          );
+          onError(error instanceof Error ? error : new Error(String(error)));
         }
         throw error;
       }
@@ -53,9 +51,7 @@ export function createObservableStream(
       } catch (error) {
         logger?.error("Error in stream flush:", error);
         if (onError) {
-          onError(
-            error instanceof Error ? error : new Error(String(error)),
-          );
+          onError(error instanceof Error ? error : new Error(String(error)));
         }
       }
     },
@@ -75,7 +71,7 @@ export function createObservableStream(
 
 /**
  * Convert async iterable to ReadableStream
- * 
+ *
  * Useful for normalizing different stream types
  */
 export function asyncIterableToStream<T>(
@@ -97,7 +93,7 @@ export function asyncIterableToStream<T>(
 
 /**
  * Collect all chunks from a stream without consuming it
- * 
+ *
  * Returns both the collected text and a new stream with the same content
  */
 export async function teeAndCollect(
@@ -171,4 +167,3 @@ export function createCompletionStream(
     },
   });
 }
-

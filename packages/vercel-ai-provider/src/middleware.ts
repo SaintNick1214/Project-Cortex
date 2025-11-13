@@ -94,7 +94,8 @@ export function buildMemoryContext(
 
   // Default context builder
   const contextLines = memories.map((memory, index) => {
-    const content = "content" in memory ? memory.content : memory.memory?.content || "";
+    const content =
+      "content" in memory ? memory.content : memory.memory?.content || "";
     const importance =
       "metadata" in memory
         ? memory.metadata?.importance || 50
@@ -104,7 +105,9 @@ export function buildMemoryContext(
   });
 
   const context = `Relevant context from past conversations:\n${contextLines.join("\n")}`;
-  logger.debug(`Built default context (${context.length} chars, ${memories.length} memories)`);
+  logger.debug(
+    `Built default context (${context.length} chars, ${memories.length} memories)`,
+  );
 
   return context;
 }
@@ -134,7 +137,8 @@ export function injectMemoryContext(
   switch (strategy) {
     case "system": {
       // Prepend to system message or create new system message
-      const hasSystemMessage = messages.length > 0 && messages[0].role === "system";
+      const hasSystemMessage =
+        messages.length > 0 && messages[0].role === "system";
 
       if (hasSystemMessage) {
         // Append to existing system message
@@ -168,7 +172,9 @@ export function injectMemoryContext(
         return messages;
       }
 
-      logger.debug(`Injecting context into user message at index ${lastUserIndex}`);
+      logger.debug(
+        `Injecting context into user message at index ${lastUserIndex}`,
+      );
 
       return [
         ...messages.slice(0, lastUserIndex),
@@ -182,8 +188,15 @@ export function injectMemoryContext(
 
     case "custom": {
       // Custom strategy not supported without customContextBuilder
-      logger.warn("Custom strategy requires customContextBuilder, using system fallback");
-      return injectMemoryContext(messages, memories, { ...config, contextInjectionStrategy: "system" }, logger);
+      logger.warn(
+        "Custom strategy requires customContextBuilder, using system fallback",
+      );
+      return injectMemoryContext(
+        messages,
+        memories,
+        { ...config, contextInjectionStrategy: "system" },
+        logger,
+      );
     }
 
     default:
@@ -195,20 +208,22 @@ export function injectMemoryContext(
 /**
  * Extract last user message content from messages array
  */
-export function getLastUserMessage(messages: LanguageModelV1Prompt): string | null {
+export function getLastUserMessage(
+  messages: LanguageModelV1Prompt,
+): string | null {
   const lastUserMessage = messages.findLast((m) => m.role === "user");
-  if (!lastUserMessage || lastUserMessage.role !== 'user') return null;
-  
+  if (!lastUserMessage || lastUserMessage.role !== "user") return null;
+
   // Handle content parts
   const content = lastUserMessage.content;
   if (Array.isArray(content)) {
     // Extract text from parts
     const textParts = content
-      .filter((part: any) => part.type === 'text')
+      .filter((part: any) => part.type === "text")
       .map((part: any) => part.text);
-    return textParts.join(' ') || null;
+    return textParts.join(" ") || null;
   }
-  
+
   return null;
 }
 
@@ -255,4 +270,3 @@ export function validateConfig(config: CortexMemoryConfig): void {
     throw new Error("defaultImportance must be between 0 and 100");
   }
 }
-

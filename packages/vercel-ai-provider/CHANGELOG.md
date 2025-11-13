@@ -11,6 +11,7 @@ First release of the Cortex Memory Provider for Vercel AI SDK!
 #### ✨ Features
 
 **Core Provider:**
+
 - `createCortexMemory()` - Factory function for memory-augmented models
 - Automatic memory search before each LLM call
 - Automatic memory storage after each response
@@ -18,6 +19,7 @@ First release of the Cortex Memory Provider for Vercel AI SDK!
 - Edge runtime compatible (Vercel Edge Functions, Cloudflare Workers)
 
 **Memory Management:**
+
 - `cortexMemory.search()` - Manual memory search
 - `cortexMemory.remember()` - Manual memory storage
 - `cortexMemory.getMemories()` - Retrieve all memories
@@ -25,6 +27,7 @@ First release of the Cortex Memory Provider for Vercel AI SDK!
 - `cortexMemory.getConfig()` - Get current configuration
 
 **Configuration Options:**
+
 - Memory space isolation
 - Custom embedding providers
 - Context injection strategies (system/user)
@@ -34,6 +37,7 @@ First release of the Cortex Memory Provider for Vercel AI SDK!
 - Debug logging
 
 **Provider Support:**
+
 - OpenAI (GPT-4, GPT-3.5, etc.)
 - Anthropic (Claude 3 family)
 - Google (Gemini)
@@ -86,20 +90,22 @@ First release of the Cortex Memory Provider for Vercel AI SDK!
 ### Future Roadmap
 
 **v0.1.1** (Week 2):
+
 - Expand integration tests
 - Add Anthropic examples
 - Add Google examples
 - Performance benchmarks
 
 **v0.2.0** (Week 3-4):
+
 - Complete multi-modal example
 - React hooks for client-side memory management
 - Server Actions integration
 - Middleware helpers for Next.js
 
 **v1.0.0** (Month 2):
+
 - API stabilization
 - Production-ready guarantees
 - Full test coverage (95%+)
 - Performance optimizations
-

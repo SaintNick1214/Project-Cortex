@@ -1,19 +1,13 @@
 /**
  * Cortex Memory Provider for Vercel AI SDK
- * 
+ *
  * Wraps language models with automatic memory retrieval and storage
  */
 
-import type {
-  LanguageModelV1,
-  LanguageModelV1StreamPart,
-} from "ai";
+import type { LanguageModelV1, LanguageModelV1StreamPart } from "ai";
 import { Cortex } from "@cortexmemory/sdk";
 import type { MemoryEntry } from "@cortexmemory/sdk";
-import type {
-  CortexMemoryConfig,
-  Logger,
-} from "./types";
+import type { CortexMemoryConfig, Logger } from "./types";
 import {
   resolveUserId,
   resolveConversationId,
@@ -25,7 +19,7 @@ import { createCompletionStream } from "./streaming";
 
 /**
  * Cortex Memory Provider
- * 
+ *
  * Wraps an existing language model with automatic memory capabilities
  */
 export class CortexMemoryProvider implements LanguageModelV1 {
@@ -39,10 +33,7 @@ export class CortexMemoryProvider implements LanguageModelV1 {
   private logger: Logger;
   private underlyingModel: LanguageModelV1;
 
-  constructor(
-    underlyingModel: LanguageModelV1,
-    config: CortexMemoryConfig,
-  ) {
+  constructor(underlyingModel: LanguageModelV1, config: CortexMemoryConfig) {
     this.underlyingModel = underlyingModel;
     this.config = config;
     this.logger = config.logger || createLogger(config.debug || false);
@@ -67,14 +58,17 @@ export class CortexMemoryProvider implements LanguageModelV1 {
 
     // Step 1: Resolve user context
     const userId = await resolveUserId(this.config, this.logger);
-    const conversationId = await resolveConversationId(this.config, this.logger);
+    const conversationId = await resolveConversationId(
+      this.config,
+      this.logger,
+    );
 
     this.logger.debug(`User: ${userId}, Conversation: ${conversationId}`);
 
     // Step 2: Search for relevant memories (if enabled)
     let memories: MemoryEntry[] = [];
     const lastUserMessage = getLastUserMessage(options.prompt);
-    
+
     if (this.config.enableMemorySearch !== false && lastUserMessage) {
       memories = await this.searchRelevantMemories(lastUserMessage, userId);
       this.logger.info(`Found ${memories.length} relevant memories`);
@@ -83,7 +77,12 @@ export class CortexMemoryProvider implements LanguageModelV1 {
     // Step 3: Inject memory context (cast to work around type complexity)
     const augmentedPrompt =
       memories.length > 0
-        ? (injectMemoryContext(options.prompt, memories, this.config, this.logger) as typeof options.prompt)
+        ? (injectMemoryContext(
+            options.prompt,
+            memories,
+            this.config,
+            this.logger,
+          ) as typeof options.prompt)
         : options.prompt;
 
     // Step 4: Call underlying LLM
@@ -120,14 +119,17 @@ export class CortexMemoryProvider implements LanguageModelV1 {
 
     // Step 1: Resolve user context
     const userId = await resolveUserId(this.config, this.logger);
-    const conversationId = await resolveConversationId(this.config, this.logger);
+    const conversationId = await resolveConversationId(
+      this.config,
+      this.logger,
+    );
 
     this.logger.debug(`User: ${userId}, Conversation: ${conversationId}`);
 
     // Step 2: Search for relevant memories (if enabled)
     let memories: MemoryEntry[] = [];
     const lastUserMessage = getLastUserMessage(options.prompt);
-    
+
     if (this.config.enableMemorySearch !== false && lastUserMessage) {
       memories = await this.searchRelevantMemories(lastUserMessage, userId);
       this.logger.info(`Found ${memories.length} relevant memories`);
@@ -136,7 +138,12 @@ export class CortexMemoryProvider implements LanguageModelV1 {
     // Step 3: Inject memory context (cast to work around type complexity)
     const augmentedPrompt =
       memories.length > 0
-        ? (injectMemoryContext(options.prompt, memories, this.config, this.logger) as typeof options.prompt)
+        ? (injectMemoryContext(
+            options.prompt,
+            memories,
+            this.config,
+            this.logger,
+          ) as typeof options.prompt)
         : options.prompt;
 
     // Step 4: Call underlying LLM stream
@@ -176,9 +183,14 @@ export class CortexMemoryProvider implements LanguageModelV1 {
       if (this.config.embeddingProvider) {
         try {
           embedding = await this.config.embeddingProvider.generate(query);
-          this.logger.debug(`Generated embedding for search: ${embedding.length} dimensions`);
+          this.logger.debug(
+            `Generated embedding for search: ${embedding.length} dimensions`,
+          );
         } catch (error) {
-          this.logger.warn("Failed to generate embedding, using keyword search:", error);
+          this.logger.warn(
+            "Failed to generate embedding, using keyword search:",
+            error,
+          );
         }
       }
 
@@ -316,4 +328,3 @@ export class CortexMemoryProvider implements LanguageModelV1 {
     this.cortex.close();
   }
 }
-

@@ -216,12 +216,9 @@ describe("Memory Streaming: Stream Utilities", () => {
         originalWarn(...args);
       };
 
-      const passthrough = createPassthroughStream(
-        () => {
-          throw new Error("Callback error");
-        },
-        undefined,
-      );
+      const passthrough = createPassthroughStream(() => {
+        throw new Error("Callback error");
+      }, undefined);
 
       const source = new ReadableStream<string>({
         start(controller) {
@@ -421,9 +418,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
         extractFacts,
       });
 
-      expect(result.fullResponse).toBe(
-        "Your favorite color is blue, noted!",
-      );
+      expect(result.fullResponse).toBe("Your favorite color is blue, noted!");
       expect(result.facts).toHaveLength(1);
       expect(result.facts[0].fact).toContain("blue");
     });
@@ -626,8 +621,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
       });
 
       // Verify conversation has both exchanges
-      const conversation =
-        await cortex.conversations.get(conversationId);
+      const conversation = await cortex.conversations.get(conversationId);
       expect(conversation).not.toBeNull();
       expect(conversation!.messageCount).toBeGreaterThanOrEqual(4); // 2 user + 2 agent
     });
@@ -689,4 +683,3 @@ describe("Memory Streaming: rememberStream() Integration", () => {
     });
   });
 });
-

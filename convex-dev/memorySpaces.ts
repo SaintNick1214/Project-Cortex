@@ -25,13 +25,15 @@ export const register = mutation({
       v.literal("project"),
       v.literal("custom"),
     ),
-    participants: v.optional(v.array(
-      v.object({
-        id: v.string(),
-        type: v.string(), // "user", "agent", "tool", etc.
-        joinedAt: v.number(),
-      }),
-    )),
+    participants: v.optional(
+      v.array(
+        v.object({
+          id: v.string(),
+          type: v.string(), // "user", "agent", "tool", etc.
+          joinedAt: v.number(),
+        }),
+      ),
+    ),
     metadata: v.optional(v.any()),
   },
   handler: async (ctx, args) => {

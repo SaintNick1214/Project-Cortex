@@ -8,37 +8,37 @@ The Cortex Python SDK has been successfully implemented with 100% API compatibil
 
 ### Code Coverage
 
-| Component | Files | Status |
-|-----------|-------|--------|
-| **Core Infrastructure** | 4 | ✅ Complete |
-| **Layer 1 (ACID Stores)** | 3 | ✅ Complete |
-| **Layer 2 (Vector)** | 1 | ✅ Complete |
-| **Layer 3 (Facts)** | 1 | ✅ Complete |
-| **Layer 4 (Convenience)** | 5 | ✅ Complete |
-| **Graph Integration** | 10 | ✅ Complete |
-| **Tests** | 4 | ✅ Complete |
-| **Examples** | 4 | ✅ Complete |
-| **Documentation** | 5 | ✅ Complete |
-| **Package Config** | 4 | ✅ Complete |
-| **TOTAL** | **41 files** | **✅ Complete** |
+| Component                 | Files        | Status          |
+| ------------------------- | ------------ | --------------- |
+| **Core Infrastructure**   | 4            | ✅ Complete     |
+| **Layer 1 (ACID Stores)** | 3            | ✅ Complete     |
+| **Layer 2 (Vector)**      | 1            | ✅ Complete     |
+| **Layer 3 (Facts)**       | 1            | ✅ Complete     |
+| **Layer 4 (Convenience)** | 5            | ✅ Complete     |
+| **Graph Integration**     | 10           | ✅ Complete     |
+| **Tests**                 | 4            | ✅ Complete     |
+| **Examples**              | 4            | ✅ Complete     |
+| **Documentation**         | 5            | ✅ Complete     |
+| **Package Config**        | 4            | ✅ Complete     |
+| **TOTAL**                 | **41 files** | **✅ Complete** |
 
 ### API Methods Implemented
 
-| API Module | Methods | Status |
-|------------|---------|--------|
-| Conversations | 13 | ✅ Complete |
-| Immutable | 9 | ✅ Complete |
-| Mutable | 12 | ✅ Complete |
-| Vector | 13 | ✅ Complete |
-| Facts | 10 | ✅ Complete |
-| Memory | 14 | ✅ Complete |
-| Contexts | 17 | ✅ Complete |
-| Users | 11 | ✅ Complete |
-| Agents | 8 | ✅ Complete |
-| Memory Spaces | 9 | ✅ Complete |
-| A2A | 4 | ✅ Complete |
-| Graph | ~20 | ✅ Complete |
-| **TOTAL** | **~140 methods** | **✅ 100% Coverage** |
+| API Module    | Methods          | Status               |
+| ------------- | ---------------- | -------------------- |
+| Conversations | 13               | ✅ Complete          |
+| Immutable     | 9                | ✅ Complete          |
+| Mutable       | 12               | ✅ Complete          |
+| Vector        | 13               | ✅ Complete          |
+| Facts         | 10               | ✅ Complete          |
+| Memory        | 14               | ✅ Complete          |
+| Contexts      | 17               | ✅ Complete          |
+| Users         | 11               | ✅ Complete          |
+| Agents        | 8                | ✅ Complete          |
+| Memory Spaces | 9                | ✅ Complete          |
+| A2A           | 4                | ✅ Complete          |
+| Graph         | ~20              | ✅ Complete          |
+| **TOTAL**     | **~140 methods** | **✅ 100% Coverage** |
 
 ## 📁 Directory Structure
 
@@ -113,27 +113,32 @@ cortex-python/
 ## 🎯 Key Features Implemented
 
 ### Core Features
+
 - ✅ Main Cortex client with graph integration support
 - ✅ Complete type system with 50+ dataclasses
 - ✅ Structured error handling with all error codes
 - ✅ Async/await throughout (Python native)
 
 ### Layer 1 (ACID Stores)
+
 - ✅ ConversationsAPI - Immutable conversation threads
 - ✅ ImmutableAPI - Shared versioned data
 - ✅ MutableAPI - Shared live data with atomic updates
 
 ### Layer 2 (Vector Index)
+
 - ✅ VectorAPI - Searchable memories with embeddings
 - ✅ Semantic search support
 - ✅ Versioning and retention
 
 ### Layer 3 (Facts)
+
 - ✅ FactsAPI - Structured knowledge extraction
 - ✅ Fact types (preference, identity, knowledge, relationship, event)
 - ✅ Temporal validity and confidence scoring
 
 ### Layer 4 (Convenience & Coordination)
+
 - ✅ MemoryAPI - High-level convenience wrapper
 - ✅ ContextsAPI - Hierarchical workflow coordination
 - ✅ UsersAPI - User profiles with GDPR cascade deletion
@@ -141,6 +146,7 @@ cortex-python/
 - ✅ MemorySpacesAPI - Memory space management
 
 ### Graph Integration
+
 - ✅ CypherGraphAdapter for Neo4j/Memgraph
 - ✅ Graph sync utilities for all entities
 - ✅ Orphan detection and cleanup
@@ -148,6 +154,7 @@ cortex-python/
 - ✅ Schema initialization and management
 
 ### A2A Communication
+
 - ✅ A2AAPI - Agent-to-agent messaging
 - ✅ Send, request, broadcast operations
 - ✅ Conversation retrieval
@@ -279,13 +286,13 @@ All methods have Google-style docstrings:
 async def remember(self, params: RememberParams) -> RememberResult:
     """
     Remember a conversation exchange (stores in both ACID and Vector).
-    
+
     Args:
         params: Remember parameters including conversation details
-        
+
     Returns:
         RememberResult with conversation details, memories, and facts
-        
+
     Example:
         >>> result = await cortex.memory.remember(
         ...     RememberParams(
@@ -296,7 +303,7 @@ async def remember(self, params: RememberParams) -> RememberResult:
         ...         user_name='User'
         ...     )
         ... )
-        
+
     Raises:
         CortexError: If validation fails
     """
@@ -305,21 +312,25 @@ async def remember(self, params: RememberParams) -> RememberResult:
 ## 🎓 Examples
 
 ### 1. Simple Chatbot (`examples/simple_chatbot.py`)
+
 - Basic conversation memory
 - Search for context
 - Memory statistics
 
 ### 2. Fact Extraction (`examples/fact_extraction.py`)
+
 - Extract structured facts from conversations
 - Query facts by type and subject
 - Demonstrates 60-90% storage savings
 
 ### 3. Graph Integration (`examples/graph_integration.py`)
+
 - Connect to Neo4j/Memgraph
 - Auto-sync to graph
 - Direct graph queries
 
 ### 4. Multi-Agent Coordination (`examples/multi_agent.py`)
+
 - Context chains for workflows
 - A2A communication
 - Hierarchical task delegation
@@ -344,20 +355,20 @@ cortex.memory.remember({              cortex.memory.remember(
 
 ### All Parameter Names
 
-| TypeScript | Python |
-|-----------|--------|
-| `memorySpaceId` | `memory_space_id` |
-| `conversationId` | `conversation_id` |
-| `userMessage` | `user_message` |
-| `agentResponse` | `agent_response` |
-| `userId` | `user_id` |
-| `userName` | `user_name` |
-| `participantId` | `participant_id` |
-| `factType` | `fact_type` |
-| `sourceType` | `source_type` |
-| `minImportance` | `min_importance` |
-| `syncToGraph` | `sync_to_graph` |
-| ... | ... (all ~50 params) |
+| TypeScript       | Python               |
+| ---------------- | -------------------- |
+| `memorySpaceId`  | `memory_space_id`    |
+| `conversationId` | `conversation_id`    |
+| `userMessage`    | `user_message`       |
+| `agentResponse`  | `agent_response`     |
+| `userId`         | `user_id`            |
+| `userName`       | `user_name`          |
+| `participantId`  | `participant_id`     |
+| `factType`       | `fact_type`          |
+| `sourceType`     | `source_type`        |
+| `minImportance`  | `min_importance`     |
+| `syncToGraph`    | `sync_to_graph`      |
+| ...              | ... (all ~50 params) |
 
 ## 🚀 Next Steps for Production
 
@@ -511,7 +522,7 @@ class CypherGraphAdapter:
             config.uri,
             auth=(config.username, config.password)
         )
-    
+
     async def query(self, cypher: str, params: dict):
         async with self.driver.session() as session:
             result = await session.run(cypher, params)
@@ -521,16 +532,16 @@ class CypherGraphAdapter:
 
 ## 📊 Comparison: TypeScript vs Python SDK
 
-| Feature | TypeScript | Python | Status |
-|---------|-----------|--------|--------|
-| **Core APIs** | 140+ methods | 140+ methods | ✅ Parity |
-| **Type System** | TypeScript interfaces | Python dataclasses | ✅ Parity |
-| **Async Support** | async/await | async/await | ✅ Parity |
-| **Graph Integration** | Neo4j driver | Neo4j async driver | ✅ Parity |
-| **Error Handling** | CortexError class | CortexError class | ✅ Parity |
-| **Documentation** | JSDoc | Google docstrings | ✅ Parity |
-| **Package Manager** | npm | pip | ✅ Different but equivalent |
-| **Testing** | Jest | Pytest | ✅ Different but equivalent |
+| Feature               | TypeScript            | Python             | Status                      |
+| --------------------- | --------------------- | ------------------ | --------------------------- |
+| **Core APIs**         | 140+ methods          | 140+ methods       | ✅ Parity                   |
+| **Type System**       | TypeScript interfaces | Python dataclasses | ✅ Parity                   |
+| **Async Support**     | async/await           | async/await        | ✅ Parity                   |
+| **Graph Integration** | Neo4j driver          | Neo4j async driver | ✅ Parity                   |
+| **Error Handling**    | CortexError class     | CortexError class  | ✅ Parity                   |
+| **Documentation**     | JSDoc                 | Google docstrings  | ✅ Parity                   |
+| **Package Manager**   | npm                   | pip                | ✅ Different but equivalent |
+| **Testing**           | Jest                  | Pytest             | ✅ Different but equivalent |
 
 ## 🎉 Conclusion
 
@@ -555,4 +566,3 @@ Developers can now use Cortex with either TypeScript or Python, with identical c
 **Built with ❤️ for the Python AI community**
 
 Implemented by Saint Nick LLC | November 2025
-

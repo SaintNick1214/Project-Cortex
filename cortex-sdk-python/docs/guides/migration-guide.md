@@ -6,25 +6,27 @@ This guide helps you migrate from the TypeScript SDK to the Python SDK. The APIs
 
 ## Quick Reference
 
-| Aspect | TypeScript | Python |
-|--------|-----------|--------|
-| **Case** | camelCase | snake_case |
-| **Objects** | `{ key: value }` | `ClassName(key=value)` |
-| **Types** | `interface` | `@dataclass` |
-| **Null** | `null` / `undefined` | `None` |
-| **Arrays** | `string[]` | `List[str]` |
-| **Optional** | `string \| undefined` | `Optional[str]` |
-| **Async** | `async/await` | `async/await` (same!) |
-| **Imports** | `import { x } from "y"` | `from y import x` |
+| Aspect       | TypeScript              | Python                 |
+| ------------ | ----------------------- | ---------------------- |
+| **Case**     | camelCase               | snake_case             |
+| **Objects**  | `{ key: value }`        | `ClassName(key=value)` |
+| **Types**    | `interface`             | `@dataclass`           |
+| **Null**     | `null` / `undefined`    | `None`                 |
+| **Arrays**   | `string[]`              | `List[str]`            |
+| **Optional** | `string \| undefined`   | `Optional[str]`        |
+| **Async**    | `async/await`           | `async/await` (same!)  |
+| **Imports**  | `import { x } from "y"` | `from y import x`      |
 
 ## Installation
 
 **TypeScript:**
+
 ```bash
 npm install @cortexmemory/sdk
 ```
 
 **Python:**
+
 ```bash
 pip install cortex-memory
 ```
@@ -32,6 +34,7 @@ pip install cortex-memory
 ## Initialization
 
 **TypeScript:**
+
 ```typescript
 import { Cortex } from "@cortexmemory/sdk";
 
@@ -41,6 +44,7 @@ const cortex = new Cortex({
 ```
 
 **Python:**
+
 ```python
 from cortex import Cortex, CortexConfig
 
@@ -54,6 +58,7 @@ cortex = Cortex(
 ### Remember
 
 **TypeScript:**
+
 ```typescript
 const result = await cortex.memory.remember({
   memorySpaceId: "agent-1",
@@ -68,6 +73,7 @@ const result = await cortex.memory.remember({
 ```
 
 **Python:**
+
 ```python
 result = await cortex.memory.remember(
     RememberParams(
@@ -85,15 +91,14 @@ result = await cortex.memory.remember(
 
 ## Complete API Mapping
 
-| TypeScript Method | Python Method | Notes |
-|------------------|---------------|-------|
-| `cortex.memory.remember()` | `cortex.memory.remember()` | Same name |
-| `cortex.memory.search()` | `cortex.memory.search()` | Same name |
-| `cortex.users.delete()` | `cortex.users.delete()` | Same name |
-| `cortex.conversations.create()` | `cortex.conversations.create()` | Same name |
-| `cortex.contexts.getChain()` | `cortex.contexts.get_chain()` | snake_case |
-| `cortex.a2a.send()` | `cortex.a2a.send()` | Same name |
-| All ~140 methods | All ~140 methods | 100% coverage |
+| TypeScript Method               | Python Method                   | Notes         |
+| ------------------------------- | ------------------------------- | ------------- |
+| `cortex.memory.remember()`      | `cortex.memory.remember()`      | Same name     |
+| `cortex.memory.search()`        | `cortex.memory.search()`        | Same name     |
+| `cortex.users.delete()`         | `cortex.users.delete()`         | Same name     |
+| `cortex.conversations.create()` | `cortex.conversations.create()` | Same name     |
+| `cortex.contexts.getChain()`    | `cortex.contexts.get_chain()`   | snake_case    |
+| `cortex.a2a.send()`             | `cortex.a2a.send()`             | Same name     |
+| All ~140 methods                | All ~140 methods                | 100% coverage |
 
 For complete migration examples, see the rest of this guide.
-

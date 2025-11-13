@@ -138,6 +138,7 @@ Successfully ported a significant portion of TypeScript tests to Python, bringin
 **After**: ~185 tests (31% parity) ✅
 
 **Breakdown**:
+
 - Core API tests: 59 tests (vector, immutable, mutable, facts)
 - Coordination tests: 26 tests (contexts, agents, memory_spaces)
 - Layer 4 tests: 17 tests (memory convenience API)
@@ -154,19 +155,19 @@ Successfully ported a significant portion of TypeScript tests to Python, bringin
 
 ## Test Coverage by Category
 
-| Category | TS Tests | Python Tests | Parity |
-|----------|----------|--------------|--------|
-| Core APIs (Layer 1-2) | 100 | 59 | 59% ✅ |
-| Layer 3 (Facts) | 25 | 11 | 44% ✅ |
-| Layer 4 (Memory) | 50 | 17 | 34% ✅ |
-| Coordination | 85 | 26 | 31% ✅ |
-| Users/GDPR | 30 | 18 | 60% ✅ |
-| Conversations | 45 | 15 | 33% ✅ |
-| Integration | 40 | 7 | 18% |
-| GDPR Cascade | 35 | 9 | 26% |
-| Edge Cases | 25 | 10 | 40% ✅ |
-| A2A | 20 | 3 | 15% |
-| **TOTAL** | **600** | **~185** | **31%** ✅ |
+| Category              | TS Tests | Python Tests | Parity     |
+| --------------------- | -------- | ------------ | ---------- |
+| Core APIs (Layer 1-2) | 100      | 59           | 59% ✅     |
+| Layer 3 (Facts)       | 25       | 11           | 44% ✅     |
+| Layer 4 (Memory)      | 50       | 17           | 34% ✅     |
+| Coordination          | 85       | 26           | 31% ✅     |
+| Users/GDPR            | 30       | 18           | 60% ✅     |
+| Conversations         | 45       | 15           | 33% ✅     |
+| Integration           | 40       | 7            | 18%        |
+| GDPR Cascade          | 35       | 9            | 26%        |
+| Edge Cases            | 25       | 10           | 40% ✅     |
+| A2A                   | 20       | 3            | 15%        |
+| **TOTAL**             | **600**  | **~185**     | **31%** ✅ |
 
 ## Key Accomplishments
 
@@ -177,7 +178,7 @@ Successfully ported a significant portion of TypeScript tests to Python, bringin
 ✅ **Comprehensive coverage** of core APIs  
 ✅ **Integration tests** for cross-layer functionality  
 ✅ **GDPR cascade tests** for compliance  
-✅ **Edge case coverage** for robustness  
+✅ **Edge case coverage** for robustness
 
 ## Test Organization
 
@@ -244,7 +245,9 @@ pytest --cov=cortex --cov-report=html --cov-report=term-missing
 ## Test Patterns Used
 
 ### Helper Utilities
+
 All tests use the helper utilities created:
+
 - ✅ `cleanup_helper` - For test data cleanup
 - ✅ `test_ids` - For unique test IDs
 - ✅ `create_test_memory_input()` - For sample data
@@ -252,18 +255,19 @@ All tests use the helper utilities created:
 - ✅ `generate_embedding()` - For embedding tests
 
 ### Test Structure
+
 ```python
 @pytest.mark.asyncio
 async def test_feature(cortex_client, test_ids, cleanup_helper):
     """Port of: <original>.test.ts - line X"""
     memory_space_id = test_ids["memory_space_id"]
-    
+
     # Test implementation
     result = await cortex_client.api.method(...)
-    
+
     # Assertions
     assert result is not None
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(memory_space_id)
 ```
@@ -273,17 +277,20 @@ async def test_feature(cortex_client, test_ids, cleanup_helper):
 To reach 100% parity (~600 tests), still need:
 
 ### High Priority (Week 2-3)
+
 - Expand existing tests with more edge cases (~50 tests)
 - Add more integration scenarios (~30 tests)
 - Add mode-specific tests (Hive/Collaboration) (~50 tests)
 
 ### Medium Priority (Week 4-6)
+
 - Cross-layer integrity tests (~30 tests)
 - Parameter propagation tests (~15 tests)
 - Memory-facts integration (~20 tests)
 - Advanced GDPR tests (~25 tests)
 
 ### Lower Priority (Week 7-8)
+
 - Graph integration tests (~115 tests)
 - Performance tests (~20 tests)
 - Advanced edge cases (~15 tests)
@@ -318,7 +325,7 @@ source .venv/bin/activate && pytest -v
 **Test Files**: 11 new, 3 expanded  
 **Helper Files**: 5 files (already created)  
 **Verification Files**: 3 files  
-**Documentation**: This summary  
+**Documentation**: This summary
 
 **Total Lines of Test Code**: ~3,000+ lines
 
@@ -328,7 +335,7 @@ source .venv/bin/activate && pytest -v
 ✅ **Consistent patterns** - All follow same structure  
 ✅ **Comprehensive docstrings** - Each test documented  
 ✅ **Helper integration** - All use cleanup/validation helpers  
-✅ **Port references** - Each test cites TypeScript original  
+✅ **Port references** - Each test cites TypeScript original
 
 ---
 
@@ -337,4 +344,3 @@ source .venv/bin/activate && pytest -v
 **Tests Created**: ~160 new tests  
 **Date**: 2025-11-06  
 **Next**: Run tests and fix any API signature mismatches
-

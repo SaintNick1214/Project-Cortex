@@ -98,17 +98,17 @@ This brings test parity from 29/600 (5%) to 129/600 (22%)
 async def test_store_memory(cortex_client, cleanup_helper, test_ids):
     """Example using helpers."""
     space_id = test_ids["memory_space_id"]
-    
+
     # Create memory
     memory_input = create_test_memory_input(content="Test")
     memory = await cortex_client.vector.store(space_id, memory_input)
-    
+
     # Validate storage
     validation = await validate_memory_storage(
         cortex_client, space_id, memory.memory_id
     )
     assert validation["exists"]
-    
+
     # Cleanup
     await cleanup_helper.purge_memories(space_id)
 ```
@@ -116,6 +116,7 @@ async def test_store_memory(cortex_client, cleanup_helper, test_ids):
 ## 📊 Statistics
 
 **Total Implementation:**
+
 - 6 new files created
 - 1 file updated (conftest.py)
 - ~1,500 lines of code
@@ -125,6 +126,7 @@ async def test_store_memory(cortex_client, cleanup_helper, test_ids):
 - 3 documentation guides
 
 **Code Quality:**
+
 - ✅ No linting errors
 - ✅ Full type hints
 - ✅ Comprehensive docstrings
@@ -133,6 +135,7 @@ async def test_store_memory(cortex_client, cleanup_helper, test_ids):
 ## 🔧 Helper Functions Summary
 
 ### TestCleanup (9 methods)
+
 - `purge_conversations(memory_space_id, prefix)`
 - `purge_memories(memory_space_id, prefix)`
 - `purge_facts(memory_space_id, prefix)`
@@ -144,18 +147,21 @@ async def test_store_memory(cortex_client, cleanup_helper, test_ids):
 - `verify_empty(memory_space_id, prefix)`
 
 ### Embeddings (4 functions)
+
 - `embeddings_available()` - Check API
 - `generate_embedding(text, use_mock)` - Single embedding
 - `generate_embeddings_batch(texts, use_mock)` - Batch
 - `generate_mock_embedding(text)` - Deterministic mock
 
 ### Storage Validation (4 functions)
+
 - `validate_conversation_storage(client, conv_id, expected)`
 - `validate_memory_storage(client, space_id, mem_id, expected)`
 - `validate_fact_storage(client, space_id, fact_id, expected)`
 - `validate_user_storage(client, user_id, expected)`
 
 ### Generators (12 functions)
+
 - `generate_test_user_id()`
 - `generate_test_memory_space_id()`
 - `generate_test_conversation_id()`
@@ -172,11 +178,13 @@ async def test_store_memory(cortex_client, cleanup_helper, test_ids):
 ## 📖 Quick Reference
 
 **Run all verification tests:**
+
 ```bash
 source .venv/bin/activate && pytest tests/test_helpers_verification.py -v -s
 ```
 
 **Run specific test category:**
+
 ```bash
 source .venv/bin/activate && pytest tests/test_helpers_verification.py -k "cleanup" -v
 source .venv/bin/activate && pytest tests/test_helpers_verification.py -k "embedding" -v
@@ -185,6 +193,7 @@ source .venv/bin/activate && pytest tests/test_helpers_verification.py -k "gener
 ```
 
 **Run summary test:**
+
 ```bash
 source .venv/bin/activate && pytest tests/test_helpers_verification.py::test_all_helpers_summary -v -s
 ```
@@ -210,4 +219,3 @@ source .venv/bin/activate && pytest tests/test_helpers_verification.py::test_all
 **Expected**: 20-25 tests pass
 
 See `VERIFY_HELPERS.md` for detailed verification instructions.
-

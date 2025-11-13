@@ -5,21 +5,25 @@
 Your project **already has them configured** in `pyproject.toml`:
 
 ### 1. **Ruff** - Modern Fast Linter (ESLint equivalent)
+
 - Speed: 10-100x faster than traditional Python linters
 - Replaces: Flake8, isort, pyupgrade, and more
 - Catches: Syntax errors, undefined names, unused imports, etc.
 
 ### 2. **mypy** - Static Type Checker (TypeScript equivalent)
+
 - Catches type mismatches at check-time
 - Would catch: Wrong parameter types, missing required params, attribute errors
 
 ### 3. **Black** - Code Formatter (Prettier equivalent)
+
 - Auto-formats code to consistent style
 - Fixes: Trailing commas, indentation, line length
 
 ## How to Use (Run Before Committing)
 
 ### Quick Check - All Linters
+
 ```bash
 cd cortex-sdk-python
 
@@ -31,6 +35,7 @@ black --check .                 # Check formatting
 ```
 
 ### Auto-Fix Issues
+
 ```bash
 # Auto-fix what can be fixed
 ruff check --fix .              # Fix auto-fixable issues
@@ -40,6 +45,7 @@ black .                         # Auto-format code
 ### What These Would Have Caught
 
 #### Issue 1: Missing Required Parameter
+
 ```python
 # Your code:
 StoreFactParams(
@@ -53,6 +59,7 @@ StoreFactParams(
 ```
 
 #### Issue 2: Wrong Attribute Name
+
 ```python
 # Your code:
 ctx.context_id  # Context doesn't have this attribute!
@@ -62,6 +69,7 @@ ctx.context_id  # Context doesn't have this attribute!
 ```
 
 #### Issue 3: Syntax Errors
+
 ```python
 # Your code:
 ConversationParticipants(user_id="test",  # Trailing comma, missing paren
@@ -71,6 +79,7 @@ ConversationParticipants(user_id="test",  # Trailing comma, missing paren
 ```
 
 #### Issue 4: Unused Imports
+
 ```python
 # Your code:
 from cortex.types import StoreFactInput  # Wrong type name!
@@ -108,6 +117,7 @@ echo "✅ All linters passed!"
 ```
 
 Make it executable:
+
 ```bash
 chmod +x .git/hooks/pre-commit
 ```
@@ -135,6 +145,7 @@ Add to `.vscode/settings.json`:
 ```
 
 Install VS Code extensions:
+
 - **Ruff** (charliermarsh.ruff)
 - **Pylance** (ms-python.vscode-pylance) - for IntelliSense
 - **Mypy Type Checker** (ms-python.mypy-type-checker)
@@ -155,28 +166,28 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
-      
+          python-version: "3.13"
+
       - name: Install dependencies
         run: |
           cd cortex-sdk-python
           pip install -e ".[dev]"
-      
+
       - name: Run Ruff
         run: |
           cd cortex-sdk-python
           ruff check .
-      
+
       - name: Run mypy
         run: |
           cd cortex-sdk-python
           mypy cortex/ tests/
-      
+
       - name: Check Black formatting
         run: |
           cd cortex-sdk-python
           black --check .
-      
+
       - name: Run tests
         run: |
           cd cortex-sdk-python
@@ -186,6 +197,7 @@ jobs:
 ## Ruff Configuration (Already in pyproject.toml)
 
 Your current config:
+
 ```toml
 [tool.ruff]
 line-length = 88
@@ -204,6 +216,7 @@ select = [
 ## What Each Tool Catches
 
 ### Ruff (Syntax & Style)
+
 - ✅ Syntax errors (missing commas, parens)
 - ✅ Undefined names (`StoreFactInput` doesn't exist)
 - ✅ Unused imports
@@ -211,6 +224,7 @@ select = [
 - ✅ Naming conventions
 
 ### mypy (Type Checking)
+
 - ✅ Missing required parameters
 - ✅ Wrong parameter types
 - ✅ Attribute errors (`context_id` doesn't exist on `Context`)
@@ -218,6 +232,7 @@ select = [
 - ✅ Dict vs object access
 
 ### Black (Formatting)
+
 - ✅ Trailing commas
 - ✅ Line length
 - ✅ Indentation
@@ -226,14 +241,17 @@ select = [
 ## Example Workflow
 
 ### Before Writing Code:
+
 1. Enable VS Code extensions (real-time feedback)
 2. Install pre-commit hook (auto-check on commit)
 
 ### While Writing Code:
+
 - See red squiggles for errors in VS Code
 - Auto-fix on save with Ruff/Black
 
 ### Before Committing:
+
 ```bash
 # Run all checks
 ruff check tests/test_conversations_filters.py
@@ -242,6 +260,7 @@ black tests/test_conversations_filters.py
 ```
 
 ### Before Pushing:
+
 ```bash
 # Run full suite
 ruff check .
@@ -255,18 +274,22 @@ pytest -v
 ### Your Filter Tests Issues:
 
 **Issue**: `StoreFactParams` missing `source_type`
+
 - **mypy**: `error: Missing required keyword argument "source_type"`
 - **Caught**: Before running tests
 
 **Issue**: `ctx.context_id` (should be `ctx.id`)
+
 - **mypy**: `error: "Context" has no attribute "context_id"`
 - **Caught**: Before running tests
 
 **Issue**: Trailing commas in `ConversationParticipants(user_id="test",`
+
 - **ruff**: `SyntaxError: invalid syntax`
 - **Caught**: Immediately
 
 **Issue**: Using `conv["type"]` on object (should be `conv.type`)
+
 - **mypy**: `error: Value of type "Conversation" is not indexable`
 - **Caught**: Before running tests
 
@@ -294,15 +317,16 @@ pytest tests/test_*_filters.py -v
 
 ## Summary
 
-| Tool | Python | JavaScript |
-|------|--------|------------|
-| Linter | **Ruff** | ESLint |
-| Type Checker | **mypy** | TypeScript |
-| Formatter | **Black** | Prettier |
+| Tool         | Python    | JavaScript |
+| ------------ | --------- | ---------- |
+| Linter       | **Ruff**  | ESLint     |
+| Type Checker | **mypy**  | TypeScript |
+| Formatter    | **Black** | Prettier   |
 
 **All 3 are already configured in your `pyproject.toml`!**
 
 **To use them**:
+
 ```bash
 # Install
 pip install -e ".[dev]"
@@ -318,10 +342,10 @@ black .                     # Auto-format
 ---
 
 **Next Steps**:
+
 1. Install VS Code extensions for real-time feedback
 2. Set up pre-commit hook
 3. Add to CI/CD pipeline
 4. Run before every test session
 
 **Time saved**: Hours of debugging → Seconds of linting
-

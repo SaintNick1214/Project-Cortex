@@ -111,7 +111,9 @@ describe("Operation Sequence Validation", () => {
       expect(list2.some((m) => m.memoryId === mem2.memoryId)).toBe(true);
 
       // Update first
-      await cortex.vector.update(spaceId, mem1.memoryId, { content: "Updated 1" });
+      await cortex.vector.update(spaceId, mem1.memoryId, {
+        content: "Updated 1",
+      });
 
       const list3 = await cortex.vector.list({ memorySpaceId: spaceId });
       expect(list3.length).toBe(count0 + 2); // Still 2
@@ -190,7 +192,9 @@ describe("Operation Sequence Validation", () => {
       expect(created.messages).toHaveLength(0);
 
       // STEP 2: Get (validate create)
-      const afterCreate = await cortex.conversations.get(created.conversationId);
+      const afterCreate = await cortex.conversations.get(
+        created.conversationId,
+      );
       expect(afterCreate!.conversationId).toBe(created.conversationId);
       expect(afterCreate!.messages).toHaveLength(0);
 
@@ -204,7 +208,9 @@ describe("Operation Sequence Validation", () => {
       });
 
       // STEP 4: Get (validate message added)
-      const afterMessage = await cortex.conversations.get(created.conversationId);
+      const afterMessage = await cortex.conversations.get(
+        created.conversationId,
+      );
       expect(afterMessage!.messages).toHaveLength(1);
       expect(afterMessage!.messages[0].content).toBe("First message");
 
@@ -212,7 +218,9 @@ describe("Operation Sequence Validation", () => {
       await cortex.conversations.delete(created.conversationId);
 
       // STEP 6: Get (validate delete)
-      const afterDelete = await cortex.conversations.get(created.conversationId);
+      const afterDelete = await cortex.conversations.get(
+        created.conversationId,
+      );
       expect(afterDelete).toBeNull();
     });
 
@@ -641,7 +649,9 @@ describe("Operation Sequence Validation", () => {
 
       const afterRemove = await cortex.memorySpaces.get(spaceId);
       expect(afterRemove!.participants).toHaveLength(1);
-      expect(afterRemove!.participants.some((p: any) => p.id === "user-1")).toBe(false);
+      expect(
+        afterRemove!.participants.some((p: any) => p.id === "user-1"),
+      ).toBe(false);
 
       // STEP 4: Delete
       await cortex.memorySpaces.delete(spaceId, { cascade: true });
@@ -892,7 +902,9 @@ describe("Operation Sequence Validation", () => {
           metadata: { importance: 50, tags: [] },
         }),
         // Update existing
-        cortex.vector.update(spaceId, mems[0].memoryId, { content: "Updated 1" }),
+        cortex.vector.update(spaceId, mems[0].memoryId, {
+          content: "Updated 1",
+        }),
         // Delete existing
         cortex.vector.delete(spaceId, mems[1].memoryId),
       ]);
@@ -1005,8 +1017,14 @@ describe("Operation Sequence Validation", () => {
       expect(result.conversation.conversationId).toBeDefined();
 
       // Get memories
-      const mem1 = await cortex.vector.get(spaceId, result.memories[0].memoryId);
-      const mem2 = await cortex.vector.get(spaceId, result.memories[1].memoryId);
+      const mem1 = await cortex.vector.get(
+        spaceId,
+        result.memories[0].memoryId,
+      );
+      const mem2 = await cortex.vector.get(
+        spaceId,
+        result.memories[1].memoryId,
+      );
 
       expect(mem1).not.toBeNull();
       expect(mem2).not.toBeNull();
@@ -1014,8 +1032,14 @@ describe("Operation Sequence Validation", () => {
       // Forget first memory
       await cortex.memory.forget(spaceId, result.memories[0].memoryId);
 
-      const afterForget1 = await cortex.vector.get(spaceId, result.memories[0].memoryId);
-      const afterForget2 = await cortex.vector.get(spaceId, result.memories[1].memoryId);
+      const afterForget1 = await cortex.vector.get(
+        spaceId,
+        result.memories[0].memoryId,
+      );
+      const afterForget2 = await cortex.vector.get(
+        spaceId,
+        result.memories[1].memoryId,
+      );
 
       expect(afterForget1).toBeNull(); // Deleted
       expect(afterForget2).not.toBeNull(); // Still exists
@@ -1044,7 +1068,9 @@ describe("Operation Sequence Validation", () => {
 
       // Verify all exist
       const listBefore = await cortex.vector.list({ memorySpaceId: spaceId });
-      const countBefore = listBefore.filter((m) => m.tags.includes("bulk-delete")).length;
+      const countBefore = listBefore.filter((m) =>
+        m.tags.includes("bulk-delete"),
+      ).length;
       expect(countBefore).toBe(10);
 
       // Delete by tag
@@ -1058,14 +1084,18 @@ describe("Operation Sequence Validation", () => {
 
       // Verify count after delete
       const listAfter = await cortex.vector.list({ memorySpaceId: spaceId });
-      const countAfter = listAfter.filter((m) => m.tags.includes("bulk-delete")).length;
+      const countAfter = listAfter.filter((m) =>
+        m.tags.includes("bulk-delete"),
+      ).length;
       expect(countAfter).toBe(0);
 
       // Verify list after delete
       const listAfterFinal = await cortex.vector.list({
         memorySpaceId: spaceId,
       });
-      const filteredAfter = listAfterFinal.filter((m) => m.tags.includes("bulk-delete"));
+      const filteredAfter = listAfterFinal.filter((m) =>
+        m.tags.includes("bulk-delete"),
+      );
       expect(filteredAfter).toHaveLength(0);
 
       // Verify each individually deleted
@@ -1092,7 +1122,9 @@ describe("Operation Sequence Validation", () => {
 
       // Update all
       const toUpdate = await cortex.vector.list({ memorySpaceId: spaceId });
-      const filteredToUpdate = toUpdate.filter((m) => m.tags.includes("bulk-update"));
+      const filteredToUpdate = toUpdate.filter((m) =>
+        m.tags.includes("bulk-update"),
+      );
       for (const mem of filteredToUpdate) {
         await cortex.vector.update(spaceId, mem.memoryId, { importance: 90 });
       }
@@ -1244,14 +1276,20 @@ describe("Operation Sequence Validation", () => {
         memorySpaceId: spaceId,
         userId,
         purpose: "Handle food preferences",
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         data: { factId: fact.factId },
       });
 
       // VALIDATE: Complete chain
       const userCheck = await cortex.users.get(userId);
       const convCheck = await cortex.conversations.get(conv.conversationId);
-      const memCheck = await cortex.vector.get(spaceId, remembered.memories[0].memoryId);
+      const memCheck = await cortex.vector.get(
+        spaceId,
+        remembered.memories[0].memoryId,
+      );
       const factCheck = await cortex.facts.get(spaceId, fact.factId);
       const ctxCheck = await cortex.contexts.get(ctx.contextId);
 
@@ -1262,9 +1300,13 @@ describe("Operation Sequence Validation", () => {
       expect(ctxCheck).not.toBeNull();
 
       // Validate references
-      expect(memCheck!.conversationRef!.conversationId).toBe(conv.conversationId);
+      expect(memCheck!.conversationRef!.conversationId).toBe(
+        conv.conversationId,
+      );
       expect(factCheck!.sourceRef!.conversationId).toBe(conv.conversationId);
-      expect((ctxCheck as any).conversationRef!.conversationId).toBe(conv.conversationId);
+      expect((ctxCheck as any).conversationRef!.conversationId).toBe(
+        conv.conversationId,
+      );
     });
 
     it("cascade delete cleans entire workflow", async () => {
@@ -1380,7 +1422,9 @@ describe("Operation Sequence Validation", () => {
 
       // Try invalid operation (should fail)
       try {
-        await cortex.vector.update("wrong-space", mem.memoryId, { content: "Hacked" });
+        await cortex.vector.update("wrong-space", mem.memoryId, {
+          content: "Hacked",
+        });
       } catch (_e) {
         // Expected
       }
@@ -1422,4 +1466,3 @@ describe("Operation Sequence Validation", () => {
     });
   });
 });
-

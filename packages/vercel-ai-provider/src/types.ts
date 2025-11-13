@@ -230,7 +230,10 @@ export interface CortexMemoryModel {
    * });
    * ```
    */
-  (underlyingModel: LanguageModelV1, settings?: Record<string, unknown>): LanguageModelV1;
+  (
+    underlyingModel: LanguageModelV1,
+    settings?: Record<string, unknown>,
+  ): LanguageModelV1;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Manual Memory Control Methods
@@ -351,4 +354,3 @@ export function createLogger(debug: boolean = false): Logger {
     error: (...args) => console.error(prefix, ...args),
   };
 }
-

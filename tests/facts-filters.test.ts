@@ -338,7 +338,9 @@ describe("Facts API - Comprehensive Filter Coverage", () => {
         factType: "observation",
       });
       expect(listResults.length).toBeGreaterThanOrEqual(1);
-      expect(listResults.every((f: any) => f.factType === "observation")).toBe(true);
+      expect(listResults.every((f: any) => f.factType === "observation")).toBe(
+        true,
+      );
 
       // Test count
       const count = await cortex.facts.count({
@@ -528,4 +530,3 @@ describe("Facts API - Comprehensive Filter Coverage", () => {
     });
   });
 });
-

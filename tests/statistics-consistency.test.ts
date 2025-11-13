@@ -61,7 +61,9 @@ describe("Statistics Consistency Testing", () => {
       });
 
       const stats = await cortex.memorySpaces.getStats(spaceId);
-      const directCount = await cortex.conversations.count({ memorySpaceId: spaceId });
+      const directCount = await cortex.conversations.count({
+        memorySpaceId: spaceId,
+      });
 
       expect(stats.totalConversations).toBe(directCount);
     });
@@ -240,7 +242,9 @@ describe("Statistics Consistency Testing", () => {
         });
       }
 
-      const count = await cortex.conversations.count({ memorySpaceId: spaceId });
+      const count = await cortex.conversations.count({
+        memorySpaceId: spaceId,
+      });
       const list = await cortex.conversations.list({ memorySpaceId: spaceId });
 
       expect(count).toBe(list.length);
@@ -298,7 +302,9 @@ describe("Statistics Consistency Testing", () => {
       const count = await cortex.memorySpaces.count({});
       const list = await cortex.memorySpaces.list({});
 
-      expect(count).toBe((list as any).spaces ? (list as any).spaces.length : list.length);
+      expect(count).toBe(
+        (list as any).spaces ? (list as any).spaces.length : list.length,
+      );
     });
 
     it("count with filters matches filtered list length", async () => {
@@ -648,7 +654,9 @@ describe("Statistics Consistency Testing", () => {
       const before = await cortex.vector.count({ memorySpaceId: spaceId });
 
       const toDelete = await cortex.vector.list({ memorySpaceId: spaceId });
-      const filteredDelete = toDelete.filter((m) => m.tags.includes("bulk-del-stats"));
+      const filteredDelete = toDelete.filter((m) =>
+        m.tags.includes("bulk-del-stats"),
+      );
       for (const mem of filteredDelete) {
         await cortex.vector.delete(spaceId, mem.memoryId);
       }
@@ -677,7 +685,9 @@ describe("Statistics Consistency Testing", () => {
       const before = await cortex.vector.count({ memorySpaceId: spaceId });
 
       const toUpdate = await cortex.vector.list({ memorySpaceId: spaceId });
-      const filteredUpdate = toUpdate.filter((m) => m.tags.includes("bulk-upd-stats"));
+      const filteredUpdate = toUpdate.filter((m) =>
+        m.tags.includes("bulk-upd-stats"),
+      );
       for (const mem of filteredUpdate) {
         await cortex.vector.update(spaceId, mem.memoryId, { importance: 90 });
       }
@@ -710,8 +720,12 @@ describe("Statistics Consistency Testing", () => {
 
       const before = await cortex.memorySpaces.getStats(spaceId);
 
-      const toDeleteStats = await cortex.vector.list({ memorySpaceId: spaceId });
-      const filteredDelStats = toDeleteStats.filter((m) => m.tags.includes("del-stats"));
+      const toDeleteStats = await cortex.vector.list({
+        memorySpaceId: spaceId,
+      });
+      const filteredDelStats = toDeleteStats.filter((m) =>
+        m.tags.includes("del-stats"),
+      );
       for (const mem of filteredDelStats) {
         await cortex.vector.delete(spaceId, mem.memoryId);
       }
@@ -1029,8 +1043,12 @@ describe("Statistics Consistency Testing", () => {
       );
 
       // Update 2
-      await cortex.vector.update(spaceId, mems[0].memoryId, { content: "Updated 1" });
-      await cortex.vector.update(spaceId, mems[1].memoryId, { content: "Updated 2" });
+      await cortex.vector.update(spaceId, mems[0].memoryId, {
+        content: "Updated 1",
+      });
+      await cortex.vector.update(spaceId, mems[1].memoryId, {
+        content: "Updated 2",
+      });
 
       // Delete 1
       await cortex.vector.delete(spaceId, mems[2].memoryId);
@@ -1094,7 +1112,10 @@ describe("Statistics Consistency Testing", () => {
 
   describe("Multi-Space Statistics Independence", () => {
     it("stats for 3 spaces are independent", async () => {
-      const spaces = Array.from({ length: 3 }, (_, i) => `${BASE_ID}-indep-${i}-${Date.now()}`);
+      const spaces = Array.from(
+        { length: 3 },
+        (_, i) => `${BASE_ID}-indep-${i}-${Date.now()}`,
+      );
 
       // Create spaces and different amounts of data
       for (let i = 0; i < spaces.length; i++) {
@@ -1190,7 +1211,9 @@ describe("Statistics Consistency Testing", () => {
 
       // Count filtered by tag (not supported directly, use list)
       const countListA = await cortex.vector.list({ memorySpaceId: spaceId });
-      const countA = countListA.filter((m) => m.tags.includes("filter-a")).length;
+      const countA = countListA.filter((m) =>
+        m.tags.includes("filter-a"),
+      ).length;
 
       const listAAll = await cortex.vector.list({
         memorySpaceId: spaceId,
@@ -1224,7 +1247,9 @@ describe("Statistics Consistency Testing", () => {
         metadata: { importance: 95, tags: [] },
       });
 
-      const allForImportance = await cortex.vector.list({ memorySpaceId: spaceId });
+      const allForImportance = await cortex.vector.list({
+        memorySpaceId: spaceId,
+      });
       const count = allForImportance.filter((m) => m.importance >= 80).length;
 
       const list = await cortex.vector.list({ memorySpaceId: spaceId });
@@ -1330,7 +1355,9 @@ describe("Statistics Consistency Testing", () => {
       );
 
       const stats = await cortex.memorySpaces.getStats(spaceId);
-      const count = await cortex.conversations.count({ memorySpaceId: spaceId });
+      const count = await cortex.conversations.count({
+        memorySpaceId: spaceId,
+      });
 
       expect(stats.totalConversations).toBe(count);
       expect(stats.totalConversations).toBe(50);
@@ -1368,7 +1395,9 @@ describe("Statistics Consistency Testing", () => {
   describe("Statistics Validation Edge Cases", () => {
     it("stats for non-existent space returns zeros", async () => {
       try {
-        const stats = await cortex.memorySpaces.getStats("non-existent-space-xyz");
+        const stats = await cortex.memorySpaces.getStats(
+          "non-existent-space-xyz",
+        );
         // May return zeros or throw
         expect(stats.totalMemories).toBe(0);
       } catch (e) {
@@ -1506,7 +1535,7 @@ describe("Statistics Consistency Testing", () => {
         stats.totalMessages +
         stats.totalMemories +
         stats.totalFacts;
-        // + stats.totalContexts; // Not in type
+      // + stats.totalContexts; // Not in type
 
       expect(totalItems).toBeGreaterThan(0);
     });
@@ -1538,10 +1567,8 @@ describe("Statistics Consistency Testing", () => {
 
       // totalItems should equal sum of all counts
       const calculatedTotal =
-        stats.totalConversations +
-        stats.totalMemories +
-        stats.totalFacts;
-        // + stats.totalContexts; // Not in type
+        stats.totalConversations + stats.totalMemories + stats.totalFacts;
+      // + stats.totalContexts; // Not in type
 
       expect(calculatedTotal).toBeGreaterThan(0);
     });
@@ -1743,7 +1770,9 @@ describe("Statistics Consistency Testing", () => {
       expect(stats.totalFacts).toBeGreaterThanOrEqual(2);
 
       // Verify with direct queries
-      const convCount = await cortex.conversations.count({ memorySpaceId: spaceId });
+      const convCount = await cortex.conversations.count({
+        memorySpaceId: spaceId,
+      });
       const memCount = await cortex.vector.count({ memorySpaceId: spaceId });
       const factCount = await cortex.facts.count({ memorySpaceId: spaceId });
 
@@ -1893,4 +1922,3 @@ describe("Statistics Consistency Testing", () => {
     });
   });
 });
-

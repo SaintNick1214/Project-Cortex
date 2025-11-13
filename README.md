@@ -66,7 +66,7 @@ Cortex provides a complete memory system for AI agents:
 
 **NEW: `memory.rememberStream()`** - First-class streaming support for AI responses:
 
-- **Stream any response format**: ReadableStream or AsyncIterable  
+- **Stream any response format**: ReadableStream or AsyncIterable
 - **Edge runtime compatible**: Works in Vercel Edge Functions, Cloudflare Workers
 - **Zero buffering required**: Handles stream consumption internally
 - **All features supported**: Embeddings, facts extraction, graph sync
@@ -77,15 +77,15 @@ Cortex provides a complete memory system for AI agents:
 const stream = await generateText({ model: "gpt-4", messages });
 
 const result = await cortex.memory.rememberStream({
-  memorySpaceId: 'agent-1',
-  conversationId: 'conv-123',
-  userMessage: 'What is the weather?',
-  responseStream: stream,  // ReadableStream or AsyncIterable
-  userId: 'user-1',
-  userName: 'Alex',
+  memorySpaceId: "agent-1",
+  conversationId: "conv-123",
+  userMessage: "What is the weather?",
+  responseStream: stream, // ReadableStream or AsyncIterable
+  userId: "user-1",
+  userName: "Alex",
 });
 
-console.log('Full response:', result.fullResponse);
+console.log("Full response:", result.fullResponse);
 // All memories stored automatically once stream completes
 ```
 

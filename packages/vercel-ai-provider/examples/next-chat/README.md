@@ -71,9 +71,9 @@ The chat uses `@cortexmemory/vercel-ai-provider` to automatically:
 
 ```typescript
 // app/api/chat/route.ts
-import { createCortexMemory } from '@cortexmemory/vercel-ai-provider';
-import { openai } from '@ai-sdk/openai';
-import { streamText } from 'ai';
+import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
+import { openai } from "@ai-sdk/openai";
+import { streamText } from "ai";
 
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
@@ -83,7 +83,7 @@ const cortexMemory = createCortexMemory({
 
 // Automatic memory injection and storage
 const result = await streamText({
-  model: cortexMemory(openai('gpt-4-turbo')),
+  model: cortexMemory(openai("gpt-4-turbo")),
   messages,
 });
 ```
@@ -91,6 +91,7 @@ const result = await streamText({
 ### What Gets Stored
 
 Every conversation turn stores:
+
 - User message in ACID layer (immutable)
 - Agent response in ACID layer (immutable)
 - Both as vector memories (for semantic search)
@@ -99,6 +100,7 @@ Every conversation turn stores:
 ### What Gets Retrieved
 
 Before each response:
+
 - Searches past memories semantically
 - Finds top 5 most relevant memories
 - Injects context into system prompt
@@ -132,12 +134,12 @@ Chat API endpoint with automatic memory:
 ```typescript
 export async function POST(req: Request) {
   const { messages } = await req.json();
-  
+
   const result = await streamText({
-    model: cortexMemory(openai('gpt-4-turbo')),
+    model: cortexMemory(openai("gpt-4-turbo")),
     messages,
   });
-  
+
   return result.toDataStreamResponse();
 }
 ```
@@ -152,7 +154,7 @@ import { useChat } from 'ai/react';
 
 export default function ChatPage() {
   const { messages, input, handleInputChange, handleSubmit } = useChat();
-  
+
   return (
     <div>
       {messages.map(m => (
@@ -180,7 +182,7 @@ export default function ChatPage() {
 
 ```typescript
 // In browser console or API route
-const memories = await cortexMemory.search('name');
+const memories = await cortexMemory.search("name");
 console.log(memories);
 // Shows: [{ content: "Hi, my name is Alice", ... }]
 ```
@@ -205,4 +207,3 @@ console.log(memories);
 ## License
 
 Apache 2.0
-

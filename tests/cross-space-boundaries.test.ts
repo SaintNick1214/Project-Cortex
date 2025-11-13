@@ -138,7 +138,10 @@ describe("Cross-Space Boundary Testing", () => {
       });
 
       // Search in space B
-      const results = await cortex.vector.search(SPACE_B, "UNIQUE_SEARCH_MARKER");
+      const results = await cortex.vector.search(
+        SPACE_B,
+        "UNIQUE_SEARCH_MARKER",
+      );
 
       // Should not return space A data
       results.forEach((mem) => {
@@ -170,10 +173,14 @@ describe("Cross-Space Boundary Testing", () => {
       ]);
 
       const listAAll = await cortex.vector.list({ memorySpaceId: SPACE_A });
-      const countA = listAAll.filter((m) => m.tags.includes("count-test")).length;
-      
+      const countA = listAAll.filter((m) =>
+        m.tags.includes("count-test"),
+      ).length;
+
       const listBAll = await cortex.vector.list({ memorySpaceId: SPACE_B });
-      const countB = listBAll.filter((m) => m.tags.includes("count-test")).length;
+      const countB = listBAll.filter((m) =>
+        m.tags.includes("count-test"),
+      ).length;
 
       expect(countA).toBeGreaterThanOrEqual(2);
       expect(countB).toBeGreaterThanOrEqual(1);
@@ -260,8 +267,12 @@ describe("Cross-Space Boundary Testing", () => {
         participants: { userId: `${TEST_USER_ID}-count` },
       });
 
-      const countA = await cortex.conversations.count({ memorySpaceId: SPACE_A });
-      const _countB = await cortex.conversations.count({ memorySpaceId: SPACE_B });
+      const countA = await cortex.conversations.count({
+        memorySpaceId: SPACE_A,
+      });
+      const _countB = await cortex.conversations.count({
+        memorySpaceId: SPACE_B,
+      });
 
       expect(countA).toBeGreaterThanOrEqual(1);
       // countB may or may not be 0 depending on other tests
@@ -289,7 +300,13 @@ describe("Cross-Space Boundary Testing", () => {
       });
 
       // Should not find space A conversation
-      expect(results.every((r) => r.conversation.memorySpaceId === SPACE_B || r.conversation.memorySpaceId !== SPACE_A)).toBe(true);
+      expect(
+        results.every(
+          (r) =>
+            r.conversation.memorySpaceId === SPACE_B ||
+            r.conversation.memorySpaceId !== SPACE_A,
+        ),
+      ).toBe(true);
     });
   });
 
@@ -356,7 +373,10 @@ describe("Cross-Space Boundary Testing", () => {
         sourceType: "manual",
       });
 
-      const results = await cortex.facts.search(SPACE_B, "FACT_ISOLATION_MARKER");
+      const results = await cortex.facts.search(
+        SPACE_B,
+        "FACT_ISOLATION_MARKER",
+      );
 
       // Should not return space A data
       results.forEach((fact) => {
@@ -439,7 +459,9 @@ describe("Cross-Space Boundary Testing", () => {
 
       // List from space B shouldn't include it
       const listB = await cortex.contexts.list({ memorySpaceId: SPACE_B });
-      expect(listB.some((c: any) => c.contextId === ctxA.contextId)).toBe(false);
+      expect(listB.some((c: any) => c.contextId === ctxA.contextId)).toBe(
+        false,
+      );
     });
 
     it("list() only returns contexts from specified space", async () => {
@@ -497,13 +519,21 @@ describe("Cross-Space Boundary Testing", () => {
 
       // Parent in space A list
       const listA = await cortex.contexts.list({ memorySpaceId: SPACE_A });
-      expect(listA.some((c: any) => c.contextId === parentA.contextId)).toBe(true);
-      expect(listA.some((c: any) => c.contextId === childB.contextId)).toBe(false);
+      expect(listA.some((c: any) => c.contextId === parentA.contextId)).toBe(
+        true,
+      );
+      expect(listA.some((c: any) => c.contextId === childB.contextId)).toBe(
+        false,
+      );
 
       // Child in space B list
       const listB = await cortex.contexts.list({ memorySpaceId: SPACE_B });
-      expect(listB.some((c: any) => c.contextId === childB.contextId)).toBe(true);
-      expect(listB.some((c: any) => c.contextId === parentA.contextId)).toBe(false);
+      expect(listB.some((c: any) => c.contextId === childB.contextId)).toBe(
+        true,
+      );
+      expect(listB.some((c: any) => c.contextId === parentA.contextId)).toBe(
+        false,
+      );
     });
   });
 
@@ -829,7 +859,10 @@ describe("Cross-Space Boundary Testing", () => {
         userName: "User A",
       });
 
-      const listB = await cortex.vector.list({ memorySpaceId: SPACE_B, limit: 100 });
+      const listB = await cortex.vector.list({
+        memorySpaceId: SPACE_B,
+        limit: 100,
+      });
 
       listB.forEach((mem: any) => {
         expect(mem.memorySpaceId).toBe(SPACE_B);
@@ -921,7 +954,10 @@ describe("Cross-Space Boundary Testing", () => {
         content: "Cross-space ref",
         contentType: "raw",
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: convA.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: convA.conversationId,
+          messageIds: [],
+        },
         metadata: { importance: 50, tags: [] },
       });
 
@@ -957,7 +993,10 @@ describe("Cross-Space Boundary Testing", () => {
         content: "B with ref to A",
         contentType: "raw",
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: convA.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: convA.conversationId,
+          messageIds: [],
+        },
         metadata: { importance: 50, tags: [] },
       });
 
@@ -994,7 +1033,10 @@ describe("Cross-Space Boundary Testing", () => {
         content: "Workflow memory A",
         contentType: "raw",
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: convA.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: convA.conversationId,
+          messageIds: [],
+        },
         metadata: { importance: 50, tags: [] },
       });
 
@@ -1009,11 +1051,15 @@ describe("Cross-Space Boundary Testing", () => {
       });
 
       // None should appear in space B queries
-      const convListB = await cortex.conversations.list({ memorySpaceId: workflowB });
+      const convListB = await cortex.conversations.list({
+        memorySpaceId: workflowB,
+      });
       const memListB = await cortex.vector.list({ memorySpaceId: workflowB });
       const factListB = await cortex.facts.list({ memorySpaceId: workflowB });
 
-      expect(convListB.some((c) => c.conversationId === convA.conversationId)).toBe(false);
+      expect(
+        convListB.some((c) => c.conversationId === convA.conversationId),
+      ).toBe(false);
       expect(memListB.some((m) => m.memoryId === memA.memoryId)).toBe(false);
       expect(factListB.some((f) => f.factId === factA.factId)).toBe(false);
     });
@@ -1099,7 +1145,10 @@ describe("Cross-Space Boundary Testing", () => {
     });
 
     it("rapid space creation/deletion doesn't corrupt isolation", async () => {
-      const spaces = Array.from({ length: 5 }, (_, i) => `rapid-${Date.now()}-${i}`);
+      const spaces = Array.from(
+        { length: 5 },
+        (_, i) => `rapid-${Date.now()}-${i}`,
+      );
 
       // Create all
       for (const spaceId of spaces) {
@@ -1149,7 +1198,11 @@ describe("Cross-Space Boundary Testing", () => {
       // Context is accessible
       const ctx = await cortex.contexts.get(ctxA.contextId);
       if ((ctx as any).grantedAccess) {
-        expect((ctx as any).grantedAccess.some((g: any) => g.memorySpaceId === SPACE_B)).toBe(true);
+        expect(
+          (ctx as any).grantedAccess.some(
+            (g: any) => g.memorySpaceId === SPACE_B,
+          ),
+        ).toBe(true);
       }
 
       // But underlying data in space A is not in space B's list
@@ -1227,7 +1280,9 @@ describe("Cross-Space Boundary Testing", () => {
 
       // Delete from space A only
       const toDeleteBulk = await cortex.vector.list({ memorySpaceId: SPACE_A });
-      const bulkToDelete = toDeleteBulk.filter((m) => m.tags.includes("bulk-iso"));
+      const bulkToDelete = toDeleteBulk.filter((m) =>
+        m.tags.includes("bulk-iso"),
+      );
       for (const mem of bulkToDelete) {
         await cortex.vector.delete(SPACE_A, mem.memoryId);
       }
@@ -1254,7 +1309,9 @@ describe("Cross-Space Boundary Testing", () => {
 
       // Update space A only
       const toUpdateBulk = await cortex.vector.list({ memorySpaceId: SPACE_A });
-      const bulkToUpdate = toUpdateBulk.filter((m) => m.tags.includes("bulk-update-iso"));
+      const bulkToUpdate = toUpdateBulk.filter((m) =>
+        m.tags.includes("bulk-update-iso"),
+      );
       for (const mem of bulkToUpdate) {
         await cortex.vector.update(SPACE_A, mem.memoryId, { importance: 90 });
       }
@@ -1476,7 +1533,10 @@ describe("Cross-Space Boundary Testing", () => {
       });
 
       // Search in space B
-      const results = await cortex.vector.search(SPACE_B, "SEMANTIC_BOUNDARY_MARKER");
+      const results = await cortex.vector.search(
+        SPACE_B,
+        "SEMANTIC_BOUNDARY_MARKER",
+      );
 
       results.forEach((mem) => {
         expect(mem.memorySpaceId).toBe(SPACE_B);
@@ -1493,15 +1553,20 @@ describe("Cross-Space Boundary Testing", () => {
         sourceType: "manual",
       });
 
-      const results = await cortex.facts.search(SPACE_B, "FACT_SEARCH_BOUNDARY");
+      const results = await cortex.facts.search(
+        SPACE_B,
+        "FACT_SEARCH_BOUNDARY",
+      );
 
       // Verify all results are from SPACE_B (not SPACE_A)
       results.forEach((fact) => {
         expect(fact.memorySpaceId).toBe(SPACE_B);
       });
-      
+
       // And verify none contain the unique marker from space A
-      const spaceAResults = results.filter((f) => f.fact.includes("unique to A"));
+      const spaceAResults = results.filter((f) =>
+        f.fact.includes("unique to A"),
+      );
       expect(spaceAResults).toHaveLength(0);
     });
 
@@ -1694,7 +1759,10 @@ describe("Cross-Space Boundary Testing", () => {
         content: "Workflow memory",
         contentType: "raw",
         source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: { conversationId: conv.conversationId, messageIds: [] },
+        conversationRef: {
+          conversationId: conv.conversationId,
+          messageIds: [],
+        },
         metadata: { importance: 50, tags: [] },
       });
 
@@ -1715,19 +1783,28 @@ describe("Cross-Space Boundary Testing", () => {
       });
 
       // Nothing should appear in space B
-      const convListB = await cortex.conversations.list({ memorySpaceId: SPACE_B });
+      const convListB = await cortex.conversations.list({
+        memorySpaceId: SPACE_B,
+      });
       const memListB = await cortex.vector.list({ memorySpaceId: SPACE_B });
       const factListB = await cortex.facts.list({ memorySpaceId: SPACE_B });
       const ctxListB = await cortex.contexts.list({ memorySpaceId: SPACE_B });
 
-      expect(convListB.some((c) => c.conversationId === conv.conversationId)).toBe(false);
+      expect(
+        convListB.some((c) => c.conversationId === conv.conversationId),
+      ).toBe(false);
       expect(memListB.some((m) => m.memoryId === mem.memoryId)).toBe(false);
       expect(factListB.some((f) => f.factId === fact.factId)).toBe(false);
-      expect(ctxListB.some((c: any) => c.contextId === ctx.contextId)).toBe(false);
+      expect(ctxListB.some((c: any) => c.contextId === ctx.contextId)).toBe(
+        false,
+      );
     });
 
     it("100 spaces maintain complete isolation", async () => {
-      const spaces = Array.from({ length: 10 }, (_, i) => `multi-iso-${Date.now()}-${i}`);
+      const spaces = Array.from(
+        { length: 10 },
+        (_, i) => `multi-iso-${Date.now()}-${i}`,
+      );
 
       // Create data in each space
       for (const spaceId of spaces) {
@@ -1791,4 +1868,3 @@ describe("Cross-Space Boundary Testing", () => {
     });
   });
 });
-

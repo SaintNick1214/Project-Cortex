@@ -12,49 +12,50 @@ The TypeScript SDK has **~600 tests** across 24 test files. The Python SDK curre
 
 ### Test Files (24 files)
 
-| Test File | Estimated Tests | Purpose | Python Equivalent |
-|-----------|-----------------|---------|-------------------|
-| **Core API Tests** | | | |
-| `conversations.test.ts` | ~45 | Layer 1a CRUD + validation | `test_conversations.py` (6) |
-| `immutable.test.ts` | ~25 | Layer 1b versioned data | **MISSING** |
-| `mutable.test.ts` | ~20 | Layer 1c live data | **MISSING** |
-| `vector.test.ts` | ~30 | Layer 2 vector operations | **MISSING** |
-| `facts.test.ts` | ~25 | Layer 3 fact extraction | **MISSING** |
-| `memory.test.ts` | ~50 | Layer 4 convenience API | `test_memory.py` (10) |
-| `contexts.test.ts` | ~35 | Context chains | **MISSING** |
-| `users.test.ts` | ~30 | User profiles + GDPR | `test_users.py` (9) |
-| `agents.test.ts` | ~25 | Agent registry | **MISSING** |
-| `memorySpaces.test.ts` | ~25 | Memory spaces | **MISSING** |
-| **Integration Tests** | | | |
-| `integration.test.ts` | ~40 | Cross-layer integration | **MISSING** |
-| `crossLayerIntegrity.test.ts` | ~30 | Data consistency | **MISSING** |
-| `memory-facts-integration.test.ts` | ~20 | Memory + facts | **MISSING** |
-| `memory-auto-conversation.test.ts` | ~15 | Auto conversation | **MISSING** |
-| `parameterPropagation.test.ts` | ~15 | Parameter passing | **MISSING** |
-| **Mode Tests** | | | |
-| `hiveMode.test.ts` | ~30 | Shared memory spaces | **MISSING** |
-| `collaborationMode.test.ts` | ~25 | Separate spaces | **MISSING** |
-| **GDPR & Cascade** | | | |
-| `gdprCascade.test.ts` | ~35 | GDPR cascade deletion | **MISSING** |
-| **Edge Cases** | | | |
-| `edgeCases.test.ts` | ~25 | Edge conditions | **MISSING** |
-| `edge-runtime.test.ts` | ~10 | Runtime edge cases | **MISSING** |
-| **Graph Integration** | | | |
-| `graph/graphAdapter.test.ts` | ~20 | Adapter tests | **MISSING** |
-| `graph/graphSyncWorker.test.ts` | ~25 | Sync worker | **MISSING** |
-| `graph/end-to-end-multilayer.test.ts` | ~30 | Full graph integration | **MISSING** |
-| `graph/proofs/*.proof.ts` | ~40 | Graph proofs (7 files) | **MISSING** |
-| **Debug/Helpers** | | | |
-| `conversations.debug.test.ts` | Debug | Debug utilities | N/A |
-| **Basic Tests** | | | |
-| (none in TS) | 0 | Basic connectivity | `test_00_basic.py` (5) |
-| **TOTAL** | **~600** | | **29** |
+| Test File                             | Estimated Tests | Purpose                    | Python Equivalent           |
+| ------------------------------------- | --------------- | -------------------------- | --------------------------- |
+| **Core API Tests**                    |                 |                            |                             |
+| `conversations.test.ts`               | ~45             | Layer 1a CRUD + validation | `test_conversations.py` (6) |
+| `immutable.test.ts`                   | ~25             | Layer 1b versioned data    | **MISSING**                 |
+| `mutable.test.ts`                     | ~20             | Layer 1c live data         | **MISSING**                 |
+| `vector.test.ts`                      | ~30             | Layer 2 vector operations  | **MISSING**                 |
+| `facts.test.ts`                       | ~25             | Layer 3 fact extraction    | **MISSING**                 |
+| `memory.test.ts`                      | ~50             | Layer 4 convenience API    | `test_memory.py` (10)       |
+| `contexts.test.ts`                    | ~35             | Context chains             | **MISSING**                 |
+| `users.test.ts`                       | ~30             | User profiles + GDPR       | `test_users.py` (9)         |
+| `agents.test.ts`                      | ~25             | Agent registry             | **MISSING**                 |
+| `memorySpaces.test.ts`                | ~25             | Memory spaces              | **MISSING**                 |
+| **Integration Tests**                 |                 |                            |                             |
+| `integration.test.ts`                 | ~40             | Cross-layer integration    | **MISSING**                 |
+| `crossLayerIntegrity.test.ts`         | ~30             | Data consistency           | **MISSING**                 |
+| `memory-facts-integration.test.ts`    | ~20             | Memory + facts             | **MISSING**                 |
+| `memory-auto-conversation.test.ts`    | ~15             | Auto conversation          | **MISSING**                 |
+| `parameterPropagation.test.ts`        | ~15             | Parameter passing          | **MISSING**                 |
+| **Mode Tests**                        |                 |                            |                             |
+| `hiveMode.test.ts`                    | ~30             | Shared memory spaces       | **MISSING**                 |
+| `collaborationMode.test.ts`           | ~25             | Separate spaces            | **MISSING**                 |
+| **GDPR & Cascade**                    |                 |                            |                             |
+| `gdprCascade.test.ts`                 | ~35             | GDPR cascade deletion      | **MISSING**                 |
+| **Edge Cases**                        |                 |                            |                             |
+| `edgeCases.test.ts`                   | ~25             | Edge conditions            | **MISSING**                 |
+| `edge-runtime.test.ts`                | ~10             | Runtime edge cases         | **MISSING**                 |
+| **Graph Integration**                 |                 |                            |                             |
+| `graph/graphAdapter.test.ts`          | ~20             | Adapter tests              | **MISSING**                 |
+| `graph/graphSyncWorker.test.ts`       | ~25             | Sync worker                | **MISSING**                 |
+| `graph/end-to-end-multilayer.test.ts` | ~30             | Full graph integration     | **MISSING**                 |
+| `graph/proofs/*.proof.ts`             | ~40             | Graph proofs (7 files)     | **MISSING**                 |
+| **Debug/Helpers**                     |                 |                            |                             |
+| `conversations.debug.test.ts`         | Debug           | Debug utilities            | N/A                         |
+| **Basic Tests**                       |                 |                            |                             |
+| (none in TS)                          | 0               | Basic connectivity         | `test_00_basic.py` (5)      |
+| **TOTAL**                             | **~600**        |                            | **29**                      |
 
 ## Python SDK Current Tests (29 tests)
 
 ### test_00_basic.py (5 tests) ✅
 
 **New for Python** - Not in TypeScript suite
+
 1. test_environment_variables
 2. test_imports
 3. test_convex_client_import
@@ -73,6 +74,7 @@ Covers ~13% of `conversations.test.ts` (45 tests)
 6. test_get_or_create
 
 **Missing from TS:**
+
 - Agent-agent conversations
 - Message history pagination
 - Conversation search
@@ -99,6 +101,7 @@ Covers ~20% of `memory.test.ts` (50 tests)
 10. (streaming test removed)
 
 **Missing from TS:**
+
 - remember() with embeddings
 - remember() with extraction
 - remember() with fact extraction
@@ -126,6 +129,7 @@ Covers ~30% of `users.test.ts` (30 tests)
 9. test_count_users
 
 **Missing from TS:**
+
 - Full GDPR cascade deletion (all layers)
 - Cascade verification
 - Cascade rollback on failure
@@ -144,6 +148,7 @@ Covers ~30% of `users.test.ts` (30 tests)
 ### 1. Missing Test Files (20 files, ~571 tests)
 
 **High Priority:**
+
 - ❌ `test_immutable.py` - Layer 1b (25 tests needed)
 - ❌ `test_mutable.py` - Layer 1c (20 tests needed)
 - ❌ `test_vector.py` - Layer 2 (30 tests needed)
@@ -153,20 +158,24 @@ Covers ~30% of `users.test.ts` (30 tests)
 - ❌ `test_memory_spaces.py` - Memory spaces (25 tests needed)
 
 **Integration:**
+
 - ❌ `test_integration.py` - Cross-layer (40 tests needed)
 - ❌ `test_cross_layer_integrity.py` - Data consistency (30 tests needed)
 - ❌ `test_memory_facts_integration.py` - Memory + facts (20 tests needed)
 - ❌ `test_gdpr_cascade.py` - Full GDPR testing (35 tests needed)
 
 **Modes:**
+
 - ❌ `test_hive_mode.py` - Hive Mode (30 tests needed)
 - ❌ `test_collaboration_mode.py` - Collaboration Mode (25 tests needed)
 
 **Edge Cases:**
+
 - ❌ `test_edge_cases.py` - Edge conditions (25 tests needed)
 - ❌ `test_parameter_propagation.py` - Parameter passing (15 tests needed)
 
 **Graph:**
+
 - ❌ `test_graph/test_adapter.py` - Graph adapter (20 tests needed)
 - ❌ `test_graph/test_sync_worker.py` - Sync worker (25 tests needed)
 - ❌ `test_graph/test_end_to_end.py` - Full graph (30 tests needed)
@@ -175,6 +184,7 @@ Covers ~30% of `users.test.ts` (30 tests)
 ### 2. Missing Test Coverage in Existing Files
 
 **test_conversations.py** - Missing 39 tests:
+
 - Agent-agent conversations (5 tests)
 - Pagination (getHistory) (5 tests)
 - Search conversations (5 tests)
@@ -185,6 +195,7 @@ Covers ~30% of `users.test.ts` (30 tests)
 - participantId tracking (4 tests)
 
 **test_memory.py** - Missing 40 tests:
+
 - Embedding generation (5 tests)
 - Content extraction (5 tests)
 - Fact extraction integration (5 tests)
@@ -196,6 +207,7 @@ Covers ~30% of `users.test.ts` (30 tests)
 - Bulk operations (4 tests)
 
 **test_users.py** - Missing 21 tests:
+
 - Full cascade deletion (5 tests)
 - Cascade verification (3 tests)
 - Cascade rollback (3 tests)
@@ -209,6 +221,7 @@ Covers ~30% of `users.test.ts` (30 tests)
 ### Phase 1: Core API Coverage (Target: 200 tests)
 
 **Priority 1 - Layer APIs (120 tests)**
+
 1. Create `test_immutable.py` (25 tests)
    - store(), get(), get_version(), get_history()
    - get_at_timestamp(), list(), search(), count()
@@ -235,15 +248,12 @@ Covers ~30% of `users.test.ts` (30 tests)
    - search(), list(), count()
    - get_chain(), get_root(), get_children()
 
-**Priority 2 - Coordination APIs (80 tests)**
-6. Create `test_agents.py` (20 tests)
-7. Create `test_memory_spaces.py` (20 tests)
-8. Expand `test_conversations.py` (+20 tests)
-9. Expand `test_memory.py` (+20 tests)
+**Priority 2 - Coordination APIs (80 tests)** 6. Create `test_agents.py` (20 tests) 7. Create `test_memory_spaces.py` (20 tests) 8. Expand `test_conversations.py` (+20 tests) 9. Expand `test_memory.py` (+20 tests)
 
 ### Phase 2: Integration Testing (Target: +150 tests)
 
 **Cross-Layer (70 tests)**
+
 1. Create `test_integration.py` (40 tests)
    - Remember → ACID + Vector linked
    - Forget → Both layers deleted
@@ -255,23 +265,21 @@ Covers ~30% of `users.test.ts` (30 tests)
    - Orphan detection
    - Data consistency
 
-**Memory + Facts (40 tests)**
-3. Create `test_memory_facts_integration.py` (20 tests)
-4. Create `test_parameter_propagation.py` (15 tests)
-5. Add auto-conversation tests (5 tests)
+**Memory + Facts (40 tests)** 3. Create `test_memory_facts_integration.py` (20 tests) 4. Create `test_parameter_propagation.py` (15 tests) 5. Add auto-conversation tests (5 tests)
 
-**GDPR & Cascade (40 tests)**
-6. Create `test_gdpr_cascade.py` (35 tests)
-   - Cascade across all layers
-   - Verification
-   - Rollback on failure
-   - Graph integration
+**GDPR & Cascade (40 tests)** 6. Create `test_gdpr_cascade.py` (35 tests)
+
+- Cascade across all layers
+- Verification
+- Rollback on failure
+- Graph integration
 
 7. Expand `test_users.py` (+5 cascade tests)
 
 ### Phase 3: Modes & Edge Cases (Target: +100 tests)
 
 **Modes (55 tests)**
+
 1. Create `test_hive_mode.py` (30 tests)
    - participantId tracking
    - Multiple tools sharing space
@@ -282,13 +290,13 @@ Covers ~30% of `users.test.ts` (30 tests)
    - Cross-space references
    - Context chains across spaces
 
-**Edge Cases (45 tests)**
-3. Create `test_edge_cases.py` (25 tests)
-   - Large payloads
-   - Empty values
-   - Unicode handling
-   - Concurrent operations
-   - Error conditions
+**Edge Cases (45 tests)** 3. Create `test_edge_cases.py` (25 tests)
+
+- Large payloads
+- Empty values
+- Unicode handling
+- Concurrent operations
+- Error conditions
 
 4. Create `test_edge_runtime.py` (10 tests)
 5. Add more edge cases to existing tests (10 tests)
@@ -296,6 +304,7 @@ Covers ~30% of `users.test.ts` (30 tests)
 ### Phase 4: Graph Testing (Target: +115 tests)
 
 **Graph Integration (115 tests)**
+
 1. Create `test_graph/test_adapter.py` (20 tests)
    - connect(), disconnect()
    - create_node(), update_node(), delete_node()
@@ -342,13 +351,13 @@ describe("API Module", () => {
     it("should do something", async () => {
       // Arrange
       const input = {...};
-      
+
       // Act
       const result = await cortex.api.method(input);
-      
+
       // Assert - SDK response
       expect(result.field).toBe(expected);
-      
+
       // Assert - Convex storage validation
       const stored = await client.query(api.table.get, {id: result.id});
       expect(stored).not.toBeNull();
@@ -366,13 +375,13 @@ async def test_method_basic(cortex_client, test_ids):
     """Test basic method operation."""
     # Arrange
     input = {...}
-    
+
     # Act
     result = await cortex_client.api.method(input)
-    
+
     # Assert
     assert result.field == expected
-    
+
     # TODO: Add Convex storage validation
     # (requires direct Convex client access)
 ```
@@ -382,15 +391,17 @@ async def test_method_basic(cortex_client, test_ids):
 ### 1. Storage Validation
 
 **TypeScript:**
+
 ```typescript
 // Validates against Convex storage directly
 const stored = await client.query(api.conversations.get, {
-  conversationId: result.conversationId
+  conversationId: result.conversationId,
 });
 expect(stored._id).toBeDefined();
 ```
 
 **Python Needed:**
+
 ```python
 # Need direct Convex client access in tests
 stored = await cortex_client.client.query("conversations:get", {
@@ -402,6 +413,7 @@ assert stored["_id"] is not None
 ### 2. Test Cleanup
 
 **TypeScript:**
+
 ```typescript
 beforeAll(async () => {
   cleanup = new TestCleanup(client);
@@ -412,15 +424,16 @@ beforeAll(async () => {
 ```
 
 **Python Needed:**
+
 ```python
 @pytest.fixture
 async def cleanup_helper(cortex_client):
     """Cleanup helper for tests."""
     # Before tests
     # Purge existing test data
-    
+
     yield
-    
+
     # After tests
     # Clean up created test data
 ```
@@ -428,16 +441,18 @@ async def cleanup_helper(cortex_client):
 ### 3. Graph Testing
 
 **TypeScript:**
+
 ```typescript
 if (graphAdapter) {
   const nodes = await graphAdapter.find_nodes("Memory", {
-    memoryId: result.memoryId
+    memoryId: result.memoryId,
   });
   expect(nodes).toHaveLength(1);
 }
 ```
 
 **Python Needed:**
+
 ```python
 @pytest.mark.graph
 @pytest.mark.asyncio
@@ -457,8 +472,9 @@ async def test_with_graph(cortex_with_graph):
 **TypeScript has 45 tests, Python has 6**
 
 Missing tests (39):
+
 - ✅ create() user-agent
-- ✅ create() agent-agent  
+- ✅ create() agent-agent
 - ⏳ create() with metadata validation
 - ⏳ create() error cases (invalid participants)
 - ✅ get()
@@ -490,6 +506,7 @@ Missing tests (39):
 **TypeScript has 30 tests, Python has 0**
 
 Missing tests (30):
+
 - ⏳ store() basic
 - ⏳ store() with embedding
 - ⏳ store() with conversationRef
@@ -532,6 +549,7 @@ All missing - need to create complete test file.
 **TypeScript has ~90 tests, Python has 0**
 
 Critical missing:
+
 - ⏳ crossLayerIntegrity (30 tests)
 - ⏳ integration (40 tests)
 - ⏳ memory-facts-integration (20 tests)
@@ -541,6 +559,7 @@ Critical missing:
 **TypeScript has 35 tests, Python has 2**
 
 Missing (33):
+
 - ⏳ Full cascade all layers
 - ⏳ Cascade verification
 - ⏳ Cascade rollback
@@ -623,18 +642,18 @@ async def setup_{module}(cortex_client):
 async def test_{operation}_basic(cortex_client, test_ids):
     """
     Test basic {operation} operation.
-    
+
     Port of: {module}.test.ts - line XXX
     """
     # Arrange
     input_data = {...}
-    
+
     # Act
     result = await cortex_client.{module}.{operation}(input_data)
-    
+
     # Assert
     assert result.field == expected
-    
+
     # TODO: Add storage validation
 ```
 
@@ -661,13 +680,13 @@ async def test_{operation}_basic(cortex_client, test_ids):
 
 ### Coverage Target
 
-| Phase | Tests | Coverage | Timeline |
-|-------|-------|----------|----------|
-| Current | 29 | 5% | ✅ Done |
-| Phase 1 | 179 | 30% | Week 1 |
-| Phase 2 | 329 | 55% | Week 2-3 |
-| Phase 3 | 479 | 80% | Week 4-6 |
-| Phase 4 | 594 | 99% | Week 7-8 |
+| Phase    | Tests   | Coverage | Timeline    |
+| -------- | ------- | -------- | ----------- |
+| Current  | 29      | 5%       | ✅ Done     |
+| Phase 1  | 179     | 30%      | Week 1      |
+| Phase 2  | 329     | 55%      | Week 2-3    |
+| Phase 3  | 479     | 80%      | Week 4-6    |
+| Phase 4  | 594     | 99%      | Week 7-8    |
 | **Goal** | **600** | **100%** | **8 weeks** |
 
 ## Quick Start for Contributors
@@ -686,6 +705,7 @@ cp test_memory.py test_vector.py  # Use as template
 ### 3. Port Tests One by One
 
 For each `it("test name")` in TypeScript:
+
 1. Create `async def test_name()` in Python
 2. Translate assertions (expect → assert)
 3. Convert types (camelCase → snake_case)
@@ -701,7 +721,7 @@ Once file is complete with tests passing!
 ✅ **Basic Tests**: 29/29 passing  
 ⏳ **Core API Tests**: 29/600 (5%)  
 ⏳ **Integration Tests**: 0/90 (0%)  
-⏳ **Graph Tests**: 0/115 (0%)  
+⏳ **Graph Tests**: 0/115 (0%)
 
 **Next Priority**: Create `test_vector.py` with 30 tests (would bring us to 59/600 = 10%)
 
@@ -710,4 +730,3 @@ Once file is complete with tests passing!
 **Last Updated**: 2025-11-06  
 **Status**: Test infrastructure complete, needs test porting  
 **Estimated Effort**: 8 weeks for full parity (1 person)
-

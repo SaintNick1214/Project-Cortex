@@ -52,6 +52,7 @@ These verify your environment is set up correctly:
 - ✅ Connection to Convex backend works
 
 **Run first:**
+
 ```bash
 pytest tests/test_00_basic.py -v -s
 ```
@@ -104,6 +105,7 @@ npm run dev:local
 ### Test failures
 
 First check if basic tests pass:
+
 ```bash
 pytest tests/test_00_basic.py -v -s
 ```
@@ -116,24 +118,24 @@ If basic tests pass but others fail, it's likely API issues.
 ```bash
 $ pytest tests/test_00_basic.py -v -s
 
-tests/test_00_basic.py::test_environment_variables 
+tests/test_00_basic.py::test_environment_variables
 CONVEX_URL: http://127.0.0.1:3210
 ✅ Environment variables loaded
 PASSED
 
-tests/test_00_basic.py::test_imports 
+tests/test_00_basic.py::test_imports
 ✅ All main imports successful
 PASSED
 
-tests/test_00_basic.py::test_convex_client_import 
+tests/test_00_basic.py::test_convex_client_import
 ✅ Convex client available
 PASSED
 
-tests/test_00_basic.py::test_cortex_initialization 
+tests/test_00_basic.py::test_cortex_initialization
 ✅ Cortex initialized and closed successfully
 PASSED
 
-tests/test_00_basic.py::test_convex_connection 
+tests/test_00_basic.py::test_convex_connection
 ✅ Convex connection successful
    Conversations found: 0
 PASSED
@@ -151,4 +153,3 @@ If you see this, you're ready to run the full test suite!
 2. Activate env: `source .venv/bin/activate`
 3. Basic tests: `pytest tests/test_00_basic.py -v -s`
 4. Full tests: `pytest -v`
-

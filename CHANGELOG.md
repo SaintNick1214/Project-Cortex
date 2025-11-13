@@ -38,17 +38,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ```typescript
 const result = await cortex.memory.rememberStream({
-  memorySpaceId: 'agent-1',
-  conversationId: 'conv-123',
-  userMessage: 'What is the weather?',
-  responseStream: stream,  // ReadableStream or AsyncIterable
-  userId: 'user-1',
-  userName: 'Alex',
-  generateEmbedding: embedFn,  // Optional
-  extractFacts: factsFn,        // Optional
+  memorySpaceId: "agent-1",
+  conversationId: "conv-123",
+  userMessage: "What is the weather?",
+  responseStream: stream, // ReadableStream or AsyncIterable
+  userId: "user-1",
+  userName: "Alex",
+  generateEmbedding: embedFn, // Optional
+  extractFacts: factsFn, // Optional
 });
 
-console.log('Full response:', result.fullResponse);
+console.log("Full response:", result.fullResponse);
 // result.memories, result.facts available as usual
 ```
 
@@ -57,7 +57,7 @@ console.log('Full response:', result.fullResponse);
 - **NEW:** `streamUtils.ts` - Reusable stream handling utilities
 - `consumeStream()` - Auto-detects and consumes any stream type
 - `consumeReadableStream()` - Web Streams API support
-- `consumeAsyncIterable()` - Async generator support  
+- `consumeAsyncIterable()` - Async generator support
 - `createPassthroughStream()` - Stream observation with callbacks
 - Type guards for stream detection
 - Proper error handling and stream cleanup
@@ -83,7 +83,7 @@ console.log('Full response:', result.fullResponse);
 **Comprehensive test coverage for streaming:**
 
 - 28 streaming tests (14 utility + 14 integration)
-- Tests ReadableStream and AsyncIterable  
+- Tests ReadableStream and AsyncIterable
 - Tests embeddings and fact extraction with streams
 - Tests error handling (empty streams, stream errors, whitespace)
 - Tests memory space isolation, hive mode, large responses (10K+ chars)
@@ -117,11 +117,13 @@ console.log('Full response:', result.fullResponse);
 #### 🔧 API Changes
 
 **New Methods:**
+
 - `cortex.memory.rememberStream(params, options?)` - Store streamed responses
 
 **New Exports:**
+
 - `RememberStreamParams` type
-- `RememberStreamResult` type  
+- `RememberStreamResult` type
 - Stream utilities (for advanced use cases)
 
 **Backward Compatible:** All existing APIs unchanged

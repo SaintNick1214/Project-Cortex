@@ -61,6 +61,7 @@ pip install -e ".[dev]"
 The Python SDK uses the [convex PyPI package](https://pypi.org/project/convex/) (v0.7.0+) as a **client library** to connect to a **Convex backend server** (which runs separately).
 
 **Two Components:**
+
 1. **Convex Python Client** (`pip install convex`) - ✅ Already in requirements
 2. **Convex Backend Server** - Must be running (local/docker/cloud)
 
@@ -107,11 +108,13 @@ export CONVEX_URL="https://expert-buffalo-268.convex.cloud"
 The Python SDK reads `CONVEX_URL` from environment variables. The `.env.local` file in the project root is **automatically loaded** by the test suite.
 
 **Current Configuration (from .env.local):**
+
 ```bash
 CONVEX_URL=http://127.0.0.1:3210  # Currently using LOCAL
 ```
 
 **To switch to MANAGED:**
+
 ```bash
 export CONVEX_URL="https://expert-buffalo-268.convex.cloud"
 ```
@@ -131,7 +134,7 @@ The Python SDK uses the same `.env.local` configuration as the TypeScript SDK. S
 LOCAL_CONVEX_DEPLOYMENT=anonymous:anonymous-Project-Cortex
 LOCAL_CONVEX_URL=http://127.0.0.1:3210
 
-# CLOUD DEVELOPMENT  
+# CLOUD DEVELOPMENT
 CLOUD_CONVEX_URL=https://expert-buffalo-268.convex.cloud
 CLOUD_CONVEX_DEPLOY_KEY=dev:expert-buffalo-268|<key>
 
@@ -184,7 +187,7 @@ The `pytest.ini` file configures:
 minversion = 8.0
 testpaths = tests
 asyncio_mode = auto          # Auto-detect async tests
-addopts = 
+addopts =
     -ra                      # Show all test results
     -q                       # Quiet output
     --strict-markers         # Strict marker validation
@@ -373,21 +376,21 @@ CONVEX_MODES=("LOCAL:http://127.0.0.1:3210" "MANAGED:https://expert-buffalo-268.
 
 for py_version in "${PYTHON_VERSIONS[@]}"; do
     IFS=':' read -r version venv <<< "$py_version"
-    
+
     for convex_mode in "${CONVEX_MODES[@]}"; do
         IFS=':' read -r mode url <<< "$convex_mode"
-        
+
         echo ""
         echo "======================================"
         echo "Python $version + Convex $mode"
         echo "======================================"
-        
+
         source "$venv/bin/activate"
         export CONVEX_URL="$url"
-        
+
         python --version
         echo "CONVEX_URL=$CONVEX_URL"
-        
+
         if [ "$version" = "3.13" ] && [ "$mode" = "LOCAL" ]; then
             # Full coverage on primary config
             pytest --cov=cortex --cov-report=term-missing
@@ -395,7 +398,7 @@ for py_version in "${PYTHON_VERSIONS[@]}"; do
             # Just run tests on other configs
             pytest -v
         fi
-        
+
         deactivate
     done
 done
@@ -434,10 +437,10 @@ async def cortex_with_graph():
     neo4j_uri = os.getenv("NEO4J_URI")
     if not neo4j_uri:
         pytest.skip("NEO4J_URI not configured")
-    
+
     from cortex import GraphConfig, GraphConnectionConfig
     from cortex.graph import CypherGraphAdapter, initialize_graph_schema
-    
+
     graph = CypherGraphAdapter()
     await graph.connect(
         GraphConnectionConfig(
@@ -446,17 +449,17 @@ async def cortex_with_graph():
             password=os.getenv("NEO4J_PASSWORD", "password")
         )
     )
-    
+
     await initialize_graph_schema(graph)
-    
+
     config = CortexConfig(
         convex_url=os.getenv("CONVEX_URL"),
         graph=GraphConfig(adapter=graph, auto_sync=False)
     )
     client = Cortex(config)
-    
+
     yield client
-    
+
     await client.close()
     await graph.disconnect()
 
@@ -491,7 +494,7 @@ async def test_remember_basic(cortex_client, test_user_id):
             user_name="Tester"
         )
     )
-    
+
     assert len(result.memories) == 2
     assert result.conversation["conversationId"] == "test-conv"
 ```
@@ -508,21 +511,21 @@ import pytest
 @pytest.mark.asyncio
 async def test_remember_with_facts(cortex_client, test_user_id):
     """Test remember with fact extraction."""
-    
+
     async def extract_facts(user_msg, agent_msg):
         return [{
             "fact": "User prefers dark mode",
             "factType": "preference",
             "confidence": 95
         }]
-    
+
     result = await cortex_client.memory.remember(
         RememberParams(
             ...,
             extract_facts=extract_facts
         )
     )
-    
+
     assert len(result.facts) > 0
 ```
 
@@ -538,9 +541,9 @@ import pytest
 @pytest.mark.asyncio
 async def test_graph_sync(cortex_with_graph, test_user_id):
     """Test auto-sync to graph database."""
-    
+
     result = await cortex_with_graph.memory.remember(params)
-    
+
     # Verify in graph
     graph = cortex_with_graph.graph_adapter
     nodes = await graph.find_nodes(
@@ -548,7 +551,7 @@ async def test_graph_sync(cortex_with_graph, test_user_id):
         {"memoryId": result.memories[0].memory_id},
         1
     )
-    
+
     assert len(nodes) == 1
 ```
 
@@ -564,24 +567,24 @@ from cortex import DeleteUserOptions
 @pytest.mark.asyncio
 async def test_gdpr_cascade(cortex_client, test_user_id):
     """Test GDPR cascade deletion across all layers."""
-    
+
     # Create user with data
     await cortex_client.users.update(test_user_id, {"name": "Test"})
-    
+
     # Create memories
     await cortex_client.memory.remember(...)
-    
+
     # Delete with cascade
     result = await cortex_client.users.delete(
         test_user_id,
         DeleteUserOptions(cascade=True, verify=True)
     )
-    
+
     # Verify deletion
     assert result.verification.complete
     assert len(result.verification.issues) == 0
     assert result.total_deleted > 0
-    
+
     # Verify user is gone
     user = await cortex_client.users.get(test_user_id)
     assert user is None
@@ -600,9 +603,9 @@ import time
 @pytest.mark.asyncio
 async def test_bulk_remember_performance(cortex_client):
     """Benchmark bulk memory operations."""
-    
+
     start = time.time()
-    
+
     # Store 100 memories
     results = await asyncio.gather(*[
         cortex_client.memory.remember(
@@ -617,12 +620,12 @@ async def test_bulk_remember_performance(cortex_client):
         )
         for i in range(100)
     ])
-    
+
     elapsed = time.time() - start
-    
+
     assert len(results) == 100
     assert elapsed < 10.0  # Should complete in under 10 seconds
-    
+
     print(f"Stored 100 memories in {elapsed:.2f}s")
 ```
 
@@ -638,50 +641,50 @@ name: Python SDK Tests
 on:
   push:
     paths:
-      - 'cortex-sdk-python/**'
+      - "cortex-sdk-python/**"
   pull_request:
     paths:
-      - 'cortex-sdk-python/**'
+      - "cortex-sdk-python/**"
 
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.12', '3.13']
-    
+        python-version: ["3.12", "3.13"]
+
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      
+
       - name: Install dependencies
         run: |
           cd cortex-sdk-python
           pip install -e ".[dev]"
-      
+
       - name: Start Convex (LOCAL)
         run: |
           npm run dev:local &
           sleep 5  # Wait for Convex to start
-      
+
       - name: Run tests (LOCAL)
         env:
           CONVEX_URL: http://localhost:3210
         run: |
           cd cortex-sdk-python
           pytest --cov=cortex --cov-report=xml
-      
+
       - name: Run tests (MANAGED)
         env:
           CONVEX_URL: ${{ secrets.CLOUD_CONVEX_URL }}
         run: |
           cd cortex-sdk-python
           pytest
-      
+
       - name: Upload coverage
         if: matrix.python-version == '3.13'
         uses: codecov/codecov-action@v3
@@ -722,9 +725,9 @@ async def cortex_client_with_cleanup(cortex_client):
     """Cortex client with automatic test data cleanup."""
     test_memory_spaces = []
     test_user_ids = []
-    
+
     yield cortex_client, test_memory_spaces, test_user_ids
-    
+
     # Cleanup after test
     for memory_space_id in test_memory_spaces:
         try:
@@ -735,7 +738,7 @@ async def cortex_client_with_cleanup(cortex_client):
             )
         except:
             pass
-    
+
     for user_id in test_user_ids:
         try:
             await cortex_client.users.delete(user_id)
@@ -756,7 +759,7 @@ async def cleanup_test_data():
     cortex = Cortex(CortexConfig(
         convex_url=os.getenv("CONVEX_URL")
     ))
-    
+
     # Delete test memory spaces
     spaces = await cortex.memory_spaces.list(limit=1000)
     for space in spaces.get("spaces", []):
@@ -766,13 +769,13 @@ async def cleanup_test_data():
                 cascade=True,
                 reason="Test cleanup"
             )
-    
+
     # Delete test users
     users = await cortex.users.list(limit=1000)
     for user in users.get("users", []):
         if user.id.startswith("test-user-"):
             await cortex.users.delete(user.id)
-    
+
     await cortex.close()
     print("✅ Test data cleaned up")
 
@@ -811,13 +814,13 @@ pytest -m "not graph"
 @pytest.mark.asyncio
 async def test_graph_orphan_detection(cortex_with_graph):
     """Test orphan detection on deletion."""
-    
+
     # Create memory → conversation relationship
     result = await cortex_with_graph.memory.remember(params)
-    
+
     memory_id = result.memories[0].memory_id
     conv_id = result.conversation["conversationId"]
-    
+
     # Delete memory with orphan cleanup
     await cortex_with_graph.memory.forget(
         memory_space_id,
@@ -827,7 +830,7 @@ async def test_graph_orphan_detection(cortex_with_graph):
             sync_to_graph=True
         )
     )
-    
+
     # Verify orphan cleanup
     graph = cortex_with_graph.graph_adapter
     conv_nodes = await graph.find_nodes(
@@ -835,7 +838,7 @@ async def test_graph_orphan_detection(cortex_with_graph):
         {"conversationId": conv_id},
         1
     )
-    
+
     # Conversation should be deleted (orphaned)
     assert len(conv_nodes) == 0
 ```
@@ -964,10 +967,10 @@ async def test_feature_name(cortex_client, test_user_id):
     """Test description."""
     # Arrange
     params = ...
-    
+
     # Act
     result = await cortex_client.method(params)
-    
+
     # Assert
     assert result is not None
     assert result.field == expected_value
@@ -993,12 +996,12 @@ async def test_remember_with_importance(cortex_client, importance):
 async def test_invalid_importance_raises_error(cortex_client):
     """Test that invalid importance raises CortexError."""
     from cortex import CortexError, ErrorCode
-    
+
     with pytest.raises(CortexError) as exc_info:
         await cortex_client.memory.remember(
             RememberParams(..., importance=150)  # Invalid!
         )
-    
+
     assert exc_info.value.code == ErrorCode.INVALID_IMPORTANCE
 ```
 
@@ -1060,10 +1063,10 @@ docker logs neo4j
 ## Support
 
 For testing questions:
+
 - 💬 [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions)
 - 🐛 [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
 
 ---
 
 **Last Updated**: 2025-11-06
-

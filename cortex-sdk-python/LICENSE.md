@@ -19,4 +19,3 @@ limitations under the License.
 This is the same license as the TypeScript SDK and Convex itself.
 
 See the main LICENSE file at: ../LICENSE.md
-

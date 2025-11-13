@@ -29,20 +29,24 @@ Follow the wizard to set up Convex with Cortex backend automatically.
 ### Option B: Manual Setup
 
 1. Install Convex globally:
+
 ```bash
 npm install -g convex
 ```
 
 2. Initialize Convex in your project:
+
 ```bash
 npx convex dev
 ```
 
 3. Copy Cortex schema to your `convex/` folder:
+
 - From `node_modules/@cortexmemory/sdk/convex-dev/`
 - To your project's `convex/` folder
 
 4. Deploy:
+
 ```bash
 npx convex deploy
 ```
@@ -66,24 +70,24 @@ MEMORY_SPACE_ID=my-chatbot
 
 ```typescript
 // app/api/chat/route.ts
-import { createCortexMemory } from '@cortexmemory/vercel-ai-provider';
-import { openai } from '@ai-sdk/openai';
-import { streamText } from 'ai';
+import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
+import { openai } from "@ai-sdk/openai";
+import { streamText } from "ai";
 
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: process.env.MEMORY_SPACE_ID || 'default-chat',
-  userId: 'demo-user', // Replace with real user ID
+  memorySpaceId: process.env.MEMORY_SPACE_ID || "default-chat",
+  userId: "demo-user", // Replace with real user ID
 });
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
-  
+
   const result = await streamText({
-    model: cortexMemory(openai('gpt-4-turbo')),
+    model: cortexMemory(openai("gpt-4-turbo")),
     messages,
   });
-  
+
   return result.toDataStreamResponse();
 }
 ```
@@ -97,11 +101,11 @@ import { useChat } from 'ai/react';
 
 export default function ChatPage() {
   const { messages, input, handleInputChange, handleSubmit } = useChat();
-  
+
   return (
     <div className="p-4 max-w-2xl mx-auto">
       <h1 className="text-2xl mb-4">Chat with Memory</h1>
-      
+
       <div className="space-y-4 mb-4">
         {messages.map(m => (
           <div key={m.id} className={m.role === 'user' ? 'text-blue-600' : 'text-gray-800'}>
@@ -109,7 +113,7 @@ export default function ChatPage() {
           </div>
         ))}
       </div>
-      
+
       <form onSubmit={handleSubmit} className="flex gap-2">
         <input
           value={input}
@@ -129,6 +133,7 @@ export default function ChatPage() {
 ## Step 6: Test Memory
 
 1. Start your app:
+
 ```bash
 npm run dev
 ```
@@ -149,6 +154,7 @@ vercel
 ```
 
 Set environment variables in Vercel:
+
 - `CONVEX_URL`
 - `OPENAI_API_KEY`
 - `MEMORY_SPACE_ID`
@@ -158,17 +164,17 @@ Set environment variables in Vercel:
 ### Add Embeddings for Better Search
 
 ```typescript
-import { embed } from 'ai';
+import { embed } from "ai";
 
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: 'my-agent',
-  userId: 'user-123',
-  
+  memorySpaceId: "my-agent",
+  userId: "user-123",
+
   embeddingProvider: {
     generate: async (text) => {
       const { embedding } = await embed({
-        model: openai.embedding('text-embedding-3-small'),
+        model: openai.embedding("text-embedding-3-small"),
         value: text,
       });
       return embedding;
@@ -182,9 +188,9 @@ const cortexMemory = createCortexMemory({
 ```typescript
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: 'my-agent',
-  userId: 'user-123',
-  
+  memorySpaceId: "my-agent",
+  userId: "user-123",
+
   enableFactExtraction: true,
   extractFacts: async (userMsg, agentResp) => {
     // Use LLM to extract facts
@@ -209,17 +215,17 @@ const cortexMemory = createCortexMemory({
 ### Pattern 1: Authentication-Based User ID
 
 ```typescript
-import { auth } from '@clerk/nextjs';
+import { auth } from "@clerk/nextjs";
 
 export async function POST(req: Request) {
   const { userId } = await auth();
-  
+
   const cortexMemory = createCortexMemory({
     convexUrl: process.env.CONVEX_URL!,
-    memorySpaceId: 'app',
+    memorySpaceId: "app",
     userId: userId!,
   });
-  
+
   // ... use cortexMemory
 }
 ```
@@ -229,9 +235,9 @@ export async function POST(req: Request) {
 ```typescript
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: 'chat',
+  memorySpaceId: "chat",
   userId: currentUser.id,
-  conversationId: () => req.headers.get('x-session-id') || 'default',
+  conversationId: () => req.headers.get("x-session-id") || "default",
 });
 ```
 
@@ -241,8 +247,8 @@ const cortexMemory = createCortexMemory({
 // app/api/chat-no-memory/route.ts
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: 'temp',
-  userId: 'anonymous',
+  memorySpaceId: "temp",
+  userId: "anonymous",
   enableMemorySearch: false,
   enableMemoryStorage: false,
 });
@@ -257,4 +263,3 @@ See [Troubleshooting Guide](./troubleshooting.md) for common issues.
 - [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
 - [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions)
 - [Documentation](https://github.com/SaintNick1214/Project-Cortex/tree/main/Documentation)
-
