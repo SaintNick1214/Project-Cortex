@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Python SDK Test Runner (wrapper for pytest)
+# Mirrors TypeScript SDK's "npm test" behavior
+#
+# Usage:
+#   ./test              # Auto-detect and run appropriate suite(s)
+#   ./test -v           # Pass flags to pytest
+#   ./test -k memory    # Run specific tests
+#
+
+cd "$(dirname "$0")"
+exec python scripts/run-python-tests.py --mode=auto "$@"
+

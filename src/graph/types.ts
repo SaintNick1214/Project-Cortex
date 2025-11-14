@@ -13,7 +13,7 @@ export interface GraphNode {
   label: string;
 
   /** Node properties (key-value pairs) */
-  properties: Record<string, any>;
+  properties: Record<string, unknown>;
 
   /** Optional node ID (set by graph database after creation) */
   id?: string;
@@ -33,7 +33,7 @@ export interface GraphEdge {
   to: string;
 
   /** Optional relationship properties */
-  properties?: Record<string, any>;
+  properties?: Record<string, unknown>;
 
   /** Optional edge ID (set by graph database after creation) */
   id?: string;
@@ -47,7 +47,7 @@ export interface GraphQuery {
   cypher: string;
 
   /** Query parameters (for parameterized queries) */
-  params?: Record<string, any>;
+  params?: Record<string, unknown>;
 }
 
 /**
@@ -92,7 +92,7 @@ export interface GraphConnectionConfig {
  */
 export interface GraphQueryResult {
   /** Records returned by the query */
-  records: Record<string, any>[];
+  records: Record<string, unknown>[];
 
   /** Number of records returned */
   count: number;
@@ -149,7 +149,7 @@ export interface GraphOperation {
   data:
     | GraphNode
     | GraphEdge
-    | { id: string; properties?: Record<string, any> };
+    | { id: string; properties?: Record<string, unknown> };
 }
 
 /**
@@ -172,7 +172,7 @@ export interface TraversalConfig {
   filter?: string;
 
   /** Optional filter parameters */
-  filterParams?: Record<string, any>;
+  filterParams?: Record<string, unknown>;
 }
 
 /**
@@ -255,7 +255,7 @@ export interface GraphAdapter {
    * @param properties Properties to update
    * @returns Promise that resolves when updated
    */
-  updateNode(id: string, properties: Record<string, any>): Promise<void>;
+  updateNode(id: string, properties: Record<string, unknown>): Promise<void>;
 
   /**
    * Delete a node
@@ -276,7 +276,7 @@ export interface GraphAdapter {
    */
   findNodes(
     label: string,
-    properties?: Record<string, any>,
+    properties?: Record<string, unknown>,
     limit?: number,
   ): Promise<GraphNode[]>;
 
@@ -310,7 +310,7 @@ export interface GraphAdapter {
    */
   findEdges(
     type: string,
-    properties?: Record<string, any>,
+    properties?: Record<string, unknown>,
     limit?: number,
   ): Promise<GraphEdge[]>;
 
@@ -327,7 +327,7 @@ export interface GraphAdapter {
    */
   query(
     query: GraphQuery | string,
-    params?: Record<string, any>,
+    params?: Record<string, unknown>,
   ): Promise<GraphQueryResult>;
 
   /**

@@ -132,11 +132,12 @@ export async function detectOrphan(
   deletionContext: DeletionContext,
   adapter: GraphAdapter,
 ): Promise<OrphanCheckResult> {
-  const rules = deletionContext.orphanRules || ORPHAN_RULES;
-  const rule = rules[nodeLabel];
+  const rules = deletionContext.orphanRules ?? ORPHAN_RULES;
+  const rule: OrphanRule | undefined = rules[nodeLabel];
 
   // Rule 1: Never delete certain node types
-  if (rule?.neverDelete) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (rule !== undefined && rule.neverDelete) {
     return {
       isOrphan: false,
       reason: "Never delete rule",
@@ -146,7 +147,8 @@ export async function detectOrphan(
   }
 
   // Rule 2: Only delete if explicitly requested (not cascaded)
-  if (rule?.explicitOnly) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (rule !== undefined && rule.explicitOnly) {
     return {
       isOrphan: false,
       reason: "Explicit delete only",
@@ -156,6 +158,12 @@ export async function detectOrphan(
   }
 
   // Find all incoming references (nodes pointing TO this node)
+  type ReferenceRecord = {
+    referrerId: string;
+    refererLabel: string;
+    relationshipType: string;
+  };
+  
   const incoming = await adapter.query(
     `
     MATCH (referrer)-[r]->(target)
@@ -168,7 +176,7 @@ export async function detectOrphan(
   );
 
   // Filter to external references (not being deleted, not self-reference)
-  const externalRefs = incoming.records.filter(
+  const externalRefs = (incoming.records as unknown as ReferenceRecord[]).filter(
     (r) =>
       !deletionContext.deletedNodeIds.has(r.referrerId) &&
       r.referrerId !== nodeId,
@@ -193,11 +201,11 @@ export async function detectOrphan(
   }
 
   // Has external references - check if they're "anchor" types
-  const anchorLabels = rule?.keepIfReferencedBy || [
-    "Memory",
-    "Fact",
-    "Context",
-  ];
+  const defaultAnchors: string[] = ["Memory", "Fact", "Context"];
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const anchorLabels: string[] = rule
+    ? rule.keepIfReferencedBy || defaultAnchors
+    : defaultAnchors;
   const hasAnchorRef = externalRefs.some((r) =>
     anchorLabels.includes(r.refererLabel),
   );
@@ -261,6 +269,8 @@ async function checkCircularIsland(
       visited.add(current);
 
       // Find all neighbors (undirected - both incoming and outgoing)
+      type NeighborRecord = { neighborId: string; neighborLabel: string };
+      
       const neighbors = await adapter.query(
         `
         MATCH (n)--(neighbor)
@@ -271,7 +281,7 @@ async function checkCircularIsland(
         { currentId: current },
       );
 
-      for (const neighbor of neighbors.records) {
+      for (const neighbor of neighbors.records as unknown as NeighborRecord[]) {
         // Skip if being deleted
         if (deletionContext.deletedNodeIds.has(neighbor.neighborId)) {
           continue;
@@ -327,6 +337,8 @@ export async function deleteWithOrphanCleanup(
   deletionContext.deletedNodeIds.add(nodeId);
 
   // 1. Get all nodes this node references (outgoing edges)
+  type ReferencedNodeRecord = { refId: string; refLabel: string; edgeId: string };
+  
   const referencedNodes = await adapter.query(
     `
     MATCH (n)-[r]->(referenced)
@@ -342,7 +354,7 @@ export async function deleteWithOrphanCleanup(
   await adapter.deleteNode(nodeId, true);
 
   // 3. Check each referenced node for orphan status
-  for (const ref of referencedNodes.records) {
+  for (const ref of referencedNodes.records as unknown as ReferencedNodeRecord[]) {
     const orphanCheck = await detectOrphan(
       ref.refId,
       ref.refLabel,

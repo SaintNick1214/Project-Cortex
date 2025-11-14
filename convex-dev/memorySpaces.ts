@@ -25,12 +25,14 @@ export const register = mutation({
       v.literal("project"),
       v.literal("custom"),
     ),
-    participants: v.array(
-      v.object({
-        id: v.string(),
-        type: v.string(), // "user", "agent", "tool", etc.
-        joinedAt: v.number(),
-      }),
+    participants: v.optional(
+      v.array(
+        v.object({
+          id: v.string(),
+          type: v.string(), // "user", "agent", "tool", etc.
+          joinedAt: v.number(),
+        }),
+      ),
     ),
     metadata: v.optional(v.any()),
   },
@@ -53,7 +55,7 @@ export const register = mutation({
       memorySpaceId: args.memorySpaceId,
       name: args.name,
       type: args.type,
-      participants: args.participants,
+      participants: args.participants || [],
       metadata: args.metadata || {},
       status: "active",
       createdAt: now,
@@ -161,6 +163,70 @@ export const removeParticipant = mutation({
 
     await ctx.db.patch(space._id, {
       participants: updatedParticipants,
+      updatedAt: Date.now(),
+    });
+
+    return await ctx.db.get(space._id);
+  },
+});
+
+/**
+ * Archive memory space (marks as inactive but preserves data)
+ */
+export const archive = mutation({
+  args: {
+    memorySpaceId: v.string(),
+    reason: v.optional(v.string()),
+    metadata: v.optional(v.any()),
+  },
+  handler: async (ctx, args) => {
+    const space = await ctx.db
+      .query("memorySpaces")
+      .withIndex("by_memorySpaceId", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
+      .first();
+
+    if (!space) {
+      throw new Error("MEMORYSPACE_NOT_FOUND");
+    }
+
+    await ctx.db.patch(space._id, {
+      status: "archived",
+      updatedAt: Date.now(),
+      metadata: {
+        ...space.metadata,
+        ...(args.metadata || {}),
+        archivedAt: Date.now(),
+        archiveReason: args.reason,
+      },
+    });
+
+    return await ctx.db.get(space._id);
+  },
+});
+
+/**
+ * Reactivate archived memory space
+ */
+export const reactivate = mutation({
+  args: {
+    memorySpaceId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const space = await ctx.db
+      .query("memorySpaces")
+      .withIndex("by_memorySpaceId", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
+      .first();
+
+    if (!space) {
+      throw new Error("MEMORYSPACE_NOT_FOUND");
+    }
+
+    await ctx.db.patch(space._id, {
+      status: "active",
       updatedAt: Date.now(),
     });
 

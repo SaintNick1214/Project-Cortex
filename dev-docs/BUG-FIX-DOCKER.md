@@ -7,6 +7,7 @@
 ### Issue #1: File Creation Before Directory Exists
 
 **Error:**
+
 ```
 ✖ Failed to create Docker Compose configuration
 ❌ Error: ENOENT: no such file or directory, open '...test-project/docker-compose.graph.yml'
@@ -24,10 +25,12 @@ The wizard was calling `setupGraphDatabase(projectPath)` before creating the pro
 
 **Fix:**
 Split the graph setup into two phases:
+
 - `getGraphConfig()` - Only prompts user, gets configuration (no file writes)
 - `setupGraphFiles()` - Creates files after project directory exists
 
 New execution order:
+
 1. Get project info
 2. Get installation type
 3. Get Convex setup
@@ -50,7 +53,7 @@ Added comprehensive Docker detection:
 ```typescript
 async function checkDockerInstalled(): Promise<boolean> {
   try {
-    const result = await execCommand('docker', ['--version'], {});
+    const result = await execCommand("docker", ["--version"], {});
     return result.code === 0;
   } catch {
     return false;
@@ -59,14 +62,16 @@ async function checkDockerInstalled(): Promise<boolean> {
 ```
 
 **Features Added:**
+
 1. **Pre-check:** Detects Docker before showing deployment options
 2. **Disabled option:** If no Docker, "Local" option is disabled in menu
 3. **Warning message:** Clear warning if Docker not detected
 4. **Installation instructions:** Platform-specific instructions (macOS/Windows/Linux)
 
-### Issue #3: ES Module __dirname Not Defined
+### Issue #3: ES Module \_\_dirname Not Defined
 
 **Error:**
+
 ```
 ReferenceError: __dirname is not defined
     at copyTemplate (file:///.../file-operations.js:75:36)
@@ -79,8 +84,8 @@ The package uses ES modules (`"type": "module"` in package.json), but the code w
 Added ES module equivalents at the top of `file-operations.ts`:
 
 ```typescript
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 // ES module equivalents of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -92,24 +97,29 @@ This is a standard pattern for ES modules that need directory information.
 ### Issue #4: ES Module require Not Defined
 
 **Error:**
+
 ```
 ReferenceError: require is not defined
 ```
 
 **Root Cause:**
 Two places in `utils.ts` used CommonJS `require`:
+
 1. Line 95: `const fs = require('fs')` - Loading fs module
 2. Line 105: `require.resolve('@cortexmemory/sdk/package.json')` - Resolving package path
 
 **Fix:**
+
 1. Import `readdirSync` directly instead of using require:
+
 ```typescript
-import { existsSync, readdirSync } from 'fs';
+import { existsSync, readdirSync } from "fs";
 ```
 
 2. Use `createRequire` for package resolution:
+
 ```typescript
-import { createRequire } from 'module';
+import { createRequire } from "module";
 
 // Create require function for ES modules
 const require = createRequire(import.meta.url);
@@ -120,6 +130,7 @@ Now `require.resolve()` works in ES modules!
 ### Issue #5: SDK Package Not Found After Installation
 
 **Error:**
+
 ```
 Error: Could not locate @cortexmemory/sdk package. Please ensure it is installed.
     at deployCortexBackend (file://.../file-operations.js:19:15)
@@ -129,6 +140,7 @@ Error: Could not locate @cortexmemory/sdk package. Please ensure it is installed
 The wizard installed the SDK in the new project's `node_modules`, but `getSDKPath()` was using `require.resolve()` which looked relative to the wizard's location, not the new project's location.
 
 **Sequence:**
+
 1. ✅ Create project directory
 2. ✅ Install dependencies (SDK installed to `test-project/node_modules/@cortexmemory/sdk`)
 3. ❌ Try to copy convex-dev → `getSDKPath()` looks in wrong location
@@ -141,14 +153,19 @@ export function getSDKPath(projectPath?: string): string | null {
   try {
     // If projectPath provided, look in that project's node_modules
     if (projectPath) {
-      const sdkPath = path.join(projectPath, 'node_modules', '@cortexmemory', 'sdk');
+      const sdkPath = path.join(
+        projectPath,
+        "node_modules",
+        "@cortexmemory",
+        "sdk",
+      );
       if (existsSync(sdkPath)) {
         return sdkPath;
       }
     }
-    
+
     // Fallback: use require.resolve from current location
-    const sdkPackageJson = require.resolve('@cortexmemory/sdk/package.json');
+    const sdkPackageJson = require.resolve("@cortexmemory/sdk/package.json");
     return path.dirname(sdkPackageJson);
   } catch {
     return null;
@@ -157,8 +174,9 @@ export function getSDKPath(projectPath?: string): string | null {
 ```
 
 Updated caller in `deployCortexBackend()`:
+
 ```typescript
-const sdkPath = getSDKPath(projectPath);  // Pass project path!
+const sdkPath = getSDKPath(projectPath); // Pass project path!
 ```
 
 Now it looks in the correct location!
@@ -166,8 +184,9 @@ Now it looks in the correct location!
 ### Issue #6: Local Convex Deployment Requires Login (RESOLVED)
 
 **Initial Error:**
+
 ```
-✖ Cannot prompt for input in non-interactive terminals. 
+✖ Cannot prompt for input in non-interactive terminals.
    (Welcome to Convex! Would you like to login to your account?)
 ✖ Deployment failed
 ❌ Error: Failed to deploy Cortex backend
@@ -184,6 +203,7 @@ CONVEX_AGENT_MODE=anonymous npx convex dev --local --once --until-success
 ```
 
 Key components:
+
 - `CONVEX_AGENT_MODE=anonymous` - **CRITICAL!** Enables non-interactive mode
 - `--local` - Uses local deployment (no cloud, no login required)
 - `--once` - Runs deployment once without watching (non-interactive)
@@ -196,32 +216,34 @@ Updated `deployConvexBackend()` to accept `isLocal` parameter and set agent mode
 export async function deployConvexBackend(
   projectPath: string,
   config: ConvexConfig,
-  isLocal: boolean = false
+  isLocal: boolean = false,
 ): Promise<void> {
-  const args = ['dev', '--once', '--until-success'];
+  const args = ["dev", "--once", "--until-success"];
   if (isLocal) {
-    args.push('--local');  // Add --local flag for local mode!
+    args.push("--local"); // Add --local flag for local mode!
   }
-  
+
   // Set environment - CRITICAL: CONVEX_AGENT_MODE for non-interactive
   const env = {
     ...process.env,
     CONVEX_URL: config.convexUrl,
     ...(config.deployKey && { CONVEX_DEPLOY_KEY: config.deployKey }),
-    ...(isLocal && { CONVEX_AGENT_MODE: 'anonymous' }),  // ← THE KEY!
+    ...(isLocal && { CONVEX_AGENT_MODE: "anonymous" }), // ← THE KEY!
   };
-  
+
   // Deploy
   await execCommand(convexCommand, args, { cwd: projectPath, env });
 }
 ```
 
 **Result:**
+
 - **Local mode:** Fully automated deployment with `--local` flag ✅
 - **Cloud modes:** Standard deployment (requires login if not already) ✅
 - **Principle preserved:** Setup is 100% automated for local mode!
 
 Updated success message:
+
 ```
 🚀 Next steps:
 
@@ -235,9 +257,10 @@ Updated success message:
 ### Issue #7: Security Warning - Shell Option with Args
 
 **Warning:**
+
 ```
-(node:71289) [DEP0190] DeprecationWarning: Passing args to a child process 
-with shell option true can lead to security vulnerabilities, as the arguments 
+(node:71289) [DEP0190] DeprecationWarning: Passing args to a child process
+with shell option true can lead to security vulnerabilities, as the arguments
 are not escaped, only concatenated.
 ```
 
@@ -249,18 +272,20 @@ Removed `shell: true` from all spawn calls:
 
 ```typescript
 // BEFORE (insecure):
-spawn(command, args, { shell: true, ...options })
+spawn(command, args, { shell: true, ...options });
 
 // AFTER (secure):
-spawn(command, args, { ...options })
+spawn(command, args, { ...options });
 ```
 
 **Changed functions:**
+
 1. `commandExists()` - Removed shell, added platform-specific command (which/where)
 2. `execCommand()` - Removed shell option
 3. `execCommandLive()` - Removed shell option
 
 **Why this is better:**
+
 - ✅ More secure (no command injection risk)
 - ✅ Faster (no shell overhead)
 - ✅ More reliable (no shell parsing issues)
@@ -276,6 +301,7 @@ If user didn't have Docker, they got an error with no guidance on how to fix it.
 Added platform-specific installation instructions:
 
 **macOS:**
+
 ```
 ⚠️  Docker Desktop is not installed
 
@@ -290,6 +316,7 @@ Or choose "Cloud/Existing instance" to use a remote graph database.
 ```
 
 **Windows:**
+
 ```
 Windows:
   1. Download Docker Desktop: https://www.docker.com/products/docker-desktop
@@ -298,6 +325,7 @@ Windows:
 ```
 
 **Linux:**
+
 ```
 Linux:
   1. Install Docker Engine: https://docs.docker.com/engine/install/
@@ -310,6 +338,7 @@ Linux:
 ### Modified Files
 
 **1. `src/utils.ts`**
+
 - Added `createRequire` from 'module' for ES module compatibility
 - Changed direct require imports to proper ES imports
 - Fixed `require.resolve()` usage for package path resolution
@@ -319,11 +348,13 @@ Linux:
 - **Added platform-specific command detection** (which/where)
 
 **2. `src/file-operations.ts`**
+
 - Added ES module `__dirname` equivalent using `fileURLToPath` and `dirname`
 - Fixed template path resolution
 - **Updated `deployCortexBackend()` to pass projectPath to `getSDKPath()`**
 
 **3. `src/wizard.ts`**
+
 - Changed `setupGraphDatabase()` call to `getGraphConfig()` (line 35)
 - Added `setupGraphFiles()` call in `executeSetup()` after directory creation
 - **Skip Convex CLI deployment for local mode** - Added conditional check
@@ -331,6 +362,7 @@ Linux:
 - Updated imports
 
 **4. `src/graph-setup.ts`**
+
 - Added `checkDockerInstalled()` function
 - Added `showDockerInstructions()` function
 - Renamed `setupGraphDatabase()` → `getGraphConfig()` (prompts only)
@@ -355,6 +387,7 @@ All tests pass with 0 errors.
 ### Manual Testing Scenarios
 
 **Scenario 1: With Docker Installed**
+
 ```bash
 node dist/index.js test-with-docker
 # Select: Local development → Enable graph → Neo4j → Local (Docker Compose)
@@ -362,6 +395,7 @@ node dist/index.js test-with-docker
 ```
 
 **Scenario 2: Without Docker Installed**
+
 ```bash
 # Stop Docker Desktop first
 node dist/index.js test-no-docker
@@ -370,6 +404,7 @@ node dist/index.js test-no-docker
 ```
 
 **Scenario 3: Cloud Graph Database**
+
 ```bash
 node dist/index.js test-cloud-graph
 # Select: Local development → Enable graph → Neo4j → Cloud/Existing
@@ -381,6 +416,7 @@ node dist/index.js test-cloud-graph
 ### User Experience
 
 **Before:**
+
 - ❌ Confusing error if Docker not installed
 - ❌ Files created before directory exists
 - ❌ ES module `__dirname` not defined error
@@ -391,6 +427,7 @@ node dist/index.js test-cloud-graph
 - ❌ No guidance on how to fix issues
 
 **After:**
+
 - ✅ Clear detection of Docker availability
 - ✅ Files created in correct order
 - ✅ ES modules fully compatible (`__dirname` and `require` fixed)
@@ -415,6 +452,7 @@ node dist/index.js test-cloud-graph
 ## Version
 
 These fixes will be included in:
+
 - **create-cortex-memories@0.1.1** (or @0.1.0 if not yet published)
 
 ## Recommendation
@@ -433,4 +471,3 @@ node dist/index.js test-cloud
 ```
 
 All scenarios should now work smoothly with clear messaging!
-

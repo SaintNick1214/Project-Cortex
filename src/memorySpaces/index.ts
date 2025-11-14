@@ -144,14 +144,14 @@ export class MemorySpacesAPI {
     memorySpaceId: string,
     updates: {
       name?: string;
-      metadata?: any;
+      metadata?: Record<string, unknown>;
       status?: "active" | "archived";
     },
   ): Promise<MemorySpace> {
     const result = await this.client.mutation(api.memorySpaces.update, {
       memorySpaceId,
       name: updates.name,
-      metadata: updates.metadata,
+      metadata: updates.metadata as Record<string, unknown> | undefined,
       status: updates.status,
     });
 
@@ -205,6 +205,48 @@ export class MemorySpacesAPI {
         participantId,
       },
     );
+
+    return result as MemorySpace;
+  }
+
+  /**
+   * Archive memory space (marks as inactive but preserves data)
+   *
+   * @example
+   * ```typescript
+   * await cortex.memorySpaces.archive('project-apollo', {
+   *   reason: 'Project completed successfully'
+   * });
+   * ```
+   */
+  async archive(
+    memorySpaceId: string,
+    options?: {
+      reason?: string;
+      metadata?: Record<string, unknown>;
+    },
+  ): Promise<MemorySpace> {
+    const result = await this.client.mutation(api.memorySpaces.archive, {
+      memorySpaceId,
+      reason: options?.reason,
+      metadata: options?.metadata as Record<string, unknown> | undefined,
+    });
+
+    return result as MemorySpace;
+  }
+
+  /**
+   * Reactivate archived memory space
+   *
+   * @example
+   * ```typescript
+   * await cortex.memorySpaces.reactivate('project-apollo');
+   * ```
+   */
+  async reactivate(memorySpaceId: string): Promise<MemorySpace> {
+    const result = await this.client.mutation(api.memorySpaces.reactivate, {
+      memorySpaceId,
+    });
 
     return result as MemorySpace;
   }

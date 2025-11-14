@@ -520,7 +520,9 @@ describe("Users API (Coordination Layer)", () => {
         console.log("  ✅ Verified graph node deleted from database");
       } else {
         expect(result.graphNodesDeleted).toBe(0);
-        console.log("  ℹ️  No graph adapter - graphNodesDeleted is 0 (no graph operations)");
+        console.log(
+          "  ℹ️  No graph adapter - graphNodesDeleted is 0 (no graph operations)",
+        );
       }
 
       // Verify verification
