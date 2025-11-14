@@ -6,6 +6,7 @@ These tests require OPENAI_API_KEY and are skipped if not available.
 """
 
 import pytest
+import os
 from cortex import RememberParams, SearchOptions
 from tests.helpers import embeddings_available
 

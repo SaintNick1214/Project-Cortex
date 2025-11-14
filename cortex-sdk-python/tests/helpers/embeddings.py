@@ -89,7 +89,8 @@ async def generate_embedding(
         return None
 
     except Exception as e:
-        # API call failed
+        # API call failed - log the error
+        print(f"Warning: OpenAI embedding generation failed: {e}")
         if use_mock:
             return generate_mock_embedding(text, dimensions)
         return None
@@ -173,6 +174,7 @@ async def summarize_conversation(
         return None
 
     except Exception as e:
-        # API call failed
+        # API call failed - log the error
+        print(f"Warning: OpenAI summarization failed: {e}")
         return None
 

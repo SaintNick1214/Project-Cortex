@@ -400,9 +400,10 @@ CONVEX_TEST_MODE=managed pytest tests/ -v
 
 ### Test Coverage
 
-- **579 tests** covering all APIs (includes 5 OpenAI integration tests)
-- **71% code coverage** (actively increasing)
+- **579 tests** covering all APIs (includes 5 OpenAI tests that skip in CI)
+- **73% code coverage** (actively increasing)
 - **100% pass rate** on both local and managed environments
+- OpenAI tests run locally with OPENAI_API_KEY, skip in CI (too expensive)
 
 ### Test Environments
 
