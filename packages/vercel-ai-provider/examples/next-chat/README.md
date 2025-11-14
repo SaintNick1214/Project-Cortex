@@ -200,9 +200,10 @@ console.log(memories);
 
 ## Next Steps
 
-- [Advanced Usage](../../docs/advanced-usage.md) - Custom embeddings, fact extraction
-- [Memory Spaces](../../docs/memory-spaces.md) - Multi-tenant setups
-- [Hive Mode](../../docs/hive-mode.md) - Cross-application memory
+- [Advanced Usage](../../../../Documentation/08-integrations/vercel-ai-sdk/advanced-usage.md) - Custom embeddings, fact extraction
+- [Memory Spaces](../../../../Documentation/08-integrations/vercel-ai-sdk/memory-spaces.md) - Multi-tenant setups
+- [Hive Mode](../../../../Documentation/08-integrations/vercel-ai-sdk/hive-mode.md) - Cross-application memory
+- [Cortex Documentation](../../../../Documentation/00-README.md) - Full documentation
 
 ## License
 

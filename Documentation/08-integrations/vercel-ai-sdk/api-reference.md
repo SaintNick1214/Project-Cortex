@@ -242,7 +242,9 @@ interface MemoryEntry {
 
 ## See Also
 
-- [Advanced Usage](./advanced-usage.md)
-- [Memory Spaces](./memory-spaces.md)
-- [Hive Mode](./hive-mode.md)
-- [Migration from mem0](./migration-from-mem0.md)
+- [Getting Started](./getting-started.md) - Setup tutorial
+- [Advanced Usage](./advanced-usage.md) - Custom patterns
+- [Memory Spaces](./memory-spaces.md) - Multi-tenancy
+- [Hive Mode](./hive-mode.md) - Cross-app memory
+- [Migration from mem0](./migration-from-mem0.md) - Switch guide
+- [Cortex Core Documentation](../../00-README.md) - Main docs
