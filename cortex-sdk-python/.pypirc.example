@@ -1,0 +1,17 @@
+# PyPI Configuration (for manual publishing only)
+# Trusted publishing via GitHub Actions is recommended
+
+[distutils]
+index-servers =
+    pypi
+    testpypi
+
+[pypi]
+username = __token__
+password = pypi-...  # Your PyPI API token (if not using trusted publishing)
+
+[testpypi]
+repository = https://test.pypi.org/legacy/
+username = __token__
+password = pypi-...  # Your TestPyPI API token
+
