@@ -10,15 +10,18 @@ Port of: tests/graph/graphAdapter.test.ts
 import pytest
 import os
 
+# Check if graph testing is enabled FIRST (before importing neo4j-dependent modules)
+GRAPH_TESTING_ENABLED = bool(os.getenv("NEO4J_URI") or os.getenv("MEMGRAPH_URI"))
+
+# Skip entire module if graph databases not configured
+if not GRAPH_TESTING_ENABLED:
+    pytest.skip("Graph database not configured (set NEO4J_URI or MEMGRAPH_URI)", allow_module_level=True)
+
 # Skip entire module if neo4j not available
 neo4j = pytest.importorskip("neo4j", reason="neo4j not installed (install with: pip install cortex-memory[graph])")
 
 from cortex.graph.adapters.cypher import CypherGraphAdapter
 from cortex.types import GraphConnectionConfig, GraphNode, GraphEdge
-
-
-# Check if graph testing is enabled - check for Neo4j/Memgraph URIs in env
-GRAPH_TESTING_ENABLED = bool(os.getenv("NEO4J_URI") or os.getenv("MEMGRAPH_URI"))
 
 NEO4J_CONFIG = GraphConnectionConfig(
     uri=os.getenv("NEO4J_URI", "bolt://localhost:7687"),

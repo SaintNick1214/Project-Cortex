@@ -32,7 +32,7 @@ jobs:
           cd cortex-sdk-python
           python -m pip install --upgrade pip
           pip install python-dotenv build twine pytest pytest-asyncio pytest-cov
-          pip install -e ".[dev,graph]"  # Include graph for full test coverage
+          pip install -e ".[dev]"  # Graph tests will skip without NEO4J_URI
       
       - name: Run tests
         run: |
@@ -40,7 +40,7 @@ jobs:
           pytest tests/ -v --tb=short
         env:
           CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_TEST_MODE: local
+          CONVEX_TEST_MODE: managed
       
       - name: Build package
         run: |
