@@ -132,7 +132,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       // Update to v2
       const v2 = await cortex.immutable.store({
         type: "kb-article",
-        id: "warranty-policy",
+        id: uniqueId,
         data: {
           title: "Warranty Policy Updated",
           duration: "60 days",
@@ -149,7 +149,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       // Validate storage
       const stored = await client.query(api.immutable.get, {
         type: "kb-article",
-        id: "warranty-policy",
+        id: uniqueId,
       });
 
       expect(stored!.version).toBe(2);
