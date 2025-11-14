@@ -2,7 +2,7 @@
  * Type definitions for Cortex Memory Provider for Vercel AI SDK
  */
 
-import type { LanguageModelV1 } from "ai";
+// Dynamic types to support AI SDK v3, v4, and v5
 import type { MemoryEntry, RememberOptions } from "@cortexmemory/sdk";
 
 /**
@@ -231,9 +231,9 @@ export interface CortexMemoryModel {
    * ```
    */
   (
-    underlyingModel: LanguageModelV1,
+    underlyingModel: any,
     settings?: Record<string, unknown>,
-  ): LanguageModelV1;
+  ): any;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Manual Memory Control Methods
@@ -319,7 +319,7 @@ export interface CortexMemoryModel {
 /**
  * Re-export AI SDK types for convenience
  */
-export type { LanguageModelV1Prompt } from "ai";
+// Prompt types handled dynamically
 
 /**
  * Internal logger interface

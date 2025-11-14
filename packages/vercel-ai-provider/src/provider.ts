@@ -4,7 +4,6 @@
  * Wraps language models with automatic memory retrieval and storage
  */
 
-import type { LanguageModelV1, LanguageModelV1StreamPart } from "ai";
 import { Cortex } from "@cortexmemory/sdk";
 import type { MemoryEntry } from "@cortexmemory/sdk";
 import type { CortexMemoryConfig, Logger } from "./types";
@@ -19,26 +18,28 @@ import { createCompletionStream } from "./streaming";
 
 /**
  * Cortex Memory Provider
- *
+ * 
  * Wraps an existing language model with automatic memory capabilities
  */
-export class CortexMemoryProvider implements LanguageModelV1 {
-  public readonly specificationVersion: "v1" = "v1";
+export class CortexMemoryProvider {
+  public readonly specificationVersion: string;
   public readonly provider: string;
   public readonly modelId: string;
-  public readonly defaultObjectGenerationMode = "json" as const;
+  public readonly defaultObjectGenerationMode?: string;
 
   private cortex: Cortex;
   private config: CortexMemoryConfig;
   private logger: Logger;
-  private underlyingModel: LanguageModelV1;
+  private underlyingModel: any;
 
-  constructor(underlyingModel: LanguageModelV1, config: CortexMemoryConfig) {
+  constructor(underlyingModel: any, config: CortexMemoryConfig) {
     this.underlyingModel = underlyingModel;
     this.config = config;
     this.logger = config.logger || createLogger(config.debug || false);
     this.provider = underlyingModel.provider;
     this.modelId = underlyingModel.modelId;
+    this.specificationVersion = underlyingModel.specificationVersion;
+    this.defaultObjectGenerationMode = underlyingModel.defaultObjectGenerationMode;
 
     // Initialize Cortex SDK
     this.cortex = new Cortex({ convexUrl: config.convexUrl });
@@ -51,9 +52,7 @@ export class CortexMemoryProvider implements LanguageModelV1 {
   /**
    * Generate text with automatic memory retrieval and storage
    */
-  async doGenerate(
-    options: Parameters<LanguageModelV1["doGenerate"]>[0],
-  ): Promise<Awaited<ReturnType<LanguageModelV1["doGenerate"]>>> {
+  async doGenerate(options: any): Promise<any> {
     this.logger.debug("doGenerate called");
 
     // Step 1: Resolve user context
@@ -112,9 +111,7 @@ export class CortexMemoryProvider implements LanguageModelV1 {
   /**
    * Stream text with automatic memory retrieval and storage
    */
-  async doStream(
-    options: Parameters<LanguageModelV1["doStream"]>[0],
-  ): Promise<Awaited<ReturnType<LanguageModelV1["doStream"]>>> {
+  async doStream(options: any): Promise<any> {
     this.logger.debug("doStream called");
 
     // Step 1: Resolve user context
@@ -268,21 +265,20 @@ export class CortexMemoryProvider implements LanguageModelV1 {
    * Wrap a stream to collect the response and store it
    */
   private wrapStreamWithMemory(
-    originalStream: ReadableStream<LanguageModelV1StreamPart>,
+    originalStream: ReadableStream<any>,
     userMessage: string,
     userId: string,
     conversationId: string,
-  ): ReadableStream<LanguageModelV1StreamPart> {
+  ): ReadableStream<any> {
     const textChunks: string[] = [];
 
-    const transformStream = new TransformStream<
-      LanguageModelV1StreamPart,
-      LanguageModelV1StreamPart
-    >({
+    const transformStream = new TransformStream<any, any>({
       transform: (chunk, controller) => {
-        // Collect text chunks
+        // Collect text chunks (support both v4 and v5 formats)
         if (chunk.type === "text-delta") {
-          textChunks.push(chunk.textDelta);
+          textChunks.push(chunk.delta || chunk.textDelta || "");
+        } else if (chunk.type === "text") {
+          textChunks.push(chunk.text || "");
         }
 
         // Forward chunk downstream
