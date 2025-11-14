@@ -13,6 +13,11 @@ on:
     paths:
       - 'cortex-sdk-python/**'
 
+# Prevent parallel execution with TypeScript tests to avoid Convex deployment conflicts
+concurrency:
+  group: cortex-tests-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   test:
     name: Test on Python ${{ matrix.python-version }}
