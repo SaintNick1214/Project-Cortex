@@ -34,15 +34,15 @@ jobs:
           cd cortex-sdk-python
           python -m pip install --upgrade pip
           pip install python-dotenv  # Required for conftest.py
-          pip install -e ".[dev,graph]"  # Include graph dependencies for full test coverage
+          pip install -e ".[dev]"  # Graph tests will skip without NEO4J_URI
       
       - name: Run tests
         run: |
           cd cortex-sdk-python
           pytest tests/ -v --cov=cortex --cov-report=term-missing
         env:
-          CONVEX_TEST_MODE: local
-          LOCAL_CONVEX_URL: http://127.0.0.1:3210
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_TEST_MODE: managed
       
       - name: Check types with mypy
         run: |
