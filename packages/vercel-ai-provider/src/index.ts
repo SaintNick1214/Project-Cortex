@@ -24,7 +24,7 @@
  * ```
  */
 
-import type { LanguageModelV1 } from "ai";
+// Types handled dynamically to support all AI SDK versions
 import type { MemoryEntry } from "@cortexmemory/sdk";
 import { Cortex } from "@cortexmemory/sdk";
 import type {
@@ -100,9 +100,9 @@ export function createCortexMemory(
    */
   const cortexMemory: CortexMemoryModel = Object.assign(
     (
-      underlyingModel: LanguageModelV1,
+      underlyingModel: any,
       settings?: Record<string, unknown>,
-    ): LanguageModelV1 => {
+    ): any => {
       logger.debug(`Wrapping model: ${underlyingModel.modelId}`);
 
       // Create memory-augmented provider
