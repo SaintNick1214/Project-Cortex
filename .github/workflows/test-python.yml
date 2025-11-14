@@ -34,7 +34,7 @@ jobs:
           cd cortex-sdk-python
           python -m pip install --upgrade pip
           pip install python-dotenv  # Required for conftest.py
-          pip install -e ".[dev]"
+          pip install -e ".[dev,graph]"  # Include graph dependencies for full test coverage
       
       - name: Run tests
         run: |
