@@ -2,12 +2,14 @@ name: Test Python SDK
 
 on:
   push:
-    branches: [main, dev]
+    branches:
+      - main  # Only run on push to main (after PR merge)
     paths:
       - 'cortex-sdk-python/**'
       - '.github/workflows/test-python.yml'
   pull_request:
-    branches: [main, dev]
+    branches:
+      - main  # Run on PRs to main (validates before merge)
     paths:
       - 'cortex-sdk-python/**'
 
@@ -18,7 +20,8 @@ jobs:
     
     strategy:
       matrix:
-        python-version: ['3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+      max-parallel: 1  # Run sequentially to avoid MANAGED Convex conflicts
     
     steps:
       - name: Checkout code
@@ -33,15 +36,17 @@ jobs:
         run: |
           cd cortex-sdk-python
           python -m pip install --upgrade pip
-          pip install -e ".[dev]"
+          pip install python-dotenv  # Required for conftest.py
+          pip install -e ".[dev]"  # Graph tests will skip without NEO4J_URI
       
       - name: Run tests
         run: |
           cd cortex-sdk-python
           pytest tests/ -v --cov=cortex --cov-report=term-missing
         env:
-          CONVEX_TEST_MODE: local
-          LOCAL_CONVEX_URL: http://127.0.0.1:3210
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_TEST_MODE: managed
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       
       - name: Check types with mypy
         run: |

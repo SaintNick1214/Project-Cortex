@@ -81,9 +81,10 @@ describe("Immutable Store API (Layer 1b)", () => {
 
   describe("store()", () => {
     it("creates version 1 for new entry", async () => {
+      const uniqueId = `refund-policy-${Date.now()}`;
       const result = await cortex.immutable.store({
         type: "kb-article",
-        id: "refund-policy",
+        id: uniqueId,
         data: {
           title: "Refund Policy",
           content: "Refunds available within 30 days",
@@ -96,7 +97,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       // Validate SDK response
       expect(result.type).toBe("kb-article");
-      expect(result.id).toBe("refund-policy");
+      expect(result.id).toBe(uniqueId);
       expect(result.version).toBe(1);
       expect(result.data.title).toBe("Refund Policy");
       expect(result.previousVersions).toEqual([]);
@@ -106,7 +107,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       // Validate Convex storage
       const stored = await client.query(api.immutable.get, {
         type: "kb-article",
-        id: "refund-policy",
+        id: uniqueId,
       });
 
       expect(stored).not.toBeNull();
@@ -115,10 +116,11 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
 
     it("increments version for existing entry", async () => {
+      const uniqueId = `warranty-policy-${Date.now()}`;
       // Create v1
       const v1 = await cortex.immutable.store({
         type: "kb-article",
-        id: "warranty-policy",
+        id: uniqueId,
         data: {
           title: "Warranty Policy",
           duration: "30 days",
@@ -130,7 +132,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       // Update to v2
       const v2 = await cortex.immutable.store({
         type: "kb-article",
-        id: "warranty-policy",
+        id: uniqueId,
         data: {
           title: "Warranty Policy Updated",
           duration: "60 days",
@@ -147,7 +149,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       // Validate storage
       const stored = await client.query(api.immutable.get, {
         type: "kb-article",
-        id: "warranty-policy",
+        id: uniqueId,
       });
 
       expect(stored!.version).toBe(2);

@@ -67,6 +67,9 @@ elif test_mode == "auto":
 from cortex import Cortex, CortexConfig
 from tests.helpers import TestCleanup, embeddings_available
 
+# Import session hooks for cleanup (pytest_sessionstart, pytest_sessionfinish)
+from tests.conftest_session import *
+
 
 @pytest.fixture(scope="session")
 def event_loop():

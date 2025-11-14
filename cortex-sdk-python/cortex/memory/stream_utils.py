@@ -98,3 +98,4 @@ async def consume_stream(stream: Any) -> str:
         )
 
 
+
