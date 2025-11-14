@@ -174,7 +174,8 @@ Go to: https://github.com/SaintNick1214/Project-Cortex/releases/new
 **Title:** v0.8.1 - Create Cortex Memories 🎉
 
 **Description:**
-```markdown
+
+````markdown
 # v0.8.1 - Interactive Setup Wizard
 
 ## 🎉 Major Onboarding Improvement
@@ -197,6 +198,7 @@ cd my-ai-agent
 npm run dev
 npm start
 ```
+````
 
 ### 📦 What's Included
 
@@ -215,6 +217,7 @@ npm start
 **After:** < 5 minutes with interactive wizard
 
 Perfect for new users, workshops, and rapid prototyping!
+
 ```
 
 ### 3. Update Website (if applicable)
@@ -228,6 +231,7 @@ Update cortexmemory.dev with:
 
 **Twitter/X:**
 ```
+
 🎉 Cortex v0.8.1 is here!
 
 Now you can set up AI agents with persistent memory in under 5 minutes:
@@ -242,10 +246,12 @@ npm create cortex-memories@latest my-agent
 Try it: https://github.com/SaintNick1214/Project-Cortex
 
 #AI #OpenSource #ConvexDev
+
 ```
 
 **Discord/Community:**
 ```
+
 🎉 **Cortex v0.8.1 Released!**
 
 We've dramatically improved the getting started experience with a new interactive setup wizard.
@@ -256,6 +262,7 @@ npm create cortex-memories@latest my-agent
 \`\`\`
 
 **What you get:**
+
 - Complete project setup in < 5 minutes
 - Interactive wizard for configuration
 - Three Convex setup modes (local/cloud/existing)
@@ -267,7 +274,8 @@ npm create cortex-memories@latest my-agent
 
 Check it out: https://github.com/SaintNick1214/Project-Cortex
 Feedback welcome!
-```
+
+````
 
 ### 5. Monitor for Issues
 
@@ -297,11 +305,12 @@ npm deprecate @cortexmemory/sdk@0.8.1 "Critical bug, use 0.8.0 instead"
 npm deprecate create-cortex-memories@0.1.0 "Use later version"
 
 # Then fix and republish as 0.8.2
-```
+````
 
 ## Success Criteria
 
 Release is successful when:
+
 - [x] Both packages published to npm
 - [ ] `npm create cortex-memories` works end-to-end
 - [ ] Generated projects run successfully
@@ -319,4 +328,3 @@ Release is successful when:
 ---
 
 **Good luck with the release! 🚀**
-

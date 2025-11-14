@@ -1,6 +1,6 @@
 /**
  * Tests for memory.remember() auto-conversation creation
- * 
+ *
  * Verifies that remember() automatically creates conversations if they don't exist
  */
 
@@ -179,16 +179,15 @@ describe("Memory API - Auto-Conversation Creation", () => {
     const conv = await cortex.conversations.get(convId);
     expect(conv?.messages.length).toBe(6); // 3 × (user + agent)
 
-    // Verify all memories were created  
+    // Verify all memories were created
     const allMemories = await cortex.memory.list({
       memorySpaceId,
       limit: 100,
     });
     const convMemories = allMemories.filter((m) => {
-      const memory = 'memory' in m ? m.memory : m;
+      const memory = "memory" in m ? m.memory : m;
       return memory.conversationRef?.conversationId === convId;
     });
     expect(convMemories.length).toBe(6); // 3 exchanges × 2 memories each
   });
 });
-

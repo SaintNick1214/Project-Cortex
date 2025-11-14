@@ -23,6 +23,18 @@ import type {
   MemoryEntry,
   FactRecord,
 } from "../types";
+
+
+// Type for Neo4j record results (reused from agents)
+interface Neo4jNodeRecord {
+  id: string;
+  labels: string[];
+}
+
+// Type for Neo4j count results
+interface Neo4jCountRecord {
+  count: number;
+}
 import type { GraphAdapter } from "../graph/types";
 import {
   deleteWithOrphanCleanup,
@@ -86,7 +98,7 @@ export class UsersAPI {
 
     return {
       id: result.id,
-      data: result.data,
+      data: (result.data as Record<string, unknown> | undefined) ?? {},
       version: result.version,
       createdAt: result.createdAt,
       updatedAt: result.updatedAt,
@@ -121,7 +133,7 @@ export class UsersAPI {
 
     return {
       id: result.id,
-      data: result.data,
+      data: (result.data as Record<string, unknown> | undefined) ?? {},
       version: result.version,
       createdAt: result.createdAt,
       updatedAt: result.updatedAt,
@@ -327,7 +339,7 @@ export class UsersAPI {
 
     return {
       version: result.version,
-      data: result.data,
+      data: (result.data as Record<string, unknown> | undefined) ?? {},
       timestamp: result.timestamp,
     };
   }
@@ -349,7 +361,7 @@ export class UsersAPI {
 
     return result.map((v) => ({
       version: v.version,
-      data: v.data,
+      data: (v.data as Record<string, unknown> | undefined) ?? {},
       timestamp: v.timestamp,
     }));
   }
@@ -381,7 +393,7 @@ export class UsersAPI {
 
     return {
       version: result.version,
-      data: result.data,
+      data: (result.data as Record<string, unknown> | undefined) ?? {},
       timestamp: result.timestamp,
     };
   }
@@ -433,7 +445,102 @@ export class UsersAPI {
     }
 
     // JSON export (default)
-    return JSON.stringify(users, null, 2);
+    return JSON.stringify(users as UserProfile[], null, 2);
+  }
+
+  /**
+   * Bulk update multiple users
+   *
+   * @param userIds - Array of user IDs to update
+   * @param updates - Updates to apply to all users
+   * @param options - Update options
+   * @returns Update result
+   *
+   * @example
+   * ```typescript
+   * const result = await cortex.users.updateMany(
+   *   ['user-1', 'user-2', 'user-3'],
+   *   { data: { status: 'active' } }
+   * );
+   * console.log(`Updated ${result.updated} users`);
+   * ```
+   */
+  async updateMany(
+    userIds: string[],
+    updates: { data: Record<string, unknown> },
+    options?: { skipVersioning?: boolean; dryRun?: boolean },
+  ): Promise<{ updated: number; userIds: string[] }> {
+    if (options?.dryRun) {
+      return {
+        updated: 0,
+        userIds: userIds,
+      };
+    }
+
+    const results: string[] = [];
+
+    for (const userId of userIds) {
+      try {
+        const user = await this.get(userId);
+        if (user) {
+          await this.update(userId, updates.data);
+          results.push(userId);
+        }
+      } catch (_e) {
+        // Continue on error
+        continue;
+      }
+    }
+
+    return {
+      updated: results.length,
+      userIds: results,
+    };
+  }
+
+  /**
+   * Bulk delete multiple users
+   *
+   * @param userIds - Array of user IDs to delete
+   * @param options - Delete options
+   * @returns Delete result
+   *
+   * @example
+   * ```typescript
+   * const result = await cortex.users.deleteMany(
+   *   ['user-1', 'user-2', 'user-3'],
+   *   { cascade: true }
+   * );
+   * console.log(`Deleted ${result.deleted} users`);
+   * ```
+   */
+  async deleteMany(
+    userIds: string[],
+    options?: { cascade?: boolean; dryRun?: boolean },
+  ): Promise<{ deleted: number; userIds: string[] }> {
+    if (options?.dryRun) {
+      return {
+        deleted: 0,
+        userIds: userIds,
+      };
+    }
+
+    const results: string[] = [];
+
+    for (const userId of userIds) {
+      try {
+        await this.delete(userId, options);
+        results.push(userId);
+      } catch (_e) {
+        // Continue if user doesn't exist
+        continue;
+      }
+    }
+
+    return {
+      deleted: results.length,
+      userIds: results,
+    };
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -649,10 +756,13 @@ export class UsersAPI {
       );
 
       // GraphQueryResult has a .records property
-      return result.records.map((record: any) => ({
-        nodeId: record.id,
-        labels: record.labels || [],
-      }));
+      return result.records.map((record) => {
+        const node = record as unknown as Neo4jNodeRecord;
+        return {
+          nodeId: node.id,
+          labels: node.labels,
+        };
+      });
     } catch (error) {
       console.warn("Failed to query graph nodes:", error);
       return [];
@@ -665,13 +775,17 @@ export class UsersAPI {
   private async backupRecords(plan: DeletionPlan): Promise<DeletionBackup> {
     // Create deep copies of all records for potential rollback
     return {
-      conversations: JSON.parse(JSON.stringify(plan.conversations)),
-      immutable: JSON.parse(JSON.stringify(plan.immutable)),
-      mutable: JSON.parse(JSON.stringify(plan.mutable)),
-      vector: JSON.parse(JSON.stringify(plan.vector)),
-      facts: JSON.parse(JSON.stringify(plan.facts)),
+      conversations: JSON.parse(
+        JSON.stringify(plan.conversations),
+      ) as Conversation[],
+      immutable: JSON.parse(
+        JSON.stringify(plan.immutable),
+      ) as ImmutableRecord[],
+      mutable: JSON.parse(JSON.stringify(plan.mutable)) as MutableRecord[],
+      vector: JSON.parse(JSON.stringify(plan.vector)) as MemoryEntry[],
+      facts: JSON.parse(JSON.stringify(plan.facts)) as FactRecord[],
       userProfile: plan.userProfile
-        ? JSON.parse(JSON.stringify(plan.userProfile))
+        ? (JSON.parse(JSON.stringify(plan.userProfile)) as unknown as UserProfile)
         : null,
     };
   }
@@ -817,7 +931,7 @@ export class UsersAPI {
 
           // Log orphan islands if any were found and deleted
           if (deleteResult.orphanIslands.length > 0) {
-            console.log(
+            console.warn(
               `  ℹ️  Deleted ${deleteResult.orphanIslands.length} orphan islands during user cascade`,
             );
           }
@@ -1096,7 +1210,8 @@ export class UsersAPI {
         { userId },
       );
       // GraphQueryResult has a .records property
-      return (result.records[0] as any)?.count || 0;
+      const record = result.records[0] as unknown as Neo4jCountRecord | undefined;
+      return record?.count ?? 0;
     } catch (error) {
       console.warn("Failed to count graph nodes:", error);
       return 0;

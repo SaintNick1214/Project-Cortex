@@ -13,6 +13,7 @@ This directory contains automated CI/CD workflows for the Cortex SDK.
 **What it does**:
 
 **For SDK (@cortexmemory/sdk):**
+
 1. ✅ Detects SDK version changes in `package.json`
 2. ✅ Runs all tests
 3. ✅ Builds package
@@ -22,6 +23,7 @@ This directory contains automated CI/CD workflows for the Cortex SDK.
 7. ✅ Verifies publish
 
 **For Wizard (create-cortex-memories):**
+
 1. ✅ Detects wizard version changes in `packages/create-cortex-memories/package.json`
 2. ✅ Builds wizard package
 3. ✅ Runs smoke tests
@@ -44,6 +46,7 @@ This directory contains automated CI/CD workflows for the Cortex SDK.
 ### Automated Release (Recommended)
 
 **Releasing SDK only:**
+
 ```bash
 # 1. Update SDK version
 # package.json: "version": "0.8.1"
@@ -60,6 +63,7 @@ git push origin main
 ```
 
 **Releasing both SDK and wizard:**
+
 ```bash
 # 1. Update both versions
 # package.json: "version": "0.8.1"
@@ -79,6 +83,7 @@ git push origin main
 ```
 
 **Releasing wizard only:**
+
 ```bash
 # 1. Update wizard version
 # packages/create-cortex-memories/package.json: "version": "0.1.1"

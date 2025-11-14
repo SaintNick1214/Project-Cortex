@@ -60,6 +60,39 @@ Cortex provides a complete memory system for AI agents:
 - 🔌 **MCP Server** - Cross-application memory sharing (planned)
 - 💬 **A2A Communication** - Inter-space messaging helpers (planned)
 
+## ✨ What's New in v0.9.0
+
+### Streaming Support - Native Edge Runtime Compatibility
+
+**NEW: `memory.rememberStream()`** - First-class streaming support for AI responses:
+
+- **Stream any response format**: ReadableStream or AsyncIterable
+- **Edge runtime compatible**: Works in Vercel Edge Functions, Cloudflare Workers
+- **Zero buffering required**: Handles stream consumption internally
+- **All features supported**: Embeddings, facts extraction, graph sync
+- **Production ready**: 28/28 streaming tests + 19/19 edge tests passing
+
+```typescript
+// With Vercel AI SDK streaming
+const stream = await generateText({ model: "gpt-4", messages });
+
+const result = await cortex.memory.rememberStream({
+  memorySpaceId: "agent-1",
+  conversationId: "conv-123",
+  userMessage: "What is the weather?",
+  responseStream: stream, // ReadableStream or AsyncIterable
+  userId: "user-1",
+  userName: "Alex",
+});
+
+console.log("Full response:", result.fullResponse);
+// All memories stored automatically once stream completes
+```
+
+**Edge Runtime verified**: All SDK operations work in edge environments - no Node.js APIs used.
+
+---
+
 ## ✨ What's New in v0.8.0
 
 ### Users & Agents APIs - GDPR Compliance & Cascade Deletion
@@ -109,6 +142,7 @@ npm create cortex-memories
 ```
 
 The interactive wizard will guide you through:
+
 - **Project Setup** - Choose new project or add to existing
 - **Convex Configuration** - Local development, new cloud database, or existing database
 - **Graph Database** - Optional Neo4j/Memgraph integration
@@ -120,7 +154,7 @@ The interactive wizard will guide you through:
 ✅ Convex backend functions (deployed automatically)  
 ✅ Environment configuration (.env.local)  
 ✅ Example code to get you started  
-✅ Optional graph database integration  
+✅ Optional graph database integration
 
 ### Start Building
 
@@ -136,7 +170,7 @@ npm start           # Terminal 2: Run your agent
 import { Cortex } from "@cortexmemory/sdk";
 
 const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL!
+  convexUrl: process.env.CONVEX_URL!,
 });
 
 // Store a memory
@@ -146,13 +180,13 @@ await cortex.memory.remember({
   userMessage: "I prefer dark mode",
   agentResponse: "Got it! I'll remember that.",
   userId: "user-123",
-  userName: "User"
+  userName: "User",
 });
 
 // Search your memories
 const results = await cortex.memory.search(
   "my-agent",
-  "what are the user's preferences?"
+  "what are the user's preferences?",
 );
 ```
 
@@ -319,12 +353,14 @@ Cortex is being designed with two deployment modes:
 ## 📖 Documentation
 
 ### Getting Started
+
 - [Installation Guide](./Documentation/01-getting-started/02-installation.md) - Multiple installation methods
 - [Five-Minute Quickstart](./Documentation/01-getting-started/03-five-minute-quickstart.md) - Build your first agent
 - [Core Concepts](./Documentation/01-getting-started/04-core-concepts.md) - Understand the fundamentals
 - [Configuration](./Documentation/01-getting-started/05-configuration.md) - Customize Cortex
 
 ### Reference
+
 - [Documentation Home](./Documentation/00-README.md) - Complete documentation index
 - [API Reference](./Documentation/03-api-reference/01-overview.md) - Full API documentation
 - [System Architecture](./Documentation/04-architecture/01-system-overview.md) - How it works

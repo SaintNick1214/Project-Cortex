@@ -228,9 +228,11 @@ export async function verifyGraphSchema(adapter: GraphAdapter): Promise<{
     });
 
     const constraints = constraintsResult.records.map(
-      (r) => r.name || "unknown",
+      (r) => (r as { name?: string }).name || "unknown",
     );
-    const indexes = indexesResult.records.map((r) => r.name || "unknown");
+    const indexes = indexesResult.records.map(
+      (r) => (r as { name?: string }).name || "unknown",
+    );
 
     // Check for required constraints
     const requiredConstraints = [

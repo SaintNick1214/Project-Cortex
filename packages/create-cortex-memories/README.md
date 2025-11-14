@@ -13,6 +13,7 @@ npm create cortex-memories
 The wizard will prompt for your project name.
 
 Or specify it directly:
+
 ```bash
 npm create cortex-memories my-ai-agent
 ```
@@ -58,4 +59,3 @@ Your AI agent now has persistent memory powered by Cortex!
 ## License
 
 Apache-2.0
-

@@ -11,6 +11,7 @@ npm create cortex-memories
 ```
 
 This interactive wizard will:
+
 - Set up a complete Cortex project
 - Configure Convex (local or cloud)
 - Install all dependencies
@@ -36,6 +37,7 @@ npm start    # Run your agent
 ```
 
 **What you get:**
+
 - ✅ Cortex SDK installed
 - ✅ Convex backend deployed
 - ✅ Environment configured
@@ -87,6 +89,7 @@ npx convex dev
 - **npm 9+** - Comes with Node.js
 
 Check your versions:
+
 ```bash
 node --version  # Should be v18.0.0 or higher
 npm --version   # Should be 9.0.0 or higher
@@ -120,17 +123,20 @@ Cortex works with Convex in three modes:
 **Best for:** Rapid iteration, learning, prototyping
 
 **Pros:**
+
 - ✅ No account needed
 - ✅ Instant start
 - ✅ Fully private
 - ✅ Free forever
 
 **Cons:**
+
 - ❌ No vector search
 - ❌ Not production-ready
 - ❌ Data stored locally only
 
 **Setup:**
+
 ```bash
 npm create cortex-memories@latest my-agent
 # Select: "Local development"
@@ -141,6 +147,7 @@ npm create cortex-memories@latest my-agent
 **Best for:** Production apps, full features, collaboration
 
 **Pros:**
+
 - ✅ Full vector search support
 - ✅ Automatic scaling
 - ✅ Real-time sync
@@ -148,11 +155,13 @@ npm create cortex-memories@latest my-agent
 - ✅ Free tier available
 
 **Cons:**
+
 - ❌ Requires Convex account
 - ❌ Internet required
 - ❌ Costs scale with usage
 
 **Setup:**
+
 ```bash
 npm create cortex-memories@latest my-agent
 # Select: "Create new Convex database"
@@ -164,11 +173,13 @@ npm create cortex-memories@latest my-agent
 **Best for:** Adding Cortex to existing Convex projects
 
 **Pros:**
+
 - ✅ Reuse existing deployment
 - ✅ Centralized data
 - ✅ Existing auth setup
 
 **Setup:**
+
 ```bash
 npm create cortex-memories@latest my-agent
 # Select: "Use existing Convex database"
@@ -212,10 +223,12 @@ npm start
 ### 3. View Dashboard
 
 **Local:**
+
 - Open: http://127.0.0.1:3210
 - You should see your deployed functions
 
 **Cloud:**
+
 - Dashboard URL shown in wizard output
 - View your data and functions online
 
@@ -226,11 +239,13 @@ npm start
 ### "npm create cortex-memories" fails
 
 **Check:**
+
 - Node.js version >= 18
 - Internet connection (to download packages)
 - npm permissions
 
 **Fix:**
+
 ```bash
 # Update npm
 npm install -g npm@latest
@@ -244,6 +259,7 @@ npm cache clean --force
 **Cause:** Dependencies not installed
 
 **Fix:**
+
 ```bash
 cd your-project
 npm install
@@ -254,6 +270,7 @@ npm install
 **Cause:** Backend not deployed or Convex not running
 
 **Fix:**
+
 ```bash
 # For local mode
 npm run dev
@@ -267,6 +284,7 @@ npx convex deploy
 **Cause:** Convex server not running
 
 **Fix:**
+
 ```bash
 # Make sure Convex is running in another terminal
 npm run dev
@@ -304,4 +322,3 @@ Check [CHANGELOG](../11-reference/03-changelog.md) for breaking changes.
 ---
 
 **Questions?** See [FAQ](../11-reference/01-faq.md) or ask in [Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).
-

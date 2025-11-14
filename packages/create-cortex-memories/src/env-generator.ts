@@ -2,10 +2,10 @@
  * Environment file generator
  */
 
-import fs from 'fs-extra';
-import path from 'path';
-import type { WizardConfig } from './types.js';
-import pc from 'picocolors';
+import fs from "fs-extra";
+import path from "path";
+import type { WizardConfig } from "./types.js";
+import pc from "picocolors";
 
 /**
  * Generate .env.local file based on wizard configuration
@@ -20,7 +20,7 @@ export function generateEnvFile(config: WizardConfig): string {
 `;
 
   // Add Convex configuration based on setup type
-  if (config.convexSetupType === 'local') {
+  if (config.convexSetupType === "local") {
     env += `# Local Development
 LOCAL_CONVEX_URL=http://127.0.0.1:3210
 LOCAL_CONVEX_DEPLOYMENT=anonymous:anonymous-${config.projectName}
@@ -28,7 +28,7 @@ CONVEX_URL=http://127.0.0.1:3210
 `;
   } else {
     env += `# Convex Cloud
-CONVEX_URL=${config.convexUrl || ''}
+CONVEX_URL=${config.convexUrl || ""}
 `;
     if (config.deployKey) {
       env += `CONVEX_DEPLOY_KEY=${config.deployKey}
@@ -37,14 +37,14 @@ CONVEX_URL=${config.convexUrl || ''}
   }
 
   // Add graph database configuration if enabled
-  if (config.graphEnabled && config.graphType !== 'skip') {
+  if (config.graphEnabled && config.graphType !== "skip") {
     env += `
 # =============================================================================
 # Graph Database Configuration (Optional)
 # =============================================================================
-NEO4J_URI=${config.graphUri || 'bolt://localhost:7687'}
-NEO4J_USERNAME=${config.graphUsername || 'neo4j'}
-NEO4J_PASSWORD=${config.graphPassword || 'cortex-password'}
+NEO4J_URI=${config.graphUri || "bolt://localhost:7687"}
+NEO4J_USERNAME=${config.graphUsername || "neo4j"}
+NEO4J_PASSWORD=${config.graphPassword || "cortex-password"}
 `;
   }
 
@@ -64,21 +64,24 @@ NEO4J_PASSWORD=${config.graphPassword || 'cortex-password'}
  */
 export async function createEnvFile(
   projectPath: string,
-  config: WizardConfig
+  config: WizardConfig,
 ): Promise<void> {
-  const envPath = path.join(projectPath, '.env.local');
+  const envPath = path.join(projectPath, ".env.local");
   const envContent = generateEnvFile(config);
 
   // Check if .env.local already exists
   if (fs.existsSync(envPath)) {
-    const backupPath = path.join(projectPath, `.env.local.backup.${Date.now()}`);
-    console.log(pc.yellow('⚠️  Existing .env.local detected'));
+    const backupPath = path.join(
+      projectPath,
+      `.env.local.backup.${Date.now()}`,
+    );
+    console.log(pc.yellow("⚠️  Existing .env.local detected"));
     console.log(pc.dim(`   Backing up to ${path.basename(backupPath)}`));
     await fs.move(envPath, backupPath);
   }
 
   await fs.writeFile(envPath, envContent);
-  console.log(pc.green('   ✓ Created .env.local'));
+  console.log(pc.green("   ✓ Created .env.local"));
 }
 
 /**
@@ -86,13 +89,13 @@ export async function createEnvFile(
  */
 export async function createGraphDockerCompose(
   projectPath: string,
-  graphType: 'neo4j' | 'memgraph'
+  graphType: "neo4j" | "memgraph",
 ): Promise<void> {
-  const dockerComposePath = path.join(projectPath, 'docker-compose.graph.yml');
+  const dockerComposePath = path.join(projectPath, "docker-compose.graph.yml");
 
-  let dockerCompose = '';
+  let dockerCompose = "";
 
-  if (graphType === 'neo4j') {
+  if (graphType === "neo4j") {
     dockerCompose = `services:
   neo4j:
     image: neo4j:5-community
@@ -113,7 +116,7 @@ volumes:
   neo4j_data:
   neo4j_logs:
 `;
-  } else if (graphType === 'memgraph') {
+  } else if (graphType === "memgraph") {
     dockerCompose = `services:
   memgraph:
     image: memgraph/memgraph-platform:latest
@@ -138,4 +141,3 @@ volumes:
   await fs.writeFile(dockerComposePath, dockerCompose);
   console.log(pc.dim(`   Created docker-compose.graph.yml for ${graphType}`));
 }
-

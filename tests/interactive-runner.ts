@@ -315,7 +315,7 @@ async function purgeAllDatabases() {
     } catch (error: unknown) {
       if (
         error instanceof Error &&
-        error.message?.includes("IMMUTABLE_ENTRY_NOT_FOUND")
+        error.message.includes("IMMUTABLE_ENTRY_NOT_FOUND")
       ) {
         continue;
       }
@@ -543,6 +543,7 @@ async function testListByUser() {
     }
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (allValid) {
     console.log("✅ All conversations contain the user");
   } else {
@@ -580,6 +581,7 @@ async function testListByMemorySpace() {
     }
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (allValid) {
     console.log("✅ All conversations in correct memory space");
   } else {
@@ -773,7 +775,7 @@ async function testDelete() {
   } catch (error: unknown) {
     if (
       error instanceof Error &&
-      error.message?.includes("CONVERSATION_NOT_FOUND")
+      error.message.includes("CONVERSATION_NOT_FOUND")
     ) {
       console.log("✅ Verified: Conversation no longer exists");
     } else {
@@ -3510,12 +3512,14 @@ async function getUserChoice(): Promise<string> {
 
 // Main loop
 async function mainLoop() {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   while (true) {
     displayMenu();
     const choice = await getUserChoice();
 
     const option = MENU_OPTIONS[choice as keyof typeof MENU_OPTIONS];
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (option) {
       try {
         await option.action();

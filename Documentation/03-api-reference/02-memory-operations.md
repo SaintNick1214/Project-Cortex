@@ -1,8 +1,10 @@
 # Memory Operations API
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2025-11-05
 
 Complete API reference for memory operations across memory spaces.
+
+> **New in v0.9.0**: `memory.rememberStream()` for streaming LLM responses
 
 ## Overview
 
@@ -680,6 +682,245 @@ await cortex.memory.remember({
 
 - [Helper Functions](../02-core-features/01-agent-memory.md#helper-store-from-conversation-recommended)
 - [Conversation Operations](./04-conversation-operations.md) - Managing ACID conversations
+
+---
+
+### rememberStream()
+
+**NEW in v0.9.0** - Store streaming LLM responses with automatic buffering.
+
+**Signature:**
+
+```typescript
+cortex.memory.rememberStream(
+  params: RememberStreamParams,
+  options?: RememberOptions
+): Promise<RememberStreamResult>
+```
+
+**What it does:**
+
+1. Consumes streaming response (ReadableStream or AsyncIterable)
+2. Buffers chunks until stream completes
+3. Stores in ACID (Layer 1) once complete
+4. Creates vector memories in Vector Memory (Layer 2)
+5. Automatically links them via `conversationRef`
+6. Returns both memory result AND the full response text
+
+**Parameters:**
+
+```typescript
+interface RememberStreamParams {
+  // Required
+  memorySpaceId: string;
+  conversationId: string;
+  userMessage: string;
+  responseStream: ReadableStream<string> | AsyncIterable<string>; // Stream to consume
+  userId: string;
+  userName: string;
+
+  // Optional - Hive Mode
+  participantId?: string;
+
+  // Optional - Content processing
+  extractContent?: (
+    userMsg: string,
+    agentResp: string,
+  ) => Promise<string | null>;
+
+  // Optional - Embeddings
+  generateEmbedding?: (content: string) => Promise<number[] | null>;
+
+  // Optional - Fact extraction
+  extractFacts?: (
+    userMsg: string,
+    agentResp: string,
+  ) => Promise<FactData[] | null>;
+
+  // Optional - Cloud Mode
+  autoEmbed?: boolean;
+  autoSummarize?: boolean;
+
+  // Optional - Metadata
+  importance?: number;
+  tags?: string[];
+}
+
+interface RememberOptions {
+  syncToGraph?: boolean; // Default: true if graph adapter configured
+}
+```
+
+**Returns:**
+
+```typescript
+interface RememberStreamResult {
+  // Standard remember() result
+  conversation: {
+    messageIds: string[];
+    conversationId: string;
+  };
+  memories: MemoryEntry[];
+  facts: FactRecord[];
+
+  // Plus streaming-specific
+  fullResponse: string; // Complete text from consumed stream
+}
+```
+
+**Example 1: Vercel AI SDK**
+
+```typescript
+import { streamText } from "ai";
+import { openai } from "@ai-sdk/openai";
+
+const response = await streamText({
+  model: openai("gpt-4"),
+  messages: [{ role: "user", content: "What is AI?" }],
+});
+
+const result = await cortex.memory.rememberStream({
+  memorySpaceId: "ai-tutor",
+  conversationId: "lesson-1",
+  userMessage: "What is AI?",
+  responseStream: response.textStream, // ReadableStream
+  userId: "student-123",
+  userName: "Alice",
+});
+
+console.log("Full response:", result.fullResponse);
+console.log("Memories stored:", result.memories.length); // 2 (user + agent)
+```
+
+**Example 2: OpenAI SDK (AsyncIterable)**
+
+```typescript
+import OpenAI from "openai";
+
+const openai = new OpenAI();
+const stream = await openai.chat.completions.create({
+  model: "gpt-4",
+  messages: [{ role: "user", content: "Hello!" }],
+  stream: true,
+});
+
+const result = await cortex.memory.rememberStream({
+  memorySpaceId: "chat-bot",
+  conversationId: "conv-789",
+  userMessage: "Hello!",
+  responseStream: stream, // AsyncIterable
+  userId: "user-456",
+  userName: "Bob",
+});
+```
+
+**Example 3: With Embeddings and Facts**
+
+```typescript
+const result = await cortex.memory.rememberStream({
+  memorySpaceId: "smart-bot",
+  conversationId: "conv-999",
+  userMessage: "My favorite color is blue",
+  responseStream: stream,
+  userId: "user-789",
+  userName: "Charlie",
+
+  // Generate embeddings
+  generateEmbedding: async (text) => {
+    const { embedding } = await embed({
+      model: openai.embedding("text-embedding-3-small"),
+      value: text,
+    });
+    return embedding;
+  },
+
+  // Extract facts
+  extractFacts: async (userMsg, agentResp) => {
+    return [
+      {
+        fact: "User's favorite color is blue",
+        factType: "preference",
+        confidence: 95,
+        subject: "user",
+        predicate: "favoriteColor",
+        object: "blue",
+      },
+    ];
+  },
+});
+
+console.log("Response:", result.fullResponse);
+console.log("Facts:", result.facts); // Extracted facts
+```
+
+**Example 4: Edge Runtime (Vercel Edge Functions)**
+
+```typescript
+// app/api/chat/route.ts
+export const runtime = "edge";
+
+export async function POST(req: Request) {
+  const { message } = await req.json();
+
+  const response = await streamText({
+    model: openai("gpt-4"),
+    messages: [{ role: "user", content: message }],
+  });
+
+  // Store in background (works in edge runtime!)
+  cortex.memory
+    .rememberStream({
+      memorySpaceId: "edge-chat",
+      conversationId: "conv-" + Date.now(),
+      userMessage: message,
+      responseStream: response.textStream,
+      userId: req.headers.get("x-user-id") || "anonymous",
+      userName: "User",
+    })
+    .catch((error) => {
+      console.error("Memory failed:", error);
+    });
+
+  // Return stream to client
+  return response.toAIStreamResponse();
+}
+```
+
+**Why use `rememberStream()`:**
+
+- ✅ No manual buffering required
+- ✅ Works with any stream type (ReadableStream, AsyncIterable)
+- ✅ Edge runtime compatible
+- ✅ Same features as `remember()` (embeddings, facts, graph sync)
+- ✅ Returns the full response text
+- ✅ Type safe with proper TypeScript inference
+
+**When to use:**
+
+- ✅ Vercel AI SDK integration
+- ✅ OpenAI SDK with streaming
+- ✅ LangChain streaming
+- ✅ Edge Functions (Vercel, Cloudflare)
+- ✅ Real-time chat applications
+- ✅ Any streaming LLM response
+
+**Errors:**
+
+- `Error('Failed to consume response stream')` - Stream reading failed
+- `Error('produced no content')` - Stream was empty or whitespace only
+- Same as `remember()` for storage errors
+
+**Performance:**
+
+- Stream consumption: Minimal overhead (< 20ms for 10K chars)
+- Storage: Same as `remember()` after stream completes
+- Memory usage: ~16 bytes per character buffered
+
+**See Also:**
+
+- [Streaming Support Guide](../02-core-features/12-streaming-support.md) - Complete streaming documentation
+- [Conversation History](../02-core-features/06-conversation-history.md#streaming-support) - Streaming in context
+- [remember()](#remember) - Non-streaming variant
 
 ---
 

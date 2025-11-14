@@ -202,7 +202,10 @@ export class ContextsAPI {
           1,
         );
         if (nodes.length > 0) {
-          await this.graphAdapter.updateNode(nodes[0].id!, updates);
+          await this.graphAdapter.updateNode(
+            nodes[0].id!,
+            updates as unknown as Record<string, unknown>,
+          );
         }
       } catch (error) {
         console.warn("Failed to update context in graph:", error);

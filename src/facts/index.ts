@@ -210,7 +210,10 @@ export class FactsAPI {
       try {
         const nodes = await this.graphAdapter.findNodes("Fact", { factId }, 1);
         if (nodes.length > 0) {
-          await this.graphAdapter.updateNode(nodes[0].id!, updates);
+          await this.graphAdapter.updateNode(
+            nodes[0].id!,
+            updates as unknown as Record<string, unknown>,
+          );
         }
       } catch (error) {
         console.warn("Failed to update fact in graph:", error);
@@ -291,6 +294,7 @@ export class FactsAPI {
       | "knowledge"
       | "relationship"
       | "event"
+      | "observation"
       | "custom";
   }): Promise<FactRecord[]> {
     const result = await this.client.query(api.facts.queryBySubject, {
@@ -348,6 +352,7 @@ export class FactsAPI {
       | "knowledge"
       | "relationship"
       | "event"
+      | "observation"
       | "custom";
   }): Promise<{
     format: string;

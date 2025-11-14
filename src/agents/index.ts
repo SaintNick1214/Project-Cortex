@@ -23,6 +23,30 @@ import type {
   MemoryEntry,
   FactRecord,
 } from "../types";
+
+// Type for Convex agent query results
+interface ConvexAgentRecord {
+  agentId: string;
+  name: string;
+  description?: string;
+  metadata?: Record<string, unknown>;
+  config?: Record<string, unknown>;
+  status: string;
+  registeredAt: number;
+  updatedAt: number;
+  lastActive?: number;
+}
+
+// Type for Neo4j record results
+interface Neo4jNodeRecord {
+  id: string;
+  labels: string[];
+}
+
+// Type for Neo4j count results
+interface Neo4jCountRecord {
+  count: number;
+}
 import type { GraphAdapter } from "../graph/types";
 import {
   deleteWithOrphanCleanup,
@@ -100,8 +124,8 @@ export class AgentsAPI {
       id: result.agentId,
       name: result.name,
       description: result.description,
-      metadata: result.metadata || {},
-      config: result.config || {},
+      metadata: (result.metadata as Record<string, unknown> | undefined) ?? {},
+      config: (result.config as Record<string, unknown> | undefined) ?? {},
       status: result.status,
       registeredAt: result.registeredAt,
       updatedAt: result.updatedAt,
@@ -135,8 +159,8 @@ export class AgentsAPI {
       id: result.agentId,
       name: result.name,
       description: result.description,
-      metadata: result.metadata || {},
-      config: result.config || {},
+      metadata: (result.metadata as Record<string, unknown> | undefined) ?? {},
+      config: (result.config as Record<string, unknown> | undefined) ?? {},
       status: result.status,
       registeredAt: result.registeredAt,
       updatedAt: result.updatedAt,
@@ -164,7 +188,7 @@ export class AgentsAPI {
     let filtered = results;
 
     if (filters?.metadata) {
-      filtered = filtered.filter((agent: any) => {
+      filtered = filtered.filter((agent: ConvexAgentRecord) => {
         return Object.entries(filters.metadata!).every(
           ([key, value]) => agent.metadata?.[key] === value,
         );
@@ -172,30 +196,32 @@ export class AgentsAPI {
     }
 
     if (filters?.name) {
-      filtered = filtered.filter((agent: any) =>
+      filtered = filtered.filter((agent: ConvexAgentRecord) =>
         agent.name.toLowerCase().includes(filters.name!.toLowerCase()),
       );
     }
 
     if (filters?.capabilities && filters.capabilities.length > 0) {
-      filtered = filtered.filter((agent: any) => {
-        const agentCaps = agent.metadata?.capabilities || [];
+      filtered = filtered.filter((agent: ConvexAgentRecord) => {
+        const agentCaps = Array.isArray(agent.metadata?.capabilities)
+          ? (agent.metadata.capabilities as string[])
+          : [];
         return filters.capabilities!.some((cap) => agentCaps.includes(cap));
       });
     }
 
     // Map to RegisteredAgent format (stats computed on-demand in get())
-    return filtered.map((r: any) => ({
+    return filtered.map((r: ConvexAgentRecord) => ({
       id: r.agentId,
       name: r.name,
       description: r.description,
-      metadata: r.metadata || {},
-      config: r.config || {},
-      status: r.status,
+      metadata: r.metadata ?? {},
+      config: r.config ?? {},
+      status: r.status as "active" | "inactive" | "archived",
       registeredAt: r.registeredAt,
       updatedAt: r.updatedAt,
       lastActive: r.lastActive,
-    }));
+    })) as RegisteredAgent[];
   }
 
   /**
@@ -239,7 +265,7 @@ export class AgentsAPI {
    */
   async update(
     agentId: string,
-    updates: Partial<AgentRegistration>,
+    updates: Partial<AgentRegistration> & { status?: string },
   ): Promise<RegisteredAgent> {
     const result = await this.client.mutation(api.agents.update, {
       agentId,
@@ -247,6 +273,8 @@ export class AgentsAPI {
       description: updates.description,
       metadata: updates.metadata,
       config: updates.config,
+      status: (updates as { status?: "active" | "inactive" | "archived" })
+        .status,
     });
 
     if (!result) {
@@ -260,8 +288,8 @@ export class AgentsAPI {
       id: result.agentId,
       name: result.name,
       description: result.description,
-      metadata: result.metadata || {},
-      config: result.config || {},
+      metadata: (result.metadata as Record<string, unknown> | undefined) ?? {},
+      config: (result.config as Record<string, unknown> | undefined) ?? {},
       status: result.status,
       registeredAt: result.registeredAt,
       updatedAt: result.updatedAt,
@@ -545,10 +573,13 @@ export class AgentsAPI {
         { participantId: agentId },
       );
 
-      return result.records.map((record: any) => ({
-        nodeId: record.id,
-        labels: record.labels || [],
-      }));
+      return result.records.map((record) => {
+        const node = record as unknown as Neo4jNodeRecord;
+        return {
+          nodeId: node.id,
+          labels: node.labels,
+        };
+      });
     } catch (error) {
       console.warn("Failed to query graph nodes:", error);
       return [];
@@ -562,11 +593,15 @@ export class AgentsAPI {
     plan: AgentDeletionPlan,
   ): Promise<AgentDeletionBackup> {
     return {
-      conversations: JSON.parse(JSON.stringify(plan.conversations)),
-      memories: JSON.parse(JSON.stringify(plan.memories)),
-      facts: JSON.parse(JSON.stringify(plan.facts)),
+      conversations: JSON.parse(
+        JSON.stringify(plan.conversations),
+      ) as Conversation[],
+      memories: JSON.parse(JSON.stringify(plan.memories)) as MemoryEntry[],
+      facts: JSON.parse(JSON.stringify(plan.facts)) as FactRecord[],
       agentRegistration: plan.agentRegistration
-        ? JSON.parse(JSON.stringify(plan.agentRegistration))
+        ? (JSON.parse(
+            JSON.stringify(plan.agentRegistration),
+          ) as unknown as RegisteredAgent)
         : null,
     };
   }
@@ -672,7 +707,7 @@ export class AgentsAPI {
             (result.graphNodesDeleted || 0) + deleteResult.deletedNodes.length;
 
           if (deleteResult.orphanIslands.length > 0) {
-            console.log(
+            console.warn(
               `  ℹ️  Deleted ${deleteResult.orphanIslands.length} orphan islands during agent cascade`,
             );
           }
@@ -858,7 +893,8 @@ export class AgentsAPI {
         `MATCH (n {participantId: $participantId}) RETURN count(n) as count`,
         { participantId: agentId },
       );
-      return (result.records[0] as any)?.count || 0;
+      const record = result.records[0] as unknown as Neo4jCountRecord | undefined;
+      return record?.count ?? 0;
     } catch (error) {
       console.warn("Failed to count graph nodes:", error);
       return 0;

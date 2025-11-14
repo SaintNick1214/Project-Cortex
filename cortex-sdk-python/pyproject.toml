@@ -1,0 +1,105 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cortex-memory"
+version = "0.9.0"
+description = "AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management"
+readme = "README.md"
+authors = [{name = "Saint Nick LLC", email = "support@cortexmemory.dev"}]
+license = "Apache-2.0"
+requires-python = ">=3.10"
+keywords = [
+    "ai",
+    "agents",
+    "memory",
+    "convex",
+    "sdk",
+    "python",
+    "conversations",
+    "vector-search",
+    "llm",
+    "chatbot",
+    "knowledge-graph",
+    "facts",
+    "hive-mode",
+    "memory-spaces",
+    "workflow-coordination",
+    "multi-agent",
+    "infinite-context",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Framework :: AsyncIO",
+    "Typing :: Typed",
+]
+
+dependencies = [
+    "convex>=0.5.0",
+    "pydantic>=2.0",
+    "typing-extensions>=4.0",
+]
+
+[project.optional-dependencies]
+graph = ["neo4j>=5.0"]
+a2a = ["redis>=5.0"]
+all = ["neo4j>=5.0", "redis>=5.0"]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pytest-cov>=4.0",
+    "black>=24.0",
+    "mypy>=1.0",
+    "ruff>=0.1",
+    "sphinx>=7.0",
+    "sphinx-rtd-theme>=2.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/SaintNick1214/Project-Cortex"
+Documentation = "https://github.com/SaintNick1214/Project-Cortex/tree/main/Documentation"
+Repository = "https://github.com/SaintNick1214/Project-Cortex"
+Issues = "https://github.com/SaintNick1214/Project-Cortex/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["cortex*"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q --strict-markers"
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.black]
+line-length = 88
+target-version = ['py312', 'py313']
+include = '\.pyi?$'
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+strict_optional = true
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]
+ignore = []
+

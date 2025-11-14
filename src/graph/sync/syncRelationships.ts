@@ -476,8 +476,14 @@ export async function syncA2ARelationships(
 
   // Extract A2A metadata (if available)
   // Note: A2A metadata is stored in custom fields, not in a metadata object
-  const toMemorySpace = (memory as any).toMemorySpace;
-  const fromMemorySpace = (memory as any).fromMemorySpace;
+  type A2AMemory = MemoryEntry & {
+    toMemorySpace?: string;
+    fromMemorySpace?: string;
+    messageId?: string;
+  };
+  const a2aMemory = memory as A2AMemory;
+  const toMemorySpace = a2aMemory.toMemorySpace;
+  const fromMemorySpace = a2aMemory.fromMemorySpace;
 
   if (!toMemorySpace || !fromMemorySpace) {
     return;
@@ -501,7 +507,7 @@ export async function syncA2ARelationships(
     from: fromNodeId,
     to: toNodeId,
     properties: {
-      messageId: (memory as any).messageId || memory.memoryId,
+      messageId: a2aMemory.messageId || memory.memoryId,
       importance: memory.importance,
       timestamp: memory.sourceTimestamp,
       memoryId: memory.memoryId,

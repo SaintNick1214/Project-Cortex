@@ -48,6 +48,7 @@ node dist/index.js test-local-convex
 ```
 
 **Expected wizard flow:**
+
 1. Project name: `test-local-convex`
 2. Installation type: New project
 3. Convex setup: Choose "Local development"
@@ -55,6 +56,7 @@ node dist/index.js test-local-convex
 5. Confirmation: Proceed
 
 **Expected output:**
+
 - ✓ Project files created
 - ✓ Convex configured for local
 - ✓ .env.local with LOCAL_CONVEX_URL
@@ -62,6 +64,7 @@ node dist/index.js test-local-convex
 - ✓ Cortex backend deployed
 
 **Verify:**
+
 ```bash
 cd test-local-convex
 ls -la  # Should see: src/, convex/, package.json, .env.local, README.md
@@ -79,6 +82,7 @@ node ../dist/index.js .
 ```
 
 **Expected wizard flow:**
+
 1. Project name: `existing-project` (detected)
 2. Add to existing: Yes
 3. Convex setup: Choose option
@@ -91,12 +95,14 @@ node dist/index.js test-cloud-convex
 ```
 
 **Expected wizard flow:**
+
 1. Project name: `test-cloud-convex`
 2. Convex setup: Choose "Create new Convex database"
 3. **Should launch Convex CLI login flow**
 4. Continue after successful setup
 
 **Requirements:**
+
 - Internet connection
 - Convex account (or willingness to create one)
 
@@ -107,15 +113,17 @@ node dist/index.js test-with-graph
 ```
 
 **Expected wizard flow:**
+
 1. Standard setup
 2. Graph database: Choose "Enable"
 3. Graph type: Choose "Neo4j"
 4. Deployment: Choose "Local (Docker Compose)"
 
 **Expected output:**
+
 - ✓ docker-compose.graph.yml created
 - ✓ neo4j-driver in package.json
-- ✓ NEO4J_* variables in .env.local
+- ✓ NEO4J\_\* variables in .env.local
 - ✓ src/graph-init.example.ts created
 
 ## Validation Checklist
@@ -149,6 +157,7 @@ After running the wizard, verify:
 
 **Cause:** SDK not installed or not built  
 **Solution:**
+
 ```bash
 cd /Users/SaintNick/Documents/Cortex/Project-Cortex
 npm run build
@@ -173,6 +182,7 @@ npm link
 ## Automated Testing (Future)
 
 For CI/CD, we can add:
+
 - Mock Convex responses
 - Snapshot testing for generated files
 - Integration tests with test Convex instances
@@ -184,4 +194,3 @@ For CI/CD, we can add:
 rm -rf test-*
 rm -rf /tmp/cortex-test
 ```
-
