@@ -258,8 +258,15 @@ const cortexMemory = createCortexMemory({
 
 See [Troubleshooting Guide](./troubleshooting.md) for common issues.
 
+## Next Steps
+
+- [Advanced Usage](./advanced-usage.md) - Custom configurations and patterns
+- [Memory Spaces](./memory-spaces.md) - Multi-tenancy guide
+- [Hive Mode](./hive-mode.md) - Cross-application memory
+- [API Reference](./api-reference.md) - Complete API documentation
+
 ## Support
 
 - [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
 - [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions)
-- [Documentation](https://github.com/SaintNick1214/Project-Cortex/tree/main/Documentation)
+- [Cortex Documentation](../../00-README.md) - Main documentation

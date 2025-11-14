@@ -6,6 +6,11 @@ on:
       - main
   # No paths filter - let version detection decide whether to publish
 
+# Prevent parallel execution with Python tests to avoid Convex deployment conflicts
+concurrency:
+  group: cortex-tests-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   check-version:
     runs-on: ubuntu-latest
