@@ -10,7 +10,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="cortex-memory",
-    version="0.8.2",
+    version="0.9.0",
     author="Saint Nick LLC",
     author_email="support@cortexmemory.dev",
     description="AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management",
@@ -23,12 +23,17 @@ setup(
         "Intended Audience :: Developers",
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "Framework :: AsyncIO",
+        "Typing :: Typed",
     ],
-    python_requires=">=3.12",
+    python_requires=">=3.10",
     install_requires=[
         "convex>=0.5.0",
         "pydantic>=2.0",

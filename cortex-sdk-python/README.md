@@ -15,13 +15,24 @@
 pip install cortex-memory
 
 # With graph database support
-pip install cortex-memory[graph]
+pip install "cortex-memory[graph]"
 
 # With A2A communication support
-pip install cortex-memory[a2a]
+pip install "cortex-memory[a2a]"
 
 # With all optional dependencies
-pip install cortex-memory[all]
+pip install "cortex-memory[all]"
+
+# Development installation
+pip install "cortex-memory[dev]"
+```
+
+**Install from source:**
+
+```bash
+git clone https://github.com/SaintNick1214/Project-Cortex.git
+cd Project-Cortex/cortex-sdk-python
+pip install -e ".[dev]"
 ```
 
 ### Your First Memory

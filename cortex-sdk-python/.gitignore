@@ -62,3 +62,30 @@ docs/_build/
 .DS_Store
 Thumbs.db
 
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+cortex_memory.egg-info/
+
+# Release temp files
+.pypirc
+
+# Session/temporary documentation (moved to dev-docs/)
+*_SUMMARY.md
+*_COMPLETE.md
+*_FIXED.md
+*_PROGRESS.md
+*_STATUS.md
+SESSION_*.md
+COMPLETE_*.md
+FINAL_*.md
+HELPERS_*.md
+TEST_*.md
+USER_*.md
+VERIFY_*.md
+STREAMING_*.md
+CLEANUP_*.md
+IMPLEMENTATION_*.md
+OFFSET_*.md
