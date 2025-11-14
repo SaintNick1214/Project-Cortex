@@ -80,9 +80,20 @@ async def test_openai_stores_multiple_facts_with_real_embeddings(
         })
         
         # Verify embeddings were stored
-        assert result.memories[0].embedding is not None
-        assert len(result.memories[0].embedding) == 1536
-        assert result.memories[0].content_type == "summarized"
+        if result.memories[0].embedding is None:
+            print(f"\n❌ ERROR: Embedding is None for fact '{conv['fact']}'")
+            print(f"   Content: {result.memories[0].content[:50]}...")
+            print(f"   Content type: {result.memories[0].content_type}")
+            print(f"   This suggests OpenAI API call failed during embedding generation")
+        assert result.memories[0].embedding is not None, f"Embedding is None for fact '{conv['fact']}' - OpenAI API call likely failed"
+        assert len(result.memories[0].embedding) == 1536, f"Embedding has wrong dimensions: {len(result.memories[0].embedding)} != 1536"
+        
+        if result.memories[0].content_type != "summarized":
+            print(f"\n❌ ERROR: Content type is '{result.memories[0].content_type}' instead of 'summarized' for fact '{conv['fact']}'")
+            print(f"   Original: {conv['user'][:50]}...")
+            print(f"   Stored: {result.memories[0].content[:50]}...")
+            print(f"   This suggests OpenAI summarization call failed")
+        assert result.memories[0].content_type == "summarized", f"Content type is '{result.memories[0].content_type}' instead of 'summarized' - OpenAI summarization likely failed"
     
     assert len(stored_memories) == 5
     
@@ -301,7 +312,11 @@ async def test_openai_validates_summarization_quality(
     memory = await cortex_client.vector.get(test_memory_space_id, memory_id)
     
     assert memory is not None
-    assert memory.content_type == "summarized"
+    if memory.content_type != "summarized":
+        print(f"\n❌ ERROR: Content type is '{memory.content_type}' instead of 'summarized'")
+        print(f"   Content: {memory.content}")
+        print(f"   This suggests OpenAI summarization call failed during remember()")
+    assert memory.content_type == "summarized", f"Content type is '{memory.content_type}' instead of 'summarized'"
     
     # Summarized content should be concise
     original = "My name is Alexander Johnson and I prefer to be called Alex"
@@ -379,7 +394,16 @@ async def test_openai_similarity_scores_are_realistic(
         if (getattr(r, "_score", None) is not None or getattr(r, "score", None) is not None)
     ]
     
-    assert len(results_with_scores) > 0
+    if len(results_with_scores) == 0:
+        print(f"\n❌ ERROR: No results have similarity scores")
+        print(f"   Total results: {len(results)}")
+        print(f"   First result has embedding: {results[0].embedding is not None if results else 'N/A'}")
+        print(f"   This suggests vector search is not working properly in managed mode")
+        print(f"   Checking embeddings in stored memories:")
+        for i, r in enumerate(results[:3]):
+            has_embedding = "YES" if r.embedding is not None else "NO"
+            print(f"     {i+1}. Memory '{r.memory_id}' has embedding: {has_embedding}")
+    assert len(results_with_scores) > 0, "No results have similarity scores - vector search might not be working"
     
     for result in results_with_scores:
         score = getattr(result, "_score", None) or getattr(result, "score", None)
