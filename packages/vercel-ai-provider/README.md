@@ -438,12 +438,12 @@ export async function POST(req: Request) {
 
 ## Documentation
 
-- [Getting Started](./docs/getting-started.md) - Step-by-step tutorial
-- [API Reference](./docs/api-reference.md) - Complete API documentation
-- [Advanced Usage](./docs/advanced-usage.md) - Custom configurations
-- [Memory Spaces](./docs/memory-spaces.md) - Multi-tenancy guide
-- [Hive Mode](./docs/hive-mode.md) - Cross-application memory
-- [Migration from mem0](./docs/migration-from-mem0.md) - Switching guide
+- [Getting Started](../../Documentation/08-integrations/vercel-ai-sdk/getting-started.md) - Step-by-step tutorial
+- [API Reference](../../Documentation/08-integrations/vercel-ai-sdk/api-reference.md) - Complete API documentation
+- [Advanced Usage](../../Documentation/08-integrations/vercel-ai-sdk/advanced-usage.md) - Custom configurations
+- [Memory Spaces](../../Documentation/08-integrations/vercel-ai-sdk/memory-spaces.md) - Multi-tenancy guide
+- [Hive Mode](../../Documentation/08-integrations/vercel-ai-sdk/hive-mode.md) - Cross-application memory
+- [Migration from mem0](../../Documentation/08-integrations/vercel-ai-sdk/migration-from-mem0.md) - Switching guide
 
 ## FAQ
 
@@ -546,7 +546,6 @@ await cortex.memory.remember({
 ### "Failed to connect to Convex"
 
 Make sure:
-
 1. Convex is running: `npx convex dev`
 2. `CONVEX_URL` is set correctly
 3. Cortex backend is deployed to Convex
@@ -554,7 +553,6 @@ Make sure:
 ### "Memory search returns no results"
 
 This is expected if:
-
 - No prior conversations stored
 - Using keyword search without embeddings (set up `embeddingProvider`)
 - Running on local Convex (vector search not supported locally)
@@ -562,10 +560,11 @@ This is expected if:
 ### "Type errors with LanguageModelV1"
 
 Make sure you're using compatible versions:
-
 - `ai`: ^3.0.0
 - `@cortexmemory/sdk`: ^0.9.0
 - `@cortexmemory/vercel-ai-provider`: ^0.1.0
+
+For more troubleshooting help, see [Troubleshooting Guide](../../Documentation/08-integrations/vercel-ai-sdk/troubleshooting.md).
 
 ## Contributing
 
@@ -574,6 +573,11 @@ We welcome contributions! Please see [CONTRIBUTING.md](../../CONTRIBUTING.md).
 ## License
 
 Apache 2.0 - See [LICENSE.md](./LICENSE.md)
+
+## Complete Documentation
+
+- [Cortex Documentation](../../Documentation/00-README.md) - Full Cortex documentation
+- [Vercel AI SDK Integration](../../Documentation/08-integrations/vercel-ai-sdk/) - All integration docs
 
 ## Links
 
