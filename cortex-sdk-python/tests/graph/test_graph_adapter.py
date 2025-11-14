@@ -9,6 +9,10 @@ Port of: tests/graph/graphAdapter.test.ts
 
 import pytest
 import os
+
+# Skip entire module if neo4j not available
+neo4j = pytest.importorskip("neo4j", reason="neo4j not installed (install with: pip install cortex-memory[graph])")
+
 from cortex.graph.adapters.cypher import CypherGraphAdapter
 from cortex.types import GraphConnectionConfig, GraphNode, GraphEdge
 
