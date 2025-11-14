@@ -61,7 +61,9 @@ class TestMemoryStreaming:
         """Set up test environment."""
         import time
         import random
-        self.convex_url = "http://127.0.0.1:3210"  # Local Convex dev server
+        import os
+        # Use environment CONVEX_URL (set by conftest.py for LOCAL/MANAGED mode)
+        self.convex_url = os.getenv("CONVEX_URL", "http://127.0.0.1:3210")
         self.cortex = Cortex(CortexConfig(convex_url=self.convex_url))
         # Use unique ID per test to avoid conflicts
         self.test_space_id = f"test-streaming-{int(time.time() * 1000)}-{random.randint(1000, 9999)}"
@@ -353,7 +355,9 @@ class TestMemoryStreamingEdgeCases:
         """Set up test environment."""
         import time
         import random
-        self.convex_url = "http://127.0.0.1:3210"
+        import os
+        # Use environment CONVEX_URL (set by conftest.py for LOCAL/MANAGED mode)
+        self.convex_url = os.getenv("CONVEX_URL", "http://127.0.0.1:3210")
         self.cortex = Cortex(CortexConfig(convex_url=self.convex_url))
         # Use unique ID per test to avoid conflicts
         self.test_space_id = f"test-streaming-edge-{int(time.time() * 1000)}-{random.randint(1000, 9999)}"
