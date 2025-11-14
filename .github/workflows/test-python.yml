@@ -2,12 +2,14 @@ name: Test Python SDK
 
 on:
   push:
-    branches: [main, dev]
+    branches:
+      - main  # Only run on push to main (after PR merge)
     paths:
       - 'cortex-sdk-python/**'
       - '.github/workflows/test-python.yml'
   pull_request:
-    branches: [main, dev]
+    branches:
+      - main  # Run on PRs to main (validates before merge)
     paths:
       - 'cortex-sdk-python/**'
 
@@ -45,6 +47,8 @@ jobs:
           CONVEX_URL: ${{ secrets.CONVEX_URL }}
           CONVEX_TEST_MODE: managed
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          CI: true
+          CLEANUP_DATABASE: true
       
       - name: Check types with mypy
         run: |
