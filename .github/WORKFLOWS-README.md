@@ -180,13 +180,16 @@ View workflow runs:
 
 ## 📝 Workflow Files
 
-| File          | Purpose               | Trigger                |
-| ------------- | --------------------- | ---------------------- |
-| `publish.yml` | Automated npm publish | Version change on main |
+| File               | Purpose                      | Trigger                          |
+| ------------------ | ---------------------------- | -------------------------------- |
+| `publish.yml`      | Automated npm publish        | Version change on main           |
+| `test-python.yml`  | Python SDK integration tests | PRs/pushes affecting Python code |
+| `publish-python.yml` | Python SDK to PyPI         | Version change on main           |
+
+**Test Coordination**: `test-python.yml` and `publish.yml` use concurrency groups to prevent simultaneous execution and avoid conflicts in the shared Convex test deployment. See [CONCURRENT-TEST-PREVENTION.md](./CONCURRENT-TEST-PREVENTION.md) for details.
 
 **Future workflows** (planned):
 
-- `test.yml` - Run tests on all PRs
 - `lint.yml` - Code quality checks
 - `docs.yml` - Deploy documentation
 - `security.yml` - Security scanning
