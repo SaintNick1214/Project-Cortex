@@ -48,7 +48,7 @@ def generate_mock_embedding(text: str, dimensions: int = 1536) -> List[float]:
 
 
 async def generate_embedding(
-    text: str, dimensions: int = 1536, use_mock: bool = False
+    text: str, dimensions: int = 1536, use_mock: bool = False, max_retries: int = 3
 ) -> Optional[List[float]]:
     """
     Generate an embedding vector for the given text.
@@ -60,39 +60,68 @@ async def generate_embedding(
         text: Text to generate embedding for
         dimensions: Number of dimensions (default: 1536)
         use_mock: If True, generate mock embedding when API unavailable
+        max_retries: Maximum number of retries on transient failures (default: 3)
 
     Returns:
         List of floats representing the embedding, or None if unavailable
     """
+    import asyncio
+    
     api_key = os.getenv("OPENAI_API_KEY")
 
     if not api_key:
+        print("Warning: OPENAI_API_KEY not set")
         if use_mock:
             return generate_mock_embedding(text, dimensions)
         return None
 
-    try:
-        from openai import OpenAI
+    for attempt in range(max_retries):
+        try:
+            from openai import OpenAI
 
-        client = OpenAI(api_key=api_key)
+            client = OpenAI(api_key=api_key, timeout=30.0)
 
-        response = client.embeddings.create(
-            model="text-embedding-3-small", input=text, dimensions=dimensions
-        )
+            response = client.embeddings.create(
+                model="text-embedding-3-small", input=text, dimensions=dimensions
+            )
 
-        return response.data[0].embedding
+            return response.data[0].embedding
 
-    except ImportError:
-        # OpenAI package not installed
-        if use_mock:
-            return generate_mock_embedding(text, dimensions)
-        return None
+        except ImportError:
+            # OpenAI package not installed
+            print("Warning: openai package not installed")
+            if use_mock:
+                return generate_mock_embedding(text, dimensions)
+            return None
 
-    except Exception as e:
-        # API call failed
-        if use_mock:
-            return generate_mock_embedding(text, dimensions)
-        return None
+        except Exception as e:
+            # API call failed - log the error
+            error_msg = str(e)
+            print(f"Warning: OpenAI embedding generation failed (attempt {attempt + 1}/{max_retries}): {error_msg}")
+            
+            # Check if it's a rate limit error or transient error that we should retry
+            is_retryable = any(keyword in error_msg.lower() for keyword in [
+                "rate limit", "timeout", "connection", "503", "502", "500"
+            ])
+            
+            if is_retryable and attempt < max_retries - 1:
+                # Exponential backoff: 1s, 2s, 4s
+                wait_time = 2 ** attempt
+                print(f"  Retrying in {wait_time}s...")
+                await asyncio.sleep(wait_time)
+                continue
+            
+            # Final attempt failed or non-retryable error
+            if use_mock:
+                print("  Falling back to mock embedding")
+                return generate_mock_embedding(text, dimensions)
+            return None
+    
+    # All retries exhausted
+    print(f"Error: OpenAI embedding generation failed after {max_retries} attempts")
+    if use_mock:
+        return generate_mock_embedding(text, dimensions)
+    return None
 
 
 async def generate_embeddings_batch(
@@ -119,7 +148,7 @@ async def generate_embeddings_batch(
 
 
 async def summarize_conversation(
-    user_message: str, agent_response: str
+    user_message: str, agent_response: str, max_retries: int = 3
 ) -> Optional[str]:
     """
     Summarize a conversation using GPT-4o-mini.
@@ -130,6 +159,7 @@ async def summarize_conversation(
     Args:
         user_message: The user's message
         agent_response: The agent's response
+        max_retries: Maximum number of retries on transient failures (default: 3)
         
     Returns:
         Summarized content as a string, or None if API unavailable
@@ -141,38 +171,63 @@ async def summarize_conversation(
         ... )
         >>> print(summary)  # "User prefers to be called Alex"
     """
+    import asyncio
+    
     api_key = os.getenv("OPENAI_API_KEY")
 
     if not api_key:
+        print("Warning: OPENAI_API_KEY not set for summarization")
         return None
 
-    try:
-        from openai import OpenAI
+    for attempt in range(max_retries):
+        try:
+            from openai import OpenAI
 
-        client = OpenAI(api_key=api_key)
+            client = OpenAI(api_key=api_key, timeout=30.0)
 
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "Extract key facts from this conversation in one concise sentence.",
-                },
-                {
-                    "role": "user",
-                    "content": f"User: {user_message}\nAgent: {agent_response}",
-                },
-            ],
-            temperature=0.3,
-        )
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "Extract key facts from this conversation in one concise sentence.",
+                    },
+                    {
+                        "role": "user",
+                        "content": f"User: {user_message}\nAgent: {agent_response}",
+                    },
+                ],
+                temperature=0.3,
+            )
 
-        return response.choices[0].message.content
+            return response.choices[0].message.content
 
-    except ImportError:
-        # OpenAI package not installed
-        return None
+        except ImportError:
+            # OpenAI package not installed
+            print("Warning: openai package not installed")
+            return None
 
-    except Exception as e:
-        # API call failed
-        return None
+        except Exception as e:
+            # API call failed - log the error
+            error_msg = str(e)
+            print(f"Warning: OpenAI summarization failed (attempt {attempt + 1}/{max_retries}): {error_msg}")
+            
+            # Check if it's a rate limit error or transient error that we should retry
+            is_retryable = any(keyword in error_msg.lower() for keyword in [
+                "rate limit", "timeout", "connection", "503", "502", "500"
+            ])
+            
+            if is_retryable and attempt < max_retries - 1:
+                # Exponential backoff: 1s, 2s, 4s
+                wait_time = 2 ** attempt
+                print(f"  Retrying in {wait_time}s...")
+                await asyncio.sleep(wait_time)
+                continue
+            
+            # Final attempt failed or non-retryable error
+            return None
+    
+    # All retries exhausted
+    print(f"Error: OpenAI summarization failed after {max_retries} attempts")
+    return None
 
