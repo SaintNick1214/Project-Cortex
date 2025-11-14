@@ -76,6 +76,54 @@ def event_loop():
     loop.close()
 
 
+@pytest.fixture(scope="session", autouse=True)
+async def cleanup_test_database():
+    """
+    Session-level cleanup that runs before ALL tests and after ALL tests.
+    
+    Cleans up test data from MANAGED Convex to prevent table bloat.
+    Only runs in CI or when CLEANUP_DATABASE=true is set.
+    """
+    import os
+    
+    # Only run cleanup in CI or when explicitly enabled
+    is_ci = os.getenv("CI") == "true" or os.getenv("GITHUB_ACTIONS") == "true"
+    cleanup_enabled = os.getenv("CLEANUP_DATABASE") == "true"
+    
+    if not (is_ci or cleanup_enabled):
+        yield
+        return
+    
+    convex_url = os.getenv("CONVEX_URL")
+    if not convex_url:
+        yield
+        return
+    
+    print("\n🧹 [Session Cleanup] Purging test data from database...")
+    
+    config = CortexConfig(convex_url=convex_url)
+    client = Cortex(config)
+    cleanup = TestCleanup(client)
+    
+    # Cleanup BEFORE tests
+    try:
+        await cleanup.purge_all()
+        print("✅ [Session Cleanup] Database cleaned before tests\n")
+    except Exception as e:
+        print(f"⚠️  [Session Cleanup] Pre-test cleanup failed: {e}\n")
+    
+    yield
+    
+    # Cleanup AFTER tests
+    try:
+        await cleanup.purge_all()
+        print("\n✅ [Session Cleanup] Database cleaned after tests")
+    except Exception as e:
+        print(f"\n⚠️  [Session Cleanup] Post-test cleanup failed: {e}")
+    finally:
+        await client.close()
+
+
 @pytest.fixture
 async def cortex_client() -> AsyncGenerator[Cortex, None]:
     """
