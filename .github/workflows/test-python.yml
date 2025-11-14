@@ -47,8 +47,6 @@ jobs:
           CONVEX_URL: ${{ secrets.CONVEX_URL }}
           CONVEX_TEST_MODE: managed
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          CI: true
-          CLEANUP_DATABASE: true
       
       - name: Check types with mypy
         run: |
