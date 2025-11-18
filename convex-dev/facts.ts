@@ -388,7 +388,7 @@ export const count = query({
     predicate: v.optional(v.string()),
     object: v.optional(v.string()),
     minConfidence: v.optional(v.number()),
-    confidence: v.optional(v.any()),
+    confidence: v.optional(v.number()), // Exact match
     // Universal filters
     userId: v.optional(v.string()),
     participantId: v.optional(v.string()),
@@ -440,20 +440,7 @@ export const count = query({
       facts = facts.filter((f) => f.confidence >= args.minConfidence!);
     }
     if (args.confidence !== undefined) {
-      const conf = args.confidence as any;
-      if (typeof conf === "number") {
-        facts = facts.filter((f) => f.confidence === conf);
-      } else {
-        if (conf.$gte !== undefined) {
-          facts = facts.filter((f) => f.confidence >= conf.$gte);
-        }
-        if (conf.$lte !== undefined) {
-          facts = facts.filter((f) => f.confidence <= conf.$lte);
-        }
-        if (conf.$eq !== undefined) {
-          facts = facts.filter((f) => f.confidence === conf.$eq);
-        }
-      }
+      facts = facts.filter((f) => f.confidence === args.confidence);
     }
     if (args.sourceType !== undefined) {
       facts = facts.filter((f) => f.sourceType === args.sourceType);
@@ -528,7 +515,7 @@ export const search = query({
     predicate: v.optional(v.string()),
     object: v.optional(v.string()),
     minConfidence: v.optional(v.number()),
-    confidence: v.optional(v.any()),
+    confidence: v.optional(v.number()), // Exact match
     // Universal filters
     userId: v.optional(v.string()),
     participantId: v.optional(v.string()),
