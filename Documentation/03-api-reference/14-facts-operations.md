@@ -303,7 +303,7 @@ interface SearchFactsOptions {
   // Result options
   limit?: number; // Max results (default: 10)
   offset?: number; // Pagination offset
-  sortBy?: "score" | "confidence" | "createdAt" | "updatedAt"; // Sort field
+  sortBy?: "confidence" | "createdAt" | "updatedAt"; // Sort field (note: search doesn't return scores)
   sortOrder?: "asc" | "desc"; // Sort direction (default: 'desc')
 }
 ```

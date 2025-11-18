@@ -411,7 +411,7 @@ class SearchFactsOptions:
     metadata: Optional[Dict[str, Any]] = None
     limit: Optional[int] = None
     offset: Optional[int] = None
-    sort_by: Optional[Literal["score", "confidence", "createdAt", "updatedAt"]] = None
+    sort_by: Optional[Literal["confidence", "createdAt", "updatedAt"]] = None  # Note: search doesn't return scores
     sort_order: Optional[Literal["asc", "desc"]] = None
 
 
