@@ -11,6 +11,8 @@ import type {
   DeleteFactOptions,
   FactRecord,
   ListFactsFilter,
+  QueryByRelationshipFilter,
+  QueryBySubjectFilter,
   SearchFactsOptions,
   StoreFactOptions,
   StoreFactParams,
@@ -53,6 +55,7 @@ export class FactsAPI {
     const result = await this.client.mutation(api.facts.store, {
       memorySpaceId: params.memorySpaceId,
       participantId: params.participantId,
+      userId: params.userId,
       fact: params.fact,
       factType: params.factType,
       subject: params.subject,
@@ -121,9 +124,27 @@ export class FactsAPI {
       memorySpaceId: filter.memorySpaceId,
       factType: filter.factType,
       subject: filter.subject,
+      predicate: filter.predicate,
+      object: filter.object,
+      minConfidence: filter.minConfidence,
+      confidence: filter.confidence,
+      userId: filter.userId,
+      participantId: filter.participantId,
       tags: filter.tags,
+      tagMatch: filter.tagMatch,
+      sourceType: filter.sourceType,
+      createdBefore: filter.createdBefore?.getTime(),
+      createdAfter: filter.createdAfter?.getTime(),
+      updatedBefore: filter.updatedBefore?.getTime(),
+      updatedAfter: filter.updatedAfter?.getTime(),
+      version: filter.version,
       includeSuperseded: filter.includeSuperseded,
+      validAt: filter.validAt?.getTime(),
+      metadata: filter.metadata,
       limit: filter.limit,
+      offset: filter.offset,
+      sortBy: filter.sortBy,
+      sortOrder: filter.sortOrder,
     });
 
     return result as FactRecord[];
@@ -144,7 +165,24 @@ export class FactsAPI {
     const result = await this.client.query(api.facts.count, {
       memorySpaceId: filter.memorySpaceId,
       factType: filter.factType,
+      subject: filter.subject,
+      predicate: filter.predicate,
+      object: filter.object,
+      minConfidence: filter.minConfidence,
+      confidence: filter.confidence,
+      userId: filter.userId,
+      participantId: filter.participantId,
+      tags: filter.tags,
+      tagMatch: filter.tagMatch,
+      sourceType: filter.sourceType,
+      createdBefore: filter.createdBefore?.getTime(),
+      createdAfter: filter.createdAfter?.getTime(),
+      updatedBefore: filter.updatedBefore?.getTime(),
+      updatedAfter: filter.updatedAfter?.getTime(),
+      version: filter.version,
       includeSuperseded: filter.includeSuperseded,
+      validAt: filter.validAt?.getTime(),
+      metadata: filter.metadata,
     });
 
     return result;
@@ -170,9 +208,28 @@ export class FactsAPI {
       memorySpaceId,
       query,
       factType: options?.factType,
+      subject: options?.subject,
+      predicate: options?.predicate,
+      object: options?.object,
       minConfidence: options?.minConfidence,
+      confidence: options?.confidence,
+      userId: options?.userId,
+      participantId: options?.participantId,
       tags: options?.tags,
+      tagMatch: options?.tagMatch,
+      sourceType: options?.sourceType,
+      createdBefore: options?.createdBefore?.getTime(),
+      createdAfter: options?.createdAfter?.getTime(),
+      updatedBefore: options?.updatedBefore?.getTime(),
+      updatedAfter: options?.updatedAfter?.getTime(),
+      version: options?.version,
+      includeSuperseded: options?.includeSuperseded,
+      validAt: options?.validAt?.getTime(),
+      metadata: options?.metadata,
       limit: options?.limit,
+      offset: options?.offset,
+      sortBy: options?.sortBy,
+      sortOrder: options?.sortOrder,
     });
 
     return result as FactRecord[];
@@ -285,22 +342,32 @@ export class FactsAPI {
    * });
    * ```
    */
-  async queryBySubject(filter: {
-    memorySpaceId: string;
-    subject: string;
-    factType?:
-      | "preference"
-      | "identity"
-      | "knowledge"
-      | "relationship"
-      | "event"
-      | "observation"
-      | "custom";
-  }): Promise<FactRecord[]> {
+  async queryBySubject(filter: QueryBySubjectFilter): Promise<FactRecord[]> {
     const result = await this.client.query(api.facts.queryBySubject, {
       memorySpaceId: filter.memorySpaceId,
       subject: filter.subject,
       factType: filter.factType,
+      userId: filter.userId,
+      participantId: filter.participantId,
+      predicate: filter.predicate,
+      object: filter.object,
+      minConfidence: filter.minConfidence,
+      confidence: filter.confidence,
+      tags: filter.tags,
+      tagMatch: filter.tagMatch,
+      sourceType: filter.sourceType,
+      createdBefore: filter.createdBefore?.getTime(),
+      createdAfter: filter.createdAfter?.getTime(),
+      updatedBefore: filter.updatedBefore?.getTime(),
+      updatedAfter: filter.updatedAfter?.getTime(),
+      version: filter.version,
+      includeSuperseded: filter.includeSuperseded,
+      validAt: filter.validAt?.getTime(),
+      metadata: filter.metadata,
+      limit: filter.limit,
+      offset: filter.offset,
+      sortBy: filter.sortBy,
+      sortOrder: filter.sortOrder,
     });
 
     return result as FactRecord[];
@@ -318,15 +385,34 @@ export class FactsAPI {
    * });
    * ```
    */
-  async queryByRelationship(filter: {
-    memorySpaceId: string;
-    subject: string;
-    predicate: string;
-  }): Promise<FactRecord[]> {
+  async queryByRelationship(
+    filter: QueryByRelationshipFilter,
+  ): Promise<FactRecord[]> {
     const result = await this.client.query(api.facts.queryByRelationship, {
       memorySpaceId: filter.memorySpaceId,
       subject: filter.subject,
       predicate: filter.predicate,
+      object: filter.object,
+      factType: filter.factType,
+      userId: filter.userId,
+      participantId: filter.participantId,
+      minConfidence: filter.minConfidence,
+      confidence: filter.confidence,
+      tags: filter.tags,
+      tagMatch: filter.tagMatch,
+      sourceType: filter.sourceType,
+      createdBefore: filter.createdBefore?.getTime(),
+      createdAfter: filter.createdAfter?.getTime(),
+      updatedBefore: filter.updatedBefore?.getTime(),
+      updatedAfter: filter.updatedAfter?.getTime(),
+      version: filter.version,
+      includeSuperseded: filter.includeSuperseded,
+      validAt: filter.validAt?.getTime(),
+      metadata: filter.metadata,
+      limit: filter.limit,
+      offset: filter.offset,
+      sortBy: filter.sortBy,
+      sortOrder: filter.sortOrder,
     });
 
     return result as FactRecord[];

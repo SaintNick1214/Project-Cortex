@@ -267,6 +267,7 @@ export default defineSchema({
     factId: v.string(), // Unique ID for this fact
     memorySpaceId: v.string(), // Memory space isolation
     participantId: v.optional(v.string()), // Hive Mode: which participant extracted this
+    userId: v.optional(v.string()), // GDPR compliance - links to user
 
     // Fact content
     fact: v.string(), // The fact statement
@@ -323,6 +324,7 @@ export default defineSchema({
     .index("by_memorySpace", ["memorySpaceId"]) // Memory space's facts
     .index("by_memorySpace_subject", ["memorySpaceId", "subject"]) // Entity-centric queries
     .index("by_participantId", ["participantId"]) // Hive Mode tracking
+    .index("by_userId", ["userId"]) // GDPR cascade
     .searchIndex("by_content", {
       searchField: "fact",
       filterFields: ["memorySpaceId", "factType"],

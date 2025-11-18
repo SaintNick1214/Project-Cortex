@@ -16,8 +16,11 @@ The Facts API (`cortex.facts.*`) provides structured knowledge storage with vers
 - ✅ Temporal validity (validFrom/validUntil)
 - ✅ Automatic versioning and supersession
 - ✅ **Graph database integration (v0.7.0+)** - Optional syncToGraph
+- ✅ **Universal filters (v0.9.1+)** - Same filters as Memory API
 - ✅ sourceRef linking to memories and conversations
 - ✅ Memory space isolation
+- ✅ **userId support (v0.9.1+)** - GDPR cascade deletion
+- ✅ **participantId support** - Hive Mode tracking
 
 **Relationship to Layers:**
 
@@ -52,6 +55,7 @@ cortex.facts.store(
 interface StoreFactParams {
   memorySpaceId: string;
   participantId?: string; // Hive Mode tracking
+  userId?: string; // GDPR compliance - links to user
   fact: string; // Human-readable fact statement
   factType: FactType; // Category of fact
   subject?: string; // Primary entity
@@ -78,8 +82,10 @@ interface StoreFactOptions {
 **Example:**
 
 ```typescript
+// Store fact with userId for GDPR compliance
 const fact = await cortex.facts.store({
   memorySpaceId: "agent-1",
+  userId: "user-123", // GDPR compliance - enables cascade deletion
   fact: "User prefers dark mode",
   factType: "preference",
   subject: "user-123",
@@ -96,6 +102,21 @@ const fact = await cortex.facts.store({
 });
 
 console.log(fact.factId); // "fact-1730123456789-abc123"
+
+// Hive Mode - store with participantId
+const hiveFact = await cortex.facts.store({
+  memorySpaceId: "shared-space",
+  participantId: "profile-agent", // Track which agent stored it
+  userId: "user-456",
+  fact: "User works at Acme Corp",
+  factType: "identity",
+  subject: "user-456",
+  predicate: "works_at",
+  object: "Acme Corp",
+  confidence: 98,
+  sourceType: "conversation",
+  tags: ["employment"],
+});
 ```
 
 ### `facts.get()`
@@ -137,12 +158,48 @@ async list(filter: ListFactsFilter): Promise<FactRecord[]>
 
 ```typescript
 interface ListFactsFilter {
+  // Required
   memorySpaceId: string;
+
+  // Fact-specific filters
   factType?: FactType; // Filter by type
   subject?: string; // Filter by subject entity
+  predicate?: string; // Filter by relationship type
+  object?: string; // Filter by object entity
+  minConfidence?: number; // Minimum confidence threshold (0-100)
+  minConfidence?: number; // Confidence >= value
+  confidence?: number; // Exact match
+
+  // Universal filters (Cortex standard)
+  userId?: string; // Filter by user
+  participantId?: string; // Filter by participant (Hive Mode)
   tags?: string[]; // Filter by tags
+  tagMatch?: "any" | "all"; // Tag match strategy (default: 'any')
+  sourceType?: "conversation" | "system" | "tool" | "manual"; // Filter by source
+
+  // Date filters
+  createdBefore?: Date;
+  createdAfter?: Date;
+  updatedBefore?: Date;
+  updatedAfter?: Date;
+
+  // Version filters
+  version?: number; // Specific version
   includeSuperseded?: boolean; // Include old versions (default: false)
+
+  // Temporal validity filters
+  validAt?: Date; // Facts valid at this time
+  validFrom?: Date; // Facts valid from this date
+  validUntil?: Date; // Facts valid until this date
+
+  // Metadata filters
+  metadata?: Record<string, any>; // Custom metadata filters
+
+  // Result options
   limit?: number; // Max results (default: 100)
+  offset?: number; // Pagination offset (default: 0)
+  sortBy?: "createdAt" | "updatedAt" | "confidence" | "version"; // Sort field
+  sortOrder?: "asc" | "desc"; // Sort direction (default: 'desc')
 }
 ```
 
@@ -161,6 +218,35 @@ const uiFacts = await cortex.facts.list({
   memorySpaceId: "agent-1",
   tags: ["ui", "settings"],
   limit: 50,
+});
+
+// Universal filters - filter by userId (GDPR-friendly)
+const userFacts = await cortex.facts.list({
+  memorySpaceId: "agent-1",
+  userId: "user-123", // All facts about this user
+  minConfidence: 80,
+  createdAfter: new Date("2025-01-01"),
+});
+
+// Hive Mode - filter by participant
+const agentFacts = await cortex.facts.list({
+  memorySpaceId: "shared-space",
+  participantId: "email-agent", // Facts stored by email agent
+  factType: "preference",
+});
+
+// Complex universal filters
+const recentHighConfidence = await cortex.facts.list({
+  memorySpaceId: "agent-1",
+  userId: "user-123",
+  minConfidence: 90, // Confidence >= 90
+  createdAfter: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // Last 7 days
+  sourceType: "conversation", // Only from conversations
+  tags: ["important"],
+  tagMatch: "all", // Must have ALL tags
+  sortBy: "confidence",
+  sortOrder: "desc",
+  limit: 20,
 });
 ```
 
@@ -182,24 +268,88 @@ async search(
 
 ```typescript
 interface SearchFactsOptions {
+  // Fact-specific filters
   factType?: FactType;
+  subject?: string;
+  predicate?: string;
+  object?: string;
   minConfidence?: number; // Filter by confidence threshold
+  minConfidence?: number; // Confidence >= value
+  confidence?: number; // Exact match
+
+  // Universal filters (Cortex standard)
+  userId?: string;
+  participantId?: string; // Hive Mode filtering
   tags?: string[];
-  limit?: number;
+  tagMatch?: "any" | "all"; // Tag match strategy (default: 'any')
+  sourceType?: "conversation" | "system" | "tool" | "manual";
+
+  // Date filters
+  createdBefore?: Date;
+  createdAfter?: Date;
+  updatedBefore?: Date;
+  updatedAfter?: Date;
+
+  // Version filters
+  version?: number;
+  includeSuperseded?: boolean; // Include old versions (default: false)
+
+  // Temporal validity
+  validAt?: Date; // Facts valid at this time
+
+  // Metadata filters
+  metadata?: Record<string, any>;
+
+  // Result options
+  limit?: number; // Max results (default: 10)
+  offset?: number; // Pagination offset
+  sortBy?: "score" | "confidence" | "createdAt" | "updatedAt"; // Sort field
+  sortOrder?: "asc" | "desc"; // Sort direction (default: 'desc')
 }
 ```
 
 **Example:**
 
 ```typescript
+// Basic search with universal filters
 const foodFacts = await cortex.facts.search("agent-1", "food preferences", {
   factType: "preference",
   minConfidence: 80,
+  userId: "user-123", // Filter by user
   limit: 10,
 });
 
 foodFacts.forEach((fact) => {
   console.log(`${fact.fact} (${fact.confidence}% confidence)`);
+});
+
+// Search with date filters
+const recentFacts = await cortex.facts.search("agent-1", "user preferences", {
+  userId: "user-123",
+  createdAfter: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Last 30 days
+  minConfidence: 70,
+  sortBy: "confidence",
+});
+
+// Search by participant (Hive Mode)
+const participantFacts = await cortex.facts.search("shared-space", "user info", {
+  participantId: "profile-agent",
+  factType: "identity",
+  validAt: new Date(), // Facts valid now
+});
+
+// Complex search with metadata
+const complexSearch = await cortex.facts.search("agent-1", "important facts", {
+  userId: "user-123",
+  minConfidence: 85,
+  sourceType: "conversation",
+  tags: ["verified", "critical"],
+  tagMatch: "all",
+  metadata: { category: "security" },
+  createdAfter: new Date("2025-01-01"),
+  sortBy: "confidence",
+  sortOrder: "desc",
+  limit: 20,
 });
 ```
 
@@ -285,37 +435,320 @@ async count(filter: CountFactsFilter): Promise<number>
 
 ```typescript
 interface CountFactsFilter {
+  // Required
   memorySpaceId: string;
+
+  // Fact-specific filters
   factType?: FactType;
-  includeSuperseded?: boolean;
+  subject?: string;
+  predicate?: string;
+  object?: string;
+  minConfidence?: number;
+  confidence?: number | { $gte?: number; $lte?: number; $eq?: number };
+
+  // Universal filters (Cortex standard)
+  userId?: string;
+  participantId?: string; // Hive Mode filtering
+  tags?: string[];
+  tagMatch?: "any" | "all";
+  sourceType?: "conversation" | "system" | "tool" | "manual";
+
+  // Date filters
+  createdBefore?: Date;
+  createdAfter?: Date;
+  updatedBefore?: Date;
+  updatedAfter?: Date;
+
+  // Version filters
+  version?: number;
+  includeSuperseded?: boolean; // Include old versions (default: false)
+
+  // Temporal validity
+  validAt?: Date; // Facts valid at this time
+
+  // Metadata filters
+  metadata?: Record<string, any>;
 }
 ```
 
 **Example:**
 
 ```typescript
+// Count all preferences
 const totalPreferences = await cortex.facts.count({
   memorySpaceId: "agent-1",
   factType: "preference",
 });
 
 console.log(`Found ${totalPreferences} user preferences`);
+
+// Count by userId (GDPR-friendly)
+const userFactCount = await cortex.facts.count({
+  memorySpaceId: "agent-1",
+  userId: "user-123",
+});
+
+console.log(`User has ${userFactCount} facts stored`);
+
+// Count high-confidence recent facts
+const recentHighConfidence = await cortex.facts.count({
+  memorySpaceId: "agent-1",
+  userId: "user-123",
+  minConfidence: 90,
+  createdAfter: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+  sourceType: "conversation",
+});
+
+console.log(`${recentHighConfidence} high-confidence facts from last 7 days`);
+
+// Count by participant (Hive Mode)
+const participantFactCount = await cortex.facts.count({
+  memorySpaceId: "shared-space",
+  participantId: "email-agent",
+  factType: "preference",
+});
+
+console.log(`Email agent stored ${participantFactCount} preferences`);
+```
+
+## Universal Filters Support
+
+> **Key Design Principle:** Facts API supports the same universal filters as Memory Operations for consistency.
+
+The Facts API now supports **universal filters** across all query operations (`list()`, `search()`, `count()`, `queryBySubject()`, etc.), making it consistent with Cortex's core design philosophy.
+
+### Supported Universal Filters
+
+All fact query operations accept these standard Cortex filters:
+
+```typescript
+interface UniversalFactFilters {
+  // Identity filters (GDPR compliance)
+  userId?: string; // Filter by user
+  participantId?: string; // Filter by participant (Hive Mode)
+
+  // Fact-specific filters
+  factType?: FactType;
+  subject?: string;
+  predicate?: string;
+  object?: string;
+  minConfidence?: number; // Confidence >= value
+  confidence?: number; // Exact match
+
+  // Source filters
+  sourceType?: "conversation" | "system" | "tool" | "manual";
+
+  // Tag filters
+  tags?: string[];
+  tagMatch?: "any" | "all"; // Default: 'any'
+
+  // Date filters
+  createdBefore?: Date;
+  createdAfter?: Date;
+  updatedBefore?: Date;
+  updatedAfter?: Date;
+
+  // Version filters
+  version?: number;
+  includeSuperseded?: boolean; // Include old versions
+
+  // Temporal validity
+  validAt?: Date; // Facts valid at specific time
+  validFrom?: Date;
+  validUntil?: Date;
+
+  // Metadata filters
+  metadata?: Record<string, any>; // Custom metadata
+
+  // Result options
+  limit?: number;
+  offset?: number;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+}
+```
+
+### Why Universal Filters Matter
+
+**1. Consistent API Experience**
+
+```typescript
+// Same filter patterns work across Cortex
+const filters = {
+  userId: "user-123",
+  createdAfter: new Date("2025-01-01"),
+  tags: ["important"],
+};
+
+// Use in Memory API
+await cortex.memory.list("agent-1", filters);
+
+// Use in Facts API
+await cortex.facts.list({ memorySpaceId: "agent-1", ...filters });
+```
+
+**2. GDPR Compliance**
+
+```typescript
+// Filter facts by userId for data export
+const userFacts = await cortex.facts.list({
+  memorySpaceId: "agent-1",
+  userId: "user-123",
+});
+
+// Export for GDPR request
+const exportData = await cortex.facts.export({
+  memorySpaceId: "agent-1",
+  userId: "user-123",
+  format: "json",
+});
+
+// Delete for GDPR compliance (via users.delete cascade)
+await cortex.users.delete("user-123", { cascade: true });
+// Automatically deletes all facts with userId="user-123"
+```
+
+**3. Hive Mode Support**
+
+```typescript
+// Filter by participantId to see which agent stored what
+const emailAgentFacts = await cortex.facts.list({
+  memorySpaceId: "shared-space",
+  participantId: "email-agent",
+  factType: "preference",
+});
+
+const profileAgentFacts = await cortex.facts.list({
+  memorySpaceId: "shared-space",
+  participantId: "profile-agent",
+  factType: "identity",
+});
+
+// Compare what different agents learned
+console.log(
+  `Email agent stored ${emailAgentFacts.length} preferences`,
+);
+console.log(
+  `Profile agent stored ${profileAgentFacts.length} identity facts`,
+);
+```
+
+**4. Complex Queries**
+
+```typescript
+// Combine multiple filters for precise queries
+const criticalRecentFacts = await cortex.facts.list({
+  memorySpaceId: "agent-1",
+  userId: "user-123",
+  minConfidence: 90,
+  factType: "preference",
+  sourceType: "conversation",
+  createdAfter: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+  tags: ["verified", "critical"],
+  tagMatch: "all",
+  metadata: { priority: "high" },
+  sortBy: "confidence",
+  sortOrder: "desc",
+});
+```
+
+### Confidence Filtering
+
+Facts API supports confidence filtering for quality thresholds:
+
+```typescript
+// Minimum confidence (most common pattern)
+const highQuality = await cortex.facts.list({
+  memorySpaceId: "agent-1",
+  minConfidence: 85, // Confidence >= 85
+});
+
+// Exact match
+const exactFacts = await cortex.facts.list({
+  memorySpaceId: "agent-1",
+  confidence: 90, // Exactly 90
+});
+
+// Note: maxConfidence (upper bound) will be added in v0.9.2
+```
+
+### Operations Supporting Universal Filters
+
+All major query operations support universal filters:
+
+- ✅ `facts.list()` - Full filter support
+- ✅ `facts.search()` - Full filter support + text search
+- ✅ `facts.count()` - Full filter support
+- ✅ `facts.queryBySubject()` - Universal filters + subject focus
+- ✅ `facts.queryByRelationship()` - Universal filters + relationship focus
+- ✅ `facts.export()` - Universal filters for selective export
+- ✅ `facts.consolidate()` - Can filter facts to consolidate
+
+### Migration Note
+
+**If you're using older code:**
+
+```typescript
+// Old (still works, but limited)
+const facts = await cortex.facts.list({
+  memorySpaceId: "agent-1",
+  factType: "preference",
+});
+
+// New (recommended - more powerful)
+const facts = await cortex.facts.list({
+  memorySpaceId: "agent-1",
+  factType: "preference",
+  userId: "user-123", // Filter by user
+  minConfidence: 80, // Quality threshold
+  createdAfter: new Date("2025-01-01"), // Recent only
+  tags: ["verified"],
+  sourceType: "conversation",
+});
 ```
 
 ## Query Operations
 
 ### `facts.queryBySubject()`
 
-Get all facts about a specific entity.
+Get all facts about a specific entity with full universal filter support.
 
 **Signature:**
 
 ```typescript
-async queryBySubject(filter: {
+async queryBySubject(filter: QueryBySubjectFilter): Promise<FactRecord[]>
+
+interface QueryBySubjectFilter {
+  // Required
   memorySpaceId: string;
-  subject: string;
+  subject: string; // Entity to query
+
+  // Fact-specific filters
   factType?: FactType;
-}): Promise<FactRecord[]>
+  predicate?: string;
+  object?: string;
+  minConfidence?: number;
+  confidence?: number | RangeQuery;
+
+  // Universal filters (all supported)
+  userId?: string;
+  participantId?: string;
+  tags?: string[];
+  tagMatch?: "any" | "all";
+  sourceType?: "conversation" | "system" | "tool" | "manual";
+  createdBefore?: Date;
+  createdAfter?: Date;
+  updatedBefore?: Date;
+  updatedAfter?: Date;
+  version?: number;
+  includeSuperseded?: boolean;
+  validAt?: Date;
+  metadata?: Record<string, any>;
+  limit?: number;
+  offset?: number;
+  sortBy?: "createdAt" | "updatedAt" | "confidence";
+  sortOrder?: "asc" | "desc";
+}
 ```
 
 **Example:**
@@ -333,20 +766,70 @@ const preferences = await cortex.facts.queryBySubject({
   subject: "user-123",
   factType: "preference",
 });
+
+// With universal filters
+const recentHighConfidence = await cortex.facts.queryBySubject({
+  memorySpaceId: "agent-1",
+  subject: "user-123",
+  userId: "user-123", // GDPR-friendly
+  factType: "preference",
+  minConfidence: 85,
+  createdAfter: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Last 30 days
+  sourceType: "conversation",
+  tags: ["verified"],
+  sortBy: "confidence",
+  sortOrder: "desc",
+});
+
+// Hive Mode - filter by participant
+const participantFacts = await cortex.facts.queryBySubject({
+  memorySpaceId: "shared-space",
+  subject: "user-123",
+  participantId: "profile-agent", // Facts stored by profile agent
+  factType: "identity",
+});
 ```
 
 ### `facts.queryByRelationship()`
 
-Get facts with specific relationship (graph traversal).
+Get facts with specific relationship (graph traversal) with full universal filter support.
 
 **Signature:**
 
 ```typescript
-async queryByRelationship(filter: {
+async queryByRelationship(filter: QueryByRelationshipFilter): Promise<FactRecord[]>
+
+interface QueryByRelationshipFilter {
+  // Required
   memorySpaceId: string;
-  subject: string;
-  predicate: string;
-}): Promise<FactRecord[]>
+  subject: string; // Source entity
+  predicate: string; // Relationship type
+
+  // Fact-specific filters
+  object?: string; // Target entity (optional)
+  factType?: FactType;
+  minConfidence?: number;
+  confidence?: number | RangeQuery;
+
+  // Universal filters (all supported)
+  userId?: string;
+  participantId?: string;
+  tags?: string[];
+  tagMatch?: "any" | "all";
+  sourceType?: "conversation" | "system" | "tool" | "manual";
+  createdBefore?: Date;
+  createdAfter?: Date;
+  updatedBefore?: Date;
+  updatedAfter?: Date;
+  version?: number;
+  includeSuperseded?: boolean;
+  validAt?: Date;
+  metadata?: Record<string, any>;
+  limit?: number;
+  offset?: number;
+  sortBy?: "createdAt" | "updatedAt" | "confidence";
+  sortOrder?: "asc" | "desc";
+}
 ```
 
 **Example:**
@@ -364,6 +847,29 @@ const preferences = await cortex.facts.queryByRelationship({
   memorySpaceId: "agent-1",
   subject: "user-123",
   predicate: "prefers",
+});
+
+// With universal filters
+const recentPreferences = await cortex.facts.queryByRelationship({
+  memorySpaceId: "agent-1",
+  subject: "user-123",
+  predicate: "prefers",
+  userId: "user-123", // GDPR-friendly
+  minConfidence: 80,
+  createdAfter: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+  sourceType: "conversation",
+  tags: ["verified"],
+  validAt: new Date(), // Only currently valid facts
+  sortBy: "confidence",
+  sortOrder: "desc",
+});
+
+// Hive Mode - filter by participant
+const agentPreferences = await cortex.facts.queryByRelationship({
+  memorySpaceId: "shared-space",
+  subject: "user-123",
+  predicate: "prefers",
+  participantId: "preference-agent", // Facts stored by preference agent
 });
 ```
 
@@ -530,7 +1036,8 @@ interface FactRecord {
   _id: string;
   factId: string;
   memorySpaceId: string;
-  participantId?: string;
+  participantId?: string; // Hive Mode tracking
+  userId?: string; // GDPR compliance - links to user
   fact: string;
   factType: FactType;
   subject?: string;
@@ -810,3 +1317,4 @@ const enriched = await cortex.memory.search("agent-1", query, {
 ---
 
 **Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+
