@@ -800,7 +800,7 @@ export interface SearchFactsOptions {
   // Result options
   limit?: number;
   offset?: number;
-  sortBy?: "score" | "confidence" | "createdAt" | "updatedAt";
+  sortBy?: "confidence" | "createdAt" | "updatedAt"; // Note: search doesn't return scores
   sortOrder?: "asc" | "desc";
 }
 

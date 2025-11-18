@@ -4,7 +4,7 @@
 
 ### Overview
 
-After initial implementation, 6 critical bugs were identified and fixed in the backend Facts API operations. All bugs have been resolved and validated with comprehensive testing.
+After initial implementation, 7 critical bugs were identified and fixed in the Facts API operations. All bugs have been resolved and validated with comprehensive testing.
 
 ---
 
@@ -267,6 +267,51 @@ facts = limit !== undefined ? facts.slice(offset, limit) : facts.slice(offset);
 
 ---
 
+## Bug #7: Invalid "score" Sort Option in SearchFactsOptions
+
+### Problem
+
+**Location**: Type definitions and documentation
+
+**Issue**: SearchFactsOptions claimed "score" was a valid sort field:
+```typescript
+// src/types/index.ts (line 803)
+sortBy?: "score" | "confidence" | "createdAt" | "updatedAt";
+
+// Documentation (line 306)
+sortBy?: "score" | "confidence" | "createdAt" | "updatedAt"; // Sort field
+```
+
+**Problems**:
+1. Backend validation didn't include "score" in validSortFields
+2. Convex search results don't include relevance scores
+3. Attempting to sort by "score" would be silently ignored
+4. False promise to users - advertised feature doesn't work
+
+### Solution
+
+**Fixed**: Removed "score" from valid sort options:
+```typescript
+// src/types/index.ts
+sortBy?: "confidence" | "createdAt" | "updatedAt"; // Note: search doesn't return scores
+
+// Documentation
+sortBy?: "confidence" | "createdAt" | "updatedAt"; // Sort field (note: search doesn't return scores)
+
+// Python types
+sort_by: Optional[Literal["confidence", "createdAt", "updatedAt"]] = None  # Note: search doesn't return scores
+```
+
+**Improvements**:
+1. ✅ Types match backend capabilities
+2. ✅ No false promises to users
+3. ✅ Clear documentation note
+4. ✅ Consistent across TypeScript and Python
+
+**Impact**: Users won't try to use an unsupported feature. If score-based sorting is needed in the future, it can be added by computing scores in the backend.
+
+---
+
 ## Validation
 
 ### Test Results - All Passing ✅
@@ -292,6 +337,7 @@ facts = limit !== undefined ? facts.slice(offset, limit) : facts.slice(offset);
 | #4 | queryByRelationship | Missing 5 filter implementations | Added all 5 missing filters | ✅ Fixed |
 | #5 | search | Unsafe sorting (missed in initial fix) | Added length check + field validation | ✅ Fixed |
 | #6 | All 5 operations | Broken pagination (offset ignored when limit present) | Combined offset+limit in single slice | ✅ Fixed |
+| #7 | SearchFactsOptions | Invalid "score" sort option advertised | Removed "score" from valid options | ✅ Fixed |
 
 ---
 
@@ -304,6 +350,7 @@ facts = limit !== undefined ? facts.slice(offset, limit) : facts.slice(offset);
 - ❌ 5 filters silently ignored in queryByRelationship
 - ❌ search() had unsafe sorting (missed in initial fix)
 - ❌ Broken pagination in ALL operations (offset ignored when limit present)
+- ❌ Invalid "score" sort option advertised (doesn't exist in search results)
 - ❌ Violated universal filters documentation
 
 ### After Fixes
@@ -313,6 +360,7 @@ facts = limit !== undefined ? facts.slice(offset, limit) : facts.slice(offset);
 - ✅ All filters implemented in queryByRelationship
 - ✅ search() now has safe sorting
 - ✅ Correct pagination in ALL operations (offset+limit work together)
+- ✅ Types match backend capabilities (no false promises)
 - ✅ Matches documentation 100%
 - ✅ Graceful degradation (invalid fields ignored)
 
@@ -363,10 +411,11 @@ facts = limit !== undefined ? facts.slice(offset, limit) : facts.slice(offset);
 
 ## Conclusion
 
-All 6 identified bugs have been fixed with:
+All 7 identified bugs have been fixed with:
 - ✅ Comprehensive safety checks in all operations
 - ✅ Complete filter implementations
 - ✅ Correct pagination logic
+- ✅ Accurate type definitions (no false promises)
 - ✅ No test regressions
 - ✅ Improved code quality
 - ✅ Consistent patterns across all 5 operations
@@ -375,11 +424,12 @@ The Facts API now:
 - ✅ Safely handles empty result sets (all operations)
 - ✅ Validates sort field names (all operations)
 - ✅ Correct pagination (offset and limit work together)
+- ✅ Types match backend capabilities exactly
 - ✅ Implements ALL documented universal filters
 - ✅ Matches documentation 100%
 - ✅ Production-ready code quality
 
-**Status**: All 6 bugs fixed and validated ✅
+**Status**: All 7 bugs fixed and validated ✅
 
 ---
 
