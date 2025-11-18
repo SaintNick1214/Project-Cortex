@@ -292,13 +292,14 @@ class TestFactsSequences:
             )
         )
 
-        list1 = await cortex_client.facts.list(memory_space_id=space_id)
+        from cortex.types import ListFactsFilter
+        list1 = await cortex_client.facts.list(ListFactsFilter(memory_space_id=space_id))
         assert any(f.fact_id == v1.fact_id for f in list1)
 
         # Update (creates v2, supersedes v1)
         v2 = await cortex_client.facts.update(space_id, v1.fact_id, updates={"fact": "Updated"})
 
-        list2 = await cortex_client.facts.list(memory_space_id=space_id)
+        list2 = await cortex_client.facts.list(ListFactsFilter(memory_space_id=space_id))
 
         # v1 should NOT appear (superseded)
         assert not any(f.fact_id == v1.fact_id for f in list2)

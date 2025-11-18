@@ -546,7 +546,10 @@ class MemoryAPI:
                 conversations[conv_id] = conv
 
         # Batch fetch facts
-        all_facts = await self.facts.list(memory_space_id, limit=10000)
+        from ..types import ListFactsFilter
+        all_facts = await self.facts.list(
+            ListFactsFilter(memory_space_id=memory_space_id, limit=10000)
+        )
 
         facts_by_memory_id = {}
         facts_by_conversation_id = {}
@@ -860,7 +863,10 @@ class MemoryAPI:
         result = await self.vector.update_many(memory_space_id, filters, updates)
 
         # Count affected facts
-        all_facts = await self.facts.list(memory_space_id, limit=10000)
+        from ..types import ListFactsFilter
+        all_facts = await self.facts.list(
+            ListFactsFilter(memory_space_id=memory_space_id, limit=10000)
+        )
         affected_facts = [
             fact
             for fact in all_facts
@@ -947,7 +953,10 @@ class MemoryAPI:
         sync_to_graph: Optional[bool],
     ) -> Tuple[int, List[str]]:
         """Helper: Find and cascade delete facts linked to a memory."""
-        all_facts = await self.facts.list(memory_space_id, limit=10000)
+        from ..types import ListFactsFilter
+        all_facts = await self.facts.list(
+            ListFactsFilter(memory_space_id=memory_space_id, limit=10000)
+        )
 
         facts_to_delete = [
             fact
@@ -987,7 +996,10 @@ class MemoryAPI:
         conversation_id: Optional[str],
     ) -> List:
         """Helper: Fetch facts for a memory or conversation."""
-        all_facts = await self.facts.list(memory_space_id, limit=10000)
+        from ..types import ListFactsFilter
+        all_facts = await self.facts.list(
+            ListFactsFilter(memory_space_id=memory_space_id, limit=10000)
+        )
 
         return [
             fact
