@@ -11,7 +11,7 @@
 | **TypeScript SDK** | ✅ Complete | ✅ 252/252 | ✅ Complete | **READY** |
 | **Python SDK** | ✅ Complete | ✅ 144/144 | ✅ Complete | **READY** |
 | **Backend (Convex)** | ✅ Complete | ✅ Validated | ✅ Complete | **READY** |
-| **Bug Fixes** | ✅ 10/10 Fixed | ✅ Validated | ✅ Documented | **READY** |
+| **Bug Fixes** | ✅ 13/13 Fixed | ✅ Validated | ✅ Documented | **READY** |
 
 **Overall**: 🚀 **APPROVED FOR v0.9.1 RELEASE**
 
@@ -74,7 +74,17 @@
 **Fix**: All operations now use v.number() (exact match) consistently  
 **Status**: ✅ Fixed - all operations identical
 
-**All 10 bugs validated with tests passing**
+### Bug #11: Dead Code in search() Handler
+**Issue**: Unreachable range query logic left over from refactoring  
+**Fix**: Removed dead code for cleaner implementation  
+**Status**: ✅ Fixed
+
+### Bug #12 & #13: Invalid validFrom/validUntil in Filter Types
+**Issue**: Filter types advertised validFrom/validUntil but backend doesn't support them  
+**Fix**: Removed unsupported fields from TypeScript and Python types  
+**Status**: ✅ Fixed - types now match backend
+
+**All 13 bugs validated with tests passing**
 
 ---
 
@@ -250,7 +260,7 @@ Both SDKs support the same comprehensive filtering with Pythonic naming in Pytho
 | **Total Test Executions** | 396/396 (100%) |
 | **Files Modified** | 21 |
 | **Lines of Code** | ~1,600 |
-| **Bug Fixes** | 10/10 |
+| **Bug Fixes** | 13/13 |
 | **Filter Options Added** | 20+ |
 | **SDKs Updated** | 2/2 |
 | **Environments Validated** | 2/2 |

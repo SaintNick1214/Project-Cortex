@@ -572,20 +572,7 @@ export const search = query({
       filtered = filtered.filter((f) => f.confidence >= args.minConfidence!);
     }
     if (args.confidence !== undefined) {
-      const conf = args.confidence as any;
-      if (typeof conf === "number") {
-        filtered = filtered.filter((f) => f.confidence === conf);
-      } else {
-        if (conf.$gte !== undefined) {
-          filtered = filtered.filter((f) => f.confidence >= conf.$gte);
-        }
-        if (conf.$lte !== undefined) {
-          filtered = filtered.filter((f) => f.confidence <= conf.$lte);
-        }
-        if (conf.$eq !== undefined) {
-          filtered = filtered.filter((f) => f.confidence === conf.$eq);
-        }
-      }
+      filtered = filtered.filter((f) => f.confidence === args.confidence);
     }
     if (args.sourceType !== undefined) {
       filtered = filtered.filter((f) => f.sourceType === args.sourceType);

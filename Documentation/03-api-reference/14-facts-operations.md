@@ -189,8 +189,6 @@ interface ListFactsFilter {
 
   // Temporal validity filters
   validAt?: Date; // Facts valid at this time
-  validFrom?: Date; // Facts valid from this date
-  validUntil?: Date; // Facts valid until this date
 
   // Metadata filters
   metadata?: Record<string, any>; // Custom metadata filters

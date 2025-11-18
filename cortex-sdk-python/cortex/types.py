@@ -340,9 +340,7 @@ class ListFactsFilter:
     include_superseded: Optional[bool] = None
     
     # Temporal validity filters
-    valid_at: Optional[datetime] = None
-    valid_from: Optional[datetime] = None
-    valid_until: Optional[datetime] = None
+    valid_at: Optional[datetime] = None  # Facts valid at specific time
     
     # Metadata filters
     metadata: Optional[Dict[str, Any]] = None

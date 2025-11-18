@@ -701,9 +701,7 @@ export interface ListFactsFilter {
   includeSuperseded?: boolean;
 
   // Temporal validity filters
-  validAt?: Date;
-  validFrom?: Date;
-  validUntil?: Date;
+  validAt?: Date; // Facts valid at specific time
 
   // Metadata filters
   metadata?: Record<string, unknown>;
