@@ -357,13 +357,10 @@ export const list = query({
       }
     }
 
-    // Apply pagination
-    if (args.offset !== undefined) {
-      facts = facts.slice(args.offset);
-    }
-    if (args.limit !== undefined) {
-      facts = facts.slice(0, args.limit);
-    }
+    // Apply pagination (offset and limit combined)
+    const offset = args.offset || 0;
+    const limit = args.limit !== undefined ? offset + args.limit : undefined;
+    facts = limit !== undefined ? facts.slice(offset, limit) : facts.slice(offset);
 
     return facts;
   },
@@ -664,13 +661,10 @@ export const search = query({
       }
     }
 
-    // Apply pagination
-    if (args.offset !== undefined) {
-      filtered = filtered.slice(args.offset);
-    }
-    if (args.limit !== undefined) {
-      filtered = filtered.slice(0, args.limit);
-    }
+    // Apply pagination (offset and limit combined)
+    const offset = args.offset || 0;
+    const limit = args.limit !== undefined ? offset + args.limit : undefined;
+    filtered = limit !== undefined ? filtered.slice(offset, limit) : filtered.slice(offset);
 
     return filtered;
   },
@@ -873,13 +867,10 @@ export const queryBySubject = query({
       }
     }
 
-    // Apply pagination
-    if (args.offset !== undefined) {
-      facts = facts.slice(args.offset);
-    }
-    if (args.limit !== undefined) {
-      facts = facts.slice(0, args.limit);
-    }
+    // Apply pagination (offset and limit combined)
+    const offset = args.offset || 0;
+    const limit = args.limit !== undefined ? offset + args.limit : undefined;
+    facts = limit !== undefined ? facts.slice(offset, limit) : facts.slice(offset);
 
     return facts;
   },
@@ -1022,13 +1013,10 @@ export const queryByRelationship = query({
       }
     }
 
-    // Apply pagination
-    if (args.offset !== undefined) {
-      facts = facts.slice(args.offset);
-    }
-    if (args.limit !== undefined) {
-      facts = facts.slice(0, args.limit);
-    }
+    // Apply pagination (offset and limit combined)
+    const offset = args.offset || 0;
+    const limit = args.limit !== undefined ? offset + args.limit : undefined;
+    facts = limit !== undefined ? facts.slice(offset, limit) : facts.slice(offset);
 
     return facts;
   },
