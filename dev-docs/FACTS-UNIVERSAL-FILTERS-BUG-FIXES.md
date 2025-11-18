@@ -4,7 +4,7 @@
 
 ### Overview
 
-After initial implementation, 10 critical bugs were identified and fixed in the Facts API operations. All bugs have been resolved and validated with comprehensive testing.
+After initial implementation, 13 critical bugs were identified and fixed in the Facts API operations. All bugs have been resolved and validated with comprehensive testing.
 
 ---
 
@@ -370,6 +370,97 @@ if (args.confidence !== undefined) {
 
 ---
 
+## Bug #11: Dead Code in search() Confidence Filtering
+
+### Problem
+
+**Location**: `search()` handler (lines 574-589 - before fix)
+
+**Issue**: Unreachable dead code for range query logic:
+```typescript
+// Backend parameter: confidence: v.optional(v.number())  // Only accepts numbers
+
+// Handler had DEAD CODE:
+if (args.confidence !== undefined) {
+  const conf = args.confidence as any;
+  if (typeof conf === "number") {
+    filtered = filtered.filter((f) => f.confidence === conf);
+  } else {
+    // This code will NEVER execute - validator rejects objects
+    if (conf.$gte !== undefined) {
+      filtered = filtered.filter((f) => f.confidence >= conf.$gte);
+    }
+    // ... more unreachable code ...
+  }
+}
+```
+
+**Problems**:
+1. Dead code left over from refactoring
+2. Suggests range queries supported when they're not
+3. Violates type safety principles
+4. Misleading about API capabilities
+
+### Solution
+
+**Fixed**: Removed dead code, simplified to exact match:
+```typescript
+if (args.confidence !== undefined) {
+  filtered = filtered.filter((f) => f.confidence === args.confidence);
+}
+```
+
+**Impact**: Cleaner code, no false implications, consistent with other operations.
+
+---
+
+## Bug #12 & #13: Invalid validFrom/validUntil in Filter Types
+
+### Problem
+
+**Location**: TypeScript and Python ListFactsFilter type definitions
+
+**Issue**: Filter types advertised unsupported temporal validity parameters:
+```typescript
+// TypeScript (src/types/index.ts - before fix)
+validAt?: Date;      // ✅ Supported
+validFrom?: Date;    // ❌ NOT supported by backend
+validUntil?: Date;   // ❌ NOT supported by backend
+
+// Python (cortex/types.py - before fix)
+valid_at: Optional[datetime] = None      # ✅ Supported
+valid_from: Optional[datetime] = None    # ❌ NOT supported
+valid_until: Optional[datetime] = None   # ❌ NOT supported
+```
+
+**Backend Reality**:
+- list() only has `validAt: v.optional(v.number())` parameter
+- No validFrom or validUntil filter parameters exist
+- These fields exist on FactRecord for storage, not for filtering
+
+**Problems**:
+1. False promise to users - advertised filters don't work
+2. Parameters silently ignored when set
+3. Confusion about temporal validity filtering
+
+### Solution
+
+**Fixed**: Removed unsupported fields from filter types:
+```typescript
+// TypeScript - now correct
+validAt?: Date; // Facts valid at specific time
+
+// Python - now correct  
+valid_at: Optional[datetime] = None  # Facts valid at specific time
+
+// Documentation - updated
+validAt?: Date; // Facts valid at this time
+```
+
+**Impact**: Types accurately reflect backend capabilities. No false promises about unsupported filters.
+
+---
+
 ## Validation
 
 ### Test Results - All Passing ✅
@@ -397,6 +488,8 @@ if (args.confidence !== undefined) {
 | #6 | All 5 operations | Broken pagination (offset ignored when limit present) | Combined offset+limit in single slice | ✅ Fixed |
 | #7 | SearchFactsOptions | Invalid "score" sort option advertised | Removed "score" from valid options | ✅ Fixed |
 | #8, #9, #10 | count, search (vs others) | Inconsistent confidence filter types | Simplified to match all operations | ✅ Fixed |
+| #11 | search | Dead code for range query confidence | Removed unreachable code | ✅ Fixed |
+| #12 & #13 | TypeScript/Python filters | Invalid validFrom/validUntil advertised | Removed unsupported fields | ✅ Fixed |
 
 ---
 
@@ -411,6 +504,8 @@ if (args.confidence !== undefined) {
 - ❌ Broken pagination in ALL operations (offset ignored when limit present)
 - ❌ Invalid "score" sort option advertised (doesn't exist in search results)
 - ❌ Inconsistent confidence filter types (some v.any(), some v.number())
+- ❌ Dead code in search() for range queries
+- ❌ Invalid validFrom/validUntil in filter types (not supported by backend)
 - ❌ Violated universal filters documentation
 
 ### After Fixes
@@ -420,8 +515,10 @@ if (args.confidence !== undefined) {
 - ✅ All filters implemented in queryByRelationship
 - ✅ search() now has safe sorting
 - ✅ Correct pagination in ALL operations (offset+limit work together)
-- ✅ Types match backend capabilities (no false promises)
+- ✅ Types match backend capabilities exactly (no false promises)
 - ✅ Consistent confidence filtering (all operations identical)
+- ✅ No dead code (clean, maintainable)
+- ✅ Only advertised features that actually work
 - ✅ Matches documentation 100%
 - ✅ Graceful degradation (invalid fields ignored)
 
@@ -472,12 +569,13 @@ if (args.confidence !== undefined) {
 
 ## Conclusion
 
-All 10 identified bugs have been fixed with:
+All 13 identified bugs have been fixed with:
 - ✅ Comprehensive safety checks in all operations
 - ✅ Complete filter implementations
 - ✅ Correct pagination logic
 - ✅ Accurate type definitions (no false promises)
 - ✅ Consistent confidence filtering across all operations
+- ✅ Dead code removed
 - ✅ No test regressions
 - ✅ Improved code quality
 - ✅ Consistent patterns across all 5 operations
@@ -488,11 +586,12 @@ The Facts API now:
 - ✅ Correct pagination (offset and limit work together)
 - ✅ Consistent confidence filtering (minConfidence + exact match)
 - ✅ Types match backend capabilities exactly
+- ✅ No dead or unreachable code
 - ✅ Implements ALL documented universal filters
 - ✅ Matches documentation 100%
 - ✅ Production-ready code quality
 
-**Status**: All 10 bugs fixed and validated ✅
+**Status**: All 13 bugs fixed and validated ✅
 
 ---
 
