@@ -19,6 +19,130 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.9.1] - 2025-11-18
+
+#### 🐛 Critical Bug Fix - Facts API Universal Filters
+
+**Fixed inconsistency in Facts API that violated Cortex's universal filters design principle.**
+
+#### Fixed
+
+**Facts API Universal Filters (Breaking Inconsistency)**:
+
+1. **Missing Universal Filters in Facts API** - Facts operations were missing standard Cortex filters
+   - Added `userId` field to `FactRecord` for GDPR compliance
+   - Added `userId` to `StoreFactParams` for cascade deletion support
+   - **UPDATED:** `ListFactsFilter` - Now includes ALL universal filters:
+     - Identity: `userId`, `participantId` (Hive Mode)
+     - Date: `createdBefore/After`, `updatedBefore/After`
+     - Source: `sourceType`
+     - Tags: `tags`, `tagMatch` ("any"/"all")
+     - Version: `version`, `includeSuperseded`
+     - Temporal: `validAt`, `validFrom`, `validUntil`
+     - Metadata: `metadata` (custom filters)
+     - Range queries: `confidence: { $gte, $lte, $eq }`
+     - Results: `sortBy`, `sortOrder`, `offset`
+   - **UPDATED:** `SearchFactsOptions` - Full universal filter support
+   - **UPDATED:** `CountFactsFilter` - Full universal filter support
+   - **UPDATED:** `QueryBySubjectFilter` - New interface with universal filters
+   - **UPDATED:** `QueryByRelationshipFilter` - New interface with universal filters
+   - Previously could not filter by: user, participant, dates, source, confidence ranges, metadata
+
+2. **API Consistency Achieved** - Facts API now matches Memory API patterns
+   - Same filter syntax works across `memory.*` and `facts.*` operations
+   - GDPR-friendly: Can filter facts by `userId` for data export/deletion
+   - Hive Mode: Can filter facts by `participantId` to track agent contributions
+   - Date filters: Can query recent facts, facts in date ranges
+   - Confidence ranges: Can filter by quality thresholds
+   - Complex queries: Combine multiple filters for precise fact retrieval
+
+#### Enhanced
+
+**Documentation Improvements**:
+
+- **NEW SECTION:** "Universal Filters Support" in Facts Operations API
+  - Explains Cortex's universal filter design principle
+  - Shows GDPR compliance examples with `userId`
+  - Demonstrates Hive Mode filtering with `participantId`
+  - Provides complex query examples
+  - Documents range query syntax (`{ $gte, $lte }`)
+  - Lists all operations supporting universal filters
+  - Includes migration notes for existing code
+
+**Updated Examples**:
+
+- All Facts API examples now showcase universal filters
+- Added `userId` filtering examples for GDPR compliance
+- Added `participantId` filtering examples for Hive Mode
+- Added date range filtering examples
+- Added confidence range query examples
+- Added complex multi-filter query examples
+
+**Updated Interfaces**:
+
+- Enhanced `ListFactsFilter` with 25+ filter options (from 5)
+- Enhanced `SearchFactsOptions` with full filter support (from 4)
+- Enhanced `CountFactsFilter` with comprehensive filters (from 2)
+- New comprehensive `QueryBySubjectFilter` interface
+- New comprehensive `QueryByRelationshipFilter` interface
+
+#### Impact
+
+**Before (Inconsistent):**
+
+```typescript
+// Limited filtering - couldn't filter by user, dates, etc.
+const facts = await cortex.facts.list({
+  memorySpaceId: "agent-1",
+  factType: "preference", // Only basic filters available
+});
+```
+
+**After (Consistent with Memory API):**
+
+```typescript
+// Full universal filters - matches Memory API patterns
+const facts = await cortex.facts.list({
+  memorySpaceId: "agent-1",
+  userId: "user-123", // GDPR-friendly filtering
+  participantId: "email-agent", // Hive Mode tracking
+  factType: "preference",
+  confidence: { $gte: 80 }, // Range queries
+  createdAfter: new Date("2025-01-01"), // Date filters
+  sourceType: "conversation",
+  tags: ["verified", "important"],
+  tagMatch: "all", // Must have all tags
+  metadata: { priority: "high" },
+  sortBy: "confidence",
+  sortOrder: "desc",
+});
+```
+
+#### Benefits
+
+✅ **API Consistency** - Facts API now follows same patterns as Memory API
+✅ **GDPR Compliance** - Can filter by `userId` for data export and deletion
+✅ **Hive Mode Support** - Can filter by `participantId` for multi-agent tracking
+✅ **Powerful Queries** - Date ranges, confidence thresholds, metadata filters
+✅ **Better Developer Experience** - Learn filters once, use everywhere
+
+#### Backward Compatibility
+
+✅ **Zero Breaking Changes** - All new filters are optional
+- Existing code continues to work unchanged
+- New filters enhance capabilities without breaking existing usage
+- No data migration required
+
+#### Documentation
+
+- **UPDATED:** `Documentation/03-api-reference/14-facts-operations.md`
+  - Added comprehensive "Universal Filters Support" section
+  - Updated all filter interface definitions
+  - Enhanced all examples to showcase new capabilities
+  - Added migration notes for developers
+
+---
+
 ### [0.9.0] - 2024-11-14
 
 #### 🐍 Python SDK - First Official Release!

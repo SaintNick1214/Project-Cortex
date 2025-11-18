@@ -207,7 +207,10 @@ async def test_list_facts(cortex_client, test_ids, cleanup_helper):
         )
     
     # List facts
-    result = await cortex_client.facts.list(memory_space_id, limit=10)
+    from cortex.types import ListFactsFilter
+    result = await cortex_client.facts.list(
+        ListFactsFilter(memory_space_id=memory_space_id, limit=10)
+    )
     
     # Should return at least 3 facts
     facts = result if isinstance(result, list) else result.get("facts", [])
@@ -248,10 +251,13 @@ async def test_list_facts_filter_by_type(cortex_client, test_ids, cleanup_helper
     )
     
     # List only preference facts
+    from cortex.types import ListFactsFilter
     result = await cortex_client.facts.list(
-        memory_space_id,
-        fact_type="preference",
-        limit=10,
+        ListFactsFilter(
+            memory_space_id=memory_space_id,
+            fact_type="preference",
+            limit=10,
+        )
     )
     
     facts = result if isinstance(result, list) else result.get("facts", [])
@@ -422,7 +428,10 @@ async def test_count_facts(cortex_client, test_ids, cleanup_helper):
         )
     
     # Count facts
-    count = await cortex_client.facts.count(memory_space_id)
+    from cortex.types import CountFactsFilter
+    count = await cortex_client.facts.count(
+        CountFactsFilter(memory_space_id=memory_space_id)
+    )
     
     assert count >= 4
     

@@ -71,6 +71,11 @@ from .types import (
     StoreFactParams,
     FactType,
     FactSourceRef,
+    ListFactsFilter,
+    CountFactsFilter,
+    SearchFactsOptions,
+    QueryBySubjectFilter,
+    QueryByRelationshipFilter,
 )
 
 # Core Types - Layer 4 (Memory Convenience)
