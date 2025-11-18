@@ -342,15 +342,19 @@ export const list = query({
       });
     }
 
-    // Apply sorting
-    if (args.sortBy) {
-      const sortField = args.sortBy as keyof typeof facts[0];
-      facts.sort((a, b) => {
-        const aVal = a[sortField] as any;
-        const bVal = b[sortField] as any;
-        const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
-        return args.sortOrder === "asc" ? comparison : -comparison;
-      });
+    // Apply sorting (safe - only if facts exist and sortBy is valid)
+    if (args.sortBy && facts.length > 0) {
+      // Validate sortBy is a valid field
+      const validSortFields = ["createdAt", "updatedAt", "confidence", "version"];
+      if (validSortFields.includes(args.sortBy)) {
+        const sortField = args.sortBy as "createdAt" | "updatedAt" | "confidence" | "version";
+        facts.sort((a, b) => {
+          const aVal = a[sortField] as any;
+          const bVal = b[sortField] as any;
+          const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+          return args.sortOrder === "asc" ? comparison : -comparison;
+        });
+      }
     }
 
     // Apply pagination
@@ -800,6 +804,9 @@ export const queryBySubject = query({
     if (args.minConfidence !== undefined) {
       facts = facts.filter((f) => f.confidence >= args.minConfidence!);
     }
+    if (args.confidence !== undefined) {
+      facts = facts.filter((f) => f.confidence === args.confidence);
+    }
     if (args.sourceType !== undefined) {
       facts = facts.filter((f) => f.sourceType === args.sourceType);
     }
@@ -820,19 +827,46 @@ export const queryBySubject = query({
     if (args.createdBefore !== undefined) {
       facts = facts.filter((f) => f.createdAt <= args.createdBefore!);
     }
+    if (args.updatedAfter !== undefined) {
+      facts = facts.filter((f) => f.updatedAt >= args.updatedAfter!);
+    }
+    if (args.updatedBefore !== undefined) {
+      facts = facts.filter((f) => f.updatedAt <= args.updatedBefore!);
+    }
     if (args.version !== undefined) {
       facts = facts.filter((f) => f.version === args.version);
     }
-
-    // Apply sorting
-    if (args.sortBy) {
-      const sortField = args.sortBy as keyof typeof facts[0];
-      facts.sort((a, b) => {
-        const aVal = a[sortField] as any;
-        const bVal = b[sortField] as any;
-        const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
-        return args.sortOrder === "asc" ? comparison : -comparison;
+    if (args.validAt !== undefined) {
+      facts = facts.filter((f) => {
+        const isValid =
+          (!f.validFrom || f.validFrom <= args.validAt!) &&
+          (!f.validUntil || f.validUntil > args.validAt!);
+        return isValid;
       });
+    }
+    if (args.metadata !== undefined) {
+      facts = facts.filter((f) => {
+        if (!f.metadata) return false;
+        // Match all provided metadata fields
+        return Object.entries(args.metadata as Record<string, any>).every(
+          ([key, value]) => f.metadata[key] === value,
+        );
+      });
+    }
+
+    // Apply sorting (safe - only if facts exist and sortBy is valid)
+    if (args.sortBy && facts.length > 0) {
+      // Validate sortBy is a valid field
+      const validSortFields = ["createdAt", "updatedAt", "confidence", "version"];
+      if (validSortFields.includes(args.sortBy)) {
+        const sortField = args.sortBy as "createdAt" | "updatedAt" | "confidence" | "version";
+        facts.sort((a, b) => {
+          const aVal = a[sortField] as any;
+          const bVal = b[sortField] as any;
+          const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+          return args.sortOrder === "asc" ? comparison : -comparison;
+        });
+      }
     }
 
     // Apply pagination
@@ -919,6 +953,9 @@ export const queryByRelationship = query({
     if (args.minConfidence !== undefined) {
       facts = facts.filter((f) => f.confidence >= args.minConfidence!);
     }
+    if (args.confidence !== undefined) {
+      facts = facts.filter((f) => f.confidence === args.confidence);
+    }
     if (args.sourceType !== undefined) {
       facts = facts.filter((f) => f.sourceType === args.sourceType);
     }
@@ -939,19 +976,46 @@ export const queryByRelationship = query({
     if (args.createdBefore !== undefined) {
       facts = facts.filter((f) => f.createdAt <= args.createdBefore!);
     }
+    if (args.updatedAfter !== undefined) {
+      facts = facts.filter((f) => f.updatedAt >= args.updatedAfter!);
+    }
+    if (args.updatedBefore !== undefined) {
+      facts = facts.filter((f) => f.updatedAt <= args.updatedBefore!);
+    }
     if (args.version !== undefined) {
       facts = facts.filter((f) => f.version === args.version);
     }
-
-    // Apply sorting
-    if (args.sortBy) {
-      const sortField = args.sortBy as keyof typeof facts[0];
-      facts.sort((a, b) => {
-        const aVal = a[sortField] as any;
-        const bVal = b[sortField] as any;
-        const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
-        return args.sortOrder === "asc" ? comparison : -comparison;
+    if (args.validAt !== undefined) {
+      facts = facts.filter((f) => {
+        const isValid =
+          (!f.validFrom || f.validFrom <= args.validAt!) &&
+          (!f.validUntil || f.validUntil > args.validAt!);
+        return isValid;
       });
+    }
+    if (args.metadata !== undefined) {
+      facts = facts.filter((f) => {
+        if (!f.metadata) return false;
+        // Match all provided metadata fields
+        return Object.entries(args.metadata as Record<string, any>).every(
+          ([key, value]) => f.metadata[key] === value,
+        );
+      });
+    }
+
+    // Apply sorting (safe - only if facts exist and sortBy is valid)
+    if (args.sortBy && facts.length > 0) {
+      // Validate sortBy is a valid field
+      const validSortFields = ["createdAt", "updatedAt", "confidence", "version"];
+      if (validSortFields.includes(args.sortBy)) {
+        const sortField = args.sortBy as "createdAt" | "updatedAt" | "confidence" | "version";
+        facts.sort((a, b) => {
+          const aVal = a[sortField] as any;
+          const bVal = b[sortField] as any;
+          const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+          return args.sortOrder === "asc" ? comparison : -comparison;
+        });
+      }
     }
 
     // Apply pagination

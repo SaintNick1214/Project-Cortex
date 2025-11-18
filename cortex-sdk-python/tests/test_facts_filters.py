@@ -61,8 +61,9 @@ class TestFactsFilterParametrized:
             )
 
         # Execute: List with factType filter
+        from cortex.types import ListFactsFilter
         results = await cortex_client.facts.list(
-            memory_space_id=space_id, fact_type=fact_type
+            ListFactsFilter(memory_space_id=space_id, fact_type=fact_type)
         )
 
         # Validate
@@ -120,8 +121,9 @@ class TestFactsFilterParametrized:
             )
 
         # Execute: Count with factType filter
+        from cortex.types import CountFactsFilter
         count = await cortex_client.facts.count(
-            memory_space_id=space_id, fact_type=fact_type
+            CountFactsFilter(memory_space_id=space_id, fact_type=fact_type)
         )
 
         # Validate
@@ -159,8 +161,9 @@ class TestFactsFilterParametrized:
             )
 
         # Execute: Search with factType filter
+        from cortex.types import SearchFactsOptions
         results = await cortex_client.facts.search(
-            memory_space_id=space_id, query=search_term, fact_type=fact_type
+            space_id, search_term, SearchFactsOptions(fact_type=fact_type)
         )
 
         # Validate
@@ -205,8 +208,11 @@ class TestFactsFilterParametrized:
             )
 
         # Execute: Query by subject with factType filter
+        from cortex.types import QueryBySubjectFilter
         results = await cortex_client.facts.query_by_subject(
-            memory_space_id=space_id, subject=subject, fact_type=fact_type
+            QueryBySubjectFilter(
+                memory_space_id=space_id, subject=subject, fact_type=fact_type
+            )
         )
 
         # Validate
@@ -290,8 +296,9 @@ class TestFactsFilterEdgeCases:
         )
 
         # Query for different type
+        from cortex.types import ListFactsFilter
         results = await cortex_client.facts.list(
-            memory_space_id=space_id, fact_type="observation"
+            ListFactsFilter(memory_space_id=space_id, fact_type="observation")
         )
 
         # Should return empty list, not error
@@ -328,8 +335,9 @@ class TestFactsFilterEdgeCases:
         )
 
         # Query for identity
+        from cortex.types import ListFactsFilter
         results = await cortex_client.facts.list(
-            memory_space_id=space_id, fact_type="identity"
+            ListFactsFilter(memory_space_id=space_id, fact_type="identity")
         )
 
         # Should return all 5 identity facts
@@ -362,27 +370,33 @@ class TestFactsFilterEdgeCases:
         # (they would have failed before the bug fix)
 
         # Test list
+        from cortex.types import ListFactsFilter
         list_results = await cortex_client.facts.list(
-            memory_space_id=space_id, fact_type="observation"
+            ListFactsFilter(memory_space_id=space_id, fact_type="observation")
         )
         assert len(list_results) >= 1, "list() should work with observation"
         assert all(f.fact_type == "observation" for f in list_results)
 
         # Test count
+        from cortex.types import CountFactsFilter
         count = await cortex_client.facts.count(
-            memory_space_id=space_id, fact_type="observation"
+            CountFactsFilter(memory_space_id=space_id, fact_type="observation")
         )
         assert count >= 1, "count() should work with observation"
 
         # Test search
+        from cortex.types import SearchFactsOptions
         search_results = await cortex_client.facts.search(
-            memory_space_id=space_id, query="clicking", fact_type="observation"
+            space_id, "clicking", SearchFactsOptions(fact_type="observation")
         )
         assert len(search_results) >= 1, "search() should work with observation"
 
         # Test query_by_subject
+        from cortex.types import QueryBySubjectFilter
         subject_results = await cortex_client.facts.query_by_subject(
-            memory_space_id=space_id, subject="user-behavior", fact_type="observation"
+            QueryBySubjectFilter(
+                memory_space_id=space_id, subject="user-behavior", fact_type="observation"
+            )
         )
         assert (
             len(subject_results) >= 1
@@ -454,8 +468,11 @@ class TestFactsFilterEdgeCases:
         )
 
         # Test: Combine factType + subject filters
+        from cortex.types import ListFactsFilter
         results = await cortex_client.facts.list(
-            memory_space_id=space_id, fact_type="preference", subject=target_subject
+            ListFactsFilter(
+                memory_space_id=space_id, fact_type="preference", subject=target_subject
+            )
         )
 
         # Should find facts matching BOTH filters
@@ -465,8 +482,11 @@ class TestFactsFilterEdgeCases:
             assert fact.subject == target_subject
 
         # Test: Combine factType + tags filters
+        from cortex.types import ListFactsFilter
         results_with_tags = await cortex_client.facts.list(
-            memory_space_id=space_id, fact_type="preference", tags=["important"]
+            ListFactsFilter(
+                memory_space_id=space_id, fact_type="preference", tags=["important"]
+            )
         )
 
         # Should find facts matching BOTH filters
@@ -507,8 +527,9 @@ class TestFactsFilterEdgeCases:
             )
 
         # Count only knowledge facts
+        from cortex.types import CountFactsFilter
         knowledge_count = await cortex_client.facts.count(
-            memory_space_id=space_id, fact_type="knowledge"
+            CountFactsFilter(memory_space_id=space_id, fact_type="knowledge")
         )
 
         assert (
@@ -516,7 +537,10 @@ class TestFactsFilterEdgeCases:
         ), f"Should count exactly 3 knowledge facts, got {knowledge_count}"
 
         # Count all facts (no filter)
-        total_count = await cortex_client.facts.count(memory_space_id=space_id)
+        from cortex.types import CountFactsFilter
+        total_count = await cortex_client.facts.count(
+            CountFactsFilter(memory_space_id=space_id)
+        )
 
         assert (
             total_count >= 5
@@ -565,11 +589,11 @@ class TestFactsFilterEdgeCases:
         )
 
         # Search with both filters
+        from cortex.types import SearchFactsOptions
         results = await cortex_client.facts.search(
-            memory_space_id=space_id,
-            query=search_term,
-            fact_type="preference",
-            min_confidence=90,
+            space_id,
+            search_term,
+            SearchFactsOptions(fact_type="preference", min_confidence=90),
         )
 
         # Should only find high confidence preference
