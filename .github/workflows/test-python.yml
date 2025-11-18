@@ -7,11 +7,6 @@ on:
     paths:
       - 'cortex-sdk-python/**'
       - '.github/workflows/test-python.yml'
-  pull_request:
-    branches:
-      - main  # Run on PRs to main (validates before merge)
-    paths:
-      - 'cortex-sdk-python/**'
 
 # Prevent parallel execution with TypeScript tests to avoid Convex deployment conflicts
 concurrency:
