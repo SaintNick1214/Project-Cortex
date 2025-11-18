@@ -11,7 +11,7 @@
 | **TypeScript SDK** | ✅ Complete | ✅ 252/252 | ✅ Complete | **READY** |
 | **Python SDK** | ✅ Complete | ✅ 144/144 | ✅ Complete | **READY** |
 | **Backend (Convex)** | ✅ Complete | ✅ Validated | ✅ Complete | **READY** |
-| **Bug Fixes** | ✅ 5/5 Fixed | ✅ Validated | ✅ Documented | **READY** |
+| **Bug Fixes** | ✅ 6/6 Fixed | ✅ Validated | ✅ Documented | **READY** |
 
 **Overall**: 🚀 **APPROVED FOR v0.9.1 RELEASE**
 
@@ -59,7 +59,12 @@
 **Fix**: Added same safety checks as other operations  
 **Status**: ✅ Fixed
 
-**All 5 bugs validated with tests passing**
+### Bug #6: Broken Pagination Logic
+**Issue**: offset parameter ignored when limit also provided  
+**Fix**: Combined offset+limit in single slice operation  
+**Status**: ✅ Fixed in all 5 operations
+
+**All 6 bugs validated with tests passing**
 
 ---
 
@@ -235,7 +240,7 @@ Both SDKs support the same comprehensive filtering with Pythonic naming in Pytho
 | **Total Test Executions** | 396/396 (100%) |
 | **Files Modified** | 21 |
 | **Lines of Code** | ~1,600 |
-| **Bug Fixes** | 5/5 |
+| **Bug Fixes** | 6/6 |
 | **Filter Options Added** | 20+ |
 | **SDKs Updated** | 2/2 |
 | **Environments Validated** | 2/2 |
