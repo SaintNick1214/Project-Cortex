@@ -11,7 +11,7 @@
 | **TypeScript SDK** | ✅ Complete | ✅ 252/252 | ✅ Complete | **READY** |
 | **Python SDK** | ✅ Complete | ✅ 144/144 | ✅ Complete | **READY** |
 | **Backend (Convex)** | ✅ Complete | ✅ Validated | ✅ Complete | **READY** |
-| **Bug Fixes** | ✅ 7/7 Fixed | ✅ Validated | ✅ Documented | **READY** |
+| **Bug Fixes** | ✅ 10/10 Fixed | ✅ Validated | ✅ Documented | **READY** |
 
 **Overall**: 🚀 **APPROVED FOR v0.9.1 RELEASE**
 
@@ -69,7 +69,12 @@
 **Fix**: Removed "score" from valid sort options (types + documentation)  
 **Status**: ✅ Fixed in TypeScript and Python
 
-**All 7 bugs validated with tests passing**
+### Bug #8, #9, #10: Inconsistent Confidence Filter Types
+**Issue**: count() and search() used v.any() while others used v.number()  
+**Fix**: All operations now use v.number() (exact match) consistently  
+**Status**: ✅ Fixed - all operations identical
+
+**All 10 bugs validated with tests passing**
 
 ---
 
@@ -245,7 +250,7 @@ Both SDKs support the same comprehensive filtering with Pythonic naming in Pytho
 | **Total Test Executions** | 396/396 (100%) |
 | **Files Modified** | 21 |
 | **Lines of Code** | ~1,600 |
-| **Bug Fixes** | 7/7 |
+| **Bug Fixes** | 10/10 |
 | **Filter Options Added** | 20+ |
 | **SDKs Updated** | 2/2 |
 | **Environments Validated** | 2/2 |
