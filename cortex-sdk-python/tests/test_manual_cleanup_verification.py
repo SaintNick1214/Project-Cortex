@@ -212,7 +212,8 @@ async def test_list_all_data_in_space(cortex_client, test_ids):
     
     # List facts
     try:
-        fcts = await cortex_client.facts.list(memory_space_id=memory_space_id, limit=100)
+        from cortex.types import ListFactsFilter
+        fcts = await cortex_client.facts.list(ListFactsFilter(memory_space_id=memory_space_id, limit=100))
         facts = fcts if isinstance(fcts, list) else fcts.get("facts", [])
         print(f"\n📌 Facts ({len(facts)}):")
         for i, fact in enumerate(facts[:5], 1):
