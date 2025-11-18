@@ -4,7 +4,7 @@
 
 ### Overview
 
-After initial implementation, 4 critical bugs were identified and fixed in the backend Facts API operations. All bugs have been resolved and validated with comprehensive testing.
+After initial implementation, 5 critical bugs were identified and fixed in the backend Facts API operations. All bugs have been resolved and validated with comprehensive testing.
 
 ---
 
@@ -163,6 +163,60 @@ args: {
 
 ---
 
+## Bug #5: Unsafe Sorting in search() Operation
+
+### Problem
+
+**Location**: `search()` handler (lines 652-665)
+
+**Issue**: The search() operation was missed during the initial bug fix and still had unsafe sorting:
+```typescript
+// Apply sorting
+if (args.sortBy) {
+  const sortField = args.sortBy as keyof typeof filtered[0];  // ❌ UNSAFE
+  filtered.sort((a, b) => {
+    const aVal = a[sortField] as any;
+    const bVal = b[sortField] as any;
+    // ...
+  });
+}
+```
+
+**Problems**:
+1. No check if `filtered` array is empty (filtered[0] could be undefined)
+2. No validation that `sortBy` is a valid field name
+3. Inconsistent with the fix applied to other operations (list, count, queryBySubject, queryByRelationship)
+
+### Solution
+
+**Fixed**: Applied same safety pattern as other operations:
+```typescript
+// Apply sorting (safe - only if facts exist and sortBy is valid)
+if (args.sortBy && filtered.length > 0) {
+  // Validate sortBy is a valid field
+  const validSortFields = ["createdAt", "updatedAt", "confidence", "version"];
+  if (validSortFields.includes(args.sortBy)) {
+    const sortField = args.sortBy as "createdAt" | "updatedAt" | "confidence" | "version";
+    filtered.sort((a, b) => {
+      const aVal = a[sortField] as any;
+      const bVal = b[sortField] as any;
+      const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+      return args.sortOrder === "asc" ? comparison : -comparison;
+    });
+  }
+}
+```
+
+**Improvements**:
+1. ✅ Check `filtered.length > 0` before sorting
+2. ✅ Validate `sortBy` against allowed fields
+3. ✅ Consistent with other operations
+4. ✅ Graceful degradation on invalid fields
+
+**Impact**: Prevents runtime errors in search() operation when no results match filters or invalid sortBy values are provided.
+
+---
+
 ## Validation
 
 ### Test Results - All Passing ✅
@@ -183,26 +237,29 @@ args: {
 
 | Bug | Location | Issue | Fix | Status |
 |-----|----------|-------|-----|--------|
-| #1 & #2 | All operations | Unsafe sorting with empty arrays | Added length check + field validation | ✅ Fixed |
+| #1 & #2 | list, count, queryBySubject, queryByRelationship | Unsafe sorting with empty arrays | Added length check + field validation | ✅ Fixed |
 | #3 | queryBySubject | Missing 5 filter implementations | Added all 5 missing filters | ✅ Fixed |
 | #4 | queryByRelationship | Missing 5 filter implementations | Added all 5 missing filters | ✅ Fixed |
+| #5 | search | Unsafe sorting (missed in initial fix) | Added length check + field validation | ✅ Fixed |
 
 ---
 
 ## Impact Assessment
 
 ### Before Fixes
-- ❌ Crash risk when sorting empty result sets
-- ❌ Crash risk with invalid sortBy values
+- ❌ Crash risk when sorting empty result sets (5 operations)
+- ❌ Crash risk with invalid sortBy values (5 operations)
 - ❌ 5 filters silently ignored in queryBySubject
 - ❌ 5 filters silently ignored in queryByRelationship
+- ❌ search() had unsafe sorting (missed in initial fix)
 - ❌ Violated universal filters documentation
 
 ### After Fixes
-- ✅ Safe sorting (checks array length)
-- ✅ Field validation (only valid sort fields)
+- ✅ Safe sorting in ALL operations (checks array length)
+- ✅ Field validation in ALL operations (only valid sort fields)
 - ✅ All filters implemented in queryBySubject
 - ✅ All filters implemented in queryByRelationship
+- ✅ search() now has safe sorting
 - ✅ Matches documentation 100%
 - ✅ Graceful degradation (invalid fields ignored)
 
@@ -253,19 +310,21 @@ args: {
 
 ## Conclusion
 
-All 4 identified bugs have been fixed with:
-- ✅ Comprehensive safety checks
+All 5 identified bugs have been fixed with:
+- ✅ Comprehensive safety checks in all operations
 - ✅ Complete filter implementations
 - ✅ No test regressions
 - ✅ Improved code quality
+- ✅ Consistent safety patterns across all 5 operations
 
 The Facts API now:
-- ✅ Safely handles empty result sets
-- ✅ Validates sort field names
+- ✅ Safely handles empty result sets (all operations)
+- ✅ Validates sort field names (all operations)
 - ✅ Implements ALL documented universal filters
 - ✅ Matches documentation 100%
+- ✅ Consistent code quality across all operations
 
-**Status**: Bugs fixed and validated ✅
+**Status**: All bugs fixed and validated ✅
 
 ---
 

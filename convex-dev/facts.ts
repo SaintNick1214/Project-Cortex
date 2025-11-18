@@ -649,15 +649,19 @@ export const search = query({
       });
     }
 
-    // Apply sorting
-    if (args.sortBy) {
-      const sortField = args.sortBy as keyof typeof filtered[0];
-      filtered.sort((a, b) => {
-        const aVal = a[sortField] as any;
-        const bVal = b[sortField] as any;
-        const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
-        return args.sortOrder === "asc" ? comparison : -comparison;
-      });
+    // Apply sorting (safe - only if facts exist and sortBy is valid)
+    if (args.sortBy && filtered.length > 0) {
+      // Validate sortBy is a valid field
+      const validSortFields = ["createdAt", "updatedAt", "confidence", "version"];
+      if (validSortFields.includes(args.sortBy)) {
+        const sortField = args.sortBy as "createdAt" | "updatedAt" | "confidence" | "version";
+        filtered.sort((a, b) => {
+          const aVal = a[sortField] as any;
+          const bVal = b[sortField] as any;
+          const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+          return args.sortOrder === "asc" ? comparison : -comparison;
+        });
+      }
     }
 
     // Apply pagination
