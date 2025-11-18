@@ -603,7 +603,8 @@ export interface FactRecord {
   _id: string;
   factId: string;
   memorySpaceId: string;
-  participantId?: string;
+  participantId?: string; // Hive Mode tracking
+  userId?: string; // GDPR compliance - links to user
   fact: string; // The fact statement
   factType:
     | "preference"
@@ -636,7 +637,8 @@ export interface FactRecord {
 
 export interface StoreFactParams {
   memorySpaceId: string;
-  participantId?: string;
+  participantId?: string; // Hive Mode tracking
+  userId?: string; // GDPR compliance - links to user
   fact: string;
   factType:
     | "preference"
@@ -663,7 +665,10 @@ export interface StoreFactParams {
 }
 
 export interface ListFactsFilter {
+  // Required
   memorySpaceId: string;
+
+  // Fact-specific filters
   factType?:
     | "preference"
     | "identity"
@@ -673,13 +678,46 @@ export interface ListFactsFilter {
     | "observation"
     | "custom";
   subject?: string;
+  predicate?: string;
+  object?: string;
+  minConfidence?: number;
+  confidence?: number; // Exact match
+
+  // Universal filters (Cortex standard)
+  userId?: string;
+  participantId?: string;
   tags?: string[];
+  tagMatch?: "any" | "all";
+  sourceType?: "conversation" | "system" | "tool" | "manual";
+
+  // Date filters
+  createdBefore?: Date;
+  createdAfter?: Date;
+  updatedBefore?: Date;
+  updatedAfter?: Date;
+
+  // Version filters
+  version?: number;
   includeSuperseded?: boolean;
+
+  // Temporal validity filters
+  validAt?: Date; // Facts valid at specific time
+
+  // Metadata filters
+  metadata?: Record<string, unknown>;
+
+  // Result options
   limit?: number;
+  offset?: number;
+  sortBy?: "createdAt" | "updatedAt" | "confidence" | "version";
+  sortOrder?: "asc" | "desc";
 }
 
 export interface CountFactsFilter {
+  // Required
   memorySpaceId: string;
+
+  // Fact-specific filters
   factType?:
     | "preference"
     | "identity"
@@ -688,10 +726,129 @@ export interface CountFactsFilter {
     | "event"
     | "observation"
     | "custom";
+  subject?: string;
+  predicate?: string;
+  object?: string;
+  minConfidence?: number;
+  confidence?: number; // Exact match
+
+  // Universal filters (Cortex standard)
+  userId?: string;
+  participantId?: string;
+  tags?: string[];
+  tagMatch?: "any" | "all";
+  sourceType?: "conversation" | "system" | "tool" | "manual";
+
+  // Date filters
+  createdBefore?: Date;
+  createdAfter?: Date;
+  updatedBefore?: Date;
+  updatedAfter?: Date;
+
+  // Version filters
+  version?: number;
   includeSuperseded?: boolean;
+
+  // Temporal validity
+  validAt?: Date;
+
+  // Metadata filters
+  metadata?: Record<string, unknown>;
 }
 
 export interface SearchFactsOptions {
+  // Fact-specific filters
+  factType?:
+    | "preference"
+    | "identity"
+    | "knowledge"
+    | "relationship"
+    | "event"
+    | "observation"
+    | "custom";
+  subject?: string;
+  predicate?: string;
+  object?: string;
+  minConfidence?: number;
+  confidence?: number; // Exact match
+
+  // Universal filters (Cortex standard)
+  userId?: string;
+  participantId?: string;
+  tags?: string[];
+  tagMatch?: "any" | "all";
+  sourceType?: "conversation" | "system" | "tool" | "manual";
+
+  // Date filters
+  createdBefore?: Date;
+  createdAfter?: Date;
+  updatedBefore?: Date;
+  updatedAfter?: Date;
+
+  // Version filters
+  version?: number;
+  includeSuperseded?: boolean;
+
+  // Temporal validity
+  validAt?: Date;
+
+  // Metadata filters
+  metadata?: Record<string, unknown>;
+
+  // Result options
+  limit?: number;
+  offset?: number;
+  sortBy?: "confidence" | "createdAt" | "updatedAt"; // Note: search doesn't return scores
+  sortOrder?: "asc" | "desc";
+}
+
+export interface QueryBySubjectFilter {
+  // Required
+  memorySpaceId: string;
+  subject: string;
+
+  // Fact-specific filters
+  factType?:
+    | "preference"
+    | "identity"
+    | "knowledge"
+    | "relationship"
+    | "event"
+    | "observation"
+    | "custom";
+  predicate?: string;
+  object?: string;
+  minConfidence?: number;
+  confidence?: number; // Exact match
+
+  // Universal filters (Cortex standard)
+  userId?: string;
+  participantId?: string;
+  tags?: string[];
+  tagMatch?: "any" | "all";
+  sourceType?: "conversation" | "system" | "tool" | "manual";
+  createdBefore?: Date;
+  createdAfter?: Date;
+  updatedBefore?: Date;
+  updatedAfter?: Date;
+  version?: number;
+  includeSuperseded?: boolean;
+  validAt?: Date;
+  metadata?: Record<string, unknown>;
+  limit?: number;
+  offset?: number;
+  sortBy?: "createdAt" | "updatedAt" | "confidence";
+  sortOrder?: "asc" | "desc";
+}
+
+export interface QueryByRelationshipFilter {
+  // Required
+  memorySpaceId: string;
+  subject: string;
+  predicate: string;
+
+  // Fact-specific filters
+  object?: string;
   factType?:
     | "preference"
     | "identity"
@@ -701,8 +858,26 @@ export interface SearchFactsOptions {
     | "observation"
     | "custom";
   minConfidence?: number;
+  confidence?: number; // Exact match
+
+  // Universal filters (Cortex standard)
+  userId?: string;
+  participantId?: string;
   tags?: string[];
+  tagMatch?: "any" | "all";
+  sourceType?: "conversation" | "system" | "tool" | "manual";
+  createdBefore?: Date;
+  createdAfter?: Date;
+  updatedBefore?: Date;
+  updatedAfter?: Date;
+  version?: number;
+  includeSuperseded?: boolean;
+  validAt?: Date;
+  metadata?: Record<string, unknown>;
   limit?: number;
+  offset?: number;
+  sortBy?: "createdAt" | "updatedAt" | "confidence";
+  sortOrder?: "asc" | "desc";
 }
 
 export interface UpdateFactInput {

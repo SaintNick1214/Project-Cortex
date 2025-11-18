@@ -3,7 +3,7 @@
  */
 
 import type { MemoryEntry } from "@cortexmemory/sdk";
-import type { LanguageModelV1Prompt } from "ai";
+// Prompt types handled dynamically to support all AI SDK versions
 import type {
   ContextInjectionStrategy,
   CortexMemoryConfig,
@@ -116,11 +116,11 @@ export function buildMemoryContext(
  * Inject memory context into messages based on strategy
  */
 export function injectMemoryContext(
-  messages: LanguageModelV1Prompt,
+  messages: any,
   memories: MemoryEntry[],
   config: CortexMemoryConfig,
   logger: Logger,
-): LanguageModelV1Prompt {
+): any {
   if (memories.length === 0) {
     logger.debug("No memories to inject, returning original messages");
     return messages;

@@ -16,7 +16,7 @@ from datetime import datetime
 ConversationType = Literal["user-agent", "agent-agent"]
 SourceType = Literal["conversation", "system", "tool", "a2a"]
 ContentType = Literal["raw", "summarized"]
-FactType = Literal["preference", "identity", "knowledge", "relationship", "event", "custom"]
+FactType = Literal["preference", "identity", "knowledge", "relationship", "event", "observation", "custom"]
 ContextStatus = Literal["active", "completed", "cancelled", "blocked"]
 MessageRole = Literal["user", "agent", "system"]
 MemorySpaceType = Literal["personal", "team", "project", "custom"]
@@ -275,7 +275,8 @@ class FactRecord:
     created_at: int
     updated_at: int
     version: int
-    participant_id: Optional[str] = None
+    participant_id: Optional[str] = None  # Hive Mode tracking
+    user_id: Optional[str] = None  # GDPR compliance - links to user
     subject: Optional[str] = None
     predicate: Optional[str] = None
     object: Optional[str] = None
@@ -295,7 +296,8 @@ class StoreFactParams:
     fact_type: FactType
     confidence: int
     source_type: Literal["conversation", "system", "tool", "manual", "a2a"]
-    participant_id: Optional[str] = None
+    participant_id: Optional[str] = None  # Hive Mode tracking
+    user_id: Optional[str] = None  # GDPR compliance - links to user
     subject: Optional[str] = None
     predicate: Optional[str] = None
     object: Optional[str] = None
@@ -304,6 +306,179 @@ class StoreFactParams:
     tags: Optional[List[str]] = None
     valid_from: Optional[int] = None
     valid_until: Optional[int] = None
+
+
+@dataclass
+class ListFactsFilter:
+    """Universal filters for listing facts (v0.9.1+)."""
+    # Required
+    memory_space_id: str
+    
+    # Fact-specific filters
+    fact_type: Optional[FactType] = None
+    subject: Optional[str] = None
+    predicate: Optional[str] = None
+    object: Optional[str] = None
+    min_confidence: Optional[int] = None
+    confidence: Optional[int] = None  # Exact match
+    
+    # Universal filters (Cortex standard)
+    user_id: Optional[str] = None
+    participant_id: Optional[str] = None
+    tags: Optional[List[str]] = None
+    tag_match: Optional[Literal["any", "all"]] = None
+    source_type: Optional[Literal["conversation", "system", "tool", "manual"]] = None
+    
+    # Date filters
+    created_before: Optional[datetime] = None
+    created_after: Optional[datetime] = None
+    updated_before: Optional[datetime] = None
+    updated_after: Optional[datetime] = None
+    
+    # Version filters
+    version: Optional[int] = None
+    include_superseded: Optional[bool] = None
+    
+    # Temporal validity filters
+    valid_at: Optional[datetime] = None  # Facts valid at specific time
+    
+    # Metadata filters
+    metadata: Optional[Dict[str, Any]] = None
+    
+    # Result options
+    limit: Optional[int] = None
+    offset: Optional[int] = None
+    sort_by: Optional[Literal["createdAt", "updatedAt", "confidence", "version"]] = None
+    sort_order: Optional[Literal["asc", "desc"]] = None
+
+
+@dataclass
+class CountFactsFilter:
+    """Universal filters for counting facts (v0.9.1+)."""
+    # Required
+    memory_space_id: str
+    
+    # Fact-specific filters
+    fact_type: Optional[FactType] = None
+    subject: Optional[str] = None
+    predicate: Optional[str] = None
+    object: Optional[str] = None
+    min_confidence: Optional[int] = None
+    confidence: Optional[int] = None
+    
+    # Universal filters
+    user_id: Optional[str] = None
+    participant_id: Optional[str] = None
+    tags: Optional[List[str]] = None
+    tag_match: Optional[Literal["any", "all"]] = None
+    source_type: Optional[Literal["conversation", "system", "tool", "manual"]] = None
+    created_before: Optional[datetime] = None
+    created_after: Optional[datetime] = None
+    updated_before: Optional[datetime] = None
+    updated_after: Optional[datetime] = None
+    version: Optional[int] = None
+    include_superseded: Optional[bool] = None
+    valid_at: Optional[datetime] = None
+    metadata: Optional[Dict[str, Any]] = None
+
+
+@dataclass
+class SearchFactsOptions:
+    """Universal filters for searching facts (v0.9.1+)."""
+    # Fact-specific filters
+    fact_type: Optional[FactType] = None
+    subject: Optional[str] = None
+    predicate: Optional[str] = None
+    object: Optional[str] = None
+    min_confidence: Optional[int] = None
+    confidence: Optional[int] = None
+    
+    # Universal filters
+    user_id: Optional[str] = None
+    participant_id: Optional[str] = None
+    tags: Optional[List[str]] = None
+    tag_match: Optional[Literal["any", "all"]] = None
+    source_type: Optional[Literal["conversation", "system", "tool", "manual"]] = None
+    created_before: Optional[datetime] = None
+    created_after: Optional[datetime] = None
+    updated_before: Optional[datetime] = None
+    updated_after: Optional[datetime] = None
+    version: Optional[int] = None
+    include_superseded: Optional[bool] = None
+    valid_at: Optional[datetime] = None
+    metadata: Optional[Dict[str, Any]] = None
+    limit: Optional[int] = None
+    offset: Optional[int] = None
+    sort_by: Optional[Literal["confidence", "createdAt", "updatedAt"]] = None  # Note: search doesn't return scores
+    sort_order: Optional[Literal["asc", "desc"]] = None
+
+
+@dataclass
+class QueryBySubjectFilter:
+    """Universal filters for queryBySubject (v0.9.1+)."""
+    # Required
+    memory_space_id: str
+    subject: str
+    
+    # Fact-specific filters
+    fact_type: Optional[FactType] = None
+    predicate: Optional[str] = None
+    object: Optional[str] = None
+    min_confidence: Optional[int] = None
+    confidence: Optional[int] = None
+    
+    # Universal filters
+    user_id: Optional[str] = None
+    participant_id: Optional[str] = None
+    tags: Optional[List[str]] = None
+    tag_match: Optional[Literal["any", "all"]] = None
+    source_type: Optional[Literal["conversation", "system", "tool", "manual"]] = None
+    created_before: Optional[datetime] = None
+    created_after: Optional[datetime] = None
+    updated_before: Optional[datetime] = None
+    updated_after: Optional[datetime] = None
+    version: Optional[int] = None
+    include_superseded: Optional[bool] = None
+    valid_at: Optional[datetime] = None
+    metadata: Optional[Dict[str, Any]] = None
+    limit: Optional[int] = None
+    offset: Optional[int] = None
+    sort_by: Optional[Literal["createdAt", "updatedAt", "confidence"]] = None
+    sort_order: Optional[Literal["asc", "desc"]] = None
+
+
+@dataclass
+class QueryByRelationshipFilter:
+    """Universal filters for queryByRelationship (v0.9.1+)."""
+    # Required
+    memory_space_id: str
+    subject: str
+    predicate: str
+    
+    # Fact-specific filters
+    object: Optional[str] = None
+    fact_type: Optional[FactType] = None
+    min_confidence: Optional[int] = None
+    confidence: Optional[int] = None
+    
+    # Universal filters
+    user_id: Optional[str] = None
+    participant_id: Optional[str] = None
+    tags: Optional[List[str]] = None
+    tag_match: Optional[Literal["any", "all"]] = None
+    source_type: Optional[Literal["conversation", "system", "tool", "manual"]] = None
+    created_before: Optional[datetime] = None
+    created_after: Optional[datetime] = None
+    updated_before: Optional[datetime] = None
+    updated_after: Optional[datetime] = None
+    version: Optional[int] = None
+    include_superseded: Optional[bool] = None
+    valid_at: Optional[datetime] = None
+    metadata: Optional[Dict[str, Any]] = None
+    limit: Optional[int] = None
+    offset: Optional[int] = None
+    sort_by: Optional[Literal["createdAt", "updatedAt", "confidence"]] = None
+    sort_order: Optional[Literal["asc", "desc"]] = None
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
