@@ -13,6 +13,11 @@ from ..types import (
     UpdateFactOptions,
     DeleteFactOptions,
     FactType,
+    ListFactsFilter,
+    CountFactsFilter,
+    SearchFactsOptions,
+    QueryBySubjectFilter,
+    QueryByRelationshipFilter,
 )
 from ..errors import CortexError, ErrorCode
 from .._utils import filter_none_values, convert_convex_response
@@ -67,6 +72,7 @@ class FactsAPI:
             filter_none_values({
                 "memorySpaceId": params.memory_space_id,
                 "participantId": params.participant_id,
+                "userId": params.user_id,
                 "fact": params.fact,
                 "factType": params.fact_type,
                 "subject": params.subject,
@@ -129,43 +135,58 @@ class FactsAPI:
 
     async def list(
         self,
-        memory_space_id: str,
-        fact_type: Optional[FactType] = None,
-        subject: Optional[str] = None,
-        tags: Optional[List[str]] = None,
-        include_superseded: bool = False,
-        limit: int = 100,
+        filter: ListFactsFilter,
     ) -> List[FactRecord]:
         """
-        List facts with filters.
+        List facts with comprehensive universal filters (v0.9.1+).
 
         Args:
-            memory_space_id: Memory space ID
-            fact_type: Filter by fact type
-            subject: Filter by subject entity
-            tags: Filter by tags
-            include_superseded: Include old versions
-            limit: Maximum results
+            filter: Comprehensive filter options with 25+ parameters
 
         Returns:
             List of fact records
 
         Example:
-            >>> preferences = await cortex.facts.list(
-            ...     'agent-1',
-            ...     fact_type='preference',
-            ...     subject='user-123'
+            >>> from cortex.types import ListFactsFilter
+            >>> facts = await cortex.facts.list(
+            ...     ListFactsFilter(
+            ...         memory_space_id='agent-1',
+            ...         user_id='user-123',  # GDPR filtering
+            ...         fact_type='preference',
+            ...         min_confidence=80,
+            ...         tags=['important'],
+            ...         sort_by='confidence',
+            ...         sort_order='desc'
+            ...     )
             ... )
         """
         result = await self.client.query(
             "facts:list",
             filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "factType": fact_type,
-                "subject": subject,
-                "tags": tags,
-                "includeSuperseded": include_superseded,
-                "limit": limit,
+                "memorySpaceId": filter.memory_space_id,
+                "factType": filter.fact_type,
+                "subject": filter.subject,
+                "predicate": filter.predicate,
+                "object": filter.object,
+                "minConfidence": filter.min_confidence,
+                "confidence": filter.confidence,
+                "userId": filter.user_id,
+                "participantId": filter.participant_id,
+                "tags": filter.tags,
+                "tagMatch": filter.tag_match,
+                "sourceType": filter.source_type,
+                "createdBefore": int(filter.created_before.timestamp() * 1000) if filter.created_before else None,
+                "createdAfter": int(filter.created_after.timestamp() * 1000) if filter.created_after else None,
+                "updatedBefore": int(filter.updated_before.timestamp() * 1000) if filter.updated_before else None,
+                "updatedAfter": int(filter.updated_after.timestamp() * 1000) if filter.updated_after else None,
+                "version": filter.version,
+                "includeSuperseded": filter.include_superseded,
+                "validAt": int(filter.valid_at.timestamp() * 1000) if filter.valid_at else None,
+                "metadata": filter.metadata,
+                "limit": filter.limit,
+                "offset": filter.offset,
+                "sortBy": filter.sort_by,
+                "sortOrder": filter.sort_order,
             }),
         )
 
@@ -175,30 +196,29 @@ class FactsAPI:
         self,
         memory_space_id: str,
         query: str,
-        fact_type: Optional[FactType] = None,
-        min_confidence: Optional[int] = None,
-        tags: Optional[List[str]] = None,
-        limit: int = 10,
+        options: Optional[SearchFactsOptions] = None,
     ) -> List[FactRecord]:
         """
-        Search facts with text matching.
+        Search facts with text matching and comprehensive universal filters (v0.9.1+).
 
         Args:
             memory_space_id: Memory space ID
             query: Search query string
-            fact_type: Filter by fact type
-            min_confidence: Minimum confidence threshold
-            tags: Filter by tags
-            limit: Maximum results
+            options: Optional comprehensive search options with universal filters
 
         Returns:
             List of matching facts
 
         Example:
-            >>> food_facts = await cortex.facts.search(
-            ...     'agent-1', 'food preferences',
-            ...     fact_type='preference',
-            ...     min_confidence=80
+            >>> from cortex.types import SearchFactsOptions
+            >>> results = await cortex.facts.search(
+            ...     'agent-1',
+            ...     'food preferences',
+            ...     SearchFactsOptions(
+            ...         user_id='user-123',
+            ...         min_confidence=80,
+            ...         tags=['verified']
+            ...     )
             ... )
         """
         result = await self.client.query(
@@ -206,10 +226,29 @@ class FactsAPI:
             filter_none_values({
                 "memorySpaceId": memory_space_id,
                 "query": query,
-                "factType": fact_type,
-                "minConfidence": min_confidence,
-                "tags": tags,
-                "limit": limit,
+                "factType": options.fact_type if options else None,
+                "subject": options.subject if options else None,
+                "predicate": options.predicate if options else None,
+                "object": options.object if options else None,
+                "minConfidence": options.min_confidence if options else None,
+                "confidence": options.confidence if options else None,
+                "userId": options.user_id if options else None,
+                "participantId": options.participant_id if options else None,
+                "tags": options.tags if options else None,
+                "tagMatch": options.tag_match if options else None,
+                "sourceType": options.source_type if options else None,
+                "createdBefore": int(options.created_before.timestamp() * 1000) if options and options.created_before else None,
+                "createdAfter": int(options.created_after.timestamp() * 1000) if options and options.created_after else None,
+                "updatedBefore": int(options.updated_before.timestamp() * 1000) if options and options.updated_before else None,
+                "updatedAfter": int(options.updated_after.timestamp() * 1000) if options and options.updated_after else None,
+                "version": options.version if options else None,
+                "includeSuperseded": options.include_superseded if options else None,
+                "validAt": int(options.valid_at.timestamp() * 1000) if options and options.valid_at else None,
+                "metadata": options.metadata if options else None,
+                "limit": options.limit if options else None,
+                "offset": options.offset if options else None,
+                "sortBy": options.sort_by if options else None,
+                "sortOrder": options.sort_order if options else None,
             }),
         )
 
@@ -297,33 +336,51 @@ class FactsAPI:
 
     async def count(
         self,
-        memory_space_id: str,
-        fact_type: Optional[FactType] = None,
-        include_superseded: bool = False,
+        filter: CountFactsFilter,
     ) -> int:
         """
-        Count facts matching filters.
+        Count facts with comprehensive universal filters (v0.9.1+).
 
         Args:
-            memory_space_id: Memory space ID
-            fact_type: Filter by fact type
-            include_superseded: Include old versions
+            filter: Comprehensive filter options
 
         Returns:
             Count of matching facts
 
         Example:
+            >>> from cortex.types import CountFactsFilter
             >>> total = await cortex.facts.count(
-            ...     'agent-1',
-            ...     fact_type='preference'
+            ...     CountFactsFilter(
+            ...         memory_space_id='agent-1',
+            ...         user_id='user-123',
+            ...         fact_type='preference',
+            ...         min_confidence=80
+            ...     )
             ... )
         """
         result = await self.client.query(
             "facts:count",
             filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "factType": fact_type,
-                "includeSuperseded": include_superseded,
+                "memorySpaceId": filter.memory_space_id,
+                "factType": filter.fact_type,
+                "subject": filter.subject,
+                "predicate": filter.predicate,
+                "object": filter.object,
+                "minConfidence": filter.min_confidence,
+                "confidence": filter.confidence,
+                "userId": filter.user_id,
+                "participantId": filter.participant_id,
+                "tags": filter.tags,
+                "tagMatch": filter.tag_match,
+                "sourceType": filter.source_type,
+                "createdBefore": int(filter.created_before.timestamp() * 1000) if filter.created_before else None,
+                "createdAfter": int(filter.created_after.timestamp() * 1000) if filter.created_after else None,
+                "updatedBefore": int(filter.updated_before.timestamp() * 1000) if filter.updated_before else None,
+                "updatedAfter": int(filter.updated_after.timestamp() * 1000) if filter.updated_after else None,
+                "version": filter.version,
+                "includeSuperseded": filter.include_superseded,
+                "validAt": int(filter.valid_at.timestamp() * 1000) if filter.valid_at else None,
+                "metadata": filter.metadata,
             }),
         )
 
@@ -331,63 +388,114 @@ class FactsAPI:
 
     async def query_by_subject(
         self,
-        memory_space_id: str,
-        subject: str,
-        fact_type: Optional[FactType] = None,
+        filter: QueryBySubjectFilter,
     ) -> List[FactRecord]:
         """
-        Get all facts about a specific entity.
+        Get all facts about a specific entity with comprehensive universal filters (v0.9.1+).
 
         Args:
-            memory_space_id: Memory space ID
-            subject: Subject entity
-            fact_type: Filter by fact type
+            filter: Comprehensive filter options with subject as required field
 
         Returns:
             List of facts about the subject
 
         Example:
+            >>> from cortex.types import QueryBySubjectFilter
             >>> user_facts = await cortex.facts.query_by_subject(
-            ...     'agent-1', 'user-123'
+            ...     QueryBySubjectFilter(
+            ...         memory_space_id='agent-1',
+            ...         subject='user-123',
+            ...         user_id='user-123',
+            ...         fact_type='preference',
+            ...         min_confidence=85
+            ...     )
             ... )
         """
         result = await self.client.query(
             "facts:queryBySubject",
             filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "subject": subject,
-                "factType": fact_type,
+                "memorySpaceId": filter.memory_space_id,
+                "subject": filter.subject,
+                "factType": filter.fact_type,
+                "predicate": filter.predicate,
+                "object": filter.object,
+                "minConfidence": filter.min_confidence,
+                "confidence": filter.confidence,
+                "userId": filter.user_id,
+                "participantId": filter.participant_id,
+                "tags": filter.tags,
+                "tagMatch": filter.tag_match,
+                "sourceType": filter.source_type,
+                "createdBefore": int(filter.created_before.timestamp() * 1000) if filter.created_before else None,
+                "createdAfter": int(filter.created_after.timestamp() * 1000) if filter.created_after else None,
+                "updatedBefore": int(filter.updated_before.timestamp() * 1000) if filter.updated_before else None,
+                "updatedAfter": int(filter.updated_after.timestamp() * 1000) if filter.updated_after else None,
+                "version": filter.version,
+                "includeSuperseded": filter.include_superseded,
+                "validAt": int(filter.valid_at.timestamp() * 1000) if filter.valid_at else None,
+                "metadata": filter.metadata,
+                "limit": filter.limit,
+                "offset": filter.offset,
+                "sortBy": filter.sort_by,
+                "sortOrder": filter.sort_order,
             }),
         )
 
         return [FactRecord(**convert_convex_response(fact)) for fact in result]
 
     async def query_by_relationship(
-        self, memory_space_id: str, subject: str, predicate: str
+        self,
+        filter: QueryByRelationshipFilter,
     ) -> List[FactRecord]:
         """
-        Get facts with specific relationship.
+        Get facts with specific relationship and comprehensive universal filters (v0.9.1+).
 
         Args:
-            memory_space_id: Memory space ID
-            subject: Subject entity
-            predicate: Relationship type
+            filter: Comprehensive filter options with subject and predicate as required fields
 
         Returns:
             List of matching facts
 
         Example:
+            >>> from cortex.types import QueryByRelationshipFilter
             >>> work_places = await cortex.facts.query_by_relationship(
-            ...     'agent-1', 'user-123', 'works_at'
+            ...     QueryByRelationshipFilter(
+            ...         memory_space_id='agent-1',
+            ...         subject='user-123',
+            ...         predicate='works_at',
+            ...         user_id='user-123',
+            ...         min_confidence=90
+            ...     )
             ... )
         """
         result = await self.client.query(
             "facts:queryByRelationship",
-            {
-                "memorySpaceId": memory_space_id,
-                "subject": subject,
-                "predicate": predicate,
-            },
+            filter_none_values({
+                "memorySpaceId": filter.memory_space_id,
+                "subject": filter.subject,
+                "predicate": filter.predicate,
+                "object": filter.object,
+                "factType": filter.fact_type,
+                "minConfidence": filter.min_confidence,
+                "confidence": filter.confidence,
+                "userId": filter.user_id,
+                "participantId": filter.participant_id,
+                "tags": filter.tags,
+                "tagMatch": filter.tag_match,
+                "sourceType": filter.source_type,
+                "createdBefore": int(filter.created_before.timestamp() * 1000) if filter.created_before else None,
+                "createdAfter": int(filter.created_after.timestamp() * 1000) if filter.created_after else None,
+                "updatedBefore": int(filter.updated_before.timestamp() * 1000) if filter.updated_before else None,
+                "updatedAfter": int(filter.updated_after.timestamp() * 1000) if filter.updated_after else None,
+                "version": filter.version,
+                "includeSuperseded": filter.include_superseded,
+                "validAt": int(filter.valid_at.timestamp() * 1000) if filter.valid_at else None,
+                "metadata": filter.metadata,
+                "limit": filter.limit,
+                "offset": filter.offset,
+                "sortBy": filter.sort_by,
+                "sortOrder": filter.sort_order,
+            }),
         )
 
         return [FactRecord(**convert_convex_response(fact)) for fact in result]

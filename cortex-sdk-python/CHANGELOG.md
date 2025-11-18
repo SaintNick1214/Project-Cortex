@@ -5,6 +5,180 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.1] - 2025-11-18
+
+### 🐛 Critical Bug Fix - Facts API Universal Filters
+
+**Fixed inconsistency in Facts API that violated Cortex's universal filters design principle.**
+
+#### Fixed
+
+**Facts API Universal Filters (Breaking Inconsistency)**:
+
+1. **Missing Universal Filters in Facts API** - Facts operations were missing standard Cortex filters
+   - Added `user_id` field to `FactRecord` for GDPR compliance
+   - Added `user_id` to `StoreFactParams` for cascade deletion support
+   - **CREATED:** `ListFactsFilter` dataclass - Full universal filter support (25+ options)
+   - **CREATED:** `CountFactsFilter` dataclass - Full universal filter support
+   - **CREATED:** `SearchFactsOptions` dataclass - Full universal filter support
+   - **CREATED:** `QueryBySubjectFilter` dataclass - Comprehensive filter interface
+   - **CREATED:** `QueryByRelationshipFilter` dataclass - Comprehensive filter interface
+   - Previously could only filter by: memory_space_id, fact_type, subject, tags (5 options)
+   - Now supports: user_id, participant_id, dates, source_type, tag_match, confidence, metadata, sorting, pagination (25+ options)
+
+2. **Critical Bug in store() Method** - user_id parameter not passed to backend
+   - Fixed: Added `"userId": params.user_id` to mutation call (line 70)
+   - Impact: user_id now correctly stored and filterable for GDPR compliance
+
+3. **API Consistency Achieved** - Facts API now matches Memory API patterns
+   - Same filter syntax works across `memory.*` and `facts.*` operations
+   - GDPR-friendly: Can filter facts by `user_id` for data export/deletion
+   - Hive Mode: Can filter facts by `participant_id` to track agent contributions
+   - Date filters: Can query recent facts, facts in date ranges
+   - Confidence ranges: Can filter by quality thresholds
+   - Complex queries: Combine multiple filters for precise fact retrieval
+
+#### Changed
+
+**Method Signatures Updated** (Breaking Changes):
+
+**Before (v0.9.0)**:
+```python
+# Limited positional/keyword arguments
+facts = await cortex.facts.list("agent-1", fact_type="preference")
+facts = await cortex.facts.search("agent-1", "query", min_confidence=80)
+count = await cortex.facts.count("agent-1", fact_type="preference")
+```
+
+**After (v0.9.1)**:
+```python
+# Comprehensive filter objects
+from cortex.types import ListFactsFilter, SearchFactsOptions, CountFactsFilter
+
+facts = await cortex.facts.list(
+    ListFactsFilter(memory_space_id="agent-1", fact_type="preference")
+)
+
+facts = await cortex.facts.search(
+    "agent-1", "query", SearchFactsOptions(min_confidence=80)
+)
+
+count = await cortex.facts.count(
+    CountFactsFilter(memory_space_id="agent-1", fact_type="preference")
+)
+```
+
+**Updated Methods**:
+- `list()` - Now accepts `ListFactsFilter` instead of individual parameters
+- `count()` - Now accepts `CountFactsFilter` instead of individual parameters
+- `search()` - Now accepts optional `SearchFactsOptions` instead of individual parameters
+- `query_by_subject()` - Now accepts `QueryBySubjectFilter` instead of individual parameters
+- `query_by_relationship()` - Now accepts `QueryByRelationshipFilter` instead of individual parameters
+
+**Migration Guide**:
+
+All existing test files updated to use new filter objects. Update your code:
+
+```python
+# Old (v0.9.0)
+facts = await cortex.facts.list(
+    memory_space_id="agent-1",
+    fact_type="preference",
+    subject="user-123"
+)
+
+# New (v0.9.1)
+from cortex.types import ListFactsFilter
+facts = await cortex.facts.list(
+    ListFactsFilter(
+        memory_space_id="agent-1",
+        fact_type="preference",
+        subject="user-123"
+    )
+)
+```
+
+#### Enhanced
+
+**New Filter Capabilities**:
+
+All Facts query operations now support comprehensive universal filters:
+
+```python
+from cortex.types import ListFactsFilter
+from datetime import datetime, timedelta
+
+facts = await cortex.facts.list(
+    ListFactsFilter(
+        memory_space_id="agent-1",
+        # Identity filters (GDPR & Hive Mode) - NEW
+        user_id="user-123",
+        participant_id="email-agent",
+        # Fact-specific
+        fact_type="preference",
+        subject="user-123",
+        min_confidence=80,
+        # Source filtering - NEW
+        source_type="conversation",
+        # Tag filtering with match strategy - NEW
+        tags=["verified", "important"],
+        tag_match="all",  # Must have ALL tags
+        # Date filtering - NEW
+        created_after=datetime.now() - timedelta(days=7),
+        # Metadata filtering - NEW
+        metadata={"priority": "high"},
+        # Sorting and pagination - NEW
+        sort_by="confidence",
+        sort_order="desc",
+        limit=20,
+        offset=0,
+    )
+)
+```
+
+**Backend Bug Fixes** (Convex):
+- Fixed unsafe sort field type casting (could crash on empty result sets)
+- Added field validation for sortBy parameter
+- Added missing filter implementations in `queryBySubject` (confidence, updatedBefore/After, validAt, metadata)
+- Added missing filter implementations in `queryByRelationship` (confidence, updatedBefore/After, validAt, metadata)
+
+#### Testing
+
+**Test Results:**
+- **LOCAL**: 72/72 tests passing (100%) ✅
+- **MANAGED**: 72/72 tests passing (100%) ✅
+- **Total**: 144 test executions (100% success rate)
+
+**New Tests:**
+- `tests/test_facts_universal_filters.py` - 20 comprehensive test cases covering all universal filters
+
+**Updated Tests:**
+- `tests/test_facts.py` - Updated 3 tests for new signatures
+- `tests/test_facts_filters.py` - Updated 10 tests for new signatures
+
+#### Benefits
+
+✅ **API Consistency** - Facts API now follows same patterns as Memory API  
+✅ **GDPR Compliance** - Can filter by `user_id` for data export and deletion  
+✅ **Hive Mode Support** - Can filter by `participant_id` for multi-agent tracking  
+✅ **Powerful Queries** - 25+ filter options vs 5 previously (500% increase)  
+✅ **Better Developer Experience** - Learn filters once, use everywhere
+
+#### Package Exports
+
+**New Exports**:
+```python
+from cortex.types import (
+    ListFactsFilter,          # NEW
+    CountFactsFilter,         # NEW
+    SearchFactsOptions,       # NEW
+    QueryBySubjectFilter,     # NEW
+    QueryByRelationshipFilter # NEW
+)
+```
+
+---
+
 ## [0.9.0] - 2024-11-14
 
 ### 🎉 First Official PyPI Release!
