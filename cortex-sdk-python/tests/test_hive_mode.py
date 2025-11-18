@@ -238,7 +238,8 @@ async def test_all_participants_contribute_to_shared_fact_base(hive_cortex):
     )
     
     # All can access all facts
-    all_facts_result = await hive_cortex.facts.list(memory_space_id=HIVE_SPACE)
+    from cortex.types import ListFactsFilter
+    all_facts_result = await hive_cortex.facts.list(ListFactsFilter(memory_space_id=HIVE_SPACE))
     all_facts = all_facts_result if isinstance(all_facts_result, list) else all_facts_result.get("facts", [])
     
     assert len(all_facts) >= 3
@@ -260,9 +261,12 @@ async def test_facts_about_same_subject_from_different_tools(hive_cortex):
     
     Port of: hiveMode.test.ts - line 185
     """
+    from cortex.types import QueryBySubjectFilter
     user_facts_result = await hive_cortex.facts.query_by_subject(
-        memory_space_id=HIVE_SPACE,
-        subject="user-alice",
+        QueryBySubjectFilter(
+            memory_space_id=HIVE_SPACE,
+            subject="user-alice"
+        )
     )
     user_facts = user_facts_result if isinstance(user_facts_result, list) else user_facts_result.get("facts", [])
     
@@ -309,9 +313,12 @@ async def test_single_memory_space_eliminates_duplication(hive_cortex):
     )
     
     # Tool-email can access same fact (no duplicate needed)
+    from cortex.types import QueryBySubjectFilter
     facts_result = await hive_cortex.facts.query_by_subject(
-        memory_space_id=HIVE_SPACE,
-        subject="user-alice",
+        QueryBySubjectFilter(
+            memory_space_id=HIVE_SPACE,
+            subject="user-alice"
+        )
     )
     facts = facts_result if isinstance(facts_result, list) else facts_result.get("facts", [])
     

@@ -371,10 +371,13 @@ async def test_partner_organizations_collaborate_on_joint_campaign(collab_cortex
     assert len(chain_b.get("siblings", [])) == 1  # Org A's task
     
     # 6. But each org's facts stay private
-    org_a_facts_result = await collab_cortex.facts.list(memory_space_id=ORG_A_SPACE)
+    from cortex.types import ListFactsFilter
+    org_a_facts_result = await collab_cortex.facts.list(
+        ListFactsFilter(memory_space_id=ORG_A_SPACE)
+    )
     org_a_facts = org_a_facts_result if isinstance(org_a_facts_result, list) else org_a_facts_result.get("facts", [])
     
-    org_b_facts_result = await collab_cortex.facts.list(memory_space_id=ORG_B_SPACE)
+    org_b_facts_result = await collab_cortex.facts.list(ListFactsFilter(memory_space_id=ORG_B_SPACE))
     org_b_facts = org_b_facts_result if isinstance(org_b_facts_result, list) else org_b_facts_result.get("facts", [])
     
     org_a_fact_texts = [f.fact if hasattr(f, 'fact') else f.get("fact") for f in org_a_facts]
@@ -490,7 +493,7 @@ async def test_shares_only_context_not_underlying_data(collab_cortex):
     assert shared_ctx.data.get("projectName") == "Joint Initiative"
     
     # But Org B CANNOT see Org A's facts
-    org_b_fact_view_result = await collab_cortex.facts.list(memory_space_id=ORG_B_SPACE)
+    org_b_fact_view_result = await collab_cortex.facts.list(ListFactsFilter(memory_space_id=ORG_B_SPACE))
     org_b_fact_view = org_b_fact_view_result if isinstance(org_b_fact_view_result, list) else org_b_fact_view_result.get("facts", [])
     
     org_b_fact_texts = [f.fact if hasattr(f, 'fact') else f.get("fact") for f in org_b_fact_view]
@@ -553,7 +556,7 @@ async def test_demonstrates_hive_vs_collaboration_difference(collab_cortex):
     )
     
     # Single query gets both
-    hive_facts_result = await collab_cortex.facts.list(memory_space_id=hive_space)
+    hive_facts_result = await collab_cortex.facts.list(ListFactsFilter(memory_space_id=hive_space))
     hive_facts = hive_facts_result if isinstance(hive_facts_result, list) else hive_facts_result.get("facts", [])
     
     assert len(hive_facts) >= 2
@@ -619,10 +622,10 @@ async def test_demonstrates_hive_vs_collaboration_difference(collab_cortex):
     )
     
     # Facts stay isolated
-    x_facts_result = await collab_cortex.facts.list(memory_space_id=company_x)
+    x_facts_result = await collab_cortex.facts.list(ListFactsFilter(memory_space_id=company_x))
     x_facts = x_facts_result if isinstance(x_facts_result, list) else x_facts_result.get("facts", [])
     
-    y_facts_result = await collab_cortex.facts.list(memory_space_id=company_y)
+    y_facts_result = await collab_cortex.facts.list(ListFactsFilter(memory_space_id=company_y))
     y_facts = y_facts_result if isinstance(y_facts_result, list) else y_facts_result.get("facts", [])
     
     x_fact_texts = [f.fact if hasattr(f, 'fact') else f.get("fact") for f in x_facts]

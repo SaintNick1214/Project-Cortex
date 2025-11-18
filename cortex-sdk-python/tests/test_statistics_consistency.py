@@ -124,8 +124,9 @@ class TestCountMatchesListLength:
                 )
             )
         
-        count = await cortex_client.facts.count(memory_space_id=space_id)
-        fact_list = await cortex_client.facts.list(memory_space_id=space_id)
+        from cortex.types import CountFactsFilter, ListFactsFilter
+        count = await cortex_client.facts.count(CountFactsFilter(memory_space_id=space_id))
+        fact_list = await cortex_client.facts.list(ListFactsFilter(memory_space_id=space_id))
         
         assert count == len(fact_list)
 
