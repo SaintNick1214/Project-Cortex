@@ -19,6 +19,7 @@ export const store = mutation({
   args: {
     memorySpaceId: v.string(),
     participantId: v.optional(v.string()), // Hive Mode: who extracted this fact
+    userId: v.optional(v.string()), // GDPR compliance - links to user
     fact: v.string(), // The fact statement
     factType: v.union(
       v.literal("preference"),
@@ -60,6 +61,7 @@ export const store = mutation({
       factId,
       memorySpaceId: args.memorySpaceId,
       participantId: args.participantId,
+      userId: args.userId,
       fact: args.fact,
       factType: args.factType,
       subject: args.subject,
@@ -219,6 +221,7 @@ export const get = query({
 export const list = query({
   args: {
     memorySpaceId: v.string(),
+    // Fact-specific filters
     factType: v.optional(
       v.union(
         v.literal("preference"),
@@ -231,61 +234,28 @@ export const list = query({
       ),
     ),
     subject: v.optional(v.string()),
+    predicate: v.optional(v.string()),
+    object: v.optional(v.string()),
+    minConfidence: v.optional(v.number()),
+    confidence: v.optional(v.number()), // Exact match
+    // Universal filters
+    userId: v.optional(v.string()),
+    participantId: v.optional(v.string()),
     tags: v.optional(v.array(v.string())),
+    tagMatch: v.optional(v.union(v.literal("any"), v.literal("all"))),
+    sourceType: v.optional(v.union(v.literal("conversation"), v.literal("system"), v.literal("tool"), v.literal("manual"))),
+    createdBefore: v.optional(v.number()),
+    createdAfter: v.optional(v.number()),
+    updatedBefore: v.optional(v.number()),
+    updatedAfter: v.optional(v.number()),
+    version: v.optional(v.number()),
     includeSuperseded: v.optional(v.boolean()),
+    validAt: v.optional(v.number()),
+    metadata: v.optional(v.any()),
     limit: v.optional(v.number()),
-  },
-  handler: async (ctx, args) => {
-    let facts = await ctx.db
-      .query("facts")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .order("desc")
-      .take(args.limit || 100);
-
-    // Filter out superseded by default
-    if (!args.includeSuperseded) {
-      facts = facts.filter((f) => f.supersededBy === undefined);
-    }
-
-    // Apply filters
-    if (args.factType) {
-      facts = facts.filter((f) => f.factType === args.factType);
-    }
-
-    if (args.subject) {
-      facts = facts.filter((f) => f.subject === args.subject);
-    }
-
-    if (args.tags && args.tags.length > 0) {
-      facts = facts.filter((f) =>
-        args.tags!.some((tag) => f.tags.includes(tag)),
-      );
-    }
-
-    return facts;
-  },
-});
-
-/**
- * Count facts
- */
-export const count = query({
-  args: {
-    memorySpaceId: v.string(),
-    factType: v.optional(
-      v.union(
-        v.literal("preference"),
-        v.literal("identity"),
-        v.literal("knowledge"),
-        v.literal("relationship"),
-        v.literal("event"),
-        v.literal("observation"),
-        v.literal("custom"),
-      ),
-    ),
-    includeSuperseded: v.optional(v.boolean()),
+    offset: v.optional(v.number()),
+    sortBy: v.optional(v.string()),
+    sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
   },
   handler: async (ctx, args) => {
     let facts = await ctx.db
@@ -300,8 +270,234 @@ export const count = query({
       facts = facts.filter((f) => f.supersededBy === undefined);
     }
 
+    // Apply universal filters
     if (args.factType) {
       facts = facts.filter((f) => f.factType === args.factType);
+    }
+    if (args.subject !== undefined) {
+      facts = facts.filter((f) => f.subject === args.subject);
+    }
+    if (args.predicate !== undefined) {
+      facts = facts.filter((f) => f.predicate === args.predicate);
+    }
+    if (args.object !== undefined) {
+      facts = facts.filter((f) => f.object === args.object);
+    }
+    if (args.userId !== undefined) {
+      facts = facts.filter((f) => f.userId === args.userId);
+    }
+    if (args.participantId !== undefined) {
+      facts = facts.filter((f) => f.participantId === args.participantId);
+    }
+    if (args.minConfidence !== undefined) {
+      facts = facts.filter((f) => f.confidence >= args.minConfidence!);
+    }
+    if (args.confidence !== undefined) {
+      facts = facts.filter((f) => f.confidence === args.confidence);
+    }
+    if (args.sourceType !== undefined) {
+      facts = facts.filter((f) => f.sourceType === args.sourceType);
+    }
+    if (args.tags && args.tags.length > 0) {
+      if (args.tagMatch === "all") {
+        facts = facts.filter((f) => 
+          args.tags!.every((tag) => f.tags.includes(tag))
+        );
+      } else { // "any" is default
+        facts = facts.filter((f) => 
+          args.tags!.some((tag) => f.tags.includes(tag))
+        );
+      }
+    }
+    if (args.createdAfter !== undefined) {
+      facts = facts.filter((f) => f.createdAt >= args.createdAfter!);
+    }
+    if (args.createdBefore !== undefined) {
+      facts = facts.filter((f) => f.createdAt <= args.createdBefore!);
+    }
+    if (args.updatedAfter !== undefined) {
+      facts = facts.filter((f) => f.updatedAt >= args.updatedAfter!);
+    }
+    if (args.updatedBefore !== undefined) {
+      facts = facts.filter((f) => f.updatedAt <= args.updatedBefore!);
+    }
+    if (args.version !== undefined) {
+      facts = facts.filter((f) => f.version === args.version);
+    }
+    if (args.validAt !== undefined) {
+      facts = facts.filter((f) => {
+        const isValid =
+          (!f.validFrom || f.validFrom <= args.validAt!) &&
+          (!f.validUntil || f.validUntil > args.validAt!);
+        return isValid;
+      });
+    }
+    if (args.metadata !== undefined) {
+      facts = facts.filter((f) => {
+        if (!f.metadata) return false;
+        // Match all provided metadata fields
+        return Object.entries(args.metadata as Record<string, any>).every(
+          ([key, value]) => f.metadata[key] === value,
+        );
+      });
+    }
+
+    // Apply sorting
+    if (args.sortBy) {
+      const sortField = args.sortBy as keyof typeof facts[0];
+      facts.sort((a, b) => {
+        const aVal = a[sortField] as any;
+        const bVal = b[sortField] as any;
+        const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+        return args.sortOrder === "asc" ? comparison : -comparison;
+      });
+    }
+
+    // Apply pagination
+    if (args.offset !== undefined) {
+      facts = facts.slice(args.offset);
+    }
+    if (args.limit !== undefined) {
+      facts = facts.slice(0, args.limit);
+    }
+
+    return facts;
+  },
+});
+
+/**
+ * Count facts
+ */
+export const count = query({
+  args: {
+    memorySpaceId: v.string(),
+    // Fact-specific filters
+    factType: v.optional(
+      v.union(
+        v.literal("preference"),
+        v.literal("identity"),
+        v.literal("knowledge"),
+        v.literal("relationship"),
+        v.literal("event"),
+        v.literal("observation"),
+        v.literal("custom"),
+      ),
+    ),
+    subject: v.optional(v.string()),
+    predicate: v.optional(v.string()),
+    object: v.optional(v.string()),
+    minConfidence: v.optional(v.number()),
+    confidence: v.optional(v.any()),
+    // Universal filters
+    userId: v.optional(v.string()),
+    participantId: v.optional(v.string()),
+    tags: v.optional(v.array(v.string())),
+    tagMatch: v.optional(v.union(v.literal("any"), v.literal("all"))),
+    sourceType: v.optional(v.union(v.literal("conversation"), v.literal("system"), v.literal("tool"), v.literal("manual"))),
+    createdBefore: v.optional(v.number()),
+    createdAfter: v.optional(v.number()),
+    updatedBefore: v.optional(v.number()),
+    updatedAfter: v.optional(v.number()),
+    version: v.optional(v.number()),
+    includeSuperseded: v.optional(v.boolean()),
+    validAt: v.optional(v.number()),
+    metadata: v.optional(v.any()),
+  },
+  handler: async (ctx, args) => {
+    let facts = await ctx.db
+      .query("facts")
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
+      .collect();
+
+    // Filter out superseded by default
+    if (!args.includeSuperseded) {
+      facts = facts.filter((f) => f.supersededBy === undefined);
+    }
+
+    // Apply universal filters (same as list)
+    if (args.factType) {
+      facts = facts.filter((f) => f.factType === args.factType);
+    }
+    if (args.subject !== undefined) {
+      facts = facts.filter((f) => f.subject === args.subject);
+    }
+    if (args.predicate !== undefined) {
+      facts = facts.filter((f) => f.predicate === args.predicate);
+    }
+    if (args.object !== undefined) {
+      facts = facts.filter((f) => f.object === args.object);
+    }
+    if (args.userId !== undefined) {
+      facts = facts.filter((f) => f.userId === args.userId);
+    }
+    if (args.participantId !== undefined) {
+      facts = facts.filter((f) => f.participantId === args.participantId);
+    }
+    if (args.minConfidence !== undefined) {
+      facts = facts.filter((f) => f.confidence >= args.minConfidence!);
+    }
+    if (args.confidence !== undefined) {
+      const conf = args.confidence as any;
+      if (typeof conf === "number") {
+        facts = facts.filter((f) => f.confidence === conf);
+      } else {
+        if (conf.$gte !== undefined) {
+          facts = facts.filter((f) => f.confidence >= conf.$gte);
+        }
+        if (conf.$lte !== undefined) {
+          facts = facts.filter((f) => f.confidence <= conf.$lte);
+        }
+        if (conf.$eq !== undefined) {
+          facts = facts.filter((f) => f.confidence === conf.$eq);
+        }
+      }
+    }
+    if (args.sourceType !== undefined) {
+      facts = facts.filter((f) => f.sourceType === args.sourceType);
+    }
+    if (args.tags && args.tags.length > 0) {
+      if (args.tagMatch === "all") {
+        facts = facts.filter((f) => 
+          args.tags!.every((tag) => f.tags.includes(tag))
+        );
+      } else {
+        facts = facts.filter((f) => 
+          args.tags!.some((tag) => f.tags.includes(tag))
+        );
+      }
+    }
+    if (args.createdAfter !== undefined) {
+      facts = facts.filter((f) => f.createdAt >= args.createdAfter!);
+    }
+    if (args.createdBefore !== undefined) {
+      facts = facts.filter((f) => f.createdAt <= args.createdBefore!);
+    }
+    if (args.updatedAfter !== undefined) {
+      facts = facts.filter((f) => f.updatedAt >= args.updatedAfter!);
+    }
+    if (args.updatedBefore !== undefined) {
+      facts = facts.filter((f) => f.updatedAt <= args.updatedBefore!);
+    }
+    if (args.version !== undefined) {
+      facts = facts.filter((f) => f.version === args.version);
+    }
+    if (args.validAt !== undefined) {
+      facts = facts.filter((f) => {
+        const isValid =
+          (!f.validFrom || f.validFrom <= args.validAt!) &&
+          (!f.validUntil || f.validUntil > args.validAt!);
+        return isValid;
+      });
+    }
+    if (args.metadata !== undefined) {
+      facts = facts.filter((f) => {
+        if (!f.metadata) return false;
+        return Object.entries(args.metadata as Record<string, any>).every(
+          ([key, value]) => f.metadata[key] === value,
+        );
+      });
     }
 
     return facts.length;
@@ -315,6 +511,7 @@ export const search = query({
   args: {
     memorySpaceId: v.string(),
     query: v.string(),
+    // Fact-specific filters
     factType: v.optional(
       v.union(
         v.literal("preference"),
@@ -326,9 +523,29 @@ export const search = query({
         v.literal("custom"),
       ),
     ),
+    subject: v.optional(v.string()),
+    predicate: v.optional(v.string()),
+    object: v.optional(v.string()),
     minConfidence: v.optional(v.number()),
+    confidence: v.optional(v.any()),
+    // Universal filters
+    userId: v.optional(v.string()),
+    participantId: v.optional(v.string()),
     tags: v.optional(v.array(v.string())),
+    tagMatch: v.optional(v.union(v.literal("any"), v.literal("all"))),
+    sourceType: v.optional(v.union(v.literal("conversation"), v.literal("system"), v.literal("tool"), v.literal("manual"))),
+    createdBefore: v.optional(v.number()),
+    createdAfter: v.optional(v.number()),
+    updatedBefore: v.optional(v.number()),
+    updatedAfter: v.optional(v.number()),
+    version: v.optional(v.number()),
+    includeSuperseded: v.optional(v.boolean()),
+    validAt: v.optional(v.number()),
+    metadata: v.optional(v.any()),
     limit: v.optional(v.number()),
+    offset: v.optional(v.number()),
+    sortBy: v.optional(v.string()),
+    sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
   },
   handler: async (ctx, args) => {
     // Keyword search on fact content
@@ -337,24 +554,114 @@ export const search = query({
       .withSearchIndex("by_content", (q) =>
         q.search("fact", args.query).eq("memorySpaceId", args.memorySpaceId),
       )
-      .take(args.limit || 20);
+      .collect();
 
-    // Filter superseded
-    let filtered = results.filter((f) => f.supersededBy === undefined);
+    // Filter superseded unless explicitly requested
+    let filtered = args.includeSuperseded 
+      ? results 
+      : results.filter((f) => f.supersededBy === undefined);
 
-    // Apply filters
+    // Apply universal filters (same as list/count)
     if (args.factType) {
       filtered = filtered.filter((f) => f.factType === args.factType);
     }
-
+    if (args.subject !== undefined) {
+      filtered = filtered.filter((f) => f.subject === args.subject);
+    }
+    if (args.predicate !== undefined) {
+      filtered = filtered.filter((f) => f.predicate === args.predicate);
+    }
+    if (args.object !== undefined) {
+      filtered = filtered.filter((f) => f.object === args.object);
+    }
+    if (args.userId !== undefined) {
+      filtered = filtered.filter((f) => f.userId === args.userId);
+    }
+    if (args.participantId !== undefined) {
+      filtered = filtered.filter((f) => f.participantId === args.participantId);
+    }
     if (args.minConfidence !== undefined) {
       filtered = filtered.filter((f) => f.confidence >= args.minConfidence!);
     }
-
+    if (args.confidence !== undefined) {
+      const conf = args.confidence as any;
+      if (typeof conf === "number") {
+        filtered = filtered.filter((f) => f.confidence === conf);
+      } else {
+        if (conf.$gte !== undefined) {
+          filtered = filtered.filter((f) => f.confidence >= conf.$gte);
+        }
+        if (conf.$lte !== undefined) {
+          filtered = filtered.filter((f) => f.confidence <= conf.$lte);
+        }
+        if (conf.$eq !== undefined) {
+          filtered = filtered.filter((f) => f.confidence === conf.$eq);
+        }
+      }
+    }
+    if (args.sourceType !== undefined) {
+      filtered = filtered.filter((f) => f.sourceType === args.sourceType);
+    }
     if (args.tags && args.tags.length > 0) {
-      filtered = filtered.filter((f) =>
-        args.tags!.some((tag) => f.tags.includes(tag)),
-      );
+      if (args.tagMatch === "all") {
+        filtered = filtered.filter((f) => 
+          args.tags!.every((tag) => f.tags.includes(tag))
+        );
+      } else {
+        filtered = filtered.filter((f) => 
+          args.tags!.some((tag) => f.tags.includes(tag))
+        );
+      }
+    }
+    if (args.createdAfter !== undefined) {
+      filtered = filtered.filter((f) => f.createdAt >= args.createdAfter!);
+    }
+    if (args.createdBefore !== undefined) {
+      filtered = filtered.filter((f) => f.createdAt <= args.createdBefore!);
+    }
+    if (args.updatedAfter !== undefined) {
+      filtered = filtered.filter((f) => f.updatedAt >= args.updatedAfter!);
+    }
+    if (args.updatedBefore !== undefined) {
+      filtered = filtered.filter((f) => f.updatedAt <= args.updatedBefore!);
+    }
+    if (args.version !== undefined) {
+      filtered = filtered.filter((f) => f.version === args.version);
+    }
+    if (args.validAt !== undefined) {
+      filtered = filtered.filter((f) => {
+        const isValid =
+          (!f.validFrom || f.validFrom <= args.validAt!) &&
+          (!f.validUntil || f.validUntil > args.validAt!);
+        return isValid;
+      });
+    }
+    if (args.metadata !== undefined) {
+      filtered = filtered.filter((f) => {
+        if (!f.metadata) return false;
+        return Object.entries(args.metadata as Record<string, any>).every(
+          ([key, value]) => f.metadata[key] === value,
+        );
+      });
+    }
+
+    // Apply sorting
+    if (args.sortBy) {
+      const sortField = args.sortBy as keyof typeof filtered[0];
+      filtered.sort((a, b) => {
+        const aVal = a[sortField] as any;
+        const bVal = b[sortField] as any;
+        const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+        return args.sortOrder === "asc" ? comparison : -comparison;
+      });
+    }
+
+    // Apply pagination
+    if (args.offset !== undefined) {
+      filtered = filtered.slice(args.offset);
+    }
+    if (args.limit !== undefined) {
+      filtered = filtered.slice(0, args.limit);
     }
 
     return filtered;
@@ -426,6 +733,7 @@ export const queryBySubject = query({
   args: {
     memorySpaceId: v.string(),
     subject: v.string(),
+    // Fact-specific filters
     factType: v.optional(
       v.union(
         v.literal("preference"),
@@ -437,6 +745,28 @@ export const queryBySubject = query({
         v.literal("custom"),
       ),
     ),
+    predicate: v.optional(v.string()),
+    object: v.optional(v.string()),
+    minConfidence: v.optional(v.number()),
+    confidence: v.optional(v.number()), // Exact match
+    // Universal filters
+    userId: v.optional(v.string()),
+    participantId: v.optional(v.string()),
+    tags: v.optional(v.array(v.string())),
+    tagMatch: v.optional(v.union(v.literal("any"), v.literal("all"))),
+    sourceType: v.optional(v.union(v.literal("conversation"), v.literal("system"), v.literal("tool"), v.literal("manual"))),
+    createdBefore: v.optional(v.number()),
+    createdAfter: v.optional(v.number()),
+    updatedBefore: v.optional(v.number()),
+    updatedAfter: v.optional(v.number()),
+    version: v.optional(v.number()),
+    includeSuperseded: v.optional(v.boolean()),
+    validAt: v.optional(v.number()),
+    metadata: v.optional(v.any()),
+    limit: v.optional(v.number()),
+    offset: v.optional(v.number()),
+    sortBy: v.optional(v.string()),
+    sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
   },
   handler: async (ctx, args) => {
     let facts = await ctx.db
@@ -446,11 +776,71 @@ export const queryBySubject = query({
       )
       .collect();
 
-    // Filter superseded
-    facts = facts.filter((f) => f.supersededBy === undefined);
+    // Filter superseded (unless explicitly requested)
+    if (!args.includeSuperseded) {
+      facts = facts.filter((f) => f.supersededBy === undefined);
+    }
 
+    // Apply universal filters
     if (args.factType) {
       facts = facts.filter((f) => f.factType === args.factType);
+    }
+    if (args.userId !== undefined) {
+      facts = facts.filter((f) => f.userId === args.userId);
+    }
+    if (args.participantId !== undefined) {
+      facts = facts.filter((f) => f.participantId === args.participantId);
+    }
+    if (args.predicate !== undefined) {
+      facts = facts.filter((f) => f.predicate === args.predicate);
+    }
+    if (args.object !== undefined) {
+      facts = facts.filter((f) => f.object === args.object);
+    }
+    if (args.minConfidence !== undefined) {
+      facts = facts.filter((f) => f.confidence >= args.minConfidence!);
+    }
+    if (args.sourceType !== undefined) {
+      facts = facts.filter((f) => f.sourceType === args.sourceType);
+    }
+    if (args.tags && args.tags.length > 0) {
+      if (args.tagMatch === "all") {
+        facts = facts.filter((f) => 
+          args.tags!.every((tag) => f.tags.includes(tag))
+        );
+      } else { // "any" is default
+        facts = facts.filter((f) => 
+          args.tags!.some((tag) => f.tags.includes(tag))
+        );
+      }
+    }
+    if (args.createdAfter !== undefined) {
+      facts = facts.filter((f) => f.createdAt >= args.createdAfter!);
+    }
+    if (args.createdBefore !== undefined) {
+      facts = facts.filter((f) => f.createdAt <= args.createdBefore!);
+    }
+    if (args.version !== undefined) {
+      facts = facts.filter((f) => f.version === args.version);
+    }
+
+    // Apply sorting
+    if (args.sortBy) {
+      const sortField = args.sortBy as keyof typeof facts[0];
+      facts.sort((a, b) => {
+        const aVal = a[sortField] as any;
+        const bVal = b[sortField] as any;
+        const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+        return args.sortOrder === "asc" ? comparison : -comparison;
+      });
+    }
+
+    // Apply pagination
+    if (args.offset !== undefined) {
+      facts = facts.slice(args.offset);
+    }
+    if (args.limit !== undefined) {
+      facts = facts.slice(0, args.limit);
     }
 
     return facts;
@@ -465,18 +855,114 @@ export const queryByRelationship = query({
     memorySpaceId: v.string(),
     subject: v.string(),
     predicate: v.string(),
+    // Fact-specific filters
+    object: v.optional(v.string()),
+    factType: v.optional(
+      v.union(
+        v.literal("preference"),
+        v.literal("identity"),
+        v.literal("knowledge"),
+        v.literal("relationship"),
+        v.literal("event"),
+        v.literal("observation"),
+        v.literal("custom"),
+      ),
+    ),
+    minConfidence: v.optional(v.number()),
+    confidence: v.optional(v.number()), // Exact match
+    // Universal filters
+    userId: v.optional(v.string()),
+    participantId: v.optional(v.string()),
+    tags: v.optional(v.array(v.string())),
+    tagMatch: v.optional(v.union(v.literal("any"), v.literal("all"))),
+    sourceType: v.optional(v.union(v.literal("conversation"), v.literal("system"), v.literal("tool"), v.literal("manual"))),
+    createdBefore: v.optional(v.number()),
+    createdAfter: v.optional(v.number()),
+    updatedBefore: v.optional(v.number()),
+    updatedAfter: v.optional(v.number()),
+    version: v.optional(v.number()),
+    includeSuperseded: v.optional(v.boolean()),
+    validAt: v.optional(v.number()),
+    metadata: v.optional(v.any()),
+    limit: v.optional(v.number()),
+    offset: v.optional(v.number()),
+    sortBy: v.optional(v.string()),
+    sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
   },
   handler: async (ctx, args) => {
-    const facts = await ctx.db
+    let facts = await ctx.db
       .query("facts")
       .withIndex("by_memorySpace_subject", (q) =>
         q.eq("memorySpaceId", args.memorySpaceId).eq("subject", args.subject),
       )
       .collect();
 
-    return facts.filter(
-      (f) => f.predicate === args.predicate && f.supersededBy === undefined,
-    );
+    // Filter by predicate and superseded
+    facts = facts.filter((f) => f.predicate === args.predicate);
+    if (!args.includeSuperseded) {
+      facts = facts.filter((f) => f.supersededBy === undefined);
+    }
+
+    // Apply universal filters
+    if (args.object !== undefined) {
+      facts = facts.filter((f) => f.object === args.object);
+    }
+    if (args.factType) {
+      facts = facts.filter((f) => f.factType === args.factType);
+    }
+    if (args.userId !== undefined) {
+      facts = facts.filter((f) => f.userId === args.userId);
+    }
+    if (args.participantId !== undefined) {
+      facts = facts.filter((f) => f.participantId === args.participantId);
+    }
+    if (args.minConfidence !== undefined) {
+      facts = facts.filter((f) => f.confidence >= args.minConfidence!);
+    }
+    if (args.sourceType !== undefined) {
+      facts = facts.filter((f) => f.sourceType === args.sourceType);
+    }
+    if (args.tags && args.tags.length > 0) {
+      if (args.tagMatch === "all") {
+        facts = facts.filter((f) => 
+          args.tags!.every((tag) => f.tags.includes(tag))
+        );
+      } else {
+        facts = facts.filter((f) => 
+          args.tags!.some((tag) => f.tags.includes(tag))
+        );
+      }
+    }
+    if (args.createdAfter !== undefined) {
+      facts = facts.filter((f) => f.createdAt >= args.createdAfter!);
+    }
+    if (args.createdBefore !== undefined) {
+      facts = facts.filter((f) => f.createdAt <= args.createdBefore!);
+    }
+    if (args.version !== undefined) {
+      facts = facts.filter((f) => f.version === args.version);
+    }
+
+    // Apply sorting
+    if (args.sortBy) {
+      const sortField = args.sortBy as keyof typeof facts[0];
+      facts.sort((a, b) => {
+        const aVal = a[sortField] as any;
+        const bVal = b[sortField] as any;
+        const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+        return args.sortOrder === "asc" ? comparison : -comparison;
+      });
+    }
+
+    // Apply pagination
+    if (args.offset !== undefined) {
+      facts = facts.slice(args.offset);
+    }
+    if (args.limit !== undefined) {
+      facts = facts.slice(0, args.limit);
+    }
+
+    return facts;
   },
 });
 
