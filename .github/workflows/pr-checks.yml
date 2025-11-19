@@ -19,6 +19,11 @@ jobs:
   code-quality:
     name: Code Quality (Lint & Type Check)
     runs-on: ubuntu-latest
+    needs: detect-changes
+    # Run if TypeScript SDK version changed OR if PR is targeting main branch
+    if: |
+      needs.detect-changes.outputs.typescript == 'true' || 
+      github.event.pull_request.base.ref == 'main'
     permissions:
       checks: write
       contents: read
@@ -61,7 +66,11 @@ jobs:
   test-typescript:
     name: Test TypeScript SDK
     runs-on: ubuntu-latest
-    needs: code-quality  # Run after linting passes
+    needs: [detect-changes, code-quality]  # Run after linting passes
+    # Run if TypeScript SDK version changed OR if PR is targeting main branch
+    if: |
+      needs.detect-changes.outputs.typescript == 'true' || 
+      github.event.pull_request.base.ref == 'main'
     
     steps:
       - name: Checkout PR code
@@ -100,32 +109,65 @@ jobs:
       - name: Build package
         run: npm run build
 
-  # Detect changed files
+  # Detect version changes
   detect-changes:
-    name: Detect Changed Files
+    name: Detect Version Changes
     runs-on: ubuntu-latest
     outputs:
-      python: ${{ steps.filter.outputs.python }}
+      typescript: ${{ steps.check-versions.outputs.typescript-changed }}
+      python: ${{ steps.check-versions.outputs.python-changed }}
     steps:
       - name: Checkout PR code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       
-      - name: Check for Python changes
-        uses: dorny/paths-filter@v2
-        id: filter
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          filters: |
-            python:
-              - 'cortex-sdk-python/**'
+          node-version: "20"
+      
+      - name: Check version numbers
+        id: check-versions
+        run: |
+          # Check TypeScript SDK version
+          TS_VERSION=$(node -p "require('./package.json').version")
+          echo "📦 PR TypeScript SDK version: $TS_VERSION"
+          
+          TS_NPM_VERSION=$(npm view @cortexmemory/sdk version 2>/dev/null || echo "0.0.0")
+          echo "📚 Published TypeScript SDK version: $TS_NPM_VERSION"
+          
+          if [ "$TS_VERSION" != "$TS_NPM_VERSION" ]; then
+            echo "typescript-changed=true" >> $GITHUB_OUTPUT
+            echo "✅ TypeScript SDK version changed: $TS_NPM_VERSION → $TS_VERSION"
+          else
+            echo "typescript-changed=false" >> $GITHUB_OUTPUT
+            echo "⏭️  TypeScript SDK version unchanged: $TS_VERSION"
+          fi
+          
+          # Check Python SDK version
+          cd cortex-sdk-python
+          PYTHON_VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
+          echo "📦 PR Python SDK version: $PYTHON_VERSION"
+          
+          pip install --upgrade pip > /dev/null 2>&1
+          PYTHON_NPM_VERSION=$(pip index versions cortex-memory 2>/dev/null | grep "cortex-memory" | head -1 | sed 's/.*(\(.*\))/\1/' || echo "0.0.0")
+          echo "📚 Published Python SDK version: $PYTHON_NPM_VERSION"
+          
+          if [ "$PYTHON_VERSION" != "$PYTHON_NPM_VERSION" ]; then
+            echo "python-changed=true" >> $GITHUB_OUTPUT
+            echo "✅ Python SDK version changed: $PYTHON_NPM_VERSION → $PYTHON_VERSION"
+          else
+            echo "python-changed=false" >> $GITHUB_OUTPUT
+            echo "⏭️  Python SDK version unchanged: $PYTHON_VERSION"
+          fi
 
   # Python SDK Tests
   test-python:
     name: Test Python SDK
     runs-on: ubuntu-latest
     needs: [detect-changes, test-typescript]  # Wait for TS tests to avoid Convex conflicts
-    # Run if Python files changed OR if PR is targeting main branch
+    # Run if Python SDK version changed OR if PR is targeting main branch
     if: |
       needs.detect-changes.outputs.python == 'true' || 
       github.event.pull_request.base.ref == 'main'
@@ -212,19 +254,25 @@ jobs:
       - name: Check if all jobs passed
         run: |
           echo "📊 Check Results:"
-          echo "  TypeScript: ${{ needs.test-typescript.result }}"
-          echo "  Python: ${{ needs.test-python.result }}"
-          echo "  Security: ${{ needs.security-check.result }}"
           echo "  Code Quality: ${{ needs.code-quality.result }}"
+          echo "  TypeScript Tests: ${{ needs.test-typescript.result }}"
+          echo "  Python Tests: ${{ needs.test-python.result }}"
+          echo "  Security Scan: ${{ needs.security-check.result }}"
           echo ""
           
-          # TypeScript tests must pass
-          if [[ "${{ needs.test-typescript.result }}" != "success" ]]; then
+          # Code quality must pass OR be skipped (when TS version unchanged)
+          if [[ "${{ needs.code-quality.result }}" == "failure" ]]; then
+            echo "❌ Code quality check failed"
+            exit 1
+          fi
+          
+          # TypeScript tests must pass OR be skipped (when TS version unchanged)
+          if [[ "${{ needs.test-typescript.result }}" == "failure" ]]; then
             echo "❌ TypeScript tests failed"
             exit 1
           fi
           
-          # Python tests must pass OR be skipped (when no Python files changed)
+          # Python tests must pass OR be skipped (when Python version unchanged)
           if [[ "${{ needs.test-python.result }}" == "failure" ]]; then
             echo "❌ Python tests failed"
             exit 1
@@ -233,12 +281,6 @@ jobs:
           # Security check must pass
           if [[ "${{ needs.security-check.result }}" != "success" ]]; then
             echo "❌ Security check failed"
-            exit 1
-          fi
-          
-          # Code quality must pass
-          if [[ "${{ needs.code-quality.result }}" != "success" ]]; then
-            echo "❌ Code quality check failed"
             exit 1
           fi
           

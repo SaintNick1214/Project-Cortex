@@ -5,6 +5,60 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.2] - 2025-11-19
+
+### 🐛 Critical Bug Fix - Facts Missing user_id During Extraction
+
+**Fixed missing parameter propagation from Memory API to Facts API during fact extraction.**
+
+#### Fixed
+
+**Parameter Propagation Bug (Critical for Multi-User)**:
+
+1. **Missing `user_id` in Fact Extraction** - Facts extracted via `memory.remember()` were missing `user_id` field
+   - **Fixed:** `cortex/memory/__init__.py` line 234 - Added `user_id=params.user_id` in `remember()` fact extraction
+   - **Fixed:** `cortex/memory/__init__.py` line 658 - Added `user_id=input.user_id` in `store()` fact extraction
+   - **Fixed:** `cortex/memory/__init__.py` line 741 - Added `user_id=updated_memory.user_id` and `participant_id=updated_memory.participant_id` in `update()` fact extraction
+   - **Impact:** Facts can now be filtered by `user_id`, GDPR cascade deletion works, multi-user isolation works correctly
+   - **Root Cause:** Integration layer wasn't passing parameters through from Memory API to Facts API
+   - **Affected versions:** v0.9.0, v0.9.1 (if Python SDK had 0.9.1)
+
+2. **Test Coverage Added** - Comprehensive parameter propagation tests
+   - Added test: `test_remember_fact_extraction_parameter_propagation()`
+   - Enhanced test: `test_remember_with_fact_extraction()` now validates `user_id` and `participant_id`
+   - Verifies: `user_id`, `participant_id`, `memory_space_id`, `source_ref`, and all other parameters reach Facts API
+   - Validates: Filtering by `user_id` works after extraction
+   - These tests would have caught the bug if they existed before
+
+#### Migration
+
+**No breaking changes.** This is a bug fix that makes the SDK work as intended.
+
+If you were working around this bug by manually storing facts instead of using extraction:
+
+```python
+# Before (workaround)
+result = await cortex.memory.remember(RememberParams(...))
+# Then manually store facts with user_id
+for fact in extracted_facts:
+    await cortex.facts.store(StoreFactParams(
+        **fact,
+        user_id=params.user_id,  # Had to add manually
+    ))
+
+# After (works correctly now)
+result = await cortex.memory.remember(
+    RememberParams(
+        user_id='user-123',
+        extract_facts=async_extract_facts,
+        ...
+    )
+)
+# user_id is now automatically propagated to facts ✅
+```
+
+---
+
 ## [0.9.1] - 2025-11-18
 
 ### 🐛 Critical Bug Fix - Facts API Universal Filters

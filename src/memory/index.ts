@@ -338,6 +338,7 @@ export class MemoryAPI {
                 {
                   memorySpaceId: params.memorySpaceId,
                   participantId: params.participantId,
+                  userId: params.userId, // ← BUG FIX: Add userId to facts!
                   fact: factData.fact,
                   factType: factData.factType,
                   subject: factData.subject || params.userId,
@@ -779,6 +780,7 @@ export class MemoryAPI {
               {
                 memorySpaceId: agentId,
                 participantId: input.participantId,
+                userId: input.userId, // ← BUG FIX: Add userId to facts!
                 fact: factData.fact,
                 factType: factData.factType,
                 subject: factData.subject || input.userId,
@@ -854,6 +856,8 @@ export class MemoryAPI {
             const storedFact = await this.facts.store(
               {
                 memorySpaceId: agentId,
+                participantId: updatedMemory.participantId, // ← BUG FIX: Add participantId
+                userId: updatedMemory.userId, // ← BUG FIX: Add userId to facts!
                 fact: factData.fact,
                 factType: factData.factType,
                 subject: factData.subject || updatedMemory.userId,

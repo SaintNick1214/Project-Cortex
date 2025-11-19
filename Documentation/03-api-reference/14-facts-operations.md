@@ -167,7 +167,6 @@ interface ListFactsFilter {
   predicate?: string; // Filter by relationship type
   object?: string; // Filter by object entity
   minConfidence?: number; // Minimum confidence threshold (0-100)
-  minConfidence?: number; // Confidence >= value
   confidence?: number; // Exact match
 
   // Universal filters (Cortex standard)
@@ -271,8 +270,7 @@ interface SearchFactsOptions {
   subject?: string;
   predicate?: string;
   object?: string;
-  minConfidence?: number; // Filter by confidence threshold
-  minConfidence?: number; // Confidence >= value
+  minConfidence?: number; // Filter by confidence threshold (0-100)
   confidence?: number; // Exact match
 
   // Universal filters (Cortex standard)
@@ -1069,6 +1067,7 @@ type FactType =
   | "knowledge" // Information/skills
   | "relationship" // Connections between entities
   | "event" // Time-based occurrences
+  | "observation" // Observed behaviors/actions
   | "custom"; // Domain-specific
 ```
 
