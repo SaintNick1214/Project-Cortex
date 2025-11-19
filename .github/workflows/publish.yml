@@ -19,11 +19,18 @@ jobs:
       sdk-new-version: ${{ steps.check-sdk.outputs.version }}
       wizard-version-changed: ${{ steps.check-wizard.outputs.changed }}
       wizard-new-version: ${{ steps.check-wizard.outputs.version }}
+      python-version-changed: ${{ steps.check-python.outputs.changed }}
+      python-new-version: ${{ steps.check-python.outputs.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 2
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
       - name: Check SDK version
         id: check-sdk
@@ -65,6 +72,29 @@ jobs:
           else
             echo "changed=false" >> $GITHUB_OUTPUT
             echo "⏭️  Wizard already published at $CURRENT_VERSION, skipping"
+          fi
+      
+      - name: Check Python SDK version
+        id: check-python
+        run: |
+          # Get current version from pyproject.toml
+          cd cortex-sdk-python
+          CURRENT_VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
+          echo "📦 Python SDK version: $CURRENT_VERSION"
+          
+          # Get published version from PyPI (or 0.0.0 if not published yet)
+          pip install --upgrade pip > /dev/null 2>&1
+          PYPI_VERSION=$(pip index versions cortex-memory 2>/dev/null | grep "cortex-memory" | head -1 | sed 's/.*(\(.*\))/\1/' || echo "0.0.0")
+          echo "📚 PyPI version: $PYPI_VERSION"
+          
+          # Compare versions (create tag if pyproject.toml > PyPI)
+          if [ "$CURRENT_VERSION" != "$PYPI_VERSION" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+            echo "✅ New Python SDK version detected: $PYPI_VERSION → $CURRENT_VERSION"
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "⏭️  Python SDK already published at $CURRENT_VERSION, skipping"
           fi
 
   publish-sdk:
@@ -229,4 +259,45 @@ jobs:
           echo "📚 npm: https://www.npmjs.com/package/create-cortex-memories"
           echo ""
           echo "🚀 Try it: npm create cortex-memories"
+          echo ""
+
+  trigger-python-publish:
+    needs: check-version
+    if: needs.check-version.outputs.python-version-changed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required to create and push tags
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Need full history for tagging
+      
+      - name: Create and push Python SDK tag
+        run: |
+          VERSION=${{ needs.check-version.outputs.python-new-version }}
+          TAG_NAME="py-v$VERSION"
+          
+          echo "════════════════════════════════════════════════════════════"
+          echo "  🏷️  CREATING PYTHON SDK TAG"
+          echo "════════════════════════════════════════════════════════════"
+          echo ""
+          echo "📦 Python SDK version: $VERSION"
+          echo "🏷️  Tag: $TAG_NAME"
+          echo ""
+          
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Create annotated tag
+          git tag -a "$TAG_NAME" -m "Python SDK Release v$VERSION"
+          
+          # Push tag (this triggers publish-python.yml)
+          git push origin "$TAG_NAME"
+          
+          echo ""
+          echo "✅ Tag $TAG_NAME created and pushed!"
+          echo "🚀 This will trigger the Python SDK publish workflow"
           echo ""
