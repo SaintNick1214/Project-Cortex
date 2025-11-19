@@ -4,7 +4,7 @@ Cortex SDK - A2A Communication API
 Agent-to-agent communication helpers with optional pub/sub support
 """
 
-from typing import Optional, List, Dict, Any
+from typing import cast, Optional, Optional, List, Dict, Any
 
 from ..types import (
     A2ASendParams,
@@ -26,7 +26,7 @@ class A2AAPI:
     sugar over the standard memory system with source.type='a2a'.
     """
 
-    def __init__(self, client, graph_adapter=None):
+    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
         """
         Initialize A2A API.
 
@@ -219,5 +219,5 @@ class A2AAPI:
             }),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 

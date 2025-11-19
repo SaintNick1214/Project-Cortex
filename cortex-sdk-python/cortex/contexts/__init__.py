@@ -4,7 +4,7 @@ Cortex SDK - Contexts API
 Coordination Layer: Context chain management for multi-agent workflow coordination
 """
 
-from typing import Optional, List, Dict, Any, Literal, Union
+from typing import cast, Optional, Optional, List, Dict, Any, Literal, Union
 
 from ..types import (
     Context,
@@ -27,7 +27,7 @@ class ContextsAPI:
     Context chains track task delegation, shared state, and workflow evolution.
     """
 
-    def __init__(self, client, graph_adapter=None):
+    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
         """
         Initialize Contexts API.
 
@@ -269,7 +269,7 @@ class ContextsAPI:
             except Exception as error:
                 print(f"Warning: Failed to delete context from graph: {error}")
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def search(
         self,
@@ -403,7 +403,7 @@ class ContextsAPI:
             return {"contexts": contexts}
         else:
             result["contexts"] = contexts
-            return result
+            return cast(Dict[str, Any], result)
 
     async def count(
         self,
@@ -451,7 +451,7 @@ class ContextsAPI:
         """
         result = await self.client.query("contexts:getChain", filter_none_values({"contextId": context_id}))
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def grant_access(
         self, context_id: str, target_memory_space_id: str, scope: str = "read-only"
@@ -771,7 +771,7 @@ class ContextsAPI:
             filter_none_values({"filters": filters, "updates": updates, "dryRun": dry_run}),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def delete_many(
         self,
@@ -805,7 +805,7 @@ class ContextsAPI:
             }),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def export(
         self,
@@ -846,7 +846,7 @@ class ContextsAPI:
             },
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def get_version(
         self, context_id: str, version: int
@@ -868,7 +868,7 @@ class ContextsAPI:
             "contexts:getVersion", filter_none_values({"contextId": context_id, "version": version})
         )
 
-        return result
+        return cast(Optional[Dict[str, Any]], result)
 
     async def get_history(self, context_id: str) -> List[Dict[str, Any]]:
         """
@@ -887,7 +887,7 @@ class ContextsAPI:
             "contexts:getHistory", filter_none_values({"contextId": context_id})
         )
 
-        return result
+        return cast(List[Dict[str, Any]], result)
 
     async def get_at_timestamp(
         self, context_id: str, timestamp: int
@@ -912,5 +912,5 @@ class ContextsAPI:
             filter_none_values({"contextId": context_id, "timestamp": timestamp}),
         )
 
-        return result
+        return cast(Optional[Dict[str, Any]], result)
 

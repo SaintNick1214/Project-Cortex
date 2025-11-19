@@ -5,7 +5,7 @@ Coordination Layer: Agent registry and management with cascade deletion by parti
 """
 
 import time
-from typing import Optional, List, Dict, Any
+from typing import cast, Optional, Optional, List, Dict, Any
 
 from ..types import (
     RegisteredAgent,
@@ -27,7 +27,7 @@ class AgentsAPI:
     cascade deletion by participantId across all memory spaces.
     """
 
-    def __init__(self, client, graph_adapter=None):
+    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
         """
         Initialize Agents API.
 
@@ -208,7 +208,7 @@ class AgentsAPI:
             >>> stats = await cortex.agents.get_stats('support-agent')
         """
         result = await self.client.query("agents:computeStats", filter_none_values({"agentId": agent_id}))
-        return result
+        return cast(Dict[str, Any], result)
 
     async def count(self, filters: Optional[Dict[str, Any]] = None) -> int:
         """
@@ -373,7 +373,7 @@ class AgentsAPI:
 
     async def _collect_agent_deletion_plan(self, agent_id: str) -> Dict[str, List[Any]]:
         """Collect all records where participantId = agent_id."""
-        plan = {
+        plan: Dict[str, Any] = {
             "conversations": [],
             "memories": [],
             "facts": [],
@@ -456,7 +456,7 @@ class AgentsAPI:
 
         return VerificationResult(complete=len(issues) == 0, issues=issues)
 
-    async def _rollback_agent_deletion(self, backup: Dict[str, List[Any]]):
+    async def _rollback_agent_deletion(self, backup: Dict[str, List[Any]]) -> Any:
         """Rollback agent deletion on failure."""
         print("Warning: Rollback not fully implemented - manual recovery may be needed")
 

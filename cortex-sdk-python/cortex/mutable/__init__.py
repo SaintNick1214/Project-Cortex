@@ -4,7 +4,7 @@ Cortex SDK - Mutable Store API
 Layer 1c: Shared mutable data with ACID transaction guarantees
 """
 
-from typing import Optional, List, Dict, Any, Callable, Literal
+from typing import cast, Optional, Optional, List, Dict, Any, Callable, Literal
 
 from ..types import MutableRecord
 from ..errors import CortexError, ErrorCode
@@ -19,7 +19,7 @@ class MutableAPI:
     Perfect for inventory, configuration, and live shared state.
     """
 
-    def __init__(self, client, graph_adapter=None):
+    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
         """
         Initialize Mutable API.
 
@@ -201,7 +201,7 @@ class MutableAPI:
             "mutable:deleteKey", filter_none_values({"namespace": namespace, "key": key})
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def list(
         self,
@@ -310,7 +310,7 @@ class MutableAPI:
             # Note: dryRun not supported by backend yet
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def purge_many(
         self,
@@ -347,7 +347,7 @@ class MutableAPI:
             }),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def transaction(self, callback: Callable) -> Dict[str, Any]:
         """

@@ -4,10 +4,13 @@ Cortex SDK - Graph Schema Initialization
 Schema management for graph database constraints and indexes
 """
 
-from typing import Dict, Any
+from typing import TYPE_CHECKING, Any, Dict
+
+if TYPE_CHECKING:
+    from ...types import GraphAdapter
 
 
-async def initialize_graph_schema(adapter) -> None:
+async def initialize_graph_schema(adapter: "GraphAdapter") -> None:
     """
     Create constraints and indexes (one-time setup).
 
@@ -56,7 +59,7 @@ async def initialize_graph_schema(adapter) -> None:
             print(f"Warning: Failed to create index: {e}")
 
 
-async def verify_graph_schema(adapter) -> Dict[str, Any]:
+async def verify_graph_schema(adapter: "GraphAdapter") -> Dict[str, Any]:
     """
     Check if schema is properly initialized.
 
@@ -83,7 +86,7 @@ async def verify_graph_schema(adapter) -> Dict[str, Any]:
     }
 
 
-async def drop_graph_schema(adapter) -> None:
+async def drop_graph_schema(adapter: "GraphAdapter") -> None:
     """
     Remove all constraints and indexes (testing/reset).
 
