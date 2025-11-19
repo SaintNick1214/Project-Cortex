@@ -6,7 +6,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![Convex](https://img.shields.io/badge/Powered%20by-Convex-purple.svg)](https://convex.dev)
 [![Status](https://img.shields.io/badge/Status-In%20Development-yellow.svg)](https://github.com/SaintNick1214/cortex/discussions)
-[![Socket Badge](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.8.2)](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.8.2)
+[![Socket Badge](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.9.2)](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.9.2)
 
 ## 🚧 Project Status: In Active Development
 
