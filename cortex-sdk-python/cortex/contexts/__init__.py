@@ -4,19 +4,19 @@ Cortex SDK - Contexts API
 Coordination Layer: Context chain management for multi-agent workflow coordination
 """
 
-from typing import cast, Optional, Optional, List, Dict, Any, Literal, Union
+from typing import Any, Dict, List, Optional, Union, cast
 
+from .._utils import convert_convex_response, filter_none_values
+from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import (
     Context,
     ContextInput,
-    ContextWithChain,
     ContextStatus,
+    ContextWithChain,
     CreateContextOptions,
-    UpdateContextOptions,
     DeleteContextOptions,
+    UpdateContextOptions,
 )
-from ..errors import CortexError, ErrorCode
-from .._utils import filter_none_values, convert_convex_response
 
 
 class ContextsAPI:
@@ -85,7 +85,7 @@ class ContextsAPI:
         # Sync to graph if requested
         if options and options.sync_to_graph and self.graph_adapter:
             try:
-                from ..graph import sync_context_to_graph, sync_context_relationships
+                from ..graph import sync_context_relationships, sync_context_to_graph
 
                 node_id = await sync_context_to_graph(result, self.graph_adapter)
                 await sync_context_relationships(result, node_id, self.graph_adapter)
@@ -373,7 +373,7 @@ class ContextsAPI:
             contexts_list = result
         else:
             contexts_list = result.get("contexts", [])
-        
+
         # Manually construct contexts
         contexts = [
             Context(
@@ -397,7 +397,7 @@ class ContextsAPI:
             )
             for ctx in contexts_list
         ]
-        
+
         # Return in expected format
         if isinstance(result, list):
             return {"contexts": contexts}
@@ -458,15 +458,15 @@ class ContextsAPI:
     ) -> Context:
         """
         Grant access to a context from another memory space (Collaboration Mode).
-        
+
         Args:
             context_id: Context ID
             target_memory_space_id: Memory space to grant access to
             scope: Access scope ('read-only', 'collaborate', 'full-access')
-        
+
         Returns:
             Updated context with granted access
-        
+
         Example:
             >>> await cortex.contexts.grant_access(
             ...     'ctx-abc123',
@@ -482,7 +482,7 @@ class ContextsAPI:
                 "scope": scope,
             }),
         )
-        
+
         # Manually construct to handle field name differences
         return Context(
             id=result.get("contextId"),

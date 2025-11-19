@@ -5,18 +5,17 @@ Coordination Layer: Agent registry and management with cascade deletion by parti
 """
 
 import time
-from typing import cast, Optional, Optional, List, Dict, Any
+from typing import Any, Dict, List, Optional, cast
 
+from .._utils import convert_convex_response, filter_none_values  # noqa: F401
+from ..errors import AgentCascadeDeletionError, CortexError, ErrorCode  # noqa: F401
 from ..types import (
-    RegisteredAgent,
     AgentRegistration,
-    AgentStats,
+    RegisteredAgent,
     UnregisterAgentOptions,
     UnregisterAgentResult,
     VerificationResult,
 )
-from ..errors import CortexError, ErrorCode, AgentCascadeDeletionError
-from .._utils import filter_none_values, convert_convex_response
 
 
 class AgentsAPI:
@@ -152,10 +151,10 @@ class AgentsAPI:
         ]
 
     async def list(
-        self, 
+        self,
         status: Optional[str] = None,
-        limit: int = 50, 
-        offset: int = 0, 
+        limit: int = 50,
+        offset: int = 0,
         sort_by: str = "name"
     ) -> List[RegisteredAgent]:
         """
@@ -197,13 +196,13 @@ class AgentsAPI:
     async def get_stats(self, agent_id: str) -> Dict[str, Any]:
         """
         Get agent statistics (memory count, conversation count, etc.).
-        
+
         Args:
             agent_id: Agent ID
-        
+
         Returns:
             Agent statistics
-        
+
         Example:
             >>> stats = await cortex.agents.get_stats('support-agent')
         """

@@ -4,11 +4,11 @@ Cortex SDK - Mutable Store API
 Layer 1c: Shared mutable data with ACID transaction guarantees
 """
 
-from typing import cast, Optional, Optional, List, Dict, Any, Callable, Literal
+from typing import Any, Callable, Dict, List, Optional, cast
 
+from .._utils import convert_convex_response, filter_none_values
+from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import MutableRecord
-from ..errors import CortexError, ErrorCode
-from .._utils import filter_none_values, convert_convex_response
 
 
 class MutableAPI:
@@ -366,7 +366,7 @@ class MutableAPI:
             >>> async def transfer(tx):
             ...     await tx.update('inventory', 'product-a', lambda x: x - 10)
             ...     await tx.update('inventory', 'product-b', lambda x: x + 10)
-            >>> 
+            >>>
             >>> await cortex.mutable.transaction(transfer)
         """
         # Note: This is a placeholder. Actual implementation requires

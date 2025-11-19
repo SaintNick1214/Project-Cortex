@@ -102,5 +102,5 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W"]
-ignore = []
-
+# Relax line length and bare except for SDK wrapper code
+ignore = ["E501", "E722"]  # E501: line-too-long, E722: bare-except (acceptable for SDK error handling)

@@ -4,25 +4,25 @@ Cortex SDK - Conversations API
 Layer 1a: ACID-compliant immutable conversation storage
 """
 
-import time
 import random
 import string
-from typing import cast, Optional, Optional, List, Dict, Any, Literal
+import time
+from typing import Any, Dict, List, Literal, Optional, cast
 
+from .._utils import convert_convex_response, filter_none_values
+from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import (
-    Conversation,
-    Message,
-    CreateConversationInput,
-    CreateConversationOptions,
     AddMessageInput,
     AddMessageOptions,
-    DeleteConversationOptions,
+    Conversation,
     ConversationSearchResult,
-    ExportResult,
     ConversationType,
+    CreateConversationInput,
+    CreateConversationOptions,
+    DeleteConversationOptions,
+    ExportResult,
+    Message,
 )
-from ..errors import CortexError, ErrorCode
-from .._utils import filter_none_values, convert_convex_response
 
 
 class ConversationsAPI:
@@ -93,7 +93,10 @@ class ConversationsAPI:
         # Sync to graph if requested
         if options and options.sync_to_graph and self.graph_adapter:
             try:
-                from ..graph import sync_conversation_to_graph, sync_conversation_relationships
+                from ..graph import (
+                    sync_conversation_relationships,
+                    sync_conversation_to_graph,
+                )
 
                 node_id = await sync_conversation_to_graph(result, self.graph_adapter)
                 await sync_conversation_relationships(result, node_id, self.graph_adapter)
