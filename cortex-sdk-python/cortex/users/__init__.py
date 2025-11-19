@@ -4,17 +4,18 @@ Cortex SDK - Users API
 Coordination Layer: User profile management with GDPR cascade deletion
 """
 
-from typing import Optional, List, Dict, Any
+import time
+from typing import Any, Dict, List, Optional
 
+from .._utils import convert_convex_response, filter_none_values  # noqa: F401
+from ..errors import CascadeDeletionError, CortexError, ErrorCode
 from ..types import (
-    UserProfile,
-    UserVersion,
     DeleteUserOptions,
     UserDeleteResult,
+    UserProfile,
+    UserVersion,
     VerificationResult,
 )
-from ..errors import CortexError, ErrorCode, CascadeDeletionError
-from .._utils import filter_none_values, convert_convex_response
 
 
 class UsersAPI:
@@ -29,7 +30,7 @@ class UsersAPI:
     - Cloud Mode: Cortex provides managed graph adapter, cascade always works + legal guarantees
     """
 
-    def __init__(self, client, graph_adapter=None):
+    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
         """
         Initialize Users API.
 
@@ -382,7 +383,7 @@ class UsersAPI:
 
     async def _collect_deletion_plan(self, user_id: str) -> Dict[str, List[Any]]:
         """Phase 1: Collect all records to delete."""
-        plan = {
+        plan: Dict[str, Any] = {
             "conversations": [],
             "immutable": [],
             "mutable": [],
@@ -410,16 +411,16 @@ class UsersAPI:
         # Collect vector memories
         # Problem: Spaces may not be registered, so we need to find memories differently
         # Solution: Collect memory space IDs from conversations (those ARE collected)
-        
+
         # Get memory space IDs from user's conversations
         memory_space_ids_to_check = set()
         for conv in plan["conversations"]:
             space_id = conv.get("memorySpaceId")
             if space_id:
                 memory_space_ids_to_check.add(space_id)
-        
+
         # Also add any registered spaces
-        spaces_list = []
+        spaces_list: List[Any] = []
         try:
             all_spaces = await self.client.query("memorySpaces:list", filter_none_values({"limit": 10000}))
             spaces_list = all_spaces if isinstance(all_spaces, list) else all_spaces.get("spaces", [])
@@ -429,7 +430,7 @@ class UsersAPI:
                     memory_space_ids_to_check.add(space_id)
         except:
             pass
-        
+
         # Store space IDs for deletion phase
         plan["vector"] = list(memory_space_ids_to_check)
 
@@ -472,7 +473,7 @@ class UsersAPI:
         # Delete vector memories using spaces from plan
         vector_deleted = 0
         deleted_memory_ids = []
-        
+
         # Use the space IDs collected in plan phase
         for space_id in plan.get("vector", []):
             try:
@@ -487,7 +488,7 @@ class UsersAPI:
                     deleted_memory_ids.extend(result.get("memoryIds", []))
             except Exception:
                 pass  # Continue with other spaces
-        
+
         if vector_deleted > 0:
             deleted_layers.append("vector")
 
@@ -498,7 +499,7 @@ class UsersAPI:
                 # Handle both camelCase and snake_case field names
                 memory_space_id = fact.get("memorySpaceId") or fact.get("memory_space_id")
                 fact_id = fact.get("factId") or fact.get("fact_id")
-                
+
                 await self.client.mutation(
                     "facts:deleteFact",
                     filter_none_values({"memorySpaceId": memory_space_id, "factId": fact_id}),
@@ -506,7 +507,7 @@ class UsersAPI:
                 facts_deleted += 1
             except Exception as error:
                 print(f"Warning: Failed to delete fact {fact.get('factId', fact.get('fact_id', 'unknown'))}: {error}")
-        
+
         if facts_deleted > 0:
             deleted_layers.append("facts")
 
@@ -521,7 +522,7 @@ class UsersAPI:
                 mutable_deleted += 1
             except Exception as error:
                 print(f"Warning: Failed to delete mutable key: {error}")
-        
+
         if mutable_deleted > 0:
             deleted_layers.append("mutable")
 
@@ -536,7 +537,7 @@ class UsersAPI:
                 immutable_deleted += 1
             except Exception as error:
                 print(f"Warning: Failed to delete immutable record: {error}")
-        
+
         if immutable_deleted > 0:
             deleted_layers.append("immutable")
 
@@ -622,7 +623,7 @@ class UsersAPI:
 
         return VerificationResult(complete=len(issues) == 0, issues=issues)
 
-    async def _rollback_deletion(self, backup: Dict[str, List[Any]]):
+    async def _rollback_deletion(self, backup: Dict[str, List[Any]])->Any:
         """Rollback deletion on failure."""
         # Restore from backup
         # This is a simplified version - actual implementation would restore all data
@@ -738,11 +739,11 @@ class UsersAPI:
         """
         # Client-side implementation (like TypeScript SDK)
         import json
-        
+
         # Get users using list()
         users_result = await self.list(limit=1000)  # Get all users
         users = users_result.get("users", [])
-        
+
         if format == "csv":
             # CSV export
             import csv
@@ -758,8 +759,8 @@ class UsersAPI:
                     "updatedAt": u.updated_at,
                     "data": json.dumps(u.data),
                 })
-            return output.getvalue()
-        
+            return output.getvalue() # type: ignore[return-value] # type: ignore[return-value]
+
         # JSON export (default)
         export_data = [
             {
@@ -771,7 +772,7 @@ class UsersAPI:
             }
             for u in users
         ]
-        return json.dumps(export_data, indent=2, default=str)
+        return json.dumps(export_data, indent=2, default=str) # type: ignore[return-value] # type: ignore[return-value]
 
     async def get_version(
         self, user_id: str, version: int
@@ -855,5 +856,4 @@ class UsersAPI:
         )
 
 
-import time
 

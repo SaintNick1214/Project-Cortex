@@ -5,22 +5,22 @@ Main entry point for the Cortex SDK providing access to all memory operations.
 """
 
 import asyncio
-from typing import Optional
+from typing import Any
 
 from convex import ConvexClient
 
-from .types import CortexConfig, GraphConfig
 from ._convex_async import AsyncConvexClient
-from .conversations import ConversationsAPI
-from .immutable import ImmutableAPI
-from .mutable import MutableAPI
-from .vector import VectorAPI
-from .facts import FactsAPI
-from .memory import MemoryAPI
-from .contexts import ContextsAPI
-from .users import UsersAPI
 from .agents import AgentsAPI
+from .contexts import ContextsAPI
+from .conversations import ConversationsAPI
+from .facts import FactsAPI
+from .immutable import ImmutableAPI
+from .memory import MemoryAPI
 from .memory_spaces import MemorySpacesAPI
+from .mutable import MutableAPI
+from .types import CortexConfig
+from .users import UsersAPI
+from .vector import VectorAPI
 
 
 class Cortex:
@@ -33,7 +33,7 @@ class Cortex:
     Example:
         >>> config = CortexConfig(convex_url="https://your-deployment.convex.cloud")
         >>> cortex = Cortex(config)
-        >>> 
+        >>>
         >>> # Remember a conversation
         >>> result = await cortex.memory.remember(
         ...     RememberParams(
@@ -50,7 +50,7 @@ class Cortex:
         >>> await cortex.close()
     """
 
-    def __init__(self, config: CortexConfig):
+    def __init__(self, config: CortexConfig) -> None:
         """
         Initialize Cortex SDK.
 
@@ -91,7 +91,7 @@ class Cortex:
             # Start worker asynchronously (don't block constructor)
             asyncio.create_task(self._start_worker())
 
-    async def _start_worker(self):
+    async def _start_worker(self) -> None:
         """Start the graph sync worker (internal)."""
         if self.sync_worker:
             try:
@@ -99,7 +99,7 @@ class Cortex:
             except Exception as error:
                 print(f"Failed to start graph sync worker: {error}")
 
-    def get_graph_sync_worker(self):
+    def get_graph_sync_worker(self) -> Any:
         """
         Get graph sync worker instance (if running).
 
@@ -108,7 +108,7 @@ class Cortex:
         """
         return self.sync_worker
 
-    async def close(self):
+    async def close(self) -> None:
         """
         Close the connection to Convex and stop graph sync worker.
 

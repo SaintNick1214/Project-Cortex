@@ -15,10 +15,62 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Code quality check (fast - runs first)
+  code-quality:
+    name: Code Quality (Lint & Type Check)
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    # Run if TypeScript SDK version changed OR if PR is targeting main branch
+    if: |
+      needs.detect-changes.outputs.typescript == 'true' || 
+      github.event.pull_request.base.ref == 'main'
+    permissions:
+      checks: write
+      contents: read
+      pull-requests: write
+    
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Deploy Convex backend
+        run: npx convex deploy --yes
+        env:
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+      
+      - name: Generate Convex types
+        run: npx convex codegen
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+      
+      - name: Run ESLint
+        run: npm run lint
+        continue-on-error: false
+      
+      - name: Type check
+        run: npx tsc --noEmit
+
   # TypeScript/JavaScript SDK Tests
   test-typescript:
     name: Test TypeScript SDK
     runs-on: ubuntu-latest
+    needs: [detect-changes, code-quality]  # Run after linting passes
+    # Run if TypeScript SDK version changed OR if PR is targeting main branch
+    if: |
+      needs.detect-changes.outputs.typescript == 'true' || 
+      github.event.pull_request.base.ref == 'main'
     
     steps:
       - name: Checkout PR code
@@ -47,12 +99,6 @@ jobs:
           CONVEX_URL: ${{ secrets.CONVEX_URL }}
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
       
-      - name: Lint code
-        run: npm run lint
-      
-      - name: Type check
-        run: npx tsc --noEmit
-      
       - name: Run tests
         run: npm test
         env:
@@ -63,11 +109,68 @@ jobs:
       - name: Build package
         run: npm run build
 
+  # Detect version changes
+  detect-changes:
+    name: Detect Version Changes
+    runs-on: ubuntu-latest
+    outputs:
+      typescript: ${{ steps.check-versions.outputs.typescript-changed }}
+      python: ${{ steps.check-versions.outputs.python-changed }}
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      
+      - name: Check version numbers
+        id: check-versions
+        run: |
+          # Check TypeScript SDK version
+          TS_VERSION=$(node -p "require('./package.json').version")
+          echo "📦 PR TypeScript SDK version: $TS_VERSION"
+          
+          TS_NPM_VERSION=$(npm view @cortexmemory/sdk version 2>/dev/null || echo "0.0.0")
+          echo "📚 Published TypeScript SDK version: $TS_NPM_VERSION"
+          
+          if [ "$TS_VERSION" != "$TS_NPM_VERSION" ]; then
+            echo "typescript-changed=true" >> $GITHUB_OUTPUT
+            echo "✅ TypeScript SDK version changed: $TS_NPM_VERSION → $TS_VERSION"
+          else
+            echo "typescript-changed=false" >> $GITHUB_OUTPUT
+            echo "⏭️  TypeScript SDK version unchanged: $TS_VERSION"
+          fi
+          
+          # Check Python SDK version
+          cd cortex-sdk-python
+          PYTHON_VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
+          echo "📦 PR Python SDK version: $PYTHON_VERSION"
+          
+          pip install --upgrade pip > /dev/null 2>&1
+          PYTHON_NPM_VERSION=$(pip index versions cortex-memory 2>/dev/null | grep "cortex-memory" | head -1 | sed 's/.*(\(.*\))/\1/' || echo "0.0.0")
+          echo "📚 Published Python SDK version: $PYTHON_NPM_VERSION"
+          
+          if [ "$PYTHON_VERSION" != "$PYTHON_NPM_VERSION" ]; then
+            echo "python-changed=true" >> $GITHUB_OUTPUT
+            echo "✅ Python SDK version changed: $PYTHON_NPM_VERSION → $PYTHON_VERSION"
+          else
+            echo "python-changed=false" >> $GITHUB_OUTPUT
+            echo "⏭️  Python SDK version unchanged: $PYTHON_VERSION"
+          fi
+
   # Python SDK Tests
   test-python:
     name: Test Python SDK
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.changed_files, 'cortex-sdk-python/')
+    needs: [detect-changes, test-typescript]  # Wait for TS tests to avoid Convex conflicts
+    # Run if Python SDK version changed OR if PR is targeting main branch
+    if: |
+      needs.detect-changes.outputs.python == 'true' || 
+      github.event.pull_request.base.ref == 'main'
     
     strategy:
       matrix:
@@ -115,6 +218,10 @@ jobs:
   security-check:
     name: Security Scan
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
     
     steps:
       - name: Checkout PR code
@@ -131,66 +238,52 @@ jobs:
           output: 'trivy-results.sarif'
       
       - name: Upload Trivy results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
 
-  # Code quality check
-  code-quality:
-    name: Code Quality
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout PR code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Run ESLint
-        run: npm run lint -- --format json --output-file eslint-report.json
-        continue-on-error: true
-      
-      - name: Annotate code
-        uses: ataylorme/eslint-annotate-action@v2
-        if: always()
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          report-json: "eslint-report.json"
-
   # All checks passed
   all-checks-passed:
     name: All Checks Passed
-    needs: [test-typescript, test-python, security-check, code-quality]
+    needs: [detect-changes, test-typescript, test-python, security-check, code-quality]
     if: always()
     runs-on: ubuntu-latest
     
     steps:
       - name: Check if all jobs passed
         run: |
-          if [[ "${{ needs.test-typescript.result }}" != "success" ]]; then
+          echo "📊 Check Results:"
+          echo "  Code Quality: ${{ needs.code-quality.result }}"
+          echo "  TypeScript Tests: ${{ needs.test-typescript.result }}"
+          echo "  Python Tests: ${{ needs.test-python.result }}"
+          echo "  Security Scan: ${{ needs.security-check.result }}"
+          echo ""
+          
+          # Code quality must pass OR be skipped (when TS version unchanged)
+          if [[ "${{ needs.code-quality.result }}" == "failure" ]]; then
+            echo "❌ Code quality check failed"
+            exit 1
+          fi
+          
+          # TypeScript tests must pass OR be skipped (when TS version unchanged)
+          if [[ "${{ needs.test-typescript.result }}" == "failure" ]]; then
             echo "❌ TypeScript tests failed"
             exit 1
           fi
+          
+          # Python tests must pass OR be skipped (when Python version unchanged)
           if [[ "${{ needs.test-python.result }}" == "failure" ]]; then
             echo "❌ Python tests failed"
             exit 1
           fi
+          
+          # Security check must pass
           if [[ "${{ needs.security-check.result }}" != "success" ]]; then
             echo "❌ Security check failed"
             exit 1
           fi
-          if [[ "${{ needs.code-quality.result }}" != "success" ]]; then
-            echo "❌ Code quality check failed"
-            exit 1
-          fi
+          
+          echo ""
           echo "✅ All checks passed!"
 

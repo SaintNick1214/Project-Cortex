@@ -5,9 +5,9 @@ Open-source SDK for AI agents with persistent memory built on Convex.
 
 Example:
     >>> from cortex import Cortex, CortexConfig, RememberParams
-    >>> 
+    >>>
     >>> cortex = Cortex(CortexConfig(convex_url="https://your-deployment.convex.cloud"))
-    >>> 
+    >>>
     >>> result = await cortex.memory.remember(
     ...     RememberParams(
     ...         memory_space_id="agent-1",
@@ -18,165 +18,141 @@ Example:
     ...         user_name="Alex"
     ...     )
     ... )
-    >>> 
+    >>>
     >>> await cortex.close()
 """
 
 # Main client
 from .client import Cortex
 
-# Configuration
-from .types import (
-    CortexConfig,
-    GraphConfig,
-    GraphSyncWorkerOptions,
-    GraphConnectionConfig,
+# Errors
+from .errors import (
+    A2ATimeoutError,
+    AgentCascadeDeletionError,
+    CascadeDeletionError,
+    CortexError,
+    ErrorCode,
+    is_a2a_timeout_error,
+    is_cascade_deletion_error,
+    is_cortex_error,
 )
 
+# Configuration
 # Core Types - Layer 1
+# Core Types - Layer 2
+# Core Types - Layer 3
+# Core Types - Layer 4 (Memory Convenience)
+# Coordination Types
+# A2A Types
+# Result Types
+# Graph Types
 from .types import (
+    A2ABroadcastParams,
+    A2ABroadcastResult,
+    A2AMessage,
+    A2ARequestParams,
+    A2AResponse,
+    A2ASendParams,
+    AddMessageInput,
+    AgentRegistration,
+    AgentStats,
+    ContentType,
+    # Contexts
+    Context,
+    ContextInput,
+    ContextStatus,
+    ContextWithChain,
     # Conversations
     Conversation,
-    Message,
-    CreateConversationInput,
-    AddMessageInput,
     ConversationParticipants,
+    ConversationRef,
     ConversationType,
+    CortexConfig,
+    CountFactsFilter,
+    CreateConversationInput,
+    DeleteManyResult,
+    DeleteResult,
+    DeleteUserOptions,
+    EnrichedMemory,
+    ExportResult,
+    FactRecord,
+    FactSourceRef,
+    FactType,
+    ForgetOptions,
+    ForgetResult,
+    GraphConfig,
+    GraphConnectionConfig,
+    GraphEdge,
+    GraphNode,
+    GraphPath,
+    GraphQueryResult,
+    GraphSyncWorkerOptions,
+    ImmutableEntry,
     # Immutable
     ImmutableRecord,
-    ImmutableEntry,
+    ImmutableRef,
     ImmutableVersion,
-    # Mutable
-    MutableRecord,
-)
-
-# Core Types - Layer 2
-from .types import (
+    ListFactsFilter,
+    ListResult,
     MemoryEntry,
     MemoryMetadata,
     MemorySource,
+    # Memory Spaces
+    MemorySpace,
+    MemorySpaceStats,
+    MemorySpaceStatus,
+    MemorySpaceType,
     MemoryVersion,
-    ConversationRef,
-    ImmutableRef,
+    Message,
+    # Mutable
+    MutableRecord,
     MutableRef,
-    StoreMemoryInput,
-    SearchOptions,
-    SourceType,
-    ContentType,
-)
-
-# Core Types - Layer 3
-from .types import (
-    FactRecord,
-    StoreFactParams,
-    FactType,
-    FactSourceRef,
-    ListFactsFilter,
-    CountFactsFilter,
-    SearchFactsOptions,
-    QueryBySubjectFilter,
     QueryByRelationshipFilter,
-)
-
-# Core Types - Layer 4 (Memory Convenience)
-from .types import (
+    QueryBySubjectFilter,
+    # Agents
+    RegisteredAgent,
+    RegisterMemorySpaceParams,
+    RememberOptions,
     RememberParams,
     RememberResult,
     RememberStreamParams,
     RememberStreamResult,
-    RememberOptions,
-    EnrichedMemory,
-    ForgetOptions,
-    ForgetResult,
-)
-
-# Coordination Types
-from .types import (
-    # Contexts
-    Context,
-    ContextInput,
-    ContextWithChain,
-    ContextStatus,
+    SearchFactsOptions,
+    SearchOptions,
+    ShortestPathConfig,
+    SourceType,
+    StoreFactParams,
+    StoreMemoryInput,
+    SyncHealthMetrics,
+    TraversalConfig,
+    UnregisterAgentOptions,
+    UnregisterAgentResult,
+    UpdateManyResult,
+    UserDeleteResult,
     # Users
     UserProfile,
     UserVersion,
-    DeleteUserOptions,
-    UserDeleteResult,
     VerificationResult,
-    # Agents
-    RegisteredAgent,
-    AgentRegistration,
-    AgentStats,
-    UnregisterAgentOptions,
-    UnregisterAgentResult,
-    # Memory Spaces
-    MemorySpace,
-    RegisterMemorySpaceParams,
-    MemorySpaceStats,
-    MemorySpaceType,
-    MemorySpaceStatus,
-)
-
-# A2A Types
-from .types import (
-    A2ASendParams,
-    A2AMessage,
-    A2ARequestParams,
-    A2AResponse,
-    A2ABroadcastParams,
-    A2ABroadcastResult,
-)
-
-# Result Types
-from .types import (
-    DeleteResult,
-    DeleteManyResult,
-    UpdateManyResult,
-    ListResult,
-    ExportResult,
-)
-
-# Graph Types
-from .types import (
-    GraphNode,
-    GraphEdge,
-    GraphPath,
-    GraphQueryResult,
-    TraversalConfig,
-    ShortestPathConfig,
-    SyncHealthMetrics,
-)
-
-# Errors
-from .errors import (
-    CortexError,
-    A2ATimeoutError,
-    CascadeDeletionError,
-    AgentCascadeDeletionError,
-    ErrorCode,
-    is_cortex_error,
-    is_a2a_timeout_error,
-    is_cascade_deletion_error,
 )
 
 # Graph Integration (optional import)
 try:
     from .graph.adapters import CypherGraphAdapter
     from .graph.schema import (
+        drop_graph_schema,
         initialize_graph_schema,
         verify_graph_schema,
-        drop_graph_schema,
     )
     from .graph.worker import GraphSyncWorker
 
     _GRAPH_AVAILABLE = True
 except ImportError:
     _GRAPH_AVAILABLE = False
-    CypherGraphAdapter = None
-    initialize_graph_schema = None
-    verify_graph_schema = None
-    drop_graph_schema = None
-    GraphSyncWorker = None
+    CypherGraphAdapter = None  # type: ignore
+    initialize_graph_schema = None  # type: ignore[assignment]
+    verify_graph_schema = None  # type: ignore[assignment]
+    drop_graph_schema = None  # type: ignore[assignment]
+    GraphSyncWorker = None  # type: ignore
 
 
 __version__ = "0.8.2"
@@ -213,6 +189,11 @@ __all__ = [
     "FactRecord",
     "StoreFactParams",
     "FactSourceRef",
+    "CountFactsFilter",
+    "ListFactsFilter",
+    "QueryByRelationshipFilter",
+    "QueryBySubjectFilter",
+    "SearchFactsOptions",
     # Layer 4 Types
     "RememberParams",
     "RememberResult",

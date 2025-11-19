@@ -4,8 +4,10 @@ Cortex SDK - Graph Orphan Detection
 Sophisticated orphan detection for cascade deletions with circular reference handling.
 """
 
-from typing import Dict, Any, List, Set
+from typing import TYPE_CHECKING, Any, Dict, Optional, Set
 
+if TYPE_CHECKING:
+    from ...types import GraphAdapter
 
 # Orphan rules configuration
 ORPHAN_RULES = {
@@ -20,7 +22,7 @@ ORPHAN_RULES = {
 
 
 async def delete_with_orphan_cleanup(
-    node_id: str, adapter, orphan_rules: Dict[str, Any] = None
+    node_id: str, adapter: "GraphAdapter", orphan_rules: Optional[Dict[str, Any]] = None
 ) -> int:
     """
     Delete a node with orphan detection and cleanup.
@@ -38,7 +40,6 @@ async def delete_with_orphan_cleanup(
     Example:
         >>> deleted_count = await delete_with_orphan_cleanup(node_id, adapter)
     """
-    rules = orphan_rules or ORPHAN_RULES
 
     # Delete the primary node
     await adapter.delete_node(node_id)

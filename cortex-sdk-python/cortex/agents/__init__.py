@@ -5,18 +5,17 @@ Coordination Layer: Agent registry and management with cascade deletion by parti
 """
 
 import time
-from typing import Optional, List, Dict, Any
+from typing import Any, Dict, List, Optional, cast
 
+from .._utils import convert_convex_response, filter_none_values  # noqa: F401
+from ..errors import AgentCascadeDeletionError, CortexError, ErrorCode  # noqa: F401
 from ..types import (
-    RegisteredAgent,
     AgentRegistration,
-    AgentStats,
+    RegisteredAgent,
     UnregisterAgentOptions,
     UnregisterAgentResult,
     VerificationResult,
 )
-from ..errors import CortexError, ErrorCode, AgentCascadeDeletionError
-from .._utils import filter_none_values, convert_convex_response
 
 
 class AgentsAPI:
@@ -27,7 +26,7 @@ class AgentsAPI:
     cascade deletion by participantId across all memory spaces.
     """
 
-    def __init__(self, client, graph_adapter=None):
+    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
         """
         Initialize Agents API.
 
@@ -152,10 +151,10 @@ class AgentsAPI:
         ]
 
     async def list(
-        self, 
+        self,
         status: Optional[str] = None,
-        limit: int = 50, 
-        offset: int = 0, 
+        limit: int = 50,
+        offset: int = 0,
         sort_by: str = "name"
     ) -> List[RegisteredAgent]:
         """
@@ -197,18 +196,18 @@ class AgentsAPI:
     async def get_stats(self, agent_id: str) -> Dict[str, Any]:
         """
         Get agent statistics (memory count, conversation count, etc.).
-        
+
         Args:
             agent_id: Agent ID
-        
+
         Returns:
             Agent statistics
-        
+
         Example:
             >>> stats = await cortex.agents.get_stats('support-agent')
         """
         result = await self.client.query("agents:computeStats", filter_none_values({"agentId": agent_id}))
-        return result
+        return cast(Dict[str, Any], result)
 
     async def count(self, filters: Optional[Dict[str, Any]] = None) -> int:
         """
@@ -373,7 +372,7 @@ class AgentsAPI:
 
     async def _collect_agent_deletion_plan(self, agent_id: str) -> Dict[str, List[Any]]:
         """Collect all records where participantId = agent_id."""
-        plan = {
+        plan: Dict[str, Any] = {
             "conversations": [],
             "memories": [],
             "facts": [],
@@ -456,7 +455,7 @@ class AgentsAPI:
 
         return VerificationResult(complete=len(issues) == 0, issues=issues)
 
-    async def _rollback_agent_deletion(self, backup: Dict[str, List[Any]]):
+    async def _rollback_agent_deletion(self, backup: Dict[str, List[Any]]) -> Any:
         """Rollback agent deletion on failure."""
         print("Warning: Rollback not fully implemented - manual recovery may be needed")
 

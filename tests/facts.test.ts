@@ -775,6 +775,9 @@ describe("Facts API (Layer 3)", () => {
       expect(result.keptFactId).toBe(fact3.factId);
       expect(result.mergedCount).toBe(2);
 
+      // Allow time for Convex to commit mutations
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       // Verify others marked as superseded
       const fact1After = await cortex.facts.get(TEST_MEMSPACE_ID, fact1.factId);
 

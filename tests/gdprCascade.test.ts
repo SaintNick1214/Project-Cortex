@@ -530,6 +530,9 @@ describe("GDPR: Cascade Deletion", () => {
         metadata: { importance: 50, tags: [] },
       });
 
+      // Allow time for Convex to commit mutations
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       // Get stats before deletion
       const statsBefore = await cortex.memorySpaces.getStats(SPACE);
       expect(statsBefore.totalMemories).toBe(2);
@@ -537,12 +540,18 @@ describe("GDPR: Cascade Deletion", () => {
       // Delete one memory
       await cortex.vector.delete(SPACE, mem1.memoryId);
 
+      // Allow time for deletion to commit
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       // Get stats after deletion
       const statsAfter = await cortex.memorySpaces.getStats(SPACE);
       expect(statsAfter.totalMemories).toBe(1);
 
       // Delete remaining
       await cortex.vector.delete(SPACE, mem2.memoryId);
+
+      // Allow time for deletion to commit
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Get final stats
       const statsFinal = await cortex.memorySpaces.getStats(SPACE);

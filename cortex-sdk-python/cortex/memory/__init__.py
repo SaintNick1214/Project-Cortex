@@ -5,30 +5,29 @@ Layer 4: High-level helpers that orchestrate Layer 1 (ACID) and Layer 2 (Vector)
 """
 
 import time
-from typing import Optional, List, Dict, Any, Union, Tuple
+from typing import Any, Dict, List, Literal, Optional, Tuple, Union, cast
 
+from ..conversations import ConversationsAPI
+from ..errors import CortexError, ErrorCode
+from ..facts import FactsAPI
 from ..types import (
-    RememberParams,
-    RememberResult,
-    RememberStreamParams,
-    RememberStreamResult,
-    RememberOptions,
-    MemoryEntry,
+    DeleteMemoryOptions,
     EnrichedMemory,
     ForgetOptions,
     ForgetResult,
-    SearchOptions,
-    DeleteMemoryOptions,
-    UpdateMemoryOptions,
-    SourceType,
+    MemoryEntry,
     MemoryMetadata,
     MemorySource,
+    RememberOptions,
+    RememberParams,
+    RememberResult,
+    RememberStreamResult,
+    SearchOptions,
+    SourceType,
     StoreMemoryInput,
+    UpdateMemoryOptions,
 )
-from ..errors import CortexError, ErrorCode
-from ..conversations import ConversationsAPI
 from ..vector import VectorAPI
-from ..facts import FactsAPI
 
 
 class MemoryAPI:
@@ -39,7 +38,7 @@ class MemoryAPI:
     This is the recommended API for most use cases.
     """
 
-    def __init__(self, client, graph_adapter=None):
+    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
         """
         Initialize Memory API.
 
@@ -91,7 +90,11 @@ class MemoryAPI:
         )
 
         # Step 1: Ensure conversation exists
-        from ..types import CreateConversationInput, ConversationParticipants, CreateConversationOptions
+        from ..types import (
+            ConversationParticipants,
+            CreateConversationInput,
+            CreateConversationOptions,
+        )
 
         existing_conversation = await self.conversations.get(params.conversation_id)
 
@@ -130,7 +133,7 @@ class MemoryAPI:
             ),
             AddMessageOptions(sync_to_graph=should_sync_to_graph),
         )
-        
+
         # Extract message IDs from the conversation responses
         # user_msg and agent_msg are Conversation objects with messages as dict list
         user_message_id = user_msg.messages[-1]["id"] if isinstance(user_msg.messages[-1], dict) else user_msg.messages[-1].id
@@ -164,7 +167,7 @@ class MemoryAPI:
             params.memory_space_id,
             StoreMemoryInput(
                 content=user_content,
-                content_type=content_type,
+                content_type=cast(Literal["raw", "summarized"], content_type),
                 participant_id=params.participant_id,
                 embedding=user_embedding,
                 user_id=params.user_id,
@@ -189,7 +192,7 @@ class MemoryAPI:
             params.memory_space_id,
             StoreMemoryInput(
                 content=agent_content,
-                content_type=content_type,
+                content_type=cast(Literal["raw", "summarized"], content_type),
                 participant_id=params.participant_id,
                 embedding=agent_embedding,
                 user_id=params.user_id,
@@ -220,7 +223,7 @@ class MemoryAPI:
                 )
 
                 if facts_to_store:
-                    from ..types import StoreFactParams, FactSourceRef, StoreFactOptions
+                    from ..types import FactSourceRef, StoreFactOptions, StoreFactParams
 
                     for fact_data in facts_to_store:
                         try:
@@ -228,6 +231,7 @@ class MemoryAPI:
                                 StoreFactParams(
                                     memory_space_id=params.memory_space_id,
                                     participant_id=params.participant_id,
+                                    user_id=params.user_id,  # BUG FIX: Add userId to facts!
                                     fact=fact_data["fact"],
                                     fact_type=fact_data["factType"],
                                     subject=fact_data.get("subject", params.user_id),
@@ -263,8 +267,8 @@ class MemoryAPI:
         )
 
     async def remember_stream(
-        self, params, options: Optional[RememberOptions] = None
-    ):
+        self, params: Any, options: Optional[RememberOptions] = None
+    ) -> Any:
         """
         Remember a conversation exchange from a streaming response.
 
@@ -289,7 +293,7 @@ class MemoryAPI:
             ...     yield "The "
             ...     yield "weather "
             ...     yield "is sunny."
-            >>> 
+            >>>
             >>> from cortex.types import RememberStreamParams
             >>> result = await cortex.memory.remember_stream(
             ...     RememberStreamParams(
@@ -304,7 +308,6 @@ class MemoryAPI:
             >>> print(result.full_response)  # "The weather is sunny."
         """
         from .stream_utils import consume_stream
-        from ..types import RememberStreamResult
 
         # Step 1: Consume the stream to get the full response text
         try:
@@ -529,7 +532,7 @@ class MemoryAPI:
         memories = await self.vector.search(memory_space_id, query, opts)
 
         if not opts.enrich_conversation:
-            return memories
+            return memories  # type: ignore[return-value]
 
         # Batch fetch conversations
         conversation_ids = set()
@@ -551,8 +554,8 @@ class MemoryAPI:
             ListFactsFilter(memory_space_id=memory_space_id, limit=10000)
         )
 
-        facts_by_memory_id = {}
-        facts_by_conversation_id = {}
+        facts_by_memory_id: Dict[str, List[Any]] = {}
+        facts_by_conversation_id: Dict[str, List[Any]] = {}
 
         for fact in all_facts:
             if fact.source_ref and fact.source_ref.memory_id:
@@ -580,7 +583,7 @@ class MemoryAPI:
                     result.source_messages = [
                         msg
                         for msg in conv.messages
-                        if (msg.get("id") if isinstance(msg, dict) else msg.id) in message_ids
+                        if (msg.get("id") if isinstance(msg, dict) else msg.id) in message_ids  # type: ignore[operator]
                     ]
 
             # Add facts
@@ -588,7 +591,7 @@ class MemoryAPI:
             if memory.conversation_ref:
                 conv_id = memory.conversation_ref.get("conversation_id") if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
                 related_facts.extend(
-                    facts_by_conversation_id.get(conv_id, [])
+                    facts_by_conversation_id.get(conv_id, [])  # type: ignore[arg-type]
                 )
 
             # Deduplicate facts
@@ -601,7 +604,7 @@ class MemoryAPI:
 
             enriched.append(result)
 
-        return enriched
+        return enriched  # type: ignore[return-value]
 
     async def store(
         self, memory_space_id: str, input: StoreMemoryInput
@@ -644,7 +647,7 @@ class MemoryAPI:
             facts_to_store = await input.extract_facts(input.content)
 
             if facts_to_store:
-                from ..types import StoreFactParams, FactSourceRef, StoreFactOptions
+                from ..types import FactSourceRef, StoreFactOptions, StoreFactParams
 
                 for fact_data in facts_to_store:
                     try:
@@ -652,6 +655,7 @@ class MemoryAPI:
                             StoreFactParams(
                                 memory_space_id=memory_space_id,
                                 participant_id=input.participant_id,
+                                user_id=input.user_id,  # BUG FIX: Add userId to facts!
                                 fact=fact_data["fact"],
                                 fact_type=fact_data["factType"],
                                 subject=fact_data.get("subject", input.user_id),
@@ -727,13 +731,15 @@ class MemoryAPI:
             facts_to_store = await options.extract_facts(updates["content"])
 
             if facts_to_store:
-                from ..types import StoreFactParams, FactSourceRef, StoreFactOptions
+                from ..types import FactSourceRef, StoreFactOptions, StoreFactParams
 
                 for fact_data in facts_to_store:
                     try:
                         stored_fact = await self.facts.store(
                             StoreFactParams(
                                 memory_space_id=memory_space_id,
+                                participant_id=updated_memory.participant_id,  # BUG FIX: Add participantId
+                                user_id=updated_memory.user_id,  # BUG FIX: Add userId to facts!
                                 fact=fact_data["fact"],
                                 fact_type=fact_data["factType"],
                                 subject=fact_data.get("subject", updated_memory.user_id),
@@ -801,7 +807,7 @@ class MemoryAPI:
 
         # Delete facts if cascade enabled
         facts_deleted = 0
-        fact_ids = []
+        fact_ids: List[str] = []
 
         if should_cascade:
             conv_id = None
@@ -840,7 +846,7 @@ class MemoryAPI:
         enrich_facts: bool = False,
     ) -> List[Union[MemoryEntry, EnrichedMemory]]:
         """List memories (delegates to vector.list)."""
-        return await self.vector.list(
+        return await self.vector.list(  # type: ignore[return-value]
             memory_space_id, user_id, participant_id, source_type, limit, enrich_facts
         )
 
@@ -884,7 +890,7 @@ class MemoryAPI:
         memories = await self.vector.list(memory_space_id, limit=10000)
 
         total_facts_deleted = 0
-        all_fact_ids = []
+        all_fact_ids: List[str] = []
 
         # Cascade delete facts for each memory
         for memory in memories:
@@ -973,7 +979,7 @@ class MemoryAPI:
             )
         ]
 
-        deleted_fact_ids = []
+        deleted_fact_ids: List[str] = []
         for fact in facts_to_delete:
             try:
                 from ..types import DeleteFactOptions

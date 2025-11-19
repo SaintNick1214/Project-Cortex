@@ -3,21 +3,21 @@ Utility functions for Cortex SDK
 """
 
 import re
-from typing import Dict, Any, List
+from typing import Any, Dict
 
 
 def filter_none_values(args: Dict[str, Any]) -> Dict[str, Any]:
     """
     Filter out None values from arguments.
-    
+
     Convex doesn't accept None/null for optional parameters - they should be omitted.
-    
+
     Args:
         args: Dictionary that may contain None values
-        
+
     Returns:
         Dictionary with None values removed
-        
+
     Example:
         >>> filter_none_values({"a": 1, "b": None, "c": "test"})
         {"a": 1, "c": "test"}
@@ -28,13 +28,13 @@ def filter_none_values(args: Dict[str, Any]) -> Dict[str, Any]:
 def camel_to_snake(name: str) -> str:
     """
     Convert camelCase to snake_case.
-    
+
     Args:
         name: camelCase string
-        
+
     Returns:
         snake_case string
-        
+
     Example:
         >>> camel_to_snake("conversationId")
         "conversation_id"
@@ -49,17 +49,17 @@ def camel_to_snake(name: str) -> str:
 def convert_convex_response(data: Any) -> Any:
     """
     Convert Convex response to Python-friendly format.
-    
+
     - Converts camelCase to snake_case
     - Removes Convex internal fields (_creationTime, etc., except _id)
     - Recursively processes nested dicts and lists
-    
+
     Args:
         data: Response data from Convex
-        
+
     Returns:
         Converted data ready for dataclass instantiation
-        
+
     Example:
         >>> convert_convex_response({
         ...     "_id": "123",
@@ -80,18 +80,18 @@ def convert_convex_response(data: Any) -> Any:
             # _score is added by vector search for similarity ranking
             if key.startswith("_") and key not in ("_id", "_score"):
                 continue
-            
+
             # Convert key to snake_case
             new_key = camel_to_snake(key)
-            
+
             # Recursively convert nested structures
             converted[new_key] = convert_convex_response(value)
-        
+
         return converted
-    
+
     elif isinstance(data, list):
         return [convert_convex_response(item) for item in data]
-    
+
     else:
         return data
 

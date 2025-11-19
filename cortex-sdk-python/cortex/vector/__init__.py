@@ -4,18 +4,18 @@ Cortex SDK - Vector Memory API
 Layer 2: Searchable memory with embeddings and versioning
 """
 
-from typing import Optional, List, Dict, Any
+from typing import Any, Dict, List, Optional, cast
 
+from .._utils import convert_convex_response, filter_none_values
+from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import (
-    MemoryEntry,
-    StoreMemoryInput,
-    StoreMemoryOptions,
     DeleteMemoryOptions,
+    MemoryEntry,
     SearchOptions,
     SourceType,
+    StoreMemoryInput,
+    StoreMemoryOptions,
 )
-from ..errors import CortexError, ErrorCode
-from .._utils import filter_none_values, convert_convex_response
 
 
 class VectorAPI:
@@ -25,7 +25,7 @@ class VectorAPI:
     Manages searchable memory entries with optional embeddings and versioning.
     """
 
-    def __init__(self, client, graph_adapter=None):
+    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
         """
         Initialize Vector API.
 
@@ -111,7 +111,7 @@ class VectorAPI:
         # Sync to graph if requested
         if options and options.sync_to_graph and self.graph_adapter:
             try:
-                from ..graph import sync_memory_to_graph, sync_memory_relationships
+                from ..graph import sync_memory_relationships, sync_memory_to_graph
 
                 node_id = await sync_memory_to_graph(result, self.graph_adapter)
                 await sync_memory_relationships(result, node_id, self.graph_adapter)
@@ -226,7 +226,7 @@ class VectorAPI:
             params["importance"] = updates["importance"]
         if "tags" in updates:
             params["tags"] = updates["tags"]
-        
+
         result = await self.client.mutation(
             "memories:update",
             filter_none_values(params),
@@ -279,7 +279,7 @@ class VectorAPI:
             except Exception as error:
                 print(f"Warning: Failed to delete memory from graph: {error}")
 
-        return result
+        return cast(Dict[str, bool], result)
 
     async def update_many(
         self,
@@ -314,7 +314,7 @@ class VectorAPI:
             }),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def delete_many(
         self, memory_space_id: str, filters: Dict[str, Any]
@@ -340,7 +340,7 @@ class VectorAPI:
             filter_none_values({"memorySpaceId": memory_space_id, "filters": filters}),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def count(
         self,
@@ -460,7 +460,7 @@ class VectorAPI:
             }),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def archive(
         self, memory_space_id: str, memory_id: str
@@ -483,7 +483,7 @@ class VectorAPI:
             filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def get_version(
         self, memory_space_id: str, memory_id: str, version: int
@@ -511,7 +511,7 @@ class VectorAPI:
             }),
         )
 
-        return result
+        return cast(Optional[Dict[str, Any]], result)
 
     async def get_history(
         self, memory_space_id: str, memory_id: str
@@ -534,7 +534,7 @@ class VectorAPI:
             filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
         )
 
-        return result
+        return cast(List[Dict[str, Any]], result)
 
     async def get_at_timestamp(
         self, memory_space_id: str, memory_id: str, timestamp: int
@@ -564,5 +564,5 @@ class VectorAPI:
             }),
         )
 
-        return result
+        return cast(Optional[Dict[str, Any]], result)
 

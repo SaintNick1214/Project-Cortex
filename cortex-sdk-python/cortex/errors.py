@@ -10,7 +10,7 @@ from typing import Any, Optional
 class CortexError(Exception):
     """Base exception for all Cortex errors with structured error codes."""
 
-    def __init__(self, code: str, message: str = "", details: Optional[Any] = None):
+    def __init__(self, code: str, message: str = "", details: Optional[Any] = None) -> None:
         """
         Initialize Cortex error.
 
@@ -27,7 +27,7 @@ class CortexError(Exception):
 class A2ATimeoutError(Exception):
     """Exception raised when A2A request times out."""
 
-    def __init__(self, message: str, message_id: str, timeout: int):
+    def __init__(self, message: str, message_id: str, timeout: int) -> None:
         """
         Initialize A2A timeout error.
 
@@ -44,7 +44,7 @@ class A2ATimeoutError(Exception):
 class CascadeDeletionError(Exception):
     """Exception raised when cascade deletion fails."""
 
-    def __init__(self, message: str, cause: Optional[Exception] = None):
+    def __init__(self, message: str, cause: Optional[Exception] = None) -> None:
         """
         Initialize cascade deletion error.
 
@@ -59,7 +59,7 @@ class CascadeDeletionError(Exception):
 class AgentCascadeDeletionError(Exception):
     """Exception raised when agent cascade deletion fails."""
 
-    def __init__(self, message: str, cause: Optional[Exception] = None):
+    def __init__(self, message: str, cause: Optional[Exception] = None) -> None:
         """
         Initialize agent cascade deletion error.
 
