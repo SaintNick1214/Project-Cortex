@@ -63,11 +63,32 @@ jobs:
       - name: Build package
         run: npm run build
 
+  # Detect changed files
+  detect-changes:
+    name: Detect Changed Files
+    runs-on: ubuntu-latest
+    outputs:
+      python: ${{ steps.filter.outputs.python }}
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      
+      - name: Check for Python changes
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            python:
+              - 'cortex-sdk-python/**'
+
   # Python SDK Tests
   test-python:
     name: Test Python SDK
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.changed_files, 'cortex-sdk-python/')
+    needs: detect-changes
+    if: needs.detect-changes.outputs.python == 'true'
     
     strategy:
       matrix:
@@ -140,6 +161,10 @@ jobs:
   code-quality:
     name: Code Quality
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: read
+      pull-requests: write
     
     steps:
       - name: Checkout PR code
@@ -156,41 +181,50 @@ jobs:
         run: npm ci
       
       - name: Run ESLint
-        run: npm run lint -- --format json --output-file eslint-report.json
-        continue-on-error: true
-      
-      - name: Annotate code
-        uses: ataylorme/eslint-annotate-action@v2
-        if: always()
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          report-json: "eslint-report.json"
+        run: npm run lint
+        continue-on-error: false
 
   # All checks passed
   all-checks-passed:
     name: All Checks Passed
-    needs: [test-typescript, test-python, security-check, code-quality]
+    needs: [detect-changes, test-typescript, test-python, security-check, code-quality]
     if: always()
     runs-on: ubuntu-latest
     
     steps:
       - name: Check if all jobs passed
         run: |
+          echo "📊 Check Results:"
+          echo "  TypeScript: ${{ needs.test-typescript.result }}"
+          echo "  Python: ${{ needs.test-python.result }}"
+          echo "  Security: ${{ needs.security-check.result }}"
+          echo "  Code Quality: ${{ needs.code-quality.result }}"
+          echo ""
+          
+          # TypeScript tests must pass
           if [[ "${{ needs.test-typescript.result }}" != "success" ]]; then
             echo "❌ TypeScript tests failed"
             exit 1
           fi
+          
+          # Python tests must pass OR be skipped (when no Python files changed)
           if [[ "${{ needs.test-python.result }}" == "failure" ]]; then
             echo "❌ Python tests failed"
             exit 1
           fi
+          
+          # Security check must pass
           if [[ "${{ needs.security-check.result }}" != "success" ]]; then
             echo "❌ Security check failed"
             exit 1
           fi
+          
+          # Code quality must pass
           if [[ "${{ needs.code-quality.result }}" != "success" ]]; then
             echo "❌ Code quality check failed"
             exit 1
           fi
+          
+          echo ""
           echo "✅ All checks passed!"
 
