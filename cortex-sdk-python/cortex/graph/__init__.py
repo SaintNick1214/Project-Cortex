@@ -4,10 +4,9 @@ Cortex SDK - Graph Database Integration
 Graph database integration for advanced relationship queries and knowledge graphs.
 """
 
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
 
-from ..types import GraphNode, GraphEdge, GraphAdapter
-
+from ..types import GraphAdapter, GraphEdge, GraphNode
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Sync Functions - Memory to Graph
@@ -62,7 +61,7 @@ async def sync_memory_relationships(
         )
         if space_nodes:
             await adapter.create_edge(
-                GraphEdge(type="IN_SPACE", from_node=node_id, to_node=space_nodes[0].id)
+                GraphEdge(type="IN_SPACE", from_node=node_id, to_node=space_nodes[0].id)  # type: ignore[arg-type]
             )
     except:
         pass
@@ -80,7 +79,7 @@ async def sync_memory_relationships(
                     GraphEdge(
                         type="REFERENCES",
                         from_node=node_id,
-                        to_node=conv_nodes[0].id,
+                        to_node=conv_nodes[0].id,  # type: ignore[arg-type]
                         properties={
                             "messageIds": memory["conversationRef"].get("messageIds", [])
                         },
@@ -97,7 +96,7 @@ async def sync_memory_relationships(
             )
             if user_nodes:
                 await adapter.create_edge(
-                    GraphEdge(type="INVOLVES", from_node=node_id, to_node=user_nodes[0].id)
+                    GraphEdge(type="INVOLVES", from_node=node_id, to_node=user_nodes[0].id)  # type: ignore[arg-type]
                 )
         except:
             pass
@@ -117,7 +116,7 @@ async def delete_memory_from_graph(
     """
     nodes = await adapter.find_nodes("Memory", {"memoryId": memory_id}, 1)
     if nodes:
-        await adapter.delete_node(nodes[0].id)
+        await adapter.delete_node(nodes[0].id)  # type: ignore[arg-type]
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -154,7 +153,7 @@ async def sync_conversation_relationships(
         )
         if space_nodes:
             await adapter.create_edge(
-                GraphEdge(type="IN_SPACE", from_node=node_id, to_node=space_nodes[0].id)
+                GraphEdge(type="IN_SPACE", from_node=node_id, to_node=space_nodes[0].id)  # type: ignore[arg-type]
             )
     except:
         pass
@@ -168,7 +167,7 @@ async def delete_conversation_from_graph(
         "Conversation", {"conversationId": conversation_id}, 1
     )
     if nodes:
-        await adapter.delete_node(nodes[0].id)
+        await adapter.delete_node(nodes[0].id)  # type: ignore[arg-type]
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -211,7 +210,7 @@ async def sync_fact_relationships(
             if conv_nodes:
                 await adapter.create_edge(
                     GraphEdge(
-                        type="EXTRACTED_FROM", from_node=node_id, to_node=conv_nodes[0].id
+                        type="EXTRACTED_FROM", from_node=node_id, to_node=conv_nodes[0].id  # type: ignore[arg-type]
                     )
                 )
         except:
@@ -222,7 +221,7 @@ async def delete_fact_from_graph(fact_id: str, adapter: GraphAdapter) -> None:
     """Delete fact from graph."""
     nodes = await adapter.find_nodes("Fact", {"factId": fact_id}, 1)
     if nodes:
-        await adapter.delete_node(nodes[0].id)
+        await adapter.delete_node(nodes[0].id)  # type: ignore[arg-type]
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -261,7 +260,7 @@ async def sync_context_relationships(
             )
             if parent_nodes:
                 await adapter.create_edge(
-                    GraphEdge(type="CHILD_OF", from_node=node_id, to_node=parent_nodes[0].id)
+                    GraphEdge(type="CHILD_OF", from_node=node_id, to_node=parent_nodes[0].id)  # type: ignore[arg-type]
                 )
         except:
             pass
@@ -273,7 +272,7 @@ async def delete_context_from_graph(
     """Delete context from graph."""
     nodes = await adapter.find_nodes("Context", {"contextId": context_id}, 1)
     if nodes:
-        await adapter.delete_node(nodes[0].id)
+        await adapter.delete_node(nodes[0].id)  # type: ignore[arg-type]
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -297,7 +296,7 @@ async def delete_user_from_graph(user_id: str, adapter: GraphAdapter) -> int:
     nodes_deleted = 0
 
     if user_nodes:
-        await adapter.delete_node(user_nodes[0].id)
+        await adapter.delete_node(user_nodes[0].id)  # type: ignore[arg-type]
         nodes_deleted += 1
 
     return nodes_deleted

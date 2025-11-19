@@ -4,20 +4,20 @@ Cortex SDK - Cypher Graph Adapter
 Neo4j/Memgraph adapter using the official Neo4j Python driver
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Optional, List, Dict, Any
 
-from neo4j import AsyncGraphDatabase  # type: ignore[import]
+from neo4j import AsyncGraphDatabase
 
-from ...errors import CortexError, ErrorCode
 from ...types import (
-    GraphConnectionConfig,
-    GraphEdge,
     GraphNode,
+    GraphEdge,
     GraphPath,
+    GraphConnectionConfig,
     GraphQueryResult,
-    ShortestPathConfig,
     TraversalConfig,
+    ShortestPathConfig,
 )
+from ...errors import CortexError, ErrorCode
 
 
 class CypherGraphAdapter:
@@ -58,8 +58,6 @@ class CypherGraphAdapter:
                 auth=(config.username, config.password),
                 max_connection_pool_size=config.max_connection_pool_size or 50,
             )
-
-            assert self.driver is not None
 
             # Verify connectivity
             async with self.driver.session(database=config.database) as session:
@@ -109,6 +107,7 @@ class CypherGraphAdapter:
             )
 
         assert self.driver is not None
+
         async with self.driver.session() as session:
             result = await session.run(
                 f"CREATE (n:{node.label} $props) RETURN id(n) as id",
@@ -134,6 +133,7 @@ class CypherGraphAdapter:
             )
 
         assert self.driver is not None
+
         async with self.driver.session() as session:
             # Build SET clause for each property
             set_clauses = ", ".join([f"n.{key} = ${key}" for key in properties.keys()])
@@ -164,6 +164,7 @@ class CypherGraphAdapter:
             )
 
         assert self.driver is not None
+
         async with self.driver.session() as session:
             await session.run(
                 """
@@ -200,6 +201,7 @@ class CypherGraphAdapter:
             )
 
         assert self.driver is not None
+
         async with self.driver.session() as session:
             props_clause = "$props" if edge.properties else "{}"
 
@@ -232,6 +234,7 @@ class CypherGraphAdapter:
             )
 
         assert self.driver is not None
+
         async with self.driver.session() as session:
             await session.run(
                 """
@@ -404,7 +407,7 @@ class CypherGraphAdapter:
             MATCH (start), (end)
             WHERE id(start) = $fromId AND id(end) = $toId
             MATCH path = shortestPath((start)-{rel_filter}-(end))
-            RETURN
+            RETURN 
                 [node IN nodes(path) | {{id: id(node), label: labels(node)[0], properties: properties(node)}}] as nodes,
                 [rel IN relationships(path) | {{id: id(rel), type: type(rel), properties: properties(rel)}}] as relationships,
                 length(path) as length

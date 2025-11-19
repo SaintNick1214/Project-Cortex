@@ -4,7 +4,7 @@ Cortex SDK - Memory Spaces API
 Memory space management for Hive and Collaboration modes
 """
 
-from typing import Optional, List, Dict, Any, Literal
+from typing import cast, Optional, Optional, List, Dict, Any, Literal
 
 from ..types import (
     MemorySpace,
@@ -25,7 +25,7 @@ class MemorySpacesAPI:
     Hive Mode (shared spaces) and Collaboration Mode (separate spaces).
     """
 
-    def __init__(self, client, graph_adapter=None):
+    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
         """
         Initialize Memory Spaces API.
 
@@ -155,7 +155,7 @@ class MemorySpacesAPI:
             return {"spaces": spaces}
         else:
             result["spaces"] = [MemorySpace(**convert_convex_response(s)) for s in result.get("spaces", [])]
-            return result
+            return cast(Dict[str, Any], result)
 
     async def search(
         self,
@@ -340,7 +340,7 @@ class MemorySpacesAPI:
             }),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def get_stats(
         self,

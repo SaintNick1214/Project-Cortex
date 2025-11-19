@@ -4,7 +4,7 @@ Cortex SDK - Vector Memory API
 Layer 2: Searchable memory with embeddings and versioning
 """
 
-from typing import Optional, List, Dict, Any
+from typing import cast, Optional, Optional, List, Dict, Any
 
 from ..types import (
     MemoryEntry,
@@ -25,7 +25,7 @@ class VectorAPI:
     Manages searchable memory entries with optional embeddings and versioning.
     """
 
-    def __init__(self, client, graph_adapter=None):
+    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
         """
         Initialize Vector API.
 
@@ -279,7 +279,7 @@ class VectorAPI:
             except Exception as error:
                 print(f"Warning: Failed to delete memory from graph: {error}")
 
-        return result
+        return cast(Dict[str, bool], result)
 
     async def update_many(
         self,
@@ -314,7 +314,7 @@ class VectorAPI:
             }),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def delete_many(
         self, memory_space_id: str, filters: Dict[str, Any]
@@ -340,7 +340,7 @@ class VectorAPI:
             filter_none_values({"memorySpaceId": memory_space_id, "filters": filters}),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def count(
         self,
@@ -460,7 +460,7 @@ class VectorAPI:
             }),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def archive(
         self, memory_space_id: str, memory_id: str
@@ -483,7 +483,7 @@ class VectorAPI:
             filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def get_version(
         self, memory_space_id: str, memory_id: str, version: int
@@ -511,7 +511,7 @@ class VectorAPI:
             }),
         )
 
-        return result
+        return cast(Optional[Dict[str, Any]], result)
 
     async def get_history(
         self, memory_space_id: str, memory_id: str
@@ -534,7 +534,7 @@ class VectorAPI:
             filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
         )
 
-        return result
+        return cast(List[Dict[str, Any]], result)
 
     async def get_at_timestamp(
         self, memory_space_id: str, memory_id: str, timestamp: int
@@ -564,5 +564,5 @@ class VectorAPI:
             }),
         )
 
-        return result
+        return cast(Optional[Dict[str, Any]], result)
 

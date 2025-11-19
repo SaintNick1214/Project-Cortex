@@ -12,13 +12,13 @@ from typing import Any
 def is_async_iterable(value: Any) -> bool:
     """
     Type guard to check if a value is an AsyncIterable.
-    
+
     Args:
         value: Value to check
-        
+
     Returns:
         True if value is an AsyncIterable, False otherwise
-        
+
     Example:
         >>> async def gen():
         ...     yield "test"
@@ -33,16 +33,16 @@ def is_async_iterable(value: Any) -> bool:
 async def consume_async_iterable(iterable: AsyncIterable[str]) -> str:
     """
     Consume an AsyncIterable and return the complete text.
-    
+
     Args:
         iterable: AsyncIterable to consume
-        
+
     Returns:
         Complete text from all chunks
-        
+
     Raises:
         Exception: If iteration fails
-        
+
     Example:
         >>> async def generator():
         ...     yield "Hello "
@@ -52,12 +52,12 @@ async def consume_async_iterable(iterable: AsyncIterable[str]) -> str:
         Hello World
     """
     chunks = []
-    
+
     try:
         async for chunk in iterable:
             if chunk is not None:
                 chunks.append(str(chunk))
-        
+
         return "".join(chunks)
     except Exception as error:
         raise Exception(
@@ -68,19 +68,19 @@ async def consume_async_iterable(iterable: AsyncIterable[str]) -> str:
 async def consume_stream(stream: Any) -> str:
     """
     Consume any supported stream type and return the complete text.
-    
+
     Automatically detects the stream type and uses the appropriate consumer.
     Currently supports AsyncIterable protocol (async generators/iterators).
-    
+
     Args:
         stream: AsyncIterable to consume
-        
+
     Returns:
         Complete text from stream
-        
+
     Raises:
         Exception: If stream type is unsupported or consumption fails
-        
+
     Example:
         >>> # Works with async generators
         >>> async def gen():

@@ -7,7 +7,7 @@ Layer 1a: ACID-compliant immutable conversation storage
 import time
 import random
 import string
-from typing import Optional, List, Dict, Any, Literal
+from typing import cast, Optional, Optional, List, Dict, Any, Literal
 
 from ..types import (
     Conversation,
@@ -33,7 +33,7 @@ class ConversationsAPI:
     for all message history.
     """
 
-    def __init__(self, client, graph_adapter=None):
+    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
         """
         Initialize Conversations API.
 
@@ -175,7 +175,7 @@ class ConversationsAPI:
                         {
                             "messageCount": result["messageCount"],
                             "updatedAt": result["updatedAt"],
-                        },
+                        }, # type: ignore[arg-type]
                     )
             except Exception as error:
                 print(f"Warning: Failed to update conversation in graph: {error}")
@@ -283,7 +283,7 @@ class ConversationsAPI:
             except Exception as error:
                 print(f"Warning: Failed to delete conversation from graph: {error}")
 
-        return result
+        return cast(Dict[str, bool], result)
 
     async def delete_many(
         self,
@@ -317,7 +317,7 @@ class ConversationsAPI:
             }),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def get_message(
         self, conversation_id: str, message_id: str
@@ -489,7 +489,7 @@ class ConversationsAPI:
 
         # Convert messages to Message objects
         result["messages"] = [Message(**convert_convex_response(msg)) for msg in result.get("messages", [])]
-        return result
+        return cast(Dict[str, Any], result)
 
     async def search(
         self,

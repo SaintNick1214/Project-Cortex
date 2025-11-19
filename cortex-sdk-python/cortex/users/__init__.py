@@ -4,7 +4,7 @@ Cortex SDK - Users API
 Coordination Layer: User profile management with GDPR cascade deletion
 """
 
-from typing import Optional, List, Dict, Any
+from typing import cast, Optional, Optional, List, Dict, Any
 
 from ..types import (
     UserProfile,
@@ -29,7 +29,7 @@ class UsersAPI:
     - Cloud Mode: Cortex provides managed graph adapter, cascade always works + legal guarantees
     """
 
-    def __init__(self, client, graph_adapter=None):
+    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
         """
         Initialize Users API.
 
@@ -382,7 +382,7 @@ class UsersAPI:
 
     async def _collect_deletion_plan(self, user_id: str) -> Dict[str, List[Any]]:
         """Phase 1: Collect all records to delete."""
-        plan = {
+        plan: Dict[str, Any] = {
             "conversations": [],
             "immutable": [],
             "mutable": [],
@@ -419,7 +419,7 @@ class UsersAPI:
                 memory_space_ids_to_check.add(space_id)
         
         # Also add any registered spaces
-        spaces_list = []
+        spaces_list: List[Any] = []
         try:
             all_spaces = await self.client.query("memorySpaces:list", filter_none_values({"limit": 10000}))
             spaces_list = all_spaces if isinstance(all_spaces, list) else all_spaces.get("spaces", [])
@@ -622,7 +622,7 @@ class UsersAPI:
 
         return VerificationResult(complete=len(issues) == 0, issues=issues)
 
-    async def _rollback_deletion(self, backup: Dict[str, List[Any]]):
+    async def _rollback_deletion(self, backup: Dict[str, List[Any]])->Any:
         """Rollback deletion on failure."""
         # Restore from backup
         # This is a simplified version - actual implementation would restore all data
@@ -758,7 +758,7 @@ class UsersAPI:
                     "updatedAt": u.updated_at,
                     "data": json.dumps(u.data),
                 })
-            return output.getvalue()
+            return output.getvalue() # type: ignore[return-value] # type: ignore[return-value]
         
         # JSON export (default)
         export_data = [
@@ -771,7 +771,7 @@ class UsersAPI:
             }
             for u in users
         ]
-        return json.dumps(export_data, indent=2, default=str)
+        return json.dumps(export_data, indent=2, default=str) # type: ignore[return-value] # type: ignore[return-value]
 
     async def get_version(
         self, user_id: str, version: int

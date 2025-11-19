@@ -4,7 +4,7 @@ Cortex SDK - Facts API
 Layer 3: Structured knowledge extraction and storage
 """
 
-from typing import Optional, List, Dict, Any
+from typing import cast, Optional, Optional, List, Dict, Any
 
 from ..types import (
     FactRecord,
@@ -30,7 +30,7 @@ class FactsAPI:
     Manages structured fact storage with versioning, relationships, and temporal validity.
     """
 
-    def __init__(self, client, graph_adapter=None):
+    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
         """
         Initialize Facts API.
 
@@ -332,7 +332,7 @@ class FactsAPI:
             except Exception as error:
                 print(f"Warning: Failed to delete fact from graph: {error}")
 
-        return result
+        return cast(Dict[str, bool], result)
 
     async def count(
         self,
@@ -555,7 +555,7 @@ class FactsAPI:
             }),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def consolidate(
         self, memory_space_id: str, fact_ids: List[str], keep_fact_id: str
@@ -587,5 +587,5 @@ class FactsAPI:
             },
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 

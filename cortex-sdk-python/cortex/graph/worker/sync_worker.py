@@ -4,10 +4,10 @@ Cortex SDK - Graph Sync Worker
 Real-time reactive synchronization worker using Convex subscriptions
 """
 
-from typing import Optional, Dict, Any
 import asyncio
+from typing import Any, Optional
 
-from ...types import SyncHealthMetrics, GraphSyncWorkerOptions
+from ...types import GraphSyncWorkerOptions, SyncHealthMetrics
 
 
 class GraphSyncWorker:
@@ -20,10 +20,10 @@ class GraphSyncWorker:
 
     def __init__(
         self,
-        client,
-        graph_adapter,
+        client: Any,
+        graph_adapter: Any,
         options: Optional[GraphSyncWorkerOptions] = None,
-    ):
+    ) -> None:
         """
         Initialize graph sync worker.
 

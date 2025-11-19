@@ -5,9 +5,8 @@ Complete type system for all Cortex operations, matching the TypeScript SDK.
 """
 
 from dataclasses import dataclass, field
-from typing import Optional, List, Dict, Any, Literal, Callable, Protocol
 from datetime import datetime
-
+from typing import Any, Callable, Dict, List, Literal, Optional, Protocol
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Core Type Aliases
@@ -313,7 +312,7 @@ class ListFactsFilter:
     """Universal filters for listing facts (v0.9.1+)."""
     # Required
     memory_space_id: str
-    
+
     # Fact-specific filters
     fact_type: Optional[FactType] = None
     subject: Optional[str] = None
@@ -321,30 +320,30 @@ class ListFactsFilter:
     object: Optional[str] = None
     min_confidence: Optional[int] = None
     confidence: Optional[int] = None  # Exact match
-    
+
     # Universal filters (Cortex standard)
     user_id: Optional[str] = None
     participant_id: Optional[str] = None
     tags: Optional[List[str]] = None
     tag_match: Optional[Literal["any", "all"]] = None
     source_type: Optional[Literal["conversation", "system", "tool", "manual"]] = None
-    
+
     # Date filters
     created_before: Optional[datetime] = None
     created_after: Optional[datetime] = None
     updated_before: Optional[datetime] = None
     updated_after: Optional[datetime] = None
-    
+
     # Version filters
     version: Optional[int] = None
     include_superseded: Optional[bool] = None
-    
+
     # Temporal validity filters
     valid_at: Optional[datetime] = None  # Facts valid at specific time
-    
+
     # Metadata filters
     metadata: Optional[Dict[str, Any]] = None
-    
+
     # Result options
     limit: Optional[int] = None
     offset: Optional[int] = None
@@ -357,7 +356,7 @@ class CountFactsFilter:
     """Universal filters for counting facts (v0.9.1+)."""
     # Required
     memory_space_id: str
-    
+
     # Fact-specific filters
     fact_type: Optional[FactType] = None
     subject: Optional[str] = None
@@ -365,7 +364,7 @@ class CountFactsFilter:
     object: Optional[str] = None
     min_confidence: Optional[int] = None
     confidence: Optional[int] = None
-    
+
     # Universal filters
     user_id: Optional[str] = None
     participant_id: Optional[str] = None
@@ -392,7 +391,7 @@ class SearchFactsOptions:
     object: Optional[str] = None
     min_confidence: Optional[int] = None
     confidence: Optional[int] = None
-    
+
     # Universal filters
     user_id: Optional[str] = None
     participant_id: Optional[str] = None
@@ -419,14 +418,14 @@ class QueryBySubjectFilter:
     # Required
     memory_space_id: str
     subject: str
-    
+
     # Fact-specific filters
     fact_type: Optional[FactType] = None
     predicate: Optional[str] = None
     object: Optional[str] = None
     min_confidence: Optional[int] = None
     confidence: Optional[int] = None
-    
+
     # Universal filters
     user_id: Optional[str] = None
     participant_id: Optional[str] = None
@@ -454,13 +453,13 @@ class QueryByRelationshipFilter:
     memory_space_id: str
     subject: str
     predicate: str
-    
+
     # Fact-specific filters
     object: Optional[str] = None
     fact_type: Optional[FactType] = None
     min_confidence: Optional[int] = None
     confidence: Optional[int] = None
-    
+
     # Universal filters
     user_id: Optional[str] = None
     participant_id: Optional[str] = None
