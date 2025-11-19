@@ -4,11 +4,11 @@ Cortex SDK - Mutable Store API
 Layer 1c: Shared mutable data with ACID transaction guarantees
 """
 
-from typing import Optional, List, Dict, Any, Callable, Literal
+from typing import Any, Callable, Dict, List, Optional, cast
 
+from .._utils import convert_convex_response, filter_none_values
+from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import MutableRecord
-from ..errors import CortexError, ErrorCode
-from .._utils import filter_none_values, convert_convex_response
 
 
 class MutableAPI:
@@ -19,7 +19,7 @@ class MutableAPI:
     Perfect for inventory, configuration, and live shared state.
     """
 
-    def __init__(self, client, graph_adapter=None):
+    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
         """
         Initialize Mutable API.
 
@@ -201,7 +201,7 @@ class MutableAPI:
             "mutable:deleteKey", filter_none_values({"namespace": namespace, "key": key})
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def list(
         self,
@@ -310,7 +310,7 @@ class MutableAPI:
             # Note: dryRun not supported by backend yet
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def purge_many(
         self,
@@ -347,7 +347,7 @@ class MutableAPI:
             }),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def transaction(self, callback: Callable) -> Dict[str, Any]:
         """
@@ -366,7 +366,7 @@ class MutableAPI:
             >>> async def transfer(tx):
             ...     await tx.update('inventory', 'product-a', lambda x: x - 10)
             ...     await tx.update('inventory', 'product-b', lambda x: x + 10)
-            >>> 
+            >>>
             >>> await cortex.mutable.transaction(transfer)
         """
         # Note: This is a placeholder. Actual implementation requires

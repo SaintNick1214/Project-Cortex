@@ -4,11 +4,11 @@ Cortex SDK - Immutable Store API
 Layer 1b: Shared immutable data with automatic versioning
 """
 
-from typing import Optional, List, Dict, Any, Literal
+from typing import Any, Dict, List, Optional, cast
 
-from ..types import ImmutableRecord, ImmutableEntry, ImmutableVersion
-from ..errors import CortexError, ErrorCode
-from .._utils import filter_none_values, convert_convex_response
+from .._utils import convert_convex_response, filter_none_values
+from ..errors import CortexError, ErrorCode  # noqa: F401
+from ..types import ImmutableEntry, ImmutableRecord, ImmutableVersion
 
 
 class ImmutableAPI:
@@ -19,7 +19,7 @@ class ImmutableAPI:
     Perfect for knowledge base articles, policies, and audit logs.
     """
 
-    def __init__(self, client, graph_adapter=None):
+    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
         """
         Initialize Immutable API.
 
@@ -230,7 +230,7 @@ class ImmutableAPI:
             filter_none_values({"query": query, "type": type, "userId": user_id, "limit": limit}),
         )
 
-        return result
+        return cast(List[Dict[str, Any]], result)
 
     async def count(
         self, type: Optional[str] = None, user_id: Optional[str] = None
@@ -275,7 +275,7 @@ class ImmutableAPI:
             "immutable:purge", filter_none_values({"type": type, "id": id})
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def purge_many(
         self,
@@ -313,7 +313,7 @@ class ImmutableAPI:
             }),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def purge_versions(
         self,
@@ -345,5 +345,5 @@ class ImmutableAPI:
             filter_none_values({"type": type, "id": id, "keepLatest": keep_latest, "olderThan": older_than}),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 

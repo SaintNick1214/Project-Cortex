@@ -4,25 +4,25 @@ Cortex SDK - Conversations API
 Layer 1a: ACID-compliant immutable conversation storage
 """
 
-import time
 import random
 import string
-from typing import Optional, List, Dict, Any, Literal
+import time
+from typing import Any, Dict, List, Literal, Optional, cast
 
+from .._utils import convert_convex_response, filter_none_values
+from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import (
-    Conversation,
-    Message,
-    CreateConversationInput,
-    CreateConversationOptions,
     AddMessageInput,
     AddMessageOptions,
-    DeleteConversationOptions,
+    Conversation,
     ConversationSearchResult,
-    ExportResult,
     ConversationType,
+    CreateConversationInput,
+    CreateConversationOptions,
+    DeleteConversationOptions,
+    ExportResult,
+    Message,
 )
-from ..errors import CortexError, ErrorCode
-from .._utils import filter_none_values, convert_convex_response
 
 
 class ConversationsAPI:
@@ -33,7 +33,7 @@ class ConversationsAPI:
     for all message history.
     """
 
-    def __init__(self, client, graph_adapter=None):
+    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
         """
         Initialize Conversations API.
 
@@ -93,7 +93,10 @@ class ConversationsAPI:
         # Sync to graph if requested
         if options and options.sync_to_graph and self.graph_adapter:
             try:
-                from ..graph import sync_conversation_to_graph, sync_conversation_relationships
+                from ..graph import (
+                    sync_conversation_relationships,
+                    sync_conversation_to_graph,
+                )
 
                 node_id = await sync_conversation_to_graph(result, self.graph_adapter)
                 await sync_conversation_relationships(result, node_id, self.graph_adapter)
@@ -175,7 +178,7 @@ class ConversationsAPI:
                         {
                             "messageCount": result["messageCount"],
                             "updatedAt": result["updatedAt"],
-                        },
+                        }, # type: ignore[arg-type]
                     )
             except Exception as error:
                 print(f"Warning: Failed to update conversation in graph: {error}")
@@ -283,7 +286,7 @@ class ConversationsAPI:
             except Exception as error:
                 print(f"Warning: Failed to delete conversation from graph: {error}")
 
-        return result
+        return cast(Dict[str, bool], result)
 
     async def delete_many(
         self,
@@ -317,7 +320,7 @@ class ConversationsAPI:
             }),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def get_message(
         self, conversation_id: str, message_id: str
@@ -489,7 +492,7 @@ class ConversationsAPI:
 
         # Convert messages to Message objects
         result["messages"] = [Message(**convert_convex_response(msg)) for msg in result.get("messages", [])]
-        return result
+        return cast(Dict[str, Any], result)
 
     async def search(
         self,

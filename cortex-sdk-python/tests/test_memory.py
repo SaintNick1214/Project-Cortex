@@ -304,6 +304,7 @@ async def test_remember_with_fact_extraction(cortex_client, test_memory_space_id
             agent_response="I've noted your preference",
             user_id=test_user_id,
             user_name="Tester",
+            participant_id="agent-test",  # Add participantId to test propagation
             extract_facts=extract_facts,
         )
     )
@@ -311,6 +312,86 @@ async def test_remember_with_fact_extraction(cortex_client, test_memory_space_id
     # Should have extracted facts
     assert len(result.facts) > 0
     assert any(f.fact == "User prefers dark mode" for f in result.facts)
+    
+    # CRITICAL: Verify userId was propagated from remember() to facts.store()
+    # This was a bug fixed in Python SDK - userId was missing!
+    extracted_fact = next(f for f in result.facts if f.fact == "User prefers dark mode")
+    assert extracted_fact.user_id == test_user_id
+    assert extracted_fact.participant_id == "agent-test"
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_remember_fact_extraction_parameter_propagation(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
+    """
+    REGRESSION TEST: Ensures ALL parameters are properly passed from remember() to facts.store().
+    
+    Bug found: userId was not being passed to facts.store() during fact extraction.
+    This caused:
+    - userId filter not working for extracted facts
+    - GDPR cascade delete failing for facts
+    - Multi-user demos breaking
+    """
+    from cortex import RememberParams, ListFactsFilter
+    
+    specific_conv_id = f"conv-param-prop-{test_user_id}"
+    specific_participant_id = "agent-param-test"
+    
+    async def extract_facts(user_msg, agent_msg):
+        return [
+            {
+                "fact": "Parameter propagation test fact",
+                "factType": "knowledge",
+                "confidence": 88,
+                "tags": ["regression-test"],
+            }
+        ]
+    
+    result = await cortex_client.memory.remember(
+        RememberParams(
+            memory_space_id=test_memory_space_id,
+            conversation_id=specific_conv_id,
+            user_message="Test message for parameter propagation",
+            agent_response="Acknowledged",
+            user_id=test_user_id,
+            user_name="Test User",
+            participant_id=specific_participant_id,
+            tags=["test-tag"],
+            extract_facts=extract_facts,
+        )
+    )
+    
+    assert len(result.facts) == 1
+    fact = result.facts[0]
+    
+    # Verify ALL parameters were properly propagated
+    assert fact.memory_space_id == test_memory_space_id
+    assert fact.user_id == test_user_id  # ← This was the bug!
+    assert fact.participant_id == specific_participant_id
+    assert fact.source_type == "conversation"
+    # source_ref could be dict or object depending on conversion
+    assert fact.source_ref is not None
+    conv_id = fact.source_ref.get("conversation_id") if isinstance(fact.source_ref, dict) else fact.source_ref.conversation_id
+    mem_id = fact.source_ref.get("memory_id") if isinstance(fact.source_ref, dict) else fact.source_ref.memory_id
+    msg_ids = fact.source_ref.get("message_ids") if isinstance(fact.source_ref, dict) else fact.source_ref.message_ids
+    assert conv_id == specific_conv_id
+    assert mem_id is not None
+    assert msg_ids is not None
+    assert len(msg_ids) == 2
+    
+    # Now test that filtering by userId actually works
+    filtered_facts = await cortex_client.facts.list(
+        ListFactsFilter(
+            memory_space_id=test_memory_space_id,
+            user_id=test_user_id,
+        )
+    )
+    
+    found_fact = next((f for f in filtered_facts if f.fact_id == fact.fact_id), None)
+    assert found_fact is not None
+    assert found_fact.user_id == test_user_id
     
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)

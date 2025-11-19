@@ -4,17 +4,17 @@ Cortex SDK - Memory Spaces API
 Memory space management for Hive and Collaboration modes
 """
 
-from typing import Optional, List, Dict, Any, Literal
+from typing import Any, Dict, List, Optional, cast
 
+from .._utils import convert_convex_response, filter_none_values
+from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import (
     MemorySpace,
-    RegisterMemorySpaceParams,
     MemorySpaceStats,
-    MemorySpaceType,
     MemorySpaceStatus,
+    MemorySpaceType,
+    RegisterMemorySpaceParams,
 )
-from ..errors import CortexError, ErrorCode
-from .._utils import filter_none_values, convert_convex_response
 
 
 class MemorySpacesAPI:
@@ -25,7 +25,7 @@ class MemorySpacesAPI:
     Hive Mode (shared spaces) and Collaboration Mode (separate spaces).
     """
 
-    def __init__(self, client, graph_adapter=None):
+    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
         """
         Initialize Memory Spaces API.
 
@@ -155,7 +155,7 @@ class MemorySpacesAPI:
             return {"spaces": spaces}
         else:
             result["spaces"] = [MemorySpace(**convert_convex_response(s)) for s in result.get("spaces", [])]
-            return result
+            return cast(Dict[str, Any], result)
 
     async def search(
         self,
@@ -340,7 +340,7 @@ class MemorySpacesAPI:
             }),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def get_stats(
         self,
@@ -383,14 +383,14 @@ class MemorySpacesAPI:
     ) -> int:
         """
         Count memory spaces matching filters.
-        
+
         Args:
             type: Filter by type
             status: Filter by status
-        
+
         Returns:
             Count of matching memory spaces
-        
+
         Example:
             >>> total = await cortex.memory_spaces.count(type='personal')
         """
@@ -401,6 +401,6 @@ class MemorySpacesAPI:
                 "status": status,
             }),
         )
-        
+
         return int(result)
 

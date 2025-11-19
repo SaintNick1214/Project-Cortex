@@ -116,7 +116,7 @@ async function traverseWithGraph(
     { contextId: rootContextId },
   );
 
-  const contexts = result.records.map((r) => r.descendants.properties);
+  const contexts = result.records.map((r) => (r.descendants as any).properties);
   const timeMs = Date.now() - startTime;
 
   return { contexts, timeMs };

@@ -23,8 +23,6 @@ import { Cortex } from "../src/index";
 describe("Facts API - Universal Filters", () => {
   let cortex: Cortex;
   const TEST_MEMSPACE_ID = `universal-filter-test-${Date.now()}`;
-  const TEST_USER_ID = "test-user-123";
-  const TEST_PARTICIPANT_ID = "test-agent-456";
 
   beforeAll(() => {
     cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });

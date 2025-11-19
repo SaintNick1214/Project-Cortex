@@ -394,7 +394,7 @@ async function queryWithGraph(
       );
 
       for (const record of contexts.records) {
-        relatedContexts.add(record.contextId);
+        relatedContexts.add(record.contextId as string);
       }
     }
   }
@@ -677,7 +677,7 @@ async function runMultiLayerProof(adapter: GraphAdapter, dbName: string) {
       )) {
         console.log(`      - "${discovered.fact}" (${discovered.confidence}%)`);
         console.log(
-          `        via shared entities: ${discovered.sharedEntities?.join(", ")}`,
+          `        via shared entities: ${(discovered.sharedEntities as string[] | undefined)?.join(", ")}`,
         );
       }
     }
@@ -697,11 +697,11 @@ async function runMultiLayerProof(adapter: GraphAdapter, dbName: string) {
       );
       for (const chain of enhancedResult.enrichment.contextChains.slice(0, 2)) {
         console.log(`      Current: ${chain.current}`);
-        if (chain.ancestors && chain.ancestors.length > 0) {
-          console.log(`      Ancestors: ${chain.ancestors.join(" → ")}`);
+        if (chain.ancestors && (chain.ancestors as string[]).length > 0) {
+          console.log(`      Ancestors: ${(chain.ancestors as string[]).join(" → ")}`);
         }
-        if (chain.descendants && chain.descendants.length > 0) {
-          console.log(`      Descendants: ${chain.descendants.join(" → ")}`);
+        if (chain.descendants && (chain.descendants as string[]).length > 0) {
+          console.log(`      Descendants: ${(chain.descendants as string[]).join(" → ")}`);
         }
       }
     }

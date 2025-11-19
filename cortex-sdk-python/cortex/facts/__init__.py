@@ -4,23 +4,23 @@ Cortex SDK - Facts API
 Layer 3: Structured knowledge extraction and storage
 """
 
-from typing import Optional, List, Dict, Any
+from typing import Any, Dict, List, Optional, cast
 
+from .._utils import convert_convex_response, filter_none_values
+from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import (
-    FactRecord,
-    StoreFactParams,
-    StoreFactOptions,
-    UpdateFactOptions,
+    CountFactsFilter,
     DeleteFactOptions,
+    FactRecord,
     FactType,
     ListFactsFilter,
-    CountFactsFilter,
-    SearchFactsOptions,
-    QueryBySubjectFilter,
     QueryByRelationshipFilter,
+    QueryBySubjectFilter,
+    SearchFactsOptions,
+    StoreFactOptions,
+    StoreFactParams,
+    UpdateFactOptions,
 )
-from ..errors import CortexError, ErrorCode
-from .._utils import filter_none_values, convert_convex_response
 
 
 class FactsAPI:
@@ -30,7 +30,7 @@ class FactsAPI:
     Manages structured fact storage with versioning, relationships, and temporal validity.
     """
 
-    def __init__(self, client, graph_adapter=None):
+    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
         """
         Initialize Facts API.
 
@@ -99,7 +99,7 @@ class FactsAPI:
         # Sync to graph if requested
         if options and options.sync_to_graph and self.graph_adapter:
             try:
-                from ..graph import sync_fact_to_graph, sync_fact_relationships
+                from ..graph import sync_fact_relationships, sync_fact_to_graph
 
                 node_id = await sync_fact_to_graph(result, self.graph_adapter)
                 await sync_fact_relationships(result, node_id, self.graph_adapter)
@@ -332,7 +332,7 @@ class FactsAPI:
             except Exception as error:
                 print(f"Warning: Failed to delete fact from graph: {error}")
 
-        return result
+        return cast(Dict[str, bool], result)
 
     async def count(
         self,
@@ -555,7 +555,7 @@ class FactsAPI:
             }),
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 
     async def consolidate(
         self, memory_space_id: str, fact_ids: List[str], keep_fact_id: str
@@ -587,5 +587,5 @@ class FactsAPI:
             },
         )
 
-        return result
+        return cast(Dict[str, Any], result)
 

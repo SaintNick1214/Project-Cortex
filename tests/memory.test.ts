@@ -804,6 +804,9 @@ describe("Memory Convenience API (Layer 3)", () => {
 
       expect(remembered.memories).toHaveLength(2);
 
+      // Allow time for Convex to commit mutations
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       // Search with enrichment
       const searchResults = await cortex.memory.search(
         TEST_MEMSPACE_ID,

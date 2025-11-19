@@ -359,7 +359,7 @@ export class UsersAPI {
       id: userId,
     });
 
-    return result.map((v) => ({
+    return result.map((v: { version: number; data: unknown; timestamp: number }) => ({
       version: v.version,
       data: (v.data as Record<string, unknown> | undefined) ?? {},
       timestamp: v.timestamp,
