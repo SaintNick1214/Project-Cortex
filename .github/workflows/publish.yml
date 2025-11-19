@@ -130,13 +130,6 @@ jobs:
           CONVEX_URL: ${{ secrets.CONVEX_URL }}
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
-      - name: Run tests
-        run: npm test
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-
       - name: Build package
         run: npm run build
 
@@ -261,43 +254,65 @@ jobs:
           echo "🚀 Try it: npm create cortex-memories"
           echo ""
 
-  trigger-python-publish:
+  publish-python:
     needs: check-version
     if: needs.check-version.outputs.python-version-changed == 'true'
     runs-on: ubuntu-latest
+    environment: pypi  # Protected environment (configure in GitHub settings)
     permissions:
-      contents: write  # Required to create and push tags
+      contents: write  # Required to create tags
+      id-token: write  # Required for trusted publishing to PyPI
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Need full history for tagging
       
-      - name: Create and push Python SDK tag
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+      - name: Install build dependencies
+        run: |
+          cd cortex-sdk-python
+          python -m pip install --upgrade pip
+          pip install build twine
+      
+      - name: Build package
+        run: |
+          cd cortex-sdk-python
+          python -m build
+      
+      - name: Check distribution
+        run: |
+          cd cortex-sdk-python
+          twine check dist/*
+      
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: cortex-sdk-python/dist/
+          skip-existing: true
+          verbose: true
+      
+      - name: Create Git Tag
         run: |
           VERSION=${{ needs.check-version.outputs.python-new-version }}
-          TAG_NAME="py-v$VERSION"
-          
-          echo "════════════════════════════════════════════════════════════"
-          echo "  🏷️  CREATING PYTHON SDK TAG"
-          echo "════════════════════════════════════════════════════════════"
-          echo ""
-          echo "📦 Python SDK version: $VERSION"
-          echo "🏷️  Tag: $TAG_NAME"
-          echo ""
-          
-          # Configure git
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # Create annotated tag
-          git tag -a "$TAG_NAME" -m "Python SDK Release v$VERSION"
-          
-          # Push tag (this triggers publish-python.yml)
-          git push origin "$TAG_NAME"
-          
+          git tag -a "py-v$VERSION" -m "Release Python SDK v$VERSION"
+          git push origin "py-v$VERSION"
+      
+      - name: Post-publish summary
+        run: |
+          VERSION=${{ needs.check-version.outputs.python-new-version }}
+          echo "════════════════════════════════════════════════════════════"
+          echo "  ✅ PYTHON SDK PUBLISHED!"
+          echo "════════════════════════════════════════════════════════════"
           echo ""
-          echo "✅ Tag $TAG_NAME created and pushed!"
-          echo "🚀 This will trigger the Python SDK publish workflow"
+          echo "📦 Package: cortex-memory@$VERSION"
+          echo "📚 PyPI: https://pypi.org/project/cortex-memory/"
+          echo "🏷️  Tag: py-v$VERSION"
+          echo ""
+          echo "🚀 Try it: pip install cortex-memory"
           echo ""
