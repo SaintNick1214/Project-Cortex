@@ -261,7 +261,7 @@ async function runAgentNetworkProof(adapter: GraphAdapter, dbName: string) {
 
     if (paths.count > 0) {
       const path = paths.records[0];
-      console.log(`    Path found: ${path.agentPath?.join(" → ")}`);
+      console.log(`    Path found: ${(path.agentPath as string[] | undefined)?.join(" → ")}`);
       console.log(`    Hops: ${path.hops}`);
     } else {
       console.log(`    No direct path found`);

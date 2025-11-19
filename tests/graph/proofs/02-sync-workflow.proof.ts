@@ -271,7 +271,7 @@ async function runSyncWorkflow(adapter: GraphAdapter, dbName: string) {
     );
     console.log(`  💡 Important memories: ${importantMemories.count}`);
     for (const record of importantMemories.records) {
-      const mem = record.m;
+      const mem = record.m as any;
       console.log(
         `    - Importance ${mem.properties?.importance}: ${mem.properties?.content}`,
       );
@@ -287,8 +287,8 @@ async function runSyncWorkflow(adapter: GraphAdapter, dbName: string) {
     );
     console.log(`  🎯 Facts with entities: ${factsWithEntities.count}`);
     for (const record of factsWithEntities.records) {
-      console.log(`    - Fact: ${record.f.properties?.fact}`);
-      console.log(`      Entities: ${record.entities?.join(", ")}`);
+      console.log(`    - Fact: ${(record.f as any).properties?.fact}`);
+      console.log(`      Entities: ${(record.entities as string[] | undefined)?.join(", ")}`);
     }
     console.log();
 
