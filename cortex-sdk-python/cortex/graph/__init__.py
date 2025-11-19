@@ -4,7 +4,7 @@ Cortex SDK - Graph Database Integration
 Graph database integration for advanced relationship queries and knowledge graphs.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from ..types import GraphAdapter, GraphEdge, GraphNode
 

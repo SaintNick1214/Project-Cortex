@@ -4,11 +4,11 @@ Cortex SDK - Immutable Store API
 Layer 1b: Shared immutable data with automatic versioning
 """
 
-from typing import cast, Optional, Optional, List, Dict, Any, Literal
+from typing import Any, Dict, List, Optional, cast
 
-from ..types import ImmutableRecord, ImmutableEntry, ImmutableVersion
-from ..errors import CortexError, ErrorCode
-from .._utils import filter_none_values, convert_convex_response
+from .._utils import convert_convex_response, filter_none_values
+from ..errors import CortexError, ErrorCode  # noqa: F401
+from ..types import ImmutableEntry, ImmutableRecord, ImmutableVersion
 
 
 class ImmutableAPI:

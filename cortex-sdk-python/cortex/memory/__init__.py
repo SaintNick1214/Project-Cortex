@@ -21,7 +21,6 @@ from ..types import (
     RememberOptions,
     RememberParams,
     RememberResult,
-    RememberStreamParams,
     RememberStreamResult,
     SearchOptions,
     SourceType,
