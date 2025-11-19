@@ -91,7 +91,7 @@ async function testBasicCRUD(
     console.log(`    - Label: ${agent1.label}`);
     console.log(`    - Name: ${agent1.properties.name}`);
     console.log(
-      `    - Capabilities: ${agent1.properties.capabilities?.join(", ")}\n`,
+      `    - Capabilities: ${(agent1.properties.capabilities as string[] | undefined)?.join(", ")}\n`,
     );
 
     // ============================================================================

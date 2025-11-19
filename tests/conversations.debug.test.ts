@@ -28,6 +28,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
   let client: ConvexClient;
   let cleanup: TestCleanup;
   let inspector: StorageInspector;
+  const TEST_MEMSPACE_ID = `debug-test-${Date.now()}`;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
 
   beforeAll(async () => {
@@ -68,6 +69,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
 
       logStep(1, "Call SDK create method");
       const result = await cortex.conversations.create({
+        memorySpaceId: TEST_MEMSPACE_ID,
         type: "user-agent",
         participants: {
           userId: "user-123",
@@ -88,7 +90,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
       expect(result.conversationId).toMatch(/^conv-/);
       expect(result.type).toBe("user-agent");
       expect(result.participants.userId).toBe("user-123");
-      expect(result.participants.agentId).toBe("agent-456");
+      expect(result.participants.participantId).toBe("agent-456");
       expect(result.messageCount).toBe(0);
       expect(result.metadata?.source).toBe("debug-test");
 
@@ -114,6 +116,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
 
       logStep(1, "Call SDK create method");
       const result = await cortex.conversations.create({
+        memorySpaceId: TEST_MEMSPACE_ID,
         type: "agent-agent",
         participants: {
           memorySpaceIds: ["agent-1", "agent-2", "agent-3"],
@@ -130,7 +133,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
 
       logStep(3, "Verify storage state");
       expect(result.type).toBe("agent-agent");
-      expect(result.participants.agentIds).toHaveLength(3);
+      expect(result.participants.memorySpaceIds).toHaveLength(3);
 
       await pause();
     });
@@ -142,6 +145,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
 
       logStep(1, "Create first conversation");
       await cortex.conversations.create({
+        memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: customId,
         type: "user-agent",
         participants: {
@@ -156,6 +160,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
       logStep(2, "Attempt to create duplicate");
       await expect(
         cortex.conversations.create({
+          memorySpaceId: TEST_MEMSPACE_ID,
           conversationId: customId,
           type: "user-agent",
           participants: {
@@ -177,6 +182,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
 
       logStep(1, "Create conversation");
       const conversation = await cortex.conversations.create({
+        memorySpaceId: TEST_MEMSPACE_ID,
         type: "user-agent",
         participants: {
           userId: "user-msg-debug",
@@ -260,6 +266,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
 
       // Create test conversations
       await cortex.conversations.create({
+        memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: "conv-list-debug-1",
         type: "user-agent",
         participants: {
@@ -269,6 +276,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
       });
 
       await cortex.conversations.create({
+        memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: "conv-list-debug-2",
         type: "user-agent",
         participants: {
@@ -278,6 +286,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
       });
 
       await cortex.conversations.create({
+        memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: "conv-list-debug-3",
         type: "agent-agent",
         participants: {
@@ -358,6 +367,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
 
       logStep(1, "Create conversation to delete");
       const conversation = await cortex.conversations.create({
+        memorySpaceId: TEST_MEMSPACE_ID,
         type: "user-agent",
         participants: {
           userId: "user-delete-debug",

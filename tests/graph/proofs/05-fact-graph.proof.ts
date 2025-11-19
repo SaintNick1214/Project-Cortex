@@ -210,7 +210,7 @@ async function runFactGraphProof(adapter: GraphAdapter, dbName: string) {
     console.log(`    Found ${relatedFacts.count} related facts:`);
     for (const record of relatedFacts.records) {
       console.log(`    - ${record.fact}`);
-      console.log(`      (shares: ${record.sharedEntities?.join(", ")})`);
+      console.log(`      (shares: ${(record.sharedEntities as string[] | undefined)?.join(", ")})`);
     }
 
     // Query 3: Find people who work at the same company
@@ -251,8 +251,8 @@ async function runFactGraphProof(adapter: GraphAdapter, dbName: string) {
     );
     if (knowledgePath.count > 0) {
       const record = knowledgePath.records[0];
-      console.log(`    Path: ${record.pathNodes?.join(" → ")}`);
-      console.log(`    Via: ${record.pathRels?.join(" → ")}`);
+      console.log(`    Path: ${(record.pathNodes as string[] | undefined)?.join(" → ")}`);
+      console.log(`    Via: ${(record.pathRels as string[] | undefined)?.join(" → ")}`);
     } else {
       console.log(`    No path found`);
     }
