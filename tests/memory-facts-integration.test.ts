@@ -57,6 +57,7 @@ describe("Memory API with Fact Integration", () => {
       agentResponse: "I'll remember that you prefer dark mode!",
       userId: testUserId,
       userName: testUserName,
+      participantId: "agent-test", // Add participantId so we can test it propagates
       extractFacts,
     });
 
@@ -66,6 +67,69 @@ describe("Memory API with Fact Integration", () => {
     expect(result.facts[0].confidence).toBe(95);
     expect(result.facts[0].sourceRef?.memoryId).toBeDefined();
     expect(result.facts[0].sourceRef?.conversationId).toBe(testConversationId);
+
+    // CRITICAL: Verify userId was propagated from remember() to facts.store()
+    // This was a bug fixed in v0.9.2 - userId was missing!
+    expect(result.facts[0].userId).toBe(testUserId);
+    expect(result.facts[0].participantId).toBe("agent-test");
+  });
+
+  test("remember() should propagate ALL parameters from remember() to facts.store()", async () => {
+    // REGRESSION TEST: Ensures all parameters are properly passed through
+    // Bug found: userId was not being passed to facts.store() in SDK v0.9.1
+    const specificConvId = `${testConversationId}-param-propagation`;
+    const specificParticipantId = "agent-param-test";
+
+    await cortex.conversations.create({
+      conversationId: specificConvId,
+      type: "user-agent",
+      memorySpaceId: testMemorySpaceId,
+      participants: { userId: testUserId, participantId: specificParticipantId },
+    });
+
+    const extractFacts = async () => [
+      {
+        fact: "Parameter propagation test fact",
+        factType: "knowledge" as const,
+        confidence: 88,
+        tags: ["regression-test"],
+      },
+    ];
+
+    const result = await cortex.memory.remember({
+      memorySpaceId: testMemorySpaceId,
+      conversationId: specificConvId,
+      userMessage: "Test message for parameter propagation",
+      agentResponse: "Acknowledged",
+      userId: testUserId,
+      userName: testUserName,
+      participantId: specificParticipantId,
+      tags: ["test-tag"],
+      extractFacts,
+    });
+
+    expect(result.facts.length).toBe(1);
+    const fact = result.facts[0];
+
+    // Verify ALL parameters were properly propagated
+    expect(fact.memorySpaceId).toBe(testMemorySpaceId);
+    expect(fact.userId).toBe(testUserId); // ← This was the bug!
+    expect(fact.participantId).toBe(specificParticipantId);
+    expect(fact.sourceType).toBe("conversation");
+    expect(fact.sourceRef?.conversationId).toBe(specificConvId);
+    expect(fact.sourceRef?.memoryId).toBeDefined();
+    expect(fact.sourceRef?.messageIds).toBeDefined();
+    expect(fact.sourceRef?.messageIds!.length).toBe(2);
+
+    // Now test that filtering by userId actually works
+    const filteredFacts = await cortex.facts.list({
+      memorySpaceId: testMemorySpaceId,
+      userId: testUserId,
+    });
+
+    const foundFact = filteredFacts.find((f) => f.factId === fact.factId);
+    expect(foundFact).toBeDefined();
+    expect(foundFact!.userId).toBe(testUserId);
   });
 
   test("remember() should handle fact extraction errors gracefully", async () => {

@@ -19,6 +19,68 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.9.2] - 2025-11-19
+
+#### 🐛 Critical Bug Fix - Facts Missing userId During Extraction
+
+**Fixed missing parameter propagation from Memory API to Facts API during fact extraction.**
+
+#### Fixed
+
+**Parameter Propagation Bug (Critical for Multi-User)**:
+
+1. **Missing `userId` in Fact Extraction** - Facts extracted via `memory.remember()` were missing `userId` field
+   - **Fixed:** `src/memory/index.ts` line 341 - Added `userId: params.userId` in `remember()` fact extraction
+   - **Fixed:** `src/memory/index.ts` line 783 - Added `userId: input.userId` in `store()` fact extraction
+   - **Fixed:** `src/memory/index.ts` line 858 - Added `userId: updatedMemory.userId` and `participantId: updatedMemory.participantId` in `update()` fact extraction
+   - **Impact:** Facts can now be filtered by `userId`, GDPR cascade deletion works, multi-user isolation works correctly
+   - **Root Cause:** Integration layer wasn't passing parameters through from Memory API to Facts API
+
+2. **Test Coverage Added** - Comprehensive parameter propagation tests
+   - Added test: `remember() should propagate ALL parameters from remember() to facts.store()`
+   - Verifies: `userId`, `participantId`, `memorySpaceId`, `sourceRef`, and all other parameters reach Facts API
+   - Validates: Filtering by `userId` works after extraction
+   - These tests would have caught the bug if they existed before
+
+#### Documentation
+
+**Documentation Fixes**:
+
+1. **Missing FactType** - Added `"observation"` factType to public documentation
+   - Updated: `Documentation/03-api-reference/14-facts-operations.md`
+   - The `"observation"` factType existed in code but was not documented
+
+2. **Duplicate Parameter** - Removed duplicate `minConfidence` definitions in documentation
+   - Fixed: Multiple interfaces showing same parameter twice
+
+#### Migration
+
+**No breaking changes.** This is a bug fix that makes the SDK work as intended.
+
+If you were working around this bug by manually storing facts instead of using extraction:
+
+```typescript
+// Before (workaround)
+const result = await cortex.memory.remember({...});
+// Then manually store facts with userId
+for (const fact of extractedFacts) {
+  await cortex.facts.store({
+    ...fact,
+    userId: params.userId, // Had to add manually
+  });
+}
+
+// After (works correctly now)
+const result = await cortex.memory.remember({
+  ...,
+  userId: 'user-123',
+  extractFacts: async (user, agent) => [...],
+});
+// userId is now automatically propagated to facts ✅
+```
+
+---
+
 ### [0.9.1] - 2025-11-18
 
 #### 🐛 Critical Bug Fix - Facts API Universal Filters

@@ -231,6 +231,7 @@ class MemoryAPI:
                                 StoreFactParams(
                                     memory_space_id=params.memory_space_id,
                                     participant_id=params.participant_id,
+                                    user_id=params.user_id,  # BUG FIX: Add userId to facts!
                                     fact=fact_data["fact"],
                                     fact_type=fact_data["factType"],
                                     subject=fact_data.get("subject", params.user_id),
@@ -654,6 +655,7 @@ class MemoryAPI:
                             StoreFactParams(
                                 memory_space_id=memory_space_id,
                                 participant_id=input.participant_id,
+                                user_id=input.user_id,  # BUG FIX: Add userId to facts!
                                 fact=fact_data["fact"],
                                 fact_type=fact_data["factType"],
                                 subject=fact_data.get("subject", input.user_id),
@@ -736,6 +738,8 @@ class MemoryAPI:
                         stored_fact = await self.facts.store(
                             StoreFactParams(
                                 memory_space_id=memory_space_id,
+                                participant_id=updated_memory.participant_id,  # BUG FIX: Add participantId
+                                user_id=updated_memory.user_id,  # BUG FIX: Add userId to facts!
                                 fact=fact_data["fact"],
                                 fact_type=fact_data["factType"],
                                 subject=fact_data.get("subject", updated_memory.user_id),
