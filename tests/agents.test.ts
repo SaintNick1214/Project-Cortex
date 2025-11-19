@@ -525,8 +525,8 @@ describe("Agents API (Coordination Layer)", () => {
         metadata: { importance: 50, tags: [] },
       });
 
-      // Wait for persist
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      // Allow time for Convex to commit mutations (increased delay for cascade operations)
+      await new Promise((resolve) => setTimeout(resolve, 200));
 
       // Verify memory exists
       const beforeMemories = (
