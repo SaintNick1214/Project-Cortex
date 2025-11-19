@@ -20,6 +20,7 @@ from cortex.types import (
     MemorySource,
     MemoryMetadata,
     StoreFactParams,
+    ListFactsFilter,
     ContextInput,
 )
 from tests.helpers import TestCleanup
@@ -371,7 +372,6 @@ async def test_partner_organizations_collaborate_on_joint_campaign(collab_cortex
     assert len(chain_b.get("siblings", [])) == 1  # Org A's task
     
     # 6. But each org's facts stay private
-    from cortex.types import ListFactsFilter
     org_a_facts_result = await collab_cortex.facts.list(
         ListFactsFilter(memory_space_id=ORG_A_SPACE)
     )
