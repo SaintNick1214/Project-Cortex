@@ -1,0 +1,196 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+  # Run on PR sync (new commits, reopens, etc.)
+  pull_request_target:
+    types: [synchronize, reopened]
+
+# Prevent parallel execution to avoid Convex deployment conflicts
+concurrency:
+  group: pr-checks-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  # TypeScript/JavaScript SDK Tests
+  test-typescript:
+    name: Test TypeScript SDK
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Deploy Convex backend
+        run: npx convex deploy --yes
+        env:
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+      
+      - name: Generate Convex types
+        run: npx convex codegen
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+      
+      - name: Lint code
+        run: npm run lint
+      
+      - name: Type check
+        run: npx tsc --noEmit
+      
+      - name: Run tests
+        run: npm test
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      
+      - name: Build package
+        run: npm run build
+
+  # Python SDK Tests
+  test-python:
+    name: Test Python SDK
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.changed_files, 'cortex-sdk-python/')
+    
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+      max-parallel: 1
+    
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Install dependencies
+        run: |
+          cd cortex-sdk-python
+          python -m pip install --upgrade pip
+          pip install python-dotenv
+          pip install -e ".[dev]"
+      
+      - name: Run tests
+        run: |
+          cd cortex-sdk-python
+          pytest tests/ -v --cov=cortex --cov-report=term-missing
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_TEST_MODE: managed
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      
+      - name: Check types with mypy
+        run: |
+          cd cortex-sdk-python
+          mypy cortex --ignore-missing-imports
+      
+      - name: Lint with ruff
+        run: |
+          cd cortex-sdk-python
+          ruff check cortex/
+
+  # Security scan
+  security-check:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+      
+      - name: Upload Trivy results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # Code quality check
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run ESLint
+        run: npm run lint -- --format json --output-file eslint-report.json
+        continue-on-error: true
+      
+      - name: Annotate code
+        uses: ataylorme/eslint-annotate-action@v2
+        if: always()
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          report-json: "eslint-report.json"
+
+  # All checks passed
+  all-checks-passed:
+    name: All Checks Passed
+    needs: [test-typescript, test-python, security-check, code-quality]
+    if: always()
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check if all jobs passed
+        run: |
+          if [[ "${{ needs.test-typescript.result }}" != "success" ]]; then
+            echo "❌ TypeScript tests failed"
+            exit 1
+          fi
+          if [[ "${{ needs.test-python.result }}" == "failure" ]]; then
+            echo "❌ Python tests failed"
+            exit 1
+          fi
+          if [[ "${{ needs.security-check.result }}" != "success" ]]; then
+            echo "❌ Security check failed"
+            exit 1
+          fi
+          if [[ "${{ needs.code-quality.result }}" != "success" ]]; then
+            echo "❌ Code quality check failed"
+            exit 1
+          fi
+          echo "✅ All checks passed!"
+
