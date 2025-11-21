@@ -61,6 +61,14 @@ Cortex is built on **Convex** - a reactive TypeScript database with built-in vec
 │  contexts   - Workflow coordination                         │
 │  agents     - Agent registry (optional)                     │
 └─────────────────────────────────────────────────────────────┘
+                            │
+                            ↓ (Sync)
+┌─────────────────────────────────────────────────────────────┐
+│        Graph Database (Optional - Neo4j/Memgraph)           │
+├─────────────────────────────────────────────────────────────┤
+│  Entities extracted from memories, facts, contexts          │
+│  Enables multi-hop traversal and complex relationships      │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -188,6 +196,25 @@ interface MemoryMetadata {
   [key: string]: any; // ← Custom fields allowed
 }
 ```
+
+
+### 6. Graph Integration
+
+Cortex offers two levels of graph capabilities:
+
+**Graph-Lite (Built-in):**
+- Uses Convex references (`conversationRef`, `parentId`) as edges
+- Excellent for 1-5 hop traversals (e.g. Memory -> Conversation -> User)
+- Zero setup, always available
+- Powered by efficient indexed lookups
+
+**Native Graph (Optional Integration):**
+- Syncs Cortex data to Neo4j or Memgraph
+- Enables deep traversals (6+ hops), complex pattern matching, and graph algorithms
+- Managed automatically via `syncToGraph` option in all APIs
+- Best for social graphs, knowledge graphs, and complex dependency analysis
+
+See [Graph Operations API](../03-api-reference/15-graph-operations.md) for details.
 
 ---
 
