@@ -5,6 +5,140 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.0] - 2025-11-21
+
+### 🎉 Major Release - Governance Policies API
+
+**Complete implementation of centralized governance policies for data retention, purging, and compliance across all Cortex layers.**
+
+#### ✨ New Features
+
+**1. Governance Policies API (`cortex.governance.*`)** - 8 Core Operations
+
+- **NEW:** `set_policy()` - Set organization-wide or memory-space-specific governance policies
+- **NEW:** `get_policy()` - Retrieve current governance policy (includes org defaults + overrides)
+- **NEW:** `set_agent_override()` - Override policy for specific memory spaces
+- **NEW:** `get_template()` - Get pre-configured compliance templates (GDPR, HIPAA, SOC2, FINRA)
+- **NEW:** `enforce()` - Manually trigger policy enforcement across layers
+- **NEW:** `simulate()` - Preview policy impact without applying (cost savings, storage freed)
+- **NEW:** `get_compliance_report()` - Generate detailed compliance reports
+- **NEW:** `get_enforcement_stats()` - Get enforcement statistics over time periods
+
+**2. Multi-Layer Governance**
+
+Policies govern all Cortex storage layers:
+
+- **Layer 1a (Conversations)**: Retention periods, archive rules, GDPR purge-on-request
+- **Layer 1b (Immutable)**: Version retention by type, automatic cleanup
+- **Layer 1c (Mutable)**: TTL settings, inactivity purging
+- **Layer 2 (Vector)**: Version retention by importance, orphan cleanup
+
+**3. Compliance Templates**
+
+Four pre-configured compliance templates:
+
+- **GDPR**: 7-year retention, right-to-be-forgotten, audit logging
+- **HIPAA**: 6-year retention, unlimited audit logs, conservative purging
+- **SOC2**: 7-year audit retention, comprehensive logging, access controls
+- **FINRA**: 7-year retention, unlimited versioning, strict retention
+
+#### 📚 New Types (Python)
+
+- `GovernancePolicy` - Complete policy dataclass
+- `PolicyScope` - Organization or memory space scope
+- `PolicyResult` - Policy application result
+- `ComplianceMode` - Literal type for compliance modes
+- `ComplianceTemplate` - Literal type for templates
+- `ComplianceSettings` - Compliance configuration
+- `ConversationsPolicy`, `ConversationsRetention`, `ConversationsPurging`
+- `ImmutablePolicy`, `ImmutableRetention`, `ImmutablePurging`, `ImmutableTypeRetention`
+- `MutablePolicy`, `MutableRetention`, `MutablePurging`
+- `VectorPolicy`, `VectorRetention`, `VectorPurging`
+- `ImportanceRange` - Importance-based retention rules
+- `EnforcementOptions`, `EnforcementResult`
+- `SimulationOptions`, `SimulationResult`, `SimulationBreakdown`
+- `ComplianceReport`, `ComplianceReportOptions`
+- `EnforcementStats`, `EnforcementStatsOptions`
+
+#### 🧪 Testing
+
+**Comprehensive Test Suite:**
+
+- **NEW:** `tests/test_governance.py` - 13 comprehensive tests
+- **Test coverage:**
+  - Policy management (set, get, override)
+  - All 4 compliance templates (GDPR, HIPAA, SOC2, FINRA)
+  - Template application
+  - Manual enforcement
+  - Policy simulation
+  - Compliance reporting
+  - Enforcement statistics (multiple time periods)
+  - Integration scenarios (GDPR workflow)
+
+#### 🎓 Usage Examples
+
+**Basic GDPR Compliance:**
+
+```python
+# Apply GDPR template
+policy = await cortex.governance.get_template("GDPR")
+policy.organization_id = "my-org"
+await cortex.governance.set_policy(policy)
+```
+
+**Memory-Space Override:**
+
+```python
+# Audit agent needs unlimited retention
+override = GovernancePolicy(
+    memory_space_id="audit-agent",
+    vector=VectorPolicy(
+        retention=VectorRetention(default_versions=-1)
+    )
+)
+await cortex.governance.set_agent_override("audit-agent", override)
+```
+
+**Test Before Applying:**
+
+```python
+# Simulate policy impact
+impact = await cortex.governance.simulate(
+    SimulationOptions(organization_id="my-org")
+)
+
+if impact.cost_savings > 50:
+    await cortex.governance.set_policy(new_policy)
+```
+
+**Compliance Reporting:**
+
+```python
+from datetime import datetime, timedelta
+
+report = await cortex.governance.get_compliance_report(
+    ComplianceReportOptions(
+        organization_id="my-org",
+        period_start=datetime(2025, 1, 1),
+        period_end=datetime(2025, 12, 31)
+    )
+)
+
+print(f"Status: {report.conversations['complianceStatus']}")
+```
+
+#### 🔄 API Parity
+
+✅ **100% API Parity with TypeScript SDK**
+
+- All 8 governance operations implemented
+- All 4 compliance templates available
+- Pythonic naming conventions (snake_case)
+- Full type annotations with dataclasses
+- Complete test coverage
+
+---
+
 ## [0.9.2] - 2025-11-19
 
 ### 🐛 Critical Bug Fix - Facts Missing user_id During Extraction

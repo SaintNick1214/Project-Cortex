@@ -56,7 +56,8 @@ Create a new conversation.
 
 ```typescript
 cortex.conversations.create(
-  params: ConversationInput
+  params: ConversationInput,
+  options?: { syncToGraph?: boolean }
 ): Promise<Conversation>
 ```
 
@@ -222,7 +223,8 @@ Add a message to an existing conversation (append-only).
 ```typescript
 cortex.conversations.addMessage(
   conversationId: string,
-  message: MessageInput
+  message: MessageInput,
+  options?: { syncToGraph?: boolean }
 ): Promise<Message>
 ```
 
@@ -694,7 +696,8 @@ Delete a conversation and all its messages.
 
 ```typescript
 cortex.conversations.delete(
-  conversationId: string
+  conversationId: string,
+  options?: { syncToGraph?: boolean }
 ): Promise<DeletionResult>
 ```
 

@@ -46,7 +46,10 @@ Register a memory space with metadata and participant tracking.
 ### Signature
 
 ```typescript
-cortex.memorySpaces.register(params: RegisterMemorySpaceParams): Promise<MemorySpace>
+cortex.memorySpaces.register(
+  params: RegisterMemorySpaceParams,
+  options?: { syncToGraph?: boolean }
+): Promise<MemorySpace>
 ```
 
 ### Parameters
@@ -373,7 +376,11 @@ Update memory space metadata (not participants - use updateParticipants()).
 ### Signature
 
 ```typescript
-cortex.memorySpaces.update(memorySpaceId: string, updates: MemorySpaceUpdates): Promise<MemorySpace>
+cortex.memorySpaces.update(
+  memorySpaceId: string,
+  updates: MemorySpaceUpdates,
+  options?: { syncToGraph?: boolean }
+): Promise<MemorySpace>
 ```
 
 ### Parameters
@@ -561,6 +568,7 @@ interface DeleteOptions {
   cascade: boolean; // REQUIRED: Must be true to proceed
   reason: string; // REQUIRED: Why deleting (audit trail)
   confirmId?: string; // Optional: Safety check (must match memorySpaceId)
+  syncToGraph?: boolean; // Delete from graph database
 }
 ```
 

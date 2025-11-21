@@ -26,7 +26,7 @@ The API Reference is organized by architectural layers:
 - **[Memory Operations](./02-memory-operations.md)** - The main API you'll use
   - Layer 4 convenience (`cortex.memory.*`)
   - Overview of all layers
-  - `remember()`, `search()`, `get()`, `update()`, `delete()`
+  - `remember()`, `rememberStream()`, `search()`, `get()`, `update()`, `delete()`
 - **[Memory Space Operations](./13-memory-space-operations.md)** - Memory space management
   - Create and manage memory spaces
   - Hive Mode participant tracking
@@ -70,6 +70,7 @@ The API Reference is organized by architectural layers:
 ### **Supporting APIs**
 
 - **[Governance Policies](./10-governance-policies-api.md)** - Retention rules
+- **[Graph Operations](./15-graph-operations.md)** - Graph database integration
 
 ### **Reference**
 

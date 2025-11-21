@@ -57,8 +57,57 @@ Cortex provides a complete memory system for AI agents:
 - 🚀 **Embedding Agnostic** - Works with OpenAI, Cohere, local models, or any provider ✅
 - 🕸️ **Graph Database Integration** - Neo4j/Memgraph support with orphan detection ✅
 - 🧠 **Fact Extraction** - LLM-powered fact extraction for 60-90% storage savings ✅
+- 🛡️ **Governance Policies** - Centralized data retention, purging, and compliance (GDPR, HIPAA, SOC2, FINRA) ✅
 - 🔌 **MCP Server** - Cross-application memory sharing (planned)
 - 💬 **A2A Communication** - Inter-space messaging helpers (planned)
+
+## ✨ What's New in v0.10.0
+
+### Governance Policies API - Enterprise Compliance Made Simple
+
+**NEW: `cortex.governance.*`** - Centralized control over data retention, purging, and compliance:
+
+- **8 Core Operations**: setPolicy, getPolicy, setAgentOverride, getTemplate, enforce, simulate, getComplianceReport, getEnforcementStats
+- **4 Compliance Templates**: GDPR, HIPAA, SOC2, FINRA (one-click compliance)
+- **Multi-Layer Governance**: Manage retention across conversations, immutable, mutable, and vector layers
+- **Policy Simulation**: Test policies before applying (impact analysis, cost savings)
+- **Compliance Reporting**: Detailed reports with per-layer compliance status
+- **Flexible Scoping**: Organization-wide policies with memory-space overrides
+- **Automatic Enforcement**: Policies enforced on write operations
+- **Audit Trail**: Complete enforcement history and statistics
+
+```typescript
+// Apply GDPR template
+const policy = await cortex.governance.getTemplate("GDPR");
+await cortex.governance.setPolicy({
+  ...policy,
+  organizationId: "my-org",
+});
+
+// Override for audit agent (unlimited retention)
+await cortex.governance.setAgentOverride("audit-agent", {
+  vector: { retention: { defaultVersions: -1 } },
+});
+
+// Simulate policy impact before applying
+const impact = await cortex.governance.simulate(newPolicy);
+console.log(`Would save ${impact.storageFreed} MB, $${impact.costSavings}/month`);
+
+// Generate compliance report
+const report = await cortex.governance.getComplianceReport({
+  organizationId: "my-org",
+  period: { start: new Date("2025-01-01"), end: new Date("2025-12-31") },
+});
+```
+
+**Enterprise Value:**
+
+- ✅ One-click GDPR, HIPAA, SOC2, FINRA compliance
+- ✅ Automatic data lifecycle management
+- ✅ Cost optimization insights
+- ✅ Complete audit trails
+
+---
 
 ## ✨ What's New in v0.9.0
 
