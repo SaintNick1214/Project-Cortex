@@ -91,6 +91,7 @@ The Python SDK provides 100% API compatibility with the TypeScript SDK:
 - 🕸️ **Graph Integration** - Optional Neo4j/Memgraph support
 - 🤝 **A2A Communication** - Agent-to-agent messaging helpers
 - 📈 **Access Analytics** - Built-in statistics and insights
+- 🛡️ **Governance Policies** - Centralized data retention, purging, and compliance (GDPR, HIPAA, SOC2, FINRA)
 
 ## 🏗️ Architecture
 
