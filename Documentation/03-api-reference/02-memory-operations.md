@@ -41,6 +41,7 @@ cortex.users.*           // User profiles (shared across all spaces)
 cortex.contexts.*        // Context chains (cross-space support)
 cortex.a2a.*             // Inter-space messaging (Collaboration Mode)
 cortex.governance.*      // Retention policies
+cortex.graph.*           // Graph database integration
 ```
 
 **Complete Architecture:**
@@ -93,6 +94,14 @@ cortex.governance.*      // Retention policies
 │  cortex.memory.remember() → L1a + L2 + optional L3          │
 │  cortex.memory.search() → L2 + L3 + optional enrichment     │
 │  Single API for conversation workflows + infinite context   │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ↓ (Sync)
+┌─────────────────────────────────────────────────────────────┐
+│        Graph Database (Optional - Neo4j/Memgraph)           │
+├─────────────────────────────────────────────────────────────┤
+│  Entities extracted from memories, facts, contexts          │
+│  Enables multi-hop traversal and complex relationships      │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -387,7 +396,8 @@ Store a new memory for an agent.
 ```typescript
 cortex.memory.store(
   memorySpaceId: string,
-  entry: MemoryInput
+  entry: MemoryInput,
+  options?: { syncToGraph?: boolean }
 ): Promise<MemoryEntry>
 ```
 
@@ -564,7 +574,8 @@ const result = await cortex.memory.remember({
 
 ```typescript
 cortex.memory.remember(
-  params: RememberParams
+  params: RememberParams,
+  options?: { syncToGraph?: boolean }
 ): Promise<RememberResult>
 ```
 
@@ -603,6 +614,10 @@ interface RememberParams {
   // Metadata
   importance?: number; // Auto-detect if not provided
   tags?: string[]; // Auto-extract if not provided
+}
+
+interface RememberOptions {
+  syncToGraph?: boolean; // Sync to graph database (default: true)
 }
 ```
 
@@ -1203,7 +1218,8 @@ Update a single memory by ID. Automatically creates new version.
 cortex.memory.update(
   memorySpaceId: string,
   memoryId: string,
-  updates: MemoryUpdate
+  updates: MemoryUpdate,
+  options?: { syncToGraph?: boolean }
 ): Promise<MemoryEntry>
 ```
 
@@ -1345,7 +1361,8 @@ await cortex.memory.updateMany(
 ```typescript
 cortex.memory.delete(
   memorySpaceId: string,
-  memoryId: string
+  memoryId: string,
+  options?: { syncToGraph?: boolean }
 ): Promise<DeletionResult>
 ```
 
@@ -2221,6 +2238,7 @@ All memory operation errors:
 - **[Agent Management API](./09-agent-management.md)** - Agent registry operations
 - **[User Operations API](./04-user-operations.md)** - User profile API
 - **[Context Operations API](./05-context-operations.md)** - Context chain API
+- **[Graph Operations API](./15-graph-operations.md)** - Graph database integration
 - **[Types & Interfaces](./11-types-interfaces.md)** - Complete TypeScript definitions
 
 ---
