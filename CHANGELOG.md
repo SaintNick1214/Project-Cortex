@@ -19,6 +19,237 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.10.0] - 2025-11-21
+
+#### 🎉 Major Release - Governance Policies API
+
+**Complete implementation of centralized governance policies for data retention, purging, and compliance across all Cortex layers.**
+
+#### ✨ New Features
+
+**1. Governance Policies API (`cortex.governance.*`)** - 8 Core Operations
+
+- **NEW:** `setPolicy()` - Set organization-wide or memory-space-specific governance policies
+- **NEW:** `getPolicy()` - Retrieve current governance policy (includes org defaults + overrides)
+- **NEW:** `setAgentOverride()` - Override policy for specific memory spaces
+- **NEW:** `getTemplate()` - Get pre-configured compliance templates (GDPR, HIPAA, SOC2, FINRA)
+- **NEW:** `enforce()` - Manually trigger policy enforcement across layers
+- **NEW:** `simulate()` - Preview policy impact without applying (cost savings, storage freed)
+- **NEW:** `getComplianceReport()` - Generate detailed compliance reports
+- **NEW:** `getEnforcementStats()` - Get enforcement statistics over time periods
+
+**2. Multi-Layer Governance**
+
+Policies govern all Cortex storage layers:
+
+- **Layer 1a (Conversations)**: Retention periods, archive rules, GDPR purge-on-request
+- **Layer 1b (Immutable)**: Version retention by type, automatic cleanup
+- **Layer 1c (Mutable)**: TTL settings, inactivity purging
+- **Layer 2 (Vector)**: Version retention by importance, orphan cleanup
+
+**3. Compliance Templates**
+
+Four pre-configured compliance templates:
+
+- **GDPR**: 7-year retention, right-to-be-forgotten, audit logging
+- **HIPAA**: 6-year retention, unlimited audit logs, conservative purging
+- **SOC2**: 7-year audit retention, comprehensive logging, access controls
+- **FINRA**: 7-year retention, unlimited versioning, strict retention
+
+**4. Flexible Policy Scopes**
+
+- **Organization-wide**: Default policies for entire organization
+- **Memory-space overrides**: Custom policies for specific agents/spaces
+- **Policy inheritance**: Memory spaces inherit org defaults with optional overrides
+
+**5. Policy Simulation & Testing**
+
+- **Dry-run mode**: Preview what would be deleted without executing
+- **Impact analysis**: Versions affected, storage freed, cost savings (USD/month)
+- **Breakdown by layer**: Detailed impact per storage layer
+- **Test-before-apply**: Validate policies before enforcement
+
+**6. Compliance Reporting**
+
+- **Multi-period reports**: 7d, 30d, 90d, 1y reporting periods
+- **Per-layer compliance status**: COMPLIANT, NON_COMPLIANT, WARNING
+- **User request tracking**: GDPR deletion requests, fulfillment times
+- **Data retention verification**: Oldest records, policy adherence
+- **Audit trail**: Complete enforcement history
+
+**7. Automatic & Manual Enforcement**
+
+- **Automatic enforcement**: Policies enforced on write operations
+- **Manual triggering**: On-demand enforcement across layers
+- **Selective enforcement**: Choose specific layers and rules
+- **Enforcement logging**: Complete audit trail of all enforcements
+
+#### 📊 Schema Additions
+
+**New Tables:**
+
+- `governancePolicies` - Policy storage with org/space scoping (4 indexes)
+- `governanceEnforcement` - Enforcement audit log (3 indexes)
+
+**New Indexes:**
+
+- `by_organization`, `by_memorySpace`, `by_active`, `by_updated`
+- `by_executed` for enforcement logs
+
+#### 📚 API Surface
+
+**New Types (TypeScript):**
+
+- `GovernancePolicy` - Complete policy structure
+- `PolicyScope` - Organization or memory space scope
+- `PolicyResult` - Policy application result
+- `ComplianceMode` - GDPR | HIPAA | SOC2 | FINRA | Custom
+- `ComplianceTemplate` - Template names
+- `EnforcementOptions` - Manual enforcement configuration
+- `EnforcementResult` - Enforcement execution results
+- `SimulationOptions` - Policy simulation parameters
+- `SimulationResult` - Simulation impact analysis
+- `ComplianceReportOptions` - Report generation parameters
+- `ComplianceReport` - Detailed compliance report
+- `EnforcementStatsOptions` - Statistics query parameters
+- `EnforcementStats` - Enforcement statistics
+
+**New Backend Functions:**
+
+- `governance.setPolicy` (mutation)
+- `governance.setAgentOverride` (mutation)
+- `governance.enforce` (mutation)
+- `governance.getPolicy` (query)
+- `governance.getTemplate` (query)
+- `governance.simulate` (query)
+- `governance.getComplianceReport` (query)
+- `governance.getEnforcementStats` (query)
+
+#### 🧪 Testing
+
+**Comprehensive Test Suite:**
+
+- **NEW:** `tests/governance.test.ts` - 25 comprehensive tests
+- **Test coverage:**
+  - Policy management (set, get, override, replacement)
+  - All 4 compliance templates (GDPR, HIPAA, SOC2, FINRA)
+  - Template customization and application
+  - Manual enforcement (all layers, selective layers, memory spaces)
+  - Policy simulation and impact analysis
+  - Compliance report generation (org and memory space)
+  - Enforcement statistics (multiple time periods)
+  - Integration scenarios (GDPR workflow, overrides, test-before-apply)
+- **All tests passing**: 25/25 ✅
+
+#### 🎯 Key Benefits
+
+**For Enterprises:**
+
+- ✅ One-click compliance (GDPR, HIPAA, SOC2, FINRA)
+- ✅ Centralized policy management
+- ✅ Automatic enforcement
+- ✅ Complete audit trails
+- ✅ Cost optimization (storage savings analysis)
+
+**For Developers:**
+
+- ✅ Simple API (8 operations)
+- ✅ Test before applying (simulation mode)
+- ✅ Flexible overrides per memory space
+- ✅ Pre-configured templates (no compliance expertise needed)
+
+**For Compliance Officers:**
+
+- ✅ Detailed compliance reports
+- ✅ User request tracking (GDPR right-to-be-forgotten)
+- ✅ Data retention verification
+- ✅ Enforcement statistics and trends
+
+#### 📖 Documentation
+
+**NEW Documentation:**
+
+- Complete Governance Policies API reference in documentation
+- All 8 operations documented with examples
+- Compliance template comparisons
+- Policy hierarchy (org → memory space)
+- Integration scenarios (GDPR workflow, testing, overrides)
+
+**Updated Documentation:**
+
+- `README.md` - Added Governance section to features
+- `CHANGELOG.md` - Complete v0.10.0 release notes
+- API reference includes all governance types
+
+#### 🔄 Backward Compatibility
+
+✅ **Zero Breaking Changes**
+
+- All governance features are optional
+- Existing code works without modifications
+- No impact on existing APIs
+
+#### 🎓 Usage Examples
+
+**Basic GDPR Compliance:**
+
+```typescript
+// Apply GDPR template
+const policy = await cortex.governance.getTemplate("GDPR");
+await cortex.governance.setPolicy({
+  ...policy,
+  organizationId: "my-org",
+});
+```
+
+**Memory-Space Override:**
+
+```typescript
+// Audit agent needs unlimited retention
+await cortex.governance.setAgentOverride("audit-agent", {
+  vector: {
+    retention: { defaultVersions: -1 },
+  },
+});
+```
+
+**Test Before Applying:**
+
+```typescript
+// Simulate policy impact
+const impact = await cortex.governance.simulate({
+  ...newPolicy,
+  organizationId: "my-org",
+});
+
+if (impact.costSavings > 50) {
+  await cortex.governance.setPolicy(newPolicy);
+}
+```
+
+**Compliance Reporting:**
+
+```typescript
+const report = await cortex.governance.getComplianceReport({
+  organizationId: "my-org",
+  period: {
+    start: new Date("2025-01-01"),
+    end: new Date("2025-12-31"),
+  },
+});
+
+console.log(`Status: ${report.conversations.complianceStatus}`);
+```
+
+#### 🔗 Related
+
+- Completes enterprise-grade compliance capabilities
+- Enables automatic data lifecycle management
+- Provides cost optimization insights
+- Supports regulatory compliance (GDPR, HIPAA, SOC2, FINRA)
+
+---
+
 ### [0.9.2] - 2025-11-19
 
 #### 🐛 Critical Bug Fix - Facts Missing userId During Extraction

@@ -470,6 +470,56 @@ export default defineSchema({
     .index("by_registered", ["registeredAt"]), // Chronological ordering
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Governance Policies (Data Retention, Purging, and Compliance)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  governancePolicies: defineTable({
+    // Scope
+    organizationId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()), // Memory space override
+
+    // Policy configuration (full JSON structure)
+    policy: v.any(), // GovernancePolicy structure
+
+    // Metadata
+    isActive: v.boolean(),
+    appliedBy: v.optional(v.string()), // Who applied this policy
+    
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_organization", ["organizationId"])
+    .index("by_memorySpace", ["memorySpaceId"])
+    .index("by_active", ["isActive", "organizationId"])
+    .index("by_updated", ["updatedAt"]),
+
+  // Governance Enforcement Log (Audit Trail)
+  governanceEnforcement: defineTable({
+    // Scope
+    organizationId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
+
+    // Enforcement details
+    enforcementType: v.union(v.literal("automatic"), v.literal("manual")),
+    layers: v.array(v.string()), // Which layers were enforced
+    rules: v.array(v.string()), // Which rules were enforced
+
+    // Results
+    versionsDeleted: v.number(),
+    recordsPurged: v.number(),
+    storageFreed: v.number(), // MB
+
+    // Metadata
+    triggeredBy: v.optional(v.string()),
+    
+    // Timestamps
+    executedAt: v.number(),
+  })
+    .index("by_organization", ["organizationId", "executedAt"])
+    .index("by_memorySpace", ["memorySpaceId", "executedAt"])
+    .index("by_executed", ["executedAt"]),
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Graph Sync Queue (Real-time Graph Database Synchronization)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   graphSyncQueue: defineTable({
