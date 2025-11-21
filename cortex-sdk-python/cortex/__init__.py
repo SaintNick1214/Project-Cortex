@@ -43,6 +43,7 @@ from .errors import (
 # Core Types - Layer 3
 # Core Types - Layer 4 (Memory Convenience)
 # Coordination Types
+# Governance Types
 # A2A Types
 # Result Types
 # Graph Types
@@ -56,6 +57,12 @@ from .types import (
     AddMessageInput,
     AgentRegistration,
     AgentStats,
+    # Governance
+    ComplianceMode,
+    ComplianceReport,
+    ComplianceReportOptions,
+    ComplianceSettings,
+    ComplianceTemplate,
     ContentType,
     # Contexts
     Context,
@@ -66,6 +73,9 @@ from .types import (
     Conversation,
     ConversationParticipants,
     ConversationRef,
+    ConversationsPolicy,
+    ConversationsPurging,
+    ConversationsRetention,
     ConversationType,
     CortexConfig,
     CountFactsFilter,
@@ -73,6 +83,10 @@ from .types import (
     DeleteManyResult,
     DeleteResult,
     DeleteUserOptions,
+    EnforcementOptions,
+    EnforcementResult,
+    EnforcementStats,
+    EnforcementStatsOptions,
     EnrichedMemory,
     ExportResult,
     FactRecord,
@@ -80,6 +94,7 @@ from .types import (
     FactType,
     ForgetOptions,
     ForgetResult,
+    GovernancePolicy,
     GraphConfig,
     GraphConnectionConfig,
     GraphEdge,
@@ -88,10 +103,15 @@ from .types import (
     GraphQueryResult,
     GraphSyncWorkerOptions,
     ImmutableEntry,
+    ImmutablePolicy,
+    ImmutablePurging,
     # Immutable
     ImmutableRecord,
     ImmutableRef,
+    ImmutableRetention,
+    ImmutableTypeRetention,
     ImmutableVersion,
+    ImportanceRange,
     ListFactsFilter,
     ListResult,
     MemoryEntry,
@@ -104,9 +124,14 @@ from .types import (
     MemorySpaceType,
     MemoryVersion,
     Message,
+    MutablePolicy,
+    MutablePurging,
     # Mutable
     MutableRecord,
     MutableRef,
+    MutableRetention,
+    PolicyResult,
+    PolicyScope,
     QueryByRelationshipFilter,
     QueryBySubjectFilter,
     # Agents
@@ -120,6 +145,8 @@ from .types import (
     SearchFactsOptions,
     SearchOptions,
     ShortestPathConfig,
+    SimulationOptions,
+    SimulationResult,
     SourceType,
     StoreFactParams,
     StoreMemoryInput,
@@ -132,6 +159,9 @@ from .types import (
     # Users
     UserProfile,
     UserVersion,
+    VectorPolicy,
+    VectorPurging,
+    VectorRetention,
     VerificationResult,
 )
 
@@ -226,6 +256,35 @@ __all__ = [
     "A2AResponse",
     "A2ABroadcastParams",
     "A2ABroadcastResult",
+    # Governance
+    "GovernancePolicy",
+    "PolicyScope",
+    "PolicyResult",
+    "ComplianceMode",
+    "ComplianceTemplate",
+    "ComplianceSettings",
+    "ConversationsPolicy",
+    "ConversationsRetention",
+    "ConversationsPurging",
+    "ImmutablePolicy",
+    "ImmutableRetention",
+    "ImmutablePurging",
+    "ImmutableTypeRetention",
+    "MutablePolicy",
+    "MutableRetention",
+    "MutablePurging",
+    "VectorPolicy",
+    "VectorRetention",
+    "VectorPurging",
+    "ImportanceRange",
+    "EnforcementOptions",
+    "EnforcementResult",
+    "SimulationOptions",
+    "SimulationResult",
+    "ComplianceReport",
+    "ComplianceReportOptions",
+    "EnforcementStats",
+    "EnforcementStatsOptions",
     # Results
     "DeleteResult",
     "DeleteManyResult",

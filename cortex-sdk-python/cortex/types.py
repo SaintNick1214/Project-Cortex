@@ -1224,3 +1224,489 @@ class GraphAdapter(Protocol):
         """Find shortest path between nodes."""
         ...
 
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Governance Policies API
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ComplianceMode = Literal["GDPR", "HIPAA", "SOC2", "FINRA", "Custom"]
+ComplianceTemplate = Literal["GDPR", "HIPAA", "SOC2", "FINRA"]
+
+
+@dataclass
+class ConversationsRetention:
+    """Conversations retention settings."""
+    delete_after: str  # '7y', '30d', etc.
+    purge_on_user_request: bool
+    archive_after: Optional[str] = None
+
+
+@dataclass
+class ConversationsPurging:
+    """Conversations purging settings."""
+    auto_delete: bool
+    delete_inactive_after: Optional[str] = None
+
+
+@dataclass
+class ConversationsPolicy:
+    """Conversations governance policy."""
+    retention: ConversationsRetention
+    purging: ConversationsPurging
+
+
+@dataclass
+class ImmutableTypeRetention:
+    """Retention settings for a specific immutable type."""
+    versions_to_keep: int  # -1 = unlimited
+    delete_after: Optional[str] = None
+
+
+@dataclass
+class ImmutableRetention:
+    """Immutable retention settings."""
+    default_versions: int
+    by_type: Dict[str, ImmutableTypeRetention] = field(default_factory=dict)
+
+
+@dataclass
+class ImmutablePurging:
+    """Immutable purging settings."""
+    auto_cleanup_versions: bool
+    purge_unused_after: Optional[str] = None
+
+
+@dataclass
+class ImmutablePolicy:
+    """Immutable governance policy."""
+    retention: ImmutableRetention
+    purging: ImmutablePurging
+
+
+@dataclass
+class MutableRetention:
+    """Mutable retention settings."""
+    default_ttl: Optional[str] = None
+    purge_inactive_after: Optional[str] = None
+
+
+@dataclass
+class MutablePurging:
+    """Mutable purging settings."""
+    auto_delete: bool
+    delete_unaccessed_after: Optional[str] = None
+
+
+@dataclass
+class MutablePolicy:
+    """Mutable governance policy."""
+    retention: MutableRetention
+    purging: MutablePurging
+
+
+@dataclass
+class ImportanceRange:
+    """Importance range for version retention."""
+    range: List[int]  # [min, max]
+    versions: int
+
+
+@dataclass
+class VectorRetention:
+    """Vector retention settings."""
+    default_versions: int
+    by_importance: List[ImportanceRange] = field(default_factory=list)
+    by_source_type: Optional[Dict[str, int]] = None
+
+
+@dataclass
+class VectorPurging:
+    """Vector purging settings."""
+    auto_cleanup_versions: bool
+    delete_orphaned: bool
+
+
+@dataclass
+class VectorPolicy:
+    """Vector governance policy."""
+    retention: VectorRetention
+    purging: VectorPurging
+
+
+@dataclass
+class ComplianceSettings:
+    """Compliance settings."""
+    mode: ComplianceMode
+    data_retention_years: int
+    require_justification: List[int]
+    audit_logging: bool
+
+
+@dataclass
+class GovernancePolicy:
+    """Complete governance policy for organization or memory space."""
+    conversations: ConversationsPolicy
+    immutable: ImmutablePolicy
+    mutable: MutablePolicy
+    vector: VectorPolicy
+    compliance: ComplianceSettings
+    organization_id: Optional[str] = None
+    memory_space_id: Optional[str] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for Convex."""
+        return {
+            "organizationId": self.organization_id,
+            "memorySpaceId": self.memory_space_id,
+            "conversations": {
+                "retention": {
+                    "deleteAfter": self.conversations.retention.delete_after,
+                    "archiveAfter": self.conversations.retention.archive_after,
+                    "purgeOnUserRequest": self.conversations.retention.purge_on_user_request,
+                },
+                "purging": {
+                    "autoDelete": self.conversations.purging.auto_delete,
+                    "deleteInactiveAfter": self.conversations.purging.delete_inactive_after,
+                },
+            },
+            "immutable": {
+                "retention": {
+                    "defaultVersions": self.immutable.retention.default_versions,
+                    "byType": {
+                        k: {
+                            "versionsToKeep": v.versions_to_keep,
+                            "deleteAfter": v.delete_after,
+                        }
+                        for k, v in self.immutable.retention.by_type.items()
+                    },
+                },
+                "purging": {
+                    "autoCleanupVersions": self.immutable.purging.auto_cleanup_versions,
+                    "purgeUnusedAfter": self.immutable.purging.purge_unused_after,
+                },
+            },
+            "mutable": {
+                "retention": {
+                    "defaultTTL": self.mutable.retention.default_ttl,
+                    "purgeInactiveAfter": self.mutable.retention.purge_inactive_after,
+                },
+                "purging": {
+                    "autoDelete": self.mutable.purging.auto_delete,
+                    "deleteUnaccessedAfter": self.mutable.purging.delete_unaccessed_after,
+                },
+            },
+            "vector": {
+                "retention": {
+                    "defaultVersions": self.vector.retention.default_versions,
+                    "byImportance": [
+                        {"range": r.range, "versions": r.versions}
+                        for r in self.vector.retention.by_importance
+                    ],
+                    "bySourceType": self.vector.retention.by_source_type,
+                },
+                "purging": {
+                    "autoCleanupVersions": self.vector.purging.auto_cleanup_versions,
+                    "deleteOrphaned": self.vector.purging.delete_orphaned,
+                },
+            },
+            "compliance": {
+                "mode": self.compliance.mode,
+                "dataRetentionYears": self.compliance.data_retention_years,
+                "requireJustification": self.compliance.require_justification,
+                "auditLogging": self.compliance.audit_logging,
+            },
+        }
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "GovernancePolicy":
+        """Create from dictionary (Convex response)."""
+        return cls(
+            organization_id=data.get("organizationId"),
+            memory_space_id=data.get("memorySpaceId"),
+            conversations=ConversationsPolicy(
+                retention=ConversationsRetention(
+                    delete_after=data["conversations"]["retention"]["deleteAfter"],
+                    archive_after=data["conversations"]["retention"].get("archiveAfter"),
+                    purge_on_user_request=data["conversations"]["retention"]["purgeOnUserRequest"],
+                ),
+                purging=ConversationsPurging(
+                    auto_delete=data["conversations"]["purging"]["autoDelete"],
+                    delete_inactive_after=data["conversations"]["purging"].get("deleteInactiveAfter"),
+                ),
+            ),
+            immutable=ImmutablePolicy(
+                retention=ImmutableRetention(
+                    default_versions=data["immutable"]["retention"]["defaultVersions"],
+                    by_type={
+                        k: ImmutableTypeRetention(
+                            versions_to_keep=v["versionsToKeep"],
+                            delete_after=v.get("deleteAfter"),
+                        )
+                        for k, v in data["immutable"]["retention"].get("byType", {}).items()
+                    },
+                ),
+                purging=ImmutablePurging(
+                    auto_cleanup_versions=data["immutable"]["purging"]["autoCleanupVersions"],
+                    purge_unused_after=data["immutable"]["purging"].get("purgeUnusedAfter"),
+                ),
+            ),
+            mutable=MutablePolicy(
+                retention=MutableRetention(
+                    default_ttl=data["mutable"]["retention"].get("defaultTTL"),
+                    purge_inactive_after=data["mutable"]["retention"].get("purgeInactiveAfter"),
+                ),
+                purging=MutablePurging(
+                    auto_delete=data["mutable"]["purging"]["autoDelete"],
+                    delete_unaccessed_after=data["mutable"]["purging"].get("deleteUnaccessedAfter"),
+                ),
+            ),
+            vector=VectorPolicy(
+                retention=VectorRetention(
+                    default_versions=data["vector"]["retention"]["defaultVersions"],
+                    by_importance=[
+                        ImportanceRange(range=r["range"], versions=r["versions"])
+                        for r in data["vector"]["retention"].get("byImportance", [])
+                    ],
+                    by_source_type=data["vector"]["retention"].get("bySourceType"),
+                ),
+                purging=VectorPurging(
+                    auto_cleanup_versions=data["vector"]["purging"]["autoCleanupVersions"],
+                    delete_orphaned=data["vector"]["purging"]["deleteOrphaned"],
+                ),
+            ),
+            compliance=ComplianceSettings(
+                mode=data["compliance"]["mode"],
+                data_retention_years=data["compliance"]["dataRetentionYears"],
+                require_justification=data["compliance"]["requireJustification"],
+                audit_logging=data["compliance"]["auditLogging"],
+            ),
+        )
+
+
+@dataclass
+class PolicyScope:
+    """Policy scope (organization or memory space)."""
+    organization_id: Optional[str] = None
+    memory_space_id: Optional[str] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for Convex."""
+        result: Dict[str, Any] = {}
+        if self.organization_id:
+            result["organizationId"] = self.organization_id
+        if self.memory_space_id:
+            result["memorySpaceId"] = self.memory_space_id
+        return result
+
+
+@dataclass
+class PolicyResult:
+    """Result from setting a policy."""
+    policy_id: str
+    applied_at: int
+    scope: Dict[str, Any]
+    success: bool
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "PolicyResult":
+        """Create from dictionary (Convex response)."""
+        return cls(
+            policy_id=data["policyId"],
+            applied_at=data["appliedAt"],
+            scope=data["scope"],
+            success=data["success"],
+        )
+
+
+@dataclass
+class EnforcementOptions:
+    """Options for manual policy enforcement."""
+    layers: Optional[List[str]] = None
+    rules: Optional[List[str]] = None
+    scope: Optional[PolicyScope] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for Convex."""
+        result: Dict[str, Any] = {}
+        if self.layers:
+            result["layers"] = self.layers
+        if self.rules:
+            result["rules"] = self.rules
+        if self.scope:
+            scope_dict = self.scope.to_dict()
+            if scope_dict:  # Only add if not empty
+                result["scope"] = scope_dict
+        return result
+
+
+@dataclass
+class EnforcementResult:
+    """Result from policy enforcement."""
+    enforced_at: int
+    versions_deleted: int
+    records_purged: int
+    storage_freed: float  # MB
+    affected_layers: List[str]
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "EnforcementResult":
+        """Create from dictionary (Convex response)."""
+        return cls(
+            enforced_at=data["enforcedAt"],
+            versions_deleted=data["versionsDeleted"],
+            records_purged=data["recordsPurged"],
+            storage_freed=data["storageFreed"],
+            affected_layers=data["affectedLayers"],
+        )
+
+
+@dataclass
+class SimulationOptions:
+    """Options for policy simulation."""
+    organization_id: Optional[str] = None
+    memory_space_id: Optional[str] = None
+    vector: Optional[VectorPolicy] = None
+    conversations: Optional[ConversationsPolicy] = None
+    immutable: Optional[ImmutablePolicy] = None
+    mutable: Optional[MutablePolicy] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for Convex."""
+        result: Dict[str, Any] = {}
+        if self.organization_id:
+            result["organizationId"] = self.organization_id
+        if self.memory_space_id:
+            result["memorySpaceId"] = self.memory_space_id
+        # Add other fields as needed
+        return result
+
+
+@dataclass
+class SimulationBreakdown:
+    """Breakdown of simulation impact by layer."""
+    affected: int
+    storage_mb: float
+
+
+@dataclass
+class SimulationResult:
+    """Result from policy simulation."""
+    versions_affected: int
+    records_affected: int
+    storage_freed: float  # MB
+    cost_savings: float  # USD/month
+    breakdown: Dict[str, Any]
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "SimulationResult":
+        """Create from dictionary (Convex response)."""
+        return cls(
+            versions_affected=data["versionsAffected"],
+            records_affected=data["recordsAffected"],
+            storage_freed=data["storageFreed"],
+            cost_savings=data["costSavings"],
+            breakdown=data.get("breakdown", {}),
+        )
+
+
+@dataclass
+class ComplianceReportOptions:
+    """Options for compliance report generation."""
+    organization_id: Optional[str] = None
+    memory_space_id: Optional[str] = None
+    period_start: Optional[datetime] = None
+    period_end: Optional[datetime] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for Convex."""
+        result: Dict[str, Any] = {}
+        if self.organization_id:
+            result["organizationId"] = self.organization_id
+        if self.memory_space_id:
+            result["memorySpaceId"] = self.memory_space_id
+        result["period"] = {
+            "start": int(self.period_start.timestamp() * 1000) if self.period_start else 0,
+            "end": int(self.period_end.timestamp() * 1000) if self.period_end else 0,
+        }
+        return result
+
+
+@dataclass
+class ComplianceLayerStatus:
+    """Compliance status for a specific layer."""
+    total: int
+    deleted: int
+    archived: int
+    compliance_status: str
+
+
+@dataclass
+class ComplianceReport:
+    """Detailed compliance report."""
+    organization_id: Optional[str]
+    memory_space_id: Optional[str]
+    period: Dict[str, int]
+    generated_at: int
+    conversations: Dict[str, Any]
+    immutable: Dict[str, Any]
+    vector: Dict[str, Any]
+    data_retention: Dict[str, Any]
+    user_requests: Dict[str, Any]
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "ComplianceReport":
+        """Create from dictionary (Convex response)."""
+        return cls(
+            organization_id=data.get("organizationId"),
+            memory_space_id=data.get("memorySpaceId"),
+            period=data["period"],
+            generated_at=data["generatedAt"],
+            conversations=data["conversations"],
+            immutable=data["immutable"],
+            vector=data["vector"],
+            data_retention=data["dataRetention"],
+            user_requests=data["userRequests"],
+        )
+
+
+@dataclass
+class EnforcementStatsOptions:
+    """Options for enforcement statistics."""
+    period: str  # "7d", "30d", "90d", "1y"
+    organization_id: Optional[str] = None
+    memory_space_id: Optional[str] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for Convex."""
+        result: Dict[str, Any] = {"period": self.period}
+        if self.organization_id:
+            result["organizationId"] = self.organization_id
+        if self.memory_space_id:
+            result["memorySpaceId"] = self.memory_space_id
+        return result
+
+
+@dataclass
+class EnforcementStats:
+    """Statistics about policy enforcement."""
+    period: Dict[str, int]
+    conversations: Dict[str, int]
+    immutable: Dict[str, int]
+    vector: Dict[str, int]
+    mutable: Dict[str, int]
+    storage_freed: float  # MB
+    cost_savings: float  # USD
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "EnforcementStats":
+        """Create from dictionary (Convex response)."""
+        return cls(
+            period=data["period"],
+            conversations=data["conversations"],
+            immutable=data["immutable"],
+            vector=data["vector"],
+            mutable=data["mutable"],
+            storage_freed=data["storageFreed"],
+            cost_savings=data["costSavings"],
+        )

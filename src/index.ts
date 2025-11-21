@@ -16,6 +16,7 @@ import { MemorySpacesAPI } from "./memorySpaces";
 import { ContextsAPI } from "./contexts";
 import { UsersAPI } from "./users";
 import { AgentsAPI } from "./agents";
+import { GovernanceAPI } from "./governance";
 import type { GraphAdapter } from "./graph/types";
 import {
   GraphSyncWorker,
@@ -84,6 +85,9 @@ export class Cortex {
   // Coordination: Agent Registry (Optional)
   public agents: AgentsAPI;
 
+  // Governance: Data Retention & Compliance
+  public governance: GovernanceAPI;
+
   constructor(config: CortexConfig) {
     // Initialize Convex client
     this.client = new ConvexClient(config.convexUrl);
@@ -102,6 +106,7 @@ export class Cortex {
     this.memory = new MemoryAPI(this.client, graphAdapter);
     this.users = new UsersAPI(this.client, graphAdapter);
     this.agents = new AgentsAPI(this.client, graphAdapter);
+    this.governance = new GovernanceAPI(this.client, graphAdapter);
 
     // Start graph sync worker if enabled
     if (config.graph?.autoSync && graphAdapter) {
@@ -116,6 +121,13 @@ export class Cortex {
         console.error("Failed to start graph sync worker:", error);
       });
     }
+  }
+
+  /**
+   * Get the underlying Convex client (for testing and advanced use cases)
+   */
+  getClient(): ConvexClient {
+    return this.client;
   }
 
   /**

@@ -14,6 +14,7 @@ from .agents import AgentsAPI
 from .contexts import ContextsAPI
 from .conversations import ConversationsAPI
 from .facts import FactsAPI
+from .governance import GovernanceAPI
 from .immutable import ImmutableAPI
 from .memory import MemoryAPI
 from .memory_spaces import MemorySpacesAPI
@@ -76,6 +77,7 @@ class Cortex:
         self.users = UsersAPI(self.client, graph_adapter)
         self.agents = AgentsAPI(self.client, graph_adapter)
         self.memory_spaces = MemorySpacesAPI(self.client, graph_adapter)
+        self.governance = GovernanceAPI(self.client, graph_adapter)
 
         # Start graph sync worker if enabled
         self.sync_worker = None

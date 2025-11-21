@@ -1136,6 +1136,206 @@ export interface ExportUsersOptions {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Governance Policies API
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export type ComplianceMode = "GDPR" | "HIPAA" | "SOC2" | "FINRA" | "Custom";
+export type ComplianceTemplate = "GDPR" | "HIPAA" | "SOC2" | "FINRA";
+
+export interface GovernancePolicy {
+  organizationId?: string;
+  memorySpaceId?: string;
+
+  // Layer 1a: Conversations
+  conversations: {
+    retention: {
+      deleteAfter: string; // '7y', '30d', etc.
+      archiveAfter?: string;
+      purgeOnUserRequest: boolean;
+    };
+    purging: {
+      autoDelete: boolean;
+      deleteInactiveAfter?: string;
+    };
+  };
+
+  // Layer 1b: Immutable
+  immutable: {
+    retention: {
+      defaultVersions: number;
+      byType: Record<
+        string,
+        {
+          versionsToKeep: number;
+          deleteAfter?: string;
+        }
+      >;
+    };
+    purging: {
+      autoCleanupVersions: boolean;
+      purgeUnusedAfter?: string;
+    };
+  };
+
+  // Layer 1c: Mutable
+  mutable: {
+    retention: {
+      defaultTTL?: string;
+      purgeInactiveAfter?: string;
+    };
+    purging: {
+      autoDelete: boolean;
+      deleteUnaccessedAfter?: string;
+    };
+  };
+
+  // Layer 2: Vector
+  vector: {
+    retention: {
+      defaultVersions: number;
+      byImportance: Array<{
+        range: [number, number];
+        versions: number;
+      }>;
+      bySourceType?: Record<string, number>;
+    };
+    purging: {
+      autoCleanupVersions: boolean;
+      deleteOrphaned: boolean;
+    };
+  };
+
+  // Cross-layer compliance
+  compliance: {
+    mode: ComplianceMode;
+    dataRetentionYears: number;
+    requireJustification: number[];
+    auditLogging: boolean;
+  };
+}
+
+export interface PolicyScope {
+  organizationId?: string;
+  memorySpaceId?: string;
+}
+
+export interface PolicyResult {
+  policyId: string;
+  appliedAt: number;
+  scope: PolicyScope;
+  success: boolean;
+}
+
+export interface EnforcementOptions {
+  layers?: ("conversations" | "immutable" | "mutable" | "vector")[];
+  rules?: ("retention" | "purging")[];
+  scope?: PolicyScope;
+}
+
+export interface EnforcementResult {
+  enforcedAt: number;
+  versionsDeleted: number;
+  recordsPurged: number;
+  storageFreed: number; // MB
+  affectedLayers: string[];
+}
+
+export interface SimulationOptions extends Partial<GovernancePolicy> {}
+
+export interface SimulationResult {
+  versionsAffected: number;
+  recordsAffected: number;
+  storageFreed: number; // MB
+  costSavings: number; // USD per month
+  breakdown: {
+    conversations?: { affected: number; storageMB: number };
+    immutable?: { affected: number; storageMB: number };
+    mutable?: { affected: number; storageMB: number };
+    vector?: { affected: number; storageMB: number };
+  };
+}
+
+export interface ComplianceReportOptions {
+  organizationId?: string;
+  memorySpaceId?: string;
+  period: {
+    start: Date;
+    end: Date;
+  };
+}
+
+export interface ComplianceReport {
+  organizationId?: string;
+  memorySpaceId?: string;
+  period: { start: number; end: number };
+  generatedAt: number;
+
+  conversations: {
+    total: number;
+    deleted: number;
+    archived: number;
+    complianceStatus: "COMPLIANT" | "NON_COMPLIANT" | "WARNING";
+  };
+
+  immutable: {
+    entities: number;
+    totalVersions: number;
+    versionsDeleted: number;
+    complianceStatus: "COMPLIANT" | "NON_COMPLIANT" | "WARNING";
+  };
+
+  vector: {
+    memories: number;
+    versionsDeleted: number;
+    orphanedCleaned: number;
+    complianceStatus: "COMPLIANT" | "NON_COMPLIANT" | "WARNING";
+  };
+
+  dataRetention: {
+    oldestRecord: number;
+    withinPolicy: boolean;
+  };
+
+  userRequests: {
+    deletionRequests: number;
+    fulfilled: number;
+    avgFulfillmentTime: string;
+  };
+}
+
+export interface EnforcementStatsOptions {
+  period: string; // "7d", "30d", "90d", "1y"
+  organizationId?: string;
+  memorySpaceId?: string;
+}
+
+export interface EnforcementStats {
+  period: { start: number; end: number };
+
+  conversations: {
+    purged: number;
+    archived: number;
+  };
+
+  immutable: {
+    versionsDeleted: number;
+    entitiesPurged: number;
+  };
+
+  vector: {
+    versionsDeleted: number;
+    memoriesPurged: number;
+  };
+
+  mutable: {
+    keysDeleted: number;
+  };
+
+  storageFreed: number; // MB
+  costSavings: number; // USD
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Graph Integration Options (syncToGraph pattern across all APIs)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
