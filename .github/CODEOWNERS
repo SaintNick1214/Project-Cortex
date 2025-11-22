@@ -1,0 +1,29 @@
+# Code Owners for Project Cortex
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything
+* @SaintNick1214
+
+# Security-sensitive files require review
+.github/workflows/* @SaintNick1214
+.github/dependabot.yml @SaintNick1214
+.github/codeql/* @SaintNick1214
+SECURITY.md @SaintNick1214
+.socket.dev.yml @SaintNick1214
+
+# Package publishing and versioning
+package.json @SaintNick1214
+packages/*/package.json @SaintNick1214
+cortex-sdk-python/pyproject.toml @SaintNick1214
+
+# Core SDK modules
+src/ @SaintNick1214
+cortex-sdk-python/cortex/ @SaintNick1214
+
+# Convex backend
+convex-dev/ @SaintNick1214
+
+# Documentation
+Documentation/ @SaintNick1214
+README.md @SaintNick1214
+CHANGELOG.md @SaintNick1214
