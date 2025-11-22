@@ -1160,7 +1160,7 @@ Both use same ACID storage, same immutability guarantees, same API patterns.
 ## Next Steps
 
 - **[Access Analytics](./07-access-analytics.md)** - Track usage patterns
-- **[Agent Memory](./01-agent-memory.md)** - Vector layer that references conversations
+- **[Agent Memory](./01-memory-spaces.md)** - Vector layer that references conversations
 - **[A2A Communication](./05-a2a-communication.md)** - Agent-agent conversation helpers
 - **[Dimension Strategies](../07-advanced-topics/02-dimension-strategies.md)** - Choosing embedding models
 
