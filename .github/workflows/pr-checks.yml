@@ -12,6 +12,11 @@ concurrency:
   group: pr-checks-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
+# Default permissions: read-only
+# Write permissions are granted explicitly at job level
+permissions:
+  contents: read
+
 jobs:
   # Code quality check (fast - runs first)
   code-quality:
@@ -26,9 +31,7 @@ jobs:
         github.event.pull_request.base.ref == 'main'
       )
     permissions:
-      checks: write
       contents: read
-      pull-requests: write
     
     steps:
       - name: Checkout PR code

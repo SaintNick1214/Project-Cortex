@@ -47,16 +47,18 @@ export async function deployCortexBackend(projectPath: string): Promise<void> {
     );
   }
 
-  // Check if target convex/ folder exists
-  const convexExists = fs.existsSync(targetConvexPath);
-
-  if (convexExists) {
-    console.log(pc.yellow("⚠️  Existing convex/ folder detected"));
-    // In a real implementation, we'd prompt the user here
-    // For now, we'll backup and overwrite
+  // Backup existing convex/ folder if it exists
+  // Use atomic fs.move which handles the check internally
+  try {
     const backupPath = path.join(projectPath, `convex.backup.${Date.now()}`);
-    console.log(pc.dim(`   Backing up to ${path.basename(backupPath)}`));
     await fs.move(targetConvexPath, backupPath);
+    console.log(pc.yellow("⚠️  Existing convex/ folder backed up"));
+    console.log(pc.dim(`   Backed up to ${path.basename(backupPath)}`));
+  } catch (error: any) {
+    // Target doesn't exist (ENOENT) - this is fine, nothing to backup
+    if (error.code !== "ENOENT") {
+      throw error; // Re-throw if it's a different error
+    }
   }
 
   // Copy all files from convex-dev to convex
@@ -197,10 +199,15 @@ export async function copyTemplate(
 
   // Replace template variables in package.json
   const packageJsonPath = path.join(targetPath, "package.json");
-  if (fs.existsSync(packageJsonPath)) {
+  try {
     let packageJson = await fs.readFile(packageJsonPath, "utf-8");
     packageJson = packageJson.replace(/\{\{PROJECT_NAME\}\}/g, projectName);
     await fs.writeFile(packageJsonPath, packageJson);
+  } catch (error: any) {
+    // File doesn't exist or can't be read - skip template replacement
+    if (error.code !== "ENOENT") {
+      throw error; // Re-throw if it's not a "file not found" error
+    }
   }
 }
 
