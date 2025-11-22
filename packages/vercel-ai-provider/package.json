@@ -1,6 +1,6 @@
 {
   "name": "@cortexmemory/vercel-ai-provider",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Vercel AI SDK provider with automatic Cortex memory integration",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -51,25 +51,25 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint": "tsc --noEmit && eslint src --ext .ts",
-    "prepublishOnly": "npm run lint && npm test && npm run build"
+    "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
     "ai": "^3.0.0 || ^4.0.0 || ^5.0.0",
     "convex": "^1.28.2"
   },
   "dependencies": {
-    "@cortexmemory/sdk": "^0.9.0"
+    "@cortexmemory/sdk": "^0.10.0"
   },
   "devDependencies": {
-    "@ai-sdk/openai": "^2.0.66",
-    "@ai-sdk/anthropic": "^2.0.44",
+    "@ai-sdk/openai": "^2.0.71",
+    "@ai-sdk/anthropic": "^2.0.45",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.10.1",
-    "@typescript-eslint/eslint-plugin": "^8.46.4",
-    "@typescript-eslint/parser": "^8.46.4",
+    "@typescript-eslint/eslint-plugin": "^8.47.0",
+    "@typescript-eslint/parser": "^8.47.0",
     "eslint": "^9.39.1",
     "jest": "^30.2.0",
-    "rimraf": "^6.1.0",
+    "rimraf": "^6.1.2",
     "ts-jest": "^29.4.5",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3"

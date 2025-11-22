@@ -8,6 +8,8 @@
 [![Status](https://img.shields.io/badge/Status-In%20Development-yellow.svg)](https://github.com/SaintNick1214/cortex/discussions)
 [![Socket Badge](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.9.2)](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.9.2)
 
+**🌐 [cortexmemory.dev](https://cortexmemory.dev) | 📚 [docs.cortexmemory.dev](https://docs.cortexmemory.dev)**
+
 ## 🚧 Project Status: In Active Development
 
 **Cortex is currently in the design and early implementation phase.** We're building a production-ready memory system for AI agents, and we're doing it in public!
@@ -21,9 +23,10 @@
 
 **Want to contribute or follow along?**
 
+- 🌐 [cortexmemory.dev](https://cortexmemory.dev) - Official website and project information
+- 📚 [docs.cortexmemory.dev](https://docs.cortexmemory.dev) - Complete documentation and guides
 - 💬 [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) - Share ideas, ask questions, propose features
 - 🐛 [GitHub Issues](https://github.com/SaintNick1214/cortex/issues) - Report bugs, request features, track progress
-- 📖 [Documentation](./Documentation/00-README.md) - In-depth architecture and design decisions
 
 ---
 
@@ -401,19 +404,21 @@ Cortex is being designed with two deployment modes:
 
 ## 📖 Documentation
 
+**📚 [docs.cortexmemory.dev](https://docs.cortexmemory.dev)** - Complete documentation, guides, and API reference
+
 ### Getting Started
 
-- [Installation Guide](./Documentation/01-getting-started/02-installation.md) - Multiple installation methods
-- [Five-Minute Quickstart](./Documentation/01-getting-started/03-five-minute-quickstart.md) - Build your first agent
-- [Core Concepts](./Documentation/01-getting-started/04-core-concepts.md) - Understand the fundamentals
-- [Configuration](./Documentation/01-getting-started/05-configuration.md) - Customize Cortex
+- [Installation Guide](https://docs.cortexmemory.dev/getting-started/installation) - Multiple installation methods
+- [Five-Minute Quickstart](https://docs.cortexmemory.dev/getting-started/quickstart) - Build your first agent
+- [Core Concepts](https://docs.cortexmemory.dev/getting-started/core-concepts) - Understand the fundamentals
+- [Configuration](https://docs.cortexmemory.dev/getting-started/configuration) - Customize Cortex
 
 ### Reference
 
-- [Documentation Home](./Documentation/00-README.md) - Complete documentation index
-- [API Reference](./Documentation/03-api-reference/01-overview.md) - Full API documentation
-- [System Architecture](./Documentation/04-architecture/01-system-overview.md) - How it works
-- [Recipes & Examples](./Documentation/06-recipes/01-simple-chatbot.md) - Real-world patterns
+- [API Reference](https://docs.cortexmemory.dev/api-reference/overview) - Full API documentation
+- [System Architecture](https://docs.cortexmemory.dev/architecture/system-overview) - How it works
+- [Recipes & Examples](https://docs.cortexmemory.dev/recipes/simple-chatbot) - Real-world patterns
+- [Local Documentation](./Documentation/00-README.md) - Repository documentation
 
 ## 🤝 Get Involved
 
@@ -600,10 +605,11 @@ Cortex was born out of building [Project Constellation](https://github.com/Saint
 
 ## 📮 Contact & Support
 
+- 🌐 Website: [cortexmemory.dev](https://cortexmemory.dev)
+- 📚 Documentation: [docs.cortexmemory.dev](https://docs.cortexmemory.dev)
 - 📧 Email: support@cortexmemory.dev
 - 💬 Discussions: [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions)
 - 🐛 Issues: [GitHub Issues](https://github.com/SaintNick1214/cortex/issues)
-- 📖 Docs: [Documentation](./Documentation/00-README.md)
 - 🐦 Twitter: [@cortexmemory](https://twitter.com/cortexmemory) (coming soon)
 
 ---
