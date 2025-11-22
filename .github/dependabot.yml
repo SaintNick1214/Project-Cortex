@@ -1,0 +1,103 @@
+# Dependabot configuration for automated dependency updates
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  # TypeScript/JavaScript dependencies (root)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Los_Angeles"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "SaintNick1214"
+    labels:
+      - "dependencies"
+      - "typescript"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    groups:
+      # Group dev dependencies together
+      dev-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group production dependencies together  
+      production-dependencies:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Vercel AI Provider package
+  - package-ecosystem: "npm"
+    directory: "/packages/vercel-ai-provider"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Los_Angeles"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "SaintNick1214"
+    labels:
+      - "dependencies"
+      - "vercel-ai-provider"
+    commit-message:
+      prefix: "chore(vercel-ai)"
+
+  # Create Cortex Memories wizard
+  - package-ecosystem: "npm"
+    directory: "/packages/create-cortex-memories"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Los_Angeles"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "SaintNick1214"
+    labels:
+      - "dependencies"
+      - "wizard"
+    commit-message:
+      prefix: "chore(wizard)"
+
+  # Python SDK
+  - package-ecosystem: "pip"
+    directory: "/cortex-sdk-python"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Los_Angeles"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "SaintNick1214"
+    labels:
+      - "dependencies"
+      - "python"
+    commit-message:
+      prefix: "chore(py-deps)"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Los_Angeles"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "SaintNick1214"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(actions)"
