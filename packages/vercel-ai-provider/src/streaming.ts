@@ -55,17 +55,6 @@ export function createObservableStream(
         }
       }
     },
-
-    cancel(reason) {
-      logger?.warn("Stream was cancelled:", reason);
-      if (onError) {
-        onError(
-          reason instanceof Error
-            ? reason
-            : new Error(`Stream cancelled: ${String(reason)}`),
-        );
-      }
-    },
   });
 }
 
@@ -153,16 +142,6 @@ export function createCompletionStream(
         if (onError) {
           onError(error instanceof Error ? error : new Error(String(error)));
         }
-      }
-    },
-
-    cancel(reason) {
-      if (onError) {
-        onError(
-          reason instanceof Error
-            ? reason
-            : new Error(`Stream cancelled: ${String(reason)}`),
-        );
       }
     },
   });
