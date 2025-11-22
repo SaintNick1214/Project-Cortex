@@ -1,5 +1,5 @@
 # Core dependencies
 convex>=0.5.0
-pydantic>=2.0
+pydantic>=2.4.0  # CVE-2024-3772: Require 2.4.0+ to avoid ReDoS vulnerability
 typing-extensions>=4.0
 
