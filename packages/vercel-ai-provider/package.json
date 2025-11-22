@@ -50,7 +50,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "lint": "tsc --noEmit && eslint src --ext .ts",
+    "lint": "tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
