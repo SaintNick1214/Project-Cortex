@@ -25,13 +25,27 @@ export async function commandExists(command: string): Promise<boolean> {
 
 /**
  * Execute a shell command and return the output
+ * 
+ * SECURITY: This function is only called with hardcoded commands (npm, convex, etc.)
+ * from within the wizard. User input is NEVER passed as the command parameter.
+ * Commands are validated from a safe allowlist.
  */
 export async function execCommand(
   command: string,
   args: string[],
   options: { cwd?: string; env?: NodeJS.ProcessEnv } = {},
 ): Promise<{ stdout: string; stderr: string; code: number }> {
+  // Allowlist of safe commands used by the wizard
+  const ALLOWED_COMMANDS = ['npx', 'convex', 'npm', 'pnpm', 'yarn', 'bun', 'git', 'node'];
+  
+  // Validate command is from allowlist (defense in depth)
+  if (!ALLOWED_COMMANDS.includes(command)) {
+    throw new Error(`Invalid command: ${command}. Only allowed: ${ALLOWED_COMMANDS.join(', ')}`);
+  }
+  
   return new Promise((resolve, reject) => {
+    // semgrep ignore: javascript.lang.security.detect-child-process.detect-child-process
+    // Justification: command is validated against allowlist above, not user-controllable
     const child = spawn(command, args, {
       ...options,
       env: { ...process.env, ...options.env },
@@ -60,13 +74,27 @@ export async function execCommand(
 
 /**
  * Execute a command with live output
+ * 
+ * SECURITY: This function is only called with hardcoded commands (npx, convex, npm, etc.)
+ * from within the wizard. User input is NEVER passed as the command parameter.
+ * Commands are validated from a safe allowlist.
  */
 export async function execCommandLive(
   command: string,
   args: string[],
   options: { cwd?: string; env?: NodeJS.ProcessEnv } = {},
 ): Promise<number> {
+  // Allowlist of safe commands used by the wizard
+  const ALLOWED_COMMANDS = ['npx', 'convex', 'npm', 'pnpm', 'yarn', 'bun', 'git'];
+  
+  // Validate command is from allowlist (defense in depth)
+  if (!ALLOWED_COMMANDS.includes(command)) {
+    throw new Error(`Invalid command: ${command}. Only allowed: ${ALLOWED_COMMANDS.join(', ')}`);
+  }
+  
   return new Promise((resolve, reject) => {
+    // semgrep ignore: javascript.lang.security.detect-child-process.detect-child-process
+    // Justification: command is validated against allowlist above, not user-controllable
     const child = spawn(command, args, {
       ...options,
       stdio: "inherit",
