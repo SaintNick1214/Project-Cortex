@@ -3,8 +3,17 @@
  */
 
 import { CortexMemoryProvider } from "../src/provider";
-import type { LanguageModelV1 } from "ai";
 import type { CortexMemoryConfig } from "../src/types";
+
+// Mock language model type (compatible with AI SDK v1)
+type MockLanguageModel = {
+  specificationVersion: string;
+  provider: string;
+  modelId: string;
+  defaultObjectGenerationMode?: string;
+  doGenerate: jest.Mock;
+  doStream: jest.Mock;
+};
 
 // Mock Cortex SDK
 jest.mock("@cortexmemory/sdk", () => ({
@@ -32,7 +41,7 @@ describe("CortexMemoryProvider", () => {
     userName: "Test User",
   };
 
-  const mockUnderlyingModel: LanguageModelV1 = {
+  const mockUnderlyingModel: MockLanguageModel = {
     specificationVersion: "v1",
     provider: "openai",
     modelId: "gpt-4",

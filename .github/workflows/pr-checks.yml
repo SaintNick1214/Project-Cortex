@@ -196,12 +196,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [detect-changes, test-typescript]  # Wait for TS tests to avoid Convex conflicts
     # Run if Python SDK version changed OR if PR is targeting main branch
-    # Skip for Dependabot PRs (they only update dependencies)
     if: |
-      github.actor != 'dependabot[bot]' && (
-        needs.detect-changes.outputs.python == 'true' || 
-        github.event.pull_request.base.ref == 'main'
-      )
+      needs.detect-changes.outputs.python == 'true' || 
+      github.event.pull_request.base.ref == 'main'
     permissions:
       contents: read
     
@@ -251,7 +248,7 @@ jobs:
   test-vercel-ai-provider:
     name: Test Vercel AI Provider
     runs-on: ubuntu-latest
-    needs: [detect-changes, test-typescript]  # Run after TS SDK tests
+    needs: detect-changes
     # Run if Vercel AI Provider version changed OR if PR is targeting main branch
     # Skip for Dependabot PRs (they only update dependencies)
     if: |
