@@ -561,8 +561,8 @@ const result = await cortex.memory.remember({
 
 **See Also:**
 
-- [Agent Memory Guide](../02-core-features/01-agent-memory.md#storing-memories)
-- [Store vs Update Decision](../02-core-features/01-agent-memory.md#store-vs-update-decision)
+- [Agent Memory Guide](../02-core-features/01-memory-spaces.md#storing-memories)
+- [Store vs Update Decision](../02-core-features/01-memory-spaces.md#store-vs-update-decision)
 
 ---
 
@@ -695,7 +695,7 @@ await cortex.memory.remember({
 
 **See Also:**
 
-- [Helper Functions](../02-core-features/01-agent-memory.md#helper-store-from-conversation-recommended)
+- [Helper Functions](../02-core-features/01-memory-spaces.md#helper-store-from-conversation-recommended)
 - [Conversation Operations](./04-conversation-operations.md) - Managing ACID conversations
 
 ---
@@ -1036,7 +1036,7 @@ const enriched = await cortex.memory.get("user-123-personal", "mem_abc123", {
 
 **See Also:**
 
-- [Retrieving Memories](../02-core-features/01-agent-memory.md#retrieving-specific-memories)
+- [Retrieving Memories](../02-core-features/01-memory-spaces.md#retrieving-specific-memories)
 
 ---
 
@@ -1204,7 +1204,7 @@ const enriched = await cortex.memory.search("user-123-personal", query, {
 **See Also:**
 
 - [Semantic Search Guide](../02-core-features/02-semantic-search.md)
-- [Universal Filters](../02-core-features/01-agent-memory.md#core-api-principle-universal-filters)
+- [Universal Filters](../02-core-features/01-memory-spaces.md#core-api-principle-universal-filters)
 
 ---
 
@@ -1274,8 +1274,8 @@ console.log(updated.previousVersions[0].content); // "The password is Blue"
 
 **See Also:**
 
-- [Updating Memories](../02-core-features/01-agent-memory.md#updating-memories)
-- [Memory Versioning](../02-core-features/01-agent-memory.md#memory-versioning-automatic)
+- [Updating Memories](../02-core-features/01-memory-spaces.md#updating-memories)
+- [Memory Versioning](../02-core-features/01-memory-spaces.md#memory-versioning-automatic)
 
 ---
 
@@ -1348,7 +1348,7 @@ await cortex.memory.updateMany(
 
 **See Also:**
 
-- [Bulk Operations](../02-core-features/01-agent-memory.md#update-many-memories-bulk)
+- [Bulk Operations](../02-core-features/01-memory-spaces.md#update-many-memories-bulk)
 
 ---
 
@@ -1427,7 +1427,7 @@ await cortex.memory.forget("user-123-personal", "mem_abc123", {
 
 **See Also:**
 
-- [Deleting Memories](../02-core-features/01-agent-memory.md#deleting-memories)
+- [Deleting Memories](../02-core-features/01-memory-spaces.md#deleting-memories)
 
 ---
 
@@ -1490,7 +1490,7 @@ console.log(`Restorable: ${result.restorable}`); // false - gone from both layer
 
 **See Also:**
 
-- [GDPR Compliance](../02-core-features/01-agent-memory.md#pattern-5-user-data-deletion-gdpr)
+- [GDPR Compliance](../02-core-features/01-memory-spaces.md#pattern-5-user-data-deletion-gdpr)
 
 ---
 
@@ -1567,8 +1567,8 @@ if (preview.wouldDelete < 100) {
 
 **See Also:**
 
-- [Bulk Deletion](../02-core-features/01-agent-memory.md#delete-by-user-gdpr-compliance)
-- [Deletion Best Practices](../02-core-features/01-agent-memory.md#deletion-best-practices)
+- [Bulk Deletion](../02-core-features/01-memory-spaces.md#delete-by-user-gdpr-compliance)
+- [Deletion Best Practices](../02-core-features/01-memory-spaces.md#deletion-best-practices)
 
 ---
 
@@ -1626,7 +1626,7 @@ console.log(`Found ${oldUnused} old, unused, low-importance memories`);
 
 **See Also:**
 
-- [Counting Memories](../02-core-features/01-agent-memory.md#counting-memories)
+- [Counting Memories](../02-core-features/01-memory-spaces.md#counting-memories)
 
 ---
 
@@ -1696,7 +1696,7 @@ const userMemories = await cortex.memory.list("user-123-personal", {
 
 **See Also:**
 
-- [Listing Memories](../02-core-features/01-agent-memory.md#listing-memories)
+- [Listing Memories](../02-core-features/01-memory-spaces.md#listing-memories)
 
 ---
 
@@ -1757,7 +1757,7 @@ console.log(`Exported to ${criticalBackup}`);
 
 **See Also:**
 
-- [Exporting Memories](../02-core-features/01-agent-memory.md#exporting-memories)
+- [Exporting Memories](../02-core-features/01-memory-spaces.md#exporting-memories)
 
 ---
 
@@ -1816,7 +1816,7 @@ const restored = await cortex.memory.restoreFromArchive(
 
 **See Also:**
 
-- [Soft Delete](../02-core-features/01-agent-memory.md#soft-delete-archive)
+- [Soft Delete](../02-core-features/01-memory-spaces.md#soft-delete-archive)
 
 ---
 
@@ -1873,7 +1873,7 @@ if (v1) {
 
 **See Also:**
 
-- [Accessing Historical Versions](../02-core-features/01-agent-memory.md#accessing-historical-versions)
+- [Accessing Historical Versions](../02-core-features/01-memory-spaces.md#accessing-historical-versions)
 
 ---
 
@@ -1925,7 +1925,7 @@ history.forEach((v) => {
 
 **See Also:**
 
-- [Version History](../02-core-features/01-agent-memory.md#memory-versioning-automatic)
+- [Version History](../02-core-features/01-memory-spaces.md#memory-versioning-automatic)
 
 ---
 
@@ -1989,8 +1989,8 @@ if (historicalMemory) {
 
 **See Also:**
 
-- [Temporal Queries](../02-core-features/01-agent-memory.md#temporal-queries)
-- [Conflict Resolution](../02-core-features/01-agent-memory.md#conflict-resolution-example)
+- [Temporal Queries](../02-core-features/01-memory-spaces.md#temporal-queries)
+- [Conflict Resolution](../02-core-features/01-memory-spaces.md#conflict-resolution-example)
 
 ---
 
@@ -2064,8 +2064,8 @@ if (result.action === "updated") {
 
 **See Also:**
 
-- [Smart Store Helper](../02-core-features/01-agent-memory.md#strategy-4-cortex-smart-store-helper)
-- [Store vs Update](../02-core-features/01-agent-memory.md#store-vs-update-decision)
+- [Smart Store Helper](../02-core-features/01-memory-spaces.md#strategy-4-cortex-smart-store-helper)
+- [Store vs Update](../02-core-features/01-memory-spaces.md#store-vs-update-decision)
 
 ---
 
@@ -2130,7 +2130,7 @@ interface UniversalFilters {
 
 **See Also:**
 
-- [Universal Filters](../02-core-features/01-agent-memory.md#core-api-principle-universal-filters)
+- [Universal Filters](../02-core-features/01-memory-spaces.md#core-api-principle-universal-filters)
 
 ---
 
@@ -2159,7 +2159,7 @@ await cortex.agents.configure("temp-agent", {
 
 **See Also:**
 
-- [Version Retention](../02-core-features/01-agent-memory.md#version-retention-configuration)
+- [Version Retention](../02-core-features/01-memory-spaces.md#version-retention-configuration)
 
 ---
 
