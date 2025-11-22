@@ -811,7 +811,7 @@ console.log("Query dimension:", queryDim);
 
 - **[Embedding Providers](./01-embedding-providers.md)** - Model-specific guides
 - **[Performance Tuning](./07-performance-tuning.md)** - Speed optimization
-- **[Agent Memory](../02-core-features/01-agent-memory.md)** - Core storage features
+- **[Agent Memory](../02-core-features/01-memory-spaces.md)** - Core storage features
 - **[Semantic Search](../02-core-features/02-semantic-search.md)** - Search strategies
 
 ---

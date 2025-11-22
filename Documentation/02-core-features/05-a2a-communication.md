@@ -1689,7 +1689,7 @@ For advanced agent network analysis (community detection, influence metrics), se
 ## Next Steps
 
 - **[Conversation History](./06-conversation-history.md)** - Message persistence patterns
-- **[Agent Memory](./01-agent-memory.md)** - Understand the underlying storage
+- **[Agent Memory](./01-memory-spaces.md)** - Understand the underlying storage
 - **[Context Chains](./04-context-chains.md)** - Link A2A to workflows
 
 ---

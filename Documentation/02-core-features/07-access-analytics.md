@@ -637,7 +637,7 @@ console.log(
 
 ## Next Steps
 
-- **[Agent Memory](./01-agent-memory.md)** - Vector layer fundamentals
+- **[Agent Memory](./01-memory-spaces.md)** - Vector layer fundamentals
 - **[Conversation History](./06-conversation-history.md)** - ACID layer details
 - **[Dimension Strategies](../07-advanced-topics/02-dimension-strategies.md)** - Choosing embedding dimensions
 - **[Analytics API](../03-api-reference/07-analytics-operations.md)** - Complete API

@@ -203,7 +203,7 @@ console.log(`Total memories: ${agent.stats?.totalMemories}`);
 
 **See Also:**
 
-- [Hybrid Agent Management](../02-core-features/01-agent-memory.md#hybrid-agent-management)
+- [Hybrid Agent Management](../02-core-features/01-memory-spaces.md#hybrid-agent-management)
 
 ---
 
