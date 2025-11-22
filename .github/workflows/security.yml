@@ -10,6 +10,11 @@ on:
     - cron: '0 3 * * 1'
   workflow_dispatch: # Allow manual runs
 
+# Default permissions: read-only
+# Write permissions are granted explicitly at job level
+permissions:
+  contents: read
+
 jobs:
   # CodeQL static analysis
   codeql-analysis:

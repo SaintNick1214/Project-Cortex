@@ -54,7 +54,8 @@ export async function setupNewConvex(
     let convexUrl = "";
     let deployKey = "";
 
-    if (fs.existsSync(envLocalPath)) {
+    // Try to read existing .env.local atomically
+    try {
       const envContent = await fs.readFile(envLocalPath, "utf-8");
       const urlMatch = envContent.match(/CONVEX_URL=(.+)/);
       const keyMatch = envContent.match(/CONVEX_DEPLOY_KEY=(.+)/);
@@ -64,6 +65,11 @@ export async function setupNewConvex(
       }
       if (keyMatch) {
         deployKey = keyMatch[1].trim();
+      }
+    } catch (error: any) {
+      // File doesn't exist (ENOENT) - this is expected for new projects
+      if (error.code !== "ENOENT") {
+        throw error; // Re-throw if it's a different error
       }
     }
 
