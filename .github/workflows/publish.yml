@@ -6,6 +6,9 @@ on:
       - main
   # No paths filter - let version detection decide whether to publish
 
+permissions:
+  contents: read
+
 # Prevent parallel execution with Python tests to avoid Convex deployment conflicts
 concurrency:
   group: cortex-tests-${{ github.ref }}
