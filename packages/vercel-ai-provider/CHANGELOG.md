@@ -2,6 +2,30 @@
 
 All notable changes to @cortexmemory/vercel-ai-provider will be documented in this file.
 
+## [0.1.1] - 2025-11-22
+
+### Changed
+
+**Dependencies:**
+
+- Updated `@cortexmemory/sdk` from `^0.9.0` to `^0.10.0`
+- Updated `@ai-sdk/openai` from `^2.0.66` to `^2.0.71`
+- Updated `@ai-sdk/anthropic` from `^2.0.44` to `^2.0.45`
+- Updated `@typescript-eslint/eslint-plugin` from `^8.46.4` to `^8.47.0`
+- Updated `@typescript-eslint/parser` from `^8.46.4` to `^8.47.0`
+- Updated `rimraf` from `^6.1.0` to `^6.1.2`
+
+**CI/CD:**
+
+- Added automated testing in PR checks workflow
+- Added automated publishing to npm on version changes
+- Integrated with centralized GitHub Actions workflows
+- Removed standalone workflow files (now uses root workflows)
+
+**Build:**
+
+- Simplified `prepublishOnly` script to only run build (tests/lint run in CI)
+
 ## [0.1.0] - 2025-11-05
 
 ### Initial Release
