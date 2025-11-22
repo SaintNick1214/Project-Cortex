@@ -181,7 +181,7 @@ jobs:
           persist-credentials: false
       
       - name: Run analysis
-        uses: ossf/scorecard-action
+        uses: ossf/scorecard-action@v2.4.0
         with:
           results_file: results.sarif
           results_format: sarif
@@ -252,7 +252,8 @@ jobs:
             p/nodejs
             p/typescript
             p/python
-          generateSarif: true
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
       
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v4
