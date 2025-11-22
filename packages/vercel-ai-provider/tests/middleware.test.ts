@@ -63,8 +63,8 @@ describe("Middleware", () => {
   describe("buildMemoryContext", () => {
     it("should build context from memories", () => {
       const memories: any[] = [
-        { content: "User likes coffee", metadata: { importance: 80 } },
-        { content: "User works at Acme", metadata: { importance: 60 } },
+        { content: "User likes coffee", importance: 80 },
+        { content: "User works at Acme", importance: 60 },
       ];
 
       const config: CortexMemoryConfig = {
@@ -83,7 +83,7 @@ describe("Middleware", () => {
 
   describe("injectMemoryContext", () => {
     const memories: any[] = [
-      { content: "Test memory", metadata: { importance: 50 } },
+      { content: "Test memory", importance: 50 },
     ];
 
     const config: CortexMemoryConfig = {
