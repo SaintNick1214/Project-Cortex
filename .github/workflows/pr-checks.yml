@@ -314,42 +314,13 @@ jobs:
           cd packages/vercel-ai-provider
           npm pack --dry-run
 
-  # Security scan
-  security-check:
-    name: Security Scan
-    runs-on: ubuntu-latest
-    # Skip for Dependabot PRs (GitHub's own security checks handle this)
-    if: github.actor != 'dependabot[bot]'
-    permissions:
-      contents: read
-      security-events: write
-      actions: read
-    
-    steps:
-      - name: Checkout PR code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0  # Full history for proper git context
-      
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-      
-      - name: Upload Trivy results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4
-        if: always()
-        with:
-          sarif_file: 'trivy-results.sarif'
+  # Note: Comprehensive security scans run in security.yml workflow
+  # This keeps PR checks fast while security scans run separately
 
   # All checks passed
   all-checks-passed:
     name: All Checks Passed
-    needs: [detect-changes, test-typescript, test-python, test-vercel-ai-provider, security-check, code-quality]
+    needs: [detect-changes, test-typescript, test-python, test-vercel-ai-provider, code-quality]
     if: always()
     runs-on: ubuntu-latest
     permissions:
@@ -363,7 +334,8 @@ jobs:
           echo "  TypeScript Tests: ${{ needs.test-typescript.result }}"
           echo "  Python Tests: ${{ needs.test-python.result }}"
           echo "  Vercel AI Provider Tests: ${{ needs.test-vercel-ai-provider.result }}"
-          echo "  Security Scan: ${{ needs.security-check.result }}"
+          echo ""
+          echo "ℹ️  Security scans run in separate workflow (see Security tab)"
           echo ""
           
           # Code quality must pass OR be skipped (when TS version unchanged)
@@ -390,12 +362,6 @@ jobs:
             exit 1
           fi
           
-          # Security check must pass
-          if [[ "${{ needs.security-check.result }}" != "success" ]]; then
-            echo "❌ Security check failed"
-            exit 1
-          fi
-          
           echo ""
-          echo "✅ All checks passed!"
+          echo "✅ All PR checks passed!"
 
