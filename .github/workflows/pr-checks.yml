@@ -305,6 +305,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0  # Full history for proper git context
       
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master

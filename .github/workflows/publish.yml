@@ -281,7 +281,7 @@ jobs:
           echo ""
 
   publish-vercel-ai-provider:
-    needs: [check-version, publish-sdk]  # Wait for SDK to publish first
+    needs: check-version
     if: needs.check-version.outputs.vercel-ai-provider-version-changed == 'true'
     runs-on: ubuntu-latest
     permissions:
