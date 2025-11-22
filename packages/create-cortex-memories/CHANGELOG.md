@@ -2,6 +2,19 @@
 
 All notable changes to the create-cortex-memories wizard will be documented in this file.
 
+## [0.1.6] - 2025-11-22
+
+### Changed
+
+**Dependencies:**
+
+- Updated `@types/node` from `^24.10.0` to `^24.10.1`
+
+**CI/CD:**
+
+- Package now integrated with centralized GitHub Actions workflows
+- Automated publishing to npm on version changes
+
 ## [0.1.5] - 2025-11-02
 
 ### Fixed
