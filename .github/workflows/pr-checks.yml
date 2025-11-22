@@ -116,6 +116,7 @@ jobs:
     outputs:
       typescript: ${{ steps.check-versions.outputs.typescript-changed }}
       python: ${{ steps.check-versions.outputs.python-changed }}
+      vercel-ai-provider: ${{ steps.check-versions.outputs.vercel-ai-provider-changed }}
     steps:
       - name: Checkout PR code
         uses: actions/checkout@v4
@@ -160,6 +161,23 @@ jobs:
           else
             echo "python-changed=false" >> $GITHUB_OUTPUT
             echo "⏭️  Python SDK version unchanged: $PYTHON_VERSION"
+          fi
+          
+          # Check Vercel AI Provider version
+          cd ..
+          cd packages/vercel-ai-provider
+          VERCEL_VERSION=$(node -p "require('./package.json').version")
+          echo "📦 PR Vercel AI Provider version: $VERCEL_VERSION"
+          
+          VERCEL_NPM_VERSION=$(npm view @cortexmemory/vercel-ai-provider version 2>/dev/null || echo "0.0.0")
+          echo "📚 Published Vercel AI Provider version: $VERCEL_NPM_VERSION"
+          
+          if [ "$VERCEL_VERSION" != "$VERCEL_NPM_VERSION" ]; then
+            echo "vercel-ai-provider-changed=true" >> $GITHUB_OUTPUT
+            echo "✅ Vercel AI Provider version changed: $VERCEL_NPM_VERSION → $VERCEL_VERSION"
+          else
+            echo "vercel-ai-provider-changed=false" >> $GITHUB_OUTPUT
+            echo "⏭️  Vercel AI Provider version unchanged: $VERCEL_VERSION"
           fi
 
   # Python SDK Tests
@@ -214,6 +232,59 @@ jobs:
           cd cortex-sdk-python
           ruff check cortex/
 
+  # Vercel AI Provider Tests
+  test-vercel-ai-provider:
+    name: Test Vercel AI Provider
+    runs-on: ubuntu-latest
+    needs: [detect-changes, test-typescript]  # Run after TS SDK tests
+    # Run if Vercel AI Provider version changed OR if PR is targeting main branch
+    if: |
+      needs.detect-changes.outputs.vercel-ai-provider == 'true' || 
+      github.event.pull_request.base.ref == 'main'
+    
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: 'npm'
+      
+      - name: Install root dependencies
+        run: npm ci
+      
+      - name: Build main SDK first
+        run: npm run build
+      
+      - name: Install Vercel AI Provider dependencies
+        run: |
+          cd packages/vercel-ai-provider
+          npm install
+      
+      - name: Run Vercel AI Provider tests
+        run: |
+          cd packages/vercel-ai-provider
+          npm test
+      
+      - name: Lint Vercel AI Provider
+        run: |
+          cd packages/vercel-ai-provider
+          npm run lint
+      
+      - name: Build Vercel AI Provider
+        run: |
+          cd packages/vercel-ai-provider
+          npm run build
+      
+      - name: Verify package contents
+        run: |
+          cd packages/vercel-ai-provider
+          npm pack --dry-run
+
   # Security scan
   security-check:
     name: Security Scan
@@ -246,7 +317,7 @@ jobs:
   # All checks passed
   all-checks-passed:
     name: All Checks Passed
-    needs: [detect-changes, test-typescript, test-python, security-check, code-quality]
+    needs: [detect-changes, test-typescript, test-python, test-vercel-ai-provider, security-check, code-quality]
     if: always()
     runs-on: ubuntu-latest
     
@@ -257,6 +328,7 @@ jobs:
           echo "  Code Quality: ${{ needs.code-quality.result }}"
           echo "  TypeScript Tests: ${{ needs.test-typescript.result }}"
           echo "  Python Tests: ${{ needs.test-python.result }}"
+          echo "  Vercel AI Provider Tests: ${{ needs.test-vercel-ai-provider.result }}"
           echo "  Security Scan: ${{ needs.security-check.result }}"
           echo ""
           
@@ -275,6 +347,12 @@ jobs:
           # Python tests must pass OR be skipped (when Python version unchanged)
           if [[ "${{ needs.test-python.result }}" == "failure" ]]; then
             echo "❌ Python tests failed"
+            exit 1
+          fi
+          
+          # Vercel AI Provider tests must pass OR be skipped (when version unchanged)
+          if [[ "${{ needs.test-vercel-ai-provider.result }}" == "failure" ]]; then
+            echo "❌ Vercel AI Provider tests failed"
             exit 1
           fi
           
