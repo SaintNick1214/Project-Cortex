@@ -5,9 +5,7 @@ on:
     branches:
       - main
       - dev
-  # Run on PR sync (new commits, reopens, etc.)
-  pull_request_target:
-    types: [synchronize, reopened]
+    types: [opened, synchronize, reopened]
 
 # Prevent parallel execution to avoid Convex deployment conflicts
 concurrency:
@@ -71,6 +69,8 @@ jobs:
     if: |
       needs.detect-changes.outputs.typescript == 'true' || 
       github.event.pull_request.base.ref == 'main'
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout PR code
@@ -113,6 +113,8 @@ jobs:
   detect-changes:
     name: Detect Version Changes
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       typescript: ${{ steps.check-versions.outputs.typescript-changed }}
       python: ${{ steps.check-versions.outputs.python-changed }}
@@ -189,6 +191,8 @@ jobs:
     if: |
       needs.detect-changes.outputs.python == 'true' || 
       github.event.pull_request.base.ref == 'main'
+    permissions:
+      contents: read
     
     strategy:
       matrix:
@@ -241,6 +245,8 @@ jobs:
     if: |
       needs.detect-changes.outputs.vercel-ai-provider == 'true' || 
       github.event.pull_request.base.ref == 'main'
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout PR code
@@ -320,6 +326,8 @@ jobs:
     needs: [detect-changes, test-typescript, test-python, test-vercel-ai-provider, security-check, code-quality]
     if: always()
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Check if all jobs passed
