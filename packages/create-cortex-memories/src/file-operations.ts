@@ -242,8 +242,15 @@ yarn-error.log*
 .convex/
 `;
 
-  if (!fs.existsSync(gitignorePath)) {
-    await fs.writeFile(gitignorePath, gitignoreContent);
+  // Use atomic file operation to avoid race condition
+  // The 'wx' flag fails if file already exists
+  try {
+    await fs.writeFile(gitignorePath, gitignoreContent, { flag: "wx" });
     console.log(pc.dim("   Created .gitignore"));
+  } catch (error: any) {
+    // File already exists (EEXIST), which is fine - silently continue
+    if (error.code !== "EEXIST") {
+      throw error;
+    }
   }
 }

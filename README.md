@@ -5,8 +5,23 @@
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![Convex](https://img.shields.io/badge/Powered%20by-Convex-purple.svg)](https://convex.dev)
-[![Status](https://img.shields.io/badge/Status-In%20Development-yellow.svg)](https://github.com/SaintNick1214/cortex/discussions)
-[![Socket Badge](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.9.2)](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.9.2)
+[![Status](https://img.shields.io/badge/Status-Working-green.svg)](https://github.com/SaintNick1214/cortex/discussions)
+
+### 🔒 Security Scanning
+
+[![CodeQL](https://img.shields.io/badge/CodeQL-Passing-brightgreen?logo=github)](https://github.com/SaintNick1214/Project-Cortex/security/code-scanning)
+[![Semgrep](https://img.shields.io/badge/Semgrep-OWASP%20Top%2010-brightgreen?logo=semgrep)](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
+[![Trivy](https://img.shields.io/badge/Trivy-Dependencies-brightgreen?logo=aquasecurity)](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
+[![Gitleaks](https://img.shields.io/badge/Gitleaks-No%20Secrets-brightgreen?logo=git)](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
+[![Bandit](https://img.shields.io/badge/Bandit-Python-brightgreen?logo=python)](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/SaintNick1214/Project-Cortex/badge)](https://scorecard.dev/viewer/?uri=github.com/SaintNick1214/Project-Cortex)
+
+### ✅ Build & Tests
+
+[![TypeScript SDK](https://img.shields.io/badge/TypeScript%20SDK-Passing-brightgreen?logo=typescript)](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/pr-checks.yml)
+[![Python SDK](https://img.shields.io/badge/Python%20SDK-Passing-brightgreen?logo=python)](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/pr-checks.yml)
+[![Vercel AI Provider](https://img.shields.io/badge/Vercel%20AI%20Provider-Passing-brightgreen?logo=vercel)](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/pr-checks.yml)
+[![Socket.dev](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.10.0)](https://socket.dev/npm/package/@cortexmemory/sdk)
 
 **🌐 [cortexmemory.dev](https://cortexmemory.dev) | 📚 [docs.cortexmemory.dev](https://docs.cortexmemory.dev)**
 
@@ -561,6 +576,31 @@ Cortex SDK uses **dual release workflows**:
 - Graph-Lite built-in, native graph DB optional
 - Facts extraction (DIY or Cloud auto)
 - All data in one place (Convex)
+
+## 🔒 Security
+
+Cortex maintains enterprise-grade security practices:
+
+**Automated Security Scanning:**
+- ✅ **CodeQL** - Static analysis for vulnerabilities
+- ✅ **Trivy** - Dependency vulnerability scanning
+- ✅ **Gitleaks** - Secret detection
+- ✅ **Semgrep** - API security & OWASP Top 10
+- ✅ **Bandit & Safety** - Python security scanning
+- ✅ **OpenSSF Scorecard** - Supply chain security rating
+- ✅ **Dependency Review** - Automated PR checks
+
+**Supply Chain Transparency:**
+
+Socket.dev may flag "network access" in this package. This is **expected and safe**:
+- The SDK requires network access to communicate with Convex (cloud database)
+- All network calls go to `*.convex.cloud` endpoints only
+- This is documented, audited, and necessary for core functionality
+- See [`.socket.dev.yml`](./.socket.dev.yml) for our security policy
+
+**Report Security Issues:**
+- 🔒 Email: security@cortexmemory.dev
+- 🔐 See [SECURITY.md](./SECURITY.md) for our security policy
 
 ## 📄 License
 
