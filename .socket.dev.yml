@@ -1,0 +1,47 @@
+# Socket.dev Security Configuration
+# https://socket.dev/docs/socket-yml
+
+# Known network access - documented and required
+issueRules:
+  - type: networkAccess
+    reason: "Convex SDK requires network access to communicate with Convex cloud backend"
+    packages:
+      - "convex"
+    action: ignore
+    
+  - type: networkAccess
+    reason: "Cortex SDK uses Convex SDK for cloud database operations"
+    packages:
+      - "@cortexmemory/sdk"
+    action: ignore
+
+# Monitor high-risk changes
+settings:
+  # Alert on new network access from other dependencies
+  alertOnNewNetworkAccess: true
+  
+  # Alert on shell access
+  alertOnShellAccess: true
+  
+  # Alert on filesystem access in non-dev dependencies
+  alertOnFilesystemAccess: true
+  
+  # Severity thresholds
+  failOnCritical: true
+  failOnHigh: false  # Warning only for high severity
+  
+# Approved network endpoints
+allowedEndpoints:
+  - "*.convex.cloud"
+  - "*.convex.dev"
+  - "convex.cloud"
+  
+# Package-specific overrides
+packageOverrides:
+  "convex":
+    networkAccess: allowed
+    reason: "Official Convex SDK - cloud database client"
+  
+  "@cortexmemory/sdk":
+    networkAccess: allowed
+    reason: "Cortex Memory SDK - wraps Convex for memory operations"
