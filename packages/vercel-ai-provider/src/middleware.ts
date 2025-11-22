@@ -209,7 +209,7 @@ export function injectMemoryContext(
  * Extract last user message content from messages array
  */
 export function getLastUserMessage(
-  messages: LanguageModelV1Prompt,
+  messages: any[],
 ): string | null {
   const lastUserMessage = messages.findLast((m) => m.role === "user");
   if (!lastUserMessage || lastUserMessage.role !== "user") return null;
