@@ -36,7 +36,7 @@ export async function execCommand(
   options: { cwd?: string; env?: NodeJS.ProcessEnv } = {},
 ): Promise<{ stdout: string; stderr: string; code: number }> {
   // Allowlist of safe commands used by the wizard
-  const ALLOWED_COMMANDS = ['npx', 'convex', 'npm', 'pnpm', 'yarn', 'bun', 'git', 'node'];
+  const ALLOWED_COMMANDS = ['npx', 'convex', 'npm', 'pnpm', 'yarn', 'bun', 'git', 'node', 'docker'];
   
   // Validate command is from allowlist (defense in depth)
   if (!ALLOWED_COMMANDS.includes(command)) {
@@ -85,7 +85,7 @@ export async function execCommandLive(
   options: { cwd?: string; env?: NodeJS.ProcessEnv } = {},
 ): Promise<number> {
   // Allowlist of safe commands used by the wizard
-  const ALLOWED_COMMANDS = ['npx', 'convex', 'npm', 'pnpm', 'yarn', 'bun', 'git'];
+  const ALLOWED_COMMANDS = ['npx', 'convex', 'npm', 'pnpm', 'yarn', 'bun', 'git', 'docker'];
   
   // Validate command is from allowlist (defense in depth)
   if (!ALLOWED_COMMANDS.includes(command)) {

@@ -30,16 +30,16 @@ jobs:
             echo "number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
           elif [ "${{ github.event_name }}" = "check_suite" ]; then
             # Get PR number from check suite
-            PR_NUMBER=$(echo '${{ toJson(github.event.check_suite.pull_requests) }}' | jq -r '.[0].number')
-            echo "number=$PR_NUMBER" >> $GITHUB_OUTPUT
-          else
-            # For status events, try to extract from context
-            PR_NUMBER=$(echo '${{ toJson(github.event) }}' | jq -r '.number // empty')
-            if [ -z "$PR_NUMBER" ]; then
-              echo "No PR found, skipping"
+            PR_NUMBER="${{ github.event.check_suite.pull_requests[0].number }}"
+            if [ -n "$PR_NUMBER" ]; then
+              echo "number=$PR_NUMBER" >> $GITHUB_OUTPUT
+            else
+              echo "No PR found in check_suite event, skipping"
               exit 0
             fi
-            echo "number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          else
+            echo "Unsupported event type, skipping"
+            exit 0
           fi
       
       - name: Check if PR should auto-merge
