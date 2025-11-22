@@ -94,12 +94,8 @@ export function buildMemoryContext(
 
   // Default context builder
   const contextLines = memories.map((memory, index) => {
-    const content =
-      "content" in memory ? memory.content : memory.memory?.content || "";
-    const importance =
-      "metadata" in memory
-        ? memory.metadata?.importance || 50
-        : memory.memory?.metadata?.importance || 50;
+    const content = memory.content || "";
+    const importance = memory.importance || 50;
 
     return `${index + 1}. ${content} (importance: ${importance}/100)`;
   });
@@ -165,7 +161,7 @@ export function injectMemoryContext(
 
     case "user": {
       // Append to last user message
-      const lastUserIndex = messages.findLastIndex((m) => m.role === "user");
+      const lastUserIndex = messages.findLastIndex((m: any) => m.role === "user");
 
       if (lastUserIndex === -1) {
         logger.warn("No user message found, cannot inject context");
@@ -209,9 +205,9 @@ export function injectMemoryContext(
  * Extract last user message content from messages array
  */
 export function getLastUserMessage(
-  messages: LanguageModelV1Prompt,
+  messages: any[],
 ): string | null {
-  const lastUserMessage = messages.findLast((m) => m.role === "user");
+  const lastUserMessage = messages.findLast((m: any) => m.role === "user");
   if (!lastUserMessage || lastUserMessage.role !== "user") return null;
 
   // Handle content parts

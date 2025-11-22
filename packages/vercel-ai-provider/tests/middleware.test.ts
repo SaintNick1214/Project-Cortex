@@ -10,8 +10,14 @@ import {
   getLastUserMessage,
   validateConfig,
 } from "../src/middleware";
-import type { CortexMemoryConfig, AIMessage } from "../src/types";
+import type { CortexMemoryConfig } from "../src/types";
 import { createLogger } from "../src/types";
+
+// Simple message type for tests (compatible with AI SDK)
+type TestMessage = {
+  role: "system" | "user" | "assistant";
+  content: string;
+};
 
 describe("Middleware", () => {
   const logger = createLogger(false);
@@ -57,8 +63,8 @@ describe("Middleware", () => {
   describe("buildMemoryContext", () => {
     it("should build context from memories", () => {
       const memories: any[] = [
-        { content: "User likes coffee", metadata: { importance: 80 } },
-        { content: "User works at Acme", metadata: { importance: 60 } },
+        { content: "User likes coffee", importance: 80 },
+        { content: "User works at Acme", importance: 60 },
       ];
 
       const config: CortexMemoryConfig = {
@@ -77,7 +83,7 @@ describe("Middleware", () => {
 
   describe("injectMemoryContext", () => {
     const memories: any[] = [
-      { content: "Test memory", metadata: { importance: 50 } },
+      { content: "Test memory", importance: 50 },
     ];
 
     const config: CortexMemoryConfig = {
@@ -87,7 +93,7 @@ describe("Middleware", () => {
     };
 
     it("should inject into system message", () => {
-      const messages: AIMessage[] = [
+      const messages: TestMessage[] = [
         { role: "system", content: "You are helpful" },
         { role: "user", content: "Hello" },
       ];
@@ -108,7 +114,7 @@ describe("Middleware", () => {
     });
 
     it("should create system message if none exists", () => {
-      const messages: AIMessage[] = [{ role: "user", content: "Hello" }];
+      const messages: TestMessage[] = [{ role: "user", content: "Hello" }];
 
       const result = injectMemoryContext(
         messages,
