@@ -277,6 +277,18 @@ jobs:
       - name: Install root dependencies
         run: npm ci
       
+      - name: Deploy Convex backend
+        run: npx convex deploy --yes
+        env:
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+      
+      - name: Generate Convex types
+        run: npx convex codegen
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+      
       - name: Build main SDK first
         run: npm run build
       
