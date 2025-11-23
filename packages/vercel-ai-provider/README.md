@@ -546,6 +546,7 @@ await cortex.memory.remember({
 ### "Failed to connect to Convex"
 
 Make sure:
+
 1. Convex is running: `npx convex dev`
 2. `CONVEX_URL` is set correctly
 3. Cortex backend is deployed to Convex
@@ -553,6 +554,7 @@ Make sure:
 ### "Memory search returns no results"
 
 This is expected if:
+
 - No prior conversations stored
 - Using keyword search without embeddings (set up `embeddingProvider`)
 - Running on local Convex (vector search not supported locally)
@@ -560,6 +562,7 @@ This is expected if:
 ### "Type errors with LanguageModelV1"
 
 Make sure you're using compatible versions:
+
 - `ai`: ^3.0.0
 - `@cortexmemory/sdk`: ^0.9.0
 - `@cortexmemory/vercel-ai-provider`: ^0.1.0

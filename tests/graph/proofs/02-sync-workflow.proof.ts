@@ -288,7 +288,9 @@ async function runSyncWorkflow(adapter: GraphAdapter, dbName: string) {
     console.log(`  🎯 Facts with entities: ${factsWithEntities.count}`);
     for (const record of factsWithEntities.records) {
       console.log(`    - Fact: ${(record.f as any).properties?.fact}`);
-      console.log(`      Entities: ${(record.entities as string[] | undefined)?.join(", ")}`);
+      console.log(
+        `      Entities: ${(record.entities as string[] | undefined)?.join(", ")}`,
+      );
     }
     console.log();
 

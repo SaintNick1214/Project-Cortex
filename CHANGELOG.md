@@ -422,6 +422,7 @@ const facts = await cortex.facts.list({
 #### Backward Compatibility
 
 ✅ **Zero Breaking Changes** - All new filters are optional
+
 - Existing code continues to work unchanged
 - New filters enhance capabilities without breaking existing usage
 - No data migration required
@@ -443,6 +444,7 @@ const facts = await cortex.facts.list({
 **MAJOR:** Complete Python SDK implementation with 100% API parity!
 
 **Full Python SDK (`cortex-memory` on PyPI):**
+
 - 🎉 All TypeScript APIs ported to Python with Pythonic interface
 - ✅ 579 comprehensive tests (100% pass rate on Python 3.10-3.14)
 - 📦 Published to PyPI: `pip install cortex-memory`
@@ -458,6 +460,7 @@ const facts = await cortex.facts.list({
 - 🛠️ Developer-friendly Makefile (`make test`, `make test-local`, `make test-managed`)
 
 **Python-Specific Features:**
+
 - `users.merge()` - Deep merge for user profiles (Python-only)
 - Pythonic naming: snake_case methods and parameters
 - Dataclasses for all types with full type hints
@@ -465,6 +468,7 @@ const facts = await cortex.facts.list({
 - Comprehensive examples (chatbot, multi-agent, fact extraction, graph integration)
 
 **Package Installation:**
+
 ```python
 pip install cortex-memory              # Core SDK
 pip install "cortex-memory[graph]"     # + Neo4j/Memgraph
@@ -473,6 +477,7 @@ pip install "cortex-memory[all]"       # Everything
 ```
 
 **Test Parity Achieved:**
+
 - TypeScript: 1,062 tests (6 skipped without OPENAI_API_KEY)
 - Python: 579 tests (5 skipped in LOCAL mode, 2 skipped without OPENAI_API_KEY in MANAGED)
 - Both SDKs include identical OpenAI integration tests

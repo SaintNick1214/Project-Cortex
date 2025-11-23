@@ -163,7 +163,7 @@ export async function detectOrphan(
     refererLabel: string;
     relationshipType: string;
   };
-  
+
   const incoming = await adapter.query(
     `
     MATCH (referrer)-[r]->(target)
@@ -176,7 +176,9 @@ export async function detectOrphan(
   );
 
   // Filter to external references (not being deleted, not self-reference)
-  const externalRefs = (incoming.records as unknown as ReferenceRecord[]).filter(
+  const externalRefs = (
+    incoming.records as unknown as ReferenceRecord[]
+  ).filter(
     (r) =>
       !deletionContext.deletedNodeIds.has(r.referrerId) &&
       r.referrerId !== nodeId,
@@ -270,7 +272,7 @@ async function checkCircularIsland(
 
       // Find all neighbors (undirected - both incoming and outgoing)
       type NeighborRecord = { neighborId: string; neighborLabel: string };
-      
+
       const neighbors = await adapter.query(
         `
         MATCH (n)--(neighbor)
@@ -337,8 +339,12 @@ export async function deleteWithOrphanCleanup(
   deletionContext.deletedNodeIds.add(nodeId);
 
   // 1. Get all nodes this node references (outgoing edges)
-  type ReferencedNodeRecord = { refId: string; refLabel: string; edgeId: string };
-  
+  type ReferencedNodeRecord = {
+    refId: string;
+    refLabel: string;
+    edgeId: string;
+  };
+
   const referencedNodes = await adapter.query(
     `
     MATCH (n)-[r]->(referenced)

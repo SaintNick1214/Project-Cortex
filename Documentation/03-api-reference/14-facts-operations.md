@@ -328,11 +328,15 @@ const recentFacts = await cortex.facts.search("agent-1", "user preferences", {
 });
 
 // Search by participant (Hive Mode)
-const participantFacts = await cortex.facts.search("shared-space", "user info", {
-  participantId: "profile-agent",
-  factType: "identity",
-  validAt: new Date(), // Facts valid now
-});
+const participantFacts = await cortex.facts.search(
+  "shared-space",
+  "user info",
+  {
+    participantId: "profile-agent",
+    factType: "identity",
+    validAt: new Date(), // Facts valid now
+  },
+);
 
 // Complex search with metadata
 const complexSearch = await cortex.facts.search("agent-1", "important facts", {
@@ -621,12 +625,8 @@ const profileAgentFacts = await cortex.facts.list({
 });
 
 // Compare what different agents learned
-console.log(
-  `Email agent stored ${emailAgentFacts.length} preferences`,
-);
-console.log(
-  `Profile agent stored ${profileAgentFacts.length} identity facts`,
-);
+console.log(`Email agent stored ${emailAgentFacts.length} preferences`);
+console.log(`Profile agent stored ${profileAgentFacts.length} identity facts`);
 ```
 
 **4. Complex Queries**
@@ -1314,4 +1314,3 @@ const enriched = await cortex.memory.search("agent-1", query, {
 ---
 
 **Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
-
