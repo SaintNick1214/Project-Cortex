@@ -17,6 +17,10 @@ concurrency:
 permissions:
   contents: read
 
+# IMPORTANT: Dependabot PRs are explicitly excluded from ALL jobs in this workflow
+# Each job has a condition to skip when github.actor == 'dependabot[bot]'
+# This prevents Dependabot from triggering any CI actions
+
 jobs:
   # Code quality check (fast - runs first)
   code-quality:
@@ -199,9 +203,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: [detect-changes, test-typescript] # Wait for TS tests to avoid Convex conflicts
     # Run if Python SDK version changed OR if PR is targeting main branch
+    # Skip for Dependabot PRs (they only update dependencies)
     if: |
-      needs.detect-changes.outputs.python == 'true' || 
-      github.event.pull_request.base.ref == 'main'
+      github.actor != 'dependabot[bot]' && (
+        needs.detect-changes.outputs.python == 'true' || 
+        github.event.pull_request.base.ref == 'main'
+      )
     permissions:
       contents: read
 
@@ -331,7 +338,8 @@ jobs:
         test-vercel-ai-provider,
         code-quality,
       ]
-    if: always()
+    # Skip for Dependabot PRs (they don't run any checks)
+    if: always() && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     permissions:
       contents: read
