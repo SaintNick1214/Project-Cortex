@@ -217,10 +217,12 @@ describe("Facts API - Universal Filters", () => {
       expect(results.length).toBeGreaterThanOrEqual(1);
       const factIds = results.map((f: any) => f.factId);
       expect(factIds).toContain(oldFact.factId);
-      
+
       // All results should be before cutoff
       results.forEach((fact: any) => {
-        expect(new Date(fact.createdAt).getTime()).toBeLessThan(cutoffDate.getTime());
+        expect(new Date(fact.createdAt).getTime()).toBeLessThan(
+          cutoffDate.getTime(),
+        );
       });
     });
 
@@ -881,4 +883,3 @@ describe("Facts API - Universal Filters", () => {
     });
   });
 });
-

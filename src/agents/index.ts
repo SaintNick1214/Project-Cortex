@@ -893,7 +893,9 @@ export class AgentsAPI {
         `MATCH (n {participantId: $participantId}) RETURN count(n) as count`,
         { participantId: agentId },
       );
-      const record = result.records[0] as unknown as Neo4jCountRecord | undefined;
+      const record = result.records[0] as unknown as
+        | Neo4jCountRecord
+        | undefined;
       return record?.count ?? 0;
     } catch (error) {
       console.warn("Failed to count graph nodes:", error);

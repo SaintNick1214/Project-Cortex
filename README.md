@@ -109,7 +109,9 @@ await cortex.governance.setAgentOverride("audit-agent", {
 
 // Simulate policy impact before applying
 const impact = await cortex.governance.simulate(newPolicy);
-console.log(`Would save ${impact.storageFreed} MB, $${impact.costSavings}/month`);
+console.log(
+  `Would save ${impact.storageFreed} MB, $${impact.costSavings}/month`,
+);
 
 // Generate compliance report
 const report = await cortex.governance.getComplianceReport({
@@ -582,6 +584,7 @@ Cortex SDK uses **dual release workflows**:
 Cortex maintains enterprise-grade security practices:
 
 **Automated Security Scanning:**
+
 - ✅ **CodeQL** - Static analysis for vulnerabilities
 - ✅ **Trivy** - Dependency vulnerability scanning
 - ✅ **Gitleaks** - Secret detection
@@ -593,12 +596,14 @@ Cortex maintains enterprise-grade security practices:
 **Supply Chain Transparency:**
 
 Socket.dev may flag "network access" in this package. This is **expected and safe**:
+
 - The SDK requires network access to communicate with Convex (cloud database)
 - All network calls go to `*.convex.cloud` endpoints only
 - This is documented, audited, and necessary for core functionality
 - See [`.socket.dev.yml`](./.socket.dev.yml) for our security policy
 
 **Report Security Issues:**
+
 - 🔒 Email: security@cortexmemory.dev
 - 🔐 See [SECURITY.md](./SECURITY.md) for our security policy
 

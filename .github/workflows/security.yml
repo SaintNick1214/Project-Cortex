@@ -2,13 +2,19 @@ name: "Security Scans"
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [main, dev]
   pull_request:
-    branches: [ main, dev ]
+    branches: [main, dev]
   schedule:
     # Run weekly security scans every Monday at 3 AM UTC
-    - cron: '0 3 * * 1'
+    - cron: "0 3 * * 1"
   workflow_dispatch: # Allow manual runs
+
+# Prevent parallel execution to avoid Convex deployment conflicts
+# Use different groups for push vs PR to allow both to run independently
+concurrency:
+  group: security-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('branch-{0}', github.ref) }}
+  cancel-in-progress: true
 
 # Default permissions: read-only
 # Write permissions are granted explicitly at job level
@@ -29,11 +35,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript-typescript', 'python' ]
+        language: ["javascript-typescript", "python"]
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -46,10 +52,10 @@ jobs:
 
       - name: Setup Node.js (for JS/TS)
         if: matrix.language == 'javascript-typescript'
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies (for JS/TS)
         if: matrix.language == 'javascript-typescript'
@@ -57,9 +63,9 @@ jobs:
 
       - name: Setup Python
         if: matrix.language == 'python'
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v4
@@ -79,28 +85,28 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH,MEDIUM'
-      
+          scan-type: "fs"
+          scan-ref: "."
+          format: "sarif"
+          output: "trivy-results.sarif"
+          severity: "CRITICAL,HIGH,MEDIUM"
+
       - name: Upload Trivy results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
-          sarif_file: 'trivy-results.sarif'
-          category: 'trivy-dependencies'
+          sarif_file: "trivy-results.sarif"
+          category: "trivy-dependencies"
 
   # Secret scanning (in addition to GitHub's built-in)
   secret-scan:
@@ -110,13 +116,13 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
         env:
@@ -131,11 +137,11 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
-      
+        uses: actions/checkout@v4
+
       - name: Dependency Review
         uses: actions/dependency-review-action@v4
         with:
@@ -150,19 +156,19 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
-      
+        uses: actions/checkout@v4
+
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
-      
+          node-version: "20"
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Check licenses
         run: |
           npx license-checker --summary --onlyAllow 'MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC;0BSD;CC0-1.0;Unlicense;Python-2.0' || true
@@ -179,25 +185,25 @@ jobs:
       id-token: write
       contents: read
       actions: read
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
-      
+
       - name: Run analysis
-        uses: ossf/scorecard-action@v2.4.3
+        uses: ossf/scorecard-action@v2.4.0
         with:
           results_file: results.sarif
           results_format: sarif
           publish_results: true
-      
+
       - name: Upload SARIF results
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: results.sarif
-          category: 'scorecard'
+          category: "scorecard"
 
   # Python package security (for your Python SDK)
   python-security:
@@ -207,27 +213,27 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
-      
+        uses: actions/checkout@v4
+
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-      
+          python-version: "3.11"
+
       - name: Install dependencies
         run: |
           cd cortex-sdk-python
           python -m pip install --upgrade pip
           pip install safety bandit[toml]
-      
+
       - name: Run Safety check (vulnerabilities)
         run: |
           cd cortex-sdk-python
           safety check --json || true
-      
+
       - name: Run Bandit (security issues)
         run: |
           cd cortex-sdk-python
@@ -243,11 +249,11 @@ jobs:
       contents: read
       security-events: write
       actions: read
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
-      
+        uses: actions/checkout@v4
+
       - name: Run Semgrep
         uses: semgrep/semgrep-action@v1
         with:
@@ -262,13 +268,13 @@ jobs:
         env:
           SEMGREP_SARIF_OUTPUT: semgrep.sarif
         continue-on-error: true
-      
+
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v4
         if: always() && hashFiles('semgrep.sarif') != ''
         with:
           sarif_file: semgrep.sarif
-          category: 'semgrep-api-security'
+          category: "semgrep-api-security"
 
   # OpenAPI/Swagger security audit (if specs exist)
   openapi-security:
@@ -278,11 +284,11 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
-      
+        uses: actions/checkout@v4
+
       - name: Check for OpenAPI specs
         id: check-specs
         run: |
@@ -293,10 +299,10 @@ jobs:
             echo "has_specs=false" >> $GITHUB_OUTPUT
             echo "ℹ️  No OpenAPI/Swagger specs found - skipping"
           fi
-      
+
       - name: Run 42Crunch API Security Audit
         if: steps.check-specs.outputs.has_specs == 'true'
-        uses: 42Crunch/api-security-audit-action@v4
+        uses: 42Crunch/api-security-audit-action@v3
         with:
           api-token: ${{ secrets.API_SECURITY_TOKEN }}
           platform-url: https://platform.42crunch.com
@@ -309,12 +315,19 @@ jobs:
   # All security checks summary
   security-summary:
     name: Security Checks Summary
-    needs: [codeql-analysis, dependency-scan, secret-scan, python-security, api-security]
+    needs:
+      [
+        codeql-analysis,
+        dependency-scan,
+        secret-scan,
+        python-security,
+        api-security,
+      ]
     if: always()
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    
+
     steps:
       - name: Check results
         run: |
@@ -327,7 +340,7 @@ jobs:
           echo ""
           echo "ℹ️  Scorecard (supply chain) and OpenAPI scans run conditionally"
           echo ""
-          
+
           # Only fail on actual failures, not skipped jobs
           # API security is continue-on-error, so don't block on it
           if [[ "${{ needs.codeql-analysis.result }}" == "failure" ]] || \
@@ -337,5 +350,5 @@ jobs:
             echo "❌ Security checks failed"
             exit 1
           fi
-          
+
           echo "✅ All critical security checks passed!"

@@ -99,10 +99,7 @@ export function createCortexMemory(
    * Main function: Wrap a language model with memory
    */
   const cortexMemory: CortexMemoryModel = Object.assign(
-    (
-      underlyingModel: any,
-      settings?: Record<string, unknown>,
-    ): any => {
+    (underlyingModel: any, settings?: Record<string, unknown>): any => {
       logger.debug(`Wrapping model: ${underlyingModel.modelId}`);
 
       // Create memory-augmented provider

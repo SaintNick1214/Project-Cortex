@@ -871,7 +871,9 @@ export class MemoryAPI {
                   memoryId: updatedMemory.memoryId,
                 },
                 tags:
-                  factData.tags && factData.tags.length > 0 ? factData.tags : updatedMemory.tags,
+                  factData.tags && factData.tags.length > 0
+                    ? factData.tags
+                    : updatedMemory.tags,
               },
               { syncToGraph: options.syncToGraph },
             );
