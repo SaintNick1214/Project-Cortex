@@ -19,9 +19,9 @@ jobs:
     # Only run on PRs targeting main
     if: github.event.pull_request.base.ref == 'main' || github.event.check_suite.pull_requests[0].base.ref == 'main'
     permissions:
-      contents: write       # Required to merge PRs
-      pull-requests: write  # Required to add comments and labels
-    
+      contents: write # Required to merge PRs
+      pull-requests: write # Required to add comments and labels
+
     steps:
       - name: Get PR number
         id: pr
@@ -41,7 +41,7 @@ jobs:
             echo "Unsupported event type, skipping"
             exit 0
           fi
-      
+
       - name: Check if PR should auto-merge
         id: should-merge
         env:
@@ -53,22 +53,22 @@ jobs:
             echo "should_merge=false" >> $GITHUB_OUTPUT
             exit 0
           fi
-          
+
           # Get PR details
           PR_JSON=$(gh api repos/${{ github.repository }}/pulls/$PR_NUMBER)
-          
+
           # Check if PR has auto-merge label
           HAS_LABEL=$(echo "$PR_JSON" | jq -r '.labels[]? | select(.name == "auto-merge") | .name' || echo "")
-          
+
           # Check if PR is approved
           REVIEWS=$(gh api repos/${{ github.repository }}/pulls/$PR_NUMBER/reviews)
           APPROVED=$(echo "$REVIEWS" | jq -r '[.[] | select(.state == "APPROVED")] | length')
-          
+
           # Check if PR is mergeable
           MERGEABLE=$(echo "$PR_JSON" | jq -r '.mergeable')
           STATE=$(echo "$PR_JSON" | jq -r '.mergeable_state')
           DRAFT=$(echo "$PR_JSON" | jq -r '.draft')
-          
+
           echo "📊 PR Status:"
           echo "  PR #$PR_NUMBER"
           echo "  Has auto-merge label: $HAS_LABEL"
@@ -76,7 +76,7 @@ jobs:
           echo "  Mergeable: $MERGEABLE"
           echo "  Mergeable state: $STATE"
           echo "  Draft: $DRAFT"
-          
+
           # Require: auto-merge label + approval + mergeable + not draft
           if [ "$HAS_LABEL" = "auto-merge" ] && \
              [ "$APPROVED" -gt "0" ] && \
@@ -89,7 +89,7 @@ jobs:
             echo "⏸️  PR not ready for auto-merge"
             echo "should_merge=false" >> $GITHUB_OUTPUT
           fi
-      
+
       - name: Auto-merge PR
         if: steps.should-merge.outputs.should_merge == 'true'
         env:
@@ -97,16 +97,16 @@ jobs:
           PR_NUMBER: ${{ steps.pr.outputs.number }}
         run: |
           echo "🚀 Auto-merging PR #$PR_NUMBER"
-          
+
           # Merge the PR (squash by default)
           gh pr merge $PR_NUMBER \
             --squash \
             --auto \
             --delete-branch \
             --subject "Auto-merge: PR #$PR_NUMBER"
-          
+
           echo "✅ PR #$PR_NUMBER queued for auto-merge"
-      
+
       - name: Comment on PR
         if: steps.should-merge.outputs.should_merge == 'true'
         env:
@@ -115,9 +115,9 @@ jobs:
         run: |
           gh pr comment $PR_NUMBER --body "$(cat <<'EOF'
           🤖 **Auto-Merge Enabled**
-          
+
           This PR has been approved and all checks have passed. It will be automatically merged once any remaining required checks complete.
-          
+
           If you need to make changes, remove the \`auto-merge\` label to prevent automatic merging.
           EOF
           )"

@@ -8,7 +8,7 @@ issueRules:
     packages:
       - "convex"
     action: ignore
-    
+
   - type: networkAccess
     reason: "Cortex SDK uses Convex SDK for cloud database operations"
     packages:
@@ -19,29 +19,29 @@ issueRules:
 settings:
   # Alert on new network access from other dependencies
   alertOnNewNetworkAccess: true
-  
+
   # Alert on shell access
   alertOnShellAccess: true
-  
+
   # Alert on filesystem access in non-dev dependencies
   alertOnFilesystemAccess: true
-  
+
   # Severity thresholds
   failOnCritical: true
-  failOnHigh: false  # Warning only for high severity
-  
+  failOnHigh: false # Warning only for high severity
+
 # Approved network endpoints
 allowedEndpoints:
   - "*.convex.cloud"
   - "*.convex.dev"
   - "convex.cloud"
-  
+
 # Package-specific overrides
 packageOverrides:
   "convex":
     networkAccess: allowed
     reason: "Official Convex SDK - cloud database client"
-  
+
   "@cortexmemory/sdk":
     networkAccess: allowed
     reason: "Cortex Memory SDK - wraps Convex for memory operations"

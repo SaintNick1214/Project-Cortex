@@ -483,7 +483,7 @@ export default defineSchema({
     // Metadata
     isActive: v.boolean(),
     appliedBy: v.optional(v.string()), // Who applied this policy
-    
+
     // Timestamps
     createdAt: v.number(),
     updatedAt: v.number(),
@@ -511,7 +511,7 @@ export default defineSchema({
 
     // Metadata
     triggeredBy: v.optional(v.string()),
-    
+
     // Timestamps
     executedAt: v.number(),
   })

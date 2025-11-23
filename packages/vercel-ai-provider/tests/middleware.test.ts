@@ -82,9 +82,7 @@ describe("Middleware", () => {
   });
 
   describe("injectMemoryContext", () => {
-    const memories: any[] = [
-      { content: "Test memory", importance: 50 },
-    ];
+    const memories: any[] = [{ content: "Test memory", importance: 50 }];
 
     const config: CortexMemoryConfig = {
       convexUrl: "test",

@@ -230,10 +230,7 @@ export interface CortexMemoryModel {
    * });
    * ```
    */
-  (
-    underlyingModel: any,
-    settings?: Record<string, unknown>,
-  ): any;
+  (underlyingModel: any, settings?: Record<string, unknown>): any;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Manual Memory Control Methods

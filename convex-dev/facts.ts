@@ -243,7 +243,14 @@ export const list = query({
     participantId: v.optional(v.string()),
     tags: v.optional(v.array(v.string())),
     tagMatch: v.optional(v.union(v.literal("any"), v.literal("all"))),
-    sourceType: v.optional(v.union(v.literal("conversation"), v.literal("system"), v.literal("tool"), v.literal("manual"))),
+    sourceType: v.optional(
+      v.union(
+        v.literal("conversation"),
+        v.literal("system"),
+        v.literal("tool"),
+        v.literal("manual"),
+      ),
+    ),
     createdBefore: v.optional(v.number()),
     createdAfter: v.optional(v.number()),
     updatedBefore: v.optional(v.number()),
@@ -300,12 +307,13 @@ export const list = query({
     }
     if (args.tags && args.tags.length > 0) {
       if (args.tagMatch === "all") {
-        facts = facts.filter((f) => 
-          args.tags!.every((tag) => f.tags.includes(tag))
+        facts = facts.filter((f) =>
+          args.tags!.every((tag) => f.tags.includes(tag)),
         );
-      } else { // "any" is default
-        facts = facts.filter((f) => 
-          args.tags!.some((tag) => f.tags.includes(tag))
+      } else {
+        // "any" is default
+        facts = facts.filter((f) =>
+          args.tags!.some((tag) => f.tags.includes(tag)),
         );
       }
     }
@@ -345,9 +353,18 @@ export const list = query({
     // Apply sorting (safe - only if facts exist and sortBy is valid)
     if (args.sortBy && facts.length > 0) {
       // Validate sortBy is a valid field
-      const validSortFields = ["createdAt", "updatedAt", "confidence", "version"];
+      const validSortFields = [
+        "createdAt",
+        "updatedAt",
+        "confidence",
+        "version",
+      ];
       if (validSortFields.includes(args.sortBy)) {
-        const sortField = args.sortBy as "createdAt" | "updatedAt" | "confidence" | "version";
+        const sortField = args.sortBy as
+          | "createdAt"
+          | "updatedAt"
+          | "confidence"
+          | "version";
         facts.sort((a, b) => {
           const aVal = a[sortField] as any;
           const bVal = b[sortField] as any;
@@ -360,7 +377,8 @@ export const list = query({
     // Apply pagination (offset and limit combined)
     const offset = args.offset || 0;
     const limit = args.limit !== undefined ? offset + args.limit : undefined;
-    facts = limit !== undefined ? facts.slice(offset, limit) : facts.slice(offset);
+    facts =
+      limit !== undefined ? facts.slice(offset, limit) : facts.slice(offset);
 
     return facts;
   },
@@ -394,7 +412,14 @@ export const count = query({
     participantId: v.optional(v.string()),
     tags: v.optional(v.array(v.string())),
     tagMatch: v.optional(v.union(v.literal("any"), v.literal("all"))),
-    sourceType: v.optional(v.union(v.literal("conversation"), v.literal("system"), v.literal("tool"), v.literal("manual"))),
+    sourceType: v.optional(
+      v.union(
+        v.literal("conversation"),
+        v.literal("system"),
+        v.literal("tool"),
+        v.literal("manual"),
+      ),
+    ),
     createdBefore: v.optional(v.number()),
     createdAfter: v.optional(v.number()),
     updatedBefore: v.optional(v.number()),
@@ -447,12 +472,12 @@ export const count = query({
     }
     if (args.tags && args.tags.length > 0) {
       if (args.tagMatch === "all") {
-        facts = facts.filter((f) => 
-          args.tags!.every((tag) => f.tags.includes(tag))
+        facts = facts.filter((f) =>
+          args.tags!.every((tag) => f.tags.includes(tag)),
         );
       } else {
-        facts = facts.filter((f) => 
-          args.tags!.some((tag) => f.tags.includes(tag))
+        facts = facts.filter((f) =>
+          args.tags!.some((tag) => f.tags.includes(tag)),
         );
       }
     }
@@ -521,7 +546,14 @@ export const search = query({
     participantId: v.optional(v.string()),
     tags: v.optional(v.array(v.string())),
     tagMatch: v.optional(v.union(v.literal("any"), v.literal("all"))),
-    sourceType: v.optional(v.union(v.literal("conversation"), v.literal("system"), v.literal("tool"), v.literal("manual"))),
+    sourceType: v.optional(
+      v.union(
+        v.literal("conversation"),
+        v.literal("system"),
+        v.literal("tool"),
+        v.literal("manual"),
+      ),
+    ),
     createdBefore: v.optional(v.number()),
     createdAfter: v.optional(v.number()),
     updatedBefore: v.optional(v.number()),
@@ -545,8 +577,8 @@ export const search = query({
       .collect();
 
     // Filter superseded unless explicitly requested
-    let filtered = args.includeSuperseded 
-      ? results 
+    let filtered = args.includeSuperseded
+      ? results
       : results.filter((f) => f.supersededBy === undefined);
 
     // Apply universal filters (same as list/count)
@@ -579,12 +611,12 @@ export const search = query({
     }
     if (args.tags && args.tags.length > 0) {
       if (args.tagMatch === "all") {
-        filtered = filtered.filter((f) => 
-          args.tags!.every((tag) => f.tags.includes(tag))
+        filtered = filtered.filter((f) =>
+          args.tags!.every((tag) => f.tags.includes(tag)),
         );
       } else {
-        filtered = filtered.filter((f) => 
-          args.tags!.some((tag) => f.tags.includes(tag))
+        filtered = filtered.filter((f) =>
+          args.tags!.some((tag) => f.tags.includes(tag)),
         );
       }
     }
@@ -623,9 +655,18 @@ export const search = query({
     // Apply sorting (safe - only if facts exist and sortBy is valid)
     if (args.sortBy && filtered.length > 0) {
       // Validate sortBy is a valid field
-      const validSortFields = ["createdAt", "updatedAt", "confidence", "version"];
+      const validSortFields = [
+        "createdAt",
+        "updatedAt",
+        "confidence",
+        "version",
+      ];
       if (validSortFields.includes(args.sortBy)) {
-        const sortField = args.sortBy as "createdAt" | "updatedAt" | "confidence" | "version";
+        const sortField = args.sortBy as
+          | "createdAt"
+          | "updatedAt"
+          | "confidence"
+          | "version";
         filtered.sort((a, b) => {
           const aVal = a[sortField] as any;
           const bVal = b[sortField] as any;
@@ -638,7 +679,10 @@ export const search = query({
     // Apply pagination (offset and limit combined)
     const offset = args.offset || 0;
     const limit = args.limit !== undefined ? offset + args.limit : undefined;
-    filtered = limit !== undefined ? filtered.slice(offset, limit) : filtered.slice(offset);
+    filtered =
+      limit !== undefined
+        ? filtered.slice(offset, limit)
+        : filtered.slice(offset);
 
     return filtered;
   },
@@ -730,7 +774,14 @@ export const queryBySubject = query({
     participantId: v.optional(v.string()),
     tags: v.optional(v.array(v.string())),
     tagMatch: v.optional(v.union(v.literal("any"), v.literal("all"))),
-    sourceType: v.optional(v.union(v.literal("conversation"), v.literal("system"), v.literal("tool"), v.literal("manual"))),
+    sourceType: v.optional(
+      v.union(
+        v.literal("conversation"),
+        v.literal("system"),
+        v.literal("tool"),
+        v.literal("manual"),
+      ),
+    ),
     createdBefore: v.optional(v.number()),
     createdAfter: v.optional(v.number()),
     updatedBefore: v.optional(v.number()),
@@ -784,12 +835,13 @@ export const queryBySubject = query({
     }
     if (args.tags && args.tags.length > 0) {
       if (args.tagMatch === "all") {
-        facts = facts.filter((f) => 
-          args.tags!.every((tag) => f.tags.includes(tag))
+        facts = facts.filter((f) =>
+          args.tags!.every((tag) => f.tags.includes(tag)),
         );
-      } else { // "any" is default
-        facts = facts.filter((f) => 
-          args.tags!.some((tag) => f.tags.includes(tag))
+      } else {
+        // "any" is default
+        facts = facts.filter((f) =>
+          args.tags!.some((tag) => f.tags.includes(tag)),
         );
       }
     }
@@ -829,9 +881,18 @@ export const queryBySubject = query({
     // Apply sorting (safe - only if facts exist and sortBy is valid)
     if (args.sortBy && facts.length > 0) {
       // Validate sortBy is a valid field
-      const validSortFields = ["createdAt", "updatedAt", "confidence", "version"];
+      const validSortFields = [
+        "createdAt",
+        "updatedAt",
+        "confidence",
+        "version",
+      ];
       if (validSortFields.includes(args.sortBy)) {
-        const sortField = args.sortBy as "createdAt" | "updatedAt" | "confidence" | "version";
+        const sortField = args.sortBy as
+          | "createdAt"
+          | "updatedAt"
+          | "confidence"
+          | "version";
         facts.sort((a, b) => {
           const aVal = a[sortField] as any;
           const bVal = b[sortField] as any;
@@ -844,7 +905,8 @@ export const queryBySubject = query({
     // Apply pagination (offset and limit combined)
     const offset = args.offset || 0;
     const limit = args.limit !== undefined ? offset + args.limit : undefined;
-    facts = limit !== undefined ? facts.slice(offset, limit) : facts.slice(offset);
+    facts =
+      limit !== undefined ? facts.slice(offset, limit) : facts.slice(offset);
 
     return facts;
   },
@@ -878,7 +940,14 @@ export const queryByRelationship = query({
     participantId: v.optional(v.string()),
     tags: v.optional(v.array(v.string())),
     tagMatch: v.optional(v.union(v.literal("any"), v.literal("all"))),
-    sourceType: v.optional(v.union(v.literal("conversation"), v.literal("system"), v.literal("tool"), v.literal("manual"))),
+    sourceType: v.optional(
+      v.union(
+        v.literal("conversation"),
+        v.literal("system"),
+        v.literal("tool"),
+        v.literal("manual"),
+      ),
+    ),
     createdBefore: v.optional(v.number()),
     createdAfter: v.optional(v.number()),
     updatedBefore: v.optional(v.number()),
@@ -930,12 +999,12 @@ export const queryByRelationship = query({
     }
     if (args.tags && args.tags.length > 0) {
       if (args.tagMatch === "all") {
-        facts = facts.filter((f) => 
-          args.tags!.every((tag) => f.tags.includes(tag))
+        facts = facts.filter((f) =>
+          args.tags!.every((tag) => f.tags.includes(tag)),
         );
       } else {
-        facts = facts.filter((f) => 
-          args.tags!.some((tag) => f.tags.includes(tag))
+        facts = facts.filter((f) =>
+          args.tags!.some((tag) => f.tags.includes(tag)),
         );
       }
     }
@@ -975,9 +1044,18 @@ export const queryByRelationship = query({
     // Apply sorting (safe - only if facts exist and sortBy is valid)
     if (args.sortBy && facts.length > 0) {
       // Validate sortBy is a valid field
-      const validSortFields = ["createdAt", "updatedAt", "confidence", "version"];
+      const validSortFields = [
+        "createdAt",
+        "updatedAt",
+        "confidence",
+        "version",
+      ];
       if (validSortFields.includes(args.sortBy)) {
-        const sortField = args.sortBy as "createdAt" | "updatedAt" | "confidence" | "version";
+        const sortField = args.sortBy as
+          | "createdAt"
+          | "updatedAt"
+          | "confidence"
+          | "version";
         facts.sort((a, b) => {
           const aVal = a[sortField] as any;
           const bVal = b[sortField] as any;
@@ -990,7 +1068,8 @@ export const queryByRelationship = query({
     // Apply pagination (offset and limit combined)
     const offset = args.offset || 0;
     const limit = args.limit !== undefined ? offset + args.limit : undefined;
-    facts = limit !== undefined ? facts.slice(offset, limit) : facts.slice(offset);
+    facts =
+      limit !== undefined ? facts.slice(offset, limit) : facts.slice(offset);
 
     return facts;
   },
