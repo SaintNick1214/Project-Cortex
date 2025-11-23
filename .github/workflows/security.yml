@@ -21,6 +21,9 @@ concurrency:
 permissions:
   contents: read
 
+# IMPORTANT: Dependabot PRs are explicitly excluded from most jobs in this workflow
+# Each relevant job has a condition to skip when github.actor == 'dependabot[bot]'
+
 jobs:
   # CodeQL static analysis
   codeql-analysis:
@@ -133,7 +136,8 @@ jobs:
   dependency-review:
     name: Dependency Review
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    # Skip for Dependabot PRs (they create PRs that would trigger this)
+    if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
     permissions:
       contents: read
       pull-requests: write
@@ -152,7 +156,8 @@ jobs:
   license-check:
     name: License Compliance
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    # Skip for Dependabot PRs (they only update dependencies)
+    if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
     permissions:
       contents: read
       pull-requests: write
@@ -323,7 +328,8 @@ jobs:
         python-security,
         api-security,
       ]
-    if: always()
+    # Skip for Dependabot PRs (no security checks run)
+    if: always() && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     permissions:
       contents: read
