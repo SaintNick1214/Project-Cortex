@@ -2,6 +2,47 @@
 
 All notable changes to @cortexmemory/vercel-ai-provider will be documented in this file.
 
+## [0.1.2] - 2025-11-23
+
+### Added
+
+**Documentation:**
+
+- Comprehensive community provider documentation ready for Vercel AI SDK submission
+- Enhanced package keywords for better NPM discoverability
+- Links to cortexmemory.dev and docs.cortexmemory.dev in package metadata
+
+**Features Highlighted:**
+
+- Self-hosted architecture (no API keys or vendor lock-in)
+- TypeScript-native implementation
+- Memory Spaces for true multi-tenancy
+- Hive Mode for cross-application memory sharing
+- ACID guarantees via Convex transactions
+- Automatic versioning (10 versions per memory)
+- Edge runtime compatibility
+- Automatic streaming support with buffering
+
+### Changed
+
+**Package Metadata:**
+
+- Enhanced keywords: added `vercel-ai-sdk`, `persistent-memory`, `self-hosted`, `multi-tenant`, `semantic-search`, `embeddings`, `rag`, `typescript`
+- Improved discoverability on NPM search
+
+**Documentation:**
+
+- Comprehensive comparison with mem0 and cloud-only solutions
+- 10+ usage examples (basic, semantic search, multi-tenant, hive mode, etc.)
+- Complete configuration reference
+- Migration guide from mem0
+- Troubleshooting section
+- How it works visual flow
+
+### Fixed
+
+- Documentation links now properly reference cortexmemory.dev ecosystem
+
 ## [0.1.1] - 2025-11-22
 
 ### Changed
