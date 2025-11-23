@@ -17,10 +17,13 @@ jobs:
     name: Auto-Merge Approved PRs
     runs-on: ubuntu-latest
     # Only run on PRs targeting main - check appropriate event context
+    # Skip for Dependabot PRs (they should never auto-merge)
     # Note: We let jobs with no valid PR pass the condition and handle it in the steps
     if: |
-      (github.event_name == 'pull_request_review' && github.event.pull_request.base.ref == 'main') ||
-      (github.event_name == 'check_suite')
+      github.actor != 'dependabot[bot]' && (
+        (github.event_name == 'pull_request_review' && github.event.pull_request.base.ref == 'main') ||
+        (github.event_name == 'check_suite')
+      )
     permissions:
       contents: write # Required to merge PRs
       pull-requests: write # Required to add comments and labels
