@@ -6,10 +6,7 @@
 
 import { Cortex } from "../src";
 import { TestCleanup } from "./helpers/cleanup";
-import type {
-  GovernancePolicy,
-  ComplianceTemplate,
-} from "../src/types";
+import type { GovernancePolicy, ComplianceTemplate } from "../src/types";
 
 describe("Governance API", () => {
   let cortex: Cortex;
@@ -117,9 +114,7 @@ describe("Governance API", () => {
         vector: {
           retention: {
             defaultVersions: -1, // Unlimited for this space
-            byImportance: [
-              { range: [0, 100], versions: -1 },
-            ],
+            byImportance: [{ range: [0, 100], versions: -1 }],
           },
           purging: {
             autoCleanupVersions: false,
@@ -229,9 +224,9 @@ describe("Governance API", () => {
 
       expect(hipaaPolicy.compliance.mode).toBe("HIPAA");
       expect(hipaaPolicy.conversations.retention.deleteAfter).toBe("6y");
-      expect(hipaaPolicy.immutable.retention.byType["audit-log"].versionsToKeep).toBe(
-        -1,
-      );
+      expect(
+        hipaaPolicy.immutable.retention.byType["audit-log"].versionsToKeep,
+      ).toBe(-1);
     });
 
     it("should customize template before applying", async () => {
@@ -364,8 +359,12 @@ describe("Governance API", () => {
       });
 
       expect(impact.breakdown.conversations).toBeDefined();
-      expect(impact.breakdown.conversations?.affected).toBeGreaterThanOrEqual(0);
-      expect(impact.breakdown.conversations?.storageMB).toBeGreaterThanOrEqual(0);
+      expect(impact.breakdown.conversations?.affected).toBeGreaterThanOrEqual(
+        0,
+      );
+      expect(impact.breakdown.conversations?.storageMB).toBeGreaterThanOrEqual(
+        0,
+      );
     });
 
     it("should calculate cost savings", async () => {
@@ -529,7 +528,9 @@ describe("Governance API", () => {
       });
 
       // 2. Verify policy is applied
-      const policy = await cortex.governance.getPolicy({ organizationId: orgId });
+      const policy = await cortex.governance.getPolicy({
+        organizationId: orgId,
+      });
       expect(policy.compliance.mode).toBe("GDPR");
 
       // 3. Simulate impact
@@ -628,7 +629,10 @@ describe("Governance API", () => {
         vector: {
           retention: {
             defaultVersions: 3,
-            byImportance: [{ range: [0, 50], versions: 1 }, { range: [51, 100], versions: 3 }],
+            byImportance: [
+              { range: [0, 50], versions: 1 },
+              { range: [51, 100], versions: 3 },
+            ],
           },
           purging: {
             autoCleanupVersions: true,

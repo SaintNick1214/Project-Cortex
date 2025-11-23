@@ -161,7 +161,9 @@ export function injectMemoryContext(
 
     case "user": {
       // Append to last user message
-      const lastUserIndex = messages.findLastIndex((m: any) => m.role === "user");
+      const lastUserIndex = messages.findLastIndex(
+        (m: any) => m.role === "user",
+      );
 
       if (lastUserIndex === -1) {
         logger.warn("No user message found, cannot inject context");
@@ -204,9 +206,7 @@ export function injectMemoryContext(
 /**
  * Extract last user message content from messages array
  */
-export function getLastUserMessage(
-  messages: any[],
-): string | null {
+export function getLastUserMessage(messages: any[]): string | null {
   const lastUserMessage = messages.findLast((m: any) => m.role === "user");
   if (!lastUserMessage || lastUserMessage.role !== "user") return null;
 

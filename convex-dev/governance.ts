@@ -211,9 +211,7 @@ const COMPLIANCE_TEMPLATES = {
     vector: {
       retention: {
         defaultVersions: 30,
-        byImportance: [
-          { range: [0, 100], versions: 30 },
-        ],
+        byImportance: [{ range: [0, 100], versions: 30 }],
       },
       purging: {
         autoCleanupVersions: false,
@@ -251,7 +249,9 @@ export const setPolicy = mutation({
     if (organizationId) {
       const existing = await ctx.db
         .query("governancePolicies")
-        .withIndex("by_organization", (q) => q.eq("organizationId", organizationId))
+        .withIndex("by_organization", (q) =>
+          q.eq("organizationId", organizationId),
+        )
         .filter((q) => q.eq(q.field("isActive"), true))
         .first();
 
@@ -261,7 +261,9 @@ export const setPolicy = mutation({
     } else if (memorySpaceId) {
       const existing = await ctx.db
         .query("governancePolicies")
-        .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", memorySpaceId))
+        .withIndex("by_memorySpace", (q) =>
+          q.eq("memorySpaceId", memorySpaceId),
+        )
         .filter((q) => q.eq(q.field("isActive"), true))
         .first();
 
@@ -362,7 +364,7 @@ export const enforce = mutation({
     // Get active policy for scope
     let policy;
     const scope = options.scope || {};
-    
+
     if (scope.memorySpaceId) {
       policy = await ctx.db
         .query("governancePolicies")

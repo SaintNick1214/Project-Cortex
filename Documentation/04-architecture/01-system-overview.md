@@ -197,18 +197,19 @@ interface MemoryMetadata {
 }
 ```
 
-
 ### 6. Graph Integration
 
 Cortex offers two levels of graph capabilities:
 
 **Graph-Lite (Built-in):**
+
 - Uses Convex references (`conversationRef`, `parentId`) as edges
 - Excellent for 1-5 hop traversals (e.g. Memory -> Conversation -> User)
 - Zero setup, always available
 - Powered by efficient indexed lookups
 
 **Native Graph (Optional Integration):**
+
 - Syncs Cortex data to Neo4j or Memgraph
 - Enables deep traversals (6+ hops), complex pattern matching, and graph algorithms
 - Managed automatically via `syncToGraph` option in all APIs

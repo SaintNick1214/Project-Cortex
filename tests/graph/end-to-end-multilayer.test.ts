@@ -942,7 +942,7 @@ What specific aspects would you like to dive deeper into?
         await graphAdapter.countEdges();
 
       type CountRecord = { count: number };
-      
+
       const memToConv = await graphAdapter.query(`
         MATCH (m:Memory)-[:REFERENCES]->(c:Conversation) RETURN count(*) as count
       `);

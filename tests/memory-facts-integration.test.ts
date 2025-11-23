@@ -84,7 +84,10 @@ describe("Memory API with Fact Integration", () => {
       conversationId: specificConvId,
       type: "user-agent",
       memorySpaceId: testMemorySpaceId,
-      participants: { userId: testUserId, participantId: specificParticipantId },
+      participants: {
+        userId: testUserId,
+        participantId: specificParticipantId,
+      },
     });
 
     const extractFacts = async () => [

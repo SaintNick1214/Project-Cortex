@@ -182,7 +182,6 @@ export class GovernanceAPI {
    * ```
    */
   async simulate(options: SimulationOptions): Promise<SimulationResult> {
-
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await this.client.query(
       api.governance.simulate as FunctionReference<"query">,

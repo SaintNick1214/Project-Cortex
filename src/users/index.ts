@@ -24,7 +24,6 @@ import type {
   FactRecord,
 } from "../types";
 
-
 // Type for Neo4j record results (reused from agents)
 interface Neo4jNodeRecord {
   id: string;
@@ -359,11 +358,13 @@ export class UsersAPI {
       id: userId,
     });
 
-    return result.map((v: { version: number; data: unknown; timestamp: number }) => ({
-      version: v.version,
-      data: (v.data as Record<string, unknown> | undefined) ?? {},
-      timestamp: v.timestamp,
-    }));
+    return result.map(
+      (v: { version: number; data: unknown; timestamp: number }) => ({
+        version: v.version,
+        data: (v.data as Record<string, unknown> | undefined) ?? {},
+        timestamp: v.timestamp,
+      }),
+    );
   }
 
   /**
@@ -785,7 +786,9 @@ export class UsersAPI {
       vector: JSON.parse(JSON.stringify(plan.vector)) as MemoryEntry[],
       facts: JSON.parse(JSON.stringify(plan.facts)) as FactRecord[],
       userProfile: plan.userProfile
-        ? (JSON.parse(JSON.stringify(plan.userProfile)) as unknown as UserProfile)
+        ? (JSON.parse(
+            JSON.stringify(plan.userProfile),
+          ) as unknown as UserProfile)
         : null,
     };
   }
@@ -1210,7 +1213,9 @@ export class UsersAPI {
         { userId },
       );
       // GraphQueryResult has a .records property
-      const record = result.records[0] as unknown as Neo4jCountRecord | undefined;
+      const record = result.records[0] as unknown as
+        | Neo4jCountRecord
+        | undefined;
       return record?.count ?? 0;
     } catch (error) {
       console.warn("Failed to count graph nodes:", error);

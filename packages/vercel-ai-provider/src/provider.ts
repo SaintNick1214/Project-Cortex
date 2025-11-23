@@ -18,7 +18,7 @@ import { createCompletionStream } from "./streaming";
 
 /**
  * Cortex Memory Provider
- * 
+ *
  * Wraps an existing language model with automatic memory capabilities
  */
 export class CortexMemoryProvider {
@@ -39,7 +39,8 @@ export class CortexMemoryProvider {
     this.provider = underlyingModel.provider;
     this.modelId = underlyingModel.modelId;
     this.specificationVersion = underlyingModel.specificationVersion;
-    this.defaultObjectGenerationMode = underlyingModel.defaultObjectGenerationMode;
+    this.defaultObjectGenerationMode =
+      underlyingModel.defaultObjectGenerationMode;
 
     // Initialize Cortex SDK
     this.cortex = new Cortex({ convexUrl: config.convexUrl });

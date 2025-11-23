@@ -13,23 +13,24 @@ Official integrations for Cortex Memory with popular AI frameworks and tools.
 Add persistent memory to Next.js applications with Vercel AI SDK:
 
 ```typescript
-import { createCortexMemory } from '@cortexmemory/vercel-ai-provider';
-import { openai } from '@ai-sdk/openai';
-import { streamText } from 'ai';
+import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
+import { openai } from "@ai-sdk/openai";
+import { streamText } from "ai";
 
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: 'my-chatbot',
-  userId: 'user-123',
+  memorySpaceId: "my-chatbot",
+  userId: "user-123",
 });
 
 const result = await streamText({
-  model: cortexMemory(openai('gpt-4-turbo')),
+  model: cortexMemory(openai("gpt-4-turbo")),
   messages,
 });
 ```
 
 **Features:**
+
 - ✅ Automatic memory retrieval and storage
 - ✅ Edge runtime compatible
 - ✅ Works with all AI SDK providers (OpenAI, Anthropic, Google, etc.)
@@ -38,6 +39,7 @@ const result = await streamText({
 - ✅ Streaming support
 
 **Learn More:**
+
 - [Getting Started](./vercel-ai-sdk/getting-started.md)
 - [API Reference](./vercel-ai-sdk/api-reference.md)
 - [Examples](../../packages/vercel-ai-provider/examples/)
@@ -71,7 +73,7 @@ Model Context Protocol servers for cross-application memory sharing.
 
 ## Integration Requests
 
-Want an integration with your favorite framework? 
+Want an integration with your favorite framework?
 
 - [Open an issue](https://github.com/SaintNick1214/Project-Cortex/issues/new)
 - [Start a discussion](https://github.com/SaintNick1214/Project-Cortex/discussions)
@@ -84,4 +86,3 @@ Want an integration with your favorite framework?
 - [Main Documentation](../00-README.md)
 - [Core Features](../02-core-features/)
 - [API Reference](../03-api-reference/)
-

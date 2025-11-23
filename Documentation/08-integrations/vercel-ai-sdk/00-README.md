@@ -37,19 +37,19 @@ npm install @cortexmemory/vercel-ai-provider @cortexmemory/sdk ai convex
 ```
 
 ```typescript
-import { createCortexMemory } from '@cortexmemory/vercel-ai-provider';
-import { openai } from '@ai-sdk/openai';
-import { streamText } from 'ai';
+import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
+import { openai } from "@ai-sdk/openai";
+import { streamText } from "ai";
 
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: 'my-chatbot',
-  userId: 'user-123',
+  memorySpaceId: "my-chatbot",
+  userId: "user-123",
 });
 
 const result = await streamText({
-  model: cortexMemory(openai('gpt-4-turbo')),
-  messages: [{ role: 'user', content: 'What did I tell you earlier?' }],
+  model: cortexMemory(openai("gpt-4-turbo")),
+  messages: [{ role: "user", content: "What did I tell you earlier?" }],
 });
 ```
 
@@ -85,4 +85,3 @@ Package source code: [`packages/vercel-ai-provider/`](../../../packages/vercel-a
 - [Streaming Support](../../02-core-features/12-streaming-support.md) - SDK streaming features
 - [Memory Spaces](../../02-core-features/01-memory-spaces.md) - Core memory space features
 - [Hive Mode](../../02-core-features/10-hive-mode.md) - Core hive mode features
-

@@ -698,10 +698,14 @@ async function runMultiLayerProof(adapter: GraphAdapter, dbName: string) {
       for (const chain of enhancedResult.enrichment.contextChains.slice(0, 2)) {
         console.log(`      Current: ${chain.current}`);
         if (chain.ancestors && (chain.ancestors as string[]).length > 0) {
-          console.log(`      Ancestors: ${(chain.ancestors as string[]).join(" → ")}`);
+          console.log(
+            `      Ancestors: ${(chain.ancestors as string[]).join(" → ")}`,
+          );
         }
         if (chain.descendants && (chain.descendants as string[]).length > 0) {
-          console.log(`      Descendants: ${(chain.descendants as string[]).join(" → ")}`);
+          console.log(
+            `      Descendants: ${(chain.descendants as string[]).join(" → ")}`,
+          );
         }
       }
     }

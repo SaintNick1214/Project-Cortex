@@ -103,7 +103,7 @@ describe("CortexMemoryProvider", () => {
         accessCount: 0,
       },
     ]);
-    
+
     // Override the mock for this test
     Cortex.mockImplementationOnce(() => ({
       memory: {
@@ -116,7 +116,7 @@ describe("CortexMemoryProvider", () => {
       },
       close: jest.fn(),
     }));
-    
+
     const provider = new CortexMemoryProvider(mockUnderlyingModel, {
       ...mockConfig,
       enableMemorySearch: true,
