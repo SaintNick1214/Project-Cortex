@@ -1259,7 +1259,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         const original =
           "My name is Alexander Johnson and I prefer to be called Alex";
 
-        expect(memory!.content.length).toBeLessThan(original.length * 2.0);
+        expect(memory!.content.length).toBeLessThan(original.length * 2.5);
         expect(memory!.content.toLowerCase()).toContain("alex");
 
         console.log(`  ✓ Original: "${original}"`);

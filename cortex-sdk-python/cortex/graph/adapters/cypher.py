@@ -102,18 +102,25 @@ class CypherGraphAdapter:
         assert self.driver is not None
         async with self.driver.session(database=self.database) as session:
             try:
-                # Try elementId() - if it works, we're on Neo4j
-                await session.run("CREATE (n:__TEST__) RETURN elementId(n) as id")
-                await session.run("MATCH (n:__TEST__) DELETE n")
-                self.use_element_id = True
+                # Use explicit transaction for atomic operation
+                async with session.begin_transaction() as tx:
+                    # Create test node
+                    await tx.run("CREATE (n:__TEST__)")
+                    # Try elementId() in separate query - if it works, we're on Neo4j
+                    result = await tx.run("MATCH (n:__TEST__) RETURN elementId(n) as id")
+                    await result.consume()  # Ensure query completes
+                    # Clean up test node
+                    await tx.run("MATCH (n:__TEST__) DELETE n")
+                    await tx.commit()
+                    self.use_element_id = True
             except Exception:
                 # elementId() not supported, use id() instead (Memgraph)
+                # Transaction will auto-rollback, but also explicitly clean up
                 self.use_element_id = False
-                # Clean up test node if created
                 try:
                     await session.run("MATCH (n:__TEST__) DELETE n")
                 except Exception:
-                    pass  # Ignore cleanup errors
+                    pass  # Ignore cleanup errors if node wasn't created
 
     def _get_id_function(self) -> str:
         """Get the appropriate ID function for the connected database."""
