@@ -185,3 +185,56 @@ export function getSDKPath(projectPath?: string): string | null {
 export function isLocalConvexUrl(url: string): boolean {
   return url.includes("localhost") || url.includes("127.0.0.1");
 }
+
+/**
+ * Fetch the latest SDK package.json from npm registry
+ */
+export async function fetchLatestSDKMetadata(): Promise<{
+  convexVersion: string;
+  sdkVersion: string;
+}> {
+  try {
+    const result = await execCommand("npm", [
+      "view",
+      "@cortexmemory/sdk",
+      "peerDependencies.convex",
+      "version",
+      "--json",
+    ]);
+
+    if (result.code !== 0) {
+      throw new Error(`npm view failed: ${result.stderr}`);
+    }
+
+    const data = JSON.parse(result.stdout);
+
+    // npm view returns different formats depending on whether one or multiple fields are requested
+    // If single field: just the value
+    // If multiple fields: { "peerDependencies.convex": "^1.29.3", "version": "0.11.0" }
+    let convexVersion: string;
+    let sdkVersion: string;
+
+    if (typeof data === "string") {
+      // Single field was returned - this shouldn't happen with our query, but handle it
+      throw new Error("Unexpected npm view response format");
+    } else {
+      convexVersion = data["peerDependencies.convex"] || "^1.29.3";
+      sdkVersion = data["version"] || "latest";
+    }
+
+    return {
+      convexVersion,
+      sdkVersion,
+    };
+  } catch (error) {
+    console.warn(
+      "⚠️  Could not fetch SDK metadata from npm, using defaults",
+      error,
+    );
+    // Fallback to safe defaults
+    return {
+      convexVersion: "^1.29.3",
+      sdkVersion: "latest",
+    };
+  }
+}

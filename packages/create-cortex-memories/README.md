@@ -31,14 +31,19 @@ npm create cortex-memories
 The wizard will guide you through:
 
 1. **Project Setup** - Name and location
-2. **Convex Configuration** - Choose between:
+2. **Smart Version Detection** - Automatically fetches the latest SDK and correct Convex version
+3. **Convex Configuration** - Choose between:
    - Set up new Convex database (cloud)
    - Use existing Convex database
    - Use local Convex for development
-3. **Graph Database (Optional)** - Enable Neo4j/Memgraph integration
-4. **Installation** - Automatically installs dependencies
-5. **Backend Deployment** - Copies and deploys Cortex backend functions
-6. **Environment Configuration** - Creates .env files with proper settings
+4. **Graph Database (Optional)** - Enable Neo4j/Memgraph integration
+5. **Installation** - Automatically installs dependencies with perfect version compatibility
+6. **Backend Deployment** - Copies and deploys Cortex backend functions
+7. **Environment Configuration** - Creates .env files with proper settings
+
+### Always Up-to-Date
+
+This CLI automatically installs the **latest** version of `@cortexmemory/sdk` and the **correct** version of Convex required by that SDK. No more version conflicts or outdated dependencies!
 
 ## After Setup
 
