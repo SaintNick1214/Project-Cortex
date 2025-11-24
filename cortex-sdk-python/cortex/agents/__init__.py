@@ -447,6 +447,7 @@ class AgentsAPI:
             return {
                 "deleted": 0,
                 "agent_ids": [a.id for a in agents],
+                "total_data_deleted": 0,
             }
 
         results = []
@@ -472,6 +473,7 @@ class AgentsAPI:
             return {
                 "deleted": result.get("deleted", 0),
                 "agent_ids": result.get("agentIds", []),
+                "total_data_deleted": 0,
             }
 
         return {
