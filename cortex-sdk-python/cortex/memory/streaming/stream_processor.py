@@ -65,16 +65,18 @@ class StreamProcessor:
         except Exception as error:
             # Emit error event
             if self.hooks.on_error:
+                from ..streaming_types import ErrorContext
+
                 stream_error = StreamError(
                     code="STREAM_PROCESSING_ERROR",
                     message=str(error),
                     recoverable=False,
                     partial_data_saved=False,
-                    context={
-                        "phase": "streaming",
-                        "chunkNumber": self.chunk_number,
-                        "bytesProcessed": len(self.accumulated_content),
-                    },
+                    context=ErrorContext(
+                        phase="streaming",
+                        chunk_number=self.chunk_number,
+                        bytes_processed=len(self.accumulated_content),
+                    ),
                     original_error=error,
                 )
                 await self._safely_call_hook(self.hooks.on_error, stream_error)
@@ -178,7 +180,6 @@ def create_stream_context(
     partial_memory_id: Optional[str] = None,
 ) -> StreamContext:
     """Helper to create a StreamContext"""
-    import time
 
     return StreamContext(
         memory_space_id=memory_space_id,

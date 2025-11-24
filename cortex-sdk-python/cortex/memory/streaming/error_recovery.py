@@ -156,8 +156,9 @@ class StreamErrorRecovery:
             try:
                 result = operation()
                 if asyncio.iscoroutine(result):
-                    return await result
-                return result
+                    result_awaited: T = await result  # type: ignore
+                    return result_awaited
+                return result  # type: ignore
 
             except Exception as error:
                 last_error = error
@@ -265,17 +266,19 @@ class StreamErrorRecovery:
         phase: str,
     ) -> StreamError:
         """Create a StreamError from a generic error"""
+        from ..streaming_types import ErrorContext
+
         return StreamError(
             code=self._error_code_from_error(error),
             message=str(error),
             recoverable=self._is_recoverable(error),
             partial_data_saved=bool(context.partial_memory_id),
-            context={
-                "phase": phase,
-                "chunkNumber": context.chunk_count,
-                "bytesProcessed": len(context.accumulated_text),
-                "partialMemoryId": context.partial_memory_id,
-            },
+            context=ErrorContext(
+                phase=phase,  # type: ignore
+                chunk_number=context.chunk_count,
+                bytes_processed=len(context.accumulated_text),
+                partial_memory_id=context.partial_memory_id,
+            ),
             original_error=error,
         )
 

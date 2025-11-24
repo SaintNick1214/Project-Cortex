@@ -9,8 +9,7 @@ Python implementation matching TypeScript src/types/streaming.ts
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Awaitable, Callable, Dict, List, Literal, Optional, Protocol
-
+from typing import Any, Awaitable, Callable, Dict, List, Literal, Optional
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Stream Hooks & Events

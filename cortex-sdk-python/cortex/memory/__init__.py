@@ -22,7 +22,6 @@ from ..types import (
     RememberOptions,
     RememberParams,
     RememberResult,
-    RememberStreamResult,
     SearchOptions,
     SourceType,
     StoreMemoryInput,
@@ -324,12 +323,10 @@ class MemoryAPI:
         """
         # Import streaming components
         from .streaming import (
-            AdaptiveStreamProcessor,
             MetricsCollector,
             ProgressiveFactExtractor,
             ProgressiveGraphSync,
             ProgressiveStorageHandler,
-            ResponseChunker,
             StreamErrorRecovery,
             StreamProcessor,
             create_stream_context,
@@ -351,11 +348,16 @@ class MemoryAPI:
 
         # Initialize components
         metrics = MetricsCollector()
+        memory_space_id = params.get("memorySpaceId") if isinstance(params, dict) else params.memory_space_id
+        conversation_id = params.get("conversationId") if isinstance(params, dict) else params.conversation_id
+        user_id = params.get("userId") if isinstance(params, dict) else params.user_id
+        user_name = params.get("userName") if isinstance(params, dict) else params.user_name
+
         context = create_stream_context(
-            memory_space_id=params.get("memorySpaceId") if isinstance(params, dict) else params.memory_space_id,
-            conversation_id=params.get("conversationId") if isinstance(params, dict) else params.conversation_id,
-            user_id=params.get("userId") if isinstance(params, dict) else params.user_id,
-            user_name=params.get("userName") if isinstance(params, dict) else params.user_name,
+            memory_space_id=str(memory_space_id or ""),
+            conversation_id=str(conversation_id or ""),
+            user_id=str(user_id or ""),
+            user_name=str(user_name or ""),
         )
 
         # Progressive storage handler (if enabled)
@@ -363,9 +365,9 @@ class MemoryAPI:
         if opts and opts.store_partial_response:
             storage_handler = ProgressiveStorageHandler(
                 self.client,
-                params.get("memorySpaceId") if isinstance(params, dict) else params.memory_space_id,
-                params.get("conversationId") if isinstance(params, dict) else params.conversation_id,
-                params.get("userId") if isinstance(params, dict) else params.user_id,
+                str(memory_space_id or ""),
+                str(conversation_id or ""),
+                str(user_id or ""),
                 opts.partial_response_interval or 3000,
             )
 
@@ -375,16 +377,17 @@ class MemoryAPI:
         if opts and opts.progressive_fact_extraction and extract_facts_fn:
             fact_extractor = ProgressiveFactExtractor(
                 self.facts,
-                params.get("memorySpaceId") if isinstance(params, dict) else params.memory_space_id,
-                params.get("userId") if isinstance(params, dict) else params.user_id,
+                str(memory_space_id or ""),
+                str(user_id or ""),
                 params.get("participantId") if isinstance(params, dict) else getattr(params, "participant_id", None),
                 opts.fact_extraction_threshold or 500,
             )
 
         # Adaptive processor (if enabled)
-        adaptive_processor: Optional[AdaptiveStreamProcessor] = None
-        if opts and opts.enable_adaptive_processing:
-            adaptive_processor = AdaptiveStreamProcessor()
+        # Note: adaptive_processor currently not integrated, keeping for future use
+        # adaptive_processor: Optional[AdaptiveStreamProcessor] = None
+        # if opts and opts.enable_adaptive_processing:
+        #     adaptive_processor = AdaptiveStreamProcessor()
 
         # Progressive graph sync (if enabled)
         graph_sync: Optional[ProgressiveGraphSync] = None
@@ -395,11 +398,11 @@ class MemoryAPI:
             )
 
         # Enhanced hooks that integrate progressive features
-        from .streaming_types import StreamHooks, ChunkEvent, ProgressEvent
-        
+        from .streaming_types import ChunkEvent, ProgressEvent, StreamHooks
+
         original_hooks = opts.hooks if opts else None
         progressive_facts: List[Any] = []
-        
+
         # Create enhanced hooks that integrate progressive components
         async def enhanced_on_chunk(event: ChunkEvent) -> None:
             # Call original hook if exists
@@ -409,36 +412,35 @@ class MemoryAPI:
                     hook_fn = original_hooks.get("onChunk")
                 elif hasattr(original_hooks, 'on_chunk'):
                     hook_fn = original_hooks.on_chunk
-            
+
             if hook_fn and callable(hook_fn):
                 hook_result = hook_fn(event)
                 if asyncio.iscoroutine(hook_result):
                     await hook_result
-            
+
             # Progressive storage update
             if storage_handler and storage_handler.should_update():
                 await storage_handler.update_partial_content(
                     event.accumulated, event.chunk_number
                 )
-            
+
             # Progressive fact extraction
             if fact_extractor and fact_extractor.should_extract(len(event.accumulated)):
-                conversation_id = params.get("conversationId") if isinstance(params, dict) else params.conversation_id
-                user_message = params.get("userMessage") if isinstance(params, dict) else params.user_message
+                user_message_val = params.get("userMessage") if isinstance(params, dict) else params.user_message
                 facts = await fact_extractor.extract_from_chunk(
                     event.accumulated,
                     event.chunk_number,
-                    extract_facts_fn,
-                    user_message,
-                    conversation_id,
+                    extract_facts_fn,  # type: ignore
+                    str(user_message_val or ""),
+                    str(conversation_id or ""),
                     sync_to_graph=(opts.sync_to_graph if opts else True) and self.graph_adapter is not None,
                 )
                 progressive_facts.extend(facts)
-            
+
             # Progressive graph sync update
             if graph_sync and graph_sync.should_sync():
                 await graph_sync.update_partial_node(event.accumulated, context)
-        
+
         async def enhanced_on_progress(event: ProgressEvent) -> None:
             # Call original hook if exists
             hook_fn = None
@@ -447,12 +449,12 @@ class MemoryAPI:
                     hook_fn = original_hooks.get("onProgress")
                 elif hasattr(original_hooks, 'on_progress'):
                     hook_fn = original_hooks.on_progress
-            
+
             if hook_fn and callable(hook_fn):
                 hook_result = hook_fn(event)
                 if asyncio.iscoroutine(hook_result):
                     await hook_result
-        
+
         async def enhanced_on_error(event: Any) -> None:
             # Call original hook if exists
             hook_fn = None
@@ -461,12 +463,12 @@ class MemoryAPI:
                     hook_fn = original_hooks.get("onError")
                 elif hasattr(original_hooks, 'on_error'):
                     hook_fn = original_hooks.on_error
-            
+
             if hook_fn and callable(hook_fn):
                 hook_result = hook_fn(event)
                 if asyncio.iscoroutine(hook_result):
                     await hook_result
-        
+
         async def enhanced_on_complete(event: Any) -> None:
             # Call original hook if exists
             hook_fn = None
@@ -475,28 +477,28 @@ class MemoryAPI:
                     hook_fn = original_hooks.get("onComplete")
                 elif hasattr(original_hooks, 'on_complete'):
                     hook_fn = original_hooks.on_complete
-            
+
             if hook_fn and callable(hook_fn):
                 hook_result = hook_fn(event)
                 if asyncio.iscoroutine(hook_result):
                     await hook_result
-        
+
         enhanced_hooks = StreamHooks(
             on_chunk=enhanced_on_chunk,
             on_progress=enhanced_on_progress,
             on_error=enhanced_on_error,
             on_complete=enhanced_on_complete,
         )
-        
+
         processor = StreamProcessor(context, enhanced_hooks, metrics)
         error_recovery = StreamErrorRecovery(self.client)
-        
+
         full_response = ""
 
         try:
             # Step 1: Ensure conversation exists
             existing_conversation = await self.conversations.get(
-                params.get("conversationId") if isinstance(params, dict) else params.conversation_id
+                str(conversation_id or "")
             )
             if not existing_conversation:
                 from ..types import (
@@ -507,7 +509,7 @@ class MemoryAPI:
 
                 await self.conversations.create(
                     CreateConversationInput(
-                        memory_space_id=params.get("memorySpaceId") if isinstance(params, dict) else params.memory_space_id,
+                        memory_space_id=str(memory_space_id or ""),
                         conversation_id=params.get("conversationId") if isinstance(params, dict) else params.conversation_id,
                         type="user-agent",
                         participants=ConversationParticipants(
@@ -522,10 +524,12 @@ class MemoryAPI:
 
             # Step 2: Initialize progressive storage
             if storage_handler:
+                user_message_val = params.get("userMessage") if isinstance(params, dict) else params.user_message
+                importance_val = params.get("importance") if isinstance(params, dict) else getattr(params, "importance", None)
                 partial_memory_id = await storage_handler.initialize_partial_memory(
                     participant_id=params.get("participantId") if isinstance(params, dict) else getattr(params, "participant_id", None),
-                    user_message=params.get("userMessage") if isinstance(params, dict) else params.user_message,
-                    importance=params.get("importance") if isinstance(params, dict) else getattr(params, "importance", None),
+                    user_message=str(user_message_val or ""),
+                    importance=int(importance_val or 50),
                     tags=params.get("tags") if isinstance(params, dict) else getattr(params, "tags", None),
                 )
                 context.partial_memory_id = partial_memory_id
@@ -541,7 +545,7 @@ class MemoryAPI:
 
             # Step 3: Process stream with all features
             response_stream = params.get("responseStream") if isinstance(params, dict) else params.response_stream
-            full_response = await processor.process_stream(response_stream, opts)
+            full_response = await processor.process_stream(response_stream, opts)  # type: ignore
 
             # Step 4: Validate we got content
             if not full_response or full_response.strip() == "":
@@ -558,16 +562,17 @@ class MemoryAPI:
             # Step 6: Use remember() for final storage
             # Determine sync_to_graph - default to True if graph adapter exists
             should_sync = (opts.sync_to_graph if opts and hasattr(opts, 'sync_to_graph') else True) and self.graph_adapter is not None
-            
+
+            user_message_val = params.get("userMessage") if isinstance(params, dict) else params.user_message
             remember_result = await self.remember(
                 RememberParams(
-                    memory_space_id=params.get("memorySpaceId") if isinstance(params, dict) else params.memory_space_id,
+                    memory_space_id=str(memory_space_id or ""),
                     participant_id=params.get("participantId") if isinstance(params, dict) else getattr(params, "participant_id", None),
-                    conversation_id=params.get("conversationId") if isinstance(params, dict) else params.conversation_id,
-                    user_message=params.get("userMessage") if isinstance(params, dict) else params.user_message,
+                    conversation_id=str(conversation_id or ""),
+                    user_message=str(user_message_val or ""),
                     agent_response=full_response,
-                    user_id=params.get("userId") if isinstance(params, dict) else params.user_id,
-                    user_name=params.get("userName") if isinstance(params, dict) else params.user_name,
+                    user_id=str(user_id or ""),
+                    user_name=str(user_name or ""),
                     extract_content=params.get("extractContent") if isinstance(params, dict) else getattr(params, "extract_content", None),
                     generate_embedding=generate_embedding_fn,
                     extract_facts=extract_facts_fn,
@@ -608,9 +613,7 @@ class MemoryAPI:
 
         except Exception as error:
             # Error recovery
-            from .streaming_types import ErrorContext
-
-            stream_error = error_recovery.create_stream_error(
+            _ = error_recovery.create_stream_error(
                 error, context, "streaming"
             )
 

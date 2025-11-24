@@ -10,7 +10,7 @@ Manages partial memory updates during streaming to enable:
 Python implementation matching TypeScript src/memory/streaming/ProgressiveStorageHandler.ts
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, List, Optional
 
 from ..streaming_types import PartialUpdate
 
@@ -160,11 +160,11 @@ class ProgressiveStorageHandler:
                     "finalContentLength": len(full_content),
                 },
             }
-            
+
             # Only include embedding if provided (Convex requires array, not null)
             if embedding is not None:
-                mutation_params["embedding"] = embedding
-            
+                mutation_params["embedding"] = embedding  # type: ignore[assignment]
+
             await self.client.mutation("memories:finalizePartialMemory", mutation_params)
 
             self.is_finalized = True

@@ -83,7 +83,11 @@ class ProgressiveFactExtractor:
 
                 # Store new fact
                 try:
-                    from ...types import FactSourceRef, StoreFactOptions, StoreFactParams
+                    from ...types import (
+                        FactSourceRef,
+                        StoreFactOptions,
+                        StoreFactParams,
+                    )
 
                     stored_fact = await self.facts_api.store(
                         StoreFactParams(
@@ -162,7 +166,11 @@ class ProgressiveFactExtractor:
             # Store any new facts found in final extraction
             for fact_data in unique_final_facts:
                 try:
-                    from ...types import FactSourceRef, StoreFactOptions, StoreFactParams
+                    from ...types import (
+                        FactSourceRef,
+                        StoreFactOptions,
+                        StoreFactParams,
+                    )
 
                     stored_fact = await self.facts_api.store(
                         StoreFactParams(
