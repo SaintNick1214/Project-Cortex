@@ -1,6 +1,6 @@
 /**
  * Progressive Graph Synchronization
- * 
+ *
  * Syncs partial memories to graph database during streaming:
  * - Creates partial nodes on stream initialization
  * - Updates node properties as content grows
@@ -37,12 +37,15 @@ export class ProgressiveGraphSync {
       // Create node with streaming properties
       // Note: Using single label 'Memory' as multiple labels may not be supported
       const nodeId = await this.graphAdapter.createNode({
-        label: 'Memory',
+        label: "Memory",
         properties: {
           memoryId: partialMemory.memoryId,
           memorySpaceId: partialMemory.memorySpaceId,
           userId: partialMemory.userId,
-          contentPreview: this.truncateContent(partialMemory.content || '', 100),
+          contentPreview: this.truncateContent(
+            partialMemory.content || "",
+            100,
+          ),
           isPartial: true,
           isStreaming: true,
           streamStartTime: Date.now(),
@@ -52,17 +55,17 @@ export class ProgressiveGraphSync {
 
       this.partialNodeId = nodeId;
       this.lastSyncTime = Date.now();
-      
+
       this.recordSyncEvent({
         timestamp: Date.now(),
-        eventType: 'node-created',
+        eventType: "node-created",
         nodeId,
-        details: 'Created partial memory node',
+        details: "Created partial memory node",
       });
 
       return nodeId;
     } catch (error) {
-      console.warn('Failed to initialize partial graph node:', error);
+      console.warn("Failed to initialize partial graph node:", error);
       throw error;
     }
   }
@@ -97,12 +100,12 @@ export class ProgressiveGraphSync {
 
       this.recordSyncEvent({
         timestamp: now,
-        eventType: 'node-updated',
+        eventType: "node-updated",
         nodeId: this.partialNodeId,
         details: `Updated with ${context.chunkCount} chunks, ${content.length} chars`,
       });
     } catch (error) {
-      console.warn('Failed to update partial graph node:', error);
+      console.warn("Failed to update partial graph node:", error);
       // Don't throw - graph sync is non-critical
     }
   }
@@ -110,9 +113,7 @@ export class ProgressiveGraphSync {
   /**
    * Finalize node when stream completes
    */
-  async finalizeNode(
-    completeMemory: MemoryEntry,
-  ): Promise<void> {
+  async finalizeNode(completeMemory: MemoryEntry): Promise<void> {
     if (!this.partialNodeId) {
       return; // Not initialized
     }
@@ -134,12 +135,13 @@ export class ProgressiveGraphSync {
 
       this.recordSyncEvent({
         timestamp: Date.now(),
-        eventType: 'finalized',
+        eventType: "finalized",
         nodeId: this.partialNodeId,
-        details: 'Finalized memory node (relationships handled by standard sync)',
+        details:
+          "Finalized memory node (relationships handled by standard sync)",
       });
     } catch (error) {
-      console.warn('Failed to finalize graph node:', error);
+      console.warn("Failed to finalize graph node:", error);
       // Don't throw - best effort
     }
   }
@@ -156,7 +158,7 @@ export class ProgressiveGraphSync {
       await this.graphAdapter.deleteNode(this.partialNodeId);
       this.partialNodeId = null;
     } catch (error) {
-      console.warn('Failed to rollback graph node:', error);
+      console.warn("Failed to rollback graph node:", error);
       // Best effort cleanup
     }
   }
@@ -168,7 +170,7 @@ export class ProgressiveGraphSync {
     if (!this.partialNodeId) {
       return false;
     }
-    
+
     return Date.now() - this.lastSyncTime >= this.syncInterval;
   }
 
@@ -200,8 +202,8 @@ export class ProgressiveGraphSync {
     if (content.length <= maxLength) {
       return content;
     }
-    
-    return content.substring(0, maxLength) + '...';
+
+    return content.substring(0, maxLength) + "...";
   }
 
   /**

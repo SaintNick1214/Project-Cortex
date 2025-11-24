@@ -157,7 +157,10 @@ describe("Context Operations API", () => {
       for (const ctx of contexts) {
         expect(ctx.data?.reviewed).toBe(true);
         // Verify version incremented via getVersion
-        const currentVersion = await cortex.contexts.getVersion(ctx.contextId, 2);
+        const currentVersion = await cortex.contexts.getVersion(
+          ctx.contextId,
+          2,
+        );
         expect(currentVersion).toBeDefined();
       }
     });
@@ -216,14 +219,14 @@ describe("Context Operations API", () => {
       await cortex.contexts.addParticipant(context.contextId, "agent-1");
       await cortex.contexts.addParticipant(context.contextId, "agent-2");
 
-      let updated = await cortex.contexts.get(context.contextId) as any;
+      let updated = (await cortex.contexts.get(context.contextId)) as any;
       expect(updated?.participants).toContain("agent-1");
       expect(updated?.participants).toContain("agent-2");
 
       // Remove one participant
       await cortex.contexts.removeParticipant(context.contextId, "agent-1");
 
-      updated = await cortex.contexts.get(context.contextId) as any;
+      updated = (await cortex.contexts.get(context.contextId)) as any;
       expect(updated?.participants).not.toContain("agent-1");
       expect(updated?.participants).toContain("agent-2");
     });

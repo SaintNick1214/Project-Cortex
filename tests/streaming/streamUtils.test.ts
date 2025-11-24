@@ -21,7 +21,7 @@ describe("RollingContextWindow", () => {
   it("should maintain rolling window within size limit", () => {
     window.add("A".repeat(50));
     window.add("B".repeat(50));
-    
+
     expect(window.getSize()).toBeLessThanOrEqual(100);
   });
 
@@ -37,7 +37,7 @@ describe("RollingContextWindow", () => {
   it("should clear window", () => {
     window.add("Test");
     window.clear();
-    
+
     expect(window.getSize()).toBe(0);
     expect(window.getContext()).toBe("");
   });
@@ -46,10 +46,10 @@ describe("RollingContextWindow", () => {
 describe("AsyncQueue", () => {
   it("should enqueue and dequeue items", async () => {
     const queue = new AsyncQueue<string>();
-    
+
     await queue.enqueue("item1");
     await queue.enqueue("item2");
-    
+
     expect(queue.size()).toBe(2);
     expect(queue.dequeue()).toBe("item1");
     expect(queue.size()).toBe(1);
@@ -57,17 +57,17 @@ describe("AsyncQueue", () => {
 
   it("should process items automatically with processor", async () => {
     const processed: string[] = [];
-    
+
     const queue = new AsyncQueue<string>(async (item) => {
       processed.push(item);
     });
-    
+
     await queue.enqueue("item1");
     await queue.enqueue("item2");
-    
+
     // Give processor time to run
-    await new Promise(resolve => setTimeout(resolve, 100));
-    
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
     expect(processed.length).toBe(2);
     expect(queue.isEmpty()).toBe(true);
   });
@@ -76,9 +76,9 @@ describe("AsyncQueue", () => {
     const queue = new AsyncQueue<string>();
     await queue.enqueue("item1");
     await queue.enqueue("item2");
-    
+
     queue.clear();
-    
+
     expect(queue.isEmpty()).toBe(true);
     expect(queue.size()).toBe(0);
   });
@@ -88,7 +88,7 @@ describe("withStreamTimeout", () => {
   it("should timeout slow streams", async () => {
     const slowStream = new ReadableStream({
       async start(controller) {
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 2000));
         controller.enqueue("too late");
         controller.close();
       },
@@ -202,7 +202,7 @@ describe("bufferStream", () => {
 
     await reader.read(); // ["A", "B"]
     const remaining = await reader.read(); // ["C"]
-    
+
     expect(remaining.value).toEqual(["C"]);
   });
 });

@@ -620,9 +620,7 @@ export class ContextsAPI {
    * console.log(`Context has ${history.length} versions`);
    * ```
    */
-  async getHistory(
-    contextId: string,
-  ): Promise<
+  async getHistory(contextId: string): Promise<
     Array<{
       version: number;
       status: string;

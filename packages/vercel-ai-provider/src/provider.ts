@@ -103,7 +103,7 @@ export class CortexMemoryProvider {
               conversationId,
               userMessage: lastUserMessage,
               agentResponse: result.text,
-          userId,
+              userId,
               userName: this.config.userName || "User",
               participantId: this.config.hiveMode?.participantId,
               generateEmbedding: this.config.embeddingProvider?.generate,
@@ -118,8 +118,8 @@ export class CortexMemoryProvider {
             },
           )
           .catch((error: Error) => {
-          this.logger.error("Failed to store memory:", error);
-        });
+            this.logger.error("Failed to store memory:", error);
+          });
       }
     }
 
@@ -229,7 +229,6 @@ export class CortexMemoryProvider {
     }
   }
 
-
   /**
    * Wrap stream with rememberStream for enhanced streaming capabilities
    */
@@ -282,9 +281,9 @@ export class CortexMemoryProvider {
             {
               memorySpaceId: this.config.memorySpaceId,
               conversationId,
-            userMessage,
+              userMessage,
               responseStream: textStream(),
-            userId,
+              userId,
               userName: this.config.userName || "User",
               participantId: this.config.hiveMode?.participantId,
               generateEmbedding: this.config.embeddingProvider?.generate,

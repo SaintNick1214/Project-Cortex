@@ -1,11 +1,18 @@
 /**
  * Progressive Graph Sync Tests
- * 
+ *
  * Tests for progressive graph synchronization during streaming
  * Runs against both Neo4j and Memgraph
  */
 
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from "@jest/globals";
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  afterAll,
+  beforeEach,
+} from "@jest/globals";
 import { CypherGraphAdapter } from "../../src/graph";
 import type { GraphAdapter } from "../../src/graph";
 import { ProgressiveGraphSync } from "../../src/memory/streaming/ProgressiveGraphSync";
@@ -54,7 +61,7 @@ databases.forEach(({ name, config }) => {
     beforeEach(async () => {
       // Clear database before each test
       await adapter.clearDatabase();
-      
+
       // Create new instance for each test
       graphSync = new ProgressiveGraphSync(adapter, 1000); // 1s sync interval for testing
     });
@@ -111,7 +118,7 @@ databases.forEach(({ name, config }) => {
         const nodeId = await graphSync.initializePartialNode(partialMemory);
 
         // Wait for sync interval to ensure update will happen
-        await new Promise(resolve => setTimeout(resolve, 1100));
+        await new Promise((resolve) => setTimeout(resolve, 1100));
 
         const context = {
           memorySpaceId: "test-space",
@@ -159,16 +166,18 @@ databases.forEach(({ name, config }) => {
         };
 
         // Wait for sync interval
-        await new Promise(resolve => setTimeout(resolve, 1100));
+        await new Promise((resolve) => setTimeout(resolve, 1100));
 
         // First update (should happen)
         await graphSync.updatePartialNode("Content 1", context);
-        
+
         // Second update immediately after (should skip due to interval)
         await graphSync.updatePartialNode("Content 2", context);
 
         // Only one update event should be recorded (first update, not second)
-        const events = graphSync.getSyncEvents().filter(e => e.eventType === "node-updated");
+        const events = graphSync
+          .getSyncEvents()
+          .filter((e) => e.eventType === "node-updated");
         expect(events.length).toBe(1);
       });
 
@@ -183,7 +192,7 @@ databases.forEach(({ name, config }) => {
         await graphSync.initializePartialNode(partialMemory);
 
         // Wait for sync interval to pass
-        await new Promise(resolve => setTimeout(resolve, 1100));
+        await new Promise((resolve) => setTimeout(resolve, 1100));
 
         expect(graphSync.shouldSync()).toBe(true);
       });
@@ -258,7 +267,7 @@ databases.forEach(({ name, config }) => {
         await graphSync.finalizeNode(completeMemory);
 
         const events = graphSync.getSyncEvents();
-        const finalizeEvent = events.find(e => e.eventType === "finalized");
+        const finalizeEvent = events.find((e) => e.eventType === "finalized");
         expect(finalizeEvent).toBeDefined();
       });
     });
@@ -285,7 +294,9 @@ databases.forEach(({ name, config }) => {
         };
 
         // Should not throw
-        await expect(newSync.finalizeNode(completeMemory)).resolves.not.toThrow();
+        await expect(
+          newSync.finalizeNode(completeMemory),
+        ).resolves.not.toThrow();
       });
 
       it("should rollback on failure", async () => {
@@ -332,7 +343,7 @@ databases.forEach(({ name, config }) => {
         };
 
         // Wait for interval
-        await new Promise(resolve => setTimeout(resolve, 1100));
+        await new Promise((resolve) => setTimeout(resolve, 1100));
         await graphSync.updatePartialNode("Updated", context);
 
         const completeMemory: MemoryEntry = {
@@ -356,8 +367,8 @@ databases.forEach(({ name, config }) => {
 
         const events = graphSync.getSyncEvents();
         expect(events.length).toBeGreaterThanOrEqual(3); // created, updated, finalized
-        
-        const eventTypes = events.map(e => e.eventType);
+
+        const eventTypes = events.map((e) => e.eventType);
         expect(eventTypes).toContain("node-created");
         expect(eventTypes).toContain("node-updated");
         expect(eventTypes).toContain("finalized");
@@ -450,7 +461,7 @@ describeIfEnabled("ProgressiveGraphSync (Memgraph)", () => {
         metrics: {} as any,
       };
 
-      await new Promise(resolve => setTimeout(resolve, 1100));
+      await new Promise((resolve) => setTimeout(resolve, 1100));
       await graphSync.updatePartialNode("Updated", context);
 
       // Finalize
@@ -491,7 +502,9 @@ if (!GRAPH_TESTING_ENABLED) {
   describe("Progressive Graph Sync", () => {
     it("should skip tests when graph databases not configured", () => {
       console.log("\n⚠️  Graph database tests skipped");
-      console.log("   To enable, set GRAPH_TESTING_ENABLED=true and configure:");
+      console.log(
+        "   To enable, set GRAPH_TESTING_ENABLED=true and configure:",
+      );
       console.log("   - NEO4J_URI and credentials");
       console.log("   - MEMGRAPH_URI and credentials\n");
       expect(true).toBe(true);

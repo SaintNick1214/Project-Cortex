@@ -6,14 +6,18 @@ services:
     image: memgraph/memgraph-mage:latest
     container_name: cortex-memgraph
     ports:
-      - "7688:7687"  # Bolt protocol
-      - "7444:7444"  # Logs
+      - "7688:7687" # Bolt protocol
+      - "7444:7444" # Logs
     command: ["--log-level=WARNING", "--also-log-to-stderr"]
     volumes:
       - memgraph_data:/var/lib/memgraph
       - memgraph_logs:/var/log/memgraph
     healthcheck:
-      test: ["CMD-SHELL", "echo 'RETURN 1;' | mgconsole --host 127.0.0.1 --port 7687 --use-ssl=False || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "echo 'RETURN 1;' | mgconsole --host 127.0.0.1 --port 7687 --use-ssl=False || exit 1",
+        ]
       interval: 10s
       timeout: 10s
       retries: 10
@@ -26,7 +30,7 @@ services:
     image: memgraph/lab:latest
     container_name: cortex-memgraph-lab
     ports:
-      - "3001:3000"  # Memgraph Lab UI
+      - "3001:3000" # Memgraph Lab UI
     environment:
       - QUICK_CONNECT_MG_HOST=memgraph
       - QUICK_CONNECT_MG_PORT=7687
@@ -41,8 +45,8 @@ services:
     image: neo4j:latest
     container_name: cortex-neo4j
     ports:
-      - "7474:7474"  # HTTP (Neo4j Browser)
-      - "7687:7687"  # Bolt protocol
+      - "7474:7474" # HTTP (Neo4j Browser)
+      - "7687:7687" # Bolt protocol
     environment:
       - NEO4J_AUTH=neo4j/cortex-dev-password
       - NEO4J_PLUGINS=["apoc"]
@@ -56,7 +60,16 @@ services:
       - neo4j_import:/import
       - neo4j_plugins:/plugins
     healthcheck:
-      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "cortex-dev-password", "RETURN 1"]
+      test:
+        [
+          "CMD",
+          "cypher-shell",
+          "-u",
+          "neo4j",
+          "-p",
+          "cortex-dev-password",
+          "RETURN 1",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5

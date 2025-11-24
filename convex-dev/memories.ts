@@ -192,7 +192,9 @@ export const finalizePartialMemory = mutation({
     }
 
     // Remove streaming-related tags
-    const finalTags = memory.tags.filter(tag => tag !== 'streaming' && tag !== 'partial');
+    const finalTags = memory.tags.filter(
+      (tag) => tag !== "streaming" && tag !== "partial",
+    );
 
     await ctx.db.patch(memory._id, {
       content: args.content,
@@ -924,8 +926,7 @@ export const restoreFromArchive = mutation({
     const updatedTags = memory.tags.filter((tag) => tag !== "archived");
 
     // Restore importance to a reasonable default if it was reduced
-    const restoredImportance =
-      memory.importance < 50 ? 50 : memory.importance;
+    const restoredImportance = memory.importance < 50 ? 50 : memory.importance;
 
     await ctx.db.patch(memory._id, {
       tags: updatedTags,

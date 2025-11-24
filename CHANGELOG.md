@@ -65,7 +65,7 @@ interface StreamingOptions {
   partialResponseInterval?: number;
   progressiveFactExtraction?: boolean;
   factExtractionThreshold?: number;
-  
+
   // Real-time monitoring
   hooks?: {
     onChunk?: (event: ChunkEvent) => void | Promise<void>;
@@ -73,16 +73,20 @@ interface StreamingOptions {
     onError?: (error: StreamError) => void | Promise<void>;
     onComplete?: (event: StreamCompleteEvent) => void | Promise<void>;
   };
-  
+
   // Error recovery
-  partialFailureHandling?: 'store-partial' | 'rollback' | 'retry' | 'best-effort';
+  partialFailureHandling?:
+    | "store-partial"
+    | "rollback"
+    | "retry"
+    | "best-effort";
   generateResumeToken?: boolean;
   streamTimeout?: number;
-  
+
   // Graph sync
   progressiveGraphSync?: boolean;
   graphSyncInterval?: number;
-  
+
   // Advanced
   enableAdaptiveProcessing?: boolean;
   maxResponseLength?: number;
@@ -98,7 +102,7 @@ interface EnhancedRememberStreamResult {
   memories: MemoryEntry[];
   facts: FactRecord[];
   fullResponse: string;
-  
+
   // NEW: Stream metrics
   streamMetrics: {
     totalChunks: number;
@@ -108,21 +112,21 @@ interface EnhancedRememberStreamResult {
     estimatedCost?: number;
     // ... more metrics
   };
-  
+
   // NEW: Progressive processing results
   progressiveProcessing?: {
     factsExtractedDuringStream: ProgressiveFact[];
     partialStorageHistory: PartialUpdate[];
     graphSyncEvents?: GraphSyncEvent[];
   };
-  
+
   // NEW: Performance insights
   performance?: {
     bottlenecks: string[];
     recommendations: string[];
     costEstimate?: number;
   };
-  
+
   // NEW: Error/recovery info
   errors?: StreamError[];
   recovered?: boolean;
@@ -266,7 +270,7 @@ const result = await cortex.memory.rememberStream(params, {
     onChunk: (event) => updateUI(event.chunk),
     onProgress: (event) => showProgress(event),
   },
-  partialFailureHandling: 'store-partial',
+  partialFailureHandling: "store-partial",
 });
 
 // Access new return fields

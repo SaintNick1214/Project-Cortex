@@ -5,9 +5,15 @@
 import { CypherGraphAdapter } from "../../src/graph";
 
 async function verify() {
-  console.log("╔═══════════════════════════════════════════════════════════════╗");
-  console.log("║          MANUAL DATA VERIFICATION                            ║");
-  console.log("╚═══════════════════════════════════════════════════════════════╝\n");
+  console.log(
+    "╔═══════════════════════════════════════════════════════════════╗",
+  );
+  console.log(
+    "║          MANUAL DATA VERIFICATION                            ║",
+  );
+  console.log(
+    "╚═══════════════════════════════════════════════════════════════╝\n",
+  );
 
   // Verify Neo4j
   console.log("🔷 Neo4j (bolt://localhost:7687):");
@@ -29,14 +35,16 @@ async function verify() {
   console.log(`   - Conversation: ${neo4jConvs}`);
   console.log(`   - User: ${neo4jUsers}`);
   console.log(`   Total Relationships: ${neo4jEdges}`);
-  
+
   if (neo4jNodes > 0) {
     console.log("   ✅ DATA EXISTS IN NEO4J");
-    
+
     // Get sample memory
     const memories = await neo4j.findNodes("Memory", {}, 1);
     if (memories.length > 0) {
-      console.log(`   Sample Memory: "${(memories[0].properties.content as string).substring(0, 50)}..."`);
+      console.log(
+        `   Sample Memory: "${(memories[0].properties.content as string).substring(0, 50)}..."`,
+      );
     }
   } else {
     console.log("   ❌ NEO4J IS EMPTY");
@@ -64,14 +72,16 @@ async function verify() {
   console.log(`   - Conversation: ${memgraphConvs}`);
   console.log(`   - User: ${memgraphUsers}`);
   console.log(`   Total Relationships: ${memgraphEdges}`);
-  
+
   if (memgraphNodes > 0) {
     console.log("   ✅ DATA EXISTS IN MEMGRAPH");
-    
+
     // Get sample memory
     const memories = await memgraph.findNodes("Memory", {}, 1);
     if (memories.length > 0) {
-      console.log(`   Sample Memory: "${(memories[0].properties.content as string).substring(0, 50)}..."`);
+      console.log(
+        `   Sample Memory: "${(memories[0].properties.content as string).substring(0, 50)}..."`,
+      );
     }
   } else {
     console.log("   ❌ MEMGRAPH IS EMPTY");
@@ -79,9 +89,15 @@ async function verify() {
 
   await memgraph.disconnect();
 
-  console.log("\n╔═══════════════════════════════════════════════════════════════╗");
-  console.log("║                    VERIFICATION COMPLETE                     ║");
-  console.log("╚═══════════════════════════════════════════════════════════════╝\n");
+  console.log(
+    "\n╔═══════════════════════════════════════════════════════════════╗",
+  );
+  console.log(
+    "║                    VERIFICATION COMPLETE                     ║",
+  );
+  console.log(
+    "╚═══════════════════════════════════════════════════════════════╝\n",
+  );
 
   if (neo4jNodes > 0 && neo4jEdges > 0) {
     console.log("✅ Neo4j: Ready to view at http://localhost:7474");

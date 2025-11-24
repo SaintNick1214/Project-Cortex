@@ -68,22 +68,22 @@ describe("MetricsCollector", () => {
       metrics.recordError(new Error("Test"));
 
       const snapshot = metrics.getSnapshot();
-      
-      expect(snapshot).toHaveProperty('startTime');
-      expect(snapshot).toHaveProperty('firstChunkLatency');
-      expect(snapshot).toHaveProperty('streamDurationMs');
-      expect(snapshot).toHaveProperty('totalChunks');
-      expect(snapshot).toHaveProperty('totalBytes');
-      expect(snapshot).toHaveProperty('averageChunkSize');
-      expect(snapshot).toHaveProperty('chunksPerSecond');
-      expect(snapshot).toHaveProperty('factsExtracted');
-      expect(snapshot).toHaveProperty('errorCount');
-      expect(snapshot).toHaveProperty('estimatedTokens');
+
+      expect(snapshot).toHaveProperty("startTime");
+      expect(snapshot).toHaveProperty("firstChunkLatency");
+      expect(snapshot).toHaveProperty("streamDurationMs");
+      expect(snapshot).toHaveProperty("totalChunks");
+      expect(snapshot).toHaveProperty("totalBytes");
+      expect(snapshot).toHaveProperty("averageChunkSize");
+      expect(snapshot).toHaveProperty("chunksPerSecond");
+      expect(snapshot).toHaveProperty("factsExtracted");
+      expect(snapshot).toHaveProperty("errorCount");
+      expect(snapshot).toHaveProperty("estimatedTokens");
     });
 
     it("should calculate chunks per second", (done) => {
       metrics.recordChunk(100);
-      
+
       setTimeout(() => {
         metrics.recordChunk(100);
         const snapshot = metrics.getSnapshot();
@@ -123,20 +123,20 @@ describe("MetricsCollector", () => {
       for (let i = 0; i < 20; i++) {
         metrics.recordChunk(50);
       }
-      
+
       const type = metrics.detectStreamType();
-      expect(type).toBe('fast');
+      expect(type).toBe("fast");
     });
 
     it("should detect slow streams", (done) => {
       metrics.recordChunk(100);
-      
+
       setTimeout(() => {
         metrics.recordChunk(100);
         setTimeout(() => {
           metrics.recordChunk(100);
           const type = metrics.detectStreamType();
-          expect(type).toBe('slow');
+          expect(type).toBe("slow");
           done();
         }, 600);
       }, 600);
@@ -147,12 +147,12 @@ describe("MetricsCollector", () => {
     it("should recommend progressive storage for long streams", (done) => {
       // Simulate long slow stream
       metrics.recordChunk(100);
-      
+
       setTimeout(() => {
         for (let i = 0; i < 5; i++) {
           metrics.recordChunk(100);
         }
-        
+
         const insights = metrics.generateInsights();
         expect(insights.recommendations.length).toBeGreaterThan(0);
         done();
@@ -168,7 +168,9 @@ describe("MetricsCollector", () => {
       }
 
       const insights = metrics.generateInsights();
-      const hasErrorWarning = insights.bottlenecks.some(b => b.includes('error rate'));
+      const hasErrorWarning = insights.bottlenecks.some((b) =>
+        b.includes("error rate"),
+      );
       expect(hasErrorWarning).toBe(true);
     });
 
@@ -180,8 +182,8 @@ describe("MetricsCollector", () => {
       const insights = metrics.generateInsights();
       const hasFacts = metrics.getSnapshot().factsExtracted > 0;
       if (!hasFacts) {
-        const hasRecommendation = insights.recommendations.some(r => 
-          r.includes('fact extraction')
+        const hasRecommendation = insights.recommendations.some((r) =>
+          r.includes("fact extraction"),
         );
         expect(hasRecommendation).toBe(true);
       }

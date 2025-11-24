@@ -148,7 +148,10 @@ describe("CortexMemoryProvider", () => {
 
   describe("Enhanced Streaming", () => {
     it("should wrap stream and return working stream", async () => {
-      const provider = new CortexMemoryProvider(mockUnderlyingModel, mockConfig);
+      const provider = new CortexMemoryProvider(
+        mockUnderlyingModel,
+        mockConfig,
+      );
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: "Hello" }],
@@ -157,10 +160,10 @@ describe("CortexMemoryProvider", () => {
 
       // Should have called underlying model
       expect(mockUnderlyingModel.doStream).toHaveBeenCalled();
-      
+
       // Stream should be defined and consumable
       expect(result.stream).toBeDefined();
-      
+
       // Consume the stream completely
       const chunks: any[] = [];
       const reader = result.stream.getReader();
@@ -193,7 +196,10 @@ describe("CortexMemoryProvider", () => {
         },
       };
 
-      const provider = new CortexMemoryProvider(mockUnderlyingModel, configWithHooks);
+      const provider = new CortexMemoryProvider(
+        mockUnderlyingModel,
+        configWithHooks,
+      );
 
       // Configuration should be stored
       const config = provider.getConfig();
@@ -211,7 +217,10 @@ describe("CortexMemoryProvider", () => {
         },
       };
 
-      const provider = new CortexMemoryProvider(mockUnderlyingModel, configWithOptions);
+      const provider = new CortexMemoryProvider(
+        mockUnderlyingModel,
+        configWithOptions,
+      );
 
       // Configuration should be stored
       const config = provider.getConfig();
@@ -220,7 +229,10 @@ describe("CortexMemoryProvider", () => {
     });
 
     it("should enable metrics by default", async () => {
-      const provider = new CortexMemoryProvider(mockUnderlyingModel, mockConfig);
+      const provider = new CortexMemoryProvider(
+        mockUnderlyingModel,
+        mockConfig,
+      );
 
       // enableStreamMetrics should default to true (or undefined, which is treated as true)
       const config = provider.getConfig();
@@ -228,7 +240,10 @@ describe("CortexMemoryProvider", () => {
     });
 
     it("should wrap streams correctly and forward all chunks", async () => {
-      const provider = new CortexMemoryProvider(mockUnderlyingModel, mockConfig);
+      const provider = new CortexMemoryProvider(
+        mockUnderlyingModel,
+        mockConfig,
+      );
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: "Test streaming" }],

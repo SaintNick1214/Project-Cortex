@@ -8,7 +8,11 @@ import fs from "fs-extra";
 import pc from "picocolors";
 import ora from "ora";
 import type { WizardConfig } from "./types.js";
-import { isValidProjectName, isDirectoryEmpty, fetchLatestSDKMetadata } from "./utils.js";
+import {
+  isValidProjectName,
+  isDirectoryEmpty,
+  fetchLatestSDKMetadata,
+} from "./utils.js";
 import {
   setupNewConvex,
   setupExistingConvex,
@@ -239,7 +243,9 @@ async function executeSetup(config: WizardConfig): Promise<void> {
     // Fetch SDK metadata to get correct Convex version
     const metadataSpinner = ora("Fetching SDK metadata...").start();
     const sdkMetadata = await fetchLatestSDKMetadata();
-    metadataSpinner.succeed(`SDK v${sdkMetadata.sdkVersion} (Convex ${sdkMetadata.convexVersion})`);
+    metadataSpinner.succeed(
+      `SDK v${sdkMetadata.sdkVersion} (Convex ${sdkMetadata.convexVersion})`,
+    );
 
     // Copy template files (check if package.json exists)
     const needsTemplate = !fs.existsSync(
@@ -248,7 +254,12 @@ async function executeSetup(config: WizardConfig): Promise<void> {
 
     if (needsTemplate || config.installationType === "new") {
       const spinner = ora("Creating project files...").start();
-      await copyTemplate("basic", config.projectPath, config.projectName, sdkMetadata.convexVersion);
+      await copyTemplate(
+        "basic",
+        config.projectPath,
+        config.projectName,
+        sdkMetadata.convexVersion,
+      );
       spinner.succeed("Project files created");
     } else {
       console.log(pc.dim("   Using existing project files"));

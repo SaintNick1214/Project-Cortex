@@ -1,6 +1,6 @@
 /**
  * Stream Processor
- * 
+ *
  * Core stream processing with hook support, chunk handling,
  * and integration with metrics collection.
  */
@@ -173,7 +173,7 @@ export class StreamProcessor {
         chunks: this.chunkNumber,
         elapsedMs: metricsSnapshot.streamDurationMs,
         estimatedCompletion: this.estimateCompletion(metricsSnapshot),
-        currentPhase: 'streaming',
+        currentPhase: "streaming",
       };
       await this.safelyCallHook(() => this.hooks.onProgress!(progressEvent));
     }
@@ -196,7 +196,9 @@ export class StreamProcessor {
   /**
    * Safely call a hook, catching and logging errors without stopping processing
    */
-  private async safelyCallHook(hookFn: () => void | Promise<void>): Promise<void> {
+  private async safelyCallHook(
+    hookFn: () => void | Promise<void>,
+  ): Promise<void> {
     try {
       await hookFn();
     } catch (error) {

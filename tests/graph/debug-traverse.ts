@@ -15,14 +15,23 @@ async function main() {
   console.log("Debugging Memgraph traverse()...\n");
 
   await adapter.clearDatabase();
-  
-  const n1 = await adapter.createNode({ label: "Test", properties: { name: "A" } });
-  const n2 = await adapter.createNode({ label: "Test", properties: { name: "B" } });
-  const n3 = await adapter.createNode({ label: "Test", properties: { name: "C" } });
-  
+
+  const n1 = await adapter.createNode({
+    label: "Test",
+    properties: { name: "A" },
+  });
+  const n2 = await adapter.createNode({
+    label: "Test",
+    properties: { name: "B" },
+  });
+  const n3 = await adapter.createNode({
+    label: "Test",
+    properties: { name: "C" },
+  });
+
   await adapter.createEdge({ from: n1, to: n2, type: "LINK", properties: {} });
   await adapter.createEdge({ from: n2, to: n3, type: "LINK", properties: {} });
-  
+
   console.log(`Created nodes: ${n1}, ${n2}, ${n3}\n`);
 
   // Test the actual query that traverse() generates
@@ -34,9 +43,11 @@ async function main() {
     RETURN DISTINCT id(connected) as id, connected, labels(connected) as labels
   `;
   console.log(generatedQuery);
-  
+
   try {
-    const result = await adapter.query(generatedQuery, { startId: parseInt(n1) });
+    const result = await adapter.query(generatedQuery, {
+      startId: parseInt(n1),
+    });
     console.log(`\nResult: ${result.count} records`);
     console.log("Records:", JSON.stringify(result.records, null, 2));
   } catch (error) {
@@ -51,7 +62,7 @@ async function main() {
     MATCH (start)-[*1..2]->(connected)
     RETURN DISTINCT id(connected) as id, connected, labels(connected) as labels
   `;
-  
+
   try {
     const result = await adapter.query(simpler, { startId: parseInt(n1) });
     console.log(`Result: ${result.count} records`);

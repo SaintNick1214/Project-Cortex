@@ -1,6 +1,6 @@
 /**
  * Clear Graph Databases Script
- * 
+ *
  * Clears all data from both Neo4j and Memgraph databases
  * Run with: npx tsx tests/graph/clear-databases.ts
  */
@@ -8,9 +8,15 @@
 import { CypherGraphAdapter } from "../../src/graph";
 
 async function main() {
-  console.log("╔═══════════════════════════════════════════════════════════════╗");
-  console.log("║          Clearing Graph Databases                            ║");
-  console.log("╚═══════════════════════════════════════════════════════════════╝\n");
+  console.log(
+    "╔═══════════════════════════════════════════════════════════════╗",
+  );
+  console.log(
+    "║          Clearing Graph Databases                            ║",
+  );
+  console.log(
+    "╚═══════════════════════════════════════════════════════════════╝\n",
+  );
 
   // Clear Neo4j
   console.log("🔷 Clearing Neo4j...");
@@ -25,7 +31,7 @@ async function main() {
   console.log(`   Before: ${neo4jBefore} nodes`);
 
   await neo4jAdapter.clearDatabase();
-  
+
   const neo4jAfter = await neo4jAdapter.countNodes();
   console.log(`   After: ${neo4jAfter} nodes`);
   console.log(`   ✅ Neo4j cleared\n`);
@@ -45,7 +51,7 @@ async function main() {
   console.log(`   Before: ${memgraphBefore} nodes`);
 
   await memgraphAdapter.clearDatabase();
-  
+
   const memgraphAfter = await memgraphAdapter.countNodes();
   console.log(`   After: ${memgraphAfter} nodes`);
   console.log(`   ✅ Memgraph cleared\n`);

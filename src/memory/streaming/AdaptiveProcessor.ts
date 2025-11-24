@@ -1,6 +1,6 @@
 /**
  * Adaptive Stream Processor
- * 
+ *
  * Analyzes stream characteristics in real-time and adjusts processing
  * strategy for optimal performance:
  * - Fast streams: Batch processing, reduced overhead
@@ -58,22 +58,22 @@ export class AdaptiveStreamProcessor {
 
     // Fast: High throughput
     if (chunksPerSecond > 10) {
-      return 'fast';
+      return "fast";
     }
 
     // Slow: Low throughput
     if (chunksPerSecond < 1 && totalChunks > 5) {
-      return 'slow';
+      return "slow";
     }
 
     // Bursty: High variance in chunk sizes
     const chunkStats = this.calculateVariance(this.chunkSizeHistory);
     if (chunkStats.coefficient > 0.5) {
-      return 'bursty';
+      return "bursty";
     }
 
     // Steady: Consistent throughput and chunk sizes
-    return 'steady';
+    return "steady";
   }
 
   /**
@@ -84,18 +84,18 @@ export class AdaptiveStreamProcessor {
     metrics: StreamMetrics,
   ): ProcessingStrategy {
     switch (streamType) {
-      case 'fast':
+      case "fast":
         return this.getFastStreamStrategy(metrics);
-      
-      case 'slow':
+
+      case "slow":
         return this.getSlowStreamStrategy(metrics);
-      
-      case 'bursty':
+
+      case "bursty":
         return this.getBurstyStreamStrategy(metrics);
-      
-      case 'steady':
+
+      case "steady":
         return this.getSteadyStreamStrategy(metrics);
-      
+
       default:
         return this.getDefaultStrategy();
     }
@@ -167,8 +167,10 @@ export class AdaptiveStreamProcessor {
   private hasStrategyChanged(newStrategy: ProcessingStrategy): boolean {
     return (
       newStrategy.bufferSize !== this.currentStrategy.bufferSize ||
-      newStrategy.factExtractionFrequency !== this.currentStrategy.factExtractionFrequency ||
-      newStrategy.partialUpdateInterval !== this.currentStrategy.partialUpdateInterval
+      newStrategy.factExtractionFrequency !==
+        this.currentStrategy.factExtractionFrequency ||
+      newStrategy.partialUpdateInterval !==
+        this.currentStrategy.partialUpdateInterval
     );
   }
 
@@ -177,7 +179,7 @@ export class AdaptiveStreamProcessor {
    */
   recordChunkSize(size: number): void {
     this.chunkSizeHistory.push(size);
-    
+
     // Keep history size manageable
     if (this.chunkSizeHistory.length > this.maxHistorySize) {
       this.chunkSizeHistory.shift();
@@ -189,7 +191,7 @@ export class AdaptiveStreamProcessor {
    */
   recordProcessingTime(timeMs: number): void {
     this.processingTimeHistory.push(timeMs);
-    
+
     // Keep history size manageable
     if (this.processingTimeHistory.length > this.maxHistorySize) {
       this.processingTimeHistory.shift();
@@ -209,7 +211,9 @@ export class AdaptiveStreamProcessor {
     }
 
     const mean = values.reduce((sum, val) => sum + val, 0) / values.length;
-    const variance = values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / values.length;
+    const variance =
+      values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) /
+      values.length;
     const stdDev = Math.sqrt(variance);
     const coefficient = mean !== 0 ? stdDev / mean : 0;
 
@@ -228,7 +232,8 @@ export class AdaptiveStreamProcessor {
    */
   shouldEnableChunking(metrics: StreamMetrics): boolean {
     // Enable chunking for very long streams
-    if (metrics.totalBytes > 50000) { // > 50KB
+    if (metrics.totalBytes > 50000) {
+      // > 50KB
       return true;
     }
 
@@ -287,29 +292,29 @@ export class AdaptiveStreamProcessor {
     // Chunking recommendation
     if (this.shouldEnableChunking(metrics)) {
       recommendations.push(
-        `Enable chunked storage with ${this.suggestChunkSize(metrics)} char chunks`
+        `Enable chunked storage with ${this.suggestChunkSize(metrics)} char chunks`,
       );
     }
 
     // Fact extraction recommendation
     if (!this.shouldEnableProgressiveFacts(metrics)) {
       recommendations.push(
-        'Consider disabling progressive fact extraction to improve throughput'
+        "Consider disabling progressive fact extraction to improve throughput",
       );
     }
 
     // Buffer size recommendation
     const streamType = this.detectStreamType(metrics);
-    if (streamType === 'fast' && this.currentStrategy.bufferSize < 5) {
+    if (streamType === "fast" && this.currentStrategy.bufferSize < 5) {
       recommendations.push(
-        'Increase buffer size to improve batching efficiency'
+        "Increase buffer size to improve batching efficiency",
       );
     }
 
     // Update interval recommendation
     if (metrics.partialUpdates > metrics.totalChunks / 2) {
       recommendations.push(
-        'Reduce partial update frequency to lower database load'
+        "Reduce partial update frequency to lower database load",
       );
     }
 

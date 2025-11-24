@@ -156,7 +156,9 @@ export class CypherGraphAdapter implements GraphAdapter {
 
       const idValue = result.records[0].get("id");
       // Convert Neo4j Integer to string if needed
-      return typeof idValue === 'object' && idValue !== null && 'toString' in idValue
+      return typeof idValue === "object" &&
+        idValue !== null &&
+        "toString" in idValue
         ? idValue.toString()
         : String(idValue);
     } catch (error) {
@@ -180,7 +182,9 @@ export class CypherGraphAdapter implements GraphAdapter {
         RETURN n, labels(n) as labels
       `;
 
-      const result = await session.run(query, { id: this.convertIdForQuery(id) });
+      const result = await session.run(query, {
+        id: this.convertIdForQuery(id),
+      });
 
       if (result.records.length === 0) {
         return null;
@@ -327,7 +331,9 @@ export class CypherGraphAdapter implements GraphAdapter {
 
       const idValue = result.records[0].get("id");
       // Convert Neo4j Integer to string if needed
-      return typeof idValue === 'object' && idValue !== null && 'toString' in idValue
+      return typeof idValue === "object" &&
+        idValue !== null &&
+        "toString" in idValue
         ? idValue.toString()
         : String(idValue);
     } catch (error) {
@@ -495,8 +501,8 @@ export class CypherGraphAdapter implements GraphAdapter {
         MATCH path = (start)${relPattern}(connected)
       `;
 
-      const params: Record<string, any> = { 
-        startId: this.convertIdForQuery(config.startId)  // FIX: Convert ID for Memgraph
+      const params: Record<string, any> = {
+        startId: this.convertIdForQuery(config.startId), // FIX: Convert ID for Memgraph
       };
 
       if (config.filter) {

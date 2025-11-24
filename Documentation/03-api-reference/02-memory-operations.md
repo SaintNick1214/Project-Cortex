@@ -741,13 +741,19 @@ interface RememberStreamParams {
   participantId?: string;
 
   // Optional - Content processing
-  extractContent?: (userMsg: string, agentResp: string) => Promise<string | null>;
+  extractContent?: (
+    userMsg: string,
+    agentResp: string,
+  ) => Promise<string | null>;
 
   // Optional - Embeddings
   generateEmbedding?: (content: string) => Promise<number[] | null>;
 
   // Optional - Fact extraction
-  extractFacts?: (userMsg: string, agentResp: string) => Promise<FactData[] | null>;
+  extractFacts?: (
+    userMsg: string,
+    agentResp: string,
+  ) => Promise<FactData[] | null>;
 
   // Optional - Cloud Mode
   autoEmbed?: boolean;
@@ -763,15 +769,15 @@ interface StreamingOptions {
   syncToGraph?: boolean;
   progressiveGraphSync?: boolean; // Sync during streaming
   graphSyncInterval?: number; // How often to sync (ms)
-  
+
   // Progressive storage
   storePartialResponse?: boolean; // Store in-progress memories
   partialResponseInterval?: number; // Update interval (ms)
-  
+
   // Progressive fact extraction
   progressiveFactExtraction?: boolean;
   factExtractionThreshold?: number; // Extract every N chars
-  
+
   // Streaming hooks
   hooks?: {
     onChunk?: (event: ChunkEvent) => void | Promise<void>;
@@ -779,13 +785,17 @@ interface StreamingOptions {
     onError?: (error: StreamError) => void | Promise<void>;
     onComplete?: (event: StreamCompleteEvent) => void | Promise<void>;
   };
-  
+
   // Error handling
-  partialFailureHandling?: 'store-partial' | 'rollback' | 'retry' | 'best-effort';
+  partialFailureHandling?:
+    | "store-partial"
+    | "rollback"
+    | "retry"
+    | "best-effort";
   maxRetries?: number;
   generateResumeToken?: boolean;
   streamTimeout?: number;
-  
+
   // Advanced
   maxResponseLength?: number;
   enableAdaptiveProcessing?: boolean;
@@ -804,7 +814,7 @@ interface EnhancedRememberStreamResult {
   memories: MemoryEntry[];
   facts: FactRecord[];
   fullResponse: string;
-  
+
   // Stream metrics
   streamMetrics: {
     totalChunks: number;
@@ -816,21 +826,21 @@ interface EnhancedRememberStreamResult {
     estimatedTokens: number;
     estimatedCost?: number;
   };
-  
+
   // Progressive processing results (if enabled)
   progressiveProcessing?: {
     factsExtractedDuringStream: ProgressiveFact[];
     partialStorageHistory: PartialUpdate[];
     graphSyncEvents?: GraphSyncEvent[];
   };
-  
+
   // Performance insights
   performance?: {
     bottlenecks: string[];
     recommendations: string[];
     costEstimate?: number;
   };
-  
+
   // Error/recovery info
   errors?: StreamError[];
   recovered?: boolean;
@@ -874,51 +884,62 @@ console.log("Stream metrics:", result.streamMetrics);
 **Example 2: With Progressive Features**
 
 ```typescript
-const result = await cortex.memory.rememberStream({
-  memorySpaceId: "ai-tutor",
-  conversationId: "lesson-2",
-  userMessage: "Explain quantum computing in detail",
-  responseStream: llmStream,
-  userId: "student-123",
-  userName: "Alice",
-  extractFacts: extractFactsCallback,
-}, {
-  // Progressive storage - save partial content during streaming
-  storePartialResponse: true,
-  partialResponseInterval: 3000, // Update every 3 seconds
-  
-  // Progressive fact extraction
-  progressiveFactExtraction: true,
-  factExtractionThreshold: 500, // Extract every 500 chars
-  
-  // Streaming hooks for real-time updates
-  hooks: {
-    onChunk: (event) => {
-      console.log(`Chunk ${event.chunkNumber}: ${event.chunk}`);
-      websocket.send({ type: 'chunk', data: event.chunk });
-    },
-    onProgress: (event) => {
-      console.log(`Progress: ${event.bytesProcessed} bytes`);
-      updateProgressBar(event.bytesProcessed);
-    },
-    onComplete: (event) => {
-      console.log(`Complete! ${event.totalChunks} chunks, ${event.durationMs}ms`);
-    },
+const result = await cortex.memory.rememberStream(
+  {
+    memorySpaceId: "ai-tutor",
+    conversationId: "lesson-2",
+    userMessage: "Explain quantum computing in detail",
+    responseStream: llmStream,
+    userId: "student-123",
+    userName: "Alice",
+    extractFacts: extractFactsCallback,
   },
-  
-  // Error recovery
-  partialFailureHandling: 'store-partial',
-  generateResumeToken: true,
-  
-  // Graph sync
-  progressiveGraphSync: true,
-  graphSyncInterval: 5000,
-});
+  {
+    // Progressive storage - save partial content during streaming
+    storePartialResponse: true,
+    partialResponseInterval: 3000, // Update every 3 seconds
+
+    // Progressive fact extraction
+    progressiveFactExtraction: true,
+    factExtractionThreshold: 500, // Extract every 500 chars
+
+    // Streaming hooks for real-time updates
+    hooks: {
+      onChunk: (event) => {
+        console.log(`Chunk ${event.chunkNumber}: ${event.chunk}`);
+        websocket.send({ type: "chunk", data: event.chunk });
+      },
+      onProgress: (event) => {
+        console.log(`Progress: ${event.bytesProcessed} bytes`);
+        updateProgressBar(event.bytesProcessed);
+      },
+      onComplete: (event) => {
+        console.log(
+          `Complete! ${event.totalChunks} chunks, ${event.durationMs}ms`,
+        );
+      },
+    },
+
+    // Error recovery
+    partialFailureHandling: "store-partial",
+    generateResumeToken: true,
+
+    // Graph sync
+    progressiveGraphSync: true,
+    graphSyncInterval: 5000,
+  },
+);
 
 // Access enhanced results
 console.log("Stream metrics:", result.streamMetrics);
-console.log("Facts extracted during stream:", result.progressiveProcessing?.factsExtractedDuringStream);
-console.log("Performance recommendations:", result.performance?.recommendations);
+console.log(
+  "Facts extracted during stream:",
+  result.progressiveProcessing?.factsExtractedDuringStream,
+);
+console.log(
+  "Performance recommendations:",
+  result.performance?.recommendations,
+);
 ```
 
 **Example 3: OpenAI SDK (AsyncIterable)**
@@ -987,15 +1008,15 @@ console.log("Facts:", result.facts); // Extracted facts
 ```typescript
 try {
   const result = await cortex.memory.rememberStream(params, {
-    partialFailureHandling: 'store-partial',
+    partialFailureHandling: "store-partial",
     generateResumeToken: true,
     streamTimeout: 30000, // 30 second timeout
   });
 } catch (error) {
   if (error instanceof ResumableStreamError) {
     // Stream was interrupted but partial data was saved
-    console.log('Stream interrupted. Resume token:', error.resumeToken);
-    
+    console.log("Stream interrupted. Resume token:", error.resumeToken);
+
     // Later, resume the stream
     const resumed = await cortex.memory.rememberStream({
       ...params,

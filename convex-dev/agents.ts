@@ -290,7 +290,7 @@ export const unregister = mutation({
 
 /**
  * Unregister multiple agents matching filters
- * 
+ *
  * Note: This only removes registrations. Cascade deletion of agent data
  * is handled in the SDK layer for each agent.
  */
@@ -326,7 +326,9 @@ export const unregisterMany = mutation({
         .withIndex("by_status", (q) => q.eq("status", args.status!))
         .collect();
     } else {
-      throw new Error("INVALID_FILTERS: Must provide agentIds or status filter");
+      throw new Error(
+        "INVALID_FILTERS: Must provide agentIds or status filter",
+      );
     }
 
     const deletedAgentIds: string[] = [];
