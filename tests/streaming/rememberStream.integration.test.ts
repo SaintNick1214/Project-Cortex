@@ -39,7 +39,7 @@ describe("rememberStream Integration Tests", () => {
   afterAll(async () => {
     // Cleanup
     if (client) {
-      client.close();
+      await client.close();
     }
   });
 
@@ -123,7 +123,7 @@ describe("rememberStream Integration Tests", () => {
             onChunk: (event) => {
               chunks.push(event.chunk);
             },
-            onProgress: (event) => {
+            onProgress: (_event) => {
               progressCallbacks++;
             },
             onComplete: (_event) => {
