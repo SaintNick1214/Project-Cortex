@@ -68,7 +68,7 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   const result = await streamText({
-    model: cortexMemory(openai("gpt-4-turbo")),
+    model: cortexMemory(openai("gpt-5-nano")),
     messages,
   });
 
@@ -291,7 +291,7 @@ Agent: "Your name is Alice!"
 ```typescript
 // When you call streamText with cortexMemory:
 const result = await streamText({
-  model: cortexMemory(openai("gpt-4")),
+  model: cortexMemory(openai("gpt-5-nano")),
   messages: [{ role: "user", content: "What did I tell you earlier?" }],
 });
 
@@ -422,7 +422,7 @@ const cortexMemory = createCortexMemory({
 });
 
 // Wrap any Vercel AI SDK provider
-const model1 = cortexMemory(openai("gpt-4"));
+const model1 = cortexMemory(openai("gpt-5-nano"));
 const model2 = cortexMemory(anthropic("claude-3-opus"));
 const model3 = cortexMemory(google("gemini-pro"));
 
@@ -508,7 +508,7 @@ const mem0 = createMem0({
 });
 
 const result = await streamText({
-  model: mem0("gpt-4"),
+  model: mem0("gpt-5-nano"),
   messages,
 });
 ```
@@ -526,7 +526,7 @@ const cortexMemory = createCortexMemory({
 });
 
 const result = await streamText({
-  model: cortexMemory(openai("gpt-4")),
+  model: cortexMemory(openai("gpt-5-nano")),
   messages,
 });
 ```
@@ -597,7 +597,7 @@ export async function POST(req: Request) {
   });
 
   const result = await streamText({
-    model: teamMemory(openai("gpt-4")),
+    model: teamMemory(openai("gpt-5-nano")),
     messages,
   });
 
@@ -636,7 +636,7 @@ export const runtime = "edge";
 
 export async function POST(req: Request) {
   const result = await streamText({
-    model: cortexMemory(openai("gpt-4")),
+    model: cortexMemory(openai("gpt-5-nano")),
     messages,
   });
 
@@ -650,7 +650,7 @@ A: No! Cortex v0.9.0+ handles streaming automatically:
 ```typescript
 // Cortex buffers the stream internally and stores after completion
 const result = await streamText({
-  model: cortexMemory(openai("gpt-4")),
+  model: cortexMemory(openai("gpt-5-nano")),
   messages,
 });
 

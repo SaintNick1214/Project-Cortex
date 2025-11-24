@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     // 1. Searched before generation (injects relevant context)
     // 2. Stored after generation (remembers this conversation)
     const result = await streamText({
-      model: cortexMemory(openai("gpt-4-turbo")),
+      model: cortexMemory(openai("gpt-5-nano")),
       messages,
       system:
         "You are a helpful assistant with long-term memory. You remember past conversations and can reference them naturally.",

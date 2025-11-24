@@ -742,7 +742,7 @@ import { streamText } from "ai";
 import { openai } from "@ai-sdk/openai";
 
 const response = await streamText({
-  model: openai("gpt-4"),
+  model: openai("gpt-5-nano"),
   messages: [{ role: "user", content: "What is AI?" }],
 });
 
@@ -768,7 +768,7 @@ import OpenAI from "openai";
 const openai = new OpenAI();
 
 const stream = await openai.chat.completions.create({
-  model: "gpt-4",
+  model: "gpt-5-nano",
   messages: [{ role: "user", content: "Hello!" }],
   stream: true,
 });
@@ -901,7 +901,7 @@ export async function POST(req: Request) {
 
   // Generate streaming response
   const aiResponse = await streamText({
-    model: openai("gpt-4"),
+    model: openai("gpt-5-nano"),
     messages: [{ role: "user", content: message }],
   });
 

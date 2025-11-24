@@ -230,7 +230,7 @@ ${context.map((m) => m.content).join("\n")}`;
 
   // Generate response
   const response = await openai.chat.completions.create({
-    model: "gpt-4",
+    model: "gpt-5-nano",
     messages: [
       { role: "system", content: systemPrompt },
       { role: "user", content: message },

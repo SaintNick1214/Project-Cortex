@@ -138,7 +138,7 @@ await cortex.agents.register({
   capabilities: ["support", "billing", "technical"],
   metadata: {
     owner: "support-team",
-    model: "gpt-4",
+    model: "gpt-5-nano",
     version: "2.0",
   },
   config: {

@@ -83,12 +83,12 @@ const cortexMemory = createCortexMemory({
 });
 
 // Wrap any AI SDK provider
-const gpt4 = cortexMemory(openai("gpt-4"));
+const gpt5 = cortexMemory(openai("gpt-5-nano"));
 const claude = cortexMemory(anthropic("claude-3-opus"));
 const gemini = cortexMemory(google("gemini-pro"));
 
 // Use with AI SDK functions
-await streamText({ model: gpt4, messages });
+await streamText({ model: gpt5, messages });
 await generateText({ model: claude, messages });
 await generateObject({ model: gemini, prompt, schema });
 ```

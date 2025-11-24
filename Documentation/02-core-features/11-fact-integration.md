@@ -219,7 +219,7 @@ Return facts as JSON array with format:
 }]`;
 
   const response = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
+    model: "gpt-5-nano",
     messages: [{ role: "user", content: prompt }],
     response_format: { type: "json_object" },
   });
