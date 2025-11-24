@@ -607,3 +607,83 @@ async def test_get_conversation_ref(cortex_client, test_memory_space_id, test_co
     
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
+
+
+# ============================================================================
+# Archive and Restore Tests (NEW)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_restore_from_archive(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+    """
+    Test restoring memory from archive.
+    
+    New method: memory.restore_from_archive()
+    """
+    # Store a memory
+    result = await cortex_client.memory.remember(
+        RememberParams(
+            memory_space_id=test_memory_space_id,
+            conversation_id=test_conversation_id,
+            user_message="Important memory",
+            agent_response="Noted",
+            user_id=test_user_id,
+            user_name="Tester",
+            importance=80,
+        )
+    )
+    
+    memory_id = result.memories[0].memory_id
+    
+    # Archive it
+    archived = await cortex_client.memory.archive(test_memory_space_id, memory_id)
+    assert archived is not None
+    
+    # Verify archived
+    memory = await cortex_client.vector.get(test_memory_space_id, memory_id)
+    assert "archived" in memory.tags
+    assert memory.importance <= 10
+    
+    # Restore from archive
+    restored = await cortex_client.memory.restore_from_archive(
+        test_memory_space_id, memory_id
+    )
+    
+    assert restored["restored"] is True
+    assert restored["memoryId"] == memory_id
+    
+    # Verify restoration
+    restored_memory = await cortex_client.vector.get(test_memory_space_id, memory_id)
+    assert "archived" not in restored_memory.tags
+    assert restored_memory.importance >= 50
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_restore_non_archived_throws_error(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+    """
+    Test that restoring non-archived memory throws error.
+    """
+    # Store a memory (don't archive)
+    result = await cortex_client.memory.remember(
+        RememberParams(
+            memory_space_id=test_memory_space_id,
+            conversation_id=test_conversation_id,
+            user_message="Not archived",
+            agent_response="OK",
+            user_id=test_user_id,
+            user_name="Tester",
+        )
+    )
+    
+    memory_id = result.memories[0].memory_id
+    
+    # Try to restore without archiving
+    with pytest.raises(Exception):
+        await cortex_client.memory.restore_from_archive(test_memory_space_id, memory_id)
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)
