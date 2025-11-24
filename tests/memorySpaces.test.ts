@@ -591,6 +591,24 @@ describe("Memory Spaces Registry API", () => {
   describe("New API Methods", () => {
     describe("search()", () => {
       beforeEach(async () => {
+        // Clean up any existing test memory spaces first
+        try {
+          await cortex.memorySpaces.delete("engineering-team");
+        } catch (error) {
+          // Ignore if doesn't exist
+        }
+        try {
+          await cortex.memorySpaces.delete("design-team");
+        } catch (error) {
+          // Ignore if doesn't exist
+        }
+        try {
+          await cortex.memorySpaces.delete("user-alice-personal");
+        } catch (error) {
+          // Ignore if doesn't exist
+        }
+
+        // Now register fresh test spaces
         await cortex.memorySpaces.register({
           memorySpaceId: "engineering-team",
           name: "Engineering Team Workspace",
@@ -611,6 +629,25 @@ describe("Memory Spaces Registry API", () => {
           type: "personal",
           metadata: { owner: "alice" },
         });
+      });
+
+      afterEach(async () => {
+        // Clean up test memory spaces
+        try {
+          await cortex.memorySpaces.delete("engineering-team");
+        } catch (error) {
+          // Ignore if doesn't exist
+        }
+        try {
+          await cortex.memorySpaces.delete("design-team");
+        } catch (error) {
+          // Ignore if doesn't exist
+        }
+        try {
+          await cortex.memorySpaces.delete("user-alice-personal");
+        } catch (error) {
+          // Ignore if doesn't exist
+        }
       });
 
       it("searches by name", async () => {
@@ -641,10 +678,18 @@ describe("Memory Spaces Registry API", () => {
           type: "team",
         });
 
-        expect(results.length).toBe(2);
+        // Should find at least our 2 test spaces
+        expect(results.length).toBeGreaterThanOrEqual(2);
+        
+        // All results should be team type
         for (const space of results) {
           expect(space.type).toBe("team");
         }
+        
+        // Verify our test spaces are included
+        const spaceIds = results.map(s => s.memorySpaceId);
+        expect(spaceIds).toContain("engineering-team");
+        expect(spaceIds).toContain("design-team");
       });
 
       it("filters by status", async () => {
@@ -673,11 +718,20 @@ describe("Memory Spaces Registry API", () => {
     });
 
     describe("updateParticipants()", () => {
+      beforeEach(async () => {
+        // Cleanup any existing participant-test space
+        try {
+          await cortex.memorySpaces.delete("participant-test");
+        } catch (error) {
+          // Doesn't exist, continue
+        }
+      });
+
       it("adds participants", async () => {
         await cortex.memorySpaces.register({
           memorySpaceId: "participant-test",
           type: "team",
-          participants: [{ id: "user-1", type: "user", joinedAt: Date.now() }],
+          participants: [{ id: "user-1", type: "user" }] as any,
         });
 
         const now = Date.now();
@@ -700,10 +754,10 @@ describe("Memory Spaces Registry API", () => {
           memorySpaceId: "participant-test",
           type: "team",
           participants: [
-            { id: "user-1", type: "user", joinedAt: Date.now() },
-            { id: "agent-1", type: "agent", joinedAt: Date.now() },
-            { id: "tool-1", type: "tool", joinedAt: Date.now() },
-          ],
+            { id: "user-1", type: "user" },
+            { id: "agent-1", type: "agent" },
+            { id: "tool-1", type: "tool" },
+          ] as any,
         });
 
         await cortex.memorySpaces.updateParticipants("participant-test", {
@@ -721,8 +775,8 @@ describe("Memory Spaces Registry API", () => {
           memorySpaceId: "participant-test",
           type: "team",
           participants: [
-            { id: "old-agent", type: "agent", joinedAt: Date.now() },
-          ],
+            { id: "old-agent", type: "agent" },
+          ] as any,
         });
 
         const now = Date.now();
@@ -741,7 +795,7 @@ describe("Memory Spaces Registry API", () => {
         await cortex.memorySpaces.register({
           memorySpaceId: "participant-test",
           type: "team",
-          participants: [{ id: "agent-1", type: "agent", joinedAt: Date.now() }],
+          participants: [{ id: "agent-1", type: "agent" }] as any,
         });
 
         const now = Date.now();

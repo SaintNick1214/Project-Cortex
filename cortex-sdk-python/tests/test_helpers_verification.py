@@ -435,8 +435,8 @@ async def test_direct_convex_client_access(cortex_client, direct_convex_client, 
 
     conv_id = conv.get("conversation_id") if isinstance(conv, dict) else conv.conversation_id
 
-    # Query directly via Convex client
-    stored = await direct_convex_client.query(
+    # Query directly via Convex client (ConvexClient.query is sync, not async)
+    stored = direct_convex_client.query(
         "conversations:get", {"conversationId": conv_id}
     )
 

@@ -1,90 +1,77 @@
+version: "3.8"
+
 services:
-  # Neo4j Community Edition
-  # Cypher query language, Bolt protocol on port 7687
-  # Web UI available at http://localhost:7474
-  neo4j:
-    image: neo4j:5-community
-    container_name: cortex-neo4j
-    ports:
-      - "7474:7474" # HTTP (Browser UI)
-      - "7687:7687" # Bolt (Query Protocol)
-    environment:
-      # Authentication
-      - NEO4J_AUTH=neo4j/cortex-dev-password
-
-      # Plugins
-      - NEO4J_PLUGINS=["apoc"]
-
-      # Memory settings (adjust based on your system)
-      - NEO4J_dbms_memory_heap_max__size=2G
-      - NEO4J_dbms_memory_pagecache_size=1G
-
-      # Accept license
-      - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
-    volumes:
-      - neo4j-data:/data
-      - neo4j-logs:/logs
-      - neo4j-import:/var/lib/neo4j/import
-      - neo4j-plugins:/plugins
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "wget --no-verbose --tries=1 --spider http://localhost:7474 || exit 1",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
-  # Memgraph
-  # Cypher-compatible, Bolt protocol on port 7688 (to avoid Neo4j conflict)
-  # Memgraph Lab available at http://localhost:3001
+  # Memgraph MAGE (with advanced algorithms)
   memgraph:
-    image: memgraph/memgraph:latest
+    image: memgraph/memgraph-mage:latest
     container_name: cortex-memgraph
     ports:
-      - "7688:7687" # Bolt (mapped to 7688 on host to avoid Neo4j conflict)
-      - "3001:3000" # Memgraph Lab UI (mapped to 3001 on host)
-    environment:
-      # Authentication (Memgraph 2.0+)
-      - MEMGRAPH_USER=memgraph
-      - MEMGRAPH_PASSWORD=cortex-dev-password
+      - "7688:7687"  # Bolt protocol
+      - "7444:7444"  # Logs
+    command: ["--log-level=WARNING", "--also-log-to-stderr"]
     volumes:
-      - memgraph-data:/var/lib/memgraph
-      - memgraph-log:/var/log/memgraph
-      - memgraph-etc:/etc/memgraph
-    command: ["--bolt-port=7687", "--log-level=WARNING"]
+      - memgraph_data:/var/lib/memgraph
+      - memgraph_logs:/var/log/memgraph
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "echo 'RETURN 1;' | mgconsole --host 127.0.0.1 --port 7687 --username memgraph --password cortex-dev-password || exit 1",
-        ]
+      test: ["CMD-SHELL", "echo 'RETURN 1;' | mgconsole --host 127.0.0.1 --port 7687 --use-ssl=False || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    networks:
+      - cortex-graph
+
+  # Memgraph Lab (UI for Memgraph)
+  memgraph-lab:
+    image: memgraph/lab:latest
+    container_name: cortex-memgraph-lab
+    ports:
+      - "3001:3000"  # Memgraph Lab UI
+    environment:
+      - QUICK_CONNECT_MG_HOST=memgraph
+      - QUICK_CONNECT_MG_PORT=7687
+    depends_on:
+      memgraph:
+        condition: service_healthy
+    networks:
+      - cortex-graph
+
+  # Neo4j (Community Edition with Browser)
+  neo4j:
+    image: neo4j:latest
+    container_name: cortex-neo4j
+    ports:
+      - "7474:7474"  # HTTP (Neo4j Browser)
+      - "7687:7687"  # Bolt protocol
+    environment:
+      - NEO4J_AUTH=neo4j/cortex-dev-password
+      - NEO4J_PLUGINS=["apoc"]
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*
+      - NEO4J_dbms_memory_heap_initial__size=512M
+      - NEO4J_dbms_memory_heap_max__size=2G
+      - NEO4J_dbms_memory_pagecache_size=512M
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+      - neo4j_import:/import
+      - neo4j_plugins:/plugins
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "cortex-dev-password", "RETURN 1"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 20s
-
-volumes:
-  # Neo4j volumes
-  neo4j-data:
-    name: cortex-neo4j-data
-  neo4j-logs:
-    name: cortex-neo4j-logs
-  neo4j-import:
-    name: cortex-neo4j-import
-  neo4j-plugins:
-    name: cortex-neo4j-plugins
-
-  # Memgraph volumes
-  memgraph-data:
-    name: cortex-memgraph-data
-  memgraph-log:
-    name: cortex-memgraph-log
-  memgraph-etc:
-    name: cortex-memgraph-etc
+    networks:
+      - cortex-graph
 
 networks:
-  default:
-    name: cortex-graph-network
+  cortex-graph:
+    driver: bridge
+
+volumes:
+  memgraph_data:
+  memgraph_logs:
+  memgraph_config:
+  neo4j_data:
+  neo4j_logs:
+  neo4j_import:
+  neo4j_plugins:
