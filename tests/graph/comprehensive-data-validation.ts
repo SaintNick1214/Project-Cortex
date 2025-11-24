@@ -230,7 +230,6 @@ async function testWithDatabase(name: string, config: any) {
       id: agentId,
       name: "Test Agent",
       description: "Validation test agent",
-      status: "active",
     });
 
     // BUG FOUND: Agents API does NOT sync to graph!
