@@ -54,7 +54,7 @@ export class AdaptiveStreamProcessor {
    * Detect stream type based on metrics
    */
   detectStreamType(metrics: StreamMetrics): StreamType {
-    const { chunksPerSecond, averageChunkSize, totalChunks } = metrics;
+    const { chunksPerSecond, totalChunks } = metrics;
 
     // Fast: High throughput
     if (chunksPerSecond > 10) {
@@ -104,7 +104,7 @@ export class AdaptiveStreamProcessor {
   /**
    * Strategy for fast streams - batch processing
    */
-  private getFastStreamStrategy(metrics: StreamMetrics): ProcessingStrategy {
+  private getFastStreamStrategy(_metrics: StreamMetrics): ProcessingStrategy {
     return {
       bufferSize: 10, // Buffer 10 chunks before processing
       factExtractionFrequency: 1000, // Extract every 1000 chars
@@ -116,7 +116,7 @@ export class AdaptiveStreamProcessor {
   /**
    * Strategy for slow streams - immediate processing
    */
-  private getSlowStreamStrategy(metrics: StreamMetrics): ProcessingStrategy {
+  private getSlowStreamStrategy(_metrics: StreamMetrics): ProcessingStrategy {
     return {
       bufferSize: 1, // Process immediately
       factExtractionFrequency: 300, // Extract every 300 chars
@@ -128,7 +128,7 @@ export class AdaptiveStreamProcessor {
   /**
    * Strategy for bursty streams - dynamic buffering
    */
-  private getBurstyStreamStrategy(metrics: StreamMetrics): ProcessingStrategy {
+  private getBurstyStreamStrategy(_metrics: StreamMetrics): ProcessingStrategy {
     return {
       bufferSize: 5, // Medium buffering
       factExtractionFrequency: 500, // Extract every 500 chars
@@ -140,7 +140,7 @@ export class AdaptiveStreamProcessor {
   /**
    * Strategy for steady streams - balanced approach
    */
-  private getSteadyStreamStrategy(metrics: StreamMetrics): ProcessingStrategy {
+  private getSteadyStreamStrategy(_metrics: StreamMetrics): ProcessingStrategy {
     return {
       bufferSize: 3, // Small buffer
       factExtractionFrequency: 500, // Extract every 500 chars

@@ -594,17 +594,17 @@ describe("Memory Spaces Registry API", () => {
         // Clean up any existing test memory spaces first
         try {
           await cortex.memorySpaces.delete("engineering-team");
-        } catch (error) {
+        } catch (_error) {
           // Ignore if doesn't exist
         }
         try {
           await cortex.memorySpaces.delete("design-team");
-        } catch (error) {
+        } catch (_error) {
           // Ignore if doesn't exist
         }
         try {
           await cortex.memorySpaces.delete("user-alice-personal");
-        } catch (error) {
+        } catch (_error) {
           // Ignore if doesn't exist
         }
 
@@ -635,17 +635,17 @@ describe("Memory Spaces Registry API", () => {
         // Clean up test memory spaces
         try {
           await cortex.memorySpaces.delete("engineering-team");
-        } catch (error) {
+        } catch (_error) {
           // Ignore if doesn't exist
         }
         try {
           await cortex.memorySpaces.delete("design-team");
-        } catch (error) {
+        } catch (_error) {
           // Ignore if doesn't exist
         }
         try {
           await cortex.memorySpaces.delete("user-alice-personal");
-        } catch (error) {
+        } catch (_error) {
           // Ignore if doesn't exist
         }
       });
@@ -724,7 +724,7 @@ describe("Memory Spaces Registry API", () => {
         // Cleanup any existing participant-test space
         try {
           await cortex.memorySpaces.delete("participant-test");
-        } catch (error) {
+        } catch (_error) {
           // Doesn't exist, continue
         }
       });

@@ -66,10 +66,10 @@ async function main() {
       },
       {
         hooks: {
-          onChunk: (event) => {
+          onChunk: (_event) => {
             chunkCount++;
           },
-          onProgress: (event) => {
+          onProgress: (_event) => {
             progressUpdates++;
           },
           onComplete: (event) => {

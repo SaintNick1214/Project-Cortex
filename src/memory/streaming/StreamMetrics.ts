@@ -60,7 +60,7 @@ export class MetricsCollector {
   /**
    * Record an error occurrence
    */
-  recordError(error: Error): void {
+  recordError(_error: Error): void {
     this.errorCount++;
   }
 

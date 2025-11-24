@@ -29,7 +29,7 @@ describeIfEnabled("Graph Sync Worker", () => {
   let graphAdapter: GraphAdapter;
   let worker: GraphSyncWorker;
   const timestamp = Date.now();
-  const memorySpaceId = `worker-test-${timestamp}`;
+  const _memorySpaceId = `worker-test-${timestamp}`;
 
   beforeAll(async () => {
     // Setup graph adapter

@@ -198,7 +198,7 @@ async function testWithDatabase(name: string, config: any) {
     // which syncs if configured. Need to pass syncToGraph to underlying immutable.store
     // For now, users are stored as Immutable nodes with immutableType: "user"
 
-    const userProfile = await cortex.users.update(testUser, {
+    const _userProfile = await cortex.users.update(testUser, {
       displayName: "Test User",
       email: "test@example.com",
       preferences: { theme: "dark" },
@@ -226,7 +226,7 @@ async function testWithDatabase(name: string, config: any) {
     console.log("6️⃣  Agents API");
 
     const agentId = `test-agent-${Date.now()}`;
-    const agent = await cortex.agents.register({
+    const _agent = await cortex.agents.register({
       id: agentId,
       name: "Test Agent",
       description: "Validation test agent",
@@ -448,7 +448,7 @@ async function main() {
     console.log("   • Memgraph: All APIs syncing correctly\n");
 
     process.exit(0);
-  } catch (error) {
+  } catch (_error) {
     console.log(
       "\n╔═══════════════════════════════════════════════════════════════╗",
     );

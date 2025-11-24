@@ -394,7 +394,7 @@ async function main() {
     console.log("");
 
     process.exit(0);
-  } catch (error) {
+  } catch (_error) {
     console.log(
       "\n╔═══════════════════════════════════════════════════════════════╗",
     );

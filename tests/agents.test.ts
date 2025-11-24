@@ -640,7 +640,7 @@ describe("Agents API (Coordination Layer)", () => {
       for (const agentId of agentIds) {
         try {
           await cortex.agents.unregister(agentId);
-        } catch (error) {
+        } catch (_error) {
           // Ignore if doesn't exist
         }
       }
@@ -724,7 +724,7 @@ describe("Agents API (Coordination Layer)", () => {
         for (const memory of existingAgentMemories) {
           await cortex.vector.delete("test-space", memory.memoryId);
         }
-      } catch (error) {
+      } catch (_error) {
         // Ignore cleanup errors
       }
 

@@ -368,7 +368,7 @@ export function withStreamTimeout<T>(
       // Set timeout
       timeoutId = setTimeout(() => {
         controller.error(new Error(`Stream timeout after ${timeoutMs}ms`));
-        reader.cancel();
+        void reader.cancel();
       }, timeoutMs);
 
       try {
@@ -427,7 +427,7 @@ export function withMaxLength(
             controller.error(
               new Error(`Stream exceeded max length of ${maxLength}`),
             );
-            reader.cancel();
+            void reader.cancel();
             break;
           }
 

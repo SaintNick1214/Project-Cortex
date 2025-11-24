@@ -142,7 +142,7 @@ export class ResponseChunker {
   private chunkBySentences(
     content: string,
     maxSentences: number,
-    preserveBoundaries: boolean = true,
+    _preserveBoundaries: boolean = true,
   ): ContentChunk[] {
     const chunks: ContentChunk[] = [];
 
@@ -229,7 +229,7 @@ export class ResponseChunker {
   private chunkByParagraphs(
     content: string,
     maxParagraphs: number,
-    preserveBoundaries: boolean = true,
+    _preserveBoundaries: boolean = true,
   ): ContentChunk[] {
     const chunks: ContentChunk[] = [];
 
@@ -385,7 +385,7 @@ export class ResponseChunker {
    */
   private async chunkBySemantic(
     content: string,
-    embeddings: number[][],
+    _embeddings: number[][],
   ): Promise<ContentChunk[]> {
     // This would require:
     // 1. Generate embeddings for sliding windows of text

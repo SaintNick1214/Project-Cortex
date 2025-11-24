@@ -830,7 +830,7 @@ describe("Users API (Coordination Layer)", () => {
         if (user) {
           await cortex.users.delete("new-user-123");
         }
-      } catch (error) {
+      } catch (_error) {
         // User doesn't exist, continue
       }
     });

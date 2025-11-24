@@ -51,7 +51,7 @@ describe("Context Operations API", () => {
 
       // Update to create v2
       await new Promise((resolve) => setTimeout(resolve, 50));
-      const timestamp1 = Date.now();
+      const _timestamp1 = Date.now();
 
       await cortex.contexts.update(context.contextId, {
         status: "active",

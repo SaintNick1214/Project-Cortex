@@ -14,7 +14,6 @@ import {
   expect,
   beforeAll,
   afterAll,
-  beforeEach,
 } from "@jest/globals";
 import { Cortex } from "../../src";
 import { ConvexClient } from "convex/browser";
@@ -121,13 +120,13 @@ describe("rememberStream Integration Tests", () => {
         },
         {
           hooks: {
-            onChunk: (event) => {
+            onChunk: (_event) => {
               chunks.push(event.chunk);
             },
-            onProgress: (event) => {
+            onProgress: (_event) => {
               progressCallbacks++;
             },
-            onComplete: (event) => {
+            onComplete: (_event) => {
               completed = true;
             },
           },
