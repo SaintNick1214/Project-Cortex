@@ -5,7 +5,7 @@
  * error recovery, and advanced streaming features.
  */
 
-import type { FactRecord, MemoryEntry, RememberResult } from "./index";
+import type { RememberResult } from "./index";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Stream Hooks & Events

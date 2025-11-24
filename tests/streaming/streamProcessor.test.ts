@@ -2,7 +2,7 @@
  * Tests for StreamProcessor
  */
 
-import { describe, it, expect, beforeEach, jest } from "@jest/globals";
+import { describe, it, expect } from "@jest/globals";
 import {
   StreamProcessor,
   createStreamContext,
@@ -167,7 +167,7 @@ describe("StreamProcessor", () => {
       });
 
       const processor = new StreamProcessor(context, {
-        onError: (error) => {
+        onError: (_error) => {
           errorCaught = true;
         },
       });

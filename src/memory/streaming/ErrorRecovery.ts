@@ -13,11 +13,9 @@
 import type { ConvexClient } from "convex/browser";
 import { api } from "../../../convex-dev/_generated/api";
 import type {
-  FailureStrategy,
   RecoveryOptions,
   RecoveryResult,
   ResumeContext,
-  PartialMemoryResult,
   StreamContext,
   StreamError,
 } from "../../types/streaming";
@@ -135,8 +133,8 @@ export class StreamErrorRecovery {
    * Retry strategy (placeholder - actual retry logic in caller)
    */
   private async retryStrategy(
-    context: StreamContext,
-    options: RecoveryOptions,
+    _context: StreamContext,
+    _options: RecoveryOptions,
   ): Promise<RecoveryResult> {
     // The actual retry logic should be handled by the caller
     // This just returns a result indicating retry should be attempted
@@ -269,7 +267,7 @@ export class StreamErrorRecovery {
    * Delete a resume token (cleanup)
    * Note: Requires mutable.delete API to be implemented
    */
-  async deleteResumeToken(token: string): Promise<void> {
+  async deleteResumeToken(_token: string): Promise<void> {
     try {
       // TODO: Implement mutable.delete mutation in Convex
       console.warn("Resume token cleanup not yet implemented");

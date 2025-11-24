@@ -182,7 +182,7 @@ export class StreamProcessor {
   /**
    * Estimate completion time based on current metrics
    */
-  private estimateCompletion(metrics: any): number | undefined {
+  private estimateCompletion(_metrics: unknown): number | undefined {
     // Simple heuristic: if we have at least 5 chunks, estimate based on throughput
     if (this.chunkNumber < 5) {
       return undefined;
