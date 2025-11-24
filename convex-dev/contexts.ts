@@ -9,6 +9,24 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Backward Compatibility Helpers
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Get version number with backward compatibility for legacy contexts
+ */
+function getContextVersion(context: any): number {
+  return context.version ?? 1;
+}
+
+/**
+ * Get previous versions array with backward compatibility for legacy contexts
+ */
+function getContextPreviousVersions(context: any): any[] {
+  return context.previousVersions ?? [];
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Mutations (Write Operations)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -135,9 +153,12 @@ export const update = mutation({
       ...args.data,
     };
 
-    // Create version snapshot
+    // Create version snapshot (with backward compatibility)
+    const currentVersion = getContextVersion(context);
+    const previousVersions = getContextPreviousVersions(context);
+    
     const newVersion = {
-      version: context.version,
+      version: currentVersion,
       status: context.status,
       data: context.data,
       timestamp: context.updatedAt,
@@ -149,8 +170,8 @@ export const update = mutation({
     await ctx.db.patch(context._id, {
       status: newStatus,
       data: newData,
-      version: context.version + 1,
-      previousVersions: [...context.previousVersions, newVersion],
+      version: currentVersion + 1,
+      previousVersions: [...previousVersions, newVersion],
       updatedAt: now,
       completedAt:
         args.completedAt !== undefined
@@ -766,8 +787,12 @@ export const updateMany = mutation({
 
     // Update each context
     for (const context of contexts) {
+      // Backward compatibility for version tracking
+      const currentVersion = getContextVersion(context);
+      const previousVersions = getContextPreviousVersions(context);
+      
       const newVersion = {
-        version: context.version,
+        version: currentVersion,
         status: context.status,
         data: context.data,
         timestamp: context.updatedAt,
@@ -784,8 +809,8 @@ export const updateMany = mutation({
             ? args.updates.status
             : context.status,
         data: newData,
-        version: context.version + 1,
-        previousVersions: [...context.previousVersions, newVersion],
+        version: currentVersion + 1,
+        previousVersions: [...previousVersions, newVersion],
         updatedAt: now,
       });
 
@@ -959,10 +984,14 @@ export const getVersion = query({
       return null;
     }
 
+    // Backward compatibility for version tracking
+    const currentVersion = getContextVersion(context);
+    const previousVersions = getContextPreviousVersions(context);
+
     // Check if it's the current version
-    if (context.version === args.version) {
+    if (currentVersion === args.version) {
       return {
-        version: context.version,
+        version: currentVersion,
         status: context.status,
         data: context.data,
         timestamp: context.updatedAt,
@@ -971,7 +1000,7 @@ export const getVersion = query({
     }
 
     // Check previous versions
-    const versionRecord = context.previousVersions.find(
+    const versionRecord = previousVersions.find(
       (v: any) => v.version === args.version,
     );
 
@@ -996,11 +1025,15 @@ export const getHistory = query({
       return [];
     }
 
+    // Backward compatibility for version tracking
+    const currentVersion = getContextVersion(context);
+    const previousVersions = getContextPreviousVersions(context);
+
     // Return all previous versions + current version
     const versions = [
-      ...context.previousVersions,
+      ...previousVersions,
       {
-        version: context.version,
+        version: currentVersion,
         status: context.status,
         data: context.data,
         timestamp: context.updatedAt,
@@ -1030,10 +1063,14 @@ export const getAtTimestamp = query({
       return null;
     }
 
+    // Backward compatibility for version tracking
+    const currentVersion = getContextVersion(context);
+    const previousVersions = getContextPreviousVersions(context);
+
     // If timestamp is after current version, return current
     if (args.timestamp >= context.updatedAt) {
       return {
-        version: context.version,
+        version: currentVersion,
         status: context.status,
         data: context.data,
         timestamp: context.updatedAt,
@@ -1044,9 +1081,9 @@ export const getAtTimestamp = query({
     // Find the version that was current at the timestamp
     // Walk backwards through versions
     const allVersions = [
-      ...context.previousVersions,
+      ...previousVersions,
       {
-        version: context.version,
+        version: currentVersion,
         status: context.status,
         data: context.data,
         timestamp: context.updatedAt,
