@@ -134,6 +134,7 @@ export class VectorAPI {
       tags: options?.tags,
       sourceType: options?.sourceType,
       minImportance: options?.minImportance,
+      minScore: options?.minScore, // FIX: Forward minScore parameter
       limit: options?.limit,
     });
 

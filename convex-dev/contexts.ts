@@ -82,6 +82,8 @@ export const create = mutation({
       grantedAccess: [],
       data: args.data,
       metadata: {},
+      version: 1, // Initialize versioning
+      previousVersions: [],
       createdAt: now,
       updatedAt: now,
       completedAt: undefined,
@@ -99,7 +101,7 @@ export const create = mutation({
 });
 
 /**
- * Update a context (creates version in metadata)
+ * Update a context (creates new version)
  */
 export const update = mutation({
   args: {
@@ -133,9 +135,22 @@ export const update = mutation({
       ...args.data,
     };
 
+    // Create version snapshot
+    const newVersion = {
+      version: context.version,
+      status: context.status,
+      data: context.data,
+      timestamp: context.updatedAt,
+      updatedBy: context.memorySpaceId, // Track which space made the update
+    };
+
+    const newStatus = args.status !== undefined ? args.status : context.status;
+
     await ctx.db.patch(context._id, {
-      status: args.status !== undefined ? args.status : context.status,
+      status: newStatus,
       data: newData,
+      version: context.version + 1,
+      previousVersions: [...context.previousVersions, newVersion],
       updatedAt: now,
       completedAt:
         args.completedAt !== undefined
@@ -693,6 +708,459 @@ export const search = query({
     }
 
     return contexts;
+  },
+});
+
+/**
+ * Update many contexts matching filters
+ */
+export const updateMany = mutation({
+  args: {
+    memorySpaceId: v.optional(v.string()),
+    userId: v.optional(v.string()),
+    status: v.optional(
+      v.union(
+        v.literal("active"),
+        v.literal("completed"),
+        v.literal("cancelled"),
+        v.literal("blocked"),
+      ),
+    ),
+    parentId: v.optional(v.string()),
+    rootId: v.optional(v.string()),
+    updates: v.object({
+      status: v.optional(
+        v.union(
+          v.literal("active"),
+          v.literal("completed"),
+          v.literal("cancelled"),
+          v.literal("blocked"),
+        ),
+      ),
+      data: v.optional(v.any()),
+    }),
+  },
+  handler: async (ctx, args) => {
+    // Get all matching contexts
+    let contexts = await ctx.db.query("contexts").collect();
+
+    // Apply filters
+    if (args.memorySpaceId) {
+      contexts = contexts.filter((c) => c.memorySpaceId === args.memorySpaceId);
+    }
+    if (args.userId) {
+      contexts = contexts.filter((c) => c.userId === args.userId);
+    }
+    if (args.status) {
+      contexts = contexts.filter((c) => c.status === args.status);
+    }
+    if (args.parentId) {
+      contexts = contexts.filter((c) => c.parentId === args.parentId);
+    }
+    if (args.rootId) {
+      contexts = contexts.filter((c) => c.rootId === args.rootId);
+    }
+
+    const now = Date.now();
+    const contextIds: string[] = [];
+
+    // Update each context
+    for (const context of contexts) {
+      const newVersion = {
+        version: context.version,
+        status: context.status,
+        data: context.data,
+        timestamp: context.updatedAt,
+        updatedBy: context.memorySpaceId,
+      };
+
+      const newData = args.updates.data
+        ? { ...context.data, ...args.updates.data }
+        : context.data;
+
+      await ctx.db.patch(context._id, {
+        status:
+          args.updates.status !== undefined
+            ? args.updates.status
+            : context.status,
+        data: newData,
+        version: context.version + 1,
+        previousVersions: [...context.previousVersions, newVersion],
+        updatedAt: now,
+      });
+
+      contextIds.push(context.contextId);
+    }
+
+    return {
+      updated: contextIds.length,
+      contextIds,
+    };
+  },
+});
+
+/**
+ * Delete many contexts matching filters
+ */
+export const deleteMany = mutation({
+  args: {
+    memorySpaceId: v.optional(v.string()),
+    userId: v.optional(v.string()),
+    status: v.optional(
+      v.union(
+        v.literal("active"),
+        v.literal("completed"),
+        v.literal("cancelled"),
+        v.literal("blocked"),
+      ),
+    ),
+    completedBefore: v.optional(v.number()),
+    cascadeChildren: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    // Get all matching contexts
+    let contexts = await ctx.db.query("contexts").collect();
+
+    // Apply filters
+    if (args.memorySpaceId) {
+      contexts = contexts.filter((c) => c.memorySpaceId === args.memorySpaceId);
+    }
+    if (args.userId) {
+      contexts = contexts.filter((c) => c.userId === args.userId);
+    }
+    if (args.status) {
+      contexts = contexts.filter((c) => c.status === args.status);
+    }
+    if (args.completedBefore) {
+      contexts = contexts.filter(
+        (c) => c.completedAt && c.completedAt < args.completedBefore!,
+      );
+    }
+
+    let totalDeleted = 0;
+    const contextIds: string[] = [];
+
+    // Delete each context
+    for (const context of contexts) {
+      if (context.childIds.length > 0 && !args.cascadeChildren) {
+        continue; // Skip if has children and no cascade
+      }
+
+      if (args.cascadeChildren) {
+        // Delete with cascade
+        const count = await deleteContextRecursive(ctx, context.contextId);
+        totalDeleted += count;
+      } else {
+        await ctx.db.delete(context._id);
+        totalDeleted += 1;
+      }
+
+      contextIds.push(context.contextId);
+    }
+
+    return {
+      deleted: totalDeleted,
+      contextIds,
+    };
+  },
+});
+
+/**
+ * Remove participant from context
+ */
+export const removeParticipant = mutation({
+  args: {
+    contextId: v.string(),
+    participantId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const context = await ctx.db
+      .query("contexts")
+      .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
+      .first();
+
+    if (!context) {
+      throw new Error("CONTEXT_NOT_FOUND");
+    }
+
+    await ctx.db.patch(context._id, {
+      participants: context.participants.filter(
+        (p) => p !== args.participantId,
+      ),
+      updatedAt: Date.now(),
+    });
+
+    return await ctx.db.get(context._id);
+  },
+});
+
+/**
+ * Get contexts by conversation ID
+ */
+export const getByConversation = query({
+  args: {
+    conversationId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const allContexts = await ctx.db.query("contexts").collect();
+
+    return allContexts.filter(
+      (c) =>
+        c.conversationRef && c.conversationRef.conversationId === args.conversationId,
+    );
+  },
+});
+
+/**
+ * Find orphaned contexts (parent no longer exists)
+ */
+export const findOrphaned = query({
+  args: {},
+  handler: async (ctx) => {
+    const allContexts = await ctx.db.query("contexts").collect();
+    const orphaned: any[] = [];
+
+    for (const context of allContexts) {
+      if (context.parentId) {
+        // Check if parent exists
+        const parent = await ctx.db
+          .query("contexts")
+          .withIndex("by_contextId", (q: any) =>
+            q.eq("contextId", context.parentId!),
+          )
+          .first();
+
+        if (!parent) {
+          orphaned.push(context);
+        }
+      }
+    }
+
+    return orphaned;
+  },
+});
+
+/**
+ * Get specific version of a context
+ */
+export const getVersion = query({
+  args: {
+    contextId: v.string(),
+    version: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const context = await ctx.db
+      .query("contexts")
+      .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
+      .first();
+
+    if (!context) {
+      return null;
+    }
+
+    // Check if it's the current version
+    if (context.version === args.version) {
+      return {
+        version: context.version,
+        status: context.status,
+        data: context.data,
+        timestamp: context.updatedAt,
+        updatedBy: context.memorySpaceId,
+      };
+    }
+
+    // Check previous versions
+    const versionRecord = context.previousVersions.find(
+      (v: any) => v.version === args.version,
+    );
+
+    return versionRecord || null;
+  },
+});
+
+/**
+ * Get all versions of a context
+ */
+export const getHistory = query({
+  args: {
+    contextId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const context = await ctx.db
+      .query("contexts")
+      .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
+      .first();
+
+    if (!context) {
+      return [];
+    }
+
+    // Return all previous versions + current version
+    const versions = [
+      ...context.previousVersions,
+      {
+        version: context.version,
+        status: context.status,
+        data: context.data,
+        timestamp: context.updatedAt,
+        updatedBy: context.memorySpaceId,
+      },
+    ];
+
+    return versions;
+  },
+});
+
+/**
+ * Get context version at specific timestamp
+ */
+export const getAtTimestamp = query({
+  args: {
+    contextId: v.string(),
+    timestamp: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const context = await ctx.db
+      .query("contexts")
+      .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
+      .first();
+
+    if (!context) {
+      return null;
+    }
+
+    // If timestamp is after current version, return current
+    if (args.timestamp >= context.updatedAt) {
+      return {
+        version: context.version,
+        status: context.status,
+        data: context.data,
+        timestamp: context.updatedAt,
+        updatedBy: context.memorySpaceId,
+      };
+    }
+
+    // Find the version that was current at the timestamp
+    // Walk backwards through versions
+    const allVersions = [
+      ...context.previousVersions,
+      {
+        version: context.version,
+        status: context.status,
+        data: context.data,
+        timestamp: context.updatedAt,
+        updatedBy: context.memorySpaceId,
+      },
+    ].sort((a, b) => b.timestamp - a.timestamp);
+
+    for (const version of allVersions) {
+      if (args.timestamp >= version.timestamp) {
+        return version;
+      }
+    }
+
+    // If timestamp is before all versions, return null
+    return null;
+  },
+});
+
+/**
+ * Export contexts to JSON or CSV
+ */
+export const exportContexts = query({
+  args: {
+    memorySpaceId: v.optional(v.string()),
+    userId: v.optional(v.string()),
+    status: v.optional(
+      v.union(
+        v.literal("active"),
+        v.literal("completed"),
+        v.literal("cancelled"),
+        v.literal("blocked"),
+      ),
+    ),
+    format: v.union(v.literal("json"), v.literal("csv")),
+    includeChain: v.optional(v.boolean()),
+    includeVersionHistory: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    // Get all matching contexts
+    let contexts = await ctx.db.query("contexts").collect();
+
+    // Apply filters
+    if (args.memorySpaceId) {
+      contexts = contexts.filter((c) => c.memorySpaceId === args.memorySpaceId);
+    }
+    if (args.userId) {
+      contexts = contexts.filter((c) => c.userId === args.userId);
+    }
+    if (args.status) {
+      contexts = contexts.filter((c) => c.status === args.status);
+    }
+
+    let data: string;
+
+    if (args.format === "json") {
+      // Build JSON export
+      const exportData = contexts.map((c) => {
+        const base: any = {
+          contextId: c.contextId,
+          memorySpaceId: c.memorySpaceId,
+          purpose: c.purpose,
+          status: c.status,
+          depth: c.depth,
+          parentId: c.parentId,
+          rootId: c.rootId,
+          userId: c.userId,
+          data: c.data,
+          createdAt: c.createdAt,
+          updatedAt: c.updatedAt,
+        };
+
+        if (args.includeVersionHistory) {
+          base.version = c.version;
+          base.previousVersions = c.previousVersions;
+        }
+
+        return base;
+      });
+
+      data = JSON.stringify(exportData, null, 2);
+    } else {
+      // CSV export
+      const headers = [
+        "contextId",
+        "memorySpaceId",
+        "purpose",
+        "status",
+        "depth",
+        "parentId",
+        "userId",
+        "createdAt",
+        "updatedAt",
+      ];
+
+      const rows = contexts.map((c) => [
+        c.contextId,
+        c.memorySpaceId,
+        c.purpose,
+        c.status,
+        c.depth.toString(),
+        c.parentId || "",
+        c.userId || "",
+        new Date(c.createdAt).toISOString(),
+        new Date(c.updatedAt).toISOString(),
+      ]);
+
+      data = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    }
+
+    return {
+      format: args.format,
+      data,
+      count: contexts.length,
+      exportedAt: Date.now(),
+    };
   },
 });
 

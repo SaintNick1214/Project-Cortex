@@ -461,7 +461,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
           userId: "user-error-2",
           userName: "ErrorUser",
         }),
-      ).rejects.toThrow(/Failed to consume response stream/);
+      ).rejects.toThrow(/Stream failure/);
     });
 
     it("should handle whitespace-only responses", async () => {

@@ -931,6 +931,30 @@ class MemoryAPI:
         """Archive a memory (delegates to vector.archive)."""
         return await self.vector.archive(memory_space_id, memory_id)
 
+    async def restore_from_archive(
+        self, memory_space_id: str, memory_id: str
+    ) -> Dict[str, Any]:
+        """
+        Restore memory from archive.
+
+        Args:
+            memory_space_id: Memory space ID
+            memory_id: Memory ID to restore
+
+        Returns:
+            Restore result
+
+        Example:
+            >>> restored = await cortex.memory.restore_from_archive('agent-1', 'mem-123')
+            >>> print(f"Restored: {restored['restored']}")
+        """
+        result = await self.client.mutation(
+            "memories:restoreFromArchive",
+            {"memorySpaceId": memory_space_id, "memoryId": memory_id},
+        )
+
+        return cast(Dict[str, Any], result)
+
     async def get_version(
         self, memory_space_id: str, memory_id: str, version: int
     ) -> Optional[Dict[str, Any]]:

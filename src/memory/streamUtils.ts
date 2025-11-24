@@ -219,3 +219,267 @@ export function createPassthroughStream(
     },
   });
 }
+
+/**
+ * Create a rolling context window for streaming
+ * Keeps only the last N characters in memory
+ */
+export class RollingContextWindow {
+  private window: string[] = [];
+  private readonly maxSize: number;
+
+  constructor(maxSize: number = 1000) {
+    this.maxSize = maxSize;
+  }
+
+  /**
+   * Add a chunk to the window
+   */
+  add(chunk: string): void {
+    this.window.push(chunk);
+    
+    // Trim window if it exceeds max size
+    const totalSize = this.window.join('').length;
+    while (totalSize > this.maxSize && this.window.length > 1) {
+      this.window.shift();
+    }
+  }
+
+  /**
+   * Get current context
+   */
+  getContext(): string {
+    return this.window.join('');
+  }
+
+  /**
+   * Get context size
+   */
+  getSize(): number {
+    return this.window.join('').length;
+  }
+
+  /**
+   * Clear the window
+   */
+  clear(): void {
+    this.window = [];
+  }
+}
+
+/**
+ * Create an async queue for processing items
+ */
+export class AsyncQueue<T> {
+  private queue: T[] = [];
+  private processing: boolean = false;
+  private processor?: (item: T) => Promise<void>;
+
+  constructor(processor?: (item: T) => Promise<void>) {
+    this.processor = processor;
+  }
+
+  /**
+   * Enqueue an item
+   */
+  async enqueue(item: T): Promise<void> {
+    this.queue.push(item);
+    
+    if (this.processor && !this.processing) {
+      await this.processQueue();
+    }
+  }
+
+  /**
+   * Dequeue an item
+   */
+  dequeue(): T | undefined {
+    return this.queue.shift();
+  }
+
+  /**
+   * Get queue size
+   */
+  size(): number {
+    return this.queue.length;
+  }
+
+  /**
+   * Check if queue is empty
+   */
+  isEmpty(): boolean {
+    return this.queue.length === 0;
+  }
+
+  /**
+   * Process all items in queue
+   */
+  private async processQueue(): Promise<void> {
+    if (!this.processor || this.processing) {
+      return;
+    }
+
+    this.processing = true;
+
+    while (this.queue.length > 0) {
+      const item = this.queue.shift();
+      if (item) {
+        try {
+          await this.processor(item);
+        } catch (error) {
+          console.error('Error processing queue item:', error);
+        }
+      }
+    }
+
+    this.processing = false;
+  }
+
+  /**
+   * Clear the queue
+   */
+  clear(): void {
+    this.queue = [];
+  }
+}
+
+/**
+ * Create a tee for a stream (split into multiple consumers)
+ */
+export function teeStream<T>(
+  stream: ReadableStream<T>,
+): [ReadableStream<T>, ReadableStream<T>] {
+  return stream.tee();
+}
+
+/**
+ * Create a timeout wrapper for a stream
+ */
+export function withStreamTimeout<T>(
+  stream: ReadableStream<T>,
+  timeoutMs: number,
+): ReadableStream<T> {
+  let timeoutId: NodeJS.Timeout;
+
+  return new ReadableStream<T>({
+    async start(controller) {
+      const reader = stream.getReader();
+
+      // Set timeout
+      timeoutId = setTimeout(() => {
+        controller.error(new Error(`Stream timeout after ${timeoutMs}ms`));
+        reader.cancel();
+      }, timeoutMs);
+
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        while (true) {
+          const { done, value } = await reader.read();
+
+          if (done) {
+            clearTimeout(timeoutId);
+            controller.close();
+            break;
+          }
+
+          controller.enqueue(value);
+        }
+      } catch (error) {
+        clearTimeout(timeoutId);
+        controller.error(error);
+      } finally {
+        reader.releaseLock();
+      }
+    },
+
+    cancel() {
+      clearTimeout(timeoutId);
+    },
+  });
+}
+
+/**
+ * Create a length-limited stream
+ */
+export function withMaxLength(
+  stream: ReadableStream<string>,
+  maxLength: number,
+): ReadableStream<string> {
+  let totalLength = 0;
+
+  return new ReadableStream<string>({
+    async start(controller) {
+      const reader = stream.getReader();
+
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        while (true) {
+          const { done, value } = await reader.read();
+
+          if (done) {
+            controller.close();
+            break;
+          }
+
+          totalLength += value.length;
+
+          if (totalLength > maxLength) {
+            controller.error(new Error(`Stream exceeded max length of ${maxLength}`));
+            reader.cancel();
+            break;
+          }
+
+          controller.enqueue(value);
+        }
+      } catch (error) {
+        controller.error(error);
+      } finally {
+        reader.releaseLock();
+      }
+    },
+  });
+}
+
+/**
+ * Buffer stream chunks for batch processing
+ */
+export function bufferStream(
+  stream: ReadableStream<string>,
+  bufferSize: number,
+): ReadableStream<string[]> {
+  let buffer: string[] = [];
+
+  return new ReadableStream<string[]>({
+    async start(controller) {
+      const reader = stream.getReader();
+
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        while (true) {
+          const { done, value } = await reader.read();
+
+          if (done) {
+            // Emit remaining buffer
+            if (buffer.length > 0) {
+              controller.enqueue([...buffer]);
+            }
+            controller.close();
+            break;
+          }
+
+          buffer.push(value);
+
+          // Emit buffer when it reaches size
+          if (buffer.length >= bufferSize) {
+            controller.enqueue([...buffer]);
+            buffer = [];
+          }
+        }
+      } catch (error) {
+        controller.error(error);
+      } finally {
+        reader.releaseLock();
+      }
+    },
+  });
+}

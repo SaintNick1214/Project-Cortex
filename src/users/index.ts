@@ -419,6 +419,109 @@ export class UsersAPI {
   }
 
   /**
+   * Get user profile or create with defaults if doesn't exist
+   *
+   * @param userId - User ID
+   * @param defaults - Default profile data if user doesn't exist
+   * @returns User profile (existing or newly created)
+   *
+   * @example
+   * ```typescript
+   * const user = await cortex.users.getOrCreate('user-123', {
+   *   displayName: 'Guest User',
+   *   preferences: { theme: 'light' },
+   *   metadata: { tier: 'free' }
+   * });
+   * ```
+   */
+  async getOrCreate(
+    userId: string,
+    defaults?: Record<string, unknown>,
+  ): Promise<UserProfile> {
+    // Try to get existing user
+    const existing = await this.get(userId);
+
+    if (existing) {
+      return existing;
+    }
+
+    // Create with defaults (immutable.store handles upsert)
+    return await this.update(userId, defaults || {});
+  }
+
+  /**
+   * Merge partial updates with existing profile
+   *
+   * This is an alias for update() with merge behavior, which is the default.
+   *
+   * @param userId - User ID
+   * @param updates - Partial updates to merge with existing data
+   * @returns Updated user profile
+   *
+   * @example
+   * ```typescript
+   * // Existing: { displayName: 'Alex', preferences: { theme: 'dark', language: 'en' } }
+   * await cortex.users.merge('user-123', {
+   *   preferences: { notifications: true }  // Adds notifications, keeps theme and language
+   * });
+   * // Result: { displayName: 'Alex', preferences: { theme: 'dark', language: 'en', notifications: true } }
+   * ```
+   */
+  async merge(
+    userId: string,
+    updates: Record<string, unknown>,
+  ): Promise<UserProfile> {
+    const existing = await this.get(userId);
+
+    if (!existing) {
+      // If user doesn't exist, just store the updates
+      return await this.update(userId, updates);
+    }
+
+    // Deep merge existing data with updates
+    const mergedData = this.deepMerge(existing.data, updates);
+
+    return await this.update(userId, mergedData);
+  }
+
+  /**
+   * Helper: Deep merge two objects
+   */
+  private deepMerge(
+    target: Record<string, unknown>,
+    source: Record<string, unknown>,
+  ): Record<string, unknown> {
+    const result = { ...target };
+
+    for (const key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        const sourceValue = source[key];
+        const targetValue = target[key];
+
+        if (
+          sourceValue &&
+          typeof sourceValue === "object" &&
+          !Array.isArray(sourceValue) &&
+          targetValue &&
+          typeof targetValue === "object" &&
+          !Array.isArray(targetValue)
+        ) {
+          // Recursively merge nested objects
+          result[key] = this.deepMerge(
+            targetValue as Record<string, unknown>,
+            sourceValue as Record<string, unknown>,
+          );
+        } else {
+          // Overwrite with source value
+          result[key] = sourceValue;
+        }
+      }
+    }
+
+    return result;
+  }
+
+  /**
    * Export user profiles
    *
    * @example

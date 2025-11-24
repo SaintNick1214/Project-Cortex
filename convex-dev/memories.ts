@@ -92,6 +92,122 @@ export const store = mutation({
 });
 
 /**
+ * Store a partial memory (for streaming)
+ * Creates a memory marked as in-progress
+ */
+export const storePartialMemory = mutation({
+  args: {
+    memorySpaceId: v.string(),
+    participantId: v.optional(v.string()),
+    conversationId: v.string(),
+    userId: v.string(),
+    content: v.string(),
+    isPartial: v.boolean(),
+    metadata: v.any(),
+    importance: v.number(),
+    tags: v.array(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const now = Date.now();
+    const memoryId = `mem-partial-${now}-${Math.random().toString(36).substring(2, 11)}`;
+
+    const _id = await ctx.db.insert("memories", {
+      memoryId,
+      memorySpaceId: args.memorySpaceId,
+      participantId: args.participantId,
+      content: args.content,
+      contentType: "raw" as const,
+      sourceType: "conversation" as const,
+      sourceTimestamp: now,
+      userId: args.userId,
+      conversationRef: {
+        conversationId: args.conversationId,
+        messageIds: [],
+      },
+      importance: args.importance,
+      tags: args.tags,
+      version: 1,
+      previousVersions: [],
+      createdAt: now,
+      updatedAt: now,
+      accessCount: 0,
+      // Store partial flag and metadata in a way Convex can handle
+      isPartial: args.isPartial,
+      partialMetadata: args.metadata,
+    });
+
+    return { memoryId, _id };
+  },
+});
+
+/**
+ * Update a partial memory (for streaming)
+ * Updates content and metadata during streaming
+ */
+export const updatePartialMemory = mutation({
+  args: {
+    memoryId: v.string(),
+    content: v.string(),
+    metadata: v.any(),
+  },
+  handler: async (ctx, args) => {
+    const memory = await ctx.db
+      .query("memories")
+      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
+      .first();
+
+    if (!memory) {
+      throw new Error("MEMORY_NOT_FOUND");
+    }
+
+    await ctx.db.patch(memory._id, {
+      content: args.content,
+      updatedAt: Date.now(),
+      partialMetadata: args.metadata,
+    });
+
+    return { success: true };
+  },
+});
+
+/**
+ * Finalize a partial memory (for streaming)
+ * Marks memory as complete and removes partial flag
+ */
+export const finalizePartialMemory = mutation({
+  args: {
+    memoryId: v.string(),
+    content: v.string(),
+    embedding: v.optional(v.array(v.float64())),
+    metadata: v.any(),
+  },
+  handler: async (ctx, args) => {
+    const memory = await ctx.db
+      .query("memories")
+      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
+      .first();
+
+    if (!memory) {
+      throw new Error("MEMORY_NOT_FOUND");
+    }
+
+    // Remove streaming-related tags
+    const finalTags = memory.tags.filter(tag => tag !== 'streaming' && tag !== 'partial');
+
+    await ctx.db.patch(memory._id, {
+      content: args.content,
+      embedding: args.embedding,
+      updatedAt: Date.now(),
+      isPartial: false,
+      tags: finalTags,
+      partialMetadata: args.metadata,
+    });
+
+    return { success: true };
+  },
+});
+
+/**
  * Delete a memory
  */
 export const deleteMemory = mutation({
@@ -170,6 +286,7 @@ export const search = query({
       ),
     ),
     minImportance: v.optional(v.number()),
+    minScore: v.optional(v.number()), // NEW: Minimum similarity score (0-1)
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
@@ -273,6 +390,17 @@ export const search = query({
 
     if (args.minImportance !== undefined) {
       results = results.filter((m) => m.importance >= args.minImportance!);
+    }
+
+    // Filter by minimum score (for semantic search)
+    if (args.minScore !== undefined) {
+      results = results.filter((m: any) => {
+        // Only filter if _score exists (semantic search results)
+        if (m._score !== undefined) {
+          return m._score >= args.minScore!;
+        }
+        return true; // Keep all results without scores
+      });
     }
 
     return results.slice(0, args.limit || 20);
@@ -761,6 +889,54 @@ export const archive = mutation({
       archived: true,
       memoryId: args.memoryId,
       restorable: true,
+    };
+  },
+});
+
+/**
+ * Restore memory from archive
+ */
+export const restoreFromArchive = mutation({
+  args: {
+    memorySpaceId: v.string(),
+    memoryId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const memory = await ctx.db
+      .query("memories")
+      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
+      .first();
+
+    if (!memory) {
+      throw new Error("MEMORY_NOT_FOUND");
+    }
+
+    if (memory.memorySpaceId !== args.memorySpaceId) {
+      throw new Error("PERMISSION_DENIED");
+    }
+
+    // Check if memory is archived
+    if (!memory.tags.includes("archived")) {
+      throw new Error("MEMORY_NOT_ARCHIVED");
+    }
+
+    // Remove archived tag
+    const updatedTags = memory.tags.filter((tag) => tag !== "archived");
+
+    // Restore importance to a reasonable default if it was reduced
+    const restoredImportance =
+      memory.importance < 50 ? 50 : memory.importance;
+
+    await ctx.db.patch(memory._id, {
+      tags: updatedTags,
+      importance: restoredImportance,
+      updatedAt: Date.now(),
+    });
+
+    return {
+      restored: true,
+      memoryId: args.memoryId,
+      memory: await ctx.db.get(memory._id),
     };
   },
 });

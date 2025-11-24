@@ -1401,8 +1401,16 @@ export interface UpdateFactOptions extends GraphSyncOption {}
 export interface DeleteFactOptions extends GraphSyncOption {}
 
 // ────────────────────────────────────────────────────────────────────────────
-// Layer 4: Contexts API Options
+// Layer 4: Contexts API Types & Options
 // ────────────────────────────────────────────────────────────────────────────
+
+export interface ContextVersion {
+  version: number;
+  status: string;
+  data?: any;
+  timestamp: number;
+  updatedBy?: string;
+}
 
 export interface CreateContextOptions extends GraphSyncOption {}
 
@@ -1411,8 +1419,13 @@ export interface UpdateContextOptions extends GraphSyncOption {}
 export interface DeleteContextOptions extends GraphSyncOption {}
 
 // ────────────────────────────────────────────────────────────────────────────
-// Layer 4: Memory Spaces API Options
+// Layer 4: Memory Spaces API Types & Options
 // ────────────────────────────────────────────────────────────────────────────
+
+export interface ParticipantUpdates {
+  add?: Array<{ id: string; type: string; joinedAt: number }>;
+  remove?: string[];
+}
 
 export interface RegisterMemorySpaceOptions extends GraphSyncOption {}
 
@@ -1463,3 +1476,59 @@ export interface RecallOptions extends GraphSyncOption {
   /** Include full conversation history */
   includeConversation?: boolean;
 }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Streaming Types (Enhanced RememberStream API)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export type {
+  // Events & Hooks
+  ChunkEvent,
+  ProgressEvent,
+  StreamCompleteEvent,
+  StreamHooks,
+  
+  // Metrics
+  StreamMetrics,
+  
+  // Progressive Storage
+  PartialUpdate,
+  ProgressiveFact,
+  GraphSyncEvent,
+  
+  // Error Handling & Recovery
+  FailureStrategy,
+  ErrorContext,
+  StreamError,
+  RecoveryOptions,
+  RecoveryResult,
+  
+  // Resume Capability
+  ResumeContext,
+  PartialMemoryResult,
+  
+  // Chunking
+  ChunkStrategy,
+  ChunkingConfig,
+  ChunkMetadata,
+  ContentChunk,
+  
+  // Adaptive Processing
+  StreamType,
+  ProcessingStrategy,
+  
+  // Memory Efficiency
+  MemoryEfficiencyOptions,
+  EmbeddingMergeStrategy,
+  
+  // Options & Parameters
+  StreamingOptions,
+  StreamContext,
+  EnhancedRememberStreamParams,
+  ProcessedChunk,
+  
+  // Enhanced Results
+  PerformanceInsights,
+  ProgressiveProcessing,
+  EnhancedRememberStreamResult,
+} from "./streaming";

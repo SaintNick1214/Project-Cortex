@@ -368,6 +368,97 @@ class AgentsAPI:
             await self._rollback_agent_deletion(backup)
             raise AgentCascadeDeletionError(f"Agent cascade deletion failed: {e}", cause=e)
 
+    async def unregister_many(
+        self,
+        filters: Optional[Dict[str, Any]] = None,
+        options: Optional[UnregisterAgentOptions] = None,
+    ) -> Dict[str, Any]:
+        """
+        Unregister multiple agents matching filters.
+
+        Args:
+            filters: Filter criteria for agents to unregister
+            options: Unregistration options (cascade, verify, dry_run)
+
+        Returns:
+            Unregistration result
+
+        Example:
+            >>> # Unregister experimental agents (keep data)
+            >>> result = await cortex.agents.unregister_many(
+            ...     {'metadata': {'environment': 'experimental'}},
+            ...     UnregisterAgentOptions(cascade=False)
+            ... )
+            >>> print(f"Unregistered {result['deleted']} agents")
+            >>>
+            >>> # Unregister with cascade deletion
+            >>> result = await cortex.agents.unregister_many(
+            ...     {'status': 'archived'},
+            ...     UnregisterAgentOptions(cascade=True)
+            ... )
+        """
+        opts = options or UnregisterAgentOptions()
+
+        # Get all matching agents
+        agents = await self.list(limit=1000)  # Get all agents
+
+        # Apply filters (client-side filtering like TypeScript SDK)
+        if filters:
+            if "metadata" in filters:
+                agents = [
+                    a
+                    for a in agents
+                    if all(
+                        a.metadata.get(k) == v for k, v in filters["metadata"].items()
+                    )
+                ]
+            if "status" in filters:
+                agents = [a for a in agents if a.status == filters["status"]]
+
+        if len(agents) == 0:
+            return {
+                "deleted": 0,
+                "agent_ids": [],
+                "total_data_deleted": 0,
+            }
+
+        if opts.dry_run:
+            return {
+                "deleted": 0,
+                "agent_ids": [a.id for a in agents],
+            }
+
+        results = []
+        total_data_deleted = 0
+
+        if opts.cascade:
+            # Unregister each agent with cascade
+            for agent in agents:
+                try:
+                    result = await self.unregister(agent.id, options)
+                    results.append(agent.id)
+                    total_data_deleted += result.total_deleted
+                except Exception as error:
+                    print(f"Warning: Failed to unregister agent {agent.id}: {error}")
+                    # Continue with other agents
+        else:
+            # Just remove registrations (use backend unregisterMany)
+            agent_ids = [a.id for a in agents]
+            result = await self.client.mutation(
+                "agents:unregisterMany", {"agentIds": agent_ids}
+            )
+
+            return {
+                "deleted": result.get("deleted", 0),
+                "agent_ids": result.get("agentIds", []),
+            }
+
+        return {
+            "deleted": len(results),
+            "agent_ids": results,
+            "total_data_deleted": total_data_deleted,
+        }
+
     # Helper methods for cascade deletion
 
     async def _collect_agent_deletion_plan(self, agent_id: str) -> Dict[str, List[Any]]:

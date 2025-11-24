@@ -1299,4 +1299,84 @@ describe("Memory Convenience API (Layer 3)", () => {
       }, 30000);
     });
   });
+
+  describe("Archive and Restore Operations", () => {
+    it("restores memory from archive", async () => {
+      const memorySpaceId = "test-archive-space";
+
+      // Create and archive a memory
+      const conv = await cortex.conversations.create({
+        memorySpaceId,
+        type: "user-agent",
+        participants: {
+          userId: "test-user",
+          participantId: "test-agent",
+        },
+      });
+
+      const result = await cortex.memory.remember({
+        memorySpaceId,
+        conversationId: conv.conversationId,
+        userMessage: "Important information",
+        agentResponse: "Got it!",
+        userId: "test-user",
+        userName: "Test User",
+        importance: 80,
+      });
+
+      const memoryId = result.memories[0].memoryId;
+
+      // Archive it
+      const archived = await cortex.memory.archive(memorySpaceId, memoryId);
+      expect(archived.archived).toBe(true);
+
+      // Verify it's archived
+      const archivedMemory = await cortex.vector.get(memorySpaceId, memoryId);
+      expect(archivedMemory?.tags).toContain("archived");
+      expect(archivedMemory?.importance).toBeLessThanOrEqual(10);
+
+      // Restore from archive
+      const restored = await cortex.memory.restoreFromArchive(
+        memorySpaceId,
+        memoryId,
+      );
+
+      expect(restored.restored).toBe(true);
+      expect(restored.memoryId).toBe(memoryId);
+
+      // Verify restoration
+      const restoredMemory = await cortex.vector.get(memorySpaceId, memoryId);
+      expect(restoredMemory?.tags).not.toContain("archived");
+      expect(restoredMemory?.importance).toBeGreaterThanOrEqual(50);
+    });
+
+    it("throws error when restoring non-archived memory", async () => {
+      const memorySpaceId = "test-archive-space";
+
+      const conv = await cortex.conversations.create({
+        memorySpaceId,
+        type: "user-agent",
+        participants: {
+          userId: "test-user",
+          participantId: "test-agent",
+        },
+      });
+
+      const result = await cortex.memory.remember({
+        memorySpaceId,
+        conversationId: conv.conversationId,
+        userMessage: "Not archived",
+        agentResponse: "OK",
+        userId: "test-user",
+        userName: "Test User",
+      });
+
+      const memoryId = result.memories[0].memoryId;
+
+      // Try to restore without archiving first
+      await expect(
+        cortex.memory.restoreFromArchive(memorySpaceId, memoryId),
+      ).rejects.toThrow();
+    });
+  });
 });

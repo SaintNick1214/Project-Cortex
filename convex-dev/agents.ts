@@ -289,6 +289,66 @@ export const unregister = mutation({
 });
 
 /**
+ * Unregister multiple agents matching filters
+ * 
+ * Note: This only removes registrations. Cascade deletion of agent data
+ * is handled in the SDK layer for each agent.
+ */
+export const unregisterMany = mutation({
+  args: {
+    status: v.optional(
+      v.union(
+        v.literal("active"),
+        v.literal("inactive"),
+        v.literal("archived"),
+      ),
+    ),
+    agentIds: v.optional(v.array(v.string())), // Specific agent IDs
+  },
+  handler: async (ctx, args) => {
+    let agents;
+
+    if (args.agentIds && args.agentIds.length > 0) {
+      // Delete specific agents
+      agents = await Promise.all(
+        args.agentIds.map((agentId) =>
+          ctx.db
+            .query("agents")
+            .withIndex("by_agentId", (q) => q.eq("agentId", agentId))
+            .first(),
+        ),
+      );
+      agents = agents.filter((a) => a !== null);
+    } else if (args.status) {
+      // Delete by status filter
+      agents = await ctx.db
+        .query("agents")
+        .withIndex("by_status", (q) => q.eq("status", args.status!))
+        .collect();
+    } else {
+      throw new Error("INVALID_FILTERS: Must provide agentIds or status filter");
+    }
+
+    const deletedAgentIds: string[] = [];
+
+    for (const agent of agents) {
+      try {
+        await ctx.db.delete(agent._id);
+        deletedAgentIds.push(agent.agentId);
+      } catch (error) {
+        console.error(`Failed to unregister agent ${agent.agentId}:`, error);
+        // Continue with other agents
+      }
+    }
+
+    return {
+      deleted: deletedAgentIds.length,
+      agentIds: deletedAgentIds,
+    };
+  },
+});
+
+/**
  * Note: Cascade deletion by participantId is orchestrated in the SDK layer.
  *
  * The SDK will:
