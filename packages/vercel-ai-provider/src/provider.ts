@@ -95,14 +95,31 @@ export class CortexMemoryProvider {
     if (this.config.enableMemoryStorage !== false) {
       const lastUserMessage = getLastUserMessage(options.prompt);
       if (lastUserMessage && result.text) {
-        this.storeConversation(
-          lastUserMessage,
-          result.text,
-          userId,
-          conversationId,
-        ).catch((error) => {
-          this.logger.error("Failed to store memory:", error);
-        });
+        // Use remember() for non-streaming responses
+        this.cortex.memory
+          .remember(
+            {
+              memorySpaceId: this.config.memorySpaceId,
+              conversationId,
+              userMessage: lastUserMessage,
+              agentResponse: result.text,
+              userId,
+              userName: this.config.userName || "User",
+              participantId: this.config.hiveMode?.participantId,
+              generateEmbedding: this.config.embeddingProvider?.generate,
+              extractFacts: this.config.enableFactExtraction
+                ? this.config.extractFacts
+                : undefined,
+              importance: this.config.defaultImportance,
+              tags: this.config.defaultTags,
+            },
+            {
+              syncToGraph: this.config.enableGraphMemory || false,
+            },
+          )
+          .catch((error: Error) => {
+            this.logger.error("Failed to store memory:", error);
+          });
       }
     }
 
@@ -150,9 +167,9 @@ export class CortexMemoryProvider {
       prompt: augmentedPrompt,
     });
 
-    // Step 5: Wrap stream to collect response and store
+    // Step 5: Use rememberStream() for enhanced streaming
     if (this.config.enableMemoryStorage !== false && lastUserMessage) {
-      const wrappedStream = this.wrapStreamWithMemory(
+      const wrappedStream = this.wrapStreamWithRememberStream(
         streamResult.stream,
         lastUserMessage,
         userId,
@@ -212,60 +229,11 @@ export class CortexMemoryProvider {
     }
   }
 
-  /**
-   * Store conversation (async, non-blocking)
-   */
-  private async storeConversation(
-    userMessage: string,
-    agentResponse: string,
-    userId: string,
-    conversationId: string,
-  ): Promise<void> {
-    try {
-      this.logger.debug(`Storing conversation: ${conversationId}`);
-
-      // Prepare extraction functions
-      const generateEmbedding = this.config.embeddingProvider
-        ? this.config.embeddingProvider.generate
-        : undefined;
-
-      const extractFacts = this.config.enableFactExtraction
-        ? this.config.extractFacts
-        : undefined;
-
-      // Store using Cortex SDK
-      const result = await this.cortex.memory.remember(
-        {
-          memorySpaceId: this.config.memorySpaceId,
-          conversationId,
-          userMessage,
-          agentResponse,
-          userId,
-          userName: this.config.userName || "User",
-          participantId: this.config.hiveMode?.participantId,
-          generateEmbedding,
-          extractFacts,
-          importance: this.config.defaultImportance || 50,
-          tags: this.config.defaultTags || [],
-        },
-        {
-          syncToGraph: this.config.enableGraphMemory || false,
-        },
-      );
-
-      this.logger.info(
-        `Stored memory: ${result.memories.length} memories, ${result.facts.length} facts`,
-      );
-    } catch (error) {
-      this.logger.error("Failed to store conversation:", error);
-      // Don't throw - storage failure shouldn't break the LLM response
-    }
-  }
 
   /**
-   * Wrap a stream to collect the response and store it
+   * Wrap stream with rememberStream for enhanced streaming capabilities
    */
-  private wrapStreamWithMemory(
+  private wrapStreamWithRememberStream(
     originalStream: ReadableStream<any>,
     userMessage: string,
     userId: string,
@@ -273,9 +241,10 @@ export class CortexMemoryProvider {
   ): ReadableStream<any> {
     const textChunks: string[] = [];
 
+    // Create transform stream that collects text AND forwards chunks
     const transformStream = new TransformStream<any, any>({
       transform: (chunk, controller) => {
-        // Collect text chunks (support both v4 and v5 formats)
+        // Extract text from AI SDK chunks (support v3, v4, v5 formats)
         if (chunk.type === "text-delta") {
           textChunks.push(chunk.delta || chunk.textDelta || "");
         } else if (chunk.type === "text") {
@@ -286,19 +255,64 @@ export class CortexMemoryProvider {
         controller.enqueue(chunk);
       },
 
-      flush: async () => {
-        // Stream completed - store the conversation
-        const fullResponse = textChunks.join("");
+      flush: async (controller) => {
+        // Stream completed - create async iterable from collected text
+        const fullText = textChunks.join("");
 
-        if (fullResponse.trim().length > 0) {
-          await this.storeConversation(
-            userMessage,
-            fullResponse,
-            userId,
-            conversationId,
-          );
-        } else {
+        if (fullText.trim().length === 0) {
           this.logger.warn("Stream completed but produced no text content");
+          return;
+        }
+
+        // Create simple async iterable for rememberStream
+        async function* textStream() {
+          yield fullText;
+        }
+
+        // Prepare streaming options
+        const streamingOptions: any = {
+          syncToGraph: this.config.enableGraphMemory || false,
+          ...this.config.streamingOptions,
+          hooks: this.config.streamingHooks,
+        };
+
+        // Call rememberStream and await it to ensure it completes before stream ends
+        try {
+          const result = await this.cortex.memory.rememberStream(
+            {
+              memorySpaceId: this.config.memorySpaceId,
+              conversationId,
+              userMessage,
+              responseStream: textStream(),
+              userId,
+              userName: this.config.userName || "User",
+              participantId: this.config.hiveMode?.participantId,
+              generateEmbedding: this.config.embeddingProvider?.generate,
+              extractFacts: this.config.enableFactExtraction
+                ? this.config.extractFacts
+                : undefined,
+              importance: this.config.defaultImportance,
+              tags: this.config.defaultTags,
+            },
+            streamingOptions,
+          );
+
+          // Log streaming results
+          if (
+            this.config.enableStreamMetrics !== false &&
+            (result as any).streamMetrics
+          ) {
+            this.logger.info("Stream metrics:", (result as any).streamMetrics);
+          }
+          if ((result as any).performance) {
+            this.logger.debug("Performance:", (result as any).performance);
+          }
+        } catch (error) {
+          this.logger.error(
+            "Failed to store stream:",
+            error instanceof Error ? error : new Error(String(error)),
+          );
+          // Don't rethrow - storage failure shouldn't break the stream
         }
       },
     });
@@ -316,6 +330,13 @@ export class CortexMemoryProvider {
 
   get supportsImageUrls() {
     return this.underlyingModel.supportsImageUrls ?? false;
+  }
+
+  /**
+   * Get current configuration (read-only)
+   */
+  getConfig(): Readonly<CortexMemoryConfig> {
+    return Object.freeze({ ...this.config });
   }
 
   /**
