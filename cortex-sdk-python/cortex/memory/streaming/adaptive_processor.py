@@ -31,7 +31,8 @@ class AdaptiveStreamProcessor:
     ) -> ProcessingStrategy:
         """Adjust processing strategy based on current metrics"""
         # Detect stream type
-        stream_type = metrics_collector.detect_stream_type()
+        stream_type_str = metrics_collector.detect_stream_type()
+        stream_type = StreamType(stream_type_str)
 
         # Get optimal strategy for this stream type
         new_strategy = self._optimize_for_type(stream_type, metrics)

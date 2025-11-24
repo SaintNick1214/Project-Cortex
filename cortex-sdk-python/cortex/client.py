@@ -81,12 +81,12 @@ class Cortex:
 
         # Start graph sync worker if enabled
         self.sync_worker = None
-        if config.graph and config.graph.auto_sync and graph_adapter:
+        if config.graph and config.graph.auto_sync and self.graph_adapter:
             from .graph.worker.sync_worker import GraphSyncWorker
 
             self.sync_worker = GraphSyncWorker(
                 self.client,
-                graph_adapter,
+                self.graph_adapter,
                 config.graph.sync_worker_options,
             )
 

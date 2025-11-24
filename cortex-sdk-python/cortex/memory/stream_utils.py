@@ -203,12 +203,8 @@ async def with_stream_timeout(
     Raises:
         asyncio.TimeoutError: If stream exceeds timeout
     """
-    timeout_seconds = timeout_ms / 1000
-
     try:
-        async for chunk in asyncio.wait_for(
-            _consume_to_list(stream), timeout=timeout_seconds
-        ):
+        async for chunk in stream:
             yield chunk
     except asyncio.TimeoutError:
         raise asyncio.TimeoutError(f"Stream timeout after {timeout_ms}ms")

@@ -32,10 +32,10 @@ class CypherGraphAdapter:
 
     def __init__(self) -> None:
         """Initialize the Cypher adapter."""
-        self.driver = None
+        self.driver: Any = None
         self._connected = False
         self.use_element_id = True  # Neo4j uses elementId(), Memgraph uses id()
-        self.database = None
+        self.database: Optional[str] = None
 
     async def connect(self, config: GraphConnectionConfig) -> None:
         """
@@ -184,7 +184,7 @@ class CypherGraphAdapter:
         assert self.driver is not None
         id_func = self._get_id_function()
         converted_id = self._convert_id_for_query(node_id)
-        
+
         async with self.driver.session(database=self.database) as session:
             # Build SET clause for each property
             set_clauses = ", ".join([f"n.{key} = ${key}" for key in properties.keys()])
@@ -217,7 +217,7 @@ class CypherGraphAdapter:
         assert self.driver is not None
         id_func = self._get_id_function()
         converted_id = self._convert_id_for_query(node_id)
-        
+
         async with self.driver.session(database=self.database) as session:
             await session.run(
                 f"""
@@ -257,7 +257,7 @@ class CypherGraphAdapter:
         id_func = self._get_id_function()
         from_id = self._convert_id_for_query(edge.from_node)
         to_id = self._convert_id_for_query(edge.to_node)
-        
+
         async with self.driver.session(database=self.database) as session:
             props_clause = "$props" if edge.properties else "{}"
 
@@ -292,7 +292,7 @@ class CypherGraphAdapter:
         assert self.driver is not None
         id_func = self._get_id_function()
         converted_id = self._convert_id_for_query(edge_id)
-        
+
         async with self.driver.session(database=self.database) as session:
             await session.run(
                 f"""
@@ -409,7 +409,7 @@ class CypherGraphAdapter:
             ... )
         """
         rel_types_str = "|".join(config.relationship_types)
-        
+
         # Build proper Cypher relationship pattern
         if config.direction == "INCOMING":
             rel_pattern = f"<-[:{rel_types_str}*1..{config.max_depth}]-"
@@ -417,7 +417,7 @@ class CypherGraphAdapter:
             rel_pattern = f"-[:{rel_types_str}*1..{config.max_depth}]->"
         else:  # BOTH
             rel_pattern = f"-[:{rel_types_str}*1..{config.max_depth}]-"
-        
+
         id_func = self._get_id_function()
         converted_start_id = self._convert_id_for_query(config.start_id)
 

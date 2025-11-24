@@ -52,19 +52,19 @@ class ProgressiveGraphSync:
                 }
             )
 
-            self.partial_node_id = node_id
+            self.partial_node_id = str(node_id)
             self.last_sync_time = int(time.time() * 1000)
 
             self._record_sync_event(
                 GraphSyncEvent(
                     timestamp=int(time.time() * 1000),
                     event_type="node-created",
-                    node_id=node_id,
+                    node_id=str(node_id),
                     details="Created partial memory node",
                 )
             )
 
-            return node_id
+            return str(node_id)
 
         except Exception as error:
             print(f"Warning: Failed to initialize partial graph node: {error}")
