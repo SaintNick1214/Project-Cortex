@@ -311,4 +311,64 @@ export class MemorySpacesAPI {
 
     return result as MemorySpace[];
   }
+
+  /**
+   * Search memory spaces by name or metadata
+   *
+   * @example
+   * ```typescript
+   * const results = await cortex.memorySpaces.search('engineering', {
+   *   type: 'team',
+   *   status: 'active',
+   *   limit: 10
+   * });
+   * ```
+   */
+  async search(
+    query: string,
+    options?: {
+      type?: "personal" | "team" | "project" | "custom";
+      status?: "active" | "archived";
+      limit?: number;
+    },
+  ): Promise<MemorySpace[]> {
+    const result = await this.client.query(api.memorySpaces.search, {
+      query,
+      type: options?.type,
+      status: options?.status,
+      limit: options?.limit,
+    });
+
+    return result as MemorySpace[];
+  }
+
+  /**
+   * Update participants (combined add/remove)
+   *
+   * @example
+   * ```typescript
+   * await cortex.memorySpaces.updateParticipants('user-123-personal', {
+   *   add: [{ id: 'github-copilot', type: 'ai-tool', joinedAt: Date.now() }],
+   *   remove: ['old-tool']
+   * });
+   * ```
+   */
+  async updateParticipants(
+    memorySpaceId: string,
+    updates: {
+      add?: Array<{ id: string; type: string; joinedAt: number }>;
+      remove?: string[];
+    },
+  ): Promise<MemorySpace> {
+    const result = await this.client.mutation(
+      api.memorySpaces.updateParticipants,
+      {
+        memorySpaceId,
+        add: updates.add,
+        remove: updates.remove,
+      },
+    );
+
+    return result as MemorySpace;
+  }
 }

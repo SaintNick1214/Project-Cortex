@@ -3,7 +3,11 @@
  */
 
 // Dynamic types to support AI SDK v3, v4, and v5
-import type { MemoryEntry, RememberOptions } from "@cortexmemory/sdk";
+import type {
+  MemoryEntry,
+  RememberOptions,
+  RememberStreamResult,
+} from "@cortexmemory/sdk";
 
 /**
  * Supported LLM providers
@@ -143,6 +147,88 @@ export interface CortexMemoryConfig {
   defaultTags?: string[];
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Streaming Enhancements (v0.2.0+)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /** Streaming options for enhanced streaming capabilities */
+  streamingOptions?: {
+    /** Enable progressive storage during streaming (default: false) */
+    storePartialResponse?: boolean;
+    /** Interval for partial updates in ms (default: 3000) */
+    partialResponseInterval?: number;
+
+    /** Enable progressive fact extraction during streaming (default: false) */
+    progressiveFactExtraction?: boolean;
+    /** Extract facts every N characters (default: 500) */
+    factExtractionThreshold?: number;
+
+    /** Enable progressive graph sync during streaming (default: false) */
+    progressiveGraphSync?: boolean;
+    /** Graph sync interval in ms (default: 5000) */
+    graphSyncInterval?: number;
+
+    /** How to handle partial failures */
+    partialFailureHandling?:
+      | "store-partial"
+      | "rollback"
+      | "retry"
+      | "best-effort";
+    /** Maximum retry attempts (default: 3) */
+    maxRetries?: number;
+    /** Generate resume tokens for interrupted streams (default: false) */
+    generateResumeToken?: boolean;
+    /** Stream timeout in ms (default: 30000) */
+    streamTimeout?: number;
+
+    /** Maximum response length in characters */
+    maxResponseLength?: number;
+    /** Enable adaptive processing based on stream characteristics (default: false) */
+    enableAdaptiveProcessing?: boolean;
+  };
+
+  /** Streaming hooks for real-time monitoring */
+  streamingHooks?: {
+    /** Called for each chunk received */
+    onChunk?: (event: {
+      chunk: string;
+      chunkNumber: number;
+      accumulated: string;
+      timestamp: number;
+      estimatedTokens: number;
+    }) => void | Promise<void>;
+    /** Called periodically with progress updates */
+    onProgress?: (event: {
+      bytesProcessed: number;
+      chunks: number;
+      elapsedMs: number;
+      estimatedCompletion?: number;
+      currentPhase?:
+        | "streaming"
+        | "fact-extraction"
+        | "storage"
+        | "finalization";
+    }) => void | Promise<void>;
+    /** Called when stream errors occur */
+    onError?: (error: {
+      message: string;
+      code?: string;
+      phase?: string;
+      recoverable?: boolean;
+      resumeToken?: string;
+    }) => void | Promise<void>;
+    /** Called when stream completes successfully */
+    onComplete?: (event: {
+      fullResponse: string;
+      totalChunks: number;
+      durationMs: number;
+      factsExtracted: number;
+    }) => void | Promise<void>;
+  };
+
+  /** Enable automatic metrics collection (default: true) */
+  enableStreamMetrics?: boolean;
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Debug and Logging
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -222,7 +308,7 @@ export interface CortexMemoryModel {
    * @example
    * ```typescript
    * import { openai } from '@ai-sdk/openai';
-   * const model = cortexMemory(openai('gpt-4'));
+   * const model = cortexMemory(openai('gpt-5-nano'));
    *
    * const result = await streamText({
    *   model,

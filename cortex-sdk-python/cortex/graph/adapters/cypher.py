@@ -25,12 +25,17 @@ class CypherGraphAdapter:
     Cypher Graph Adapter for Neo4j and Memgraph.
 
     Uses the official Neo4j Python driver with async support.
+    Automatically detects database type and handles ID differences:
+    - Neo4j uses elementId() returning strings
+    - Memgraph uses id() returning integers
     """
 
     def __init__(self) -> None:
         """Initialize the Cypher adapter."""
-        self.driver = None
+        self.driver: Any = None
         self._connected = False
+        self.use_element_id = True  # Neo4j uses elementId(), Memgraph uses id()
+        self.database: Optional[str] = None
 
     async def connect(self, config: GraphConnectionConfig) -> None:
         """
@@ -53,6 +58,7 @@ class CypherGraphAdapter:
             ... )
         """
         try:
+            self.database = config.database
             self.driver = AsyncGraphDatabase.driver(
                 config.uri,
                 auth=(config.username, config.password),
@@ -66,6 +72,9 @@ class CypherGraphAdapter:
                 await session.run("RETURN 1")
 
             self._connected = True
+
+            # Detect database type (Neo4j vs Memgraph)
+            await self._detect_database_type()
 
         except Exception as e:
             raise CortexError(
@@ -84,6 +93,51 @@ class CypherGraphAdapter:
         if self.driver:
             await self.driver.close()
             self._connected = False
+
+    async def _detect_database_type(self) -> None:
+        """
+        Detect database type and set appropriate ID function.
+        Neo4j uses elementId() returning strings, Memgraph uses id() returning integers.
+        """
+        assert self.driver is not None
+        async with self.driver.session(database=self.database) as session:
+            try:
+                # Use explicit transaction for atomic operation
+                async with session.begin_transaction() as tx:
+                    # Create test node
+                    await tx.run("CREATE (n:__TEST__)")
+                    # Try elementId() in separate query - if it works, we're on Neo4j
+                    result = await tx.run("MATCH (n:__TEST__) RETURN elementId(n) as id")
+                    await result.consume()  # Ensure query completes
+                    # Clean up test node
+                    await tx.run("MATCH (n:__TEST__) DELETE n")
+                    await tx.commit()
+                    self.use_element_id = True
+            except Exception:
+                # elementId() not supported, use id() instead (Memgraph)
+                # Transaction will auto-rollback, but also explicitly clean up
+                self.use_element_id = False
+                try:
+                    await session.run("MATCH (n:__TEST__) DELETE n")
+                except Exception:
+                    pass  # Ignore cleanup errors if node wasn't created
+
+    def _get_id_function(self) -> str:
+        """Get the appropriate ID function for the connected database."""
+        return "elementId" if self.use_element_id else "id"
+
+    def _convert_id_for_query(self, id_value: str) -> Any:
+        """
+        Convert ID to appropriate type for database queries.
+        Neo4j uses string IDs (elementId), Memgraph uses integer IDs (id).
+        """
+        if not self.use_element_id:
+            # Memgraph uses integer IDs
+            try:
+                return int(id_value)
+            except (ValueError, TypeError):
+                return id_value
+        return id_value
 
     async def create_node(self, node: GraphNode) -> str:
         """
@@ -109,9 +163,10 @@ class CypherGraphAdapter:
             )
 
         assert self.driver is not None
-        async with self.driver.session() as session:
+        id_func = self._get_id_function()
+        async with self.driver.session(database=self.database) as session:
             result = await session.run(
-                f"CREATE (n:{node.label} $props) RETURN id(n) as id",
+                f"CREATE (n:{node.label} $props) RETURN {id_func}(n) as id",
                 props=node.properties,
             )
             record = await result.single()
@@ -134,17 +189,20 @@ class CypherGraphAdapter:
             )
 
         assert self.driver is not None
-        async with self.driver.session() as session:
+        id_func = self._get_id_function()
+        converted_id = self._convert_id_for_query(node_id)
+
+        async with self.driver.session(database=self.database) as session:
             # Build SET clause for each property
             set_clauses = ", ".join([f"n.{key} = ${key}" for key in properties.keys()])
 
             await session.run(
                 f"""
                 MATCH (n)
-                WHERE id(n) = $nodeId
+                WHERE {id_func}(n) = $nodeId
                 SET {set_clauses}
                 """,
-                nodeId=node_id,
+                nodeId=converted_id,
                 **properties,
             )
 
@@ -164,14 +222,17 @@ class CypherGraphAdapter:
             )
 
         assert self.driver is not None
-        async with self.driver.session() as session:
+        id_func = self._get_id_function()
+        converted_id = self._convert_id_for_query(node_id)
+
+        async with self.driver.session(database=self.database) as session:
             await session.run(
-                """
+                f"""
                 MATCH (n)
-                WHERE id(n) = $nodeId
+                WHERE {id_func}(n) = $nodeId
                 DETACH DELETE n
                 """,
-                nodeId=node_id,
+                nodeId=converted_id,
             )
 
     async def create_edge(self, edge: GraphEdge) -> str:
@@ -200,17 +261,21 @@ class CypherGraphAdapter:
             )
 
         assert self.driver is not None
-        async with self.driver.session() as session:
+        id_func = self._get_id_function()
+        from_id = self._convert_id_for_query(edge.from_node)
+        to_id = self._convert_id_for_query(edge.to_node)
+
+        async with self.driver.session(database=self.database) as session:
             props_clause = "$props" if edge.properties else "{}"
 
             result = await session.run(
                 f"""
                 MATCH (a), (b)
-                WHERE id(a) = $from AND id(b) = $to
+                WHERE {id_func}(a) = $from AND {id_func}(b) = $to
                 CREATE (a)-[r:{edge.type} {props_clause}]->(b)
-                RETURN id(r) as id
+                RETURN {id_func}(r) as id
                 """,
-                **{"from": edge.from_node, "to": edge.to_node, "props": edge.properties or {}},
+                **{"from": from_id, "to": to_id, "props": edge.properties or {}},
             )
 
             record = await result.single()
@@ -232,14 +297,17 @@ class CypherGraphAdapter:
             )
 
         assert self.driver is not None
-        async with self.driver.session() as session:
+        id_func = self._get_id_function()
+        converted_id = self._convert_id_for_query(edge_id)
+
+        async with self.driver.session(database=self.database) as session:
             await session.run(
-                """
+                f"""
                 MATCH ()-[r]-()
-                WHERE id(r) = $edgeId
+                WHERE {id_func}(r) = $edgeId
                 DELETE r
                 """,
-                edgeId=edge_id,
+                edgeId=converted_id,
             )
 
     async def query(
@@ -269,7 +337,7 @@ class CypherGraphAdapter:
         assert self.driver is not None
 
         try:
-            async with self.driver.session() as session:
+            async with self.driver.session(database=self.database) as session:
                 result = await session.run(cypher, params or {})
                 records = [record.data() async for record in result]
 
@@ -306,12 +374,13 @@ class CypherGraphAdapter:
         # Build WHERE clause
         where_clauses = [f"n.{key} = ${key}" for key in properties.keys()]
         where_str = " AND ".join(where_clauses)
+        id_func = self._get_id_function()
 
         result = await self.query(
             f"""
             MATCH (n:{label})
             {"WHERE " + where_str if where_str else ""}
-            RETURN id(n) as id, labels(n) as labels, properties(n) as properties
+            RETURN {id_func}(n) as id, labels(n) as labels, properties(n) as properties
             LIMIT {limit}
             """,
             properties,
@@ -347,18 +416,26 @@ class CypherGraphAdapter:
             ... )
         """
         rel_types_str = "|".join(config.relationship_types)
-        direction = "<-" if config.direction == "INCOMING" else "->"
-        if config.direction == "BOTH":
-            direction = "-"
+
+        # Build proper Cypher relationship pattern
+        if config.direction == "INCOMING":
+            rel_pattern = f"<-[:{rel_types_str}*1..{config.max_depth}]-"
+        elif config.direction == "OUTGOING":
+            rel_pattern = f"-[:{rel_types_str}*1..{config.max_depth}]->"
+        else:  # BOTH
+            rel_pattern = f"-[:{rel_types_str}*1..{config.max_depth}]-"
+
+        id_func = self._get_id_function()
+        converted_start_id = self._convert_id_for_query(config.start_id)
 
         result = await self.query(
             f"""
             MATCH (start)
-            WHERE id(start) = $startId
-            MATCH (start){direction}[:{rel_types_str}*1..{config.max_depth}]{direction}(connected)
-            RETURN DISTINCT id(connected) as id, labels(connected) as labels, properties(connected) as properties
+            WHERE {id_func}(start) = $startId
+            MATCH (start){rel_pattern}(connected)
+            RETURN DISTINCT {id_func}(connected) as id, labels(connected) as labels, properties(connected) as properties
             """,
-            {"startId": config.start_id},
+            {"startId": converted_start_id},
         )
 
         return [
@@ -399,18 +476,22 @@ class CypherGraphAdapter:
         else:
             rel_filter = f"[*1..{config.max_hops}]"
 
+        id_func = self._get_id_function()
+        from_id = self._convert_id_for_query(config.from_id)
+        to_id = self._convert_id_for_query(config.to_id)
+
         result = await self.query(
             f"""
             MATCH (start), (end)
-            WHERE id(start) = $fromId AND id(end) = $toId
+            WHERE {id_func}(start) = $fromId AND {id_func}(end) = $toId
             MATCH path = shortestPath((start)-{rel_filter}-(end))
             RETURN
-                [node IN nodes(path) | {{id: id(node), label: labels(node)[0], properties: properties(node)}}] as nodes,
-                [rel IN relationships(path) | {{id: id(rel), type: type(rel), properties: properties(rel)}}] as relationships,
+                [node IN nodes(path) | {{id: {id_func}(node), label: labels(node)[0], properties: properties(node)}}] as nodes,
+                [rel IN relationships(path) | {{id: {id_func}(rel), type: type(rel), properties: properties(rel)}}] as relationships,
                 length(path) as length
             LIMIT 1
             """,
-            {"fromId": config.from_id, "toId": config.to_id},
+            {"fromId": from_id, "toId": to_id},
         )
 
         if result.count == 0:

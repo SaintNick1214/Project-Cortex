@@ -821,4 +821,146 @@ describe("Users API (Coordination Layer)", () => {
       console.log(`     Layers: ${result.deletedLayers.join(", ")}`);
     });
   });
+
+  describe("New API Methods", () => {
+    beforeEach(async () => {
+      // Cleanup user if exists
+      try {
+        const user = await cortex.users.get("new-user-123");
+        if (user) {
+          await cortex.users.delete("new-user-123");
+        }
+      } catch (_error) {
+        // User doesn't exist, continue
+      }
+    });
+
+    describe("getOrCreate()", () => {
+      it("creates user with defaults if doesn't exist", async () => {
+        const result = await cortex.users.getOrCreate("new-user-123", {
+          displayName: "New User",
+          preferences: { theme: "light" },
+          metadata: { tier: "free" },
+        });
+
+        expect(result).toBeDefined();
+        expect(result.id).toBe("new-user-123");
+        expect((result.data as any).displayName).toBe("New User");
+        expect((result.data as any).preferences.theme).toBe("light");
+        expect(result.version).toBe(1);
+      });
+
+      it("returns existing user without modifications", async () => {
+        // Create user first
+        await cortex.users.update("new-user-123", {
+          displayName: "Existing User",
+          email: "existing@example.com",
+        });
+
+        // getOrCreate should return existing without modification
+        const result = await cortex.users.getOrCreate("new-user-123", {
+          displayName: "Default User", // Won't be used
+        });
+
+        expect(result.data.displayName).toBe("Existing User");
+        expect(result.data.email).toBe("existing@example.com");
+      });
+
+      it("creates user with empty defaults if not provided", async () => {
+        const result = await cortex.users.getOrCreate("new-user-123");
+
+        expect(result).toBeDefined();
+        expect(result.id).toBe("new-user-123");
+        expect(result.data).toEqual({});
+        expect(result.version).toBe(1);
+      });
+    });
+
+    describe("merge()", () => {
+      it("deep merges nested objects", async () => {
+        // Create user with initial data
+        await cortex.users.update("new-user-123", {
+          displayName: "Alex",
+          preferences: {
+            theme: "dark",
+            language: "en",
+          },
+          metadata: {
+            tier: "pro",
+          },
+        });
+
+        // Merge new preferences
+        const result = await cortex.users.merge("new-user-123", {
+          preferences: {
+            notifications: true, // New field
+          },
+          metadata: {
+            lastSeen: Date.now(), // New field
+          },
+        });
+
+        expect((result.data as any).displayName).toBe("Alex");
+        expect((result.data as any).preferences.theme).toBe("dark"); // Preserved
+        expect((result.data as any).preferences.language).toBe("en"); // Preserved
+        expect((result.data as any).preferences.notifications).toBe(true); // Added
+        expect((result.data as any).metadata.tier).toBe("pro"); // Preserved
+        expect((result.data as any).metadata.lastSeen).toBeDefined(); // Added
+      });
+
+      it("overwrites non-object values", async () => {
+        await cortex.users.update("new-user-123", {
+          displayName: "Old Name",
+          tier: "free",
+        });
+
+        const result = await cortex.users.merge("new-user-123", {
+          displayName: "New Name",
+          tier: "pro",
+        });
+
+        expect(result.data.displayName).toBe("New Name");
+        expect(result.data.tier).toBe("pro");
+      });
+
+      it("handles merging into non-existent user", async () => {
+        const result = await cortex.users.merge("new-user-123", {
+          displayName: "Created User",
+        });
+
+        expect(result).toBeDefined();
+        expect(result.data.displayName).toBe("Created User");
+      });
+
+      it("handles complex nested merges", async () => {
+        await cortex.users.update("new-user-123", {
+          settings: {
+            ui: {
+              theme: "dark",
+              fontSize: 14,
+            },
+            notifications: {
+              email: true,
+            },
+          },
+        });
+
+        const result = await cortex.users.merge("new-user-123", {
+          settings: {
+            ui: {
+              fontSize: 16, // Update nested value
+            },
+            notifications: {
+              push: true, // Add nested value
+            },
+          },
+        });
+
+        expect((result.data as any).settings.ui.theme).toBe("dark"); // Preserved
+        expect((result.data as any).settings.ui.fontSize).toBe(16); // Updated
+        expect((result.data as any).settings.notifications.email).toBe(true); // Preserved
+        expect((result.data as any).settings.notifications.push).toBe(true); // Added
+      });
+    });
+  });
 });

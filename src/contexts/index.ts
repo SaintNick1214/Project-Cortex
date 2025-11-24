@@ -415,4 +415,265 @@ export class ContextsAPI {
 
     return result as Context;
   }
+
+  /**
+   * Update many contexts matching filters
+   *
+   * @example
+   * ```typescript
+   * await cortex.contexts.updateMany(
+   *   { status: 'completed', completedBefore: Date.now() - 30*24*60*60*1000 },
+   *   { data: { archived: true } }
+   * );
+   * ```
+   */
+  async updateMany(
+    filters: {
+      memorySpaceId?: string;
+      userId?: string;
+      status?: "active" | "completed" | "cancelled" | "blocked";
+      parentId?: string;
+      rootId?: string;
+    },
+    updates: {
+      status?: "active" | "completed" | "cancelled" | "blocked";
+      data?: Record<string, unknown>;
+    },
+  ): Promise<{ updated: number; contextIds: string[] }> {
+    const result = await this.client.mutation(api.contexts.updateMany, {
+      memorySpaceId: filters.memorySpaceId,
+      userId: filters.userId,
+      status: filters.status,
+      parentId: filters.parentId,
+      rootId: filters.rootId,
+      updates,
+    });
+
+    return result as { updated: number; contextIds: string[] };
+  }
+
+  /**
+   * Delete many contexts matching filters
+   *
+   * @example
+   * ```typescript
+   * await cortex.contexts.deleteMany({
+   *   status: 'cancelled',
+   *   completedBefore: Date.now() - 90*24*60*60*1000
+   * }, { cascadeChildren: true });
+   * ```
+   */
+  async deleteMany(
+    filters: {
+      memorySpaceId?: string;
+      userId?: string;
+      status?: "active" | "completed" | "cancelled" | "blocked";
+      completedBefore?: number;
+    },
+    options?: { cascadeChildren?: boolean },
+  ): Promise<{ deleted: number; contextIds: string[] }> {
+    const result = await this.client.mutation(api.contexts.deleteMany, {
+      memorySpaceId: filters.memorySpaceId,
+      userId: filters.userId,
+      status: filters.status,
+      completedBefore: filters.completedBefore,
+      cascadeChildren: options?.cascadeChildren,
+    });
+
+    return result as { deleted: number; contextIds: string[] };
+  }
+
+  /**
+   * Export contexts to JSON or CSV
+   *
+   * @example
+   * ```typescript
+   * const exported = await cortex.contexts.export(
+   *   { userId: 'user-123' },
+   *   { format: 'json', includeChain: true, includeVersionHistory: true }
+   * );
+   * ```
+   */
+  async export(
+    filters?: {
+      memorySpaceId?: string;
+      userId?: string;
+      status?: "active" | "completed" | "cancelled" | "blocked";
+    },
+    options?: {
+      format: "json" | "csv";
+      includeChain?: boolean;
+      includeVersionHistory?: boolean;
+    },
+  ): Promise<{
+    format: string;
+    data: string;
+    count: number;
+    exportedAt: number;
+  }> {
+    const result = await this.client.query(api.contexts.exportContexts, {
+      memorySpaceId: filters?.memorySpaceId,
+      userId: filters?.userId,
+      status: filters?.status,
+      format: options?.format || "json",
+      includeChain: options?.includeChain,
+      includeVersionHistory: options?.includeVersionHistory,
+    });
+
+    return result as {
+      format: string;
+      data: string;
+      count: number;
+      exportedAt: number;
+    };
+  }
+
+  /**
+   * Remove participant from context
+   *
+   * @example
+   * ```typescript
+   * await cortex.contexts.removeParticipant('ctx-123', 'old-agent-space');
+   * ```
+   */
+  async removeParticipant(
+    contextId: string,
+    participantId: string,
+  ): Promise<Context> {
+    const result = await this.client.mutation(api.contexts.removeParticipant, {
+      contextId,
+      participantId,
+    });
+
+    return result as Context;
+  }
+
+  /**
+   * Get all contexts originating from a specific conversation
+   *
+   * @example
+   * ```typescript
+   * const contexts = await cortex.contexts.getByConversation('conv-456');
+   * ```
+   */
+  async getByConversation(conversationId: string): Promise<Context[]> {
+    const result = await this.client.query(api.contexts.getByConversation, {
+      conversationId,
+    });
+
+    return result as Context[];
+  }
+
+  /**
+   * Find contexts whose parent no longer exists
+   *
+   * @example
+   * ```typescript
+   * const orphaned = await cortex.contexts.findOrphaned();
+   * console.log(`Found ${orphaned.length} orphaned contexts`);
+   * ```
+   */
+  async findOrphaned(): Promise<Context[]> {
+    const result = await this.client.query(api.contexts.findOrphaned, {});
+
+    return result as Context[];
+  }
+
+  /**
+   * Get specific version of a context
+   *
+   * @example
+   * ```typescript
+   * const v1 = await cortex.contexts.getVersion('ctx-123', 1);
+   * ```
+   */
+  async getVersion(
+    contextId: string,
+    version: number,
+  ): Promise<{
+    version: number;
+    status: string;
+    data?: any;
+    timestamp: number;
+    updatedBy?: string;
+  } | null> {
+    const result = await this.client.query(api.contexts.getVersion, {
+      contextId,
+      version,
+    });
+
+    return result as {
+      version: number;
+      status: string;
+      data?: any;
+      timestamp: number;
+      updatedBy?: string;
+    } | null;
+  }
+
+  /**
+   * Get all versions of a context
+   *
+   * @example
+   * ```typescript
+   * const history = await cortex.contexts.getHistory('ctx-123');
+   * console.log(`Context has ${history.length} versions`);
+   * ```
+   */
+  async getHistory(contextId: string): Promise<
+    Array<{
+      version: number;
+      status: string;
+      data?: any;
+      timestamp: number;
+      updatedBy?: string;
+    }>
+  > {
+    const result = await this.client.query(api.contexts.getHistory, {
+      contextId,
+    });
+
+    return result as Array<{
+      version: number;
+      status: string;
+      data?: any;
+      timestamp: number;
+      updatedBy?: string;
+    }>;
+  }
+
+  /**
+   * Get context state at specific point in time
+   *
+   * @example
+   * ```typescript
+   * const historical = await cortex.contexts.getAtTimestamp(
+   *   'ctx-123',
+   *   new Date('2025-10-20')
+   * );
+   * ```
+   */
+  async getAtTimestamp(
+    contextId: string,
+    timestamp: Date,
+  ): Promise<{
+    version: number;
+    status: string;
+    data?: any;
+    timestamp: number;
+    updatedBy?: string;
+  } | null> {
+    const result = await this.client.query(api.contexts.getAtTimestamp, {
+      contextId,
+      timestamp: timestamp.getTime(),
+    });
+
+    return result as {
+      version: number;
+      status: string;
+      data?: any;
+      timestamp: number;
+      updatedBy?: string;
+    } | null;
+  }
 }

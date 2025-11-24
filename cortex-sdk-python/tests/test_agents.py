@@ -269,3 +269,98 @@ async def test_count_agents(cortex_client, test_ids):
     for agent_id in agent_ids:
         await cortex_client.agents.unregister(agent_id)
 
+
+# ============================================================================
+# unregister_many() Tests (NEW)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_unregister_many_without_cascade(cortex_client):
+    """
+    Test bulk unregistering agents without cascade.
+    
+    New method: agents.unregister_many()
+    """
+    from cortex import UnregisterAgentOptions
+    
+    # Register multiple test agents
+    agent1 = await cortex_client.agents.register(
+        AgentRegistration(
+            id="bulk-py-agent-1",
+            name="Bulk Test 1",
+            metadata={"environment": "test", "team": "experimental"},
+        )
+    )
+    
+    agent2 = await cortex_client.agents.register(
+        AgentRegistration(
+            id="bulk-py-agent-2",
+            name="Bulk Test 2",
+            metadata={"environment": "test", "team": "experimental"},
+        )
+    )
+    
+    agent3 = await cortex_client.agents.register(
+        AgentRegistration(
+            id="bulk-py-agent-3",
+            name="Bulk Test 3",
+            metadata={"environment": "production", "team": "core"},
+        )
+    )
+    
+    # Unregister agents with environment=test
+    result = await cortex_client.agents.unregister_many(
+        filters={"metadata": {"environment": "test"}},
+        options=UnregisterAgentOptions(cascade=False),
+    )
+    
+    assert result["deleted"] == 2
+    assert "bulk-py-agent-1" in result["agent_ids"]
+    assert "bulk-py-agent-2" in result["agent_ids"]
+    
+    # Verify unregistered
+    agent1_check = await cortex_client.agents.get("bulk-py-agent-1")
+    agent2_check = await cortex_client.agents.get("bulk-py-agent-2")
+    agent3_check = await cortex_client.agents.get("bulk-py-agent-3")
+    
+    assert agent1_check is None
+    assert agent2_check is None
+    assert agent3_check is not None  # Not in filter
+    
+    # Cleanup
+    await cortex_client.agents.unregister("bulk-py-agent-3")
+
+
+@pytest.mark.asyncio
+async def test_unregister_many_dry_run(cortex_client):
+    """
+    Test dry run for bulk unregister.
+    """
+    from cortex import UnregisterAgentOptions
+    
+    # Register test agent
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id="dry-run-py-agent",
+            name="Dry Run Test",
+            metadata={"team": "test"},
+        )
+    )
+    
+    # Dry run
+    result = await cortex_client.agents.unregister_many(
+        filters={"metadata": {"team": "test"}},
+        options=UnregisterAgentOptions(dry_run=True),
+    )
+    
+    assert result["deleted"] == 0
+    assert len(result["agent_ids"]) == 1
+    assert "dry-run-py-agent" in result["agent_ids"]
+    
+    # Verify agent still exists
+    agent = await cortex_client.agents.get("dry-run-py-agent")
+    assert agent is not None
+    
+    # Cleanup
+    await cortex_client.agents.unregister("dry-run-py-agent")

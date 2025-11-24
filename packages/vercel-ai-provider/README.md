@@ -28,6 +28,19 @@ Add long-term memory to any Vercel AI SDK application with a single import. Buil
 npm install @cortexmemory/vercel-ai-provider @cortexmemory/sdk ai convex
 ```
 
+## What's New in v0.2.0
+
+The provider now uses the enhanced `rememberStream()` API, unlocking powerful streaming capabilities:
+
+- **Progressive Storage** - Store partial responses during streaming for resumability
+- **Streaming Hooks** - Monitor progress with `onChunk`, `onProgress`, `onComplete` callbacks
+- **Comprehensive Metrics** - Track latency, throughput, token usage, and costs
+- **Progressive Fact Extraction** - Extract facts incrementally during streaming
+- **Error Recovery** - Resume interrupted streams with checkpoints
+- **Adaptive Processing** - Auto-optimize based on stream characteristics
+
+All features are opt-in and fully backward compatible.
+
 ### Setup
 
 1. **Deploy Cortex Backend to Convex:**
@@ -55,7 +68,7 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   const result = await streamText({
-    model: cortexMemory(openai("gpt-4-turbo")),
+    model: cortexMemory(openai("gpt-5-nano")),
     messages,
   });
 
@@ -86,6 +99,163 @@ export default function Chat() {
 ```
 
 That's it! Your AI now has **persistent memory** that works across sessions.
+
+## Enhanced Streaming Features (v0.2.0+)
+
+The provider now includes powerful streaming enhancements powered by the `rememberStream()` API.
+
+### Progressive Storage
+
+Store partial responses during streaming for resumability:
+
+```typescript
+const cortexMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "demo-chat",
+  userId: "user-123",
+
+  streamingOptions: {
+    storePartialResponse: true,
+    partialResponseInterval: 3000, // Update every 3 seconds
+  },
+});
+```
+
+### Streaming Hooks
+
+Monitor streaming progress in real-time:
+
+```typescript
+const cortexMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "demo-chat",
+  userId: "user-123",
+
+  streamingHooks: {
+    onChunk: (event) => {
+      console.log(`Chunk ${event.chunkNumber}: ${event.chunk}`);
+    },
+    onProgress: (event) => {
+      console.log(`Progress: ${event.bytesProcessed} bytes`);
+      updateProgressBar(event.bytesProcessed);
+    },
+    onComplete: (event) => {
+      console.log(`Completed in ${event.durationMs}ms`);
+      console.log(`Facts extracted: ${event.factsExtracted}`);
+    },
+    onError: (error) => {
+      console.error("Stream error:", error.message);
+    },
+  },
+});
+```
+
+### Comprehensive Metrics
+
+Automatic collection of streaming performance metrics:
+
+```typescript
+const cortexMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "demo-chat",
+  userId: "user-123",
+
+  enableStreamMetrics: true, // Default: true
+});
+```
+
+Metrics include:
+
+- First chunk latency
+- Total stream duration
+- Chunks per second
+- Estimated tokens and costs
+- Performance bottlenecks and recommendations
+
+### Progressive Fact Extraction
+
+Extract facts incrementally during streaming instead of waiting for completion:
+
+```typescript
+const cortexMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "demo-chat",
+  userId: "user-123",
+
+  enableFactExtraction: true,
+
+  streamingOptions: {
+    progressiveFactExtraction: true,
+    factExtractionThreshold: 500, // Extract every 500 characters
+  },
+});
+```
+
+### Error Recovery
+
+Handle interrupted streams with resume tokens:
+
+```typescript
+const cortexMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "demo-chat",
+  userId: "user-123",
+
+  streamingOptions: {
+    partialFailureHandling: "store-partial", // or 'rollback', 'retry', 'best-effort'
+    maxRetries: 3,
+    generateResumeToken: true,
+    streamTimeout: 30000, // 30 seconds
+  },
+});
+```
+
+### Complete Example with All Features
+
+```typescript
+import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
+import { openai } from "@ai-sdk/openai";
+import { streamText, embed } from "ai";
+
+const cortexMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "advanced-chat",
+  userId: "user-123",
+
+  // Progressive storage
+  streamingOptions: {
+    storePartialResponse: true,
+    partialResponseInterval: 3000,
+    progressiveFactExtraction: true,
+    progressiveGraphSync: true,
+    enableAdaptiveProcessing: true,
+  },
+
+  // Real-time hooks
+  streamingHooks: {
+    onProgress: (event) => {
+      websocket.send({ type: "progress", data: event });
+    },
+    onComplete: (event) => {
+      console.log(`Stream metrics:`, event);
+    },
+  },
+
+  // Semantic search
+  embeddingProvider: {
+    generate: async (text) => {
+      const { embedding } = await embed({
+        model: openai.embedding("text-embedding-3-small"),
+        value: text,
+      });
+      return embedding;
+    },
+  },
+
+  // Fact extraction
+  enableFactExtraction: true,
+});
+```
 
 ## How It Works
 
@@ -122,7 +292,7 @@ Agent: "Your name is Alice!"
 ```typescript
 // When you call streamText with cortexMemory:
 const result = await streamText({
-  model: cortexMemory(openai("gpt-4")),
+  model: cortexMemory(openai("gpt-5-nano")),
   messages: [{ role: "user", content: "What did I tell you earlier?" }],
 });
 
@@ -253,7 +423,7 @@ const cortexMemory = createCortexMemory({
 });
 
 // Wrap any Vercel AI SDK provider
-const model1 = cortexMemory(openai("gpt-4"));
+const model1 = cortexMemory(openai("gpt-5-nano"));
 const model2 = cortexMemory(anthropic("claude-3-opus"));
 const model3 = cortexMemory(google("gemini-pro"));
 
@@ -339,7 +509,7 @@ const mem0 = createMem0({
 });
 
 const result = await streamText({
-  model: mem0("gpt-4"),
+  model: mem0("gpt-5-nano"),
   messages,
 });
 ```
@@ -357,7 +527,7 @@ const cortexMemory = createCortexMemory({
 });
 
 const result = await streamText({
-  model: cortexMemory(openai("gpt-4")),
+  model: cortexMemory(openai("gpt-5-nano")),
   messages,
 });
 ```
@@ -428,7 +598,7 @@ export async function POST(req: Request) {
   });
 
   const result = await streamText({
-    model: teamMemory(openai("gpt-4")),
+    model: teamMemory(openai("gpt-5-nano")),
     messages,
   });
 
@@ -467,7 +637,7 @@ export const runtime = "edge";
 
 export async function POST(req: Request) {
   const result = await streamText({
-    model: cortexMemory(openai("gpt-4")),
+    model: cortexMemory(openai("gpt-5-nano")),
     messages,
   });
 
@@ -481,7 +651,7 @@ A: No! Cortex v0.9.0+ handles streaming automatically:
 ```typescript
 // Cortex buffers the stream internally and stores after completion
 const result = await streamText({
-  model: cortexMemory(openai("gpt-4")),
+  model: cortexMemory(openai("gpt-5-nano")),
   messages,
 });
 

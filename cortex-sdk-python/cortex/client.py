@@ -64,29 +64,29 @@ class Cortex:
         self.client = AsyncConvexClient(sync_client)
 
         # Get graph adapter if configured
-        graph_adapter = config.graph.adapter if config.graph else None
+        self.graph_adapter = config.graph.adapter if config.graph else None
 
         # Initialize API modules with graph adapter
-        self.conversations = ConversationsAPI(self.client, graph_adapter)
-        self.immutable = ImmutableAPI(self.client, graph_adapter)
-        self.mutable = MutableAPI(self.client, graph_adapter)
-        self.vector = VectorAPI(self.client, graph_adapter)
-        self.facts = FactsAPI(self.client, graph_adapter)
-        self.memory = MemoryAPI(self.client, graph_adapter)
-        self.contexts = ContextsAPI(self.client, graph_adapter)
-        self.users = UsersAPI(self.client, graph_adapter)
-        self.agents = AgentsAPI(self.client, graph_adapter)
-        self.memory_spaces = MemorySpacesAPI(self.client, graph_adapter)
-        self.governance = GovernanceAPI(self.client, graph_adapter)
+        self.conversations = ConversationsAPI(self.client, self.graph_adapter)
+        self.immutable = ImmutableAPI(self.client, self.graph_adapter)
+        self.mutable = MutableAPI(self.client, self.graph_adapter)
+        self.vector = VectorAPI(self.client, self.graph_adapter)
+        self.facts = FactsAPI(self.client, self.graph_adapter)
+        self.memory = MemoryAPI(self.client, self.graph_adapter)
+        self.contexts = ContextsAPI(self.client, self.graph_adapter)
+        self.users = UsersAPI(self.client, self.graph_adapter)
+        self.agents = AgentsAPI(self.client, self.graph_adapter)
+        self.memory_spaces = MemorySpacesAPI(self.client, self.graph_adapter)
+        self.governance = GovernanceAPI(self.client, self.graph_adapter)
 
         # Start graph sync worker if enabled
         self.sync_worker = None
-        if config.graph and config.graph.auto_sync and graph_adapter:
+        if config.graph and config.graph.auto_sync and self.graph_adapter:
             from .graph.worker.sync_worker import GraphSyncWorker
 
             self.sync_worker = GraphSyncWorker(
                 self.client,
-                graph_adapter,
+                self.graph_adapter,
                 config.graph.sync_worker_options,
             )
 

@@ -143,7 +143,7 @@ const report = await cortex.governance.getComplianceReport({
 
 ```typescript
 // With Vercel AI SDK streaming
-const stream = await generateText({ model: "gpt-4", messages });
+const stream = await generateText({ model: "gpt-5-nano", messages });
 
 const result = await cortex.memory.rememberStream({
   memorySpaceId: "agent-1",

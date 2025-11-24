@@ -327,7 +327,7 @@ async function respondToUser(userMessage: string, memorySpaceId: string) {
 
 - Traditional: 50,000 tokens (accumulated)
 - Infinite Context: 400 tokens (retrieved)
-- Savings: $1.50 → $0.012 per request (GPT-4)
+- Savings: $1.50 → $0.012 per request (GPT-5-nano)
 
 **3. Works with Any Model**
 

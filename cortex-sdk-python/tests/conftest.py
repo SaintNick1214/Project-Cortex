@@ -1,234 +1,174 @@
 """
-Pytest configuration and fixtures for Cortex SDK tests
+Pytest Configuration
 
-Supports dual-deployment testing strategy:
-- LOCAL: Test against local Convex dev server (http://127.0.0.1:3210)
-- MANAGED: Test against managed Convex deployment (cloud)
-- AUTO: Auto-detect and use available deployment(s)
-
-Set via environment variable:
-    export CONVEX_TEST_MODE=local    # Test LOCAL only
-    export CONVEX_TEST_MODE=managed  # Test MANAGED only
-    export CONVEX_TEST_MODE=auto     # Auto-detect (default)
-
-Or use the test runner script:
-    python scripts/run-python-tests.py --mode=local
-    python scripts/run-python-tests.py --mode=managed
-    python scripts/run-python-tests.py --mode=both
+Shared fixtures and configuration for all Python SDK tests.
 """
 
-import pytest
-import os
 import asyncio
+import os
+import time
+import pytest
 from typing import AsyncGenerator
 from pathlib import Path
-
-# Load environment variables from .env.local in project root
 from dotenv import load_dotenv
 
-# Load from project root .env.local
+# Load .env.local from project root to get graph database configuration
 project_root = Path(__file__).parent.parent.parent
 env_file = project_root / ".env.local"
 if env_file.exists():
     load_dotenv(env_file, override=True)
 
-# Configure CONVEX_URL based on test mode (like TypeScript SDK)
-test_mode = os.getenv("CONVEX_TEST_MODE", "auto")
-has_local_config = bool(os.getenv("LOCAL_CONVEX_URL"))
-has_managed_config = bool(os.getenv("CLOUD_CONVEX_URL"))
-
-if test_mode == "local":
-    if os.getenv("LOCAL_CONVEX_URL"):
-        os.environ["CONVEX_URL"] = os.getenv("LOCAL_CONVEX_URL")
-    print(f"\n🧪 [Python SDK] Testing against LOCAL Convex: {os.getenv('CONVEX_URL')}")
-    print("   Note: Vector search not supported in local mode\n")
-elif test_mode == "managed":
-    if os.getenv("CLOUD_CONVEX_URL"):
-        os.environ["CONVEX_URL"] = os.getenv("CLOUD_CONVEX_URL")
-    print(f"\n🧪 [Python SDK] Testing against MANAGED Convex: {os.getenv('CONVEX_URL')}")
-    print("   Note: Vector search fully supported in managed mode\n")
-elif test_mode == "auto":
-    # Auto-detect which deployment is available
-    if has_local_config and not has_managed_config:
-        os.environ["CONVEX_URL"] = os.getenv("LOCAL_CONVEX_URL")
-        print(f"\n🧪 [Python SDK] Auto-detected LOCAL Convex: {os.getenv('CONVEX_URL')}")
-    elif has_managed_config and not has_local_config:
-        os.environ["CONVEX_URL"] = os.getenv("CLOUD_CONVEX_URL")
-        print(f"\n🧪 [Python SDK] Auto-detected MANAGED Convex: {os.getenv('CONVEX_URL')}")
-    elif has_local_config and has_managed_config:
-        # Both present - default to LOCAL (test runner will handle dual testing)
-        os.environ["CONVEX_URL"] = os.getenv("LOCAL_CONVEX_URL")
-        print(f"\n⚠️  [Python SDK] Both configs detected, defaulting to LOCAL: {os.getenv('CONVEX_URL')}")
-        print("   To run BOTH suites (like TypeScript 'npm test'):")
-        print("     make test                              # Using Makefile (recommended)")
-        print("     python scripts/run-python-tests.py     # Using script directly")
-        print("     ./test                                 # Using wrapper script\n")
-
 from cortex import Cortex, CortexConfig
-from tests.helpers import TestCleanup, embeddings_available
-
-# Import session hooks for cleanup (pytest_sessionstart, pytest_sessionfinish)
-from tests.conftest_session import *
+from tests.helpers import TestCleanup
 
 
+def generate_test_id(prefix=""):
+    """Generate unique test ID based on timestamp."""
+    return f"{prefix}{int(time.time() * 1000)}"
+
+
+# Configure asyncio for pytest
 @pytest.fixture(scope="session")
 def event_loop():
-    """Create an instance of the default event loop for the test session."""
+    """Create event loop for async tests"""
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
 
 
-@pytest.fixture
-async def cortex_client() -> AsyncGenerator[Cortex, None]:
-    """
-    Fixture for Cortex client.
-
-    Automatically initializes and cleans up Cortex instance for tests.
-    Uses CONVEX_URL from environment (.env.local is auto-loaded above).
-    """
-    # Get CONVEX_URL from environment (loaded from .env.local)
-    convex_url = os.getenv("CONVEX_URL")
-    
-    if not convex_url:
-        pytest.fail(
-            "CONVEX_URL not set. Make sure .env.local exists in project root "
-            "or set CONVEX_URL environment variable."
-        )
-
-    config = CortexConfig(convex_url=convex_url)
-    client = Cortex(config)
-
-    yield client
-
-    # Cleanup
-    await client.close()
-
-
-@pytest.fixture
-async def cortex_with_graph() -> AsyncGenerator[Cortex, None]:
-    """
-    Fixture for Cortex client with graph integration.
-
-    Only runs if graph database is configured.
-    """
-    convex_url = os.getenv("CONVEX_URL", "http://localhost:3210")
-    neo4j_uri = os.getenv("NEO4J_URI")
-
-    if not neo4j_uri:
-        pytest.skip("NEO4J_URI not configured")
-
-    from cortex import GraphConfig, GraphConnectionConfig
-    from cortex.graph import CypherGraphAdapter, initialize_graph_schema
-
-    # Setup graph adapter
-    graph = CypherGraphAdapter()
-    await graph.connect(
-        GraphConnectionConfig(
-            uri=neo4j_uri,
-            username=os.getenv("NEO4J_USER", "neo4j"),
-            password=os.getenv("NEO4J_PASSWORD", "password"),
-        )
-    )
-
-    # Initialize schema
-    try:
-        await initialize_graph_schema(graph)
-    except:
-        pass  # Schema might already exist
-
-    # Create Cortex with graph
-    config = CortexConfig(
-        convex_url=convex_url, graph=GraphConfig(adapter=graph, auto_sync=False)
-    )
-    client = Cortex(config)
-
-    yield client
-
-    # Cleanup
-    await client.close()
-    await graph.disconnect()
-
-
-@pytest.fixture
-def test_user_id():
-    """Generate unique test user ID."""
-    import time
-    import random
-    return f"test-user-{int(time.time())}-{random.randint(1000, 9999)}"
-
-
-@pytest.fixture
-def test_memory_space_id():
-    """Generate unique test memory space ID."""
-    import time
-    import random
-    return f"test-space-{int(time.time())}-{random.randint(1000, 9999)}"
-
-
-@pytest.fixture
-def test_conversation_id():
-    """Generate unique test conversation ID."""
-    import time
-    import random
-    return f"test-conv-{int(time.time())}-{random.randint(1000, 9999)}"
-
-
-@pytest.fixture
-async def cleanup_helper(cortex_client) -> TestCleanup:
-    """
-    Fixture providing TestCleanup instance for test data cleanup.
-    
-    Usage:
-        async def test_something(cortex_client, cleanup_helper):
-            # ... create test data ...
-            await cleanup_helper.purge_all()
-    """
-    return TestCleanup(cortex_client)
-
-
-@pytest.fixture
-async def direct_convex_client(cortex_client):
-    """
-    Fixture providing direct access to AsyncConvexClient for storage validation.
-    
-    Usage:
-        async def test_something(cortex_client, direct_convex_client):
-            result = await cortex_client.conversations.create(...)
-            stored = await direct_convex_client.query("conversations:get", {...})
-            assert stored is not None
-    """
-    return cortex_client.client
-
-
-@pytest.fixture
-def test_ids():
-    """
-    Fixture providing multiple unique test IDs at once.
-    
-    Returns:
-        Dictionary with various test IDs
-    """
-    import time
-    import random
-    timestamp = int(time.time() * 1000)
-    rand = random.randint(1000, 9999)
-    
+# Test environment variables
+@pytest.fixture(scope="session")
+def test_config():
+    """Test configuration from environment"""
     return {
-        "user_id": f"test-user-{timestamp}-{rand}",
-        "memory_space_id": f"test-space-{timestamp}-{rand}",
-        "conversation_id": f"test-conv-{timestamp}-{rand}",
-        "agent_id": f"test-agent-{timestamp}-{rand}",
+        "convex_url": os.getenv("CONVEX_URL", "https://your-project.convex.cloud"),
+        "neo4j_uri": os.getenv("NEO4J_URI", "bolt://localhost:7687"),
+        "neo4j_user": os.getenv("NEO4J_USER", "neo4j"),
+        "neo4j_password": os.getenv("NEO4J_PASSWORD", "password"),
+        "memgraph_uri": os.getenv("MEMGRAPH_URI", "bolt://localhost:7688"),
+        "memgraph_user": os.getenv("MEMGRAPH_USER", ""),
+        "memgraph_password": os.getenv("MEMGRAPH_PASSWORD", ""),
     }
 
 
-@pytest.fixture
-def embeddings_available_fixture():
+# Cortex client fixture (function scope for test isolation)
+@pytest.fixture(scope="function")
+async def cortex_client(test_config) -> AsyncGenerator[Cortex, None]:
     """
-    Fixture that checks if embeddings can be generated.
+    Cortex client fixture for tests.
     
-    Returns:
-        True if OPENAI_API_KEY is set, False otherwise
+    Creates a fresh Cortex instance for each test function.
     """
+    convex_url = test_config["convex_url"]
+    client = Cortex(CortexConfig(convex_url=convex_url))
+    
+    yield client
+    
+    # Cleanup
+    try:
+        await client.close()
+    except Exception:
+        pass
+
+
+# Test IDs fixture for generating unique test identifiers
+@pytest.fixture(scope="function")
+def test_ids():
+    """Generate unique test IDs for each test."""
+    timestamp = generate_test_id("")
+    return {
+        "memory_space_id": f"test-space-{timestamp}",
+        "agent_id": f"test-agent-{timestamp}",
+        "user_id": f"test-user-{timestamp}",
+        "conversation_id": f"test-conv-{timestamp}",
+        "context_id": f"test-ctx-{timestamp}",
+    }
+
+
+# Individual ID fixtures for convenience
+@pytest.fixture(scope="function")
+def test_memory_space_id():
+    """Generate unique memory space ID."""
+    return f"test-space-{generate_test_id('')}"
+
+
+@pytest.fixture(scope="function")
+def test_user_id():
+    """Generate unique user ID."""
+    return f"test-user-{generate_test_id('')}"
+
+
+@pytest.fixture(scope="function")
+def test_agent_id():
+    """Generate unique agent ID."""
+    return f"test-agent-{generate_test_id('')}"
+
+
+@pytest.fixture(scope="function")
+def test_conversation_id():
+    """Generate unique conversation ID."""
+    return f"test-conv-{generate_test_id('')}"
+
+
+@pytest.fixture(scope="function")
+def test_context_id():
+    """Generate unique context ID."""
+    return f"test-ctx-{generate_test_id('')}"
+
+
+# Cleanup helper fixture
+@pytest.fixture(scope="function")
+async def cleanup_helper(cortex_client):
+    """TestCleanup helper for tests that need cleanup."""
+    return TestCleanup(cortex_client)
+
+
+# Embeddings availability fixture
+@pytest.fixture(scope="session")
+def embeddings_available_fixture():
+    """Check if OpenAI embeddings are available."""
+    from tests.helpers import embeddings_available
     return embeddings_available()
 
+
+# Direct Convex client fixture for low-level testing
+@pytest.fixture(scope="function")
+async def direct_convex_client(test_config) -> AsyncGenerator:
+    """
+    Direct Convex client for low-level testing.
+    
+    Provides access to the underlying ConvexClient for tests that need
+    to verify data storage at the Convex level.
+    """
+    from convex import ConvexClient
+    
+    convex_url = test_config["convex_url"]
+    client = ConvexClient(convex_url)
+    
+    yield client
+    
+    # Cleanup
+    try:
+        client.close()
+    except Exception:
+        pass
+
+
+# Markers for test categories
+def pytest_configure(config):
+    """Register custom markers"""
+    config.addinivalue_line(
+        "markers", "integration: Integration tests requiring live databases"
+    )
+    config.addinivalue_line(
+        "markers", "unit: Unit tests with mocked dependencies"
+    )
+    config.addinivalue_line(
+        "markers", "manual: Manual tests requiring manual verification"
+    )
+    config.addinivalue_line(
+        "markers", "graph: Tests requiring graph database"
+    )
+    config.addinivalue_line(
+        "markers", "slow: Tests that take longer to run"
+    )

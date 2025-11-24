@@ -123,6 +123,14 @@ export class CypherGraphAdapter implements GraphAdapter {
     return this.useElementId ? "elementId" : "id";
   }
 
+  /**
+   * Convert ID to appropriate type for database queries
+   * Neo4j uses string IDs (elementId), Memgraph uses integer IDs (id)
+   */
+  private convertIdForQuery(id: string): string | number {
+    return !this.useElementId ? parseInt(id, 10) : id;
+  }
+
   // ============================================================================
   // Node Operations
   // ============================================================================
@@ -146,7 +154,13 @@ export class CypherGraphAdapter implements GraphAdapter {
         throw new GraphDatabaseError("Failed to create node: no ID returned");
       }
 
-      return result.records[0].get("id");
+      const idValue = result.records[0].get("id");
+      // Convert Neo4j Integer to string if needed
+      return typeof idValue === "object" &&
+        idValue !== null &&
+        "toString" in idValue
+        ? idValue.toString()
+        : String(idValue);
     } catch (error) {
       throw this.handleError(
         error,
@@ -168,7 +182,9 @@ export class CypherGraphAdapter implements GraphAdapter {
         RETURN n, labels(n) as labels
       `;
 
-      const result = await session.run(query, { id });
+      const result = await session.run(query, {
+        id: this.convertIdForQuery(id),
+      });
 
       if (result.records.length === 0) {
         return null;
@@ -203,7 +219,7 @@ export class CypherGraphAdapter implements GraphAdapter {
       `;
 
       const result = await session.run(query, {
-        id,
+        id: this.convertIdForQuery(id),
         properties: this.serializeProperties(properties),
       });
 
@@ -234,7 +250,7 @@ export class CypherGraphAdapter implements GraphAdapter {
           DELETE n
         `;
 
-      await session.run(query, { id });
+      await session.run(query, { id: this.convertIdForQuery(id) });
     } catch (error) {
       throw this.handleError(error, `Failed to delete node ${id}`);
     } finally {
@@ -302,8 +318,8 @@ export class CypherGraphAdapter implements GraphAdapter {
       `;
 
       const result = await session.run(query, {
-        fromId: edge.from,
-        toId: edge.to,
+        fromId: this.convertIdForQuery(edge.from),
+        toId: this.convertIdForQuery(edge.to),
         properties: this.serializeProperties(edge.properties || {}),
       });
 
@@ -313,7 +329,13 @@ export class CypherGraphAdapter implements GraphAdapter {
         );
       }
 
-      return result.records[0].get("id");
+      const idValue = result.records[0].get("id");
+      // Convert Neo4j Integer to string if needed
+      return typeof idValue === "object" &&
+        idValue !== null &&
+        "toString" in idValue
+        ? idValue.toString()
+        : String(idValue);
     } catch (error) {
       throw this.handleError(
         error,
@@ -335,7 +357,7 @@ export class CypherGraphAdapter implements GraphAdapter {
         DELETE r
       `;
 
-      await session.run(query, { id });
+      await session.run(query, { id: this.convertIdForQuery(id) });
     } catch (error) {
       throw this.handleError(error, `Failed to delete edge ${id}`);
     } finally {
@@ -479,7 +501,9 @@ export class CypherGraphAdapter implements GraphAdapter {
         MATCH path = (start)${relPattern}(connected)
       `;
 
-      const params: Record<string, any> = { startId: config.startId };
+      const params: Record<string, any> = {
+        startId: this.convertIdForQuery(config.startId), // FIX: Convert ID for Memgraph
+      };
 
       if (config.filter) {
         query += ` WHERE ${config.filter}`;
@@ -632,7 +656,7 @@ export class CypherGraphAdapter implements GraphAdapter {
             await tx.run(
               `MATCH (n) WHERE ${idFunc}(n) = $id SET n += $properties`,
               {
-                id: data.id,
+                id: this.convertIdForQuery(data.id),
                 properties: this.serializeProperties(data.properties),
               },
             );
@@ -643,7 +667,7 @@ export class CypherGraphAdapter implements GraphAdapter {
             const data = op.data as { id: string };
             const idFunc = this.getIdFunction();
             await tx.run(`MATCH (n) WHERE ${idFunc}(n) = $id DETACH DELETE n`, {
-              id: data.id,
+              id: this.convertIdForQuery(data.id),
             });
             break;
           }
@@ -659,8 +683,8 @@ export class CypherGraphAdapter implements GraphAdapter {
               RETURN ${idFunc}(r) as id
             `,
               {
-                fromId: edge.from,
-                toId: edge.to,
+                fromId: this.convertIdForQuery(edge.from),
+                toId: this.convertIdForQuery(edge.to),
                 properties: this.serializeProperties(edge.properties || {}),
               },
             );
@@ -671,7 +695,7 @@ export class CypherGraphAdapter implements GraphAdapter {
             const data = op.data as { id: string };
             const idFunc = this.getIdFunction();
             await tx.run(`MATCH ()-[r]->() WHERE ${idFunc}(r) = $id DELETE r`, {
-              id: data.id,
+              id: this.convertIdForQuery(data.id),
             });
             break;
           }

@@ -331,12 +331,12 @@ async function intelligentRetrieval(memorySpaceId: string, query: string) {
 
 ### Scenario: 1000 Conversation Exchanges
 
-| Approach                       | Tokens per Request | Cost per Request | Scalability                      |
-| ------------------------------ | ------------------ | ---------------- | -------------------------------- |
-| **Traditional (Accumulation)** | 50,000 tokens      | $1.50 (GPT-4)    | ❌ Hits limits at ~2K exchanges  |
-| **Summarization**              | 10,000 tokens      | $0.30            | ⚠️ Loses nuance, still expensive |
-| **Infinite Context (Facts)**   | 80 tokens          | $0.0024          | ✅ Scales to 1M+ exchanges       |
-| **Infinite Context (Hybrid)**  | 405 tokens         | $0.012           | ✅ Scales + full fidelity        |
+| Approach                       | Tokens per Request | Cost per Request   | Scalability                      |
+| ------------------------------ | ------------------ | ------------------ | -------------------------------- |
+| **Traditional (Accumulation)** | 50,000 tokens      | $1.50 (GPT-5-nano) | ❌ Hits limits at ~2K exchanges  |
+| **Summarization**              | 10,000 tokens      | $0.30              | ⚠️ Loses nuance, still expensive |
+| **Infinite Context (Facts)**   | 80 tokens          | $0.0024            | ✅ Scales to 1M+ exchanges       |
+| **Infinite Context (Hybrid)**  | 405 tokens         | $0.012             | ✅ Scales + full fidelity        |
 
 **Cost Reduction:** 99% vs traditional, 97% vs summarization
 
@@ -344,12 +344,12 @@ async function intelligentRetrieval(memorySpaceId: string, query: string) {
 
 ### Model Comparison with Infinite Context
 
-| Model                | Context Window | Cost per 1M Tokens | With Infinite Context                        |
-| -------------------- | -------------- | ------------------ | -------------------------------------------- |
-| GPT-4o-mini (legacy) | 16K            | $0.50              | ✅ Effectively unlimited (via retrieval)     |
-| GPT-5                | 1M             | $5                 | ✅ Retrieval still better (cheaper + faster) |
-| Claude-4.5-sonnet    | 200K           | $3                 | ✅ Retrieval is faster than large context    |
-| o3-mini              | 128K           | $2                 | ✅ Can use smaller models effectively        |
+| Model               | Context Window | Cost per 1M Tokens | With Infinite Context                        |
+| ------------------- | -------------- | ------------------ | -------------------------------------------- |
+| gpt-5-nano (legacy) | 16K            | $0.50              | ✅ Effectively unlimited (via retrieval)     |
+| GPT-5               | 1M             | $5                 | ✅ Retrieval still better (cheaper + faster) |
+| Claude-4.5-sonnet   | 200K           | $3                 | ✅ Retrieval is faster than large context    |
+| o3-mini             | 128K           | $2                 | ✅ Can use smaller models effectively        |
 
 **Key Insight:** Even with 1M+ context window models, retrieval-based context is:
 
@@ -528,7 +528,7 @@ if (context.length < 15) {
 ```typescript
 // Adjust retrieval based on model's context window
 const MODEL_CONTEXT_LIMITS = {
-  "gpt-4o-mini": 16000, // Legacy smaller model
+  "gpt-5-nano": 16000, // Legacy smaller model
   "gpt-5": 1000000, // Current SOTA
   "claude-4.5-sonnet": 200000,
   "o3-mini": 128000,
@@ -678,7 +678,7 @@ Input: 10,000 user conversations/month, 50 exchanges each
 Traditional Approach:
 - Tokens per conversation: 50 exchanges × 50 tokens = 2,500 tokens
 - Total tokens: 10,000 × 2,500 = 25M tokens/month
-- Cost (GPT-4): 25M × $0.03/1K = $750/month
+- Cost (GPT-5-nano): 25M × $0.03/1K = $750/month
 - Problem: Hits context limits at ~200 exchanges
 
 With Cortex Infinite Context:
@@ -692,7 +692,7 @@ Actually:
 - Each exchange: 1 LLM call with 400 token context
 - Exchanges: 10,000 conversations × 50 exchanges = 500,000 exchanges
 - Token usage: 500,000 × 400 = 200M tokens
-- Cost (GPT-4): 200M × $0.03/1K = $6,000/month
+- Cost (GPT-5-nano): 200M × $0.03/1K = $6,000/month
 
 Hmm, that doesn't look cheaper. Let me reconsider...
 

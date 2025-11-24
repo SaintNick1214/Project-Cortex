@@ -35,4 +35,8 @@ export default {
     ],
   },
   transformIgnorePatterns: ["node_modules/(?!convex)"],
+  reporters: [
+    "default",
+    "<rootDir>/tests/test-timing-reporter.cjs",
+  ],
 };
