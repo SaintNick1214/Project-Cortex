@@ -181,6 +181,7 @@ class VectorAPI:
                 "tags": opts.tags,
                 "sourceType": opts.source_type,
                 "minImportance": opts.min_importance,
+                "minScore": opts.min_score,  # FIX: Forward min_score parameter
                 "limit": opts.limit,
             }),
         )

@@ -75,7 +75,7 @@ const cortexMemory = createCortexMemory({
   enableFactExtraction: true,
   extractFacts: async (userMsg, agentResp) => {
     const { object } = await generateObject({
-      model: openai("gpt-4"),
+      model: openai("gpt-5-nano"),
       schema: factSchema,
       prompt: `Extract facts from: "${userMsg}" and "${agentResp}"`,
     });

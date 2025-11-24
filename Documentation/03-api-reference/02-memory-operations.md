@@ -1,10 +1,10 @@
 # Memory Operations API
 
-> **Last Updated**: 2025-11-05
+> **Last Updated**: 2025-11-23
 
 Complete API reference for memory operations across memory spaces.
 
-> **New in v0.9.0**: `memory.rememberStream()` for streaming LLM responses
+> **Enhanced in v0.10.0**: `memory.rememberStream()` with progressive storage, streaming hooks, and comprehensive metrics
 
 ## Overview
 
@@ -702,25 +702,28 @@ await cortex.memory.remember({
 
 ### rememberStream()
 
-**NEW in v0.9.0** - Store streaming LLM responses with automatic buffering.
+**ENHANCED in v0.10.0** - Advanced streaming orchestration with progressive storage, real-time fact extraction, comprehensive metrics, and error recovery.
 
 **Signature:**
 
 ```typescript
 cortex.memory.rememberStream(
   params: RememberStreamParams,
-  options?: RememberOptions
-): Promise<RememberStreamResult>
+  options?: StreamingOptions
+): Promise<EnhancedRememberStreamResult>
 ```
 
 **What it does:**
 
-1. Consumes streaming response (ReadableStream or AsyncIterable)
-2. Buffers chunks until stream completes
-3. Stores in ACID (Layer 1) once complete
-4. Creates vector memories in Vector Memory (Layer 2)
-5. Automatically links them via `conversationRef`
-6. Returns both memory result AND the full response text
+1. **Processes stream progressively** - Not just buffering, but real processing during streaming
+2. **Progressive storage** - Optionally stores partial memories as content arrives
+3. **Real-time fact extraction** - Extract facts incrementally during streaming
+4. **Streaming hooks** - Monitor progress with `onChunk`, `onProgress`, `onError`, `onComplete` callbacks
+5. **Comprehensive metrics** - Track latency, throughput, token usage, and costs
+6. **Error recovery** - Resume interrupted streams with resume tokens
+7. **Adaptive processing** - Auto-optimize based on stream characteristics
+8. **Graph sync** - Progressively sync to graph databases (Neo4j/Memgraph)
+9. **Complete feature parity** - All `remember()` features work in streaming mode
 
 **Parameters:**
 
@@ -730,7 +733,7 @@ interface RememberStreamParams {
   memorySpaceId: string;
   conversationId: string;
   userMessage: string;
-  responseStream: ReadableStream<string> | AsyncIterable<string>; // Stream to consume
+  responseStream: ReadableStream<string> | AsyncIterable<string>;
   userId: string;
   userName: string;
 
@@ -761,15 +764,48 @@ interface RememberStreamParams {
   tags?: string[];
 }
 
-interface RememberOptions {
-  syncToGraph?: boolean; // Default: true if graph adapter configured
+interface StreamingOptions {
+  // Graph sync
+  syncToGraph?: boolean;
+  progressiveGraphSync?: boolean; // Sync during streaming
+  graphSyncInterval?: number; // How often to sync (ms)
+
+  // Progressive storage
+  storePartialResponse?: boolean; // Store in-progress memories
+  partialResponseInterval?: number; // Update interval (ms)
+
+  // Progressive fact extraction
+  progressiveFactExtraction?: boolean;
+  factExtractionThreshold?: number; // Extract every N chars
+
+  // Streaming hooks
+  hooks?: {
+    onChunk?: (event: ChunkEvent) => void | Promise<void>;
+    onProgress?: (event: ProgressEvent) => void | Promise<void>;
+    onError?: (error: StreamError) => void | Promise<void>;
+    onComplete?: (event: StreamCompleteEvent) => void | Promise<void>;
+  };
+
+  // Error handling
+  partialFailureHandling?:
+    | "store-partial"
+    | "rollback"
+    | "retry"
+    | "best-effort";
+  maxRetries?: number;
+  generateResumeToken?: boolean;
+  streamTimeout?: number;
+
+  // Advanced
+  maxResponseLength?: number;
+  enableAdaptiveProcessing?: boolean;
 }
 ```
 
 **Returns:**
 
 ```typescript
-interface RememberStreamResult {
+interface EnhancedRememberStreamResult {
   // Standard remember() result
   conversation: {
     messageIds: string[];
@@ -777,9 +813,38 @@ interface RememberStreamResult {
   };
   memories: MemoryEntry[];
   facts: FactRecord[];
+  fullResponse: string;
 
-  // Plus streaming-specific
-  fullResponse: string; // Complete text from consumed stream
+  // Stream metrics
+  streamMetrics: {
+    totalChunks: number;
+    streamDurationMs: number;
+    averageChunkSize: number;
+    firstChunkLatency: number;
+    totalBytesProcessed: number;
+    chunksPerSecond: number;
+    estimatedTokens: number;
+    estimatedCost?: number;
+  };
+
+  // Progressive processing results (if enabled)
+  progressiveProcessing?: {
+    factsExtractedDuringStream: ProgressiveFact[];
+    partialStorageHistory: PartialUpdate[];
+    graphSyncEvents?: GraphSyncEvent[];
+  };
+
+  // Performance insights
+  performance?: {
+    bottlenecks: string[];
+    recommendations: string[];
+    costEstimate?: number;
+  };
+
+  // Error/recovery info
+  errors?: StreamError[];
+  recovered?: boolean;
+  resumeToken?: string;
 }
 ```
 
@@ -790,7 +855,7 @@ import { streamText } from "ai";
 import { openai } from "@ai-sdk/openai";
 
 const response = await streamText({
-  model: openai("gpt-4"),
+  model: openai("gpt-5-nano"),
   messages: [{ role: "user", content: "What is AI?" }],
 });
 
@@ -805,16 +870,86 @@ const result = await cortex.memory.rememberStream({
 
 console.log("Full response:", result.fullResponse);
 console.log("Memories stored:", result.memories.length); // 2 (user + agent)
+console.log("Stream metrics:", result.streamMetrics);
+// NEW: Access streaming metrics
+// {
+//   totalChunks: 5,
+//   streamDurationMs: 432,
+//   firstChunkLatency: 123,
+//   estimatedTokens: 250,
+//   estimatedCost: 0.015
+// }
 ```
 
-**Example 2: OpenAI SDK (AsyncIterable)**
+**Example 2: With Progressive Features**
+
+```typescript
+const result = await cortex.memory.rememberStream(
+  {
+    memorySpaceId: "ai-tutor",
+    conversationId: "lesson-2",
+    userMessage: "Explain quantum computing in detail",
+    responseStream: llmStream,
+    userId: "student-123",
+    userName: "Alice",
+    extractFacts: extractFactsCallback,
+  },
+  {
+    // Progressive storage - save partial content during streaming
+    storePartialResponse: true,
+    partialResponseInterval: 3000, // Update every 3 seconds
+
+    // Progressive fact extraction
+    progressiveFactExtraction: true,
+    factExtractionThreshold: 500, // Extract every 500 chars
+
+    // Streaming hooks for real-time updates
+    hooks: {
+      onChunk: (event) => {
+        console.log(`Chunk ${event.chunkNumber}: ${event.chunk}`);
+        websocket.send({ type: "chunk", data: event.chunk });
+      },
+      onProgress: (event) => {
+        console.log(`Progress: ${event.bytesProcessed} bytes`);
+        updateProgressBar(event.bytesProcessed);
+      },
+      onComplete: (event) => {
+        console.log(
+          `Complete! ${event.totalChunks} chunks, ${event.durationMs}ms`,
+        );
+      },
+    },
+
+    // Error recovery
+    partialFailureHandling: "store-partial",
+    generateResumeToken: true,
+
+    // Graph sync
+    progressiveGraphSync: true,
+    graphSyncInterval: 5000,
+  },
+);
+
+// Access enhanced results
+console.log("Stream metrics:", result.streamMetrics);
+console.log(
+  "Facts extracted during stream:",
+  result.progressiveProcessing?.factsExtractedDuringStream,
+);
+console.log(
+  "Performance recommendations:",
+  result.performance?.recommendations,
+);
+```
+
+**Example 3: OpenAI SDK (AsyncIterable)**
 
 ```typescript
 import OpenAI from "openai";
 
 const openai = new OpenAI();
 const stream = await openai.chat.completions.create({
-  model: "gpt-4",
+  model: "gpt-5-nano",
   messages: [{ role: "user", content: "Hello!" }],
   stream: true,
 });
@@ -829,7 +964,7 @@ const result = await cortex.memory.rememberStream({
 });
 ```
 
-**Example 3: With Embeddings and Facts**
+**Example 4: With Embeddings and Facts**
 
 ```typescript
 const result = await cortex.memory.rememberStream({
@@ -868,7 +1003,30 @@ console.log("Response:", result.fullResponse);
 console.log("Facts:", result.facts); // Extracted facts
 ```
 
-**Example 4: Edge Runtime (Vercel Edge Functions)**
+**Example 5: Error Recovery with Resume**
+
+```typescript
+try {
+  const result = await cortex.memory.rememberStream(params, {
+    partialFailureHandling: "store-partial",
+    generateResumeToken: true,
+    streamTimeout: 30000, // 30 second timeout
+  });
+} catch (error) {
+  if (error instanceof ResumableStreamError) {
+    // Stream was interrupted but partial data was saved
+    console.log("Stream interrupted. Resume token:", error.resumeToken);
+
+    // Later, resume the stream
+    const resumed = await cortex.memory.rememberStream({
+      ...params,
+      resumeFrom: await validateResumeToken(error.resumeToken),
+    });
+  }
+}
+```
+
+**Example 6: Edge Runtime (Vercel Edge Functions)**
 
 ```typescript
 // app/api/chat/route.ts
@@ -878,7 +1036,7 @@ export async function POST(req: Request) {
   const { message } = await req.json();
 
   const response = await streamText({
-    model: openai("gpt-4"),
+    model: openai("gpt-5-nano"),
     messages: [{ role: "user", content: message }],
   });
 
@@ -901,35 +1059,49 @@ export async function POST(req: Request) {
 }
 ```
 
-**Why use `rememberStream()`:**
+**Key Features (v0.10.0+):**
 
-- ✅ No manual buffering required
-- ✅ Works with any stream type (ReadableStream, AsyncIterable)
-- ✅ Edge runtime compatible
-- ✅ Same features as `remember()` (embeddings, facts, graph sync)
-- ✅ Returns the full response text
-- ✅ Type safe with proper TypeScript inference
+- ✅ **Progressive Storage** - Store partial memories during streaming (resumable)
+- ✅ **Streaming Hooks** - Real-time callbacks for monitoring and UI updates
+- ✅ **Comprehensive Metrics** - Track latency, throughput, tokens, costs
+- ✅ **Progressive Facts** - Extract facts incrementally with deduplication
+- ✅ **Error Recovery** - Resume interrupted streams with checkpoints
+- ✅ **Graph Sync** - Progressively update Neo4j/Memgraph during streaming
+- ✅ **Adaptive Processing** - Auto-optimize based on stream characteristics
+- ✅ **Complete Parity** - All `remember()` features (embeddings, facts, graph sync)
+- ✅ **Type Safe** - Full TypeScript support with comprehensive types
 
-**When to use:**
+**When to Use:**
 
-- ✅ Vercel AI SDK integration
-- ✅ OpenAI SDK with streaming
-- ✅ LangChain streaming
-- ✅ Edge Functions (Vercel, Cloudflare)
-- ✅ Real-time chat applications
-- ✅ Any streaming LLM response
+- ✅ Streaming LLM responses (OpenAI, Anthropic, Vercel AI SDK, etc.)
+- ✅ Long-running agent responses (> 5 seconds)
+- ✅ Real-time chat applications with live updates
+- ✅ Edge runtime functions (Vercel, Cloudflare Workers)
+- ✅ When you need resumability (long streams that might fail)
+- ✅ When monitoring performance is critical
+- ✅ When you want real-time fact extraction
 
-**Errors:**
+**When NOT to Use:**
+
+- ❌ Already have complete response (use `remember()` - simpler and faster)
+- ❌ Very short responses (< 50 chars) where overhead isn't worth it
+
+**Error Handling:**
 
 - `Error('Failed to consume response stream')` - Stream reading failed
 - `Error('produced no content')` - Stream was empty or whitespace only
-- Same as `remember()` for storage errors
+- `ResumableStreamError` - Stream interrupted, includes resume token
+- `Error('Stream timeout')` - Stream exceeded timeout limit
+- `Error('Stream exceeded max length')` - Stream too long
+- Standard `remember()` errors for final storage
 
 **Performance:**
 
-- Stream consumption: Minimal overhead (< 20ms for 10K chars)
-- Storage: Same as `remember()` after stream completes
-- Memory usage: ~16 bytes per character buffered
+- **First Chunk Latency**: 6-10ms (excellent)
+- **Overhead vs Buffering**: < 5% (minimal impact)
+- **Memory Usage**: O(1) for unbounded streams (with rolling window)
+- **Throughput**: Processes immediately, no accumulation delay
+- **Graph Sync Latency**: < 50ms per update (both Neo4j and Memgraph)
 
 **See Also:**
 

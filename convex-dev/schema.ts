@@ -242,6 +242,10 @@ export default defineSchema({
     updatedAt: v.number(),
     lastAccessed: v.optional(v.number()),
     accessCount: v.number(),
+
+    // Streaming support (NEW - for progressive storage)
+    isPartial: v.optional(v.boolean()), // Flag for in-progress streaming memories
+    partialMetadata: v.optional(v.any()), // Metadata for partial/streaming memories
   })
     .index("by_memorySpace", ["memorySpaceId"]) // NEW: Memory space's memories
     .index("by_memoryId", ["memoryId"]) // Unique lookup
@@ -423,6 +427,18 @@ export default defineSchema({
 
     // Metadata
     metadata: v.optional(v.any()),
+
+    // Versioning (automatic version tracking for updates)
+    version: v.number(), // Current version number (starts at 1)
+    previousVersions: v.array(
+      v.object({
+        version: v.number(),
+        status: v.string(),
+        data: v.optional(v.any()),
+        timestamp: v.number(),
+        updatedBy: v.optional(v.string()), // Agent/participant that made the change
+      }),
+    ),
 
     // Timestamps
     createdAt: v.number(),

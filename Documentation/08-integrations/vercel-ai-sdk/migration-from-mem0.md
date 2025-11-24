@@ -34,7 +34,7 @@ const mem0 = createMem0({
 });
 
 const result = await streamText({
-  model: mem0("gpt-4"),
+  model: mem0("gpt-5-nano"),
   messages,
 });
 ```
@@ -52,7 +52,7 @@ const cortexMemory = createCortexMemory({
 });
 
 const result = await streamText({
-  model: cortexMemory(openai("gpt-4")),
+  model: cortexMemory(openai("gpt-5-nano")),
   messages,
 });
 ```
@@ -113,13 +113,13 @@ const cortexMemory = createCortexMemory({
 ```typescript
 // Before
 const result = await streamText({
-  model: mem0("gpt-4"),
+  model: mem0("gpt-5-nano"),
   messages,
 });
 
 // After
 const result = await streamText({
-  model: cortexMemory(openai("gpt-4")),
+  model: cortexMemory(openai("gpt-5-nano")),
   messages,
 });
 ```

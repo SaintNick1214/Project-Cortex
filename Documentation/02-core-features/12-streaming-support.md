@@ -28,7 +28,7 @@ Modern LLMs deliver responses incrementally for better UX. Without native stream
 // ❌ Manual buffering required
 let fullResponse = "";
 const stream = await openai.chat.completions.create({
-  model: "gpt-4",
+  model: "gpt-5-nano",
   messages: [{ role: "user", content: "Hello!" }],
   stream: true,
 });
@@ -85,7 +85,7 @@ import { streamText } from "ai";
 import { openai } from "@ai-sdk/openai";
 
 const response = await streamText({
-  model: openai("gpt-4"),
+  model: openai("gpt-5-nano"),
   messages: [{ role: "user", content: "What is AI?" }],
 });
 
@@ -112,7 +112,7 @@ import OpenAI from "openai";
 
 const openai = new OpenAI();
 const stream = await openai.chat.completions.create({
-  model: "gpt-4",
+  model: "gpt-5-nano",
   messages: [{ role: "user", content: "Hello!" }],
   stream: true,
 });
@@ -244,7 +244,7 @@ const cortex = new Cortex({
 
 // Generate streaming response
 const response = await streamText({
-  model: openai("gpt-4"),
+  model: openai("gpt-5-nano"),
   messages: [{ role: "user", content: "What is the meaning of life?" }],
 });
 
@@ -335,7 +335,7 @@ export async function POST(req: Request) {
 
   // Generate streaming response
   const response = await streamText({
-    model: openai("gpt-4"),
+    model: openai("gpt-5-nano"),
     messages: [{ role: "user", content: message }],
   });
 
@@ -685,7 +685,7 @@ describe("Streaming Memory", () => {
 ```typescript
 it("should work with Vercel AI SDK", async () => {
   const response = await streamText({
-    model: openai("gpt-4"),
+    model: openai("gpt-5-nano"),
     messages: [{ role: "user", content: "Test" }],
   });
 

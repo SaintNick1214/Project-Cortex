@@ -587,4 +587,231 @@ describe("Memory Spaces Registry API", () => {
       expect(deleted).toBeNull();
     });
   });
+
+  describe("New API Methods", () => {
+    describe("search()", () => {
+      beforeEach(async () => {
+        // Clean up any existing test memory spaces first
+        try {
+          await cortex.memorySpaces.delete("engineering-team");
+        } catch (_error) {
+          // Ignore if doesn't exist
+        }
+        try {
+          await cortex.memorySpaces.delete("design-team");
+        } catch (_error) {
+          // Ignore if doesn't exist
+        }
+        try {
+          await cortex.memorySpaces.delete("user-alice-personal");
+        } catch (_error) {
+          // Ignore if doesn't exist
+        }
+
+        // Now register fresh test spaces
+        await cortex.memorySpaces.register({
+          memorySpaceId: "engineering-team",
+          name: "Engineering Team Workspace",
+          type: "team",
+          metadata: { department: "engineering", project: "apollo" },
+        });
+
+        await cortex.memorySpaces.register({
+          memorySpaceId: "design-team",
+          name: "Design Team Workspace",
+          type: "team",
+          metadata: { department: "design" },
+        });
+
+        await cortex.memorySpaces.register({
+          memorySpaceId: "user-alice-personal",
+          name: "Alice Personal Space",
+          type: "personal",
+          metadata: { owner: "alice" },
+        });
+      });
+
+      afterEach(async () => {
+        // Clean up test memory spaces
+        try {
+          await cortex.memorySpaces.delete("engineering-team");
+        } catch (_error) {
+          // Ignore if doesn't exist
+        }
+        try {
+          await cortex.memorySpaces.delete("design-team");
+        } catch (_error) {
+          // Ignore if doesn't exist
+        }
+        try {
+          await cortex.memorySpaces.delete("user-alice-personal");
+        } catch (_error) {
+          // Ignore if doesn't exist
+        }
+      });
+
+      it("searches by name", async () => {
+        const results = await cortex.memorySpaces.search("Engineering");
+
+        expect(results.length).toBeGreaterThan(0);
+        expect(results.some((s) => s.name?.includes("Engineering"))).toBe(true);
+      });
+
+      it("searches by memorySpaceId", async () => {
+        const results = await cortex.memorySpaces.search("design");
+
+        expect(results.length).toBeGreaterThan(0);
+        expect(results.some((s) => s.memorySpaceId.includes("design"))).toBe(
+          true,
+        );
+      });
+
+      it("searches by metadata", async () => {
+        const results = await cortex.memorySpaces.search("apollo");
+
+        expect(results.length).toBeGreaterThan(0);
+        expect(results.some((s) => s.metadata?.project === "apollo")).toBe(
+          true,
+        );
+      });
+
+      it("filters by type", async () => {
+        const results = await cortex.memorySpaces.search("Team", {
+          type: "team",
+        });
+
+        // Should find at least our 2 test spaces
+        expect(results.length).toBeGreaterThanOrEqual(2);
+
+        // All results should be team type
+        for (const space of results) {
+          expect(space.type).toBe("team");
+        }
+
+        // Verify our test spaces are included
+        const spaceIds = results.map((s) => s.memorySpaceId);
+        expect(spaceIds).toContain("engineering-team");
+        expect(spaceIds).toContain("design-team");
+      });
+
+      it("filters by status", async () => {
+        await cortex.memorySpaces.archive("design-team");
+
+        const activeResults = await cortex.memorySpaces.search("Team", {
+          status: "active",
+        });
+        const archivedResults = await cortex.memorySpaces.search("Team", {
+          status: "archived",
+        });
+
+        expect(
+          activeResults.some((s) => s.memorySpaceId === "design-team"),
+        ).toBe(false);
+        expect(
+          archivedResults.some((s) => s.memorySpaceId === "design-team"),
+        ).toBe(true);
+      });
+
+      it("limits results", async () => {
+        const results = await cortex.memorySpaces.search("", { limit: 2 });
+
+        expect(results.length).toBeLessThanOrEqual(2);
+      });
+    });
+
+    describe("updateParticipants()", () => {
+      beforeEach(async () => {
+        // Cleanup any existing participant-test space
+        try {
+          await cortex.memorySpaces.delete("participant-test");
+        } catch (_error) {
+          // Doesn't exist, continue
+        }
+      });
+
+      it("adds participants", async () => {
+        await cortex.memorySpaces.register({
+          memorySpaceId: "participant-test",
+          type: "team",
+          participants: [{ id: "user-1", type: "user" }] as any,
+        });
+
+        const now = Date.now();
+        await cortex.memorySpaces.updateParticipants("participant-test", {
+          add: [
+            { id: "agent-1", type: "agent", joinedAt: now },
+            { id: "tool-1", type: "tool", joinedAt: now },
+          ],
+        });
+
+        const updated = await cortex.memorySpaces.get("participant-test");
+
+        expect(updated?.participants).toHaveLength(3);
+        expect(updated?.participants.some((p) => p.id === "agent-1")).toBe(
+          true,
+        );
+        expect(updated?.participants.some((p) => p.id === "tool-1")).toBe(true);
+      });
+
+      it("removes participants", async () => {
+        await cortex.memorySpaces.register({
+          memorySpaceId: "participant-test",
+          type: "team",
+          participants: [
+            { id: "user-1", type: "user" },
+            { id: "agent-1", type: "agent" },
+            { id: "tool-1", type: "tool" },
+          ] as any,
+        });
+
+        await cortex.memorySpaces.updateParticipants("participant-test", {
+          remove: ["agent-1", "tool-1"],
+        });
+
+        const updated = await cortex.memorySpaces.get("participant-test");
+
+        expect(updated?.participants).toHaveLength(1);
+        expect(updated?.participants[0].id).toBe("user-1");
+      });
+
+      it("adds and removes in one call", async () => {
+        await cortex.memorySpaces.register({
+          memorySpaceId: "participant-test",
+          type: "team",
+          participants: [{ id: "old-agent", type: "agent" }] as any,
+        });
+
+        const now = Date.now();
+        await cortex.memorySpaces.updateParticipants("participant-test", {
+          add: [{ id: "new-agent", type: "agent", joinedAt: now }],
+          remove: ["old-agent"],
+        });
+
+        const updated = await cortex.memorySpaces.get("participant-test");
+
+        expect(updated?.participants).toHaveLength(1);
+        expect(updated?.participants[0].id).toBe("new-agent");
+      });
+
+      it("prevents duplicate participants", async () => {
+        await cortex.memorySpaces.register({
+          memorySpaceId: "participant-test",
+          type: "team",
+          participants: [{ id: "agent-1", type: "agent" }] as any,
+        });
+
+        const now = Date.now();
+        await cortex.memorySpaces.updateParticipants("participant-test", {
+          add: [
+            { id: "agent-1", type: "agent", joinedAt: now }, // Duplicate
+            { id: "agent-2", type: "agent", joinedAt: now },
+          ],
+        });
+
+        const updated = await cortex.memorySpaces.get("participant-test");
+
+        expect(updated?.participants).toHaveLength(2);
+      });
+    });
+  });
 });

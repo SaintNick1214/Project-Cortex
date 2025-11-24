@@ -120,6 +120,7 @@ export async function copyTemplate(
   templateName: string,
   targetPath: string,
   projectName: string,
+  convexVersion?: string,
 ): Promise<void> {
   // When running from npm/npx, templates are relative to the package root
   // Try multiple possible locations
@@ -200,9 +201,25 @@ export async function copyTemplate(
   // Replace template variables in package.json
   const packageJsonPath = path.join(targetPath, "package.json");
   try {
-    let packageJson = await fs.readFile(packageJsonPath, "utf-8");
-    packageJson = packageJson.replace(/\{\{PROJECT_NAME\}\}/g, projectName);
-    await fs.writeFile(packageJsonPath, packageJson);
+    const packageJsonContent = await fs.readFile(packageJsonPath, "utf-8");
+    const packageJson = JSON.parse(packageJsonContent);
+
+    // Replace project name
+    packageJson.name = projectName;
+
+    // Update Convex version if provided
+    if (convexVersion && packageJson.dependencies?.convex) {
+      packageJson.dependencies.convex = convexVersion;
+      console.log(
+        pc.dim(`   Using Convex ${convexVersion} (from SDK metadata)`),
+      );
+    }
+
+    // Write back with proper formatting
+    await fs.writeFile(
+      packageJsonPath,
+      JSON.stringify(packageJson, null, 2) + "\n",
+    );
   } catch (error: any) {
     // File doesn't exist or can't be read - skip template replacement
     if (error.code !== "ENOENT") {

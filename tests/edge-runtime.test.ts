@@ -224,7 +224,7 @@ describe("Edge Runtime Compatibility", () => {
           userId: "error-stream-user",
           userName: "ErrorUser",
         }),
-      ).rejects.toThrow(/Failed to consume response stream/);
+      ).rejects.toThrow(/Edge stream error/);
     });
   });
 

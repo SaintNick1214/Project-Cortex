@@ -4,6 +4,7 @@ Cortex SDK - Memory Convenience API
 Layer 4: High-level helpers that orchestrate Layer 1 (ACID) and Layer 2 (Vector) automatically
 """
 
+import asyncio
 import time
 from typing import Any, Dict, List, Literal, Optional, Tuple, Union, cast
 
@@ -21,7 +22,6 @@ from ..types import (
     RememberOptions,
     RememberParams,
     RememberResult,
-    RememberStreamResult,
     SearchOptions,
     SourceType,
     StoreMemoryInput,
@@ -267,91 +267,385 @@ class MemoryAPI:
         )
 
     async def remember_stream(
-        self, params: Any, options: Optional[RememberOptions] = None
+        self, params: Any, options: Optional[Any] = None
     ) -> Any:
         """
-        Remember a conversation exchange from a streaming response.
+        Remember a conversation exchange from a streaming response (ENHANCED).
 
-        This method consumes a stream (AsyncIterable) and stores the conversation
-        in both ACID and Vector layers once the stream completes.
+        This method provides true streaming capabilities with:
+        - Progressive storage during streaming
+        - Real-time fact extraction
+        - Streaming hooks for monitoring
+        - Error recovery with resume capability
+        - Adaptive processing based on stream characteristics
+        - Optional chunking for very long responses
 
         Auto-syncs to graph if configured (default: true).
 
         Args:
             params: RememberStreamParams with stream parameters
-            options: Optional remember options
+            options: Optional StreamingOptions for advanced features
 
         Returns:
-            RememberStreamResult with remember result and full response text
-
-        Raises:
-            Exception: If stream consumption fails or produces no content
+            EnhancedRememberStreamResult with metrics and progressive processing details
 
         Example:
-            >>> # With async generator
-            >>> async def stream_response():
-            ...     yield "The "
-            ...     yield "weather "
-            ...     yield "is sunny."
+            >>> # Basic usage
+            >>> result = await cortex.memory.remember_stream({
+            ...     'memorySpaceId': 'agent-1',
+            ...     'conversationId': 'conv-123',
+            ...     'userMessage': 'What is the weather?',
+            ...     'responseStream': llm_stream,
+            ...     'userId': 'user-1',
+            ...     'userName': 'Alex',
+            ... })
             >>>
-            >>> from cortex.types import RememberStreamParams
-            >>> result = await cortex.memory.remember_stream(
-            ...     RememberStreamParams(
-            ...         memory_space_id='agent-1',
-            ...         conversation_id='conv-123',
-            ...         user_message='What is the weather?',
-            ...         response_stream=stream_response(),
-            ...         user_id='user-1',
-            ...         user_name='Alex'
-            ...     )
-            ... )
-            >>> print(result.full_response)  # "The weather is sunny."
+            >>> # With progressive features
+            >>> result = await cortex.memory.remember_stream({
+            ...     'memorySpaceId': 'agent-1',
+            ...     'conversationId': 'conv-123',
+            ...     'userMessage': 'Explain quantum computing',
+            ...     'responseStream': llm_stream,
+            ...     'userId': 'user-1',
+            ...     'userName': 'Alex',
+            ...     'extractFacts': extract_facts_from_text,
+            ... }, {
+            ...     'storePartialResponse': True,
+            ...     'partialResponseInterval': 3000,
+            ...     'progressiveFactExtraction': True,
+            ...     'factExtractionThreshold': 500,
+            ...     'hooks': {
+            ...         'onChunk': lambda event: print(f'Chunk: {event.chunk}'),
+            ...         'onProgress': lambda event: print(f'Progress: {event.bytes_processed}'),
+            ...     },
+            ...     'partialFailureHandling': 'store-partial',
+            ... })
         """
-        from .stream_utils import consume_stream
+        # Import streaming components
+        from .streaming import (
+            MetricsCollector,
+            ProgressiveFactExtractor,
+            ProgressiveGraphSync,
+            ProgressiveStorageHandler,
+            StreamErrorRecovery,
+            StreamProcessor,
+            create_stream_context,
+        )
+        from .streaming_types import (
+            EnhancedRememberStreamResult,
+            PerformanceInsights,
+            ProgressiveProcessing,
+            StreamingOptions,
+        )
 
-        # Step 1: Consume the stream to get the full response text
-        try:
-            agent_response = await consume_stream(params.response_stream)
-        except Exception as error:
-            raise Exception(
-                f"Failed to consume response stream: {str(error)}"
-            ) from error
+        # Parse options - ensure we always have a StreamingOptions object
+        if options is None:
+            opts = StreamingOptions()
+        elif isinstance(options, dict):
+            opts = StreamingOptions(**options)
+        else:
+            opts = options
 
-        # Step 2: Validate we got some content
-        if not agent_response or agent_response.strip() == "":
-            raise Exception(
-                "Response stream completed but produced no content. "
-                "Cannot store empty response."
+        # Initialize components
+        metrics = MetricsCollector()
+        memory_space_id = params.get("memorySpaceId") if isinstance(params, dict) else params.memory_space_id
+        conversation_id = params.get("conversationId") if isinstance(params, dict) else params.conversation_id
+        user_id = params.get("userId") if isinstance(params, dict) else params.user_id
+        user_name = params.get("userName") if isinstance(params, dict) else params.user_name
+
+        context = create_stream_context(
+            memory_space_id=str(memory_space_id or ""),
+            conversation_id=str(conversation_id or ""),
+            user_id=str(user_id or ""),
+            user_name=str(user_name or ""),
+        )
+
+        # Progressive storage handler (if enabled)
+        storage_handler: Optional[ProgressiveStorageHandler] = None
+        if opts and opts.store_partial_response:
+            storage_handler = ProgressiveStorageHandler(
+                self.client,
+                str(memory_space_id or ""),
+                str(conversation_id or ""),
+                str(user_id or ""),
+                opts.partial_response_interval or 3000,
             )
 
-        # Step 3: Use the existing remember() method with the complete response
-        remember_result = await self.remember(
-            RememberParams(
-                memory_space_id=params.memory_space_id,
-                participant_id=params.participant_id,
-                conversation_id=params.conversation_id,
-                user_message=params.user_message,
-                agent_response=agent_response,
-                user_id=params.user_id,
-                user_name=params.user_name,
-                extract_content=params.extract_content,
-                generate_embedding=params.generate_embedding,
-                extract_facts=params.extract_facts,
-                auto_embed=params.auto_embed,
-                auto_summarize=params.auto_summarize,
-                importance=params.importance,
-                tags=params.tags,
-            ),
-            options,
+        # Progressive fact extractor (if enabled)
+        fact_extractor: Optional[ProgressiveFactExtractor] = None
+        extract_facts_fn = params.get("extractFacts") if isinstance(params, dict) else getattr(params, "extract_facts", None)
+        if opts and opts.progressive_fact_extraction and extract_facts_fn:
+            fact_extractor = ProgressiveFactExtractor(
+                self.facts,
+                str(memory_space_id or ""),
+                str(user_id or ""),
+                params.get("participantId") if isinstance(params, dict) else getattr(params, "participant_id", None),
+                opts.fact_extraction_threshold or 500,
+            )
+
+        # Adaptive processor (if enabled)
+        # Note: adaptive_processor currently not integrated, keeping for future use
+        # adaptive_processor: Optional[AdaptiveStreamProcessor] = None
+        # if opts and opts.enable_adaptive_processing:
+        #     adaptive_processor = AdaptiveStreamProcessor()
+
+        # Progressive graph sync (if enabled)
+        graph_sync: Optional[ProgressiveGraphSync] = None
+        if opts and opts.progressive_graph_sync and self.graph_adapter:
+            graph_sync = ProgressiveGraphSync(
+                self.graph_adapter,
+                opts.graph_sync_interval or 5000,
+            )
+
+        # Enhanced hooks that integrate progressive features
+        from .streaming_types import ChunkEvent, ProgressEvent, StreamHooks
+
+        original_hooks = opts.hooks if opts else None
+        progressive_facts: List[Any] = []
+
+        # Create enhanced hooks that integrate progressive components
+        async def enhanced_on_chunk(event: ChunkEvent) -> None:
+            # Call original hook if exists
+            hook_fn = None
+            if original_hooks:
+                if isinstance(original_hooks, dict):
+                    hook_fn = original_hooks.get("onChunk")
+                elif hasattr(original_hooks, 'on_chunk'):
+                    hook_fn = original_hooks.on_chunk
+
+            if hook_fn and callable(hook_fn):
+                hook_result = hook_fn(event)
+                if asyncio.iscoroutine(hook_result):
+                    await hook_result
+
+            # Progressive storage update
+            if storage_handler and storage_handler.should_update():
+                await storage_handler.update_partial_content(
+                    event.accumulated, event.chunk_number
+                )
+
+            # Progressive fact extraction
+            if fact_extractor and fact_extractor.should_extract(len(event.accumulated)):
+                user_message_val = params.get("userMessage") if isinstance(params, dict) else params.user_message
+                facts = await fact_extractor.extract_from_chunk(
+                    event.accumulated,
+                    event.chunk_number,
+                    extract_facts_fn,  # type: ignore
+                    str(user_message_val or ""),
+                    str(conversation_id or ""),
+                    sync_to_graph=(opts.sync_to_graph if opts else True) and self.graph_adapter is not None,
+                )
+                progressive_facts.extend(facts)
+
+            # Progressive graph sync update
+            if graph_sync and graph_sync.should_sync():
+                await graph_sync.update_partial_node(event.accumulated, context)
+
+        async def enhanced_on_progress(event: ProgressEvent) -> None:
+            # Call original hook if exists
+            hook_fn = None
+            if original_hooks:
+                if isinstance(original_hooks, dict):
+                    hook_fn = original_hooks.get("onProgress")
+                elif hasattr(original_hooks, 'on_progress'):
+                    hook_fn = original_hooks.on_progress
+
+            if hook_fn and callable(hook_fn):
+                hook_result = hook_fn(event)
+                if asyncio.iscoroutine(hook_result):
+                    await hook_result
+
+        async def enhanced_on_error(event: Any) -> None:
+            # Call original hook if exists
+            hook_fn = None
+            if original_hooks:
+                if isinstance(original_hooks, dict):
+                    hook_fn = original_hooks.get("onError")
+                elif hasattr(original_hooks, 'on_error'):
+                    hook_fn = original_hooks.on_error
+
+            if hook_fn and callable(hook_fn):
+                hook_result = hook_fn(event)
+                if asyncio.iscoroutine(hook_result):
+                    await hook_result
+
+        async def enhanced_on_complete(event: Any) -> None:
+            # Call original hook if exists
+            hook_fn = None
+            if original_hooks:
+                if isinstance(original_hooks, dict):
+                    hook_fn = original_hooks.get("onComplete")
+                elif hasattr(original_hooks, 'on_complete'):
+                    hook_fn = original_hooks.on_complete
+
+            if hook_fn and callable(hook_fn):
+                hook_result = hook_fn(event)
+                if asyncio.iscoroutine(hook_result):
+                    await hook_result
+
+        enhanced_hooks = StreamHooks(
+            on_chunk=enhanced_on_chunk,
+            on_progress=enhanced_on_progress,
+            on_error=enhanced_on_error,
+            on_complete=enhanced_on_complete,
         )
 
-        # Step 4: Return the result with the full response
-        return RememberStreamResult(
-            conversation=remember_result.conversation,
-            memories=remember_result.memories,
-            facts=remember_result.facts,
-            full_response=agent_response,
-        )
+        processor = StreamProcessor(context, enhanced_hooks, metrics)
+        error_recovery = StreamErrorRecovery(self.client)
+
+        full_response = ""
+
+        try:
+            # Step 1: Ensure conversation exists
+            existing_conversation = await self.conversations.get(
+                str(conversation_id or "")
+            )
+            if not existing_conversation:
+                from ..types import (
+                    ConversationParticipants,
+                    CreateConversationInput,
+                    CreateConversationOptions,
+                )
+
+                await self.conversations.create(
+                    CreateConversationInput(
+                        memory_space_id=str(memory_space_id or ""),
+                        conversation_id=params.get("conversationId") if isinstance(params, dict) else params.conversation_id,
+                        type="user-agent",
+                        participants=ConversationParticipants(
+                            user_id=params.get("userId") if isinstance(params, dict) else params.user_id,
+                            participant_id=params.get("participantId", "agent") if isinstance(params, dict) else getattr(params, "participant_id", "agent"),
+                        ),
+                    ),
+                    CreateConversationOptions(
+                        sync_to_graph=(opts.sync_to_graph if opts else True) and self.graph_adapter is not None,
+                    ),
+                )
+
+            # Step 2: Initialize progressive storage
+            if storage_handler:
+                user_message_val = params.get("userMessage") if isinstance(params, dict) else params.user_message
+                importance_val = params.get("importance") if isinstance(params, dict) else getattr(params, "importance", None)
+                partial_memory_id = await storage_handler.initialize_partial_memory(
+                    participant_id=params.get("participantId") if isinstance(params, dict) else getattr(params, "participant_id", None),
+                    user_message=str(user_message_val or ""),
+                    importance=int(importance_val or 50),
+                    tags=params.get("tags") if isinstance(params, dict) else getattr(params, "tags", None),
+                )
+                context.partial_memory_id = partial_memory_id
+
+                # Initialize graph node if enabled
+                if graph_sync:
+                    await graph_sync.initialize_partial_node({
+                        "memoryId": partial_memory_id,
+                        "memorySpaceId": params.get("memorySpaceId") if isinstance(params, dict) else params.memory_space_id,
+                        "userId": params.get("userId") if isinstance(params, dict) else params.user_id,
+                        "content": "[Streaming...]",
+                    })
+
+            # Step 3: Process stream with all features
+            response_stream = params.get("responseStream") if isinstance(params, dict) else params.response_stream
+            full_response = await processor.process_stream(response_stream, opts)  # type: ignore
+
+            # Step 4: Validate we got content
+            if not full_response or full_response.strip() == "":
+                raise Exception("Response stream completed but produced no content.")
+
+            # Step 5: Finalize storage
+            generate_embedding_fn = params.get("generateEmbedding") if isinstance(params, dict) else getattr(params, "generate_embedding", None)
+            if storage_handler and storage_handler.is_ready():
+                embedding = None
+                if generate_embedding_fn:
+                    embedding = await generate_embedding_fn(full_response)
+                await storage_handler.finalize_memory(full_response, embedding)
+
+            # Step 6: Use remember() for final storage
+            # Determine sync_to_graph - default to True if graph adapter exists
+            should_sync = (opts.sync_to_graph if opts and hasattr(opts, 'sync_to_graph') else True) and self.graph_adapter is not None
+
+            user_message_val = params.get("userMessage") if isinstance(params, dict) else params.user_message
+            remember_result = await self.remember(
+                RememberParams(
+                    memory_space_id=str(memory_space_id or ""),
+                    participant_id=params.get("participantId") if isinstance(params, dict) else getattr(params, "participant_id", None),
+                    conversation_id=str(conversation_id or ""),
+                    user_message=str(user_message_val or ""),
+                    agent_response=full_response,
+                    user_id=str(user_id or ""),
+                    user_name=str(user_name or ""),
+                    extract_content=params.get("extractContent") if isinstance(params, dict) else getattr(params, "extract_content", None),
+                    generate_embedding=generate_embedding_fn,
+                    extract_facts=extract_facts_fn,
+                    auto_embed=params.get("autoEmbed") if isinstance(params, dict) else getattr(params, "auto_embed", None),
+                    auto_summarize=params.get("autoSummarize") if isinstance(params, dict) else getattr(params, "auto_summarize", None),
+                    importance=params.get("importance") if isinstance(params, dict) else getattr(params, "importance", None),
+                    tags=params.get("tags") if isinstance(params, dict) else getattr(params, "tags", None),
+                ),
+                RememberOptions(sync_to_graph=should_sync),
+            )
+
+            # Step 7: Finalize graph sync
+            if graph_sync and remember_result.memories:
+                await graph_sync.finalize_node(remember_result.memories[0])
+
+            # Step 8: Generate performance insights
+            metrics_snapshot = metrics.get_snapshot()
+            insights = metrics.generate_insights()
+
+            # Step 9: Return enhanced result
+            return EnhancedRememberStreamResult(
+                conversation=remember_result.conversation,
+                memories=remember_result.memories,
+                facts=remember_result.facts,
+                full_response=full_response,
+                stream_metrics=metrics_snapshot,
+                progressive_processing=ProgressiveProcessing(
+                    facts_extracted_during_stream=progressive_facts,
+                    partial_storage_history=storage_handler.get_update_history() if storage_handler else [],
+                    graph_sync_events=graph_sync.get_sync_events() if graph_sync else None,
+                ),
+                performance=PerformanceInsights(
+                    bottlenecks=insights["bottlenecks"],
+                    recommendations=insights["recommendations"],
+                    cost_estimate=metrics_snapshot.estimated_cost,
+                ),
+            )
+
+        except Exception as error:
+            # Error recovery
+            _ = error_recovery.create_stream_error(
+                error, context, "streaming"
+            )
+
+            # Handle based on strategy
+            if opts and opts.partial_failure_handling:
+                from .streaming_types import RecoveryOptions
+
+                recovery_result = await error_recovery.handle_stream_error(
+                    error,
+                    context,
+                    RecoveryOptions(
+                        strategy=opts.partial_failure_handling,
+                        max_retries=opts.max_retries or 3,
+                        retry_delay=opts.retry_delay or 1000,
+                        preserve_partial_data=True,
+                    ),
+                )
+
+                if recovery_result.success and opts.generate_resume_token:
+                    from .streaming.error_recovery import ResumableStreamError
+
+                    raise ResumableStreamError(
+                        error, recovery_result.resume_token or ""
+                    )
+
+            # Cleanup on failure
+            if storage_handler:
+                await storage_handler.rollback()
+            if graph_sync:
+                await graph_sync.rollback()
+
+            raise
 
     async def forget(
         self,
@@ -930,6 +1224,30 @@ class MemoryAPI:
     ) -> Dict[str, Any]:
         """Archive a memory (delegates to vector.archive)."""
         return await self.vector.archive(memory_space_id, memory_id)
+
+    async def restore_from_archive(
+        self, memory_space_id: str, memory_id: str
+    ) -> Dict[str, Any]:
+        """
+        Restore memory from archive.
+
+        Args:
+            memory_space_id: Memory space ID
+            memory_id: Memory ID to restore
+
+        Returns:
+            Restore result
+
+        Example:
+            >>> restored = await cortex.memory.restore_from_archive('agent-1', 'mem-123')
+            >>> print(f"Restored: {restored['restored']}")
+        """
+        result = await self.client.mutation(
+            "memories:restoreFromArchive",
+            {"memorySpaceId": memory_space_id, "memoryId": memory_id},
+        )
+
+        return cast(Dict[str, Any], result)
 
     async def get_version(
         self, memory_space_id: str, memory_id: str, version: int

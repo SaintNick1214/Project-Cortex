@@ -117,6 +117,27 @@ export class AgentsAPI {
       throw new Error(`Failed to register agent ${agent.id}`);
     }
 
+    // Sync to graph if configured
+    if (this.graphAdapter) {
+      try {
+        await this.graphAdapter.createNode({
+          label: "Agent",
+          properties: {
+            agentId: result.agentId,
+            name: result.name,
+            description: result.description || null,
+            status: result.status,
+            registeredAt: result.registeredAt,
+            updatedAt: result.updatedAt,
+            lastActive: result.lastActive || null,
+          },
+        });
+      } catch (error) {
+        console.warn("Failed to sync agent to graph:", error);
+        // Don't fail the operation - graph sync is non-critical
+      }
+    }
+
     // Compute stats
     const stats = await this.getAgentStats(agent.id);
 
@@ -432,6 +453,90 @@ export class AgentsAPI {
         error,
       );
     }
+  }
+
+  /**
+   * Unregister multiple agents matching filters
+   *
+   * @param filters - Filter criteria for agents to unregister
+   * @param options - Unregistration options
+   * @returns Unregistration result
+   *
+   * @example
+   * ```typescript
+   * // Unregister experimental agents (keep data)
+   * const result = await cortex.agents.unregisterMany(
+   *   { metadata: { environment: 'experimental' } },
+   *   { cascade: false }
+   * );
+   * console.log(`Unregistered ${result.deleted} agents`);
+   *
+   * // Unregister and cascade delete all data
+   * const result = await cortex.agents.unregisterMany(
+   *   { status: 'archived' },
+   *   { cascade: true }
+   * );
+   * ```
+   */
+  async unregisterMany(
+    filters: AgentFilters,
+    options?: UnregisterAgentOptions,
+  ): Promise<{
+    deleted: number;
+    agentIds: string[];
+    totalDataDeleted?: number;
+  }> {
+    // Get all matching agents
+    const agents = await this.list(filters);
+
+    if (agents.length === 0) {
+      return {
+        deleted: 0,
+        agentIds: [],
+        totalDataDeleted: 0,
+      };
+    }
+
+    if (options?.dryRun) {
+      return {
+        deleted: 0,
+        agentIds: agents.map((a) => a.id),
+      };
+    }
+
+    const results: string[] = [];
+    let totalDataDeleted = 0;
+
+    if (options?.cascade) {
+      // Unregister each agent with cascade
+      for (const agent of agents) {
+        try {
+          const result = await this.unregister(agent.id, options);
+          results.push(agent.id);
+          totalDataDeleted += result.totalDeleted;
+        } catch (error) {
+          console.error(`Failed to unregister agent ${agent.id}:`, error);
+          // Continue with other agents
+        }
+      }
+    } else {
+      // Just remove registrations (use backend unregisterMany)
+      const agentIds = agents.map((a) => a.id);
+      const result = await this.client.mutation(api.agents.unregisterMany, {
+        agentIds,
+      });
+
+      return {
+        deleted: result.deleted,
+        agentIds: result.agentIds,
+      };
+    }
+
+    return {
+      deleted: results.length,
+      agentIds: results,
+      totalDataDeleted,
+    };
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

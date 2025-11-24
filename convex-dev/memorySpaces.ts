@@ -491,6 +491,120 @@ export const findByParticipant = query({
 });
 
 /**
+ * Search memory spaces by name or metadata
+ */
+export const search = query({
+  args: {
+    query: v.string(),
+    type: v.optional(
+      v.union(
+        v.literal("personal"),
+        v.literal("team"),
+        v.literal("project"),
+        v.literal("custom"),
+      ),
+    ),
+    status: v.optional(v.union(v.literal("active"), v.literal("archived"))),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    let spaces = await ctx.db.query("memorySpaces").collect();
+
+    // Apply type and status filters
+    if (args.type) {
+      spaces = spaces.filter((s) => s.type === args.type);
+    }
+    if (args.status) {
+      spaces = spaces.filter((s) => s.status === args.status);
+    }
+
+    // Text search across name and metadata
+    const queryLower = args.query.toLowerCase();
+    spaces = spaces.filter((space) => {
+      // Search in name
+      if (space.name && space.name.toLowerCase().includes(queryLower)) {
+        return true;
+      }
+
+      // Search in memorySpaceId
+      if (space.memorySpaceId.toLowerCase().includes(queryLower)) {
+        return true;
+      }
+
+      // Search in metadata (stringify and search)
+      if (space.metadata) {
+        const metadataStr = JSON.stringify(space.metadata).toLowerCase();
+        if (metadataStr.includes(queryLower)) {
+          return true;
+        }
+      }
+
+      return false;
+    });
+
+    // Limit results
+    return spaces.slice(0, args.limit || 50);
+  },
+});
+
+/**
+ * Update participants (combined add/remove)
+ */
+export const updateParticipants = mutation({
+  args: {
+    memorySpaceId: v.string(),
+    add: v.optional(
+      v.array(
+        v.object({
+          id: v.string(),
+          type: v.string(),
+          joinedAt: v.number(),
+        }),
+      ),
+    ),
+    remove: v.optional(v.array(v.string())), // Participant IDs to remove
+  },
+  handler: async (ctx, args) => {
+    const space = await ctx.db
+      .query("memorySpaces")
+      .withIndex("by_memorySpaceId", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
+      .first();
+
+    if (!space) {
+      throw new Error("MEMORYSPACE_NOT_FOUND");
+    }
+
+    let updatedParticipants = [...space.participants];
+
+    // Remove participants
+    if (args.remove && args.remove.length > 0) {
+      updatedParticipants = updatedParticipants.filter(
+        (p) => !args.remove!.includes(p.id),
+      );
+    }
+
+    // Add new participants
+    if (args.add && args.add.length > 0) {
+      for (const newParticipant of args.add) {
+        // Don't add duplicates
+        if (!updatedParticipants.some((p) => p.id === newParticipant.id)) {
+          updatedParticipants.push(newParticipant);
+        }
+      }
+    }
+
+    await ctx.db.patch(space._id, {
+      participants: updatedParticipants,
+      updatedAt: Date.now(),
+    });
+
+    return await ctx.db.get(space._id);
+  },
+});
+
+/**
  * Purge all memory spaces (TEST/DEV ONLY)
  */
 export const purgeAll = mutation({
