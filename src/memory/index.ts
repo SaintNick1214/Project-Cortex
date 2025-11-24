@@ -442,14 +442,28 @@ export class MemoryAPI {
     options?: import("../types/streaming").StreamingOptions,
   ): Promise<import("../types/streaming").EnhancedRememberStreamResult> {
     // Import streaming components (lazy to avoid circular deps)
-    const { StreamProcessor, createStreamContext } = await import("./streaming/StreamProcessor");
+    const { StreamProcessor, createStreamContext } = await import(
+      "./streaming/StreamProcessor"
+    );
     const { MetricsCollector } = await import("./streaming/StreamMetrics");
-    const { ProgressiveStorageHandler } = await import("./streaming/ProgressiveStorageHandler");
-    const { ProgressiveFactExtractor } = await import("./streaming/FactExtractor");
-    const { StreamErrorRecovery, ResumableStreamError } = await import("./streaming/ErrorRecovery");
-    const { AdaptiveStreamProcessor } = await import("./streaming/AdaptiveProcessor");
-    const { ResponseChunker, shouldChunkContent } = await import("./streaming/ChunkingStrategies");
-    const { ProgressiveGraphSync } = await import("./streaming/ProgressiveGraphSync");
+    const { ProgressiveStorageHandler } = await import(
+      "./streaming/ProgressiveStorageHandler"
+    );
+    const { ProgressiveFactExtractor } = await import(
+      "./streaming/FactExtractor"
+    );
+    const { StreamErrorRecovery, ResumableStreamError } = await import(
+      "./streaming/ErrorRecovery"
+    );
+    const { AdaptiveStreamProcessor } = await import(
+      "./streaming/AdaptiveProcessor"
+    );
+    const { ResponseChunker, shouldChunkContent } = await import(
+      "./streaming/ChunkingStrategies"
+    );
+    const { ProgressiveGraphSync } = await import(
+      "./streaming/ProgressiveGraphSync"
+    );
 
     // Initialize components
     const metrics = new MetricsCollector();
@@ -460,11 +474,16 @@ export class MemoryAPI {
       userName: params.userName,
     });
 
-    const processor = new StreamProcessor(context, options?.hooks || {}, metrics);
+    const processor = new StreamProcessor(
+      context,
+      options?.hooks || {},
+      metrics,
+    );
     const errorRecovery = new StreamErrorRecovery(this.client);
 
     // Progressive storage handler (if enabled)
-    let storageHandler: InstanceType<typeof ProgressiveStorageHandler> | null = null;
+    let storageHandler: InstanceType<typeof ProgressiveStorageHandler> | null =
+      null;
     if (options?.storePartialResponse) {
       storageHandler = new ProgressiveStorageHandler(
         this.client,
@@ -476,7 +495,8 @@ export class MemoryAPI {
     }
 
     // Progressive fact extractor (if enabled)
-    let factExtractor: InstanceType<typeof ProgressiveFactExtractor> | null = null;
+    let factExtractor: InstanceType<typeof ProgressiveFactExtractor> | null =
+      null;
     if (options?.progressiveFactExtraction && params.extractFacts) {
       factExtractor = new ProgressiveFactExtractor(
         this.facts,
@@ -488,7 +508,8 @@ export class MemoryAPI {
     }
 
     // Adaptive processor (if enabled)
-    let adaptiveProcessor: InstanceType<typeof AdaptiveStreamProcessor> | null = null;
+    let adaptiveProcessor: InstanceType<typeof AdaptiveStreamProcessor> | null =
+      null;
     if (options?.enableAdaptiveProcessing) {
       adaptiveProcessor = new AdaptiveStreamProcessor();
     }
@@ -503,11 +524,13 @@ export class MemoryAPI {
     }
 
     const progressiveFacts: import("../types/streaming").ProgressiveFact[] = [];
-    let fullResponse = '';
+    let fullResponse = "";
 
     try {
       // Step 1: Ensure conversation exists
-      const existingConversation = await this.conversations.get(params.conversationId);
+      const existingConversation = await this.conversations.get(
+        params.conversationId,
+      );
       if (!existingConversation) {
         await this.conversations.create(
           {
@@ -520,7 +543,8 @@ export class MemoryAPI {
             },
           },
           {
-            syncToGraph: options?.syncToGraph !== false && this.graphAdapter !== undefined,
+            syncToGraph:
+              options?.syncToGraph !== false && this.graphAdapter !== undefined,
           },
         );
       }
@@ -541,17 +565,20 @@ export class MemoryAPI {
             memoryId: partialMemoryId,
             memorySpaceId: params.memorySpaceId,
             userId: params.userId,
-            content: '[Streaming...]',
+            content: "[Streaming...]",
           } as any);
         }
       }
 
       // Step 3: Process stream with all features
-      fullResponse = await processor.processStream(params.responseStream, options || {});
+      fullResponse = await processor.processStream(
+        params.responseStream,
+        options || {},
+      );
 
       // Step 4: Progressive processing during stream
       // (This is handled by StreamProcessor hooks and integrated components)
-      
+
       // Step 5: Validate we got content
       if (!fullResponse || fullResponse.trim().length === 0) {
         throw new Error("Response stream completed but produced no content.");
@@ -561,7 +588,9 @@ export class MemoryAPI {
       if (storageHandler && storageHandler.isReady()) {
         await storageHandler.finalizeMemory(
           fullResponse,
-          params.generateEmbedding ? await params.generateEmbedding(fullResponse) || undefined : undefined,
+          params.generateEmbedding
+            ? (await params.generateEmbedding(fullResponse)) || undefined
+            : undefined,
         );
       }
 
@@ -611,13 +640,12 @@ export class MemoryAPI {
           costEstimate: metricsSnapshot.estimatedCost,
         },
       };
-
     } catch (error) {
       // Error recovery
       const streamError = errorRecovery.createStreamError(
         error instanceof Error ? error : new Error(String(error)),
         context,
-        'streaming',
+        "streaming",
       );
 
       // Handle based on strategy
@@ -636,7 +664,7 @@ export class MemoryAPI {
         if (recoveryResult.success && options.generateResumeToken) {
           throw new ResumableStreamError(
             error instanceof Error ? error : new Error(String(error)),
-            recoveryResult.resumeToken || '',
+            recoveryResult.resumeToken || "",
           );
         }
       }

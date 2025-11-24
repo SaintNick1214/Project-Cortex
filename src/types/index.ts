@@ -1487,46 +1487,46 @@ export type {
   ProgressEvent,
   StreamCompleteEvent,
   StreamHooks,
-  
+
   // Metrics
   StreamMetrics,
-  
+
   // Progressive Storage
   PartialUpdate,
   ProgressiveFact,
   GraphSyncEvent,
-  
+
   // Error Handling & Recovery
   FailureStrategy,
   ErrorContext,
   StreamError,
   RecoveryOptions,
   RecoveryResult,
-  
+
   // Resume Capability
   ResumeContext,
   PartialMemoryResult,
-  
+
   // Chunking
   ChunkStrategy,
   ChunkingConfig,
   ChunkMetadata,
   ContentChunk,
-  
+
   // Adaptive Processing
   StreamType,
   ProcessingStrategy,
-  
+
   // Memory Efficiency
   MemoryEfficiencyOptions,
   EmbeddingMergeStrategy,
-  
+
   // Options & Parameters
   StreamingOptions,
   StreamContext,
   EnhancedRememberStreamParams,
   ProcessedChunk,
-  
+
   // Enhanced Results
   PerformanceInsights,
   ProgressiveProcessing,

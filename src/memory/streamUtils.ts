@@ -237,9 +237,9 @@ export class RollingContextWindow {
    */
   add(chunk: string): void {
     this.window.push(chunk);
-    
+
     // Trim window if it exceeds max size
-    const totalSize = this.window.join('').length;
+    const totalSize = this.window.join("").length;
     while (totalSize > this.maxSize && this.window.length > 1) {
       this.window.shift();
     }
@@ -249,14 +249,14 @@ export class RollingContextWindow {
    * Get current context
    */
   getContext(): string {
-    return this.window.join('');
+    return this.window.join("");
   }
 
   /**
    * Get context size
    */
   getSize(): number {
-    return this.window.join('').length;
+    return this.window.join("").length;
   }
 
   /**
@@ -284,7 +284,7 @@ export class AsyncQueue<T> {
    */
   async enqueue(item: T): Promise<void> {
     this.queue.push(item);
-    
+
     if (this.processor && !this.processing) {
       await this.processQueue();
     }
@@ -327,7 +327,7 @@ export class AsyncQueue<T> {
         try {
           await this.processor(item);
         } catch (error) {
-          console.error('Error processing queue item:', error);
+          console.error("Error processing queue item:", error);
         }
       }
     }
@@ -424,7 +424,9 @@ export function withMaxLength(
           totalLength += value.length;
 
           if (totalLength > maxLength) {
-            controller.error(new Error(`Stream exceeded max length of ${maxLength}`));
+            controller.error(
+              new Error(`Stream exceeded max length of ${maxLength}`),
+            );
             reader.cancel();
             break;
           }

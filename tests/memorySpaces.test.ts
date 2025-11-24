@@ -670,7 +670,9 @@ describe("Memory Spaces Registry API", () => {
         const results = await cortex.memorySpaces.search("apollo");
 
         expect(results.length).toBeGreaterThan(0);
-        expect(results.some((s) => s.metadata?.project === "apollo")).toBe(true);
+        expect(results.some((s) => s.metadata?.project === "apollo")).toBe(
+          true,
+        );
       });
 
       it("filters by type", async () => {
@@ -680,14 +682,14 @@ describe("Memory Spaces Registry API", () => {
 
         // Should find at least our 2 test spaces
         expect(results.length).toBeGreaterThanOrEqual(2);
-        
+
         // All results should be team type
         for (const space of results) {
           expect(space.type).toBe("team");
         }
-        
+
         // Verify our test spaces are included
-        const spaceIds = results.map(s => s.memorySpaceId);
+        const spaceIds = results.map((s) => s.memorySpaceId);
         expect(spaceIds).toContain("engineering-team");
         expect(spaceIds).toContain("design-team");
       });
@@ -702,12 +704,12 @@ describe("Memory Spaces Registry API", () => {
           status: "archived",
         });
 
-        expect(activeResults.some((s) => s.memorySpaceId === "design-team")).toBe(
-          false,
-        );
-        expect(archivedResults.some((s) => s.memorySpaceId === "design-team")).toBe(
-          true,
-        );
+        expect(
+          activeResults.some((s) => s.memorySpaceId === "design-team"),
+        ).toBe(false);
+        expect(
+          archivedResults.some((s) => s.memorySpaceId === "design-team"),
+        ).toBe(true);
       });
 
       it("limits results", async () => {
@@ -745,7 +747,9 @@ describe("Memory Spaces Registry API", () => {
         const updated = await cortex.memorySpaces.get("participant-test");
 
         expect(updated?.participants).toHaveLength(3);
-        expect(updated?.participants.some((p) => p.id === "agent-1")).toBe(true);
+        expect(updated?.participants.some((p) => p.id === "agent-1")).toBe(
+          true,
+        );
         expect(updated?.participants.some((p) => p.id === "tool-1")).toBe(true);
       });
 
@@ -774,9 +778,7 @@ describe("Memory Spaces Registry API", () => {
         await cortex.memorySpaces.register({
           memorySpaceId: "participant-test",
           type: "team",
-          participants: [
-            { id: "old-agent", type: "agent" },
-          ] as any,
+          participants: [{ id: "old-agent", type: "agent" }] as any,
         });
 
         const now = Date.now();

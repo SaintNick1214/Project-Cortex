@@ -105,15 +105,15 @@ No migration needed! Existing code continues to work without changes. To use new
 ```typescript
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: 'my-chat',
-  userId: 'user-123',
-  
+  memorySpaceId: "my-chat",
+  userId: "user-123",
+
   // NEW: Opt-in to enhanced streaming
   streamingOptions: {
     storePartialResponse: true,
     progressiveFactExtraction: true,
   },
-  
+
   streamingHooks: {
     onProgress: (event) => console.log(event),
   },

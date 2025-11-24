@@ -135,7 +135,7 @@ describe("Helper Functions", () => {
     it("should adjust sentence count based on content length", () => {
       const shortSize = estimateOptimalChunkSize(5000, "sentence");
       const longSize = estimateOptimalChunkSize(20000, "sentence");
-      
+
       expect(shortSize).toBeLessThan(longSize);
     });
 

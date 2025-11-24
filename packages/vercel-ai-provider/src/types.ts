@@ -3,7 +3,11 @@
  */
 
 // Dynamic types to support AI SDK v3, v4, and v5
-import type { MemoryEntry, RememberOptions, RememberStreamResult } from "@cortexmemory/sdk";
+import type {
+  MemoryEntry,
+  RememberOptions,
+  RememberStreamResult,
+} from "@cortexmemory/sdk";
 
 /**
  * Supported LLM providers

@@ -16,25 +16,25 @@ async function main() {
 
   // Clear and create test data
   await adapter.clearDatabase();
-  
+
   const node1 = await adapter.createNode({
     label: "TestNode",
     properties: { id: 1, name: "Node 1" },
   });
   console.log("Created node 1:", node1);
-  
+
   const node2 = await adapter.createNode({
     label: "TestNode",
     properties: { id: 2, name: "Node 2" },
   });
   console.log("Created node 2:", node2);
-  
+
   const node3 = await adapter.createNode({
     label: "TestNode",
     properties: { id: 3, name: "Node 3" },
   });
   console.log("Created node 3:", node3);
-  
+
   // Create relationships
   await adapter.createEdge({
     from: node1,
@@ -43,7 +43,7 @@ async function main() {
     properties: {},
   });
   console.log("Created edge 1->2");
-  
+
   await adapter.createEdge({
     from: node2,
     to: node3,
@@ -61,7 +61,9 @@ async function main() {
       direction: "OUTGOING",
     });
     console.log(`✅ traverse() returned ${result.length} nodes`);
-    result.forEach((n, i) => console.log(`   Node ${i + 1}:`, n.properties.name));
+    result.forEach((n, i) =>
+      console.log(`   Node ${i + 1}:`, n.properties.name),
+    );
   } catch (error) {
     console.error("❌ traverse() failed:", (error as Error).message);
   }
@@ -75,7 +77,7 @@ async function main() {
       MATCH (start)-[*1..2]->(connected)
       RETURN DISTINCT id(connected) as id, connected, labels(connected) as labels
     `;
-    
+
     const result = await adapter.query(query, { startId: parseInt(node1) });
     console.log(`✅ Direct query returned ${result.count} records`);
     result.records.forEach((r, i) => console.log(`   Record ${i + 1}:`, r));
@@ -91,7 +93,7 @@ async function main() {
       WHERE id(start) = $startId
       RETURN DISTINCT id(connected) as id, labels(connected) as labels
     `;
-    
+
     const result = await adapter.query(query, { startId: parseInt(node1) });
     console.log(`✅ Simplified query returned ${result.count} records`);
   } catch (error) {
@@ -106,10 +108,10 @@ async function main() {
       WHERE id(start) = $startId
       RETURN id(connected) as id, connected.name as name
     `;
-    
+
     const result = await adapter.query(query, { startId: parseInt(node1) });
     console.log(`✅ One-hop query returned ${result.count} records`);
-    result.records.forEach(r => console.log(`   Found:`, r));
+    result.records.forEach((r) => console.log(`   Found:`, r));
   } catch (error) {
     console.error("❌ One-hop query failed:", (error as Error).message);
   }

@@ -1,6 +1,6 @@
 /**
  * Stream Metrics Collection and Reporting
- * 
+ *
  * Tracks comprehensive performance metrics during streaming operations
  * including timing, throughput, processing stats, and cost estimates.
  */
@@ -30,15 +30,15 @@ export class MetricsCollector {
    */
   recordChunk(size: number): void {
     const now = Date.now();
-    
+
     // Record first chunk latency
     if (this.firstChunkTime === null) {
       this.firstChunkTime = now;
     }
-    
+
     this.chunkSizes.push(size);
     this.chunkTimestamps.push(now);
-    
+
     // Rough token estimate (1 token ≈ 4 chars)
     this.tokenEstimate += Math.ceil(size / 4);
   }
@@ -83,23 +83,23 @@ export class MetricsCollector {
     return {
       // Timing
       startTime: this.startTime,
-      firstChunkLatency: this.firstChunkTime 
-        ? this.firstChunkTime - this.startTime 
+      firstChunkLatency: this.firstChunkTime
+        ? this.firstChunkTime - this.startTime
         : 0,
       streamDurationMs: duration,
-      
+
       // Throughput
       totalChunks,
       totalBytes,
       averageChunkSize: totalChunks > 0 ? totalBytes / totalChunks : 0,
       chunksPerSecond: duration > 0 ? (totalChunks / duration) * 1000 : 0,
-      
+
       // Processing
       factsExtracted: this.factsCount,
       partialUpdates: this.partialUpdateCount,
       errorCount: this.errorCount,
       retryCount: this.retryCount,
-      
+
       // Estimates
       estimatedTokens: this.tokenEstimate,
       estimatedCost: this.calculateCost(this.tokenEstimate),
@@ -112,7 +112,7 @@ export class MetricsCollector {
    */
   private calculateCost(tokens: number): number | undefined {
     if (tokens === 0) return undefined;
-    
+
     // Assume output tokens, more expensive
     const costPer1K = 0.06;
     return (tokens / 1000) * costPer1K;
@@ -135,10 +135,14 @@ export class MetricsCollector {
     const min = sorted[0];
     const max = sorted[sorted.length - 1];
     const median = sorted[Math.floor(sorted.length / 2)];
-    
+
     // Calculate standard deviation
-    const mean = this.chunkSizes.reduce((sum, size) => sum + size, 0) / this.chunkSizes.length;
-    const variance = this.chunkSizes.reduce((sum, size) => sum + Math.pow(size - mean, 2), 0) / this.chunkSizes.length;
+    const mean =
+      this.chunkSizes.reduce((sum, size) => sum + size, 0) /
+      this.chunkSizes.length;
+    const variance =
+      this.chunkSizes.reduce((sum, size) => sum + Math.pow(size - mean, 2), 0) /
+      this.chunkSizes.length;
     const stdDev = Math.sqrt(variance);
 
     return { min, max, median, stdDev };
@@ -161,7 +165,8 @@ export class MetricsCollector {
       delays.push(this.chunkTimestamps[i] - this.chunkTimestamps[i - 1]);
     }
 
-    const averageInterChunkDelay = delays.reduce((sum, d) => sum + d, 0) / delays.length;
+    const averageInterChunkDelay =
+      delays.reduce((sum, d) => sum + d, 0) / delays.length;
     const minDelay = Math.min(...delays);
     const maxDelay = Math.max(...delays);
 
@@ -171,28 +176,30 @@ export class MetricsCollector {
   /**
    * Detect stream characteristics
    */
-  detectStreamType(): 'fast' | 'slow' | 'bursty' | 'steady' {
+  detectStreamType(): "fast" | "slow" | "bursty" | "steady" {
     const timingStats = this.getTimingStats();
     const chunkStats = this.getChunkStats();
 
     // Fast: Short inter-chunk delays (< 50ms average)
     if (timingStats.averageInterChunkDelay < 50) {
-      return 'fast';
+      return "fast";
     }
 
     // Slow: Long inter-chunk delays (> 500ms average)
     if (timingStats.averageInterChunkDelay > 500) {
-      return 'slow';
+      return "slow";
     }
 
     // Bursty: High variance in chunk sizes or timing
-    const timingVariance = (timingStats.maxDelay - timingStats.minDelay) / timingStats.averageInterChunkDelay;
+    const timingVariance =
+      (timingStats.maxDelay - timingStats.minDelay) /
+      timingStats.averageInterChunkDelay;
     if (timingVariance > 2 || chunkStats.stdDev > chunkStats.median) {
-      return 'bursty';
+      return "bursty";
     }
 
     // Steady: Consistent timing and chunk sizes
-    return 'steady';
+    return "steady";
   }
 
   /**
@@ -223,36 +230,47 @@ export class MetricsCollector {
 
     // Analyze first chunk latency
     if (metrics.firstChunkLatency > 2000) {
-      bottlenecks.push('High first chunk latency (> 2s)');
-      recommendations.push('Consider optimizing LLM prompt or switching to a faster model');
+      bottlenecks.push("High first chunk latency (> 2s)");
+      recommendations.push(
+        "Consider optimizing LLM prompt or switching to a faster model",
+      );
     }
 
     // Analyze throughput
     if (metrics.chunksPerSecond < 1 && metrics.totalChunks > 10) {
-      bottlenecks.push('Low throughput (< 1 chunk/second)');
-      recommendations.push('Stream may be slow, consider using progressive storage');
+      bottlenecks.push("Low throughput (< 1 chunk/second)");
+      recommendations.push(
+        "Stream may be slow, consider using progressive storage",
+      );
     }
 
     // Analyze error rate
-    const errorRate = metrics.totalChunks > 0 ? metrics.errorCount / metrics.totalChunks : 0;
+    const errorRate =
+      metrics.totalChunks > 0 ? metrics.errorCount / metrics.totalChunks : 0;
     if (errorRate > 0.1) {
       bottlenecks.push(`High error rate (${(errorRate * 100).toFixed(1)}%)`);
-      recommendations.push('Implement retry logic or check network stability');
+      recommendations.push("Implement retry logic or check network stability");
     }
 
     // Analyze fact extraction
     if (metrics.factsExtracted === 0 && metrics.totalBytes > 1000) {
-      recommendations.push('No facts extracted - consider enabling progressive fact extraction');
+      recommendations.push(
+        "No facts extracted - consider enabling progressive fact extraction",
+      );
     }
 
     // Analyze partial updates
     if (metrics.partialUpdates === 0 && metrics.streamDurationMs > 5000) {
-      recommendations.push('Long stream with no partial updates - enable progressive storage for better resilience');
+      recommendations.push(
+        "Long stream with no partial updates - enable progressive storage for better resilience",
+      );
     }
 
     // Cost warnings
     if (metrics.estimatedCost && metrics.estimatedCost > 1) {
-      recommendations.push(`High estimated cost ($${metrics.estimatedCost.toFixed(2)}) - consider response length limits`);
+      recommendations.push(
+        `High estimated cost ($${metrics.estimatedCost.toFixed(2)}) - consider response length limits`,
+      );
     }
 
     return { bottlenecks, recommendations };

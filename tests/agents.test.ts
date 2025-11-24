@@ -644,10 +644,10 @@ describe("Agents API (Coordination Layer)", () => {
           // Ignore if doesn't exist
         }
       }
-      
+
       // Wait a bit for cleanup to complete
       await new Promise((resolve) => setTimeout(resolve, 100));
-      
+
       // Register multiple test agents
       await cortex.agents.register({
         id: "bulk-agent-1",

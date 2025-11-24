@@ -1,6 +1,6 @@
 /**
  * Integration tests for rememberStream API
- * 
+ *
  * Tests the complete streaming workflow including:
  * - Progressive storage
  * - Fact extraction
@@ -8,7 +8,14 @@
  * - Metrics collection
  */
 
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from "@jest/globals";
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  afterAll,
+  beforeEach,
+} from "@jest/globals";
 import { Cortex } from "../../src";
 import { ConvexClient } from "convex/browser";
 
@@ -25,7 +32,7 @@ describe("rememberStream Integration Tests", () => {
     // Initialize Cortex client
     client = new ConvexClient(CONVEX_URL);
     cortex = new Cortex({ convexUrl: CONVEX_URL });
-    
+
     // Wait for client to be ready
     await new Promise((resolve) => setTimeout(resolve, 1000));
   });
@@ -162,9 +169,9 @@ describe("rememberStream Integration Tests", () => {
     it("should provide performance insights", async () => {
       async function* slowStream() {
         yield "Slow ";
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 100));
         yield "stream ";
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 100));
         yield "here";
       }
 
@@ -201,7 +208,7 @@ describe("rememberStream Integration Tests", () => {
           responseStream: emptyStream(),
           userId: TEST_USER_ID,
           userName: "Test User",
-        })
+        }),
       ).rejects.toThrow(/no content/i);
     });
 
@@ -221,7 +228,7 @@ describe("rememberStream Integration Tests", () => {
           responseStream: errorStream(),
           userId: TEST_USER_ID,
           userName: "Test User",
-        })
+        }),
       ).rejects.toThrow();
     });
   });
@@ -247,7 +254,7 @@ describe("rememberStream Integration Tests", () => {
       expect(result.fullResponse).toBe("Simple response");
       expect(result.conversation).toBeDefined();
       expect(result.memories).toBeDefined();
-      
+
       // New API fields are present
       expect(result.streamMetrics).toBeDefined();
     });
@@ -274,11 +281,11 @@ describe("rememberStream Integration Tests", () => {
       });
 
       expect(result.fullResponse).toBe("The password is Blue123");
-      
+
       // Verify memory was stored correctly
       // Note: result.memories includes both user message and agent response
-      const agentMemory = result.memories.find(m => 
-        m.content === "The password is Blue123"
+      const agentMemory = result.memories.find(
+        (m) => m.content === "The password is Blue123",
       );
       expect(agentMemory).toBeDefined();
       expect(agentMemory?.content).toBe("The password is Blue123");
@@ -302,8 +309,8 @@ describe("rememberStream Integration Tests", () => {
         tags: ["critical", "security"],
       });
 
-      const agentMemory = result.memories.find(m => 
-        m.content.includes("Important")
+      const agentMemory = result.memories.find((m) =>
+        m.content.includes("Important"),
       );
       expect(agentMemory?.importance).toBe(90);
       expect(agentMemory?.tags).toContain("critical");

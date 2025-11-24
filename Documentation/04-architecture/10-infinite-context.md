@@ -331,12 +331,12 @@ async function intelligentRetrieval(memorySpaceId: string, query: string) {
 
 ### Scenario: 1000 Conversation Exchanges
 
-| Approach                       | Tokens per Request | Cost per Request | Scalability                      |
-| ------------------------------ | ------------------ | ---------------- | -------------------------------- |
-| **Traditional (Accumulation)** | 50,000 tokens      | $1.50 (GPT-5-nano)    | ❌ Hits limits at ~2K exchanges  |
-| **Summarization**              | 10,000 tokens      | $0.30            | ⚠️ Loses nuance, still expensive |
-| **Infinite Context (Facts)**   | 80 tokens          | $0.0024          | ✅ Scales to 1M+ exchanges       |
-| **Infinite Context (Hybrid)**  | 405 tokens         | $0.012           | ✅ Scales + full fidelity        |
+| Approach                       | Tokens per Request | Cost per Request   | Scalability                      |
+| ------------------------------ | ------------------ | ------------------ | -------------------------------- |
+| **Traditional (Accumulation)** | 50,000 tokens      | $1.50 (GPT-5-nano) | ❌ Hits limits at ~2K exchanges  |
+| **Summarization**              | 10,000 tokens      | $0.30              | ⚠️ Loses nuance, still expensive |
+| **Infinite Context (Facts)**   | 80 tokens          | $0.0024            | ✅ Scales to 1M+ exchanges       |
+| **Infinite Context (Hybrid)**  | 405 tokens         | $0.012             | ✅ Scales + full fidelity        |
 
 **Cost Reduction:** 99% vs traditional, 97% vs summarization
 
@@ -344,12 +344,12 @@ async function intelligentRetrieval(memorySpaceId: string, query: string) {
 
 ### Model Comparison with Infinite Context
 
-| Model                | Context Window | Cost per 1M Tokens | With Infinite Context                        |
-| -------------------- | -------------- | ------------------ | -------------------------------------------- |
+| Model               | Context Window | Cost per 1M Tokens | With Infinite Context                        |
+| ------------------- | -------------- | ------------------ | -------------------------------------------- |
 | gpt-5-nano (legacy) | 16K            | $0.50              | ✅ Effectively unlimited (via retrieval)     |
-| GPT-5                | 1M             | $5                 | ✅ Retrieval still better (cheaper + faster) |
-| Claude-4.5-sonnet    | 200K           | $3                 | ✅ Retrieval is faster than large context    |
-| o3-mini              | 128K           | $2                 | ✅ Can use smaller models effectively        |
+| GPT-5               | 1M             | $5                 | ✅ Retrieval still better (cheaper + faster) |
+| Claude-4.5-sonnet   | 200K           | $3                 | ✅ Retrieval is faster than large context    |
+| o3-mini             | 128K           | $2                 | ✅ Can use smaller models effectively        |
 
 **Key Insight:** Even with 1M+ context window models, retrieval-based context is:
 

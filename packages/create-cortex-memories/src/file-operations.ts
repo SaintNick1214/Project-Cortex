@@ -210,11 +210,16 @@ export async function copyTemplate(
     // Update Convex version if provided
     if (convexVersion && packageJson.dependencies?.convex) {
       packageJson.dependencies.convex = convexVersion;
-      console.log(pc.dim(`   Using Convex ${convexVersion} (from SDK metadata)`));
+      console.log(
+        pc.dim(`   Using Convex ${convexVersion} (from SDK metadata)`),
+      );
     }
 
     // Write back with proper formatting
-    await fs.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2) + "\n");
+    await fs.writeFile(
+      packageJsonPath,
+      JSON.stringify(packageJson, null, 2) + "\n",
+    );
   } catch (error: any) {
     // File doesn't exist or can't be read - skip template replacement
     if (error.code !== "ENOENT") {

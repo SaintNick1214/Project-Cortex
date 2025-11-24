@@ -1,6 +1,6 @@
 /**
  * Progressive Fact Extractor
- * 
+ *
  * Extracts facts incrementally during streaming with deduplication
  * to avoid storing redundant information as content accumulates.
  */
@@ -18,7 +18,7 @@ export class ProgressiveFactExtractor {
   private readonly memorySpaceId: string;
   private readonly userId: string;
   private readonly participantId?: string;
-  
+
   private extractedFacts: Map<string, FactRecord> = new Map();
   private lastExtractionPoint: number = 0;
   private extractionCount: number = 0;
@@ -50,7 +50,10 @@ export class ProgressiveFactExtractor {
   async extractFromChunk(
     content: string,
     chunkNumber: number,
-    extractFacts: (userMessage: string, agentResponse: string) => Promise<Array<{
+    extractFacts: (
+      userMessage: string,
+      agentResponse: string,
+    ) => Promise<Array<{
       fact: string;
       factType: string;
       subject?: string;
@@ -117,7 +120,11 @@ export class ProgressiveFactExtractor {
                 conversationId,
                 messageIds: [],
               },
-              tags: [...(factData.tags || []), "progressive", `chunk-${chunkNumber}`],
+              tags: [
+                ...(factData.tags || []),
+                "progressive",
+                `chunk-${chunkNumber}`,
+              ],
             },
             { syncToGraph },
           );
@@ -155,7 +162,10 @@ export class ProgressiveFactExtractor {
   async finalizeExtraction(
     userMessage: string,
     fullAgentResponse: string,
-    extractFacts: (userMessage: string, agentResponse: string) => Promise<Array<{
+    extractFacts: (
+      userMessage: string,
+      agentResponse: string,
+    ) => Promise<Array<{
       fact: string;
       factType: string;
       subject?: string;
@@ -171,7 +181,10 @@ export class ProgressiveFactExtractor {
   ): Promise<FactRecord[]> {
     try {
       // Extract facts from complete response
-      const finalFactsToStore = await extractFacts(userMessage, fullAgentResponse);
+      const finalFactsToStore = await extractFacts(
+        userMessage,
+        fullAgentResponse,
+      );
 
       if (!finalFactsToStore || finalFactsToStore.length === 0) {
         return Array.from(this.extractedFacts.values());
@@ -235,20 +248,22 @@ export class ProgressiveFactExtractor {
       confidence: number;
       tags?: string[];
     }>,
-  ): Promise<Array<{
-    fact: string;
-    factType: string;
-    subject?: string;
-    predicate?: string;
-    object?: string;
-    confidence: number;
-    tags?: string[];
-  }>> {
+  ): Promise<
+    Array<{
+      fact: string;
+      factType: string;
+      subject?: string;
+      predicate?: string;
+      object?: string;
+      confidence: number;
+      tags?: string[];
+    }>
+  > {
     const uniqueFacts = [];
 
     for (const fact of newFacts) {
       const factKey = this.generateFactKey(fact.fact, fact.subject);
-      
+
       if (!this.extractedFacts.has(factKey)) {
         uniqueFacts.push(fact);
       } else {
@@ -271,10 +286,10 @@ export class ProgressiveFactExtractor {
   private generateFactKey(fact: string, subject?: string): string {
     // Normalize the fact text
     const normalized = fact.toLowerCase().trim();
-    
+
     // Include subject if available for better distinction
     const key = subject ? `${subject}::${normalized}` : normalized;
-    
+
     return key;
   }
 
@@ -287,21 +302,26 @@ export class ProgressiveFactExtractor {
     messageIds: string[],
     syncToGraph: boolean,
   ): Promise<void> {
-    const updatePromises = Array.from(this.extractedFacts.values()).map(async (fact) => {
-      try {
-        // Remove progressive tag to mark as finalized
-        await this.factsAPI.update(
-          this.memorySpaceId,
-          fact.factId,
-          {
-            tags: fact.tags.filter(tag => tag !== 'progressive'),
-          },
-          { syncToGraph },
-        );
-      } catch (error) {
-        console.warn(`Failed to update fact ${fact.factId} with memory ref:`, error);
-      }
-    });
+    const updatePromises = Array.from(this.extractedFacts.values()).map(
+      async (fact) => {
+        try {
+          // Remove progressive tag to mark as finalized
+          await this.factsAPI.update(
+            this.memorySpaceId,
+            fact.factId,
+            {
+              tags: fact.tags.filter((tag) => tag !== "progressive"),
+            },
+            { syncToGraph },
+          );
+        } catch (error) {
+          console.warn(
+            `Failed to update fact ${fact.factId} with memory ref:`,
+            error,
+          );
+        }
+      },
+    );
 
     await Promise.allSettled(updatePromises);
   }
@@ -324,9 +344,10 @@ export class ProgressiveFactExtractor {
     return {
       totalFactsExtracted: this.extractedFacts.size,
       extractionPoints: this.extractionCount,
-      averageFactsPerExtraction: this.extractionCount > 0 
-        ? this.extractedFacts.size / this.extractionCount 
-        : 0,
+      averageFactsPerExtraction:
+        this.extractionCount > 0
+          ? this.extractedFacts.size / this.extractionCount
+          : 0,
     };
   }
 

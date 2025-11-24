@@ -1,6 +1,6 @@
 /**
  * Memgraph-Only Demo - Creates data with relationships
- * 
+ *
  * Run with: npx tsx tests/streaming/demo-memgraph-only.ts
  */
 
@@ -128,18 +128,18 @@ async function main() {
 
   console.log("🔶 View in Memgraph Lab: http://localhost:3001\n");
   console.log("Try these queries:\n");
-  
+
   console.log("1. View everything (nodes + relationships):");
   console.log("   MATCH (n)-[r]->(m) RETURN n, r, m;\n");
-  
+
   console.log("2. View Memory → Conversation connections:");
   console.log("   MATCH (mem:Memory)-[r:PART_OF]->(conv:Conversation)");
   console.log("   RETURN mem, r, conv;\n");
-  
+
   console.log("3. View full path from Memory to User:");
   console.log("   MATCH path = (mem:Memory)-[*]->(u:User)");
   console.log("   RETURN path;\n");
-  
+
   console.log("4. Count relationships:");
   console.log("   MATCH ()-[r]->()");
   console.log("   RETURN type(r) as type, COUNT(r) as count;\n");

@@ -1,6 +1,6 @@
 /**
  * Progressive Storage Handler
- * 
+ *
  * Manages partial memory updates during streaming to enable:
  * - Incremental storage as content arrives
  * - Resumability in case of failures
@@ -21,7 +21,7 @@ export class ProgressiveStorageHandler {
   private readonly conversationId: string;
   private readonly userId: string;
   private readonly updateInterval: number;
-  
+
   private partialMemoryId: string | null = null;
   private lastUpdateTime: number = 0;
   private updateHistory: PartialUpdate[] = [];
@@ -58,20 +58,23 @@ export class ProgressiveStorageHandler {
 
     try {
       // Create initial partial memory with placeholder content
-      const result = await this.client.mutation(api.memories.storePartialMemory, {
-        memorySpaceId: this.memorySpaceId,
-        participantId: params.participantId,
-        conversationId: this.conversationId,
-        userId: this.userId,
-        content: "[Streaming in progress...]",
-        isPartial: true,
-        metadata: {
-          userMessage: params.userMessage,
-          streamStartTime: Date.now(),
+      const result = await this.client.mutation(
+        api.memories.storePartialMemory,
+        {
+          memorySpaceId: this.memorySpaceId,
+          participantId: params.participantId,
+          conversationId: this.conversationId,
+          userId: this.userId,
+          content: "[Streaming in progress...]",
+          isPartial: true,
+          metadata: {
+            userMessage: params.userMessage,
+            streamStartTime: Date.now(),
+          },
+          importance: params.importance || 50,
+          tags: [...(params.tags || []), "streaming", "partial"],
         },
-        importance: params.importance || 50,
-        tags: [...(params.tags || []), "streaming", "partial"],
-      });
+      );
 
       this.partialMemoryId = result.memoryId;
       this.isInitialized = true;
@@ -249,12 +252,12 @@ export function calculateOptimalUpdateInterval(
   if (chunksPerSecond > 10) {
     return 5000; // 5 seconds
   }
-  
+
   // If stream is slow, update more frequently for better progress tracking
   if (chunksPerSecond < 1) {
     return 1000; // 1 second
   }
-  
+
   // Default: 3 seconds
   return 3000;
 }

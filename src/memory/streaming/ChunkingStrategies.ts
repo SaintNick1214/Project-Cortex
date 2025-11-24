@@ -1,6 +1,6 @@
 /**
  * Chunking Strategies
- * 
+ *
  * Different approaches for breaking long responses into chunks:
  * - Token-based: Split by token count
  * - Sentence-based: Split by sentences
@@ -27,23 +27,45 @@ export class ResponseChunker {
     config: ChunkingConfig,
   ): Promise<ContentChunk[]> {
     switch (config.strategy) {
-      case 'token':
-        return this.chunkByTokens(content, config.maxChunkSize, config.overlapSize);
-      
-      case 'sentence':
-        return this.chunkBySentences(content, config.maxChunkSize, config.preserveBoundaries);
-      
-      case 'paragraph':
-        return this.chunkByParagraphs(content, config.maxChunkSize, config.preserveBoundaries);
-      
-      case 'fixed':
-        return this.chunkByFixed(content, config.maxChunkSize, config.overlapSize);
-      
-      case 'semantic':
+      case "token":
+        return this.chunkByTokens(
+          content,
+          config.maxChunkSize,
+          config.overlapSize,
+        );
+
+      case "sentence":
+        return this.chunkBySentences(
+          content,
+          config.maxChunkSize,
+          config.preserveBoundaries,
+        );
+
+      case "paragraph":
+        return this.chunkByParagraphs(
+          content,
+          config.maxChunkSize,
+          config.preserveBoundaries,
+        );
+
+      case "fixed":
+        return this.chunkByFixed(
+          content,
+          config.maxChunkSize,
+          config.overlapSize,
+        );
+
+      case "semantic":
         // Semantic chunking would require embeddings - fallback to sentence for now
-        console.warn('Semantic chunking requires embeddings, falling back to sentence-based');
-        return this.chunkBySentences(content, config.maxChunkSize, config.preserveBoundaries);
-      
+        console.warn(
+          "Semantic chunking requires embeddings, falling back to sentence-based",
+        );
+        return this.chunkBySentences(
+          content,
+          config.maxChunkSize,
+          config.preserveBoundaries,
+        );
+
       default:
         throw new Error(`Unknown chunking strategy: ${config.strategy}`);
     }
@@ -96,7 +118,7 @@ export class ResponseChunker {
       if (endOffset >= content.length) {
         break;
       }
-      
+
       startOffset += stepSize;
       chunkIndex++;
 
@@ -107,7 +129,7 @@ export class ResponseChunker {
     }
 
     // Update total chunks count in metadata
-    chunks.forEach(chunk => {
+    chunks.forEach((chunk) => {
       chunk.metadata.totalChunks = chunks.length;
     });
 
@@ -123,7 +145,7 @@ export class ResponseChunker {
     preserveBoundaries: boolean = true,
   ): ContentChunk[] {
     const chunks: ContentChunk[] = [];
-    
+
     // Split into sentences (simple regex - can be improved)
     const sentenceRegex = /[.!?]+\s+/g;
     const sentences: string[] = [];
@@ -131,10 +153,12 @@ export class ResponseChunker {
     let match;
 
     while ((match = sentenceRegex.exec(content)) !== null) {
-      sentences.push(content.substring(lastIndex, match.index + match[0].length));
+      sentences.push(
+        content.substring(lastIndex, match.index + match[0].length),
+      );
       lastIndex = match.index + match[0].length;
     }
-    
+
     // Add remaining content as last sentence
     if (lastIndex < content.length) {
       sentences.push(content.substring(lastIndex));
@@ -142,19 +166,21 @@ export class ResponseChunker {
 
     if (sentences.length === 0) {
       // No sentence breaks found, treat entire content as one chunk
-      return [{
-        content,
-        chunkIndex: 0,
-        startOffset: 0,
-        endOffset: content.length,
-        metadata: {
+      return [
+        {
+          content,
           chunkIndex: 0,
-          totalChunks: 1,
           startOffset: 0,
           endOffset: content.length,
-          hasOverlap: false,
+          metadata: {
+            chunkIndex: 0,
+            totalChunks: 1,
+            startOffset: 0,
+            endOffset: content.length,
+            hasOverlap: false,
+          },
         },
-      }];
+      ];
     }
 
     // Group sentences into chunks
@@ -167,7 +193,7 @@ export class ResponseChunker {
 
       // Create chunk when we reach maxSentences or end of content
       if (currentChunk.length >= maxSentences || i === sentences.length - 1) {
-        const chunkContent = currentChunk.join('');
+        const chunkContent = currentChunk.join("");
         const endOffset = currentStartOffset + chunkContent.length;
 
         chunks.push({
@@ -190,7 +216,7 @@ export class ResponseChunker {
     }
 
     // Update total chunks count
-    chunks.forEach(chunk => {
+    chunks.forEach((chunk) => {
       chunk.metadata.totalChunks = chunks.length;
     });
 
@@ -206,25 +232,27 @@ export class ResponseChunker {
     preserveBoundaries: boolean = true,
   ): ContentChunk[] {
     const chunks: ContentChunk[] = [];
-    
+
     // Split by double newlines (paragraph breaks)
     const paragraphs = content.split(/\n\n+/);
 
     if (paragraphs.length === 0) {
       // No paragraph breaks, treat as single chunk
-      return [{
-        content,
-        chunkIndex: 0,
-        startOffset: 0,
-        endOffset: content.length,
-        metadata: {
+      return [
+        {
+          content,
           chunkIndex: 0,
-          totalChunks: 1,
           startOffset: 0,
           endOffset: content.length,
-          hasOverlap: false,
+          metadata: {
+            chunkIndex: 0,
+            totalChunks: 1,
+            startOffset: 0,
+            endOffset: content.length,
+            hasOverlap: false,
+          },
         },
-      }];
+      ];
     }
 
     // Group paragraphs into chunks
@@ -237,7 +265,7 @@ export class ResponseChunker {
 
       // Create chunk when we reach maxParagraphs or end of content
       if (currentChunk.length >= maxParagraphs || i === paragraphs.length - 1) {
-        const chunkContent = currentChunk.join('\n\n');
+        const chunkContent = currentChunk.join("\n\n");
         const endOffset = currentStartOffset + chunkContent.length;
 
         chunks.push({
@@ -260,7 +288,7 @@ export class ResponseChunker {
     }
 
     // Update total chunks count
-    chunks.forEach(chunk => {
+    chunks.forEach((chunk) => {
       chunk.metadata.totalChunks = chunks.length;
     });
 
@@ -277,19 +305,21 @@ export class ResponseChunker {
   ): ContentChunk[] {
     // Handle empty content
     if (content.length === 0) {
-      return [{
-        content: '',
-        chunkIndex: 0,
-        startOffset: 0,
-        endOffset: 0,
-        metadata: {
+      return [
+        {
+          content: "",
           chunkIndex: 0,
-          totalChunks: 1,
           startOffset: 0,
           endOffset: 0,
-          hasOverlap: false,
+          metadata: {
+            chunkIndex: 0,
+            totalChunks: 1,
+            startOffset: 0,
+            endOffset: 0,
+            hasOverlap: false,
+          },
         },
-      }];
+      ];
     }
 
     // Validate overlap is smaller than chunk size
@@ -335,12 +365,14 @@ export class ResponseChunker {
 
       // Additional safety: prevent infinite loops
       if (chunkIndex > 100000) {
-        throw new Error("Chunking exceeded maximum iterations - possible infinite loop");
+        throw new Error(
+          "Chunking exceeded maximum iterations - possible infinite loop",
+        );
       }
     }
 
     // Update total chunks count
-    chunks.forEach(chunk => {
+    chunks.forEach((chunk) => {
       chunk.metadata.totalChunks = chunks.length;
     });
 
@@ -359,7 +391,7 @@ export class ResponseChunker {
     // 1. Generate embeddings for sliding windows of text
     // 2. Calculate similarity between adjacent windows
     // 3. Split where similarity drops below threshold
-    // 
+    //
     // For now, fallback to sentence-based chunking
     return this.chunkBySentences(content, 10, true);
   }
@@ -373,26 +405,26 @@ export function estimateOptimalChunkSize(
   strategy: ChunkStrategy,
 ): number {
   switch (strategy) {
-    case 'token':
+    case "token":
       // Aim for ~500 tokens per chunk
       return 500;
-    
-    case 'sentence':
+
+    case "sentence":
       // Aim for 5-10 sentences per chunk
       return contentLength > 10000 ? 10 : 5;
-    
-    case 'paragraph':
+
+    case "paragraph":
       // Aim for 2-3 paragraphs per chunk
       return contentLength > 5000 ? 3 : 2;
-    
-    case 'fixed':
+
+    case "fixed":
       // Aim for 2000 characters per chunk
       return 2000;
-    
-    case 'semantic':
+
+    case "semantic":
       // Similar to sentence-based
       return 10;
-    
+
     default:
       return 2000;
   }

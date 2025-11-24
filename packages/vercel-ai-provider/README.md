@@ -111,9 +111,9 @@ Store partial responses during streaming for resumability:
 ```typescript
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: 'demo-chat',
-  userId: 'user-123',
-  
+  memorySpaceId: "demo-chat",
+  userId: "user-123",
+
   streamingOptions: {
     storePartialResponse: true,
     partialResponseInterval: 3000, // Update every 3 seconds
@@ -128,9 +128,9 @@ Monitor streaming progress in real-time:
 ```typescript
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: 'demo-chat',
-  userId: 'user-123',
-  
+  memorySpaceId: "demo-chat",
+  userId: "user-123",
+
   streamingHooks: {
     onChunk: (event) => {
       console.log(`Chunk ${event.chunkNumber}: ${event.chunk}`);
@@ -144,7 +144,7 @@ const cortexMemory = createCortexMemory({
       console.log(`Facts extracted: ${event.factsExtracted}`);
     },
     onError: (error) => {
-      console.error('Stream error:', error.message);
+      console.error("Stream error:", error.message);
     },
   },
 });
@@ -157,14 +157,15 @@ Automatic collection of streaming performance metrics:
 ```typescript
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: 'demo-chat',
-  userId: 'user-123',
-  
+  memorySpaceId: "demo-chat",
+  userId: "user-123",
+
   enableStreamMetrics: true, // Default: true
 });
 ```
 
 Metrics include:
+
 - First chunk latency
 - Total stream duration
 - Chunks per second
@@ -178,11 +179,11 @@ Extract facts incrementally during streaming instead of waiting for completion:
 ```typescript
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: 'demo-chat',
-  userId: 'user-123',
-  
+  memorySpaceId: "demo-chat",
+  userId: "user-123",
+
   enableFactExtraction: true,
-  
+
   streamingOptions: {
     progressiveFactExtraction: true,
     factExtractionThreshold: 500, // Extract every 500 characters
@@ -197,11 +198,11 @@ Handle interrupted streams with resume tokens:
 ```typescript
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: 'demo-chat',
-  userId: 'user-123',
-  
+  memorySpaceId: "demo-chat",
+  userId: "user-123",
+
   streamingOptions: {
-    partialFailureHandling: 'store-partial', // or 'rollback', 'retry', 'best-effort'
+    partialFailureHandling: "store-partial", // or 'rollback', 'retry', 'best-effort'
     maxRetries: 3,
     generateResumeToken: true,
     streamTimeout: 30000, // 30 seconds
@@ -212,15 +213,15 @@ const cortexMemory = createCortexMemory({
 ### Complete Example with All Features
 
 ```typescript
-import { createCortexMemory } from '@cortexmemory/vercel-ai-provider';
-import { openai } from '@ai-sdk/openai';
-import { streamText, embed } from 'ai';
+import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
+import { openai } from "@ai-sdk/openai";
+import { streamText, embed } from "ai";
 
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: 'advanced-chat',
-  userId: 'user-123',
-  
+  memorySpaceId: "advanced-chat",
+  userId: "user-123",
+
   // Progressive storage
   streamingOptions: {
     storePartialResponse: true,
@@ -229,28 +230,28 @@ const cortexMemory = createCortexMemory({
     progressiveGraphSync: true,
     enableAdaptiveProcessing: true,
   },
-  
+
   // Real-time hooks
   streamingHooks: {
     onProgress: (event) => {
-      websocket.send({ type: 'progress', data: event });
+      websocket.send({ type: "progress", data: event });
     },
     onComplete: (event) => {
       console.log(`Stream metrics:`, event);
     },
   },
-  
+
   // Semantic search
   embeddingProvider: {
     generate: async (text) => {
       const { embedding } = await embed({
-        model: openai.embedding('text-embedding-3-small'),
+        model: openai.embedding("text-embedding-3-small"),
         value: text,
       });
       return embedding;
     },
   },
-  
+
   // Fact extraction
   enableFactExtraction: true,
 });

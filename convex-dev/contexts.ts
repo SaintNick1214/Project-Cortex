@@ -906,7 +906,8 @@ export const getByConversation = query({
 
     return allContexts.filter(
       (c) =>
-        c.conversationRef && c.conversationRef.conversationId === args.conversationId,
+        c.conversationRef &&
+        c.conversationRef.conversationId === args.conversationId,
     );
   },
 });

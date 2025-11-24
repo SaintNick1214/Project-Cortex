@@ -1,9 +1,9 @@
 /**
  * Graph DB Demo - NO CLEANUP
- * 
+ *
  * Creates test data in both Neo4j and Memgraph and LEAVES IT THERE
  * for manual inspection in the UIs.
- * 
+ *
  * Run with: npx tsx tests/graph/demo-no-cleanup.ts
  */
 
@@ -11,10 +11,10 @@ import { CypherGraphAdapter } from "../../src/graph";
 
 async function createDemoData(name: string, config: any) {
   console.log(`\n🔷 Creating demo data in ${name}...`);
-  
+
   const adapter = new CypherGraphAdapter();
   await adapter.connect(config);
-  
+
   // Create User node
   const userId = await adapter.createNode({
     label: "User",
@@ -26,7 +26,7 @@ async function createDemoData(name: string, config: any) {
     },
   });
   console.log(`   ✅ Created User node: ${userId}`);
-  
+
   // Create Conversation node
   const convId = await adapter.createNode({
     label: "Conversation",
@@ -39,7 +39,7 @@ async function createDemoData(name: string, config: any) {
     },
   });
   console.log(`   ✅ Created Conversation node: ${convId}`);
-  
+
   // Create Memory nodes
   const mem1Id = await adapter.createNode({
     label: "Memory",
@@ -58,13 +58,14 @@ async function createDemoData(name: string, config: any) {
     },
   });
   console.log(`   ✅ Created Memory node 1: ${mem1Id}`);
-  
+
   const mem2Id = await adapter.createNode({
     label: "Memory",
     properties: {
       memoryId: "mem-demo-2",
       memorySpaceId: "demo-space",
-      content: "AI is artificial intelligence - computer systems that can perform tasks requiring human intelligence.",
+      content:
+        "AI is artificial intelligence - computer systems that can perform tasks requiring human intelligence.",
       contentType: "raw",
       sourceType: "conversation",
       importance: 85,
@@ -76,7 +77,7 @@ async function createDemoData(name: string, config: any) {
     },
   });
   console.log(`   ✅ Created Memory node 2: ${mem2Id}`);
-  
+
   const mem3Id = await adapter.createNode({
     label: "Memory",
     properties: {
@@ -94,7 +95,7 @@ async function createDemoData(name: string, config: any) {
     },
   });
   console.log(`   ✅ Created Memory node 3: ${mem3Id}`);
-  
+
   // Create relationships (edges)
   const edge1 = await adapter.createEdge({
     from: mem1Id,
@@ -103,7 +104,7 @@ async function createDemoData(name: string, config: any) {
     properties: { messageIndex: 0, createdAt: Date.now() },
   });
   console.log(`   ✅ Created PART_OF_CONVERSATION edge: ${edge1}`);
-  
+
   const edge2 = await adapter.createEdge({
     from: mem2Id,
     to: convId,
@@ -111,7 +112,7 @@ async function createDemoData(name: string, config: any) {
     properties: { messageIndex: 1, createdAt: Date.now() },
   });
   console.log(`   ✅ Created PART_OF_CONVERSATION edge: ${edge2}`);
-  
+
   const edge3 = await adapter.createEdge({
     from: mem3Id,
     to: convId,
@@ -119,7 +120,7 @@ async function createDemoData(name: string, config: any) {
     properties: { messageIndex: 2, createdAt: Date.now() },
   });
   console.log(`   ✅ Created PART_OF_CONVERSATION edge: ${edge3}`);
-  
+
   const edge4 = await adapter.createEdge({
     from: convId,
     to: userId,
@@ -127,7 +128,7 @@ async function createDemoData(name: string, config: any) {
     properties: { createdAt: Date.now() },
   });
   console.log(`   ✅ Created BELONGS_TO_USER edge: ${edge4}`);
-  
+
   const edge5 = await adapter.createEdge({
     from: mem2Id,
     to: mem1Id,
@@ -135,7 +136,7 @@ async function createDemoData(name: string, config: any) {
     properties: { confidence: 0.95, createdAt: Date.now() },
   });
   console.log(`   ✅ Created ANSWERS edge: ${edge5}`);
-  
+
   const edge6 = await adapter.createEdge({
     from: mem3Id,
     to: mem2Id,
@@ -143,22 +144,28 @@ async function createDemoData(name: string, config: any) {
     properties: { relevance: 0.88, createdAt: Date.now() },
   });
   console.log(`   ✅ Created FOLLOWS_UP edge: ${edge6}`);
-  
+
   // Count to verify
   const nodeCount = await adapter.countNodes();
   const edgeCount = await adapter.countEdges();
-  
+
   console.log(`\n   📊 ${name} Summary:`);
   console.log(`      Nodes: ${nodeCount} (1 User, 1 Conversation, 3 Memory)`);
   console.log(`      Relationships: ${edgeCount}`);
-  
+
   await adapter.disconnect();
 }
 
 async function main() {
-  console.log("╔═══════════════════════════════════════════════════════════════╗");
-  console.log("║   Graph DB Demo - Creating Persistent Data                   ║");
-  console.log("╚═══════════════════════════════════════════════════════════════╝");
+  console.log(
+    "╔═══════════════════════════════════════════════════════════════╗",
+  );
+  console.log(
+    "║   Graph DB Demo - Creating Persistent Data                   ║",
+  );
+  console.log(
+    "╚═══════════════════════════════════════════════════════════════╝",
+  );
 
   // Create in Neo4j
   await createDemoData("Neo4j", {
@@ -174,10 +181,16 @@ async function main() {
     password: "cortex-dev-password",
   });
 
-  console.log("\n╔═══════════════════════════════════════════════════════════════╗");
-  console.log("║                    ✅ DATA CREATED!                            ║");
-  console.log("╚═══════════════════════════════════════════════════════════════╝\n");
-  
+  console.log(
+    "\n╔═══════════════════════════════════════════════════════════════╗",
+  );
+  console.log(
+    "║                    ✅ DATA CREATED!                            ║",
+  );
+  console.log(
+    "╚═══════════════════════════════════════════════════════════════╝\n",
+  );
+
   console.log("📊 View in Neo4j Browser (http://localhost:7474):");
   console.log("   Login: neo4j / cortex-dev-password");
   console.log("");
@@ -188,10 +201,12 @@ async function main() {
   console.log("   MATCH (n:Memory) RETURN n;");
   console.log("");
   console.log("   Query 3: See conversation flow:");
-  console.log("   MATCH path = (m:Memory)-[:PART_OF_CONVERSATION]->(c:Conversation)-[:BELONGS_TO_USER]->(u:User)");
+  console.log(
+    "   MATCH path = (m:Memory)-[:PART_OF_CONVERSATION]->(c:Conversation)-[:BELONGS_TO_USER]->(u:User)",
+  );
   console.log("   RETURN path;");
   console.log("");
-  
+
   console.log("📊 View in Memgraph Lab (http://localhost:3001):");
   console.log("   (Auto-connects)");
   console.log("");
@@ -200,16 +215,20 @@ async function main() {
   console.log("");
   console.log("   Query 2: See Q&A relationships:");
   console.log("   MATCH (question:Memory)-[:ANSWERS]-(answer:Memory)");
-  console.log("   RETURN question.content as Question, answer.content as Answer;");
+  console.log(
+    "   RETURN question.content as Question, answer.content as Answer;",
+  );
   console.log("");
-  
+
   console.log("💡 Key Features to Notice:");
-  console.log("   • Memory nodes have streaming metadata (chunkCount, estimatedTokens)");
+  console.log(
+    "   • Memory nodes have streaming metadata (chunkCount, estimatedTokens)",
+  );
   console.log("   • Relationships show conversation flow");
   console.log("   • ANSWERS relationship connects questions to answers");
   console.log("   • FOLLOWS_UP shows conversation continuity");
   console.log("");
-  
+
   console.log("🧹 To clear when done:");
   console.log("   npx tsx tests/graph/clear-databases.ts");
   console.log("");

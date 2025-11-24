@@ -1,6 +1,6 @@
 /**
  * Streaming-specific type definitions for RememberStream API
- * 
+ *
  * Comprehensive types for progressive streaming, real-time processing,
  * error recovery, and advanced streaming features.
  */
@@ -30,7 +30,7 @@ export interface ProgressEvent {
   chunks: number;
   elapsedMs: number;
   estimatedCompletion?: number;
-  currentPhase?: 'streaming' | 'fact-extraction' | 'storage' | 'finalization';
+  currentPhase?: "streaming" | "fact-extraction" | "storage" | "finalization";
 }
 
 /**
@@ -65,19 +65,19 @@ export interface StreamMetrics {
   startTime: number;
   firstChunkLatency: number;
   streamDurationMs: number;
-  
+
   // Throughput
   totalChunks: number;
   totalBytes: number;
   averageChunkSize: number;
   chunksPerSecond: number;
-  
+
   // Processing
   factsExtracted: number;
   partialUpdates: number;
   errorCount: number;
   retryCount: number;
-  
+
   // Estimates
   estimatedTokens: number;
   estimatedCost?: number;
@@ -113,7 +113,11 @@ export interface ProgressiveFact {
  */
 export interface GraphSyncEvent {
   timestamp: number;
-  eventType: 'node-created' | 'node-updated' | 'relationship-created' | 'finalized';
+  eventType:
+    | "node-created"
+    | "node-updated"
+    | "relationship-created"
+    | "finalized";
   nodeId?: string;
   details?: string;
 }
@@ -125,13 +129,22 @@ export interface GraphSyncEvent {
 /**
  * Failure handling strategy
  */
-export type FailureStrategy = 'store-partial' | 'rollback' | 'retry' | 'best-effort';
+export type FailureStrategy =
+  | "store-partial"
+  | "rollback"
+  | "retry"
+  | "best-effort";
 
 /**
  * Error context for debugging
  */
 export interface ErrorContext {
-  phase: 'initialization' | 'streaming' | 'fact-extraction' | 'storage' | 'finalization';
+  phase:
+    | "initialization"
+    | "streaming"
+    | "fact-extraction"
+    | "storage"
+    | "finalization";
   chunkNumber: number;
   bytesProcessed: number;
   partialMemoryId?: string;
@@ -208,7 +221,12 @@ export interface PartialMemoryResult {
 /**
  * Strategy for breaking content into chunks
  */
-export type ChunkStrategy = 'token' | 'sentence' | 'paragraph' | 'fixed' | 'semantic';
+export type ChunkStrategy =
+  | "token"
+  | "sentence"
+  | "paragraph"
+  | "fixed"
+  | "semantic";
 
 /**
  * Configuration for content chunking
@@ -250,7 +268,7 @@ export interface ContentChunk {
 /**
  * Stream type classification
  */
-export type StreamType = 'fast' | 'slow' | 'bursty' | 'steady';
+export type StreamType = "fast" | "slow" | "bursty" | "steady";
 
 /**
  * Processing strategy for adaptive behavior
@@ -280,7 +298,7 @@ export interface MemoryEfficiencyOptions {
 /**
  * Embedding merge strategy for chunked content
  */
-export type EmbeddingMergeStrategy = 'concatenate' | 'average' | 'hierarchical';
+export type EmbeddingMergeStrategy = "concatenate" | "average" | "hierarchical";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Streaming Options
@@ -294,38 +312,38 @@ export interface StreamingOptions {
   syncToGraph?: boolean;
   progressiveGraphSync?: boolean;
   graphSyncInterval?: number;
-  
+
   // Progressive storage
   storePartialResponse?: boolean;
   partialResponseInterval?: number;
-  
+
   // Progressive fact extraction
   progressiveFactExtraction?: boolean;
   factExtractionThreshold?: number;
-  
+
   // Chunking
   chunkSize?: number;
   chunkingStrategy?: ChunkStrategy;
   maxSingleMemorySize?: number;
-  
+
   // Hooks
   hooks?: StreamHooks;
-  
+
   // Error handling
   partialFailureHandling?: FailureStrategy;
   maxRetries?: number;
   retryDelay?: number;
   generateResumeToken?: boolean;
   streamTimeout?: number;
-  
+
   // Memory efficiency
   maxBufferSize?: number;
   incrementalEmbeddings?: boolean;
   embeddingMergeStrategy?: EmbeddingMergeStrategy;
-  
+
   // Adaptive processing
   enableAdaptiveProcessing?: boolean;
-  
+
   // Advanced
   maxResponseLength?: number;
 }
@@ -342,18 +360,18 @@ export interface StreamContext {
   conversationId: string;
   userId: string;
   userName: string;
-  
+
   // State
   accumulatedText: string;
   chunkCount: number;
   estimatedTokens: number;
   elapsedMs: number;
-  
+
   // Processing
   partialMemoryId?: string;
   extractedFactIds: string[];
   graphNodeId?: string;
-  
+
   // Metrics
   metrics: StreamMetrics;
 }
@@ -386,18 +404,18 @@ export interface ProgressiveProcessing {
 export interface EnhancedRememberStreamResult extends RememberResult {
   // Core data (existing)
   fullResponse: string;
-  
+
   // Stream metrics
   streamMetrics: StreamMetrics;
-  
+
   // Progressive processing results
   progressiveProcessing?: ProgressiveProcessing;
-  
+
   // Error/recovery info
   errors?: StreamError[];
   recovered?: boolean;
   resumeToken?: string;
-  
+
   // Performance insights
   performance?: PerformanceInsights;
 }
@@ -417,16 +435,16 @@ export interface EnhancedRememberStreamParams {
   responseStream: ReadableStream<string> | AsyncIterable<string>;
   userId: string;
   userName: string;
-  
+
   // Optional extraction
   extractContent?: (
     userMessage: string,
     agentResponse: string,
   ) => Promise<string | null>;
-  
+
   // Optional embedding
   generateEmbedding?: (content: string) => Promise<number[] | null>;
-  
+
   // Optional fact extraction
   extractFacts?: (
     userMessage: string,
@@ -447,29 +465,32 @@ export interface EnhancedRememberStreamParams {
     confidence: number;
     tags?: string[];
   }> | null>;
-  
+
   // Cloud Mode options
   autoEmbed?: boolean;
   autoSummarize?: boolean;
-  
+
   // Metadata
   importance?: number;
   tags?: string[];
-  
+
   // Resume support
   resumeFrom?: ResumeContext;
-  
+
   // Stream management
   streamTimeout?: number;
   maxResponseLength?: number;
-  
+
   // Chunked processing
-  chunkProcessor?: (chunk: string, context: StreamContext) => Promise<ProcessedChunk>;
-  
+  chunkProcessor?: (
+    chunk: string,
+    context: StreamContext,
+  ) => Promise<ProcessedChunk>;
+
   // Progressive embeddings
   embedChunks?: boolean;
   mergeStrategy?: EmbeddingMergeStrategy;
-  
+
   // Error recovery
   partialFailureHandling?: FailureStrategy;
   resumeToken?: string;

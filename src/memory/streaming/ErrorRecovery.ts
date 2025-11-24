@@ -1,12 +1,12 @@
 /**
  * Error Recovery System
- * 
+ *
  * Handles stream failures with multiple recovery strategies:
  * - Store partial data for later recovery
  * - Rollback to last known good state
  * - Retry with exponential backoff
  * - Best-effort continuation
- * 
+ *
  * Includes resume token generation for interrupted streams.
  */
 
@@ -42,21 +42,21 @@ export class StreamErrorRecovery {
     context: StreamContext,
     options: RecoveryOptions,
   ): Promise<RecoveryResult> {
-    console.warn('Stream error occurred:', error.message);
+    console.warn("Stream error occurred:", error.message);
 
     switch (options.strategy) {
-      case 'store-partial':
+      case "store-partial":
         return await this.storePartialOnFailure(context, options);
-      
-      case 'rollback':
+
+      case "rollback":
         return await this.rollbackToLastState(context);
-      
-      case 'retry':
+
+      case "retry":
         return await this.retryStrategy(context, options);
-      
-      case 'best-effort':
+
+      case "best-effort":
         return await this.bestEffortStrategy(context, options);
-      
+
       default:
         return {
           success: false,
@@ -78,10 +78,10 @@ export class StreamErrorRecovery {
       let resumeToken: string | undefined;
       if (options.preservePartialData) {
         resumeToken = await this.generateResumeToken({
-          resumeToken: '', // Will be filled in
+          resumeToken: "", // Will be filled in
           lastProcessedChunk: context.chunkCount,
           accumulatedContent: context.accumulatedText,
-          partialMemoryId: context.partialMemoryId || '',
+          partialMemoryId: context.partialMemoryId || "",
           factsExtracted: context.extractedFactIds,
           timestamp: Date.now(),
           checksum: this.calculateChecksum(context.accumulatedText),
@@ -90,14 +90,14 @@ export class StreamErrorRecovery {
 
       return {
         success: true,
-        strategy: 'store-partial',
-        partialMemoryId: context.partialMemoryId || '',
+        strategy: "store-partial",
+        partialMemoryId: context.partialMemoryId || "",
         resumeToken,
       };
     } catch (error) {
       return {
         success: false,
-        strategy: 'store-partial',
+        strategy: "store-partial",
         error: error instanceof Error ? error : new Error(String(error)),
       };
     }
@@ -120,12 +120,12 @@ export class StreamErrorRecovery {
 
       return {
         success: true,
-        strategy: 'rollback',
+        strategy: "rollback",
       };
     } catch (error) {
       return {
         success: false,
-        strategy: 'rollback',
+        strategy: "rollback",
         error: error instanceof Error ? error : new Error(String(error)),
       };
     }
@@ -142,7 +142,7 @@ export class StreamErrorRecovery {
     // This just returns a result indicating retry should be attempted
     return {
       success: false,
-      strategy: 'retry',
+      strategy: "retry",
     };
   }
 
@@ -162,12 +162,12 @@ export class StreamErrorRecovery {
 
       return {
         success: false,
-        strategy: 'best-effort',
+        strategy: "best-effort",
       };
     } catch (error) {
       return {
         success: false,
-        strategy: 'best-effort',
+        strategy: "best-effort",
         error: error instanceof Error ? error : new Error(String(error)),
       };
     }
@@ -188,7 +188,7 @@ export class StreamErrorRecovery {
         return await operation();
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
-        
+
         if (attempt < maxRetries - 1) {
           // Calculate exponential backoff delay
           const delay = baseDelay * Math.pow(2, attempt);
@@ -197,7 +197,7 @@ export class StreamErrorRecovery {
       }
     }
 
-    throw lastError || new Error('Max retries exceeded');
+    throw lastError || new Error("Max retries exceeded");
   }
 
   /**
@@ -205,12 +205,12 @@ export class StreamErrorRecovery {
    */
   async generateResumeToken(context: ResumeContext): Promise<string> {
     // Create a unique token
-    const token = `resume_${Date.now()}_${crypto.randomBytes(16).toString('hex')}`;
+    const token = `resume_${Date.now()}_${crypto.randomBytes(16).toString("hex")}`;
 
     // Store resume context in mutable store with TTL
     try {
       await this.client.mutation(api.mutable.set, {
-        namespace: 'resume-tokens',
+        namespace: "resume-tokens",
         key: token,
         value: {
           ...context,
@@ -232,7 +232,7 @@ export class StreamErrorRecovery {
   async validateResumeToken(token: string): Promise<ResumeContext | null> {
     try {
       const stored = await this.client.query(api.mutable.get, {
-        namespace: 'resume-tokens',
+        namespace: "resume-tokens",
         key: token,
       });
 
@@ -250,15 +250,17 @@ export class StreamErrorRecovery {
       }
 
       // Validate checksum
-      const calculatedChecksum = this.calculateChecksum(context.accumulatedContent);
+      const calculatedChecksum = this.calculateChecksum(
+        context.accumulatedContent,
+      );
       if (calculatedChecksum !== context.checksum) {
-        console.warn('Resume context checksum mismatch');
+        console.warn("Resume context checksum mismatch");
         return null;
       }
 
       return context;
     } catch (error) {
-      console.error('Failed to validate resume token:', error);
+      console.error("Failed to validate resume token:", error);
       return null;
     }
   }
@@ -270,13 +272,13 @@ export class StreamErrorRecovery {
   async deleteResumeToken(token: string): Promise<void> {
     try {
       // TODO: Implement mutable.delete mutation in Convex
-      console.warn('Resume token cleanup not yet implemented');
+      console.warn("Resume token cleanup not yet implemented");
       // await this.client.mutation(api.mutable.delete, {
       //   namespace: 'resume-tokens',
       //   key: token,
       // });
     } catch (error) {
-      console.warn('Failed to delete resume token:', error);
+      console.warn("Failed to delete resume token:", error);
       // Non-critical - tokens will expire anyway
     }
   }
@@ -286,9 +288,9 @@ export class StreamErrorRecovery {
    */
   private calculateChecksum(content: string): string {
     return crypto
-      .createHash('sha256')
+      .createHash("sha256")
       .update(content)
-      .digest('hex')
+      .digest("hex")
       .substring(0, 16); // Use first 16 chars for brevity
   }
 
@@ -296,7 +298,7 @@ export class StreamErrorRecovery {
    * Sleep utility for backoff delays
    */
   private sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   /**
@@ -305,7 +307,12 @@ export class StreamErrorRecovery {
   createStreamError(
     error: Error,
     context: StreamContext,
-    phase: 'initialization' | 'streaming' | 'fact-extraction' | 'storage' | 'finalization',
+    phase:
+      | "initialization"
+      | "streaming"
+      | "fact-extraction"
+      | "storage"
+      | "finalization",
   ): StreamError {
     return {
       code: this.errorCodeFromError(error),
@@ -327,15 +334,15 @@ export class StreamErrorRecovery {
    */
   private isRecoverable(error: Error): boolean {
     const recoverablePatterns = [
-      'ECONNRESET',
-      'ETIMEDOUT',
-      'ENOTFOUND',
-      'Network',
-      'timeout',
+      "ECONNRESET",
+      "ETIMEDOUT",
+      "ENOTFOUND",
+      "Network",
+      "timeout",
     ];
 
-    return recoverablePatterns.some(pattern => 
-      error.message.includes(pattern)
+    return recoverablePatterns.some((pattern) =>
+      error.message.includes(pattern),
     );
   }
 
@@ -343,10 +350,10 @@ export class StreamErrorRecovery {
    * Get error code from error
    */
   private errorCodeFromError(error: Error): string {
-    if ('code' in error && typeof error.code === 'string') {
+    if ("code" in error && typeof error.code === "string") {
       return error.code;
     }
-    return 'UNKNOWN_ERROR';
+    return "UNKNOWN_ERROR";
   }
 }
 
@@ -358,7 +365,9 @@ export class ResumableStreamError extends Error {
     public readonly originalError: Error,
     public readonly resumeToken: string,
   ) {
-    super(`Stream interrupted: ${originalError.message}. Resume with token: ${resumeToken}`);
-    this.name = 'ResumableStreamError';
+    super(
+      `Stream interrupted: ${originalError.message}. Resume with token: ${resumeToken}`,
+    );
+    this.name = "ResumableStreamError";
   }
 }

@@ -215,9 +215,9 @@ describe("StreamProcessor", () => {
 
       const processor = new StreamProcessor(context);
       const metrics = processor.getMetrics();
-      
+
       expect(metrics).toBeDefined();
-      expect(typeof metrics.getSnapshot).toBe('function');
+      expect(typeof metrics.getSnapshot).toBe("function");
     });
   });
 
@@ -232,7 +232,7 @@ describe("StreamProcessor", () => {
 
       const processor = new StreamProcessor(context);
       const retrievedContext = processor.getContext();
-      
+
       expect(retrievedContext).toBe(context);
       expect(retrievedContext.memorySpaceId).toBe("test-space");
     });

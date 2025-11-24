@@ -360,11 +360,14 @@ export class MemorySpacesAPI {
       remove?: string[];
     },
   ): Promise<MemorySpace> {
-    const result = await this.client.mutation(api.memorySpaces.updateParticipants, {
-      memorySpaceId,
-      add: updates.add,
-      remove: updates.remove,
-    });
+    const result = await this.client.mutation(
+      api.memorySpaces.updateParticipants,
+      {
+        memorySpaceId,
+        add: updates.add,
+        remove: updates.remove,
+      },
+    );
 
     return result as MemorySpace;
   }
