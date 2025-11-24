@@ -24,7 +24,7 @@ const cortexMemory = createCortexMemory({
 });
 
 const result = await streamText({
-  model: cortexMemory(openai("gpt-4-turbo")),
+  model: cortexMemory(openai("gpt-5-nano")),
   messages,
 });
 ```

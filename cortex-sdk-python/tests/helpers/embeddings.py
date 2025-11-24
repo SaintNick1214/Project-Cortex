@@ -151,7 +151,7 @@ async def summarize_conversation(
     user_message: str, agent_response: str, max_retries: int = 3
 ) -> Optional[str]:
     """
-    Summarize a conversation using GPT-4o-mini.
+    Summarize a conversation using gpt-5-nano.
     
     Extracts key facts from the conversation in one concise sentence.
     Returns None if OpenAI API not available.
@@ -186,7 +186,7 @@ async def summarize_conversation(
             client = OpenAI(api_key=api_key, timeout=30.0)
 
             response = client.chat.completions.create(
-                model="gpt-4o-mini",
+                model="gpt-5-nano",
                 messages=[
                     {
                         "role": "system",

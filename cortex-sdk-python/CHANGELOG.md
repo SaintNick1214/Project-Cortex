@@ -867,7 +867,7 @@ from cortex.types import (
 
 - Real embedding generation with text-embedding-3-small
 - Semantic search validation (non-keyword matching)
-- GPT-4o-mini summarization quality testing
+- gpt-5-nano summarization quality testing
 - Similarity score validation (0-1 range)
 - Enriched conversation context retrieval
 - All tests gracefully skip without OPENAI_API_KEY

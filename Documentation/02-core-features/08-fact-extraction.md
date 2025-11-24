@@ -117,7 +117,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 async function extractFacts(conversation: string): Promise<ExtractedFact[]> {
   const response = await openai.chat.completions.create({
-    model: "gpt-4",
+    model: "gpt-5-nano",
     messages: [
       {
         role: "system",
@@ -183,7 +183,7 @@ async function storeFact(
       category: fact.category,
       confidence: fact.confidence,
       extractedAt: new Date().toISOString(),
-      extractedBy: "gpt-4",
+      extractedBy: "gpt-5-nano",
     },
     userId,
     conversationRef,
@@ -643,7 +643,7 @@ async function buildFactBasedContext(
         confidence: 0.95
       }
     ],
-    extractedBy: "gpt-4",
+    extractedBy: "gpt-5-nano",
     extractedAt: "2025-10-28T10:30:00Z"
   },
 
@@ -815,7 +815,7 @@ async function batchExtractFacts(
     .join("\n\n---\n\n");
 
   const response = await openai.chat.completions.create({
-    model: "gpt-4",
+    model: "gpt-5-nano",
     messages: [
       {
         role: "user",

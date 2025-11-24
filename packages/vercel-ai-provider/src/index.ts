@@ -15,7 +15,7 @@
  *
  * // Use the augmented model
  * const result = await streamText({
- *   model: cortexMemory(openai('gpt-4')),
+ *   model: cortexMemory(openai('gpt-5-nano')),
  *   messages: [{ role: 'user', content: 'What did I tell you about my name?' }],
  * });
  *
@@ -74,7 +74,7 @@ import { createLogger } from "./types";
  *
  * // Use with streamText
  * const result = await streamText({
- *   model: cortexMemory(openai('gpt-4')),
+ *   model: cortexMemory(openai('gpt-5-nano')),
  *   messages,
  * });
  *

@@ -225,7 +225,7 @@ First release of the Cortex Memory Provider for Vercel AI SDK!
 
 **Provider Support:**
 
-- OpenAI (GPT-4, GPT-3.5, etc.)
+- OpenAI (GPT-5 , GPT-3.5, etc.)
 - Anthropic (Claude 3 family)
 - Google (Gemini)
 - Groq

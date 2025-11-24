@@ -716,7 +716,7 @@ const facts = await cortex.facts.list({
 - ✅ 579 comprehensive tests (100% pass rate on Python 3.10-3.14)
 - 📦 Published to PyPI: `pip install cortex-memory`
 - 🧪 Dual-testing infrastructure (LOCAL + MANAGED Convex, identical to TypeScript)
-- 🤝 5 OpenAI integration tests (semantic search, embeddings, GPT-4o-mini summarization)
+- 🤝 5 OpenAI integration tests (semantic search, embeddings, gpt-5-nano summarization)
 - 📊 71% code coverage and growing
 - 🔒 Complete GDPR cascade deletion with verification
 - 🕸️ Full Neo4j/Memgraph graph database integration
@@ -2092,7 +2092,7 @@ Complete dual-layer orchestration with automatic ACID + Vector management! **All
 **Advanced AI Integration Tests (5)**:
 
 - Real embedding validation (text-embedding-3-small, 1536-dim)
-- Real LLM summarization (gpt-4o-mini)
+- Real LLM summarization (gpt-5-nano)
 - Semantic search recall (finds content with different wording)
 - Enrichment validation (dual-layer retrieval)
 - Cosine similarity scoring (0-1 range validation)
@@ -2124,7 +2124,7 @@ Complete dual-layer orchestration with automatic ACID + Vector management! **All
 **Real AI Validation**:
 
 - Tested with OpenAI text-embedding-3-small (1536-dim)
-- Tested with OpenAI gpt-4o-mini (summarization)
+- Tested with OpenAI gpt-5-nano (summarization)
 - Semantic search proven with real embeddings
 - Cosine similarity calculation validated
 - Cost: ~$0.0003 per test run (affordable for CI/CD)
