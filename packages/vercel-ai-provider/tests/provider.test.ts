@@ -28,6 +28,19 @@ jest.mock("@cortexmemory/sdk", () => ({
         memories: [],
         facts: [],
       }),
+      rememberStream: jest.fn().mockResolvedValue({
+        fullResponse: "Test response",
+        conversation: {
+          messageIds: ["msg-1", "msg-2"],
+          conversationId: "conv-1",
+        },
+        memories: [],
+        facts: [],
+        streamMetrics: {
+          totalChunks: 1,
+          streamDurationMs: 100,
+        },
+      }),
     },
     close: jest.fn(),
   })),
@@ -131,5 +144,118 @@ describe("CortexMemoryProvider", () => {
     expect(result.text).toBe("Test response");
     // Underlying model should have been called
     expect(mockUnderlyingModel.doGenerate).toHaveBeenCalled();
+  });
+
+  describe("Enhanced Streaming", () => {
+    it("should wrap stream and return working stream", async () => {
+      const provider = new CortexMemoryProvider(mockUnderlyingModel, mockConfig);
+
+      const result = await provider.doStream({
+        prompt: [{ role: "user", content: "Hello" }],
+        mode: { type: "regular" },
+      } as any);
+
+      // Should have called underlying model
+      expect(mockUnderlyingModel.doStream).toHaveBeenCalled();
+      
+      // Stream should be defined and consumable
+      expect(result.stream).toBeDefined();
+      
+      // Consume the stream completely
+      const chunks: any[] = [];
+      const reader = result.stream.getReader();
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(value);
+        }
+      } finally {
+        reader.releaseLock();
+      }
+
+      // Should have received the mocked chunks
+      expect(chunks.length).toBe(2);
+      expect(chunks[0].type).toBe("text-delta");
+    });
+
+    it("should accept streaming hooks in configuration", async () => {
+      const onChunkMock = jest.fn();
+      const onProgressMock = jest.fn();
+      const onCompleteMock = jest.fn();
+
+      const configWithHooks = {
+        ...mockConfig,
+        streamingHooks: {
+          onChunk: onChunkMock,
+          onProgress: onProgressMock,
+          onComplete: onCompleteMock,
+        },
+      };
+
+      const provider = new CortexMemoryProvider(mockUnderlyingModel, configWithHooks);
+
+      // Configuration should be stored
+      const config = provider.getConfig();
+      expect(config.streamingHooks).toBeDefined();
+      expect(config.streamingHooks?.onChunk).toBe(onChunkMock);
+    });
+
+    it("should accept streaming options in configuration", async () => {
+      const configWithOptions = {
+        ...mockConfig,
+        streamingOptions: {
+          storePartialResponse: true,
+          partialResponseInterval: 2000,
+          progressiveFactExtraction: true,
+        },
+      };
+
+      const provider = new CortexMemoryProvider(mockUnderlyingModel, configWithOptions);
+
+      // Configuration should be stored
+      const config = provider.getConfig();
+      expect(config.streamingOptions).toBeDefined();
+      expect(config.streamingOptions?.storePartialResponse).toBe(true);
+    });
+
+    it("should enable metrics by default", async () => {
+      const provider = new CortexMemoryProvider(mockUnderlyingModel, mockConfig);
+
+      // enableStreamMetrics should default to true (or undefined, which is treated as true)
+      const config = provider.getConfig();
+      expect(config.enableStreamMetrics !== false).toBe(true);
+    });
+
+    it("should wrap streams correctly and forward all chunks", async () => {
+      const provider = new CortexMemoryProvider(mockUnderlyingModel, mockConfig);
+
+      const result = await provider.doStream({
+        prompt: [{ role: "user", content: "Test streaming" }],
+        mode: { type: "regular" },
+      } as any);
+
+      // Verify stream exists
+      expect(result.stream).toBeDefined();
+      expect(typeof result.stream.getReader).toBe("function");
+
+      // Should be able to consume the stream
+      let streamCompleted = false;
+      const reader = result.stream.getReader();
+      try {
+        while (true) {
+          const { done } = await reader.read();
+          if (done) {
+            streamCompleted = true;
+            break;
+          }
+        }
+      } finally {
+        reader.releaseLock();
+      }
+
+      // Stream should complete successfully
+      expect(streamCompleted).toBe(true);
+    });
   });
 });
