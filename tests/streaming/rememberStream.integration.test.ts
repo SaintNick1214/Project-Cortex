@@ -120,10 +120,10 @@ describe("rememberStream Integration Tests", () => {
         },
         {
           hooks: {
-            onChunk: (_event) => {
+            onChunk: (event) => {
               chunks.push(event.chunk);
             },
-            onProgress: (_event) => {
+            onProgress: (event) => {
               progressCallbacks++;
             },
             onComplete: (_event) => {

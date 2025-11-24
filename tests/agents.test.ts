@@ -712,21 +712,23 @@ describe("Agents API (Coordination Layer)", () => {
       expect(result.agentIds).toHaveLength(0);
     });
 
-    it("unregisters with cascade deletion", async () => {
-      // First clean up any existing memories for bulk-agent-1
-      try {
-        const existingMemories = await cortex.vector.list({
-          memorySpaceId: "test-space",
-        });
-        const existingAgentMemories = existingMemories.filter(
-          (m) => m.participantId === "bulk-agent-1",
-        );
-        for (const memory of existingAgentMemories) {
-          await cortex.vector.delete("test-space", memory.memoryId);
+    it(
+      "unregisters with cascade deletion",
+      async () => {
+        // First clean up any existing memories for bulk-agent-1
+        try {
+          const existingMemories = await cortex.vector.list({
+            memorySpaceId: "test-space",
+          });
+          const existingAgentMemories = existingMemories.filter(
+            (m) => m.participantId === "bulk-agent-1",
+          );
+          for (const memory of existingAgentMemories) {
+            await cortex.vector.delete("test-space", memory.memoryId);
+          }
+        } catch (_error) {
+          // Ignore cleanup errors
         }
-      } catch (_error) {
-        // Ignore cleanup errors
-      }
 
       // Create data for bulk-agent-1
       const conv = await cortex.conversations.create({
@@ -770,6 +772,8 @@ describe("Agents API (Coordination Layer)", () => {
       // timing issue where memories may not be immediately removed from vector.list()
       // The operation itself completes successfully (totalDataDeleted > 0),
       // indicating the cascade deletion logic works correctly
-    }, 30000);
+      },
+      60000,
+    ); // Increased timeout for cascade deletion which can be slow in managed mode
   });
 });
