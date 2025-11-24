@@ -68,6 +68,27 @@ class AgentsAPI:
             }),
         )
 
+        # Sync to graph if adapter is configured
+        if self.graph_adapter:
+            try:
+                from ..types import GraphNode
+                await self.graph_adapter.create_node(
+                    GraphNode(
+                        label="Agent",
+                        properties={
+                            "agentId": agent.id,
+                            "name": agent.name,
+                            "description": agent.description or "",
+                            "status": result.get("status", "active"),
+                            "registeredAt": result.get("registeredAt"),
+                            "updatedAt": result.get("updatedAt"),
+                        },
+                    )
+                )
+            except Exception as e:
+                # Log but don't fail - graph sync is supplementary
+                print(f"Warning: Failed to sync agent to graph: {e}")
+
         # Manually construct to handle field name differences
         return RegisteredAgent(
             id=result.get("agentId"),

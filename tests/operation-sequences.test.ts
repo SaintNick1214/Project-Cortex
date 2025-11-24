@@ -715,8 +715,7 @@ describe("Operation Sequence Validation", () => {
   // ══════════════════════════════════════════════════════════════════════
 
   describe("Users: Data Evolution Sequence", () => {
-    it.skip("update→get→merge→get→delete validates profile changes", async () => {
-      // Skipped: merge() not in TypeScript SDK
+    it("update→get→merge→get→delete validates profile changes", async () => {
       const userId = `user-seq-${Date.now()}`;
 
       // STEP 1: Create via update
@@ -731,9 +730,8 @@ describe("Operation Sequence Validation", () => {
       const afterCreate = await cortex.users.get(userId);
       expect(afterCreate!.data.name).toBe("Test User");
 
-      // STEP 3: Merge additional data
-      // Note: merge not in TypeScript SDK - skip this test
-      const merged = await cortex.users.update(userId, {
+      // STEP 3: Merge additional data using merge() method
+      const merged = await cortex.users.merge(userId, {
         preferences: { theme: "dark" },
       });
 
@@ -743,8 +741,7 @@ describe("Operation Sequence Validation", () => {
       // STEP 4: Get (validate merge)
       const afterMerge = await cortex.users.get(userId);
       expect(afterMerge!.data.name).toBe("Test User");
-      // Note: merge not implemented in TypeScript SDK - using update instead
-      // expect(afterMerge!.data.preferences.theme).toBe("dark");
+      expect((afterMerge!.data as any)?.preferences?.theme).toBe("dark");
 
       // STEP 5: Delete
       await cortex.users.delete(userId, { cascade: true });

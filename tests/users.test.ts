@@ -824,7 +824,15 @@ describe("Users API (Coordination Layer)", () => {
 
   describe("New API Methods", () => {
     beforeEach(async () => {
-      await cleanup.deleteUser("new-user-123");
+      // Cleanup user if exists
+      try {
+        const user = await cortex.users.get("new-user-123");
+        if (user) {
+          await cortex.users.delete("new-user-123");
+        }
+      } catch (error) {
+        // User doesn't exist, continue
+      }
     });
 
     describe("getOrCreate()", () => {
@@ -837,8 +845,8 @@ describe("Users API (Coordination Layer)", () => {
 
         expect(result).toBeDefined();
         expect(result.id).toBe("new-user-123");
-        expect(result.data.displayName).toBe("New User");
-        expect(result.data.preferences.theme).toBe("light");
+        expect((result.data as any).displayName).toBe("New User");
+        expect((result.data as any).preferences.theme).toBe("light");
         expect(result.version).toBe(1);
       });
 
@@ -892,12 +900,12 @@ describe("Users API (Coordination Layer)", () => {
           },
         });
 
-        expect(result.data.displayName).toBe("Alex");
-        expect(result.data.preferences.theme).toBe("dark"); // Preserved
-        expect(result.data.preferences.language).toBe("en"); // Preserved
-        expect(result.data.preferences.notifications).toBe(true); // Added
-        expect(result.data.metadata.tier).toBe("pro"); // Preserved
-        expect(result.data.metadata.lastSeen).toBeDefined(); // Added
+        expect((result.data as any).displayName).toBe("Alex");
+        expect((result.data as any).preferences.theme).toBe("dark"); // Preserved
+        expect((result.data as any).preferences.language).toBe("en"); // Preserved
+        expect((result.data as any).preferences.notifications).toBe(true); // Added
+        expect((result.data as any).metadata.tier).toBe("pro"); // Preserved
+        expect((result.data as any).metadata.lastSeen).toBeDefined(); // Added
       });
 
       it("overwrites non-object values", async () => {
@@ -948,10 +956,10 @@ describe("Users API (Coordination Layer)", () => {
           },
         });
 
-        expect(result.data.settings.ui.theme).toBe("dark"); // Preserved
-        expect(result.data.settings.ui.fontSize).toBe(16); // Updated
-        expect(result.data.settings.notifications.email).toBe(true); // Preserved
-        expect(result.data.settings.notifications.push).toBe(true); // Added
+        expect((result.data as any).settings.ui.theme).toBe("dark"); // Preserved
+        expect((result.data as any).settings.ui.fontSize).toBe(16); // Updated
+        expect((result.data as any).settings.notifications.email).toBe(true); // Preserved
+        expect((result.data as any).settings.notifications.push).toBe(true); // Added
       });
     });
   });
