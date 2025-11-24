@@ -2,6 +2,32 @@
 
 All notable changes to the create-cortex-memories wizard will be documented in this file.
 
+## [0.2.0] - 2025-11-24
+
+### Added
+
+**Smart Version Detection:**
+
+- CLI now automatically fetches the latest SDK version from npm registry
+- Dynamically detects and installs the correct Convex version required by the SDK
+- Template always uses `"latest"` for SDK to ensure newest features
+- Convex version is automatically synced with SDK's peerDependencies
+- No more manual version maintenance or version drift issues
+
+**User Experience:**
+
+- New spinner showing SDK version and Convex version being used
+- Clear messaging when Convex version is injected from SDK metadata
+- Graceful fallback to safe defaults if npm registry is unavailable
+
+### Changed
+
+**Template:**
+
+- Updated SDK to use `"latest"` instead of pinned version
+- Convex version is now dynamically determined at scaffolding time
+- Ensures perfect compatibility between SDK and Convex versions
+
 ## [0.1.6] - 2025-11-22
 
 ### Changed
