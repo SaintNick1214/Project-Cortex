@@ -258,7 +258,7 @@ def validate_version(version: int) -> None:
             "version",
         )
 
-    if not isinstance(version, int) or version != int(version):
+    if not isinstance(version, int) and version != int(version):
         raise ContextsValidationError(
             f"version must be an integer, got {version}",
             "INVALID_RANGE",
