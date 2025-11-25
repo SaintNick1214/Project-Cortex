@@ -52,7 +52,7 @@ async function summarizeConversation(
   }
 
   const response = await openai.chat.completions.create({
-    model: "gpt-5-nano",
+    model: "gpt-4.1-nano",
     messages: [
       {
         role: "system",
@@ -2815,7 +2815,7 @@ async function showAdvancedMemoryMenu() {
     return;
   }
   console.log("\n🤖 Advanced OpenAI Integration Tests");
-  console.log("Uses: text-embedding-3-small (1536-dim) + gpt-5-nano");
+  console.log("Uses: text-embedding-3-small (1536-dim) + gpt-4.1-nano");
   console.log("Cost: ~$0.0003 per test run\n");
 }
 
@@ -3036,7 +3036,7 @@ async function testMemoryRememberWithAI() {
   }
 
   console.log(`\n🧠 Testing: memory.remember() with real AI...`);
-  console.log(`Using: text-embedding-3-small (1536-dim) + gpt-5-nano\n`);
+  console.log(`Using: text-embedding-3-small (1536-dim) + gpt-4.1-nano\n`);
 
   // Create conversation
   const conv = await cortex.conversations.create({
@@ -3204,7 +3204,7 @@ async function testSummarizationQuality() {
     console.log(`  "${original}"`);
     console.log(`  Length: ${original.length} chars`);
 
-    console.log(`\nSummarized by gpt-5-nano:`);
+    console.log(`\nSummarized by gpt-4.1-nano:`);
     console.log(`  "${memory.content}"`);
     console.log(`  Length: ${memory.content.length} chars`);
 

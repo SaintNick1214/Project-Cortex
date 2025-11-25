@@ -54,7 +54,7 @@ export async function POST(req: Request) {
 
     // 4. Generate response with both contexts
     const result = await streamText({
-      model: cortexMemory(openai("gpt-5-nano")),
+      model: cortexMemory(openai("gpt-4.1-nano")),
       messages,
       system: `You are a helpful assistant with access to documents and conversation memory.
       
