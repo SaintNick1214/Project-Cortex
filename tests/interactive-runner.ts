@@ -64,7 +64,7 @@ async function summarizeConversation(
         content: `User: ${userMessage}\nAgent: ${agentResponse}`,
       },
     ],
-    // temperature not supported with gpt-4.1-nano, uses default of 1
+    // temperature not supported with gpt-5-nano, uses default of 1
   });
 
   return response.choices[0].message.content;
