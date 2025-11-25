@@ -308,7 +308,7 @@ export interface CortexMemoryModel {
    * @example
    * ```typescript
    * import { openai } from '@ai-sdk/openai';
-   * const model = cortexMemory(openai('gpt-5-nano'));
+   * const model = cortexMemory(openai('gpt-4.1-nano'));
    *
    * const result = await streamText({
    *   model,

@@ -283,7 +283,7 @@ async def test_openai_validates_summarization_quality(
     """
     Port of: memory.test.ts - "validates summarization quality"
     
-    Validates that gpt-5-nano produces concise, accurate summaries.
+    Validates that gpt-4.1-nano produces concise, accurate summaries.
     """
     if not embeddings_available():
         pytest.skip("OPENAI_API_KEY not set")

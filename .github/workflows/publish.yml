@@ -381,7 +381,7 @@ jobs:
           });
 
           const result = await streamText({
-            model: cortexMemory(openai('gpt-5-nano')),
+            model: cortexMemory(openai('gpt-4.1-nano')),
             messages
           });
           \`\`\`
