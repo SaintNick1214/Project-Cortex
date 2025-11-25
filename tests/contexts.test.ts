@@ -96,11 +96,13 @@ describe("Context Chains API", () => {
     });
 
     it("throws error for non-existent parent", async () => {
+      // Note: This tests BACKEND validation (requires DB lookup)
+      // Using a properly formatted contextId that doesn't exist in the database
       await expect(
         cortex.contexts.create({
           purpose: "Orphan context",
           memorySpaceId: "test-space",
-          parentId: "ctx-does-not-exist",
+          parentId: "ctx-9999999999-nonexistent",
         }),
       ).rejects.toThrow("PARENT_NOT_FOUND");
     });
@@ -127,7 +129,8 @@ describe("Context Chains API", () => {
     });
 
     it("returns null for non-existent context", async () => {
-      const context = await cortex.contexts.get("ctx-does-not-exist");
+      // Using a properly formatted contextId that doesn't exist in the database
+      const context = await cortex.contexts.get("ctx-9999999999-nonexistent");
 
       expect(context).toBeNull();
     });
@@ -213,6 +216,7 @@ describe("Context Chains API", () => {
     });
 
     it("throws error when deleting parent with children", async () => {
+      // Note: This tests BACKEND validation (requires DB lookup)
       const root = await cortex.contexts.create({
         purpose: "Parent with children",
         memorySpaceId: "supervisor-space",
@@ -618,6 +622,434 @@ describe("Context Chains API", () => {
       const deleted = await cortex.contexts.get(created.contextId);
 
       expect(deleted).toBeNull();
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Client-Side Validation
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Client-Side Validation", () => {
+    describe("create() validation", () => {
+      it("should throw on missing purpose", async () => {
+        await expect(
+          cortex.contexts.create({
+            purpose: "",
+            memorySpaceId: "test-space",
+          }),
+        ).rejects.toThrow("purpose");
+      });
+
+      it("should throw on whitespace-only purpose", async () => {
+        await expect(
+          cortex.contexts.create({
+            purpose: "   ",
+            memorySpaceId: "test-space",
+          }),
+        ).rejects.toThrow("whitespace");
+      });
+
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(
+          cortex.contexts.create({
+            purpose: "Test",
+            memorySpaceId: "",
+          }),
+        ).rejects.toThrow("memorySpaceId");
+      });
+
+      it("should throw on invalid parentId format", async () => {
+        await expect(
+          cortex.contexts.create({
+            purpose: "Test",
+            memorySpaceId: "test-space",
+            parentId: "invalid-format",
+          }),
+        ).rejects.toThrow("Invalid contextId format");
+      });
+
+      it("should throw on invalid status", async () => {
+        await expect(
+          cortex.contexts.create({
+            purpose: "Test",
+            memorySpaceId: "test-space",
+            status: "pending" as any,
+          }),
+        ).rejects.toThrow("Invalid status");
+      });
+
+      it("should throw on invalid conversationRef", async () => {
+        await expect(
+          cortex.contexts.create({
+            purpose: "Test",
+            memorySpaceId: "test-space",
+            conversationRef: {} as any,
+          }),
+        ).rejects.toThrow("conversationId");
+      });
+
+      it("should throw on invalid data type", async () => {
+        await expect(
+          cortex.contexts.create({
+            purpose: "Test",
+            memorySpaceId: "test-space",
+            data: "not an object" as any,
+          }),
+        ).rejects.toThrow("data must be an object");
+      });
+    });
+
+    describe("get() validation", () => {
+      it("should throw on missing contextId", async () => {
+        await expect(cortex.contexts.get("")).rejects.toThrow("contextId");
+      });
+
+      it("should throw on invalid contextId format", async () => {
+        await expect(cortex.contexts.get("invalid-id")).rejects.toThrow(
+          "Invalid contextId format",
+        );
+      });
+    });
+
+    describe("update() validation", () => {
+      it("should throw on missing contextId", async () => {
+        await expect(
+          cortex.contexts.update("", { status: "completed" }),
+        ).rejects.toThrow("contextId");
+      });
+
+      it("should throw on invalid contextId format", async () => {
+        await expect(
+          cortex.contexts.update("invalid-id", { status: "completed" }),
+        ).rejects.toThrow("Invalid contextId format");
+      });
+
+      it("should throw on invalid status", async () => {
+        await expect(
+          cortex.contexts.update("ctx-123-abc", { status: "done" as any }),
+        ).rejects.toThrow("Invalid status");
+      });
+
+      it("should throw on invalid completedAt timestamp", async () => {
+        await expect(
+          cortex.contexts.update("ctx-123-abc", { completedAt: -1 }),
+        ).rejects.toThrow("must be > 0");
+      });
+    });
+
+    describe("delete() validation", () => {
+      it("should throw on missing contextId", async () => {
+        await expect(cortex.contexts.delete("")).rejects.toThrow("contextId");
+      });
+
+      it("should throw on invalid contextId format", async () => {
+        await expect(cortex.contexts.delete("invalid-id")).rejects.toThrow(
+          "Invalid contextId format",
+        );
+      });
+    });
+
+    describe("list() validation", () => {
+      it("should throw on invalid depth", async () => {
+        await expect(cortex.contexts.list({ depth: -1 })).rejects.toThrow(
+          "depth must be >= 0",
+        );
+      });
+
+      it("should throw on invalid limit", async () => {
+        await expect(cortex.contexts.list({ limit: 0 })).rejects.toThrow(
+          "limit must be > 0",
+        );
+      });
+
+      it("should throw on limit exceeding max", async () => {
+        await expect(cortex.contexts.list({ limit: 1001 })).rejects.toThrow(
+          "limit must be <= 1000",
+        );
+      });
+
+      it("should throw on invalid status", async () => {
+        await expect(
+          cortex.contexts.list({ status: "pending" as any }),
+        ).rejects.toThrow("Invalid status");
+      });
+
+      it("should throw on invalid parentId format", async () => {
+        await expect(
+          cortex.contexts.list({ parentId: "invalid-format" }),
+        ).rejects.toThrow("Invalid contextId format");
+      });
+
+      it("should throw on invalid rootId format", async () => {
+        await expect(
+          cortex.contexts.list({ rootId: "invalid-format" }),
+        ).rejects.toThrow("Invalid contextId format");
+      });
+    });
+
+    describe("count() validation", () => {
+      it("should throw on invalid status", async () => {
+        await expect(
+          cortex.contexts.count({ status: "pending" as any }),
+        ).rejects.toThrow("Invalid status");
+      });
+    });
+
+    describe("getChain() validation", () => {
+      it("should throw on missing contextId", async () => {
+        await expect(cortex.contexts.getChain("")).rejects.toThrow(
+          "contextId",
+        );
+      });
+
+      it("should throw on invalid contextId format", async () => {
+        await expect(cortex.contexts.getChain("invalid-id")).rejects.toThrow(
+          "Invalid contextId format",
+        );
+      });
+    });
+
+    describe("getRoot() validation", () => {
+      it("should throw on missing contextId", async () => {
+        await expect(cortex.contexts.getRoot("")).rejects.toThrow("contextId");
+      });
+
+      it("should throw on invalid contextId format", async () => {
+        await expect(cortex.contexts.getRoot("invalid-id")).rejects.toThrow(
+          "Invalid contextId format",
+        );
+      });
+    });
+
+    describe("getChildren() validation", () => {
+      it("should throw on missing contextId", async () => {
+        await expect(cortex.contexts.getChildren("")).rejects.toThrow(
+          "contextId",
+        );
+      });
+
+      it("should throw on invalid contextId format", async () => {
+        await expect(
+          cortex.contexts.getChildren("invalid-id"),
+        ).rejects.toThrow("Invalid contextId format");
+      });
+
+      it("should throw on invalid status option", async () => {
+        await expect(
+          cortex.contexts.getChildren("ctx-123-abc", {
+            status: "pending" as any,
+          }),
+        ).rejects.toThrow("Invalid status");
+      });
+    });
+
+    describe("addParticipant() validation", () => {
+      it("should throw on missing contextId", async () => {
+        await expect(
+          cortex.contexts.addParticipant("", "participant-123"),
+        ).rejects.toThrow("contextId");
+      });
+
+      it("should throw on invalid contextId format", async () => {
+        await expect(
+          cortex.contexts.addParticipant("invalid-id", "participant-123"),
+        ).rejects.toThrow("Invalid contextId format");
+      });
+
+      it("should throw on empty participantId", async () => {
+        await expect(
+          cortex.contexts.addParticipant("ctx-123-abc", ""),
+        ).rejects.toThrow("participantId");
+      });
+    });
+
+    describe("removeParticipant() validation", () => {
+      it("should throw on missing contextId", async () => {
+        await expect(
+          cortex.contexts.removeParticipant("", "participant-123"),
+        ).rejects.toThrow("contextId");
+      });
+
+      it("should throw on empty participantId", async () => {
+        await expect(
+          cortex.contexts.removeParticipant("ctx-123-abc", ""),
+        ).rejects.toThrow("participantId");
+      });
+    });
+
+    describe("grantAccess() validation", () => {
+      it("should throw on missing contextId", async () => {
+        await expect(
+          cortex.contexts.grantAccess("", "space-123", "read-only"),
+        ).rejects.toThrow("contextId");
+      });
+
+      it("should throw on empty targetMemorySpaceId", async () => {
+        await expect(
+          cortex.contexts.grantAccess("ctx-123-abc", "", "read-only"),
+        ).rejects.toThrow("targetMemorySpaceId");
+      });
+
+      it("should throw on empty scope", async () => {
+        await expect(
+          cortex.contexts.grantAccess("ctx-123-abc", "space-123", ""),
+        ).rejects.toThrow("scope");
+      });
+    });
+
+    describe("updateMany() validation", () => {
+      it("should throw on empty filters", async () => {
+        await expect(
+          cortex.contexts.updateMany({}, { status: "completed" }),
+        ).rejects.toThrow("filters must include at least one");
+      });
+
+      it("should throw on empty updates", async () => {
+        await expect(
+          cortex.contexts.updateMany({ memorySpaceId: "test" }, {}),
+        ).rejects.toThrow("updates must include at least one");
+      });
+
+      it("should throw on invalid filter status", async () => {
+        await expect(
+          cortex.contexts.updateMany(
+            { status: "pending" as any },
+            { data: {} },
+          ),
+        ).rejects.toThrow("Invalid status");
+      });
+
+      it("should throw on invalid update status", async () => {
+        await expect(
+          cortex.contexts.updateMany(
+            { memorySpaceId: "test" },
+            { status: "done" as any },
+          ),
+        ).rejects.toThrow("Invalid status");
+      });
+    });
+
+    describe("deleteMany() validation", () => {
+      it("should throw on empty filters", async () => {
+        await expect(cortex.contexts.deleteMany({})).rejects.toThrow(
+          "filters must include at least one",
+        );
+      });
+
+      it("should throw on invalid completedBefore", async () => {
+        await expect(
+          cortex.contexts.deleteMany({ completedBefore: -1 }),
+        ).rejects.toThrow("must be > 0");
+      });
+
+      it("should throw on invalid status", async () => {
+        await expect(
+          cortex.contexts.deleteMany({ status: "pending" as any }),
+        ).rejects.toThrow("Invalid status");
+      });
+    });
+
+    describe("export() validation", () => {
+      it("should throw on invalid format", async () => {
+        await expect(
+          cortex.contexts.export({}, { format: "xml" as any }),
+        ).rejects.toThrow("Invalid format");
+      });
+
+      it("should throw on invalid filter status", async () => {
+        await expect(
+          cortex.contexts.export(
+            { status: "pending" as any },
+            { format: "json" },
+          ),
+        ).rejects.toThrow("Invalid status");
+      });
+    });
+
+    describe("getByConversation() validation", () => {
+      it("should throw on missing conversationId", async () => {
+        await expect(cortex.contexts.getByConversation("")).rejects.toThrow(
+          "conversationId",
+        );
+      });
+
+      it("should throw on invalid conversationId format", async () => {
+        await expect(
+          cortex.contexts.getByConversation("invalid-id"),
+        ).rejects.toThrow("Invalid conversationId format");
+      });
+    });
+
+    describe("getVersion() validation", () => {
+      it("should throw on missing contextId", async () => {
+        await expect(cortex.contexts.getVersion("", 1)).rejects.toThrow(
+          "contextId",
+        );
+      });
+
+      it("should throw on invalid contextId format", async () => {
+        await expect(
+          cortex.contexts.getVersion("invalid-id", 1),
+        ).rejects.toThrow("Invalid contextId format");
+      });
+
+      it("should throw on invalid version number", async () => {
+        await expect(
+          cortex.contexts.getVersion("ctx-123-abc", 0),
+        ).rejects.toThrow("version must be >= 1");
+      });
+
+      it("should throw on negative version", async () => {
+        await expect(
+          cortex.contexts.getVersion("ctx-123-abc", -1),
+        ).rejects.toThrow("version must be >= 1");
+      });
+
+      it("should throw on non-integer version", async () => {
+        await expect(
+          cortex.contexts.getVersion("ctx-123-abc", 1.5),
+        ).rejects.toThrow("version must be an integer");
+      });
+    });
+
+    describe("getHistory() validation", () => {
+      it("should throw on missing contextId", async () => {
+        await expect(cortex.contexts.getHistory("")).rejects.toThrow(
+          "contextId",
+        );
+      });
+
+      it("should throw on invalid contextId format", async () => {
+        await expect(cortex.contexts.getHistory("invalid-id")).rejects.toThrow(
+          "Invalid contextId format",
+        );
+      });
+    });
+
+    describe("getAtTimestamp() validation", () => {
+      it("should throw on missing contextId", async () => {
+        await expect(
+          cortex.contexts.getAtTimestamp("", new Date()),
+        ).rejects.toThrow("contextId");
+      });
+
+      it("should throw on invalid contextId format", async () => {
+        await expect(
+          cortex.contexts.getAtTimestamp("invalid-id", new Date()),
+        ).rejects.toThrow("Invalid contextId format");
+      });
+
+      it("should throw on invalid date", async () => {
+        await expect(
+          cortex.contexts.getAtTimestamp("ctx-123-abc", new Date("invalid")),
+        ).rejects.toThrow("must be a valid Date");
+      });
+
+      it("should throw on non-Date object", async () => {
+        await expect(
+          cortex.contexts.getAtTimestamp("ctx-123-abc", 1234567890 as any),
+        ).rejects.toThrow("must be a Date object");
+      });
     });
   });
 });

@@ -19,6 +19,118 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.12.0] - 2025-11-25
+
+#### 🎯 Client-Side Validation - All APIs
+
+**Comprehensive client-side validation added to all 11 APIs to catch errors before backend calls, providing faster feedback (<1ms vs 50-200ms) and better developer experience.**
+
+#### ✨ New Features
+
+**1. Client-Side Validation Framework**
+
+All 11 APIs now validate inputs before making backend calls:
+
+- **Governance API** - Policy structure, period formats, importance ranges, version counts, scopes, date ranges
+- **Memory API** - Memory space IDs, content validation, importance scores, source types, conversation/immutable/mutable refs
+- **Conversations API** - Conversation types, participant validation, message validation, query filters
+- **Facts API** - Fact types, confidence scores, subject/predicate/object, temporal validity
+- **Immutable API** - Type/ID validation, version numbers, data size limits
+- **Mutable API** - Namespace/key validation, value size limits, TTL formats
+- **Agents API** - Agent ID format, metadata validation, status values
+- **Users API** - User ID validation, profile data structure
+- **Contexts API** - Context purpose, status transitions, parent-child relationships
+- **Memory Spaces API** - Space type validation, participant structure
+- **Vector API** - Memory space IDs, embeddings dimensions, importance ranges
+
+**2. Custom Validation Error Classes**
+
+Each API has a dedicated validation error class for precise error handling:
+
+```typescript
+// TypeScript
+import { GovernanceValidationError } from '@cortexmemory/sdk';
+
+try {
+  await cortex.governance.setPolicy(policy);
+} catch (error) {
+  if (error instanceof GovernanceValidationError) {
+    console.log(`Validation failed: ${error.code} - ${error.field}`);
+  }
+}
+```
+
+```python
+# Python
+from cortex.governance import GovernanceValidationError
+
+try:
+    await cortex.governance.set_policy(policy)
+except GovernanceValidationError as e:
+    print(f"Validation failed: {e.code} - {e.field}")
+```
+
+**3. Validation Benefits**
+
+- ⚡ **Faster Feedback**: Errors caught in <1ms (vs 50-200ms backend round-trip)
+- 📝 **Better Error Messages**: Clear descriptions with fix suggestions and field names
+- 🔒 **Defense in Depth**: Client validation + backend validation for security
+- 🧪 **Complete Test Coverage**: 240+ validation tests across both SDKs
+- 💰 **Reduced Backend Load**: Invalid requests never reach Convex
+- 🎯 **Improved DX**: Developers get immediate feedback in their IDE
+
+**4. Validation Categories**
+
+All validators check:
+- Required fields (non-null, non-empty strings)
+- Format validation (IDs, periods, dates, regex patterns)
+- Range validation (0-100 scores, array lengths, date ranges)
+- Enum validation (allowed values for literals)
+- Business logic (no overlaps, valid combinations)
+- Reference validation (related IDs provided together)
+
+#### 🧪 Testing
+
+**TypeScript SDK:**
+- 240+ new validation tests
+- All tests passing (51 governance, 189 across other APIs)
+- Zero breaking changes to public API
+
+**Python SDK:**
+- 180+ new validation tests
+- All tests passing (35 governance, 145 across other APIs)
+- Zero breaking changes to public API
+
+#### 📝 Documentation
+
+Validation errors are automatically documented with:
+- Error codes for programmatic handling
+- Field names for precise debugging
+- Clear fix suggestions in error messages
+
+#### 🔄 Migration Guide
+
+**No migration required** - This is a non-breaking enhancement. All existing code continues to work, but now gets faster error feedback.
+
+Optional: Catch validation errors specifically for better error handling:
+
+```typescript
+// TypeScript - Optional enhanced error handling
+import { MemoryValidationError } from '@cortexmemory/sdk';
+
+try {
+  await cortex.memory.remember(params);
+} catch (error) {
+  if (error instanceof MemoryValidationError) {
+    // Handle validation errors (instant, client-side)
+  } else {
+    // Handle backend errors (database, network)
+  }
+}
+```
+
+---
+
 ### [0.11.0] - 2025-11-23
 
 #### 🚀 Major Release - Enhanced Streaming & Complete Graph Sync

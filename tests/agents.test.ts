@@ -129,6 +129,324 @@ describe("Agents API (Coordination Layer)", () => {
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Client-Side Validation
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Client-Side Validation", () => {
+    describe("register() validation", () => {
+      it("should throw on missing agent ID", async () => {
+        await expect(
+          cortex.agents.register({
+            name: "Test Agent",
+          } as any),
+        ).rejects.toMatchObject({
+          name: "AgentValidationError",
+          code: "MISSING_AGENT_ID",
+        });
+      });
+
+      it("should throw on empty agent ID", async () => {
+        await expect(
+          cortex.agents.register({
+            id: "",
+            name: "Test Agent",
+          }),
+        ).rejects.toMatchObject({
+          code: "EMPTY_AGENT_ID",
+          field: "id",
+        });
+      });
+
+      it("should throw on whitespace-only agent ID", async () => {
+        await expect(
+          cortex.agents.register({
+            id: "   ",
+            name: "Test Agent",
+          }),
+        ).rejects.toMatchObject({
+          code: "EMPTY_AGENT_ID",
+        });
+      });
+
+      it("should throw on agent ID too long", async () => {
+        await expect(
+          cortex.agents.register({
+            id: "a".repeat(300),
+            name: "Test Agent",
+          }),
+        ).rejects.toMatchObject({
+          code: "AGENT_ID_TOO_LONG",
+        });
+      });
+
+      it("should throw on missing agent name", async () => {
+        await expect(
+          cortex.agents.register({
+            id: "test-agent",
+          } as any),
+        ).rejects.toMatchObject({
+          code: "MISSING_AGENT_NAME",
+        });
+      });
+
+      it("should throw on empty agent name", async () => {
+        await expect(
+          cortex.agents.register({
+            id: "test-agent",
+            name: "",
+          }),
+        ).rejects.toMatchObject({
+          code: "EMPTY_AGENT_NAME",
+        });
+      });
+
+      it("should throw on agent name too long", async () => {
+        await expect(
+          cortex.agents.register({
+            id: "test-agent",
+            name: "a".repeat(300),
+          }),
+        ).rejects.toMatchObject({
+          code: "AGENT_NAME_TOO_LONG",
+        });
+      });
+
+      it("should throw on invalid metadata format", async () => {
+        await expect(
+          cortex.agents.register({
+            id: "test-agent",
+            name: "Test",
+            metadata: "invalid" as any,
+          }),
+        ).rejects.toMatchObject({
+          code: "INVALID_METADATA_FORMAT",
+        });
+      });
+
+      it("should throw on invalid config format", async () => {
+        await expect(
+          cortex.agents.register({
+            id: "test-agent",
+            name: "Test",
+            config: ["invalid"] as any,
+          }),
+        ).rejects.toMatchObject({
+          code: "INVALID_CONFIG_FORMAT",
+        });
+      });
+    });
+
+    describe("get() validation", () => {
+      it("should throw on empty agent ID", async () => {
+        await expect(cortex.agents.get("")).rejects.toMatchObject({
+          code: "EMPTY_AGENT_ID",
+        });
+      });
+
+      it("should throw on whitespace agent ID", async () => {
+        await expect(cortex.agents.get("   ")).rejects.toMatchObject({
+          code: "EMPTY_AGENT_ID",
+        });
+      });
+    });
+
+    describe("list() validation", () => {
+      it("should throw on invalid limit (zero)", async () => {
+        await expect(cortex.agents.list({ limit: 0 })).rejects.toMatchObject({
+          code: "INVALID_LIMIT_VALUE",
+        });
+      });
+
+      it("should throw on invalid limit (too large)", async () => {
+        await expect(cortex.agents.list({ limit: 2000 })).rejects.toMatchObject(
+          {
+            code: "INVALID_LIMIT_VALUE",
+          },
+        );
+      });
+
+      it("should throw on negative offset", async () => {
+        await expect(
+          cortex.agents.list({ offset: -5 }),
+        ).rejects.toMatchObject({
+          code: "INVALID_OFFSET_VALUE",
+        });
+      });
+
+      it("should throw on invalid status", async () => {
+        await expect(
+          cortex.agents.list({ status: "deleted" as any }),
+        ).rejects.toMatchObject({
+          code: "INVALID_STATUS",
+        });
+      });
+
+      it("should throw on invalid sortBy", async () => {
+        await expect(
+          cortex.agents.list({ sortBy: "invalid" as any }),
+        ).rejects.toMatchObject({
+          code: "INVALID_SORT_BY",
+        });
+      });
+
+      it("should throw on invalid sortOrder", async () => {
+        await expect(
+          cortex.agents.list({ sortOrder: "descending" as any }),
+        ).rejects.toMatchObject({
+          code: "INVALID_SORT_ORDER",
+        });
+      });
+
+      it("should throw on invalid timestamp range", async () => {
+        await expect(
+          cortex.agents.list({
+            registeredAfter: 1000,
+            registeredBefore: 500,
+          }),
+        ).rejects.toMatchObject({
+          code: "INVALID_TIMESTAMP_RANGE",
+        });
+      });
+
+      it("should throw on invalid metadata format", async () => {
+        await expect(
+          cortex.agents.list({ metadata: "invalid" as any }),
+        ).rejects.toMatchObject({
+          code: "INVALID_METADATA_FORMAT",
+        });
+      });
+    });
+
+    describe("search() validation", () => {
+      it("should throw on invalid filters", async () => {
+        await expect(
+          cortex.agents.search({ limit: -1 }),
+        ).rejects.toMatchObject({
+          code: "INVALID_LIMIT_VALUE",
+        });
+      });
+    });
+
+    describe("count() validation", () => {
+      it("should throw on invalid status", async () => {
+        await expect(
+          cortex.agents.count({ status: "deleted" as any }),
+        ).rejects.toMatchObject({
+          code: "INVALID_STATUS",
+        });
+      });
+    });
+
+    describe("update() validation", () => {
+      it("should throw on empty agent ID", async () => {
+        await expect(
+          cortex.agents.update("", { name: "New Name" }),
+        ).rejects.toMatchObject({
+          code: "EMPTY_AGENT_ID",
+        });
+      });
+
+      it("should throw when no update fields provided", async () => {
+        await expect(
+          cortex.agents.update("test-agent", {}),
+        ).rejects.toMatchObject({
+          code: "MISSING_UPDATES",
+        });
+      });
+
+      it("should throw on invalid status in update", async () => {
+        await expect(
+          cortex.agents.update("test-agent", { status: "deleted" as any }),
+        ).rejects.toMatchObject({
+          code: "INVALID_STATUS",
+        });
+      });
+
+      it("should throw on invalid name format", async () => {
+        await expect(
+          cortex.agents.update("test-agent", { name: "" }),
+        ).rejects.toMatchObject({
+          code: "EMPTY_AGENT_NAME",
+        });
+      });
+    });
+
+    describe("configure() validation", () => {
+      it("should throw on empty agent ID", async () => {
+        await expect(
+          cortex.agents.configure("", { setting: "value" }),
+        ).rejects.toMatchObject({
+          code: "EMPTY_AGENT_ID",
+        });
+      });
+
+      it("should throw on empty config object", async () => {
+        await expect(
+          cortex.agents.configure("test-agent", {}),
+        ).rejects.toMatchObject({
+          code: "EMPTY_CONFIG_OBJECT",
+        });
+      });
+
+      it("should throw on invalid config format", async () => {
+        await expect(
+          cortex.agents.configure("test-agent", "invalid" as any),
+        ).rejects.toMatchObject({
+          code: "INVALID_CONFIG_FORMAT",
+        });
+      });
+    });
+
+    describe("exists() validation", () => {
+      it("should throw on empty agent ID", async () => {
+        await expect(cortex.agents.exists("")).rejects.toMatchObject({
+          code: "EMPTY_AGENT_ID",
+        });
+      });
+    });
+
+    describe("unregister() validation", () => {
+      it("should throw on empty agent ID", async () => {
+        await expect(cortex.agents.unregister("")).rejects.toMatchObject({
+          code: "EMPTY_AGENT_ID",
+        });
+      });
+
+      it("should throw on conflicting options", async () => {
+        await expect(
+          cortex.agents.unregister("test-agent", {
+            dryRun: true,
+            verify: false,
+          }),
+        ).rejects.toMatchObject({
+          code: "CONFLICTING_OPTIONS",
+        });
+      });
+    });
+
+    describe("unregisterMany() validation", () => {
+      it("should throw on invalid filters", async () => {
+        await expect(
+          cortex.agents.unregisterMany({ limit: -1 }),
+        ).rejects.toMatchObject({
+          code: "INVALID_LIMIT_VALUE",
+        });
+      });
+
+      it("should throw on conflicting options", async () => {
+        await expect(
+          cortex.agents.unregisterMany(
+            { status: "archived" },
+            { dryRun: true, verify: false },
+          ),
+        ).rejects.toMatchObject({
+          code: "CONFLICTING_OPTIONS",
+        });
+      });
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Registry Operations
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -192,6 +510,8 @@ describe("Agents API (Coordination Layer)", () => {
     });
 
     it("throws error when registering duplicate agent", async () => {
+      // Note: This tests BACKEND validation (existence check)
+      // Client-side validation tests are in "Client-Side Validation" suite above
       const agentId = "test-agent-duplicate-" + Date.now();
 
       await cortex.agents.register({
@@ -561,6 +881,8 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("edge cases", () => {
     it("handles unregistering non-existent agent gracefully", async () => {
+      // Note: This tests BACKEND behavior (not found handling)
+      // Client-side validation ensures agentId format is valid
       const result = await cortex.agents.unregister(
         "non-existent-" + Date.now(),
         {

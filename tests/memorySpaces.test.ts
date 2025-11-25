@@ -32,7 +32,336 @@ describe("Memory Spaces Registry API", () => {
     await client.close();
   });
 
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Client-Side Validation
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Client-Side Validation", () => {
+    describe("register validation", () => {
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(
+          cortex.memorySpaces.register({
+            memorySpaceId: "",
+            type: "personal",
+          } as any),
+        ).rejects.toThrow("memorySpaceId");
+      });
+
+      it("should throw on invalid memorySpaceId format", async () => {
+        await expect(
+          cortex.memorySpaces.register({
+            memorySpaceId: "space with spaces",
+            type: "personal",
+          }),
+        ).rejects.toThrow("Invalid memorySpaceId format");
+      });
+
+      it("should throw on missing type", async () => {
+        await expect(
+          cortex.memorySpaces.register({
+            memorySpaceId: "valid-id",
+          } as any),
+        ).rejects.toThrow("type is required");
+      });
+
+      it("should throw on invalid type", async () => {
+        await expect(
+          cortex.memorySpaces.register({
+            memorySpaceId: "valid-id",
+            type: "invalid" as any,
+          }),
+        ).rejects.toThrow("Invalid type");
+      });
+
+      it("should throw on empty participant id in array", async () => {
+        await expect(
+          cortex.memorySpaces.register({
+            memorySpaceId: "valid-id",
+            type: "personal",
+            participants: [{ id: "", type: "user" }],
+          }),
+        ).rejects.toThrow("participant.id");
+      });
+
+      it("should throw on invalid participant structure", async () => {
+        await expect(
+          cortex.memorySpaces.register({
+            memorySpaceId: "valid-id",
+            type: "personal",
+            participants: [{ id: "" }] as any,
+          }),
+        ).rejects.toThrow("participant");
+      });
+
+      it("should throw on duplicate participant IDs", async () => {
+        await expect(
+          cortex.memorySpaces.register({
+            memorySpaceId: "valid-id",
+            type: "personal",
+            participants: [
+              { id: "user-1", type: "user" },
+              { id: "user-1", type: "agent" },
+            ],
+          }),
+        ).rejects.toThrow("Duplicate participant");
+      });
+
+      it("should throw on invalid name length", async () => {
+        await expect(
+          cortex.memorySpaces.register({
+            memorySpaceId: "valid-id",
+            type: "personal",
+            name: "a".repeat(300),
+          }),
+        ).rejects.toThrow("name");
+      });
+    });
+
+    describe("get validation", () => {
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(cortex.memorySpaces.get("")).rejects.toThrow(
+          "memorySpaceId",
+        );
+      });
+
+      it("should throw on whitespace memorySpaceId", async () => {
+        await expect(cortex.memorySpaces.get("   ")).rejects.toThrow(
+          "memorySpaceId",
+        );
+      });
+    });
+
+    describe("list validation", () => {
+      it("should throw on invalid type", async () => {
+        await expect(
+          cortex.memorySpaces.list({ type: "invalid" as any }),
+        ).rejects.toThrow("Invalid type");
+      });
+
+      it("should throw on invalid status", async () => {
+        await expect(
+          cortex.memorySpaces.list({ status: "deleted" as any }),
+        ).rejects.toThrow("Invalid status");
+      });
+
+      it("should throw on invalid limit", async () => {
+        await expect(cortex.memorySpaces.list({ limit: 0 })).rejects.toThrow(
+          "limit",
+        );
+      });
+
+      it("should throw on negative limit", async () => {
+        await expect(cortex.memorySpaces.list({ limit: -10 })).rejects.toThrow(
+          "limit",
+        );
+      });
+    });
+
+    describe("count validation", () => {
+      it("should throw on invalid type", async () => {
+        await expect(
+          cortex.memorySpaces.count({ type: "PERSONAL" as any }),
+        ).rejects.toThrow("Invalid type");
+      });
+
+      it("should throw on invalid status", async () => {
+        await expect(
+          cortex.memorySpaces.count({ status: "inactive" as any }),
+        ).rejects.toThrow("Invalid status");
+      });
+    });
+
+    describe("update validation", () => {
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(
+          cortex.memorySpaces.update("", { name: "Test" }),
+        ).rejects.toThrow("memorySpaceId");
+      });
+
+      it("should throw on no updates provided", async () => {
+        await expect(
+          cortex.memorySpaces.update("valid-id", {}),
+        ).rejects.toThrow("At least one");
+      });
+
+      it("should throw on invalid status", async () => {
+        await expect(
+          cortex.memorySpaces.update("valid-id", { status: "deleted" as any }),
+        ).rejects.toThrow("Invalid status");
+      });
+
+      it("should throw on invalid name", async () => {
+        await expect(
+          cortex.memorySpaces.update("valid-id", { name: "   " }),
+        ).rejects.toThrow("name");
+      });
+    });
+
+    describe("addParticipant validation", () => {
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(
+          cortex.memorySpaces.addParticipant("", {
+            id: "user-1",
+            type: "user",
+            joinedAt: Date.now(),
+          }),
+        ).rejects.toThrow("memorySpaceId");
+      });
+
+      it("should throw on missing participant.id", async () => {
+        await expect(
+          cortex.memorySpaces.addParticipant("valid-id", {
+            type: "user",
+            joinedAt: Date.now(),
+          } as any),
+        ).rejects.toThrow("participant.id");
+      });
+
+      it("should throw on missing participant.type", async () => {
+        await expect(
+          cortex.memorySpaces.addParticipant("valid-id", {
+            id: "user-1",
+            joinedAt: Date.now(),
+          } as any),
+        ).rejects.toThrow("participant.type");
+      });
+
+      it("should throw on invalid joinedAt", async () => {
+        await expect(
+          cortex.memorySpaces.addParticipant("valid-id", {
+            id: "user-1",
+            type: "user",
+            joinedAt: -1,
+          }),
+        ).rejects.toThrow("joinedAt");
+      });
+    });
+
+    describe("removeParticipant validation", () => {
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(
+          cortex.memorySpaces.removeParticipant("", "user-1"),
+        ).rejects.toThrow("memorySpaceId");
+      });
+
+      it("should throw on empty participantId", async () => {
+        await expect(
+          cortex.memorySpaces.removeParticipant("valid-id", ""),
+        ).rejects.toThrow("participantId");
+      });
+
+      it("should throw on whitespace participantId", async () => {
+        await expect(
+          cortex.memorySpaces.removeParticipant("valid-id", "   "),
+        ).rejects.toThrow("participantId");
+      });
+    });
+
+    describe("search validation", () => {
+      it("should throw on empty query", async () => {
+        await expect(cortex.memorySpaces.search("")).rejects.toThrow("query");
+      });
+
+      it("should throw on whitespace query", async () => {
+        await expect(cortex.memorySpaces.search("   ")).rejects.toThrow(
+          "query",
+        );
+      });
+
+      it("should throw on invalid type filter", async () => {
+        await expect(
+          cortex.memorySpaces.search("test", { type: "invalid" as any }),
+        ).rejects.toThrow("Invalid type");
+      });
+
+      it("should throw on invalid limit", async () => {
+        await expect(
+          cortex.memorySpaces.search("test", { limit: 0 }),
+        ).rejects.toThrow("limit");
+      });
+    });
+
+    describe("updateParticipants validation", () => {
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(
+          cortex.memorySpaces.updateParticipants("", {
+            add: [{ id: "user-1", type: "user", joinedAt: Date.now() }],
+          }),
+        ).rejects.toThrow("memorySpaceId");
+      });
+
+      it("should throw when no updates provided", async () => {
+        await expect(
+          cortex.memorySpaces.updateParticipants("valid-id", {}),
+        ).rejects.toThrow("At least one");
+      });
+
+      it("should throw on invalid add participants", async () => {
+        await expect(
+          cortex.memorySpaces.updateParticipants("valid-id", {
+            add: [{ id: "", type: "user", joinedAt: Date.now() }],
+          }),
+        ).rejects.toThrow("participant");
+      });
+
+      it("should throw on empty participant ID to remove", async () => {
+        await expect(
+          cortex.memorySpaces.updateParticipants("valid-id", {
+            remove: [""],
+          }),
+        ).rejects.toThrow("Participant ID");
+      });
+    });
+
+    describe("archive, reactivate, delete, getStats validation", () => {
+      it("should throw on empty memorySpaceId for archive", async () => {
+        await expect(cortex.memorySpaces.archive("")).rejects.toThrow(
+          "memorySpaceId",
+        );
+      });
+
+      it("should throw on empty memorySpaceId for reactivate", async () => {
+        await expect(cortex.memorySpaces.reactivate("")).rejects.toThrow(
+          "memorySpaceId",
+        );
+      });
+
+      it("should throw on empty memorySpaceId for delete", async () => {
+        await expect(cortex.memorySpaces.delete("")).rejects.toThrow(
+          "memorySpaceId",
+        );
+      });
+
+      it("should throw on empty memorySpaceId for getStats", async () => {
+        await expect(cortex.memorySpaces.getStats("")).rejects.toThrow(
+          "memorySpaceId",
+        );
+      });
+    });
+
+    describe("findByParticipant validation", () => {
+      it("should throw on empty participantId", async () => {
+        await expect(
+          cortex.memorySpaces.findByParticipant(""),
+        ).rejects.toThrow("participantId");
+      });
+
+      it("should throw on whitespace participantId", async () => {
+        await expect(
+          cortex.memorySpaces.findByParticipant("   "),
+        ).rejects.toThrow("participantId");
+      });
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Backend Validation Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
   describe("register()", () => {
+    // Note: Backend validation tests below
+    // Client-side validation tests are in "Client-Side Validation" suite
+
     it("registers a personal memory space", async () => {
       const space = await cortex.memorySpaces.register({
         memorySpaceId: "user-alice-personal",
@@ -90,6 +419,7 @@ describe("Memory Spaces Registry API", () => {
     });
 
     it("throws error for duplicate memorySpaceId", async () => {
+      // Note: This tests BACKEND validation (existence check)
       await cortex.memorySpaces.register({
         memorySpaceId: "duplicate-test",
         type: "personal",
@@ -713,7 +1043,7 @@ describe("Memory Spaces Registry API", () => {
       });
 
       it("limits results", async () => {
-        const results = await cortex.memorySpaces.search("", { limit: 2 });
+        const results = await cortex.memorySpaces.search("Team", { limit: 2 });
 
         expect(results.length).toBeLessThanOrEqual(2);
       });

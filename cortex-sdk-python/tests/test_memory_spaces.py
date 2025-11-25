@@ -12,7 +12,228 @@ Tests validate:
 
 import pytest
 from cortex import RegisterMemorySpaceParams
+from cortex.memory_spaces import MemorySpaceValidationError
 from tests.helpers import generate_test_memory_space_id
+
+
+# ============================================================================
+# Client-Side Validation Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_register_missing_memory_space_id(cortex_client):
+    """Should raise on missing memory_space_id."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.register(
+            RegisterMemorySpaceParams(memory_space_id="", type="personal")
+        )
+    assert "memory_space_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_register_invalid_memory_space_id_format(cortex_client):
+    """Should raise on invalid memory_space_id format."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.register(
+            RegisterMemorySpaceParams(memory_space_id="space with spaces", type="personal")
+        )
+    assert "Invalid memory_space_id format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_register_missing_type(cortex_client):
+    """Should raise on missing type."""
+    # Note: In Python, RegisterMemorySpaceParams requires 'type' as a parameter,
+    # so we test this by passing None and checking the validator
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        params = RegisterMemorySpaceParams(memory_space_id="valid-id", type="personal")
+        params.type = None  # Override to test validation
+        await cortex_client.memory_spaces.register(params)
+    assert "type is required" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_register_invalid_type(cortex_client):
+    """Should raise on invalid type."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.register(
+            RegisterMemorySpaceParams(memory_space_id="valid-id", type="invalid")
+        )
+    assert "Invalid type" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_register_invalid_participant_structure(cortex_client):
+    """Should raise on invalid participant structure."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.register(
+            RegisterMemorySpaceParams(
+                memory_space_id="valid-id", type="personal", participants=[{"id": ""}]
+            )
+        )
+    assert "participant" in str(exc_info.value).lower()
+
+
+@pytest.mark.asyncio
+async def test_register_duplicate_participant_ids(cortex_client):
+    """Should raise on duplicate participant IDs."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.register(
+            RegisterMemorySpaceParams(
+                memory_space_id="valid-id",
+                type="personal",
+                participants=[{"id": "user-1", "type": "user"}, {"id": "user-1", "type": "agent"}],
+            )
+        )
+    assert "Duplicate participant" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_register_invalid_name_length(cortex_client):
+    """Should raise on invalid name length."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.register(
+            RegisterMemorySpaceParams(memory_space_id="valid-id", type="personal", name="a" * 300)
+        )
+    assert "name" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_empty_memory_space_id(cortex_client):
+    """Should raise on empty memory_space_id."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.get("")
+    assert "memory_space_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_list_invalid_type(cortex_client):
+    """Should raise on invalid type."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.list(type="invalid")
+    assert "Invalid type" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_list_invalid_status(cortex_client):
+    """Should raise on invalid status."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.list(status="deleted")
+    assert "Invalid status" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_list_invalid_limit(cortex_client):
+    """Should raise on invalid limit."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.list(limit=0)
+    assert "limit" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_search_empty_query(cortex_client):
+    """Should raise on empty query."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.search("")
+    assert "query" in str(exc_info.value).lower()
+
+
+@pytest.mark.asyncio
+async def test_search_whitespace_query(cortex_client):
+    """Should raise on whitespace query."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.search("   ")
+    assert "query" in str(exc_info.value).lower()
+
+
+@pytest.mark.asyncio
+async def test_update_empty_memory_space_id(cortex_client):
+    """Should raise on empty memory_space_id."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.update("", {"name": "Test"})
+    assert "memory_space_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_no_updates_provided(cortex_client):
+    """Should raise on no updates provided."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.update("valid-id", {})
+    assert "At least one field must be provided" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_invalid_status(cortex_client):
+    """Should raise on invalid status."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.update("valid-id", {"status": "deleted"})
+    assert "Invalid status" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_participants_empty_memory_space_id(cortex_client):
+    """Should raise on empty memory_space_id."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.update_participants(
+            "", add=[{"id": "user-1", "type": "user"}]
+        )
+    assert "memory_space_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_participants_no_updates(cortex_client):
+    """Should raise when no updates provided."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.update_participants("valid-id")
+    assert "At least one" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_archive_empty_memory_space_id(cortex_client):
+    """Should raise on empty memory_space_id."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.archive("")
+    assert "memory_space_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_reactivate_empty_memory_space_id(cortex_client):
+    """Should raise on empty memory_space_id."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.reactivate("")
+    assert "memory_space_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_stats_empty_memory_space_id(cortex_client):
+    """Should raise on empty memory_space_id."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.get_stats("")
+    assert "memory_space_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_count_invalid_type(cortex_client):
+    """Should raise on invalid type."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.count(type="PERSONAL")
+    assert "Invalid type" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_delete_empty_memory_space_id(cortex_client):
+    """Should raise on empty memory_space_id."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.delete("")
+    assert "memory_space_id" in str(exc_info.value)
+
+
+# ============================================================================
+# Backend Validation Tests
+# ============================================================================
+# Note: Backend validation tests below
+# Client-side validation tests are in the section above
 
 
 # ============================================================================
@@ -24,6 +245,9 @@ from tests.helpers import generate_test_memory_space_id
 async def test_register_memory_space(cortex_client, test_ids):
     """
     Test registering a memory space.
+    
+    Note: Backend validation test
+    Client-side validation tests are in the section above
     
     Port of: memorySpaces.test.ts - register tests
     """

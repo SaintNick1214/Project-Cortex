@@ -12,6 +12,7 @@ Tests validate:
 
 import pytest
 from cortex import ImmutableEntry
+from cortex.immutable import ImmutableValidationError
 from tests.helpers import TestCleanup
 
 
@@ -374,130 +375,280 @@ async def test_search_immutable(cortex_client):
 
 
 # ============================================================================
-# Expansion to 54 tests - Additional 41 scenarios
+# Client-Side Validation Tests
 # ============================================================================
 
-# Adding 41 placeholder tests to reach 54/54 parity with TypeScript
+
+# store() validation tests
+@pytest.mark.asyncio
+async def test_store_validation_missing_type(cortex_client):
+    """Should throw on missing type."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.store(
+            ImmutableEntry(type=None, id="test", data={"value": 1})
+        )
+    assert "Type is required" in str(exc_info.value)
+    assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+
 
 @pytest.mark.asyncio
-async def test_imm_exp_1(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp1", data={})); await cortex_client.immutable.purge("test", "exp1"); assert True
+async def test_store_validation_empty_type(cortex_client):
+    """Should throw on empty type."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.store(
+            ImmutableEntry(type="", id="test", data={})
+        )
+    assert "Type must be a non-empty string" in str(exc_info.value)
+
 
 @pytest.mark.asyncio
-async def test_imm_exp_2(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp2", data={})); await cortex_client.immutable.purge("test", "exp2"); assert True
+async def test_store_validation_type_invalid_chars(cortex_client):
+    """Should throw on type with invalid characters."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.store(
+            ImmutableEntry(type="type with spaces", id="test", data={})
+        )
+    assert "valid characters" in str(exc_info.value)
+
 
 @pytest.mark.asyncio
-async def test_imm_exp_3(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp3", data={})); await cortex_client.immutable.purge("test", "exp3"); assert True
+async def test_store_validation_missing_id(cortex_client):
+    """Should throw on missing id."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.store(
+            ImmutableEntry(type="test", id=None, data={})
+        )
+    assert "ID is required" in str(exc_info.value)
+
 
 @pytest.mark.asyncio
-async def test_imm_exp_4(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp4", data={})); await cortex_client.immutable.purge("test", "exp4"); assert True
+async def test_store_validation_empty_id(cortex_client):
+    """Should throw on empty id."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.store(
+            ImmutableEntry(type="test", id="", data={})
+        )
+    assert "ID must be a non-empty string" in str(exc_info.value)
+
 
 @pytest.mark.asyncio
-async def test_imm_exp_5(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp5", data={})); await cortex_client.immutable.purge("test", "exp5"); assert True
+async def test_store_validation_missing_data(cortex_client):
+    """Should throw on missing data."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.store(
+            ImmutableEntry(type="test", id="test-id", data=None)
+        )
+    assert "Data is required" in str(exc_info.value)
+
 
 @pytest.mark.asyncio
-async def test_imm_exp_6(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp6", data={})); await cortex_client.immutable.purge("test", "exp6"); assert True
+async def test_store_validation_invalid_data_type(cortex_client):
+    """Should throw on invalid data type (list)."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.store(
+            ImmutableEntry(type="test", id="test-id", data=[])
+        )
+    assert "Data must be a valid dict" in str(exc_info.value)
+
 
 @pytest.mark.asyncio
-async def test_imm_exp_7(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp7", data={})); await cortex_client.immutable.purge("test", "exp7"); assert True
+async def test_store_validation_invalid_metadata(cortex_client):
+    """Should throw on invalid metadata type."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.store(
+            ImmutableEntry(type="test", id="test-id", data={}, metadata="invalid")
+        )
+    assert "Metadata must be a dict" in str(exc_info.value)
+
 
 @pytest.mark.asyncio
-async def test_imm_exp_8(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp8", data={})); await cortex_client.immutable.purge("test", "exp8"); assert True
+async def test_store_validation_empty_user_id(cortex_client):
+    """Should throw on empty user_id."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.store(
+            ImmutableEntry(type="test", id="test-id", data={}, user_id="")
+        )
+    assert "user_id cannot be empty" in str(exc_info.value)
+
+
+# get() validation tests
+@pytest.mark.asyncio
+async def test_get_validation_empty_type(cortex_client):
+    """Should throw on empty type."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.get("", "test-id")
+    assert "Type must be a non-empty string" in str(exc_info.value)
+
 
 @pytest.mark.asyncio
-async def test_imm_exp_9(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp9", data={})); await cortex_client.immutable.purge("test", "exp9"); assert True
+async def test_get_validation_empty_id(cortex_client):
+    """Should throw on empty id."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.get("test-type", "")
+    assert "ID must be a non-empty string" in str(exc_info.value)
+
+
+# getVersion() validation tests
+@pytest.mark.asyncio
+async def test_get_version_validation_zero(cortex_client):
+    """Should throw on version 0."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.get_version("test", "id", 0)
+    assert "Version must be a positive integer >= 1" in str(exc_info.value)
+
 
 @pytest.mark.asyncio
-async def test_imm_exp_10(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp10", data={})); await cortex_client.immutable.purge("test", "exp10"); assert True
+async def test_get_version_validation_negative(cortex_client):
+    """Should throw on negative version."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.get_version("test", "id", -1)
+    assert "Version must be a positive integer >= 1" in str(exc_info.value)
+
+
+# getAtTimestamp() validation tests
+@pytest.mark.asyncio
+async def test_get_at_timestamp_validation_negative(cortex_client):
+    """Should throw on negative timestamp."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.get_at_timestamp("test", "id", -1000)
+    assert "Timestamp must be a positive integer" in str(exc_info.value)
+
+
+# search() validation tests
+@pytest.mark.asyncio
+async def test_search_validation_empty_query(cortex_client):
+    """Should throw on empty query."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.search("")
+    assert "Search query is required" in str(exc_info.value)
+
 
 @pytest.mark.asyncio
-async def test_imm_exp_11(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp11", data={})); await cortex_client.immutable.purge("test", "exp11"); assert True
+async def test_search_validation_invalid_type_filter(cortex_client):
+    """Should throw on invalid type filter."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.search("query", type="")
+    assert "Type must be a non-empty string" in str(exc_info.value)
+
+
+# list() validation tests
+@pytest.mark.asyncio
+async def test_list_validation_invalid_limit_zero(cortex_client):
+    """Should throw on limit = 0."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.list(limit=0)
+    assert "Limit must be a positive integer" in str(exc_info.value)
+
 
 @pytest.mark.asyncio
-async def test_imm_exp_12(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp12", data={})); await cortex_client.immutable.purge("test", "exp12"); assert True
+async def test_list_validation_invalid_limit_negative(cortex_client):
+    """Should throw on negative limit."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.list(limit=-5)
+    assert "Limit must be a positive integer" in str(exc_info.value)
+
+
+# count() validation tests
+@pytest.mark.asyncio
+async def test_count_validation_empty_type(cortex_client):
+    """Should throw on empty type."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.count(type="")
+    assert "Type must be a non-empty string" in str(exc_info.value)
+
+
+# purge() validation tests
+@pytest.mark.asyncio
+async def test_purge_validation_empty_type(cortex_client):
+    """Should throw on empty type."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.purge("", "test-id")
+    assert "Type must be a non-empty string" in str(exc_info.value)
+
 
 @pytest.mark.asyncio
-async def test_imm_exp_13(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp13", data={})); await cortex_client.immutable.purge("test", "exp13"); assert True
+async def test_purge_validation_empty_id(cortex_client):
+    """Should throw on empty id."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.purge("test-type", "")
+    assert "ID must be a non-empty string" in str(exc_info.value)
+
+
+# purgeMany() validation tests
+@pytest.mark.asyncio
+async def test_purge_many_validation_no_filters(cortex_client):
+    """Should throw when no filters provided."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.purge_many()
+    assert "requires at least one filter" in str(exc_info.value)
+
 
 @pytest.mark.asyncio
-async def test_imm_exp_14(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp14", data={})); await cortex_client.immutable.purge("test", "exp14"); assert True
+async def test_purge_many_validation_invalid_timestamp(cortex_client):
+    """Should throw on negative created_before."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.purge_many(type="test", created_before=-1000)
+    assert "Timestamp must be a positive integer" in str(exc_info.value)
+
+
+# purgeVersions() validation tests
+@pytest.mark.asyncio
+async def test_purge_versions_validation_no_params(cortex_client):
+    """Should throw when neither keep_latest nor older_than provided."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.purge_versions("test", "id")
+    assert "requires either keep_latest or older_than" in str(exc_info.value)
+
 
 @pytest.mark.asyncio
-async def test_imm_exp_15(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp15", data={})); await cortex_client.immutable.purge("test", "exp15"); assert True
+async def test_purge_versions_validation_keep_latest_zero(cortex_client):
+    """Should throw on keep_latest = 0."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.purge_versions("test", "id", keep_latest=0)
+    assert "keep_latest must be a positive integer >= 1" in str(exc_info.value)
+
 
 @pytest.mark.asyncio
-async def test_imm_exp_16(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp16", data={})); await cortex_client.immutable.purge("test", "exp16"); assert True
+async def test_purge_versions_validation_older_than_negative(cortex_client):
+    """Should throw on negative older_than."""
+    with pytest.raises(ImmutableValidationError) as exc_info:
+        await cortex_client.immutable.purge_versions("test", "id", older_than=-1000)
+    assert "Timestamp must be a positive integer" in str(exc_info.value)
+
+
+# Validation error properties tests
+@pytest.mark.asyncio
+async def test_validation_error_has_code(cortex_client):
+    """Should include error code."""
+    try:
+        await cortex_client.immutable.store(
+            ImmutableEntry(type="", id="test", data={})
+        )
+        assert False, "Should have thrown"
+    except ImmutableValidationError as e:
+        assert e.code == "INVALID_TYPE"
+
 
 @pytest.mark.asyncio
-async def test_imm_exp_17(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp17", data={})); await cortex_client.immutable.purge("test", "exp17"); assert True
+async def test_validation_error_has_field(cortex_client):
+    """Should include field name."""
+    try:
+        await cortex_client.immutable.store(
+            ImmutableEntry(type="", id="test", data={})
+        )
+        assert False, "Should have thrown"
+    except ImmutableValidationError as e:
+        assert e.field == "type"
+
 
 @pytest.mark.asyncio
-async def test_imm_exp_18(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp18", data={})); await cortex_client.immutable.purge("test", "exp18"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_19(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp19", data={})); await cortex_client.immutable.purge("test", "exp19"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_20(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp20", data={})); await cortex_client.immutable.purge("test", "exp20"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_21(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp21", data={})); await cortex_client.immutable.purge("test", "exp21"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_22(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp22", data={})); await cortex_client.immutable.purge("test", "exp22"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_23(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp23", data={})); await cortex_client.immutable.purge("test", "exp23"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_24(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp24", data={})); await cortex_client.immutable.purge("test", "exp24"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_25(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp25", data={})); await cortex_client.immutable.purge("test", "exp25"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_26(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp26", data={})); await cortex_client.immutable.purge("test", "exp26"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_27(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp27", data={})); await cortex_client.immutable.purge("test", "exp27"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_28(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp28", data={})); await cortex_client.immutable.purge("test", "exp28"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_29(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp29", data={})); await cortex_client.immutable.purge("test", "exp29"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_30(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp30", data={})); await cortex_client.immutable.purge("test", "exp30"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_31(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp31", data={})); await cortex_client.immutable.purge("test", "exp31"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_32(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp32", data={})); await cortex_client.immutable.purge("test", "exp32"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_33(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp33", data={})); await cortex_client.immutable.purge("test", "exp33"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_34(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp34", data={})); await cortex_client.immutable.purge("test", "exp34"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_35(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp35", data={})); await cortex_client.immutable.purge("test", "exp35"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_36(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp36", data={})); await cortex_client.immutable.purge("test", "exp36"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_37(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp37", data={})); await cortex_client.immutable.purge("test", "exp37"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_38(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp38", data={})); await cortex_client.immutable.purge("test", "exp38"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_39(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp39", data={})); await cortex_client.immutable.purge("test", "exp39"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_40(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp40", data={})); await cortex_client.immutable.purge("test", "exp40"); assert True
-
-@pytest.mark.asyncio
-async def test_imm_exp_41(cortex_client): result = await cortex_client.immutable.store(ImmutableEntry(type="test", id="exp41", data={})); await cortex_client.immutable.purge("test", "exp41"); assert True
+async def test_validation_error_is_exception(cortex_client):
+    """Should be instance of ImmutableValidationError."""
+    try:
+        await cortex_client.immutable.store(
+            ImmutableEntry(type="", id="test", data={})
+        )
+        assert False, "Should have thrown"
+    except ImmutableValidationError as e:
+        assert isinstance(e, ImmutableValidationError)
+        assert isinstance(e, Exception)

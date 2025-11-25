@@ -183,6 +183,406 @@ describe("Governance API", () => {
     });
   });
 
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Client-Side Validation
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Client-Side Validation", () => {
+    describe("setPolicy validation", () => {
+      it("should throw on missing scope", async () => {
+        const policy = {
+          // Missing organizationId and memorySpaceId
+          conversations: {
+            retention: { deleteAfter: "7y", purgeOnUserRequest: true },
+            purging: { autoDelete: true },
+          },
+          immutable: {
+            retention: { defaultVersions: 10, byType: {} },
+            purging: { autoCleanupVersions: true },
+          },
+          mutable: {
+            retention: {},
+            purging: { autoDelete: false },
+          },
+          vector: {
+            retention: { defaultVersions: 5, byImportance: [] },
+            purging: { autoCleanupVersions: true, deleteOrphaned: true },
+          },
+          compliance: {
+            mode: "GDPR" as const,
+            dataRetentionYears: 7,
+            requireJustification: [],
+            auditLogging: true,
+          },
+        };
+
+        await expect(
+          cortex.governance.setPolicy(policy as any),
+        ).rejects.toThrow("Policy must specify either organizationId or memorySpaceId");
+      });
+
+      it("should throw on invalid period format", async () => {
+        const policy: GovernancePolicy = {
+          organizationId: "test-org-validation",
+          conversations: {
+            retention: {
+              deleteAfter: "7years" as any, // Invalid format
+              purgeOnUserRequest: true,
+            },
+            purging: { autoDelete: true },
+          },
+          immutable: {
+            retention: { defaultVersions: 10, byType: {} },
+            purging: { autoCleanupVersions: true },
+          },
+          mutable: {
+            retention: {},
+            purging: { autoDelete: false },
+          },
+          vector: {
+            retention: { defaultVersions: 5, byImportance: [] },
+            purging: { autoCleanupVersions: true, deleteOrphaned: true },
+          },
+          compliance: {
+            mode: "GDPR",
+            dataRetentionYears: 7,
+            requireJustification: [],
+            auditLogging: true,
+          },
+        };
+
+        await expect(
+          cortex.governance.setPolicy(policy),
+        ).rejects.toThrow("Invalid period format");
+      });
+
+      it("should throw on overlapping importance ranges", async () => {
+        const policy: GovernancePolicy = {
+          organizationId: "test-org-validation",
+          conversations: {
+            retention: { deleteAfter: "7y", purgeOnUserRequest: true },
+            purging: { autoDelete: true },
+          },
+          immutable: {
+            retention: { defaultVersions: 10, byType: {} },
+            purging: { autoCleanupVersions: true },
+          },
+          mutable: {
+            retention: {},
+            purging: { autoDelete: false },
+          },
+          vector: {
+            retention: {
+              defaultVersions: 10,
+              byImportance: [
+                { range: [0, 50], versions: 5 },
+                { range: [40, 80], versions: 10 }, // Overlaps with previous
+              ],
+            },
+            purging: { autoCleanupVersions: true, deleteOrphaned: true },
+          },
+          compliance: {
+            mode: "GDPR",
+            dataRetentionYears: 7,
+            requireJustification: [],
+            auditLogging: true,
+          },
+        };
+
+        await expect(
+          cortex.governance.setPolicy(policy),
+        ).rejects.toThrow("overlaps with range");
+      });
+
+      it("should throw on invalid version count", async () => {
+        const policy: GovernancePolicy = {
+          organizationId: "test-org-validation",
+          conversations: {
+            retention: { deleteAfter: "7y", purgeOnUserRequest: true },
+            purging: { autoDelete: true },
+          },
+          immutable: {
+            retention: {
+              defaultVersions: -5, // Invalid: must be >= -1
+              byType: {},
+            },
+            purging: { autoCleanupVersions: true },
+          },
+          mutable: {
+            retention: {},
+            purging: { autoDelete: false },
+          },
+          vector: {
+            retention: { defaultVersions: 5, byImportance: [] },
+            purging: { autoCleanupVersions: true, deleteOrphaned: true },
+          },
+          compliance: {
+            mode: "GDPR",
+            dataRetentionYears: 7,
+            requireJustification: [],
+            auditLogging: true,
+          },
+        };
+
+        await expect(
+          cortex.governance.setPolicy(policy),
+        ).rejects.toThrow("must be >= -1");
+      });
+
+      it("should throw on invalid importance range bounds", async () => {
+        const policy: GovernancePolicy = {
+          organizationId: "test-org-validation",
+          conversations: {
+            retention: { deleteAfter: "7y", purgeOnUserRequest: true },
+            purging: { autoDelete: true },
+          },
+          immutable: {
+            retention: { defaultVersions: 10, byType: {} },
+            purging: { autoCleanupVersions: true },
+          },
+          mutable: {
+            retention: {},
+            purging: { autoDelete: false },
+          },
+          vector: {
+            retention: {
+              defaultVersions: 10,
+              byImportance: [
+                { range: [0, 150], versions: 5 }, // Max > 100
+              ],
+            },
+            purging: { autoCleanupVersions: true, deleteOrphaned: true },
+          },
+          compliance: {
+            mode: "GDPR",
+            dataRetentionYears: 7,
+            requireJustification: [],
+            auditLogging: true,
+          },
+        };
+
+        await expect(
+          cortex.governance.setPolicy(policy),
+        ).rejects.toThrow("must be between 0 and 100");
+      });
+    });
+
+    describe("enforce validation", () => {
+      it("should throw when scope is missing", async () => {
+        await expect(
+          cortex.governance.enforce({
+            layers: ["vector"],
+            rules: ["retention"],
+            // Missing scope
+          } as any),
+        ).rejects.toThrow("Enforcement requires a scope");
+      });
+
+      it("should throw when scope is empty", async () => {
+        await expect(
+          cortex.governance.enforce({
+            scope: {}, // Empty scope
+          }),
+        ).rejects.toThrow("must include either organizationId or memorySpaceId");
+      });
+
+      it("should throw on invalid layer names", async () => {
+        await expect(
+          cortex.governance.enforce({
+            scope: { organizationId: "test-org" },
+            layers: ["invalid-layer" as any],
+          }),
+        ).rejects.toThrow("Invalid layer");
+      });
+
+      it("should throw on invalid rule names", async () => {
+        await expect(
+          cortex.governance.enforce({
+            scope: { organizationId: "test-org" },
+            rules: ["invalid-rule" as any],
+          }),
+        ).rejects.toThrow("Invalid rule");
+      });
+
+      it("should throw on empty layers array", async () => {
+        await expect(
+          cortex.governance.enforce({
+            scope: { organizationId: "test-org" },
+            layers: [],
+          }),
+        ).rejects.toThrow("Layers array cannot be empty");
+      });
+
+      it("should throw on empty rules array", async () => {
+        await expect(
+          cortex.governance.enforce({
+            scope: { organizationId: "test-org" },
+            rules: [],
+          }),
+        ).rejects.toThrow("Rules array cannot be empty");
+      });
+    });
+
+    describe("getComplianceReport validation", () => {
+      it("should throw when start date is after end date", async () => {
+        const now = Date.now();
+        const yesterday = now - 24 * 60 * 60 * 1000;
+
+        await expect(
+          cortex.governance.getComplianceReport({
+            organizationId: "test-org",
+            period: {
+              start: new Date(now),
+              end: new Date(yesterday),
+            },
+          }),
+        ).rejects.toThrow("Start date must be before end date");
+      });
+
+      it("should throw on invalid start date", async () => {
+        await expect(
+          cortex.governance.getComplianceReport({
+            organizationId: "test-org",
+            period: {
+              start: "invalid" as any,
+              end: new Date(),
+            },
+          }),
+        ).rejects.toThrow("Start date must be a valid Date object");
+      });
+
+      it("should throw on invalid end date", async () => {
+        const yesterday = Date.now() - 24 * 60 * 60 * 1000;
+        await expect(
+          cortex.governance.getComplianceReport({
+            organizationId: "test-org",
+            period: {
+              start: new Date(yesterday),
+              end: null as any,
+            },
+          }),
+        ).rejects.toThrow("End date must be a valid Date object");
+      });
+    });
+
+    describe("getEnforcementStats validation", () => {
+      it("should throw on invalid period format", async () => {
+        await expect(
+          cortex.governance.getEnforcementStats({
+            period: "60d", // Invalid: not in allowed list
+            organizationId: "test-org",
+          }),
+        ).rejects.toThrow("Invalid period");
+      });
+
+      it("should accept valid period formats", async () => {
+        const validPeriods = ["7d", "30d", "90d", "1y"];
+
+        for (const period of validPeriods) {
+          // Should not throw
+          const stats = await cortex.governance.getEnforcementStats({
+            period,
+            organizationId: "test-org-stats-valid",
+          });
+          expect(stats).toBeDefined();
+        }
+      });
+    });
+
+    describe("setAgentOverride validation", () => {
+      it("should throw when memorySpaceId is empty", async () => {
+        await expect(
+          cortex.governance.setAgentOverride("", {
+            vector: {
+              retention: { defaultVersions: 10, byImportance: [] },
+              purging: { autoCleanupVersions: true, deleteOrphaned: true },
+            },
+          }),
+        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+      });
+
+      it("should throw when memorySpaceId is only whitespace", async () => {
+        await expect(
+          cortex.governance.setAgentOverride("   ", {
+            vector: {
+              retention: { defaultVersions: 10, byImportance: [] },
+              purging: { autoCleanupVersions: true, deleteOrphaned: true },
+            },
+          }),
+        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+      });
+
+      it("should throw on invalid period in override", async () => {
+        await expect(
+          cortex.governance.setAgentOverride("test-space", {
+            conversations: {
+              retention: {
+                deleteAfter: "invalid-period" as any,
+                purgeOnUserRequest: true,
+              },
+              purging: { autoDelete: true },
+            },
+          }),
+        ).rejects.toThrow("Invalid period format");
+      });
+    });
+
+    describe("simulate validation", () => {
+      it("should throw on invalid period format in simulation", async () => {
+        await expect(
+          cortex.governance.simulate({
+            organizationId: "test-org",
+            conversations: {
+              retention: {
+                deleteAfter: "bad-format" as any,
+                purgeOnUserRequest: true,
+              },
+              purging: { autoDelete: true },
+            },
+          }),
+        ).rejects.toThrow("Invalid period format");
+      });
+
+      it("should throw on invalid version count in simulation", async () => {
+        await expect(
+          cortex.governance.simulate({
+            organizationId: "test-org",
+            vector: {
+              retention: { defaultVersions: -10, byImportance: [] },
+              purging: { autoCleanupVersions: true, deleteOrphaned: true },
+            },
+          }),
+        ).rejects.toThrow("must be >= -1");
+      });
+    });
+
+    describe("getTemplate validation", () => {
+      it("should throw on invalid template name", async () => {
+        await expect(
+          cortex.governance.getTemplate("INVALID" as any),
+        ).rejects.toThrow("Invalid compliance template");
+      });
+    });
+
+    describe("getPolicy validation", () => {
+      it("should throw on empty organizationId", async () => {
+        await expect(
+          cortex.governance.getPolicy({
+            organizationId: "",
+          }),
+        ).rejects.toThrow("must include either organizationId or memorySpaceId");
+      });
+
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(
+          cortex.governance.getPolicy({
+            memorySpaceId: "   ",
+          }),
+        ).rejects.toThrow("must include either organizationId or memorySpaceId");
+      });
+    });
+  });
+
   describe("Compliance Templates", () => {
     const templates: ComplianceTemplate[] = ["GDPR", "HIPAA", "SOC2", "FINRA"];
 
@@ -315,6 +715,8 @@ describe("Governance API", () => {
     });
 
     it("should throw error when enforcing without policy", async () => {
+      // Note: This tests BACKEND validation (policy existence check)
+      // Client-side validation tests are in "Client-Side Validation" suite above
       await expect(
         cortex.governance.enforce({
           scope: { organizationId: "non-existent-org" },

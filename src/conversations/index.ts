@@ -28,6 +28,22 @@ import {
   syncConversationRelationships,
   deleteConversationFromGraph,
 } from "../graph";
+import {
+  ConversationValidationError,
+  validateRequiredString,
+  validateConversationType,
+  validateMessageRole,
+  validateIdFormat,
+  validateExportFormat,
+  validateSortOrder,
+  validateSearchQuery,
+  validateLimit,
+  validateOffset,
+  validateNonEmptyArray,
+  validateDateRange,
+  validateParticipants,
+  validateNoDuplicates,
+} from "./validators";
 
 export class ConversationsAPI {
   constructor(
@@ -54,6 +70,24 @@ export class ConversationsAPI {
     input: CreateConversationInput,
     options?: CreateConversationOptions,
   ): Promise<Conversation> {
+    // Validate required fields
+    validateRequiredString(input.memorySpaceId, "memorySpaceId");
+    validateConversationType(input.type);
+
+    // Validate optional conversationId format
+    validateIdFormat(input.conversationId, "conversation", "conversationId");
+
+    // Validate participants based on type
+    validateParticipants(input.type, input.participants);
+
+    // For agent-agent, validate no duplicate memorySpaceIds
+    if (input.type === "agent-agent" && input.participants.memorySpaceIds) {
+      validateNoDuplicates(
+        input.participants.memorySpaceIds,
+        "participants.memorySpaceIds",
+      );
+    }
+
     // Auto-generate conversationId if not provided
     const conversationId =
       input.conversationId || this.generateConversationId();
@@ -96,6 +130,8 @@ export class ConversationsAPI {
    * ```
    */
   async get(conversationId: string): Promise<Conversation | null> {
+    validateRequiredString(conversationId, "conversationId");
+
     const result = await this.client.query(api.conversations.get, {
       conversationId,
     });
@@ -121,6 +157,13 @@ export class ConversationsAPI {
     input: AddMessageInput,
     options?: AddMessageOptions,
   ): Promise<Conversation> {
+    validateRequiredString(input.conversationId, "conversationId");
+    validateRequiredString(input.message.content, "message.content");
+    validateMessageRole(input.message.role);
+
+    // Validate optional message ID format
+    validateIdFormat(input.message.id, "message", "message.id");
+
     // Auto-generate message ID if not provided
     const messageId = input.message.id || this.generateMessageId();
 
@@ -169,6 +212,14 @@ export class ConversationsAPI {
    * ```
    */
   async list(filter?: ListConversationsFilter): Promise<Conversation[]> {
+    // All fields optional, validate only if provided
+    if (filter?.type) {
+      validateConversationType(filter.type);
+    }
+    if (filter?.limit !== undefined) {
+      validateLimit(filter.limit);
+    }
+
     const result = await this.client.query(api.conversations.list, {
       type: filter?.type,
       userId: filter?.userId,
@@ -190,6 +241,11 @@ export class ConversationsAPI {
    * ```
    */
   async count(filter?: CountConversationsFilter): Promise<number> {
+    // Similar to list - validate type if provided
+    if (filter?.type) {
+      validateConversationType(filter.type);
+    }
+
     const result = await this.client.query(api.conversations.count, {
       type: filter?.type,
       userId: filter?.userId,
@@ -211,6 +267,8 @@ export class ConversationsAPI {
     conversationId: string,
     options?: DeleteConversationOptions,
   ): Promise<{ deleted: boolean }> {
+    validateRequiredString(conversationId, "conversationId");
+
     const result = await this.client.mutation(
       api.conversations.deleteConversation,
       {
@@ -255,6 +313,19 @@ export class ConversationsAPI {
     totalMessagesDeleted: number;
     conversationIds: string[];
   }> {
+    // Validate type if provided
+    if (filter.type) {
+      validateConversationType(filter.type);
+    }
+
+    // Ensure at least one filter is provided
+    if (!filter.userId && !filter.memorySpaceId && !filter.type) {
+      throw new ConversationValidationError(
+        "deleteMany requires at least one filter (userId, memorySpaceId, or type)",
+        "MISSING_REQUIRED_FIELD",
+      );
+    }
+
     const result = await this.client.mutation(api.conversations.deleteMany, {
       userId: filter.userId,
       memorySpaceId: filter.memorySpaceId, // Updated
@@ -280,6 +351,9 @@ export class ConversationsAPI {
     conversationId: string,
     messageId: string,
   ): Promise<Message | null> {
+    validateRequiredString(conversationId, "conversationId");
+    validateRequiredString(messageId, "messageId");
+
     const result = await this.client.query(api.conversations.getMessage, {
       conversationId,
       messageId,
@@ -300,6 +374,12 @@ export class ConversationsAPI {
     conversationId: string,
     messageIds: string[],
   ): Promise<Message[]> {
+    validateRequiredString(conversationId, "conversationId");
+    validateNonEmptyArray(messageIds, "messageIds");
+
+    // Validate no duplicates
+    validateNoDuplicates(messageIds, "messageIds");
+
     const result = await this.client.query(api.conversations.getMessagesByIds, {
       conversationId,
       messageIds,
@@ -326,6 +406,29 @@ export class ConversationsAPI {
     userId?: string;
     memorySpaceIds?: string[]; // For agent-agent (Collaboration Mode)
   }): Promise<Conversation | null> {
+    validateRequiredString(params.memorySpaceId, "memorySpaceId");
+    validateConversationType(params.type);
+
+    // Validate based on type
+    if (params.type === "user-agent" && !params.userId) {
+      throw new ConversationValidationError(
+        "userId is required for user-agent conversation search",
+        "MISSING_REQUIRED_FIELD",
+        "userId",
+      );
+    }
+
+    if (params.type === "agent-agent") {
+      if (!params.memorySpaceIds || params.memorySpaceIds.length < 2) {
+        throw new ConversationValidationError(
+          "agent-agent conversations require at least 2 memorySpaceIds",
+          "INVALID_ARRAY_LENGTH",
+          "memorySpaceIds",
+        );
+      }
+      validateNoDuplicates(params.memorySpaceIds, "memorySpaceIds");
+    }
+
     const result = await this.client.query(api.conversations.findConversation, {
       memorySpaceId: params.memorySpaceId,
       type: params.type,
@@ -349,6 +452,18 @@ export class ConversationsAPI {
    * ```
    */
   async getOrCreate(input: CreateConversationInput): Promise<Conversation> {
+    // Same validation as create()
+    validateRequiredString(input.memorySpaceId, "memorySpaceId");
+    validateConversationType(input.type);
+    validateParticipants(input.type, input.participants);
+
+    if (input.type === "agent-agent" && input.participants.memorySpaceIds) {
+      validateNoDuplicates(
+        input.participants.memorySpaceIds,
+        "participants.memorySpaceIds",
+      );
+    }
+
     const result = await this.client.mutation(api.conversations.getOrCreate, {
       memorySpaceId: input.memorySpaceId,
       participantId: input.participantId,
@@ -381,6 +496,18 @@ export class ConversationsAPI {
     hasMore: boolean;
     conversationId: string;
   }> {
+    validateRequiredString(conversationId, "conversationId");
+
+    if (options?.limit !== undefined) {
+      validateLimit(options.limit);
+    }
+    if (options?.offset !== undefined) {
+      validateOffset(options.offset);
+    }
+    if (options?.sortOrder) {
+      validateSortOrder(options.sortOrder);
+    }
+
     const result = await this.client.query(api.conversations.getHistory, {
       conversationId,
       limit: options?.limit,
@@ -413,6 +540,21 @@ export class ConversationsAPI {
   async search(
     input: SearchConversationsInput,
   ): Promise<ConversationSearchResult[]> {
+    validateSearchQuery(input.query);
+
+    if (input.filters?.type) {
+      validateConversationType(input.filters.type);
+    }
+    if (input.filters?.limit !== undefined) {
+      validateLimit(input.filters.limit);
+    }
+
+    // Validate date range
+    validateDateRange(
+      input.filters?.dateRange?.start,
+      input.filters?.dateRange?.end,
+    );
+
     const result = await this.client.query(api.conversations.search, {
       query: input.query,
       type: input.filters?.type,
@@ -439,6 +581,24 @@ export class ConversationsAPI {
    * ```
    */
   async export(options: ExportConversationsOptions): Promise<ExportResult> {
+    validateExportFormat(options.format);
+
+    if (options.filters?.type) {
+      validateConversationType(options.filters.type);
+    }
+    if (options.filters?.conversationIds) {
+      validateNonEmptyArray(
+        options.filters.conversationIds,
+        "filters.conversationIds",
+      );
+    }
+
+    // Validate date range
+    validateDateRange(
+      options.filters?.dateRange?.start,
+      options.filters?.dateRange?.end,
+    );
+
     const result = await this.client.query(
       api.conversations.exportConversations,
       {
@@ -472,3 +632,6 @@ export class ConversationsAPI {
     return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
   }
 }
+
+// Export validation error for users who want to catch it specifically
+export { ConversationValidationError } from "./validators";

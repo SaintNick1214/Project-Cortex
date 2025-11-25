@@ -9,6 +9,21 @@ from typing import Any, Callable, Dict, List, Optional, cast
 from .._utils import convert_convex_response, filter_none_values
 from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import MutableRecord
+from .validators import (
+    MutableValidationError,
+    validate_amount,
+    validate_key,
+    validate_key_format,
+    validate_key_prefix,
+    validate_limit,
+    validate_namespace,
+    validate_namespace_format,
+    validate_updater,
+    validate_user_id,
+    validate_value_size,
+)
+
+__all__ = ["MutableAPI", "MutableValidationError"]
 
 
 class MutableAPI:
@@ -52,6 +67,16 @@ class MutableAPI:
         Example:
             >>> record = await cortex.mutable.set('inventory', 'widget-qty', 100)
         """
+        # Client-side validation
+        validate_namespace(namespace)
+        validate_namespace_format(namespace)
+        validate_key(key)
+        validate_key_format(key)
+        validate_value_size(value)
+
+        if user_id is not None:
+            validate_user_id(user_id)
+
         result = await self.client.mutation(
             "mutable:set",
             filter_none_values({
@@ -78,6 +103,12 @@ class MutableAPI:
         Example:
             >>> qty = await cortex.mutable.get('inventory', 'widget-qty')
         """
+        # Client-side validation
+        validate_namespace(namespace)
+        validate_namespace_format(namespace)
+        validate_key(key)
+        validate_key_format(key)
+
         result = await self.client.query(
             "mutable:get", filter_none_values({"namespace": namespace, "key": key})
         )
@@ -104,6 +135,13 @@ class MutableAPI:
             ...     lambda current: current - 1 if current > 0 else 0
             ... )
         """
+        # Client-side validation
+        validate_namespace(namespace)
+        validate_namespace_format(namespace)
+        validate_key(key)
+        validate_key_format(key)
+        validate_updater(updater)
+
         # Note: This requires server-side updater support in Convex
         # For now, implement as get-then-set with potential race condition
         current_record = await self.get(namespace, key)
@@ -139,6 +177,13 @@ class MutableAPI:
         Example:
             >>> await cortex.mutable.increment('counters', 'page-views', 10)
         """
+        # Client-side validation
+        validate_namespace(namespace)
+        validate_namespace_format(namespace)
+        validate_key(key)
+        validate_key_format(key)
+        validate_amount(amount, "amount")
+
         return await self.update(namespace, key, lambda x: (x or 0) + amount)
 
     async def decrement(
@@ -158,6 +203,13 @@ class MutableAPI:
         Example:
             >>> await cortex.mutable.decrement('inventory', 'widget-qty', 5)
         """
+        # Client-side validation
+        validate_namespace(namespace)
+        validate_namespace_format(namespace)
+        validate_key(key)
+        validate_key_format(key)
+        validate_amount(amount, "amount")
+
         return await self.update(namespace, key, lambda x: (x or 0) - amount)
 
     async def get_record(self, namespace: str, key: str) -> Optional[MutableRecord]:
@@ -174,8 +226,14 @@ class MutableAPI:
         Example:
             >>> record = await cortex.mutable.get_record('config', 'timeout')
         """
+        # Client-side validation
+        validate_namespace(namespace)
+        validate_namespace_format(namespace)
+        validate_key(key)
+        validate_key_format(key)
+
         result = await self.client.query(
-            "mutable:getRecord", filter_none_values({"namespace": namespace, "key": key})
+            "mutable:get", filter_none_values({"namespace": namespace, "key": key})
         )
 
         if not result:
@@ -197,6 +255,12 @@ class MutableAPI:
         Example:
             >>> await cortex.mutable.delete('inventory', 'discontinued-widget')
         """
+        # Client-side validation
+        validate_namespace(namespace)
+        validate_namespace_format(namespace)
+        validate_key(key)
+        validate_key_format(key)
+
         result = await self.client.mutation(
             "mutable:deleteKey", filter_none_values({"namespace": namespace, "key": key})
         )
@@ -225,6 +289,19 @@ class MutableAPI:
         Example:
             >>> items = await cortex.mutable.list('inventory', limit=100)
         """
+        # Client-side validation
+        validate_namespace(namespace)
+        validate_namespace_format(namespace)
+
+        if key_prefix is not None:
+            validate_key_prefix(key_prefix)
+
+        if user_id is not None:
+            validate_user_id(user_id)
+
+        if limit is not None:
+            validate_limit(limit)
+
         result = await self.client.query(
             "mutable:list",
             filter_none_values({
@@ -257,6 +334,16 @@ class MutableAPI:
         Example:
             >>> total = await cortex.mutable.count('inventory')
         """
+        # Client-side validation
+        validate_namespace(namespace)
+        validate_namespace_format(namespace)
+
+        if key_prefix is not None:
+            validate_key_prefix(key_prefix)
+
+        if user_id is not None:
+            validate_user_id(user_id)
+
         result = await self.client.query(
             "mutable:count",
             filter_none_values({
@@ -283,6 +370,12 @@ class MutableAPI:
             >>> if await cortex.mutable.exists('inventory', 'widget-qty'):
             ...     qty = await cortex.mutable.get('inventory', 'widget-qty')
         """
+        # Client-side validation
+        validate_namespace(namespace)
+        validate_namespace_format(namespace)
+        validate_key(key)
+        validate_key_format(key)
+
         result = await self.client.query(
             "mutable:exists", filter_none_values({"namespace": namespace, "key": key})
         )
@@ -305,6 +398,10 @@ class MutableAPI:
         Example:
             >>> result = await cortex.mutable.purge_namespace('test-data')
         """
+        # Client-side validation
+        validate_namespace(namespace)
+        validate_namespace_format(namespace)
+
         result = await self.client.mutation(
             "mutable:purgeNamespace", filter_none_values({"namespace": namespace})
             # Note: dryRun not supported by backend yet
@@ -337,6 +434,16 @@ class MutableAPI:
             ...     updated_before=old_timestamp
             ... )
         """
+        # Client-side validation
+        validate_namespace(namespace)
+        validate_namespace_format(namespace)
+
+        if key_prefix is not None:
+            validate_key_prefix(key_prefix)
+
+        if user_id is not None:
+            validate_user_id(user_id)
+
         result = await self.client.mutation(
             "mutable:purgeMany",
             filter_none_values({

@@ -36,6 +36,9 @@ from .errors import (
     is_cascade_deletion_error,
     is_cortex_error,
 )
+from .conversations.validators import ConversationValidationError
+from .governance.validators import GovernanceValidationError
+from .users.validators import UserValidationError
 
 # Configuration
 # Core Types - Layer 1
@@ -305,6 +308,7 @@ __all__ = [
     "A2ATimeoutError",
     "CascadeDeletionError",
     "AgentCascadeDeletionError",
+    "ConversationValidationError",
     "ErrorCode",
     "is_cortex_error",
     "is_a2a_timeout_error",

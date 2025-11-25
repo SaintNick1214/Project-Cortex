@@ -114,6 +114,8 @@ describe("Users API (Coordination Layer)", () => {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Core Operations
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // NOTE: These tests validate BACKEND behavior and E2E functionality
+  // Client-side validation tests are in "Client-Side Validation" suite
 
   describe("get() and update()", () => {
     it("creates a user profile", async () => {
@@ -655,6 +657,329 @@ describe("Users API (Coordination Layer)", () => {
       expect(result).toBeTruthy();
       expect(result).toContain("id,version,createdAt,updatedAt,data");
       expect(result).toContain(userId);
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Client-Side Validation
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Client-Side Validation", () => {
+    describe("get() validation", () => {
+      it("should throw on empty userId", async () => {
+        await expect(cortex.users.get("")).rejects.toThrow(
+          "userId cannot be empty",
+        );
+      });
+
+      it("should throw on whitespace-only userId", async () => {
+        await expect(cortex.users.get("   ")).rejects.toThrow(
+          "userId cannot be empty",
+        );
+      });
+
+      it("should throw on null userId", async () => {
+        await expect(cortex.users.get(null as any)).rejects.toThrow(
+          "userId is required",
+        );
+      });
+
+      it("should throw on undefined userId", async () => {
+        await expect(cortex.users.get(undefined as any)).rejects.toThrow(
+          "userId is required",
+        );
+      });
+
+      it("should accept valid userId", async () => {
+        // Should not throw - may return null but validates
+        await cortex.users.get("valid-user-123");
+        // No assertion needed - just checking it doesn't throw
+      });
+    });
+
+    describe("update() validation", () => {
+      it("should throw on empty userId", async () => {
+        await expect(
+          cortex.users.update("", { name: "Test" }),
+        ).rejects.toThrow("userId cannot be empty");
+      });
+
+      it("should throw on null data", async () => {
+        await expect(
+          cortex.users.update("user-123", null as any),
+        ).rejects.toThrow("data is required");
+      });
+
+      it("should throw on undefined data", async () => {
+        await expect(
+          cortex.users.update("user-123", undefined as any),
+        ).rejects.toThrow("data is required");
+      });
+
+      it("should throw on array data", async () => {
+        await expect(
+          cortex.users.update("user-123", [] as any),
+        ).rejects.toThrow("data must be an object");
+      });
+
+      it("should accept valid userId and data", async () => {
+        // Should succeed
+        const result = await cortex.users.update(
+          "valid-user-" + Date.now(),
+          { name: "Test" },
+        );
+        expect(result.id).toBeTruthy();
+      });
+    });
+
+    describe("delete() validation", () => {
+      it("should throw on empty userId", async () => {
+        await expect(cortex.users.delete("")).rejects.toThrow(
+          "userId cannot be empty",
+        );
+      });
+
+      it("should accept valid options", async () => {
+        const userId = "delete-test-" + Date.now();
+        await cortex.users.update(userId, { name: "Test" });
+
+        const result = await cortex.users.delete(userId, {
+          cascade: false,
+          verify: true,
+          dryRun: false,
+        });
+        expect(result).toBeDefined();
+      });
+    });
+
+    describe("list() validation", () => {
+      it("should throw on invalid limit (< 1)", async () => {
+        await expect(cortex.users.list({ limit: 0 })).rejects.toThrow(
+          "limit must be between 1 and 1000",
+        );
+      });
+
+      it("should throw on invalid limit (> 1000)", async () => {
+        await expect(cortex.users.list({ limit: 1001 })).rejects.toThrow(
+          "limit must be between 1 and 1000",
+        );
+      });
+
+      it("should throw on negative limit", async () => {
+        await expect(cortex.users.list({ limit: -5 })).rejects.toThrow(
+          "limit must be between 1 and 1000",
+        );
+      });
+
+      it("should accept valid limit", async () => {
+        const result = await cortex.users.list({ limit: 10 });
+        expect(Array.isArray(result)).toBe(true);
+      });
+
+      it("should accept undefined filters", async () => {
+        const result = await cortex.users.list();
+        expect(Array.isArray(result)).toBe(true);
+      });
+    });
+
+    describe("getVersion() validation", () => {
+      it("should throw on invalid version (< 1)", async () => {
+        await expect(cortex.users.getVersion("user-123", 0)).rejects.toThrow(
+          "version must be >= 1",
+        );
+      });
+
+      it("should throw on negative version", async () => {
+        await expect(cortex.users.getVersion("user-123", -1)).rejects.toThrow(
+          "version must be >= 1",
+        );
+      });
+
+      it("should throw on non-integer version", async () => {
+        await expect(cortex.users.getVersion("user-123", 1.5)).rejects.toThrow(
+          "version must be an integer",
+        );
+      });
+
+      it("should throw on NaN version", async () => {
+        await expect(cortex.users.getVersion("user-123", NaN)).rejects.toThrow(
+          "version must be a valid number",
+        );
+      });
+
+      it("should accept valid version", async () => {
+        // May return null but validates
+        await cortex.users.getVersion("user-123", 1);
+        // No error means validation passed
+      });
+    });
+
+    describe("getAtTimestamp() validation", () => {
+      it("should throw on invalid Date", async () => {
+        const invalidDate = new Date("invalid");
+        await expect(
+          cortex.users.getAtTimestamp("user-123", invalidDate),
+        ).rejects.toThrow("timestamp must be a valid Date");
+      });
+
+      it("should throw on null Date", async () => {
+        await expect(
+          cortex.users.getAtTimestamp("user-123", null as any),
+        ).rejects.toThrow("timestamp is required");
+      });
+
+      it("should accept valid Date", async () => {
+        await cortex.users.getAtTimestamp("user-123", new Date());
+        // No error means validation passed
+      });
+    });
+
+    describe("getOrCreate() validation", () => {
+      it("should throw on empty userId", async () => {
+        await expect(
+          cortex.users.getOrCreate("", { name: "Test" }),
+        ).rejects.toThrow("userId cannot be empty");
+      });
+
+      it("should throw on invalid defaults type", async () => {
+        await expect(
+          cortex.users.getOrCreate("user-123", [] as any),
+        ).rejects.toThrow("defaults must be an object");
+      });
+
+      it("should accept valid userId with no defaults", async () => {
+        const result = await cortex.users.getOrCreate(
+          "new-user-" + Date.now(),
+        );
+        expect(result).toBeDefined();
+      });
+
+      it("should accept valid userId with defaults", async () => {
+        const result = await cortex.users.getOrCreate(
+          "new-user-" + Date.now(),
+          { name: "Test" },
+        );
+        expect(result).toBeDefined();
+      });
+    });
+
+    describe("merge() validation", () => {
+      it("should throw on empty userId", async () => {
+        await expect(
+          cortex.users.merge("", { name: "Test" }),
+        ).rejects.toThrow("userId cannot be empty");
+      });
+
+      it("should throw on null updates", async () => {
+        await expect(
+          cortex.users.merge("user-123", null as any),
+        ).rejects.toThrow("updates is required");
+      });
+
+      it("should throw on array updates", async () => {
+        await expect(
+          cortex.users.merge("user-123", [] as any),
+        ).rejects.toThrow("updates must be an object");
+      });
+    });
+
+    describe("export() validation", () => {
+      it("should throw on invalid format", async () => {
+        await expect(
+          cortex.users.export({ format: "xml" as any }),
+        ).rejects.toThrow("Invalid export format");
+      });
+
+      it("should accept json format", async () => {
+        const result = await cortex.users.export({ format: "json" });
+        expect(result).toBeTruthy();
+      });
+
+      it("should accept csv format", async () => {
+        const result = await cortex.users.export({ format: "csv" });
+        expect(result).toBeTruthy();
+      });
+    });
+
+    describe("updateMany() validation", () => {
+      it("should throw on empty userIds array", async () => {
+        await expect(
+          cortex.users.updateMany([], { data: { name: "Test" } }),
+        ).rejects.toThrow("userIds array cannot be empty");
+      });
+
+      it("should throw on array with > 100 userIds", async () => {
+        const tooManyIds = Array.from({ length: 101 }, (_, i) => `user-${i}`);
+        await expect(
+          cortex.users.updateMany(tooManyIds, { data: { name: "Test" } }),
+        ).rejects.toThrow("userIds array cannot exceed 100 items");
+      });
+
+      it("should throw on missing updates.data", async () => {
+        await expect(
+          cortex.users.updateMany(["user-1"], {} as any),
+        ).rejects.toThrow("updates.data is required");
+      });
+
+      it("should throw on duplicate userIds", async () => {
+        await expect(
+          cortex.users.updateMany(["user-1", "user-1"], {
+            data: { name: "Test" },
+          }),
+        ).rejects.toThrow("Duplicate userIds found in array");
+      });
+
+      it("should accept valid array", async () => {
+        const result = await cortex.users.updateMany(
+          ["user-1", "user-2"],
+          { data: { name: "Test" } },
+          { dryRun: true },
+        );
+        expect(result).toBeDefined();
+      });
+    });
+
+    describe("deleteMany() validation", () => {
+      it("should throw on empty userIds array", async () => {
+        await expect(cortex.users.deleteMany([])).rejects.toThrow(
+          "userIds array cannot be empty",
+        );
+      });
+
+      it("should throw on array with > 100 userIds", async () => {
+        const tooManyIds = Array.from({ length: 101 }, (_, i) => `user-${i}`);
+        await expect(cortex.users.deleteMany(tooManyIds)).rejects.toThrow(
+          "userIds array cannot exceed 100 items",
+        );
+      });
+
+      it("should accept valid array", async () => {
+        const result = await cortex.users.deleteMany(["user-1", "user-2"], {
+          dryRun: true,
+        });
+        expect(result).toBeDefined();
+      });
+    });
+
+    describe("Error details", () => {
+      it("should include error code in thrown errors", async () => {
+        try {
+          await cortex.users.get("");
+          fail("Should have thrown");
+        } catch (error: any) {
+          expect(error.code).toBe("INVALID_USER_ID_FORMAT");
+          expect(error.name).toBe("UserValidationError");
+        }
+      });
+
+      it("should include field name in thrown errors", async () => {
+        try {
+          await cortex.users.update("", { name: "Test" });
+          fail("Should have thrown");
+        } catch (error: any) {
+          expect(error.field).toBe("userId");
+        }
+      });
     });
   });
 

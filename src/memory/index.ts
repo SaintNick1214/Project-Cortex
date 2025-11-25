@@ -39,6 +39,31 @@ import {
   type UpdateMemoryResult,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
+import {
+  MemoryValidationError,
+  validateMemorySpaceId,
+  validateMemoryId,
+  validateUserId,
+  validateConversationId,
+  validateContent,
+  validateContentType,
+  validateSourceType,
+  validateExportFormat,
+  validateImportance,
+  validateVersion,
+  validateLimit,
+  validateTimestamp,
+  validateMinScore,
+  validateEmbedding,
+  validateTags,
+  validateRememberParams,
+  validateStoreMemoryInput,
+  validateSearchOptions,
+  validateUpdateOptions,
+  validateConversationRefRequirement,
+  validateStreamObject,
+  validateFilterCombination,
+} from "./validators";
 
 // Type for conversation with messages
 interface ConversationWithMessages {
@@ -187,6 +212,9 @@ export class MemoryAPI {
     params: RememberParams,
     options?: RememberOptions,
   ): Promise<RememberResult> {
+    // Client-side validation
+    validateRememberParams(params);
+
     const now = Date.now();
 
     // Step 1: Ensure conversation exists (auto-create if needed)
@@ -298,7 +326,7 @@ export class MemoryAPI {
       params.memorySpaceId,
       {
         content: agentContent,
-        contentType,
+        contentType: "raw", // Agent content is always raw, only user content gets summarized
         participantId: params.participantId, // Hive Mode tracking
         embedding: agentEmbedding,
         userId: params.userId,
@@ -439,6 +467,30 @@ export class MemoryAPI {
     params: RememberStreamParams,
     options?: import("../types/streaming").StreamingOptions,
   ): Promise<import("../types/streaming").EnhancedRememberStreamResult> {
+    // Client-side validation (skip agentResponse since it comes from stream)
+    validateMemorySpaceId(params.memorySpaceId);
+    validateConversationId(params.conversationId);
+    validateContent(params.userMessage, "userMessage");
+    validateUserId(params.userId);
+
+    if (!params.userName || typeof params.userName !== "string" || params.userName.trim().length === 0) {
+      throw new MemoryValidationError(
+        "userName is required and must be a non-empty string",
+        "MISSING_REQUIRED_FIELD",
+        "userName",
+      );
+    }
+
+    if (params.importance !== undefined) {
+      validateImportance(params.importance);
+    }
+
+    if (params.tags) {
+      validateTags(params.tags);
+    }
+
+    validateStreamObject(params.responseStream);
+
     // Import streaming components (lazy to avoid circular deps)
     const { StreamProcessor, createStreamContext } = await import(
       "./streaming/StreamProcessor"
@@ -705,6 +757,10 @@ export class MemoryAPI {
     memoryId: string,
     options?: ExtendedForgetOptions,
   ): Promise<ForgetResult> {
+    // Client-side validation
+    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateMemoryId(memoryId);
+
     // Get the memory first
     const memory = await this.vector.get(agentId, memoryId);
 
@@ -779,6 +835,10 @@ export class MemoryAPI {
     memoryId: string,
     options?: GetMemoryOptions,
   ): Promise<MemoryEntry | EnrichedMemory | null> {
+    // Client-side validation
+    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateMemoryId(memoryId);
+
     // Get from vector
     const memory = await this.vector.get(agentId, memoryId);
 
@@ -840,6 +900,14 @@ export class MemoryAPI {
     query: string,
     options?: SearchMemoryOptions,
   ): Promise<MemoryEntry[] | EnrichedMemory[]> {
+    // Client-side validation
+    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateContent(query, "query");
+
+    if (options) {
+      validateSearchOptions(options);
+    }
+
     // Search vector
     const memories = await this.vector.search(agentId, query, {
       embedding: options?.embedding,
@@ -962,12 +1030,10 @@ export class MemoryAPI {
     agentId: string,
     input: StoreMemoryInput,
   ): Promise<StoreMemoryResult> {
-    // Validate conversationRef requirement
-    if (input.source.type === "conversation" && !input.conversationRef) {
-      throw new Error(
-        "INVALID_INPUT: conversationRef required for source.type='conversation'",
-      );
-    }
+    // Client-side validation
+    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateStoreMemoryInput(input);
+    validateConversationRefRequirement(input.source.type, input.conversationRef);
 
     // Store memory
     const memory = await this.vector.store(agentId, input);
@@ -1038,6 +1104,11 @@ export class MemoryAPI {
     },
     options?: UpdateMemoryOptions,
   ): Promise<UpdateMemoryResult> {
+    // Client-side validation
+    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateMemoryId(memoryId);
+    validateUpdateOptions(updates);
+
     const updatedMemory = await this.vector.update(agentId, memoryId, updates);
 
     const factsReextracted: FactRecord[] = [];
@@ -1106,6 +1177,10 @@ export class MemoryAPI {
     memoryId: string,
     options?: DeleteMemoryOptions,
   ): Promise<DeleteMemoryResult> {
+    // Client-side validation
+    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateMemoryId(memoryId);
+
     const memory = await this.vector.get(agentId, memoryId);
 
     if (!memory) {
@@ -1150,6 +1225,21 @@ export class MemoryAPI {
   async list(
     filter: ListMemoriesFilter,
   ): Promise<MemoryEntry[] | EnrichedMemory[]> {
+    // Client-side validation
+    validateMemorySpaceId(filter.memorySpaceId);
+
+    if (filter.userId !== undefined) {
+      validateUserId(filter.userId, "userId");
+    }
+
+    if (filter.sourceType !== undefined) {
+      validateSourceType(filter.sourceType);
+    }
+
+    if (filter.limit !== undefined) {
+      validateLimit(filter.limit);
+    }
+
     const memories = await this.vector.list(filter);
 
     if (!filter.enrichFacts) {
@@ -1183,6 +1273,17 @@ export class MemoryAPI {
    * Count memories (delegates to vector.count)
    */
   async count(filter: CountMemoriesFilter): Promise<number> {
+    // Client-side validation
+    validateMemorySpaceId(filter.memorySpaceId);
+
+    if (filter.userId !== undefined) {
+      validateUserId(filter.userId, "userId");
+    }
+
+    if (filter.sourceType !== undefined) {
+      validateSourceType(filter.sourceType);
+    }
+
     return await this.vector.count(filter);
   }
 
@@ -1200,6 +1301,18 @@ export class MemoryAPI {
       tags?: string[];
     },
   ): Promise<UpdateManyResult> {
+    // Client-side validation
+    validateMemorySpaceId(filter.memorySpaceId);
+    validateUpdateOptions(updates);
+
+    if (filter.userId !== undefined) {
+      validateUserId(filter.userId, "userId");
+    }
+
+    if (filter.sourceType !== undefined) {
+      validateSourceType(filter.sourceType);
+    }
+
     const result = await this.vector.updateMany(filter, updates);
 
     // Count facts that reference updated memories
@@ -1226,6 +1339,18 @@ export class MemoryAPI {
     userId?: string;
     sourceType?: SourceType;
   }): Promise<DeleteManyResult> {
+    // Client-side validation
+    validateMemorySpaceId(filter.memorySpaceId);
+    validateFilterCombination(filter);
+
+    if (filter.userId !== undefined) {
+      validateUserId(filter.userId, "userId");
+    }
+
+    if (filter.sourceType !== undefined) {
+      validateSourceType(filter.sourceType);
+    }
+
     // Get all memories to delete
     const memories = await this.vector.list(filter);
 
@@ -1263,6 +1388,14 @@ export class MemoryAPI {
     count: number;
     exportedAt: number;
   }> {
+    // Client-side validation
+    validateMemorySpaceId(options.memorySpaceId);
+    validateExportFormat(options.format);
+
+    if (options.userId !== undefined) {
+      validateUserId(options.userId, "userId");
+    }
+
     const result = await this.vector.export(options);
 
     if (!options.includeFacts) {
@@ -1306,6 +1439,10 @@ export class MemoryAPI {
    * Archive a memory and mark associated facts as expired
    */
   async archive(agentId: string, memoryId: string): Promise<ArchiveResult> {
+    // Client-side validation
+    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateMemoryId(memoryId);
+
     const memory = await this.vector.get(agentId, memoryId);
 
     if (!memory) {
@@ -1346,6 +1483,10 @@ export class MemoryAPI {
     memoryId: string;
     memory: MemoryEntry;
   }> {
+    // Client-side validation
+    validateMemorySpaceId(memorySpaceId);
+    validateMemoryId(memoryId);
+
     const result = await this.client.mutation(api.memories.restoreFromArchive, {
       memorySpaceId,
       memoryId,
@@ -1372,6 +1513,11 @@ export class MemoryAPI {
     embedding?: number[];
     timestamp: number;
   } | null> {
+    // Client-side validation
+    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateMemoryId(memoryId);
+    validateVersion(version);
+
     return await this.vector.getVersion(agentId, memoryId, version);
   }
 
@@ -1390,6 +1536,10 @@ export class MemoryAPI {
       timestamp: number;
     }>
   > {
+    // Client-side validation
+    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateMemoryId(memoryId);
+
     return await this.vector.getHistory(agentId, memoryId);
   }
 
@@ -1407,6 +1557,14 @@ export class MemoryAPI {
     embedding?: number[];
     timestamp: number;
   } | null> {
+    // Client-side validation
+    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateMemoryId(memoryId);
+    validateTimestamp(timestamp);
+
     return await this.vector.getAtTimestamp(agentId, memoryId, timestamp);
   }
 }
+
+// Export validation error for users who want to catch it specifically
+export { MemoryValidationError } from "./validators";

@@ -22,6 +22,18 @@ import type {
   EnforcementStatsOptions,
   EnforcementStats,
 } from "../types";
+import {
+  GovernanceValidationError,
+  validateGovernancePolicy,
+  validatePeriodFormat,
+  validateImportanceRanges,
+  validateVersionCount,
+  validatePolicyScope,
+  validateEnforcementOptions,
+  validateDateRange,
+  validateStatsPeriod,
+  validateComplianceTemplate,
+} from "./validators";
 
 export class GovernanceAPI {
   constructor(
@@ -48,6 +60,80 @@ export class GovernanceAPI {
    * ```
    */
   async setPolicy(policy: GovernancePolicy): Promise<PolicyResult> {
+    // Validate complete policy structure
+    validateGovernancePolicy(policy);
+
+    // Validate at least one scope is provided
+    if (!policy.organizationId && !policy.memorySpaceId) {
+      throw new GovernanceValidationError(
+        "Policy must specify either organizationId or memorySpaceId",
+        "MISSING_SCOPE",
+      );
+    }
+
+    // Validate specific fields
+    if (policy.conversations?.retention?.deleteAfter) {
+      validatePeriodFormat(
+        policy.conversations.retention.deleteAfter,
+        "conversations.retention.deleteAfter",
+      );
+    }
+    if (policy.conversations?.retention?.archiveAfter) {
+      validatePeriodFormat(
+        policy.conversations.retention.archiveAfter,
+        "conversations.retention.archiveAfter",
+      );
+    }
+    if (policy.conversations?.purging?.deleteInactiveAfter) {
+      validatePeriodFormat(
+        policy.conversations.purging.deleteInactiveAfter,
+        "conversations.purging.deleteInactiveAfter",
+      );
+    }
+
+    // Validate mutable periods
+    if (policy.mutable?.retention?.defaultTTL) {
+      validatePeriodFormat(
+        policy.mutable.retention.defaultTTL,
+        "mutable.retention.defaultTTL",
+      );
+    }
+    if (policy.mutable?.retention?.purgeInactiveAfter) {
+      validatePeriodFormat(
+        policy.mutable.retention.purgeInactiveAfter,
+        "mutable.retention.purgeInactiveAfter",
+      );
+    }
+    if (policy.mutable?.purging?.deleteUnaccessedAfter) {
+      validatePeriodFormat(
+        policy.mutable.purging.deleteUnaccessedAfter,
+        "mutable.purging.deleteUnaccessedAfter",
+      );
+    }
+
+    // Validate immutable periods
+    if (policy.immutable?.purging?.purgeUnusedAfter) {
+      validatePeriodFormat(
+        policy.immutable.purging.purgeUnusedAfter,
+        "immutable.purging.purgeUnusedAfter",
+      );
+    }
+
+    // Validate version counts
+    validateVersionCount(
+      policy.immutable.retention.defaultVersions,
+      "immutable.retention.defaultVersions",
+    );
+    validateVersionCount(
+      policy.vector.retention.defaultVersions,
+      "vector.retention.defaultVersions",
+    );
+
+    // Validate vector importance ranges
+    if (policy.vector?.retention?.byImportance) {
+      validateImportanceRanges(policy.vector.retention.byImportance);
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await this.client.mutation(
       api.governance.setPolicy as FunctionReference<"mutation">,
@@ -75,6 +161,14 @@ export class GovernanceAPI {
    * ```
    */
   async getPolicy(scope?: PolicyScope): Promise<GovernancePolicy> {
+    // If scope provided, validate it
+    if (
+      scope &&
+      (scope.organizationId !== undefined || scope.memorySpaceId !== undefined)
+    ) {
+      validatePolicyScope(scope);
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await this.client.query(
       api.governance.getPolicy as FunctionReference<"query">,
@@ -102,6 +196,78 @@ export class GovernanceAPI {
     memorySpaceId: string,
     overrides: Partial<GovernancePolicy>,
   ): Promise<void> {
+    // Validate memorySpaceId
+    if (!memorySpaceId || memorySpaceId.trim().length === 0) {
+      throw new GovernanceValidationError(
+        "memorySpaceId is required and cannot be empty",
+        "MISSING_SCOPE",
+        "memorySpaceId",
+      );
+    }
+
+    // Validate override structure (same as setPolicy but for partial)
+    if (overrides.conversations?.retention?.deleteAfter) {
+      validatePeriodFormat(
+        overrides.conversations.retention.deleteAfter,
+        "conversations.retention.deleteAfter",
+      );
+    }
+    if (overrides.conversations?.retention?.archiveAfter) {
+      validatePeriodFormat(
+        overrides.conversations.retention.archiveAfter,
+        "conversations.retention.archiveAfter",
+      );
+    }
+    if (overrides.conversations?.purging?.deleteInactiveAfter) {
+      validatePeriodFormat(
+        overrides.conversations.purging.deleteInactiveAfter,
+        "conversations.purging.deleteInactiveAfter",
+      );
+    }
+
+    if (overrides.mutable?.retention?.defaultTTL) {
+      validatePeriodFormat(
+        overrides.mutable.retention.defaultTTL,
+        "mutable.retention.defaultTTL",
+      );
+    }
+    if (overrides.mutable?.retention?.purgeInactiveAfter) {
+      validatePeriodFormat(
+        overrides.mutable.retention.purgeInactiveAfter,
+        "mutable.retention.purgeInactiveAfter",
+      );
+    }
+    if (overrides.mutable?.purging?.deleteUnaccessedAfter) {
+      validatePeriodFormat(
+        overrides.mutable.purging.deleteUnaccessedAfter,
+        "mutable.purging.deleteUnaccessedAfter",
+      );
+    }
+
+    if (overrides.immutable?.purging?.purgeUnusedAfter) {
+      validatePeriodFormat(
+        overrides.immutable.purging.purgeUnusedAfter,
+        "immutable.purging.purgeUnusedAfter",
+      );
+    }
+
+    if (overrides.immutable?.retention?.defaultVersions !== undefined) {
+      validateVersionCount(
+        overrides.immutable.retention.defaultVersions,
+        "immutable.retention.defaultVersions",
+      );
+    }
+    if (overrides.vector?.retention?.defaultVersions !== undefined) {
+      validateVersionCount(
+        overrides.vector.retention.defaultVersions,
+        "vector.retention.defaultVersions",
+      );
+    }
+
+    if (overrides.vector?.retention?.byImportance) {
+      validateImportanceRanges(overrides.vector.retention.byImportance);
+    }
+
     await this.client.mutation(
       api.governance.setAgentOverride as FunctionReference<"mutation">,
       { memorySpaceId, overrides },
@@ -124,6 +290,9 @@ export class GovernanceAPI {
    * ```
    */
   async getTemplate(template: ComplianceTemplate): Promise<GovernancePolicy> {
+    // TypeScript enforces this, but add runtime check
+    validateComplianceTemplate(template);
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await this.client.query(
       api.governance.getTemplate as FunctionReference<"query">,
@@ -150,6 +319,9 @@ export class GovernanceAPI {
    * ```
    */
   async enforce(options: EnforcementOptions): Promise<EnforcementResult> {
+    // Validate enforcement options
+    validateEnforcementOptions(options);
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await this.client.mutation(
       api.governance.enforce as FunctionReference<"mutation">,
@@ -182,6 +354,69 @@ export class GovernanceAPI {
    * ```
    */
   async simulate(options: SimulationOptions): Promise<SimulationResult> {
+    // Validate partial policy structure (same validations as setPolicy)
+    if (options.conversations?.retention?.deleteAfter) {
+      validatePeriodFormat(
+        options.conversations.retention.deleteAfter,
+        "conversations.retention.deleteAfter",
+      );
+    }
+    if (options.conversations?.retention?.archiveAfter) {
+      validatePeriodFormat(
+        options.conversations.retention.archiveAfter,
+        "conversations.retention.archiveAfter",
+      );
+    }
+    if (options.conversations?.purging?.deleteInactiveAfter) {
+      validatePeriodFormat(
+        options.conversations.purging.deleteInactiveAfter,
+        "conversations.purging.deleteInactiveAfter",
+      );
+    }
+
+    if (options.mutable?.retention?.defaultTTL) {
+      validatePeriodFormat(
+        options.mutable.retention.defaultTTL,
+        "mutable.retention.defaultTTL",
+      );
+    }
+    if (options.mutable?.retention?.purgeInactiveAfter) {
+      validatePeriodFormat(
+        options.mutable.retention.purgeInactiveAfter,
+        "mutable.retention.purgeInactiveAfter",
+      );
+    }
+    if (options.mutable?.purging?.deleteUnaccessedAfter) {
+      validatePeriodFormat(
+        options.mutable.purging.deleteUnaccessedAfter,
+        "mutable.purging.deleteUnaccessedAfter",
+      );
+    }
+
+    if (options.immutable?.purging?.purgeUnusedAfter) {
+      validatePeriodFormat(
+        options.immutable.purging.purgeUnusedAfter,
+        "immutable.purging.purgeUnusedAfter",
+      );
+    }
+
+    if (options.immutable?.retention?.defaultVersions !== undefined) {
+      validateVersionCount(
+        options.immutable.retention.defaultVersions,
+        "immutable.retention.defaultVersions",
+      );
+    }
+    if (options.vector?.retention?.defaultVersions !== undefined) {
+      validateVersionCount(
+        options.vector.retention.defaultVersions,
+        "vector.retention.defaultVersions",
+      );
+    }
+
+    if (options.vector?.retention?.byImportance) {
+      validateImportanceRanges(options.vector.retention.byImportance);
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await this.client.query(
       api.governance.simulate as FunctionReference<"query">,
@@ -213,6 +448,17 @@ export class GovernanceAPI {
   async getComplianceReport(
     options: ComplianceReportOptions,
   ): Promise<ComplianceReport> {
+    // Validate date range
+    validateDateRange(options.period.start, options.period.end);
+
+    // Validate scope if provided
+    if (options.organizationId || options.memorySpaceId) {
+      validatePolicyScope({
+        organizationId: options.organizationId,
+        memorySpaceId: options.memorySpaceId,
+      });
+    }
+
     // Convert dates to timestamps for Convex
     const convexOptions = {
       organizationId: options.organizationId,
@@ -252,6 +498,17 @@ export class GovernanceAPI {
   async getEnforcementStats(
     options: EnforcementStatsOptions,
   ): Promise<EnforcementStats> {
+    // Validate period format
+    validateStatsPeriod(options.period);
+
+    // Validate scope if provided
+    if (options.organizationId || options.memorySpaceId) {
+      validatePolicyScope({
+        organizationId: options.organizationId,
+        memorySpaceId: options.memorySpaceId,
+      });
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await this.client.query(
       api.governance.getEnforcementStats as FunctionReference<"query">,
@@ -259,3 +516,6 @@ export class GovernanceAPI {
     );
   }
 }
+
+// Export validation error for users who want to catch it specifically
+export { GovernanceValidationError } from "./validators";

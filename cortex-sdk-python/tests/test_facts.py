@@ -438,3 +438,801 @@ async def test_count_facts(cortex_client, test_ids, cleanup_helper):
     # Cleanup
     await cleanup_helper.purge_facts(memory_space_id)
 
+
+# ============================================================================
+# Client-Side Validation Tests
+# ============================================================================
+
+
+class TestStoreValidation:
+    """Tests for store() client-side validation"""
+
+    @pytest.mark.asyncio
+    async def test_missing_memory_space_id(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.store(
+                StoreFactParams(
+                    memory_space_id="",
+                    fact="test",
+                    fact_type="knowledge",
+                    confidence=90,
+                    source_type="system",
+                )
+            )
+        assert "memory_space_id is required" in str(exc_info.value)
+        assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+
+    @pytest.mark.asyncio
+    async def test_empty_fact(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.store(
+                StoreFactParams(
+                    memory_space_id="test-space",
+                    fact="",
+                    fact_type="knowledge",
+                    confidence=90,
+                    source_type="system",
+                )
+            )
+        assert "fact is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_fact_type(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.store(
+                StoreFactParams(
+                    memory_space_id="test-space",
+                    fact="test",
+                    fact_type="invalid",
+                    confidence=90,
+                    source_type="system",
+                )
+            )
+        assert "Invalid fact_type" in str(exc_info.value)
+        assert exc_info.value.code == "INVALID_FACT_TYPE"
+
+    @pytest.mark.asyncio
+    async def test_confidence_below_zero(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.store(
+                StoreFactParams(
+                    memory_space_id="test-space",
+                    fact="test",
+                    fact_type="knowledge",
+                    confidence=-1,
+                    source_type="system",
+                )
+            )
+        assert "confidence must be between 0 and 100" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_confidence_above_100(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.store(
+                StoreFactParams(
+                    memory_space_id="test-space",
+                    fact="test",
+                    fact_type="knowledge",
+                    confidence=150,
+                    source_type="system",
+                )
+            )
+        assert "confidence must be between 0 and 100" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_source_type(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.store(
+                StoreFactParams(
+                    memory_space_id="test-space",
+                    fact="test",
+                    fact_type="knowledge",
+                    confidence=90,
+                    source_type="invalid",
+                )
+            )
+        assert "Invalid source_type" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_tags_not_list(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.store(
+                StoreFactParams(
+                    memory_space_id="test-space",
+                    fact="test",
+                    fact_type="knowledge",
+                    confidence=90,
+                    source_type="system",
+                    tags="not-a-list",
+                )
+            )
+        assert "tags must be a list" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_validity_period(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.store(
+                StoreFactParams(
+                    memory_space_id="test-space",
+                    fact="test",
+                    fact_type="knowledge",
+                    confidence=90,
+                    source_type="system",
+                    valid_from=2000,
+                    valid_until=1000,
+                )
+            )
+        assert "valid_from must be before valid_until" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_source_ref_structure(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.store(
+                StoreFactParams(
+                    memory_space_id="test-space",
+                    fact="test",
+                    fact_type="knowledge",
+                    confidence=90,
+                    source_type="system",
+                    source_ref="not-an-object",
+                )
+            )
+        assert "source_ref must be" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_metadata_not_dict(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.store(
+                StoreFactParams(
+                    memory_space_id="test-space",
+                    fact="test",
+                    fact_type="knowledge",
+                    confidence=90,
+                    source_type="system",
+                    metadata=["array"],
+                )
+            )
+        assert "metadata must be a dict" in str(exc_info.value)
+
+
+class TestGetValidation:
+    """Tests for get() client-side validation"""
+
+    @pytest.mark.asyncio
+    async def test_missing_memory_space_id(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.get("", "fact-123")
+        assert "memory_space_id is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_missing_fact_id(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.get("test-space", "")
+        assert "fact_id is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_fact_id_format(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.get("test-space", "invalid-id")
+        assert 'fact_id must start with "fact-"' in str(exc_info.value)
+
+
+class TestListValidation:
+    """Tests for list() client-side validation"""
+
+    @pytest.mark.asyncio
+    async def test_missing_memory_space_id(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import ListFactsFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.list(
+                ListFactsFilter(memory_space_id="")
+            )
+        assert "memory_space_id is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_fact_type(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import ListFactsFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.list(
+                ListFactsFilter(
+                    memory_space_id="test-space",
+                    fact_type="invalid"
+                )
+            )
+        assert "Invalid fact_type" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_confidence(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import ListFactsFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.list(
+                ListFactsFilter(
+                    memory_space_id="test-space",
+                    confidence=150
+                )
+            )
+        assert "confidence must be between 0 and 100" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_min_confidence(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import ListFactsFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.list(
+                ListFactsFilter(
+                    memory_space_id="test-space",
+                    min_confidence=-10
+                )
+            )
+        assert "min_confidence must be between 0 and 100" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_tag_match(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import ListFactsFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.list(
+                ListFactsFilter(
+                    memory_space_id="test-space",
+                    tag_match="invalid"
+                )
+            )
+        assert "Invalid tag_match" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_negative_limit(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import ListFactsFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.list(
+                ListFactsFilter(
+                    memory_space_id="test-space",
+                    limit=-5
+                )
+            )
+        assert "limit must be non-negative" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_negative_offset(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import ListFactsFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.list(
+                ListFactsFilter(
+                    memory_space_id="test-space",
+                    offset=-10
+                )
+            )
+        assert "offset must be non-negative" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_sort_by(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import ListFactsFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.list(
+                ListFactsFilter(
+                    memory_space_id="test-space",
+                    sort_by="invalid"
+                )
+            )
+        assert "Invalid sort_by" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_sort_order(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import ListFactsFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.list(
+                ListFactsFilter(
+                    memory_space_id="test-space",
+                    sort_order="invalid"
+                )
+            )
+        assert "Invalid sort_order" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_date_range_created(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import ListFactsFilter
+        from datetime import datetime, timedelta
+        
+        now = datetime.now()
+        yesterday = now - timedelta(days=1)
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.list(
+                ListFactsFilter(
+                    memory_space_id="test-space",
+                    created_after=now,
+                    created_before=yesterday
+                )
+            )
+        assert "created_after must be before created_before" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_date_range_updated(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import ListFactsFilter
+        from datetime import datetime, timedelta
+        
+        now = datetime.now()
+        yesterday = now - timedelta(days=1)
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.list(
+                ListFactsFilter(
+                    memory_space_id="test-space",
+                    updated_after=now,
+                    updated_before=yesterday
+                )
+            )
+        assert "updated_after must be before updated_before" in str(exc_info.value)
+
+
+class TestCountValidation:
+    """Tests for count() client-side validation"""
+
+    @pytest.mark.asyncio
+    async def test_missing_memory_space_id(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import CountFactsFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.count(
+                CountFactsFilter(memory_space_id="")
+            )
+        assert "memory_space_id is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_fact_type(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import CountFactsFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.count(
+                CountFactsFilter(
+                    memory_space_id="test-space",
+                    fact_type="invalid"
+                )
+            )
+        assert "Invalid fact_type" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_confidence(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import CountFactsFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.count(
+                CountFactsFilter(
+                    memory_space_id="test-space",
+                    confidence=200
+                )
+            )
+        assert "confidence must be between 0 and 100" in str(exc_info.value)
+
+
+class TestSearchValidation:
+    """Tests for search() client-side validation"""
+
+    @pytest.mark.asyncio
+    async def test_missing_memory_space_id(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.search("", "test query")
+        assert "memory_space_id is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_missing_query(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.search("test-space", "")
+        assert "query is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_options(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import SearchFactsOptions
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.search(
+                "test-space",
+                "test",
+                SearchFactsOptions(fact_type="invalid")
+            )
+        assert "Invalid fact_type" in str(exc_info.value)
+
+
+class TestUpdateValidation:
+    """Tests for update() client-side validation"""
+
+    @pytest.mark.asyncio
+    async def test_missing_memory_space_id(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.update("", "fact-123", {"confidence": 95})
+        assert "memory_space_id is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_missing_fact_id(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.update("test-space", "", {"confidence": 95})
+        assert "fact_id is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_fact_id_format(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.update(
+                "test-space",
+                "invalid-id",
+                {"confidence": 95}
+            )
+        assert 'fact_id must start with "fact-"' in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_empty_updates_object(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.update("test-space", "fact-123", {})
+        assert "Update must include at least one field" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_confidence_in_updates(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.update(
+                "test-space",
+                "fact-123",
+                {"confidence": 150}
+            )
+        assert "confidence must be between 0 and 100" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_tags_in_updates(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.update(
+                "test-space",
+                "fact-123",
+                {"tags": "not-array"}
+            )
+        assert "tags must be a list" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_metadata_in_updates(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.update(
+                "test-space",
+                "fact-123",
+                {"metadata": ["array"]}
+            )
+        assert "metadata must be a dict" in str(exc_info.value)
+
+
+class TestDeleteValidation:
+    """Tests for delete() client-side validation"""
+
+    @pytest.mark.asyncio
+    async def test_missing_memory_space_id(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.delete("", "fact-123")
+        assert "memory_space_id is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_missing_fact_id(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.delete("test-space", "")
+        assert "fact_id is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_fact_id_format(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.delete("test-space", "invalid-id")
+        assert 'fact_id must start with "fact-"' in str(exc_info.value)
+
+
+class TestGetHistoryValidation:
+    """Tests for get_history() client-side validation"""
+
+    @pytest.mark.asyncio
+    async def test_missing_memory_space_id(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.get_history("", "fact-123")
+        assert "memory_space_id is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_missing_fact_id(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.get_history("test-space", "")
+        assert "fact_id is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_fact_id_format(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.get_history("test-space", "invalid-id")
+        assert 'fact_id must start with "fact-"' in str(exc_info.value)
+
+
+class TestQueryBySubjectValidation:
+    """Tests for query_by_subject() client-side validation"""
+
+    @pytest.mark.asyncio
+    async def test_missing_memory_space_id(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import QueryBySubjectFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.query_by_subject(
+                QueryBySubjectFilter(
+                    memory_space_id="",
+                    subject="user-123"
+                )
+            )
+        assert "memory_space_id is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_missing_subject(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import QueryBySubjectFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.query_by_subject(
+                QueryBySubjectFilter(
+                    memory_space_id="test-space",
+                    subject=""
+                )
+            )
+        assert "subject is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_fact_type(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import QueryBySubjectFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.query_by_subject(
+                QueryBySubjectFilter(
+                    memory_space_id="test-space",
+                    subject="user-123",
+                    fact_type="invalid"
+                )
+            )
+        assert "Invalid fact_type" in str(exc_info.value)
+
+
+class TestQueryByRelationshipValidation:
+    """Tests for query_by_relationship() client-side validation"""
+
+    @pytest.mark.asyncio
+    async def test_missing_memory_space_id(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import QueryByRelationshipFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.query_by_relationship(
+                QueryByRelationshipFilter(
+                    memory_space_id="",
+                    subject="user-123",
+                    predicate="likes"
+                )
+            )
+        assert "memory_space_id is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_missing_subject(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import QueryByRelationshipFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.query_by_relationship(
+                QueryByRelationshipFilter(
+                    memory_space_id="test-space",
+                    subject="",
+                    predicate="likes"
+                )
+            )
+        assert "subject is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_missing_predicate(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import QueryByRelationshipFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.query_by_relationship(
+                QueryByRelationshipFilter(
+                    memory_space_id="test-space",
+                    subject="user-123",
+                    predicate=""
+                )
+            )
+        assert "predicate is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_fact_type(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        from cortex.types import QueryByRelationshipFilter
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.query_by_relationship(
+                QueryByRelationshipFilter(
+                    memory_space_id="test-space",
+                    subject="user-123",
+                    predicate="likes",
+                    fact_type="invalid"
+                )
+            )
+        assert "Invalid fact_type" in str(exc_info.value)
+
+
+class TestExportValidation:
+    """Tests for export() client-side validation"""
+
+    @pytest.mark.asyncio
+    async def test_missing_memory_space_id(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.export("", format="json")
+        assert "memory_space_id is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_format(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.export("test-space", format="xml")
+        assert "Invalid format" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_fact_type(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.export(
+                "test-space",
+                format="json",
+                fact_type="invalid"
+            )
+        assert "Invalid fact_type" in str(exc_info.value)
+
+
+class TestConsolidateValidation:
+    """Tests for consolidate() client-side validation"""
+
+    @pytest.mark.asyncio
+    async def test_missing_memory_space_id(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.consolidate(
+                "",
+                ["fact-1", "fact-2"],
+                "fact-1"
+            )
+        assert "memory_space_id is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_empty_fact_ids_array(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.consolidate(
+                "test-space",
+                [],
+                "fact-1"
+            )
+        assert "fact_ids must contain at least one element" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_fact_ids_with_single_element(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.consolidate(
+                "test-space",
+                ["fact-1"],
+                "fact-1"
+            )
+        assert "consolidation requires at least 2 facts" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_missing_keep_fact_id(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.consolidate(
+                "test-space",
+                ["fact-1", "fact-2"],
+                ""
+            )
+        assert "keep_fact_id is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_keep_fact_id_not_in_fact_ids(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.consolidate(
+                "test-space",
+                ["fact-1", "fact-2"],
+                "fact-3"
+            )
+        assert "keep_fact_id" in str(exc_info.value)
+        assert "must be in fact_ids" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_duplicate_fact_ids(self, cortex_client):
+        from cortex.facts import FactsValidationError
+        
+        with pytest.raises(FactsValidationError) as exc_info:
+            await cortex_client.facts.consolidate(
+                "test-space",
+                ["fact-1", "fact-2", "fact-1"],
+                "fact-1"
+            )
+        assert "must not contain duplicates" in str(exc_info.value)
+

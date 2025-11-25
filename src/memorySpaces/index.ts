@@ -14,6 +14,18 @@ import type {
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
 import { syncMemorySpaceToGraph } from "../graph";
+import {
+  MemorySpaceValidationError,
+  validateMemorySpaceId,
+  validateMemorySpaceType,
+  validateMemorySpaceStatus,
+  validateLimit,
+  validateParticipant,
+  validateParticipants,
+  validateSearchQuery,
+  validateName,
+  validateUpdateParams,
+} from "./validators";
 
 export class MemorySpacesAPI {
   constructor(
@@ -41,6 +53,25 @@ export class MemorySpacesAPI {
     params: RegisterMemorySpaceParams,
     options?: RegisterMemorySpaceOptions,
   ): Promise<MemorySpace> {
+    // Validate required fields
+    validateMemorySpaceId(params.memorySpaceId);
+    if (!params.type) {
+      throw new MemorySpaceValidationError(
+        "type is required",
+        "MISSING_TYPE",
+        "type",
+      );
+    }
+    validateMemorySpaceType(params.type);
+
+    // Validate optional fields
+    if (params.name !== undefined) {
+      validateName(params.name);
+    }
+    if (params.participants !== undefined) {
+      validateParticipants(params.participants);
+    }
+
     const now = Date.now();
     const participants =
       params.participants?.map((p) => ({
@@ -77,6 +108,8 @@ export class MemorySpacesAPI {
    * ```
    */
   async get(memorySpaceId: string): Promise<MemorySpace | null> {
+    validateMemorySpaceId(memorySpaceId);
+
     const result = await this.client.query(api.memorySpaces.get, {
       memorySpaceId,
     });
@@ -100,6 +133,16 @@ export class MemorySpacesAPI {
     status?: "active" | "archived";
     limit?: number;
   }): Promise<MemorySpace[]> {
+    if (filter?.type) {
+      validateMemorySpaceType(filter.type);
+    }
+    if (filter?.status) {
+      validateMemorySpaceStatus(filter.status);
+    }
+    if (filter?.limit !== undefined) {
+      validateLimit(filter.limit, 1000);
+    }
+
     const result = await this.client.query(api.memorySpaces.list, {
       type: filter?.type,
       status: filter?.status,
@@ -121,6 +164,13 @@ export class MemorySpacesAPI {
     type?: "personal" | "team" | "project" | "custom";
     status?: "active" | "archived";
   }): Promise<number> {
+    if (filter?.type) {
+      validateMemorySpaceType(filter.type);
+    }
+    if (filter?.status) {
+      validateMemorySpaceStatus(filter.status);
+    }
+
     const result = await this.client.query(api.memorySpaces.count, {
       type: filter?.type,
       status: filter?.status,
@@ -148,6 +198,16 @@ export class MemorySpacesAPI {
       status?: "active" | "archived";
     },
   ): Promise<MemorySpace> {
+    validateMemorySpaceId(memorySpaceId);
+    validateUpdateParams(updates);
+
+    if (updates.name !== undefined) {
+      validateName(updates.name);
+    }
+    if (updates.status !== undefined) {
+      validateMemorySpaceStatus(updates.status);
+    }
+
     const result = await this.client.mutation(api.memorySpaces.update, {
       memorySpaceId,
       name: updates.name,
@@ -178,6 +238,9 @@ export class MemorySpacesAPI {
       joinedAt: number;
     },
   ): Promise<MemorySpace> {
+    validateMemorySpaceId(memorySpaceId);
+    validateParticipant(participant);
+
     const result = await this.client.mutation(api.memorySpaces.addParticipant, {
       memorySpaceId,
       participant,
@@ -198,6 +261,15 @@ export class MemorySpacesAPI {
     memorySpaceId: string,
     participantId: string,
   ): Promise<MemorySpace> {
+    validateMemorySpaceId(memorySpaceId);
+    if (!participantId || participantId.trim().length === 0) {
+      throw new MemorySpaceValidationError(
+        "participantId is required and cannot be empty",
+        "MISSING_PARTICIPANT_ID",
+        "participantId",
+      );
+    }
+
     const result = await this.client.mutation(
       api.memorySpaces.removeParticipant,
       {
@@ -226,6 +298,8 @@ export class MemorySpacesAPI {
       metadata?: Record<string, unknown>;
     },
   ): Promise<MemorySpace> {
+    validateMemorySpaceId(memorySpaceId);
+
     const result = await this.client.mutation(api.memorySpaces.archive, {
       memorySpaceId,
       reason: options?.reason,
@@ -244,6 +318,8 @@ export class MemorySpacesAPI {
    * ```
    */
   async reactivate(memorySpaceId: string): Promise<MemorySpace> {
+    validateMemorySpaceId(memorySpaceId);
+
     const result = await this.client.mutation(api.memorySpaces.reactivate, {
       memorySpaceId,
     });
@@ -267,6 +343,8 @@ export class MemorySpacesAPI {
     memorySpaceId: string;
     cascaded: boolean;
   }> {
+    validateMemorySpaceId(memorySpaceId);
+
     const result = await this.client.mutation(api.memorySpaces.deleteSpace, {
       memorySpaceId,
       cascade: options?.cascade || false,
@@ -289,6 +367,8 @@ export class MemorySpacesAPI {
    * ```
    */
   async getStats(memorySpaceId: string): Promise<MemorySpaceStats> {
+    validateMemorySpaceId(memorySpaceId);
+
     const result = await this.client.query(api.memorySpaces.getStats, {
       memorySpaceId,
     });
@@ -305,6 +385,14 @@ export class MemorySpacesAPI {
    * ```
    */
   async findByParticipant(participantId: string): Promise<MemorySpace[]> {
+    if (!participantId || participantId.trim().length === 0) {
+      throw new MemorySpaceValidationError(
+        "participantId is required and cannot be empty",
+        "MISSING_PARTICIPANT_ID",
+        "participantId",
+      );
+    }
+
     const result = await this.client.query(api.memorySpaces.findByParticipant, {
       participantId,
     });
@@ -332,6 +420,18 @@ export class MemorySpacesAPI {
       limit?: number;
     },
   ): Promise<MemorySpace[]> {
+    validateSearchQuery(query);
+
+    if (options?.type) {
+      validateMemorySpaceType(options.type);
+    }
+    if (options?.status) {
+      validateMemorySpaceStatus(options.status);
+    }
+    if (options?.limit !== undefined) {
+      validateLimit(options.limit, 1000);
+    }
+
     const result = await this.client.query(api.memorySpaces.search, {
       query,
       type: options?.type,
@@ -360,6 +460,33 @@ export class MemorySpacesAPI {
       remove?: string[];
     },
   ): Promise<MemorySpace> {
+    validateMemorySpaceId(memorySpaceId);
+
+    // At least one operation required
+    if (!updates.add && !updates.remove) {
+      throw new MemorySpaceValidationError(
+        "At least one of 'add' or 'remove' must be provided",
+        "EMPTY_UPDATES",
+      );
+    }
+
+    // Validate add participants
+    if (updates.add && updates.add.length > 0) {
+      validateParticipants(updates.add);
+    }
+
+    // Validate remove participant IDs
+    if (updates.remove && updates.remove.length > 0) {
+      for (const id of updates.remove) {
+        if (!id || id.trim().length === 0) {
+          throw new MemorySpaceValidationError(
+            "Participant ID to remove cannot be empty",
+            "MISSING_PARTICIPANT_ID",
+          );
+        }
+      }
+    }
+
     const result = await this.client.mutation(
       api.memorySpaces.updateParticipants,
       {
@@ -372,3 +499,6 @@ export class MemorySpacesAPI {
     return result as MemorySpace;
   }
 }
+
+// Export validation error for users who want to catch it specifically
+export { MemorySpaceValidationError } from "./validators";

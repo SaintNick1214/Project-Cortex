@@ -15,6 +15,17 @@ from ..types import (
     MemorySpaceType,
     RegisterMemorySpaceParams,
 )
+from .validators import (
+    MemorySpaceValidationError,
+    validate_limit,
+    validate_memory_space_id,
+    validate_memory_space_status,
+    validate_memory_space_type,
+    validate_name,
+    validate_participants,
+    validate_search_query,
+    validate_update_params,
+)
 
 
 class MemorySpacesAPI:
@@ -62,6 +73,18 @@ class MemorySpacesAPI:
             ...     )
             ... )
         """
+        # Validate required fields
+        validate_memory_space_id(params.memory_space_id)
+        if not params.type:
+            raise MemorySpaceValidationError("type is required", "MISSING_TYPE", "type")
+        validate_memory_space_type(params.type)
+
+        # Validate optional fields
+        if params.name is not None:
+            validate_name(params.name)
+        if params.participants is not None:
+            validate_participants(params.participants)
+
         result = await self.client.mutation(
             "memorySpaces:register",
             filter_none_values({
@@ -103,6 +126,8 @@ class MemorySpacesAPI:
             ...     include_stats=True
             ... )
         """
+        validate_memory_space_id(memory_space_id)
+
         result = await self.client.query(
             "memorySpaces:get",
             {"memorySpaceId": memory_space_id},
@@ -138,6 +163,13 @@ class MemorySpacesAPI:
         Example:
             >>> result = await cortex.memory_spaces.list(type='personal', status='active')
         """
+        if type is not None:
+            validate_memory_space_type(type)
+        if status is not None:
+            validate_memory_space_status(status)
+        if limit is not None:
+            validate_limit(limit, 1000)
+
         result = await self.client.query(
             "memorySpaces:list",
             filter_none_values({
@@ -179,6 +211,15 @@ class MemorySpacesAPI:
         Example:
             >>> results = await cortex.memory_spaces.search('engineering')
         """
+        validate_search_query(query)
+
+        if type is not None:
+            validate_memory_space_type(type)
+        if status is not None:
+            validate_memory_space_status(status)
+        if limit is not None:
+            validate_limit(limit, 1000)
+
         result = await self.client.query(
             "memorySpaces:search",
             filter_none_values({"query": query, "type": type, "status": status, "limit": limit}),
@@ -205,6 +246,14 @@ class MemorySpacesAPI:
             ...     {'name': "Alice's Updated Space"}
             ... )
         """
+        validate_memory_space_id(memory_space_id)
+        validate_update_params(updates)
+
+        if "name" in updates and updates["name"] is not None:
+            validate_name(updates["name"])
+        if "status" in updates and updates["status"] is not None:
+            validate_memory_space_status(updates["status"])
+
         # Flatten updates - backend expects direct fields, not an updates dict
         mutation_args = {"memorySpaceId": memory_space_id}
         mutation_args.update(updates)
@@ -237,6 +286,26 @@ class MemorySpacesAPI:
             ...     add=['github-copilot']
             ... )
         """
+        validate_memory_space_id(memory_space_id)
+
+        # At least one operation required
+        if add is None and remove is None:
+            raise MemorySpaceValidationError(
+                "At least one of 'add' or 'remove' must be provided", "EMPTY_UPDATES"
+            )
+
+        # Validate add participants
+        if add is not None and len(add) > 0:
+            validate_participants(add)
+
+        # Validate remove participant IDs
+        if remove is not None and len(remove) > 0:
+            for participant_id in remove:
+                if not participant_id or not participant_id.strip():
+                    raise MemorySpaceValidationError(
+                        "Participant ID to remove cannot be empty", "MISSING_PARTICIPANT_ID"
+                    )
+
         result = await self.client.mutation(
             "memorySpaces:updateParticipants",
             filter_none_values({"memorySpaceId": memory_space_id, "add": add, "remove": remove}),
@@ -267,6 +336,8 @@ class MemorySpacesAPI:
             ...     reason='Project completed successfully'
             ... )
         """
+        validate_memory_space_id(memory_space_id)
+
         result = await self.client.mutation(
             "memorySpaces:archive",
             filter_none_values({"memorySpaceId": memory_space_id, "reason": reason, "metadata": metadata}),
@@ -287,6 +358,8 @@ class MemorySpacesAPI:
         Example:
             >>> await cortex.memory_spaces.reactivate('user-123-personal')
         """
+        validate_memory_space_id(memory_space_id)
+
         result = await self.client.mutation(
             "memorySpaces:reactivate", {"memorySpaceId": memory_space_id}
         )
@@ -322,6 +395,8 @@ class MemorySpacesAPI:
             ...     confirm_id='user-123-personal'
             ... )
         """
+        validate_memory_space_id(memory_space_id)
+
         if not cascade:
             raise CortexError(
                 ErrorCode.INVALID_INPUT, "Must set cascade=True to delete memory space"
@@ -366,6 +441,8 @@ class MemorySpacesAPI:
             ...     include_participants=True
             ... )
         """
+        validate_memory_space_id(memory_space_id)
+
         result = await self.client.query(
             "memorySpaces:getStats",
             filter_none_values({
@@ -394,6 +471,11 @@ class MemorySpacesAPI:
         Example:
             >>> total = await cortex.memory_spaces.count(type='personal')
         """
+        if type is not None:
+            validate_memory_space_type(type)
+        if status is not None:
+            validate_memory_space_status(status)
+
         result = await self.client.query(
             "memorySpaces:count",
             filter_none_values({
@@ -403,4 +485,8 @@ class MemorySpacesAPI:
         )
 
         return int(result)
+
+
+# Export validation error for users who want to catch it specifically
+__all__ = ["MemorySpacesAPI", "MemorySpaceValidationError"]
 
