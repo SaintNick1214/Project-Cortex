@@ -40,6 +40,20 @@ import {
   createDeletionContext,
   ORPHAN_RULES,
 } from "../graph/sync/orphanDetection";
+import {
+  UserValidationError,
+  validateUserId,
+  validateData,
+  validateVersionNumber,
+  validateTimestamp,
+  validateListUsersFilter,
+  validateUserFilters,
+  validateDeleteUserOptions,
+  validateExportOptions,
+  validateUserIdsArray,
+  validateBulkUpdateOptions,
+  validateBulkDeleteOptions,
+} from "./validators";
 
 /**
  * Custom error for cascade deletion failures
@@ -53,6 +67,9 @@ export class CascadeDeletionError extends Error {
     this.name = "CascadeDeletionError";
   }
 }
+
+// Export validation error for users who want to catch it specifically
+export { UserValidationError } from "./validators";
 
 /**
  * Users API
@@ -86,6 +103,9 @@ export class UsersAPI {
    * ```
    */
   async get(userId: string): Promise<UserProfile | null> {
+    // Client-side validation
+    validateUserId(userId);
+
     const result = await this.client.query(api.immutable.get, {
       type: "user",
       id: userId,
@@ -120,6 +140,10 @@ export class UsersAPI {
     userId: string,
     data: Record<string, unknown>,
   ): Promise<UserProfile> {
+    // Client-side validation
+    validateUserId(userId);
+    validateData(data, "data");
+
     const result = await this.client.mutation(api.immutable.store, {
       type: "user",
       id: userId,
@@ -164,6 +188,10 @@ export class UsersAPI {
     userId: string,
     options?: DeleteUserOptions,
   ): Promise<UserDeleteResult> {
+    // Client-side validation
+    validateUserId(userId);
+    validateDeleteUserOptions(options);
+
     const cascade = options?.cascade ?? false;
     const verify = options?.verify ?? true;
     const dryRun = options?.dryRun ?? false;
@@ -258,6 +286,9 @@ export class UsersAPI {
    * ```
    */
   async list(filters?: ListUsersFilter): Promise<UserProfile[]> {
+    // Client-side validation
+    validateListUsersFilter(filters);
+
     const results = await this.client.query(api.immutable.list, {
       type: "user",
       limit: filters?.limit,
@@ -281,6 +312,9 @@ export class UsersAPI {
    * ```
    */
   async search(filters: UserFilters): Promise<UserProfile[]> {
+    // Client-side validation
+    validateUserFilters(filters);
+
     const results = await this.client.query(api.immutable.list, {
       type: "user",
       limit: filters.limit,
@@ -305,6 +339,9 @@ export class UsersAPI {
    * ```
    */
   async count(_filters?: UserFilters): Promise<number> {
+    // Client-side validation
+    validateUserFilters(_filters);
+
     return await this.client.query(api.immutable.count, {
       type: "user",
     });
@@ -326,6 +363,10 @@ export class UsersAPI {
     userId: string,
     version: number,
   ): Promise<UserVersion | null> {
+    // Client-side validation
+    validateUserId(userId);
+    validateVersionNumber(version);
+
     const result = await this.client.query(api.immutable.getVersion, {
       type: "user",
       id: userId,
@@ -353,6 +394,9 @@ export class UsersAPI {
    * ```
    */
   async getHistory(userId: string): Promise<UserVersion[]> {
+    // Client-side validation
+    validateUserId(userId);
+
     const result = await this.client.query(api.immutable.getHistory, {
       type: "user",
       id: userId,
@@ -382,6 +426,10 @@ export class UsersAPI {
     userId: string,
     timestamp: Date,
   ): Promise<UserVersion | null> {
+    // Client-side validation
+    validateUserId(userId);
+    validateTimestamp(timestamp);
+
     const result = await this.client.query(api.immutable.getAtTimestamp, {
       type: "user",
       id: userId,
@@ -414,6 +462,9 @@ export class UsersAPI {
    * ```
    */
   async exists(userId: string): Promise<boolean> {
+    // Client-side validation
+    validateUserId(userId);
+
     const user = await this.get(userId);
     return user !== null;
   }
@@ -438,6 +489,12 @@ export class UsersAPI {
     userId: string,
     defaults?: Record<string, unknown>,
   ): Promise<UserProfile> {
+    // Client-side validation
+    validateUserId(userId);
+    if (defaults !== undefined) {
+      validateData(defaults, "defaults");
+    }
+
     // Try to get existing user
     const existing = await this.get(userId);
 
@@ -471,6 +528,10 @@ export class UsersAPI {
     userId: string,
     updates: Record<string, unknown>,
   ): Promise<UserProfile> {
+    // Client-side validation
+    validateUserId(userId);
+    validateData(updates, "updates");
+
     const existing = await this.get(userId);
 
     if (!existing) {
@@ -532,6 +593,9 @@ export class UsersAPI {
    * ```
    */
   async export(options?: ExportUsersOptions): Promise<string> {
+    // Client-side validation
+    validateExportOptions(options);
+
     const users = await this.list(options?.filters);
 
     if (options?.format === "csv") {
@@ -574,6 +638,18 @@ export class UsersAPI {
     updates: { data: Record<string, unknown> },
     options?: { skipVersioning?: boolean; dryRun?: boolean },
   ): Promise<{ updated: number; userIds: string[] }> {
+    // Client-side validation
+    validateUserIdsArray(userIds, 1, 100);
+    if (!updates || !updates.data) {
+      throw new UserValidationError(
+        "updates.data is required",
+        "MISSING_DATA",
+        "updates.data",
+      );
+    }
+    validateData(updates.data, "updates.data");
+    validateBulkUpdateOptions(options);
+
     if (options?.dryRun) {
       return {
         updated: 0,
@@ -622,6 +698,10 @@ export class UsersAPI {
     userIds: string[],
     options?: { cascade?: boolean; dryRun?: boolean },
   ): Promise<{ deleted: number; userIds: string[] }> {
+    // Client-side validation
+    validateUserIdsArray(userIds, 1, 100);
+    validateBulkDeleteOptions(options);
+
     if (options?.dryRun) {
       return {
         deleted: 0,

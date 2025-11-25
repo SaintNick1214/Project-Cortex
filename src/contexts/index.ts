@@ -17,6 +17,25 @@ import type {
   UpdateContextOptions,
   DeleteContextOptions,
 } from "../types";
+import {
+  ContextsValidationError,
+  validateRequiredString,
+  validatePurpose,
+  validateContextIdFormat,
+  validateConversationIdFormat,
+  validateStatus,
+  validateExportFormat,
+  validateDepth,
+  validateLimit,
+  validateVersion,
+  validateTimestamp,
+  validateDataObject,
+  validateConversationRef,
+  validateDateObject,
+  validateNonEmptyArray,
+  validateUpdatesObject,
+  validateHasFilters,
+} from "./validators";
 
 export interface Context {
   _id: string;
@@ -117,6 +136,30 @@ export class ContextsAPI {
     params: CreateContextParams,
     options?: CreateContextOptions,
   ): Promise<Context> {
+    // Client-side validation
+    validatePurpose(params.purpose);
+    validateRequiredString(params.memorySpaceId, "memorySpaceId");
+
+    if (params.userId !== undefined) {
+      validateRequiredString(params.userId, "userId");
+    }
+
+    if (params.parentId !== undefined) {
+      validateContextIdFormat(params.parentId);
+    }
+
+    if (params.status !== undefined) {
+      validateStatus(params.status);
+    }
+
+    if (params.conversationRef !== undefined) {
+      validateConversationRef(params.conversationRef);
+    }
+
+    if (params.data !== undefined) {
+      validateDataObject(params.data);
+    }
+
     const result = await this.client.mutation(api.contexts.create, {
       purpose: params.purpose,
       memorySpaceId: params.memorySpaceId,
@@ -162,6 +205,10 @@ export class ContextsAPI {
     contextId: string,
     options?: { includeChain?: boolean },
   ): Promise<Context | ContextChain | null> {
+    // Client-side validation
+    validateRequiredString(contextId, "contextId");
+    validateContextIdFormat(contextId);
+
     const result = await this.client.query(api.contexts.get, {
       contextId,
       includeChain: options?.includeChain,
@@ -186,6 +233,22 @@ export class ContextsAPI {
     updates: UpdateContextParams,
     options?: UpdateContextOptions,
   ): Promise<Context> {
+    // Client-side validation
+    validateRequiredString(contextId, "contextId");
+    validateContextIdFormat(contextId);
+
+    if (updates.status !== undefined) {
+      validateStatus(updates.status);
+    }
+
+    if (updates.data !== undefined) {
+      validateDataObject(updates.data);
+    }
+
+    if (updates.completedAt !== undefined) {
+      validateTimestamp(updates.completedAt, "completedAt");
+    }
+
     const result = await this.client.mutation(api.contexts.update, {
       contextId,
       status: updates.status,
@@ -231,6 +294,10 @@ export class ContextsAPI {
     contextId: string;
     descendantsDeleted: number;
   }> {
+    // Client-side validation
+    validateRequiredString(contextId, "contextId");
+    validateContextIdFormat(contextId);
+
     const result = await this.client.mutation(api.contexts.deleteContext, {
       contextId,
       cascadeChildren: options?.cascadeChildren,
@@ -264,6 +331,31 @@ export class ContextsAPI {
    * ```
    */
   async list(filter?: ListContextsFilter): Promise<Context[]> {
+    // Client-side validation
+    if (filter) {
+      if (filter.memorySpaceId !== undefined) {
+        validateRequiredString(filter.memorySpaceId, "memorySpaceId");
+      }
+      if (filter.userId !== undefined) {
+        validateRequiredString(filter.userId, "userId");
+      }
+      if (filter.status !== undefined) {
+        validateStatus(filter.status);
+      }
+      if (filter.parentId !== undefined) {
+        validateContextIdFormat(filter.parentId);
+      }
+      if (filter.rootId !== undefined) {
+        validateContextIdFormat(filter.rootId);
+      }
+      if (filter.depth !== undefined) {
+        validateDepth(filter.depth);
+      }
+      if (filter.limit !== undefined) {
+        validateLimit(filter.limit);
+      }
+    }
+
     const result = await this.client.query(api.contexts.list, {
       memorySpaceId: filter?.memorySpaceId,
       userId: filter?.userId,
@@ -289,6 +381,19 @@ export class ContextsAPI {
    * ```
    */
   async count(filter?: CountContextsFilter): Promise<number> {
+    // Client-side validation
+    if (filter) {
+      if (filter.memorySpaceId !== undefined) {
+        validateRequiredString(filter.memorySpaceId, "memorySpaceId");
+      }
+      if (filter.userId !== undefined) {
+        validateRequiredString(filter.userId, "userId");
+      }
+      if (filter.status !== undefined) {
+        validateStatus(filter.status);
+      }
+    }
+
     const result = await this.client.query(api.contexts.count, {
       memorySpaceId: filter?.memorySpaceId,
       userId: filter?.userId,
@@ -324,6 +429,10 @@ export class ContextsAPI {
    * ```
    */
   async getChain(contextId: string): Promise<ContextChain> {
+    // Client-side validation
+    validateRequiredString(contextId, "contextId");
+    validateContextIdFormat(contextId);
+
     const result = await this.client.query(api.contexts.getChain, {
       contextId,
     });
@@ -340,6 +449,10 @@ export class ContextsAPI {
    * ```
    */
   async getRoot(contextId: string): Promise<Context> {
+    // Client-side validation
+    validateRequiredString(contextId, "contextId");
+    validateContextIdFormat(contextId);
+
     const result = await this.client.query(api.contexts.getRoot, {
       contextId,
     });
@@ -365,6 +478,14 @@ export class ContextsAPI {
       recursive?: boolean;
     },
   ): Promise<Context[]> {
+    // Client-side validation
+    validateRequiredString(contextId, "contextId");
+    validateContextIdFormat(contextId);
+
+    if (options?.status !== undefined) {
+      validateStatus(options.status);
+    }
+
     const result = await this.client.query(api.contexts.getChildren, {
       contextId,
       status: options?.status,
@@ -386,6 +507,11 @@ export class ContextsAPI {
     contextId: string,
     participantId: string,
   ): Promise<Context> {
+    // Client-side validation
+    validateRequiredString(contextId, "contextId");
+    validateContextIdFormat(contextId);
+    validateRequiredString(participantId, "participantId");
+
     const result = await this.client.mutation(api.contexts.addParticipant, {
       contextId,
       participantId,
@@ -407,6 +533,12 @@ export class ContextsAPI {
     targetMemorySpaceId: string,
     scope: string,
   ): Promise<Context> {
+    // Client-side validation
+    validateRequiredString(contextId, "contextId");
+    validateContextIdFormat(contextId);
+    validateRequiredString(targetMemorySpaceId, "targetMemorySpaceId");
+    validateRequiredString(scope, "scope");
+
     const result = await this.client.mutation(api.contexts.grantAccess, {
       contextId,
       targetMemorySpaceId,
@@ -440,6 +572,38 @@ export class ContextsAPI {
       data?: Record<string, unknown>;
     },
   ): Promise<{ updated: number; contextIds: string[] }> {
+    // Client-side validation
+    validateHasFilters(filters);
+    validateUpdatesObject(updates);
+
+    if (filters.memorySpaceId !== undefined) {
+      validateRequiredString(filters.memorySpaceId, "memorySpaceId");
+    }
+
+    if (filters.userId !== undefined) {
+      validateRequiredString(filters.userId, "userId");
+    }
+
+    if (filters.status !== undefined) {
+      validateStatus(filters.status);
+    }
+
+    if (filters.parentId !== undefined) {
+      validateContextIdFormat(filters.parentId);
+    }
+
+    if (filters.rootId !== undefined) {
+      validateContextIdFormat(filters.rootId);
+    }
+
+    if (updates.status !== undefined) {
+      validateStatus(updates.status);
+    }
+
+    if (updates.data !== undefined) {
+      validateDataObject(updates.data);
+    }
+
     const result = await this.client.mutation(api.contexts.updateMany, {
       memorySpaceId: filters.memorySpaceId,
       userId: filters.userId,
@@ -472,6 +636,25 @@ export class ContextsAPI {
     },
     options?: { cascadeChildren?: boolean },
   ): Promise<{ deleted: number; contextIds: string[] }> {
+    // Client-side validation
+    validateHasFilters(filters);
+
+    if (filters.memorySpaceId !== undefined) {
+      validateRequiredString(filters.memorySpaceId, "memorySpaceId");
+    }
+
+    if (filters.userId !== undefined) {
+      validateRequiredString(filters.userId, "userId");
+    }
+
+    if (filters.status !== undefined) {
+      validateStatus(filters.status);
+    }
+
+    if (filters.completedBefore !== undefined) {
+      validateTimestamp(filters.completedBefore, "completedBefore");
+    }
+
     const result = await this.client.mutation(api.contexts.deleteMany, {
       memorySpaceId: filters.memorySpaceId,
       userId: filters.userId,
@@ -511,6 +694,25 @@ export class ContextsAPI {
     count: number;
     exportedAt: number;
   }> {
+    // Client-side validation
+    if (options?.format) {
+      validateExportFormat(options.format);
+    }
+
+    if (filters) {
+      if (filters.memorySpaceId !== undefined) {
+        validateRequiredString(filters.memorySpaceId, "memorySpaceId");
+      }
+
+      if (filters.userId !== undefined) {
+        validateRequiredString(filters.userId, "userId");
+      }
+
+      if (filters.status !== undefined) {
+        validateStatus(filters.status);
+      }
+    }
+
     const result = await this.client.query(api.contexts.exportContexts, {
       memorySpaceId: filters?.memorySpaceId,
       userId: filters?.userId,
@@ -540,6 +742,11 @@ export class ContextsAPI {
     contextId: string,
     participantId: string,
   ): Promise<Context> {
+    // Client-side validation
+    validateRequiredString(contextId, "contextId");
+    validateContextIdFormat(contextId);
+    validateRequiredString(participantId, "participantId");
+
     const result = await this.client.mutation(api.contexts.removeParticipant, {
       contextId,
       participantId,
@@ -557,6 +764,10 @@ export class ContextsAPI {
    * ```
    */
   async getByConversation(conversationId: string): Promise<Context[]> {
+    // Client-side validation
+    validateRequiredString(conversationId, "conversationId");
+    validateConversationIdFormat(conversationId);
+
     const result = await this.client.query(api.contexts.getByConversation, {
       conversationId,
     });
@@ -597,6 +808,11 @@ export class ContextsAPI {
     timestamp: number;
     updatedBy?: string;
   } | null> {
+    // Client-side validation
+    validateRequiredString(contextId, "contextId");
+    validateContextIdFormat(contextId);
+    validateVersion(version);
+
     const result = await this.client.query(api.contexts.getVersion, {
       contextId,
       version,
@@ -629,6 +845,10 @@ export class ContextsAPI {
       updatedBy?: string;
     }>
   > {
+    // Client-side validation
+    validateRequiredString(contextId, "contextId");
+    validateContextIdFormat(contextId);
+
     const result = await this.client.query(api.contexts.getHistory, {
       contextId,
     });
@@ -663,6 +883,11 @@ export class ContextsAPI {
     timestamp: number;
     updatedBy?: string;
   } | null> {
+    // Client-side validation
+    validateRequiredString(contextId, "contextId");
+    validateContextIdFormat(contextId);
+    validateDateObject(timestamp, "timestamp");
+
     const result = await this.client.query(api.contexts.getAtTimestamp, {
       contextId,
       timestamp: timestamp.getTime(),
@@ -677,3 +902,6 @@ export class ContextsAPI {
     } | null;
   }
 }
+
+// Export validation error for users who want to catch it specifically
+export { ContextsValidationError } from "./validators";

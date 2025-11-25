@@ -133,6 +133,8 @@ describe("Conversations API (Layer 1a)", () => {
     });
 
     it("throws error for duplicate conversationId", async () => {
+      // NOTE: This tests BACKEND validation (database uniqueness check)
+      // Client-side validation only checks format, not existence
       const conversationId = "conv-duplicate-test";
 
       await cortex.conversations.create({
@@ -160,6 +162,7 @@ describe("Conversations API (Layer 1a)", () => {
     });
 
     it("throws error for invalid user-agent participants", async () => {
+      // NOTE: This tests CLIENT-SIDE validation (participant structure check)
       await expect(
         cortex.conversations.create({
           memorySpaceId: "test-space-error",
@@ -172,6 +175,7 @@ describe("Conversations API (Layer 1a)", () => {
     });
 
     it("throws error for invalid agent-agent participants", async () => {
+      // NOTE: This tests CLIENT-SIDE validation (array length check)
       await expect(
         cortex.conversations.create({
           memorySpaceId: "test-space-error-agent",
@@ -348,6 +352,8 @@ describe("Conversations API (Layer 1a)", () => {
     });
 
     it("throws error for non-existent conversation", async () => {
+      // NOTE: This tests BACKEND validation (existence check)
+      // Client-side validation only checks required fields and format
       await expect(
         cortex.conversations.addMessage({
           conversationId: "conv-does-not-exist",
@@ -695,6 +701,8 @@ describe("Conversations API (Layer 1a)", () => {
     });
 
     it("throws error for non-existent conversation", async () => {
+      // NOTE: This tests BACKEND validation (existence check)
+      // Client-side validation only checks required fields and format
       await expect(
         cortex.conversations.getHistory("conv-does-not-exist"),
       ).rejects.toThrow("CONVERSATION_NOT_FOUND");
@@ -1188,7 +1196,9 @@ describe("Conversations API (Layer 1a)", () => {
       expect(page1.messages[0].content).not.toBe(page2.messages[0].content);
     });
 
-    it("handles empty message content", async () => {
+    it("rejects empty message content", async () => {
+      // NOTE: This now tests CLIENT-SIDE validation
+      // Empty content is caught by validation before reaching backend
       const conv = await cortex.conversations.create({
         memorySpaceId: "test-space-empty",
         type: "user-agent",
@@ -1198,15 +1208,19 @@ describe("Conversations API (Layer 1a)", () => {
         },
       });
 
-      const result = await cortex.conversations.addMessage({
-        conversationId: conv.conversationId,
-        message: {
-          role: "user",
-          content: "",
-        },
+      await expect(
+        cortex.conversations.addMessage({
+          conversationId: conv.conversationId,
+          message: {
+            role: "user",
+            content: "",
+          },
+        }),
+      ).rejects.toMatchObject({
+        name: "ConversationValidationError",
+        code: "MISSING_REQUIRED_FIELD",
+        field: "message.content",
       });
-
-      expect(result.messages[0].content).toBe("");
     });
 
     it("handles very long message content", async () => {
@@ -1596,6 +1610,683 @@ describe("Conversations API (Layer 1a)", () => {
         });
 
         expect(second.conversationId).toBe(first.conversationId);
+      });
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Client-Side Validation
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Client-Side Validation", () => {
+    describe("create() validation", () => {
+      it("throws on missing memorySpaceId", async () => {
+        await expect(
+          cortex.conversations.create({
+            type: "user-agent",
+            participants: { userId: "user-123" },
+          } as any),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "MISSING_REQUIRED_FIELD",
+          field: "memorySpaceId",
+        });
+      });
+
+      it("throws on empty memorySpaceId", async () => {
+        await expect(
+          cortex.conversations.create({
+            memorySpaceId: "",
+            type: "user-agent",
+            participants: { userId: "user-123" },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "MISSING_REQUIRED_FIELD",
+          field: "memorySpaceId",
+        });
+      });
+
+      it("throws on whitespace-only memorySpaceId", async () => {
+        await expect(
+          cortex.conversations.create({
+            memorySpaceId: "   ",
+            type: "user-agent",
+            participants: { userId: "user-123" },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "MISSING_REQUIRED_FIELD",
+          field: "memorySpaceId",
+        });
+      });
+
+      it("throws on invalid type", async () => {
+        await expect(
+          cortex.conversations.create({
+            memorySpaceId: "test-space",
+            type: "invalid-type" as any,
+            participants: { userId: "user-123" },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_TYPE",
+        });
+      });
+
+      it("throws on invalid conversationId format (contains newline)", async () => {
+        await expect(
+          cortex.conversations.create({
+            conversationId: "conv-123\n456",
+            memorySpaceId: "test-space",
+            type: "user-agent",
+            participants: { userId: "user-123" },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_ID_FORMAT",
+        });
+      });
+
+      it("throws when user-agent missing userId", async () => {
+        await expect(
+          cortex.conversations.create({
+            memorySpaceId: "test-space",
+            type: "user-agent",
+            participants: {},
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_PARTICIPANTS",
+        });
+      });
+
+      it("throws when agent-agent has < 2 memorySpaceIds", async () => {
+        await expect(
+          cortex.conversations.create({
+            memorySpaceId: "test-space",
+            type: "agent-agent",
+            participants: { memorySpaceIds: ["agent-1"] },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_PARTICIPANTS",
+        });
+      });
+
+      it("throws when agent-agent has duplicate memorySpaceIds", async () => {
+        await expect(
+          cortex.conversations.create({
+            memorySpaceId: "test-space",
+            type: "agent-agent",
+            participants: { memorySpaceIds: ["agent-1", "agent-1"] },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "DUPLICATE_VALUES",
+        });
+      });
+    });
+
+    describe("addMessage() validation", () => {
+      it("throws on missing conversationId", async () => {
+        await expect(
+          cortex.conversations.addMessage({
+            conversationId: undefined as any,
+            message: { role: "user", content: "test" },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "MISSING_REQUIRED_FIELD",
+          field: "conversationId",
+        });
+      });
+
+      it("throws on missing message.content", async () => {
+        await expect(
+          cortex.conversations.addMessage({
+            conversationId: "conv-123",
+            message: { role: "user", content: undefined as any },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "MISSING_REQUIRED_FIELD",
+          field: "message.content",
+        });
+      });
+
+      it("throws on empty message.content", async () => {
+        await expect(
+          cortex.conversations.addMessage({
+            conversationId: "conv-123",
+            message: { role: "user", content: "" },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "MISSING_REQUIRED_FIELD",
+          field: "message.content",
+        });
+      });
+
+      it("throws on invalid message.role", async () => {
+        await expect(
+          cortex.conversations.addMessage({
+            conversationId: "conv-123",
+            message: { role: "invalid" as any, content: "test" },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_ROLE",
+        });
+      });
+
+      it("throws on invalid message ID format", async () => {
+        await expect(
+          cortex.conversations.addMessage({
+            conversationId: "conv-123",
+            message: {
+              id: "msg\0invalid",
+              role: "user",
+              content: "test",
+            },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_ID_FORMAT",
+        });
+      });
+    });
+
+    describe("get() validation", () => {
+      it("throws on missing conversationId", async () => {
+        await expect(
+          cortex.conversations.get(undefined as any),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "MISSING_REQUIRED_FIELD",
+          field: "conversationId",
+        });
+      });
+
+      it("throws on empty conversationId", async () => {
+        await expect(cortex.conversations.get("")).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "MISSING_REQUIRED_FIELD",
+          field: "conversationId",
+        });
+      });
+    });
+
+    describe("list() validation", () => {
+      it("throws on invalid type", async () => {
+        await expect(
+          cortex.conversations.list({ type: "invalid" as any }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_TYPE",
+        });
+      });
+
+      it("throws on invalid limit (negative)", async () => {
+        await expect(
+          cortex.conversations.list({ limit: -1 }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_RANGE",
+          field: "limit",
+        });
+      });
+
+      it("throws on invalid limit (zero)", async () => {
+        await expect(
+          cortex.conversations.list({ limit: 0 }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_RANGE",
+          field: "limit",
+        });
+      });
+
+      it("throws on limit too large (>1000)", async () => {
+        await expect(
+          cortex.conversations.list({ limit: 1001 }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_RANGE",
+          field: "limit",
+        });
+      });
+    });
+
+    describe("count() validation", () => {
+      it("throws on invalid type", async () => {
+        await expect(
+          cortex.conversations.count({ type: "wrong-type" as any }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_TYPE",
+        });
+      });
+    });
+
+    describe("delete() validation", () => {
+      it("throws on missing conversationId", async () => {
+        await expect(
+          cortex.conversations.delete(undefined as any),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "MISSING_REQUIRED_FIELD",
+          field: "conversationId",
+        });
+      });
+
+      it("throws on empty conversationId", async () => {
+        await expect(cortex.conversations.delete("")).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "MISSING_REQUIRED_FIELD",
+          field: "conversationId",
+        });
+      });
+    });
+
+    describe("deleteMany() validation", () => {
+      it("throws on invalid type", async () => {
+        await expect(
+          cortex.conversations.deleteMany({ type: "bad-type" as any }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_TYPE",
+        });
+      });
+
+      it("throws when no filters provided", async () => {
+        await expect(cortex.conversations.deleteMany({})).rejects.toMatchObject(
+          {
+            name: "ConversationValidationError",
+            code: "MISSING_REQUIRED_FIELD",
+          },
+        );
+      });
+    });
+
+    describe("getMessage() validation", () => {
+      it("throws on missing conversationId", async () => {
+        await expect(
+          cortex.conversations.getMessage(undefined as any, "msg-123"),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "MISSING_REQUIRED_FIELD",
+          field: "conversationId",
+        });
+      });
+
+      it("throws on missing messageId", async () => {
+        await expect(
+          cortex.conversations.getMessage("conv-123", undefined as any),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "MISSING_REQUIRED_FIELD",
+          field: "messageId",
+        });
+      });
+    });
+
+    describe("getMessagesByIds() validation", () => {
+      it("throws on missing conversationId", async () => {
+        await expect(
+          cortex.conversations.getMessagesByIds(undefined as any, ["msg-1"]),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "MISSING_REQUIRED_FIELD",
+          field: "conversationId",
+        });
+      });
+
+      it("throws on empty messageIds array", async () => {
+        await expect(
+          cortex.conversations.getMessagesByIds("conv-123", []),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "EMPTY_ARRAY",
+          field: "messageIds",
+        });
+      });
+
+      it("throws on duplicate messageIds", async () => {
+        await expect(
+          cortex.conversations.getMessagesByIds("conv-123", [
+            "msg-1",
+            "msg-2",
+            "msg-1",
+          ]),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "DUPLICATE_VALUES",
+          field: "messageIds",
+        });
+      });
+    });
+
+    describe("findConversation() validation", () => {
+      it("throws on missing memorySpaceId", async () => {
+        await expect(
+          cortex.conversations.findConversation({
+            memorySpaceId: undefined as any,
+            type: "user-agent",
+            userId: "user-123",
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "MISSING_REQUIRED_FIELD",
+          field: "memorySpaceId",
+        });
+      });
+
+      it("throws on invalid type", async () => {
+        await expect(
+          cortex.conversations.findConversation({
+            memorySpaceId: "test-space",
+            type: "bad-type" as any,
+            userId: "user-123",
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_TYPE",
+        });
+      });
+
+      it("throws when user-agent missing userId", async () => {
+        await expect(
+          cortex.conversations.findConversation({
+            memorySpaceId: "test-space",
+            type: "user-agent",
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "MISSING_REQUIRED_FIELD",
+          field: "userId",
+        });
+      });
+
+      it("throws when agent-agent missing memorySpaceIds", async () => {
+        await expect(
+          cortex.conversations.findConversation({
+            memorySpaceId: "test-space",
+            type: "agent-agent",
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_ARRAY_LENGTH",
+        });
+      });
+
+      it("throws when agent-agent has < 2 memorySpaceIds", async () => {
+        await expect(
+          cortex.conversations.findConversation({
+            memorySpaceId: "test-space",
+            type: "agent-agent",
+            memorySpaceIds: ["agent-1"],
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_ARRAY_LENGTH",
+        });
+      });
+
+      it("throws when agent-agent has duplicate memorySpaceIds", async () => {
+        await expect(
+          cortex.conversations.findConversation({
+            memorySpaceId: "test-space",
+            type: "agent-agent",
+            memorySpaceIds: ["agent-1", "agent-1"],
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "DUPLICATE_VALUES",
+        });
+      });
+    });
+
+    describe("getOrCreate() validation", () => {
+      it("throws on missing memorySpaceId", async () => {
+        await expect(
+          cortex.conversations.getOrCreate({
+            memorySpaceId: undefined as any,
+            type: "user-agent",
+            participants: { userId: "user-123" },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "MISSING_REQUIRED_FIELD",
+          field: "memorySpaceId",
+        });
+      });
+
+      it("throws on invalid type", async () => {
+        await expect(
+          cortex.conversations.getOrCreate({
+            memorySpaceId: "test-space",
+            type: "invalid" as any,
+            participants: { userId: "user-123" },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_TYPE",
+        });
+      });
+
+      it("throws when user-agent missing userId", async () => {
+        await expect(
+          cortex.conversations.getOrCreate({
+            memorySpaceId: "test-space",
+            type: "user-agent",
+            participants: {},
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_PARTICIPANTS",
+        });
+      });
+
+      it("throws when agent-agent has < 2 memorySpaceIds", async () => {
+        await expect(
+          cortex.conversations.getOrCreate({
+            memorySpaceId: "test-space",
+            type: "agent-agent",
+            participants: { memorySpaceIds: ["agent-1"] },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_PARTICIPANTS",
+        });
+      });
+    });
+
+    describe("getHistory() validation", () => {
+      it("throws on missing conversationId", async () => {
+        await expect(
+          cortex.conversations.getHistory(undefined as any),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "MISSING_REQUIRED_FIELD",
+          field: "conversationId",
+        });
+      });
+
+      it("throws on invalid limit", async () => {
+        await expect(
+          cortex.conversations.getHistory("conv-123", { limit: 0 }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_RANGE",
+          field: "limit",
+        });
+      });
+
+      it("throws on invalid offset (negative)", async () => {
+        await expect(
+          cortex.conversations.getHistory("conv-123", { offset: -1 }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_RANGE",
+          field: "offset",
+        });
+      });
+
+      it("throws on invalid sortOrder", async () => {
+        await expect(
+          cortex.conversations.getHistory("conv-123", {
+            sortOrder: "invalid" as any,
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_SORT_ORDER",
+        });
+      });
+    });
+
+    describe("search() validation", () => {
+      it("throws on empty query", async () => {
+        await expect(
+          cortex.conversations.search({ query: "" }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "EMPTY_STRING",
+          field: "query",
+        });
+      });
+
+      it("throws on whitespace-only query", async () => {
+        await expect(
+          cortex.conversations.search({ query: "   " }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "EMPTY_STRING",
+          field: "query",
+        });
+      });
+
+      it("throws on invalid type filter", async () => {
+        await expect(
+          cortex.conversations.search({
+            query: "test",
+            filters: { type: "invalid" as any },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_TYPE",
+        });
+      });
+
+      it("throws on invalid limit", async () => {
+        await expect(
+          cortex.conversations.search({
+            query: "test",
+            filters: { limit: -5 },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_RANGE",
+          field: "limit",
+        });
+      });
+
+      it("throws on invalid date range (start > end)", async () => {
+        const now = Date.now();
+        await expect(
+          cortex.conversations.search({
+            query: "test",
+            filters: {
+              dateRange: { start: now, end: now - 1000 },
+            },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_DATE_RANGE",
+        });
+      });
+
+      it("throws on invalid date range (start === end)", async () => {
+        const now = Date.now();
+        await expect(
+          cortex.conversations.search({
+            query: "test",
+            filters: {
+              dateRange: { start: now, end: now },
+            },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_DATE_RANGE",
+        });
+      });
+    });
+
+    describe("export() validation", () => {
+      it("throws on invalid format", async () => {
+        await expect(
+          cortex.conversations.export({ format: "xml" as any }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_FORMAT",
+        });
+      });
+
+      it("throws on invalid type filter", async () => {
+        await expect(
+          cortex.conversations.export({
+            format: "json",
+            filters: { type: "bad" as any },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_TYPE",
+        });
+      });
+
+      it("throws on empty conversationIds array", async () => {
+        await expect(
+          cortex.conversations.export({
+            format: "json",
+            filters: { conversationIds: [] },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "EMPTY_ARRAY",
+        });
+      });
+
+      it("throws on invalid date range", async () => {
+        const now = Date.now();
+        await expect(
+          cortex.conversations.export({
+            format: "json",
+            filters: {
+              dateRange: { start: now + 1000, end: now },
+            },
+          }),
+        ).rejects.toMatchObject({
+          name: "ConversationValidationError",
+          code: "INVALID_DATE_RANGE",
+        });
+      });
+    });
+
+    describe("Validation timing", () => {
+      it("validation errors are synchronous (<1ms)", async () => {
+        const start = Date.now();
+        try {
+          await cortex.conversations.create({
+            memorySpaceId: "",
+            type: "user-agent",
+            participants: {},
+          } as any);
+        } catch (error: any) {
+          const duration = Date.now() - start;
+
+          expect(duration).toBeLessThan(1);
+          expect(error.name).toBe("ConversationValidationError");
+        }
       });
     });
   });

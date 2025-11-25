@@ -32,6 +32,485 @@ from cortex import (
     VectorPurging,
     VectorRetention,
 )
+from cortex.governance import GovernanceValidationError
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Client-Side Validation
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+@pytest.mark.asyncio
+async def test_set_policy_missing_scope(cortex_client: Cortex):
+    """Should throw on missing scope."""
+    policy = GovernancePolicy(
+        # Missing organization_id and memory_space_id
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(delete_after="7y", purge_on_user_request=True),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(default_versions=5, by_importance=[]),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+    )
+
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.set_policy(policy)
+
+    assert "must specify either organization_id or memory_space_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_set_policy_invalid_period_format(cortex_client: Cortex):
+    """Should throw on invalid period format."""
+    policy = GovernancePolicy(
+        organization_id="test-org-validation",
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(
+                delete_after="7years",  # Invalid format
+                purge_on_user_request=True,
+            ),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(default_versions=5, by_importance=[]),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+    )
+
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.set_policy(policy)
+
+    assert "Invalid period format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_set_policy_overlapping_ranges(cortex_client: Cortex):
+    """Should throw on overlapping importance ranges."""
+    policy = GovernancePolicy(
+        organization_id="test-org-validation",
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(delete_after="7y", purge_on_user_request=True),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(
+                default_versions=10,
+                by_importance=[
+                    ImportanceRange(range=[0, 50], versions=5),
+                    ImportanceRange(range=[40, 80], versions=10),  # Overlaps
+                ],
+            ),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+    )
+
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.set_policy(policy)
+
+    assert "overlaps with range" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_set_policy_invalid_version_count(cortex_client: Cortex):
+    """Should throw on invalid version count."""
+    policy = GovernancePolicy(
+        organization_id="test-org-validation",
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(delete_after="7y", purge_on_user_request=True),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=-5),  # Invalid
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(default_versions=5, by_importance=[]),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+    )
+
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.set_policy(policy)
+
+    assert "must be >= -1" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_set_policy_invalid_importance_bounds(cortex_client: Cortex):
+    """Should throw on invalid importance range bounds."""
+    policy = GovernancePolicy(
+        organization_id="test-org-validation",
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(delete_after="7y", purge_on_user_request=True),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(
+                default_versions=10,
+                by_importance=[
+                    ImportanceRange(range=[0, 150], versions=5),  # Max > 100
+                ],
+            ),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+    )
+
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.set_policy(policy)
+
+    assert "must be between 0 and 100" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_enforce_missing_scope(cortex_client: Cortex):
+    """Should throw when scope is missing."""
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.enforce(
+            EnforcementOptions(
+                layers=["vector"],
+                rules=["retention"],
+                # Missing scope
+            )
+        )
+
+    assert "Enforcement requires a scope" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_enforce_empty_scope(cortex_client: Cortex):
+    """Should throw when scope is empty."""
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.enforce(
+            EnforcementOptions(scope=PolicyScope())  # Empty scope
+        )
+
+    assert "must include either organization_id or memory_space_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_enforce_invalid_layers(cortex_client: Cortex):
+    """Should throw on invalid layer names."""
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.enforce(
+            EnforcementOptions(
+                scope=PolicyScope(organization_id="test-org"),
+                layers=["invalid-layer"],
+            )
+        )
+
+    assert "Invalid layer" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_enforce_invalid_rules(cortex_client: Cortex):
+    """Should throw on invalid rule names."""
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.enforce(
+            EnforcementOptions(
+                scope=PolicyScope(organization_id="test-org"),
+                rules=["invalid-rule"],
+            )
+        )
+
+    assert "Invalid rule" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_enforce_empty_layers_array(cortex_client: Cortex):
+    """Should throw on empty layers array."""
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.enforce(
+            EnforcementOptions(
+                scope=PolicyScope(organization_id="test-org"),
+                layers=[],
+            )
+        )
+
+    assert "Layers array cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_enforce_empty_rules_array(cortex_client: Cortex):
+    """Should throw on empty rules array."""
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.enforce(
+            EnforcementOptions(
+                scope=PolicyScope(organization_id="test-org"),
+                rules=[],
+            )
+        )
+
+    assert "Rules array cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_compliance_report_invalid_date_range(cortex_client: Cortex):
+    """Should throw when start date is after end date."""
+    now = datetime.now()
+    yesterday = now - timedelta(days=1)
+
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.get_compliance_report(
+            ComplianceReportOptions(
+                organization_id="test-org",
+                period_start=now,
+                period_end=yesterday,
+            )
+        )
+
+    assert "Start date must be before end date" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_enforcement_stats_invalid_period(cortex_client: Cortex):
+    """Should throw on invalid period format."""
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.get_enforcement_stats(
+            EnforcementStatsOptions(
+                period="60d",  # Invalid: not in allowed list
+                organization_id="test-org",
+            )
+        )
+
+    assert "Invalid period" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_agent_override_empty_memory_space_id(cortex_client: Cortex):
+    """Should throw when memory_space_id is empty."""
+    # Create minimal valid policy for override (only need one field to test memory_space_id validation)
+    override = GovernancePolicy(
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(delete_after="7y", purge_on_user_request=True),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(default_versions=10, by_importance=[]),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+    )
+
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.set_agent_override("", override)
+
+    assert "memory_space_id is required and cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_agent_override_whitespace_memory_space_id(cortex_client: Cortex):
+    """Should throw when memory_space_id is only whitespace."""
+    override = GovernancePolicy(
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(delete_after="7y", purge_on_user_request=True),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(default_versions=10, by_importance=[]),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+    )
+
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.set_agent_override("   ", override)
+
+    assert "memory_space_id is required and cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_agent_override_invalid_period(cortex_client: Cortex):
+    """Should throw on invalid period in override."""
+    override = GovernancePolicy(
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(
+                delete_after="invalid-period",
+                purge_on_user_request=True,
+            ),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(default_versions=10, by_importance=[]),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+    )
+
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.set_agent_override("test-space", override)
+
+    assert "Invalid period format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_simulate_invalid_period(cortex_client: Cortex):
+    """Should throw on invalid period format in simulation."""
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.simulate(
+            SimulationOptions(
+                organization_id="test-org",
+                conversations=ConversationsPolicy(
+                    retention=ConversationsRetention(
+                        delete_after="bad-format",
+                        purge_on_user_request=True,
+                    ),
+                    purging=ConversationsPurging(auto_delete=True),
+                ),
+            )
+        )
+
+    assert "Invalid period format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_simulate_invalid_version_count(cortex_client: Cortex):
+    """Should throw on invalid version count in simulation."""
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.simulate(
+            SimulationOptions(
+                organization_id="test-org",
+                vector=VectorPolicy(
+                    retention=VectorRetention(default_versions=-10, by_importance=[]),
+                    purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+                ),
+            )
+        )
+
+    assert "must be >= -1" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_template_invalid_name(cortex_client: Cortex):
+    """Should throw on invalid template name."""
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.get_template("INVALID")  # type: ignore
+
+    assert "Invalid compliance template" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_policy_empty_organization_id(cortex_client: Cortex):
+    """Should throw on empty organization_id."""
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.get_policy(PolicyScope(organization_id=""))
+
+    assert "must include either organization_id or memory_space_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_policy_empty_memory_space_id(cortex_client: Cortex):
+    """Should throw on empty memory_space_id."""
+    with pytest.raises(GovernanceValidationError) as exc_info:
+        await cortex_client.governance.get_policy(PolicyScope(memory_space_id="   "))
+
+    assert "must include either organization_id or memory_space_id" in str(exc_info.value)
+
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Core Operations

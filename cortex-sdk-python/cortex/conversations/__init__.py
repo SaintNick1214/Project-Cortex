@@ -23,6 +23,22 @@ from ..types import (
     ExportResult,
     Message,
 )
+from .validators import (
+    ConversationValidationError,
+    validate_required_string,
+    validate_conversation_type,
+    validate_message_role,
+    validate_id_format,
+    validate_export_format,
+    validate_sort_order,
+    validate_search_query,
+    validate_limit,
+    validate_offset,
+    validate_non_empty_list,
+    validate_timestamp_range,
+    validate_participants,
+    validate_no_duplicates,
+)
 
 
 class ConversationsAPI:
@@ -71,6 +87,35 @@ class ConversationsAPI:
             ...     )
             ... )
         """
+        # Validate required fields
+        validate_required_string(input.memory_space_id, "memory_space_id")
+        validate_conversation_type(input.type)
+
+        # Validate optional conversation_id format
+        validate_id_format(
+            input.conversation_id if hasattr(input, "conversation_id") else None,
+            "conversation",
+            "conversation_id",
+        )
+
+        # Validate participants based on type
+        validate_participants(input.type, input.participants)
+
+        # For agent-agent, validate no duplicate memory_space_ids
+        if input.type == "agent-agent":
+            memory_space_ids = None
+            if hasattr(input.participants, "memory_space_ids"):
+                memory_space_ids = input.participants.memory_space_ids
+            elif isinstance(input.participants, dict):
+                memory_space_ids = input.participants.get(
+                    "memorySpaceIds"
+                ) or input.participants.get("memory_space_ids")
+
+            if memory_space_ids:
+                validate_no_duplicates(
+                    memory_space_ids, "participants.memory_space_ids"
+                )
+
         # Auto-generate conversation ID if not provided
         conversation_id = input.conversation_id or self._generate_conversation_id()
 
@@ -118,6 +163,8 @@ class ConversationsAPI:
         Example:
             >>> conversation = await cortex.conversations.get('conv-abc123')
         """
+        validate_required_string(conversation_id, "conversation_id")
+
         result = await self.client.query(
             "conversations:get", {"conversationId": conversation_id}
         )
@@ -149,6 +196,10 @@ class ConversationsAPI:
             ...     )
             ... )
         """
+        validate_required_string(input.conversation_id, "conversation_id")
+        validate_required_string(input.content, "content")
+        validate_message_role(input.role)
+
         # Auto-generate message ID
         message_id = self._generate_message_id()
 
@@ -210,6 +261,12 @@ class ConversationsAPI:
             ...     limit=10
             ... )
         """
+        # All fields optional, validate only if provided
+        if type is not None:
+            validate_conversation_type(type)
+        if limit is not None:
+            validate_limit(limit)
+
         result = await self.client.query(
             "conversations:list",
             filter_none_values({
@@ -244,6 +301,9 @@ class ConversationsAPI:
             ...     memory_space_id='user-123-personal'
             ... )
         """
+        if type is not None:
+            validate_conversation_type(type)
+
         result = await self.client.query(
             "conversations:count",
             filter_none_values({
@@ -271,6 +331,8 @@ class ConversationsAPI:
         Example:
             >>> await cortex.conversations.delete('conv-abc123')
         """
+        validate_required_string(conversation_id, "conversation_id")
+
         result = await self.client.mutation(
             "conversations:deleteConversation", filter_none_values({"conversationId": conversation_id})
         )
@@ -311,6 +373,17 @@ class ConversationsAPI:
             ...     user_id='user-123'
             ... )
         """
+        # Validate type if provided
+        if type is not None:
+            validate_conversation_type(type)
+
+        # Ensure at least one filter is provided
+        if user_id is None and memory_space_id is None and type is None:
+            raise ConversationValidationError(
+                "delete_many requires at least one filter (user_id, memory_space_id, or type)",
+                "MISSING_REQUIRED_FIELD",
+            )
+
         result = await self.client.mutation(
             "conversations:deleteMany",
             filter_none_values({
@@ -338,6 +411,9 @@ class ConversationsAPI:
         Example:
             >>> message = await cortex.conversations.get_message('conv-123', 'msg-456')
         """
+        validate_required_string(conversation_id, "conversation_id")
+        validate_required_string(message_id, "message_id")
+
         result = await self.client.query(
             "conversations:getMessage",
             filter_none_values({"conversationId": conversation_id, "messageId": message_id}),
@@ -366,6 +442,10 @@ class ConversationsAPI:
             ...     'conv-123', ['msg-1', 'msg-2']
             ... )
         """
+        validate_required_string(conversation_id, "conversation_id")
+        validate_non_empty_list(message_ids, "message_ids")
+        validate_no_duplicates(message_ids, "message_ids")
+
         result = await self.client.query(
             "conversations:getMessagesByIds",
             filter_none_values({"conversationId": conversation_id, "messageIds": message_ids}),
@@ -399,6 +479,26 @@ class ConversationsAPI:
             ...     user_id='user-123'
             ... )
         """
+        validate_required_string(memory_space_id, "memory_space_id")
+        validate_conversation_type(type)
+
+        # Validate based on type
+        if type == "user-agent" and user_id is None:
+            raise ConversationValidationError(
+                "user_id is required for user-agent conversation search",
+                "MISSING_REQUIRED_FIELD",
+                "user_id",
+            )
+
+        if type == "agent-agent":
+            if memory_space_ids is None or len(memory_space_ids) < 2:
+                raise ConversationValidationError(
+                    "agent-agent conversations require at least 2 memory_space_ids",
+                    "INVALID_ARRAY_LENGTH",
+                    "memory_space_ids",
+                )
+            validate_no_duplicates(memory_space_ids, "memory_space_ids")
+
         result = await self.client.query(
             "conversations:findConversation",
             filter_none_values({
@@ -436,6 +536,25 @@ class ConversationsAPI:
             ...     )
             ... )
         """
+        # Same validation as create()
+        validate_required_string(input.memory_space_id, "memory_space_id")
+        validate_conversation_type(input.type)
+        validate_participants(input.type, input.participants)
+
+        if input.type == "agent-agent":
+            memory_space_ids = None
+            if hasattr(input.participants, "memory_space_ids"):
+                memory_space_ids = input.participants.memory_space_ids
+            elif isinstance(input.participants, dict):
+                memory_space_ids = input.participants.get(
+                    "memorySpaceIds"
+                ) or input.participants.get("memory_space_ids")
+
+            if memory_space_ids:
+                validate_no_duplicates(
+                    memory_space_ids, "participants.memory_space_ids"
+                )
+
         result = await self.client.mutation(
             "conversations:getOrCreate",
             filter_none_values({
@@ -480,6 +599,15 @@ class ConversationsAPI:
             ...     sort_order='desc'
             ... )
         """
+        validate_required_string(conversation_id, "conversation_id")
+
+        if limit is not None:
+            validate_limit(limit)
+        if offset is not None:
+            validate_offset(offset)
+        if sort_order is not None:
+            validate_sort_order(sort_order)
+
         result = await self.client.query(
             "conversations:getHistory",
             filter_none_values({
@@ -526,6 +654,16 @@ class ConversationsAPI:
             ...     limit=5
             ... )
         """
+        validate_search_query(query)
+
+        if type is not None:
+            validate_conversation_type(type)
+        if limit is not None:
+            validate_limit(limit)
+
+        # Validate date range
+        validate_timestamp_range(date_start, date_end)
+
         result = await self.client.query(
             "conversations:search",
             filter_none_values({
@@ -576,6 +714,16 @@ class ConversationsAPI:
             ...     include_metadata=True
             ... )
         """
+        validate_export_format(format)
+
+        if type is not None:
+            validate_conversation_type(type)
+        if conversation_ids is not None:
+            validate_non_empty_list(conversation_ids, "conversation_ids")
+
+        # Validate date range
+        validate_timestamp_range(date_start, date_end)
+
         result = await self.client.query(
             "conversations:exportConversations",
             filter_none_values({
@@ -607,4 +755,8 @@ class ConversationsAPI:
         timestamp = int(time.time() * 1000)
         random_part = "".join(random.choices(string.ascii_lowercase + string.digits, k=9))
         return f"{timestamp}-{random_part}"
+
+
+# Export validation error for users who want to catch it specifically
+__all__ = ["ConversationsAPI", "ConversationValidationError"]
 

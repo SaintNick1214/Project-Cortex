@@ -15,6 +15,26 @@ import type {
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
 import { deleteMutableFromGraph } from "../graph";
+import {
+  validateNamespace,
+  validateNamespaceFormat,
+  validateKey,
+  validateKeyFormat,
+  validateValue,
+  validateValueSize,
+  validateUserId,
+  validateUpdater,
+  validateAmount,
+  validateListFilter,
+  validateCountFilter,
+  validatePurgeFilter,
+  validateOperationsArray,
+  validateTransactionOperations,
+  MutableValidationError,
+} from "./validators";
+
+// Export validation error for users who want to catch it specifically
+export { MutableValidationError } from "./validators";
 
 export class MutableAPI {
   constructor(
@@ -38,6 +58,18 @@ export class MutableAPI {
     metadata?: Record<string, unknown>,
     options?: SetMutableOptions,
   ): Promise<MutableRecord> {
+    // Client-side validation
+    validateNamespace(namespace);
+    validateNamespaceFormat(namespace);
+    validateKey(key);
+    validateKeyFormat(key);
+    validateValue(value);
+    validateValueSize(value);
+
+    if (userId !== undefined) {
+      validateUserId(userId);
+    }
+
     const result = await this.client.mutation(api.mutable.set, {
       namespace,
       key,
@@ -70,6 +102,12 @@ export class MutableAPI {
    * ```
    */
   async get(namespace: string, key: string): Promise<unknown | null> {
+    // Client-side validation
+    validateNamespace(namespace);
+    validateNamespaceFormat(namespace);
+    validateKey(key);
+    validateKeyFormat(key);
+
     const result = await this.client.query(api.mutable.get, {
       namespace,
       key,
@@ -91,6 +129,12 @@ export class MutableAPI {
     namespace: string,
     key: string,
   ): Promise<MutableRecord | null> {
+    // Client-side validation
+    validateNamespace(namespace);
+    validateNamespaceFormat(namespace);
+    validateKey(key);
+    validateKeyFormat(key);
+
     const result = await this.client.query(api.mutable.get, {
       namespace,
       key,
@@ -112,6 +156,13 @@ export class MutableAPI {
     key: string,
     updater: (current: T) => T,
   ): Promise<MutableRecord> {
+    // Client-side validation
+    validateNamespace(namespace);
+    validateNamespaceFormat(namespace);
+    validateKey(key);
+    validateKeyFormat(key);
+    validateUpdater(updater);
+
     // Get current value
     const current = await this.get(namespace, key);
 
@@ -142,6 +193,13 @@ export class MutableAPI {
     key: string,
     amount = 1,
   ): Promise<MutableRecord> {
+    // Client-side validation
+    validateNamespace(namespace);
+    validateNamespaceFormat(namespace);
+    validateKey(key);
+    validateKeyFormat(key);
+    validateAmount(amount, "amount");
+
     const result = await this.client.mutation(api.mutable.update, {
       namespace,
       key,
@@ -165,6 +223,13 @@ export class MutableAPI {
     key: string,
     amount = 1,
   ): Promise<MutableRecord> {
+    // Client-side validation
+    validateNamespace(namespace);
+    validateNamespaceFormat(namespace);
+    validateKey(key);
+    validateKeyFormat(key);
+    validateAmount(amount, "amount");
+
     const result = await this.client.mutation(api.mutable.update, {
       namespace,
       key,
@@ -184,6 +249,12 @@ export class MutableAPI {
    * ```
    */
   async exists(namespace: string, key: string): Promise<boolean> {
+    // Client-side validation
+    validateNamespace(namespace);
+    validateNamespaceFormat(namespace);
+    validateKey(key);
+    validateKeyFormat(key);
+
     const result = await this.client.query(api.mutable.exists, {
       namespace,
       key,
@@ -204,6 +275,9 @@ export class MutableAPI {
    * ```
    */
   async list(filter: ListMutableFilter): Promise<MutableRecord[]> {
+    // Client-side validation
+    validateListFilter(filter);
+
     const result = await this.client.query(api.mutable.list, {
       namespace: filter.namespace,
       keyPrefix: filter.keyPrefix,
@@ -223,6 +297,9 @@ export class MutableAPI {
    * ```
    */
   async count(filter: CountMutableFilter): Promise<number> {
+    // Client-side validation
+    validateCountFilter(filter);
+
     const result = await this.client.query(api.mutable.count, {
       namespace: filter.namespace,
       userId: filter.userId,
@@ -245,6 +322,12 @@ export class MutableAPI {
     key: string,
     options?: DeleteMutableOptions,
   ): Promise<{ deleted: boolean; namespace: string; key: string }> {
+    // Client-side validation
+    validateNamespace(namespace);
+    validateNamespaceFormat(namespace);
+    validateKey(key);
+    validateKeyFormat(key);
+
     const result = await this.client.mutation(api.mutable.deleteKey, {
       namespace,
       key,
@@ -274,6 +357,12 @@ export class MutableAPI {
     namespace: string,
     key: string,
   ): Promise<{ deleted: boolean; namespace: string; key: string }> {
+    // Client-side validation (same as delete)
+    validateNamespace(namespace);
+    validateNamespaceFormat(namespace);
+    validateKey(key);
+    validateKeyFormat(key);
+
     return await this.delete(namespace, key);
   }
 
@@ -288,6 +377,10 @@ export class MutableAPI {
   async purgeNamespace(
     namespace: string,
   ): Promise<{ deleted: number; namespace: string }> {
+    // Client-side validation
+    validateNamespace(namespace);
+    validateNamespaceFormat(namespace);
+
     const result = await this.client.mutation(api.mutable.purgeNamespace, {
       namespace,
     });
@@ -320,6 +413,10 @@ export class MutableAPI {
     operationsExecuted: number;
     results: unknown[];
   }> {
+    // Client-side validation
+    validateOperationsArray(operations);
+    validateTransactionOperations(operations);
+
     const result = await this.client.mutation(api.mutable.transaction, {
       operations,
     });
@@ -351,6 +448,9 @@ export class MutableAPI {
     namespace: string;
     keys: string[];
   }> {
+    // Client-side validation
+    validatePurgeFilter(filter);
+
     const result = await this.client.mutation(api.mutable.purgeMany, {
       namespace: filter.namespace,
       keyPrefix: filter.keyPrefix,

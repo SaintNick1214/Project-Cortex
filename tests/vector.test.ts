@@ -1018,4 +1018,700 @@ describe("Vector Memory API (Layer 2)", () => {
       expect(countAfter).toBe(countBefore + 5);
     });
   });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Client-Side Validation
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Client-Side Validation", () => {
+    // These tests verify that invalid inputs are caught synchronously
+    // before making backend calls, providing faster error feedback.
+
+    describe("store() validation", () => {
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(
+          cortex.vector.store("", {
+            content: "test",
+            contentType: "raw",
+            source: { type: "system" },
+            metadata: { importance: 50, tags: [] },
+          }),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on whitespace-only memorySpaceId", async () => {
+        await expect(
+          cortex.vector.store("   ", {
+            content: "test",
+            contentType: "raw",
+            source: { type: "system" },
+            metadata: { importance: 50, tags: [] },
+          }),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on missing content", async () => {
+        await expect(
+          cortex.vector.store("memspace-test", {
+            contentType: "raw",
+            source: { type: "system" },
+            metadata: { importance: 50, tags: [] },
+          } as any),
+        ).rejects.toThrow("content is required");
+      });
+
+      it("should throw on empty content", async () => {
+        await expect(
+          cortex.vector.store("memspace-test", {
+            content: "   ",
+            contentType: "raw",
+            source: { type: "system" },
+            metadata: { importance: 50, tags: [] },
+          }),
+        ).rejects.toThrow("content cannot be empty");
+      });
+
+      it("should throw on missing contentType", async () => {
+        await expect(
+          cortex.vector.store("memspace-test", {
+            content: "test",
+            source: { type: "system" },
+            metadata: { importance: 50, tags: [] },
+          } as any),
+        ).rejects.toThrow("contentType is required");
+      });
+
+      it("should throw on invalid contentType", async () => {
+        await expect(
+          cortex.vector.store("memspace-test", {
+            content: "test",
+            contentType: "invalid" as any,
+            source: { type: "system" },
+            metadata: { importance: 50, tags: [] },
+          }),
+        ).rejects.toThrow("Invalid contentType");
+      });
+
+      it("should throw on missing source", async () => {
+        await expect(
+          cortex.vector.store("memspace-test", {
+            content: "test",
+            contentType: "raw",
+            metadata: { importance: 50, tags: [] },
+          } as any),
+        ).rejects.toThrow("source is required");
+      });
+
+      it("should throw on missing source.type", async () => {
+        await expect(
+          cortex.vector.store("memspace-test", {
+            content: "test",
+            contentType: "raw",
+            source: {} as any,
+            metadata: { importance: 50, tags: [] },
+          }),
+        ).rejects.toThrow("source.type is required");
+      });
+
+      it("should throw on invalid sourceType", async () => {
+        await expect(
+          cortex.vector.store("memspace-test", {
+            content: "test",
+            contentType: "raw",
+            source: { type: "invalid" as any },
+            metadata: { importance: 50, tags: [] },
+          }),
+        ).rejects.toThrow("Invalid source.type");
+      });
+
+      it("should throw on missing metadata", async () => {
+        await expect(
+          cortex.vector.store("memspace-test", {
+            content: "test",
+            contentType: "raw",
+            source: { type: "system" },
+          } as any),
+        ).rejects.toThrow("metadata is required");
+      });
+
+      it("should throw on missing metadata.importance", async () => {
+        await expect(
+          cortex.vector.store("memspace-test", {
+            content: "test",
+            contentType: "raw",
+            source: { type: "system" },
+            metadata: { tags: [] } as any,
+          }),
+        ).rejects.toThrow("metadata.importance is required");
+      });
+
+      it("should throw on importance below 0", async () => {
+        await expect(
+          cortex.vector.store("memspace-test", {
+            content: "test",
+            contentType: "raw",
+            source: { type: "system" },
+            metadata: { importance: -1, tags: [] },
+          }),
+        ).rejects.toThrow("must be between 0 and 100");
+      });
+
+      it("should throw on importance above 100", async () => {
+        await expect(
+          cortex.vector.store("memspace-test", {
+            content: "test",
+            contentType: "raw",
+            source: { type: "system" },
+            metadata: { importance: 101, tags: [] },
+          }),
+        ).rejects.toThrow("must be between 0 and 100");
+      });
+
+      it("should throw on missing metadata.tags", async () => {
+        await expect(
+          cortex.vector.store("memspace-test", {
+            content: "test",
+            contentType: "raw",
+            source: { type: "system" },
+            metadata: { importance: 50 } as any,
+          }),
+        ).rejects.toThrow("metadata.tags is required");
+      });
+
+      it("should throw on invalid tags (not array)", async () => {
+        await expect(
+          cortex.vector.store("memspace-test", {
+            content: "test",
+            contentType: "raw",
+            source: { type: "system" },
+            metadata: { importance: 50, tags: "tag" as any },
+          }),
+        ).rejects.toThrow("must be an array");
+      });
+
+      it("should throw on invalid embedding (not array of numbers)", async () => {
+        await expect(
+          cortex.vector.store("memspace-test", {
+            content: "test",
+            contentType: "raw",
+            source: { type: "system" },
+            metadata: { importance: 50, tags: [] },
+            embedding: ["a", "b"] as any,
+          }),
+        ).rejects.toThrow("must be a number");
+      });
+
+      it("should accept valid importance at boundary 0", async () => {
+        const result = await cortex.vector.store("memspace-validation-test", {
+          content: "boundary test 0",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 0, tags: [] },
+        });
+        expect(result.importance).toBe(0);
+      });
+
+      it("should accept valid importance at boundary 100", async () => {
+        const result = await cortex.vector.store("memspace-validation-test", {
+          content: "boundary test 100",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 100, tags: [] },
+        });
+        expect(result.importance).toBe(100);
+      });
+    });
+
+    describe("get() validation", () => {
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(cortex.vector.get("", "mem-123")).rejects.toThrow(
+          "memorySpaceId is required",
+        );
+      });
+
+      it("should throw on whitespace-only memorySpaceId", async () => {
+        await expect(cortex.vector.get("   ", "mem-123")).rejects.toThrow(
+          "memorySpaceId is required",
+        );
+      });
+
+      it("should throw on empty memoryId", async () => {
+        await expect(cortex.vector.get("memspace-test", "")).rejects.toThrow(
+          "memoryId is required",
+        );
+      });
+
+      it("should throw on whitespace-only memoryId", async () => {
+        await expect(cortex.vector.get("memspace-test", "   ")).rejects.toThrow(
+          "memoryId is required",
+        );
+      });
+    });
+
+    describe("search() validation", () => {
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(cortex.vector.search("", "query")).rejects.toThrow(
+          "memorySpaceId is required",
+        );
+      });
+
+      it("should throw on invalid minImportance below 0", async () => {
+        await expect(
+          cortex.vector.search("memspace-test", "query", { minImportance: -1 }),
+        ).rejects.toThrow("must be between 0 and 100");
+      });
+
+      it("should throw on invalid minImportance above 100", async () => {
+        await expect(
+          cortex.vector.search("memspace-test", "query", { minImportance: 101 }),
+        ).rejects.toThrow("must be between 0 and 100");
+      });
+
+      it("should throw on invalid minScore below 0", async () => {
+        await expect(
+          cortex.vector.search("memspace-test", "query", { minScore: -0.1 }),
+        ).rejects.toThrow("must be between 0 and 1");
+      });
+
+      it("should throw on invalid minScore above 1", async () => {
+        await expect(
+          cortex.vector.search("memspace-test", "query", { minScore: 1.5 }),
+        ).rejects.toThrow("must be between 0 and 1");
+      });
+
+      it("should throw on invalid limit (0)", async () => {
+        await expect(
+          cortex.vector.search("memspace-test", "query", { limit: 0 }),
+        ).rejects.toThrow("must be a positive integer");
+      });
+
+      it("should throw on invalid limit (negative)", async () => {
+        await expect(
+          cortex.vector.search("memspace-test", "query", { limit: -1 }),
+        ).rejects.toThrow("must be a positive integer");
+      });
+
+      it("should throw on invalid sourceType", async () => {
+        await expect(
+          cortex.vector.search("memspace-test", "query", {
+            sourceType: "invalid" as any,
+          }),
+        ).rejects.toThrow("Invalid sourceType");
+      });
+
+      it("should accept valid minScore at boundary 0", async () => {
+        // Should not throw
+        const results = await cortex.vector.search("memspace-test", "query", {
+          minScore: 0,
+        });
+        expect(Array.isArray(results)).toBe(true);
+      });
+
+      it("should accept valid minScore at boundary 1", async () => {
+        // Should not throw
+        const results = await cortex.vector.search("memspace-test", "query", {
+          minScore: 1,
+        });
+        expect(Array.isArray(results)).toBe(true);
+      });
+    });
+
+    describe("delete() validation", () => {
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(cortex.vector.delete("", "mem-123")).rejects.toThrow(
+          "memorySpaceId is required",
+        );
+      });
+
+      it("should throw on whitespace-only memorySpaceId", async () => {
+        await expect(cortex.vector.delete("   ", "mem-123")).rejects.toThrow(
+          "memorySpaceId is required",
+        );
+      });
+
+      it("should throw on empty memoryId", async () => {
+        await expect(
+          cortex.vector.delete("memspace-test", ""),
+        ).rejects.toThrow("memoryId is required");
+      });
+
+      it("should throw on whitespace-only memoryId", async () => {
+        await expect(
+          cortex.vector.delete("memspace-test", "   "),
+        ).rejects.toThrow("memoryId is required");
+      });
+    });
+
+    describe("list() validation", () => {
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(cortex.vector.list({} as any)).rejects.toThrow(
+          "memorySpaceId is required",
+        );
+      });
+
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(
+          cortex.vector.list({ memorySpaceId: "" }),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on invalid sourceType", async () => {
+        await expect(
+          cortex.vector.list({
+            memorySpaceId: "memspace-test",
+            sourceType: "invalid" as any,
+          }),
+        ).rejects.toThrow("Invalid sourceType");
+      });
+
+      it("should throw on invalid limit", async () => {
+        await expect(
+          cortex.vector.list({ memorySpaceId: "memspace-test", limit: 0 }),
+        ).rejects.toThrow("must be a positive integer");
+      });
+    });
+
+    describe("count() validation", () => {
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(cortex.vector.count({} as any)).rejects.toThrow(
+          "memorySpaceId is required",
+        );
+      });
+
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(
+          cortex.vector.count({ memorySpaceId: "" }),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on invalid sourceType", async () => {
+        await expect(
+          cortex.vector.count({
+            memorySpaceId: "memspace-test",
+            sourceType: "invalid" as any,
+          }),
+        ).rejects.toThrow("Invalid sourceType");
+      });
+    });
+
+    describe("update() validation", () => {
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(
+          cortex.vector.update("", "mem-123", { content: "new" }),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on whitespace-only memorySpaceId", async () => {
+        await expect(
+          cortex.vector.update("   ", "mem-123", { content: "new" }),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on empty memoryId", async () => {
+        await expect(
+          cortex.vector.update("memspace-test", "", { content: "new" }),
+        ).rejects.toThrow("memoryId is required");
+      });
+
+      it("should throw on whitespace-only memoryId", async () => {
+        await expect(
+          cortex.vector.update("memspace-test", "   ", { content: "new" }),
+        ).rejects.toThrow("memoryId is required");
+      });
+
+      it("should throw on invalid importance below 0", async () => {
+        await expect(
+          cortex.vector.update("memspace-test", "mem-123", { importance: -1 }),
+        ).rejects.toThrow("must be between 0 and 100");
+      });
+
+      it("should throw on invalid importance above 100", async () => {
+        await expect(
+          cortex.vector.update("memspace-test", "mem-123", { importance: 101 }),
+        ).rejects.toThrow("must be between 0 and 100");
+      });
+
+      it("should throw on invalid tags (not array)", async () => {
+        await expect(
+          cortex.vector.update("memspace-test", "mem-123", {
+            tags: "tag" as any,
+          }),
+        ).rejects.toThrow("must be an array");
+      });
+
+      it("should throw on invalid embedding", async () => {
+        await expect(
+          cortex.vector.update("memspace-test", "mem-123", {
+            embedding: ["a"] as any,
+          }),
+        ).rejects.toThrow("must be a number");
+      });
+    });
+
+    describe("getVersion() validation", () => {
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(
+          cortex.vector.getVersion("", "mem-123", 1),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on whitespace-only memorySpaceId", async () => {
+        await expect(
+          cortex.vector.getVersion("   ", "mem-123", 1),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on empty memoryId", async () => {
+        await expect(
+          cortex.vector.getVersion("memspace-test", "", 1),
+        ).rejects.toThrow("memoryId is required");
+      });
+
+      it("should throw on version 0", async () => {
+        await expect(
+          cortex.vector.getVersion("memspace-test", "mem-123", 0),
+        ).rejects.toThrow("must be a positive integer");
+      });
+
+      it("should throw on negative version", async () => {
+        await expect(
+          cortex.vector.getVersion("memspace-test", "mem-123", -1),
+        ).rejects.toThrow("must be a positive integer");
+      });
+
+      it("should throw on non-integer version", async () => {
+        await expect(
+          cortex.vector.getVersion("memspace-test", "mem-123", 1.5),
+        ).rejects.toThrow("must be a positive integer");
+      });
+    });
+
+    describe("getHistory() validation", () => {
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(
+          cortex.vector.getHistory("", "mem-123"),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on whitespace-only memorySpaceId", async () => {
+        await expect(
+          cortex.vector.getHistory("   ", "mem-123"),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on empty memoryId", async () => {
+        await expect(
+          cortex.vector.getHistory("memspace-test", ""),
+        ).rejects.toThrow("memoryId is required");
+      });
+
+      it("should throw on whitespace-only memoryId", async () => {
+        await expect(
+          cortex.vector.getHistory("memspace-test", "   "),
+        ).rejects.toThrow("memoryId is required");
+      });
+    });
+
+    describe("deleteMany() validation", () => {
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(cortex.vector.deleteMany({} as any)).rejects.toThrow(
+          "memorySpaceId is required",
+        );
+      });
+
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(
+          cortex.vector.deleteMany({ memorySpaceId: "" }),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on whitespace-only memorySpaceId", async () => {
+        await expect(
+          cortex.vector.deleteMany({ memorySpaceId: "   " }),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on invalid sourceType", async () => {
+        await expect(
+          cortex.vector.deleteMany({
+            memorySpaceId: "memspace-test",
+            sourceType: "invalid" as any,
+          }),
+        ).rejects.toThrow("Invalid sourceType");
+      });
+    });
+
+    describe("export() validation", () => {
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(
+          cortex.vector.export({ format: "json" } as any),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(
+          cortex.vector.export({ memorySpaceId: "", format: "json" }),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on missing format", async () => {
+        await expect(
+          cortex.vector.export({ memorySpaceId: "memspace-test" } as any),
+        ).rejects.toThrow("Invalid format");
+      });
+
+      it("should throw on invalid format", async () => {
+        await expect(
+          cortex.vector.export({
+            memorySpaceId: "memspace-test",
+            format: "xml" as any,
+          }),
+        ).rejects.toThrow("Invalid format");
+      });
+    });
+
+    describe("updateMany() validation", () => {
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(
+          cortex.vector.updateMany({} as any, { importance: 50 }),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(
+          cortex.vector.updateMany({ memorySpaceId: "" }, { importance: 50 }),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on whitespace-only memorySpaceId", async () => {
+        await expect(
+          cortex.vector.updateMany({ memorySpaceId: "   " }, { importance: 50 }),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on invalid sourceType", async () => {
+        await expect(
+          cortex.vector.updateMany(
+            { memorySpaceId: "memspace-test", sourceType: "invalid" as any },
+            { importance: 50 },
+          ),
+        ).rejects.toThrow("Invalid sourceType");
+      });
+
+      it("should throw on invalid importance below 0", async () => {
+        await expect(
+          cortex.vector.updateMany(
+            { memorySpaceId: "memspace-test" },
+            { importance: -1 },
+          ),
+        ).rejects.toThrow("must be between 0 and 100");
+      });
+
+      it("should throw on invalid importance above 100", async () => {
+        await expect(
+          cortex.vector.updateMany(
+            { memorySpaceId: "memspace-test" },
+            { importance: 101 },
+          ),
+        ).rejects.toThrow("must be between 0 and 100");
+      });
+
+      it("should throw on invalid tags", async () => {
+        await expect(
+          cortex.vector.updateMany(
+            { memorySpaceId: "memspace-test" },
+            { tags: "tag" as any },
+          ),
+        ).rejects.toThrow("must be an array");
+      });
+    });
+
+    describe("archive() validation", () => {
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(cortex.vector.archive("", "mem-123")).rejects.toThrow(
+          "memorySpaceId is required",
+        );
+      });
+
+      it("should throw on whitespace-only memorySpaceId", async () => {
+        await expect(cortex.vector.archive("   ", "mem-123")).rejects.toThrow(
+          "memorySpaceId is required",
+        );
+      });
+
+      it("should throw on empty memoryId", async () => {
+        await expect(
+          cortex.vector.archive("memspace-test", ""),
+        ).rejects.toThrow("memoryId is required");
+      });
+
+      it("should throw on whitespace-only memoryId", async () => {
+        await expect(
+          cortex.vector.archive("memspace-test", "   "),
+        ).rejects.toThrow("memoryId is required");
+      });
+    });
+
+    describe("getAtTimestamp() validation", () => {
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(
+          cortex.vector.getAtTimestamp("", "mem-123", Date.now()),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on whitespace-only memorySpaceId", async () => {
+        await expect(
+          cortex.vector.getAtTimestamp("   ", "mem-123", Date.now()),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on empty memoryId", async () => {
+        await expect(
+          cortex.vector.getAtTimestamp("memspace-test", "", Date.now()),
+        ).rejects.toThrow("memoryId is required");
+      });
+
+      it("should throw on whitespace-only memoryId", async () => {
+        await expect(
+          cortex.vector.getAtTimestamp("memspace-test", "   ", Date.now()),
+        ).rejects.toThrow("memoryId is required");
+      });
+
+      it("should throw on negative timestamp", async () => {
+        await expect(
+          cortex.vector.getAtTimestamp("memspace-test", "mem-123", -1),
+        ).rejects.toThrow("must be a non-negative number");
+      });
+
+      it("should throw on invalid Date object", async () => {
+        await expect(
+          cortex.vector.getAtTimestamp(
+            "memspace-test",
+            "mem-123",
+            new Date("invalid"),
+          ),
+        ).rejects.toThrow("must be a valid Date");
+      });
+
+      it("should accept valid timestamp as number", async () => {
+        // Should not throw (will return null if memory doesn't exist)
+        const result = await cortex.vector.getAtTimestamp(
+          "memspace-test",
+          "mem-does-not-exist",
+          Date.now(),
+        );
+        expect(result).toBeNull();
+      });
+
+      it("should accept valid timestamp as Date", async () => {
+        // Should not throw (will return null if memory doesn't exist)
+        const result = await cortex.vector.getAtTimestamp(
+          "memspace-test",
+          "mem-does-not-exist",
+          new Date(),
+        );
+        expect(result).toBeNull();
+      });
+    });
+  });
 });

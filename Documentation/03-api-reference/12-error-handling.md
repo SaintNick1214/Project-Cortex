@@ -1,12 +1,19 @@
 # Error Handling
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2025-11-25
 
 Complete guide to error handling, debugging, and troubleshooting in Cortex.
 
 ## Overview
 
 Cortex uses structured errors with specific error codes to make debugging easier. All errors extend `CortexError` with a `code` property for programmatic handling.
+
+**As of v0.12.0**, Cortex includes comprehensive **client-side validation** that catches errors before they reach the backend, providing:
+- ⚡ **Instant feedback** (<1ms vs 50-200ms backend round-trip)
+- 📝 **Better error messages** with fix suggestions and field names
+- 🎯 **Improved developer experience** with faster iteration
+
+See [Client-Side Validation](#client-side-validation) section below for details.
 
 ```typescript
 try {
@@ -21,6 +28,239 @@ try {
     if (error.code === 'INVALID_IMPORTANCE') {
       // Fix and retry
     }
+  }
+}
+```
+
+---
+
+## Client-Side Validation
+
+**New in v0.12.0** - All 11 APIs now validate inputs before making backend calls.
+
+### What is Client-Side Validation?
+
+Client-side validation catches common errors **synchronously** in your application before making network requests to the Convex backend:
+
+```typescript
+// ❌ Before v0.12.0 - Error requires backend round-trip (50-200ms)
+await cortex.governance.setPolicy({
+  organizationId: "my-org",
+  conversations: {
+    retention: { deleteAfter: "7years" }  // Invalid format
+  }
+});
+// → Waits for backend call, then throws error
+
+// ✅ After v0.12.0 - Error caught instantly (<1ms)
+await cortex.governance.setPolicy({
+  organizationId: "my-org",
+  conversations: {
+    retention: { deleteAfter: "7years" }  // Invalid format
+  }
+});
+// → Throws GovernanceValidationError immediately
+// → Message: "Invalid period format '7years'. Must be in format like '7d', '30m', or '1y'"
+```
+
+### Validation Error Classes
+
+Each API has its own validation error class for specific error handling:
+
+```typescript
+import {
+  GovernanceValidationError,
+  MemoryValidationError,
+  ConversationValidationError,
+  FactValidationError,
+  // ... and 7 more
+} from '@cortexmemory/sdk';
+
+try {
+  await cortex.governance.setPolicy(policy);
+} catch (error) {
+  if (error instanceof GovernanceValidationError) {
+    console.log(`Validation failed: ${error.code} - ${error.field}`);
+    // Handle client-side validation error (instant)
+  } else {
+    // Handle backend error (database, network, business logic)
+  }
+}
+```
+
+**Python:**
+
+```python
+from cortex.governance import GovernanceValidationError
+
+try:
+    await cortex.governance.set_policy(policy)
+except GovernanceValidationError as e:
+    print(f"Validation failed: {e.code} - {e.field}")
+    # Handle client-side validation error (instant)
+except Exception as e:
+    # Handle backend error (database, network, business logic)
+    pass
+```
+
+### What Gets Validated Client-Side?
+
+**All APIs validate:**
+- ✅ Required fields (non-null, non-empty strings)
+- ✅ Format validation (IDs, periods like "7d", dates, regex patterns)
+- ✅ Range validation (0-100 scores, array lengths, date ranges)
+- ✅ Enum validation (allowed values for string literals)
+- ✅ Business logic (no overlaps, valid combinations)
+- ✅ Reference validation (related IDs provided together)
+
+**Left for backend validation:**
+- ❌ Existence checks (does this ID exist in database?)
+- ❌ Authorization (does user have permission?)
+- ❌ Race conditions (concurrent modifications)
+- ❌ Complex database queries
+
+### Validation Coverage by API
+
+| API | Validators | Example Validations |
+|-----|-----------|---------------------|
+| **Governance** | 9 validators | Period formats, importance ranges, version counts, scopes, date ranges |
+| **Memory** | 12 validators | Memory space IDs, content, importance, source types, conversation refs |
+| **Conversations** | 8 validators | Conversation types, participants, messages, query filters |
+| **Facts** | 10 validators | Fact types, confidence scores, subject/predicate/object, temporal validity |
+| **Immutable** | 6 validators | Type/ID validation, version numbers, data size limits |
+| **Mutable** | 7 validators | Namespace/key validation, value size, TTL formats |
+| **Agents** | 5 validators | Agent ID format, metadata, status values |
+| **Users** | 4 validators | User ID validation, profile data structure |
+| **Contexts** | 7 validators | Purpose, status transitions, parent-child relationships |
+| **Memory Spaces** | 6 validators | Space type, participant structure |
+| **Vector** | 8 validators | Memory space IDs, embedding dimensions, importance ranges |
+
+### Common Validation Errors
+
+#### 1. Invalid Period Format
+
+```typescript
+// ❌ Wrong
+await cortex.governance.setPolicy({
+  conversations: {
+    retention: { deleteAfter: "7years" }  // Wrong format
+  }
+});
+
+// ✅ Correct
+await cortex.governance.setPolicy({
+  conversations: {
+    retention: { deleteAfter: "7y" }  // ✅ "7d", "30m", "1y"
+  }
+});
+```
+
+#### 2. Invalid Importance Range
+
+```typescript
+// ❌ Wrong
+await cortex.memory.store("agent-1", {
+  content: "Test",
+  metadata: { importance: 150 }  // Must be 0-100
+});
+
+// ✅ Correct
+await cortex.memory.store("agent-1", {
+  content: "Test",
+  metadata: { importance: 100 }  // ✅ 0-100
+});
+```
+
+#### 3. Overlapping Importance Ranges
+
+```typescript
+// ❌ Wrong
+await cortex.governance.setPolicy({
+  vector: {
+    retention: {
+      byImportance: [
+        { range: [0, 50], versions: 5 },
+        { range: [40, 80], versions: 10 }  // Overlaps [0, 50]!
+      ]
+    }
+  }
+});
+
+// ✅ Correct
+await cortex.governance.setPolicy({
+  vector: {
+    retention: {
+      byImportance: [
+        { range: [0, 50], versions: 5 },
+        { range: [51, 100], versions: 10 }  // No overlap
+      ]
+    }
+  }
+});
+```
+
+#### 4. Missing Required Scope
+
+```typescript
+// ❌ Wrong
+await cortex.governance.enforce({
+  layers: ["vector"],
+  // Missing scope!
+});
+
+// ✅ Correct
+await cortex.governance.enforce({
+  scope: { organizationId: "my-org" },
+  layers: ["vector"]
+});
+```
+
+#### 5. Empty String Parameters
+
+```typescript
+// ❌ Wrong
+await cortex.conversations.create({
+  memorySpaceId: "",  // Empty string!
+  type: "user-agent",
+  participants: { userId: "user-123" }
+});
+
+// ✅ Correct
+await cortex.conversations.create({
+  memorySpaceId: "user-123-personal",  // Non-empty
+  type: "user-agent",
+  participants: { userId: "user-123" }
+});
+```
+
+### Benefits of Client-Side Validation
+
+1. **Faster Development** - See errors instantly without waiting for backend
+2. **Better Error Messages** - Clear descriptions with fix suggestions
+3. **Reduced Costs** - Fewer invalid requests to Convex
+4. **Type Safety++** - Runtime validation complements TypeScript/Python types
+5. **Offline Development** - Catch errors even when backend is down
+
+### Migration from v0.11.x
+
+**No changes required!** Validation is backward-compatible:
+
+```typescript
+// This code works exactly the same in v0.12.0
+await cortex.memory.store("agent-1", data);
+
+// But now you get faster error feedback if data is invalid
+// And you can optionally catch validation errors specifically:
+
+try {
+  await cortex.memory.store("agent-1", data);
+} catch (error) {
+  if (error instanceof MemoryValidationError) {
+    // Client-side validation error - fix input and retry immediately
+    console.log(`Invalid input: ${error.message}`);
+  } else {
+    // Backend error - might be transient, consider retry
+    console.log(`Backend error: ${error.message}`);
   }
 }
 ```

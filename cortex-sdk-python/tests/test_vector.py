@@ -867,3 +867,608 @@ async def test_store_memory_with_long_content(cortex_client, test_ids, cleanup_h
     # Cleanup
     await cleanup_helper.purge_memory_space(memory_space_id)
 
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Client-Side Validation Tests
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+from cortex.vector import VectorValidationError
+from cortex import MemorySource, MemoryMetadata, SearchOptions
+
+
+# store() validation tests
+
+@pytest.mark.asyncio
+async def test_store_validation_empty_memory_space_id(cortex_client):
+    """Should throw on empty memory_space_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.store(
+            "",
+            StoreMemoryInput(
+                content="Test",
+                content_type="raw",
+                source=MemorySource(type="system", timestamp=1000),
+                metadata=MemoryMetadata(importance=50, tags=[])
+            )
+        )
+    assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_store_validation_whitespace_memory_space_id(cortex_client):
+    """Should throw on whitespace memory_space_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.store(
+            "   ",
+            StoreMemoryInput(
+                content="Test",
+                content_type="raw",
+                source=MemorySource(type="system", timestamp=1000),
+                metadata=MemoryMetadata(importance=50, tags=[])
+            )
+        )
+    assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_store_validation_empty_content(cortex_client, test_ids):
+    """Should throw on empty content."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.store(
+            test_ids["memory_space_id"],
+            StoreMemoryInput(
+                content="   ",
+                content_type="raw",
+                source=MemorySource(type="system", timestamp=1000),
+                metadata=MemoryMetadata(importance=50, tags=[])
+            )
+        )
+    assert "content cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_store_validation_invalid_content_type(cortex_client, test_ids):
+    """Should throw on invalid content_type."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.store(
+            test_ids["memory_space_id"],
+            StoreMemoryInput(
+                content="Test",
+                content_type="unknown",
+                source=MemorySource(type="system", timestamp=1000),
+                metadata=MemoryMetadata(importance=50, tags=[])
+            )
+        )
+    assert "Invalid content_type" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_store_validation_invalid_source_type(cortex_client, test_ids):
+    """Should throw on invalid source_type."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.store(
+            test_ids["memory_space_id"],
+            StoreMemoryInput(
+                content="Test",
+                content_type="raw",
+                source=MemorySource(type="invalid", timestamp=1000),
+                metadata=MemoryMetadata(importance=50, tags=[])
+            )
+        )
+    assert "Invalid source_type" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_store_validation_invalid_importance_negative(cortex_client, test_ids):
+    """Should throw on negative importance."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.store(
+            test_ids["memory_space_id"],
+            StoreMemoryInput(
+                content="Test",
+                content_type="raw",
+                source=MemorySource(type="system", timestamp=1000),
+                metadata=MemoryMetadata(importance=-5, tags=[])
+            )
+        )
+    assert "importance must be between 0 and 100" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_store_validation_invalid_importance_too_high(cortex_client, test_ids):
+    """Should throw on importance > 100."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.store(
+            test_ids["memory_space_id"],
+            StoreMemoryInput(
+                content="Test",
+                content_type="raw",
+                source=MemorySource(type="system", timestamp=1000),
+                metadata=MemoryMetadata(importance=150, tags=[])
+            )
+        )
+    assert "importance must be between 0 and 100" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_store_validation_tags_with_empty_strings(cortex_client, test_ids):
+    """Should throw on tags with empty strings."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.store(
+            test_ids["memory_space_id"],
+            StoreMemoryInput(
+                content="Test",
+                content_type="raw",
+                source=MemorySource(type="system", timestamp=1000),
+                metadata=MemoryMetadata(importance=50, tags=["valid", ""])
+            )
+        )
+    assert "must be a non-empty string" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_store_validation_invalid_embedding_empty(cortex_client, test_ids):
+    """Should throw on empty embedding array."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.store(
+            test_ids["memory_space_id"],
+            StoreMemoryInput(
+                content="Test",
+                content_type="raw",
+                source=MemorySource(type="system", timestamp=1000),
+                metadata=MemoryMetadata(importance=50, tags=[]),
+                embedding=[]
+            )
+        )
+    assert "embedding cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_store_validation_invalid_embedding_nan(cortex_client, test_ids):
+    """Should throw on NaN in embedding."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.store(
+            test_ids["memory_space_id"],
+            StoreMemoryInput(
+                content="Test",
+                content_type="raw",
+                source=MemorySource(type="system", timestamp=1000),
+                metadata=MemoryMetadata(importance=50, tags=[]),
+                embedding=[0.1, float('nan'), 0.3]
+            )
+        )
+    assert "must be a finite number" in str(exc_info.value)
+
+
+# get() validation tests
+
+@pytest.mark.asyncio
+async def test_get_validation_empty_memory_space_id(cortex_client):
+    """Should throw on empty memory_space_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.get("", "mem-123")
+    assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_validation_empty_memory_id(cortex_client, test_ids):
+    """Should throw on empty memory_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.get(test_ids["memory_space_id"], "")
+    assert "memory_id cannot be empty" in str(exc_info.value)
+
+
+# search() validation tests
+
+@pytest.mark.asyncio
+async def test_search_validation_empty_memory_space_id(cortex_client):
+    """Should throw on empty memory_space_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.search("", "query")
+    assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_search_validation_empty_query(cortex_client, test_ids):
+    """Should throw on empty query."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.search(test_ids["memory_space_id"], "   ")
+    assert "query cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_search_validation_invalid_embedding_empty(cortex_client, test_ids):
+    """Should throw on empty embedding array."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.search(
+            test_ids["memory_space_id"],
+            "query",
+            SearchOptions(embedding=[])
+        )
+    assert "embedding cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_search_validation_invalid_embedding_nan(cortex_client, test_ids):
+    """Should throw on NaN in embedding."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.search(
+            test_ids["memory_space_id"],
+            "query",
+            SearchOptions(embedding=[0.1, float('nan'), 0.3])
+        )
+    assert "must be a finite number" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_search_validation_invalid_min_score_negative(cortex_client, test_ids):
+    """Should throw on negative min_score."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.search(
+            test_ids["memory_space_id"],
+            "query",
+            SearchOptions(min_score=-0.5)
+        )
+    assert "min_score must be between 0 and 1" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_search_validation_invalid_min_score_too_high(cortex_client, test_ids):
+    """Should throw on min_score > 1."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.search(
+            test_ids["memory_space_id"],
+            "query",
+            SearchOptions(min_score=1.5)
+        )
+    assert "min_score must be between 0 and 1" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_search_validation_invalid_limit_zero(cortex_client, test_ids):
+    """Should throw on limit=0."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.search(
+            test_ids["memory_space_id"],
+            "query",
+            SearchOptions(limit=0)
+        )
+    assert "limit must be a positive integer" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_search_validation_invalid_limit_negative(cortex_client, test_ids):
+    """Should throw on negative limit."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.search(
+            test_ids["memory_space_id"],
+            "query",
+            SearchOptions(limit=-10)
+        )
+    assert "limit must be a positive integer" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_search_validation_tags_with_empty_strings(cortex_client, test_ids):
+    """Should throw on tags with empty strings."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.search(
+            test_ids["memory_space_id"],
+            "query",
+            SearchOptions(tags=["valid", ""])
+        )
+    assert "must be a non-empty string" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_search_validation_invalid_min_importance(cortex_client, test_ids):
+    """Should throw on invalid min_importance."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.search(
+            test_ids["memory_space_id"],
+            "query",
+            SearchOptions(min_importance=150)
+        )
+    assert "min_importance must be between 0 and 100" in str(exc_info.value)
+
+
+# update() validation tests
+
+@pytest.mark.asyncio
+async def test_update_validation_empty_memory_space_id(cortex_client):
+    """Should throw on empty memory_space_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.update("", "mem-123", {"content": "Updated"})
+    assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_validation_empty_memory_id(cortex_client, test_ids):
+    """Should throw on empty memory_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.update(test_ids["memory_space_id"], "", {"content": "Updated"})
+    assert "memory_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_validation_no_update_fields(cortex_client, test_ids):
+    """Should throw when no update fields provided."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.update(test_ids["memory_space_id"], "mem-123", {})
+    assert "At least one update field must be provided" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_validation_invalid_importance(cortex_client, test_ids):
+    """Should throw on invalid importance."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.update(test_ids["memory_space_id"], "mem-123", {"importance": -5})
+    assert "importance must be between 0 and 100" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_validation_invalid_embedding(cortex_client, test_ids):
+    """Should throw on invalid embedding."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.update(test_ids["memory_space_id"], "mem-123", {"embedding": []})
+    assert "embedding cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_validation_tags_with_empty_strings(cortex_client, test_ids):
+    """Should throw on tags with empty strings."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.update(test_ids["memory_space_id"], "mem-123", {"tags": ["", "valid"]})
+    assert "must be a non-empty string" in str(exc_info.value)
+
+
+# delete() validation tests
+
+@pytest.mark.asyncio
+async def test_delete_validation_empty_memory_space_id(cortex_client):
+    """Should throw on empty memory_space_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.delete("", "mem-123")
+    assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_delete_validation_empty_memory_id(cortex_client, test_ids):
+    """Should throw on empty memory_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.delete(test_ids["memory_space_id"], "")
+    assert "memory_id cannot be empty" in str(exc_info.value)
+
+
+# update_many() validation tests
+
+@pytest.mark.asyncio
+async def test_update_many_validation_empty_memory_space_id(cortex_client):
+    """Should throw on empty memory_space_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.update_many("", {}, {"importance": 80})
+    assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_many_validation_no_update_fields(cortex_client, test_ids):
+    """Should throw when no update fields provided."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.update_many(test_ids["memory_space_id"], {}, {})
+    assert "At least one update field must be provided" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_many_validation_invalid_importance(cortex_client, test_ids):
+    """Should throw on invalid importance."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.update_many(test_ids["memory_space_id"], {}, {"importance": 200})
+    assert "importance must be between 0 and 100" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_many_validation_tags_with_empty_strings(cortex_client, test_ids):
+    """Should throw on tags with empty strings."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.update_many(test_ids["memory_space_id"], {}, {"tags": ["valid", ""]})
+    assert "must be a non-empty string" in str(exc_info.value)
+
+
+# delete_many() validation tests
+
+@pytest.mark.asyncio
+async def test_delete_many_validation_empty_memory_space_id(cortex_client):
+    """Should throw on empty memory_space_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.delete_many("", {})
+    assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_delete_many_validation_invalid_source_type(cortex_client, test_ids):
+    """Should throw on invalid source_type."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.delete_many(test_ids["memory_space_id"], {"source_type": "invalid"})
+    assert "Invalid source_type" in str(exc_info.value)
+
+
+# count() validation tests
+
+@pytest.mark.asyncio
+async def test_count_validation_empty_memory_space_id(cortex_client):
+    """Should throw on empty memory_space_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.count("")
+    assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_count_validation_invalid_source_type(cortex_client, test_ids):
+    """Should throw on invalid source_type."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.count(test_ids["memory_space_id"], source_type="invalid")
+    assert "Invalid source_type" in str(exc_info.value)
+
+
+# list() validation tests
+
+@pytest.mark.asyncio
+async def test_list_validation_empty_memory_space_id(cortex_client):
+    """Should throw on empty memory_space_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.list("")
+    assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_list_validation_invalid_source_type(cortex_client, test_ids):
+    """Should throw on invalid source_type."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.list(test_ids["memory_space_id"], source_type="invalid")
+    assert "Invalid source_type" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_list_validation_invalid_limit_negative(cortex_client, test_ids):
+    """Should throw on negative limit."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.list(test_ids["memory_space_id"], limit=-5)
+    assert "limit must be a positive integer" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_list_validation_invalid_limit_zero(cortex_client, test_ids):
+    """Should throw on limit=0."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.list(test_ids["memory_space_id"], limit=0)
+    assert "limit must be a positive integer" in str(exc_info.value)
+
+
+# export() validation tests
+
+@pytest.mark.asyncio
+async def test_export_validation_empty_memory_space_id(cortex_client):
+    """Should throw on empty memory_space_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.export("", format="json")
+    assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_export_validation_invalid_format(cortex_client, test_ids):
+    """Should throw on invalid format."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.export(test_ids["memory_space_id"], format="xml")
+    assert "Invalid format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_export_validation_empty_user_id(cortex_client, test_ids):
+    """Should throw on empty user_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.export(test_ids["memory_space_id"], user_id="   ")
+    assert "user_id cannot be empty" in str(exc_info.value)
+
+
+# archive() validation tests
+
+@pytest.mark.asyncio
+async def test_archive_validation_empty_memory_space_id(cortex_client):
+    """Should throw on empty memory_space_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.archive("", "mem-123")
+    assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_archive_validation_empty_memory_id(cortex_client, test_ids):
+    """Should throw on empty memory_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.archive(test_ids["memory_space_id"], "")
+    assert "memory_id cannot be empty" in str(exc_info.value)
+
+
+# get_version() validation tests
+
+@pytest.mark.asyncio
+async def test_get_version_validation_empty_memory_space_id(cortex_client):
+    """Should throw on empty memory_space_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.get_version("", "mem-123", 1)
+    assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_version_validation_empty_memory_id(cortex_client, test_ids):
+    """Should throw on empty memory_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.get_version(test_ids["memory_space_id"], "", 1)
+    assert "memory_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_version_validation_invalid_version_zero(cortex_client, test_ids):
+    """Should throw on version=0."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.get_version(test_ids["memory_space_id"], "mem-123", 0)
+    assert "version must be a positive integer" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_version_validation_negative_version(cortex_client, test_ids):
+    """Should throw on negative version."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.get_version(test_ids["memory_space_id"], "mem-123", -1)
+    assert "version must be a positive integer" in str(exc_info.value)
+
+
+# get_history() validation tests
+
+@pytest.mark.asyncio
+async def test_get_history_validation_empty_memory_space_id(cortex_client):
+    """Should throw on empty memory_space_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.get_history("", "mem-123")
+    assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_history_validation_empty_memory_id(cortex_client, test_ids):
+    """Should throw on empty memory_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.get_history(test_ids["memory_space_id"], "")
+    assert "memory_id cannot be empty" in str(exc_info.value)
+
+
+# get_at_timestamp() validation tests
+
+@pytest.mark.asyncio
+async def test_get_at_timestamp_validation_empty_memory_space_id(cortex_client):
+    """Should throw on empty memory_space_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.get_at_timestamp("", "mem-123", 1000)
+    assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_at_timestamp_validation_empty_memory_id(cortex_client, test_ids):
+    """Should throw on empty memory_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.get_at_timestamp(test_ids["memory_space_id"], "", 1000)
+    assert "memory_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_at_timestamp_validation_invalid_timestamp_nan(cortex_client, test_ids):
+    """Should throw on NaN timestamp."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.get_at_timestamp(test_ids["memory_space_id"], "mem-123", float('nan'))
+    assert "timestamp must be a valid timestamp" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_at_timestamp_validation_negative_timestamp(cortex_client, test_ids):
+    """Should throw on negative timestamp."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.get_at_timestamp(test_ids["memory_space_id"], "mem-123", -1000)
+    assert "timestamp cannot be negative" in str(exc_info.value)

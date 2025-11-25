@@ -17,6 +17,19 @@ import type {
   StoreImmutableOptions,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
+import {
+  ImmutableValidationError,
+  validateImmutableEntry,
+  validateType,
+  validateId,
+  validateVersion,
+  validateTimestamp,
+  validateListFilter,
+  validateSearchInput,
+  validateCountFilter,
+  validatePurgeManyFilter,
+  validateKeepLatest,
+} from "./validators";
 
 export class ImmutableAPI {
   constructor(
@@ -43,6 +56,9 @@ export class ImmutableAPI {
     entry: ImmutableEntry,
     options?: StoreImmutableOptions,
   ): Promise<ImmutableRecord> {
+    // CLIENT-SIDE VALIDATION
+    validateImmutableEntry(entry);
+
     const result = await this.client.mutation(api.immutable.store, {
       type: entry.type,
       id: entry.id,
@@ -79,6 +95,10 @@ export class ImmutableAPI {
    * ```
    */
   async get(type: string, id: string): Promise<ImmutableRecord | null> {
+    // CLIENT-SIDE VALIDATION
+    validateType(type, "type");
+    validateId(id, "id");
+
     const result = await this.client.query(api.immutable.get, {
       type,
       id,
@@ -100,6 +120,11 @@ export class ImmutableAPI {
     id: string,
     version: number,
   ): Promise<ImmutableVersionExpanded | null> {
+    // CLIENT-SIDE VALIDATION
+    validateType(type, "type");
+    validateId(id, "id");
+    validateVersion(version, "version");
+
     const result = await this.client.query(api.immutable.getVersion, {
       type,
       id,
@@ -122,6 +147,10 @@ export class ImmutableAPI {
     type: string,
     id: string,
   ): Promise<ImmutableVersionExpanded[]> {
+    // CLIENT-SIDE VALIDATION
+    validateType(type, "type");
+    validateId(id, "id");
+
     const result = await this.client.query(api.immutable.getHistory, {
       type,
       id,
@@ -142,6 +171,11 @@ export class ImmutableAPI {
    * ```
    */
   async list(filter?: ListImmutableFilter): Promise<ImmutableRecord[]> {
+    // CLIENT-SIDE VALIDATION
+    if (filter) {
+      validateListFilter(filter);
+    }
+
     const result = await this.client.query(api.immutable.list, {
       type: filter?.type,
       userId: filter?.userId,
@@ -163,6 +197,9 @@ export class ImmutableAPI {
    * ```
    */
   async search(input: SearchImmutableInput): Promise<ImmutableSearchResult[]> {
+    // CLIENT-SIDE VALIDATION
+    validateSearchInput(input);
+
     const result = await this.client.query(api.immutable.search, {
       query: input.query,
       type: input.type,
@@ -184,6 +221,11 @@ export class ImmutableAPI {
    * ```
    */
   async count(filter?: CountImmutableFilter): Promise<number> {
+    // CLIENT-SIDE VALIDATION
+    if (filter) {
+      validateCountFilter(filter);
+    }
+
     const result = await this.client.query(api.immutable.count, {
       type: filter?.type,
       userId: filter?.userId,
@@ -209,6 +251,10 @@ export class ImmutableAPI {
     id: string;
     versionsDeleted: number;
   }> {
+    // CLIENT-SIDE VALIDATION
+    validateType(type, "type");
+    validateId(id, "id");
+
     const result = await this.client.mutation(api.immutable.purge, {
       type,
       id,
@@ -239,6 +285,11 @@ export class ImmutableAPI {
     id: string,
     timestamp: number | Date,
   ): Promise<ImmutableVersionExpanded | null> {
+    // CLIENT-SIDE VALIDATION
+    validateType(type, "type");
+    validateId(id, "id");
+    validateTimestamp(timestamp, "timestamp");
+
     const ts = typeof timestamp === "number" ? timestamp : timestamp.getTime();
 
     const result = await this.client.query(api.immutable.getAtTimestamp, {
@@ -263,6 +314,9 @@ export class ImmutableAPI {
     totalVersionsDeleted: number;
     entries: Array<{ type: string; id: string }>;
   }> {
+    // CLIENT-SIDE VALIDATION
+    validatePurgeManyFilter(filter);
+
     const result = await this.client.mutation(api.immutable.purgeMany, {
       type: filter.type,
       userId: filter.userId,
@@ -291,6 +345,11 @@ export class ImmutableAPI {
     versionsPurged: number;
     versionsRemaining: number;
   }> {
+    // CLIENT-SIDE VALIDATION
+    validateType(type, "type");
+    validateId(id, "id");
+    validateKeepLatest(keepLatest, "keepLatest");
+
     const result = await this.client.mutation(api.immutable.purgeVersions, {
       type,
       id,
@@ -303,3 +362,6 @@ export class ImmutableAPI {
     };
   }
 }
+
+// Export validation error for users who want to catch it specifically
+export { ImmutableValidationError } from "./validators";

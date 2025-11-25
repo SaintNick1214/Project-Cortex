@@ -158,3 +158,7 @@ export type {
   SyncHealthMetrics,
 } from "./graph/worker/GraphSyncWorker";
 export { GraphSyncWorker } from "./graph/worker/GraphSyncWorker";
+
+// Re-export validation errors for user catch blocks
+export { UserValidationError } from "./users";
+export { GovernanceValidationError } from "./governance";

@@ -16,6 +16,18 @@ from ..types import (
     UnregisterAgentResult,
     VerificationResult,
 )
+from .validators import (
+    AgentValidationError,
+    validate_agent_id,
+    validate_agent_name,
+    validate_agent_registration,
+    validate_agent_status,
+    validate_list_parameters,
+    validate_search_parameters,
+    validate_unregister_options,
+    validate_metadata,
+    validate_config,
+)
 
 
 class AgentsAPI:
@@ -57,6 +69,13 @@ class AgentsAPI:
             ...     )
             ... )
         """
+        # Validate agent registration
+        validate_agent_registration(agent)
+        if agent.metadata:
+            validate_metadata(agent.metadata)
+        if agent.config:
+            validate_config(agent.config)
+
         result = await self.client.mutation(
             "agents:register",
             filter_none_values({
@@ -115,6 +134,9 @@ class AgentsAPI:
         Example:
             >>> agent = await cortex.agents.get('support-agent')
         """
+        # Validate agent_id
+        validate_agent_id(agent_id, "agent_id")
+
         result = await self.client.query("agents:get", filter_none_values({"agentId": agent_id}))
 
         if not result:
@@ -151,6 +173,9 @@ class AgentsAPI:
             ...     {'metadata.team': 'support'}
             ... )
         """
+        # Validate search parameters
+        validate_search_parameters(filters, limit)
+
         result = await self.client.query(
             "agents:search", filter_none_values({"filters": filters, "limit": limit})
         )
@@ -193,6 +218,9 @@ class AgentsAPI:
         Example:
             >>> page1 = await cortex.agents.list(status="active", limit=50)
         """
+        # Validate parameters
+        validate_list_parameters(status, limit, offset, sort_by)
+
         result = await self.client.query(
             "agents:list", filter_none_values({"status": status, "limit": limit, "offset": offset})
         )
@@ -227,6 +255,9 @@ class AgentsAPI:
         Example:
             >>> stats = await cortex.agents.get_stats('support-agent')
         """
+        # Validate agent_id
+        validate_agent_id(agent_id, "agent_id")
+
         result = await self.client.query("agents:computeStats", filter_none_values({"agentId": agent_id}))
         return cast(Dict[str, Any], result)
 
@@ -243,6 +274,13 @@ class AgentsAPI:
         Example:
             >>> total = await cortex.agents.count()
         """
+        # Validate filters if provided
+        if filters is not None:
+            if not isinstance(filters, dict):
+                raise AgentValidationError(
+                    "filters must be a dict", "INVALID_METADATA_FORMAT", "filters"
+                )
+
         result = await self.client.query("agents:count", filter_none_values({}))
 
         return int(result)
@@ -266,6 +304,25 @@ class AgentsAPI:
             ...     {'metadata': {'version': '2.2.0'}}
             ... )
         """
+        # Validate agent_id
+        validate_agent_id(agent_id, "agent_id")
+
+        # Validate updates dict
+        if not updates or len(updates) == 0:
+            raise AgentValidationError(
+                "At least one field must be provided for update", "MISSING_UPDATES"
+            )
+
+        # Validate individual fields if present
+        if "name" in updates:
+            validate_agent_name(updates["name"], "name")
+        if "status" in updates:
+            validate_agent_status(updates["status"], "status")
+        if "metadata" in updates and updates["metadata"] is not None:
+            validate_metadata(updates["metadata"], "metadata")
+        if "config" in updates and updates["config"] is not None:
+            validate_config(updates["config"], "config")
+
         # Flatten updates into top-level parameters
         result = await self.client.mutation(
             "agents:update", filter_none_values({"agentId": agent_id, **updates})
@@ -300,6 +357,16 @@ class AgentsAPI:
             ...     {'memoryVersionRetention': -1}  # Unlimited
             ... )
         """
+        # Validate agent_id
+        validate_agent_id(agent_id, "agent_id")
+
+        # Validate config
+        validate_config(config, "config")
+        if not config or len(config) == 0:
+            raise AgentValidationError(
+                "config cannot be empty", "EMPTY_CONFIG_OBJECT", "config"
+            )
+
         await self.client.mutation(
             "agents:configure", filter_none_values({"agentId": agent_id, "config": config})
         )
@@ -330,6 +397,13 @@ class AgentsAPI:
             ...     UnregisterAgentOptions(cascade=True)
             ... )
         """
+        # Validate agent_id
+        validate_agent_id(agent_id, "agent_id")
+
+        # Validate options
+        if options:
+            validate_unregister_options(options)
+
         opts = options or UnregisterAgentOptions()
 
         if not opts.cascade:
@@ -418,6 +492,14 @@ class AgentsAPI:
             ...     UnregisterAgentOptions(cascade=True)
             ... )
         """
+        # Validate filters
+        if filters is not None:
+            validate_search_parameters(filters, 1000)  # Max limit
+
+        # Validate options
+        if options:
+            validate_unregister_options(options)
+
         opts = options or UnregisterAgentOptions()
 
         # Get all matching agents
@@ -572,4 +654,7 @@ class AgentsAPI:
     async def _rollback_agent_deletion(self, backup: Dict[str, List[Any]]) -> Any:
         """Rollback agent deletion on failure."""
         print("Warning: Rollback not fully implemented - manual recovery may be needed")
+
+
+__all__ = ["AgentsAPI", "AgentValidationError"]
 

@@ -5,6 +5,86 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.0] - 2025-11-25
+
+### 🎯 Client-Side Validation - All APIs
+
+**Comprehensive client-side validation added to all 11 APIs to catch errors before backend calls, providing faster feedback (<1ms vs 50-200ms) and better developer experience.**
+
+#### ✨ New Features
+
+**1. Client-Side Validation Framework**
+
+All 11 APIs now validate inputs before making backend calls:
+
+- **Governance API** - Policy structure, period formats, importance ranges, version counts, scopes, date ranges
+- **Memory API** - Memory space IDs, content validation, importance scores, source types, conversation/immutable/mutable refs
+- **Conversations API** - Conversation types, participant validation, message validation, query filters
+- **Facts API** - Fact types, confidence scores, subject/predicate/object, temporal validity
+- **Immutable API** - Type/ID validation, version numbers, data size limits
+- **Mutable API** - Namespace/key validation, value size limits, TTL formats
+- **Agents API** - Agent ID format, metadata validation, status values
+- **Users API** - User ID validation, profile data structure
+- **Contexts API** - Context purpose, status transitions, parent-child relationships
+- **Memory Spaces API** - Space type validation, participant structure
+- **Vector API** - Memory space IDs, embeddings dimensions, importance ranges
+
+**2. Custom Validation Error Classes**
+
+Each API has a dedicated validation error class for precise error handling:
+
+```python
+from cortex.governance import GovernanceValidationError
+
+try:
+    await cortex.governance.set_policy(policy)
+except GovernanceValidationError as e:
+    print(f"Validation failed: {e.code} - {e.field}")
+```
+
+**3. Validation Benefits**
+
+- ⚡ **Faster Feedback**: Errors caught in <1ms (vs 50-200ms backend round-trip)
+- 📝 **Better Error Messages**: Clear descriptions with fix suggestions and field names
+- 🔒 **Defense in Depth**: Client validation + backend validation for security
+- 🧪 **Complete Test Coverage**: 180+ validation tests
+- 💰 **Reduced Backend Load**: Invalid requests never reach Convex
+- 🎯 **Improved DX**: Developers get immediate feedback
+
+**4. Python-Specific Considerations**
+
+- Accepts both `int` and `float` for numeric fields (JSON deserialization)
+- Proper `isinstance()` type guards for validation
+- Pythonic error messages with f-strings
+- Integration with existing `CortexError` hierarchy
+
+#### 🧪 Testing
+
+- 180+ new validation tests
+- All tests passing (35 governance, 145 across other APIs)
+- Zero breaking changes to public API
+
+#### 🔄 Migration Guide
+
+**No migration required** - This is a non-breaking enhancement. All existing code continues to work, but now gets faster error feedback.
+
+Optional: Catch validation errors specifically for better error handling:
+
+```python
+from cortex.memory import MemoryValidationError
+
+try:
+    await cortex.memory.remember(params)
+except MemoryValidationError as e:
+    # Handle validation errors (instant, client-side)
+    print(f"Validation error: {e.code} in field {e.field}")
+except Exception as e:
+    # Handle backend errors (database, network)
+    print(f"Backend error: {e}")
+```
+
+---
+
 ## [0.11.0] - 2025-11-23
 
 ### 🎉 Major Release - Enhanced Streaming API & Cross-Database Graph Support
