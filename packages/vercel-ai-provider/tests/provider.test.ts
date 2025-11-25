@@ -57,7 +57,7 @@ describe("CortexMemoryProvider", () => {
   const mockUnderlyingModel: MockLanguageModel = {
     specificationVersion: "v1",
     provider: "openai",
-    modelId: "gpt-5-nano",
+    modelId: "gpt-4.1-nano",
     defaultObjectGenerationMode: "json",
     doGenerate: jest.fn().mockResolvedValue({
       text: "Test response",
@@ -81,7 +81,7 @@ describe("CortexMemoryProvider", () => {
 
     expect(provider.specificationVersion).toBe("v1");
     expect(provider.provider).toBe("openai");
-    expect(provider.modelId).toBe("gpt-5-nano");
+    expect(provider.modelId).toBe("gpt-4.1-nano");
   });
 
   it("should delegate to underlying model for doGenerate", async () => {
