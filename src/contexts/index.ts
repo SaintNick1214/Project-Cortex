@@ -593,7 +593,7 @@ export class ContextsAPI {
   ): Promise<{
     version: number;
     status: string;
-    data?: any;
+    data?: Record<string, unknown>;
     timestamp: number;
     updatedBy?: string;
   } | null> {
@@ -605,7 +605,7 @@ export class ContextsAPI {
     return result as {
       version: number;
       status: string;
-      data?: any;
+      data?: Record<string, unknown>;
       timestamp: number;
       updatedBy?: string;
     } | null;
@@ -624,7 +624,7 @@ export class ContextsAPI {
     Array<{
       version: number;
       status: string;
-      data?: any;
+      data?: Record<string, unknown>;
       timestamp: number;
       updatedBy?: string;
     }>
@@ -636,7 +636,7 @@ export class ContextsAPI {
     return result as Array<{
       version: number;
       status: string;
-      data?: any;
+      data?: Record<string, unknown>;
       timestamp: number;
       updatedBy?: string;
     }>;
@@ -659,7 +659,7 @@ export class ContextsAPI {
   ): Promise<{
     version: number;
     status: string;
-    data?: any;
+    data?: Record<string, unknown>;
     timestamp: number;
     updatedBy?: string;
   } | null> {
@@ -671,7 +671,7 @@ export class ContextsAPI {
     return result as {
       version: number;
       status: string;
-      data?: any;
+      data?: Record<string, unknown>;
       timestamp: number;
       updatedBy?: string;
     } | null;

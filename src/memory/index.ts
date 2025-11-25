@@ -567,7 +567,7 @@ export class MemoryAPI {
             memorySpaceId: params.memorySpaceId,
             userId: params.userId,
             content: "[Streaming...]",
-          } as any);
+          });
         }
       }
 

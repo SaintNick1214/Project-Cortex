@@ -9,6 +9,15 @@ import type { FactRecord } from "../../types";
 import type { ProgressiveFact } from "../../types/streaming";
 import type { FactsAPI } from "../../facts";
 
+type FactType =
+  | "preference"
+  | "identity"
+  | "knowledge"
+  | "relationship"
+  | "event"
+  | "observation"
+  | "custom";
+
 /**
  * Extracts facts progressively during streaming
  */
@@ -110,7 +119,7 @@ export class ProgressiveFactExtractor {
               participantId: this.participantId,
               userId: this.userId,
               fact: factData.fact,
-              factType: factData.factType as any,
+              factType: factData.factType as FactType,
               subject: factData.subject || this.userId,
               predicate: factData.predicate,
               object: factData.object,
@@ -202,7 +211,7 @@ export class ProgressiveFactExtractor {
               participantId: this.participantId,
               userId: this.userId,
               fact: factData.fact,
-              factType: factData.factType as any,
+              factType: factData.factType as FactType,
               subject: factData.subject || this.userId,
               predicate: factData.predicate,
               object: factData.object,
