@@ -23,19 +23,11 @@ Example:
 """
 
 # Main client
-from .client import Cortex
-
 # Validation Errors
 from .agents.validators import AgentValidationError
+from .client import Cortex
 from .contexts.validators import ContextsValidationError
 from .conversations.validators import ConversationValidationError
-from .facts.validators import FactsValidationError
-from .governance.validators import GovernanceValidationError
-from .immutable.validators import ImmutableValidationError
-from .memory.validators import MemoryValidationError
-from .memory_spaces.validators import MemorySpaceValidationError
-from .mutable.validators import MutableValidationError
-from .vector.validators import VectorValidationError
 
 # Errors
 from .errors import (
@@ -48,6 +40,12 @@ from .errors import (
     is_cascade_deletion_error,
     is_cortex_error,
 )
+from .facts.validators import FactsValidationError
+from .governance.validators import GovernanceValidationError
+from .immutable.validators import ImmutableValidationError
+from .memory.validators import MemoryValidationError
+from .memory_spaces.validators import MemorySpaceValidationError
+from .mutable.validators import MutableValidationError
 
 # Configuration
 # Core Types - Layer 1
@@ -177,6 +175,7 @@ from .types import (
     VerificationResult,
 )
 from .users.validators import UserValidationError
+from .vector.validators import VectorValidationError
 
 # Validation Errors already imported above, UserValidationError completes the set
 
