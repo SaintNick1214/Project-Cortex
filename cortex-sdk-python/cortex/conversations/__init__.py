@@ -491,7 +491,7 @@ class ConversationsAPI:
             )
 
         if type == "agent-agent":
-            if memory_space_ids is None or len(memory_space_ids) < 2:
+            if not memory_space_ids or not isinstance(memory_space_ids, list) or len(memory_space_ids) < 2:
                 raise ConversationValidationError(
                     "agent-agent conversations require at least 2 memory_space_ids",
                     "INVALID_ARRAY_LENGTH",

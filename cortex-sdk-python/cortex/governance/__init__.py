@@ -163,15 +163,17 @@ class GovernanceAPI:
 
         # Validate version counts
         if policy.immutable and policy.immutable.retention:
-            validate_version_count(
-                policy.immutable.retention.default_versions,
-                "immutable.retention.default_versions",
-            )
+            if policy.immutable.retention.default_versions is not None:
+                validate_version_count(
+                    policy.immutable.retention.default_versions,
+                    "immutable.retention.default_versions",
+                )
         if policy.vector and policy.vector.retention:
-            validate_version_count(
-                policy.vector.retention.default_versions,
-                "vector.retention.default_versions",
-            )
+            if policy.vector.retention.default_versions is not None:
+                validate_version_count(
+                    policy.vector.retention.default_versions,
+                    "vector.retention.default_versions",
+                )
 
         # Validate vector importance ranges
         if policy.vector and policy.vector.retention:
