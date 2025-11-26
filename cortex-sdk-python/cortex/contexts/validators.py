@@ -7,7 +7,7 @@ they reach the backend, providing faster feedback and better error messages.
 
 import re
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 
 class ContextsValidationError(Exception):
@@ -87,7 +87,7 @@ VALID_FORMATS = ["json", "csv"]
 
 
 def validate_context_id_format(context_id: str) -> None:
-    """
+    r"""
     Validates contextId format: must match pattern /^ctx-\d+-[a-z0-9]+$/.
 
     Args:

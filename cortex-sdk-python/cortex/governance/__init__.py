@@ -104,8 +104,9 @@ class GovernanceAPI:
             ... )
 
         """
-        # Validate complete policy structure
-        validate_governance_policy(policy)
+        # Validate policy is provided
+        if not policy:
+            raise GovernanceValidationError("Policy is required", "MISSING_POLICY")
 
         # Validate at least one scope is provided
         if not policy.organization_id and not policy.memory_space_id:
@@ -503,8 +504,9 @@ class GovernanceAPI:
             >>> print(f"Status: {report.conversations.compliance_status}")
 
         """
-        # Validate date range
-        validate_date_range(options.period_start, options.period_end)
+        # Validate date range (only if both dates are provided)
+        if options.period_start is not None and options.period_end is not None:
+            validate_date_range(options.period_start, options.period_end)
 
         # Validate scope if provided
         if options.organization_id or options.memory_space_id:

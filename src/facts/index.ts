@@ -26,7 +26,6 @@ import {
   deleteFactFromGraph,
 } from "../graph";
 import {
-  FactsValidationError,
   validateMemorySpaceId,
   validateRequiredString,
   validateConfidence,

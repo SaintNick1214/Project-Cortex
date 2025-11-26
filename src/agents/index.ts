@@ -26,7 +26,6 @@ import type {
 import {
   AgentValidationError,
   validateAgentId,
-  validateAgentName,
   validateAgentRegistration,
   validateAgentFilters,
   validateUnregisterOptions,

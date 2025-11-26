@@ -246,6 +246,49 @@ def validate_participants(participants: List[Dict[str, Any]]) -> None:
         participant_ids.add(p_id)
 
 
+def validate_participant_ids(participant_ids: List[str]) -> None:
+    """
+    Validates an array of participant IDs (strings).
+
+    Used for update_participants where only IDs are passed, not full objects.
+
+    Args:
+        participant_ids: List of participant ID strings to validate
+
+    Raises:
+        MemorySpaceValidationError: If validation fails
+    """
+    if not isinstance(participant_ids, list):
+        raise MemorySpaceValidationError(
+            "participant_ids must be a list", "INVALID_PARTICIPANT"
+        )
+
+    # Empty lists are valid
+    if len(participant_ids) == 0:
+        return
+
+    # Track IDs to check for duplicates
+    seen_ids: set[str] = set()
+
+    for i, p_id in enumerate(participant_ids):
+        # Validate individual ID
+        if not p_id or not isinstance(p_id, str) or not p_id.strip():
+            raise MemorySpaceValidationError(
+                f"Participant ID at index {i} is required and cannot be empty",
+                "MISSING_PARTICIPANT_ID",
+                "participant_ids",
+            )
+
+        # Check for duplicates
+        if p_id in seen_ids:
+            raise MemorySpaceValidationError(
+                f'Duplicate participant ID "{p_id}" found in participant_ids array',
+                "DUPLICATE_PARTICIPANT",
+                "participant_ids",
+            )
+        seen_ids.add(p_id)
+
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # String Field Validation
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

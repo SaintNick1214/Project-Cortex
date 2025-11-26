@@ -30,7 +30,6 @@ import {
   validatePurgeFilter,
   validateOperationsArray,
   validateTransactionOperations,
-  MutableValidationError,
 } from "./validators";
 
 // Export validation error for users who want to catch it specifically
