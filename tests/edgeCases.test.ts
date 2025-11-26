@@ -495,20 +495,23 @@ Line 4`;
     });
 
     it("handles retrieval of non-existent fact gracefully", async () => {
+      // Use valid format but non-existent ID
       const result = await cortex.facts.get(
         TEST_MEMSPACE_ID,
-        "non-existent-fact-id",
+        "fact-nonexistent-12345",
       );
       expect(result).toBeNull();
     });
 
     it("handles retrieval of non-existent conversation gracefully", async () => {
-      const result = await cortex.conversations.get("non-existent-conv-id");
+      // Use valid format but non-existent ID
+      const result = await cortex.conversations.get("conv-nonexistent-12345");
       expect(result).toBeNull();
     });
 
     it("handles retrieval of non-existent context gracefully", async () => {
-      const result = await cortex.contexts.get("non-existent-ctx-id");
+      // Use valid format but non-existent ID
+      const result = await cortex.contexts.get("ctx-1234567890-nonexistent");
       expect(result).toBeNull();
     });
   });
