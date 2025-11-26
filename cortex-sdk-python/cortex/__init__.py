@@ -309,6 +309,8 @@ __all__ = [
     "CascadeDeletionError",
     "AgentCascadeDeletionError",
     "ConversationValidationError",
+    "GovernanceValidationError",
+    "UserValidationError",
     "ErrorCode",
     "is_cortex_error",
     "is_a2a_timeout_error",
