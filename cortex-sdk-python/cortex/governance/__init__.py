@@ -27,7 +27,6 @@ from .validators import (
     validate_compliance_template,
     validate_date_range,
     validate_enforcement_options,
-    validate_governance_policy,
     validate_importance_ranges,
     validate_period_format,
     validate_policy_scope,
