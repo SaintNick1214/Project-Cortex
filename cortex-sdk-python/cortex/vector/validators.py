@@ -422,15 +422,20 @@ def validate_store_memory_input(input: StoreMemoryInput) -> None:
             "source is required", "MISSING_REQUIRED_FIELD", "source"
         )
 
-    validate_source_type(input.source.type)
+    # Handle both dict and object access for source
+    source_type = input.source.get("type") if isinstance(input.source, dict) else input.source.type
+    validate_source_type(source_type)
 
     if not input.metadata:
         raise VectorValidationError(
             "metadata is required", "MISSING_REQUIRED_FIELD", "metadata"
         )
 
-    validate_importance(input.metadata.importance)
-    validate_tags(input.metadata.tags)
+    # Handle both dict and object access for metadata
+    importance = input.metadata.get("importance") if isinstance(input.metadata, dict) else input.metadata.importance
+    tags = input.metadata.get("tags") if isinstance(input.metadata, dict) else input.metadata.tags
+    validate_importance(importance)
+    validate_tags(tags)
 
     # Optional fields validation
     if input.embedding is not None:
