@@ -54,7 +54,7 @@ async function summarizeConversation(
         content: `User: ${userMessage}\nAgent: ${agentResponse}`,
       },
     ],
-    // temperature not supported with gpt-4.1-nano, uses default of 1
+    // temperature not supported with gpt-5-nano, uses default of 1
   });
 
   return response.choices[0].message.content;
@@ -1264,7 +1264,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         expect(memory).not.toBeNull();
         expect(memory!.contentType).toBe("summarized");
 
-        // Summarized content should be concise (relaxed constraint for gpt-4.1-nano default temperature)
+        // Summarized content should be concise (relaxed constraint for gpt-5-nano default temperature)
         const original =
           "My name is Alexander Johnson and I prefer to be called Alex";
 
