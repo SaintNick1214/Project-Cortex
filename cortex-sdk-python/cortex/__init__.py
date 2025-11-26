@@ -25,6 +25,18 @@ Example:
 # Main client
 from .client import Cortex
 
+# Validation Errors
+from .agents.validators import AgentValidationError
+from .contexts.validators import ContextsValidationError
+from .conversations.validators import ConversationValidationError
+from .facts.validators import FactsValidationError
+from .governance.validators import GovernanceValidationError
+from .immutable.validators import ImmutableValidationError
+from .memory.validators import MemoryValidationError
+from .memory_spaces.validators import MemorySpaceValidationError
+from .mutable.validators import MutableValidationError
+from .vector.validators import VectorValidationError
+
 # Errors
 from .errors import (
     A2ATimeoutError,
@@ -36,9 +48,6 @@ from .errors import (
     is_cascade_deletion_error,
     is_cortex_error,
 )
-from .conversations.validators import ConversationValidationError
-from .governance.validators import GovernanceValidationError
-from .users.validators import UserValidationError
 
 # Configuration
 # Core Types - Layer 1
@@ -167,6 +176,9 @@ from .types import (
     VectorRetention,
     VerificationResult,
 )
+from .users.validators import UserValidationError
+
+# Validation Errors already imported above, UserValidationError completes the set
 
 # Graph Integration (optional import)
 try:
@@ -308,13 +320,22 @@ __all__ = [
     "A2ATimeoutError",
     "CascadeDeletionError",
     "AgentCascadeDeletionError",
-    "ConversationValidationError",
-    "GovernanceValidationError",
-    "UserValidationError",
     "ErrorCode",
     "is_cortex_error",
     "is_a2a_timeout_error",
     "is_cascade_deletion_error",
+    # Validation Errors
+    "AgentValidationError",
+    "ContextsValidationError",
+    "ConversationValidationError",
+    "FactsValidationError",
+    "GovernanceValidationError",
+    "ImmutableValidationError",
+    "MemorySpaceValidationError",
+    "MemoryValidationError",
+    "MutableValidationError",
+    "UserValidationError",
+    "VectorValidationError",
     # Type Literals
     "ConversationType",
     "SourceType",

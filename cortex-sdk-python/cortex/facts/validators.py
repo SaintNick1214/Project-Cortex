@@ -289,7 +289,7 @@ def validate_non_negative_integer(
             field_name,
         )
 
-    if not isinstance(value, int) or (isinstance(value, float) and value != int(value)):
+    if not isinstance(value, int) and (isinstance(value, float) and value != int(value)):
         raise FactsValidationError(
             f"{field_name} must be an integer, got {value}",
             "INVALID_ARRAY",
@@ -610,7 +610,7 @@ def validate_source_ref(source_ref: Any) -> None:
         raise FactsValidationError(
             "source_ref must be an object or dict", "INVALID_METADATA", "source_ref"
         )
-    
+
     # Must be dict or object with attributes
     if not isinstance(source_ref, dict) and not hasattr(source_ref, "__dict__"):
         raise FactsValidationError(

@@ -22,11 +22,11 @@ from .validators import (
     validate_agent_name,
     validate_agent_registration,
     validate_agent_status,
+    validate_config,
     validate_list_parameters,
+    validate_metadata,
     validate_search_parameters,
     validate_unregister_options,
-    validate_metadata,
-    validate_config,
 )
 
 
@@ -281,7 +281,7 @@ class AgentsAPI:
                     "filters must be a dict", "INVALID_METADATA_FORMAT", "filters"
                 )
 
-        result = await self.client.query("agents:count", filter_none_values({}))
+        result = await self.client.query("agents:count", filter_none_values({"filters": filters}))
 
         return int(result)
 

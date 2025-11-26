@@ -18,7 +18,6 @@ import type {
   DeleteContextOptions,
 } from "../types";
 import {
-  ContextsValidationError,
   validateRequiredString,
   validatePurpose,
   validateContextIdFormat,
@@ -32,7 +31,6 @@ import {
   validateDataObject,
   validateConversationRef,
   validateDateObject,
-  validateNonEmptyArray,
   validateUpdatesObject,
   validateHasFilters,
 } from "./validators";

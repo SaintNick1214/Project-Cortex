@@ -18,7 +18,6 @@ import type {
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
 import {
-  ImmutableValidationError,
   validateImmutableEntry,
   validateType,
   validateId,

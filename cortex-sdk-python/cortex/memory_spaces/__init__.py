@@ -22,6 +22,7 @@ from .validators import (
     validate_memory_space_status,
     validate_memory_space_type,
     validate_name,
+    validate_participant_ids,
     validate_participants,
     validate_search_query,
     validate_update_params,
@@ -294,9 +295,9 @@ class MemorySpacesAPI:
                 "At least one of 'add' or 'remove' must be provided", "EMPTY_UPDATES"
             )
 
-        # Validate add participants
+        # Validate add participant IDs
         if add is not None and len(add) > 0:
-            validate_participants(add)
+            validate_participant_ids(add)
 
         # Validate remove participant IDs
         if remove is not None and len(remove) > 0:
