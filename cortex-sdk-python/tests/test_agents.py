@@ -234,13 +234,15 @@ async def test_search_invalid_limit(cortex_client):
 
 
 @pytest.mark.asyncio
-async def test_count_invalid_filters_format(cortex_client):
-    """Should throw on invalid filters format."""
-    with pytest.raises(Exception) as exc_info:
-        await cortex_client.agents.count(filters="invalid")
+async def test_count_invalid_status(cortex_client):
+    """Should throw on invalid status value."""
+    from cortex.agents.validators import AgentValidationError
+    
+    with pytest.raises(AgentValidationError) as exc_info:
+        await cortex_client.agents.count(status="invalid-status")
 
     error = exc_info.value
-    assert error.code == "INVALID_METADATA_FORMAT"
+    assert error.code == "INVALID_STATUS"
 
 
 # get_stats() validation tests

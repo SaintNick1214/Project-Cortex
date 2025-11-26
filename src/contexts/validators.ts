@@ -110,7 +110,7 @@ export function validateStatus(status: string): void {
     );
   }
 
-  if (!VALID_STATUSES.includes(status as any)) {
+  if (!(VALID_STATUSES as readonly string[]).includes(status)) {
     throw new ContextsValidationError(
       `Invalid status "${status}". Valid statuses: ${VALID_STATUSES.join(", ")}`,
       "INVALID_STATUS",
@@ -133,7 +133,7 @@ export function validateExportFormat(format: string): void {
     );
   }
 
-  if (!VALID_FORMATS.includes(format as any)) {
+  if (!(VALID_FORMATS as readonly string[]).includes(format)) {
     throw new ContextsValidationError(
       `Invalid format "${format}". Valid formats: ${VALID_FORMATS.join(", ")}`,
       "INVALID_FORMAT",
@@ -354,8 +354,9 @@ export function validateNonEmptyArray(arr: unknown[], fieldName: string): void {
  * Validates that updates object has at least one field
  */
 export function validateUpdatesObject(updates: Record<string, unknown>): void {
+  // Use as unknown for defensive runtime check (input could come from untrusted source)
   if (
-    updates === null ||
+    (updates as unknown) === null ||
     typeof updates !== "object" ||
     Array.isArray(updates)
   ) {
@@ -380,8 +381,9 @@ export function validateUpdatesObject(updates: Record<string, unknown>): void {
  * Validates that filters object has at least one defined value
  */
 export function validateHasFilters(filters: Record<string, unknown>): void {
+  // Use as unknown for defensive runtime check (input could come from untrusted source)
   if (
-    filters === null ||
+    (filters as unknown) === null ||
     typeof filters !== "object" ||
     Array.isArray(filters)
   ) {

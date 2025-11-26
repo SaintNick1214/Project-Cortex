@@ -261,27 +261,25 @@ class AgentsAPI:
         result = await self.client.query("agents:computeStats", filter_none_values({"agentId": agent_id}))
         return cast(Dict[str, Any], result)
 
-    async def count(self, filters: Optional[Dict[str, Any]] = None) -> int:
+    async def count(self, status: Optional[str] = None) -> int:
         """
         Count registered agents.
 
         Args:
-            filters: Optional filter criteria
+            status: Optional filter by agent status
 
         Returns:
             Count of matching agents
 
         Example:
             >>> total = await cortex.agents.count()
+            >>> active = await cortex.agents.count(status='active')
         """
-        # Validate filters if provided
-        if filters is not None:
-            if not isinstance(filters, dict):
-                raise AgentValidationError(
-                    "filters must be a dict", "INVALID_METADATA_FORMAT", "filters"
-                )
+        # Validate status if provided
+        if status is not None:
+            validate_agent_status(status)
 
-        result = await self.client.query("agents:count", filter_none_values({"filters": filters}))
+        result = await self.client.query("agents:count", filter_none_values({"status": status}))
 
         return int(result)
 

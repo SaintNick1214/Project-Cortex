@@ -5,6 +5,7 @@ Client-side validation for governance operations to catch errors before
 they reach the backend, providing faster feedback and better error messages.
 """
 
+import math
 import re
 from datetime import datetime
 from typing import List, Optional
@@ -215,6 +216,13 @@ def validate_importance_ranges(ranges: List[ImportanceRange]) -> None:
                 "INVALID_IMPORTANCE_RANGE",
             )
 
+        # Check for NaN values (NaN comparisons always return False)
+        if math.isnan(min_val) or math.isnan(max_val):
+            raise GovernanceValidationError(
+                f"Range at index {i} cannot contain NaN values",
+                "INVALID_IMPORTANCE_RANGE",
+            )
+
         if min_val < 0 or min_val > 100:
             raise GovernanceValidationError(
                 f"Range minimum at index {i} must be between 0 and 100, got {min_val}",
@@ -234,7 +242,7 @@ def validate_importance_ranges(ranges: List[ImportanceRange]) -> None:
             )
 
         # Validate versions (accept both int and float from JSON parsing)
-        if not isinstance(versions, (int, float)) or versions < -1:
+        if not isinstance(versions, (int, float)) or math.isnan(versions) or versions < -1:
             raise GovernanceValidationError(
                 f"Versions at index {i} must be a number >= -1 (where -1 means unlimited), got {versions}",
                 "INVALID_VERSIONS",
@@ -272,6 +280,12 @@ def validate_version_count(versions: int, field_name: str = "versions") -> None:
     if not isinstance(versions, (int, float)):
         raise GovernanceValidationError(
             f"{field_name} must be a number", "INVALID_VERSIONS", field_name
+        )
+
+    # Check for NaN values (NaN comparisons always return False)
+    if math.isnan(versions):
+        raise GovernanceValidationError(
+            f"{field_name} cannot be NaN", "INVALID_VERSIONS", field_name
         )
 
     if versions < -1:
