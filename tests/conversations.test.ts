@@ -2273,7 +2273,7 @@ describe("Conversations API (Layer 1a)", () => {
     });
 
     describe("Validation timing", () => {
-      it("validation errors are synchronous (<1ms)", async () => {
+      it("validation errors are synchronous (no network latency)", async () => {
         const start = Date.now();
         try {
           await cortex.conversations.create({
@@ -2284,7 +2284,10 @@ describe("Conversations API (Layer 1a)", () => {
         } catch (error: any) {
           const duration = Date.now() - start;
 
-          expect(duration).toBeLessThan(1);
+          // Validation should be nearly instant (no network call)
+          // Using 10ms threshold to account for Date.now() millisecond precision
+          // and CI environment variability (still much faster than any network call)
+          expect(duration).toBeLessThan(10);
           expect(error.name).toBe("ConversationValidationError");
         }
       });
