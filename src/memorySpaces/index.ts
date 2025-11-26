@@ -55,6 +55,8 @@ export class MemorySpacesAPI {
   ): Promise<MemorySpace> {
     // Validate required fields
     validateMemorySpaceId(params.memorySpaceId);
+    // Runtime validation for potentially untrusted external input
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!params.type) {
       throw new MemorySpaceValidationError(
         "type is required",

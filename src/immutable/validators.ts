@@ -32,8 +32,10 @@ export class ImmutableValidationError extends Error {
 
 /**
  * Validates type string is non-empty and valid format
+ * Runtime checks for potentially untrusted external input
  */
 export function validateType(type: string, fieldName = "type"): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (type === undefined || type === null) {
     throw new ImmutableValidationError(
       `Type is required`,
@@ -63,8 +65,10 @@ export function validateType(type: string, fieldName = "type"): void {
 
 /**
  * Validates ID string is non-empty
+ * Runtime checks for potentially untrusted external input
  */
 export function validateId(id: string, fieldName = "id"): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (id === undefined || id === null) {
     throw new ImmutableValidationError(
       `ID is required`,
@@ -84,11 +88,13 @@ export function validateId(id: string, fieldName = "id"): void {
 
 /**
  * Validates data is a valid object
+ * Runtime checks for potentially untrusted external input
  */
 export function validateData(
   data: Record<string, unknown>,
   fieldName = "data",
 ): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (data === null || data === undefined) {
     throw new ImmutableValidationError(
       `Data is required`,
@@ -117,11 +123,9 @@ export function validateMetadata(
     return; // undefined is OK
   }
 
-  if (
-    metadata === null ||
-    typeof metadata !== "object" ||
-    Array.isArray(metadata)
-  ) {
+  // Runtime validation - metadata could be null or array from external sources
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (typeof metadata !== "object" || metadata === null || Array.isArray(metadata)) {
     throw new ImmutableValidationError(
       `Metadata must be an object`,
       "INVALID_METADATA",
@@ -256,8 +260,10 @@ export function validateKeepLatest(
 
 /**
  * Validates complete immutable entry structure
+ * Runtime checks for potentially untrusted external input
  */
 export function validateImmutableEntry(entry: ImmutableEntry): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!entry) {
     throw new ImmutableValidationError(
       "Entry is required",
@@ -299,8 +305,10 @@ export function validateListFilter(filter: ListImmutableFilter): void {
 
 /**
  * Validates search input structure
+ * Runtime checks for potentially untrusted external input
  */
 export function validateSearchInput(input: SearchImmutableInput): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!input) {
     throw new ImmutableValidationError(
       "Search input is required",
@@ -350,11 +358,13 @@ export function validateCountFilter(filter: CountImmutableFilter): void {
 
 /**
  * Validates purgeMany filter structure
+ * Runtime checks for potentially untrusted external input
  */
 export function validatePurgeManyFilter(filter: {
   type?: string;
   userId?: string;
 }): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!filter) {
     throw new ImmutableValidationError(
       "Filter is required",

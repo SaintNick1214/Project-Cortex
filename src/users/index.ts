@@ -640,6 +640,8 @@ export class UsersAPI {
   ): Promise<{ updated: number; userIds: string[] }> {
     // Client-side validation
     validateUserIdsArray(userIds, 1, 100);
+    // Runtime validation for potentially untrusted external input
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!updates || !updates.data) {
       throw new UserValidationError(
         "updates.data is required",

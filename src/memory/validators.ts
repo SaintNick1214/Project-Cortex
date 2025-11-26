@@ -169,7 +169,7 @@ const VALID_CONTENT_TYPES = ["raw", "summarized", "fact"] as const;
  * Validates contentType is one of allowed values
  */
 export function validateContentType(contentType: string): void {
-  if (!VALID_CONTENT_TYPES.includes(contentType as any)) {
+  if (!(VALID_CONTENT_TYPES as readonly string[]).includes(contentType)) {
     throw new MemoryValidationError(
       `Invalid contentType "${contentType}". Valid types: ${VALID_CONTENT_TYPES.join(", ")}`,
       "INVALID_FORMAT",
@@ -184,7 +184,7 @@ const VALID_SOURCE_TYPES = ["conversation", "system", "tool", "a2a"] as const;
  * Validates sourceType is one of allowed values
  */
 export function validateSourceType(sourceType: string): void {
-  if (!VALID_SOURCE_TYPES.includes(sourceType as any)) {
+  if (!(VALID_SOURCE_TYPES as readonly string[]).includes(sourceType)) {
     throw new MemoryValidationError(
       `Invalid sourceType "${sourceType}". Valid types: ${VALID_SOURCE_TYPES.join(", ")}`,
       "INVALID_SOURCE_TYPE",
@@ -199,7 +199,7 @@ const VALID_EXPORT_FORMATS = ["json", "csv"] as const;
  * Validates export format is one of allowed values
  */
 export function validateExportFormat(format: string): void {
-  if (!VALID_EXPORT_FORMATS.includes(format as any)) {
+  if (!(VALID_EXPORT_FORMATS as readonly string[]).includes(format)) {
     throw new MemoryValidationError(
       `Invalid format "${format}". Valid formats: ${VALID_EXPORT_FORMATS.join(", ")}`,
       "INVALID_FORMAT",
@@ -517,6 +517,8 @@ export function validateStoreMemoryInput(input: StoreMemoryInput): void {
   validateContent(input.content);
   validateContentType(input.contentType);
 
+  // Runtime validation for potentially untrusted external input
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!input.source || typeof input.source !== "object") {
     throw new MemoryValidationError(
       "source is required and must be an object",
@@ -527,6 +529,8 @@ export function validateStoreMemoryInput(input: StoreMemoryInput): void {
 
   validateSourceType(input.source.type);
 
+  // Runtime validation for potentially untrusted external input
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!input.metadata || typeof input.metadata !== "object") {
     throw new MemoryValidationError(
       "metadata is required and must be an object",

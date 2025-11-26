@@ -1407,7 +1407,7 @@ export interface DeleteFactOptions extends GraphSyncOption {}
 export interface ContextVersion {
   version: number;
   status: string;
-  data?: any;
+  data?: Record<string, unknown>;
   timestamp: number;
   updatedBy?: string;
 }
