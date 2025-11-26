@@ -186,7 +186,9 @@ class TestMemoryStreaming:
 
     async def test_invalid_stream_type(self):
         """Test that non-iterable raises error."""
-        with pytest.raises(TypeError) as exc_info:
+        from cortex.memory.validators import MemoryValidationError
+        
+        with pytest.raises(MemoryValidationError) as exc_info:
             await self.cortex.memory.remember_stream(
                 RememberStreamParams(
                     memory_space_id=self.test_space_id,
@@ -198,8 +200,8 @@ class TestMemoryStreaming:
                 )
             )
         
-        # Python raises TypeError for invalid async iteration
-        assert "__aiter__" in str(exc_info.value) or "async for" in str(exc_info.value)
+        # Validation catches invalid stream type
+        assert "AsyncIterable" in str(exc_info.value) or "__aiter__" in str(exc_info.value)
 
     async def test_stream_with_fact_extraction(self):
         """Test streaming with fact extraction."""
