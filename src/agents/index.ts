@@ -23,6 +23,16 @@ import type {
   MemoryEntry,
   FactRecord,
 } from "../types";
+import {
+  AgentValidationError,
+  validateAgentId,
+  validateAgentRegistration,
+  validateAgentFilters,
+  validateUnregisterOptions,
+  validateMetadata,
+  validateConfig,
+  validateUpdatePayload,
+} from "./validators";
 
 // Type for Convex agent query results
 interface ConvexAgentRecord {
@@ -105,6 +115,11 @@ export class AgentsAPI {
    * ```
    */
   async register(agent: AgentRegistration): Promise<RegisteredAgent> {
+    // Validate agent registration
+    validateAgentRegistration(agent);
+    if (agent.metadata) validateMetadata(agent.metadata);
+    if (agent.config) validateConfig(agent.config);
+
     const result = await this.client.mutation(api.agents.register, {
       agentId: agent.id,
       name: agent.name,
@@ -167,6 +182,9 @@ export class AgentsAPI {
    * ```
    */
   async get(agentId: string): Promise<RegisteredAgent | null> {
+    // Validate agentId
+    validateAgentId(agentId, "agentId");
+
     const result = await this.client.query(api.agents.get, { agentId });
 
     if (!result) {
@@ -199,6 +217,11 @@ export class AgentsAPI {
    * ```
    */
   async list(filters?: AgentFilters): Promise<RegisteredAgent[]> {
+    // Validate filters
+    if (filters) {
+      validateAgentFilters(filters);
+    }
+
     const results = await this.client.query(api.agents.list, {
       status: filters?.status,
       limit: filters?.limit,
@@ -269,6 +292,11 @@ export class AgentsAPI {
    * ```
    */
   async count(filters?: AgentFilters): Promise<number> {
+    // Validate filters
+    if (filters) {
+      validateAgentFilters(filters);
+    }
+
     return await this.client.query(api.agents.count, {
       status: filters?.status,
     });
@@ -288,6 +316,9 @@ export class AgentsAPI {
     agentId: string,
     updates: Partial<AgentRegistration> & { status?: string },
   ): Promise<RegisteredAgent> {
+    // Validate update payload
+    validateUpdatePayload(agentId, updates);
+
     const result = await this.client.mutation(api.agents.update, {
       agentId,
       name: updates.name,
@@ -333,6 +364,17 @@ export class AgentsAPI {
     agentId: string,
     config: Record<string, unknown>,
   ): Promise<void> {
+    // Validate agentId and config
+    validateAgentId(agentId, "agentId");
+    validateConfig(config, "config");
+    if (Object.keys(config).length === 0) {
+      throw new AgentValidationError(
+        "config cannot be empty",
+        "EMPTY_CONFIG_OBJECT",
+        "config",
+      );
+    }
+
     await this.client.mutation(api.agents.update, {
       agentId,
       config,
@@ -350,6 +392,9 @@ export class AgentsAPI {
    * ```
    */
   async exists(agentId: string): Promise<boolean> {
+    // Validate agentId
+    validateAgentId(agentId, "agentId");
+
     return await this.client.query(api.agents.exists, { agentId });
   }
 
@@ -378,6 +423,12 @@ export class AgentsAPI {
     agentId: string,
     options?: UnregisterAgentOptions,
   ): Promise<UnregisterAgentResult> {
+    // Validate agentId and options
+    validateAgentId(agentId, "agentId");
+    if (options) {
+      validateUnregisterOptions(options);
+    }
+
     const cascade = options?.cascade ?? false;
     const verify = options?.verify ?? true;
     const dryRun = options?.dryRun ?? false;
@@ -486,6 +537,12 @@ export class AgentsAPI {
     agentIds: string[];
     totalDataDeleted?: number;
   }> {
+    // Validate filters and options
+    validateAgentFilters(filters);
+    if (options) {
+      validateUnregisterOptions(options);
+    }
+
     // Get all matching agents
     const agents = await this.list(filters);
 
@@ -1060,3 +1117,6 @@ export class AgentsAPI {
     return layers;
   }
 }
+
+// Export validation error for users who want to catch it specifically
+export { AgentValidationError } from "./validators";

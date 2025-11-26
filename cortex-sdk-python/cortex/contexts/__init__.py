@@ -17,6 +17,22 @@ from ..types import (
     DeleteContextOptions,
     UpdateContextOptions,
 )
+from .validators import (
+    ContextsValidationError,
+    validate_context_id_format,
+    validate_conversation_id_format,
+    validate_conversation_ref,
+    validate_data_object,
+    validate_export_format,
+    validate_has_filters,
+    validate_limit,
+    validate_purpose,
+    validate_required_string,
+    validate_status,
+    validate_timestamp,
+    validate_updates_dict,
+    validate_version,
+)
 
 
 class ContextsAPI:
@@ -61,6 +77,30 @@ class ContextsAPI:
             ...     )
             ... )
         """
+        # Client-side validation
+        validate_purpose(params.purpose)
+        validate_required_string(params.memory_space_id, "memory_space_id")
+
+        if params.user_id is not None:
+            validate_required_string(params.user_id, "user_id")
+
+        if params.parent_id is not None:
+            validate_context_id_format(params.parent_id)
+
+        if params.status is not None:
+            validate_status(params.status)
+
+        if params.conversation_ref is not None:
+            # Handle both dict and object types
+            ref_dict = params.conversation_ref if isinstance(params.conversation_ref, dict) else {
+                "conversationId": getattr(params.conversation_ref, "conversation_id", None),
+                "messageIds": getattr(params.conversation_ref, "message_ids", [])
+            }
+            validate_conversation_ref(ref_dict)
+
+        if params.data is not None:
+            validate_data_object(params.data)
+
         result = await self.client.mutation(
             "contexts:create",
             filter_none_values({
@@ -70,7 +110,7 @@ class ContextsAPI:
                 "userId": params.user_id,
                 "conversationRef": (
                     {
-                        "conversationId": params.conversation_ref.get("conversationId") if isinstance(params.conversation_ref, dict) else params.conversation_ref.conversation_id,
+                        "conversationId": params.conversation_ref.get("conversationId") if isinstance(params.conversation_ref, dict) else getattr(params.conversation_ref, "conversation_id", None),
                         "messageIds": (params.conversation_ref.get("messageIds") if isinstance(params.conversation_ref, dict) else getattr(params.conversation_ref, "message_ids", None)) or [],
                     }
                     if params.conversation_ref
@@ -136,6 +176,10 @@ class ContextsAPI:
             ...     include_chain=True
             ... )
         """
+        # Client-side validation
+        validate_required_string(context_id, "context_id")
+        validate_context_id_format(context_id)
+
         result = await self.client.query(
             "contexts:get",
             filter_none_values({
@@ -195,6 +239,19 @@ class ContextsAPI:
             ...     {'status': 'completed', 'data': {'result': 'success'}}
             ... )
         """
+        # Client-side validation
+        validate_required_string(context_id, "context_id")
+        validate_context_id_format(context_id)
+
+        if "status" in updates and updates["status"] is not None:
+            validate_status(updates["status"])
+
+        if "data" in updates and updates["data"] is not None:
+            validate_data_object(updates["data"])
+
+        if "completedAt" in updates and updates["completedAt"] is not None:
+            validate_timestamp(updates["completedAt"], "completedAt")
+
         # Flatten updates into top-level parameters
         result = await self.client.mutation(
             "contexts:update", filter_none_values({"contextId": context_id, **updates})
@@ -249,6 +306,10 @@ class ContextsAPI:
             ...     DeleteContextOptions(cascade_children=True)
             ... )
         """
+        # Client-side validation
+        validate_required_string(context_id, "context_id")
+        validate_context_id_format(context_id)
+
         opts = options or DeleteContextOptions()
 
         result = await self.client.mutation(
@@ -298,6 +359,18 @@ class ContextsAPI:
             ...     status='active'
             ... )
         """
+        # Client-side validation
+        if memory_space_id is not None:
+            validate_required_string(memory_space_id, "memory_space_id")
+
+        if user_id is not None:
+            validate_required_string(user_id, "user_id")
+
+        if status is not None:
+            validate_status(status)
+
+        validate_limit(limit)
+
         result = await self.client.query(
             "contexts:search",
             filter_none_values({
@@ -358,6 +431,22 @@ class ContextsAPI:
         Example:
             >>> page1 = await cortex.contexts.list(limit=50, offset=0)
         """
+        # Client-side validation
+        if memory_space_id is not None:
+            validate_required_string(memory_space_id, "memory_space_id")
+
+        if status is not None:
+            validate_status(status)
+
+        validate_limit(limit)
+
+        if offset < 0:
+            raise ContextsValidationError(
+                f"offset must be >= 0, got {offset}",
+                "INVALID_RANGE",
+                "offset",
+            )
+
         result = await self.client.query(
             "contexts:list",
             filter_none_values({
@@ -425,6 +514,16 @@ class ContextsAPI:
         Example:
             >>> total = await cortex.contexts.count()
         """
+        # Client-side validation
+        if memory_space_id is not None:
+            validate_required_string(memory_space_id, "memory_space_id")
+
+        if user_id is not None:
+            validate_required_string(user_id, "user_id")
+
+        if status is not None:
+            validate_status(status)
+
         result = await self.client.query(
             "contexts:count",
             filter_none_values({
@@ -449,6 +548,10 @@ class ContextsAPI:
         Example:
             >>> chain = await cortex.contexts.get_chain('ctx-child')
         """
+        # Client-side validation
+        validate_required_string(context_id, "context_id")
+        validate_context_id_format(context_id)
+
         result = await self.client.query("contexts:getChain", filter_none_values({"contextId": context_id}))
 
         return cast(Dict[str, Any], result)
@@ -474,6 +577,12 @@ class ContextsAPI:
             ...     'collaborate'
             ... )
         """
+        # Client-side validation
+        validate_required_string(context_id, "context_id")
+        validate_context_id_format(context_id)
+        validate_required_string(target_memory_space_id, "target_memory_space_id")
+        validate_required_string(scope, "scope")
+
         result = await self.client.mutation(
             "contexts:grantAccess",
             filter_none_values({
@@ -517,6 +626,10 @@ class ContextsAPI:
         Example:
             >>> root = await cortex.contexts.get_root('ctx-deeply-nested-child')
         """
+        # Client-side validation
+        validate_required_string(context_id, "context_id")
+        validate_context_id_format(context_id)
+
         result = await self.client.query("contexts:getRoot", filter_none_values({"contextId": context_id}))
 
         # Manually construct to handle field name differences
@@ -560,6 +673,13 @@ class ContextsAPI:
         Example:
             >>> children = await cortex.contexts.get_children('ctx-root')
         """
+        # Client-side validation
+        validate_required_string(context_id, "context_id")
+        validate_context_id_format(context_id)
+
+        if status is not None:
+            validate_status(status)
+
         result = await self.client.query(
             "contexts:getChildren",
             filter_none_values({"contextId": context_id, "status": status, "recursive": recursive}),
@@ -639,6 +759,11 @@ class ContextsAPI:
         Example:
             >>> await cortex.contexts.add_participant('ctx-abc123', 'legal-agent')
         """
+        # Client-side validation
+        validate_required_string(context_id, "context_id")
+        validate_context_id_format(context_id)
+        validate_required_string(participant_id, "participant_id")
+
         result = await self.client.mutation(
             "contexts:addParticipant",
             {"contextId": context_id, "participantId": participant_id},
@@ -679,6 +804,11 @@ class ContextsAPI:
         Example:
             >>> await cortex.contexts.remove_participant('ctx-abc123', 'old-agent')
         """
+        # Client-side validation
+        validate_required_string(context_id, "context_id")
+        validate_context_id_format(context_id)
+        validate_required_string(participant_id, "participant_id")
+
         result = await self.client.mutation(
             "contexts:removeParticipant",
             {"contextId": context_id, "participantId": participant_id},
@@ -718,6 +848,10 @@ class ContextsAPI:
         Example:
             >>> contexts = await cortex.contexts.get_by_conversation('conv-456')
         """
+        # Client-side validation
+        validate_required_string(conversation_id, "conversation_id")
+        validate_conversation_id_format(conversation_id)
+
         result = await self.client.query(
             "contexts:getByConversation", filter_none_values({"conversationId": conversation_id})
         )
@@ -766,6 +900,31 @@ class ContextsAPI:
             ...     {'data': {'archived': True}}
             ... )
         """
+        # Client-side validation
+        validate_has_filters(filters)
+        validate_updates_dict(updates)
+
+        if "memorySpaceId" in filters and filters["memorySpaceId"] is not None:
+            validate_required_string(filters["memorySpaceId"], "memorySpaceId")
+
+        if "userId" in filters and filters["userId"] is not None:
+            validate_required_string(filters["userId"], "userId")
+
+        if "status" in filters and filters["status"] is not None:
+            validate_status(filters["status"])
+
+        if "parentId" in filters and filters["parentId"] is not None:
+            validate_context_id_format(filters["parentId"])
+
+        if "rootId" in filters and filters["rootId"] is not None:
+            validate_context_id_format(filters["rootId"])
+
+        if "status" in updates and updates["status"] is not None:
+            validate_status(updates["status"])
+
+        if "data" in updates and updates["data"] is not None:
+            validate_data_object(updates["data"])
+
         result = await self.client.mutation(
             "contexts:updateMany",
             filter_none_values({"filters": filters, "updates": updates, "dryRun": dry_run}),
@@ -796,6 +955,21 @@ class ContextsAPI:
             ...     cascade_children=True
             ... )
         """
+        # Client-side validation
+        validate_has_filters(filters)
+
+        if "memorySpaceId" in filters and filters["memorySpaceId"] is not None:
+            validate_required_string(filters["memorySpaceId"], "memorySpaceId")
+
+        if "userId" in filters and filters["userId"] is not None:
+            validate_required_string(filters["userId"], "userId")
+
+        if "status" in filters and filters["status"] is not None:
+            validate_status(filters["status"])
+
+        if "completedBefore" in filters and filters["completedBefore"] is not None:
+            validate_timestamp(filters["completedBefore"], "completedBefore")
+
         result = await self.client.mutation(
             "contexts:deleteMany",
             filter_none_values({
@@ -835,6 +1009,19 @@ class ContextsAPI:
             ...     include_chain=True
             ... )
         """
+        # Client-side validation
+        validate_export_format(format)
+
+        if filters:
+            if "memorySpaceId" in filters and filters["memorySpaceId"] is not None:
+                validate_required_string(filters["memorySpaceId"], "memorySpaceId")
+
+            if "userId" in filters and filters["userId"] is not None:
+                validate_required_string(filters["userId"], "userId")
+
+            if "status" in filters and filters["status"] is not None:
+                validate_status(filters["status"])
+
         result = await self.client.query(
             "contexts:export",
             {
@@ -864,6 +1051,11 @@ class ContextsAPI:
         Example:
             >>> v1 = await cortex.contexts.get_version('ctx-abc123', 1)
         """
+        # Client-side validation
+        validate_required_string(context_id, "context_id")
+        validate_context_id_format(context_id)
+        validate_version(version)
+
         result = await self.client.query(
             "contexts:getVersion", filter_none_values({"contextId": context_id, "version": version})
         )
@@ -883,6 +1075,10 @@ class ContextsAPI:
         Example:
             >>> history = await cortex.contexts.get_history('ctx-abc123')
         """
+        # Client-side validation
+        validate_required_string(context_id, "context_id")
+        validate_context_id_format(context_id)
+
         result = await self.client.query(
             "contexts:getHistory", filter_none_values({"contextId": context_id})
         )
@@ -907,6 +1103,11 @@ class ContextsAPI:
             ...     'ctx-abc123', 1609459200000
             ... )
         """
+        # Client-side validation
+        validate_required_string(context_id, "context_id")
+        validate_context_id_format(context_id)
+        validate_timestamp(timestamp, "timestamp")
+
         result = await self.client.query(
             "contexts:getAtTimestamp",
             filter_none_values({"contextId": context_id, "timestamp": timestamp}),
@@ -914,3 +1115,5 @@ class ContextsAPI:
 
         return cast(Optional[Dict[str, Any]], result)
 
+
+__all__ = ["ContextsAPI", "ContextsValidationError"]

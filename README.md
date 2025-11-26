@@ -78,6 +78,52 @@ Cortex provides a complete memory system for AI agents:
 - 🛡️ **Governance Policies** - Centralized data retention, purging, and compliance (GDPR, HIPAA, SOC2, FINRA) ✅
 - 🔌 **MCP Server** - Cross-application memory sharing (planned)
 - 💬 **A2A Communication** - Inter-space messaging helpers (planned)
+- ✅ **Client-Side Validation** - Instant error feedback (<1ms) for all 11 APIs ✅
+
+## ✨ What's New in v0.12.0
+
+### Client-Side Validation - Instant Error Feedback
+
+**All 11 APIs now validate inputs client-side before making backend calls:**
+
+- ⚡ **10-200x faster error feedback** (<1ms vs 50-200ms backend round-trip)
+- 📝 **Better error messages** with field names and fix suggestions
+- 🔒 **Defense in depth** with both client and backend validation
+- 🧪 **420+ validation tests** across both TypeScript and Python SDKs
+
+```typescript
+// ❌ Before v0.12.0 - Wait for backend to validate
+await cortex.governance.setPolicy({
+  conversations: { retention: { deleteAfter: "7years" } }  // Invalid format
+});
+// → 50-200ms wait → Error thrown
+
+// ✅ After v0.12.0 - Instant validation
+await cortex.governance.setPolicy({
+  conversations: { retention: { deleteAfter: "7years" } }  // Invalid format
+});
+// → <1ms → GovernanceValidationError with helpful message:
+//   "Invalid period format '7years'. Must be in format like '7d', '30m', or '1y'"
+
+// Optional: Catch validation errors specifically
+import { GovernanceValidationError } from '@cortexmemory/sdk';
+
+try {
+  await cortex.governance.setPolicy(policy);
+} catch (error) {
+  if (error instanceof GovernanceValidationError) {
+    console.log(`Validation failed: ${error.code} - ${error.field}`);
+    // Fix input and retry immediately
+  }
+}
+```
+
+**Validation Coverage:**
+- ✅ Governance API (9 validators) - Period formats, ranges, scopes, dates
+- ✅ Memory API (12 validators) - IDs, content, importance, source types
+- ✅ All 9 other APIs (62+ validators total)
+
+---
 
 ## ✨ What's New in v0.10.0
 

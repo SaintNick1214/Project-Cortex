@@ -1468,4 +1468,577 @@ describe("Facts API (Layer 3)", () => {
       expect(countAfter).toBe(countBefore + 5);
     });
   });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Client-Side Validation
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Client-Side Validation", () => {
+    describe("store() validation", () => {
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(
+          cortex.facts.store({
+            memorySpaceId: "",
+            fact: "test",
+            factType: "knowledge",
+            confidence: 90,
+            sourceType: "system",
+          }),
+        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+      });
+
+      it("should throw on empty fact", async () => {
+        await expect(
+          cortex.facts.store({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            fact: "",
+            factType: "knowledge",
+            confidence: 90,
+            sourceType: "system",
+          }),
+        ).rejects.toThrow("fact is required and cannot be empty");
+      });
+
+      it("should throw on invalid factType", async () => {
+        await expect(
+          cortex.facts.store({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            fact: "test",
+            factType: "invalid" as any,
+            confidence: 90,
+            sourceType: "system",
+          }),
+        ).rejects.toThrow("Invalid factType");
+      });
+
+      it("should throw on confidence < 0", async () => {
+        await expect(
+          cortex.facts.store({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            fact: "test",
+            factType: "knowledge",
+            confidence: -1,
+            sourceType: "system",
+          }),
+        ).rejects.toThrow("confidence must be between 0 and 100");
+      });
+
+      it("should throw on confidence > 100", async () => {
+        await expect(
+          cortex.facts.store({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            fact: "test",
+            factType: "knowledge",
+            confidence: 150,
+            sourceType: "system",
+          }),
+        ).rejects.toThrow("confidence must be between 0 and 100");
+      });
+
+      it("should throw on invalid sourceType", async () => {
+        await expect(
+          cortex.facts.store({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            fact: "test",
+            factType: "knowledge",
+            confidence: 90,
+            sourceType: "invalid" as any,
+          }),
+        ).rejects.toThrow("Invalid sourceType");
+      });
+
+      it("should throw on invalid tags (not array)", async () => {
+        await expect(
+          cortex.facts.store({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            fact: "test",
+            factType: "knowledge",
+            confidence: 90,
+            sourceType: "system",
+            tags: "not-an-array" as any,
+          }),
+        ).rejects.toThrow("tags must be an array");
+      });
+
+      it("should throw on invalid validFrom/validUntil", async () => {
+        await expect(
+          cortex.facts.store({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            fact: "test",
+            factType: "knowledge",
+            confidence: 90,
+            sourceType: "system",
+            validFrom: 2000,
+            validUntil: 1000,
+          }),
+        ).rejects.toThrow("validFrom must be before validUntil");
+      });
+
+      it("should throw on invalid sourceRef structure", async () => {
+        await expect(
+          cortex.facts.store({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            fact: "test",
+            factType: "knowledge",
+            confidence: 90,
+            sourceType: "system",
+            sourceRef: "not-an-object" as any,
+          }),
+        ).rejects.toThrow("sourceRef must be an object");
+      });
+
+      it("should throw on invalid metadata (not object)", async () => {
+        await expect(
+          cortex.facts.store({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            fact: "test",
+            factType: "knowledge",
+            confidence: 90,
+            sourceType: "system",
+            metadata: ["array"] as any,
+          }),
+        ).rejects.toThrow("metadata must be an object");
+      });
+    });
+
+    describe("get() validation", () => {
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(cortex.facts.get("", "fact-123")).rejects.toThrow(
+          "memorySpaceId is required and cannot be empty",
+        );
+      });
+
+      it("should throw on missing factId", async () => {
+        await expect(
+          cortex.facts.get(TEST_MEMSPACE_ID, ""),
+        ).rejects.toThrow("factId is required and cannot be empty");
+      });
+
+      it("should throw on invalid factId format", async () => {
+        await expect(
+          cortex.facts.get(TEST_MEMSPACE_ID, "invalid-id"),
+        ).rejects.toThrow('factId must start with "fact-"');
+      });
+    });
+
+    describe("list() validation", () => {
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(
+          cortex.facts.list({ memorySpaceId: "" }),
+        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+      });
+
+      it("should throw on invalid factType", async () => {
+        await expect(
+          cortex.facts.list({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            factType: "invalid" as any,
+          }),
+        ).rejects.toThrow("Invalid factType");
+      });
+
+      it("should throw on invalid sourceType", async () => {
+        await expect(
+          cortex.facts.list({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            sourceType: "invalid" as any,
+          }),
+        ).rejects.toThrow("Invalid sourceType");
+      });
+
+      it("should throw on invalid confidence", async () => {
+        await expect(
+          cortex.facts.list({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            confidence: 150,
+          }),
+        ).rejects.toThrow("confidence must be between 0 and 100");
+      });
+
+      it("should throw on invalid minConfidence", async () => {
+        await expect(
+          cortex.facts.list({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            minConfidence: -10,
+          }),
+        ).rejects.toThrow("minConfidence must be between 0 and 100");
+      });
+
+      it("should throw on invalid tagMatch", async () => {
+        await expect(
+          cortex.facts.list({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            tagMatch: "invalid" as any,
+          }),
+        ).rejects.toThrow("Invalid tagMatch");
+      });
+
+      it("should throw on negative limit", async () => {
+        await expect(
+          cortex.facts.list({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            limit: -5,
+          }),
+        ).rejects.toThrow("limit must be non-negative");
+      });
+
+      it("should throw on negative offset", async () => {
+        await expect(
+          cortex.facts.list({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            offset: -10,
+          }),
+        ).rejects.toThrow("offset must be non-negative");
+      });
+
+      it("should throw on invalid sortBy", async () => {
+        await expect(
+          cortex.facts.list({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            sortBy: "invalid" as any,
+          }),
+        ).rejects.toThrow("Invalid sortBy");
+      });
+
+      it("should throw on invalid sortOrder", async () => {
+        await expect(
+          cortex.facts.list({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            sortOrder: "invalid" as any,
+          }),
+        ).rejects.toThrow("Invalid sortOrder");
+      });
+
+      it("should throw on invalid date range (createdAfter > createdBefore)", async () => {
+        const now = new Date();
+        const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+        await expect(
+          cortex.facts.list({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            createdAfter: now,
+            createdBefore: yesterday,
+          }),
+        ).rejects.toThrow("createdAfter must be before createdBefore");
+      });
+
+      it("should throw on invalid date range (updatedAfter > updatedBefore)", async () => {
+        const now = new Date();
+        const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+        await expect(
+          cortex.facts.list({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            updatedAfter: now,
+            updatedBefore: yesterday,
+          }),
+        ).rejects.toThrow("updatedAfter must be before updatedBefore");
+      });
+    });
+
+    describe("count() validation", () => {
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(
+          cortex.facts.count({ memorySpaceId: "" }),
+        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+      });
+
+      it("should throw on invalid factType", async () => {
+        await expect(
+          cortex.facts.count({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            factType: "invalid" as any,
+          }),
+        ).rejects.toThrow("Invalid factType");
+      });
+
+      it("should throw on invalid confidence", async () => {
+        await expect(
+          cortex.facts.count({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            confidence: 200,
+          }),
+        ).rejects.toThrow("confidence must be between 0 and 100");
+      });
+    });
+
+    describe("search() validation", () => {
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(
+          cortex.facts.search("", "test query"),
+        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+      });
+
+      it("should throw on missing query", async () => {
+        await expect(
+          cortex.facts.search(TEST_MEMSPACE_ID, ""),
+        ).rejects.toThrow("query is required and cannot be empty");
+      });
+
+      it("should throw on invalid options", async () => {
+        await expect(
+          cortex.facts.search(TEST_MEMSPACE_ID, "test", {
+            factType: "invalid" as any,
+          }),
+        ).rejects.toThrow("Invalid factType");
+      });
+    });
+
+    describe("update() validation", () => {
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(
+          cortex.facts.update("", "fact-123", { confidence: 95 }),
+        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+      });
+
+      it("should throw on missing factId", async () => {
+        await expect(
+          cortex.facts.update(TEST_MEMSPACE_ID, "", { confidence: 95 }),
+        ).rejects.toThrow("factId is required and cannot be empty");
+      });
+
+      it("should throw on invalid factId format", async () => {
+        await expect(
+          cortex.facts.update(TEST_MEMSPACE_ID, "invalid-id", {
+            confidence: 95,
+          }),
+        ).rejects.toThrow('factId must start with "fact-"');
+      });
+
+      it("should throw on empty updates object", async () => {
+        await expect(
+          cortex.facts.update(TEST_MEMSPACE_ID, "fact-123", {}),
+        ).rejects.toThrow("Update must include at least one field");
+      });
+
+      it("should throw on invalid confidence in updates", async () => {
+        await expect(
+          cortex.facts.update(TEST_MEMSPACE_ID, "fact-123", {
+            confidence: 150,
+          }),
+        ).rejects.toThrow("confidence must be between 0 and 100");
+      });
+
+      it("should throw on invalid tags in updates", async () => {
+        await expect(
+          cortex.facts.update(TEST_MEMSPACE_ID, "fact-123", {
+            tags: "not-array" as any,
+          }),
+        ).rejects.toThrow("tags must be an array");
+      });
+
+      it("should throw on invalid metadata in updates", async () => {
+        await expect(
+          cortex.facts.update(TEST_MEMSPACE_ID, "fact-123", {
+            metadata: ["array"] as any,
+          }),
+        ).rejects.toThrow("metadata must be an object");
+      });
+    });
+
+    describe("delete() validation", () => {
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(cortex.facts.delete("", "fact-123")).rejects.toThrow(
+          "memorySpaceId is required and cannot be empty",
+        );
+      });
+
+      it("should throw on missing factId", async () => {
+        await expect(
+          cortex.facts.delete(TEST_MEMSPACE_ID, ""),
+        ).rejects.toThrow("factId is required and cannot be empty");
+      });
+
+      it("should throw on invalid factId format", async () => {
+        await expect(
+          cortex.facts.delete(TEST_MEMSPACE_ID, "invalid-id"),
+        ).rejects.toThrow('factId must start with "fact-"');
+      });
+    });
+
+    describe("getHistory() validation", () => {
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(
+          cortex.facts.getHistory("", "fact-123"),
+        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+      });
+
+      it("should throw on missing factId", async () => {
+        await expect(
+          cortex.facts.getHistory(TEST_MEMSPACE_ID, ""),
+        ).rejects.toThrow("factId is required and cannot be empty");
+      });
+
+      it("should throw on invalid factId format", async () => {
+        await expect(
+          cortex.facts.getHistory(TEST_MEMSPACE_ID, "invalid-id"),
+        ).rejects.toThrow('factId must start with "fact-"');
+      });
+    });
+
+    describe("queryBySubject() validation", () => {
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(
+          cortex.facts.queryBySubject({
+            memorySpaceId: "",
+            subject: "user-123",
+          }),
+        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+      });
+
+      it("should throw on missing subject", async () => {
+        await expect(
+          cortex.facts.queryBySubject({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            subject: "",
+          }),
+        ).rejects.toThrow("subject is required and cannot be empty");
+      });
+
+      it("should throw on invalid factType", async () => {
+        await expect(
+          cortex.facts.queryBySubject({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            subject: "user-123",
+            factType: "invalid" as any,
+          }),
+        ).rejects.toThrow("Invalid factType");
+      });
+    });
+
+    describe("queryByRelationship() validation", () => {
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(
+          cortex.facts.queryByRelationship({
+            memorySpaceId: "",
+            subject: "user-123",
+            predicate: "likes",
+          }),
+        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+      });
+
+      it("should throw on missing subject", async () => {
+        await expect(
+          cortex.facts.queryByRelationship({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            subject: "",
+            predicate: "likes",
+          }),
+        ).rejects.toThrow("subject is required and cannot be empty");
+      });
+
+      it("should throw on missing predicate", async () => {
+        await expect(
+          cortex.facts.queryByRelationship({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            subject: "user-123",
+            predicate: "",
+          }),
+        ).rejects.toThrow("predicate is required and cannot be empty");
+      });
+
+      it("should throw on invalid factType", async () => {
+        await expect(
+          cortex.facts.queryByRelationship({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            subject: "user-123",
+            predicate: "likes",
+            factType: "invalid" as any,
+          }),
+        ).rejects.toThrow("Invalid factType");
+      });
+    });
+
+    describe("export() validation", () => {
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(
+          cortex.facts.export({
+            memorySpaceId: "",
+            format: "json",
+          }),
+        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+      });
+
+      it("should throw on invalid format", async () => {
+        await expect(
+          cortex.facts.export({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            format: "xml" as any,
+          }),
+        ).rejects.toThrow("Invalid format");
+      });
+
+      it("should throw on invalid factType", async () => {
+        await expect(
+          cortex.facts.export({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            format: "json",
+            factType: "invalid" as any,
+          }),
+        ).rejects.toThrow("Invalid factType");
+      });
+    });
+
+    describe("consolidate() validation", () => {
+      it("should throw on missing memorySpaceId", async () => {
+        await expect(
+          cortex.facts.consolidate({
+            memorySpaceId: "",
+            factIds: ["fact-1", "fact-2"],
+            keepFactId: "fact-1",
+          }),
+        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+      });
+
+      it("should throw on empty factIds array", async () => {
+        await expect(
+          cortex.facts.consolidate({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            factIds: [],
+            keepFactId: "fact-1",
+          }),
+        ).rejects.toThrow("factIds must contain at least one element");
+      });
+
+      it("should throw on factIds with single element", async () => {
+        await expect(
+          cortex.facts.consolidate({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            factIds: ["fact-1"],
+            keepFactId: "fact-1",
+          }),
+        ).rejects.toThrow("consolidation requires at least 2 facts");
+      });
+
+      it("should throw on missing keepFactId", async () => {
+        await expect(
+          cortex.facts.consolidate({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            factIds: ["fact-1", "fact-2"],
+            keepFactId: "",
+          }),
+        ).rejects.toThrow("keepFactId is required and cannot be empty");
+      });
+
+      it("should throw when keepFactId not in factIds", async () => {
+        await expect(
+          cortex.facts.consolidate({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            factIds: ["fact-1", "fact-2"],
+            keepFactId: "fact-3",
+          }),
+        ).rejects.toThrow("keepFactId");
+      });
+
+      it("should throw on duplicate factIds", async () => {
+        await expect(
+          cortex.facts.consolidate({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            factIds: ["fact-1", "fact-2", "fact-1"],
+            keepFactId: "fact-1",
+          }),
+        ).rejects.toThrow("must not contain duplicates");
+      });
+    });
+  });
 });

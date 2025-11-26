@@ -585,8 +585,10 @@ async def test_handles_conversation_with_100_plus_messages(cortex_client, test_m
 
 
 @pytest.mark.asyncio
-async def test_handles_empty_message_content(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
-    """Test empty message content handling. Port of: conversations.test.ts - line 1191"""
+async def test_rejects_empty_message_content(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+    """Test empty message content is rejected. Port of: conversations.test.ts - line 1191"""
+    # NOTE: This now tests CLIENT-SIDE validation
+    # Empty content is caught by validation before reaching backend
     await cortex_client.conversations.create(
         CreateConversationInput(
             conversation_id=test_conversation_id,
@@ -596,12 +598,15 @@ async def test_handles_empty_message_content(cortex_client, test_memory_space_id
         )
     )
     
-    # Add message with minimal content
-    conv = await cortex_client.conversations.add_message(
-        AddMessageInput(conversation_id=test_conversation_id, role="user", content=" ")
-    )
+    # Empty content should be rejected
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.conversations.add_message(
+            AddMessageInput(conversation_id=test_conversation_id, role="user", content="")
+        )
     
-    assert conv.message_count == 1
+    assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+    assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+    
     await cortex_client.conversations.delete(test_conversation_id)
 
 
@@ -1334,3 +1339,627 @@ async def test_conv_final_16(cortex_client, test_memory_space_id, test_user_id, 
 
 @pytest.mark.asyncio
 async def test_conv_final_17(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id))); await cortex_client.conversations.delete(conv.conversation_id); assert True
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Client-Side Validation Tests
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+class TestCreateValidation:
+    """Client-side validation tests for create()"""
+
+    @pytest.mark.asyncio
+    async def test_throws_on_missing_memory_space_id(self, cortex_client):
+        """Should throw on missing memory_space_id"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.create(
+                CreateConversationInput(
+                    memory_space_id=None,  # type: ignore
+                    type="user-agent",
+                    participants=ConversationParticipants(user_id="user-123"),
+                )
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+        assert exc_info.value.field == "memory_space_id"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_empty_memory_space_id(self, cortex_client):
+        """Should throw on empty memory_space_id"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.create(
+                CreateConversationInput(
+                    memory_space_id="",
+                    type="user-agent",
+                    participants=ConversationParticipants(user_id="user-123"),
+                )
+            )
+        error = exc_info.value
+        assert error.__class__.__name__ == "ConversationValidationError"
+        assert error.code == "MISSING_REQUIRED_FIELD"
+        assert error.field == "memory_space_id"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_whitespace_memory_space_id(self, cortex_client):
+        """Should throw on whitespace-only memory_space_id"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.create(
+                CreateConversationInput(
+                    memory_space_id="   ",
+                    type="user-agent",
+                    participants=ConversationParticipants(user_id="user-123"),
+                )
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_invalid_type(self, cortex_client):
+        """Should throw on invalid conversation type"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.create(
+                CreateConversationInput(
+                    memory_space_id="test-space",
+                    type="invalid-type",  # type: ignore
+                    participants=ConversationParticipants(user_id="user-123"),
+                )
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_TYPE"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_invalid_conversation_id_format(self, cortex_client):
+        """Should throw on conversationId with newline"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.create(
+                CreateConversationInput(
+                    conversation_id="conv-123\n456",
+                    memory_space_id="test-space",
+                    type="user-agent",
+                    participants=ConversationParticipants(user_id="user-123"),
+                )
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_ID_FORMAT"
+
+    @pytest.mark.asyncio
+    async def test_throws_when_user_agent_missing_user_id(self, cortex_client):
+        """Should throw when user-agent conversation missing userId"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.create(
+                CreateConversationInput(
+                    memory_space_id="test-space",
+                    type="user-agent",
+                    participants=ConversationParticipants(),
+                )
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_PARTICIPANTS"
+
+    @pytest.mark.asyncio
+    async def test_throws_when_agent_agent_has_less_than_2_spaces(self, cortex_client):
+        """Should throw when agent-agent has < 2 memorySpaceIds"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.create(
+                CreateConversationInput(
+                    memory_space_id="test-space",
+                    type="agent-agent",
+                    participants=ConversationParticipants(memory_space_ids=["agent-1"]),
+                )
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_PARTICIPANTS"
+
+    @pytest.mark.asyncio
+    async def test_throws_when_agent_agent_has_duplicates(self, cortex_client):
+        """Should throw when agent-agent has duplicate memorySpaceIds"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.create(
+                CreateConversationInput(
+                    memory_space_id="test-space",
+                    type="agent-agent",
+                    participants=ConversationParticipants(
+                        memory_space_ids=["agent-1", "agent-1"]
+                    ),
+                )
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "DUPLICATE_VALUES"
+
+
+class TestAddMessageValidation:
+    """Client-side validation tests for add_message()"""
+
+    @pytest.mark.asyncio
+    async def test_throws_on_missing_conversation_id(self, cortex_client):
+        """Should throw on missing conversation_id"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.add_message(
+                AddMessageInput(conversation_id=None, role="user", content="test")  # type: ignore
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+        assert exc_info.value.field == "conversation_id"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_missing_content(self, cortex_client):
+        """Should throw on missing message content"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.add_message(
+                AddMessageInput(conversation_id="conv-123", role="user", content=None)  # type: ignore
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+        assert exc_info.value.field == "content"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_empty_content(self, cortex_client):
+        """Should throw on empty message content"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.add_message(
+                AddMessageInput(conversation_id="conv-123", role="user", content="")
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_invalid_role(self, cortex_client):
+        """Should throw on invalid message role"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.add_message(
+                AddMessageInput(
+                    conversation_id="conv-123", role="invalid", content="test"  # type: ignore
+                )
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_ROLE"
+
+
+class TestGetValidation:
+    """Client-side validation tests for get()"""
+
+    @pytest.mark.asyncio
+    async def test_throws_on_missing_conversation_id(self, cortex_client):
+        """Should throw on missing conversation_id"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.get(None)  # type: ignore
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_empty_conversation_id(self, cortex_client):
+        """Should throw on empty conversation_id"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.get("")
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+
+
+class TestListValidation:
+    """Client-side validation tests for list()"""
+
+    @pytest.mark.asyncio
+    async def test_throws_on_invalid_type(self, cortex_client):
+        """Should throw on invalid type"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.list(type="invalid")  # type: ignore
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_TYPE"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_negative_limit(self, cortex_client):
+        """Should throw on negative limit"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.list(limit=-1)
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_RANGE"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_zero_limit(self, cortex_client):
+        """Should throw on zero limit"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.list(limit=0)
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_RANGE"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_limit_too_large(self, cortex_client):
+        """Should throw on limit > 1000"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.list(limit=1001)
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_RANGE"
+
+
+class TestCountValidation:
+    """Client-side validation tests for count()"""
+
+    @pytest.mark.asyncio
+    async def test_throws_on_invalid_type(self, cortex_client):
+        """Should throw on invalid type"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.count(type="wrong-type")  # type: ignore
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_TYPE"
+
+
+class TestDeleteValidation:
+    """Client-side validation tests for delete()"""
+
+    @pytest.mark.asyncio
+    async def test_throws_on_missing_conversation_id(self, cortex_client):
+        """Should throw on missing conversation_id"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.delete(None)  # type: ignore
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_empty_conversation_id(self, cortex_client):
+        """Should throw on empty conversation_id"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.delete("")
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+
+
+class TestDeleteManyValidation:
+    """Client-side validation tests for delete_many()"""
+
+    @pytest.mark.asyncio
+    async def test_throws_on_invalid_type(self, cortex_client):
+        """Should throw on invalid type"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.delete_many(type="bad-type")  # type: ignore
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_TYPE"
+
+    @pytest.mark.asyncio
+    async def test_throws_when_no_filters_provided(self, cortex_client):
+        """Should throw when no filters provided"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.delete_many()
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+
+
+class TestGetMessageValidation:
+    """Client-side validation tests for get_message()"""
+
+    @pytest.mark.asyncio
+    async def test_throws_on_missing_conversation_id(self, cortex_client):
+        """Should throw on missing conversation_id"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.get_message(None, "msg-123")  # type: ignore
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_missing_message_id(self, cortex_client):
+        """Should throw on missing message_id"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.get_message("conv-123", None)  # type: ignore
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+
+
+class TestGetMessagesByIdsValidation:
+    """Client-side validation tests for get_messages_by_ids()"""
+
+    @pytest.mark.asyncio
+    async def test_throws_on_missing_conversation_id(self, cortex_client):
+        """Should throw on missing conversation_id"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.get_messages_by_ids(None, ["msg-1"])  # type: ignore
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_empty_message_ids_array(self, cortex_client):
+        """Should throw on empty message_ids list"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.get_messages_by_ids("conv-123", [])
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "EMPTY_ARRAY"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_duplicate_message_ids(self, cortex_client):
+        """Should throw on duplicate message_ids"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.get_messages_by_ids(
+                "conv-123", ["msg-1", "msg-2", "msg-1"]
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "DUPLICATE_VALUES"
+
+
+class TestFindConversationValidation:
+    """Client-side validation tests for find_conversation()"""
+
+    @pytest.mark.asyncio
+    async def test_throws_on_missing_memory_space_id(self, cortex_client):
+        """Should throw on missing memory_space_id"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.find_conversation(
+                memory_space_id=None,  # type: ignore
+                type="user-agent",
+                user_id="user-123",
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_invalid_type(self, cortex_client):
+        """Should throw on invalid type"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.find_conversation(
+                memory_space_id="test-space", type="bad-type", user_id="user-123"  # type: ignore
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_TYPE"
+
+    @pytest.mark.asyncio
+    async def test_throws_when_user_agent_missing_user_id(self, cortex_client):
+        """Should throw when user-agent missing user_id"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.find_conversation(
+                memory_space_id="test-space", type="user-agent"
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+
+    @pytest.mark.asyncio
+    async def test_throws_when_agent_agent_missing_memory_space_ids(
+        self, cortex_client
+    ):
+        """Should throw when agent-agent missing memory_space_ids"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.find_conversation(
+                memory_space_id="test-space", type="agent-agent"
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_ARRAY_LENGTH"
+
+    @pytest.mark.asyncio
+    async def test_throws_when_agent_agent_has_less_than_2(self, cortex_client):
+        """Should throw when agent-agent has < 2 memory_space_ids"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.find_conversation(
+                memory_space_id="test-space",
+                type="agent-agent",
+                memory_space_ids=["agent-1"],
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_ARRAY_LENGTH"
+
+    @pytest.mark.asyncio
+    async def test_throws_when_agent_agent_has_duplicates(self, cortex_client):
+        """Should throw when agent-agent has duplicate memory_space_ids"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.find_conversation(
+                memory_space_id="test-space",
+                type="agent-agent",
+                memory_space_ids=["agent-1", "agent-1"],
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "DUPLICATE_VALUES"
+
+
+class TestGetOrCreateValidation:
+    """Client-side validation tests for get_or_create()"""
+
+    @pytest.mark.asyncio
+    async def test_throws_on_missing_memory_space_id(self, cortex_client):
+        """Should throw on missing memory_space_id"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.get_or_create(
+                CreateConversationInput(
+                    memory_space_id=None,  # type: ignore
+                    type="user-agent",
+                    participants=ConversationParticipants(user_id="user-123"),
+                )
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_invalid_type(self, cortex_client):
+        """Should throw on invalid type"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.get_or_create(
+                CreateConversationInput(
+                    memory_space_id="test-space",
+                    type="invalid",  # type: ignore
+                    participants=ConversationParticipants(user_id="user-123"),
+                )
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_TYPE"
+
+    @pytest.mark.asyncio
+    async def test_throws_when_user_agent_missing_user_id(self, cortex_client):
+        """Should throw when user-agent missing user_id"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.get_or_create(
+                CreateConversationInput(
+                    memory_space_id="test-space",
+                    type="user-agent",
+                    participants=ConversationParticipants(),
+                )
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_PARTICIPANTS"
+
+    @pytest.mark.asyncio
+    async def test_throws_when_agent_agent_has_less_than_2(self, cortex_client):
+        """Should throw when agent-agent has < 2 memory_space_ids"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.get_or_create(
+                CreateConversationInput(
+                    memory_space_id="test-space",
+                    type="agent-agent",
+                    participants=ConversationParticipants(memory_space_ids=["agent-1"]),
+                )
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_PARTICIPANTS"
+
+
+class TestGetHistoryValidation:
+    """Client-side validation tests for get_history()"""
+
+    @pytest.mark.asyncio
+    async def test_throws_on_missing_conversation_id(self, cortex_client):
+        """Should throw on missing conversation_id"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.get_history(None)  # type: ignore
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_invalid_limit(self, cortex_client):
+        """Should throw on invalid limit"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.get_history("conv-123", limit=0)
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_RANGE"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_negative_offset(self, cortex_client):
+        """Should throw on negative offset"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.get_history("conv-123", offset=-1)
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_RANGE"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_invalid_sort_order(self, cortex_client):
+        """Should throw on invalid sort_order"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.get_history(
+                "conv-123", sort_order="invalid"  # type: ignore
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_SORT_ORDER"
+
+
+class TestSearchValidation:
+    """Client-side validation tests for search()"""
+
+    @pytest.mark.asyncio
+    async def test_throws_on_empty_query(self, cortex_client):
+        """Should throw on empty query"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.search("")
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "EMPTY_STRING"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_whitespace_query(self, cortex_client):
+        """Should throw on whitespace-only query"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.search("   ")
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "EMPTY_STRING"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_invalid_type_filter(self, cortex_client):
+        """Should throw on invalid type filter"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.search("test", type="invalid")  # type: ignore
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_TYPE"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_invalid_limit(self, cortex_client):
+        """Should throw on invalid limit"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.search("test", limit=-5)
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_RANGE"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_invalid_date_range_start_after_end(self, cortex_client):
+        """Should throw on invalid date range (start > end)"""
+        now = int(1000000000000)
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.search(
+                "test", date_start=now, date_end=now - 1000
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_DATE_RANGE"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_invalid_date_range_equal(self, cortex_client):
+        """Should throw on invalid date range (start == end)"""
+        now = int(1000000000000)
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.search("test", date_start=now, date_end=now)
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_DATE_RANGE"
+
+
+class TestExportValidation:
+    """Client-side validation tests for export()"""
+
+    @pytest.mark.asyncio
+    async def test_throws_on_invalid_format(self, cortex_client):
+        """Should throw on invalid format"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.export(format="xml")  # type: ignore
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_FORMAT"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_invalid_type_filter(self, cortex_client):
+        """Should throw on invalid type filter"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.export(format="json", type="bad")  # type: ignore
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_TYPE"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_empty_conversation_ids_array(self, cortex_client):
+        """Should throw on empty conversation_ids list"""
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.export(
+                format="json", conversation_ids=[]
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "EMPTY_ARRAY"
+
+    @pytest.mark.asyncio
+    async def test_throws_on_invalid_date_range(self, cortex_client):
+        """Should throw on invalid date range"""
+        now = int(1000000000000)
+        with pytest.raises(Exception) as exc_info:
+            await cortex_client.conversations.export(
+                format="json", date_start=now + 1000, date_end=now
+            )
+        assert exc_info.value.__class__.__name__ == "ConversationValidationError"
+        assert exc_info.value.code == "INVALID_DATE_RANGE"
+
+
+class TestValidationTiming:
+    """Client-side validation performance tests"""
+
+    @pytest.mark.asyncio
+    async def test_validation_errors_are_synchronous(self, cortex_client):
+        """Should validate synchronously in < 1ms"""
+        import time
+
+        start = time.time()
+        try:
+            await cortex_client.conversations.create(
+                CreateConversationInput(
+                    memory_space_id="",
+                    type="user-agent",
+                    participants=ConversationParticipants(),
+                )
+            )
+        except Exception as error:
+            duration = (time.time() - start) * 1000  # Convert to ms
+
+            assert duration < 1
+            assert error.__class__.__name__ == "ConversationValidationError"

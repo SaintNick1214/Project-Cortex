@@ -704,16 +704,16 @@ async def test_handles_very_large_metadata_object(edge_cortex):
 @pytest.mark.asyncio
 async def test_handles_nonexistent_ids_gracefully(edge_cortex):
     """Test handling nonexistent IDs gracefully. Port of: edgeCases.test.ts - line 708"""
-    # Get nonexistent memory
-    memory = await edge_cortex.vector.get(TEST_MEMSPACE_ID, "nonexistent-memory-id")
+    # Get nonexistent memory (use valid ID format)
+    memory = await edge_cortex.vector.get(TEST_MEMSPACE_ID, "mem-nonexistent-12345")
     assert memory is None
     
-    # Get nonexistent fact
-    fact = await edge_cortex.facts.get(TEST_MEMSPACE_ID, "nonexistent-fact-id")
+    # Get nonexistent fact (use valid ID format: fact-*)
+    fact = await edge_cortex.facts.get(TEST_MEMSPACE_ID, "fact-nonexistent-12345")
     assert fact is None
     
-    # Get nonexistent conversation
-    conv = await edge_cortex.conversations.get("nonexistent-conv-id")
+    # Get nonexistent conversation (use valid ID format: conv-*)
+    conv = await edge_cortex.conversations.get("conv-nonexistent-12345")
     assert conv is None
 
 
@@ -822,17 +822,21 @@ async def test_handles_single_character_content(edge_cortex):
 @pytest.mark.asyncio
 async def test_handles_content_with_only_spaces(edge_cortex):
     """Test handling content with only spaces. Port of: edgeCases.test.ts - line 832"""
-    memory = await edge_cortex.vector.store(
-        TEST_MEMSPACE_ID,
-        StoreMemoryInput(
-            content="     ",
-            content_type="raw",
-            source=MemorySource(type="system", timestamp=int(time.time() * 1000)),
-            metadata=MemoryMetadata(importance=50, tags=[]),
-        ),
-    )
+    from cortex.vector.validators import VectorValidationError
     
-    assert memory.content == "     "
+    # Whitespace-only content should be rejected by validation
+    with pytest.raises(VectorValidationError) as exc_info:
+        await edge_cortex.vector.store(
+            TEST_MEMSPACE_ID,
+            StoreMemoryInput(
+                content="     ",
+                content_type="raw",
+                source=MemorySource(type="system", timestamp=int(time.time() * 1000)),
+                metadata=MemoryMetadata(importance=50, tags=[]),
+            ),
+        )
+    
+    assert "cannot be empty" in str(exc_info.value)
 
 
 # ============================================================================

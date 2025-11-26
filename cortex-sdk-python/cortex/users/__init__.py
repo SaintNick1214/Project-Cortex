@@ -7,6 +7,8 @@ Coordination Layer: User profile management with GDPR cascade deletion
 import time
 from typing import Any, Dict, List, Optional
 
+__all__ = ["UsersAPI", "UserValidationError"]
+
 from .._utils import convert_convex_response, filter_none_values  # noqa: F401
 from ..errors import CascadeDeletionError, CortexError, ErrorCode
 from ..types import (
@@ -15,6 +17,18 @@ from ..types import (
     UserProfile,
     UserVersion,
     VerificationResult,
+)
+from .validators import (
+    UserValidationError,
+    validate_data,
+    validate_delete_options,
+    validate_export_format,
+    validate_limit,
+    validate_offset,
+    validate_timestamp,
+    validate_user_id,
+    validate_user_ids_array,
+    validate_version_number,
 )
 
 
@@ -56,6 +70,9 @@ class UsersAPI:
             >>> if user:
             ...     print(user.data['displayName'])
         """
+        # Client-side validation
+        validate_user_id(user_id)
+
         result = await self.client.query("immutable:get", filter_none_values({"type": "user", "id": user_id}))
 
         if not result:
@@ -90,6 +107,10 @@ class UsersAPI:
             ...     }
             ... )
         """
+        # Client-side validation
+        validate_user_id(user_id)
+        validate_data(data, "data")
+
         result = await self.client.mutation(
             "immutable:store", {"type": "user", "id": user_id, "data": data}
         )
@@ -139,6 +160,10 @@ class UsersAPI:
             ... )
             >>> print(f"Deleted {result.total_deleted} records")
         """
+        # Client-side validation
+        validate_user_id(user_id)
+        validate_delete_options(options)
+
         opts = options or DeleteUserOptions()
 
         if not opts.cascade:
@@ -223,6 +248,9 @@ class UsersAPI:
             ...     limit=100
             ... )
         """
+        # Client-side validation
+        validate_limit(limit, "limit")
+
         # Client-side implementation using immutable:list (like TypeScript SDK)
         result = await self.client.query(
             "immutable:list", filter_none_values({"type": "user", "limit": limit})
@@ -254,6 +282,10 @@ class UsersAPI:
         Example:
             >>> page1 = await cortex.users.list(limit=50)
         """
+        # Client-side validation
+        validate_limit(limit, "limit")
+        validate_offset(offset, "offset")
+
         # Note: offset is not supported by the Convex backend yet
         result = await self.client.query(
             "users:list", filter_none_values({"limit": limit})
@@ -294,6 +326,9 @@ class UsersAPI:
         Example:
             >>> total = await cortex.users.count()
         """
+        # Client-side validation
+        # filters is optional dict - no specific validation needed
+
         result = await self.client.query("users:count", filter_none_values({"filters": filters}))
 
         return int(result)
@@ -312,6 +347,9 @@ class UsersAPI:
             >>> if await cortex.users.exists('user-123'):
             ...     user = await cortex.users.get('user-123')
         """
+        # Client-side validation
+        validate_user_id(user_id)
+
         user = await self.get(user_id)
         return user is not None
 
@@ -334,6 +372,11 @@ class UsersAPI:
             ...     {'displayName': 'Guest User', 'tier': 'free'}
             ... )
         """
+        # Client-side validation
+        validate_user_id(user_id)
+        if defaults is not None:
+            validate_data(defaults, "defaults")
+
         user = await self.get(user_id)
 
         if user:
@@ -360,6 +403,10 @@ class UsersAPI:
             ...     {'preferences': {'notifications': True}}
             ... )
         """
+        # Client-side validation
+        validate_user_id(user_id)
+        validate_data(updates, "updates")
+
         existing = await self.get(user_id)
 
         if not existing:
@@ -653,6 +700,10 @@ class UsersAPI:
             ... )
             >>> print(f"Updated {result['updated']} users")
         """
+        # Client-side validation
+        validate_user_ids_array(user_ids, min_length=1, max_length=100)
+        validate_data(updates, "updates")
+
         # Client-side implementation (like TypeScript SDK)
         results = []
 
@@ -693,6 +744,9 @@ class UsersAPI:
             ... )
             >>> print(f"Deleted {result['deleted']} users")
         """
+        # Client-side validation
+        validate_user_ids_array(user_ids, min_length=1, max_length=100)
+
         # Client-side implementation (like TypeScript SDK)
         results = []
 
@@ -737,6 +791,9 @@ class UsersAPI:
             ...     include_memories=True
             ... )
         """
+        # Client-side validation
+        validate_export_format(format)
+
         # Client-side implementation (like TypeScript SDK)
         import json
 
@@ -790,6 +847,10 @@ class UsersAPI:
         Example:
             >>> v1 = await cortex.users.get_version('user-123', 1)
         """
+        # Client-side validation
+        validate_user_id(user_id)
+        validate_version_number(version, "version")
+
         result = await self.client.query(
             "immutable:getVersion", filter_none_values({"type": "user", "id": user_id, "version": version})
         )
@@ -816,6 +877,9 @@ class UsersAPI:
         Example:
             >>> history = await cortex.users.get_history('user-123')
         """
+        # Client-side validation
+        validate_user_id(user_id)
+
         result = await self.client.query(
             "immutable:getHistory", filter_none_values({"type": "user", "id": user_id})
         )
@@ -843,6 +907,10 @@ class UsersAPI:
             ...     'user-123', 1609459200000
             ... )
         """
+        # Client-side validation
+        validate_user_id(user_id)
+        validate_timestamp(timestamp, "timestamp")
+
         result = await self.client.query(
             "immutable:getAtTimestamp",
             filter_none_values({"type": "user", "id": user_id, "timestamp": timestamp}),

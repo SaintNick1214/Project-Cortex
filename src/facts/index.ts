@@ -25,6 +25,26 @@ import {
   syncFactRelationships,
   deleteFactFromGraph,
 } from "../graph";
+import {
+  validateMemorySpaceId,
+  validateRequiredString,
+  validateConfidence,
+  validateFactType,
+  validateSourceType,
+  validateStringArray,
+  validateValidityPeriod,
+  validateSourceRef,
+  validateMetadata,
+  validateFactIdFormat,
+  validateTagMatch,
+  validateNonNegativeInteger,
+  validateSortBy,
+  validateSortOrder,
+  validateDateRange,
+  validateUpdateHasFields,
+  validateConsolidation,
+  validateExportFormat,
+} from "./validators";
 
 export class FactsAPI {
   constructor(
@@ -52,6 +72,27 @@ export class FactsAPI {
     params: StoreFactParams,
     options?: StoreFactOptions,
   ): Promise<FactRecord> {
+    // Validate required fields
+    validateMemorySpaceId(params.memorySpaceId);
+    validateRequiredString(params.fact, "fact");
+    validateFactType(params.factType);
+    validateConfidence(params.confidence, "confidence");
+    validateSourceType(params.sourceType);
+
+    // Validate optional fields if provided
+    if (params.tags !== undefined) {
+      validateStringArray(params.tags, "tags", true);
+    }
+    if (params.validFrom !== undefined && params.validUntil !== undefined) {
+      validateValidityPeriod(params.validFrom, params.validUntil);
+    }
+    if (params.sourceRef !== undefined) {
+      validateSourceRef(params.sourceRef);
+    }
+    if (params.metadata !== undefined) {
+      validateMetadata(params.metadata);
+    }
+
     const result = await this.client.mutation(api.facts.store, {
       memorySpaceId: params.memorySpaceId,
       participantId: params.participantId,
@@ -99,6 +140,10 @@ export class FactsAPI {
    * ```
    */
   async get(memorySpaceId: string, factId: string): Promise<FactRecord | null> {
+    validateMemorySpaceId(memorySpaceId);
+    validateRequiredString(factId, "factId");
+    validateFactIdFormat(factId);
+
     const result = await this.client.query(api.facts.get, {
       memorySpaceId,
       factId,
@@ -120,6 +165,58 @@ export class FactsAPI {
    * ```
    */
   async list(filter: ListFactsFilter): Promise<FactRecord[]> {
+    validateMemorySpaceId(filter.memorySpaceId);
+
+    if (filter.factType !== undefined) {
+      validateFactType(filter.factType);
+    }
+    if (filter.sourceType !== undefined) {
+      validateSourceType(filter.sourceType);
+    }
+    if (filter.confidence !== undefined) {
+      validateConfidence(filter.confidence, "confidence");
+    }
+    if (filter.minConfidence !== undefined) {
+      validateConfidence(filter.minConfidence, "minConfidence");
+    }
+    if (filter.tags !== undefined) {
+      validateStringArray(filter.tags, "tags", true);
+    }
+    if (filter.tagMatch !== undefined) {
+      validateTagMatch(filter.tagMatch);
+    }
+    if (filter.limit !== undefined) {
+      validateNonNegativeInteger(filter.limit, "limit");
+    }
+    if (filter.offset !== undefined) {
+      validateNonNegativeInteger(filter.offset, "offset");
+    }
+    if (filter.sortBy !== undefined) {
+      validateSortBy(filter.sortBy);
+    }
+    if (filter.sortOrder !== undefined) {
+      validateSortOrder(filter.sortOrder);
+    }
+    if (filter.createdBefore && filter.createdAfter) {
+      validateDateRange(
+        filter.createdAfter,
+        filter.createdBefore,
+        "createdAfter",
+        "createdBefore",
+      );
+    }
+    if (filter.updatedBefore && filter.updatedAfter) {
+      validateDateRange(
+        filter.updatedAfter,
+        filter.updatedBefore,
+        "updatedAfter",
+        "updatedBefore",
+      );
+    }
+    if (filter.metadata !== undefined) {
+      validateMetadata(filter.metadata);
+    }
+
     const result = await this.client.query(api.facts.list, {
       memorySpaceId: filter.memorySpaceId,
       factType: filter.factType,
@@ -162,6 +259,46 @@ export class FactsAPI {
    * ```
    */
   async count(filter: CountFactsFilter): Promise<number> {
+    validateMemorySpaceId(filter.memorySpaceId);
+
+    if (filter.factType !== undefined) {
+      validateFactType(filter.factType);
+    }
+    if (filter.sourceType !== undefined) {
+      validateSourceType(filter.sourceType);
+    }
+    if (filter.confidence !== undefined) {
+      validateConfidence(filter.confidence, "confidence");
+    }
+    if (filter.minConfidence !== undefined) {
+      validateConfidence(filter.minConfidence, "minConfidence");
+    }
+    if (filter.tags !== undefined) {
+      validateStringArray(filter.tags, "tags", true);
+    }
+    if (filter.tagMatch !== undefined) {
+      validateTagMatch(filter.tagMatch);
+    }
+    if (filter.createdBefore && filter.createdAfter) {
+      validateDateRange(
+        filter.createdAfter,
+        filter.createdBefore,
+        "createdAfter",
+        "createdBefore",
+      );
+    }
+    if (filter.updatedBefore && filter.updatedAfter) {
+      validateDateRange(
+        filter.updatedAfter,
+        filter.updatedBefore,
+        "updatedAfter",
+        "updatedBefore",
+      );
+    }
+    if (filter.metadata !== undefined) {
+      validateMetadata(filter.metadata);
+    }
+
     const result = await this.client.query(api.facts.count, {
       memorySpaceId: filter.memorySpaceId,
       factType: filter.factType,
@@ -204,6 +341,61 @@ export class FactsAPI {
     query: string,
     options?: SearchFactsOptions,
   ): Promise<FactRecord[]> {
+    validateMemorySpaceId(memorySpaceId);
+    validateRequiredString(query, "query");
+
+    if (options) {
+      if (options.factType !== undefined) {
+        validateFactType(options.factType);
+      }
+      if (options.sourceType !== undefined) {
+        validateSourceType(options.sourceType);
+      }
+      if (options.confidence !== undefined) {
+        validateConfidence(options.confidence, "confidence");
+      }
+      if (options.minConfidence !== undefined) {
+        validateConfidence(options.minConfidence, "minConfidence");
+      }
+      if (options.tags !== undefined) {
+        validateStringArray(options.tags, "tags", true);
+      }
+      if (options.tagMatch !== undefined) {
+        validateTagMatch(options.tagMatch);
+      }
+      if (options.limit !== undefined) {
+        validateNonNegativeInteger(options.limit, "limit");
+      }
+      if (options.offset !== undefined) {
+        validateNonNegativeInteger(options.offset, "offset");
+      }
+      if (options.sortBy !== undefined) {
+        validateSortBy(options.sortBy);
+      }
+      if (options.sortOrder !== undefined) {
+        validateSortOrder(options.sortOrder);
+      }
+      if (options.createdBefore && options.createdAfter) {
+        validateDateRange(
+          options.createdAfter,
+          options.createdBefore,
+          "createdAfter",
+          "createdBefore",
+        );
+      }
+      if (options.updatedBefore && options.updatedAfter) {
+        validateDateRange(
+          options.updatedAfter,
+          options.updatedBefore,
+          "updatedAfter",
+          "updatedBefore",
+        );
+      }
+      if (options.metadata !== undefined) {
+        validateMetadata(options.metadata);
+      }
+    }
+
     const result = await this.client.query(api.facts.search, {
       memorySpaceId,
       query,
@@ -252,6 +444,21 @@ export class FactsAPI {
     updates: UpdateFactInput,
     options?: UpdateFactOptions,
   ): Promise<FactRecord> {
+    validateMemorySpaceId(memorySpaceId);
+    validateRequiredString(factId, "factId");
+    validateFactIdFormat(factId);
+    validateUpdateHasFields(updates);
+
+    if (updates.confidence !== undefined) {
+      validateConfidence(updates.confidence, "confidence");
+    }
+    if (updates.tags !== undefined) {
+      validateStringArray(updates.tags, "tags", true);
+    }
+    if (updates.metadata !== undefined) {
+      validateMetadata(updates.metadata);
+    }
+
     const result = await this.client.mutation(api.facts.update, {
       memorySpaceId,
       factId,
@@ -293,6 +500,10 @@ export class FactsAPI {
     factId: string,
     options?: DeleteFactOptions,
   ): Promise<{ deleted: boolean; factId: string }> {
+    validateMemorySpaceId(memorySpaceId);
+    validateRequiredString(factId, "factId");
+    validateFactIdFormat(factId);
+
     const result = await this.client.mutation(api.facts.deleteFact, {
       memorySpaceId,
       factId,
@@ -322,6 +533,10 @@ export class FactsAPI {
     memorySpaceId: string,
     factId: string,
   ): Promise<FactRecord[]> {
+    validateMemorySpaceId(memorySpaceId);
+    validateRequiredString(factId, "factId");
+    validateFactIdFormat(factId);
+
     const result = await this.client.query(api.facts.getHistory, {
       memorySpaceId,
       factId,
@@ -343,6 +558,59 @@ export class FactsAPI {
    * ```
    */
   async queryBySubject(filter: QueryBySubjectFilter): Promise<FactRecord[]> {
+    validateMemorySpaceId(filter.memorySpaceId);
+    validateRequiredString(filter.subject, "subject");
+
+    if (filter.factType !== undefined) {
+      validateFactType(filter.factType);
+    }
+    if (filter.sourceType !== undefined) {
+      validateSourceType(filter.sourceType);
+    }
+    if (filter.confidence !== undefined) {
+      validateConfidence(filter.confidence, "confidence");
+    }
+    if (filter.minConfidence !== undefined) {
+      validateConfidence(filter.minConfidence, "minConfidence");
+    }
+    if (filter.tags !== undefined) {
+      validateStringArray(filter.tags, "tags", true);
+    }
+    if (filter.tagMatch !== undefined) {
+      validateTagMatch(filter.tagMatch);
+    }
+    if (filter.limit !== undefined) {
+      validateNonNegativeInteger(filter.limit, "limit");
+    }
+    if (filter.offset !== undefined) {
+      validateNonNegativeInteger(filter.offset, "offset");
+    }
+    if (filter.sortBy !== undefined) {
+      validateSortBy(filter.sortBy);
+    }
+    if (filter.sortOrder !== undefined) {
+      validateSortOrder(filter.sortOrder);
+    }
+    if (filter.createdBefore && filter.createdAfter) {
+      validateDateRange(
+        filter.createdAfter,
+        filter.createdBefore,
+        "createdAfter",
+        "createdBefore",
+      );
+    }
+    if (filter.updatedBefore && filter.updatedAfter) {
+      validateDateRange(
+        filter.updatedAfter,
+        filter.updatedBefore,
+        "updatedAfter",
+        "updatedBefore",
+      );
+    }
+    if (filter.metadata !== undefined) {
+      validateMetadata(filter.metadata);
+    }
+
     const result = await this.client.query(api.facts.queryBySubject, {
       memorySpaceId: filter.memorySpaceId,
       subject: filter.subject,
@@ -388,6 +656,60 @@ export class FactsAPI {
   async queryByRelationship(
     filter: QueryByRelationshipFilter,
   ): Promise<FactRecord[]> {
+    validateMemorySpaceId(filter.memorySpaceId);
+    validateRequiredString(filter.subject, "subject");
+    validateRequiredString(filter.predicate, "predicate");
+
+    if (filter.factType !== undefined) {
+      validateFactType(filter.factType);
+    }
+    if (filter.sourceType !== undefined) {
+      validateSourceType(filter.sourceType);
+    }
+    if (filter.confidence !== undefined) {
+      validateConfidence(filter.confidence, "confidence");
+    }
+    if (filter.minConfidence !== undefined) {
+      validateConfidence(filter.minConfidence, "minConfidence");
+    }
+    if (filter.tags !== undefined) {
+      validateStringArray(filter.tags, "tags", true);
+    }
+    if (filter.tagMatch !== undefined) {
+      validateTagMatch(filter.tagMatch);
+    }
+    if (filter.limit !== undefined) {
+      validateNonNegativeInteger(filter.limit, "limit");
+    }
+    if (filter.offset !== undefined) {
+      validateNonNegativeInteger(filter.offset, "offset");
+    }
+    if (filter.sortBy !== undefined) {
+      validateSortBy(filter.sortBy);
+    }
+    if (filter.sortOrder !== undefined) {
+      validateSortOrder(filter.sortOrder);
+    }
+    if (filter.createdBefore && filter.createdAfter) {
+      validateDateRange(
+        filter.createdAfter,
+        filter.createdBefore,
+        "createdAfter",
+        "createdBefore",
+      );
+    }
+    if (filter.updatedBefore && filter.updatedAfter) {
+      validateDateRange(
+        filter.updatedAfter,
+        filter.updatedBefore,
+        "updatedAfter",
+        "updatedBefore",
+      );
+    }
+    if (filter.metadata !== undefined) {
+      validateMetadata(filter.metadata);
+    }
+
     const result = await this.client.query(api.facts.queryByRelationship, {
       memorySpaceId: filter.memorySpaceId,
       subject: filter.subject,
@@ -446,6 +768,13 @@ export class FactsAPI {
     count: number;
     exportedAt: number;
   }> {
+    validateMemorySpaceId(options.memorySpaceId);
+    validateExportFormat(options.format);
+
+    if (options.factType !== undefined) {
+      validateFactType(options.factType);
+    }
+
     const result = await this.client.query(api.facts.exportFacts, {
       memorySpaceId: options.memorySpaceId,
       format: options.format,
@@ -481,6 +810,11 @@ export class FactsAPI {
     keptFactId: string;
     mergedCount: number;
   }> {
+    validateMemorySpaceId(params.memorySpaceId);
+    validateStringArray(params.factIds, "factIds", false);
+    validateRequiredString(params.keepFactId, "keepFactId");
+    validateConsolidation(params.factIds, params.keepFactId);
+
     const result = await this.client.mutation(api.facts.consolidate, {
       memorySpaceId: params.memorySpaceId,
       factIds: params.factIds,
@@ -494,3 +828,6 @@ export class FactsAPI {
     };
   }
 }
+
+// Export validation error for users who want to catch it specifically
+export { FactsValidationError } from "./validators";

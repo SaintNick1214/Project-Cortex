@@ -221,6 +221,8 @@ async def test_search_empty_query(cortex_client, test_ids, cleanup_helper):
     
     Port of: edgeCases.test.ts - empty query tests
     """
+    from cortex.vector.validators import VectorValidationError
+    
     memory_space_id = test_ids["memory_space_id"]
     
     # Create a memory first
@@ -229,11 +231,11 @@ async def test_search_empty_query(cortex_client, test_ids, cleanup_helper):
         create_test_memory_input(content="Some content"),
     )
     
-    # Search with empty query
-    results = await cortex_client.vector.search(memory_space_id, "")
+    # Search with empty query should raise validation error
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.search(memory_space_id, "")
     
-    # Should handle gracefully (may return all or none)
-    assert isinstance(results, list)
+    assert "cannot be empty" in str(exc_info.value)
     
     # Cleanup
     await cleanup_helper.purge_memory_space(memory_space_id)

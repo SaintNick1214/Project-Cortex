@@ -16,6 +16,21 @@ from ..types import (
     StoreMemoryInput,
     StoreMemoryOptions,
 )
+from .validators import (
+    VectorValidationError,
+    validate_content,
+    validate_export_format,
+    validate_limit,
+    validate_memory_id,
+    validate_memory_space_id,
+    validate_search_options,
+    validate_source_type,
+    validate_store_memory_input,
+    validate_timestamp,
+    validate_update_options,
+    validate_user_id,
+    validate_version,
+)
 
 
 class VectorAPI:
@@ -64,6 +79,10 @@ class VectorAPI:
             ...     )
             ... )
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_store_memory_input(input)
+
         result = await self.client.mutation(
             "memories:store",
             filter_none_values({
@@ -136,6 +155,10 @@ class VectorAPI:
         Example:
             >>> memory = await cortex.vector.get('agent-1', 'mem-abc123')
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+
         result = await self.client.query(
             "memories:get", filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id})
         )
@@ -169,7 +192,14 @@ class VectorAPI:
             ...     SearchOptions(limit=10, min_importance=50)
             ... )
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_content(query, "query")
+
         opts = options or SearchOptions()
+
+        if options:
+            validate_search_options(options)
 
         result = await self.client.query(
             "memories:search",
@@ -213,6 +243,11 @@ class VectorAPI:
             ...     {'content': 'Updated content', 'importance': 80}
             ... )
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+        validate_update_options(updates)
+
         # Convex expects flat parameters, not an 'updates' object
         params = {
             "memorySpaceId": memory_space_id,
@@ -264,6 +299,10 @@ class VectorAPI:
         Example:
             >>> await cortex.vector.delete('agent-1', 'mem-abc123')
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+
         result = await self.client.mutation(
             "memories:deleteMemory",  # Correct function name
             filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
@@ -306,6 +345,16 @@ class VectorAPI:
             ...     {'importance': 75}
             ... )
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_update_options(updates)
+
+        if filters.get("user_id") is not None:
+            validate_user_id(filters["user_id"])
+
+        if filters.get("source_type") is not None:
+            validate_source_type(filters["source_type"])
+
         result = await self.client.mutation(
             "memories:updateMany",
             filter_none_values({
@@ -336,6 +385,15 @@ class VectorAPI:
             ...     {'importance': {'$lte': 30}}
             ... )
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+
+        if filters.get("user_id") is not None:
+            validate_user_id(filters["user_id"])
+
+        if filters.get("source_type") is not None:
+            validate_source_type(filters["source_type"])
+
         result = await self.client.mutation(
             "memories:deleteMany",
             filter_none_values({"memorySpaceId": memory_space_id, "filters": filters}),
@@ -365,6 +423,15 @@ class VectorAPI:
         Example:
             >>> total = await cortex.vector.count('agent-1')
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+
+        if user_id is not None:
+            validate_user_id(user_id)
+
+        if source_type is not None:
+            validate_source_type(source_type)
+
         result = await self.client.query(
             "memories:count",
             filter_none_values({
@@ -407,6 +474,18 @@ class VectorAPI:
             ...     limit=50
             ... )
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+
+        if user_id is not None:
+            validate_user_id(user_id)
+
+        if source_type is not None:
+            validate_source_type(source_type)
+
+        if limit is not None:
+            validate_limit(limit)
+
         # Convex list doesn't support enrichFacts parameter
         result = await self.client.query(
             "memories:list",
@@ -450,6 +529,13 @@ class VectorAPI:
             ...     format='json'
             ... )
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_export_format(format)
+
+        if user_id is not None:
+            validate_user_id(user_id)
+
         result = await self.client.query(
             "memories:export",
             filter_none_values({
@@ -479,6 +565,10 @@ class VectorAPI:
         Example:
             >>> result = await cortex.vector.archive('agent-1', 'mem-123')
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+
         result = await self.client.mutation(
             "memories:archive",
             filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
@@ -503,6 +593,11 @@ class VectorAPI:
         Example:
             >>> v1 = await cortex.vector.get_version('agent-1', 'mem-123', 1)
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+        validate_version(version)
+
         result = await self.client.query(
             "memories:getVersion",
             filter_none_values({
@@ -530,6 +625,10 @@ class VectorAPI:
         Example:
             >>> history = await cortex.vector.get_history('agent-1', 'mem-123')
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+
         result = await self.client.query(
             "memories:getHistory",
             filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
@@ -556,6 +655,11 @@ class VectorAPI:
             ...     'agent-1', 'mem-123', 1609459200000
             ... )
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+        validate_timestamp(timestamp)
+
         result = await self.client.query(
             "memories:getAtTimestamp",
             filter_none_values({
@@ -566,4 +670,7 @@ class VectorAPI:
         )
 
         return cast(Optional[Dict[str, Any]], result)
+
+
+__all__ = ["VectorAPI", "VectorValidationError"]
 

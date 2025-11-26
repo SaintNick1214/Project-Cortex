@@ -5,6 +5,230 @@ Tests for Users API with GDPR cascade deletion
 import pytest
 
 from cortex import DeleteUserOptions
+from cortex.users.validators import UserValidationError
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Client-Side Validation Tests
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+class TestUserValidation:
+    """Test client-side validation for Users API."""
+
+    @pytest.mark.asyncio
+    async def test_get_empty_user_id(self, cortex_client):
+        """Should throw on empty user_id."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.get("")
+
+        error = exc_info.value
+        assert error.code == "INVALID_USER_ID_FORMAT"
+        assert "user_id cannot be empty" in str(error)
+
+    @pytest.mark.asyncio
+    async def test_get_none_user_id(self, cortex_client):
+        """Should throw on None user_id."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.get(None)
+
+        error = exc_info.value
+        assert error.code == "MISSING_USER_ID"
+
+    @pytest.mark.asyncio
+    async def test_get_whitespace_user_id(self, cortex_client):
+        """Should throw on whitespace-only user_id."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.get("   ")
+
+        assert "user_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_update_empty_user_id(self, cortex_client):
+        """Should throw on empty user_id in update."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.update("", {"name": "Test"})
+
+        assert "user_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_update_none_data(self, cortex_client):
+        """Should throw on None data."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.update("user-123", None)
+
+        assert "data is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_update_list_data(self, cortex_client):
+        """Should throw on list data (should be dict)."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.update("user-123", [])
+
+        assert "data must be a dict" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_list_invalid_limit_zero(self, cortex_client):
+        """Should throw on limit = 0."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.list(limit=0)
+
+        assert "limit must be between 1 and 1000" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_list_invalid_limit_negative(self, cortex_client):
+        """Should throw on negative limit."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.list(limit=-5)
+
+        assert "limit must be between 1 and 1000" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_list_invalid_limit_too_large(self, cortex_client):
+        """Should throw on limit > 1000."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.list(limit=1001)
+
+        assert "limit must be between 1 and 1000" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_list_negative_offset(self, cortex_client):
+        """Should throw on negative offset."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.list(offset=-1)
+
+        assert "offset must be >= 0" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_get_version_invalid_version_zero(self, cortex_client):
+        """Should throw on version = 0."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.get_version("user-123", 0)
+
+        assert "version must be >= 1" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_get_version_negative_version(self, cortex_client):
+        """Should throw on negative version."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.get_version("user-123", -1)
+
+        assert "version must be >= 1" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_get_version_float_version(self, cortex_client):
+        """Should throw on non-integer version."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.get_version("user-123", 1.5)
+
+        assert "version must be a whole number" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_get_at_timestamp_negative(self, cortex_client):
+        """Should throw on negative timestamp."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.get_at_timestamp("user-123", -1000)
+
+        assert "timestamp must be >= 0" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_export_invalid_format(self, cortex_client):
+        """Should throw on invalid export format."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.export(format="xml")
+
+        error = exc_info.value
+        assert 'Invalid export format "xml"' in str(error)
+        assert error.code == "INVALID_EXPORT_FORMAT"
+
+    @pytest.mark.asyncio
+    async def test_update_many_empty_array(self, cortex_client):
+        """Should throw on empty user_ids array."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.update_many([], {"name": "Test"})
+
+        assert "user_ids array cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_update_many_too_large(self, cortex_client):
+        """Should throw on > 100 user_ids."""
+        too_many = [f"user-{i}" for i in range(101)]
+
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.update_many(too_many, {"name": "Test"})
+
+        assert "user_ids array cannot exceed 100" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_update_many_duplicates(self, cortex_client):
+        """Should throw on duplicate user_ids."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.update_many(
+                ["user-1", "user-1"], {"name": "Test"}
+            )
+
+        assert "Duplicate" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_delete_many_empty_array(self, cortex_client):
+        """Should throw on empty user_ids array."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.delete_many([])
+
+        assert "user_ids array cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_delete_many_too_large(self, cortex_client):
+        """Should throw on > 100 user_ids."""
+        too_many = [f"user-{i}" for i in range(101)]
+
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.delete_many(too_many)
+
+        assert "user_ids array cannot exceed 100" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_validation_error_has_code(self, cortex_client):
+        """Validation errors should include error code."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.get("")
+
+        error = exc_info.value
+        assert hasattr(error, "code")
+        assert hasattr(error, "field")
+        assert error.code == "INVALID_USER_ID_FORMAT"
+        assert error.field == "user_id"
+
+    @pytest.mark.asyncio
+    async def test_get_or_create_invalid_defaults(self, cortex_client):
+        """Should throw on invalid defaults type."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.get_or_create("user-123", [])
+
+        assert "defaults must be a dict" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_merge_none_updates(self, cortex_client):
+        """Should throw on None updates."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.merge("user-123", None)
+
+        assert "updates is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_merge_list_updates(self, cortex_client):
+        """Should throw on list updates (should be dict)."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.merge("user-123", [])
+
+        assert "updates must be a dict" in str(exc_info.value)
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Existing E2E Tests - Backend Behavior and Integration
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# NOTE: Tests below validate BACKEND behavior and E2E functionality
+# Client-side validation tests are in TestUserValidation class above
 
 
 @pytest.mark.asyncio

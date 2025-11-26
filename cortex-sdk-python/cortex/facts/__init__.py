@@ -21,6 +21,27 @@ from ..types import (
     StoreFactParams,
     UpdateFactOptions,
 )
+from .validators import (
+    FactsValidationError,
+    validate_confidence,
+    validate_consolidation,
+    validate_datetime_range,
+    validate_export_format,
+    validate_fact_id_format,
+    validate_fact_type,
+    validate_memory_space_id,
+    validate_metadata,
+    validate_non_negative_integer,
+    validate_required_string,
+    validate_sort_by,
+    validate_sort_order,
+    validate_source_ref,
+    validate_source_type,
+    validate_string_array,
+    validate_tag_match,
+    validate_update_has_fields,
+    validate_validity_period,
+)
 
 
 class FactsAPI:
@@ -67,6 +88,23 @@ class FactsAPI:
             ...     )
             ... )
         """
+        # Validate required fields
+        validate_memory_space_id(params.memory_space_id)
+        validate_required_string(params.fact, "fact")
+        validate_fact_type(params.fact_type)
+        validate_confidence(params.confidence, "confidence")
+        validate_source_type(params.source_type)
+
+        # Validate optional fields if provided
+        if params.tags is not None:
+            validate_string_array(params.tags, "tags", True)
+        if params.valid_from is not None and params.valid_until is not None:
+            validate_validity_period(params.valid_from, params.valid_until)
+        if params.source_ref is not None:
+            validate_source_ref(params.source_ref)
+        if params.metadata is not None:
+            validate_metadata(params.metadata)
+
         result = await self.client.mutation(
             "facts:store",
             filter_none_values({
@@ -82,9 +120,9 @@ class FactsAPI:
                 "sourceType": params.source_type,
                 "sourceRef": (
                     {
-                        "conversationId": params.source_ref.get("conversationId") if isinstance(params.source_ref, dict) else params.source_ref.conversation_id,
-                        "messageIds": (params.source_ref.get("messageIds") if isinstance(params.source_ref, dict) else params.source_ref.message_ids) or [],
-                        "memoryId": params.source_ref.get("memoryId") if isinstance(params.source_ref, dict) else params.source_ref.memory_id,
+                        "conversationId": params.source_ref.get("conversationId") if isinstance(params.source_ref, dict) else getattr(params.source_ref, "conversation_id", None),
+                        "messageIds": (params.source_ref.get("messageIds") if isinstance(params.source_ref, dict) else getattr(params.source_ref, "message_ids", None)) or [],
+                        "memoryId": params.source_ref.get("memoryId") if isinstance(params.source_ref, dict) else getattr(params.source_ref, "memory_id", None),
                     }
                     if params.source_ref
                     else None
@@ -124,6 +162,10 @@ class FactsAPI:
         Example:
             >>> fact = await cortex.facts.get('agent-1', 'fact-123')
         """
+        validate_memory_space_id(memory_space_id)
+        validate_required_string(fact_id, "fact_id")
+        validate_fact_id_format(fact_id)
+
         result = await self.client.query(
             "facts:get", {"memorySpaceId": memory_space_id, "factId": fact_id}
         )
@@ -160,6 +202,45 @@ class FactsAPI:
             ...     )
             ... )
         """
+        validate_memory_space_id(filter.memory_space_id)
+
+        if filter.fact_type is not None:
+            validate_fact_type(filter.fact_type)
+        if filter.source_type is not None:
+            validate_source_type(filter.source_type)
+        if filter.confidence is not None:
+            validate_confidence(filter.confidence, "confidence")
+        if filter.min_confidence is not None:
+            validate_confidence(filter.min_confidence, "min_confidence")
+        if filter.tags is not None:
+            validate_string_array(filter.tags, "tags", True)
+        if filter.tag_match is not None:
+            validate_tag_match(filter.tag_match)
+        if filter.limit is not None:
+            validate_non_negative_integer(filter.limit, "limit")
+        if filter.offset is not None:
+            validate_non_negative_integer(filter.offset, "offset")
+        if filter.sort_by is not None:
+            validate_sort_by(filter.sort_by)
+        if filter.sort_order is not None:
+            validate_sort_order(filter.sort_order)
+        if filter.created_before and filter.created_after:
+            validate_datetime_range(
+                filter.created_after,
+                filter.created_before,
+                "created_after",
+                "created_before",
+            )
+        if filter.updated_before and filter.updated_after:
+            validate_datetime_range(
+                filter.updated_after,
+                filter.updated_before,
+                "updated_after",
+                "updated_before",
+            )
+        if filter.metadata is not None:
+            validate_metadata(filter.metadata)
+
         result = await self.client.query(
             "facts:list",
             filter_none_values({
@@ -221,6 +302,47 @@ class FactsAPI:
             ...     )
             ... )
         """
+        validate_memory_space_id(memory_space_id)
+        validate_required_string(query, "query")
+
+        if options:
+            if options.fact_type is not None:
+                validate_fact_type(options.fact_type)
+            if options.source_type is not None:
+                validate_source_type(options.source_type)
+            if options.confidence is not None:
+                validate_confidence(options.confidence, "confidence")
+            if options.min_confidence is not None:
+                validate_confidence(options.min_confidence, "min_confidence")
+            if options.tags is not None:
+                validate_string_array(options.tags, "tags", True)
+            if options.tag_match is not None:
+                validate_tag_match(options.tag_match)
+            if options.limit is not None:
+                validate_non_negative_integer(options.limit, "limit")
+            if options.offset is not None:
+                validate_non_negative_integer(options.offset, "offset")
+            if options.sort_by is not None:
+                validate_sort_by(options.sort_by)
+            if options.sort_order is not None:
+                validate_sort_order(options.sort_order)
+            if options.created_before and options.created_after:
+                validate_datetime_range(
+                    options.created_after,
+                    options.created_before,
+                    "created_after",
+                    "created_before",
+                )
+            if options.updated_before and options.updated_after:
+                validate_datetime_range(
+                    options.updated_after,
+                    options.updated_before,
+                    "updated_after",
+                    "updated_before",
+                )
+            if options.metadata is not None:
+                validate_metadata(options.metadata)
+
         result = await self.client.query(
             "facts:search",
             filter_none_values({
@@ -279,6 +401,18 @@ class FactsAPI:
             ...     {'confidence': 99, 'tags': ['verified', 'ui']}
             ... )
         """
+        validate_memory_space_id(memory_space_id)
+        validate_required_string(fact_id, "fact_id")
+        validate_fact_id_format(fact_id)
+        validate_update_has_fields(updates)
+
+        if "confidence" in updates:
+            validate_confidence(updates["confidence"], "confidence")
+        if "tags" in updates:
+            validate_string_array(updates["tags"], "tags", True)
+        if "metadata" in updates:
+            validate_metadata(updates["metadata"])
+
         result = await self.client.mutation(
             "facts:update",
             filter_none_values({
@@ -319,6 +453,10 @@ class FactsAPI:
         Example:
             >>> await cortex.facts.delete('agent-1', 'fact-123')
         """
+        validate_memory_space_id(memory_space_id)
+        validate_required_string(fact_id, "fact_id")
+        validate_fact_id_format(fact_id)
+
         result = await self.client.mutation(
             "facts:deleteFact", {"memorySpaceId": memory_space_id, "factId": fact_id}
         )
@@ -358,6 +496,37 @@ class FactsAPI:
             ...     )
             ... )
         """
+        validate_memory_space_id(filter.memory_space_id)
+
+        if filter.fact_type is not None:
+            validate_fact_type(filter.fact_type)
+        if filter.source_type is not None:
+            validate_source_type(filter.source_type)
+        if filter.confidence is not None:
+            validate_confidence(filter.confidence, "confidence")
+        if filter.min_confidence is not None:
+            validate_confidence(filter.min_confidence, "min_confidence")
+        if filter.tags is not None:
+            validate_string_array(filter.tags, "tags", True)
+        if filter.tag_match is not None:
+            validate_tag_match(filter.tag_match)
+        if filter.created_before and filter.created_after:
+            validate_datetime_range(
+                filter.created_after,
+                filter.created_before,
+                "created_after",
+                "created_before",
+            )
+        if filter.updated_before and filter.updated_after:
+            validate_datetime_range(
+                filter.updated_after,
+                filter.updated_before,
+                "updated_after",
+                "updated_before",
+            )
+        if filter.metadata is not None:
+            validate_metadata(filter.metadata)
+
         result = await self.client.query(
             "facts:count",
             filter_none_values({
@@ -411,6 +580,46 @@ class FactsAPI:
             ...     )
             ... )
         """
+        validate_memory_space_id(filter.memory_space_id)
+        validate_required_string(filter.subject, "subject")
+
+        if filter.fact_type is not None:
+            validate_fact_type(filter.fact_type)
+        if filter.source_type is not None:
+            validate_source_type(filter.source_type)
+        if filter.confidence is not None:
+            validate_confidence(filter.confidence, "confidence")
+        if filter.min_confidence is not None:
+            validate_confidence(filter.min_confidence, "min_confidence")
+        if filter.tags is not None:
+            validate_string_array(filter.tags, "tags", True)
+        if filter.tag_match is not None:
+            validate_tag_match(filter.tag_match)
+        if filter.limit is not None:
+            validate_non_negative_integer(filter.limit, "limit")
+        if filter.offset is not None:
+            validate_non_negative_integer(filter.offset, "offset")
+        if filter.sort_by is not None:
+            validate_sort_by(filter.sort_by)
+        if filter.sort_order is not None:
+            validate_sort_order(filter.sort_order)
+        if filter.created_before and filter.created_after:
+            validate_datetime_range(
+                filter.created_after,
+                filter.created_before,
+                "created_after",
+                "created_before",
+            )
+        if filter.updated_before and filter.updated_after:
+            validate_datetime_range(
+                filter.updated_after,
+                filter.updated_before,
+                "updated_after",
+                "updated_before",
+            )
+        if filter.metadata is not None:
+            validate_metadata(filter.metadata)
+
         result = await self.client.query(
             "facts:queryBySubject",
             filter_none_values({
@@ -468,6 +677,47 @@ class FactsAPI:
             ...     )
             ... )
         """
+        validate_memory_space_id(filter.memory_space_id)
+        validate_required_string(filter.subject, "subject")
+        validate_required_string(filter.predicate, "predicate")
+
+        if filter.fact_type is not None:
+            validate_fact_type(filter.fact_type)
+        if filter.source_type is not None:
+            validate_source_type(filter.source_type)
+        if filter.confidence is not None:
+            validate_confidence(filter.confidence, "confidence")
+        if filter.min_confidence is not None:
+            validate_confidence(filter.min_confidence, "min_confidence")
+        if filter.tags is not None:
+            validate_string_array(filter.tags, "tags", True)
+        if filter.tag_match is not None:
+            validate_tag_match(filter.tag_match)
+        if filter.limit is not None:
+            validate_non_negative_integer(filter.limit, "limit")
+        if filter.offset is not None:
+            validate_non_negative_integer(filter.offset, "offset")
+        if filter.sort_by is not None:
+            validate_sort_by(filter.sort_by)
+        if filter.sort_order is not None:
+            validate_sort_order(filter.sort_order)
+        if filter.created_before and filter.created_after:
+            validate_datetime_range(
+                filter.created_after,
+                filter.created_before,
+                "created_after",
+                "created_before",
+            )
+        if filter.updated_before and filter.updated_after:
+            validate_datetime_range(
+                filter.updated_after,
+                filter.updated_before,
+                "updated_after",
+                "updated_before",
+            )
+        if filter.metadata is not None:
+            validate_metadata(filter.metadata)
+
         result = await self.client.query(
             "facts:queryByRelationship",
             filter_none_values({
@@ -516,6 +766,10 @@ class FactsAPI:
         Example:
             >>> history = await cortex.facts.get_history('agent-1', 'fact-123')
         """
+        validate_memory_space_id(memory_space_id)
+        validate_required_string(fact_id, "fact_id")
+        validate_fact_id_format(fact_id)
+
         result = await self.client.query(
             "facts:getHistory", {"memorySpaceId": memory_space_id, "factId": fact_id}
         )
@@ -546,6 +800,12 @@ class FactsAPI:
             ...     fact_type='preference'
             ... )
         """
+        validate_memory_space_id(memory_space_id)
+        validate_export_format(format)
+
+        if fact_type is not None:
+            validate_fact_type(fact_type)
+
         result = await self.client.query(
             "facts:exportFacts",
             filter_none_values({
@@ -578,6 +838,11 @@ class FactsAPI:
             ...     'fact-1'
             ... )
         """
+        validate_memory_space_id(memory_space_id)
+        validate_string_array(fact_ids, "fact_ids", False)
+        validate_required_string(keep_fact_id, "keep_fact_id")
+        validate_consolidation(fact_ids, keep_fact_id)
+
         result = await self.client.mutation(
             "facts:consolidate",
             {
@@ -588,4 +853,7 @@ class FactsAPI:
         )
 
         return cast(Dict[str, Any], result)
+
+
+__all__ = ["FactsAPI", "FactsValidationError"]
 
