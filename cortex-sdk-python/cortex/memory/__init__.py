@@ -28,6 +28,28 @@ from ..types import (
     UpdateMemoryOptions,
 )
 from ..vector import VectorAPI
+from .validators import (
+    MemoryValidationError,
+    validate_content,
+    validate_conversation_id,
+    validate_conversation_ref_requirement,
+    validate_export_format,
+    validate_filter_combination,
+    validate_importance,
+    validate_limit,
+    validate_memory_id,
+    validate_memory_space_id,
+    validate_remember_params,
+    validate_search_options,
+    validate_source_type,
+    validate_store_memory_input,
+    validate_stream_object,
+    validate_tags,
+    validate_timestamp,
+    validate_update_options,
+    validate_user_id,
+    validate_version,
+)
 
 
 class MemoryAPI:
@@ -81,6 +103,9 @@ class MemoryAPI:
             ... )
             >>> print(len(result.memories))  # 2 (user + agent)
         """
+        # Client-side validation
+        validate_remember_params(params)
+
         now = int(time.time() * 1000)
         opts = options or RememberOptions()
 
@@ -192,7 +217,7 @@ class MemoryAPI:
             params.memory_space_id,
             StoreMemoryInput(
                 content=agent_content,
-                content_type=cast(Literal["raw", "summarized"], content_type),
+                content_type="raw",  # Agent content is always raw, only user content gets summarized
                 participant_id=params.participant_id,
                 embedding=agent_embedding,
                 user_id=params.user_id,
@@ -321,6 +346,36 @@ class MemoryAPI:
             ...     'partialFailureHandling': 'store-partial',
             ... })
         """
+        # Client-side validation (skip agent_response since it comes from stream)
+        memory_space_id = params.get("memorySpaceId") if isinstance(params, dict) else params.memory_space_id
+        conversation_id = params.get("conversationId") if isinstance(params, dict) else params.conversation_id
+        user_id = params.get("userId") if isinstance(params, dict) else params.user_id
+        user_name = params.get("userName") if isinstance(params, dict) else params.user_name
+        user_message = params.get("userMessage") if isinstance(params, dict) else params.user_message
+        importance = params.get("importance") if isinstance(params, dict) else getattr(params, "importance", None)
+        tags = params.get("tags") if isinstance(params, dict) else getattr(params, "tags", None)
+        response_stream = params.get("responseStream") if isinstance(params, dict) else params.response_stream
+
+        validate_memory_space_id(str(memory_space_id or ""))
+        validate_conversation_id(str(conversation_id or ""))
+        validate_content(str(user_message or ""), "user_message")
+        validate_user_id(str(user_id or ""))
+
+        if not user_name or not isinstance(user_name, str) or str(user_name).strip() == "":
+            raise MemoryValidationError(
+                "user_name is required and must be a non-empty string",
+                "MISSING_REQUIRED_FIELD",
+                "user_name",
+            )
+
+        if importance is not None:
+            validate_importance(importance)
+
+        if tags is not None:
+            validate_tags(tags)
+
+        validate_stream_object(response_stream)
+
         # Import streaming components
         from .streaming import (
             MetricsCollector,
@@ -348,10 +403,6 @@ class MemoryAPI:
 
         # Initialize components
         metrics = MetricsCollector()
-        memory_space_id = params.get("memorySpaceId") if isinstance(params, dict) else params.memory_space_id
-        conversation_id = params.get("conversationId") if isinstance(params, dict) else params.conversation_id
-        user_id = params.get("userId") if isinstance(params, dict) else params.user_id
-        user_name = params.get("userName") if isinstance(params, dict) else params.user_name
 
         context = create_stream_context(
             memory_space_id=str(memory_space_id or ""),
@@ -670,6 +721,10 @@ class MemoryAPI:
             ...     ForgetOptions(delete_conversation=True)
             ... )
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+
         opts = options or ForgetOptions()
 
         # Get the memory first
@@ -753,6 +808,10 @@ class MemoryAPI:
             ...     include_conversation=True
             ... )
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+
         memory = await self.vector.get(memory_space_id, memory_id)
 
         if not memory:
@@ -820,6 +879,13 @@ class MemoryAPI:
             ...     )
             ... )
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_content(query, "query")
+
+        if options:
+            validate_search_options(options)
+
         opts = options or SearchOptions()
 
         # Search vector
@@ -924,12 +990,10 @@ class MemoryAPI:
             ...     )
             ... )
         """
-        # Validate conversationRef requirement
-        if input.source.type == "conversation" and not input.conversation_ref:
-            raise CortexError(
-                ErrorCode.INVALID_INPUT,
-                "conversationRef required for source.type='conversation'",
-            )
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_store_memory_input(input)
+        validate_conversation_ref_requirement(input.source.type, input.conversation_ref)
 
         # Store memory
         memory = await self.vector.store(memory_space_id, input)
@@ -1005,6 +1069,11 @@ class MemoryAPI:
             ...     {'content': 'Updated content', 'importance': 80}
             ... )
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+        validate_update_options(updates)
+
         updated_memory = await self.vector.update(memory_space_id, memory_id, updates)
 
         facts_reextracted = []
@@ -1087,6 +1156,10 @@ class MemoryAPI:
         Example:
             >>> result = await cortex.memory.delete('agent-1', 'mem-123')
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+
         opts = options or DeleteMemoryOptions()
 
         memory = await self.vector.get(memory_space_id, memory_id)
@@ -1140,6 +1213,18 @@ class MemoryAPI:
         enrich_facts: bool = False,
     ) -> List[Union[MemoryEntry, EnrichedMemory]]:
         """List memories (delegates to vector.list)."""
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+
+        if user_id is not None:
+            validate_user_id(user_id)
+
+        if source_type is not None:
+            validate_source_type(source_type)
+
+        if limit is not None:
+            validate_limit(limit)
+
         return await self.vector.list(  # type: ignore[return-value]
             memory_space_id, user_id, participant_id, source_type, limit, enrich_facts
         )
@@ -1152,6 +1237,15 @@ class MemoryAPI:
         source_type: Optional[SourceType] = None,
     ) -> int:
         """Count memories (delegates to vector.count)."""
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+
+        if user_id is not None:
+            validate_user_id(user_id)
+
+        if source_type is not None:
+            validate_source_type(source_type)
+
         return await self.vector.count(
             memory_space_id, user_id, participant_id, source_type
         )
@@ -1160,6 +1254,16 @@ class MemoryAPI:
         self, memory_space_id: str, filters: Dict[str, Any], updates: Dict[str, Any]
     ) -> Dict[str, Any]:
         """Update many memories (delegates to vector.update_many)."""
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_update_options(updates)
+
+        if filters.get("user_id") is not None:
+            validate_user_id(filters["user_id"])
+
+        if filters.get("source_type") is not None:
+            validate_source_type(filters["source_type"])
+
         result = await self.vector.update_many(memory_space_id, filters, updates)
 
         # Count affected facts
@@ -1180,6 +1284,16 @@ class MemoryAPI:
         self, memory_space_id: str, filters: Dict[str, Any]
     ) -> Dict[str, Any]:
         """Delete many memories (delegates to vector.delete_many)."""
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_filter_combination({"memory_space_id": memory_space_id, **filters})
+
+        if filters.get("user_id") is not None:
+            validate_user_id(filters["user_id"])
+
+        if filters.get("source_type") is not None:
+            validate_source_type(filters["source_type"])
+
         # Get all memories to delete
         memories = await self.vector.list(memory_space_id, limit=10000)
 
@@ -1215,6 +1329,13 @@ class MemoryAPI:
         include_facts: bool = False,
     ) -> Dict[str, Any]:
         """Export memories (delegates to vector.export)."""
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_export_format(format)
+
+        if user_id is not None:
+            validate_user_id(user_id)
+
         return await self.vector.export(
             memory_space_id, user_id, format, include_embeddings, include_facts
         )
@@ -1223,6 +1344,10 @@ class MemoryAPI:
         self, memory_space_id: str, memory_id: str
     ) -> Dict[str, Any]:
         """Archive a memory (delegates to vector.archive)."""
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+
         return await self.vector.archive(memory_space_id, memory_id)
 
     async def restore_from_archive(
@@ -1242,6 +1367,10 @@ class MemoryAPI:
             >>> restored = await cortex.memory.restore_from_archive('agent-1', 'mem-123')
             >>> print(f"Restored: {restored['restored']}")
         """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+
         result = await self.client.mutation(
             "memories:restoreFromArchive",
             {"memorySpaceId": memory_space_id, "memoryId": memory_id},
@@ -1253,18 +1382,32 @@ class MemoryAPI:
         self, memory_space_id: str, memory_id: str, version: int
     ) -> Optional[Dict[str, Any]]:
         """Get specific version (delegates to vector.get_version)."""
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+        validate_version(version)
+
         return await self.vector.get_version(memory_space_id, memory_id, version)
 
     async def get_history(
         self, memory_space_id: str, memory_id: str
     ) -> List[Dict[str, Any]]:
         """Get version history (delegates to vector.get_history)."""
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+
         return await self.vector.get_history(memory_space_id, memory_id)
 
     async def get_at_timestamp(
         self, memory_space_id: str, memory_id: str, timestamp: int
     ) -> Optional[Dict[str, Any]]:
         """Get version at timestamp (delegates to vector.get_at_timestamp)."""
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+        validate_timestamp(timestamp)
+
         return await self.vector.get_at_timestamp(memory_space_id, memory_id, timestamp)
 
     # Helper methods

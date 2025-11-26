@@ -1458,14 +1458,15 @@ describe("Parameter Combination Testing", () => {
 
   describe("Parameter Validation Edge Cases", () => {
     it("empty string parameters", async () => {
-      const result = await cortex.vector.store(BASE_ID, {
-        content: "", // Empty content
-        contentType: "raw",
-        source: { type: "system" },
-        metadata: { importance: 50, tags: [] },
-      });
-
-      expect(result.content).toBe("");
+      // Empty content should be rejected by validation
+      await expect(
+        cortex.vector.store(BASE_ID, {
+          content: "", // Empty content
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
+        }),
+      ).rejects.toThrow("content is required");
     });
 
     it("very long content parameter", async () => {

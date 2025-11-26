@@ -21,6 +21,20 @@ import {
   syncMemoryRelationships,
   deleteMemoryFromGraph,
 } from "../graph";
+import {
+  validateMemorySpaceId,
+  validateMemoryId,
+  validateStoreInput,
+  validateSearchOptions,
+  validateListFilter,
+  validateCountFilter,
+  validateUpdateInput,
+  validateVersion,
+  validateTimestamp,
+  validateExportOptions,
+  validateDeleteManyFilter,
+  validateUpdateManyInputs,
+} from "./validators";
 
 export class VectorAPI {
   constructor(
@@ -52,6 +66,10 @@ export class VectorAPI {
     input: StoreMemoryInput,
     options?: StoreMemoryOptions,
   ): Promise<MemoryEntry> {
+    // Client-side validation
+    validateMemorySpaceId(memorySpaceId);
+    validateStoreInput(input);
+
     const result = await this.client.mutation(api.memories.store, {
       memorySpaceId,
       participantId: input.participantId, // NEW: Hive Mode
@@ -102,6 +120,10 @@ export class VectorAPI {
     memorySpaceId: string,
     memoryId: string,
   ): Promise<MemoryEntry | null> {
+    // Client-side validation
+    validateMemorySpaceId(memorySpaceId);
+    validateMemoryId(memoryId);
+
     const result = await this.client.query(api.memories.get, {
       memorySpaceId,
       memoryId,
@@ -126,6 +148,10 @@ export class VectorAPI {
     query: string,
     options?: SearchMemoriesOptions,
   ): Promise<MemoryEntry[]> {
+    // Client-side validation
+    validateMemorySpaceId(memorySpaceId);
+    validateSearchOptions(options);
+
     const result = await this.client.query(api.memories.search, {
       memorySpaceId,
       query,
@@ -159,6 +185,10 @@ export class VectorAPI {
     memoryId: string,
     options?: DeleteMemoryOptions,
   ): Promise<{ deleted: boolean; memoryId: string }> {
+    // Client-side validation
+    validateMemorySpaceId(memorySpaceId);
+    validateMemoryId(memoryId);
+
     const result = await this.client.mutation(api.memories.deleteMemory, {
       memorySpaceId,
       memoryId,
@@ -189,6 +219,9 @@ export class VectorAPI {
    * ```
    */
   async list(filter: ListMemoriesFilter): Promise<MemoryEntry[]> {
+    // Client-side validation
+    validateListFilter(filter);
+
     const result = await this.client.query(api.memories.list, {
       memorySpaceId: filter.memorySpaceId,
       userId: filter.userId,
@@ -211,6 +244,9 @@ export class VectorAPI {
    * ```
    */
   async count(filter: CountMemoriesFilter): Promise<number> {
+    // Client-side validation
+    validateCountFilter(filter);
+
     const result = await this.client.query(api.memories.count, {
       memorySpaceId: filter.memorySpaceId,
       userId: filter.userId,
@@ -241,6 +277,11 @@ export class VectorAPI {
       tags?: string[];
     },
   ): Promise<MemoryEntry> {
+    // Client-side validation
+    validateMemorySpaceId(memorySpaceId);
+    validateMemoryId(memoryId);
+    validateUpdateInput(updates);
+
     const result = await this.client.mutation(api.memories.update, {
       memorySpaceId,
       memoryId,
@@ -272,6 +313,11 @@ export class VectorAPI {
     embedding?: number[];
     timestamp: number;
   } | null> {
+    // Client-side validation
+    validateMemorySpaceId(memorySpaceId);
+    validateMemoryId(memoryId);
+    validateVersion(version);
+
     const result = await this.client.query(api.memories.getVersion, {
       memorySpaceId,
       memoryId,
@@ -307,6 +353,10 @@ export class VectorAPI {
       timestamp: number;
     }>
   > {
+    // Client-side validation
+    validateMemorySpaceId(memorySpaceId);
+    validateMemoryId(memoryId);
+
     const result = await this.client.query(api.memories.getHistory, {
       memorySpaceId,
       memoryId,
@@ -337,6 +387,9 @@ export class VectorAPI {
     userId?: string;
     sourceType?: "conversation" | "system" | "tool" | "a2a";
   }): Promise<{ deleted: number; memoryIds: string[] }> {
+    // Client-side validation
+    validateDeleteManyFilter(filter);
+
     const result = await this.client.mutation(api.memories.deleteMany, {
       memorySpaceId: filter.memorySpaceId,
       userId: filter.userId,
@@ -368,6 +421,9 @@ export class VectorAPI {
     count: number;
     exportedAt: number;
   }> {
+    // Client-side validation
+    validateExportOptions(options);
+
     const result = await this.client.query(api.memories.exportMemories, {
       memorySpaceId: options.memorySpaceId,
       userId: options.userId,
@@ -407,6 +463,9 @@ export class VectorAPI {
       tags?: string[];
     },
   ): Promise<{ updated: number; memoryIds: string[] }> {
+    // Client-side validation
+    validateUpdateManyInputs(filter, updates);
+
     const result = await this.client.mutation(api.memories.updateMany, {
       memorySpaceId: filter.memorySpaceId,
       userId: filter.userId,
@@ -430,6 +489,10 @@ export class VectorAPI {
     memorySpaceId: string,
     memoryId: string,
   ): Promise<{ archived: boolean; memoryId: string; restorable: boolean }> {
+    // Client-side validation
+    validateMemorySpaceId(memorySpaceId);
+    validateMemoryId(memoryId);
+
     const result = await this.client.mutation(api.memories.archive, {
       memorySpaceId,
       memoryId,
@@ -461,6 +524,11 @@ export class VectorAPI {
     embedding?: number[];
     timestamp: number;
   } | null> {
+    // Client-side validation
+    validateMemorySpaceId(memorySpaceId);
+    validateMemoryId(memoryId);
+    validateTimestamp(timestamp);
+
     const ts = typeof timestamp === "number" ? timestamp : timestamp.getTime();
 
     const result = await this.client.query(api.memories.getAtTimestamp, {
@@ -478,3 +546,6 @@ export class VectorAPI {
     } | null;
   }
 }
+
+// Export validation error for users who want to catch it specifically
+export { VectorValidationError } from "./validators";

@@ -1077,4 +1077,818 @@ describe("Mutable Store API (Layer 1c)", () => {
       // No previousVersions field!
     });
   });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Client-Side Validation Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // These tests validate CLIENT-SIDE validation (synchronous errors)
+  // Backend validation tests are in the functional suites above
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Client-Side Validation", () => {
+    describe("set() validation", () => {
+      it("should throw on missing namespace", async () => {
+        await expect(
+          cortex.mutable.set("" as any, "key", "value"),
+        ).rejects.toThrow("namespace is required");
+      });
+
+      it("should throw on empty namespace", async () => {
+        await expect(
+          cortex.mutable.set("", "key", "value"),
+        ).rejects.toThrow("namespace is required");
+      });
+
+      it("should throw on whitespace-only namespace", async () => {
+        await expect(
+          cortex.mutable.set("   ", "key", "value"),
+        ).rejects.toThrow("namespace is required");
+      });
+
+      it("should throw on invalid namespace format (spaces)", async () => {
+        await expect(
+          cortex.mutable.set("name with spaces", "key", "value"),
+        ).rejects.toThrow("Invalid namespace format");
+      });
+
+      it("should throw on invalid namespace format (emoji)", async () => {
+        await expect(
+          cortex.mutable.set("namespace-😀", "key", "value"),
+        ).rejects.toThrow("Invalid namespace format");
+      });
+
+      it("should throw on missing key", async () => {
+        await expect(
+          cortex.mutable.set("namespace", "" as any, "value"),
+        ).rejects.toThrow("key is required");
+      });
+
+      it("should throw on empty key", async () => {
+        await expect(
+          cortex.mutable.set("namespace", "", "value"),
+        ).rejects.toThrow("key is required");
+      });
+
+      it("should throw on invalid key format", async () => {
+        await expect(
+          cortex.mutable.set("namespace", "key with spaces", "value"),
+        ).rejects.toThrow("Invalid key format");
+      });
+
+      it("should throw on missing value (undefined)", async () => {
+        await expect(
+          cortex.mutable.set("namespace", "key", undefined as any),
+        ).rejects.toThrow("Value is required");
+      });
+
+      it("should throw on value too large", async () => {
+        const largeValue = { data: "x".repeat(2 * 1024 * 1024) }; // 2MB
+        await expect(
+          cortex.mutable.set("namespace", "key", largeValue),
+        ).rejects.toThrow("exceeds maximum size");
+      });
+
+      it("should throw on invalid userId format", async () => {
+        await expect(
+          cortex.mutable.set("namespace", "key", "value", ""),
+        ).rejects.toThrow("userId cannot be empty");
+      });
+
+      it("should accept valid inputs", async () => {
+        const result = await cortex.mutable.set(
+          "validation-test",
+          "valid-key",
+          "valid-value",
+        );
+        expect(result.value).toBe("valid-value");
+      });
+
+      it("should accept complex object values", async () => {
+        const complexValue = { nested: { data: [1, 2, 3] } };
+        const result = await cortex.mutable.set(
+          "validation-test",
+          "complex",
+          complexValue,
+        );
+        expect(result.value).toEqual(complexValue);
+      });
+    });
+
+    describe("get() validation", () => {
+      it("should throw on missing namespace", async () => {
+        await expect(cortex.mutable.get("", "key")).rejects.toThrow(
+          "namespace is required",
+        );
+      });
+
+      it("should throw on invalid namespace format", async () => {
+        await expect(
+          cortex.mutable.get("name with spaces", "key"),
+        ).rejects.toThrow("Invalid namespace format");
+      });
+
+      it("should throw on missing key", async () => {
+        await expect(cortex.mutable.get("namespace", "")).rejects.toThrow(
+          "key is required",
+        );
+      });
+
+      it("should throw on invalid key format", async () => {
+        await expect(
+          cortex.mutable.get("namespace", "key with spaces"),
+        ).rejects.toThrow("Invalid key format");
+      });
+
+      it("should accept valid inputs", async () => {
+        await cortex.mutable.set("validation-test", "get-test", "value");
+        const value = await cortex.mutable.get("validation-test", "get-test");
+        expect(value).toBe("value");
+      });
+    });
+
+    describe("getRecord() validation", () => {
+      it("should throw on missing namespace", async () => {
+        await expect(cortex.mutable.getRecord("", "key")).rejects.toThrow(
+          "namespace is required",
+        );
+      });
+
+      it("should throw on invalid namespace format", async () => {
+        await expect(
+          cortex.mutable.getRecord("name with spaces", "key"),
+        ).rejects.toThrow("Invalid namespace format");
+      });
+
+      it("should throw on missing key", async () => {
+        await expect(
+          cortex.mutable.getRecord("namespace", ""),
+        ).rejects.toThrow("key is required");
+      });
+
+      it("should throw on invalid key format", async () => {
+        await expect(
+          cortex.mutable.getRecord("namespace", "key with spaces"),
+        ).rejects.toThrow("Invalid key format");
+      });
+
+      it("should accept valid inputs", async () => {
+        await cortex.mutable.set("validation-test", "record-test", "value");
+        const record = await cortex.mutable.getRecord(
+          "validation-test",
+          "record-test",
+        );
+        expect(record?.value).toBe("value");
+      });
+    });
+
+    describe("update() validation", () => {
+      beforeAll(async () => {
+        await cortex.mutable.set("validation-test", "update-test", 100);
+      });
+
+      it("should throw on missing namespace", async () => {
+        await expect(
+          cortex.mutable.update("", "key", (v) => v),
+        ).rejects.toThrow("namespace is required");
+      });
+
+      it("should throw on invalid namespace format", async () => {
+        await expect(
+          cortex.mutable.update("name with spaces", "key", (v) => v),
+        ).rejects.toThrow("Invalid namespace format");
+      });
+
+      it("should throw on missing key", async () => {
+        await expect(
+          cortex.mutable.update("namespace", "", (v) => v),
+        ).rejects.toThrow("key is required");
+      });
+
+      it("should throw on invalid key format", async () => {
+        await expect(
+          cortex.mutable.update("namespace", "key with spaces", (v) => v),
+        ).rejects.toThrow("Invalid key format");
+      });
+
+      it("should throw on missing updater", async () => {
+        await expect(
+          cortex.mutable.update(
+            "validation-test",
+            "update-test",
+            undefined as any,
+          ),
+        ).rejects.toThrow("Updater function is required");
+      });
+
+      it("should throw on non-function updater", async () => {
+        await expect(
+          cortex.mutable.update("validation-test", "update-test", "not a function" as any),
+        ).rejects.toThrow("Updater must be a function");
+      });
+
+      it("should accept valid function updater", async () => {
+        const result = await cortex.mutable.update(
+          "validation-test",
+          "update-test",
+          (v: any) => v + 1,
+        );
+        expect(result.value).toBe(101);
+      });
+    });
+
+    describe("increment() validation", () => {
+      beforeAll(async () => {
+        await cortex.mutable.set("validation-test", "inc-test", 0);
+      });
+
+      it("should throw on missing namespace", async () => {
+        await expect(
+          cortex.mutable.increment("", "key", 1),
+        ).rejects.toThrow("namespace is required");
+      });
+
+      it("should throw on invalid namespace format", async () => {
+        await expect(
+          cortex.mutable.increment("name with spaces", "key", 1),
+        ).rejects.toThrow("Invalid namespace format");
+      });
+
+      it("should throw on missing key", async () => {
+        await expect(
+          cortex.mutable.increment("namespace", "", 1),
+        ).rejects.toThrow("key is required");
+      });
+
+      it("should throw on invalid key format", async () => {
+        await expect(
+          cortex.mutable.increment("namespace", "key with spaces", 1),
+        ).rejects.toThrow("Invalid key format");
+      });
+
+      it("should throw on non-numeric amount", async () => {
+        await expect(
+          cortex.mutable.increment(
+            "validation-test",
+            "inc-test",
+            "not a number" as any,
+          ),
+        ).rejects.toThrow("amount must be a number");
+      });
+
+      it("should accept valid amount", async () => {
+        const result = await cortex.mutable.increment(
+          "validation-test",
+          "inc-test",
+          5,
+        );
+        expect(result.value).toBeGreaterThanOrEqual(5);
+      });
+
+      it("should accept default amount (1)", async () => {
+        const before = await cortex.mutable.get("validation-test", "inc-test");
+        const result = await cortex.mutable.increment(
+          "validation-test",
+          "inc-test",
+        );
+        expect(result.value).toBe((before as number) + 1);
+      });
+    });
+
+    describe("decrement() validation", () => {
+      beforeAll(async () => {
+        await cortex.mutable.set("validation-test", "dec-test", 100);
+      });
+
+      it("should throw on missing namespace", async () => {
+        await expect(
+          cortex.mutable.decrement("", "key", 1),
+        ).rejects.toThrow("namespace is required");
+      });
+
+      it("should throw on invalid namespace format", async () => {
+        await expect(
+          cortex.mutable.decrement("name with spaces", "key", 1),
+        ).rejects.toThrow("Invalid namespace format");
+      });
+
+      it("should throw on missing key", async () => {
+        await expect(
+          cortex.mutable.decrement("namespace", "", 1),
+        ).rejects.toThrow("key is required");
+      });
+
+      it("should throw on invalid key format", async () => {
+        await expect(
+          cortex.mutable.decrement("namespace", "key with spaces", 1),
+        ).rejects.toThrow("Invalid key format");
+      });
+
+      it("should throw on non-numeric amount", async () => {
+        await expect(
+          cortex.mutable.decrement(
+            "validation-test",
+            "dec-test",
+            "not a number" as any,
+          ),
+        ).rejects.toThrow("amount must be a number");
+      });
+
+      it("should accept valid amount", async () => {
+        const result = await cortex.mutable.decrement(
+          "validation-test",
+          "dec-test",
+          5,
+        );
+        expect(result.value).toBeLessThanOrEqual(95);
+      });
+
+      it("should accept default amount (1)", async () => {
+        const before = await cortex.mutable.get("validation-test", "dec-test");
+        const result = await cortex.mutable.decrement(
+          "validation-test",
+          "dec-test",
+        );
+        expect(result.value).toBe((before as number) - 1);
+      });
+    });
+
+    describe("exists() validation", () => {
+      it("should throw on missing namespace", async () => {
+        await expect(cortex.mutable.exists("", "key")).rejects.toThrow(
+          "namespace is required",
+        );
+      });
+
+      it("should throw on invalid namespace format", async () => {
+        await expect(
+          cortex.mutable.exists("name with spaces", "key"),
+        ).rejects.toThrow("Invalid namespace format");
+      });
+
+      it("should throw on missing key", async () => {
+        await expect(cortex.mutable.exists("namespace", "")).rejects.toThrow(
+          "key is required",
+        );
+      });
+
+      it("should throw on invalid key format", async () => {
+        await expect(
+          cortex.mutable.exists("namespace", "key with spaces"),
+        ).rejects.toThrow("Invalid key format");
+      });
+    });
+
+    describe("delete() validation", () => {
+      it("should throw on missing namespace", async () => {
+        await expect(cortex.mutable.delete("", "key")).rejects.toThrow(
+          "namespace is required",
+        );
+      });
+
+      it("should throw on invalid namespace format", async () => {
+        await expect(
+          cortex.mutable.delete("name with spaces", "key"),
+        ).rejects.toThrow("Invalid namespace format");
+      });
+
+      it("should throw on missing key", async () => {
+        await expect(cortex.mutable.delete("namespace", "")).rejects.toThrow(
+          "key is required",
+        );
+      });
+
+      it("should throw on invalid key format", async () => {
+        await expect(
+          cortex.mutable.delete("namespace", "key with spaces"),
+        ).rejects.toThrow("Invalid key format");
+      });
+    });
+
+    describe("purge() validation", () => {
+      it("should throw on missing namespace", async () => {
+        await expect(cortex.mutable.purge("", "key")).rejects.toThrow(
+          "namespace is required",
+        );
+      });
+
+      it("should throw on invalid namespace format", async () => {
+        await expect(
+          cortex.mutable.purge("name with spaces", "key"),
+        ).rejects.toThrow("Invalid namespace format");
+      });
+
+      it("should throw on missing key", async () => {
+        await expect(cortex.mutable.purge("namespace", "")).rejects.toThrow(
+          "key is required",
+        );
+      });
+
+      it("should throw on invalid key format", async () => {
+        await expect(
+          cortex.mutable.purge("namespace", "key with spaces"),
+        ).rejects.toThrow("Invalid key format");
+      });
+    });
+
+    describe("list() validation", () => {
+      it("should throw on missing filter", async () => {
+        await expect(
+          cortex.mutable.list(undefined as any),
+        ).rejects.toThrow("Filter is required");
+      });
+
+      it("should throw on null filter", async () => {
+        await expect(cortex.mutable.list(null as any)).rejects.toThrow(
+          "Filter is required",
+        );
+      });
+
+      it("should throw on missing filter.namespace", async () => {
+        await expect(cortex.mutable.list({} as any)).rejects.toThrow(
+          "Filter must include namespace",
+        );
+      });
+
+      it("should throw on empty namespace", async () => {
+        await expect(
+          cortex.mutable.list({ namespace: "" }),
+        ).rejects.toThrow("Filter must include namespace");
+      });
+
+      it("should throw on invalid namespace format", async () => {
+        await expect(
+          cortex.mutable.list({ namespace: "name with spaces" }),
+        ).rejects.toThrow("Invalid namespace format");
+      });
+
+      it("should throw on invalid keyPrefix format", async () => {
+        await expect(
+          cortex.mutable.list({
+            namespace: "test",
+            keyPrefix: "prefix with spaces",
+          }),
+        ).rejects.toThrow("Invalid keyPrefix format");
+      });
+
+      it("should throw on invalid userId format", async () => {
+        await expect(
+          cortex.mutable.list({ namespace: "test", userId: "" }),
+        ).rejects.toThrow("userId cannot be empty");
+      });
+
+      it("should throw on non-numeric limit", async () => {
+        await expect(
+          cortex.mutable.list({ namespace: "test", limit: "10" as any }),
+        ).rejects.toThrow("limit must be a number");
+      });
+
+      it("should throw on negative limit", async () => {
+        await expect(
+          cortex.mutable.list({ namespace: "test", limit: -1 }),
+        ).rejects.toThrow("limit must be non-negative");
+      });
+
+      it("should throw on limit > 1000", async () => {
+        await expect(
+          cortex.mutable.list({ namespace: "test", limit: 1001 }),
+        ).rejects.toThrow("limit exceeds maximum");
+      });
+
+      it("should accept valid filter with all optional fields", async () => {
+        const result = await cortex.mutable.list({
+          namespace: "validation-test",
+          keyPrefix: "test-",
+          limit: 10,
+        });
+        expect(Array.isArray(result)).toBe(true);
+      });
+    });
+
+    describe("count() validation", () => {
+      it("should throw on missing filter", async () => {
+        await expect(
+          cortex.mutable.count(undefined as any),
+        ).rejects.toThrow("Filter is required");
+      });
+
+      it("should throw on missing filter.namespace", async () => {
+        await expect(cortex.mutable.count({} as any)).rejects.toThrow(
+          "Filter must include namespace",
+        );
+      });
+
+      it("should throw on empty namespace", async () => {
+        await expect(
+          cortex.mutable.count({ namespace: "" }),
+        ).rejects.toThrow("Filter must include namespace");
+      });
+
+      it("should throw on invalid namespace format", async () => {
+        await expect(
+          cortex.mutable.count({ namespace: "name with spaces" }),
+        ).rejects.toThrow("Invalid namespace format");
+      });
+
+      it("should throw on invalid keyPrefix format", async () => {
+        await expect(
+          cortex.mutable.count({
+            namespace: "test",
+            keyPrefix: "prefix with spaces",
+          }),
+        ).rejects.toThrow("Invalid keyPrefix format");
+      });
+
+      it("should throw on invalid userId format", async () => {
+        await expect(
+          cortex.mutable.count({ namespace: "test", userId: "" }),
+        ).rejects.toThrow("userId cannot be empty");
+      });
+
+      it("should accept valid filter with namespace only", async () => {
+        const result = await cortex.mutable.count({
+          namespace: "validation-test",
+        });
+        expect(typeof result).toBe("number");
+      });
+
+      it("should accept valid filter with keyPrefix", async () => {
+        const result = await cortex.mutable.count({
+          namespace: "validation-test",
+          keyPrefix: "test-",
+        });
+        expect(typeof result).toBe("number");
+      });
+
+      it("should accept valid filter with all fields", async () => {
+        const result = await cortex.mutable.count({
+          namespace: "validation-test",
+          keyPrefix: "test-",
+        });
+        expect(typeof result).toBe("number");
+      });
+    });
+
+    describe("transaction() validation", () => {
+      it("should throw on missing operations", async () => {
+        await expect(
+          cortex.mutable.transaction(undefined as any),
+        ).rejects.toThrow("Operations array is required");
+      });
+
+      it("should throw on null operations", async () => {
+        await expect(
+          cortex.mutable.transaction(null as any),
+        ).rejects.toThrow("Operations array is required");
+      });
+
+      it("should throw on non-array operations", async () => {
+        await expect(
+          cortex.mutable.transaction({} as any),
+        ).rejects.toThrow("Operations must be an array");
+      });
+
+      it("should throw on empty operations array", async () => {
+        await expect(cortex.mutable.transaction([])).rejects.toThrow(
+          "Operations array cannot be empty",
+        );
+      });
+
+      it("should throw on operation missing op field", async () => {
+        await expect(
+          cortex.mutable.transaction([
+            { namespace: "test", key: "key" } as any,
+          ]),
+        ).rejects.toThrow('missing required field "op"');
+      });
+
+      it("should throw on invalid op type", async () => {
+        await expect(
+          cortex.mutable.transaction([
+            { op: "invalid", namespace: "test", key: "key" } as any,
+          ]),
+        ).rejects.toThrow('has invalid "op" value');
+      });
+
+      it("should throw on operation missing namespace", async () => {
+        await expect(
+          cortex.mutable.transaction([{ op: "set", key: "key" } as any]),
+        ).rejects.toThrow('missing required field "namespace"');
+      });
+
+      it("should throw on operation missing key", async () => {
+        await expect(
+          cortex.mutable.transaction([{ op: "set", namespace: "test" } as any]),
+        ).rejects.toThrow('missing required field "key"');
+      });
+
+      it("should throw on set operation missing value", async () => {
+        await expect(
+          cortex.mutable.transaction([
+            { op: "set", namespace: "test", key: "key" } as any,
+          ]),
+        ).rejects.toThrow('missing required field "value"');
+      });
+
+      it("should throw on invalid amount type (non-number)", async () => {
+        await expect(
+          cortex.mutable.transaction([
+            {
+              op: "increment",
+              namespace: "test",
+              key: "key",
+              amount: "not a number",
+            } as any,
+          ]),
+        ).rejects.toThrow("amount must be a number");
+      });
+
+      it("should validate namespace format in operations", async () => {
+        await expect(
+          cortex.mutable.transaction([
+            {
+              op: "set",
+              namespace: "name with spaces",
+              key: "key",
+              value: "value",
+            },
+          ]),
+        ).rejects.toThrow("Invalid namespace format");
+      });
+
+      it("should validate key format in operations", async () => {
+        await expect(
+          cortex.mutable.transaction([
+            {
+              op: "set",
+              namespace: "test",
+              key: "key with spaces",
+              value: "value",
+            },
+          ]),
+        ).rejects.toThrow("Invalid key format");
+      });
+
+      it("should accept valid single operation", async () => {
+        await cortex.mutable.set("validation-test", "tx-test", 0);
+        const result = await cortex.mutable.transaction([
+          {
+            op: "increment",
+            namespace: "validation-test",
+            key: "tx-test",
+            amount: 1,
+          },
+        ]);
+        expect(result.success).toBe(true);
+      });
+
+      it("should accept valid multiple operations", async () => {
+        await cortex.mutable.set("validation-test", "tx-multi-1", 0);
+        await cortex.mutable.set("validation-test", "tx-multi-2", 0);
+        const result = await cortex.mutable.transaction([
+          {
+            op: "increment",
+            namespace: "validation-test",
+            key: "tx-multi-1",
+            amount: 1,
+          },
+          {
+            op: "increment",
+            namespace: "validation-test",
+            key: "tx-multi-2",
+            amount: 1,
+          },
+        ]);
+        expect(result.success).toBe(true);
+      });
+
+      it("should accept all operation types", async () => {
+        await cortex.mutable.set("validation-test", "tx-all-ops", 0);
+        await cortex.mutable.set("validation-test", "tx-delete-me", "value");
+        const result = await cortex.mutable.transaction([
+          {
+            op: "set",
+            namespace: "validation-test",
+            key: "tx-set",
+            value: "new",
+          },
+          {
+            op: "update",
+            namespace: "validation-test",
+            key: "tx-all-ops",
+            value: 10,
+          },
+          {
+            op: "increment",
+            namespace: "validation-test",
+            key: "tx-all-ops",
+            amount: 5,
+          },
+          {
+            op: "decrement",
+            namespace: "validation-test",
+            key: "tx-all-ops",
+            amount: 3,
+          },
+          {
+            op: "delete",
+            namespace: "validation-test",
+            key: "tx-delete-me",
+          },
+        ]);
+        expect(result.success).toBe(true);
+      });
+    });
+
+    describe("purgeMany() validation", () => {
+      it("should throw on missing filter", async () => {
+        await expect(
+          cortex.mutable.purgeMany(undefined as any),
+        ).rejects.toThrow("Filter is required");
+      });
+
+      it("should throw on missing filter.namespace", async () => {
+        await expect(
+          cortex.mutable.purgeMany({} as any),
+        ).rejects.toThrow("Filter must include namespace");
+      });
+
+      it("should throw on empty namespace", async () => {
+        await expect(
+          cortex.mutable.purgeMany({ namespace: "" }),
+        ).rejects.toThrow("Filter must include namespace");
+      });
+
+      it("should throw on invalid namespace format", async () => {
+        await expect(
+          cortex.mutable.purgeMany({ namespace: "name with spaces" }),
+        ).rejects.toThrow("Invalid namespace format");
+      });
+
+      it("should throw on invalid keyPrefix format", async () => {
+        await expect(
+          cortex.mutable.purgeMany({
+            namespace: "test",
+            keyPrefix: "prefix with spaces",
+          }),
+        ).rejects.toThrow("Invalid keyPrefix format");
+      });
+
+      it("should throw on invalid userId format", async () => {
+        await expect(
+          cortex.mutable.purgeMany({ namespace: "test", userId: "" }),
+        ).rejects.toThrow("userId cannot be empty");
+      });
+
+      it("should accept valid filter with namespace only", async () => {
+        await cortex.mutable.set("purge-validation", "test-1", "value");
+        const result = await cortex.mutable.purgeMany({
+          namespace: "purge-validation",
+        });
+        expect(result.deleted).toBeGreaterThanOrEqual(0);
+      });
+
+      it("should accept valid filter with all fields", async () => {
+        await cortex.mutable.set("purge-validation-2", "prefix-1", "value");
+        const result = await cortex.mutable.purgeMany({
+          namespace: "purge-validation-2",
+          keyPrefix: "prefix-",
+        });
+        expect(result.deleted).toBeGreaterThanOrEqual(0);
+      });
+    });
+
+    describe("purgeNamespace() validation", () => {
+      it("should throw on missing namespace", async () => {
+        await expect(
+          cortex.mutable.purgeNamespace(undefined as any),
+        ).rejects.toThrow("namespace is required");
+      });
+
+      it("should throw on empty namespace", async () => {
+        await expect(cortex.mutable.purgeNamespace("")).rejects.toThrow(
+          "namespace is required",
+        );
+      });
+
+      it("should throw on whitespace-only namespace", async () => {
+        await expect(cortex.mutable.purgeNamespace("   ")).rejects.toThrow(
+          "namespace is required",
+        );
+      });
+
+      it("should throw on invalid namespace format", async () => {
+        await expect(
+          cortex.mutable.purgeNamespace("name with spaces"),
+        ).rejects.toThrow("Invalid namespace format");
+      });
+
+      it("should accept valid namespace", async () => {
+        await cortex.mutable.set("purge-ns-validation", "key", "value");
+        const result = await cortex.mutable.purgeNamespace(
+          "purge-ns-validation",
+        );
+        expect(result.deleted).toBeGreaterThanOrEqual(0);
+      });
+    });
+  });
 });

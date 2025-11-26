@@ -79,6 +79,517 @@ describe("Immutable Store API (Layer 1b)", () => {
     await client.close();
   });
 
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Client-Side Validation
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Client-Side Validation", () => {
+    describe("store() validation", () => {
+      it("should throw on missing type", async () => {
+        await expect(
+          cortex.immutable.store({
+            id: "test",
+            data: { value: 1 },
+          } as any),
+        ).rejects.toThrow("Type is required");
+      });
+
+      it("should throw on empty type", async () => {
+        await expect(
+          cortex.immutable.store({
+            type: "",
+            id: "test",
+            data: { value: 1 },
+          }),
+        ).rejects.toThrow("Type must be a non-empty string");
+      });
+
+      it("should throw on whitespace-only type", async () => {
+        await expect(
+          cortex.immutable.store({
+            type: "   ",
+            id: "test",
+            data: { value: 1 },
+          }),
+        ).rejects.toThrow("Type must be a non-empty string");
+      });
+
+      it("should throw on type with invalid characters", async () => {
+        await expect(
+          cortex.immutable.store({
+            type: "type with spaces",
+            id: "test",
+            data: { value: 1 },
+          }),
+        ).rejects.toThrow("valid characters");
+      });
+
+      it("should throw on missing id", async () => {
+        await expect(
+          cortex.immutable.store({
+            type: "test",
+            data: { value: 1 },
+          } as any),
+        ).rejects.toThrow("ID is required");
+      });
+
+      it("should throw on empty id", async () => {
+        await expect(
+          cortex.immutable.store({
+            type: "test",
+            id: "",
+            data: { value: 1 },
+          }),
+        ).rejects.toThrow("ID must be a non-empty string");
+      });
+
+      it("should throw on missing data", async () => {
+        await expect(
+          cortex.immutable.store({
+            type: "test",
+            id: "test-id",
+          } as any),
+        ).rejects.toThrow("Data is required");
+      });
+
+      it("should throw on invalid data type (array)", async () => {
+        await expect(
+          cortex.immutable.store({
+            type: "test",
+            id: "test-id",
+            data: [] as any,
+          }),
+        ).rejects.toThrow("Data must be a valid object");
+      });
+
+      it("should throw on invalid data type (string)", async () => {
+        await expect(
+          cortex.immutable.store({
+            type: "test",
+            id: "test-id",
+            data: "string" as any,
+          }),
+        ).rejects.toThrow("Data must be a valid object");
+      });
+
+      it("should throw on invalid metadata type", async () => {
+        await expect(
+          cortex.immutable.store({
+            type: "test",
+            id: "test-id",
+            data: { value: 1 },
+            metadata: "invalid" as any,
+          }),
+        ).rejects.toThrow("Metadata must be an object");
+      });
+
+      it("should throw on empty userId", async () => {
+        await expect(
+          cortex.immutable.store({
+            type: "test",
+            id: "test-id",
+            data: { value: 1 },
+            userId: "",
+          }),
+        ).rejects.toThrow("userId cannot be empty");
+      });
+
+      it("should accept undefined userId", async () => {
+        // Should not throw - userId is optional
+        const result = await cortex.immutable.store({
+          type: `valid-test-${Date.now()}`,
+          id: "test-id",
+          data: { value: 1 },
+        });
+        expect(result).toBeDefined();
+      });
+
+      it("should accept empty data object", async () => {
+        // Empty object is valid
+        const result = await cortex.immutable.store({
+          type: `empty-data-${Date.now()}`,
+          id: "test-id",
+          data: {},
+        });
+        expect(result.data).toEqual({});
+      });
+    });
+
+    describe("get() validation", () => {
+      it("should throw on empty type", async () => {
+        await expect(cortex.immutable.get("", "test-id")).rejects.toThrow(
+          "Type must be a non-empty string",
+        );
+      });
+
+      it("should throw on empty id", async () => {
+        await expect(cortex.immutable.get("test-type", "")).rejects.toThrow(
+          "ID must be a non-empty string",
+        );
+      });
+
+      it("should throw on non-string type", async () => {
+        await expect(
+          cortex.immutable.get(123 as any, "test-id"),
+        ).rejects.toThrow("Type must be a non-empty string");
+      });
+    });
+
+    describe("getVersion() validation", () => {
+      it("should throw on invalid version (zero)", async () => {
+        await expect(
+          cortex.immutable.getVersion("test-type", "test-id", 0),
+        ).rejects.toThrow("Version must be a positive integer >= 1");
+      });
+
+      it("should throw on invalid version (negative)", async () => {
+        await expect(
+          cortex.immutable.getVersion("test-type", "test-id", -1),
+        ).rejects.toThrow("Version must be a positive integer >= 1");
+      });
+
+      it("should throw on invalid version (decimal)", async () => {
+        await expect(
+          cortex.immutable.getVersion("test-type", "test-id", 1.5),
+        ).rejects.toThrow("Version must be a positive integer");
+      });
+
+      it("should throw on invalid version (string)", async () => {
+        await expect(
+          cortex.immutable.getVersion("test-type", "test-id", "1" as any),
+        ).rejects.toThrow("Version must be a positive integer");
+      });
+
+      it("should throw on invalid version (NaN)", async () => {
+        await expect(
+          cortex.immutable.getVersion("test-type", "test-id", NaN),
+        ).rejects.toThrow("Version must be a positive integer");
+      });
+    });
+
+    describe("getHistory() validation", () => {
+      it("should throw on empty type", async () => {
+        await expect(
+          cortex.immutable.getHistory("", "test-id"),
+        ).rejects.toThrow("Type must be a non-empty string");
+      });
+
+      it("should throw on empty id", async () => {
+        await expect(
+          cortex.immutable.getHistory("test-type", ""),
+        ).rejects.toThrow("ID must be a non-empty string");
+      });
+    });
+
+    describe("list() validation", () => {
+      it("should throw on invalid type", async () => {
+        await expect(cortex.immutable.list({ type: "" })).rejects.toThrow(
+          "Type must be a non-empty string",
+        );
+      });
+
+      it("should throw on invalid userId", async () => {
+        await expect(cortex.immutable.list({ userId: "  " })).rejects.toThrow(
+          "userId cannot be empty",
+        );
+      });
+
+      it("should throw on invalid limit (zero)", async () => {
+        await expect(cortex.immutable.list({ limit: 0 })).rejects.toThrow(
+          "Limit must be a positive integer",
+        );
+      });
+
+      it("should throw on invalid limit (negative)", async () => {
+        await expect(cortex.immutable.list({ limit: -5 })).rejects.toThrow(
+          "Limit must be a positive integer",
+        );
+      });
+
+      it("should throw on invalid limit (decimal)", async () => {
+        await expect(cortex.immutable.list({ limit: 10.5 })).rejects.toThrow(
+          "Limit must be a positive integer",
+        );
+      });
+
+      it("should accept undefined filter", async () => {
+        // Should not throw
+        const result = await cortex.immutable.list();
+        expect(result).toBeDefined();
+      });
+
+      it("should accept empty filter object", async () => {
+        // Should not throw
+        const result = await cortex.immutable.list({});
+        expect(result).toBeDefined();
+      });
+    });
+
+    describe("search() validation", () => {
+      it("should throw on missing query", async () => {
+        await expect(cortex.immutable.search({} as any)).rejects.toThrow(
+          "Search query is required",
+        );
+      });
+
+      it("should throw on empty query", async () => {
+        await expect(
+          cortex.immutable.search({ query: "" }),
+        ).rejects.toThrow("Search query is required");
+      });
+
+      it("should throw on whitespace-only query", async () => {
+        await expect(
+          cortex.immutable.search({ query: "   " }),
+        ).rejects.toThrow("Search query is required");
+      });
+
+      it("should throw on non-string query", async () => {
+        await expect(
+          cortex.immutable.search({ query: 123 as any }),
+        ).rejects.toThrow("Search query is required");
+      });
+
+      it("should throw on invalid type filter", async () => {
+        await expect(
+          cortex.immutable.search({ query: "test", type: "" }),
+        ).rejects.toThrow("Type must be a non-empty string");
+      });
+
+      it("should throw on invalid limit", async () => {
+        await expect(
+          cortex.immutable.search({ query: "test", limit: 0 }),
+        ).rejects.toThrow("Limit must be a positive integer");
+      });
+    });
+
+    describe("count() validation", () => {
+      it("should throw on invalid type", async () => {
+        await expect(cortex.immutable.count({ type: "" })).rejects.toThrow(
+          "Type must be a non-empty string",
+        );
+      });
+
+      it("should throw on invalid userId", async () => {
+        await expect(cortex.immutable.count({ userId: "" })).rejects.toThrow(
+          "userId cannot be empty",
+        );
+      });
+
+      it("should accept undefined filter", async () => {
+        // Should not throw
+        const result = await cortex.immutable.count();
+        expect(typeof result).toBe("number");
+      });
+    });
+
+    describe("purge() validation", () => {
+      it("should throw on empty type", async () => {
+        await expect(cortex.immutable.purge("", "test-id")).rejects.toThrow(
+          "Type must be a non-empty string",
+        );
+      });
+
+      it("should throw on empty id", async () => {
+        await expect(cortex.immutable.purge("test-type", "")).rejects.toThrow(
+          "ID must be a non-empty string",
+        );
+      });
+
+      // Note: Backend validation still applies - IMMUTABLE_ENTRY_NOT_FOUND
+      // is tested in existing tests (line 645-649)
+    });
+
+    describe("getAtTimestamp() validation", () => {
+      it("should throw on empty type", async () => {
+        await expect(
+          cortex.immutable.getAtTimestamp("", "test-id", Date.now()),
+        ).rejects.toThrow("Type must be a non-empty string");
+      });
+
+      it("should throw on empty id", async () => {
+        await expect(
+          cortex.immutable.getAtTimestamp("test-type", "", Date.now()),
+        ).rejects.toThrow("ID must be a non-empty string");
+      });
+
+      it("should throw on invalid timestamp (string)", async () => {
+        await expect(
+          cortex.immutable.getAtTimestamp(
+            "test-type",
+            "test-id",
+            "2025-01-01" as any,
+          ),
+        ).rejects.toThrow(
+          "Timestamp must be a valid Date object or positive number",
+        );
+      });
+
+      it("should throw on invalid timestamp (negative)", async () => {
+        await expect(
+          cortex.immutable.getAtTimestamp("test-type", "test-id", -1000),
+        ).rejects.toThrow(
+          "Timestamp must be a valid Date object or positive number",
+        );
+      });
+
+      it("should throw on invalid timestamp (NaN)", async () => {
+        await expect(
+          cortex.immutable.getAtTimestamp("test-type", "test-id", NaN),
+        ).rejects.toThrow(
+          "Timestamp must be a valid Date object or positive number",
+        );
+      });
+
+      it("should throw on invalid Date object", async () => {
+        await expect(
+          cortex.immutable.getAtTimestamp(
+            "test-type",
+            "test-id",
+            new Date("invalid"),
+          ),
+        ).rejects.toThrow("Timestamp must be a valid Date object");
+      });
+
+      it("should accept valid number timestamp", async () => {
+        // Should not throw (will return null if doesn't exist)
+        const result = await cortex.immutable.getAtTimestamp(
+          "test",
+          "id",
+          Date.now(),
+        );
+        expect(result).toBeNull();
+      });
+
+      it("should accept valid Date object", async () => {
+        // Should not throw (will return null if doesn't exist)
+        const result = await cortex.immutable.getAtTimestamp(
+          "test",
+          "id",
+          new Date(),
+        );
+        expect(result).toBeNull();
+      });
+    });
+
+    describe("purgeMany() validation", () => {
+      it("should throw when no filters provided", async () => {
+        await expect(cortex.immutable.purgeMany({})).rejects.toThrow(
+          "purgeMany requires at least one filter",
+        );
+      });
+
+      it("should throw on invalid type filter", async () => {
+        await expect(
+          cortex.immutable.purgeMany({ type: "" }),
+        ).rejects.toThrow("Type must be a non-empty string");
+      });
+
+      it("should throw on invalid userId filter", async () => {
+        await expect(
+          cortex.immutable.purgeMany({ userId: "  " }),
+        ).rejects.toThrow("userId cannot be empty");
+      });
+
+      it("should accept valid type filter", async () => {
+        // Should not throw
+        const result = await cortex.immutable.purgeMany({
+          type: `test-${Date.now()}`,
+        });
+        expect(result).toBeDefined();
+      });
+
+      it("should accept valid userId filter", async () => {
+        // Should not throw
+        const result = await cortex.immutable.purgeMany({ userId: "user-123" });
+        expect(result).toBeDefined();
+      });
+    });
+
+    describe("purgeVersions() validation", () => {
+      it("should throw on empty type", async () => {
+        await expect(
+          cortex.immutable.purgeVersions("", "test-id", 5),
+        ).rejects.toThrow("Type must be a non-empty string");
+      });
+
+      it("should throw on empty id", async () => {
+        await expect(
+          cortex.immutable.purgeVersions("test-type", "", 5),
+        ).rejects.toThrow("ID must be a non-empty string");
+      });
+
+      it("should throw on invalid keepLatest (zero)", async () => {
+        await expect(
+          cortex.immutable.purgeVersions("test-type", "test-id", 0),
+        ).rejects.toThrow("keepLatest must be a positive integer >= 1");
+      });
+
+      it("should throw on invalid keepLatest (negative)", async () => {
+        await expect(
+          cortex.immutable.purgeVersions("test-type", "test-id", -5),
+        ).rejects.toThrow("keepLatest must be a positive integer >= 1");
+      });
+
+      it("should throw on invalid keepLatest (decimal)", async () => {
+        await expect(
+          cortex.immutable.purgeVersions("test-type", "test-id", 5.5),
+        ).rejects.toThrow("keepLatest must be a positive integer");
+      });
+
+      it("should throw on invalid keepLatest (string)", async () => {
+        await expect(
+          cortex.immutable.purgeVersions("test-type", "test-id", "5" as any),
+        ).rejects.toThrow("keepLatest must be a positive integer");
+      });
+
+      // Note: Backend validation still applies - IMMUTABLE_ENTRY_NOT_FOUND
+      // is tested in existing tests (line 1506-1510)
+    });
+
+    describe("Validation Error Properties", () => {
+      it("should include error code", async () => {
+        try {
+          await cortex.immutable.store({
+            type: "",
+            id: "test",
+            data: {},
+          });
+          fail("Should have thrown");
+        } catch (error: any) {
+          expect(error.code).toBe("INVALID_TYPE");
+        }
+      });
+
+      it("should include field name", async () => {
+        try {
+          await cortex.immutable.store({
+            type: "",
+            id: "test",
+            data: {},
+          });
+          fail("Should have thrown");
+        } catch (error: any) {
+          expect(error.field).toBe("type");
+        }
+      });
+
+      it("should be instance of ImmutableValidationError", async () => {
+        const { ImmutableValidationError } = await import("../src/immutable");
+        try {
+          await cortex.immutable.store({
+            type: "",
+            id: "test",
+            data: {},
+          });
+          fail("Should have thrown");
+        } catch (error: any) {
+          expect(error).toBeInstanceOf(ImmutableValidationError);
+        }
+      });
+    });
+  });
+
   describe("store()", () => {
     it("creates version 1 for new entry", async () => {
       const uniqueId = `refund-policy-${Date.now()}`;
@@ -642,6 +1153,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       expect(after).toBeNull();
     });
 
+    // Backend validation test - checks entry existence
     it("throws error for non-existent entry", async () => {
       await expect(
         cortex.immutable.purge("temp-data", "does-not-exist"),
@@ -1503,6 +2015,7 @@ describe("Immutable Store API (Layer 1b)", () => {
         expect(result.versionsRemaining).toBe(3);
       });
 
+      // Backend validation test - checks entry existence
       it("throws error for non-existent entry", async () => {
         await expect(
           cortex.immutable.purgeVersions("type", "nonexistent", 5),

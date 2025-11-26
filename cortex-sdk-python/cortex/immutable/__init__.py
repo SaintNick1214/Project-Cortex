@@ -9,6 +9,19 @@ from typing import Any, Dict, List, Optional, cast
 from .._utils import convert_convex_response, filter_none_values
 from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import ImmutableEntry, ImmutableRecord, ImmutableVersion
+from .validators import (
+    ImmutableValidationError,
+    validate_id,
+    validate_immutable_entry,
+    validate_keep_latest,
+    validate_limit,
+    validate_purge_many_filter,
+    validate_search_query,
+    validate_timestamp,
+    validate_type,
+    validate_user_id,
+    validate_version,
+)
 
 
 class ImmutableAPI:
@@ -50,6 +63,9 @@ class ImmutableAPI:
             ...     )
             ... )
         """
+        # CLIENT-SIDE VALIDATION
+        validate_immutable_entry(entry)
+
         result = await self.client.mutation(
             "immutable:store",
             filter_none_values({
@@ -77,6 +93,10 @@ class ImmutableAPI:
         Example:
             >>> article = await cortex.immutable.get('kb-article', 'refund-policy')
         """
+        # CLIENT-SIDE VALIDATION
+        validate_type(type, "type")
+        validate_id(id, "id")
+
         result = await self.client.query("immutable:get", filter_none_values({"type": type, "id": id}))
 
         if not result:
@@ -101,6 +121,11 @@ class ImmutableAPI:
         Example:
             >>> v1 = await cortex.immutable.get_version('kb-article', 'guide-1', 1)
         """
+        # CLIENT-SIDE VALIDATION
+        validate_type(type, "type")
+        validate_id(id, "id")
+        validate_version(version, "version")
+
         result = await self.client.query(
             "immutable:getVersion", filter_none_values({"type": type, "id": id, "version": version})
         )
@@ -130,6 +155,10 @@ class ImmutableAPI:
         Example:
             >>> history = await cortex.immutable.get_history('policy', 'max-refund')
         """
+        # CLIENT-SIDE VALIDATION
+        validate_type(type, "type")
+        validate_id(id, "id")
+
         result = await self.client.query(
             "immutable:getHistory", filter_none_values({"type": type, "id": id})
         )
@@ -164,6 +193,11 @@ class ImmutableAPI:
             ...     'policy', 'max-refund', 1609459200000
             ... )
         """
+        # CLIENT-SIDE VALIDATION
+        validate_type(type, "type")
+        validate_id(id, "id")
+        validate_timestamp(timestamp, "timestamp")
+
         result = await self.client.query(
             "immutable:getAtTimestamp",
             filter_none_values({"type": type, "id": id, "timestamp": timestamp}),
@@ -194,6 +228,14 @@ class ImmutableAPI:
         Example:
             >>> articles = await cortex.immutable.list(type='kb-article', limit=50)
         """
+        # CLIENT-SIDE VALIDATION
+        if type is not None:
+            validate_type(type, "type")
+        if user_id is not None:
+            validate_user_id(user_id, "user_id")
+        if limit is not None:
+            validate_limit(limit, "limit")
+
         result = await self.client.query(
             "immutable:list", filter_none_values({"type": type, "userId": user_id, "limit": limit})
         )
@@ -225,6 +267,15 @@ class ImmutableAPI:
             ...     type='kb-article'
             ... )
         """
+        # CLIENT-SIDE VALIDATION
+        validate_search_query(query, "query")
+        if type is not None:
+            validate_type(type, "type")
+        if user_id is not None:
+            validate_user_id(user_id, "user_id")
+        if limit is not None:
+            validate_limit(limit, "limit")
+
         result = await self.client.query(
             "immutable:search",
             filter_none_values({"query": query, "type": type, "userId": user_id, "limit": limit}),
@@ -248,6 +299,12 @@ class ImmutableAPI:
         Example:
             >>> total = await cortex.immutable.count(type='kb-article')
         """
+        # CLIENT-SIDE VALIDATION
+        if type is not None:
+            validate_type(type, "type")
+        if user_id is not None:
+            validate_user_id(user_id, "user_id")
+
         result = await self.client.query(
             "immutable:count", filter_none_values({"type": type, "userId": user_id})
         )
@@ -271,6 +328,10 @@ class ImmutableAPI:
         Example:
             >>> result = await cortex.immutable.purge('kb-article', 'old-article')
         """
+        # CLIENT-SIDE VALIDATION
+        validate_type(type, "type")
+        validate_id(id, "id")
+
         result = await self.client.mutation(
             "immutable:purge", filter_none_values({"type": type, "id": id})
         )
@@ -303,6 +364,11 @@ class ImmutableAPI:
             ...     dry_run=True
             ... )
         """
+        # CLIENT-SIDE VALIDATION
+        validate_purge_many_filter(type, user_id)
+        if created_before is not None:
+            validate_timestamp(created_before, "created_before")
+
         result = await self.client.mutation(
             "immutable:purgeMany",
             filter_none_values({
@@ -340,10 +406,30 @@ class ImmutableAPI:
             ...     keep_latest=20
             ... )
         """
+        # CLIENT-SIDE VALIDATION
+        validate_type(type, "type")
+        validate_id(id, "id")
+
+        # At least one parameter required
+        if keep_latest is None and older_than is None:
+            raise ImmutableValidationError(
+                "purge_versions requires either keep_latest or older_than parameter",
+                "INVALID_FILTER",
+            )
+
+        if keep_latest is not None:
+            validate_keep_latest(keep_latest, "keep_latest")
+        if older_than is not None:
+            validate_timestamp(older_than, "older_than")
+
         result = await self.client.mutation(
             "immutable:purgeVersions",
             filter_none_values({"type": type, "id": id, "keepLatest": keep_latest, "olderThan": older_than}),
         )
 
         return cast(Dict[str, Any], result)
+
+
+# Export validation error for specific error handling
+__all__ = ["ImmutableAPI", "ImmutableValidationError"]
 

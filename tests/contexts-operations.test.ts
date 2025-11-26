@@ -74,16 +74,16 @@ describe("Context Operations API", () => {
 
       expect(v1).toBeDefined();
       expect(v1!.version).toBe(1);
-      expect(v1!.data.value).toBe("v1");
+      expect(v1!.data!.value).toBe("v1");
 
       expect(v2).toBeDefined();
       expect(v2!.version).toBe(2);
-      expect(v2!.data.value).toBe("v2");
+      expect(v2!.data!.value).toBe("v2");
 
       expect(v3).toBeDefined();
       expect(v3!.version).toBe(3);
       expect(v3!.status).toBe("completed");
-      expect(v3!.data.value).toBe("v3");
+      expect(v3!.data!.value).toBe("v3");
 
       // Test getHistory
       const history = await cortex.contexts.getHistory(context.contextId);
@@ -234,7 +234,8 @@ describe("Context Operations API", () => {
 
   describe("Query Operations", () => {
     it("finds contexts by conversation ID", async () => {
-      const conversationId = "test-conv-123";
+      // Use valid conversation ID format (must start with "conv-")
+      const conversationId = "conv-test-123";
 
       // Create contexts linked to conversation
       await cortex.contexts.create({
