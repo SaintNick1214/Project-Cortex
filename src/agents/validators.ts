@@ -33,7 +33,8 @@ export class AgentValidationError extends Error {
  * Validates agent ID is non-empty and within length limits
  */
 export function validateAgentId(agentId: string, fieldName = "agentId"): void {
-  if (agentId === null || agentId === undefined) {
+  // Runtime defensive checks - TypeScript types don't prevent JS callers from passing invalid values
+  if ((agentId as unknown) === null || (agentId as unknown) === undefined) {
     throw new AgentValidationError(
       `${fieldName} is required`,
       "MISSING_AGENT_ID",
@@ -74,7 +75,8 @@ export function validateAgentId(agentId: string, fieldName = "agentId"): void {
  * Validates agent name is non-empty and within length limits
  */
 export function validateAgentName(name: string, fieldName = "name"): void {
-  if (name === null || name === undefined) {
+  // Runtime defensive checks - TypeScript types don't prevent JS callers from passing invalid values
+  if ((name as unknown) === null || (name as unknown) === undefined) {
     throw new AgentValidationError(
       `${fieldName} is required`,
       "MISSING_AGENT_NAME",
@@ -115,7 +117,8 @@ export function validateAgentName(name: string, fieldName = "name"): void {
  * Validates complete agent registration structure
  */
 export function validateAgentRegistration(agent: AgentRegistration): void {
-  if (!agent) {
+  // Runtime defensive checks - TypeScript types don't prevent JS callers from passing invalid values
+  if (!(agent as unknown)) {
     throw new AgentValidationError(
       "Agent registration object is required",
       "MISSING_AGENT_ID",
@@ -123,7 +126,7 @@ export function validateAgentRegistration(agent: AgentRegistration): void {
   }
 
   // Validate required fields exist (not undefined)
-  if (agent.id === undefined || agent.id === null) {
+  if ((agent.id as unknown) === undefined || (agent.id as unknown) === null) {
     throw new AgentValidationError(
       "Agent ID is required",
       "MISSING_AGENT_ID",
@@ -131,7 +134,7 @@ export function validateAgentRegistration(agent: AgentRegistration): void {
     );
   }
 
-  if (agent.name === undefined || agent.name === null) {
+  if ((agent.name as unknown) === undefined || (agent.name as unknown) === null) {
     throw new AgentValidationError(
       "Agent name is required",
       "MISSING_AGENT_NAME",
@@ -171,7 +174,7 @@ export function validateAgentStatus(status: string, fieldName = "status"): void 
     );
   }
 
-  if (!VALID_STATUSES.includes(status as any)) {
+  if (!(VALID_STATUSES as readonly string[]).includes(status)) {
     throw new AgentValidationError(
       `Invalid status "${status}". Valid values: ${VALID_STATUSES.join(", ")}`,
       "INVALID_STATUS",
@@ -191,7 +194,8 @@ const VALID_SORT_ORDER = ["asc", "desc"] as const;
  * Validates agent filter options
  */
 export function validateAgentFilters(filters: AgentFilters): void {
-  if (!filters) {
+  // Runtime defensive check
+  if (!(filters as unknown)) {
     return; // Filters are optional
   }
 
@@ -258,7 +262,7 @@ export function validateAgentFilters(filters: AgentFilters): void {
 
   // Validate sortBy
   if (filters.sortBy !== undefined) {
-    if (!VALID_SORT_BY.includes(filters.sortBy as any)) {
+    if (!(VALID_SORT_BY as readonly string[]).includes(filters.sortBy)) {
       throw new AgentValidationError(
         `Invalid sortBy "${filters.sortBy}". Valid values: ${VALID_SORT_BY.join(", ")}`,
         "INVALID_SORT_BY",
@@ -269,7 +273,7 @@ export function validateAgentFilters(filters: AgentFilters): void {
 
   // Validate sortOrder
   if (filters.sortOrder !== undefined) {
-    if (!VALID_SORT_ORDER.includes(filters.sortOrder as any)) {
+    if (!(VALID_SORT_ORDER as readonly string[]).includes(filters.sortOrder)) {
       throw new AgentValidationError(
         `Invalid sortOrder "${filters.sortOrder}". Valid values: ${VALID_SORT_ORDER.join(", ")}`,
         "INVALID_SORT_ORDER",
@@ -289,7 +293,8 @@ export function validateAgentFilters(filters: AgentFilters): void {
 export function validateUnregisterOptions(
   options: UnregisterAgentOptions,
 ): void {
-  if (!options) {
+  // Runtime defensive check
+  if (!(options as unknown)) {
     return; // Options are optional
   }
 
@@ -313,7 +318,8 @@ export function validateMetadata(
   metadata: Record<string, unknown>,
   fieldName = "metadata",
 ): void {
-  if (metadata === null) {
+  // Runtime defensive check
+  if ((metadata as unknown) === null) {
     throw new AgentValidationError(
       `${fieldName} cannot be null`,
       "INVALID_METADATA_FORMAT",
@@ -345,7 +351,8 @@ export function validateConfig(
   config: Record<string, unknown>,
   fieldName = "config",
 ): void {
-  if (config === null) {
+  // Runtime defensive check
+  if ((config as unknown) === null) {
     throw new AgentValidationError(
       `${fieldName} cannot be null`,
       "INVALID_CONFIG_FORMAT",

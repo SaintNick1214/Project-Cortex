@@ -234,7 +234,8 @@ describe("Context Operations API", () => {
 
   describe("Query Operations", () => {
     it("finds contexts by conversation ID", async () => {
-      const conversationId = "test-conv-123";
+      // Use valid conversation ID format (must start with "conv-")
+      const conversationId = "conv-test-123";
 
       // Create contexts linked to conversation
       await cortex.contexts.create({
