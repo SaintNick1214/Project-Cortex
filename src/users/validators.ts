@@ -32,8 +32,10 @@ export class UserValidationError extends Error {
 
 /**
  * Validates userId is provided and non-empty
+ * Runtime checks for potentially untrusted external input
  */
 export function validateUserId(userId: string, fieldName = "userId"): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (userId === null || userId === undefined) {
     throw new UserValidationError(
       `${fieldName} is required`,
@@ -134,11 +136,13 @@ export function validateVersionNumber(
 
 /**
  * Validates timestamp is a valid Date object
+ * Runtime checks for potentially untrusted external input
  */
 export function validateTimestamp(
   timestamp: Date,
   fieldName = "timestamp",
 ): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (timestamp === null || timestamp === undefined) {
     throw new UserValidationError(
       `${fieldName} is required`,
@@ -267,6 +271,7 @@ export function validateOffset(
 
 /**
  * Validates ListUsersFilter structure
+ * Runtime checks for potentially untrusted external input
  */
 export function validateListUsersFilter(
   filters: ListUsersFilter | undefined,
@@ -275,6 +280,7 @@ export function validateListUsersFilter(
     return; // Optional parameter
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (typeof filters !== "object" || filters === null) {
     throw new UserValidationError(
       "Filters must be an object",
@@ -295,12 +301,14 @@ export function validateListUsersFilter(
 
 /**
  * Validates UserFilters structure
+ * Runtime checks for potentially untrusted external input
  */
 export function validateUserFilters(filters: UserFilters | undefined): void {
   if (filters === undefined) {
     return; // Optional parameter
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (typeof filters !== "object" || filters === null) {
     throw new UserValidationError(
       "Filters must be an object",
@@ -317,6 +325,7 @@ export function validateUserFilters(filters: UserFilters | undefined): void {
 
 /**
  * Validates DeleteUserOptions structure
+ * Runtime checks for potentially untrusted external input
  */
 export function validateDeleteUserOptions(
   options: DeleteUserOptions | undefined,
@@ -325,6 +334,7 @@ export function validateDeleteUserOptions(
     return; // Optional parameter
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (typeof options !== "object" || options === null) {
     throw new UserValidationError(
       "Options must be an object",
@@ -424,6 +434,7 @@ export function validateUserIdsArray(
 
 /**
  * Validates bulk update options
+ * Runtime checks for potentially untrusted external input
  */
 export function validateBulkUpdateOptions(
   options:
@@ -437,6 +448,7 @@ export function validateBulkUpdateOptions(
     return; // Optional parameter
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (typeof options !== "object" || options === null) {
     throw new UserValidationError(
       "Options must be an object",
@@ -467,6 +479,7 @@ export function validateBulkUpdateOptions(
 
 /**
  * Validates bulk delete options
+ * Runtime checks for potentially untrusted external input
  */
 export function validateBulkDeleteOptions(
   options:
@@ -480,6 +493,7 @@ export function validateBulkDeleteOptions(
     return; // Optional parameter
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (typeof options !== "object" || options === null) {
     throw new UserValidationError(
       "Options must be an object",
@@ -511,6 +525,7 @@ export function validateBulkDeleteOptions(
 
 /**
  * Validates export options structure
+ * Runtime checks for potentially untrusted external input
  */
 export function validateExportOptions(
   options: ExportUsersOptions | undefined,
@@ -523,6 +538,7 @@ export function validateExportOptions(
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (typeof options !== "object" || options === null) {
     throw new UserValidationError(
       "Options must be an object",

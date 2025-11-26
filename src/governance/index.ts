@@ -71,40 +71,38 @@ export class GovernanceAPI {
       );
     }
 
-    // Validate specific fields
-    if (policy.conversations?.retention?.deleteAfter) {
-      validatePeriodFormat(
-        policy.conversations.retention.deleteAfter,
-        "conversations.retention.deleteAfter",
-      );
-    }
-    if (policy.conversations?.retention?.archiveAfter) {
+    // Validate specific fields - deleteAfter is required, archiveAfter is optional
+    validatePeriodFormat(
+      policy.conversations.retention.deleteAfter,
+      "conversations.retention.deleteAfter",
+    );
+    if (policy.conversations.retention.archiveAfter) {
       validatePeriodFormat(
         policy.conversations.retention.archiveAfter,
         "conversations.retention.archiveAfter",
       );
     }
-    if (policy.conversations?.purging?.deleteInactiveAfter) {
+    if (policy.conversations.purging.deleteInactiveAfter) {
       validatePeriodFormat(
         policy.conversations.purging.deleteInactiveAfter,
         "conversations.purging.deleteInactiveAfter",
       );
     }
 
-    // Validate mutable periods
-    if (policy.mutable?.retention?.defaultTTL) {
+    // Validate mutable periods (all optional)
+    if (policy.mutable.retention.defaultTTL) {
       validatePeriodFormat(
         policy.mutable.retention.defaultTTL,
         "mutable.retention.defaultTTL",
       );
     }
-    if (policy.mutable?.retention?.purgeInactiveAfter) {
+    if (policy.mutable.retention.purgeInactiveAfter) {
       validatePeriodFormat(
         policy.mutable.retention.purgeInactiveAfter,
         "mutable.retention.purgeInactiveAfter",
       );
     }
-    if (policy.mutable?.purging?.deleteUnaccessedAfter) {
+    if (policy.mutable.purging.deleteUnaccessedAfter) {
       validatePeriodFormat(
         policy.mutable.purging.deleteUnaccessedAfter,
         "mutable.purging.deleteUnaccessedAfter",
@@ -112,7 +110,7 @@ export class GovernanceAPI {
     }
 
     // Validate immutable periods
-    if (policy.immutable?.purging?.purgeUnusedAfter) {
+    if (policy.immutable.purging.purgeUnusedAfter) {
       validatePeriodFormat(
         policy.immutable.purging.purgeUnusedAfter,
         "immutable.purging.purgeUnusedAfter",
@@ -129,8 +127,8 @@ export class GovernanceAPI {
       "vector.retention.defaultVersions",
     );
 
-    // Validate vector importance ranges
-    if (policy.vector?.retention?.byImportance) {
+    // Validate vector importance ranges (validate if array has elements)
+    if (policy.vector.retention.byImportance.length > 0) {
       validateImportanceRanges(policy.vector.retention.byImportance);
     }
 
@@ -206,65 +204,66 @@ export class GovernanceAPI {
     }
 
     // Validate override structure (same as setPolicy but for partial)
-    if (overrides.conversations?.retention?.deleteAfter) {
+    // Partial<GovernancePolicy> makes top-level optional, but nested structure is required
+    if (overrides.conversations?.retention.deleteAfter) {
       validatePeriodFormat(
         overrides.conversations.retention.deleteAfter,
         "conversations.retention.deleteAfter",
       );
     }
-    if (overrides.conversations?.retention?.archiveAfter) {
+    if (overrides.conversations?.retention.archiveAfter) {
       validatePeriodFormat(
         overrides.conversations.retention.archiveAfter,
         "conversations.retention.archiveAfter",
       );
     }
-    if (overrides.conversations?.purging?.deleteInactiveAfter) {
+    if (overrides.conversations?.purging.deleteInactiveAfter) {
       validatePeriodFormat(
         overrides.conversations.purging.deleteInactiveAfter,
         "conversations.purging.deleteInactiveAfter",
       );
     }
 
-    if (overrides.mutable?.retention?.defaultTTL) {
+    if (overrides.mutable?.retention.defaultTTL) {
       validatePeriodFormat(
         overrides.mutable.retention.defaultTTL,
         "mutable.retention.defaultTTL",
       );
     }
-    if (overrides.mutable?.retention?.purgeInactiveAfter) {
+    if (overrides.mutable?.retention.purgeInactiveAfter) {
       validatePeriodFormat(
         overrides.mutable.retention.purgeInactiveAfter,
         "mutable.retention.purgeInactiveAfter",
       );
     }
-    if (overrides.mutable?.purging?.deleteUnaccessedAfter) {
+    if (overrides.mutable?.purging.deleteUnaccessedAfter) {
       validatePeriodFormat(
         overrides.mutable.purging.deleteUnaccessedAfter,
         "mutable.purging.deleteUnaccessedAfter",
       );
     }
 
-    if (overrides.immutable?.purging?.purgeUnusedAfter) {
+    if (overrides.immutable?.purging.purgeUnusedAfter) {
       validatePeriodFormat(
         overrides.immutable.purging.purgeUnusedAfter,
         "immutable.purging.purgeUnusedAfter",
       );
     }
 
-    if (overrides.immutable?.retention?.defaultVersions !== undefined) {
+    if (overrides.immutable?.retention.defaultVersions !== undefined) {
       validateVersionCount(
         overrides.immutable.retention.defaultVersions,
         "immutable.retention.defaultVersions",
       );
     }
-    if (overrides.vector?.retention?.defaultVersions !== undefined) {
+    if (overrides.vector?.retention.defaultVersions !== undefined) {
       validateVersionCount(
         overrides.vector.retention.defaultVersions,
         "vector.retention.defaultVersions",
       );
     }
 
-    if (overrides.vector?.retention?.byImportance) {
+    if (overrides.vector?.retention.byImportance) {
       validateImportanceRanges(overrides.vector.retention.byImportance);
     }
 
@@ -355,65 +354,66 @@ export class GovernanceAPI {
    */
   async simulate(options: SimulationOptions): Promise<SimulationResult> {
     // Validate partial policy structure (same validations as setPolicy)
-    if (options.conversations?.retention?.deleteAfter) {
+    // SimulationOptions extends Partial<GovernancePolicy>: top-level optional, nested required
+    if (options.conversations?.retention.deleteAfter) {
       validatePeriodFormat(
         options.conversations.retention.deleteAfter,
         "conversations.retention.deleteAfter",
       );
     }
-    if (options.conversations?.retention?.archiveAfter) {
+    if (options.conversations?.retention.archiveAfter) {
       validatePeriodFormat(
         options.conversations.retention.archiveAfter,
         "conversations.retention.archiveAfter",
       );
     }
-    if (options.conversations?.purging?.deleteInactiveAfter) {
+    if (options.conversations?.purging.deleteInactiveAfter) {
       validatePeriodFormat(
         options.conversations.purging.deleteInactiveAfter,
         "conversations.purging.deleteInactiveAfter",
       );
     }
 
-    if (options.mutable?.retention?.defaultTTL) {
+    if (options.mutable?.retention.defaultTTL) {
       validatePeriodFormat(
         options.mutable.retention.defaultTTL,
         "mutable.retention.defaultTTL",
       );
     }
-    if (options.mutable?.retention?.purgeInactiveAfter) {
+    if (options.mutable?.retention.purgeInactiveAfter) {
       validatePeriodFormat(
         options.mutable.retention.purgeInactiveAfter,
         "mutable.retention.purgeInactiveAfter",
       );
     }
-    if (options.mutable?.purging?.deleteUnaccessedAfter) {
+    if (options.mutable?.purging.deleteUnaccessedAfter) {
       validatePeriodFormat(
         options.mutable.purging.deleteUnaccessedAfter,
         "mutable.purging.deleteUnaccessedAfter",
       );
     }
 
-    if (options.immutable?.purging?.purgeUnusedAfter) {
+    if (options.immutable?.purging.purgeUnusedAfter) {
       validatePeriodFormat(
         options.immutable.purging.purgeUnusedAfter,
         "immutable.purging.purgeUnusedAfter",
       );
     }
 
-    if (options.immutable?.retention?.defaultVersions !== undefined) {
+    if (options.immutable?.retention.defaultVersions !== undefined) {
       validateVersionCount(
         options.immutable.retention.defaultVersions,
         "immutable.retention.defaultVersions",
       );
     }
-    if (options.vector?.retention?.defaultVersions !== undefined) {
+    if (options.vector?.retention.defaultVersions !== undefined) {
       validateVersionCount(
         options.vector.retention.defaultVersions,
         "vector.retention.defaultVersions",
       );
     }
 
-    if (options.vector?.retention?.byImportance) {
+    if (options.vector?.retention.byImportance) {
       validateImportanceRanges(options.vector.retention.byImportance);
     }
 

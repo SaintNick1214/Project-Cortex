@@ -9,7 +9,6 @@ import type {
   GovernancePolicy,
   PolicyScope,
   EnforcementOptions,
-  ComplianceTemplate,
 } from "../types";
 
 /**
@@ -32,8 +31,13 @@ export class GovernanceValidationError extends Error {
 
 /**
  * Validates complete governance policy structure
+ * 
+ * Note: These runtime checks are intentional even though TypeScript types
+ * guarantee structure - data may come from external/untrusted sources.
  */
 export function validateGovernancePolicy(policy: GovernancePolicy): void {
+  // Runtime validation for potentially untrusted input
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!policy) {
     throw new GovernanceValidationError(
       "Policy is required",
@@ -42,6 +46,7 @@ export function validateGovernancePolicy(policy: GovernancePolicy): void {
   }
 
   // Check required top-level fields
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!policy.conversations) {
     throw new GovernanceValidationError(
       "Policy must include conversations configuration",
@@ -50,6 +55,7 @@ export function validateGovernancePolicy(policy: GovernancePolicy): void {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!policy.immutable) {
     throw new GovernanceValidationError(
       "Policy must include immutable configuration",
@@ -58,6 +64,7 @@ export function validateGovernancePolicy(policy: GovernancePolicy): void {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!policy.mutable) {
     throw new GovernanceValidationError(
       "Policy must include mutable configuration",
@@ -66,6 +73,7 @@ export function validateGovernancePolicy(policy: GovernancePolicy): void {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!policy.vector) {
     throw new GovernanceValidationError(
       "Policy must include vector configuration",
@@ -74,6 +82,7 @@ export function validateGovernancePolicy(policy: GovernancePolicy): void {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!policy.compliance) {
     throw new GovernanceValidationError(
       "Policy must include compliance configuration",
@@ -83,6 +92,7 @@ export function validateGovernancePolicy(policy: GovernancePolicy): void {
   }
 
   // Validate nested structures
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!policy.conversations.retention) {
     throw new GovernanceValidationError(
       "Conversations policy must include retention configuration",
@@ -91,6 +101,7 @@ export function validateGovernancePolicy(policy: GovernancePolicy): void {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!policy.conversations.purging) {
     throw new GovernanceValidationError(
       "Conversations policy must include purging configuration",
@@ -99,6 +110,7 @@ export function validateGovernancePolicy(policy: GovernancePolicy): void {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!policy.immutable.retention) {
     throw new GovernanceValidationError(
       "Immutable policy must include retention configuration",
@@ -107,6 +119,7 @@ export function validateGovernancePolicy(policy: GovernancePolicy): void {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!policy.immutable.purging) {
     throw new GovernanceValidationError(
       "Immutable policy must include purging configuration",
@@ -115,6 +128,7 @@ export function validateGovernancePolicy(policy: GovernancePolicy): void {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!policy.mutable.retention) {
     throw new GovernanceValidationError(
       "Mutable policy must include retention configuration",
@@ -123,6 +137,7 @@ export function validateGovernancePolicy(policy: GovernancePolicy): void {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!policy.mutable.purging) {
     throw new GovernanceValidationError(
       "Mutable policy must include purging configuration",
@@ -131,6 +146,7 @@ export function validateGovernancePolicy(policy: GovernancePolicy): void {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!policy.vector.retention) {
     throw new GovernanceValidationError(
       "Vector policy must include retention configuration",
@@ -139,6 +155,7 @@ export function validateGovernancePolicy(policy: GovernancePolicy): void {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!policy.vector.purging) {
     throw new GovernanceValidationError(
       "Vector policy must include purging configuration",
@@ -186,6 +203,8 @@ export function validateImportanceRanges(
   for (let i = 0; i < ranges.length; i++) {
     const { range, versions } = ranges[i];
 
+    // Runtime check for potentially malformed data from external sources
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!Array.isArray(range) || range.length !== 2) {
       throw new GovernanceValidationError(
         `Range at index ${i} must be a tuple [min, max]`,
@@ -280,6 +299,8 @@ export function validateVersionCount(versions: number, fieldName = "versions"): 
  * Validates policy scope (organizationId or memorySpaceId)
  */
 export function validatePolicyScope(scope: PolicyScope): void {
+  // Runtime check for potentially untrusted input
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!scope) {
     throw new GovernanceValidationError(
       "Scope is required",
@@ -326,6 +347,8 @@ const VALID_RULES = ["retention", "purging"] as const;
  * Validates enforcement options
  */
 export function validateEnforcementOptions(options: EnforcementOptions): void {
+  // Runtime check for potentially untrusted input
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!options) {
     throw new GovernanceValidationError(
       "Enforcement options are required",
@@ -333,7 +356,7 @@ export function validateEnforcementOptions(options: EnforcementOptions): void {
     );
   }
 
-  // Validate scope
+  // Validate scope (scope is optional in the type but required for enforcement)
   if (!options.scope) {
     throw new GovernanceValidationError(
       "Enforcement requires a scope (organizationId or memorySpaceId)",
@@ -360,7 +383,7 @@ export function validateEnforcementOptions(options: EnforcementOptions): void {
     }
 
     for (const layer of options.layers) {
-      if (!VALID_LAYERS.includes(layer as any)) {
+      if (!(VALID_LAYERS as readonly string[]).includes(layer)) {
         throw new GovernanceValidationError(
           `Invalid layer "${layer}". Valid layers: ${VALID_LAYERS.join(", ")}`,
           "INVALID_LAYERS",
@@ -386,7 +409,7 @@ export function validateEnforcementOptions(options: EnforcementOptions): void {
     }
 
     for (const rule of options.rules) {
-      if (!VALID_RULES.includes(rule as any)) {
+      if (!(VALID_RULES as readonly string[]).includes(rule)) {
         throw new GovernanceValidationError(
           `Invalid rule "${rule}". Valid rules: ${VALID_RULES.join(", ")}`,
           "INVALID_RULES",
@@ -441,7 +464,7 @@ export function validateStatsPeriod(period: string): void {
     );
   }
 
-  if (!VALID_PERIODS.includes(period as any)) {
+  if (!(VALID_PERIODS as readonly string[]).includes(period)) {
     throw new GovernanceValidationError(
       `Invalid period "${period}". Valid periods: ${VALID_PERIODS.join(", ")}`,
       "INVALID_PERIOD",
@@ -466,7 +489,7 @@ export function validateComplianceTemplate(template: string): void {
     );
   }
 
-  if (!VALID_TEMPLATES.includes(template as ComplianceTemplate)) {
+  if (!(VALID_TEMPLATES as readonly string[]).includes(template)) {
     throw new GovernanceValidationError(
       `Invalid compliance template "${template}". Valid templates: ${VALID_TEMPLATES.join(", ")}`,
       "INVALID_COMPLIANCE_MODE",
