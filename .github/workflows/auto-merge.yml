@@ -36,11 +36,12 @@ jobs:
             echo "number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
             echo "base_ref=${{ github.event.pull_request.base.ref }}" >> $GITHUB_OUTPUT
           elif [ "${{ github.event_name }}" = "check_suite" ]; then
-            # Get PR number from check suite (with null safety)
-            PR_COUNT="${{ toJSON(github.event.check_suite.pull_requests) != '[]' && '1' || '0' }}"
-            if [ "$PR_COUNT" = "1" ]; then
-              PR_NUMBER="${{ github.event.check_suite.pull_requests[0].number }}"
-              BASE_REF="${{ github.event.check_suite.pull_requests[0].base.ref }}"
+            # Get PR number from check suite (parse JSON safely in shell)
+            PR_JSON='${{ toJSON(github.event.check_suite.pull_requests) }}'
+            PR_COUNT=$(echo "$PR_JSON" | jq 'length')
+            if [ "$PR_COUNT" -gt "0" ]; then
+              PR_NUMBER=$(echo "$PR_JSON" | jq -r '.[0].number')
+              BASE_REF=$(echo "$PR_JSON" | jq -r '.[0].base.ref')
               
               # Only proceed if targeting main
               if [ "$BASE_REF" = "main" ]; then
