@@ -1609,9 +1609,9 @@ describe("Facts API (Layer 3)", () => {
       });
 
       it("should throw on missing factId", async () => {
-        await expect(
-          cortex.facts.get(TEST_MEMSPACE_ID, ""),
-        ).rejects.toThrow("factId is required and cannot be empty");
+        await expect(cortex.facts.get(TEST_MEMSPACE_ID, "")).rejects.toThrow(
+          "factId is required and cannot be empty",
+        );
       });
 
       it("should throw on invalid factId format", async () => {
@@ -1623,9 +1623,9 @@ describe("Facts API (Layer 3)", () => {
 
     describe("list() validation", () => {
       it("should throw on missing memorySpaceId", async () => {
-        await expect(
-          cortex.facts.list({ memorySpaceId: "" }),
-        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+        await expect(cortex.facts.list({ memorySpaceId: "" })).rejects.toThrow(
+          "memorySpaceId is required and cannot be empty",
+        );
       });
 
       it("should throw on invalid factType", async () => {
@@ -1738,9 +1738,9 @@ describe("Facts API (Layer 3)", () => {
 
     describe("count() validation", () => {
       it("should throw on missing memorySpaceId", async () => {
-        await expect(
-          cortex.facts.count({ memorySpaceId: "" }),
-        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+        await expect(cortex.facts.count({ memorySpaceId: "" })).rejects.toThrow(
+          "memorySpaceId is required and cannot be empty",
+        );
       });
 
       it("should throw on invalid factType", async () => {
@@ -1764,15 +1764,15 @@ describe("Facts API (Layer 3)", () => {
 
     describe("search() validation", () => {
       it("should throw on missing memorySpaceId", async () => {
-        await expect(
-          cortex.facts.search("", "test query"),
-        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+        await expect(cortex.facts.search("", "test query")).rejects.toThrow(
+          "memorySpaceId is required and cannot be empty",
+        );
       });
 
       it("should throw on missing query", async () => {
-        await expect(
-          cortex.facts.search(TEST_MEMSPACE_ID, ""),
-        ).rejects.toThrow("query is required and cannot be empty");
+        await expect(cortex.facts.search(TEST_MEMSPACE_ID, "")).rejects.toThrow(
+          "query is required and cannot be empty",
+        );
       });
 
       it("should throw on invalid options", async () => {
@@ -1844,9 +1844,9 @@ describe("Facts API (Layer 3)", () => {
       });
 
       it("should throw on missing factId", async () => {
-        await expect(
-          cortex.facts.delete(TEST_MEMSPACE_ID, ""),
-        ).rejects.toThrow("factId is required and cannot be empty");
+        await expect(cortex.facts.delete(TEST_MEMSPACE_ID, "")).rejects.toThrow(
+          "factId is required and cannot be empty",
+        );
       });
 
       it("should throw on invalid factId format", async () => {
@@ -1858,9 +1858,9 @@ describe("Facts API (Layer 3)", () => {
 
     describe("getHistory() validation", () => {
       it("should throw on missing memorySpaceId", async () => {
-        await expect(
-          cortex.facts.getHistory("", "fact-123"),
-        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+        await expect(cortex.facts.getHistory("", "fact-123")).rejects.toThrow(
+          "memorySpaceId is required and cannot be empty",
+        );
       });
 
       it("should throw on missing factId", async () => {

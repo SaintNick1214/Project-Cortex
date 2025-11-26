@@ -339,7 +339,10 @@ export function validateParticipants(
     }
   } else {
     // Agent-agent conversations require memorySpaceIds with at least 2 elements
-    if (!participants.memorySpaceIds || !Array.isArray(participants.memorySpaceIds)) {
+    if (
+      !participants.memorySpaceIds ||
+      !Array.isArray(participants.memorySpaceIds)
+    ) {
       throw new ConversationValidationError(
         "agent-agent conversations require memorySpaceIds array",
         "INVALID_PARTICIPANTS",

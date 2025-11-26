@@ -1263,7 +1263,9 @@ describe("Vector Memory API (Layer 2)", () => {
 
       it("should throw on invalid minImportance above 100", async () => {
         await expect(
-          cortex.vector.search("memspace-test", "query", { minImportance: 101 }),
+          cortex.vector.search("memspace-test", "query", {
+            minImportance: 101,
+          }),
         ).rejects.toThrow("must be between 0 and 100");
       });
 
@@ -1330,9 +1332,9 @@ describe("Vector Memory API (Layer 2)", () => {
       });
 
       it("should throw on empty memoryId", async () => {
-        await expect(
-          cortex.vector.delete("memspace-test", ""),
-        ).rejects.toThrow("memoryId is required");
+        await expect(cortex.vector.delete("memspace-test", "")).rejects.toThrow(
+          "memoryId is required",
+        );
       });
 
       it("should throw on whitespace-only memoryId", async () => {
@@ -1350,9 +1352,9 @@ describe("Vector Memory API (Layer 2)", () => {
       });
 
       it("should throw on empty memorySpaceId", async () => {
-        await expect(
-          cortex.vector.list({ memorySpaceId: "" }),
-        ).rejects.toThrow("memorySpaceId is required");
+        await expect(cortex.vector.list({ memorySpaceId: "" })).rejects.toThrow(
+          "memorySpaceId is required",
+        );
       });
 
       it("should throw on invalid sourceType", async () => {
@@ -1488,9 +1490,9 @@ describe("Vector Memory API (Layer 2)", () => {
 
     describe("getHistory() validation", () => {
       it("should throw on empty memorySpaceId", async () => {
-        await expect(
-          cortex.vector.getHistory("", "mem-123"),
-        ).rejects.toThrow("memorySpaceId is required");
+        await expect(cortex.vector.getHistory("", "mem-123")).rejects.toThrow(
+          "memorySpaceId is required",
+        );
       });
 
       it("should throw on whitespace-only memorySpaceId", async () => {
@@ -1585,7 +1587,10 @@ describe("Vector Memory API (Layer 2)", () => {
 
       it("should throw on whitespace-only memorySpaceId", async () => {
         await expect(
-          cortex.vector.updateMany({ memorySpaceId: "   " }, { importance: 50 }),
+          cortex.vector.updateMany(
+            { memorySpaceId: "   " },
+            { importance: 50 },
+          ),
         ).rejects.toThrow("memorySpaceId is required");
       });
 

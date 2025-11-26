@@ -333,15 +333,15 @@ describe("Immutable Store API (Layer 1b)", () => {
       });
 
       it("should throw on empty query", async () => {
-        await expect(
-          cortex.immutable.search({ query: "" }),
-        ).rejects.toThrow("Search query is required");
+        await expect(cortex.immutable.search({ query: "" })).rejects.toThrow(
+          "Search query is required",
+        );
       });
 
       it("should throw on whitespace-only query", async () => {
-        await expect(
-          cortex.immutable.search({ query: "   " }),
-        ).rejects.toThrow("Search query is required");
+        await expect(cortex.immutable.search({ query: "   " })).rejects.toThrow(
+          "Search query is required",
+        );
       });
 
       it("should throw on non-string query", async () => {
@@ -480,9 +480,9 @@ describe("Immutable Store API (Layer 1b)", () => {
       });
 
       it("should throw on invalid type filter", async () => {
-        await expect(
-          cortex.immutable.purgeMany({ type: "" }),
-        ).rejects.toThrow("Type must be a non-empty string");
+        await expect(cortex.immutable.purgeMany({ type: "" })).rejects.toThrow(
+          "Type must be a non-empty string",
+        );
       });
 
       it("should throw on invalid userId filter", async () => {

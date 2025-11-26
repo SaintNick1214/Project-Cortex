@@ -699,9 +699,9 @@ describe("Users API (Coordination Layer)", () => {
 
     describe("update() validation", () => {
       it("should throw on empty userId", async () => {
-        await expect(
-          cortex.users.update("", { name: "Test" }),
-        ).rejects.toThrow("userId cannot be empty");
+        await expect(cortex.users.update("", { name: "Test" })).rejects.toThrow(
+          "userId cannot be empty",
+        );
       });
 
       it("should throw on null data", async () => {
@@ -724,10 +724,9 @@ describe("Users API (Coordination Layer)", () => {
 
       it("should accept valid userId and data", async () => {
         // Should succeed
-        const result = await cortex.users.update(
-          "valid-user-" + Date.now(),
-          { name: "Test" },
-        );
+        const result = await cortex.users.update("valid-user-" + Date.now(), {
+          name: "Test",
+        });
         expect(result.id).toBeTruthy();
       });
     });
@@ -848,9 +847,7 @@ describe("Users API (Coordination Layer)", () => {
       });
 
       it("should accept valid userId with no defaults", async () => {
-        const result = await cortex.users.getOrCreate(
-          "new-user-" + Date.now(),
-        );
+        const result = await cortex.users.getOrCreate("new-user-" + Date.now());
         expect(result).toBeDefined();
       });
 
@@ -865,9 +862,9 @@ describe("Users API (Coordination Layer)", () => {
 
     describe("merge() validation", () => {
       it("should throw on empty userId", async () => {
-        await expect(
-          cortex.users.merge("", { name: "Test" }),
-        ).rejects.toThrow("userId cannot be empty");
+        await expect(cortex.users.merge("", { name: "Test" })).rejects.toThrow(
+          "userId cannot be empty",
+        );
       });
 
       it("should throw on null updates", async () => {
@@ -877,9 +874,9 @@ describe("Users API (Coordination Layer)", () => {
       });
 
       it("should throw on array updates", async () => {
-        await expect(
-          cortex.users.merge("user-123", [] as any),
-        ).rejects.toThrow("updates must be an object");
+        await expect(cortex.users.merge("user-123", [] as any)).rejects.toThrow(
+          "updates must be an object",
+        );
       });
     });
 

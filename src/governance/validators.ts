@@ -31,7 +31,7 @@ export class GovernanceValidationError extends Error {
 
 /**
  * Validates complete governance policy structure
- * 
+ *
  * Note: These runtime checks are intentional even though TypeScript types
  * guarantee structure - data may come from external/untrusted sources.
  */
@@ -39,10 +39,7 @@ export function validateGovernancePolicy(policy: GovernancePolicy): void {
   // Runtime validation for potentially untrusted input
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!policy) {
-    throw new GovernanceValidationError(
-      "Policy is required",
-      "MISSING_POLICY",
-    );
+    throw new GovernanceValidationError("Policy is required", "MISSING_POLICY");
   }
 
   // Check required top-level fields
@@ -168,7 +165,10 @@ export function validateGovernancePolicy(policy: GovernancePolicy): void {
 /**
  * Validates period format strings like "7y", "30d", "1m"
  */
-export function validatePeriodFormat(period: string, fieldName = "period"): void {
+export function validatePeriodFormat(
+  period: string,
+  fieldName = "period",
+): void {
   if (!period || typeof period !== "string") {
     throw new GovernanceValidationError(
       `${fieldName} is required and must be a string`,
@@ -254,7 +254,7 @@ export function validateImportanceRanges(
     // Check for overlaps with previous ranges
     for (let j = 0; j < i; j++) {
       const [prevMin, prevMax] = ranges[j].range;
-      
+
       // Check if ranges overlap
       if (
         (min >= prevMin && min <= prevMax) ||
@@ -273,7 +273,10 @@ export function validateImportanceRanges(
 /**
  * Validates version count (must be >= -1, where -1 means unlimited)
  */
-export function validateVersionCount(versions: number, fieldName = "versions"): void {
+export function validateVersionCount(
+  versions: number,
+  fieldName = "versions",
+): void {
   if (typeof versions !== "number") {
     throw new GovernanceValidationError(
       `${fieldName} must be a number`,
@@ -302,14 +305,13 @@ export function validatePolicyScope(scope: PolicyScope): void {
   // Runtime check for potentially untrusted input
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!scope) {
-    throw new GovernanceValidationError(
-      "Scope is required",
-      "MISSING_SCOPE",
-    );
+    throw new GovernanceValidationError("Scope is required", "MISSING_SCOPE");
   }
 
-  const hasOrgId = scope.organizationId && scope.organizationId.trim().length > 0;
-  const hasSpaceId = scope.memorySpaceId && scope.memorySpaceId.trim().length > 0;
+  const hasOrgId =
+    scope.organizationId && scope.organizationId.trim().length > 0;
+  const hasSpaceId =
+    scope.memorySpaceId && scope.memorySpaceId.trim().length > 0;
 
   if (!hasOrgId && !hasSpaceId) {
     throw new GovernanceValidationError(
@@ -340,7 +342,12 @@ export function validatePolicyScope(scope: PolicyScope): void {
 // Enforcement Options Validation
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-const VALID_LAYERS = ["conversations", "immutable", "mutable", "vector"] as const;
+const VALID_LAYERS = [
+  "conversations",
+  "immutable",
+  "mutable",
+  "vector",
+] as const;
 const VALID_RULES = ["retention", "purging"] as const;
 
 /**

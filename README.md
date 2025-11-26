@@ -94,19 +94,19 @@ Cortex provides a complete memory system for AI agents:
 ```typescript
 // ❌ Before v0.12.0 - Wait for backend to validate
 await cortex.governance.setPolicy({
-  conversations: { retention: { deleteAfter: "7years" } }  // Invalid format
+  conversations: { retention: { deleteAfter: "7years" } }, // Invalid format
 });
 // → 50-200ms wait → Error thrown
 
 // ✅ After v0.12.0 - Instant validation
 await cortex.governance.setPolicy({
-  conversations: { retention: { deleteAfter: "7years" } }  // Invalid format
+  conversations: { retention: { deleteAfter: "7years" } }, // Invalid format
 });
 // → <1ms → GovernanceValidationError with helpful message:
 //   "Invalid period format '7years'. Must be in format like '7d', '30m', or '1y'"
 
 // Optional: Catch validation errors specifically
-import { GovernanceValidationError } from '@cortexmemory/sdk';
+import { GovernanceValidationError } from "@cortexmemory/sdk";
 
 try {
   await cortex.governance.setPolicy(policy);
@@ -119,6 +119,7 @@ try {
 ```
 
 **Validation Coverage:**
+
 - ✅ Governance API (9 validators) - Period formats, ranges, scopes, dates
 - ✅ Memory API (12 validators) - IDs, content, importance, source types
 - ✅ All 9 other APIs (62+ validators total)

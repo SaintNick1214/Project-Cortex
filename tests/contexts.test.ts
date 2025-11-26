@@ -797,9 +797,7 @@ describe("Context Chains API", () => {
 
     describe("getChain() validation", () => {
       it("should throw on missing contextId", async () => {
-        await expect(cortex.contexts.getChain("")).rejects.toThrow(
-          "contextId",
-        );
+        await expect(cortex.contexts.getChain("")).rejects.toThrow("contextId");
       });
 
       it("should throw on invalid contextId format", async () => {
@@ -829,9 +827,9 @@ describe("Context Chains API", () => {
       });
 
       it("should throw on invalid contextId format", async () => {
-        await expect(
-          cortex.contexts.getChildren("invalid-id"),
-        ).rejects.toThrow("Invalid contextId format");
+        await expect(cortex.contexts.getChildren("invalid-id")).rejects.toThrow(
+          "Invalid contextId format",
+        );
       });
 
       it("should throw on invalid status option", async () => {
