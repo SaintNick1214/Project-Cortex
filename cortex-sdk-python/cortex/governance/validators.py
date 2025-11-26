@@ -354,14 +354,9 @@ def validate_enforcement_options(options: EnforcementOptions) -> None:
             "Enforcement options are required", "MISSING_OPTIONS"
         )
 
-    # Validate scope
-    if not options.scope:
-        raise GovernanceValidationError(
-            "Enforcement requires a scope (organization_id or memory_space_id)",
-            "MISSING_SCOPE",
-        )
-
-    validate_policy_scope(options.scope)
+    # Validate scope if provided (scope is optional for global enforcement)
+    if options.scope:
+        validate_policy_scope(options.scope)
 
     # Validate layers if provided
     if options.layers is not None:

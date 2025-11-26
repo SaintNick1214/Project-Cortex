@@ -120,9 +120,9 @@ class FactsAPI:
                 "sourceType": params.source_type,
                 "sourceRef": (
                     {
-                        "conversationId": params.source_ref.get("conversationId") if isinstance(params.source_ref, dict) else params.source_ref.conversation_id,
-                        "messageIds": (params.source_ref.get("messageIds") if isinstance(params.source_ref, dict) else params.source_ref.message_ids) or [],
-                        "memoryId": params.source_ref.get("memoryId") if isinstance(params.source_ref, dict) else params.source_ref.memory_id,
+                        "conversationId": params.source_ref.get("conversationId") if isinstance(params.source_ref, dict) else getattr(params.source_ref, "conversation_id", None),
+                        "messageIds": (params.source_ref.get("messageIds") if isinstance(params.source_ref, dict) else getattr(params.source_ref, "message_ids", None)) or [],
+                        "memoryId": params.source_ref.get("memoryId") if isinstance(params.source_ref, dict) else getattr(params.source_ref, "memory_id", None),
                     }
                     if params.source_ref
                     else None

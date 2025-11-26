@@ -93,7 +93,7 @@ class ContextsAPI:
         if params.conversation_ref is not None:
             # Handle both dict and object types
             ref_dict = params.conversation_ref if isinstance(params.conversation_ref, dict) else {
-                "conversationId": params.conversation_ref.conversation_id,
+                "conversationId": getattr(params.conversation_ref, "conversation_id", None),
                 "messageIds": getattr(params.conversation_ref, "message_ids", [])
             }
             validate_conversation_ref(ref_dict)
@@ -110,7 +110,7 @@ class ContextsAPI:
                 "userId": params.user_id,
                 "conversationRef": (
                     {
-                        "conversationId": params.conversation_ref.get("conversationId") if isinstance(params.conversation_ref, dict) else params.conversation_ref.conversation_id,
+                        "conversationId": params.conversation_ref.get("conversationId") if isinstance(params.conversation_ref, dict) else getattr(params.conversation_ref, "conversation_id", None),
                         "messageIds": (params.conversation_ref.get("messageIds") if isinstance(params.conversation_ref, dict) else getattr(params.conversation_ref, "message_ids", None)) or [],
                     }
                     if params.conversation_ref
