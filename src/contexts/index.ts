@@ -811,12 +811,10 @@ export class ContextsAPI {
     validateContextIdFormat(contextId);
     validateVersion(version);
 
-    const result = await this.client.query(api.contexts.getVersion, {
+    return (await this.client.query(api.contexts.getVersion, {
       contextId,
       version,
-    });
-
-    return result as {
+    })) as {
       version: number;
       status: string;
       data?: Record<string, unknown>;
@@ -886,12 +884,10 @@ export class ContextsAPI {
     validateContextIdFormat(contextId);
     validateDateObject(timestamp, "timestamp");
 
-    const result = await this.client.query(api.contexts.getAtTimestamp, {
+    return (await this.client.query(api.contexts.getAtTimestamp, {
       contextId,
       timestamp: timestamp.getTime(),
-    });
-
-    return result as {
+    })) as {
       version: number;
       status: string;
       data?: Record<string, unknown>;

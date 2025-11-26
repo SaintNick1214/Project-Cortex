@@ -319,7 +319,8 @@ export function validateParticipants(
   type: ConversationType,
   participants: CreateConversationInput["participants"],
 ): void {
-  if (!participants) {
+  // Use as unknown for defensive runtime check (input could come from untrusted source)
+  if (!(participants as unknown)) {
     throw new ConversationValidationError(
       "Participants is required",
       "MISSING_REQUIRED_FIELD",
@@ -336,7 +337,7 @@ export function validateParticipants(
         "participants.userId",
       );
     }
-  } else if (type === "agent-agent") {
+  } else {
     // Agent-agent conversations require memorySpaceIds with at least 2 elements
     if (!participants.memorySpaceIds || !Array.isArray(participants.memorySpaceIds)) {
       throw new ConversationValidationError(

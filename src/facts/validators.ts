@@ -82,7 +82,12 @@ export function validateRequiredNumber(
   value: number | undefined,
   fieldName: string,
 ): void {
-  if (value === undefined || value === null || typeof value !== "number") {
+  // Use as unknown for defensive runtime checks (value could come from untrusted input)
+  if (
+    (value as unknown) === undefined ||
+    (value as unknown) === null ||
+    typeof value !== "number"
+  ) {
     throw new FactsValidationError(
       `${fieldName} is required and must be a number`,
       "MISSING_REQUIRED_FIELD",
@@ -272,7 +277,7 @@ export function validatePagination(limit?: number, offset?: number): void {
  * Validates factType
  */
 export function validateFactType(factType: string): void {
-  if (!VALID_FACT_TYPES.includes(factType as any)) {
+  if (!(VALID_FACT_TYPES as readonly string[]).includes(factType)) {
     throw new FactsValidationError(
       `Invalid factType "${factType}". Valid types: ${VALID_FACT_TYPES.join(", ")}`,
       "INVALID_FACT_TYPE",
@@ -285,7 +290,7 @@ export function validateFactType(factType: string): void {
  * Validates sourceType
  */
 export function validateSourceType(sourceType: string): void {
-  if (!VALID_SOURCE_TYPES.includes(sourceType as any)) {
+  if (!(VALID_SOURCE_TYPES as readonly string[]).includes(sourceType)) {
     throw new FactsValidationError(
       `Invalid sourceType "${sourceType}". Valid types: ${VALID_SOURCE_TYPES.join(", ")}`,
       "INVALID_SOURCE_TYPE",
@@ -298,7 +303,7 @@ export function validateSourceType(sourceType: string): void {
  * Validates export format
  */
 export function validateExportFormat(format: string): void {
-  if (!VALID_EXPORT_FORMATS.includes(format as any)) {
+  if (!(VALID_EXPORT_FORMATS as readonly string[]).includes(format)) {
     throw new FactsValidationError(
       `Invalid format "${format}". Valid formats: ${VALID_EXPORT_FORMATS.join(", ")}`,
       "INVALID_EXPORT_FORMAT",
@@ -311,7 +316,7 @@ export function validateExportFormat(format: string): void {
  * Validates sortBy field
  */
 export function validateSortBy(sortBy: string): void {
-  if (!VALID_SORT_BY_FIELDS.includes(sortBy as any)) {
+  if (!(VALID_SORT_BY_FIELDS as readonly string[]).includes(sortBy)) {
     throw new FactsValidationError(
       `Invalid sortBy "${sortBy}". Valid fields: ${VALID_SORT_BY_FIELDS.join(", ")}`,
       "INVALID_SORT_BY",
@@ -324,7 +329,7 @@ export function validateSortBy(sortBy: string): void {
  * Validates tagMatch
  */
 export function validateTagMatch(tagMatch: string): void {
-  if (!VALID_TAG_MATCH.includes(tagMatch as any)) {
+  if (!(VALID_TAG_MATCH as readonly string[]).includes(tagMatch)) {
     throw new FactsValidationError(
       `Invalid tagMatch "${tagMatch}". Valid values: ${VALID_TAG_MATCH.join(", ")}`,
       "INVALID_TAG_MATCH",
@@ -337,7 +342,7 @@ export function validateTagMatch(tagMatch: string): void {
  * Validates sortOrder
  */
 export function validateSortOrder(sortOrder: string): void {
-  if (!VALID_SORT_ORDER.includes(sortOrder as any)) {
+  if (!(VALID_SORT_ORDER as readonly string[]).includes(sortOrder)) {
     throw new FactsValidationError(
       `Invalid sortOrder "${sortOrder}". Valid values: ${VALID_SORT_ORDER.join(", ")}`,
       "INVALID_SORT_ORDER",
