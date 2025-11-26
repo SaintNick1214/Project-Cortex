@@ -661,9 +661,7 @@ export function validateConversationRefRequirement(
 /**
  * Validates stream object is valid
  */
-export function validateStreamObject(
-  stream: unknown,
-): void {
+export function validateStreamObject(stream: unknown): void {
   if (!stream || typeof stream !== "object") {
     throw new MemoryValidationError(
       "responseStream must be a ReadableStream or AsyncIterable object",
@@ -696,7 +694,8 @@ export function validateFilterCombination(filter: {
 }): void {
   // For deleteMany, we require at least one additional filter beyond memorySpaceId
   // to prevent accidental mass deletion
-  const hasAdditionalFilter = filter.userId !== undefined || filter.sourceType !== undefined;
+  const hasAdditionalFilter =
+    filter.userId !== undefined || filter.sourceType !== undefined;
 
   if (!hasAdditionalFilter) {
     throw new MemoryValidationError(

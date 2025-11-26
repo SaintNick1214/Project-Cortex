@@ -8,13 +8,7 @@
  * - Metrics collection
  */
 
-import {
-  describe,
-  it,
-  expect,
-  beforeAll,
-  afterAll,
-} from "@jest/globals";
+import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
 import { Cortex } from "../../src";
 import { ConvexClient } from "convex/browser";
 

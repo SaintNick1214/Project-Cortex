@@ -341,9 +341,9 @@ describe("Memory Spaces Registry API", () => {
 
     describe("findByParticipant validation", () => {
       it("should throw on empty participantId", async () => {
-        await expect(
-          cortex.memorySpaces.findByParticipant(""),
-        ).rejects.toThrow("participantId");
+        await expect(cortex.memorySpaces.findByParticipant("")).rejects.toThrow(
+          "participantId",
+        );
       });
 
       it("should throw on whitespace participantId", async () => {

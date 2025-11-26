@@ -470,7 +470,11 @@ export class MemoryAPI {
     validateContent(params.userMessage, "userMessage");
     validateUserId(params.userId);
 
-    if (!params.userName || typeof params.userName !== "string" || params.userName.trim().length === 0) {
+    if (
+      !params.userName ||
+      typeof params.userName !== "string" ||
+      params.userName.trim().length === 0
+    ) {
       throw new MemoryValidationError(
         "userName is required and must be a non-empty string",
         "MISSING_REQUIRED_FIELD",
@@ -506,9 +510,10 @@ export class MemoryAPI {
       "./streaming/AdaptiveProcessor"
     );
     // Note: ResponseChunker and shouldChunkContent are not currently used but kept for future chunking implementation
-    const { ResponseChunker: _ResponseChunker, shouldChunkContent: _shouldChunkContent } = await import(
-      "./streaming/ChunkingStrategies"
-    );
+    const {
+      ResponseChunker: _ResponseChunker,
+      shouldChunkContent: _shouldChunkContent,
+    } = await import("./streaming/ChunkingStrategies");
     const { ProgressiveGraphSync } = await import(
       "./streaming/ProgressiveGraphSync"
     );
@@ -558,8 +563,9 @@ export class MemoryAPI {
 
     // Adaptive processor (if enabled)
     // Note: adaptiveProcessor is prepared for future integration
-    let _adaptiveProcessor: InstanceType<typeof AdaptiveStreamProcessor> | null =
-      null;
+    let _adaptiveProcessor: InstanceType<
+      typeof AdaptiveStreamProcessor
+    > | null = null;
     if (options?.enableAdaptiveProcessing) {
       _adaptiveProcessor = new AdaptiveStreamProcessor();
     }
@@ -1030,7 +1036,10 @@ export class MemoryAPI {
     // Client-side validation
     validateMemorySpaceId(agentId, "memorySpaceId");
     validateStoreMemoryInput(input);
-    validateConversationRefRequirement(input.source.type, input.conversationRef);
+    validateConversationRefRequirement(
+      input.source.type,
+      input.conversationRef,
+    );
 
     // Store memory
     const memory = await this.vector.store(agentId, input);

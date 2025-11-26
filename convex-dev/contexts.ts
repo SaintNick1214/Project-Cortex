@@ -156,7 +156,7 @@ export const update = mutation({
     // Create version snapshot (with backward compatibility)
     const currentVersion = getContextVersion(context);
     const previousVersions = getContextPreviousVersions(context);
-    
+
     const newVersion = {
       version: currentVersion,
       status: context.status,
@@ -790,7 +790,7 @@ export const updateMany = mutation({
       // Backward compatibility for version tracking
       const currentVersion = getContextVersion(context);
       const previousVersions = getContextPreviousVersions(context);
-      
+
       const newVersion = {
         version: currentVersion,
         status: context.status,

@@ -1132,8 +1132,13 @@ describe("Memory Convenience API (Layer 3)", () => {
 
       it("recalls facts using semantic search (not keyword matching)", async () => {
         // Skip if running in LOCAL mode (no vector search support)
-        if (process.env.CONVEX_URL?.includes("localhost") || process.env.CONVEX_URL?.includes("127.0.0.1")) {
-          console.log("⏭️  Skipping: Semantic search requires MANAGED mode (LOCAL doesn't support vector search)");
+        if (
+          process.env.CONVEX_URL?.includes("localhost") ||
+          process.env.CONVEX_URL?.includes("127.0.0.1")
+        ) {
+          console.log(
+            "⏭️  Skipping: Semantic search requires MANAGED mode (LOCAL doesn't support vector search)",
+          );
           return;
         }
 
@@ -1173,9 +1178,14 @@ describe("Memory Convenience API (Layer 3)", () => {
 
           // Check if expected content appears in any of the top 5 results
           // Semantic search ranking can vary, but the relevant result should be highly ranked
-          const topResults = results.slice(0, 5) as { content: string; _score?: number }[];
+          const topResults = results.slice(0, 5) as {
+            content: string;
+            _score?: number;
+          }[];
           const matchingResult = topResults.find((r) =>
-            r.content.toLowerCase().includes(search.expectInContent.toLowerCase())
+            r.content
+              .toLowerCase()
+              .includes(search.expectInContent.toLowerCase()),
           );
 
           // Log results for debugging
@@ -1195,7 +1205,9 @@ describe("Memory Convenience API (Layer 3)", () => {
 
           // Log for visibility
           const matchIndex = topResults.findIndex((r) =>
-            r.content.toLowerCase().includes(search.expectInContent.toLowerCase())
+            r.content
+              .toLowerCase()
+              .includes(search.expectInContent.toLowerCase()),
           );
           console.log(
             `  ✓ Query: "${search.query}" → Found "${search.expectInContent}" at position ${matchIndex + 1}`,
@@ -1585,9 +1597,9 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     describe("forget() validation", () => {
       it("throws on empty memorySpaceId", async () => {
-        await expect(
-          cortex.memory.forget("", "mem-123"),
-        ).rejects.toThrow("memorySpaceId cannot be empty");
+        await expect(cortex.memory.forget("", "mem-123")).rejects.toThrow(
+          "memorySpaceId cannot be empty",
+        );
       });
 
       it("throws on empty memoryId", async () => {
@@ -1599,23 +1611,23 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     describe("get() validation", () => {
       it("throws on empty memorySpaceId", async () => {
-        await expect(
-          cortex.memory.get("", "mem-123"),
-        ).rejects.toThrow("memorySpaceId cannot be empty");
+        await expect(cortex.memory.get("", "mem-123")).rejects.toThrow(
+          "memorySpaceId cannot be empty",
+        );
       });
 
       it("throws on empty memoryId", async () => {
-        await expect(
-          cortex.memory.get(TEST_MEMSPACE_ID, ""),
-        ).rejects.toThrow("memoryId cannot be empty");
+        await expect(cortex.memory.get(TEST_MEMSPACE_ID, "")).rejects.toThrow(
+          "memoryId cannot be empty",
+        );
       });
     });
 
     describe("search() validation", () => {
       it("throws on empty memorySpaceId", async () => {
-        await expect(
-          cortex.memory.search("", "query"),
-        ).rejects.toThrow("memorySpaceId cannot be empty");
+        await expect(cortex.memory.search("", "query")).rejects.toThrow(
+          "memorySpaceId cannot be empty",
+        );
       });
 
       it("throws on empty query", async () => {
@@ -1742,7 +1754,9 @@ describe("Memory Convenience API (Layer 3)", () => {
             source: { type: "conversation", timestamp: Date.now() },
             metadata: { importance: 50, tags: [] },
           }),
-        ).rejects.toThrow('conversationRef is required when source.type is "conversation"');
+        ).rejects.toThrow(
+          'conversationRef is required when source.type is "conversation"',
+        );
       });
 
       it("throws on invalid embedding", async () => {
@@ -1826,9 +1840,9 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     describe("delete() validation", () => {
       it("throws on empty memorySpaceId", async () => {
-        await expect(
-          cortex.memory.delete("", "mem-123"),
-        ).rejects.toThrow("memorySpaceId cannot be empty");
+        await expect(cortex.memory.delete("", "mem-123")).rejects.toThrow(
+          "memorySpaceId cannot be empty",
+        );
       });
 
       it("throws on empty memoryId", async () => {
@@ -1840,9 +1854,9 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     describe("list() validation", () => {
       it("throws on empty memorySpaceId", async () => {
-        await expect(
-          cortex.memory.list({ memorySpaceId: "" }),
-        ).rejects.toThrow("memorySpaceId cannot be empty");
+        await expect(cortex.memory.list({ memorySpaceId: "" })).rejects.toThrow(
+          "memorySpaceId cannot be empty",
+        );
       });
 
       it("throws on invalid sourceType", async () => {
@@ -1884,10 +1898,7 @@ describe("Memory Convenience API (Layer 3)", () => {
     describe("updateMany() validation", () => {
       it("throws on empty memorySpaceId", async () => {
         await expect(
-          cortex.memory.updateMany(
-            { memorySpaceId: "" },
-            { importance: 80 },
-          ),
+          cortex.memory.updateMany({ memorySpaceId: "" }, { importance: 80 }),
         ).rejects.toThrow("memorySpaceId cannot be empty");
       });
 
@@ -1961,9 +1972,9 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     describe("archive() validation", () => {
       it("throws on empty memorySpaceId", async () => {
-        await expect(
-          cortex.memory.archive("", "mem-123"),
-        ).rejects.toThrow("memorySpaceId cannot be empty");
+        await expect(cortex.memory.archive("", "mem-123")).rejects.toThrow(
+          "memorySpaceId cannot be empty",
+        );
       });
 
       it("throws on empty memoryId", async () => {
@@ -2015,9 +2026,9 @@ describe("Memory Convenience API (Layer 3)", () => {
 
     describe("getHistory() validation", () => {
       it("throws on empty memorySpaceId", async () => {
-        await expect(
-          cortex.memory.getHistory("", "mem-123"),
-        ).rejects.toThrow("memorySpaceId cannot be empty");
+        await expect(cortex.memory.getHistory("", "mem-123")).rejects.toThrow(
+          "memorySpaceId cannot be empty",
+        );
       });
 
       it("throws on empty memoryId", async () => {

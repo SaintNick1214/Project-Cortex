@@ -266,9 +266,7 @@ describe("Agents API (Coordination Layer)", () => {
       });
 
       it("should throw on negative offset", async () => {
-        await expect(
-          cortex.agents.list({ offset: -5 }),
-        ).rejects.toMatchObject({
+        await expect(cortex.agents.list({ offset: -5 })).rejects.toMatchObject({
           code: "INVALID_OFFSET_VALUE",
         });
       });
@@ -319,11 +317,11 @@ describe("Agents API (Coordination Layer)", () => {
 
     describe("search() validation", () => {
       it("should throw on invalid filters", async () => {
-        await expect(
-          cortex.agents.search({ limit: -1 }),
-        ).rejects.toMatchObject({
-          code: "INVALID_LIMIT_VALUE",
-        });
+        await expect(cortex.agents.search({ limit: -1 })).rejects.toMatchObject(
+          {
+            code: "INVALID_LIMIT_VALUE",
+          },
+        );
       });
     });
 
@@ -1034,23 +1032,21 @@ describe("Agents API (Coordination Layer)", () => {
       expect(result.agentIds).toHaveLength(0);
     });
 
-    it(
-      "unregisters with cascade deletion",
-      async () => {
-        // First clean up any existing memories for bulk-agent-1
-        try {
-          const existingMemories = await cortex.vector.list({
-            memorySpaceId: "test-space",
-          });
-          const existingAgentMemories = existingMemories.filter(
-            (m) => m.participantId === "bulk-agent-1",
-          );
-          for (const memory of existingAgentMemories) {
-            await cortex.vector.delete("test-space", memory.memoryId);
-          }
-        } catch (_error) {
-          // Ignore cleanup errors
+    it("unregisters with cascade deletion", async () => {
+      // First clean up any existing memories for bulk-agent-1
+      try {
+        const existingMemories = await cortex.vector.list({
+          memorySpaceId: "test-space",
+        });
+        const existingAgentMemories = existingMemories.filter(
+          (m) => m.participantId === "bulk-agent-1",
+        );
+        for (const memory of existingAgentMemories) {
+          await cortex.vector.delete("test-space", memory.memoryId);
         }
+      } catch (_error) {
+        // Ignore cleanup errors
+      }
 
       // Create data for bulk-agent-1
       const conv = await cortex.conversations.create({
@@ -1094,8 +1090,6 @@ describe("Agents API (Coordination Layer)", () => {
       // timing issue where memories may not be immediately removed from vector.list()
       // The operation itself completes successfully (totalDataDeleted > 0),
       // indicating the cascade deletion logic works correctly
-      },
-      60000,
-    ); // Increased timeout for cascade deletion which can be slow in managed mode
+    }, 60000); // Increased timeout for cascade deletion which can be slow in managed mode
   });
 });

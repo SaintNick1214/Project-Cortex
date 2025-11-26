@@ -49,7 +49,7 @@ Each API has a dedicated validation error class for precise error handling:
 
 ```typescript
 // TypeScript
-import { GovernanceValidationError } from '@cortexmemory/sdk';
+import { GovernanceValidationError } from "@cortexmemory/sdk";
 
 try {
   await cortex.governance.setPolicy(policy);
@@ -82,6 +82,7 @@ except GovernanceValidationError as e:
 **4. Validation Categories**
 
 All validators check:
+
 - Required fields (non-null, non-empty strings)
 - Format validation (IDs, periods, dates, regex patterns)
 - Range validation (0-100 scores, array lengths, date ranges)
@@ -92,11 +93,13 @@ All validators check:
 #### 🧪 Testing
 
 **TypeScript SDK:**
+
 - 240+ new validation tests
 - All tests passing (51 governance, 189 across other APIs)
 - Zero breaking changes to public API
 
 **Python SDK:**
+
 - 180+ new validation tests
 - All tests passing (35 governance, 145 across other APIs)
 - Zero breaking changes to public API
@@ -104,6 +107,7 @@ All validators check:
 #### 📝 Documentation
 
 Validation errors are automatically documented with:
+
 - Error codes for programmatic handling
 - Field names for precise debugging
 - Clear fix suggestions in error messages
@@ -116,7 +120,7 @@ Optional: Catch validation errors specifically for better error handling:
 
 ```typescript
 // TypeScript - Optional enhanced error handling
-import { MemoryValidationError } from '@cortexmemory/sdk';
+import { MemoryValidationError } from "@cortexmemory/sdk";
 
 try {
   await cortex.memory.remember(params);

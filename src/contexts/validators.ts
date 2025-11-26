@@ -254,11 +254,7 @@ export function validateTimestamp(timestamp: number, fieldName: string): void {
  * Validates that data is an object (not null, not array)
  */
 export function validateDataObject(data: unknown): void {
-  if (
-    data === null ||
-    typeof data !== "object" ||
-    Array.isArray(data)
-  ) {
+  if (data === null || typeof data !== "object" || Array.isArray(data)) {
     throw new ContextsValidationError(
       "data must be an object",
       "INVALID_TYPE",
