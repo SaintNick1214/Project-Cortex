@@ -6,16 +6,18 @@ Detailed Convex schema definitions, indexes, and data structures for all Cortex 
 
 ## Overview
 
-Cortex uses **six Convex tables** to implement the three-layer architecture plus coordination entities:
+Cortex uses **seven Convex tables** to implement the 4-layer architecture plus coordination entities:
 
-| Table           | Layer | Purpose                   | Versioned   | Retention                  |
-| --------------- | ----- | ------------------------- | ----------- | -------------------------- |
-| `conversations` | 1a    | ACID message threads      | Append-only | Forever                    |
-| `immutable`     | 1b    | Shared versioned data     | Auto        | Configurable (20 versions) |
-| `mutable`       | 1c    | Shared live data          | No          | N/A (overwrites)           |
-| `memories`      | 2     | Vector index              | Auto        | Configurable (10 versions) |
-| `contexts`      | -     | Workflow coordination     | Auto        | Configurable               |
-| `agents`        | -     | Agent registry (optional) | No          | Until unregistered         |
+| Table           | Layer | Purpose                       | Versioned   | Retention                  |
+| --------------- | ----- | ----------------------------- | ----------- | -------------------------- |
+| `conversations` | 1a    | ACID message threads          | Append-only | Forever                    |
+| `immutable`     | 1b    | Shared versioned data         | Auto        | Configurable (20 versions) |
+| `mutable`       | 1c    | Shared live data              | No          | N/A (overwrites)           |
+| `memories`      | 2     | Vector index                  | Auto        | Configurable (10 versions) |
+| `facts`         | 3     | Structured knowledge          | Auto        | Configurable (10 versions) |
+| `contexts`      | -     | Workflow coordination         | Auto        | Configurable               |
+| `agents`        | -     | Agent registry (optional)     | No          | Until unregistered         |
+| **Layer 4**: Graph database (optional Neo4j/Memgraph integration)                                        |
 
 ---
 

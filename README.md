@@ -65,7 +65,7 @@ Cortex provides a complete memory system for AI agents:
 - 🔒 **Memory Space Isolation** - Flexible boundaries (per user, team, or project) ✅
 - ♾️ **Long-term Persistence** - Memories last forever with automatic indexing ✅
 - ⏱️ **Automatic Versioning** - Updates preserve history, never lose data (10 versions default) ✅
-- 🗄️ **ACID + Vector Hybrid** - Immutable conversation source + fast searchable index ✅
+- 🗄️ **4-Layer Hybrid Architecture** - ACID conversations + vector search + facts extraction + graph integration ✅
 - 🔍 **Semantic Search** - AI-powered retrieval with multi-strategy fallback ✅
 - 📊 **Vector Embeddings** - Optional but preferred, support any dimension (768, 1536, 3072+) ✅
 - 🔗 **Context Chains** - Hierarchical context sharing across memory spaces ✅
@@ -432,11 +432,11 @@ Cortex is being designed with two deployment modes:
 ### Key Design Decisions
 
 - **Built on Convex**: Leverages Convex's reactive backend for optimal performance
-- **ACID + Vector Hybrid**: Immutable conversation history + searchable memory index (linked via conversationRef)
+- **4-Layer Architecture**: ACID conversations + vector search + facts extraction + graph integration (all working together)
 - **Any Convex deployment**: Works with Convex Cloud, localhost, or self-hosted infrastructure
 - **Embedding-agnostic**: Optional embeddings from any provider (OpenAI, Cohere, local models)
 - **Progressive enhancement**: Works with raw content (text search) or embeddings (semantic search)
-- **Hybrid agents**: Start simple with string IDs, add structure when needed
+- **Flexible agents**: Start simple with string IDs, add structure when needed
 - **Flexible dimensions**: Support for any vector dimension (768, 1536, 3072+)
 - **Your data, your instance**: Whether direct or cloud mode, data lives in your Convex deployment
 
@@ -455,6 +455,8 @@ Cortex is being designed with two deployment modes:
 | ----------------- | ------ | -------- | -------- | ----- |
 | Vector Search     | ✅     | ✅       | ✅       | ❌    |
 | ACID Transactions | ✅     | ❌       | ❌       | ❌    |
+| Facts Extraction  | ✅     | ❌       | ❌       | ❌    |
+| Graph Integration | ✅     | ❌       | ❌       | ❌    |
 | Real-time Updates | ✅     | ❌       | ❌       | ✅    |
 | Versioning        | ✅     | ❌       | ❌       | ❌    |
 | Temporal Queries  | ✅     | ❌       | ❌       | ❌    |
@@ -621,8 +623,8 @@ Cortex SDK uses **dual release workflows**:
 
 **📊 Unified Architecture**
 
-- 4-layer design (ACID + Vector + Facts + Convenience)
-- Graph-Lite built-in, native graph DB optional
+- 4-layer hybrid design (ACID + Vector + Facts + Graph)
+- Graph-Lite built-in, native Neo4j/Memgraph optional
 - Facts extraction (DIY or Cloud auto)
 - All data in one place (Convex)
 
