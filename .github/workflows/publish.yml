@@ -476,12 +476,20 @@ jobs:
           cd packages/cortex-cli
           npm install
 
-      - name: Run tests
+      - name: Run unit tests
         run: |
           cd packages/cortex-cli
           npm run test:unit
         env:
           CONVEX_URL: ${{ secrets.CONVEX_URL }}
+
+      - name: Run integration tests
+        run: |
+          cd packages/cortex-cli
+          npm run test:integration
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
       - name: Build package
         run: |

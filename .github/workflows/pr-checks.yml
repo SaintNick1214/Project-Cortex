@@ -407,6 +407,8 @@ jobs:
         run: |
           cd packages/cortex-cli
           npm run test:unit
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
 
       - name: Run CLI integration tests
         run: |
