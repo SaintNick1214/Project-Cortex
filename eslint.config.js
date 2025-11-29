@@ -170,7 +170,7 @@ export default [
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: "./tsconfig.json",
+        project: "./convex-dev/tsconfig.json",
       },
       globals: {
         ...globals.node,

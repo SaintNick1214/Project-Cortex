@@ -17,6 +17,7 @@ import { ContextsAPI } from "./contexts";
 import { UsersAPI } from "./users";
 import { AgentsAPI } from "./agents";
 import { GovernanceAPI } from "./governance";
+import { A2AAPI } from "./a2a";
 import type { GraphAdapter } from "./graph/types";
 import {
   GraphSyncWorker,
@@ -88,6 +89,9 @@ export class Cortex {
   // Governance: Data Retention & Compliance
   public governance: GovernanceAPI;
 
+  // A2A: Agent-to-Agent Communication
+  public a2a: A2AAPI;
+
   constructor(config: CortexConfig) {
     // Initialize Convex client
     this.client = new ConvexClient(config.convexUrl);
@@ -107,6 +111,7 @@ export class Cortex {
     this.users = new UsersAPI(this.client, graphAdapter);
     this.agents = new AgentsAPI(this.client, graphAdapter);
     this.governance = new GovernanceAPI(this.client, graphAdapter);
+    this.a2a = new A2AAPI(this.client, graphAdapter);
 
     // Start graph sync worker if enabled
     if (config.graph?.autoSync && graphAdapter) {
@@ -162,3 +167,4 @@ export { GraphSyncWorker } from "./graph/worker/GraphSyncWorker";
 // Re-export validation errors for user catch blocks
 export { UserValidationError } from "./users";
 export { GovernanceValidationError } from "./governance";
+export { A2AValidationError } from "./a2a";

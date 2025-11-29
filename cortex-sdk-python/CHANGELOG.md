@@ -5,6 +5,89 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.14.0] - 2025-11-29
+
+### 🤖 A2A (Agent-to-Agent) Communication API
+
+**Full implementation of the A2A Communication API, enabling seamless inter-agent communication with ACID guarantees and bidirectional memory storage.**
+
+#### ✨ New Features
+
+**1. A2A API Methods**
+
+Four new methods for agent-to-agent communication:
+
+- **`send()`** - Fire-and-forget message between agents (no pub/sub required)
+- **`request()`** - Synchronous request-response pattern (requires pub/sub infrastructure)
+- **`broadcast()`** - One-to-many communication to multiple agents
+- **`get_conversation()`** - Retrieve conversation history with rich filtering
+
+**2. Bidirectional Memory Storage**
+
+Each A2A message automatically creates:
+- Memory in sender's space (direction: "outbound")
+- Memory in receiver's space (direction: "inbound")
+- ACID conversation tracking (optional, enabled by default)
+
+```python
+from cortex import Cortex, CortexConfig, A2ASendParams
+
+cortex = Cortex(CortexConfig(convex_url="..."))
+
+result = await cortex.a2a.send(
+    A2ASendParams(
+        from_agent="sales-agent",
+        to_agent="support-agent",
+        message="Customer asking about enterprise pricing",
+        importance=70
+    )
+)
+print(f"Message {result.message_id} sent")
+```
+
+**3. Client-Side Validation**
+
+Comprehensive validation for all A2A operations:
+
+- Agent ID format validation
+- Message content and size limits (100KB max)
+- Importance range (0-100)
+- Timeout and retry configuration
+- Recipients array validation for broadcasts
+- Conversation filter validation
+
+```python
+from cortex import A2AValidationError
+
+try:
+    await cortex.a2a.send(params)
+except A2AValidationError as e:
+    print(f"Validation failed: {e.code} - {e.field}")
+```
+
+**4. Type Updates**
+
+- Added `metadata: Optional[Dict[str, Any]]` field to `MemoryEntry` for A2A-specific data
+- New types: `A2ASendParams`, `A2AMessage`, `A2ARequestParams`, `A2AResponse`, `A2ABroadcastParams`, `A2ABroadcastResult`
+
+#### 🧪 Testing
+
+- 50 new A2A tests covering core operations, validation, integration, and edge cases
+- All tests passing against local and cloud Convex deployments
+
+#### 🔄 Migration Guide
+
+**No migration required** - This is a non-breaking addition.
+
+To use A2A, simply access `cortex.a2a`:
+
+```python
+cortex = Cortex(CortexConfig(convex_url="..."))
+await cortex.a2a.send(A2ASendParams(from_agent="agent-1", to_agent="agent-2", message="Hello"))
+```
+
+---
+
 ## [0.12.0] - 2025-11-25
 
 ### 🎯 Client-Side Validation - All APIs
