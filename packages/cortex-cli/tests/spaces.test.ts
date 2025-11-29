@@ -10,7 +10,8 @@ import { cleanupTestData } from "./setup";
 describe("CLI Memory Space Commands", () => {
   let cortex: Cortex;
   const CONVEX_URL = process.env.CONVEX_URL!;
-  const TEST_PREFIX = "cli-test-spaces";
+  const TIMESTAMP = Date.now();
+  const TEST_PREFIX = `cli-test-spaces-${TIMESTAMP}`;
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });

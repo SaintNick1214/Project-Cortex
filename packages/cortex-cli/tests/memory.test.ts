@@ -10,7 +10,8 @@ import { cleanupTestData } from "./setup";
 describe("CLI Memory Commands", () => {
   let cortex: Cortex;
   const CONVEX_URL = process.env.CONVEX_URL!;
-  const TEST_PREFIX = "cli-test-memory";
+  const TIMESTAMP = Date.now();
+  const TEST_PREFIX = `cli-test-memory-${TIMESTAMP}`;
   const TEST_SPACE_ID = `${TEST_PREFIX}-space`;
   const TEST_USER_ID = `${TEST_PREFIX}-user`;
 
