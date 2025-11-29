@@ -10,6 +10,7 @@ from typing import Any
 from convex import ConvexClient
 
 from ._convex_async import AsyncConvexClient
+from .a2a import A2AAPI
 from .agents import AgentsAPI
 from .contexts import ContextsAPI
 from .conversations import ConversationsAPI
@@ -78,6 +79,7 @@ class Cortex:
         self.agents = AgentsAPI(self.client, self.graph_adapter)
         self.memory_spaces = MemorySpacesAPI(self.client, self.graph_adapter)
         self.governance = GovernanceAPI(self.client, self.graph_adapter)
+        self.a2a = A2AAPI(self.client, self.graph_adapter)
 
         # Start graph sync worker if enabled
         self.sync_worker = None

@@ -24,6 +24,7 @@ Example:
 
 # Main client
 # Validation Errors
+from .a2a.validators import A2AValidationError
 from .agents.validators import AgentValidationError
 from .client import Cortex
 from .contexts.validators import ContextsValidationError
@@ -324,6 +325,7 @@ __all__ = [
     "is_a2a_timeout_error",
     "is_cascade_deletion_error",
     # Validation Errors
+    "A2AValidationError",
     "AgentValidationError",
     "ContextsValidationError",
     "ConversationValidationError",

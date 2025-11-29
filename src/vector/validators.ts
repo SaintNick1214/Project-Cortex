@@ -399,7 +399,7 @@ export function validateStoreInput(input: StoreMemoryInput): void {
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+   
   if (
     input.metadata.importance === undefined ||
     input.metadata.importance === null

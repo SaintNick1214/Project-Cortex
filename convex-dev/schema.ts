@@ -222,9 +222,12 @@ export default defineSchema({
       }),
     ),
 
-    // Metadata
+    // Metadata (flattened for indexing/filtering)
     importance: v.number(), // 0-100 (flattened for filtering)
     tags: v.array(v.string()), // Flattened for filtering
+
+    // Flexible metadata (for source-specific data like A2A direction, messageId, etc.)
+    metadata: v.optional(v.any()),
 
     // Versioning (like immutable)
     version: v.number(),

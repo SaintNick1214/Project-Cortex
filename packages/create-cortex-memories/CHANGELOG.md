@@ -2,6 +2,36 @@
 
 All notable changes to the create-cortex-memories wizard will be documented in this file.
 
+## [0.3.0] - 2025-11-29
+
+### Added
+
+**Cortex CLI Integration:**
+
+- New optional step to install `@cortexmemory/cli` during project setup
+- Interactive prompt asking if user wants CLI for database management
+- Automatic CLI installation as dev dependency when selected
+- Adds CLI scripts to generated `package.json`:
+  - `npm run cortex` - Run CLI directly
+  - `npm run cortex:setup` - Interactive CLI setup wizard
+  - `npm run cortex:stats` - View database statistics
+  - `npm run cortex:spaces` - List memory spaces
+
+**User Experience:**
+
+- Updated configuration summary to show CLI installation status
+- Enhanced success message with CLI commands when installed
+- Clear instructions for using CLI after setup
+
+### Changed
+
+- Improved success message formatting with CLI section
+- Configuration summary now includes CLI status
+
+### Documentation
+
+- Updated to reflect CLI integration option
+
 ## [0.2.0] - 2025-11-24
 
 ### Added

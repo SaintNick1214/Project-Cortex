@@ -19,6 +19,147 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.14.0] - 2025-11-29
+
+#### 🤖 A2A (Agent-to-Agent) Communication API
+
+**Full implementation of the A2A Communication API across both TypeScript and Python SDKs, enabling seamless inter-agent communication with ACID guarantees and bidirectional memory storage.**
+
+#### ✨ New Features
+
+**1. A2A API Methods**
+
+Four new methods for agent-to-agent communication:
+
+- **`send()`** - Fire-and-forget message between agents (no pub/sub required)
+- **`request()`** - Synchronous request-response pattern (requires pub/sub infrastructure)
+- **`broadcast()`** - One-to-many communication to multiple agents
+- **`getConversation()`** - Retrieve conversation history with rich filtering
+
+**2. Bidirectional Memory Storage**
+
+Each A2A message automatically creates:
+- Memory in sender's space (direction: "outbound")
+- Memory in receiver's space (direction: "inbound")
+- ACID conversation tracking (optional, enabled by default)
+
+```typescript
+// TypeScript
+const result = await cortex.a2a.send({
+  from: "sales-agent",
+  to: "support-agent",
+  message: "Customer asking about enterprise pricing",
+  importance: 70,
+});
+console.log(`Message ${result.messageId} sent`);
+```
+
+```python
+# Python
+result = await cortex.a2a.send(
+    A2ASendParams(
+        from_agent="sales-agent",
+        to_agent="support-agent",
+        message="Customer asking about enterprise pricing",
+        importance=70
+    )
+)
+```
+
+**3. A2A Metadata Structure**
+
+Memories now include structured metadata for A2A operations:
+
+```typescript
+metadata: {
+  direction: "outbound" | "inbound",
+  fromAgent: string,
+  toAgent: string,
+  messageId: string,
+  contextId?: string,    // Workflow link
+  broadcast?: boolean,   // If from broadcast
+  broadcastId?: string,
+  messageType?: "request" | "response",
+  requiresResponse?: boolean,
+  responded?: boolean,
+}
+```
+
+**4. Client-Side Validation**
+
+Comprehensive validation for all A2A operations:
+
+- Agent ID format validation
+- Message content and size limits (100KB max)
+- Importance range (0-100)
+- Timeout and retry configuration
+- Recipients array validation for broadcasts
+- Conversation filter validation
+
+```typescript
+// TypeScript
+import { A2AValidationError } from "@cortexmemory/sdk";
+
+try {
+  await cortex.a2a.send(params);
+} catch (error) {
+  if (error instanceof A2AValidationError) {
+    console.log(`Validation failed: ${error.code} - ${error.field}`);
+  }
+}
+```
+
+```python
+# Python
+from cortex import A2AValidationError
+
+try:
+    await cortex.a2a.send(params)
+except A2AValidationError as e:
+    print(f"Validation failed: {e.code} - {e.field}")
+```
+
+**5. Schema Enhancement**
+
+Added flexible `metadata` field to the memories table for storing source-specific data:
+
+```typescript
+// Convex schema addition
+metadata: v.optional(v.any()),
+```
+
+#### 🧪 Testing
+
+- **TypeScript**: 53 new A2A tests (core operations, validation, integration, edge cases)
+- **Python**: 50 new A2A tests (matching TypeScript coverage)
+- All tests passing on both local and cloud deployments
+
+#### 📚 Documentation
+
+Full API documentation available at:
+- [A2A Communication API Reference](./Documentation/03-api-reference/06-a2a-communication.md)
+- [A2A Core Features Guide](./Documentation/02-core-features/05-a2a-communication.md)
+
+#### 🔄 Migration Guide
+
+**No migration required** - This is a non-breaking addition. The new `metadata` field on memories is optional and backward compatible.
+
+To use A2A, simply access `cortex.a2a`:
+
+```typescript
+// TypeScript
+const cortex = new Cortex({ convexUrl: "..." });
+await cortex.a2a.send({ from: "agent-1", to: "agent-2", message: "Hello" });
+```
+
+```python
+# Python
+cortex = Cortex(CortexConfig(convex_url="..."))
+await cortex.a2a.send(A2ASendParams(from_agent="agent-1", to_agent="agent-2", message="Hello"))
+```
+
+---
+
 ### [0.12.0] - 2025-11-25
 
 #### 🎯 Client-Side Validation - All APIs

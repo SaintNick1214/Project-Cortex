@@ -220,6 +220,7 @@ class MemoryEntry:
     immutable_ref: Optional[ImmutableRef] = None
     mutable_ref: Optional[MutableRef] = None
     last_accessed: Optional[int] = None
+    metadata: Optional[Dict[str, Any]] = None  # Flexible metadata (for A2A direction, messageId, etc.)
     _score: Optional[float] = None  # Similarity score from vector search (managed mode only)
     score: Optional[float] = None  # Alias for _score
 

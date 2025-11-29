@@ -156,6 +156,7 @@ jobs:
       typescript: ${{ steps.check-versions.outputs.typescript-changed }}
       python: ${{ steps.check-versions.outputs.python-changed }}
       vercel-ai-provider: ${{ steps.check-versions.outputs.vercel-ai-provider-changed }}
+      cli: ${{ steps.check-versions.outputs.cli-changed }}
     steps:
       - name: Checkout PR code
         uses: actions/checkout@v6
@@ -217,6 +218,22 @@ jobs:
           else
             echo "vercel-ai-provider-changed=false" >> $GITHUB_OUTPUT
             echo "⏭️  Vercel AI Provider version unchanged: $VERCEL_VERSION"
+          fi
+
+          # Check CLI version
+          cd ../cortex-cli
+          CLI_VERSION=$(node -p "require('./package.json').version")
+          echo "📦 PR CLI version: $CLI_VERSION"
+
+          CLI_NPM_VERSION=$(npm view @cortexmemory/cli version 2>/dev/null || echo "0.0.0")
+          echo "📚 Published CLI version: $CLI_NPM_VERSION"
+
+          if [ "$CLI_VERSION" != "$CLI_NPM_VERSION" ]; then
+            echo "cli-changed=true" >> $GITHUB_OUTPUT
+            echo "✅ CLI version changed: $CLI_NPM_VERSION → $CLI_VERSION"
+          else
+            echo "cli-changed=false" >> $GITHUB_OUTPUT
+            echo "⏭️  CLI version unchanged: $CLI_VERSION"
           fi
 
   # Python SDK Tests
@@ -336,6 +353,84 @@ jobs:
           cd packages/vercel-ai-provider
           npm pack --dry-run
 
+  # CLI Tests
+  test-cli:
+    name: Test Cortex CLI
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    # Run if CLI version changed OR if PR is targeting main branch
+    # Skip for Dependabot PRs (they only update dependencies)
+    if: |
+      github.actor != 'dependabot[bot]' && (
+        needs.detect-changes.outputs.cli == 'true' || 
+        github.event.pull_request.base.ref == 'main'
+      )
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Deploy Convex backend
+        run: npx convex deploy --yes
+        env:
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
+      - name: Generate Convex types
+        run: npx convex codegen
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
+      - name: Build main SDK first
+        run: npm run build
+
+      - name: Install CLI dependencies
+        run: |
+          cd packages/cortex-cli
+          npm install
+
+      - name: Run CLI unit tests
+        run: |
+          cd packages/cortex-cli
+          npm run test:unit
+
+      - name: Run CLI integration tests
+        run: |
+          cd packages/cortex-cli
+          npm run test:integration
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
+      - name: Lint CLI
+        run: |
+          cd packages/cortex-cli
+          npm run lint
+
+      - name: Build CLI
+        run: |
+          cd packages/cortex-cli
+          npm run build
+
+      - name: Verify package contents
+        run: |
+          cd packages/cortex-cli
+          npm pack --dry-run
+
   # Note: Comprehensive security scans run in security.yml workflow
   # This keeps PR checks fast while security scans run separately
 
@@ -348,6 +443,7 @@ jobs:
         test-typescript,
         test-python,
         test-vercel-ai-provider,
+        test-cli,
         code-quality,
       ]
     # Skip for Dependabot PRs (they don't run any checks)
@@ -364,6 +460,7 @@ jobs:
           echo "  TypeScript Tests: ${{ needs.test-typescript.result }}"
           echo "  Python Tests: ${{ needs.test-python.result }}"
           echo "  Vercel AI Provider Tests: ${{ needs.test-vercel-ai-provider.result }}"
+          echo "  CLI Tests: ${{ needs.test-cli.result }}"
           echo ""
           echo "ℹ️  Security scans run in separate workflow (see Security tab)"
           echo ""
@@ -389,6 +486,12 @@ jobs:
           # Vercel AI Provider tests must pass OR be skipped (when version unchanged)
           if [[ "${{ needs.test-vercel-ai-provider.result }}" == "failure" ]]; then
             echo "❌ Vercel AI Provider tests failed"
+            exit 1
+          fi
+
+          # CLI tests must pass OR be skipped (when version unchanged)
+          if [[ "${{ needs.test-cli.result }}" == "failure" ]]; then
+            echo "❌ CLI tests failed"
             exit 1
           fi
 

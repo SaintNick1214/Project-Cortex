@@ -124,7 +124,7 @@ export function validateMetadata(
   }
 
   // Runtime validation - metadata could be null or array from external sources
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+   
   if (
     typeof metadata !== "object" ||
     metadata === null ||

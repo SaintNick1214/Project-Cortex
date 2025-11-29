@@ -25,6 +25,8 @@ jobs:
       wizard-new-version: ${{ steps.check-wizard.outputs.version }}
       vercel-ai-provider-version-changed: ${{ steps.check-vercel-ai-provider.outputs.changed }}
       vercel-ai-provider-new-version: ${{ steps.check-vercel-ai-provider.outputs.version }}
+      cli-version-changed: ${{ steps.check-cli.outputs.changed }}
+      cli-new-version: ${{ steps.check-cli.outputs.version }}
       python-version-changed: ${{ steps.check-python.outputs.changed }}
       python-new-version: ${{ steps.check-python.outputs.version }}
     steps:
@@ -99,6 +101,27 @@ jobs:
           else
             echo "changed=false" >> $GITHUB_OUTPUT
             echo "⏭️  Vercel AI Provider already published at $CURRENT_VERSION, skipping"
+          fi
+
+      - name: Check CLI version
+        id: check-cli
+        run: |
+          # Get current version from package.json
+          CURRENT_VERSION=$(node -p "require('./packages/cortex-cli/package.json').version")
+          echo "📦 CLI version: $CURRENT_VERSION"
+
+          # Get published version from npm (or 0.0.0 if not published yet)
+          NPM_VERSION=$(npm view @cortexmemory/cli version 2>/dev/null || echo "0.0.0")
+          echo "📚 npm version: $NPM_VERSION"
+
+          # Compare versions (publish if package.json > npm)
+          if [ "$CURRENT_VERSION" != "$NPM_VERSION" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+            echo "✅ New CLI version detected: $NPM_VERSION → $CURRENT_VERSION"
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "⏭️  CLI already published at $CURRENT_VERSION, skipping"
           fi
 
       - name: Check Python SDK version
@@ -410,6 +433,135 @@ jobs:
           echo "🐙 GitHub: https://github.com/SaintNick1214/Project-Cortex/releases/tag/vercel-ai-provider-v$VERSION"
           echo ""
           echo "🚀 Install: npm install @cortexmemory/vercel-ai-provider"
+          echo ""
+
+  publish-cli:
+    needs: check-version
+    if: needs.check-version.outputs.cli-version-changed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Deploy Convex backend
+        run: npx convex deploy --yes
+        env:
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
+      - name: Generate Convex types
+        run: npx convex codegen
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
+      - name: Build main SDK first
+        run: npm run build
+
+      - name: Install CLI dependencies
+        run: |
+          cd packages/cortex-cli
+          npm install
+
+      - name: Run tests
+        run: |
+          cd packages/cortex-cli
+          npm run test:unit
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+
+      - name: Build package
+        run: |
+          cd packages/cortex-cli
+          npm run build
+
+      - name: Verify package contents
+        run: |
+          cd packages/cortex-cli
+          npm pack --dry-run
+
+      - name: Publish to npm
+        run: |
+          cd packages/cortex-cli
+          npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create Git Tag
+        run: |
+          VERSION=${{ needs.check-version.outputs.cli-new-version }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "cli-v$VERSION" -m "Release CLI v$VERSION"
+          git push origin "cli-v$VERSION"
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.check-version.outputs.cli-new-version }}
+        run: |
+          gh release create "cli-v$VERSION" \
+            --title "Cortex CLI v$VERSION" \
+            --notes "## Cortex CLI v$VERSION
+
+          Administrative CLI for managing Cortex Memory deployments.
+
+          ### Installation
+          \`\`\`bash
+          npm install -g @cortexmemory/cli
+          \`\`\`
+
+          ### Quick Start
+          \`\`\`bash
+          # Setup
+          cortex setup
+
+          # List memory spaces
+          cortex spaces list
+
+          # View database statistics
+          cortex db stats
+
+          # Manage users
+          cortex users list
+          \`\`\`
+
+          ### Documentation
+          - [README](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/cortex-cli/README.md)
+          - [Changelog](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/cortex-cli/CHANGELOG.md)"
+
+      - name: Verify npm publish
+        run: |
+          echo "Waiting for npm registry to update..."
+          sleep 10
+          npm view @cortexmemory/cli version
+          echo "✅ CLI published successfully!"
+
+      - name: Post-publish summary
+        run: |
+          VERSION=${{ needs.check-version.outputs.cli-new-version }}
+          echo "════════════════════════════════════════════════════════════"
+          echo "  ✅ CLI PUBLISHED!"
+          echo "════════════════════════════════════════════════════════════"
+          echo ""
+          echo "📦 Package: @cortexmemory/cli@$VERSION"
+          echo "📚 npm: https://www.npmjs.com/package/@cortexmemory/cli"
+          echo "🐙 GitHub: https://github.com/SaintNick1214/Project-Cortex/releases/tag/cli-v$VERSION"
+          echo ""
+          echo "🚀 Install: npm install -g @cortexmemory/cli"
           echo ""
 
   publish-python:
