@@ -26,14 +26,14 @@ export function getCleanupClient(): Cortex {
 export async function cleanupTestData(prefix: string): Promise<void> {
   const client = getCleanupClient();
 
-  // Delete memory spaces with test prefix
+  // Delete users first (cascade will delete their memories)
   try {
-    const spaces = await client.memorySpaces.list({ limit: 1000 });
-    const testSpaces = spaces.filter((s) => s.memorySpaceId.startsWith(prefix));
+    const users = await client.users.list({ limit: 1000 });
+    const testUsers = users.filter((u) => u.id.startsWith(prefix));
 
-    for (const space of testSpaces) {
+    for (const user of testUsers) {
       try {
-        await client.memorySpaces.delete(space.memorySpaceId, { cascade: true });
+        await client.users.delete(user.id, { cascade: true });
       } catch {
         // Ignore errors
       }
@@ -42,14 +42,14 @@ export async function cleanupTestData(prefix: string): Promise<void> {
     // Ignore errors
   }
 
-  // Delete users with test prefix
+  // Then delete memory spaces (without cascade since memories already deleted)
   try {
-    const users = await client.users.list({ limit: 1000 });
-    const testUsers = users.filter((u) => u.id.startsWith(prefix));
+    const spaces = await client.memorySpaces.list({ limit: 1000 });
+    const testSpaces = spaces.filter((s) => s.memorySpaceId.startsWith(prefix));
 
-    for (const user of testUsers) {
+    for (const space of testSpaces) {
       try {
-        await client.users.delete(user.id, { cascade: true });
+        await client.memorySpaces.delete(space.memorySpaceId, { cascade: false });
       } catch {
         // Ignore errors
       }
