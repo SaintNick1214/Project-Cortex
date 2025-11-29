@@ -294,6 +294,7 @@ export interface MemoryEntry {
   sourceUserId?: string;
   sourceUserName?: string;
   sourceTimestamp: number;
+  messageRole?: "user" | "agent" | "system"; // NEW: For semantic search weighting
   conversationRef?: ConversationRef;
   immutableRef?: ImmutableRef;
   mutableRef?: MutableRef;
@@ -313,6 +314,7 @@ export interface StoreMemoryInput {
   participantId?: string; // NEW: Hive Mode tracking
   embedding?: number[];
   userId?: string;
+  messageRole?: "user" | "agent" | "system"; // NEW: For semantic search weighting
   source: {
     type: SourceType;
     userId?: string;

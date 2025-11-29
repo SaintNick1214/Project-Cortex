@@ -80,6 +80,7 @@ export class VectorAPI {
       sourceUserId: input.source.userId,
       sourceUserName: input.source.userName,
       userId: input.userId,
+      messageRole: input.messageRole, // NEW: For semantic search weighting
       conversationRef: input.conversationRef,
       immutableRef: input.immutableRef,
       mutableRef: input.mutableRef,

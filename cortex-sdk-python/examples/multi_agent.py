@@ -4,13 +4,14 @@ Multi-Agent Example
 Demonstrates multi-agent coordination with contexts and A2A communication.
 """
 
-import os
 import asyncio
+import os
+
 from cortex import (
+    A2ASendParams,
+    ContextInput,
     Cortex,
     CortexConfig,
-    ContextInput,
-    A2ASendParams,
 )
 
 
@@ -60,7 +61,7 @@ async def main():
         )
     )
     print(f"   ✅ A2A message sent: {a2a_result.message_id}")
-    print(f"      Stored in both agents' memories")
+    print("      Stored in both agents' memories")
 
     # Step 3: Create sub-context for finance agent
     print("\n3️⃣ Finance agent creates sub-context...")

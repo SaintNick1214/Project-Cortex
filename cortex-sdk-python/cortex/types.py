@@ -216,6 +216,7 @@ class MemoryEntry:
     embedding: Optional[List[float]] = None
     source_user_id: Optional[str] = None
     source_user_name: Optional[str] = None
+    message_role: Optional[Literal["user", "agent", "system"]] = None  # NEW: For semantic search weighting
     conversation_ref: Optional[ConversationRef] = None
     immutable_ref: Optional[ImmutableRef] = None
     mutable_ref: Optional[MutableRef] = None
@@ -244,6 +245,7 @@ class StoreMemoryInput:
     participant_id: Optional[str] = None
     embedding: Optional[List[float]] = None
     user_id: Optional[str] = None
+    message_role: Optional[Literal["user", "agent", "system"]] = None  # NEW: For semantic search weighting
     conversation_ref: Optional[ConversationRef] = None
     immutable_ref: Optional[ImmutableRef] = None
     mutable_ref: Optional[MutableRef] = None

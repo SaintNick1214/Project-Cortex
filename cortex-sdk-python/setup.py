@@ -10,7 +10,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="cortex-memory",
-    version="0.12.0",
+    version="0.14.0",
     author="Saint Nick LLC",
     author_email="support@cortexmemory.dev",
     description="AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management",
@@ -36,7 +36,7 @@ setup(
     python_requires=">=3.10",
     install_requires=[
         "convex>=0.5.0",
-        "pydantic>=2.0",
+        "pydantic>=2.4.0",  # CVE-2024-3772: Require 2.4.0+ to avoid ReDoS vulnerability
         "typing-extensions>=4.0",
     ],
     extras_require={
@@ -52,6 +52,7 @@ setup(
             "ruff>=0.1",
             "sphinx>=7.0",
             "sphinx-rtd-theme>=2.0",
+            "openai>=1.0",  # Required for OpenAI integration tests
         ],
     },
     keywords=[
