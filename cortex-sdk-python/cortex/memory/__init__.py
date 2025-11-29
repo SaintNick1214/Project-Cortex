@@ -196,6 +196,7 @@ class MemoryAPI:
                 participant_id=params.participant_id,
                 embedding=user_embedding,
                 user_id=params.user_id,
+                message_role="user",  # NEW: Mark as user message for semantic search weighting
                 source=MemorySource(
                     type="conversation",
                     user_id=params.user_id,
@@ -221,6 +222,7 @@ class MemoryAPI:
                 participant_id=params.participant_id,
                 embedding=agent_embedding,
                 user_id=params.user_id,
+                message_role="agent",  # NEW: Mark as agent message for semantic search weighting
                 source=MemorySource(
                     type="conversation",
                     user_id=params.user_id,

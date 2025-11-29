@@ -4,9 +4,10 @@ Fact Extraction Example
 Demonstrates fact extraction from conversations for structured knowledge.
 """
 
-import os
 import asyncio
+import os
 import re
+
 from cortex import (
     Cortex,
     CortexConfig,

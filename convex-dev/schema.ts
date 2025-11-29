@@ -186,6 +186,11 @@ export default defineSchema({
     sourceUserName: v.optional(v.string()),
     sourceTimestamp: v.number(),
 
+    // Message role (for conversation memories) - helps with semantic search weighting
+    messageRole: v.optional(
+      v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
+    ),
+
     // GDPR support
     userId: v.optional(v.string()), // For cascade deletion
 

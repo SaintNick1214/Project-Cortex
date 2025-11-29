@@ -300,6 +300,7 @@ export class MemoryAPI {
         participantId: params.participantId, // Hive Mode tracking
         embedding: userEmbedding,
         userId: params.userId,
+        messageRole: "user", // NEW: Mark as user message for semantic search weighting
         source: {
           type: "conversation",
           userId: params.userId,
@@ -327,6 +328,7 @@ export class MemoryAPI {
         participantId: params.participantId, // Hive Mode tracking
         embedding: agentEmbedding,
         userId: params.userId,
+        messageRole: "agent", // NEW: Mark as agent message for semantic search weighting
         source: {
           type: "conversation",
           userId: params.userId,

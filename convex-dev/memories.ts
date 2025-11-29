@@ -35,6 +35,9 @@ export const store = mutation({
     sourceUserId: v.optional(v.string()),
     sourceUserName: v.optional(v.string()),
     userId: v.optional(v.string()),
+    messageRole: v.optional(
+      v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
+    ), // NEW: For semantic search weighting
     conversationRef: v.optional(
       v.object({
         conversationId: v.string(),
@@ -74,6 +77,7 @@ export const store = mutation({
       sourceUserId: args.sourceUserId,
       sourceUserName: args.sourceUserName,
       sourceTimestamp: now,
+      messageRole: args.messageRole, // NEW
       userId: args.userId,
       conversationRef: args.conversationRef,
       immutableRef: args.immutableRef,
@@ -392,6 +396,30 @@ export const search = query({
 
     if (args.minImportance !== undefined) {
       results = results.filter((m) => m.importance >= args.minImportance!);
+    }
+
+    // Apply role-based weighting for semantic search (BEFORE filtering by minScore)
+    // This helps user messages (facts about the user) rank higher than agent responses
+    if (args.embedding && args.embedding.length > 0) {
+      results = results.map((m: any) => {
+        // Boost user messages by 20% for better semantic ranking
+        // This helps queries like "what should I address the user as" find user names
+        // instead of agent responses like "I've noted your email address"
+        if (m.messageRole === "user" && m._score !== undefined) {
+          return {
+            ...m,
+            _score: m._score * 1.2, // 20% boost for user messages
+          };
+        }
+        return m;
+      });
+
+      // Re-sort after applying weights
+      results.sort((a: any, b: any) => {
+        const scoreA = a._score ?? 0;
+        const scoreB = b._score ?? 0;
+        return scoreB - scoreA;
+      });
     }
 
     // Filter by minimum score (for semantic search)
