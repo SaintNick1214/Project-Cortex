@@ -10,16 +10,13 @@
 
 import { Command } from "commander";
 import ora from "ora";
-import type { CLIConfig, OutputFormat } from "../types.js";
+import type { CLIConfig } from "../types.js";
 import { withClient } from "../utils/client.js";
-import { resolveConfig } from "../utils/config.js";
 import {
-  formatOutput,
   printSuccess,
   printError,
   printWarning,
   printSection,
-  formatCount,
   formatTimestamp,
 } from "../utils/formatting.js";
 import {

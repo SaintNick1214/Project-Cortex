@@ -12,7 +12,7 @@
 
 import { Command } from "commander";
 import ora from "ora";
-import type { CLIConfig, OutputFormat, MemorySpaceType, MemorySpaceStatus } from "../types.js";
+import type { CLIConfig, OutputFormat, MemorySpaceStatus } from "../types.js";
 import { withClient } from "../utils/client.js";
 import { resolveConfig } from "../utils/config.js";
 import {
