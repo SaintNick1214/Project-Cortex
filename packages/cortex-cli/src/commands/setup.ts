@@ -20,7 +20,7 @@ import {
   setConfigValue,
   updateDeployment,
 } from "../utils/config.js";
-import { testConnection, getDeploymentInfo } from "../utils/client.js";
+import { testConnection } from "../utils/client.js";
 import {
   printSuccess,
   printError,

@@ -11,7 +11,7 @@
 import { Command } from "commander";
 import ora from "ora";
 import type { CLIConfig, OutputFormat, DatabaseStats, BackupData } from "../types.js";
-import { withClient, createClient } from "../utils/client.js";
+import { withClient } from "../utils/client.js";
 import { resolveConfig } from "../utils/config.js";
 import {
   formatOutput,
@@ -19,7 +19,6 @@ import {
   printError,
   printWarning,
   printSection,
-  formatCount,
   formatTimestamp,
   formatBytes,
 } from "../utils/formatting.js";
