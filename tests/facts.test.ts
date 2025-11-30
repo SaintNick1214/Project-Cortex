@@ -19,7 +19,8 @@ describe("Facts API (Layer 3)", () => {
   let client: ConvexClient;
   let cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-  const TEST_MEMSPACE_ID = "memspace-facts-test";
+  const TIMESTAMP = Date.now();
+  const TEST_MEMSPACE_ID = `memspace-facts-test-${TIMESTAMP}`;
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });

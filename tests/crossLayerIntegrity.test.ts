@@ -14,8 +14,9 @@ describe("Cross-Layer Reference Integrity", () => {
   let client: ConvexClient;
   let cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-  const TEST_MEMSPACE_ID = "cross-layer-test";
-  const TEST_USER_ID = "user-cross-layer";
+  const TIMESTAMP = Date.now();
+  const TEST_MEMSPACE_ID = `cross-layer-test-${TIMESTAMP}`;
+  const TEST_USER_ID = `user-cross-layer-${TIMESTAMP}`;
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });

@@ -1033,8 +1033,9 @@ describe("Users API (Coordination Layer)", () => {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   describe("integration with other APIs", () => {
-    const INTEGRATION_USER_ID = "integration-test-user";
-    const INTEGRATION_SPACE_ID = "integration-test-space";
+    const INTEGRATION_TIMESTAMP = Date.now();
+    const INTEGRATION_USER_ID = `integration-test-user-${INTEGRATION_TIMESTAMP}`;
+    const INTEGRATION_SPACE_ID = `integration-test-space-${INTEGRATION_TIMESTAMP}`;
 
     beforeAll(async () => {
       // Create user

@@ -14,8 +14,9 @@ import { ConvexClient } from "convex/browser";
 
 // Test configuration
 const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-const TEST_MEMORY_SPACE = "test-streaming-space";
-const TEST_USER_ID = "test-user-streaming";
+const TIMESTAMP = Date.now();
+const TEST_MEMORY_SPACE = `test-streaming-space-${TIMESTAMP}`;
+const TEST_USER_ID = `test-user-streaming-${TIMESTAMP}`;
 
 describe("rememberStream Integration Tests", () => {
   let cortex: Cortex;
