@@ -5,40 +5,47 @@
  * - SDK API calls
  * - Convex mutations/queries
  * - Storage validation
+ *
+ * PARALLEL-SAFE: Uses TestRunContext for isolated test data
  */
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
-import { TestCleanup } from "./helpers";
+import {
+  createNamedTestRunContext,
+  ScopedCleanup,
+} from "./helpers";
 
 describe("Conversations API (Layer 1a)", () => {
+  // Create unique test run context for parallel-safe execution
+  const ctx = createNamedTestRunContext("conversations");
+
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let scopedCleanup: ScopedCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
 
   beforeAll(async () => {
+    console.log(`\n🧪 Conversations API Tests - Run ID: ${ctx.runId}\n`);
+
     // Initialize SDK
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     // Direct client for storage validation
     client = new ConvexClient(CONVEX_URL);
-    // Cleanup helper
-    cleanup = new TestCleanup(client);
+    // Scoped cleanup (only cleans data from this test run)
+    scopedCleanup = new ScopedCleanup(client, ctx);
 
-    // 🧹 Purge conversations table before all tests
-    console.log("\n🧹 Purging conversations table before tests...");
-    const result = await cleanup.purgeConversations();
-
-    console.log(`✅ Purged ${result.deleted} conversations\n`);
-
-    // Verify empty (warn if not, but don't fail - parallel tests might create data)
-    await cleanup.verifyConversationsEmpty();
+    // Note: No global purge - test data is isolated by prefix
+    console.log("✅ Test isolation setup complete\n");
   });
 
   afterAll(async () => {
+    console.log(`\n🧹 Cleaning up test run ${ctx.runId}...`);
+    await scopedCleanup.cleanupAll();
     cortex.close();
     await client.close();
+    console.log(`✅ Test run ${ctx.runId} cleanup complete\n`);
   });
 
   describe("create()", () => {

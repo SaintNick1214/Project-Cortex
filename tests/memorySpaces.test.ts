@@ -6,30 +6,43 @@
  * - Participant tracking
  * - Statistics and analytics
  * - Hive Mode scenarios
+ *
+ * PARALLEL-SAFE: Uses TestRunContext for isolated test data
  */
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
-import { TestCleanup } from "./helpers";
+import {
+  createNamedTestRunContext,
+  ScopedCleanup,
+} from "./helpers";
 
 describe("Memory Spaces Registry API", () => {
+  // Create unique test run context for parallel-safe execution
+  const ctx = createNamedTestRunContext("memspaces");
+
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let scopedCleanup: ScopedCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
 
   beforeAll(async () => {
+    console.log(`\n🧪 Memory Spaces API Tests - Run ID: ${ctx.runId}\n`);
+
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    cleanup = new TestCleanup(client);
+    scopedCleanup = new ScopedCleanup(client, ctx);
 
-    await cleanup.purgeAll();
+    // Note: No global purge - test data is isolated by prefix
+    console.log("✅ Test isolation setup complete\n");
   });
 
   afterAll(async () => {
-    await cleanup.purgeAll();
+    console.log(`\n🧹 Cleaning up test run ${ctx.runId}...`);
+    await scopedCleanup.cleanupAll();
     await client.close();
+    console.log(`✅ Test run ${ctx.runId} cleanup complete\n`);
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

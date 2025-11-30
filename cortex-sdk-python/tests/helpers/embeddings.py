@@ -5,8 +5,8 @@ Provides functions for generating embeddings for testing, with graceful fallback
 """
 
 import os
-from typing import Optional, List
 import random
+from typing import List, Optional
 
 
 def embeddings_available() -> bool:
@@ -66,7 +66,7 @@ async def generate_embedding(
         List of floats representing the embedding, or None if unavailable
     """
     import asyncio
-    
+
     api_key = os.getenv("OPENAI_API_KEY")
 
     if not api_key:
@@ -98,25 +98,25 @@ async def generate_embedding(
             # API call failed - log the error
             error_msg = str(e)
             print(f"Warning: OpenAI embedding generation failed (attempt {attempt + 1}/{max_retries}): {error_msg}")
-            
+
             # Check if it's a rate limit error or transient error that we should retry
             is_retryable = any(keyword in error_msg.lower() for keyword in [
                 "rate limit", "timeout", "connection", "503", "502", "500"
             ])
-            
+
             if is_retryable and attempt < max_retries - 1:
                 # Exponential backoff: 1s, 2s, 4s
                 wait_time = 2 ** attempt
                 print(f"  Retrying in {wait_time}s...")
                 await asyncio.sleep(wait_time)
                 continue
-            
+
             # Final attempt failed or non-retryable error
             if use_mock:
                 print("  Falling back to mock embedding")
                 return generate_mock_embedding(text, dimensions)
             return None
-    
+
     # All retries exhausted
     print(f"Error: OpenAI embedding generation failed after {max_retries} attempts")
     if use_mock:
@@ -172,7 +172,7 @@ async def summarize_conversation(
         >>> print(summary)  # "User prefers to be called Alex"
     """
     import asyncio
-    
+
     api_key = os.getenv("OPENAI_API_KEY")
 
     if not api_key:
@@ -211,22 +211,22 @@ async def summarize_conversation(
             # API call failed - log the error
             error_msg = str(e)
             print(f"Warning: OpenAI summarization failed (attempt {attempt + 1}/{max_retries}): {error_msg}")
-            
+
             # Check if it's a rate limit error or transient error that we should retry
             is_retryable = any(keyword in error_msg.lower() for keyword in [
                 "rate limit", "timeout", "connection", "503", "502", "500"
             ])
-            
+
             if is_retryable and attempt < max_retries - 1:
                 # Exponential backoff: 1s, 2s, 4s
                 wait_time = 2 ** attempt
                 print(f"  Retrying in {wait_time}s...")
                 await asyncio.sleep(wait_time)
                 continue
-            
+
             # Final attempt failed or non-retryable error
             return None
-    
+
     # All retries exhausted
     print(f"Error: OpenAI summarization failed after {max_retries} attempts")
     return None

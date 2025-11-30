@@ -7,7 +7,9 @@ on:
       - dev
     types: [opened, synchronize, reopened]
 
-# Prevent parallel execution to avoid Convex deployment conflicts
+# Concurrency: Allow one workflow per PR, cancel in-progress on new commits
+# Note: Tests now use parallel-safe isolation (TestRunContext), so concurrent
+# test runs within the same workflow are safe.
 concurrency:
   group: pr-checks-${{ github.event.pull_request.number }}
   cancel-in-progress: true
@@ -237,10 +239,12 @@ jobs:
           fi
 
   # Python SDK Tests
+  # PARALLEL-SAFE: Tests now use TestRunContext for isolation, so Python tests
+  # can run in parallel with TypeScript tests and with each other.
   test-python:
     name: Test Python SDK
     runs-on: ubuntu-latest
-    needs: [detect-changes, test-typescript] # Wait for TS tests to avoid Convex conflicts
+    needs: detect-changes  # Only needs version detection, not TS tests
     # Run if Python SDK version changed OR if PR is targeting main branch
     # Skip for Dependabot PRs (they only update dependencies)
     if: |
@@ -254,7 +258,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
-      max-parallel: 1
+      max-parallel: 5  # Run all Python versions in parallel (parallel-safe)
 
     steps:
       - name: Checkout PR code

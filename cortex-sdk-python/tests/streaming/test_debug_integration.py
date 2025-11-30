@@ -5,8 +5,9 @@ Simplified tests to debug why integration tests might be failing.
 """
 
 import asyncio
-import os
+
 import pytest
+
 from cortex.memory.streaming_types import StreamingOptions
 
 
@@ -23,24 +24,24 @@ class TestDebugIntegration:
     def test_streaming_options_has_sync_to_graph(self):
         """Test: StreamingOptions has sync_to_graph attribute"""
         opts = StreamingOptions()
-        
+
         # CRITICAL: Check attribute exists
         assert hasattr(opts, "sync_to_graph"), "StreamingOptions missing sync_to_graph"
-        
+
         # Check default value
         assert opts.sync_to_graph is True, f"Expected True, got {opts.sync_to_graph}"
 
     def test_streaming_options_from_dict_preserves_sync(self):
         """Test: Creating StreamingOptions from dict preserves sync_to_graph"""
         opts = StreamingOptions(**{"sync_to_graph": True, "store_partial_response": True})
-        
+
         assert opts.sync_to_graph is True
         assert opts.store_partial_response is True
 
     def test_streaming_options_explicit_false(self):
         """Test: Can explicitly set sync_to_graph to False"""
         opts = StreamingOptions(sync_to_graph=False)
-        
+
         assert opts.sync_to_graph is False
 
     @pytest.mark.asyncio
@@ -55,9 +56,9 @@ class TestDebugIntegration:
             "userId": "user",
             "userName": "User",
         }
-        
+
         opts = StreamingOptions(sync_to_graph=True)
-        
+
         # Just verify the types are correct (we won't actually run this)
         assert isinstance(params, dict)
         assert isinstance(opts, StreamingOptions)
@@ -66,7 +67,7 @@ class TestDebugIntegration:
     def test_streaming_options_defaults_match_typescript(self):
         """Test: All defaults match TypeScript SDK"""
         opts = StreamingOptions()
-        
+
         # Check all defaults
         assert opts.sync_to_graph is True, "sync_to_graph should default to True"
         assert opts.progressive_graph_sync is False

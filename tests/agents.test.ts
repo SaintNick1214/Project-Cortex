@@ -6,24 +6,34 @@
  * - Cascade deletion by participantId across all memory spaces
  * - Graph integration with orphan detection
  * - Verification and rollback
+ *
+ * PARALLEL-SAFE: Uses TestRunContext for isolated test data
  */
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
-import { TestCleanup } from "./helpers";
+import {
+  createNamedTestRunContext,
+  ScopedCleanup,
+} from "./helpers";
 import { CypherGraphAdapter } from "../src/graph/adapters/CypherGraphAdapter";
 import type { GraphAdapter } from "../src/graph/types";
 
 describe("Agents API (Coordination Layer)", () => {
+  // Create unique test run context for parallel-safe execution
+  const ctx = createNamedTestRunContext("agents");
+
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let scopedCleanup: ScopedCleanup;
   let graphAdapter: GraphAdapter | undefined;
   let hasGraphSupport: boolean = false;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
 
   beforeAll(async () => {
+    console.log(`\n🧪 Agents API Tests - Run ID: ${ctx.runId}\n`);
+
     // Initialize graph adapter if environment variables are set
     const neo4jUri = process.env.NEO4J_URI;
     const neo4jUsername = process.env.NEO4J_USERNAME;
@@ -71,50 +81,32 @@ describe("Agents API (Coordination Layer)", () => {
 
     // Direct client for storage validation
     client = new ConvexClient(CONVEX_URL);
-    // Cleanup helper
-    cleanup = new TestCleanup(client);
 
-    // 🧹 Purge test data before all tests
-    console.log("🧹 Purging test data before tests...");
-    await cleanup.purgeConversations();
-    await cleanup.purgeMemories();
-    await cleanup.purgeFacts();
-    await cleanup.purgeMemorySpaces();
+    // Scoped cleanup (only cleans data from this test run)
+    scopedCleanup = new ScopedCleanup(client, ctx);
 
-    // Purge agents registry
-    try {
-      const allAgents = await client.query(api.agents.list, {});
-      for (const agent of allAgents) {
-        try {
-          await client.mutation(api.agents.unregister, {
-            agentId: agent.agentId,
-          });
-        } catch (_error) {
-          // Ignore errors, agent may already be deleted
-        }
-      }
-      console.log("✅ Purged agents registry");
-    } catch (error) {
-      console.warn("⚠️  Failed to purge agents:", error);
-    }
-
-    // Clean graph if available
-    if (graphAdapter) {
-      try {
-        await graphAdapter.query(
-          "MATCH (n) WHERE n.participantId IS NOT NULL DETACH DELETE n",
-          {},
-        );
-        console.log("✅ Purged graph test data");
-      } catch (error) {
-        console.warn("⚠️  Failed to purge graph data:", error);
-      }
-    }
-
-    console.log("✅ Purged all test data\n");
+    // Note: No global purge - each test run is isolated by prefix
+    console.log("✅ Test isolation setup complete\n");
   });
 
   afterAll(async () => {
+    // Clean up only data created by this test run
+    console.log(`\n🧹 Cleaning up test run ${ctx.runId}...`);
+    await scopedCleanup.cleanupAll();
+
+    // Clean graph data for this run if available
+    if (graphAdapter) {
+      try {
+        await graphAdapter.query(
+          `MATCH (n) WHERE n.agentId STARTS WITH $prefix OR n.participantId STARTS WITH $prefix DETACH DELETE n`,
+          { prefix: ctx.runId },
+        );
+        console.log("✅ Cleaned up graph test data");
+      } catch (error) {
+        console.warn("⚠️  Failed to clean up graph data:", error);
+      }
+    }
+
     cortex.close();
     await client.close();
 
@@ -126,6 +118,8 @@ describe("Agents API (Coordination Layer)", () => {
         console.warn("Failed to disconnect graph adapter:", error);
       }
     }
+
+    console.log(`✅ Test run ${ctx.runId} cleanup complete\n`);
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

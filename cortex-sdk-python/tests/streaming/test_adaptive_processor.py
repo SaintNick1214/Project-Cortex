@@ -6,6 +6,7 @@ Verifies stream type detection and strategy recommendations.
 """
 
 import pytest
+
 from cortex.memory.streaming.adaptive_processor import (
     AdaptiveStreamProcessor,
     create_adaptive_processor,
@@ -77,7 +78,7 @@ class TestAdaptiveStreamProcessor:
         Validates: Streams with consistent behavior
         """
         processor = AdaptiveStreamProcessor()
-        
+
         # Record consistent chunk sizes
         for _ in range(10):
             processor.record_chunk_size(100)  # Consistent size
@@ -97,7 +98,7 @@ class TestAdaptiveStreamProcessor:
         Validates: High variance in chunk sizes
         """
         processor = AdaptiveStreamProcessor()
-        
+
         # Record variable chunk sizes (high variance)
         processor.record_chunk_size(10)
         processor.record_chunk_size(500)
@@ -122,7 +123,7 @@ class TestAdaptiveStreamProcessor:
         """
         processor = AdaptiveStreamProcessor()
         metrics_collector = MetricsCollector()
-        
+
         # Simulate fast stream
         for _ in range(20):
             metrics_collector.record_chunk(100)
@@ -142,7 +143,7 @@ class TestAdaptiveStreamProcessor:
         """
         processor = AdaptiveStreamProcessor()
         metrics_collector = MetricsCollector()
-        
+
         # Simulate slow stream
         metrics_collector.record_chunk(100)
         import time
@@ -162,19 +163,19 @@ class TestAdaptiveStreamProcessor:
         Validates: Large streams trigger chunking suggestion
         """
         processor = AdaptiveStreamProcessor()
-        
+
         # Large stream
         large_metrics = create_test_metrics(
             chunks_per_second=5.0, total_chunks=100, total_bytes=60000
         )
-        
+
         assert processor.should_enable_chunking(large_metrics) is True, "Large stream should enable chunking"
 
         # Small stream
         small_metrics = create_test_metrics(
             chunks_per_second=5.0, total_chunks=10, total_bytes=1000
         )
-        
+
         assert processor.should_enable_chunking(small_metrics) is False, "Small stream should not chunk"
 
     def test_suggest_chunk_size_based_on_characteristics(self):
@@ -183,7 +184,7 @@ class TestAdaptiveStreamProcessor:
         Validates: Suggestions adapt to stream characteristics
         """
         processor = AdaptiveStreamProcessor()
-        
+
         # Small average chunk size -> smaller memory chunks
         small_metrics = create_test_metrics(
             chunks_per_second=10.0, total_chunks=100, total_bytes=3000
@@ -204,7 +205,7 @@ class TestAdaptiveStreamProcessor:
         Validates: Fast streams get specific recommendations
         """
         processor = AdaptiveStreamProcessor()
-        
+
         # Create fast stream metrics
         fast_metrics = create_test_metrics(
             chunks_per_second=20.0, total_chunks=200, total_bytes=100000
@@ -223,7 +224,7 @@ class TestAdaptiveStreamProcessor:
         Validates: Appropriate suggestions based on stream characteristics
         """
         processor = AdaptiveStreamProcessor()
-        
+
         # Slow, long stream -> enable progressive facts
         slow_long = create_test_metrics(
             chunks_per_second=2.0, total_chunks=50, total_bytes=3000
@@ -242,7 +243,7 @@ class TestAdaptiveStreamProcessor:
         Validates: State returns to initial values
         """
         processor = AdaptiveStreamProcessor()
-        
+
         # Record data
         processor.record_chunk_size(100)
         processor.record_chunk_size(200)
@@ -262,7 +263,7 @@ def test_create_adaptive_processor():
     Validates: Processor is properly initialized
     """
     processor = create_adaptive_processor()
-    
+
     # CRITICAL: Validate initialization
     assert processor is not None
     assert isinstance(processor, AdaptiveStreamProcessor)

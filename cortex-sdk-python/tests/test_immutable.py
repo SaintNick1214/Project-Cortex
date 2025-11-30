@@ -11,10 +11,9 @@ Tests validate:
 """
 
 import pytest
+
 from cortex import ImmutableEntry
 from cortex.immutable import ImmutableValidationError
-from tests.helpers import TestCleanup
-
 
 # ============================================================================
 # store() Tests
@@ -30,7 +29,7 @@ async def test_store_creates_version_1(cortex_client):
     """
     import time
     unique_id = f"refund-policy-test-{int(time.time() * 1000)}"
-    
+
     result = await cortex_client.immutable.store(
         ImmutableEntry(
             type="test-kb-article",
@@ -45,14 +44,14 @@ async def test_store_creates_version_1(cortex_client):
             },
         )
     )
-    
+
     # Validate result
     assert result.type == "test-kb-article"
     assert result.id == unique_id
     assert result.version == 1
     assert result.data["title"] == "Refund Policy"
     assert len(result.previous_versions) == 0
-    
+
     # Cleanup
     await cortex_client.immutable.purge("test-kb-article", unique_id)
 
@@ -66,7 +65,7 @@ async def test_store_creates_version_2_on_update(cortex_client):
     """
     import time
     unique_id = f"test-doc-{int(time.time() * 1000)}"
-    
+
     # Create version 1
     v1 = await cortex_client.immutable.store(
         ImmutableEntry(
@@ -75,9 +74,9 @@ async def test_store_creates_version_2_on_update(cortex_client):
             data={"content": "Version 1"},
         )
     )
-    
+
     assert v1.version == 1
-    
+
     # Update to version 2
     v2 = await cortex_client.immutable.store(
         ImmutableEntry(
@@ -86,13 +85,13 @@ async def test_store_creates_version_2_on_update(cortex_client):
             data={"content": "Version 2"},
         )
     )
-    
+
     assert v2.version == 2
     assert v2.data["content"] == "Version 2"
     # previous_versions is list of version objects with {version, data, timestamp}
     version_numbers = [v.get("version") if isinstance(v, dict) else v.version for v in v2.previous_versions]
     assert 1 in version_numbers
-    
+
     # Cleanup
     await cortex_client.immutable.purge("test-article", unique_id)
 
@@ -117,15 +116,15 @@ async def test_get_latest_version(cortex_client):
             data={"theme": "dark"},
         )
     )
-    
+
     # Get latest version
     result = await cortex_client.immutable.get("test-config", "app-settings")
-    
+
     assert result is not None
     assert result.type == "test-config"
     assert result.id == "app-settings"
     assert result.data["theme"] == "dark"
-    
+
     # Cleanup
     await cortex_client.immutable.purge("test-config", "app-settings")
 
@@ -138,7 +137,7 @@ async def test_get_nonexistent_returns_none(cortex_client):
     Port of: immutable.test.ts - get tests
     """
     result = await cortex_client.immutable.get("test-config", "does-not-exist")
-    
+
     assert result is None
 
 
@@ -162,7 +161,7 @@ async def test_get_specific_version(cortex_client):
             data={"value": "v1"},
         )
     )
-    
+
     # Create version 2
     v2 = await cortex_client.immutable.store(
         ImmutableEntry(
@@ -171,21 +170,21 @@ async def test_get_specific_version(cortex_client):
             data={"value": "v2"},
         )
     )
-    
+
     # Get version 1
     retrieved_v1 = await cortex_client.immutable.get_version("test-config", "settings-ver", 1)
-    
+
     assert retrieved_v1 is not None
     assert retrieved_v1.version == 1
     assert retrieved_v1.data["value"] == "v1"
-    
+
     # Get version 2
     retrieved_v2 = await cortex_client.immutable.get_version("test-config", "settings-ver", 2)
-    
+
     assert retrieved_v2 is not None
     assert retrieved_v2.version == 2
     assert retrieved_v2.data["value"] == "v2"
-    
+
     # Cleanup
     await cortex_client.immutable.purge("test-config", "settings-ver")
 
@@ -206,20 +205,20 @@ async def test_get_version_history(cortex_client):
     await cortex_client.immutable.store(
         ImmutableEntry(type="test-doc", id="history-test", data={"content": "Version 1"})
     )
-    
+
     await cortex_client.immutable.store(
         ImmutableEntry(type="test-doc", id="history-test", data={"content": "Version 2"})
     )
-    
+
     await cortex_client.immutable.store(
         ImmutableEntry(type="test-doc", id="history-test", data={"content": "Version 3"})
     )
-    
+
     # Get history
     history = await cortex_client.immutable.get_history("test-doc", "history-test")
-    
+
     assert len(history) >= 3
-    
+
     # Cleanup
     await cortex_client.immutable.purge("test-doc", "history-test")
 
@@ -245,15 +244,15 @@ async def test_list_entries(cortex_client):
                 data={"value": i},
             )
         )
-    
+
     # List entries
     result = await cortex_client.immutable.list(limit=100)
-    
+
     # Should return at least 3 entries
     entries = result if isinstance(result, list) else result.get("records", [])
     test_entries = [e for e in entries if (e.get("type") if isinstance(e, dict) else e.type) == "test-item"]
     assert len(test_entries) >= 3
-    
+
     # Cleanup
     for i in range(3):
         await cortex_client.immutable.purge("test-item", f"list-item-{i}")
@@ -280,13 +279,13 @@ async def test_count_entries(cortex_client):
                 data={"value": i},
             )
         )
-    
+
     # Count entries
     count = await cortex_client.immutable.count()
-    
+
     # Should have at least 3
     assert count >= 3
-    
+
     # Cleanup
     for i in range(3):
         await cortex_client.immutable.purge("test-count", f"count-item-{i}")
@@ -308,17 +307,17 @@ async def test_purge_entry(cortex_client):
     await cortex_client.immutable.store(
         ImmutableEntry(type="test-purge", id="purge-test", data={"content": "Version 1"})
     )
-    
+
     await cortex_client.immutable.store(
         ImmutableEntry(type="test-purge", id="purge-test", data={"content": "Version 2"})
     )
-    
+
     # Purge entry
     result = await cortex_client.immutable.purge("test-purge", "purge-test")
-    
+
     # Verify purged
     retrieved = await cortex_client.immutable.get("test-purge", "purge-test")
-    
+
     assert retrieved is None
 
 
@@ -345,7 +344,7 @@ async def test_search_immutable(cortex_client):
             },
         )
     )
-    
+
     await cortex_client.immutable.store(
         ImmutableEntry(
             type="test-search-article",
@@ -356,10 +355,10 @@ async def test_search_immutable(cortex_client):
             },
         )
     )
-    
+
     # Search for "Python"
     results = await cortex_client.immutable.search("Python")
-    
+
     # Should find the Python article
     # Backend returns {entry, score, highlights} format
     assert len(results) > 0
@@ -368,7 +367,7 @@ async def test_search_immutable(cortex_client):
         for r in results
     )
     assert found_python
-    
+
     # Cleanup
     await cortex_client.immutable.purge("test-search-article", "article-python")
     await cortex_client.immutable.purge("test-search-article", "article-js")

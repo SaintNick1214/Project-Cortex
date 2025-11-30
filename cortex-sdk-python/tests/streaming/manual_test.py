@@ -17,10 +17,9 @@ from typing import AsyncIterable
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 from cortex import CortexClient
-from cortex.types import GraphConnectionConfig
 from cortex.graph.adapters.cypher import CypherGraphAdapter
 from cortex.memory.streaming_types import StreamingOptions
-
+from cortex.types import GraphConnectionConfig
 
 # Configuration
 CONVEX_URL = os.getenv("CONVEX_URL", "https://your-project.convex.cloud")
@@ -74,7 +73,7 @@ async def main():
 
     # Setup
     print("\n1️⃣  Setting up Cortex client with graph adapter...")
-    
+
     graph_adapter = CypherGraphAdapter()
     await graph_adapter.connect(
         GraphConnectionConfig(uri=NEO4J_URI, username=NEO4J_USER, password=NEO4J_PASSWORD)
@@ -91,7 +90,7 @@ async def main():
     user_id = "manual-test-user"
     user_name = "Manual Tester"
 
-    print(f"\n2️⃣  Test Configuration:")
+    print("\n2️⃣  Test Configuration:")
     print(f"   Memory Space: {memory_space_id}")
     print(f"   Conversation: {conversation_id}")
     print(f"   User: {user_name} ({user_id})")
@@ -116,7 +115,7 @@ async def main():
 
     # Execute streaming
     print("\n3️⃣  Executing remember_stream() with all features...")
-    
+
     result = await client.memory.remember_stream(
         {
             "memorySpaceId": memory_space_id,
@@ -145,9 +144,9 @@ async def main():
     # Validate response
     print(f"\n   📝 Full Response ({len(result.full_response)} chars):")
     print(f"   '{result.full_response[:100]}...'")
-    
+
     # Validate metrics
-    print(f"\n   📊 Stream Metrics:")
+    print("\n   📊 Stream Metrics:")
     print(f"      • Total Chunks: {result.stream_metrics.total_chunks}")
     print(f"      • Total Bytes: {result.stream_metrics.total_bytes}")
     print(f"      • Duration: {result.stream_metrics.stream_duration_ms}ms")
@@ -163,7 +162,7 @@ async def main():
 
     # Validate progressive processing
     if result.progressive_processing:
-        print(f"\n   🔄 Progressive Processing:")
+        print("\n   🔄 Progressive Processing:")
         print(f"      • Partial Updates: {len(result.progressive_processing.partial_storage_history)}")
         if result.progressive_processing.graph_sync_events:
             print(f"      • Graph Sync Events: {len(result.progressive_processing.graph_sync_events)}")
@@ -172,13 +171,13 @@ async def main():
 
     # Validate performance insights
     if result.performance:
-        print(f"\n   💡 Performance Insights:")
+        print("\n   💡 Performance Insights:")
         if result.performance.bottlenecks:
-            print(f"      Bottlenecks:")
+            print("      Bottlenecks:")
             for bottleneck in result.performance.bottlenecks:
                 print(f"         - {bottleneck}")
         if result.performance.recommendations:
-            print(f"      Recommendations:")
+            print("      Recommendations:")
             for rec in result.performance.recommendations:
                 print(f"         - {rec}")
 
@@ -197,7 +196,7 @@ async def main():
 
     # Check Graph
     print("\n   🔗 Neo4j Graph Validation:")
-    
+
     # Verify Memory node
     memory_nodes = await graph_adapter.find_nodes(
         label="Memory",
@@ -228,7 +227,7 @@ async def main():
             "convId": conversation_id,
         },
     )
-    
+
     if edge_query.count > 0 and edge_query.records[0]["edgeCount"] > 0:
         print(f"      ✅ REFERENCES edge exists: {edge_query.records[0]['edgeType']}")
     else:

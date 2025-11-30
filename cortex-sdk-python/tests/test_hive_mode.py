@@ -10,25 +10,26 @@ Tests validate:
 Port of: tests/hiveMode.test.ts
 """
 
-import pytest
 import time
+import time as _time
+
+import pytest
+
 from cortex import Cortex, CortexConfig
 from cortex.types import (
-    RegisterMemorySpaceParams,
-    CreateConversationInput,
-    ConversationParticipants,
     AddMessageInput,
-    StoreMemoryInput,
-    MemorySource,
-    MemoryMetadata,
-    StoreFactParams,
     ContextInput,
+    ConversationParticipants,
+    CreateConversationInput,
+    MemoryMetadata,
+    MemorySource,
+    RegisterMemorySpaceParams,
     RememberParams,
+    StoreFactParams,
+    StoreMemoryInput,
 )
 from tests.helpers import TestCleanup
 
-
-import time as _time
 HIVE_SPACE = f"hive-test-shared-python-{int(_time.time() * 1000)}"
 
 
@@ -39,10 +40,10 @@ async def hive_cortex():
     convex_url = os.getenv("CONVEX_URL", "http://127.0.0.1:3210")
     cortex = Cortex(CortexConfig(convex_url=convex_url))
     cleanup = TestCleanup(cortex)
-    
+
     # Clean all
     await cleanup.purge_all()
-    
+
     # Register hive space with multiple participants
     now = int(time.time() * 1000)
     await cortex.memory_spaces.register(
@@ -59,9 +60,9 @@ async def hive_cortex():
             ],
         )
     )
-    
+
     yield cortex
-    
+
     # Cleanup
     await cleanup.purge_all()
     await cortex.close()
@@ -90,7 +91,7 @@ async def test_all_participants_see_same_conversations(hive_cortex):
             ),
         )
     )
-    
+
     await hive_cortex.conversations.add_message(
         AddMessageInput(
             conversation_id=conv.conversation_id,
@@ -99,13 +100,13 @@ async def test_all_participants_see_same_conversations(hive_cortex):
             participant_id="tool-calendar",
         )
     )
-    
+
     # Tool-email can see same conversation
     all_convs = await hive_cortex.conversations.list(memory_space_id=HIVE_SPACE)
-    
+
     # Handle list or dict response
     conv_list = all_convs if isinstance(all_convs, list) else all_convs.get("conversations", [])
-    
+
     conv_ids = [c.conversation_id if hasattr(c, 'conversation_id') else c.get("conversationId") for c in conv_list]
     assert conv.conversation_id in conv_ids
 
@@ -136,7 +137,7 @@ async def test_all_participants_contribute_to_shared_memory_pool(hive_cortex):
             ),
         ),
     )
-    
+
     # Tool-email stores related memory
     await hive_cortex.vector.store(
         HIVE_SPACE,
@@ -151,7 +152,7 @@ async def test_all_participants_contribute_to_shared_memory_pool(hive_cortex):
             ),
         ),
     )
-    
+
     # Tool-tasks stores memory
     await hive_cortex.vector.store(
         HIVE_SPACE,
@@ -166,20 +167,20 @@ async def test_all_participants_contribute_to_shared_memory_pool(hive_cortex):
             ),
         ),
     )
-    
+
     # All tools can access ALL memories
     result = await hive_cortex.vector.list(memory_space_id=HIVE_SPACE)
     all_memories = result if isinstance(result, list) else result.get("memories", [])
-    
+
     assert len(all_memories) >= 3
-    
+
     # Verify memories from different participants
     participants = set(
         m.participant_id if hasattr(m, 'participant_id') else m.get("participantId")
         for m in all_memories
         if (hasattr(m, 'participant_id') and m.participant_id) or m.get("participantId")
     )
-    
+
     assert len(participants) >= 3
 
 
@@ -208,7 +209,7 @@ async def test_all_participants_contribute_to_shared_fact_base(hive_cortex):
             tags=["meeting", "recurring"],
         )
     )
-    
+
     # Tool-email extracts fact
     await hive_cortex.facts.store(
         StoreFactParams(
@@ -222,7 +223,7 @@ async def test_all_participants_contribute_to_shared_fact_base(hive_cortex):
             tags=["notification", "preference"],
         )
     )
-    
+
     # Agent-assistant extracts fact
     await hive_cortex.facts.store(
         StoreFactParams(
@@ -236,21 +237,21 @@ async def test_all_participants_contribute_to_shared_fact_base(hive_cortex):
             tags=["project", "work"],
         )
     )
-    
+
     # All can access all facts
     from cortex.types import ListFactsFilter
     all_facts_result = await hive_cortex.facts.list(ListFactsFilter(memory_space_id=HIVE_SPACE))
     all_facts = all_facts_result if isinstance(all_facts_result, list) else all_facts_result.get("facts", [])
-    
+
     assert len(all_facts) >= 3
-    
+
     # Verify different participants
     extractors = set(
         f.participant_id if hasattr(f, 'participant_id') else f.get("participantId")
         for f in all_facts
         if (hasattr(f, 'participant_id') and f.participant_id) or f.get("participantId")
     )
-    
+
     assert len(extractors) >= 3
 
 
@@ -269,16 +270,16 @@ async def test_facts_about_same_subject_from_different_tools(hive_cortex):
         )
     )
     user_facts = user_facts_result if isinstance(user_facts_result, list) else user_facts_result.get("facts", [])
-    
+
     assert len(user_facts) >= 3
-    
+
     # Multiple participants contributed facts about same user
     contributors = set(
         f.participant_id if hasattr(f, 'participant_id') else f.get("participantId")
         for f in user_facts
         if (hasattr(f, 'participant_id') and f.participant_id) or f.get("participantId")
     )
-    
+
     assert len(contributors) >= 2
 
 
@@ -295,7 +296,7 @@ async def test_single_memory_space_eliminates_duplication(hive_cortex):
     Port of: hiveMode.test.ts - line 203
     """
     fact_text = "User's timezone is America/Los_Angeles"
-    
+
     # Tool-calendar stores it once
     stored = await hive_cortex.facts.store(
         StoreFactParams(
@@ -311,7 +312,7 @@ async def test_single_memory_space_eliminates_duplication(hive_cortex):
             tags=["timezone", "identity"],
         )
     )
-    
+
     # Tool-email can access same fact (no duplicate needed)
     from cortex.types import QueryBySubjectFilter
     facts_result = await hive_cortex.facts.query_by_subject(
@@ -321,9 +322,9 @@ async def test_single_memory_space_eliminates_duplication(hive_cortex):
         )
     )
     facts = facts_result if isinstance(facts_result, list) else facts_result.get("facts", [])
-    
+
     timezone_facts = [f for f in facts if (f.predicate if hasattr(f, 'predicate') else f.get("predicate")) == "has_timezone"]
-    
+
     # Should only be ONE fact about timezone (no duplication)
     assert len(timezone_facts) == 1
     fact_id = timezone_facts[0].fact_id if hasattr(timezone_facts[0], 'fact_id') else timezone_facts[0].get("factId")
@@ -352,7 +353,7 @@ async def test_tracks_which_participant_created_what(hive_cortex):
             ),
         )
     )
-    
+
     conv2 = await hive_cortex.conversations.create(
         CreateConversationInput(
             memory_space_id=HIVE_SPACE,
@@ -363,7 +364,7 @@ async def test_tracks_which_participant_created_what(hive_cortex):
             ),
         )
     )
-    
+
     # Can see who created what
     # Note: participantId is stored in participants object
     assert conv1.conversation_id is not None
@@ -371,7 +372,7 @@ async def test_tracks_which_participant_created_what(hive_cortex):
     # Both in same space
     assert conv1.memory_space_id == HIVE_SPACE
     assert conv2.memory_space_id == HIVE_SPACE
-    
+
     # But both in same space
     assert conv1.memory_space_id == HIVE_SPACE
     assert conv2.memory_space_id == HIVE_SPACE
@@ -391,7 +392,7 @@ async def test_multi_tool_coordination_for_user_workflow(hive_cortex):
     """
     # Scenario: User asks "What do I have scheduled this week?"
     # Multiple tools need to coordinate in shared hive
-    
+
     # 1. Agent-assistant processes request
     agent_conv = await hive_cortex.conversations.create(
         CreateConversationInput(
@@ -403,7 +404,7 @@ async def test_multi_tool_coordination_for_user_workflow(hive_cortex):
             ),
         )
     )
-    
+
     user_msg = await hive_cortex.conversations.add_message(
         AddMessageInput(
             conversation_id=agent_conv.conversation_id,
@@ -411,10 +412,10 @@ async def test_multi_tool_coordination_for_user_workflow(hive_cortex):
             content="What do I have scheduled this week?",
         )
     )
-    
+
     # 2. Agent delegates to calendar tool (creates context)
     message_id = user_msg.messages[0]["id"] if isinstance(user_msg.messages[0], dict) else user_msg.messages[0].id
-    
+
     context = await hive_cortex.contexts.create(
         ContextInput(
             purpose="Retrieve weekly schedule",
@@ -425,7 +426,7 @@ async def test_multi_tool_coordination_for_user_workflow(hive_cortex):
             },
         )
     )
-    
+
     # 3. Calendar tool executes and stores result
     await hive_cortex.facts.store(
         StoreFactParams(
@@ -440,26 +441,26 @@ async def test_multi_tool_coordination_for_user_workflow(hive_cortex):
             tags=["meetings", "schedule", "weekly"],
         )
     )
-    
+
     # 4. Email tool checks for meeting notifications
     meetings_result = await hive_cortex.facts.search(HIVE_SPACE, "meetings")
     meetings = meetings_result if isinstance(meetings_result, list) else meetings_result.get("facts", [])
-    
+
     # Handle search result format {entry, score, highlights}
     if meetings and isinstance(meetings[0], dict) and "entry" in meetings[0]:
         meetings = [m["entry"] for m in meetings]
-    
+
     assert len(meetings) >= 1
-    
+
     # 5. All data in ONE space
     stats = await hive_cortex.memory_spaces.get_stats(HIVE_SPACE)
-    
+
     assert stats.total_conversations >= 1
     assert stats.total_facts >= 1
-    
+
     # 6. Verify all participants tracked
     space = await hive_cortex.memory_spaces.get(HIVE_SPACE)
-    
+
     assert len(space.participants) >= 5
 
 
@@ -489,7 +490,7 @@ async def test_single_query_retrieves_all_participant_memories(hive_cortex):
             ),
         ),
     )
-    
+
     await hive_cortex.vector.store(
         HIVE_SPACE,
         StoreMemoryInput(
@@ -503,7 +504,7 @@ async def test_single_query_retrieves_all_participant_memories(hive_cortex):
             ),
         ),
     )
-    
+
     await hive_cortex.vector.store(
         HIVE_SPACE,
         StoreMemoryInput(
@@ -517,24 +518,24 @@ async def test_single_query_retrieves_all_participant_memories(hive_cortex):
             ),
         ),
     )
-    
+
     # Single query gets ALL (vs 3 separate queries without Hive Mode)
     start_time = time.time()
     result = await hive_cortex.vector.list(memory_space_id=HIVE_SPACE)
     query_time = (time.time() - start_time) * 1000  # Convert to ms
-    
+
     all_memories = result if isinstance(result, list) else result.get("memories", [])
-    
+
     assert len(all_memories) >= 3
     assert query_time < 1000  # Should be fast
-    
+
     # Verify from different participants
     participants = set(
         m.participant_id if hasattr(m, 'participant_id') else m.get("participantId")
         for m in all_memories
         if (hasattr(m, 'participant_id') and m.participant_id) or m.get("participantId")
     )
-    
+
     assert len(participants) >= 3
 
 
@@ -560,7 +561,7 @@ async def test_participant_id_persists_through_vector_update(hive_cortex):
             metadata=MemoryMetadata(importance=70, tags=["test"]),
         ),
     )
-    
+
     updated = await hive_cortex.vector.update(
         HIVE_SPACE,
         mem.memory_id,
@@ -570,11 +571,11 @@ async def test_participant_id_persists_through_vector_update(hive_cortex):
             "tags": ["test", "updated"],
         },
     )
-    
+
     # Validate participantId preserved
     participant = updated.participant_id if hasattr(updated, 'participant_id') else updated.get("participantId")
     assert participant == "tool-calendar"
-    
+
     # Verify in database
     stored = await hive_cortex.vector.get(HIVE_SPACE, mem.memory_id)
     stored_participant = stored.participant_id if hasattr(stored, 'participant_id') else stored.get("participantId")
@@ -595,7 +596,7 @@ async def test_tracks_5_plus_participants_in_same_hive(hive_cortex):
         "tool-notes",
         "agent-assistant",
     ]
-    
+
     # Each participant stores memory
     for participant in participants_list:
         await hive_cortex.vector.store(
@@ -608,27 +609,27 @@ async def test_tracks_5_plus_participants_in_same_hive(hive_cortex):
                 metadata=MemoryMetadata(importance=70, tags=["multi-participant"]),
             ),
         )
-    
+
     # Validate all 5 participants tracked
     result = await hive_cortex.vector.list(memory_space_id=HIVE_SPACE)
     all_memories = result if isinstance(result, list) else result.get("memories", [])
-    
+
     multi_participant_mems = [
         m for m in all_memories
         if "multi-participant" in ((m.tags if hasattr(m, 'tags') else m.get("tags", [])) or [])
     ]
-    
+
     unique_participants = set(
         m.participant_id if hasattr(m, 'participant_id') else m.get("participantId")
         for m in multi_participant_mems
         if (hasattr(m, 'participant_id') and m.participant_id) or m.get("participantId")
     )
-    
+
     assert len(unique_participants) >= 5
-    
+
     for p in participants_list:
         assert p in unique_participants
-    
+
     # Can identify who created what
     for participant in participants_list:
         participant_mems = [
@@ -648,7 +649,7 @@ async def test_multiple_participants_use_remember_in_same_hive(hive_cortex):
     Port of: hiveMode.test.ts - line 461
     """
     participants_list = ["tool-calendar", "tool-email", "tool-tasks"]
-    
+
     # Create conversation for remember() tests
     conv = await hive_cortex.conversations.create(
         CreateConversationInput(
@@ -657,7 +658,7 @@ async def test_multiple_participants_use_remember_in_same_hive(hive_cortex):
             participants=ConversationParticipants(user_id="user-alice"),
         )
     )
-    
+
     for participant in participants_list:
         await hive_cortex.memory.remember(
             RememberParams(
@@ -671,19 +672,19 @@ async def test_multiple_participants_use_remember_in_same_hive(hive_cortex):
                 tags=["remember-test"],
             )
         )
-    
+
     # Verify all memories have correct participantId
     result = await hive_cortex.vector.list(memory_space_id=HIVE_SPACE)
     all_memories = result if isinstance(result, list) else result.get("memories", [])
-    
+
     remember_test_mems = [
         m for m in all_memories
         if "remember-test" in ((m.tags if hasattr(m, 'tags') else m.get("tags", [])) or [])
     ]
-    
+
     # 2 memories per remember()
     assert len(remember_test_mems) >= len(participants_list) * 2
-    
+
     # Each participant should have memories
     for participant in participants_list:
         participant_mems = [
@@ -710,7 +711,7 @@ async def test_message_participant_id_for_agent_messages(hive_cortex):
             ),
         )
     )
-    
+
     await hive_cortex.conversations.add_message(
         AddMessageInput(
             conversation_id=conv.conversation_id,
@@ -719,13 +720,13 @@ async def test_message_participant_id_for_agent_messages(hive_cortex):
             participant_id="tool-calendar",
         )
     )
-    
+
     updated_conv = await hive_cortex.conversations.get(conv.conversation_id)
     agent_msgs = [
         m for m in updated_conv.messages
         if (m.get("role") if isinstance(m, dict) else m.role) == "agent"
     ]
-    
+
     assert len(agent_msgs) > 0
     # Note: participantId may not be on individual messages
     # Just verify message was added
@@ -751,7 +752,7 @@ async def test_facts_participant_id_persists_through_update(hive_cortex):
             tags=["fact-update-test"],
         )
     )
-    
+
     v2 = await hive_cortex.facts.update(
         HIVE_SPACE,
         v1.fact_id,
@@ -760,11 +761,11 @@ async def test_facts_participant_id_persists_through_update(hive_cortex):
             "confidence": 90,
         },
     )
-    
+
     # New version should preserve participantId
     participant = v2.participant_id if hasattr(v2, 'participant_id') else v2.get("participantId")
     assert participant == "agent-assistant"
-    
+
     # Verify in database
     stored = await hive_cortex.facts.get(HIVE_SPACE, v2.fact_id)
     stored_participant = stored.participant_id if hasattr(stored, 'participant_id') else stored.get("participantId")
@@ -789,7 +790,7 @@ async def test_can_distinguish_memories_by_participant_in_search(hive_cortex):
             metadata=MemoryMetadata(importance=80, tags=["distinguish-test"]),
         ),
     )
-    
+
     await hive_cortex.vector.store(
         HIVE_SPACE,
         StoreMemoryInput(
@@ -800,28 +801,28 @@ async def test_can_distinguish_memories_by_participant_in_search(hive_cortex):
             metadata=MemoryMetadata(importance=80, tags=["distinguish-test"]),
         ),
     )
-    
+
     from cortex.types import SearchOptions
     results = await hive_cortex.vector.search(
         HIVE_SPACE,
         "DISTINGUISH_TEST",
         SearchOptions(limit=10),
     )
-    
+
     distinguish_results = [
         r for r in results
         if "distinguish-test" in ((r.tags if hasattr(r, 'tags') else r.get("tags", [])) or [])
     ]
-    
+
     assert len(distinguish_results) >= 2
-    
+
     # Should have memories from both participants
     participants = set(
         r.participant_id if hasattr(r, 'participant_id') else r.get("participantId")
         for r in distinguish_results
         if (hasattr(r, 'participant_id') and r.participant_id) or r.get("participantId")
     )
-    
+
     assert "tool-calendar" in participants
     assert "tool-email" in participants
 
@@ -840,11 +841,11 @@ async def test_contexts_track_participants_correctly(hive_cortex):
             user_id="user-alice",
         )
     )
-    
+
     assert ctx is not None
     assert ctx.memory_space_id == HIVE_SPACE
     assert ctx.user_id == "user-alice"
-    
+
     # Verify the memory space has multiple participants
     space = await hive_cortex.memory_spaces.get(HIVE_SPACE)
     assert len(space.participants) >= 3
@@ -868,7 +869,7 @@ async def test_participant_statistics_accurate(hive_cortex):
             metadata=MemoryMetadata(importance=70, tags=["stats-test"]),
         ),
     )
-    
+
     await hive_cortex.vector.store(
         HIVE_SPACE,
         StoreMemoryInput(
@@ -879,7 +880,7 @@ async def test_participant_statistics_accurate(hive_cortex):
             metadata=MemoryMetadata(importance=70, tags=["stats-test"]),
         ),
     )
-    
+
     await hive_cortex.vector.store(
         HIVE_SPACE,
         StoreMemoryInput(
@@ -890,13 +891,13 @@ async def test_participant_statistics_accurate(hive_cortex):
             metadata=MemoryMetadata(importance=70, tags=["stats-test"]),
         ),
     )
-    
+
     # Get stats
     stats = await hive_cortex.memory_spaces.get_stats(HIVE_SPACE)
-    
+
     assert stats is not None
     assert stats.total_memories >= 3
-    
+
     # Verify space has multiple participants registered
     space = await hive_cortex.memory_spaces.get(HIVE_SPACE)
     assert len(space.participants) >= 3
@@ -910,7 +911,7 @@ async def test_participant_id_in_all_layers_for_end_to_end_workflow(hive_cortex)
     Port of: hiveMode.test.ts - line 648
     """
     participant = "tool-workflow-test"
-    
+
     # Create conversation first
     conv = await hive_cortex.conversations.create(
         CreateConversationInput(
@@ -922,7 +923,7 @@ async def test_participant_id_in_all_layers_for_end_to_end_workflow(hive_cortex)
             ),
         )
     )
-    
+
     # 1. Remember with participantId
     result = await hive_cortex.memory.remember(
         RememberParams(
@@ -935,7 +936,7 @@ async def test_participant_id_in_all_layers_for_end_to_end_workflow(hive_cortex)
             agent_response="Workflow test response",
         )
     )
-    
+
     # 2. Store fact with participantId
     fact = await hive_cortex.facts.store(
         StoreFactParams(
@@ -949,7 +950,7 @@ async def test_participant_id_in_all_layers_for_end_to_end_workflow(hive_cortex)
             source_ref={"conversationId": result.conversation["conversationId"], "memoryId": "temp"},
         )
     )
-    
+
     # 3. Create context
     ctx = await hive_cortex.contexts.create(
         ContextInput(
@@ -958,16 +959,16 @@ async def test_participant_id_in_all_layers_for_end_to_end_workflow(hive_cortex)
             user_id="user-alice",
         )
     )
-    
+
     # Validate participantId in all layers
     conv_check = await hive_cortex.conversations.get(result.conversation["conversationId"])
     # Just verify conversation exists
     assert conv_check is not None
-    
+
     mem = await hive_cortex.vector.get(HIVE_SPACE, result.memories[0].memory_id)
     mem_participant = mem.participant_id if hasattr(mem, 'participant_id') else mem.get("participantId")
     assert mem_participant == participant
-    
+
     fact_participant = fact.participant_id if hasattr(fact, 'participant_id') else fact.get("participantId")
     assert fact_participant == participant
     assert ctx.memory_space_id == HIVE_SPACE
@@ -990,10 +991,10 @@ async def test_handles_undefined_participant_id_across_all_operations(hive_corte
             metadata=MemoryMetadata(importance=70, tags=["no-participant"]),
         ),
     )
-    
+
     participant = mem.participant_id if hasattr(mem, 'participant_id') else mem.get("participantId")
     assert participant is None
-    
+
     # Fact without participantId
     fact = await hive_cortex.facts.store(
         StoreFactParams(
@@ -1005,14 +1006,14 @@ async def test_handles_undefined_participant_id_across_all_operations(hive_corte
             source_type="system",
         )
     )
-    
+
     fact_participant = fact.participant_id if hasattr(fact, 'participant_id') else fact.get("participantId")
     assert fact_participant is None
-    
+
     # Both should be retrievable
     stored_mem = await hive_cortex.vector.get(HIVE_SPACE, mem.memory_id)
     assert stored_mem is not None
-    
+
     stored_fact = await hive_cortex.facts.get(HIVE_SPACE, fact.fact_id)
     assert stored_fact is not None
 

@@ -7,16 +7,17 @@ to underlying layer functions.
 Port of: tests/parameterPropagation.test.ts
 """
 
-import pytest
 import os
+
+import pytest
+
 from cortex import Cortex, CortexConfig
 from cortex.types import (
-    CreateConversationInput,
     ConversationParticipants,
+    CreateConversationInput,
     RememberParams,
 )
 from tests.helpers import TestCleanup
-
 
 TEST_MEMSPACE_ID = "param-prop-test-python"
 TEST_USER_ID = "user-param-test-python"
@@ -28,9 +29,9 @@ async def param_cortex():
     convex_url = os.getenv("CONVEX_URL", "http://127.0.0.1:3210")
     cortex = Cortex(CortexConfig(convex_url=convex_url))
     cleanup = TestCleanup(cortex)
-    
+
     await cleanup.purge_all()
-    
+
     # Create conversation for remember() tests
     conv = await cortex.conversations.create(
         CreateConversationInput(
@@ -39,12 +40,12 @@ async def param_cortex():
             participants=ConversationParticipants(user_id=TEST_USER_ID),
         )
     )
-    
+
     # Store conversation ID for tests
     cortex._test_conversation_id = conv.conversation_id
-    
+
     yield cortex
-    
+
     await cleanup.purge_all()
     await cortex.close()
 
@@ -72,14 +73,14 @@ async def test_propagates_participant_id_to_vector_layer(param_cortex):
             agent_response="You have 3 meetings tomorrow",
         )
     )
-    
+
     assert len(result.memories) == 2
-    
+
     # Verify user memory has participantId
     user_mem = await param_cortex.vector.get(TEST_MEMSPACE_ID, result.memories[0].memory_id)
     user_participant = user_mem.participant_id if hasattr(user_mem, 'participant_id') else user_mem.get("participantId")
     assert user_participant == "tool-calendar"
-    
+
     # Verify agent memory has participantId
     agent_mem = await param_cortex.vector.get(TEST_MEMSPACE_ID, result.memories[1].memory_id)
     agent_participant = agent_mem.participant_id if hasattr(agent_mem, 'participant_id') else agent_mem.get("participantId")
@@ -94,7 +95,7 @@ async def test_propagates_importance_to_vector_layer(param_cortex):
     Port of: parameterPropagation.test.ts - line 72
     """
     importance = 95
-    
+
     result = await param_cortex.memory.remember(
         RememberParams(
             memory_space_id=TEST_MEMSPACE_ID,
@@ -106,14 +107,14 @@ async def test_propagates_importance_to_vector_layer(param_cortex):
             agent_response="I've noted that securely",
         )
     )
-    
+
     # Verify both memories have correct importance
     user_mem = await param_cortex.vector.get(TEST_MEMSPACE_ID, result.memories[0].memory_id)
     agent_mem = await param_cortex.vector.get(TEST_MEMSPACE_ID, result.memories[1].memory_id)
-    
+
     user_importance = user_mem.importance if hasattr(user_mem, 'importance') else user_mem.get("importance")
     agent_importance = agent_mem.importance if hasattr(agent_mem, 'importance') else agent_mem.get("importance")
-    
+
     assert user_importance == importance
     assert agent_importance == importance
 
@@ -126,7 +127,7 @@ async def test_propagates_tags_to_vector_layer(param_cortex):
     Port of: parameterPropagation.test.ts - line 99
     """
     tags = ["critical", "password", "security"]
-    
+
     result = await param_cortex.memory.remember(
         RememberParams(
             memory_space_id=TEST_MEMSPACE_ID,
@@ -138,13 +139,13 @@ async def test_propagates_tags_to_vector_layer(param_cortex):
             agent_response="Noted the security issue",
         )
     )
-    
+
     user_mem = await param_cortex.vector.get(TEST_MEMSPACE_ID, result.memories[0].memory_id)
     agent_mem = await param_cortex.vector.get(TEST_MEMSPACE_ID, result.memories[1].memory_id)
-    
+
     user_tags = user_mem.tags if hasattr(user_mem, 'tags') else user_mem.get("tags")
     agent_tags = agent_mem.tags if hasattr(agent_mem, 'tags') else agent_mem.get("tags")
-    
+
     assert all(tag in user_tags for tag in tags)
     assert all(tag in agent_tags for tag in tags)
 
@@ -166,7 +167,7 @@ async def test_propagates_user_id_to_vector_layer(param_cortex):
             agent_response="Response to user",
         )
     )
-    
+
     # Both memories should have userId
     for mem in result.memories:
         stored = await param_cortex.vector.get(TEST_MEMSPACE_ID, mem.memory_id)
@@ -197,10 +198,10 @@ async def test_propagates_participant_id_to_conversation_messages(param_cortex):
             agent_response="Email sent successfully",
         )
     )
-    
+
     # Check conversation messages
     conv = await param_cortex.conversations.get(result.conversation["conversationId"])
-    
+
     # Agent message should have participantId
     agent_messages = [m for m in conv.messages if (m.get("role") if isinstance(m, dict) else m.role) == "agent"]
     if agent_messages:
@@ -228,7 +229,7 @@ async def test_propagates_participant_id_to_extracted_facts(param_cortex):
                 "confidence": 90,
             }
         ]
-    
+
     result = await param_cortex.memory.remember(
         RememberParams(
             memory_space_id=TEST_MEMSPACE_ID,
@@ -241,7 +242,7 @@ async def test_propagates_participant_id_to_extracted_facts(param_cortex):
             extract_facts=extract_facts,
         )
     )
-    
+
     # Extracted fact should have participantId
     if result.facts:
         for fact in result.facts:
@@ -272,7 +273,7 @@ async def test_propagates_none_for_optional_participant_id(param_cortex):
             agent_response="Response without participant",
         )
     )
-    
+
     # Memories should have None participantId
     for mem in result.memories:
         stored = await param_cortex.vector.get(TEST_MEMSPACE_ID, mem.memory_id)
@@ -298,10 +299,10 @@ async def test_propagates_default_importance_when_omitted(param_cortex):
             agent_response="Response",
         )
     )
-    
+
     user_mem = await param_cortex.vector.get(TEST_MEMSPACE_ID, result.memories[0].memory_id)
     user_importance = user_mem.importance if hasattr(user_mem, 'importance') else user_mem.get("importance")
-    
+
     # Should have some default value (typically 50)
     assert user_importance is not None
     assert isinstance(user_importance, (int, float))
@@ -329,12 +330,12 @@ async def test_user_id_propagates_through_all_layers(param_cortex):
             agent_response="Response",
         )
     )
-    
+
     # Check conversation
     conv = await param_cortex.conversations.get(result.conversation["conversationId"])
     # Just verify conversation exists
     assert conv is not None
-    
+
     # Check vector memories
     for mem in result.memories:
         stored = await param_cortex.vector.get(TEST_MEMSPACE_ID, mem.memory_id)
@@ -359,11 +360,11 @@ async def test_memory_space_id_consistent_across_layers(param_cortex):
             agent_response="Response",
         )
     )
-    
+
     # Conversation has memorySpaceId
     conv = await param_cortex.conversations.get(result.conversation["conversationId"])
     assert conv.memory_space_id == TEST_MEMSPACE_ID
-    
+
     # Memories have memorySpaceId
     for mem in result.memories:
         stored = await param_cortex.vector.get(TEST_MEMSPACE_ID, mem.memory_id)
@@ -396,7 +397,7 @@ async def test_propagates_custom_metadata_fields(param_cortex):
             tags=["custom-metadata"],
         )
     )
-    
+
     # Verify tags were propagated
     for mem in result.memories:
         stored = await param_cortex.vector.get(TEST_MEMSPACE_ID, mem.memory_id)
@@ -417,7 +418,7 @@ async def test_propagates_source_user_name_to_memories(param_cortex):
     Port of: parameterPropagation.test.ts - line 395
     """
     user_name = "Alice Smith"
-    
+
     result = await param_cortex.memory.remember(
         RememberParams(
             memory_space_id=TEST_MEMSPACE_ID,
@@ -428,7 +429,7 @@ async def test_propagates_source_user_name_to_memories(param_cortex):
             agent_response="Response",
         )
     )
-    
+
     # Check memories have sourceUserName
     user_mem = await param_cortex.vector.get(TEST_MEMSPACE_ID, result.memories[0].memory_id)
     stored_name = user_mem.source_user_name if hasattr(user_mem, 'source_user_name') else user_mem.get("sourceUserName")
@@ -457,11 +458,11 @@ async def test_propagates_conversation_id_to_conversation_ref(param_cortex):
             agent_response="Response",
         )
     )
-    
+
     # Memories should have conversationRef
     user_mem = await param_cortex.vector.get(TEST_MEMSPACE_ID, result.memories[0].memory_id)
     conv_ref = user_mem.conversation_ref if hasattr(user_mem, 'conversation_ref') else user_mem.get("conversationRef")
-    
+
     # Just verify conversation ref exists
     assert conv_ref is not None or result.conversation is not None
 
@@ -488,11 +489,11 @@ async def test_auto_generates_timestamp_when_omitted(param_cortex):
             agent_response="Response",
         )
     )
-    
+
     # Memories should have timestamps
     user_mem = await param_cortex.vector.get(TEST_MEMSPACE_ID, result.memories[0].memory_id)
     source_ts = user_mem.source_timestamp if hasattr(user_mem, 'source_timestamp') else user_mem.get("sourceTimestamp")
-    
+
     assert source_ts is not None
     assert source_ts > 0
 
@@ -522,14 +523,14 @@ async def test_propagates_all_parameters_together(param_cortex):
             agent_response="Response with all params",
         )
     )
-    
+
     # Verify all parameters propagated
     user_mem = await param_cortex.vector.get(TEST_MEMSPACE_ID, result.memories[0].memory_id)
-    
+
     assert (user_mem.user_id if hasattr(user_mem, 'user_id') else user_mem.get("userId")) == TEST_USER_ID
     assert (user_mem.participant_id if hasattr(user_mem, 'participant_id') else user_mem.get("participantId")) == "tool-calendar"
     assert (user_mem.importance if hasattr(user_mem, 'importance') else user_mem.get("importance")) == 85
-    
+
     stored_tags = user_mem.tags if hasattr(user_mem, 'tags') else user_mem.get("tags")
     assert "calendar" in stored_tags
     assert "meeting" in stored_tags

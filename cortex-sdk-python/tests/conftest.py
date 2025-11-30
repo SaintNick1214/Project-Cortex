@@ -2,14 +2,18 @@
 Pytest Configuration
 
 Shared fixtures and configuration for all Python SDK tests.
+
+PARALLEL-SAFE: Uses TestRunContext for isolated test data.
+Each test module gets its own run ID to prevent conflicts.
 """
 
 import asyncio
 import os
 import time
-import pytest
-from typing import AsyncGenerator
 from pathlib import Path
+from typing import AsyncGenerator
+
+import pytest
 from dotenv import load_dotenv
 
 # Load .env.local from project root to get graph database configuration
@@ -18,8 +22,13 @@ env_file = project_root / ".env.local"
 if env_file.exists():
     load_dotenv(env_file, override=True)
 
-from cortex import Cortex, CortexConfig
-from tests.helpers import TestCleanup
+from cortex import Cortex, CortexConfig  # noqa: E402
+from tests.helpers import (  # noqa: E402
+    ScopedCleanup,
+    TestCleanup,
+    TestRunContext,
+    create_named_test_run_context,
+)
 
 
 def generate_test_id(prefix=""):
@@ -56,14 +65,14 @@ def test_config():
 async def cortex_client(test_config) -> AsyncGenerator[Cortex, None]:
     """
     Cortex client fixture for tests.
-    
+
     Creates a fresh Cortex instance for each test function.
     """
     convex_url = test_config["convex_url"]
     client = Cortex(CortexConfig(convex_url=convex_url))
-    
+
     yield client
-    
+
     # Cleanup
     try:
         await client.close()
@@ -116,11 +125,105 @@ def test_context_id():
     return f"test-ctx-{generate_test_id('')}"
 
 
-# Cleanup helper fixture
+# Cleanup helper fixture (legacy - for backwards compatibility)
 @pytest.fixture(scope="function")
 async def cleanup_helper(cortex_client):
     """TestCleanup helper for tests that need cleanup."""
     return TestCleanup(cortex_client)
+
+
+# ============================================================================
+# PARALLEL-SAFE TEST ISOLATION FIXTURES
+# ============================================================================
+# Use these fixtures for tests that need to run in parallel without conflicts.
+
+@pytest.fixture(scope="module")
+def test_run_context(request) -> TestRunContext:
+    """
+    Create a unique test run context for parallel-safe test execution.
+
+    This fixture is scoped to the module level, meaning all tests in a module
+    share the same run ID. This allows tests within a module to share data
+    while maintaining isolation from other modules running in parallel.
+
+    Example:
+        def test_something(test_run_context, cortex_client):
+            user_id = test_run_context.user_id("alice")
+            await cortex_client.users.update(user_id, {"name": "Alice"})
+    """
+    # Extract module name from test file path for better debugging
+    module_name = request.module.__name__.split('.')[-1].replace('test_', '')
+    ctx = create_named_test_run_context(module_name)
+    print(f"\n🧪 Test Run Context Created: {ctx.run_id}\n")
+    return ctx
+
+
+@pytest.fixture(scope="module")
+async def scoped_cleanup(cortex_client, test_run_context) -> AsyncGenerator[ScopedCleanup, None]:
+    """
+    Scoped cleanup helper for parallel-safe test isolation.
+
+    This cleanup only deletes data created by this test run, identified
+    by the run ID prefix. This enables safe parallel test execution.
+
+    Example:
+        @pytest.fixture(scope="module")
+        async def setup_teardown(scoped_cleanup, cortex_client, test_run_context):
+            # Setup: create test data
+            yield
+            # Teardown: cleanup only this run's data
+            await scoped_cleanup.cleanup_all()
+    """
+    cleanup = ScopedCleanup(cortex_client, test_run_context)
+    yield cleanup
+
+    # Auto-cleanup at end of module
+    print(f"\n🧹 Cleaning up test run {test_run_context.run_id}...")
+    result = await cleanup.cleanup_all()
+    print(f"✅ Cleaned up {result.total} entities\n")
+
+
+@pytest.fixture(scope="function")
+def ctx(test_run_context) -> TestRunContext:
+    """
+    Convenience alias for test_run_context.
+
+    Shorter name for use in test functions:
+        def test_something(ctx, cortex_client):
+            user_id = ctx.user_id("test")
+    """
+    return test_run_context
+
+
+# Individual ID fixtures using the test run context for parallel safety
+@pytest.fixture(scope="function")
+def isolated_memory_space_id(test_run_context):
+    """Generate unique memory space ID using test run context."""
+    return test_run_context.memory_space_id()
+
+
+@pytest.fixture(scope="function")
+def isolated_user_id(test_run_context):
+    """Generate unique user ID using test run context."""
+    return test_run_context.user_id()
+
+
+@pytest.fixture(scope="function")
+def isolated_agent_id(test_run_context):
+    """Generate unique agent ID using test run context."""
+    return test_run_context.agent_id()
+
+
+@pytest.fixture(scope="function")
+def isolated_conversation_id(test_run_context):
+    """Generate unique conversation ID using test run context."""
+    return test_run_context.conversation_id()
+
+
+@pytest.fixture(scope="function")
+def isolated_context_id(test_run_context):
+    """Generate unique context ID using test run context."""
+    return test_run_context.context_id()
 
 
 # Embeddings availability fixture
@@ -136,17 +239,17 @@ def embeddings_available_fixture():
 async def direct_convex_client(test_config) -> AsyncGenerator:
     """
     Direct Convex client for low-level testing.
-    
+
     Provides access to the underlying ConvexClient for tests that need
     to verify data storage at the Convex level.
     """
     from convex import ConvexClient
-    
+
     convex_url = test_config["convex_url"]
     client = ConvexClient(convex_url)
-    
+
     yield client
-    
+
     # Cleanup
     try:
         client.close()

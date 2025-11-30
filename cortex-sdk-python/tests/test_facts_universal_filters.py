@@ -17,17 +17,17 @@ Tests all universal filters documented in v0.9.1:
 Ensures Facts API matches Memory API universal filter patterns.
 """
 
-import pytest
 from datetime import datetime, timedelta
 from time import sleep
-from cortex import Cortex
+
+import pytest
+
 from cortex.types import (
-    StoreFactParams,
-    ListFactsFilter,
     CountFactsFilter,
-    SearchFactsOptions,
+    ListFactsFilter,
     QueryBySubjectFilter,
-    QueryByRelationshipFilter,
+    SearchFactsOptions,
+    StoreFactParams,
 )
 
 
