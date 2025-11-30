@@ -14,7 +14,8 @@ describe("Edge Cases: Extreme Values", () => {
   let client: ConvexClient;
   let cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-  const TEST_MEMSPACE_ID = "edge-cases-test";
+  const TIMESTAMP = Date.now();
+  const TEST_MEMSPACE_ID = `edge-cases-test-${TIMESTAMP}`;
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });

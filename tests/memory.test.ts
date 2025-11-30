@@ -65,8 +65,9 @@ describe("Memory Convenience API (Layer 3)", () => {
   let client: ConvexClient;
   let cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-  const TEST_MEMSPACE_ID = "memspace-test-l3";
-  const TEST_USER_ID = "user-test-l3";
+  const TIMESTAMP = Date.now();
+  const TEST_MEMSPACE_ID = `memspace-test-l3-${TIMESTAMP}`;
+  const TEST_USER_ID = `user-test-l3-${TIMESTAMP}`;
   const TEST_USER_NAME = "Test User";
 
   beforeAll(async () => {

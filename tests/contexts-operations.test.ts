@@ -16,7 +16,8 @@ describe("Context Operations API", () => {
   let client: ConvexClient;
   let cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-  const TEST_MEMORY_SPACE = "test-context-ops-space";
+  const TIMESTAMP = Date.now();
+  const TEST_MEMORY_SPACE = `test-context-ops-space-${TIMESTAMP}`;
 
   beforeAll(async () => {
     client = new ConvexClient(CONVEX_URL);

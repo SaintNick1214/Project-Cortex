@@ -245,7 +245,8 @@ describe("Memory Streaming: rememberStream() Integration", () => {
   let client: ConvexClient;
   let cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-  const TEST_MEMSPACE_ID = "streaming-test-space";
+  const TIMESTAMP = Date.now();
+  const TEST_MEMSPACE_ID = `streaming-test-space-${TIMESTAMP}`;
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
