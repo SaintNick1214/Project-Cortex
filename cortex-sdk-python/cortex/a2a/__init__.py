@@ -259,6 +259,7 @@ class A2AAPI:
                 "tags": tags,
                 "userId": user_id,
                 "limit": limit,
+                "offset": offset,
             }),
         )
 

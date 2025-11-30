@@ -159,12 +159,35 @@ def test_run_context(request) -> TestRunContext:
 
 
 @pytest.fixture(scope="module")
-async def scoped_cleanup(cortex_client, test_run_context) -> AsyncGenerator[ScopedCleanup, None]:
+async def module_cortex_client(test_config) -> AsyncGenerator[Cortex, None]:
+    """
+    Module-scoped Cortex client for fixtures that need module-level persistence.
+
+    Use this for module-scoped fixtures like scoped_cleanup. For individual
+    test functions, use the function-scoped cortex_client fixture instead.
+    """
+    convex_url = test_config["convex_url"]
+    client = Cortex(CortexConfig(convex_url=convex_url))
+
+    yield client
+
+    # Cleanup
+    try:
+        await client.close()
+    except Exception:
+        pass
+
+
+@pytest.fixture(scope="module")
+async def scoped_cleanup(module_cortex_client, test_run_context) -> AsyncGenerator[ScopedCleanup, None]:
     """
     Scoped cleanup helper for parallel-safe test isolation.
 
     This cleanup only deletes data created by this test run, identified
     by the run ID prefix. This enables safe parallel test execution.
+
+    Note: Uses module_cortex_client (module-scoped) instead of cortex_client
+    (function-scoped) to avoid pytest scope mismatch errors.
 
     Example:
         @pytest.fixture(scope="module")
@@ -174,7 +197,7 @@ async def scoped_cleanup(cortex_client, test_run_context) -> AsyncGenerator[Scop
             # Teardown: cleanup only this run's data
             await scoped_cleanup.cleanup_all()
     """
-    cleanup = ScopedCleanup(cortex_client, test_run_context)
+    cleanup = ScopedCleanup(module_cortex_client, test_run_context)
     yield cleanup
 
     # Auto-cleanup at end of module

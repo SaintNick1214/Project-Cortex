@@ -24,17 +24,82 @@ permissions:
 # This prevents Dependabot from triggering any CI actions
 
 jobs:
-  # Code quality check (fast - runs first)
-  code-quality:
-    name: Code Quality (Lint & Type Check)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # STAGE 1: Detect which files changed (fast, runs first)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  detect-changes:
+    name: Detect File Changes
+    runs-on: ubuntu-latest
+    # Skip for Dependabot PRs (they only update dependencies)
+    if: github.actor != 'dependabot[bot]'
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      typescript: ${{ steps.filter.outputs.typescript }}
+      python: ${{ steps.filter.outputs.python }}
+      vercel-ai-provider: ${{ steps.filter.outputs.vercel-ai-provider }}
+      cli: ${{ steps.filter.outputs.cli }}
+      convex: ${{ steps.filter.outputs.convex }}
+      any-tests: ${{ steps.filter.outputs.typescript == 'true' || steps.filter.outputs.python == 'true' || steps.filter.outputs.vercel-ai-provider == 'true' || steps.filter.outputs.cli == 'true' || steps.filter.outputs.convex == 'true' }}
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+
+      - name: Detect file changes
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            typescript:
+              - 'src/**'
+              - 'tests/**'
+              - 'package.json'
+              - 'tsconfig.json'
+              - 'jest.config.js'
+            python:
+              - 'cortex-sdk-python/**'
+            vercel-ai-provider:
+              - 'packages/vercel-ai-provider/**'
+            cli:
+              - 'packages/cortex-cli/**'
+            convex:
+              - 'convex-dev/**'
+
+      - name: Show detected changes
+        run: |
+          echo "📊 Detected Changes:"
+          echo "  TypeScript SDK:      ${{ steps.filter.outputs.typescript }}"
+          echo "  Python SDK:          ${{ steps.filter.outputs.python }}"
+          echo "  Vercel AI Provider:  ${{ steps.filter.outputs.vercel-ai-provider }}"
+          echo "  CLI:                 ${{ steps.filter.outputs.cli }}"
+          echo "  Convex Backend:      ${{ steps.filter.outputs.convex }}"
+          echo ""
+          if [[ "${{ steps.filter.outputs.typescript }}" == "true" || \
+                "${{ steps.filter.outputs.python }}" == "true" || \
+                "${{ steps.filter.outputs.vercel-ai-provider }}" == "true" || \
+                "${{ steps.filter.outputs.cli }}" == "true" || \
+                "${{ steps.filter.outputs.convex }}" == "true" ]]; then
+            echo "✅ Tests will run for changed packages"
+          else
+            echo "⏭️  No testable changes detected - tests will be skipped"
+          fi
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # STAGE 2: Deploy Convex & Purge Database (runs once before all tests)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  setup-and-purge:
+    name: Deploy & Purge Database
     runs-on: ubuntu-latest
     needs: detect-changes
-    # Run if TypeScript SDK version changed OR Python SDK version changed OR if PR is targeting main branch
-    # Skip for Dependabot PRs (they only update dependencies)
+    # Run if any tests need to run OR if targeting main branch
     if: |
       github.actor != 'dependabot[bot]' && (
-        needs.detect-changes.outputs.typescript == 'true' || 
+        needs.detect-changes.outputs.typescript == 'true' ||
         needs.detect-changes.outputs.python == 'true' ||
+        needs.detect-changes.outputs.vercel-ai-provider == 'true' ||
+        needs.detect-changes.outputs.cli == 'true' ||
+        needs.detect-changes.outputs.convex == 'true' ||
         github.event.pull_request.base.ref == 'main'
       )
     permissions:
@@ -42,81 +107,12 @@ jobs:
 
     steps:
       - name: Checkout PR code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: "20"
-
-      - name: Setup Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Deploy Convex backend
-        run: npx convex deploy --yes
-        env:
-          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-
-      - name: Generate Convex types
-        run: npx convex codegen
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-
-      - name: Run ESLint (TypeScript)
-        run: npm run lint
-        continue-on-error: false
-
-      - name: Type check (TypeScript)
-        run: npx tsc --noEmit
-
-      - name: Install Python dev dependencies
-        run: |
-          cd cortex-sdk-python
-          python -m pip install --upgrade pip
-          pip install -e ".[dev]"
-
-      - name: Type check with mypy (Python)
-        run: |
-          cd cortex-sdk-python
-          mypy cortex --ignore-missing-imports
-
-      - name: Lint with ruff (Python)
-        run: |
-          cd cortex-sdk-python
-          ruff check cortex/
-
-  # TypeScript/JavaScript SDK Tests
-  test-typescript:
-    name: Test TypeScript SDK
-    runs-on: ubuntu-latest
-    needs: detect-changes
-    # Run if TypeScript SDK version changed OR if PR is targeting main branch
-    # Skip for Dependabot PRs (they only update dependencies)
-    if: |
-      github.actor != 'dependabot[bot]' && (
-        needs.detect-changes.outputs.typescript == 'true' || 
-        github.event.pull_request.base.ref == 'main'
-      )
-    permissions:
-      contents: read
-
-    steps:
-      - name: Checkout PR code
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
@@ -136,6 +132,122 @@ jobs:
           CONVEX_URL: ${{ secrets.CONVEX_URL }}
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
+      - name: Purge test database
+        run: |
+          echo "🧹 Purging all test data before parallel test execution..."
+          npx tsx scripts/cleanup-test-data.ts
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # STAGE 3: Code Quality (runs in parallel with tests after purge)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  code-quality:
+    name: Code Quality (Lint & Type Check)
+    runs-on: ubuntu-latest
+    needs: [detect-changes, setup-and-purge]
+    # Run if TypeScript or Python files changed OR if PR is targeting main branch
+    if: |
+      github.actor != 'dependabot[bot]' && (
+        needs.detect-changes.outputs.typescript == 'true' || 
+        needs.detect-changes.outputs.python == 'true' ||
+        github.event.pull_request.base.ref == 'main'
+      )
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Generate Convex types
+        run: npx convex codegen
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
+      - name: Run ESLint (TypeScript)
+        if: needs.detect-changes.outputs.typescript == 'true' || github.event.pull_request.base.ref == 'main'
+        run: npm run lint
+        continue-on-error: false
+
+      - name: Type check (TypeScript)
+        if: needs.detect-changes.outputs.typescript == 'true' || github.event.pull_request.base.ref == 'main'
+        run: npx tsc --noEmit
+
+      - name: Install Python dev dependencies
+        if: needs.detect-changes.outputs.python == 'true' || github.event.pull_request.base.ref == 'main'
+        run: |
+          cd cortex-sdk-python
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Type check with mypy (Python)
+        if: needs.detect-changes.outputs.python == 'true' || github.event.pull_request.base.ref == 'main'
+        run: |
+          cd cortex-sdk-python
+          mypy cortex --ignore-missing-imports
+
+      - name: Lint with ruff (Python)
+        if: needs.detect-changes.outputs.python == 'true' || github.event.pull_request.base.ref == 'main'
+        run: |
+          cd cortex-sdk-python
+          ruff check cortex/
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # STAGE 3: TypeScript SDK Tests (parallel with other test jobs)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  test-typescript:
+    name: Test TypeScript SDK
+    runs-on: ubuntu-latest
+    needs: [detect-changes, setup-and-purge]
+    # Run if TypeScript SDK or Convex backend changed OR if PR is targeting main branch
+    if: |
+      github.actor != 'dependabot[bot]' && (
+        needs.detect-changes.outputs.typescript == 'true' ||
+        needs.detect-changes.outputs.convex == 'true' ||
+        github.event.pull_request.base.ref == 'main'
+      )
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Convex types
+        run: npx convex codegen
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
       - name: Run tests
         run: npm test
         env:
@@ -146,107 +258,14 @@ jobs:
       - name: Build package
         run: npm run build
 
-  # Detect version changes
-  detect-changes:
-    name: Detect Version Changes
-    runs-on: ubuntu-latest
-    # Skip for Dependabot PRs (they only update dependencies)
-    if: github.actor != 'dependabot[bot]'
-    permissions:
-      contents: read
-    outputs:
-      typescript: ${{ steps.check-versions.outputs.typescript-changed }}
-      python: ${{ steps.check-versions.outputs.python-changed }}
-      vercel-ai-provider: ${{ steps.check-versions.outputs.vercel-ai-provider-changed }}
-      cli: ${{ steps.check-versions.outputs.cli-changed }}
-    steps:
-      - name: Checkout PR code
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: "20"
-
-      - name: Check version numbers
-        id: check-versions
-        run: |
-          # Check TypeScript SDK version
-          TS_VERSION=$(node -p "require('./package.json').version")
-          echo "📦 PR TypeScript SDK version: $TS_VERSION"
-
-          TS_NPM_VERSION=$(npm view @cortexmemory/sdk version 2>/dev/null || echo "0.0.0")
-          echo "📚 Published TypeScript SDK version: $TS_NPM_VERSION"
-
-          if [ "$TS_VERSION" != "$TS_NPM_VERSION" ]; then
-            echo "typescript-changed=true" >> $GITHUB_OUTPUT
-            echo "✅ TypeScript SDK version changed: $TS_NPM_VERSION → $TS_VERSION"
-          else
-            echo "typescript-changed=false" >> $GITHUB_OUTPUT
-            echo "⏭️  TypeScript SDK version unchanged: $TS_VERSION"
-          fi
-
-          # Check Python SDK version
-          cd cortex-sdk-python
-          PYTHON_VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
-          echo "📦 PR Python SDK version: $PYTHON_VERSION"
-
-          pip install --upgrade pip > /dev/null 2>&1
-          PYTHON_NPM_VERSION=$(pip index versions cortex-memory 2>/dev/null | grep "cortex-memory" | head -1 | sed 's/.*(\(.*\))/\1/' || echo "0.0.0")
-          echo "📚 Published Python SDK version: $PYTHON_NPM_VERSION"
-
-          if [ "$PYTHON_VERSION" != "$PYTHON_NPM_VERSION" ]; then
-            echo "python-changed=true" >> $GITHUB_OUTPUT
-            echo "✅ Python SDK version changed: $PYTHON_NPM_VERSION → $PYTHON_VERSION"
-          else
-            echo "python-changed=false" >> $GITHUB_OUTPUT
-            echo "⏭️  Python SDK version unchanged: $PYTHON_VERSION"
-          fi
-
-          # Check Vercel AI Provider version
-          cd ..
-          cd packages/vercel-ai-provider
-          VERCEL_VERSION=$(node -p "require('./package.json').version")
-          echo "📦 PR Vercel AI Provider version: $VERCEL_VERSION"
-
-          VERCEL_NPM_VERSION=$(npm view @cortexmemory/vercel-ai-provider version 2>/dev/null || echo "0.0.0")
-          echo "📚 Published Vercel AI Provider version: $VERCEL_NPM_VERSION"
-
-          if [ "$VERCEL_VERSION" != "$VERCEL_NPM_VERSION" ]; then
-            echo "vercel-ai-provider-changed=true" >> $GITHUB_OUTPUT
-            echo "✅ Vercel AI Provider version changed: $VERCEL_NPM_VERSION → $VERCEL_VERSION"
-          else
-            echo "vercel-ai-provider-changed=false" >> $GITHUB_OUTPUT
-            echo "⏭️  Vercel AI Provider version unchanged: $VERCEL_VERSION"
-          fi
-
-          # Check CLI version
-          cd ../cortex-cli
-          CLI_VERSION=$(node -p "require('./package.json').version")
-          echo "📦 PR CLI version: $CLI_VERSION"
-
-          CLI_NPM_VERSION=$(npm view @cortexmemory/cli version 2>/dev/null || echo "0.0.0")
-          echo "📚 Published CLI version: $CLI_NPM_VERSION"
-
-          if [ "$CLI_VERSION" != "$CLI_NPM_VERSION" ]; then
-            echo "cli-changed=true" >> $GITHUB_OUTPUT
-            echo "✅ CLI version changed: $CLI_NPM_VERSION → $CLI_VERSION"
-          else
-            echo "cli-changed=false" >> $GITHUB_OUTPUT
-            echo "⏭️  CLI version unchanged: $CLI_VERSION"
-          fi
-
-  # Python SDK Tests
-  # PARALLEL-SAFE: Tests now use TestRunContext for isolation, so Python tests
-  # can run in parallel with TypeScript tests and with each other.
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # STAGE 3: Python SDK Tests (parallel with other test jobs, matrix across versions)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-python:
     name: Test Python SDK
     runs-on: ubuntu-latest
-    needs: detect-changes  # Only needs version detection, not TS tests
-    # Run if Python SDK version changed OR if PR is targeting main branch
-    # Skip for Dependabot PRs (they only update dependencies)
+    needs: [detect-changes, setup-and-purge]
+    # Run if Python SDK changed OR if PR is targeting main branch
     if: |
       github.actor != 'dependabot[bot]' && (
         needs.detect-changes.outputs.python == 'true' || 
@@ -259,15 +278,16 @@ jobs:
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
       max-parallel: 5  # Run all Python versions in parallel (parallel-safe)
+      fail-fast: false
 
     steps:
       - name: Checkout PR code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -287,13 +307,14 @@ jobs:
           CONVEX_TEST_MODE: managed
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
-  # Vercel AI Provider Tests
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # STAGE 3: Vercel AI Provider Tests (parallel with other test jobs)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-vercel-ai-provider:
     name: Test Vercel AI Provider
     runs-on: ubuntu-latest
-    needs: detect-changes
-    # Run if Vercel AI Provider version changed OR if PR is targeting main branch
-    # Skip for Dependabot PRs (they only update dependencies)
+    needs: [detect-changes, setup-and-purge]
+    # Run if Vercel AI Provider changed OR if PR is targeting main branch
     if: |
       github.actor != 'dependabot[bot]' && (
         needs.detect-changes.outputs.vercel-ai-provider == 'true' || 
@@ -304,24 +325,18 @@ jobs:
 
     steps:
       - name: Checkout PR code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
 
       - name: Install root dependencies
         run: npm ci
-
-      - name: Deploy Convex backend
-        run: npx convex deploy --yes
-        env:
-          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
       - name: Generate Convex types
         run: npx convex codegen
@@ -357,13 +372,14 @@ jobs:
           cd packages/vercel-ai-provider
           npm pack --dry-run
 
-  # CLI Tests
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # STAGE 3: CLI Tests (parallel with other test jobs)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-cli:
     name: Test Cortex CLI
     runs-on: ubuntu-latest
-    needs: detect-changes
-    # Run if CLI version changed OR if PR is targeting main branch
-    # Skip for Dependabot PRs (they only update dependencies)
+    needs: [detect-changes, setup-and-purge]
+    # Run if CLI changed OR if PR is targeting main branch
     if: |
       github.actor != 'dependabot[bot]' && (
         needs.detect-changes.outputs.cli == 'true' || 
@@ -374,24 +390,18 @@ jobs:
 
     steps:
       - name: Checkout PR code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
 
       - name: Install root dependencies
         run: npm ci
-
-      - name: Deploy Convex backend
-        run: npx convex deploy --yes
-        env:
-          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
       - name: Generate Convex types
         run: npx convex codegen
@@ -437,15 +447,15 @@ jobs:
           cd packages/cortex-cli
           npm pack --dry-run
 
-  # Note: Comprehensive security scans run in security.yml workflow
-  # This keeps PR checks fast while security scans run separately
-
-  # All checks passed
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # STAGE 4: All Checks Passed (final gate)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   all-checks-passed:
     name: All Checks Passed
     needs:
       [
         detect-changes,
+        setup-and-purge,
         test-typescript,
         test-python,
         test-vercel-ai-provider,
@@ -462,40 +472,48 @@ jobs:
       - name: Check if all jobs passed
         run: |
           echo "📊 Check Results:"
-          echo "  Code Quality: ${{ needs.code-quality.result }}"
-          echo "  TypeScript Tests: ${{ needs.test-typescript.result }}"
-          echo "  Python Tests: ${{ needs.test-python.result }}"
+          echo "  Detect Changes:           ${{ needs.detect-changes.result }}"
+          echo "  Setup & Purge:            ${{ needs.setup-and-purge.result }}"
+          echo "  Code Quality:             ${{ needs.code-quality.result }}"
+          echo "  TypeScript Tests:         ${{ needs.test-typescript.result }}"
+          echo "  Python Tests:             ${{ needs.test-python.result }}"
           echo "  Vercel AI Provider Tests: ${{ needs.test-vercel-ai-provider.result }}"
-          echo "  CLI Tests: ${{ needs.test-cli.result }}"
+          echo "  CLI Tests:                ${{ needs.test-cli.result }}"
           echo ""
           echo "ℹ️  Security scans run in separate workflow (see Security tab)"
           echo ""
 
-          # Code quality must pass OR be skipped (when TS version unchanged)
+          # Setup & purge must pass if it ran
+          if [[ "${{ needs.setup-and-purge.result }}" == "failure" ]]; then
+            echo "❌ Setup & purge failed"
+            exit 1
+          fi
+
+          # Code quality must pass OR be skipped (when no changes)
           if [[ "${{ needs.code-quality.result }}" == "failure" ]]; then
             echo "❌ Code quality check failed"
             exit 1
           fi
 
-          # TypeScript tests must pass OR be skipped (when TS version unchanged)
+          # TypeScript tests must pass OR be skipped (when no changes)
           if [[ "${{ needs.test-typescript.result }}" == "failure" ]]; then
             echo "❌ TypeScript tests failed"
             exit 1
           fi
 
-          # Python tests must pass OR be skipped (when Python version unchanged)
+          # Python tests must pass OR be skipped (when no changes)
           if [[ "${{ needs.test-python.result }}" == "failure" ]]; then
             echo "❌ Python tests failed"
             exit 1
           fi
 
-          # Vercel AI Provider tests must pass OR be skipped (when version unchanged)
+          # Vercel AI Provider tests must pass OR be skipped (when no changes)
           if [[ "${{ needs.test-vercel-ai-provider.result }}" == "failure" ]]; then
             echo "❌ Vercel AI Provider tests failed"
             exit 1
           fi
 
-          # CLI tests must pass OR be skipped (when version unchanged)
+          # CLI tests must pass OR be skipped (when no changes)
           if [[ "${{ needs.test-cli.result }}" == "failure" ]]; then
             echo "❌ CLI tests failed"
             exit 1
