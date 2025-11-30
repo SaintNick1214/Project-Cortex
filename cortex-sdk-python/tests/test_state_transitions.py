@@ -40,15 +40,16 @@ AGENT_TRANSITIONS = [
 ]
 
 
-@pytest.fixture(scope="module")
-def base_id():
-    import time
-    return f"state-test-{int(time.time() * 1000)}"
+@pytest.fixture(scope="function")
+def base_id(ctx):
+    """Generate unique base ID for state transition tests."""
+    return ctx.memory_space_id("state-test")
 
 
-@pytest.fixture(scope="module")
-def test_user_id():
-    return "state-test-user"
+@pytest.fixture(scope="function")
+def test_user_id(ctx):
+    """Generate unique user ID for state transition tests."""
+    return ctx.user_id("state-test-user")
 
 
 class TestContextStateTransitions:
