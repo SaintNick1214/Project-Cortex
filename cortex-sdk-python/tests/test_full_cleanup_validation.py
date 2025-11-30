@@ -16,14 +16,15 @@ from tests.helpers import (
 
 
 @pytest.mark.asyncio
-async def test_full_cleanup_validation(cortex_client, test_ids):
+async def test_full_cleanup_validation(cortex_client, ctx):
     """
     Comprehensive cleanup validation test.
     
     Creates data in all layers, shows exact state before/after cleanup.
+    Uses ctx for proper test isolation.
     """
-    memory_space_id = test_ids["memory_space_id"]
-    user_id = test_ids["user_id"]
+    memory_space_id = ctx.memory_space_id()
+    user_id = ctx.user_id()
 
     cleanup = TestCleanup(cortex_client)
 
@@ -75,7 +76,7 @@ async def test_full_cleanup_validation(cortex_client, test_ids):
     # Create 3 users
     print("\n👥 Creating 3 test users...")
     for i in range(3):
-        uid = generate_test_user_id()
+        uid = ctx.user_id(f"user-{i}")
         await cortex_client.users.update(uid, {"name": f"Test User {i+1}"})
         created_items["users"].append(uid)
         print(f"   {i+1}. Created: {uid}")
@@ -106,11 +107,11 @@ async def test_full_cleanup_validation(cortex_client, test_ids):
         content = mem.get("content") if isinstance(mem, dict) else mem.content
         print(f"   {i}. {mid}: {content[:40]}...")
 
-    # Count users
+    # Count users (only count THIS test run's users)
     user_list = await cortex_client.users.list(limit=1000)
     users = user_list.get("users", [])
-    test_users = [u for u in users if (u.id if hasattr(u, 'id') else u.get("id")).startswith("test-user-")]
-    print(f"\n📊 Total users: {len(users)}, Test users: {len(test_users)}")
+    test_users = [u for u in users if (u.id if hasattr(u, 'id') else u.get("id")).startswith(ctx.run_id)]
+    print(f"\n📊 Total users: {len(users)}, This run's users: {len(test_users)}")
     for i, u in enumerate(test_users[:5], 1):
         uid = u.id if hasattr(u, 'id') else u.get("id")
         name = u.data.get("name") if hasattr(u, 'data') else u.get("data", {}).get("name")
@@ -133,9 +134,9 @@ async def test_full_cleanup_validation(cortex_client, test_ids):
     print(f"     - Immutable deleted: {space_result['immutable']}")
     print(f"     - Mutable deleted: {space_result['mutable']}")
 
-    # Cleanup users
-    print("\n🧹 Cleaning up test users...")
-    user_count = await cleanup.purge_users(prefix="test-user-")
+    # Cleanup users (only this run's users)
+    print(f"\n🧹 Cleaning up this run's users (prefix: {ctx.run_id})...")
+    user_count = await cleanup.purge_users(prefix=ctx.run_id)
     print(f"   Users deleted: {user_count}")
 
     # ============================================================================
@@ -165,15 +166,15 @@ async def test_full_cleanup_validation(cortex_client, test_ids):
             mid = mem.get("memory_id") if isinstance(mem, dict) else mem.memory_id
             print(f"      {i}. {mid}")
 
-    # Check users
+    # Check users (only this run's users)
     user_list_after = await cortex_client.users.list(limit=1000)
     users_after = user_list_after.get("users", [])
-    test_users_after = [u for u in users_after if (u.id if hasattr(u, 'id') else u.get("id")).startswith("test-user-")]
-    print(f"\n📊 Total users: {len(users_after)}, Test users: {len(test_users_after)}")
+    test_users_after = [u for u in users_after if (u.id if hasattr(u, 'id') else u.get("id")).startswith(ctx.run_id)]
+    print(f"\n📊 Total users: {len(users_after)}, This run's users: {len(test_users_after)}")
     if len(test_users_after) == 0:
-        print("   ✅ All test users deleted")
+        print("   ✅ All this run's users deleted")
     else:
-        print(f"   ⚠️ {len(test_users_after)} test users remain:")
+        print(f"   ⚠️ {len(test_users_after)} users from this run remain:")
         for i, u in enumerate(test_users_after[:5], 1):
             uid = u.id if hasattr(u, 'id') else u.get("id")
             print(f"      {i}. {uid}")

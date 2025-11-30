@@ -168,7 +168,12 @@ class UsersAPI:
 
         if not opts.cascade:
             # Simple deletion - just the user profile
-            await self.client.mutation("immutable:purge", {"type": "user", "id": user_id})
+            try:
+                await self.client.mutation("immutable:purge", {"type": "user", "id": user_id})
+                total_deleted = 1
+            except Exception:
+                # User profile doesn't exist in immutable table - that's okay
+                total_deleted = 0
 
             return UserDeleteResult(
                 user_id=user_id,
@@ -179,8 +184,8 @@ class UsersAPI:
                 mutable_keys_deleted=0,
                 vector_memories_deleted=0,
                 facts_deleted=0,
-                total_deleted=1,
-                deleted_layers=["user-profile"],
+                total_deleted=total_deleted,
+                deleted_layers=["user-profile"] if total_deleted > 0 else [],
                 verification=VerificationResult(complete=True, issues=[]),
             )
 
@@ -603,9 +608,13 @@ class UsersAPI:
         if conversations_deleted > 0:
             deleted_layers.append("conversations")
 
-        # Delete user profile
-        await self.client.mutation("immutable:purge", {"type": "user", "id": user_id})
-        deleted_layers.append("user-profile")
+        # Delete user profile (may not exist if user was never created)
+        try:
+            await self.client.mutation("immutable:purge", {"type": "user", "id": user_id})
+            deleted_layers.append("user-profile")
+        except Exception:
+            # User profile doesn't exist - that's okay, might only have associated data
+            pass
 
         # Delete from graph if configured
         graph_nodes_deleted = None
