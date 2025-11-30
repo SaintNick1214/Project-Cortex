@@ -32,8 +32,9 @@ from tests.helpers import (  # noqa: E402
 
 
 def generate_test_id(prefix=""):
-    """Generate unique test ID based on timestamp."""
-    return f"{prefix}{int(time.time() * 1000)}"
+    """Generate unique test ID based on timestamp + random suffix."""
+    import random
+    return f"{prefix}{int(time.time() * 1000)}-{random.randint(1000, 9999)}"
 
 
 # Configure asyncio for pytest
