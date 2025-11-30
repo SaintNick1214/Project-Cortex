@@ -6,60 +6,29 @@
  * - Convex mutations/queries
  * - Storage validation
  * - Versioning behavior
+ *
+ * PARALLEL-SAFE: Uses TestRunContext for isolated test data
  */
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
-import { TestCleanup } from "./helpers";
-
-// Extend TestCleanup for immutable table
-class ImmutableTestCleanup extends TestCleanup {
-  async purgeImmutable(): Promise<number> {
-    console.log("🧹 Purging immutable table...");
-    const entries = await this.client.query(api.immutable.list, {});
-
-    let deleted = 0;
-
-    for (const entry of entries) {
-      try {
-        await this.client.mutation(api.immutable.purge, {
-          type: entry.type,
-          id: entry.id,
-        });
-        deleted++;
-      } catch (err: any) {
-        if (err.message?.includes("IMMUTABLE_ENTRY_NOT_FOUND")) {
-          continue;
-        }
-        throw err;
-      }
-    }
-
-    console.log(`✅ Purged ${deleted} immutable entries`);
-
-    return deleted;
-  }
-
-  async verifyImmutableEmpty(): Promise<void> {
-    const count = await this.client.query(api.immutable.count, {});
-
-    if (count > 0) {
-      console.warn(
-        `⚠️  Warning: Immutable table not empty (${count} entries remaining)`,
-      );
-    } else {
-      console.log("✅ Immutable table is empty");
-    }
-  }
-}
+import {
+  createNamedTestRunContext,
+  ScopedCleanup,
+} from "./helpers";
 
 describe("Immutable Store API (Layer 1b)", () => {
+  // Create unique test run context for parallel-safe execution
+  const ctx = createNamedTestRunContext("immutable");
+
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: ImmutableTestCleanup;
+  let scopedCleanup: ScopedCleanup;
 
   beforeAll(async () => {
+    console.log(`\n🧪 Immutable Store API Tests - Run ID: ${ctx.runId}\n`);
+
     const convexUrl = process.env.CONVEX_URL;
 
     if (!convexUrl) {
@@ -68,15 +37,18 @@ describe("Immutable Store API (Layer 1b)", () => {
 
     cortex = new Cortex({ convexUrl });
     client = new ConvexClient(convexUrl);
-    cleanup = new ImmutableTestCleanup(client);
+    scopedCleanup = new ScopedCleanup(client, ctx);
 
-    // Clean table before tests
-    await cleanup.purgeImmutable();
-    await cleanup.verifyImmutableEmpty();
+    // Note: No global purge - test data is isolated by prefix
+    console.log("✅ Test isolation setup complete\n");
   });
 
   afterAll(async () => {
+    // Clean up only data created by this test run
+    console.log(`\n🧹 Cleaning up test run ${ctx.runId}...`);
+    await scopedCleanup.cleanupAll();
     await client.close();
+    console.log(`✅ Test run ${ctx.runId} cleanup complete\n`);
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -715,10 +687,12 @@ describe("Immutable Store API (Layer 1b)", () => {
 
   describe("get()", () => {
     it("retrieves current version of entry", async () => {
+      const type = ctx.immutableType("kb-article-get");
+      const id = ctx.immutableId("shipping-policy");
       // Create entry
       await cortex.immutable.store({
-        type: "kb-article",
-        id: "shipping-policy",
+        type,
+        id,
         data: {
           title: "Shipping Policy",
           freeShippingOver: 50,
@@ -726,41 +700,40 @@ describe("Immutable Store API (Layer 1b)", () => {
       });
 
       // Retrieve it
-      const retrieved = await cortex.immutable.get(
-        "kb-article",
-        "shipping-policy",
-      );
+      const retrieved = await cortex.immutable.get(type, id);
 
       expect(retrieved).not.toBeNull();
-      expect(retrieved!.type).toBe("kb-article");
-      expect(retrieved!.id).toBe("shipping-policy");
+      expect(retrieved!.type).toBe(type);
+      expect(retrieved!.id).toBe(id);
       expect(retrieved!.version).toBe(1);
       expect(retrieved!.data.freeShippingOver).toBe(50);
     });
 
     it("returns null for non-existent entry", async () => {
-      const result = await cortex.immutable.get("kb-article", "does-not-exist");
+      const result = await cortex.immutable.get(ctx.immutableType("kb-article"), "does-not-exist");
 
       expect(result).toBeNull();
     });
 
     it("returns latest version after updates", async () => {
+      const type = ctx.immutableType("config");
+      const id = ctx.immutableId("app-settings");
       // Create v1
       await cortex.immutable.store({
-        type: "config",
-        id: "app-settings",
+        type,
+        id,
         data: { darkMode: false },
       });
 
       // Update to v2
       await cortex.immutable.store({
-        type: "config",
-        id: "app-settings",
+        type,
+        id,
         data: { darkMode: true },
       });
 
       // Get should return v2
-      const current = await cortex.immutable.get("config", "app-settings");
+      const current = await cortex.immutable.get(type, id);
 
       expect(current!.version).toBe(2);
       expect(current!.data.darkMode).toBe(true);
@@ -847,12 +820,16 @@ describe("Immutable Store API (Layer 1b)", () => {
   });
 
   describe("getHistory()", () => {
+    // Use isolated type/id for this test block
+    const historyType = ctx.immutableType("audit-log");
+    const historyId = ctx.immutableId("system-changes");
+    
     beforeAll(async () => {
       // Create entry with 5 versions
       for (let i = 1; i <= 5; i++) {
         await cortex.immutable.store({
-          type: "audit-log",
-          id: "system-changes",
+          type: historyType,
+          id: historyId,
           data: {
             change: `Change ${i}`,
             timestamp: Date.now(),
@@ -862,10 +839,7 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
 
     it("retrieves all versions in order", async () => {
-      const history = await cortex.immutable.getHistory(
-        "audit-log",
-        "system-changes",
-      );
+      const history = await cortex.immutable.getHistory(historyType, historyId);
 
       expect(history).toHaveLength(5);
 
@@ -877,14 +851,11 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
 
     it("includes all version metadata", async () => {
-      const history = await cortex.immutable.getHistory(
-        "audit-log",
-        "system-changes",
-      );
+      const history = await cortex.immutable.getHistory(historyType, historyId);
 
       history.forEach((version) => {
-        expect(version.type).toBe("audit-log");
-        expect(version.id).toBe("system-changes");
+        expect(version.type).toBe(historyType);
+        expect(version.id).toBe(historyId);
         expect(version.timestamp).toBeGreaterThan(0);
         expect(version.createdAt).toBeGreaterThan(0);
       });
@@ -892,7 +863,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
     it("returns empty array for non-existent entry", async () => {
       const history = await cortex.immutable.getHistory(
-        "audit-log",
+        historyType,
         "does-not-exist",
       );
 
@@ -1163,8 +1134,8 @@ describe("Immutable Store API (Layer 1b)", () => {
 
   describe("Versioning", () => {
     it("maintains version history correctly", async () => {
-      const type = "versioning-test";
-      const id = "history-test";
+      const type = ctx.immutableType("versioning-test");
+      const id = ctx.immutableId("history-test");
 
       // Create 10 versions
       for (let i = 1; i <= 10; i++) {
@@ -1197,8 +1168,8 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
 
     it("preserves previous version timestamps", async () => {
-      const type = "timestamp-test";
-      const id = "timestamps";
+      const type = ctx.immutableType("timestamp-test");
+      const id = ctx.immutableId("timestamps");
 
       // Create v1
       await cortex.immutable.store({
@@ -1230,8 +1201,8 @@ describe("Immutable Store API (Layer 1b)", () => {
 
   describe("Storage Validation", () => {
     it("validates ACID properties", async () => {
-      const type = "acid-test";
-      const id = "acid-entry";
+      const type = ctx.immutableType("acid-test");
+      const id = ctx.immutableId("acid-entry");
 
       // Create entry
       const _created = await cortex.immutable.store({
@@ -1312,8 +1283,8 @@ describe("Immutable Store API (Layer 1b)", () => {
 
   describe("State Change Propagation", () => {
     it("updates propagate to all read operations", async () => {
-      const type = "propagation-test";
-      const id = "state-change";
+      const type = ctx.immutableType("propagation-test");
+      const id = ctx.immutableId("state-change");
 
       // Create v1
       await cortex.immutable.store({
@@ -1336,7 +1307,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       expect(history).toHaveLength(1);
 
-      let searchResults = await cortex.immutable.search({ query: "draft" });
+      let searchResults = await cortex.immutable.search({ query: "draft", type });
 
       expect(searchResults.some((r) => r.entry.id === id)).toBe(true);
 
@@ -1362,11 +1333,11 @@ describe("Immutable Store API (Layer 1b)", () => {
       expect(history[1].data.status).toBe("published");
 
       // Search should find new content
-      searchResults = await cortex.immutable.search({ query: "published" });
+      searchResults = await cortex.immutable.search({ query: "published", type });
       expect(searchResults.some((r) => r.entry.id === id)).toBe(true);
 
       // Old search should NOT find it
-      const draftResults = await cortex.immutable.search({ query: "draft" });
+      const draftResults = await cortex.immutable.search({ query: "draft", type });
       const hasDraft = draftResults.some((r) => r.entry.id === id);
 
       expect(hasDraft).toBe(false); // "draft" no longer in current version
@@ -1378,18 +1349,21 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
 
     it("list operations reflect updates immediately", async () => {
-      const type = "list-propagation-test";
+      const type = ctx.immutableType("list-propagation-test");
+      const id1 = ctx.immutableId("entry-1");
+      const id2 = ctx.immutableId("entry-2");
+      const id3 = ctx.immutableId("entry-3");
 
       // Create multiple entries
       await cortex.immutable.store({
         type,
-        id: "entry-1",
+        id: id1,
         data: { value: 1 },
       });
 
       await cortex.immutable.store({
         type,
-        id: "entry-2",
+        id: id2,
         data: { value: 2 },
       });
 
@@ -1406,7 +1380,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       // Add third entry
       await cortex.immutable.store({
         type,
-        id: "entry-3",
+        id: id3,
         data: { value: 3 },
       });
 
@@ -1419,12 +1393,12 @@ describe("Immutable Store API (Layer 1b)", () => {
       expect(count).toBe(3);
 
       // Delete one
-      await cortex.immutable.purge(type, "entry-2");
+      await cortex.immutable.purge(type, id2);
 
       // List should immediately show 2
       list = await cortex.immutable.list({ type });
       expect(list.length).toBe(2);
-      expect(list.some((e) => e.id === "entry-2")).toBe(false);
+      expect(list.some((e) => e.id === id2)).toBe(false);
 
       // Count should immediately show 2
       count = await cortex.immutable.count({ type });
@@ -1476,8 +1450,8 @@ describe("Immutable Store API (Layer 1b)", () => {
 
   describe("Edge Cases", () => {
     it("handles many versions (20+)", async () => {
-      const type = "stress-test";
-      const id = "many-versions";
+      const type = ctx.immutableType("stress-test");
+      const id = ctx.immutableId("many-versions");
 
       // Create 25 versions
       for (let i = 1; i <= 25; i++) {
@@ -1524,21 +1498,25 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
 
     it("handles empty data object", async () => {
+      const type = ctx.immutableType("empty-test");
+      const id = ctx.immutableId("empty-data");
       const result = await cortex.immutable.store({
-        type: "empty-test",
-        id: "empty-data",
+        type,
+        id,
         data: {},
       });
 
       expect(result.data).toEqual({});
       expect(result.version).toBe(1);
 
-      const retrieved = await cortex.immutable.get("empty-test", "empty-data");
+      const retrieved = await cortex.immutable.get(type, id);
 
       expect(retrieved!.data).toEqual({});
     });
 
     it("handles large data objects", async () => {
+      const type = ctx.immutableType("large-test");
+      const id = ctx.immutableId("large-data");
       // Create ~10KB data object
       const largeData = {
         items: Array.from({ length: 1000 }, (_, i) => ({
@@ -1549,39 +1527,40 @@ describe("Immutable Store API (Layer 1b)", () => {
       };
 
       const result = await cortex.immutable.store({
-        type: "large-test",
-        id: "large-data",
+        type,
+        id,
         data: largeData,
       });
 
       expect(result.data.items).toHaveLength(1000);
 
-      const retrieved = await cortex.immutable.get("large-test", "large-data");
+      const retrieved = await cortex.immutable.get(type, id);
 
       expect(retrieved!.data.items).toHaveLength(1000);
     });
 
     it("handles special characters in type and id", async () => {
+      // Using a unique suffix with special chars supported by the API
+      const suffix = Date.now().toString();
+      const type = `test-type_with.special-chars-${suffix}`;
+      const id = `test-id_123.456-789-${suffix}`;
       const result = await cortex.immutable.store({
-        type: "test-type_with.special-chars",
-        id: "test-id_123.456-789",
+        type,
+        id,
         data: { value: "special" },
       });
 
-      expect(result.type).toBe("test-type_with.special-chars");
-      expect(result.id).toBe("test-id_123.456-789");
+      expect(result.type).toBe(type);
+      expect(result.id).toBe(id);
 
-      const retrieved = await cortex.immutable.get(
-        "test-type_with.special-chars",
-        "test-id_123.456-789",
-      );
+      const retrieved = await cortex.immutable.get(type, id);
 
       expect(retrieved).not.toBeNull();
     });
 
     it("handles rapid sequential updates", async () => {
-      const type = "rapid-test";
-      const id = "rapid-updates";
+      const type = ctx.immutableType("rapid-test");
+      const id = ctx.immutableId("rapid-updates");
 
       // Perform 10 rapid updates
       const promises = [];
@@ -1608,8 +1587,8 @@ describe("Immutable Store API (Layer 1b)", () => {
 
   describe("Cross-Operation Integration", () => {
     it("store → list → search → count consistency", async () => {
-      const type = "integration-test";
-      const testId = "consistency-check";
+      const type = ctx.immutableType("integration-test");
+      const testId = ctx.immutableId("consistency-check");
 
       // Store entry
       await cortex.immutable.store({
@@ -1679,8 +1658,8 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
 
     it("version history accessible after many updates", async () => {
-      const type = "history-access-test";
-      const id = "historical-entry";
+      const type = ctx.immutableType("history-access-test");
+      const id = ctx.immutableId("historical-entry");
 
       // Create 15 versions with different searchable content
       const versions = [];
@@ -1731,8 +1710,8 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
 
     it("metadata changes propagate correctly", async () => {
-      const type = "metadata-test";
-      const id = "meta-entry";
+      const type = ctx.immutableType("metadata-test");
+      const id = ctx.immutableId("meta-entry");
 
       // Create with initial metadata
       await cortex.immutable.store({
@@ -1776,20 +1755,18 @@ describe("Immutable Store API (Layer 1b)", () => {
 
   describe("Advanced Operations", () => {
     describe("getAtTimestamp()", () => {
-      let type: string;
-      let id: string;
+      // Using module-level ctx for unique types/ids
+      const timestampType = ctx.immutableType("temporal-test");
+      const timestampId = ctx.immutableId("time-travel");
       let v1Timestamp: number;
       let v2Timestamp: number;
       let v3Timestamp: number;
 
       beforeAll(async () => {
-        type = "temporal-test";
-        id = "time-travel";
-
         // Create v1
         const v1 = await cortex.immutable.store({
-          type,
-          id,
+          type: timestampType,
+          id: timestampId,
           data: { value: "v1", status: "draft" },
         });
 
@@ -1799,8 +1776,8 @@ describe("Immutable Store API (Layer 1b)", () => {
 
         // Create v2
         const v2 = await cortex.immutable.store({
-          type,
-          id,
+          type: timestampType,
+          id: timestampId,
           data: { value: "v2", status: "review" },
         });
 
@@ -1810,8 +1787,8 @@ describe("Immutable Store API (Layer 1b)", () => {
 
         // Create v3
         const v3 = await cortex.immutable.store({
-          type,
-          id,
+          type: timestampType,
+          id: timestampId,
           data: { value: "v3", status: "published" },
         });
 
@@ -1820,7 +1797,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       it("returns current version for future timestamp", async () => {
         const future = Date.now() + 10000;
-        const result = await cortex.immutable.getAtTimestamp(type, id, future);
+        const result = await cortex.immutable.getAtTimestamp(timestampType, timestampId, future);
 
         expect(result).not.toBeNull();
         expect(result!.version).toBe(3);
@@ -1830,8 +1807,8 @@ describe("Immutable Store API (Layer 1b)", () => {
       it("returns correct version for timestamp between updates", async () => {
         // At v1 timestamp, should get v1
         const atV1 = await cortex.immutable.getAtTimestamp(
-          type,
-          id,
+          timestampType,
+          timestampId,
           v1Timestamp,
         );
 
@@ -1840,8 +1817,8 @@ describe("Immutable Store API (Layer 1b)", () => {
 
         // At v2 timestamp, should get v2
         const atV2 = await cortex.immutable.getAtTimestamp(
-          type,
-          id,
+          timestampType,
+          timestampId,
           v2Timestamp,
         );
 
@@ -1850,8 +1827,8 @@ describe("Immutable Store API (Layer 1b)", () => {
 
         // At v3 timestamp, should get v3
         const atV3 = await cortex.immutable.getAtTimestamp(
-          type,
-          id,
+          timestampType,
+          timestampId,
           v3Timestamp,
         );
 
@@ -1861,7 +1838,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       it("returns null for timestamp before creation", async () => {
         const past = v1Timestamp - 1000;
-        const result = await cortex.immutable.getAtTimestamp(type, id, past);
+        const result = await cortex.immutable.getAtTimestamp(timestampType, timestampId, past);
 
         expect(result).toBeNull();
       });
@@ -1878,21 +1855,24 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
 
     describe("purgeMany()", () => {
+      const bulkPurgeType = ctx.immutableType("bulk-purge-test");
+      const bulkPurgeUserId = ctx.userId("user-purge-many");
+      
       beforeAll(async () => {
         // Create entries for bulk purge
         for (let i = 1; i <= 5; i++) {
           await cortex.immutable.store({
-            type: "bulk-purge-test",
-            id: `entry-${i}`,
+            type: bulkPurgeType,
+            id: ctx.immutableId(`entry-${i}`),
             data: { value: i },
           });
         }
 
         for (let i = 1; i <= 3; i++) {
           await cortex.immutable.store({
-            type: "bulk-purge-test",
-            id: `user-entry-${i}`,
-            userId: "user-purge-many",
+            type: bulkPurgeType,
+            id: ctx.immutableId(`user-entry-${i}`),
+            userId: bulkPurgeUserId,
             data: { value: i },
           });
         }
@@ -1900,7 +1880,7 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       it("deletes multiple entries by type", async () => {
         const result = await cortex.immutable.purgeMany({
-          type: "bulk-purge-test",
+          type: bulkPurgeType,
         });
 
         expect(result.deleted).toBeGreaterThanOrEqual(8);
@@ -1908,44 +1888,47 @@ describe("Immutable Store API (Layer 1b)", () => {
 
         // Verify deletion
         const remaining = await cortex.immutable.list({
-          type: "bulk-purge-test",
+          type: bulkPurgeType,
         });
 
         expect(remaining.length).toBe(0);
       });
 
       it("deletes by userId filter", async () => {
+        const userDataType = ctx.immutableType("user-data-unique");
+        const userPurgeId = ctx.userId("user-purge-specific-unique");
+        
         // Create fresh user-specific entries
         await cortex.immutable.store({
-          type: "user-data-unique",
-          id: "data-1",
-          userId: "user-purge-specific-unique",
+          type: userDataType,
+          id: ctx.immutableId("data-1"),
+          userId: userPurgeId,
           data: { value: 1 },
         });
 
         await cortex.immutable.store({
-          type: "user-data-unique",
-          id: "data-2",
-          userId: "user-purge-specific-unique",
+          type: userDataType,
+          id: ctx.immutableId("data-2"),
+          userId: userPurgeId,
           data: { value: 2 },
         });
 
         // Verify count before
         const countBefore = await cortex.immutable.count({
-          userId: "user-purge-specific-unique",
+          userId: userPurgeId,
         });
 
         expect(countBefore).toBe(2);
 
         const result = await cortex.immutable.purgeMany({
-          userId: "user-purge-specific-unique",
+          userId: userPurgeId,
         });
 
         expect(result.deleted).toBe(2);
 
         // Verify deletion
         const remaining = await cortex.immutable.list({
-          userId: "user-purge-specific-unique",
+          userId: userPurgeId,
         });
 
         expect(remaining.length).toBe(0);
@@ -1954,8 +1937,8 @@ describe("Immutable Store API (Layer 1b)", () => {
 
     describe("purgeVersions()", () => {
       it("deletes old versions while keeping recent ones", async () => {
-        const type = "version-cleanup";
-        const id = "pruned-entry";
+        const type = ctx.immutableType("version-cleanup");
+        const id = ctx.immutableId("pruned-entry");
 
         // Create 10 versions
         for (let i = 1; i <= 10; i++) {
@@ -1996,8 +1979,8 @@ describe("Immutable Store API (Layer 1b)", () => {
       });
 
       it("returns 0 purged if already within limit", async () => {
-        const type = "no-purge-needed";
-        const id = "entry";
+        const type = ctx.immutableType("no-purge-needed");
+        const id = ctx.immutableId("entry");
 
         // Create only 3 versions
         for (let i = 1; i <= 3; i++) {
@@ -2026,40 +2009,44 @@ describe("Immutable Store API (Layer 1b)", () => {
 
   describe("Type Isolation", () => {
     it("entries of different types are properly isolated", async () => {
+      const isolatedTypeA = ctx.immutableType("type-a");
+      const isolatedTypeB = ctx.immutableType("type-b");
+      const sharedId = ctx.immutableId("shared-id");
+      
       // Create entries with same ID but different types
       await cortex.immutable.store({
-        type: "type-a",
-        id: "shared-id",
+        type: isolatedTypeA,
+        id: sharedId,
         data: { source: "type-a" },
       });
 
       await cortex.immutable.store({
-        type: "type-b",
-        id: "shared-id",
+        type: isolatedTypeB,
+        id: sharedId,
         data: { source: "type-b" },
       });
 
       // Get should return correct type
-      const typeA = await cortex.immutable.get("type-a", "shared-id");
+      const typeAResult = await cortex.immutable.get(isolatedTypeA, sharedId);
 
-      expect(typeA!.data.source).toBe("type-a");
+      expect(typeAResult!.data.source).toBe("type-a");
 
-      const typeB = await cortex.immutable.get("type-b", "shared-id");
+      const typeBResult = await cortex.immutable.get(isolatedTypeB, sharedId);
 
-      expect(typeB!.data.source).toBe("type-b");
+      expect(typeBResult!.data.source).toBe("type-b");
 
       // List by type should be isolated
-      const listA = await cortex.immutable.list({ type: "type-a" });
+      const listA = await cortex.immutable.list({ type: isolatedTypeA });
 
-      expect(listA.every((e) => e.type === "type-a")).toBe(true);
+      expect(listA.every((e) => e.type === isolatedTypeA)).toBe(true);
 
-      const listB = await cortex.immutable.list({ type: "type-b" });
+      const listB = await cortex.immutable.list({ type: isolatedTypeB });
 
-      expect(listB.every((e) => e.type === "type-b")).toBe(true);
+      expect(listB.every((e) => e.type === isolatedTypeB)).toBe(true);
 
       // Count by type should be isolated
-      const countA = await cortex.immutable.count({ type: "type-a" });
-      const countB = await cortex.immutable.count({ type: "type-b" });
+      const countA = await cortex.immutable.count({ type: isolatedTypeA });
+      const countB = await cortex.immutable.count({ type: isolatedTypeB });
 
       expect(countA).toBeGreaterThanOrEqual(1);
       expect(countB).toBeGreaterThanOrEqual(1);

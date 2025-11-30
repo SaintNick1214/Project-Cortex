@@ -16,11 +16,12 @@ Additional pytest args:
     python scripts/run-python-tests.py --mode=local -v -k test_memory
 """
 
-import os
-import sys
-import subprocess
 import argparse
+import os
+import subprocess
+import sys
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 # Load .env.local to get deployment configurations
@@ -40,18 +41,18 @@ def has_managed_config():
 def run_tests(mode, pytest_args):
     """
     Run pytest with specific test mode.
-    
+
     Args:
         mode: "local" or "managed"
         pytest_args: Additional pytest arguments
     """
     env = os.environ.copy()
     env["CONVEX_TEST_MODE"] = mode
-    
+
     print("\n" + "=" * 60)
     print(f"🚀 Running {mode.upper()} tests...")
     print("=" * 60 + "\n")
-    
+
     # Build pytest command
     sdk_path = project_root / "cortex-sdk-python"
     cmd = [
@@ -62,15 +63,15 @@ def run_tests(mode, pytest_args):
         "--tb=short",
         *pytest_args
     ]
-    
+
     # Run tests
     result = subprocess.run(
         cmd,
         cwd=sdk_path,
         env=env,
-        
+
     )
-    
+
     if result.returncode == 0:
         print(f"\n✅ {mode.upper()} tests completed successfully\n")
         return True
@@ -86,17 +87,17 @@ def main():
         default="auto",
         help="Test mode: local, managed, both, or auto-detect (default: auto)"
     )
-    
+
     args, pytest_args = parser.parse_known_args()
-    
+
     has_local = has_local_config()
     has_managed = has_managed_config()
-    
+
     print("\n🔍 [Python SDK] Detecting available Convex configurations...")
     print(f"   Local config (LOCAL_CONVEX_URL): {'✅ Found' if has_local else '❌ Not found'}")
     print(f"   Managed config (CLOUD_CONVEX_URL): {'✅ Found' if has_managed else '❌ Not found'}")
     print(f"   Test mode: {args.mode}\n")
-    
+
     # Handle explicit test modes
     if args.mode == "local":
         if not has_local:
@@ -104,26 +105,26 @@ def main():
             sys.exit(1)
         success = run_tests("local", pytest_args)
         sys.exit(0 if success else 1)
-    
+
     elif args.mode == "managed":
         if not has_managed:
             print("❌ MANAGED test mode requested but CLOUD_CONVEX_URL not configured in .env.local")
             sys.exit(1)
         success = run_tests("managed", pytest_args)
         sys.exit(0 if success else 1)
-    
+
     elif args.mode == "both":
         # Explicitly run both suites
         if not has_local or not has_managed:
             print("❌ BOTH mode requires both LOCAL_CONVEX_URL and CLOUD_CONVEX_URL in .env.local")
             sys.exit(1)
-        
+
         print("🎯 Both configurations detected - running DUAL TEST SUITE")
         print("   Tests will run against both local AND managed environments\n")
-        
+
         local_success = run_tests("local", pytest_args)
         managed_success = run_tests("managed", pytest_args)
-        
+
         if local_success and managed_success:
             print("\n" + "=" * 60)
             print("🎉 SUCCESS: All test suites passed!")
@@ -138,7 +139,7 @@ def main():
             print(f"   {'✅' if managed_success else '❌'} Managed tests: {'PASSED' if managed_success else 'FAILED'}")
             print("=" * 60 + "\n")
             sys.exit(1)
-    
+
     elif args.mode == "auto":
         # Auto-detect and run appropriate suite(s)
         if not has_local and not has_managed:
@@ -147,17 +148,17 @@ def main():
             print("  - LOCAL_CONVEX_URL for local testing")
             print("  - CLOUD_CONVEX_URL for managed testing")
             sys.exit(1)
-        
+
         test_suites = []
         if has_local:
             test_suites.append("local")
         if has_managed:
             test_suites.append("managed")
-        
+
         if len(test_suites) == 2:
             print("🎯 Both configurations detected - running DUAL TEST SUITE")
             print("   Tests will run against both local AND managed environments\n")
-        
+
         # Run each test suite
         all_passed = True
         results = {}
@@ -165,7 +166,7 @@ def main():
             results[suite] = run_tests(suite, pytest_args)
             if not results[suite]:
                 all_passed = False
-        
+
         # Summary
         if len(test_suites) == 2:
             print("\n" + "=" * 60)
@@ -178,9 +179,9 @@ def main():
                 icon = "✅" if results[suite] else "❌"
                 print(f"   {icon} {suite.capitalize()} tests: {status}")
             print("=" * 60 + "\n")
-        
+
         sys.exit(0 if all_passed else 1)
-    
+
     else:
         print(f"❌ Invalid test mode: {args.mode}")
         print("Valid modes: local, managed, both, auto")

@@ -6,22 +6,21 @@ using them in the main test suite.
 """
 
 import pytest
+
 from tests.helpers import (
     TestCleanup,
-    generate_embedding,
+    create_test_conversation_input,
+    create_test_fact_input,
+    create_test_memory_input,
     embeddings_available,
+    generate_embedding,
+    generate_test_conversation_id,
+    generate_test_memory_space_id,
+    generate_test_user_id,
     validate_conversation_storage,
     validate_memory_storage,
-    validate_fact_storage,
     validate_user_storage,
-    generate_test_user_id,
-    generate_test_memory_space_id,
-    generate_test_conversation_id,
-    create_test_memory_input,
-    create_test_fact_input,
-    create_test_conversation_input,
 )
-
 
 # ============================================================================
 # Cleanup Helper Tests
@@ -88,7 +87,7 @@ async def test_cleanup_facts(cortex_client, test_ids):
         fact_input = create_test_fact_input(fact="Test fact for cleanup")
         # Note: The actual API signature might differ
         # This is just verifying the cleanup helper works
-        
+
         # Purge facts (delete_all=True deletes all facts in the space)
         count = await cleanup.purge_facts(memory_space_id, delete_all=True)
         print(f"✓ Purged {count} test fact(s)")
@@ -201,7 +200,7 @@ async def test_generate_embedding_consistency():
     # Use mock embeddings for consistency test
     # Real OpenAI embeddings are not deterministic and may vary slightly between calls
     from tests.helpers.embeddings import generate_mock_embedding
-    
+
     embedding1 = generate_mock_embedding(text)
     embedding2 = generate_mock_embedding(text)
 
@@ -331,8 +330,8 @@ async def test_validate_storage_with_expected_data(cortex_client, test_ids):
     if not validation["matches"]:
         print(f"Validation errors: {validation['errors']}")
         # Don't fail - field names might be converted
-    
-    print(f"✓ Storage validation with expected data works")
+
+    print("✓ Storage validation with expected data works")
 
     # Cleanup
     await cortex_client.conversations.delete(conv_id)
@@ -385,7 +384,7 @@ def test_create_test_memory_input():
     assert input_data.content_type == "raw"
     assert input_data.metadata.importance == 75
     assert input_data.metadata.tags == ["test", "validation"]
-    print(f"✓ Generated valid memory input (StoreMemoryInput object)")
+    print("✓ Generated valid memory input (StoreMemoryInput object)")
 
 
 def test_create_test_fact_input():
@@ -470,10 +469,10 @@ async def test_all_helpers_summary(cortex_client, cleanup_helper, test_ids, embe
     print("  - Can purge all test data")
 
     # Test embeddings
-    print(f"\n✓ Embeddings Helper: Working")
+    print("\n✓ Embeddings Helper: Working")
     print(f"  - API Available: {embeddings_available_fixture}")
-    print(f"  - Mock embeddings: Working")
-    print(f"  - Consistency: Verified")
+    print("  - Mock embeddings: Working")
+    print("  - Consistency: Verified")
 
     # Test storage validation
     print("\n✓ Storage Validation Helper: Working")

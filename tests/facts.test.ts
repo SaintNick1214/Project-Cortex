@@ -7,33 +7,47 @@
  * - Fact storage and versioning
  * - Graph-like relationships
  * - Memory space isolation
+ *
+ * PARALLEL-SAFE: Uses TestRunContext for isolated test data
  */
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
-import { TestCleanup } from "./helpers";
+import {
+  createNamedTestRunContext,
+  ScopedCleanup,
+} from "./helpers";
 
 describe("Facts API (Layer 3)", () => {
+  // Create unique test run context for parallel-safe execution
+  const ctx = createNamedTestRunContext("facts");
+
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let scopedCleanup: ScopedCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-  const TIMESTAMP = Date.now();
-  const TEST_MEMSPACE_ID = `memspace-facts-test-${TIMESTAMP}`;
+
+  // Use context generator for test memory space ID
+  const TEST_MEMSPACE_ID = ctx.memorySpaceId("test");
 
   beforeAll(async () => {
+    console.log(`\n🧪 Facts API Tests - Run ID: ${ctx.runId}\n`);
+
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    cleanup = new TestCleanup(client);
+    scopedCleanup = new ScopedCleanup(client, ctx);
 
-    // Clean all test data before tests
-    await cleanup.purgeAll();
+    // Note: No global purge - test data is isolated by prefix
+    console.log("✅ Test isolation setup complete\n");
   });
 
   afterAll(async () => {
-    await cleanup.purgeAll();
+    // Clean up only data created by this test run
+    console.log(`\n🧹 Cleaning up test run ${ctx.runId}...`);
+    await scopedCleanup.cleanupAll();
     await client.close();
+    console.log(`✅ Test run ${ctx.runId} cleanup complete\n`);
   });
 
   describe("store()", () => {

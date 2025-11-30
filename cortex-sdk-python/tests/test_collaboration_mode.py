@@ -10,24 +10,26 @@ Tests validate:
 Port of: tests/collaborationMode.test.ts
 """
 
-import pytest
-import time
 import os
-from cortex import Cortex, CortexConfig
-from cortex.types import (
-    RegisterMemorySpaceParams,
-    StoreMemoryInput,
-    MemorySource,
-    MemoryMetadata,
-    StoreFactParams,
-    ListFactsFilter,
-    ContextInput,
-)
-from tests.helpers import TestCleanup
-
+import time
 
 # Two separate organizations - use timestamp to avoid conflicts
 import time as _time
+
+import pytest
+
+from cortex import Cortex, CortexConfig
+from cortex.types import (
+    ContextInput,
+    ListFactsFilter,
+    MemoryMetadata,
+    MemorySource,
+    RegisterMemorySpaceParams,
+    StoreFactParams,
+    StoreMemoryInput,
+)
+from tests.helpers import TestCleanup
+
 _timestamp = int(_time.time() * 1000)
 ORG_A_SPACE = f"org-a-space-python-{_timestamp}"
 ORG_B_SPACE = f"org-b-space-python-{_timestamp}"
@@ -39,9 +41,9 @@ async def collab_cortex():
     convex_url = os.getenv("CONVEX_URL", "http://127.0.0.1:3210")
     cortex = Cortex(CortexConfig(convex_url=convex_url))
     cleanup = TestCleanup(cortex)
-    
+
     await cleanup.purge_all()
-    
+
     # Register two separate organizations
     now = int(time.time() * 1000)
     await cortex.memory_spaces.register(
@@ -55,7 +57,7 @@ async def collab_cortex():
             ],
         )
     )
-    
+
     await cortex.memory_spaces.register(
         RegisterMemorySpaceParams(
             memory_space_id=ORG_B_SPACE,
@@ -67,9 +69,9 @@ async def collab_cortex():
             ],
         )
     )
-    
+
     yield cortex
-    
+
     # Cleanup
     await cleanup.purge_all()
     await cortex.close()
@@ -97,7 +99,7 @@ async def test_each_organization_has_separate_data_by_default(collab_cortex):
             metadata=MemoryMetadata(importance=90, tags=["confidential"]),
         ),
     )
-    
+
     # Org B stores data
     await collab_cortex.vector.store(
         ORG_B_SPACE,
@@ -108,27 +110,27 @@ async def test_each_organization_has_separate_data_by_default(collab_cortex):
             metadata=MemoryMetadata(importance=90, tags=["confidential"]),
         ),
     )
-    
+
     # Org A only sees their data
     org_a_result = await collab_cortex.vector.list(memory_space_id=ORG_A_SPACE)
     org_a_memories = org_a_result if isinstance(org_a_result, list) else org_a_result.get("memories", [])
-    
+
     for m in org_a_memories:
         space_id = m.memory_space_id if hasattr(m, 'memory_space_id') else m.get("memorySpaceId")
         assert space_id == ORG_A_SPACE
-    
+
     # Org B only sees their data
     org_b_result = await collab_cortex.vector.list(memory_space_id=ORG_B_SPACE)
     org_b_memories = org_b_result if isinstance(org_b_result, list) else org_b_result.get("memories", [])
-    
+
     for m in org_b_memories:
         space_id = m.memory_space_id if hasattr(m, 'memory_space_id') else m.get("memorySpaceId")
         assert space_id == ORG_B_SPACE
-    
+
     # No cross-contamination
     org_a_contents = [m.content if hasattr(m, 'content') else m.get("content") for m in org_a_memories]
     org_b_contents = [m.content if hasattr(m, 'content') else m.get("content") for m in org_b_memories]
-    
+
     assert not any("Organization B" in content for content in org_a_contents)
     assert not any("Organization A" in content for content in org_b_contents)
 
@@ -157,21 +159,21 @@ async def test_shares_workflow_context_across_organizations(collab_cortex):
             },
         )
     )
-    
+
     # Org A grants access to Org B
     updated = await collab_cortex.contexts.grant_access(
         shared_context.id,
         ORG_B_SPACE,
         "read-only",
     )
-    
+
     assert updated.granted_access is not None
     assert any(g.get("memorySpaceId") == ORG_B_SPACE for g in updated.granted_access)
-    
+
     # Both orgs can see the context
     org_a_view = await collab_cortex.contexts.get(shared_context.id)
     assert org_a_view is not None
-    
+
     # Org B can also see (via granted access)
     assert any(g.get("memorySpaceId") == ORG_B_SPACE for g in (org_a_view.granted_access or []))
 
@@ -190,7 +192,7 @@ async def test_creates_child_contexts_in_different_spaces(collab_cortex):
             memory_space_id=ORG_A_SPACE,
         )
     )
-    
+
     # Org A creates their task
     org_a_task = await collab_cortex.contexts.create(
         ContextInput(
@@ -199,7 +201,7 @@ async def test_creates_child_contexts_in_different_spaces(collab_cortex):
             parent_id=root.id,
         )
     )
-    
+
     # Org B creates their task (child of A's root - cross-space)
     org_b_task = await collab_cortex.contexts.create(
         ContextInput(
@@ -208,7 +210,7 @@ async def test_creates_child_contexts_in_different_spaces(collab_cortex):
             parent_id=root.id,
         )
     )
-    
+
     # Both children reference same root but live in different spaces
     assert org_a_task.memory_space_id == ORG_A_SPACE
     assert org_b_task.memory_space_id == ORG_B_SPACE
@@ -235,17 +237,17 @@ async def test_contexts_can_grant_selective_access(collab_cortex):
             data={"confidential": True},
         )
     )
-    
+
     # Initially no access granted
     assert private_context.granted_access == [] or private_context.granted_access is None
-    
+
     # Grant read-only access to Org B
     updated = await collab_cortex.contexts.grant_access(
         private_context.id,
         ORG_B_SPACE,
         "read-only",
     )
-    
+
     assert len(updated.granted_access) == 1
     assert updated.granted_access[0].get("scope") == "read-only"
 
@@ -263,21 +265,21 @@ async def test_can_grant_different_scopes(collab_cortex):
             memory_space_id=ORG_A_SPACE,
         )
     )
-    
+
     # Grant read-only to Org B
     await collab_cortex.contexts.grant_access(
         context.id,
         ORG_B_SPACE,
         "read-only",
     )
-    
+
     # Grant full access to another space
     updated = await collab_cortex.contexts.grant_access(
         context.id,
         "partner-space",
         "full-access",
     )
-    
+
     assert len(updated.granted_access) == 2
 
 
@@ -296,7 +298,7 @@ async def test_partner_organizations_collaborate_on_joint_campaign(collab_cortex
     # SCENARIO: Two companies partner on marketing campaign
     # Each has separate memory space (data isolation)
     # But share workflow context for coordination
-    
+
     # 1. Company A creates campaign context
     campaign = await collab_cortex.contexts.create(
         ContextInput(
@@ -310,14 +312,14 @@ async def test_partner_organizations_collaborate_on_joint_campaign(collab_cortex
             },
         )
     )
-    
+
     # 2. Company A grants access to Company B
     await collab_cortex.contexts.grant_access(
         campaign.id,
         ORG_B_SPACE,
         "collaborate",
     )
-    
+
     # 3. Company A adds their internal task
     org_a_task = await collab_cortex.contexts.create(
         ContextInput(
@@ -326,7 +328,7 @@ async def test_partner_organizations_collaborate_on_joint_campaign(collab_cortex
             parent_id=campaign.id,
         )
     )
-    
+
     # Store facts in their own space
     await collab_cortex.facts.store(
         StoreFactParams(
@@ -339,7 +341,7 @@ async def test_partner_organizations_collaborate_on_joint_campaign(collab_cortex
             tags=["campaign", "content"],
         )
     )
-    
+
     # 4. Company B adds their task
     org_b_task = await collab_cortex.contexts.create(
         ContextInput(
@@ -348,7 +350,7 @@ async def test_partner_organizations_collaborate_on_joint_campaign(collab_cortex
             parent_id=campaign.id,
         )
     )
-    
+
     # Store facts in their own space
     await collab_cortex.facts.store(
         StoreFactParams(
@@ -361,31 +363,31 @@ async def test_partner_organizations_collaborate_on_joint_campaign(collab_cortex
             tags=["campaign", "distribution"],
         )
     )
-    
+
     # 5. Both can see shared context chain
     chain_a = await collab_cortex.contexts.get_chain(org_a_task.id)
     chain_b = await collab_cortex.contexts.get_chain(org_b_task.id)
-    
+
     assert chain_a.get("root", {}).get("contextId") == campaign.id
     assert chain_b.get("root", {}).get("contextId") == campaign.id
     assert len(chain_a.get("siblings", [])) == 1  # Org B's task
     assert len(chain_b.get("siblings", [])) == 1  # Org A's task
-    
+
     # 6. But each org's facts stay private
     org_a_facts_result = await collab_cortex.facts.list(
         ListFactsFilter(memory_space_id=ORG_A_SPACE)
     )
     org_a_facts = org_a_facts_result if isinstance(org_a_facts_result, list) else org_a_facts_result.get("facts", [])
-    
+
     org_b_facts_result = await collab_cortex.facts.list(ListFactsFilter(memory_space_id=ORG_B_SPACE))
     org_b_facts = org_b_facts_result if isinstance(org_b_facts_result, list) else org_b_facts_result.get("facts", [])
-    
+
     org_a_fact_texts = [f.fact if hasattr(f, 'fact') else f.get("fact") for f in org_a_facts]
     org_b_fact_texts = [f.fact if hasattr(f, 'fact') else f.get("fact") for f in org_b_facts]
-    
+
     assert any("social media" in text for text in org_a_fact_texts)
     assert not any("ad platform" in text for text in org_a_fact_texts)
-    
+
     assert any("ad platform" in text for text in org_b_fact_texts)
     assert not any("social media" in text for text in org_b_fact_texts)
 
@@ -410,14 +412,14 @@ async def test_coordinates_tasks_across_organizations(collab_cortex):
             data={"dealValue": 500000},
         )
     )
-    
+
     # Grant access to Org B
     await collab_cortex.contexts.grant_access(
         root.id,
         ORG_B_SPACE,
         "collaborate",
     )
-    
+
     # Org A creates their task
     org_a_task = await collab_cortex.contexts.create(
         ContextInput(
@@ -426,7 +428,7 @@ async def test_coordinates_tasks_across_organizations(collab_cortex):
             parent_id=root.id,
         )
     )
-    
+
     # Org B creates their task (child of A's root - cross-space!)
     org_b_task = await collab_cortex.contexts.create(
         ContextInput(
@@ -435,14 +437,14 @@ async def test_coordinates_tasks_across_organizations(collab_cortex):
             parent_id=root.id,
         )
     )
-    
+
     # Both tasks share same root
     assert org_a_task.root_id == root.id
     assert org_b_task.root_id == root.id
-    
+
     # Can see each other as siblings
     chain_a = await collab_cortex.contexts.get_chain(org_a_task.id)
-    
+
     siblings = chain_a.get("siblings", [])
     sibling_ids = [s.get("contextId") for s in siblings]
     assert org_b_task.id in sibling_ids
@@ -471,7 +473,7 @@ async def test_shares_only_context_not_underlying_data(collab_cortex):
             tags=["financial", "sensitive"],
         )
     )
-    
+
     # Create context and share it
     context = await collab_cortex.contexts.create(
         ContextInput(
@@ -480,22 +482,22 @@ async def test_shares_only_context_not_underlying_data(collab_cortex):
             data={"projectName": "Joint Initiative"},
         )
     )
-    
+
     await collab_cortex.contexts.grant_access(
         context.id,
         ORG_B_SPACE,
         "read-only",
     )
-    
+
     # Org B can see context
     shared_ctx = await collab_cortex.contexts.get(context.id)
-    
+
     assert shared_ctx.data.get("projectName") == "Joint Initiative"
-    
+
     # But Org B CANNOT see Org A's facts
     org_b_fact_view_result = await collab_cortex.facts.list(ListFactsFilter(memory_space_id=ORG_B_SPACE))
     org_b_fact_view = org_b_fact_view_result if isinstance(org_b_fact_view_result, list) else org_b_fact_view_result.get("facts", [])
-    
+
     org_b_fact_texts = [f.fact if hasattr(f, 'fact') else f.get("fact") for f in org_b_fact_view]
     assert not any("$10M" in text for text in org_b_fact_texts)
 
@@ -515,7 +517,7 @@ async def test_demonstrates_hive_vs_collaboration_difference(collab_cortex):
     # HIVE MODE: All tools in ONE space (no data silos)
     hive_space = f"hive-demo-python-{int(time.time() * 1000)}"
     now = int(time.time() * 1000)
-    
+
     await collab_cortex.memory_spaces.register(
         RegisterMemorySpaceParams(
             memory_space_id=hive_space,
@@ -529,7 +531,7 @@ async def test_demonstrates_hive_vs_collaboration_difference(collab_cortex):
             ],
         )
     )
-    
+
     # All tools store in SAME space
     await collab_cortex.facts.store(
         StoreFactParams(
@@ -542,7 +544,7 @@ async def test_demonstrates_hive_vs_collaboration_difference(collab_cortex):
             tags=["demo"],
         )
     )
-    
+
     await collab_cortex.facts.store(
         StoreFactParams(
             memory_space_id=hive_space,
@@ -554,18 +556,18 @@ async def test_demonstrates_hive_vs_collaboration_difference(collab_cortex):
             tags=["demo"],
         )
     )
-    
+
     # Single query gets both
     hive_facts_result = await collab_cortex.facts.list(ListFactsFilter(memory_space_id=hive_space))
     hive_facts = hive_facts_result if isinstance(hive_facts_result, list) else hive_facts_result.get("facts", [])
-    
+
     assert len(hive_facts) >= 2
-    
+
     # COLLABORATION MODE: Separate spaces, shared contexts
     timestamp = int(time.time() * 1000)
     company_x = f"company-x-python-{timestamp}"
     company_y = f"company-y-python-{timestamp}"
-    
+
     await collab_cortex.memory_spaces.register(
         RegisterMemorySpaceParams(
             memory_space_id=company_x,
@@ -574,7 +576,7 @@ async def test_demonstrates_hive_vs_collaboration_difference(collab_cortex):
             participants=[{"id": "user-x", "type": "user", "joinedAt": now}],
         )
     )
-    
+
     await collab_cortex.memory_spaces.register(
         RegisterMemorySpaceParams(
             memory_space_id=company_y,
@@ -583,7 +585,7 @@ async def test_demonstrates_hive_vs_collaboration_difference(collab_cortex):
             participants=[{"id": "user-y", "type": "user", "joinedAt": now}],
         )
     )
-    
+
     # Each stores in their own space
     await collab_cortex.facts.store(
         StoreFactParams(
@@ -595,7 +597,7 @@ async def test_demonstrates_hive_vs_collaboration_difference(collab_cortex):
             tags=["confidential"],
         )
     )
-    
+
     await collab_cortex.facts.store(
         StoreFactParams(
             memory_space_id=company_y,
@@ -606,7 +608,7 @@ async def test_demonstrates_hive_vs_collaboration_difference(collab_cortex):
             tags=["confidential"],
         )
     )
-    
+
     # Create shared context for collaboration
     shared_project = await collab_cortex.contexts.create(
         ContextInput(
@@ -614,29 +616,29 @@ async def test_demonstrates_hive_vs_collaboration_difference(collab_cortex):
             memory_space_id=company_x,
         )
     )
-    
+
     await collab_cortex.contexts.grant_access(
         shared_project.id,
         company_y,
         "collaborate",
     )
-    
+
     # Facts stay isolated
     x_facts_result = await collab_cortex.facts.list(ListFactsFilter(memory_space_id=company_x))
     x_facts = x_facts_result if isinstance(x_facts_result, list) else x_facts_result.get("facts", [])
-    
+
     y_facts_result = await collab_cortex.facts.list(ListFactsFilter(memory_space_id=company_y))
     y_facts = y_facts_result if isinstance(y_facts_result, list) else y_facts_result.get("facts", [])
-    
+
     x_fact_texts = [f.fact if hasattr(f, 'fact') else f.get("fact") for f in x_facts]
     y_fact_texts = [f.fact if hasattr(f, 'fact') else f.get("fact") for f in y_facts]
-    
+
     assert not any("Company Y" in text for text in x_fact_texts)
     assert not any("Company X" in text for text in y_fact_texts)
-    
+
     # But context is shared
     context = await collab_cortex.contexts.get(shared_project.id)
-    
+
     assert context.granted_access is not None
     assert any(g.get("memorySpaceId") == company_y for g in context.granted_access)
 

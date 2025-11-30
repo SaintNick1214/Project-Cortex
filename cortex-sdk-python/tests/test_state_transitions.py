@@ -10,9 +10,8 @@ Tests all valid state transitions across stateful entities to ensure:
 """
 
 import pytest
-from cortex import Cortex
-from cortex.types import ContextInput, RegisterMemorySpaceParams, AgentRegistration
 
+from cortex.types import AgentRegistration, ContextInput, RegisterMemorySpaceParams
 
 # State definitions from schema
 CONTEXT_STATUSES = ["active", "completed", "cancelled", "blocked"]
@@ -692,7 +691,7 @@ class TestCrossEntityStateEffects:
         completed_list = completed_list_result.get("contexts", [])
         blocked_list_result = await cortex_client.contexts.list(memory_space_id=space_id, status="blocked")
         blocked_list = blocked_list_result.get("contexts", [])
-        
+
         assert any(c.id == active.id for c in active_list)
         assert any(c.id == completed.id for c in completed_list)
         assert any(c.id == blocked.id for c in blocked_list)
@@ -738,8 +737,8 @@ class TestStateTransitionEdgeCases:
         self, cortex_client, base_id, test_user_id
     ):
         """Test concurrent transitions handled correctly."""
-        import time
         import asyncio
+        import time
         space_id = f"{base_id}-concurrent-{int(time.time() * 1000)}"
         user_id = "concurrent-user"
 
@@ -829,6 +828,7 @@ class TestStateTransitionEdgeCases:
     ):
         """Test archived space with data can be reactivated with data intact."""
         import time
+
         from cortex.types import CreateConversationInput, StoreMemoryInput
         space_id = f"{base_id}-data-cycle-{int(time.time() * 1000)}"
 
@@ -911,8 +911,8 @@ class TestBatchStateTransitions:
         self, cortex_client, base_id, test_user_id
     ):
         """Test multiple contexts can transition simultaneously."""
-        import time
         import asyncio
+        import time
         space_id = f"{base_id}-batch-{int(time.time() * 1000)}"
         user_id = "batch-user"
 
@@ -951,7 +951,6 @@ class TestBatchStateTransitions:
     async def test_multiple_spaces_transition_independently(self, cortex_client, base_id):
         """Test transitioning multiple spaces independently."""
         import time
-        import asyncio
 
         spaces = []
         for i in range(3):

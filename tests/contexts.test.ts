@@ -6,30 +6,43 @@
  * - Parent-child relationships
  * - Cross-space context sharing (Collaboration Mode)
  * - Chain traversal
+ *
+ * PARALLEL-SAFE: Uses TestRunContext for isolated test data
  */
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 // api is available via setupCortex if needed
-import { TestCleanup } from "./helpers";
+import {
+  createNamedTestRunContext,
+  ScopedCleanup,
+} from "./helpers";
 
 describe("Context Chains API", () => {
+  // Create unique test run context for parallel-safe execution
+  const ctx = createNamedTestRunContext("contexts");
+
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let scopedCleanup: ScopedCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
 
   beforeAll(async () => {
+    console.log(`\n🧪 Context Chains API Tests - Run ID: ${ctx.runId}\n`);
+
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    cleanup = new TestCleanup(client);
+    scopedCleanup = new ScopedCleanup(client, ctx);
 
-    await cleanup.purgeAll();
+    // Note: No global purge - test data is isolated by prefix
+    console.log("✅ Test isolation setup complete\n");
   });
 
   afterAll(async () => {
-    await cleanup.purgeAll();
+    console.log(`\n🧹 Cleaning up test run ${ctx.runId}...`);
+    await scopedCleanup.cleanupAll();
     await client.close();
+    console.log(`✅ Test run ${ctx.runId} cleanup complete\n`);
   });
 
   describe("create()", () => {

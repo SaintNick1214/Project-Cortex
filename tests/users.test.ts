@@ -7,24 +7,36 @@
  * - Storage validation
  * - Cascade deletion with rollback
  * - Graph integration
+ *
+ * PARALLEL-SAFE: Uses TestRunContext for isolated test data
  */
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
-import { TestCleanup } from "./helpers";
+import {
+  createNamedTestRunContext,
+  ScopedCleanup,
+  countUsers,
+  listUsers,
+} from "./helpers";
 import { CypherGraphAdapter } from "../src/graph/adapters/CypherGraphAdapter";
 import type { GraphAdapter } from "../src/graph/types";
 
 describe("Users API (Coordination Layer)", () => {
+  // Create unique test run context for parallel-safe execution
+  const ctx = createNamedTestRunContext("users");
+
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let scopedCleanup: ScopedCleanup;
   let graphAdapter: GraphAdapter | undefined;
   let hasGraphSupport: boolean = false;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
 
   beforeAll(async () => {
+    console.log(`\n🧪 Users API Tests - Run ID: ${ctx.runId}\n`);
+
     // Initialize graph adapter if environment variables are set
     const neo4jUri = process.env.NEO4J_URI;
     const neo4jUsername = process.env.NEO4J_USERNAME;
@@ -72,32 +84,32 @@ describe("Users API (Coordination Layer)", () => {
 
     // Direct client for storage validation
     client = new ConvexClient(CONVEX_URL);
-    // Cleanup helper
-    cleanup = new TestCleanup(client);
 
-    // 🧹 Purge test data before all tests
-    console.log("🧹 Purging test data before tests...");
-    await cleanup.purgeConversations();
-    await cleanup.purgeMemories();
-    await cleanup.purgeFacts();
+    // Scoped cleanup (only cleans data from this test run)
+    scopedCleanup = new ScopedCleanup(client, ctx);
 
-    // Clean graph if available
-    if (graphAdapter) {
-      try {
-        await graphAdapter.query(
-          "MATCH (n) WHERE n.userId IS NOT NULL DETACH DELETE n",
-          {},
-        );
-        console.log("✅ Purged graph test data");
-      } catch (error) {
-        console.warn("⚠️  Failed to purge graph data:", error);
-      }
-    }
-
-    console.log("✅ Purged all test data\n");
+    // Note: No global purge - each test run is isolated by prefix
+    console.log("✅ Test isolation setup complete\n");
   });
 
   afterAll(async () => {
+    // Clean up only data created by this test run
+    console.log(`\n🧹 Cleaning up test run ${ctx.runId}...`);
+    await scopedCleanup.cleanupAll();
+
+    // Clean graph data for this run if available
+    if (graphAdapter) {
+      try {
+        await graphAdapter.query(
+          `MATCH (n) WHERE n.userId STARTS WITH $prefix DETACH DELETE n`,
+          { prefix: ctx.runId },
+        );
+        console.log("✅ Cleaned up graph test data");
+      } catch (error) {
+        console.warn("⚠️  Failed to clean up graph data:", error);
+      }
+    }
+
     cortex.close();
     await client.close();
 
@@ -109,6 +121,8 @@ describe("Users API (Coordination Layer)", () => {
         console.warn("Failed to disconnect graph adapter:", error);
       }
     }
+
+    console.log(`✅ Test run ${ctx.runId} cleanup complete\n`);
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -119,8 +133,8 @@ describe("Users API (Coordination Layer)", () => {
 
   describe("get() and update()", () => {
     it("creates a user profile", async () => {
-      // Use unique ID for each test run to avoid version accumulation
-      const userId = "test-user-create-" + Date.now();
+      // Use context generator for unique ID
+      const userId = ctx.userId("create");
 
       const result = await cortex.users.update(userId, {
         displayName: "Alice",
@@ -153,7 +167,7 @@ describe("Users API (Coordination Layer)", () => {
     });
 
     it("retrieves a user profile", async () => {
-      const userId = "test-user-get-" + Date.now();
+      const userId = ctx.userId("get");
 
       // Create user first
       await cortex.users.update(userId, { displayName: "Alice" });
@@ -168,7 +182,7 @@ describe("Users API (Coordination Layer)", () => {
     });
 
     it("updates a user profile and increments version", async () => {
-      const userId = "test-user-update-" + Date.now();
+      const userId = ctx.userId("update");
 
       // Create initial version
       await cortex.users.update(userId, {
@@ -209,20 +223,21 @@ describe("Users API (Coordination Layer)", () => {
   describe("list() and count()", () => {
     it("lists all users", async () => {
       // Create unique users for this test
-      const userId1 = "test-user-list-1-" + Date.now();
-      const userId2 = "test-user-list-2-" + Date.now();
-      const userId3 = "test-user-list-3-" + Date.now();
+      const userId1 = ctx.userId("list-1");
+      const userId2 = ctx.userId("list-2");
+      const userId3 = ctx.userId("list-3");
 
       await cortex.users.update(userId1, { name: "Bob" });
       await cortex.users.update(userId2, { name: "Charlie" });
       await cortex.users.update(userId3, { name: "Dave" });
 
-      const results = await cortex.users.list();
+      // Filter to only users from this test run for accurate count
+      const testRunUsers = await listUsers(cortex, ctx);
 
-      expect(results.length).toBeGreaterThanOrEqual(3);
-      expect(results.some((u) => u.id === userId1)).toBe(true);
-      expect(results.some((u) => u.id === userId2)).toBe(true);
-      expect(results.some((u) => u.id === userId3)).toBe(true);
+      expect(testRunUsers.length).toBeGreaterThanOrEqual(3);
+      expect(testRunUsers.some((u) => u.id === userId1)).toBe(true);
+      expect(testRunUsers.some((u) => u.id === userId2)).toBe(true);
+      expect(testRunUsers.some((u) => u.id === userId3)).toBe(true);
     });
 
     it("lists users with limit", async () => {
@@ -232,16 +247,17 @@ describe("Users API (Coordination Layer)", () => {
     });
 
     it("counts users", async () => {
-      const count = await cortex.users.count();
+      // Use filtered count for parallel-safe assertion
+      const testRunUserCount = await countUsers(cortex, ctx);
 
-      // Should have at least some users from previous tests
-      expect(count).toBeGreaterThanOrEqual(1);
+      // Should have users from this test run's previous tests
+      expect(testRunUserCount).toBeGreaterThanOrEqual(1);
     });
   });
 
   describe("exists()", () => {
     it("returns true for existing user", async () => {
-      const userId = "test-user-exists-" + Date.now();
+      const userId = ctx.userId("exists");
       await cortex.users.update(userId, { name: "Exists Test" });
 
       const exists = await cortex.users.exists(userId);
@@ -262,7 +278,7 @@ describe("Users API (Coordination Layer)", () => {
 
   describe("getVersion() and getHistory()", () => {
     it("retrieves specific version", async () => {
-      const userId = "version-test-user-" + Date.now();
+      const userId = ctx.userId("version-test");
 
       // Create user with multiple versions
       await cortex.users.update(userId, { name: "Version 1" });
@@ -287,7 +303,7 @@ describe("Users API (Coordination Layer)", () => {
     });
 
     it("retrieves version history", async () => {
-      const userId = "version-history-user-" + Date.now();
+      const userId = ctx.userId("version-history");
 
       // Create user with multiple versions
       await cortex.users.update(userId, { name: "Version 1" });
@@ -331,7 +347,7 @@ describe("Users API (Coordination Layer)", () => {
     });
 
     it("retrieves version at timestamp", async () => {
-      const userId = "version-timestamp-user-" + Date.now();
+      const userId = ctx.userId("version-timestamp");
 
       // Create user with multiple versions
       await cortex.users.update(userId, { name: "Version 1" });
@@ -352,7 +368,7 @@ describe("Users API (Coordination Layer)", () => {
 
   describe("delete() - simple mode", () => {
     it("deletes user profile only (no cascade)", async () => {
-      const userId = "simple-delete-user-" + Date.now();
+      const userId = ctx.userId("simple-delete");
       await cortex.users.update(userId, { name: "To Delete" });
 
       const result = await cortex.users.delete(userId);
@@ -378,8 +394,8 @@ describe("Users API (Coordination Layer)", () => {
 
   describe("delete() - cascade mode", () => {
     it("performs cascade deletion across all layers", async () => {
-      const CASCADE_USER_ID = "cascade-test-user-" + Date.now();
-      const CASCADE_SPACE_ID = "cascade-test-space-" + Date.now();
+      const CASCADE_USER_ID = ctx.userId("cascade-test");
+      const CASCADE_SPACE_ID = ctx.memorySpaceId("cascade-test");
 
       // Create user
       await cortex.users.update(CASCADE_USER_ID, { name: "Cascade Test" });
@@ -395,16 +411,18 @@ describe("Users API (Coordination Layer)", () => {
 
       // Create immutable record with userId
       await cortex.immutable.store({
-        type: "feedback",
-        id: "feedback-cascade-" + Date.now(),
+        type: ctx.immutableType("feedback"),
+        id: ctx.immutableId("feedback-cascade"),
         data: { rating: 5 },
         userId: CASCADE_USER_ID,
       });
 
       // Create mutable record with userId
+      // Note: Using standard "user-sessions" namespace so cascade deletion can find it
+      // (cascade deletion only searches predefined common namespaces)
       await cortex.mutable.set(
         "user-sessions",
-        "session-cascade-" + Date.now(),
+        ctx.mutableKey("session-cascade"),
         { active: true },
         CASCADE_USER_ID,
       );
@@ -555,7 +573,7 @@ describe("Users API (Coordination Layer)", () => {
 
   describe("delete() - dry run mode", () => {
     it("previews deletion without actually deleting", async () => {
-      const userId = "dry-run-test-user-" + Date.now();
+      const userId = ctx.userId("dry-run-test");
 
       // Create user with data
       await cortex.users.update(userId, { name: "Dry Run Test" });
@@ -579,7 +597,7 @@ describe("Users API (Coordination Layer)", () => {
 
   describe("delete() - verification", () => {
     it("runs verification step after deletion", async () => {
-      const userId = "verify-test-user-" + Date.now();
+      const userId = ctx.userId("verify-test");
       await cortex.users.update(userId, { name: "Verify Test" });
 
       const result = await cortex.users.delete(userId, {
@@ -610,7 +628,7 @@ describe("Users API (Coordination Layer)", () => {
     });
 
     it("skips verification when disabled", async () => {
-      const userId = "verify-skip-user-" + Date.now();
+      const userId = ctx.userId("verify-skip");
       await cortex.users.update(userId, { name: "Skip Verify" });
 
       const result = await cortex.users.delete(userId, {
@@ -629,8 +647,8 @@ describe("Users API (Coordination Layer)", () => {
 
   describe("export()", () => {
     it("exports users as JSON", async () => {
-      const userId1 = "export-user-json-1-" + Date.now();
-      const userId2 = "export-user-json-2-" + Date.now();
+      const userId1 = ctx.userId("export-json-1");
+      const userId2 = ctx.userId("export-json-2");
 
       await cortex.users.update(userId1, { name: "Export 1" });
       await cortex.users.update(userId2, { name: "Export 2" });
@@ -647,7 +665,7 @@ describe("Users API (Coordination Layer)", () => {
     });
 
     it("exports users as CSV", async () => {
-      const userId = "export-user-csv-" + Date.now();
+      const userId = ctx.userId("export-csv");
       await cortex.users.update(userId, { name: "Export CSV" });
 
       const result = await cortex.users.export({
@@ -724,7 +742,7 @@ describe("Users API (Coordination Layer)", () => {
 
       it("should accept valid userId and data", async () => {
         // Should succeed
-        const result = await cortex.users.update("valid-user-" + Date.now(), {
+        const result = await cortex.users.update(ctx.userId("valid"), {
           name: "Test",
         });
         expect(result.id).toBeTruthy();
@@ -739,7 +757,7 @@ describe("Users API (Coordination Layer)", () => {
       });
 
       it("should accept valid options", async () => {
-        const userId = "delete-test-" + Date.now();
+        const userId = ctx.userId("delete-test");
         await cortex.users.update(userId, { name: "Test" });
 
         const result = await cortex.users.delete(userId, {
@@ -847,13 +865,13 @@ describe("Users API (Coordination Layer)", () => {
       });
 
       it("should accept valid userId with no defaults", async () => {
-        const result = await cortex.users.getOrCreate("new-user-" + Date.now());
+        const result = await cortex.users.getOrCreate(ctx.userId("no-defaults"));
         expect(result).toBeDefined();
       });
 
       it("should accept valid userId with defaults", async () => {
         const result = await cortex.users.getOrCreate(
-          "new-user-" + Date.now(),
+          ctx.userId("with-defaults"),
           { name: "Test" },
         );
         expect(result).toBeDefined();
@@ -986,16 +1004,18 @@ describe("Users API (Coordination Layer)", () => {
 
   describe("edge cases", () => {
     it("handles deletion of non-existent user gracefully", async () => {
-      const result = await cortex.users.delete("non-existent-user-xyz", {
+      // Use a unique ID that definitely doesn't exist
+      const nonExistentUserId = ctx.userId("nonexistent-xyz");
+      const result = await cortex.users.delete(nonExistentUserId, {
         cascade: true,
       });
 
-      expect(result.userId).toBe("non-existent-user-xyz");
+      expect(result.userId).toBe(nonExistentUserId);
       expect(result.totalDeleted).toBe(0);
     });
 
     it("handles user with no associated data", async () => {
-      const userId = "isolated-user-" + Date.now();
+      const userId = ctx.userId("isolated");
       await cortex.users.update(userId, { name: "Isolated" });
 
       const result = await cortex.users.delete(userId, {
@@ -1007,7 +1027,7 @@ describe("Users API (Coordination Layer)", () => {
     });
 
     it("handles concurrent updates correctly", async () => {
-      const userId = "concurrent-user-" + Date.now();
+      const userId = ctx.userId("concurrent");
       await cortex.users.update(userId, { name: "Initial" });
 
       // Simulate concurrent updates
@@ -1033,9 +1053,9 @@ describe("Users API (Coordination Layer)", () => {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   describe("integration with other APIs", () => {
-    const INTEGRATION_TIMESTAMP = Date.now();
-    const INTEGRATION_USER_ID = `integration-test-user-${INTEGRATION_TIMESTAMP}`;
-    const INTEGRATION_SPACE_ID = `integration-test-space-${INTEGRATION_TIMESTAMP}`;
+    // Use ctx generators for isolated test IDs
+    const INTEGRATION_USER_ID = ctx.userId("integration");
+    const INTEGRATION_SPACE_ID = ctx.memorySpaceId("integration");
 
     beforeAll(async () => {
       // Create user
@@ -1149,9 +1169,9 @@ describe("Users API (Coordination Layer)", () => {
     beforeEach(async () => {
       // Cleanup user if exists
       try {
-        const user = await cortex.users.get("new-user-123");
+        const user = await cortex.users.get(ctx.userId("new-api-methods"));
         if (user) {
-          await cortex.users.delete("new-user-123");
+          await cortex.users.delete(ctx.userId("new-api-methods"));
         }
       } catch (_error) {
         // User doesn't exist, continue
@@ -1160,14 +1180,14 @@ describe("Users API (Coordination Layer)", () => {
 
     describe("getOrCreate()", () => {
       it("creates user with defaults if doesn't exist", async () => {
-        const result = await cortex.users.getOrCreate("new-user-123", {
+        const result = await cortex.users.getOrCreate(ctx.userId("new-api-methods"), {
           displayName: "New User",
           preferences: { theme: "light" },
           metadata: { tier: "free" },
         });
 
         expect(result).toBeDefined();
-        expect(result.id).toBe("new-user-123");
+        expect(result.id).toBe(ctx.userId("new-api-methods"));
         expect((result.data as any).displayName).toBe("New User");
         expect((result.data as any).preferences.theme).toBe("light");
         expect(result.version).toBe(1);
@@ -1175,13 +1195,13 @@ describe("Users API (Coordination Layer)", () => {
 
       it("returns existing user without modifications", async () => {
         // Create user first
-        await cortex.users.update("new-user-123", {
+        await cortex.users.update(ctx.userId("new-api-methods"), {
           displayName: "Existing User",
           email: "existing@example.com",
         });
 
         // getOrCreate should return existing without modification
-        const result = await cortex.users.getOrCreate("new-user-123", {
+        const result = await cortex.users.getOrCreate(ctx.userId("new-api-methods"), {
           displayName: "Default User", // Won't be used
         });
 
@@ -1190,10 +1210,10 @@ describe("Users API (Coordination Layer)", () => {
       });
 
       it("creates user with empty defaults if not provided", async () => {
-        const result = await cortex.users.getOrCreate("new-user-123");
+        const result = await cortex.users.getOrCreate(ctx.userId("new-api-methods"));
 
         expect(result).toBeDefined();
-        expect(result.id).toBe("new-user-123");
+        expect(result.id).toBe(ctx.userId("new-api-methods"));
         expect(result.data).toEqual({});
         expect(result.version).toBe(1);
       });
@@ -1202,7 +1222,7 @@ describe("Users API (Coordination Layer)", () => {
     describe("merge()", () => {
       it("deep merges nested objects", async () => {
         // Create user with initial data
-        await cortex.users.update("new-user-123", {
+        await cortex.users.update(ctx.userId("new-api-methods"), {
           displayName: "Alex",
           preferences: {
             theme: "dark",
@@ -1214,7 +1234,7 @@ describe("Users API (Coordination Layer)", () => {
         });
 
         // Merge new preferences
-        const result = await cortex.users.merge("new-user-123", {
+        const result = await cortex.users.merge(ctx.userId("new-api-methods"), {
           preferences: {
             notifications: true, // New field
           },
@@ -1232,12 +1252,12 @@ describe("Users API (Coordination Layer)", () => {
       });
 
       it("overwrites non-object values", async () => {
-        await cortex.users.update("new-user-123", {
+        await cortex.users.update(ctx.userId("new-api-methods"), {
           displayName: "Old Name",
           tier: "free",
         });
 
-        const result = await cortex.users.merge("new-user-123", {
+        const result = await cortex.users.merge(ctx.userId("new-api-methods"), {
           displayName: "New Name",
           tier: "pro",
         });
@@ -1247,7 +1267,7 @@ describe("Users API (Coordination Layer)", () => {
       });
 
       it("handles merging into non-existent user", async () => {
-        const result = await cortex.users.merge("new-user-123", {
+        const result = await cortex.users.merge(ctx.userId("new-api-methods"), {
           displayName: "Created User",
         });
 
@@ -1256,7 +1276,7 @@ describe("Users API (Coordination Layer)", () => {
       });
 
       it("handles complex nested merges", async () => {
-        await cortex.users.update("new-user-123", {
+        await cortex.users.update(ctx.userId("new-api-methods"), {
           settings: {
             ui: {
               theme: "dark",
@@ -1268,7 +1288,7 @@ describe("Users API (Coordination Layer)", () => {
           },
         });
 
-        const result = await cortex.users.merge("new-user-123", {
+        const result = await cortex.users.merge(ctx.userId("new-api-methods"), {
           settings: {
             ui: {
               fontSize: 16, // Update nested value

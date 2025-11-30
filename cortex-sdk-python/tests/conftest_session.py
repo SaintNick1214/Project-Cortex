@@ -16,13 +16,13 @@ def pytest_sessionstart(session):
     convex_url = os.getenv("CONVEX_URL")
     if not convex_url:
         return
-    
+
     print("\n🧹 [Cleanup] Purging all test data before test run...")
-    
+
     # Run async cleanup with timeout
     from cortex import Cortex, CortexConfig
     from tests.helpers import TestCleanup
-    
+
     async def cleanup():
         client = Cortex(CortexConfig(convex_url=convex_url))
         cleanup_helper = TestCleanup(client)
@@ -39,7 +39,7 @@ def pytest_sessionstart(session):
                 await client.close()
             except:
                 pass
-    
+
     # Run the async cleanup
     try:
         asyncio.run(cleanup())
@@ -55,13 +55,13 @@ def pytest_sessionfinish(session, exitstatus):
     convex_url = os.getenv("CONVEX_URL")
     if not convex_url:
         return
-    
+
     print("\n🧹 [Cleanup] Purging all test data after test run...")
-    
+
     # Run async cleanup with timeout
     from cortex import Cortex, CortexConfig
     from tests.helpers import TestCleanup
-    
+
     async def cleanup():
         client = Cortex(CortexConfig(convex_url=convex_url))
         cleanup_helper = TestCleanup(client)
@@ -78,7 +78,7 @@ def pytest_sessionfinish(session, exitstatus):
                 await client.close()
             except:
                 pass
-    
+
     # Run the async cleanup
     try:
         asyncio.run(cleanup())

@@ -10,11 +10,12 @@ Tests validate:
 - Orphan detection
 """
 
-import pytest
 import time
-from cortex import RememberParams, ForgetOptions
-from tests.helpers import TestCleanup, create_test_memory_input
 
+import pytest
+
+from cortex import ForgetOptions, RememberParams
+from tests.helpers import create_test_memory_input
 
 # ============================================================================
 # Remember Integration Tests
@@ -32,7 +33,7 @@ async def test_remember_creates_conversation_and_memories(cortex_client, test_id
     memory_space_id = test_ids["memory_space_id"]
     conversation_id = test_ids["conversation_id"]
     user_id = test_ids["user_id"]
-    
+
     # Remember creates conversation + memories
     result = await cortex_client.memory.remember(
         RememberParams(
@@ -44,22 +45,22 @@ async def test_remember_creates_conversation_and_memories(cortex_client, test_id
             user_name="Tester",
         )
     )
-    
+
     # Verify conversation was created
     conv = await cortex_client.conversations.get(conversation_id)
     assert conv is not None
     assert conv.message_count == 2
-    
+
     # Verify memories were created
     assert len(result.memories) == 2
-    
+
     # Verify linkage - memories should reference conversation
     for memory in result.memories:
         assert memory.conversation_ref is not None
         # conversation_ref is a dict after conversion
         conv_id = memory.conversation_ref.get("conversation_id") if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
         assert conv_id == conversation_id
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(memory_space_id)
 
@@ -75,7 +76,7 @@ async def test_forget_deletes_both_layers(cortex_client, test_ids, cleanup_helpe
     memory_space_id = test_ids["memory_space_id"]
     conversation_id = test_ids["conversation_id"]
     user_id = test_ids["user_id"]
-    
+
     # Remember
     result = await cortex_client.memory.remember(
         RememberParams(
@@ -87,9 +88,9 @@ async def test_forget_deletes_both_layers(cortex_client, test_ids, cleanup_helpe
             user_name="Tester",
         )
     )
-    
+
     memory_id = result.memories[0].memory_id
-    
+
     # Forget with conversation deletion
     forget_result = await cortex_client.memory.forget(
         memory_space_id,
@@ -99,15 +100,15 @@ async def test_forget_deletes_both_layers(cortex_client, test_ids, cleanup_helpe
             delete_entire_conversation=True,
         ),
     )
-    
+
     # Both should be deleted
     assert forget_result.memory_deleted is True
     assert forget_result.conversation_deleted is True
-    
+
     # Verify conversation is gone
     conv = await cortex_client.conversations.get(conversation_id)
     assert conv is None
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(memory_space_id)
 
@@ -123,9 +124,9 @@ async def test_cross_layer_reference_integrity(cortex_client, test_ids, cleanup_
     memory_space_id = test_ids["memory_space_id"]
     conversation_id = test_ids["conversation_id"]
     user_id = test_ids["user_id"]
-    
+
     # Create conversation
-    from cortex import CreateConversationInput, ConversationParticipants
+    from cortex import ConversationParticipants, CreateConversationInput
     conv = await cortex_client.conversations.create(
         CreateConversationInput(
             conversation_id=conversation_id,
@@ -134,7 +135,7 @@ async def test_cross_layer_reference_integrity(cortex_client, test_ids, cleanup_
             participants=ConversationParticipants(user_id=user_id),
         )
     )
-    
+
     # Add messages
     from cortex import AddMessageInput
     await cortex_client.conversations.add_message(
@@ -144,9 +145,9 @@ async def test_cross_layer_reference_integrity(cortex_client, test_ids, cleanup_
             content="Test message",
         )
     )
-    
+
     # Create memory referencing conversation
-    from cortex import StoreMemoryInput, MemorySource, MemoryMetadata, ConversationRef
+    from cortex import ConversationRef, MemoryMetadata, MemorySource, StoreMemoryInput
     memory = await cortex_client.vector.store(
         memory_space_id,
         StoreMemoryInput(
@@ -160,17 +161,17 @@ async def test_cross_layer_reference_integrity(cortex_client, test_ids, cleanup_
             metadata=MemoryMetadata(importance=50, tags=["test"]),
         ),
     )
-    
+
     # Verify reference exists
     assert memory.conversation_ref is not None
     # conversation_ref is a dict after conversion
     conv_id = memory.conversation_ref.get("conversation_id") if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
     assert conv_id == conversation_id
-    
+
     # Get conversation - verify it exists
     conv_check = await cortex_client.conversations.get(conversation_id)
     assert conv_check is not None
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(memory_space_id)
 
@@ -186,7 +187,7 @@ async def test_memory_facts_linkage(cortex_client, test_ids, cleanup_helper):
     memory_space_id = test_ids["memory_space_id"]
     conversation_id = test_ids["conversation_id"]
     user_id = test_ids["user_id"]
-    
+
     # Define fact extraction
     async def extract_facts(user_msg, agent_msg):
         return [
@@ -196,7 +197,7 @@ async def test_memory_facts_linkage(cortex_client, test_ids, cleanup_helper):
                 "confidence": 90,
             }
         ]
-    
+
     # Remember with fact extraction
     result = await cortex_client.memory.remember(
         RememberParams(
@@ -209,17 +210,17 @@ async def test_memory_facts_linkage(cortex_client, test_ids, cleanup_helper):
             extract_facts=extract_facts,
         )
     )
-    
+
     # Verify memories created
     assert len(result.memories) == 2
-    
+
     # Verify facts created
     assert len(result.facts) > 0
-    
+
     # Verify linkage - facts should be in same memory space
     fact = result.facts[0]
     assert fact.memory_space_id == memory_space_id
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(memory_space_id)
 
@@ -235,10 +236,10 @@ async def test_user_cascade_affects_all_layers(cortex_client, test_ids, cleanup_
     memory_space_id = test_ids["memory_space_id"]
     conversation_id = test_ids["conversation_id"]
     user_id = test_ids["user_id"]
-    
+
     # Create user profile
     await cortex_client.users.update(user_id, {"displayName": "Cascade Test"})
-    
+
     # Create memories
     await cortex_client.memory.remember(
         RememberParams(
@@ -250,31 +251,31 @@ async def test_user_cascade_affects_all_layers(cortex_client, test_ids, cleanup_
             user_name="Tester",
         )
     )
-    
+
     # Count memories before
     mem_count_before = await cortex_client.vector.count(
         memory_space_id,
         user_id=user_id,
     )
     assert mem_count_before > 0
-    
+
     # Delete user with cascade
     from cortex import DeleteUserOptions
     delete_result = await cortex_client.users.delete(
         user_id,
         DeleteUserOptions(cascade=True),
     )
-    
+
     # Should have deleted from multiple layers
     assert delete_result.total_deleted > 0
-    
+
     # Count memories after - should be 0
     mem_count_after = await cortex_client.vector.count(
         memory_space_id,
         user_id=user_id,
     )
     assert mem_count_after == 0
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(memory_space_id)
 
@@ -290,37 +291,37 @@ async def test_memory_space_isolation(cortex_client, test_ids, cleanup_helper):
     space_1 = test_ids["memory_space_id"]
     space_2 = space_1 + "-isolated"
     user_id = test_ids["user_id"]
-    
+
     # Create memory in space 1
     mem1 = await cortex_client.vector.store(
         space_1,
         create_test_memory_input(content="Space 1 memory"),
     )
-    
+
     # Create memory in space 2
     mem2 = await cortex_client.vector.store(
         space_2,
         create_test_memory_input(content="Space 2 memory"),
     )
-    
+
     # List space 1 - should only see space 1 memory
     list1 = await cortex_client.vector.list(space_1, limit=100)
     memories1 = list1 if isinstance(list1, list) else list1.get("memories", [])
-    
+
     # Verify space 1 only has its own memories
     for mem in memories1:
         mem_space = mem.get("memory_space_id") if isinstance(mem, dict) else mem.memory_space_id
         assert mem_space == space_1
-    
+
     # List space 2 - should only see space 2 memory
     list2 = await cortex_client.vector.list(space_2, limit=100)
     memories2 = list2 if isinstance(list2, list) else list2.get("memories", [])
-    
+
     # Verify space 2 only has its own memories
     for mem in memories2:
         mem_space = mem.get("memory_space_id") if isinstance(mem, dict) else mem.memory_space_id
         assert mem_space == space_2
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(space_1)
     await cleanup_helper.purge_memory_space(space_2)

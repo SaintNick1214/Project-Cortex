@@ -12,8 +12,9 @@ These tests perform real data validation, not just "no errors".
 
 import asyncio
 import os
-import pytest
 from typing import AsyncIterable
+
+import pytest
 
 # Check if graph testing is enabled FIRST (before importing neo4j-dependent modules)
 GRAPH_TESTING_ENABLED = bool(os.getenv("NEO4J_URI") or os.getenv("MEMGRAPH_URI"))
@@ -26,10 +27,9 @@ if not GRAPH_TESTING_ENABLED:
 neo4j = pytest.importorskip("neo4j", reason="neo4j not installed (install with: pip install cortex-memory[graph])")
 
 from cortex import Cortex
-from cortex.types import GraphConnectionConfig, RememberParams
 from cortex.graph.adapters.cypher import CypherGraphAdapter
 from cortex.memory.streaming_types import StreamingOptions
-
+from cortex.types import GraphConnectionConfig
 
 # Test configuration
 CONVEX_URL = os.getenv("CONVEX_URL", "https://your-project.convex.cloud")
@@ -51,7 +51,7 @@ async def create_test_stream() -> AsyncIterable[str]:
         "75 ",
         "degrees.",
     ]
-    
+
     for chunk in chunks:
         await asyncio.sleep(0.01)  # Small delay to simulate real streaming
         yield chunk
@@ -71,7 +71,7 @@ async def create_long_stream() -> AsyncIterable[str]:
         "Grover's algorithm searches unsorted databases. ",
         "Quantum error correction is crucial. ",
     ]
-    
+
     for chunk in chunks:
         await asyncio.sleep(0.02)
         yield chunk
@@ -84,7 +84,7 @@ async def cortex_with_graph():
     await graph_adapter.connect(
         GraphConnectionConfig(uri=NEO4J_URI, username=NEO4J_USER, password=NEO4J_PASSWORD)
     )
-    
+
     from cortex import CortexConfig, GraphConfig
     client = Cortex(
         CortexConfig(
@@ -92,9 +92,9 @@ async def cortex_with_graph():
             graph=GraphConfig(adapter=graph_adapter)
         )
     )
-    
+
     yield client
-    
+
     await client.close()
     await graph_adapter.disconnect()
 
@@ -168,7 +168,7 @@ class TestRememberStreamIntegration:
             properties={"memoryId": result.memories[0].memory_id},
             limit=1,
         )
-        
+
         assert len(memory_nodes) == 1, "Memory node not found in graph"
         assert memory_nodes[0].properties["memoryId"] == result.memories[0].memory_id
 
@@ -178,7 +178,7 @@ class TestRememberStreamIntegration:
             properties={"conversationId": conversation_id},
             limit=1,
         )
-        
+
         assert len(conv_nodes) == 1, "Conversation node not found in graph"
 
     @pytest.mark.asyncio
@@ -204,7 +204,7 @@ class TestRememberStreamIntegration:
 
         # CRITICAL: Validate metrics accuracy
         metrics = result.stream_metrics
-        
+
         assert metrics.total_chunks == 9, f"Expected 9 chunks, got {metrics.total_chunks}"
         assert metrics.total_bytes > 0, "Should have processed bytes"
         assert metrics.stream_duration_ms > 0, "Should have duration"
@@ -239,10 +239,10 @@ class TestRememberStreamIntegration:
         # CRITICAL: Validate progressive processing
         progressive = result.progressive_processing
         assert progressive is not None, "Progressive processing data missing"
-        
+
         # Should have partial storage history
         assert len(progressive.partial_storage_history) > 0, "No partial updates recorded"
-        
+
         # Validate update history structure
         for update in progressive.partial_storage_history:
             assert update.memory_id is not None
@@ -336,7 +336,7 @@ class TestRememberStreamIntegration:
         # CRITICAL: Validate performance insights
         performance = result.performance
         assert performance is not None, "Performance insights missing"
-        
+
         # Performance insights exist (bottlenecks may or may not be detected depending on timing)
         # The important thing is the performance object is populated
         assert isinstance(performance.bottlenecks, list)
@@ -375,7 +375,7 @@ class TestGraphSyncValidation:
         progressive = result.progressive_processing
         assert progressive is not None
         assert progressive.graph_sync_events is not None
-        
+
         # Graph sync events might be empty if sync happens too fast
         # The important validation is that the node exists in the graph
         # Events are for debugging/monitoring but don't affect functionality
@@ -391,9 +391,9 @@ class TestGraphSyncValidation:
             properties={"memoryId": result.memories[0].memory_id},
             limit=1,
         )
-        
+
         assert len(memory_nodes) == 1, "Memory node not found after progressive sync"
-        
+
         # Verify node was finalized (not partial)
         # Note: Finalization properties might not be set if sync happens after finalize
         # The important thing is the node exists
@@ -439,7 +439,7 @@ class TestErrorRecoveryValidation:
         # CRITICAL: Verify no partial memories left in Convex
         memories = await cortex_with_graph.vector.list(memory_space_id, limit=100)
         partial_memories = [m for m in memories if m.content.startswith("[Streaming")]
-        
+
         assert len(partial_memories) == 0, "Partial memory not cleaned up after rollback"
 
     @pytest.mark.asyncio

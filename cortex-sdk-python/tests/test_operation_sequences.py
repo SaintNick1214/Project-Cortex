@@ -8,17 +8,17 @@ Tests multi-step operation sequences to ensure state consistency at EACH step:
 4. Concurrent sequences don't corrupt state
 """
 
-import pytest
 import asyncio
+
 from cortex.types import (
-    CreateConversationInput,
-    StoreMemoryInput,
-    StoreFactParams,
-    ContextInput,
-    RegisterMemorySpaceParams,
     AddMessageInput,
-    RememberParams,
+    ContextInput,
+    CreateConversationInput,
     DeleteUserOptions,
+    RegisterMemorySpaceParams,
+    RememberParams,
+    StoreFactParams,
+    StoreMemoryInput,
 )
 
 
@@ -765,7 +765,6 @@ class TestComplexWorkflows:
 
     async def test_complete_user_journey(self, cortex_client):
         """Test complete user journey maintains consistency."""
-        import time
         space_id = generate_test_id("seq-journey-")
         user_id = "journey-user"
 

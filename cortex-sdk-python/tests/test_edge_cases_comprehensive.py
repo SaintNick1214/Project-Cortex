@@ -7,22 +7,23 @@ and boundary conditions.
 Port of: tests/edgeCases.test.ts
 """
 
-import pytest
-import time
 import os
+import time
+
+import pytest
+
 from cortex import Cortex, CortexConfig
 from cortex.types import (
-    StoreMemoryInput,
-    MemorySource,
-    MemoryMetadata,
-    StoreFactParams,
-    ImmutableEntry,
-    CreateConversationInput,
-    ConversationParticipants,
     ContextInput,
+    ConversationParticipants,
+    CreateConversationInput,
+    ImmutableEntry,
+    MemoryMetadata,
+    MemorySource,
+    StoreFactParams,
+    StoreMemoryInput,
 )
 from tests.helpers import TestCleanup
-
 
 TEST_MEMSPACE_ID = "edge-cases-test-python"
 
@@ -33,11 +34,11 @@ async def edge_cortex():
     convex_url = os.getenv("CONVEX_URL", "http://127.0.0.1:3210")
     cortex = Cortex(CortexConfig(convex_url=convex_url))
     cleanup = TestCleanup(cortex)
-    
+
     await cleanup.purge_all()
-    
+
     yield cortex
-    
+
     await cleanup.purge_all()
     await cortex.close()
 
@@ -51,7 +52,7 @@ async def edge_cortex():
 async def test_handles_very_long_content_10kb_plus(edge_cortex):
     """Test handling very long content (10KB+). Port of: edgeCases.test.ts - line 32"""
     long_content = "A" * 10000
-    
+
     memory = await edge_cortex.vector.store(
         TEST_MEMSPACE_ID,
         StoreMemoryInput(
@@ -61,9 +62,9 @@ async def test_handles_very_long_content_10kb_plus(edge_cortex):
             metadata=MemoryMetadata(importance=50, tags=[]),
         ),
     )
-    
+
     assert len(memory.content) == 10000
-    
+
     stored = await edge_cortex.vector.get(TEST_MEMSPACE_ID, memory.memory_id)
     stored_content = stored.content if hasattr(stored, 'content') else stored.get("content")
     assert stored_content == long_content
@@ -74,7 +75,7 @@ async def test_handles_very_long_content_10kb_plus(edge_cortex):
 async def test_handles_very_long_fact_statements_10kb_plus(edge_cortex):
     """Test handling very long fact statements (10KB+). Port of: edgeCases.test.ts - line 49"""
     long_fact = "B" * 10000
-    
+
     fact = await edge_cortex.facts.store(
         StoreFactParams(
             memory_space_id=TEST_MEMSPACE_ID,
@@ -85,7 +86,7 @@ async def test_handles_very_long_fact_statements_10kb_plus(edge_cortex):
             source_type="system",
         )
     )
-    
+
     assert len(fact.fact) == 10000
 
 
@@ -93,7 +94,7 @@ async def test_handles_very_long_fact_statements_10kb_plus(edge_cortex):
 async def test_handles_long_array_of_tags_100_plus_tags(edge_cortex):
     """Test handling long array of tags (100+ tags). Port of: edgeCases.test.ts - line 67"""
     tags = [f"tag-{i}" for i in range(100)]
-    
+
     memory = await edge_cortex.vector.store(
         TEST_MEMSPACE_ID,
         StoreMemoryInput(
@@ -106,9 +107,9 @@ async def test_handles_long_array_of_tags_100_plus_tags(edge_cortex):
             ),
         ),
     )
-    
+
     assert len(memory.tags) == 100
-    
+
     stored = await edge_cortex.vector.get(TEST_MEMSPACE_ID, memory.memory_id)
     stored_tags = stored.tags if hasattr(stored, 'tags') else stored.get("tags")
     assert len(stored_tags) == 100
@@ -119,7 +120,7 @@ async def test_handles_long_array_of_tags_100_plus_tags(edge_cortex):
 async def test_handles_very_long_participant_id(edge_cortex):
     """Test handling very long participant ID. Port of: edgeCases.test.ts - line 87"""
     long_participant_id = "participant-" + "x" * 200
-    
+
     memory = await edge_cortex.vector.store(
         TEST_MEMSPACE_ID,
         StoreMemoryInput(
@@ -130,7 +131,7 @@ async def test_handles_very_long_participant_id(edge_cortex):
             metadata=MemoryMetadata(importance=50, tags=[]),
         ),
     )
-    
+
     assert memory.participant_id == long_participant_id
 
 
@@ -143,7 +144,7 @@ async def test_handles_very_long_participant_id(edge_cortex):
 async def test_handles_unicode_emoji_in_content(edge_cortex):
     """Test handling Unicode emoji in content. Port of: edgeCases.test.ts - line 106"""
     unicode_content = "Hello 👋 world 🌍 with emoji 🎉 and symbols ∑∫√"
-    
+
     memory = await edge_cortex.vector.store(
         TEST_MEMSPACE_ID,
         StoreMemoryInput(
@@ -153,7 +154,7 @@ async def test_handles_unicode_emoji_in_content(edge_cortex):
             metadata=MemoryMetadata(importance=50, tags=[]),
         ),
     )
-    
+
     stored = await edge_cortex.vector.get(TEST_MEMSPACE_ID, memory.memory_id)
     stored_content = stored.content if hasattr(stored, 'content') else stored.get("content")
     assert stored_content == unicode_content
@@ -163,7 +164,7 @@ async def test_handles_unicode_emoji_in_content(edge_cortex):
 async def test_handles_special_characters_in_ids(edge_cortex):
     """Test handling special characters in IDs. Port of: edgeCases.test.ts - line 127"""
     special_id = "test-id-with-dash_underscore.period"
-    
+
     immutable = await edge_cortex.immutable.store(
         ImmutableEntry(
             type="test-type",
@@ -171,9 +172,9 @@ async def test_handles_special_characters_in_ids(edge_cortex):
             data={"value": "test"},
         )
     )
-    
+
     assert immutable.id == special_id
-    
+
     retrieved = await edge_cortex.immutable.get("test-type", special_id)
     assert retrieved.id == special_id
 
@@ -182,7 +183,7 @@ async def test_handles_special_characters_in_ids(edge_cortex):
 async def test_handles_newlines_and_tabs_in_content(edge_cortex):
     """Test handling newlines and tabs in content. Port of: edgeCases.test.ts - line 148"""
     content_with_whitespace = "Line 1\nLine 2\n\tTabbed\r\nWindows newline"
-    
+
     memory = await edge_cortex.vector.store(
         TEST_MEMSPACE_ID,
         StoreMemoryInput(
@@ -192,7 +193,7 @@ async def test_handles_newlines_and_tabs_in_content(edge_cortex):
             metadata=MemoryMetadata(importance=50, tags=[]),
         ),
     )
-    
+
     stored = await edge_cortex.vector.get(TEST_MEMSPACE_ID, memory.memory_id)
     stored_content = stored.content if hasattr(stored, 'content') else stored.get("content")
     assert stored_content == content_with_whitespace
@@ -202,7 +203,7 @@ async def test_handles_newlines_and_tabs_in_content(edge_cortex):
 async def test_handles_json_special_characters(edge_cortex):
     """Test handling JSON special characters. Port of: edgeCases.test.ts - line 169"""
     content = 'Content with "quotes" and \\backslashes\\ and {curly braces}'
-    
+
     memory = await edge_cortex.vector.store(
         TEST_MEMSPACE_ID,
         StoreMemoryInput(
@@ -212,7 +213,7 @@ async def test_handles_json_special_characters(edge_cortex):
             metadata=MemoryMetadata(importance=50, tags=[]),
         ),
     )
-    
+
     stored = await edge_cortex.vector.get(TEST_MEMSPACE_ID, memory.memory_id)
     stored_content = stored.content if hasattr(stored, 'content') else stored.get("content")
     assert stored_content == content
@@ -235,7 +236,7 @@ async def test_handles_empty_tags_array(edge_cortex):
             metadata=MemoryMetadata(importance=50, tags=[]),
         ),
     )
-    
+
     assert memory.tags == []
 
 
@@ -251,7 +252,7 @@ async def test_handles_minimal_metadata(edge_cortex):
             metadata=MemoryMetadata(importance=0, tags=[]),
         ),
     )
-    
+
     assert memory.importance == 0
     assert memory.tags == []
 
@@ -266,9 +267,9 @@ async def test_handles_empty_data_object(edge_cortex):
             data={},
         )
     )
-    
+
     assert immutable.data == {}
-    
+
     retrieved = await edge_cortex.immutable.get("test-empty", "empty-data")
     assert retrieved.data == {}
 
@@ -290,7 +291,7 @@ async def test_handles_importance_zero(edge_cortex):
             metadata=MemoryMetadata(importance=0, tags=[]),
         ),
     )
-    
+
     assert memory.importance == 0
 
 
@@ -306,7 +307,7 @@ async def test_handles_importance_100(edge_cortex):
             metadata=MemoryMetadata(importance=100, tags=[]),
         ),
     )
-    
+
     assert memory.importance == 100
 
 
@@ -323,7 +324,7 @@ async def test_handles_confidence_zero(edge_cortex):
             source_type="system",
         )
     )
-    
+
     assert fact.confidence == 0
 
 
@@ -340,7 +341,7 @@ async def test_handles_confidence_100(edge_cortex):
             source_type="system",
         )
     )
-    
+
     assert fact.confidence == 100
 
 
@@ -353,7 +354,7 @@ async def test_handles_confidence_100(edge_cortex):
 async def test_handles_concurrent_memory_creation(edge_cortex):
     """Test handling concurrent memory creation. Port of: edgeCases.test.ts - line 333"""
     import asyncio
-    
+
     # Create 10 memories concurrently
     tasks = [
         edge_cortex.vector.store(
@@ -367,9 +368,9 @@ async def test_handles_concurrent_memory_creation(edge_cortex):
         )
         for i in range(10)
     ]
-    
+
     results = await asyncio.gather(*tasks)
-    
+
     assert len(results) == 10
     # All should have unique memory IDs
     memory_ids = [r.memory_id for r in results]
@@ -380,7 +381,7 @@ async def test_handles_concurrent_memory_creation(edge_cortex):
 async def test_handles_concurrent_fact_updates(edge_cortex):
     """Test handling concurrent fact updates. Port of: edgeCases.test.ts - line 363"""
     import asyncio
-    
+
     # Create initial fact
     fact = await edge_cortex.facts.store(
         StoreFactParams(
@@ -392,7 +393,7 @@ async def test_handles_concurrent_fact_updates(edge_cortex):
             source_type="system",
         )
     )
-    
+
     # Update concurrently (last write wins)
     tasks = [
         edge_cortex.facts.update(
@@ -402,9 +403,9 @@ async def test_handles_concurrent_fact_updates(edge_cortex):
         )
         for i in range(5)
     ]
-    
+
     results = await asyncio.gather(*tasks)
-    
+
     # All updates succeeded
     assert len(results) == 5
 
@@ -430,7 +431,7 @@ async def test_handles_deeply_nested_data_objects(edge_cortex):
             }
         }
     }
-    
+
     immutable = await edge_cortex.immutable.store(
         ImmutableEntry(
             type="nested-test",
@@ -438,7 +439,7 @@ async def test_handles_deeply_nested_data_objects(edge_cortex):
             data=nested_data,
         )
     )
-    
+
     retrieved = await edge_cortex.immutable.get("nested-test", "deep-nest")
     assert retrieved.data["level1"]["level2"]["level3"]["level4"]["level5"]["value"] == "deep nesting works"
 
@@ -451,7 +452,7 @@ async def test_handles_arrays_in_data(edge_cortex):
         "names": ["Alice", "Bob", "Charlie"],
         "nested": [[1, 2], [3, 4]],
     }
-    
+
     immutable = await edge_cortex.immutable.store(
         ImmutableEntry(
             type="array-test",
@@ -459,7 +460,7 @@ async def test_handles_arrays_in_data(edge_cortex):
             data=data_with_arrays,
         )
     )
-    
+
     retrieved = await edge_cortex.immutable.get("array-test", "arrays")
     assert retrieved.data["items"] == [1, 2, 3, 4, 5]
     assert retrieved.data["names"] == ["Alice", "Bob", "Charlie"]
@@ -474,7 +475,7 @@ async def test_handles_arrays_in_data(edge_cortex):
 async def test_handles_uuid_format_ids(edge_cortex):
     """Test handling UUID format IDs. Port of: edgeCases.test.ts - line 456"""
     uuid_id = "550e8400-e29b-41d4-a716-446655440000"
-    
+
     immutable = await edge_cortex.immutable.store(
         ImmutableEntry(
             type="uuid-test",
@@ -482,9 +483,9 @@ async def test_handles_uuid_format_ids(edge_cortex):
             data={"value": "uuid format"},
         )
     )
-    
+
     assert immutable.id == uuid_id
-    
+
     retrieved = await edge_cortex.immutable.get("uuid-test", uuid_id)
     assert retrieved.id == uuid_id
 
@@ -493,7 +494,7 @@ async def test_handles_uuid_format_ids(edge_cortex):
 async def test_handles_numeric_string_ids(edge_cortex):
     """Test handling numeric string IDs. Port of: edgeCases.test.ts - line 478"""
     numeric_id = "12345678901234567890"
-    
+
     immutable = await edge_cortex.immutable.store(
         ImmutableEntry(
             type="numeric-test",
@@ -501,7 +502,7 @@ async def test_handles_numeric_string_ids(edge_cortex):
             data={"value": "numeric id"},
         )
     )
-    
+
     assert immutable.id == numeric_id
 
 
@@ -523,7 +524,7 @@ async def test_handles_none_optional_fields(edge_cortex):
             # All optional fields omitted
         ),
     )
-    
+
     assert memory.participant_id is None
     assert memory.user_id is None
 
@@ -537,7 +538,7 @@ async def test_handles_none_optional_fields(edge_cortex):
 async def test_handles_very_old_timestamps(edge_cortex):
     """Test handling very old timestamps. Port of: edgeCases.test.ts - line 523"""
     old_timestamp = 946684800000  # Year 2000
-    
+
     memory = await edge_cortex.vector.store(
         TEST_MEMSPACE_ID,
         StoreMemoryInput(
@@ -547,7 +548,7 @@ async def test_handles_very_old_timestamps(edge_cortex):
             metadata=MemoryMetadata(importance=50, tags=[]),
         ),
     )
-    
+
     # Backend may override timestamp with current time for validation
     source_ts = memory.source_timestamp if hasattr(memory, 'source_timestamp') else memory.get("sourceTimestamp")
     assert source_ts is not None  # Just verify it exists
@@ -557,7 +558,7 @@ async def test_handles_very_old_timestamps(edge_cortex):
 async def test_handles_future_timestamps(edge_cortex):
     """Test handling future timestamps. Port of: edgeCases.test.ts - line 545"""
     future_timestamp = 2524608000000  # Year 2050
-    
+
     memory = await edge_cortex.vector.store(
         TEST_MEMSPACE_ID,
         StoreMemoryInput(
@@ -567,7 +568,7 @@ async def test_handles_future_timestamps(edge_cortex):
             metadata=MemoryMetadata(importance=50, tags=[]),
         ),
     )
-    
+
     # Backend may override timestamp with current time for validation
     source_ts = memory.source_timestamp if hasattr(memory, 'source_timestamp') else memory.get("sourceTimestamp")
     assert source_ts is not None  # Just verify it exists
@@ -582,7 +583,7 @@ async def test_handles_future_timestamps(edge_cortex):
 async def test_handles_all_content_types(edge_cortex):
     """Test handling all content types. Port of: edgeCases.test.ts - line 567"""
     content_types = ["raw", "summarized", "fact"]  # Backend supported types
-    
+
     for ct in content_types:
         memory = await edge_cortex.vector.store(
             TEST_MEMSPACE_ID,
@@ -593,7 +594,7 @@ async def test_handles_all_content_types(edge_cortex):
                 metadata=MemoryMetadata(importance=50, tags=[ct]),
             ),
         )
-        
+
         content_type = memory.content_type if hasattr(memory, 'content_type') else memory.get("contentType")
         assert content_type == ct
 
@@ -607,7 +608,7 @@ async def test_handles_all_content_types(edge_cortex):
 async def test_handles_all_source_types(edge_cortex):
     """Test handling all source types. Port of: edgeCases.test.ts - line 595"""
     source_types = ["conversation", "system", "tool", "a2a"]
-    
+
     for st in source_types:
         memory = await edge_cortex.vector.store(
             TEST_MEMSPACE_ID,
@@ -618,7 +619,7 @@ async def test_handles_all_source_types(edge_cortex):
                 metadata=MemoryMetadata(importance=50, tags=[st]),
             ),
         )
-        
+
         source_type = memory.source_type if hasattr(memory, 'source_type') else memory.get("sourceType")
         assert source_type == st
 
@@ -643,9 +644,9 @@ async def test_handles_bulk_memory_creation_50_plus(edge_cortex):
             ),
         )
         memories.append(mem)
-    
+
     assert len(memories) == 50
-    
+
     # All retrievable
     for mem in memories[:5]:  # Check first 5
         stored = await edge_cortex.vector.get(TEST_MEMSPACE_ID, mem.memory_id)
@@ -669,7 +670,7 @@ async def test_handles_bulk_fact_creation_50_plus(edge_cortex):
             )
         )
         facts.append(fact)
-    
+
     assert len(facts) == 50
 
 
@@ -683,7 +684,7 @@ async def test_handles_very_large_metadata_object(edge_cortex):
     """Test handling very large metadata object. Port of: edgeCases.test.ts - line 682"""
     # Backend only supports specific metadata fields, put large data in data instead
     large_data = {f"key{i}": f"value{i}" for i in range(100)}
-    
+
     immutable = await edge_cortex.immutable.store(
         ImmutableEntry(
             type="large-meta",
@@ -691,7 +692,7 @@ async def test_handles_very_large_metadata_object(edge_cortex):
             data=large_data,
         )
     )
-    
+
     retrieved = await edge_cortex.immutable.get("large-meta", "large-metadata")
     assert len(retrieved.data) == 100
 
@@ -707,11 +708,11 @@ async def test_handles_nonexistent_ids_gracefully(edge_cortex):
     # Get nonexistent memory (use valid ID format)
     memory = await edge_cortex.vector.get(TEST_MEMSPACE_ID, "mem-nonexistent-12345")
     assert memory is None
-    
+
     # Get nonexistent fact (use valid ID format: fact-*)
     fact = await edge_cortex.facts.get(TEST_MEMSPACE_ID, "fact-nonexistent-12345")
     assert fact is None
-    
+
     # Get nonexistent conversation (use valid ID format: conv-*)
     conv = await edge_cortex.conversations.get("conv-nonexistent-12345")
     assert conv is None
@@ -733,7 +734,7 @@ async def test_handles_rapid_version_updates_10_plus(edge_cortex):
             data={"version": 1},
         )
     )
-    
+
     # Rapidly update 10 times
     for i in range(2, 12):
         v = await edge_cortex.immutable.store(
@@ -743,10 +744,10 @@ async def test_handles_rapid_version_updates_10_plus(edge_cortex):
                 data={"version": i},
             )
         )
-    
+
     # Should be version 11 or higher (may have been run before)
     assert v.version >= 11
-    
+
     # Should have previous versions tracked
     assert len(v.previous_versions) > 0
 
@@ -760,7 +761,7 @@ async def test_handles_rapid_version_updates_10_plus(edge_cortex):
 async def test_handles_sql_injection_attempt_in_content(edge_cortex):
     """Test handling SQL injection attempt in content. Port of: edgeCases.test.ts - line 765"""
     sql_content = "'; DROP TABLE users; --"
-    
+
     memory = await edge_cortex.vector.store(
         TEST_MEMSPACE_ID,
         StoreMemoryInput(
@@ -770,7 +771,7 @@ async def test_handles_sql_injection_attempt_in_content(edge_cortex):
             metadata=MemoryMetadata(importance=50, tags=[]),
         ),
     )
-    
+
     # Should store safely
     stored = await edge_cortex.vector.get(TEST_MEMSPACE_ID, memory.memory_id)
     stored_content = stored.content if hasattr(stored, 'content') else stored.get("content")
@@ -781,7 +782,7 @@ async def test_handles_sql_injection_attempt_in_content(edge_cortex):
 async def test_handles_xss_attempt_in_content(edge_cortex):
     """Test handling XSS attempt in content. Port of: edgeCases.test.ts - line 788"""
     xss_content = "<script>alert('XSS')</script>"
-    
+
     memory = await edge_cortex.vector.store(
         TEST_MEMSPACE_ID,
         StoreMemoryInput(
@@ -791,7 +792,7 @@ async def test_handles_xss_attempt_in_content(edge_cortex):
             metadata=MemoryMetadata(importance=50, tags=[]),
         ),
     )
-    
+
     # Should store safely without executing
     stored = await edge_cortex.vector.get(TEST_MEMSPACE_ID, memory.memory_id)
     stored_content = stored.content if hasattr(stored, 'content') else stored.get("content")
@@ -815,7 +816,7 @@ async def test_handles_single_character_content(edge_cortex):
             metadata=MemoryMetadata(importance=50, tags=[]),
         ),
     )
-    
+
     assert memory.content == "A"
 
 
@@ -823,7 +824,7 @@ async def test_handles_single_character_content(edge_cortex):
 async def test_handles_content_with_only_spaces(edge_cortex):
     """Test handling content with only spaces. Port of: edgeCases.test.ts - line 832"""
     from cortex.vector.validators import VectorValidationError
-    
+
     # Whitespace-only content should be rejected by validation
     with pytest.raises(VectorValidationError) as exc_info:
         await edge_cortex.vector.store(
@@ -835,7 +836,7 @@ async def test_handles_content_with_only_spaces(edge_cortex):
                 metadata=MemoryMetadata(importance=50, tags=[]),
             ),
         )
-    
+
     assert "cannot be empty" in str(exc_info.value)
 
 
@@ -848,7 +849,7 @@ async def test_handles_content_with_only_spaces(edge_cortex):
 async def test_handles_mixed_language_content(edge_cortex):
     """Test handling mixed language content. Port of: edgeCases.test.ts - line 853"""
     mixed_content = "English, 中文, العربية, עברית, 日本語, 한국어, Русский"
-    
+
     memory = await edge_cortex.vector.store(
         TEST_MEMSPACE_ID,
         StoreMemoryInput(
@@ -858,7 +859,7 @@ async def test_handles_mixed_language_content(edge_cortex):
             metadata=MemoryMetadata(importance=50, tags=[]),
         ),
     )
-    
+
     stored = await edge_cortex.vector.get(TEST_MEMSPACE_ID, memory.memory_id)
     stored_content = stored.content if hasattr(stored, 'content') else stored.get("content")
     assert stored_content == mixed_content
@@ -873,7 +874,7 @@ async def test_handles_mixed_language_content(edge_cortex):
 async def test_handles_conversation_with_100_plus_messages(edge_cortex):
     """Test handling conversation with 100+ messages. Port of: edgeCases.test.ts - line 876"""
     from cortex.types import AddMessageInput
-    
+
     conv = await edge_cortex.conversations.create(
         CreateConversationInput(
             type="user-agent",
@@ -881,7 +882,7 @@ async def test_handles_conversation_with_100_plus_messages(edge_cortex):
             participants=ConversationParticipants(user_id="test-user"),
         )
     )
-    
+
     # Add 100 messages
     for i in range(100):
         await edge_cortex.conversations.add_message(
@@ -891,10 +892,10 @@ async def test_handles_conversation_with_100_plus_messages(edge_cortex):
                 content=f"Message {i+1}",
             )
         )
-    
+
     # Retrieve conversation
     updated = await edge_cortex.conversations.get(conv.conversation_id)
-    
+
     assert len(updated.messages) == 100
     assert updated.message_count == 100
 
@@ -909,7 +910,7 @@ async def test_handles_deep_context_chain_10_plus_levels(edge_cortex):
     """Test handling deep context chain (10+ levels). Port of: edgeCases.test.ts - line 910"""
     # Create 10-level deep chain
     contexts = []
-    
+
     # Root
     root = await edge_cortex.contexts.create(
         ContextInput(
@@ -918,7 +919,7 @@ async def test_handles_deep_context_chain_10_plus_levels(edge_cortex):
         )
     )
     contexts.append(root)
-    
+
     # Create 9 more levels
     for i in range(1, 10):
         ctx = await edge_cortex.contexts.create(
@@ -929,12 +930,12 @@ async def test_handles_deep_context_chain_10_plus_levels(edge_cortex):
             )
         )
         contexts.append(ctx)
-    
+
     # Deepest context
     deepest = contexts[-1]
     assert deepest.depth == 9
     assert deepest.root_id == root.id
-    
+
     # Can navigate to root
     retrieved_root = await edge_cortex.contexts.get_root(deepest.id)
     assert retrieved_root.id == root.id
@@ -955,7 +956,7 @@ async def test_handles_boolean_values_in_data(edge_cortex):
             data={"enabled": True, "disabled": False, "nullable": None},
         )
     )
-    
+
     retrieved = await edge_cortex.immutable.get("boolean-test", "booleans")
     assert retrieved.data["enabled"] is True
     assert retrieved.data["disabled"] is False
@@ -978,7 +979,7 @@ async def test_handles_numeric_values_in_data(edge_cortex):
             },
         )
     )
-    
+
     retrieved = await edge_cortex.immutable.get("numeric-test", "numbers")
     assert retrieved.data["integer"] == 42
     assert retrieved.data["float"] == 3.14159
@@ -994,7 +995,7 @@ async def test_handles_numeric_values_in_data(edge_cortex):
 async def test_handles_tags_with_special_characters(edge_cortex):
     """Test handling tags with special characters. Port of: edgeCases.test.ts - line 1003"""
     special_tags = ["tag-with-dash", "tag_with_underscore", "tag.with.dots", "tag:with:colons"]
-    
+
     memory = await edge_cortex.vector.store(
         TEST_MEMSPACE_ID,
         StoreMemoryInput(
@@ -1004,7 +1005,7 @@ async def test_handles_tags_with_special_characters(edge_cortex):
             metadata=MemoryMetadata(importance=50, tags=special_tags),
         ),
     )
-    
+
     stored_tags = memory.tags if hasattr(memory, 'tags') else memory.get("tags")
     assert all(tag in stored_tags for tag in special_tags)
 
@@ -1013,7 +1014,7 @@ async def test_handles_tags_with_special_characters(edge_cortex):
 async def test_handles_duplicate_tags(edge_cortex):
     """Test handling duplicate tags. Port of: edgeCases.test.ts - line 1028"""
     tags_with_dupes = ["tag1", "tag2", "tag1", "tag3", "tag2"]
-    
+
     memory = await edge_cortex.vector.store(
         TEST_MEMSPACE_ID,
         StoreMemoryInput(
@@ -1023,7 +1024,7 @@ async def test_handles_duplicate_tags(edge_cortex):
             metadata=MemoryMetadata(importance=50, tags=tags_with_dupes),
         ),
     )
-    
+
     # Backend may deduplicate or keep all
     stored_tags = memory.tags if hasattr(memory, 'tags') else memory.get("tags")
     assert len(stored_tags) >= 3  # At least the unique ones

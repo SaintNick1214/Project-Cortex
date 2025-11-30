@@ -5,13 +5,13 @@ Tests that validate ACTUAL error recovery behavior.
 Verifies resume token generation, validation, and recovery strategies.
 """
 
-import asyncio
-import pytest
 from unittest.mock import AsyncMock, MagicMock
 
+import pytest
+
 from cortex.memory.streaming.error_recovery import (
-    StreamErrorRecovery,
     ResumableStreamError,
+    StreamErrorRecovery,
 )
 from cortex.memory.streaming_types import (
     FailureStrategy,
@@ -56,10 +56,11 @@ class TestStreamErrorRecovery:
         Validates: Token format and storage in mutable store
         """
         recovery = StreamErrorRecovery(mock_convex_client)
-        
-        from cortex.memory.streaming_types import ResumeContext
+
         import time
-        
+
+        from cortex.memory.streaming_types import ResumeContext
+
         resume_context = ResumeContext(
             resume_token="",
             last_processed_chunk=10,
@@ -92,9 +93,9 @@ class TestStreamErrorRecovery:
         Validates: Context is correctly retrieved and validated
         """
         import time
-        
+
         recovery = StreamErrorRecovery(mock_convex_client)
-        
+
         # Mock stored context
         stored_context = {
             "resumeToken": "test-token",
@@ -106,7 +107,7 @@ class TestStreamErrorRecovery:
             "checksum": recovery._calculate_checksum("Test content"),
             "expiresAt": int(time.time() * 1000) + 3600000,  # 1 hour from now
         }
-        
+
         mock_convex_client.query.return_value = {"value": stored_context}
 
         # Validate token
@@ -125,9 +126,9 @@ class TestStreamErrorRecovery:
         Validates: Expiration check works correctly
         """
         import time
-        
+
         recovery = StreamErrorRecovery(mock_convex_client)
-        
+
         # Mock expired context
         expired_context = {
             "resumeToken": "expired-token",
@@ -139,7 +140,7 @@ class TestStreamErrorRecovery:
             "checksum": "abc",
             "expiresAt": int(time.time() * 1000) - 1000,  # Expired 1 second ago
         }
-        
+
         mock_convex_client.query.return_value = {"value": expired_context}
 
         # Validate token
@@ -155,7 +156,7 @@ class TestStreamErrorRecovery:
         Validates: Recovery result indicates success
         """
         recovery = StreamErrorRecovery(mock_convex_client)
-        
+
         options = RecoveryOptions(
             strategy=FailureStrategy.STORE_PARTIAL,
             preserve_partial_data=True,
@@ -178,7 +179,7 @@ class TestStreamErrorRecovery:
         Validates: Delete mutation is called
         """
         recovery = StreamErrorRecovery(mock_convex_client)
-        
+
         options = RecoveryOptions(strategy=FailureStrategy.ROLLBACK)
 
         # Handle error
@@ -202,7 +203,7 @@ class TestStreamErrorRecovery:
         Validates: Delays increase exponentially
         """
         recovery = StreamErrorRecovery(MagicMock())
-        
+
         attempt_count = 0
 
         async def failing_operation():
@@ -228,7 +229,7 @@ class TestStreamErrorRecovery:
         Validates: Error propagation after max retries
         """
         recovery = StreamErrorRecovery(MagicMock())
-        
+
         async def always_fails():
             raise Exception("Always fails")
 

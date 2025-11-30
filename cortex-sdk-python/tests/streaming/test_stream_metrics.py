@@ -6,7 +6,9 @@ Verifies timing, throughput, and performance calculations.
 """
 
 import asyncio
+
 import pytest
+
 from cortex.memory.streaming.stream_metrics import MetricsCollector
 
 
@@ -42,14 +44,14 @@ class TestMetricsCollector:
         Validates: Chunk count, bytes, tokens, timing
         """
         collector = MetricsCollector()
-        
+
         # Record first chunk
         chunk_size_1 = 100
         collector.record_chunk(chunk_size_1)
-        
+
         # Small delay to ensure timing differences
         await asyncio.sleep(0.01)
-        
+
         # Record second chunk
         chunk_size_2 = 150
         collector.record_chunk(chunk_size_2)
@@ -69,7 +71,7 @@ class TestMetricsCollector:
         Validates: Actual cost values based on token count
         """
         collector = MetricsCollector()
-        
+
         # Record chunks to generate tokens
         for _ in range(10):
             collector.record_chunk(400)  # 400 bytes = 100 tokens
@@ -89,7 +91,7 @@ class TestMetricsCollector:
         Validates: Min, max, median, standard deviation
         """
         collector = MetricsCollector()
-        
+
         # Record chunks with known sizes
         sizes = [10, 20, 30, 40, 50]
         for size in sizes:
@@ -111,7 +113,7 @@ class TestMetricsCollector:
         Validates: Chunks per second based on actual timing
         """
         collector = MetricsCollector()
-        
+
         # Record chunks with delays
         for i in range(5):
             collector.record_chunk(100)
@@ -133,7 +135,7 @@ class TestMetricsCollector:
         fast_collector = MetricsCollector()
         for i in range(20):
             fast_collector.record_chunk(100)
-        
+
         stream_type = fast_collector.detect_stream_type()
         assert stream_type == "fast", f"Expected 'fast', got '{stream_type}'"
 
@@ -143,7 +145,7 @@ class TestMetricsCollector:
         import time
         time.sleep(0.6)  # 600ms delay
         slow_collector.record_chunk(100)
-        
+
         stream_type = slow_collector.detect_stream_type()
         assert stream_type == "slow", f"Expected 'slow', got '{stream_type}'"
 
@@ -153,7 +155,7 @@ class TestMetricsCollector:
         Validates: Exact counts match records
         """
         collector = MetricsCollector()
-        
+
         # Record various events
         collector.record_fact_extraction(3)
         collector.record_fact_extraction(2)
@@ -177,7 +179,7 @@ class TestMetricsCollector:
         Validates: Bottleneck detection and recommendations
         """
         collector = MetricsCollector()
-        
+
         # Simulate slow first chunk
         import time
         time.sleep(2.1)  # 2.1 second delay
@@ -196,7 +198,7 @@ class TestMetricsCollector:
         Validates: All values return to initial state
         """
         collector = MetricsCollector()
-        
+
         # Record data
         for i in range(10):
             collector.record_chunk(100)

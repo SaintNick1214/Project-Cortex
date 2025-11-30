@@ -4,10 +4,12 @@ Tests for Memory Streaming API - remember_stream()
 Tests the streaming variant of remember() that consumes AsyncIterable streams.
 """
 
-import pytest
 import asyncio
+
+import pytest
+
 from cortex import Cortex, CortexConfig, RememberStreamParams
-from cortex.types import FactRecord, RegisterMemorySpaceParams
+from cortex.types import RegisterMemorySpaceParams
 
 
 # Helper to create async generator for testing
@@ -59,15 +61,15 @@ class TestMemoryStreaming:
     @pytest.fixture(autouse=True)
     async def setup(self):
         """Set up test environment."""
-        import time
-        import random
         import os
+        import random
+        import time
         # Use environment CONVEX_URL (set by conftest.py for LOCAL/MANAGED mode)
         self.convex_url = os.getenv("CONVEX_URL", "http://127.0.0.1:3210")
         self.cortex = Cortex(CortexConfig(convex_url=self.convex_url))
         # Use unique ID per test to avoid conflicts
         self.test_space_id = f"test-streaming-{int(time.time() * 1000)}-{random.randint(1000, 9999)}"
-        
+
         # Register memory space
         await self.cortex.memory_spaces.register(
             RegisterMemorySpaceParams(
@@ -76,9 +78,9 @@ class TestMemoryStreaming:
                 type="custom",
             )
         )
-        
+
         yield
-        
+
         # Cleanup
         try:
             await self.cortex.close()
@@ -165,7 +167,7 @@ class TestMemoryStreaming:
                     user_name="EmptyUser",
                 )
             )
-        
+
         assert "produced no content" in str(exc_info.value)
 
     async def test_whitespace_stream_error(self):
@@ -181,13 +183,13 @@ class TestMemoryStreaming:
                     user_name="WhitespaceUser",
                 )
             )
-        
+
         assert "produced no content" in str(exc_info.value)
 
     async def test_invalid_stream_type(self):
         """Test that non-iterable raises error."""
         from cortex.memory.validators import MemoryValidationError
-        
+
         with pytest.raises(MemoryValidationError) as exc_info:
             await self.cortex.memory.remember_stream(
                 RememberStreamParams(
@@ -199,13 +201,13 @@ class TestMemoryStreaming:
                     user_name="InvalidUser",
                 )
             )
-        
+
         # Validation catches invalid stream type
         assert "AsyncIterable" in str(exc_info.value) or "__aiter__" in str(exc_info.value)
 
     async def test_stream_with_fact_extraction(self):
         """Test streaming with fact extraction."""
-        
+
         async def fact_extractor(user_msg: str, agent_resp: str):
             """Extract facts from the conversation."""
             if "favorite color" in agent_resp.lower():
@@ -304,13 +306,13 @@ class TestMemoryStreaming:
         assert hasattr(result, "memories")
         assert hasattr(result, "facts")
         assert hasattr(result, "full_response")
-        
+
         # Check types
         assert isinstance(result.conversation, dict)
         assert isinstance(result.memories, list)
         assert isinstance(result.facts, list)
         assert isinstance(result.full_response, str)
-        
+
         # Check conversation structure
         assert "conversationId" in result.conversation
         assert "messageIds" in result.conversation
@@ -318,7 +320,7 @@ class TestMemoryStreaming:
     async def test_stream_verification_in_database(self):
         """Test that streamed content is actually stored and retrievable."""
         conv_id = "stream-conv-verify"
-        
+
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
@@ -335,7 +337,7 @@ class TestMemoryStreaming:
         assert conversation is not None
         assert conversation.conversation_id == conv_id
         assert len(conversation.messages) == 2
-        
+
         # Verify message content
         agent_message = conversation.messages[1]
         content = agent_message.get("content") if isinstance(agent_message, dict) else agent_message.content
@@ -356,15 +358,15 @@ class TestMemoryStreamingEdgeCases:
     @pytest.fixture(autouse=True)
     async def setup(self):
         """Set up test environment."""
-        import time
-        import random
         import os
+        import random
+        import time
         # Use environment CONVEX_URL (set by conftest.py for LOCAL/MANAGED mode)
         self.convex_url = os.getenv("CONVEX_URL", "http://127.0.0.1:3210")
         self.cortex = Cortex(CortexConfig(convex_url=self.convex_url))
         # Use unique ID per test to avoid conflicts
         self.test_space_id = f"test-streaming-edge-{int(time.time() * 1000)}-{random.randint(1000, 9999)}"
-        
+
         await self.cortex.memory_spaces.register(
             RegisterMemorySpaceParams(
                 memory_space_id=self.test_space_id,
@@ -372,9 +374,9 @@ class TestMemoryStreamingEdgeCases:
                 type="custom",
             )
         )
-        
+
         yield
-        
+
         try:
             await self.cortex.close()
         except:
@@ -382,7 +384,7 @@ class TestMemoryStreamingEdgeCases:
 
     async def test_unicode_in_stream(self):
         """Test that unicode characters work correctly."""
-        
+
         async def unicode_stream():
             yield "Hello "
             yield "世界 "
@@ -405,7 +407,7 @@ class TestMemoryStreamingEdgeCases:
 
     async def test_large_stream(self):
         """Test streaming with large content."""
-        
+
         async def large_stream():
             # Generate ~10KB of text
             for i in range(1000):
@@ -429,7 +431,7 @@ class TestMemoryStreamingEdgeCases:
 
     async def test_none_chunks_in_stream(self):
         """Test that None chunks are handled correctly."""
-        
+
         async def none_chunk_stream():
             yield "Start "
             yield None  # Should be skipped
