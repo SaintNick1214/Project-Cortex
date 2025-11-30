@@ -59,16 +59,17 @@ class TestMemoryStreaming:
     """Test suite for Memory Streaming API."""
 
     @pytest.fixture(autouse=True)
-    async def setup(self):
+    async def setup(self, test_run_context, request):
         """Set up test environment."""
         import os
         import random
-        import time
         # Use environment CONVEX_URL (set by conftest.py for LOCAL/MANAGED mode)
         self.convex_url = os.getenv("CONVEX_URL", "http://127.0.0.1:3210")
         self.cortex = Cortex(CortexConfig(convex_url=self.convex_url))
-        # Use unique ID per test to avoid conflicts
-        self.test_space_id = f"test-streaming-{int(time.time() * 1000)}-{random.randint(1000, 9999)}"
+        # Use ctx for unique ID generation + test name for uniqueness per method
+        self.ctx = test_run_context
+        test_name = request.node.name.replace("test_", "")
+        self.test_space_id = f"{self.ctx.run_id}-stream-{test_name}-{random.randint(1000, 9999)}"
 
         # Register memory space
         await self.cortex.memory_spaces.register(
@@ -89,20 +90,22 @@ class TestMemoryStreaming:
 
     async def test_basic_streaming(self):
         """Test basic streaming with async generator."""
+        conv_id = self.ctx.conversation_id("stream-1")
+        
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
-                conversation_id="stream-conv-1",
+                conversation_id=conv_id,
                 user_message="What's the weather?",
                 response_stream=simple_stream(),
-                user_id="user-1",
+                user_id=self.ctx.user_id("user-1"),
                 user_name="TestUser",
             )
         )
 
         assert result.full_response == "The weather is sunny today."
         assert len(result.memories) == 2  # user + agent
-        assert result.conversation["conversationId"] == "stream-conv-1"
+        assert result.conversation["conversationId"] == conv_id
         assert len(result.conversation["messageIds"]) == 2
         assert isinstance(result.facts, list)
 
@@ -111,10 +114,10 @@ class TestMemoryStreaming:
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
-                conversation_id="stream-conv-2",
+                conversation_id=self.ctx.conversation_id("stream-2"),
                 user_message="Say hello",
                 response_stream=multi_chunk_stream(),
-                user_id="user-2",
+                user_id=self.ctx.user_id("user-2"),
                 user_name="MultiUser",
             )
         )
@@ -127,10 +130,10 @@ class TestMemoryStreaming:
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
-                conversation_id="stream-conv-3",
+                conversation_id=self.ctx.conversation_id("stream-3"),
                 user_message="Single chunk test",
                 response_stream=single_chunk_stream(),
-                user_id="user-3",
+                user_id=self.ctx.user_id("user-3"),
                 user_name="SingleUser",
             )
         )
@@ -143,10 +146,10 @@ class TestMemoryStreaming:
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
-                conversation_id="stream-conv-4",
+                conversation_id=self.ctx.conversation_id("stream-4"),
                 user_message="Delayed test",
                 response_stream=delayed_stream(),
-                user_id="user-4",
+                user_id=self.ctx.user_id("user-4"),
                 user_name="DelayUser",
             )
         )
@@ -319,7 +322,7 @@ class TestMemoryStreaming:
 
     async def test_stream_verification_in_database(self):
         """Test that streamed content is actually stored and retrievable."""
-        conv_id = "stream-conv-verify"
+        conv_id = self.ctx.conversation_id("verify")
 
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
@@ -327,7 +330,7 @@ class TestMemoryStreaming:
                 conversation_id=conv_id,
                 user_message="Verify this",
                 response_stream=simple_stream(),
-                user_id="user-verify",
+                user_id=self.ctx.user_id("user-verify"),
                 user_name="VerifyUser",
             )
         )
