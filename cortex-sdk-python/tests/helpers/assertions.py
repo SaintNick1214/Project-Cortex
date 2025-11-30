@@ -548,6 +548,9 @@ async def wait_for_count(
     Returns:
         True if count reached expected value
     """
-    return await wait_for_condition(
-        lambda: count_fn().then(lambda c: c == expected), ctx, timeout
-    )
+
+    async def check_count() -> bool:
+        count = await count_fn()
+        return count == expected
+
+    return await wait_for_condition(check_count, ctx, timeout)
