@@ -18,7 +18,7 @@ from tests.helpers import (
 async def test_manual_cleanup_verification(cortex_client, test_ids):
     """
     Manual verification of cleanup helper functionality.
-    
+
     This test:
     1. Creates test data in all layers
     2. Shows what exists
@@ -178,7 +178,7 @@ async def test_manual_cleanup_verification(cortex_client, test_ids):
 async def test_list_all_data_in_space(cortex_client, test_ids):
     """
     Helper test to see what data exists in a memory space.
-    
+
     Run this to inspect current state of test data.
     """
     memory_space_id = test_ids["memory_space_id"]

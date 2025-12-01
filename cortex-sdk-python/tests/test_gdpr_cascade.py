@@ -25,7 +25,7 @@ from cortex import DeleteUserOptions, RememberParams
 async def test_cascade_delete_user_profile_layer(cortex_client, test_user_id, cleanup_helper):
     """
     Test cascade deletion removes user profile.
-    
+
     Port of: gdprCascade.test.ts - user profile layer
     """
     # Create user
@@ -52,7 +52,7 @@ async def test_cascade_delete_user_profile_layer(cortex_client, test_user_id, cl
 async def test_cascade_delete_conversations_layer(cortex_client, test_ids, cleanup_helper):
     """
     Test cascade deletion removes user's conversations.
-    
+
     Port of: gdprCascade.test.ts - conversations layer
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -94,7 +94,7 @@ async def test_cascade_delete_conversations_layer(cortex_client, test_ids, clean
 async def test_cascade_delete_memories_layer(cortex_client, test_ids, cleanup_helper):
     """
     Test cascade deletion removes user's memories.
-    
+
     Port of: gdprCascade.test.ts - memories layer
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -105,7 +105,7 @@ async def test_cascade_delete_memories_layer(cortex_client, test_ids, cleanup_he
     await cortex_client.users.update(user_id, {"displayName": "Memory Cascade Test"})
 
     # Create memories for user
-    result = await cortex_client.memory.remember(
+    await cortex_client.memory.remember(
         RememberParams(
             memory_space_id=memory_space_id,
             conversation_id=conversation_id,
@@ -152,7 +152,7 @@ async def test_cascade_delete_memories_layer(cortex_client, test_ids, cleanup_he
 async def test_cascade_with_verification(cortex_client, test_ids, cleanup_helper):
     """
     Test cascade deletion with verification enabled.
-    
+
     Port of: gdprCascade.test.ts - verification tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -192,7 +192,7 @@ async def test_cascade_with_verification(cortex_client, test_ids, cleanup_helper
 async def test_cascade_dry_run(cortex_client, test_ids, cleanup_helper):
     """
     Test cascade deletion dry run (plan only, no actual deletion).
-    
+
     Port of: gdprCascade.test.ts - dry run tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -240,7 +240,7 @@ async def test_cascade_dry_run(cortex_client, test_ids, cleanup_helper):
 async def test_cascade_all_layers(cortex_client, test_ids, cleanup_helper):
     """
     Test cascade deletion across all 4 layers.
-    
+
     Port of: gdprCascade.test.ts - all layers test
     """
     memory_space_id = test_ids["memory_space_id"]

@@ -99,7 +99,7 @@ class TestVectorMemorySequences:
         assert any(m.memory_id == mem1.memory_id for m in list1)
 
         # Create another
-        mem2 = await cortex_client.vector.store(
+        await cortex_client.vector.store(
             space_id,
             StoreMemoryInput(
                 content="Memory 2",
@@ -412,7 +412,7 @@ class TestMutableSequences:
         # STEP 2: Get (validate set)
         after_set = await cortex_client.mutable.get(ns, key)
         # Mutable returns record, extract value if needed
-        value = after_set.get("value") or after_set
+        after_set.get("value") or after_set
         # Basic validation that it was set
         assert after_set is not None
 
@@ -464,7 +464,6 @@ class TestMemorySpaceSequences:
         # STEP 2-3: Participant management
         # Note: updateParticipants not implemented in backend - skip participant tests
         after_add = space  # Skip add
-        after_remove = space  # Skip remove
         assert len(after_add.participants) >= 1
 
         # STEP 4: Delete

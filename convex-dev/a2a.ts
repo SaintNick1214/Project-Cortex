@@ -47,8 +47,12 @@ export const send = mutation({
     if (!args.message || args.message.trim() === "") {
       throw new Error("EMPTY_MESSAGE: Message cannot be empty");
     }
-    if (args.message.length > 102400) {
-      throw new Error("MESSAGE_TOO_LARGE: Message exceeds 100KB limit");
+    // Check UTF-8 byte size (not character length) to match Python SDK validation
+    const messageByteSize = new TextEncoder().encode(args.message).length;
+    if (messageByteSize > 102400) {
+      throw new Error(
+        `MESSAGE_TOO_LARGE: Message exceeds 100KB limit (current size: ${Math.floor(messageByteSize / 1024)}KB)`
+      );
     }
     if (args.from === args.to) {
       throw new Error("SAME_AGENT_COMMUNICATION: Cannot send message to self");
@@ -252,8 +256,12 @@ export const request = mutation({
     if (!args.message || args.message.trim() === "") {
       throw new Error("EMPTY_MESSAGE: Message cannot be empty");
     }
-    if (args.message.length > 102400) {
-      throw new Error("MESSAGE_TOO_LARGE: Message exceeds 100KB limit");
+    // Check UTF-8 byte size (not character length) to match Python SDK validation
+    const messageByteSize = new TextEncoder().encode(args.message).length;
+    if (messageByteSize > 102400) {
+      throw new Error(
+        `MESSAGE_TOO_LARGE: Message exceeds 100KB limit (current size: ${Math.floor(messageByteSize / 1024)}KB)`
+      );
     }
     if (args.from === args.to) {
       throw new Error("SAME_AGENT_COMMUNICATION: Cannot send request to self");
@@ -374,8 +382,12 @@ export const broadcast = mutation({
     if (!args.message || args.message.trim() === "") {
       throw new Error("EMPTY_MESSAGE: Message cannot be empty");
     }
-    if (args.message.length > 102400) {
-      throw new Error("MESSAGE_TOO_LARGE: Message exceeds 100KB limit");
+    // Check UTF-8 byte size (not character length) to match Python SDK validation
+    const messageByteSize = new TextEncoder().encode(args.message).length;
+    if (messageByteSize > 102400) {
+      throw new Error(
+        `MESSAGE_TOO_LARGE: Message exceeds 100KB limit (current size: ${Math.floor(messageByteSize / 1024)}KB)`
+      );
     }
     if (!args.to || args.to.length === 0) {
       throw new Error("EMPTY_RECIPIENTS: Recipients array cannot be empty");

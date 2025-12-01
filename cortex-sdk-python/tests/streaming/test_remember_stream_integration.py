@@ -431,7 +431,7 @@ class TestGraphSyncValidation:
         # Verify node was finalized (not partial)
         # Note: Finalization properties might not be set if sync happens after finalize
         # The important thing is the node exists
-        node = memory_nodes[0]
+        memory_nodes[0]
         # Don't check isStreaming/isPartial as they might not be updated in time
 
 
@@ -491,7 +491,6 @@ class TestErrorRecoveryValidation:
             raise Exception("Stream interrupted")
 
         # Attempt streaming with resume token generation
-        resume_token = None
         try:
             await cortex_with_graph.memory.remember_stream(
                 {
@@ -511,7 +510,7 @@ class TestErrorRecoveryValidation:
         except Exception as error:
             # Extract resume token from ResumableStreamError
             if hasattr(error, "resume_token"):
-                resume_token = error.resume_token
+                pass
 
         # CRITICAL: Validate resume token was generated
         # Note: This test depends on ResumableStreamError being raised correctly

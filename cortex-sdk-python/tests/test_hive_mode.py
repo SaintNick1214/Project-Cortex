@@ -36,7 +36,7 @@ async def hive_space_fixture(module_cortex_client, test_run_context):
     """Set up hive memory space with multiple participants."""
     ctx = test_run_context
     hive_space = ctx.memory_space_id("hive-shared")
-    
+
     # Register hive space with multiple participants
     now = int(time.time() * 1000)
     await module_cortex_client.memory_spaces.register(
@@ -66,11 +66,11 @@ async def hive_space_fixture(module_cortex_client, test_run_context):
 async def test_all_participants_see_same_conversations(cortex_client, hive_space_fixture):
     """
     Test that all participants in a hive see the same conversations.
-    
+
     Port of: hiveMode.test.ts - line 50
     """
     hive_space = hive_space_fixture["hive_space"]
-    
+
     # Tool-calendar creates conversation
     conv = await cortex_client.conversations.create(
         CreateConversationInput(
@@ -111,11 +111,11 @@ async def test_all_participants_see_same_conversations(cortex_client, hive_space
 async def test_all_participants_contribute_to_shared_memory_pool(cortex_client, hive_space_fixture):
     """
     Test that all participants contribute to shared memory pool.
-    
+
     Port of: hiveMode.test.ts - line 79
     """
     hive_space = hive_space_fixture["hive_space"]
-    
+
     # Tool-calendar stores memory
     await cortex_client.vector.store(
         hive_space,
@@ -186,11 +186,11 @@ async def test_all_participants_contribute_to_shared_memory_pool(cortex_client, 
 async def test_all_participants_contribute_to_shared_fact_base(cortex_client, hive_space_fixture):
     """
     Test that all participants contribute to shared fact base.
-    
+
     Port of: hiveMode.test.ts - line 133
     """
     hive_space = hive_space_fixture["hive_space"]
-    
+
     # Tool-calendar extracts fact
     await cortex_client.facts.store(
         StoreFactParams(
@@ -254,11 +254,11 @@ async def test_all_participants_contribute_to_shared_fact_base(cortex_client, hi
 async def test_facts_about_same_subject_from_different_tools(cortex_client, hive_space_fixture):
     """
     Test that facts about same subject from different tools are accessible.
-    
+
     Port of: hiveMode.test.ts - line 185
     """
     hive_space = hive_space_fixture["hive_space"]
-    
+
     from cortex.types import QueryBySubjectFilter
     user_facts_result = await cortex_client.facts.query_by_subject(
         QueryBySubjectFilter(
@@ -289,11 +289,11 @@ async def test_facts_about_same_subject_from_different_tools(cortex_client, hive
 async def test_single_memory_space_eliminates_duplication(cortex_client, hive_space_fixture):
     """
     Test that single memory space eliminates data duplication.
-    
+
     Port of: hiveMode.test.ts - line 203
     """
     hive_space = hive_space_fixture["hive_space"]
-    
+
     fact_text = "User's timezone is America/Los_Angeles"
 
     # Tool-calendar stores it once
@@ -339,11 +339,11 @@ async def test_single_memory_space_eliminates_duplication(cortex_client, hive_sp
 async def test_tracks_which_participant_created_what(cortex_client, hive_space_fixture):
     """
     Test that system tracks which participant created what.
-    
+
     Port of: hiveMode.test.ts - line 239
     """
     hive_space = hive_space_fixture["hive_space"]
-    
+
     conv1 = await cortex_client.conversations.create(
         CreateConversationInput(
             memory_space_id=hive_space,
@@ -388,11 +388,11 @@ async def test_tracks_which_participant_created_what(cortex_client, hive_space_f
 async def test_multi_tool_coordination_for_user_workflow(cortex_client, hive_space_fixture):
     """
     Test multi-tool coordination in shared hive for user workflow.
-    
+
     Port of: hiveMode.test.ts - line 263
     """
     hive_space = hive_space_fixture["hive_space"]
-    
+
     # Scenario: User asks "What do I have scheduled this week?"
     # Multiple tools need to coordinate in shared hive
 
@@ -419,7 +419,7 @@ async def test_multi_tool_coordination_for_user_workflow(cortex_client, hive_spa
     # 2. Agent delegates to calendar tool (creates context)
     message_id = user_msg.messages[0]["id"] if isinstance(user_msg.messages[0], dict) else user_msg.messages[0].id
 
-    context = await cortex_client.contexts.create(
+    await cortex_client.contexts.create(
         ContextInput(
             purpose="Retrieve weekly schedule",
             memory_space_id=hive_space,
@@ -476,11 +476,11 @@ async def test_multi_tool_coordination_for_user_workflow(cortex_client, hive_spa
 async def test_single_query_retrieves_all_participant_memories(cortex_client, hive_space_fixture):
     """
     Test that single query retrieves all participant memories (performance benefit).
-    
+
     Port of: hiveMode.test.ts - line 329
     """
     hive_space = hive_space_fixture["hive_space"]
-    
+
     # Add memories from 3 different tools
     await cortex_client.vector.store(
         hive_space,
@@ -553,11 +553,11 @@ async def test_single_query_retrieves_all_participant_memories(cortex_client, hi
 async def test_participant_id_persists_through_vector_update(cortex_client, hive_space_fixture):
     """
     Test that participantId persists through vector.update().
-    
+
     Port of: hiveMode.test.ts - line 388
     """
     hive_space = hive_space_fixture["hive_space"]
-    
+
     mem = await cortex_client.vector.store(
         hive_space,
         StoreMemoryInput(
@@ -593,11 +593,11 @@ async def test_participant_id_persists_through_vector_update(cortex_client, hive
 async def test_tracks_5_plus_participants_in_same_hive(cortex_client, hive_space_fixture):
     """
     Test tracking 5+ participants in same hive.
-    
+
     Port of: hiveMode.test.ts - line 411
     """
     hive_space = hive_space_fixture["hive_space"]
-    
+
     participants_list = [
         "tool-calendar",
         "tool-email",
@@ -654,11 +654,11 @@ async def test_tracks_5_plus_participants_in_same_hive(cortex_client, hive_space
 async def test_multiple_participants_use_remember_in_same_hive(cortex_client, hive_space_fixture):
     """
     Test multiple participants using remember() in same hive.
-    
+
     Port of: hiveMode.test.ts - line 461
     """
     hive_space = hive_space_fixture["hive_space"]
-    
+
     participants_list = ["tool-calendar", "tool-email", "tool-tasks"]
 
     # Create conversation for remember() tests
@@ -709,11 +709,11 @@ async def test_multiple_participants_use_remember_in_same_hive(cortex_client, hi
 async def test_message_participant_id_for_agent_messages(cortex_client, hive_space_fixture):
     """
     Test that message.participantId is set for agent messages.
-    
+
     Port of: hiveMode.test.ts - line 506
     """
     hive_space = hive_space_fixture["hive_space"]
-    
+
     conv = await cortex_client.conversations.create(
         CreateConversationInput(
             memory_space_id=hive_space,
@@ -750,11 +750,11 @@ async def test_message_participant_id_for_agent_messages(cortex_client, hive_spa
 async def test_facts_participant_id_persists_through_update(cortex_client, hive_space_fixture):
     """
     Test that facts participantId persists through update.
-    
+
     Port of: hiveMode.test.ts - line 529
     """
     hive_space = hive_space_fixture["hive_space"]
-    
+
     v1 = await cortex_client.facts.store(
         StoreFactParams(
             memory_space_id=hive_space,
@@ -791,11 +791,11 @@ async def test_facts_participant_id_persists_through_update(cortex_client, hive_
 async def test_can_distinguish_memories_by_participant_in_search(cortex_client, hive_space_fixture):
     """
     Test that memories can be distinguished by participant in search.
-    
+
     Port of: hiveMode.test.ts - line 554
     """
     hive_space = hive_space_fixture["hive_space"]
-    
+
     # Create unique memories per participant
     await cortex_client.vector.store(
         hive_space,
@@ -848,11 +848,11 @@ async def test_can_distinguish_memories_by_participant_in_search(cortex_client, 
 async def test_contexts_track_participants_correctly(cortex_client, hive_space_fixture):
     """
     Test that contexts track participants correctly via memory space.
-    
+
     Port of: hiveMode.test.ts - line 593
     """
     hive_space = hive_space_fixture["hive_space"]
-    
+
     ctx = await cortex_client.contexts.create(
         ContextInput(
             purpose="Multi-participant context",
@@ -879,11 +879,11 @@ async def test_contexts_track_participants_correctly(cortex_client, hive_space_f
 async def test_participant_statistics_accurate(cortex_client, hive_space_fixture):
     """
     Test that participant statistics are accurate.
-    
+
     Port of: hiveMode.test.ts - line 611
     """
     hive_space = hive_space_fixture["hive_space"]
-    
+
     # Store memories from different participants with unique tag
     await cortex_client.vector.store(
         hive_space,
@@ -940,11 +940,11 @@ async def test_participant_statistics_accurate(cortex_client, hive_space_fixture
 async def test_participant_id_in_all_layers_for_end_to_end_workflow(cortex_client, hive_space_fixture):
     """
     Test that participantId flows through all layers in end-to-end workflow.
-    
+
     Port of: hiveMode.test.ts - line 648
     """
     hive_space = hive_space_fixture["hive_space"]
-    
+
     participant = "tool-workflow-test"
 
     # Create conversation first
@@ -1013,11 +1013,11 @@ async def test_participant_id_in_all_layers_for_end_to_end_workflow(cortex_clien
 async def test_handles_undefined_participant_id_across_all_operations(cortex_client, hive_space_fixture):
     """
     Test that undefined participantId is handled correctly across all operations.
-    
+
     Port of: hiveMode.test.ts - line 704
     """
     hive_space = hive_space_fixture["hive_space"]
-    
+
     # Store without participantId
     mem = await cortex_client.vector.store(
         hive_space,

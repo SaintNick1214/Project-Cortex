@@ -11,7 +11,6 @@ from tests.helpers import (
     TestCleanup,
     create_test_conversation_input,
     create_test_memory_input,
-    generate_test_user_id,
 )
 
 
@@ -19,7 +18,7 @@ from tests.helpers import (
 async def test_full_cleanup_validation(cortex_client, ctx):
     """
     Comprehensive cleanup validation test.
-    
+
     Creates data in all layers, shows exact state before/after cleanup.
     Uses ctx for proper test isolation.
     """

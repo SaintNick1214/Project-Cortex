@@ -235,7 +235,7 @@ class TestGraphDataValidation:
 
         # Create memory (creates edges)
         from cortex import RememberOptions
-        result = await cortex_client.memory.remember(
+        await cortex_client.memory.remember(
             RememberParams(
                 memory_space_id=memory_space_id,
                 conversation_id=conversation_id,

@@ -31,7 +31,7 @@ from tests.helpers import (
 async def test_store_memory_without_embedding(cortex_client, test_ids, cleanup_helper):
     """
     Test storing memory without embedding (keyword search only).
-    
+
     Port of: vector.test.ts - line 43
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -67,7 +67,7 @@ async def test_store_memory_without_embedding(cortex_client, test_ids, cleanup_h
 async def test_store_memory_with_embedding(cortex_client, test_ids, cleanup_helper):
     """
     Test storing memory with embedding (semantic search).
-    
+
     Port of: vector.test.ts - line 64
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -103,7 +103,7 @@ async def test_store_memory_with_embedding(cortex_client, test_ids, cleanup_help
 async def test_store_memory_with_conversation_ref(cortex_client, test_ids, cleanup_helper):
     """
     Test storing memory with conversationRef.
-    
+
     Port of: vector.test.ts - line 84
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -141,7 +141,7 @@ async def test_store_memory_with_conversation_ref(cortex_client, test_ids, clean
 async def test_store_memory_with_user_id_for_gdpr(cortex_client, test_ids, cleanup_helper):
     """
     Test storing memory with userId for GDPR.
-    
+
     Port of: vector.test.ts - line 104
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -177,7 +177,7 @@ async def test_store_memory_with_user_id_for_gdpr(cortex_client, test_ids, clean
 async def test_get_existing_memory(cortex_client, test_ids, cleanup_helper):
     """
     Test retrieving existing memory.
-    
+
     Port of: vector.test.ts - line 137
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -203,7 +203,7 @@ async def test_get_existing_memory(cortex_client, test_ids, cleanup_helper):
 async def test_get_nonexistent_memory_returns_none(cortex_client, test_ids):
     """
     Test that getting non-existent memory returns None.
-    
+
     Port of: vector.test.ts - line 145
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -217,7 +217,7 @@ async def test_get_nonexistent_memory_returns_none(cortex_client, test_ids):
 async def test_get_memory_space_isolation(cortex_client, test_ids, cleanup_helper):
     """
     Test that memory space isolation is enforced.
-    
+
     Port of: vector.test.ts - line 154
     """
     memory_space_id_1 = test_ids["memory_space_id"]
@@ -247,7 +247,7 @@ async def test_get_memory_space_isolation(cortex_client, test_ids, cleanup_helpe
 async def test_search_keyword(cortex_client, test_ids, cleanup_helper):
     """
     Test keyword search finds memories.
-    
+
     Port of: vector.test.ts - line 196
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -288,7 +288,7 @@ async def test_search_keyword(cortex_client, test_ids, cleanup_helper):
 async def test_search_filter_by_user_id(cortex_client, test_ids, cleanup_helper):
     """
     Test search filters by userId.
-    
+
     Port of: vector.test.ts - line 203
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -336,7 +336,7 @@ async def test_search_filter_by_user_id(cortex_client, test_ids, cleanup_helper)
 async def test_search_filter_by_tags(cortex_client, test_ids, cleanup_helper):
     """
     Test search filters by tags.
-    
+
     Port of: vector.test.ts - line 215
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -383,7 +383,7 @@ async def test_search_filter_by_tags(cortex_client, test_ids, cleanup_helper):
 async def test_search_filter_by_min_importance(cortex_client, test_ids, cleanup_helper):
     """
     Test search filters by minImportance.
-    
+
     Port of: vector.test.ts - line 226
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -429,7 +429,7 @@ async def test_search_filter_by_min_importance(cortex_client, test_ids, cleanup_
 async def test_search_respects_limit(cortex_client, test_ids, cleanup_helper):
     """
     Test search respects limit parameter.
-    
+
     Port of: vector.test.ts - line 236
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -465,7 +465,7 @@ async def test_search_respects_limit(cortex_client, test_ids, cleanup_helper):
 async def test_update_memory_content(cortex_client, test_ids, cleanup_helper):
     """
     Test updating memory content creates new version.
-    
+
     Port of: vector.test.ts - update tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -498,7 +498,7 @@ async def test_update_memory_content(cortex_client, test_ids, cleanup_helper):
 async def test_update_memory_importance(cortex_client, test_ids, cleanup_helper):
     """
     Test updating memory importance.
-    
+
     Port of: vector.test.ts - update tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -532,7 +532,7 @@ async def test_update_memory_importance(cortex_client, test_ids, cleanup_helper)
 async def test_delete_memory(cortex_client, test_ids, cleanup_helper):
     """
     Test deleting a memory.
-    
+
     Port of: vector.test.ts - delete tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -565,7 +565,7 @@ async def test_delete_memory(cortex_client, test_ids, cleanup_helper):
 async def test_list_memories(cortex_client, test_ids, cleanup_helper):
     """
     Test listing memories in a space.
-    
+
     Port of: vector.test.ts - list tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -592,7 +592,7 @@ async def test_list_memories(cortex_client, test_ids, cleanup_helper):
 async def test_list_memories_with_limit(cortex_client, test_ids, cleanup_helper):
     """
     Test list respects limit parameter.
-    
+
     Port of: vector.test.ts - list tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -624,7 +624,7 @@ async def test_list_memories_with_limit(cortex_client, test_ids, cleanup_helper)
 async def test_count_memories(cortex_client, test_ids, cleanup_helper):
     """
     Test counting memories in a space.
-    
+
     Port of: vector.test.ts - count tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -655,7 +655,7 @@ async def test_count_memories(cortex_client, test_ids, cleanup_helper):
 async def test_memory_versioning(cortex_client, test_ids, cleanup_helper):
     """
     Test memory versioning on updates.
-    
+
     Port of: vector.test.ts - versioning tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -698,7 +698,7 @@ async def test_memory_versioning(cortex_client, test_ids, cleanup_helper):
 async def test_get_version(cortex_client, test_ids, cleanup_helper):
     """
     Test retrieving specific memory version.
-    
+
     Port of: vector.test.ts - getVersion tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -708,7 +708,7 @@ async def test_get_version(cortex_client, test_ids, cleanup_helper):
     v1 = await cortex_client.vector.store(memory_space_id, memory_input)
     memory_id = v1.memory_id
 
-    v2 = await cortex_client.vector.update(
+    await cortex_client.vector.update(
         memory_space_id,
         memory_id,
         {"content": "Version 2"},
@@ -750,7 +750,7 @@ async def test_get_version(cortex_client, test_ids, cleanup_helper):
 async def test_get_history(cortex_client, test_ids, cleanup_helper):
     """
     Test retrieving memory version history.
-    
+
     Port of: vector.test.ts - getHistory tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -788,7 +788,7 @@ async def test_get_history(cortex_client, test_ids, cleanup_helper):
 async def test_store_validates_in_convex_storage(cortex_client, test_ids, cleanup_helper):
     """
     Test that stored memory exists in Convex storage.
-    
+
     Port of: vector.test.ts - storage validation
     """
     memory_space_id = test_ids["memory_space_id"]

@@ -19,7 +19,7 @@ async def test_openai_stores_multiple_facts_with_real_embeddings(
 ):
     """
     Port of: memory.test.ts - "stores multiple facts with real embeddings and summarization"
-    
+
     Scenario: Customer support conversation with 5 key facts.
     Validates that embeddings are generated and summarization works.
     """
@@ -109,7 +109,7 @@ async def test_openai_recalls_facts_using_semantic_search(
 ):
     """
     Port of: memory.test.ts - "recalls facts using semantic search (not keyword matching)"
-    
+
     Test semantic understanding - queries don't match exact words but find correct facts.
     Note: This test requires MANAGED mode as LOCAL doesn't support vector search.
     """
@@ -208,7 +208,7 @@ async def test_openai_enriches_search_results_with_conversation_context(
 ):
     """
     Port of: memory.test.ts - "enriches search results with full conversation context"
-    
+
     Validates that enrichConversation returns full ACID source with conversation details.
     """
     if not embeddings_available():
@@ -288,7 +288,7 @@ async def test_openai_validates_summarization_quality(
 ):
     """
     Port of: memory.test.ts - "validates summarization quality"
-    
+
     Validates that gpt-4.1-nano produces concise, accurate summaries.
     """
     if not embeddings_available():
@@ -343,7 +343,7 @@ async def test_openai_similarity_scores_are_realistic(
 ):
     """
     Port of: memory.test.ts - "similarity scores are realistic (0-1 range)"
-    
+
     Validates that similarity scores are in valid 0-1 range.
     Note: This test requires MANAGED mode as LOCAL doesn't support vector search.
     """

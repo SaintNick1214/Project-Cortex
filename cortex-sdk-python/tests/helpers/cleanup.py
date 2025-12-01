@@ -696,19 +696,19 @@ class ScopedCleanupResult:
 class ScopedCleanup:
     """
     Scoped cleanup helper for parallel test execution.
-    
-    Unlike TestCleanup which purges data by prefix patterns, ScopedCleanup 
-    only deletes entities that match the test run's unique prefix. This enables 
+
+    Unlike TestCleanup which purges data by prefix patterns, ScopedCleanup
+    only deletes entities that match the test run's unique prefix. This enables
     safe parallel test execution without interference between test runs.
-    
+
     Example:
         >>> ctx = create_test_run_context()
         >>> cleanup = ScopedCleanup(cortex_client, ctx)
-        >>> 
+        >>>
         >>> # Create test data using ctx generators
         >>> user_id = ctx.user_id("alice")
         >>> await cortex.users.update(user_id, {"name": "Alice"})
-        >>> 
+        >>>
         >>> # Clean up only this run's data
         >>> result = await cleanup.cleanup_all()
         >>> print(f"Deleted {result.total} entities")
@@ -717,7 +717,7 @@ class ScopedCleanup:
     def __init__(self, cortex_client: Cortex, ctx: TestRunContext, verbose: bool = False):
         """
         Initialize scoped cleanup helper.
-        
+
         Args:
             cortex_client: Cortex SDK instance
             ctx: Test run context containing the run ID prefix
@@ -739,7 +739,7 @@ class ScopedCleanup:
     async def cleanup_conversations(self) -> int:
         """
         Cleanup conversations created by this test run.
-        
+
         Returns:
             Number of conversations deleted
         """
@@ -769,7 +769,7 @@ class ScopedCleanup:
     async def cleanup_memory_spaces(self) -> int:
         """
         Cleanup memory spaces created by this test run.
-        
+
         Returns:
             Number of memory spaces deleted
         """
@@ -798,7 +798,7 @@ class ScopedCleanup:
     async def cleanup_memories(self) -> int:
         """
         Cleanup memories in memory spaces belonging to this test run.
-        
+
         Returns:
             Number of memories deleted
         """
@@ -836,7 +836,7 @@ class ScopedCleanup:
     async def cleanup_facts(self) -> int:
         """
         Cleanup facts in memory spaces belonging to this test run.
-        
+
         Returns:
             Number of facts deleted
         """
@@ -874,7 +874,7 @@ class ScopedCleanup:
     async def cleanup_contexts(self) -> int:
         """
         Cleanup contexts created by this test run.
-        
+
         Returns:
             Number of contexts deleted
         """
@@ -905,7 +905,7 @@ class ScopedCleanup:
     async def cleanup_users(self) -> int:
         """
         Cleanup users created by this test run.
-        
+
         Returns:
             Number of users deleted
         """
@@ -934,7 +934,7 @@ class ScopedCleanup:
     async def cleanup_agents(self) -> int:
         """
         Cleanup agents created by this test run.
-        
+
         Returns:
             Number of agents deleted
         """
@@ -963,7 +963,7 @@ class ScopedCleanup:
     async def cleanup_immutable(self) -> int:
         """
         Cleanup immutable records created by this test run (excludes users).
-        
+
         Returns:
             Number of immutable records deleted
         """
@@ -997,7 +997,7 @@ class ScopedCleanup:
     async def cleanup_mutable(self) -> int:
         """
         Cleanup mutable records created by this test run.
-        
+
         Returns:
             Number of mutable records deleted
         """
@@ -1028,7 +1028,7 @@ class ScopedCleanup:
         """
         Cleanup all entities created by this test run.
         Order matters: delete dependent entities first.
-        
+
         Returns:
             Summary of deleted entities
         """
@@ -1054,7 +1054,7 @@ class ScopedCleanup:
     async def verify_cleanup(self) -> bool:
         """
         Verify that no entities from this test run remain in the database.
-        
+
         Returns:
             True if cleanup was complete, False if orphaned entities found
         """
@@ -1071,7 +1071,7 @@ class ScopedCleanup:
     async def count_remaining(self) -> Dict[str, int]:
         """
         Count remaining entities that belong to this test run.
-        
+
         Returns:
             Dictionary with counts per entity type
         """

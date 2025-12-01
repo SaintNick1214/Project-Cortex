@@ -24,7 +24,7 @@ from cortex.immutable import ImmutableValidationError
 async def test_store_creates_version_1(cortex_client):
     """
     Test creating version 1 for new entry.
-    
+
     Port of: immutable.test.ts - line 83
     """
     import time
@@ -60,7 +60,7 @@ async def test_store_creates_version_1(cortex_client):
 async def test_store_creates_version_2_on_update(cortex_client):
     """
     Test creating version 2 when updating existing entry.
-    
+
     Port of: immutable.test.ts - versioning tests
     """
     import time
@@ -105,11 +105,11 @@ async def test_store_creates_version_2_on_update(cortex_client):
 async def test_get_latest_version(cortex_client):
     """
     Test getting latest version of an entry.
-    
+
     Port of: immutable.test.ts - get tests
     """
     # Create entry
-    stored = await cortex_client.immutable.store(
+    await cortex_client.immutable.store(
         ImmutableEntry(
             type="test-config",
             id="app-settings",
@@ -133,7 +133,7 @@ async def test_get_latest_version(cortex_client):
 async def test_get_nonexistent_returns_none(cortex_client):
     """
     Test that getting non-existent entry returns None.
-    
+
     Port of: immutable.test.ts - get tests
     """
     result = await cortex_client.immutable.get("test-config", "does-not-exist")
@@ -150,11 +150,11 @@ async def test_get_nonexistent_returns_none(cortex_client):
 async def test_get_specific_version(cortex_client):
     """
     Test retrieving specific version of an entry.
-    
+
     Port of: immutable.test.ts - getVersion tests
     """
     # Create version 1
-    v1 = await cortex_client.immutable.store(
+    await cortex_client.immutable.store(
         ImmutableEntry(
             type="test-config",
             id="settings-ver",
@@ -163,7 +163,7 @@ async def test_get_specific_version(cortex_client):
     )
 
     # Create version 2
-    v2 = await cortex_client.immutable.store(
+    await cortex_client.immutable.store(
         ImmutableEntry(
             type="test-config",
             id="settings-ver",
@@ -198,7 +198,7 @@ async def test_get_specific_version(cortex_client):
 async def test_get_version_history(cortex_client):
     """
     Test retrieving version history.
-    
+
     Port of: immutable.test.ts - getHistory tests
     """
     # Create entry with multiple versions
@@ -232,7 +232,7 @@ async def test_get_version_history(cortex_client):
 async def test_list_entries(cortex_client):
     """
     Test listing immutable entries.
-    
+
     Port of: immutable.test.ts - list tests
     """
     # Create multiple entries
@@ -267,11 +267,11 @@ async def test_list_entries(cortex_client):
 async def test_count_entries(cortex_client, ctx):
     """
     Test counting immutable entries.
-    
+
     Port of: immutable.test.ts - count tests
     """
     immutable_type = ctx.immutable_type("test-count")
-    
+
     # Create entries
     for i in range(3):
         await cortex_client.immutable.store(
@@ -298,12 +298,12 @@ async def test_count_entries(cortex_client, ctx):
 async def test_purge_entry(cortex_client, ctx):
     """
     Test purging an immutable entry (all versions).
-    
+
     Port of: immutable.test.ts - purge tests
     """
     immutable_type = ctx.immutable_type("test-purge")
     immutable_id = ctx.immutable_id("purge-test")
-    
+
     # Create entry with multiple versions
     await cortex_client.immutable.store(
         ImmutableEntry(type=immutable_type, id=immutable_id, data={"content": "Version 1"})
@@ -314,7 +314,7 @@ async def test_purge_entry(cortex_client, ctx):
     )
 
     # Purge entry
-    result = await cortex_client.immutable.purge(immutable_type, immutable_id)
+    await cortex_client.immutable.purge(immutable_type, immutable_id)
 
     # Verify purged
     retrieved = await cortex_client.immutable.get(immutable_type, immutable_id)
@@ -331,11 +331,11 @@ async def test_purge_entry(cortex_client, ctx):
 async def test_search_immutable(cortex_client, ctx):
     """
     Test searching immutable entries.
-    
+
     Port of: immutable.test.ts - search tests
     """
     immutable_type = ctx.immutable_type("test-search-article")
-    
+
     # Create searchable entries
     await cortex_client.immutable.store(
         ImmutableEntry(

@@ -27,7 +27,7 @@ from tests.helpers import create_test_memory_input
 async def test_remember_creates_conversation_and_memories(cortex_client, test_ids, cleanup_helper):
     """
     Test that remember() creates both conversation and memories.
-    
+
     Port of: integration.test.ts - remember integration
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -70,7 +70,7 @@ async def test_remember_creates_conversation_and_memories(cortex_client, test_id
 async def test_forget_deletes_both_layers(cortex_client, test_ids, cleanup_helper):
     """
     Test that forget() can delete from both ACID and Vector layers.
-    
+
     Port of: integration.test.ts - forget integration
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -118,7 +118,7 @@ async def test_forget_deletes_both_layers(cortex_client, test_ids, cleanup_helpe
 async def test_cross_layer_reference_integrity(cortex_client, test_ids, cleanup_helper):
     """
     Test reference integrity between layers.
-    
+
     Port of: integration.test.ts - reference integrity
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -127,7 +127,7 @@ async def test_cross_layer_reference_integrity(cortex_client, test_ids, cleanup_
 
     # Create conversation
     from cortex import ConversationParticipants, CreateConversationInput
-    conv = await cortex_client.conversations.create(
+    await cortex_client.conversations.create(
         CreateConversationInput(
             conversation_id=conversation_id,
             memory_space_id=memory_space_id,
@@ -181,7 +181,7 @@ async def test_cross_layer_reference_integrity(cortex_client, test_ids, cleanup_
 async def test_memory_facts_linkage(cortex_client, test_ids, cleanup_helper):
     """
     Test linkage between memories and facts.
-    
+
     Port of: integration.test.ts - memory-facts integration
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -230,7 +230,7 @@ async def test_memory_facts_linkage(cortex_client, test_ids, cleanup_helper):
 async def test_user_cascade_affects_all_layers(cortex_client, test_ids, cleanup_helper):
     """
     Test user deletion cascades to all layers.
-    
+
     Port of: integration.test.ts - cascade integration
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -285,21 +285,21 @@ async def test_user_cascade_affects_all_layers(cortex_client, test_ids, cleanup_
 async def test_memory_space_isolation(cortex_client, test_ids, cleanup_helper):
     """
     Test that memory spaces are isolated from each other.
-    
+
     Port of: integration.test.ts - isolation tests
     """
     space_1 = test_ids["memory_space_id"]
     space_2 = space_1 + "-isolated"
-    user_id = test_ids["user_id"]
+    test_ids["user_id"]
 
     # Create memory in space 1
-    mem1 = await cortex_client.vector.store(
+    await cortex_client.vector.store(
         space_1,
         create_test_memory_input(content="Space 1 memory"),
     )
 
     # Create memory in space 2
-    mem2 = await cortex_client.vector.store(
+    await cortex_client.vector.store(
         space_2,
         create_test_memory_input(content="Space 2 memory"),
     )
