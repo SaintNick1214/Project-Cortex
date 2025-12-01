@@ -95,7 +95,10 @@ class VectorAPI:
             "sourceUserId": input.source.get("userId") if isinstance(input.source, dict) else getattr(input.source, "user_id", None),
             "sourceUserName": input.source.get("userName") if isinstance(input.source, dict) else getattr(input.source, "user_name", None),
                 "userId": input.user_id,
-                "messageRole": getattr(input, "message_role", None),  # NEW: For semantic search weighting
+                "messageRole": getattr(input, "message_role", None),  # For semantic search weighting
+                # Enrichment fields (for bullet-proof retrieval)
+                "enrichedContent": getattr(input, "enriched_content", None),  # Concatenated searchable content
+                "factCategory": getattr(input, "fact_category", None),  # Category for filtering
                 "conversationRef": (
                     {
                         "conversationId": input.conversation_ref.get("conversationId") if isinstance(input.conversation_ref, dict) else input.conversation_ref.conversation_id,

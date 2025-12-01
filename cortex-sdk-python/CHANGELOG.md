@@ -5,6 +5,144 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.0] - 2025-11-30
+
+### 🎯 Enriched Fact Extraction - Bullet-Proof Semantic Search
+
+**Comprehensive enhancement to fact extraction and retrieval, ensuring extracted facts always rank #1 in semantic search through rich metadata, search aliases, and category-based boosting.**
+
+#### ✨ New Features
+
+**1. Enriched Fact Extraction System**
+
+Facts can now store rich metadata optimized for retrieval:
+
+- **`category`** - Specific sub-category for filtering (e.g., "addressing_preference")
+- **`search_aliases`** - Array of alternative search terms that should match this fact
+- **`semantic_context`** - Usage context sentence explaining when/how to use this information
+- **`entities`** - Array of extracted entities with name, type, and optional full_value
+- **`relations`** - Array of subject-predicate-object triples for graph integration
+
+```python
+await cortex.facts.store(
+    StoreFactParams(
+        memory_space_id="agent-1",
+        fact="User prefers to be called Alex",
+        fact_type="identity",
+        confidence=95,
+        source_type="conversation",
+
+        # Enrichment fields (NEW)
+        category="addressing_preference",
+        search_aliases=["name", "nickname", "what to call", "address as", "greet"],
+        semantic_context="Use 'Alex' when addressing, greeting, or referring to this user",
+        entities=[
+            EnrichedEntity(name="Alex", type="preferred_name", full_value="Alexander Johnson"),
+        ],
+        relations=[
+            EnrichedRelation(subject="user", predicate="prefers_to_be_called", object="Alex"),
+        ],
+    )
+)
+```
+
+**2. Enhanced Search Boosting**
+
+Vector memory search now applies intelligent boosting:
+
+| Condition | Boost |
+|-----------|-------|
+| User message role (`message_role="user"`) | +20% |
+| Matching `fact_category` (when `query_category` provided) | +30% |
+| Has `enriched_content` field | +10% |
+
+```python
+# Search with category boosting
+results = await cortex.memory.search(
+    memory_space_id,
+    query,
+    SearchOptions(
+        embedding=await generate_embedding(query),
+        query_category="addressing_preference",  # Boost matching facts
+    )
+)
+```
+
+**3. Enriched Content for Vector Indexing**
+
+New `enriched_content` field on memories concatenates all searchable content for embedding.
+
+**4. Enhanced Graph Synchronization**
+
+Graph sync now creates richer entity nodes and relationship edges from enriched facts:
+
+- **Entity nodes** include `entity_type` and `full_value` properties
+- **Relations** create typed edges (e.g., `PREFERS_TO_BE_CALLED`)
+- **MENTIONS edges** link facts to extracted entities with role metadata
+
+**5. New Types (Python)**
+
+```python
+@dataclass
+class EnrichedEntity:
+    """Entity extracted from enriched fact extraction."""
+    name: str
+    type: str
+    full_value: Optional[str] = None
+
+
+@dataclass
+class EnrichedRelation:
+    """Relation extracted from enriched fact extraction."""
+    subject: str
+    predicate: str
+    object: str
+```
+
+Updated dataclasses:
+
+- `StoreFactParams` - Added `category`, `search_aliases`, `semantic_context`, `entities`, `relations`
+- `FactRecord` - Added same enrichment fields
+- `StoreMemoryInput` - Added `enriched_content`, `fact_category`
+- `MemoryEntry` - Added `enriched_content`, `fact_category`
+
+#### 📊 Schema Changes
+
+**Facts Table (Layer 3):**
+
+- `category` - Specific sub-category
+- `searchAliases` - Alternative search terms
+- `semanticContext` - Usage context
+- `entities` - Extracted entities with types
+- `relations` - Relationship triples for graph
+
+**Memories Table (Layer 2):**
+
+- `enrichedContent` - Concatenated searchable content
+- `factCategory` - Category for boosting
+- `factsRef` - Reference to Layer 3 fact
+
+#### 🧪 Testing
+
+- Enhanced semantic search tests with strict top-1 validation
+- Validates bullet-proof retrieval: correct result must be #1
+
+#### 📚 Documentation
+
+- Updated Facts Operations API with enrichment fields and examples
+- Updated Memory Operations API with query_category and enriched_content
+- New "Enriched Fact Extraction" section explaining the system architecture
+
+#### 🔄 Backward Compatibility
+
+✅ **Zero Breaking Changes**
+
+- All enrichment fields are optional
+- Existing code works without modifications
+- No data migration required
+
+---
+
 ## [0.14.0] - 2025-11-29
 
 ### 🤖 A2A (Agent-to-Agent) Communication API

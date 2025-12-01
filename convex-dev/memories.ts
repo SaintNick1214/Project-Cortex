@@ -31,6 +31,7 @@ export const store = mutation({
       v.literal("system"),
       v.literal("tool"),
       v.literal("a2a"),
+      v.literal("fact-extraction"), // NEW: For fact-extracted memories
     ),
     sourceUserId: v.optional(v.string()),
     sourceUserName: v.optional(v.string()),
@@ -38,6 +39,9 @@ export const store = mutation({
     messageRole: v.optional(
       v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
     ), // NEW: For semantic search weighting
+    // Enrichment fields (for bullet-proof retrieval)
+    enrichedContent: v.optional(v.string()), // Concatenated searchable content for embedding
+    factCategory: v.optional(v.string()), // Category for filtering (e.g., "addressing_preference")
     conversationRef: v.optional(
       v.object({
         conversationId: v.string(),
@@ -59,6 +63,12 @@ export const store = mutation({
         snapshotAt: v.number(),
       }),
     ),
+    factsRef: v.optional(
+      v.object({
+        factId: v.string(),
+        version: v.optional(v.number()),
+      }),
+    ), // NEW: Reference to Layer 3 fact
     importance: v.number(),
     tags: v.array(v.string()),
   },
@@ -78,10 +88,14 @@ export const store = mutation({
       sourceUserName: args.sourceUserName,
       sourceTimestamp: now,
       messageRole: args.messageRole, // NEW
+      // Enrichment fields
+      enrichedContent: args.enrichedContent,
+      factCategory: args.factCategory,
       userId: args.userId,
       conversationRef: args.conversationRef,
       immutableRef: args.immutableRef,
       mutableRef: args.mutableRef,
+      factsRef: args.factsRef, // NEW
       importance: args.importance,
       tags: args.tags,
       version: 1,
@@ -293,6 +307,7 @@ export const search = query({
     ),
     minImportance: v.optional(v.number()),
     minScore: v.optional(v.number()), // NEW: Minimum similarity score (0-1)
+    queryCategory: v.optional(v.string()), // NEW: Category to boost (for bullet-proof retrieval)
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
@@ -398,20 +413,37 @@ export const search = query({
       results = results.filter((m) => m.importance >= args.minImportance!);
     }
 
-    // Apply role-based weighting for semantic search (BEFORE filtering by minScore)
+    // Apply role-based and category-based weighting for semantic search (BEFORE filtering by minScore)
     // This helps user messages (facts about the user) rank higher than agent responses
+    // And category-matched facts rank higher for bullet-proof retrieval
     if (args.embedding && args.embedding.length > 0) {
       results = results.map((m: any) => {
+        let score = m._score ?? 0;
+
         // Boost user messages by 20% for better semantic ranking
         // This helps queries like "what should I address the user as" find user names
         // instead of agent responses like "I've noted your email address"
-        if (m.messageRole === "user" && m._score !== undefined) {
-          return {
-            ...m,
-            _score: m._score * 1.2, // 20% boost for user messages
-          };
+        if (m.messageRole === "user") {
+          score *= 1.2; // 20% boost for user messages
         }
-        return m;
+
+        // NEW: Category-based boosting for bullet-proof retrieval
+        // Boost facts that match the query's category by 30%
+        // This ensures "addressing_preference" facts rank highest for "what to call" queries
+        if (args.queryCategory && m.factCategory === args.queryCategory) {
+          score *= 1.3; // 30% boost for matching category
+        }
+
+        // Additional boost for enriched content (facts with semantic context)
+        // These are more retrieval-optimized and should rank higher
+        if (m.enrichedContent) {
+          score *= 1.1; // 10% boost for enriched facts
+        }
+
+        return {
+          ...m,
+          _score: score,
+        };
       });
 
       // Re-sort after applying weights
