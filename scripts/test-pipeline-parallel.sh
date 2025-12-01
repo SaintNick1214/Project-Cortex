@@ -2,7 +2,7 @@
 set -e
 
 # Advanced Local Pipeline Test Script
-# Runs MULTIPLE Python test processes in parallel to truly simulate CI matrix
+# Runs MULTIPLE test processes in parallel to truly simulate CI concurrent execution
 
 # Colors
 RED='\033[0;31m'
@@ -16,8 +16,8 @@ NC='\033[0m'
 echo ""
 echo "╔════════════════════════════════════════════════════════════════╗"
 echo "║          ADVANCED LOCAL PIPELINE SIMULATOR                     ║"
-echo "║   Runs 5 parallel Python test suites + TypeScript tests       ║"
-echo "║             (Simulates full CI matrix locally)                 ║"
+echo "║   Runs parallel Python + TypeScript test suites               ║"
+echo "║             (Simulates concurrent CI execution)                ║"
 echo "╚════════════════════════════════════════════════════════════════╝"
 echo ""
 
@@ -28,12 +28,16 @@ if [ -z "$LOCAL_CONVEX_URL" ]; then
     exit 1
 fi
 
-# Check number of parallel runs (default 5 to match CI)
-PARALLEL_RUNS=${1:-5}
+# Check number of parallel runs
+PYTHON_PARALLEL=${1:-5}
+TS_PARALLEL=${2:-3}
+TOTAL_JOBS=$((PYTHON_PARALLEL + TS_PARALLEL))
 
 echo -e "${CYAN}🔍 Configuration:${NC}"
 echo "   Convex URL: $LOCAL_CONVEX_URL"
-echo "   Parallel Python runs: $PARALLEL_RUNS"
+echo "   Parallel Python runs: $PYTHON_PARALLEL"
+echo "   Parallel TypeScript runs: $TS_PARALLEL"
+echo "   Total parallel processes: $TOTAL_JOBS"
 echo "   Working Dir: $(pwd)"
 echo ""
 
@@ -55,7 +59,7 @@ echo ""
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${BLUE}STAGE 2: Launch ${PARALLEL_RUNS} Parallel Test Processes${NC}"
+echo -e "${BLUE}STAGE 2: Launch $TOTAL_JOBS Parallel Test Processes${NC}"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
@@ -70,25 +74,30 @@ declare -A JOB_NAMES
 START_TIME=$(date +%s)
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Launch TypeScript Tests
+# Launch N Parallel TypeScript Test Runs
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-echo -e "${MAGENTA}📦 TypeScript SDK${NC}"
-(
-    CONVEX_TEST_MODE=local npm test > "$LOGS_DIR/ts.log" 2>&1
-    echo $? > "$LOGS_DIR/ts.exit"
-) &
-PIDS["ts"]=$!
-JOB_NAMES["ts"]="TypeScript SDK"
-echo "   Started (PID: ${PIDS["ts"]})"
+echo -e "${MAGENTA}📦 TypeScript SDK (${TS_PARALLEL} parallel runs)${NC}"
+
+for i in $(seq 1 $TS_PARALLEL); do
+    (
+        CONVEX_TEST_MODE=local npm test > "$LOGS_DIR/ts-$i.log" 2>&1
+        echo $? > "$LOGS_DIR/ts-$i.exit"
+    ) &
+    PIDS["ts-$i"]=$!
+    JOB_NAMES["ts-$i"]="TypeScript Run $i"
+    echo "   Run $i started (PID: ${PIDS["ts-$i"]})"
+done
+
+echo ""
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Launch N Parallel Python Test Runs
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-echo -e "${MAGENTA}🐍 Python SDK (${PARALLEL_RUNS} parallel runs)${NC}"
+echo -e "${MAGENTA}🐍 Python SDK (${PYTHON_PARALLEL} parallel runs)${NC}"
 
-for i in $(seq 1 $PARALLEL_RUNS); do
+for i in $(seq 1 $PYTHON_PARALLEL); do
     (
         cd cortex-sdk-python
         CONVEX_URL=$LOCAL_CONVEX_URL \
@@ -107,14 +116,13 @@ echo ""
 # Real-time Progress Updates
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-echo -e "${CYAN}⏳ Monitoring $((PARALLEL_RUNS + 1)) parallel jobs...${NC}"
+echo -e "${CYAN}⏳ Monitoring $TOTAL_JOBS parallel jobs...${NC}"
 echo ""
 
 # Show live progress
 COMPLETED=0
-TOTAL=$((PARALLEL_RUNS + 1))
 
-while [ $COMPLETED -lt $TOTAL ]; do
+while [ $COMPLETED -lt $TOTAL_JOBS ]; do
     COMPLETED=0
     
     # Clear line and show status
@@ -133,9 +141,9 @@ while [ $COMPLETED -lt $TOTAL ]; do
         fi
     done
     
-    echo -ne " ($COMPLETED/$TOTAL complete)"
+    echo -ne " ($COMPLETED/$TOTAL_JOBS complete)"
     
-    if [ $COMPLETED -lt $TOTAL ]; then
+    if [ $COMPLETED -lt $TOTAL_JOBS ]; then
         sleep 1
     fi
 done
@@ -209,7 +217,7 @@ done
 
 echo ""
 echo -e "${CYAN}Summary:${NC}"
-echo "   Total jobs: $TOTAL"
+echo "   Total jobs: $TOTAL_JOBS"
 echo "   Duration: ${DURATION}s"
 echo "   Python SDK: $PYTHON_PASS/$PARALLEL_RUNS passed"
 
@@ -275,7 +283,8 @@ echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━
 echo -e "${GREEN}✅ ALL PARALLEL TESTS PASSED${NC}"
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
-echo "   🎉 Successfully ran $PARALLEL_RUNS parallel Python test suites"
+echo "   🎉 Successfully ran $TOTAL_JOBS parallel test processes"
+echo "      ($TS_PARALLEL TypeScript + $PYTHON_PARALLEL Python)"
 echo "      with zero conflicts in ${DURATION}s!"
 echo ""
 echo "   This proves the test isolation system works correctly."
