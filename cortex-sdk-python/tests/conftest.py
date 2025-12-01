@@ -17,10 +17,11 @@ import pytest
 from dotenv import load_dotenv
 
 # Load .env.local from project root to get graph database configuration
+# Note: override=False means command-line env vars take precedence over .env.local
 project_root = Path(__file__).parent.parent.parent
 env_file = project_root / ".env.local"
 if env_file.exists():
-    load_dotenv(env_file, override=True)
+    load_dotenv(env_file, override=False)
 
 from cortex import Cortex, CortexConfig  # noqa: E402
 from tests.helpers import (  # noqa: E402

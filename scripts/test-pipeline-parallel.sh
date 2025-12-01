@@ -38,9 +38,19 @@ fi
 
 PYTHON_PARALLEL=${1:-5}
 TS_PARALLEL=${2:-3}
+RUN_PACKAGES=${3:-true}  # Third arg: include package tests (default: true)
 TOTAL_JOBS=$((PYTHON_PARALLEL + TS_PARALLEL))
 
-echo -e "${CYAN}🔍 Config: $TOTAL_JOBS jobs ($TS_PARALLEL TS + $PYTHON_PARALLEL Python)${NC}"
+if [ "$RUN_PACKAGES" == "true" ]; then
+    TOTAL_JOBS=$((TOTAL_JOBS + 2))  # +2 for Vercel AI Provider + CLI
+fi
+
+echo -e "${CYAN}🔍 Config: $TOTAL_JOBS jobs ($TS_PARALLEL TS + $PYTHON_PARALLEL Python"
+if [ "$RUN_PACKAGES" == "true" ]; then
+    echo -e "             + 1 Vercel AI Provider + 1 CLI)${NC}"
+else
+    echo -e ")${NC}"
+fi
 echo ""
 
 # Purge
@@ -50,7 +60,7 @@ echo ""
 
 # Launch tests
 LOGS_DIR=$(mktemp -d)
-echo -e "${CYAN}📦 Launching TypeScript ($TS_PARALLEL runs)...${NC}"
+echo -e "${CYAN}📦 Launching TypeScript SDK ($TS_PARALLEL runs)...${NC}"
 
 for i in $(seq 1 $TS_PARALLEL); do
     (CONVEX_TEST_MODE=local npm test > "$LOGS_DIR/ts-$i.log" 2>&1; echo $? > "$LOGS_DIR/ts-$i.exit") &
@@ -58,12 +68,39 @@ for i in $(seq 1 $TS_PARALLEL); do
 done
 
 echo ""
-echo -e "${CYAN}🐍 Launching Python ($PYTHON_PARALLEL runs)...${NC}"
+echo -e "${CYAN}🐍 Launching Python SDK ($PYTHON_PARALLEL runs)...${NC}"
 
 for i in $(seq 1 $PYTHON_PARALLEL); do
     (cd cortex-sdk-python && CONVEX_URL=$LOCAL_CONVEX_URL CONVEX_TEST_MODE=local pytest tests/ -q > "$LOGS_DIR/python-$i.log" 2>&1; echo $? > "$LOGS_DIR/python-$i.exit") &
     echo "   Run $i (PID: $!)"
 done
+
+# Package tests (run once each in parallel with SDK tests)
+if [ "$RUN_PACKAGES" == "true" ]; then
+    echo ""
+    echo -e "${CYAN}⚡ Launching Vercel AI Provider tests...${NC}"
+    (
+        npm run build > /dev/null 2>&1
+        cd packages/vercel-ai-provider
+        npm install > /dev/null 2>&1
+        npm test > "$LOGS_DIR/vercel-ai.log" 2>&1
+        echo $? > "$LOGS_DIR/vercel-ai.exit"
+    ) &
+    echo "   Started (PID: $!)"
+
+    echo ""
+    echo -e "${CYAN}🔧 Launching CLI tests (⚠ hits DB - may conflict!)...${NC}"
+    (
+        npm run build > /dev/null 2>&1
+        cd packages/cortex-cli
+        npm install > /dev/null 2>&1
+        npm run test:unit > "$LOGS_DIR/cli-unit.tmp" 2>&1
+        CONVEX_URL=$LOCAL_CONVEX_URL npm run test:integration >> "$LOGS_DIR/cli.log" 2>&1
+        cat "$LOGS_DIR/cli-unit.tmp" >> "$LOGS_DIR/cli.log"
+        echo $? > "$LOGS_DIR/cli.exit"
+    ) &
+    echo "   Started (PID: $!)"
+fi
 
 echo ""
 echo -e "${CYAN}⏳ Waiting for completion...${NC}"
@@ -103,6 +140,30 @@ for i in $(seq 1 $PYTHON_PARALLEL); do
     fi
 done
 
+# Package tests results
+if [ "$RUN_PACKAGES" == "true" ]; then
+    echo ""
+    echo -e "${CYAN}Package Tests:${NC}"
+    
+    # Vercel AI Provider
+    exit_code=$(cat "$LOGS_DIR/vercel-ai.exit" 2>/dev/null || echo 1)
+    if [ $exit_code -eq 0 ]; then
+        echo -e "   ${GREEN}✓${NC} Vercel AI Provider"
+    else
+        echo -e "   ${RED}✗${NC} Vercel AI Provider"
+        ALL_PASSED=false
+    fi
+    
+    # CLI
+    exit_code=$(cat "$LOGS_DIR/cli.exit" 2>/dev/null || echo 1)
+    if [ $exit_code -eq 0 ]; then
+        echo -e "   ${GREEN}✓${NC} Cortex CLI"
+    else
+        echo -e "   ${RED}✗${NC} Cortex CLI (may have DB conflicts)"
+        ALL_PASSED=false
+    fi
+fi
+
 echo ""
 
 if [ "$ALL_PASSED" = "true" ]; then
@@ -112,5 +173,8 @@ if [ "$ALL_PASSED" = "true" ]; then
 else
     echo -e "${RED}❌ SOME TESTS FAILED${NC}"
     echo "   Check logs: $LOGS_DIR"
+    echo ""
+    echo "   Usage: ./scripts/test-pipeline-parallel.sh [PYTHON_RUNS] [TS_RUNS] [RUN_PACKAGES]"
+    echo "   Example: ./scripts/test-pipeline-parallel.sh 3 2 false  # Skip package tests"
     exit 1
 fi
