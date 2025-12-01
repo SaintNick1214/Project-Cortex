@@ -332,11 +332,16 @@ class ImmutableAPI:
         validate_type(type, "type")
         validate_id(id, "id")
 
-        result = await self.client.mutation(
-            "immutable:purge", filter_none_values({"type": type, "id": id})
-        )
-
-        return cast(Dict[str, Any], result)
+        try:
+            result = await self.client.mutation(
+                "immutable:purge", filter_none_values({"type": type, "id": id})
+            )
+            return cast(Dict[str, Any], result)
+        except Exception as e:
+            # Entry may not exist (already deleted by parallel run or global purge)
+            if "IMMUTABLE_ENTRY_NOT_FOUND" in str(e):
+                return {"deleted": 0}
+            raise
 
     async def purge_many(
         self,
