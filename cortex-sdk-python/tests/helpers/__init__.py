@@ -34,7 +34,13 @@ from .assertions import (
     wait_for_count,
 )
 from .cleanup import ScopedCleanup, ScopedCleanupResult, TestCleanup
-from .embeddings import embeddings_available, generate_embedding, summarize_conversation
+from .embeddings import (
+    build_enriched_content,
+    embeddings_available,
+    extract_facts_enriched,
+    generate_embedding,
+    summarize_conversation,
+)
 from .generators import (
     create_test_conversation_input,
     create_test_fact_input,
@@ -69,6 +75,8 @@ __all__ = [
     "generate_embedding",
     "embeddings_available",
     "summarize_conversation",
+    "extract_facts_enriched",
+    "build_enriched_content",
     "validate_conversation_storage",
     "validate_memory_storage",
     "validate_fact_storage",

@@ -1144,8 +1144,8 @@ describe("Memory Convenience API (Layer 3)", () => {
         }
 
         // Test semantic understanding (queries don't match exact words)
-        // Note: Semantic search ranking can vary with embedding model updates,
-        // so we check if expected content appears in top results (not strictly #1)
+        // STRICT VALIDATION: Expected content MUST be in the top 1 result
+        // This matches the Python test's strictness for bullet-proof retrieval
         const searches = [
           {
             query: "what should I address the user as",
@@ -1170,42 +1170,45 @@ describe("Memory Convenience API (Layer 3)", () => {
             {
               embedding: await generateEmbedding(search.query),
               userId: TEST_USER_ID,
-              limit: 10, // Get more results to handle edge cases in similarity scoring
+              limit: 10, // Get more results for debugging context
             },
           )) as unknown[];
 
           // Should find the relevant fact (semantic match, not keyword)
           expect(results.length).toBeGreaterThan(0);
 
-          // Check if expected content appears in any of the top 5 results
-          // Semantic search ranking can vary, but the relevant result should be highly ranked
-          const topResults = results.slice(0, 5) as {
+          // STRICT: Get only the top result for validation
+          const topResult = results[0] as {
             content: string;
             _score?: number;
-          }[];
-          const matchingResult = topResults.find((r) =>
-            r.content
-              .toLowerCase()
-              .includes(search.expectInContent.toLowerCase()),
-          );
+          };
 
-          // Log results for debugging
-          if (!matchingResult) {
+          // Check if expected content is in the TOP 1 result (not top 5)
+          const isInTopResult = topResult.content
+            .toLowerCase()
+            .includes(search.expectInContent.toLowerCase());
+
+          // Log all top 5 results for debugging context
+          if (!isInTopResult) {
             console.log(
-              `  ⚠ Query: "${search.query}" - Expected "${search.expectInContent}" not in top 5:`,
+              `  ⚠ Query: "${search.query}" - Expected "${search.expectInContent}" NOT in top result:`,
             );
-            topResults.forEach((r, i) => {
-              console.log(
-                `    ${i + 1}. "${r.content.substring(0, 80)}..." (score: ${r._score?.toFixed(3) || "N/A"})`,
-              );
-            });
+            (results.slice(0, 5) as { content: string; _score?: number }[]).forEach(
+              (r, i) => {
+                console.log(
+                  `    ${i + 1}. "${r.content.substring(0, 80)}..." (score: ${r._score?.toFixed(3) || "N/A"})`,
+                );
+              },
+            );
           }
 
-          // Validate: Expected content MUST appear in top 5 results
-          expect(matchingResult).toBeDefined();
+          // STRICT VALIDATION: Top result MUST contain expected content
+          expect(isInTopResult).toBe(true);
 
           // Log for visibility
-          const matchIndex = topResults.findIndex((r) =>
+          const matchIndex = (
+            results.slice(0, 5) as { content: string; _score?: number }[]
+          ).findIndex((r) =>
             r.content
               .toLowerCase()
               .includes(search.expectInContent.toLowerCase()),

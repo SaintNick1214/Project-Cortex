@@ -300,6 +300,11 @@ export interface MemoryEntry {
   mutableRef?: MutableRef;
   importance: number;
   tags: string[];
+
+  // Enrichment fields (for bullet-proof retrieval)
+  enrichedContent?: string; // Concatenated searchable content for embedding
+  factCategory?: string; // Category for filtering (e.g., "addressing_preference")
+
   version: number;
   previousVersions: MemoryVersion[];
   createdAt: number;
@@ -315,6 +320,11 @@ export interface StoreMemoryInput {
   embedding?: number[];
   userId?: string;
   messageRole?: "user" | "agent" | "system"; // NEW: For semantic search weighting
+
+  // Enrichment fields (for bullet-proof retrieval)
+  enrichedContent?: string; // Concatenated searchable content for embedding
+  factCategory?: string; // Category for filtering (e.g., "addressing_preference")
+
   source: {
     type: SourceType;
     userId?: string;
@@ -601,6 +611,20 @@ export interface ExportMemoriesOptions {
 // Layer 3: Facts Store (NEW)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+// Entity type for enriched fact extraction
+export interface EnrichedEntity {
+  name: string;
+  type: string;
+  fullValue?: string;
+}
+
+// Relation type for enriched fact extraction
+export interface EnrichedRelation {
+  subject: string;
+  predicate: string;
+  object: string;
+}
+
 export interface FactRecord {
   _id: string;
   factId: string;
@@ -628,6 +652,14 @@ export interface FactRecord {
   };
   metadata?: Record<string, unknown>;
   tags: string[];
+
+  // Enrichment fields (for bullet-proof retrieval)
+  category?: string; // Specific sub-category (e.g., "addressing_preference")
+  searchAliases?: string[]; // Alternative search terms
+  semanticContext?: string; // Usage context sentence
+  entities?: EnrichedEntity[]; // Extracted entities with types
+  relations?: EnrichedRelation[]; // Subject-predicate-object triples for graph
+
   validFrom?: number;
   validUntil?: number;
   version: number;
@@ -662,6 +694,14 @@ export interface StoreFactParams {
   };
   metadata?: Record<string, unknown>;
   tags?: string[];
+
+  // Enrichment fields (for bullet-proof retrieval)
+  category?: string; // Specific sub-category (e.g., "addressing_preference")
+  searchAliases?: string[]; // Alternative search terms
+  semanticContext?: string; // Usage context sentence
+  entities?: EnrichedEntity[]; // Extracted entities with types
+  relations?: EnrichedRelation[]; // Subject-predicate-object triples for graph
+
   validFrom?: number;
   validUntil?: number;
 }

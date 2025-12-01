@@ -1,10 +1,12 @@
 # Memory Operations API
 
-> **Last Updated**: 2025-11-23
+> **Last Updated**: 2025-11-30
 
 Complete API reference for memory operations across memory spaces.
 
-> **Enhanced in v0.10.0**: `memory.rememberStream()` with progressive storage, streaming hooks, and comprehensive metrics
+> **Enhanced in v0.15.0**: `memory.rememberStream()` with progressive storage, streaming hooks, and comprehensive metrics
+>
+> **New in v0.15.0**: Enriched fact extraction with `enrichedContent` and `factCategory` for bullet-proof semantic search
 
 ## Overview
 
@@ -475,6 +477,10 @@ interface MemoryEntry {
   updatedAt: Date;
   lastAccessed?: Date;
   accessCount: number; // Always 0 for new
+
+  // Enrichment fields (v0.15.0+) - for bullet-proof retrieval
+  enrichedContent?: string; // Concatenated searchable content for embedding
+  factCategory?: string; // Category for filtering (e.g., "addressing_preference")
 }
 ```
 
@@ -702,7 +708,7 @@ await cortex.memory.remember({
 
 ### rememberStream()
 
-**ENHANCED in v0.10.0** - Advanced streaming orchestration with progressive storage, real-time fact extraction, comprehensive metrics, and error recovery.
+**ENHANCED in v0.15.0** - Advanced streaming orchestration with progressive storage, real-time fact extraction, comprehensive metrics, and error recovery.
 
 **Signature:**
 
@@ -1059,7 +1065,7 @@ export async function POST(req: Request) {
 }
 ```
 
-**Key Features (v0.10.0+):**
+**Key Features (v0.15.0+):**
 
 - ✅ **Progressive Storage** - Store partial memories during streaming (resumable)
 - ✅ **Streaming Hooks** - Real-time callbacks for monitoring and UI updates
@@ -1273,6 +1279,10 @@ interface SearchOptions {
   boostImportance?: boolean; // Boost by importance score
   boostRecent?: boolean; // Boost recent memories
   boostPopular?: boolean; // Boost frequently accessed
+
+  // Enriched fact boosting (v0.15.0+)
+  queryCategory?: string; // Category to boost (e.g., "addressing_preference")
+  // Facts with matching factCategory get +30% score boost
 }
 
 interface RangeQuery {

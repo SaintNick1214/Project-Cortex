@@ -19,6 +19,158 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.15.0] - 2025-11-30
+
+#### 🎯 Enriched Fact Extraction - Bullet-Proof Semantic Search
+
+**Comprehensive enhancement to fact extraction and retrieval, ensuring extracted facts always rank #1 in semantic search through rich metadata, search aliases, and category-based boosting.**
+
+#### ✨ New Features
+
+**1. Enriched Fact Extraction System**
+
+Facts can now store rich metadata optimized for retrieval:
+
+- **`category`** - Specific sub-category for filtering (e.g., "addressing_preference")
+- **`searchAliases`** - Array of alternative search terms that should match this fact
+- **`semanticContext`** - Usage context sentence explaining when/how to use this information
+- **`entities`** - Array of extracted entities with name, type, and optional fullValue
+- **`relations`** - Array of subject-predicate-object triples for graph integration
+
+```typescript
+await cortex.facts.store({
+  memorySpaceId: "agent-1",
+  fact: "User prefers to be called Alex",
+  factType: "identity",
+  confidence: 95,
+  sourceType: "conversation",
+
+  // Enrichment fields (NEW)
+  category: "addressing_preference",
+  searchAliases: ["name", "nickname", "what to call", "address as", "greet"],
+  semanticContext: "Use 'Alex' when addressing, greeting, or referring to this user",
+  entities: [
+    { name: "Alex", type: "preferred_name", fullValue: "Alexander Johnson" },
+  ],
+  relations: [
+    { subject: "user", predicate: "prefers_to_be_called", object: "Alex" },
+  ],
+});
+```
+
+**2. Enhanced Search Boosting**
+
+Vector memory search (`memories:search`) now applies intelligent boosting:
+
+| Condition | Boost |
+|-----------|-------|
+| User message role (`messageRole: "user"`) | +20% |
+| Matching `factCategory` (when `queryCategory` provided) | +30% |
+| Has `enrichedContent` field | +10% |
+
+```typescript
+// Search with category boosting
+const results = await cortex.memory.search(memorySpaceId, query, {
+  embedding: await generateEmbedding(query),
+  queryCategory: "addressing_preference", // Boost matching facts
+});
+```
+
+**3. Enriched Content for Vector Indexing**
+
+New `enrichedContent` field on memories concatenates all searchable content for embedding:
+
+```typescript
+// Example enrichedContent generated from enriched fact:
+// "User prefers to be called Alex | name nickname what to call address as | Use 'Alex' when addressing..."
+```
+
+**4. Enhanced Graph Synchronization**
+
+Graph sync now creates richer entity nodes and relationship edges from enriched facts:
+
+- **Entity nodes** include `entityType` and `fullValue` properties
+- **Relations** create typed edges (e.g., `PREFERS_TO_BE_CALLED`)
+- **MENTIONS edges** link facts to extracted entities with role metadata
+
+**5. New Types (TypeScript)**
+
+```typescript
+interface EnrichedEntity {
+  name: string;
+  type: string;
+  fullValue?: string;
+}
+
+interface EnrichedRelation {
+  subject: string;
+  predicate: string;
+  object: string;
+}
+
+// Updated StoreFactParams, FactRecord with enrichment fields
+// Updated StoreMemoryInput, MemoryEntry with enrichedContent, factCategory
+// Updated SearchOptions with queryCategory
+```
+
+**6. New Types (Python)**
+
+```python
+@dataclass
+class EnrichedEntity:
+    name: str
+    type: str
+    full_value: Optional[str] = None
+
+@dataclass
+class EnrichedRelation:
+    subject: str
+    predicate: str
+    object: str
+
+# Updated StoreFactParams, FactRecord with enrichment fields
+# Updated StoreMemoryInput, MemoryEntry with enriched_content, fact_category
+```
+
+#### 📊 Schema Changes
+
+**Facts Table (Layer 3):**
+
+- `category: v.optional(v.string())` - Specific sub-category
+- `searchAliases: v.optional(v.array(v.string()))` - Alternative search terms
+- `semanticContext: v.optional(v.string())` - Usage context
+- `entities: v.optional(v.array(v.object({...})))` - Extracted entities
+- `relations: v.optional(v.array(v.object({...})))` - Relationship triples
+
+**Memories Table (Layer 2):**
+
+- `enrichedContent: v.optional(v.string())` - Concatenated searchable content
+- `factCategory: v.optional(v.string())` - Category for boosting
+- `factsRef: v.optional(v.object({...}))` - Reference to Layer 3 fact
+
+#### 🧪 Testing
+
+- Strengthened TypeScript semantic search test to require top-1 result validation
+- Matches Python SDK test strictness for bullet-proof retrieval validation
+
+#### 📚 Documentation
+
+- Updated Facts Operations API with enrichment fields and examples
+- Updated Memory Operations API with queryCategory and enrichedContent
+- New "Enriched Fact Extraction" section explaining the system architecture
+- Search boosting logic documented with boost percentages
+
+#### 🔄 Backward Compatibility
+
+✅ **Zero Breaking Changes**
+
+- All enrichment fields are optional
+- Existing code works without modifications
+- No data migration required
+- Enrichment features are additive
+
+---
+
 ### [0.14.0] - 2025-11-29
 
 #### 🤖 A2A (Agent-to-Agent) Communication API

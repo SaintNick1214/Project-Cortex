@@ -1,6 +1,6 @@
 # Facts Operations API
 
-> **Last Updated**: 2025-10-30
+> **Last Updated**: 2025-11-30
 > **Version**: v0.7.0+
 
 Complete API reference for the Facts layer (Layer 3) - structured knowledge extraction and storage.
@@ -21,6 +21,7 @@ The Facts API (`cortex.facts.*`) provides structured knowledge storage with vers
 - ✅ Memory space isolation
 - ✅ **userId support (v0.9.1+)** - GDPR cascade deletion
 - ✅ **participantId support** - Hive Mode tracking
+- ✅ **Enriched fact extraction (v0.15.0+)** - Search aliases, semantic context, entities, relations
 
 **Relationship to Layers:**
 
@@ -72,6 +73,27 @@ interface StoreFactParams {
   tags?: string[];
   validFrom?: number; // Temporal validity start
   validUntil?: number; // Temporal validity end
+
+  // Enrichment fields (v0.15.0+) - for bullet-proof retrieval
+  category?: string; // Specific sub-category (e.g., "addressing_preference")
+  searchAliases?: string[]; // Alternative search terms for retrieval
+  semanticContext?: string; // Usage context sentence
+  entities?: EnrichedEntity[]; // Extracted entities with types
+  relations?: EnrichedRelation[]; // Subject-predicate-object triples for graph
+}
+
+// Enriched entity structure
+interface EnrichedEntity {
+  name: string; // Entity name (e.g., "Alex")
+  type: string; // Entity type (e.g., "preferred_name", "full_name")
+  fullValue?: string; // Full value if applicable (e.g., "Alexander Johnson")
+}
+
+// Enriched relation structure
+interface EnrichedRelation {
+  subject: string; // Subject entity (e.g., "user")
+  predicate: string; // Relationship type (e.g., "prefers_to_be_called")
+  object: string; // Object entity (e.g., "Alex")
 }
 
 interface StoreFactOptions {
@@ -116,6 +138,46 @@ const hiveFact = await cortex.facts.store({
   confidence: 98,
   sourceType: "conversation",
   tags: ["employment"],
+});
+
+// Enriched fact (v0.15.0+) - bullet-proof retrieval
+const enrichedFact = await cortex.facts.store({
+  memorySpaceId: "agent-1",
+  userId: "user-123",
+  fact: "User prefers to be called Alex",
+  factType: "identity",
+  subject: "user",
+  predicate: "prefers_to_be_called",
+  object: "Alex",
+  confidence: 95,
+  sourceType: "conversation",
+  tags: ["name", "preference"],
+
+  // Enrichment fields for better semantic search
+  category: "addressing_preference", // Specific sub-category
+  searchAliases: [
+    "name",
+    "nickname",
+    "what to call",
+    "address as",
+    "greet",
+    "refer to",
+    "how to address",
+  ],
+  semanticContext:
+    "Use 'Alex' when addressing, greeting, or referring to this user",
+  entities: [
+    { name: "Alex", type: "preferred_name", fullValue: "Alexander Johnson" },
+    { name: "Alexander Johnson", type: "full_name" },
+  ],
+  relations: [
+    { subject: "user", predicate: "prefers_to_be_called", object: "Alex" },
+    {
+      subject: "user",
+      predicate: "full_name_is",
+      object: "Alexander Johnson",
+    },
+  ],
 });
 ```
 
@@ -1055,6 +1117,13 @@ interface FactRecord {
   supersedes?: string;
   createdAt: number;
   updatedAt: number;
+
+  // Enrichment fields (v0.15.0+) - for bullet-proof retrieval
+  category?: string; // Specific sub-category (e.g., "addressing_preference")
+  searchAliases?: string[]; // Alternative search terms
+  semanticContext?: string; // Usage context sentence
+  entities?: EnrichedEntity[]; // Extracted entities with types
+  relations?: EnrichedRelation[]; // Subject-predicate-object triples for graph
 }
 ```
 
@@ -1070,6 +1139,141 @@ type FactType =
   | "observation" // Observed behaviors/actions
   | "custom"; // Domain-specific
 ```
+
+## Enriched Fact Extraction (v0.15.0+)
+
+> **New in v0.15.0**: Bullet-proof fact retrieval through enriched extraction.
+
+Cortex v0.15.0 introduces **enriched fact extraction** - a system for extracting facts with rich metadata that dramatically improves semantic search accuracy.
+
+### Why Enriched Facts?
+
+Standard fact extraction stores simple statements like "User prefers to be called Alex". While correct, this can be outranked by unrelated content like "I've noted your email address" when searching for "what should I address the user as".
+
+Enriched facts solve this by storing:
+- **Search aliases**: Alternative terms that should match this fact
+- **Semantic context**: When/how to use this information
+- **Category**: Specific sub-category for filtering and boosting
+- **Entities**: Named entities with types and full values
+- **Relations**: Subject-predicate-object triples for graph integration
+
+### Enrichment Data Flow
+
+```
+Input: "My name is Alexander Johnson, call me Alex"
+                    ↓
+    LLM Enriched Extraction
+                    ↓
+┌────────────────────────────────────────────────────┐
+│ fact: "User prefers to be called Alex"             │
+│ category: "addressing_preference"                   │
+│ searchAliases: ["name", "nickname", "what to call",│
+│                "address as", "greet", "refer to"]  │
+│ semanticContext: "Use 'Alex' when addressing..."   │
+│ entities: [{name: "Alex", type: "preferred_name",  │
+│             fullValue: "Alexander Johnson"}, ...]   │
+│ relations: [{subject: "user",                       │
+│              predicate: "prefers_to_be_called",    │
+│              object: "Alex"}, ...]                 │
+└────────────────────────────────────────────────────┘
+                    ↓
+    ┌───────────────┼───────────────┐
+    ↓               ↓               ↓
+ L3: Facts     L2: Vector       Graph DB
+(structured)  (enrichedContent) (entities +
+                                relations)
+                    ↓
+Search: "what should I address the user as"
+                    ↓
+Result: "User prefers to be called Alex" → TOP RANK ✓
+```
+
+### Using Enriched Facts
+
+**1. Store with enrichment fields:**
+
+```typescript
+await cortex.facts.store({
+  memorySpaceId: "agent-1",
+  fact: "User prefers to be called Alex",
+  factType: "identity",
+  confidence: 95,
+  sourceType: "conversation",
+
+  // Enrichment fields
+  category: "addressing_preference",
+  searchAliases: ["name", "nickname", "what to call", "address as"],
+  semanticContext: "Use 'Alex' when addressing this user",
+  entities: [
+    { name: "Alex", type: "preferred_name", fullValue: "Alexander Johnson" },
+  ],
+  relations: [
+    { subject: "user", predicate: "prefers_to_be_called", object: "Alex" },
+  ],
+});
+```
+
+**2. Search with category boosting:**
+
+```typescript
+// Enriched facts with matching category get 30% score boost
+const results = await cortex.memory.search(memorySpaceId, query, {
+  embedding: await generateEmbedding(query),
+  queryCategory: "addressing_preference", // Boost matching facts
+});
+```
+
+### Extracting Enriched Facts with LLM
+
+Use this prompt template for LLM-based enriched extraction:
+
+```typescript
+const ENRICHED_FACT_EXTRACTION_PROMPT = `
+You are a fact extraction assistant optimized for retrieval. 
+Extract key facts from this conversation with rich metadata.
+
+For each fact, provide:
+1. fact: The core fact statement (clear, concise, third-person)
+2. factType: Category (preference, identity, knowledge, relationship, event, observation)
+3. category: Specific sub-category for search (e.g., "addressing_preference")
+4. searchAliases: Array of alternative search terms that should find this fact
+5. semanticContext: A sentence explaining when/how to use this information
+6. entities: Array of extracted entities with {name, type, fullValue?}
+7. relations: Array of {subject, predicate, object} triples
+8. confidence: 0-100 confidence score
+
+Return ONLY a valid JSON array.
+`;
+```
+
+### Graph Integration
+
+When `syncToGraph: true`, enriched facts automatically:
+1. Create **Entity nodes** for each item in `entities[]`
+2. Create **relationship edges** for each item in `relations[]`
+3. Update existing Entity nodes with enriched metadata (fullValue, entityType)
+
+```typescript
+// Entities become graph nodes
+{name: "Alex", type: "preferred_name", fullValue: "Alexander Johnson"}
+// → Entity node: {name: "Alex", entityType: "preferred_name", fullValue: "Alexander Johnson"}
+
+// Relations become graph edges
+{subject: "user", predicate: "prefers_to_be_called", object: "Alex"}
+// → Edge: (user)-[PREFERS_TO_BE_CALLED]->(Alex)
+```
+
+### Search Boosting Logic
+
+When searching with enriched facts, the search engine applies boosts:
+
+| Condition | Boost |
+|-----------|-------|
+| User message role | +20% |
+| Matching `factCategory` | +30% |
+| Has `enrichedContent` | +10% |
+
+This ensures properly enriched facts rank highest for relevant queries.
 
 ## Best Practices
 
