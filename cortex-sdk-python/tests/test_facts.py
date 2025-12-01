@@ -23,7 +23,7 @@ from cortex import FactSourceRef, StoreFactParams
 async def test_store_preference_fact(cortex_client, test_ids, cleanup_helper):
     """
     Test storing a preference fact.
-    
+
     Port of: facts.test.ts - line 39
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -60,7 +60,7 @@ async def test_store_preference_fact(cortex_client, test_ids, cleanup_helper):
 async def test_store_knowledge_fact_with_source_ref(cortex_client, test_ids, cleanup_helper):
     """
     Test storing knowledge fact with source reference.
-    
+
     Port of: facts.test.ts - line 62
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -98,7 +98,7 @@ async def test_store_knowledge_fact_with_source_ref(cortex_client, test_ids, cle
 async def test_store_relationship_fact(cortex_client, test_ids, cleanup_helper):
     """
     Test storing relationship fact (graph triple).
-    
+
     Port of: facts.test.ts - line 83
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -136,7 +136,7 @@ async def test_store_relationship_fact(cortex_client, test_ids, cleanup_helper):
 async def test_get_fact_by_id(cortex_client, test_ids, cleanup_helper):
     """
     Test retrieving fact by ID.
-    
+
     Port of: facts.test.ts - get tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -169,7 +169,7 @@ async def test_get_fact_by_id(cortex_client, test_ids, cleanup_helper):
 async def test_get_nonexistent_fact_returns_none(cortex_client, test_ids):
     """
     Test that getting non-existent fact returns None.
-    
+
     Port of: facts.test.ts - get tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -188,7 +188,7 @@ async def test_get_nonexistent_fact_returns_none(cortex_client, test_ids):
 async def test_list_facts(cortex_client, test_ids, cleanup_helper):
     """
     Test listing facts in a memory space.
-    
+
     Port of: facts.test.ts - list tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -223,7 +223,7 @@ async def test_list_facts(cortex_client, test_ids, cleanup_helper):
 async def test_list_facts_filter_by_type(cortex_client, test_ids, cleanup_helper):
     """
     Test listing facts filtered by fact type.
-    
+
     Port of: facts.test.ts - list tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -279,7 +279,7 @@ async def test_list_facts_filter_by_type(cortex_client, test_ids, cleanup_helper
 async def test_search_facts(cortex_client, test_ids, cleanup_helper):
     """
     Test searching facts by query text.
-    
+
     Port of: facts.test.ts - search tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -330,7 +330,7 @@ async def test_search_facts(cortex_client, test_ids, cleanup_helper):
 async def test_update_fact_confidence(cortex_client, test_ids, cleanup_helper):
     """
     Test updating fact confidence.
-    
+
     Port of: facts.test.ts - update tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -372,7 +372,7 @@ async def test_update_fact_confidence(cortex_client, test_ids, cleanup_helper):
 async def test_delete_fact(cortex_client, test_ids, cleanup_helper):
     """
     Test deleting a fact.
-    
+
     Port of: facts.test.ts - delete tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -409,7 +409,7 @@ async def test_delete_fact(cortex_client, test_ids, cleanup_helper):
 async def test_count_facts(cortex_client, test_ids, cleanup_helper):
     """
     Test counting facts in a memory space.
-    
+
     Port of: facts.test.ts - count tests
     """
     memory_space_id = test_ids["memory_space_id"]

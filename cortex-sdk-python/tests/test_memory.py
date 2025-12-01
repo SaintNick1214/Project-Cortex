@@ -248,14 +248,14 @@ async def test_count_and_list(cortex_client, test_memory_space_id, test_conversa
 async def test_remember_with_embeddings(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test remember with embedding generation.
-    
+
     Port of: memory.test.ts - embedding tests
     """
     from tests.helpers import generate_embedding
 
     # Generate embeddings for messages
-    user_embedding = await generate_embedding("I need help with my account", use_mock=True)
-    agent_embedding = await generate_embedding("I can help you with that", use_mock=True)
+    await generate_embedding("I need help with my account", use_mock=True)
+    await generate_embedding("I can help you with that", use_mock=True)
 
     # Note: Embeddings are generated automatically by the backend
     result = await cortex_client.memory.remember(
@@ -281,7 +281,7 @@ async def test_remember_with_embeddings(cortex_client, test_memory_space_id, tes
 async def test_remember_with_fact_extraction(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test remember with fact extraction callback.
-    
+
     Port of: memory.test.ts - fact extraction tests
     """
     # Define fact extraction function
@@ -326,7 +326,7 @@ async def test_remember_with_fact_extraction(cortex_client, test_memory_space_id
 async def test_remember_fact_extraction_parameter_propagation(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
     """
     REGRESSION TEST: Ensures ALL parameters are properly passed from remember() to facts.store().
-    
+
     Bug found: userId was not being passed to facts.store() during fact extraction.
     This caused:
     - userId filter not working for extracted facts
@@ -400,7 +400,7 @@ async def test_remember_fact_extraction_parameter_propagation(cortex_client, tes
 async def test_search_with_strategy(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test search with different strategies.
-    
+
     Port of: memory.test.ts - search strategy tests
     """
     # Store memories
@@ -437,7 +437,7 @@ async def test_search_with_strategy(cortex_client, test_memory_space_id, test_co
 async def test_list_with_filters(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test listing memories with filters.
-    
+
     Port of: memory.test.ts - list tests
     """
     # Store memories with different importance
@@ -475,7 +475,7 @@ async def test_list_with_filters(cortex_client, test_memory_space_id, test_conve
 async def test_count_with_filters(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test counting memories with filters.
-    
+
     Port of: memory.test.ts - count tests
     """
     # Store memories with tags
@@ -509,7 +509,7 @@ async def test_count_with_filters(cortex_client, test_memory_space_id, test_conv
 async def test_forget_with_options(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test forget with various options.
-    
+
     Port of: memory.test.ts - forget tests
     """
     # Store a memory
@@ -546,7 +546,7 @@ async def test_forget_with_options(cortex_client, test_memory_space_id, test_con
 async def test_archive_and_restore(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test archiving and restoring memories.
-    
+
     Port of: memory.test.ts - archive tests
     """
     # Store a memory
@@ -577,7 +577,7 @@ async def test_archive_and_restore(cortex_client, test_memory_space_id, test_con
 async def test_get_conversation_ref(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test getting memory with conversationRef populated.
-    
+
     Port of: memory.test.ts - conversationRef tests
     """
     # Store memory with conversation
@@ -617,7 +617,7 @@ async def test_get_conversation_ref(cortex_client, test_memory_space_id, test_co
 async def test_restore_from_archive(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test restoring memory from archive.
-    
+
     New method: memory.restore_from_archive()
     """
     # Store a memory

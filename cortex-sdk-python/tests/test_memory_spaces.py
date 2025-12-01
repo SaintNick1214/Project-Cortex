@@ -244,10 +244,10 @@ async def test_delete_empty_memory_space_id(cortex_client):
 async def test_register_memory_space(cortex_client, test_ids):
     """
     Test registering a memory space.
-    
+
     Note: Backend validation test
     Client-side validation tests are in the section above
-    
+
     Port of: memorySpaces.test.ts - register tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -275,7 +275,7 @@ async def test_register_memory_space(cortex_client, test_ids):
 async def test_register_shared_memory_space(cortex_client, test_ids):
     """
     Test registering shared memory space (Hive mode).
-    
+
     Port of: memorySpaces.test.ts - hive mode tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -313,7 +313,7 @@ async def test_register_shared_memory_space(cortex_client, test_ids):
 async def test_get_memory_space(cortex_client, test_ids):
     """
     Test retrieving a memory space by ID.
-    
+
     Port of: memorySpaces.test.ts - get tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -342,7 +342,7 @@ async def test_get_memory_space(cortex_client, test_ids):
 async def test_get_nonexistent_returns_none(cortex_client):
     """
     Test that getting non-existent space returns None.
-    
+
     Port of: memorySpaces.test.ts - get tests
     """
     result = await cortex_client.memory_spaces.get("space-does-not-exist")
@@ -359,7 +359,7 @@ async def test_get_nonexistent_returns_none(cortex_client):
 async def test_list_memory_spaces(cortex_client, test_ids):
     """
     Test listing memory spaces.
-    
+
     Port of: memorySpaces.test.ts - list tests
     """
     # Register multiple spaces
@@ -391,7 +391,7 @@ async def test_list_memory_spaces(cortex_client, test_ids):
 async def test_list_filter_by_type(cortex_client, test_ids):
     """
     Test listing memory spaces filtered by type.
-    
+
     Port of: memorySpaces.test.ts - list tests
     """
     # Register spaces of different types
@@ -438,7 +438,7 @@ async def test_list_filter_by_type(cortex_client, test_ids):
 async def test_delete_memory_space(cortex_client, test_ids):
     """
     Test deleting a memory space.
-    
+
     Port of: memorySpaces.test.ts - delete tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -453,7 +453,7 @@ async def test_delete_memory_space(cortex_client, test_ids):
     )
 
     # Delete space
-    result = await cortex_client.memory_spaces.delete(memory_space_id)
+    await cortex_client.memory_spaces.delete(memory_space_id)
 
     # Verify deleted
     retrieved = await cortex_client.memory_spaces.get(memory_space_id)
@@ -469,7 +469,7 @@ async def test_delete_memory_space(cortex_client, test_ids):
 async def test_count_memory_spaces(cortex_client, test_ids):
     """
     Test counting memory spaces.
-    
+
     Port of: memorySpaces.test.ts - count tests
     """
     # Register spaces
@@ -504,7 +504,7 @@ async def test_count_memory_spaces(cortex_client, test_ids):
 async def test_get_memory_space_stats(cortex_client, test_ids, cleanup_helper):
     """
     Test getting memory space statistics.
-    
+
     Port of: memorySpaces.test.ts - getStats tests
     """
     memory_space_id = test_ids["memory_space_id"]

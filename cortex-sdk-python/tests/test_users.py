@@ -348,7 +348,7 @@ async def test_delete_user_cascade_dry_run(cortex_client, test_user_id):
     await cortex_client.users.update(test_user_id, {"displayName": "Test User"})
 
     # Dry run cascade deletion
-    result = await cortex_client.users.delete(
+    await cortex_client.users.delete(
         test_user_id, DeleteUserOptions(cascade=True, dry_run=True)
     )
 
@@ -376,7 +376,7 @@ async def test_count_users(cortex_client):
 async def test_delete_user_full_cascade(cortex_client, test_user_id, test_memory_space_id, test_conversation_id, cleanup_helper):
     """
     Test full GDPR cascade deletion across all layers.
-    
+
     Port of: users.test.ts - full cascade tests
     """
     # Create user
@@ -417,7 +417,7 @@ async def test_delete_user_full_cascade(cortex_client, test_user_id, test_memory
 async def test_search_users(cortex_client, test_user_id, cleanup_helper):
     """
     Test searching users (client-side implementation).
-    
+
     Port of: users.test.ts - search tests
     """
     # Create users with searchable data
@@ -442,7 +442,7 @@ async def test_search_users(cortex_client, test_user_id, cleanup_helper):
 async def test_list_users(cortex_client, cleanup_helper):
     """
     Test listing users with pagination.
-    
+
     Port of: users.test.ts - list tests
     """
     # List users
@@ -459,7 +459,7 @@ async def test_list_users(cortex_client, cleanup_helper):
 async def test_update_many_users(cortex_client, cleanup_helper):
     """
     Test bulk updating users (client-side implementation).
-    
+
     Port of: users.test.ts - updateMany tests
     """
     from tests.helpers import generate_test_user_id
@@ -489,7 +489,7 @@ async def test_update_many_users(cortex_client, cleanup_helper):
 async def test_delete_many_users(cortex_client, cleanup_helper):
     """
     Test bulk deleting users (client-side implementation).
-    
+
     Port of: users.test.ts - deleteMany tests
     """
     from tests.helpers import generate_test_user_id
@@ -517,7 +517,7 @@ async def test_delete_many_users(cortex_client, cleanup_helper):
 async def test_export_users(cortex_client, test_user_id, cleanup_helper):
     """
     Test exporting user data (client-side implementation).
-    
+
     Port of: users.test.ts - export tests
     """
     # Create user
@@ -541,7 +541,7 @@ async def test_export_users(cortex_client, test_user_id, cleanup_helper):
 async def test_get_version_history(cortex_client, test_user_id, cleanup_helper):
     """
     Test getting user version history.
-    
+
     Port of: users.test.ts - versioning tests
     """
     # Create user
@@ -563,7 +563,7 @@ async def test_get_version_history(cortex_client, test_user_id, cleanup_helper):
 async def test_get_at_timestamp(cortex_client, test_user_id, cleanup_helper):
     """
     Test getting user state at specific timestamp.
-    
+
     Port of: users.test.ts - temporal query tests
     """
     import time

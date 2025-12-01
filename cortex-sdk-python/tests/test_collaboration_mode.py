@@ -32,7 +32,7 @@ from cortex.types import (
 async def collab_spaces(module_cortex_client, test_run_context):
     """Set up two organization spaces for collaboration tests."""
     ctx = test_run_context
-    
+
     # Create unique org spaces
     org_a_space = ctx.memory_space_id("org-a")
     org_b_space = ctx.memory_space_id("org-b")
@@ -75,12 +75,12 @@ async def collab_spaces(module_cortex_client, test_run_context):
 async def test_each_organization_has_separate_data_by_default(cortex_client, collab_spaces):
     """
     Test that each organization has separate data by default.
-    
+
     Port of: collaborationMode.test.ts - line 60
     """
     org_a_space = collab_spaces["org_a"]
     org_b_space = collab_spaces["org_b"]
-    
+
     # Org A stores data
     await cortex_client.vector.store(
         org_a_space,
@@ -136,12 +136,12 @@ async def test_each_organization_has_separate_data_by_default(cortex_client, col
 async def test_shares_workflow_context_across_organizations(cortex_client, collab_spaces):
     """
     Test sharing workflow context across organizations.
-    
+
     Port of: collaborationMode.test.ts - line 106
     """
     org_a_space = collab_spaces["org_a"]
     org_b_space = collab_spaces["org_b"]
-    
+
     # Org A creates context for joint project
     shared_context = await cortex_client.contexts.create(
         ContextInput(
@@ -177,12 +177,12 @@ async def test_shares_workflow_context_across_organizations(cortex_client, colla
 async def test_creates_child_contexts_in_different_spaces(cortex_client, collab_spaces):
     """
     Test creating child contexts in different spaces.
-    
+
     Port of: collaborationMode.test.ts - line 143
     """
     org_a_space = collab_spaces["org_a"]
     org_b_space = collab_spaces["org_b"]
-    
+
     # Org A creates root
     root = await cortex_client.contexts.create(
         ContextInput(
@@ -225,12 +225,12 @@ async def test_creates_child_contexts_in_different_spaces(cortex_client, collab_
 async def test_contexts_can_grant_selective_access(cortex_client, collab_spaces):
     """
     Test that contexts can grant selective access.
-    
+
     Port of: collaborationMode.test.ts - line 173
     """
     org_a_space = collab_spaces["org_a"]
     org_b_space = collab_spaces["org_b"]
-    
+
     private_context = await cortex_client.contexts.create(
         ContextInput(
             purpose="Internal Org A workflow",
@@ -257,12 +257,12 @@ async def test_contexts_can_grant_selective_access(cortex_client, collab_spaces)
 async def test_can_grant_different_scopes(cortex_client, collab_spaces):
     """
     Test that can grant different access scopes.
-    
+
     Port of: collaborationMode.test.ts - line 194
     """
     org_a_space = collab_spaces["org_a"]
     org_b_space = collab_spaces["org_b"]
-    
+
     context = await cortex_client.contexts.create(
         ContextInput(
             purpose="Multi-scope test",
@@ -296,12 +296,12 @@ async def test_can_grant_different_scopes(cortex_client, collab_spaces):
 async def test_partner_organizations_collaborate_on_joint_campaign(cortex_client, collab_spaces):
     """
     Test partner organizations collaborating on joint campaign.
-    
+
     Port of: collaborationMode.test.ts - line 219
     """
     org_a_space = collab_spaces["org_a"]
     org_b_space = collab_spaces["org_b"]
-    
+
     # SCENARIO: Two companies partner on marketing campaign
     # Each has separate memory space (data isolation)
     # But share workflow context for coordination
@@ -408,12 +408,12 @@ async def test_partner_organizations_collaborate_on_joint_campaign(cortex_client
 async def test_coordinates_tasks_across_organizations(cortex_client, collab_spaces):
     """
     Test coordinating tasks across organizations.
-    
+
     Port of: collaborationMode.test.ts - line 416
     """
     org_a_space = collab_spaces["org_a"]
     org_b_space = collab_spaces["org_b"]
-    
+
     # Root context in Org A
     root = await cortex_client.contexts.create(
         ContextInput(
@@ -469,12 +469,12 @@ async def test_coordinates_tasks_across_organizations(cortex_client, collab_spac
 async def test_shares_only_context_not_underlying_data(cortex_client, collab_spaces):
     """
     Test that only context is shared, not underlying data.
-    
+
     Port of: collaborationMode.test.ts - line 459
     """
     org_a_space = collab_spaces["org_a"]
     org_b_space = collab_spaces["org_b"]
-    
+
     # Org A stores sensitive facts
     await cortex_client.facts.store(
         StoreFactParams(
@@ -524,13 +524,13 @@ async def test_shares_only_context_not_underlying_data(cortex_client, collab_spa
 async def test_demonstrates_hive_vs_collaboration_difference(cortex_client, collab_spaces):
     """
     Test demonstrating the difference between Hive and Collaboration modes.
-    
+
     Port of: collaborationMode.test.ts - line 305
     """
-    org_a_space = collab_spaces["org_a"]
-    org_b_space = collab_spaces["org_b"]
+    collab_spaces["org_a"]
+    collab_spaces["org_b"]
     ctx = collab_spaces["ctx"]
-    
+
     # HIVE MODE: All tools in ONE space (no data silos)
     hive_space = ctx.memory_space_id("hive-demo")
     now = int(time.time() * 1000)

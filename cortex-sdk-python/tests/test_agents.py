@@ -398,7 +398,7 @@ async def test_unregister_many_conflicting_options(cortex_client):
 async def test_register_agent(cortex_client, test_ids):
     """
     Test registering an agent.
-    
+
     Port of: agents.test.ts - register tests
     """
     agent_id = test_ids["agent_id"]
@@ -426,10 +426,10 @@ async def test_register_agent(cortex_client, test_ids):
 async def test_register_agent_updates_existing(cortex_client, test_ids):
     """
     Test that registering same agent updates existing registration.
-    
+
     Note: This tests BACKEND validation (duplicate detection)
     Client-side validation tests are in "Client-Side Validation Tests" section above
-    
+
     Port of: agents.test.ts - register tests
     """
     agent_id = test_ids["agent_id"]
@@ -469,7 +469,7 @@ async def test_register_agent_updates_existing(cortex_client, test_ids):
 async def test_get_registered_agent(cortex_client, test_ids):
     """
     Test getting a registered agent.
-    
+
     Port of: agents.test.ts - get tests
     """
     agent_id = test_ids["agent_id"]
@@ -500,7 +500,7 @@ async def test_get_registered_agent(cortex_client, test_ids):
 async def test_get_nonexistent_returns_none(cortex_client):
     """
     Test that getting non-existent agent returns None.
-    
+
     Port of: agents.test.ts - get tests
     """
     result = await cortex_client.agents.get("agent-does-not-exist")
@@ -517,7 +517,7 @@ async def test_get_nonexistent_returns_none(cortex_client):
 async def test_list_agents(cortex_client, test_ids):
     """
     Test listing registered agents.
-    
+
     Port of: agents.test.ts - list tests
     """
     # Register multiple agents
@@ -554,7 +554,7 @@ async def test_list_agents(cortex_client, test_ids):
 async def test_unregister_agent(cortex_client, test_ids):
     """
     Test unregistering an agent.
-    
+
     Port of: agents.test.ts - unregister tests
     """
     agent_id = test_ids["agent_id"]
@@ -569,7 +569,7 @@ async def test_unregister_agent(cortex_client, test_ids):
     )
 
     # Unregister
-    result = await cortex_client.agents.unregister(agent_id)
+    await cortex_client.agents.unregister(agent_id)
 
     # Verify unregistered
     retrieved = await cortex_client.agents.get(agent_id)
@@ -585,7 +585,7 @@ async def test_unregister_agent(cortex_client, test_ids):
 async def test_get_agent_stats(cortex_client, test_ids):
     """
     Test getting agent statistics.
-    
+
     Port of: agents.test.ts - getStats tests
     """
     agent_id = test_ids["agent_id"]
@@ -621,7 +621,7 @@ async def test_get_agent_stats(cortex_client, test_ids):
 async def test_count_agents(cortex_client, test_ids):
     """
     Test counting registered agents.
-    
+
     Port of: agents.test.ts - count tests
     """
     # Register agents
@@ -656,13 +656,13 @@ async def test_count_agents(cortex_client, test_ids):
 async def test_unregister_many_without_cascade(cortex_client):
     """
     Test bulk unregistering agents without cascade.
-    
+
     New method: agents.unregister_many()
     """
     from cortex import UnregisterAgentOptions
 
     # Register multiple test agents
-    agent1 = await cortex_client.agents.register(
+    await cortex_client.agents.register(
         AgentRegistration(
             id="bulk-py-agent-1",
             name="Bulk Test 1",
@@ -670,7 +670,7 @@ async def test_unregister_many_without_cascade(cortex_client):
         )
     )
 
-    agent2 = await cortex_client.agents.register(
+    await cortex_client.agents.register(
         AgentRegistration(
             id="bulk-py-agent-2",
             name="Bulk Test 2",
@@ -678,7 +678,7 @@ async def test_unregister_many_without_cascade(cortex_client):
         )
     )
 
-    agent3 = await cortex_client.agents.register(
+    await cortex_client.agents.register(
         AgentRegistration(
             id="bulk-py-agent-3",
             name="Bulk Test 3",

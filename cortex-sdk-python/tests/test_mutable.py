@@ -21,7 +21,7 @@ import pytest
 async def test_set_creates_new_record(cortex_client, test_ids, cleanup_helper):
     """
     Test creating a new mutable record.
-    
+
     Port of: mutable.test.ts - set tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -45,7 +45,7 @@ async def test_set_creates_new_record(cortex_client, test_ids, cleanup_helper):
 async def test_set_overwrites_existing_record(cortex_client, test_ids, cleanup_helper):
     """
     Test overwriting existing mutable record.
-    
+
     Port of: mutable.test.ts - set tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -58,7 +58,7 @@ async def test_set_overwrites_existing_record(cortex_client, test_ids, cleanup_h
     )
 
     # Overwrite with new value
-    result = await cortex_client.mutable.set(
+    await cortex_client.mutable.set(
         "test-namespace",
         "counter",
         {"count": 10},
@@ -87,7 +87,7 @@ async def test_set_overwrites_existing_record(cortex_client, test_ids, cleanup_h
 async def test_get_existing_record(cortex_client, test_ids, cleanup_helper):
     """
     Test getting existing mutable record.
-    
+
     Port of: mutable.test.ts - get tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -117,10 +117,10 @@ async def test_get_existing_record(cortex_client, test_ids, cleanup_helper):
 async def test_get_nonexistent_returns_none(cortex_client, test_ids):
     """
     Test that getting non-existent record returns None.
-    
+
     Port of: mutable.test.ts - get tests
     """
-    memory_space_id = test_ids["memory_space_id"]
+    test_ids["memory_space_id"]
 
     result = await cortex_client.mutable.get(
         "test-namespace",
@@ -139,7 +139,7 @@ async def test_get_nonexistent_returns_none(cortex_client, test_ids):
 async def test_update_merges_values(cortex_client, test_ids, cleanup_helper):
     """
     Test update merges with existing value.
-    
+
     Port of: mutable.test.ts - update tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -152,7 +152,7 @@ async def test_update_merges_values(cortex_client, test_ids, cleanup_helper):
     )
 
     # Update (requires a callable updater function)
-    result = await cortex_client.mutable.update(
+    await cortex_client.mutable.update(
         "test-namespace",
         "user-prefs",
         lambda current: {**current, "language": "en"},
@@ -182,7 +182,7 @@ async def test_update_merges_values(cortex_client, test_ids, cleanup_helper):
 async def test_delete_record(cortex_client, test_ids, cleanup_helper):
     """
     Test deleting a mutable record.
-    
+
     Port of: mutable.test.ts - delete tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -195,7 +195,7 @@ async def test_delete_record(cortex_client, test_ids, cleanup_helper):
     )
 
     # Delete it
-    result = await cortex_client.mutable.delete(
+    await cortex_client.mutable.delete(
         "test-namespace",
         "delete-test",
     )
@@ -221,7 +221,7 @@ async def test_delete_record(cortex_client, test_ids, cleanup_helper):
 async def test_list_records_in_namespace(cortex_client, test_ids, cleanup_helper):
     """
     Test listing records in a namespace.
-    
+
     Port of: mutable.test.ts - list tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -257,7 +257,7 @@ async def test_list_records_in_namespace(cortex_client, test_ids, cleanup_helper
 async def test_count_records(cortex_client, test_ids, cleanup_helper):
     """
     Test counting records in a namespace.
-    
+
     Port of: mutable.test.ts - count tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -290,7 +290,7 @@ async def test_count_records(cortex_client, test_ids, cleanup_helper):
 async def test_exists_returns_true_for_existing(cortex_client, test_ids, cleanup_helper):
     """
     Test exists() returns True for existing record.
-    
+
     Port of: mutable.test.ts - exists tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -318,10 +318,10 @@ async def test_exists_returns_true_for_existing(cortex_client, test_ids, cleanup
 async def test_exists_returns_false_for_nonexistent(cortex_client, test_ids):
     """
     Test exists() returns False for non-existent record.
-    
+
     Port of: mutable.test.ts - exists tests
     """
-    memory_space_id = test_ids["memory_space_id"]
+    test_ids["memory_space_id"]
 
     exists = await cortex_client.mutable.exists(
         "test-namespace",
@@ -340,7 +340,7 @@ async def test_exists_returns_false_for_nonexistent(cortex_client, test_ids):
 async def test_purge_namespace(cortex_client, test_ids, cleanup_helper):
     """
     Test purging entire namespace.
-    
+
     Port of: mutable.test.ts - purgeNamespace tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -354,7 +354,7 @@ async def test_purge_namespace(cortex_client, test_ids, cleanup_helper):
         )
 
     # Purge namespace
-    result = await cortex_client.mutable.purge_namespace(
+    await cortex_client.mutable.purge_namespace(
         "purge-namespace-test",
     )
 

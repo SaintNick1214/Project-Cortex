@@ -24,7 +24,6 @@ from cortex.types import (
     StoreMemoryInput,
 )
 
-
 # ============================================================================
 # Large Content
 # ============================================================================
@@ -35,7 +34,7 @@ async def test_handles_very_long_content_10kb_plus(cortex_client, ctx):
     """Test handling very long content (10KB+). Port of: edgeCases.test.ts - line 32"""
     memory_space_id = ctx.memory_space_id()
     user_id = ctx.user_id()
-    
+
     long_content = "A" * 10000
 
     memory = await cortex_client.vector.store(
@@ -61,7 +60,7 @@ async def test_handles_very_long_fact_statements_10kb_plus(cortex_client, ctx):
     """Test handling very long fact statements (10KB+). Port of: edgeCases.test.ts - line 49"""
     memory_space_id = ctx.memory_space_id()
     user_id = ctx.user_id()
-    
+
     long_fact = "B" * 10000
 
     fact = await cortex_client.facts.store(
@@ -83,7 +82,7 @@ async def test_handles_long_array_of_tags_100_plus_tags(cortex_client, ctx):
     """Test handling long array of tags (100+ tags). Port of: edgeCases.test.ts - line 67"""
     memory_space_id = ctx.memory_space_id()
     user_id = ctx.user_id()
-    
+
     tags = [f"tag-{i}" for i in range(100)]
 
     memory = await cortex_client.vector.store(
@@ -157,7 +156,7 @@ async def test_handles_unicode_emoji_in_content(cortex_client, ctx):
 @pytest.mark.asyncio
 async def test_handles_special_characters_in_ids(cortex_client, ctx):
     """Test handling special characters in IDs. Port of: edgeCases.test.ts - line 127"""
-    memory_space_id = ctx.memory_space_id()
+    ctx.memory_space_id()
     immutable_type = ctx.immutable_type("test-type")
     special_id = ctx.immutable_id("test-id-with-dash_underscore.period")
 
@@ -260,7 +259,7 @@ async def test_handles_minimal_metadata(cortex_client, ctx):
 @pytest.mark.asyncio
 async def test_handles_empty_data_object(cortex_client, ctx):
     """Test handling empty data object. Port of: edgeCases.test.ts - line 229"""
-    memory_space_id = ctx.memory_space_id()
+    ctx.memory_space_id()
     immutable = await cortex_client.immutable.store(
         ImmutableEntry(type=ctx.immutable_type("test-empty"), id=ctx.immutable_id("empty-data"),
             data={},
@@ -426,7 +425,7 @@ async def test_handles_concurrent_fact_updates(cortex_client, ctx):
 @pytest.mark.asyncio
 async def test_handles_deeply_nested_data_objects(cortex_client, ctx):
     """Test handling deeply nested data objects. Port of: edgeCases.test.ts - line 397"""
-    memory_space_id = ctx.memory_space_id()
+    ctx.memory_space_id()
     nested_data = {
         "level1": {
             "level2": {
@@ -441,7 +440,7 @@ async def test_handles_deeply_nested_data_objects(cortex_client, ctx):
         }
     }
 
-    immutable = await cortex_client.immutable.store(
+    await cortex_client.immutable.store(
         ImmutableEntry(type=ctx.immutable_type("nested-test"), id=ctx.immutable_id("deep-nest"),
             data=nested_data,
         )
@@ -454,14 +453,14 @@ async def test_handles_deeply_nested_data_objects(cortex_client, ctx):
 @pytest.mark.asyncio
 async def test_handles_arrays_in_data(cortex_client, ctx):
     """Test handling arrays in data. Port of: edgeCases.test.ts - line 429"""
-    memory_space_id = ctx.memory_space_id()
+    ctx.memory_space_id()
     data_with_arrays = {
         "items": [1, 2, 3, 4, 5],
         "names": ["Alice", "Bob", "Charlie"],
         "nested": [[1, 2], [3, 4]],
     }
 
-    immutable = await cortex_client.immutable.store(
+    await cortex_client.immutable.store(
         ImmutableEntry(type=ctx.immutable_type("array-test"), id=ctx.immutable_id("arrays"),
             data=data_with_arrays,
         )
@@ -480,7 +479,7 @@ async def test_handles_arrays_in_data(cortex_client, ctx):
 @pytest.mark.asyncio
 async def test_handles_uuid_format_ids(cortex_client, ctx):
     """Test handling UUID format IDs. Port of: edgeCases.test.ts - line 456"""
-    memory_space_id = ctx.memory_space_id()
+    ctx.memory_space_id()
     immutable_type = ctx.immutable_type("uuid-test")
     # Use ctx-prefixed ID to maintain isolation
     uuid_id = ctx.immutable_id("550e8400-e29b-41d4-a716-446655440000")
@@ -502,7 +501,7 @@ async def test_handles_uuid_format_ids(cortex_client, ctx):
 @pytest.mark.asyncio
 async def test_handles_numeric_string_ids(cortex_client, ctx):
     """Test handling numeric string IDs. Port of: edgeCases.test.ts - line 478"""
-    memory_space_id = ctx.memory_space_id()
+    ctx.memory_space_id()
     immutable_type = ctx.immutable_type("numeric-test")
     # Use ctx-prefixed ID to maintain isolation
     numeric_id = ctx.immutable_id("12345678901234567890")
@@ -702,11 +701,11 @@ async def test_handles_bulk_fact_creation_50_plus(cortex_client, ctx):
 @pytest.mark.asyncio
 async def test_handles_very_large_metadata_object(cortex_client, ctx):
     """Test handling very large metadata object. Port of: edgeCases.test.ts - line 682"""
-    memory_space_id = ctx.memory_space_id()
+    ctx.memory_space_id()
     # Backend only supports specific metadata fields, put large data in data instead
     large_data = {f"key{i}": f"value{i}" for i in range(100)}
 
-    immutable = await cortex_client.immutable.store(
+    await cortex_client.immutable.store(
         ImmutableEntry(type=ctx.immutable_type("large-meta"), id=ctx.immutable_id("large-metadata"),
             data=large_data,
         )
@@ -746,7 +745,7 @@ async def test_handles_nonexistent_ids_gracefully(cortex_client, ctx):
 @pytest.mark.asyncio
 async def test_handles_rapid_version_updates_10_plus(cortex_client, ctx):
     """Test handling rapid version updates (10+). Port of: edgeCases.test.ts - line 734"""
-    memory_space_id = ctx.memory_space_id()
+    ctx.memory_space_id()
     # Create initial
     v = await cortex_client.immutable.store(
         ImmutableEntry(type=ctx.immutable_type("rapid-version"), id=ctx.immutable_id("rapid-test"),
@@ -980,8 +979,8 @@ async def test_handles_deep_context_chain_10_plus_levels(cortex_client, ctx):
 @pytest.mark.asyncio
 async def test_handles_boolean_values_in_data(cortex_client, ctx):
     """Test handling boolean values in data. Port of: edgeCases.test.ts - line 950"""
-    memory_space_id = ctx.memory_space_id()
-    immutable = await cortex_client.immutable.store(
+    ctx.memory_space_id()
+    await cortex_client.immutable.store(
         ImmutableEntry(type=ctx.immutable_type("boolean-test"), id=ctx.immutable_id("booleans"),
             data={"enabled": True, "disabled": False, "nullable": None},
         )
@@ -996,8 +995,8 @@ async def test_handles_boolean_values_in_data(cortex_client, ctx):
 @pytest.mark.asyncio
 async def test_handles_numeric_values_in_data(cortex_client, ctx):
     """Test handling numeric values in data. Port of: edgeCases.test.ts - line 975"""
-    memory_space_id = ctx.memory_space_id()
-    immutable = await cortex_client.immutable.store(
+    ctx.memory_space_id()
+    await cortex_client.immutable.store(
         ImmutableEntry(type=ctx.immutable_type("numeric-test"), id=ctx.immutable_id("numbers"),
             data={
                 "integer": 42,

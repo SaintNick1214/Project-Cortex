@@ -84,7 +84,7 @@ async def test_cleanup_facts(cortex_client, test_ids):
 
     # Try to create test fact (might fail if facts API needs specific setup)
     try:
-        fact_input = create_test_fact_input(fact="Test fact for cleanup")
+        create_test_fact_input(fact="Test fact for cleanup")
         # Note: The actual API signature might differ
         # This is just verifying the cleanup helper works
 

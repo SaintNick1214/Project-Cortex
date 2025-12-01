@@ -152,18 +152,18 @@ async def summarize_conversation(
 ) -> Optional[str]:
     """
     Summarize a conversation using gpt-4.1-nano.
-    
+
     Extracts key facts from the conversation in one concise sentence.
     Returns None if OpenAI API not available.
-    
+
     Args:
         user_message: The user's message
         agent_response: The agent's response
         max_retries: Maximum number of retries on transient failures (default: 3)
-        
+
     Returns:
         Summarized content as a string, or None if API unavailable
-        
+
     Example:
         >>> summary = await summarize_conversation(
         ...     "My name is Alexander Johnson and I prefer to be called Alex",
@@ -283,21 +283,21 @@ async def extract_facts_enriched(
 ) -> Optional[List[dict]]:
     """
     Extract enriched facts from a conversation for bullet-proof retrieval.
-    
+
     This function extracts facts with rich metadata including:
     - searchAliases: Alternative search terms
     - semanticContext: Usage context sentence
     - entities: Extracted entities with types
     - relations: Subject-predicate-object triples
-    
+
     Args:
         user_message: The user's message
         agent_response: The agent's response
         max_retries: Maximum number of retries on transient failures (default: 3)
-        
+
     Returns:
         List of enriched fact dictionaries, or None if API unavailable
-        
+
     Example:
         >>> facts = await extract_facts_enriched(
         ...     "My name is Alexander Johnson and I prefer to be called Alex",
@@ -342,7 +342,7 @@ async def extract_facts_enriched(
             )
 
             content = response.choices[0].message.content
-            
+
             # Parse JSON response
             try:
                 # Handle potential markdown code blocks
@@ -351,14 +351,14 @@ async def extract_facts_enriched(
                     if content.startswith("json"):
                         content = content[4:]
                 content = content.strip()
-                
+
                 facts = json.loads(content)
-                
+
                 # Validate structure
                 if not isinstance(facts, list):
                     print(f"Warning: Expected list, got {type(facts)}")
                     return []
-                
+
                 # Validate each fact has required fields
                 validated_facts = []
                 for fact in facts:
@@ -375,7 +375,7 @@ async def extract_facts_enriched(
                             "confidence": fact.get("confidence", 70),
                         }
                         validated_facts.append(validated_fact)
-                
+
                 return validated_facts
 
             except json.JSONDecodeError as e:
@@ -410,20 +410,20 @@ async def extract_facts_enriched(
 def build_enriched_content(fact: dict) -> str:
     """
     Build concatenated searchable content from an enriched fact.
-    
+
     This creates a single string with maximum semantic surface area
     for embedding generation, combining:
     - The core fact
     - Category information
     - Search aliases
     - Semantic context
-    
+
     Args:
         fact: Enriched fact dictionary
-        
+
     Returns:
         Concatenated string optimized for embedding
-        
+
     Example:
         >>> content = build_enriched_content({
         ...     "fact": "User prefers to be called Alex",
@@ -435,18 +435,18 @@ def build_enriched_content(fact: dict) -> str:
         True
     """
     parts = [fact.get("fact", "")]
-    
+
     category = fact.get("category")
     if category:
         parts.append(f"Category: {category}")
-    
+
     aliases = fact.get("searchAliases", [])
     if aliases:
         parts.append(f"Search terms: {', '.join(aliases)}")
-    
+
     context = fact.get("semanticContext")
     if context:
         parts.append(f"Context: {context}")
-    
+
     return "\n".join(parts)
 

@@ -91,7 +91,7 @@ class TestMemoryStreaming:
     async def test_basic_streaming(self):
         """Test basic streaming with async generator."""
         conv_id = self.ctx.conversation_id("stream-1")
-        
+
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
@@ -324,7 +324,7 @@ class TestMemoryStreaming:
         """Test that streamed content is actually stored and retrievable."""
         conv_id = self.ctx.conversation_id("verify")
 
-        result = await self.cortex.memory.remember_stream(
+        await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
                 conversation_id=conv_id,

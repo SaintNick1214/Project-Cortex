@@ -57,7 +57,7 @@ async def test_add_message(cortex_client, test_memory_space_id, test_conversatio
 async def test_get_conversation(cortex_client, test_memory_space_id, test_conversation_id, test_user_id):
     """Test retrieving a conversation."""
     # Create conversation
-    created = await cortex_client.conversations.create(
+    await cortex_client.conversations.create(
         CreateConversationInput(
             conversation_id=test_conversation_id,
             memory_space_id=test_memory_space_id,
@@ -77,7 +77,7 @@ async def test_get_conversation(cortex_client, test_memory_space_id, test_conver
 async def test_list_conversations(cortex_client, test_memory_space_id, test_user_id):
     """Test listing conversations."""
     import asyncio
-    
+
     # Create a few conversations
     created_ids = []
     for i in range(3):
@@ -89,7 +89,7 @@ async def test_list_conversations(cortex_client, test_memory_space_id, test_user
             )
         )
         created_ids.append(conv.conversation_id)
-    
+
     # Small delay to ensure all writes are visible
     await asyncio.sleep(0.3)
 
@@ -157,7 +157,7 @@ async def test_get_or_create(cortex_client, test_memory_space_id, test_user_id):
 async def test_create_agent_to_agent_conversation(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
     """
     Test creating agent-to-agent conversation.
-    
+
     Port of: conversations.test.ts - agent-agent tests
     """
     conversation = await cortex_client.conversations.create(
@@ -182,7 +182,7 @@ async def test_create_agent_to_agent_conversation(cortex_client, test_memory_spa
 async def test_get_history(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test getting conversation history.
-    
+
     Port of: conversations.test.ts - getHistory tests
     """
     # Create conversation
@@ -223,7 +223,7 @@ async def test_get_history(cortex_client, test_memory_space_id, test_conversatio
 async def test_get_message(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test getting a specific message by ID.
-    
+
     Port of: conversations.test.ts - getMessage tests
     """
     # Create conversation
@@ -267,7 +267,7 @@ async def test_get_message(cortex_client, test_memory_space_id, test_conversatio
 async def test_find_conversation(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
     """
     Test finding conversation by participants.
-    
+
     Port of: conversations.test.ts - findConversation tests
     """
     participant_id = "specific-agent-123"
@@ -302,7 +302,7 @@ async def test_find_conversation(cortex_client, test_memory_space_id, test_user_
 async def test_search_conversations(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
     """
     Test searching conversations.
-    
+
     Port of: conversations.test.ts - search tests
     """
     # Create conversations with different content
@@ -340,7 +340,7 @@ async def test_search_conversations(cortex_client, test_memory_space_id, test_us
 async def test_delete_conversation(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
     """
     Test deleting a conversation.
-    
+
     Port of: conversations.test.ts - delete tests
     """
     # Create conversation
@@ -353,7 +353,7 @@ async def test_delete_conversation(cortex_client, test_memory_space_id, test_use
     )
 
     # Delete it
-    result = await cortex_client.conversations.delete(created.conversation_id)
+    await cortex_client.conversations.delete(created.conversation_id)
 
     # Verify deleted
     retrieved = await cortex_client.conversations.get(created.conversation_id)
@@ -364,7 +364,7 @@ async def test_delete_conversation(cortex_client, test_memory_space_id, test_use
 async def test_delete_many_conversations(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
     """
     Test deleting multiple conversations.
-    
+
     Port of: conversations.test.ts - deleteMany tests
     """
     # Create multiple conversations
@@ -393,7 +393,7 @@ async def test_delete_many_conversations(cortex_client, test_memory_space_id, te
 async def test_export_conversations(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
     """
     Test exporting conversations.
-    
+
     Port of: conversations.test.ts - export tests
     """
     # Create conversation with messages
@@ -498,7 +498,7 @@ async def test_appends_multiple_messages_immutability(cortex_client, test_memory
     )
 
     # Add first message
-    conv1 = await cortex_client.conversations.add_message(
+    await cortex_client.conversations.add_message(
         AddMessageInput(conversation_id=test_conversation_id, role="user", content="Message 1")
     )
 
@@ -566,7 +566,7 @@ async def test_validates_complete_acid_properties(cortex_client, test_memory_spa
 async def test_handles_conversation_with_100_plus_messages(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """Test conversation with 100+ messages. Port of: conversations.test.ts - line 1145"""
     import asyncio
-    
+
     # Create the conversation
     created = await cortex_client.conversations.create(
         CreateConversationInput(
@@ -576,14 +576,14 @@ async def test_handles_conversation_with_100_plus_messages(cortex_client, test_m
             participants=ConversationParticipants(user_id=test_user_id),
         )
     )
-    
+
     # Verify conversation was created
     assert created is not None
     assert created.conversation_id == test_conversation_id
-    
+
     # Delay to ensure conversation is fully persisted
     await asyncio.sleep(0.5)
-    
+
     # Verify conversation can be retrieved
     conv = await cortex_client.conversations.get(test_conversation_id)
     assert conv is not None, f"Conversation {test_conversation_id} not found after creation"
@@ -981,7 +981,6 @@ async def test_accepts_custom_message_id(cortex_client, test_memory_space_id, te
         )
     )
 
-    custom_message_id = "msg-custom-python-abc"
 
     # Note: AddMessageInput doesn't support message_id parameter
     # Backend auto-generates message IDs
@@ -1019,7 +1018,7 @@ async def test_add_message_throws_error_for_nonexistent_conversation(cortex_clie
 @pytest.mark.asyncio
 async def test_message_additions_propagate_to_all_read_operations(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """Test message propagation. Port of: conversations.test.ts - line 999"""
-    conv = await cortex_client.conversations.create(
+    await cortex_client.conversations.create(
         CreateConversationInput(
             conversation_id=test_conversation_id,
             memory_space_id=test_memory_space_id,

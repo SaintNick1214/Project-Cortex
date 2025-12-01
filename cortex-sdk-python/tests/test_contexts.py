@@ -24,7 +24,7 @@ from cortex.contexts import ContextsValidationError
 async def test_create_context(cortex_client, test_ids, cleanup_helper):
     """
     Test creating a context.
-    
+
     Port of: contexts.test.ts - create tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -51,7 +51,7 @@ async def test_create_context(cortex_client, test_ids, cleanup_helper):
 async def test_create_context_with_parent(cortex_client, test_ids, cleanup_helper):
     """
     Test creating context with parent (context chain).
-    
+
     Port of: contexts.test.ts - chain tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -92,7 +92,7 @@ async def test_create_context_with_parent(cortex_client, test_ids, cleanup_helpe
 async def test_get_context(cortex_client, test_ids, cleanup_helper):
     """
     Test retrieving a context by ID.
-    
+
     Port of: contexts.test.ts - get tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -120,11 +120,11 @@ async def test_get_context(cortex_client, test_ids, cleanup_helper):
 async def test_get_nonexistent_returns_none(cortex_client, test_ids):
     """
     Test that getting non-existent context returns None.
-    
+
     Port of: contexts.test.ts - get tests
     Note: This tests BACKEND validation (DB lookup)
     """
-    memory_space_id = test_ids["memory_space_id"]
+    test_ids["memory_space_id"]
 
     # Using properly formatted ID that doesn't exist in database
     result = await cortex_client.contexts.get("ctx-9999999999-nonexistent")
@@ -141,7 +141,7 @@ async def test_get_nonexistent_returns_none(cortex_client, test_ids):
 async def test_update_context(cortex_client, test_ids, cleanup_helper):
     """
     Test updating context properties.
-    
+
     Port of: contexts.test.ts - update tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -177,7 +177,7 @@ async def test_update_context(cortex_client, test_ids, cleanup_helper):
 async def test_list_contexts(cortex_client, test_ids, cleanup_helper):
     """
     Test listing contexts in a memory space.
-    
+
     Port of: contexts.test.ts - list tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -214,7 +214,7 @@ async def test_list_contexts(cortex_client, test_ids, cleanup_helper):
 async def test_search_contexts(cortex_client, test_ids, cleanup_helper):
     """
     Test searching contexts by name or description.
-    
+
     Port of: contexts.test.ts - search tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -259,7 +259,7 @@ async def test_search_contexts(cortex_client, test_ids, cleanup_helper):
 async def test_delete_context(cortex_client, test_ids, cleanup_helper):
     """
     Test deleting a context.
-    
+
     Port of: contexts.test.ts - delete tests
     """
     memory_space_id = test_ids["memory_space_id"]
@@ -273,7 +273,7 @@ async def test_delete_context(cortex_client, test_ids, cleanup_helper):
     )
 
     # Delete context
-    result = await cortex_client.contexts.delete(created.id)
+    await cortex_client.contexts.delete(created.id)
 
     # Verify deleted
     retrieved = await cortex_client.contexts.get(created.id)
@@ -289,7 +289,7 @@ async def test_delete_context(cortex_client, test_ids, cleanup_helper):
 async def test_count_contexts(cortex_client, test_ids, cleanup_helper):
     """
     Test counting contexts in a memory space.
-    
+
     Port of: contexts.test.ts - count tests
     """
     memory_space_id = test_ids["memory_space_id"]

@@ -83,7 +83,7 @@ async def test_should_create_a_node(neo4j_adapter):
 @pytest.mark.asyncio
 async def test_should_read_a_node(neo4j_adapter):
     """Test reading a node. Port of: graphAdapter.test.ts - line 64"""
-    node_id = await neo4j_adapter.create_node(
+    await neo4j_adapter.create_node(
         GraphNode(label="TestNode", properties={"name": "Read Test"})
     )
 
@@ -163,7 +163,6 @@ async def test_should_read_relationships(neo4j_adapter):
 
     # Note: get_relationships not implemented
     # Just verify edge creation succeeded
-    rels = []
 
     # Just verify operation completed
     assert True

@@ -25,7 +25,7 @@ async def param_test_setup(module_cortex_client, test_run_context):
     ctx = test_run_context
     memory_space_id = ctx.memory_space_id("param-prop")
     user_id = ctx.user_id("param-test")
-    
+
     # Create conversation for remember() tests
     conv = await module_cortex_client.conversations.create(
         CreateConversationInput(
@@ -52,11 +52,11 @@ async def param_test_setup(module_cortex_client, test_run_context):
 async def test_propagates_participant_id_to_vector_layer(cortex_client, param_test_setup):
     """
     Test that participantId propagates to vector layer.
-    
+
     Port of: parameterPropagation.test.ts - line 42
     """
     setup = param_test_setup
-    
+
     result = await cortex_client.memory.remember(
         RememberParams(
             memory_space_id=setup["memory_space_id"],
@@ -86,7 +86,7 @@ async def test_propagates_participant_id_to_vector_layer(cortex_client, param_te
 async def test_propagates_importance_to_vector_layer(cortex_client, param_test_setup):
     """
     Test that importance propagates to vector layer.
-    
+
     Port of: parameterPropagation.test.ts - line 72
     """
     setup = param_test_setup
@@ -119,7 +119,7 @@ async def test_propagates_importance_to_vector_layer(cortex_client, param_test_s
 async def test_propagates_tags_to_vector_layer(cortex_client, param_test_setup):
     """
     Test that tags propagate to vector layer.
-    
+
     Port of: parameterPropagation.test.ts - line 99
     """
     setup = param_test_setup
@@ -151,11 +151,11 @@ async def test_propagates_tags_to_vector_layer(cortex_client, param_test_setup):
 async def test_propagates_user_id_to_vector_layer(cortex_client, param_test_setup):
     """
     Test that userId propagates to vector layer.
-    
+
     Port of: parameterPropagation.test.ts - line 128
     """
     setup = param_test_setup
-    
+
     result = await cortex_client.memory.remember(
         RememberParams(
             memory_space_id=setup["memory_space_id"],
@@ -183,11 +183,11 @@ async def test_propagates_user_id_to_vector_layer(cortex_client, param_test_setu
 async def test_propagates_participant_id_to_conversation_messages(cortex_client, param_test_setup):
     """
     Test that participantId propagates to conversation messages.
-    
+
     Port of: parameterPropagation.test.ts - line 159
     """
     setup = param_test_setup
-    
+
     result = await cortex_client.memory.remember(
         RememberParams(
             memory_space_id=setup["memory_space_id"],
@@ -206,7 +206,7 @@ async def test_propagates_participant_id_to_conversation_messages(cortex_client,
     # Agent message should have participantId
     agent_messages = [m for m in conv.messages if (m.get("role") if isinstance(m, dict) else m.role) == "agent"]
     if agent_messages:
-        participant = agent_messages[-1].get("participantId") if isinstance(agent_messages[-1], dict) else getattr(agent_messages[-1], 'participant_id', None)
+        agent_messages[-1].get("participantId") if isinstance(agent_messages[-1], dict) else getattr(agent_messages[-1], 'participant_id', None)
         # participantId might not be on individual messages, but on conversation.participants
 
 
@@ -219,11 +219,11 @@ async def test_propagates_participant_id_to_conversation_messages(cortex_client,
 async def test_propagates_participant_id_to_extracted_facts(cortex_client, param_test_setup):
     """
     Test that participantId propagates to extracted facts.
-    
+
     Port of: parameterPropagation.test.ts - line 195
     """
     setup = param_test_setup
-    
+
     async def extract_facts(user_msg, agent_msg):
         return [
             {
@@ -249,7 +249,7 @@ async def test_propagates_participant_id_to_extracted_facts(cortex_client, param
     # Extracted fact should have participantId
     if result.facts:
         for fact in result.facts:
-            fact_participant = fact.participant_id if hasattr(fact, 'participant_id') else fact.get("participantId")
+            fact.participant_id if hasattr(fact, 'participant_id') else fact.get("participantId")
             # participantId should be propagated from remember params
 
 
@@ -262,11 +262,11 @@ async def test_propagates_participant_id_to_extracted_facts(cortex_client, param
 async def test_propagates_none_for_optional_participant_id(cortex_client, param_test_setup):
     """
     Test that None is properly handled for optional participantId.
-    
+
     Port of: parameterPropagation.test.ts - line 233
     """
     setup = param_test_setup
-    
+
     result = await cortex_client.memory.remember(
         RememberParams(
             memory_space_id=setup["memory_space_id"],
@@ -290,11 +290,11 @@ async def test_propagates_none_for_optional_participant_id(cortex_client, param_
 async def test_propagates_default_importance_when_omitted(cortex_client, param_test_setup):
     """
     Test that default importance is used when omitted.
-    
+
     Port of: parameterPropagation.test.ts - line 265
     """
     setup = param_test_setup
-    
+
     result = await cortex_client.memory.remember(
         RememberParams(
             memory_space_id=setup["memory_space_id"],
@@ -324,11 +324,11 @@ async def test_propagates_default_importance_when_omitted(cortex_client, param_t
 async def test_user_id_propagates_through_all_layers(cortex_client, param_test_setup):
     """
     Test that userId propagates through all layers.
-    
+
     Port of: parameterPropagation.test.ts - line 296
     """
     setup = param_test_setup
-    
+
     result = await cortex_client.memory.remember(
         RememberParams(
             memory_space_id=setup["memory_space_id"],
@@ -356,11 +356,11 @@ async def test_user_id_propagates_through_all_layers(cortex_client, param_test_s
 async def test_memory_space_id_consistent_across_layers(cortex_client, param_test_setup):
     """
     Test that memorySpaceId is consistent across layers.
-    
+
     Port of: parameterPropagation.test.ts - line 330
     """
     setup = param_test_setup
-    
+
     result = await cortex_client.memory.remember(
         RememberParams(
             memory_space_id=setup["memory_space_id"],
@@ -392,11 +392,11 @@ async def test_memory_space_id_consistent_across_layers(cortex_client, param_tes
 async def test_propagates_custom_metadata_fields(cortex_client, param_test_setup):
     """
     Test propagation of custom metadata fields.
-    
+
     Port of: parameterPropagation.test.ts - line 364
     """
     setup = param_test_setup
-    
+
     # Note: Python SDK may handle metadata differently than TypeScript
     # This test validates the core parameter propagation pattern
     result = await cortex_client.memory.remember(
@@ -427,7 +427,7 @@ async def test_propagates_custom_metadata_fields(cortex_client, param_test_setup
 async def test_propagates_source_user_name_to_memories(cortex_client, param_test_setup):
     """
     Test that source userName propagates to memories.
-    
+
     Port of: parameterPropagation.test.ts - line 395
     """
     setup = param_test_setup
@@ -459,11 +459,11 @@ async def test_propagates_source_user_name_to_memories(cortex_client, param_test
 async def test_propagates_conversation_id_to_conversation_ref(cortex_client, param_test_setup):
     """
     Test that conversationId propagates to conversationRef.
-    
+
     Port of: parameterPropagation.test.ts - line 427
     """
     setup = param_test_setup
-    
+
     result = await cortex_client.memory.remember(
         RememberParams(
             memory_space_id=setup["memory_space_id"],
@@ -492,11 +492,11 @@ async def test_propagates_conversation_id_to_conversation_ref(cortex_client, par
 async def test_auto_generates_timestamp_when_omitted(cortex_client, param_test_setup):
     """
     Test that timestamp is auto-generated when omitted.
-    
+
     Port of: parameterPropagation.test.ts - line 460
     """
     setup = param_test_setup
-    
+
     result = await cortex_client.memory.remember(
         RememberParams(
             memory_space_id=setup["memory_space_id"],
@@ -525,11 +525,11 @@ async def test_auto_generates_timestamp_when_omitted(cortex_client, param_test_s
 async def test_propagates_all_parameters_together(cortex_client, param_test_setup):
     """
     Test propagating all parameters together.
-    
+
     Port of: parameterPropagation.test.ts - line 491
     """
     setup = param_test_setup
-    
+
     result = await cortex_client.memory.remember(
         RememberParams(
             memory_space_id=setup["memory_space_id"],

@@ -20,11 +20,9 @@ from cortex.types import (
     CreateConversationInput,
     MemoryMetadata,
     MemorySource,
-    RememberParams,
     StoreFactParams,
     StoreMemoryInput,
 )
-
 
 # ============================================================================
 # Conversation References
@@ -35,12 +33,12 @@ from cortex.types import (
 async def test_conversation_ref_points_to_actual_conversation(cortex_client, ctx):
     """
     Test that conversationRef points to actual conversation.
-    
+
     Port of: crossLayerIntegrity.test.ts - line 33
     """
     memory_space_id = ctx.memory_space_id()
     user_id = ctx.user_id()
-    
+
     conv = await cortex_client.conversations.create(
         CreateConversationInput(
             type="user-agent",
@@ -92,12 +90,12 @@ async def test_conversation_ref_points_to_actual_conversation(cortex_client, ctx
 async def test_handles_missing_conversation_ref_gracefully(cortex_client, ctx):
     """
     Test that missing conversationRef is handled gracefully.
-    
+
     Port of: crossLayerIntegrity.test.ts - line 113
     """
     memory_space_id = ctx.memory_space_id()
     user_id = ctx.user_id()
-    
+
     memory = await cortex_client.vector.store(
         memory_space_id,
         StoreMemoryInput(
@@ -126,12 +124,12 @@ async def test_handles_missing_conversation_ref_gracefully(cortex_client, ctx):
 async def test_source_ref_in_facts_points_to_actual_conversation(cortex_client, ctx):
     """
     Test that sourceRef in facts points to actual conversation.
-    
+
     Port of: crossLayerIntegrity.test.ts - line 130
     """
     memory_space_id = ctx.memory_space_id()
     user_id = ctx.user_id()
-    
+
     conv = await cortex_client.conversations.create(
         CreateConversationInput(
             type="user-agent",
@@ -165,12 +163,12 @@ async def test_source_ref_in_facts_points_to_actual_conversation(cortex_client, 
 async def test_source_ref_memory_id_points_to_actual_memory(cortex_client, ctx):
     """
     Test that sourceRef memoryId points to actual memory.
-    
+
     Port of: crossLayerIntegrity.test.ts - line 156
     """
     memory_space_id = ctx.memory_space_id()
     user_id = ctx.user_id()
-    
+
     # Create memory first
     mem = await cortex_client.vector.store(
         memory_space_id,
@@ -215,17 +213,17 @@ async def test_source_ref_memory_id_points_to_actual_memory(cortex_client, ctx):
 async def test_immutable_ref_points_to_actual_immutable_record(cortex_client, ctx):
     """
     Test that immutableRef points to actual immutable record.
-    
+
     Port of: crossLayerIntegrity.test.ts - line 186
     """
     from cortex.types import ImmutableEntry
 
     memory_space_id = ctx.memory_space_id()
-    
+
     # Store immutable record with unique type/id
     immutable_type = ctx.immutable_type("policy")
     immutable_id = ctx.immutable_id("refund-policy")
-    
+
     immutable = await cortex_client.immutable.store(
         ImmutableEntry(
             type=immutable_type,
@@ -265,12 +263,12 @@ async def test_immutable_ref_points_to_actual_immutable_record(cortex_client, ct
 async def test_mutable_ref_snapshot_matches_actual_value(cortex_client, ctx):
     """
     Test that mutableRef snapshot matches actual value.
-    
+
     Port of: crossLayerIntegrity.test.ts - line 220
     """
     memory_space_id = ctx.memory_space_id()
     namespace = ctx.mutable_namespace("user-prefs")
-    
+
     # Set mutable value
     await cortex_client.mutable.set(
         namespace,
@@ -318,12 +316,12 @@ async def test_mutable_ref_snapshot_matches_actual_value(cortex_client, ctx):
 async def test_context_conversation_ref_points_to_actual_conversation(cortex_client, ctx):
     """
     Test that context conversationRef points to actual conversation.
-    
+
     Port of: crossLayerIntegrity.test.ts - line 264
     """
     memory_space_id = ctx.memory_space_id()
     user_id = ctx.user_id()
-    
+
     conv = await cortex_client.conversations.create(
         CreateConversationInput(
             type="user-agent",
@@ -368,11 +366,11 @@ async def test_context_conversation_ref_points_to_actual_conversation(cortex_cli
 async def test_child_context_parent_id_points_to_actual_parent(cortex_client, ctx):
     """
     Test that child context parentId points to actual parent.
-    
+
     Port of: crossLayerIntegrity.test.ts - line 306
     """
     memory_space_id = ctx.memory_space_id()
-    
+
     parent = await cortex_client.contexts.create(
         ContextInput(
             purpose="Parent context",
@@ -401,11 +399,11 @@ async def test_child_context_parent_id_points_to_actual_parent(cortex_client, ct
 async def test_parent_child_ids_array_contains_actual_children(cortex_client, ctx):
     """
     Test that parent's childIds array contains actual children.
-    
+
     Port of: crossLayerIntegrity.test.ts - line 335
     """
     memory_space_id = ctx.memory_space_id()
-    
+
     parent = await cortex_client.contexts.create(
         ContextInput(
             purpose="Parent with multiple children",
@@ -452,11 +450,11 @@ async def test_parent_child_ids_array_contains_actual_children(cortex_client, ct
 async def test_all_contexts_in_chain_reference_same_root(cortex_client, ctx):
     """
     Test that all contexts in chain reference same root.
-    
+
     Port of: crossLayerIntegrity.test.ts - line 377
     """
     memory_space_id = ctx.memory_space_id()
-    
+
     root = await cortex_client.contexts.create(
         ContextInput(
             purpose="Root context",
@@ -499,11 +497,11 @@ async def test_all_contexts_in_chain_reference_same_root(cortex_client, ctx):
 async def test_parent_child_relationship_is_bidirectional(cortex_client, ctx):
     """
     Test that parent-child relationship is bidirectional.
-    
+
     Port of: crossLayerIntegrity.test.ts - line 418
     """
     memory_space_id = ctx.memory_space_id()
-    
+
     parent = await cortex_client.contexts.create(
         ContextInput(
             purpose="Bidirectional parent",
@@ -544,11 +542,11 @@ async def test_parent_child_relationship_is_bidirectional(cortex_client, ctx):
 async def test_detects_orphaned_contexts_when_parent_deleted(cortex_client, ctx):
     """
     Test detection of orphaned contexts when parent is deleted.
-    
+
     Port of: crossLayerIntegrity.test.ts - line 457
     """
     memory_space_id = ctx.memory_space_id()
-    
+
     parent = await cortex_client.contexts.create(
         ContextInput(
             purpose="Parent that will be deleted",
@@ -585,11 +583,11 @@ async def test_detects_orphaned_contexts_when_parent_deleted(cortex_client, ctx)
 async def test_memory_previous_versions_reference_valid_versions(cortex_client, ctx):
     """
     Test that memory previousVersions reference valid versions.
-    
+
     Port of: crossLayerIntegrity.test.ts - line 495
     """
     memory_space_id = ctx.memory_space_id()
-    
+
     # Create v1
     v1 = await cortex_client.vector.store(
         memory_space_id,
@@ -626,12 +624,12 @@ async def test_memory_previous_versions_reference_valid_versions(cortex_client, 
 async def test_conversation_message_ids_are_unique_and_retrievable(cortex_client, ctx):
     """
     Test that conversation message IDs are unique and retrievable.
-    
+
     Port of: crossLayerIntegrity.test.ts - line 531
     """
     memory_space_id = ctx.memory_space_id()
     user_id = ctx.user_id()
-    
+
     conv = await cortex_client.conversations.create(
         CreateConversationInput(
             type="user-agent",
@@ -672,7 +670,7 @@ async def test_conversation_message_ids_are_unique_and_retrievable(cortex_client
 async def test_user_deletion_cascade_maintains_referential_integrity(cortex_client, ctx):
     """
     Test that user deletion cascade maintains referential integrity.
-    
+
     Port of: crossLayerIntegrity.test.ts - line 571
     """
     from cortex import DeleteUserOptions
@@ -699,7 +697,7 @@ async def test_user_deletion_cascade_maintains_referential_integrity(cortex_clie
     await cortex_client.users.delete(test_user, DeleteUserOptions(cascade=True))
 
     # Memory should be deleted
-    retrieved = await cortex_client.vector.get(memory_space_id, mem.memory_id)
+    await cortex_client.vector.get(memory_space_id, mem.memory_id)
     # Should be None if cascade worked
     # If not None, cascade didn't delete it
     # This validates the cascade integrity
@@ -709,12 +707,12 @@ async def test_user_deletion_cascade_maintains_referential_integrity(cortex_clie
 async def test_fact_version_chain_maintains_integrity(cortex_client, ctx):
     """
     Test that fact version chain maintains integrity.
-    
+
     Port of: crossLayerIntegrity.test.ts - line 603
     """
     memory_space_id = ctx.memory_space_id()
     user_id = ctx.user_id()
-    
+
     # Create fact v1
     v1 = await cortex_client.facts.store(
         StoreFactParams(
