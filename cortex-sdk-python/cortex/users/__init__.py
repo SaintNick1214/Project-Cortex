@@ -32,6 +32,29 @@ from .validators import (
 )
 
 
+def _is_user_not_found_error(e: Exception) -> bool:
+    """Check if an exception indicates a user/immutable entry was not found.
+
+    This handles the Convex error format which includes the error code
+    in the exception message. We check for patterns that indicate the
+    user profile doesn't exist.
+
+    Args:
+        e: The exception to check
+
+    Returns:
+        True if this is a "not found" error for a user/immutable entry
+    """
+    error_str = str(e)
+    # Check for error code patterns from Convex backend
+    return (
+        "IMMUTABLE_ENTRY_NOT_FOUND" in error_str
+        or "USER_NOT_FOUND" in error_str
+        or "immutable entry not found" in error_str.lower()
+        or "user not found" in error_str.lower()
+    )
+
+
 class UsersAPI:
     """
     Users API
@@ -171,9 +194,13 @@ class UsersAPI:
             try:
                 await self.client.mutation("immutable:purge", {"type": "user", "id": user_id})
                 total_deleted = 1
-            except Exception:
-                # User profile doesn't exist in immutable table - that's okay
-                total_deleted = 0
+            except Exception as e:
+                # Only ignore "not found" errors - user profile may not exist
+                if _is_user_not_found_error(e):
+                    total_deleted = 0
+                else:
+                    # Re-raise unexpected errors (connection issues, permission errors, etc.)
+                    raise
 
             return UserDeleteResult(
                 user_id=user_id,
@@ -612,9 +639,14 @@ class UsersAPI:
         try:
             await self.client.mutation("immutable:purge", {"type": "user", "id": user_id})
             deleted_layers.append("user-profile")
-        except Exception:
-            # User profile doesn't exist - that's okay, might only have associated data
-            pass
+        except Exception as e:
+            # Only ignore "not found" errors - user profile may not exist
+            if _is_user_not_found_error(e):
+                # User profile doesn't exist - that's okay, might only have associated data
+                pass
+            else:
+                # Log unexpected errors but continue (cascade should be best-effort)
+                print(f"Warning: Failed to delete user profile: {e}")
 
         # Delete from graph if configured
         graph_nodes_deleted = None
@@ -632,7 +664,7 @@ class UsersAPI:
 
         # Calculate total deleted (only count user profile if it was actually deleted)
         user_profile_count = 1 if "user-profile" in deleted_layers else 0
-        
+
         total_deleted = (
             conversations_deleted
             + immutable_deleted
