@@ -24,6 +24,27 @@ from .validators import (
 )
 
 
+def _is_immutable_not_found_error(e: Exception) -> bool:
+    """Check if an exception indicates an immutable entry was not found.
+
+    This handles the Convex error format which includes the error code
+    in the exception message. We check multiple patterns to be robust.
+
+    Args:
+        e: The exception to check
+
+    Returns:
+        True if this is a "not found" error that can be safely ignored
+    """
+    error_str = str(e)
+    # Check for the specific error code pattern from Convex
+    # Format: "Error: IMMUTABLE_ENTRY_NOT_FOUND" or within a longer message
+    return (
+        "IMMUTABLE_ENTRY_NOT_FOUND" in error_str
+        or "immutable entry not found" in error_str.lower()
+    )
+
+
 class ImmutableAPI:
     """
     Immutable Store API - Layer 1b
@@ -339,7 +360,8 @@ class ImmutableAPI:
             return cast(Dict[str, Any], result)
         except Exception as e:
             # Entry may not exist (already deleted by parallel run or global purge)
-            if "IMMUTABLE_ENTRY_NOT_FOUND" in str(e):
+            # Check for IMMUTABLE_ENTRY_NOT_FOUND error code in the exception
+            if _is_immutable_not_found_error(e):
                 return {"deleted": 0}
             raise
 
