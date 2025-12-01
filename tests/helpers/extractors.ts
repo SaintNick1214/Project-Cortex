@@ -119,7 +119,9 @@ export async function extractFactsEnriched(
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey && !openai) {
-    console.warn("Warning: OPENAI_API_KEY not set for enriched fact extraction");
+    console.warn(
+      "Warning: OPENAI_API_KEY not set for enriched fact extraction",
+    );
     return null;
   }
 
@@ -139,7 +141,8 @@ export async function extractFactsEnriched(
         messages: [
           {
             role: "system",
-            content: "You are a fact extraction assistant. Return only valid JSON.",
+            content:
+              "You are a fact extraction assistant. Return only valid JSON.",
           },
           {
             role: "user",

@@ -14,10 +14,7 @@
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
-import {
-  createNamedTestRunContext,
-  ScopedCleanup,
-} from "./helpers";
+import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 
 // Legacy cleanup class - kept for reference but not used in parallel-safe mode
 class _MutableTestCleanup {

@@ -124,7 +124,7 @@ export function validateMetadata(
   }
 
   // Runtime validation - metadata could be null or array from external sources
-   
+
   if (
     typeof metadata !== "object" ||
     metadata === null ||

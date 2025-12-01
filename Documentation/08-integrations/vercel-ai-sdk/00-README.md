@@ -48,20 +48,20 @@ const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: "my-chatbot",
   userId: "user-123",
-  
+
   // Optional: Enhanced streaming features (v0.2.0+)
   streamingOptions: {
-    storePartialResponse: true,      // Store during streaming
-    progressiveFactExtraction: true,  // Extract facts incrementally
-    enableStreamMetrics: true,        // Collect performance metrics
+    storePartialResponse: true, // Store during streaming
+    progressiveFactExtraction: true, // Extract facts incrementally
+    enableStreamMetrics: true, // Collect performance metrics
   },
-  
+
   streamingHooks: {
     onProgress: (event) => {
       console.log(`Progress: ${event.progress}%`);
     },
     onComplete: (event) => {
-      console.log('Metrics:', event.metrics);
+      console.log("Metrics:", event.metrics);
     },
   },
 });
@@ -99,6 +99,7 @@ This integration provides:
 Version 0.2.0 introduces powerful streaming capabilities powered by Cortex SDK v0.11.0:
 
 **Progressive Storage**: Store partial responses during streaming for resumability
+
 ```typescript
 streamingOptions: {
   storePartialResponse: true,
@@ -107,6 +108,7 @@ streamingOptions: {
 ```
 
 **Streaming Hooks**: Real-time monitoring with lifecycle callbacks
+
 ```typescript
 streamingHooks: {
   onChunk: (event) => console.log('Chunk:', event.chunk),
@@ -117,6 +119,7 @@ streamingHooks: {
 ```
 
 **Streaming Metrics**: Automatic performance monitoring
+
 ```typescript
 streamingOptions: {
   enableStreamMetrics: true, // enabled by default
@@ -125,6 +128,7 @@ streamingOptions: {
 ```
 
 **Progressive Fact Extraction**: Extract facts during streaming
+
 ```typescript
 streamingOptions: {
   progressiveFactExtraction: true,
@@ -133,6 +137,7 @@ streamingOptions: {
 ```
 
 **Error Recovery**: Handle interrupted streams
+
 ```typescript
 streamingOptions: {
   partialFailureHandling: 'store-partial', // or 'rollback', 'retry', 'best-effort'

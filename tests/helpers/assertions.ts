@@ -312,7 +312,10 @@ export async function listMutable<T extends { namespace: string; key: string }>(
   namespace: string,
 ): Promise<T[]> {
   const records = await cortex.mutable.list({ namespace });
-  return filterByPrefix(records, ctx.runId, ["namespace", "key"]) as unknown as T[];
+  return filterByPrefix(records, ctx.runId, [
+    "namespace",
+    "key",
+  ]) as unknown as T[];
 }
 
 // ============================================================================

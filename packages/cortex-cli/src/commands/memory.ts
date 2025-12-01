@@ -116,11 +116,15 @@ export function registerMemoryCommands(
             }),
           );
 
-          printSuccess(`Found ${formatCount(memories.length, "memory", "memories")}`);
+          printSuccess(
+            `Found ${formatCount(memories.length, "memory", "memories")}`,
+          );
         });
       } catch (error) {
         spinner.stop();
-        printError(error instanceof Error ? error.message : "Failed to list memories");
+        printError(
+          error instanceof Error ? error.message : "Failed to list memories",
+        );
         process.exit(1);
       }
     });
@@ -180,11 +184,20 @@ export function registerMemoryCommands(
           console.log(
             formatOutput(displayData, format, {
               title: `Search results for "${query}"`,
-              headers: ["id", "content", "type", "source", "user", "importance"],
+              headers: [
+                "id",
+                "content",
+                "type",
+                "source",
+                "user",
+                "importance",
+              ],
             }),
           );
 
-          printSuccess(`Found ${formatCount(memories.length, "memory", "memories")}`);
+          printSuccess(
+            `Found ${formatCount(memories.length, "memory", "memories")}`,
+          );
         });
       } catch (error) {
         spinner.stop();
@@ -426,9 +439,10 @@ export function registerMemoryCommands(
             });
 
             if (recentMemories.length > 0) {
-              const lastMemory = "memory" in recentMemories[0] 
-                ? recentMemories[0].memory 
-                : recentMemories[0];
+              const lastMemory =
+                "memory" in recentMemories[0]
+                  ? recentMemories[0].memory
+                  : recentMemories[0];
               console.log(
                 `  Last Activity: ${formatTimestamp(lastMemory.createdAt)}`,
               );
@@ -437,7 +451,9 @@ export function registerMemoryCommands(
         });
       } catch (error) {
         spinner.stop();
-        printError(error instanceof Error ? error.message : "Failed to load statistics");
+        printError(
+          error instanceof Error ? error.message : "Failed to load statistics",
+        );
         process.exit(1);
       }
     });
@@ -478,23 +494,25 @@ export function registerMemoryCommands(
             // Handle both MemoryEntry and EnrichedMemory types
             const memory = "memory" in result ? result.memory : result;
             printSection(`Memory: ${memory.memoryId}`, {
-              "Content": memory.content,
+              Content: memory.content,
               "Content Type": memory.contentType,
               "Source Type": memory.sourceType,
               "User ID": memory.userId ?? "-",
-              "Importance": memory.importance,
-              "Version": memory.version,
-              "Created": formatTimestamp(memory.createdAt),
-              "Updated": formatTimestamp(memory.updatedAt),
+              Importance: memory.importance,
+              Version: memory.version,
+              Created: formatTimestamp(memory.createdAt),
+              Updated: formatTimestamp(memory.updatedAt),
               "Access Count": memory.accessCount,
-              "Tags": memory.tags.length > 0 ? memory.tags.join(", ") : "-",
+              Tags: memory.tags.length > 0 ? memory.tags.join(", ") : "-",
             });
 
             // Show enriched data if available
             if ("memory" in result && result.sourceMessages) {
               console.log("\n  Source Messages:");
               for (const msg of result.sourceMessages) {
-                console.log(`    [${msg.role}]: ${msg.content.substring(0, 100)}...`);
+                console.log(
+                  `    [${msg.role}]: ${msg.content.substring(0, 100)}...`,
+                );
               }
             }
 
@@ -505,7 +523,9 @@ export function registerMemoryCommands(
         });
       } catch (error) {
         spinner.stop();
-        printError(error instanceof Error ? error.message : "Failed to get memory");
+        printError(
+          error instanceof Error ? error.message : "Failed to get memory",
+        );
         process.exit(1);
       }
     });

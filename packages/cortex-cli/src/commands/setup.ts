@@ -147,7 +147,8 @@ export function registerSetupCommands(
         const confirmChoice = await prompts({
           type: "confirm",
           name: "confirm",
-          message: "Require confirmation for dangerous operations (delete, clear)?",
+          message:
+            "Require confirmation for dangerous operations (delete, clear)?",
           initial: true,
         });
         config.confirmDangerous = confirmChoice.confirm ?? true;
@@ -193,7 +194,9 @@ export function registerSetupCommands(
         const config = await loadConfig();
         await showConfiguration(config, options.format);
       } catch (error) {
-        printError(error instanceof Error ? error.message : "Failed to load config");
+        printError(
+          error instanceof Error ? error.message : "Failed to load config",
+        );
         process.exit(1);
       }
     });
@@ -207,7 +210,9 @@ export function registerSetupCommands(
         await setConfigValue(key, value);
         printSuccess(`Set ${key} = ${value}`);
       } catch (error) {
-        printError(error instanceof Error ? error.message : "Failed to set config");
+        printError(
+          error instanceof Error ? error.message : "Failed to set config",
+        );
         process.exit(1);
       }
     });
@@ -223,7 +228,9 @@ export function registerSetupCommands(
         const deploymentName = options.deployment ?? config.default;
         await testAndShowConnection(config, deploymentName);
       } catch (error) {
-        printError(error instanceof Error ? error.message : "Connection test failed");
+        printError(
+          error instanceof Error ? error.message : "Connection test failed",
+        );
         process.exit(1);
       }
     });
@@ -239,7 +246,9 @@ export function registerSetupCommands(
         const deployments = listDeployments(config);
 
         if (deployments.length === 0) {
-          printWarning("No deployments configured. Run 'cortex setup' to configure.");
+          printWarning(
+            "No deployments configured. Run 'cortex setup' to configure.",
+          );
           return;
         }
 
@@ -258,7 +267,9 @@ export function registerSetupCommands(
           console.log();
         }
       } catch (error) {
-        printError(error instanceof Error ? error.message : "Failed to list deployments");
+        printError(
+          error instanceof Error ? error.message : "Failed to list deployments",
+        );
         process.exit(1);
       }
     });
@@ -291,7 +302,9 @@ export function registerSetupCommands(
           printInfo(`Set as default deployment`);
         }
       } catch (error) {
-        printError(error instanceof Error ? error.message : "Failed to add deployment");
+        printError(
+          error instanceof Error ? error.message : "Failed to add deployment",
+        );
         process.exit(1);
       }
     });
@@ -321,7 +334,9 @@ export function registerSetupCommands(
         printSuccess(`Removed deployment "${name}"`);
       } catch (error) {
         printError(
-          error instanceof Error ? error.message : "Failed to remove deployment",
+          error instanceof Error
+            ? error.message
+            : "Failed to remove deployment",
         );
         process.exit(1);
       }
@@ -406,8 +421,13 @@ async function autoSetup(config: CLIConfig): Promise<void> {
 
   // Check for cloud config
   const cloudUrl = process.env.CLOUD_CONVEX_URL ?? process.env.CONVEX_URL;
-  const cloudKey = process.env.CLOUD_CONVEX_DEPLOY_KEY ?? process.env.CONVEX_DEPLOY_KEY;
-  if (cloudUrl && !cloudUrl.includes("localhost") && !cloudUrl.includes("127.0.0.1")) {
+  const cloudKey =
+    process.env.CLOUD_CONVEX_DEPLOY_KEY ?? process.env.CONVEX_DEPLOY_KEY;
+  if (
+    cloudUrl &&
+    !cloudUrl.includes("localhost") &&
+    !cloudUrl.includes("127.0.0.1")
+  ) {
     config.deployments.cloud = {
       url: cloudUrl,
       key: cloudKey,

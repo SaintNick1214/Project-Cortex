@@ -50,11 +50,11 @@ await cortex.facts.store(
 
 Vector memory search now applies intelligent boosting:
 
-| Condition | Boost |
-|-----------|-------|
-| User message role (`message_role="user"`) | +20% |
-| Matching `fact_category` (when `query_category` provided) | +30% |
-| Has `enriched_content` field | +10% |
+| Condition                                                 | Boost |
+| --------------------------------------------------------- | ----- |
+| User message role (`message_role="user"`)                 | +20%  |
+| Matching `fact_category` (when `query_category` provided) | +30%  |
+| Has `enriched_content` field                              | +10%  |
 
 ```python
 # Search with category boosting
@@ -163,6 +163,7 @@ Four new methods for agent-to-agent communication:
 **2. Bidirectional Memory Storage**
 
 Each A2A message automatically creates:
+
 - Memory in sender's space (direction: "outbound")
 - Memory in receiver's space (direction: "inbound")
 - ACID conversation tracking (optional, enabled by default)

@@ -28,6 +28,7 @@ These scripts simulate the GitHub Actions PR pipeline locally for faster iterati
 **Purpose:** Quick local testing with change detection
 
 **Features:**
+
 - Detects changed files (simulates `dorny/paths-filter`)
 - Only runs tests for changed packages
 - Runs against local Convex (much faster than managed)
@@ -37,6 +38,7 @@ These scripts simulate the GitHub Actions PR pipeline locally for faster iterati
 **When to use:** Quick verification before pushing
 
 **Example output:**
+
 ```
 ╔════════════════════════════════════════════════════════════════╗
 ║                 LOCAL PIPELINE SIMULATOR                       ║
@@ -45,20 +47,20 @@ These scripts simulate the GitHub Actions PR pipeline locally for faster iterati
 
 🔍 Configuration:
    Convex URL: http://127.0.0.1:3210
-   
+
 STAGE 1: Detect File Changes
    ✓ TypeScript SDK changed
    ✓ Python SDK changed
-   
+
 STAGE 2: Deploy & Purge Database
    ✓ Convex deployed
    🧹 Purging test database...
-   
+
 STAGE 3: Run Tests in Parallel
    ✓ TypeScript SDK
    ✓ Python SDK
    ✓ Code Quality
-   
+
 ✅ ALL CHECKS PASSED (95s)
 ```
 
@@ -67,19 +69,22 @@ STAGE 3: Run Tests in Parallel
 **Purpose:** Stress test parallel execution (matches CI exactly)
 
 **Features:**
+
 - Runs N parallel Python test processes simultaneously
 - Default: 5 parallel runs (matching CI matrix of 3.10, 3.11, 3.12, 3.13, 3.14)
 - Runs TypeScript tests in parallel too
 - Real-time progress monitoring
 - Proves test isolation works under load
 
-**When to use:** 
+**When to use:**
+
 - Before pushing major changes
 - To verify parallel test isolation
 - To catch race conditions locally
 - To verify no conflicts between parallel runs
 
 **Example output:**
+
 ```
 ╔════════════════════════════════════════════════════════════════╗
 ║          ADVANCED LOCAL PIPELINE SIMULATOR                     ║
@@ -90,10 +95,10 @@ STAGE 3: Run Tests in Parallel
 🔍 Configuration:
    Convex URL: http://127.0.0.1:3210
    Parallel Python runs: 5
-   
+
 STAGE 1: Purge Test Database
    🧹 Deleted 0 entities
-   
+
 STAGE 2: Launch 5 Parallel Test Processes
    📦 TypeScript SDK (PID: 12345)
    🐍 Python SDK (5 parallel runs)
@@ -102,15 +107,15 @@ STAGE 2: Launch 5 Parallel Test Processes
       Run 3 (PID: 12348)
       Run 4 (PID: 12349)
       Run 5 (PID: 12350)
-      
+
 ⏳ Monitoring 6 parallel jobs...
    Progress: ●●●●●● (6/6 complete)
-   
+
 ✅ ALL PARALLEL TESTS PASSED
 
    🎉 Successfully ran 5 parallel Python test suites
       with zero conflicts in 98s!
-      
+
    TypeScript: 1920 tests
    Python: 1206 tests (per run)
    Python Total: 6030 test executions
@@ -121,6 +126,7 @@ STAGE 2: Launch 5 Parallel Test Processes
 ### Required Environment Variables
 
 In `.env.local`:
+
 ```bash
 LOCAL_CONVEX_URL=http://127.0.0.1:3210
 CONVEX_URL=http://127.0.0.1:3210  # For tests
@@ -130,11 +136,13 @@ OPENAI_API_KEY=sk-...              # For vector search tests
 ### Local Convex Must Be Running
 
 Start local Convex in a separate terminal:
+
 ```bash
 npm run dev
 ```
 
 Or in the background:
+
 ```bash
 nohup npm run dev > convex-dev.log 2>&1 &
 ```
@@ -146,6 +154,7 @@ nohup npm run dev > convex-dev.log 2>&1 &
 The scripts use `git diff` to compare against `main` branch:
 
 **TypeScript SDK:**
+
 - `src/**`
 - `tests/**`
 - `package.json`
@@ -153,15 +162,19 @@ The scripts use `git diff` to compare against `main` branch:
 - `jest.config.js`
 
 **Python SDK:**
+
 - `cortex-sdk-python/**`
 
 **Convex Backend:**
+
 - `convex-dev/**`
 
 **Vercel AI Provider:**
+
 - `packages/vercel-ai-provider/**`
 
 **Cortex CLI:**
+
 - `packages/cortex-cli/**`
 
 If files in these paths changed, the corresponding tests run.
@@ -201,6 +214,7 @@ user_id = ctx.user_id()                  # → "module_name-run-1234567890-abc12
 ```
 
 When 5 parallel runs execute simultaneously, each has a different `run_id`, so:
+
 - No ID collisions
 - No data conflicts
 - Each run's cleanup only affects its own data
@@ -212,6 +226,7 @@ When 5 parallel runs execute simultaneously, each has a different `run_id`, so:
 **Problem:** Local Convex isn't running
 
 **Solution:**
+
 ```bash
 npm run dev
 ```
@@ -221,6 +236,7 @@ npm run dev
 **Problem:** Leftover data from previous failed run
 
 **Solution:**
+
 ```bash
 # Purge manually
 npx tsx scripts/cleanup-test-data.ts
@@ -233,7 +249,8 @@ npx tsx scripts/cleanup-test-data.ts
 
 **Problem:** Test isolation isn't working
 
-**Solution:** 
+**Solution:**
+
 - Check that tests use `ctx` fixture (not hardcoded IDs)
 - Check that tests use `test_run_context` or standard fixtures
 - Review test file for module-level constants
@@ -243,6 +260,7 @@ npx tsx scripts/cleanup-test-data.ts
 **Problem:** One test process is stuck
 
 **Solution:**
+
 ```bash
 # Find hanging process
 ps aux | grep pytest
@@ -259,12 +277,12 @@ tail -100 /tmp/tmp.xyz/python-3.log
 
 ### Local vs CI
 
-| Metric | CI (Managed Convex) | Local (Local Convex) | Speedup |
-|--------|---------------------|----------------------|---------|
-| TypeScript Tests | ~60s | ~75s | 0.8x |
-| Python Tests (1 run) | ~180s | ~45s | 4x |
-| Python Tests (5 parallel) | ~180s | ~50s | 3.6x |
-| Total Pipeline | ~5-8 min | ~2-3 min | 2-3x |
+| Metric                    | CI (Managed Convex) | Local (Local Convex) | Speedup |
+| ------------------------- | ------------------- | -------------------- | ------- |
+| TypeScript Tests          | ~60s                | ~75s                 | 0.8x    |
+| Python Tests (1 run)      | ~180s               | ~45s                 | 4x      |
+| Python Tests (5 parallel) | ~180s               | ~50s                 | 3.6x    |
+| Total Pipeline            | ~5-8 min            | ~2-3 min             | 2-3x    |
 
 **Note:** Local is faster for Python (no network latency), slightly slower for TypeScript (local Convex overhead).
 
@@ -272,16 +290,16 @@ tail -100 /tmp/tmp.xyz/python-3.log
 
 These scripts simulate the actual CI pipeline:
 
-| CI Step | Local Equivalent |
-|---------|------------------|
-| `detect-changes` | `git diff main` + path filtering |
-| `setup-and-purge` | `npx tsx scripts/cleanup-test-data.ts` |
-| `test-typescript` | `CONVEX_TEST_MODE=local npm test &` |
-| `test-python` matrix | `N x pytest tests/` in background |
-| `test-vercel-ai-provider` | `cd packages/vercel-ai-provider && npm test` |
-| `test-cli` | `cd packages/cortex-cli && npm run test:unit && npm run test:integration` |
-| `code-quality` | `npm run lint && tsc --noEmit` |
-| `all-checks-passed` | Wait for all PIDs, check exit codes |
+| CI Step                   | Local Equivalent                                                          |
+| ------------------------- | ------------------------------------------------------------------------- |
+| `detect-changes`          | `git diff main` + path filtering                                          |
+| `setup-and-purge`         | `npx tsx scripts/cleanup-test-data.ts`                                    |
+| `test-typescript`         | `CONVEX_TEST_MODE=local npm test &`                                       |
+| `test-python` matrix      | `N x pytest tests/` in background                                         |
+| `test-vercel-ai-provider` | `cd packages/vercel-ai-provider && npm test`                              |
+| `test-cli`                | `cd packages/cortex-cli && npm run test:unit && npm run test:integration` |
+| `code-quality`            | `npm run lint && tsc --noEmit`                                            |
+| `all-checks-passed`       | Wait for all PIDs, check exit codes                                       |
 
 ## Tips
 

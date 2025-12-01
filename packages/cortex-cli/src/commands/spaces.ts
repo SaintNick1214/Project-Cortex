@@ -41,15 +41,16 @@ export function registerSpaceCommands(
   program: Command,
   config: CLIConfig,
 ): void {
-  const spaces = program
-    .command("spaces")
-    .description("Manage memory spaces");
+  const spaces = program.command("spaces").description("Manage memory spaces");
 
   // spaces list
   spaces
     .command("list")
     .description("List all memory spaces")
-    .option("-t, --type <type>", "Filter by type: personal, team, project, custom")
+    .option(
+      "-t, --type <type>",
+      "Filter by type: personal, team, project, custom",
+    )
     .option("-s, --status <status>", "Filter by status: active, archived")
     .option("-l, --limit <number>", "Maximum number of results", "100")
     .option("-f, --format <format>", "Output format: table, json, csv")
@@ -96,15 +97,26 @@ export function registerSpaceCommands(
           console.log(
             formatOutput(displayData, format, {
               title: "Memory Spaces",
-              headers: ["id", "name", "type", "status", "participants", "created"],
+              headers: [
+                "id",
+                "name",
+                "type",
+                "status",
+                "participants",
+                "created",
+              ],
             }),
           );
 
-          printSuccess(`Found ${formatCount(spacesList.length, "memory space")}`);
+          printSuccess(
+            `Found ${formatCount(spacesList.length, "memory space")}`,
+          );
         });
       } catch (error) {
         spinner.stop();
-        printError(error instanceof Error ? error.message : "Failed to list spaces");
+        printError(
+          error instanceof Error ? error.message : "Failed to list spaces",
+        );
         process.exit(1);
       }
     });
@@ -113,7 +125,10 @@ export function registerSpaceCommands(
   spaces
     .command("create <spaceId>")
     .description("Create a new memory space")
-    .requiredOption("-t, --type <type>", "Space type: personal, team, project, custom")
+    .requiredOption(
+      "-t, --type <type>",
+      "Space type: personal, team, project, custom",
+    )
     .option("-n, --name <name>", "Human-readable name")
     .option("-m, --metadata <json>", "JSON metadata", "{}")
     .action(async (spaceId, options) => {
@@ -185,13 +200,13 @@ export function registerSpaceCommands(
             console.log(formatOutput(space, "json"));
           } else {
             printSection(`Memory Space: ${spaceId}`, {
-              "ID": space.memorySpaceId,
-              "Name": space.name ?? "-",
-              "Type": space.type,
-              "Status": space.status,
-              "Participants": space.participants?.length ?? 0,
-              "Created": formatTimestamp(space.createdAt),
-              "Updated": formatTimestamp(space.updatedAt),
+              ID: space.memorySpaceId,
+              Name: space.name ?? "-",
+              Type: space.type,
+              Status: space.status,
+              Participants: space.participants?.length ?? 0,
+              Created: formatTimestamp(space.createdAt),
+              Updated: formatTimestamp(space.updatedAt),
             });
 
             if (space.participants && space.participants.length > 0) {
@@ -213,7 +228,9 @@ export function registerSpaceCommands(
         });
       } catch (error) {
         spinner.stop();
-        printError(error instanceof Error ? error.message : "Failed to get space");
+        printError(
+          error instanceof Error ? error.message : "Failed to get space",
+        );
         process.exit(1);
       }
     });
@@ -222,7 +239,11 @@ export function registerSpaceCommands(
   spaces
     .command("delete <spaceId>")
     .description("Delete a memory space")
-    .option("--cascade", "Delete all data in the space (memories, facts, etc.)", false)
+    .option(
+      "--cascade",
+      "Delete all data in the space (memories, facts, etc.)",
+      false,
+    )
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (spaceId, options) => {
       const globalOpts = program.opts();
@@ -232,7 +253,9 @@ export function registerSpaceCommands(
 
         if (options.cascade && !options.yes) {
           console.log("\n⚠️  CASCADE DELETION");
-          console.log("This will permanently delete the memory space and ALL its data:");
+          console.log(
+            "This will permanently delete the memory space and ALL its data:",
+          );
           console.log("  • All memories");
           console.log("  • All facts");
           console.log("  • All conversations");
@@ -346,7 +369,9 @@ export function registerSpaceCommands(
         });
       } catch (error) {
         spinner.stop();
-        printError(error instanceof Error ? error.message : "Reactivate failed");
+        printError(
+          error instanceof Error ? error.message : "Reactivate failed",
+        );
         process.exit(1);
       }
     });
@@ -375,18 +400,23 @@ export function registerSpaceCommands(
             console.log(formatOutput(stats, "json"));
           } else {
             printSection(`Statistics for ${spaceId}`, {
-              "Conversations": stats.totalConversations,
-              "Memories": stats.totalMemories,
-              "Facts": stats.totalFacts,
+              Conversations: stats.totalConversations,
+              Memories: stats.totalMemories,
+              Facts: stats.totalFacts,
               "Total Messages": stats.totalMessages,
-              "Participants": stats.participants?.length ?? 0,
-              "Top Tags": stats.topTags.length > 0 ? stats.topTags.slice(0, 5).join(", ") : "-",
+              Participants: stats.participants?.length ?? 0,
+              "Top Tags":
+                stats.topTags.length > 0
+                  ? stats.topTags.slice(0, 5).join(", ")
+                  : "-",
             });
           }
         });
       } catch (error) {
         spinner.stop();
-        printError(error instanceof Error ? error.message : "Failed to load statistics");
+        printError(
+          error instanceof Error ? error.message : "Failed to load statistics",
+        );
         process.exit(1);
       }
     });
@@ -441,7 +471,11 @@ export function registerSpaceCommands(
         });
       } catch (error) {
         spinner.stop();
-        printError(error instanceof Error ? error.message : "Failed to list participants");
+        printError(
+          error instanceof Error
+            ? error.message
+            : "Failed to list participants",
+        );
         process.exit(1);
       }
     });
@@ -451,7 +485,10 @@ export function registerSpaceCommands(
     .command("add-participant <spaceId>")
     .description("Add a participant to a memory space")
     .requiredOption("-i, --id <participantId>", "Participant ID")
-    .requiredOption("-t, --type <type>", "Participant type (e.g., user, ai-tool, ai-agent)")
+    .requiredOption(
+      "-t, --type <type>",
+      "Participant type (e.g., user, ai-tool, ai-agent)",
+    )
     .action(async (spaceId, options) => {
       const globalOpts = program.opts();
 
@@ -469,11 +506,15 @@ export function registerSpaceCommands(
 
           spinner.stop();
           printSuccess(`Added participant ${options.id} to ${spaceId}`);
-          console.log(`  Total participants: ${space.participants?.length ?? 0}`);
+          console.log(
+            `  Total participants: ${space.participants?.length ?? 0}`,
+          );
         });
       } catch (error) {
         spinner.stop();
-        printError(error instanceof Error ? error.message : "Failed to add participant");
+        printError(
+          error instanceof Error ? error.message : "Failed to add participant",
+        );
         process.exit(1);
       }
     });
@@ -511,10 +552,16 @@ export function registerSpaceCommands(
 
           spinner.stop();
           printSuccess(`Removed participant ${options.id} from ${spaceId}`);
-          console.log(`  Remaining participants: ${space.participants?.length ?? 0}`);
+          console.log(
+            `  Remaining participants: ${space.participants?.length ?? 0}`,
+          );
         });
       } catch (error) {
-        printError(error instanceof Error ? error.message : "Failed to remove participant");
+        printError(
+          error instanceof Error
+            ? error.message
+            : "Failed to remove participant",
+        );
         process.exit(1);
       }
     });
@@ -533,7 +580,9 @@ export function registerSpaceCommands(
         validateMemorySpaceId(spaceId);
 
         if (!options.name && !options.status && !options.metadata) {
-          printError("At least one of --name, --status, or --metadata is required");
+          printError(
+            "At least one of --name, --status, or --metadata is required",
+          );
           process.exit(1);
         }
 

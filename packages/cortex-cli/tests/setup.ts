@@ -49,7 +49,9 @@ export async function cleanupTestData(prefix: string): Promise<void> {
 
     for (const space of testSpaces) {
       try {
-        await client.memorySpaces.delete(space.memorySpaceId, { cascade: false });
+        await client.memorySpaces.delete(space.memorySpaceId, {
+          cascade: false,
+        });
       } catch {
         // Ignore errors
       }

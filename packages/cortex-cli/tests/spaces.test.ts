@@ -342,7 +342,9 @@ describe("CLI Memory Space Commands", () => {
         metadata: { importance: 50, tags: [] },
       });
 
-      const result = await cortex.memorySpaces.delete(spaceId, { cascade: true });
+      const result = await cortex.memorySpaces.delete(spaceId, {
+        cascade: true,
+      });
 
       expect(result.deleted).toBe(true);
     });

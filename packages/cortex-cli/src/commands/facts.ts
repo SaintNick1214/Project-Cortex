@@ -84,8 +84,7 @@ export function registerFactsCommands(
           // Format facts for display
           const displayData = factsList.map((f) => ({
             id: f.factId,
-            fact:
-              f.fact.length > 50 ? f.fact.substring(0, 47) + "..." : f.fact,
+            fact: f.fact.length > 50 ? f.fact.substring(0, 47) + "..." : f.fact,
             type: f.factType,
             confidence: f.confidence + "%",
             subject: f.subject ?? "-",
@@ -95,7 +94,14 @@ export function registerFactsCommands(
           console.log(
             formatOutput(displayData, format, {
               title: `Facts in ${options.space}`,
-              headers: ["id", "fact", "type", "confidence", "subject", "created"],
+              headers: [
+                "id",
+                "fact",
+                "type",
+                "confidence",
+                "subject",
+                "created",
+              ],
             }),
           );
 
@@ -103,7 +109,9 @@ export function registerFactsCommands(
         });
       } catch (error) {
         spinner.stop();
-        printError(error instanceof Error ? error.message : "Failed to list facts");
+        printError(
+          error instanceof Error ? error.message : "Failed to list facts",
+        );
         process.exit(1);
       }
     });
@@ -146,8 +154,7 @@ export function registerFactsCommands(
 
           const displayData = results.map((f) => ({
             id: f.factId,
-            fact:
-              f.fact.length > 60 ? f.fact.substring(0, 57) + "..." : f.fact,
+            fact: f.fact.length > 60 ? f.fact.substring(0, 57) + "..." : f.fact,
             type: f.factType,
             confidence: f.confidence + "%",
           }));
@@ -200,26 +207,30 @@ export function registerFactsCommands(
             console.log(formatOutput(fact, "json"));
           } else {
             printSection(`Fact: ${factId}`, {
-              "Fact": fact.fact,
-              "Type": fact.factType,
-              "Confidence": `${fact.confidence}%`,
-              "Subject": fact.subject ?? "-",
-              "Predicate": fact.predicate ?? "-",
-              "Object": fact.object ?? "-",
+              Fact: fact.fact,
+              Type: fact.factType,
+              Confidence: `${fact.confidence}%`,
+              Subject: fact.subject ?? "-",
+              Predicate: fact.predicate ?? "-",
+              Object: fact.object ?? "-",
               "Source Type": fact.sourceType,
-              "Version": fact.version,
-              "Created": formatTimestamp(fact.createdAt),
-              "Updated": formatTimestamp(fact.updatedAt),
-              "Tags": fact.tags.length > 0 ? fact.tags.join(", ") : "-",
+              Version: fact.version,
+              Created: formatTimestamp(fact.createdAt),
+              Updated: formatTimestamp(fact.updatedAt),
+              Tags: fact.tags.length > 0 ? fact.tags.join(", ") : "-",
             });
 
             if (fact.validFrom || fact.validUntil) {
               console.log("\n  Temporal Validity:");
               if (fact.validFrom) {
-                console.log(`    Valid From: ${formatTimestamp(fact.validFrom)}`);
+                console.log(
+                  `    Valid From: ${formatTimestamp(fact.validFrom)}`,
+                );
               }
               if (fact.validUntil) {
-                console.log(`    Valid Until: ${formatTimestamp(fact.validUntil)}`);
+                console.log(
+                  `    Valid Until: ${formatTimestamp(fact.validUntil)}`,
+                );
               }
             }
 
@@ -238,7 +249,9 @@ export function registerFactsCommands(
         });
       } catch (error) {
         spinner.stop();
-        printError(error instanceof Error ? error.message : "Failed to get fact");
+        printError(
+          error instanceof Error ? error.message : "Failed to get fact",
+        );
         process.exit(1);
       }
     });
@@ -380,7 +393,9 @@ export function registerFactsCommands(
           });
 
           spinner.stop();
-          printSuccess(`${formatCount(factsList.length, "fact")} in ${options.space}`);
+          printSuccess(
+            `${formatCount(factsList.length, "fact")} in ${options.space}`,
+          );
 
           // Show breakdown by type
           const byType = new Map<string, number>();

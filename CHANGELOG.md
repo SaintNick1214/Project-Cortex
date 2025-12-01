@@ -48,7 +48,8 @@ await cortex.facts.store({
   // Enrichment fields (NEW)
   category: "addressing_preference",
   searchAliases: ["name", "nickname", "what to call", "address as", "greet"],
-  semanticContext: "Use 'Alex' when addressing, greeting, or referring to this user",
+  semanticContext:
+    "Use 'Alex' when addressing, greeting, or referring to this user",
   entities: [
     { name: "Alex", type: "preferred_name", fullValue: "Alexander Johnson" },
   ],
@@ -62,11 +63,11 @@ await cortex.facts.store({
 
 Vector memory search (`memories:search`) now applies intelligent boosting:
 
-| Condition | Boost |
-|-----------|-------|
-| User message role (`messageRole: "user"`) | +20% |
-| Matching `factCategory` (when `queryCategory` provided) | +30% |
-| Has `enrichedContent` field | +10% |
+| Condition                                               | Boost |
+| ------------------------------------------------------- | ----- |
+| User message role (`messageRole: "user"`)               | +20%  |
+| Matching `factCategory` (when `queryCategory` provided) | +30%  |
+| Has `enrichedContent` field                             | +10%  |
 
 ```typescript
 // Search with category boosting
@@ -191,6 +192,7 @@ Four new methods for agent-to-agent communication:
 **2. Bidirectional Memory Storage**
 
 Each A2A message automatically creates:
+
 - Memory in sender's space (direction: "outbound")
 - Memory in receiver's space (direction: "inbound")
 - ACID conversation tracking (optional, enabled by default)
@@ -289,6 +291,7 @@ metadata: v.optional(v.any()),
 #### 📚 Documentation
 
 Full API documentation available at:
+
 - [A2A Communication API Reference](./Documentation/03-api-reference/06-a2a-communication.md)
 - [A2A Core Features Guide](./Documentation/02-core-features/05-a2a-communication.md)
 

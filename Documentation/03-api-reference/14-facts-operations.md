@@ -1151,6 +1151,7 @@ Cortex v0.15.0 introduces **enriched fact extraction** - a system for extracting
 Standard fact extraction stores simple statements like "User prefers to be called Alex". While correct, this can be outranked by unrelated content like "I've noted your email address" when searching for "what should I address the user as".
 
 Enriched facts solve this by storing:
+
 - **Search aliases**: Alternative terms that should match this fact
 - **Semantic context**: When/how to use this information
 - **Category**: Specific sub-category for filtering and boosting
@@ -1249,6 +1250,7 @@ Return ONLY a valid JSON array.
 ### Graph Integration
 
 When `syncToGraph: true`, enriched facts automatically:
+
 1. Create **Entity nodes** for each item in `entities[]`
 2. Create **relationship edges** for each item in `relations[]`
 3. Update existing Entity nodes with enriched metadata (fullValue, entityType)
@@ -1267,11 +1269,11 @@ When `syncToGraph: true`, enriched facts automatically:
 
 When searching with enriched facts, the search engine applies boosts:
 
-| Condition | Boost |
-|-----------|-------|
-| User message role | +20% |
-| Matching `factCategory` | +30% |
-| Has `enrichedContent` | +10% |
+| Condition               | Boost |
+| ----------------------- | ----- |
+| User message role       | +20%  |
+| Matching `factCategory` | +30%  |
+| Has `enrichedContent`   | +10%  |
 
 This ensures properly enriched facts rank highest for relevant queries.
 

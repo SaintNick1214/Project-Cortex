@@ -117,7 +117,9 @@ export function registerConversationsCommands(
       } catch (error) {
         spinner.stop();
         printError(
-          error instanceof Error ? error.message : "Failed to list conversations",
+          error instanceof Error
+            ? error.message
+            : "Failed to list conversations",
         );
         process.exit(1);
       }
@@ -138,7 +140,10 @@ export function registerConversationsCommands(
 
       try {
         validateConversationId(conversationId);
-        const messageLimit = validateLimit(parseInt(options.messages, 10), 1000);
+        const messageLimit = validateLimit(
+          parseInt(options.messages, 10),
+          1000,
+        );
 
         await withClient(config, globalOpts, async (client) => {
           const conversation = await client.conversations.get(conversationId);
@@ -155,18 +160,19 @@ export function registerConversationsCommands(
             console.log(formatOutput(conversation, "json"));
           } else {
             printSection(`Conversation: ${conversationId}`, {
-              "ID": conversation.conversationId,
+              ID: conversation.conversationId,
               "Memory Space": conversation.memorySpaceId,
-              "Type": conversation.type,
+              Type: conversation.type,
               "Message Count": conversation.messageCount,
               "User ID": conversation.participants?.userId ?? "-",
               "Participant ID": conversation.participants?.participantId ?? "-",
-              "Created": formatTimestamp(conversation.createdAt),
-              "Updated": formatTimestamp(conversation.updatedAt),
+              Created: formatTimestamp(conversation.createdAt),
+              Updated: formatTimestamp(conversation.updatedAt),
             });
 
             // Show messages
-            const messages = conversation.messages?.slice(0, messageLimit) ?? [];
+            const messages =
+              conversation.messages?.slice(0, messageLimit) ?? [];
             if (messages.length > 0) {
               console.log("\n  Messages:");
               console.log("  " + "─".repeat(60));
@@ -272,7 +278,11 @@ export function registerConversationsCommands(
   conversations
     .command("export <conversationId>")
     .description("Export a conversation to a file")
-    .option("-o, --output <file>", "Output file path", "conversation-export.json")
+    .option(
+      "-o, --output <file>",
+      "Output file path",
+      "conversation-export.json",
+    )
     .option("-f, --format <format>", "Export format: json, txt", "json")
     .action(async (conversationId, options) => {
       const globalOpts = program.opts();
@@ -518,7 +528,9 @@ export function registerConversationsCommands(
         });
       } catch (error) {
         spinner.stop();
-        printError(error instanceof Error ? error.message : "Failed to list messages");
+        printError(
+          error instanceof Error ? error.message : "Failed to list messages",
+        );
         process.exit(1);
       }
     });

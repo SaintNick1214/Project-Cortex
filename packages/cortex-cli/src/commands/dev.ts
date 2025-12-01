@@ -58,7 +58,10 @@ const DATA_TEMPLATES = {
       },
     ],
     facts: [
-      { fact: "User prefers helpful and friendly responses", type: "preference" },
+      {
+        fact: "User prefers helpful and friendly responses",
+        type: "preference",
+      },
       { fact: "User enjoys humor in conversations", type: "preference" },
     ],
   },
@@ -349,7 +352,10 @@ export function registerDevCommands(program: Command, config: CLIConfig): void {
       "-t, --template <template>",
       "Template: chatbot, ecommerce, knowledge-base",
     )
-    .option("-s, --space <id>", "Memory space ID (creates new if not specified)")
+    .option(
+      "-s, --space <id>",
+      "Memory space ID (creates new if not specified)",
+    )
     .option("-u, --user <id>", "User ID", "demo-user")
     .action(async (options) => {
       const globalOpts = program.opts();
@@ -446,13 +452,15 @@ export function registerDevCommands(program: Command, config: CLIConfig): void {
           printSuccess(`Generated ${template.name} demo data`);
           printSection("Created", {
             "Memory Space": spaceId,
-            "User": userId,
-            "Conversations": conversationCount,
-            "Facts": factCount,
+            User: userId,
+            Conversations: conversationCount,
+            Facts: factCount,
           });
         });
       } catch (error) {
-        printError(error instanceof Error ? error.message : "Generation failed");
+        printError(
+          error instanceof Error ? error.message : "Generation failed",
+        );
         process.exit(1);
       }
     });
@@ -487,10 +495,10 @@ export function registerDevCommands(program: Command, config: CLIConfig): void {
 
           console.log();
           printSection("Search Debug", {
-            "Query": query,
-            "Space": options.space,
-            "Results": results.length,
-            "Duration": `${duration}ms`,
+            Query: query,
+            Space: options.space,
+            Results: results.length,
+            Duration: `${duration}ms`,
           });
 
           if (results.length > 0) {
@@ -498,15 +506,36 @@ export function registerDevCommands(program: Command, config: CLIConfig): void {
             for (let i = 0; i < results.length; i++) {
               const result = results[i];
               // Type guard for EnrichedMemory vs MemoryEntry
-              const memory = result && typeof result === "object" && "memory" in result
-                ? (result as { memory: { memoryId: string; content: string; contentType: string; importance: number; createdAt: number; tags: string[] } }).memory
-                : result as { memoryId: string; content: string; contentType: string; importance: number; createdAt: number; tags: string[] };
+              const memory =
+                result && typeof result === "object" && "memory" in result
+                  ? (
+                      result as {
+                        memory: {
+                          memoryId: string;
+                          content: string;
+                          contentType: string;
+                          importance: number;
+                          createdAt: number;
+                          tags: string[];
+                        };
+                      }
+                    ).memory
+                  : (result as {
+                      memoryId: string;
+                      content: string;
+                      contentType: string;
+                      importance: number;
+                      createdAt: number;
+                      tags: string[];
+                    });
               console.log(`\n  ${pc.cyan(`[${i + 1}]`)} ${memory.memoryId}`);
               console.log(
                 `      ${pc.dim("Content:")} ${memory.content.substring(0, 100)}...`,
               );
               console.log(`      ${pc.dim("Type:")} ${memory.contentType}`);
-              console.log(`      ${pc.dim("Importance:")} ${memory.importance}`);
+              console.log(
+                `      ${pc.dim("Importance:")} ${memory.importance}`,
+              );
 
               if (options.verbose) {
                 console.log(
@@ -578,7 +607,9 @@ export function registerDevCommands(program: Command, config: CLIConfig): void {
           console.log(pc.bold("Source:"));
           console.log(`  Type: ${memory.sourceType}`);
           console.log(`  User: ${memory.userId ?? "-"}`);
-          console.log(`  Timestamp: ${formatTimestamp(memory.sourceTimestamp)}`);
+          console.log(
+            `  Timestamp: ${formatTimestamp(memory.sourceTimestamp)}`,
+          );
           console.log();
 
           // Metadata
@@ -593,7 +624,10 @@ export function registerDevCommands(program: Command, config: CLIConfig): void {
           if (memory.embedding) {
             console.log(`  Dimensions: ${memory.embedding.length}`);
             console.log(
-              `  Sample: [${memory.embedding.slice(0, 5).map((n) => n.toFixed(4)).join(", ")}, ...]`,
+              `  Sample: [${memory.embedding
+                .slice(0, 5)
+                .map((n) => n.toFixed(4))
+                .join(", ")}, ...]`,
             );
           } else {
             console.log("  No embedding stored");
@@ -605,13 +639,19 @@ export function registerDevCommands(program: Command, config: CLIConfig): void {
           console.log(`  Created: ${formatTimestamp(memory.createdAt)}`);
           console.log(`  Updated: ${formatTimestamp(memory.updatedAt)}`);
           if (memory.lastAccessed) {
-            console.log(`  Last Accessed: ${formatTimestamp(memory.lastAccessed)}`);
+            console.log(
+              `  Last Accessed: ${formatTimestamp(memory.lastAccessed)}`,
+            );
           }
 
           // Version history
           if (memory.previousVersions && memory.previousVersions.length > 0) {
             console.log();
-            console.log(pc.bold(`Version History: ${memory.previousVersions.length} previous versions`));
+            console.log(
+              pc.bold(
+                `Version History: ${memory.previousVersions.length} previous versions`,
+              ),
+            );
           }
         });
       } catch (error) {

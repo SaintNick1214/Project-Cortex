@@ -51,7 +51,7 @@ export const send = mutation({
     const messageByteSize = new TextEncoder().encode(args.message).length;
     if (messageByteSize > 102400) {
       throw new Error(
-        `MESSAGE_TOO_LARGE: Message exceeds 100KB limit (current size: ${Math.floor(messageByteSize / 1024)}KB)`
+        `MESSAGE_TOO_LARGE: Message exceeds 100KB limit (current size: ${Math.floor(messageByteSize / 1024)}KB)`,
       );
     }
     if (args.from === args.to) {
@@ -59,7 +59,9 @@ export const send = mutation({
     }
     const importance = args.importance ?? 60;
     if (importance < 0 || importance > 100) {
-      throw new Error("INVALID_IMPORTANCE: Importance must be between 0 and 100");
+      throw new Error(
+        "INVALID_IMPORTANCE: Importance must be between 0 and 100",
+      );
     }
 
     const now = Date.now();
@@ -260,7 +262,7 @@ export const request = mutation({
     const messageByteSize = new TextEncoder().encode(args.message).length;
     if (messageByteSize > 102400) {
       throw new Error(
-        `MESSAGE_TOO_LARGE: Message exceeds 100KB limit (current size: ${Math.floor(messageByteSize / 1024)}KB)`
+        `MESSAGE_TOO_LARGE: Message exceeds 100KB limit (current size: ${Math.floor(messageByteSize / 1024)}KB)`,
       );
     }
     if (args.from === args.to) {
@@ -269,12 +271,16 @@ export const request = mutation({
 
     const timeout = args.timeout ?? 30000;
     if (timeout < 1000 || timeout > 300000) {
-      throw new Error("INVALID_TIMEOUT: Timeout must be between 1000ms and 300000ms");
+      throw new Error(
+        "INVALID_TIMEOUT: Timeout must be between 1000ms and 300000ms",
+      );
     }
 
     const importance = args.importance ?? 70;
     if (importance < 0 || importance > 100) {
-      throw new Error("INVALID_IMPORTANCE: Importance must be between 0 and 100");
+      throw new Error(
+        "INVALID_IMPORTANCE: Importance must be between 0 and 100",
+      );
     }
 
     const now = Date.now();
@@ -352,7 +358,7 @@ export const request = mutation({
       "PUBSUB_NOT_CONFIGURED: request() requires pub/sub infrastructure for real-time responses. " +
         "In Direct Mode, configure your own Redis/RabbitMQ/NATS adapter. " +
         "In Cloud Mode, pub/sub is included automatically. " +
-        `Request stored with messageId: ${messageId}`
+        `Request stored with messageId: ${messageId}`,
     );
   },
 });
@@ -386,7 +392,7 @@ export const broadcast = mutation({
     const messageByteSize = new TextEncoder().encode(args.message).length;
     if (messageByteSize > 102400) {
       throw new Error(
-        `MESSAGE_TOO_LARGE: Message exceeds 100KB limit (current size: ${Math.floor(messageByteSize / 1024)}KB)`
+        `MESSAGE_TOO_LARGE: Message exceeds 100KB limit (current size: ${Math.floor(messageByteSize / 1024)}KB)`,
       );
     }
     if (!args.to || args.to.length === 0) {
@@ -399,7 +405,9 @@ export const broadcast = mutation({
     // Check for duplicates
     const uniqueRecipients = new Set(args.to);
     if (uniqueRecipients.size !== args.to.length) {
-      throw new Error("DUPLICATE_RECIPIENTS: Recipients array contains duplicates");
+      throw new Error(
+        "DUPLICATE_RECIPIENTS: Recipients array contains duplicates",
+      );
     }
 
     // Check for sender in recipients
@@ -410,13 +418,17 @@ export const broadcast = mutation({
     // Validate all recipient IDs
     for (const recipient of args.to) {
       if (!recipient || recipient.trim() === "") {
-        throw new Error("INVALID_AGENT_ID: All recipient IDs must be non-empty");
+        throw new Error(
+          "INVALID_AGENT_ID: All recipient IDs must be non-empty",
+        );
       }
     }
 
     const importance = args.importance ?? 60;
     if (importance < 0 || importance > 100) {
-      throw new Error("INVALID_IMPORTANCE: Importance must be between 0 and 100");
+      throw new Error(
+        "INVALID_IMPORTANCE: Importance must be between 0 and 100",
+      );
     }
 
     const now = Date.now();
@@ -644,8 +656,13 @@ export const getConversation = query({
       throw new Error("INVALID_DATE_RANGE: 'since' must be before 'until'");
     }
 
-    if (args.minImportance !== undefined && (args.minImportance < 0 || args.minImportance > 100)) {
-      throw new Error("INVALID_IMPORTANCE: minImportance must be between 0 and 100");
+    if (
+      args.minImportance !== undefined &&
+      (args.minImportance < 0 || args.minImportance > 100)
+    ) {
+      throw new Error(
+        "INVALID_IMPORTANCE: minImportance must be between 0 and 100",
+      );
     }
 
     // Get A2A conversation ID
@@ -655,7 +672,9 @@ export const getConversation = query({
     // Try to get ACID conversation
     const conversation = await ctx.db
       .query("conversations")
-      .withIndex("by_conversationId", (q) => q.eq("conversationId", conversationId))
+      .withIndex("by_conversationId", (q) =>
+        q.eq("conversationId", conversationId),
+      )
       .first();
 
     // Get A2A memories from agent1's perspective (includes both sent and received)
@@ -667,11 +686,13 @@ export const getConversation = query({
     // Filter for A2A messages with agent2 using metadata
     agent1Memories = agent1Memories.filter((m) => {
       if (m.sourceType !== "a2a") return false;
-      
+
       // Use metadata to check if this memory involves agent2
-      const meta = m.metadata as { fromAgent?: string; toAgent?: string } | undefined;
+      const meta = m.metadata as
+        | { fromAgent?: string; toAgent?: string }
+        | undefined;
       if (!meta) return false;
-      
+
       return (
         (meta.fromAgent === args.agent1 && meta.toAgent === args.agent2) ||
         (meta.fromAgent === args.agent2 && meta.toAgent === args.agent1)
@@ -686,11 +707,13 @@ export const getConversation = query({
       agent1Memories = agent1Memories.filter((m) => m.createdAt <= args.until!);
     }
     if (args.minImportance !== undefined) {
-      agent1Memories = agent1Memories.filter((m) => m.importance >= args.minImportance!);
+      agent1Memories = agent1Memories.filter(
+        (m) => m.importance >= args.minImportance!,
+      );
     }
     if (args.tags && args.tags.length > 0) {
       agent1Memories = agent1Memories.filter((m) =>
-        args.tags!.some((tag) => m.tags.includes(tag))
+        args.tags!.some((tag) => m.tags.includes(tag)),
       );
     }
     if (args.userId) {
@@ -705,26 +728,39 @@ export const getConversation = query({
 
     // Transform to conversation messages
     const messages = paginatedMemories.map((m) => {
-      const meta = m.metadata as {
-        fromAgent?: string;
-        toAgent?: string;
-        messageId?: string;
-        direction?: string;
-        broadcast?: boolean;
-        broadcastId?: string;
-      } | undefined;
-      
+      const meta = m.metadata as
+        | {
+            fromAgent?: string;
+            toAgent?: string;
+            messageId?: string;
+            direction?: string;
+            broadcast?: boolean;
+            broadcastId?: string;
+          }
+        | undefined;
+
       // Filter out internal tags for user-facing output
-      const userTags = m.tags.filter((t) => 
-        !["a2a", "sent", "received", "broadcast", "request", "pending"].includes(t) &&
-        t !== args.agent1 &&
-        t !== args.agent2
+      const userTags = m.tags.filter(
+        (t) =>
+          ![
+            "a2a",
+            "sent",
+            "received",
+            "broadcast",
+            "request",
+            "pending",
+          ].includes(t) &&
+          t !== args.agent1 &&
+          t !== args.agent2,
       );
-      
+
       return {
         from: meta?.fromAgent || args.agent1,
         to: meta?.toAgent || args.agent2,
-        message: m.content.replace(/^(Sent to [^:]+: |Received from [^:]+: |Broadcast to [^:]+: |Broadcast from [^:]+: |Request to [^:]+: |Request from [^:]+: )/, ""),
+        message: m.content.replace(
+          /^(Sent to [^:]+: |Received from [^:]+: |Broadcast to [^:]+: |Broadcast from [^:]+: |Request to [^:]+: |Request from [^:]+: )/,
+          "",
+        ),
         importance: m.importance,
         timestamp: m.createdAt,
         messageId: meta?.messageId || m.memoryId,
@@ -739,15 +775,16 @@ export const getConversation = query({
 
     // Calculate period
     const timestamps = messages.map((m) => m.timestamp);
-    const period = timestamps.length > 0
-      ? {
-          start: Math.min(...timestamps),
-          end: Math.max(...timestamps),
-        }
-      : {
-          start: Date.now(),
-          end: Date.now(),
-        };
+    const period =
+      timestamps.length > 0
+        ? {
+            start: Math.min(...timestamps),
+            end: Math.max(...timestamps),
+          }
+        : {
+            start: Date.now(),
+            end: Date.now(),
+          };
 
     // Collect unique user tags
     const allTags = new Set<string>();

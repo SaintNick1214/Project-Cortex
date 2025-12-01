@@ -1186,7 +1186,9 @@ describe("Memory Convenience API (Layer 3)", () => {
 
           // Find if expected content is in any of the top 3 results
           const matchingResult = top3Results.find((r) =>
-            r.content.toLowerCase().includes(search.expectInContent.toLowerCase()),
+            r.content
+              .toLowerCase()
+              .includes(search.expectInContent.toLowerCase()),
           );
 
           // Log all top 5 results for debugging context if not found
@@ -1194,13 +1196,13 @@ describe("Memory Convenience API (Layer 3)", () => {
             console.log(
               `  ⚠ Query: "${search.query}" - Expected "${search.expectInContent}" NOT in top 3:`,
             );
-            (results.slice(0, 5) as { content: string; _score?: number }[]).forEach(
-              (r, i) => {
-                console.log(
-                  `    ${i + 1}. "${r.content.substring(0, 80)}..." (score: ${r._score?.toFixed(3) || "N/A"})`,
-                );
-              },
-            );
+            (
+              results.slice(0, 5) as { content: string; _score?: number }[]
+            ).forEach((r, i) => {
+              console.log(
+                `    ${i + 1}. "${r.content.substring(0, 80)}..." (score: ${r._score?.toFixed(3) || "N/A"})`,
+              );
+            });
           }
 
           // VALIDATION: Expected content MUST appear in top 3 results

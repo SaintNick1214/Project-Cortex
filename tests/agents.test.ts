@@ -13,10 +13,7 @@
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
-import {
-  createNamedTestRunContext,
-  ScopedCleanup,
-} from "./helpers";
+import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 import { CypherGraphAdapter } from "../src/graph/adapters/CypherGraphAdapter";
 import type { GraphAdapter } from "../src/graph/types";
 

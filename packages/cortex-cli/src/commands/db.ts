@@ -10,7 +10,12 @@
 
 import { Command } from "commander";
 import ora from "ora";
-import type { CLIConfig, OutputFormat, DatabaseStats, BackupData } from "../types.js";
+import type {
+  CLIConfig,
+  OutputFormat,
+  DatabaseStats,
+  BackupData,
+} from "../types.js";
 import { withClient } from "../utils/client.js";
 import { resolveConfig } from "../utils/config.js";
 import {
@@ -34,9 +39,7 @@ import pc from "picocolors";
  * Register database commands
  */
 export function registerDbCommands(program: Command, config: CLIConfig): void {
-  const db = program
-    .command("db")
-    .description("Database-wide operations");
+  const db = program.command("db").description("Database-wide operations");
 
   // db stats
   db.command("stats")
@@ -52,10 +55,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
       try {
         await withClient(config, globalOpts, async (client) => {
           // Get counts from all tables
-          const [
-            spacesCount,
-            usersCount,
-          ] = await Promise.all([
+          const [spacesCount, usersCount] = await Promise.all([
             client.memorySpaces.count(),
             client.users.count(),
           ]);
@@ -69,7 +69,9 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
 
           for (const space of spaces) {
             try {
-              const stats = await client.memorySpaces.getStats(space.memorySpaceId);
+              const stats = await client.memorySpaces.getStats(
+                space.memorySpaceId,
+              );
               totalMemories += stats.totalMemories;
               totalConversations += stats.totalConversations;
               totalFacts += stats.totalFacts;
@@ -109,7 +111,9 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
               globalOpts,
             );
             console.log(`  ${pc.dim("Deployment:")} ${info.url}`);
-            console.log(`  ${pc.dim("Mode:")} ${info.isLocal ? "Local" : "Cloud"}`);
+            console.log(
+              `  ${pc.dim("Mode:")} ${info.isLocal ? "Local" : "Cloud"}`,
+            );
           }
         });
       } catch (error) {
@@ -138,7 +142,9 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
         if (options.confirm !== expectedText) {
           console.log();
           console.log(
-            pc.red(pc.bold("⚠️  DANGER: This will DELETE ALL DATA in the database!")),
+            pc.red(
+              pc.bold("⚠️  DANGER: This will DELETE ALL DATA in the database!"),
+            ),
           );
           console.log();
           console.log("This operation will permanently delete:");
@@ -200,7 +206,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           printSuccess("Database cleared");
           printSection("Deletion Summary", {
             "Memory Spaces": deletedSpaces,
-            "Users": deletedUsers,
+            Users: deletedUsers,
           });
         });
       } catch (error) {
@@ -289,17 +295,18 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           printSuccess(`Backup created: ${options.output}`);
           printSection("Backup Summary", {
             "File Size": formatBytes(size),
-            "Timestamp": formatTimestamp(backup.timestamp),
-            "Memory Spaces": (backup.data.memorySpaces as unknown[])?.length ?? 0,
-            "Users": (backup.data.users as unknown[])?.length ?? 0,
-            "Conversations": options.includeAll
-              ? (backup.data.conversations as unknown[])?.length ?? 0
+            Timestamp: formatTimestamp(backup.timestamp),
+            "Memory Spaces":
+              (backup.data.memorySpaces as unknown[])?.length ?? 0,
+            Users: (backup.data.users as unknown[])?.length ?? 0,
+            Conversations: options.includeAll
+              ? ((backup.data.conversations as unknown[])?.length ?? 0)
               : "Not included",
-            "Memories": options.includeAll
-              ? (backup.data.memories as unknown[])?.length ?? 0
+            Memories: options.includeAll
+              ? ((backup.data.memories as unknown[])?.length ?? 0)
               : "Not included",
-            "Facts": options.includeAll
-              ? (backup.data.facts as unknown[])?.length ?? 0
+            Facts: options.includeAll
+              ? ((backup.data.facts as unknown[])?.length ?? 0)
               : "Not included",
           });
         });
@@ -334,14 +341,15 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
 
         console.log();
         printSection("Backup Information", {
-          "Version": backup.version,
-          "Created": formatTimestamp(backup.timestamp),
-          "Source": backup.deployment,
+          Version: backup.version,
+          Created: formatTimestamp(backup.timestamp),
+          Source: backup.deployment,
           "Memory Spaces": (backup.data.memorySpaces as unknown[])?.length ?? 0,
-          "Users": (backup.data.users as unknown[])?.length ?? 0,
-          "Conversations": (backup.data.conversations as unknown[])?.length ?? "N/A",
-          "Memories": (backup.data.memories as unknown[])?.length ?? "N/A",
-          "Facts": (backup.data.facts as unknown[])?.length ?? "N/A",
+          Users: (backup.data.users as unknown[])?.length ?? 0,
+          Conversations:
+            (backup.data.conversations as unknown[])?.length ?? "N/A",
+          Memories: (backup.data.memories as unknown[])?.length ?? "N/A",
+          Facts: (backup.data.facts as unknown[])?.length ?? "N/A",
         });
 
         if (options.dryRun) {
@@ -415,7 +423,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           printSuccess("Restore complete");
           printSection("Restore Summary", {
             "Memory Spaces": restored.spaces,
-            "Users": restored.users,
+            Users: restored.users,
           });
 
           printWarning(

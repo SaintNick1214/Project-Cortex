@@ -3,11 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "@jest/globals";
-import {
-  getDeployment,
-  resolveConfig,
-  listDeployments,
-} from "../config.js";
+import { getDeployment, resolveConfig, listDeployments } from "../config.js";
 import type { CLIConfig } from "../../types.js";
 
 describe("config utilities", () => {
