@@ -630,13 +630,16 @@ class UsersAPI:
             except Exception as error:
                 print(f"Warning: Failed to delete from graph: {error}")
 
+        # Calculate total deleted (only count user profile if it was actually deleted)
+        user_profile_count = 1 if "user-profile" in deleted_layers else 0
+        
         total_deleted = (
             conversations_deleted
             + immutable_deleted
             + mutable_deleted
             + vector_deleted
             + facts_deleted
-            + 1  # user profile
+            + user_profile_count
         )
 
         return UserDeleteResult(

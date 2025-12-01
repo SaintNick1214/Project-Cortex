@@ -512,9 +512,9 @@ class TestUserProfileSequences:
 class TestConcurrentOperationSequences:
     """Concurrent operation sequence tests."""
 
-    async def test_parallel_creates(self, cortex_client):
+    async def test_parallel_creates(self, cortex_client, ctx):
         """Test parallel creates don't corrupt state."""
-        space_id = generate_test_id("seq-parallel-")
+        space_id = ctx.memory_space_id("seq-parallel")
 
         # Create 20 memories in parallel
         tasks = [

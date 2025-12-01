@@ -264,18 +264,20 @@ async def test_list_entries(cortex_client):
 
 
 @pytest.mark.asyncio
-async def test_count_entries(cortex_client):
+async def test_count_entries(cortex_client, ctx):
     """
     Test counting immutable entries.
     
     Port of: immutable.test.ts - count tests
     """
+    immutable_type = ctx.immutable_type("test-count")
+    
     # Create entries
     for i in range(3):
         await cortex_client.immutable.store(
             ImmutableEntry(
-                type="test-count",
-                id=f"count-item-{i}",
+                type=immutable_type,
+                id=ctx.immutable_id(f"count-item-{i}"),
                 data={"value": i},
             )
         )
@@ -286,10 +288,6 @@ async def test_count_entries(cortex_client):
     # Should have at least 3
     assert count >= 3
 
-    # Cleanup
-    for i in range(3):
-        await cortex_client.immutable.purge("test-count", f"count-item-{i}")
-
 
 # ============================================================================
 # purge() Tests
@@ -297,26 +295,29 @@ async def test_count_entries(cortex_client):
 
 
 @pytest.mark.asyncio
-async def test_purge_entry(cortex_client):
+async def test_purge_entry(cortex_client, ctx):
     """
     Test purging an immutable entry (all versions).
     
     Port of: immutable.test.ts - purge tests
     """
+    immutable_type = ctx.immutable_type("test-purge")
+    immutable_id = ctx.immutable_id("purge-test")
+    
     # Create entry with multiple versions
     await cortex_client.immutable.store(
-        ImmutableEntry(type="test-purge", id="purge-test", data={"content": "Version 1"})
+        ImmutableEntry(type=immutable_type, id=immutable_id, data={"content": "Version 1"})
     )
 
     await cortex_client.immutable.store(
-        ImmutableEntry(type="test-purge", id="purge-test", data={"content": "Version 2"})
+        ImmutableEntry(type=immutable_type, id=immutable_id, data={"content": "Version 2"})
     )
 
     # Purge entry
-    result = await cortex_client.immutable.purge("test-purge", "purge-test")
+    result = await cortex_client.immutable.purge(immutable_type, immutable_id)
 
     # Verify purged
-    retrieved = await cortex_client.immutable.get("test-purge", "purge-test")
+    retrieved = await cortex_client.immutable.get(immutable_type, immutable_id)
 
     assert retrieved is None
 
@@ -327,17 +328,19 @@ async def test_purge_entry(cortex_client):
 
 
 @pytest.mark.asyncio
-async def test_search_immutable(cortex_client):
+async def test_search_immutable(cortex_client, ctx):
     """
     Test searching immutable entries.
     
     Port of: immutable.test.ts - search tests
     """
+    immutable_type = ctx.immutable_type("test-search-article")
+    
     # Create searchable entries
     await cortex_client.immutable.store(
         ImmutableEntry(
-            type="test-search-article",
-            id="article-python",
+            type=immutable_type,
+            id=ctx.immutable_id("article-python"),
             data={
                 "title": "Getting Started with Python",
                 "content": "Python is a great programming language",
@@ -347,8 +350,8 @@ async def test_search_immutable(cortex_client):
 
     await cortex_client.immutable.store(
         ImmutableEntry(
-            type="test-search-article",
-            id="article-js",
+            type=immutable_type,
+            id=ctx.immutable_id("article-js"),
             data={
                 "title": "Advanced JavaScript",
                 "content": "JavaScript async patterns",
@@ -367,10 +370,6 @@ async def test_search_immutable(cortex_client):
         for r in results
     )
     assert found_python
-
-    # Cleanup
-    await cortex_client.immutable.purge("test-search-article", "article-python")
-    await cortex_client.immutable.purge("test-search-article", "article-js")
 
 
 # ============================================================================
