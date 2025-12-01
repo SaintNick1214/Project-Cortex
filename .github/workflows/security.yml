@@ -307,7 +307,7 @@ jobs:
 
       - name: Run 42Crunch API Security Audit
         if: steps.check-specs.outputs.has_specs == 'true'
-        uses: 42Crunch/api-security-audit-action@v3
+        uses: 42Crunch/api-security-audit-action@v4
         with:
           api-token: ${{ secrets.API_SECURITY_TOKEN }}
           platform-url: https://platform.42crunch.com
