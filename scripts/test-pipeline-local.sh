@@ -20,6 +20,11 @@ echo "║          Tests run in parallel against local Convex            ║"
 echo "╚════════════════════════════════════════════════════════════════╝"
 echo ""
 
+# Load .env.local if it exists
+if [ -f ".env.local" ]; then
+    export $(grep -v '^#' .env.local | grep -v '^$' | xargs)
+fi
+
 # Check for local Convex
 if [ -z "$LOCAL_CONVEX_URL" ]; then
     echo -e "${RED}✗ LOCAL_CONVEX_URL not set${NC}"
