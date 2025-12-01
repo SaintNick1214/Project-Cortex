@@ -147,8 +147,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: [detect-changes, setup-and-purge]
     # Run if TypeScript or Python files changed OR if PR is targeting main branch
+    # Note: always() allows this job to run even if setup-and-purge was skipped (conditional dependency)
     if: |
-      github.actor != 'dependabot[bot]' && (
+      always() &&
+      github.actor != 'dependabot[bot]' &&
+      (needs.setup-and-purge.result == 'success' || needs.setup-and-purge.result == 'skipped') &&
+      needs.detect-changes.result == 'success' &&
+      (
         needs.detect-changes.outputs.typescript == 'true' || 
         needs.detect-changes.outputs.python == 'true' ||
         github.event.pull_request.base.ref == 'main'
@@ -218,8 +223,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: [detect-changes, setup-and-purge]
     # Run if TypeScript SDK or Convex backend changed OR if PR is targeting main branch
+    # Note: always() allows this job to run even if setup-and-purge was skipped (conditional dependency)
     if: |
-      github.actor != 'dependabot[bot]' && (
+      always() &&
+      github.actor != 'dependabot[bot]' &&
+      needs.setup-and-purge.result == 'success' &&
+      needs.detect-changes.result == 'success' &&
+      (
         needs.detect-changes.outputs.typescript == 'true' ||
         needs.detect-changes.outputs.convex == 'true' ||
         github.event.pull_request.base.ref == 'main'
@@ -266,8 +276,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: [detect-changes, setup-and-purge]
     # Run if Python SDK changed OR if PR is targeting main branch
+    # Note: always() allows this job to run even if setup-and-purge was skipped (conditional dependency)
     if: |
-      github.actor != 'dependabot[bot]' && (
+      always() &&
+      github.actor != 'dependabot[bot]' &&
+      needs.setup-and-purge.result == 'success' &&
+      needs.detect-changes.result == 'success' &&
+      (
         needs.detect-changes.outputs.python == 'true' || 
         github.event.pull_request.base.ref == 'main'
       )
@@ -315,8 +330,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: [detect-changes, setup-and-purge]
     # Run if Vercel AI Provider changed OR if PR is targeting main branch
+    # Note: always() allows this job to run even if setup-and-purge was skipped (conditional dependency)
     if: |
-      github.actor != 'dependabot[bot]' && (
+      always() &&
+      github.actor != 'dependabot[bot]' &&
+      needs.setup-and-purge.result == 'success' &&
+      needs.detect-changes.result == 'success' &&
+      (
         needs.detect-changes.outputs.vercel-ai-provider == 'true' || 
         github.event.pull_request.base.ref == 'main'
       )
@@ -380,8 +400,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: [detect-changes, setup-and-purge]
     # Run if CLI changed OR if PR is targeting main branch
+    # Note: always() allows this job to run even if setup-and-purge was skipped (conditional dependency)
     if: |
-      github.actor != 'dependabot[bot]' && (
+      always() &&
+      github.actor != 'dependabot[bot]' &&
+      needs.setup-and-purge.result == 'success' &&
+      needs.detect-changes.result == 'success' &&
+      (
         needs.detect-changes.outputs.cli == 'true' || 
         github.event.pull_request.base.ref == 'main'
       )
