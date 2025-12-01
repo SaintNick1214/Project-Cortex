@@ -21,10 +21,17 @@ echo "║             (Simulates concurrent CI execution)                ║"
 echo "╚════════════════════════════════════════════════════════════════╝"
 echo ""
 
+# Load .env.local if it exists
+if [ -f ".env.local" ]; then
+    export $(grep -v '^#' .env.local | grep -v '^$' | xargs)
+fi
+
 # Check for local Convex
 if [ -z "$LOCAL_CONVEX_URL" ]; then
     echo -e "${RED}✗ LOCAL_CONVEX_URL not set${NC}"
     echo "  Please set LOCAL_CONVEX_URL in .env.local"
+    echo "  Current dir: $(pwd)"
+    echo "  .env.local exists: $([ -f .env.local ] && echo 'yes' || echo 'no')"
     exit 1
 fi
 
