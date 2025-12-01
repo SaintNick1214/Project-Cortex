@@ -22,7 +22,14 @@ echo ""
 
 # Load .env.local if it exists
 if [ -f ".env.local" ]; then
-    export $(grep -v '^#' .env.local | grep -v '^$' | xargs)
+    while IFS='=' read -r key value; do
+        # Skip comments and empty lines
+        if [[ $key =~ ^[A-Z_]+ ]]; then
+            # Remove inline comments from value
+            value=$(echo "$value" | sed 's/#.*$//' | xargs)
+            export "$key=$value"
+        fi
+    done < .env.local
 fi
 
 # Check for local Convex

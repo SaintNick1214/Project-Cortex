@@ -214,6 +214,11 @@ async def test_openai_enriches_search_results_with_conversation_context(
     if not embeddings_available():
         pytest.skip("OPENAI_API_KEY not set")
 
+    # Skip if running in LOCAL mode (no vector search support)
+    convex_url = os.getenv("CONVEX_URL", "")
+    if "localhost" in convex_url or "127.0.0.1" in convex_url:
+        pytest.skip("Semantic search requires MANAGED mode (LOCAL doesn't support vector search)")
+
     from tests.helpers import generate_embedding, summarize_conversation
 
     # Store one memory with conversation

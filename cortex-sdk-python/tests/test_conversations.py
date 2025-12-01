@@ -76,15 +76,22 @@ async def test_get_conversation(cortex_client, test_memory_space_id, test_conver
 @pytest.mark.asyncio
 async def test_list_conversations(cortex_client, test_memory_space_id, test_user_id):
     """Test listing conversations."""
+    import asyncio
+    
     # Create a few conversations
+    created_ids = []
     for i in range(3):
-        await cortex_client.conversations.create(
+        conv = await cortex_client.conversations.create(
             CreateConversationInput(
                 memory_space_id=test_memory_space_id,
                 type="user-agent",
                 participants=ConversationParticipants(user_id=test_user_id),
             )
         )
+        created_ids.append(conv.conversation_id)
+    
+    # Small delay to ensure all writes are visible
+    await asyncio.sleep(0.3)
 
     # List them
     conversations = await cortex_client.conversations.list(
@@ -558,7 +565,10 @@ async def test_validates_complete_acid_properties(cortex_client, test_memory_spa
 @pytest.mark.asyncio
 async def test_handles_conversation_with_100_plus_messages(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """Test conversation with 100+ messages. Port of: conversations.test.ts - line 1145"""
-    await cortex_client.conversations.create(
+    import asyncio
+    
+    # Create the conversation
+    created = await cortex_client.conversations.create(
         CreateConversationInput(
             conversation_id=test_conversation_id,
             memory_space_id=test_memory_space_id,
@@ -566,6 +576,17 @@ async def test_handles_conversation_with_100_plus_messages(cortex_client, test_m
             participants=ConversationParticipants(user_id=test_user_id),
         )
     )
+    
+    # Verify conversation was created
+    assert created is not None
+    assert created.conversation_id == test_conversation_id
+    
+    # Delay to ensure conversation is fully persisted
+    await asyncio.sleep(0.5)
+    
+    # Verify conversation can be retrieved
+    conv = await cortex_client.conversations.get(test_conversation_id)
+    assert conv is not None, f"Conversation {test_conversation_id} not found after creation"
 
     # Add 100 messages
     for i in range(100):
