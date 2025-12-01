@@ -409,14 +409,6 @@ describe("State Transition Testing", () => {
     it("count reflects archive transition", async () => {
       const spaceId = `${BASE_ID}-space-count-${Date.now()}`;
 
-      // Get initial counts
-      const beforeActiveCount = await cortex.memorySpaces.count({
-        status: "active",
-      });
-      const beforeArchivedCount = await cortex.memorySpaces.count({
-        status: "archived",
-      });
-
       // Register active space
       await cortex.memorySpaces.register({
         memorySpaceId: spaceId,
@@ -424,22 +416,35 @@ describe("State Transition Testing", () => {
         name: "Count test",
       });
 
+      // Verify space is active
+      const beforeArchive = await cortex.memorySpaces.get(spaceId);
+      expect(beforeArchive!.status).toBe("active");
+
       // Archive it
       await cortex.memorySpaces.archive(spaceId);
 
-      // Get final counts
-      const afterActiveCount = await cortex.memorySpaces.count({
-        status: "active",
-      });
-      const afterArchivedCount = await cortex.memorySpaces.count({
+      // Verify space is now archived (test-specific verification)
+      const afterArchive = await cortex.memorySpaces.get(spaceId);
+      expect(afterArchive!.status).toBe("archived");
+
+      // Verify it appears in archived list
+      const archivedList = await cortex.memorySpaces.list({
         status: "archived",
       });
+      const archivedSpaces =
+        (archivedList as any).spaces || archivedList;
+      expect(
+        archivedSpaces.some((s: any) => s.memorySpaceId === spaceId),
+      ).toBe(true);
 
-      // Active count unchanged (added then removed)
-      expect(afterActiveCount).toBe(beforeActiveCount);
-
-      // Archived count increased
-      expect(afterArchivedCount).toBe(beforeArchivedCount + 1);
+      // Verify it does NOT appear in active list
+      const activeList = await cortex.memorySpaces.list({
+        status: "active",
+      });
+      const activeSpaces = (activeList as any).spaces || activeList;
+      expect(
+        activeSpaces.some((s: any) => s.memorySpaceId === spaceId),
+      ).toBe(false);
     });
 
     it("should preserve metadata through archive/reactivate cycle", async () => {

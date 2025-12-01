@@ -177,6 +177,13 @@ class MutableRef:
 
 
 @dataclass
+class FactsRef:
+    """Reference to Layer 3 fact for memory-fact linking."""
+    fact_id: str
+    version: Optional[int] = None
+
+
+@dataclass
 class MemoryMetadata:
     """Metadata for memory entries."""
     importance: int  # 0-100
@@ -220,6 +227,7 @@ class MemoryEntry:
     conversation_ref: Optional[ConversationRef] = None
     immutable_ref: Optional[ImmutableRef] = None
     mutable_ref: Optional[MutableRef] = None
+    facts_ref: Optional[FactsRef] = None  # Reference to Layer 3 fact
     last_accessed: Optional[int] = None
     metadata: Optional[Dict[str, Any]] = None  # Flexible metadata (for A2A direction, messageId, etc.)
     _score: Optional[float] = None  # Similarity score from vector search (managed mode only)
@@ -252,6 +260,7 @@ class StoreMemoryInput:
     conversation_ref: Optional[ConversationRef] = None
     immutable_ref: Optional[ImmutableRef] = None
     mutable_ref: Optional[MutableRef] = None
+    facts_ref: Optional[FactsRef] = None  # Reference to Layer 3 fact
     # Enrichment fields (for bullet-proof retrieval)
     enriched_content: Optional[str] = None  # Concatenated searchable content for embedding
     fact_category: Optional[str] = None  # Category for filtering (e.g., "addressing_preference")

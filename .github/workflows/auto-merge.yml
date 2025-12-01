@@ -43,6 +43,12 @@ jobs:
               PR_NUMBER=$(echo "$PR_JSON" | jq -r '.[0].number')
               BASE_REF=$(echo "$PR_JSON" | jq -r '.[0].base.ref')
               
+              # Validate jq didn't return "null" string for missing/null fields
+              if [ "$PR_NUMBER" = "null" ] || [ "$BASE_REF" = "null" ]; then
+                echo "PR number or base ref is null, skipping"
+                exit 0
+              fi
+              
               # Only proceed if targeting main
               if [ "$BASE_REF" = "main" ]; then
                 echo "number=$PR_NUMBER" >> $GITHUB_OUTPUT
@@ -66,8 +72,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ steps.pr.outputs.number }}
         run: |
-          if [ -z "$PR_NUMBER" ]; then
-            echo "No PR number, skipping"
+          if [ -z "$PR_NUMBER" ] || [ "$PR_NUMBER" = "null" ]; then
+            echo "No valid PR number, skipping"
             echo "should_merge=false" >> $GITHUB_OUTPUT
             exit 0
           fi

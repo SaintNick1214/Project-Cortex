@@ -227,7 +227,7 @@ jobs:
     if: |
       always() &&
       github.actor != 'dependabot[bot]' &&
-      needs.setup-and-purge.result == 'success' &&
+      (needs.setup-and-purge.result == 'success' || needs.setup-and-purge.result == 'skipped') &&
       needs.detect-changes.result == 'success' &&
       (
         needs.detect-changes.outputs.typescript == 'true' ||
@@ -280,7 +280,7 @@ jobs:
     if: |
       always() &&
       github.actor != 'dependabot[bot]' &&
-      needs.setup-and-purge.result == 'success' &&
+      (needs.setup-and-purge.result == 'success' || needs.setup-and-purge.result == 'skipped') &&
       needs.detect-changes.result == 'success' &&
       (
         needs.detect-changes.outputs.python == 'true' || 
@@ -334,7 +334,7 @@ jobs:
     if: |
       always() &&
       github.actor != 'dependabot[bot]' &&
-      needs.setup-and-purge.result == 'success' &&
+      (needs.setup-and-purge.result == 'success' || needs.setup-and-purge.result == 'skipped') &&
       needs.detect-changes.result == 'success' &&
       (
         needs.detect-changes.outputs.vercel-ai-provider == 'true' || 
@@ -404,7 +404,7 @@ jobs:
     if: |
       always() &&
       github.actor != 'dependabot[bot]' &&
-      needs.setup-and-purge.result == 'success' &&
+      (needs.setup-and-purge.result == 'success' || needs.setup-and-purge.result == 'skipped') &&
       needs.detect-changes.result == 'success' &&
       (
         needs.detect-changes.outputs.cli == 'true' || 
@@ -507,6 +507,12 @@ jobs:
           echo ""
           echo "ℹ️  Security scans run in separate workflow (see Security tab)"
           echo ""
+
+          # Detect changes must pass (it's the root job)
+          if [[ "${{ needs.detect-changes.result }}" == "failure" ]]; then
+            echo "❌ Detect changes failed"
+            exit 1
+          fi
 
           # Setup & purge must pass if it ran
           if [[ "${{ needs.setup-and-purge.result }}" == "failure" ]]; then
