@@ -23,11 +23,7 @@ export default {
   testPathIgnorePatterns: ["/node_modules/", "/dist/"],
   setupFiles: ["<rootDir>/tests/env.ts"],
   setupFilesAfterEnv: ["<rootDir>/tests/setup.ts"],
-  collectCoverageFrom: [
-    "src/**/*.ts",
-    "!src/**/__tests__/**",
-    "!src/index.ts",
-  ],
+  collectCoverageFrom: ["src/**/*.ts", "!src/**/__tests__/**", "!src/index.ts"],
   coverageDirectory: "coverage",
   coverageReporters: ["text", "lcov", "html"],
   coverageThreshold: {

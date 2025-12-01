@@ -216,7 +216,11 @@ export function formatBytes(bytes: number): string {
 /**
  * Format a count with proper pluralization
  */
-export function formatCount(count: number, singular: string, plural?: string): string {
+export function formatCount(
+  count: number,
+  singular: string,
+  plural?: string,
+): string {
   const word = count === 1 ? singular : (plural ?? `${singular}s`);
   return `${count.toLocaleString()} ${word}`;
 }

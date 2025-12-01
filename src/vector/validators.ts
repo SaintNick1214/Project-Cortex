@@ -399,7 +399,6 @@ export function validateStoreInput(input: StoreMemoryInput): void {
     );
   }
 
-   
   if (
     input.metadata.importance === undefined ||
     input.metadata.importance === null

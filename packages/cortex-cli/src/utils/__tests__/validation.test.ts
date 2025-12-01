@@ -37,14 +37,24 @@ describe("validation utilities", () => {
     });
 
     it("should reject null/undefined", () => {
-      expect(() => validateMemorySpaceId(null as unknown as string)).toThrow(ValidationError);
-      expect(() => validateMemorySpaceId(undefined as unknown as string)).toThrow(ValidationError);
+      expect(() => validateMemorySpaceId(null as unknown as string)).toThrow(
+        ValidationError,
+      );
+      expect(() =>
+        validateMemorySpaceId(undefined as unknown as string),
+      ).toThrow(ValidationError);
     });
 
     it("should reject IDs with invalid characters", () => {
-      expect(() => validateMemorySpaceId("space with spaces")).toThrow(ValidationError);
-      expect(() => validateMemorySpaceId("space@special")).toThrow(ValidationError);
-      expect(() => validateMemorySpaceId("space/path")).toThrow(ValidationError);
+      expect(() => validateMemorySpaceId("space with spaces")).toThrow(
+        ValidationError,
+      );
+      expect(() => validateMemorySpaceId("space@special")).toThrow(
+        ValidationError,
+      );
+      expect(() => validateMemorySpaceId("space/path")).toThrow(
+        ValidationError,
+      );
     });
 
     it("should reject IDs that are too long", () => {
@@ -121,7 +131,9 @@ describe("validation utilities", () => {
     });
 
     it("should reject invalid statuses", () => {
-      expect(() => validateMemorySpaceStatus("deleted")).toThrow(ValidationError);
+      expect(() => validateMemorySpaceStatus("deleted")).toThrow(
+        ValidationError,
+      );
     });
   });
 
@@ -222,7 +234,11 @@ describe("validation utilities", () => {
   describe("parseArrayArg", () => {
     it("should parse comma-separated values", () => {
       expect(parseArrayArg("a,b,c")).toEqual(["a", "b", "c"]);
-      expect(parseArrayArg("user-1, user-2, user-3")).toEqual(["user-1", "user-2", "user-3"]);
+      expect(parseArrayArg("user-1, user-2, user-3")).toEqual([
+        "user-1",
+        "user-2",
+        "user-3",
+      ]);
     });
 
     it("should handle single value", () => {

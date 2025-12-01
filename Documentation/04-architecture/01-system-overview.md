@@ -799,7 +799,8 @@ Your App → Cortex Cloud API → Your Convex Instance
 3. **Layer 3 (Facts)** - Structured knowledge extraction, 60-90% storage savings
 4. **Layer 4 (Graph)** - Optional relationship traversal, multi-hop queries
 
-**Benefits:** 
+**Benefits:**
+
 - Aggressive retention on Vector (save costs) without losing ACID audit trail
 - Facts extraction for intelligent storage optimization
 - Graph integration for complex relationship queries

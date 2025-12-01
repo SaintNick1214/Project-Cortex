@@ -394,10 +394,7 @@ export function validateConversationFilters(
 
   // Validate limit
   if (filters.limit !== undefined) {
-    if (
-      typeof filters.limit !== "number" ||
-      !Number.isInteger(filters.limit)
-    ) {
+    if (typeof filters.limit !== "number" || !Number.isInteger(filters.limit)) {
       throw new A2AValidationError(
         "Limit must be an integer",
         "INVALID_LIMIT",

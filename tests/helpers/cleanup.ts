@@ -577,9 +577,12 @@ export class ScopedCleanup {
       for (const suffix of suffixes) {
         const namespace = `${this.runId}-${suffix}`;
         try {
-          const result = await this.client.mutation(api.mutable.purgeNamespace, {
-            namespace,
-          });
+          const result = await this.client.mutation(
+            api.mutable.purgeNamespace,
+            {
+              namespace,
+            },
+          );
           deleted += result.deleted;
         } catch {
           // Namespace may not exist
@@ -657,7 +660,9 @@ export class ScopedCleanup {
       return false;
     }
 
-    this.log(`✅ Cleanup verified - no orphaned entities for run ${this.runId}`);
+    this.log(
+      `✅ Cleanup verified - no orphaned entities for run ${this.runId}`,
+    );
     return true;
   }
 
@@ -705,9 +710,7 @@ export class ScopedCleanup {
 
       // Count agents
       const agents = await this.client.query(api.agents.list, {});
-      result.agents = agents.filter((a) =>
-        this.belongsToRun(a.agentId),
-      ).length;
+      result.agents = agents.filter((a) => this.belongsToRun(a.agentId)).length;
 
       // Count immutable (excluding users)
       const immutable = await this.client.query(api.immutable.list, {});

@@ -110,8 +110,7 @@ export function getDeploymentInfo(
     deployment: resolved.deployment,
     hasKey: Boolean(resolved.key),
     isLocal:
-      resolved.url.includes("localhost") ||
-      resolved.url.includes("127.0.0.1"),
+      resolved.url.includes("localhost") || resolved.url.includes("127.0.0.1"),
   };
 }
 

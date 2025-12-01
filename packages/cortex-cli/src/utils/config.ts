@@ -99,10 +99,7 @@ export async function loadConfig(): Promise<CLIConfig> {
 /**
  * Merge two configurations, with source overriding target
  */
-function mergeConfig(
-  target: CLIConfig,
-  source: Partial<CLIConfig>,
-): CLIConfig {
+function mergeConfig(target: CLIConfig, source: Partial<CLIConfig>): CLIConfig {
   return {
     deployments: {
       ...target.deployments,

@@ -865,7 +865,9 @@ describe("Users API (Coordination Layer)", () => {
       });
 
       it("should accept valid userId with no defaults", async () => {
-        const result = await cortex.users.getOrCreate(ctx.userId("no-defaults"));
+        const result = await cortex.users.getOrCreate(
+          ctx.userId("no-defaults"),
+        );
         expect(result).toBeDefined();
       });
 
@@ -1007,7 +1009,9 @@ describe("Users API (Coordination Layer)", () => {
       // Use a highly unique ID that definitely doesn't exist
       // Note: In parallel test environments, cascade might still find some related data
       // due to prefix-based matching patterns. The key test is that it doesn't throw.
-      const nonExistentUserId = ctx.userId(`nonexistent-${Date.now()}-${Math.random().toString(36).substring(7)}`);
+      const nonExistentUserId = ctx.userId(
+        `nonexistent-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+      );
       const result = await cortex.users.delete(nonExistentUserId, {
         cascade: true,
       });
@@ -1183,11 +1187,14 @@ describe("Users API (Coordination Layer)", () => {
 
     describe("getOrCreate()", () => {
       it("creates user with defaults if doesn't exist", async () => {
-        const result = await cortex.users.getOrCreate(ctx.userId("new-api-methods"), {
-          displayName: "New User",
-          preferences: { theme: "light" },
-          metadata: { tier: "free" },
-        });
+        const result = await cortex.users.getOrCreate(
+          ctx.userId("new-api-methods"),
+          {
+            displayName: "New User",
+            preferences: { theme: "light" },
+            metadata: { tier: "free" },
+          },
+        );
 
         expect(result).toBeDefined();
         expect(result.id).toBe(ctx.userId("new-api-methods"));
@@ -1204,16 +1211,21 @@ describe("Users API (Coordination Layer)", () => {
         });
 
         // getOrCreate should return existing without modification
-        const result = await cortex.users.getOrCreate(ctx.userId("new-api-methods"), {
-          displayName: "Default User", // Won't be used
-        });
+        const result = await cortex.users.getOrCreate(
+          ctx.userId("new-api-methods"),
+          {
+            displayName: "Default User", // Won't be used
+          },
+        );
 
         expect(result.data.displayName).toBe("Existing User");
         expect(result.data.email).toBe("existing@example.com");
       });
 
       it("creates user with empty defaults if not provided", async () => {
-        const result = await cortex.users.getOrCreate(ctx.userId("new-api-methods"));
+        const result = await cortex.users.getOrCreate(
+          ctx.userId("new-api-methods"),
+        );
 
         expect(result).toBeDefined();
         expect(result.id).toBe(ctx.userId("new-api-methods"));

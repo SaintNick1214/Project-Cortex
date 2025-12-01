@@ -375,7 +375,9 @@ async function executeSetup(config: WizardConfig): Promise<void> {
       if (cliResult.code !== 0) {
         cliSpinner.warn("CLI installation failed (non-critical)");
         console.log(
-          pc.dim("   You can install it later: npm install -D @cortexmemory/cli"),
+          pc.dim(
+            "   You can install it later: npm install -D @cortexmemory/cli",
+          ),
         );
       } else {
         cliSpinner.succeed("Cortex CLI installed");
@@ -469,12 +471,10 @@ function showSuccessMessage(config: WizardConfig): void {
         pc.dim("   # View database statistics"),
     );
     console.log(
-      pc.cyan("  npm run cortex:spaces") +
-        pc.dim("  # List memory spaces"),
+      pc.cyan("  npm run cortex:spaces") + pc.dim("  # List memory spaces"),
     );
     console.log(
-      pc.cyan("  npx cortex --help") +
-        pc.dim("      # See all CLI commands"),
+      pc.cyan("  npx cortex --help") + pc.dim("      # See all CLI commands"),
     );
   }
 

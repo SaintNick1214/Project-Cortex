@@ -119,16 +119,20 @@ export function registerConvexCommands(
         spinner.stop();
 
         printSection("Convex Deployment Status", {
-          "URL": info.url,
-          "Deployment": info.deployment ?? "-",
+          URL: info.url,
+          Deployment: info.deployment ?? "-",
           "Deploy Key": info.hasKey ? "✓ Configured" : "✗ Not set",
-          "Mode": info.isLocal ? "Local" : "Cloud",
+          Mode: info.isLocal ? "Local" : "Cloud",
         });
 
         // Try to get more info from Convex CLI
-        const result = await execCommand("npx", ["convex", "dashboard", "--print-url"], {
-          quiet: true,
-        });
+        const result = await execCommand(
+          "npx",
+          ["convex", "dashboard", "--print-url"],
+          {
+            quiet: true,
+          },
+        );
 
         if (result.exitCode === 0 && result.stdout.trim()) {
           console.log(`  Dashboard: ${result.stdout.trim()}`);
@@ -146,7 +150,9 @@ export function registerConvexCommands(
         }
       } catch (error) {
         spinner.stop();
-        printError(error instanceof Error ? error.message : "Status check failed");
+        printError(
+          error instanceof Error ? error.message : "Status check failed",
+        );
         process.exit(1);
       }
     });
@@ -230,7 +236,9 @@ export function registerConvexCommands(
 
         await execCommandLive("npx", args);
       } catch (error) {
-        printError(error instanceof Error ? error.message : "Dev server failed");
+        printError(
+          error instanceof Error ? error.message : "Dev server failed",
+        );
         process.exit(1);
       }
     });
@@ -323,7 +331,8 @@ export function registerConvexCommands(
           );
           const data = JSON.parse(result.stdout);
           currentVersion =
-            data.dependencies?.["@cortexmemory/sdk"]?.version ?? "not installed";
+            data.dependencies?.["@cortexmemory/sdk"]?.version ??
+            "not installed";
         } catch {
           // Ignore errors
         }
@@ -345,8 +354,8 @@ export function registerConvexCommands(
 
         console.log();
         printSection("Cortex SDK Version", {
-          "Current": currentVersion,
-          "Latest": latestVersion,
+          Current: currentVersion,
+          Latest: latestVersion,
         });
 
         const targetVersion = options.version ?? latestVersion;
@@ -476,7 +485,9 @@ export function registerConvexCommands(
         );
       } catch (error) {
         spinner.stop();
-        printError(error instanceof Error ? error.message : "Schema info failed");
+        printError(
+          error instanceof Error ? error.message : "Schema info failed",
+        );
         process.exit(1);
       }
     });
@@ -490,7 +501,11 @@ export function registerConvexCommands(
       printInfo("Initializing Convex...");
       console.log();
 
-      const exitCode = await execCommandLive("npx", ["convex", "dev", "--once"]);
+      const exitCode = await execCommandLive("npx", [
+        "convex",
+        "dev",
+        "--once",
+      ]);
 
       if (exitCode === 0) {
         console.log();
@@ -528,7 +543,9 @@ export function registerConvexCommands(
 
         await execCommandLive("npx", args);
       } catch (error) {
-        printError(error instanceof Error ? error.message : "Env command failed");
+        printError(
+          error instanceof Error ? error.message : "Env command failed",
+        );
         process.exit(1);
       }
     });

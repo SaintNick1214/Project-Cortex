@@ -577,7 +577,9 @@ describe("A2A Communication API", () => {
             message: "test",
           });
         } catch (error) {
-          expect((error as A2AValidationError).code).toBe("DUPLICATE_RECIPIENTS");
+          expect((error as A2AValidationError).code).toBe(
+            "DUPLICATE_RECIPIENTS",
+          );
         }
       });
 
@@ -602,7 +604,9 @@ describe("A2A Communication API", () => {
             message: "test",
           });
         } catch (error) {
-          expect((error as A2AValidationError).code).toBe("TOO_MANY_RECIPIENTS");
+          expect((error as A2AValidationError).code).toBe(
+            "TOO_MANY_RECIPIENTS",
+          );
         }
       });
 
@@ -708,15 +712,15 @@ describe("A2A Communication API", () => {
       });
 
       it("should throw on empty agent1", async () => {
-        await expect(
-          cortex.a2a.getConversation("", "agent-2"),
-        ).rejects.toThrow(A2AValidationError);
+        await expect(cortex.a2a.getConversation("", "agent-2")).rejects.toThrow(
+          A2AValidationError,
+        );
       });
 
       it("should throw on empty agent2", async () => {
-        await expect(
-          cortex.a2a.getConversation("agent-1", ""),
-        ).rejects.toThrow(A2AValidationError);
+        await expect(cortex.a2a.getConversation("agent-1", "")).rejects.toThrow(
+          A2AValidationError,
+        );
       });
     });
 

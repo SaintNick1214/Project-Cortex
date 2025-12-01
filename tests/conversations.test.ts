@@ -12,10 +12,7 @@
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
-import {
-  createNamedTestRunContext,
-  ScopedCleanup,
-} from "./helpers";
+import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 
 describe("Conversations API (Layer 1a)", () => {
   // Create unique test run context for parallel-safe execution

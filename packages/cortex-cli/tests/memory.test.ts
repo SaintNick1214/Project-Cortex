@@ -175,13 +175,16 @@ describe("CLI Memory Commands", () => {
         const memory = await cortex.memory.get(TEST_SPACE_ID, testMemoryId);
 
         expect(memory).not.toBeNull();
-        expect((memory as any).memoryId || (memory as any).memory?.memoryId).toBe(
-          testMemoryId,
-        );
+        expect(
+          (memory as any).memoryId || (memory as any).memory?.memoryId,
+        ).toBe(testMemoryId);
       });
 
       it("should return null for non-existent memory", async () => {
-        const memory = await cortex.memory.get(TEST_SPACE_ID, "non-existent-id");
+        const memory = await cortex.memory.get(
+          TEST_SPACE_ID,
+          "non-existent-id",
+        );
 
         expect(memory).toBeNull();
       });
@@ -197,7 +200,10 @@ describe("CLI Memory Commands", () => {
           metadata: { importance: 50, tags: ["delete-test"] },
         });
 
-        const result = await cortex.memory.delete(TEST_SPACE_ID, stored.memoryId);
+        const result = await cortex.memory.delete(
+          TEST_SPACE_ID,
+          stored.memoryId,
+        );
 
         expect(result.deleted).toBe(true);
 
@@ -286,7 +292,10 @@ describe("CLI Memory Commands", () => {
       });
 
       it("should archive a memory", async () => {
-        const result = await cortex.memory.archive(TEST_SPACE_ID, archiveMemoryId);
+        const result = await cortex.memory.archive(
+          TEST_SPACE_ID,
+          archiveMemoryId,
+        );
 
         expect(result.archived).toBe(true);
 

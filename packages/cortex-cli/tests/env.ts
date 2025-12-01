@@ -3,7 +3,7 @@
  * Loads environment variables BEFORE test modules are imported
  *
  * Uses the same environment as SDK tests (LOCAL_CONVEX_URL, CONVEX_URL, etc.)
- * 
+ *
  * NOTE: Unit tests don't require CONVEX_URL - only integration tests do.
  * This file should NOT call process.exit() as it breaks unit tests in CI.
  */
@@ -74,7 +74,7 @@ if (process.env.CONVEX_URL) {
   const isLocal =
     process.env.CONVEX_URL.includes("localhost") ||
     process.env.CONVEX_URL.includes("127.0.0.1");
-  
+
   // Store deployment type
   process.env.CONVEX_DEPLOYMENT_TYPE = isLocal ? "local" : "managed";
 }

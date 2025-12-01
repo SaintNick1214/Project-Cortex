@@ -9,7 +9,7 @@ Automatic extraction and storage of structured facts from conversations, integra
 The Facts layer is a key component of Cortex's 4-layer hybrid architecture:
 
 - **Layer 1 (ACID)**: Raw conversation storage
-- **Layer 2 (Vector)**: Searchable memory embeddings  
+- **Layer 2 (Vector)**: Searchable memory embeddings
 - **Layer 3 (Facts)**: Structured knowledge extraction
 - **Layer 4 (Graph)**: Optional relationship traversal
 

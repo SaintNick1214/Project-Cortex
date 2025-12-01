@@ -91,7 +91,9 @@ export function registerUserCommands(
         });
       } catch (error) {
         spinner.stop();
-        printError(error instanceof Error ? error.message : "Failed to list users");
+        printError(
+          error instanceof Error ? error.message : "Failed to list users",
+        );
         process.exit(1);
       }
     });
@@ -138,10 +140,10 @@ export function registerUserCommands(
             );
           } else {
             printSection(`User Profile: ${userId}`, {
-              "ID": user.id,
-              "Version": user.version,
-              "Created": formatTimestamp(user.createdAt),
-              "Updated": formatTimestamp(user.updatedAt),
+              ID: user.id,
+              Version: user.version,
+              Created: formatTimestamp(user.createdAt),
+              Updated: formatTimestamp(user.updatedAt),
             });
 
             console.log("\n  Profile Data:");
@@ -164,7 +166,9 @@ export function registerUserCommands(
         });
       } catch (error) {
         spinner.stop();
-        printError(error instanceof Error ? error.message : "Failed to get user");
+        printError(
+          error instanceof Error ? error.message : "Failed to get user",
+        );
         process.exit(1);
       }
     });
@@ -174,9 +178,17 @@ export function registerUserCommands(
     .command("delete <userId>")
     .description("Delete user profile with optional GDPR cascade deletion")
     .option("--cascade", "Delete all user data across all layers (GDPR)", false)
-    .option("--dry-run", "Preview what would be deleted without actually deleting", false)
+    .option(
+      "--dry-run",
+      "Preview what would be deleted without actually deleting",
+      false,
+    )
     .option("--verify", "Verify deletion completeness after cascade", true)
-    .option("-y, --yes", "Skip confirmation prompt (not recommended for cascade)", false)
+    .option(
+      "-y, --yes",
+      "Skip confirmation prompt (not recommended for cascade)",
+      false,
+    )
     .action(async (userId, options) => {
       const globalOpts = program.opts();
 
@@ -186,7 +198,9 @@ export function registerUserCommands(
         // Require extra confirmation for cascade deletion
         if (options.cascade && !options.yes && !options.dryRun) {
           console.log("\n⚠️  GDPR CASCADE DELETION");
-          console.log("This will permanently delete ALL data for this user across:");
+          console.log(
+            "This will permanently delete ALL data for this user across:",
+          );
           console.log("  • User profile");
           console.log("  • Conversations and messages");
           console.log("  • Memories (vector store)");
@@ -235,12 +249,12 @@ export function registerUserCommands(
             console.log("\n📋 DRY RUN - No data was deleted\n");
             printSection(`Would delete for user ${userId}`, {
               "User Profile": "Yes",
-              "Conversations": result.conversationsDeleted,
+              Conversations: result.conversationsDeleted,
               "Conversation Messages": result.conversationMessagesDeleted,
               "Immutable Records": result.immutableRecordsDeleted,
               "Mutable Keys": result.mutableKeysDeleted,
               "Vector Memories": result.vectorMemoriesDeleted,
-              "Facts": result.factsDeleted,
+              Facts: result.factsDeleted,
               "Graph Nodes": result.graphNodesDeleted ?? "N/A",
               "Total Records": result.totalDeleted,
               "Affected Layers": result.deletedLayers.join(", "),
@@ -250,10 +264,10 @@ export function registerUserCommands(
 
             if (options.cascade) {
               printSection("Cascade Deletion Summary", {
-                "Conversations": result.conversationsDeleted,
-                "Messages": result.conversationMessagesDeleted,
-                "Memories": result.vectorMemoriesDeleted,
-                "Facts": result.factsDeleted,
+                Conversations: result.conversationsDeleted,
+                Messages: result.conversationMessagesDeleted,
+                Memories: result.vectorMemoriesDeleted,
+                Facts: result.factsDeleted,
                 "Immutable Records": result.immutableRecordsDeleted,
                 "Mutable Keys": result.mutableKeysDeleted,
                 "Graph Nodes": result.graphNodesDeleted ?? "N/A",
@@ -484,7 +498,9 @@ export function registerUserCommands(
         });
       } catch (error) {
         spinner.stop();
-        printError(error instanceof Error ? error.message : "Failed to load statistics");
+        printError(
+          error instanceof Error ? error.message : "Failed to load statistics",
+        );
         process.exit(1);
       }
     });
@@ -521,7 +537,9 @@ export function registerUserCommands(
           const updated = await client.users.merge(userId, data);
 
           spinner.stop();
-          printSuccess(`Updated user ${userId} (now version ${updated.version})`);
+          printSuccess(
+            `Updated user ${userId} (now version ${updated.version})`,
+          );
         });
       } catch (error) {
         printError(error instanceof Error ? error.message : "Update failed");

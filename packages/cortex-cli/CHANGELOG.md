@@ -5,6 +5,7 @@
 ### Added
 
 #### Core Commands
+
 - **Memory Operations** (`cortex memory`)
   - `list` - List memories in a memory space
   - `search` - Search memories by content
@@ -98,6 +99,7 @@
   - `config reset` - Reset to defaults
 
 #### Features
+
 - Configuration management with multiple deployment support
 - Table, JSON, and CSV output formats
 - Interactive confirmations for dangerous operations
@@ -108,6 +110,7 @@
 - Test data seeding and cleanup
 
 ### Integration
+
 - Added to `create-cortex-memories` wizard as optional installation
 - Automatic npm scripts added to generated projects:
   - `npm run cortex` - Run CLI
@@ -116,6 +119,7 @@
   - `npm run cortex:spaces` - List memory spaces
 
 ### Dependencies
+
 - @cortexmemory/sdk ^0.12.0
 - commander ^13.1.0
 - prompts ^2.4.2

@@ -5,7 +5,12 @@
  */
 
 import pc from "picocolors";
-import type { MemorySpaceType, MemorySpaceStatus, FactType, OutputFormat } from "../types.js";
+import type {
+  MemorySpaceType,
+  MemorySpaceStatus,
+  FactType,
+  OutputFormat,
+} from "../types.js";
 
 /**
  * Validation error
@@ -30,7 +35,9 @@ export function validateMemorySpaceId(id: string): void {
   }
 
   if (id.length > 255) {
-    throw new ValidationError("Memory space ID is too long (max 255 characters)");
+    throw new ValidationError(
+      "Memory space ID is too long (max 255 characters)",
+    );
   }
 
   // Check for valid characters
@@ -101,7 +108,12 @@ export function validateFactId(id: string): void {
  * Validate memory space type
  */
 export function validateMemorySpaceType(type: string): MemorySpaceType {
-  const validTypes: MemorySpaceType[] = ["personal", "team", "project", "custom"];
+  const validTypes: MemorySpaceType[] = [
+    "personal",
+    "team",
+    "project",
+    "custom",
+  ];
   if (!validTypes.includes(type as MemorySpaceType)) {
     throw new ValidationError(
       `Invalid memory space type: ${type}. Valid types are: ${validTypes.join(", ")}`,

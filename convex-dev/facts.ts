@@ -195,8 +195,7 @@ export const update = mutation({
         args.semanticContext !== undefined
           ? args.semanticContext
           : existing.semanticContext,
-      entities:
-        args.entities !== undefined ? args.entities : existing.entities,
+      entities: args.entities !== undefined ? args.entities : existing.entities,
       relations:
         args.relations !== undefined ? args.relations : existing.relations,
       version: existing.version + 1,

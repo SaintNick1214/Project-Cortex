@@ -281,10 +281,12 @@ npm run typecheck
 ### Environment Setup
 
 Tests use environment variables from the monorepo root:
+
 - `.env.test` - Test defaults
 - `.env.local` - Local overrides
 
 Key variables:
+
 - `LOCAL_CONVEX_URL` - Local Convex URL (e.g., `http://127.0.0.1:3210`)
 - `CONVEX_URL` - Managed Convex URL
 - `CONVEX_TEST_MODE` - `local`, `managed`, or `auto`

@@ -13,10 +13,7 @@
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 // api is available via setupCortex if needed
-import {
-  createNamedTestRunContext,
-  ScopedCleanup,
-} from "./helpers";
+import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 
 describe("Context Chains API", () => {
   // Create unique test run context for parallel-safe execution

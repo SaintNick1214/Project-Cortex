@@ -13,10 +13,7 @@
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
-import {
-  createNamedTestRunContext,
-  ScopedCleanup,
-} from "./helpers";
+import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 
 describe("Immutable Store API (Layer 1b)", () => {
   // Create unique test run context for parallel-safe execution
@@ -710,7 +707,10 @@ describe("Immutable Store API (Layer 1b)", () => {
     });
 
     it("returns null for non-existent entry", async () => {
-      const result = await cortex.immutable.get(ctx.immutableType("kb-article"), "does-not-exist");
+      const result = await cortex.immutable.get(
+        ctx.immutableType("kb-article"),
+        "does-not-exist",
+      );
 
       expect(result).toBeNull();
     });
@@ -823,7 +823,7 @@ describe("Immutable Store API (Layer 1b)", () => {
     // Use isolated type/id for this test block
     const historyType = ctx.immutableType("audit-log");
     const historyId = ctx.immutableId("system-changes");
-    
+
     beforeAll(async () => {
       // Create entry with 5 versions
       for (let i = 1; i <= 5; i++) {
@@ -1307,7 +1307,10 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       expect(history).toHaveLength(1);
 
-      let searchResults = await cortex.immutable.search({ query: "draft", type });
+      let searchResults = await cortex.immutable.search({
+        query: "draft",
+        type,
+      });
 
       expect(searchResults.some((r) => r.entry.id === id)).toBe(true);
 
@@ -1333,11 +1336,17 @@ describe("Immutable Store API (Layer 1b)", () => {
       expect(history[1].data.status).toBe("published");
 
       // Search should find new content
-      searchResults = await cortex.immutable.search({ query: "published", type });
+      searchResults = await cortex.immutable.search({
+        query: "published",
+        type,
+      });
       expect(searchResults.some((r) => r.entry.id === id)).toBe(true);
 
       // Old search should NOT find it
-      const draftResults = await cortex.immutable.search({ query: "draft", type });
+      const draftResults = await cortex.immutable.search({
+        query: "draft",
+        type,
+      });
       const hasDraft = draftResults.some((r) => r.entry.id === id);
 
       expect(hasDraft).toBe(false); // "draft" no longer in current version
@@ -1797,7 +1806,11 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       it("returns current version for future timestamp", async () => {
         const future = Date.now() + 10000;
-        const result = await cortex.immutable.getAtTimestamp(timestampType, timestampId, future);
+        const result = await cortex.immutable.getAtTimestamp(
+          timestampType,
+          timestampId,
+          future,
+        );
 
         expect(result).not.toBeNull();
         expect(result!.version).toBe(3);
@@ -1838,7 +1851,11 @@ describe("Immutable Store API (Layer 1b)", () => {
 
       it("returns null for timestamp before creation", async () => {
         const past = v1Timestamp - 1000;
-        const result = await cortex.immutable.getAtTimestamp(timestampType, timestampId, past);
+        const result = await cortex.immutable.getAtTimestamp(
+          timestampType,
+          timestampId,
+          past,
+        );
 
         expect(result).toBeNull();
       });
@@ -1857,7 +1874,7 @@ describe("Immutable Store API (Layer 1b)", () => {
     describe("purgeMany()", () => {
       const bulkPurgeType = ctx.immutableType("bulk-purge-test");
       const bulkPurgeUserId = ctx.userId("user-purge-many");
-      
+
       beforeAll(async () => {
         // Create entries for bulk purge
         for (let i = 1; i <= 5; i++) {
@@ -1897,7 +1914,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       it("deletes by userId filter", async () => {
         const userDataType = ctx.immutableType("user-data-unique");
         const userPurgeId = ctx.userId("user-purge-specific-unique");
-        
+
         // Create fresh user-specific entries
         await cortex.immutable.store({
           type: userDataType,
@@ -2012,7 +2029,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       const isolatedTypeA = ctx.immutableType("type-a");
       const isolatedTypeB = ctx.immutableType("type-b");
       const sharedId = ctx.immutableId("shared-id");
-      
+
       // Create entries with same ID but different types
       await cortex.immutable.store({
         type: isolatedTypeA,

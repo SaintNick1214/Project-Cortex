@@ -21,15 +21,15 @@ const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: "my-chatbot",
   userId: "user-123",
-  
+
   // NEW in v0.2.0: Enhanced streaming options
   streamingOptions: {
     storePartialResponse: true,
     progressiveFactExtraction: true,
   },
-  
+
   streamingHooks: {
-    onProgress: (event) => console.log('Stream progress:', event),
+    onProgress: (event) => console.log("Stream progress:", event),
   },
 });
 
