@@ -8,14 +8,17 @@ These scripts simulate the GitHub Actions PR pipeline locally for faster iterati
 # Simple test (auto-detects changes, runs affected tests)
 ./scripts/test-pipeline-local.sh
 
-# Force run all tests
+# Force run all tests (SDK + packages)
 ./scripts/test-pipeline-local.sh --all
 
-# Simulate full CI matrix (5 parallel Python runs + TypeScript)
+# Simulate full CI matrix (5 parallel Python runs + TypeScript + packages)
 ./scripts/test-pipeline-parallel.sh
 
-# Run fewer parallel Python tests (default is 5)
-./scripts/test-pipeline-parallel.sh 3
+# Run fewer parallel tests
+./scripts/test-pipeline-parallel.sh 3 2       # 3 Python + 2 TS
+
+# Skip package tests (faster, only SDK tests)
+./scripts/test-pipeline-parallel.sh 3 2 false
 ```
 
 ## Scripts Overview
@@ -155,7 +158,15 @@ The scripts use `git diff` to compare against `main` branch:
 **Convex Backend:**
 - `convex-dev/**`
 
+**Vercel AI Provider:**
+- `packages/vercel-ai-provider/**`
+
+**Cortex CLI:**
+- `packages/cortex-cli/**`
+
 If files in these paths changed, the corresponding tests run.
+
+**Note:** CLI integration tests hit the database, so they can potentially conflict with SDK tests when running in parallel.
 
 ### Parallel Execution
 
@@ -267,6 +278,8 @@ These scripts simulate the actual CI pipeline:
 | `setup-and-purge` | `npx tsx scripts/cleanup-test-data.ts` |
 | `test-typescript` | `CONVEX_TEST_MODE=local npm test &` |
 | `test-python` matrix | `N x pytest tests/` in background |
+| `test-vercel-ai-provider` | `cd packages/vercel-ai-provider && npm test` |
+| `test-cli` | `cd packages/cortex-cli && npm run test:unit && npm run test:integration` |
 | `code-quality` | `npm run lint && tsc --noEmit` |
 | `all-checks-passed` | Wait for all PIDs, check exit codes |
 
@@ -277,6 +290,8 @@ These scripts simulate the actual CI pipeline:
 3. **Check logs on failure** - Scripts show log paths for debugging
 4. **Keep local Convex running** - Start it once, reuse for multiple test runs
 5. **Watch for conflicts** - If parallel script fails but local script passes, it's a parallel conflict
+6. **CLI conflicts** - CLI integration tests hit the database and may conflict with SDK tests
+7. **Skip packages for faster iteration** - Use `./scripts/test-pipeline-parallel.sh 3 2 false` to skip package tests
 
 ## What's Next?
 

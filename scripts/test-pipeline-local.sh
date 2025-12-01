@@ -2,8 +2,8 @@
 set -e
 
 # Local Pipeline Test Script
+# Compatible with macOS bash 3.2+
 # Simulates the GitHub Actions PR pipeline locally against local Convex
-# Runs tests in parallel just like CI/CD, but much faster (local DB)
 
 # Colors for output
 RED='\033[0;31m'
@@ -67,6 +67,8 @@ echo ""
 CHANGED_TYPESCRIPT=false
 CHANGED_PYTHON=false
 CHANGED_CONVEX=false
+CHANGED_VERCEL_AI=false
+CHANGED_CLI=false
 
 if git diff --name-only $BASE | grep -qE '^(src/|tests/|package\.json|tsconfig\.json|jest\.config\.js)'; then
     CHANGED_TYPESCRIPT=true
@@ -89,6 +91,20 @@ else
     echo -e "   ${YELLOW}⊘${NC} Convex backend unchanged"
 fi
 
+if git diff --name-only $BASE | grep -qE '^packages/vercel-ai-provider/'; then
+    CHANGED_VERCEL_AI=true
+    echo -e "   ${GREEN}✓${NC} Vercel AI Provider changed"
+else
+    echo -e "   ${YELLOW}⊘${NC} Vercel AI Provider unchanged"
+fi
+
+if git diff --name-only $BASE | grep -qE '^packages/cortex-cli/'; then
+    CHANGED_CLI=true
+    echo -e "   ${GREEN}✓${NC} Cortex CLI changed"
+else
+    echo -e "   ${YELLOW}⊘${NC} Cortex CLI unchanged"
+fi
+
 echo ""
 
 # Force run all tests if requested
@@ -97,6 +113,8 @@ if [ "$1" == "--all" ]; then
     CHANGED_TYPESCRIPT=true
     CHANGED_PYTHON=true
     CHANGED_CONVEX=true
+    CHANGED_VERCEL_AI=true
+    CHANGED_CLI=true
     echo ""
 fi
 
@@ -109,32 +127,9 @@ echo -e "${BLUE}STAGE 2: Deploy & Purge Database (setup-and-purge)${NC}"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
-if [ "$CHANGED_TYPESCRIPT" == "true" ] || [ "$CHANGED_PYTHON" == "true" ] || [ "$CHANGED_CONVEX" == "true" ]; then
-    echo -e "${CYAN}🚀 Deploying Convex backend...${NC}"
-    npx convex dev --once --run 'scripts/cleanup-test-data.ts' > /dev/null 2>&1 &
-    DEPLOY_PID=$!
-    
-    # Wait for deploy with spinner
-    SPIN='-\|/'
-    i=0
-    while kill -0 $DEPLOY_PID 2>/dev/null; do
-        i=$(( (i+1) %4 ))
-        printf "\r   ${SPIN:$i:1} Deploying..."
-        sleep 0.1
-    done
-    wait $DEPLOY_PID
-    DEPLOY_EXIT=$?
-    
-    if [ $DEPLOY_EXIT -eq 0 ]; then
-        echo -e "\r   ${GREEN}✓${NC} Convex deployed successfully"
-    else
-        echo -e "\r   ${RED}✗${NC} Convex deploy failed"
-        exit 1
-    fi
-    
-    echo ""
+if [ "$CHANGED_TYPESCRIPT" == "true" ] || [ "$CHANGED_PYTHON" == "true" ] || [ "$CHANGED_CONVEX" == "true" ] || [ "$CHANGED_CLI" == "true" ]; then
     echo -e "${CYAN}🧹 Purging test database...${NC}"
-    npx tsx scripts/cleanup-test-data.ts $LOCAL_CONVEX_URL
+    npx tsx scripts/cleanup-test-data.ts $LOCAL_CONVEX_URL 2>&1 | grep -E "✅|TOTAL|Deleted" || true
     echo ""
 else
     echo -e "${YELLOW}⊘ No changes detected - skipping deploy & purge${NC}"
@@ -155,9 +150,11 @@ LOGS_DIR=$(mktemp -d)
 echo -e "${CYAN}   Test logs: $LOGS_DIR${NC}"
 echo ""
 
-# Track PIDs and job names
-declare -A PIDS
-declare -A JOB_NAMES
+# Track PIDs and job names using indexed arrays (bash 3.2 compatible)
+PIDS=()
+JOB_NAMES=()
+JOB_IDS=()
+JOB_COUNT=0
 
 # Start time
 START_TIME=$(date +%s)
@@ -172,27 +169,94 @@ if [ "$CHANGED_TYPESCRIPT" == "true" ] || [ "$CHANGED_CONVEX" == "true" ]; then
         CONVEX_TEST_MODE=local npm test > "$LOGS_DIR/ts-tests.log" 2>&1
         echo $? > "$LOGS_DIR/ts-tests.exit"
     ) &
-    PIDS["ts"]=$!
-    JOB_NAMES["ts"]="TypeScript SDK"
-    echo "   Started (PID: ${PIDS["ts"]})"
+    PIDS+=($!)
+    JOB_NAMES+=("TypeScript SDK")
+    JOB_IDS+=("ts-tests")
+    echo "   Started (PID: $!)"
+    JOB_COUNT=$((JOB_COUNT + 1))
 fi
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Python SDK Tests (5 versions in parallel - simulates matrix)
+# Python SDK Tests (current version only locally)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 if [ "$CHANGED_PYTHON" == "true" ]; then
-    echo -e "${CYAN}🐍 Python SDK Tests (current version only - simulates 1 of 5 matrix jobs)${NC}"
+    echo -e "${CYAN}🐍 Python SDK Tests (current version only)${NC}"
     (
         cd cortex-sdk-python
         CONVEX_URL=$LOCAL_CONVEX_URL CONVEX_TEST_MODE=local pytest tests/ -v > "$LOGS_DIR/python-tests.log" 2>&1
         echo $? > "$LOGS_DIR/python-tests.exit"
     ) &
-    PIDS["python"]=$!
-    JOB_NAMES["python"]="Python SDK"
-    echo "   Started (PID: ${PIDS["python"]})"
-    echo -e "   ${YELLOW}Note: Only running current Python version locally${NC}"
-    echo -e "   ${YELLOW}      CI will run all 5 versions (3.10, 3.11, 3.12, 3.13, 3.14)${NC}"
+    PIDS+=($!)
+    JOB_NAMES+=("Python SDK")
+    JOB_IDS+=("python-tests")
+    echo "   Started (PID: $!)"
+    echo -e "   ${YELLOW}Note: CI runs 5 Python versions (3.10-3.14)${NC}"
+    JOB_COUNT=$((JOB_COUNT + 1))
+fi
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Vercel AI Provider Tests (unit tests - no DB required)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+if [ "$CHANGED_VERCEL_AI" == "true" ] || [ "$CHANGED_TYPESCRIPT" == "true" ]; then
+    echo -e "${CYAN}⚡ Vercel AI Provider Tests${NC}"
+    (
+        {
+            # Build main SDK first (provider depends on it)
+            npm run build 2>&1
+            
+            # Install and test Vercel AI Provider
+            cd packages/vercel-ai-provider
+            npm install 2>&1
+            npm test 2>&1
+            npm run lint 2>&1
+            npm run build 2>&1
+        } > "$LOGS_DIR/vercel-ai-tests.log" 2>&1
+        echo $? > "$LOGS_DIR/vercel-ai-tests.exit"
+    ) &
+    PIDS+=($!)
+    JOB_NAMES+=("Vercel AI Provider")
+    JOB_IDS+=("vercel-ai-tests")
+    echo "   Started (PID: $!)"
+    echo -e "   ${YELLOW}Note: Unit tests only (no DB)${NC}"
+    JOB_COUNT=$((JOB_COUNT + 1))
+fi
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Cortex CLI Tests (unit + integration - integration hits DB!)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+if [ "$CHANGED_CLI" == "true" ] || [ "$CHANGED_TYPESCRIPT" == "true" ]; then
+    echo -e "${CYAN}🔧 Cortex CLI Tests${NC}"
+    (
+        {
+            # Build main SDK first (CLI depends on it)
+            npm run build 2>&1
+            
+            # Install and test CLI
+            cd packages/cortex-cli
+            npm install 2>&1
+            
+            # Run unit tests (pure unit tests)
+            echo "=== Running CLI unit tests ==="
+            npm run test:unit 2>&1
+            
+            # Run integration tests (these hit the database - potential conflicts!)
+            echo "=== Running CLI integration tests ==="
+            CONVEX_URL=$LOCAL_CONVEX_URL npm run test:integration 2>&1
+            
+            npm run lint 2>&1
+            npm run build 2>&1
+        } > "$LOGS_DIR/cli-tests.log" 2>&1
+        echo $? > "$LOGS_DIR/cli-tests.exit"
+    ) &
+    PIDS+=($!)
+    JOB_NAMES+=("Cortex CLI")
+    JOB_IDS+=("cli-tests")
+    echo "   Started (PID: $!)"
+    echo -e "   ${YELLOW}⚠ Integration tests hit DB${NC}"
+    JOB_COUNT=$((JOB_COUNT + 1))
 fi
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -220,9 +284,11 @@ if [ "$CHANGED_TYPESCRIPT" == "true" ] || [ "$CHANGED_PYTHON" == "true" ]; then
         } > "$LOGS_DIR/code-quality.log" 2>&1
         echo $? > "$LOGS_DIR/code-quality.exit"
     ) &
-    PIDS["quality"]=$!
-    JOB_NAMES["quality"]="Code Quality"
-    echo "   Started (PID: ${PIDS["quality"]})"
+    PIDS+=($!)
+    JOB_NAMES+=("Code Quality")
+    JOB_IDS+=("code-quality")
+    echo "   Started (PID: $!)"
+    JOB_COUNT=$((JOB_COUNT + 1))
 fi
 
 echo ""
@@ -231,7 +297,7 @@ echo ""
 # Wait for all jobs and collect results
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-if [ ${#PIDS[@]} -eq 0 ]; then
+if [ $JOB_COUNT -eq 0 ]; then
     echo -e "${YELLOW}⊘ No tests to run (no changes detected)${NC}"
     echo ""
     echo "   Run with --all flag to force all tests:"
@@ -240,35 +306,34 @@ if [ ${#PIDS[@]} -eq 0 ]; then
     exit 0
 fi
 
-echo -e "${CYAN}⏳ Waiting for ${#PIDS[@]} parallel job(s) to complete...${NC}"
+echo -e "${CYAN}⏳ Waiting for $JOB_COUNT parallel job(s) to complete...${NC}"
 echo ""
 
 # Wait for each job and track status
-declare -A RESULTS
+RESULTS=()
 ALL_PASSED=true
 
-for job in "${!PIDS[@]}"; do
-    PID=${PIDS[$job]}
-    NAME=${JOB_NAMES[$job]}
+for i in $(seq 0 $((JOB_COUNT - 1))); do
+    PID=${PIDS[$i]}
+    NAME=${JOB_NAMES[$i]}
+    JOB_ID=${JOB_IDS[$i]}
     
-    # Show spinner while waiting
+    # Show which job we're waiting for
     echo -ne "   ${CYAN}◌${NC} $NAME (PID: $PID)... "
     
-    wait $PID
+    # Wait for this specific PID
+    wait $PID 2>/dev/null || true
     
     # Read exit code from file
-    if [ -f "$LOGS_DIR/$job-tests.exit" ]; then
-        EXIT_CODE=$(cat "$LOGS_DIR/$job-tests.exit")
-    elif [ -f "$LOGS_DIR/$job.exit" ]; then
-        EXIT_CODE=$(cat "$LOGS_DIR/$job.exit")
-    else
-        EXIT_CODE=0
+    EXIT_CODE=1
+    if [ -f "$LOGS_DIR/$JOB_ID.exit" ]; then
+        EXIT_CODE=$(cat "$LOGS_DIR/$JOB_ID.exit")
     fi
     
-    RESULTS[$job]=$EXIT_CODE
+    RESULTS+=($EXIT_CODE)
     
     if [ $EXIT_CODE -eq 0 ]; then
-        echo -e "\r   ${GREEN}✓${NC} $NAME"
+        echo -e "\r   ${GREEN}✓${NC} $NAME                    "
     else
         echo -e "\r   ${RED}✗${NC} $NAME (exit code: $EXIT_CODE)"
         ALL_PASSED=false
@@ -286,9 +351,9 @@ echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 
 # Show detailed results for each job
-for job in "${!RESULTS[@]}"; do
-    EXIT_CODE=${RESULTS[$job]}
-    NAME=${JOB_NAMES[$job]}
+for i in $(seq 0 $((JOB_COUNT - 1))); do
+    EXIT_CODE=${RESULTS[$i]}
+    NAME=${JOB_NAMES[$i]}
     
     if [ $EXIT_CODE -eq 0 ]; then
         echo -e "   ${GREEN}✓${NC} $NAME: PASSED"
@@ -311,20 +376,19 @@ if [ "$ALL_PASSED" != "true" ]; then
     echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
     
-    for job in "${!RESULTS[@]}"; do
-        if [ ${RESULTS[$job]} -ne 0 ]; then
-            NAME=${JOB_NAMES[$job]}
+    for i in $(seq 0 $((JOB_COUNT - 1))); do
+        if [ ${RESULTS[$i]} -ne 0 ]; then
+            NAME=${JOB_NAMES[$i]}
+            JOB_ID=${JOB_IDS[$i]}
             echo -e "${YELLOW}▼ $NAME Logs:${NC}"
             echo ""
             
-            if [ -f "$LOGS_DIR/$job-tests.log" ]; then
-                tail -50 "$LOGS_DIR/$job-tests.log"
-            elif [ -f "$LOGS_DIR/$job.log" ]; then
-                tail -50 "$LOGS_DIR/$job.log"
+            if [ -f "$LOGS_DIR/$JOB_ID.log" ]; then
+                tail -50 "$LOGS_DIR/$JOB_ID.log"
             fi
             
             echo ""
-            echo -e "${YELLOW}   Full log: $LOGS_DIR/$job-tests.log${NC}"
+            echo -e "${YELLOW}   Full log: $LOGS_DIR/$JOB_ID.log${NC}"
             echo ""
         fi
     done
