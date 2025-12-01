@@ -268,6 +268,11 @@ export interface MutableRef {
   snapshotAt: number;
 }
 
+export interface FactsRef {
+  factId: string;
+  version?: number;
+}
+
 export interface MemoryMetadata {
   importance: number; // 0-100
   tags: string[];
@@ -298,6 +303,7 @@ export interface MemoryEntry {
   conversationRef?: ConversationRef;
   immutableRef?: ImmutableRef;
   mutableRef?: MutableRef;
+  factsRef?: FactsRef; // Reference to Layer 3 fact
   importance: number;
   tags: string[];
 
@@ -334,6 +340,7 @@ export interface StoreMemoryInput {
   conversationRef?: ConversationRef;
   immutableRef?: ImmutableRef;
   mutableRef?: MutableRef;
+  factsRef?: FactsRef; // Reference to Layer 3 fact
   metadata: MemoryMetadata;
   extractFacts?: (content: string) => Promise<Array<{
     fact: string;

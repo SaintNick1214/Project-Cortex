@@ -441,7 +441,7 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("register() and get()", () => {
     it("registers an agent", async () => {
-      const agentId = "test-agent-register-" + Date.now();
+      const agentId = ctx.agentId("register");
 
       const result = await cortex.agents.register({
         id: agentId,
@@ -476,7 +476,7 @@ describe("Agents API (Coordination Layer)", () => {
     });
 
     it("retrieves a registered agent", async () => {
-      const agentId = "test-agent-get-" + Date.now();
+      const agentId = ctx.agentId("get");
 
       await cortex.agents.register({
         id: agentId,
@@ -493,7 +493,7 @@ describe("Agents API (Coordination Layer)", () => {
 
     it("returns null for unregistered agent", async () => {
       const result = await cortex.agents.get(
-        "non-existent-agent-" + Date.now(),
+        ctx.agentId("non-existent"),
       );
       expect(result).toBeNull();
     });
@@ -501,7 +501,7 @@ describe("Agents API (Coordination Layer)", () => {
     it("throws error when registering duplicate agent", async () => {
       // Note: This tests BACKEND validation (existence check)
       // Client-side validation tests are in "Client-Side Validation" suite above
-      const agentId = "test-agent-duplicate-" + Date.now();
+      const agentId = ctx.agentId("duplicate");
 
       await cortex.agents.register({
         id: agentId,
@@ -519,8 +519,8 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("list(), search(), and count()", () => {
     it("lists all agents", async () => {
-      const agent1 = "test-agent-list-1-" + Date.now();
-      const agent2 = "test-agent-list-2-" + Date.now();
+      const agent1 = ctx.agentId("list-1");
+      const agent2 = ctx.agentId("list-2");
 
       await cortex.agents.register({ id: agent1, name: "Agent 1" });
       await cortex.agents.register({ id: agent2, name: "Agent 2" });
@@ -538,7 +538,7 @@ describe("Agents API (Coordination Layer)", () => {
     });
 
     it("searches agents by metadata", async () => {
-      const agentId = "test-agent-search-" + Date.now();
+      const agentId = ctx.agentId("search");
 
       await cortex.agents.register({
         id: agentId,
@@ -564,7 +564,7 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("update() and configure()", () => {
     it("updates agent metadata", async () => {
-      const agentId = "test-agent-update-" + Date.now();
+      const agentId = ctx.agentId("update");
 
       await cortex.agents.register({
         id: agentId,
@@ -582,7 +582,7 @@ describe("Agents API (Coordination Layer)", () => {
     });
 
     it("configures agent settings", async () => {
-      const agentId = "test-agent-configure-" + Date.now();
+      const agentId = ctx.agentId("configure");
 
       await cortex.agents.register({ id: agentId, name: "Config Test" });
 
@@ -599,7 +599,7 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("exists()", () => {
     it("returns true for registered agent", async () => {
-      const agentId = "test-agent-exists-" + Date.now();
+      const agentId = ctx.agentId("exists");
       await cortex.agents.register({ id: agentId, name: "Exists Test" });
 
       const exists = await cortex.agents.exists(agentId);
@@ -607,7 +607,7 @@ describe("Agents API (Coordination Layer)", () => {
     });
 
     it("returns false for unregistered agent", async () => {
-      const exists = await cortex.agents.exists("non-existent-" + Date.now());
+      const exists = await cortex.agents.exists(ctx.agentId("non-existent-check"));
       expect(exists).toBe(false);
     });
   });
@@ -618,7 +618,7 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("unregister() - simple mode", () => {
     it("unregisters agent without deleting data", async () => {
-      const agentId = "test-agent-unregister-" + Date.now();
+      const agentId = ctx.agentId("unregister");
 
       await cortex.agents.register({ id: agentId, name: "Unregister Test" });
 
@@ -643,9 +643,9 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("unregister() - cascade mode", () => {
     it("performs cascade deletion by participantId across all spaces", async () => {
-      const agentId = "cascade-agent-" + Date.now();
-      const space1 = "space-1-" + Date.now();
-      const space2 = "space-2-" + Date.now();
+      const agentId = ctx.agentId("cascade");
+      const space1 = ctx.memorySpaceId("cascade-1");
+      const space2 = ctx.memorySpaceId("cascade-2");
 
       // Register agent
       await cortex.agents.register({ id: agentId, name: "Cascade Test" });
@@ -757,12 +757,12 @@ describe("Agents API (Coordination Layer)", () => {
         `  ✅ Cascade complete: Deleted from ${result.memorySpacesAffected.length} spaces`,
       );
       console.log(`     Layers: ${result.deletedLayers.join(", ")}`);
-    });
+    }, 60000); // 60s timeout for cascade operation
   });
 
   describe("unregister() - dry run mode", () => {
     it("previews deletion without actually deleting", async () => {
-      const agentId = "dry-run-agent-" + Date.now();
+      const agentId = ctx.agentId("dry-run");
 
       await cortex.agents.register({ id: agentId, name: "Dry Run Test" });
 
@@ -784,7 +784,7 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("unregister() - verification", () => {
     it("runs verification step after deletion", async () => {
-      const agentId = "verify-agent-" + Date.now();
+      const agentId = ctx.agentId("verify");
 
       await cortex.agents.register({ id: agentId, name: "Verify Test" });
 
@@ -817,8 +817,8 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("cascade without registration", () => {
     it("deletes data even if agent was never registered", async () => {
-      const agentId = "unregistered-agent-" + Date.now();
-      const spaceId = "space-unreg-" + Date.now();
+      const agentId = ctx.agentId("unregistered");
+      const spaceId = ctx.memorySpaceId("unreg");
 
       // DON'T register the agent - just create data with participantId
       await cortex.memorySpaces.register({
@@ -873,7 +873,7 @@ describe("Agents API (Coordination Layer)", () => {
       // Note: This tests BACKEND behavior (not found handling)
       // Client-side validation ensures agentId format is valid
       const result = await cortex.agents.unregister(
-        "non-existent-" + Date.now(),
+        ctx.agentId("non-existent-edge"),
         {
           cascade: true,
         },
@@ -883,7 +883,7 @@ describe("Agents API (Coordination Layer)", () => {
     });
 
     it("handles agent with no data", async () => {
-      const agentId = "empty-agent-" + Date.now();
+      const agentId = ctx.agentId("empty");
 
       await cortex.agents.register({ id: agentId, name: "Empty" });
 
@@ -903,8 +903,8 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("agent statistics", () => {
     it("computes stats from actual data", async () => {
-      const agentId = "stats-agent-" + Date.now();
-      const spaceId = "stats-space-" + Date.now();
+      const agentId = ctx.agentId("stats");
+      const spaceId = ctx.memorySpaceId("stats");
 
       // Register agent
       await cortex.agents.register({ id: agentId, name: "Stats Agent" });

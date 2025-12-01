@@ -369,27 +369,33 @@ class TestMemorySpaceStateTransitions:
         import time
         space_id = f"{base_id}-space-count-{int(time.time() * 1000)}"
 
-        # Get initial counts
-        before_active = await cortex_client.memory_spaces.count(status="active")
-        before_archived = await cortex_client.memory_spaces.count(status="archived")
-
-        # Register and archive
+        # Register space
         await cortex_client.memory_spaces.register(
             RegisterMemorySpaceParams(
                 memory_space_id=space_id, type="project", name="Count test"
             )
         )
+
+        # Verify space is active
+        before_archive = await cortex_client.memory_spaces.get(space_id)
+        assert before_archive.status == "active"
+
+        # Archive it
         await cortex_client.memory_spaces.archive(space_id)
 
-        # Get final counts
-        after_active = await cortex_client.memory_spaces.count(status="active")
-        after_archived = await cortex_client.memory_spaces.count(status="archived")
+        # Verify space is now archived (test-specific verification)
+        after_archive = await cortex_client.memory_spaces.get(space_id)
+        assert after_archive.status == "archived"
 
-        # Active unchanged (added then removed)
-        assert after_active == before_active
+        # Verify it appears in archived list
+        archived_list = await cortex_client.memory_spaces.list(status="archived")
+        archived_spaces = archived_list if isinstance(archived_list, list) else archived_list.get("spaces", [])
+        assert any(s.memory_space_id == space_id for s in archived_spaces)
 
-        # Archived increased (use >= to handle parallel test runs)
-        assert after_archived >= before_archived + 1
+        # Verify it does NOT appear in active list
+        active_list = await cortex_client.memory_spaces.list(status="active")
+        active_spaces = active_list if isinstance(active_list, list) else active_list.get("spaces", [])
+        assert not any(s.memory_space_id == space_id for s in active_spaces)
 
     async def test_metadata_preserved_through_archive_cycle(
         self, cortex_client, base_id

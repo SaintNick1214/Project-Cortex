@@ -10,33 +10,34 @@
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
-import { TestCleanup } from "./helpers";
+import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 
 describe("Collaboration Mode", () => {
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let cleanup: ScopedCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
 
-  // Two separate organizations
-  const ORG_A_SPACE = "org-a-space";
-  const ORG_B_SPACE = "org-b-space";
+  // Create isolated test context
+  const ctx = createNamedTestRunContext("collab");
+
+  // Two separate organizations - dynamic IDs per test run
+  const ORG_A_SPACE = ctx.memorySpaceId("org-a");
+  const ORG_B_SPACE = ctx.memorySpaceId("org-b");
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    cleanup = new TestCleanup(client);
+    cleanup = new ScopedCleanup(client, ctx);
 
-    await cleanup.purgeAll();
-
-    // Register two separate organizations
+    // Register two separate organizations with test-specific IDs
     await cortex.memorySpaces.register({
       memorySpaceId: ORG_A_SPACE,
       name: "Organization A",
       type: "team",
       participants: [
-        { id: "user-alice", type: "user" },
-        { id: "agent-a", type: "agent" },
+        { id: ctx.userId("alice"), type: "user" },
+        { id: ctx.agentId("agent-a"), type: "agent" },
       ],
     });
 
@@ -45,14 +46,15 @@ describe("Collaboration Mode", () => {
       name: "Organization B",
       type: "team",
       participants: [
-        { id: "user-bob", type: "user" },
-        { id: "agent-b", type: "agent" },
+        { id: ctx.userId("bob"), type: "user" },
+        { id: ctx.agentId("agent-b"), type: "agent" },
       ],
     });
   });
 
   afterAll(async () => {
-    await cleanup.purgeAll();
+    // Only cleanup data belonging to this test run
+    await cleanup.cleanupAll();
     await client.close();
   });
 
@@ -192,6 +194,8 @@ describe("Collaboration Mode", () => {
     });
 
     it("can grant different scopes", async () => {
+      const partnerSpace = ctx.memorySpaceId("partner");
+
       const context = await cortex.contexts.create({
         purpose: "Multi-scope test",
         memorySpaceId: ORG_A_SPACE,
@@ -207,7 +211,7 @@ describe("Collaboration Mode", () => {
       // Later: Could grant full access to another space
       const updated = await cortex.contexts.grantAccess(
         context.contextId,
-        "partner-space",
+        partnerSpace,
         "full-access",
       );
 
@@ -247,15 +251,16 @@ describe("Collaboration Mode", () => {
         parentId: campaign.contextId,
       });
 
-      // Store facts in their own space
+      // Store facts in their own space - use unique content for this test
+      const orgAFactContent = `Company A will handle social media content creation - ${ctx.runId}`;
       await cortex.facts.store({
         memorySpaceId: ORG_A_SPACE,
-        participantId: "agent-a",
-        fact: "Company A will handle social media content creation",
+        participantId: ctx.agentId("agent-a"),
+        fact: orgAFactContent,
         factType: "knowledge",
         confidence: 100,
         sourceType: "manual",
-        tags: ["campaign", "content"],
+        tags: ["campaign", "content", ctx.runId],
       });
 
       // 4. Company B adds their task
@@ -265,15 +270,16 @@ describe("Collaboration Mode", () => {
         parentId: campaign.contextId,
       });
 
-      // Store facts in their own space
+      // Store facts in their own space - use unique content for this test
+      const orgBFactContent = `Company B will handle ad platform distribution - ${ctx.runId}`;
       await cortex.facts.store({
         memorySpaceId: ORG_B_SPACE,
-        participantId: "agent-b",
-        fact: "Company B will handle ad platform distribution",
+        participantId: ctx.agentId("agent-b"),
+        fact: orgBFactContent,
         factType: "knowledge",
         confidence: 100,
         sourceType: "manual",
-        tags: ["campaign", "distribution"],
+        tags: ["campaign", "distribution", ctx.runId],
       });
 
       // 5. Both can see shared context chain
@@ -285,9 +291,15 @@ describe("Collaboration Mode", () => {
       expect(chainA.siblings).toHaveLength(1); // Org B's task
       expect(chainB.siblings).toHaveLength(1); // Org A's task
 
-      // 6. But each org's facts stay private
-      const orgAFacts = await cortex.facts.list({ memorySpaceId: ORG_A_SPACE });
-      const orgBFacts = await cortex.facts.list({ memorySpaceId: ORG_B_SPACE });
+      // 6. But each org's facts stay private - filter by tag to get only this test's facts
+      const orgAFacts = await cortex.facts.list({
+        memorySpaceId: ORG_A_SPACE,
+        tags: [ctx.runId],
+      });
+      const orgBFacts = await cortex.facts.list({
+        memorySpaceId: ORG_B_SPACE,
+        tags: [ctx.runId],
+      });
 
       expect(orgAFacts.some((f) => f.fact.includes("social media"))).toBe(true);
       expect(orgAFacts.some((f) => f.fact.includes("ad platform"))).toBe(false);
@@ -304,81 +316,84 @@ describe("Collaboration Mode", () => {
   describe("Hive vs Collaboration Comparison", () => {
     it("demonstrates the difference", async () => {
       // HIVE MODE: All tools in ONE space (no data silos)
-      const hiveSpace = "hive-demo";
+      const hiveSpace = ctx.memorySpaceId("hive-demo");
 
       await cortex.memorySpaces.register({
         memorySpaceId: hiveSpace,
         name: "Hive: Single User's Tools",
         type: "personal",
         participants: [
-          { id: "user-demo", type: "user" },
-          { id: "tool-1", type: "tool" },
-          { id: "tool-2", type: "tool" },
-          { id: "tool-3", type: "tool" },
+          { id: ctx.userId("demo"), type: "user" },
+          { id: ctx.agentId("tool-1"), type: "tool" },
+          { id: ctx.agentId("tool-2"), type: "tool" },
+          { id: ctx.agentId("tool-3"), type: "tool" },
         ],
       });
 
-      // All tools store in SAME space
+      // All tools store in SAME space with unique tags
       await cortex.facts.store({
         memorySpaceId: hiveSpace,
-        participantId: "tool-1",
-        fact: "Fact from tool 1",
+        participantId: ctx.agentId("tool-1"),
+        fact: `Fact from tool 1 - ${ctx.runId}`,
         factType: "knowledge",
         confidence: 90,
         sourceType: "tool",
-        tags: ["demo"],
+        tags: ["demo", ctx.runId],
       });
 
       await cortex.facts.store({
         memorySpaceId: hiveSpace,
-        participantId: "tool-2",
-        fact: "Fact from tool 2",
+        participantId: ctx.agentId("tool-2"),
+        fact: `Fact from tool 2 - ${ctx.runId}`,
         factType: "knowledge",
         confidence: 90,
         sourceType: "tool",
-        tags: ["demo"],
+        tags: ["demo", ctx.runId],
       });
 
-      // Single query gets both
-      const hiveFacts = await cortex.facts.list({ memorySpaceId: hiveSpace });
+      // Single query gets both - filter by tag to get only this test's facts
+      const hiveFacts = await cortex.facts.list({
+        memorySpaceId: hiveSpace,
+        tags: [ctx.runId],
+      });
 
       expect(hiveFacts.length).toBeGreaterThanOrEqual(2);
 
       // COLLABORATION MODE: Separate spaces, shared contexts
-      const companyX = "company-x";
-      const companyY = "company-y";
+      const companyX = ctx.memorySpaceId("company-x");
+      const companyY = ctx.memorySpaceId("company-y");
 
       await cortex.memorySpaces.register({
         memorySpaceId: companyX,
         name: "Company X",
         type: "team",
-        participants: [{ id: "user-x", type: "user" }],
+        participants: [{ id: ctx.userId("user-x"), type: "user" }],
       });
 
       await cortex.memorySpaces.register({
         memorySpaceId: companyY,
         name: "Company Y",
         type: "team",
-        participants: [{ id: "user-y", type: "user" }],
+        participants: [{ id: ctx.userId("user-y"), type: "user" }],
       });
 
-      // Each stores in their own space
+      // Each stores in their own space with unique tags
       await cortex.facts.store({
         memorySpaceId: companyX,
-        fact: "Company X confidential data",
+        fact: `Company X confidential data - ${ctx.runId}`,
         factType: "knowledge",
         confidence: 100,
         sourceType: "system",
-        tags: ["confidential"],
+        tags: ["confidential", ctx.runId],
       });
 
       await cortex.facts.store({
         memorySpaceId: companyY,
-        fact: "Company Y confidential data",
+        fact: `Company Y confidential data - ${ctx.runId}`,
         factType: "knowledge",
         confidence: 100,
         sourceType: "system",
-        tags: ["confidential"],
+        tags: ["confidential", ctx.runId],
       });
 
       // Create shared context for collaboration
@@ -393,9 +408,15 @@ describe("Collaboration Mode", () => {
         "collaborate",
       );
 
-      // Facts stay isolated
-      const xFacts = await cortex.facts.list({ memorySpaceId: companyX });
-      const yFacts = await cortex.facts.list({ memorySpaceId: companyY });
+      // Facts stay isolated - filter by tag to get only this test's facts
+      const xFacts = await cortex.facts.list({
+        memorySpaceId: companyX,
+        tags: [ctx.runId],
+      });
+      const yFacts = await cortex.facts.list({
+        memorySpaceId: companyY,
+        tags: [ctx.runId],
+      });
 
       expect(xFacts.some((f) => f.fact.includes("Company Y"))).toBe(false);
       expect(yFacts.some((f) => f.fact.includes("Company X"))).toBe(false);
@@ -457,14 +478,14 @@ describe("Collaboration Mode", () => {
 
   describe("Secure Data Sharing", () => {
     it("shares only context, not underlying data", async () => {
-      // Org A stores sensitive facts
+      // Org A stores sensitive facts with unique tag
       await cortex.facts.store({
         memorySpaceId: ORG_A_SPACE,
-        fact: "Org A revenue: $10M",
+        fact: `Org A revenue: $10M - ${ctx.runId}`,
         factType: "knowledge",
         confidence: 100,
         sourceType: "system",
-        tags: ["financial", "sensitive"],
+        tags: ["financial", "sensitive", ctx.runId],
       });
 
       // Create context and share it
@@ -485,9 +506,10 @@ describe("Collaboration Mode", () => {
 
       expect((sharedCtx as any).data.projectName).toBe("Joint Initiative");
 
-      // But Org B CANNOT see Org A's facts
+      // But Org B CANNOT see Org A's facts - filter by tag for this test's facts
       const orgBFactView = await cortex.facts.list({
         memorySpaceId: ORG_B_SPACE,
+        tags: [ctx.runId],
       });
 
       expect(orgBFactView.some((f) => f.fact.includes("$10M"))).toBe(false);
