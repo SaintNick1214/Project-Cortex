@@ -2,17 +2,46 @@
 Session-level hooks for test setup and cleanup.
 
 This module provides pytest hooks that run BEFORE and AFTER all tests.
+
+IMPORTANT: Session-level purge_all() is DISABLED for parallel test execution.
+When multiple test suites run in parallel (e.g., 5 Python SDK test suites in CI),
+session-level purges will delete data created by OTHER parallel suites, causing
+race conditions and test failures.
+
+The CI pipeline performs a global database purge BEFORE starting parallel tests,
+so session-level cleanup is redundant. Individual tests use TestRunContext for
+isolated, non-conflicting IDs.
+
+To enable session cleanup for local single-suite runs, set:
+    ENABLE_SESSION_CLEANUP=true
 """
 
 import asyncio
 import os
 
 
+def _is_session_cleanup_enabled():
+    """
+    Check if session-level cleanup is enabled.
+
+    Disabled by default for parallel execution safety.
+    Set ENABLE_SESSION_CLEANUP=true to enable for local single-suite runs.
+    """
+    return os.getenv("ENABLE_SESSION_CLEANUP", "").lower() in ("true", "1", "yes")
+
+
 def pytest_sessionstart(session):
     """
     Called before test collection.
-    Always runs database cleanup to ensure clean slate.
+
+    NOTE: Session-level purge is DISABLED by default for parallel execution.
+    The CI pipeline performs a global purge before starting all parallel tests.
     """
+    if not _is_session_cleanup_enabled():
+        print("\n📝 [Cleanup] Session-level cleanup DISABLED (parallel-safe mode)")
+        print("   Set ENABLE_SESSION_CLEANUP=true for local single-suite runs\n")
+        return
+
     convex_url = os.getenv("CONVEX_URL")
     if not convex_url:
         return
@@ -50,8 +79,14 @@ def pytest_sessionstart(session):
 def pytest_sessionfinish(session, exitstatus):
     """
     Called after all tests complete.
-    Always runs database cleanup to prevent data bloat.
+
+    NOTE: Session-level purge is DISABLED by default for parallel execution.
+    The CI pipeline performs cleanup separately after all parallel tests complete.
     """
+    if not _is_session_cleanup_enabled():
+        # Silent - already notified at session start
+        return
+
     convex_url = os.getenv("CONVEX_URL")
     if not convex_url:
         return

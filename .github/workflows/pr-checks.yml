@@ -41,7 +41,6 @@ jobs:
       vercel-ai-provider: ${{ steps.filter.outputs.vercel-ai-provider }}
       cli: ${{ steps.filter.outputs.cli }}
       convex: ${{ steps.filter.outputs.convex }}
-      any-tests: ${{ steps.filter.outputs.typescript == 'true' || steps.filter.outputs.python == 'true' || steps.filter.outputs.vercel-ai-provider == 'true' || steps.filter.outputs.cli == 'true' || steps.filter.outputs.convex == 'true' }}
     steps:
       - name: Checkout PR code
         uses: actions/checkout@v6
