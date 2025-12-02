@@ -35,7 +35,7 @@ export default {
     },
   },
   verbose: true,
-  testTimeout: 30000, // 30 seconds for Convex operations
+  testTimeout: 60000, // 60 seconds for Convex operations with resilience layer retries
   forceExit: true,
   transformIgnorePatterns: ["node_modules/(?!convex)"],
 };
