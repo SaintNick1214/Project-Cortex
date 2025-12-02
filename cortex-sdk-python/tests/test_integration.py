@@ -204,14 +204,15 @@ async def test_memory_facts_linkage(cortex_client, test_ids, cleanup_helper):
             memory_space_id=memory_space_id,
             conversation_id=conversation_id,
             user_message="I love pizza",
-            agent_response="Noted!",
+            # Agent response with meaningful content (not just acknowledgment)
+            agent_response="I'll remember that you love pizza for future restaurant recommendations",
             user_id=user_id,
             user_name="Tester",
             extract_facts=extract_facts,
         )
     )
 
-    # Verify memories created
+    # Verify memories created (both user and agent have meaningful content)
     assert len(result.memories) == 2
 
     # Verify facts created

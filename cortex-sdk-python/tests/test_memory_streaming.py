@@ -227,9 +227,11 @@ class TestMemoryStreaming:
             return []
 
         async def color_stream():
+            # Response with meaningful content (not just acknowledgment)
             yield "Your favorite color "
-            yield "is blue, "
-            yield "noted!"
+            yield "is blue - "
+            yield "I'll use this preference "
+            yield "for future recommendations"
 
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
@@ -243,7 +245,7 @@ class TestMemoryStreaming:
             )
         )
 
-        assert result.full_response == "Your favorite color is blue, noted!"
+        assert result.full_response == "Your favorite color is blue - I'll use this preference for future recommendations"
         assert len(result.memories) == 2
         assert len(result.facts) == 1
         assert "blue" in result.facts[0].fact

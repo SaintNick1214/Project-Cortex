@@ -100,7 +100,8 @@ async def test_propagates_importance_to_vector_layer(cortex_client, param_test_s
             user_name="Test User",
             importance=importance,
             user_message="My password is secret123",
-            agent_response="I've noted that securely",
+            # Agent response with meaningful content (not just acknowledgment)
+            agent_response="Your password secret123 has been securely stored in the encrypted vault",
         )
     )
 
@@ -133,7 +134,8 @@ async def test_propagates_tags_to_vector_layer(cortex_client, param_test_setup):
             user_name="Test User",
             tags=tags,
             user_message="Security concern here",
-            agent_response="Noted the security issue",
+            # Agent response with meaningful content (not just acknowledgment)
+            agent_response="The security issue has been logged and flagged for immediate review by the team",
         )
     )
 
