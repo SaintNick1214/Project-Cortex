@@ -146,11 +146,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [detect-changes, setup-and-purge]
     # Run if TypeScript or Python files changed OR if PR is targeting main branch
-    # Note: always() allows this job to run even if setup-and-purge was skipped (conditional dependency)
+    # IMPORTANT: Requires setup-and-purge to have SUCCEEDED (not just skipped) to ensure consistency with test jobs
     if: |
       always() &&
       github.actor != 'dependabot[bot]' &&
-      (needs.setup-and-purge.result == 'success' || needs.setup-and-purge.result == 'skipped') &&
+      needs.setup-and-purge.result == 'success' &&
       needs.detect-changes.result == 'success' &&
       (
         needs.detect-changes.outputs.typescript == 'true' || 
@@ -517,6 +517,52 @@ jobs:
           if [[ "${{ needs.setup-and-purge.result }}" == "failure" ]]; then
             echo "❌ Setup & purge failed"
             exit 1
+          fi
+
+          # Validate that tests ran when they should have
+          # If setup-and-purge succeeded, tests should not be skipped (they should pass or fail)
+          if [[ "${{ needs.setup-and-purge.result }}" == "success" ]]; then
+            # Check TypeScript tests
+            if [[ ("${{ needs.detect-changes.outputs.typescript }}" == "true" || \
+                   "${{ needs.detect-changes.outputs.convex }}" == "true" || \
+                   "${{ github.event.pull_request.base.ref }}" == "main") && \
+                  "${{ needs.test-typescript.result }}" == "skipped" ]]; then
+              echo "❌ TypeScript tests should have run but were skipped"
+              exit 1
+            fi
+
+            # Check Python tests
+            if [[ ("${{ needs.detect-changes.outputs.python }}" == "true" || \
+                   "${{ github.event.pull_request.base.ref }}" == "main") && \
+                  "${{ needs.test-python.result }}" == "skipped" ]]; then
+              echo "❌ Python tests should have run but were skipped"
+              exit 1
+            fi
+
+            # Check Vercel AI Provider tests
+            if [[ ("${{ needs.detect-changes.outputs.vercel-ai-provider }}" == "true" || \
+                   "${{ github.event.pull_request.base.ref }}" == "main") && \
+                  "${{ needs.test-vercel-ai-provider.result }}" == "skipped" ]]; then
+              echo "❌ Vercel AI Provider tests should have run but were skipped"
+              exit 1
+            fi
+
+            # Check CLI tests
+            if [[ ("${{ needs.detect-changes.outputs.cli }}" == "true" || \
+                   "${{ github.event.pull_request.base.ref }}" == "main") && \
+                  "${{ needs.test-cli.result }}" == "skipped" ]]; then
+              echo "❌ CLI tests should have run but were skipped"
+              exit 1
+            fi
+
+            # Check code quality
+            if [[ ("${{ needs.detect-changes.outputs.typescript }}" == "true" || \
+                   "${{ needs.detect-changes.outputs.python }}" == "true" || \
+                   "${{ github.event.pull_request.base.ref }}" == "main") && \
+                  "${{ needs.code-quality.result }}" == "skipped" ]]; then
+              echo "❌ Code quality checks should have run but were skipped"
+              exit 1
+            fi
           fi
 
           # Code quality must pass OR be skipped (when no changes)

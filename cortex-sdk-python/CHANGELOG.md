@@ -192,6 +192,49 @@ class RateLimitExceededError(Exception): ...
 
 ---
 
+## [0.15.1] - 2025-11-29
+
+### 🔍 Semantic Search Quality - Agent Acknowledgment Filtering
+
+**Fixes an edge case where agent acknowledgments like "I've noted your email address" could outrank user facts in semantic search due to word overlap (e.g., "address" matching both contexts).**
+
+#### 🐛 Bug Fixes
+
+**1. Agent Acknowledgment Noise Filtering**
+
+Agent responses that are pure acknowledgments (no meaningful facts) are now filtered from vector storage:
+
+- ✅ **ACID storage preserved** - Full conversation history maintained
+- ✅ **Vector storage filtered** - Acknowledgments don't pollute semantic search
+- ✅ **Automatic detection** - Patterns like "Got it!", "I've noted", "I'll remember" are identified
+
+```python
+# Before: Both stored in vector (agent response pollutes search)
+await cortex.memory.remember(
+    RememberParams(
+        user_message="My name is Alex",
+        agent_response="Got it!",  # Would appear in semantic search
+        ...
+    )
+)
+
+# After: Only user fact stored in vector
+# "Got it!" still in ACID for conversation history
+# But won't appear when searching "what to call the user"
+```
+
+**2. Role-Based Search Weighting**
+
+- User messages receive 25% boost in semantic search scoring
+- Detected acknowledgments receive 50% penalty (defense-in-depth)
+- `message_role` field tracks source for intelligent ranking
+
+#### 🎯 Impact
+
+Queries like "what should I address the user as" now reliably return user facts ("My name is Alex") instead of agent acknowledgments ("I've noted your email address") that happen to contain semantically similar words.
+
+---
+
 ## [0.15.0] - 2025-11-30
 
 ### 🎯 Enriched Fact Extraction - Bullet-Proof Semantic Search
