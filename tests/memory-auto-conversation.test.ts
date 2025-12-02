@@ -23,13 +23,13 @@ describe("Memory API - Auto-Conversation Creation", () => {
     _cleanup = new TestCleanup(client);
 
     // Clean slate
-    await cleanup.purgeConversations();
-    await cleanup.purgeMemories();
+    await _cleanup.purgeConversations();
+    await _cleanup.purgeMemories();
   });
 
   afterAll(async () => {
-    await cleanup.purgeConversations();
-    await cleanup.purgeMemories();
+    await _cleanup.purgeConversations();
+    await _cleanup.purgeMemories();
     cortex.close();
     await client.close();
   });

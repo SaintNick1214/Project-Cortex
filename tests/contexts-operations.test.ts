@@ -26,14 +26,14 @@ describe("Context Operations API", () => {
   });
 
   afterAll(async () => {
-    await cleanup.purgeContexts();
+    await _cleanup.purgeContexts();
     if (client) {
       client.close();
     }
   });
 
   beforeEach(async () => {
-    await cleanup.purgeContexts();
+    await _cleanup.purgeContexts();
   });
 
   describe("Versioning Operations", () => {
