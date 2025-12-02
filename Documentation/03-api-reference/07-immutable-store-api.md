@@ -1076,10 +1076,10 @@ Fact-abc123
 
 ## Next Steps
 
-- **[Mutable Store API](./11-mutable-store-api.md)** - Live shared data
-- **[Governance Policies API](./12-governance-policies-api.md)** - Multi-layer retention rules
+- **[Mutable Store API](./08-mutable-store-api.md)** - Live shared data
+- **[Governance Policies API](./10-governance-policies-api.md)** - Multi-layer retention rules
 - **[Memory Operations API](./02-memory-operations.md)** - Vector layer operations
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

@@ -16,6 +16,17 @@ from ..types import (
     A2AResponse,
     A2ASendParams,
 )
+from .validators import (
+    A2AValidationError,
+    validate_agent_id,
+    validate_broadcast_params,
+    validate_conversation_filters,
+    validate_request_params,
+    validate_send_params,
+)
+
+# Re-export for convenience
+__all__ = ["A2AAPI", "A2AValidationError"]
 
 
 class A2AAPI:
@@ -26,16 +37,31 @@ class A2AAPI:
     sugar over the standard memory system with source.type='a2a'.
     """
 
-    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
+    def __init__(
+        self,
+        client: Any,
+        graph_adapter: Optional[Any] = None,
+        resilience: Optional[Any] = None,
+    ) -> None:
         """
         Initialize A2A API.
 
         Args:
             client: Convex client instance
             graph_adapter: Optional graph database adapter
+            resilience: Optional resilience layer for overload protection
         """
         self.client = client
         self.graph_adapter = graph_adapter
+        self._resilience = resilience
+
+    async def _execute_with_resilience(
+        self, operation: Any, operation_name: str
+    ) -> Any:
+        """Execute an operation through the resilience layer (if available)."""
+        if self._resilience:
+            return await self._resilience.execute(operation, operation_name)
+        return await operation()
 
     async def send(self, params: A2ASendParams) -> A2AMessage:
         """
@@ -50,6 +76,9 @@ class A2AAPI:
         Returns:
             A2A message result
 
+        Raises:
+            A2AValidationError: If validation fails
+
         Example:
             >>> result = await cortex.a2a.send(
             ...     A2ASendParams(
@@ -60,6 +89,9 @@ class A2AAPI:
             ...     )
             ... )
         """
+        # Client-side validation
+        validate_send_params(params)
+
         result = await self.client.mutation(
             "a2a:send",
             filter_none_values({
@@ -92,6 +124,7 @@ class A2AAPI:
             A2A response
 
         Raises:
+            A2AValidationError: If validation fails
             A2ATimeoutError: If no response within timeout
             CortexError: If pub/sub not configured
 
@@ -109,6 +142,9 @@ class A2AAPI:
             ... except A2ATimeoutError:
             ...     print("No response received")
         """
+        # Client-side validation
+        validate_request_params(params)
+
         result = await self.client.mutation(
             "a2a:request",
             filter_none_values({
@@ -144,6 +180,9 @@ class A2AAPI:
         Returns:
             Broadcast result
 
+        Raises:
+            A2AValidationError: If validation fails
+
         Example:
             >>> result = await cortex.a2a.broadcast(
             ...     A2ABroadcastParams(
@@ -154,6 +193,9 @@ class A2AAPI:
             ...     )
             ... )
         """
+        # Client-side validation
+        validate_broadcast_params(params)
+
         result = await self.client.mutation(
             "a2a:broadcast",
             filter_none_values({
@@ -180,6 +222,7 @@ class A2AAPI:
         tags: Optional[List[str]] = None,
         user_id: Optional[str] = None,
         limit: int = 100,
+        offset: int = 0,
     ) -> Dict[str, Any]:
         """
         Get chronological conversation between two agents.
@@ -193,9 +236,13 @@ class A2AAPI:
             tags: Filter by tags
             user_id: Filter A2A about specific user
             limit: Maximum messages
+            offset: Pagination offset
 
         Returns:
             A2A conversation with messages
+
+        Raises:
+            A2AValidationError: If validation fails
 
         Example:
             >>> convo = await cortex.a2a.get_conversation(
@@ -205,6 +252,17 @@ class A2AAPI:
             ...     tags=['budget']
             ... )
         """
+        # Client-side validation
+        validate_agent_id(agent1, "agent1")
+        validate_agent_id(agent2, "agent2")
+        validate_conversation_filters(
+            since=since,
+            until=until,
+            min_importance=min_importance,
+            limit=limit,
+            offset=offset,
+        )
+
         result = await self.client.query(
             "a2a:getConversation",
             filter_none_values({
@@ -216,6 +274,7 @@ class A2AAPI:
                 "tags": tags,
                 "userId": user_id,
                 "limit": limit,
+                "offset": offset,
             }),
         )
 

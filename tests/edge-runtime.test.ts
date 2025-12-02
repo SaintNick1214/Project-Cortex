@@ -8,6 +8,10 @@
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { TestCleanup } from "./helpers/cleanup";
+import { createTestRunContext } from "./helpers/isolation";
+
+// Create test run context for parallel execution isolation
+const ctx = createTestRunContext();
 
 describe("Edge Runtime Compatibility", () => {
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
@@ -50,17 +54,17 @@ describe("Edge Runtime Compatibility", () => {
   describe("Convex Client in Edge Context", () => {
     let cortex: Cortex;
     let client: ConvexClient;
-    let cleanup: TestCleanup;
+    let _cleanup: TestCleanup;
 
     beforeAll(async () => {
       cortex = new Cortex({ convexUrl: CONVEX_URL });
       client = new ConvexClient(CONVEX_URL);
-      cleanup = new TestCleanup(client);
-      await cleanup.purgeAll();
+      _cleanup = new TestCleanup(client);
+      // NOTE: Removed purgeAll() for parallel execution compatibility.
     });
 
     afterAll(async () => {
-      await cleanup.purgeAll();
+      // NOTE: Removed purgeAll() for parallel execution compatibility.
       await client.close();
     });
 
@@ -74,18 +78,18 @@ describe("Edge Runtime Compatibility", () => {
 
     it("should create memory spaces without Node.js APIs", async () => {
       const result = await cortex.memorySpaces.register({
-        memorySpaceId: "edge-test-space",
+        memorySpaceId: ctx.memorySpaceId("edge-test"),
         name: "Edge Test Space",
         type: "custom",
       });
 
       expect(result).toBeDefined();
-      expect(result.memorySpaceId).toBe("edge-test-space");
+      expect(result.memorySpaceId).toBe(ctx.memorySpaceId("edge-test"));
     });
 
     it("should perform memory operations without Node.js APIs", async () => {
       const result = await cortex.memory.remember({
-        memorySpaceId: "edge-test-space",
+        memorySpaceId: ctx.memorySpaceId("edge-test"),
         conversationId: "edge-conv-1",
         userMessage: "Test in edge runtime",
         agentResponse: "Working fine!",
@@ -100,7 +104,7 @@ describe("Edge Runtime Compatibility", () => {
 
     it("should search memories without Node.js APIs", async () => {
       const memories = await cortex.memory.search(
-        "edge-test-space",
+        ctx.memorySpaceId("edge-test"),
         "edge runtime",
       );
 
@@ -112,23 +116,23 @@ describe("Edge Runtime Compatibility", () => {
   describe("Streaming in Edge Context", () => {
     let cortex: Cortex;
     let client: ConvexClient;
-    let cleanup: TestCleanup;
+    let _cleanup: TestCleanup;
 
     beforeAll(async () => {
       cortex = new Cortex({ convexUrl: CONVEX_URL });
       client = new ConvexClient(CONVEX_URL);
-      cleanup = new TestCleanup(client);
-      await cleanup.purgeAll();
+      _cleanup = new TestCleanup(client);
+      // NOTE: Removed purgeAll() for parallel execution compatibility.
 
       await cortex.memorySpaces.register({
-        memorySpaceId: "edge-stream-space",
+        memorySpaceId: ctx.memorySpaceId("edge-stream"),
         name: "Edge Stream Space",
         type: "custom",
       });
     });
 
     afterAll(async () => {
-      await cleanup.purgeAll();
+      // NOTE: Removed purgeAll() for parallel execution compatibility.
       await client.close();
     });
 
@@ -144,7 +148,7 @@ describe("Edge Runtime Compatibility", () => {
       });
 
       const result = await cortex.memory.rememberStream({
-        memorySpaceId: "edge-stream-space",
+        memorySpaceId: ctx.memorySpaceId("edge-stream"),
         conversationId: "edge-stream-conv",
         userMessage: "Test edge streaming",
         responseStream: stream,
@@ -165,7 +169,7 @@ describe("Edge Runtime Compatibility", () => {
       }
 
       const result = await cortex.memory.rememberStream({
-        memorySpaceId: "edge-stream-space",
+        memorySpaceId: ctx.memorySpaceId("edge-stream"),
         conversationId: "edge-async-conv",
         userMessage: "Test async iterable",
         responseStream: edgeGenerator(),
@@ -217,7 +221,7 @@ describe("Edge Runtime Compatibility", () => {
 
       await expect(
         cortex.memory.rememberStream({
-          memorySpaceId: "edge-stream-space",
+          memorySpaceId: ctx.memorySpaceId("edge-stream"),
           conversationId: "error-stream-conv",
           userMessage: "Test",
           responseStream: failingStream,
@@ -281,17 +285,17 @@ describe("Edge Runtime Compatibility", () => {
   describe("Convex Queries in Edge Context", () => {
     let cortex: Cortex;
     let client: ConvexClient;
-    let cleanup: TestCleanup;
+    let _cleanup: TestCleanup;
 
     beforeAll(async () => {
       cortex = new Cortex({ convexUrl: CONVEX_URL });
       client = new ConvexClient(CONVEX_URL);
-      cleanup = new TestCleanup(client);
-      await cleanup.purgeAll();
+      _cleanup = new TestCleanup(client);
+      // NOTE: Removed purgeAll() for parallel execution compatibility.
     });
 
     afterAll(async () => {
-      await cleanup.purgeAll();
+      // NOTE: Removed purgeAll() for parallel execution compatibility.
       await client.close();
     });
 
@@ -319,13 +323,13 @@ describe("Edge Runtime: Real-world Scenarios", () => {
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let _cleanup: TestCleanup;
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    cleanup = new TestCleanup(client);
-    await cleanup.purgeAll();
+    _cleanup = new TestCleanup(client);
+    // NOTE: Removed purgeAll() for parallel execution compatibility.
 
     await cortex.memorySpaces.register({
       memorySpaceId: "edge-real-world",
@@ -335,7 +339,7 @@ describe("Edge Runtime: Real-world Scenarios", () => {
   });
 
   afterAll(async () => {
-    await cleanup.purgeAll();
+    // NOTE: Removed purgeAll() for parallel execution compatibility.
     await client.close();
   });
 

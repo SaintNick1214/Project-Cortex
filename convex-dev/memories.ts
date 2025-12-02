@@ -31,10 +31,17 @@ export const store = mutation({
       v.literal("system"),
       v.literal("tool"),
       v.literal("a2a"),
+      v.literal("fact-extraction"), // NEW: For fact-extracted memories
     ),
     sourceUserId: v.optional(v.string()),
     sourceUserName: v.optional(v.string()),
     userId: v.optional(v.string()),
+    messageRole: v.optional(
+      v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
+    ), // NEW: For semantic search weighting
+    // Enrichment fields (for bullet-proof retrieval)
+    enrichedContent: v.optional(v.string()), // Concatenated searchable content for embedding
+    factCategory: v.optional(v.string()), // Category for filtering (e.g., "addressing_preference")
     conversationRef: v.optional(
       v.object({
         conversationId: v.string(),
@@ -56,6 +63,12 @@ export const store = mutation({
         snapshotAt: v.number(),
       }),
     ),
+    factsRef: v.optional(
+      v.object({
+        factId: v.string(),
+        version: v.optional(v.number()),
+      }),
+    ), // NEW: Reference to Layer 3 fact
     importance: v.number(),
     tags: v.array(v.string()),
   },
@@ -74,10 +87,15 @@ export const store = mutation({
       sourceUserId: args.sourceUserId,
       sourceUserName: args.sourceUserName,
       sourceTimestamp: now,
+      messageRole: args.messageRole, // NEW
+      // Enrichment fields
+      enrichedContent: args.enrichedContent,
+      factCategory: args.factCategory,
       userId: args.userId,
       conversationRef: args.conversationRef,
       immutableRef: args.immutableRef,
       mutableRef: args.mutableRef,
+      factsRef: args.factsRef, // NEW
       importance: args.importance,
       tags: args.tags,
       version: 1,
@@ -289,6 +307,7 @@ export const search = query({
     ),
     minImportance: v.optional(v.number()),
     minScore: v.optional(v.number()), // NEW: Minimum similarity score (0-1)
+    queryCategory: v.optional(v.string()), // NEW: Category to boost (for bullet-proof retrieval)
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
@@ -392,6 +411,61 @@ export const search = query({
 
     if (args.minImportance !== undefined) {
       results = results.filter((m) => m.importance >= args.minImportance!);
+    }
+
+    // Apply role-based and category-based weighting for semantic search (BEFORE filtering by minScore)
+    // This helps user messages (facts about the user) rank higher than agent responses
+    // And category-matched facts rank higher for bullet-proof retrieval
+    if (args.embedding && args.embedding.length > 0) {
+      results = results.map((m: any) => {
+        let score = m._score ?? 0;
+
+        // Role-based weighting for semantic search
+        // User messages contain facts ABOUT the user (names, preferences, etc.)
+        // Agent responses are typically acknowledgments, not facts worth searching
+        if (m.messageRole === "user") {
+          score *= 1.25; // 25% boost for user messages
+        } else if (m.messageRole === "agent") {
+          // Agent acknowledgments like "I've noted your email" are noise
+          // Only penalize if content looks like an acknowledgment (short, no real facts)
+          const content = (m.content || "").toLowerCase();
+          const isAcknowledgment =
+            content.length < 60 &&
+            (content.includes("got it") ||
+              content.includes("i've noted") ||
+              content.includes("i'll remember") ||
+              content.includes("noted") ||
+              content.includes("understood") ||
+              content.includes("i'll set") ||
+              content.includes("i'll call"));
+          if (isAcknowledgment) {
+            score *= 0.5; // 50% penalty for pure acknowledgments
+          }
+        }
+
+        // Category-based boosting for bullet-proof retrieval
+        // Boost facts that match the query's category
+        if (args.queryCategory && m.factCategory === args.queryCategory) {
+          score *= 1.3; // 30% boost for matching category
+        }
+
+        // Additional boost for enriched content (facts with semantic context)
+        if (m.enrichedContent) {
+          score *= 1.1; // 10% boost for enriched facts
+        }
+
+        return {
+          ...m,
+          _score: score,
+        };
+      });
+
+      // Re-sort after applying weights
+      results.sort((a: any, b: any) => {
+        const scoreA = a._score ?? 0;
+        const scoreB = b._score ?? 0;
+        return scoreB - scoreA;
+      });
     }
 
     // Filter by minimum score (for semantic search)

@@ -6,10 +6,15 @@ Verifies chunk accumulation, hook invocation, and context updates.
 """
 
 import asyncio
+
 import pytest
-from cortex.memory.streaming.stream_processor import StreamProcessor, create_stream_context
+
 from cortex.memory.streaming.stream_metrics import MetricsCollector
-from cortex.memory.streaming_types import StreamHooks, StreamingOptions
+from cortex.memory.streaming.stream_processor import (
+    StreamProcessor,
+    create_stream_context,
+)
+from cortex.memory.streaming_types import StreamHooks
 
 
 async def create_simple_stream():
@@ -42,9 +47,9 @@ class TestStreamProcessor:
             user_id="test-user",
             user_name="Test User",
         )
-        
+
         processor = StreamProcessor(context)
-        
+
         # Process stream
         result = await processor.process_stream(create_simple_stream())
 
@@ -65,7 +70,7 @@ class TestStreamProcessor:
             user_id="test-user",
             user_name="Test User",
         )
-        
+
         chunk_events = []
 
         def on_chunk(event):
@@ -73,13 +78,13 @@ class TestStreamProcessor:
 
         hooks = StreamHooks(on_chunk=on_chunk)
         processor = StreamProcessor(context, hooks)
-        
+
         # Process stream
         await processor.process_stream(create_numbered_stream(5))
 
         # CRITICAL: Validate hook was called for each chunk
         assert len(chunk_events) == 5, f"Expected 5 chunk events, got {len(chunk_events)}"
-        
+
         # Validate each event
         for i, event in enumerate(chunk_events):
             assert event.chunk == f"Chunk{i}", f"Chunk {i} has wrong content"
@@ -98,7 +103,7 @@ class TestStreamProcessor:
             user_id="test-user",
             user_name="Test User",
         )
-        
+
         progress_events = []
 
         def on_progress(event):
@@ -106,14 +111,14 @@ class TestStreamProcessor:
 
         hooks = StreamHooks(on_progress=on_progress)
         processor = StreamProcessor(context, hooks)
-        
+
         # Process 25 chunks (progress every 10 chunks by default)
         await processor.process_stream(create_numbered_stream(25))
 
         # CRITICAL: Validate progress was called
         # Should be called at chunks 10 and 20
         assert len(progress_events) >= 2, f"Expected at least 2 progress events, got {len(progress_events)}"
-        
+
         # Validate progress event data
         for event in progress_events:
             assert event.bytes_processed > 0
@@ -133,7 +138,7 @@ class TestStreamProcessor:
             user_id="test-user",
             user_name="Test User",
         )
-        
+
         completion_events = []
 
         def on_complete(event):
@@ -141,13 +146,13 @@ class TestStreamProcessor:
 
         hooks = StreamHooks(on_complete=on_complete)
         processor = StreamProcessor(context, hooks)
-        
+
         # Process stream
         full_response = await processor.process_stream(create_numbered_stream(10))
 
         # CRITICAL: Validate completion hook
         assert len(completion_events) == 1, "onComplete should be called exactly once"
-        
+
         complete_event = completion_events[0]
         assert complete_event.full_response == full_response
         assert complete_event.total_chunks == 10
@@ -165,7 +170,7 @@ class TestStreamProcessor:
             user_id="test-user",
             user_name="Test User",
         )
-        
+
         error_events = []
 
         def on_error(event):
@@ -173,7 +178,7 @@ class TestStreamProcessor:
 
         hooks = StreamHooks(on_error=on_error)
         processor = StreamProcessor(context, hooks)
-        
+
         # Create failing stream
         async def failing_stream():
             yield "Start"
@@ -185,7 +190,7 @@ class TestStreamProcessor:
 
         # CRITICAL: Validate error hook was called
         assert len(error_events) == 1, "onError should be called once"
-        
+
         error_event = error_events[0]
         assert error_event.code == "STREAM_PROCESSING_ERROR"
         assert "Test error" in error_event.message
@@ -203,9 +208,9 @@ class TestStreamProcessor:
             user_id="test-user",
             user_name="Test User",
         )
-        
+
         processor = StreamProcessor(context)
-        
+
         # Process stream
         await processor.process_stream(create_numbered_stream(5))
 
@@ -228,10 +233,10 @@ class TestStreamProcessor:
             user_id="test-user",
             user_name="Test User",
         )
-        
+
         metrics_collector = MetricsCollector()
         processor = StreamProcessor(context, metrics=metrics_collector)
-        
+
         # Process known stream
         await processor.process_stream(create_numbered_stream(7))
 
@@ -240,7 +245,7 @@ class TestStreamProcessor:
         assert metrics.total_chunks == 7, f"Expected 7 chunks, got {metrics.total_chunks}"
         assert metrics.total_bytes > 0
         assert metrics.stream_duration_ms > 0
-        
+
         # Get metrics from processor
         processor_metrics = processor.get_metrics()
         assert processor_metrics is metrics_collector

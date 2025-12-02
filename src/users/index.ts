@@ -71,6 +71,8 @@ export class CascadeDeletionError extends Error {
 // Export validation error for users who want to catch it specifically
 export { UserValidationError } from "./validators";
 
+import type { ResilienceLayer } from "../resilience";
+
 /**
  * Users API
  *
@@ -85,7 +87,21 @@ export class UsersAPI {
   constructor(
     private readonly client: ConvexClient,
     private readonly graphAdapter?: GraphAdapter,
+    private readonly resilience?: ResilienceLayer,
   ) {}
+
+  /**
+   * Execute an operation through the resilience layer (if available)
+   */
+  private async executeWithResilience<T>(
+    operation: () => Promise<T>,
+    operationName: string,
+  ): Promise<T> {
+    if (this.resilience) {
+      return this.resilience.execute(operation, operationName);
+    }
+    return operation();
+  }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Core Operations
@@ -640,6 +656,8 @@ export class UsersAPI {
   ): Promise<{ updated: number; userIds: string[] }> {
     // Client-side validation
     validateUserIdsArray(userIds, 1, 100);
+    // Runtime validation for potentially untrusted external input
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!updates || !updates.data) {
       throw new UserValidationError(
         "updates.data is required",

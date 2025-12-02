@@ -53,6 +53,9 @@ export async function runWizard(targetDir?: string): Promise<void> {
   // Step 4: Graph database (optional) - just get the config, don't create files yet
   const graphConfig = await getGraphConfig();
 
+  // Step 5: Cortex CLI (optional)
+  const installCLI = await getCliInstallOption();
+
   // Build wizard configuration
   const config: WizardConfig = {
     projectName: projectInfo.projectName,
@@ -66,6 +69,7 @@ export async function runWizard(targetDir?: string): Promise<void> {
     graphUri: graphConfig?.uri,
     graphUsername: graphConfig?.username,
     graphPassword: graphConfig?.password,
+    installCLI,
   };
 
   // Show confirmation
@@ -192,6 +196,23 @@ async function getConvexSetup(): Promise<{
 }
 
 /**
+ * Get CLI installation option
+ */
+async function getCliInstallOption(): Promise<boolean> {
+  console.log(pc.cyan("\n🔧 Cortex CLI (Optional)"));
+  console.log(pc.dim("   Command-line tools for database management\n"));
+
+  const response = await prompts({
+    type: "confirm",
+    name: "installCLI",
+    message: "Install Cortex CLI for database management?",
+    initial: true,
+  });
+
+  return response.installCLI ?? false;
+}
+
+/**
  * Show confirmation screen
  */
 async function showConfirmation(config: WizardConfig): Promise<void> {
@@ -214,6 +235,10 @@ async function showConfirmation(config: WizardConfig): Promise<void> {
   console.log(
     pc.bold("Graph DB:"),
     config.graphEnabled ? config.graphType : "Disabled",
+  );
+  console.log(
+    pc.bold("CLI:"),
+    config.installCLI ? "Install @cortexmemory/cli" : "Skip",
   );
   console.log(pc.dim("─".repeat(50)));
 
@@ -339,11 +364,56 @@ async function executeSetup(config: WizardConfig): Promise<void> {
       graphSpinner.succeed("Graph database configured");
     }
 
+    // Install Cortex CLI if requested
+    if (config.installCLI) {
+      const cliSpinner = ora("Installing Cortex CLI...").start();
+      const cliResult = await execCommand(
+        "npm",
+        ["install", "--save-dev", "@cortexmemory/cli"],
+        { cwd: config.projectPath },
+      );
+      if (cliResult.code !== 0) {
+        cliSpinner.warn("CLI installation failed (non-critical)");
+        console.log(
+          pc.dim(
+            "   You can install it later: npm install -D @cortexmemory/cli",
+          ),
+        );
+      } else {
+        cliSpinner.succeed("Cortex CLI installed");
+
+        // Add CLI scripts to package.json
+        await addCLIScripts(config.projectPath);
+      }
+    }
+
     // Success!
     showSuccessMessage(config);
   } catch (error) {
     console.error(pc.red("\n❌ Setup failed:"), error);
     throw error;
+  }
+}
+
+/**
+ * Add CLI scripts to package.json
+ */
+async function addCLIScripts(projectPath: string): Promise<void> {
+  const packageJsonPath = path.join(projectPath, "package.json");
+
+  try {
+    const packageJson = await fs.readJson(packageJsonPath);
+
+    // Add CLI scripts
+    packageJson.scripts = packageJson.scripts || {};
+    packageJson.scripts["cortex"] = "cortex";
+    packageJson.scripts["cortex:setup"] = "cortex setup";
+    packageJson.scripts["cortex:stats"] = "cortex db stats";
+    packageJson.scripts["cortex:spaces"] = "cortex spaces list";
+
+    await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 });
+  } catch {
+    // Non-critical, skip silently
   }
 }
 
@@ -367,6 +437,10 @@ function showSuccessMessage(config: WizardConfig): void {
     console.log(pc.bold("🕸️  Graph:"), config.graphType, "(configured)");
   }
 
+  if (config.installCLI) {
+    console.log(pc.bold("🔧 CLI:"), "@cortexmemory/cli (installed)");
+  }
+
   console.log(pc.green("\n✅ Setup complete!\n"));
 
   console.log(pc.bold("🚀 Next steps:\n"));
@@ -386,6 +460,21 @@ function showSuccessMessage(config: WizardConfig): void {
     console.log(pc.cyan("  npm start") + pc.dim("  # Run your AI agent"));
     console.log(
       pc.dim(`\n  💡 Dashboard: ${config.convexUrl?.replace("/api", "")}`),
+    );
+  }
+
+  // CLI commands if installed
+  if (config.installCLI) {
+    console.log(pc.bold("\n🔧 CLI Commands:\n"));
+    console.log(
+      pc.cyan("  npm run cortex:stats") +
+        pc.dim("   # View database statistics"),
+    );
+    console.log(
+      pc.cyan("  npm run cortex:spaces") + pc.dim("  # List memory spaces"),
+    );
+    console.log(
+      pc.cyan("  npx cortex --help") + pc.dim("      # See all CLI commands"),
     );
   }
 

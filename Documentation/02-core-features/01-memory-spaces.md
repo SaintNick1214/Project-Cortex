@@ -863,4 +863,4 @@ await cortex.memory.remember({
 - [Context Chains](./04-context-chains.md) - Learn cross-space delegation
 - [Infinite Context](../04-architecture/10-infinite-context.md) - Never run out of context
 
-**Questions?** Check the [FAQ](../11-reference/01-faq.md) or ask in [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).

@@ -955,4 +955,4 @@ export const get = query({
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

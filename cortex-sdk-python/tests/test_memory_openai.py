@@ -5,8 +5,10 @@ Port of: memory.test.ts - "Advanced: Real-World Embedding & Recall"
 These tests require OPENAI_API_KEY and are skipped if not available.
 """
 
-import pytest
 import os
+
+import pytest
+
 from cortex import RememberParams, SearchOptions
 from tests.helpers import embeddings_available
 
@@ -17,15 +19,15 @@ async def test_openai_stores_multiple_facts_with_real_embeddings(
 ):
     """
     Port of: memory.test.ts - "stores multiple facts with real embeddings and summarization"
-    
+
     Scenario: Customer support conversation with 5 key facts.
     Validates that embeddings are generated and summarization works.
     """
     if not embeddings_available():
         pytest.skip("OPENAI_API_KEY not set")
-    
+
     from tests.helpers import generate_embedding, summarize_conversation
-    
+
     # Scenario: Customer support conversation with 5 key facts
     conversations = [
         {
@@ -54,9 +56,9 @@ async def test_openai_stores_multiple_facts_with_real_embeddings(
             "fact": "preferences",
         },
     ]
-    
+
     stored_memories = []
-    
+
     # Store each with embeddings and summarization
     for conv in conversations:
         result = await cortex_client.memory.remember(
@@ -73,30 +75,30 @@ async def test_openai_stores_multiple_facts_with_real_embeddings(
                 tags=[conv["fact"], "customer-support"],
             )
         )
-        
+
         stored_memories.append({
             "fact": conv["fact"],
             "memory_id": result.memories[0].memory_id,
         })
-        
+
         # Verify embeddings were stored
         if result.memories[0].embedding is None:
             print(f"\n❌ ERROR: Embedding is None for fact '{conv['fact']}'")
             print(f"   Content: {result.memories[0].content[:50]}...")
             print(f"   Content type: {result.memories[0].content_type}")
-            print(f"   This suggests OpenAI API call failed during embedding generation")
+            print("   This suggests OpenAI API call failed during embedding generation")
         assert result.memories[0].embedding is not None, f"Embedding is None for fact '{conv['fact']}' - OpenAI API call likely failed"
         assert len(result.memories[0].embedding) == 1536, f"Embedding has wrong dimensions: {len(result.memories[0].embedding)} != 1536"
-        
+
         if result.memories[0].content_type != "summarized":
             print(f"\n❌ ERROR: Content type is '{result.memories[0].content_type}' instead of 'summarized' for fact '{conv['fact']}'")
             print(f"   Original: {conv['user'][:50]}...")
             print(f"   Stored: {result.memories[0].content[:50]}...")
-            print(f"   This suggests OpenAI summarization call failed")
+            print("   This suggests OpenAI summarization call failed")
         assert result.memories[0].content_type == "summarized", f"Content type is '{result.memories[0].content_type}' instead of 'summarized' - OpenAI summarization likely failed"
-    
+
     assert len(stored_memories) == 5
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
 
@@ -107,22 +109,21 @@ async def test_openai_recalls_facts_using_semantic_search(
 ):
     """
     Port of: memory.test.ts - "recalls facts using semantic search (not keyword matching)"
-    
+
     Test semantic understanding - queries don't match exact words but find correct facts.
     Note: This test requires MANAGED mode as LOCAL doesn't support vector search.
     """
-    import os
-    
+
     if not embeddings_available():
         pytest.skip("OPENAI_API_KEY not set")
-    
+
     # Skip if running in LOCAL mode (no vector search support)
     convex_url = os.getenv("CONVEX_URL", "")
     if "localhost" in convex_url or "127.0.0.1" in convex_url:
         pytest.skip("Semantic search requires MANAGED mode (LOCAL doesn't support vector search)")
-    
+
     from tests.helpers import generate_embedding, summarize_conversation
-    
+
     # First store the facts
     conversations = [
         {"user": "My name is Alexander Johnson and I prefer to be called Alex", "agent": "Got it, I'll call you Alex!", "fact": "user-name"},
@@ -131,7 +132,7 @@ async def test_openai_recalls_facts_using_semantic_search(
         {"user": "We need the new feature deployed by Friday 5pm EST", "agent": "Noted - deployment deadline is Friday at 5pm EST", "fact": "deadline"},
         {"user": "I prefer dark mode theme and minimal notifications", "agent": "I'll set dark mode and reduce notifications", "fact": "preferences"},
     ]
-    
+
     for conv in conversations:
         await cortex_client.memory.remember(
             RememberParams(
@@ -147,7 +148,7 @@ async def test_openai_recalls_facts_using_semantic_search(
                 tags=[conv["fact"], "customer-support"],
             )
         )
-    
+
     # Test semantic understanding (queries don't match exact words)
     searches = [
         {"query": "what should I address the user as", "expect_in_content": "Alex"},
@@ -156,7 +157,7 @@ async def test_openai_recalls_facts_using_semantic_search(
         {"query": "when is the deployment due", "expect_in_content": "Friday"},
         {"query": "UI appearance settings", "expect_in_content": "dark mode"},
     ]
-    
+
     for search in searches:
         results = await cortex_client.memory.search(
             test_memory_space_id,
@@ -167,14 +168,14 @@ async def test_openai_recalls_facts_using_semantic_search(
                 limit=10,  # Get more results to handle edge cases in similarity scoring
             ),
         )
-        
+
         # Should find the relevant fact (semantic match, not keyword)
         assert len(results) > 0
-        
+
         # Validate the TOP result (results[0]) contains the expected content
         # This ensures semantic search ranks the most relevant result first
         top_result = results[0]
-        
+
         # If top result doesn't match, log for debugging
         if search["expect_in_content"].lower() not in top_result.content.lower():
             query_text = search['query']
@@ -186,17 +187,17 @@ async def test_openai_recalls_facts_using_semantic_search(
                 score_str = f"{score:.3f}" if score is not None else "N/A"
                 content_preview = r.content[:80] if len(r.content) > 80 else r.content
                 print(f"    {i + 1}. '{content_preview}...' (score: {score_str}) {has_match}")
-        
+
         # Strict validation: Top result MUST contain expected content
         assert search["expect_in_content"].lower() in top_result.content.lower()
-        
+
         # Log for visibility
         score = getattr(top_result, "_score", None) or getattr(top_result, "score", None)
         score_str = f"{score:.3f}" if score is not None else "N/A"
         query_text = search['query']
         content_preview = top_result.content[:60] if len(top_result.content) > 60 else top_result.content
         print(f"  Success: Query '{query_text}' found in '{content_preview}...' (score: {score_str})")
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
 
@@ -207,14 +208,19 @@ async def test_openai_enriches_search_results_with_conversation_context(
 ):
     """
     Port of: memory.test.ts - "enriches search results with full conversation context"
-    
+
     Validates that enrichConversation returns full ACID source with conversation details.
     """
     if not embeddings_available():
         pytest.skip("OPENAI_API_KEY not set")
-    
+
+    # Skip if running in LOCAL mode (no vector search support)
+    convex_url = os.getenv("CONVEX_URL", "")
+    if "localhost" in convex_url or "127.0.0.1" in convex_url:
+        pytest.skip("Semantic search requires MANAGED mode (LOCAL doesn't support vector search)")
+
     from tests.helpers import generate_embedding, summarize_conversation
-    
+
     # Store one memory with conversation
     await cortex_client.memory.remember(
         RememberParams(
@@ -230,7 +236,7 @@ async def test_openai_enriches_search_results_with_conversation_context(
             tags=["api-password", "customer-support"],
         )
     )
-    
+
     results = await cortex_client.memory.search(
         test_memory_space_id,
         "password",
@@ -240,22 +246,22 @@ async def test_openai_enriches_search_results_with_conversation_context(
             user_id=test_user_id,
         ),
     )
-    
+
     assert len(results) > 0
-    
+
     enriched = results[0]
-    
+
     # Check if it's enriched structure (has .memory attribute)
     if hasattr(enriched, "memory"):
         # Enriched structure exists
         assert enriched.memory is not None
-        
+
         # Conversation may or may not exist (depends on conversationRef)
         if hasattr(enriched, "conversation") and enriched.conversation:
             assert enriched.conversation is not None
             assert hasattr(enriched, "source_messages")
             assert len(enriched.source_messages) > 0
-            
+
             mem_content = enriched.memory.content[:40] if len(enriched.memory.content) > 40 else enriched.memory.content
             first_msg = enriched.source_messages[0]
             msg_content = first_msg.get("content") if isinstance(first_msg, dict) else first_msg.content
@@ -271,7 +277,7 @@ async def test_openai_enriches_search_results_with_conversation_context(
         assert enriched.content is not None
         content_preview = enriched.content[:40] if len(enriched.content) > 40 else enriched.content
         print(f"  Direct result: '{content_preview}...'")
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
 
@@ -282,14 +288,14 @@ async def test_openai_validates_summarization_quality(
 ):
     """
     Port of: memory.test.ts - "validates summarization quality"
-    
+
     Validates that gpt-4.1-nano produces concise, accurate summaries.
     """
     if not embeddings_available():
         pytest.skip("OPENAI_API_KEY not set")
-    
+
     from tests.helpers import generate_embedding, summarize_conversation
-    
+
     # Store one memory with summarization
     result = await cortex_client.memory.remember(
         RememberParams(
@@ -305,28 +311,28 @@ async def test_openai_validates_summarization_quality(
             tags=["user-name", "customer-support"],
         )
     )
-    
+
     memory_id = result.memories[0].memory_id
-    
+
     # Get the summarized memory
     memory = await cortex_client.vector.get(test_memory_space_id, memory_id)
-    
+
     assert memory is not None
     if memory.content_type != "summarized":
         print(f"\n❌ ERROR: Content type is '{memory.content_type}' instead of 'summarized'")
         print(f"   Content: {memory.content}")
-        print(f"   This suggests OpenAI summarization call failed during remember()")
+        print("   This suggests OpenAI summarization call failed during remember()")
     assert memory.content_type == "summarized", f"Content type is '{memory.content_type}' instead of 'summarized'"
-    
+
     # Summarized content should be concise (relaxed constraint for gpt-4.1-nano default temperature)
     original = "My name is Alexander Johnson and I prefer to be called Alex"
-    
+
     assert len(memory.content) < len(original) * 2.5
     assert "alex" in memory.content.lower()
-    
+
     print(f"  Original: '{original}'")
     print(f"  Summarized: '{memory.content}'")
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
 
@@ -337,29 +343,28 @@ async def test_openai_similarity_scores_are_realistic(
 ):
     """
     Port of: memory.test.ts - "similarity scores are realistic (0-1 range)"
-    
+
     Validates that similarity scores are in valid 0-1 range.
     Note: This test requires MANAGED mode as LOCAL doesn't support vector search.
     """
-    import os
-    
+
     if not embeddings_available():
         pytest.skip("OPENAI_API_KEY not set")
-    
+
     # Skip if running in LOCAL mode (no vector search support)
     convex_url = os.getenv("CONVEX_URL", "")
     if "localhost" in convex_url or "127.0.0.1" in convex_url:
         pytest.skip("Similarity scores require MANAGED mode (LOCAL doesn't support vector search)")
-    
+
     from tests.helpers import generate_embedding, summarize_conversation
-    
+
     # Store some memories first
     conversations = [
         {"user": "The API password for production is SecurePass2024!", "agent": "I'll remember that password securely"},
         {"user": "My email is alex.johnson@techcorp.com", "agent": "I've noted your email address"},
         {"user": "I prefer dark mode theme", "agent": "I'll set dark mode"},
     ]
-    
+
     for conv in conversations:
         await cortex_client.memory.remember(
             RememberParams(
@@ -375,7 +380,7 @@ async def test_openai_similarity_scores_are_realistic(
                 tags=["test"],
             )
         )
-    
+
     # Search with embedding
     results = await cortex_client.memory.search(
         test_memory_space_id,
@@ -385,34 +390,34 @@ async def test_openai_similarity_scores_are_realistic(
             user_id=test_user_id,
         ),
     )
-    
+
     assert len(results) > 0
-    
+
     # Validate scores are in valid range
     results_with_scores = [
-        r for r in results 
+        r for r in results
         if (getattr(r, "_score", None) is not None or getattr(r, "score", None) is not None)
     ]
-    
+
     if len(results_with_scores) == 0:
-        print(f"\n❌ ERROR: No results have similarity scores")
+        print("\n❌ ERROR: No results have similarity scores")
         print(f"   Total results: {len(results)}")
         print(f"   First result has embedding: {results[0].embedding is not None if results else 'N/A'}")
-        print(f"   This suggests vector search is not working properly in managed mode")
-        print(f"   Checking embeddings in stored memories:")
+        print("   This suggests vector search is not working properly in managed mode")
+        print("   Checking embeddings in stored memories:")
         for i, r in enumerate(results[:3]):
             has_embedding = "YES" if r.embedding is not None else "NO"
             print(f"     {i+1}. Memory '{r.memory_id}' has embedding: {has_embedding}")
     assert len(results_with_scores) > 0, "No results have similarity scores - vector search might not be working"
-    
+
     for result in results_with_scores:
         score = getattr(result, "_score", None) or getattr(result, "score", None)
-        
+
         assert score >= 0
         assert score <= 1
         content_preview = result.content[:30] if len(result.content) > 30 else result.content
         print(f"  Memory '{content_preview}...' score: {score:.4f}")
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
 

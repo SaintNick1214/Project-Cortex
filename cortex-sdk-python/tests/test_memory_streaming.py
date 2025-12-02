@@ -4,10 +4,12 @@ Tests for Memory Streaming API - remember_stream()
 Tests the streaming variant of remember() that consumes AsyncIterable streams.
 """
 
-import pytest
 import asyncio
+
+import pytest
+
 from cortex import Cortex, CortexConfig, RememberStreamParams
-from cortex.types import FactRecord, RegisterMemorySpaceParams
+from cortex.types import RegisterMemorySpaceParams
 
 
 # Helper to create async generator for testing
@@ -57,17 +59,18 @@ class TestMemoryStreaming:
     """Test suite for Memory Streaming API."""
 
     @pytest.fixture(autouse=True)
-    async def setup(self):
+    async def setup(self, test_run_context, request):
         """Set up test environment."""
-        import time
-        import random
         import os
+        import random
         # Use environment CONVEX_URL (set by conftest.py for LOCAL/MANAGED mode)
         self.convex_url = os.getenv("CONVEX_URL", "http://127.0.0.1:3210")
         self.cortex = Cortex(CortexConfig(convex_url=self.convex_url))
-        # Use unique ID per test to avoid conflicts
-        self.test_space_id = f"test-streaming-{int(time.time() * 1000)}-{random.randint(1000, 9999)}"
-        
+        # Use ctx for unique ID generation + test name for uniqueness per method
+        self.ctx = test_run_context
+        test_name = request.node.name.replace("test_", "")
+        self.test_space_id = f"{self.ctx.run_id}-stream-{test_name}-{random.randint(1000, 9999)}"
+
         # Register memory space
         await self.cortex.memory_spaces.register(
             RegisterMemorySpaceParams(
@@ -76,9 +79,9 @@ class TestMemoryStreaming:
                 type="custom",
             )
         )
-        
+
         yield
-        
+
         # Cleanup
         try:
             await self.cortex.close()
@@ -87,20 +90,22 @@ class TestMemoryStreaming:
 
     async def test_basic_streaming(self):
         """Test basic streaming with async generator."""
+        conv_id = self.ctx.conversation_id("stream-1")
+
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
-                conversation_id="stream-conv-1",
+                conversation_id=conv_id,
                 user_message="What's the weather?",
                 response_stream=simple_stream(),
-                user_id="user-1",
+                user_id=self.ctx.user_id("user-1"),
                 user_name="TestUser",
             )
         )
 
         assert result.full_response == "The weather is sunny today."
         assert len(result.memories) == 2  # user + agent
-        assert result.conversation["conversationId"] == "stream-conv-1"
+        assert result.conversation["conversationId"] == conv_id
         assert len(result.conversation["messageIds"]) == 2
         assert isinstance(result.facts, list)
 
@@ -109,10 +114,10 @@ class TestMemoryStreaming:
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
-                conversation_id="stream-conv-2",
+                conversation_id=self.ctx.conversation_id("stream-2"),
                 user_message="Say hello",
                 response_stream=multi_chunk_stream(),
-                user_id="user-2",
+                user_id=self.ctx.user_id("user-2"),
                 user_name="MultiUser",
             )
         )
@@ -125,10 +130,10 @@ class TestMemoryStreaming:
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
-                conversation_id="stream-conv-3",
+                conversation_id=self.ctx.conversation_id("stream-3"),
                 user_message="Single chunk test",
                 response_stream=single_chunk_stream(),
-                user_id="user-3",
+                user_id=self.ctx.user_id("user-3"),
                 user_name="SingleUser",
             )
         )
@@ -141,10 +146,10 @@ class TestMemoryStreaming:
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
-                conversation_id="stream-conv-4",
+                conversation_id=self.ctx.conversation_id("stream-4"),
                 user_message="Delayed test",
                 response_stream=delayed_stream(),
-                user_id="user-4",
+                user_id=self.ctx.user_id("user-4"),
                 user_name="DelayUser",
             )
         )
@@ -165,7 +170,7 @@ class TestMemoryStreaming:
                     user_name="EmptyUser",
                 )
             )
-        
+
         assert "produced no content" in str(exc_info.value)
 
     async def test_whitespace_stream_error(self):
@@ -181,13 +186,13 @@ class TestMemoryStreaming:
                     user_name="WhitespaceUser",
                 )
             )
-        
+
         assert "produced no content" in str(exc_info.value)
 
     async def test_invalid_stream_type(self):
         """Test that non-iterable raises error."""
         from cortex.memory.validators import MemoryValidationError
-        
+
         with pytest.raises(MemoryValidationError) as exc_info:
             await self.cortex.memory.remember_stream(
                 RememberStreamParams(
@@ -199,13 +204,13 @@ class TestMemoryStreaming:
                     user_name="InvalidUser",
                 )
             )
-        
+
         # Validation catches invalid stream type
         assert "AsyncIterable" in str(exc_info.value) or "__aiter__" in str(exc_info.value)
 
     async def test_stream_with_fact_extraction(self):
         """Test streaming with fact extraction."""
-        
+
         async def fact_extractor(user_msg: str, agent_resp: str):
             """Extract facts from the conversation."""
             if "favorite color" in agent_resp.lower():
@@ -222,9 +227,11 @@ class TestMemoryStreaming:
             return []
 
         async def color_stream():
+            # Response with meaningful content (not just acknowledgment)
             yield "Your favorite color "
-            yield "is blue, "
-            yield "noted!"
+            yield "is blue - "
+            yield "I'll use this preference "
+            yield "for future recommendations"
 
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
@@ -238,7 +245,7 @@ class TestMemoryStreaming:
             )
         )
 
-        assert result.full_response == "Your favorite color is blue, noted!"
+        assert result.full_response == "Your favorite color is blue - I'll use this preference for future recommendations"
         assert len(result.memories) == 2
         assert len(result.facts) == 1
         assert "blue" in result.facts[0].fact
@@ -304,28 +311,28 @@ class TestMemoryStreaming:
         assert hasattr(result, "memories")
         assert hasattr(result, "facts")
         assert hasattr(result, "full_response")
-        
+
         # Check types
         assert isinstance(result.conversation, dict)
         assert isinstance(result.memories, list)
         assert isinstance(result.facts, list)
         assert isinstance(result.full_response, str)
-        
+
         # Check conversation structure
         assert "conversationId" in result.conversation
         assert "messageIds" in result.conversation
 
     async def test_stream_verification_in_database(self):
         """Test that streamed content is actually stored and retrievable."""
-        conv_id = "stream-conv-verify"
-        
-        result = await self.cortex.memory.remember_stream(
+        conv_id = self.ctx.conversation_id("verify")
+
+        await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
                 conversation_id=conv_id,
                 user_message="Verify this",
                 response_stream=simple_stream(),
-                user_id="user-verify",
+                user_id=self.ctx.user_id("user-verify"),
                 user_name="VerifyUser",
             )
         )
@@ -335,7 +342,7 @@ class TestMemoryStreaming:
         assert conversation is not None
         assert conversation.conversation_id == conv_id
         assert len(conversation.messages) == 2
-        
+
         # Verify message content
         agent_message = conversation.messages[1]
         content = agent_message.get("content") if isinstance(agent_message, dict) else agent_message.content
@@ -356,15 +363,15 @@ class TestMemoryStreamingEdgeCases:
     @pytest.fixture(autouse=True)
     async def setup(self):
         """Set up test environment."""
-        import time
-        import random
         import os
+        import random
+        import time
         # Use environment CONVEX_URL (set by conftest.py for LOCAL/MANAGED mode)
         self.convex_url = os.getenv("CONVEX_URL", "http://127.0.0.1:3210")
         self.cortex = Cortex(CortexConfig(convex_url=self.convex_url))
         # Use unique ID per test to avoid conflicts
         self.test_space_id = f"test-streaming-edge-{int(time.time() * 1000)}-{random.randint(1000, 9999)}"
-        
+
         await self.cortex.memory_spaces.register(
             RegisterMemorySpaceParams(
                 memory_space_id=self.test_space_id,
@@ -372,9 +379,9 @@ class TestMemoryStreamingEdgeCases:
                 type="custom",
             )
         )
-        
+
         yield
-        
+
         try:
             await self.cortex.close()
         except:
@@ -382,7 +389,7 @@ class TestMemoryStreamingEdgeCases:
 
     async def test_unicode_in_stream(self):
         """Test that unicode characters work correctly."""
-        
+
         async def unicode_stream():
             yield "Hello "
             yield "世界 "
@@ -405,7 +412,7 @@ class TestMemoryStreamingEdgeCases:
 
     async def test_large_stream(self):
         """Test streaming with large content."""
-        
+
         async def large_stream():
             # Generate ~10KB of text
             for i in range(1000):
@@ -429,7 +436,7 @@ class TestMemoryStreamingEdgeCases:
 
     async def test_none_chunks_in_stream(self):
         """Test that None chunks are handled correctly."""
-        
+
         async def none_chunk_stream():
             yield "Start "
             yield None  # Should be skipped

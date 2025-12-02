@@ -7,32 +7,44 @@
  * - Fact storage and versioning
  * - Graph-like relationships
  * - Memory space isolation
+ *
+ * PARALLEL-SAFE: Uses TestRunContext for isolated test data
  */
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
-import { TestCleanup } from "./helpers";
+import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 
 describe("Facts API (Layer 3)", () => {
+  // Create unique test run context for parallel-safe execution
+  const ctx = createNamedTestRunContext("facts");
+
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let scopedCleanup: ScopedCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-  const TEST_MEMSPACE_ID = "memspace-facts-test";
+
+  // Use context generator for test memory space ID
+  const TEST_MEMSPACE_ID = ctx.memorySpaceId("test");
 
   beforeAll(async () => {
+    console.log(`\n🧪 Facts API Tests - Run ID: ${ctx.runId}\n`);
+
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    cleanup = new TestCleanup(client);
+    scopedCleanup = new ScopedCleanup(client, ctx);
 
-    // Clean all test data before tests
-    await cleanup.purgeAll();
+    // Note: No global purge - test data is isolated by prefix
+    console.log("✅ Test isolation setup complete\n");
   });
 
   afterAll(async () => {
-    await cleanup.purgeAll();
+    // Clean up only data created by this test run
+    console.log(`\n🧹 Cleaning up test run ${ctx.runId}...`);
+    await scopedCleanup.cleanupAll();
     await client.close();
+    console.log(`✅ Test run ${ctx.runId} cleanup complete\n`);
   });
 
   describe("store()", () => {
@@ -1609,9 +1621,9 @@ describe("Facts API (Layer 3)", () => {
       });
 
       it("should throw on missing factId", async () => {
-        await expect(
-          cortex.facts.get(TEST_MEMSPACE_ID, ""),
-        ).rejects.toThrow("factId is required and cannot be empty");
+        await expect(cortex.facts.get(TEST_MEMSPACE_ID, "")).rejects.toThrow(
+          "factId is required and cannot be empty",
+        );
       });
 
       it("should throw on invalid factId format", async () => {
@@ -1623,9 +1635,9 @@ describe("Facts API (Layer 3)", () => {
 
     describe("list() validation", () => {
       it("should throw on missing memorySpaceId", async () => {
-        await expect(
-          cortex.facts.list({ memorySpaceId: "" }),
-        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+        await expect(cortex.facts.list({ memorySpaceId: "" })).rejects.toThrow(
+          "memorySpaceId is required and cannot be empty",
+        );
       });
 
       it("should throw on invalid factType", async () => {
@@ -1738,9 +1750,9 @@ describe("Facts API (Layer 3)", () => {
 
     describe("count() validation", () => {
       it("should throw on missing memorySpaceId", async () => {
-        await expect(
-          cortex.facts.count({ memorySpaceId: "" }),
-        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+        await expect(cortex.facts.count({ memorySpaceId: "" })).rejects.toThrow(
+          "memorySpaceId is required and cannot be empty",
+        );
       });
 
       it("should throw on invalid factType", async () => {
@@ -1764,15 +1776,15 @@ describe("Facts API (Layer 3)", () => {
 
     describe("search() validation", () => {
       it("should throw on missing memorySpaceId", async () => {
-        await expect(
-          cortex.facts.search("", "test query"),
-        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+        await expect(cortex.facts.search("", "test query")).rejects.toThrow(
+          "memorySpaceId is required and cannot be empty",
+        );
       });
 
       it("should throw on missing query", async () => {
-        await expect(
-          cortex.facts.search(TEST_MEMSPACE_ID, ""),
-        ).rejects.toThrow("query is required and cannot be empty");
+        await expect(cortex.facts.search(TEST_MEMSPACE_ID, "")).rejects.toThrow(
+          "query is required and cannot be empty",
+        );
       });
 
       it("should throw on invalid options", async () => {
@@ -1844,9 +1856,9 @@ describe("Facts API (Layer 3)", () => {
       });
 
       it("should throw on missing factId", async () => {
-        await expect(
-          cortex.facts.delete(TEST_MEMSPACE_ID, ""),
-        ).rejects.toThrow("factId is required and cannot be empty");
+        await expect(cortex.facts.delete(TEST_MEMSPACE_ID, "")).rejects.toThrow(
+          "factId is required and cannot be empty",
+        );
       });
 
       it("should throw on invalid factId format", async () => {
@@ -1858,9 +1870,9 @@ describe("Facts API (Layer 3)", () => {
 
     describe("getHistory() validation", () => {
       it("should throw on missing memorySpaceId", async () => {
-        await expect(
-          cortex.facts.getHistory("", "fact-123"),
-        ).rejects.toThrow("memorySpaceId is required and cannot be empty");
+        await expect(cortex.facts.getHistory("", "fact-123")).rejects.toThrow(
+          "memorySpaceId is required and cannot be empty",
+        );
       });
 
       it("should throw on missing factId", async () => {

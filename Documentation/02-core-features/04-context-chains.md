@@ -880,8 +880,7 @@ await cortex.contexts.deleteMany({
 
 - **[A2A Communication](./05-a2a-communication.md)** - Agent-to-agent messaging
 - **[API Reference](../03-api-reference/05-context-operations.md)** - Context API docs
-- **[Hierarchical Agents Recipe](../06-recipes/05-hierarchical-agents.md)** - Real implementation
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

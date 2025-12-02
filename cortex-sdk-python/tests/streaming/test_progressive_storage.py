@@ -6,9 +6,9 @@ Verifies partial memory creation, updates, and finalization.
 """
 
 import asyncio
-import os
-import pytest
 from unittest.mock import AsyncMock, MagicMock
+
+import pytest
 
 from cortex.memory.streaming.progressive_storage_handler import (
     ProgressiveStorageHandler,
@@ -145,7 +145,7 @@ class TestProgressiveStorageHandler:
         # CRITICAL: Validate update history
         history = handler.get_update_history()
         assert len(history) == 3, f"Expected 3 updates in history, got {len(history)}"
-        
+
         # Validate each update record
         for i, update in enumerate(history):
             assert update.memory_id == "partial-mem-123"
@@ -169,7 +169,7 @@ class TestProgressiveStorageHandler:
         )
 
         await handler.initialize_partial_memory(user_message="Test")
-        
+
         # Finalize
         await handler.finalize_memory("Complete content", embedding=[0.1, 0.2, 0.3])
 
@@ -218,7 +218,7 @@ class TestProgressiveStorageHandler:
         Validates: Timing-based update decisions
         """
         mock_client = MagicMock()
-        
+
         handler = ProgressiveStorageHandler(
             client=mock_client,
             memory_space_id="test-space",

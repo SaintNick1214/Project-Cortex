@@ -5,9 +5,10 @@ These tests verify the SDK can be imported and basic connections work.
 Run these first to validate your setup.
 """
 
-import pytest
 import os
 from pathlib import Path
+
+import pytest
 from dotenv import load_dotenv
 
 # Load .env.local
@@ -21,7 +22,7 @@ def test_environment_variables():
     """Test that environment variables are loaded."""
     convex_url = os.getenv("CONVEX_URL")
     print(f"\nCONVEX_URL: {convex_url}")
-    
+
     assert convex_url is not None, (
         "CONVEX_URL not set. Check that .env.local exists in project root "
         f"({project_root}/.env.local)"
@@ -33,14 +34,14 @@ def test_imports():
     """Test that all main modules can be imported."""
     try:
         from cortex import (
+            A2ASendParams,
+            ContextInput,
             Cortex,
             CortexConfig,
+            DeleteUserOptions,
+            FactRecord,
             RememberParams,
             SearchOptions,
-            DeleteUserOptions,
-            ContextInput,
-            FactRecord,
-            A2ASendParams,
         )
         print("✅ All main imports successful")
     except ImportError as e:
@@ -63,21 +64,21 @@ def test_convex_client_import():
 async def test_cortex_initialization():
     """Test that Cortex can be initialized."""
     from cortex import Cortex, CortexConfig
-    
+
     convex_url = os.getenv("CONVEX_URL")
-    
+
     try:
         cortex = Cortex(CortexConfig(convex_url=convex_url))
-        
+
         # Verify basic structure
         assert cortex.client is not None
         assert cortex.memory is not None
         assert cortex.conversations is not None
         assert cortex.users is not None
-        
+
         await cortex.close()
         print("✅ Cortex initialized and closed successfully")
-        
+
     except Exception as e:
         pytest.fail(f"Cortex initialization failed: {e}")
 
@@ -86,25 +87,25 @@ async def test_cortex_initialization():
 async def test_convex_connection():
     """Test basic connection to Convex backend."""
     from cortex import Cortex, CortexConfig
-    
+
     convex_url = os.getenv("CONVEX_URL")
     cortex = Cortex(CortexConfig(convex_url=convex_url))
-    
+
     try:
         # Try a simple query - list conversations
         # This should work even if no conversations exist (returns empty list)
         result = await cortex.conversations.list(limit=1)
-        
-        print(f"✅ Convex connection successful")
+
+        print("✅ Convex connection successful")
         print(f"   Conversations found: {len(result)}")
-        
+
         assert isinstance(result, list)
-        
+
     except Exception as e:
         print(f"❌ Convex connection failed: {e}")
         print(f"   Error type: {type(e).__name__}")
         print(f"   Make sure Convex backend is running at: {convex_url}")
-        print(f"   Start with: npm run dev:local (from project root)")
+        print("   Start with: npm run dev:local (from project root)")
         raise
     finally:
         await cortex.close()

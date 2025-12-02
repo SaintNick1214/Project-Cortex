@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cortex-memory"
-version = "0.12.0"
+version = "0.16.0"
 description = "AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management"
 readme = "README.md"
 authors = [{name = "Saint Nick LLC", email = "support@cortexmemory.dev"}]
@@ -103,4 +103,16 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W"]
 # Relax line length and bare except for SDK wrapper code
-ignore = ["E501", "E722"]  # E501: line-too-long, E722: bare-except (acceptable for SDK error handling)
+ignore = [
+    "E501",  # line-too-long (handled by formatter)
+    "E722",  # bare-except (acceptable for SDK error handling)
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Test files have special patterns that are acceptable
+"tests/*" = [
+    "E402",  # Module imports not at top - expected with pytest.importorskip()
+    "E702",  # Multiple statements on one line - parametrized tests
+    "F401",  # Unused imports - import validation tests
+    "F841",  # Unused variables - test scaffolding
+]

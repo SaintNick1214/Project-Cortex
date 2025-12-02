@@ -18,7 +18,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 from cortex.graph.adapters.cypher import CypherGraphAdapter
 from cortex.types import GraphConnectionConfig
 
-
 # Configuration
 NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
 NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
@@ -32,7 +31,7 @@ MEMGRAPH_PASSWORD = os.getenv("MEMGRAPH_PASSWORD", "")
 async def clear_neo4j():
     """Clear Neo4j database and validate"""
     print("🗑️  Clearing Neo4j database...")
-    
+
     adapter = CypherGraphAdapter()
     await adapter.connect(
         GraphConnectionConfig(uri=NEO4J_URI, username=NEO4J_USER, password=NEO4J_PASSWORD)
@@ -59,7 +58,7 @@ async def clear_neo4j():
 async def clear_memgraph():
     """Clear Memgraph database and validate"""
     print("🗑️  Clearing Memgraph database...")
-    
+
     adapter = CypherGraphAdapter()
     await adapter.connect(
         GraphConnectionConfig(uri=MEMGRAPH_URI, username=MEMGRAPH_USER, password=MEMGRAPH_PASSWORD)
@@ -95,13 +94,13 @@ async def main():
 
     print()
     print("=" * 70)
-    
+
     if neo4j_success and memgraph_success:
         print("✅ ALL DATABASES CLEARED SUCCESSFULLY")
     else:
         print("❌ SOME DATABASES FAILED TO CLEAR")
         sys.exit(1)
-    
+
     print("=" * 70)
 
 

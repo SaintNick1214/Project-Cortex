@@ -10,9 +10,8 @@ Tests all valid state transitions across stateful entities to ensure:
 """
 
 import pytest
-from cortex import Cortex
-from cortex.types import ContextInput, RegisterMemorySpaceParams, AgentRegistration
 
+from cortex.types import AgentRegistration, ContextInput, RegisterMemorySpaceParams
 
 # State definitions from schema
 CONTEXT_STATUSES = ["active", "completed", "cancelled", "blocked"]
@@ -41,15 +40,16 @@ AGENT_TRANSITIONS = [
 ]
 
 
-@pytest.fixture(scope="module")
-def base_id():
-    import time
-    return f"state-test-{int(time.time() * 1000)}"
+@pytest.fixture(scope="function")
+def base_id(ctx):
+    """Generate unique base ID for state transition tests."""
+    return ctx.memory_space_id("state-test")
 
 
-@pytest.fixture(scope="module")
-def test_user_id():
-    return "state-test-user"
+@pytest.fixture(scope="function")
+def test_user_id(ctx):
+    """Generate unique user ID for state transition tests."""
+    return ctx.user_id("state-test-user")
 
 
 class TestContextStateTransitions:
@@ -369,27 +369,33 @@ class TestMemorySpaceStateTransitions:
         import time
         space_id = f"{base_id}-space-count-{int(time.time() * 1000)}"
 
-        # Get initial counts
-        before_active = await cortex_client.memory_spaces.count(status="active")
-        before_archived = await cortex_client.memory_spaces.count(status="archived")
-
-        # Register and archive
+        # Register space
         await cortex_client.memory_spaces.register(
             RegisterMemorySpaceParams(
                 memory_space_id=space_id, type="project", name="Count test"
             )
         )
+
+        # Verify space is active
+        before_archive = await cortex_client.memory_spaces.get(space_id)
+        assert before_archive.status == "active"
+
+        # Archive it
         await cortex_client.memory_spaces.archive(space_id)
 
-        # Get final counts
-        after_active = await cortex_client.memory_spaces.count(status="active")
-        after_archived = await cortex_client.memory_spaces.count(status="archived")
+        # Verify space is now archived (test-specific verification)
+        after_archive = await cortex_client.memory_spaces.get(space_id)
+        assert after_archive.status == "archived"
 
-        # Active unchanged (added then removed)
-        assert after_active == before_active
+        # Verify it appears in archived list
+        archived_list = await cortex_client.memory_spaces.list(status="archived")
+        archived_spaces = archived_list if isinstance(archived_list, list) else archived_list.get("spaces", [])
+        assert any(s.memory_space_id == space_id for s in archived_spaces)
 
-        # Archived increased
-        assert after_archived == before_archived + 1
+        # Verify it does NOT appear in active list
+        active_list = await cortex_client.memory_spaces.list(status="active")
+        active_spaces = active_list if isinstance(active_list, list) else active_list.get("spaces", [])
+        assert not any(s.memory_space_id == space_id for s in active_spaces)
 
     async def test_metadata_preserved_through_archive_cycle(
         self, cortex_client, base_id
@@ -692,7 +698,7 @@ class TestCrossEntityStateEffects:
         completed_list = completed_list_result.get("contexts", [])
         blocked_list_result = await cortex_client.contexts.list(memory_space_id=space_id, status="blocked")
         blocked_list = blocked_list_result.get("contexts", [])
-        
+
         assert any(c.id == active.id for c in active_list)
         assert any(c.id == completed.id for c in completed_list)
         assert any(c.id == blocked.id for c in blocked_list)
@@ -738,8 +744,8 @@ class TestStateTransitionEdgeCases:
         self, cortex_client, base_id, test_user_id
     ):
         """Test concurrent transitions handled correctly."""
-        import time
         import asyncio
+        import time
         space_id = f"{base_id}-concurrent-{int(time.time() * 1000)}"
         user_id = "concurrent-user"
 
@@ -829,6 +835,7 @@ class TestStateTransitionEdgeCases:
     ):
         """Test archived space with data can be reactivated with data intact."""
         import time
+
         from cortex.types import CreateConversationInput, StoreMemoryInput
         space_id = f"{base_id}-data-cycle-{int(time.time() * 1000)}"
 
@@ -911,8 +918,8 @@ class TestBatchStateTransitions:
         self, cortex_client, base_id, test_user_id
     ):
         """Test multiple contexts can transition simultaneously."""
-        import time
         import asyncio
+        import time
         space_id = f"{base_id}-batch-{int(time.time() * 1000)}"
         user_id = "batch-user"
 
@@ -951,7 +958,6 @@ class TestBatchStateTransitions:
     async def test_multiple_spaces_transition_independently(self, cortex_client, base_id):
         """Test transitioning multiple spaces independently."""
         import time
-        import asyncio
 
         spaces = []
         for i in range(3):

@@ -258,3 +258,37 @@ export const clearSyncedItems = mutation({
     return { deleted: items.length };
   },
 });
+
+/**
+ * Purge all graph sync queue items (TEST/DEV ONLY)
+ */
+export const purgeAll = mutation({
+  args: {},
+  handler: async (ctx) => {
+    // Safety check: Only allow in test/dev environments
+    const siteUrl = process.env.CONVEX_SITE_URL || "";
+    const isLocal =
+      siteUrl.includes("localhost") || siteUrl.includes("127.0.0.1");
+    const isDevDeployment =
+      siteUrl.includes(".convex.site") ||
+      siteUrl.includes("dev-") ||
+      siteUrl.includes("convex.cloud");
+    const isTestEnv =
+      process.env.NODE_ENV === "test" ||
+      process.env.CONVEX_ENVIRONMENT === "test";
+
+    if (!isLocal && !isDevDeployment && !isTestEnv) {
+      throw new Error(
+        "PURGE_DISABLED_IN_PRODUCTION: purgeAll is only available in test/dev environments.",
+      );
+    }
+
+    const allItems = await ctx.db.query("graphSyncQueue").collect();
+
+    for (const item of allItems) {
+      await ctx.db.delete(item._id);
+    }
+
+    return { deleted: allItems.length };
+  },
+});

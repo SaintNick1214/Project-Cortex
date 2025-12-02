@@ -1,4 +1,4 @@
-.PHONY: test test-local test-managed test-both install dev clean
+.PHONY: test test-local test-managed test-both test-stress install dev clean
 
 # Default test target - auto-detects and runs appropriate suite(s)
 # Mirrors TypeScript SDK's "npm test" behavior
@@ -16,6 +16,11 @@ test-managed:
 # Explicitly run both suites
 test-both:
 	@python scripts/run-python-tests.py --mode=both
+
+# Run manual stress tests (NOT for CI - tests resilience under real load)
+test-stress:
+	@echo "⚠️  Running MANUAL stress tests - this will create significant database load!"
+	@python tests/resilience_stress_manual.py
 
 # Install package in development mode
 install:
@@ -41,6 +46,7 @@ help:
 	@echo "  make test-local    - Run LOCAL tests only (like 'npm run test:local')"
 	@echo "  make test-managed  - Run MANAGED tests only (like 'npm run test:managed')"
 	@echo "  make test-both     - Explicitly run BOTH suites (like 'npm run test:both')"
+	@echo "  make test-stress   - Manual stress tests (NOT for CI) - tests resilience under real load"
 	@echo ""
 	@echo "  make install       - Install package in development mode"
 	@echo "  make dev           - Create venv and install (first-time setup)"

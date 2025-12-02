@@ -4,8 +4,9 @@ Simple Chatbot Example
 Demonstrates basic Cortex usage for a simple chatbot with memory.
 """
 
-import os
 import asyncio
+import os
+
 from cortex import (
     Cortex,
     CortexConfig,

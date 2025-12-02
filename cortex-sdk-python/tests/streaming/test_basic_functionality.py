@@ -6,10 +6,15 @@ These tests validate the implementation is correct at a basic level.
 """
 
 import asyncio
+
 import pytest
+
 from cortex.memory.streaming.stream_metrics import MetricsCollector
-from cortex.memory.streaming.stream_processor import StreamProcessor, create_stream_context
-from cortex.memory.streaming_types import StreamingOptions, StreamHooks
+from cortex.memory.streaming.stream_processor import (
+    StreamProcessor,
+    create_stream_context,
+)
+from cortex.memory.streaming_types import StreamHooks, StreamingOptions
 
 
 async def simple_stream():
@@ -33,10 +38,10 @@ class TestBasicFunctionality:
             user_id="user",
             user_name="User",
         )
-        
+
         processor = StreamProcessor(context)
         result = await processor.process_stream(simple_stream())
-        
+
         assert result == "Hello World"
         assert processor.get_chunk_number() == 3
 
@@ -49,21 +54,21 @@ class TestBasicFunctionality:
             user_id="user",
             user_name="User",
         )
-        
+
         chunk_calls = []
         complete_calls = []
-        
+
         def on_chunk(event):
             chunk_calls.append(event)
-        
+
         def on_complete(event):
             complete_calls.append(event)
-        
+
         hooks = StreamHooks(on_chunk=on_chunk, on_complete=on_complete)
         processor = StreamProcessor(context, hooks)
-        
+
         result = await processor.process_stream(simple_stream())
-        
+
         # CRITICAL: Hooks should be called
         assert len(chunk_calls) == 3, f"Expected 3 chunk calls, got {len(chunk_calls)}"
         assert len(complete_calls) == 1, f"Expected 1 complete call, got {len(complete_calls)}"
@@ -72,12 +77,12 @@ class TestBasicFunctionality:
     def test_metrics_collector_basics(self):
         """Test: MetricsCollector tracks basic metrics"""
         collector = MetricsCollector()
-        
+
         collector.record_chunk(100)
         collector.record_chunk(200)
-        
+
         snapshot = collector.get_snapshot()
-        
+
         assert snapshot.total_chunks == 2
         assert snapshot.total_bytes == 300
         assert snapshot.average_chunk_size == 150.0
@@ -85,7 +90,7 @@ class TestBasicFunctionality:
     def test_streaming_options_defaults(self):
         """Test: StreamingOptions has sensible defaults"""
         opts = StreamingOptions()
-        
+
         assert opts.sync_to_graph is True  # Should default to True
         assert opts.progressive_graph_sync is False  # Should default to False
         assert opts.store_partial_response is False
@@ -98,7 +103,7 @@ class TestBasicFunctionality:
             "store_partial_response": True,
             "progressive_fact_extraction": True,
         })
-        
+
         assert opts.sync_to_graph is True
         assert opts.store_partial_response is True
         assert opts.progressive_fact_extraction is True

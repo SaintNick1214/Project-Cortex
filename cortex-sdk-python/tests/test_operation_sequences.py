@@ -8,17 +8,17 @@ Tests multi-step operation sequences to ensure state consistency at EACH step:
 4. Concurrent sequences don't corrupt state
 """
 
-import pytest
 import asyncio
+
 from cortex.types import (
-    CreateConversationInput,
-    StoreMemoryInput,
-    StoreFactParams,
-    ContextInput,
-    RegisterMemorySpaceParams,
     AddMessageInput,
-    RememberParams,
+    ContextInput,
+    CreateConversationInput,
     DeleteUserOptions,
+    RegisterMemorySpaceParams,
+    RememberParams,
+    StoreFactParams,
+    StoreMemoryInput,
 )
 
 
@@ -99,7 +99,7 @@ class TestVectorMemorySequences:
         assert any(m.memory_id == mem1.memory_id for m in list1)
 
         # Create another
-        mem2 = await cortex_client.vector.store(
+        await cortex_client.vector.store(
             space_id,
             StoreMemoryInput(
                 content="Memory 2",
@@ -412,7 +412,7 @@ class TestMutableSequences:
         # STEP 2: Get (validate set)
         after_set = await cortex_client.mutable.get(ns, key)
         # Mutable returns record, extract value if needed
-        value = after_set.get("value") or after_set
+        after_set.get("value") or after_set
         # Basic validation that it was set
         assert after_set is not None
 
@@ -464,7 +464,6 @@ class TestMemorySpaceSequences:
         # STEP 2-3: Participant management
         # Note: updateParticipants not implemented in backend - skip participant tests
         after_add = space  # Skip add
-        after_remove = space  # Skip remove
         assert len(after_add.participants) >= 1
 
         # STEP 4: Delete
@@ -512,9 +511,9 @@ class TestUserProfileSequences:
 class TestConcurrentOperationSequences:
     """Concurrent operation sequence tests."""
 
-    async def test_parallel_creates(self, cortex_client):
+    async def test_parallel_creates(self, cortex_client, ctx):
         """Test parallel creates don't corrupt state."""
-        space_id = generate_test_id("seq-parallel-")
+        space_id = ctx.memory_space_id("seq-parallel")
 
         # Create 20 memories in parallel
         tasks = [
@@ -765,7 +764,6 @@ class TestComplexWorkflows:
 
     async def test_complete_user_journey(self, cortex_client):
         """Test complete user journey maintains consistency."""
-        import time
         space_id = generate_test_id("seq-journey-")
         user_id = "journey-user"
 

@@ -26,12 +26,27 @@ import {
   validateName,
   validateUpdateParams,
 } from "./validators";
+import type { ResilienceLayer } from "../resilience";
 
 export class MemorySpacesAPI {
   constructor(
     private client: ConvexClient,
     private graphAdapter?: GraphAdapter,
+    private resilience?: ResilienceLayer,
   ) {}
+
+  /**
+   * Execute an operation through the resilience layer (if available)
+   */
+  private async executeWithResilience<T>(
+    operation: () => Promise<T>,
+    operationName: string,
+  ): Promise<T> {
+    if (this.resilience) {
+      return this.resilience.execute(operation, operationName);
+    }
+    return operation();
+  }
 
   /**
    * Register a new memory space
@@ -55,6 +70,8 @@ export class MemorySpacesAPI {
   ): Promise<MemorySpace> {
     // Validate required fields
     validateMemorySpaceId(params.memorySpaceId);
+    // Runtime validation for potentially untrusted external input
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!params.type) {
       throw new MemorySpaceValidationError(
         "type is required",

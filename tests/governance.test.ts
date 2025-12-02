@@ -7,10 +7,14 @@
 import { Cortex } from "../src";
 import { TestCleanup } from "./helpers/cleanup";
 import type { GovernancePolicy, ComplianceTemplate } from "../src/types";
+import { createTestRunContext } from "./helpers/isolation";
+
+// Create test run context for parallel execution isolation
+const _ctx = createTestRunContext();
 
 describe("Governance API", () => {
   let cortex: Cortex;
-  let cleanup: TestCleanup;
+  let _cleanup: TestCleanup;
 
   beforeAll(() => {
     if (!process.env.CONVEX_URL) {
@@ -18,11 +22,11 @@ describe("Governance API", () => {
     }
 
     cortex = new Cortex({ convexUrl: process.env.CONVEX_URL });
-    cleanup = new TestCleanup(cortex.getClient());
+    _cleanup = new TestCleanup(cortex.getClient());
   });
 
   afterAll(async () => {
-    await cleanup.purgeAll();
+    // NOTE: Removed purgeAll() for parallel execution compatibility.
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -218,7 +222,9 @@ describe("Governance API", () => {
 
         await expect(
           cortex.governance.setPolicy(policy as any),
-        ).rejects.toThrow("Policy must specify either organizationId or memorySpaceId");
+        ).rejects.toThrow(
+          "Policy must specify either organizationId or memorySpaceId",
+        );
       });
 
       it("should throw on invalid period format", async () => {
@@ -251,9 +257,9 @@ describe("Governance API", () => {
           },
         };
 
-        await expect(
-          cortex.governance.setPolicy(policy),
-        ).rejects.toThrow("Invalid period format");
+        await expect(cortex.governance.setPolicy(policy)).rejects.toThrow(
+          "Invalid period format",
+        );
       });
 
       it("should throw on overlapping importance ranges", async () => {
@@ -289,9 +295,9 @@ describe("Governance API", () => {
           },
         };
 
-        await expect(
-          cortex.governance.setPolicy(policy),
-        ).rejects.toThrow("overlaps with range");
+        await expect(cortex.governance.setPolicy(policy)).rejects.toThrow(
+          "overlaps with range",
+        );
       });
 
       it("should throw on invalid version count", async () => {
@@ -324,9 +330,9 @@ describe("Governance API", () => {
           },
         };
 
-        await expect(
-          cortex.governance.setPolicy(policy),
-        ).rejects.toThrow("must be >= -1");
+        await expect(cortex.governance.setPolicy(policy)).rejects.toThrow(
+          "must be >= -1",
+        );
       });
 
       it("should throw on invalid importance range bounds", async () => {
@@ -361,9 +367,9 @@ describe("Governance API", () => {
           },
         };
 
-        await expect(
-          cortex.governance.setPolicy(policy),
-        ).rejects.toThrow("must be between 0 and 100");
+        await expect(cortex.governance.setPolicy(policy)).rejects.toThrow(
+          "must be between 0 and 100",
+        );
       });
     });
 
@@ -383,7 +389,9 @@ describe("Governance API", () => {
           cortex.governance.enforce({
             scope: {}, // Empty scope
           }),
-        ).rejects.toThrow("must include either organizationId or memorySpaceId");
+        ).rejects.toThrow(
+          "must include either organizationId or memorySpaceId",
+        );
       });
 
       it("should throw on invalid layer names", async () => {
@@ -570,7 +578,9 @@ describe("Governance API", () => {
           cortex.governance.getPolicy({
             organizationId: "",
           }),
-        ).rejects.toThrow("must include either organizationId or memorySpaceId");
+        ).rejects.toThrow(
+          "must include either organizationId or memorySpaceId",
+        );
       });
 
       it("should throw on empty memorySpaceId", async () => {
@@ -578,7 +588,9 @@ describe("Governance API", () => {
           cortex.governance.getPolicy({
             memorySpaceId: "   ",
           }),
-        ).rejects.toThrow("must include either organizationId or memorySpaceId");
+        ).rejects.toThrow(
+          "must include either organizationId or memorySpaceId",
+        );
       });
     });
   });

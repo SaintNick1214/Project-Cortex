@@ -9,6 +9,7 @@ Critical: These tests perform real data checks against Neo4j and Memgraph.
 
 import asyncio
 import os
+
 import pytest
 
 # Check if graph testing is enabled FIRST (before importing neo4j-dependent modules)
@@ -22,9 +23,8 @@ if not GRAPH_TESTING_ENABLED:
 neo4j = pytest.importorskip("neo4j", reason="neo4j not installed (install with: pip install cortex-memory[graph])")
 
 from cortex import Cortex
-from cortex.types import GraphConnectionConfig, RememberParams
 from cortex.graph.adapters.cypher import CypherGraphAdapter
-
+from cortex.types import GraphConnectionConfig, RememberParams
 
 # Test configuration
 NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
@@ -103,7 +103,7 @@ class TestGraphDataValidation:
         """
         # Register agent with graph sync
         agent_id = f"test-agent-{asyncio.get_event_loop().time()}"
-        
+
         from cortex import AgentRegistration
         await cortex_client.agents.register(
             AgentRegistration(
@@ -135,7 +135,7 @@ class TestGraphDataValidation:
         """
         # Register agent
         agent_id = f"test-agent-memgraph-{asyncio.get_event_loop().time()}"
-        
+
         from cortex import AgentRegistration
         await cortex_client_memgraph.agents.register(
             AgentRegistration(
@@ -156,7 +156,7 @@ class TestGraphDataValidation:
         # Validate Memgraph returns integer ID correctly
         assert node.id is not None
         assert isinstance(node.id, str)  # Should be string representation of int
-        
+
         # Validate properties
         assert node.properties["agentId"] == agent_id
 
@@ -235,7 +235,7 @@ class TestGraphDataValidation:
 
         # Create memory (creates edges)
         from cortex import RememberOptions
-        result = await cortex_client.memory.remember(
+        await cortex_client.memory.remember(
             RememberParams(
                 memory_space_id=memory_space_id,
                 conversation_id=conversation_id,
@@ -283,7 +283,7 @@ class TestGraphDataValidation:
         from cortex.types import StoreFactParams
 
         memory_space_id = f"test-space-fact-{asyncio.get_event_loop().time()}"
-        
+
         # Store fact
         from cortex.types import StoreFactOptions
         fact = await cortex_client.facts.store(
@@ -319,37 +319,39 @@ class TestGraphDataValidation:
 
 
 @pytest.mark.asyncio
+@pytest.mark.skip(reason="Utility function - not safe for parallel execution. Run manually: pytest -k test_clear_neo4j_database --run-utilities")
 async def test_clear_neo4j_database():
-    """Utility: Clear Neo4j test database"""
+    """Utility: Clear Neo4j test database - SKIP IN PARALLEL RUNS"""
     adapter = CypherGraphAdapter()
     await adapter.connect(
         GraphConnectionConfig(uri=NEO4J_URI, username=NEO4J_USER, password=NEO4J_PASSWORD)
     )
-    
+
     await adapter.query("MATCH (n) DETACH DELETE n")
-    
+
     # Verify empty
     result = await adapter.query("MATCH (n) RETURN count(n) as count")
     assert result.records[0]["count"] == 0, "Neo4j not empty after clear"
-    
+
     await adapter.disconnect()
     print("✅ Neo4j database cleared")
 
 
 @pytest.mark.asyncio
+@pytest.mark.skip(reason="Utility function - not safe for parallel execution. Run manually: pytest -k test_clear_memgraph_database --run-utilities")
 async def test_clear_memgraph_database():
-    """Utility: Clear Memgraph test database"""
+    """Utility: Clear Memgraph test database - SKIP IN PARALLEL RUNS"""
     adapter = CypherGraphAdapter()
     await adapter.connect(
         GraphConnectionConfig(uri=MEMGRAPH_URI, username=MEMGRAPH_USER, password=MEMGRAPH_PASSWORD)
     )
-    
+
     await adapter.query("MATCH (n) DETACH DELETE n")
-    
+
     # Verify empty
     result = await adapter.query("MATCH (n) RETURN count(n) as count")
     assert result.records[0]["count"] == 0, "Memgraph not empty after clear"
-    
+
     await adapter.disconnect()
     print("✅ Memgraph database cleared")
 

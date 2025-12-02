@@ -14,6 +14,7 @@ export interface WizardConfig {
   graphUri?: string;
   graphUsername?: string;
   graphPassword?: string;
+  installCLI?: boolean;
 }
 
 export interface ConvexConfig {
