@@ -44,7 +44,8 @@ describe("Memory API - Auto-Conversation Creation", () => {
       memorySpaceId,
       conversationId,
       userMessage: "I prefer dark mode",
-      agentResponse: "Got it!",
+      // Agent response with meaningful content (not just acknowledgment)
+      agentResponse: "Your dark mode preference has been saved to your profile settings",
       userId: "user-123",
       userName: "Alice",
     });

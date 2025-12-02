@@ -84,7 +84,9 @@ describe("Parameter Propagation: memory.remember()", () => {
         userName: "Test User",
         importance: IMPORTANCE,
         userMessage: "My password is secret123",
-        agentResponse: "I've noted that securely",
+        // Agent response with meaningful content (not just acknowledgment)
+        agentResponse:
+          "Your password secret123 has been securely stored in the encrypted vault",
       });
 
       // Verify both memories have correct importance
@@ -111,7 +113,9 @@ describe("Parameter Propagation: memory.remember()", () => {
         userName: "Test User",
         tags: TAGS,
         userMessage: "Security concern here",
-        agentResponse: "Noted the security issue",
+        // Agent response with meaningful content (not just acknowledgment)
+        agentResponse:
+          "The security concern has been logged and flagged for immediate review by the team",
       });
 
       const userMem = await cortex.vector.get(
