@@ -153,7 +153,7 @@ All features are **backward compatible** and opt-in via configuration.
 
 ## Examples
 
-See [examples directory](../../../packages/vercel-ai-provider/examples/) for:
+See [examples directory](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/examples) for:
 
 - **next-chat** - Basic chat with persistent memory (updated for v0.2.0)
 - **next-rag** - RAG pattern combining documents + conversation memory (updated for v0.2.0)
@@ -163,11 +163,11 @@ See [examples directory](../../../packages/vercel-ai-provider/examples/) for:
 
 ## Package Source
 
-Package source code: [`packages/vercel-ai-provider/`](../../../packages/vercel-ai-provider/)
+Package source code: [`packages/vercel-ai-provider/`](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider)
 
 ## See Also
 
-- [Cortex SDK Documentation](../../00-README.md) - Main Cortex documentation
+- [Cortex SDK Documentation](/) - Main Cortex documentation
 - [Streaming Support](../../02-core-features/12-streaming-support.md) - SDK streaming features
 - [Memory Spaces](../../02-core-features/01-memory-spaces.md) - Core memory space features
 - [Hive Mode](../../02-core-features/10-hive-mode.md) - Core hive mode features

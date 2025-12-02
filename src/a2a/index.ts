@@ -45,12 +45,27 @@ import {
 
 // Re-export for convenience
 export { A2AValidationError } from "./validators";
+import type { ResilienceLayer } from "../resilience";
 
 export class A2AAPI {
   constructor(
     private readonly client: ConvexClient,
     private readonly _graphAdapter?: unknown,
+    private readonly resilience?: ResilienceLayer,
   ) {}
+
+  /**
+   * Execute an operation through the resilience layer (if available)
+   */
+  private async executeWithResilience<T>(
+    operation: () => Promise<T>,
+    operationName: string,
+  ): Promise<T> {
+    if (this.resilience) {
+      return this.resilience.execute(operation, operationName);
+    }
+    return operation();
+  }
 
   /**
    * Send a message from one agent to another.

@@ -44,12 +44,27 @@ import {
   validateParticipants,
   validateNoDuplicates,
 } from "./validators";
+import type { ResilienceLayer } from "../resilience";
 
 export class ConversationsAPI {
   constructor(
     private readonly client: ConvexClient,
     private readonly graphAdapter?: GraphAdapter,
+    private readonly resilience?: ResilienceLayer,
   ) {}
+
+  /**
+   * Execute an operation through the resilience layer (if available)
+   */
+  private async executeWithResilience<T>(
+    operation: () => Promise<T>,
+    operationName: string,
+  ): Promise<T> {
+    if (this.resilience) {
+      return this.resilience.execute(operation, operationName);
+    }
+    return operation();
+  }
 
   /**
    * Create a new conversation
@@ -92,14 +107,18 @@ export class ConversationsAPI {
     const conversationId =
       input.conversationId || this.generateConversationId();
 
-    const result = await this.client.mutation(api.conversations.create, {
-      conversationId,
-      memorySpaceId: input.memorySpaceId,
-      participantId: input.participantId,
-      type: input.type,
-      participants: input.participants,
-      metadata: input.metadata,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.conversations.create, {
+          conversationId,
+          memorySpaceId: input.memorySpaceId,
+          participantId: input.participantId,
+          type: input.type,
+          participants: input.participants,
+          metadata: input.metadata,
+        }),
+      "conversations:create",
+    );
 
     // Sync to graph if requested
     if (options?.syncToGraph && this.graphAdapter) {
@@ -132,9 +151,13 @@ export class ConversationsAPI {
   async get(conversationId: string): Promise<Conversation | null> {
     validateRequiredString(conversationId, "conversationId");
 
-    const result = await this.client.query(api.conversations.get, {
-      conversationId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.conversations.get, {
+          conversationId,
+        }),
+      "conversations:get",
+    );
 
     return result as Conversation | null;
   }

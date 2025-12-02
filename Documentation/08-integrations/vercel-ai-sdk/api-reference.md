@@ -247,4 +247,4 @@ interface MemoryEntry {
 - [Memory Spaces](./memory-spaces.md) - Multi-tenancy
 - [Hive Mode](./hive-mode.md) - Cross-app memory
 - [Migration from mem0](./migration-from-mem0.md) - Switch guide
-- [Cortex Core Documentation](../../00-README.md) - Main docs
+- [Cortex Core Documentation](/) - Main docs
