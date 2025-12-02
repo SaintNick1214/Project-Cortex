@@ -1107,4 +1107,4 @@ The Memory Space Operations API provides explicit control over memory space life
 - [Memory Spaces Guide](../02-core-features/01-memory-spaces.md) - Core concepts
 - [A2A Communication](./06-a2a-communication.md) - Collaboration Mode
 
-**Questions?** Check the [FAQ](../11-reference/01-faq.md) or ask in [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).

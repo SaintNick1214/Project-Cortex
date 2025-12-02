@@ -4,15 +4,16 @@ Test data generators for Cortex Python SDK tests.
 Provides functions to generate unique IDs and sample test data.
 """
 
-import time
 import random
-from typing import Dict, Any, List, Optional
+import time
+from typing import Any, Dict, List, Optional
+
 from cortex import (
-    StoreMemoryInput,
-    MemorySource,
-    MemoryMetadata,
-    CreateConversationInput,
     ConversationParticipants,
+    CreateConversationInput,
+    MemoryMetadata,
+    MemorySource,
+    StoreMemoryInput,
 )
 
 

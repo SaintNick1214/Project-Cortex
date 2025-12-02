@@ -2,6 +2,19 @@
 /**
  * Manual cleanup script for test data
  * Purges all test data from a Convex deployment
+ *
+ * Tables purged (in order for referential integrity):
+ *   1. conversations - conversation history
+ *   2. memories - vector store
+ *   3. facts - extracted facts
+ *   4. contexts - hierarchical contexts
+ *   5. memorySpaces - memory space registry
+ *   6. immutable - versioned immutable records
+ *   7. mutable - operational data
+ *   8. agents - agent registry
+ *   9. graphSyncQueue - graph sync queue
+ *  10. governancePolicies - governance policies
+ *  11. governanceEnforcement - enforcement logs
  */
 
 import { ConvexClient } from "convex/browser";
@@ -28,7 +41,9 @@ const client = new ConvexClient(convexUrl);
 
 async function cleanup() {
   try {
-    console.log("🧹 Starting comprehensive cleanup across all 8 tables...\n");
+    console.log(
+      "🧹 Starting comprehensive cleanup across all 11 tables...\n",
+    );
 
     let stats = {
       conversations: 0,
@@ -39,6 +54,9 @@ async function cleanup() {
       immutable: 0,
       mutable: 0,
       agents: 0,
+      graphSyncQueue: 0,
+      governancePolicies: 0,
+      governanceEnforcement: 0,
     };
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -76,7 +94,7 @@ async function cleanup() {
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Table 3: Facts (NEW)
+    // Table 3: Facts
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     console.log("📊 Purging facts...");
     try {
@@ -88,7 +106,7 @@ async function cleanup() {
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Table 4: Contexts (NEW)
+    // Table 4: Contexts
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     console.log("🔗 Purging contexts...");
     try {
@@ -100,7 +118,7 @@ async function cleanup() {
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Table 5: Memory Spaces (NEW)
+    // Table 5: Memory Spaces
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     console.log("🏢 Purging memory spaces...");
     try {
@@ -116,16 +134,9 @@ async function cleanup() {
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     console.log("💾 Purging immutable store...");
     try {
-      if ((api.immutable as any).purgeAll) {
-        const result = await client.mutation(
-          (api.immutable as any).purgeAll,
-          {},
-        );
-        stats.immutable = result.deleted;
-        console.log(`   ✅ Deleted ${stats.immutable} immutable entries`);
-      } else {
-        console.log(`   ⏭️  No purgeAll available (shared table)`);
-      }
+      const result = await client.mutation(api.immutable.purgeAll, {});
+      stats.immutable = result.deleted;
+      console.log(`   ✅ Deleted ${stats.immutable} immutable entries`);
     } catch (e: any) {
       console.error(`   ⚠️  Immutable cleanup failed: ${e.message}`);
     }
@@ -135,28 +146,71 @@ async function cleanup() {
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     console.log("⚡ Purging mutable store...");
     try {
-      if ((api.mutable as any).purgeAll) {
-        const result = await client.mutation((api.mutable as any).purgeAll, {});
-        stats.mutable = result.deleted;
-        console.log(`   ✅ Deleted ${stats.mutable} mutable entries`);
-      } else {
-        console.log(`   ⏭️  No purgeAll available (shared table)`);
-      }
+      const result = await client.mutation(api.mutable.purgeAll, {});
+      stats.mutable = result.deleted;
+      console.log(`   ✅ Deleted ${stats.mutable} mutable entries`);
     } catch (e: any) {
       console.error(`   ⚠️  Mutable cleanup failed: ${e.message}`);
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Table 8: Agents Registry (DEPRECATED but still cleaned)
+    // Table 8: Agents Registry
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    console.log("👤 Purging agents registry (deprecated)...");
+    console.log("👤 Purging agents registry...");
     try {
-      // Agents table doesn't have purgeAll, so we skip it
-      // It's deprecated and will be removed in future versions
-      stats.agents = 0;
-      console.log(`   ⏭️  Skipped (deprecated table)`);
+      const result = await client.mutation(api.agents.purgeAll, {});
+      stats.agents = result.deleted;
+      console.log(`   ✅ Deleted ${stats.agents} agents`);
     } catch (e: any) {
       console.error(`   ⚠️  Agents cleanup failed: ${e.message}`);
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Table 9: Graph Sync Queue
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    console.log("🔄 Purging graph sync queue...");
+    try {
+      const result = await client.mutation(api.graphSync.purgeAll, {});
+      stats.graphSyncQueue = result.deleted;
+      console.log(`   ✅ Deleted ${stats.graphSyncQueue} graph sync entries`);
+    } catch (e: any) {
+      console.error(`   ⚠️  Graph sync cleanup failed: ${e.message}`);
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Table 10: Governance Policies
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    console.log("📜 Purging governance policies...");
+    try {
+      const result = await client.mutation(
+        api.governance.purgeAllPolicies,
+        {},
+      );
+      stats.governancePolicies = result.deleted;
+      console.log(
+        `   ✅ Deleted ${stats.governancePolicies} governance policies`,
+      );
+    } catch (e: any) {
+      console.error(`   ⚠️  Governance policies cleanup failed: ${e.message}`);
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Table 11: Governance Enforcement Logs
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    console.log("📋 Purging governance enforcement logs...");
+    try {
+      const result = await client.mutation(
+        api.governance.purgeAllEnforcement,
+        {},
+      );
+      stats.governanceEnforcement = result.deleted;
+      console.log(
+        `   ✅ Deleted ${stats.governanceEnforcement} enforcement logs`,
+      );
+    } catch (e: any) {
+      console.error(
+        `   ⚠️  Governance enforcement cleanup failed: ${e.message}`,
+      );
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -169,31 +223,51 @@ async function cleanup() {
       stats.contexts +
       stats.memorySpaces +
       stats.immutable +
-      stats.mutable;
+      stats.mutable +
+      stats.agents +
+      stats.graphSyncQueue +
+      stats.governancePolicies +
+      stats.governanceEnforcement;
 
     console.log(`\n${"=".repeat(60)}`);
     console.log("✅ CLEANUP COMPLETE!");
     console.log(`${"=".repeat(60)}`);
     console.log(`📊 Summary:`);
     console.log(
-      `   Conversations:   ${stats.conversations.toString().padStart(6)}`,
-    );
-    console.log(`   Memories:        ${stats.memories.toString().padStart(6)}`);
-    console.log(
-      `   Facts:           ${stats.facts.toString().padStart(6)} (NEW)`,
+      `   Conversations:         ${stats.conversations.toString().padStart(6)}`,
     );
     console.log(
-      `   Contexts:        ${stats.contexts.toString().padStart(6)} (NEW)`,
+      `   Memories:              ${stats.memories.toString().padStart(6)}`,
     );
     console.log(
-      `   Memory Spaces:   ${stats.memorySpaces.toString().padStart(6)} (NEW)`,
+      `   Facts:                 ${stats.facts.toString().padStart(6)}`,
     );
     console.log(
-      `   Immutable:       ${stats.immutable.toString().padStart(6)}`,
+      `   Contexts:              ${stats.contexts.toString().padStart(6)}`,
     );
-    console.log(`   Mutable:         ${stats.mutable.toString().padStart(6)}`);
-    console.log(`   ${"─".repeat(26)}`);
-    console.log(`   TOTAL DELETED:   ${total.toString().padStart(6)}`);
+    console.log(
+      `   Memory Spaces:         ${stats.memorySpaces.toString().padStart(6)}`,
+    );
+    console.log(
+      `   Immutable:             ${stats.immutable.toString().padStart(6)}`,
+    );
+    console.log(
+      `   Mutable:               ${stats.mutable.toString().padStart(6)}`,
+    );
+    console.log(
+      `   Agents:                ${stats.agents.toString().padStart(6)}`,
+    );
+    console.log(
+      `   Graph Sync Queue:      ${stats.graphSyncQueue.toString().padStart(6)}`,
+    );
+    console.log(
+      `   Governance Policies:   ${stats.governancePolicies.toString().padStart(6)}`,
+    );
+    console.log(
+      `   Governance Enforce:    ${stats.governanceEnforcement.toString().padStart(6)}`,
+    );
+    console.log(`   ${"─".repeat(30)}`);
+    console.log(`   TOTAL DELETED:         ${total.toString().padStart(6)}`);
     console.log(`${"=".repeat(60)}\n`);
   } catch (error) {
     console.error("❌ Cleanup failed:", error);

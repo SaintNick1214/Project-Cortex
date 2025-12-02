@@ -60,19 +60,37 @@ class MemoryAPI:
     This is the recommended API for most use cases.
     """
 
-    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
+    def __init__(
+        self,
+        client: Any,
+        graph_adapter: Optional[Any] = None,
+        resilience: Optional[Any] = None,
+    ) -> None:
         """
         Initialize Memory API.
 
         Args:
             client: Convex client instance
             graph_adapter: Optional graph database adapter
+            resilience: Optional resilience layer for overload protection
         """
         self.client = client
         self.graph_adapter = graph_adapter
-        self.conversations = ConversationsAPI(client, graph_adapter)
-        self.vector = VectorAPI(client, graph_adapter)
-        self.facts = FactsAPI(client, graph_adapter)
+        self._resilience = resilience
+        # Pass resilience layer to sub-APIs
+        self.conversations = ConversationsAPI(client, graph_adapter, resilience)
+        self.vector = VectorAPI(client, graph_adapter, resilience)
+        self.facts = FactsAPI(client, graph_adapter, resilience)
+
+    async def _execute_with_resilience(
+        self,
+        operation: Any,
+        operation_name: str,
+    ) -> Any:
+        """Execute an operation through the resilience layer (if available)."""
+        if self._resilience:
+            return await self._resilience.execute(operation, operation_name)
+        return await operation()
 
     async def remember(
         self, params: RememberParams, options: Optional[RememberOptions] = None
@@ -196,6 +214,7 @@ class MemoryAPI:
                 participant_id=params.participant_id,
                 embedding=user_embedding,
                 user_id=params.user_id,
+                message_role="user",  # NEW: Mark as user message for semantic search weighting
                 source=MemorySource(
                     type="conversation",
                     user_id=params.user_id,
@@ -213,30 +232,55 @@ class MemoryAPI:
             StoreMemoryOptions(sync_to_graph=should_sync_to_graph),
         )
 
-        agent_memory = await self.vector.store(
-            params.memory_space_id,
-            StoreMemoryInput(
-                content=agent_content,
-                content_type="raw",  # Agent content is always raw, only user content gets summarized
-                participant_id=params.participant_id,
-                embedding=agent_embedding,
-                user_id=params.user_id,
-                source=MemorySource(
-                    type="conversation",
-                    user_id=params.user_id,
-                    user_name=params.user_name,
-                    timestamp=now + 1,
-                ),
-                conversation_ref=ConversationRef(
-                    conversation_id=params.conversation_id,
-                    message_ids=[agent_message_id],
-                ),
-                metadata=MemoryMetadata(
-                    importance=params.importance or 50, tags=params.tags or []
-                ),
-            ),
-            StoreMemoryOptions(sync_to_graph=should_sync_to_graph),
+        # Detect if agent response is just an acknowledgment (not a fact worth indexing)
+        # Acknowledgments pollute semantic search with "I've noted", "Got it", etc.
+        agent_content_lower = agent_content.lower()
+        is_acknowledgment = len(agent_content) < 80 and any(
+            phrase in agent_content_lower
+            for phrase in [
+                "got it",
+                "i've noted",
+                "i'll remember",
+                "noted",
+                "understood",
+                "i'll set",
+                "i'll call you",
+                "will do",
+                "sure thing",
+                "okay,",
+                "ok,",
+            ]
         )
+
+        # Only store agent response in vector if it contains meaningful information
+        # Pure acknowledgments are stored in ACID (for conversation history) but not vector
+        agent_memory = None
+        if not is_acknowledgment:
+            agent_memory = await self.vector.store(
+                params.memory_space_id,
+                StoreMemoryInput(
+                    content=agent_content,
+                    content_type="raw",  # Agent content is always raw, only user content gets summarized
+                    participant_id=params.participant_id,
+                    embedding=agent_embedding,
+                    user_id=params.user_id,
+                    message_role="agent",  # Mark as agent message for semantic search weighting
+                    source=MemorySource(
+                        type="conversation",
+                        user_id=params.user_id,
+                        user_name=params.user_name,
+                        timestamp=now + 1,
+                    ),
+                    conversation_ref=ConversationRef(
+                        conversation_id=params.conversation_id,
+                        message_ids=[agent_message_id],
+                    ),
+                    metadata=MemoryMetadata(
+                        importance=params.importance or 50, tags=params.tags or []
+                    ),
+                ),
+                StoreMemoryOptions(sync_to_graph=should_sync_to_graph),
+            )
 
         # Step 8: Extract and store facts if provided
         extracted_facts = []
@@ -282,12 +326,15 @@ class MemoryAPI:
             except Exception as error:
                 print(f"Warning: Failed to extract facts: {error}")
 
+        # Filter out None memories (agent_memory is None if it was an acknowledgment)
+        stored_memories = [m for m in [user_memory, agent_memory] if m is not None]
+
         return RememberResult(
             conversation={
                 "messageIds": [user_message_id, agent_message_id],
                 "conversationId": params.conversation_id,
             },
-            memories=[user_memory, agent_memory],
+            memories=stored_memories,
             facts=extracted_facts,
         )
 

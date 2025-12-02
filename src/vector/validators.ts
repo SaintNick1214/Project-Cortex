@@ -42,7 +42,11 @@ const VALID_EXPORT_FORMATS = ["json", "csv"] as const;
  * Validates memorySpaceId is a non-empty string
  */
 export function validateMemorySpaceId(memorySpaceId: string): void {
-  if (!memorySpaceId || typeof memorySpaceId !== "string" || memorySpaceId.trim().length === 0) {
+  if (
+    !memorySpaceId ||
+    typeof memorySpaceId !== "string" ||
+    memorySpaceId.trim().length === 0
+  ) {
     throw new VectorValidationError(
       "memorySpaceId is required and cannot be empty",
       "INVALID_MEMORY_SPACE_ID",
@@ -55,7 +59,11 @@ export function validateMemorySpaceId(memorySpaceId: string): void {
  * Validates memoryId is a non-empty string
  */
 export function validateMemoryId(memoryId: string): void {
-  if (!memoryId || typeof memoryId !== "string" || memoryId.trim().length === 0) {
+  if (
+    !memoryId ||
+    typeof memoryId !== "string" ||
+    memoryId.trim().length === 0
+  ) {
     throw new VectorValidationError(
       "memoryId is required and cannot be empty",
       "INVALID_MEMORY_ID",
@@ -71,8 +79,14 @@ export function validateMemoryId(memoryId: string): void {
 /**
  * Validates contentType is "raw" | "summarized" | "fact"
  */
-export function validateContentType(contentType: string, fieldName = "contentType"): void {
-  if (!contentType || !VALID_CONTENT_TYPES.includes(contentType as any)) {
+export function validateContentType(
+  contentType: string,
+  fieldName = "contentType",
+): void {
+  if (
+    !contentType ||
+    !(VALID_CONTENT_TYPES as readonly string[]).includes(contentType)
+  ) {
     throw new VectorValidationError(
       `Invalid ${fieldName} "${contentType}". Valid values: ${VALID_CONTENT_TYPES.join(", ")}`,
       "INVALID_CONTENT_TYPE",
@@ -84,8 +98,14 @@ export function validateContentType(contentType: string, fieldName = "contentTyp
 /**
  * Validates sourceType is "conversation" | "system" | "tool" | "a2a"
  */
-export function validateSourceType(sourceType: string, fieldName = "sourceType"): void {
-  if (!sourceType || !VALID_SOURCE_TYPES.includes(sourceType as any)) {
+export function validateSourceType(
+  sourceType: string,
+  fieldName = "sourceType",
+): void {
+  if (
+    !sourceType ||
+    !(VALID_SOURCE_TYPES as readonly string[]).includes(sourceType)
+  ) {
     throw new VectorValidationError(
       `Invalid ${fieldName} "${sourceType}". Valid values: ${VALID_SOURCE_TYPES.join(", ")}`,
       "INVALID_SOURCE_TYPE",
@@ -98,7 +118,10 @@ export function validateSourceType(sourceType: string, fieldName = "sourceType")
  * Validates export format is "json" | "csv"
  */
 export function validateExportFormat(format: string): void {
-  if (!format || !VALID_EXPORT_FORMATS.includes(format as any)) {
+  if (
+    !format ||
+    !(VALID_EXPORT_FORMATS as readonly string[]).includes(format)
+  ) {
     throw new VectorValidationError(
       `Invalid format "${format}". Valid values: ${VALID_EXPORT_FORMATS.join(", ")}`,
       "INVALID_EXPORT_FORMAT",
@@ -114,7 +137,10 @@ export function validateExportFormat(format: string): void {
 /**
  * Validates importance is a number between 0-100
  */
-export function validateImportance(importance: number, fieldName = "importance"): void {
+export function validateImportance(
+  importance: number,
+  fieldName = "importance",
+): void {
   if (typeof importance !== "number" || isNaN(importance)) {
     throw new VectorValidationError(
       `${fieldName} must be a number`,
@@ -135,7 +161,10 @@ export function validateImportance(importance: number, fieldName = "importance")
 /**
  * Validates minScore is a number between 0-1
  */
-export function validateMinScore(minScore: number, fieldName = "minScore"): void {
+export function validateMinScore(
+  minScore: number,
+  fieldName = "minScore",
+): void {
   if (typeof minScore !== "number" || isNaN(minScore)) {
     throw new VectorValidationError(
       `${fieldName} must be a number`,
@@ -198,7 +227,10 @@ export function validateVersion(version: number, fieldName = "version"): void {
 /**
  * Validates timestamp is a positive number or valid Date
  */
-export function validateTimestamp(timestamp: number | Date, fieldName = "timestamp"): void {
+export function validateTimestamp(
+  timestamp: number | Date,
+  fieldName = "timestamp",
+): void {
   if (timestamp instanceof Date) {
     if (isNaN(timestamp.getTime())) {
       throw new VectorValidationError(
@@ -256,8 +288,13 @@ export function validateTags(tags: string[], fieldName = "tags"): void {
 
 /**
  * Validates embedding is an array of numbers if provided
+ * Runtime checks for potentially untrusted external input
  */
-export function validateEmbedding(embedding: number[] | undefined, fieldName = "embedding"): void {
+export function validateEmbedding(
+  embedding: number[] | undefined,
+  fieldName = "embedding",
+): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (embedding === undefined || embedding === null) {
     return; // Optional field
   }
@@ -292,8 +329,10 @@ export function validateEmbedding(embedding: number[] | undefined, fieldName = "
 
 /**
  * Validates complete store input structure
+ * Runtime checks for potentially untrusted external input
  */
 export function validateStoreInput(input: StoreMemoryInput): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!input) {
     throw new VectorValidationError(
       "input is required",
@@ -320,6 +359,7 @@ export function validateStoreInput(input: StoreMemoryInput): void {
   }
 
   // Validate contentType
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!input.contentType) {
     throw new VectorValidationError(
       "contentType is required",
@@ -330,6 +370,7 @@ export function validateStoreInput(input: StoreMemoryInput): void {
   validateContentType(input.contentType, "contentType");
 
   // Validate source
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!input.source) {
     throw new VectorValidationError(
       "source is required",
@@ -338,6 +379,7 @@ export function validateStoreInput(input: StoreMemoryInput): void {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!input.source.type) {
     throw new VectorValidationError(
       "source.type is required",
@@ -348,6 +390,7 @@ export function validateStoreInput(input: StoreMemoryInput): void {
   validateSourceType(input.source.type, "source.type");
 
   // Validate metadata
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!input.metadata) {
     throw new VectorValidationError(
       "metadata is required",
@@ -356,7 +399,10 @@ export function validateStoreInput(input: StoreMemoryInput): void {
     );
   }
 
-  if (input.metadata.importance === undefined || input.metadata.importance === null) {
+  if (
+    input.metadata.importance === undefined ||
+    input.metadata.importance === null
+  ) {
     throw new VectorValidationError(
       "metadata.importance is required",
       "MISSING_REQUIRED_FIELD",
@@ -365,6 +411,7 @@ export function validateStoreInput(input: StoreMemoryInput): void {
   }
   validateImportance(input.metadata.importance, "metadata.importance");
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!input.metadata.tags) {
     throw new VectorValidationError(
       "metadata.tags is required",
@@ -415,8 +462,10 @@ export function validateSearchOptions(options?: SearchMemoriesOptions): void {
 
 /**
  * Validates list filter
+ * Runtime checks for potentially untrusted external input
  */
 export function validateListFilter(filter: ListMemoriesFilter): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!filter) {
     throw new VectorValidationError(
       "filter is required",
@@ -438,8 +487,10 @@ export function validateListFilter(filter: ListMemoriesFilter): void {
 
 /**
  * Validates count filter
+ * Runtime checks for potentially untrusted external input
  */
 export function validateCountFilter(filter: CountMemoriesFilter): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!filter) {
     throw new VectorValidationError(
       "filter is required",
@@ -457,6 +508,7 @@ export function validateCountFilter(filter: CountMemoriesFilter): void {
 
 /**
  * Validates update input
+ * Runtime checks for potentially untrusted external input
  */
 export function validateUpdateInput(updates: {
   content?: string;
@@ -464,6 +516,7 @@ export function validateUpdateInput(updates: {
   importance?: number;
   tags?: string[];
 }): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!updates) {
     throw new VectorValidationError(
       "updates is required",
@@ -487,6 +540,7 @@ export function validateUpdateInput(updates: {
 
 /**
  * Validates export options
+ * Runtime checks for potentially untrusted external input
  */
 export function validateExportOptions(options: {
   memorySpaceId: string;
@@ -494,6 +548,7 @@ export function validateExportOptions(options: {
   format: "json" | "csv";
   includeEmbeddings?: boolean;
 }): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!options) {
     throw new VectorValidationError(
       "options is required",
@@ -508,12 +563,14 @@ export function validateExportOptions(options: {
 
 /**
  * Validates deleteMany filter
+ * Runtime checks for potentially untrusted external input
  */
 export function validateDeleteManyFilter(filter: {
   memorySpaceId: string;
   userId?: string;
   sourceType?: "conversation" | "system" | "tool" | "a2a";
 }): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!filter) {
     throw new VectorValidationError(
       "filter is required",
@@ -531,6 +588,7 @@ export function validateDeleteManyFilter(filter: {
 
 /**
  * Validates updateMany inputs
+ * Runtime checks for potentially untrusted external input
  */
 export function validateUpdateManyInputs(
   filter: {
@@ -543,6 +601,7 @@ export function validateUpdateManyInputs(
     tags?: string[];
   },
 ): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!filter) {
     throw new VectorValidationError(
       "filter is required",
@@ -557,6 +616,7 @@ export function validateUpdateManyInputs(
     validateSourceType(filter.sourceType, "sourceType");
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!updates) {
     throw new VectorValidationError(
       "updates is required",

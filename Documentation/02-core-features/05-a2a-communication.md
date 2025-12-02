@@ -158,7 +158,7 @@ await cortex.vector.store("hr-agent", {
 
 ### A2A = Agent Memory with source.type = 'a2a'
 
-Under the hood, A2A uses the **full ACID + Vector hybrid architecture**:
+Under the hood, A2A uses the **full 4-layer architecture** (ACID + Vector + Facts + Graph):
 
 ### Layer 1: ACID A2A Conversation (Immutable Thread)
 
@@ -1694,4 +1694,4 @@ For advanced agent network analysis (community detection, influence metrics), se
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

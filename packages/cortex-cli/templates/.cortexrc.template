@@ -1,0 +1,15 @@
+{
+  "deployments": {
+    "local": {
+      "url": "http://127.0.0.1:3210",
+      "deployment": "anonymous:anonymous-cortex-sdk-local"
+    },
+    "production": {
+      "url": "https://your-deployment.convex.cloud",
+      "key": "your-deploy-key-here"
+    }
+  },
+  "default": "local",
+  "format": "table",
+  "confirmDangerous": true
+}

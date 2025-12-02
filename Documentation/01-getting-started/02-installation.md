@@ -317,8 +317,8 @@ npm install convex@latest
 npx convex deploy
 ```
 
-Check [CHANGELOG](../11-reference/03-changelog.md) for breaking changes.
+Check GitHub releases for breaking changes.
 
 ---
 
-**Questions?** See [FAQ](../11-reference/01-faq.md) or ask in [Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).
+**Questions?** Ask in [Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).

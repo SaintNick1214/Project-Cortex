@@ -65,7 +65,7 @@ Cortex provides a complete memory system for AI agents:
 - 🔒 **Memory Space Isolation** - Flexible boundaries (per user, team, or project) ✅
 - ♾️ **Long-term Persistence** - Memories last forever with automatic indexing ✅
 - ⏱️ **Automatic Versioning** - Updates preserve history, never lose data (10 versions default) ✅
-- 🗄️ **ACID + Vector Hybrid** - Immutable conversation source + fast searchable index ✅
+- 🗄️ **4-Layer Hybrid Architecture** - ACID conversations + vector search + facts extraction + graph integration ✅
 - 🔍 **Semantic Search** - AI-powered retrieval with multi-strategy fallback ✅
 - 📊 **Vector Embeddings** - Optional but preferred, support any dimension (768, 1536, 3072+) ✅
 - 🔗 **Context Chains** - Hierarchical context sharing across memory spaces ✅
@@ -79,6 +79,48 @@ Cortex provides a complete memory system for AI agents:
 - 🔌 **MCP Server** - Cross-application memory sharing (planned)
 - 💬 **A2A Communication** - Inter-space messaging helpers (planned)
 - ✅ **Client-Side Validation** - Instant error feedback (<1ms) for all 11 APIs ✅
+- 🛡️ **Resilience Layer** - Rate limiting, circuit breaker, priority queue for overload protection ✅
+
+## ✨ What's New in v0.16.0
+
+### Resilience Layer - Production-Ready Overload Protection
+
+**NEW: Built-in protection against server overload during extreme traffic bursts:**
+
+- ⚡ **Token Bucket Rate Limiter** - Smooths bursty traffic (100 tokens, 50/sec refill default)
+- 🚦 **Concurrency Limiter** - Controls parallel requests (20 max concurrent, 1000 queue)
+- 🎯 **Priority Queue** - Critical ops (deletes) get priority, low-priority ops queue
+- 🔌 **Circuit Breaker** - Fails fast when backend is unhealthy (5 failures → open)
+- 📊 **Full Metrics** - Monitor rate limiter, queue depth, circuit state
+
+```typescript
+import { Cortex, ResiliencePresets } from "@cortexmemory/sdk";
+
+// Default - enabled with balanced settings (no config needed!)
+const cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
+
+// Or use a preset for your use case
+const realtimeCortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  resilience: ResiliencePresets.realTimeAgent, // Low latency
+});
+
+const batchCortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  resilience: ResiliencePresets.batchProcessing, // Large queues
+});
+
+// Monitor health
+console.log(cortex.isHealthy()); // false if circuit is open
+console.log(cortex.getResilienceMetrics()); // Full metrics
+
+// Graceful shutdown
+await cortex.shutdown(30000); // Wait up to 30s for pending ops
+```
+
+**Zero breaking changes** - resilience is enabled by default with sensible settings. All existing code works without modification.
+
+---
 
 ## ✨ What's New in v0.12.0
 
@@ -94,19 +136,19 @@ Cortex provides a complete memory system for AI agents:
 ```typescript
 // ❌ Before v0.12.0 - Wait for backend to validate
 await cortex.governance.setPolicy({
-  conversations: { retention: { deleteAfter: "7years" } }  // Invalid format
+  conversations: { retention: { deleteAfter: "7years" } }, // Invalid format
 });
 // → 50-200ms wait → Error thrown
 
 // ✅ After v0.12.0 - Instant validation
 await cortex.governance.setPolicy({
-  conversations: { retention: { deleteAfter: "7years" } }  // Invalid format
+  conversations: { retention: { deleteAfter: "7years" } }, // Invalid format
 });
 // → <1ms → GovernanceValidationError with helpful message:
 //   "Invalid period format '7years'. Must be in format like '7d', '30m', or '1y'"
 
 // Optional: Catch validation errors specifically
-import { GovernanceValidationError } from '@cortexmemory/sdk';
+import { GovernanceValidationError } from "@cortexmemory/sdk";
 
 try {
   await cortex.governance.setPolicy(policy);
@@ -119,6 +161,7 @@ try {
 ```
 
 **Validation Coverage:**
+
 - ✅ Governance API (9 validators) - Period formats, ranges, scopes, dates
 - ✅ Memory API (12 validators) - IDs, content, importance, source types
 - ✅ All 9 other APIs (62+ validators total)
@@ -431,11 +474,11 @@ Cortex is being designed with two deployment modes:
 ### Key Design Decisions
 
 - **Built on Convex**: Leverages Convex's reactive backend for optimal performance
-- **ACID + Vector Hybrid**: Immutable conversation history + searchable memory index (linked via conversationRef)
+- **4-Layer Architecture**: ACID conversations + vector search + facts extraction + graph integration (all working together)
 - **Any Convex deployment**: Works with Convex Cloud, localhost, or self-hosted infrastructure
 - **Embedding-agnostic**: Optional embeddings from any provider (OpenAI, Cohere, local models)
 - **Progressive enhancement**: Works with raw content (text search) or embeddings (semantic search)
-- **Hybrid agents**: Start simple with string IDs, add structure when needed
+- **Flexible agents**: Start simple with string IDs, add structure when needed
 - **Flexible dimensions**: Support for any vector dimension (768, 1536, 3072+)
 - **Your data, your instance**: Whether direct or cloud mode, data lives in your Convex deployment
 
@@ -454,6 +497,8 @@ Cortex is being designed with two deployment modes:
 | ----------------- | ------ | -------- | -------- | ----- |
 | Vector Search     | ✅     | ✅       | ✅       | ❌    |
 | ACID Transactions | ✅     | ❌       | ❌       | ❌    |
+| Facts Extraction  | ✅     | ❌       | ❌       | ❌    |
+| Graph Integration | ✅     | ❌       | ❌       | ❌    |
 | Real-time Updates | ✅     | ❌       | ❌       | ✅    |
 | Versioning        | ✅     | ❌       | ❌       | ❌    |
 | Temporal Queries  | ✅     | ❌       | ❌       | ❌    |
@@ -620,8 +665,8 @@ Cortex SDK uses **dual release workflows**:
 
 **📊 Unified Architecture**
 
-- 4-layer design (ACID + Vector + Facts + Convenience)
-- Graph-Lite built-in, native graph DB optional
+- 4-layer hybrid design (ACID + Vector + Facts + Graph)
+- Graph-Lite built-in, native Neo4j/Memgraph optional
 - Facts extraction (DIY or Cloud auto)
 - All data in one place (Convex)
 

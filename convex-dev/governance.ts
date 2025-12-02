@@ -669,3 +669,71 @@ export const getEnforcementStats = query({
     };
   },
 });
+
+/**
+ * Purge all governance policies (TEST/DEV ONLY)
+ */
+export const purgeAllPolicies = mutation({
+  args: {},
+  handler: async (ctx) => {
+    // Safety check: Only allow in test/dev environments
+    const siteUrl = process.env.CONVEX_SITE_URL || "";
+    const isLocal =
+      siteUrl.includes("localhost") || siteUrl.includes("127.0.0.1");
+    const isDevDeployment =
+      siteUrl.includes(".convex.site") ||
+      siteUrl.includes("dev-") ||
+      siteUrl.includes("convex.cloud");
+    const isTestEnv =
+      process.env.NODE_ENV === "test" ||
+      process.env.CONVEX_ENVIRONMENT === "test";
+
+    if (!isLocal && !isDevDeployment && !isTestEnv) {
+      throw new Error(
+        "PURGE_DISABLED_IN_PRODUCTION: purgeAllPolicies is only available in test/dev environments.",
+      );
+    }
+
+    const allPolicies = await ctx.db.query("governancePolicies").collect();
+
+    for (const policy of allPolicies) {
+      await ctx.db.delete(policy._id);
+    }
+
+    return { deleted: allPolicies.length };
+  },
+});
+
+/**
+ * Purge all governance enforcement logs (TEST/DEV ONLY)
+ */
+export const purgeAllEnforcement = mutation({
+  args: {},
+  handler: async (ctx) => {
+    // Safety check: Only allow in test/dev environments
+    const siteUrl = process.env.CONVEX_SITE_URL || "";
+    const isLocal =
+      siteUrl.includes("localhost") || siteUrl.includes("127.0.0.1");
+    const isDevDeployment =
+      siteUrl.includes(".convex.site") ||
+      siteUrl.includes("dev-") ||
+      siteUrl.includes("convex.cloud");
+    const isTestEnv =
+      process.env.NODE_ENV === "test" ||
+      process.env.CONVEX_ENVIRONMENT === "test";
+
+    if (!isLocal && !isDevDeployment && !isTestEnv) {
+      throw new Error(
+        "PURGE_DISABLED_IN_PRODUCTION: purgeAllEnforcement is only available in test/dev environments.",
+      );
+    }
+
+    const allLogs = await ctx.db.query("governanceEnforcement").collect();
+
+    for (const log of allLogs) {
+      await ctx.db.delete(log._id);
+    }
+
+    return { deleted: allLogs.length };
+  },
+});

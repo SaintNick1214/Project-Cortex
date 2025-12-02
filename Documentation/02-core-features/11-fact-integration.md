@@ -2,22 +2,23 @@
 
 > **Last Updated**: 2025-10-31
 
-Automatic extraction and storage of structured facts from conversations, integrated into the complete three-layer memory pipeline.
+Automatic extraction and storage of structured facts from conversations, integrated into Cortex's 4-layer architecture.
 
 ## Overview
 
-The Facts layer completes Cortex's three-layer architecture:
+The Facts layer is a key component of Cortex's 4-layer hybrid architecture:
 
 - **Layer 1 (ACID)**: Raw conversation storage
 - **Layer 2 (Vector)**: Searchable memory embeddings
 - **Layer 3 (Facts)**: Structured knowledge extraction
+- **Layer 4 (Graph)**: Optional relationship traversal
 
 When you call `memory.remember()` with an `extractFacts` callback, Cortex automatically:
 
 1. Stores the conversation in ACID
 2. Creates searchable memory embeddings in Vector
 3. Extracts and stores structured facts
-4. Links all three layers together via `sourceRef`
+4. Links all layers together via `sourceRef`
 5. Syncs to graph database (if configured)
 
 ## Quick Start
@@ -546,4 +547,4 @@ await Promise.all(pendingExtractions);
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

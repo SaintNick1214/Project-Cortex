@@ -32,6 +32,29 @@ from .validators import (
 )
 
 
+def _is_user_not_found_error(e: Exception) -> bool:
+    """Check if an exception indicates a user/immutable entry was not found.
+
+    This handles the Convex error format which includes the error code
+    in the exception message. We check for patterns that indicate the
+    user profile doesn't exist.
+
+    Args:
+        e: The exception to check
+
+    Returns:
+        True if this is a "not found" error for a user/immutable entry
+    """
+    error_str = str(e)
+    # Check for error code patterns from Convex backend
+    return (
+        "IMMUTABLE_ENTRY_NOT_FOUND" in error_str
+        or "USER_NOT_FOUND" in error_str
+        or "immutable entry not found" in error_str.lower()
+        or "user not found" in error_str.lower()
+    )
+
+
 class UsersAPI:
     """
     Users API
@@ -44,16 +67,31 @@ class UsersAPI:
     - Cloud Mode: Cortex provides managed graph adapter, cascade always works + legal guarantees
     """
 
-    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
+    def __init__(
+        self,
+        client: Any,
+        graph_adapter: Optional[Any] = None,
+        resilience: Optional[Any] = None,
+    ) -> None:
         """
         Initialize Users API.
 
         Args:
             client: Convex client instance
             graph_adapter: Optional graph database adapter for cascade deletion
+            resilience: Optional resilience layer for overload protection
         """
         self.client = client
         self.graph_adapter = graph_adapter
+        self._resilience = resilience
+
+    async def _execute_with_resilience(
+        self, operation: Any, operation_name: str
+    ) -> Any:
+        """Execute an operation through the resilience layer (if available)."""
+        if self._resilience:
+            return await self._resilience.execute(operation, operation_name)
+        return await operation()
 
     async def get(self, user_id: str) -> Optional[UserProfile]:
         """
@@ -168,7 +206,16 @@ class UsersAPI:
 
         if not opts.cascade:
             # Simple deletion - just the user profile
-            await self.client.mutation("immutable:purge", {"type": "user", "id": user_id})
+            try:
+                await self.client.mutation("immutable:purge", {"type": "user", "id": user_id})
+                total_deleted = 1
+            except Exception as e:
+                # Only ignore "not found" errors - user profile may not exist
+                if _is_user_not_found_error(e):
+                    total_deleted = 0
+                else:
+                    # Re-raise unexpected errors (connection issues, permission errors, etc.)
+                    raise
 
             return UserDeleteResult(
                 user_id=user_id,
@@ -179,8 +226,8 @@ class UsersAPI:
                 mutable_keys_deleted=0,
                 vector_memories_deleted=0,
                 facts_deleted=0,
-                total_deleted=1,
-                deleted_layers=["user-profile"],
+                total_deleted=total_deleted,
+                deleted_layers=["user-profile"] if total_deleted > 0 else [],
                 verification=VerificationResult(complete=True, issues=[]),
             )
 
@@ -603,9 +650,18 @@ class UsersAPI:
         if conversations_deleted > 0:
             deleted_layers.append("conversations")
 
-        # Delete user profile
-        await self.client.mutation("immutable:purge", {"type": "user", "id": user_id})
-        deleted_layers.append("user-profile")
+        # Delete user profile (may not exist if user was never created)
+        try:
+            await self.client.mutation("immutable:purge", {"type": "user", "id": user_id})
+            deleted_layers.append("user-profile")
+        except Exception as e:
+            # Only ignore "not found" errors - user profile may not exist
+            if _is_user_not_found_error(e):
+                # User profile doesn't exist - that's okay, might only have associated data
+                pass
+            else:
+                # Log unexpected errors but continue (cascade should be best-effort)
+                print(f"Warning: Failed to delete user profile: {e}")
 
         # Delete from graph if configured
         graph_nodes_deleted = None
@@ -621,13 +677,16 @@ class UsersAPI:
             except Exception as error:
                 print(f"Warning: Failed to delete from graph: {error}")
 
+        # Calculate total deleted (only count user profile if it was actually deleted)
+        user_profile_count = 1 if "user-profile" in deleted_layers else 0
+
         total_deleted = (
             conversations_deleted
             + immutable_deleted
             + mutable_deleted
             + vector_deleted
             + facts_deleted
-            + 1  # user profile
+            + user_profile_count
         )
 
         return UserDeleteResult(

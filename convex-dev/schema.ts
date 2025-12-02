@@ -186,6 +186,11 @@ export default defineSchema({
     sourceUserName: v.optional(v.string()),
     sourceTimestamp: v.number(),
 
+    // Message role (for conversation memories) - helps with semantic search weighting
+    messageRole: v.optional(
+      v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
+    ),
+
     // GDPR support
     userId: v.optional(v.string()), // For cascade deletion
 
@@ -222,9 +227,18 @@ export default defineSchema({
       }),
     ),
 
-    // Metadata
+    // Metadata (flattened for indexing/filtering)
     importance: v.number(), // 0-100 (flattened for filtering)
     tags: v.array(v.string()), // Flattened for filtering
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Enrichment Fields (for bullet-proof retrieval)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    enrichedContent: v.optional(v.string()), // Concatenated searchable content for embedding
+    factCategory: v.optional(v.string()), // Category for filtering (e.g., "addressing_preference")
+
+    // Flexible metadata (for source-specific data like A2A direction, messageId, etc.)
+    metadata: v.optional(v.any()),
 
     // Versioning (like immutable)
     version: v.number(),
@@ -310,6 +324,31 @@ export default defineSchema({
     // Metadata & Tags
     metadata: v.optional(v.any()),
     tags: v.array(v.string()),
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Enrichment Fields (for bullet-proof retrieval)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    category: v.optional(v.string()), // Specific sub-category (e.g., "addressing_preference")
+    searchAliases: v.optional(v.array(v.string())), // Alternative search terms
+    semanticContext: v.optional(v.string()), // Usage context sentence
+    entities: v.optional(
+      v.array(
+        v.object({
+          name: v.string(),
+          type: v.string(),
+          fullValue: v.optional(v.string()),
+        }),
+      ),
+    ), // Extracted entities with types
+    relations: v.optional(
+      v.array(
+        v.object({
+          subject: v.string(),
+          predicate: v.string(),
+          object: v.string(),
+        }),
+      ),
+    ), // Subject-predicate-object triples for graph
 
     // Temporal validity
     validFrom: v.optional(v.number()),

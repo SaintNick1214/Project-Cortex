@@ -12,7 +12,13 @@ Note: Python port of comprehensive TypeScript cross-space boundary tests.
 """
 
 import pytest
-from cortex.types import StoreMemoryInput, StoreFactParams, CreateConversationInput, ContextInput, RegisterMemorySpaceParams, AddMessageInput
+
+from cortex.types import (
+    CreateConversationInput,
+    RegisterMemorySpaceParams,
+    StoreFactParams,
+    StoreMemoryInput,
+)
 
 
 def generate_test_id(prefix=""):
@@ -44,11 +50,11 @@ class TestVectorMemoryIsolation:
                 metadata={"importance": 50, "tags": []},
             ),
         )
-        
+
         # Attempt to get from space B
         result = await cortex_client.vector.get(space_b, mem_a.memory_id)
         assert result is None
-        
+
     async def test_list_never_returns_wrong_space_data(self, cortex_client, space_a, space_b):
         """Test list() only returns data from specified space."""
         await cortex_client.vector.store(
@@ -60,7 +66,7 @@ class TestVectorMemoryIsolation:
                 metadata={"importance": 50, "tags": []},
             ),
         )
-        
+
         await cortex_client.vector.store(
             space_b,
             StoreMemoryInput(
@@ -70,14 +76,14 @@ class TestVectorMemoryIsolation:
                 metadata={"importance": 50, "tags": []},
             ),
         )
-        
+
         # List space A
         list_a = await cortex_client.vector.list(memory_space_id=space_a)
-        
+
         for mem in list_a:
             assert mem.memory_space_id == space_a
             assert "MARKER_SPACE_B" not in mem.content
-            
+
     async def test_search_respects_space_boundaries(self, cortex_client, space_a, space_b):
         """Test search() never returns data from other spaces."""
         await cortex_client.vector.store(
@@ -89,10 +95,10 @@ class TestVectorMemoryIsolation:
                 metadata={"importance": 50, "tags": []},
             ),
         )
-        
+
         # Search in space B
         results = await cortex_client.vector.search(space_b, "UNIQUE_SEARCH_MARKER")
-        
+
         # Should not return space A data
         for mem in results:
             assert mem.memory_space_id == space_b
@@ -110,7 +116,7 @@ class TestConversationIsolation:
                 participants={"userId": "test-user"},
             )
         )
-        
+
         await cortex_client.conversations.create(
             CreateConversationInput(
                 type="user-agent",
@@ -118,13 +124,13 @@ class TestConversationIsolation:
                 participants={"userId": "test-user"},
             )
         )
-        
+
         list_a = await cortex_client.conversations.list(memory_space_id=space_a)
         list_b = await cortex_client.conversations.list(memory_space_id=space_b)
-        
+
         for conv in list_a:
             assert conv.memory_space_id == space_a
-            
+
         for conv in list_b:
             assert conv.memory_space_id == space_b
 
@@ -144,7 +150,7 @@ class TestFactsIsolation:
                 source_type="manual",
             )
         )
-        
+
         result = await cortex_client.facts.get(space_b, fact_a.fact_id)
         assert result is None
 
@@ -159,7 +165,7 @@ class TestStatisticsIsolation:
                 memory_space_id=space_a, type="project", name="Space A"
             )
         )
-        
+
         await cortex_client.vector.store(
             space_a,
             StoreMemoryInput(
@@ -169,7 +175,7 @@ class TestStatisticsIsolation:
                 metadata={"importance": 50, "tags": []},
             ),
         )
-        
+
         stats_a = await cortex_client.memory_spaces.get_stats(space_a)
         assert stats_a.total_memories >= 1
 
@@ -188,7 +194,7 @@ class TestBulkOperationIsolation:
                 metadata={"importance": 50, "tags": ["bulk-iso"]},
             ),
         )
-        
+
         mem_b = await cortex_client.vector.store(
             space_b,
             StoreMemoryInput(
@@ -198,14 +204,14 @@ class TestBulkOperationIsolation:
                 metadata={"importance": 50, "tags": ["bulk-iso"]},
             ),
         )
-        
+
         # Delete from space A only (deleteMany doesn't support tag filter in Python SDK)
         # Use manual deletion
         list_a = await cortex_client.vector.list(memory_space_id=space_a)
         for mem in list_a:
             if "bulk-iso" in mem.tags:
                 await cortex_client.vector.delete(space_a, mem.memory_id)
-        
+
         # Space B memory should still exist
         check_b = await cortex_client.vector.get(space_b, mem_b.memory_id)
         assert check_b is not None

@@ -79,7 +79,7 @@ export function validateMemorySpaceType(type: string): void {
     );
   }
 
-  if (!VALID_TYPES.includes(type as any)) {
+  if (!(VALID_TYPES as readonly string[]).includes(type)) {
     throw new MemorySpaceValidationError(
       `Invalid type "${type}". Valid types: ${VALID_TYPES.join(", ")}`,
       "INVALID_TYPE",
@@ -100,7 +100,7 @@ export function validateMemorySpaceStatus(status: string): void {
     );
   }
 
-  if (!VALID_STATUSES.includes(status as any)) {
+  if (!(VALID_STATUSES as readonly string[]).includes(status)) {
     throw new MemorySpaceValidationError(
       `Invalid status "${status}". Valid statuses: ${VALID_STATUSES.join(", ")}`,
       "INVALID_STATUS",
@@ -217,6 +217,7 @@ export function validateParticipants(participants: unknown): void {
   const participantIds = new Set<string>();
 
   for (let i = 0; i < participants.length; i++) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const participant = participants[i];
 
     // Validate individual participant
@@ -309,8 +310,10 @@ export function validateName(name: string | undefined): void {
 
 /**
  * Validates that update parameters contain at least one field
+ * Runtime validation for potentially untrusted external input
  */
 export function validateUpdateParams(updates: Record<string, unknown>): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!updates || typeof updates !== "object") {
     throw new MemorySpaceValidationError(
       "Updates must be an object",

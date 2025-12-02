@@ -1262,11 +1262,11 @@ async function consolidateFacts(memorySpaceId: string, userId: string) {
 
 ## Next Steps
 
-- **[Facts vs Conversations Trade-offs](./03-facts-vs-conversations.md)** - Detailed comparison
-- **[Graph Database Integration](./02-graph-database-integration.md)** - Add graph for entity relationships
-- **[Semantic Search](../02-core-features/02-semantic-search.md)** - Search fact efficiently
+- **[Facts vs Conversations Trade-offs](../07-advanced-topics/03-facts-vs-conversations.md)** - Detailed comparison
+- **[Graph Database Integration](../07-advanced-topics/02-graph-database-integration.md)** - Add graph for entity relationships
+- **[Semantic Search](./02-semantic-search.md)** - Search facts efficiently
 - **[Immutable Store API](../03-api-reference/07-immutable-store-api.md)** - Storage layer for facts
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

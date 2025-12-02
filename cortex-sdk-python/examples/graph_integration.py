@@ -4,8 +4,9 @@ Graph Integration Example
 Demonstrates Neo4j/Memgraph integration for advanced queries.
 """
 
-import os
 import asyncio
+import os
+
 from cortex import (
     Cortex,
     CortexConfig,

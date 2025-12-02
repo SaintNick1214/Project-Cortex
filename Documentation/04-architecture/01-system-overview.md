@@ -6,7 +6,7 @@ High-level architecture of Cortex and how it leverages Convex.
 
 ## Architecture at a Glance
 
-Cortex is built on **Convex** - a reactive TypeScript database with built-in vector search. We organize storage into **three layers** plus **coordination entities**:
+Cortex is built on **Convex** - a reactive TypeScript database with built-in vector search. We organize storage into **four layers** (ACID + Vector + Facts + Graph) plus **coordination entities**:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -792,13 +792,18 @@ Your App → Cortex Cloud API → Your Convex Instance
 6. **Flexible scaling** - Serverless, pay-per-use
 7. **Open source option** - Can self-host (FSL license)
 
-### Why Three Layers?
+### Why Four Layers?
 
 1. **Layer 1 (ACID)** - Complete data preservation, compliance, audit trail
-2. **Layer 2 (Vector)** - Fast search, optimized retrieval, retention rules
-3. **Layer 3 (SDK)** - Developer convenience, reduced code
+2. **Layer 2 (Vector)** - Fast semantic search, optimized retrieval, retention rules
+3. **Layer 3 (Facts)** - Structured knowledge extraction, 60-90% storage savings
+4. **Layer 4 (Graph)** - Optional relationship traversal, multi-hop queries
 
-**Benefit:** Aggressive retention on Vector (save costs) without losing ACID audit trail.
+**Benefits:**
+
+- Aggressive retention on Vector (save costs) without losing ACID audit trail
+- Facts extraction for intelligent storage optimization
+- Graph integration for complex relationship queries
 
 ### Why userId Everywhere?
 
@@ -851,4 +856,4 @@ Your App → Cortex Cloud API → Your Convex Instance
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

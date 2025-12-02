@@ -134,7 +134,10 @@ export function validateAgentRegistration(agent: AgentRegistration): void {
     );
   }
 
-  if ((agent.name as unknown) === undefined || (agent.name as unknown) === null) {
+  if (
+    (agent.name as unknown) === undefined ||
+    (agent.name as unknown) === null
+  ) {
     throw new AgentValidationError(
       "Agent name is required",
       "MISSING_AGENT_NAME",
@@ -165,7 +168,10 @@ const VALID_STATUSES = ["active", "inactive", "archived"] as const;
 /**
  * Validates agent status value
  */
-export function validateAgentStatus(status: string, fieldName = "status"): void {
+export function validateAgentStatus(
+  status: string,
+  fieldName = "status",
+): void {
   if (!status || typeof status !== "string") {
     throw new AgentValidationError(
       `${fieldName} is required and must be a string`,

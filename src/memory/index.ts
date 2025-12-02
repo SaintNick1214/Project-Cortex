@@ -61,6 +61,7 @@ import {
   validateStreamObject,
   validateFilterCombination,
 } from "./validators";
+import type { ResilienceLayer } from "../resilience";
 
 // Type for conversation with messages
 interface ConversationWithMessages {
@@ -74,13 +75,33 @@ export class MemoryAPI {
   private readonly vector: VectorAPI;
   private readonly facts: FactsAPI;
   private readonly graphAdapter?: GraphAdapter;
+  private readonly resilience?: ResilienceLayer;
 
-  constructor(client: ConvexClient, graphAdapter?: GraphAdapter) {
+  constructor(
+    client: ConvexClient,
+    graphAdapter?: GraphAdapter,
+    resilience?: ResilienceLayer,
+  ) {
     this.client = client;
     this.graphAdapter = graphAdapter;
-    this.conversations = new ConversationsAPI(client, graphAdapter);
-    this.vector = new VectorAPI(client, graphAdapter);
-    this.facts = new FactsAPI(client, graphAdapter);
+    this.resilience = resilience;
+    // Pass resilience layer to sub-APIs
+    this.conversations = new ConversationsAPI(client, graphAdapter, resilience);
+    this.vector = new VectorAPI(client, graphAdapter, resilience);
+    this.facts = new FactsAPI(client, graphAdapter, resilience);
+  }
+
+  /**
+   * Execute an operation through the resilience layer (if available)
+   */
+  private async executeWithResilience<T>(
+    operation: () => Promise<T>,
+    operationName: string,
+  ): Promise<T> {
+    if (this.resilience) {
+      return this.resilience.execute(operation, operationName);
+    }
+    return operation();
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -300,6 +321,7 @@ export class MemoryAPI {
         participantId: params.participantId, // Hive Mode tracking
         embedding: userEmbedding,
         userId: params.userId,
+        messageRole: "user", // NEW: Mark as user message for semantic search weighting
         source: {
           type: "conversation",
           userId: params.userId,
@@ -318,32 +340,58 @@ export class MemoryAPI {
       { syncToGraph: shouldSyncToGraph },
     );
 
-    // Step 7: Store agent response in Vector with conversationRef
-    const agentMemory = await this.vector.store(
-      params.memorySpaceId,
-      {
-        content: agentContent,
-        contentType: "raw", // Agent content is always raw, only user content gets summarized
-        participantId: params.participantId, // Hive Mode tracking
-        embedding: agentEmbedding,
-        userId: params.userId,
-        source: {
-          type: "conversation",
+    // Step 7: Store agent response in Vector (only if it contains meaningful info)
+    // Detect if agent response is just an acknowledgment (not a fact worth indexing)
+    // Acknowledgments pollute semantic search with "I've noted", "Got it", etc.
+    const agentContentLower = agentContent.toLowerCase();
+    const acknowledgmentPhrases = [
+      "got it",
+      "i've noted",
+      "i'll remember",
+      "noted",
+      "understood",
+      "i'll set",
+      "i'll call you",
+      "will do",
+      "sure thing",
+      "okay,",
+      "ok,",
+    ];
+    const isAcknowledgment =
+      agentContent.length < 80 &&
+      acknowledgmentPhrases.some((phrase) => agentContentLower.includes(phrase));
+
+    // Only store agent response in vector if it contains meaningful information
+    // Pure acknowledgments are stored in ACID (conversation history) but not vector
+    let agentMemory: MemoryEntry | undefined;
+    if (!isAcknowledgment) {
+      agentMemory = await this.vector.store(
+        params.memorySpaceId,
+        {
+          content: agentContent,
+          contentType: "raw", // Agent content is always raw, only user content gets summarized
+          participantId: params.participantId, // Hive Mode tracking
+          embedding: agentEmbedding,
           userId: params.userId,
-          userName: params.userName,
-          timestamp: now + 1,
+          messageRole: "agent", // Mark as agent message for semantic search weighting
+          source: {
+            type: "conversation",
+            userId: params.userId,
+            userName: params.userName,
+            timestamp: now + 1,
+          },
+          conversationRef: {
+            conversationId: params.conversationId,
+            messageIds: [agentMsg.messages[agentMsg.messages.length - 1].id],
+          },
+          metadata: {
+            importance: params.importance || 50,
+            tags: params.tags || [],
+          },
         },
-        conversationRef: {
-          conversationId: params.conversationId,
-          messageIds: [agentMsg.messages[agentMsg.messages.length - 1].id],
-        },
-        metadata: {
-          importance: params.importance || 50,
-          tags: params.tags || [],
-        },
-      },
-      { syncToGraph: shouldSyncToGraph },
-    );
+        { syncToGraph: shouldSyncToGraph },
+      );
+    }
 
     // Step 8: Extract and store facts (if extraction function provided)
     const extractedFacts: FactRecord[] = [];
@@ -396,6 +444,11 @@ export class MemoryAPI {
       }
     }
 
+    // Filter out undefined memories (agentMemory is undefined if it was an acknowledgment)
+    const storedMemories = [userMemory, agentMemory].filter(
+      (m): m is MemoryEntry => m !== undefined,
+    );
+
     return {
       conversation: {
         messageIds: [
@@ -404,7 +457,7 @@ export class MemoryAPI {
         ],
         conversationId: params.conversationId,
       },
-      memories: [userMemory, agentMemory],
+      memories: storedMemories,
       facts: extractedFacts,
     };
   }
@@ -470,7 +523,11 @@ export class MemoryAPI {
     validateContent(params.userMessage, "userMessage");
     validateUserId(params.userId);
 
-    if (!params.userName || typeof params.userName !== "string" || params.userName.trim().length === 0) {
+    if (
+      !params.userName ||
+      typeof params.userName !== "string" ||
+      params.userName.trim().length === 0
+    ) {
       throw new MemoryValidationError(
         "userName is required and must be a non-empty string",
         "MISSING_REQUIRED_FIELD",
@@ -506,9 +563,10 @@ export class MemoryAPI {
       "./streaming/AdaptiveProcessor"
     );
     // Note: ResponseChunker and shouldChunkContent are not currently used but kept for future chunking implementation
-    const { ResponseChunker: _ResponseChunker, shouldChunkContent: _shouldChunkContent } = await import(
-      "./streaming/ChunkingStrategies"
-    );
+    const {
+      ResponseChunker: _ResponseChunker,
+      shouldChunkContent: _shouldChunkContent,
+    } = await import("./streaming/ChunkingStrategies");
     const { ProgressiveGraphSync } = await import(
       "./streaming/ProgressiveGraphSync"
     );
@@ -558,8 +616,9 @@ export class MemoryAPI {
 
     // Adaptive processor (if enabled)
     // Note: adaptiveProcessor is prepared for future integration
-    let _adaptiveProcessor: InstanceType<typeof AdaptiveStreamProcessor> | null =
-      null;
+    let _adaptiveProcessor: InstanceType<
+      typeof AdaptiveStreamProcessor
+    > | null = null;
     if (options?.enableAdaptiveProcessing) {
       _adaptiveProcessor = new AdaptiveStreamProcessor();
     }
@@ -1030,7 +1089,10 @@ export class MemoryAPI {
     // Client-side validation
     validateMemorySpaceId(agentId, "memorySpaceId");
     validateStoreMemoryInput(input);
-    validateConversationRefRequirement(input.source.type, input.conversationRef);
+    validateConversationRefRequirement(
+      input.source.type,
+      input.conversationRef,
+    );
 
     // Store memory
     const memory = await this.vector.store(agentId, input);

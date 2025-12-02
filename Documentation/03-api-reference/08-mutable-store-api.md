@@ -1953,10 +1953,10 @@ Memory-def
 
 ## Next Steps
 
-- **[Immutable Store API](./10-immutable-store-api.md)** - Versioned shared data
-- **[Conversation Operations API](./06-conversation-operations-api.md)** - Private conversations
-- **[Governance Policies API](./12-governance-policies-api.md)** - Multi-layer retention rules
+- **[Immutable Store API](./07-immutable-store-api.md)** - Versioned shared data
+- **[Conversation Operations API](./03-conversation-operations.md)** - Private conversations
+- **[Governance Policies API](./10-governance-policies-api.md)** - Multi-layer retention rules
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

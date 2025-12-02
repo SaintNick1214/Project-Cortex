@@ -363,3 +363,40 @@ export const unregisterMany = mutation({
  * This approach provides better control and error handling than a single
  * complex backend mutation.
  */
+
+/**
+ * Purge all agents (TEST/DEV ONLY)
+ *
+ * WARNING: This permanently deletes ALL agent registrations!
+ * Only available in test/dev environments.
+ */
+export const purgeAll = mutation({
+  args: {},
+  handler: async (ctx) => {
+    // Safety check: Only allow in test/dev environments
+    const siteUrl = process.env.CONVEX_SITE_URL || "";
+    const isLocal =
+      siteUrl.includes("localhost") || siteUrl.includes("127.0.0.1");
+    const isDevDeployment =
+      siteUrl.includes(".convex.site") ||
+      siteUrl.includes("dev-") ||
+      siteUrl.includes("convex.cloud");
+    const isTestEnv =
+      process.env.NODE_ENV === "test" ||
+      process.env.CONVEX_ENVIRONMENT === "test";
+
+    if (!isLocal && !isDevDeployment && !isTestEnv) {
+      throw new Error(
+        "PURGE_DISABLED_IN_PRODUCTION: purgeAll is only available in test/dev environments.",
+      );
+    }
+
+    const allAgents = await ctx.db.query("agents").collect();
+
+    for (const agent of allAgents) {
+      await ctx.db.delete(agent._id);
+    }
+
+    return { deleted: allAgents.length };
+  },
+});

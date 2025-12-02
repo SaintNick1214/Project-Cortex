@@ -9,6 +9,7 @@ Complete guide to error handling, debugging, and troubleshooting in Cortex.
 Cortex uses structured errors with specific error codes to make debugging easier. All errors extend `CortexError` with a `code` property for programmatic handling.
 
 **As of v0.12.0**, Cortex includes comprehensive **client-side validation** that catches errors before they reach the backend, providing:
+
 - ⚡ **Instant feedback** (<1ms vs 50-200ms backend round-trip)
 - 📝 **Better error messages** with fix suggestions and field names
 - 🎯 **Improved developer experience** with faster iteration
@@ -47,8 +48,8 @@ Client-side validation catches common errors **synchronously** in your applicati
 await cortex.governance.setPolicy({
   organizationId: "my-org",
   conversations: {
-    retention: { deleteAfter: "7years" }  // Invalid format
-  }
+    retention: { deleteAfter: "7years" }, // Invalid format
+  },
 });
 // → Waits for backend call, then throws error
 
@@ -56,8 +57,8 @@ await cortex.governance.setPolicy({
 await cortex.governance.setPolicy({
   organizationId: "my-org",
   conversations: {
-    retention: { deleteAfter: "7years" }  // Invalid format
-  }
+    retention: { deleteAfter: "7years" }, // Invalid format
+  },
 });
 // → Throws GovernanceValidationError immediately
 // → Message: "Invalid period format '7years'. Must be in format like '7d', '30m', or '1y'"
@@ -74,7 +75,7 @@ import {
   ConversationValidationError,
   FactValidationError,
   // ... and 7 more
-} from '@cortexmemory/sdk';
+} from "@cortexmemory/sdk";
 
 try {
   await cortex.governance.setPolicy(policy);
@@ -106,6 +107,7 @@ except Exception as e:
 ### What Gets Validated Client-Side?
 
 **All APIs validate:**
+
 - ✅ Required fields (non-null, non-empty strings)
 - ✅ Format validation (IDs, periods like "7d", dates, regex patterns)
 - ✅ Range validation (0-100 scores, array lengths, date ranges)
@@ -114,6 +116,7 @@ except Exception as e:
 - ✅ Reference validation (related IDs provided together)
 
 **Left for backend validation:**
+
 - ❌ Existence checks (does this ID exist in database?)
 - ❌ Authorization (does user have permission?)
 - ❌ Race conditions (concurrent modifications)
@@ -121,19 +124,19 @@ except Exception as e:
 
 ### Validation Coverage by API
 
-| API | Validators | Example Validations |
-|-----|-----------|---------------------|
-| **Governance** | 9 validators | Period formats, importance ranges, version counts, scopes, date ranges |
-| **Memory** | 12 validators | Memory space IDs, content, importance, source types, conversation refs |
-| **Conversations** | 8 validators | Conversation types, participants, messages, query filters |
-| **Facts** | 10 validators | Fact types, confidence scores, subject/predicate/object, temporal validity |
-| **Immutable** | 6 validators | Type/ID validation, version numbers, data size limits |
-| **Mutable** | 7 validators | Namespace/key validation, value size, TTL formats |
-| **Agents** | 5 validators | Agent ID format, metadata, status values |
-| **Users** | 4 validators | User ID validation, profile data structure |
-| **Contexts** | 7 validators | Purpose, status transitions, parent-child relationships |
-| **Memory Spaces** | 6 validators | Space type, participant structure |
-| **Vector** | 8 validators | Memory space IDs, embedding dimensions, importance ranges |
+| API               | Validators    | Example Validations                                                        |
+| ----------------- | ------------- | -------------------------------------------------------------------------- |
+| **Governance**    | 9 validators  | Period formats, importance ranges, version counts, scopes, date ranges     |
+| **Memory**        | 12 validators | Memory space IDs, content, importance, source types, conversation refs     |
+| **Conversations** | 8 validators  | Conversation types, participants, messages, query filters                  |
+| **Facts**         | 10 validators | Fact types, confidence scores, subject/predicate/object, temporal validity |
+| **Immutable**     | 6 validators  | Type/ID validation, version numbers, data size limits                      |
+| **Mutable**       | 7 validators  | Namespace/key validation, value size, TTL formats                          |
+| **Agents**        | 5 validators  | Agent ID format, metadata, status values                                   |
+| **Users**         | 4 validators  | User ID validation, profile data structure                                 |
+| **Contexts**      | 7 validators  | Purpose, status transitions, parent-child relationships                    |
+| **Memory Spaces** | 6 validators  | Space type, participant structure                                          |
+| **Vector**        | 8 validators  | Memory space IDs, embedding dimensions, importance ranges                  |
 
 ### Common Validation Errors
 
@@ -143,15 +146,15 @@ except Exception as e:
 // ❌ Wrong
 await cortex.governance.setPolicy({
   conversations: {
-    retention: { deleteAfter: "7years" }  // Wrong format
-  }
+    retention: { deleteAfter: "7years" }, // Wrong format
+  },
 });
 
 // ✅ Correct
 await cortex.governance.setPolicy({
   conversations: {
-    retention: { deleteAfter: "7y" }  // ✅ "7d", "30m", "1y"
-  }
+    retention: { deleteAfter: "7y" }, // ✅ "7d", "30m", "1y"
+  },
 });
 ```
 
@@ -161,13 +164,13 @@ await cortex.governance.setPolicy({
 // ❌ Wrong
 await cortex.memory.store("agent-1", {
   content: "Test",
-  metadata: { importance: 150 }  // Must be 0-100
+  metadata: { importance: 150 }, // Must be 0-100
 });
 
 // ✅ Correct
 await cortex.memory.store("agent-1", {
   content: "Test",
-  metadata: { importance: 100 }  // ✅ 0-100
+  metadata: { importance: 100 }, // ✅ 0-100
 });
 ```
 
@@ -180,10 +183,10 @@ await cortex.governance.setPolicy({
     retention: {
       byImportance: [
         { range: [0, 50], versions: 5 },
-        { range: [40, 80], versions: 10 }  // Overlaps [0, 50]!
-      ]
-    }
-  }
+        { range: [40, 80], versions: 10 }, // Overlaps [0, 50]!
+      ],
+    },
+  },
 });
 
 // ✅ Correct
@@ -192,10 +195,10 @@ await cortex.governance.setPolicy({
     retention: {
       byImportance: [
         { range: [0, 50], versions: 5 },
-        { range: [51, 100], versions: 10 }  // No overlap
-      ]
-    }
-  }
+        { range: [51, 100], versions: 10 }, // No overlap
+      ],
+    },
+  },
 });
 ```
 
@@ -211,7 +214,7 @@ await cortex.governance.enforce({
 // ✅ Correct
 await cortex.governance.enforce({
   scope: { organizationId: "my-org" },
-  layers: ["vector"]
+  layers: ["vector"],
 });
 ```
 
@@ -220,16 +223,16 @@ await cortex.governance.enforce({
 ```typescript
 // ❌ Wrong
 await cortex.conversations.create({
-  memorySpaceId: "",  // Empty string!
+  memorySpaceId: "", // Empty string!
   type: "user-agent",
-  participants: { userId: "user-123" }
+  participants: { userId: "user-123" },
 });
 
 // ✅ Correct
 await cortex.conversations.create({
-  memorySpaceId: "user-123-personal",  // Non-empty
+  memorySpaceId: "user-123-personal", // Non-empty
   type: "user-agent",
-  participants: { userId: "user-123" }
+  participants: { userId: "user-123" },
 });
 ```
 
@@ -1311,9 +1314,7 @@ const cortex = new Cortex({
 ## Next Steps
 
 - **[Memory Operations API](./02-memory-operations.md)** - Using Cortex APIs
-- **[Troubleshooting Guide](../../11-reference/02-troubleshooting.md)** - Common issues
-- **[FAQ](../../11-reference/01-faq.md)** - Frequently asked questions
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

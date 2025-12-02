@@ -31,6 +31,7 @@ import {
   validateOperationsArray,
   validateTransactionOperations,
 } from "./validators";
+import type { ResilienceLayer } from "../resilience";
 
 // Export validation error for users who want to catch it specifically
 export { MutableValidationError } from "./validators";
@@ -39,7 +40,21 @@ export class MutableAPI {
   constructor(
     private readonly client: ConvexClient,
     private readonly graphAdapter?: GraphAdapter,
+    private readonly resilience?: ResilienceLayer,
   ) {}
+
+  /**
+   * Execute an operation through the resilience layer (if available)
+   */
+  private async executeWithResilience<T>(
+    operation: () => Promise<T>,
+    operationName: string,
+  ): Promise<T> {
+    if (this.resilience) {
+      return this.resilience.execute(operation, operationName);
+    }
+    return operation();
+  }
 
   /**
    * Set a key to a value (creates or overwrites)

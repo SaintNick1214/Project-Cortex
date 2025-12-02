@@ -70,10 +70,10 @@ await cortex.memory.remember({
   userName: "Alex",
 });
 
-// Search works (Layer 3 - searches Vector index)
+// Search works (searches Vector index)
 const memories = await cortex.memory.search("my-agent", "hello");
 
-// That's it! No setup required - all three layers work.
+// That's it! No setup required - all layers work immediately.
 ```
 
 **Use when:**
@@ -1212,7 +1212,7 @@ const partners = collaborations.map(m => m.metadata.toAgent);
 **Agent Management is optional but powerful:**
 
 - ✅ Start with simple string IDs (zero configuration)
-- ✅ All three layers work immediately (ACID, Vector, Memory API)
+- ✅ All layers work immediately (ACID, Vector, Facts, Graph)
 - ✅ Register when you need organization and analytics
 - ✅ Configure retention and behavior per agent
 - ✅ Search and discover agents by capabilities
@@ -1234,9 +1234,8 @@ const partners = collaborations.map(m => m.metadata.toAgent);
 
 - **[User Operations API](./04-user-operations.md)** - User profile management
 - **[Memory Operations API](./02-memory-operations.md)** - Memory CRUD
-- **[Analytics Operations API](./07-analytics-operations.md)** - Get agent stats
-- **[Types & Interfaces](./08-types-interfaces.md)** - Complete TypeScript definitions
+- **[Types & Interfaces](./11-types-interfaces.md)** - Complete TypeScript definitions
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

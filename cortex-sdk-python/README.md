@@ -92,6 +92,42 @@ The Python SDK provides 100% API compatibility with the TypeScript SDK:
 - 🤝 **A2A Communication** - Agent-to-agent messaging helpers
 - 📈 **Access Analytics** - Built-in statistics and insights
 - 🛡️ **Governance Policies** - Centralized data retention, purging, and compliance (GDPR, HIPAA, SOC2, FINRA)
+- 🔒 **Resilience Layer** - Rate limiting, circuit breaker, priority queue for overload protection
+
+## ✨ What's New in v0.16.0
+
+### Resilience Layer - Production-Ready Overload Protection
+
+**NEW: Built-in protection against server overload during extreme traffic bursts:**
+
+```python
+from cortex import Cortex, CortexConfig
+from cortex.resilience import ResiliencePresets
+
+# Default - enabled with balanced settings (no config needed!)
+cortex = Cortex(CortexConfig(convex_url=os.getenv("CONVEX_URL")))
+
+# Or use a preset for your use case
+realtime_cortex = Cortex(CortexConfig(
+    convex_url=os.getenv("CONVEX_URL"),
+    resilience=ResiliencePresets.real_time_agent,  # Low latency
+))
+
+# Monitor health
+print(cortex.is_healthy())  # False if circuit is open
+print(cortex.get_resilience_metrics())  # Full metrics
+
+# Graceful shutdown
+await cortex.shutdown(timeout_s=30.0)  # Wait for pending ops
+```
+
+**Features:**
+- ⚡ **Token Bucket Rate Limiter** - Smooths bursty traffic
+- 🚦 **Concurrency Limiter** - Controls parallel requests
+- 🎯 **Priority Queue** - Critical ops get priority
+- 🔌 **Circuit Breaker** - Fails fast when backend is unhealthy
+
+---
 
 ## 🏗️ Architecture
 

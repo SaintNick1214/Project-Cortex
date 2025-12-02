@@ -303,3 +303,62 @@ export async function ensureEntityNode(
     throw error;
   }
 }
+
+/**
+ * Create or get an enriched Entity node (for bullet-proof fact retrieval)
+ *
+ * Creates Entity nodes with additional metadata from enriched extraction:
+ * - entityType: Specific type (e.g., "preferred_name", "full_name", "company")
+ * - fullValue: Full value if available (e.g., "Alexander Johnson" for "Alex")
+ *
+ * Uses findNodes + createNode pattern with update for existing nodes
+ */
+export async function ensureEnrichedEntityNode(
+  entityName: string,
+  entityType: string,
+  fullValue: string | undefined,
+  adapter: GraphAdapter,
+): Promise<string> {
+  // Try to find existing node by name
+  const nodes = await adapter.findNodes("Entity", { name: entityName }, 1);
+
+  if (nodes.length > 0) {
+    const existingNode = nodes[0];
+
+    // Update node if we have enriched data that wasn't there before
+    if (fullValue && existingNode.properties.fullValue !== fullValue) {
+      await adapter.updateNode(existingNode.id!, {
+        fullValue,
+        entityType, // Update type if we have more specific info
+        updatedAt: Date.now(),
+      });
+    }
+
+    return existingNode.id!;
+  }
+
+  // Create new enriched Entity node if not found
+  try {
+    return await adapter.createNode({
+      label: "Entity",
+      properties: {
+        name: entityName,
+        type: entityType,
+        entityType, // Specific entity type (e.g., "preferred_name")
+        fullValue: fullValue || null, // Full value if available
+        createdAt: Date.now(),
+      },
+    });
+  } catch (error) {
+    // If creation failed due to constraint (race condition), try finding again
+    const retryNodes = await adapter.findNodes(
+      "Entity",
+      { name: entityName },
+      1,
+    );
+    if (retryNodes.length > 0) {
+      return retryNodes[0].id!;
+    }
+    throw error;
+  }
+}

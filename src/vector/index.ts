@@ -35,12 +35,27 @@ import {
   validateDeleteManyFilter,
   validateUpdateManyInputs,
 } from "./validators";
+import type { ResilienceLayer } from "../resilience";
 
 export class VectorAPI {
   constructor(
     private readonly client: ConvexClient,
     private readonly graphAdapter?: GraphAdapter,
+    private readonly resilience?: ResilienceLayer,
   ) {}
+
+  /**
+   * Execute an operation through the resilience layer (if available)
+   */
+  private async executeWithResilience<T>(
+    operation: () => Promise<T>,
+    operationName: string,
+  ): Promise<T> {
+    if (this.resilience) {
+      return this.resilience.execute(operation, operationName);
+    }
+    return operation();
+  }
 
   /**
    * Store a vector memory
@@ -70,22 +85,27 @@ export class VectorAPI {
     validateMemorySpaceId(memorySpaceId);
     validateStoreInput(input);
 
-    const result = await this.client.mutation(api.memories.store, {
-      memorySpaceId,
-      participantId: input.participantId, // NEW: Hive Mode
-      content: input.content,
-      contentType: input.contentType,
-      embedding: input.embedding,
-      sourceType: input.source.type,
-      sourceUserId: input.source.userId,
-      sourceUserName: input.source.userName,
-      userId: input.userId,
-      conversationRef: input.conversationRef,
-      immutableRef: input.immutableRef,
-      mutableRef: input.mutableRef,
-      importance: input.metadata.importance,
-      tags: input.metadata.tags,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.memories.store, {
+          memorySpaceId,
+          participantId: input.participantId, // NEW: Hive Mode
+          content: input.content,
+          contentType: input.contentType,
+          embedding: input.embedding,
+          sourceType: input.source.type,
+          sourceUserId: input.source.userId,
+          sourceUserName: input.source.userName,
+          userId: input.userId,
+          messageRole: input.messageRole, // NEW: For semantic search weighting
+          conversationRef: input.conversationRef,
+          immutableRef: input.immutableRef,
+          mutableRef: input.mutableRef,
+          importance: input.metadata.importance,
+          tags: input.metadata.tags,
+        }),
+      "vector:store",
+    );
 
     // Sync to graph if requested and configured
     if (options?.syncToGraph && this.graphAdapter) {

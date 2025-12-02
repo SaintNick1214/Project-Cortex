@@ -5,6 +5,458 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.16.0] - 2025-12-01
+
+### 🛡️ Resilience Layer - Production-Ready Overload Protection
+
+**Complete implementation of a 4-layer resilience system protecting against server overload during extreme traffic bursts.**
+
+#### ✨ New Features
+
+**1. Token Bucket Rate Limiter**
+
+Smooths out bursty traffic into a sustainable flow:
+
+```python
+from cortex import Cortex, CortexConfig
+from cortex.resilience import ResilienceConfig, RateLimiterConfig
+
+cortex = Cortex(CortexConfig(
+    convex_url=os.getenv("CONVEX_URL"),
+    resilience=ResilienceConfig(
+        rate_limiter=RateLimiterConfig(
+            bucket_size=200,     # Allow bursts up to 200
+            refill_rate=100,     # Sustain 100 ops/sec
+        )
+    )
+))
+```
+
+**2. Concurrency Limiter (Semaphore)**
+
+Controls the number of concurrent in-flight requests:
+
+```python
+resilience=ResilienceConfig(
+    concurrency=ConcurrencyConfig(
+        max_concurrent=20,    # Max 20 parallel requests
+        queue_size=1000,      # Queue up to 1000 pending
+        timeout=30.0,         # 30s timeout for queued requests
+    )
+)
+```
+
+**3. Priority Queue**
+
+In-memory queue that prioritizes critical operations:
+
+| Priority | Examples | Behavior |
+|----------|----------|----------|
+| `critical` | `users:delete` | Bypass circuit breaker |
+| `high` | `memory:remember`, `facts:store` | Priority processing |
+| `normal` | Most operations | Standard queue |
+| `low` | `memory:search`, `vector:search` | Deferrable |
+| `background` | `governance:simulate` | Lowest priority |
+
+Priorities are **automatically assigned** based on operation name patterns.
+
+**4. Circuit Breaker**
+
+Prevents cascading failures by failing fast when backend is unhealthy:
+
+```python
+resilience=ResilienceConfig(
+    circuit_breaker=CircuitBreakerConfig(
+        failure_threshold=5,   # Open after 5 failures
+        success_threshold=2,   # Close after 2 successes
+        timeout=30.0,          # 30s before half-open retry
+    ),
+    on_circuit_open=lambda failures: print(f"Circuit opened after {failures} failures")
+)
+```
+
+**5. Resilience Presets**
+
+Pre-configured presets for common use cases:
+
+```python
+from cortex.resilience import ResiliencePresets
+
+# Default - balanced for most use cases
+Cortex(CortexConfig(convex_url=url, resilience=ResiliencePresets.default))
+
+# Real-time agent - low latency, smaller buffers
+Cortex(CortexConfig(convex_url=url, resilience=ResiliencePresets.real_time_agent))
+
+# Batch processing - large queues, patient retries
+Cortex(CortexConfig(convex_url=url, resilience=ResiliencePresets.batch_processing))
+
+# Hive mode - many agents, conservative limits
+Cortex(CortexConfig(convex_url=url, resilience=ResiliencePresets.hive_mode))
+
+# Disabled - bypass all protection (not recommended)
+Cortex(CortexConfig(convex_url=url, resilience=ResiliencePresets.disabled))
+```
+
+**6. Metrics & Monitoring**
+
+```python
+metrics = cortex.get_resilience_metrics()
+
+print(f"Rate limiter: {metrics.rate_limiter.available}/{metrics.rate_limiter.bucket_size} tokens")
+print(f"Concurrency: {metrics.concurrency.active}/{metrics.concurrency.max} active")
+print(f"Queue: {metrics.queue.size} pending")
+print(f"Circuit: {metrics.circuit_breaker.state} ({metrics.circuit_breaker.failures} failures)")
+
+# Health check
+is_healthy = cortex.is_healthy()  # False if circuit is open
+```
+
+**7. Graceful Shutdown**
+
+```python
+# Wait for pending operations to complete
+await cortex.shutdown(timeout_s=30.0)
+
+# Or immediate close
+await cortex.close()
+```
+
+#### 📦 New Modules
+
+**Python (`cortex/resilience/`):**
+- `types.py` - Configuration dataclasses and exceptions
+- `token_bucket.py` - Token bucket rate limiter
+- `semaphore.py` - Async semaphore with queue
+- `priorities.py` - Operation priority mapping
+- `priority_queue.py` - Priority-based request queue
+- `circuit_breaker.py` - Circuit breaker pattern
+- `__init__.py` - ResilienceLayer orchestrator and presets
+
+#### 🧪 Testing
+
+- **40 new Python tests** covering all resilience components
+- All existing tests now run through resilience layer by default
+- Integration tests validate end-to-end protection
+
+#### 📚 New Types
+
+```python
+from typing import Literal
+from dataclasses import dataclass
+
+Priority = Literal["critical", "high", "normal", "low", "background"]
+
+@dataclass
+class ResilienceConfig:
+    enabled: bool = True
+    rate_limiter: Optional[RateLimiterConfig] = None
+    concurrency: Optional[ConcurrencyConfig] = None
+    circuit_breaker: Optional[CircuitBreakerConfig] = None
+    queue: Optional[QueueConfig] = None
+    on_circuit_open: Optional[Callable[[int], None]] = None
+    on_circuit_close: Optional[Callable[[], None]] = None
+    on_queue_full: Optional[Callable[[Priority], None]] = None
+
+@dataclass
+class ResilienceMetrics:
+    rate_limiter: RateLimiterMetrics
+    concurrency: ConcurrencyMetrics
+    queue: QueueMetrics
+    circuit_breaker: CircuitBreakerMetrics
+
+# Custom exceptions
+class CircuitOpenError(Exception): ...
+class QueueFullError(Exception): ...
+class AcquireTimeoutError(Exception): ...
+class RateLimitExceededError(Exception): ...
+```
+
+#### 🔄 Backward Compatibility
+
+✅ **Zero Breaking Changes**
+
+- Resilience is **enabled by default** with balanced settings
+- All existing code works without modification
+- Pass `resilience=ResilienceConfig(enabled=False)` to disable
+- Existing tests automatically run through resilience layer
+
+#### 🎯 Production Benefits
+
+- **Burst Protection**: Handle 10x traffic spikes gracefully
+- **Cascade Prevention**: Circuit breaker isolates failures
+- **Priority Handling**: Critical ops (deletes) bypass queue
+- **Graceful Degradation**: Low-priority ops queue during overload
+- **Zero Config**: Works out of the box with sensible defaults
+- **Full Observability**: Metrics for dashboards and alerting
+
+---
+
+## [0.15.1] - 2025-11-29
+
+### 🔍 Semantic Search Quality - Agent Acknowledgment Filtering
+
+**Fixes an edge case where agent acknowledgments like "I've noted your email address" could outrank user facts in semantic search due to word overlap (e.g., "address" matching both contexts).**
+
+#### 🐛 Bug Fixes
+
+**1. Agent Acknowledgment Noise Filtering**
+
+Agent responses that are pure acknowledgments (no meaningful facts) are now filtered from vector storage:
+
+- ✅ **ACID storage preserved** - Full conversation history maintained
+- ✅ **Vector storage filtered** - Acknowledgments don't pollute semantic search
+- ✅ **Automatic detection** - Patterns like "Got it!", "I've noted", "I'll remember" are identified
+
+```python
+# Before: Both stored in vector (agent response pollutes search)
+await cortex.memory.remember(
+    RememberParams(
+        user_message="My name is Alex",
+        agent_response="Got it!",  # Would appear in semantic search
+        ...
+    )
+)
+
+# After: Only user fact stored in vector
+# "Got it!" still in ACID for conversation history
+# But won't appear when searching "what to call the user"
+```
+
+**2. Role-Based Search Weighting**
+
+- User messages receive 25% boost in semantic search scoring
+- Detected acknowledgments receive 50% penalty (defense-in-depth)
+- `message_role` field tracks source for intelligent ranking
+
+#### 🎯 Impact
+
+Queries like "what should I address the user as" now reliably return user facts ("My name is Alex") instead of agent acknowledgments ("I've noted your email address") that happen to contain semantically similar words.
+
+---
+
+## [0.15.0] - 2025-11-30
+
+### 🎯 Enriched Fact Extraction - Bullet-Proof Semantic Search
+
+**Comprehensive enhancement to fact extraction and retrieval, ensuring extracted facts always rank #1 in semantic search through rich metadata, search aliases, and category-based boosting.**
+
+#### ✨ New Features
+
+**1. Enriched Fact Extraction System**
+
+Facts can now store rich metadata optimized for retrieval:
+
+- **`category`** - Specific sub-category for filtering (e.g., "addressing_preference")
+- **`search_aliases`** - Array of alternative search terms that should match this fact
+- **`semantic_context`** - Usage context sentence explaining when/how to use this information
+- **`entities`** - Array of extracted entities with name, type, and optional full_value
+- **`relations`** - Array of subject-predicate-object triples for graph integration
+
+```python
+await cortex.facts.store(
+    StoreFactParams(
+        memory_space_id="agent-1",
+        fact="User prefers to be called Alex",
+        fact_type="identity",
+        confidence=95,
+        source_type="conversation",
+
+        # Enrichment fields (NEW)
+        category="addressing_preference",
+        search_aliases=["name", "nickname", "what to call", "address as", "greet"],
+        semantic_context="Use 'Alex' when addressing, greeting, or referring to this user",
+        entities=[
+            EnrichedEntity(name="Alex", type="preferred_name", full_value="Alexander Johnson"),
+        ],
+        relations=[
+            EnrichedRelation(subject="user", predicate="prefers_to_be_called", object="Alex"),
+        ],
+    )
+)
+```
+
+**2. Enhanced Search Boosting**
+
+Vector memory search now applies intelligent boosting:
+
+| Condition                                                 | Boost |
+| --------------------------------------------------------- | ----- |
+| User message role (`message_role="user"`)                 | +20%  |
+| Matching `fact_category` (when `query_category` provided) | +30%  |
+| Has `enriched_content` field                              | +10%  |
+
+```python
+# Search with category boosting
+results = await cortex.memory.search(
+    memory_space_id,
+    query,
+    SearchOptions(
+        embedding=await generate_embedding(query),
+        query_category="addressing_preference",  # Boost matching facts
+    )
+)
+```
+
+**3. Enriched Content for Vector Indexing**
+
+New `enriched_content` field on memories concatenates all searchable content for embedding.
+
+**4. Enhanced Graph Synchronization**
+
+Graph sync now creates richer entity nodes and relationship edges from enriched facts:
+
+- **Entity nodes** include `entity_type` and `full_value` properties
+- **Relations** create typed edges (e.g., `PREFERS_TO_BE_CALLED`)
+- **MENTIONS edges** link facts to extracted entities with role metadata
+
+**5. New Types (Python)**
+
+```python
+@dataclass
+class EnrichedEntity:
+    """Entity extracted from enriched fact extraction."""
+    name: str
+    type: str
+    full_value: Optional[str] = None
+
+
+@dataclass
+class EnrichedRelation:
+    """Relation extracted from enriched fact extraction."""
+    subject: str
+    predicate: str
+    object: str
+```
+
+Updated dataclasses:
+
+- `StoreFactParams` - Added `category`, `search_aliases`, `semantic_context`, `entities`, `relations`
+- `FactRecord` - Added same enrichment fields
+- `StoreMemoryInput` - Added `enriched_content`, `fact_category`
+- `MemoryEntry` - Added `enriched_content`, `fact_category`
+
+#### 📊 Schema Changes
+
+**Facts Table (Layer 3):**
+
+- `category` - Specific sub-category
+- `searchAliases` - Alternative search terms
+- `semanticContext` - Usage context
+- `entities` - Extracted entities with types
+- `relations` - Relationship triples for graph
+
+**Memories Table (Layer 2):**
+
+- `enrichedContent` - Concatenated searchable content
+- `factCategory` - Category for boosting
+- `factsRef` - Reference to Layer 3 fact
+
+#### 🧪 Testing
+
+- Enhanced semantic search tests with strict top-1 validation
+- Validates bullet-proof retrieval: correct result must be #1
+
+#### 📚 Documentation
+
+- Updated Facts Operations API with enrichment fields and examples
+- Updated Memory Operations API with query_category and enriched_content
+- New "Enriched Fact Extraction" section explaining the system architecture
+
+#### 🔄 Backward Compatibility
+
+✅ **Zero Breaking Changes**
+
+- All enrichment fields are optional
+- Existing code works without modifications
+- No data migration required
+
+---
+
+## [0.14.0] - 2025-11-29
+
+### 🤖 A2A (Agent-to-Agent) Communication API
+
+**Full implementation of the A2A Communication API, enabling seamless inter-agent communication with ACID guarantees and bidirectional memory storage.**
+
+#### ✨ New Features
+
+**1. A2A API Methods**
+
+Four new methods for agent-to-agent communication:
+
+- **`send()`** - Fire-and-forget message between agents (no pub/sub required)
+- **`request()`** - Synchronous request-response pattern (requires pub/sub infrastructure)
+- **`broadcast()`** - One-to-many communication to multiple agents
+- **`get_conversation()`** - Retrieve conversation history with rich filtering
+
+**2. Bidirectional Memory Storage**
+
+Each A2A message automatically creates:
+
+- Memory in sender's space (direction: "outbound")
+- Memory in receiver's space (direction: "inbound")
+- ACID conversation tracking (optional, enabled by default)
+
+```python
+from cortex import Cortex, CortexConfig, A2ASendParams
+
+cortex = Cortex(CortexConfig(convex_url="..."))
+
+result = await cortex.a2a.send(
+    A2ASendParams(
+        from_agent="sales-agent",
+        to_agent="support-agent",
+        message="Customer asking about enterprise pricing",
+        importance=70
+    )
+)
+print(f"Message {result.message_id} sent")
+```
+
+**3. Client-Side Validation**
+
+Comprehensive validation for all A2A operations:
+
+- Agent ID format validation
+- Message content and size limits (100KB max)
+- Importance range (0-100)
+- Timeout and retry configuration
+- Recipients array validation for broadcasts
+- Conversation filter validation
+
+```python
+from cortex import A2AValidationError
+
+try:
+    await cortex.a2a.send(params)
+except A2AValidationError as e:
+    print(f"Validation failed: {e.code} - {e.field}")
+```
+
+**4. Type Updates**
+
+- Added `metadata: Optional[Dict[str, Any]]` field to `MemoryEntry` for A2A-specific data
+- New types: `A2ASendParams`, `A2AMessage`, `A2ARequestParams`, `A2AResponse`, `A2ABroadcastParams`, `A2ABroadcastResult`
+
+#### 🧪 Testing
+
+- 50 new A2A tests covering core operations, validation, integration, and edge cases
+- All tests passing against local and cloud Convex deployments
+
+#### 🔄 Migration Guide
+
+**No migration required** - This is a non-breaking addition.
+
+To use A2A, simply access `cortex.a2a`:
+
+```python
+cortex = Cortex(CortexConfig(convex_url="..."))
+await cortex.a2a.send(A2ASendParams(from_agent="agent-1", to_agent="agent-2", message="Hello"))
+```
+
+---
+
 ## [0.12.0] - 2025-11-25
 
 ### 🎯 Client-Side Validation - All APIs

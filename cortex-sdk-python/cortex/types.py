@@ -177,6 +177,13 @@ class MutableRef:
 
 
 @dataclass
+class FactsRef:
+    """Reference to Layer 3 fact for memory-fact linking."""
+    fact_id: str
+    version: Optional[int] = None
+
+
+@dataclass
 class MemoryMetadata:
     """Metadata for memory entries."""
     importance: int  # 0-100
@@ -216,12 +223,18 @@ class MemoryEntry:
     embedding: Optional[List[float]] = None
     source_user_id: Optional[str] = None
     source_user_name: Optional[str] = None
+    message_role: Optional[Literal["user", "agent", "system"]] = None  # NEW: For semantic search weighting
     conversation_ref: Optional[ConversationRef] = None
     immutable_ref: Optional[ImmutableRef] = None
     mutable_ref: Optional[MutableRef] = None
+    facts_ref: Optional[FactsRef] = None  # Reference to Layer 3 fact
     last_accessed: Optional[int] = None
+    metadata: Optional[Dict[str, Any]] = None  # Flexible metadata (for A2A direction, messageId, etc.)
     _score: Optional[float] = None  # Similarity score from vector search (managed mode only)
     score: Optional[float] = None  # Alias for _score
+    # Enrichment fields (for bullet-proof retrieval)
+    enriched_content: Optional[str] = None  # Concatenated searchable content for embedding
+    fact_category: Optional[str] = None  # Category for filtering (e.g., "addressing_preference")
 
 
 @dataclass
@@ -243,14 +256,35 @@ class StoreMemoryInput:
     participant_id: Optional[str] = None
     embedding: Optional[List[float]] = None
     user_id: Optional[str] = None
+    message_role: Optional[Literal["user", "agent", "system"]] = None  # NEW: For semantic search weighting
     conversation_ref: Optional[ConversationRef] = None
     immutable_ref: Optional[ImmutableRef] = None
     mutable_ref: Optional[MutableRef] = None
+    facts_ref: Optional[FactsRef] = None  # Reference to Layer 3 fact
+    # Enrichment fields (for bullet-proof retrieval)
+    enriched_content: Optional[str] = None  # Concatenated searchable content for embedding
+    fact_category: Optional[str] = None  # Category for filtering (e.g., "addressing_preference")
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Layer 3: Facts
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+@dataclass
+class EnrichedEntity:
+    """Entity extracted from enriched fact extraction."""
+    name: str
+    type: str
+    full_value: Optional[str] = None
+
+
+@dataclass
+class EnrichedRelation:
+    """Relation extracted from enriched fact extraction."""
+    subject: str
+    predicate: str
+    object: str
+
 
 @dataclass
 class FactSourceRef:
@@ -285,6 +319,12 @@ class FactRecord:
     valid_until: Optional[int] = None
     superseded_by: Optional[str] = None
     supersedes: Optional[str] = None
+    # Enrichment fields (for bullet-proof retrieval)
+    category: Optional[str] = None  # Specific sub-category (e.g., "addressing_preference")
+    search_aliases: Optional[List[str]] = None  # Alternative search terms
+    semantic_context: Optional[str] = None  # Usage context sentence
+    entities: Optional[List[EnrichedEntity]] = None  # Extracted entities with types
+    relations: Optional[List[EnrichedRelation]] = None  # Subject-predicate-object triples for graph
 
 
 @dataclass
@@ -305,6 +345,12 @@ class StoreFactParams:
     tags: Optional[List[str]] = None
     valid_from: Optional[int] = None
     valid_until: Optional[int] = None
+    # Enrichment fields (for bullet-proof retrieval)
+    category: Optional[str] = None  # Specific sub-category (e.g., "addressing_preference")
+    search_aliases: Optional[List[str]] = None  # Alternative search terms
+    semantic_context: Optional[str] = None  # Usage context sentence
+    entities: Optional[List[EnrichedEntity]] = None  # Extracted entities with types
+    relations: Optional[List[EnrichedRelation]] = None  # Subject-predicate-object triples for graph
 
 
 @dataclass
@@ -1077,6 +1123,7 @@ class CortexConfig:
     """Main Cortex SDK configuration."""
     convex_url: str
     graph: Optional[GraphConfig] = None
+    resilience: Optional[Any] = None  # ResilienceConfig from resilience module
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

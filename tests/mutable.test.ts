@@ -7,71 +7,18 @@
  * - Storage validation
  * - Atomic updates
  * - State change propagation
+ *
+ * PARALLEL-SAFE: Uses TestRunContext for isolated test data
  */
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
-import { TestCleanup } from "./helpers";
+import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 
-// Extend TestCleanup for mutable table
-class MutableTestCleanup extends TestCleanup {
-  async purgeMutable(): Promise<number> {
-    console.log("🧹 Purging mutable table...");
-
-    // Purge ALL known test namespaces
-    const namespaces = [
-      "test",
-      "inventory",
-      "config",
-      "counters",
-      "sessions",
-      "temp",
-      "purge-test",
-      "count-test",
-      "prefix-test",
-      "user-data",
-      "propagation-test",
-      "sync-test",
-      "sync-test-unique",
-      "rapid-test",
-      "large-test",
-      "test-namespace_with.chars",
-      "empty-test",
-      "concurrent",
-      "integration-test",
-      "acid-test",
-      "overwrite-test",
-      "ns-a",
-      "ns-b",
-      "bulk-delete",
-      "purge-ns-test",
-      "bulk-mut-del",
-      "tx-integration-unique",
-      "mix-test",
-      "transfer",
-      "transfer-test",
-      "state",
-    ];
-
-    let deleted = 0;
-
-    for (const ns of namespaces) {
-      try {
-        const result = await this.client.mutation(api.mutable.purgeNamespace, {
-          namespace: ns,
-        });
-
-        deleted += result.deleted;
-      } catch (_error: unknown) {
-        // Namespace might not exist - that's fine
-      }
-    }
-
-    console.log(`✅ Purged ${deleted} mutable entries`);
-
-    return deleted;
-  }
+// Legacy cleanup class - kept for reference but not used in parallel-safe mode
+class _MutableTestCleanup {
+  constructor(protected client: ConvexClient) {}
 
   async verifyMutableEmpty(): Promise<void> {
     // Check a few test namespaces
@@ -97,11 +44,16 @@ class MutableTestCleanup extends TestCleanup {
 }
 
 describe("Mutable Store API (Layer 1c)", () => {
+  // Create unique test run context for parallel-safe execution
+  const ctx = createNamedTestRunContext("mutable");
+
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: MutableTestCleanup;
+  let scopedCleanup: ScopedCleanup;
 
   beforeAll(async () => {
+    console.log(`\n🧪 Mutable Store API Tests - Run ID: ${ctx.runId}\n`);
+
     const convexUrl = process.env.CONVEX_URL;
 
     if (!convexUrl) {
@@ -110,15 +62,18 @@ describe("Mutable Store API (Layer 1c)", () => {
 
     cortex = new Cortex({ convexUrl });
     client = new ConvexClient(convexUrl);
-    cleanup = new MutableTestCleanup(client);
+    scopedCleanup = new ScopedCleanup(client, ctx);
 
-    // Clean table before tests
-    await cleanup.purgeMutable();
-    await cleanup.verifyMutableEmpty();
+    // Note: No global purge - test data is isolated by prefix
+    console.log("✅ Test isolation setup complete\n");
   });
 
   afterAll(async () => {
+    // Clean up only data created by this test run
+    console.log(`\n🧹 Cleaning up test run ${ctx.runId}...`);
+    await scopedCleanup.cleanupAll();
     await client.close();
+    console.log(`✅ Test run ${ctx.runId} cleanup complete\n`);
   });
 
   describe("set()", () => {
@@ -1094,15 +1049,15 @@ describe("Mutable Store API (Layer 1c)", () => {
       });
 
       it("should throw on empty namespace", async () => {
-        await expect(
-          cortex.mutable.set("", "key", "value"),
-        ).rejects.toThrow("namespace is required");
+        await expect(cortex.mutable.set("", "key", "value")).rejects.toThrow(
+          "namespace is required",
+        );
       });
 
       it("should throw on whitespace-only namespace", async () => {
-        await expect(
-          cortex.mutable.set("   ", "key", "value"),
-        ).rejects.toThrow("namespace is required");
+        await expect(cortex.mutable.set("   ", "key", "value")).rejects.toThrow(
+          "namespace is required",
+        );
       });
 
       it("should throw on invalid namespace format (spaces)", async () => {
@@ -1220,9 +1175,9 @@ describe("Mutable Store API (Layer 1c)", () => {
       });
 
       it("should throw on missing key", async () => {
-        await expect(
-          cortex.mutable.getRecord("namespace", ""),
-        ).rejects.toThrow("key is required");
+        await expect(cortex.mutable.getRecord("namespace", "")).rejects.toThrow(
+          "key is required",
+        );
       });
 
       it("should throw on invalid key format", async () => {
@@ -1282,7 +1237,11 @@ describe("Mutable Store API (Layer 1c)", () => {
 
       it("should throw on non-function updater", async () => {
         await expect(
-          cortex.mutable.update("validation-test", "update-test", "not a function" as any),
+          cortex.mutable.update(
+            "validation-test",
+            "update-test",
+            "not a function" as any,
+          ),
         ).rejects.toThrow("Updater must be a function");
       });
 
@@ -1302,9 +1261,9 @@ describe("Mutable Store API (Layer 1c)", () => {
       });
 
       it("should throw on missing namespace", async () => {
-        await expect(
-          cortex.mutable.increment("", "key", 1),
-        ).rejects.toThrow("namespace is required");
+        await expect(cortex.mutable.increment("", "key", 1)).rejects.toThrow(
+          "namespace is required",
+        );
       });
 
       it("should throw on invalid namespace format", async () => {
@@ -1360,9 +1319,9 @@ describe("Mutable Store API (Layer 1c)", () => {
       });
 
       it("should throw on missing namespace", async () => {
-        await expect(
-          cortex.mutable.decrement("", "key", 1),
-        ).rejects.toThrow("namespace is required");
+        await expect(cortex.mutable.decrement("", "key", 1)).rejects.toThrow(
+          "namespace is required",
+        );
       });
 
       it("should throw on invalid namespace format", async () => {
@@ -1492,9 +1451,9 @@ describe("Mutable Store API (Layer 1c)", () => {
 
     describe("list() validation", () => {
       it("should throw on missing filter", async () => {
-        await expect(
-          cortex.mutable.list(undefined as any),
-        ).rejects.toThrow("Filter is required");
+        await expect(cortex.mutable.list(undefined as any)).rejects.toThrow(
+          "Filter is required",
+        );
       });
 
       it("should throw on null filter", async () => {
@@ -1510,9 +1469,9 @@ describe("Mutable Store API (Layer 1c)", () => {
       });
 
       it("should throw on empty namespace", async () => {
-        await expect(
-          cortex.mutable.list({ namespace: "" }),
-        ).rejects.toThrow("Filter must include namespace");
+        await expect(cortex.mutable.list({ namespace: "" })).rejects.toThrow(
+          "Filter must include namespace",
+        );
       });
 
       it("should throw on invalid namespace format", async () => {
@@ -1566,9 +1525,9 @@ describe("Mutable Store API (Layer 1c)", () => {
 
     describe("count() validation", () => {
       it("should throw on missing filter", async () => {
-        await expect(
-          cortex.mutable.count(undefined as any),
-        ).rejects.toThrow("Filter is required");
+        await expect(cortex.mutable.count(undefined as any)).rejects.toThrow(
+          "Filter is required",
+        );
       });
 
       it("should throw on missing filter.namespace", async () => {
@@ -1578,9 +1537,9 @@ describe("Mutable Store API (Layer 1c)", () => {
       });
 
       it("should throw on empty namespace", async () => {
-        await expect(
-          cortex.mutable.count({ namespace: "" }),
-        ).rejects.toThrow("Filter must include namespace");
+        await expect(cortex.mutable.count({ namespace: "" })).rejects.toThrow(
+          "Filter must include namespace",
+        );
       });
 
       it("should throw on invalid namespace format", async () => {
@@ -1636,15 +1595,15 @@ describe("Mutable Store API (Layer 1c)", () => {
       });
 
       it("should throw on null operations", async () => {
-        await expect(
-          cortex.mutable.transaction(null as any),
-        ).rejects.toThrow("Operations array is required");
+        await expect(cortex.mutable.transaction(null as any)).rejects.toThrow(
+          "Operations array is required",
+        );
       });
 
       it("should throw on non-array operations", async () => {
-        await expect(
-          cortex.mutable.transaction({} as any),
-        ).rejects.toThrow("Operations must be an array");
+        await expect(cortex.mutable.transaction({} as any)).rejects.toThrow(
+          "Operations must be an array",
+        );
       });
 
       it("should throw on empty operations array", async () => {
@@ -1807,9 +1766,9 @@ describe("Mutable Store API (Layer 1c)", () => {
       });
 
       it("should throw on missing filter.namespace", async () => {
-        await expect(
-          cortex.mutable.purgeMany({} as any),
-        ).rejects.toThrow("Filter must include namespace");
+        await expect(cortex.mutable.purgeMany({} as any)).rejects.toThrow(
+          "Filter must include namespace",
+        );
       });
 
       it("should throw on empty namespace", async () => {

@@ -6,6 +6,7 @@ Verifies chunk content, sizes, overlaps, and boundaries.
 """
 
 import pytest
+
 from cortex.memory.streaming.chunking_strategies import (
     ResponseChunker,
     estimate_optimal_chunk_size,
@@ -25,7 +26,7 @@ class TestResponseChunker:
         """
         chunker = ResponseChunker()
         content = "A" * 1000  # 1000 chars
-        
+
         config = ChunkingConfig(
             strategy=ChunkStrategy.FIXED,
             max_chunk_size=250,
@@ -37,7 +38,7 @@ class TestResponseChunker:
 
         # CRITICAL: Validate actual chunk properties
         assert len(chunks) == 4, f"Expected 4 chunks, got {len(chunks)}"
-        
+
         # Validate each chunk
         for i, chunk in enumerate(chunks):
             assert chunk.chunk_index == i
@@ -54,7 +55,7 @@ class TestResponseChunker:
         """
         chunker = ResponseChunker()
         content = "0123456789" * 10  # 100 chars
-        
+
         config = ChunkingConfig(
             strategy=ChunkStrategy.FIXED,
             max_chunk_size=30,
@@ -66,7 +67,7 @@ class TestResponseChunker:
 
         # CRITICAL: Validate overlap
         assert len(chunks) > 1
-        
+
         # Check that consecutive chunks overlap
         for i in range(len(chunks) - 1):
             current_end = chunks[i].content[-10:]  # Last 10 chars
@@ -81,7 +82,7 @@ class TestResponseChunker:
         """
         chunker = ResponseChunker()
         content = "word " * 200  # 1000 chars total
-        
+
         config = ChunkingConfig(
             strategy=ChunkStrategy.TOKEN,
             max_chunk_size=100,  # 100 tokens = ~400 chars
@@ -104,7 +105,7 @@ class TestResponseChunker:
         """
         chunker = ResponseChunker()
         content = "First sentence. Second sentence. Third sentence. Fourth sentence. Fifth sentence."
-        
+
         config = ChunkingConfig(
             strategy=ChunkStrategy.SENTENCE,
             max_chunk_size=2,  # 2 sentences per chunk
@@ -116,7 +117,7 @@ class TestResponseChunker:
 
         # CRITICAL: Validate sentence boundaries
         assert len(chunks) == 3, f"Expected 3 chunks (2+2+1 sentences), got {len(chunks)}"
-        
+
         # First chunk should have 2 sentences
         assert chunks[0].content.count(".") == 2
         # Second chunk should have 2 sentences
@@ -132,7 +133,7 @@ class TestResponseChunker:
         """
         chunker = ResponseChunker()
         content = "Para 1\n\nPara 2\n\nPara 3\n\nPara 4"
-        
+
         config = ChunkingConfig(
             strategy=ChunkStrategy.PARAGRAPH,
             max_chunk_size=2,  # 2 paragraphs per chunk
@@ -157,7 +158,7 @@ class TestResponseChunker:
         """
         chunker = ResponseChunker()
         content = ""
-        
+
         config = ChunkingConfig(
             strategy=ChunkStrategy.FIXED,
             max_chunk_size=100,
@@ -181,7 +182,7 @@ class TestResponseChunker:
         """
         chunker = ResponseChunker()
         content = "A" * 1000
-        
+
         config = ChunkingConfig(
             strategy=ChunkStrategy.FIXED,
             max_chunk_size=100,
@@ -209,15 +210,15 @@ class TestResponseChunker:
         Validates: Size recommendations for different strategies
         """
         # CRITICAL: Validate size estimates
-        
+
         # Token strategy
         token_size = estimate_optimal_chunk_size(5000, ChunkStrategy.TOKEN)
         assert token_size == 500, "Token strategy should suggest 500 tokens"
-        
+
         # Fixed strategy
         fixed_size = estimate_optimal_chunk_size(5000, ChunkStrategy.FIXED)
         assert fixed_size == 2000, "Fixed strategy should suggest 2000 chars"
-        
+
         # Sentence strategy (varies by content length)
         sentence_small = estimate_optimal_chunk_size(5000, ChunkStrategy.SENTENCE)
         sentence_large = estimate_optimal_chunk_size(15000, ChunkStrategy.SENTENCE)
@@ -232,7 +233,7 @@ class TestResponseChunker:
         """
         chunker = ResponseChunker()
         content = "A" * 500
-        
+
         config = ChunkingConfig(
             strategy=ChunkStrategy.FIXED,
             max_chunk_size=100,

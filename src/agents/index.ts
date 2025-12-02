@@ -88,11 +88,27 @@ export class AgentCascadeDeletionError extends Error {
  * - Users: Cascade by userId (GDPR compliance, required)
  * - Agents: Cascade by participantId (convenience, optional)
  */
+import type { ResilienceLayer } from "../resilience";
+
 export class AgentsAPI {
   constructor(
     private readonly client: ConvexClient,
     private readonly graphAdapter?: GraphAdapter,
+    private readonly resilience?: ResilienceLayer,
   ) {}
+
+  /**
+   * Execute an operation through the resilience layer (if available)
+   */
+  private async executeWithResilience<T>(
+    operation: () => Promise<T>,
+    operationName: string,
+  ): Promise<T> {
+    if (this.resilience) {
+      return this.resilience.execute(operation, operationName);
+    }
+    return operation();
+  }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Registry Operations

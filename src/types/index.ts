@@ -268,6 +268,11 @@ export interface MutableRef {
   snapshotAt: number;
 }
 
+export interface FactsRef {
+  factId: string;
+  version?: number;
+}
+
 export interface MemoryMetadata {
   importance: number; // 0-100
   tags: string[];
@@ -294,11 +299,18 @@ export interface MemoryEntry {
   sourceUserId?: string;
   sourceUserName?: string;
   sourceTimestamp: number;
+  messageRole?: "user" | "agent" | "system"; // NEW: For semantic search weighting
   conversationRef?: ConversationRef;
   immutableRef?: ImmutableRef;
   mutableRef?: MutableRef;
+  factsRef?: FactsRef; // Reference to Layer 3 fact
   importance: number;
   tags: string[];
+
+  // Enrichment fields (for bullet-proof retrieval)
+  enrichedContent?: string; // Concatenated searchable content for embedding
+  factCategory?: string; // Category for filtering (e.g., "addressing_preference")
+
   version: number;
   previousVersions: MemoryVersion[];
   createdAt: number;
@@ -313,6 +325,12 @@ export interface StoreMemoryInput {
   participantId?: string; // NEW: Hive Mode tracking
   embedding?: number[];
   userId?: string;
+  messageRole?: "user" | "agent" | "system"; // NEW: For semantic search weighting
+
+  // Enrichment fields (for bullet-proof retrieval)
+  enrichedContent?: string; // Concatenated searchable content for embedding
+  factCategory?: string; // Category for filtering (e.g., "addressing_preference")
+
   source: {
     type: SourceType;
     userId?: string;
@@ -322,6 +340,7 @@ export interface StoreMemoryInput {
   conversationRef?: ConversationRef;
   immutableRef?: ImmutableRef;
   mutableRef?: MutableRef;
+  factsRef?: FactsRef; // Reference to Layer 3 fact
   metadata: MemoryMetadata;
   extractFacts?: (content: string) => Promise<Array<{
     fact: string;
@@ -599,6 +618,20 @@ export interface ExportMemoriesOptions {
 // Layer 3: Facts Store (NEW)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+// Entity type for enriched fact extraction
+export interface EnrichedEntity {
+  name: string;
+  type: string;
+  fullValue?: string;
+}
+
+// Relation type for enriched fact extraction
+export interface EnrichedRelation {
+  subject: string;
+  predicate: string;
+  object: string;
+}
+
 export interface FactRecord {
   _id: string;
   factId: string;
@@ -626,6 +659,14 @@ export interface FactRecord {
   };
   metadata?: Record<string, unknown>;
   tags: string[];
+
+  // Enrichment fields (for bullet-proof retrieval)
+  category?: string; // Specific sub-category (e.g., "addressing_preference")
+  searchAliases?: string[]; // Alternative search terms
+  semanticContext?: string; // Usage context sentence
+  entities?: EnrichedEntity[]; // Extracted entities with types
+  relations?: EnrichedRelation[]; // Subject-predicate-object triples for graph
+
   validFrom?: number;
   validUntil?: number;
   version: number;
@@ -660,6 +701,14 @@ export interface StoreFactParams {
   };
   metadata?: Record<string, unknown>;
   tags?: string[];
+
+  // Enrichment fields (for bullet-proof retrieval)
+  category?: string; // Specific sub-category (e.g., "addressing_preference")
+  searchAliases?: string[]; // Alternative search terms
+  semanticContext?: string; // Usage context sentence
+  entities?: EnrichedEntity[]; // Extracted entities with types
+  relations?: EnrichedRelation[]; // Subject-predicate-object triples for graph
+
   validFrom?: number;
   validUntil?: number;
 }
@@ -1047,6 +1096,223 @@ export interface AgentDeletionBackup {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// A2A Communication API
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Parameters for sending an A2A message
+ */
+export interface A2ASendParams {
+  /** Sender agent ID */
+  from: string;
+  /** Receiver agent ID */
+  to: string;
+  /** Message content */
+  message: string;
+  /** Optional user ID (enables GDPR cascade) */
+  userId?: string;
+  /** Optional context/workflow ID */
+  contextId?: string;
+  /** Importance level 0-100 (default: 60) */
+  importance?: number;
+  /** Store in ACID conversation (default: true) */
+  trackConversation?: boolean;
+  /** Auto-generate embeddings (Cloud Mode only) */
+  autoEmbed?: boolean;
+  /** Optional metadata */
+  metadata?: {
+    tags?: string[];
+    priority?: "low" | "normal" | "high" | "urgent";
+    [key: string]: unknown;
+  };
+}
+
+/**
+ * Result from A2A send operation
+ */
+export interface A2AMessage {
+  /** Unique message ID */
+  messageId: string;
+  /** Timestamp when sent */
+  sentAt: number;
+  /** ACID conversation ID (if trackConversation=true) */
+  conversationId?: string;
+  /** Message ID in ACID conversation */
+  acidMessageId?: string;
+  /** Memory ID in sender's storage */
+  senderMemoryId: string;
+  /** Memory ID in receiver's storage */
+  receiverMemoryId: string;
+}
+
+/**
+ * Parameters for A2A request (synchronous request-response)
+ */
+export interface A2ARequestParams {
+  /** Sender agent ID */
+  from: string;
+  /** Receiver agent ID */
+  to: string;
+  /** Request message */
+  message: string;
+  /** Timeout in milliseconds (default: 30000) */
+  timeout?: number;
+  /** Number of retry attempts (default: 1) */
+  retries?: number;
+  /** Optional user ID (enables GDPR cascade) */
+  userId?: string;
+  /** Optional context/workflow ID */
+  contextId?: string;
+  /** Importance level 0-100 */
+  importance?: number;
+}
+
+/**
+ * Response from A2A request
+ */
+export interface A2AResponse {
+  /** Response message content */
+  response: string;
+  /** Original request message ID */
+  messageId: string;
+  /** Response message ID */
+  responseMessageId: string;
+  /** Timestamp when responded */
+  respondedAt: number;
+  /** Response time in milliseconds */
+  responseTime: number;
+}
+
+/**
+ * Parameters for A2A broadcast (one-to-many)
+ */
+export interface A2ABroadcastParams {
+  /** Sender agent ID */
+  from: string;
+  /** Array of recipient agent IDs */
+  to: string[];
+  /** Message content */
+  message: string;
+  /** Optional user ID (enables GDPR cascade) */
+  userId?: string;
+  /** Optional context/workflow ID */
+  contextId?: string;
+  /** Importance level 0-100 (default: 60) */
+  importance?: number;
+  /** Store in ACID conversation (default: true) */
+  trackConversation?: boolean;
+  /** Optional metadata */
+  metadata?: {
+    tags?: string[];
+    [key: string]: unknown;
+  };
+}
+
+/**
+ * Result from A2A broadcast
+ */
+export interface A2ABroadcastResult {
+  /** Broadcast message ID */
+  messageId: string;
+  /** Timestamp when sent */
+  sentAt: number;
+  /** Array of recipient agent IDs */
+  recipients: string[];
+  /** Memory IDs in sender's storage (one per recipient) */
+  senderMemoryIds: string[];
+  /** Memory IDs in receivers' storage (one per recipient) */
+  receiverMemoryIds: string[];
+  /** Total memories created (sender + receiver for each) */
+  memoriesCreated: number;
+  /** Conversation IDs (if trackConversation=true) */
+  conversationIds?: string[];
+}
+
+/**
+ * Filters for getConversation
+ */
+export interface A2AConversationFilters {
+  /** Filter by start date */
+  since?: Date;
+  /** Filter by end date */
+  until?: Date;
+  /** Minimum importance filter (0-100) */
+  minImportance?: number;
+  /** Filter by tags */
+  tags?: string[];
+  /** Filter A2A about specific user */
+  userId?: string;
+  /** Maximum messages to return (default: 100) */
+  limit?: number;
+  /** Pagination offset */
+  offset?: number;
+  /** Output format */
+  format?: "chronological";
+}
+
+/**
+ * A2A conversation result
+ */
+export interface A2AConversation {
+  /** The two participants */
+  participants: [string, string];
+  /** ACID conversation ID (if exists) */
+  conversationId?: string;
+  /** Total message count (before pagination) */
+  messageCount: number;
+  /** Conversation messages */
+  messages: A2AConversationMessage[];
+  /** Time period covered */
+  period: {
+    start: number;
+    end: number;
+  };
+  /** Tags found in messages */
+  tags?: string[];
+  /** True if ACID conversation exists for full history */
+  canRetrieveFullHistory: boolean;
+}
+
+/**
+ * Individual message in A2A conversation
+ */
+export interface A2AConversationMessage {
+  /** Sender agent ID */
+  from: string;
+  /** Receiver agent ID */
+  to: string;
+  /** Message content */
+  message: string;
+  /** Importance level */
+  importance: number;
+  /** Timestamp */
+  timestamp: number;
+  /** Message ID */
+  messageId: string;
+  /** Vector memory ID */
+  memoryId: string;
+  /** ACID message ID (if tracked) */
+  acidMessageId?: string;
+  /** Tags */
+  tags?: string[];
+}
+
+/**
+ * A2A timeout error
+ */
+export class A2ATimeoutError extends Error {
+  public readonly name = "A2ATimeoutError";
+
+  constructor(
+    message: string,
+    public readonly messageId: string,
+    public readonly timeout: number,
+  ) {
+    super(message);
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Coordination: User Operations API
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -1407,7 +1673,7 @@ export interface DeleteFactOptions extends GraphSyncOption {}
 export interface ContextVersion {
   version: number;
   status: string;
-  data?: any;
+  data?: Record<string, unknown>;
   timestamp: number;
   updatedBy?: string;
 }

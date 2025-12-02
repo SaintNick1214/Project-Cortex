@@ -6,24 +6,31 @@
  * - Cascade deletion by participantId across all memory spaces
  * - Graph integration with orphan detection
  * - Verification and rollback
+ *
+ * PARALLEL-SAFE: Uses TestRunContext for isolated test data
  */
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
-import { TestCleanup } from "./helpers";
+import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 import { CypherGraphAdapter } from "../src/graph/adapters/CypherGraphAdapter";
 import type { GraphAdapter } from "../src/graph/types";
 
 describe("Agents API (Coordination Layer)", () => {
+  // Create unique test run context for parallel-safe execution
+  const ctx = createNamedTestRunContext("agents");
+
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let scopedCleanup: ScopedCleanup;
   let graphAdapter: GraphAdapter | undefined;
   let hasGraphSupport: boolean = false;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
 
   beforeAll(async () => {
+    console.log(`\n🧪 Agents API Tests - Run ID: ${ctx.runId}\n`);
+
     // Initialize graph adapter if environment variables are set
     const neo4jUri = process.env.NEO4J_URI;
     const neo4jUsername = process.env.NEO4J_USERNAME;
@@ -71,50 +78,32 @@ describe("Agents API (Coordination Layer)", () => {
 
     // Direct client for storage validation
     client = new ConvexClient(CONVEX_URL);
-    // Cleanup helper
-    cleanup = new TestCleanup(client);
 
-    // 🧹 Purge test data before all tests
-    console.log("🧹 Purging test data before tests...");
-    await cleanup.purgeConversations();
-    await cleanup.purgeMemories();
-    await cleanup.purgeFacts();
-    await cleanup.purgeMemorySpaces();
+    // Scoped cleanup (only cleans data from this test run)
+    scopedCleanup = new ScopedCleanup(client, ctx);
 
-    // Purge agents registry
-    try {
-      const allAgents = await client.query(api.agents.list, {});
-      for (const agent of allAgents) {
-        try {
-          await client.mutation(api.agents.unregister, {
-            agentId: agent.agentId,
-          });
-        } catch (_error) {
-          // Ignore errors, agent may already be deleted
-        }
-      }
-      console.log("✅ Purged agents registry");
-    } catch (error) {
-      console.warn("⚠️  Failed to purge agents:", error);
-    }
-
-    // Clean graph if available
-    if (graphAdapter) {
-      try {
-        await graphAdapter.query(
-          "MATCH (n) WHERE n.participantId IS NOT NULL DETACH DELETE n",
-          {},
-        );
-        console.log("✅ Purged graph test data");
-      } catch (error) {
-        console.warn("⚠️  Failed to purge graph data:", error);
-      }
-    }
-
-    console.log("✅ Purged all test data\n");
+    // Note: No global purge - each test run is isolated by prefix
+    console.log("✅ Test isolation setup complete\n");
   });
 
   afterAll(async () => {
+    // Clean up only data created by this test run
+    console.log(`\n🧹 Cleaning up test run ${ctx.runId}...`);
+    await scopedCleanup.cleanupAll();
+
+    // Clean graph data for this run if available
+    if (graphAdapter) {
+      try {
+        await graphAdapter.query(
+          `MATCH (n) WHERE n.agentId STARTS WITH $prefix OR n.participantId STARTS WITH $prefix DETACH DELETE n`,
+          { prefix: ctx.runId },
+        );
+        console.log("✅ Cleaned up graph test data");
+      } catch (error) {
+        console.warn("⚠️  Failed to clean up graph data:", error);
+      }
+    }
+
     cortex.close();
     await client.close();
 
@@ -126,6 +115,8 @@ describe("Agents API (Coordination Layer)", () => {
         console.warn("Failed to disconnect graph adapter:", error);
       }
     }
+
+    console.log(`✅ Test run ${ctx.runId} cleanup complete\n`);
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -266,9 +257,7 @@ describe("Agents API (Coordination Layer)", () => {
       });
 
       it("should throw on negative offset", async () => {
-        await expect(
-          cortex.agents.list({ offset: -5 }),
-        ).rejects.toMatchObject({
+        await expect(cortex.agents.list({ offset: -5 })).rejects.toMatchObject({
           code: "INVALID_OFFSET_VALUE",
         });
       });
@@ -319,11 +308,11 @@ describe("Agents API (Coordination Layer)", () => {
 
     describe("search() validation", () => {
       it("should throw on invalid filters", async () => {
-        await expect(
-          cortex.agents.search({ limit: -1 }),
-        ).rejects.toMatchObject({
-          code: "INVALID_LIMIT_VALUE",
-        });
+        await expect(cortex.agents.search({ limit: -1 })).rejects.toMatchObject(
+          {
+            code: "INVALID_LIMIT_VALUE",
+          },
+        );
       });
     });
 
@@ -452,7 +441,7 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("register() and get()", () => {
     it("registers an agent", async () => {
-      const agentId = "test-agent-register-" + Date.now();
+      const agentId = ctx.agentId("register");
 
       const result = await cortex.agents.register({
         id: agentId,
@@ -487,7 +476,7 @@ describe("Agents API (Coordination Layer)", () => {
     });
 
     it("retrieves a registered agent", async () => {
-      const agentId = "test-agent-get-" + Date.now();
+      const agentId = ctx.agentId("get");
 
       await cortex.agents.register({
         id: agentId,
@@ -504,7 +493,7 @@ describe("Agents API (Coordination Layer)", () => {
 
     it("returns null for unregistered agent", async () => {
       const result = await cortex.agents.get(
-        "non-existent-agent-" + Date.now(),
+        ctx.agentId("non-existent"),
       );
       expect(result).toBeNull();
     });
@@ -512,7 +501,7 @@ describe("Agents API (Coordination Layer)", () => {
     it("throws error when registering duplicate agent", async () => {
       // Note: This tests BACKEND validation (existence check)
       // Client-side validation tests are in "Client-Side Validation" suite above
-      const agentId = "test-agent-duplicate-" + Date.now();
+      const agentId = ctx.agentId("duplicate");
 
       await cortex.agents.register({
         id: agentId,
@@ -530,8 +519,8 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("list(), search(), and count()", () => {
     it("lists all agents", async () => {
-      const agent1 = "test-agent-list-1-" + Date.now();
-      const agent2 = "test-agent-list-2-" + Date.now();
+      const agent1 = ctx.agentId("list-1");
+      const agent2 = ctx.agentId("list-2");
 
       await cortex.agents.register({ id: agent1, name: "Agent 1" });
       await cortex.agents.register({ id: agent2, name: "Agent 2" });
@@ -549,7 +538,7 @@ describe("Agents API (Coordination Layer)", () => {
     });
 
     it("searches agents by metadata", async () => {
-      const agentId = "test-agent-search-" + Date.now();
+      const agentId = ctx.agentId("search");
 
       await cortex.agents.register({
         id: agentId,
@@ -575,7 +564,7 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("update() and configure()", () => {
     it("updates agent metadata", async () => {
-      const agentId = "test-agent-update-" + Date.now();
+      const agentId = ctx.agentId("update");
 
       await cortex.agents.register({
         id: agentId,
@@ -593,7 +582,7 @@ describe("Agents API (Coordination Layer)", () => {
     });
 
     it("configures agent settings", async () => {
-      const agentId = "test-agent-configure-" + Date.now();
+      const agentId = ctx.agentId("configure");
 
       await cortex.agents.register({ id: agentId, name: "Config Test" });
 
@@ -610,7 +599,7 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("exists()", () => {
     it("returns true for registered agent", async () => {
-      const agentId = "test-agent-exists-" + Date.now();
+      const agentId = ctx.agentId("exists");
       await cortex.agents.register({ id: agentId, name: "Exists Test" });
 
       const exists = await cortex.agents.exists(agentId);
@@ -618,7 +607,7 @@ describe("Agents API (Coordination Layer)", () => {
     });
 
     it("returns false for unregistered agent", async () => {
-      const exists = await cortex.agents.exists("non-existent-" + Date.now());
+      const exists = await cortex.agents.exists(ctx.agentId("non-existent-check"));
       expect(exists).toBe(false);
     });
   });
@@ -629,7 +618,7 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("unregister() - simple mode", () => {
     it("unregisters agent without deleting data", async () => {
-      const agentId = "test-agent-unregister-" + Date.now();
+      const agentId = ctx.agentId("unregister");
 
       await cortex.agents.register({ id: agentId, name: "Unregister Test" });
 
@@ -654,9 +643,9 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("unregister() - cascade mode", () => {
     it("performs cascade deletion by participantId across all spaces", async () => {
-      const agentId = "cascade-agent-" + Date.now();
-      const space1 = "space-1-" + Date.now();
-      const space2 = "space-2-" + Date.now();
+      const agentId = ctx.agentId("cascade");
+      const space1 = ctx.memorySpaceId("cascade-1");
+      const space2 = ctx.memorySpaceId("cascade-2");
 
       // Register agent
       await cortex.agents.register({ id: agentId, name: "Cascade Test" });
@@ -768,12 +757,12 @@ describe("Agents API (Coordination Layer)", () => {
         `  ✅ Cascade complete: Deleted from ${result.memorySpacesAffected.length} spaces`,
       );
       console.log(`     Layers: ${result.deletedLayers.join(", ")}`);
-    });
+    }, 60000); // 60s timeout for cascade operation
   });
 
   describe("unregister() - dry run mode", () => {
     it("previews deletion without actually deleting", async () => {
-      const agentId = "dry-run-agent-" + Date.now();
+      const agentId = ctx.agentId("dry-run");
 
       await cortex.agents.register({ id: agentId, name: "Dry Run Test" });
 
@@ -795,7 +784,7 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("unregister() - verification", () => {
     it("runs verification step after deletion", async () => {
-      const agentId = "verify-agent-" + Date.now();
+      const agentId = ctx.agentId("verify");
 
       await cortex.agents.register({ id: agentId, name: "Verify Test" });
 
@@ -828,8 +817,8 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("cascade without registration", () => {
     it("deletes data even if agent was never registered", async () => {
-      const agentId = "unregistered-agent-" + Date.now();
-      const spaceId = "space-unreg-" + Date.now();
+      const agentId = ctx.agentId("unregistered");
+      const spaceId = ctx.memorySpaceId("unreg");
 
       // DON'T register the agent - just create data with participantId
       await cortex.memorySpaces.register({
@@ -884,7 +873,7 @@ describe("Agents API (Coordination Layer)", () => {
       // Note: This tests BACKEND behavior (not found handling)
       // Client-side validation ensures agentId format is valid
       const result = await cortex.agents.unregister(
-        "non-existent-" + Date.now(),
+        ctx.agentId("non-existent-edge"),
         {
           cascade: true,
         },
@@ -894,7 +883,7 @@ describe("Agents API (Coordination Layer)", () => {
     });
 
     it("handles agent with no data", async () => {
-      const agentId = "empty-agent-" + Date.now();
+      const agentId = ctx.agentId("empty");
 
       await cortex.agents.register({ id: agentId, name: "Empty" });
 
@@ -914,8 +903,8 @@ describe("Agents API (Coordination Layer)", () => {
 
   describe("agent statistics", () => {
     it("computes stats from actual data", async () => {
-      const agentId = "stats-agent-" + Date.now();
-      const spaceId = "stats-space-" + Date.now();
+      const agentId = ctx.agentId("stats");
+      const spaceId = ctx.memorySpaceId("stats");
 
       // Register agent
       await cortex.agents.register({ id: agentId, name: "Stats Agent" });
@@ -956,9 +945,19 @@ describe("Agents API (Coordination Layer)", () => {
   });
 
   describe("unregisterMany()", () => {
+    // Use test-scoped IDs and metadata to avoid parallel run conflicts
+    const bulkAgent1Id = ctx.agentId("bulk-1");
+    const bulkAgent2Id = ctx.agentId("bulk-2");
+    const bulkAgent3Id = ctx.agentId("bulk-3");
+    const testEnvTag = `test-env-${ctx.runId}`;
+    const prodEnvTag = `prod-env-${ctx.runId}`;
+    const experimentalTeam = `experimental-${ctx.runId}`;
+    const coreTeam = `core-${ctx.runId}`;
+    const bulkTestSpace = ctx.memorySpaceId("bulk-test");
+
     beforeEach(async () => {
       // Cleanup any existing test agents
-      const agentIds = ["bulk-agent-1", "bulk-agent-2", "bulk-agent-3"];
+      const agentIds = [bulkAgent1Id, bulkAgent2Id, bulkAgent3Id];
       for (const agentId of agentIds) {
         try {
           await cortex.agents.unregister(agentId);
@@ -970,40 +969,40 @@ describe("Agents API (Coordination Layer)", () => {
       // Wait a bit for cleanup to complete
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      // Register multiple test agents
+      // Register multiple test agents with run-scoped metadata
       await cortex.agents.register({
-        id: "bulk-agent-1",
+        id: bulkAgent1Id,
         name: "Bulk Agent 1",
-        metadata: { environment: "test", team: "experimental" },
+        metadata: { environment: testEnvTag, team: experimentalTeam },
       });
 
       await cortex.agents.register({
-        id: "bulk-agent-2",
+        id: bulkAgent2Id,
         name: "Bulk Agent 2",
-        metadata: { environment: "test", team: "experimental" },
+        metadata: { environment: testEnvTag, team: experimentalTeam },
       });
 
       await cortex.agents.register({
-        id: "bulk-agent-3",
+        id: bulkAgent3Id,
         name: "Bulk Agent 3",
-        metadata: { environment: "production", team: "core" },
+        metadata: { environment: prodEnvTag, team: coreTeam },
       });
     });
 
     it("unregisters multiple agents without cascade", async () => {
       const result = await cortex.agents.unregisterMany(
-        { metadata: { environment: "test" } },
+        { metadata: { environment: testEnvTag } },
         { cascade: false },
       );
 
       expect(result.deleted).toBe(2);
-      expect(result.agentIds).toContain("bulk-agent-1");
-      expect(result.agentIds).toContain("bulk-agent-2");
+      expect(result.agentIds).toContain(bulkAgent1Id);
+      expect(result.agentIds).toContain(bulkAgent2Id);
 
       // Verify unregistered
-      const agent1 = await cortex.agents.get("bulk-agent-1");
-      const agent2 = await cortex.agents.get("bulk-agent-2");
-      const agent3 = await cortex.agents.get("bulk-agent-3");
+      const agent1 = await cortex.agents.get(bulkAgent1Id);
+      const agent2 = await cortex.agents.get(bulkAgent2Id);
+      const agent3 = await cortex.agents.get(bulkAgent3Id);
 
       expect(agent1).toBeNull();
       expect(agent2).toBeNull();
@@ -1012,7 +1011,7 @@ describe("Agents API (Coordination Layer)", () => {
 
     it("dry run preview", async () => {
       const result = await cortex.agents.unregisterMany(
-        { metadata: { team: "experimental" } },
+        { metadata: { team: experimentalTeam } },
         { dryRun: true },
       );
 
@@ -1020,13 +1019,13 @@ describe("Agents API (Coordination Layer)", () => {
       expect(result.agentIds).toHaveLength(2);
 
       // Verify agents still exist
-      const agent1 = await cortex.agents.get("bulk-agent-1");
+      const agent1 = await cortex.agents.get(bulkAgent1Id);
       expect(agent1).not.toBeNull();
     });
 
     it("handles empty result set gracefully", async () => {
       const result = await cortex.agents.unregisterMany(
-        { metadata: { team: "nonexistent" } },
+        { metadata: { team: `nonexistent-${ctx.runId}` } },
         { cascade: false },
       );
 
@@ -1034,56 +1033,54 @@ describe("Agents API (Coordination Layer)", () => {
       expect(result.agentIds).toHaveLength(0);
     });
 
-    it(
-      "unregisters with cascade deletion",
-      async () => {
-        // First clean up any existing memories for bulk-agent-1
-        try {
-          const existingMemories = await cortex.vector.list({
-            memorySpaceId: "test-space",
-          });
-          const existingAgentMemories = existingMemories.filter(
-            (m) => m.participantId === "bulk-agent-1",
-          );
-          for (const memory of existingAgentMemories) {
-            await cortex.vector.delete("test-space", memory.memoryId);
-          }
-        } catch (_error) {
-          // Ignore cleanup errors
+    it("unregisters with cascade deletion", async () => {
+      // First clean up any existing memories for bulk-agent-1
+      try {
+        const existingMemories = await cortex.vector.list({
+          memorySpaceId: bulkTestSpace,
+        });
+        const existingAgentMemories = existingMemories.filter(
+          (m) => m.participantId === bulkAgent1Id,
+        );
+        for (const memory of existingAgentMemories) {
+          await cortex.vector.delete(bulkTestSpace, memory.memoryId);
         }
+      } catch (_error) {
+        // Ignore cleanup errors
+      }
 
       // Create data for bulk-agent-1
       const conv = await cortex.conversations.create({
-        memorySpaceId: "test-space",
+        memorySpaceId: bulkTestSpace,
         type: "user-agent",
         participants: {
-          userId: "test-user",
-          participantId: "bulk-agent-1",
+          userId: ctx.userId("bulk-test"),
+          participantId: bulkAgent1Id,
         },
       });
 
       await cortex.memory.remember({
-        memorySpaceId: "test-space",
-        participantId: "bulk-agent-1",
+        memorySpaceId: bulkTestSpace,
+        participantId: bulkAgent1Id,
         conversationId: conv.conversationId,
         userMessage: "Test",
         agentResponse: "OK",
-        userId: "test-user",
+        userId: ctx.userId("bulk-test"),
         userName: "Test User",
       });
 
       // Verify memory was created
       const beforeMemories = await cortex.vector.list({
-        memorySpaceId: "test-space",
+        memorySpaceId: bulkTestSpace,
       });
       const beforeAgentMemories = beforeMemories.filter(
-        (m) => m.participantId === "bulk-agent-1",
+        (m) => m.participantId === bulkAgent1Id,
       );
       expect(beforeAgentMemories.length).toBeGreaterThan(0);
 
-      // Unregister with cascade
+      // Unregister with cascade - use scoped metadata filter
       const result = await cortex.agents.unregisterMany(
-        { metadata: { environment: "test" } },
+        { metadata: { environment: testEnvTag } },
         { cascade: true },
       );
 
@@ -1094,8 +1091,6 @@ describe("Agents API (Coordination Layer)", () => {
       // timing issue where memories may not be immediately removed from vector.list()
       // The operation itself completes successfully (totalDataDeleted > 0),
       // indicating the cascade deletion logic works correctly
-      },
-      60000,
-    ); // Increased timeout for cascade deletion which can be slow in managed mode
+    }, 60000); // Increased timeout for cascade deletion which can be slow in managed mode
   });
 });

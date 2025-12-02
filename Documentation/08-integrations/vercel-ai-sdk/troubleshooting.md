@@ -73,4 +73,4 @@ Solutions:
 ## Support
 
 - [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
-- [Documentation](../README.md)
+- [Getting Started Guide](./getting-started.md)

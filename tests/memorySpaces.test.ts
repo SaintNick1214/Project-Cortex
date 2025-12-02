@@ -6,30 +6,40 @@
  * - Participant tracking
  * - Statistics and analytics
  * - Hive Mode scenarios
+ *
+ * PARALLEL-SAFE: Uses TestRunContext for isolated test data
  */
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
-import { TestCleanup } from "./helpers";
+import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 
 describe("Memory Spaces Registry API", () => {
+  // Create unique test run context for parallel-safe execution
+  const ctx = createNamedTestRunContext("memspaces");
+
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let scopedCleanup: ScopedCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
 
   beforeAll(async () => {
+    console.log(`\n🧪 Memory Spaces API Tests - Run ID: ${ctx.runId}\n`);
+
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    cleanup = new TestCleanup(client);
+    scopedCleanup = new ScopedCleanup(client, ctx);
 
-    await cleanup.purgeAll();
+    // Note: No global purge - test data is isolated by prefix
+    console.log("✅ Test isolation setup complete\n");
   });
 
   afterAll(async () => {
-    await cleanup.purgeAll();
+    console.log(`\n🧹 Cleaning up test run ${ctx.runId}...`);
+    await scopedCleanup.cleanupAll();
     await client.close();
+    console.log(`✅ Test run ${ctx.runId} cleanup complete\n`);
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -341,9 +351,9 @@ describe("Memory Spaces Registry API", () => {
 
     describe("findByParticipant validation", () => {
       it("should throw on empty participantId", async () => {
-        await expect(
-          cortex.memorySpaces.findByParticipant(""),
-        ).rejects.toThrow("participantId");
+        await expect(cortex.memorySpaces.findByParticipant("")).rejects.toThrow(
+          "participantId",
+        );
       });
 
       it("should throw on whitespace participantId", async () => {
@@ -363,18 +373,23 @@ describe("Memory Spaces Registry API", () => {
     // Client-side validation tests are in "Client-Side Validation" suite
 
     it("registers a personal memory space", async () => {
+      // Use test-scoped IDs
+      const personalSpaceId = ctx.memorySpaceId("alice-personal");
+      const userAlice = ctx.userId("alice");
+      const agentAssistant = ctx.agentId("assistant");
+
       const space = await cortex.memorySpaces.register({
-        memorySpaceId: "user-alice-personal",
+        memorySpaceId: personalSpaceId,
         name: "Alice's Personal Space",
         type: "personal",
         participants: [
-          { id: "user-alice", type: "user" },
-          { id: "agent-assistant", type: "agent" },
+          { id: userAlice, type: "user" },
+          { id: agentAssistant, type: "agent" },
         ],
         metadata: { tier: "premium" },
       });
 
-      expect(space.memorySpaceId).toBe("user-alice-personal");
+      expect(space.memorySpaceId).toBe(personalSpaceId);
       expect(space.name).toBe("Alice's Personal Space");
       expect(space.type).toBe("personal");
       expect(space.participants).toHaveLength(2);
@@ -382,14 +397,20 @@ describe("Memory Spaces Registry API", () => {
     });
 
     it("registers a team memory space", async () => {
+      // Use test-scoped IDs
+      const teamSpaceId = ctx.memorySpaceId("team-engineering");
+      const userBob = ctx.userId("bob");
+      const userCharlie = ctx.userId("charlie");
+      const agentCodeReview = ctx.agentId("code-review");
+
       const space = await cortex.memorySpaces.register({
-        memorySpaceId: "team-engineering",
+        memorySpaceId: teamSpaceId,
         name: "Engineering Team",
         type: "team",
         participants: [
-          { id: "user-bob", type: "user" },
-          { id: "user-charlie", type: "user" },
-          { id: "agent-code-review", type: "agent" },
+          { id: userBob, type: "user" },
+          { id: userCharlie, type: "user" },
+          { id: agentCodeReview, type: "agent" },
         ],
       });
 
@@ -398,14 +419,20 @@ describe("Memory Spaces Registry API", () => {
     });
 
     it("registers a project memory space", async () => {
+      // Use test-scoped IDs
+      const projectSpaceId = ctx.memorySpaceId("project-q4");
+      const userPM = ctx.userId("pm");
+      const agentPlanner = ctx.agentId("planner");
+      const toolAnalytics = `tool-analytics-${ctx.runId}`;
+
       const space = await cortex.memorySpaces.register({
-        memorySpaceId: "project-q4-launch",
+        memorySpaceId: projectSpaceId,
         name: "Q4 Product Launch",
         type: "project",
         participants: [
-          { id: "user-pm", type: "user" },
-          { id: "agent-planner", type: "agent" },
-          { id: "tool-analytics", type: "tool" },
+          { id: userPM, type: "user" },
+          { id: agentPlanner, type: "agent" },
+          { id: toolAnalytics, type: "tool" },
         ],
         metadata: {
           deadline: "2025-12-31",
@@ -419,16 +446,19 @@ describe("Memory Spaces Registry API", () => {
     });
 
     it("throws error for duplicate memorySpaceId", async () => {
+      // Use test-scoped ID
+      const duplicateSpaceId = ctx.memorySpaceId("duplicate-test");
+
       // Note: This tests BACKEND validation (existence check)
       await cortex.memorySpaces.register({
-        memorySpaceId: "duplicate-test",
+        memorySpaceId: duplicateSpaceId,
         type: "personal",
         participants: [],
       });
 
       await expect(
         cortex.memorySpaces.register({
-          memorySpaceId: "duplicate-test",
+          memorySpaceId: duplicateSpaceId,
           type: "team",
           participants: [],
         }),
@@ -437,46 +467,55 @@ describe("Memory Spaces Registry API", () => {
   });
 
   describe("get()", () => {
+    // Use test-scoped ID
+    const getTestSpaceId = ctx.memorySpaceId("get-test");
+    const testUser = ctx.userId("get-test");
+
     beforeAll(async () => {
       await cortex.memorySpaces.register({
-        memorySpaceId: "get-test-space",
+        memorySpaceId: getTestSpaceId,
         name: "Test Space",
         type: "personal",
-        participants: [{ id: "user-test", type: "user" }],
+        participants: [{ id: testUser, type: "user" }],
       });
     });
 
     it("retrieves existing memory space", async () => {
-      const space = await cortex.memorySpaces.get("get-test-space");
+      const space = await cortex.memorySpaces.get(getTestSpaceId);
 
       expect(space).not.toBeNull();
-      expect(space!.memorySpaceId).toBe("get-test-space");
+      expect(space!.memorySpaceId).toBe(getTestSpaceId);
       expect(space!.name).toBe("Test Space");
     });
 
     it("returns null for non-existent space", async () => {
-      const space = await cortex.memorySpaces.get("does-not-exist");
+      const space = await cortex.memorySpaces.get(`nonexistent-${ctx.runId}`);
 
       expect(space).toBeNull();
     });
   });
 
   describe("list()", () => {
+    // Use test-scoped IDs
+    const listPersonal1 = ctx.memorySpaceId("list-personal-1");
+    const listTeam1 = ctx.memorySpaceId("list-team-1");
+    const listProject1 = ctx.memorySpaceId("list-project-1");
+
     beforeAll(async () => {
       await cortex.memorySpaces.register({
-        memorySpaceId: "list-personal-1",
+        memorySpaceId: listPersonal1,
         type: "personal",
         participants: [],
       });
 
       await cortex.memorySpaces.register({
-        memorySpaceId: "list-team-1",
+        memorySpaceId: listTeam1,
         type: "team",
         participants: [],
       });
 
       await cortex.memorySpaces.register({
-        memorySpaceId: "list-project-1",
+        memorySpaceId: listProject1,
         type: "project",
         participants: [],
         metadata: {},
@@ -534,9 +573,12 @@ describe("Memory Spaces Registry API", () => {
   });
 
   describe("update()", () => {
+    // Use test-scoped ID
+    const updateSpaceId = ctx.memorySpaceId("update-test");
+
     beforeAll(async () => {
       await cortex.memorySpaces.register({
-        memorySpaceId: "update-test-space",
+        memorySpaceId: updateSpaceId,
         name: "Original Name",
         type: "personal",
         participants: [],
@@ -544,7 +586,7 @@ describe("Memory Spaces Registry API", () => {
     });
 
     it("updates name", async () => {
-      const updated = await cortex.memorySpaces.update("update-test-space", {
+      const updated = await cortex.memorySpaces.update(updateSpaceId, {
         name: "Updated Name",
       });
 
@@ -552,7 +594,7 @@ describe("Memory Spaces Registry API", () => {
     });
 
     it("updates metadata", async () => {
-      const updated = await cortex.memorySpaces.update("update-test-space", {
+      const updated = await cortex.memorySpaces.update(updateSpaceId, {
         metadata: { tier: "enterprise", features: ["analytics"] },
       });
 
@@ -560,7 +602,7 @@ describe("Memory Spaces Registry API", () => {
     });
 
     it("updates status", async () => {
-      const updated = await cortex.memorySpaces.update("update-test-space", {
+      const updated = await cortex.memorySpaces.update(updateSpaceId, {
         status: "archived",
       });
 
@@ -569,40 +611,43 @@ describe("Memory Spaces Registry API", () => {
 
     it("throws error for non-existent space", async () => {
       await expect(
-        cortex.memorySpaces.update("does-not-exist", { name: "Test" }),
+        cortex.memorySpaces.update(`nonexistent-${ctx.runId}`, { name: "Test" }),
       ).rejects.toThrow("MEMORYSPACE_NOT_FOUND");
     });
   });
 
   describe("addParticipant()", () => {
+    // Use test-scoped IDs
+    const addParticipantSpaceId = ctx.memorySpaceId("add-participant-test");
+    const user1 = ctx.userId("add-part-user-1");
+    const agentHelper = ctx.agentId("helper");
+
     beforeAll(async () => {
       await cortex.memorySpaces.register({
-        memorySpaceId: "participant-test-space",
+        memorySpaceId: addParticipantSpaceId,
         type: "team",
-        participants: [{ id: "user-1", type: "user" }],
+        participants: [{ id: user1, type: "user" }],
       });
     });
 
     it("adds new participant", async () => {
       const updated = await cortex.memorySpaces.addParticipant(
-        "participant-test-space",
+        addParticipantSpaceId,
         {
-          id: "agent-helper",
+          id: agentHelper,
           type: "agent",
           joinedAt: Date.now(),
         },
       );
 
       expect(updated.participants).toHaveLength(2);
-      expect(updated.participants.some((p) => p.id === "agent-helper")).toBe(
-        true,
-      );
+      expect(updated.participants.some((p) => p.id === agentHelper)).toBe(true);
     });
 
     it("throws error for duplicate participant", async () => {
       await expect(
-        cortex.memorySpaces.addParticipant("participant-test-space", {
-          id: "user-1",
+        cortex.memorySpaces.addParticipant(addParticipantSpaceId, {
+          id: user1,
           type: "user",
           joinedAt: Date.now(),
         }),
@@ -611,73 +656,89 @@ describe("Memory Spaces Registry API", () => {
   });
 
   describe("removeParticipant()", () => {
+    // Use test-scoped IDs
+    const removeParticipantSpaceId = ctx.memorySpaceId("remove-participant");
+
     beforeAll(async () => {
       await cortex.memorySpaces.register({
-        memorySpaceId: "remove-participant-space",
+        memorySpaceId: removeParticipantSpaceId,
         type: "team",
         participants: [
-          { id: "user-1", type: "user" },
-          { id: "user-2", type: "user" },
+          { id: ctx.userId("remove-user-1"), type: "user" },
+          { id: ctx.userId("remove-user-2"), type: "user" },
         ],
       });
     });
 
     it("removes participant", async () => {
       const updated = await cortex.memorySpaces.removeParticipant(
-        "remove-participant-space",
-        "user-2",
+        removeParticipantSpaceId,
+        ctx.userId("remove-user-2"),
       );
 
       expect(updated.participants).toHaveLength(1);
-      expect(updated.participants.some((p) => p.id === "user-2")).toBe(false);
+      expect(
+        updated.participants.some(
+          (p) => p.id === ctx.userId("remove-user-2"),
+        ),
+      ).toBe(false);
     });
   });
 
   describe("delete()", () => {
     it("deletes empty space", async () => {
+      // Use test-scoped ID to avoid parallel conflicts
+      const deleteSpaceId = ctx.memorySpaceId("delete-empty");
+
       await cortex.memorySpaces.register({
-        memorySpaceId: "delete-test-space",
+        memorySpaceId: deleteSpaceId,
         type: "personal",
         participants: [],
       });
 
-      const result = await cortex.memorySpaces.delete("delete-test-space");
+      const result = await cortex.memorySpaces.delete(deleteSpaceId);
 
       expect(result.deleted).toBe(true);
-      expect(result.memorySpaceId).toBe("delete-test-space");
+      expect(result.memorySpaceId).toBe(deleteSpaceId);
 
       // Verify deleted
-      const space = await cortex.memorySpaces.get("delete-test-space");
+      const space = await cortex.memorySpaces.get(deleteSpaceId);
 
       expect(space).toBeNull();
     });
 
     it("deletes space with cascade", async () => {
+      // Use test-scoped ID to avoid parallel conflicts
+      const cascadeSpaceId = ctx.memorySpaceId("delete-cascade");
+
       // Create space with data
       await cortex.memorySpaces.register({
-        memorySpaceId: "cascade-test-space",
+        memorySpaceId: cascadeSpaceId,
         type: "team",
         participants: [],
       });
 
       // Add some data
       await cortex.conversations.create({
-        memorySpaceId: "cascade-test-space",
+        memorySpaceId: cascadeSpaceId,
         type: "user-agent",
-        participants: { userId: "user-test", participantId: "agent-test" },
+        participants: {
+          userId: ctx.userId("cascade-test"),
+          participantId: ctx.agentId("cascade-test"),
+        },
       });
 
       await cortex.facts.store({
-        memorySpaceId: "cascade-test-space",
-        fact: "Test fact",
+        memorySpaceId: cascadeSpaceId,
+        fact: `Test fact - ${ctx.runId}`,
         factType: "knowledge",
         confidence: 90,
         sourceType: "system",
-        tags: ["test"],
+        tags: [ctx.runId],
       });
 
       // Delete with cascade
-      const result = await cortex.memorySpaces.delete("cascade-test-space", {
+      const result = await cortex.memorySpaces.delete(cascadeSpaceId, {
         cascade: true,
       });
 
@@ -687,33 +748,39 @@ describe("Memory Spaces Registry API", () => {
   });
 
   describe("getStats()", () => {
+    // Use test-scoped IDs to avoid parallel conflicts
+    const statsSpaceId = ctx.memorySpaceId("stats");
+    const statsUser1 = ctx.userId("stats-1");
+    const statsUser2 = ctx.userId("stats-2");
+    const statsAgent = ctx.agentId("stats");
+
     beforeAll(async () => {
       await cortex.memorySpaces.register({
-        memorySpaceId: "stats-test-space",
+        memorySpaceId: statsSpaceId,
         type: "team",
         participants: [
-          { id: "user-1", type: "user" },
-          { id: "user-2", type: "user" },
+          { id: statsUser1, type: "user" },
+          { id: statsUser2, type: "user" },
         ],
       });
 
       // Add some data
       await cortex.conversations.create({
-        memorySpaceId: "stats-test-space",
+        memorySpaceId: statsSpaceId,
         type: "user-agent",
-        participants: { userId: "user-1", participantId: "agent-1" },
+        participants: { userId: statsUser1, participantId: statsAgent },
       });
 
       await cortex.conversations.addMessage({
         conversationId: (
           await cortex.conversations.list({
-            memorySpaceId: "stats-test-space",
+            memorySpaceId: statsSpaceId,
           })
         )[0].conversationId,
         message: { role: "user", content: "Test message" },
       });
 
-      await cortex.vector.store("stats-test-space", {
+      await cortex.vector.store(statsSpaceId, {
         content: "Test memory",
         contentType: "raw",
         source: { type: "system" },
@@ -721,19 +788,19 @@ describe("Memory Spaces Registry API", () => {
       });
 
       await cortex.facts.store({
-        memorySpaceId: "stats-test-space",
-        fact: "Test fact",
+        memorySpaceId: statsSpaceId,
+        fact: `Test fact - ${ctx.runId}`,
         factType: "knowledge",
         confidence: 90,
         sourceType: "system",
-        tags: ["test"],
+        tags: [ctx.runId],
       });
     });
 
     it("returns comprehensive statistics", async () => {
-      const stats = await cortex.memorySpaces.getStats("stats-test-space");
+      const stats = await cortex.memorySpaces.getStats(statsSpaceId);
 
-      expect(stats.memorySpaceId).toBe("stats-test-space");
+      expect(stats.memorySpaceId).toBe(statsSpaceId);
       expect(stats.totalConversations).toBeGreaterThanOrEqual(1);
       expect(stats.totalMessages).toBeGreaterThanOrEqual(1);
       expect(stats.totalMemories).toBeGreaterThanOrEqual(1);
@@ -742,19 +809,26 @@ describe("Memory Spaces Registry API", () => {
 
     it("throws error for non-existent space", async () => {
       await expect(
-        cortex.memorySpaces.getStats("does-not-exist"),
+        cortex.memorySpaces.getStats(`nonexistent-${ctx.runId}`),
       ).rejects.toThrow("MEMORYSPACE_NOT_FOUND");
     });
   });
 
   describe("findByParticipant()", () => {
+    // Use test-scoped IDs to avoid parallel conflicts
+    const searchSpace1 = ctx.memorySpaceId("search-1");
+    const searchSpace2 = ctx.memorySpaceId("search-2");
+    const searchSpace3 = ctx.memorySpaceId("search-3");
+    const userDavid = ctx.userId("david");
+    const userEve = ctx.userId("eve");
+
     beforeAll(async () => {
       // Create test spaces, ignore if they already exist
       try {
         await cortex.memorySpaces.register({
-          memorySpaceId: "participant-search-1",
+          memorySpaceId: searchSpace1,
           type: "personal",
-          participants: [{ id: "user-david", type: "user" }],
+          participants: [{ id: userDavid, type: "user" }],
         });
       } catch (_error) {
         // Already exists, that's fine
@@ -762,11 +836,11 @@ describe("Memory Spaces Registry API", () => {
 
       try {
         await cortex.memorySpaces.register({
-          memorySpaceId: "participant-search-2",
+          memorySpaceId: searchSpace2,
           type: "team",
           participants: [
-            { id: "user-david", type: "user" },
-            { id: "user-eve", type: "user" },
+            { id: userDavid, type: "user" },
+            { id: userEve, type: "user" },
           ],
         });
       } catch (_error) {
@@ -775,9 +849,9 @@ describe("Memory Spaces Registry API", () => {
 
       try {
         await cortex.memorySpaces.register({
-          memorySpaceId: "participant-search-3",
+          memorySpaceId: searchSpace3,
           type: "project",
-          participants: [{ id: "user-eve", type: "user" }],
+          participants: [{ id: userEve, type: "user" }],
         });
       } catch (_error) {
         // Already exists, that's fine
@@ -785,16 +859,18 @@ describe("Memory Spaces Registry API", () => {
     });
 
     it("finds all spaces for a participant", async () => {
-      const spaces = await cortex.memorySpaces.findByParticipant("user-david");
+      const spaces = await cortex.memorySpaces.findByParticipant(userDavid);
 
       expect(spaces.length).toBeGreaterThanOrEqual(2);
       spaces.forEach((s) => {
-        expect(s.participants.some((p) => p.id === "user-david")).toBe(true);
+        expect(s.participants.some((p) => p.id === userDavid)).toBe(true);
       });
     });
 
     it("returns empty for participant not in any space", async () => {
-      const spaces = await cortex.memorySpaces.findByParticipant("user-nobody");
+      const spaces = await cortex.memorySpaces.findByParticipant(
+        `user-nobody-${ctx.runId}`,
+      );
 
       expect(spaces.length).toBe(0);
     });
@@ -802,16 +878,24 @@ describe("Memory Spaces Registry API", () => {
 
   describe("Hive Mode Scenarios", () => {
     it("supports multiple tools sharing one space", async () => {
+      // Use test-scoped IDs
+      const hiveSpaceId = ctx.memorySpaceId("hive-multitools");
+      const userOwner = ctx.userId("owner");
+      const toolCalendar = `tool-calendar-${ctx.runId}`;
+      const toolEmail = `tool-email-${ctx.runId}`;
+      const toolTasks = `tool-tasks-${ctx.runId}`;
+      const agentCoordinator = ctx.agentId("coordinator");
+
       const hiveSpace = await cortex.memorySpaces.register({
-        memorySpaceId: "hive-multitools",
+        memorySpaceId: hiveSpaceId,
         name: "Multi-Tool Hive",
         type: "team",
         participants: [
-          { id: "user-owner", type: "user" },
-          { id: "tool-calendar", type: "tool" },
-          { id: "tool-email", type: "tool" },
-          { id: "tool-tasks", type: "tool" },
-          { id: "agent-coordinator", type: "agent" },
+          { id: userOwner, type: "user" },
+          { id: toolCalendar, type: "tool" },
+          { id: toolEmail, type: "tool" },
+          { id: toolTasks, type: "tool" },
+          { id: agentCoordinator, type: "agent" },
         ],
       });
 
@@ -820,33 +904,33 @@ describe("Memory Spaces Registry API", () => {
       // All tools can contribute to same space
       // First create a conversation
       const conv = await cortex.conversations.create({
-        memorySpaceId: "hive-multitools",
+        memorySpaceId: hiveSpaceId,
         type: "user-agent",
-        participants: { userId: "user-owner", participantId: "tool-calendar" },
+        participants: { userId: userOwner, participantId: toolCalendar },
       });
 
       await cortex.memory.remember({
-        memorySpaceId: "hive-multitools",
-        participantId: "tool-calendar",
+        memorySpaceId: hiveSpaceId,
+        participantId: toolCalendar,
         conversationId: conv.conversationId,
         userMessage: "Meeting scheduled for Monday",
         agentResponse: "Added to calendar",
-        userId: "user-owner",
+        userId: userOwner,
         userName: "Owner",
       });
 
       await cortex.facts.store({
-        memorySpaceId: "hive-multitools",
-        participantId: "tool-tasks",
-        fact: "User prefers morning meetings",
+        memorySpaceId: hiveSpaceId,
+        participantId: toolTasks,
+        fact: `User prefers morning meetings - ${ctx.runId}`,
         factType: "preference",
         confidence: 90,
         sourceType: "tool",
-        tags: ["meetings"],
+        tags: ["meetings", ctx.runId],
       });
 
       // Verify all in same space
-      const stats = await cortex.memorySpaces.getStats("hive-multitools");
+      const stats = await cortex.memorySpaces.getStats(hiveSpaceId);
 
       expect(stats.totalMemories).toBeGreaterThanOrEqual(2);
       expect(stats.totalFacts).toBeGreaterThanOrEqual(1);
@@ -855,24 +939,29 @@ describe("Memory Spaces Registry API", () => {
 
   describe("Storage Validation", () => {
     it("validates memory space structure in database", async () => {
+      // Use test-scoped IDs
+      const validationSpaceId = ctx.memorySpaceId("validation");
+      const userVal = ctx.userId("val");
+      const agentVal = ctx.agentId("val");
+
       const _space = await cortex.memorySpaces.register({
-        memorySpaceId: "validation-space",
+        memorySpaceId: validationSpaceId,
         name: "Validation Test",
         type: "custom",
         participants: [
-          { id: "user-val", type: "user" },
-          { id: "agent-val", type: "agent" },
+          { id: userVal, type: "user" },
+          { id: agentVal, type: "agent" },
         ],
         metadata: { custom: "data" },
       });
 
       // Direct database query
       const stored = await client.query(api.memorySpaces.get, {
-        memorySpaceId: "validation-space",
+        memorySpaceId: validationSpaceId,
       });
 
       expect(stored).not.toBeNull();
-      expect(stored!.memorySpaceId).toBe("validation-space");
+      expect(stored!.memorySpaceId).toBe(validationSpaceId);
       expect(stored!.participants).toHaveLength(2);
       expect(stored!.status).toBe("active");
       expect(stored!.createdAt).toBeGreaterThan(0);
@@ -881,18 +970,22 @@ describe("Memory Spaces Registry API", () => {
 
   describe("Lifecycle Management", () => {
     it("creates -> updates -> archives -> deletes", async () => {
+      // Use test-scoped IDs
+      const lifecycleSpaceId = ctx.memorySpaceId("lifecycle");
+      const lifecycleUser = ctx.userId("lifecycle");
+
       // Create
       const space = await cortex.memorySpaces.register({
-        memorySpaceId: "lifecycle-space",
+        memorySpaceId: lifecycleSpaceId,
         name: "Lifecycle Test",
         type: "project",
-        participants: [{ id: "user-lifecycle", type: "user" }],
+        participants: [{ id: lifecycleUser, type: "user" }],
       });
 
       expect(space.status).toBe("active");
 
       // Update
-      const updated = await cortex.memorySpaces.update("lifecycle-space", {
+      const updated = await cortex.memorySpaces.update(lifecycleSpaceId, {
         name: "Updated Lifecycle",
         metadata: { phase: "development" },
       });
@@ -900,19 +993,19 @@ describe("Memory Spaces Registry API", () => {
       expect(updated.name).toBe("Updated Lifecycle");
 
       // Archive
-      const archived = await cortex.memorySpaces.update("lifecycle-space", {
+      const archived = await cortex.memorySpaces.update(lifecycleSpaceId, {
         status: "archived",
       });
 
       expect(archived.status).toBe("archived");
 
       // Delete
-      const result = await cortex.memorySpaces.delete("lifecycle-space");
+      const result = await cortex.memorySpaces.delete(lifecycleSpaceId);
 
       expect(result.deleted).toBe(true);
 
       // Verify deleted
-      const deleted = await cortex.memorySpaces.get("lifecycle-space");
+      const deleted = await cortex.memorySpaces.get(lifecycleSpaceId);
 
       expect(deleted).toBeNull();
     });
@@ -920,42 +1013,50 @@ describe("Memory Spaces Registry API", () => {
 
   describe("New API Methods", () => {
     describe("search()", () => {
+      // Use test-scoped IDs to avoid parallel conflicts
+      const engineeringSpace = ctx.memorySpaceId("engineering-team");
+      const designSpace = ctx.memorySpaceId("design-team");
+      const aliceSpace = ctx.memorySpaceId("alice-personal");
+      // Use unique searchable terms scoped to this run
+      const projectTag = `apollo-${ctx.runId}`;
+      const searchTerm = ctx.runId; // Use runId as a unique searchable term
+
       beforeEach(async () => {
         // Clean up any existing test memory spaces first
         try {
-          await cortex.memorySpaces.delete("engineering-team");
+          await cortex.memorySpaces.delete(engineeringSpace);
         } catch (_error) {
           // Ignore if doesn't exist
         }
         try {
-          await cortex.memorySpaces.delete("design-team");
+          await cortex.memorySpaces.delete(designSpace);
         } catch (_error) {
           // Ignore if doesn't exist
         }
         try {
-          await cortex.memorySpaces.delete("user-alice-personal");
+          await cortex.memorySpaces.delete(aliceSpace);
         } catch (_error) {
           // Ignore if doesn't exist
         }
 
-        // Now register fresh test spaces
+        // Now register fresh test spaces with unique searchable content
         await cortex.memorySpaces.register({
-          memorySpaceId: "engineering-team",
-          name: "Engineering Team Workspace",
+          memorySpaceId: engineeringSpace,
+          name: `Engineering Team ${searchTerm}`,
           type: "team",
-          metadata: { department: "engineering", project: "apollo" },
+          metadata: { department: "engineering", project: projectTag },
         });
 
         await cortex.memorySpaces.register({
-          memorySpaceId: "design-team",
-          name: "Design Team Workspace",
+          memorySpaceId: designSpace,
+          name: `Design Team ${searchTerm}`,
           type: "team",
           metadata: { department: "design" },
         });
 
         await cortex.memorySpaces.register({
-          memorySpaceId: "user-alice-personal",
-          name: "Alice Personal Space",
+          memorySpaceId: aliceSpace,
+          name: `Alice Personal ${searchTerm}`,
           type: "personal",
           metadata: { owner: "alice" },
         });
@@ -964,49 +1065,52 @@ describe("Memory Spaces Registry API", () => {
       afterEach(async () => {
         // Clean up test memory spaces
         try {
-          await cortex.memorySpaces.delete("engineering-team");
+          await cortex.memorySpaces.delete(engineeringSpace);
         } catch (_error) {
           // Ignore if doesn't exist
         }
         try {
-          await cortex.memorySpaces.delete("design-team");
+          await cortex.memorySpaces.delete(designSpace);
         } catch (_error) {
           // Ignore if doesn't exist
         }
         try {
-          await cortex.memorySpaces.delete("user-alice-personal");
+          await cortex.memorySpaces.delete(aliceSpace);
         } catch (_error) {
           // Ignore if doesn't exist
         }
       });
 
       it("searches by name", async () => {
-        const results = await cortex.memorySpaces.search("Engineering");
+        // Search using our unique searchTerm
+        const results = await cortex.memorySpaces.search(searchTerm);
 
         expect(results.length).toBeGreaterThan(0);
-        expect(results.some((s) => s.name?.includes("Engineering"))).toBe(true);
+        expect(results.some((s) => s.name?.includes(searchTerm))).toBe(true);
       });
 
       it("searches by memorySpaceId", async () => {
-        const results = await cortex.memorySpaces.search("design");
+        // Search using a portion of the memorySpaceId which contains runId
+        const results = await cortex.memorySpaces.search(ctx.runId);
 
         expect(results.length).toBeGreaterThan(0);
-        expect(results.some((s) => s.memorySpaceId.includes("design"))).toBe(
+        expect(results.some((s) => s.memorySpaceId.includes(ctx.runId))).toBe(
           true,
         );
       });
 
       it("searches by metadata", async () => {
-        const results = await cortex.memorySpaces.search("apollo");
+        const results = await cortex.memorySpaces.search(projectTag);
 
         expect(results.length).toBeGreaterThan(0);
-        expect(results.some((s) => s.metadata?.project === "apollo")).toBe(
+        expect(results.some((s) => s.metadata?.project === projectTag)).toBe(
           true,
         );
       });
 
       it("filters by type", async () => {
-        const results = await cortex.memorySpaces.search("Team", {
+        // Search with our unique term and filter by type
+        const results = await cortex.memorySpaces.search(searchTerm, {
           type: "team",
         });
 
@@ -1020,40 +1124,49 @@ describe("Memory Spaces Registry API", () => {
 
         // Verify our test spaces are included
         const spaceIds = results.map((s) => s.memorySpaceId);
-        expect(spaceIds).toContain("engineering-team");
-        expect(spaceIds).toContain("design-team");
+        expect(spaceIds).toContain(engineeringSpace);
+        expect(spaceIds).toContain(designSpace);
       });
 
       it("filters by status", async () => {
-        await cortex.memorySpaces.archive("design-team");
+        await cortex.memorySpaces.archive(designSpace);
 
-        const activeResults = await cortex.memorySpaces.search("Team", {
+        // Search with unique term so we only get our test spaces
+        const activeResults = await cortex.memorySpaces.search(searchTerm, {
           status: "active",
         });
-        const archivedResults = await cortex.memorySpaces.search("Team", {
+        const archivedResults = await cortex.memorySpaces.search(searchTerm, {
           status: "archived",
         });
 
         expect(
-          activeResults.some((s) => s.memorySpaceId === "design-team"),
+          activeResults.some((s) => s.memorySpaceId === designSpace),
         ).toBe(false);
         expect(
-          archivedResults.some((s) => s.memorySpaceId === "design-team"),
+          archivedResults.some((s) => s.memorySpaceId === designSpace),
         ).toBe(true);
       });
 
       it("limits results", async () => {
-        const results = await cortex.memorySpaces.search("Team", { limit: 2 });
+        const results = await cortex.memorySpaces.search(searchTerm, {
+          limit: 2,
+        });
 
         expect(results.length).toBeLessThanOrEqual(2);
       });
     });
 
     describe("updateParticipants()", () => {
+      // Use test-scoped IDs
+      const participantTestSpace = ctx.memorySpaceId("participant-test");
+      const user1 = ctx.userId("p-user-1");
+      const agent1 = ctx.agentId("p-agent-1");
+      const tool1 = `tool-${ctx.runId}-1`;
+
       beforeEach(async () => {
         // Cleanup any existing participant-test space
         try {
-          await cortex.memorySpaces.delete("participant-test");
+          await cortex.memorySpaces.delete(participantTestSpace);
         } catch (_error) {
           // Doesn't exist, continue
         }
@@ -1061,84 +1174,88 @@ describe("Memory Spaces Registry API", () => {
 
       it("adds participants", async () => {
         await cortex.memorySpaces.register({
-          memorySpaceId: "participant-test",
+          memorySpaceId: participantTestSpace,
           type: "team",
-          participants: [{ id: "user-1", type: "user" }] as any,
+          participants: [{ id: user1, type: "user" }] as any,
         });
 
         const now = Date.now();
-        await cortex.memorySpaces.updateParticipants("participant-test", {
+        await cortex.memorySpaces.updateParticipants(participantTestSpace, {
           add: [
-            { id: "agent-1", type: "agent", joinedAt: now },
-            { id: "tool-1", type: "tool", joinedAt: now },
+            { id: agent1, type: "agent", joinedAt: now },
+            { id: tool1, type: "tool", joinedAt: now },
           ],
         });
 
-        const updated = await cortex.memorySpaces.get("participant-test");
+        const updated = await cortex.memorySpaces.get(participantTestSpace);
 
         expect(updated?.participants).toHaveLength(3);
-        expect(updated?.participants.some((p) => p.id === "agent-1")).toBe(
-          true,
-        );
-        expect(updated?.participants.some((p) => p.id === "tool-1")).toBe(true);
+        expect(updated?.participants.some((p) => p.id === agent1)).toBe(true);
+        expect(updated?.participants.some((p) => p.id === tool1)).toBe(true);
       });
 
       it("removes participants", async () => {
         await cortex.memorySpaces.register({
-          memorySpaceId: "participant-test",
+          memorySpaceId: participantTestSpace,
           type: "team",
           participants: [
-            { id: "user-1", type: "user" },
-            { id: "agent-1", type: "agent" },
-            { id: "tool-1", type: "tool" },
+            { id: user1, type: "user" },
+            { id: agent1, type: "agent" },
+            { id: tool1, type: "tool" },
           ] as any,
         });
 
-        await cortex.memorySpaces.updateParticipants("participant-test", {
-          remove: ["agent-1", "tool-1"],
+        await cortex.memorySpaces.updateParticipants(participantTestSpace, {
+          remove: [agent1, tool1],
         });
 
-        const updated = await cortex.memorySpaces.get("participant-test");
+        const updated = await cortex.memorySpaces.get(participantTestSpace);
 
         expect(updated?.participants).toHaveLength(1);
-        expect(updated?.participants[0].id).toBe("user-1");
+        expect(updated?.participants[0].id).toBe(user1);
       });
 
       it("adds and removes in one call", async () => {
+        const oldAgent = ctx.agentId("old-agent");
+        const newAgent = ctx.agentId("new-agent");
+
         await cortex.memorySpaces.register({
-          memorySpaceId: "participant-test",
+          memorySpaceId: participantTestSpace,
           type: "team",
-          participants: [{ id: "old-agent", type: "agent" }] as any,
+          participants: [{ id: oldAgent, type: "agent" }] as any,
         });
 
         const now = Date.now();
-        await cortex.memorySpaces.updateParticipants("participant-test", {
-          add: [{ id: "new-agent", type: "agent", joinedAt: now }],
-          remove: ["old-agent"],
+        await cortex.memorySpaces.updateParticipants(participantTestSpace, {
+          add: [{ id: newAgent, type: "agent", joinedAt: now }],
+          remove: [oldAgent],
         });
 
-        const updated = await cortex.memorySpaces.get("participant-test");
+        const updated = await cortex.memorySpaces.get(participantTestSpace);
 
         expect(updated?.participants).toHaveLength(1);
-        expect(updated?.participants[0].id).toBe("new-agent");
+        expect(updated?.participants[0].id).toBe(newAgent);
       });
 
       it("prevents duplicate participants", async () => {
+        const dupAgent1 = ctx.agentId("dup-agent-1");
+        const dupAgent2 = ctx.agentId("dup-agent-2");
+
         await cortex.memorySpaces.register({
-          memorySpaceId: "participant-test",
+          memorySpaceId: participantTestSpace,
           type: "team",
-          participants: [{ id: "agent-1", type: "agent" }] as any,
+          participants: [{ id: dupAgent1, type: "agent" }] as any,
         });
 
         const now = Date.now();
-        await cortex.memorySpaces.updateParticipants("participant-test", {
+        await cortex.memorySpaces.updateParticipants(participantTestSpace, {
           add: [
-            { id: "agent-1", type: "agent", joinedAt: now }, // Duplicate
-            { id: "agent-2", type: "agent", joinedAt: now },
+            { id: dupAgent1, type: "agent", joinedAt: now }, // Duplicate
+            { id: dupAgent2, type: "agent", joinedAt: now },
           ],
         });
 
-        const updated = await cortex.memorySpaces.get("participant-test");
+        const updated = await cortex.memorySpaces.get(participantTestSpace);
 
         expect(updated?.participants).toHaveLength(2);
       });

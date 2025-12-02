@@ -52,6 +52,28 @@ export const store = mutation({
     tags: v.array(v.string()),
     validFrom: v.optional(v.number()), // Temporal validity
     validUntil: v.optional(v.number()),
+    // Enrichment fields (for bullet-proof retrieval)
+    category: v.optional(v.string()), // Specific sub-category (e.g., "addressing_preference")
+    searchAliases: v.optional(v.array(v.string())), // Alternative search terms
+    semanticContext: v.optional(v.string()), // Usage context sentence
+    entities: v.optional(
+      v.array(
+        v.object({
+          name: v.string(),
+          type: v.string(),
+          fullValue: v.optional(v.string()),
+        }),
+      ),
+    ), // Extracted entities with types
+    relations: v.optional(
+      v.array(
+        v.object({
+          subject: v.string(),
+          predicate: v.string(),
+          object: v.string(),
+        }),
+      ),
+    ), // Subject-predicate-object triples for graph
   },
   handler: async (ctx, args) => {
     const now = Date.now();
@@ -74,6 +96,12 @@ export const store = mutation({
       tags: args.tags,
       validFrom: args.validFrom || now,
       validUntil: args.validUntil,
+      // Enrichment fields
+      category: args.category,
+      searchAliases: args.searchAliases,
+      semanticContext: args.semanticContext,
+      entities: args.entities,
+      relations: args.relations,
       version: 1,
       supersededBy: undefined,
       supersedes: undefined,
@@ -97,6 +125,28 @@ export const update = mutation({
     tags: v.optional(v.array(v.string())),
     validUntil: v.optional(v.number()),
     metadata: v.optional(v.any()),
+    // Enrichment fields (for bullet-proof retrieval)
+    category: v.optional(v.string()),
+    searchAliases: v.optional(v.array(v.string())),
+    semanticContext: v.optional(v.string()),
+    entities: v.optional(
+      v.array(
+        v.object({
+          name: v.string(),
+          type: v.string(),
+          fullValue: v.optional(v.string()),
+        }),
+      ),
+    ),
+    relations: v.optional(
+      v.array(
+        v.object({
+          subject: v.string(),
+          predicate: v.string(),
+          object: v.string(),
+        }),
+      ),
+    ),
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
@@ -121,6 +171,7 @@ export const update = mutation({
       factId: newFactId,
       memorySpaceId: existing.memorySpaceId,
       participantId: existing.participantId,
+      userId: existing.userId, // GDPR compliance - preserve user link across versions
       fact: args.fact || existing.fact,
       factType: existing.factType,
       subject: existing.subject,
@@ -135,10 +186,23 @@ export const update = mutation({
       validFrom: existing.validFrom,
       validUntil:
         args.validUntil !== undefined ? args.validUntil : existing.validUntil,
+      // Enrichment fields - preserve from existing or update
+      category: args.category !== undefined ? args.category : existing.category,
+      searchAliases:
+        args.searchAliases !== undefined
+          ? args.searchAliases
+          : existing.searchAliases,
+      semanticContext:
+        args.semanticContext !== undefined
+          ? args.semanticContext
+          : existing.semanticContext,
+      entities: args.entities !== undefined ? args.entities : existing.entities,
+      relations:
+        args.relations !== undefined ? args.relations : existing.relations,
       version: existing.version + 1,
       supersedes: existing.factId, // Link to previous
       supersededBy: undefined,
-      createdAt: now,
+      createdAt: existing.createdAt, // Preserve original creation time across versions
       updatedAt: now,
     });
 

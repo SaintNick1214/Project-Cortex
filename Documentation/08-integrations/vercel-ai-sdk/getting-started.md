@@ -269,4 +269,4 @@ See [Troubleshooting Guide](./troubleshooting.md) for common issues.
 
 - [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
 - [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions)
-- [Cortex Documentation](../../00-README.md) - Main documentation
+- [Cortex Documentation](/) - Main documentation

@@ -12,6 +12,7 @@ import {
   ensureUserNode,
   ensureParticipantNode,
   ensureEntityNode,
+  ensureEnrichedEntityNode,
 } from "./syncUtils";
 
 /**
@@ -306,6 +307,8 @@ export async function syncMemoryRelationships(
  *
  * Creates:
  * - MENTIONS relationships to Entity nodes (for subject, object)
+ * - Entity nodes from enriched extraction (with types and fullValues)
+ * - Relationship edges from enriched relations array
  * - EXTRACTED_FROM relationships to Conversation (if sourceRef exists)
  * - IN_SPACE relationships to MemorySpace
  * - SUPERSEDES / SUPERSEDED_BY relationships (fact versioning)
@@ -316,8 +319,86 @@ export async function syncFactRelationships(
   factNodeId: string,
   adapter: GraphAdapter,
 ): Promise<void> {
-  // Create Entity nodes and MENTIONS relationships
-  if (fact.subject) {
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // NEW: Sync enriched entities from bullet-proof extraction
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  const entityNodeIds: Map<string, string> = new Map();
+
+  if (fact.entities && fact.entities.length > 0) {
+    for (const entity of fact.entities) {
+      // Create enriched Entity node with type and fullValue
+      const entityNodeId = await ensureEnrichedEntityNode(
+        entity.name,
+        entity.type,
+        entity.fullValue,
+        adapter,
+      );
+
+      entityNodeIds.set(entity.name.toLowerCase(), entityNodeId);
+
+      // Create MENTIONS relationship from Fact to Entity
+      await adapter.createEdge({
+        type: "MENTIONS",
+        from: factNodeId,
+        to: entityNodeId,
+        properties: {
+          role: entity.type,
+          fullValue: entity.fullValue,
+          createdAt: fact.createdAt,
+        },
+      });
+    }
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // NEW: Sync enriched relations from bullet-proof extraction
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  if (fact.relations && fact.relations.length > 0) {
+    for (const relation of fact.relations) {
+      // Get or create subject and object entity nodes
+      let subjectNodeId = entityNodeIds.get(relation.subject.toLowerCase());
+      if (!subjectNodeId) {
+        subjectNodeId = await ensureEntityNode(
+          relation.subject,
+          "subject",
+          adapter,
+        );
+        entityNodeIds.set(relation.subject.toLowerCase(), subjectNodeId);
+      }
+
+      let objectNodeId = entityNodeIds.get(relation.object.toLowerCase());
+      if (!objectNodeId) {
+        objectNodeId = await ensureEntityNode(
+          relation.object,
+          "object",
+          adapter,
+        );
+        entityNodeIds.set(relation.object.toLowerCase(), objectNodeId);
+      }
+
+      // Create relationship edge with predicate as type
+      const relationshipType = relation.predicate
+        .toUpperCase()
+        .replace(/\s+/g, "_");
+
+      await adapter.createEdge({
+        type: relationshipType,
+        from: subjectNodeId,
+        to: objectNodeId,
+        properties: {
+          factId: fact.factId,
+          confidence: fact.confidence,
+          category: fact.category,
+          createdAt: fact.createdAt,
+        },
+      });
+    }
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Legacy: Create Entity nodes from subject/object fields (fallback)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  if (fact.subject && !entityNodeIds.has(fact.subject.toLowerCase())) {
     const subjectNodeId = await ensureEntityNode(
       fact.subject,
       "subject",
@@ -335,7 +416,7 @@ export async function syncFactRelationships(
     });
   }
 
-  if (fact.object) {
+  if (fact.object && !entityNodeIds.has(fact.object.toLowerCase())) {
     const objectNodeId = await ensureEntityNode(fact.object, "object", adapter);
 
     await adapter.createEdge({
@@ -349,8 +430,13 @@ export async function syncFactRelationships(
     });
   }
 
-  // If we have a predicate, create a typed relationship between subject and object
-  if (fact.subject && fact.object && fact.predicate) {
+  // If we have a predicate but no enriched relations, create a typed relationship
+  if (
+    fact.subject &&
+    fact.object &&
+    fact.predicate &&
+    (!fact.relations || fact.relations.length === 0)
+  ) {
     // Find entity nodes by name (entities use name as unique identifier)
     const subjectNodes = await adapter.findNodes(
       "Entity",

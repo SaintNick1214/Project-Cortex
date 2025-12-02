@@ -11,15 +11,12 @@ Tests all valid combinations of optional parameters to ensure:
 Note: Python port of comprehensive TypeScript parameter combination tests.
 """
 
-import pytest
 from cortex.types import (
-    StoreMemoryInput,
-    StoreFactParams,
     ContextInput,
     CreateConversationInput,
-    RegisterMemorySpaceParams,
     RememberParams,
-    AddMessageInput,
+    StoreFactParams,
+    StoreMemoryInput,
 )
 
 
@@ -34,7 +31,7 @@ class TestVectorStoreParameterCombinations:
     async def test_all_parameters_provided(self, cortex_client):
         """Test with all optional parameters."""
         space_id = generate_test_id("param-all-")
-        
+
         conv = await cortex_client.conversations.create(
             CreateConversationInput(
                 type="user-agent",
@@ -42,7 +39,7 @@ class TestVectorStoreParameterCombinations:
                 participants={"userId": "test-user"},
             )
         )
-        
+
         result = await cortex_client.vector.store(
             space_id,
             StoreMemoryInput(
@@ -59,16 +56,16 @@ class TestVectorStoreParameterCombinations:
                 metadata={"importance": 85, "tags": ["param", "test"]},
             ),
         )
-        
+
         assert result.participant_id == "tool-1"
         assert result.user_id == "test-user"
         assert result.importance == 85
         assert "param" in result.tags
-        
+
     async def test_minimal_parameters(self, cortex_client):
         """Test with only required parameters."""
         space_id = generate_test_id("param-min-")
-        
+
         result = await cortex_client.vector.store(
             space_id,
             StoreMemoryInput(
@@ -78,7 +75,7 @@ class TestVectorStoreParameterCombinations:
                 metadata={"importance": 50, "tags": []},
             ),
         )
-        
+
         assert result.participant_id is None
         assert result.user_id is None
         assert result.conversation_ref is None
@@ -92,7 +89,7 @@ class TestFactsStoreParameterCombinations:
         space_id = generate_test_id("facts-all-")
         import time
         now = int(time.time() * 1000)
-        
+
         result = await cortex_client.facts.store(
             StoreFactParams(
                 memory_space_id=space_id,
@@ -110,16 +107,16 @@ class TestFactsStoreParameterCombinations:
                 valid_until=now + 86400000,
             )
         )
-        
+
         assert result.participant_id == "agent-analyzer"
         assert result.subject == "test-user"
         assert result.predicate == "knows"
         assert result.object == "programming"
-        
+
     async def test_minimal_parameters(self, cortex_client):
         """Test with only required parameters."""
         space_id = generate_test_id("facts-min-")
-        
+
         result = await cortex_client.facts.store(
             StoreFactParams(
                 memory_space_id=space_id,
@@ -130,7 +127,7 @@ class TestFactsStoreParameterCombinations:
                 source_type="manual",
             )
         )
-        
+
         assert result.participant_id is None
         assert result.predicate is None
 
@@ -141,10 +138,10 @@ class TestRememberParameterCombinations:
     async def test_all_parameters_provided(self, cortex_client):
         """Test with all optional parameters."""
         space_id = generate_test_id("remember-all-")
-        
+
         async def extract_facts(user, agent):
             return [{"fact": "Extracted", "factType": "knowledge", "confidence": 85}]
-        
+
         result = await cortex_client.memory.remember(
             RememberParams(
                 memory_space_id=space_id,
@@ -159,14 +156,14 @@ class TestRememberParameterCombinations:
                 extract_facts=extract_facts,
             )
         )
-        
+
         assert len(result.memories) == 2
         assert result.memories[0].importance == 95
-        
+
     async def test_minimal_parameters(self, cortex_client):
         """Test with only required parameters."""
         space_id = generate_test_id("remember-min-")
-        
+
         result = await cortex_client.memory.remember(
             RememberParams(
                 memory_space_id=space_id,
@@ -177,7 +174,7 @@ class TestRememberParameterCombinations:
                 user_name="Test User",
             )
         )
-        
+
         assert len(result.memories) == 2
 
 
@@ -187,7 +184,7 @@ class TestContextsCreateParameterCombinations:
     async def test_all_parameters_provided(self, cortex_client):
         """Test with all optional parameters."""
         space_id = generate_test_id("ctx-all-")
-        
+
         parent = await cortex_client.contexts.create(
             ContextInput(
                 memory_space_id=space_id,
@@ -195,7 +192,7 @@ class TestContextsCreateParameterCombinations:
                 purpose="Parent",
             )
         )
-        
+
         conv = await cortex_client.conversations.create(
             CreateConversationInput(
                 type="user-agent",
@@ -203,7 +200,7 @@ class TestContextsCreateParameterCombinations:
                 participants={"userId": "test-user"},
             )
         )
-        
+
         result = await cortex_client.contexts.create(
             ContextInput(
                 memory_space_id=space_id,
@@ -215,7 +212,7 @@ class TestContextsCreateParameterCombinations:
                 data={"taskId": "task-123"},
             )
         )
-        
+
         assert result.parent_id == parent.id
         assert result.conversation_ref is not None
         assert result.data.get("taskId") == "task-123"
@@ -227,7 +224,7 @@ class TestParameterPreservation:
     async def test_vector_update_preserves_participant_id(self, cortex_client):
         """Test vector.update() preserves participantId."""
         space_id = generate_test_id("preserve-")
-        
+
         mem = await cortex_client.vector.store(
             space_id,
             StoreMemoryInput(
@@ -238,13 +235,13 @@ class TestParameterPreservation:
                 metadata={"importance": 50, "tags": ["original"]},
             ),
         )
-        
+
         updated = await cortex_client.vector.update(
             space_id,
             mem.memory_id,
             updates={"content": "Updated", "importance": 80},
         )
-        
+
         assert updated.participant_id == "tool-preserve"
         assert "original" in updated.tags
 

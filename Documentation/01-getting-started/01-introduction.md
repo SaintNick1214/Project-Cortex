@@ -469,7 +469,6 @@ Ready to add persistent memory to your AI agents?
 1. **[Install Cortex](./02-installation.md)** - Get set up in 5 minutes
 2. **[Quick Start](./03-five-minute-quickstart.md)** - Build your first memory-enabled agent
 3. **[Core Concepts](./04-core-concepts.md)** - Understand how Cortex works
-4. **[Recipes](../06-recipes/01-simple-chatbot.md)** - See real-world examples
 
 > **Note**: Cortex is in early development. The open source SDK (direct mode) is being built first, with cloud mode features coming later based on community feedback.
 
@@ -477,7 +476,6 @@ Ready to add persistent memory to your AI agents?
 
 Join the Cortex community:
 
-- **[Discord](https://discord.gg/cortex)** - Chat with developers
 - **[GitHub Discussions](https://github.com/yourusername/cortex/discussions)** - Ask questions
 - **[Twitter](https://twitter.com/cortexmemory)** - Follow updates
 - **[Email](mailto:hello@cortexmemory.dev)** - Direct support
@@ -488,4 +486,4 @@ Continue to [Installation](./02-installation.md) to get Cortex running in your p
 
 ---
 
-**Questions?** Check out the [FAQ](../11-reference/01-faq.md) or join our [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).

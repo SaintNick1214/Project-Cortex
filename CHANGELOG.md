@@ -19,6 +19,563 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.16.0] - 2025-12-01
+
+#### 🛡️ Resilience Layer - Production-Ready Overload Protection
+
+**Complete implementation of a 4-layer resilience system protecting against server overload during extreme traffic bursts. Fully integrated into both TypeScript and Python SDKs.**
+
+#### ✨ New Features
+
+**1. Token Bucket Rate Limiter**
+
+Smooths out bursty traffic into a sustainable flow:
+
+```typescript
+// Default: 100 tokens, 50/sec refill
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  resilience: {
+    rateLimiter: {
+      bucketSize: 200,     // Allow bursts up to 200
+      refillRate: 100,     // Sustain 100 ops/sec
+    }
+  }
+});
+```
+
+**2. Concurrency Limiter (Semaphore)**
+
+Controls the number of concurrent in-flight requests:
+
+```typescript
+resilience: {
+  concurrency: {
+    maxConcurrent: 20,    // Max 20 parallel requests
+    queueSize: 1000,      // Queue up to 1000 pending
+    timeout: 30000,       // 30s timeout for queued requests
+  }
+}
+```
+
+**3. Priority Queue**
+
+In-memory queue that prioritizes critical operations:
+
+| Priority | Examples | Behavior |
+|----------|----------|----------|
+| `critical` | `users:delete` | Bypass circuit breaker |
+| `high` | `memory:remember`, `facts:store` | Priority processing |
+| `normal` | Most operations | Standard queue |
+| `low` | `memory:search`, `vector:search` | Deferrable |
+| `background` | `governance:simulate` | Lowest priority |
+
+Priorities are **automatically assigned** based on operation name patterns.
+
+**4. Circuit Breaker**
+
+Prevents cascading failures by failing fast when backend is unhealthy:
+
+```typescript
+resilience: {
+  circuitBreaker: {
+    failureThreshold: 5,   // Open after 5 failures
+    successThreshold: 2,   // Close after 2 successes
+    timeout: 30000,        // 30s before half-open retry
+  },
+  onCircuitOpen: (failures) => {
+    console.warn(`Circuit opened after ${failures} failures`);
+  }
+}
+```
+
+**5. Resilience Presets**
+
+Pre-configured presets for common use cases:
+
+```typescript
+import { ResiliencePresets } from "@cortexmemory/sdk";
+
+// Default - balanced for most use cases
+new Cortex({ convexUrl, resilience: ResiliencePresets.default });
+
+// Real-time agent - low latency, smaller buffers
+new Cortex({ convexUrl, resilience: ResiliencePresets.realTimeAgent });
+
+// Batch processing - large queues, patient retries
+new Cortex({ convexUrl, resilience: ResiliencePresets.batchProcessing });
+
+// Hive mode - many agents, conservative limits
+new Cortex({ convexUrl, resilience: ResiliencePresets.hiveMode });
+
+// Disabled - bypass all protection (not recommended)
+new Cortex({ convexUrl, resilience: ResiliencePresets.disabled });
+```
+
+**6. Metrics & Monitoring**
+
+```typescript
+const metrics = cortex.getResilienceMetrics();
+
+console.log(`Rate limiter: ${metrics.rateLimiter.available}/${metrics.rateLimiter.bucketSize} tokens`);
+console.log(`Concurrency: ${metrics.concurrency.active}/${metrics.concurrency.max} active`);
+console.log(`Queue: ${metrics.queue.size} pending`);
+console.log(`Circuit: ${metrics.circuitBreaker.state} (${metrics.circuitBreaker.failures} failures)`);
+
+// Health check
+const isHealthy = cortex.isHealthy(); // false if circuit is open
+```
+
+**7. Graceful Shutdown**
+
+```typescript
+// Wait for pending operations to complete
+await cortex.shutdown(30000); // 30s timeout
+
+// Or immediate close
+await cortex.close();
+```
+
+#### 📦 New Modules
+
+**TypeScript (`src/resilience/`):**
+- `types.ts` - Configuration interfaces and error classes
+- `TokenBucket.ts` - Token bucket rate limiter
+- `Semaphore.ts` - Async semaphore with queue
+- `priorities.ts` - Operation priority mapping
+- `PriorityQueue.ts` - Priority-based request queue
+- `CircuitBreaker.ts` - Circuit breaker pattern
+- `index.ts` - ResilienceLayer orchestrator and presets
+
+**Python (`cortex/resilience/`):**
+- `types.py` - Configuration dataclasses and exceptions
+- `token_bucket.py` - Token bucket rate limiter
+- `semaphore.py` - Async semaphore with queue
+- `priorities.py` - Operation priority mapping
+- `priority_queue.py` - Priority-based request queue
+- `circuit_breaker.py` - Circuit breaker pattern
+- `__init__.py` - ResilienceLayer orchestrator and presets
+
+#### 🧪 Testing
+
+- **40 new TypeScript tests** covering all resilience components
+- **40 new Python tests** with equivalent coverage
+- All 1960+ existing tests now run through resilience layer by default
+- Integration tests validate end-to-end protection
+
+#### 📚 New Types
+
+**TypeScript:**
+```typescript
+type Priority = "critical" | "high" | "normal" | "low" | "background";
+
+interface ResilienceConfig {
+  enabled?: boolean;
+  rateLimiter?: RateLimiterConfig;
+  concurrency?: ConcurrencyConfig;
+  circuitBreaker?: CircuitBreakerConfig;
+  queue?: QueueConfig;
+  onCircuitOpen?: (failures: number) => void;
+  onCircuitClose?: () => void;
+  onQueueFull?: (priority: Priority) => void;
+}
+
+interface ResilienceMetrics {
+  rateLimiter: RateLimiterMetrics;
+  concurrency: ConcurrencyMetrics;
+  queue: QueueMetrics;
+  circuitBreaker: CircuitBreakerMetrics;
+}
+
+// Custom errors
+class CircuitOpenError extends Error { ... }
+class QueueFullError extends Error { ... }
+class AcquireTimeoutError extends Error { ... }
+class RateLimitExceededError extends Error { ... }
+```
+
+**Python:**
+```python
+Priority = Literal["critical", "high", "normal", "low", "background"]
+
+@dataclass
+class ResilienceConfig:
+    enabled: bool = True
+    rate_limiter: Optional[RateLimiterConfig] = None
+    concurrency: Optional[ConcurrencyConfig] = None
+    circuit_breaker: Optional[CircuitBreakerConfig] = None
+    queue: Optional[QueueConfig] = None
+    on_circuit_open: Optional[Callable[[int], None]] = None
+
+class CircuitOpenError(Exception): ...
+class QueueFullError(Exception): ...
+class AcquireTimeoutError(Exception): ...
+class RateLimitExceededError(Exception): ...
+```
+
+#### 🔄 Backward Compatibility
+
+✅ **Zero Breaking Changes**
+
+- Resilience is **enabled by default** with balanced settings
+- All existing code works without modification
+- Pass `resilience: { enabled: false }` to disable
+- Existing tests automatically run through resilience layer
+
+#### 🎯 Production Benefits
+
+- **Burst Protection**: Handle 10x traffic spikes gracefully
+- **Cascade Prevention**: Circuit breaker isolates failures
+- **Priority Handling**: Critical ops (deletes) bypass queue
+- **Graceful Degradation**: Low-priority ops queue during overload
+- **Zero Config**: Works out of the box with sensible defaults
+- **Full Observability**: Metrics for dashboards and alerting
+
+---
+
+### [0.15.1] - 2025-11-29
+
+#### 🔍 Semantic Search Quality - Agent Acknowledgment Filtering
+
+**Fixes an edge case where agent acknowledgments like "I've noted your email address" could outrank user facts in semantic search due to word overlap (e.g., "address" matching both contexts).**
+
+#### 🐛 Bug Fixes
+
+**1. Agent Acknowledgment Noise Filtering**
+
+Agent responses that are pure acknowledgments (no meaningful facts) are now filtered from vector storage:
+
+- ✅ **ACID storage preserved** - Full conversation history maintained
+- ✅ **Vector storage filtered** - Acknowledgments don't pollute semantic search
+- ✅ **Automatic detection** - Patterns like "Got it!", "I've noted", "I'll remember" are identified
+
+```python
+# Before: Both stored in vector (agent response pollutes search)
+await cortex.memory.remember(
+    user_message="My name is Alex",
+    agent_response="Got it!",  # Would appear in semantic search
+    ...
+)
+
+# After: Only user fact stored in vector
+# "Got it!" still in ACID for conversation history
+# But won't appear when searching "what to call the user"
+```
+
+**2. Role-Based Search Weighting**
+
+- User messages receive 25% boost in semantic search scoring
+- Detected acknowledgments receive 50% penalty (defense-in-depth)
+- `messageRole` field tracks source for intelligent ranking
+
+#### 🎯 Impact
+
+Queries like "what should I address the user as" now reliably return user facts ("My name is Alex") instead of agent acknowledgments ("I've noted your email address") that happen to contain semantically similar words.
+
+#### 📦 Affected Packages
+
+- `@cortexmemory/sdk` - TypeScript SDK
+- `cortex-sdk` - Python SDK
+- `convex-dev` - Backend search handler
+
+---
+
+### [0.15.0] - 2025-11-30
+
+#### 🎯 Enriched Fact Extraction - Bullet-Proof Semantic Search
+
+**Comprehensive enhancement to fact extraction and retrieval, ensuring extracted facts always rank #1 in semantic search through rich metadata, search aliases, and category-based boosting.**
+
+#### ✨ New Features
+
+**1. Enriched Fact Extraction System**
+
+Facts can now store rich metadata optimized for retrieval:
+
+- **`category`** - Specific sub-category for filtering (e.g., "addressing_preference")
+- **`searchAliases`** - Array of alternative search terms that should match this fact
+- **`semanticContext`** - Usage context sentence explaining when/how to use this information
+- **`entities`** - Array of extracted entities with name, type, and optional fullValue
+- **`relations`** - Array of subject-predicate-object triples for graph integration
+
+```typescript
+await cortex.facts.store({
+  memorySpaceId: "agent-1",
+  fact: "User prefers to be called Alex",
+  factType: "identity",
+  confidence: 95,
+  sourceType: "conversation",
+
+  // Enrichment fields (NEW)
+  category: "addressing_preference",
+  searchAliases: ["name", "nickname", "what to call", "address as", "greet"],
+  semanticContext:
+    "Use 'Alex' when addressing, greeting, or referring to this user",
+  entities: [
+    { name: "Alex", type: "preferred_name", fullValue: "Alexander Johnson" },
+  ],
+  relations: [
+    { subject: "user", predicate: "prefers_to_be_called", object: "Alex" },
+  ],
+});
+```
+
+**2. Enhanced Search Boosting**
+
+Vector memory search (`memories:search`) now applies intelligent boosting:
+
+| Condition                                               | Boost |
+| ------------------------------------------------------- | ----- |
+| User message role (`messageRole: "user"`)               | +20%  |
+| Matching `factCategory` (when `queryCategory` provided) | +30%  |
+| Has `enrichedContent` field                             | +10%  |
+
+```typescript
+// Search with category boosting
+const results = await cortex.memory.search(memorySpaceId, query, {
+  embedding: await generateEmbedding(query),
+  queryCategory: "addressing_preference", // Boost matching facts
+});
+```
+
+**3. Enriched Content for Vector Indexing**
+
+New `enrichedContent` field on memories concatenates all searchable content for embedding:
+
+```typescript
+// Example enrichedContent generated from enriched fact:
+// "User prefers to be called Alex | name nickname what to call address as | Use 'Alex' when addressing..."
+```
+
+**4. Enhanced Graph Synchronization**
+
+Graph sync now creates richer entity nodes and relationship edges from enriched facts:
+
+- **Entity nodes** include `entityType` and `fullValue` properties
+- **Relations** create typed edges (e.g., `PREFERS_TO_BE_CALLED`)
+- **MENTIONS edges** link facts to extracted entities with role metadata
+
+**5. New Types (TypeScript)**
+
+```typescript
+interface EnrichedEntity {
+  name: string;
+  type: string;
+  fullValue?: string;
+}
+
+interface EnrichedRelation {
+  subject: string;
+  predicate: string;
+  object: string;
+}
+
+// Updated StoreFactParams, FactRecord with enrichment fields
+// Updated StoreMemoryInput, MemoryEntry with enrichedContent, factCategory
+// Updated SearchOptions with queryCategory
+```
+
+**6. New Types (Python)**
+
+```python
+@dataclass
+class EnrichedEntity:
+    name: str
+    type: str
+    full_value: Optional[str] = None
+
+@dataclass
+class EnrichedRelation:
+    subject: str
+    predicate: str
+    object: str
+
+# Updated StoreFactParams, FactRecord with enrichment fields
+# Updated StoreMemoryInput, MemoryEntry with enriched_content, fact_category
+```
+
+#### 📊 Schema Changes
+
+**Facts Table (Layer 3):**
+
+- `category: v.optional(v.string())` - Specific sub-category
+- `searchAliases: v.optional(v.array(v.string()))` - Alternative search terms
+- `semanticContext: v.optional(v.string())` - Usage context
+- `entities: v.optional(v.array(v.object({...})))` - Extracted entities
+- `relations: v.optional(v.array(v.object({...})))` - Relationship triples
+
+**Memories Table (Layer 2):**
+
+- `enrichedContent: v.optional(v.string())` - Concatenated searchable content
+- `factCategory: v.optional(v.string())` - Category for boosting
+- `factsRef: v.optional(v.object({...}))` - Reference to Layer 3 fact
+
+#### 🧪 Testing
+
+- Strengthened TypeScript semantic search test to require top-1 result validation
+- Matches Python SDK test strictness for bullet-proof retrieval validation
+
+#### 📚 Documentation
+
+- Updated Facts Operations API with enrichment fields and examples
+- Updated Memory Operations API with queryCategory and enrichedContent
+- New "Enriched Fact Extraction" section explaining the system architecture
+- Search boosting logic documented with boost percentages
+
+#### 🔄 Backward Compatibility
+
+✅ **Zero Breaking Changes**
+
+- All enrichment fields are optional
+- Existing code works without modifications
+- No data migration required
+- Enrichment features are additive
+
+---
+
+### [0.14.0] - 2025-11-29
+
+#### 🤖 A2A (Agent-to-Agent) Communication API
+
+**Full implementation of the A2A Communication API across both TypeScript and Python SDKs, enabling seamless inter-agent communication with ACID guarantees and bidirectional memory storage.**
+
+#### ✨ New Features
+
+**1. A2A API Methods**
+
+Four new methods for agent-to-agent communication:
+
+- **`send()`** - Fire-and-forget message between agents (no pub/sub required)
+- **`request()`** - Synchronous request-response pattern (requires pub/sub infrastructure)
+- **`broadcast()`** - One-to-many communication to multiple agents
+- **`getConversation()`** - Retrieve conversation history with rich filtering
+
+**2. Bidirectional Memory Storage**
+
+Each A2A message automatically creates:
+
+- Memory in sender's space (direction: "outbound")
+- Memory in receiver's space (direction: "inbound")
+- ACID conversation tracking (optional, enabled by default)
+
+```typescript
+// TypeScript
+const result = await cortex.a2a.send({
+  from: "sales-agent",
+  to: "support-agent",
+  message: "Customer asking about enterprise pricing",
+  importance: 70,
+});
+console.log(`Message ${result.messageId} sent`);
+```
+
+```python
+# Python
+result = await cortex.a2a.send(
+    A2ASendParams(
+        from_agent="sales-agent",
+        to_agent="support-agent",
+        message="Customer asking about enterprise pricing",
+        importance=70
+    )
+)
+```
+
+**3. A2A Metadata Structure**
+
+Memories now include structured metadata for A2A operations:
+
+```typescript
+metadata: {
+  direction: "outbound" | "inbound",
+  fromAgent: string,
+  toAgent: string,
+  messageId: string,
+  contextId?: string,    // Workflow link
+  broadcast?: boolean,   // If from broadcast
+  broadcastId?: string,
+  messageType?: "request" | "response",
+  requiresResponse?: boolean,
+  responded?: boolean,
+}
+```
+
+**4. Client-Side Validation**
+
+Comprehensive validation for all A2A operations:
+
+- Agent ID format validation
+- Message content and size limits (100KB max)
+- Importance range (0-100)
+- Timeout and retry configuration
+- Recipients array validation for broadcasts
+- Conversation filter validation
+
+```typescript
+// TypeScript
+import { A2AValidationError } from "@cortexmemory/sdk";
+
+try {
+  await cortex.a2a.send(params);
+} catch (error) {
+  if (error instanceof A2AValidationError) {
+    console.log(`Validation failed: ${error.code} - ${error.field}`);
+  }
+}
+```
+
+```python
+# Python
+from cortex import A2AValidationError
+
+try:
+    await cortex.a2a.send(params)
+except A2AValidationError as e:
+    print(f"Validation failed: {e.code} - {e.field}")
+```
+
+**5. Schema Enhancement**
+
+Added flexible `metadata` field to the memories table for storing source-specific data:
+
+```typescript
+// Convex schema addition
+metadata: v.optional(v.any()),
+```
+
+#### 🧪 Testing
+
+- **TypeScript**: 53 new A2A tests (core operations, validation, integration, edge cases)
+- **Python**: 50 new A2A tests (matching TypeScript coverage)
+- All tests passing on both local and cloud deployments
+
+#### 📚 Documentation
+
+Full API documentation available at:
+
+- [A2A Communication API Reference](./Documentation/03-api-reference/06-a2a-communication.md)
+- [A2A Core Features Guide](./Documentation/02-core-features/05-a2a-communication.md)
+
+#### 🔄 Migration Guide
+
+**No migration required** - This is a non-breaking addition. The new `metadata` field on memories is optional and backward compatible.
+
+To use A2A, simply access `cortex.a2a`:
+
+```typescript
+// TypeScript
+const cortex = new Cortex({ convexUrl: "..." });
+await cortex.a2a.send({ from: "agent-1", to: "agent-2", message: "Hello" });
+```
+
+```python
+# Python
+cortex = Cortex(CortexConfig(convex_url="..."))
+await cortex.a2a.send(A2ASendParams(from_agent="agent-1", to_agent="agent-2", message="Hello"))
+```
+
+---
+
 ### [0.12.0] - 2025-11-25
 
 #### 🎯 Client-Side Validation - All APIs
@@ -49,7 +606,7 @@ Each API has a dedicated validation error class for precise error handling:
 
 ```typescript
 // TypeScript
-import { GovernanceValidationError } from '@cortexmemory/sdk';
+import { GovernanceValidationError } from "@cortexmemory/sdk";
 
 try {
   await cortex.governance.setPolicy(policy);
@@ -82,6 +639,7 @@ except GovernanceValidationError as e:
 **4. Validation Categories**
 
 All validators check:
+
 - Required fields (non-null, non-empty strings)
 - Format validation (IDs, periods, dates, regex patterns)
 - Range validation (0-100 scores, array lengths, date ranges)
@@ -92,11 +650,13 @@ All validators check:
 #### 🧪 Testing
 
 **TypeScript SDK:**
+
 - 240+ new validation tests
 - All tests passing (51 governance, 189 across other APIs)
 - Zero breaking changes to public API
 
 **Python SDK:**
+
 - 180+ new validation tests
 - All tests passing (35 governance, 145 across other APIs)
 - Zero breaking changes to public API
@@ -104,6 +664,7 @@ All validators check:
 #### 📝 Documentation
 
 Validation errors are automatically documented with:
+
 - Error codes for programmatic handling
 - Field names for precise debugging
 - Clear fix suggestions in error messages
@@ -116,7 +677,7 @@ Optional: Catch validation errors specifically for better error handling:
 
 ```typescript
 // TypeScript - Optional enhanced error handling
-import { MemoryValidationError } from '@cortexmemory/sdk';
+import { MemoryValidationError } from "@cortexmemory/sdk";
 
 try {
   await cortex.memory.remember(params);

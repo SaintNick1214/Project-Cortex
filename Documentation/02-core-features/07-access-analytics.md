@@ -640,8 +640,8 @@ console.log(
 - **[Agent Memory](./01-memory-spaces.md)** - Vector layer fundamentals
 - **[Conversation History](./06-conversation-history.md)** - ACID layer details
 - **[Dimension Strategies](../07-advanced-topics/02-dimension-strategies.md)** - Choosing embedding dimensions
-- **[Analytics API](../03-api-reference/07-analytics-operations.md)** - Complete API
+- **[Memory Operations API](../03-api-reference/02-memory-operations.md)** - Complete API reference
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

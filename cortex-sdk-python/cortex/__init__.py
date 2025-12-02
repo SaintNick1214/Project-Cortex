@@ -24,6 +24,7 @@ Example:
 
 # Main client
 # Validation Errors
+from .a2a.validators import A2AValidationError
 from .agents.validators import AgentValidationError
 from .client import Cortex
 from .contexts.validators import ContextsValidationError
@@ -101,6 +102,7 @@ from .types import (
     ExportResult,
     FactRecord,
     FactSourceRef,
+    FactsRef,
     FactType,
     ForgetOptions,
     ForgetResult,
@@ -233,6 +235,7 @@ __all__ = [
     "FactRecord",
     "StoreFactParams",
     "FactSourceRef",
+    "FactsRef",
     "CountFactsFilter",
     "ListFactsFilter",
     "QueryByRelationshipFilter",
@@ -324,6 +327,7 @@ __all__ = [
     "is_a2a_timeout_error",
     "is_cascade_deletion_error",
     # Validation Errors
+    "A2AValidationError",
     "AgentValidationError",
     "ContextsValidationError",
     "ConversationValidationError",

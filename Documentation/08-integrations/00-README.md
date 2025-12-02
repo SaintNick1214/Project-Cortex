@@ -6,9 +6,9 @@ Official integrations for Cortex Memory with popular AI frameworks and tools.
 
 ### Vercel AI SDK
 
-**Status**: ✅ Complete (v0.1.0)  
+**Status**: ✅ Complete (v0.2.0)  
 **Package**: `@cortexmemory/vercel-ai-provider`  
-**Documentation**: [Vercel AI SDK Integration](./vercel-ai-sdk/)
+**Documentation**: See [Getting Started](./vercel-ai-sdk/getting-started.md) guide
 
 Add persistent memory to Next.js applications with Vercel AI SDK:
 
@@ -21,6 +21,16 @@ const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: "my-chatbot",
   userId: "user-123",
+
+  // NEW in v0.2.0: Enhanced streaming options
+  streamingOptions: {
+    storePartialResponse: true,
+    progressiveFactExtraction: true,
+  },
+
+  streamingHooks: {
+    onProgress: (event) => console.log("Stream progress:", event),
+  },
 });
 
 const result = await streamText({
@@ -36,13 +46,16 @@ const result = await streamText({
 - ✅ Works with all AI SDK providers (OpenAI, Anthropic, Google, etc.)
 - ✅ Memory Spaces for multi-tenancy
 - ✅ Hive Mode for cross-application memory
-- ✅ Streaming support
+- ✅ **Enhanced streaming support** with real-time hooks and metrics
+- ✅ **Progressive storage** during streaming for resumability
+- ✅ **Streaming metrics** with automatic performance analysis
+- ✅ **Error recovery** with partial failure handling
 
 **Learn More:**
 
 - [Getting Started](./vercel-ai-sdk/getting-started.md)
 - [API Reference](./vercel-ai-sdk/api-reference.md)
-- [Examples](../../packages/vercel-ai-provider/examples/)
+- [Examples](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/examples)
 
 ---
 
@@ -77,12 +90,11 @@ Want an integration with your favorite framework?
 
 - [Open an issue](https://github.com/SaintNick1214/Project-Cortex/issues/new)
 - [Start a discussion](https://github.com/SaintNick1214/Project-Cortex/discussions)
-- [Contribute](../../CONTRIBUTING.md)
+- [Contribute](/project/contributing)
 
 ---
 
 ## See Also
 
-- [Main Documentation](../00-README.md)
-- [Core Features](../02-core-features/)
-- [API Reference](../03-api-reference/)
+- [Memory Spaces](../02-core-features/01-memory-spaces.md)
+- [API Reference](../03-api-reference/01-overview.md)

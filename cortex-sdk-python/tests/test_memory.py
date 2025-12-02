@@ -4,8 +4,7 @@ Tests for Memory API (Layer 4 convenience)
 
 import pytest
 
-from cortex import RememberParams, SearchOptions, ForgetOptions, CortexError
-from tests.helpers import embeddings_available
+from cortex import ForgetOptions, RememberParams, SearchOptions
 
 
 @pytest.mark.asyncio
@@ -249,15 +248,15 @@ async def test_count_and_list(cortex_client, test_memory_space_id, test_conversa
 async def test_remember_with_embeddings(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test remember with embedding generation.
-    
+
     Port of: memory.test.ts - embedding tests
     """
     from tests.helpers import generate_embedding
-    
+
     # Generate embeddings for messages
-    user_embedding = await generate_embedding("I need help with my account", use_mock=True)
-    agent_embedding = await generate_embedding("I can help you with that", use_mock=True)
-    
+    await generate_embedding("I need help with my account", use_mock=True)
+    await generate_embedding("I can help you with that", use_mock=True)
+
     # Note: Embeddings are generated automatically by the backend
     result = await cortex_client.memory.remember(
         RememberParams(
@@ -269,11 +268,11 @@ async def test_remember_with_embeddings(cortex_client, test_memory_space_id, tes
             user_name="Tester",
         )
     )
-    
+
     # Both memories should be created
     assert len(result.memories) == 2
     # Note: Embeddings are generated automatically by backend if enabled
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
 
@@ -282,7 +281,7 @@ async def test_remember_with_embeddings(cortex_client, test_memory_space_id, tes
 async def test_remember_with_fact_extraction(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test remember with fact extraction callback.
-    
+
     Port of: memory.test.ts - fact extraction tests
     """
     # Define fact extraction function
@@ -295,7 +294,7 @@ async def test_remember_with_fact_extraction(cortex_client, test_memory_space_id
                 "tags": ["ui", "preferences"],
             }
         ]
-    
+
     result = await cortex_client.memory.remember(
         RememberParams(
             memory_space_id=test_memory_space_id,
@@ -308,17 +307,17 @@ async def test_remember_with_fact_extraction(cortex_client, test_memory_space_id
             extract_facts=extract_facts,
         )
     )
-    
+
     # Should have extracted facts
     assert len(result.facts) > 0
     assert any(f.fact == "User prefers dark mode" for f in result.facts)
-    
+
     # CRITICAL: Verify userId was propagated from remember() to facts.store()
     # This was a bug fixed in Python SDK - userId was missing!
     extracted_fact = next(f for f in result.facts if f.fact == "User prefers dark mode")
     assert extracted_fact.user_id == test_user_id
     assert extracted_fact.participant_id == "agent-test"
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
 
@@ -327,18 +326,18 @@ async def test_remember_with_fact_extraction(cortex_client, test_memory_space_id
 async def test_remember_fact_extraction_parameter_propagation(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
     """
     REGRESSION TEST: Ensures ALL parameters are properly passed from remember() to facts.store().
-    
+
     Bug found: userId was not being passed to facts.store() during fact extraction.
     This caused:
     - userId filter not working for extracted facts
     - GDPR cascade delete failing for facts
     - Multi-user demos breaking
     """
-    from cortex import RememberParams, ListFactsFilter
-    
+    from cortex import ListFactsFilter, RememberParams
+
     specific_conv_id = f"conv-param-prop-{test_user_id}"
     specific_participant_id = "agent-param-test"
-    
+
     async def extract_facts(user_msg, agent_msg):
         return [
             {
@@ -348,7 +347,7 @@ async def test_remember_fact_extraction_parameter_propagation(cortex_client, tes
                 "tags": ["regression-test"],
             }
         ]
-    
+
     result = await cortex_client.memory.remember(
         RememberParams(
             memory_space_id=test_memory_space_id,
@@ -362,10 +361,10 @@ async def test_remember_fact_extraction_parameter_propagation(cortex_client, tes
             extract_facts=extract_facts,
         )
     )
-    
+
     assert len(result.facts) == 1
     fact = result.facts[0]
-    
+
     # Verify ALL parameters were properly propagated
     assert fact.memory_space_id == test_memory_space_id
     assert fact.user_id == test_user_id  # ← This was the bug!
@@ -380,7 +379,7 @@ async def test_remember_fact_extraction_parameter_propagation(cortex_client, tes
     assert mem_id is not None
     assert msg_ids is not None
     assert len(msg_ids) == 2
-    
+
     # Now test that filtering by userId actually works
     filtered_facts = await cortex_client.facts.list(
         ListFactsFilter(
@@ -388,11 +387,11 @@ async def test_remember_fact_extraction_parameter_propagation(cortex_client, tes
             user_id=test_user_id,
         )
     )
-    
+
     found_fact = next((f for f in filtered_facts if f.fact_id == fact.fact_id), None)
     assert found_fact is not None
     assert found_fact.user_id == test_user_id
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
 
@@ -401,7 +400,7 @@ async def test_remember_fact_extraction_parameter_propagation(cortex_client, tes
 async def test_search_with_strategy(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test search with different strategies.
-    
+
     Port of: memory.test.ts - search strategy tests
     """
     # Store memories
@@ -416,7 +415,7 @@ async def test_search_with_strategy(cortex_client, test_memory_space_id, test_co
             importance=50,
         )
     )
-    
+
     # Search with keyword strategy
     results = await cortex_client.memory.search(
         test_memory_space_id,
@@ -427,9 +426,9 @@ async def test_search_with_strategy(cortex_client, test_memory_space_id, test_co
             limit=10,
         ),
     )
-    
+
     assert len(results) >= 0  # May or may not find results
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
 
@@ -438,7 +437,7 @@ async def test_search_with_strategy(cortex_client, test_memory_space_id, test_co
 async def test_list_with_filters(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test listing memories with filters.
-    
+
     Port of: memory.test.ts - list tests
     """
     # Store memories with different importance
@@ -454,7 +453,7 @@ async def test_list_with_filters(cortex_client, test_memory_space_id, test_conve
                 importance=30 + (i * 20),  # 30, 50, 70
             )
         )
-    
+
     # List memories (filter by importance client-side)
     memories = await cortex_client.memory.list(
         test_memory_space_id,
@@ -463,11 +462,11 @@ async def test_list_with_filters(cortex_client, test_memory_space_id, test_conve
     )
     # Filter by importance client-side
     memories = [m for m in memories if m.importance >= 60]
-    
+
     # Should only return memories with importance >= 60
     for mem in memories:
         assert mem.importance >= 60
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
 
@@ -476,7 +475,7 @@ async def test_list_with_filters(cortex_client, test_memory_space_id, test_conve
 async def test_count_with_filters(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test counting memories with filters.
-    
+
     Port of: memory.test.ts - count tests
     """
     # Store memories with tags
@@ -492,16 +491,16 @@ async def test_count_with_filters(cortex_client, test_memory_space_id, test_conv
                 tags=["important"] if i % 2 == 0 else ["normal"],
             )
         )
-    
+
     # Count all memories (backend doesn't support tags filter)
     count = await cortex_client.memory.count(
         test_memory_space_id,
         user_id=test_user_id,
     )
-    
+
     # Should have 8 memories total (4 user + 4 agent messages)
     assert count >= 8
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
 
@@ -510,7 +509,7 @@ async def test_count_with_filters(cortex_client, test_memory_space_id, test_conv
 async def test_forget_with_options(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test forget with various options.
-    
+
     Port of: memory.test.ts - forget tests
     """
     # Store a memory
@@ -524,9 +523,9 @@ async def test_forget_with_options(cortex_client, test_memory_space_id, test_con
             user_name="Tester",
         )
     )
-    
+
     memory_id = result.memories[0].memory_id
-    
+
     # Forget (soft delete by default)
     forget_result = await cortex_client.memory.forget(
         test_memory_space_id,
@@ -535,10 +534,10 @@ async def test_forget_with_options(cortex_client, test_memory_space_id, test_con
             delete_conversation=False,
         ),
     )
-    
+
     assert forget_result.memory_deleted is True
     assert forget_result.restorable is True
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
 
@@ -547,7 +546,7 @@ async def test_forget_with_options(cortex_client, test_memory_space_id, test_con
 async def test_archive_and_restore(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test archiving and restoring memories.
-    
+
     Port of: memory.test.ts - archive tests
     """
     # Store a memory
@@ -561,15 +560,15 @@ async def test_archive_and_restore(cortex_client, test_memory_space_id, test_con
             user_name="Tester",
         )
     )
-    
+
     memory_id = result.memories[0].memory_id
-    
+
     # Archive it
     archived = await cortex_client.vector.archive(test_memory_space_id, memory_id)
-    
+
     # Verify archived
     assert archived is not None
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
 
@@ -578,7 +577,7 @@ async def test_archive_and_restore(cortex_client, test_memory_space_id, test_con
 async def test_get_conversation_ref(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test getting memory with conversationRef populated.
-    
+
     Port of: memory.test.ts - conversationRef tests
     """
     # Store memory with conversation
@@ -592,19 +591,19 @@ async def test_get_conversation_ref(cortex_client, test_memory_space_id, test_co
             user_name="Tester",
         )
     )
-    
+
     memory_id = result.memories[0].memory_id
-    
+
     # Get memory
     memory = await cortex_client.memory.get(test_memory_space_id, memory_id)
-    
+
     # Should have conversationRef
     assert memory is not None
     assert memory.conversation_ref is not None
     # conversation_ref is a dict after conversion
     conv_id = memory.conversation_ref.get("conversation_id") if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
     assert conv_id == test_conversation_id
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
 
@@ -618,7 +617,7 @@ async def test_get_conversation_ref(cortex_client, test_memory_space_id, test_co
 async def test_restore_from_archive(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
     """
     Test restoring memory from archive.
-    
+
     New method: memory.restore_from_archive()
     """
     # Store a memory
@@ -633,31 +632,31 @@ async def test_restore_from_archive(cortex_client, test_memory_space_id, test_co
             importance=80,
         )
     )
-    
+
     memory_id = result.memories[0].memory_id
-    
+
     # Archive it
     archived = await cortex_client.memory.archive(test_memory_space_id, memory_id)
     assert archived is not None
-    
+
     # Verify archived
     memory = await cortex_client.vector.get(test_memory_space_id, memory_id)
     assert "archived" in memory.tags
     assert memory.importance <= 10
-    
+
     # Restore from archive
     restored = await cortex_client.memory.restore_from_archive(
         test_memory_space_id, memory_id
     )
-    
+
     assert restored["restored"] is True
     assert restored["memoryId"] == memory_id
-    
+
     # Verify restoration
     restored_memory = await cortex_client.vector.get(test_memory_space_id, memory_id)
     assert "archived" not in restored_memory.tags
     assert restored_memory.importance >= 50
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
 
@@ -678,14 +677,14 @@ async def test_restore_non_archived_throws_error(cortex_client, test_memory_spac
             user_name="Tester",
         )
     )
-    
+
     memory_id = result.memories[0].memory_id
-    
+
     # Try to restore without archiving
     # Backend validation: archive status check
     with pytest.raises(Exception):
         await cortex_client.memory.restore_from_archive(test_memory_space_id, memory_id)
-    
+
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
 
@@ -694,9 +693,8 @@ async def test_restore_non_archived_throws_error(cortex_client, test_memory_spac
 # Client-Side Validation Tests
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+from cortex import MemoryMetadata, MemorySource, StoreMemoryInput
 from cortex.memory import MemoryValidationError
-from cortex import MemorySource, MemoryMetadata, StoreMemoryInput
-
 
 # remember() validation tests
 
@@ -910,7 +908,7 @@ async def test_remember_stream_validation_inherits_remember_checks(cortex_client
     """Should inherit remember() validations."""
     async def mock_stream():
         yield "test"
-    
+
     with pytest.raises(MemoryValidationError) as exc_info:
         await cortex_client.memory.remember_stream({
             "memorySpaceId": "",
@@ -982,7 +980,7 @@ async def test_search_validation_invalid_embedding_empty(cortex_client, test_mem
     """Should throw on empty embedding array."""
     with pytest.raises(MemoryValidationError) as exc_info:
         await cortex_client.memory.search(
-            test_memory_space_id, 
+            test_memory_space_id,
             "query",
             SearchOptions(embedding=[])
         )
