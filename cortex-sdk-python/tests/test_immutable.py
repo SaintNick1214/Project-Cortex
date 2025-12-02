@@ -102,41 +102,47 @@ async def test_store_creates_version_2_on_update(cortex_client):
 
 
 @pytest.mark.asyncio
-async def test_get_latest_version(cortex_client):
+async def test_get_latest_version(cortex_client, ctx):
     """
     Test getting latest version of an entry.
 
     Port of: immutable.test.ts - get tests
     """
+    # Use ctx-scoped IDs for parallel execution isolation
+    test_type = ctx.immutable_type("config")
+    test_id = ctx.immutable_id("app-settings")
+
     # Create entry
     await cortex_client.immutable.store(
         ImmutableEntry(
-            type="test-config",
-            id="app-settings",
+            type=test_type,
+            id=test_id,
             data={"theme": "dark"},
         )
     )
 
     # Get latest version
-    result = await cortex_client.immutable.get("test-config", "app-settings")
+    result = await cortex_client.immutable.get(test_type, test_id)
 
     assert result is not None
-    assert result.type == "test-config"
-    assert result.id == "app-settings"
+    assert result.type == test_type
+    assert result.id == test_id
     assert result.data["theme"] == "dark"
 
     # Cleanup
-    await cortex_client.immutable.purge("test-config", "app-settings")
+    await cortex_client.immutable.purge(test_type, test_id)
 
 
 @pytest.mark.asyncio
-async def test_get_nonexistent_returns_none(cortex_client):
+async def test_get_nonexistent_returns_none(cortex_client, ctx):
     """
     Test that getting non-existent entry returns None.
 
     Port of: immutable.test.ts - get tests
     """
-    result = await cortex_client.immutable.get("test-config", "does-not-exist")
+    # Use ctx-scoped type for consistency, with a guaranteed non-existent ID
+    test_type = ctx.immutable_type("nonexistent-test")
+    result = await cortex_client.immutable.get(test_type, "does-not-exist-12345")
 
     assert result is None
 
