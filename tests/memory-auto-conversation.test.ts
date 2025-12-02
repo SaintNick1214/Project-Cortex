@@ -11,7 +11,7 @@ import { TestCleanup } from "./helpers/cleanup.js";
 describe("Memory API - Auto-Conversation Creation", () => {
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let _cleanup: TestCleanup;
 
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
   const memorySpaceId = "test-auto-conv-space";
@@ -20,7 +20,7 @@ describe("Memory API - Auto-Conversation Creation", () => {
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    cleanup = new TestCleanup(client);
+    _cleanup = new TestCleanup(client);
 
     // Clean slate
     await cleanup.purgeConversations();

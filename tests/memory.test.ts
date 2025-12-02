@@ -9,6 +9,10 @@ import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
 import OpenAI from "openai";
 import { TestCleanup } from "./helpers/cleanup";
+import { createTestRunContext } from "./helpers/isolation";
+
+// Create test run context for parallel execution isolation
+const ctx = createTestRunContext();
 
 // OpenAI client (optional - tests skip if key not present)
 const openai = process.env.OPENAI_API_KEY
@@ -63,23 +67,25 @@ async function summarizeConversation(
 describe("Memory Convenience API (Layer 3)", () => {
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let _cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-  const TIMESTAMP = Date.now();
-  const TEST_MEMSPACE_ID = `memspace-test-l3-${TIMESTAMP}`;
-  const TEST_USER_ID = `user-test-l3-${TIMESTAMP}`;
+  // Use ctx-scoped IDs for parallel execution isolation
+  const TEST_MEMSPACE_ID = ctx.memorySpaceId("l3");
+  const TEST_USER_ID = ctx.userId("l3");
+  const TEST_AGENT_ID = ctx.agentId("l3");
   const TEST_USER_NAME = "Test User";
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    cleanup = new TestCleanup(client);
+    _cleanup = new TestCleanup(client);
 
-    await cleanup.purgeAll();
+    // NOTE: Removed purgeAll() to enable parallel test execution.
+    // Each test uses ctx-scoped IDs to avoid conflicts.
   });
 
   afterAll(async () => {
-    await cleanup.purgeAll();
+    // NOTE: Removed purgeAll() to prevent deleting parallel test data.
     await client.close();
   });
 
@@ -95,7 +101,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
+        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
       });
 
       testConversationId = conv.conversationId;
@@ -262,7 +268,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
+        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
       });
 
       testConversationId = conv.conversationId;
@@ -338,7 +344,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
+        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
       });
 
       testConversationId = conv.conversationId;
@@ -418,7 +424,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
+        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
       });
 
       testConversationId = conv.conversationId;
@@ -510,7 +516,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
+        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
       });
 
       _testConversationId = conv.conversationId;
@@ -791,7 +797,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
+        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
       });
 
       // Remember
@@ -869,7 +875,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
+        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
       });
 
       const remembered = await cortex.memory.remember({
@@ -913,7 +919,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
+        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
       });
 
       const beforeACID = await client.query(api.conversations.get, {
@@ -951,7 +957,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
+        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
       });
 
       const remembered = await cortex.memory.remember({
@@ -1056,8 +1062,8 @@ describe("Memory Convenience API (Layer 3)", () => {
       const storedMemories: Array<{ fact: string; memoryId: string }> = [];
 
       beforeAll(async () => {
-        // Clean up any stale test data from previous runs
-        await cleanup.purgeAll();
+        // NOTE: Removed purgeAll() for parallel execution compatibility.
+        // Each test uses ctx-scoped IDs to avoid conflicts.
 
         // Create conversation
         const conv = await cortex.conversations.create({
@@ -1065,7 +1071,7 @@ describe("Memory Convenience API (Layer 3)", () => {
           memorySpaceId: TEST_MEMSPACE_ID,
           participants: {
             userId: TEST_USER_ID,
-            participantId: "agent-test-l3",
+            participantId: TEST_AGENT_ID,
           },
         });
 
@@ -1431,7 +1437,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: "agent-test-l3" },
+        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
       });
       testConversationId = conv.conversationId;
     });

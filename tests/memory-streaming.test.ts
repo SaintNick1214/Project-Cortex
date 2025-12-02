@@ -240,19 +240,23 @@ describe("Memory Streaming: Stream Utilities", () => {
   });
 });
 
+// Import ctx helper for streaming tests
+import { createTestRunContext } from "./helpers/isolation";
+const streamCtx = createTestRunContext();
+
 describe("Memory Streaming: rememberStream() Integration", () => {
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let _cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-  const TIMESTAMP = Date.now();
-  const TEST_MEMSPACE_ID = `streaming-test-space-${TIMESTAMP}`;
+  // Use ctx-scoped IDs for parallel execution isolation
+  const TEST_MEMSPACE_ID = streamCtx.memorySpaceId("streaming");
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    cleanup = new TestCleanup(client);
-    await cleanup.purgeAll();
+    _cleanup = new TestCleanup(client);
+    // NOTE: Removed purgeAll() for parallel execution compatibility.
 
     // Create memory space
     await cortex.memorySpaces.register({
@@ -263,7 +267,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
   });
 
   afterAll(async () => {
-    await cleanup.purgeAll();
+    // NOTE: Removed purgeAll() to prevent deleting parallel test data.
     await client.close();
   });
 

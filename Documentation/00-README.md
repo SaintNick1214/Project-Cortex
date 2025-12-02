@@ -31,6 +31,8 @@ Deep dives into Cortex capabilities:
 - **[MCP Server](./02-core-features/09-mcp-server.md)** - Cross-application memory sharing
 - **[Hive Mode](./02-core-features/10-hive-mode.md)** - Multi-participant agent coordination
 - **[Fact Integration](./02-core-features/11-fact-integration.md)** - Automatic fact extraction in Memory API
+- **[Streaming Support](./02-core-features/12-streaming-support.md)** - Native LLM response streaming with auto-storage
+- **[Resilience Layer](./02-core-features/13-resilience-layer.md)** - Rate limiting, circuit breakers, and overload protection
 
 ### 📖 API Reference
 
@@ -162,6 +164,14 @@ Documentation problems? Please help us improve:
 
 Recent documentation additions:
 
+- **2025-12-01**: 🎉 **v0.16.0 - Resilience Layer**
+  - Built-in protection against server overload
+  - Token bucket rate limiting, concurrency control, priority queues
+  - Circuit breaker pattern with automatic recovery
+  - Tuned for [Convex platform limits](https://docs.convex.dev/production/state/limits)
+  - Presets for different use cases (realTimeAgent, batchProcessing, hiveMode)
+  - New: [Resilience Layer Guide](./02-core-features/13-resilience-layer.md)
+
 - **2025-10-31**: 🎉 **v0.7.0 - Graph Database Integration**
   - Complete graph database support (Neo4j, Memgraph)
   - Real-time sync worker with reactive queries
@@ -186,7 +196,7 @@ The Cortex code is licensed under [Apache License 2.0](/project/license).
 
 ---
 
-**Last Updated**: 2025-10-31
+**Last Updated**: 2025-12-01
 
 ---
 

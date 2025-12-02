@@ -12,38 +12,47 @@
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { TestCleanup } from "./helpers";
+import { createTestRunContext } from "./helpers/isolation";
+
+// Create test run context for parallel execution isolation
+const ctx = createTestRunContext();
 
 describe("Complex Integration Tests", () => {
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let _cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    cleanup = new TestCleanup(client);
+    _cleanup = new TestCleanup(client);
 
-    await cleanup.purgeAll();
+    // NOTE: Removed purgeAll() for parallel execution compatibility.
   });
 
   afterAll(async () => {
-    await cleanup.purgeAll();
+    // NOTE: Removed purgeAll() to prevent deleting parallel test data.
     await client.close();
   });
 
   describe("Scenario 1: Enterprise Support Ticket (All Layers)", () => {
     it("handles complete workflow through all 4 layers", async () => {
+      // Use ctx-scoped IDs for parallel execution isolation
+      const SUPPORT_SPACE = ctx.memorySpaceId("support-agent");
+      const AGENT_SUPPORT = ctx.agentId("support");
+      const TOOL_TICKETING = `tool-ticketing-${ctx.runId}`;
+
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       // SETUP: Register memory spaces
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       await cortex.memorySpaces.register({
-        memorySpaceId: "support-agent-space",
+        memorySpaceId: SUPPORT_SPACE,
         name: "Support Agent",
         type: "team",
         participants: [
-          { id: "agent-support", type: "agent" },
-          { id: "tool-ticketing", type: "tool" },
+          { id: AGENT_SUPPORT, type: "agent" },
+          { id: TOOL_TICKETING, type: "tool" },
         ],
       });
 

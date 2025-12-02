@@ -7,10 +7,14 @@
 import { Cortex } from "../src";
 import { TestCleanup } from "./helpers/cleanup";
 import type { GovernancePolicy, ComplianceTemplate } from "../src/types";
+import { createTestRunContext } from "./helpers/isolation";
+
+// Create test run context for parallel execution isolation
+const _ctx = createTestRunContext();
 
 describe("Governance API", () => {
   let cortex: Cortex;
-  let cleanup: TestCleanup;
+  let _cleanup: TestCleanup;
 
   beforeAll(() => {
     if (!process.env.CONVEX_URL) {
@@ -18,11 +22,11 @@ describe("Governance API", () => {
     }
 
     cortex = new Cortex({ convexUrl: process.env.CONVEX_URL });
-    cleanup = new TestCleanup(cortex.getClient());
+    _cleanup = new TestCleanup(cortex.getClient());
   });
 
   afterAll(async () => {
-    await cleanup.purgeAll();
+    // NOTE: Removed purgeAll() for parallel execution compatibility.
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

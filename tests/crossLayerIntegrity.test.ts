@@ -8,25 +8,29 @@
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { TestCleanup } from "./helpers/cleanup";
+import { createTestRunContext } from "./helpers/isolation";
+
+// Create test run context for parallel execution isolation
+const ctx = createTestRunContext();
 
 describe("Cross-Layer Reference Integrity", () => {
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let _cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-  const TIMESTAMP = Date.now();
-  const TEST_MEMSPACE_ID = `cross-layer-test-${TIMESTAMP}`;
-  const TEST_USER_ID = `user-cross-layer-${TIMESTAMP}`;
+  // Use ctx-scoped IDs for parallel execution isolation
+  const TEST_MEMSPACE_ID = ctx.memorySpaceId("cross-layer");
+  const TEST_USER_ID = ctx.userId("cross-layer");
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    cleanup = new TestCleanup(client);
-    await cleanup.purgeAll();
+    _cleanup = new TestCleanup(client);
+    // NOTE: Removed purgeAll() to enable parallel test execution.
   });
 
   afterAll(async () => {
-    await cleanup.purgeAll();
+    // NOTE: Removed purgeAll() to prevent deleting parallel test data.
     await client.close();
   });
 
