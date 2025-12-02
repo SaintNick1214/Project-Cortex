@@ -552,9 +552,8 @@ process.on("SIGTERM", () => {
 ## Next Steps
 
 - **[Memory Operations API](../03-api-reference/02-memory-operations.md)** - Start using the API
-- **[Simple Chatbot Recipe](../06-recipes/01-simple-chatbot.md)** - Build a complete example
-- **[Production Checklist](../08-deployment/01-production-checklist.md)** - Prepare for production
+- **[Architecture](../04-architecture/01-system-overview.md)** - Understand the system design
 
 ---
 
-**Questions?** See [FAQ](../11-reference/01-faq.md) or ask in [Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).
+**Questions?** Ask in [Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).

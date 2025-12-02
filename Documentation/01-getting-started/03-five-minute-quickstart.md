@@ -346,7 +346,6 @@ You now have a working Cortex project! Here's what to explore:
 1. **[Core Concepts](./04-core-concepts.md)** - Understand memory spaces, conversations, and search
 2. **[Configuration](./05-configuration.md)** - Customize Cortex for your use case
 3. **[Memory Operations API](../03-api-reference/02-memory-operations.md)** - Full API reference
-4. **[Simple Chatbot Recipe](../06-recipes/01-simple-chatbot.md)** - Build a complete chatbot
 
 ---
 
@@ -354,10 +353,7 @@ You now have a working Cortex project! Here's what to explore:
 
 **Stuck?**
 
-1. Check the [Troubleshooting Guide](../11-reference/02-troubleshooting.md)
-2. Read the [FAQ](../11-reference/01-faq.md)
-3. Ask in [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions)
-4. Join our [Discord](https://discord.gg/cortex) (coming soon)
+- Ask in [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions)
 
 **Found a bug?**
 

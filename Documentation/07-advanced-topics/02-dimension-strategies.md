@@ -809,11 +809,9 @@ console.log("Query dimension:", queryDim);
 
 ## Next Steps
 
-- **[Embedding Providers](./01-embedding-providers.md)** - Model-specific guides
-- **[Performance Tuning](./07-performance-tuning.md)** - Speed optimization
 - **[Agent Memory](../02-core-features/01-memory-spaces.md)** - Core storage features
 - **[Semantic Search](../02-core-features/02-semantic-search.md)** - Search strategies
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

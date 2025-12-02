@@ -229,33 +229,38 @@ async def test_get_version_history(cortex_client):
 
 
 @pytest.mark.asyncio
-async def test_list_entries(cortex_client):
+async def test_list_entries(cortex_client, ctx):
     """
     Test listing immutable entries.
 
     Port of: immutable.test.ts - list tests
     """
-    # Create multiple entries
+    # Use test-specific type to avoid conflicts in parallel runs
+    test_type = ctx.immutable_type("list-test")
+
+    # Create multiple entries with unique IDs
+    created_ids = []
     for i in range(3):
+        entry_id = ctx.immutable_id(f"list-item-{i}")
+        created_ids.append(entry_id)
         await cortex_client.immutable.store(
             ImmutableEntry(
-                type="test-item",
-                id=f"list-item-{i}",
+                type=test_type,
+                id=entry_id,
                 data={"value": i},
             )
         )
 
-    # List entries
-    result = await cortex_client.immutable.list(limit=100)
+    # List entries filtered by our test type
+    result = await cortex_client.immutable.list(type=test_type, limit=100)
 
-    # Should return at least 3 entries
+    # Should return at least 3 entries of our type
     entries = result if isinstance(result, list) else result.get("records", [])
-    test_entries = [e for e in entries if (e.get("type") if isinstance(e, dict) else e.type) == "test-item"]
-    assert len(test_entries) >= 3
+    assert len(entries) >= 3
 
     # Cleanup
-    for i in range(3):
-        await cortex_client.immutable.purge("test-item", f"list-item-{i}")
+    for entry_id in created_ids:
+        await cortex_client.immutable.purge(test_type, entry_id)
 
 
 # ============================================================================

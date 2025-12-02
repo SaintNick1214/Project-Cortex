@@ -1234,9 +1234,8 @@ const partners = collaborations.map(m => m.metadata.toAgent);
 
 - **[User Operations API](./04-user-operations.md)** - User profile management
 - **[Memory Operations API](./02-memory-operations.md)** - Memory CRUD
-- **[Analytics Operations API](./07-analytics-operations.md)** - Get agent stats
-- **[Types & Interfaces](./08-types-interfaces.md)** - Complete TypeScript definitions
+- **[Types & Interfaces](./11-types-interfaces.md)** - Complete TypeScript definitions
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

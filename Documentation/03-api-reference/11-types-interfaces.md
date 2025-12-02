@@ -1447,8 +1447,7 @@ const filters: CortexTypes.UniversalFilters = { ... };
 
 - **[Error Handling](./12-error-handling.md)** - Error codes and debugging
 - **[Memory Operations API](./02-memory-operations.md)** - Using these types in practice
-- **[Examples Index](../../11-reference/07-examples-index.md)** - Real-world usage
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
