@@ -26,7 +26,7 @@ describe("Parameter Propagation: memory.remember()", () => {
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    __cleanup = new TestCleanup(client);
+    _cleanup = new TestCleanup(client);
     // NOTE: Removed purgeAll() for parallel execution compatibility.
 
     // Create conversation for remember() tests
@@ -488,11 +488,11 @@ describe("Parameter Propagation: memory.forget()", () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
     _cleanup = new TestCleanup(client);
-    await cleanup.purgeAll();
+    await _cleanup.purgeAll();
   });
 
   afterAll(async () => {
-    await cleanup.purgeAll();
+    await _cleanup.purgeAll();
     await client.close();
   });
 

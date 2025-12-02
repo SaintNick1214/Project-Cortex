@@ -49,10 +49,10 @@ const formatDuration = (ms: number) => {
 const printMetrics = (cortex: Cortex) => {
   const metrics = cortex.getResilienceMetrics();
   console.log("\n📊 Current Metrics:");
-  console.log(`   Rate Limiter: ${metrics.rateLimiter.tokensAvailable}/${metrics.rateLimiter.bucketSize} tokens`);
-  console.log(`   Concurrency: ${metrics.concurrency.active}/${metrics.concurrency.max} active, ${metrics.concurrency.waiting} waiting`);
+  console.log(`   Rate Limiter: ${metrics.rateLimiter.tokensAvailable} tokens available`);
+  console.log(`   Concurrency: ${metrics.concurrency.active} active, ${metrics.concurrency.waiting} waiting (max reached: ${metrics.concurrency.maxReached})`);
   console.log(`   Queue: ${metrics.queue.total} pending (${JSON.stringify(metrics.queue.byPriority)})`);
-  console.log(`   Circuit: ${metrics.circuitBreaker.state} (${metrics.circuitBreaker.failures} failures, ${metrics.circuitBreaker.successes} successes)`);
+  console.log(`   Circuit: ${metrics.circuitBreaker.state} (${metrics.circuitBreaker.failures} failures, ${metrics.circuitBreaker.totalOpens} total opens)`);
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -239,7 +239,7 @@ async function testConcurrencySaturation() {
   // Cleanup
   try {
     const spaces = await cortex.memorySpaces.list();
-    const testSpace = spaces.find((s: { id: string }) => s.id === testSpaceId);
+    const testSpace = spaces.find((s) => s.memorySpaceId === testSpaceId);
     if (testSpace) {
       await cortex.memorySpaces.delete(testSpaceId);
     }

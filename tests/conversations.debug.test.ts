@@ -51,8 +51,8 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
 
     // 🧹 CRITICAL: Purge conversations table before tests
     logStep(1, "Purging conversations table");
-    await cleanup.purgeConversations();
-    await cleanup.verifyConversationsEmpty();
+    await _cleanup.purgeConversations();
+    await _cleanup.verifyConversationsEmpty();
 
     await pause("Table purged. Ready to start tests.");
   });
