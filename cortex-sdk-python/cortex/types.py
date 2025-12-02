@@ -1123,6 +1123,7 @@ class CortexConfig:
     """Main Cortex SDK configuration."""
     convex_url: str
     graph: Optional[GraphConfig] = None
+    resilience: Optional[Any] = None  # ResilienceConfig from resilience module
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -5,7 +5,7 @@ Main entry point for the Cortex SDK providing access to all memory operations.
 """
 
 import asyncio
-from typing import Any
+from typing import Any, Optional
 
 from convex import ConvexClient
 
@@ -20,6 +20,12 @@ from .immutable import ImmutableAPI
 from .memory import MemoryAPI
 from .memory_spaces import MemorySpacesAPI
 from .mutable import MutableAPI
+from .resilience import (
+    ResilienceLayer,
+    ResiliencePresets,
+    ResilienceConfig,
+    ResilienceMetrics,
+)
 from .types import CortexConfig
 from .users import UsersAPI
 from .vector import VectorAPI
@@ -67,19 +73,33 @@ class Cortex:
         # Get graph adapter if configured
         self.graph_adapter = config.graph.adapter if config.graph else None
 
-        # Initialize API modules with graph adapter
-        self.conversations = ConversationsAPI(self.client, self.graph_adapter)
-        self.immutable = ImmutableAPI(self.client, self.graph_adapter)
-        self.mutable = MutableAPI(self.client, self.graph_adapter)
-        self.vector = VectorAPI(self.client, self.graph_adapter)
-        self.facts = FactsAPI(self.client, self.graph_adapter)
-        self.memory = MemoryAPI(self.client, self.graph_adapter)
-        self.contexts = ContextsAPI(self.client, self.graph_adapter)
-        self.users = UsersAPI(self.client, self.graph_adapter)
-        self.agents = AgentsAPI(self.client, self.graph_adapter)
-        self.memory_spaces = MemorySpacesAPI(self.client, self.graph_adapter)
-        self.governance = GovernanceAPI(self.client, self.graph_adapter)
-        self.a2a = A2AAPI(self.client, self.graph_adapter)
+        # Initialize resilience layer (default: enabled with balanced settings)
+        resilience_config = (
+            config.resilience if config.resilience else ResiliencePresets.default()
+        )
+        self._resilience = ResilienceLayer(resilience_config)
+
+        # Initialize API modules with graph adapter and resilience layer
+        self.conversations = ConversationsAPI(
+            self.client, self.graph_adapter, self._resilience
+        )
+        self.immutable = ImmutableAPI(
+            self.client, self.graph_adapter, self._resilience
+        )
+        self.mutable = MutableAPI(self.client, self.graph_adapter, self._resilience)
+        self.vector = VectorAPI(self.client, self.graph_adapter, self._resilience)
+        self.facts = FactsAPI(self.client, self.graph_adapter, self._resilience)
+        self.memory = MemoryAPI(self.client, self.graph_adapter, self._resilience)
+        self.contexts = ContextsAPI(self.client, self.graph_adapter, self._resilience)
+        self.users = UsersAPI(self.client, self.graph_adapter, self._resilience)
+        self.agents = AgentsAPI(self.client, self.graph_adapter, self._resilience)
+        self.memory_spaces = MemorySpacesAPI(
+            self.client, self.graph_adapter, self._resilience
+        )
+        self.governance = GovernanceAPI(
+            self.client, self.graph_adapter, self._resilience
+        )
+        self.a2a = A2AAPI(self.client, self.graph_adapter, self._resilience)
 
         # Start graph sync worker if enabled
         self.sync_worker = None
@@ -112,16 +132,86 @@ class Cortex:
         """
         return self.sync_worker
 
+    def get_resilience(self) -> ResilienceLayer:
+        """
+        Get the resilience layer for monitoring and manual control.
+
+        Example:
+            >>> # Check system health
+            >>> is_healthy = cortex.get_resilience().is_healthy()
+            >>>
+            >>> # Get current metrics
+            >>> metrics = cortex.get_resilience().get_metrics()
+            >>> print(f'Circuit state: {metrics.circuit_breaker.state}')
+            >>> print(f'Queue size: {metrics.queue.total}')
+            >>>
+            >>> # Reset all resilience state (use with caution)
+            >>> cortex.get_resilience().reset()
+
+        Returns:
+            ResilienceLayer instance
+        """
+        return self._resilience
+
+    def get_resilience_metrics(self) -> ResilienceMetrics:
+        """
+        Get current resilience metrics.
+
+        Convenience method equivalent to `get_resilience().get_metrics()`.
+
+        Returns:
+            Current resilience metrics
+        """
+        return self._resilience.get_metrics()
+
+    def is_healthy(self) -> bool:
+        """
+        Check if the SDK is healthy and accepting requests.
+
+        Returns:
+            False if circuit breaker is open
+        """
+        return self._resilience.is_healthy()
+
     async def close(self) -> None:
         """
-        Close the connection to Convex and stop graph sync worker.
+        Close the connection to Convex and stop all workers.
 
         Example:
             >>> cortex = Cortex(config)
             >>> # ... use cortex ...
             >>> await cortex.close()
         """
+        # Stop graph sync worker
         if self.sync_worker:
             self.sync_worker.stop()
+
+        # Stop resilience layer queue processor
+        self._resilience.stop_queue_processor()
+
+        await self.client.close()
+
+    async def shutdown(self, timeout_s: float = 30.0) -> None:
+        """
+        Gracefully shutdown the SDK.
+
+        Waits for pending operations to complete before closing.
+
+        Args:
+            timeout_s: Maximum time to wait (default: 30 seconds)
+
+        Example:
+            >>> cortex = Cortex(config)
+            >>> # ... use cortex ...
+            >>> await cortex.shutdown()
+        """
+        # Stop graph sync worker
+        if self.sync_worker:
+            self.sync_worker.stop()
+
+        # Gracefully shutdown resilience layer
+        await self._resilience.shutdown(timeout_s)
+
+        # Close Convex client
         await self.client.close()
 
