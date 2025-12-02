@@ -60,19 +60,37 @@ class MemoryAPI:
     This is the recommended API for most use cases.
     """
 
-    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
+    def __init__(
+        self,
+        client: Any,
+        graph_adapter: Optional[Any] = None,
+        resilience: Optional[Any] = None,
+    ) -> None:
         """
         Initialize Memory API.
 
         Args:
             client: Convex client instance
             graph_adapter: Optional graph database adapter
+            resilience: Optional resilience layer for overload protection
         """
         self.client = client
         self.graph_adapter = graph_adapter
-        self.conversations = ConversationsAPI(client, graph_adapter)
-        self.vector = VectorAPI(client, graph_adapter)
-        self.facts = FactsAPI(client, graph_adapter)
+        self._resilience = resilience
+        # Pass resilience layer to sub-APIs
+        self.conversations = ConversationsAPI(client, graph_adapter, resilience)
+        self.vector = VectorAPI(client, graph_adapter, resilience)
+        self.facts = FactsAPI(client, graph_adapter, resilience)
+
+    async def _execute_with_resilience(
+        self,
+        operation: Any,
+        operation_name: str,
+    ) -> Any:
+        """Execute an operation through the resilience layer (if available)."""
+        if self._resilience:
+            return await self._resilience.execute(operation, operation_name)
+        return await operation()
 
     async def remember(
         self, params: RememberParams, options: Optional[RememberOptions] = None

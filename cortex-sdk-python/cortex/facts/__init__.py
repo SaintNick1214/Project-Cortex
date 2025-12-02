@@ -51,16 +51,31 @@ class FactsAPI:
     Manages structured fact storage with versioning, relationships, and temporal validity.
     """
 
-    def __init__(self, client: Any, graph_adapter: Optional[Any] = None) -> None:
+    def __init__(
+        self,
+        client: Any,
+        graph_adapter: Optional[Any] = None,
+        resilience: Optional[Any] = None,
+    ) -> None:
         """
         Initialize Facts API.
 
         Args:
             client: Convex client instance
             graph_adapter: Optional graph database adapter for sync
+            resilience: Optional resilience layer for overload protection
         """
         self.client = client
         self.graph_adapter = graph_adapter
+        self._resilience = resilience
+
+    async def _execute_with_resilience(
+        self, operation: Any, operation_name: str
+    ) -> Any:
+        """Execute an operation through the resilience layer (if available)."""
+        if self._resilience:
+            return await self._resilience.execute(operation, operation_name)
+        return await operation()
 
     async def store(
         self, params: StoreFactParams, options: Optional[StoreFactOptions] = None
