@@ -577,17 +577,17 @@ class TestResiliencePresets:
     def test_has_real_time_agent_preset(self):
         preset = ResiliencePresets.real_time_agent()
         assert preset is not None
-        assert preset.concurrency.max_concurrent == 10
+        assert preset.concurrency.max_concurrent == 8  # Half of free plan limit for headroom
 
     def test_has_batch_processing_preset(self):
         preset = ResiliencePresets.batch_processing()
         assert preset is not None
-        assert preset.concurrency.max_concurrent == 50
+        assert preset.concurrency.max_concurrent == 64  # For Professional plan
 
     def test_has_hive_mode_preset(self):
         preset = ResiliencePresets.hive_mode()
         assert preset is not None
-        assert preset.concurrency.max_concurrent == 100
+        assert preset.concurrency.max_concurrent == 128  # For Professional plan
 
     def test_has_disabled_preset(self):
         preset = ResiliencePresets.disabled()
