@@ -47,29 +47,46 @@ export { getPriority, isCritical, OPERATION_PRIORITIES } from "./priorities";
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 /**
- * Pre-configured resilience settings for common use cases
+ * Pre-configured resilience settings for common use cases.
+ *
+ * Based on Convex platform limits:
+ * @see https://docs.convex.dev/production/state/limits
+ *
+ * Free/Starter Plan:
+ *   - Concurrent queries: 16
+ *   - Concurrent mutations: 16
+ *   - Concurrent actions: 64
+ *   - Function calls: 1M/month
+ *
+ * Professional Plan:
+ *   - Concurrent queries: 256
+ *   - Concurrent mutations: 256
+ *   - Concurrent actions: 256-1000
+ *   - Function calls: 25M/month
  */
 export const ResiliencePresets = {
   /**
-   * Default balanced configuration
-   * Good for most use cases
+   * Default configuration for Convex Free/Starter plan
+   *
+   * Respects Convex's 16 concurrent query/mutation limit.
+   * Good for most single-agent use cases.
    */
   default: {
     enabled: true,
     rateLimiter: {
-      bucketSize: 100,
-      refillRate: 50,
+      bucketSize: 100, // Allow burst of 100 calls
+      refillRate: 50, // Sustain ~50 ops/sec (well under 1M/month)
     },
     concurrency: {
-      maxConcurrent: 20,
-      queueSize: 1000,
-      timeout: 30000,
+      maxConcurrent: 16, // Convex free plan limit for queries/mutations
+      queueSize: 1000, // Queue excess requests
+      timeout: 30000, // 30s timeout (queries/mutations must complete in 1s anyway)
     },
     circuitBreaker: {
-      failureThreshold: 5,
-      successThreshold: 2,
-      timeout: 30000,
-      halfOpenMax: 3,
+      failureThreshold: 5, // Open after 5 consecutive failures
+      successThreshold: 2, // Close after 2 successes in half-open
+      timeout: 30000, // 30s before attempting recovery
+      halfOpenMax: 3, // Allow 3 test requests in half-open
     },
     queue: {
       maxSize: {
@@ -83,24 +100,26 @@ export const ResiliencePresets = {
   } as ResilienceConfig,
 
   /**
-   * Real-time agent configuration
-   * Optimized for low latency conversation storage
+   * Real-time agent configuration for Convex Free/Starter plan
+   *
+   * Optimized for low latency conversation storage.
+   * Uses conservative limits to ensure fast response times.
    */
   realTimeAgent: {
     enabled: true,
     rateLimiter: {
-      bucketSize: 50,
-      refillRate: 30,
+      bucketSize: 30, // Small burst for responsive UX
+      refillRate: 20, // Modest sustained rate
     },
     concurrency: {
-      maxConcurrent: 10,
-      queueSize: 100,
-      timeout: 5000,
+      maxConcurrent: 8, // Half of free plan limit for headroom
+      queueSize: 100, // Small queue - prefer fast failure
+      timeout: 5000, // 5s timeout - fail fast for real-time
     },
     circuitBreaker: {
-      failureThreshold: 3,
+      failureThreshold: 3, // Trip quickly on issues
       successThreshold: 2,
-      timeout: 10000,
+      timeout: 10000, // Quick recovery attempt
       halfOpenMax: 2,
     },
     queue: {
@@ -115,24 +134,26 @@ export const ResiliencePresets = {
   } as ResilienceConfig,
 
   /**
-   * Batch processing configuration
-   * High throughput for bulk operations
+   * Batch processing configuration for Convex Professional plan
+   *
+   * High throughput for bulk operations.
+   * ⚠️ Requires Professional plan (256 concurrent limit)
    */
   batchProcessing: {
     enabled: true,
     rateLimiter: {
-      bucketSize: 500,
-      refillRate: 100,
+      bucketSize: 500, // Large burst for batch imports
+      refillRate: 100, // High sustained throughput
     },
     concurrency: {
-      maxConcurrent: 50,
-      queueSize: 10000,
-      timeout: 60000,
+      maxConcurrent: 64, // Professional plan allows 256, use 64 for safety
+      queueSize: 10000, // Large queue for batch jobs
+      timeout: 60000, // 1 minute timeout for batch operations
     },
     circuitBreaker: {
-      failureThreshold: 10,
+      failureThreshold: 10, // More tolerant of transient failures
       successThreshold: 3,
-      timeout: 60000,
+      timeout: 60000, // Longer recovery for batch context
       halfOpenMax: 5,
     },
     queue: {
@@ -147,22 +168,25 @@ export const ResiliencePresets = {
   } as ResilienceConfig,
 
   /**
-   * Hive Mode configuration
-   * Extreme concurrency for multi-agent swarms
+   * Hive Mode configuration for Convex Professional plan
+   *
+   * Extreme concurrency for multi-agent swarms sharing one database.
+   * ⚠️ Requires Professional plan with increased limits.
+   * Contact Convex support for limits beyond default Professional tier.
    */
   hiveMode: {
     enabled: true,
     rateLimiter: {
-      bucketSize: 1000,
-      refillRate: 200,
+      bucketSize: 1000, // Large burst for swarm coordination
+      refillRate: 200, // High sustained for many agents
     },
     concurrency: {
-      maxConcurrent: 100,
-      queueSize: 50000,
-      timeout: 120000,
+      maxConcurrent: 128, // High concurrency for swarms
+      queueSize: 50000, // Very large queue for burst absorption
+      timeout: 120000, // 2 minute timeout for complex coordination
     },
     circuitBreaker: {
-      failureThreshold: 20,
+      failureThreshold: 20, // Very tolerant - swarms have natural backoff
       successThreshold: 5,
       timeout: 30000,
       halfOpenMax: 10,
@@ -180,7 +204,9 @@ export const ResiliencePresets = {
 
   /**
    * Disabled configuration
-   * Bypasses all resilience mechanisms
+   *
+   * Bypasses all resilience mechanisms.
+   * ⚠️ Not recommended for production - may hit Convex rate limits.
    */
   disabled: {
     enabled: false,

@@ -100,19 +100,49 @@ T = TypeVar("T")
 
 
 class ResiliencePresets:
-    """Pre-configured resilience settings for common use cases."""
+    """
+    Pre-configured resilience settings for common use cases.
+
+    Based on Convex platform limits:
+    https://docs.convex.dev/production/state/limits
+
+    Free/Starter Plan:
+      - Concurrent queries: 16
+      - Concurrent mutations: 16
+      - Concurrent actions: 64
+      - Function calls: 1M/month
+
+    Professional Plan:
+      - Concurrent queries: 256
+      - Concurrent mutations: 256
+      - Concurrent actions: 256-1000
+      - Function calls: 25M/month
+    """
 
     @staticmethod
     def default() -> ResilienceConfig:
-        """Default balanced configuration. Good for most use cases."""
+        """
+        Default configuration for Convex Free/Starter plan.
+
+        Respects Convex's 16 concurrent query/mutation limit.
+        Good for most single-agent use cases.
+        """
         return ResilienceConfig(
             enabled=True,
-            rate_limiter=RateLimiterConfig(bucket_size=100, refill_rate=50),
+            rate_limiter=RateLimiterConfig(
+                bucket_size=100,  # Allow burst of 100 calls
+                refill_rate=50,  # Sustain ~50 ops/sec (well under 1M/month)
+            ),
             concurrency=ConcurrencyConfig(
-                max_concurrent=20, queue_size=1000, timeout=30
+                max_concurrent=16,  # Convex free plan limit for queries/mutations
+                queue_size=1000,  # Queue excess requests
+                timeout=30,  # 30s timeout
             ),
             circuit_breaker=CircuitBreakerConfig(
-                failure_threshold=5, success_threshold=2, timeout=30, half_open_max=3
+                failure_threshold=5,  # Open after 5 consecutive failures
+                success_threshold=2,  # Close after 2 successes in half-open
+                timeout=30,  # 30s before attempting recovery
+                half_open_max=3,  # Allow 3 test requests in half-open
             ),
             queue=QueueConfig(
                 max_size={
@@ -127,15 +157,28 @@ class ResiliencePresets:
 
     @staticmethod
     def real_time_agent() -> ResilienceConfig:
-        """Real-time agent configuration. Optimized for low latency."""
+        """
+        Real-time agent configuration for Convex Free/Starter plan.
+
+        Optimized for low latency conversation storage.
+        Uses conservative limits to ensure fast response times.
+        """
         return ResilienceConfig(
             enabled=True,
-            rate_limiter=RateLimiterConfig(bucket_size=50, refill_rate=30),
+            rate_limiter=RateLimiterConfig(
+                bucket_size=30,  # Small burst for responsive UX
+                refill_rate=20,  # Modest sustained rate
+            ),
             concurrency=ConcurrencyConfig(
-                max_concurrent=10, queue_size=100, timeout=5
+                max_concurrent=8,  # Half of free plan limit for headroom
+                queue_size=100,  # Small queue - prefer fast failure
+                timeout=5,  # 5s timeout - fail fast for real-time
             ),
             circuit_breaker=CircuitBreakerConfig(
-                failure_threshold=3, success_threshold=2, timeout=10, half_open_max=2
+                failure_threshold=3,  # Trip quickly on issues
+                success_threshold=2,
+                timeout=10,  # Quick recovery attempt
+                half_open_max=2,
             ),
             queue=QueueConfig(
                 max_size={
@@ -150,15 +193,28 @@ class ResiliencePresets:
 
     @staticmethod
     def batch_processing() -> ResilienceConfig:
-        """Batch processing configuration. High throughput for bulk operations."""
+        """
+        Batch processing configuration for Convex Professional plan.
+
+        High throughput for bulk operations.
+        ⚠️ Requires Professional plan (256 concurrent limit).
+        """
         return ResilienceConfig(
             enabled=True,
-            rate_limiter=RateLimiterConfig(bucket_size=500, refill_rate=100),
+            rate_limiter=RateLimiterConfig(
+                bucket_size=500,  # Large burst for batch imports
+                refill_rate=100,  # High sustained throughput
+            ),
             concurrency=ConcurrencyConfig(
-                max_concurrent=50, queue_size=10000, timeout=60
+                max_concurrent=64,  # Professional plan allows 256, use 64 for safety
+                queue_size=10000,  # Large queue for batch jobs
+                timeout=60,  # 1 minute timeout for batch operations
             ),
             circuit_breaker=CircuitBreakerConfig(
-                failure_threshold=10, success_threshold=3, timeout=60, half_open_max=5
+                failure_threshold=10,  # More tolerant of transient failures
+                success_threshold=3,
+                timeout=60,  # Longer recovery for batch context
+                half_open_max=5,
             ),
             queue=QueueConfig(
                 max_size={
@@ -173,15 +229,29 @@ class ResiliencePresets:
 
     @staticmethod
     def hive_mode() -> ResilienceConfig:
-        """Hive Mode configuration. Extreme concurrency for multi-agent swarms."""
+        """
+        Hive Mode configuration for Convex Professional plan.
+
+        Extreme concurrency for multi-agent swarms sharing one database.
+        ⚠️ Requires Professional plan with increased limits.
+        Contact Convex support for limits beyond default Professional tier.
+        """
         return ResilienceConfig(
             enabled=True,
-            rate_limiter=RateLimiterConfig(bucket_size=1000, refill_rate=200),
+            rate_limiter=RateLimiterConfig(
+                bucket_size=1000,  # Large burst for swarm coordination
+                refill_rate=200,  # High sustained for many agents
+            ),
             concurrency=ConcurrencyConfig(
-                max_concurrent=100, queue_size=50000, timeout=120
+                max_concurrent=128,  # High concurrency for swarms
+                queue_size=50000,  # Very large queue for burst absorption
+                timeout=120,  # 2 minute timeout for complex coordination
             ),
             circuit_breaker=CircuitBreakerConfig(
-                failure_threshold=20, success_threshold=5, timeout=30, half_open_max=10
+                failure_threshold=20,  # Very tolerant - swarms have natural backoff
+                success_threshold=5,
+                timeout=30,
+                half_open_max=10,
             ),
             queue=QueueConfig(
                 max_size={

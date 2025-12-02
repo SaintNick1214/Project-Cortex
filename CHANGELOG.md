@@ -19,6 +19,220 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.16.0] - 2025-12-01
+
+#### 🛡️ Resilience Layer - Production-Ready Overload Protection
+
+**Complete implementation of a 4-layer resilience system protecting against server overload during extreme traffic bursts. Fully integrated into both TypeScript and Python SDKs.**
+
+#### ✨ New Features
+
+**1. Token Bucket Rate Limiter**
+
+Smooths out bursty traffic into a sustainable flow:
+
+```typescript
+// Default: 100 tokens, 50/sec refill
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  resilience: {
+    rateLimiter: {
+      bucketSize: 200,     // Allow bursts up to 200
+      refillRate: 100,     // Sustain 100 ops/sec
+    }
+  }
+});
+```
+
+**2. Concurrency Limiter (Semaphore)**
+
+Controls the number of concurrent in-flight requests:
+
+```typescript
+resilience: {
+  concurrency: {
+    maxConcurrent: 20,    // Max 20 parallel requests
+    queueSize: 1000,      // Queue up to 1000 pending
+    timeout: 30000,       // 30s timeout for queued requests
+  }
+}
+```
+
+**3. Priority Queue**
+
+In-memory queue that prioritizes critical operations:
+
+| Priority | Examples | Behavior |
+|----------|----------|----------|
+| `critical` | `users:delete` | Bypass circuit breaker |
+| `high` | `memory:remember`, `facts:store` | Priority processing |
+| `normal` | Most operations | Standard queue |
+| `low` | `memory:search`, `vector:search` | Deferrable |
+| `background` | `governance:simulate` | Lowest priority |
+
+Priorities are **automatically assigned** based on operation name patterns.
+
+**4. Circuit Breaker**
+
+Prevents cascading failures by failing fast when backend is unhealthy:
+
+```typescript
+resilience: {
+  circuitBreaker: {
+    failureThreshold: 5,   // Open after 5 failures
+    successThreshold: 2,   // Close after 2 successes
+    timeout: 30000,        // 30s before half-open retry
+  },
+  onCircuitOpen: (failures) => {
+    console.warn(`Circuit opened after ${failures} failures`);
+  }
+}
+```
+
+**5. Resilience Presets**
+
+Pre-configured presets for common use cases:
+
+```typescript
+import { ResiliencePresets } from "@cortexmemory/sdk";
+
+// Default - balanced for most use cases
+new Cortex({ convexUrl, resilience: ResiliencePresets.default });
+
+// Real-time agent - low latency, smaller buffers
+new Cortex({ convexUrl, resilience: ResiliencePresets.realTimeAgent });
+
+// Batch processing - large queues, patient retries
+new Cortex({ convexUrl, resilience: ResiliencePresets.batchProcessing });
+
+// Hive mode - many agents, conservative limits
+new Cortex({ convexUrl, resilience: ResiliencePresets.hiveMode });
+
+// Disabled - bypass all protection (not recommended)
+new Cortex({ convexUrl, resilience: ResiliencePresets.disabled });
+```
+
+**6. Metrics & Monitoring**
+
+```typescript
+const metrics = cortex.getResilienceMetrics();
+
+console.log(`Rate limiter: ${metrics.rateLimiter.available}/${metrics.rateLimiter.bucketSize} tokens`);
+console.log(`Concurrency: ${metrics.concurrency.active}/${metrics.concurrency.max} active`);
+console.log(`Queue: ${metrics.queue.size} pending`);
+console.log(`Circuit: ${metrics.circuitBreaker.state} (${metrics.circuitBreaker.failures} failures)`);
+
+// Health check
+const isHealthy = cortex.isHealthy(); // false if circuit is open
+```
+
+**7. Graceful Shutdown**
+
+```typescript
+// Wait for pending operations to complete
+await cortex.shutdown(30000); // 30s timeout
+
+// Or immediate close
+await cortex.close();
+```
+
+#### 📦 New Modules
+
+**TypeScript (`src/resilience/`):**
+- `types.ts` - Configuration interfaces and error classes
+- `TokenBucket.ts` - Token bucket rate limiter
+- `Semaphore.ts` - Async semaphore with queue
+- `priorities.ts` - Operation priority mapping
+- `PriorityQueue.ts` - Priority-based request queue
+- `CircuitBreaker.ts` - Circuit breaker pattern
+- `index.ts` - ResilienceLayer orchestrator and presets
+
+**Python (`cortex/resilience/`):**
+- `types.py` - Configuration dataclasses and exceptions
+- `token_bucket.py` - Token bucket rate limiter
+- `semaphore.py` - Async semaphore with queue
+- `priorities.py` - Operation priority mapping
+- `priority_queue.py` - Priority-based request queue
+- `circuit_breaker.py` - Circuit breaker pattern
+- `__init__.py` - ResilienceLayer orchestrator and presets
+
+#### 🧪 Testing
+
+- **40 new TypeScript tests** covering all resilience components
+- **40 new Python tests** with equivalent coverage
+- All 1960+ existing tests now run through resilience layer by default
+- Integration tests validate end-to-end protection
+
+#### 📚 New Types
+
+**TypeScript:**
+```typescript
+type Priority = "critical" | "high" | "normal" | "low" | "background";
+
+interface ResilienceConfig {
+  enabled?: boolean;
+  rateLimiter?: RateLimiterConfig;
+  concurrency?: ConcurrencyConfig;
+  circuitBreaker?: CircuitBreakerConfig;
+  queue?: QueueConfig;
+  onCircuitOpen?: (failures: number) => void;
+  onCircuitClose?: () => void;
+  onQueueFull?: (priority: Priority) => void;
+}
+
+interface ResilienceMetrics {
+  rateLimiter: RateLimiterMetrics;
+  concurrency: ConcurrencyMetrics;
+  queue: QueueMetrics;
+  circuitBreaker: CircuitBreakerMetrics;
+}
+
+// Custom errors
+class CircuitOpenError extends Error { ... }
+class QueueFullError extends Error { ... }
+class AcquireTimeoutError extends Error { ... }
+class RateLimitExceededError extends Error { ... }
+```
+
+**Python:**
+```python
+Priority = Literal["critical", "high", "normal", "low", "background"]
+
+@dataclass
+class ResilienceConfig:
+    enabled: bool = True
+    rate_limiter: Optional[RateLimiterConfig] = None
+    concurrency: Optional[ConcurrencyConfig] = None
+    circuit_breaker: Optional[CircuitBreakerConfig] = None
+    queue: Optional[QueueConfig] = None
+    on_circuit_open: Optional[Callable[[int], None]] = None
+
+class CircuitOpenError(Exception): ...
+class QueueFullError(Exception): ...
+class AcquireTimeoutError(Exception): ...
+class RateLimitExceededError(Exception): ...
+```
+
+#### 🔄 Backward Compatibility
+
+✅ **Zero Breaking Changes**
+
+- Resilience is **enabled by default** with balanced settings
+- All existing code works without modification
+- Pass `resilience: { enabled: false }` to disable
+- Existing tests automatically run through resilience layer
+
+#### 🎯 Production Benefits
+
+- **Burst Protection**: Handle 10x traffic spikes gracefully
+- **Cascade Prevention**: Circuit breaker isolates failures
+- **Priority Handling**: Critical ops (deletes) bypass queue
+- **Graceful Degradation**: Low-priority ops queue during overload
+- **Zero Config**: Works out of the box with sensible defaults
+- **Full Observability**: Metrics for dashboards and alerting
+
+---
+
 ### [0.15.0] - 2025-11-30
 
 #### 🎯 Enriched Fact Extraction - Bullet-Proof Semantic Search

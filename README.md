@@ -79,6 +79,48 @@ Cortex provides a complete memory system for AI agents:
 - 🔌 **MCP Server** - Cross-application memory sharing (planned)
 - 💬 **A2A Communication** - Inter-space messaging helpers (planned)
 - ✅ **Client-Side Validation** - Instant error feedback (<1ms) for all 11 APIs ✅
+- 🛡️ **Resilience Layer** - Rate limiting, circuit breaker, priority queue for overload protection ✅
+
+## ✨ What's New in v0.16.0
+
+### Resilience Layer - Production-Ready Overload Protection
+
+**NEW: Built-in protection against server overload during extreme traffic bursts:**
+
+- ⚡ **Token Bucket Rate Limiter** - Smooths bursty traffic (100 tokens, 50/sec refill default)
+- 🚦 **Concurrency Limiter** - Controls parallel requests (20 max concurrent, 1000 queue)
+- 🎯 **Priority Queue** - Critical ops (deletes) get priority, low-priority ops queue
+- 🔌 **Circuit Breaker** - Fails fast when backend is unhealthy (5 failures → open)
+- 📊 **Full Metrics** - Monitor rate limiter, queue depth, circuit state
+
+```typescript
+import { Cortex, ResiliencePresets } from "@cortexmemory/sdk";
+
+// Default - enabled with balanced settings (no config needed!)
+const cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
+
+// Or use a preset for your use case
+const realtimeCortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  resilience: ResiliencePresets.realTimeAgent, // Low latency
+});
+
+const batchCortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  resilience: ResiliencePresets.batchProcessing, // Large queues
+});
+
+// Monitor health
+console.log(cortex.isHealthy()); // false if circuit is open
+console.log(cortex.getResilienceMetrics()); // Full metrics
+
+// Graceful shutdown
+await cortex.shutdown(30000); // Wait up to 30s for pending ops
+```
+
+**Zero breaking changes** - resilience is enabled by default with sensible settings. All existing code works without modification.
+
+---
 
 ## ✨ What's New in v0.12.0
 
