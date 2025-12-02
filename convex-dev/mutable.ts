@@ -423,3 +423,40 @@ export const count = query({
     return entries.length;
   },
 });
+
+/**
+ * Purge all mutable entries (TEST/DEV ONLY)
+ *
+ * WARNING: This permanently deletes ALL mutable entries!
+ * Only available in test/dev environments.
+ */
+export const purgeAll = mutation({
+  args: {},
+  handler: async (ctx) => {
+    // Safety check: Only allow in test/dev environments
+    const siteUrl = process.env.CONVEX_SITE_URL || "";
+    const isLocal =
+      siteUrl.includes("localhost") || siteUrl.includes("127.0.0.1");
+    const isDevDeployment =
+      siteUrl.includes(".convex.site") ||
+      siteUrl.includes("dev-") ||
+      siteUrl.includes("convex.cloud");
+    const isTestEnv =
+      process.env.NODE_ENV === "test" ||
+      process.env.CONVEX_ENVIRONMENT === "test";
+
+    if (!isLocal && !isDevDeployment && !isTestEnv) {
+      throw new Error(
+        "PURGE_DISABLED_IN_PRODUCTION: purgeAll is only available in test/dev environments.",
+      );
+    }
+
+    const allEntries = await ctx.db.query("mutable").collect();
+
+    for (const entry of allEntries) {
+      await ctx.db.delete(entry._id);
+    }
+
+    return { deleted: allEntries.length };
+  },
+});
