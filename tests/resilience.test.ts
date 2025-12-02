@@ -8,8 +8,6 @@
  * - Circuit Breaker
  * - ResilienceLayer (integration)
  */
-
-import { describe, test, expect, beforeEach, afterEach } from "vitest";
 import {
   TokenBucket,
   Semaphore,
@@ -198,8 +196,8 @@ describe("Semaphore", () => {
 
     await sem.acquire(); // Take the permit
 
-    // First waiter should be queued
-    const wait1 = sem.acquire();
+    // First waiter should be queued (fire and forget - will be rejected by reset)
+    void sem.acquire();
 
     // Give it time to queue
     await new Promise((resolve) => setTimeout(resolve, 10));

@@ -289,8 +289,8 @@ export class ResilienceLayer {
       // Release permit
       permit.release();
 
-      // Trigger queue processing
-      this.processQueueBatch();
+      // Trigger queue processing (fire and forget)
+      void this.processQueueBatch();
     }
   }
 
@@ -441,7 +441,7 @@ export class ResilienceLayer {
     // Process queue every 100ms if there are items
     this.queueProcessorInterval = setInterval(() => {
       if (!this.queue.isEmpty()) {
-        this.processQueueBatch();
+        void this.processQueueBatch();
       }
     }, 100);
   }
