@@ -222,11 +222,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [detect-changes, setup-and-purge]
     # Run if TypeScript SDK or Convex backend changed OR if PR is targeting main branch
-    # Note: always() allows this job to run even if setup-and-purge was skipped (conditional dependency)
+    # IMPORTANT: Requires setup-and-purge to have SUCCEEDED (not just skipped) to ensure database isolation
     if: |
       always() &&
       github.actor != 'dependabot[bot]' &&
-      (needs.setup-and-purge.result == 'success' || needs.setup-and-purge.result == 'skipped') &&
+      needs.setup-and-purge.result == 'success' &&
       needs.detect-changes.result == 'success' &&
       (
         needs.detect-changes.outputs.typescript == 'true' ||
@@ -275,11 +275,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [detect-changes, setup-and-purge]
     # Run if Python SDK changed OR if PR is targeting main branch
-    # Note: always() allows this job to run even if setup-and-purge was skipped (conditional dependency)
+    # IMPORTANT: Requires setup-and-purge to have SUCCEEDED (not just skipped) to ensure database isolation
     if: |
       always() &&
       github.actor != 'dependabot[bot]' &&
-      (needs.setup-and-purge.result == 'success' || needs.setup-and-purge.result == 'skipped') &&
+      needs.setup-and-purge.result == 'success' &&
       needs.detect-changes.result == 'success' &&
       (
         needs.detect-changes.outputs.python == 'true' || 
@@ -329,11 +329,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [detect-changes, setup-and-purge]
     # Run if Vercel AI Provider changed OR if PR is targeting main branch
-    # Note: always() allows this job to run even if setup-and-purge was skipped (conditional dependency)
+    # IMPORTANT: Requires setup-and-purge to have SUCCEEDED (not just skipped) to ensure database isolation
     if: |
       always() &&
       github.actor != 'dependabot[bot]' &&
-      (needs.setup-and-purge.result == 'success' || needs.setup-and-purge.result == 'skipped') &&
+      needs.setup-and-purge.result == 'success' &&
       needs.detect-changes.result == 'success' &&
       (
         needs.detect-changes.outputs.vercel-ai-provider == 'true' || 
@@ -399,11 +399,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [detect-changes, setup-and-purge]
     # Run if CLI changed OR if PR is targeting main branch
-    # Note: always() allows this job to run even if setup-and-purge was skipped (conditional dependency)
+    # IMPORTANT: Requires setup-and-purge to have SUCCEEDED (not just skipped) to ensure database isolation
     if: |
       always() &&
       github.actor != 'dependabot[bot]' &&
-      (needs.setup-and-purge.result == 'success' || needs.setup-and-purge.result == 'skipped') &&
+      needs.setup-and-purge.result == 'success' &&
       needs.detect-changes.result == 'success' &&
       (
         needs.detect-changes.outputs.cli == 'true' || 

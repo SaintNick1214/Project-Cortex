@@ -128,7 +128,8 @@ describe("Parameter Propagation: memory.remember()", () => {
     });
 
     it("propagates userId to vector layer", async () => {
-      const USER_ID = "user-specific-123";
+      // Use ctx-scoped userId for parallel execution isolation
+      const USER_ID = ctx.userId("specific");
 
       // Create specific conversation for this user
       const conv = await cortex.conversations.create({
@@ -481,18 +482,19 @@ describe("Parameter Propagation: memory.forget()", () => {
   let client: ConvexClient;
   let _cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-  const TEST_MEMSPACE_ID = "param-forget-test";
-  const TEST_USER_ID = "user-forget-test";
+  // Use ctx-scoped IDs for parallel execution isolation
+  const TEST_MEMSPACE_ID = ctx.memorySpaceId("param-forget");
+  const TEST_USER_ID = ctx.userId("forget-test");
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
     _cleanup = new TestCleanup(client);
-    await _cleanup.purgeAll();
+    // NOTE: Removed purgeAll() for parallel execution compatibility.
   });
 
   afterAll(async () => {
-    await _cleanup.purgeAll();
+    // NOTE: Removed purgeAll() to prevent deleting parallel test data.
     await client.close();
   });
 
