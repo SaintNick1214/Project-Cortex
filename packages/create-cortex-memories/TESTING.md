@@ -6,7 +6,7 @@
 
 ```bash
 # From the create-cortex-memories directory
-cd /Users/SaintNick/Documents/Cortex/Project-Cortex/packages/create-cortex-memories
+cd packages/create-cortex-memories
 
 # Run the wizard directly
 node dist/index.js test-project
@@ -32,8 +32,8 @@ npm unlink -g create-cortex-memories
 mkdir -p /tmp/cortex-test
 cd /tmp/cortex-test
 
-# Run wizard
-node /Users/SaintNick/Documents/Cortex/Project-Cortex/packages/create-cortex-memories/dist/index.js my-test-app
+# Run wizard (assuming you're in the repo root)
+node "$REPO_ROOT/packages/create-cortex-memories/dist/index.js" my-test-app
 
 # Verify output
 ls -la my-test-app
@@ -159,7 +159,7 @@ After running the wizard, verify:
 **Solution:**
 
 ```bash
-cd /Users/SaintNick/Documents/Cortex/Project-Cortex
+# From the repo root
 npm run build
 npm link
 ```

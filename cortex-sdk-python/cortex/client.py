@@ -5,7 +5,7 @@ Main entry point for the Cortex SDK providing access to all memory operations.
 """
 
 import asyncio
-from typing import Any, Optional
+from typing import Any
 
 from convex import ConvexClient
 
@@ -22,9 +22,8 @@ from .memory_spaces import MemorySpacesAPI
 from .mutable import MutableAPI
 from .resilience import (
     ResilienceLayer,
-    ResiliencePresets,
-    ResilienceConfig,
     ResilienceMetrics,
+    ResiliencePresets,
 )
 from .types import CortexConfig
 from .users import UsersAPI

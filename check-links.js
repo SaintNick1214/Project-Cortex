@@ -3,8 +3,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const docsRoot = '/Users/SaintNick/Documents/Cortex/Project-Cortex/Documentation';
-const projectRoot = '/Users/SaintNick/Documents/Cortex/Project-Cortex';
+// Use relative paths from script location for portability
+const projectRoot = path.resolve(__dirname);
+const docsRoot = path.join(projectRoot, 'Documentation');
 
 // Get all markdown files
 function getAllMarkdownFiles(dir) {
@@ -24,7 +25,8 @@ function getAllMarkdownFiles(dir) {
 }
 
 // Extract links from markdown content
-function extractLinks(content, filePath) {
+// eslint-disable-next-line no-unused-vars
+function extractLinks(content, _filePath) {
   const links = [];
   
   // Match [text](url) style links

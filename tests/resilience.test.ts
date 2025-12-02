@@ -192,12 +192,14 @@ describe("Semaphore", () => {
   });
 
   test("should throw when queue is full", async () => {
-    const sem = new Semaphore({ maxConcurrent: 1, queueSize: 1, timeout: 1000 });
+    const sem = new Semaphore({ maxConcurrent: 1, queueSize: 1, timeout: 100 });
 
-    await sem.acquire(); // Take the permit
+    const permit = await sem.acquire(); // Take the permit
 
-    // First waiter should be queued (fire and forget - will be rejected by reset)
-    void sem.acquire();
+    // First waiter should be queued (will timeout)
+    const waitPromise = sem.acquire(50).catch(() => {
+      // Ignore timeout error
+    });
 
     // Give it time to queue
     await new Promise((resolve) => setTimeout(resolve, 10));
@@ -205,8 +207,9 @@ describe("Semaphore", () => {
     // Second waiter should fail (queue full)
     await expect(sem.acquire()).rejects.toThrow(/queue full/i);
 
-    // Cleanup
-    sem.reset();
+    // Wait for first waiter to timeout, then release permit
+    await waitPromise;
+    permit.release();
   });
 
   test("should track metrics", () => {
