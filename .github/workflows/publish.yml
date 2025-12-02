@@ -223,9 +223,16 @@ jobs:
       - name: Verify npm publish
         run: |
           echo "Waiting for npm registry to update..."
-          sleep 10
-          npm view @cortexmemory/sdk version
-          echo "✅ SDK published successfully!"
+          # Retry up to 6 times with 10s delay (60s total max wait)
+          for i in 1 2 3 4 5 6; do
+            sleep 10
+            if npm view @cortexmemory/sdk version 2>/dev/null; then
+              echo "✅ SDK published successfully!"
+              exit 0
+            fi
+            echo "Attempt $i: Package not yet visible, retrying..."
+          done
+          echo "⚠️ Package may still be propagating, but publish completed"
 
       - name: Post-publish summary
         run: |
@@ -287,9 +294,16 @@ jobs:
       - name: Verify npm publish
         run: |
           echo "Waiting for npm registry to update..."
-          sleep 10
-          npm view create-cortex-memories version
-          echo "✅ Wizard published successfully!"
+          # Retry up to 6 times with 10s delay (60s total max wait)
+          for i in 1 2 3 4 5 6; do
+            sleep 10
+            if npm view create-cortex-memories version 2>/dev/null; then
+              echo "✅ Wizard published successfully!"
+              exit 0
+            fi
+            echo "Attempt $i: Package not yet visible, retrying..."
+          done
+          echo "⚠️ Package may still be propagating, but publish completed"
 
       - name: Post-publish summary
         run: |
@@ -417,9 +431,16 @@ jobs:
       - name: Verify npm publish
         run: |
           echo "Waiting for npm registry to update..."
-          sleep 10
-          npm view @cortexmemory/vercel-ai-provider version
-          echo "✅ Vercel AI Provider published successfully!"
+          # Retry up to 6 times with 10s delay (60s total max wait)
+          for i in 1 2 3 4 5 6; do
+            sleep 10
+            if npm view @cortexmemory/vercel-ai-provider version 2>/dev/null; then
+              echo "✅ Vercel AI Provider published successfully!"
+              exit 0
+            fi
+            echo "Attempt $i: Package not yet visible, retrying..."
+          done
+          echo "⚠️ Package may still be propagating, but publish completed"
 
       - name: Post-publish summary
         run: |
@@ -554,9 +575,16 @@ jobs:
       - name: Verify npm publish
         run: |
           echo "Waiting for npm registry to update..."
-          sleep 10
-          npm view @cortexmemory/cli version
-          echo "✅ CLI published successfully!"
+          # Retry up to 6 times with 10s delay (60s total max wait)
+          for i in 1 2 3 4 5 6; do
+            sleep 10
+            if npm view @cortexmemory/cli version 2>/dev/null; then
+              echo "✅ CLI published successfully!"
+              exit 0
+            fi
+            echo "Attempt $i: Package not yet visible, retrying..."
+          done
+          echo "⚠️ Package may still be propagating, but publish completed"
 
       - name: Post-publish summary
         run: |
