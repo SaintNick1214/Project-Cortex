@@ -14,13 +14,18 @@
  * WARNING: These tests will create significant load on your database!
  */
 
-import { Cortex, ResiliencePresets } from "../src";
+import { Cortex, ResiliencePresets as _ResiliencePresets } from "../src";
 import {
-  ResilienceLayer,
+  ResilienceLayer as _ResilienceLayer,
   CircuitOpenError,
-  QueueFullError,
+  QueueFullError as _QueueFullError,
   RateLimitExceededError,
 } from "../src/resilience";
+
+// Suppress unused import warnings - these are available for manual testing
+void _ResiliencePresets;
+void _ResilienceLayer;
+void _QueueFullError;
 import * as dotenv from "dotenv";
 
 // Load environment
@@ -135,7 +140,7 @@ async function testBurstRateLimiting() {
     console.log("\n⚠️  Rate limiter may not be working as expected");
   }
 
-  await cortex.close();
+  cortex.close();
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -240,7 +245,7 @@ async function testConcurrencySaturation() {
     }
   } catch {}
 
-  await cortex.close();
+  cortex.close();
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -369,7 +374,7 @@ async function testCircuitBreakerTripAndRecovery() {
     console.log("\n⚠️  Circuit did not trip - backend validation may prevent failures reaching circuit");
   }
 
-  await cortex.close();
+  cortex.close();
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -511,7 +516,7 @@ async function testPriorityQueueUnderLoad() {
     await cortex.memorySpaces.delete(testSpaceId);
   } catch {}
 
-  await cortex.close();
+  cortex.close();
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -542,8 +547,11 @@ async function testGracefulShutdown() {
   });
 
   const testSpaceId = `shutdown-test-${Date.now()}`;
-  let completedBeforeShutdown = 0;
-  let completedAfterShutdown = 0;
+  // Track completion counts (used for logging)
+  const _completedBeforeShutdown = 0;
+  const _completedAfterShutdown = 0;
+  void _completedBeforeShutdown;
+  void _completedAfterShutdown;
 
   console.log("📤 Starting 20 operations...");
 
@@ -552,7 +560,7 @@ async function testGracefulShutdown() {
     try {
       await cortex.memory.search(testSpaceId, `shutdown query ${i}`);
       return "success";
-    } catch (error) {
+    } catch (_error) {
       return "failed";
     }
   });
