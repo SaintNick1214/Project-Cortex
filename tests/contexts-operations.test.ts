@@ -14,7 +14,7 @@ import { TestCleanup } from "./helpers";
 describe("Context Operations API", () => {
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let _cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
   const TIMESTAMP = Date.now();
   const TEST_MEMORY_SPACE = `test-context-ops-space-${TIMESTAMP}`;
@@ -22,7 +22,7 @@ describe("Context Operations API", () => {
   beforeAll(async () => {
     client = new ConvexClient(CONVEX_URL);
     cortex = new Cortex({ convexUrl: CONVEX_URL });
-    cleanup = new TestCleanup(client);
+    _cleanup = new TestCleanup(client);
   });
 
   afterAll(async () => {

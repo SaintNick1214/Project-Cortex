@@ -12,25 +12,26 @@ Tests for the overload protection system components:
 import asyncio
 import time
 from typing import Any
+
 import pytest
 
 from cortex.resilience import (
-    TokenBucket,
-    Semaphore,
-    PriorityQueue,
+    AcquireTimeoutError,
     CircuitBreaker,
+    CircuitBreakerConfig,
+    CircuitOpenError,
+    ConcurrencyConfig,
+    PriorityQueue,
+    QueueConfig,
+    QueuedRequest,
+    QueueFullError,
+    RateLimiterConfig,
+    RateLimitExceededError,
+    ResilienceConfig,
     ResilienceLayer,
     ResiliencePresets,
-    CircuitOpenError,
-    QueueFullError,
-    AcquireTimeoutError,
-    RateLimitExceededError,
-    RateLimiterConfig,
-    ConcurrencyConfig,
-    CircuitBreakerConfig,
-    QueueConfig,
-    ResilienceConfig,
-    QueuedRequest,
+    Semaphore,
+    TokenBucket,
     get_priority,
     is_critical,
 )

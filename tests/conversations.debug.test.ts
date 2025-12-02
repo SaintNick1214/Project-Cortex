@@ -26,7 +26,7 @@ import {
 describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let _cleanup: TestCleanup;
   let inspector: StorageInspector;
   const TEST_MEMSPACE_ID = `debug-test-${Date.now()}`;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
@@ -44,7 +44,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
     // Initialize SDK and helpers
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    cleanup = new TestCleanup(client);
+    _cleanup = new TestCleanup(client);
     inspector = new StorageInspector(client);
 
     debugLog("Setup", "SDK and helpers initialized");

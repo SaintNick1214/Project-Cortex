@@ -8,21 +8,26 @@
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { TestCleanup } from "./helpers/cleanup";
+import { createTestRunContext } from "./helpers/isolation";
+
+// Create test run context for parallel execution isolation
+const ctx = createTestRunContext();
 
 describe("Parameter Propagation: memory.remember()", () => {
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let _cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-  const TEST_MEMSPACE_ID = "param-prop-test";
-  const TEST_USER_ID = "user-param-test";
+  // Use ctx-scoped IDs for parallel execution isolation
+  const TEST_MEMSPACE_ID = ctx.memorySpaceId("param-prop");
+  const TEST_USER_ID = ctx.userId("param-test");
   let testConversationId: string;
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    cleanup = new TestCleanup(client);
-    await cleanup.purgeAll();
+    __cleanup = new TestCleanup(client);
+    // NOTE: Removed purgeAll() for parallel execution compatibility.
 
     // Create conversation for remember() tests
     const conv = await cortex.conversations.create({
@@ -34,7 +39,7 @@ describe("Parameter Propagation: memory.remember()", () => {
   });
 
   afterAll(async () => {
-    await cleanup.purgeAll();
+    // NOTE: Removed purgeAll() to prevent deleting parallel test data.
     await client.close();
   });
 
@@ -474,7 +479,7 @@ describe("Parameter Propagation: memory.remember()", () => {
 describe("Parameter Propagation: memory.forget()", () => {
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let _cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
   const TEST_MEMSPACE_ID = "param-forget-test";
   const TEST_USER_ID = "user-forget-test";
@@ -482,7 +487,7 @@ describe("Parameter Propagation: memory.forget()", () => {
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    cleanup = new TestCleanup(client);
+    _cleanup = new TestCleanup(client);
     await cleanup.purgeAll();
   });
 

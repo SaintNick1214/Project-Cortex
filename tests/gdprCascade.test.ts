@@ -8,30 +8,35 @@
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { TestCleanup } from "./helpers/cleanup";
+import { createTestRunContext } from "./helpers/isolation";
+
+// Create test run context for parallel execution isolation
+const ctx = createTestRunContext();
 
 describe("GDPR: Cascade Deletion", () => {
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let _cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-  const TIMESTAMP = Date.now();
-  const TEST_MEMSPACE_ID = `gdpr-cascade-test-${TIMESTAMP}`;
+  // Use ctx-scoped IDs for parallel execution isolation
+  const TEST_MEMSPACE_ID = ctx.memorySpaceId("gdpr-cascade");
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    cleanup = new TestCleanup(client);
-    await cleanup.purgeAll();
+    _cleanup = new TestCleanup(client);
+    // NOTE: Removed purgeAll() for parallel execution compatibility.
   });
 
   afterAll(async () => {
-    await cleanup.purgeAll();
+    // NOTE: Removed purgeAll() to prevent deleting parallel test data.
     await client.close();
   });
 
   describe("Memory Space Cascade Deletion", () => {
     it("deleting memorySpace with cascade removes ALL data", async () => {
-      const SPACE = "cascade-test-space";
+      const SPACE = ctx.memorySpaceId("cascade-all");
+      const TEST_USER = ctx.userId("cascade");
 
       await cortex.memorySpaces.register({
         memorySpaceId: SPACE,
@@ -43,7 +48,7 @@ describe("GDPR: Cascade Deletion", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: SPACE,
-        participants: { userId: "test-user" },
+        participants: { userId: TEST_USER },
       });
 
       const mem = await cortex.vector.store(SPACE, {

@@ -11,38 +11,47 @@
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { TestCleanup } from "./helpers";
+import { createTestRunContext } from "./helpers/isolation";
+
+// Create test run context for parallel execution isolation
+const ctx = createTestRunContext();
 
 describe("Hive Mode", () => {
   let cortex: Cortex;
   let client: ConvexClient;
-  let cleanup: TestCleanup;
+  let _cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-  const HIVE_SPACE = "hive-test-shared";
+  // Use ctx-scoped IDs for parallel execution isolation
+  const HIVE_SPACE = ctx.memorySpaceId("hive-shared");
+  const USER_ALICE = ctx.userId("alice");
+  const AGENT_ASSISTANT = ctx.agentId("assistant");
+  const TOOL_CALENDAR = `tool-calendar-${ctx.runId}`;
+  const TOOL_EMAIL = `tool-email-${ctx.runId}`;
+  const TOOL_TASKS = `tool-tasks-${ctx.runId}`;
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    cleanup = new TestCleanup(client);
+    _cleanup = new TestCleanup(client);
 
-    // Clean and register hive space
-    await cleanup.purgeAll();
+    // NOTE: Removed purgeAll() for parallel execution compatibility.
 
     await cortex.memorySpaces.register({
       memorySpaceId: HIVE_SPACE,
       name: "Shared Hive Space",
       type: "team",
       participants: [
-        { id: "user-alice", type: "user" },
-        { id: "agent-assistant", type: "agent" },
-        { id: "tool-calendar", type: "tool" },
-        { id: "tool-email", type: "tool" },
-        { id: "tool-tasks", type: "tool" },
+        { id: USER_ALICE, type: "user" },
+        { id: AGENT_ASSISTANT, type: "agent" },
+        { id: TOOL_CALENDAR, type: "tool" },
+        { id: TOOL_EMAIL, type: "tool" },
+        { id: TOOL_TASKS, type: "tool" },
       ],
     });
   });
 
   afterAll(async () => {
-    await cleanup.purgeAll();
+    // NOTE: Removed purgeAll() to prevent deleting parallel test data.
     await client.close();
   });
 
@@ -52,7 +61,7 @@ describe("Hive Mode", () => {
       const conv = await cortex.conversations.create({
         memorySpaceId: HIVE_SPACE,
         type: "user-agent",
-        participants: { userId: "user-alice", participantId: "tool-calendar" },
+        participants: { userId: USER_ALICE, participantId: TOOL_CALENDAR },
       });
 
       await cortex.conversations.addMessage({
@@ -60,7 +69,7 @@ describe("Hive Mode", () => {
         message: {
           role: "user",
           content: "Schedule meeting for Monday at 9 AM",
-          participantId: "tool-calendar",
+          participantId: TOOL_CALENDAR,
         },
       });
 
@@ -81,8 +90,8 @@ describe("Hive Mode", () => {
       await cortex.vector.store(HIVE_SPACE, {
         content: "User has meeting Monday 9 AM",
         contentType: "raw",
-        participantId: "tool-calendar", // Hive Mode tracking
-        source: { type: "tool", userId: "user-alice" },
+        participantId: TOOL_CALENDAR, // Hive Mode tracking
+        source: { type: "tool", userId: USER_ALICE },
         metadata: {
           importance: 80,
           tags: ["meeting", "calendar"],
@@ -93,8 +102,8 @@ describe("Hive Mode", () => {
       await cortex.vector.store(HIVE_SPACE, {
         content: "User prefers email reminders 1 hour before meetings",
         contentType: "raw",
-        participantId: "tool-email", // Hive Mode tracking
-        source: { type: "tool", userId: "user-alice" },
+        participantId: TOOL_EMAIL, // Hive Mode tracking
+        source: { type: "tool", userId: USER_ALICE },
         metadata: {
           importance: 70,
           tags: ["notification", "email", "meeting"],
@@ -106,7 +115,7 @@ describe("Hive Mode", () => {
         content: "User has task to prepare meeting agenda",
         contentType: "raw",
         participantId: "tool-tasks", // Hive Mode tracking
-        source: { type: "tool", userId: "user-alice" },
+        source: { type: "tool", userId: USER_ALICE },
         metadata: {
           importance: 75,
           tags: ["task", "meeting"],
@@ -134,10 +143,10 @@ describe("Hive Mode", () => {
       // Tool-calendar extracts fact
       await cortex.facts.store({
         memorySpaceId: HIVE_SPACE,
-        participantId: "tool-calendar",
+        participantId: TOOL_CALENDAR,
         fact: "User has recurring weekly team meeting on Mondays at 9 AM",
         factType: "preference",
-        subject: "user-alice",
+        subject: USER_ALICE,
         confidence: 95,
         sourceType: "tool",
         tags: ["meeting", "recurring"],
@@ -146,10 +155,10 @@ describe("Hive Mode", () => {
       // Tool-email extracts fact
       await cortex.facts.store({
         memorySpaceId: HIVE_SPACE,
-        participantId: "tool-email",
+        participantId: TOOL_EMAIL,
         fact: "User prefers email over SMS for notifications",
         factType: "preference",
-        subject: "user-alice",
+        subject: USER_ALICE,
         confidence: 90,
         sourceType: "tool",
         tags: ["notification", "preference"],
@@ -158,10 +167,10 @@ describe("Hive Mode", () => {
       // Agent-assistant extracts fact
       await cortex.facts.store({
         memorySpaceId: HIVE_SPACE,
-        participantId: "agent-assistant",
+        participantId: AGENT_ASSISTANT,
         fact: "User is working on Q4 product launch project",
         factType: "knowledge",
-        subject: "user-alice",
+        subject: USER_ALICE,
         confidence: 100,
         sourceType: "conversation",
         tags: ["project", "work"],
@@ -185,7 +194,7 @@ describe("Hive Mode", () => {
     it("facts about same subject from different tools", async () => {
       const userFacts = await cortex.facts.queryBySubject({
         memorySpaceId: HIVE_SPACE,
-        subject: "user-alice",
+        subject: USER_ALICE,
       });
 
       expect(userFacts.length).toBeGreaterThanOrEqual(3);
@@ -210,10 +219,10 @@ describe("Hive Mode", () => {
       // Tool-calendar stores it once
       const stored = await cortex.facts.store({
         memorySpaceId: HIVE_SPACE,
-        participantId: "tool-calendar",
+        participantId: TOOL_CALENDAR,
         fact,
         factType: "identity",
-        subject: "user-alice",
+        subject: USER_ALICE,
         predicate: "has_timezone",
         object: "America/Los_Angeles",
         confidence: 100,
@@ -224,7 +233,7 @@ describe("Hive Mode", () => {
       // Tool-email can access same fact (no duplicate needed)
       const facts = await cortex.facts.queryBySubject({
         memorySpaceId: HIVE_SPACE,
-        subject: "user-alice",
+        subject: USER_ALICE,
       });
 
       const timezoneFacts = facts.filter((f) => f.predicate === "has_timezone");
@@ -240,18 +249,18 @@ describe("Hive Mode", () => {
       const conv1 = await cortex.conversations.create({
         memorySpaceId: HIVE_SPACE,
         type: "user-agent",
-        participants: { userId: "user-alice", participantId: "tool-calendar" },
+        participants: { userId: USER_ALICE, participantId: TOOL_CALENDAR },
       });
 
       const conv2 = await cortex.conversations.create({
         memorySpaceId: HIVE_SPACE,
         type: "user-agent",
-        participants: { userId: "user-alice", participantId: "tool-email" },
+        participants: { userId: USER_ALICE, participantId: TOOL_EMAIL },
       });
 
       // Can see who created what (participantId is in participants object)
-      expect(conv1.participants.participantId).toBe("tool-calendar");
-      expect(conv2.participants.participantId).toBe("tool-email");
+      expect(conv1.participants.participantId).toBe(TOOL_CALENDAR);
+      expect(conv2.participants.participantId).toBe(TOOL_EMAIL);
 
       // But both in same space
       expect(conv1.memorySpaceId).toBe(HIVE_SPACE);
@@ -269,8 +278,8 @@ describe("Hive Mode", () => {
         memorySpaceId: HIVE_SPACE,
         type: "user-agent",
         participants: {
-          userId: "user-alice",
-          participantId: "agent-assistant",
+          userId: USER_ALICE,
+          participantId: AGENT_ASSISTANT,
         },
       });
 
@@ -295,10 +304,10 @@ describe("Hive Mode", () => {
       // 3. Calendar tool executes and stores result
       await cortex.facts.store({
         memorySpaceId: HIVE_SPACE,
-        participantId: "tool-calendar",
+        participantId: TOOL_CALENDAR,
         fact: "User has 3 meetings scheduled this week",
         factType: "knowledge",
-        subject: "user-alice",
+        subject: USER_ALICE,
         confidence: 100,
         sourceType: "tool",
         sourceRef: {
@@ -331,7 +340,7 @@ describe("Hive Mode", () => {
       await cortex.vector.store(HIVE_SPACE, {
         content: "Calendar: Meeting at 9 AM",
         contentType: "raw",
-        participantId: "tool-calendar", // Hive Mode tracking
+        participantId: TOOL_CALENDAR, // Hive Mode tracking
         source: { type: "tool" },
         metadata: {
           importance: 80,
@@ -342,7 +351,7 @@ describe("Hive Mode", () => {
       await cortex.vector.store(HIVE_SPACE, {
         content: "Email: Unread message from boss",
         contentType: "raw",
-        participantId: "tool-email", // Hive Mode tracking
+        participantId: TOOL_EMAIL, // Hive Mode tracking
         source: { type: "tool" },
         metadata: {
           importance: 90,
@@ -389,8 +398,8 @@ describe("Hive Mode", () => {
       const mem = await cortex.vector.store(HIVE_SPACE, {
         content: "Original content from tool",
         contentType: "raw",
-        participantId: "tool-calendar",
-        source: { type: "tool", userId: "user-alice" },
+        participantId: TOOL_CALENDAR,
+        source: { type: "tool", userId: USER_ALICE },
         metadata: { importance: 70, tags: ["test"] },
       });
 
@@ -401,20 +410,20 @@ describe("Hive Mode", () => {
       });
 
       // Validate participantId preserved
-      expect(updated.participantId).toBe("tool-calendar");
+      expect(updated.participantId).toBe(TOOL_CALENDAR);
 
       // Verify in database
       const stored = await cortex.vector.get(HIVE_SPACE, mem.memoryId);
-      expect(stored!.participantId).toBe("tool-calendar");
+      expect(stored!.participantId).toBe(TOOL_CALENDAR);
     });
 
     it("tracks 5+ participants in same hive", async () => {
       const PARTICIPANTS = [
-        "tool-calendar",
-        "tool-email",
+        TOOL_CALENDAR,
+        TOOL_EMAIL,
         "tool-tasks",
         "tool-notes",
-        "agent-assistant",
+        AGENT_ASSISTANT,
       ];
 
       // Each participant stores memory
@@ -423,7 +432,7 @@ describe("Hive Mode", () => {
           content: `Memory from ${participant}`,
           contentType: "raw",
           participantId: participant,
-          source: { type: "tool", userId: "user-alice" },
+          source: { type: "tool", userId: USER_ALICE },
           metadata: { importance: 70, tags: ["multi-participant"] },
         });
       }
@@ -459,20 +468,20 @@ describe("Hive Mode", () => {
     });
 
     it("multiple participants use remember() in same hive", async () => {
-      const PARTICIPANTS = ["tool-calendar", "tool-email", "tool-tasks"];
+      const PARTICIPANTS = [TOOL_CALENDAR, TOOL_EMAIL, "tool-tasks"];
 
       // Create conversation for remember() tests
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: HIVE_SPACE,
-        participants: { userId: "user-alice" },
+        participants: { userId: USER_ALICE },
       });
 
       for (const participant of PARTICIPANTS) {
         await cortex.memory.remember({
           memorySpaceId: HIVE_SPACE,
           conversationId: conv.conversationId,
-          userId: "user-alice",
+          userId: USER_ALICE,
           userName: "Alice",
           participantId: participant,
           userMessage: `Test from ${participant}`,
@@ -507,7 +516,7 @@ describe("Hive Mode", () => {
       const conv = await cortex.conversations.create({
         memorySpaceId: HIVE_SPACE,
         type: "user-agent",
-        participants: { userId: "user-alice", participantId: "tool-calendar" },
+        participants: { userId: USER_ALICE, participantId: TOOL_CALENDAR },
       });
 
       await cortex.conversations.addMessage({
@@ -515,7 +524,7 @@ describe("Hive Mode", () => {
         message: {
           role: "agent",
           content: "Response from calendar tool",
-          participantId: "tool-calendar",
+          participantId: TOOL_CALENDAR,
         },
       });
 
@@ -523,16 +532,16 @@ describe("Hive Mode", () => {
       const agentMsg = updatedConv!.messages.find((m) => m.role === "agent");
 
       expect(agentMsg).toBeDefined();
-      expect(agentMsg!.participantId).toBe("tool-calendar");
+      expect(agentMsg!.participantId).toBe(TOOL_CALENDAR);
     });
 
     it("facts participantId persists through update", async () => {
       const v1 = await cortex.facts.store({
         memorySpaceId: HIVE_SPACE,
-        participantId: "agent-assistant",
+        participantId: AGENT_ASSISTANT,
         fact: "Original fact from agent",
         factType: "knowledge",
-        subject: "user-alice",
+        subject: USER_ALICE,
         confidence: 80,
         sourceType: "system",
         tags: ["fact-update-test"],
@@ -544,11 +553,11 @@ describe("Hive Mode", () => {
       });
 
       // New version should preserve participantId
-      expect(v2.participantId).toBe("agent-assistant");
+      expect(v2.participantId).toBe(AGENT_ASSISTANT);
 
       // Verify in database
       const stored = await cortex.facts.get(HIVE_SPACE, v2.factId);
-      expect(stored!.participantId).toBe("agent-assistant");
+      expect(stored!.participantId).toBe(AGENT_ASSISTANT);
     });
 
     it("can distinguish memories by participant in search", async () => {
@@ -556,7 +565,7 @@ describe("Hive Mode", () => {
       await cortex.vector.store(HIVE_SPACE, {
         content: "DISTINGUISH_TEST calendar specific data",
         contentType: "raw",
-        participantId: "tool-calendar",
+        participantId: TOOL_CALENDAR,
         source: { type: "tool" },
         metadata: { importance: 80, tags: ["distinguish-test"] },
       });
@@ -564,7 +573,7 @@ describe("Hive Mode", () => {
       await cortex.vector.store(HIVE_SPACE, {
         content: "DISTINGUISH_TEST email specific data",
         contentType: "raw",
-        participantId: "tool-email",
+        participantId: TOOL_EMAIL,
         source: { type: "tool" },
         metadata: { importance: 80, tags: ["distinguish-test"] },
       });
@@ -586,8 +595,8 @@ describe("Hive Mode", () => {
         distinguishResults.map((r) => r.participantId).filter(Boolean),
       );
 
-      expect(participants.has("tool-calendar")).toBe(true);
-      expect(participants.has("tool-email")).toBe(true);
+      expect(participants.has(TOOL_CALENDAR)).toBe(true);
+      expect(participants.has(TOOL_EMAIL)).toBe(true);
     });
 
     it("contexts track participants correctly", async () => {
@@ -596,12 +605,12 @@ describe("Hive Mode", () => {
       const ctx = await cortex.contexts.create({
         purpose: "Multi-participant context",
         memorySpaceId: HIVE_SPACE,
-        userId: "user-alice",
+        userId: USER_ALICE,
       });
 
       expect(ctx).toBeDefined();
       expect(ctx.memorySpaceId).toBe(HIVE_SPACE);
-      expect(ctx.userId).toBe("user-alice");
+      expect(ctx.userId).toBe(USER_ALICE);
 
       // Verify the memory space has multiple participants
       const space = await cortex.memorySpaces.get(HIVE_SPACE);
@@ -613,7 +622,7 @@ describe("Hive Mode", () => {
       await cortex.vector.store(HIVE_SPACE, {
         content: "Stats test calendar",
         contentType: "raw",
-        participantId: "tool-calendar",
+        participantId: TOOL_CALENDAR,
         source: { type: "tool" },
         metadata: { importance: 70, tags: ["stats-test"] },
       });
@@ -621,7 +630,7 @@ describe("Hive Mode", () => {
       await cortex.vector.store(HIVE_SPACE, {
         content: "Stats test email",
         contentType: "raw",
-        participantId: "tool-email",
+        participantId: TOOL_EMAIL,
         source: { type: "tool" },
         metadata: { importance: 70, tags: ["stats-test"] },
       });
@@ -652,14 +661,14 @@ describe("Hive Mode", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: HIVE_SPACE,
-        participants: { userId: "user-alice", participantId: PARTICIPANT },
+        participants: { userId: USER_ALICE, participantId: PARTICIPANT },
       });
 
       // 1. Remember with participantId
       const result = await cortex.memory.remember({
         memorySpaceId: HIVE_SPACE,
         conversationId: conv.conversationId,
-        userId: "user-alice",
+        userId: USER_ALICE,
         userName: "Alice",
         participantId: PARTICIPANT,
         userMessage: "Workflow test message",
@@ -672,7 +681,7 @@ describe("Hive Mode", () => {
         participantId: PARTICIPANT,
         fact: "Workflow test fact",
         factType: "knowledge",
-        subject: "user-alice",
+        subject: USER_ALICE,
         confidence: 95,
         sourceType: "conversation",
         sourceRef: { conversationId: result.conversation.conversationId },
@@ -682,7 +691,7 @@ describe("Hive Mode", () => {
       const ctx = await cortex.contexts.create({
         purpose: "Workflow test context",
         memorySpaceId: HIVE_SPACE,
-        userId: "user-alice",
+        userId: USER_ALICE,
       });
 
       // Validate participantId in all layers
@@ -706,7 +715,7 @@ describe("Hive Mode", () => {
       const mem = await cortex.vector.store(HIVE_SPACE, {
         content: "No participant",
         contentType: "raw",
-        source: { type: "system", userId: "user-alice" },
+        source: { type: "system", userId: USER_ALICE },
         metadata: { importance: 70, tags: ["no-participant"] },
       });
 
@@ -717,7 +726,7 @@ describe("Hive Mode", () => {
         memorySpaceId: HIVE_SPACE,
         fact: "Fact without participant",
         factType: "knowledge",
-        subject: "user-alice",
+        subject: USER_ALICE,
         confidence: 80,
         sourceType: "system",
       });

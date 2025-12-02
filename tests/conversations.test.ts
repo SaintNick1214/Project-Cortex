@@ -47,13 +47,18 @@ describe("Conversations API (Layer 1a)", () => {
 
   describe("create()", () => {
     it("creates a user-agent conversation", async () => {
+      // Use test-scoped IDs
+      const createSpace = ctx.memorySpaceId("create-1");
+      const createUser = ctx.userId("create-123");
+      const createAgent = ctx.agentId("create-456");
+
       const result = await cortex.conversations.create({
-        memorySpaceId: "test-space-1",
-        participantId: "test-agent",
+        memorySpaceId: createSpace,
+        participantId: createAgent,
         type: "user-agent",
         participants: {
-          userId: "user-123",
-          participantId: "agent-456",
+          userId: createUser,
+          participantId: createAgent,
         },
         metadata: {
           source: "test",
@@ -63,8 +68,8 @@ describe("Conversations API (Layer 1a)", () => {
       // Validate SDK response
       expect(result.conversationId).toMatch(/^conv-/);
       expect(result.type).toBe("user-agent");
-      expect(result.participants.userId).toBe("user-123");
-      expect(result.participants.participantId).toBe("agent-456");
+      expect(result.participants.userId).toBe(createUser);
+      expect(result.participants.participantId).toBe(createAgent);
       expect(result.messageCount).toBe(0);
       expect(result.messages).toHaveLength(0);
       expect(result.metadata).toEqual({ source: "test" });
@@ -80,28 +85,30 @@ describe("Conversations API (Layer 1a)", () => {
       expect(stored!._id).toBeDefined();
       expect(stored!.conversationId).toBe(result.conversationId);
       expect(stored!.type).toBe("user-agent");
-      expect(stored!.participants.userId).toBe("user-123");
-      expect(stored!.participants.participantId).toBe("agent-456");
+      expect(stored!.participants.userId).toBe(createUser);
+      expect(stored!.participants.participantId).toBe(createAgent);
       expect(stored!.messages).toEqual([]);
       expect(stored!.messageCount).toBe(0);
     });
 
     it("creates an agent-agent conversation", async () => {
+      // Use test-scoped IDs
+      const collabSpace = ctx.memorySpaceId("collab-create");
+      const agent1 = ctx.agentId("collab-1");
+      const agent2 = ctx.agentId("collab-2");
+      const agent3 = ctx.agentId("collab-3");
+
       const result = await cortex.conversations.create({
-        memorySpaceId: "test-collab-space",
+        memorySpaceId: collabSpace,
         type: "agent-agent",
         participants: {
-          memorySpaceIds: ["agent-1", "agent-2", "agent-3"],
+          memorySpaceIds: [agent1, agent2, agent3],
         },
       });
 
       // Validate SDK response
       expect(result.type).toBe("agent-agent");
-      expect(result.participants.memorySpaceIds).toEqual([
-        "agent-1",
-        "agent-2",
-        "agent-3",
-      ]);
+      expect(result.participants.memorySpaceIds).toEqual([agent1, agent2, agent3]);
       expect(result.messageCount).toBe(0);
 
       // Validate storage
@@ -114,15 +121,19 @@ describe("Conversations API (Layer 1a)", () => {
     });
 
     it("accepts custom conversationId", async () => {
-      const customId = "conv-custom-123";
+      // Use test-scoped IDs
+      const customId = ctx.conversationId("custom-123");
+      const customSpace = ctx.memorySpaceId("custom");
+      const customUser = ctx.userId("custom-1");
+      const customAgent = ctx.agentId("custom-1");
 
       const result = await cortex.conversations.create({
         conversationId: customId,
-        memorySpaceId: "test-space-custom",
+        memorySpaceId: customSpace,
         type: "user-agent",
         participants: {
-          userId: "user-1",
-          participantId: "agent-1",
+          userId: customUser,
+          participantId: customAgent,
         },
       });
 
@@ -139,15 +150,20 @@ describe("Conversations API (Layer 1a)", () => {
     it("throws error for duplicate conversationId", async () => {
       // NOTE: This tests BACKEND validation (database uniqueness check)
       // Client-side validation only checks format, not existence
-      const conversationId = "conv-duplicate-test";
+      const conversationId = ctx.conversationId("duplicate-test");
+      const dupSpace = ctx.memorySpaceId("dup");
+      const dupUser1 = ctx.userId("dup-1");
+      const dupUser2 = ctx.userId("dup-2");
+      const dupAgent1 = ctx.agentId("dup-1");
+      const dupAgent2 = ctx.agentId("dup-2");
 
       await cortex.conversations.create({
         conversationId,
-        memorySpaceId: "test-space-dup",
+        memorySpaceId: dupSpace,
         type: "user-agent",
         participants: {
-          userId: "user-1",
-          participantId: "agent-1",
+          userId: dupUser1,
+          participantId: dupAgent1,
         },
       });
 
@@ -155,11 +171,11 @@ describe("Conversations API (Layer 1a)", () => {
       await expect(
         cortex.conversations.create({
           conversationId,
-          memorySpaceId: "test-space-dup",
+          memorySpaceId: dupSpace,
           type: "user-agent",
           participants: {
-            userId: "user-2",
-            participantId: "agent-2",
+            userId: dupUser2,
+            participantId: dupAgent2,
           },
         }),
       ).rejects.toThrow("CONVERSATION_ALREADY_EXISTS");
@@ -182,10 +198,10 @@ describe("Conversations API (Layer 1a)", () => {
       // NOTE: This tests CLIENT-SIDE validation (array length check)
       await expect(
         cortex.conversations.create({
-          memorySpaceId: "test-space-error-agent",
+          memorySpaceId: ctx.memorySpaceId("error-agent"),
           type: "agent-agent",
           participants: {
-            memorySpaceIds: ["agent-1"], // Only one space
+            memorySpaceIds: [ctx.agentId("single")], // Only one space
           },
         }),
       ).rejects.toThrow(
@@ -196,13 +212,18 @@ describe("Conversations API (Layer 1a)", () => {
 
   describe("get()", () => {
     it("retrieves an existing conversation", async () => {
+      // Use test-scoped IDs
+      const getSpace = ctx.memorySpaceId("get-test");
+      const getUser = ctx.userId("get-test");
+      const getAgent = ctx.agentId("get-test");
+
       // Create conversation
       const created = await cortex.conversations.create({
-        memorySpaceId: "test-space-get",
+        memorySpaceId: getSpace,
         type: "user-agent",
         participants: {
-          userId: "user-get-test",
-          participantId: "agent-get-test",
+          userId: getUser,
+          participantId: getAgent,
         },
       });
 
@@ -213,13 +234,13 @@ describe("Conversations API (Layer 1a)", () => {
       expect(retrieved!.conversationId).toBe(created.conversationId);
       expect(retrieved!.type).toBe("user-agent");
       expect(retrieved!.participants).toEqual({
-        userId: "user-get-test",
-        participantId: "agent-get-test",
+        userId: getUser,
+        participantId: getAgent,
       });
     });
 
     it("returns null for non-existent conversation", async () => {
-      const result = await cortex.conversations.get("conv-does-not-exist");
+      const result = await cortex.conversations.get(`nonexistent-${ctx.runId}`);
 
       expect(result).toBeNull();
     });
@@ -227,13 +248,18 @@ describe("Conversations API (Layer 1a)", () => {
 
   describe("addMessage()", () => {
     it("adds a message to a conversation", async () => {
+      // Use test-scoped IDs
+      const msgSpace = ctx.memorySpaceId("msg-test");
+      const msgUser = ctx.userId("msg-test");
+      const msgAgent = ctx.agentId("msg-test");
+
       // Create conversation
       const conversation = await cortex.conversations.create({
-        memorySpaceId: "test-space-msg",
+        memorySpaceId: msgSpace,
         type: "user-agent",
         participants: {
-          userId: "user-msg-test",
-          participantId: "agent-msg-test",
+          userId: msgUser,
+          participantId: msgAgent,
         },
       });
 
@@ -269,13 +295,18 @@ describe("Conversations API (Layer 1a)", () => {
     });
 
     it("appends multiple messages (immutability)", async () => {
+      // Use test-scoped IDs
+      const appendSpace = ctx.memorySpaceId("append-test");
+      const appendUser = ctx.userId("append-test");
+      const appendAgent = ctx.agentId("append-test");
+
       // Create conversation
       const conversation = await cortex.conversations.create({
-        memorySpaceId: "test-space-append",
+        memorySpaceId: appendSpace,
         type: "user-agent",
         participants: {
-          userId: "user-append-test",
-          participantId: "agent-append-test",
+          userId: appendUser,
+          participantId: appendAgent,
         },
       });
 
@@ -294,7 +325,7 @@ describe("Conversations API (Layer 1a)", () => {
         message: {
           role: "agent",
           content: "Second message",
-          participantId: "agent-append-test",
+          participantId: appendAgent,
         },
       });
 
@@ -332,16 +363,21 @@ describe("Conversations API (Layer 1a)", () => {
     });
 
     it("accepts custom messageId", async () => {
+      // Use test-scoped IDs
+      const deleteSpace = ctx.memorySpaceId("delete-msg");
+      const deleteUser = ctx.userId("delete-msg-1");
+      const deleteAgent = ctx.agentId("delete-msg-1");
+
       const conversation = await cortex.conversations.create({
-        memorySpaceId: "test-space-delete-msg",
+        memorySpaceId: deleteSpace,
         type: "user-agent",
         participants: {
-          userId: "user-1",
-          participantId: "agent-1",
+          userId: deleteUser,
+          participantId: deleteAgent,
         },
       });
 
-      const customMessageId = "msg-custom-abc";
+      const customMessageId = `msg-custom-${ctx.runId}`;
 
       const updated = await cortex.conversations.addMessage({
         conversationId: conversation.conversationId,
@@ -371,34 +407,44 @@ describe("Conversations API (Layer 1a)", () => {
   });
 
   describe("list()", () => {
+    // Use test-scoped IDs to avoid parallel conflicts
+    const listSpace1 = ctx.memorySpaceId("list-space-1");
+    const listSpace2 = ctx.memorySpaceId("list-space-2");
+    const listUser = ctx.userId("list-test");
+    const listAgent1 = ctx.agentId("list-1");
+    const listAgent2 = ctx.agentId("list-2");
+    const convList1 = ctx.conversationId("list-1");
+    const convList2 = ctx.conversationId("list-2");
+    const convList3 = ctx.conversationId("list-3");
+
     beforeAll(async () => {
       // Create test data
       await cortex.conversations.create({
-        conversationId: "conv-list-1",
-        memorySpaceId: "test-space-list",
+        conversationId: convList1,
+        memorySpaceId: listSpace1,
         type: "user-agent",
         participants: {
-          userId: "user-list-test",
-          participantId: "agent-list-1",
+          userId: listUser,
+          participantId: listAgent1,
         },
       });
 
       await cortex.conversations.create({
-        conversationId: "conv-list-2",
-        memorySpaceId: "test-space-list",
+        conversationId: convList2,
+        memorySpaceId: listSpace1,
         type: "user-agent",
         participants: {
-          userId: "user-list-test",
-          participantId: "agent-list-2",
+          userId: listUser,
+          participantId: listAgent2,
         },
       });
 
       await cortex.conversations.create({
-        conversationId: "conv-list-3",
-        memorySpaceId: "test-collab-list",
+        conversationId: convList3,
+        memorySpaceId: listSpace2,
         type: "agent-agent",
         participants: {
-          memorySpaceIds: ["agent-list-1", "agent-list-2"],
+          memorySpaceIds: [listAgent1, listAgent2],
         },
       });
     });
@@ -411,24 +457,24 @@ describe("Conversations API (Layer 1a)", () => {
 
     it("filters by userId", async () => {
       const conversations = await cortex.conversations.list({
-        userId: "user-list-test",
+        userId: listUser,
       });
 
       expect(conversations.length).toBeGreaterThanOrEqual(2);
       conversations.forEach((conv) => {
-        expect(conv.participants.userId).toBe("user-list-test");
+        expect(conv.participants.userId).toBe(listUser);
       });
     });
 
     it("filters by memorySpaceId", async () => {
       const conversations = await cortex.conversations.list({
-        memorySpaceId: "test-space-list",
+        memorySpaceId: listSpace1,
       });
 
-      // Should find both user-agent conversations (conv-list-1 and conv-list-2)
+      // Should find both user-agent conversations
       expect(conversations.length).toBe(2);
       conversations.forEach((conv) => {
-        expect(conv.memorySpaceId).toBe("test-space-list");
+        expect(conv.memorySpaceId).toBe(listSpace1);
       });
     });
 
@@ -445,14 +491,14 @@ describe("Conversations API (Layer 1a)", () => {
 
     it("combines filters (userId + memorySpaceId)", async () => {
       const conversations = await cortex.conversations.list({
-        userId: "user-list-test",
-        memorySpaceId: "test-space-list",
+        userId: listUser,
+        memorySpaceId: listSpace1,
       });
 
       expect(conversations.length).toBeGreaterThanOrEqual(1);
       conversations.forEach((conv) => {
-        expect(conv.participants.userId).toBe("user-list-test");
-        expect(conv.memorySpaceId).toBe("test-space-list");
+        expect(conv.participants.userId).toBe(listUser);
+        expect(conv.memorySpaceId).toBe(listSpace1);
       });
     });
 
@@ -466,6 +512,10 @@ describe("Conversations API (Layer 1a)", () => {
   });
 
   describe("count()", () => {
+    // Re-use scoped IDs from list() test setup (which runs in beforeAll)
+    const countUser = ctx.userId("list-test");
+    const countSpace = ctx.memorySpaceId("list-space-1");
+
     it("counts all conversations", async () => {
       const count = await cortex.conversations.count();
 
@@ -474,7 +524,7 @@ describe("Conversations API (Layer 1a)", () => {
 
     it("counts by userId", async () => {
       const count = await cortex.conversations.count({
-        userId: "user-list-test",
+        userId: countUser,
       });
 
       expect(count).toBeGreaterThanOrEqual(2);
@@ -482,10 +532,10 @@ describe("Conversations API (Layer 1a)", () => {
 
     it("counts by memorySpaceId", async () => {
       const count = await cortex.conversations.count({
-        memorySpaceId: "test-space-list",
+        memorySpaceId: countSpace,
       });
 
-      expect(count).toBeGreaterThanOrEqual(2); // Should find conv-list-1 and conv-list-2
+      expect(count).toBeGreaterThanOrEqual(2);
     });
 
     it("counts by type", async () => {
@@ -499,13 +549,18 @@ describe("Conversations API (Layer 1a)", () => {
 
   describe("delete()", () => {
     it("deletes a conversation", async () => {
+      // Use test-scoped IDs
+      const delSpace = ctx.memorySpaceId("delete-conv");
+      const delUser = ctx.userId("delete-test");
+      const delAgent = ctx.agentId("delete-test");
+
       // Create conversation
       const conversation = await cortex.conversations.create({
-        memorySpaceId: "test-space-delete",
+        memorySpaceId: delSpace,
         type: "user-agent",
         participants: {
-          userId: "user-delete-test",
-          participantId: "agent-delete-test",
+          userId: delUser,
+          participantId: delAgent,
         },
       });
 
@@ -533,19 +588,24 @@ describe("Conversations API (Layer 1a)", () => {
 
     it("throws error for non-existent conversation", async () => {
       await expect(
-        cortex.conversations.delete("conv-does-not-exist"),
+        cortex.conversations.delete(`nonexistent-${ctx.runId}`),
       ).rejects.toThrow("CONVERSATION_NOT_FOUND");
     });
   });
 
   describe("Storage Validation", () => {
     it("validates complete ACID properties", async () => {
+      // Use test-scoped IDs
+      const acidSpace = ctx.memorySpaceId("acid-test");
+      const acidUser = ctx.userId("acid-test");
+      const acidAgent = ctx.agentId("acid-test");
+
       const conversation = await cortex.conversations.create({
-        memorySpaceId: "test-space-acid",
+        memorySpaceId: acidSpace,
         type: "user-agent",
         participants: {
-          userId: "user-acid-test",
-          participantId: "agent-acid-test",
+          userId: acidUser,
+          participantId: acidAgent,
         },
       });
 
@@ -556,7 +616,7 @@ describe("Conversations API (Layer 1a)", () => {
           message: {
             role: i % 2 === 0 ? "user" : "agent",
             content: `Message ${i + 1}`,
-            participantId: i % 2 === 0 ? undefined : "agent-acid-test",
+            participantId: i % 2 === 0 ? undefined : acidAgent,
           },
         });
       }
@@ -590,12 +650,15 @@ describe("Conversations API (Layer 1a)", () => {
     it("validates index usage", async () => {
       // This test ensures indexes are being used
       // by verifying queries complete in reasonable time
+      // Use the list-test user/space from the list() describe block
+      const indexUser = ctx.userId("list-test");
+      const indexSpace = ctx.memorySpaceId("list-space-1");
 
       const startTime = Date.now();
 
       await cortex.conversations.list({
-        userId: "user-list-test",
-        memorySpaceId: "test-space-list-1",
+        userId: indexUser,
+        memorySpaceId: indexSpace,
       });
 
       const duration = Date.now() - startTime;
@@ -608,14 +671,19 @@ describe("Conversations API (Layer 1a)", () => {
   describe("getHistory()", () => {
     let testConversationId: string;
 
+    // Use test-scoped IDs
+    const historySpace = ctx.memorySpaceId("history");
+    const historyUser = ctx.userId("history-test");
+    const historyAgent = ctx.agentId("history-test");
+
     beforeAll(async () => {
       // Create conversation with multiple messages
       const conversation = await cortex.conversations.create({
-        memorySpaceId: "test-space-history",
+        memorySpaceId: historySpace,
         type: "user-agent",
         participants: {
-          userId: "user-history-test",
-          participantId: "agent-history-test",
+          userId: historyUser,
+          participantId: historyAgent,
         },
       });
 
@@ -708,21 +776,33 @@ describe("Conversations API (Layer 1a)", () => {
       // NOTE: This tests BACKEND validation (existence check)
       // Client-side validation only checks required fields and format
       await expect(
-        cortex.conversations.getHistory("conv-does-not-exist"),
+        cortex.conversations.getHistory(`nonexistent-${ctx.runId}`),
       ).rejects.toThrow("CONVERSATION_NOT_FOUND");
     });
   });
 
   describe("search()", () => {
+    // Use test-scoped IDs
+    const searchSpace1 = ctx.memorySpaceId("search-space");
+    const searchSpace2 = ctx.memorySpaceId("search-space-other");
+    const searchUser1 = ctx.userId("search-test");
+    const searchUser2 = ctx.userId("search-other");
+    const searchAgent = ctx.agentId("search-test");
+    const convSearch1 = ctx.conversationId("search-1");
+    const convSearch2 = ctx.conversationId("search-2");
+    const convSearch3 = ctx.conversationId("search-3");
+    // Use unique search term scoped to this run
+    const searchKeyword = `secretword-${ctx.runId}`;
+
     beforeAll(async () => {
       // Create test conversations with searchable content
       const conv1 = await cortex.conversations.create({
-        conversationId: "conv-search-1",
-        memorySpaceId: "test-space-search",
+        conversationId: convSearch1,
+        memorySpaceId: searchSpace1,
         type: "user-agent",
         participants: {
-          userId: "user-search-test",
-          participantId: "agent-search-test",
+          userId: searchUser1,
+          participantId: searchAgent,
         },
       });
 
@@ -730,7 +810,7 @@ describe("Conversations API (Layer 1a)", () => {
         conversationId: conv1.conversationId,
         message: {
           role: "user",
-          content: "What is the password for the system?",
+          content: `What is the ${searchKeyword} for the system?`,
         },
       });
 
@@ -738,17 +818,17 @@ describe("Conversations API (Layer 1a)", () => {
         conversationId: conv1.conversationId,
         message: {
           role: "agent",
-          content: "The password is Blue123!",
+          content: `The ${searchKeyword} is Blue123!`,
         },
       });
 
       const conv2 = await cortex.conversations.create({
-        conversationId: "conv-search-2",
-        memorySpaceId: "test-space-search",
+        conversationId: convSearch2,
+        memorySpaceId: searchSpace1,
         type: "user-agent",
         participants: {
-          userId: "user-search-test",
-          participantId: "agent-search-test",
+          userId: searchUser1,
+          participantId: searchAgent,
         },
       });
 
@@ -764,17 +844,17 @@ describe("Conversations API (Layer 1a)", () => {
         conversationId: conv2.conversationId,
         message: {
           role: "agent",
-          content: "The weather is sunny with no password required!",
+          content: `The weather is sunny with no ${searchKeyword} required!`,
         },
       });
 
       const conv3 = await cortex.conversations.create({
-        conversationId: "conv-search-3",
-        memorySpaceId: "test-space-search-other",
+        conversationId: convSearch3,
+        memorySpaceId: searchSpace2,
         type: "user-agent",
         participants: {
-          userId: "user-search-other",
-          participantId: "agent-search-test",
+          userId: searchUser2,
+          participantId: searchAgent,
         },
       });
 
@@ -782,22 +862,22 @@ describe("Conversations API (Layer 1a)", () => {
         conversationId: conv3.conversationId,
         message: {
           role: "user",
-          content: "This conversation has no password mentions at all.",
+          content: `This conversation has no ${searchKeyword} mentions at all.`,
         },
       });
     });
 
     it("finds conversations containing search query", async () => {
       const results = await cortex.conversations.search({
-        query: "password",
+        query: searchKeyword,
       });
 
       expect(results.length).toBeGreaterThanOrEqual(2);
 
-      // All results should contain "password"
+      // All results should contain the search keyword
       results.forEach((result) => {
         const hasMatch = result.matchedMessages.some((msg) =>
-          msg.content.toLowerCase().includes("password"),
+          msg.content.toLowerCase().includes(searchKeyword.toLowerCase()),
         );
 
         expect(hasMatch).toBe(true);
@@ -806,35 +886,33 @@ describe("Conversations API (Layer 1a)", () => {
 
     it("filters by userId", async () => {
       const results = await cortex.conversations.search({
-        query: "password",
+        query: searchKeyword,
         filters: {
-          userId: "user-search-test",
+          userId: searchUser1,
         },
       });
 
-      expect(results.length).toBe(2); // conv-search-1 and conv-search-2
+      expect(results.length).toBe(2);
       results.forEach((result) => {
-        expect(result.conversation.participants.userId).toBe(
-          "user-search-test",
-        );
+        expect(result.conversation.participants.userId).toBe(searchUser1);
       });
     });
 
     it("includes highlights from matched messages", async () => {
       const results = await cortex.conversations.search({
-        query: "password",
+        query: searchKeyword,
         filters: { limit: 1 },
       });
 
       expect(results[0].highlights.length).toBeGreaterThan(0);
       results[0].highlights.forEach((highlight) => {
-        expect(highlight.toLowerCase()).toContain("password");
+        expect(highlight.toLowerCase()).toContain(searchKeyword.toLowerCase());
       });
     });
 
     it("calculates relevance scores", async () => {
       const results = await cortex.conversations.search({
-        query: "password",
+        query: searchKeyword,
       });
 
       // All results should have scores
@@ -851,7 +929,7 @@ describe("Conversations API (Layer 1a)", () => {
 
     it("returns empty array when no matches", async () => {
       const results = await cortex.conversations.search({
-        query: "nonexistent-query-xyz",
+        query: `nonexistent-query-${ctx.runId}-xyz`,
       });
 
       expect(results).toEqual([]);
@@ -859,7 +937,7 @@ describe("Conversations API (Layer 1a)", () => {
 
     it("respects limit parameter", async () => {
       const results = await cortex.conversations.search({
-        query: "password",
+        query: searchKeyword,
         filters: { limit: 1 },
       });
 
@@ -868,25 +946,34 @@ describe("Conversations API (Layer 1a)", () => {
   });
 
   describe("export()", () => {
+    // Use test-scoped IDs
+    const exportSpace1 = ctx.memorySpaceId("export-space");
+    const exportSpace2 = ctx.memorySpaceId("export-collab");
+    const exportUser = ctx.userId("export-test");
+    const exportAgent = ctx.agentId("export-test");
+    const convExport1 = ctx.conversationId("export-1");
+    const convExport2 = ctx.conversationId("export-2");
+    const campaignTag = `summer-${ctx.runId}`;
+
     beforeAll(async () => {
       // Create test conversations for export
       await cortex.conversations.create({
-        conversationId: "conv-export-1",
-        memorySpaceId: "test-space-export",
+        conversationId: convExport1,
+        memorySpaceId: exportSpace1,
         type: "user-agent",
         participants: {
-          userId: "user-export-test",
-          participantId: "agent-export-test",
+          userId: exportUser,
+          participantId: exportAgent,
         },
-        metadata: { campaign: "summer-2025" },
+        metadata: { campaign: campaignTag },
       });
 
       await cortex.conversations.create({
-        conversationId: "conv-export-2",
-        memorySpaceId: "test-collab-export",
+        conversationId: convExport2,
+        memorySpaceId: exportSpace2,
         type: "agent-agent",
         participants: {
-          memorySpaceIds: ["agent-export-test", "agent-export-other"],
+          memorySpaceIds: [exportAgent, ctx.agentId("export-other")],
         },
         metadata: { priority: "high" },
       });
@@ -894,7 +981,7 @@ describe("Conversations API (Layer 1a)", () => {
 
     it("exports to JSON format", async () => {
       const exported = await cortex.conversations.export({
-        filters: { userId: "user-export-test" },
+        filters: { userId: exportUser },
         format: "json",
         includeMetadata: true,
       });
@@ -913,7 +1000,7 @@ describe("Conversations API (Layer 1a)", () => {
 
     it("exports to CSV format", async () => {
       const exported = await cortex.conversations.export({
-        filters: { userId: "user-export-test" },
+        filters: { userId: exportUser },
         format: "csv",
         includeMetadata: false,
       });
@@ -932,7 +1019,7 @@ describe("Conversations API (Layer 1a)", () => {
 
     it("includes metadata when requested", async () => {
       const withMetadata = await cortex.conversations.export({
-        filters: { conversationIds: ["conv-export-1"] },
+        filters: { conversationIds: [convExport1] },
         format: "json",
         includeMetadata: true,
       });
@@ -940,12 +1027,12 @@ describe("Conversations API (Layer 1a)", () => {
       const parsed = JSON.parse(withMetadata.data);
 
       expect(parsed[0].metadata).toBeDefined();
-      expect(parsed[0].metadata.campaign).toBe("summer-2025");
+      expect(parsed[0].metadata.campaign).toBe(campaignTag);
     });
 
     it("excludes metadata when not requested", async () => {
       const withoutMetadata = await cortex.conversations.export({
-        filters: { conversationIds: ["conv-export-1"] },
+        filters: { conversationIds: [convExport1] },
         format: "json",
         includeMetadata: false,
       });
@@ -958,7 +1045,7 @@ describe("Conversations API (Layer 1a)", () => {
     it("filters by conversation IDs", async () => {
       const exported = await cortex.conversations.export({
         filters: {
-          conversationIds: ["conv-export-1", "conv-export-2"],
+          conversationIds: [convExport1, convExport2],
         },
         format: "json",
       });
@@ -967,8 +1054,8 @@ describe("Conversations API (Layer 1a)", () => {
       const parsed = JSON.parse(exported.data);
       const ids = parsed.map((c: any) => c.conversationId);
 
-      expect(ids).toContain("conv-export-1");
-      expect(ids).toContain("conv-export-2");
+      expect(ids).toContain(convExport1);
+      expect(ids).toContain(convExport2);
     });
 
     it("filters by type", async () => {
@@ -1008,14 +1095,20 @@ describe("Conversations API (Layer 1a)", () => {
   });
 
   describe("State Change Propagation", () => {
+    // Use test-scoped IDs
+    const propSpace = ctx.memorySpaceId("propagation");
+    const propUser = ctx.userId("propagation-test");
+    const propAgent = ctx.agentId("propagation-test");
+    const propKeyword = `PROPAGATE-${ctx.runId}`;
+
     it("message additions propagate to all read operations", async () => {
       // Create conversation
       const conv = await cortex.conversations.create({
-        memorySpaceId: "test-space-propagation",
+        memorySpaceId: propSpace,
         type: "user-agent",
         participants: {
-          userId: "user-propagation-test",
-          participantId: "agent-propagation-test",
+          userId: propUser,
+          participantId: propAgent,
         },
       });
 
@@ -1025,7 +1118,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(retrieved!.messageCount).toBe(0);
 
       let list = await cortex.conversations.list({
-        userId: "user-propagation-test",
+        userId: propUser,
       });
 
       expect(list[0].messageCount).toBe(0);
@@ -1035,24 +1128,24 @@ describe("Conversations API (Layer 1a)", () => {
         conversationId: conv.conversationId,
         message: {
           role: "user",
-          content: "Test message with keyword PROPAGATE",
+          content: `Test message with keyword ${propKeyword}`,
         },
       });
 
       // Verify change in get()
       retrieved = await cortex.conversations.get(conv.conversationId);
       expect(retrieved!.messageCount).toBe(1);
-      expect(retrieved!.messages[0].content).toContain("PROPAGATE");
+      expect(retrieved!.messages[0].content).toContain(propKeyword);
 
       // Verify change in list()
       list = await cortex.conversations.list({
-        userId: "user-propagation-test",
+        userId: propUser,
       });
       expect(list[0].messageCount).toBe(1);
 
       // Verify in search()
       const searchResults = await cortex.conversations.search({
-        query: "PROPAGATE",
+        query: propKeyword,
       });
 
       expect(
@@ -1090,21 +1183,27 @@ describe("Conversations API (Layer 1a)", () => {
       expect(finalHistory.messages).toHaveLength(5);
 
       const finalList = await cortex.conversations.list({
-        userId: "user-propagation-test",
+        userId: propUser,
       });
 
       expect(finalList[0].messageCount).toBe(5);
     });
 
     it("deletion propagates to all read operations", async () => {
+      // Use test-scoped IDs
+      const deleteSpace = ctx.memorySpaceId("delete-prop");
+      const deleteUser = ctx.userId("delete-test");
+      const deleteAgent = ctx.agentId("delete-test");
+      const deleteConvId = ctx.conversationId("deletion-prop");
+
       // Create conversation
       const conv = await cortex.conversations.create({
-        conversationId: "conv-deletion-propagation",
-        memorySpaceId: "test-space-delete-prop",
+        conversationId: deleteConvId,
+        memorySpaceId: deleteSpace,
         type: "user-agent",
         participants: {
-          userId: "user-delete-test",
-          participantId: "agent-delete-test",
+          userId: deleteUser,
+          participantId: deleteAgent,
         },
       });
 
@@ -1120,7 +1219,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(get).not.toBeNull();
 
       let list = await cortex.conversations.list({
-        userId: "user-delete-test",
+        userId: deleteUser,
       });
 
       expect(list.some((c) => c.conversationId === conv.conversationId)).toBe(
@@ -1128,7 +1227,7 @@ describe("Conversations API (Layer 1a)", () => {
       );
 
       const count = await cortex.conversations.count({
-        userId: "user-delete-test",
+        userId: deleteUser,
       });
 
       expect(count).toBeGreaterThanOrEqual(1);
@@ -1140,13 +1239,13 @@ describe("Conversations API (Layer 1a)", () => {
       get = await cortex.conversations.get(conv.conversationId);
       expect(get).toBeNull();
 
-      list = await cortex.conversations.list({ userId: "user-delete-test" });
+      list = await cortex.conversations.list({ userId: deleteUser });
       expect(list.some((c) => c.conversationId === conv.conversationId)).toBe(
         false,
       );
 
       const countAfter = await cortex.conversations.count({
-        userId: "user-delete-test",
+        userId: deleteUser,
       });
 
       expect(countAfter).toBe(count - 1);
@@ -1155,12 +1254,17 @@ describe("Conversations API (Layer 1a)", () => {
 
   describe("Edge Cases", () => {
     it("handles conversation with many messages (100+)", async () => {
+      // Use test-scoped IDs
+      const manySpace = ctx.memorySpaceId("many-messages");
+      const manyUser = ctx.userId("many-messages");
+      const manyAgent = ctx.agentId("many-messages");
+
       const conv = await cortex.conversations.create({
-        memorySpaceId: "test-space-many",
+        memorySpaceId: manySpace,
         type: "user-agent",
         participants: {
-          userId: "user-many-messages",
-          participantId: "agent-many-messages",
+          userId: manyUser,
+          participantId: manyAgent,
         },
       });
 
@@ -1203,12 +1307,16 @@ describe("Conversations API (Layer 1a)", () => {
     it("rejects empty message content", async () => {
       // NOTE: This now tests CLIENT-SIDE validation
       // Empty content is caught by validation before reaching backend
+      const emptySpace = ctx.memorySpaceId("empty-test");
+      const emptyUser = ctx.userId("empty-test");
+      const emptyAgent = ctx.agentId("empty-test");
+
       const conv = await cortex.conversations.create({
-        memorySpaceId: "test-space-empty",
+        memorySpaceId: emptySpace,
         type: "user-agent",
         participants: {
-          userId: "user-empty-test",
-          participantId: "agent-empty-test",
+          userId: emptyUser,
+          participantId: emptyAgent,
         },
       });
 
@@ -1228,12 +1336,16 @@ describe("Conversations API (Layer 1a)", () => {
     });
 
     it("handles very long message content", async () => {
+      const longSpace = ctx.memorySpaceId("long-test");
+      const longUser = ctx.userId("long-test");
+      const longAgent = ctx.agentId("long-test");
+
       const conv = await cortex.conversations.create({
-        memorySpaceId: "test-space-long",
+        memorySpaceId: longSpace,
         type: "user-agent",
         participants: {
-          userId: "user-long-test",
-          participantId: "agent-long-test",
+          userId: longUser,
+          participantId: longAgent,
         },
       });
 
@@ -1256,15 +1368,18 @@ describe("Conversations API (Layer 1a)", () => {
     });
 
     it("handles special characters in conversationId", async () => {
-      const specialId = "conv_test-123.special-chars";
+      const specialId = `conv_test-${ctx.runId}.special-chars`;
+      const specialSpace = ctx.memorySpaceId("special");
+      const specialUser = ctx.userId("special");
+      const specialAgent = ctx.agentId("special");
 
       const conv = await cortex.conversations.create({
         conversationId: specialId,
-        memorySpaceId: "test-space-special",
+        memorySpaceId: specialSpace,
         type: "user-agent",
         participants: {
-          userId: "user-special",
-          participantId: "agent-special",
+          userId: specialUser,
+          participantId: specialAgent,
         },
       });
 
@@ -1276,12 +1391,16 @@ describe("Conversations API (Layer 1a)", () => {
     });
 
     it("handles concurrent message additions", async () => {
+      const concurrentSpace = ctx.memorySpaceId("concurrent-edge");
+      const concurrentUser = ctx.userId("concurrent-edge");
+      const concurrentAgent = ctx.agentId("concurrent-edge");
+
       const conv = await cortex.conversations.create({
-        memorySpaceId: "test-space-concurrent",
+        memorySpaceId: concurrentSpace,
         type: "user-agent",
         participants: {
-          userId: "user-concurrent-edge",
-          participantId: "agent-concurrent-edge",
+          userId: concurrentUser,
+          participantId: concurrentAgent,
         },
       });
 
@@ -1310,16 +1429,21 @@ describe("Conversations API (Layer 1a)", () => {
 
   describe("Advanced Operations", () => {
     describe("deleteMany()", () => {
+      // Use test-scoped IDs
+      const bulkSpace = ctx.memorySpaceId("bulk-delete");
+      const bulkUser = ctx.userId("bulk-delete");
+      const bulkAgent = ctx.agentId("bulk-delete");
+
       beforeAll(async () => {
         // Create test conversations for bulk delete
         for (let i = 1; i <= 5; i++) {
           await cortex.conversations.create({
-            conversationId: `conv-bulk-delete-${i}`,
-            memorySpaceId: "test-space-bulk",
+            conversationId: ctx.conversationId(`bulk-delete-${i}`),
+            memorySpaceId: bulkSpace,
             type: "user-agent",
             participants: {
-              userId: "user-bulk-delete",
-              participantId: "agent-bulk-delete",
+              userId: bulkUser,
+              participantId: bulkAgent,
             },
           });
         }
@@ -1327,7 +1451,7 @@ describe("Conversations API (Layer 1a)", () => {
 
       it("deletes multiple conversations by userId", async () => {
         const result = await cortex.conversations.deleteMany({
-          userId: "user-bulk-delete",
+          userId: bulkUser,
         });
 
         expect(result.deleted).toBeGreaterThanOrEqual(5);
@@ -1335,20 +1459,25 @@ describe("Conversations API (Layer 1a)", () => {
 
         // Verify deletion
         const remaining = await cortex.conversations.list({
-          userId: "user-bulk-delete",
+          userId: bulkUser,
         });
 
         expect(remaining.length).toBe(0);
       });
 
       it("returns count of messages deleted", async () => {
+        // Use test-scoped IDs
+        const deleteMsgsSpace = ctx.memorySpaceId("delete-msgs");
+        const deleteMsgsUser = ctx.userId("delete-many-msgs");
+        const deleteMsgsAgent = ctx.agentId("delete-msgs");
+
         // Create conversation with messages
         const conv = await cortex.conversations.create({
-          memorySpaceId: "test-space-delete-msgs",
+          memorySpaceId: deleteMsgsSpace,
           type: "user-agent",
           participants: {
-            userId: "user-delete-many-msgs",
-            participantId: "agent-test",
+            userId: deleteMsgsUser,
+            participantId: deleteMsgsAgent,
           },
         });
 
@@ -1360,7 +1489,7 @@ describe("Conversations API (Layer 1a)", () => {
         }
 
         const result = await cortex.conversations.deleteMany({
-          userId: "user-delete-many-msgs",
+          userId: deleteMsgsUser,
         });
 
         expect(result.totalMessagesDeleted).toBeGreaterThanOrEqual(5);
@@ -1371,13 +1500,18 @@ describe("Conversations API (Layer 1a)", () => {
       let testConversationId: string;
       let testMessageId: string;
 
+      // Use test-scoped IDs
+      const getMsgSpace = ctx.memorySpaceId("get-msg");
+      const getMsgUser = ctx.userId("get-message");
+      const getMsgAgent = ctx.agentId("get-message");
+
       beforeAll(async () => {
         const conv = await cortex.conversations.create({
-          memorySpaceId: "test-space-get-msg",
+          memorySpaceId: getMsgSpace,
           type: "user-agent",
           participants: {
-            userId: "user-get-message",
-            participantId: "agent-get-message",
+            userId: getMsgUser,
+            participantId: getMsgAgent,
           },
         });
 
@@ -1408,7 +1542,7 @@ describe("Conversations API (Layer 1a)", () => {
       it("returns null for non-existent message", async () => {
         const message = await cortex.conversations.getMessage(
           testConversationId,
-          "msg-does-not-exist",
+          `msg-nonexistent-${ctx.runId}`,
         );
 
         expect(message).toBeNull();
@@ -1416,7 +1550,7 @@ describe("Conversations API (Layer 1a)", () => {
 
       it("returns null for non-existent conversation", async () => {
         const message = await cortex.conversations.getMessage(
-          "conv-does-not-exist",
+          `conv-nonexistent-${ctx.runId}`,
           testMessageId,
         );
 
@@ -1428,13 +1562,18 @@ describe("Conversations API (Layer 1a)", () => {
       let testConversationId: string;
       let messageIds: string[];
 
+      // Use test-scoped IDs
+      const getMsgsSpace = ctx.memorySpaceId("get-msgs");
+      const getMsgsUser = ctx.userId("get-messages");
+      const getMsgsAgent = ctx.agentId("get-messages");
+
       beforeAll(async () => {
         const conv = await cortex.conversations.create({
-          memorySpaceId: "test-space-get-msgs",
+          memorySpaceId: getMsgsSpace,
           type: "user-agent",
           participants: {
-            userId: "user-get-messages",
-            participantId: "agent-get-messages",
+            userId: getMsgsUser,
+            participantId: getMsgsAgent,
           },
         });
 
@@ -1469,7 +1608,7 @@ describe("Conversations API (Layer 1a)", () => {
 
       it("returns empty array for non-existent conversation", async () => {
         const messages = await cortex.conversations.getMessagesByIds(
-          "conv-does-not-exist",
+          `conv-nonexistent-${ctx.runId}`,
           messageIds,
         );
 
@@ -1489,56 +1628,64 @@ describe("Conversations API (Layer 1a)", () => {
     });
 
     describe("findConversation()", () => {
+      // Use test-scoped IDs
+      const findSpace = ctx.memorySpaceId("find");
+      const findCollabSpace = ctx.memorySpaceId("collab-find");
+      const findUser = ctx.userId("find");
+      const findAgent = ctx.agentId("find");
+      const findAgentA = ctx.agentId("find-a");
+      const findAgentB = ctx.agentId("find-b");
+
       beforeAll(async () => {
         await cortex.conversations.create({
-          memorySpaceId: "test-space-find",
+          memorySpaceId: findSpace,
           type: "user-agent",
           participants: {
-            userId: "user-find",
-            participantId: "agent-find",
+            userId: findUser,
+            participantId: findAgent,
           },
         });
 
         await cortex.conversations.create({
-          memorySpaceId: "test-collab-find",
+          memorySpaceId: findCollabSpace,
           type: "agent-agent",
           participants: {
-            memorySpaceIds: ["agent-a", "agent-b"],
+            memorySpaceIds: [findAgentA, findAgentB],
           },
         });
       });
 
       it("finds existing user-agent conversation", async () => {
         const found = await cortex.conversations.findConversation({
-          memorySpaceId: "test-space-find",
+          memorySpaceId: findSpace,
           type: "user-agent",
-          userId: "user-find",
+          userId: findUser,
         });
 
         expect(found).not.toBeNull();
         expect(found!.type).toBe("user-agent");
-        expect(found!.participants.userId).toBe("user-find");
-        expect(found!.participants.participantId).toBe("agent-find");
+        expect(found!.participants.userId).toBe(findUser);
+        expect(found!.participants.participantId).toBe(findAgent);
       });
 
       it("finds existing agent-agent conversation", async () => {
         const found = await cortex.conversations.findConversation({
-          memorySpaceId: "test-collab-find",
+          memorySpaceId: findCollabSpace,
           type: "agent-agent",
-          memorySpaceIds: ["agent-a", "agent-b"],
+          memorySpaceIds: [findAgentA, findAgentB],
         });
 
         expect(found).not.toBeNull();
         expect(found!.type).toBe("agent-agent");
-        expect(found!.participants.memorySpaceIds).toContain("agent-a");
-        expect(found!.participants.memorySpaceIds).toContain("agent-b");
+        expect(found!.participants.memorySpaceIds).toContain(findAgentA);
+        expect(found!.participants.memorySpaceIds).toContain(findAgentB);
       });
 
       it("finds agent-agent regardless of order", async () => {
         const found = await cortex.conversations.findConversation({
-          memorySpaceId: "test-collab-find",
+          memorySpaceId: findCollabSpace,
           type: "agent-agent",
-          memorySpaceIds: ["agent-b", "agent-a"], // Reversed order
+          memorySpaceIds: [findAgentB, findAgentA], // Reversed order
         });
 
         expect(found).not.toBeNull();
@@ -1546,9 +1693,9 @@ describe("Conversations API (Layer 1a)", () => {
 
       it("returns null for non-existent conversation", async () => {
         const found = await cortex.conversations.findConversation({
-          memorySpaceId: "test-space-nonexistent",
+          memorySpaceId: ctx.memorySpaceId("nonexistent"),
           type: "user-agent",
-          userId: "user-nonexistent",
+          userId: ctx.userId("nonexistent"),
         });
 
         expect(found).toBeNull();
@@ -1557,12 +1704,16 @@ describe("Conversations API (Layer 1a)", () => {
 
     describe("getOrCreate()", () => {
       it("creates new conversation if doesn't exist", async () => {
+        const gocSpace = ctx.memorySpaceId("goc-new");
+        const gocUser = ctx.userId("goc-new");
+        const gocAgent = ctx.agentId("goc-new");
+
         const result = await cortex.conversations.getOrCreate({
-          memorySpaceId: "test-space-get-or-create-new",
+          memorySpaceId: gocSpace,
           type: "user-agent",
           participants: {
-            userId: "user-get-or-create-new",
-            participantId: "agent-get-or-create-new",
+            userId: gocUser,
+            participantId: gocAgent,
           },
         });
 
@@ -1572,23 +1723,27 @@ describe("Conversations API (Layer 1a)", () => {
       });
 
       it("returns existing conversation if found", async () => {
+        const gocExistSpace = ctx.memorySpaceId("goc-existing");
+        const gocExistUser = ctx.userId("goc-existing");
+        const gocExistAgent = ctx.agentId("goc-existing");
+
         // First call creates
         const first = await cortex.conversations.getOrCreate({
-          memorySpaceId: "test-space-get-or-create-existing",
+          memorySpaceId: gocExistSpace,
           type: "user-agent",
           participants: {
-            userId: "user-get-or-create-existing",
-            participantId: "agent-get-or-create-existing",
+            userId: gocExistUser,
+            participantId: gocExistAgent,
           },
         });
 
         // Second call returns same
         const second = await cortex.conversations.getOrCreate({
-          memorySpaceId: "test-space-get-or-create-existing",
+          memorySpaceId: gocExistSpace,
           type: "user-agent",
           participants: {
-            userId: "user-get-or-create-existing",
-            participantId: "agent-get-or-create-existing",
+            userId: gocExistUser,
+            participantId: gocExistAgent,
           },
         });
 
@@ -1597,19 +1752,23 @@ describe("Conversations API (Layer 1a)", () => {
       });
 
       it("works with agent-agent conversations", async () => {
+        const gocCollabSpace = ctx.memorySpaceId("goc-collab");
+        const gocAgentX = ctx.agentId("goc-x");
+        const gocAgentY = ctx.agentId("goc-y");
+
         const first = await cortex.conversations.getOrCreate({
-          memorySpaceId: "test-collab-get-or-create",
+          memorySpaceId: gocCollabSpace,
           type: "agent-agent",
           participants: {
-            memorySpaceIds: ["agent-x", "agent-y"],
+            memorySpaceIds: [gocAgentX, gocAgentY],
           },
         });
 
         const second = await cortex.conversations.getOrCreate({
-          memorySpaceId: "test-collab-get-or-create",
+          memorySpaceId: gocCollabSpace,
           type: "agent-agent",
           participants: {
-            memorySpaceIds: ["agent-y", "agent-x"], // Different order
+            memorySpaceIds: [gocAgentY, gocAgentX], // Different order
           },
         });
 
@@ -2300,16 +2459,22 @@ describe("Conversations API (Layer 1a)", () => {
 
   describe("Cross-Operation Integration", () => {
     it("create → addMessage → list → search → export consistency", async () => {
+      // Use test-scoped IDs
+      const integrationSpace = ctx.memorySpaceId("integration");
+      const integrationUser = ctx.userId("integration-test");
+      const integrationAgent = ctx.agentId("integration-test");
+      const uniqueSearchTerm = `UNIQUE_SEARCH_${ctx.runId}`;
+
       // Create with unique keyword
       const conv = await cortex.conversations.create({
-        memorySpaceId: "test-space-integration",
+        memorySpaceId: integrationSpace,
         type: "user-agent",
         participants: {
-          userId: "user-integration-test",
-          participantId: "agent-integration-test",
+          userId: integrationUser,
+          participantId: integrationAgent,
         },
         metadata: {
-          testKeyword: "INTEGRATION_TEST_MARKER",
+          testKeyword: `INTEGRATION_TEST_${ctx.runId}`,
         },
       });
 
@@ -2318,13 +2483,13 @@ describe("Conversations API (Layer 1a)", () => {
         conversationId: conv.conversationId,
         message: {
           role: "user",
-          content: "This message contains UNIQUE_SEARCH_TERM for testing",
+          content: `This message contains ${uniqueSearchTerm} for testing`,
         },
       });
 
       // Verify in list
       const listResults = await cortex.conversations.list({
-        userId: "user-integration-test",
+        userId: integrationUser,
       });
 
       expect(
@@ -2337,7 +2502,7 @@ describe("Conversations API (Layer 1a)", () => {
 
       // Verify in search
       const searchResults = await cortex.conversations.search({
-        query: "UNIQUE_SEARCH_TERM",
+        query: uniqueSearchTerm,
       });
 
       expect(
@@ -2348,14 +2513,14 @@ describe("Conversations API (Layer 1a)", () => {
 
       // Verify in count
       const count = await cortex.conversations.count({
-        userId: "user-integration-test",
+        userId: integrationUser,
       });
 
       expect(count).toBeGreaterThanOrEqual(1);
 
       // Verify in export
       const exported = await cortex.conversations.export({
-        filters: { userId: "user-integration-test" },
+        filters: { userId: integrationUser },
         format: "json",
       });
       const parsed = JSON.parse(exported.data);
@@ -2376,7 +2541,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(updatedGet!.messageCount).toBe(2);
 
       const updatedList = await cortex.conversations.list({
-        userId: "user-integration-test",
+        userId: integrationUser,
       });
 
       expect(
@@ -2386,17 +2551,24 @@ describe("Conversations API (Layer 1a)", () => {
     });
 
     it("search results update as messages are added", async () => {
+      // Use test-scoped IDs
+      const searchUpdateSpace = ctx.memorySpaceId("search-update");
+      const searchUpdateUser = ctx.userId("search-update");
+      const searchUpdateAgent = ctx.agentId("search-update");
+      // Use unique search term to avoid conflicts
+      const searchTerm = `secretpassword-${ctx.runId}`;
+
       const conv = await cortex.conversations.create({
-        memorySpaceId: "test-space-search-update",
+        memorySpaceId: searchUpdateSpace,
         type: "user-agent",
         participants: {
-          userId: "user-search-update",
-          participantId: "agent-search-update",
+          userId: searchUpdateUser,
+          participantId: searchUpdateAgent,
         },
       });
 
-      // Initially no matches for "password"
-      let results = await cortex.conversations.search({ query: "password" });
+      // Initially no matches for our unique term
+      let results = await cortex.conversations.search({ query: searchTerm });
 
       expect(
         results.some(
@@ -2404,17 +2576,17 @@ describe("Conversations API (Layer 1a)", () => {
         ),
       ).toBe(false);
 
-      // Add message with "password"
+      // Add message with our unique term
       await cortex.conversations.addMessage({
         conversationId: conv.conversationId,
         message: {
           role: "user",
-          content: "What is the password for the account?",
+          content: `What is the ${searchTerm} for the account?`,
         },
       });
 
       // Should now find it
-      results = await cortex.conversations.search({ query: "password" });
+      results = await cortex.conversations.search({ query: searchTerm });
       expect(
         results.some(
           (r) => r.conversation.conversationId === conv.conversationId,
@@ -2426,17 +2598,17 @@ describe("Conversations API (Layer 1a)", () => {
         )?.matchedMessages.length,
       ).toBe(1);
 
-      // Add another message with "password"
+      // Add another message with our unique term
       await cortex.conversations.addMessage({
         conversationId: conv.conversationId,
         message: {
           role: "agent",
-          content: "The password is reset123",
+          content: `The ${searchTerm} is reset123`,
         },
       });
 
       // Should find 2 matched messages
-      results = await cortex.conversations.search({ query: "password" });
+      results = await cortex.conversations.search({ query: searchTerm });
       const thisResult = results.find(
         (r) => r.conversation.conversationId === conv.conversationId,
       );

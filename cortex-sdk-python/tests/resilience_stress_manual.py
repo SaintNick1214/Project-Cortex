@@ -34,8 +34,8 @@ from cortex.resilience import (
     CircuitOpenError,
     ConcurrencyConfig,
     QueueFullError,
-    RateLimitExceededError,
     RateLimiterConfig,
+    RateLimitExceededError,
     ResilienceConfig,
     ResiliencePresets,
 )

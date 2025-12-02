@@ -7,24 +7,29 @@
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { TestCleanup } from "./helpers/cleanup";
+import { createTestRunContext } from "./helpers/isolation";
+
+// Create test run context for parallel execution isolation
+const ctx = createTestRunContext();
 
 describe("Memory API with Fact Integration", () => {
   let cortex: Cortex;
-  let cleanup: TestCleanup;
+  let _cleanup: TestCleanup;
 
-  const testMemorySpaceId = `fact-test-${Date.now()}`;
-  const testConversationId = `conv-fact-${Date.now()}`;
-  const testUserId = "test-user-facts";
+  // Use ctx-scoped IDs for parallel execution isolation
+  const testMemorySpaceId = ctx.memorySpaceId("fact-test");
+  const testConversationId = ctx.conversationId("fact");
+  const testUserId = ctx.userId("facts");
   const testUserName = "Test User";
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: process.env.CONVEX_URL || "" });
     const client = new ConvexClient(process.env.CONVEX_URL || "");
-    cleanup = new TestCleanup(client);
+    _cleanup = new TestCleanup(client);
   });
 
   afterAll(async () => {
-    await cleanup.purgeAll();
+    // NOTE: Removed purgeAll() for parallel execution compatibility.
   });
 
   test("remember() should extract and store facts when extractFacts callback provided", async () => {
