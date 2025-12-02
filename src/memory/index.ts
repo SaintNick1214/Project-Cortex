@@ -61,6 +61,7 @@ import {
   validateStreamObject,
   validateFilterCombination,
 } from "./validators";
+import type { ResilienceLayer } from "../resilience";
 
 // Type for conversation with messages
 interface ConversationWithMessages {
@@ -74,13 +75,33 @@ export class MemoryAPI {
   private readonly vector: VectorAPI;
   private readonly facts: FactsAPI;
   private readonly graphAdapter?: GraphAdapter;
+  private readonly resilience?: ResilienceLayer;
 
-  constructor(client: ConvexClient, graphAdapter?: GraphAdapter) {
+  constructor(
+    client: ConvexClient,
+    graphAdapter?: GraphAdapter,
+    resilience?: ResilienceLayer,
+  ) {
     this.client = client;
     this.graphAdapter = graphAdapter;
-    this.conversations = new ConversationsAPI(client, graphAdapter);
-    this.vector = new VectorAPI(client, graphAdapter);
-    this.facts = new FactsAPI(client, graphAdapter);
+    this.resilience = resilience;
+    // Pass resilience layer to sub-APIs
+    this.conversations = new ConversationsAPI(client, graphAdapter, resilience);
+    this.vector = new VectorAPI(client, graphAdapter, resilience);
+    this.facts = new FactsAPI(client, graphAdapter, resilience);
+  }
+
+  /**
+   * Execute an operation through the resilience layer (if available)
+   */
+  private async executeWithResilience<T>(
+    operation: () => Promise<T>,
+    operationName: string,
+  ): Promise<T> {
+    if (this.resilience) {
+      return this.resilience.execute(operation, operationName);
+    }
+    return operation();
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

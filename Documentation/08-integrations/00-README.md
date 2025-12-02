@@ -55,7 +55,7 @@ const result = await streamText({
 
 - [Getting Started](./vercel-ai-sdk/getting-started.md)
 - [API Reference](./vercel-ai-sdk/api-reference.md)
-- [Examples](../../packages/vercel-ai-provider/examples/)
+- [Examples](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/examples)
 
 ---
 
@@ -90,7 +90,7 @@ Want an integration with your favorite framework?
 
 - [Open an issue](https://github.com/SaintNick1214/Project-Cortex/issues/new)
 - [Start a discussion](https://github.com/SaintNick1214/Project-Cortex/discussions)
-- [Contribute](../../CONTRIBUTING.md)
+- [Contribute](/project/contributing)
 
 ---
 

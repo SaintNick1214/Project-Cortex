@@ -112,7 +112,7 @@ Expert-level content:
 
 - **Start from scratch** → [Installation](./01-getting-started/02-installation.md)
 - **Understand concepts** → [Core Concepts](./01-getting-started/04-core-concepts.md)
-- **Integrate with Vercel AI SDK** → [Vercel AI SDK Integration](./08-integrations/vercel-ai-sdk/00-README.md)
+- **Integrate with Vercel AI SDK** → [Vercel AI SDK Integration](./08-integrations/vercel-ai-sdk/getting-started.md)
 
 ## 📖 Documentation Conventions
 
@@ -182,7 +182,7 @@ See the project's GitHub releases for full version history.
 
 All documentation is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
-The Cortex code is licensed under [Apache License 2.0](../LICENSE.md).
+The Cortex code is licensed under [Apache License 2.0](/project/license).
 
 ---
 

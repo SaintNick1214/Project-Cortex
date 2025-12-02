@@ -29,12 +29,27 @@ import {
   validatePurgeManyFilter,
   validateKeepLatest,
 } from "./validators";
+import type { ResilienceLayer } from "../resilience";
 
 export class ImmutableAPI {
   constructor(
     private readonly client: ConvexClient,
     private readonly graphAdapter?: GraphAdapter,
+    private readonly resilience?: ResilienceLayer,
   ) {}
+
+  /**
+   * Execute an operation through the resilience layer (if available)
+   */
+  private async executeWithResilience<T>(
+    operation: () => Promise<T>,
+    operationName: string,
+  ): Promise<T> {
+    if (this.resilience) {
+      return this.resilience.execute(operation, operationName);
+    }
+    return operation();
+  }
 
   /**
    * Store immutable data (creates v1 or increments version if exists)

@@ -23,6 +23,12 @@ import {
   GraphSyncWorker,
   type GraphSyncWorkerOptions,
 } from "./graph/worker/GraphSyncWorker";
+import {
+  ResilienceLayer,
+  ResiliencePresets,
+  type ResilienceConfig,
+  type ResilienceMetrics,
+} from "./resilience";
 
 /**
  * Graph database configuration
@@ -50,11 +56,38 @@ export interface CortexConfig {
 
   /** Optional graph database integration */
   graph?: GraphConfig;
+
+  /**
+   * Resilience/overload protection configuration
+   *
+   * Provides rate limiting, concurrency control, circuit breaking,
+   * and priority queuing for burst traffic handling.
+   *
+   * @default ResiliencePresets.default (enabled with balanced settings)
+   *
+   * @example
+   * ```typescript
+   * // Use preset
+   * resilience: ResiliencePresets.hiveMode
+   *
+   * // Custom configuration
+   * resilience: {
+   *   enabled: true,
+   *   rateLimiter: { bucketSize: 200, refillRate: 100 },
+   *   circuitBreaker: { failureThreshold: 10 },
+   * }
+   *
+   * // Disable resilience
+   * resilience: { enabled: false }
+   * ```
+   */
+  resilience?: ResilienceConfig;
 }
 
 export class Cortex {
   private readonly client: ConvexClient;
   private syncWorker?: GraphSyncWorker;
+  private readonly resilienceLayer: ResilienceLayer;
 
   // Layer 1a: Conversations
   public conversations: ConversationsAPI;
@@ -96,22 +129,51 @@ export class Cortex {
     // Initialize Convex client
     this.client = new ConvexClient(config.convexUrl);
 
+    // Initialize resilience layer (default: enabled with balanced settings)
+    this.resilienceLayer = new ResilienceLayer(
+      config.resilience ?? ResiliencePresets.default,
+    );
+
     // Get graph adapter if configured
     const graphAdapter = config.graph?.adapter;
 
-    // Initialize API modules with graph adapter
-    this.conversations = new ConversationsAPI(this.client, graphAdapter);
-    this.immutable = new ImmutableAPI(this.client, graphAdapter);
-    this.mutable = new MutableAPI(this.client, graphAdapter);
-    this.vector = new VectorAPI(this.client, graphAdapter);
-    this.facts = new FactsAPI(this.client, graphAdapter);
-    this.contexts = new ContextsAPI(this.client, graphAdapter);
-    this.memorySpaces = new MemorySpacesAPI(this.client, graphAdapter);
-    this.memory = new MemoryAPI(this.client, graphAdapter);
-    this.users = new UsersAPI(this.client, graphAdapter);
-    this.agents = new AgentsAPI(this.client, graphAdapter);
-    this.governance = new GovernanceAPI(this.client, graphAdapter);
-    this.a2a = new A2AAPI(this.client, graphAdapter);
+    // Initialize API modules with graph adapter and resilience layer
+    this.conversations = new ConversationsAPI(
+      this.client,
+      graphAdapter,
+      this.resilienceLayer,
+    );
+    this.immutable = new ImmutableAPI(
+      this.client,
+      graphAdapter,
+      this.resilienceLayer,
+    );
+    this.mutable = new MutableAPI(
+      this.client,
+      graphAdapter,
+      this.resilienceLayer,
+    );
+    this.vector = new VectorAPI(this.client, graphAdapter, this.resilienceLayer);
+    this.facts = new FactsAPI(this.client, graphAdapter, this.resilienceLayer);
+    this.contexts = new ContextsAPI(
+      this.client,
+      graphAdapter,
+      this.resilienceLayer,
+    );
+    this.memorySpaces = new MemorySpacesAPI(
+      this.client,
+      graphAdapter,
+      this.resilienceLayer,
+    );
+    this.memory = new MemoryAPI(this.client, graphAdapter, this.resilienceLayer);
+    this.users = new UsersAPI(this.client, graphAdapter, this.resilienceLayer);
+    this.agents = new AgentsAPI(this.client, graphAdapter, this.resilienceLayer);
+    this.governance = new GovernanceAPI(
+      this.client,
+      graphAdapter,
+      this.resilienceLayer,
+    );
+    this.a2a = new A2AAPI(this.client, graphAdapter, this.resilienceLayer);
 
     // Start graph sync worker if enabled
     if (config.graph?.autoSync && graphAdapter) {
@@ -143,12 +205,76 @@ export class Cortex {
   }
 
   /**
-   * Close the connection to Convex and stop graph sync worker
+   * Get the resilience layer for monitoring and manual control
+   *
+   * @example
+   * ```typescript
+   * // Check system health
+   * const isHealthy = cortex.getResilience().isHealthy();
+   *
+   * // Get current metrics
+   * const metrics = cortex.getResilience().getMetrics();
+   * console.log('Circuit state:', metrics.circuitBreaker.state);
+   * console.log('Queue size:', metrics.queue.total);
+   *
+   * // Reset all resilience state (use with caution)
+   * cortex.getResilience().reset();
+   * ```
+   */
+  getResilience(): ResilienceLayer {
+    return this.resilienceLayer;
+  }
+
+  /**
+   * Get current resilience metrics
+   *
+   * Convenience method equivalent to `getResilience().getMetrics()`
+   */
+  getResilienceMetrics(): ResilienceMetrics {
+    return this.resilienceLayer.getMetrics();
+  }
+
+  /**
+   * Check if the SDK is healthy and accepting requests
+   *
+   * Returns false if circuit breaker is open
+   */
+  isHealthy(): boolean {
+    return this.resilienceLayer.isHealthy();
+  }
+
+  /**
+   * Close the connection to Convex and stop all workers
    */
   close(): void {
+    // Stop graph sync worker
     if (this.syncWorker) {
       this.syncWorker.stop();
     }
+
+    // Stop resilience layer queue processor
+    this.resilienceLayer.stopQueueProcessor();
+
+    void this.client.close();
+  }
+
+  /**
+   * Gracefully shutdown the SDK
+   *
+   * Waits for pending operations to complete before closing.
+   *
+   * @param timeoutMs Maximum time to wait (default: 30000ms)
+   */
+  async shutdown(timeoutMs: number = 30000): Promise<void> {
+    // Stop graph sync worker
+    if (this.syncWorker) {
+      this.syncWorker.stop();
+    }
+
+    // Gracefully shutdown resilience layer
+    await this.resilienceLayer.shutdown(timeoutMs);
+
+    // Close Convex client
     void this.client.close();
   }
 }
@@ -168,3 +294,30 @@ export { GraphSyncWorker } from "./graph/worker/GraphSyncWorker";
 export { UserValidationError } from "./users";
 export { GovernanceValidationError } from "./governance";
 export { A2AValidationError } from "./a2a";
+
+// Re-export resilience types and presets
+export {
+  ResilienceLayer,
+  ResiliencePresets,
+  TokenBucket,
+  Semaphore,
+  PriorityQueue,
+  CircuitBreaker,
+  CircuitOpenError,
+  QueueFullError,
+  AcquireTimeoutError,
+  RateLimitExceededError,
+  getPriority,
+  isCritical,
+  OPERATION_PRIORITIES,
+} from "./resilience";
+export type {
+  ResilienceConfig,
+  ResilienceMetrics,
+  Priority,
+  CircuitState,
+  RateLimiterConfig,
+  ConcurrencyConfig,
+  CircuitBreakerConfig,
+  QueueConfig,
+} from "./resilience";
