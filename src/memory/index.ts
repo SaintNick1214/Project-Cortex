@@ -340,33 +340,58 @@ export class MemoryAPI {
       { syncToGraph: shouldSyncToGraph },
     );
 
-    // Step 7: Store agent response in Vector with conversationRef
-    const agentMemory = await this.vector.store(
-      params.memorySpaceId,
-      {
-        content: agentContent,
-        contentType: "raw", // Agent content is always raw, only user content gets summarized
-        participantId: params.participantId, // Hive Mode tracking
-        embedding: agentEmbedding,
-        userId: params.userId,
-        messageRole: "agent", // NEW: Mark as agent message for semantic search weighting
-        source: {
-          type: "conversation",
+    // Step 7: Store agent response in Vector (only if it contains meaningful info)
+    // Detect if agent response is just an acknowledgment (not a fact worth indexing)
+    // Acknowledgments pollute semantic search with "I've noted", "Got it", etc.
+    const agentContentLower = agentContent.toLowerCase();
+    const acknowledgmentPhrases = [
+      "got it",
+      "i've noted",
+      "i'll remember",
+      "noted",
+      "understood",
+      "i'll set",
+      "i'll call you",
+      "will do",
+      "sure thing",
+      "okay,",
+      "ok,",
+    ];
+    const isAcknowledgment =
+      agentContent.length < 80 &&
+      acknowledgmentPhrases.some((phrase) => agentContentLower.includes(phrase));
+
+    // Only store agent response in vector if it contains meaningful information
+    // Pure acknowledgments are stored in ACID (conversation history) but not vector
+    let agentMemory: MemoryEntry | undefined;
+    if (!isAcknowledgment) {
+      agentMemory = await this.vector.store(
+        params.memorySpaceId,
+        {
+          content: agentContent,
+          contentType: "raw", // Agent content is always raw, only user content gets summarized
+          participantId: params.participantId, // Hive Mode tracking
+          embedding: agentEmbedding,
           userId: params.userId,
-          userName: params.userName,
-          timestamp: now + 1,
+          messageRole: "agent", // Mark as agent message for semantic search weighting
+          source: {
+            type: "conversation",
+            userId: params.userId,
+            userName: params.userName,
+            timestamp: now + 1,
+          },
+          conversationRef: {
+            conversationId: params.conversationId,
+            messageIds: [agentMsg.messages[agentMsg.messages.length - 1].id],
+          },
+          metadata: {
+            importance: params.importance || 50,
+            tags: params.tags || [],
+          },
         },
-        conversationRef: {
-          conversationId: params.conversationId,
-          messageIds: [agentMsg.messages[agentMsg.messages.length - 1].id],
-        },
-        metadata: {
-          importance: params.importance || 50,
-          tags: params.tags || [],
-        },
-      },
-      { syncToGraph: shouldSyncToGraph },
-    );
+        { syncToGraph: shouldSyncToGraph },
+      );
+    }
 
     // Step 8: Extract and store facts (if extraction function provided)
     const extractedFacts: FactRecord[] = [];
@@ -419,6 +444,11 @@ export class MemoryAPI {
       }
     }
 
+    // Filter out undefined memories (agentMemory is undefined if it was an acknowledgment)
+    const storedMemories = [userMemory, agentMemory].filter(
+      (m): m is MemoryEntry => m !== undefined,
+    );
+
     return {
       conversation: {
         messageIds: [
@@ -427,7 +457,7 @@ export class MemoryAPI {
         ],
         conversationId: params.conversationId,
       },
-      memories: [userMemory, agentMemory],
+      memories: storedMemories,
       facts: extractedFacts,
     };
   }

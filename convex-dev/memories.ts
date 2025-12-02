@@ -420,22 +420,36 @@ export const search = query({
       results = results.map((m: any) => {
         let score = m._score ?? 0;
 
-        // Boost user messages by 20% for better semantic ranking
-        // This helps queries like "what should I address the user as" find user names
-        // instead of agent responses like "I've noted your email address"
+        // Role-based weighting for semantic search
+        // User messages contain facts ABOUT the user (names, preferences, etc.)
+        // Agent responses are typically acknowledgments, not facts worth searching
         if (m.messageRole === "user") {
-          score *= 1.2; // 20% boost for user messages
+          score *= 1.25; // 25% boost for user messages
+        } else if (m.messageRole === "agent") {
+          // Agent acknowledgments like "I've noted your email" are noise
+          // Only penalize if content looks like an acknowledgment (short, no real facts)
+          const content = (m.content || "").toLowerCase();
+          const isAcknowledgment =
+            content.length < 60 &&
+            (content.includes("got it") ||
+              content.includes("i've noted") ||
+              content.includes("i'll remember") ||
+              content.includes("noted") ||
+              content.includes("understood") ||
+              content.includes("i'll set") ||
+              content.includes("i'll call"));
+          if (isAcknowledgment) {
+            score *= 0.5; // 50% penalty for pure acknowledgments
+          }
         }
 
-        // NEW: Category-based boosting for bullet-proof retrieval
-        // Boost facts that match the query's category by 30%
-        // This ensures "addressing_preference" facts rank highest for "what to call" queries
+        // Category-based boosting for bullet-proof retrieval
+        // Boost facts that match the query's category
         if (args.queryCategory && m.factCategory === args.queryCategory) {
           score *= 1.3; // 30% boost for matching category
         }
 
         // Additional boost for enriched content (facts with semantic context)
-        // These are more retrieval-optimized and should rank higher
         if (m.enrichedContent) {
           score *= 1.1; // 10% boost for enriched facts
         }
