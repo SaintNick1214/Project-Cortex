@@ -112,7 +112,9 @@ describe("Memory Convenience API (Layer 3)", () => {
         memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: testConversationId,
         userMessage: "The password is Blue",
-        agentResponse: "I'll remember that password!",
+        // Agent response with meaningful content (not just acknowledgment)
+        agentResponse:
+          "The password Blue has been securely stored in your vault",
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
       });
@@ -145,10 +147,14 @@ describe("Memory Convenience API (Layer 3)", () => {
         memorySpaceId: TEST_MEMSPACE_ID,
         conversationId: testConversationId,
         userMessage: "Remember this important fact",
-        agentResponse: "Got it!",
+        // Agent response with meaningful content (not just acknowledgment)
+        agentResponse: "This important fact has been stored for future reference",
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
       });
+
+      // Verify both memories created (agent response has meaningful content)
+      expect(result.memories).toHaveLength(2);
 
       // Check user memory
       const userMemory = result.memories[0];
@@ -165,6 +171,27 @@ describe("Memory Convenience API (Layer 3)", () => {
       expect(agentMemory.conversationRef!.messageIds).toContain(
         result.conversation.messageIds[1],
       );
+    });
+
+    it("skips vector storage for agent acknowledgments (noise filtering)", async () => {
+      // Test that pure acknowledgments like "Got it!" don't create vector memories
+      // This improves semantic search quality by filtering noise
+      const result = await cortex.memory.remember({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        conversationId: testConversationId,
+        userMessage: "My favorite color is purple",
+        agentResponse: "Got it!", // Pure acknowledgment - no semantic value
+        userId: TEST_USER_ID,
+        userName: TEST_USER_NAME,
+      });
+
+      // Only user memory should be created (agent acknowledgment filtered)
+      expect(result.memories).toHaveLength(1);
+      expect(result.memories[0].content).toContain("purple");
+      expect(result.memories[0].messageRole).toBe("user");
+
+      // ACID still has both messages (for conversation history)
+      expect(result.conversation.messageIds).toHaveLength(2);
     });
 
     it("handles embedding generation callback", async () => {
