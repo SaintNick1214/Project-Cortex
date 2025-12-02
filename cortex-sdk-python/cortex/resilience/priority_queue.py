@@ -11,16 +11,16 @@ Features:
 """
 
 import time
-from typing import Dict, List, Optional, TypeVar, Generic
+from typing import Dict, List, Optional, TypeVar
 
 from .types import (
-    Priority,
+    DEFAULT_QUEUE_SIZES,
     PRIORITY_ORDER,
+    Priority,
     QueueConfig,
     QueuedRequest,
-    QueueMetrics,
     QueueFullError,
-    DEFAULT_QUEUE_SIZES,
+    QueueMetrics,
 )
 
 T = TypeVar("T")

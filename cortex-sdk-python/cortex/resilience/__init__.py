@@ -22,39 +22,38 @@ Usage:
 
 import asyncio
 import time
-import uuid
-from typing import Any, Awaitable, Callable, Optional, TypeVar
+from typing import Awaitable, Callable, Optional, TypeVar
 
 from .circuit_breaker import CircuitBreaker
-from .priorities import get_priority, is_critical, OPERATION_PRIORITIES
+from .priorities import OPERATION_PRIORITIES, get_priority, is_critical
 from .priority_queue import PriorityQueue
 from .semaphore import Semaphore
 from .token_bucket import TokenBucket
 from .types import (
-    # Config types
-    ResilienceConfig,
-    RateLimiterConfig,
-    ConcurrencyConfig,
-    CircuitBreakerConfig,
-    QueueConfig,
-    # Metric types
-    ResilienceMetrics,
-    RateLimiterMetrics,
-    ConcurrencyMetrics,
-    CircuitBreakerMetrics,
-    QueueMetrics,
-    # Other types
-    Priority,
-    CircuitState,
-    QueuedRequest,
-    SemaphorePermit,
-    PRIORITY_ORDER,
     DEFAULT_QUEUE_SIZES,
+    PRIORITY_ORDER,
+    AcquireTimeoutError,
+    CircuitBreakerConfig,
+    CircuitBreakerMetrics,
     # Errors
     CircuitOpenError,
+    CircuitState,
+    ConcurrencyConfig,
+    ConcurrencyMetrics,
+    # Other types
+    Priority,
+    QueueConfig,
+    QueuedRequest,
     QueueFullError,
-    AcquireTimeoutError,
+    QueueMetrics,
+    RateLimiterConfig,
+    RateLimiterMetrics,
     RateLimitExceededError,
+    # Config types
+    ResilienceConfig,
+    # Metric types
+    ResilienceMetrics,
+    SemaphorePermit,
 )
 
 # Re-export all types and classes
@@ -394,12 +393,13 @@ class ResilienceLayer:
 
         try:
             self._queue.enqueue(request)
-        except QueueFullError as e:
+        except QueueFullError:
             if self._config.on_queue_full:
                 self._config.on_queue_full(priority)
             raise
 
-        return await future
+        result = await future
+        return result  # type: ignore[no-any-return]
 
     async def _process_queue_batch(self) -> None:
         """Process queued requests."""

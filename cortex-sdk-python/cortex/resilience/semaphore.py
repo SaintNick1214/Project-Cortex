@@ -12,13 +12,13 @@ Behavior:
 """
 
 import asyncio
-from typing import Optional, List, Tuple
+from typing import List, Optional, Tuple
 
 from .types import (
+    AcquireTimeoutError,
     ConcurrencyConfig,
     ConcurrencyMetrics,
     SemaphorePermit,
-    AcquireTimeoutError,
 )
 
 
@@ -78,7 +78,7 @@ class Semaphore:
         # Set timeout if specified
         if effective_timeout > 0:
 
-            def on_timeout():
+            def on_timeout() -> None:
                 if not future.done():
                     # Remove from waiting list
                     self._waiting = [
@@ -96,7 +96,8 @@ class Semaphore:
         self._waiting.append((future, timer_handle))
 
         try:
-            return await future
+            result = await future
+            return result  # type: ignore[no-any-return]
         except asyncio.CancelledError:
             # Remove from waiting list on cancellation
             self._waiting = [(f, h) for f, h in self._waiting if f is not future]
@@ -122,7 +123,7 @@ class Semaphore:
         """Create a permit object with release function."""
         released = False
 
-        def release():
+        def release() -> None:
             nonlocal released
             if released:
                 return

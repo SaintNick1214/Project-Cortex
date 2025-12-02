@@ -8,10 +8,8 @@ Type definitions for the overload protection system including:
 - Circuit Breaker
 """
 
-from dataclasses import dataclass, field
-from enum import Enum
+from dataclasses import dataclass
 from typing import Any, Awaitable, Callable, Dict, List, Literal, Optional
-
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Priority Types

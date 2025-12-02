@@ -171,6 +171,7 @@ export const update = mutation({
       factId: newFactId,
       memorySpaceId: existing.memorySpaceId,
       participantId: existing.participantId,
+      userId: existing.userId, // GDPR compliance - preserve user link across versions
       fact: args.fact || existing.fact,
       factType: existing.factType,
       subject: existing.subject,
@@ -201,7 +202,7 @@ export const update = mutation({
       version: existing.version + 1,
       supersedes: existing.factId, // Link to previous
       supersededBy: undefined,
-      createdAt: now,
+      createdAt: existing.createdAt, // Preserve original creation time across versions
       updatedAt: now,
     });
 
