@@ -1449,21 +1449,25 @@ describe("Conversations API (Layer 1a)", () => {
         }
       });
 
-      it("deletes multiple conversations by userId", async () => {
-        const result = await cortex.conversations.deleteMany({
-          userId: bulkUser,
-        });
+      it(
+        "deletes multiple conversations by userId",
+        async () => {
+          const result = await cortex.conversations.deleteMany({
+            userId: bulkUser,
+          });
 
-        expect(result.deleted).toBeGreaterThanOrEqual(5);
-        expect(result.conversationIds).toHaveLength(result.deleted);
+          expect(result.deleted).toBeGreaterThanOrEqual(5);
+          expect(result.conversationIds).toHaveLength(result.deleted);
 
-        // Verify deletion
-        const remaining = await cortex.conversations.list({
-          userId: bulkUser,
-        });
+          // Verify deletion
+          const remaining = await cortex.conversations.list({
+            userId: bulkUser,
+          });
 
-        expect(remaining.length).toBe(0);
-      });
+          expect(remaining.length).toBe(0);
+        },
+        60000,
+      ); // Extended timeout for bulk delete with resilience layer
 
       it("returns count of messages deleted", async () => {
         // Use test-scoped IDs
