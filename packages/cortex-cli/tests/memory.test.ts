@@ -20,13 +20,21 @@ describe("CLI Memory Commands", () => {
 
     // Clean up any leftover test data
     await cleanupTestData(TEST_PREFIX);
-  });
+  }, 60000); // 60 second timeout for setup
 
   afterAll(async () => {
-    // Clean up test data
-    await cleanupTestData(TEST_PREFIX);
-    cortex.close();
-  });
+    try {
+      // Clean up test data
+      await cleanupTestData(TEST_PREFIX);
+    } finally {
+      // Ensure client is closed even if cleanup fails
+      try {
+        cortex.close();
+      } catch (error) {
+        console.warn('⚠️  Error closing cortex client:', error);
+      }
+    }
+  }, 60000); // 60 second timeout for cleanup
 
   describe("memory operations via SDK (underlying CLI operations)", () => {
     let testConversationId: string;

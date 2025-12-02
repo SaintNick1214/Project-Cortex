@@ -157,13 +157,14 @@ async def test_cleanup_all(cortex_client, test_ids, cleanup_helper):
     user_id = generate_test_user_id()
     await cortex_client.users.update(user_id, {"name": "Test User"})
 
-    # Purge all
-    result = await cleanup_helper.purge_all()
+    # Purge all data in this test's memory space only
+    # IMPORTANT: Must provide memory_space_id to avoid deleting other parallel tests' data
+    result = await cleanup_helper.purge_all(memory_space_id)
 
     assert isinstance(result, dict)
     assert "conversations" in result
     assert "users" in result
-    print(f"✓ Purged all test data: {result}")
+    print(f"✓ Purged all test data in {memory_space_id}: {result}")
 
 
 # ============================================================================

@@ -16,12 +16,20 @@ describe("CLI User Commands", () => {
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     await cleanupTestData(TEST_PREFIX);
-  });
+  }, 60000); // 60 second timeout for setup
 
   afterAll(async () => {
-    await cleanupTestData(TEST_PREFIX);
-    cortex.close();
-  });
+    try {
+      await cleanupTestData(TEST_PREFIX);
+    } finally {
+      // Ensure client is closed even if cleanup fails
+      try {
+        cortex.close();
+      } catch (error) {
+        console.warn('⚠️  Error closing cortex client:', error);
+      }
+    }
+  }, 60000); // 60 second timeout for cleanup
 
   describe("users list", () => {
     beforeAll(async () => {
@@ -205,7 +213,7 @@ describe("CLI User Commands", () => {
       } catch {
         // Ignore
       }
-    });
+    }, 60000); // 60 second timeout for cascade delete operations
   });
 
   describe("users deleteMany", () => {
