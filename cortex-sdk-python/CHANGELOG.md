@@ -5,6 +5,193 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.16.0] - 2025-12-01
+
+### 🛡️ Resilience Layer - Production-Ready Overload Protection
+
+**Complete implementation of a 4-layer resilience system protecting against server overload during extreme traffic bursts.**
+
+#### ✨ New Features
+
+**1. Token Bucket Rate Limiter**
+
+Smooths out bursty traffic into a sustainable flow:
+
+```python
+from cortex import Cortex, CortexConfig
+from cortex.resilience import ResilienceConfig, RateLimiterConfig
+
+cortex = Cortex(CortexConfig(
+    convex_url=os.getenv("CONVEX_URL"),
+    resilience=ResilienceConfig(
+        rate_limiter=RateLimiterConfig(
+            bucket_size=200,     # Allow bursts up to 200
+            refill_rate=100,     # Sustain 100 ops/sec
+        )
+    )
+))
+```
+
+**2. Concurrency Limiter (Semaphore)**
+
+Controls the number of concurrent in-flight requests:
+
+```python
+resilience=ResilienceConfig(
+    concurrency=ConcurrencyConfig(
+        max_concurrent=20,    # Max 20 parallel requests
+        queue_size=1000,      # Queue up to 1000 pending
+        timeout=30.0,         # 30s timeout for queued requests
+    )
+)
+```
+
+**3. Priority Queue**
+
+In-memory queue that prioritizes critical operations:
+
+| Priority | Examples | Behavior |
+|----------|----------|----------|
+| `critical` | `users:delete` | Bypass circuit breaker |
+| `high` | `memory:remember`, `facts:store` | Priority processing |
+| `normal` | Most operations | Standard queue |
+| `low` | `memory:search`, `vector:search` | Deferrable |
+| `background` | `governance:simulate` | Lowest priority |
+
+Priorities are **automatically assigned** based on operation name patterns.
+
+**4. Circuit Breaker**
+
+Prevents cascading failures by failing fast when backend is unhealthy:
+
+```python
+resilience=ResilienceConfig(
+    circuit_breaker=CircuitBreakerConfig(
+        failure_threshold=5,   # Open after 5 failures
+        success_threshold=2,   # Close after 2 successes
+        timeout=30.0,          # 30s before half-open retry
+    ),
+    on_circuit_open=lambda failures: print(f"Circuit opened after {failures} failures")
+)
+```
+
+**5. Resilience Presets**
+
+Pre-configured presets for common use cases:
+
+```python
+from cortex.resilience import ResiliencePresets
+
+# Default - balanced for most use cases
+Cortex(CortexConfig(convex_url=url, resilience=ResiliencePresets.default))
+
+# Real-time agent - low latency, smaller buffers
+Cortex(CortexConfig(convex_url=url, resilience=ResiliencePresets.real_time_agent))
+
+# Batch processing - large queues, patient retries
+Cortex(CortexConfig(convex_url=url, resilience=ResiliencePresets.batch_processing))
+
+# Hive mode - many agents, conservative limits
+Cortex(CortexConfig(convex_url=url, resilience=ResiliencePresets.hive_mode))
+
+# Disabled - bypass all protection (not recommended)
+Cortex(CortexConfig(convex_url=url, resilience=ResiliencePresets.disabled))
+```
+
+**6. Metrics & Monitoring**
+
+```python
+metrics = cortex.get_resilience_metrics()
+
+print(f"Rate limiter: {metrics.rate_limiter.available}/{metrics.rate_limiter.bucket_size} tokens")
+print(f"Concurrency: {metrics.concurrency.active}/{metrics.concurrency.max} active")
+print(f"Queue: {metrics.queue.size} pending")
+print(f"Circuit: {metrics.circuit_breaker.state} ({metrics.circuit_breaker.failures} failures)")
+
+# Health check
+is_healthy = cortex.is_healthy()  # False if circuit is open
+```
+
+**7. Graceful Shutdown**
+
+```python
+# Wait for pending operations to complete
+await cortex.shutdown(timeout_s=30.0)
+
+# Or immediate close
+await cortex.close()
+```
+
+#### 📦 New Modules
+
+**Python (`cortex/resilience/`):**
+- `types.py` - Configuration dataclasses and exceptions
+- `token_bucket.py` - Token bucket rate limiter
+- `semaphore.py` - Async semaphore with queue
+- `priorities.py` - Operation priority mapping
+- `priority_queue.py` - Priority-based request queue
+- `circuit_breaker.py` - Circuit breaker pattern
+- `__init__.py` - ResilienceLayer orchestrator and presets
+
+#### 🧪 Testing
+
+- **40 new Python tests** covering all resilience components
+- All existing tests now run through resilience layer by default
+- Integration tests validate end-to-end protection
+
+#### 📚 New Types
+
+```python
+from typing import Literal
+from dataclasses import dataclass
+
+Priority = Literal["critical", "high", "normal", "low", "background"]
+
+@dataclass
+class ResilienceConfig:
+    enabled: bool = True
+    rate_limiter: Optional[RateLimiterConfig] = None
+    concurrency: Optional[ConcurrencyConfig] = None
+    circuit_breaker: Optional[CircuitBreakerConfig] = None
+    queue: Optional[QueueConfig] = None
+    on_circuit_open: Optional[Callable[[int], None]] = None
+    on_circuit_close: Optional[Callable[[], None]] = None
+    on_queue_full: Optional[Callable[[Priority], None]] = None
+
+@dataclass
+class ResilienceMetrics:
+    rate_limiter: RateLimiterMetrics
+    concurrency: ConcurrencyMetrics
+    queue: QueueMetrics
+    circuit_breaker: CircuitBreakerMetrics
+
+# Custom exceptions
+class CircuitOpenError(Exception): ...
+class QueueFullError(Exception): ...
+class AcquireTimeoutError(Exception): ...
+class RateLimitExceededError(Exception): ...
+```
+
+#### 🔄 Backward Compatibility
+
+✅ **Zero Breaking Changes**
+
+- Resilience is **enabled by default** with balanced settings
+- All existing code works without modification
+- Pass `resilience=ResilienceConfig(enabled=False)` to disable
+- Existing tests automatically run through resilience layer
+
+#### 🎯 Production Benefits
+
+- **Burst Protection**: Handle 10x traffic spikes gracefully
+- **Cascade Prevention**: Circuit breaker isolates failures
+- **Priority Handling**: Critical ops (deletes) bypass queue
+- **Graceful Degradation**: Low-priority ops queue during overload
+- **Zero Config**: Works out of the box with sensible defaults
+- **Full Observability**: Metrics for dashboards and alerting
+
+---
+
 ## [0.15.0] - 2025-11-30
 
 ### 🎯 Enriched Fact Extraction - Bullet-Proof Semantic Search

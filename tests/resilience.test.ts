@@ -553,17 +553,17 @@ describe("ResiliencePresets", () => {
 
   test("should have realTimeAgent preset", () => {
     expect(ResiliencePresets.realTimeAgent).toBeDefined();
-    expect(ResiliencePresets.realTimeAgent.concurrency?.maxConcurrent).toBe(10);
+    expect(ResiliencePresets.realTimeAgent.concurrency?.maxConcurrent).toBe(8); // Half of free plan limit
   });
 
   test("should have batchProcessing preset", () => {
     expect(ResiliencePresets.batchProcessing).toBeDefined();
-    expect(ResiliencePresets.batchProcessing.concurrency?.maxConcurrent).toBe(50);
+    expect(ResiliencePresets.batchProcessing.concurrency?.maxConcurrent).toBe(64); // For Professional plan
   });
 
   test("should have hiveMode preset", () => {
     expect(ResiliencePresets.hiveMode).toBeDefined();
-    expect(ResiliencePresets.hiveMode.concurrency?.maxConcurrent).toBe(100);
+    expect(ResiliencePresets.hiveMode.concurrency?.maxConcurrent).toBe(128); // For Professional plan
   });
 
   test("should have disabled preset", () => {

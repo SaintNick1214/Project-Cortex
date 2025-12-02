@@ -945,9 +945,19 @@ describe("Agents API (Coordination Layer)", () => {
   });
 
   describe("unregisterMany()", () => {
+    // Use test-scoped IDs and metadata to avoid parallel run conflicts
+    const bulkAgent1Id = ctx.agentId("bulk-1");
+    const bulkAgent2Id = ctx.agentId("bulk-2");
+    const bulkAgent3Id = ctx.agentId("bulk-3");
+    const testEnvTag = `test-env-${ctx.runId}`;
+    const prodEnvTag = `prod-env-${ctx.runId}`;
+    const experimentalTeam = `experimental-${ctx.runId}`;
+    const coreTeam = `core-${ctx.runId}`;
+    const bulkTestSpace = ctx.memorySpaceId("bulk-test");
+
     beforeEach(async () => {
       // Cleanup any existing test agents
-      const agentIds = ["bulk-agent-1", "bulk-agent-2", "bulk-agent-3"];
+      const agentIds = [bulkAgent1Id, bulkAgent2Id, bulkAgent3Id];
       for (const agentId of agentIds) {
         try {
           await cortex.agents.unregister(agentId);
@@ -959,40 +969,40 @@ describe("Agents API (Coordination Layer)", () => {
       // Wait a bit for cleanup to complete
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      // Register multiple test agents
+      // Register multiple test agents with run-scoped metadata
       await cortex.agents.register({
-        id: "bulk-agent-1",
+        id: bulkAgent1Id,
         name: "Bulk Agent 1",
-        metadata: { environment: "test", team: "experimental" },
+        metadata: { environment: testEnvTag, team: experimentalTeam },
       });
 
       await cortex.agents.register({
-        id: "bulk-agent-2",
+        id: bulkAgent2Id,
         name: "Bulk Agent 2",
-        metadata: { environment: "test", team: "experimental" },
+        metadata: { environment: testEnvTag, team: experimentalTeam },
       });
 
       await cortex.agents.register({
-        id: "bulk-agent-3",
+        id: bulkAgent3Id,
         name: "Bulk Agent 3",
-        metadata: { environment: "production", team: "core" },
+        metadata: { environment: prodEnvTag, team: coreTeam },
       });
     });
 
     it("unregisters multiple agents without cascade", async () => {
       const result = await cortex.agents.unregisterMany(
-        { metadata: { environment: "test" } },
+        { metadata: { environment: testEnvTag } },
         { cascade: false },
       );
 
       expect(result.deleted).toBe(2);
-      expect(result.agentIds).toContain("bulk-agent-1");
-      expect(result.agentIds).toContain("bulk-agent-2");
+      expect(result.agentIds).toContain(bulkAgent1Id);
+      expect(result.agentIds).toContain(bulkAgent2Id);
 
       // Verify unregistered
-      const agent1 = await cortex.agents.get("bulk-agent-1");
-      const agent2 = await cortex.agents.get("bulk-agent-2");
-      const agent3 = await cortex.agents.get("bulk-agent-3");
+      const agent1 = await cortex.agents.get(bulkAgent1Id);
+      const agent2 = await cortex.agents.get(bulkAgent2Id);
+      const agent3 = await cortex.agents.get(bulkAgent3Id);
 
       expect(agent1).toBeNull();
       expect(agent2).toBeNull();
@@ -1001,7 +1011,7 @@ describe("Agents API (Coordination Layer)", () => {
 
     it("dry run preview", async () => {
       const result = await cortex.agents.unregisterMany(
-        { metadata: { team: "experimental" } },
+        { metadata: { team: experimentalTeam } },
         { dryRun: true },
       );
 
@@ -1009,13 +1019,13 @@ describe("Agents API (Coordination Layer)", () => {
       expect(result.agentIds).toHaveLength(2);
 
       // Verify agents still exist
-      const agent1 = await cortex.agents.get("bulk-agent-1");
+      const agent1 = await cortex.agents.get(bulkAgent1Id);
       expect(agent1).not.toBeNull();
     });
 
     it("handles empty result set gracefully", async () => {
       const result = await cortex.agents.unregisterMany(
-        { metadata: { team: "nonexistent" } },
+        { metadata: { team: `nonexistent-${ctx.runId}` } },
         { cascade: false },
       );
 
@@ -1027,13 +1037,13 @@ describe("Agents API (Coordination Layer)", () => {
       // First clean up any existing memories for bulk-agent-1
       try {
         const existingMemories = await cortex.vector.list({
-          memorySpaceId: "test-space",
+          memorySpaceId: bulkTestSpace,
         });
         const existingAgentMemories = existingMemories.filter(
-          (m) => m.participantId === "bulk-agent-1",
+          (m) => m.participantId === bulkAgent1Id,
         );
         for (const memory of existingAgentMemories) {
-          await cortex.vector.delete("test-space", memory.memoryId);
+          await cortex.vector.delete(bulkTestSpace, memory.memoryId);
         }
       } catch (_error) {
         // Ignore cleanup errors
@@ -1041,36 +1051,36 @@ describe("Agents API (Coordination Layer)", () => {
 
       // Create data for bulk-agent-1
       const conv = await cortex.conversations.create({
-        memorySpaceId: "test-space",
+        memorySpaceId: bulkTestSpace,
         type: "user-agent",
         participants: {
-          userId: "test-user",
-          participantId: "bulk-agent-1",
+          userId: ctx.userId("bulk-test"),
+          participantId: bulkAgent1Id,
         },
       });
 
       await cortex.memory.remember({
-        memorySpaceId: "test-space",
-        participantId: "bulk-agent-1",
+        memorySpaceId: bulkTestSpace,
+        participantId: bulkAgent1Id,
         conversationId: conv.conversationId,
         userMessage: "Test",
         agentResponse: "OK",
-        userId: "test-user",
+        userId: ctx.userId("bulk-test"),
         userName: "Test User",
       });
 
       // Verify memory was created
       const beforeMemories = await cortex.vector.list({
-        memorySpaceId: "test-space",
+        memorySpaceId: bulkTestSpace,
       });
       const beforeAgentMemories = beforeMemories.filter(
-        (m) => m.participantId === "bulk-agent-1",
+        (m) => m.participantId === bulkAgent1Id,
       );
       expect(beforeAgentMemories.length).toBeGreaterThan(0);
 
-      // Unregister with cascade
+      // Unregister with cascade - use scoped metadata filter
       const result = await cortex.agents.unregisterMany(
-        { metadata: { environment: "test" } },
+        { metadata: { environment: testEnvTag } },
         { cascade: true },
       );
 
