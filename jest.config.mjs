@@ -19,7 +19,7 @@ export default {
     "^@/(.*)$": "<rootDir>/src/$1",
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },
-  testTimeout: 30000, // 30 seconds for Convex operations
+  testTimeout: 60000, // 60 seconds for Convex operations with resilience layer retries
   forceExit: true, // Exit after tests complete (helps with Convex client cleanup)
   extensionsToTreatAsEsm: [".ts"],
   transform: {
