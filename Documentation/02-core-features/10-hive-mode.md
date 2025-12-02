@@ -786,4 +786,4 @@ await cortex.memory.remember({
 - [Context Chains](./04-context-chains.md) - Cross-space delegation
 - [MCP Server](./09-mcp-server.md) - Hive Mode for MCP integration
 
-**Questions?** Check the [FAQ](../11-reference/01-faq.md) or ask in [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).

@@ -544,11 +544,11 @@ console.log(`- Cost savings: $${stats.costSavings}`);
 
 ## Next Steps
 
-- **[Immutable Store API](./10-immutable-store-api.md)** - Versioned shared data
-- **[Mutable Store API](./11-mutable-store-api.md)** - Live shared data
+- **[Immutable Store API](./07-immutable-store-api.md)** - Versioned shared data
+- **[Mutable Store API](./08-mutable-store-api.md)** - Live shared data
 - **[Memory Operations API](./02-memory-operations.md)** - Vector layer
-- **[Conversation Operations API](./06-conversation-operations-api.md)** - Private conversations
+- **[Conversation Operations API](./03-conversation-operations.md)** - Private conversations
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

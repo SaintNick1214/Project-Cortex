@@ -1363,13 +1363,12 @@ const updates = await cortex.memory.search("team-engineering", "code review", {
 
 Now that you understand the core concepts:
 
-1. **[See Examples](../06-recipes/01-simple-chatbot.md)** - Real-world implementations
-2. **[API Reference](../03-api-reference/02-memory-operations.md)** - Complete API documentation
-3. **[Architecture](../04-architecture/01-system-overview.md)** - Deep dive into how it works
-4. **[Advanced Topics](../07-advanced-topics/01-graph-lite-traversal.md)** - Graph queries, fact extraction, and optimization
-5. **[Hive Mode Guide](../02-core-features/10-hive-mode.md)** - Master multi-tool memory sharing
-6. **[Infinite Context](../04-architecture/10-infinite-context.md)** - Never run out of context again
+1. **[API Reference](../03-api-reference/02-memory-operations.md)** - Complete API documentation
+2. **[Architecture](../04-architecture/01-system-overview.md)** - Deep dive into how it works
+3. **[Advanced Topics](../07-advanced-topics/01-graph-lite-traversal.md)** - Graph queries, fact extraction, and optimization
+4. **[Hive Mode Guide](../02-core-features/10-hive-mode.md)** - Master multi-tool memory sharing
+5. **[Infinite Context](../04-architecture/10-infinite-context.md)** - Never run out of context again
 
 ---
 
-**Questions?** Check the [FAQ](../11-reference/01-faq.md) or ask in [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).

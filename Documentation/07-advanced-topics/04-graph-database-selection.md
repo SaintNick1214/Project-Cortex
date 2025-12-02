@@ -833,7 +833,6 @@ g.V().hasLabel('Agent').has('team', 'engineering')
 
 - Growing community (~2K GitHub stars)
 - Good official documentation
-- Active Discord community
 - Memgraph Lab (visualization)
 - MAGE library (algorithms)
 
@@ -865,4 +864,4 @@ Or go managed:
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

@@ -8,7 +8,7 @@ Official integrations for Cortex Memory with popular AI frameworks and tools.
 
 **Status**: ✅ Complete (v0.2.0)  
 **Package**: `@cortexmemory/vercel-ai-provider`  
-**Documentation**: [Vercel AI SDK Integration](./vercel-ai-sdk/)
+**Documentation**: See [Getting Started](./vercel-ai-sdk/getting-started.md) guide
 
 Add persistent memory to Next.js applications with Vercel AI SDK:
 
@@ -96,6 +96,5 @@ Want an integration with your favorite framework?
 
 ## See Also
 
-- [Main Documentation](../00-README.md)
-- [Core Features](../02-core-features/)
-- [API Reference](../03-api-reference/)
+- [Memory Spaces](../02-core-features/01-memory-spaces.md)
+- [API Reference](../03-api-reference/01-overview.md)

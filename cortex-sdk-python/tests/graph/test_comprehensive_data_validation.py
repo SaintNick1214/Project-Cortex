@@ -319,8 +319,9 @@ class TestGraphDataValidation:
 
 
 @pytest.mark.asyncio
+@pytest.mark.skip(reason="Utility function - not safe for parallel execution. Run manually: pytest -k test_clear_neo4j_database --run-utilities")
 async def test_clear_neo4j_database():
-    """Utility: Clear Neo4j test database"""
+    """Utility: Clear Neo4j test database - SKIP IN PARALLEL RUNS"""
     adapter = CypherGraphAdapter()
     await adapter.connect(
         GraphConnectionConfig(uri=NEO4J_URI, username=NEO4J_USER, password=NEO4J_PASSWORD)
@@ -337,8 +338,9 @@ async def test_clear_neo4j_database():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skip(reason="Utility function - not safe for parallel execution. Run manually: pytest -k test_clear_memgraph_database --run-utilities")
 async def test_clear_memgraph_database():
-    """Utility: Clear Memgraph test database"""
+    """Utility: Clear Memgraph test database - SKIP IN PARALLEL RUNS"""
     adapter = CypherGraphAdapter()
     await adapter.connect(
         GraphConnectionConfig(uri=MEMGRAPH_URI, username=MEMGRAPH_USER, password=MEMGRAPH_PASSWORD)

@@ -1043,8 +1043,6 @@ await cortex.contexts.create({ purpose, memorySpaceId, userId });
 ### Community
 
 - **GitHub Discussions** - Ask questions, share patterns
-- **Discord** - Real-time help in #help channel
-- **Examples** - See working code in [Recipes](../06-recipes/)
 
 ### Found a Bug?
 
@@ -1077,4 +1075,4 @@ await cortex.contexts.create({ purpose, memorySpaceId, userId });
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

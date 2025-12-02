@@ -702,7 +702,7 @@ await cortex.memory.remember({
 **See Also:**
 
 - [Helper Functions](../02-core-features/01-memory-spaces.md#helper-store-from-conversation-recommended)
-- [Conversation Operations](./04-conversation-operations.md) - Managing ACID conversations
+- [Conversation Operations](./03-conversation-operations.md) - Managing ACID conversations
 
 ---
 
@@ -2411,7 +2411,7 @@ All memory operation errors:
 
 **See Also:**
 
-- [Error Handling Guide](./09-error-handling.md)
+- [Error Handling Guide](./12-error-handling.md)
 
 ---
 
@@ -2425,4 +2425,4 @@ All memory operation errors:
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

@@ -653,7 +653,7 @@ async def test_count_agents(cortex_client, test_ids):
 
 
 @pytest.mark.asyncio
-async def test_unregister_many_without_cascade(cortex_client):
+async def test_unregister_many_without_cascade(cortex_client, ctx):
     """
     Test bulk unregistering agents without cascade.
 
@@ -661,83 +661,95 @@ async def test_unregister_many_without_cascade(cortex_client):
     """
     from cortex import UnregisterAgentOptions
 
+    # Use test-scoped IDs to avoid parallel conflicts
+    agent1_id = ctx.agent_id("bulk-1")
+    agent2_id = ctx.agent_id("bulk-2")
+    agent3_id = ctx.agent_id("bulk-3")
+    # Use test-scoped metadata tags
+    test_env_tag = f"test-env-{ctx.run_id}"
+    prod_env_tag = f"prod-env-{ctx.run_id}"
+
     # Register multiple test agents
     await cortex_client.agents.register(
         AgentRegistration(
-            id="bulk-py-agent-1",
+            id=agent1_id,
             name="Bulk Test 1",
-            metadata={"environment": "test", "team": "experimental"},
+            metadata={"environment": test_env_tag, "team": "experimental"},
         )
     )
 
     await cortex_client.agents.register(
         AgentRegistration(
-            id="bulk-py-agent-2",
+            id=agent2_id,
             name="Bulk Test 2",
-            metadata={"environment": "test", "team": "experimental"},
+            metadata={"environment": test_env_tag, "team": "experimental"},
         )
     )
 
     await cortex_client.agents.register(
         AgentRegistration(
-            id="bulk-py-agent-3",
+            id=agent3_id,
             name="Bulk Test 3",
-            metadata={"environment": "production", "team": "core"},
+            metadata={"environment": prod_env_tag, "team": "core"},
         )
     )
 
-    # Unregister agents with environment=test
+    # Unregister agents with our test-scoped environment tag
     result = await cortex_client.agents.unregister_many(
-        filters={"metadata": {"environment": "test"}},
+        filters={"metadata": {"environment": test_env_tag}},
         options=UnregisterAgentOptions(cascade=False),
     )
 
     assert result["deleted"] == 2
-    assert "bulk-py-agent-1" in result["agent_ids"]
-    assert "bulk-py-agent-2" in result["agent_ids"]
+    assert agent1_id in result["agent_ids"]
+    assert agent2_id in result["agent_ids"]
 
     # Verify unregistered
-    agent1_check = await cortex_client.agents.get("bulk-py-agent-1")
-    agent2_check = await cortex_client.agents.get("bulk-py-agent-2")
-    agent3_check = await cortex_client.agents.get("bulk-py-agent-3")
+    agent1_check = await cortex_client.agents.get(agent1_id)
+    agent2_check = await cortex_client.agents.get(agent2_id)
+    agent3_check = await cortex_client.agents.get(agent3_id)
 
     assert agent1_check is None
     assert agent2_check is None
     assert agent3_check is not None  # Not in filter
 
     # Cleanup
-    await cortex_client.agents.unregister("bulk-py-agent-3")
+    await cortex_client.agents.unregister(agent3_id)
 
 
 @pytest.mark.asyncio
-async def test_unregister_many_dry_run(cortex_client):
+async def test_unregister_many_dry_run(cortex_client, ctx):
     """
     Test dry run for bulk unregister.
     """
     from cortex import UnregisterAgentOptions
 
+    # Use test-scoped IDs and metadata
+    agent_id = ctx.agent_id("dry-run")
+    team_tag = f"test-team-{ctx.run_id}"
+
     # Register test agent
     await cortex_client.agents.register(
         AgentRegistration(
-            id="dry-run-py-agent",
+            id=agent_id,
             name="Dry Run Test",
-            metadata={"team": "test"},
+            metadata={"team": team_tag},
         )
     )
 
-    # Dry run
+    # Dry run with test-scoped metadata filter
     result = await cortex_client.agents.unregister_many(
-        filters={"metadata": {"team": "test"}},
+        filters={"metadata": {"team": team_tag}},
         options=UnregisterAgentOptions(dry_run=True),
     )
 
     assert result["deleted"] == 0
     assert len(result["agent_ids"]) == 1
-    assert "dry-run-py-agent" in result["agent_ids"]
+    assert agent_id in result["agent_ids"]
 
     # Verify agent still exists
-    agent = await cortex_client.agents.get("dry-run-py-agent")
+    agent = await cortex_client.agents.get(agent_id)
     assert agent is not None
 
     # Cleanup
-    await cortex_client.agents.unregister("dry-run-py-agent")
+    await cortex_client.agents.unregister(agent_id)

@@ -450,9 +450,10 @@ async def test_accepts_custom_conversation_id(cortex_client, test_memory_space_i
 
 
 @pytest.mark.asyncio
-async def test_throws_error_for_duplicate_conversation_id(cortex_client, test_memory_space_id, cleanup_helper):
+async def test_throws_error_for_duplicate_conversation_id(cortex_client, test_memory_space_id, ctx, cleanup_helper):
     """Test duplicate conversationId error. Port of: conversations.test.ts - line 135"""
-    conversation_id = "conv-duplicate-test-python"
+    # Use test-scoped conversation ID to avoid parallel conflicts
+    conversation_id = ctx.conversation_id("duplicate-test")
 
     await cortex_client.conversations.create(
         CreateConversationInput(
@@ -1084,9 +1085,10 @@ async def test_deletion_propagates_to_all_read_operations(cortex_client, test_me
 
 
 @pytest.mark.asyncio
-async def test_handles_special_characters_in_conversation_id(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
+async def test_handles_special_characters_in_conversation_id(cortex_client, test_memory_space_id, test_user_id, ctx, cleanup_helper):
     """Test special characters in conversationId. Port of: conversations.test.ts - line 1240"""
-    special_id = "conv_test-123.special-chars"
+    # Use ctx for unique ID while still testing special characters
+    special_id = f"conv_test-{ctx.run_id}.special-chars"
 
     conv = await cortex_client.conversations.create(
         CreateConversationInput(

@@ -1151,8 +1151,8 @@ See **[Fact Integration](./11-fact-integration.md)** for complete documentation 
 - **[User Profiles](./03-user-profiles.md)** - Manage user context across agents
 - **[Context Chains](./04-context-chains.md)** - Hierarchical agent coordination
 - **[Fact Integration](./11-fact-integration.md)** - Extract structured knowledge from conversations
-- **[API Reference](../03-api-reference/06-search-operations.md)** - Complete search API
+- **[Memory Operations API](../03-api-reference/02-memory-operations.md)** - Complete API reference
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

@@ -1621,7 +1621,7 @@ All A2A operation errors:
 
 **See Also:**
 
-- [Error Handling Guide](./09-error-handling.md)
+- [Error Handling Guide](./12-error-handling.md)
 
 ---
 
@@ -1634,4 +1634,4 @@ All A2A operation errors:
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

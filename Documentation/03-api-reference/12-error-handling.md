@@ -1314,9 +1314,7 @@ const cortex = new Cortex({
 ## Next Steps
 
 - **[Memory Operations API](./02-memory-operations.md)** - Using Cortex APIs
-- **[Troubleshooting Guide](../../11-reference/02-troubleshooting.md)** - Common issues
-- **[FAQ](../../11-reference/01-faq.md)** - Frequently asked questions
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

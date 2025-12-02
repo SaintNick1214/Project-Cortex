@@ -2107,7 +2107,7 @@ All user operation errors:
 
 **See Also:**
 
-- [Error Handling Guide](./09-error-handling.md)
+- [Error Handling Guide](./12-error-handling.md)
 
 ---
 
@@ -2115,9 +2115,9 @@ All user operation errors:
 
 - **[Context Operations API](./05-context-operations.md)** - Context chain management
 - **[A2A Communication API](./06-a2a-communication.md)** - Agent-to-agent messaging
-- **[Conversation Operations API](./07-conversation-operations.md)** - ACID conversation management
-- **[Types & Interfaces](./08-types-interfaces.md)** - Complete TypeScript definitions
+- **[Conversation Operations API](./03-conversation-operations.md)** - ACID conversation management
+- **[Types & Interfaces](./11-types-interfaces.md)** - Complete TypeScript definitions
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions) or [Discord](https://discord.gg/cortex).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
