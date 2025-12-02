@@ -204,8 +204,8 @@ async def test_memory_facts_linkage(cortex_client, test_ids, cleanup_helper):
             memory_space_id=memory_space_id,
             conversation_id=conversation_id,
             user_message="I love pizza",
-            # Agent response with meaningful content (not just acknowledgment)
-            agent_response="I'll remember that you love pizza for future restaurant recommendations",
+            # Agent response must be >80 chars and not contain filtered phrases like "i'll remember"
+            agent_response="That's great! Pizza is a wonderful choice - I've added this food preference to your profile for personalized restaurant suggestions.",
             user_id=user_id,
             user_name="Tester",
             extract_facts=extract_facts,
