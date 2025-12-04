@@ -611,7 +611,9 @@ describe("Memory Spaces Registry API", () => {
 
     it("throws error for non-existent space", async () => {
       await expect(
-        cortex.memorySpaces.update(`nonexistent-${ctx.runId}`, { name: "Test" }),
+        cortex.memorySpaces.update(`nonexistent-${ctx.runId}`, {
+          name: "Test",
+        }),
       ).rejects.toThrow("MEMORYSPACE_NOT_FOUND");
     });
   });
@@ -678,9 +680,7 @@ describe("Memory Spaces Registry API", () => {
 
       expect(updated.participants).toHaveLength(1);
       expect(
-        updated.participants.some(
-          (p) => p.id === ctx.userId("remove-user-2"),
-        ),
+        updated.participants.some((p) => p.id === ctx.userId("remove-user-2")),
       ).toBe(false);
     });
   });
@@ -1140,9 +1140,9 @@ describe("Memory Spaces Registry API", () => {
           status: "archived",
         });
 
-        expect(
-          activeResults.some((s) => s.memorySpaceId === designSpace),
-        ).toBe(false);
+        expect(activeResults.some((s) => s.memorySpaceId === designSpace)).toBe(
+          false,
+        );
         expect(
           archivedResults.some((s) => s.memorySpaceId === designSpace),
         ).toBe(true);

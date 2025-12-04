@@ -161,9 +161,7 @@ describe("Memory Orchestration", () => {
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining("No memorySpaceId provided"),
       );
-      expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining("default"),
-      );
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("default"));
 
       // Verify result is valid
       expect(result.memories.length).toBeGreaterThan(0);
@@ -346,7 +344,12 @@ describe("Memory Orchestration", () => {
     });
 
     it("should accept multiple skipLayers", async () => {
-      const skipLayers: SkippableLayer[] = ["users", "agents", "facts", "graph"];
+      const skipLayers: SkippableLayer[] = [
+        "users",
+        "agents",
+        "facts",
+        "graph",
+      ];
 
       const result = await cortex.memory.remember({
         memorySpaceId: `${TEST_PREFIX}-space-multi-skip`,

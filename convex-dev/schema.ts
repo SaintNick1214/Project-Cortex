@@ -277,7 +277,13 @@ export default defineSchema({
     .index("by_participantId", ["participantId"]) // NEW: Hive Mode tracking
     .searchIndex("by_content", {
       searchField: "content",
-      filterFields: ["memorySpaceId", "sourceType", "userId", "agentId", "participantId"], // Updated filters
+      filterFields: [
+        "memorySpaceId",
+        "sourceType",
+        "userId",
+        "agentId",
+        "participantId",
+      ], // Updated filters
     })
     .vectorIndex("by_embedding", {
       vectorField: "embedding",

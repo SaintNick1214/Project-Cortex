@@ -134,7 +134,9 @@ export class CircuitBreaker {
       this.recordSuccess();
       return result;
     } catch (error) {
-      this.recordFailure(error instanceof Error ? error : new Error(String(error)));
+      this.recordFailure(
+        error instanceof Error ? error : new Error(String(error)),
+      );
       throw error;
     }
   }

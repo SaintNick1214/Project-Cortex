@@ -451,7 +451,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
           responseStream: stream,
           userId: "user-error",
           userName: "ErrorUser",
-        agentId: TEST_AGENT_ID,
+          agentId: TEST_AGENT_ID,
         }),
       ).rejects.toThrow(/produced no content/);
     });
@@ -472,7 +472,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
           responseStream: stream,
           userId: "user-error-2",
           userName: "ErrorUser",
-        agentId: TEST_AGENT_ID,
+          agentId: TEST_AGENT_ID,
         }),
       ).rejects.toThrow(/Stream failure/);
     });

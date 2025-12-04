@@ -91,7 +91,7 @@ const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL,
   // Optional: Enable auto fact extraction
   llm: {
-    provider: 'openai',
+    provider: "openai",
     apiKey: process.env.OPENAI_API_KEY,
   },
 });
@@ -100,9 +100,9 @@ const cortex = new Cortex({
 // remember() now auto-registers: memory space, user profile, conversation
 const result = await cortex.memory.remember({
   memorySpaceId: "support-bot-space", // Auto-registered if not exists
-  userId: "user-123",                 // Auto-creates user profile
-  userName: "Alex",                   // Required with userId
-  conversationId: "conv-001",         // Auto-created if not exists
+  userId: "user-123", // Auto-creates user profile
+  userName: "Alex", // Required with userId
+  conversationId: "conv-001", // Auto-created if not exists
   userMessage: "My password is Blue123",
   agentResponse: "I'll remember that securely!",
   userId: "user-123",
@@ -507,9 +507,9 @@ const cortex = new Cortex({
 
   // Optional: LLM config for auto fact extraction
   llm: {
-    provider: 'openai',
+    provider: "openai",
     apiKey: process.env.OPENAI_API_KEY,
-    model: 'gpt-4o-mini',
+    model: "gpt-4o-mini",
   },
 
   // Optional: Graph database integration
@@ -521,11 +521,11 @@ const cortex = new Cortex({
 
 // Full orchestration with remember() - auto-registers entities
 await cortex.memory.remember({
-  memorySpaceId: 'user-123-space', // Auto-registered if not exists
-  userId: 'user-123',              // Auto-creates user profile
-  userName: 'Alex',
-  conversationId: 'conv-456',
-  userMessage: 'User prefers dark mode',
+  memorySpaceId: "user-123-space", // Auto-registered if not exists
+  userId: "user-123", // Auto-creates user profile
+  userName: "Alex",
+  conversationId: "conv-456",
+  userMessage: "User prefers dark mode",
   agentResponse: "I'll remember that preference!",
   // → Facts auto-extracted if LLM configured
   // → Graph synced if adapter configured

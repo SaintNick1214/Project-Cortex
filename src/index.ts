@@ -181,8 +181,7 @@ export class Cortex {
    * @returns LLMConfig if both gates pass, undefined otherwise
    */
   private static autoConfigureLLM(): LLMConfig | undefined {
-    const factExtractionEnabled =
-      process.env.CORTEX_FACT_EXTRACTION === "true";
+    const factExtractionEnabled = process.env.CORTEX_FACT_EXTRACTION === "true";
 
     if (!factExtractionEnabled) {
       return undefined;
@@ -383,7 +382,11 @@ export class Cortex {
       graphAdapter,
       this.resilienceLayer,
     );
-    this.vector = new VectorAPI(this.client, graphAdapter, this.resilienceLayer);
+    this.vector = new VectorAPI(
+      this.client,
+      graphAdapter,
+      this.resilienceLayer,
+    );
     this.facts = new FactsAPI(this.client, graphAdapter, this.resilienceLayer);
     this.contexts = new ContextsAPI(
       this.client,
@@ -396,7 +399,11 @@ export class Cortex {
       this.resilienceLayer,
     );
     this.users = new UsersAPI(this.client, graphAdapter, this.resilienceLayer);
-    this.agents = new AgentsAPI(this.client, graphAdapter, this.resilienceLayer);
+    this.agents = new AgentsAPI(
+      this.client,
+      graphAdapter,
+      this.resilienceLayer,
+    );
     this.governance = new GovernanceAPI(
       this.client,
       graphAdapter,

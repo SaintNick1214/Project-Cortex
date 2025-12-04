@@ -62,9 +62,7 @@ async function selectDatabase(
 
   // If --deployment flag was passed, use that
   if (globalOpts.deployment) {
-    const specified = deployments.find(
-      (d) => d.name === globalOpts.deployment,
-    );
+    const specified = deployments.find((d) => d.name === globalOpts.deployment);
     if (specified) {
       targetDeployment = specified;
       targetUrl = specified.url;
@@ -128,7 +126,11 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
 
       try {
         // Select database
-        const selection = await selectDatabase(config, globalOpts, "view stats for");
+        const selection = await selectDatabase(
+          config,
+          globalOpts,
+          "view stats for",
+        );
         if (!selection) return;
         globalOpts = selection.globalOpts;
         const { targetName, targetUrl } = selection;
@@ -137,7 +139,12 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
 
         await withClient(config, globalOpts, async (client) => {
           // Get deployment info
-          const info = { url: targetUrl, isLocal: targetUrl.includes("127.0.0.1") || targetUrl.includes("localhost") };
+          const info = {
+            url: targetUrl,
+            isLocal:
+              targetUrl.includes("127.0.0.1") ||
+              targetUrl.includes("localhost"),
+          };
           const rawClient = client.getClient();
 
           // Get comprehensive counts from all tables using admin function
@@ -177,7 +184,9 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           spinner.text = "Counting messages...";
           let totalMessages = 0;
           try {
-            const convos = await client.conversations.list({ limit: MAX_LIMIT });
+            const convos = await client.conversations.list({
+              limit: MAX_LIMIT,
+            });
             for (const convo of convos) {
               totalMessages += convo.messageCount ?? 0;
             }
@@ -209,8 +218,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
                   governanceEnforcement: tableCounts.governanceEnforcement ?? 0,
                   graphSyncQueue: tableCounts.graphSyncQueue ?? 0,
                   deployment: {
-                    name:
-                      globalOpts.deployment ?? config.default ?? "default",
+                    name: globalOpts.deployment ?? config.default ?? "default",
                     url: info.url,
                     isLocal: info.isLocal,
                   },
@@ -221,9 +229,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           } else {
             console.log();
             console.log(
-              pc.bold(
-                `📊 Database Statistics: ${pc.cyan(targetName)}`,
-              ),
+              pc.bold(`📊 Database Statistics: ${pc.cyan(targetName)}`),
             );
             console.log(pc.dim("─".repeat(45)));
             console.log();
@@ -313,9 +319,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
 
       try {
         console.log();
-        console.log(
-          pc.red(pc.bold("⚠️  DANGER: Clear Database")),
-        );
+        console.log(pc.red(pc.bold("⚠️  DANGER: Clear Database")));
 
         // Select database
         const selection = await selectDatabase(config, globalOpts, "clear");
@@ -328,23 +332,35 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
         console.log("  • All memory spaces and memories");
         console.log("  • All conversations and messages");
         console.log("  • All facts and user profiles");
-        
+
         // Check if graph sync is enabled (same logic as Cortex.create())
         const neo4jUri = process.env.NEO4J_URI;
         const memgraphUri = process.env.MEMGRAPH_URI;
-        const graphSyncEnabled = process.env.CORTEX_GRAPH_SYNC === 'true' || !!(neo4jUri || memgraphUri);
-        
+        const graphSyncEnabled =
+          process.env.CORTEX_GRAPH_SYNC === "true" ||
+          !!(neo4jUri || memgraphUri);
+
         // Debug: Show env var detection
         if (process.env.DEBUG || program.opts().debug) {
-          console.log(pc.dim(`  [DEBUG] CORTEX_GRAPH_SYNC=${process.env.CORTEX_GRAPH_SYNC}`));
-          console.log(pc.dim(`  [DEBUG] NEO4J_URI=${neo4jUri ? 'set' : 'unset'}`));
-          console.log(pc.dim(`  [DEBUG] MEMGRAPH_URI=${memgraphUri ? 'set' : 'unset'}`));
+          console.log(
+            pc.dim(
+              `  [DEBUG] CORTEX_GRAPH_SYNC=${process.env.CORTEX_GRAPH_SYNC}`,
+            ),
+          );
+          console.log(
+            pc.dim(`  [DEBUG] NEO4J_URI=${neo4jUri ? "set" : "unset"}`),
+          );
+          console.log(
+            pc.dim(`  [DEBUG] MEMGRAPH_URI=${memgraphUri ? "set" : "unset"}`),
+          );
           console.log(pc.dim(`  [DEBUG] graphSyncEnabled=${graphSyncEnabled}`));
         }
-        
+
         if (graphSyncEnabled) {
-          const dbType = neo4jUri ? 'Neo4j' : 'Memgraph';
-          console.log(`  • All graph database nodes and relationships (${dbType})`);
+          const dbType = neo4jUri ? "Neo4j" : "Memgraph";
+          console.log(
+            `  • All graph database nodes and relationships (${dbType})`,
+          );
         }
         console.log();
 
@@ -395,7 +411,9 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
               spinner.text = `Clearing ${tableName}... (${deleted[counter]} deleted)`;
               try {
                 const result = await rawClient.mutation(
-                  "admin:clearTable" as Parameters<typeof rawClient.mutation>[0],
+                  "admin:clearTable" as Parameters<
+                    typeof rawClient.mutation
+                  >[0],
                   { table: tableName, limit: MAX_LIMIT },
                 );
                 deleted[counter] += result.deleted;
@@ -468,7 +486,9 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           while (hasMoreConvos) {
             spinner.text = `Clearing conversations... (${deleted.conversations} deleted, ${deleted.messages} messages)`;
             try {
-              const convos = await client.conversations.list({ limit: MAX_LIMIT });
+              const convos = await client.conversations.list({
+                limit: MAX_LIMIT,
+              });
               if (convos.length === 0) {
                 hasMoreConvos = false;
                 break;
@@ -502,7 +522,9 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           while (hasMoreSpaces) {
             spinner.text = `Clearing memorySpaces... (${deleted.memorySpaces} deleted)`;
             try {
-              const spaces = await client.memorySpaces.list({ limit: MAX_LIMIT });
+              const spaces = await client.memorySpaces.list({
+                limit: MAX_LIMIT,
+              });
               if (spaces.length === 0) {
                 hasMoreSpaces = false;
                 break;
@@ -589,7 +611,10 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           await clearTableDirect("governancePolicies", "governancePolicies");
 
           // 11. Clear governance enforcement logs
-          await clearTableDirect("governanceEnforcement", "governanceEnforcement");
+          await clearTableDirect(
+            "governanceEnforcement",
+            "governanceEnforcement",
+          );
 
           // 12. Clear graph sync queue
           await clearTableDirect("graphSyncQueue", "graphSyncQueue");
@@ -598,55 +623,59 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           // Check both explicit flag and auto-detection (same logic as Cortex.create())
           const neo4jUri = process.env.NEO4J_URI;
           const memgraphUri = process.env.MEMGRAPH_URI;
-          const graphSyncEnabled = process.env.CORTEX_GRAPH_SYNC === 'true' || !!(neo4jUri || memgraphUri);
-          
+          const graphSyncEnabled =
+            process.env.CORTEX_GRAPH_SYNC === "true" ||
+            !!(neo4jUri || memgraphUri);
+
           if (graphSyncEnabled) {
-            spinner.text = 'Clearing graph database...';
+            spinner.text = "Clearing graph database...";
             let graphCleared = false;
-            
+
             try {
-              
               if (neo4jUri || memgraphUri) {
                 // Dynamically import neo4j-driver only when needed
-                const neo4j = await import('neo4j-driver');
-                
+                const neo4j = await import("neo4j-driver");
+
                 // Determine which database to connect to
                 const uri = neo4jUri || memgraphUri;
-                const username = neo4jUri 
-                  ? (process.env.NEO4J_USERNAME || 'neo4j')
-                  : (process.env.MEMGRAPH_USERNAME || 'memgraph');
+                const username = neo4jUri
+                  ? process.env.NEO4J_USERNAME || "neo4j"
+                  : process.env.MEMGRAPH_USERNAME || "memgraph";
                 const password = neo4jUri
-                  ? (process.env.NEO4J_PASSWORD || '')
-                  : (process.env.MEMGRAPH_PASSWORD || '');
-                
+                  ? process.env.NEO4J_PASSWORD || ""
+                  : process.env.MEMGRAPH_PASSWORD || "";
+
                 // Connect to graph database
                 const driver = neo4j.default.driver(
                   uri!,
-                  neo4j.default.auth.basic(username, password)
+                  neo4j.default.auth.basic(username, password),
                 );
-                
+
                 // Verify connectivity
                 await driver.verifyConnectivity();
-                
+
                 // Create session and clear all data
                 const session = driver.session();
                 try {
                   // DETACH DELETE removes nodes and all their relationships
                   // Works for both Neo4j and Memgraph
-                  await session.run('MATCH (n) DETACH DELETE n');
+                  await session.run("MATCH (n) DETACH DELETE n");
                   graphCleared = true;
                 } finally {
                   await session.close();
                 }
-                
+
                 await driver.close();
               }
             } catch (error) {
               // Log warning but don't fail the entire operation
-              const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-              spinner.warn(pc.yellow(`Graph database clear failed: ${errorMsg}`));
+              const errorMsg =
+                error instanceof Error ? error.message : "Unknown error";
+              spinner.warn(
+                pc.yellow(`Graph database clear failed: ${errorMsg}`),
+              );
             }
-            
+
             if (graphCleared) {
               // Only show success if we actually cleared
               deleted.graphSyncQueue = -1; // Use as flag to indicate graph was cleared
@@ -685,7 +714,8 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           const systemTables = {
             "Governance Policies": deleted.governancePolicies,
             "Governance Logs": deleted.governanceEnforcement,
-            "Graph Sync Queue": deleted.graphSyncQueue >= 0 ? deleted.graphSyncQueue : 0,
+            "Graph Sync Queue":
+              deleted.graphSyncQueue >= 0 ? deleted.graphSyncQueue : 0,
           };
 
           printSection("Core Entities", coreEntities);
@@ -693,10 +723,10 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           printSection("Conversations", conversationData);
           printSection("Shared Stores", sharedStores);
           printSection("System Tables", systemTables);
-          
+
           // Show graph database status if it was cleared
           if (deleted.graphSyncQueue === -1) {
-            const dbType = process.env.NEO4J_URI ? 'Neo4j' : 'Memgraph';
+            const dbType = process.env.NEO4J_URI ? "Neo4j" : "Memgraph";
             console.log();
             printSection("Graph Database", {
               [dbType]: pc.green("Cleared ✓"),
@@ -857,7 +887,11 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
         }
 
         // Select target database
-        const selection = await selectDatabase(config, globalOpts, "restore to");
+        const selection = await selectDatabase(
+          config,
+          globalOpts,
+          "restore to",
+        );
         if (!selection) return;
         globalOpts = selection.globalOpts;
         const { targetName } = selection;

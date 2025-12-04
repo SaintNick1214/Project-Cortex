@@ -134,7 +134,9 @@ function parseFactsResponse(content: string): ExtractedFact[] | null {
       .filter((f: unknown) => {
         if (typeof f !== "object" || f === null) return false;
         const fact = f as Record<string, unknown>;
-        return typeof fact.fact === "string" && typeof fact.factType === "string";
+        return (
+          typeof fact.fact === "string" && typeof fact.factType === "string"
+        );
       })
       .map((f: Record<string, unknown>) => ({
         fact: f.fact as string,
@@ -159,9 +161,7 @@ function parseFactsResponse(content: string): ExtractedFact[] | null {
 /**
  * Normalize fact type to valid enum value
  */
-function normalizeFactType(
-  type: string,
-): ExtractedFact["factType"] {
+function normalizeFactType(type: string): ExtractedFact["factType"] {
   const validTypes = [
     "preference",
     "identity",
@@ -209,7 +209,10 @@ class OpenAIClient implements LLMClient {
 
       const messages = [
         { role: "system", content: EXTRACTION_SYSTEM_PROMPT },
-        { role: "user", content: buildExtractionPrompt(userMessage, agentResponse) },
+        {
+          role: "user",
+          content: buildExtractionPrompt(userMessage, agentResponse),
+        },
       ];
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -297,7 +300,9 @@ class AnthropicClient implements LLMClient {
 
       // Extract text content from response
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const textBlock = response.content.find((block: any) => block.type === "text");
+      const textBlock = response.content.find(
+        (block: any) => block.type === "text",
+      );
       if (!textBlock || textBlock.type !== "text") {
         console.warn("[Cortex LLM] Anthropic returned no text content");
         return null;

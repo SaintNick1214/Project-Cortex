@@ -143,9 +143,7 @@ export const countTable = query({
   },
   handler: async (ctx, args) => {
     // Count by fetching all (limited to reasonable amount for performance)
-    const records = await ctx.db
-      .query(args.table as "agents")
-      .take(10000);
+    const records = await ctx.db.query(args.table as "agents").take(10000);
 
     return { count: records.length };
   },

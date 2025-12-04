@@ -26,7 +26,7 @@ describe("CLI User Commands", () => {
       try {
         cortex.close();
       } catch (error) {
-        console.warn('⚠️  Error closing cortex client:', error);
+        console.warn("⚠️  Error closing cortex client:", error);
       }
     }
   }, 60000); // 60 second timeout for cleanup

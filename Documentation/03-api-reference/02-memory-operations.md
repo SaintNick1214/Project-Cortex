@@ -650,12 +650,12 @@ cortex.memory.remember({...})
 ```typescript
 // Layers that can be explicitly skipped
 type SkippableLayer =
-  | 'users'         // Don't auto-create user profile
-  | 'agents'        // Don't auto-register agent
-  | 'conversations' // Don't store in ACID conversation layer
-  | 'vector'        // Don't store in vector memory layer
-  | 'facts'         // Don't auto-extract facts
-  | 'graph';        // Don't sync to graph database
+  | "users" // Don't auto-create user profile
+  | "agents" // Don't auto-register agent
+  | "conversations" // Don't store in ACID conversation layer
+  | "vector" // Don't store in vector memory layer
+  | "facts" // Don't auto-extract facts
+  | "graph"; // Don't sync to graph database
 
 interface RememberParams {
   // Memory Space (defaults to 'default' with warning if not provided)
@@ -667,9 +667,9 @@ interface RememberParams {
   agentResponse: string;
 
   // Owner Attribution (at least one required)
-  userId?: string;        // For user-owned memories
-  agentId?: string;       // For agent-owned memories
-  userName?: string;      // Required when userId is provided
+  userId?: string; // For user-owned memories
+  agentId?: string; // For agent-owned memories
+  userName?: string; // Required when userId is provided
 
   // Hive Mode (optional)
   participantId?: string; // Tracks WHO stored the memory (distinct from ownership)
@@ -692,7 +692,14 @@ interface RememberParams {
     agentResponse: string,
   ) => Promise<Array<{
     fact: string;
-    factType: 'preference' | 'identity' | 'knowledge' | 'relationship' | 'event' | 'observation' | 'custom';
+    factType:
+      | "preference"
+      | "identity"
+      | "knowledge"
+      | "relationship"
+      | "event"
+      | "observation"
+      | "custom";
     subject?: string;
     predicate?: string;
     object?: string;
@@ -723,7 +730,7 @@ interface RememberResult {
     conversationId: string; // ACID conversation ID
   };
   memories: MemoryEntry[]; // Created in Vector Layer 2 (with conversationRef)
-  facts: FactRecord[];     // Extracted facts (Layer 3)
+  facts: FactRecord[]; // Extracted facts (Layer 3)
 }
 ```
 
@@ -732,11 +739,11 @@ interface RememberResult {
 ```typescript
 // Full orchestration (default) - user-owned memory
 const result = await cortex.memory.remember({
-  memorySpaceId: 'user-123-space',
-  userId: 'user-123',
-  userName: 'Alex',
-  conversationId: 'conv-456',
-  userMessage: 'Call me Alex',
+  memorySpaceId: "user-123-space",
+  userId: "user-123",
+  userName: "Alex",
+  conversationId: "conv-456",
+  userMessage: "Call me Alex",
   agentResponse: "I'll remember that, Alex!",
 });
 // → memorySpace registered (if needed)
@@ -747,40 +754,42 @@ const result = await cortex.memory.remember({
 
 // Agent-owned memory (no user involved)
 await cortex.memory.remember({
-  memorySpaceId: 'system-space',
-  agentId: 'cleanup-agent',
-  conversationId: 'conv-789',
-  userMessage: 'System cleanup initiated',
-  agentResponse: 'Cleanup complete',
-  skipLayers: ['users'], // No user to create
+  memorySpaceId: "system-space",
+  agentId: "cleanup-agent",
+  conversationId: "conv-789",
+  userMessage: "System cleanup initiated",
+  agentResponse: "Cleanup complete",
+  skipLayers: ["users"], // No user to create
 });
 
 // Lightweight mode - skip facts and graph
 await cortex.memory.remember({
-  memorySpaceId: 'quick-space',
-  agentId: 'quick-bot',
-  conversationId: 'conv-101',
-  userMessage: 'Quick question',
-  agentResponse: 'Quick answer',
-  skipLayers: ['facts', 'graph'], // Fast path
+  memorySpaceId: "quick-space",
+  agentId: "quick-bot",
+  conversationId: "conv-101",
+  userMessage: "Quick question",
+  agentResponse: "Quick answer",
+  skipLayers: ["facts", "graph"], // Fast path
 });
 
 // With custom fact extraction
 await cortex.memory.remember({
-  memorySpaceId: 'user-123-space',
-  userId: 'user-123',
-  userName: 'Alex',
-  conversationId: 'conv-456',
-  userMessage: 'My favorite color is blue',
+  memorySpaceId: "user-123-space",
+  userId: "user-123",
+  userName: "Alex",
+  conversationId: "conv-456",
+  userMessage: "My favorite color is blue",
   agentResponse: "I'll remember that blue is your favorite!",
-  extractFacts: async (user, agent) => [{
-    fact: 'User prefers blue color',
-    factType: 'preference',
-    subject: 'user-123',
-    predicate: 'prefers_color',
-    object: 'blue',
-    confidence: 95,
-  }],
+  extractFacts: async (user, agent) => [
+    {
+      fact: "User prefers blue color",
+      factType: "preference",
+      subject: "user-123",
+      predicate: "prefers_color",
+      object: "blue",
+      confidence: 95,
+    },
+  ],
 });
 ```
 
@@ -788,12 +797,16 @@ await cortex.memory.remember({
 
 ```typescript
 // Missing owner attribution
-CortexError('OWNER_REQUIRED',
-  'Either userId or agentId must be provided for memory ownership')
+CortexError(
+  "OWNER_REQUIRED",
+  "Either userId or agentId must be provided for memory ownership",
+);
 
 // Missing userName when userId is provided
-CortexError('MISSING_REQUIRED_FIELD',
-  'userName is required when userId is provided')
+CortexError(
+  "MISSING_REQUIRED_FIELD",
+  "userName is required when userId is provided",
+);
 ```
 
 **Why use `remember()`:**

@@ -26,7 +26,10 @@ import {
 } from "../src/resilience";
 
 // Helper to create test operations
-const createOperation = <T>(result: T, delay: number = 0): (() => Promise<T>) => {
+const createOperation = <T>(
+  result: T,
+  delay: number = 0,
+): (() => Promise<T>) => {
   return async () => {
     if (delay > 0) {
       await new Promise((resolve) => setTimeout(resolve, delay));
@@ -35,7 +38,10 @@ const createOperation = <T>(result: T, delay: number = 0): (() => Promise<T>) =>
   };
 };
 
-const createFailingOperation = (error: Error, delay: number = 0): (() => Promise<never>) => {
+const createFailingOperation = (
+  error: Error,
+  delay: number = 0,
+): (() => Promise<never>) => {
   return async () => {
     if (delay > 0) {
       await new Promise((resolve) => setTimeout(resolve, delay));
@@ -133,7 +139,11 @@ describe("TokenBucket", () => {
 
 describe("Semaphore", () => {
   test("should allow up to maxPermits concurrent acquisitions", async () => {
-    const sem = new Semaphore({ maxConcurrent: 3, queueSize: 10, timeout: 1000 });
+    const sem = new Semaphore({
+      maxConcurrent: 3,
+      queueSize: 10,
+      timeout: 1000,
+    });
 
     const p1 = sem.tryAcquire();
     const p2 = sem.tryAcquire();
@@ -149,7 +159,11 @@ describe("Semaphore", () => {
   });
 
   test("should release permit properly", async () => {
-    const sem = new Semaphore({ maxConcurrent: 1, queueSize: 10, timeout: 1000 });
+    const sem = new Semaphore({
+      maxConcurrent: 1,
+      queueSize: 10,
+      timeout: 1000,
+    });
 
     const permit = sem.tryAcquire()!;
     expect(sem.getActiveCount()).toBe(1);
@@ -159,7 +173,11 @@ describe("Semaphore", () => {
   });
 
   test("should queue waiting requests", async () => {
-    const sem = new Semaphore({ maxConcurrent: 1, queueSize: 10, timeout: 1000 });
+    const sem = new Semaphore({
+      maxConcurrent: 1,
+      queueSize: 10,
+      timeout: 1000,
+    });
 
     const permit1 = await sem.acquire();
     expect(sem.getWaitingCount()).toBe(0);
@@ -213,7 +231,11 @@ describe("Semaphore", () => {
   });
 
   test("should track metrics", () => {
-    const sem = new Semaphore({ maxConcurrent: 3, queueSize: 10, timeout: 1000 });
+    const sem = new Semaphore({
+      maxConcurrent: 3,
+      queueSize: 10,
+      timeout: 1000,
+    });
 
     sem.tryAcquire();
     sem.tryAcquire();
@@ -230,7 +252,10 @@ describe("Semaphore", () => {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 describe("PriorityQueue", () => {
-  const createRequest = (priority: Priority, id: string = "test"): QueuedRequest => ({
+  const createRequest = (
+    priority: Priority,
+    id: string = "test",
+  ): QueuedRequest => ({
     id,
     operation: async () => "result",
     priority,
@@ -274,7 +299,9 @@ describe("PriorityQueue", () => {
 
     queue.enqueue(createRequest("normal", "first"));
 
-    expect(() => queue.enqueue(createRequest("normal", "second"))).toThrow(QueueFullError);
+    expect(() => queue.enqueue(createRequest("normal", "second"))).toThrow(
+      QueueFullError,
+    );
   });
 
   test("should track size by priority", () => {
@@ -341,7 +368,9 @@ describe("CircuitBreaker", () => {
       await cb.execute(failingOp);
     } catch {}
 
-    await expect(cb.execute(createOperation("test"))).rejects.toThrow(CircuitOpenError);
+    await expect(cb.execute(createOperation("test"))).rejects.toThrow(
+      CircuitOpenError,
+    );
   });
 
   test("should transition to half-open after timeout", async () => {
@@ -392,7 +421,11 @@ describe("CircuitBreaker", () => {
     let openCalled = false;
     const cb = new CircuitBreaker(
       { failureThreshold: 1 },
-      { onOpen: () => { openCalled = true; } },
+      {
+        onOpen: () => {
+          openCalled = true;
+        },
+      },
     );
 
     const failingOp = createFailingOperation(new Error("Test error"));
@@ -558,7 +591,9 @@ describe("ResiliencePresets", () => {
 
   test("should have batchProcessing preset", () => {
     expect(ResiliencePresets.batchProcessing).toBeDefined();
-    expect(ResiliencePresets.batchProcessing.concurrency?.maxConcurrent).toBe(64); // For Professional plan
+    expect(ResiliencePresets.batchProcessing.concurrency?.maxConcurrent).toBe(
+      64,
+    ); // For Professional plan
   });
 
   test("should have hiveMode preset", () => {

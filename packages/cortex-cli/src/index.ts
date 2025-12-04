@@ -29,7 +29,9 @@ if (envLoaded) {
   const result = loadEnv({ path: envLocalPath });
   // Debug: log if env file was loaded (only when --debug flag is used)
   if (process.argv.includes("--debug")) {
-    console.log(`[DEBUG] Loaded ${Object.keys(result.parsed || {}).length} env vars from ${envLocalPath}`);
+    console.log(
+      `[DEBUG] Loaded ${Object.keys(result.parsed || {}).length} env vars from ${envLocalPath}`,
+    );
   }
 }
 

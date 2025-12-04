@@ -150,7 +150,8 @@ describe("Memory Convenience API (Layer 3)", () => {
         conversationId: testConversationId,
         userMessage: "Remember this important fact",
         // Agent response with meaningful content (not just acknowledgment)
-        agentResponse: "This important fact has been stored for future reference",
+        agentResponse:
+          "This important fact has been stored for future reference",
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
         agentId: TEST_AGENT_ID,
@@ -1492,7 +1493,9 @@ describe("Memory Convenience API (Layer 3)", () => {
     describe("remember() validation", () => {
       it("uses default memorySpaceId with warning when not provided", async () => {
         // Capture console.warn calls
-        const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+        const warnSpy = jest
+          .spyOn(console, "warn")
+          .mockImplementation(() => {});
 
         // Should succeed (not throw) when memorySpaceId is not provided
         const result = await cortex.memory.remember({

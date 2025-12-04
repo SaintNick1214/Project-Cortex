@@ -431,20 +431,19 @@ describe("State Transition Testing", () => {
       const archivedList = await cortex.memorySpaces.list({
         status: "archived",
       });
-      const archivedSpaces =
-        (archivedList as any).spaces || archivedList;
-      expect(
-        archivedSpaces.some((s: any) => s.memorySpaceId === spaceId),
-      ).toBe(true);
+      const archivedSpaces = (archivedList as any).spaces || archivedList;
+      expect(archivedSpaces.some((s: any) => s.memorySpaceId === spaceId)).toBe(
+        true,
+      );
 
       // Verify it does NOT appear in active list
       const activeList = await cortex.memorySpaces.list({
         status: "active",
       });
       const activeSpaces = (activeList as any).spaces || activeList;
-      expect(
-        activeSpaces.some((s: any) => s.memorySpaceId === spaceId),
-      ).toBe(false);
+      expect(activeSpaces.some((s: any) => s.memorySpaceId === spaceId)).toBe(
+        false,
+      );
     });
 
     it("should preserve metadata through archive/reactivate cycle", async () => {

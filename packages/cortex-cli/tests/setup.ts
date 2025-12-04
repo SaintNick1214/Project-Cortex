@@ -26,13 +26,15 @@ export function getCleanupClient(): Cortex {
 async function withTimeout<T>(
   promise: Promise<T>,
   timeoutMs: number,
-  fallback: T
+  fallback: T,
 ): Promise<T> {
   let timeoutHandle: NodeJS.Timeout;
-  
+
   const timeoutPromise = new Promise<T>((resolve) => {
     timeoutHandle = setTimeout(() => {
-      console.warn(`  ⚠️  Operation timed out after ${timeoutMs}ms, continuing...`);
+      console.warn(
+        `  ⚠️  Operation timed out after ${timeoutMs}ms, continuing...`,
+      );
       resolve(fallback);
     }, timeoutMs);
   });
@@ -55,7 +57,7 @@ export async function cleanupTestData(prefix: string): Promise<void> {
   const client = getCleanupClient();
   const OPERATION_TIMEOUT = 10000; // 10 seconds per operation
   const MAX_BATCH_SIZE = 50; // Process in smaller batches
-  
+
   console.log(`🧹 Cleaning up test data with prefix: ${prefix}`);
 
   // Delete users first (cascade will delete their memories)
@@ -63,27 +65,27 @@ export async function cleanupTestData(prefix: string): Promise<void> {
     const users = await withTimeout(
       client.users.list({ limit: 1000 }),
       OPERATION_TIMEOUT,
-      []
+      [],
     );
-    
+
     const testUsers = users.filter((u) => u.id.startsWith(prefix));
     console.log(`  Found ${testUsers.length} test users to clean up`);
 
     // Process in batches to avoid overwhelming the system
     for (let i = 0; i < testUsers.length; i += MAX_BATCH_SIZE) {
       const batch = testUsers.slice(i, i + MAX_BATCH_SIZE);
-      
+
       await Promise.all(
         batch.map((user) =>
           withTimeout(
             client.users.delete(user.id, { cascade: true }).catch(() => {}),
             OPERATION_TIMEOUT,
-            undefined
-          )
-        )
+            undefined,
+          ),
+        ),
       );
     }
-    
+
     console.log(`  ✅ Cleaned up ${testUsers.length} test users`);
   } catch (error) {
     console.warn(`  ⚠️  Error cleaning up users:`, error);
@@ -94,27 +96,29 @@ export async function cleanupTestData(prefix: string): Promise<void> {
     const spaces = await withTimeout(
       client.memorySpaces.list({ limit: 1000 }),
       OPERATION_TIMEOUT,
-      []
+      [],
     );
-    
+
     const testSpaces = spaces.filter((s) => s.memorySpaceId.startsWith(prefix));
     console.log(`  Found ${testSpaces.length} test spaces to clean up`);
 
     // Process in batches
     for (let i = 0; i < testSpaces.length; i += MAX_BATCH_SIZE) {
       const batch = testSpaces.slice(i, i + MAX_BATCH_SIZE);
-      
+
       await Promise.all(
         batch.map((space) =>
           withTimeout(
-            client.memorySpaces.delete(space.memorySpaceId, { cascade: false }).catch(() => {}),
+            client.memorySpaces
+              .delete(space.memorySpaceId, { cascade: false })
+              .catch(() => {}),
             OPERATION_TIMEOUT,
-            undefined
-          )
-        )
+            undefined,
+          ),
+        ),
       );
     }
-    
+
     console.log(`  ✅ Cleaned up ${testSpaces.length} test spaces`);
   } catch (error) {
     console.warn(`  ⚠️  Error cleaning up spaces:`, error);
@@ -124,15 +128,14 @@ export async function cleanupTestData(prefix: string): Promise<void> {
 /**
  * Force close a client with timeout protection
  */
-async function forceCloseClient(client: Cortex, timeoutMs: number = 5000): Promise<void> {
+async function forceCloseClient(
+  client: Cortex,
+  timeoutMs: number = 5000,
+): Promise<void> {
   try {
-    await withTimeout(
-      Promise.resolve(client.close()),
-      timeoutMs,
-      undefined
-    );
+    await withTimeout(Promise.resolve(client.close()), timeoutMs, undefined);
   } catch (error) {
-    console.warn('  ⚠️  Error closing client:', error);
+    console.warn("  ⚠️  Error closing client:", error);
   }
 }
 

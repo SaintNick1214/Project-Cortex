@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 **1. `mergeNode()` Method**
 
 New method on `GraphAdapter` interface that uses Cypher `MERGE` semantics:
+
 - Creates node if not exists
 - Matches existing node if it does
 - Updates properties on match
@@ -40,15 +41,16 @@ New method on `GraphAdapter` interface that uses Cypher `MERGE` semantics:
 const nodeId = await adapter.mergeNode(
   {
     label: "MemorySpace",
-    properties: { memorySpaceId: "space-123", name: "Main" }
+    properties: { memorySpaceId: "space-123", name: "Main" },
   },
-  { memorySpaceId: "space-123" }  // Match properties
+  { memorySpaceId: "space-123" }, // Match properties
 );
 ```
 
 **2. All Sync Utilities Now Idempotent**
 
 Updated sync functions to use `mergeNode()`:
+
 - `syncMemorySpaceToGraph()`
 - `syncContextToGraph()`
 - `syncConversationToGraph()`
@@ -260,7 +262,7 @@ await cortex.memory.remember({
   agentResponse: "Hi there!",
   userId: "user-123",
   userName: "Alice",
-  agentId: "assistant-v1",  // Now required for user-agent conversations
+  agentId: "assistant-v1", // Now required for user-agent conversations
 });
 
 // ✅ Correct - agent-only (no user)
@@ -306,12 +308,13 @@ New graph elements for agent tracking:
 
 #### 📊 Schema Updates
 
-| Table | Field Added | Purpose |
-|-------|-------------|---------|
-| `memories` | `agentId` | Agent-owned memory attribution |
-| `conversations.participants` | `agentId` | Agent participant tracking |
+| Table                        | Field Added | Purpose                        |
+| ---------------------------- | ----------- | ------------------------------ |
+| `memories`                   | `agentId`   | Agent-owned memory attribution |
+| `conversations.participants` | `agentId`   | Agent participant tracking     |
 
 New indexes:
+
 - `by_agentId` on memories table
 - `by_memorySpace_agentId` on memories table
 - `by_agent` on conversations table
@@ -319,10 +322,10 @@ New indexes:
 
 #### 🔧 Validation Rules
 
-| Scenario | Required Fields |
-|----------|-----------------|
-| User-agent conversation | `userId` + `userName` + `agentId` |
-| Agent-only (system/tool) | `agentId` only |
+| Scenario                 | Required Fields                   |
+| ------------------------ | --------------------------------- |
+| User-agent conversation  | `userId` + `userName` + `agentId` |
+| Agent-only (system/tool) | `agentId` only                    |
 
 #### ⚠️ Breaking Changes
 
@@ -345,7 +348,7 @@ await cortex.memory.remember({
 await cortex.memory.remember({
   userId: "user-123",
   userName: "Alice",
-  agentId: "your-agent-id",  // Add this
+  agentId: "your-agent-id", // Add this
   // ... other params
 });
 ```
@@ -370,10 +373,10 @@ const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL!,
   resilience: {
     rateLimiter: {
-      bucketSize: 200,     // Allow bursts up to 200
-      refillRate: 100,     // Sustain 100 ops/sec
-    }
-  }
+      bucketSize: 200, // Allow bursts up to 200
+      refillRate: 100, // Sustain 100 ops/sec
+    },
+  },
 });
 ```
 
@@ -395,13 +398,13 @@ resilience: {
 
 In-memory queue that prioritizes critical operations:
 
-| Priority | Examples | Behavior |
-|----------|----------|----------|
-| `critical` | `users:delete` | Bypass circuit breaker |
-| `high` | `memory:remember`, `facts:store` | Priority processing |
-| `normal` | Most operations | Standard queue |
-| `low` | `memory:search`, `vector:search` | Deferrable |
-| `background` | `governance:simulate` | Lowest priority |
+| Priority     | Examples                         | Behavior               |
+| ------------ | -------------------------------- | ---------------------- |
+| `critical`   | `users:delete`                   | Bypass circuit breaker |
+| `high`       | `memory:remember`, `facts:store` | Priority processing    |
+| `normal`     | Most operations                  | Standard queue         |
+| `low`        | `memory:search`, `vector:search` | Deferrable             |
+| `background` | `governance:simulate`            | Lowest priority        |
 
 Priorities are **automatically assigned** based on operation name patterns.
 
@@ -450,10 +453,16 @@ new Cortex({ convexUrl, resilience: ResiliencePresets.disabled });
 ```typescript
 const metrics = cortex.getResilienceMetrics();
 
-console.log(`Rate limiter: ${metrics.rateLimiter.available}/${metrics.rateLimiter.bucketSize} tokens`);
-console.log(`Concurrency: ${metrics.concurrency.active}/${metrics.concurrency.max} active`);
+console.log(
+  `Rate limiter: ${metrics.rateLimiter.available}/${metrics.rateLimiter.bucketSize} tokens`,
+);
+console.log(
+  `Concurrency: ${metrics.concurrency.active}/${metrics.concurrency.max} active`,
+);
 console.log(`Queue: ${metrics.queue.size} pending`);
-console.log(`Circuit: ${metrics.circuitBreaker.state} (${metrics.circuitBreaker.failures} failures)`);
+console.log(
+  `Circuit: ${metrics.circuitBreaker.state} (${metrics.circuitBreaker.failures} failures)`,
+);
 
 // Health check
 const isHealthy = cortex.isHealthy(); // false if circuit is open
@@ -472,6 +481,7 @@ await cortex.close();
 #### 📦 New Modules
 
 **TypeScript (`src/resilience/`):**
+
 - `types.ts` - Configuration interfaces and error classes
 - `TokenBucket.ts` - Token bucket rate limiter
 - `Semaphore.ts` - Async semaphore with queue
@@ -481,6 +491,7 @@ await cortex.close();
 - `index.ts` - ResilienceLayer orchestrator and presets
 
 **Python (`cortex/resilience/`):**
+
 - `types.py` - Configuration dataclasses and exceptions
 - `token_bucket.py` - Token bucket rate limiter
 - `semaphore.py` - Async semaphore with queue
@@ -499,6 +510,7 @@ await cortex.close();
 #### 📚 New Types
 
 **TypeScript:**
+
 ```typescript
 type Priority = "critical" | "high" | "normal" | "low" | "background";
 
@@ -528,6 +540,7 @@ class RateLimitExceededError extends Error { ... }
 ```
 
 **Python:**
+
 ```python
 Priority = Literal["critical", "high", "normal", "low", "background"]
 

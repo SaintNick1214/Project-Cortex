@@ -122,6 +122,7 @@ await cortex.shutdown(timeout_s=30.0)  # Wait for pending ops
 ```
 
 **Features:**
+
 - ⚡ **Token Bucket Rate Limiter** - Smooths bursty traffic
 - 🚦 **Concurrency Limiter** - Controls parallel requests
 - 🎯 **Priority Queue** - Critical ops get priority

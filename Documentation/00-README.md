@@ -107,7 +107,6 @@ Expert-level content:
 - **[Facts vs Conversations](./07-advanced-topics/03-facts-vs-conversations.md)** - Storage strategy trade-offs and efficiency
 - **[Dimension Strategies](./07-advanced-topics/02-dimension-strategies.md)** - Choosing vector dimensions and models
 
-
 ## 🎯 Quick Links
 
 ### I want to...
