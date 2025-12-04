@@ -151,15 +151,15 @@ class MemoryAPI:
         # Use provided extractor if available
         if params.extract_facts:
             return params.extract_facts
-        
+
         # Check LLM config for custom extractor
         if self._llm_config and self._llm_config.extract_facts:
             return self._llm_config.extract_facts
-        
+
         # Check LLM config for API key - use built-in extraction
         if self._llm_config and self._llm_config.api_key:
             return self._create_llm_fact_extractor
-        
+
         return None
 
     async def _ensure_user_exists(self, user_id: str, user_name: Optional[str]) -> None:
@@ -299,7 +299,7 @@ class MemoryAPI:
 
         # Determine if we should sync to graph (check skipLayers)
         should_sync_to_graph = (
-            opts.sync_to_graph is not False 
+            opts.sync_to_graph is not False
             and self.graph_adapter is not None
             and not self._should_skip_layer("graph", skip_layers)
         )
@@ -507,7 +507,11 @@ class MemoryAPI:
                     )
 
                     if facts_to_store:
-                        from ..types import FactSourceRef, StoreFactOptions, StoreFactParams
+                        from ..types import (
+                            FactSourceRef,
+                            StoreFactOptions,
+                            StoreFactParams,
+                        )
 
                         for fact_data in facts_to_store:
                             try:
@@ -839,7 +843,7 @@ class MemoryAPI:
         try:
             # Determine if we should sync to graph (check skipLayers)
             should_sync_to_graph = (
-                (opts.sync_to_graph if opts else True) 
+                (opts.sync_to_graph if opts else True)
                 and self.graph_adapter is not None
                 and not self._should_skip_layer("graph", skip_layers)
             )

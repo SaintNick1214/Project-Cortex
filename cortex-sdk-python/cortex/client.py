@@ -27,7 +27,7 @@ from .resilience import (
     ResilienceMetrics,
     ResiliencePresets,
 )
-from .types import CortexConfig, GraphConfig, LLMConfig
+from .types import CortexConfig, GraphConfig, GraphConnectionConfig, LLMConfig
 from .users import UsersAPI
 from .vector import VectorAPI
 
@@ -132,11 +132,11 @@ class Cortex:
                 from .graph.adapters import CypherGraphAdapter
 
                 adapter = CypherGraphAdapter()
-                await adapter.connect({
-                    "uri": neo4j_uri,
-                    "username": os.environ.get("NEO4J_USERNAME", "neo4j"),
-                    "password": os.environ.get("NEO4J_PASSWORD", ""),
-                })
+                await adapter.connect(GraphConnectionConfig(
+                    uri=neo4j_uri,
+                    username=os.environ.get("NEO4J_USERNAME", "neo4j"),
+                    password=os.environ.get("NEO4J_PASSWORD", ""),
+                ))
                 return GraphConfig(adapter=adapter, auto_sync=True)
             except ImportError:
                 warnings.warn(
@@ -155,11 +155,11 @@ class Cortex:
                 from .graph.adapters import CypherGraphAdapter
 
                 adapter = CypherGraphAdapter()
-                await adapter.connect({
-                    "uri": memgraph_uri,
-                    "username": os.environ.get("MEMGRAPH_USERNAME", "memgraph"),
-                    "password": os.environ.get("MEMGRAPH_PASSWORD", ""),
-                })
+                await adapter.connect(GraphConnectionConfig(
+                    uri=memgraph_uri,
+                    username=os.environ.get("MEMGRAPH_USERNAME", "memgraph"),
+                    password=os.environ.get("MEMGRAPH_PASSWORD", ""),
+                ))
                 return GraphConfig(adapter=adapter, auto_sync=True)
             except ImportError:
                 warnings.warn(

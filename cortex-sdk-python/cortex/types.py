@@ -545,14 +545,14 @@ class QueryByRelationshipFilter:
 @dataclass
 class RememberParams:
     """Parameters for remembering a conversation.
-    
+
     Ownership rules:
     - For user-agent conversations: user_id, user_name, AND agent_id are all required
     - For agent-only memories: only agent_id is required (skip conversations layer)
-    
+
     Use skip_layers to explicitly opt-out of specific layers:
     - 'users': Don't auto-create user profile
-    - 'agents': Don't auto-register agent  
+    - 'agents': Don't auto-register agent
     - 'conversations': Don't store in ACID conversations
     - 'vector': Don't store in vector index
     - 'facts': Don't extract/store facts
@@ -587,14 +587,14 @@ class RememberResult:
 @dataclass
 class RememberStreamParams:
     """Parameters for remember_stream() - streaming variant of remember().
-    
+
     Ownership rules:
     - For user-agent conversations: user_id, user_name, AND agent_id are all required
     - For agent-only memories: only agent_id is required (skip conversations layer)
-    
+
     Use skip_layers to explicitly opt-out of specific layers:
     - 'users': Don't auto-create user profile
-    - 'agents': Don't auto-register agent  
+    - 'agents': Don't auto-register agent
     - 'conversations': Don't store in ACID conversations
     - 'vector': Don't store in vector index
     - 'facts': Don't extract/store facts
