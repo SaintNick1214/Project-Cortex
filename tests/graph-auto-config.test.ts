@@ -12,10 +12,10 @@
 import { jest } from "@jest/globals";
 import { Cortex, type GraphConfig } from "../src/index.js";
 
-// Type for accessing private static method
-type CortexWithPrivate = typeof Cortex & {
-  autoConfigureGraph: () => Promise<GraphConfig | undefined>;
-};
+// Helper to access private static method for testing
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const autoConfigureGraph = (): Promise<GraphConfig | undefined> =>
+  (Cortex as any).autoConfigureGraph();
 
 describe("Graph Auto-Configuration", () => {
   // Store original env vars to restore after tests
@@ -45,7 +45,7 @@ describe("Graph Auto-Configuration", () => {
       process.env.NEO4J_PASSWORD = "password";
       // CORTEX_GRAPH_SYNC is NOT set
 
-      const result = await (Cortex as CortexWithPrivate).autoConfigureGraph();
+      const result = await autoConfigureGraph();
 
       expect(result).toBeUndefined();
     });
@@ -54,7 +54,7 @@ describe("Graph Auto-Configuration", () => {
       process.env.CORTEX_GRAPH_SYNC = "false";
       process.env.NEO4J_URI = "bolt://localhost:7687";
 
-      const result = await (Cortex as CortexWithPrivate).autoConfigureGraph();
+      const result = await autoConfigureGraph();
 
       expect(result).toBeUndefined();
     });
@@ -63,7 +63,7 @@ describe("Graph Auto-Configuration", () => {
       process.env.CORTEX_GRAPH_SYNC = "";
       process.env.NEO4J_URI = "bolt://localhost:7687";
 
-      const result = await (Cortex as CortexWithPrivate).autoConfigureGraph();
+      const result = await autoConfigureGraph();
 
       expect(result).toBeUndefined();
     });
@@ -78,7 +78,7 @@ describe("Graph Auto-Configuration", () => {
       // Suppress the expected warning
       const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
 
-      const result = await (Cortex as CortexWithPrivate).autoConfigureGraph();
+      const result = await autoConfigureGraph();
 
       expect(result).toBeUndefined();
       expect(warnSpy).toHaveBeenCalledWith(
@@ -100,7 +100,7 @@ describe("Graph Auto-Configuration", () => {
       const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
       const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
 
-      await (Cortex as CortexWithPrivate).autoConfigureGraph();
+      await autoConfigureGraph();
 
       // Should have warned about both URIs set (Neo4j takes priority)
       expect(warnSpy).toHaveBeenCalledWith(
@@ -121,7 +121,7 @@ describe("Graph Auto-Configuration", () => {
 
       const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
 
-      const result = await (Cortex as CortexWithPrivate).autoConfigureGraph();
+      const result = await autoConfigureGraph();
 
       // Should return undefined when connection fails
       expect(result).toBeUndefined();
@@ -142,7 +142,7 @@ describe("Graph Auto-Configuration", () => {
 
       const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
 
-      const result = await (Cortex as CortexWithPrivate).autoConfigureGraph();
+      const result = await autoConfigureGraph();
 
       // Should return undefined when connection fails
       expect(result).toBeUndefined();
