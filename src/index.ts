@@ -19,6 +19,7 @@ import { AgentsAPI } from "./agents";
 import { GovernanceAPI } from "./governance";
 import { A2AAPI } from "./a2a";
 import type { GraphAdapter } from "./graph/types";
+import { CypherGraphAdapter } from "./graph";
 import {
   GraphSyncWorker,
   type GraphSyncWorkerOptions,
@@ -209,6 +210,109 @@ export class Cortex {
     );
 
     return undefined;
+  }
+
+  /**
+   * Auto-configure graph database from environment variables.
+   *
+   * Uses a two-gate approach:
+   * - Gate 1: Connection credentials must be present (NEO4J_URI or MEMGRAPH_URI + auth)
+   * - Gate 2: CORTEX_GRAPH_SYNC must be explicitly set to 'true'
+   *
+   * This prevents accidental graph connections - users must explicitly opt-in.
+   *
+   * @returns GraphConfig if both gates pass, undefined otherwise
+   */
+  private static async autoConfigureGraph(): Promise<GraphConfig | undefined> {
+    const graphSyncEnabled = process.env.CORTEX_GRAPH_SYNC === "true";
+
+    if (!graphSyncEnabled) {
+      return undefined;
+    }
+
+    // Check providers in priority order
+    const neo4jUri = process.env.NEO4J_URI;
+    const memgraphUri = process.env.MEMGRAPH_URI;
+
+    if (neo4jUri && memgraphUri) {
+      console.warn(
+        "[Cortex] Both NEO4J_URI and MEMGRAPH_URI set. Using Neo4j.",
+      );
+    }
+
+    if (neo4jUri) {
+      try {
+        const adapter = new CypherGraphAdapter();
+        await adapter.connect({
+          uri: neo4jUri,
+          username: process.env.NEO4J_USERNAME || "neo4j",
+          password: process.env.NEO4J_PASSWORD || "",
+        });
+        return { adapter, autoSync: true };
+      } catch (error) {
+        console.error(
+          "[Cortex] Failed to connect to Neo4j:",
+          error instanceof Error ? error.message : error,
+        );
+        return undefined;
+      }
+    }
+
+    if (memgraphUri) {
+      try {
+        const adapter = new CypherGraphAdapter();
+        await adapter.connect({
+          uri: memgraphUri,
+          username: process.env.MEMGRAPH_USERNAME || "memgraph",
+          password: process.env.MEMGRAPH_PASSWORD || "",
+        });
+        return { adapter, autoSync: true };
+      } catch (error) {
+        console.error(
+          "[Cortex] Failed to connect to Memgraph:",
+          error instanceof Error ? error.message : error,
+        );
+        return undefined;
+      }
+    }
+
+    // CORTEX_GRAPH_SYNC=true but no URI found - warn user
+    console.warn(
+      "[Cortex] CORTEX_GRAPH_SYNC=true but no graph database URI found. " +
+        "Set NEO4J_URI or MEMGRAPH_URI to enable graph sync.",
+    );
+
+    return undefined;
+  }
+
+  /**
+   * Create a Cortex instance with automatic configuration.
+   *
+   * This factory method enables async auto-configuration of:
+   * - Graph database (if CORTEX_GRAPH_SYNC=true and connection credentials set)
+   * - LLM for fact extraction (if CORTEX_FACT_EXTRACTION=true and API key set)
+   *
+   * Use this instead of `new Cortex()` when you want environment-based auto-config.
+   *
+   * @example
+   * ```typescript
+   * // With env vars: CORTEX_GRAPH_SYNC=true, NEO4J_URI=bolt://localhost:7687
+   * const cortex = await Cortex.create({ convexUrl: process.env.CONVEX_URL! });
+   * // Graph is automatically connected and sync worker started
+   * ```
+   *
+   * @param config - Cortex configuration (explicit config takes priority over env vars)
+   * @returns Promise<Cortex> - Fully configured Cortex instance
+   */
+  static async create(config: CortexConfig): Promise<Cortex> {
+    // Auto-configure graph if not explicitly provided
+    const graphConfig = config.graph ?? (await Cortex.autoConfigureGraph());
+
+    // Create instance with potentially auto-configured graph
+    return new Cortex({
+      ...config,
+      graph: graphConfig,
+    });
   }
 
   // Layer 1a: Conversations

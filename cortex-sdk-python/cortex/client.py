@@ -27,7 +27,7 @@ from .resilience import (
     ResilienceMetrics,
     ResiliencePresets,
 )
-from .types import CortexConfig, LLMConfig
+from .types import CortexConfig, GraphConfig, LLMConfig
 from .users import UsersAPI
 from .vector import VectorAPI
 
@@ -96,6 +96,127 @@ class Cortex:
         )
 
         return None
+
+    @staticmethod
+    async def _auto_configure_graph() -> Optional[GraphConfig]:
+        """
+        Auto-configure graph database from environment variables.
+
+        Uses a two-gate approach:
+        - Gate 1: Connection credentials must be present (NEO4J_URI or MEMGRAPH_URI + auth)
+        - Gate 2: CORTEX_GRAPH_SYNC must be explicitly set to 'true'
+
+        This prevents accidental graph connections - users must explicitly opt-in.
+
+        Returns:
+            GraphConfig if both gates pass, None otherwise
+        """
+        graph_sync_enabled = os.environ.get("CORTEX_GRAPH_SYNC") == "true"
+
+        if not graph_sync_enabled:
+            return None
+
+        # Check providers in priority order
+        neo4j_uri = os.environ.get("NEO4J_URI")
+        memgraph_uri = os.environ.get("MEMGRAPH_URI")
+
+        if neo4j_uri and memgraph_uri:
+            warnings.warn(
+                "[Cortex] Both NEO4J_URI and MEMGRAPH_URI set. Using Neo4j.",
+                UserWarning,
+                stacklevel=2,
+            )
+
+        if neo4j_uri:
+            try:
+                from .graph.adapters import CypherGraphAdapter
+
+                adapter = CypherGraphAdapter()
+                await adapter.connect({
+                    "uri": neo4j_uri,
+                    "username": os.environ.get("NEO4J_USERNAME", "neo4j"),
+                    "password": os.environ.get("NEO4J_PASSWORD", ""),
+                })
+                return GraphConfig(adapter=adapter, auto_sync=True)
+            except ImportError:
+                warnings.warn(
+                    "[Cortex] neo4j package not installed. "
+                    "Run: pip install cortex-memory[graph]",
+                    UserWarning,
+                    stacklevel=2,
+                )
+                return None
+            except Exception as e:
+                print(f"[Cortex] Failed to connect to Neo4j: {e}")
+                return None
+
+        if memgraph_uri:
+            try:
+                from .graph.adapters import CypherGraphAdapter
+
+                adapter = CypherGraphAdapter()
+                await adapter.connect({
+                    "uri": memgraph_uri,
+                    "username": os.environ.get("MEMGRAPH_USERNAME", "memgraph"),
+                    "password": os.environ.get("MEMGRAPH_PASSWORD", ""),
+                })
+                return GraphConfig(adapter=adapter, auto_sync=True)
+            except ImportError:
+                warnings.warn(
+                    "[Cortex] neo4j package not installed. "
+                    "Run: pip install cortex-memory[graph]",
+                    UserWarning,
+                    stacklevel=2,
+                )
+                return None
+            except Exception as e:
+                print(f"[Cortex] Failed to connect to Memgraph: {e}")
+                return None
+
+        # CORTEX_GRAPH_SYNC=true but no URI found - warn user
+        warnings.warn(
+            "[Cortex] CORTEX_GRAPH_SYNC=true but no graph database URI found. "
+            "Set NEO4J_URI or MEMGRAPH_URI to enable graph sync.",
+            UserWarning,
+            stacklevel=2,
+        )
+
+        return None
+
+    @classmethod
+    async def create(cls, config: CortexConfig) -> "Cortex":
+        """
+        Create a Cortex instance with automatic configuration.
+
+        This factory method enables async auto-configuration of:
+        - Graph database (if CORTEX_GRAPH_SYNC=true and connection credentials set)
+        - LLM for fact extraction (if CORTEX_FACT_EXTRACTION=true and API key set)
+
+        Use this instead of `Cortex()` when you want environment-based auto-config.
+
+        Example:
+            >>> # With env vars: CORTEX_GRAPH_SYNC=true, NEO4J_URI=bolt://localhost:7687
+            >>> cortex = await Cortex.create(CortexConfig(convex_url=os.getenv("CONVEX_URL")))
+            >>> # Graph is automatically connected and sync worker started
+
+        Args:
+            config: Cortex configuration (explicit config takes priority over env vars)
+
+        Returns:
+            Fully configured Cortex instance
+        """
+        # Auto-configure graph if not explicitly provided
+        graph_config = config.graph or await cls._auto_configure_graph()
+
+        # Create a new config with the potentially auto-configured graph
+        updated_config = CortexConfig(
+            convex_url=config.convex_url,
+            graph=graph_config,
+            resilience=config.resilience,
+            llm=config.llm,
+        )
+
+        return cls(updated_config)
 
     def __init__(self, config: CortexConfig) -> None:
         """
