@@ -6,13 +6,14 @@ Layer 4: High-level helpers that orchestrate Layer 1 (ACID) and Layer 2 (Vector)
 
 import asyncio
 import time
-from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Tuple, Union, cast
+from typing import Any, Dict, List, Literal, Optional, Tuple, Union, cast
 
 from ..conversations import ConversationsAPI
 from ..errors import CortexError, ErrorCode
 from ..facts import FactsAPI
 from ..llm import ExtractedFact, LLMClient, create_llm_client
 from ..types import (
+    ConversationType,
     DeleteMemoryOptions,
     EnrichedMemory,
     ForgetOptions,
@@ -141,7 +142,7 @@ class MemoryAPI:
     def _get_fact_extractor(self, params: RememberParams) -> Optional[Any]:
         """
         Get fact extractor function with fallback chain.
-        
+
         Priority:
         1. params.extract_facts (explicit callback)
         2. LLM config's extract_facts (if configured)
@@ -165,10 +166,10 @@ class MemoryAPI:
     async def _ensure_user_exists(self, user_id: str, user_name: Optional[str]) -> None:
         """
         Auto-create user profile if it doesn't exist.
-        
+
         This ensures that user profiles are automatically registered when
         remember() is called, matching the TypeScript SDK behavior.
-        
+
         Uses immutable:store with type='user' (same as UsersAPI.update).
         """
         try:
@@ -192,10 +193,10 @@ class MemoryAPI:
     async def _ensure_agent_exists(self, agent_id: str) -> None:
         """
         Auto-register agent if it doesn't exist.
-        
+
         This ensures that agents are automatically registered when
         remember() is called, matching the TypeScript SDK behavior.
-        
+
         Uses agents:exists query and agents:register mutation.
         """
         try:
@@ -222,7 +223,7 @@ class MemoryAPI:
     async def _ensure_memory_space_exists(self, memory_space_id: str, sync_to_graph: bool = False) -> None:
         """
         Auto-register memory space if it doesn't exist.
-        
+
         Memory spaces are always auto-created when used - they cannot be skipped.
         Uses memorySpaces:get query and memorySpaces:register mutation.
         """
@@ -277,7 +278,7 @@ class MemoryAPI:
             ...         agent_id='assistant-v1',
             ...     )
             ... )
-            >>> 
+            >>>
             >>> # Skip specific layers
             >>> result = await cortex.memory.remember(
             ...     RememberParams(
@@ -337,7 +338,7 @@ class MemoryAPI:
 
             if not existing_conversation:
                 # Determine conversation type based on owner
-                conversation_type = "user-agent" if params.user_id else "agent-agent"
+                conversation_type: ConversationType = "user-agent" if params.user_id else "agent-agent"
                 participants = (
                     ConversationParticipants(
                         user_id=params.user_id,
@@ -861,7 +862,7 @@ class MemoryAPI:
                     )
 
                     # Determine conversation type
-                    conversation_type = "user-agent" if user_id else "agent-agent"
+                    conversation_type: ConversationType = "user-agent" if user_id else "agent-agent"
                     participants = (
                         ConversationParticipants(
                             user_id=user_id,

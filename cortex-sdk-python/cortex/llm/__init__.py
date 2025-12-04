@@ -12,7 +12,7 @@ import json
 import os
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, List, Literal, Optional
+from typing import TYPE_CHECKING, Any, List, Literal, Optional
 
 if TYPE_CHECKING:
     from ..types import LLMConfig
@@ -224,7 +224,8 @@ class OpenAIClient(LLMClient):
             )
 
             # Build request options - some models don't support all parameters
-            messages = [
+            # Use Any type to avoid strict OpenAI SDK typing issues
+            messages: Any = [
                 {"role": "system", "content": EXTRACTION_SYSTEM_PROMPT},
                 {
                     "role": "user",
@@ -246,7 +247,7 @@ class OpenAIClient(LLMClient):
                     messages=messages,
                     temperature=self.config.temperature or 0.1,
                     max_tokens=self.config.max_tokens or 1000,
-                    response_format={"type": "json_object"},
+                    response_format={"type": "json_object"},  # type: ignore[arg-type]
                 )
 
             content = response.choices[0].message.content
@@ -331,7 +332,7 @@ def create_llm_client(config: "LLMConfig") -> Optional[LLMClient]:
         if config.extract_facts:
             # Wrap the custom function in a client-like interface
             class CustomClient(LLMClient):
-                def __init__(self, extract_fn):
+                def __init__(self, extract_fn: Any) -> None:
                     self.extract_fn = extract_fn
 
                 async def extract_facts(
