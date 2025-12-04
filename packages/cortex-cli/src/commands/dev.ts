@@ -300,7 +300,7 @@ export function registerDevCommands(program: Command, config: CLIConfig): void {
 
           // Find and delete test spaces
           spinner.text = "Finding test memory spaces...";
-          const spaces = await client.memorySpaces.list({ limit: 10000 });
+          const spaces = await client.memorySpaces.list({ limit: 1000 });
           const testSpaces = spaces.filter((s) =>
             s.memorySpaceId.startsWith(prefix),
           );
@@ -318,7 +318,7 @@ export function registerDevCommands(program: Command, config: CLIConfig): void {
 
           // Find and delete test users
           spinner.text = "Finding test users...";
-          const users = await client.users.list({ limit: 10000 });
+          const users = await client.users.list({ limit: 1000 });
           const testUsers = users.filter((u) => u.id.startsWith(prefix));
 
           for (const user of testUsers) {

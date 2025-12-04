@@ -13,7 +13,7 @@
 import { Command } from "commander";
 import ora from "ora";
 import type { CLIConfig, OutputFormat } from "../types.js";
-import { createClient, withClient } from "../utils/client.js";
+import { withClient } from "../utils/client.js";
 import { resolveConfig } from "../utils/config.js";
 import {
   formatOutput,
@@ -274,37 +274,36 @@ export function registerMemoryCommands(
           validateUserId(options.user);
         }
 
-        // Count memories first
-        const client = createClient(config, globalOpts);
-        const count = await client.memory.count({
-          memorySpaceId: options.space,
-          userId: options.user,
-          sourceType: options.source,
-        });
+        await withClient(config, globalOpts, async (client) => {
+          // Count memories first
+          const count = await client.memory.count({
+            memorySpaceId: options.space,
+            userId: options.user,
+            sourceType: options.source,
+          });
 
-        if (count === 0) {
-          printWarning("No memories found to delete");
-          return;
-        }
-
-        if (!options.yes) {
-          const scope = options.user
-            ? `for user ${options.user} in space ${options.space}`
-            : `in space ${options.space}`;
-          const confirmed = await requireConfirmation(
-            `Delete ${formatCount(count, "memory", "memories")} ${scope}? This cannot be undone.`,
-            config,
-          );
-          if (!confirmed) {
-            printWarning("Operation cancelled");
+          if (count === 0) {
+            printWarning("No memories found to delete");
             return;
           }
-        }
 
-        const spinner = ora(`Deleting ${count} memories...`).start();
+          if (!options.yes) {
+            const scope = options.user
+              ? `for user ${options.user} in space ${options.space}`
+              : `in space ${options.space}`;
+            const confirmed = await requireConfirmation(
+              `Delete ${formatCount(count, "memory", "memories")} ${scope}? This cannot be undone.`,
+              config,
+            );
+            if (!confirmed) {
+              printWarning("Operation cancelled");
+              return;
+            }
+          }
 
-        await withClient(config, globalOpts, async (cortex) => {
-          const result = await cortex.memory.deleteMany({
+          const spinner = ora(`Deleting ${count} memories...`).start();
+
+          const result = await client.memory.deleteMany({
             memorySpaceId: options.space,
             userId: options.user,
             sourceType: options.source,

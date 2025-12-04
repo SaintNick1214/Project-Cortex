@@ -43,6 +43,7 @@ async def test_remember_creates_conversation_and_memories(cortex_client, test_id
             agent_response="Hi there!",
             user_id=user_id,
             user_name="Tester",
+            agent_id=test_ids.get("agent_id", "test-agent"),
         )
     )
 
@@ -86,6 +87,7 @@ async def test_forget_deletes_both_layers(cortex_client, test_ids, cleanup_helpe
             agent_response="Okay",
             user_id=user_id,
             user_name="Tester",
+            agent_id=test_ids.get("agent_id", "test-agent"),
         )
     )
 

@@ -6,6 +6,9 @@
  * and streamlining development workflows.
  */
 
+import { existsSync } from "fs";
+import { join } from "path";
+import { config as loadEnv } from "dotenv";
 import { Command } from "commander";
 import pc from "picocolors";
 import { registerMemoryCommands } from "./commands/memory.js";
@@ -19,8 +22,14 @@ import { registerDbCommands } from "./commands/db.js";
 import { registerDevCommands } from "./commands/dev.js";
 import { loadConfig } from "./utils/config.js";
 
+// Auto-load .env.local if it exists in current directory
+const envLocalPath = join(process.cwd(), ".env.local");
+if (existsSync(envLocalPath)) {
+  loadEnv({ path: envLocalPath, quiet: true });
+}
+
 // Package version - will be read from package.json in build
-const VERSION = "0.1.0";
+const VERSION = "0.1.1";
 
 const program = new Command();
 
@@ -30,6 +39,7 @@ program
     "CLI tool for managing Cortex Memory deployments and performing administrative tasks",
   )
   .version(VERSION)
+  .enablePositionalOptions()
   .option("-d, --deployment <name>", "Deployment name to use (from config)")
   .option("-u, --url <url>", "Convex deployment URL (overrides config)")
   .option("-k, --key <key>", "Convex deploy key (overrides config)")
@@ -54,6 +64,12 @@ async function main() {
     registerDbCommands(program, config);
     registerDevCommands(program, config);
 
+    // Show help if no command provided (after commands are registered)
+    if (process.argv.length === 2) {
+      program.outputHelp();
+      process.exit(0);
+    }
+
     // Parse arguments and execute
     await program.parseAsync(process.argv);
   } catch (error) {
@@ -67,12 +83,6 @@ async function main() {
     }
     process.exit(1);
   }
-}
-
-// Show help if no command provided
-if (process.argv.length === 2) {
-  program.outputHelp();
-  process.exit(0);
 }
 
 main();

@@ -30,7 +30,14 @@ import {
   formatOutput,
 } from "../utils/formatting.js";
 import { validateUrl } from "../utils/validation.js";
+import {
+  addDeploymentToEnv,
+  removeDeploymentFromEnv,
+  getDeploymentEnvKeys,
+  getEnvLocalPath,
+} from "../utils/env-file.js";
 import { existsSync } from "fs";
+import { join } from "path";
 
 /**
  * Register setup and config commands
@@ -182,7 +189,9 @@ export function registerSetupCommands(
   // config command group
   const configCmd = program
     .command("config")
-    .description("Manage CLI configuration");
+    .description("Manage CLI configuration")
+    .enablePositionalOptions()
+    .passThroughOptions();
 
   // config show
   configCmd
@@ -276,20 +285,96 @@ export function registerSetupCommands(
 
   // config add-deployment
   configCmd
-    .command("add-deployment <name>")
-    .description("Add a new deployment configuration")
-    .requiredOption("-u, --url <url>", "Convex deployment URL")
+    .command("add-deployment [name]")
+    .description(
+      "Add a new deployment configuration\n\nExample: cortex config add-deployment cloud -u https://my-app.convex.cloud",
+    )
+    .option("-u, --url <url>", "Convex deployment URL")
     .option("-k, --key <key>", "Convex deploy key")
     .option("--default", "Set as default deployment", false)
-    .action(async (name, options) => {
+    .option("--json-only", "Only save to ~/.cortexrc (skip .env.local)", false)
+    .action(async (nameArg, options) => {
       try {
-        validateUrl(options.url);
+        // Prompt for missing values interactively
+        let name = nameArg;
+        let url = options.url;
+        let key = options.key;
+
+        if (!name) {
+          const response = await prompts({
+            type: "select",
+            name: "name",
+            message: "Deployment name:",
+            choices: [
+              { title: "local", description: "Local development", value: "local" },
+              { title: "cloud", description: "Cloud/production", value: "cloud" },
+              { title: "staging", description: "Staging environment", value: "staging" },
+              { title: "custom", description: "Enter custom name", value: "__custom__" },
+            ],
+          });
+          if (!response.name) {
+            printWarning("Cancelled");
+            return;
+          }
+          if (response.name === "__custom__") {
+            const customResponse = await prompts({
+              type: "text",
+              name: "name",
+              message: "Custom deployment name:",
+              validate: (v) => v.length > 0 || "Name is required",
+            });
+            if (!customResponse.name) {
+              printWarning("Cancelled");
+              return;
+            }
+            name = customResponse.name;
+          } else {
+            name = response.name;
+          }
+        }
+
+        if (!url) {
+          const isLocal = name.toLowerCase() === "local";
+          const response = await prompts({
+            type: "text",
+            name: "url",
+            message: "Convex deployment URL:",
+            initial: isLocal ? "http://127.0.0.1:3210" : "https://your-app.convex.cloud",
+            validate: (v) => {
+              try {
+                new URL(v);
+                return true;
+              } catch {
+                return "Please enter a valid URL";
+              }
+            },
+          });
+          if (!response.url) {
+            printWarning("Cancelled");
+            return;
+          }
+          url = response.url;
+        }
+
+        validateUrl(url);
+
+        // Only prompt for key if not local and not already provided
+        const isLocal = name.toLowerCase() === "local";
+        if (!key && !isLocal) {
+          const response = await prompts({
+            type: "password",
+            name: "key",
+            message: "Convex deploy key (optional, press Enter to skip):",
+          });
+          key = response.key || undefined;
+        }
 
         const deployment: DeploymentConfig = {
-          url: options.url,
-          key: options.key,
+          url,
+          key,
         };
 
+        // Save to user config (~/.cortexrc)
         const config = await updateDeployment(name, deployment);
 
         if (options.default) {
@@ -297,7 +382,19 @@ export function registerSetupCommands(
           await saveUserConfig(config);
         }
 
-        printSuccess(`Added deployment "${name}"`);
+        // Also save to .env.local (unless --json-only)
+        if (!options.jsonOnly) {
+          await addDeploymentToEnv(name, url, key);
+          const envKeys = getDeploymentEnvKeys(name);
+          printSuccess(`Added deployment "${name}"`);
+          printInfo(`Updated .env.local: ${envKeys.urlKey}=${url}`);
+          if (key) {
+            printInfo(`Updated .env.local: ${envKeys.keyKey}=***`);
+          }
+        } else {
+          printSuccess(`Added deployment "${name}" to ~/.cortexrc`);
+        }
+
         if (options.default) {
           printInfo(`Set as default deployment`);
         }
@@ -311,11 +408,42 @@ export function registerSetupCommands(
 
   // config remove-deployment
   configCmd
-    .command("remove-deployment <name>")
+    .command("remove-deployment [name]")
     .description("Remove a deployment configuration")
-    .action(async (name) => {
+    .option("--json-only", "Only remove from ~/.cortexrc (skip .env.local)", false)
+    .action(async (nameArg, options) => {
       try {
         const config = await loadConfig();
+        let name = nameArg;
+
+        // If no name provided, show interactive selection
+        if (!name) {
+          const deploymentNames = Object.keys(config.deployments).filter(
+            (n) => n !== config.default,
+          );
+
+          if (deploymentNames.length === 0) {
+            printWarning("No removable deployments found (cannot remove default)");
+            return;
+          }
+
+          const response = await prompts({
+            type: "select",
+            name: "name",
+            message: "Select deployment to remove:",
+            choices: deploymentNames.map((n) => ({
+              title: n,
+              description: config.deployments[n].url,
+              value: n,
+            })),
+          });
+
+          if (!response.name) {
+            printWarning("Cancelled");
+            return;
+          }
+          name = response.name;
+        }
 
         if (!config.deployments[name]) {
           printError(`Deployment "${name}" not found`);
@@ -329,9 +457,32 @@ export function registerSetupCommands(
           process.exit(1);
         }
 
+        // Confirm removal
+        const confirm = await prompts({
+          type: "confirm",
+          name: "value",
+          message: `Remove deployment "${name}" (${config.deployments[name].url})?`,
+          initial: false,
+        });
+
+        if (!confirm.value) {
+          printWarning("Cancelled");
+          return;
+        }
+
+        // Remove from user config (~/.cortexrc)
         delete config.deployments[name];
         await saveUserConfig(config);
-        printSuccess(`Removed deployment "${name}"`);
+
+        // Also remove from .env.local (unless --json-only)
+        if (!options.jsonOnly) {
+          const envKeys = getDeploymentEnvKeys(name);
+          await removeDeploymentFromEnv(name);
+          printSuccess(`Removed deployment "${name}"`);
+          printInfo(`Removed from .env.local: ${envKeys.urlKey}, ${envKeys.keyKey}`);
+        } else {
+          printSuccess(`Removed deployment "${name}" from ~/.cortexrc`);
+        }
       } catch (error) {
         printError(
           error instanceof Error
@@ -348,15 +499,38 @@ export function registerSetupCommands(
     .description("Show configuration file paths")
     .action(async () => {
       const userPath = getUserConfigPath();
-      const projectPath = getProjectConfigPath();
+      const projectJsonPath = getProjectConfigPath();
+      const projectEnvPath = join(process.cwd(), ".env.local");
 
       console.log();
       printSection("Configuration Paths", {
-        "User config": userPath,
+        "User config (~/.cortexrc)": userPath,
         "User config exists": existsSync(userPath) ? "Yes" : "No",
-        "Project config": projectPath,
-        "Project config exists": existsSync(projectPath) ? "Yes" : "No",
+        "Project JSON config": projectJsonPath,
+        "Project JSON exists": existsSync(projectJsonPath) ? "Yes" : "No",
+        "Project env config": projectEnvPath,
+        "Project env exists": existsSync(projectEnvPath) ? "Yes" : "No",
       });
+
+      // Show which env vars are currently set
+      const envVars = {
+        LOCAL_CONVEX_URL: process.env.LOCAL_CONVEX_URL,
+        LOCAL_CONVEX_DEPLOYMENT: process.env.LOCAL_CONVEX_DEPLOYMENT,
+        CLOUD_CONVEX_URL: process.env.CLOUD_CONVEX_URL,
+        CLOUD_CONVEX_DEPLOY_KEY: process.env.CLOUD_CONVEX_DEPLOY_KEY
+          ? "***"
+          : undefined,
+        CONVEX_URL: process.env.CONVEX_URL,
+        CONVEX_DEPLOY_KEY: process.env.CONVEX_DEPLOY_KEY ? "***" : undefined,
+      };
+
+      const setVars = Object.entries(envVars).filter(([, v]) => v);
+      if (setVars.length > 0) {
+        printSection(
+          "Environment Variables",
+          Object.fromEntries(setVars),
+        );
+      }
     });
 
   // config reset

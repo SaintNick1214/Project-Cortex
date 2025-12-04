@@ -440,7 +440,7 @@ export function registerConversationsCommands(
           const convList = await client.conversations.list({
             memorySpaceId: options.space,
             userId: options.user,
-            limit: 10000,
+            limit: 1000,
           });
 
           let deleted = 0;

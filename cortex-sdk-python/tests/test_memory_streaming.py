@@ -100,6 +100,7 @@ class TestMemoryStreaming:
                 response_stream=simple_stream(),
                 user_id=self.ctx.user_id("user-1"),
                 user_name="TestUser",
+                agent_id=self.ctx.agent_id("test-agent"),
             )
         )
 
@@ -119,6 +120,7 @@ class TestMemoryStreaming:
                 response_stream=multi_chunk_stream(),
                 user_id=self.ctx.user_id("user-2"),
                 user_name="MultiUser",
+                agent_id=self.ctx.agent_id("test-agent"),
             )
         )
 
@@ -135,6 +137,7 @@ class TestMemoryStreaming:
                 response_stream=single_chunk_stream(),
                 user_id=self.ctx.user_id("user-3"),
                 user_name="SingleUser",
+                agent_id=self.ctx.agent_id("test-agent"),
             )
         )
 
@@ -151,6 +154,7 @@ class TestMemoryStreaming:
                 response_stream=delayed_stream(),
                 user_id=self.ctx.user_id("user-4"),
                 user_name="DelayUser",
+                agent_id=self.ctx.agent_id("test-agent"),
             )
         )
 
@@ -168,6 +172,7 @@ class TestMemoryStreaming:
                     response_stream=empty_stream(),
                     user_id="user-empty",
                     user_name="EmptyUser",
+                    agent_id="test-agent",
                 )
             )
 
@@ -184,6 +189,7 @@ class TestMemoryStreaming:
                     response_stream=whitespace_stream(),
                     user_id="user-whitespace",
                     user_name="WhitespaceUser",
+                    agent_id="test-agent",
                 )
             )
 
@@ -202,6 +208,7 @@ class TestMemoryStreaming:
                     response_stream="not a stream",  # Invalid
                     user_id="user-invalid",
                     user_name="InvalidUser",
+                    agent_id="test-agent",
                 )
             )
 
@@ -241,6 +248,7 @@ class TestMemoryStreaming:
                 response_stream=color_stream(),
                 user_id="user-facts",
                 user_name="FactUser",
+                agent_id="test-agent",
                 extract_facts=fact_extractor,
             )
         )
@@ -260,6 +268,7 @@ class TestMemoryStreaming:
                 response_stream=simple_stream(),
                 user_id="user-meta",
                 user_name="MetaUser",
+                agent_id="test-agent",
                 importance=80,
                 tags=["important", "weather"],
             )
@@ -283,6 +292,7 @@ class TestMemoryStreaming:
                 response_stream=simple_stream(),
                 user_id="user-hive",
                 user_name="HiveUser",
+                agent_id="test-agent",
                 participant_id="agent-alpha",
             )
         )
@@ -303,6 +313,7 @@ class TestMemoryStreaming:
                 response_stream=simple_stream(),
                 user_id="user-structure",
                 user_name="StructUser",
+                agent_id="test-agent",
             )
         )
 
@@ -334,6 +345,7 @@ class TestMemoryStreaming:
                 response_stream=simple_stream(),
                 user_id=self.ctx.user_id("user-verify"),
                 user_name="VerifyUser",
+                agent_id=self.ctx.agent_id("test-agent"),
             )
         )
 
@@ -404,6 +416,7 @@ class TestMemoryStreamingEdgeCases:
                 response_stream=unicode_stream(),
                 user_id="user-unicode",
                 user_name="UnicodeUser",
+                agent_id="test-agent",
             )
         )
 
@@ -426,6 +439,7 @@ class TestMemoryStreamingEdgeCases:
                 response_stream=large_stream(),
                 user_id="user-large",
                 user_name="LargeUser",
+                agent_id="test-agent",
             )
         )
 
@@ -452,6 +466,7 @@ class TestMemoryStreamingEdgeCases:
                 response_stream=none_chunk_stream(),
                 user_id="user-none",
                 user_name="NoneUser",
+                agent_id="test-agent",
             )
         )
 

@@ -21,6 +21,15 @@ MessageRole = Literal["user", "agent", "system"]
 MemorySpaceType = Literal["personal", "team", "project", "custom"]
 MemorySpaceStatus = Literal["active", "archived"]
 
+# Skippable layers for memory orchestration
+# - 'users': Don't auto-create user profile
+# - 'agents': Don't auto-register agent
+# - 'conversations': Don't store in ACID conversations
+# - 'vector': Don't store in vector index
+# - 'facts': Don't extract/store facts
+# - 'graph': Don't sync to graph database
+SkippableLayer = Literal["users", "agents", "conversations", "vector", "facts", "graph"]
+
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Layer 1a: Conversations
@@ -40,9 +49,10 @@ class Message:
 @dataclass
 class ConversationParticipants:
     """Conversation participants."""
-    user_id: Optional[str] = None
-    participant_id: Optional[str] = None
-    memory_space_ids: Optional[List[str]] = None
+    user_id: Optional[str] = None  # The human user in the conversation
+    agent_id: Optional[str] = None  # The agent/assistant in the conversation
+    participant_id: Optional[str] = None  # Hive Mode: who created this
+    memory_space_ids: Optional[List[str]] = None  # Collaboration Mode (agent-agent)
 
 
 @dataclass
@@ -218,12 +228,13 @@ class MemoryEntry:
     created_at: int
     updated_at: int
     access_count: int
-    participant_id: Optional[str] = None
-    user_id: Optional[str] = None
+    participant_id: Optional[str] = None  # Hive Mode tracking
+    user_id: Optional[str] = None  # For user-owned memories
+    agent_id: Optional[str] = None  # For agent-owned memories
     embedding: Optional[List[float]] = None
     source_user_id: Optional[str] = None
     source_user_name: Optional[str] = None
-    message_role: Optional[Literal["user", "agent", "system"]] = None  # NEW: For semantic search weighting
+    message_role: Optional[Literal["user", "agent", "system"]] = None  # For semantic search weighting
     conversation_ref: Optional[ConversationRef] = None
     immutable_ref: Optional[ImmutableRef] = None
     mutable_ref: Optional[MutableRef] = None
@@ -253,10 +264,11 @@ class StoreMemoryInput:
     content_type: ContentType
     source: MemorySource
     metadata: MemoryMetadata
-    participant_id: Optional[str] = None
+    participant_id: Optional[str] = None  # Hive Mode tracking
     embedding: Optional[List[float]] = None
-    user_id: Optional[str] = None
-    message_role: Optional[Literal["user", "agent", "system"]] = None  # NEW: For semantic search weighting
+    user_id: Optional[str] = None  # For user-owned memories
+    agent_id: Optional[str] = None  # For agent-owned memories
+    message_role: Optional[Literal["user", "agent", "system"]] = None  # For semantic search weighting
     conversation_ref: Optional[ConversationRef] = None
     immutable_ref: Optional[ImmutableRef] = None
     mutable_ref: Optional[MutableRef] = None
@@ -532,14 +544,29 @@ class QueryByRelationshipFilter:
 
 @dataclass
 class RememberParams:
-    """Parameters for remembering a conversation."""
+    """Parameters for remembering a conversation.
+    
+    Ownership rules:
+    - For user-agent conversations: user_id, user_name, AND agent_id are all required
+    - For agent-only memories: only agent_id is required (skip conversations layer)
+    
+    Use skip_layers to explicitly opt-out of specific layers:
+    - 'users': Don't auto-create user profile
+    - 'agents': Don't auto-register agent  
+    - 'conversations': Don't store in ACID conversations
+    - 'vector': Don't store in vector index
+    - 'facts': Don't extract/store facts
+    - 'graph': Don't sync to graph database
+    """
     memory_space_id: str
     conversation_id: str
     user_message: str
     agent_response: str
-    user_id: str
-    user_name: str
-    participant_id: Optional[str] = None
+    user_id: Optional[str] = None  # User owner (requires agent_id and user_name when provided)
+    user_name: Optional[str] = None  # Required when user_id is provided
+    agent_id: Optional[str] = None  # Agent owner (required when user_id is provided)
+    participant_id: Optional[str] = None  # Hive Mode: who created this
+    skip_layers: Optional[List[str]] = None  # Layers to explicitly skip during orchestration
     importance: Optional[int] = None
     tags: Optional[List[str]] = None
     extract_content: Optional[Callable[[str, str], Any]] = None
@@ -559,14 +586,29 @@ class RememberResult:
 
 @dataclass
 class RememberStreamParams:
-    """Parameters for remember_stream() - streaming variant of remember()."""
+    """Parameters for remember_stream() - streaming variant of remember().
+    
+    Ownership rules:
+    - For user-agent conversations: user_id, user_name, AND agent_id are all required
+    - For agent-only memories: only agent_id is required (skip conversations layer)
+    
+    Use skip_layers to explicitly opt-out of specific layers:
+    - 'users': Don't auto-create user profile
+    - 'agents': Don't auto-register agent  
+    - 'conversations': Don't store in ACID conversations
+    - 'vector': Don't store in vector index
+    - 'facts': Don't extract/store facts
+    - 'graph': Don't sync to graph database
+    """
     memory_space_id: str
     conversation_id: str
     user_message: str
     response_stream: Any  # AsyncIterable[str] - async generator or iterator
-    user_id: str
-    user_name: str
-    participant_id: Optional[str] = None
+    user_id: Optional[str] = None  # User owner (requires agent_id and user_name when provided)
+    user_name: Optional[str] = None  # Required when user_id is provided
+    agent_id: Optional[str] = None  # Agent owner (required when user_id is provided)
+    participant_id: Optional[str] = None  # Hive Mode: who created this
+    skip_layers: Optional[List[str]] = None  # Layers to explicitly skip during orchestration
     importance: Optional[int] = None
     tags: Optional[List[str]] = None
     extract_content: Optional[Callable[[str, str], Any]] = None

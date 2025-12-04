@@ -41,8 +41,11 @@ export default defineSchema({
     // Participants (based on type)
     participants: v.object({
       // user-agent conversations
-      userId: v.optional(v.string()),
-      participantId: v.optional(v.string()), // Hive Mode tracking
+      userId: v.optional(v.string()), // The human user in the conversation
+      agentId: v.optional(v.string()), // The agent/assistant in the conversation
+
+      // Hive Mode tracking (which tool/agent in shared space created this)
+      participantId: v.optional(v.string()),
 
       // agent-agent conversations (Collaboration Mode - cross-space)
       memorySpaceIds: v.optional(v.array(v.string())), // Both spaces involved
@@ -80,7 +83,9 @@ export default defineSchema({
     .index("by_memorySpace", ["memorySpaceId"]) // NEW: Memory space's conversations
     .index("by_type", ["type"]) // List by type
     .index("by_user", ["participants.userId"]) // User's conversations
+    .index("by_agent", ["participants.agentId"]) // Agent's conversations
     .index("by_memorySpace_user", ["memorySpaceId", "participants.userId"]) // NEW: Space + user
+    .index("by_memorySpace_agent", ["memorySpaceId", "participants.agentId"]) // Space + agent
     .index("by_created", ["createdAt"]), // Chronological ordering
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -191,8 +196,9 @@ export default defineSchema({
       v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
     ),
 
-    // GDPR support
-    userId: v.optional(v.string()), // For cascade deletion
+    // Owner Attribution (at least one required for proper tracking)
+    userId: v.optional(v.string()), // For user-owned memories (GDPR cascade)
+    agentId: v.optional(v.string()), // For agent-owned memories (agent deletion cascade)
 
     // References to Layer 1 (mutually exclusive, all optional)
     conversationRef: v.optional(
@@ -264,17 +270,19 @@ export default defineSchema({
     .index("by_memorySpace", ["memorySpaceId"]) // NEW: Memory space's memories
     .index("by_memoryId", ["memoryId"]) // Unique lookup
     .index("by_userId", ["userId"]) // GDPR cascade
+    .index("by_agentId", ["agentId"]) // Agent deletion cascade
     .index("by_memorySpace_created", ["memorySpaceId", "createdAt"]) // NEW: Chronological
     .index("by_memorySpace_userId", ["memorySpaceId", "userId"]) // NEW: Space + user
+    .index("by_memorySpace_agentId", ["memorySpaceId", "agentId"]) // NEW: Space + agent
     .index("by_participantId", ["participantId"]) // NEW: Hive Mode tracking
     .searchIndex("by_content", {
       searchField: "content",
-      filterFields: ["memorySpaceId", "sourceType", "userId", "participantId"], // Updated filters
+      filterFields: ["memorySpaceId", "sourceType", "userId", "agentId", "participantId"], // Updated filters
     })
     .vectorIndex("by_embedding", {
       vectorField: "embedding",
       dimensions: 1536, // Default: OpenAI text-embedding-3-small
-      filterFields: ["memorySpaceId", "userId", "participantId"], // Updated: memorySpace isolation
+      filterFields: ["memorySpaceId", "userId", "agentId", "participantId"], // Updated: memorySpace isolation + agent support
     }),
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -35,7 +35,8 @@ export const store = mutation({
     ),
     sourceUserId: v.optional(v.string()),
     sourceUserName: v.optional(v.string()),
-    userId: v.optional(v.string()),
+    userId: v.optional(v.string()), // For user-owned memories
+    agentId: v.optional(v.string()), // For agent-owned memories
     messageRole: v.optional(
       v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
     ), // NEW: For semantic search weighting
@@ -92,6 +93,7 @@ export const store = mutation({
       enrichedContent: args.enrichedContent,
       factCategory: args.factCategory,
       userId: args.userId,
+      agentId: args.agentId, // NEW: Agent-owned memories support
       conversationRef: args.conversationRef,
       immutableRef: args.immutableRef,
       mutableRef: args.mutableRef,

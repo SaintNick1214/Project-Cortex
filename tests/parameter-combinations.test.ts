@@ -16,6 +16,7 @@ describe("Parameter Combination Testing", () => {
   let cortex: Cortex;
   const BASE_ID = `param-test-${Date.now()}`;
   const TEST_USER_ID = "param-test-user";
+  const TEST_AGENT_ID = "param-test-agent";
 
   beforeAll(() => {
     cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
@@ -584,6 +585,7 @@ describe("Parameter Combination Testing", () => {
         agentResponse: "Agent response",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         importance: 95,
         tags: ["important", "remember"],
         extractContent: async (_user, _agent) => `${_user} - ${_agent}`,
@@ -610,6 +612,7 @@ describe("Parameter Combination Testing", () => {
         agentResponse: "Min response",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
       });
 
       expect(result.memories).toHaveLength(2);
@@ -626,6 +629,7 @@ describe("Parameter Combination Testing", () => {
         agentResponse: "Agent msg",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         importance: 88,
       });
 
@@ -643,6 +647,7 @@ describe("Parameter Combination Testing", () => {
         agentResponse: "Tagged response",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         importance: 75,
         tags: ["tagged", "test"],
       });
@@ -659,6 +664,7 @@ describe("Parameter Combination Testing", () => {
         agentResponse: "Long agent response",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         importance: 70,
         extractContent: async (_user, _agent) =>
           `Summary: ${_user.substring(0, 10)}...`,
@@ -676,6 +682,7 @@ describe("Parameter Combination Testing", () => {
         agentResponse: "Noted",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         tags: ["profile", "identity"],
         extractFacts: async (_user, _agent) => [
           {
@@ -700,6 +707,7 @@ describe("Parameter Combination Testing", () => {
         agentResponse: "Good to know",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         extractFacts: async (_user, _agent) => [
           {
             fact: "User likes pizza",
@@ -721,6 +729,7 @@ describe("Parameter Combination Testing", () => {
         agentResponse: "Full response",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         extractContent: async (_user, _agent) => `${_user} / ${_agent}`,
         extractFacts: async (_user, _agent) => [
           {
@@ -1283,6 +1292,7 @@ describe("Parameter Combination Testing", () => {
         agentResponse: "Complex response",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         importance: 92,
         tags: ["complex", "test", "propagation"],
       });
@@ -1427,6 +1437,7 @@ describe("Parameter Combination Testing", () => {
         agentResponse: "That's great!",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         extractContent: async (_user, _agent) =>
           "Extracted: TypeScript + Google",
         extractFacts: async (_user, _agent) => [
@@ -1655,6 +1666,7 @@ describe("Parameter Combination Testing", () => {
         agentResponse: "Agent",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
       });
       expect(remembered.memories[0].participantId).toBe(participantId);
     });
@@ -1679,6 +1691,7 @@ describe("Parameter Combination Testing", () => {
         agentResponse: "Agent",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         importance,
       });
       expect(remembered.memories[0].importance).toBe(importance);
@@ -1716,6 +1729,7 @@ describe("Parameter Combination Testing", () => {
         agentResponse: "Agent",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         tags,
       });
       expect(remembered.memories[0].tags).toEqual(tags);
@@ -1731,6 +1745,7 @@ describe("Parameter Combination Testing", () => {
         agentResponse: "Response",
         userId,
         userName: "Prop User",
+        agentId: TEST_AGENT_ID,
       });
 
       // Memories should have userId

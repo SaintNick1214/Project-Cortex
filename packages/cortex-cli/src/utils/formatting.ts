@@ -160,6 +160,10 @@ function formatValue(value: unknown): string {
   const str = String(value);
   // Truncate long strings
   if (str.length > 50) {
+    // For paths, truncate from the beginning to show the important end
+    if (str.includes("/") || str.includes("\\")) {
+      return "..." + str.substring(str.length - 47);
+    }
     return str.substring(0, 47) + "...";
   }
   return str;

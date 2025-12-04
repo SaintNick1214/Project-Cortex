@@ -917,6 +917,7 @@ describe("Memory Spaces Registry API", () => {
         agentResponse: "Added to calendar",
         userId: userOwner,
         userName: "Owner",
+        agentId: agentCoordinator,
       });
 
       await cortex.facts.store({

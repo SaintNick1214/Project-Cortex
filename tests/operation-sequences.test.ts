@@ -14,6 +14,7 @@ import { Cortex } from "../src/index";
 describe("Operation Sequence Validation", () => {
   let cortex: Cortex;
   const BASE_ID = `seq-test-${Date.now()}`;
+  const TEST_AGENT_ID = `seq-test-agent-${Date.now()}`;
 
   beforeAll(() => {
     cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
@@ -1008,6 +1009,7 @@ describe("Operation Sequence Validation", () => {
         agentResponse: "Test response",
         userId: "test-user",
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
       });
 
       expect(result.memories).toHaveLength(2);
@@ -1255,6 +1257,7 @@ describe("Operation Sequence Validation", () => {
         agentResponse: "Noted!",
         userId,
         userName: "Journey User",
+        agentId: TEST_AGENT_ID,
       });
 
       // Step 5: Extract fact

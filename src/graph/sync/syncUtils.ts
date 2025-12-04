@@ -62,6 +62,7 @@ export async function syncConversationToGraph(
       participantId: conversation.participantId || null,
       type: conversation.type,
       userId: conversation.participants.userId || null,
+      agentId: conversation.participants.agentId || null, // NEW: Agent tracking
       messageCount: conversation.messageCount,
       createdAt: conversation.createdAt,
       updatedAt: conversation.updatedAt,
@@ -88,6 +89,7 @@ export async function syncMemoryToGraph(
       memorySpaceId: memory.memorySpaceId,
       participantId: memory.participantId || null,
       userId: memory.userId || null,
+      agentId: memory.agentId || null, // NEW: Agent tracking
       content: memory.content.substring(0, 200), // Truncate for graph
       contentType: memory.contentType,
       sourceType: memory.sourceType,
@@ -195,6 +197,9 @@ export async function findGraphNodeId(
     case "User":
       propertyName = "userId";
       break;
+    case "Agent":
+      propertyName = "agentId";
+      break;
     case "Participant":
       propertyName = "participantId";
       break;
@@ -228,6 +233,31 @@ export async function ensureUserNode(
     label: "User",
     properties: {
       userId,
+      createdAt: Date.now(),
+    },
+  });
+}
+
+/**
+ * Create or get an Agent node
+ *
+ * Helper for ensuring Agent nodes exist before creating relationships
+ */
+export async function ensureAgentNode(
+  agentId: string,
+  adapter: GraphAdapter,
+): Promise<string> {
+  // Try to find existing node
+  const existingId = await findGraphNodeId("Agent", agentId, adapter);
+  if (existingId) {
+    return existingId;
+  }
+
+  // Create new Agent node
+  return await adapter.createNode({
+    label: "Agent",
+    properties: {
+      agentId,
       createdAt: Date.now(),
     },
   });

@@ -1,6 +1,6 @@
 {
   "name": "@cortexmemory/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CLI tool for managing Cortex Memory deployments, performing administrative tasks, and streamlining development workflows",
   "type": "module",
   "bin": {
@@ -53,7 +53,8 @@
     "ora": "^9.0.0",
     "cli-table3": "^0.6.5",
     "cosmiconfig": "^9.0.0",
-    "convex": "^1.30.0"
+    "convex": "^1.30.0",
+    "dotenv": "^17.2.3"
   },
   "devDependencies": {
     "@types/prompts": "^2.4.9",
@@ -66,7 +67,6 @@
     "globals": "^16.5.0",
     "jest": "^30.2.0",
     "@types/jest": "^30.0.0",
-    "ts-jest": "^29.4.6",
-    "dotenv": "^17.2.3"
+    "ts-jest": "^29.4.6"
   }
 }

@@ -48,9 +48,10 @@ export function registerUserCommands(
   // users list
   users
     .command("list")
-    .description("List all user profiles")
+    .description("List all user profiles with usage stats")
     .option("-l, --limit <number>", "Maximum number of results", "50")
     .option("-f, --format <format>", "Output format: table, json, csv")
+    .option("--no-stats", "Skip gathering usage stats (faster)")
     .action(async (options) => {
       const globalOpts = program.opts();
       const resolved = resolveConfig(config, globalOpts);
@@ -64,26 +65,98 @@ export function registerUserCommands(
         await withClient(config, globalOpts, async (client) => {
           const usersList = await client.users.list({ limit });
 
-          spinner.stop();
-
           if (usersList.length === 0) {
+            spinner.stop();
             printWarning("No users found");
             return;
           }
 
+          // Gather stats if not disabled
+          let userStats: Map<
+            string,
+            { memories: number; conversations: number; facts: number }
+          > = new Map();
+
+          if (options.stats !== false) {
+            spinner.text = `Loading stats for ${usersList.length} users...`;
+
+            // Get all memory spaces once
+            const spaces = await client.memorySpaces.list();
+
+            for (const user of usersList) {
+              let memories = 0;
+              let conversations = 0;
+              let facts = 0;
+
+              for (const space of spaces) {
+                try {
+                  // Count memories for this user in this space
+                  const memCount = await client.memory.count({
+                    memorySpaceId: space.memorySpaceId,
+                    userId: user.id,
+                  });
+                  memories += memCount;
+
+                  // Count conversations
+                  const convos = await client.conversations.list({
+                    memorySpaceId: space.memorySpaceId,
+                    userId: user.id,
+                    limit: 1000,
+                  });
+                  conversations += convos.length;
+
+                  // Count facts
+                  const factsList = await client.facts.list({
+                    memorySpaceId: space.memorySpaceId,
+                    userId: user.id,
+                    limit: 1000,
+                  });
+                  facts += factsList.length;
+                } catch {
+                  // Skip spaces that don't support userId filter
+                }
+              }
+
+              userStats.set(user.id, { memories, conversations, facts });
+            }
+          }
+
+          spinner.stop();
+
           // Format users for display
-          const displayData = usersList.map((u) => ({
-            id: u.id,
-            version: u.version,
-            created: formatRelativeTime(u.createdAt),
-            updated: formatRelativeTime(u.updatedAt),
-            data: JSON.stringify(u.data).substring(0, 50) + "...",
-          }));
+          const displayData = usersList.map((u) => {
+            const stats = userStats.get(u.id);
+            if (stats) {
+              return {
+                id: u.id,
+                memories: stats.memories,
+                conversations: stats.conversations,
+                facts: stats.facts,
+                version: u.version,
+                updated: formatRelativeTime(u.updatedAt),
+              };
+            } else {
+              // No stats mode - show basic info with a preview of data keys
+              const dataKeys = Object.keys(u.data).slice(0, 3).join(", ");
+              return {
+                id: u.id,
+                version: u.version,
+                created: formatRelativeTime(u.createdAt),
+                updated: formatRelativeTime(u.updatedAt),
+                fields: dataKeys || "(empty)",
+              };
+            }
+          });
+
+          const headers =
+            options.stats !== false
+              ? ["id", "memories", "conversations", "facts", "version", "updated"]
+              : ["id", "version", "created", "updated", "fields"];
 
           console.log(
             formatOutput(displayData, format, {
               title: "User Profiles",
-              headers: ["id", "version", "created", "updated", "data"],
+              headers,
             }),
           );
 
