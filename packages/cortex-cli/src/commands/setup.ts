@@ -34,7 +34,6 @@ import {
   addDeploymentToEnv,
   removeDeploymentFromEnv,
   getDeploymentEnvKeys,
-  getEnvLocalPath,
 } from "../utils/env-file.js";
 import { existsSync } from "fs";
 import { join } from "path";

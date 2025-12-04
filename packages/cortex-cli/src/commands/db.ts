@@ -27,46 +27,13 @@ import {
   formatTimestamp,
   formatBytes,
 } from "../utils/formatting.js";
-import {
-  validateFilePath,
-  requireConfirmation,
-  requireExactConfirmation,
-} from "../utils/validation.js";
+import { validateFilePath, requireConfirmation } from "../utils/validation.js";
 import { writeFile, readFile } from "fs/promises";
 import pc from "picocolors";
 import prompts from "prompts";
 import { listDeployments } from "../utils/config.js";
 
 const MAX_LIMIT = 1000;
-
-/**
- * Paginate through all results using cursor-based pagination
- */
-async function paginateAll<T>(
-  fetchFn: (cursor?: string) => Promise<{ data: T[]; cursor?: string }>,
-): Promise<T[]> {
-  const results: T[] = [];
-  let cursor: string | undefined;
-
-  do {
-    const response = await fetchFn(cursor);
-    results.push(...response.data);
-    cursor = response.cursor;
-  } while (cursor);
-
-  return results;
-}
-
-/**
- * Fetch all items using simple limit-based pagination (no cursor)
- */
-async function fetchAllWithLimit<T>(
-  fetchFn: (limit: number) => Promise<T[]>,
-  batchSize: number = MAX_LIMIT,
-): Promise<T[]> {
-  // For APIs without cursor pagination, just fetch max allowed
-  return await fetchFn(batchSize);
-}
 
 /**
  * Select a database deployment interactively or from options
@@ -178,8 +145,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           let tableCounts: Record<string, number> = {};
           try {
             tableCounts = await rawClient.query(
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              "admin:getAllCounts" as any,
+              "admin:getAllCounts" as Parameters<typeof rawClient.query>[0],
               {},
             );
           } catch {
@@ -429,8 +395,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
               spinner.text = `Clearing ${tableName}... (${deleted[counter]} deleted)`;
               try {
                 const result = await rawClient.mutation(
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  "admin:clearTable" as any,
+                  "admin:clearTable" as Parameters<typeof rawClient.mutation>[0],
                   { table: tableName, limit: MAX_LIMIT },
                 );
                 deleted[counter] += result.deleted;
@@ -545,8 +510,9 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
               for (const space of spaces) {
                 try {
                   await rawClient.mutation(
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    "memorySpaces:deleteSpace" as any,
+                    "memorySpaces:deleteSpace" as Parameters<
+                      typeof rawClient.mutation
+                    >[0],
                     { memorySpaceId: space.memorySpaceId, cascade: true },
                   );
                   deleted.memorySpaces++;

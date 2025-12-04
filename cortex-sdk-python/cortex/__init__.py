@@ -126,8 +126,6 @@ from .types import (
     ImportanceRange,
     ListFactsFilter,
     ListResult,
-    # LLM Configuration
-    LLMConfig,
     MemoryEntry,
     MemoryMetadata,
     MemorySource,
