@@ -30,7 +30,7 @@ export async function parseEnvFile(path: string): Promise<EnvLine[]> {
     content = await readFile(path, "utf-8");
   } catch (error) {
     // File doesn't exist - return empty lines (avoids TOCTOU race condition)
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+    if (error instanceof Error && "code" in error && error.code === "ENOENT") {
       return [];
     }
     throw error;
