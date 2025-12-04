@@ -6,16 +6,18 @@ Layer 4: High-level helpers that orchestrate Layer 1 (ACID) and Layer 2 (Vector)
 
 import asyncio
 import time
-from typing import Any, Dict, List, Literal, Optional, Tuple, Union, cast
+from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Tuple, Union, cast
 
 from ..conversations import ConversationsAPI
 from ..errors import CortexError, ErrorCode
 from ..facts import FactsAPI
+from ..llm import ExtractedFact, LLMClient, create_llm_client
 from ..types import (
     DeleteMemoryOptions,
     EnrichedMemory,
     ForgetOptions,
     ForgetResult,
+    LLMConfig,
     MemoryEntry,
     MemoryMetadata,
     MemorySource,
@@ -65,6 +67,7 @@ class MemoryAPI:
         client: Any,
         graph_adapter: Optional[Any] = None,
         resilience: Optional[Any] = None,
+        llm_config: Optional[LLMConfig] = None,
     ) -> None:
         """
         Initialize Memory API.
@@ -73,10 +76,13 @@ class MemoryAPI:
             client: Convex client instance
             graph_adapter: Optional graph database adapter
             resilience: Optional resilience layer for overload protection
+            llm_config: Optional LLM configuration for automatic fact extraction
         """
         self.client = client
         self.graph_adapter = graph_adapter
         self._resilience = resilience
+        self._llm_config = llm_config
+        self._llm_client: Optional[LLMClient] = None
         # Pass resilience layer to sub-APIs
         self.conversations = ConversationsAPI(client, graph_adapter, resilience)
         self.vector = VectorAPI(client, graph_adapter, resilience)
@@ -96,6 +102,42 @@ class MemoryAPI:
         """Check if a layer should be skipped during orchestration."""
         return skip_layers is not None and layer in skip_layers
 
+    def _get_llm_client(self) -> Optional[LLMClient]:
+        """Get or create LLM client for fact extraction."""
+        # Return cached client if already created
+        if self._llm_client is not None:
+            return self._llm_client
+
+        # Create and cache client
+        if self._llm_config:
+            self._llm_client = create_llm_client(self._llm_config)
+
+        return self._llm_client
+
+    async def _create_llm_fact_extractor(
+        self, user_message: str, agent_response: str
+    ) -> Optional[List[ExtractedFact]]:
+        """
+        Create an LLM-based fact extractor function.
+
+        Uses the configured LLM provider (OpenAI or Anthropic) to automatically
+        extract structured facts from conversations. Falls back to None if
+        extraction fails or LLM is not properly configured.
+        """
+        client = self._get_llm_client()
+        if not client:
+            print(
+                "[Cortex] LLM fact extraction configured but client could not be created. "
+                "Ensure openai or anthropic is installed."
+            )
+            return None
+
+        try:
+            return await client.extract_facts(user_message, agent_response)
+        except Exception as e:
+            print(f"[Cortex] LLM fact extraction failed: {e}")
+            return None
+
     def _get_fact_extractor(self, params: RememberParams) -> Optional[Any]:
         """
         Get fact extractor function with fallback chain.
@@ -103,17 +145,20 @@ class MemoryAPI:
         Priority:
         1. params.extract_facts (explicit callback)
         2. LLM config's extract_facts (if configured)
-        3. None (no fact extraction)
+        3. LLM client's extract_facts (if api_key configured)
+        4. None (no fact extraction)
         """
         # Use provided extractor if available
         if params.extract_facts:
             return params.extract_facts
         
-        # TODO: Add LLM config support when implemented
-        # if self.llm_config and hasattr(self.llm_config, 'extract_facts'):
-        #     return self.llm_config.extract_facts
-        # if self.llm_config and hasattr(self.llm_config, 'api_key'):
-        #     return self._create_llm_fact_extractor()
+        # Check LLM config for custom extractor
+        if self._llm_config and self._llm_config.extract_facts:
+            return self._llm_config.extract_facts
+        
+        # Check LLM config for API key - use built-in extraction
+        if self._llm_config and self._llm_config.api_key:
+            return self._create_llm_fact_extractor
         
         return None
 

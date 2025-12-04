@@ -210,6 +210,7 @@ async def test_memory_facts_linkage(cortex_client, test_ids, cleanup_helper):
             agent_response="That's great! Pizza is a wonderful choice - I've added this food preference to your profile for personalized restaurant suggestions.",
             user_id=user_id,
             user_name="Tester",
+            agent_id="test-agent",
             extract_facts=extract_facts,
         )
     )
@@ -252,6 +253,7 @@ async def test_user_cascade_affects_all_layers(cortex_client, test_ids, cleanup_
             agent_response="Response",
             user_id=user_id,
             user_name="Tester",
+            agent_id="test-agent",
         )
     )
 

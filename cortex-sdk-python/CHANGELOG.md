@@ -5,6 +5,123 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.0] - 2025-12-03
+
+### 🤖 Automatic LLM Fact Extraction
+
+**Zero-configuration fact extraction from conversations using OpenAI or Anthropic. Just set environment variables and facts are automatically extracted during `remember()` calls. Full TypeScript SDK parity.**
+
+#### ✨ New Features
+
+**1. Automatic Fact Extraction**
+
+Enable with two environment variables:
+
+```bash
+# Gate 1: API key (OpenAI or Anthropic)
+OPENAI_API_KEY=sk-...
+# or
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Gate 2: Explicit opt-in
+CORTEX_FACT_EXTRACTION=true
+
+# Optional: Custom model
+CORTEX_FACT_EXTRACTION_MODEL=gpt-4o
+```
+
+Facts are now automatically extracted during `remember()`:
+
+```python
+from cortex import Cortex
+from cortex.types import CortexConfig, RememberParams
+
+cortex = Cortex(CortexConfig(convex_url=os.getenv("CONVEX_URL")))
+
+result = await cortex.memory.remember(
+    RememberParams(
+        memory_space_id="my-space",
+        conversation_id="conv-123",
+        user_message="I prefer TypeScript for backend development",
+        agent_response="Great choice!",
+        user_id="user-123",
+        agent_id="assistant-v1",
+    )
+)
+
+# Automatically extracts and stores:
+# ExtractedFact(fact="User prefers TypeScript for backend", fact_type="preference", confidence=0.95)
+```
+
+**2. LLM Client Module**
+
+New `cortex/llm/__init__.py` module with:
+
+- `LLMClient` abstract base class
+- `OpenAIClient` - Uses OpenAI's JSON mode for reliable extraction
+- `AnthropicClient` - Uses Claude's structured output
+- `create_llm_client(config)` factory function
+- Graceful fallback if SDK not installed
+
+**3. Optional Dependencies**
+
+LLM SDKs are now optional dependencies:
+
+```bash
+# Install with LLM support
+pip install cortex-memory[llm]      # Both OpenAI and Anthropic
+pip install cortex-memory[openai]   # OpenAI only
+pip install cortex-memory[anthropic] # Anthropic only
+```
+
+#### 🔧 Configuration
+
+**Explicit Config (overrides env vars):**
+
+```python
+from cortex.types import CortexConfig, LLMConfig
+
+cortex = Cortex(
+    CortexConfig(
+        convex_url="...",
+        llm=LLMConfig(
+            provider="openai",
+            api_key="sk-...",
+            model="gpt-4o",
+            temperature=0.1,
+            max_tokens=1000,
+        ),
+    )
+)
+```
+
+**Custom Extractor:**
+
+```python
+async def custom_extractor(user_msg: str, agent_msg: str):
+    # Your custom extraction logic
+    return [{"fact": "...", "factType": "preference", "confidence": 0.9}]
+
+cortex = Cortex(
+    CortexConfig(
+        convex_url="...",
+        llm=LLMConfig(
+            provider="custom",
+            api_key="unused",
+            extract_facts=custom_extractor,
+        ),
+    )
+)
+```
+
+#### 🛡️ Safety Features
+
+- **Two-gate opt-in**: Requires both API key AND `CORTEX_FACT_EXTRACTION=true`
+- **Graceful degradation**: Missing SDK logs warning, doesn't break `remember()`
+- **Explicit override**: `CortexConfig.llm` always takes priority over env vars
+
+---
+
 ## [0.17.0] - 2025-12-03
 
 ### 🔄 Memory Orchestration - Enhanced Owner Attribution & skipLayers Support

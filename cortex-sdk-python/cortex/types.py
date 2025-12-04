@@ -1161,11 +1161,28 @@ class GraphConfig:
 
 
 @dataclass
+class LLMConfig:
+    """
+    LLM configuration for automatic fact extraction.
+
+    When configured, enables automatic fact extraction from conversations
+    during remember() operations (unless explicitly skipped via skip_layers).
+    """
+    provider: Literal["openai", "anthropic", "custom"]
+    api_key: str
+    model: Optional[str] = None
+    extract_facts: Optional[Callable] = None
+    max_tokens: int = 1000
+    temperature: float = 0.1
+
+
+@dataclass
 class CortexConfig:
     """Main Cortex SDK configuration."""
     convex_url: str
     graph: Optional[GraphConfig] = None
     resilience: Optional[Any] = None  # ResilienceConfig from resilience module
+    llm: Optional[LLMConfig] = None  # LLM config for auto fact extraction
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

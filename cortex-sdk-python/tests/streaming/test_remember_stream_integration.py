@@ -164,6 +164,7 @@ class TestRememberStreamIntegration:
                 "responseStream": create_test_stream(),
                 "userId": "test-user",
                 "userName": "Test User",
+                "agentId": "test-agent",
             },
             StreamingOptions(sync_to_graph=True),
         )
@@ -265,6 +266,7 @@ class TestRememberStreamIntegration:
                 "responseStream": create_long_stream(),
                 "userId": "test-user",
                 "userName": "Test User",
+                "agentId": "test-agent",
             },
             StreamingOptions(
                 store_partial_response=True,
@@ -317,6 +319,7 @@ class TestRememberStreamIntegration:
                 "responseStream": create_test_stream(),
                 "userId": "test-user",
                 "userName": "Test User",
+                "agentId": "test-agent",
             },
             StreamingOptions(
                 hooks={
@@ -400,6 +403,7 @@ class TestGraphSyncValidation:
                 "responseStream": create_long_stream(),
                 "userId": "test-user",
                 "userName": "Test User",
+                "agentId": "test-agent",
             },
             StreamingOptions(
                 progressive_graph_sync=True,
@@ -544,6 +548,7 @@ class TestMultiDatabaseValidation:
                 "responseStream": create_test_stream(),
                 "userId": "test-user",
                 "userName": "Test User",
+                "agentId": "test-agent",
             },
             StreamingOptions(sync_to_graph=True),
         )

@@ -123,6 +123,7 @@ async def test_cascade_delete_memories_layer(cortex_client, test_ids, cleanup_he
             agent_response="Response",
             user_id=user_id,
             user_name="Tester",
+            agent_id="test-agent",
         )
     )
 
@@ -183,6 +184,7 @@ async def test_cascade_with_verification(cortex_client, test_ids, cleanup_helper
             agent_response="Response",
             user_id=user_id,
             user_name="Tester",
+            agent_id="test-agent",
         )
     )
 
@@ -223,6 +225,7 @@ async def test_cascade_dry_run(cortex_client, test_ids, cleanup_helper):
             agent_response="Response",
             user_id=user_id,
             user_name="Tester",
+            agent_id="test-agent",
         )
     )
 
@@ -329,6 +332,7 @@ async def test_cascade_all_layers(cortex_client, test_ids, cleanup_helper):
             agent_response="Done",
             user_id=user_id,
             user_name="Tester",
+            agent_id="test-agent",
             extract_facts=extract_facts,
         )
     )
