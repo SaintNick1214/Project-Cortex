@@ -171,87 +171,65 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
         await withClient(config, globalOpts, async (client) => {
           // Get deployment info
           const info = { url: targetUrl, isLocal: targetUrl.includes("127.0.0.1") || targetUrl.includes("localhost") };
+          const rawClient = client.getClient();
 
-          // Get basic counts
-          spinner.text = "Counting users and spaces...";
-          const [spacesCount, usersCount] = await Promise.all([
-            client.memorySpaces.count(),
-            client.users.count(),
-          ]);
-
-          // Count agents
-          spinner.text = "Counting agents...";
-          let agentsCount = 0;
+          // Get comprehensive counts from all tables using admin function
+          spinner.text = "Counting all tables...";
+          let tableCounts: Record<string, number> = {};
           try {
-            const agents = await client.agents.list({ limit: MAX_LIMIT });
-            agentsCount = agents.length;
+            tableCounts = await rawClient.query(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              "admin:getAllCounts" as any,
+              {},
+            );
           } catch {
-            // Agents API may not be available
+            // Fall back to individual counts if admin function not available
+            tableCounts = {
+              agents: 0,
+              contexts: 0,
+              conversations: 0,
+              facts: 0,
+              governanceEnforcement: 0,
+              governancePolicies: 0,
+              graphSyncQueue: 0,
+              immutable: 0,
+              memories: 0,
+              memorySpaces: 0,
+              mutable: 0,
+            };
           }
 
-          // Count contexts
-          spinner.text = "Counting contexts...";
-          let contextsCount = 0;
+          // Get user count from SDK (users may be managed separately)
+          let usersCount = 0;
           try {
-            const contexts = await client.contexts.list({ limit: MAX_LIMIT });
-            contextsCount = contexts.length;
+            usersCount = await client.users.count();
           } catch {
-            // Contexts API may not be available
+            // Users API may not be available
           }
 
-          // Count immutable records
-          spinner.text = "Counting immutable records...";
-          let immutableCount = 0;
-          try {
-            const immutable = await client.immutable.list({ limit: MAX_LIMIT });
-            immutableCount = immutable.length;
-          } catch {
-            // Immutable API may not be available
-          }
-
-          // Get space-level statistics
-          spinner.text = "Gathering space statistics...";
-          const spaces = await client.memorySpaces.list({ limit: MAX_LIMIT });
-
-          let totalMemories = 0;
-          let totalConversations = 0;
-          let totalFacts = 0;
+          // Count messages in conversations
+          spinner.text = "Counting messages...";
           let totalMessages = 0;
-
-          for (const space of spaces) {
-            try {
-              const stats = await client.memorySpaces.getStats(
-                space.memorySpaceId,
-              );
-              totalMemories += stats.totalMemories;
-              totalConversations += stats.totalConversations;
-              totalFacts += stats.totalFacts;
-              // Count messages in conversations
-              if (stats.totalConversations > 0) {
-                const convos = await client.conversations.list({
-                  memorySpaceId: space.memorySpaceId,
-                  limit: MAX_LIMIT,
-                });
-                for (const convo of convos) {
-                  totalMessages += convo.messageCount ?? 0;
-                }
-              }
-            } catch {
-              // Skip if stats not available
+          try {
+            const convos = await client.conversations.list({ limit: MAX_LIMIT });
+            for (const convo of convos) {
+              totalMessages += convo.messageCount ?? 0;
             }
+          } catch {
+            // Skip if not available
           }
 
           spinner.stop();
 
           const stats: DatabaseStats = {
-            memorySpaces: spacesCount,
-            conversations: totalConversations,
-            memories: totalMemories,
-            facts: totalFacts,
+            memorySpaces: tableCounts.memorySpaces ?? 0,
+            conversations: tableCounts.conversations ?? 0,
+            memories: tableCounts.memories ?? 0,
+            facts: tableCounts.facts ?? 0,
             users: usersCount,
-            immutableRecords: immutableCount,
-            mutableRecords: 0,
-            contexts: contextsCount,
+            immutableRecords: tableCounts.immutable ?? 0,
+            mutableRecords: tableCounts.mutable ?? 0,
+            contexts: tableCounts.contexts ?? 0,
           };
 
           if (format === "json") {
@@ -259,8 +237,11 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
               formatOutput(
                 {
                   ...stats,
-                  agents: agentsCount,
+                  agents: tableCounts.agents ?? 0,
                   messages: totalMessages,
+                  governancePolicies: tableCounts.governancePolicies ?? 0,
+                  governanceEnforcement: tableCounts.governanceEnforcement ?? 0,
+                  graphSyncQueue: tableCounts.graphSyncQueue ?? 0,
                   deployment: {
                     name:
                       globalOpts.deployment ?? config.default ?? "default",
@@ -290,7 +271,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
               `    Users:            ${pc.yellow(String(stats.users))}`,
             );
             console.log(
-              `    Agents:           ${pc.yellow(String(agentsCount))}`,
+              `    Agents:           ${pc.yellow(String(tableCounts.agents ?? 0))}`,
             );
             console.log();
 
@@ -321,6 +302,22 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
             console.log(pc.bold("  Shared Stores"));
             console.log(
               `    Immutable:        ${pc.yellow(String(stats.immutableRecords))}`,
+            );
+            console.log(
+              `    Mutable:          ${pc.yellow(String(stats.mutableRecords))}`,
+            );
+            console.log();
+
+            // System tables
+            console.log(pc.bold("  System Tables"));
+            console.log(
+              `    Gov. Policies:    ${pc.yellow(String(tableCounts.governancePolicies ?? 0))}`,
+            );
+            console.log(
+              `    Gov. Logs:        ${pc.yellow(String(tableCounts.governanceEnforcement ?? 0))}`,
+            );
+            console.log(
+              `    Graph Sync Queue: ${pc.yellow(String(tableCounts.graphSyncQueue ?? 0))}`,
             );
             console.log();
 
@@ -390,17 +387,43 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
             contexts: 0,
             conversations: 0,
             messages: 0,
-            memorySpaces: 0,
-            memories: 0,
             facts: 0,
+            memories: 0,
+            memorySpaces: 0,
             immutable: 0,
+            mutable: 0,
             users: 0,
+            governancePolicies: 0,
+            governanceEnforcement: 0,
+            graphSyncQueue: 0,
           };
 
-          // 1. Delete all agents first (they may reference other entities)
-          // NOTE: We use cascade: false here because memory space deletion
-          // will cascade and clean up all agent data anyway. Using cascade: true
-          // would be redundant and extremely slow (3.6s per agent vs 5ms).
+          // Get raw Convex client for direct table access via admin functions
+          const rawClient = client.getClient();
+
+          // Helper to clear a table using the admin:clearTable mutation
+          const clearTableDirect = async (
+            tableName: string,
+            counter: keyof typeof deleted,
+          ) => {
+            let hasMore = true;
+            while (hasMore) {
+              spinner.text = `Clearing ${tableName}... (${deleted[counter]} deleted)`;
+              try {
+                const result = await rawClient.mutation(
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  "admin:clearTable" as any,
+                  { table: tableName, limit: MAX_LIMIT },
+                );
+                deleted[counter] += result.deleted;
+                hasMore = result.hasMore;
+              } catch {
+                hasMore = false;
+              }
+            }
+          };
+
+          // 1. Clear agents (using SDK for proper unregister)
           let hasMoreAgents = true;
           while (hasMoreAgents) {
             spinner.text = `Clearing agents... (${deleted.agents} deleted)`;
@@ -422,12 +445,13 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
                 hasMoreAgents = false;
               }
             } catch {
-              // Agents API may not be available
+              // Fall back to direct table clear if SDK fails
+              await clearTableDirect("agents", "agents");
               hasMoreAgents = false;
             }
           }
 
-          // 2. Delete all contexts
+          // 2. Clear contexts (using SDK for cascade)
           let hasMoreContexts = true;
           while (hasMoreContexts) {
             spinner.text = `Clearing contexts... (${deleted.contexts} deleted)`;
@@ -451,13 +475,12 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
                 hasMoreContexts = false;
               }
             } catch {
-              // Contexts API may not be available
+              await clearTableDirect("contexts", "contexts");
               hasMoreContexts = false;
             }
           }
 
-          // 3. Delete ALL conversations directly (don't rely on memory space cascade)
-          // This catches orphaned conversations whose memory space was already deleted
+          // 3. Clear conversations (count messages)
           let hasMoreConvos = true;
           while (hasMoreConvos) {
             spinner.text = `Clearing conversations... (${deleted.conversations} deleted, ${deleted.messages} messages)`;
@@ -480,50 +503,52 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
                 hasMoreConvos = false;
               }
             } catch {
-              // Conversations API may not be available
+              await clearTableDirect("conversations", "conversations");
               hasMoreConvos = false;
             }
           }
 
-          // 4. Delete all memory spaces (with cascade - deletes memories, facts)
-          // Use raw Convex client to bypass SDK validation for cleanup of invalid IDs
-          const rawClient = client.getClient();
+          // 4. Clear facts (direct table clear)
+          await clearTableDirect("facts", "facts");
+
+          // 5. Clear memories (direct table clear)
+          await clearTableDirect("memories", "memories");
+
+          // 6. Clear memory spaces (using raw client for invalid IDs)
           let hasMoreSpaces = true;
           while (hasMoreSpaces) {
-            spinner.text = `Clearing memory spaces... (${deleted.memorySpaces} deleted)`;
-            const spaces = await client.memorySpaces.list({ limit: MAX_LIMIT });
-
-            if (spaces.length === 0) {
-              hasMoreSpaces = false;
-              break;
-            }
-
-            for (const space of spaces) {
-              try {
-                // Use raw client to bypass SDK validation (handles invalid IDs from tests)
-                await rawClient.mutation(
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  "memorySpaces:deleteSpace" as any,
-                  {
-                    memorySpaceId: space.memorySpaceId,
-                    cascade: true,
-                  },
-                );
-                deleted.memorySpaces++;
-              } catch {
-                // Continue on error
+            spinner.text = `Clearing memorySpaces... (${deleted.memorySpaces} deleted)`;
+            try {
+              const spaces = await client.memorySpaces.list({ limit: MAX_LIMIT });
+              if (spaces.length === 0) {
+                hasMoreSpaces = false;
+                break;
               }
-            }
-
-            if (spaces.length < MAX_LIMIT) {
+              for (const space of spaces) {
+                try {
+                  await rawClient.mutation(
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    "memorySpaces:deleteSpace" as any,
+                    { memorySpaceId: space.memorySpaceId, cascade: true },
+                  );
+                  deleted.memorySpaces++;
+                } catch {
+                  // Continue on error
+                }
+              }
+              if (spaces.length < MAX_LIMIT) {
+                hasMoreSpaces = false;
+              }
+            } catch {
+              await clearTableDirect("memorySpaces", "memorySpaces");
               hasMoreSpaces = false;
             }
           }
 
-          // 5. Delete all immutable records
+          // 7. Clear immutable (using SDK)
           let hasMoreImmutable = true;
           while (hasMoreImmutable) {
-            spinner.text = `Clearing immutable records... (${deleted.immutable} deleted)`;
+            spinner.text = `Clearing immutable... (${deleted.immutable} deleted)`;
             try {
               const records = await client.immutable.list({ limit: MAX_LIMIT });
               if (records.length === 0) {
@@ -542,35 +567,48 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
                 hasMoreImmutable = false;
               }
             } catch {
-              // Immutable API may not be available
+              await clearTableDirect("immutable", "immutable");
               hasMoreImmutable = false;
             }
           }
 
-          // 6. Delete all users (with cascade - cleans up any remaining user data)
+          // 8. Clear mutable (direct table clear)
+          await clearTableDirect("mutable", "mutable");
+
+          // 9. Clear users (using SDK for cascade - users table is virtual/SDK-managed)
           let hasMoreUsers = true;
           while (hasMoreUsers) {
             spinner.text = `Clearing users... (${deleted.users} deleted)`;
-            const users = await client.users.list({ limit: MAX_LIMIT });
-
-            if (users.length === 0) {
-              hasMoreUsers = false;
-              break;
-            }
-
-            for (const user of users) {
-              try {
-                await client.users.delete(user.id, { cascade: true });
-                deleted.users++;
-              } catch {
-                // Continue on error
+            try {
+              const users = await client.users.list({ limit: MAX_LIMIT });
+              if (users.length === 0) {
+                hasMoreUsers = false;
+                break;
               }
-            }
-
-            if (users.length < MAX_LIMIT) {
+              for (const user of users) {
+                try {
+                  await client.users.delete(user.id, { cascade: true });
+                  deleted.users++;
+                } catch {
+                  // Continue on error
+                }
+              }
+              if (users.length < MAX_LIMIT) {
+                hasMoreUsers = false;
+              }
+            } catch {
               hasMoreUsers = false;
             }
           }
+
+          // 10. Clear governance policies
+          await clearTableDirect("governancePolicies", "governancePolicies");
+
+          // 11. Clear governance enforcement logs
+          await clearTableDirect("governanceEnforcement", "governanceEnforcement");
+
+          // 12. Clear graph sync queue
+          await clearTableDirect("graphSyncQueue", "graphSyncQueue");
 
           spinner.stop();
 
@@ -581,15 +619,37 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
             URL: targetUrl,
           });
           console.log();
-          printSection("Records Deleted", {
+
+          // Show counts with categories
+          const coreEntities = {
             Agents: deleted.agents,
+            Users: deleted.users,
+            "Memory Spaces": deleted.memorySpaces,
+          };
+          const memoryData = {
+            Memories: deleted.memories,
+            Facts: deleted.facts,
             Contexts: deleted.contexts,
+          };
+          const conversationData = {
             Conversations: deleted.conversations,
             Messages: deleted.messages,
-            "Memory Spaces": deleted.memorySpaces,
-            "Immutable Records": deleted.immutable,
-            Users: deleted.users,
-          });
+          };
+          const sharedStores = {
+            Immutable: deleted.immutable,
+            Mutable: deleted.mutable,
+          };
+          const systemTables = {
+            "Governance Policies": deleted.governancePolicies,
+            "Governance Logs": deleted.governanceEnforcement,
+            "Graph Sync Queue": deleted.graphSyncQueue,
+          };
+
+          printSection("Core Entities", coreEntities);
+          printSection("Memory Data", memoryData);
+          printSection("Conversations", conversationData);
+          printSection("Shared Stores", sharedStores);
+          printSection("System Tables", systemTables);
         });
       } catch (error) {
         printError(error instanceof Error ? error.message : "Clear failed");

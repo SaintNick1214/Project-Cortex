@@ -1,0 +1,183 @@
+/**
+ * Admin Operations
+ *
+ * Low-level administrative functions for database management.
+ * These bypass normal validation for cleanup/maintenance operations.
+ *
+ * WARNING: These functions are powerful and should only be used by
+ * authorized administrative tools like the CLI.
+ */
+
+import { mutation, query } from "./_generated/server";
+import { v } from "convex/values";
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Generic List All Functions (for db clear)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * List all records from any table
+ */
+export const listTable = query({
+  args: {
+    table: v.union(
+      v.literal("agents"),
+      v.literal("contexts"),
+      v.literal("conversations"),
+      v.literal("facts"),
+      v.literal("governanceEnforcement"),
+      v.literal("governancePolicies"),
+      v.literal("graphSyncQueue"),
+      v.literal("immutable"),
+      v.literal("memories"),
+      v.literal("memorySpaces"),
+      v.literal("mutable"),
+    ),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = Math.min(args.limit ?? 1000, 1000);
+
+    // Use type assertion since we're dynamically accessing tables
+    const records = await ctx.db
+      .query(args.table as "agents")
+      .order("desc")
+      .take(limit);
+
+    return records;
+  },
+});
+
+/**
+ * Delete a record by its Convex _id
+ */
+export const deleteRecord = mutation({
+  args: {
+    table: v.union(
+      v.literal("agents"),
+      v.literal("contexts"),
+      v.literal("conversations"),
+      v.literal("facts"),
+      v.literal("governanceEnforcement"),
+      v.literal("governancePolicies"),
+      v.literal("graphSyncQueue"),
+      v.literal("immutable"),
+      v.literal("memories"),
+      v.literal("memorySpaces"),
+      v.literal("mutable"),
+    ),
+    id: v.id("agents"), // Will be cast to appropriate type
+  },
+  handler: async (ctx, args) => {
+    // Delete the record directly using Convex _id
+    // The id type is polymorphic - Convex handles the table routing
+    await ctx.db.delete(args.id as typeof args.id);
+    return { deleted: true };
+  },
+});
+
+/**
+ * Bulk delete all records from a table (up to limit)
+ * Returns count of deleted records
+ */
+export const clearTable = mutation({
+  args: {
+    table: v.union(
+      v.literal("agents"),
+      v.literal("contexts"),
+      v.literal("conversations"),
+      v.literal("facts"),
+      v.literal("governanceEnforcement"),
+      v.literal("governancePolicies"),
+      v.literal("graphSyncQueue"),
+      v.literal("immutable"),
+      v.literal("memories"),
+      v.literal("memorySpaces"),
+      v.literal("mutable"),
+    ),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = Math.min(args.limit ?? 1000, 1000);
+
+    const records = await ctx.db
+      .query(args.table as "agents")
+      .order("desc")
+      .take(limit);
+
+    let deleted = 0;
+    for (const record of records) {
+      await ctx.db.delete(record._id);
+      deleted++;
+    }
+
+    return {
+      deleted,
+      hasMore: records.length === limit,
+    };
+  },
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Table Statistics
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Count records in a table
+ */
+export const countTable = query({
+  args: {
+    table: v.union(
+      v.literal("agents"),
+      v.literal("contexts"),
+      v.literal("conversations"),
+      v.literal("facts"),
+      v.literal("governanceEnforcement"),
+      v.literal("governancePolicies"),
+      v.literal("graphSyncQueue"),
+      v.literal("immutable"),
+      v.literal("memories"),
+      v.literal("memorySpaces"),
+      v.literal("mutable"),
+    ),
+  },
+  handler: async (ctx, args) => {
+    // Count by fetching all (limited to reasonable amount for performance)
+    const records = await ctx.db
+      .query(args.table as "agents")
+      .take(10000);
+
+    return { count: records.length };
+  },
+});
+
+/**
+ * Get counts for all tables at once
+ */
+export const getAllCounts = query({
+  args: {},
+  handler: async (ctx) => {
+    const tables = [
+      "agents",
+      "contexts",
+      "conversations",
+      "facts",
+      "governanceEnforcement",
+      "governancePolicies",
+      "graphSyncQueue",
+      "immutable",
+      "memories",
+      "memorySpaces",
+      "mutable",
+    ] as const;
+
+    const counts: Record<string, number> = {};
+
+    for (const table of tables) {
+      const records = await ctx.db.query(table).take(10000);
+      counts[table] = records.length;
+    }
+
+    return counts;
+  },
+});

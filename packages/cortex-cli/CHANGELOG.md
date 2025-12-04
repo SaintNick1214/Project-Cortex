@@ -15,8 +15,8 @@
 - `cortex users list --no-stats` option for faster listing without gathering stats
 - `cortex db clear` now shows target database and allows selecting from multiple deployments
 - `cortex db clear` simplified confirmation (y/N instead of typing exact phrase)
-- `cortex db stats` now shows agents, contexts, messages, immutable records, and better formatting
-- `cortex db clear` now comprehensively clears all tables: agents, contexts, conversations, memory spaces, immutable records, and users
+- `cortex db stats` now shows all 11 tables with comprehensive statistics
+- `cortex db clear` now clears ALL 11 tables: agents, contexts, conversations, facts, memories, memorySpaces, immutable, mutable, governancePolicies, governanceEnforcement, graphSyncQueue
 - All `cortex db` commands now prompt to select database when multiple deployments configured
 - Added usage examples in command descriptions (e.g., `cortex config add-deployment --help`)
 
