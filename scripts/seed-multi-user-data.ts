@@ -25,7 +25,9 @@ if (!convexUrl) {
 
 console.log(`\n🌱 Seeding multi-user chatbot data to: ${convexUrl}\n`);
 
-const cortex = new Cortex({ convexUrl });
+// Use Cortex.create() for auto-configuration of graph database from env vars
+// (CORTEX_GRAPH_SYNC=true + NEO4J_URI enables automatic graph sync)
+let cortex: Cortex;
 
 // Sample memory content for realistic simulation
 const memoryTemplates = [
@@ -171,6 +173,16 @@ const userData = [
 
 async function seedData() {
   try {
+    // Initialize Cortex with auto-configuration (graph sync from env vars)
+    cortex = await Cortex.create({ convexUrl });
+    
+    const graphWorker = cortex.getGraphSyncWorker();
+    if (graphWorker) {
+      console.log("📊 Graph sync enabled (auto-configured from environment)\n");
+    } else {
+      console.log("⚠️  Graph sync not enabled (set CORTEX_GRAPH_SYNC=true and NEO4J_URI)\n");
+    }
+    
     console.log("🌱 Starting multi-user data seeding...\n");
 
     // Create a single memory space for the chatbot
@@ -178,7 +190,39 @@ async function seedData() {
     const agentId = "chatbot-assistant-001";
 
     console.log(`📦 Memory Space: ${memorySpaceId}`);
-    console.log(`🤖 Agent: ${agentId}\n`);
+    console.log(`🤖 Agent: ${agentId}`);
+
+    // Pre-register memory space and agent to avoid race conditions in parallel memory creation
+    console.log(`🔧 Pre-registering shared resources...`);
+    try {
+      await cortex.memorySpaces.register({
+        memorySpaceId,
+        type: "custom",
+        name: "Multi-User Chatbot Space",
+      });
+      console.log(`   ✅ Memory space registered`);
+    } catch (e: any) {
+      if (!e.message?.includes("ALREADY_EXISTS")) {
+        console.error(`   ⚠️  Failed to register memory space: ${e.message}`);
+      } else {
+        console.log(`   ℹ️  Memory space already exists`);
+      }
+    }
+
+    try {
+      await cortex.agents.register({
+        id: agentId, // Client API uses 'id', not 'agentId'
+        name: "Chatbot Assistant",
+        description: "Multi-user chatbot assistant",
+      });
+      console.log(`   ✅ Agent registered\n`);
+    } catch (e: any) {
+      if (!e.message?.includes("ALREADY_REGISTERED")) {
+        console.error(`   ⚠️  Failed to register agent: ${e.message}`);
+      } else {
+        console.log(`   ℹ️  Agent already exists\n`);
+      }
+    }
 
     let totalMemories = 0;
 

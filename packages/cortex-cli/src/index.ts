@@ -24,8 +24,13 @@ import { loadConfig } from "./utils/config.js";
 
 // Auto-load .env.local if it exists in current directory
 const envLocalPath = join(process.cwd(), ".env.local");
-if (existsSync(envLocalPath)) {
-  loadEnv({ path: envLocalPath, quiet: true });
+const envLoaded = existsSync(envLocalPath);
+if (envLoaded) {
+  const result = loadEnv({ path: envLocalPath });
+  // Debug: log if env file was loaded (only when --debug flag is used)
+  if (process.argv.includes("--debug")) {
+    console.log(`[DEBUG] Loaded ${Object.keys(result.parsed || {}).length} env vars from ${envLocalPath}`);
+  }
 }
 
 // Package version - will be read from package.json in build
