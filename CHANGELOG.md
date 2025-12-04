@@ -19,6 +19,67 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.19.0] - 2025-12-03
+
+#### 🔗 Automatic Graph Database Configuration
+
+**Zero-configuration graph database integration via environment variables. Just set `CORTEX_GRAPH_SYNC=true` and connection credentials for automatic graph sync during `remember()` calls.**
+
+#### ✨ New Features
+
+**1. Automatic Graph Configuration**
+
+Enable with two environment variables:
+
+```bash
+# Gate 1: Connection credentials (Neo4j OR Memgraph)
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=password
+
+# OR
+MEMGRAPH_URI=bolt://localhost:7688
+MEMGRAPH_USERNAME=memgraph
+MEMGRAPH_PASSWORD=password
+
+# Gate 2: Explicit opt-in
+CORTEX_GRAPH_SYNC=true
+```
+
+Graph is now automatically configured with `Cortex.create()`:
+
+```typescript
+// With env vars: CORTEX_GRAPH_SYNC=true, NEO4J_URI=bolt://localhost:7687
+const cortex = await Cortex.create({ convexUrl: process.env.CONVEX_URL! });
+// Graph is automatically connected and sync worker started
+```
+
+**2. Factory Pattern for Async Configuration**
+
+New `Cortex.create()` static factory method that enables async auto-configuration:
+
+```typescript
+// Factory method - enables graph auto-config
+const cortex = await Cortex.create({ convexUrl: "..." });
+
+// Constructor still works (backward compatible, no graph auto-config)
+const cortex = new Cortex({ convexUrl: "..." });
+```
+
+**3. Priority Handling**
+
+- Explicit `CortexConfig.graph` always takes priority over env vars
+- If both `NEO4J_URI` and `MEMGRAPH_URI` are set, Neo4j is used with a warning
+- Auto-sync worker is automatically started when auto-configured
+
+#### 🛡️ Safety Features
+
+- **Two-gate opt-in**: Requires both connection credentials AND `CORTEX_GRAPH_SYNC=true`
+- **Graceful error handling**: Connection failures log error and return undefined
+- **Backward compatible**: Existing `new Cortex()` usage unchanged
+
+---
+
 ### [0.18.0] - 2025-12-03
 
 #### 🤖 Automatic LLM Fact Extraction
