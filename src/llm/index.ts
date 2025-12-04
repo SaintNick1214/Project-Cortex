@@ -269,7 +269,6 @@ class AnthropicClient implements LLMClient {
   ): Promise<ExtractedFact[] | null> {
     try {
       // Dynamic import to avoid requiring anthropic as hard dependency
-      // @ts-expect-error - Dynamic import of optional dependency
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const Anthropic = (await import("@anthropic-ai/sdk")).default as any;
 
@@ -358,7 +357,6 @@ export async function isLLMAvailable(
       await import("openai");
       return true;
     } else if (provider === "anthropic") {
-      // @ts-expect-error - Dynamic import of optional dependency
       await import("@anthropic-ai/sdk");
       return true;
     }
