@@ -19,6 +19,115 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.18.0] - 2025-12-03
+
+#### 🤖 Automatic LLM Fact Extraction
+
+**Zero-configuration fact extraction from conversations using OpenAI or Anthropic. Just set environment variables and facts are automatically extracted during `remember()` calls.**
+
+#### ✨ New Features
+
+**1. Automatic Fact Extraction**
+
+Enable with two environment variables:
+
+```bash
+# Gate 1: API key (OpenAI or Anthropic)
+OPENAI_API_KEY=sk-...
+# or
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Gate 2: Explicit opt-in
+CORTEX_FACT_EXTRACTION=true
+
+# Optional: Custom model
+CORTEX_FACT_EXTRACTION_MODEL=gpt-4o
+```
+
+Facts are now automatically extracted during `remember()`:
+
+```typescript
+await cortex.memory.remember({
+  memorySpaceId: "my-space",
+  conversationId: "conv-123",
+  userMessage: "I prefer TypeScript for backend development",
+  agentResponse: "Great choice!",
+  userId: "user-123",
+  agentId: "assistant-v1",
+});
+
+// Automatically extracts and stores:
+// { fact: "User prefers TypeScript for backend", factType: "preference", confidence: 0.95 }
+```
+
+**2. LLM Client Module**
+
+New `src/llm/index.ts` module with:
+
+- `LLMClient` interface for fact extraction
+- `OpenAIClient` - Uses OpenAI's JSON mode for reliable extraction
+- `AnthropicClient` - Uses Claude's structured output
+- `createLLMClient(config)` factory function
+- Graceful fallback if SDK not installed
+
+**3. Model Flexibility**
+
+Supports any model with graceful capability detection:
+
+- Standard models (gpt-4o-mini, claude-3-haiku): Full JSON mode, temperature, max_tokens
+- Reasoning models (o1, o1-mini): Automatically omits unsupported parameters
+
+**4. Optional Peer Dependencies**
+
+LLM SDKs are now optional peer dependencies:
+
+```bash
+# Install only what you need
+npm install openai           # For OpenAI
+npm install @anthropic-ai/sdk  # For Anthropic
+```
+
+#### 🔧 Configuration
+
+**Explicit Config (overrides env vars):**
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: "...",
+  llm: {
+    provider: "openai",
+    apiKey: "sk-...",
+    model: "gpt-4o",
+    temperature: 0.1,
+    maxTokens: 1000,
+  },
+});
+```
+
+**Custom Extractor:**
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: "...",
+  llm: {
+    provider: "custom",
+    apiKey: "unused",
+    extractFacts: async (userMsg, agentMsg) => {
+      // Your custom extraction logic
+      return [{ fact: "...", factType: "preference", confidence: 0.9 }];
+    },
+  },
+});
+```
+
+#### 🛡️ Safety Features
+
+- **Two-gate opt-in**: Requires both API key AND `CORTEX_FACT_EXTRACTION=true`
+- **Graceful degradation**: Missing SDK logs warning, doesn't break `remember()`
+- **Explicit override**: `CortexConfig.llm` always takes priority over env vars
+
+---
+
 ### [0.17.0] - 2025-12-03
 
 #### 🔄 Memory Orchestration - Enhanced Owner Attribution

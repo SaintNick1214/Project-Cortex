@@ -398,6 +398,13 @@ describe("Edge Runtime: Real-world Scenarios", () => {
   it("should handle concurrent requests (edge function behavior)", async () => {
     // Edge functions often handle concurrent requests
     // Test that Cortex can handle parallel operations
+    const CONCURRENT_AGENT = ctx.agentId("concurrent");
+
+    // Pre-register agent to avoid race condition in concurrent requests
+    await cortex.agents.register({
+      id: CONCURRENT_AGENT,
+      name: "Concurrent Test Agent",
+    });
 
     const requests = Array.from({ length: 5 }, (_, i) => ({
       userMessage: `Question ${i + 1}`,
@@ -413,7 +420,7 @@ describe("Edge Runtime: Real-world Scenarios", () => {
           agentResponse: req.agentResponse,
           userId: "concurrent-user",
           userName: "ConcurrentUser",
-          agentId: "concurrent-agent",
+          agentId: CONCURRENT_AGENT,
         }),
       ),
     );

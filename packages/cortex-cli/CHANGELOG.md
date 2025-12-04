@@ -15,12 +15,14 @@
 - `cortex users list --no-stats` option for faster listing without gathering stats
 - `cortex db clear` now shows target database and allows selecting from multiple deployments
 - `cortex db clear` simplified confirmation (y/N instead of typing exact phrase)
-- `cortex db stats` now shows agents, contexts, messages, and better formatting
+- `cortex db stats` now shows agents, contexts, messages, immutable records, and better formatting
+- `cortex db clear` now comprehensively clears all tables: agents, contexts, conversations, memory spaces, immutable records, and users
 - All `cortex db` commands now prompt to select database when multiple deployments configured
 - Added usage examples in command descriptions (e.g., `cortex config add-deployment --help`)
 
 ### Fixed
 
+- Fixed `cortex db clear` timing out on agents by using fast unregister (was 3.6s/agent with cascade, now 5ms/agent)
 - Fixed all commands hanging after completion by properly closing SDK client connections
 - Fixed `cortex config add-deployment` failing to parse `-u/--url` option due to conflict with global options
 - Fixed path truncation to show end of path (filename) instead of beginning

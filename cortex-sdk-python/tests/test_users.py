@@ -392,6 +392,7 @@ async def test_delete_user_full_cascade(cortex_client, test_user_id, test_memory
             agent_response="Agent response",
             user_id=test_user_id,
             user_name="Tester",
+            agent_id="test-agent",
         )
     )
 

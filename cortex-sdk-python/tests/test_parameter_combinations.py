@@ -151,6 +151,7 @@ class TestRememberParameterCombinations:
                 agent_response="Agent response",
                 user_id="test-user",
                 user_name="Test User",
+                agent_id="test-agent",
                 importance=95,
                 tags=["important"],
                 extract_facts=extract_facts,
@@ -172,6 +173,7 @@ class TestRememberParameterCombinations:
                 agent_response="Min response",
                 user_id="test-user",
                 user_name="Test User",
+                agent_id="test-agent",
             )
         )
 

@@ -168,6 +168,49 @@ export class Cortex {
   private readonly resilienceLayer: ResilienceLayer;
   private readonly llmConfig?: LLMConfig;
 
+  /**
+   * Auto-configure LLM from environment variables.
+   *
+   * Uses a two-gate approach:
+   * - Gate 1: An API key must be present (OPENAI_API_KEY or ANTHROPIC_API_KEY)
+   * - Gate 2: CORTEX_FACT_EXTRACTION must be explicitly set to 'true'
+   *
+   * This prevents accidental API costs - users must explicitly opt-in.
+   *
+   * @returns LLMConfig if both gates pass, undefined otherwise
+   */
+  private static autoConfigureLLM(): LLMConfig | undefined {
+    const factExtractionEnabled =
+      process.env.CORTEX_FACT_EXTRACTION === "true";
+
+    if (!factExtractionEnabled) {
+      return undefined;
+    }
+
+    // Check providers in priority order
+    if (process.env.OPENAI_API_KEY) {
+      return {
+        provider: "openai",
+        apiKey: process.env.OPENAI_API_KEY,
+      };
+    }
+
+    if (process.env.ANTHROPIC_API_KEY) {
+      return {
+        provider: "anthropic",
+        apiKey: process.env.ANTHROPIC_API_KEY,
+      };
+    }
+
+    // CORTEX_FACT_EXTRACTION=true but no API key found - warn user
+    console.warn(
+      "[Cortex] CORTEX_FACT_EXTRACTION=true but no API key found. " +
+        "Set OPENAI_API_KEY or ANTHROPIC_API_KEY to enable automatic fact extraction.",
+    );
+
+    return undefined;
+  }
+
   // Layer 1a: Conversations
   public conversations: ConversationsAPI;
 
@@ -209,7 +252,8 @@ export class Cortex {
     this.client = new ConvexClient(config.convexUrl);
 
     // Store LLM config for fact extraction
-    this.llmConfig = config.llm;
+    // Use explicit config if provided, otherwise auto-configure from environment
+    this.llmConfig = config.llm ?? Cortex.autoConfigureLLM();
 
     // Initialize resilience layer (default: enabled with balanced settings)
     this.resilienceLayer = new ResilienceLayer(

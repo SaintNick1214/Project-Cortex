@@ -199,6 +199,16 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
             // Contexts API may not be available
           }
 
+          // Count immutable records
+          spinner.text = "Counting immutable records...";
+          let immutableCount = 0;
+          try {
+            const immutable = await client.immutable.list({ limit: MAX_LIMIT });
+            immutableCount = immutable.length;
+          } catch {
+            // Immutable API may not be available
+          }
+
           // Get space-level statistics
           spinner.text = "Gathering space statistics...";
           const spaces = await client.memorySpaces.list({ limit: MAX_LIMIT });
@@ -239,7 +249,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
             memories: totalMemories,
             facts: totalFacts,
             users: usersCount,
-            immutableRecords: 0,
+            immutableRecords: immutableCount,
             mutableRecords: 0,
             contexts: contextsCount,
           };
@@ -307,6 +317,13 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
             );
             console.log();
 
+            // Shared stores
+            console.log(pc.bold("  Shared Stores"));
+            console.log(
+              `    Immutable:        ${pc.yellow(String(stats.immutableRecords))}`,
+            );
+            console.log();
+
             // Deployment info
             console.log(pc.bold("  Deployment"));
             console.log(`    URL:              ${pc.dim(info.url)}`);
@@ -371,11 +388,19 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           const deleted = {
             agents: 0,
             contexts: 0,
+            conversations: 0,
+            messages: 0,
             memorySpaces: 0,
+            memories: 0,
+            facts: 0,
+            immutable: 0,
             users: 0,
           };
 
           // 1. Delete all agents first (they may reference other entities)
+          // NOTE: We use cascade: false here because memory space deletion
+          // will cascade and clean up all agent data anyway. Using cascade: true
+          // would be redundant and extremely slow (3.6s per agent vs 5ms).
           let hasMoreAgents = true;
           while (hasMoreAgents) {
             spinner.text = `Clearing agents... (${deleted.agents} deleted)`;
@@ -387,7 +412,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
               }
               for (const agent of agents) {
                 try {
-                  await client.agents.unregister(agent.id, { cascade: true });
+                  await client.agents.unregister(agent.id, { cascade: false });
                   deleted.agents++;
                 } catch {
                   // Continue on error
@@ -431,7 +456,38 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
             }
           }
 
-          // 3. Delete all memory spaces (with cascade - deletes memories, conversations, facts)
+          // 3. Delete ALL conversations directly (don't rely on memory space cascade)
+          // This catches orphaned conversations whose memory space was already deleted
+          let hasMoreConvos = true;
+          while (hasMoreConvos) {
+            spinner.text = `Clearing conversations... (${deleted.conversations} deleted, ${deleted.messages} messages)`;
+            try {
+              const convos = await client.conversations.list({ limit: MAX_LIMIT });
+              if (convos.length === 0) {
+                hasMoreConvos = false;
+                break;
+              }
+              for (const convo of convos) {
+                try {
+                  deleted.messages += convo.messageCount || 0;
+                  await client.conversations.delete(convo.conversationId);
+                  deleted.conversations++;
+                } catch {
+                  // Continue on error
+                }
+              }
+              if (convos.length < MAX_LIMIT) {
+                hasMoreConvos = false;
+              }
+            } catch {
+              // Conversations API may not be available
+              hasMoreConvos = false;
+            }
+          }
+
+          // 4. Delete all memory spaces (with cascade - deletes memories, facts)
+          // Use raw Convex client to bypass SDK validation for cleanup of invalid IDs
+          const rawClient = client.getClient();
           let hasMoreSpaces = true;
           while (hasMoreSpaces) {
             spinner.text = `Clearing memory spaces... (${deleted.memorySpaces} deleted)`;
@@ -444,9 +500,15 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
 
             for (const space of spaces) {
               try {
-                await client.memorySpaces.delete(space.memorySpaceId, {
-                  cascade: true,
-                });
+                // Use raw client to bypass SDK validation (handles invalid IDs from tests)
+                await rawClient.mutation(
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  "memorySpaces:deleteSpace" as any,
+                  {
+                    memorySpaceId: space.memorySpaceId,
+                    cascade: true,
+                  },
+                );
                 deleted.memorySpaces++;
               } catch {
                 // Continue on error
@@ -458,7 +520,34 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
             }
           }
 
-          // 4. Delete all users (with cascade - cleans up any remaining user data)
+          // 5. Delete all immutable records
+          let hasMoreImmutable = true;
+          while (hasMoreImmutable) {
+            spinner.text = `Clearing immutable records... (${deleted.immutable} deleted)`;
+            try {
+              const records = await client.immutable.list({ limit: MAX_LIMIT });
+              if (records.length === 0) {
+                hasMoreImmutable = false;
+                break;
+              }
+              for (const record of records) {
+                try {
+                  await client.immutable.purge(record.type, record.id);
+                  deleted.immutable++;
+                } catch {
+                  // Continue on error
+                }
+              }
+              if (records.length < MAX_LIMIT) {
+                hasMoreImmutable = false;
+              }
+            } catch {
+              // Immutable API may not be available
+              hasMoreImmutable = false;
+            }
+          }
+
+          // 6. Delete all users (with cascade - cleans up any remaining user data)
           let hasMoreUsers = true;
           while (hasMoreUsers) {
             spinner.text = `Clearing users... (${deleted.users} deleted)`;
@@ -486,12 +575,19 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           spinner.stop();
 
           printSuccess(`Database "${targetName}" cleared`);
+          console.log();
           printSection("Deletion Summary", {
             Database: targetName,
             URL: targetUrl,
+          });
+          console.log();
+          printSection("Records Deleted", {
             Agents: deleted.agents,
             Contexts: deleted.contexts,
+            Conversations: deleted.conversations,
+            Messages: deleted.messages,
             "Memory Spaces": deleted.memorySpaces,
+            "Immutable Records": deleted.immutable,
             Users: deleted.users,
           });
         });

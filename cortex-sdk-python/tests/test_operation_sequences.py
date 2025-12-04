@@ -666,6 +666,7 @@ class TestCrossLayerSequences:
                 agent_response="Test response",
                 user_id="test-user",
                 user_name="Test User",
+                agent_id="test-agent",
             )
         )
 
@@ -799,6 +800,7 @@ class TestComplexWorkflows:
                 agent_response="Noted!",
                 user_id=user_id,
                 user_name="Journey User",
+                agent_id="test-agent",
             )
         )
 

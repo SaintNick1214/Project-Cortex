@@ -5,7 +5,9 @@ Main entry point for the Cortex SDK providing access to all memory operations.
 """
 
 import asyncio
-from typing import Any
+import os
+import warnings
+from typing import Any, Optional
 
 from convex import ConvexClient
 
@@ -25,7 +27,7 @@ from .resilience import (
     ResilienceMetrics,
     ResiliencePresets,
 )
-from .types import CortexConfig
+from .types import CortexConfig, LLMConfig
 from .users import UsersAPI
 from .vector import VectorAPI
 
@@ -57,6 +59,44 @@ class Cortex:
         >>> await cortex.close()
     """
 
+    @staticmethod
+    def _auto_configure_llm() -> Optional[LLMConfig]:
+        """
+        Auto-configure LLM from environment variables.
+
+        Uses a two-gate approach:
+        - Gate 1: An API key must be present (OPENAI_API_KEY or ANTHROPIC_API_KEY)
+        - Gate 2: CORTEX_FACT_EXTRACTION must be explicitly set to 'true'
+
+        This prevents accidental API costs - users must explicitly opt-in.
+
+        Returns:
+            LLMConfig if both gates pass, None otherwise
+        """
+        fact_extraction_enabled = os.environ.get("CORTEX_FACT_EXTRACTION") == "true"
+
+        if not fact_extraction_enabled:
+            return None
+
+        # Check providers in priority order
+        openai_key = os.environ.get("OPENAI_API_KEY")
+        if openai_key:
+            return LLMConfig(provider="openai", api_key=openai_key)
+
+        anthropic_key = os.environ.get("ANTHROPIC_API_KEY")
+        if anthropic_key:
+            return LLMConfig(provider="anthropic", api_key=anthropic_key)
+
+        # CORTEX_FACT_EXTRACTION=true but no API key found - warn user
+        warnings.warn(
+            "[Cortex] CORTEX_FACT_EXTRACTION=true but no API key found. "
+            "Set OPENAI_API_KEY or ANTHROPIC_API_KEY to enable automatic fact extraction.",
+            UserWarning,
+            stacklevel=2,
+        )
+
+        return None
+
     def __init__(self, config: CortexConfig) -> None:
         """
         Initialize Cortex SDK.
@@ -71,6 +111,10 @@ class Cortex:
 
         # Get graph adapter if configured
         self.graph_adapter = config.graph.adapter if config.graph else None
+
+        # Store LLM config for fact extraction
+        # Use explicit config if provided, otherwise auto-configure from environment
+        self._llm_config: Optional[LLMConfig] = config.llm or Cortex._auto_configure_llm()
 
         # Initialize resilience layer (default: enabled with balanced settings)
         resilience_config = (
@@ -88,7 +132,9 @@ class Cortex:
         self.mutable = MutableAPI(self.client, self.graph_adapter, self._resilience)
         self.vector = VectorAPI(self.client, self.graph_adapter, self._resilience)
         self.facts = FactsAPI(self.client, self.graph_adapter, self._resilience)
-        self.memory = MemoryAPI(self.client, self.graph_adapter, self._resilience)
+        self.memory = MemoryAPI(
+            self.client, self.graph_adapter, self._resilience, self._llm_config
+        )
         self.contexts = ContextsAPI(self.client, self.graph_adapter, self._resilience)
         self.users = UsersAPI(self.client, self.graph_adapter, self._resilience)
         self.agents = AgentsAPI(self.client, self.graph_adapter, self._resilience)

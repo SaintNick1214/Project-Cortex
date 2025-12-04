@@ -71,6 +71,7 @@ import {
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
 import type { LLMConfig } from "../index";
+import { createLLMClient, type ExtractedFact, type LLMClient } from "../llm";
 import {
   MemoryValidationError,
   validateMemorySpaceId,
@@ -130,6 +131,7 @@ export class MemoryAPI {
   private readonly usersAPI?: UsersAPI;
   private readonly agentsAPI?: AgentsAPI;
   private readonly llmConfig?: LLMConfig;
+  private llmClient?: LLMClient | null;
 
   constructor(
     client: ConvexClient,
@@ -476,56 +478,59 @@ export class MemoryAPI {
   }
 
   /**
+   * Get or create LLM client for fact extraction
+   */
+  private getLLMClient(): LLMClient | null {
+    // Return cached client if available
+    if (this.llmClient !== undefined) {
+      return this.llmClient;
+    }
+
+    // Create and cache client
+    if (this.llmConfig) {
+      this.llmClient = createLLMClient(this.llmConfig);
+    } else {
+      this.llmClient = null;
+    }
+
+    return this.llmClient;
+  }
+
+  /**
    * Create an LLM-based fact extractor function
+   *
+   * Uses the configured LLM provider (OpenAI or Anthropic) to automatically
+   * extract structured facts from conversations. Falls back to null if
+   * extraction fails or LLM is not properly configured.
    */
   private createLLMFactExtractor(): (
     userMessage: string,
     agentResponse: string,
-  ) => Promise<Array<{
-    fact: string;
-    factType:
-      | "preference"
-      | "identity"
-      | "knowledge"
-      | "relationship"
-      | "event"
-      | "observation"
-      | "custom";
-    subject?: string;
-    predicate?: string;
-    object?: string;
-    confidence: number;
-    tags?: string[];
-  }> | null> {
-    // This is a placeholder implementation - in production, this would call the LLM
-    // For now, we return a function that returns null (no facts extracted)
-    // This allows the feature flag to work while actual LLM integration is added later
+  ) => Promise<ExtractedFact[] | null> {
+    const client = this.getLLMClient();
+
+    if (!client) {
+      // No LLM client available - return function that logs and returns null
+      return async (): Promise<ExtractedFact[] | null> => {
+        console.debug(
+          "[Cortex] LLM fact extraction configured but client could not be created. " +
+            "Ensure openai or @anthropic-ai/sdk is installed.",
+        );
+        return null;
+      };
+    }
+
+    // Return the client's extractFacts method bound to the client
     return async (
-      _userMessage: string,
-      _agentResponse: string,
-    ): Promise<Array<{
-      fact: string;
-      factType:
-        | "preference"
-        | "identity"
-        | "knowledge"
-        | "relationship"
-        | "event"
-        | "observation"
-        | "custom";
-      subject?: string;
-      predicate?: string;
-      object?: string;
-      confidence: number;
-      tags?: string[];
-    }> | null> => {
-      // TODO: Implement actual LLM-based fact extraction
-      // For now, silently skip - LLM integration will be added in a future PR
-      console.debug(
-        "[Cortex] LLM fact extraction is configured but not yet implemented. " +
-          "Provide an extractFacts function or wait for LLM integration.",
-      );
-      return null;
+      userMessage: string,
+      agentResponse: string,
+    ): Promise<ExtractedFact[] | null> => {
+      try {
+        return await client.extractFacts(userMessage, agentResponse);
+      } catch (error) {
+        console.error("[Cortex] LLM fact extraction failed:", error);
+        return null;
+      }
     };
   }
 

@@ -90,6 +90,8 @@ from .types import (
     ConversationType,
     CortexConfig,
     CountFactsFilter,
+    # LLM Configuration
+    LLMConfig,
     CreateConversationInput,
     DeleteManyResult,
     DeleteResult,

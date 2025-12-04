@@ -307,6 +307,7 @@ async def test_openai_validates_summarization_quality(
             agent_response="Got it, I'll call you Alex!",
             user_id=test_user_id,
             user_name="Alex Johnson",
+            agent_id="test-agent",
             generate_embedding=generate_embedding,
             extract_content=summarize_conversation,
             importance=70,
