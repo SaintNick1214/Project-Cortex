@@ -51,7 +51,9 @@ describe("LLM Auto-Configuration", () => {
 
       expect(result).toBeUndefined();
       expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining("CORTEX_FACT_EXTRACTION=true but no API key found"),
+        expect.stringContaining(
+          "CORTEX_FACT_EXTRACTION=true but no API key found",
+        ),
       );
 
       warnSpy.mockRestore();

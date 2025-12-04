@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 **1. `merge_node()` Method**
 
 New method on `GraphAdapter` protocol that uses Cypher `MERGE` semantics:
+
 - Creates node if not exists
 - Matches existing node if it does
 - Updates properties on match
@@ -35,6 +36,7 @@ node_id = await adapter.merge_node(
 **2. All Sync Utilities Now Idempotent**
 
 Updated sync functions to use `merge_node()`:
+
 - `sync_memory_space_to_graph()`
 - `sync_context_to_graph()`
 - `sync_conversation_to_graph()`
@@ -292,20 +294,20 @@ result = await cortex.memory.remember(
 
 #### 📊 Type Updates
 
-| Type | Field Added | Purpose |
-|------|-------------|---------|
-| `MemoryEntry` | `agent_id` | Agent-owned memory attribution |
-| `StoreMemoryInput` | `agent_id` | Pass agent ownership to store |
-| `ConversationParticipants` | `agent_id` | Agent participant tracking |
-| `RememberParams` | `agent_id` | Required for user-agent conversations |
-| `RememberStreamParams` | `agent_id` | Required for streaming user-agent conversations |
+| Type                       | Field Added | Purpose                                         |
+| -------------------------- | ----------- | ----------------------------------------------- |
+| `MemoryEntry`              | `agent_id`  | Agent-owned memory attribution                  |
+| `StoreMemoryInput`         | `agent_id`  | Pass agent ownership to store                   |
+| `ConversationParticipants` | `agent_id`  | Agent participant tracking                      |
+| `RememberParams`           | `agent_id`  | Required for user-agent conversations           |
+| `RememberStreamParams`     | `agent_id`  | Required for streaming user-agent conversations |
 
 #### 🔧 Validation Rules
 
-| Scenario | Required Fields |
-|----------|-----------------|
-| User-agent conversation | `user_id` + `user_name` + `agent_id` |
-| Agent-only (system/tool) | `agent_id` only |
+| Scenario                 | Required Fields                      |
+| ------------------------ | ------------------------------------ |
+| User-agent conversation  | `user_id` + `user_name` + `agent_id` |
+| Agent-only (system/tool) | `agent_id` only                      |
 
 #### ⚠️ Breaking Changes
 
@@ -353,7 +355,7 @@ from cortex.types import SkippableLayer
 
 # Valid layers to skip:
 # - 'users': Don't auto-create user profile
-# - 'agents': Don't auto-register agent  
+# - 'agents': Don't auto-register agent
 # - 'conversations': Don't store in ACID conversations
 # - 'vector': Don't store in vector index
 # - 'facts': Don't extract/store facts
@@ -404,25 +406,25 @@ New internal helper methods for automatic entity registration:
 
 All layers are **enabled by default**. Use `skip_layers` to explicitly opt-out:
 
-| Layer | Default | Skippable |
-|-------|---------|-----------|
-| `memorySpace` | Always runs | ❌ Cannot skip |
-| `users` | Auto-create | ✅ `skip_layers=['users']` |
-| `agents` | Auto-register | ✅ `skip_layers=['agents']` |
-| `conversations` | Store in ACID | ✅ `skip_layers=['conversations']` |
-| `vector` | Index for search | ✅ `skip_layers=['vector']` |
-| `facts` | Extract if configured | ✅ `skip_layers=['facts']` |
-| `graph` | Sync if adapter | ✅ `skip_layers=['graph']` |
+| Layer           | Default               | Skippable                          |
+| --------------- | --------------------- | ---------------------------------- |
+| `memorySpace`   | Always runs           | ❌ Cannot skip                     |
+| `users`         | Auto-create           | ✅ `skip_layers=['users']`         |
+| `agents`        | Auto-register         | ✅ `skip_layers=['agents']`        |
+| `conversations` | Store in ACID         | ✅ `skip_layers=['conversations']` |
+| `vector`        | Index for search      | ✅ `skip_layers=['vector']`        |
+| `facts`         | Extract if configured | ✅ `skip_layers=['facts']`         |
+| `graph`         | Sync if adapter       | ✅ `skip_layers=['graph']`         |
 
 #### 🔄 TypeScript SDK Parity
 
-| Feature | TypeScript | Python |
-|---------|------------|--------|
-| `skipLayers` param | ✅ | ✅ (as `skip_layers`) |
-| `SkippableLayer` type | ✅ | ✅ |
-| `shouldSkipLayer()` | ✅ | ✅ (as `_should_skip_layer()`) |
-| Layer conditionals | ✅ | ✅ |
-| Auto-registration | ✅ | ✅ |
+| Feature               | TypeScript | Python                         |
+| --------------------- | ---------- | ------------------------------ |
+| `skipLayers` param    | ✅         | ✅ (as `skip_layers`)          |
+| `SkippableLayer` type | ✅         | ✅                             |
+| `shouldSkipLayer()`   | ✅         | ✅ (as `_should_skip_layer()`) |
+| Layer conditionals    | ✅         | ✅                             |
+| Auto-registration     | ✅         | ✅                             |
 
 ---
 
@@ -471,13 +473,13 @@ resilience=ResilienceConfig(
 
 In-memory queue that prioritizes critical operations:
 
-| Priority | Examples | Behavior |
-|----------|----------|----------|
-| `critical` | `users:delete` | Bypass circuit breaker |
-| `high` | `memory:remember`, `facts:store` | Priority processing |
-| `normal` | Most operations | Standard queue |
-| `low` | `memory:search`, `vector:search` | Deferrable |
-| `background` | `governance:simulate` | Lowest priority |
+| Priority     | Examples                         | Behavior               |
+| ------------ | -------------------------------- | ---------------------- |
+| `critical`   | `users:delete`                   | Bypass circuit breaker |
+| `high`       | `memory:remember`, `facts:store` | Priority processing    |
+| `normal`     | Most operations                  | Standard queue         |
+| `low`        | `memory:search`, `vector:search` | Deferrable             |
+| `background` | `governance:simulate`            | Lowest priority        |
 
 Priorities are **automatically assigned** based on operation name patterns.
 
@@ -546,6 +548,7 @@ await cortex.close()
 #### 📦 New Modules
 
 **Python (`cortex/resilience/`):**
+
 - `types.py` - Configuration dataclasses and exceptions
 - `token_bucket.py` - Token bucket rate limiter
 - `semaphore.py` - Async semaphore with queue

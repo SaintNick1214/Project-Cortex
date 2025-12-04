@@ -2,7 +2,7 @@
 /**
  * Seed script for multi-user chatbot scenario
  * Creates a single memory space with 5 users, each having 20 memories
- * 
+ *
  * Simulates: A chatbot using Cortex Memory with multiple users
  */
 
@@ -175,14 +175,16 @@ async function seedData() {
   try {
     // Initialize Cortex with auto-configuration (graph sync from env vars)
     cortex = await Cortex.create({ convexUrl });
-    
+
     const graphWorker = cortex.getGraphSyncWorker();
     if (graphWorker) {
       console.log("📊 Graph sync enabled (auto-configured from environment)\n");
     } else {
-      console.log("⚠️  Graph sync not enabled (set CORTEX_GRAPH_SYNC=true and NEO4J_URI)\n");
+      console.log(
+        "⚠️  Graph sync not enabled (set CORTEX_GRAPH_SYNC=true and NEO4J_URI)\n",
+      );
     }
-    
+
     console.log("🌱 Starting multi-user data seeding...\n");
 
     // Create a single memory space for the chatbot
@@ -228,9 +230,7 @@ async function seedData() {
 
     // For each user, create 20 memories
     for (const user of userData) {
-      console.log(
-        `👤 Processing user: ${user.name} (${user.userId})`,
-      );
+      console.log(`👤 Processing user: ${user.name} (${user.userId})`);
 
       // Create a conversation for this user
       const conversation = await cortex.conversations.create({

@@ -347,7 +347,10 @@ export class MemoryAPI {
     const ownerType = hasUserId ? "user" : "agent";
 
     // 5. Validate userName is provided when userId is provided
-    if (hasUserId && (!params.userName || params.userName.trim().length === 0)) {
+    if (
+      hasUserId &&
+      (!params.userName || params.userName.trim().length === 0)
+    ) {
       throw new MemoryValidationError(
         "userName is required when userId is provided",
         "MISSING_REQUIRED_FIELD",
@@ -436,27 +439,27 @@ export class MemoryAPI {
   /**
    * Get fact extraction function - uses provided extractor, LLM config, or returns null
    */
-  private getFactExtractor(
-    params: RememberParams,
-  ): ((
-    userMessage: string,
-    agentResponse: string,
-  ) => Promise<Array<{
-    fact: string;
-    factType:
-      | "preference"
-      | "identity"
-      | "knowledge"
-      | "relationship"
-      | "event"
-      | "observation"
-      | "custom";
-    subject?: string;
-    predicate?: string;
-    object?: string;
-    confidence: number;
-    tags?: string[];
-  }> | null>) | null {
+  private getFactExtractor(params: RememberParams):
+    | ((
+        userMessage: string,
+        agentResponse: string,
+      ) => Promise<Array<{
+        fact: string;
+        factType:
+          | "preference"
+          | "identity"
+          | "knowledge"
+          | "relationship"
+          | "event"
+          | "observation"
+          | "custom";
+        subject?: string;
+        predicate?: string;
+        object?: string;
+        confidence: number;
+        tags?: string[];
+      }> | null>)
+    | null {
     // 1. Use provided extractor if available
     if (params.extractFacts) {
       return params.extractFacts;
@@ -829,7 +832,8 @@ export class MemoryAPI {
                     userId: params.userId,
                     fact: factData.fact,
                     factType: factData.factType,
-                    subject: factData.subject || params.userId || params.agentId,
+                    subject:
+                      factData.subject || params.userId || params.agentId,
                     predicate: factData.predicate,
                     object: factData.object,
                     confidence: factData.confidence,
@@ -866,8 +870,7 @@ export class MemoryAPI {
 
     return {
       conversation: {
-        messageIds:
-          userMsgId && agentMsgId ? [userMsgId, agentMsgId] : [],
+        messageIds: userMsgId && agentMsgId ? [userMsgId, agentMsgId] : [],
         conversationId: params.conversationId,
       },
       memories: storedMemories,
@@ -979,7 +982,10 @@ export class MemoryAPI {
     }
 
     // Validate userName is provided when userId is provided
-    if (hasUserId && (!params.userName || params.userName.trim().length === 0)) {
+    if (
+      hasUserId &&
+      (!params.userName || params.userName.trim().length === 0)
+    ) {
       throw new MemoryValidationError(
         "userName is required when userId is provided",
         "MISSING_REQUIRED_FIELD",

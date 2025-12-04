@@ -212,7 +212,10 @@ export class CypherGraphAdapter implements GraphAdapter {
       // Add create/update properties if there are any non-match properties
       if (setPropEntries.length > 0) {
         const extraProps = Object.fromEntries(
-          setPropEntries.map(([key, value]) => [key, this.serializeValue(value)]),
+          setPropEntries.map(([key, value]) => [
+            key,
+            this.serializeValue(value),
+          ]),
         );
         params.createProps = extraProps;
         params.updateProps = extraProps;

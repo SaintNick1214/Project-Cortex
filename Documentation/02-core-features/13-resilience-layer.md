@@ -44,13 +44,13 @@ Without protection, a traffic spike can cascade into database overload:
 
 The resilience layer is tuned to respect [Convex's documented limits](https://docs.convex.dev/production/state/limits):
 
-| Resource | Free/Starter | Professional |
-|----------|--------------|--------------|
-| Concurrent Queries | **16** | 256 |
-| Concurrent Mutations | **16** | 256 |
-| Concurrent Actions | **64** | 256-1000 |
-| Query/Mutation Execution | 1 second | 1 second |
-| Function Calls/Month | 1,000,000 | 25,000,000 |
+| Resource                 | Free/Starter | Professional |
+| ------------------------ | ------------ | ------------ |
+| Concurrent Queries       | **16**       | 256          |
+| Concurrent Mutations     | **16**       | 256          |
+| Concurrent Actions       | **64**       | 256-1000     |
+| Query/Mutation Execution | 1 second     | 1 second     |
+| Function Calls/Month     | 1,000,000    | 25,000,000   |
 
 **Default preset uses Free plan limits (16 concurrent)** to work safely on any Convex deployment.
 
@@ -120,28 +120,28 @@ const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL!,
   resilience: {
     enabled: true,
-    
+
     // Token bucket rate limiter
     rateLimiter: {
-      bucketSize: 100,    // Max burst capacity
-      refillRate: 50,     // Tokens per second
+      bucketSize: 100, // Max burst capacity
+      refillRate: 50, // Tokens per second
     },
-    
+
     // Concurrency control
     concurrency: {
-      maxConcurrent: 16,  // Convex free plan limit
-      queueSize: 1000,    // Pending request queue
-      timeout: 30000,     // 30s acquire timeout
+      maxConcurrent: 16, // Convex free plan limit
+      queueSize: 1000, // Pending request queue
+      timeout: 30000, // 30s acquire timeout
     },
-    
+
     // Circuit breaker
     circuitBreaker: {
-      failureThreshold: 5,   // Open after 5 failures
-      successThreshold: 2,   // Close after 2 successes
-      timeout: 30000,        // 30s before recovery attempt
-      halfOpenMax: 3,        // Test requests in half-open
+      failureThreshold: 5, // Open after 5 failures
+      successThreshold: 2, // Close after 2 successes
+      timeout: 30000, // 30s before recovery attempt
+      halfOpenMax: 3, // Test requests in half-open
     },
-    
+
     // Priority queue sizes
     queue: {
       maxSize: {
@@ -152,7 +152,7 @@ const cortex = new Cortex({
         background: 5000,
       },
     },
-    
+
     // Event callbacks
     onCircuitOpen: () => console.warn("Circuit opened!"),
     onCircuitClose: () => console.log("Circuit recovered"),
@@ -166,30 +166,30 @@ const cortex = new Cortex({
 
 Safe defaults that respect Convex's 16 concurrent query/mutation limit.
 
-| Setting | Value | Rationale |
-|---------|-------|-----------|
-| Max Concurrent | 16 | Convex free plan limit |
-| Bucket Size | 100 | Allow reasonable burst |
-| Refill Rate | 50/sec | ~1.3M ops/month capacity |
-| Circuit Threshold | 5 failures | Balance sensitivity |
+| Setting           | Value      | Rationale                |
+| ----------------- | ---------- | ------------------------ |
+| Max Concurrent    | 16         | Convex free plan limit   |
+| Bucket Size       | 100        | Allow reasonable burst   |
+| Refill Rate       | 50/sec     | ~1.3M ops/month capacity |
+| Circuit Threshold | 5 failures | Balance sensitivity      |
 
 ```typescript
-resilience: ResiliencePresets.default
+resilience: ResiliencePresets.default;
 ```
 
 ### `realTimeAgent` - Low Latency Chat
 
 Conservative settings for responsive real-time interactions.
 
-| Setting | Value | Rationale |
-|---------|-------|-----------|
-| Max Concurrent | 8 | Half of limit for headroom |
-| Bucket Size | 30 | Small burst, fast response |
-| Timeout | 5s | Fail fast for UX |
-| Circuit Threshold | 3 | Trip quickly on issues |
+| Setting           | Value | Rationale                  |
+| ----------------- | ----- | -------------------------- |
+| Max Concurrent    | 8     | Half of limit for headroom |
+| Bucket Size       | 30    | Small burst, fast response |
+| Timeout           | 5s    | Fail fast for UX           |
+| Circuit Threshold | 3     | Trip quickly on issues     |
 
 ```typescript
-resilience: ResiliencePresets.realTimeAgent
+resilience: ResiliencePresets.realTimeAgent;
 ```
 
 ### `batchProcessing` - Bulk Operations
@@ -198,15 +198,15 @@ High throughput for data migrations and bulk imports.
 
 ⚠️ **Requires Convex Professional plan** (256 concurrent limit)
 
-| Setting | Value | Rationale |
-|---------|-------|-----------|
-| Max Concurrent | 64 | Professional plan capacity |
-| Bucket Size | 500 | Large burst for batches |
-| Timeout | 60s | Long operations allowed |
-| Queue Size | 10,000 | Handle large batches |
+| Setting        | Value  | Rationale                  |
+| -------------- | ------ | -------------------------- |
+| Max Concurrent | 64     | Professional plan capacity |
+| Bucket Size    | 500    | Large burst for batches    |
+| Timeout        | 60s    | Long operations allowed    |
+| Queue Size     | 10,000 | Handle large batches       |
 
 ```typescript
-resilience: ResiliencePresets.batchProcessing
+resilience: ResiliencePresets.batchProcessing;
 ```
 
 ### `hiveMode` - Multi-Agent Swarms
@@ -215,15 +215,15 @@ Extreme concurrency for coordinated agent swarms.
 
 ⚠️ **Requires Convex Professional plan with increased limits**
 
-| Setting | Value | Rationale |
-|---------|-------|-----------|
-| Max Concurrent | 128 | High swarm capacity |
-| Bucket Size | 1000 | Massive burst handling |
-| Timeout | 120s | Complex coordination |
-| Queue Size | 50,000 | Absorb swarm bursts |
+| Setting        | Value  | Rationale              |
+| -------------- | ------ | ---------------------- |
+| Max Concurrent | 128    | High swarm capacity    |
+| Bucket Size    | 1000   | Massive burst handling |
+| Timeout        | 120s   | Complex coordination   |
+| Queue Size     | 50,000 | Absorb swarm bursts    |
 
 ```typescript
-resilience: ResiliencePresets.hiveMode
+resilience: ResiliencePresets.hiveMode;
 ```
 
 ## Architecture
@@ -277,13 +277,13 @@ Controls **how many** requests execute simultaneously.
 
 Orders queued requests by importance.
 
-| Priority | Operations | Queue Size |
-|----------|------------|------------|
-| `critical` | Circuit breaker recovery tests | 100 |
-| `high` | User-facing reads (search, recall) | 500 |
-| `normal` | Standard writes (remember) | 1000 |
-| `low` | Analytics, background sync | 2000 |
-| `background` | Cleanup, maintenance | 5000 |
+| Priority     | Operations                         | Queue Size |
+| ------------ | ---------------------------------- | ---------- |
+| `critical`   | Circuit breaker recovery tests     | 100        |
+| `high`       | User-facing reads (search, recall) | 500        |
+| `normal`     | Standard writes (remember)         | 1000       |
+| `low`        | Analytics, background sync         | 2000       |
+| `background` | Cleanup, maintenance               | 5000       |
 
 ```typescript
 // Under load, critical operations execute first
@@ -308,6 +308,7 @@ CLOSED (normal) → 5 failures → OPEN (fast-fail)
 ```
 
 **States:**
+
 - **CLOSED**: Normal operation, requests pass through
 - **OPEN**: Backend unhealthy, reject non-critical requests immediately
 - **HALF-OPEN**: Testing recovery, allow limited requests
@@ -355,17 +356,17 @@ console.log(metrics);
 // Periodic health check
 setInterval(() => {
   const metrics = cortex.getResilienceMetrics();
-  
+
   // Alert if circuit opens
-  if (metrics.circuitBreaker.state === 'open') {
-    alertOps('Circuit breaker OPEN - backend unhealthy');
+  if (metrics.circuitBreaker.state === "open") {
+    alertOps("Circuit breaker OPEN - backend unhealthy");
   }
-  
+
   // Alert if queue backing up
   if (metrics.queue.total > 500) {
     alertOps(`Queue depth: ${metrics.queue.total}`);
   }
-  
+
   // Alert if approaching concurrency limit
   if (metrics.concurrency.active >= 14) {
     alertOps(`High concurrency: ${metrics.concurrency.active}/16`);
@@ -484,10 +485,10 @@ const cortex = new Cortex({
 
 ```typescript
 // Free/Starter plan: Use default or realTimeAgent
-resilience: ResiliencePresets.default
+resilience: ResiliencePresets.default;
 
 // Professional plan: Can use batchProcessing or hiveMode
-resilience: ResiliencePresets.batchProcessing
+resilience: ResiliencePresets.batchProcessing;
 ```
 
 ### 3. Monitor Circuit Breaker State
@@ -500,12 +501,12 @@ const cortex = new Cortex({
     ...ResiliencePresets.default,
     onCircuitOpen: () => {
       // Log, alert, update health endpoint
-      console.error('Circuit OPEN - Convex may be having issues');
-      metrics.increment('circuit_breaker.open');
+      console.error("Circuit OPEN - Convex may be having issues");
+      metrics.increment("circuit_breaker.open");
     },
     onCircuitClose: () => {
-      console.log('Circuit CLOSED - Service recovered');
-      metrics.increment('circuit_breaker.close');
+      console.log("Circuit CLOSED - Service recovered");
+      metrics.increment("circuit_breaker.close");
     },
   },
 });
@@ -518,12 +519,12 @@ When queue is full, propagate backpressure to callers:
 ```typescript
 async function handleRequest(req) {
   const metrics = cortex.getResilienceMetrics();
-  
+
   // Reject early if system is overloaded
   if (metrics.queue.total > 800) {
     return { status: 503, message: 'Service temporarily unavailable' };
   }
-  
+
   try {
     await cortex.memory.remember({...});
     return { status: 200 };
@@ -540,15 +541,15 @@ async function handleRequest(req) {
 
 ```typescript
 // In your server shutdown handler
-process.on('SIGTERM', async () => {
-  console.log('Shutting down gracefully...');
-  
+process.on("SIGTERM", async () => {
+  console.log("Shutting down gracefully...");
+
   // Stop accepting new requests
   server.close();
-  
+
   // Wait for in-flight Cortex operations
   await cortex.shutdown();
-  
+
   process.exit(0);
 });
 ```
@@ -570,6 +571,7 @@ A: Non-critical requests fail immediately with `CircuitOpenError`. Critical oper
 **Q: How do I know if I'm hitting Convex limits?**
 
 A: Monitor the concurrency metrics. If `active` frequently hits `maxConcurrent` and `waiting` grows, you're at capacity. Consider:
+
 - Upgrading to Convex Professional plan
 - Optimizing your query patterns
 - Adding caching
@@ -581,6 +583,7 @@ A: Yes! The resilience layer adds client-side protection that complements Convex
 **Q: How do priorities work?**
 
 A: Operations are automatically assigned priorities:
+
 - `critical`: Internal circuit breaker recovery
 - `high`: User-facing reads (search, recall, getConversation)
 - `normal`: Writes (remember, update)

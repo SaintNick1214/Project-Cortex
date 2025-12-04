@@ -305,10 +305,26 @@ export function registerSetupCommands(
             name: "name",
             message: "Deployment name:",
             choices: [
-              { title: "local", description: "Local development", value: "local" },
-              { title: "cloud", description: "Cloud/production", value: "cloud" },
-              { title: "staging", description: "Staging environment", value: "staging" },
-              { title: "custom", description: "Enter custom name", value: "__custom__" },
+              {
+                title: "local",
+                description: "Local development",
+                value: "local",
+              },
+              {
+                title: "cloud",
+                description: "Cloud/production",
+                value: "cloud",
+              },
+              {
+                title: "staging",
+                description: "Staging environment",
+                value: "staging",
+              },
+              {
+                title: "custom",
+                description: "Enter custom name",
+                value: "__custom__",
+              },
             ],
           });
           if (!response.name) {
@@ -338,7 +354,9 @@ export function registerSetupCommands(
             type: "text",
             name: "url",
             message: "Convex deployment URL:",
-            initial: isLocal ? "http://127.0.0.1:3210" : "https://your-app.convex.cloud",
+            initial: isLocal
+              ? "http://127.0.0.1:3210"
+              : "https://your-app.convex.cloud",
             validate: (v) => {
               try {
                 new URL(v);
@@ -409,7 +427,11 @@ export function registerSetupCommands(
   configCmd
     .command("remove-deployment [name]")
     .description("Remove a deployment configuration")
-    .option("--json-only", "Only remove from ~/.cortexrc (skip .env.local)", false)
+    .option(
+      "--json-only",
+      "Only remove from ~/.cortexrc (skip .env.local)",
+      false,
+    )
     .action(async (nameArg, options) => {
       try {
         const config = await loadConfig();
@@ -422,7 +444,9 @@ export function registerSetupCommands(
           );
 
           if (deploymentNames.length === 0) {
-            printWarning("No removable deployments found (cannot remove default)");
+            printWarning(
+              "No removable deployments found (cannot remove default)",
+            );
             return;
           }
 
@@ -478,7 +502,9 @@ export function registerSetupCommands(
           const envKeys = getDeploymentEnvKeys(name);
           await removeDeploymentFromEnv(name);
           printSuccess(`Removed deployment "${name}"`);
-          printInfo(`Removed from .env.local: ${envKeys.urlKey}, ${envKeys.keyKey}`);
+          printInfo(
+            `Removed from .env.local: ${envKeys.urlKey}, ${envKeys.keyKey}`,
+          );
         } else {
           printSuccess(`Removed deployment "${name}" from ~/.cortexrc`);
         }
@@ -525,10 +551,7 @@ export function registerSetupCommands(
 
       const setVars = Object.entries(envVars).filter(([, v]) => v);
       if (setVars.length > 0) {
-        printSection(
-          "Environment Variables",
-          Object.fromEntries(setVars),
-        );
+        printSection("Environment Variables", Object.fromEntries(setVars));
       }
     });
 

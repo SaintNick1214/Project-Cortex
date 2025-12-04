@@ -492,9 +492,7 @@ describe("Agents API (Coordination Layer)", () => {
     });
 
     it("returns null for unregistered agent", async () => {
-      const result = await cortex.agents.get(
-        ctx.agentId("non-existent"),
-      );
+      const result = await cortex.agents.get(ctx.agentId("non-existent"));
       expect(result).toBeNull();
     });
 
@@ -607,7 +605,9 @@ describe("Agents API (Coordination Layer)", () => {
     });
 
     it("returns false for unregistered agent", async () => {
-      const exists = await cortex.agents.exists(ctx.agentId("non-existent-check"));
+      const exists = await cortex.agents.exists(
+        ctx.agentId("non-existent-check"),
+      );
       expect(exists).toBe(false);
     });
   });

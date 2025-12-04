@@ -14,7 +14,11 @@ import { Cortex, type GraphConfig } from "../src/index.js";
 
 // Helper to access private static method for testing
 const autoConfigureGraph = (): Promise<GraphConfig | undefined> =>
-  (Cortex as unknown as { autoConfigureGraph: () => Promise<GraphConfig | undefined> }).autoConfigureGraph();
+  (
+    Cortex as unknown as {
+      autoConfigureGraph: () => Promise<GraphConfig | undefined>;
+    }
+  ).autoConfigureGraph();
 
 describe("Graph Auto-Configuration", () => {
   // Store original env vars to restore after tests
@@ -81,7 +85,9 @@ describe("Graph Auto-Configuration", () => {
 
       expect(result).toBeUndefined();
       expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining("CORTEX_GRAPH_SYNC=true but no graph database URI found"),
+        expect.stringContaining(
+          "CORTEX_GRAPH_SYNC=true but no graph database URI found",
+        ),
       );
 
       warnSpy.mockRestore();
@@ -97,13 +103,17 @@ describe("Graph Auto-Configuration", () => {
       process.env.MEMGRAPH_PASSWORD = "memgraphpass";
 
       const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
-      const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+      const errorSpy = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
 
       await autoConfigureGraph();
 
       // Should have warned about both URIs set (Neo4j takes priority)
       expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining("Both NEO4J_URI and MEMGRAPH_URI set. Using Neo4j"),
+        expect.stringContaining(
+          "Both NEO4J_URI and MEMGRAPH_URI set. Using Neo4j",
+        ),
       );
 
       warnSpy.mockRestore();
@@ -118,7 +128,9 @@ describe("Graph Auto-Configuration", () => {
       process.env.NEO4J_USERNAME = "neo4j";
       process.env.NEO4J_PASSWORD = "password";
 
-      const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+      const errorSpy = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
 
       const result = await autoConfigureGraph();
 
@@ -139,7 +151,9 @@ describe("Graph Auto-Configuration", () => {
       process.env.MEMGRAPH_USERNAME = "memgraph";
       process.env.MEMGRAPH_PASSWORD = "password";
 
-      const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+      const errorSpy = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
 
       const result = await autoConfigureGraph();
 
@@ -160,7 +174,9 @@ describe("Graph Auto-Configuration", () => {
       process.env.CORTEX_GRAPH_SYNC = "true";
       process.env.NEO4J_URI = "bolt://localhost:9999"; // Non-existent port
 
-      const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+      const errorSpy = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
 
       const cortex = await Cortex.create({
         convexUrl: "http://127.0.0.1:3210",
@@ -179,7 +195,9 @@ describe("Graph Auto-Configuration", () => {
       process.env.NEO4J_URI = "bolt://localhost:7687";
 
       // Suppress connection error since we're testing config priority
-      const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+      const errorSpy = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
 
       // Create a mock adapter
       const explicitAdapter = {

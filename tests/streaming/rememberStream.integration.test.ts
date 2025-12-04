@@ -206,9 +206,9 @@ describe("rememberStream Integration Tests", () => {
           conversationId,
           userMessage: "Empty test",
           responseStream: emptyStream(),
-        userId: TEST_USER_ID,
-        userName: "Test User",
-        agentId: TEST_AGENT_ID,
+          userId: TEST_USER_ID,
+          userName: "Test User",
+          agentId: TEST_AGENT_ID,
         }),
       ).rejects.toThrow(/no content/i);
     });
@@ -227,9 +227,9 @@ describe("rememberStream Integration Tests", () => {
           conversationId,
           userMessage: "Error test",
           responseStream: errorStream(),
-        userId: TEST_USER_ID,
-        userName: "Test User",
-        agentId: TEST_AGENT_ID,
+          userId: TEST_USER_ID,
+          userName: "Test User",
+          agentId: TEST_AGENT_ID,
         }),
       ).rejects.toThrow();
     });

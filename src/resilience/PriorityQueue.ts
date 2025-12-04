@@ -202,7 +202,9 @@ export class PriorityQueue<T = unknown> {
       // Remove from end to preserve indices
       for (let i = toRemove.length - 1; i >= 0; i--) {
         const request = queue.splice(toRemove[i], 1)[0];
-        request.reject(new Error(`Request expired after ${maxAgeMs}ms in queue`));
+        request.reject(
+          new Error(`Request expired after ${maxAgeMs}ms in queue`),
+        );
         removed++;
       }
     }

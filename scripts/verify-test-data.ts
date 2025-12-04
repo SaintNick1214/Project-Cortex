@@ -53,7 +53,7 @@ async function verify() {
         for (let i = 0; i < Math.min(3, memorySpaces.length); i++) {
           const space = memorySpaces[i];
           console.log(`   ${i + 1}. ${space.memorySpaceId}`);
-          
+
           // Try to get memories for this space
           try {
             const memories = await client.query(api.memories.list, {
@@ -61,11 +61,13 @@ async function verify() {
               limit: 5,
             });
             console.log(`      Memories in space: ${memories.length}`);
-            
+
             // Show userId in memories
             memories.forEach((mem: any, idx: number) => {
               if (mem.userId) {
-                console.log(`      ${idx + 1}. Memory ${mem.memoryId.slice(0, 8)}... userId: ${mem.userId}`);
+                console.log(
+                  `      ${idx + 1}. Memory ${mem.memoryId.slice(0, 8)}... userId: ${mem.userId}`,
+                );
               }
             });
           } catch (e) {
@@ -80,9 +82,9 @@ async function verify() {
     // Check facts (requires memorySpaceId, so we'll skip or use first space)
     try {
       if (memorySpaces.length > 0) {
-        const facts = await client.query(api.facts.list, { 
+        const facts = await client.query(api.facts.list, {
           memorySpaceId: memorySpaces[0].memorySpaceId,
-          limit: 100 
+          limit: 100,
         });
         console.log(`\n📊 Facts (in first space): ${facts.length}`);
       } else {
@@ -103,7 +105,7 @@ async function verify() {
     console.log(`\n${"=".repeat(60)}`);
     console.log("✅ VERIFICATION COMPLETE!");
     console.log(
-      `📈 Database contains test data including user-attached memories`
+      `📈 Database contains test data including user-attached memories`,
     );
     console.log(`${"=".repeat(60)}\n`);
   } catch (error) {

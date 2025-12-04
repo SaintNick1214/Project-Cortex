@@ -356,11 +356,9 @@ describe("Edge Runtime: Real-world Scenarios", () => {
     const userMessage = "What is the capital of France?";
 
     // 2. Search for relevant memories
-    const memories = await cortex.memory.search(
-      EDGE_SPACE,
-      userMessage,
-      { limit: 5 },
-    );
+    const memories = await cortex.memory.search(EDGE_SPACE, userMessage, {
+      limit: 5,
+    });
     expect(Array.isArray(memories)).toBe(true);
 
     // 3. Simulate streaming LLM response

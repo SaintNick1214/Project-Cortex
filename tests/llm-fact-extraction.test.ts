@@ -81,13 +81,11 @@ describe("LLM Fact Extraction", () => {
       const customExtractor = async (
         _userMsg: string,
         _agentMsg: string,
-      ): Promise<
-        Array<{
-          fact: string;
-          factType: "preference";
-          confidence: number;
-        }> | null
-      > => {
+      ): Promise<Array<{
+        fact: string;
+        factType: "preference";
+        confidence: number;
+      }> | null> => {
         return [
           {
             fact: "Custom fact",
@@ -201,7 +199,10 @@ describe("LLM Fact Extraction", () => {
         apiKey: "test-key",
       });
 
-      const facts = await client!.extractFacts("I moved to London", "Nice city!");
+      const facts = await client!.extractFacts(
+        "I moved to London",
+        "Nice city!",
+      );
 
       expect(facts).toHaveLength(1);
       expect(facts![0].fact).toBe("User lives in London");
@@ -441,7 +442,9 @@ describe("LLM Fact Extraction", () => {
       ];
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const customExtractor = jest.fn<(...args: any[]) => any>().mockResolvedValue(customFacts);
+      const customExtractor = jest
+        .fn<(...args: any[]) => any>()
+        .mockResolvedValue(customFacts);
 
       const client = createLLMClient({
         provider: "custom",

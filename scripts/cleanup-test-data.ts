@@ -41,9 +41,7 @@ const client = new ConvexClient(convexUrl);
 
 async function cleanup() {
   try {
-    console.log(
-      "🧹 Starting comprehensive cleanup across all 11 tables...\n",
-    );
+    console.log("🧹 Starting comprehensive cleanup across all 11 tables...\n");
 
     let stats = {
       conversations: 0,
@@ -184,10 +182,7 @@ async function cleanup() {
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     console.log("📜 Purging governance policies...");
     try {
-      const result = await client.mutation(
-        api.governance.purgeAllPolicies,
-        {},
-      );
+      const result = await client.mutation(api.governance.purgeAllPolicies, {});
       stats.governancePolicies = result.deleted;
       console.log(
         `   ✅ Deleted ${stats.governancePolicies} governance policies`,

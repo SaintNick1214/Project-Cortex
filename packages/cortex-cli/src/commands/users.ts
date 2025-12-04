@@ -150,7 +150,14 @@ export function registerUserCommands(
 
           const headers =
             options.stats !== false
-              ? ["id", "memories", "conversations", "facts", "version", "updated"]
+              ? [
+                  "id",
+                  "memories",
+                  "conversations",
+                  "facts",
+                  "version",
+                  "updated",
+                ]
               : ["id", "version", "created", "updated", "fields"];
 
           console.log(

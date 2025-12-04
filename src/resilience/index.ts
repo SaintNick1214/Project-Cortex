@@ -452,9 +452,7 @@ export class ResilienceLayer {
       this.circuitBreaker.recordFailure(
         error instanceof Error ? error : new Error(String(error)),
       );
-      request.reject(
-        error instanceof Error ? error : new Error(String(error)),
-      );
+      request.reject(error instanceof Error ? error : new Error(String(error)));
     } finally {
       permit.release();
     }
@@ -539,10 +537,7 @@ export class ResilienceLayer {
 
     // Wait for queue to drain
     const startTime = Date.now();
-    while (
-      !this.queue.isEmpty() &&
-      Date.now() - startTime < timeoutMs
-    ) {
+    while (!this.queue.isEmpty() && Date.now() - startTime < timeoutMs) {
       await this.sleep(100);
     }
 

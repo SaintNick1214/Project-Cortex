@@ -103,7 +103,9 @@ export function setEnvVar(
  * Remove an environment variable from the parsed lines
  */
 export function removeEnvVar(lines: EnvLine[], key: string): EnvLine[] {
-  return lines.filter((line) => !(line.type === "variable" && line.key === key));
+  return lines.filter(
+    (line) => !(line.type === "variable" && line.key === key),
+  );
 }
 
 /**
@@ -124,7 +126,11 @@ export function getDeploymentEnvKeys(name: string): {
     };
   }
 
-  if (normalized === "cloud" || normalized === "production" || normalized === "prod") {
+  if (
+    normalized === "cloud" ||
+    normalized === "production" ||
+    normalized === "prod"
+  ) {
     return {
       urlKey: "CLOUD_CONVEX_URL",
       keyKey: "CLOUD_CONVEX_DEPLOY_KEY",
