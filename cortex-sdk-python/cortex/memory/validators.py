@@ -512,7 +512,7 @@ def validate_remember_params(params: RememberParams) -> None:
 
     Raises:
         MemoryValidationError: If params are invalid
-    
+
     Ownership rules:
         - Either user_id or agent_id must be provided
         - If user_id is provided, agent_id is also required (user-agent conversations)

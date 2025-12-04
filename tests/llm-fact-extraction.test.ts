@@ -8,8 +8,7 @@
 
 import { jest } from "@jest/globals";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyFunction = (...args: any[]) => any;
+type AnyFunction = (...args: unknown[]) => unknown;
 
 // Store mock functions for each provider
 const mockOpenAICreate = jest.fn<AnyFunction>();

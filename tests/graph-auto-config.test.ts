@@ -13,9 +13,8 @@ import { jest } from "@jest/globals";
 import { Cortex, type GraphConfig } from "../src/index.js";
 
 // Helper to access private static method for testing
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const autoConfigureGraph = (): Promise<GraphConfig | undefined> =>
-  (Cortex as any).autoConfigureGraph();
+  (Cortex as unknown as { autoConfigureGraph: () => Promise<GraphConfig | undefined> }).autoConfigureGraph();
 
 describe("Graph Auto-Configuration", () => {
   // Store original env vars to restore after tests
@@ -172,7 +171,7 @@ describe("Graph Auto-Configuration", () => {
       expect(cortex.getGraphSyncWorker()).toBeUndefined();
 
       errorSpy.mockRestore();
-      await cortex.close();
+      cortex.close();
     });
 
     it("uses explicit config.graph over auto-config", async () => {
@@ -199,7 +198,7 @@ describe("Graph Auto-Configuration", () => {
       expect(cortex).toBeDefined();
 
       errorSpy.mockRestore();
-      await cortex.close();
+      cortex.close();
     });
 
     it("creates Cortex without graph when CORTEX_GRAPH_SYNC is not set", async () => {
@@ -212,7 +211,7 @@ describe("Graph Auto-Configuration", () => {
       expect(cortex).toBeDefined();
       expect(cortex.getGraphSyncWorker()).toBeUndefined();
 
-      await cortex.close();
+      cortex.close();
     });
   });
 });
