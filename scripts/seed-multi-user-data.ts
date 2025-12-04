@@ -200,7 +200,8 @@ async function seedData() {
 
       console.log(`   📋 Created conversation: ${conversation.conversationId}`);
 
-      // Create 20 memories for this user
+      // Create 20 memories for this user in parallel
+      const memoryPromises = [];
       for (let i = 0; i < 20; i++) {
         const template = memoryTemplates[i];
         const userMessage = template.replace(
@@ -210,8 +211,8 @@ async function seedData() {
 
         const agentResponse = `Got it! I've noted that ${userMessage.toLowerCase()}.`;
 
-        try {
-          await cortex.memory.remember({
+        const memoryPromise = cortex.memory
+          .remember({
             memorySpaceId: memorySpaceId,
             conversationId: conversation.conversationId,
             userMessage: userMessage,
@@ -220,13 +221,19 @@ async function seedData() {
             userName: user.name,
             agentId: agentId, // Required for user-agent conversations
             importance: 50 + Math.floor(Math.random() * 30), // Random importance 50-80
+          })
+          .then(() => {
+            totalMemories++;
+          })
+          .catch((e: any) => {
+            console.error(`      ⚠️  Failed to create memory: ${e.message}`);
           });
 
-          totalMemories++;
-        } catch (e: any) {
-          console.error(`      ⚠️  Failed to create memory: ${e.message}`);
-        }
+        memoryPromises.push(memoryPromise);
       }
+
+      // Wait for all memories to be created in parallel
+      await Promise.all(memoryPromises);
 
       console.log(`   ✅ Created 20 memories for ${user.name}\n`);
     }
