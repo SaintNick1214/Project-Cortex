@@ -188,8 +188,6 @@ jobs:
 
       - name: Publish to npm
         run: npm publish --access public --provenance --ignore-scripts
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create Git Tag
         run: |
@@ -288,8 +286,6 @@ jobs:
         run: |
           cd packages/create-cortex-memories
           npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Verify npm publish
         run: |
@@ -378,8 +374,6 @@ jobs:
         run: |
           cd packages/vercel-ai-provider
           npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create Git Tag
         run: |
@@ -526,8 +520,6 @@ jobs:
         run: |
           cd packages/cortex-cli
           npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create Git Tag
         run: |
