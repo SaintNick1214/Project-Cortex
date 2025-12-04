@@ -170,6 +170,7 @@ What specific aspects would you like to dive deeper into?
         agentResponse: COMPLEX_AGENT_RESPONSE,
         userId: "dr-sarah-chen",
         userName: "Dr. Sarah Chen",
+        agentId: "medical-assistant",
         importance: 95,
         tags: ["medical-ai", "team", "tech-stack", "challenges"],
       });

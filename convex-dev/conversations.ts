@@ -23,8 +23,9 @@ export const create = mutation({
     participantId: v.optional(v.string()), // NEW: Hive Mode participant tracking
     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
     participants: v.object({
-      userId: v.optional(v.string()),
-      participantId: v.optional(v.string()), // Hive Mode: which participant
+      userId: v.optional(v.string()), // The human user in the conversation
+      agentId: v.optional(v.string()), // The agent/assistant in the conversation
+      participantId: v.optional(v.string()), // Hive Mode: who created this
       memorySpaceIds: v.optional(v.array(v.string())), // Collaboration Mode: cross-space
     }),
     metadata: v.optional(v.any()),
@@ -197,6 +198,30 @@ export const deleteMany = mutation({
       deleted,
       totalMessagesDeleted,
       conversationIds: conversations.map((c) => c.conversationId),
+    };
+  },
+});
+
+/**
+ * Purge ALL conversations (development/testing only)
+ */
+export const purgeAll = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const conversations = await ctx.db.query("conversations").collect();
+
+    let deleted = 0;
+    let totalMessagesDeleted = 0;
+
+    for (const conversation of conversations) {
+      totalMessagesDeleted += conversation.messageCount;
+      await ctx.db.delete(conversation._id);
+      deleted++;
+    }
+
+    return {
+      deleted,
+      totalMessagesDeleted,
     };
   },
 });

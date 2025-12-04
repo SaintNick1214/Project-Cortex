@@ -24,8 +24,9 @@ export interface Conversation {
   participantId?: string; // NEW: Hive Mode tracking
   type: ConversationType;
   participants: {
-    userId?: string;
-    participantId?: string; // Hive Mode
+    userId?: string; // The human user in the conversation
+    agentId?: string; // The agent/assistant in the conversation
+    participantId?: string; // Hive Mode: who created this
     memorySpaceIds?: string[]; // Collaboration Mode (agent-agent)
   };
   messages: Message[];
@@ -41,9 +42,10 @@ export interface CreateConversationInput {
   participantId?: string; // NEW: Hive Mode
   type: ConversationType;
   participants: {
-    userId?: string;
-    participantId?: string;
-    memorySpaceIds?: string[];
+    userId?: string; // The human user in the conversation
+    agentId?: string; // The agent/assistant in the conversation
+    participantId?: string; // Hive Mode: who created this
+    memorySpaceIds?: string[]; // Collaboration Mode (agent-agent)
   };
   metadata?: Record<string, unknown>;
 }
@@ -291,7 +293,8 @@ export interface MemoryEntry {
   memoryId: string;
   memorySpaceId: string; // Updated
   participantId?: string; // NEW: Hive Mode
-  userId?: string;
+  userId?: string; // For user-owned memories
+  agentId?: string; // For agent-owned memories
   content: string;
   contentType: ContentType;
   embedding?: number[];
@@ -324,7 +327,8 @@ export interface StoreMemoryInput {
   contentType: ContentType;
   participantId?: string; // NEW: Hive Mode tracking
   embedding?: number[];
-  userId?: string;
+  userId?: string; // For user-owned memories
+  agentId?: string; // For agent-owned memories
   messageRole?: "user" | "agent" | "system"; // NEW: For semantic search weighting
 
   // Enrichment fields (for bullet-proof retrieval)
@@ -390,14 +394,76 @@ export interface CountMemoriesFilter {
 // Layer 3: Memory Convenience API
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+/**
+ * Layers that can be explicitly skipped during remember() orchestration.
+ *
+ * - 'users': Don't auto-create user profile
+ * - 'agents': Don't auto-register agent
+ * - 'conversations': Don't store messages in ACID conversation layer
+ * - 'vector': Don't store in vector memory layer
+ * - 'facts': Don't auto-extract facts (even if LLM configured)
+ * - 'graph': Don't sync to graph database (even if configured)
+ */
+export type SkippableLayer =
+  | "users"
+  | "agents"
+  | "conversations"
+  | "vector"
+  | "facts"
+  | "graph";
+
 export interface RememberParams {
-  memorySpaceId: string; // Updated
-  participantId?: string; // NEW: Hive Mode tracking
+  /**
+   * Memory space for isolation. If not provided, defaults to 'default'
+   * with a warning. Auto-registers the memory space if it doesn't exist.
+   */
+  memorySpaceId?: string;
+
+  /**
+   * Conversation ID. Required.
+   */
   conversationId: string;
+
+  /**
+   * The user's message content. Required.
+   */
   userMessage: string;
+
+  /**
+   * The agent's response content. Required.
+   */
   agentResponse: string;
-  userId: string;
-  userName: string;
+
+  /**
+   * User ID for user-owned memories. At least one of userId or agentId is required.
+   * Auto-creates user profile if it doesn't exist (unless 'users' is in skipLayers).
+   */
+  userId?: string;
+
+  /**
+   * Agent ID for agent-owned memories. At least one of userId or agentId is required.
+   * Auto-registers agent if it doesn't exist (unless 'agents' is in skipLayers).
+   */
+  agentId?: string;
+
+  /**
+   * Display name for the user (used in conversation tracking).
+   * Required when userId is provided.
+   */
+  userName?: string;
+
+  /**
+   * Participant ID for Hive Mode tracking.
+   * This tracks WHO stored the memory within a shared memory space,
+   * distinct from userId/agentId which indicates ownership.
+   */
+  participantId?: string;
+
+  /**
+   * Layers to explicitly skip during orchestration.
+   * By default, all configured layers are enabled.
+   */
+  skipLayers?: SkippableLayer[];
 
   // Optional extraction
   extractContent?: (
@@ -453,13 +519,57 @@ export interface RememberResult {
  * Similar to RememberParams but accepts streaming response instead of complete string
  */
 export interface RememberStreamParams {
-  memorySpaceId: string;
-  participantId?: string; // Hive Mode tracking
+  /**
+   * Memory space for isolation. If not provided, defaults to 'default'
+   * with a warning. Auto-registers the memory space if it doesn't exist.
+   */
+  memorySpaceId?: string;
+
+  /**
+   * Conversation ID. Required.
+   */
   conversationId: string;
+
+  /**
+   * The user's message content. Required.
+   */
   userMessage: string;
+
+  /**
+   * The streaming response from the agent.
+   */
   responseStream: ReadableStream<string> | AsyncIterable<string>;
-  userId: string;
-  userName: string;
+
+  /**
+   * User ID for user-owned memories. At least one of userId or agentId is required.
+   * Auto-creates user profile if it doesn't exist (unless 'users' is in skipLayers).
+   */
+  userId?: string;
+
+  /**
+   * Agent ID for agent-owned memories. At least one of userId or agentId is required.
+   * Auto-registers agent if it doesn't exist (unless 'agents' is in skipLayers).
+   */
+  agentId?: string;
+
+  /**
+   * Display name for the user (used in conversation tracking).
+   * Required when userId is provided.
+   */
+  userName?: string;
+
+  /**
+   * Participant ID for Hive Mode tracking.
+   * This tracks WHO stored the memory within a shared memory space,
+   * distinct from userId/agentId which indicates ownership.
+   */
+  participantId?: string;
+
+  /**
+   * Layers to explicitly skip during orchestration.
+   * By default, all configured layers are enabled.
+   */
+  skipLayers?: SkippableLayer[];
 
   // Optional extraction
   extractContent?: (

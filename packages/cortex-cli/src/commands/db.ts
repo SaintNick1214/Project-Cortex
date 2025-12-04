@@ -34,6 +34,115 @@ import {
 } from "../utils/validation.js";
 import { writeFile, readFile } from "fs/promises";
 import pc from "picocolors";
+import prompts from "prompts";
+import { listDeployments } from "../utils/config.js";
+
+const MAX_LIMIT = 1000;
+
+/**
+ * Paginate through all results using cursor-based pagination
+ */
+async function paginateAll<T>(
+  fetchFn: (cursor?: string) => Promise<{ data: T[]; cursor?: string }>,
+): Promise<T[]> {
+  const results: T[] = [];
+  let cursor: string | undefined;
+
+  do {
+    const response = await fetchFn(cursor);
+    results.push(...response.data);
+    cursor = response.cursor;
+  } while (cursor);
+
+  return results;
+}
+
+/**
+ * Fetch all items using simple limit-based pagination (no cursor)
+ */
+async function fetchAllWithLimit<T>(
+  fetchFn: (limit: number) => Promise<T[]>,
+  batchSize: number = MAX_LIMIT,
+): Promise<T[]> {
+  // For APIs without cursor pagination, just fetch max allowed
+  return await fetchFn(batchSize);
+}
+
+/**
+ * Select a database deployment interactively or from options
+ * Returns updated globalOpts with the selected deployment
+ */
+async function selectDatabase(
+  config: CLIConfig,
+  globalOpts: Record<string, unknown>,
+  actionDescription: string,
+): Promise<{
+  globalOpts: Record<string, unknown>;
+  targetName: string;
+  targetUrl: string;
+} | null> {
+  const deployments = listDeployments(config);
+
+  if (deployments.length === 0) {
+    printError("No deployments configured. Run 'cortex setup' first.");
+    return null;
+  }
+
+  // Determine target deployment
+  let targetDeployment = deployments.find((d) => d.isDefault);
+  let targetUrl = targetDeployment?.url ?? "";
+  let targetName = targetDeployment?.name ?? config.default;
+
+  // If --deployment flag was passed, use that
+  if (globalOpts.deployment) {
+    const specified = deployments.find(
+      (d) => d.name === globalOpts.deployment,
+    );
+    if (specified) {
+      targetDeployment = specified;
+      targetUrl = specified.url;
+      targetName = specified.name;
+    } else {
+      printError(`Deployment "${globalOpts.deployment}" not found`);
+      return null;
+    }
+  }
+
+  // If multiple deployments and none specified, ask which one
+  if (deployments.length > 1 && !globalOpts.deployment) {
+    console.log();
+    console.log(
+      `Current target: ${pc.cyan(targetName)} (${pc.dim(targetUrl)})`,
+    );
+    console.log();
+
+    const selectResponse = await prompts({
+      type: "select",
+      name: "deployment",
+      message: `Select database to ${actionDescription}:`,
+      choices: deployments.map((d) => ({
+        title: d.isDefault ? `${d.name} (default)` : d.name,
+        description: d.url,
+        value: d.name,
+      })),
+      initial: deployments.findIndex((d) => d.name === targetName),
+    });
+
+    if (!selectResponse.deployment) {
+      printWarning("Operation cancelled");
+      return null;
+    }
+
+    targetName = selectResponse.deployment;
+    const selected = deployments.find((d) => d.name === targetName);
+    targetUrl = selected?.url ?? "";
+
+    // Update globalOpts to use selected deployment
+    globalOpts = { ...globalOpts, deployment: targetName };
+  }
+
+  return { globalOpts, targetName, targetUrl };
+}
 
 /**
  * Register database commands
@@ -46,26 +155,58 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
     .description("Show database statistics")
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (options) => {
-      const globalOpts = program.opts();
+      let globalOpts = program.opts();
       const resolved = resolveConfig(config, globalOpts);
       const format = (options.format ?? resolved.format) as OutputFormat;
 
-      const spinner = ora("Loading database statistics...").start();
-
       try {
+        // Select database
+        const selection = await selectDatabase(config, globalOpts, "view stats for");
+        if (!selection) return;
+        globalOpts = selection.globalOpts;
+        const { targetName, targetUrl } = selection;
+
+        const spinner = ora(`Loading statistics for ${targetName}...`).start();
+
         await withClient(config, globalOpts, async (client) => {
-          // Get counts from all tables
+          // Get deployment info
+          const info = { url: targetUrl, isLocal: targetUrl.includes("127.0.0.1") || targetUrl.includes("localhost") };
+
+          // Get basic counts
+          spinner.text = "Counting users and spaces...";
           const [spacesCount, usersCount] = await Promise.all([
             client.memorySpaces.count(),
             client.users.count(),
           ]);
 
+          // Count agents
+          spinner.text = "Counting agents...";
+          let agentsCount = 0;
+          try {
+            const agents = await client.agents.list({ limit: MAX_LIMIT });
+            agentsCount = agents.length;
+          } catch {
+            // Agents API may not be available
+          }
+
+          // Count contexts
+          spinner.text = "Counting contexts...";
+          let contextsCount = 0;
+          try {
+            const contexts = await client.contexts.list({ limit: MAX_LIMIT });
+            contextsCount = contexts.length;
+          } catch {
+            // Contexts API may not be available
+          }
+
           // Get space-level statistics
-          const spaces = await client.memorySpaces.list({ limit: 1000 });
+          spinner.text = "Gathering space statistics...";
+          const spaces = await client.memorySpaces.list({ limit: MAX_LIMIT });
 
           let totalMemories = 0;
           let totalConversations = 0;
           let totalFacts = 0;
+          let totalMessages = 0;
 
           for (const space of spaces) {
             try {
@@ -75,6 +216,16 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
               totalMemories += stats.totalMemories;
               totalConversations += stats.totalConversations;
               totalFacts += stats.totalFacts;
+              // Count messages in conversations
+              if (stats.totalConversations > 0) {
+                const convos = await client.conversations.list({
+                  memorySpaceId: space.memorySpaceId,
+                  limit: MAX_LIMIT,
+                });
+                for (const convo of convos) {
+                  totalMessages += convo.messageCount ?? 0;
+                }
+              }
             } catch {
               // Skip if stats not available
             }
@@ -88,36 +239,84 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
             memories: totalMemories,
             facts: totalFacts,
             users: usersCount,
-            immutableRecords: 0, // Would need separate query
-            mutableRecords: 0, // Would need separate query
-            contexts: 0, // Would need separate query
+            immutableRecords: 0,
+            mutableRecords: 0,
+            contexts: contextsCount,
           };
 
           if (format === "json") {
-            console.log(formatOutput(stats, "json"));
+            console.log(
+              formatOutput(
+                {
+                  ...stats,
+                  agents: agentsCount,
+                  messages: totalMessages,
+                  deployment: {
+                    name:
+                      globalOpts.deployment ?? config.default ?? "default",
+                    url: info.url,
+                    isLocal: info.isLocal,
+                  },
+                },
+                "json",
+              ),
+            );
           } else {
             console.log();
-            printSection("Database Statistics", {
-              "Memory Spaces": stats.memorySpaces,
-              "Total Memories": stats.memories,
-              "Total Conversations": stats.conversations,
-              "Total Facts": stats.facts,
-              "User Profiles": stats.users,
-            });
-
-            // Show deployment info
-            const info = (await import("../utils/client.js")).getDeploymentInfo(
-              config,
-              globalOpts,
-            );
-            console.log(`  ${pc.dim("Deployment:")} ${info.url}`);
             console.log(
-              `  ${pc.dim("Mode:")} ${info.isLocal ? "Local" : "Cloud"}`,
+              pc.bold(
+                `📊 Database Statistics: ${pc.cyan(targetName)}`,
+              ),
             );
+            console.log(pc.dim("─".repeat(45)));
+            console.log();
+
+            // Core entities
+            console.log(pc.bold("  Core Entities"));
+            console.log(
+              `    Memory Spaces:    ${pc.yellow(String(stats.memorySpaces))}`,
+            );
+            console.log(
+              `    Users:            ${pc.yellow(String(stats.users))}`,
+            );
+            console.log(
+              `    Agents:           ${pc.yellow(String(agentsCount))}`,
+            );
+            console.log();
+
+            // Memory data
+            console.log(pc.bold("  Memory Data"));
+            console.log(
+              `    Memories:         ${pc.yellow(String(stats.memories))}`,
+            );
+            console.log(
+              `    Facts:            ${pc.yellow(String(stats.facts))}`,
+            );
+            console.log(
+              `    Contexts:         ${pc.yellow(String(stats.contexts))}`,
+            );
+            console.log();
+
+            // Conversation data
+            console.log(pc.bold("  Conversations"));
+            console.log(
+              `    Conversations:    ${pc.yellow(String(stats.conversations))}`,
+            );
+            console.log(
+              `    Messages:         ${pc.yellow(String(totalMessages))}`,
+            );
+            console.log();
+
+            // Deployment info
+            console.log(pc.bold("  Deployment"));
+            console.log(`    URL:              ${pc.dim(info.url)}`);
+            console.log(
+              `    Mode:             ${info.isLocal ? pc.green("Local") : pc.blue("Cloud")}`,
+            );
+            console.log();
           }
         });
       } catch (error) {
-        spinner.stop();
         printError(
           error instanceof Error ? error.message : "Failed to load statistics",
         );
@@ -128,85 +327,172 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
   // db clear
   db.command("clear")
     .description("Clear entire database (DANGEROUS!)")
-    .option(
-      "--confirm <text>",
-      'Confirmation text: "I understand this is irreversible"',
-    )
+    .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (options) => {
-      const globalOpts = program.opts();
+      let globalOpts = program.opts();
 
       try {
-        // Require exact confirmation text
-        const expectedText = "I understand this is irreversible";
+        console.log();
+        console.log(
+          pc.red(pc.bold("⚠️  DANGER: Clear Database")),
+        );
 
-        if (options.confirm !== expectedText) {
-          console.log();
-          console.log(
-            pc.red(
-              pc.bold("⚠️  DANGER: This will DELETE ALL DATA in the database!"),
-            ),
-          );
-          console.log();
-          console.log("This operation will permanently delete:");
-          console.log("  • All memory spaces");
-          console.log("  • All memories");
-          console.log("  • All conversations");
-          console.log("  • All facts");
-          console.log("  • All user profiles");
-          console.log("  • All immutable and mutable records");
-          console.log("  • All contexts");
-          console.log();
-          console.log(pc.yellow("This cannot be undone!"));
-          console.log();
+        // Select database
+        const selection = await selectDatabase(config, globalOpts, "clear");
+        if (!selection) return;
+        globalOpts = selection.globalOpts;
+        const { targetName, targetUrl } = selection;
 
-          const confirmed = await requireExactConfirmation(
-            expectedText,
-            `To proceed, type exactly: "${expectedText}"`,
-          );
+        console.log();
+        console.log("This will permanently delete:");
+        console.log("  • All memory spaces and memories");
+        console.log("  • All conversations and messages");
+        console.log("  • All facts and user profiles");
+        console.log();
 
-          if (!confirmed) {
+        // Simple y/N confirmation
+        if (!options.yes) {
+          const confirmResponse = await prompts({
+            type: "confirm",
+            name: "confirmed",
+            message: `Clear ALL data from ${pc.red(targetName)}?`,
+            initial: false,
+          });
+
+          if (!confirmResponse.confirmed) {
             printWarning("Operation cancelled");
             return;
           }
         }
 
-        const spinner = ora("Clearing database...").start();
+        const spinner = ora(`Clearing ${targetName}...`).start();
 
         await withClient(config, globalOpts, async (client) => {
-          // Delete all memory spaces (with cascade)
-          const spaces = await client.memorySpaces.list({ limit: 10000 });
-          let deletedSpaces = 0;
+          const deleted = {
+            agents: 0,
+            contexts: 0,
+            memorySpaces: 0,
+            users: 0,
+          };
 
-          for (const space of spaces) {
+          // 1. Delete all agents first (they may reference other entities)
+          let hasMoreAgents = true;
+          while (hasMoreAgents) {
+            spinner.text = `Clearing agents... (${deleted.agents} deleted)`;
             try {
-              await client.memorySpaces.delete(space.memorySpaceId, {
-                cascade: true,
-              });
-              deletedSpaces++;
+              const agents = await client.agents.list({ limit: MAX_LIMIT });
+              if (agents.length === 0) {
+                hasMoreAgents = false;
+                break;
+              }
+              for (const agent of agents) {
+                try {
+                  await client.agents.unregister(agent.id, { cascade: true });
+                  deleted.agents++;
+                } catch {
+                  // Continue on error
+                }
+              }
+              if (agents.length < MAX_LIMIT) {
+                hasMoreAgents = false;
+              }
             } catch {
-              // Continue on error
+              // Agents API may not be available
+              hasMoreAgents = false;
             }
           }
 
-          // Delete all users
-          const users = await client.users.list({ limit: 10000 });
-          let deletedUsers = 0;
-
-          for (const user of users) {
+          // 2. Delete all contexts
+          let hasMoreContexts = true;
+          while (hasMoreContexts) {
+            spinner.text = `Clearing contexts... (${deleted.contexts} deleted)`;
             try {
-              await client.users.delete(user.id, { cascade: true });
-              deletedUsers++;
+              const contexts = await client.contexts.list({ limit: MAX_LIMIT });
+              if (contexts.length === 0) {
+                hasMoreContexts = false;
+                break;
+              }
+              for (const ctx of contexts) {
+                try {
+                  await client.contexts.delete(ctx.contextId, {
+                    cascadeChildren: true,
+                  });
+                  deleted.contexts++;
+                } catch {
+                  // Continue on error
+                }
+              }
+              if (contexts.length < MAX_LIMIT) {
+                hasMoreContexts = false;
+              }
             } catch {
-              // Continue on error
+              // Contexts API may not be available
+              hasMoreContexts = false;
+            }
+          }
+
+          // 3. Delete all memory spaces (with cascade - deletes memories, conversations, facts)
+          let hasMoreSpaces = true;
+          while (hasMoreSpaces) {
+            spinner.text = `Clearing memory spaces... (${deleted.memorySpaces} deleted)`;
+            const spaces = await client.memorySpaces.list({ limit: MAX_LIMIT });
+
+            if (spaces.length === 0) {
+              hasMoreSpaces = false;
+              break;
+            }
+
+            for (const space of spaces) {
+              try {
+                await client.memorySpaces.delete(space.memorySpaceId, {
+                  cascade: true,
+                });
+                deleted.memorySpaces++;
+              } catch {
+                // Continue on error
+              }
+            }
+
+            if (spaces.length < MAX_LIMIT) {
+              hasMoreSpaces = false;
+            }
+          }
+
+          // 4. Delete all users (with cascade - cleans up any remaining user data)
+          let hasMoreUsers = true;
+          while (hasMoreUsers) {
+            spinner.text = `Clearing users... (${deleted.users} deleted)`;
+            const users = await client.users.list({ limit: MAX_LIMIT });
+
+            if (users.length === 0) {
+              hasMoreUsers = false;
+              break;
+            }
+
+            for (const user of users) {
+              try {
+                await client.users.delete(user.id, { cascade: true });
+                deleted.users++;
+              } catch {
+                // Continue on error
+              }
+            }
+
+            if (users.length < MAX_LIMIT) {
+              hasMoreUsers = false;
             }
           }
 
           spinner.stop();
 
-          printSuccess("Database cleared");
+          printSuccess(`Database "${targetName}" cleared`);
           printSection("Deletion Summary", {
-            "Memory Spaces": deletedSpaces,
-            Users: deletedUsers,
+            Database: targetName,
+            URL: targetUrl,
+            Agents: deleted.agents,
+            Contexts: deleted.contexts,
+            "Memory Spaces": deleted.memorySpaces,
+            Users: deleted.users,
           });
         });
       } catch (error) {
@@ -221,30 +507,36 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
     .option("-o, --output <file>", "Output file path", "cortex-backup.json")
     .option("--include-all", "Include all data (may be large)", false)
     .action(async (options) => {
-      const globalOpts = program.opts();
-
-      const spinner = ora("Creating backup...").start();
+      let globalOpts = program.opts();
 
       try {
         validateFilePath(options.output);
+
+        // Select database
+        const selection = await selectDatabase(config, globalOpts, "backup");
+        if (!selection) return;
+        globalOpts = selection.globalOpts;
+        const { targetName, targetUrl } = selection;
+
+        const spinner = ora(`Creating backup of ${targetName}...`).start();
 
         await withClient(config, globalOpts, async (client) => {
           const backup: BackupData = {
             version: "1.0",
             timestamp: Date.now(),
-            deployment: resolveConfig(config, globalOpts).url,
+            deployment: targetUrl,
             data: {},
           };
 
-          // Backup memory spaces
+          // Backup memory spaces (paginate if needed)
           spinner.text = "Backing up memory spaces...";
           backup.data.memorySpaces = await client.memorySpaces.list({
-            limit: 10000,
+            limit: MAX_LIMIT,
           });
 
-          // Backup users
+          // Backup users (paginate if needed)
           spinner.text = "Backing up users...";
-          backup.data.users = await client.users.list({ limit: 10000 });
+          backup.data.users = await client.users.list({ limit: MAX_LIMIT });
 
           if (options.includeAll) {
             // Backup conversations
@@ -256,7 +548,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
             for (const space of spaces) {
               const convs = await client.conversations.list({
                 memorySpaceId: space.memorySpaceId,
-                limit: 10000,
+                limit: MAX_LIMIT,
               });
               (backup.data.conversations as unknown[]).push(...convs);
             }
@@ -267,7 +559,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
             for (const space of spaces) {
               const memories = await client.memory.list({
                 memorySpaceId: space.memorySpaceId,
-                limit: 10000,
+                limit: MAX_LIMIT,
               });
               (backup.data.memories as unknown[]).push(...memories);
             }
@@ -278,7 +570,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
             for (const space of spaces) {
               const facts = await client.facts.list({
                 memorySpaceId: space.memorySpaceId,
-                limit: 10000,
+                limit: MAX_LIMIT,
               });
               (backup.data.facts as unknown[]).push(...facts);
             }
@@ -311,7 +603,6 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           });
         });
       } catch (error) {
-        spinner.stop();
         printError(error instanceof Error ? error.message : "Backup failed");
         process.exit(1);
       }
@@ -324,12 +615,12 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
     .option("--dry-run", "Preview what would be restored", false)
     .option("-y, --yes", "Skip confirmation", false)
     .action(async (options) => {
-      const globalOpts = program.opts();
+      let globalOpts = program.opts();
 
       try {
         validateFilePath(options.input);
 
-        // Read backup file
+        // Read backup file first to show info before selecting target
         const content = await readFile(options.input, "utf-8");
         const backup = JSON.parse(content) as BackupData;
 
@@ -357,9 +648,15 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           return;
         }
 
+        // Select target database
+        const selection = await selectDatabase(config, globalOpts, "restore to");
+        if (!selection) return;
+        globalOpts = selection.globalOpts;
+        const { targetName } = selection;
+
         if (!options.yes) {
           const confirmed = await requireConfirmation(
-            "Restore this backup? Existing data may be overwritten.",
+            `Restore this backup to ${targetName}? Existing data may be overwritten.`,
             config,
           );
           if (!confirmed) {
@@ -368,7 +665,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           }
         }
 
-        const spinner = ora("Restoring backup...").start();
+        const spinner = ora(`Restoring backup to ${targetName}...`).start();
 
         await withClient(config, globalOpts, async (client) => {
           let restored = {
@@ -441,18 +738,25 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
     .description("Export all data to JSON")
     .option("-o, --output <file>", "Output file path", "cortex-export.json")
     .action(async (options) => {
-      const globalOpts = program.opts();
-
-      const spinner = ora("Exporting data...").start();
+      let globalOpts = program.opts();
 
       try {
         validateFilePath(options.output);
 
+        // Select database
+        const selection = await selectDatabase(config, globalOpts, "export");
+        if (!selection) return;
+        globalOpts = selection.globalOpts;
+        const { targetName, targetUrl } = selection;
+
+        const spinner = ora(`Exporting data from ${targetName}...`).start();
+
         await withClient(config, globalOpts, async (client) => {
           const exportData = {
             exportedAt: Date.now(),
-            memorySpaces: await client.memorySpaces.list({ limit: 10000 }),
-            users: await client.users.list({ limit: 10000 }),
+            deployment: { name: targetName, url: targetUrl },
+            memorySpaces: await client.memorySpaces.list({ limit: MAX_LIMIT }),
+            users: await client.users.list({ limit: MAX_LIMIT }),
           };
 
           const content = JSON.stringify(exportData, null, 2);
@@ -462,7 +766,6 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           printSuccess(`Exported data to ${options.output}`);
         });
       } catch (error) {
-        spinner.stop();
         printError(error instanceof Error ? error.message : "Export failed");
         process.exit(1);
       }

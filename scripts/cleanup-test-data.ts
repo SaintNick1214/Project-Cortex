@@ -64,7 +64,9 @@ async function cleanup() {
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     console.log("📋 Purging conversations...");
     try {
-      const conversations = await client.query(api.conversations.list, {});
+      const conversations = await client.query(api.conversations.list, {
+        limit: 10000, // Fetch all conversations (default is 100)
+      });
       stats.conversations = conversations.length;
 
       for (const conv of conversations) {

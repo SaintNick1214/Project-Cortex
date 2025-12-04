@@ -1067,6 +1067,7 @@ describe("Agents API (Coordination Layer)", () => {
         agentResponse: "OK",
         userId: ctx.userId("bulk-test"),
         userName: "Test User",
+        agentId: bulkAgent1Id,
       });
 
       // Verify memory was created

@@ -3,6 +3,33 @@
  *
  * High-level helpers that orchestrate Layer 1 (ACID) and Layer 2 (Vector) automatically.
  * Recommended API for most use cases.
+ *
+ * ## Orchestration Flow
+ *
+ * When calling `remember()`, the following layers are orchestrated by default:
+ *
+ * 1. **VALIDATION** (cannot be skipped)
+ *    - memorySpaceId: defaults to 'default' with warning if not provided
+ *    - userId OR agentId: at least one is required for ownership
+ *
+ * 2. **MEMORYSPACE** (cannot be skipped)
+ *    - Auto-registers memory space if it doesn't exist
+ *
+ * 3. **OWNER PROFILES** (skip: 'users'/'agents')
+ *    - userId → auto-creates user profile
+ *    - agentId → auto-registers agent
+ *
+ * 4. **CONVERSATION** (skip: 'conversations')
+ *    - Stores messages in ACID conversation layer
+ *
+ * 5. **VECTOR MEMORY** (skip: 'vector')
+ *    - Creates searchable vector memory
+ *
+ * 6. **FACTS** (skip: 'facts')
+ *    - Auto-extracts facts if LLM configured
+ *
+ * 7. **GRAPH** (skip: 'graph')
+ *    - Syncs entities to graph database if configured
  */
 
 import type { ConvexClient } from "convex/browser";
@@ -10,6 +37,9 @@ import { api } from "../../convex-dev/_generated/api";
 import { ConversationsAPI } from "../conversations";
 import { VectorAPI } from "../vector";
 import { FactsAPI } from "../facts";
+import type { MemorySpacesAPI } from "../memorySpaces";
+import type { UsersAPI } from "../users";
+import type { AgentsAPI } from "../agents";
 import {
   type ArchiveResult,
   type Conversation,
@@ -31,6 +61,7 @@ import {
   type RememberResult,
   type RememberStreamParams,
   type SearchMemoryOptions,
+  type SkippableLayer,
   type SourceType,
   type StoreMemoryInput,
   type StoreMemoryResult,
@@ -39,6 +70,7 @@ import {
   type UpdateMemoryResult,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
+import type { LLMConfig } from "../index";
 import {
   MemoryValidationError,
   validateMemorySpaceId,
@@ -53,7 +85,6 @@ import {
   validateLimit,
   validateTimestamp,
   validateTags,
-  validateRememberParams,
   validateStoreMemoryInput,
   validateSearchOptions,
   validateUpdateOptions,
@@ -63,10 +94,27 @@ import {
 } from "./validators";
 import type { ResilienceLayer } from "../resilience";
 
+/** Default memory space ID used when none is provided */
+const DEFAULT_MEMORY_SPACE_ID = "default";
+
 // Type for conversation with messages
 interface ConversationWithMessages {
   messages: Message[];
   [key: string]: unknown;
+}
+
+/**
+ * Dependencies for full memory orchestration
+ */
+export interface MemoryAPIDependencies {
+  /** Memory spaces API for auto-registration */
+  memorySpaces: MemorySpacesAPI;
+  /** Users API for auto-profile creation */
+  users: UsersAPI;
+  /** Agents API for auto-registration */
+  agents: AgentsAPI;
+  /** LLM config for auto fact extraction */
+  llm?: LLMConfig;
 }
 
 export class MemoryAPI {
@@ -77,14 +125,28 @@ export class MemoryAPI {
   private readonly graphAdapter?: GraphAdapter;
   private readonly resilience?: ResilienceLayer;
 
+  // Dependencies for orchestration
+  private readonly memorySpacesAPI?: MemorySpacesAPI;
+  private readonly usersAPI?: UsersAPI;
+  private readonly agentsAPI?: AgentsAPI;
+  private readonly llmConfig?: LLMConfig;
+
   constructor(
     client: ConvexClient,
     graphAdapter?: GraphAdapter,
     resilience?: ResilienceLayer,
+    dependencies?: MemoryAPIDependencies,
   ) {
     this.client = client;
     this.graphAdapter = graphAdapter;
     this.resilience = resilience;
+
+    // Store orchestration dependencies
+    this.memorySpacesAPI = dependencies?.memorySpaces;
+    this.usersAPI = dependencies?.users;
+    this.agentsAPI = dependencies?.agents;
+    this.llmConfig = dependencies?.llm;
+
     // Pass resilience layer to sub-APIs
     this.conversations = new ConversationsAPI(client, graphAdapter, resilience);
     this.vector = new VectorAPI(client, graphAdapter, resilience);
@@ -206,184 +268,473 @@ export class MemoryAPI {
   // Core Dual-Layer Operations
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Orchestration Helper Methods
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * Check if a layer should be skipped
+   */
+  private shouldSkipLayer(
+    layer: SkippableLayer,
+    skipLayers?: SkippableLayer[],
+  ): boolean {
+    return skipLayers?.includes(layer) ?? false;
+  }
+
+  /**
+   * Validate and normalize remember params with orchestration defaults
+   */
+  private validateAndNormalizeParams(params: RememberParams): {
+    memorySpaceId: string;
+    ownerId: string;
+    ownerType: "user" | "agent";
+    warnings: string[];
+  } {
+    const warnings: string[] = [];
+
+    // 1. Validate required fields
+    validateConversationId(params.conversationId);
+    validateContent(params.userMessage, "userMessage");
+    validateContent(params.agentResponse, "agentResponse");
+
+    // 2. Handle memorySpaceId - default to 'default' with warning if not specified
+    let memorySpaceId = params.memorySpaceId;
+    if (memorySpaceId === undefined || memorySpaceId === null) {
+      // Not specified - use default with warning
+      memorySpaceId = DEFAULT_MEMORY_SPACE_ID;
+      warnings.push(
+        `[Cortex Warning] No memorySpaceId provided, using '${DEFAULT_MEMORY_SPACE_ID}'. ` +
+          "Consider explicitly setting a memorySpaceId for proper memory isolation.",
+      );
+    } else if (memorySpaceId.trim().length === 0) {
+      // Specified but empty/whitespace - this is an error
+      throw new MemoryValidationError(
+        "memorySpaceId cannot be empty. Either provide a valid memorySpaceId or omit it to use the default.",
+        "INVALID_MEMORYSPACE_ID",
+        "memorySpaceId",
+      );
+    }
+
+    // 3. Validate owner attribution - at least one of userId or agentId required
+    const hasUserId = params.userId && params.userId.trim().length > 0;
+    const hasAgentId = params.agentId && params.agentId.trim().length > 0;
+
+    if (!hasUserId && !hasAgentId) {
+      throw new MemoryValidationError(
+        "Either userId or agentId must be provided for memory ownership. " +
+          "Use userId for user-owned memories, agentId for agent-owned memories.",
+        "OWNER_REQUIRED",
+        "userId/agentId",
+      );
+    }
+
+    // 4. For user-agent conversations, require agentId when userId is provided
+    // A user can't have a conversation with themselves - there must be an agent
+    if (hasUserId && !hasAgentId) {
+      throw new MemoryValidationError(
+        "agentId is required when userId is provided. " +
+          "User-agent conversations require both a user and an agent participant.",
+        "AGENT_REQUIRED_FOR_USER_CONVERSATION",
+        "agentId",
+      );
+    }
+
+    // Determine primary owner
+    const ownerId = hasUserId ? params.userId! : params.agentId!;
+    const ownerType = hasUserId ? "user" : "agent";
+
+    // 5. Validate userName is provided when userId is provided
+    if (hasUserId && (!params.userName || params.userName.trim().length === 0)) {
+      throw new MemoryValidationError(
+        "userName is required when userId is provided",
+        "MISSING_REQUIRED_FIELD",
+        "userName",
+      );
+    }
+
+    // 5. Validate optional fields
+    if (params.importance !== undefined) {
+      validateImportance(params.importance);
+    }
+    if (params.tags) {
+      validateTags(params.tags);
+    }
+
+    return {
+      memorySpaceId,
+      ownerId,
+      ownerType,
+      warnings,
+    };
+  }
+
+  /**
+   * Ensure memory space exists, auto-register if not
+   */
+  private async ensureMemorySpaceExists(
+    memorySpaceId: string,
+    syncToGraph: boolean,
+  ): Promise<void> {
+    if (!this.memorySpacesAPI) {
+      // No memorySpaces API available - skip auto-registration
+      return;
+    }
+
+    const existingSpace = await this.memorySpacesAPI.get(memorySpaceId);
+    if (!existingSpace) {
+      await this.memorySpacesAPI.register(
+        {
+          memorySpaceId,
+          type: "custom",
+          name: memorySpaceId,
+        },
+        { syncToGraph },
+      );
+    }
+  }
+
+  /**
+   * Ensure user profile exists, auto-create if not
+   */
+  private async ensureUserExists(
+    userId: string,
+    userName?: string,
+  ): Promise<void> {
+    if (!this.usersAPI) {
+      // No users API available - skip auto-creation
+      return;
+    }
+
+    await this.usersAPI.getOrCreate(userId, {
+      displayName: userName || userId,
+      createdAt: Date.now(),
+    });
+  }
+
+  /**
+   * Ensure agent is registered, auto-register if not
+   */
+  private async ensureAgentExists(agentId: string): Promise<void> {
+    if (!this.agentsAPI) {
+      // No agents API available - skip auto-registration
+      return;
+    }
+
+    const existingAgent = await this.agentsAPI.exists(agentId);
+    if (!existingAgent) {
+      await this.agentsAPI.register({
+        id: agentId,
+        name: agentId,
+        description: "Auto-registered by memory.remember()",
+      });
+    }
+  }
+
+  /**
+   * Get fact extraction function - uses provided extractor, LLM config, or returns null
+   */
+  private getFactExtractor(
+    params: RememberParams,
+  ): ((
+    userMessage: string,
+    agentResponse: string,
+  ) => Promise<Array<{
+    fact: string;
+    factType:
+      | "preference"
+      | "identity"
+      | "knowledge"
+      | "relationship"
+      | "event"
+      | "observation"
+      | "custom";
+    subject?: string;
+    predicate?: string;
+    object?: string;
+    confidence: number;
+    tags?: string[];
+  }> | null>) | null {
+    // 1. Use provided extractor if available
+    if (params.extractFacts) {
+      return params.extractFacts;
+    }
+
+    // 2. Use LLM config's custom extractor if available
+    if (this.llmConfig?.extractFacts) {
+      return this.llmConfig.extractFacts;
+    }
+
+    // 3. If LLM is configured, use built-in extraction (to be implemented)
+    if (this.llmConfig?.apiKey) {
+      // Return a function that will call the LLM for fact extraction
+      return this.createLLMFactExtractor();
+    }
+
+    // 4. No fact extraction available
+    return null;
+  }
+
+  /**
+   * Create an LLM-based fact extractor function
+   */
+  private createLLMFactExtractor(): (
+    userMessage: string,
+    agentResponse: string,
+  ) => Promise<Array<{
+    fact: string;
+    factType:
+      | "preference"
+      | "identity"
+      | "knowledge"
+      | "relationship"
+      | "event"
+      | "observation"
+      | "custom";
+    subject?: string;
+    predicate?: string;
+    object?: string;
+    confidence: number;
+    tags?: string[];
+  }> | null> {
+    // This is a placeholder implementation - in production, this would call the LLM
+    // For now, we return a function that returns null (no facts extracted)
+    // This allows the feature flag to work while actual LLM integration is added later
+    return async (
+      _userMessage: string,
+      _agentResponse: string,
+    ): Promise<Array<{
+      fact: string;
+      factType:
+        | "preference"
+        | "identity"
+        | "knowledge"
+        | "relationship"
+        | "event"
+        | "observation"
+        | "custom";
+      subject?: string;
+      predicate?: string;
+      object?: string;
+      confidence: number;
+      tags?: string[];
+    }> | null> => {
+      // TODO: Implement actual LLM-based fact extraction
+      // For now, silently skip - LLM integration will be added in a future PR
+      console.debug(
+        "[Cortex] LLM fact extraction is configured but not yet implemented. " +
+          "Provide an extractFacts function or wait for LLM integration.",
+      );
+      return null;
+    };
+  }
+
   /**
    * Remember a conversation exchange (stores in both ACID and Vector)
    *
-   * Auto-syncs to graph if configured (default: true)
+   * This method orchestrates across multiple layers by default:
+   * - Auto-registers memory space if it doesn't exist
+   * - Auto-creates user profile if userId is provided
+   * - Auto-registers agent if agentId is provided
+   * - Stores messages in ACID conversation layer
+   * - Creates searchable vector memories
+   * - Extracts facts if LLM is configured or extractFacts provided
+   * - Syncs to graph if configured
+   *
+   * Use `skipLayers` to explicitly opt-out of specific layers.
    *
    * @example
    * ```typescript
+   * // Full orchestration (default)
    * await cortex.memory.remember({
-   *   memorySpaceId: 'agent-1',
-   *   conversationId: 'conv-123',
-   *   userMessage: 'The password is Blue',
-   *   agentResponse: "I'll remember that!",
-   *   userId: 'user-1',
+   *   memorySpaceId: 'user-123-space',
+   *   userId: 'user-123',
    *   userName: 'Alex',
+   *   conversationId: 'conv-123',
+   *   userMessage: 'Call me Alex',
+   *   agentResponse: "I'll remember that, Alex!",
    * });
    *
-   * // Disable graph sync
-   * await cortex.memory.remember(params, { syncToGraph: false });
+   * // Skip facts and graph (lightweight mode)
+   * await cortex.memory.remember({
+   *   memorySpaceId: 'user-123-space',
+   *   agentId: 'quick-bot',
+   *   conversationId: 'conv-456',
+   *   userMessage: 'Quick question',
+   *   agentResponse: 'Quick answer',
+   *   skipLayers: ['facts', 'graph'],
+   * });
    * ```
    */
   async remember(
     params: RememberParams,
     options?: RememberOptions,
   ): Promise<RememberResult> {
-    // Client-side validation
-    validateRememberParams(params);
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // STEP 1: VALIDATION (Cannot be skipped)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    const { memorySpaceId, ownerId, ownerType, warnings } =
+      this.validateAndNormalizeParams(params);
+
+    // Emit warnings (non-breaking)
+    for (const warning of warnings) {
+      console.warn(warning);
+    }
 
     const now = Date.now();
-
-    // Step 1: Ensure conversation exists (auto-create if needed)
-    const existingConversation = await this.conversations.get(
-      params.conversationId,
-    );
-
-    if (!existingConversation) {
-      // Auto-create conversation with sensible defaults
-      await this.conversations.create(
-        {
-          memorySpaceId: params.memorySpaceId,
-          conversationId: params.conversationId,
-          type: "user-agent",
-          participants: {
-            userId: params.userId,
-            participantId: params.participantId || "agent",
-          },
-        },
-        {
-          syncToGraph:
-            options?.syncToGraph !== false && this.graphAdapter !== undefined,
-        },
-      );
-    }
-
-    // Step 2: Store user message in ACID
-    const userMsg = await this.conversations.addMessage({
-      conversationId: params.conversationId,
-      message: {
-        role: "user",
-        content: params.userMessage,
-        metadata: { userId: params.userId },
-      },
-    });
-
-    // Step 3: Store agent response in ACID
-    const agentMsg = await this.conversations.addMessage({
-      conversationId: params.conversationId,
-      message: {
-        role: "agent",
-        content: params.agentResponse,
-        participantId: params.participantId, // Updated
-        metadata: {},
-      },
-    });
-
-    // Step 4: Extract content (if provided)
-    let userContent = params.userMessage;
-    const agentContent = params.agentResponse;
-    let contentType: "raw" | "summarized" = "raw";
-
-    if (params.extractContent) {
-      const extracted = await params.extractContent(
-        params.userMessage,
-        params.agentResponse,
-      );
-
-      if (extracted) {
-        userContent = extracted;
-        contentType = "summarized";
-      }
-    }
-
-    // Step 5: Generate embeddings (if provided)
-    let userEmbedding: number[] | undefined;
-    let agentEmbedding: number[] | undefined;
-
-    if (params.generateEmbedding) {
-      userEmbedding =
-        (await params.generateEmbedding(userContent)) || undefined;
-      agentEmbedding =
-        (await params.generateEmbedding(agentContent)) || undefined;
-    }
+    const skipLayers = params.skipLayers || [];
 
     // Determine if we should sync to graph (default: true if configured)
     const shouldSyncToGraph =
-      options?.syncToGraph !== false && this.graphAdapter !== undefined;
+      options?.syncToGraph !== false &&
+      this.graphAdapter !== undefined &&
+      !this.shouldSkipLayer("graph", skipLayers);
 
-    // Step 6: Store user message in Vector with conversationRef
-    const userMemory = await this.vector.store(
-      params.memorySpaceId,
-      {
-        content: userContent,
-        contentType,
-        participantId: params.participantId, // Hive Mode tracking
-        embedding: userEmbedding,
-        userId: params.userId,
-        messageRole: "user", // NEW: Mark as user message for semantic search weighting
-        source: {
-          type: "conversation",
-          userId: params.userId,
-          userName: params.userName,
-          timestamp: now,
-        },
-        conversationRef: {
-          conversationId: params.conversationId,
-          messageIds: [userMsg.messages[userMsg.messages.length - 1].id],
-        },
-        metadata: {
-          importance: params.importance || 50,
-          tags: params.tags || [],
-        },
-      },
-      { syncToGraph: shouldSyncToGraph },
-    );
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // STEP 2: MEMORYSPACE (Cannot be skipped)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    await this.ensureMemorySpaceExists(memorySpaceId, shouldSyncToGraph);
 
-    // Step 7: Store agent response in Vector (only if it contains meaningful info)
-    // Detect if agent response is just an acknowledgment (not a fact worth indexing)
-    // Acknowledgments pollute semantic search with "I've noted", "Got it", etc.
-    const agentContentLower = agentContent.toLowerCase();
-    const acknowledgmentPhrases = [
-      "got it",
-      "i've noted",
-      "i'll remember",
-      "noted",
-      "understood",
-      "i'll set",
-      "i'll call you",
-      "will do",
-      "sure thing",
-      "okay,",
-      "ok,",
-    ];
-    const isAcknowledgment =
-      agentContent.length < 80 &&
-      acknowledgmentPhrases.some((phrase) => agentContentLower.includes(phrase));
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // STEP 3: OWNER PROFILES (skip: 'users'/'agents')
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    if (ownerType === "user" && !this.shouldSkipLayer("users", skipLayers)) {
+      await this.ensureUserExists(ownerId, params.userName);
+    }
 
-    // Only store agent response in vector if it contains meaningful information
-    // Pure acknowledgments are stored in ACID (conversation history) but not vector
-    let agentMemory: MemoryEntry | undefined;
-    if (!isAcknowledgment) {
-      agentMemory = await this.vector.store(
-        params.memorySpaceId,
+    if (ownerType === "agent" && !this.shouldSkipLayer("agents", skipLayers)) {
+      await this.ensureAgentExists(ownerId);
+    }
+
+    // Also ensure agentId is registered if both userId and agentId are provided
+    if (
+      params.agentId &&
+      params.userId &&
+      !this.shouldSkipLayer("agents", skipLayers)
+    ) {
+      await this.ensureAgentExists(params.agentId);
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // STEP 4: CONVERSATION (skip: 'conversations')
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    let userMsgId: string | undefined;
+    let agentMsgId: string | undefined;
+
+    if (!this.shouldSkipLayer("conversations", skipLayers)) {
+      // Ensure conversation exists (auto-create if needed)
+      const existingConversation = await this.conversations.get(
+        params.conversationId,
+      );
+
+      if (!existingConversation) {
+        // Determine conversation type based on owner:
+        // - user-agent: when userId is provided (user↔agent interaction)
+        // - agent-agent: when only agentId is provided (agent-only or system interaction)
+        const conversationType = params.userId ? "user-agent" : "agent-agent";
+        const participants = params.userId
+          ? {
+              userId: params.userId,
+              agentId: params.agentId, // The agent in this user↔agent conversation
+              participantId: params.participantId, // Hive Mode: who created this
+            }
+          : {
+              // For agent-agent, store the agentId as the owner
+              agentId: params.agentId,
+              participantId: params.participantId, // Hive Mode: who created this
+            };
+
+        await this.conversations.create(
+          {
+            memorySpaceId,
+            conversationId: params.conversationId,
+            type: conversationType,
+            participants,
+          },
+          { syncToGraph: shouldSyncToGraph },
+        );
+      }
+
+      // Store user message in ACID
+      const userMsg = await this.conversations.addMessage({
+        conversationId: params.conversationId,
+        message: {
+          role: "user",
+          content: params.userMessage,
+          metadata: { userId: params.userId },
+        },
+      });
+      userMsgId = userMsg.messages[userMsg.messages.length - 1].id;
+
+      // Store agent response in ACID
+      const agentMsg = await this.conversations.addMessage({
+        conversationId: params.conversationId,
+        message: {
+          role: "agent",
+          content: params.agentResponse,
+          participantId: params.participantId || params.agentId,
+          metadata: {},
+        },
+      });
+      agentMsgId = agentMsg.messages[agentMsg.messages.length - 1].id;
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // STEP 5: VECTOR MEMORY (skip: 'vector')
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    const storedMemories: MemoryEntry[] = [];
+
+    if (!this.shouldSkipLayer("vector", skipLayers)) {
+      // Extract content (if provided)
+      let userContent = params.userMessage;
+      const agentContent = params.agentResponse;
+      let contentType: "raw" | "summarized" = "raw";
+
+      if (params.extractContent) {
+        const extracted = await params.extractContent(
+          params.userMessage,
+          params.agentResponse,
+        );
+        if (extracted) {
+          userContent = extracted;
+          contentType = "summarized";
+        }
+      }
+
+      // Generate embeddings (if provided)
+      let userEmbedding: number[] | undefined;
+      let agentEmbedding: number[] | undefined;
+
+      if (params.generateEmbedding) {
+        userEmbedding =
+          (await params.generateEmbedding(userContent)) || undefined;
+        agentEmbedding =
+          (await params.generateEmbedding(agentContent)) || undefined;
+      }
+
+      // Store user message in Vector with conversationRef
+      const userMemory = await this.vector.store(
+        memorySpaceId,
         {
-          content: agentContent,
-          contentType: "raw", // Agent content is always raw, only user content gets summarized
-          participantId: params.participantId, // Hive Mode tracking
-          embedding: agentEmbedding,
+          content: userContent,
+          contentType,
+          participantId: params.participantId,
+          embedding: userEmbedding,
           userId: params.userId,
-          messageRole: "agent", // Mark as agent message for semantic search weighting
+          agentId: params.agentId, // NEW: Support agent-owned memories
+          messageRole: "user",
           source: {
             type: "conversation",
             userId: params.userId,
             userName: params.userName,
-            timestamp: now + 1,
+            timestamp: now,
           },
-          conversationRef: {
-            conversationId: params.conversationId,
-            messageIds: [agentMsg.messages[agentMsg.messages.length - 1].id],
-          },
+          conversationRef: userMsgId
+            ? {
+                conversationId: params.conversationId,
+                messageIds: [userMsgId],
+              }
+            : undefined,
           metadata: {
             importance: params.importance || 50,
             tags: params.tags || [],
@@ -391,70 +742,127 @@ export class MemoryAPI {
         },
         { syncToGraph: shouldSyncToGraph },
       );
-    }
+      storedMemories.push(userMemory);
 
-    // Step 8: Extract and store facts (if extraction function provided)
-    const extractedFacts: FactRecord[] = [];
-
-    if (params.extractFacts) {
-      try {
-        const factsToStore = await params.extractFacts(
-          params.userMessage,
-          params.agentResponse,
+      // Store agent response in Vector (only if it contains meaningful info)
+      const agentContentLower = agentContent.toLowerCase();
+      const acknowledgmentPhrases = [
+        "got it",
+        "i've noted",
+        "i'll remember",
+        "noted",
+        "understood",
+        "i'll set",
+        "i'll call you",
+        "will do",
+        "sure thing",
+        "okay,",
+        "ok,",
+      ];
+      const isAcknowledgment =
+        agentContent.length < 80 &&
+        acknowledgmentPhrases.some((phrase) =>
+          agentContentLower.includes(phrase),
         );
 
-        if (factsToStore && factsToStore.length > 0) {
-          for (const factData of factsToStore) {
-            try {
-              const storedFact = await this.facts.store(
-                {
-                  memorySpaceId: params.memorySpaceId,
-                  participantId: params.participantId,
-                  userId: params.userId, // ← BUG FIX: Add userId to facts!
-                  fact: factData.fact,
-                  factType: factData.factType,
-                  subject: factData.subject || params.userId,
-                  predicate: factData.predicate,
-                  object: factData.object,
-                  confidence: factData.confidence,
-                  sourceType: "conversation",
-                  sourceRef: {
-                    conversationId: params.conversationId,
-                    messageIds: [
-                      userMsg.messages[userMsg.messages.length - 1].id,
-                      agentMsg.messages[agentMsg.messages.length - 1].id,
-                    ],
-                    memoryId: userMemory.memoryId,
-                  },
-                  tags: factData.tags || params.tags || [],
-                },
-                { syncToGraph: shouldSyncToGraph },
-              );
-
-              extractedFacts.push(storedFact);
-            } catch (error) {
-              console.warn("Failed to store fact:", error);
-              // Continue with other facts
-            }
-          }
-        }
-      } catch (error) {
-        console.warn("Failed to extract facts:", error);
-        // Continue without facts - don't fail the entire remember operation
+      if (!isAcknowledgment) {
+        const agentMemory = await this.vector.store(
+          memorySpaceId,
+          {
+            content: agentContent,
+            contentType: "raw",
+            participantId: params.participantId,
+            embedding: agentEmbedding,
+            userId: params.userId,
+            agentId: params.agentId, // NEW: Support agent-owned memories
+            messageRole: "agent",
+            source: {
+              type: "conversation",
+              userId: params.userId,
+              userName: params.userName,
+              timestamp: now + 1,
+            },
+            conversationRef: agentMsgId
+              ? {
+                  conversationId: params.conversationId,
+                  messageIds: [agentMsgId],
+                }
+              : undefined,
+            metadata: {
+              importance: params.importance || 50,
+              tags: params.tags || [],
+            },
+          },
+          { syncToGraph: shouldSyncToGraph },
+        );
+        storedMemories.push(agentMemory);
       }
     }
 
-    // Filter out undefined memories (agentMemory is undefined if it was an acknowledgment)
-    const storedMemories = [userMemory, agentMemory].filter(
-      (m): m is MemoryEntry => m !== undefined,
-    );
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // STEP 6: FACTS (skip: 'facts')
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    const extractedFacts: FactRecord[] = [];
+
+    if (!this.shouldSkipLayer("facts", skipLayers)) {
+      const factExtractor = this.getFactExtractor(params);
+
+      if (factExtractor) {
+        try {
+          const factsToStore = await factExtractor(
+            params.userMessage,
+            params.agentResponse,
+          );
+
+          if (factsToStore && factsToStore.length > 0) {
+            for (const factData of factsToStore) {
+              try {
+                const storedFact = await this.facts.store(
+                  {
+                    memorySpaceId,
+                    participantId: params.participantId,
+                    userId: params.userId,
+                    fact: factData.fact,
+                    factType: factData.factType,
+                    subject: factData.subject || params.userId || params.agentId,
+                    predicate: factData.predicate,
+                    object: factData.object,
+                    confidence: factData.confidence,
+                    sourceType: "conversation",
+                    sourceRef: {
+                      conversationId: params.conversationId,
+                      messageIds:
+                        userMsgId && agentMsgId
+                          ? [userMsgId, agentMsgId]
+                          : undefined,
+                      memoryId: storedMemories[0]?.memoryId,
+                    },
+                    tags: factData.tags || params.tags || [],
+                  },
+                  { syncToGraph: shouldSyncToGraph },
+                );
+
+                extractedFacts.push(storedFact);
+              } catch (error) {
+                console.warn("Failed to store fact:", error);
+              }
+            }
+          }
+        } catch (error) {
+          console.warn("Failed to extract facts:", error);
+        }
+      }
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // STEP 7: GRAPH (handled via syncToGraph in previous steps)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Graph sync is handled inline with each layer via the syncToGraph option
 
     return {
       conversation: {
-        messageIds: [
-          userMsg.messages[userMsg.messages.length - 1].id,
-          agentMsg.messages[agentMsg.messages.length - 1].id,
-        ],
+        messageIds:
+          userMsgId && agentMsgId ? [userMsgId, agentMsgId] : [],
         conversationId: params.conversationId,
       },
       memories: storedMemories,
@@ -517,19 +925,58 @@ export class MemoryAPI {
     params: RememberStreamParams,
     options?: import("../types/streaming").StreamingOptions,
   ): Promise<import("../types/streaming").EnhancedRememberStreamResult> {
-    // Client-side validation (skip agentResponse since it comes from stream)
-    validateMemorySpaceId(params.memorySpaceId);
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // VALIDATION: Same validation as remember() but without agentResponse
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     validateConversationId(params.conversationId);
     validateContent(params.userMessage, "userMessage");
-    validateUserId(params.userId);
+    validateStreamObject(params.responseStream);
 
-    if (
-      !params.userName ||
-      typeof params.userName !== "string" ||
-      params.userName.trim().length === 0
-    ) {
+    // Handle memorySpaceId - default to 'default' with warning if not specified
+    let memorySpaceId = params.memorySpaceId;
+    if (memorySpaceId === undefined || memorySpaceId === null) {
+      // Not specified - use default with warning
+      memorySpaceId = DEFAULT_MEMORY_SPACE_ID;
+      console.warn(
+        `[Cortex Warning] No memorySpaceId provided, using '${DEFAULT_MEMORY_SPACE_ID}'. ` +
+          "Consider explicitly setting a memorySpaceId for proper memory isolation.",
+      );
+    } else if (memorySpaceId.trim().length === 0) {
+      // Specified but empty/whitespace - this is an error
       throw new MemoryValidationError(
-        "userName is required and must be a non-empty string",
+        "memorySpaceId cannot be empty. Either provide a valid memorySpaceId or omit it to use the default.",
+        "INVALID_MEMORYSPACE_ID",
+        "memorySpaceId",
+      );
+    }
+
+    // Validate owner attribution - at least one of userId or agentId required
+    const hasUserId = params.userId && params.userId.trim().length > 0;
+    const hasAgentId = params.agentId && params.agentId.trim().length > 0;
+
+    if (!hasUserId && !hasAgentId) {
+      throw new MemoryValidationError(
+        "Either userId or agentId must be provided for memory ownership. " +
+          "Use userId for user-owned memories, agentId for agent-owned memories.",
+        "OWNER_REQUIRED",
+        "userId/agentId",
+      );
+    }
+
+    // For user-agent conversations, require agentId when userId is provided
+    if (hasUserId && !hasAgentId) {
+      throw new MemoryValidationError(
+        "agentId is required when userId is provided. " +
+          "User-agent conversations require both a user and an agent participant.",
+        "AGENT_REQUIRED_FOR_USER_CONVERSATION",
+        "agentId",
+      );
+    }
+
+    // Validate userName is provided when userId is provided
+    if (hasUserId && (!params.userName || params.userName.trim().length === 0)) {
+      throw new MemoryValidationError(
+        "userName is required when userId is provided",
         "MISSING_REQUIRED_FIELD",
         "userName",
       );
@@ -543,7 +990,10 @@ export class MemoryAPI {
       validateTags(params.tags);
     }
 
-    validateStreamObject(params.responseStream);
+    // Determine owner for orchestration
+    const ownerId = hasUserId ? params.userId! : params.agentId!;
+    const ownerType = hasUserId ? "user" : "agent";
+    const skipLayers = params.skipLayers || [];
 
     // Import streaming components (lazy to avoid circular deps)
     const { StreamProcessor, createStreamContext } = await import(
@@ -571,13 +1021,44 @@ export class MemoryAPI {
       "./streaming/ProgressiveGraphSync"
     );
 
+    // Determine if we should sync to graph (default: true if configured)
+    const shouldSyncToGraph =
+      options?.syncToGraph !== false &&
+      this.graphAdapter !== undefined &&
+      !this.shouldSkipLayer("graph", skipLayers);
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // ORCHESTRATION: Same as remember() - auto-register entities
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    // Auto-register memory space
+    await this.ensureMemorySpaceExists(memorySpaceId, shouldSyncToGraph);
+
+    // Auto-create user/agent profiles
+    if (ownerType === "user" && !this.shouldSkipLayer("users", skipLayers)) {
+      await this.ensureUserExists(ownerId, params.userName);
+    }
+
+    if (ownerType === "agent" && !this.shouldSkipLayer("agents", skipLayers)) {
+      await this.ensureAgentExists(ownerId);
+    }
+
+    // Also ensure agentId is registered if both userId and agentId are provided
+    if (
+      params.agentId &&
+      params.userId &&
+      !this.shouldSkipLayer("agents", skipLayers)
+    ) {
+      await this.ensureAgentExists(params.agentId);
+    }
+
     // Initialize components
     const metrics = new MetricsCollector();
     const context = createStreamContext({
-      memorySpaceId: params.memorySpaceId,
+      memorySpaceId,
       conversationId: params.conversationId,
-      userId: params.userId,
-      userName: params.userName,
+      userId: params.userId || params.agentId || "unknown", // Use ownerId
+      userName: params.userName || params.agentId || "Agent",
     });
 
     const processor = new StreamProcessor(
@@ -593,9 +1074,9 @@ export class MemoryAPI {
     if (options?.storePartialResponse) {
       storageHandler = new ProgressiveStorageHandler(
         this.client,
-        params.memorySpaceId,
+        memorySpaceId,
         params.conversationId,
-        params.userId,
+        params.userId || params.agentId || ownerId, // Use owner
         options.partialResponseInterval || 3000,
       );
     }
@@ -607,8 +1088,8 @@ export class MemoryAPI {
     if (options?.progressiveFactExtraction && params.extractFacts) {
       _factExtractor = new ProgressiveFactExtractor(
         this.facts,
-        params.memorySpaceId,
-        params.userId,
+        memorySpaceId,
+        ownerId, // Use validated owner (userId or agentId)
         params.participantId,
         options.factExtractionThreshold || 500,
       );
@@ -636,26 +1117,26 @@ export class MemoryAPI {
     let fullResponse = "";
 
     try {
-      // Step 1: Ensure conversation exists
-      const existingConversation = await this.conversations.get(
-        params.conversationId,
-      );
-      if (!existingConversation) {
-        await this.conversations.create(
-          {
-            memorySpaceId: params.memorySpaceId,
-            conversationId: params.conversationId,
-            type: "user-agent",
-            participants: {
-              userId: params.userId,
-              participantId: params.participantId || "agent",
-            },
-          },
-          {
-            syncToGraph:
-              options?.syncToGraph !== false && this.graphAdapter !== undefined,
-          },
+      // Ensure conversation exists (if not skipped)
+      if (!this.shouldSkipLayer("conversations", skipLayers)) {
+        const existingConversation = await this.conversations.get(
+          params.conversationId,
         );
+        if (!existingConversation) {
+          await this.conversations.create(
+            {
+              memorySpaceId,
+              conversationId: params.conversationId,
+              type: "user-agent",
+              participants: {
+                userId: params.userId,
+                agentId: params.agentId, // The agent in this conversation
+                participantId: params.participantId, // Hive Mode: who created this
+              },
+            },
+            { syncToGraph: shouldSyncToGraph },
+          );
+        }
       }
 
       // Step 2: Initialize progressive storage
@@ -704,14 +1185,17 @@ export class MemoryAPI {
       }
 
       // Step 7: Use remember() for final storage
+      // Note: remember() will handle all orchestration (memorySpace, user, agent, etc.)
+      // We pass skipLayers to avoid double-orchestration since we already did it above
       const rememberResult = await this.remember(
         {
-          memorySpaceId: params.memorySpaceId,
+          memorySpaceId, // Use normalized memorySpaceId
           participantId: params.participantId,
           conversationId: params.conversationId,
           userMessage: params.userMessage,
           agentResponse: fullResponse,
           userId: params.userId,
+          agentId: params.agentId,
           userName: params.userName,
           extractContent: params.extractContent,
           generateEmbedding: params.generateEmbedding,
@@ -720,6 +1204,14 @@ export class MemoryAPI {
           autoSummarize: params.autoSummarize,
           importance: params.importance,
           tags: params.tags,
+          // Skip orchestration layers we already handled in rememberStream
+          skipLayers: [
+            "users", // Already handled above
+            "agents", // Already handled above
+            ...(this.shouldSkipLayer("conversations", skipLayers)
+              ? ["conversations" as const]
+              : []), // Pass through if user skipped
+          ],
         },
         { syncToGraph: options?.syncToGraph },
       );

@@ -179,6 +179,7 @@ class TestGraphDataValidation:
                 agent_response="Test response",
                 user_id="test-user",
                 user_name="Test User",
+                agent_id="test-agent",
             ),
             options=RememberOptions(sync_to_graph=True),
         )
@@ -243,6 +244,7 @@ class TestGraphDataValidation:
                 agent_response="Response",
                 user_id="test-user",
                 user_name="Test User",
+                agent_id="test-agent",
             ),
             options=RememberOptions(sync_to_graph=True),
         )

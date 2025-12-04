@@ -5,6 +5,200 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.17.0] - 2025-12-03
+
+### 🔄 Memory Orchestration - Enhanced Owner Attribution & skipLayers Support
+
+**Complete overhaul of memory orchestration to enforce proper user-agent conversation modeling and add explicit layer control. User-agent conversations now require both `user_id` and `agent_id`, and all layers can be explicitly skipped via `skip_layers`. Full TypeScript SDK parity achieved.**
+
+#### ✨ New Features
+
+**1. Mandatory Agent Attribution for User Conversations**
+
+When a `user_id` is provided, `agent_id` is now required:
+
+```python
+from cortex import Cortex
+from cortex.types import RememberParams
+
+cortex = Cortex(CortexConfig(convex_url=os.getenv("CONVEX_URL")))
+
+# ✅ Correct - both user and agent specified
+result = await cortex.memory.remember(
+    RememberParams(
+        memory_space_id="my-space",
+        conversation_id="conv-123",
+        user_message="Hello!",
+        agent_response="Hi there!",
+        user_id="user-123",
+        user_name="Alice",
+        agent_id="assistant-v1",  # Now required for user-agent conversations
+    )
+)
+
+# ✅ Correct - agent-only (no user)
+result = await cortex.memory.remember(
+    RememberParams(
+        memory_space_id="my-space",
+        conversation_id="conv-456",
+        user_message="System task",
+        agent_response="Completed",
+        agent_id="worker-agent",
+    )
+)
+
+# ❌ Error - user without agent
+result = await cortex.memory.remember(
+    RememberParams(
+        user_id="user-123",
+        user_name="Alice",
+        # Missing agent_id - will throw!
+    )
+)
+```
+
+**2. Agent ID Support Across All Layers**
+
+- **Conversations**: `participants.agent_id` field added
+- **Memories**: `agent_id` field for agent-owned memories
+- **Indexes**: Optimized queries by agent_id
+
+#### 📊 Type Updates
+
+| Type | Field Added | Purpose |
+|------|-------------|---------|
+| `MemoryEntry` | `agent_id` | Agent-owned memory attribution |
+| `StoreMemoryInput` | `agent_id` | Pass agent ownership to store |
+| `ConversationParticipants` | `agent_id` | Agent participant tracking |
+| `RememberParams` | `agent_id` | Required for user-agent conversations |
+| `RememberStreamParams` | `agent_id` | Required for streaming user-agent conversations |
+
+#### 🔧 Validation Rules
+
+| Scenario | Required Fields |
+|----------|-----------------|
+| User-agent conversation | `user_id` + `user_name` + `agent_id` |
+| Agent-only (system/tool) | `agent_id` only |
+
+#### ⚠️ Breaking Changes
+
+- `cortex.memory.remember()` now throws if `user_id` is provided without `agent_id`
+- `user_id` and `user_name` are now optional (were required in 0.16.x)
+- Error: `"agent_id is required when user_id is provided. User-agent conversations require both a user and an agent participant."`
+
+#### Migration
+
+Update existing `remember()` calls to include `agent_id`:
+
+```python
+# Before (v0.16.x)
+await cortex.memory.remember(
+    RememberParams(
+        user_id="user-123",
+        user_name="Alice",
+        # ... other params
+    )
+)
+
+# After (v0.17.0)
+await cortex.memory.remember(
+    RememberParams(
+        user_id="user-123",
+        user_name="Alice",
+        agent_id="your-agent-id",  # Add this
+        # ... other params
+    )
+)
+```
+
+### 🎛️ skipLayers - Explicit Layer Control
+
+**Control which layers execute during memory orchestration with the new `skip_layers` parameter.**
+
+#### ✨ New Features
+
+**1. Skippable Layer Type**
+
+New `SkippableLayer` type defines which layers can be explicitly skipped:
+
+```python
+from cortex.types import SkippableLayer
+
+# Valid layers to skip:
+# - 'users': Don't auto-create user profile
+# - 'agents': Don't auto-register agent  
+# - 'conversations': Don't store in ACID conversations
+# - 'vector': Don't store in vector index
+# - 'facts': Don't extract/store facts
+# - 'graph': Don't sync to graph database
+```
+
+**2. skip_layers Parameter**
+
+Control orchestration behavior on a per-call basis:
+
+```python
+# ✅ Skip specific layers
+result = await cortex.memory.remember(
+    RememberParams(
+        memory_space_id="my-space",
+        conversation_id="conv-456",
+        user_message="Quick question",
+        agent_response="Quick answer",
+        agent_id="assistant-v1",
+        skip_layers=["facts", "graph"],  # Only skip facts & graph
+    )
+)
+
+# ✅ Vector-only storage (agent memories)
+result = await cortex.memory.remember(
+    RememberParams(
+        memory_space_id="my-space",
+        conversation_id="agent-memory-1",
+        user_message="Internal processing note",
+        agent_response="Processed",
+        agent_id="worker-agent",
+        skip_layers=["conversations", "users"],  # Vector-only
+    )
+)
+```
+
+**3. Auto-Registration Helpers**
+
+New internal helper methods for automatic entity registration:
+
+- `_ensure_user_exists()`: Auto-creates user profile if not exists
+- `_ensure_agent_exists()`: Auto-registers agent if not exists
+- `_ensure_memory_space_exists()`: Auto-registers memory space if not exists
+- `_should_skip_layer()`: Checks if a layer should be skipped
+- `_get_fact_extractor()`: Gets fact extractor with fallback chain
+
+#### 📋 Default Behavior
+
+All layers are **enabled by default**. Use `skip_layers` to explicitly opt-out:
+
+| Layer | Default | Skippable |
+|-------|---------|-----------|
+| `memorySpace` | Always runs | ❌ Cannot skip |
+| `users` | Auto-create | ✅ `skip_layers=['users']` |
+| `agents` | Auto-register | ✅ `skip_layers=['agents']` |
+| `conversations` | Store in ACID | ✅ `skip_layers=['conversations']` |
+| `vector` | Index for search | ✅ `skip_layers=['vector']` |
+| `facts` | Extract if configured | ✅ `skip_layers=['facts']` |
+| `graph` | Sync if adapter | ✅ `skip_layers=['graph']` |
+
+#### 🔄 TypeScript SDK Parity
+
+| Feature | TypeScript | Python |
+|---------|------------|--------|
+| `skipLayers` param | ✅ | ✅ (as `skip_layers`) |
+| `SkippableLayer` type | ✅ | ✅ |
+| `shouldSkipLayer()` | ✅ | ✅ (as `_should_skip_layer()`) |
+| Layer conditionals | ✅ | ✅ |
+| Auto-registration | ✅ | ✅ |
+
+---
+
 ## [0.16.0] - 2025-12-01
 
 ### 🛡️ Resilience Layer - Production-Ready Overload Protection

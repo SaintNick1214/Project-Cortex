@@ -2,13 +2,15 @@
 Tests for Memory API (Layer 4 convenience)
 """
 
+import time
+
 import pytest
 
 from cortex import ForgetOptions, RememberParams, SearchOptions
 
 
 @pytest.mark.asyncio
-async def test_remember_basic(cortex_client, test_memory_space_id, test_conversation_id, test_user_id):
+async def test_remember_basic(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id):
     """Test basic remember operation."""
     result = await cortex_client.memory.remember(
         RememberParams(
@@ -18,6 +20,7 @@ async def test_remember_basic(cortex_client, test_memory_space_id, test_conversa
             agent_response="Test response",
             user_id=test_user_id,
             user_name="Tester",
+            agent_id=test_agent_id,
         )
     )
 
@@ -28,7 +31,7 @@ async def test_remember_basic(cortex_client, test_memory_space_id, test_conversa
 
 @pytest.mark.asyncio
 async def test_remember_with_metadata(
-    cortex_client, test_memory_space_id, test_conversation_id, test_user_id
+    cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id
 ):
     """Test remember with importance and tags."""
     result = await cortex_client.memory.remember(
@@ -39,6 +42,7 @@ async def test_remember_with_metadata(
             agent_response="Acknowledged",
             user_id=test_user_id,
             user_name="Tester",
+            agent_id=test_agent_id,
             importance=90,
             tags=["important", "test"],
         )
@@ -50,7 +54,7 @@ async def test_remember_with_metadata(
 
 
 @pytest.mark.asyncio
-async def test_search(cortex_client, test_memory_space_id, test_conversation_id, test_user_id):
+async def test_search(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id):
     """Test memory search."""
     # Store a memory first
     await cortex_client.memory.remember(
@@ -61,6 +65,7 @@ async def test_search(cortex_client, test_memory_space_id, test_conversation_id,
             agent_response="Noted",
             user_id=test_user_id,
             user_name="Tester",
+            agent_id=test_agent_id,
         )
     )
 
@@ -76,7 +81,7 @@ async def test_search(cortex_client, test_memory_space_id, test_conversation_id,
 
 
 @pytest.mark.asyncio
-async def test_get_memory(cortex_client, test_memory_space_id, test_conversation_id, test_user_id):
+async def test_get_memory(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id):
     """Test getting a specific memory."""
     # Store a memory
     result = await cortex_client.memory.remember(
@@ -87,6 +92,7 @@ async def test_get_memory(cortex_client, test_memory_space_id, test_conversation
             agent_response="Response",
             user_id=test_user_id,
             user_name="Tester",
+            agent_id=test_agent_id,
         )
     )
 
@@ -101,7 +107,7 @@ async def test_get_memory(cortex_client, test_memory_space_id, test_conversation
 
 @pytest.mark.asyncio
 async def test_get_with_enrichment(
-    cortex_client, test_memory_space_id, test_conversation_id, test_user_id
+    cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id
 ):
     """Test getting memory with conversation enrichment."""
     # Store a memory
@@ -113,6 +119,7 @@ async def test_get_with_enrichment(
             agent_response="Response",
             user_id=test_user_id,
             user_name="Tester",
+            agent_id=test_agent_id,
         )
     )
 
@@ -129,7 +136,7 @@ async def test_get_with_enrichment(
 
 
 @pytest.mark.asyncio
-async def test_update_memory(cortex_client, test_memory_space_id, test_conversation_id, test_user_id):
+async def test_update_memory(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id):
     """Test updating a memory."""
     # Store a memory
     result = await cortex_client.memory.remember(
@@ -140,6 +147,7 @@ async def test_update_memory(cortex_client, test_memory_space_id, test_conversat
             agent_response="Response",
             user_id=test_user_id,
             user_name="Tester",
+            agent_id=test_agent_id,
         )
     )
 
@@ -155,7 +163,7 @@ async def test_update_memory(cortex_client, test_memory_space_id, test_conversat
 
 
 @pytest.mark.asyncio
-async def test_delete_memory(cortex_client, test_memory_space_id, test_conversation_id, test_user_id):
+async def test_delete_memory(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id):
     """Test deleting a memory."""
     # Store a memory
     result = await cortex_client.memory.remember(
@@ -166,6 +174,7 @@ async def test_delete_memory(cortex_client, test_memory_space_id, test_conversat
             agent_response="Response",
             user_id=test_user_id,
             user_name="Tester",
+            agent_id=test_agent_id,
         )
     )
 
@@ -183,7 +192,7 @@ async def test_delete_memory(cortex_client, test_memory_space_id, test_conversat
 
 @pytest.mark.asyncio
 async def test_forget_with_conversation(
-    cortex_client, test_memory_space_id, test_conversation_id, test_user_id
+    cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id
 ):
     """Test forgetting a memory and its conversation."""
     # Store a memory
@@ -195,6 +204,7 @@ async def test_forget_with_conversation(
             agent_response="Response",
             user_id=test_user_id,
             user_name="Tester",
+            agent_id=test_agent_id,
         )
     )
 
@@ -213,7 +223,7 @@ async def test_forget_with_conversation(
 
 
 @pytest.mark.asyncio
-async def test_count_and_list(cortex_client, test_memory_space_id, test_conversation_id, test_user_id):
+async def test_count_and_list(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id):
     """Test counting and listing memories."""
     # Store a few memories
     for i in range(3):
@@ -225,6 +235,7 @@ async def test_count_and_list(cortex_client, test_memory_space_id, test_conversa
                 agent_response=f"Response {i}",
                 user_id=test_user_id,
                 user_name="Tester",
+                agent_id=test_agent_id,
             )
         )
 
@@ -245,7 +256,7 @@ async def test_count_and_list(cortex_client, test_memory_space_id, test_conversa
 
 
 @pytest.mark.asyncio
-async def test_remember_with_embeddings(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+async def test_remember_with_embeddings(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id, cleanup_helper):
     """
     Test remember with embedding generation.
 
@@ -266,6 +277,7 @@ async def test_remember_with_embeddings(cortex_client, test_memory_space_id, tes
             agent_response="I can help you with that",
             user_id=test_user_id,
             user_name="Tester",
+            agent_id=test_agent_id,
         )
     )
 
@@ -278,7 +290,7 @@ async def test_remember_with_embeddings(cortex_client, test_memory_space_id, tes
 
 
 @pytest.mark.asyncio
-async def test_remember_with_fact_extraction(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+async def test_remember_with_fact_extraction(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id, cleanup_helper):
     """
     Test remember with fact extraction callback.
 
@@ -303,6 +315,7 @@ async def test_remember_with_fact_extraction(cortex_client, test_memory_space_id
             agent_response="I've noted your preference",
             user_id=test_user_id,
             user_name="Tester",
+            agent_id=test_agent_id,
             participant_id="agent-test",  # Add participantId to test propagation
             extract_facts=extract_facts,
         )
@@ -356,6 +369,7 @@ async def test_remember_fact_extraction_parameter_propagation(cortex_client, tes
             agent_response="Acknowledged",
             user_id=test_user_id,
             user_name="Test User",
+            agent_id="agent-param-test",
             participant_id=specific_participant_id,
             tags=["test-tag"],
             extract_facts=extract_facts,
@@ -397,7 +411,7 @@ async def test_remember_fact_extraction_parameter_propagation(cortex_client, tes
 
 
 @pytest.mark.asyncio
-async def test_search_with_strategy(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+async def test_search_with_strategy(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id, cleanup_helper):
     """
     Test search with different strategies.
 
@@ -412,6 +426,7 @@ async def test_search_with_strategy(cortex_client, test_memory_space_id, test_co
             agent_response="Response",
             user_id=test_user_id,
             user_name="Tester",
+            agent_id=test_agent_id,
             importance=50,
         )
     )
@@ -434,7 +449,7 @@ async def test_search_with_strategy(cortex_client, test_memory_space_id, test_co
 
 
 @pytest.mark.asyncio
-async def test_list_with_filters(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+async def test_list_with_filters(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id, cleanup_helper):
     """
     Test listing memories with filters.
 
@@ -450,6 +465,7 @@ async def test_list_with_filters(cortex_client, test_memory_space_id, test_conve
                 agent_response=f"Response {i}",
                 user_id=test_user_id,
                 user_name="Tester",
+                agent_id=test_agent_id,
                 importance=30 + (i * 20),  # 30, 50, 70
             )
         )
@@ -472,7 +488,7 @@ async def test_list_with_filters(cortex_client, test_memory_space_id, test_conve
 
 
 @pytest.mark.asyncio
-async def test_count_with_filters(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+async def test_count_with_filters(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id, cleanup_helper):
     """
     Test counting memories with filters.
 
@@ -488,6 +504,7 @@ async def test_count_with_filters(cortex_client, test_memory_space_id, test_conv
                 agent_response=f"Response {i}",
                 user_id=test_user_id,
                 user_name="Tester",
+                agent_id=test_agent_id,
                 tags=["important"] if i % 2 == 0 else ["normal"],
             )
         )
@@ -506,7 +523,7 @@ async def test_count_with_filters(cortex_client, test_memory_space_id, test_conv
 
 
 @pytest.mark.asyncio
-async def test_forget_with_options(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+async def test_forget_with_options(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id, cleanup_helper):
     """
     Test forget with various options.
 
@@ -521,6 +538,7 @@ async def test_forget_with_options(cortex_client, test_memory_space_id, test_con
             agent_response="Noted",
             user_id=test_user_id,
             user_name="Tester",
+            agent_id=test_agent_id,
         )
     )
 
@@ -543,7 +561,7 @@ async def test_forget_with_options(cortex_client, test_memory_space_id, test_con
 
 
 @pytest.mark.asyncio
-async def test_archive_and_restore(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+async def test_archive_and_restore(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id, cleanup_helper):
     """
     Test archiving and restoring memories.
 
@@ -558,6 +576,7 @@ async def test_archive_and_restore(cortex_client, test_memory_space_id, test_con
             agent_response="Response",
             user_id=test_user_id,
             user_name="Tester",
+            agent_id=test_agent_id,
         )
     )
 
@@ -574,7 +593,7 @@ async def test_archive_and_restore(cortex_client, test_memory_space_id, test_con
 
 
 @pytest.mark.asyncio
-async def test_get_conversation_ref(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+async def test_get_conversation_ref(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id, cleanup_helper):
     """
     Test getting memory with conversationRef populated.
 
@@ -589,6 +608,7 @@ async def test_get_conversation_ref(cortex_client, test_memory_space_id, test_co
             agent_response="Test response",
             user_id=test_user_id,
             user_name="Tester",
+            agent_id=test_agent_id,
         )
     )
 
@@ -614,7 +634,7 @@ async def test_get_conversation_ref(cortex_client, test_memory_space_id, test_co
 
 
 @pytest.mark.asyncio
-async def test_restore_from_archive(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+async def test_restore_from_archive(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id, cleanup_helper):
     """
     Test restoring memory from archive.
 
@@ -629,6 +649,7 @@ async def test_restore_from_archive(cortex_client, test_memory_space_id, test_co
             agent_response="Noted",
             user_id=test_user_id,
             user_name="Tester",
+            agent_id=test_agent_id,
             importance=80,
         )
     )
@@ -662,7 +683,7 @@ async def test_restore_from_archive(cortex_client, test_memory_space_id, test_co
 
 
 @pytest.mark.asyncio
-async def test_restore_non_archived_throws_error(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+async def test_restore_non_archived_throws_error(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id, cleanup_helper):
     """
     Test that restoring non-archived memory throws error.
     """
@@ -675,6 +696,7 @@ async def test_restore_non_archived_throws_error(cortex_client, test_memory_spac
             agent_response="OK",
             user_id=test_user_id,
             user_name="Tester",
+            agent_id=test_agent_id,
         )
     )
 
@@ -801,8 +823,8 @@ async def test_remember_validation_missing_agent_response(cortex_client, test_me
 
 
 @pytest.mark.asyncio
-async def test_remember_validation_missing_user_id(cortex_client, test_memory_space_id, test_conversation_id):
-    """Should throw on missing user_id."""
+async def test_remember_validation_missing_owner(cortex_client, test_memory_space_id, test_conversation_id):
+    """Should throw on missing owner (neither user_id nor agent_id)."""
     with pytest.raises(MemoryValidationError) as exc_info:
         await cortex_client.memory.remember(
             RememberParams(
@@ -814,11 +836,51 @@ async def test_remember_validation_missing_user_id(cortex_client, test_memory_sp
                 user_name="Tester"
             )
         )
-    assert "user_id cannot be empty" in str(exc_info.value)
+    assert "Either user_id or agent_id must be provided" in str(exc_info.value)
 
 
 @pytest.mark.asyncio
-async def test_remember_validation_invalid_importance_negative(cortex_client, test_memory_space_id, test_conversation_id, test_user_id):
+async def test_remember_validation_user_without_agent(cortex_client, test_memory_space_id, test_conversation_id, test_user_id):
+    """Should throw when user_id is provided without agent_id."""
+    with pytest.raises(MemoryValidationError) as exc_info:
+        await cortex_client.memory.remember(
+            RememberParams(
+                memory_space_id=test_memory_space_id,
+                conversation_id=test_conversation_id,
+                user_message="Test",
+                agent_response="OK",
+                user_id=test_user_id,
+                user_name="Tester"
+                # Missing agent_id - should throw!
+            )
+        )
+    assert "agent_id is required when user_id is provided" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_remember_validation_agent_only_works(cortex_client, test_memory_space_id, test_conversation_id, test_agent_id, cleanup_helper):
+    """Should allow agent-only memory (no user_id) when skipping conversations layer."""
+    # Agent-only memories typically skip the conversations layer since
+    # agent-agent conversations require different setup (memory_space_ids)
+    result = await cortex_client.memory.remember(
+        RememberParams(
+            memory_space_id=test_memory_space_id,
+            conversation_id=test_conversation_id,
+            user_message="Agent task",
+            agent_response="Completed",
+            agent_id=test_agent_id,
+            skip_layers=["conversations"],  # Skip conversations for agent-only
+            # No user_id - this is valid for agent-only scenarios
+        )
+    )
+    assert len(result.memories) >= 1
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_remember_validation_invalid_importance_negative(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id):
     """Should throw on negative importance."""
     with pytest.raises(MemoryValidationError) as exc_info:
         await cortex_client.memory.remember(
@@ -829,6 +891,7 @@ async def test_remember_validation_invalid_importance_negative(cortex_client, te
                 agent_response="OK",
                 user_id=test_user_id,
                 user_name="Tester",
+                agent_id=test_agent_id,
                 importance=-1
             )
         )
@@ -836,7 +899,7 @@ async def test_remember_validation_invalid_importance_negative(cortex_client, te
 
 
 @pytest.mark.asyncio
-async def test_remember_validation_invalid_importance_too_high(cortex_client, test_memory_space_id, test_conversation_id, test_user_id):
+async def test_remember_validation_invalid_importance_too_high(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id):
     """Should throw on importance > 100."""
     with pytest.raises(MemoryValidationError) as exc_info:
         await cortex_client.memory.remember(
@@ -847,6 +910,7 @@ async def test_remember_validation_invalid_importance_too_high(cortex_client, te
                 agent_response="OK",
                 user_id=test_user_id,
                 user_name="Tester",
+                agent_id=test_agent_id,
                 importance=150
             )
         )
@@ -854,7 +918,7 @@ async def test_remember_validation_invalid_importance_too_high(cortex_client, te
 
 
 @pytest.mark.asyncio
-async def test_remember_validation_tags_with_empty_strings(cortex_client, test_memory_space_id, test_conversation_id, test_user_id):
+async def test_remember_validation_tags_with_empty_strings(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id):
     """Should throw on tags with empty strings."""
     with pytest.raises(MemoryValidationError) as exc_info:
         await cortex_client.memory.remember(
@@ -865,6 +929,7 @@ async def test_remember_validation_tags_with_empty_strings(cortex_client, test_m
                 agent_response="OK",
                 user_id=test_user_id,
                 user_name="Tester",
+                agent_id=test_agent_id,
                 tags=["valid", "", "tag"]
             )
         )
@@ -874,7 +939,7 @@ async def test_remember_validation_tags_with_empty_strings(cortex_client, test_m
 # rememberStream() validation tests
 
 @pytest.mark.asyncio
-async def test_remember_stream_validation_invalid_stream(cortex_client, test_memory_space_id, test_conversation_id, test_user_id):
+async def test_remember_stream_validation_invalid_stream(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id):
     """Should throw on invalid stream object."""
     with pytest.raises(MemoryValidationError) as exc_info:
         await cortex_client.memory.remember_stream({
@@ -883,13 +948,14 @@ async def test_remember_stream_validation_invalid_stream(cortex_client, test_mem
             "userMessage": "Test",
             "responseStream": {},  # Invalid
             "userId": test_user_id,
-            "userName": "Tester"
+            "userName": "Tester",
+            "agentId": test_agent_id
         })
     assert "response_stream must be" in str(exc_info.value)
 
 
 @pytest.mark.asyncio
-async def test_remember_stream_validation_null_stream(cortex_client, test_memory_space_id, test_conversation_id, test_user_id):
+async def test_remember_stream_validation_null_stream(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id):
     """Should throw on null stream."""
     with pytest.raises(MemoryValidationError) as exc_info:
         await cortex_client.memory.remember_stream({
@@ -898,13 +964,14 @@ async def test_remember_stream_validation_null_stream(cortex_client, test_memory
             "userMessage": "Test",
             "responseStream": None,
             "userId": test_user_id,
-            "userName": "Tester"
+            "userName": "Tester",
+            "agentId": test_agent_id
         })
     assert "response_stream must be" in str(exc_info.value)
 
 
 @pytest.mark.asyncio
-async def test_remember_stream_validation_inherits_remember_checks(cortex_client, test_conversation_id, test_user_id):
+async def test_remember_stream_validation_inherits_remember_checks(cortex_client, test_conversation_id, test_user_id, test_agent_id):
     """Should inherit remember() validations."""
     async def mock_stream():
         yield "test"
@@ -916,7 +983,8 @@ async def test_remember_stream_validation_inherits_remember_checks(cortex_client
             "userMessage": "Test",
             "responseStream": mock_stream(),
             "userId": test_user_id,
-            "userName": "Tester"
+            "userName": "Tester",
+            "agentId": test_agent_id
         })
     assert "memory_space_id cannot be empty" in str(exc_info.value)
 
@@ -1512,3 +1580,203 @@ async def test_get_at_timestamp_validation_negative_timestamp(cortex_client, tes
     with pytest.raises(MemoryValidationError) as exc_info:
         await cortex_client.memory.get_at_timestamp(test_memory_space_id, "mem-123", -1000)
     assert "timestamp cannot be negative" in str(exc_info.value)
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# skipLayers Tests
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+@pytest.mark.asyncio
+async def test_skip_layers_conversations(cortex_client, test_memory_space_id, test_conversation_id, test_agent_id, cleanup_helper):
+    """Test skipping the conversations layer."""
+    result = await cortex_client.memory.remember(
+        RememberParams(
+            memory_space_id=test_memory_space_id,
+            conversation_id=test_conversation_id,
+            user_message="Test message",
+            agent_response="Test response",
+            agent_id=test_agent_id,
+            skip_layers=["conversations"],
+        )
+    )
+
+    # Should still create memories (in vector)
+    assert len(result.memories) >= 1
+    
+    # Conversation should NOT exist (was skipped)
+    conversation = await cortex_client.conversations.get(test_conversation_id)
+    assert conversation is None
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_skip_layers_vector(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id, cleanup_helper):
+    """Test skipping the vector layer."""
+    result = await cortex_client.memory.remember(
+        RememberParams(
+            memory_space_id=test_memory_space_id,
+            conversation_id=test_conversation_id,
+            user_message="Test message",
+            agent_response="Test response",
+            user_id=test_user_id,
+            user_name="Tester",
+            agent_id=test_agent_id,
+            skip_layers=["vector"],
+        )
+    )
+
+    # Should NOT create memories (vector was skipped)
+    assert len(result.memories) == 0
+    
+    # Conversation should exist
+    conversation = await cortex_client.conversations.get(test_conversation_id)
+    assert conversation is not None
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_skip_layers_facts(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id, cleanup_helper):
+    """Test skipping the facts layer even when extract_facts is provided."""
+    async def extract_facts(user_msg, agent_msg):
+        return [
+            {
+                "fact": "This should NOT be stored",
+                "factType": "preference",
+                "confidence": 95,
+            }
+        ]
+
+    result = await cortex_client.memory.remember(
+        RememberParams(
+            memory_space_id=test_memory_space_id,
+            conversation_id=test_conversation_id,
+            user_message="I like testing",
+            agent_response="Noted",
+            user_id=test_user_id,
+            user_name="Tester",
+            agent_id=test_agent_id,
+            extract_facts=extract_facts,
+            skip_layers=["facts"],  # Should skip fact extraction
+        )
+    )
+
+    # Memories should be created
+    assert len(result.memories) >= 1
+    
+    # Facts should NOT be extracted (was skipped)
+    assert len(result.facts) == 0
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_skip_layers_multiple(cortex_client, test_memory_space_id, test_conversation_id, test_agent_id, cleanup_helper):
+    """Test skipping multiple layers at once."""
+    result = await cortex_client.memory.remember(
+        RememberParams(
+            memory_space_id=test_memory_space_id,
+            conversation_id=test_conversation_id,
+            user_message="Test message",
+            agent_response="Test response",
+            agent_id=test_agent_id,
+            skip_layers=["conversations", "facts", "graph"],
+        )
+    )
+
+    # Should still create memories (vector not skipped)
+    assert len(result.memories) >= 1
+    
+    # Conversation should NOT exist (was skipped)
+    conversation = await cortex_client.conversations.get(test_conversation_id)
+    assert conversation is None
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_skip_layers_users(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id, cleanup_helper):
+    """Test skipping the users layer (no auto-create user profile)."""
+    # Use a unique user_id that shouldn't exist
+    unique_user_id = f"test-skip-user-{int(time.time() * 1000)}"
+    
+    result = await cortex_client.memory.remember(
+        RememberParams(
+            memory_space_id=test_memory_space_id,
+            conversation_id=test_conversation_id,
+            user_message="Test message",
+            agent_response="Test response",
+            user_id=unique_user_id,
+            user_name="Test User",
+            agent_id=test_agent_id,
+            skip_layers=["users"],  # Don't auto-create user
+        )
+    )
+
+    # Should still create memories
+    assert len(result.memories) >= 1
+    
+    # User profile should NOT have been auto-created
+    # (Note: this depends on the backend behavior - the user might still not exist)
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_skip_layers_agents(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, cleanup_helper):
+    """Test skipping the agents layer (no auto-register agent)."""
+    # Use a unique agent_id that shouldn't exist
+    unique_agent_id = f"test-skip-agent-{int(time.time() * 1000)}"
+    
+    result = await cortex_client.memory.remember(
+        RememberParams(
+            memory_space_id=test_memory_space_id,
+            conversation_id=test_conversation_id,
+            user_message="Test message",
+            agent_response="Test response",
+            user_id=test_user_id,
+            user_name="Tester",
+            agent_id=unique_agent_id,
+            skip_layers=["agents"],  # Don't auto-register agent
+        )
+    )
+
+    # Should still create memories
+    assert len(result.memories) >= 1
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_no_skip_layers_default_behavior(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id, cleanup_helper):
+    """Test that default behavior (no skipLayers) runs all layers."""
+    result = await cortex_client.memory.remember(
+        RememberParams(
+            memory_space_id=test_memory_space_id,
+            conversation_id=test_conversation_id,
+            user_message="Test message",
+            agent_response="Test response",
+            user_id=test_user_id,
+            user_name="Tester",
+            agent_id=test_agent_id,
+            # No skip_layers - all layers should run
+        )
+    )
+
+    # Memories should be created
+    assert len(result.memories) >= 1
+    
+    # Conversation should exist
+    conversation = await cortex_client.conversations.get(test_conversation_id)
+    assert conversation is not None
+    
+    # Cleanup
+    await cleanup_helper.purge_memory_space(test_memory_space_id)

@@ -48,6 +48,67 @@ export interface GraphConfig {
 }
 
 /**
+ * LLM provider type
+ */
+export type LLMProvider = "openai" | "anthropic" | "custom";
+
+/**
+ * LLM configuration for auto fact extraction
+ *
+ * When configured, enables automatic fact extraction from conversations
+ * during remember() operations (unless explicitly skipped via skipLayers).
+ */
+export interface LLMConfig {
+  /** LLM provider */
+  provider: LLMProvider;
+
+  /** API key for the provider */
+  apiKey: string;
+
+  /**
+   * Model to use for fact extraction.
+   * Default: 'gpt-4o-mini' for OpenAI, 'claude-3-haiku-20240307' for Anthropic
+   */
+  model?: string;
+
+  /**
+   * Custom extraction function (for 'custom' provider or to override default behavior).
+   * If provided, this will be used instead of the built-in extraction.
+   */
+  extractFacts?: (
+    userMessage: string,
+    agentResponse: string,
+  ) => Promise<Array<{
+    fact: string;
+    factType:
+      | "preference"
+      | "identity"
+      | "knowledge"
+      | "relationship"
+      | "event"
+      | "observation"
+      | "custom";
+    subject?: string;
+    predicate?: string;
+    object?: string;
+    confidence: number;
+    tags?: string[];
+  }> | null>;
+
+  /**
+   * Maximum tokens for fact extraction response.
+   * Default: 1000
+   */
+  maxTokens?: number;
+
+  /**
+   * Temperature for fact extraction.
+   * Default: 0.1 (low for consistent extraction)
+   */
+  temperature?: number;
+}
+
+/**
  * Cortex SDK configuration
  */
 export interface CortexConfig {
@@ -56,6 +117,23 @@ export interface CortexConfig {
 
   /** Optional graph database integration */
   graph?: GraphConfig;
+
+  /**
+   * Optional LLM configuration for auto fact extraction.
+   *
+   * When configured, enables automatic fact extraction from conversations
+   * during remember() operations (unless explicitly skipped via skipLayers).
+   *
+   * @example
+   * ```typescript
+   * llm: {
+   *   provider: 'openai',
+   *   apiKey: process.env.OPENAI_API_KEY,
+   *   model: 'gpt-4o-mini',
+   * }
+   * ```
+   */
+  llm?: LLMConfig;
 
   /**
    * Resilience/overload protection configuration
@@ -88,6 +166,7 @@ export class Cortex {
   private readonly client: ConvexClient;
   private syncWorker?: GraphSyncWorker;
   private readonly resilienceLayer: ResilienceLayer;
+  private readonly llmConfig?: LLMConfig;
 
   // Layer 1a: Conversations
   public conversations: ConversationsAPI;
@@ -129,6 +208,9 @@ export class Cortex {
     // Initialize Convex client
     this.client = new ConvexClient(config.convexUrl);
 
+    // Store LLM config for fact extraction
+    this.llmConfig = config.llm;
+
     // Initialize resilience layer (default: enabled with balanced settings)
     this.resilienceLayer = new ResilienceLayer(
       config.resilience ?? ResiliencePresets.default,
@@ -165,7 +247,6 @@ export class Cortex {
       graphAdapter,
       this.resilienceLayer,
     );
-    this.memory = new MemoryAPI(this.client, graphAdapter, this.resilienceLayer);
     this.users = new UsersAPI(this.client, graphAdapter, this.resilienceLayer);
     this.agents = new AgentsAPI(this.client, graphAdapter, this.resilienceLayer);
     this.governance = new GovernanceAPI(
@@ -174,6 +255,19 @@ export class Cortex {
       this.resilienceLayer,
     );
     this.a2a = new A2AAPI(this.client, graphAdapter, this.resilienceLayer);
+
+    // Initialize MemoryAPI with dependencies for full orchestration
+    this.memory = new MemoryAPI(
+      this.client,
+      graphAdapter,
+      this.resilienceLayer,
+      {
+        memorySpaces: this.memorySpaces,
+        users: this.users,
+        agents: this.agents,
+        llm: this.llmConfig,
+      },
+    );
 
     // Start graph sync worker if enabled
     if (config.graph?.autoSync && graphAdapter) {

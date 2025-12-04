@@ -19,6 +19,119 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.17.0] - 2025-12-03
+
+#### 🔄 Memory Orchestration - Enhanced Owner Attribution
+
+**Complete overhaul of memory orchestration to enforce proper user-agent conversation modeling. User-agent conversations now require both `userId` and `agentId`, ensuring every conversation has both participants properly recorded.**
+
+#### ✨ New Features
+
+**1. Mandatory Agent Attribution for User Conversations**
+
+When a `userId` is provided, `agentId` is now required:
+
+```typescript
+// ✅ Correct - both user and agent specified
+await cortex.memory.remember({
+  memorySpaceId: "my-space",
+  conversationId: "conv-123",
+  userMessage: "Hello!",
+  agentResponse: "Hi there!",
+  userId: "user-123",
+  userName: "Alice",
+  agentId: "assistant-v1",  // Now required for user-agent conversations
+});
+
+// ✅ Correct - agent-only (no user)
+await cortex.memory.remember({
+  memorySpaceId: "my-space",
+  conversationId: "conv-456",
+  userMessage: "System task",
+  agentResponse: "Completed",
+  agentId: "worker-agent",
+  skipLayers: ["conversations"],
+});
+
+// ❌ Error - user without agent
+await cortex.memory.remember({
+  userId: "user-123",
+  userName: "Alice",
+  // Missing agentId - will throw!
+});
+```
+
+**2. Agent ID Support Across All Layers**
+
+- **Conversations**: `participants.agentId` field added
+- **Memories**: `agentId` field for agent-owned memories
+- **Graph Sync**: Agent nodes and relationships
+- **Indexes**: Optimized queries by agentId
+
+**3. Graph Layer Agent Support**
+
+New graph elements for agent tracking:
+
+```cypher
+// New Agent node type
+(:Agent {agentId: "assistant-v1", createdAt: 1733234567890})
+
+// Conversation involves both user and agent
+(Conversation)-[:INVOLVES]->(User)
+(Conversation)-[:INVOLVES]->(Agent)
+
+// Memory relates to agent
+(Memory)-[:RELATES_TO]->(Agent)
+```
+
+#### 📊 Schema Updates
+
+| Table | Field Added | Purpose |
+|-------|-------------|---------|
+| `memories` | `agentId` | Agent-owned memory attribution |
+| `conversations.participants` | `agentId` | Agent participant tracking |
+
+New indexes:
+- `by_agentId` on memories table
+- `by_memorySpace_agentId` on memories table
+- `by_agent` on conversations table
+- `by_memorySpace_agent` on conversations table
+
+#### 🔧 Validation Rules
+
+| Scenario | Required Fields |
+|----------|-----------------|
+| User-agent conversation | `userId` + `userName` + `agentId` |
+| Agent-only (system/tool) | `agentId` only |
+
+#### ⚠️ Breaking Changes
+
+- `cortex.memory.remember()` now throws if `userId` is provided without `agentId`
+- Error: `"agentId is required when userId is provided. User-agent conversations require both a user and an agent participant."`
+
+#### Migration
+
+Update existing `remember()` calls to include `agentId`:
+
+```typescript
+// Before (v0.16.x)
+await cortex.memory.remember({
+  userId: "user-123",
+  userName: "Alice",
+  // ... other params
+});
+
+// After (v0.17.0)
+await cortex.memory.remember({
+  userId: "user-123",
+  userName: "Alice",
+  agentId: "your-agent-id",  // Add this
+  // ... other params
+});
+```
+
+---
+
 ### [0.16.0] - 2025-12-01
 
 #### 🛡️ Resilience Layer - Production-Ready Overload Protection

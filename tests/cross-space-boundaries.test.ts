@@ -17,6 +17,7 @@ describe("Cross-Space Boundary Testing", () => {
   const SPACE_A = `space-a-${Date.now()}`;
   const SPACE_B = `space-b-${Date.now()}`;
   const TEST_USER_ID = "boundary-test-user";
+  const TEST_AGENT_ID = "boundary-test-agent";
 
   beforeAll(() => {
     cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
@@ -839,6 +840,7 @@ describe("Cross-Space Boundary Testing", () => {
         agentResponse: "Response A",
         userId: TEST_USER_ID,
         userName: "User A",
+        agentId: TEST_AGENT_ID,
       });
 
       const results = await cortex.memory.search(SPACE_B, "SEARCH_ISO_MARKER");
@@ -857,6 +859,7 @@ describe("Cross-Space Boundary Testing", () => {
         agentResponse: "Response A",
         userId: TEST_USER_ID,
         userName: "User A",
+        agentId: TEST_AGENT_ID,
       });
 
       const listB = await cortex.vector.list({
@@ -1605,6 +1608,7 @@ describe("Cross-Space Boundary Testing", () => {
         agentResponse: "Response A",
         userId,
         userName: "Search User",
+        agentId: TEST_AGENT_ID,
       });
 
       // Search in space B for same user

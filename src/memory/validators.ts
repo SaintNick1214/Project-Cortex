@@ -461,29 +461,56 @@ export function validateMessageIds(
 
 /**
  * Validates RememberParams structure
+ *
+ * NOTE: Since v0.17.0, the primary validation is done in MemoryAPI.validateAndNormalizeParams()
+ * which handles the new orchestration logic (optional memorySpaceId, userId OR agentId, etc.)
+ * This function is kept for backwards compatibility but uses the new optional field approach.
  */
 export function validateRememberParams(params: RememberParams): void {
   // Required fields
-  validateMemorySpaceId(params.memorySpaceId);
   validateConversationId(params.conversationId);
   validateContent(params.userMessage, "userMessage");
   validateContent(params.agentResponse, "agentResponse");
-  validateUserId(params.userId);
 
-  if (!params.userName || typeof params.userName !== "string") {
+  // memorySpaceId is optional now - defaults to 'default' in remember()
+  if (params.memorySpaceId !== undefined) {
+    validateMemorySpaceId(params.memorySpaceId);
+  }
+
+  // Owner validation: userId OR agentId required
+  const hasUserId = params.userId && params.userId.trim().length > 0;
+  const hasAgentId = params.agentId && params.agentId.trim().length > 0;
+
+  if (!hasUserId && !hasAgentId) {
     throw new MemoryValidationError(
-      "userName is required and must be a string",
-      "MISSING_REQUIRED_FIELD",
-      "userName",
+      "Either userId or agentId must be provided for memory ownership",
+      "OWNER_REQUIRED",
+      "userId/agentId",
     );
   }
 
-  if (params.userName.trim().length === 0) {
-    throw new MemoryValidationError(
-      "userName cannot be empty",
-      "MISSING_REQUIRED_FIELD",
-      "userName",
-    );
+  // Validate userId if provided
+  if (hasUserId) {
+    validateUserId(params.userId!);
+  }
+
+  // userName is required when userId is provided
+  if (hasUserId) {
+    if (!params.userName || typeof params.userName !== "string") {
+      throw new MemoryValidationError(
+        "userName is required when userId is provided",
+        "MISSING_REQUIRED_FIELD",
+        "userName",
+      );
+    }
+
+    if (params.userName.trim().length === 0) {
+      throw new MemoryValidationError(
+        "userName cannot be empty when userId is provided",
+        "MISSING_REQUIRED_FIELD",
+        "userName",
+      );
+    }
   }
 
   // Optional fields validation

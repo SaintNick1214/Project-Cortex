@@ -15,6 +15,7 @@ describe("Statistics Consistency Testing", () => {
   let cortex: Cortex;
   const BASE_ID = `stats-test-${Date.now()}`;
   const TEST_USER_ID = "stats-test-user";
+  const TEST_AGENT_ID = "stats-test-agent";
 
   beforeAll(() => {
     cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
@@ -870,6 +871,7 @@ describe("Statistics Consistency Testing", () => {
         agentResponse: "Response",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
       });
 
       const after = await cortex.memorySpaces.getStats(spaceId);
@@ -890,6 +892,7 @@ describe("Statistics Consistency Testing", () => {
         agentResponse: "Response",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
       });
 
       const before = await cortex.vector.count({ memorySpaceId: spaceId });
@@ -1603,6 +1606,7 @@ describe("Statistics Consistency Testing", () => {
         agentResponse: "Response",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
       });
 
       const during = await cortex.vector.count({ memorySpaceId: spaceId });

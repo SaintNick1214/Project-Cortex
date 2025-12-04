@@ -21,6 +21,7 @@ describe("Cross-Layer Reference Integrity", () => {
   // Use ctx-scoped IDs for parallel execution isolation
   const TEST_MEMSPACE_ID = ctx.memorySpaceId("cross-layer");
   const TEST_USER_ID = ctx.userId("cross-layer");
+  const TEST_AGENT_ID = ctx.agentId("cross-layer");
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
@@ -89,6 +90,7 @@ describe("Cross-Layer Reference Integrity", () => {
         conversationId: convNew.conversationId,
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         userMessage: "Reference integrity test",
         agentResponse: "Testing references",
       });
@@ -399,6 +401,7 @@ describe("Cross-Layer Reference Integrity", () => {
         conversationId: convRef.conversationId,
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         userMessage: "Cross-layer consistency test",
         agentResponse: "Validating consistency",
       });
