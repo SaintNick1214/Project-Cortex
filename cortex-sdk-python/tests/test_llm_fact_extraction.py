@@ -91,7 +91,7 @@ class TestOpenAIClient:
             )
         ]
 
-        with patch("cortex.llm.AsyncOpenAI") as mock_openai:
+        with patch("openai.AsyncOpenAI") as mock_openai:
             mock_client = AsyncMock()
             mock_client.chat.completions.create = AsyncMock(return_value=mock_response)
             mock_openai.return_value = mock_client
@@ -115,7 +115,7 @@ class TestOpenAIClient:
             MagicMock(message=MagicMock(content=json.dumps({"facts": []})))
         ]
 
-        with patch("cortex.llm.AsyncOpenAI") as mock_openai:
+        with patch("openai.AsyncOpenAI") as mock_openai:
             mock_client = AsyncMock()
             mock_client.chat.completions.create = AsyncMock(return_value=mock_response)
             mock_openai.return_value = mock_client
@@ -131,7 +131,7 @@ class TestOpenAIClient:
     @pytest.mark.asyncio
     async def test_handles_api_errors_gracefully(self):
         """Handles API errors gracefully."""
-        with patch("cortex.llm.AsyncOpenAI") as mock_openai:
+        with patch("openai.AsyncOpenAI") as mock_openai:
             mock_client = AsyncMock()
             mock_client.chat.completions.create = AsyncMock(
                 side_effect=Exception("API Error")
@@ -153,7 +153,7 @@ class TestOpenAIClient:
             MagicMock(message=MagicMock(content=json.dumps({"facts": []})))
         ]
 
-        with patch("cortex.llm.AsyncOpenAI") as mock_openai:
+        with patch("openai.AsyncOpenAI") as mock_openai:
             mock_client = AsyncMock()
             mock_client.chat.completions.create = AsyncMock(return_value=mock_response)
             mock_openai.return_value = mock_client
@@ -190,7 +190,7 @@ class TestAnthropicClient:
             )
         ]
 
-        with patch("cortex.llm.AsyncAnthropic") as mock_anthropic:
+        with patch("anthropic.AsyncAnthropic") as mock_anthropic:
             mock_client = AsyncMock()
             mock_client.messages.create = AsyncMock(return_value=mock_response)
             mock_anthropic.return_value = mock_client
@@ -208,7 +208,7 @@ class TestAnthropicClient:
     @pytest.mark.asyncio
     async def test_handles_api_errors_gracefully(self):
         """Handles API errors gracefully."""
-        with patch("cortex.llm.AsyncAnthropic") as mock_anthropic:
+        with patch("anthropic.AsyncAnthropic") as mock_anthropic:
             mock_client = AsyncMock()
             mock_client.messages.create = AsyncMock(side_effect=Exception("API Error"))
             mock_anthropic.return_value = mock_client

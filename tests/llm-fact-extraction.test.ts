@@ -8,11 +8,11 @@
 
 import { jest } from "@jest/globals";
 
-type AnyFunction = (...args: unknown[]) => unknown;
-
-// Store mock functions for each provider
-const mockOpenAICreate = jest.fn<AnyFunction>();
-const mockAnthropicCreate = jest.fn<AnyFunction>();
+// Store mock functions for each provider - using explicit any for Jest mock compatibility
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockOpenAICreate = jest.fn<(...args: any[]) => any>();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockAnthropicCreate = jest.fn<(...args: any[]) => any>();
 
 // Mock OpenAI before imports
 jest.unstable_mockModule("openai", () => ({
@@ -440,7 +440,8 @@ describe("LLM Fact Extraction", () => {
         },
       ];
 
-      const customExtractor = jest.fn<AnyFunction>().mockResolvedValue(customFacts);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const customExtractor = jest.fn<(...args: any[]) => any>().mockResolvedValue(customFacts);
 
       const client = createLLMClient({
         provider: "custom",

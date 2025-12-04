@@ -140,7 +140,11 @@ def _parse_facts_response(content: str) -> Optional[List[ExtractedFact]]:
             json_str = json_str.replace("\n```", "").replace("```", "")
 
         parsed = json.loads(json_str)
-        facts_data = parsed.get("facts", parsed)
+        # Handle both {"facts": [...]} and direct array [...] formats
+        if isinstance(parsed, list):
+            facts_data = parsed
+        else:
+            facts_data = parsed.get("facts", parsed)
 
         if not isinstance(facts_data, list):
             print("[Cortex LLM] Invalid facts response format - not a list")
