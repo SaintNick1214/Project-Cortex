@@ -9,9 +9,7 @@
 import { jest } from "@jest/globals";
 
 // Store mock functions for each provider - using explicit any for Jest mock compatibility
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockOpenAICreate = jest.fn<(...args: any[]) => any>();
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockAnthropicCreate = jest.fn<(...args: any[]) => any>();
 
 // Mock OpenAI before imports
@@ -441,7 +439,6 @@ describe("LLM Fact Extraction", () => {
         },
       ];
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const customExtractor = jest
         .fn<(...args: any[]) => any>()
         .mockResolvedValue(customFacts);

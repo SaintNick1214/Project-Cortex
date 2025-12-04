@@ -5,7 +5,6 @@
  */
 
 import { readFile, writeFile } from "fs/promises";
-import { existsSync } from "fs";
 import { join } from "path";
 
 /**
@@ -26,11 +25,17 @@ export interface EnvLine {
 }
 
 export async function parseEnvFile(path: string): Promise<EnvLine[]> {
-  if (!existsSync(path)) {
-    return [];
+  let content: string;
+  try {
+    content = await readFile(path, "utf-8");
+  } catch (error) {
+    // File doesn't exist - return empty lines (avoids TOCTOU race condition)
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      return [];
+    }
+    throw error;
   }
 
-  const content = await readFile(path, "utf-8");
   const lines: EnvLine[] = [];
 
   for (const raw of content.split("\n")) {
@@ -175,11 +180,14 @@ export async function addDeploymentToEnv(
 export async function removeDeploymentFromEnv(name: string): Promise<void> {
   const envPath = getEnvLocalPath();
 
-  if (!existsSync(envPath)) {
+  // parseEnvFile handles non-existent files gracefully (returns empty array)
+  // This avoids TOCTOU race condition from using existsSync
+  let lines = await parseEnvFile(envPath);
+
+  // If file doesn't exist (empty lines), nothing to remove
+  if (lines.length === 0) {
     return;
   }
-
-  let lines = await parseEnvFile(envPath);
 
   const envKeys = getDeploymentEnvKeys(name);
 

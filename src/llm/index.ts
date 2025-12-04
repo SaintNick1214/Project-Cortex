@@ -299,8 +299,8 @@ class AnthropicClient implements LLMClient {
       });
 
       // Extract text content from response
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const textBlock = response.content.find(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (block: any) => block.type === "text",
       );
       if (!textBlock || textBlock.type !== "text") {
