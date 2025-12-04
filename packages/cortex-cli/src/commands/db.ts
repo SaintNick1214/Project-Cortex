@@ -362,6 +362,24 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
         console.log("  • All memory spaces and memories");
         console.log("  • All conversations and messages");
         console.log("  • All facts and user profiles");
+        
+        // Check if graph sync is enabled (same logic as Cortex.create())
+        const neo4jUri = process.env.NEO4J_URI;
+        const memgraphUri = process.env.MEMGRAPH_URI;
+        const graphSyncEnabled = process.env.CORTEX_GRAPH_SYNC === 'true' || !!(neo4jUri || memgraphUri);
+        
+        // Debug: Show env var detection
+        if (process.env.DEBUG || program.opts().debug) {
+          console.log(pc.dim(`  [DEBUG] CORTEX_GRAPH_SYNC=${process.env.CORTEX_GRAPH_SYNC}`));
+          console.log(pc.dim(`  [DEBUG] NEO4J_URI=${neo4jUri ? 'set' : 'unset'}`));
+          console.log(pc.dim(`  [DEBUG] MEMGRAPH_URI=${memgraphUri ? 'set' : 'unset'}`));
+          console.log(pc.dim(`  [DEBUG] graphSyncEnabled=${graphSyncEnabled}`));
+        }
+        
+        if (graphSyncEnabled) {
+          const dbType = neo4jUri ? 'Neo4j' : 'Memgraph';
+          console.log(`  • All graph database nodes and relationships (${dbType})`);
+        }
         console.log();
 
         // Simple y/N confirmation
@@ -610,6 +628,65 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           // 12. Clear graph sync queue
           await clearTableDirect("graphSyncQueue", "graphSyncQueue");
 
+          // 13. Clear graph database if graph sync is enabled
+          // Check both explicit flag and auto-detection (same logic as Cortex.create())
+          const neo4jUri = process.env.NEO4J_URI;
+          const memgraphUri = process.env.MEMGRAPH_URI;
+          const graphSyncEnabled = process.env.CORTEX_GRAPH_SYNC === 'true' || !!(neo4jUri || memgraphUri);
+          
+          if (graphSyncEnabled) {
+            spinner.text = 'Clearing graph database...';
+            let graphCleared = false;
+            
+            try {
+              
+              if (neo4jUri || memgraphUri) {
+                // Dynamically import neo4j-driver only when needed
+                const neo4j = await import('neo4j-driver');
+                
+                // Determine which database to connect to
+                const uri = neo4jUri || memgraphUri;
+                const username = neo4jUri 
+                  ? (process.env.NEO4J_USERNAME || 'neo4j')
+                  : (process.env.MEMGRAPH_USERNAME || 'memgraph');
+                const password = neo4jUri
+                  ? (process.env.NEO4J_PASSWORD || '')
+                  : (process.env.MEMGRAPH_PASSWORD || '');
+                
+                // Connect to graph database
+                const driver = neo4j.default.driver(
+                  uri!,
+                  neo4j.default.auth.basic(username, password)
+                );
+                
+                // Verify connectivity
+                await driver.verifyConnectivity();
+                
+                // Create session and clear all data
+                const session = driver.session();
+                try {
+                  // DETACH DELETE removes nodes and all their relationships
+                  // Works for both Neo4j and Memgraph
+                  await session.run('MATCH (n) DETACH DELETE n');
+                  graphCleared = true;
+                } finally {
+                  await session.close();
+                }
+                
+                await driver.close();
+              }
+            } catch (error) {
+              // Log warning but don't fail the entire operation
+              const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+              spinner.warn(pc.yellow(`Graph database clear failed: ${errorMsg}`));
+            }
+            
+            if (graphCleared) {
+              // Only show success if we actually cleared
+              deleted.graphSyncQueue = -1; // Use as flag to indicate graph was cleared
+            }
+          }
+
           spinner.stop();
 
           printSuccess(`Database "${targetName}" cleared`);
@@ -642,7 +719,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           const systemTables = {
             "Governance Policies": deleted.governancePolicies,
             "Governance Logs": deleted.governanceEnforcement,
-            "Graph Sync Queue": deleted.graphSyncQueue,
+            "Graph Sync Queue": deleted.graphSyncQueue >= 0 ? deleted.graphSyncQueue : 0,
           };
 
           printSection("Core Entities", coreEntities);
@@ -650,6 +727,15 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           printSection("Conversations", conversationData);
           printSection("Shared Stores", sharedStores);
           printSection("System Tables", systemTables);
+          
+          // Show graph database status if it was cleared
+          if (deleted.graphSyncQueue === -1) {
+            const dbType = process.env.NEO4J_URI ? 'Neo4j' : 'Memgraph';
+            console.log();
+            printSection("Graph Database", {
+              [dbType]: pc.green("Cleared ✓"),
+            });
+          }
         });
       } catch (error) {
         printError(error instanceof Error ? error.message : "Clear failed");

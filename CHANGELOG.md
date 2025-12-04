@@ -19,6 +19,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.19.1] - 2025-12-03
+
+#### 🛡️ Idempotent Graph Sync Operations
+
+**Graph sync operations now use MERGE instead of CREATE for resilient, idempotent operations. Re-running scripts or handling race conditions no longer causes constraint violation errors.**
+
+#### ✨ New Features
+
+**1. `mergeNode()` Method**
+
+New method on `GraphAdapter` interface that uses Cypher `MERGE` semantics:
+- Creates node if not exists
+- Matches existing node if it does
+- Updates properties on match
+- Safe for concurrent operations
+
+```typescript
+// Idempotent - safe to call multiple times
+const nodeId = await adapter.mergeNode(
+  {
+    label: "MemorySpace",
+    properties: { memorySpaceId: "space-123", name: "Main" }
+  },
+  { memorySpaceId: "space-123" }  // Match properties
+);
+```
+
+**2. All Sync Utilities Now Idempotent**
+
+Updated sync functions to use `mergeNode()`:
+- `syncMemorySpaceToGraph()`
+- `syncContextToGraph()`
+- `syncConversationToGraph()`
+- `syncMemoryToGraph()`
+- `syncFactToGraph()`
+- `ensureUserNode()`
+- `ensureAgentNode()`
+- `ensureParticipantNode()`
+- `ensureEntityNode()`
+- `ensureEnrichedEntityNode()`
+
+#### 🔧 Technical Details
+
+- Graph operations no longer fail with "Node already exists" errors
+- Scripts can be safely re-run without clearing Neo4j/Memgraph
+- Race conditions in parallel memory creation are handled gracefully
+- Existing data is updated rather than causing conflicts
+
+---
+
 ### [0.19.0] - 2025-12-03
 
 #### 🔗 Automatic Graph Database Configuration

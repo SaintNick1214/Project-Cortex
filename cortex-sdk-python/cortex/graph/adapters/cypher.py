@@ -172,6 +172,74 @@ class CypherGraphAdapter:
             record = await result.single()
             return str(record["id"])
 
+    async def merge_node(
+        self, node: "GraphNode", match_properties: Dict[str, Any]
+    ) -> str:
+        """
+        Merge (upsert) a node using MERGE semantics.
+
+        Creates if not exists, matches if exists. Updates properties on existing nodes.
+        Idempotent and safe for concurrent operations.
+
+        Args:
+            node: Node to merge
+            match_properties: Properties to match on (for finding existing node)
+
+        Returns:
+            Node ID (existing or newly created)
+
+        Example:
+            >>> node_id = await adapter.merge_node(
+            ...     GraphNode(
+            ...         label='MemorySpace',
+            ...         properties={'memorySpaceId': 'space-123', 'name': 'Main'}
+            ...     ),
+            ...     {'memorySpaceId': 'space-123'}
+            ... )
+        """
+        if not self._connected:
+            raise CortexError(
+                ErrorCode.GRAPH_CONNECTION_ERROR, "Not connected to graph database"
+            )
+
+        assert self.driver is not None
+        id_func = self._get_id_function()
+
+        # Build MERGE clause with match properties
+        match_prop_str = ", ".join(
+            [f"{key}: $match_{key}" for key in match_properties.keys()]
+        )
+
+        # Build SET clause for updating all other properties
+        extra_props = {
+            k: v for k, v in node.properties.items() if k not in match_properties
+        }
+        set_clause = (
+            "ON CREATE SET n += $createProps ON MATCH SET n += $updateProps"
+            if extra_props
+            else ""
+        )
+
+        query = f"""
+            MERGE (n:{node.label} {{{match_prop_str}}})
+            {set_clause}
+            RETURN {id_func}(n) as id
+        """
+
+        # Build parameters
+        params: Dict[str, Any] = {}
+        for key, value in match_properties.items():
+            params[f"match_{key}"] = value
+
+        if extra_props:
+            params["createProps"] = extra_props
+            params["updateProps"] = extra_props
+
+        async with self.driver.session(database=self.database) as session:
+            result = await session.run(query, params)
+            record = await result.single()
+            return str(record["id"])
+
     async def update_node(self, node_id: str, properties: Dict[str, Any]) -> None:
         """
         Update node properties.

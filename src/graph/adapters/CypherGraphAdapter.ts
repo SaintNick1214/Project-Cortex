@@ -171,6 +171,75 @@ export class CypherGraphAdapter implements GraphAdapter {
     }
   }
 
+  async mergeNode(
+    node: GraphNode,
+    matchProperties: Record<string, unknown>,
+  ): Promise<string> {
+    const session = this.getSession();
+
+    try {
+      const idFunc = this.getIdFunction();
+
+      // Build MERGE clause with match properties
+      const matchPropEntries = Object.entries(matchProperties);
+      const matchPropStr = matchPropEntries
+        .map(([key]) => `${key}: $match_${key}`)
+        .join(", ");
+
+      // Build SET clause for updating all other properties
+      const setPropEntries = Object.entries(node.properties).filter(
+        ([key]) => !(key in matchProperties),
+      );
+      const setClause =
+        setPropEntries.length > 0
+          ? `ON CREATE SET n += $createProps ON MATCH SET n += $updateProps`
+          : "";
+
+      const query = `
+        MERGE (n:${this.escapeLabel(node.label)} {${matchPropStr}})
+        ${setClause}
+        RETURN ${idFunc}(n) as id
+      `;
+
+      // Build parameters
+      const params: Record<string, unknown> = {};
+
+      // Add match properties with prefix
+      for (const [key, value] of matchPropEntries) {
+        params[`match_${key}`] = this.serializeValue(value);
+      }
+
+      // Add create/update properties if there are any non-match properties
+      if (setPropEntries.length > 0) {
+        const extraProps = Object.fromEntries(
+          setPropEntries.map(([key, value]) => [key, this.serializeValue(value)]),
+        );
+        params.createProps = extraProps;
+        params.updateProps = extraProps;
+      }
+
+      const result = await session.run(query, params);
+
+      if (result.records.length === 0) {
+        throw new GraphDatabaseError("Failed to merge node: no ID returned");
+      }
+
+      const idValue = result.records[0].get("id");
+      return typeof idValue === "object" &&
+        idValue !== null &&
+        "toString" in idValue
+        ? idValue.toString()
+        : String(idValue);
+    } catch (error) {
+      throw this.handleError(
+        error,
+        `Failed to merge node with label ${node.label}`,
+      );
+    } finally {
+      await session.close();
+    }
+  }
+
   async getNode(id: string): Promise<GraphNode | null> {
     const session = this.getSession();
 

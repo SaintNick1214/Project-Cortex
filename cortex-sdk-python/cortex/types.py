@@ -1298,6 +1298,24 @@ class GraphAdapter(Protocol):
         """Create a node and return its ID."""
         ...
 
+    async def merge_node(
+        self, node: GraphNode, match_properties: Dict[str, Any]
+    ) -> str:
+        """
+        Merge (upsert) a node in the graph.
+
+        Uses MERGE semantics: creates if not exists, matches if exists.
+        Updates properties on existing nodes. Idempotent and safe for concurrent ops.
+
+        Args:
+            node: Node to merge
+            match_properties: Properties to match on (for finding existing node)
+
+        Returns:
+            Node ID (existing or newly created)
+        """
+        ...
+
     async def update_node(self, node_id: str, properties: Dict[str, Any]) -> None:
         """Update node properties."""
         ...

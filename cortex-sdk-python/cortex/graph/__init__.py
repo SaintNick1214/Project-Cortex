@@ -17,6 +17,8 @@ async def sync_memory_to_graph(memory: Dict[str, Any], adapter: GraphAdapter) ->
     """
     Sync a memory to the graph database.
 
+    Uses MERGE for idempotent operations.
+
     Args:
         memory: Memory entry to sync
         adapter: Graph database adapter
@@ -40,7 +42,7 @@ async def sync_memory_to_graph(memory: Dict[str, Any], adapter: GraphAdapter) ->
         },
     )
 
-    return await adapter.create_node(node)
+    return await adapter.merge_node(node, {"memoryId": memory["memoryId"]})
 
 
 async def sync_memory_relationships(
@@ -127,7 +129,7 @@ async def delete_memory_from_graph(
 async def sync_conversation_to_graph(
     conversation: Dict[str, Any], adapter: GraphAdapter
 ) -> str:
-    """Sync conversation to graph."""
+    """Sync conversation to graph. Uses MERGE for idempotent operations."""
     node = GraphNode(
         label="Conversation",
         properties={
@@ -139,7 +141,9 @@ async def sync_conversation_to_graph(
         },
     )
 
-    return await adapter.create_node(node)
+    return await adapter.merge_node(
+        node, {"conversationId": conversation["conversationId"]}
+    )
 
 
 async def sync_conversation_relationships(
@@ -176,7 +180,7 @@ async def delete_conversation_from_graph(
 
 
 async def sync_fact_to_graph(fact: Dict[str, Any], adapter: GraphAdapter) -> str:
-    """Sync fact to graph."""
+    """Sync fact to graph. Uses MERGE for idempotent operations."""
     node = GraphNode(
         label="Fact",
         properties={
@@ -192,7 +196,7 @@ async def sync_fact_to_graph(fact: Dict[str, Any], adapter: GraphAdapter) -> str
         },
     )
 
-    return await adapter.create_node(node)
+    return await adapter.merge_node(node, {"factId": fact["factId"]})
 
 
 async def sync_fact_relationships(
@@ -230,7 +234,7 @@ async def delete_fact_from_graph(fact_id: str, adapter: GraphAdapter) -> None:
 
 
 async def sync_context_to_graph(context: Dict[str, Any], adapter: GraphAdapter) -> str:
-    """Sync context to graph."""
+    """Sync context to graph. Uses MERGE for idempotent operations."""
     node = GraphNode(
         label="Context",
         properties={
@@ -245,7 +249,7 @@ async def sync_context_to_graph(context: Dict[str, Any], adapter: GraphAdapter) 
         },
     )
 
-    return await adapter.create_node(node)
+    return await adapter.merge_node(node, {"contextId": context["id"]})
 
 
 async def sync_context_relationships(
@@ -321,7 +325,7 @@ async def delete_agent_from_graph(agent_id: str, adapter: GraphAdapter) -> int:
 async def sync_memory_space_to_graph(
     memory_space: Dict[str, Any], adapter: GraphAdapter
 ) -> str:
-    """Sync memory space to graph."""
+    """Sync memory space to graph. Uses MERGE for idempotent operations."""
     node = GraphNode(
         label="MemorySpace",
         properties={
@@ -333,7 +337,9 @@ async def sync_memory_space_to_graph(
         },
     )
 
-    return await adapter.create_node(node)
+    return await adapter.merge_node(
+        node, {"memorySpaceId": memory_space["memorySpaceId"]}
+    )
 
 
 # Re-export for convenience
