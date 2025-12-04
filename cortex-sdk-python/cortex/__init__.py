@@ -90,8 +90,6 @@ from .types import (
     ConversationType,
     CortexConfig,
     CountFactsFilter,
-    # LLM Configuration
-    LLMConfig,
     CreateConversationInput,
     DeleteManyResult,
     DeleteResult,
@@ -128,6 +126,8 @@ from .types import (
     ImportanceRange,
     ListFactsFilter,
     ListResult,
+    # LLM Configuration
+    LLMConfig,
     MemoryEntry,
     MemoryMetadata,
     MemorySource,
