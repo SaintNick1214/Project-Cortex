@@ -152,7 +152,9 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           let tableCounts: Record<string, number> = {};
           try {
             tableCounts = await rawClient.query(
-              "admin:getAllCounts" as Parameters<typeof rawClient.query>[0],
+              "admin:getAllCounts" as unknown as Parameters<
+                typeof rawClient.query
+              >[0],
               {},
             );
           } catch {
@@ -411,7 +413,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
               spinner.text = `Clearing ${tableName}... (${deleted[counter]} deleted)`;
               try {
                 const result = await rawClient.mutation(
-                  "admin:clearTable" as Parameters<
+                  "admin:clearTable" as unknown as Parameters<
                     typeof rawClient.mutation
                   >[0],
                   { table: tableName, limit: MAX_LIMIT },
@@ -532,7 +534,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
               for (const space of spaces) {
                 try {
                   await rawClient.mutation(
-                    "memorySpaces:deleteSpace" as Parameters<
+                    "memorySpaces:deleteSpace" as unknown as Parameters<
                       typeof rawClient.mutation
                     >[0],
                     { memorySpaceId: space.memorySpaceId, cascade: true },
