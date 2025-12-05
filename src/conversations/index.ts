@@ -67,6 +67,27 @@ export class ConversationsAPI {
   }
 
   /**
+   * Handle ConvexError from direct Convex calls (queries that don't go through resilience)
+   * Extracts error.data and includes it in the thrown error message
+   */
+  private handleConvexError(error: unknown): never {
+    if (
+      error &&
+      typeof error === "object" &&
+      "data" in error &&
+      (error as { data: unknown }).data !== undefined
+    ) {
+      const convexError = error as { data: unknown };
+      const errorData =
+        typeof convexError.data === "string"
+          ? convexError.data
+          : JSON.stringify(convexError.data);
+      throw new Error(errorData);
+    }
+    throw error;
+  }
+
+  /**
    * Create a new conversation
    *
    * @example
@@ -190,16 +211,21 @@ export class ConversationsAPI {
     // Auto-generate message ID if not provided
     const messageId = input.message.id || this.generateMessageId();
 
-    const result = await this.client.mutation(api.conversations.addMessage, {
-      conversationId: input.conversationId,
-      message: {
-        id: messageId,
-        role: input.message.role,
-        content: input.message.content,
-        participantId: input.message.participantId, // Updated for Hive Mode
-        metadata: input.message.metadata,
-      },
-    });
+    let result;
+    try {
+      result = await this.client.mutation(api.conversations.addMessage, {
+        conversationId: input.conversationId,
+        message: {
+          id: messageId,
+          role: input.message.role,
+          content: input.message.content,
+          participantId: input.message.participantId, // Updated for Hive Mode
+          metadata: input.message.metadata,
+        },
+      });
+    } catch (error) {
+      this.handleConvexError(error);
+    }
 
     // Update in graph if requested (conversation already synced, just update properties)
     if (options?.syncToGraph && this.graphAdapter) {
@@ -292,12 +318,17 @@ export class ConversationsAPI {
   ): Promise<{ deleted: boolean }> {
     validateRequiredString(conversationId, "conversationId");
 
-    const result = await this.client.mutation(
-      api.conversations.deleteConversation,
-      {
-        conversationId,
-      },
-    );
+    let result;
+    try {
+      result = await this.client.mutation(
+        api.conversations.deleteConversation,
+        {
+          conversationId,
+        },
+      );
+    } catch (error) {
+      this.handleConvexError(error);
+    }
 
     // Delete from graph
     if (options?.syncToGraph && this.graphAdapter) {
@@ -531,19 +562,23 @@ export class ConversationsAPI {
       validateSortOrder(options.sortOrder);
     }
 
-    const result = await this.client.query(api.conversations.getHistory, {
-      conversationId,
-      limit: options?.limit,
-      offset: options?.offset,
-      sortOrder: options?.sortOrder,
-    });
+    try {
+      const result = await this.client.query(api.conversations.getHistory, {
+        conversationId,
+        limit: options?.limit,
+        offset: options?.offset,
+        sortOrder: options?.sortOrder,
+      });
 
-    return result as {
-      messages: Message[];
-      total: number;
-      hasMore: boolean;
-      conversationId: string;
-    };
+      return result as {
+        messages: Message[];
+        total: number;
+        hasMore: boolean;
+        conversationId: string;
+      };
+    } catch (error) {
+      this.handleConvexError(error);
+    }
   }
 
   /**

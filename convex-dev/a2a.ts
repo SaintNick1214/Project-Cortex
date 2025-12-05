@@ -11,7 +11,7 @@
  * - getConversation(): Retrieve conversation history (no pub/sub required)
  */
 
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -354,7 +354,7 @@ export const request = mutation({
     });
 
     // Return timeout indicator - real-time response requires pub/sub
-    throw new Error(
+    throw new ConvexError(
       "PUBSUB_NOT_CONFIGURED: request() requires pub/sub infrastructure for real-time responses. " +
         "In Direct Mode, configure your own Redis/RabbitMQ/NATS adapter. " +
         "In Cloud Mode, pub/sub is included automatically. " +

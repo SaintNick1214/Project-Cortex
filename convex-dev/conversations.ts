@@ -6,7 +6,7 @@
  * Two types: user-agent, agent-agent (Collaboration Mode)
  */
 
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -56,7 +56,7 @@ export const create = mutation({
       .first();
 
     if (existing) {
-      throw new Error("CONVERSATION_ALREADY_EXISTS");
+      throw new ConvexError("CONVERSATION_ALREADY_EXISTS");
     }
 
     const now = Date.now();
@@ -103,7 +103,7 @@ export const addMessage = mutation({
       .first();
 
     if (!conversation) {
-      throw new Error("CONVERSATION_NOT_FOUND");
+      throw new ConvexError("CONVERSATION_NOT_FOUND");
     }
 
     // Create message with timestamp
@@ -139,7 +139,7 @@ export const deleteConversation = mutation({
       .first();
 
     if (!conversation) {
-      throw new Error("CONVERSATION_NOT_FOUND");
+      throw new ConvexError("CONVERSATION_NOT_FOUND");
     }
 
     await ctx.db.delete(conversation._id);
@@ -198,6 +198,44 @@ export const deleteMany = mutation({
       deleted,
       totalMessagesDeleted,
       conversationIds: conversations.map((c) => c.conversationId),
+    };
+  },
+});
+
+/**
+ * Delete multiple conversations by their IDs (batch delete for cascade operations)
+ * Much faster than calling deleteConversation multiple times
+ */
+export const deleteByIds = mutation({
+  args: {
+    conversationIds: v.array(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const deletedIds: string[] = [];
+    let totalMessagesDeleted = 0;
+
+    // Batch fetch all conversations first (single query)
+    const allConversations = await ctx.db.query("conversations").collect();
+
+    // Create a map for O(1) lookup
+    const conversationMap = new Map(
+      allConversations.map((c) => [c.conversationId, c]),
+    );
+
+    // Delete all matching conversations
+    for (const conversationId of args.conversationIds) {
+      const conversation = conversationMap.get(conversationId);
+      if (conversation) {
+        totalMessagesDeleted += conversation.messageCount;
+        await ctx.db.delete(conversation._id);
+        deletedIds.push(conversationId);
+      }
+    }
+
+    return {
+      deleted: deletedIds.length,
+      conversationIds: deletedIds,
+      totalMessagesDeleted,
     };
   },
 });
@@ -579,7 +617,7 @@ export const getHistory = query({
       .first();
 
     if (!conversation) {
-      throw new Error("CONVERSATION_NOT_FOUND");
+      throw new ConvexError("CONVERSATION_NOT_FOUND");
     }
 
     const limit = args.limit || 50;

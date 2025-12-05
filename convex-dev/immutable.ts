@@ -5,7 +5,7 @@
  * Types: kb-article, policy, audit-log, feedback, user, etc.
  */
 
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -90,7 +90,7 @@ export const purge = mutation({
       .first();
 
     if (!entry) {
-      throw new Error("IMMUTABLE_ENTRY_NOT_FOUND");
+      throw new ConvexError("IMMUTABLE_ENTRY_NOT_FOUND");
     }
 
     const versionsDeleted = entry.version; // Current + previous
@@ -505,7 +505,7 @@ export const purgeVersions = mutation({
       .first();
 
     if (!entry) {
-      throw new Error("IMMUTABLE_ENTRY_NOT_FOUND");
+      throw new ConvexError("IMMUTABLE_ENTRY_NOT_FOUND");
     }
 
     const totalVersions = entry.previousVersions.length + 1; // Previous + current

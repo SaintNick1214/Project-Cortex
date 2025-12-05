@@ -310,6 +310,22 @@ export class ResilienceLayer {
         error instanceof Error ? error : new Error(String(error)),
       );
 
+      // Handle ConvexError - extract data and include in error message
+      // ConvexError has a `data` property containing the actual error code/message
+      if (
+        error &&
+        typeof error === "object" &&
+        "data" in error &&
+        (error as { data: unknown }).data !== undefined
+      ) {
+        const convexError = error as { data: unknown; message?: string };
+        const errorData =
+          typeof convexError.data === "string"
+            ? convexError.data
+            : JSON.stringify(convexError.data);
+        throw new Error(errorData);
+      }
+
       throw error;
     } finally {
       // Release permit
