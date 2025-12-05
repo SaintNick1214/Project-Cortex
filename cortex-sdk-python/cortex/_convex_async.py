@@ -13,14 +13,14 @@ from typing import Any, Dict
 def _extract_convex_error_data(error: Exception) -> str:
     """
     Extract error data from a ConvexError.
-    
+
     In managed Convex deployments, ConvexError has a `data` property containing
     the actual error code/message, while the `message` is often sanitized to
     "Server Error" for security reasons.
-    
+
     Args:
         error: The caught exception
-        
+
     Returns:
         The error data as a string
     """
@@ -60,7 +60,7 @@ class AsyncConvexClient:
 
         Returns:
             Query result
-            
+
         Raises:
             Exception: Re-raises with extracted ConvexError data in message
         """
@@ -85,7 +85,7 @@ class AsyncConvexClient:
 
         Returns:
             Mutation result
-            
+
         Raises:
             Exception: Re-raises with extracted ConvexError data in message
         """
