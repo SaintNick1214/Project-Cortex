@@ -776,7 +776,7 @@ class UsersAPI:
         for memory in backup.get("vector_memories", []):
             try:
                 await self.client.mutation(
-                    "memories:createMemory",
+                    "memories:store",
                     filter_none_values({
                         "memorySpaceId": memory.get("memorySpaceId"),
                         "memoryId": memory.get("memoryId"),
@@ -799,7 +799,7 @@ class UsersAPI:
         for fact in backup.get("facts", []):
             try:
                 await self.client.mutation(
-                    "facts:createFact",
+                    "facts:store",
                     filter_none_values({
                         "memorySpaceId": fact.get("memorySpaceId") or fact.get("memory_space_id"),
                         "factId": fact.get("factId") or fact.get("fact_id"),
@@ -838,7 +838,7 @@ class UsersAPI:
         for record in backup.get("immutable", []):
             try:
                 await self.client.mutation(
-                    "immutable:create",
+                    "immutable:store",
                     {
                         "type": record["type"],
                         "id": record["id"],
@@ -853,7 +853,7 @@ class UsersAPI:
         for conv in backup.get("conversations", []):
             try:
                 await self.client.mutation(
-                    "conversations:createConversation",
+                    "conversations:create",
                     filter_none_values({
                         "memorySpaceId": conv.get("memorySpaceId"),
                         "conversationId": conv.get("conversationId"),
