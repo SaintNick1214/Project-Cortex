@@ -170,7 +170,7 @@ class CypherGraphAdapter:
                 props=node.properties,
             )
             record = await result.single()
-            return str(record["id"])
+            return str(record["id"]) if record else ""
 
     async def merge_node(
         self, node: "GraphNode", match_properties: Dict[str, Any]
@@ -240,7 +240,7 @@ class CypherGraphAdapter:
         async with self.driver.session(database=self.database) as session:
             result = await session.run(query, params)
             record = await result.single()
-            return str(record["id"])
+            return str(record["id"]) if record else ""
 
     async def update_node(self, node_id: str, properties: Dict[str, Any]) -> None:
         """
