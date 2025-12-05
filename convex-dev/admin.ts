@@ -40,10 +40,10 @@ export const listTable = query({
 
     // Query the specified table dynamically
     // The table name is validated by the union type in args
+    // Note: We can't use .order() on dynamic queries without an indexed context.
+    // Using .take() without ordering returns records in insertion order.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const records = await (ctx.db.query as any)(args.table)
-      .order("desc")
-      .take(limit);
+    const records = await (ctx.db.query as any)(args.table).take(limit);
 
     return records;
   },
@@ -116,10 +116,10 @@ export const clearTable = mutation({
 
     // Query the specified table dynamically
     // The table name is validated by the union type in args
+    // Note: We can't use .order() on dynamic queries without an indexed context.
+    // Using .take() without ordering returns records in insertion order.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const records = await (ctx.db.query as any)(args.table)
-      .order("desc")
-      .take(limit);
+    const records = await (ctx.db.query as any)(args.table).take(limit);
 
     let deleted = 0;
     for (const record of records) {
