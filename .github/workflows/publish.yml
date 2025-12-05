@@ -286,7 +286,7 @@ jobs:
       - name: Publish to npm
         run: |
           cd packages/create-cortex-memories
-          npm publish --access public --provenance
+          npm publish --access public --provenance --ignore-scripts
 
       - name: Verify npm publish
         run: |
@@ -375,7 +375,7 @@ jobs:
       - name: Publish to npm
         run: |
           cd packages/vercel-ai-provider
-          npm publish --access public --provenance
+          npm publish --access public --provenance --ignore-scripts
 
       - name: Create Git Tag
         run: |
@@ -522,7 +522,7 @@ jobs:
       - name: Publish to npm
         run: |
           cd packages/cortex-cli
-          npm publish --access public --provenance
+          npm publish --access public --provenance --ignore-scripts
 
       - name: Create Git Tag
         run: |
