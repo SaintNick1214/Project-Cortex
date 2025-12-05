@@ -441,16 +441,31 @@ class AgentsAPI:
             # Just count what would be deleted
             plan = await self._collect_agent_deletion_plan(agent_id)
 
+            conversations_count = len(plan.get("conversations", []))
+            memories_count = len(plan.get("memories", []))
+            facts_count = len(plan.get("facts", []))
+            graph_nodes_count = len(plan.get("graph", []))
+
+            # Total = all records that would be deleted + 1 for agent registration
+            total_deleted = (
+                conversations_count +
+                memories_count +
+                facts_count +
+                graph_nodes_count +
+                1  # agent registration
+            )
+
             return UnregisterAgentResult(
                 agent_id=agent_id,
                 unregistered_at=int(time.time() * 1000),
-                conversations_deleted=len(plan.get("conversations", [])),
+                conversations_deleted=conversations_count,
                 conversation_messages_deleted=sum(
                     conv.get("messageCount", 0) for conv in plan.get("conversations", [])
                 ),
-                memories_deleted=len(plan.get("memories", [])),
-                facts_deleted=len(plan.get("facts", [])),
-                total_deleted=1,
+                memories_deleted=memories_count,
+                facts_deleted=facts_count,
+                graph_nodes_deleted=graph_nodes_count if graph_nodes_count > 0 else None,
+                total_deleted=total_deleted,
                 deleted_layers=[],
                 memory_spaces_affected=list(
                     set(m.get("memorySpaceId") for m in plan.get("memories", []))

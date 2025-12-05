@@ -494,7 +494,7 @@ describe("Complex Integration Tests", () => {
       const conv = await cortex.conversations.create({
         memorySpaceId: LARGE_HIVE,
         type: "user-agent",
-        participants: { userId: "user-demo", participantId: "agent-assistant" },
+        participants: { userId: "user-demo", agentId: "agent-demo", participantId: "agent-assistant" },
       });
 
       // Simulate 50 message exchange (scaled down from thousands for test speed)
@@ -584,7 +584,7 @@ describe("Complex Integration Tests", () => {
       const conv = await cortex.conversations.create({
         memorySpaceId: GDPR_SPACE,
         type: "user-agent",
-        participants: { userId: TARGET_USER, participantId: "agent-test" },
+        participants: { userId: TARGET_USER, agentId: "agent-gdpr", participantId: "agent-test" },
       });
 
       await cortex.conversations.addMessage({
@@ -720,7 +720,7 @@ describe("Complex Integration Tests", () => {
       const conv = await cortex.conversations.create({
         memorySpaceId: SEARCH_SPACE,
         type: "user-agent",
-        participants: { userId: "user-search", participantId: "agent-search" },
+        participants: { userId: "user-search", agentId: "agent-search-main", participantId: "agent-search" },
       });
 
       await cortex.conversations.addMessage({
@@ -806,7 +806,7 @@ describe("Complex Integration Tests", () => {
       const conv = await cortex.conversations.create({
         memorySpaceId: STATS_SPACE,
         type: "user-agent",
-        participants: { userId: "user-stats", participantId: "agent-stats" },
+        participants: { userId: "user-stats", agentId: "agent-stats-main", participantId: "agent-stats" },
       });
 
       for (let i = 0; i < 5; i++) {
