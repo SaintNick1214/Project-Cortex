@@ -337,19 +337,14 @@ class MemoryAPI:
             existing_conversation = await self.conversations.get(params.conversation_id)
 
             if not existing_conversation:
-                # Determine conversation type based on owner
-                conversation_type: ConversationType = "user-agent" if params.user_id else "agent-agent"
-                participants = (
-                    ConversationParticipants(
-                        user_id=params.user_id,
-                        agent_id=params.agent_id,
-                        participant_id=params.participant_id,
-                    )
-                    if params.user_id
-                    else ConversationParticipants(
-                        agent_id=params.agent_id,
-                        participant_id=params.participant_id,
-                    )
+                # Always use user-agent type for remember() function
+                # agent-agent conversations are for explicit multi-agent collaboration
+                # and require memorySpaceIds (hive-mode or collaboration-mode)
+                conversation_type: ConversationType = "user-agent"
+                participants = ConversationParticipants(
+                    user_id=params.user_id,
+                    agent_id=params.agent_id,
+                    participant_id=params.participant_id,
                 )
 
                 await self.conversations.create(
@@ -861,19 +856,14 @@ class MemoryAPI:
                         CreateConversationOptions,
                     )
 
-                    # Determine conversation type
-                    conversation_type: ConversationType = "user-agent" if user_id else "agent-agent"
-                    participants = (
-                        ConversationParticipants(
-                            user_id=user_id,
-                            agent_id=agent_id,
-                            participant_id=params.get("participantId") if isinstance(params, dict) else getattr(params, "participant_id", None),
-                        )
-                        if user_id
-                        else ConversationParticipants(
-                            agent_id=agent_id,
-                            participant_id=params.get("participantId") if isinstance(params, dict) else getattr(params, "participant_id", None),
-                        )
+                    # Always use user-agent type for remember_stream() function
+                    # agent-agent conversations are for explicit multi-agent collaboration
+                    # and require memorySpaceIds (hive-mode or collaboration-mode)
+                    conversation_type: ConversationType = "user-agent"
+                    participants = ConversationParticipants(
+                        user_id=user_id,
+                        agent_id=agent_id,
+                        participant_id=params.get("participantId") if isinstance(params, dict) else getattr(params, "participant_id", None),
                     )
 
                     await self.conversations.create(
