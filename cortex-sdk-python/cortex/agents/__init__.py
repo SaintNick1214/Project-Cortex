@@ -889,7 +889,11 @@ class AgentsAPI:
                         "facts:list",
                         {"memorySpaceId": space.get("memorySpaceId")},
                     )
-                    return len([f for f in facts if f.get("participantId") == agent_id])
+                    # Check both participantId and agentId (v0.17.0+ agent-owned facts)
+                    return len([
+                        f for f in facts
+                        if f.get("participantId") == agent_id or f.get("agentId") == agent_id
+                    ])
                 except Exception:
                     return 0
             results = await asyncio.gather(*[check_space(s) for s in memory_spaces])
@@ -899,9 +903,12 @@ class AgentsAPI:
             if not self.graph_adapter:
                 return -1  # Indicates no graph adapter
             try:
+                # Check both participantId and agentId (v0.17.0+ agent-owned nodes)
+                # This catches: Agent nodes, agent-owned memories, agent-owned conversations
                 result = await self.graph_adapter.query(
-                    "MATCH (n {participantId: $participantId}) RETURN count(n) as count",
-                    {"participantId": agent_id},
+                    "MATCH (n) WHERE n.participantId = $agentId OR n.agentId = $agentId "
+                    "RETURN count(n) as count",
+                    {"agentId": agent_id},
                 )
                 records = result.get("records", [])
                 return records[0].get("count", 0) if records else 0
@@ -918,18 +925,18 @@ class AgentsAPI:
 
         # Build issues list
         if remaining_memories > 0:
-            issues.append(f"{remaining_memories} memories still reference participantId")
+            issues.append(f"{remaining_memories} memories still reference agent")
 
         if remaining_convos > 0:
-            issues.append(f"{remaining_convos} conversations still reference participantId")
+            issues.append(f"{remaining_convos} conversations still reference agent")
 
         if remaining_facts > 0:
-            issues.append(f"{remaining_facts} facts still reference participantId")
+            issues.append(f"{remaining_facts} facts still reference agent")
 
         if graph_count == -1:
             issues.append("Graph adapter not configured - manual graph cleanup required")
         elif graph_count > 0:
-            issues.append(f"{graph_count} graph nodes still reference participantId")
+            issues.append(f"{graph_count} graph nodes still reference agent")
 
         return VerificationResult(
             complete=(len(issues) == 0 or (len(issues) == 1 and "Graph adapter" in issues[0])),
