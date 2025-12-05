@@ -74,13 +74,9 @@ class AsyncConvexClient:
             # Extract error data from ConvexError for enhanced message
             # ConvexError has a `data` field with the actual error code/message
             error_data = _extract_convex_error_data(e)
-            # Preserve original exception type by creating new instance with enhanced message
+            # If we extracted meaningful data, re-raise with that data as the message
             if error_data != str(e):
-                try:
-                    raise type(e)(error_data) from e
-                except TypeError:
-                    # If exception type doesn't accept single string arg, re-raise original Convex error
-                    raise e from e
+                raise Exception(error_data) from e
             raise
 
     async def mutation(self, name: str, args: Dict[str, Any]) -> Any:
@@ -107,13 +103,9 @@ class AsyncConvexClient:
             # Extract error data from ConvexError for enhanced message
             # ConvexError has a `data` field with the actual error code/message
             error_data = _extract_convex_error_data(e)
-            # Preserve original exception type by creating new instance with enhanced message
+            # If we extracted meaningful data, re-raise with that data as the message
             if error_data != str(e):
-                try:
-                    raise type(e)(error_data) from e
-                except TypeError:
-                    # If exception type doesn't accept single string arg, re-raise original Convex error
-                    raise e from e
+                raise Exception(error_data) from e
             raise
 
     async def close(self) -> None:
