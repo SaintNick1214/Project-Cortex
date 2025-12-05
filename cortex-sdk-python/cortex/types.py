@@ -823,7 +823,13 @@ class UnregisterAgentOptions:
 
 @dataclass
 class UnregisterAgentResult:
-    """Result from agent unregistration."""
+    """Result from agent unregistration.
+
+    Uses GDPR-style best-effort cascade deletion:
+    - Continues on individual layer failures
+    - Reports what succeeded and what failed
+    - Maximizes data deletion even if some operations fail
+    """
     agent_id: str
     unregistered_at: int
     conversations_deleted: int
@@ -835,6 +841,7 @@ class UnregisterAgentResult:
     memory_spaces_affected: List[str]
     verification: VerificationResult
     graph_nodes_deleted: Optional[int] = None
+    deletion_errors: List[str] = field(default_factory=list)  # Errors from best-effort deletion
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

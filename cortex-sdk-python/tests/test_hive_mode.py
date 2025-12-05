@@ -78,6 +78,7 @@ async def test_all_participants_see_same_conversations(cortex_client, hive_space
             type="user-agent",
             participants=ConversationParticipants(
                 user_id="user-alice",
+                agent_id="tool-calendar",
                 participant_id="tool-calendar",
             ),
         )
@@ -350,6 +351,7 @@ async def test_tracks_which_participant_created_what(cortex_client, hive_space_f
             type="user-agent",
             participants=ConversationParticipants(
                 user_id="user-alice",
+                agent_id="tool-calendar",
                 participant_id="tool-calendar",
             ),
         )
@@ -361,6 +363,7 @@ async def test_tracks_which_participant_created_what(cortex_client, hive_space_f
             type="user-agent",
             participants=ConversationParticipants(
                 user_id="user-alice",
+                agent_id="tool-email",
                 participant_id="tool-email",
             ),
         )
@@ -403,6 +406,7 @@ async def test_multi_tool_coordination_for_user_workflow(cortex_client, hive_spa
             type="user-agent",
             participants=ConversationParticipants(
                 user_id="user-alice",
+                agent_id="agent-assistant",
                 participant_id="agent-assistant",
             ),
         )
@@ -721,6 +725,7 @@ async def test_message_participant_id_for_agent_messages(cortex_client, hive_spa
             type="user-agent",
             participants=ConversationParticipants(
                 user_id="user-alice",
+                agent_id="tool-calendar",
                 participant_id="tool-calendar",
             ),
         )
@@ -955,6 +960,7 @@ async def test_participant_id_in_all_layers_for_end_to_end_workflow(cortex_clien
             memory_space_id=hive_space,
             participants=ConversationParticipants(
                 user_id="user-alice",
+                agent_id=participant,
                 participant_id=participant,
             ),
         )

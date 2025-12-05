@@ -57,17 +57,34 @@ class CascadeDeletionError(Exception):
 
 
 class AgentCascadeDeletionError(Exception):
-    """Exception raised when agent cascade deletion fails."""
+    """Exception raised when agent cascade deletion fails.
 
-    def __init__(self, message: str, cause: Optional[Exception] = None) -> None:
+    This error includes information about what was already deleted before
+    the failure occurred. This is critical for understanding database state
+    after a partial failure - records that were deleted cannot be recovered.
+    """
+
+    def __init__(
+        self,
+        message: str,
+        cause: Optional[Exception] = None,
+        partial_deletion: Optional[dict] = None,
+    ) -> None:
         """
         Initialize agent cascade deletion error.
 
         Args:
             message: Error message
             cause: Original exception that caused the failure
+            partial_deletion: Dict containing what was already deleted before failure:
+                - facts_deleted: Number of facts deleted
+                - memories_deleted: Number of memories deleted
+                - conversations_deleted: Number of conversations deleted
+                - deleted_layers: List of layers that were successfully deleted
+                - failed_layer: The layer that failed
         """
         self.cause = cause
+        self.partial_deletion = partial_deletion or {}
         super().__init__(message)
 
 
