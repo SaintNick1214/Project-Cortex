@@ -52,6 +52,26 @@ export class ImmutableAPI {
   }
 
   /**
+   * Handle ConvexError from direct Convex calls
+   */
+  private handleConvexError(error: unknown): never {
+    if (
+      error &&
+      typeof error === "object" &&
+      "data" in error &&
+      (error as { data: unknown }).data !== undefined
+    ) {
+      const convexError = error as { data: unknown };
+      const errorData =
+        typeof convexError.data === "string"
+          ? convexError.data
+          : JSON.stringify(convexError.data);
+      throw new Error(errorData);
+    }
+    throw error;
+  }
+
+  /**
    * Store immutable data (creates v1 or increments version if exists)
    *
    * @example
@@ -269,17 +289,21 @@ export class ImmutableAPI {
     validateType(type, "type");
     validateId(id, "id");
 
-    const result = await this.client.mutation(api.immutable.purge, {
-      type,
-      id,
-    });
+    try {
+      const result = await this.client.mutation(api.immutable.purge, {
+        type,
+        id,
+      });
 
-    return result as {
-      deleted: boolean;
-      type: string;
-      id: string;
-      versionsDeleted: number;
-    };
+      return result as {
+        deleted: boolean;
+        type: string;
+        id: string;
+        versionsDeleted: number;
+      };
+    } catch (error) {
+      this.handleConvexError(error);
+    }
   }
 
   /**
@@ -364,16 +388,20 @@ export class ImmutableAPI {
     validateId(id, "id");
     validateKeepLatest(keepLatest, "keepLatest");
 
-    const result = await this.client.mutation(api.immutable.purgeVersions, {
-      type,
-      id,
-      keepLatest,
-    });
+    try {
+      const result = await this.client.mutation(api.immutable.purgeVersions, {
+        type,
+        id,
+        keepLatest,
+      });
 
-    return result as {
-      versionsPurged: number;
-      versionsRemaining: number;
-    };
+      return result as {
+        versionsPurged: number;
+        versionsRemaining: number;
+      };
+    } catch (error) {
+      this.handleConvexError(error);
+    }
   }
 }
 

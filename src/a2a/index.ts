@@ -169,23 +169,42 @@ export class A2AAPI {
         throw error;
       }
 
-      // Handle backend error about pub/sub requirement
-      if (error instanceof Error) {
-        if (error.message.includes("PUBSUB_NOT_CONFIGURED")) {
-          // Extract messageId from error message if present
-          const messageIdMatch = error.message.match(/messageId: ([a-z0-9-]+)/);
-          const messageId = messageIdMatch ? messageIdMatch[1] : "unknown";
-
-          throw new A2ATimeoutError(
-            `request() requires pub/sub infrastructure for real-time responses. ` +
-              `In Direct Mode, configure your own Redis/RabbitMQ/NATS adapter. ` +
-              `In Cloud Mode, pub/sub is included automatically.`,
-            messageId,
-            params.timeout ?? 30000,
-          );
-        }
+      // Handle ConvexError - extract data property
+      let errorMessage = "";
+      if (
+        error &&
+        typeof error === "object" &&
+        "data" in error &&
+        (error as { data: unknown }).data !== undefined
+      ) {
+        const convexError = error as { data: unknown };
+        errorMessage =
+          typeof convexError.data === "string"
+            ? convexError.data
+            : JSON.stringify(convexError.data);
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
       }
 
+      // Handle backend error about pub/sub requirement
+      if (errorMessage.includes("PUBSUB_NOT_CONFIGURED")) {
+        // Extract messageId from error message if present
+        const messageIdMatch = errorMessage.match(/messageId: ([a-z0-9-]+)/);
+        const messageId = messageIdMatch ? messageIdMatch[1] : "unknown";
+
+        throw new A2ATimeoutError(
+          `request() requires pub/sub infrastructure for real-time responses. ` +
+            `In Direct Mode, configure your own Redis/RabbitMQ/NATS adapter. ` +
+            `In Cloud Mode, pub/sub is included automatically.`,
+          messageId,
+          params.timeout ?? 30000,
+        );
+      }
+
+      // Re-throw with extracted error data for other errors
+      if (errorMessage) {
+        throw new Error(errorMessage);
+      }
       throw error;
     }
   }

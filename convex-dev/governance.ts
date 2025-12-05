@@ -5,7 +5,7 @@
  */
 
 import { mutation, query } from "./_generated/server";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Compliance Templates
@@ -384,7 +384,7 @@ export const enforce = mutation({
     }
 
     if (!policy) {
-      throw new Error("No active policy found for scope");
+      throw new ConvexError("No active policy found for scope");
     }
 
     // Simulate enforcement to get counts

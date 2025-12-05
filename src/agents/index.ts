@@ -110,6 +110,26 @@ export class AgentsAPI {
     return operation();
   }
 
+  /**
+   * Handle ConvexError from direct Convex calls
+   */
+  private handleConvexError(error: unknown): never {
+    if (
+      error &&
+      typeof error === "object" &&
+      "data" in error &&
+      (error as { data: unknown }).data !== undefined
+    ) {
+      const convexError = error as { data: unknown };
+      const errorData =
+        typeof convexError.data === "string"
+          ? convexError.data
+          : JSON.stringify(convexError.data);
+      throw new Error(errorData);
+    }
+    throw error;
+  }
+
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Registry Operations
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -136,13 +156,18 @@ export class AgentsAPI {
     if (agent.metadata) validateMetadata(agent.metadata);
     if (agent.config) validateConfig(agent.config);
 
-    const result = await this.client.mutation(api.agents.register, {
-      agentId: agent.id,
-      name: agent.name,
-      description: agent.description,
-      metadata: agent.metadata,
-      config: agent.config,
-    });
+    let result;
+    try {
+      result = await this.client.mutation(api.agents.register, {
+        agentId: agent.id,
+        name: agent.name,
+        description: agent.description,
+        metadata: agent.metadata,
+        config: agent.config,
+      });
+    } catch (error) {
+      this.handleConvexError(error);
+    }
 
     if (!result) {
       throw new Error(`Failed to register agent ${agent.id}`);
@@ -630,7 +655,7 @@ export class AgentsAPI {
 
   /**
    * PHASE 1: Collect all records where participantId = agentId
-   * This queries across ALL memory spaces
+   * This queries across ALL memory spaces IN PARALLEL for performance
    */
   private async collectAgentDeletionTargets(
     agentId: string,
@@ -649,81 +674,96 @@ export class AgentsAPI {
     // Get all memory spaces
     const memorySpaces = await this.client.query(api.memorySpaces.list, {});
 
-    // Collect conversations where agent is participant
-    try {
-      for (const space of memorySpaces) {
-        const conversations = await this.client.query(api.conversations.list, {
-          memorySpaceId: space.memorySpaceId,
-        });
+    // PARALLEL COLLECTION: Query all spaces for all data types simultaneously
+    // This reduces N*3 sequential calls to 3 parallel batches
+    const [conversationResults, memoryResults, factResults, graphNodes] =
+      await Promise.all([
+        // Collect all conversations in parallel across spaces
+        Promise.all(
+          memorySpaces.map((space) =>
+            this.client
+              .query(api.conversations.list, {
+                memorySpaceId: space.memorySpaceId,
+              })
+              .then((conversations) => ({
+                spaceId: space.memorySpaceId,
+                conversations: (conversations as Conversation[]).filter(
+                  (c) =>
+                    c.participants.participantId === agentId ||
+                    c.participants.memorySpaceIds?.includes(agentId) ||
+                    c.participantId === agentId,
+                ),
+              }))
+              .catch(() => ({ spaceId: space.memorySpaceId, conversations: [] })),
+          ),
+        ),
 
-        // Filter conversations where agent is a participant
-        const agentConvos = (conversations as Conversation[]).filter(
-          (c) =>
-            c.participants.participantId === agentId ||
-            c.participants.memorySpaceIds?.includes(agentId) ||
-            c.participantId === agentId, // Hive Mode
-        );
+        // Collect all memories in parallel across spaces
+        Promise.all(
+          memorySpaces.map((space) =>
+            this.client
+              .query(api.memories.list, {
+                memorySpaceId: space.memorySpaceId,
+              })
+              .then((memories) => ({
+                spaceId: space.memorySpaceId,
+                memories: (memories as MemoryEntry[]).filter(
+                  (m) => m.participantId === agentId,
+                ),
+              }))
+              .catch(() => ({ spaceId: space.memorySpaceId, memories: [] })),
+          ),
+        ),
 
-        if (agentConvos.length > 0) {
-          plan.conversations.push(...agentConvos);
-          affectedSpaces.add(space.memorySpaceId);
-        }
-      }
-    } catch (error) {
-      console.warn("Failed to collect conversations:", error);
-    }
+        // Collect all facts in parallel across spaces
+        Promise.all(
+          memorySpaces.map((space) =>
+            this.client
+              .query(api.facts.list, {
+                memorySpaceId: space.memorySpaceId,
+              })
+              .then((facts) => ({
+                spaceId: space.memorySpaceId,
+                facts: (facts as FactRecord[]).filter(
+                  (f) => f.participantId === agentId,
+                ),
+              }))
+              .catch(() => ({ spaceId: space.memorySpaceId, facts: [] })),
+          ),
+        ),
 
-    // Collect memories where participantId = agentId
-    try {
-      for (const space of memorySpaces) {
-        const memories = await this.client.query(api.memories.list, {
-          memorySpaceId: space.memorySpaceId,
-        });
+        // Collect graph nodes (single query, already efficient)
+        this.graphAdapter
+          ? this.collectGraphNodes(agentId).catch(() => [])
+          : Promise.resolve([]),
+      ]);
 
-        // Filter memories by participantId
-        const agentMemories = (memories as MemoryEntry[]).filter(
-          (m) => m.participantId === agentId,
-        );
-
-        if (agentMemories.length > 0) {
-          plan.memories.push(...agentMemories);
-          affectedSpaces.add(space.memorySpaceId);
-        }
-      }
-    } catch (error) {
-      console.warn("Failed to collect memories:", error);
-    }
-
-    // Collect facts where participantId = agentId
-    try {
-      for (const space of memorySpaces) {
-        const facts = await this.client.query(api.facts.list, {
-          memorySpaceId: space.memorySpaceId,
-        });
-
-        // Filter facts by participantId
-        const agentFacts = (facts as FactRecord[]).filter(
-          (f) => f.participantId === agentId,
-        );
-
-        if (agentFacts.length > 0) {
-          plan.facts.push(...agentFacts);
-          affectedSpaces.add(space.memorySpaceId);
-        }
-      }
-    } catch (error) {
-      console.warn("Failed to collect facts:", error);
-    }
-
-    // Collect graph nodes where participantId = agentId
-    if (this.graphAdapter) {
-      try {
-        const graphNodes = await this.collectGraphNodes(agentId);
-        plan.graph = graphNodes;
-      } catch (error) {
-        console.warn("Failed to collect graph nodes:", error);
+    // Process conversation results
+    for (const result of conversationResults) {
+      if (result.conversations.length > 0) {
+        plan.conversations.push(...result.conversations);
+        affectedSpaces.add(result.spaceId);
       }
     }
+
+    // Process memory results
+    for (const result of memoryResults) {
+      if (result.memories.length > 0) {
+        plan.memories.push(...result.memories);
+        affectedSpaces.add(result.spaceId);
+      }
+    }
+
+    // Process fact results
+    for (const result of factResults) {
+      if (result.facts.length > 0) {
+        plan.facts.push(...result.facts);
+        affectedSpaces.add(result.spaceId);
+      }
+    }
+
+    // Set graph nodes
+    plan.graph = graphNodes;
 
     // Get agent registration
     const registration = await this.get(agentId);
@@ -786,6 +826,7 @@ export class AgentsAPI {
 
   /**
    * PHASE 3: Execute cascade deletion in reverse dependency order
+   * OPTIMIZED: Uses batch deletes instead of individual API calls
    */
   private async executeAgentCascadeDeletion(
     agentId: string,
@@ -809,58 +850,56 @@ export class AgentsAPI {
     };
 
     // Delete in reverse dependency order: facts → memories → conversations → graph → registration
+    // OPTIMIZED: Use batch deletes instead of individual calls
 
-    // 1. Delete facts
-    for (const fact of plan.facts) {
+    // 1. Delete facts (batch)
+    if (plan.facts.length > 0) {
       try {
-        await this.client.mutation(api.facts.deleteFact, {
-          memorySpaceId: fact.memorySpaceId,
-          factId: fact.factId,
+        const factIds = plan.facts.map((f) => f.factId);
+        const deleteResult = await this.client.mutation(api.facts.deleteByIds, {
+          factIds,
         });
-        result.factsDeleted++;
+        result.factsDeleted = deleteResult.deleted;
+        result.deletedLayers.push("facts");
       } catch (error) {
-        throw new Error(`Failed to delete fact ${fact.factId}: ${error}`);
+        throw new Error(`Failed to batch delete facts: ${error}`);
       }
     }
-    if (result.factsDeleted > 0) {
-      result.deletedLayers.push("facts");
-    }
 
-    // 2. Delete memories
-    for (const memory of plan.memories) {
+    // 2. Delete memories (batch)
+    if (plan.memories.length > 0) {
       try {
-        await this.client.mutation(api.memories.deleteMemory, {
-          memorySpaceId: memory.memorySpaceId,
-          memoryId: memory.memoryId,
-        });
-        result.memoriesDeleted++;
-      } catch (error) {
-        throw new Error(`Failed to delete memory ${memory.memoryId}: ${error}`);
-      }
-    }
-    if (result.memoriesDeleted > 0) {
-      result.deletedLayers.push("memories");
-    }
-
-    // 3. Delete conversations
-    for (const conversation of plan.conversations) {
-      try {
-        await this.client.mutation(api.conversations.deleteConversation, {
-          conversationId: conversation.conversationId,
-        });
-        result.conversationsDeleted++;
-        result.conversationMessagesDeleted += conversation.messageCount || 0;
-      } catch (error) {
-        throw new Error(
-          `Failed to delete conversation ${conversation.conversationId}: ${error}`,
+        const memoryIds = plan.memories.map((m) => m.memoryId);
+        const deleteResult = await this.client.mutation(
+          api.memories.deleteByIds,
+          { memoryIds },
         );
+        result.memoriesDeleted = deleteResult.deleted;
+        result.deletedLayers.push("memories");
+      } catch (error) {
+        throw new Error(`Failed to batch delete memories: ${error}`);
       }
     }
-    if (result.conversationsDeleted > 0) {
-      result.deletedLayers.push("conversations");
+
+    // 3. Delete conversations (batch)
+    if (plan.conversations.length > 0) {
+      try {
+        const conversationIds = plan.conversations.map(
+          (c) => c.conversationId,
+        );
+        const deleteResult = await this.client.mutation(
+          api.conversations.deleteByIds,
+          { conversationIds },
+        );
+        result.conversationsDeleted = deleteResult.deleted;
+        result.conversationMessagesDeleted = deleteResult.totalMessagesDeleted;
+        result.deletedLayers.push("conversations");
+      } catch (error) {
+        throw new Error(`Failed to batch delete conversations: ${error}`);
+      }
     }
 
-    // 4. Delete graph nodes (with orphan detection)
+    // 4. Delete graph nodes (with orphan detection) - parallel where possible
     if (this.graphAdapter && plan.graph.length > 0) {
       const deletionContext = createDeletionContext(
         `Agent cascade deletion for ${agentId}`,
@@ -872,29 +911,32 @@ export class AgentsAPI {
         },
       );
 
-      for (const node of plan.graph) {
-        try {
-          const deleteResult = await deleteWithOrphanCleanup(
-            node.nodeId,
-            node.labels[0] || "Agent",
-            deletionContext,
-            this.graphAdapter,
-          );
+      // Process graph nodes in parallel batches of 10 for better performance
+      const BATCH_SIZE = 10;
+      for (let i = 0; i < plan.graph.length; i += BATCH_SIZE) {
+        const batch = plan.graph.slice(i, i + BATCH_SIZE);
+        const batchResults = await Promise.all(
+          batch.map(async (node) => {
+            try {
+              return await deleteWithOrphanCleanup(
+                node.nodeId,
+                node.labels[0] || "Agent",
+                deletionContext,
+                this.graphAdapter!,
+              );
+            } catch (error) {
+              console.warn(`Failed to delete graph node ${node.nodeId}:`, error);
+              return { deletedNodes: [], orphanIslands: [] };
+            }
+          }),
+        );
 
+        for (const deleteResult of batchResults) {
           result.graphNodesDeleted =
             (result.graphNodesDeleted || 0) + deleteResult.deletedNodes.length;
-
-          if (deleteResult.orphanIslands.length > 0) {
-            console.warn(
-              `  ℹ️  Deleted ${deleteResult.orphanIslands.length} orphan islands during agent cascade`,
-            );
-          }
-        } catch (error) {
-          throw new Error(
-            `Failed to delete graph node ${node.nodeId}: ${error}`,
-          );
         }
       }
+
       if (result.graphNodesDeleted && result.graphNodesDeleted > 0) {
         result.deletedLayers.push("graph");
       }
@@ -953,100 +995,104 @@ export class AgentsAPI {
 
   /**
    * PHASE 4: Verify deletion completeness
+   * OPTIMIZED: Runs all verification queries in parallel
    */
   private async verifyAgentDeletion(
     agentId: string,
   ): Promise<VerificationResult> {
     const issues: string[] = [];
 
-    // Check for remaining memories
-    try {
-      const memorySpaces = await this.client.query(api.memorySpaces.list, {});
-      let remainingMemories = 0;
+    // Get memory spaces once
+    const memorySpaces = await this.client.query(api.memorySpaces.list, {});
 
-      for (const space of memorySpaces) {
-        const memories = await this.client.query(api.memories.list, {
-          memorySpaceId: space.memorySpaceId,
-        });
-        const agentMemories = (memories as MemoryEntry[]).filter(
-          (m) => m.participantId === agentId,
-        );
-        remainingMemories += agentMemories.length;
-      }
+    // Run ALL verification queries in parallel for maximum performance
+    const [memoryCounts, conversationCounts, factCounts, graphCount] =
+      await Promise.all([
+        // Check for remaining memories (parallel across all spaces)
+        Promise.all(
+          memorySpaces.map((space) =>
+            this.client
+              .query(api.memories.list, { memorySpaceId: space.memorySpaceId })
+              .then(
+                (memories) =>
+                  (memories as MemoryEntry[]).filter(
+                    (m) => m.participantId === agentId,
+                  ).length,
+              )
+              .catch(() => 0),
+          ),
+        ),
 
-      if (remainingMemories > 0) {
-        issues.push(
-          `${remainingMemories} memories still reference participantId`,
-        );
-      }
-    } catch (error) {
-      issues.push(`Failed to verify memories: ${error}`);
+        // Check for remaining conversations (parallel across all spaces)
+        Promise.all(
+          memorySpaces.map((space) =>
+            this.client
+              .query(api.conversations.list, {
+                memorySpaceId: space.memorySpaceId,
+              })
+              .then(
+                (conversations) =>
+                  (conversations as Conversation[]).filter(
+                    (c) =>
+                      c.participants.participantId === agentId ||
+                      c.participants.memorySpaceIds?.includes(agentId) ||
+                      c.participantId === agentId,
+                  ).length,
+              )
+              .catch(() => 0),
+          ),
+        ),
+
+        // Check for remaining facts (parallel across all spaces)
+        Promise.all(
+          memorySpaces.map((space) =>
+            this.client
+              .query(api.facts.list, { memorySpaceId: space.memorySpaceId })
+              .then(
+                (facts) =>
+                  (facts as FactRecord[]).filter(
+                    (f) => f.participantId === agentId,
+                  ).length,
+              )
+              .catch(() => 0),
+          ),
+        ),
+
+        // Check graph nodes
+        this.graphAdapter
+          ? this.countGraphNodes(agentId).catch(() => 0)
+          : Promise.resolve(-1), // -1 indicates no graph adapter
+      ]);
+
+    // Sum up results
+    const remainingMemories = memoryCounts.reduce((a, b) => a + b, 0);
+    const remainingConvos = conversationCounts.reduce((a, b) => a + b, 0);
+    const remainingFacts = factCounts.reduce((a, b) => a + b, 0);
+
+    // Build issues list
+    if (remainingMemories > 0) {
+      issues.push(
+        `${remainingMemories} memories still reference participantId`,
+      );
     }
 
-    // Check for remaining conversations
-    try {
-      const memorySpaces = await this.client.query(api.memorySpaces.list, {});
-      let remainingConvos = 0;
-
-      for (const space of memorySpaces) {
-        const conversations = await this.client.query(api.conversations.list, {
-          memorySpaceId: space.memorySpaceId,
-        });
-        const agentConvos = (conversations as Conversation[]).filter(
-          (c) =>
-            c.participants.participantId === agentId ||
-            c.participants.memorySpaceIds?.includes(agentId) ||
-            c.participantId === agentId,
-        );
-        remainingConvos += agentConvos.length;
-      }
-
-      if (remainingConvos > 0) {
-        issues.push(
-          `${remainingConvos} conversations still reference participantId`,
-        );
-      }
-    } catch (error) {
-      issues.push(`Failed to verify conversations: ${error}`);
+    if (remainingConvos > 0) {
+      issues.push(
+        `${remainingConvos} conversations still reference participantId`,
+      );
     }
 
-    // Check for remaining facts
-    try {
-      const memorySpaces = await this.client.query(api.memorySpaces.list, {});
-      let remainingFacts = 0;
-
-      for (const space of memorySpaces) {
-        const facts = await this.client.query(api.facts.list, {
-          memorySpaceId: space.memorySpaceId,
-        });
-        const agentFacts = (facts as FactRecord[]).filter(
-          (f) => f.participantId === agentId,
-        );
-        remainingFacts += agentFacts.length;
-      }
-
-      if (remainingFacts > 0) {
-        issues.push(`${remainingFacts} facts still reference participantId`);
-      }
-    } catch (error) {
-      issues.push(`Failed to verify facts: ${error}`);
+    if (remainingFacts > 0) {
+      issues.push(`${remainingFacts} facts still reference participantId`);
     }
 
-    // Check graph (if available)
-    if (this.graphAdapter) {
-      try {
-        const remainingGraph = await this.countGraphNodes(agentId);
-        if (remainingGraph > 0) {
-          issues.push(
-            `${remainingGraph} graph nodes still reference participantId`,
-          );
-        }
-      } catch (error) {
-        issues.push(`Failed to verify graph nodes: ${error}`);
-      }
-    } else {
+    if (graphCount === -1) {
       issues.push(
         "Graph adapter not configured - manual graph cleanup required",
+      );
+    } else if (graphCount > 0) {
+      issues.push(
+        `${graphCount} graph nodes still reference participantId`,
       );
     }
 

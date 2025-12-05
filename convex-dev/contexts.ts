@@ -5,7 +5,7 @@
  * Multi-agent task delegation with shared context
  */
 
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -73,7 +73,7 @@ export const create = mutation({
         .first();
 
       if (!parentContext) {
-        throw new Error("PARENT_NOT_FOUND");
+        throw new ConvexError("PARENT_NOT_FOUND");
       }
 
       rootId = parentContext.rootId! || parentContext.contextId;
@@ -142,7 +142,7 @@ export const update = mutation({
       .first();
 
     if (!context) {
-      throw new Error("CONTEXT_NOT_FOUND");
+      throw new ConvexError("CONTEXT_NOT_FOUND");
     }
 
     const now = Date.now();
@@ -200,12 +200,12 @@ export const deleteContext = mutation({
       .first();
 
     if (!context) {
-      throw new Error("CONTEXT_NOT_FOUND");
+      throw new ConvexError("CONTEXT_NOT_FOUND");
     }
 
     // Check for children
     if (context.childIds.length > 0 && !args.cascadeChildren) {
-      throw new Error("HAS_CHILDREN");
+      throw new ConvexError("HAS_CHILDREN");
     }
 
     let deletedCount = 0;
@@ -273,7 +273,7 @@ export const addParticipant = mutation({
       .first();
 
     if (!context) {
-      throw new Error("CONTEXT_NOT_FOUND");
+      throw new ConvexError("CONTEXT_NOT_FOUND");
     }
 
     if (context.participants.includes(args.participantId)) {
@@ -305,7 +305,7 @@ export const grantAccess = mutation({
       .first();
 
     if (!context) {
-      throw new Error("CONTEXT_NOT_FOUND");
+      throw new ConvexError("CONTEXT_NOT_FOUND");
     }
 
     const grant = {
@@ -567,7 +567,7 @@ export const getChain = query({
       .first();
 
     if (!context) {
-      throw new Error("CONTEXT_NOT_FOUND");
+      throw new ConvexError("CONTEXT_NOT_FOUND");
     }
 
     return await buildContextChain(ctx, context);
@@ -588,7 +588,7 @@ export const getRoot = query({
       .first();
 
     if (!context) {
-      throw new Error("CONTEXT_NOT_FOUND");
+      throw new ConvexError("CONTEXT_NOT_FOUND");
     }
 
     const rootId = context.rootId || context.contextId;
@@ -905,7 +905,7 @@ export const removeParticipant = mutation({
       .first();
 
     if (!context) {
-      throw new Error("CONTEXT_NOT_FOUND");
+      throw new ConvexError("CONTEXT_NOT_FOUND");
     }
 
     await ctx.db.patch(context._id, {
