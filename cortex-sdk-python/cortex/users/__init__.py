@@ -781,14 +781,18 @@ class UsersAPI:
                         "memorySpaceId": memory.get("memorySpaceId"),
                         "memoryId": memory.get("memoryId"),
                         "content": memory.get("content"),
+                        "contentType": memory.get("contentType", "raw"),
                         "embedding": memory.get("embedding"),
                         "importance": memory.get("importance"),
                         "sourceType": memory.get("sourceType"),
-                        "conversationId": memory.get("conversationId"),
+                        "sourceUserId": memory.get("sourceUserId"),
+                        "sourceUserName": memory.get("sourceUserName"),
+                        # conversationRef is a nested object, not a flat field
+                        "conversationRef": memory.get("conversationRef"),
                         "userId": memory.get("userId"),
                         "agentId": memory.get("agentId"),
-                        "tags": memory.get("tags"),
-                        "metadata": memory.get("metadata"),
+                        "participantId": memory.get("participantId"),
+                        "tags": memory.get("tags", []),
                     }),
                 )
                 rollback_stats["vector_restored"] += 1

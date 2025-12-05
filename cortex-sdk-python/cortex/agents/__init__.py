@@ -904,10 +904,11 @@ class AgentsAPI:
                         "facts:list",
                         {"memorySpaceId": space.get("memorySpaceId")},
                     )
-                    # Check both participantId and agentId (v0.17.0+ agent-owned facts)
+                    # Facts only have participantId (tracks which agent extracted the fact)
+                    # Note: Facts don't have agentId field - only memories and conversations do
                     return len([
                         f for f in facts
-                        if f.get("participantId") == agent_id or f.get("agentId") == agent_id
+                        if f.get("participantId") == agent_id
                     ])
                 except Exception:
                     return 0
@@ -1009,15 +1010,18 @@ class AgentsAPI:
                         "memorySpaceId": memory.get("memorySpaceId"),
                         "memoryId": memory.get("memoryId"),
                         "content": memory.get("content"),
+                        "contentType": memory.get("contentType", "raw"),
                         "embedding": memory.get("embedding"),
                         "importance": memory.get("importance"),
                         "sourceType": memory.get("sourceType"),
-                        "conversationId": memory.get("conversationId"),
+                        "sourceUserId": memory.get("sourceUserId"),
+                        "sourceUserName": memory.get("sourceUserName"),
+                        # conversationRef is a nested object, not a flat field
+                        "conversationRef": memory.get("conversationRef"),
                         "userId": memory.get("userId"),
                         "agentId": memory.get("agentId"),
                         "participantId": memory.get("participantId"),
-                        "tags": memory.get("tags"),
-                        "metadata": memory.get("metadata"),
+                        "tags": memory.get("tags", []),
                     }),
                 )
                 rollback_stats["memories_restored"] += 1
