@@ -62,7 +62,7 @@ class AsyncConvexClient:
             Query result
 
         Raises:
-            Exception: Re-raises with extracted ConvexError data in message
+            Original exception type with enhanced message containing ConvexError data
         """
         loop = asyncio.get_event_loop()
         try:
@@ -71,9 +71,12 @@ class AsyncConvexClient:
                 lambda: self._sync_client.query(name, args)
             )
         except Exception as e:
-            # Extract error data from ConvexError and re-raise with meaningful message
+            # Extract error data from ConvexError for enhanced message
             error_data = _extract_convex_error_data(e)
-            raise Exception(error_data) from e
+            # Preserve original exception type - only enhance message if we extracted meaningful data
+            if error_data != str(e):
+                e.args = (error_data,) + e.args[1:] if e.args else (error_data,)
+            raise
 
     async def mutation(self, name: str, args: Dict[str, Any]) -> Any:
         """
@@ -87,7 +90,7 @@ class AsyncConvexClient:
             Mutation result
 
         Raises:
-            Exception: Re-raises with extracted ConvexError data in message
+            Original exception type with enhanced message containing ConvexError data
         """
         loop = asyncio.get_event_loop()
         try:
@@ -96,9 +99,12 @@ class AsyncConvexClient:
                 lambda: self._sync_client.mutation(name, args)
             )
         except Exception as e:
-            # Extract error data from ConvexError and re-raise with meaningful message
+            # Extract error data from ConvexError for enhanced message
             error_data = _extract_convex_error_data(e)
-            raise Exception(error_data) from e
+            # Preserve original exception type - only enhance message if we extracted meaningful data
+            if error_data != str(e):
+                e.args = (error_data,) + e.args[1:] if e.args else (error_data,)
+            raise
 
     async def close(self) -> None:
         """
