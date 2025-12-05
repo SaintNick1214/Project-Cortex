@@ -34,14 +34,20 @@ export const create = mutation({
     // Validate participants based on type
     if (args.type === "user-agent") {
       if (!args.participants.userId) {
-        throw new Error("user-agent conversations require userId");
+        throw new ConvexError("user-agent conversations require userId");
+      }
+      // v0.17.0: User-agent conversations require both userId AND agentId
+      if (!args.participants.agentId) {
+        throw new ConvexError(
+          "agentId is required when userId is provided. User-agent conversations require both a user and an agent participant.",
+        );
       }
     } else if (args.type === "agent-agent") {
       if (
         !args.participants.memorySpaceIds ||
         args.participants.memorySpaceIds.length < 2
       ) {
-        throw new Error(
+        throw new ConvexError(
           "agent-agent conversations require at least 2 memorySpaceIds",
         );
       }
@@ -328,6 +334,7 @@ export const getOrCreate = mutation({
     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
     participants: v.object({
       userId: v.optional(v.string()),
+      agentId: v.optional(v.string()), // v0.17.0: Required for user-agent conversations
       participantId: v.optional(v.string()),
       memorySpaceIds: v.optional(v.array(v.string())),
     }),
@@ -339,7 +346,13 @@ export const getOrCreate = mutation({
 
     if (args.type === "user-agent") {
       if (!args.participants.userId) {
-        throw new Error("user-agent conversations require userId");
+        throw new ConvexError("user-agent conversations require userId");
+      }
+      // v0.17.0: User-agent conversations require both userId AND agentId
+      if (!args.participants.agentId) {
+        throw new ConvexError(
+          "agentId is required when userId is provided. User-agent conversations require both a user and an agent participant.",
+        );
       }
 
       // Look for existing in this memory space with this user
@@ -358,7 +371,7 @@ export const getOrCreate = mutation({
         !args.participants.memorySpaceIds ||
         args.participants.memorySpaceIds.length < 2
       ) {
-        throw new Error(
+        throw new ConvexError(
           "agent-agent conversations require at least 2 memorySpaceIds",
         );
       }

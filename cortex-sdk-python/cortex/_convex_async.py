@@ -6,7 +6,32 @@ an async API to match the TypeScript SDK.
 """
 
 import asyncio
+import json
 from typing import Any, Dict
+
+
+def _extract_convex_error_data(error: Exception) -> str:
+    """
+    Extract error data from a ConvexError.
+    
+    In managed Convex deployments, ConvexError has a `data` property containing
+    the actual error code/message, while the `message` is often sanitized to
+    "Server Error" for security reasons.
+    
+    Args:
+        error: The caught exception
+        
+    Returns:
+        The error data as a string
+    """
+    # Check if this is a ConvexError with a data attribute
+    if hasattr(error, "data") and error.data is not None:
+        if isinstance(error.data, str):
+            return error.data
+        else:
+            return json.dumps(error.data)
+    # Fall back to the original error message
+    return str(error)
 
 
 class AsyncConvexClient:
@@ -35,12 +60,20 @@ class AsyncConvexClient:
 
         Returns:
             Query result
+            
+        Raises:
+            Exception: Re-raises with extracted ConvexError data in message
         """
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(
-            None,
-            lambda: self._sync_client.query(name, args)
-        )
+        try:
+            return await loop.run_in_executor(
+                None,
+                lambda: self._sync_client.query(name, args)
+            )
+        except Exception as e:
+            # Extract error data from ConvexError and re-raise with meaningful message
+            error_data = _extract_convex_error_data(e)
+            raise Exception(error_data) from e
 
     async def mutation(self, name: str, args: Dict[str, Any]) -> Any:
         """
@@ -52,12 +85,20 @@ class AsyncConvexClient:
 
         Returns:
             Mutation result
+            
+        Raises:
+            Exception: Re-raises with extracted ConvexError data in message
         """
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(
-            None,
-            lambda: self._sync_client.mutation(name, args)
-        )
+        try:
+            return await loop.run_in_executor(
+                None,
+                lambda: self._sync_client.mutation(name, args)
+            )
+        except Exception as e:
+            # Extract error data from ConvexError and re-raise with meaningful message
+            error_data = _extract_convex_error_data(e)
+            raise Exception(error_data) from e
 
     async def close(self) -> None:
         """
