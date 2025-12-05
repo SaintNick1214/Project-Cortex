@@ -850,7 +850,7 @@ class TestStateTransitionEdgeCases:
             CreateConversationInput(
                 type="user-agent",
                 memory_space_id=space_id,
-                participants={"userId": test_user_id},
+                participants={"userId": test_user_id, "agentId": "test-agent"},
             )
         )
 
