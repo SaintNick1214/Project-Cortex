@@ -48,7 +48,7 @@ describe("GDPR: Cascade Deletion", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: SPACE,
-        participants: { userId: TEST_USER },
+        participants: { userId: TEST_USER, agentId: "test-agent" },
       });
 
       const mem = await cortex.vector.store(SPACE, {
@@ -170,7 +170,7 @@ describe("GDPR: Cascade Deletion", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: "test-user" },
+        participants: { userId: "test-user", agentId: "test-agent" },
       });
 
       const remembered = await cortex.memory.remember({
@@ -212,7 +212,7 @@ describe("GDPR: Cascade Deletion", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: "test-user" },
+        participants: { userId: "test-user", agentId: "test-agent" },
       });
 
       const remembered = await cortex.memory.remember({
@@ -247,7 +247,7 @@ describe("GDPR: Cascade Deletion", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: "test-user" },
+        participants: { userId: "test-user", agentId: "test-agent" },
       });
 
       // Create unrelated memory (no conversationRef)
