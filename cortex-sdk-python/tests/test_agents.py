@@ -16,7 +16,11 @@ from cortex import (
     AgentRegistration,
     ConversationParticipants,
     CreateConversationInput,
+    MemoryMetadata,
+    MemorySource,
     RegisterMemorySpaceParams,
+    RememberParams,
+    StoreMemoryInput,
 )
 
 # ============================================================================
@@ -810,22 +814,26 @@ async def test_cascade_delete_across_memory_spaces(cortex_client, ctx):
     )
 
     await cortex_client.vector.store(
-        memory_space_id=space1_id,
-        content="Memory in space 1",
-        content_type="raw",
-        participant_id=agent_id,
-        source={"type": "system"},
-        metadata={"importance": 50, "tags": []},
+        space1_id,
+        StoreMemoryInput(
+            content="Memory in space 1",
+            content_type="raw",
+            participant_id=agent_id,
+            source=MemorySource(type="system"),
+            metadata=MemoryMetadata(importance=50, tags=[]),
+        ),
     )
 
     # Create data in space 2 with participantId
     await cortex_client.vector.store(
-        memory_space_id=space2_id,
-        content="Memory in space 2",
-        content_type="raw",
-        participant_id=agent_id,
-        source={"type": "system"},
-        metadata={"importance": 50, "tags": []},
+        space2_id,
+        StoreMemoryInput(
+            content="Memory in space 2",
+            content_type="raw",
+            participant_id=agent_id,
+            source=MemorySource(type="system"),
+            metadata=MemoryMetadata(importance=50, tags=[]),
+        ),
     )
 
     # Wait for data to persist
@@ -958,12 +966,14 @@ async def test_cascade_delete_without_registration(cortex_client, ctx):
     )
 
     await cortex_client.vector.store(
-        memory_space_id=space_id,
-        content="Memory from unregistered agent",
-        content_type="raw",
-        participant_id=agent_id,  # Agent never registered!
-        source={"type": "system"},
-        metadata={"importance": 50, "tags": []},
+        space_id,
+        StoreMemoryInput(
+            content="Memory from unregistered agent",
+            content_type="raw",
+            participant_id=agent_id,  # Agent never registered!
+            source=MemorySource(type="system"),
+            metadata=MemoryMetadata(importance=50, tags=[]),
+        ),
     )
 
     # Wait for data to persist
@@ -1045,14 +1055,16 @@ async def test_unregister_many_with_cascade(cortex_client, ctx):
     )
 
     await cortex_client.memory.remember(
-        memory_space_id=space_id,
-        participant_id=agent1_id,
-        conversation_id=conv.conversation_id,
-        user_message="Test",
-        agent_response="OK",
-        user_id=ctx.user_id("bulk-test"),
-        user_name="Test User",
-        agent_id=agent1_id,
+        RememberParams(
+            memory_space_id=space_id,
+            participant_id=agent1_id,
+            conversation_id=conv.conversation_id,
+            user_message="Test",
+            agent_response="OK",
+            user_id=ctx.user_id("bulk-test"),
+            user_name="Test User",
+            agent_id=agent1_id,
+        )
     )
 
     await asyncio.sleep(0.2)
@@ -1100,20 +1112,24 @@ async def test_agent_statistics_from_actual_data(cortex_client, ctx):
 
     # Create actual data
     await cortex_client.vector.store(
-        memory_space_id=space_id,
-        content="Test memory 1",
-        content_type="raw",
-        participant_id=agent_id,
-        source={"type": "system"},
-        metadata={"importance": 50, "tags": []},
+        space_id,
+        StoreMemoryInput(
+            content="Test memory 1",
+            content_type="raw",
+            participant_id=agent_id,
+            source=MemorySource(type="system"),
+            metadata=MemoryMetadata(importance=50, tags=[]),
+        ),
     )
     await cortex_client.vector.store(
-        memory_space_id=space_id,
-        content="Test memory 2",
-        content_type="raw",
-        participant_id=agent_id,
-        source={"type": "system"},
-        metadata={"importance": 50, "tags": []},
+        space_id,
+        StoreMemoryInput(
+            content="Test memory 2",
+            content_type="raw",
+            participant_id=agent_id,
+            source=MemorySource(type="system"),
+            metadata=MemoryMetadata(importance=50, tags=[]),
+        ),
     )
 
     await asyncio.sleep(0.1)
