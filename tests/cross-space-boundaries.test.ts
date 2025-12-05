@@ -226,7 +226,7 @@ describe("Cross-Space Boundary Testing", () => {
       const convA = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: SPACE_A,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       // Can get directly (conversations not space-scoped in get)
@@ -240,13 +240,13 @@ describe("Cross-Space Boundary Testing", () => {
       await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: SPACE_A,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: SPACE_B,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const listA = await cortex.conversations.list({ memorySpaceId: SPACE_A });
@@ -265,7 +265,7 @@ describe("Cross-Space Boundary Testing", () => {
       await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: SPACE_A,
-        participants: { userId: `${TEST_USER_ID}-count` },
+        participants: { userId: `${TEST_USER_ID}-count`, agentId: "test-agent-count" },
       });
 
       const countA = await cortex.conversations.count({
@@ -283,7 +283,7 @@ describe("Cross-Space Boundary Testing", () => {
       const convA = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: SPACE_A,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       await cortex.conversations.addMessage({
@@ -555,7 +555,7 @@ describe("Cross-Space Boundary Testing", () => {
       await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: SPACE_A,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       await cortex.vector.store(SPACE_A, {
@@ -949,7 +949,7 @@ describe("Cross-Space Boundary Testing", () => {
       const convA = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: SPACE_A,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       // Memory in space B can reference conversation in space A
@@ -989,7 +989,7 @@ describe("Cross-Space Boundary Testing", () => {
       const convA = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: tempA,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const memB = await cortex.vector.store(tempB, {
@@ -1029,7 +1029,7 @@ describe("Cross-Space Boundary Testing", () => {
       const convA = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: workflowA,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const memA = await cortex.vector.store(workflowA, {
@@ -1577,7 +1577,7 @@ describe("Cross-Space Boundary Testing", () => {
       const convA = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: SPACE_A,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       await cortex.conversations.addMessage({
@@ -1751,7 +1751,7 @@ describe("Cross-Space Boundary Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: workflowSpace,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       await cortex.conversations.addMessage({

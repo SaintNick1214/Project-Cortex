@@ -154,6 +154,7 @@ def create_test_conversation_input(
     memory_space_id: str,
     user_id: Optional[str] = None,
     participant_id: Optional[str] = None,
+    agent_id: Optional[str] = None,
     conversation_id: Optional[str] = None,
 ) -> CreateConversationInput:
     """
@@ -163,18 +164,21 @@ def create_test_conversation_input(
         memory_space_id: Memory space ID
         user_id: Optional user ID (generates one if not provided)
         participant_id: Optional participant ID (generates one if not provided)
+        agent_id: Optional agent ID (defaults to participant_id if not provided)
         conversation_id: Optional conversation ID (generates one if not provided)
 
     Returns:
         CreateConversationInput object
     """
+    generated_participant = participant_id or generate_test_agent_id()
     return CreateConversationInput(
         memory_space_id=memory_space_id,
         conversation_id=conversation_id,
         type="user-agent",
         participants=ConversationParticipants(
             user_id=user_id or generate_test_user_id(),
-            participant_id=participant_id or generate_test_agent_id(),
+            agent_id=agent_id or generated_participant,
+            participant_id=generated_participant,
         ),
     )
 
