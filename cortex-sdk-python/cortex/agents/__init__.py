@@ -769,7 +769,7 @@ class AgentsAPI:
             memories_deleted +
             facts_deleted +
             graph_nodes_deleted +
-            1  # agent registration
+            (1 if "agent-registration" in deleted_layers else 0)
         )
 
         return UnregisterAgentResult(
