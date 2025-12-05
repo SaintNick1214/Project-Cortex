@@ -31,7 +31,7 @@ async def param_test_setup(module_cortex_client, test_run_context):
         CreateConversationInput(
             type="user-agent",
             memory_space_id=memory_space_id,
-            participants=ConversationParticipants(user_id=user_id),
+            participants=ConversationParticipants(user_id=user_id, agent_id="test-agent"),
         )
     )
 

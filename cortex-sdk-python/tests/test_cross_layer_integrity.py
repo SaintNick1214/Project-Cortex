@@ -43,7 +43,7 @@ async def test_conversation_ref_points_to_actual_conversation(cortex_client, ctx
         CreateConversationInput(
             type="user-agent",
             memory_space_id=memory_space_id,
-            participants=ConversationParticipants(user_id=user_id),
+            participants=ConversationParticipants(user_id=user_id, agent_id="test-agent"),
         )
     )
 
@@ -134,7 +134,7 @@ async def test_source_ref_in_facts_points_to_actual_conversation(cortex_client, 
         CreateConversationInput(
             type="user-agent",
             memory_space_id=memory_space_id,
-            participants=ConversationParticipants(user_id=user_id),
+            participants=ConversationParticipants(user_id=user_id, agent_id="test-agent"),
         )
     )
 
@@ -326,7 +326,7 @@ async def test_context_conversation_ref_points_to_actual_conversation(cortex_cli
         CreateConversationInput(
             type="user-agent",
             memory_space_id=memory_space_id,
-            participants=ConversationParticipants(user_id=user_id),
+            participants=ConversationParticipants(user_id=user_id, agent_id="test-agent"),
         )
     )
 
@@ -634,7 +634,7 @@ async def test_conversation_message_ids_are_unique_and_retrievable(cortex_client
         CreateConversationInput(
             type="user-agent",
             memory_space_id=memory_space_id,
-            participants=ConversationParticipants(user_id=user_id),
+            participants=ConversationParticipants(user_id=user_id, agent_id="test-agent"),
         )
     )
 

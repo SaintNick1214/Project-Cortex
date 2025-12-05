@@ -279,6 +279,7 @@ describe("Hive Mode", () => {
         type: "user-agent",
         participants: {
           userId: USER_ALICE,
+          agentId: AGENT_ASSISTANT,
           participantId: AGENT_ASSISTANT,
         },
       });

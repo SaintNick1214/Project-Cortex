@@ -348,7 +348,7 @@ def create_llm_client(config: "LLMConfig") -> Optional[LLMClient]:
                     # Convert dict results to ExtractedFact objects
                     return [
                         ExtractedFact(
-                            fact=f.get("fact", f.get("fact", "")),
+                            fact=f.get("fact", ""),
                             fact_type=_normalize_fact_type(
                                 f.get("factType", f.get("fact_type", "custom"))
                             ),

@@ -134,7 +134,7 @@ async def test_cross_layer_reference_integrity(cortex_client, test_ids, cleanup_
             conversation_id=conversation_id,
             memory_space_id=memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=user_id),
+            participants=ConversationParticipants(user_id=user_id, agent_id="test-agent"),
         )
     )
 

@@ -80,6 +80,7 @@ describe("Complex Integration Tests", () => {
         type: "user-agent",
         participants: {
           userId: "user-vip-123",
+          agentId: "agent-support",
           participantId: "agent-support",
         },
       });
