@@ -71,12 +71,10 @@ class AsyncConvexClient:
                 lambda: self._sync_client.query(name, args)
             )
         except Exception as e:
-            # Extract error data from ConvexError for enhanced message
+            # Extract error data from ConvexError and re-raise with meaningful message
+            # ConvexError has a `data` field with the actual error code/message
             error_data = _extract_convex_error_data(e)
-            # Preserve original exception type - only enhance message if we extracted meaningful data
-            if error_data != str(e):
-                e.args = (error_data,) + e.args[1:] if e.args else (error_data,)
-            raise
+            raise Exception(error_data) from e
 
     async def mutation(self, name: str, args: Dict[str, Any]) -> Any:
         """
@@ -99,12 +97,10 @@ class AsyncConvexClient:
                 lambda: self._sync_client.mutation(name, args)
             )
         except Exception as e:
-            # Extract error data from ConvexError for enhanced message
+            # Extract error data from ConvexError and re-raise with meaningful message
+            # ConvexError has a `data` field with the actual error code/message
             error_data = _extract_convex_error_data(e)
-            # Preserve original exception type - only enhance message if we extracted meaningful data
-            if error_data != str(e):
-                e.args = (error_data,) + e.args[1:] if e.args else (error_data,)
-            raise
+            raise Exception(error_data) from e
 
     async def close(self) -> None:
         """

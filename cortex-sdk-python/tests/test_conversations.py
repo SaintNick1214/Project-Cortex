@@ -15,7 +15,7 @@ async def test_create_conversation(cortex_client, test_memory_space_id, test_use
             memory_space_id=test_memory_space_id,
             type="user-agent",
             participants=ConversationParticipants(
-                user_id=test_user_id, participant_id="test-bot"
+                user_id=test_user_id, agent_id="test-bot"
             ),
         )
     )
@@ -129,7 +129,7 @@ async def test_get_or_create(cortex_client, test_memory_space_id, test_user_id):
             memory_space_id=test_memory_space_id,
             type="user-agent",
             participants=ConversationParticipants(
-                user_id=test_user_id, participant_id="bot-1"
+                user_id=test_user_id, agent_id="bot-1"
             ),
         )
     )
@@ -140,7 +140,7 @@ async def test_get_or_create(cortex_client, test_memory_space_id, test_user_id):
             memory_space_id=test_memory_space_id,
             type="user-agent",
             participants=ConversationParticipants(
-                user_id=test_user_id, participant_id="bot-1"
+                user_id=test_user_id, agent_id="bot-1"
             ),
         )
     )
@@ -279,7 +279,7 @@ async def test_find_conversation(cortex_client, test_memory_space_id, test_user_
             type="user-agent",
             participants=ConversationParticipants(
                 user_id=test_user_id,
-                participant_id=participant_id,
+                agent_id=participant_id,
             ),
         )
     )
