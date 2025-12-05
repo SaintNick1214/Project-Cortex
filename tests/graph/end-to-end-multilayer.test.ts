@@ -141,6 +141,7 @@ What specific aspects would you like to dive deeper into?
         type: "user-agent",
         participants: {
           userId: "dr-sarah-chen",
+          agentId: "ai-assistant",
           participantId: "ai-assistant",
         },
       },

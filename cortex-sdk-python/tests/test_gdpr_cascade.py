@@ -76,7 +76,7 @@ async def test_cascade_delete_conversations_layer(cortex_client, test_ids, clean
             conversation_id=conversation_id,
             memory_space_id=memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=user_id),
+            participants=ConversationParticipants(user_id=user_id, agent_id="test-agent"),
         )
     )
 
@@ -295,7 +295,7 @@ async def test_cascade_all_layers(cortex_client, test_ids, cleanup_helper):
             conversation_id=conversation_id,
             memory_space_id=memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=user_id),
+            participants=ConversationParticipants(user_id=user_id, agent_id="test-agent"),
         )
     )
 

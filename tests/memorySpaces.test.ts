@@ -724,6 +724,7 @@ describe("Memory Spaces Registry API", () => {
         type: "user-agent",
         participants: {
           userId: ctx.userId("cascade-test"),
+          agentId: ctx.agentId("cascade-test"),
           participantId: ctx.agentId("cascade-test"),
         },
       });

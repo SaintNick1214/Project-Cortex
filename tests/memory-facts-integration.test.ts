@@ -93,6 +93,7 @@ describe("Memory API with Fact Integration", () => {
       memorySpaceId: testMemorySpaceId,
       participants: {
         userId: testUserId,
+          agentId: specificParticipantId,
         participantId: specificParticipantId,
       },
     });

@@ -76,6 +76,7 @@ describe("Memory API - Auto-Conversation Creation", () => {
       type: "user-agent",
       participants: {
         userId: "user-456",
+          agentId: "test-agent",
         participantId: "test-agent",
       },
     });

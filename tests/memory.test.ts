@@ -1116,6 +1116,7 @@ describe("Memory Convenience API (Layer 3)", () => {
           memorySpaceId: TEST_MEMSPACE_ID,
           participants: {
             userId: TEST_USER_ID,
+          agentId: TEST_AGENT_ID,
             participantId: TEST_AGENT_ID,
           },
         });
@@ -1401,6 +1402,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         type: "user-agent",
         participants: {
           userId: "test-user",
+          agentId: "test-agent",
           participantId: "test-agent",
         },
       });
@@ -1450,6 +1452,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         type: "user-agent",
         participants: {
           userId: "test-user",
+          agentId: "test-agent",
           participantId: "test-agent",
         },
       });

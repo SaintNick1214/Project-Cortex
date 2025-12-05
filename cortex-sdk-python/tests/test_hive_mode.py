@@ -666,7 +666,7 @@ async def test_multiple_participants_use_remember_in_same_hive(cortex_client, hi
         CreateConversationInput(
             type="user-agent",
             memory_space_id=hive_space,
-            participants=ConversationParticipants(user_id="user-alice"),
+            participants=ConversationParticipants(user_id="user-alice", agent_id="test-agent"),
         )
     )
 

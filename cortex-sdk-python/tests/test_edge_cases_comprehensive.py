@@ -902,7 +902,7 @@ async def test_handles_conversation_with_100_plus_messages(cortex_client, ctx):
         CreateConversationInput(
             type="user-agent",
             memory_space_id=memory_space_id,
-            participants=ConversationParticipants(user_id=user_id),
+            participants=ConversationParticipants(user_id=user_id, agent_id="test-agent"),
         )
     )
 

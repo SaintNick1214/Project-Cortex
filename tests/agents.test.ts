@@ -667,6 +667,7 @@ describe("Agents API (Coordination Layer)", () => {
         type: "user-agent",
         participants: {
           userId: "user-1",
+          agentId: agentId,
           participantId: agentId,
         },
       });
@@ -1055,6 +1056,7 @@ describe("Agents API (Coordination Layer)", () => {
         type: "user-agent",
         participants: {
           userId: ctx.userId("bulk-test"),
+          agentId: bulkAgent1Id,
           participantId: bulkAgent1Id,
         },
       });
