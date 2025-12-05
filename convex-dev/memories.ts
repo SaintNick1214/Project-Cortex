@@ -758,6 +758,7 @@ export const deleteMany = mutation({
 /**
  * Delete multiple memories by their IDs (batch delete for cascade operations)
  * Much faster than calling deleteMemory multiple times
+ * Uses index lookups instead of full table scan to avoid memory issues with large tables
  */
 export const deleteByIds = mutation({
   args: {
@@ -766,15 +767,14 @@ export const deleteByIds = mutation({
   handler: async (ctx, args) => {
     const deletedIds: string[] = [];
 
-    // Batch fetch all memories first (single query)
-    const allMemories = await ctx.db.query("memories").collect();
-
-    // Create a map for O(1) lookup
-    const memoryMap = new Map(allMemories.map((m) => [m.memoryId, m]));
-
-    // Delete all matching memories
+    // Look up each memory by index to avoid full table scan
+    // This is O(n) index lookups vs O(entire table) memory usage
     for (const memoryId of args.memoryIds) {
-      const memory = memoryMap.get(memoryId);
+      const memory = await ctx.db
+        .query("memories")
+        .withIndex("by_memoryId", (q) => q.eq("memoryId", memoryId))
+        .first();
+
       if (memory) {
         await ctx.db.delete(memory._id);
         deletedIds.push(memoryId);

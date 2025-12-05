@@ -1323,6 +1323,7 @@ export const consolidate = mutation({
 /**
  * Delete multiple facts by their IDs (batch delete for cascade operations)
  * Much faster than calling deleteFact multiple times
+ * Uses index lookups instead of full table scan to avoid memory issues with large tables
  */
 export const deleteByIds = mutation({
   args: {
@@ -1332,17 +1333,14 @@ export const deleteByIds = mutation({
     const deletedIds: string[] = [];
     const now = Date.now();
 
-    // Batch fetch all facts first (single query)
-    const allFacts = await ctx.db
-      .query("facts")
-      .collect();
-
-    // Create a map for O(1) lookup
-    const factMap = new Map(allFacts.map((f) => [f.factId, f]));
-
-    // Delete all matching facts
+    // Look up each fact by index to avoid full table scan
+    // This is O(n) index lookups vs O(entire table) memory usage
     for (const factId of args.factIds) {
-      const fact = factMap.get(factId);
+      const fact = await ctx.db
+        .query("facts")
+        .withIndex("by_factId", (q) => q.eq("factId", factId))
+        .first();
+
       if (fact) {
         // Soft delete by marking as invalidated
         await ctx.db.patch(fact._id, {
