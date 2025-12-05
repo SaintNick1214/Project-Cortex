@@ -556,7 +556,7 @@ describe("ResilienceLayer", () => {
     expect(metrics.concurrency.maxReached).toBe(0);
   });
 
-  test("should reject non-critical operations when circuit is open", async () => {
+  test("should queue ALL operations when circuit is open (true resilience)", async () => {
     // Force circuit open
     for (let i = 0; i < 3; i++) {
       try {
@@ -567,10 +567,10 @@ describe("ResilienceLayer", () => {
       } catch {}
     }
 
-    // Non-critical should be rejected
-    await expect(
-      resilience.execute(createOperation("test"), "memory:search"),
-    ).rejects.toThrow(CircuitOpenError);
+    // ALL operations (including non-critical) should be queued, not rejected
+    // The operation will wait in queue and resolve when circuit closes
+    const result = await resilience.execute(createOperation("test"), "memory:search");
+    expect(result).toBe("test");
   });
 });
 

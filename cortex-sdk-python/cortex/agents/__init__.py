@@ -609,7 +609,7 @@ class AgentsAPI:
                 agent_convos = [
                     c for c in conversations
                     if (c.get("participants", {}).get("participantId") == agent_id or
-                        agent_id in (c.get("participants", {}).get("memorySpaceIds") or []) or
+                        c.get("participants", {}).get("agentId") == agent_id or
                         c.get("participantId") == agent_id)
                 ]
                 return {"spaceId": space.get("memorySpaceId"), "conversations": agent_convos}
@@ -822,7 +822,7 @@ class AgentsAPI:
                     return len([
                         c for c in conversations
                         if (c.get("participants", {}).get("participantId") == agent_id or
-                            agent_id in (c.get("participants", {}).get("memorySpaceIds") or []) or
+                            c.get("participants", {}).get("agentId") == agent_id or
                             c.get("participantId") == agent_id)
                     ])
                 except Exception:
