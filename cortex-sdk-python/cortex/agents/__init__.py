@@ -779,7 +779,7 @@ class AgentsAPI:
             conversation_messages_deleted=conversation_messages_deleted,
             memories_deleted=memories_deleted,
             facts_deleted=facts_deleted,
-            graph_nodes_deleted=graph_nodes_deleted if graph_nodes_deleted else None,
+            graph_nodes_deleted=graph_nodes_deleted if "graph" in deleted_layers else None,
             total_deleted=total_deleted,
             deleted_layers=deleted_layers,
             memory_spaces_affected=memory_spaces_affected,

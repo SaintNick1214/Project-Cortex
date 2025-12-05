@@ -208,12 +208,15 @@ class Cortex:
         # Auto-configure graph if not explicitly provided
         graph_config = config.graph or await cls._auto_configure_graph()
 
-        # Create a new config with the potentially auto-configured graph
+        # Auto-configure LLM if not explicitly provided
+        llm_config = config.llm or cls._auto_configure_llm()
+
+        # Create a new config with the potentially auto-configured components
         updated_config = CortexConfig(
             convex_url=config.convex_url,
             graph=graph_config,
             resilience=config.resilience,
-            llm=config.llm,
+            llm=llm_config,
         )
 
         return cls(updated_config)
