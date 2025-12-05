@@ -211,6 +211,7 @@ export const deleteMany = mutation({
 /**
  * Delete multiple conversations by their IDs (batch delete for cascade operations)
  * Much faster than calling deleteConversation multiple times
+ * Uses index lookups instead of full table scan to avoid memory issues with large tables
  */
 export const deleteByIds = mutation({
   args: {
@@ -220,17 +221,16 @@ export const deleteByIds = mutation({
     const deletedIds: string[] = [];
     let totalMessagesDeleted = 0;
 
-    // Batch fetch all conversations first (single query)
-    const allConversations = await ctx.db.query("conversations").collect();
-
-    // Create a map for O(1) lookup
-    const conversationMap = new Map(
-      allConversations.map((c) => [c.conversationId, c]),
-    );
-
-    // Delete all matching conversations
+    // Look up each conversation by index to avoid full table scan
+    // This is O(n) index lookups vs O(entire table) memory usage
     for (const conversationId of args.conversationIds) {
-      const conversation = conversationMap.get(conversationId);
+      const conversation = await ctx.db
+        .query("conversations")
+        .withIndex("by_conversationId", (q) =>
+          q.eq("conversationId", conversationId),
+        )
+        .first();
+
       if (conversation) {
         totalMessagesDeleted += conversation.messageCount;
         await ctx.db.delete(conversation._id);

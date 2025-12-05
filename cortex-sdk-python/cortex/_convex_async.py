@@ -79,8 +79,8 @@ class AsyncConvexClient:
                 try:
                     raise type(e)(error_data) from e
                 except TypeError:
-                    # If exception type doesn't accept single string arg, re-raise original
-                    raise
+                    # If exception type doesn't accept single string arg, re-raise original Convex error
+                    raise e from e
             raise
 
     async def mutation(self, name: str, args: Dict[str, Any]) -> Any:
@@ -112,8 +112,8 @@ class AsyncConvexClient:
                 try:
                     raise type(e)(error_data) from e
                 except TypeError:
-                    # If exception type doesn't accept single string arg, re-raise original
-                    raise
+                    # If exception type doesn't accept single string arg, re-raise original Convex error
+                    raise e from e
             raise
 
     async def close(self) -> None:
