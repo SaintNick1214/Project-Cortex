@@ -690,7 +690,7 @@ export class AgentsAPI {
                 conversations: (conversations as Conversation[]).filter(
                   (c) =>
                     c.participants.participantId === agentId ||
-                    c.participants.memorySpaceIds?.includes(agentId) ||
+                    c.participants.agentId === agentId ||
                     c.participantId === agentId,
                 ),
               }))
@@ -1035,7 +1035,7 @@ export class AgentsAPI {
                   (conversations as Conversation[]).filter(
                     (c) =>
                       c.participants.participantId === agentId ||
-                      c.participants.memorySpaceIds?.includes(agentId) ||
+                      c.participants.agentId === agentId ||
                       c.participantId === agentId,
                   ).length,
               )

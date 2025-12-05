@@ -244,6 +244,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(retrieved!.type).toBe("user-agent");
       expect(retrieved!.participants).toEqual({
         userId: getUser,
+        agentId: getAgent,
         participantId: getAgent,
       });
     });
