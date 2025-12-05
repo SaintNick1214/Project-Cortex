@@ -12,7 +12,12 @@ Tests validate:
 
 import pytest
 
-from cortex import AgentRegistration
+from cortex import (
+    AgentRegistration,
+    ConversationParticipants,
+    CreateConversationInput,
+    RegisterMemorySpaceParams,
+)
 
 # ============================================================================
 # Client-Side Validation Tests
@@ -768,6 +773,7 @@ async def test_cascade_delete_across_memory_spaces(cortex_client, ctx):
     Port of: agents.test.ts - "performs cascade deletion by participantId across all spaces"
     """
     import asyncio
+
     from cortex import UnregisterAgentOptions
 
     agent_id = ctx.agent_id("cascade")
@@ -781,20 +787,26 @@ async def test_cascade_delete_across_memory_spaces(cortex_client, ctx):
 
     # Register memory spaces
     await cortex_client.memory_spaces.register(
-        memory_space_id=space1_id,
-        space_type="personal",
+        RegisterMemorySpaceParams(
+            memory_space_id=space1_id,
+            type="personal",
+        )
     )
     await cortex_client.memory_spaces.register(
-        memory_space_id=space2_id,
-        space_type="personal",
+        RegisterMemorySpaceParams(
+            memory_space_id=space2_id,
+            type="personal",
+        )
     )
 
     # Create data in space 1 with participantId
     await cortex_client.conversations.create(
-        memory_space_id=space1_id,
-        participant_id=agent_id,
-        conversation_type="user-agent",
-        participants={"userId": "test-user-1", "participantId": agent_id},
+        CreateConversationInput(
+            memory_space_id=space1_id,
+            participant_id=agent_id,
+            type="user-agent",
+            participants=ConversationParticipants(user_id="test-user-1", agent_id=agent_id, participant_id=agent_id),
+        )
     )
 
     await cortex_client.vector.store(
@@ -931,6 +943,7 @@ async def test_cascade_delete_without_registration(cortex_client, ctx):
     Port of: agents.test.ts - "deletes data even if agent was never registered"
     """
     import asyncio
+
     from cortex import UnregisterAgentOptions
 
     agent_id = ctx.agent_id("unregistered")
@@ -938,8 +951,10 @@ async def test_cascade_delete_without_registration(cortex_client, ctx):
 
     # DON'T register the agent - just create data with participantId
     await cortex_client.memory_spaces.register(
-        memory_space_id=space_id,
-        space_type="personal",
+        RegisterMemorySpaceParams(
+            memory_space_id=space_id,
+            type="personal",
+        )
     )
 
     await cortex_client.vector.store(
@@ -988,6 +1003,7 @@ async def test_unregister_many_with_cascade(cortex_client, ctx):
     Port of: agents.test.ts - "unregisters with cascade deletion"
     """
     import asyncio
+
     from cortex import UnregisterAgentOptions
 
     agent1_id = ctx.agent_id("cascade-bulk-1")
@@ -997,8 +1013,10 @@ async def test_unregister_many_with_cascade(cortex_client, ctx):
 
     # Register memory space
     await cortex_client.memory_spaces.register(
-        memory_space_id=space_id,
-        space_type="personal",
+        RegisterMemorySpaceParams(
+            memory_space_id=space_id,
+            type="personal",
+        )
     )
 
     # Register agents with test-scoped metadata
@@ -1019,9 +1037,11 @@ async def test_unregister_many_with_cascade(cortex_client, ctx):
 
     # Create data for agent1
     conv = await cortex_client.conversations.create(
-        memory_space_id=space_id,
-        conversation_type="user-agent",
-        participants={"userId": ctx.user_id("bulk-test"), "participantId": agent1_id},
+        CreateConversationInput(
+            memory_space_id=space_id,
+            type="user-agent",
+            participants=ConversationParticipants(user_id=ctx.user_id("bulk-test"), agent_id=agent1_id, participant_id=agent1_id),
+        )
     )
 
     await cortex_client.memory.remember(
@@ -1072,8 +1092,10 @@ async def test_agent_statistics_from_actual_data(cortex_client, ctx):
         AgentRegistration(id=agent_id, name="Stats Data Agent")
     )
     await cortex_client.memory_spaces.register(
-        memory_space_id=space_id,
-        space_type="personal",
+        RegisterMemorySpaceParams(
+            memory_space_id=space_id,
+            type="personal",
+        )
     )
 
     # Create actual data

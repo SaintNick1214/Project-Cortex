@@ -316,9 +316,14 @@ async def delete_agent_from_graph(agent_id: str, adapter: GraphAdapter) -> int:
 
     Returns:
         Number of nodes deleted
+
+    TODO: Not yet implemented. This would query for all nodes with
+          agentId/participantId = agent_id and delete them.
+          Currently returns 0 (no deletions).
     """
+    # TODO: Implement agent node deletion from graph
     # This would query for all nodes with participantId = agent_id
-    # Simplified for now
+    # and delete Agent nodes, related memories, conversations, etc.
     return 0
 
 

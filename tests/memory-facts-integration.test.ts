@@ -39,7 +39,7 @@ describe("Memory API with Fact Integration", () => {
       conversationId: testConversationId,
       type: "user-agent",
       memorySpaceId: testMemorySpaceId,
-      participants: { userId: testUserId, participantId: "agent-test" },
+      participants: { userId: testUserId, agentId: "agent-test", participantId: "agent-test" },
     });
 
     const extractFacts = async (_userMsg: string, _agentMsg: string) => {
@@ -150,7 +150,7 @@ describe("Memory API with Fact Integration", () => {
       conversationId: `${testConversationId}-error`,
       type: "user-agent",
       memorySpaceId: testMemorySpaceId,
-      participants: { userId: testUserId, participantId: "agent-test" },
+      participants: { userId: testUserId, agentId: "agent-test", participantId: "agent-test" },
     });
 
     const extractFacts = async () => {
@@ -179,7 +179,7 @@ describe("Memory API with Fact Integration", () => {
       conversationId: `${testConversationId}-delete`,
       type: "user-agent",
       memorySpaceId: testMemorySpaceId,
-      participants: { userId: testUserId, participantId: "agent-test" },
+      participants: { userId: testUserId, agentId: "agent-test", participantId: "agent-test" },
     });
 
     const extractFacts = async () => [
@@ -223,7 +223,7 @@ describe("Memory API with Fact Integration", () => {
       conversationId: `${testConversationId}-get`,
       type: "user-agent",
       memorySpaceId: testMemorySpaceId,
-      participants: { userId: testUserId, participantId: "agent-test" },
+      participants: { userId: testUserId, agentId: "agent-test", participantId: "agent-test" },
     });
 
     const extractFacts = async () => [
@@ -267,7 +267,7 @@ describe("Memory API with Fact Integration", () => {
       conversationId: `${testConversationId}-search`,
       type: "user-agent",
       memorySpaceId: testMemorySpaceId,
-      participants: { userId: testUserId, participantId: "agent-test" },
+      participants: { userId: testUserId, agentId: "agent-test", participantId: "agent-test" },
     });
 
     const extractFacts = async () => [
@@ -314,7 +314,7 @@ describe("Memory API with Fact Integration", () => {
       conversationId: `${testConversationId}-multi`,
       type: "user-agent",
       memorySpaceId: testMemorySpaceId,
-      participants: { userId: testUserId, participantId: "agent-test" },
+      participants: { userId: testUserId, agentId: "agent-test", participantId: "agent-test" },
     });
 
     const extractFacts = async () => [
@@ -365,7 +365,7 @@ describe("Memory API with Fact Integration", () => {
       conversationId: `${testConversationId}-sourceref`,
       type: "user-agent",
       memorySpaceId: testMemorySpaceId,
-      participants: { userId: testUserId, participantId: "agent-test" },
+      participants: { userId: testUserId, agentId: "agent-test", participantId: "agent-test" },
     });
 
     const extractFacts = async () => [

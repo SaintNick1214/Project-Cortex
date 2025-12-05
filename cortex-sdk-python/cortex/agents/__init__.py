@@ -768,7 +768,7 @@ class AgentsAPI:
             conversations_deleted +
             memories_deleted +
             facts_deleted +
-            graph_nodes_deleted +
+            (graph_nodes_deleted if "graph" in deleted_layers else 0) +
             (1 if "agent-registration" in deleted_layers else 0)
         )
 
