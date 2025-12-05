@@ -753,12 +753,13 @@ class AgentsAPI:
                 graph_nodes_deleted = await delete_agent_from_graph(
                     agent_id, self.graph_adapter
                 )
+                # Only add to deleted_layers if nodes were actually deleted (consistent with other layers)
+                if graph_nodes_deleted > 0:
+                    deleted_layers.append("graph")
             except Exception as error:
                 # Mark as attempted but failed (0 nodes deleted due to error)
                 graph_nodes_deleted = 0
                 print(f"Warning: Failed to delete from graph: {error}")
-            # Always mark graph as attempted (even if 0 nodes deleted or failed)
-            deleted_layers.append("graph")
 
         # 5. Delete agent registration (last)
         try:
