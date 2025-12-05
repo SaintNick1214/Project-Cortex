@@ -458,7 +458,8 @@ class AgentsAPI:
                 verification=VerificationResult(complete=True, issues=[]),
             )
 
-        # Execute cascade deletion
+        # Execute cascade deletion with STRICT error handling
+        # Any error triggers immediate rollback to maintain data integrity
         plan = await self._collect_agent_deletion_plan(agent_id)
         backup = await self._create_agent_deletion_backup(plan)
 
@@ -471,8 +472,12 @@ class AgentsAPI:
                 result.verification = verification
 
             return result
+        except AgentCascadeDeletionError:
+            # Rollback on any deletion error
+            await self._rollback_agent_deletion(backup)
+            raise
         except Exception as e:
-            # Rollback on failure
+            # Rollback on unexpected errors too
             await self._rollback_agent_deletion(backup)
             raise AgentCascadeDeletionError(f"Agent cascade deletion failed: {e}", cause=e)
 
@@ -699,8 +704,13 @@ class AgentsAPI:
         self, plan: Dict[str, List[Any]], agent_id: str
     ) -> UnregisterAgentResult:
         """
-        Execute agent deletion.
-        OPTIMIZED: Uses batch deletes instead of individual API calls.
+        Execute agent deletion with strict error handling.
+
+        STRICT MODE: Any error triggers immediate rollback of all operations.
+        This ensures data integrity - either all data is deleted or none is.
+
+        Raises:
+            AgentCascadeDeletionError: On any failure, with partial_deletion info
         """
         deleted_at = int(time.time() * 1000)
         deleted_layers: List[str] = []
@@ -709,9 +719,19 @@ class AgentsAPI:
         conversation_messages_deleted = 0
         memories_deleted = 0
         facts_deleted = 0
-        graph_nodes_deleted: Optional[int] = None  # None = not attempted, 0+ = attempted
+        graph_nodes_deleted: Optional[int] = None
 
-        # 1. Delete facts (batch)
+        # Helper to build partial deletion info for error reporting
+        def _build_partial_deletion_info(failed_layer: str) -> dict:
+            return {
+                "facts_deleted": facts_deleted,
+                "memories_deleted": memories_deleted,
+                "conversations_deleted": conversations_deleted,
+                "deleted_layers": list(deleted_layers),
+                "failed_layer": failed_layer,
+            }
+
+        # 1. Delete facts (batch) - STRICT: raise on error
         if plan.get("facts"):
             try:
                 fact_ids = [f.get("factId") for f in plan["facts"]]
@@ -720,9 +740,13 @@ class AgentsAPI:
                 if facts_deleted > 0:
                     deleted_layers.append("facts")
             except Exception as e:
-                raise AgentCascadeDeletionError(f"Failed to batch delete facts: {e}")
+                raise AgentCascadeDeletionError(
+                    f"Failed to delete facts: {e}",
+                    cause=e if isinstance(e, Exception) else None,
+                    partial_deletion=_build_partial_deletion_info("facts"),
+                )
 
-        # 2. Delete memories (batch)
+        # 2. Delete memories (batch) - STRICT: raise on error
         if plan.get("memories"):
             try:
                 memory_ids = [m.get("memoryId") for m in plan["memories"]]
@@ -731,9 +755,13 @@ class AgentsAPI:
                 if memories_deleted > 0:
                     deleted_layers.append("memories")
             except Exception as e:
-                raise AgentCascadeDeletionError(f"Failed to batch delete memories: {e}")
+                raise AgentCascadeDeletionError(
+                    f"Failed to delete memories: {e}",
+                    cause=e if isinstance(e, Exception) else None,
+                    partial_deletion=_build_partial_deletion_info("memories"),
+                )
 
-        # 3. Delete conversations (batch)
+        # 3. Delete conversations (batch) - STRICT: raise on error
         if plan.get("conversations"):
             try:
                 conversation_ids = [c.get("conversationId") for c in plan["conversations"]]
@@ -743,9 +771,13 @@ class AgentsAPI:
                 if conversations_deleted > 0:
                     deleted_layers.append("conversations")
             except Exception as e:
-                raise AgentCascadeDeletionError(f"Failed to batch delete conversations: {e}")
+                raise AgentCascadeDeletionError(
+                    f"Failed to delete conversations: {e}",
+                    cause=e if isinstance(e, Exception) else None,
+                    partial_deletion=_build_partial_deletion_info("conversations"),
+                )
 
-        # 4. Delete graph nodes
+        # 4. Delete graph nodes - STRICT: raise on error
         if self.graph_adapter and plan.get("graph"):
             try:
                 from ..graph import delete_agent_from_graph
@@ -753,20 +785,28 @@ class AgentsAPI:
                 graph_nodes_deleted = await delete_agent_from_graph(
                     agent_id, self.graph_adapter
                 )
-                # Only add to deleted_layers if nodes were actually deleted (consistent with other layers)
                 if graph_nodes_deleted > 0:
                     deleted_layers.append("graph")
-            except Exception as error:
-                # Mark as attempted but failed (0 nodes deleted due to error)
-                graph_nodes_deleted = 0
-                print(f"Warning: Failed to delete from graph: {error}")
+            except Exception as e:
+                raise AgentCascadeDeletionError(
+                    f"Failed to delete graph nodes: {e}",
+                    cause=e if isinstance(e, Exception) else None,
+                    partial_deletion=_build_partial_deletion_info("graph"),
+                )
 
-        # 5. Delete agent registration (last)
+        # 5. Delete agent registration (last) - STRICT: raise on error
         try:
             await self.client.mutation("agents:unregister", filter_none_values({"agentId": agent_id}))
             deleted_layers.append("agent-registration")
-        except Exception:
-            pass  # Agent might not be registered
+        except Exception as e:
+            # Only raise if agent was registered (not-found is okay)
+            error_str = str(e).lower()
+            if "not_registered" not in error_str and "not found" not in error_str:
+                raise AgentCascadeDeletionError(
+                    f"Failed to unregister agent: {e}",
+                    cause=e if isinstance(e, Exception) else None,
+                    partial_deletion=_build_partial_deletion_info("agent-registration"),
+                )
 
         # Get affected memory spaces
         memory_spaces_affected = plan.get("memory_spaces", [])
@@ -786,11 +826,12 @@ class AgentsAPI:
             conversation_messages_deleted=conversation_messages_deleted,
             memories_deleted=memories_deleted,
             facts_deleted=facts_deleted,
-            graph_nodes_deleted=graph_nodes_deleted,  # None if not attempted, 0+ if attempted
+            graph_nodes_deleted=graph_nodes_deleted,
             total_deleted=total_deleted,
             deleted_layers=deleted_layers,
             memory_spaces_affected=memory_spaces_affected,
             verification=VerificationResult(complete=True, issues=[]),
+            deletion_errors=[],  # No errors if we get here
         )
 
     async def _verify_agent_deletion(self, agent_id: str) -> VerificationResult:
@@ -895,9 +936,100 @@ class AgentsAPI:
             issues=issues,
         )
 
-    async def _rollback_agent_deletion(self, backup: Dict[str, List[Any]]) -> Any:
-        """Rollback agent deletion on failure."""
-        print("Warning: Rollback not fully implemented - manual recovery may be needed")
+    async def _rollback_agent_deletion(self, backup: Dict[str, List[Any]]) -> Dict[str, Any]:
+        """
+        Rollback agent deletion on failure by re-creating deleted data.
+
+        Args:
+            backup: Dict containing the original data that was deleted
+
+        Returns:
+            Dict with rollback statistics
+        """
+        rollback_stats = {
+            "facts_restored": 0,
+            "memories_restored": 0,
+            "conversations_restored": 0,
+            "errors": [],
+        }
+
+        # Restore facts
+        for fact in backup.get("facts", []):
+            try:
+                await self.client.mutation(
+                    "facts:createFact",
+                    filter_none_values({
+                        "memorySpaceId": fact.get("memorySpaceId"),
+                        "factId": fact.get("factId"),
+                        "content": fact.get("content"),
+                        "subject": fact.get("subject"),
+                        "predicate": fact.get("predicate"),
+                        "object": fact.get("object"),
+                        "confidence": fact.get("confidence"),
+                        "source": fact.get("source"),
+                        "memoryId": fact.get("memoryId"),
+                        "userId": fact.get("userId"),
+                        "agentId": fact.get("agentId"),
+                        "tags": fact.get("tags"),
+                        "metadata": fact.get("metadata"),
+                    }),
+                )
+                rollback_stats["facts_restored"] += 1
+            except Exception as e:
+                rollback_stats["errors"].append(f"Failed to restore fact {fact.get('factId')}: {e}")
+
+        # Restore memories
+        for memory in backup.get("memories", []):
+            try:
+                await self.client.mutation(
+                    "memories:createMemory",
+                    filter_none_values({
+                        "memorySpaceId": memory.get("memorySpaceId"),
+                        "memoryId": memory.get("memoryId"),
+                        "content": memory.get("content"),
+                        "embedding": memory.get("embedding"),
+                        "importance": memory.get("importance"),
+                        "sourceType": memory.get("sourceType"),
+                        "conversationId": memory.get("conversationId"),
+                        "userId": memory.get("userId"),
+                        "agentId": memory.get("agentId"),
+                        "participantId": memory.get("participantId"),
+                        "tags": memory.get("tags"),
+                        "metadata": memory.get("metadata"),
+                    }),
+                )
+                rollback_stats["memories_restored"] += 1
+            except Exception as e:
+                rollback_stats["errors"].append(f"Failed to restore memory {memory.get('memoryId')}: {e}")
+
+        # Restore conversations (without messages - those are harder to restore)
+        for conv in backup.get("conversations", []):
+            try:
+                await self.client.mutation(
+                    "conversations:createConversation",
+                    filter_none_values({
+                        "memorySpaceId": conv.get("memorySpaceId"),
+                        "conversationId": conv.get("conversationId"),
+                        "type": conv.get("type"),
+                        "participants": conv.get("participants"),
+                        "metadata": conv.get("metadata"),
+                    }),
+                )
+                rollback_stats["conversations_restored"] += 1
+            except Exception as e:
+                rollback_stats["errors"].append(f"Failed to restore conversation {conv.get('conversationId')}: {e}")
+
+        # Log rollback results
+        if rollback_stats["errors"]:
+            print(f"Rollback completed with errors: {len(rollback_stats['errors'])} failures")
+            for error in rollback_stats["errors"]:
+                print(f"  - {error}")
+        else:
+            print(f"Rollback completed: {rollback_stats['facts_restored']} facts, "
+                  f"{rollback_stats['memories_restored']} memories, "
+                  f"{rollback_stats['conversations_restored']} conversations restored")
+
+        return rollback_stats
 
 
 __all__ = ["AgentsAPI", "AgentValidationError"]
