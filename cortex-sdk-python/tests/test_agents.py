@@ -819,7 +819,7 @@ async def test_cascade_delete_across_memory_spaces(cortex_client, ctx):
             content="Memory in space 1",
             content_type="raw",
             participant_id=agent_id,
-            source=MemorySource(type="system"),
+            source=MemorySource(type="system", timestamp=0),
             metadata=MemoryMetadata(importance=50, tags=[]),
         ),
     )
@@ -831,7 +831,7 @@ async def test_cascade_delete_across_memory_spaces(cortex_client, ctx):
             content="Memory in space 2",
             content_type="raw",
             participant_id=agent_id,
-            source=MemorySource(type="system"),
+            source=MemorySource(type="system", timestamp=0),
             metadata=MemoryMetadata(importance=50, tags=[]),
         ),
     )
@@ -866,8 +866,8 @@ async def test_cascade_delete_across_memory_spaces(cortex_client, ctx):
     # Verify memories are deleted in both spaces
     remaining1 = await cortex_client.vector.list(memory_space_id=space1_id)
     remaining2 = await cortex_client.vector.list(memory_space_id=space2_id)
-    agent_memories1 = [m for m in remaining1 if m.get("participantId") == agent_id]
-    agent_memories2 = [m for m in remaining2 if m.get("participantId") == agent_id]
+    agent_memories1 = [m for m in remaining1 if getattr(m, "participant_id", None) == agent_id]
+    agent_memories2 = [m for m in remaining2 if getattr(m, "participant_id", None) == agent_id]
     assert len(agent_memories1) == 0
     assert len(agent_memories2) == 0
 
@@ -971,7 +971,7 @@ async def test_cascade_delete_without_registration(cortex_client, ctx):
             content="Memory from unregistered agent",
             content_type="raw",
             participant_id=agent_id,  # Agent never registered!
-            source=MemorySource(type="system"),
+            source=MemorySource(type="system", timestamp=0),
             metadata=MemoryMetadata(importance=50, tags=[]),
         ),
     )
@@ -981,7 +981,7 @@ async def test_cascade_delete_without_registration(cortex_client, ctx):
 
     # Verify memory exists
     before_memories = await cortex_client.vector.list(memory_space_id=space_id)
-    agent_memories = [m for m in before_memories if m.get("participantId") == agent_id]
+    agent_memories = [m for m in before_memories if getattr(m, "participant_id", None) == agent_id]
     assert len(agent_memories) >= 1
 
     # CASCADE DELETE (without registration)
@@ -996,7 +996,7 @@ async def test_cascade_delete_without_registration(cortex_client, ctx):
 
     # Verify memories are gone
     after_memories = await cortex_client.vector.list(memory_space_id=space_id)
-    remaining = [m for m in after_memories if m.get("participantId") == agent_id]
+    remaining = [m for m in after_memories if getattr(m, "participant_id", None) == agent_id]
     assert len(remaining) == 0
 
     print("  ✅ Cascade works without registration (queries by participantId in data)")
@@ -1071,7 +1071,7 @@ async def test_unregister_many_with_cascade(cortex_client, ctx):
 
     # Verify memory was created
     before_memories = await cortex_client.vector.list(memory_space_id=space_id)
-    agent_memories = [m for m in before_memories if m.get("participantId") == agent1_id]
+    agent_memories = [m for m in before_memories if getattr(m, "participant_id", None) == agent1_id]
     assert len(agent_memories) > 0
 
     # Unregister with cascade using scoped metadata filter
@@ -1117,7 +1117,7 @@ async def test_agent_statistics_from_actual_data(cortex_client, ctx):
             content="Test memory 1",
             content_type="raw",
             participant_id=agent_id,
-            source=MemorySource(type="system"),
+            source=MemorySource(type="system", timestamp=0),
             metadata=MemoryMetadata(importance=50, tags=[]),
         ),
     )
@@ -1127,7 +1127,7 @@ async def test_agent_statistics_from_actual_data(cortex_client, ctx):
             content="Test memory 2",
             content_type="raw",
             participant_id=agent_id,
-            source=MemorySource(type="system"),
+            source=MemorySource(type="system", timestamp=0),
             metadata=MemoryMetadata(importance=50, tags=[]),
         ),
     )

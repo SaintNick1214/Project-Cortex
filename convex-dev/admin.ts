@@ -38,9 +38,10 @@ export const listTable = query({
   handler: async (ctx, args) => {
     const limit = Math.min(args.limit ?? 1000, 1000);
 
-    // Use type assertion since we're dynamically accessing tables
-    const records = await ctx.db
-      .query(args.table as "agents")
+    // Query the specified table dynamically
+    // The table name is validated by the union type in args
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const records = await (ctx.db.query as any)(args.table)
       .order("desc")
       .take(limit);
 
@@ -113,8 +114,10 @@ export const clearTable = mutation({
   handler: async (ctx, args) => {
     const limit = Math.min(args.limit ?? 1000, 1000);
 
-    const records = await ctx.db
-      .query(args.table as "agents")
+    // Query the specified table dynamically
+    // The table name is validated by the union type in args
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const records = await (ctx.db.query as any)(args.table)
       .order("desc")
       .take(limit);
 
