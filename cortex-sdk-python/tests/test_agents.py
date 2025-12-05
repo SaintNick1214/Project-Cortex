@@ -753,3 +753,405 @@ async def test_unregister_many_dry_run(cortex_client, ctx):
 
     # Cleanup
     await cortex_client.agents.unregister(agent_id)
+
+
+# ============================================================================
+# Cascade Deletion Tests (Port of: agents.test.ts - cascade mode)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_cascade_delete_across_memory_spaces(cortex_client, ctx):
+    """
+    Test cascade deletion by participantId across all memory spaces.
+
+    Port of: agents.test.ts - "performs cascade deletion by participantId across all spaces"
+    """
+    import asyncio
+    from cortex import UnregisterAgentOptions
+
+    agent_id = ctx.agent_id("cascade")
+    space1_id = ctx.memory_space_id("cascade-1")
+    space2_id = ctx.memory_space_id("cascade-2")
+
+    # Register agent
+    await cortex_client.agents.register(
+        AgentRegistration(id=agent_id, name="Cascade Test Agent")
+    )
+
+    # Register memory spaces
+    await cortex_client.memory_spaces.register(
+        memory_space_id=space1_id,
+        space_type="personal",
+    )
+    await cortex_client.memory_spaces.register(
+        memory_space_id=space2_id,
+        space_type="personal",
+    )
+
+    # Create data in space 1 with participantId
+    await cortex_client.conversations.create(
+        memory_space_id=space1_id,
+        participant_id=agent_id,
+        conversation_type="user-agent",
+        participants={"userId": "test-user-1", "participantId": agent_id},
+    )
+
+    await cortex_client.vector.store(
+        memory_space_id=space1_id,
+        content="Memory in space 1",
+        content_type="raw",
+        participant_id=agent_id,
+        source={"type": "system"},
+        metadata={"importance": 50, "tags": []},
+    )
+
+    # Create data in space 2 with participantId
+    await cortex_client.vector.store(
+        memory_space_id=space2_id,
+        content="Memory in space 2",
+        content_type="raw",
+        participant_id=agent_id,
+        source={"type": "system"},
+        metadata={"importance": 50, "tags": []},
+    )
+
+    # Wait for data to persist
+    await asyncio.sleep(0.2)
+
+    # Verify setup
+    memories1 = await cortex_client.vector.list(memory_space_id=space1_id)
+    memories2 = await cortex_client.vector.list(memory_space_id=space2_id)
+    print(f"  ℹ️  Setup: {len(memories1)} memories in space1, {len(memories2)} in space2")
+
+    # CASCADE DELETE
+    result = await cortex_client.agents.unregister(
+        agent_id,
+        UnregisterAgentOptions(cascade=True),
+    )
+
+    # Verify counts
+    assert result.agent_id == agent_id
+    assert result.memories_deleted >= 2  # At least 2 memories
+    assert result.conversations_deleted >= 1
+    assert result.total_deleted > 1
+    assert space1_id in result.memory_spaces_affected
+    assert space2_id in result.memory_spaces_affected
+    assert len(result.deleted_layers) > 1
+
+    # Verify agent is unregistered
+    agent = await cortex_client.agents.get(agent_id)
+    assert agent is None
+
+    # Verify memories are deleted in both spaces
+    remaining1 = await cortex_client.vector.list(memory_space_id=space1_id)
+    remaining2 = await cortex_client.vector.list(memory_space_id=space2_id)
+    agent_memories1 = [m for m in remaining1 if m.get("participantId") == agent_id]
+    agent_memories2 = [m for m in remaining2 if m.get("participantId") == agent_id]
+    assert len(agent_memories1) == 0
+    assert len(agent_memories2) == 0
+
+    print(f"  ✅ Cascade complete: Deleted from {len(result.memory_spaces_affected)} spaces")
+    print(f"     Layers: {', '.join(result.deleted_layers)}")
+
+    # Cleanup spaces
+    await cortex_client.memory_spaces.delete(space1_id)
+    await cortex_client.memory_spaces.delete(space2_id)
+
+
+@pytest.mark.asyncio
+async def test_cascade_delete_dry_run(cortex_client, ctx):
+    """
+    Test dry run mode previews deletion without actually deleting.
+
+    Port of: agents.test.ts - "previews deletion without actually deleting"
+    """
+    from cortex import UnregisterAgentOptions
+
+    agent_id = ctx.agent_id("dry-run-cascade")
+
+    # Register agent
+    await cortex_client.agents.register(
+        AgentRegistration(id=agent_id, name="Dry Run Test Agent")
+    )
+
+    # Cascade delete with dry_run
+    result = await cortex_client.agents.unregister(
+        agent_id,
+        UnregisterAgentOptions(cascade=True, dry_run=True),
+    )
+
+    # Should return preview
+    assert result.agent_id == agent_id
+    # In dry run, agent should still exist
+    agent = await cortex_client.agents.get(agent_id)
+    assert agent is not None
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent_id)
+
+
+@pytest.mark.asyncio
+async def test_cascade_delete_with_verification(cortex_client, ctx):
+    """
+    Test verification step after cascade deletion.
+
+    Port of: agents.test.ts - "runs verification step after deletion"
+    """
+    from cortex import UnregisterAgentOptions
+
+    agent_id = ctx.agent_id("verify-cascade")
+
+    # Register agent
+    await cortex_client.agents.register(
+        AgentRegistration(id=agent_id, name="Verify Test Agent")
+    )
+
+    # Cascade delete with verification
+    result = await cortex_client.agents.unregister(
+        agent_id,
+        UnregisterAgentOptions(cascade=True, verify=True),
+    )
+
+    # Should have verification result
+    assert result.verification is not None
+    assert hasattr(result.verification, "complete")
+    assert hasattr(result.verification, "issues")
+
+    # Verification should be complete (or have graph adapter warning)
+    if not result.verification.complete:
+        print(f"  ℹ️  Verification issues: {result.verification.issues}")
+
+
+@pytest.mark.asyncio
+async def test_cascade_delete_without_registration(cortex_client, ctx):
+    """
+    Test cascade delete works even if agent was never registered.
+
+    Port of: agents.test.ts - "deletes data even if agent was never registered"
+    """
+    import asyncio
+    from cortex import UnregisterAgentOptions
+
+    agent_id = ctx.agent_id("unregistered")
+    space_id = ctx.memory_space_id("unreg-space")
+
+    # DON'T register the agent - just create data with participantId
+    await cortex_client.memory_spaces.register(
+        memory_space_id=space_id,
+        space_type="personal",
+    )
+
+    await cortex_client.vector.store(
+        memory_space_id=space_id,
+        content="Memory from unregistered agent",
+        content_type="raw",
+        participant_id=agent_id,  # Agent never registered!
+        source={"type": "system"},
+        metadata={"importance": 50, "tags": []},
+    )
+
+    # Wait for data to persist
+    await asyncio.sleep(0.2)
+
+    # Verify memory exists
+    before_memories = await cortex_client.vector.list(memory_space_id=space_id)
+    agent_memories = [m for m in before_memories if m.get("participantId") == agent_id]
+    assert len(agent_memories) >= 1
+
+    # CASCADE DELETE (without registration)
+    result = await cortex_client.agents.unregister(
+        agent_id,
+        UnregisterAgentOptions(cascade=True),
+    )
+
+    # Should still delete the memories
+    assert result.memories_deleted >= 1
+    assert result.total_deleted >= 1
+
+    # Verify memories are gone
+    after_memories = await cortex_client.vector.list(memory_space_id=space_id)
+    remaining = [m for m in after_memories if m.get("participantId") == agent_id]
+    assert len(remaining) == 0
+
+    print("  ✅ Cascade works without registration (queries by participantId in data)")
+
+    # Cleanup
+    await cortex_client.memory_spaces.delete(space_id)
+
+
+@pytest.mark.asyncio
+async def test_unregister_many_with_cascade(cortex_client, ctx):
+    """
+    Test bulk unregister with cascade deletion.
+
+    Port of: agents.test.ts - "unregisters with cascade deletion"
+    """
+    import asyncio
+    from cortex import UnregisterAgentOptions
+
+    agent1_id = ctx.agent_id("cascade-bulk-1")
+    agent2_id = ctx.agent_id("cascade-bulk-2")
+    space_id = ctx.memory_space_id("bulk-cascade")
+    test_env_tag = f"cascade-test-{ctx.run_id}"
+
+    # Register memory space
+    await cortex_client.memory_spaces.register(
+        memory_space_id=space_id,
+        space_type="personal",
+    )
+
+    # Register agents with test-scoped metadata
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent1_id,
+            name="Cascade Bulk 1",
+            metadata={"environment": test_env_tag},
+        )
+    )
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent2_id,
+            name="Cascade Bulk 2",
+            metadata={"environment": test_env_tag},
+        )
+    )
+
+    # Create data for agent1
+    conv = await cortex_client.conversations.create(
+        memory_space_id=space_id,
+        conversation_type="user-agent",
+        participants={"userId": ctx.user_id("bulk-test"), "participantId": agent1_id},
+    )
+
+    await cortex_client.memory.remember(
+        memory_space_id=space_id,
+        participant_id=agent1_id,
+        conversation_id=conv.conversation_id,
+        user_message="Test",
+        agent_response="OK",
+        user_id=ctx.user_id("bulk-test"),
+        user_name="Test User",
+        agent_id=agent1_id,
+    )
+
+    await asyncio.sleep(0.2)
+
+    # Verify memory was created
+    before_memories = await cortex_client.vector.list(memory_space_id=space_id)
+    agent_memories = [m for m in before_memories if m.get("participantId") == agent1_id]
+    assert len(agent_memories) > 0
+
+    # Unregister with cascade using scoped metadata filter
+    result = await cortex_client.agents.unregister_many(
+        filters={"metadata": {"environment": test_env_tag}},
+        options=UnregisterAgentOptions(cascade=True),
+    )
+
+    assert result["deleted"] == 2
+    assert result["total_data_deleted"] > 0
+
+    # Cleanup
+    await cortex_client.memory_spaces.delete(space_id)
+
+
+@pytest.mark.asyncio
+async def test_agent_statistics_from_actual_data(cortex_client, ctx):
+    """
+    Test that agent statistics are computed from actual data.
+
+    Port of: agents.test.ts - "computes stats from actual data"
+    """
+    import asyncio
+
+    agent_id = ctx.agent_id("stats-data")
+    space_id = ctx.memory_space_id("stats-space")
+
+    # Register agent and space
+    await cortex_client.agents.register(
+        AgentRegistration(id=agent_id, name="Stats Data Agent")
+    )
+    await cortex_client.memory_spaces.register(
+        memory_space_id=space_id,
+        space_type="personal",
+    )
+
+    # Create actual data
+    await cortex_client.vector.store(
+        memory_space_id=space_id,
+        content="Test memory 1",
+        content_type="raw",
+        participant_id=agent_id,
+        source={"type": "system"},
+        metadata={"importance": 50, "tags": []},
+    )
+    await cortex_client.vector.store(
+        memory_space_id=space_id,
+        content="Test memory 2",
+        content_type="raw",
+        participant_id=agent_id,
+        source={"type": "system"},
+        metadata={"importance": 50, "tags": []},
+    )
+
+    await asyncio.sleep(0.1)
+
+    # Get stats
+    stats = await cortex_client.agents.get_stats(agent_id)
+
+    assert stats is not None
+    # Stats should reflect actual data
+    total_memories = stats.get("totalMemories") or stats.get("total_memories", 0)
+    assert total_memories >= 2
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent_id)
+    await cortex_client.memory_spaces.delete(space_id)
+
+
+# ============================================================================
+# Edge Cases (Port of: agents.test.ts - edge cases)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_unregister_nonexistent_agent_gracefully(cortex_client, ctx):
+    """
+    Test handling unregistering non-existent agent gracefully.
+
+    Port of: agents.test.ts - "handles unregistering non-existent agent gracefully"
+    """
+    from cortex import UnregisterAgentOptions
+
+    result = await cortex_client.agents.unregister(
+        ctx.agent_id("non-existent-edge"),
+        UnregisterAgentOptions(cascade=True),
+    )
+
+    assert result.total_deleted == 0
+
+
+@pytest.mark.asyncio
+async def test_unregister_agent_with_no_data(cortex_client, ctx):
+    """
+    Test handling agent with no data.
+
+    Port of: agents.test.ts - "handles agent with no data"
+    """
+    from cortex import UnregisterAgentOptions
+
+    agent_id = ctx.agent_id("empty")
+
+    await cortex_client.agents.register(
+        AgentRegistration(id=agent_id, name="Empty Agent")
+    )
+
+    result = await cortex_client.agents.unregister(
+        agent_id,
+        UnregisterAgentOptions(cascade=True),
+    )
+
+    # Just registration deleted
+    assert result.total_deleted >= 1
+    assert result.memories_deleted == 0
+    assert result.conversations_deleted == 0
