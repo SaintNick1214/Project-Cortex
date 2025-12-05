@@ -66,12 +66,25 @@ export const deleteRecord = mutation({
       v.literal("memorySpaces"),
       v.literal("mutable"),
     ),
-    id: v.id("agents"), // Will be cast to appropriate type
+    // Accept any valid Convex ID - table routing is handled by the ID itself
+    id: v.union(
+      v.id("agents"),
+      v.id("contexts"),
+      v.id("conversations"),
+      v.id("facts"),
+      v.id("governanceEnforcement"),
+      v.id("governancePolicies"),
+      v.id("graphSyncQueue"),
+      v.id("immutable"),
+      v.id("memories"),
+      v.id("memorySpaces"),
+      v.id("mutable"),
+    ),
   },
   handler: async (ctx, args) => {
     // Delete the record directly using Convex _id
-    // The id type is polymorphic - Convex handles the table routing
-    await ctx.db.delete(args.id as typeof args.id);
+    // Convex routes to the correct table based on the ID prefix
+    await ctx.db.delete(args.id);
     return { deleted: true };
   },
 });
