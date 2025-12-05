@@ -78,9 +78,9 @@
     "update-deps:dry": "node scripts/update-deps.mjs --dry-run"
   },
   "peerDependencies": {
+    "@anthropic-ai/sdk": "^0.30.0",
     "convex": "^1.30.0",
-    "openai": "^4.0.0 || ^5.0.0 || ^6.0.0",
-    "@anthropic-ai/sdk": "^0.30.0"
+    "openai": "^4.0.0 || ^5.0.0 || ^6.0.0"
   },
   "peerDependenciesMeta": {
     "openai": {
@@ -113,6 +113,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "anthropic": "^0.0.0",
     "neo4j-driver": "^6.0.1"
   }
 }

@@ -42,7 +42,7 @@ class TestMemorySpaceStatsConsistency:
                 CreateConversationInput(
                     type="user-agent",
                     memory_space_id=space_id,
-                    participants={"userId": f"user-{i}"},
+                    participants={"userId": f"user-{i}", "agentId": "test-agent"},
                 )
             )
 
@@ -146,7 +146,7 @@ class TestStatsUpdateImmediately:
             CreateConversationInput(
                 type="user-agent",
                 memory_space_id=space_id,
-                participants={"userId": "test-user"},
+                participants={"userId": "test-user", "agentId": "test-agent"},
             )
         )
 
