@@ -705,7 +705,7 @@ class AgentsAPI:
         conversation_messages_deleted = 0
         memories_deleted = 0
         facts_deleted = 0
-        graph_nodes_deleted = 0
+        graph_nodes_deleted: Optional[int] = None  # None = not attempted, 0+ = attempted
 
         # 1. Delete facts (batch)
         if plan.get("facts"):
@@ -749,8 +749,8 @@ class AgentsAPI:
                 graph_nodes_deleted = await delete_agent_from_graph(
                     agent_id, self.graph_adapter
                 )
-                if graph_nodes_deleted > 0:
-                    deleted_layers.append("graph")
+                # Always mark graph as attempted (even if 0 nodes deleted)
+                deleted_layers.append("graph")
             except Exception as error:
                 print(f"Warning: Failed to delete from graph: {error}")
 
@@ -768,7 +768,7 @@ class AgentsAPI:
             conversations_deleted +
             memories_deleted +
             facts_deleted +
-            (graph_nodes_deleted if "graph" in deleted_layers else 0) +
+            (graph_nodes_deleted or 0) +
             (1 if "agent-registration" in deleted_layers else 0)
         )
 
@@ -779,7 +779,7 @@ class AgentsAPI:
             conversation_messages_deleted=conversation_messages_deleted,
             memories_deleted=memories_deleted,
             facts_deleted=facts_deleted,
-            graph_nodes_deleted=graph_nodes_deleted if "graph" in deleted_layers else None,
+            graph_nodes_deleted=graph_nodes_deleted,  # None if not attempted, 0+ if attempted
             total_deleted=total_deleted,
             deleted_layers=deleted_layers,
             memory_spaces_affected=memory_spaces_affected,
