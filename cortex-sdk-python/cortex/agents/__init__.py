@@ -445,14 +445,16 @@ class AgentsAPI:
             memories_count = len(plan.get("memories", []))
             facts_count = len(plan.get("facts", []))
             graph_nodes_count = len(plan.get("graph", []))
+            agent_registered = plan.get("agent_registered", False)
 
-            # Total = all records that would be deleted + 1 for agent registration
+            # Total = all records that would be deleted + 1 for agent registration (only if registered)
+            # This matches the actual execution logic which only counts registration if it succeeds
             total_deleted = (
                 conversations_count +
                 memories_count +
                 facts_count +
                 graph_nodes_count +
-                1  # agent registration
+                (1 if agent_registered else 0)
             )
 
             return UnregisterAgentResult(
@@ -612,7 +614,15 @@ class AgentsAPI:
             "facts": [],
             "graph": [],
             "memory_spaces": [],
+            "agent_registered": False,  # Track if agent is registered
         }
+        
+        # Check if agent is registered
+        try:
+            agent = await self.client.query("agents:getByAgentId", {"agentId": agent_id})
+            plan["agent_registered"] = agent is not None
+        except Exception:
+            plan["agent_registered"] = False
 
         affected_spaces: set = set()
 
@@ -665,14 +675,52 @@ class AgentsAPI:
         async def collect_graph_nodes() -> List[Dict[str, Any]]:
             if not self.graph_adapter:
                 return []
+            nodes: List[Dict[str, Any]] = []
+            seen_ids: set = set()
+            
             try:
+                # 1. Query for Agent node by agentId (same as delete_agent_from_graph step 1)
+                agent_result = await self.graph_adapter.query(
+                    "MATCH (n:Agent {agentId: $agentId}) RETURN elementId(n) as id, labels(n) as labels",
+                    {"agentId": agent_id},
+                )
+                for r in agent_result.get("records", []):
+                    node_id = r.get("id")
+                    if node_id and node_id not in seen_ids:
+                        seen_ids.add(node_id)
+                        nodes.append({"nodeId": node_id, "labels": r.get("labels", [])})
+            except Exception:
+                pass
+            
+            try:
+                # 2. Query for nodes where participantId matches (same as delete_agent_from_graph step 2)
                 result = await self.graph_adapter.query(
                     "MATCH (n {participantId: $participantId}) RETURN elementId(n) as id, labels(n) as labels",
                     {"participantId": agent_id},
                 )
-                return [{"nodeId": r.get("id"), "labels": r.get("labels", [])} for r in result.get("records", [])]
+                for r in result.get("records", []):
+                    node_id = r.get("id")
+                    if node_id and node_id not in seen_ids:
+                        seen_ids.add(node_id)
+                        nodes.append({"nodeId": node_id, "labels": r.get("labels", [])})
             except Exception:
-                return []
+                pass
+            
+            try:
+                # 3. Query for nodes where agentId matches (same as delete_agent_from_graph step 3)
+                result = await self.graph_adapter.query(
+                    "MATCH (n {agentId: $agentId}) RETURN elementId(n) as id, labels(n) as labels",
+                    {"agentId": agent_id},
+                )
+                for r in result.get("records", []):
+                    node_id = r.get("id")
+                    if node_id and node_id not in seen_ids:
+                        seen_ids.add(node_id)
+                        nodes.append({"nodeId": node_id, "labels": r.get("labels", [])})
+            except Exception:
+                pass
+            
+            return nodes
 
         # PARALLEL COLLECTION: Query all spaces simultaneously
         conversation_results, memory_results, fact_results, graph_nodes = await asyncio.gather(
