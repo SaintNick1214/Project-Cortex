@@ -622,7 +622,11 @@ class AgentsAPI:
                     "memories:list",
                     {"memorySpaceId": space.get("memorySpaceId")},
                 )
-                agent_memories = [m for m in memories if m.get("participantId") == agent_id]
+                # Check both participantId and agentId (v0.17.0+ agent-owned memories)
+                agent_memories = [
+                    m for m in memories
+                    if m.get("participantId") == agent_id or m.get("agentId") == agent_id
+                ]
                 return {"spaceId": space.get("memorySpaceId"), "memories": agent_memories}
             except Exception:
                 return {"spaceId": space.get("memorySpaceId"), "memories": []}
@@ -806,7 +810,11 @@ class AgentsAPI:
                         "memories:list",
                         {"memorySpaceId": space.get("memorySpaceId")},
                     )
-                    return len([m for m in memories if m.get("participantId") == agent_id])
+                    # Check both participantId and agentId (v0.17.0+ agent-owned memories)
+                    return len([
+                        m for m in memories
+                        if m.get("participantId") == agent_id or m.get("agentId") == agent_id
+                    ])
                 except Exception:
                     return 0
             results = await asyncio.gather(*[check_space(s) for s in memory_spaces])

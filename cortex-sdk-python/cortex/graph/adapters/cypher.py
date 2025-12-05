@@ -214,17 +214,19 @@ class CypherGraphAdapter:
         extra_props = {
             k: v for k, v in node.properties.items() if k not in match_properties
         }
-        set_clause = (
-            "ON CREATE SET n += $createProps ON MATCH SET n += $updateProps"
-            if extra_props
-            else ""
-        )
 
-        query = f"""
-            MERGE (n:{node.label} {{{match_prop_str}}})
-            {set_clause}
-            RETURN {id_func}(n) as id
-        """
+        # Build query with or without SET clause to avoid empty lines
+        if extra_props:
+            query = f"""
+                MERGE (n:{node.label} {{{match_prop_str}}})
+                ON CREATE SET n += $createProps ON MATCH SET n += $updateProps
+                RETURN {id_func}(n) as id
+            """
+        else:
+            query = f"""
+                MERGE (n:{node.label} {{{match_prop_str}}})
+                RETURN {id_func}(n) as id
+            """
 
         # Build parameters
         params: Dict[str, Any] = {}
