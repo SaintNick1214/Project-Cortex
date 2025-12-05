@@ -355,7 +355,8 @@ export const getOrCreate = mutation({
         );
       }
 
-      // Look for existing in this memory space with this user
+      // Look for existing in this memory space with this user AND agent
+      // v0.17.0: Must match agentId to support multiple agents per user/space
       existing = await ctx.db
         .query("conversations")
         .withIndex("by_memorySpace_user", (q) =>
@@ -363,7 +364,12 @@ export const getOrCreate = mutation({
             .eq("memorySpaceId", args.memorySpaceId!)
             .eq("participants.userId", args.participants.userId),
         )
-        .filter((q) => q.eq(q.field("type"), "user-agent"))
+        .filter((q) =>
+          q.and(
+            q.eq(q.field("type"), "user-agent"),
+            q.eq(q.field("participants.agentId"), args.participants.agentId),
+          ),
+        )
         .first();
     } else {
       // agent-agent (Collaboration Mode)
