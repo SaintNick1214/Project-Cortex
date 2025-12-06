@@ -5,7 +5,7 @@
  * Namespaces: inventory, config, counters, sessions, state, etc.
  */
 
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -89,7 +89,7 @@ export const update = mutation({
       .first();
 
     if (!existing) {
-      throw new Error("MUTABLE_KEY_NOT_FOUND");
+      throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
     }
 
     let newValue = existing.value;
@@ -140,7 +140,7 @@ export const deleteKey = mutation({
       .first();
 
     if (!entry) {
-      throw new Error("MUTABLE_KEY_NOT_FOUND");
+      throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
     }
 
     await ctx.db.delete(entry._id);
@@ -238,7 +238,7 @@ export const transaction = mutation({
         operation.op === "decrement"
       ) {
         if (!existing) {
-          throw new Error(
+          throw new ConvexError(
             `MUTABLE_KEY_NOT_FOUND: ${operation.namespace}/${operation.key}`,
           );
         }
@@ -261,7 +261,7 @@ export const transaction = mutation({
         results.push(await ctx.db.get(existing._id));
       } else if (operation.op === "delete") {
         if (!existing) {
-          throw new Error(
+          throw new ConvexError(
             `MUTABLE_KEY_NOT_FOUND: ${operation.namespace}/${operation.key}`,
           );
         }

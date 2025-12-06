@@ -15,7 +15,7 @@ from tests.helpers import embeddings_available
 
 @pytest.mark.asyncio
 async def test_openai_stores_multiple_facts_with_real_embeddings(
-    cortex_client, test_memory_space_id, test_user_id, test_conversation_id, cleanup_helper
+    cortex_client, test_memory_space_id, test_user_id, test_agent_id, test_conversation_id, cleanup_helper
 ):
     """
     Port of: memory.test.ts - "stores multiple facts with real embeddings and summarization"
@@ -69,6 +69,7 @@ async def test_openai_stores_multiple_facts_with_real_embeddings(
                 agent_response=conv["agent"],
                 user_id=test_user_id,
                 user_name="Alex Johnson",
+                agent_id=test_agent_id,
                 generate_embedding=generate_embedding,
                 extract_content=summarize_conversation,
                 importance=100 if conv["fact"] == "api-password" else 70,
@@ -105,7 +106,7 @@ async def test_openai_stores_multiple_facts_with_real_embeddings(
 
 @pytest.mark.asyncio
 async def test_openai_recalls_facts_using_semantic_search(
-    cortex_client, test_memory_space_id, test_user_id, test_conversation_id, cleanup_helper
+    cortex_client, test_memory_space_id, test_user_id, test_agent_id, test_conversation_id, cleanup_helper
 ):
     """
     Port of: memory.test.ts - "recalls facts using semantic search (not keyword matching)"
@@ -142,6 +143,7 @@ async def test_openai_recalls_facts_using_semantic_search(
                 agent_response=conv["agent"],
                 user_id=test_user_id,
                 user_name="Alex Johnson",
+                agent_id=test_agent_id,
                 generate_embedding=generate_embedding,
                 extract_content=summarize_conversation,
                 importance=100 if conv["fact"] == "api-password" else 70,
@@ -204,7 +206,7 @@ async def test_openai_recalls_facts_using_semantic_search(
 
 @pytest.mark.asyncio
 async def test_openai_enriches_search_results_with_conversation_context(
-    cortex_client, test_memory_space_id, test_user_id, test_conversation_id, cleanup_helper
+    cortex_client, test_memory_space_id, test_user_id, test_agent_id, test_conversation_id, cleanup_helper
 ):
     """
     Port of: memory.test.ts - "enriches search results with full conversation context"
@@ -230,6 +232,7 @@ async def test_openai_enriches_search_results_with_conversation_context(
             agent_response="I'll remember that password securely",
             user_id=test_user_id,
             user_name="Alex Johnson",
+            agent_id=test_agent_id,
             generate_embedding=generate_embedding,
             extract_content=summarize_conversation,
             importance=100,
@@ -305,6 +308,7 @@ async def test_openai_validates_summarization_quality(
             agent_response="Got it, I'll call you Alex!",
             user_id=test_user_id,
             user_name="Alex Johnson",
+            agent_id="test-agent",
             generate_embedding=generate_embedding,
             extract_content=summarize_conversation,
             importance=70,
@@ -339,7 +343,7 @@ async def test_openai_validates_summarization_quality(
 
 @pytest.mark.asyncio
 async def test_openai_similarity_scores_are_realistic(
-    cortex_client, test_memory_space_id, test_user_id, test_conversation_id, cleanup_helper
+    cortex_client, test_memory_space_id, test_user_id, test_agent_id, test_conversation_id, cleanup_helper
 ):
     """
     Port of: memory.test.ts - "similarity scores are realistic (0-1 range)"
@@ -374,6 +378,7 @@ async def test_openai_similarity_scores_are_realistic(
                 agent_response=conv["agent"],
                 user_id=test_user_id,
                 user_name="Alex Johnson",
+                agent_id=test_agent_id,
                 generate_embedding=generate_embedding,
                 extract_content=summarize_conversation,
                 importance=80,

@@ -10,6 +10,7 @@ import type { Conversation, MemoryEntry, FactRecord } from "../../types";
 import {
   findGraphNodeId,
   ensureUserNode,
+  ensureAgentNode,
   ensureParticipantNode,
   ensureEntityNode,
   ensureEnrichedEntityNode,
@@ -176,6 +177,23 @@ export async function syncConversationRelationships(
     });
   }
 
+  // Agent relationship
+  if (conversation.participants.agentId) {
+    const agentNodeId = await ensureAgentNode(
+      conversation.participants.agentId,
+      adapter,
+    );
+
+    await adapter.createEdge({
+      type: "INVOLVES",
+      from: conversationNodeId,
+      to: agentNodeId,
+      properties: {
+        createdAt: conversation.createdAt,
+      },
+    });
+  }
+
   // Participant relationship (Hive Mode)
   if (conversation.participantId) {
     const participantNodeId = await ensureParticipantNode(
@@ -239,6 +257,20 @@ export async function syncMemoryRelationships(
       type: "RELATES_TO",
       from: memoryNodeId,
       to: userNodeId,
+      properties: {
+        createdAt: memory.createdAt,
+      },
+    });
+  }
+
+  // agentId → RELATES_TO edge
+  if (memory.agentId) {
+    const agentNodeId = await ensureAgentNode(memory.agentId, adapter);
+
+    await adapter.createEdge({
+      type: "RELATES_TO",
+      from: memoryNodeId,
+      to: agentNodeId,
       properties: {
         createdAt: memory.createdAt,
       },

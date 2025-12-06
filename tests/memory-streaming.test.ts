@@ -251,6 +251,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
   // Use ctx-scoped IDs for parallel execution isolation
   const TEST_MEMSPACE_ID = streamCtx.memorySpaceId("streaming");
+  const TEST_AGENT_ID = streamCtx.agentId("streaming");
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
@@ -289,6 +290,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
         responseStream: stream,
         userId: "user-stream-1",
         userName: "StreamUser",
+        agentId: TEST_AGENT_ID,
       });
 
       expect(result.fullResponse).toBe("The weather is sunny today.");
@@ -317,6 +319,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
         responseStream: generator(),
         userId: "user-stream-2",
         userName: "StreamUser",
+        agentId: TEST_AGENT_ID,
       });
 
       expect(result.fullResponse).toBe("Hello from generator");
@@ -341,6 +344,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
         responseStream: responseGenerator(),
         userId: "user-stream-3",
         userName: "StreamUser",
+        agentId: TEST_AGENT_ID,
       });
 
       expect(result.fullResponse).toBe("First Second Third");
@@ -372,6 +376,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
         responseStream: stream,
         userId: "user-emb",
         userName: "EmbedUser",
+        agentId: TEST_AGENT_ID,
         generateEmbedding,
       });
 
@@ -420,6 +425,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
         responseStream: stream,
         userId: "user-facts",
         userName: "FactUser",
+        agentId: TEST_AGENT_ID,
         extractFacts,
       });
 
@@ -445,6 +451,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
           responseStream: stream,
           userId: "user-error",
           userName: "ErrorUser",
+          agentId: TEST_AGENT_ID,
         }),
       ).rejects.toThrow(/produced no content/);
     });
@@ -465,6 +472,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
           responseStream: stream,
           userId: "user-error-2",
           userName: "ErrorUser",
+          agentId: TEST_AGENT_ID,
         }),
       ).rejects.toThrow(/Stream failure/);
     });
@@ -486,6 +494,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
           responseStream: stream,
           userId: "user-whitespace",
           userName: "WhitespaceUser",
+          agentId: TEST_AGENT_ID,
         }),
       ).rejects.toThrow(/produced no content/);
     });
@@ -493,8 +502,8 @@ describe("Memory Streaming: rememberStream() Integration", () => {
 
   describe("Memory Space Isolation", () => {
     it("should respect memory space boundaries", async () => {
-      const space1 = "stream-space-1";
-      const space2 = "stream-space-2";
+      const space1 = `stream-space-1-${Date.now()}`;
+      const space2 = `stream-space-2-${Date.now()}`;
 
       // Create both spaces
       await cortex.memorySpaces.register({
@@ -523,6 +532,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
         responseStream: stream1,
         userId: "user-space-test",
         userName: "SpaceUser",
+        agentId: TEST_AGENT_ID,
       });
 
       // Store in space 2
@@ -540,6 +550,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
         responseStream: stream2,
         userId: "user-space-test",
         userName: "SpaceUser",
+        agentId: TEST_AGENT_ID,
       });
 
       // Verify isolation
@@ -576,6 +587,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
         responseStream: stream,
         userId: "user-hive",
         userName: "HiveUser",
+        agentId: TEST_AGENT_ID,
         participantId: "assistant-a",
       });
 
@@ -606,6 +618,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
         responseStream: stream1,
         userId: "user-threading",
         userName: "ThreadUser",
+        agentId: TEST_AGENT_ID,
       });
 
       // Second stream
@@ -623,6 +636,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
         responseStream: stream2,
         userId: "user-threading",
         userName: "ThreadUser",
+        agentId: TEST_AGENT_ID,
       });
 
       // Verify conversation has both exchanges
@@ -653,6 +667,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
         responseStream: stream,
         userId: "user-large",
         userName: "LargeUser",
+        agentId: TEST_AGENT_ID,
       });
 
       expect(result.fullResponse.length).toBe(chunkSize * chunkCount);
@@ -679,6 +694,7 @@ describe("Memory Streaming: rememberStream() Integration", () => {
         responseStream: stream,
         userId: "user-emoji",
         userName: "EmojiUser",
+        agentId: TEST_AGENT_ID,
       });
 
       expect(result.fullResponse).toBe("Hello 🌍 World 🚀 Test 💡");

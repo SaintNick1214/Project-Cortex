@@ -176,7 +176,7 @@ class TestConversationSequences:
             CreateConversationInput(
                 type="user-agent",
                 memory_space_id=space_id,
-                participants={"userId": "test-user"},
+                participants={"userId": "test-user", "agentId": "test-agent"},
             )
         )
 
@@ -216,7 +216,7 @@ class TestConversationSequences:
             CreateConversationInput(
                 type="user-agent",
                 memory_space_id=space_id,
-                participants={"userId": "test-user"},
+                participants={"userId": "test-user", "agentId": "test-agent"},
             )
         )
 
@@ -590,7 +590,7 @@ class TestCrossLayerSequences:
             CreateConversationInput(
                 type="user-agent",
                 memory_space_id=space_id,
-                participants={"userId": user_id},
+                participants={"userId": user_id, "agentId": "test-agent"},
             )
         )
 
@@ -666,6 +666,7 @@ class TestCrossLayerSequences:
                 agent_response="Test response",
                 user_id="test-user",
                 user_name="Test User",
+                agent_id="test-agent",
             )
         )
 
@@ -777,7 +778,7 @@ class TestComplexWorkflows:
             CreateConversationInput(
                 type="user-agent",
                 memory_space_id=space_id,
-                participants={"userId": user_id},
+                participants={"userId": user_id, "agentId": "test-agent"},
             )
         )
 
@@ -799,6 +800,7 @@ class TestComplexWorkflows:
                 agent_response="Noted!",
                 user_id=user_id,
                 user_name="Journey User",
+                agent_id="test-agent",
             )
         )
 
@@ -856,7 +858,7 @@ class TestComplexWorkflows:
             CreateConversationInput(
                 type="user-agent",
                 memory_space_id=space_id,
-                participants={"userId": "cascade-user"},
+                participants={"userId": "cascade-user", "agentId": "test-agent"},
             )
         )
 

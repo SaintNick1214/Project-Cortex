@@ -241,6 +241,22 @@ export interface GraphAdapter {
   createNode(node: GraphNode): Promise<string>;
 
   /**
+   * Merge (upsert) a node in the graph
+   *
+   * Uses MERGE semantics: creates if not exists, matches if exists.
+   * Updates properties on existing nodes.
+   * This is idempotent and safe for concurrent operations.
+   *
+   * @param node Node to merge
+   * @param matchProperties Properties to match on (for finding existing node)
+   * @returns Promise that resolves to the node ID (existing or newly created)
+   */
+  mergeNode(
+    node: GraphNode,
+    matchProperties: Record<string, unknown>,
+  ): Promise<string>;
+
+  /**
    * Get a node by ID
    *
    * @param id Node ID

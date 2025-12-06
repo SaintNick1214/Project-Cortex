@@ -55,6 +55,26 @@ export class FactsAPI {
   ) {}
 
   /**
+   * Handle ConvexError from direct Convex calls
+   */
+  private handleConvexError(error: unknown): never {
+    if (
+      error &&
+      typeof error === "object" &&
+      "data" in error &&
+      (error as { data: unknown }).data !== undefined
+    ) {
+      const convexError = error as { data: unknown };
+      const errorData =
+        typeof convexError.data === "string"
+          ? convexError.data
+          : JSON.stringify(convexError.data);
+      throw new Error(errorData);
+    }
+    throw error;
+  }
+
+  /**
    * Execute an operation through the resilience layer (if available)
    */
   private async executeWithResilience<T>(
@@ -474,15 +494,20 @@ export class FactsAPI {
       validateMetadata(updates.metadata);
     }
 
-    const result = await this.client.mutation(api.facts.update, {
-      memorySpaceId,
-      factId,
-      fact: updates.fact,
-      confidence: updates.confidence,
-      tags: updates.tags,
-      validUntil: updates.validUntil,
-      metadata: updates.metadata,
-    });
+    let result;
+    try {
+      result = await this.client.mutation(api.facts.update, {
+        memorySpaceId,
+        factId,
+        fact: updates.fact,
+        confidence: updates.confidence,
+        tags: updates.tags,
+        validUntil: updates.validUntil,
+        metadata: updates.metadata,
+      });
+    } catch (error) {
+      this.handleConvexError(error);
+    }
 
     // Update in graph if requested
     if (options?.syncToGraph && this.graphAdapter) {
@@ -519,10 +544,15 @@ export class FactsAPI {
     validateRequiredString(factId, "factId");
     validateFactIdFormat(factId);
 
-    const result = await this.client.mutation(api.facts.deleteFact, {
-      memorySpaceId,
-      factId,
-    });
+    let result;
+    try {
+      result = await this.client.mutation(api.facts.deleteFact, {
+        memorySpaceId,
+        factId,
+      });
+    } catch (error) {
+      this.handleConvexError(error);
+    }
 
     // Delete from graph with Entity orphan cleanup
     if (options?.syncToGraph && this.graphAdapter) {

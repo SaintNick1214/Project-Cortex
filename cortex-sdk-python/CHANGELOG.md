@@ -5,6 +5,429 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.19.1] - 2025-12-03
+
+### 🛡️ Idempotent Graph Sync Operations
+
+**Graph sync operations now use MERGE instead of CREATE for resilient, idempotent operations. Full TypeScript SDK parity. Re-running scripts or handling race conditions no longer causes constraint violation errors.**
+
+#### ✨ New Features
+
+**1. `merge_node()` Method**
+
+New method on `GraphAdapter` protocol that uses Cypher `MERGE` semantics:
+
+- Creates node if not exists
+- Matches existing node if it does
+- Updates properties on match
+- Safe for concurrent operations
+
+```python
+# Idempotent - safe to call multiple times
+node_id = await adapter.merge_node(
+    GraphNode(
+        label="MemorySpace",
+        properties={"memorySpaceId": "space-123", "name": "Main"}
+    ),
+    {"memorySpaceId": "space-123"}  # Match properties
+)
+```
+
+**2. All Sync Utilities Now Idempotent**
+
+Updated sync functions to use `merge_node()`:
+
+- `sync_memory_space_to_graph()`
+- `sync_context_to_graph()`
+- `sync_conversation_to_graph()`
+- `sync_memory_to_graph()`
+- `sync_fact_to_graph()`
+
+#### 🔧 Technical Details
+
+- Graph operations no longer fail with "Node already exists" errors
+- Scripts can be safely re-run without clearing Neo4j/Memgraph
+- Race conditions in parallel memory creation are handled gracefully
+- Existing data is updated rather than causing conflicts
+
+---
+
+## [0.19.0] - 2025-12-03
+
+### 🔗 Automatic Graph Database Configuration
+
+**Zero-configuration graph database integration via environment variables. Just set `CORTEX_GRAPH_SYNC=true` and connection credentials for automatic graph sync during `remember()` calls. Full TypeScript SDK parity.**
+
+#### ✨ New Features
+
+**1. Automatic Graph Configuration**
+
+Enable with two environment variables:
+
+```bash
+# Gate 1: Connection credentials (Neo4j OR Memgraph)
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=password
+
+# OR
+MEMGRAPH_URI=bolt://localhost:7688
+MEMGRAPH_USERNAME=memgraph
+MEMGRAPH_PASSWORD=password
+
+# Gate 2: Explicit opt-in
+CORTEX_GRAPH_SYNC=true
+```
+
+Graph is now automatically configured with `Cortex.create()`:
+
+```python
+import os
+from cortex import Cortex
+from cortex.types import CortexConfig
+
+# With env vars: CORTEX_GRAPH_SYNC=true, NEO4J_URI=bolt://localhost:7687
+cortex = await Cortex.create(CortexConfig(convex_url=os.getenv("CONVEX_URL")))
+# Graph is automatically connected and sync worker started
+```
+
+**2. Factory Pattern for Async Configuration**
+
+New `Cortex.create()` classmethod that enables async auto-configuration:
+
+```python
+# Factory method - enables graph auto-config
+cortex = await Cortex.create(CortexConfig(convex_url="..."))
+
+# Constructor still works (backward compatible, no graph auto-config)
+cortex = Cortex(CortexConfig(convex_url="..."))
+```
+
+**3. Priority Handling**
+
+- Explicit `CortexConfig.graph` always takes priority over env vars
+- If both `NEO4J_URI` and `MEMGRAPH_URI` are set, Neo4j is used with a warning
+- Auto-sync worker is automatically started when auto-configured
+
+#### 🛡️ Safety Features
+
+- **Two-gate opt-in**: Requires both connection credentials AND `CORTEX_GRAPH_SYNC=true`
+- **Graceful error handling**: Connection failures log error and return None
+- **Backward compatible**: Existing `Cortex()` usage unchanged
+
+---
+
+## [0.18.0] - 2025-12-03
+
+### 🤖 Automatic LLM Fact Extraction
+
+**Zero-configuration fact extraction from conversations using OpenAI or Anthropic. Just set environment variables and facts are automatically extracted during `remember()` calls. Full TypeScript SDK parity.**
+
+#### ✨ New Features
+
+**1. Automatic Fact Extraction**
+
+Enable with two environment variables:
+
+```bash
+# Gate 1: API key (OpenAI or Anthropic)
+OPENAI_API_KEY=sk-...
+# or
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Gate 2: Explicit opt-in
+CORTEX_FACT_EXTRACTION=true
+
+# Optional: Custom model
+CORTEX_FACT_EXTRACTION_MODEL=gpt-4o
+```
+
+Facts are now automatically extracted during `remember()`:
+
+```python
+from cortex import Cortex
+from cortex.types import CortexConfig, RememberParams
+
+cortex = Cortex(CortexConfig(convex_url=os.getenv("CONVEX_URL")))
+
+result = await cortex.memory.remember(
+    RememberParams(
+        memory_space_id="my-space",
+        conversation_id="conv-123",
+        user_message="I prefer TypeScript for backend development",
+        agent_response="Great choice!",
+        user_id="user-123",
+        agent_id="assistant-v1",
+    )
+)
+
+# Automatically extracts and stores:
+# ExtractedFact(fact="User prefers TypeScript for backend", fact_type="preference", confidence=0.95)
+```
+
+**2. LLM Client Module**
+
+New `cortex/llm/__init__.py` module with:
+
+- `LLMClient` abstract base class
+- `OpenAIClient` - Uses OpenAI's JSON mode for reliable extraction
+- `AnthropicClient` - Uses Claude's structured output
+- `create_llm_client(config)` factory function
+- Graceful fallback if SDK not installed
+
+**3. Optional Dependencies**
+
+LLM SDKs are now optional dependencies:
+
+```bash
+# Install with LLM support
+pip install cortex-memory[llm]      # Both OpenAI and Anthropic
+pip install cortex-memory[openai]   # OpenAI only
+pip install cortex-memory[anthropic] # Anthropic only
+```
+
+#### 🔧 Configuration
+
+**Explicit Config (overrides env vars):**
+
+```python
+from cortex.types import CortexConfig, LLMConfig
+
+cortex = Cortex(
+    CortexConfig(
+        convex_url="...",
+        llm=LLMConfig(
+            provider="openai",
+            api_key="sk-...",
+            model="gpt-4o",
+            temperature=0.1,
+            max_tokens=1000,
+        ),
+    )
+)
+```
+
+**Custom Extractor:**
+
+```python
+async def custom_extractor(user_msg: str, agent_msg: str):
+    # Your custom extraction logic
+    return [{"fact": "...", "factType": "preference", "confidence": 0.9}]
+
+cortex = Cortex(
+    CortexConfig(
+        convex_url="...",
+        llm=LLMConfig(
+            provider="custom",
+            api_key="unused",
+            extract_facts=custom_extractor,
+        ),
+    )
+)
+```
+
+#### 🛡️ Safety Features
+
+- **Two-gate opt-in**: Requires both API key AND `CORTEX_FACT_EXTRACTION=true`
+- **Graceful degradation**: Missing SDK logs warning, doesn't break `remember()`
+- **Explicit override**: `CortexConfig.llm` always takes priority over env vars
+
+---
+
+## [0.17.0] - 2025-12-03
+
+### 🔄 Memory Orchestration - Enhanced Owner Attribution & skipLayers Support
+
+**Complete overhaul of memory orchestration to enforce proper user-agent conversation modeling and add explicit layer control. User-agent conversations now require both `user_id` and `agent_id`, and all layers can be explicitly skipped via `skip_layers`. Full TypeScript SDK parity achieved.**
+
+#### ✨ New Features
+
+**1. Mandatory Agent Attribution for User Conversations**
+
+When a `user_id` is provided, `agent_id` is now required:
+
+```python
+from cortex import Cortex
+from cortex.types import RememberParams
+
+cortex = Cortex(CortexConfig(convex_url=os.getenv("CONVEX_URL")))
+
+# ✅ Correct - both user and agent specified
+result = await cortex.memory.remember(
+    RememberParams(
+        memory_space_id="my-space",
+        conversation_id="conv-123",
+        user_message="Hello!",
+        agent_response="Hi there!",
+        user_id="user-123",
+        user_name="Alice",
+        agent_id="assistant-v1",  # Now required for user-agent conversations
+    )
+)
+
+# ✅ Correct - agent-only (no user)
+result = await cortex.memory.remember(
+    RememberParams(
+        memory_space_id="my-space",
+        conversation_id="conv-456",
+        user_message="System task",
+        agent_response="Completed",
+        agent_id="worker-agent",
+    )
+)
+
+# ❌ Error - user without agent
+result = await cortex.memory.remember(
+    RememberParams(
+        user_id="user-123",
+        user_name="Alice",
+        # Missing agent_id - will throw!
+    )
+)
+```
+
+**2. Agent ID Support Across All Layers**
+
+- **Conversations**: `participants.agent_id` field added
+- **Memories**: `agent_id` field for agent-owned memories
+- **Indexes**: Optimized queries by agent_id
+
+#### 📊 Type Updates
+
+| Type                       | Field Added | Purpose                                         |
+| -------------------------- | ----------- | ----------------------------------------------- |
+| `MemoryEntry`              | `agent_id`  | Agent-owned memory attribution                  |
+| `StoreMemoryInput`         | `agent_id`  | Pass agent ownership to store                   |
+| `ConversationParticipants` | `agent_id`  | Agent participant tracking                      |
+| `RememberParams`           | `agent_id`  | Required for user-agent conversations           |
+| `RememberStreamParams`     | `agent_id`  | Required for streaming user-agent conversations |
+
+#### 🔧 Validation Rules
+
+| Scenario                 | Required Fields                      |
+| ------------------------ | ------------------------------------ |
+| User-agent conversation  | `user_id` + `user_name` + `agent_id` |
+| Agent-only (system/tool) | `agent_id` only                      |
+
+#### ⚠️ Breaking Changes
+
+- `cortex.memory.remember()` now throws if `user_id` is provided without `agent_id`
+- `user_id` and `user_name` are now optional (were required in 0.16.x)
+- Error: `"agent_id is required when user_id is provided. User-agent conversations require both a user and an agent participant."`
+
+#### Migration
+
+Update existing `remember()` calls to include `agent_id`:
+
+```python
+# Before (v0.16.x)
+await cortex.memory.remember(
+    RememberParams(
+        user_id="user-123",
+        user_name="Alice",
+        # ... other params
+    )
+)
+
+# After (v0.17.0)
+await cortex.memory.remember(
+    RememberParams(
+        user_id="user-123",
+        user_name="Alice",
+        agent_id="your-agent-id",  # Add this
+        # ... other params
+    )
+)
+```
+
+### 🎛️ skipLayers - Explicit Layer Control
+
+**Control which layers execute during memory orchestration with the new `skip_layers` parameter.**
+
+#### ✨ New Features
+
+**1. Skippable Layer Type**
+
+New `SkippableLayer` type defines which layers can be explicitly skipped:
+
+```python
+from cortex.types import SkippableLayer
+
+# Valid layers to skip:
+# - 'users': Don't auto-create user profile
+# - 'agents': Don't auto-register agent
+# - 'conversations': Don't store in ACID conversations
+# - 'vector': Don't store in vector index
+# - 'facts': Don't extract/store facts
+# - 'graph': Don't sync to graph database
+```
+
+**2. skip_layers Parameter**
+
+Control orchestration behavior on a per-call basis:
+
+```python
+# ✅ Skip specific layers
+result = await cortex.memory.remember(
+    RememberParams(
+        memory_space_id="my-space",
+        conversation_id="conv-456",
+        user_message="Quick question",
+        agent_response="Quick answer",
+        agent_id="assistant-v1",
+        skip_layers=["facts", "graph"],  # Only skip facts & graph
+    )
+)
+
+# ✅ Vector-only storage (agent memories)
+result = await cortex.memory.remember(
+    RememberParams(
+        memory_space_id="my-space",
+        conversation_id="agent-memory-1",
+        user_message="Internal processing note",
+        agent_response="Processed",
+        agent_id="worker-agent",
+        skip_layers=["conversations", "users"],  # Vector-only
+    )
+)
+```
+
+**3. Auto-Registration Helpers**
+
+New internal helper methods for automatic entity registration:
+
+- `_ensure_user_exists()`: Auto-creates user profile if not exists
+- `_ensure_agent_exists()`: Auto-registers agent if not exists
+- `_ensure_memory_space_exists()`: Auto-registers memory space if not exists
+- `_should_skip_layer()`: Checks if a layer should be skipped
+- `_get_fact_extractor()`: Gets fact extractor with fallback chain
+
+#### 📋 Default Behavior
+
+All layers are **enabled by default**. Use `skip_layers` to explicitly opt-out:
+
+| Layer           | Default               | Skippable                          |
+| --------------- | --------------------- | ---------------------------------- |
+| `memorySpace`   | Always runs           | ❌ Cannot skip                     |
+| `users`         | Auto-create           | ✅ `skip_layers=['users']`         |
+| `agents`        | Auto-register         | ✅ `skip_layers=['agents']`        |
+| `conversations` | Store in ACID         | ✅ `skip_layers=['conversations']` |
+| `vector`        | Index for search      | ✅ `skip_layers=['vector']`        |
+| `facts`         | Extract if configured | ✅ `skip_layers=['facts']`         |
+| `graph`         | Sync if adapter       | ✅ `skip_layers=['graph']`         |
+
+#### 🔄 TypeScript SDK Parity
+
+| Feature               | TypeScript | Python                         |
+| --------------------- | ---------- | ------------------------------ |
+| `skipLayers` param    | ✅         | ✅ (as `skip_layers`)          |
+| `SkippableLayer` type | ✅         | ✅                             |
+| `shouldSkipLayer()`   | ✅         | ✅ (as `_should_skip_layer()`) |
+| Layer conditionals    | ✅         | ✅                             |
+| Auto-registration     | ✅         | ✅                             |
+
+---
+
 ## [0.16.0] - 2025-12-01
 
 ### 🛡️ Resilience Layer - Production-Ready Overload Protection
@@ -50,13 +473,13 @@ resilience=ResilienceConfig(
 
 In-memory queue that prioritizes critical operations:
 
-| Priority | Examples | Behavior |
-|----------|----------|----------|
-| `critical` | `users:delete` | Bypass circuit breaker |
-| `high` | `memory:remember`, `facts:store` | Priority processing |
-| `normal` | Most operations | Standard queue |
-| `low` | `memory:search`, `vector:search` | Deferrable |
-| `background` | `governance:simulate` | Lowest priority |
+| Priority     | Examples                         | Behavior               |
+| ------------ | -------------------------------- | ---------------------- |
+| `critical`   | `users:delete`                   | Bypass circuit breaker |
+| `high`       | `memory:remember`, `facts:store` | Priority processing    |
+| `normal`     | Most operations                  | Standard queue         |
+| `low`        | `memory:search`, `vector:search` | Deferrable             |
+| `background` | `governance:simulate`            | Lowest priority        |
 
 Priorities are **automatically assigned** based on operation name patterns.
 
@@ -125,6 +548,7 @@ await cortex.close()
 #### 📦 New Modules
 
 **Python (`cortex/resilience/`):**
+
 - `types.py` - Configuration dataclasses and exceptions
 - `token_bucket.py` - Token bucket rate limiter
 - `semaphore.py` - Async semaphore with queue

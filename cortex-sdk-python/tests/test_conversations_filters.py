@@ -38,7 +38,7 @@ class TestConversationsFilterParametrized:
                 CreateConversationInput(
                     memory_space_id=space_id,
                     type="user-agent",
-                    participants=ConversationParticipants(user_id=user_id),
+                    participants=ConversationParticipants(user_id=user_id, agent_id="test-agent"),
                 )
             )
         else:  # agent-agent
@@ -70,7 +70,7 @@ class TestConversationsFilterParametrized:
                 CreateConversationInput(
                     memory_space_id=space_id,
                     type="user-agent",
-                    participants=ConversationParticipants(user_id="noise-user"),
+                    participants=ConversationParticipants(user_id="noise-user", agent_id="test-agent"),
                 )
             )
 
@@ -103,14 +103,14 @@ class TestConversationsFilterParametrized:
                 CreateConversationInput(
                     memory_space_id=space_id,
                     type="user-agent",
-                    participants=ConversationParticipants(user_id="user-count-1"),
+                    participants=ConversationParticipants(user_id="user-count-1", agent_id="test-agent"),
                 )
             )
             await cortex_client.conversations.create(
                 CreateConversationInput(
                     memory_space_id=space_id,
                     type="user-agent",
-                    participants=ConversationParticipants(user_id="user-count-2"),
+                    participants=ConversationParticipants(user_id="user-count-2", agent_id="test-agent"),
                 )
             )
         else:  # agent-agent
@@ -151,7 +151,7 @@ class TestConversationsFilterParametrized:
                 CreateConversationInput(
                     memory_space_id=space_id,
                     type="user-agent",
-                    participants=ConversationParticipants(user_id="noise-user"),
+                    participants=ConversationParticipants(user_id="noise-user", agent_id="test-agent"),
                 )
             )
 
@@ -175,7 +175,7 @@ class TestConversationsFilterParametrized:
                 CreateConversationInput(
                     memory_space_id=space_id,
                     type="user-agent",
-                    participants=ConversationParticipants(user_id="search-user"),
+                    participants=ConversationParticipants(user_id="search-user", agent_id="test-agent"),
                 )
             )
         else:
@@ -214,7 +214,7 @@ class TestConversationsFilterParametrized:
                 CreateConversationInput(
                     memory_space_id=space_id,
                     type="user-agent",
-                    participants=ConversationParticipants(user_id="noise-user"),
+                    participants=ConversationParticipants(user_id="noise-user", agent_id="test-agent"),
                 )
             )
 
@@ -253,7 +253,7 @@ class TestConversationsFilterEdgeCases:
             CreateConversationInput(
                 memory_space_id=space_id,
                 type="user-agent",
-                participants=ConversationParticipants(user_id="only-user"),
+                participants=ConversationParticipants(user_id="only-user", agent_id="test-agent"),
             )
         )
 
@@ -276,7 +276,7 @@ class TestConversationsFilterEdgeCases:
             CreateConversationInput(
                 memory_space_id=space_id,
                 type="user-agent",
-                participants=ConversationParticipants(user_id="test-user"),
+                participants=ConversationParticipants(user_id="test-user", agent_id="test-agent"),
             )
         )
 
@@ -318,7 +318,7 @@ class TestConversationsFilterEdgeCases:
             CreateConversationInput(
                 memory_space_id=space_id,
                 type="user-agent",
-                participants=ConversationParticipants(user_id=target_user),
+                participants=ConversationParticipants(user_id=target_user, agent_id="test-agent"),
             )
         )
 
@@ -327,7 +327,7 @@ class TestConversationsFilterEdgeCases:
             CreateConversationInput(
                 memory_space_id=space_id,
                 type="user-agent",
-                participants=ConversationParticipants(user_id="different-user"),
+                participants=ConversationParticipants(user_id="different-user", agent_id="test-agent"),
             )
         )
 
@@ -365,7 +365,7 @@ class TestConversationsFilterEdgeCases:
             CreateConversationInput(
                 memory_space_id=space_1,
                 type="user-agent",
-                participants=ConversationParticipants(user_id="user-space-1"),
+                participants=ConversationParticipants(user_id="user-space-1", agent_id="test-agent"),
             )
         )
 
@@ -374,7 +374,7 @@ class TestConversationsFilterEdgeCases:
             CreateConversationInput(
                 memory_space_id=space_2,
                 type="user-agent",
-                participants=ConversationParticipants(user_id="user-space-2"),
+                participants=ConversationParticipants(user_id="user-space-2", agent_id="test-agent"),
             )
         )
 
@@ -411,7 +411,7 @@ class TestConversationsFilterEdgeCases:
                 CreateConversationInput(
                     memory_space_id=space_id,
                     type="user-agent",
-                    participants=ConversationParticipants(user_id=f"user-{i}"),
+                    participants=ConversationParticipants(user_id=f"user-{i}", agent_id="test-agent"),
                 )
             )
 
@@ -453,7 +453,7 @@ class TestConversationsFilterEdgeCases:
             CreateConversationInput(
                 memory_space_id=space_id,
                 type="user-agent",
-                participants=ConversationParticipants(user_id="date-user"),
+                participants=ConversationParticipants(user_id="date-user", agent_id="test-agent"),
             )
         )
 
@@ -487,7 +487,7 @@ class TestConversationsFilterEdgeCases:
             CreateConversationInput(
                 memory_space_id=space_id,
                 type="user-agent",
-                participants=ConversationParticipants(user_id="unique-user"),
+                participants=ConversationParticipants(user_id="unique-user", agent_id="test-agent"),
             )
         )
 

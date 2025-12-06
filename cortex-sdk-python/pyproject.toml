@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cortex-memory"
-version = "0.16.0"
+version = "0.19.1"
 description = "AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management"
 readme = "README.md"
 authors = [{name = "Saint Nick LLC", email = "support@cortexmemory.dev"}]
@@ -53,7 +53,11 @@ dependencies = [
 [project.optional-dependencies]
 graph = ["neo4j>=5.0"]
 a2a = ["redis>=5.0"]
-all = ["neo4j>=5.0", "redis>=5.0"]
+# LLM providers for automatic fact extraction
+llm = ["openai>=1.0", "anthropic>=0.30.0"]
+openai = ["openai>=1.0"]
+anthropic = ["anthropic>=0.30.0"]
+all = ["neo4j>=5.0", "redis>=5.0", "openai>=1.0", "anthropic>=0.30.0"]
 dev = [
     "pytest>=8.0",
     "pytest-asyncio>=0.23",
@@ -64,6 +68,7 @@ dev = [
     "sphinx>=7.0",
     "sphinx-rtd-theme>=2.0",
     "openai>=1.0",  # Required for OpenAI integration tests
+    "anthropic>=0.30.0",  # Required for Anthropic integration tests
 ]
 
 [project.urls]

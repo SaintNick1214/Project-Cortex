@@ -21,6 +21,15 @@ MessageRole = Literal["user", "agent", "system"]
 MemorySpaceType = Literal["personal", "team", "project", "custom"]
 MemorySpaceStatus = Literal["active", "archived"]
 
+# Skippable layers for memory orchestration
+# - 'users': Don't auto-create user profile
+# - 'agents': Don't auto-register agent
+# - 'conversations': Don't store in ACID conversations
+# - 'vector': Don't store in vector index
+# - 'facts': Don't extract/store facts
+# - 'graph': Don't sync to graph database
+SkippableLayer = Literal["users", "agents", "conversations", "vector", "facts", "graph"]
+
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Layer 1a: Conversations
@@ -40,9 +49,10 @@ class Message:
 @dataclass
 class ConversationParticipants:
     """Conversation participants."""
-    user_id: Optional[str] = None
-    participant_id: Optional[str] = None
-    memory_space_ids: Optional[List[str]] = None
+    user_id: Optional[str] = None  # The human user in the conversation
+    agent_id: Optional[str] = None  # The agent/assistant in the conversation
+    participant_id: Optional[str] = None  # Hive Mode: who created this
+    memory_space_ids: Optional[List[str]] = None  # Collaboration Mode (agent-agent)
 
 
 @dataclass
@@ -218,12 +228,13 @@ class MemoryEntry:
     created_at: int
     updated_at: int
     access_count: int
-    participant_id: Optional[str] = None
-    user_id: Optional[str] = None
+    participant_id: Optional[str] = None  # Hive Mode tracking
+    user_id: Optional[str] = None  # For user-owned memories
+    agent_id: Optional[str] = None  # For agent-owned memories
     embedding: Optional[List[float]] = None
     source_user_id: Optional[str] = None
     source_user_name: Optional[str] = None
-    message_role: Optional[Literal["user", "agent", "system"]] = None  # NEW: For semantic search weighting
+    message_role: Optional[Literal["user", "agent", "system"]] = None  # For semantic search weighting
     conversation_ref: Optional[ConversationRef] = None
     immutable_ref: Optional[ImmutableRef] = None
     mutable_ref: Optional[MutableRef] = None
@@ -253,10 +264,11 @@ class StoreMemoryInput:
     content_type: ContentType
     source: MemorySource
     metadata: MemoryMetadata
-    participant_id: Optional[str] = None
+    participant_id: Optional[str] = None  # Hive Mode tracking
     embedding: Optional[List[float]] = None
-    user_id: Optional[str] = None
-    message_role: Optional[Literal["user", "agent", "system"]] = None  # NEW: For semantic search weighting
+    user_id: Optional[str] = None  # For user-owned memories
+    agent_id: Optional[str] = None  # For agent-owned memories
+    message_role: Optional[Literal["user", "agent", "system"]] = None  # For semantic search weighting
     conversation_ref: Optional[ConversationRef] = None
     immutable_ref: Optional[ImmutableRef] = None
     mutable_ref: Optional[MutableRef] = None
@@ -532,14 +544,29 @@ class QueryByRelationshipFilter:
 
 @dataclass
 class RememberParams:
-    """Parameters for remembering a conversation."""
+    """Parameters for remembering a conversation.
+
+    Ownership rules:
+    - For user-agent conversations: user_id, user_name, AND agent_id are all required
+    - For agent-only memories: only agent_id is required (skip conversations layer)
+
+    Use skip_layers to explicitly opt-out of specific layers:
+    - 'users': Don't auto-create user profile
+    - 'agents': Don't auto-register agent
+    - 'conversations': Don't store in ACID conversations
+    - 'vector': Don't store in vector index
+    - 'facts': Don't extract/store facts
+    - 'graph': Don't sync to graph database
+    """
     memory_space_id: str
     conversation_id: str
     user_message: str
     agent_response: str
-    user_id: str
-    user_name: str
-    participant_id: Optional[str] = None
+    user_id: Optional[str] = None  # User owner (requires agent_id and user_name when provided)
+    user_name: Optional[str] = None  # Required when user_id is provided
+    agent_id: Optional[str] = None  # Agent owner (required when user_id is provided)
+    participant_id: Optional[str] = None  # Hive Mode: who created this
+    skip_layers: Optional[List[str]] = None  # Layers to explicitly skip during orchestration
     importance: Optional[int] = None
     tags: Optional[List[str]] = None
     extract_content: Optional[Callable[[str, str], Any]] = None
@@ -559,14 +586,29 @@ class RememberResult:
 
 @dataclass
 class RememberStreamParams:
-    """Parameters for remember_stream() - streaming variant of remember()."""
+    """Parameters for remember_stream() - streaming variant of remember().
+
+    Ownership rules:
+    - For user-agent conversations: user_id, user_name, AND agent_id are all required
+    - For agent-only memories: only agent_id is required (skip conversations layer)
+
+    Use skip_layers to explicitly opt-out of specific layers:
+    - 'users': Don't auto-create user profile
+    - 'agents': Don't auto-register agent
+    - 'conversations': Don't store in ACID conversations
+    - 'vector': Don't store in vector index
+    - 'facts': Don't extract/store facts
+    - 'graph': Don't sync to graph database
+    """
     memory_space_id: str
     conversation_id: str
     user_message: str
     response_stream: Any  # AsyncIterable[str] - async generator or iterator
-    user_id: str
-    user_name: str
-    participant_id: Optional[str] = None
+    user_id: Optional[str] = None  # User owner (requires agent_id and user_name when provided)
+    user_name: Optional[str] = None  # Required when user_id is provided
+    agent_id: Optional[str] = None  # Agent owner (required when user_id is provided)
+    participant_id: Optional[str] = None  # Hive Mode: who created this
+    skip_layers: Optional[List[str]] = None  # Layers to explicitly skip during orchestration
     importance: Optional[int] = None
     tags: Optional[List[str]] = None
     extract_content: Optional[Callable[[str, str], Any]] = None
@@ -781,7 +823,13 @@ class UnregisterAgentOptions:
 
 @dataclass
 class UnregisterAgentResult:
-    """Result from agent unregistration."""
+    """Result from agent unregistration.
+
+    Uses GDPR-style best-effort cascade deletion:
+    - Continues on individual layer failures
+    - Reports what succeeded and what failed
+    - Maximizes data deletion even if some operations fail
+    """
     agent_id: str
     unregistered_at: int
     conversations_deleted: int
@@ -793,6 +841,7 @@ class UnregisterAgentResult:
     memory_spaces_affected: List[str]
     verification: VerificationResult
     graph_nodes_deleted: Optional[int] = None
+    deletion_errors: List[str] = field(default_factory=list)  # Errors from best-effort deletion
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1119,11 +1168,28 @@ class GraphConfig:
 
 
 @dataclass
+class LLMConfig:
+    """
+    LLM configuration for automatic fact extraction.
+
+    When configured, enables automatic fact extraction from conversations
+    during remember() operations (unless explicitly skipped via skip_layers).
+    """
+    provider: Literal["openai", "anthropic", "custom"]
+    api_key: str
+    model: Optional[str] = None
+    extract_facts: Optional[Callable] = None
+    max_tokens: int = 1000
+    temperature: float = 0.1
+
+
+@dataclass
 class CortexConfig:
     """Main Cortex SDK configuration."""
     convex_url: str
     graph: Optional[GraphConfig] = None
     resilience: Optional[Any] = None  # ResilienceConfig from resilience module
+    llm: Optional[LLMConfig] = None  # LLM config for auto fact extraction
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1237,6 +1303,24 @@ class GraphAdapter(Protocol):
 
     async def create_node(self, node: GraphNode) -> str:
         """Create a node and return its ID."""
+        ...
+
+    async def merge_node(
+        self, node: GraphNode, match_properties: Dict[str, Any]
+    ) -> str:
+        """
+        Merge (upsert) a node in the graph.
+
+        Uses MERGE semantics: creates if not exists, matches if exists.
+        Updates properties on existing nodes. Idempotent and safe for concurrent ops.
+
+        Args:
+            node: Node to merge
+            match_properties: Properties to match on (for finding existing node)
+
+        Returns:
+            Node ID (existing or newly created)
+        """
         ...
 
     async def update_node(self, node_id: str, properties: Dict[str, Any]) -> None:

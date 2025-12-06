@@ -36,7 +36,7 @@ class TestVectorStoreParameterCombinations:
             CreateConversationInput(
                 type="user-agent",
                 memory_space_id=space_id,
-                participants={"userId": "test-user"},
+                participants={"userId": "test-user", "agentId": "test-agent"},
             )
         )
 
@@ -151,6 +151,7 @@ class TestRememberParameterCombinations:
                 agent_response="Agent response",
                 user_id="test-user",
                 user_name="Test User",
+                agent_id="test-agent",
                 importance=95,
                 tags=["important"],
                 extract_facts=extract_facts,
@@ -172,6 +173,7 @@ class TestRememberParameterCombinations:
                 agent_response="Min response",
                 user_id="test-user",
                 user_name="Test User",
+                agent_id="test-agent",
             )
         )
 
@@ -197,7 +199,7 @@ class TestContextsCreateParameterCombinations:
             CreateConversationInput(
                 type="user-agent",
                 memory_space_id=space_id,
-                participants={"userId": "test-user"},
+                participants={"userId": "test-user", "agentId": "test-agent"},
             )
         )
 

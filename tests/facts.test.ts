@@ -1084,6 +1084,7 @@ describe("Facts API (Layer 3)", () => {
         type: "user-agent",
         participants: {
           userId: "user-fact-test",
+          agentId: "agent-fact-test",
           participantId: "agent-fact-test",
         },
       });

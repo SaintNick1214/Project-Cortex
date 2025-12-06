@@ -14,6 +14,7 @@ import { Cortex } from "../src/index";
 describe("Operation Sequence Validation", () => {
   let cortex: Cortex;
   const BASE_ID = `seq-test-${Date.now()}`;
+  const TEST_AGENT_ID = `seq-test-agent-${Date.now()}`;
 
   beforeAll(() => {
     cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
@@ -185,7 +186,7 @@ describe("Operation Sequence Validation", () => {
       const created = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: "test-user" },
+        participants: { userId: "test-user", agentId: TEST_AGENT_ID },
       });
 
       expect(created.conversationId).toBeDefined();
@@ -230,7 +231,7 @@ describe("Operation Sequence Validation", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: "test-user" },
+        participants: { userId: "test-user", agentId: TEST_AGENT_ID },
       });
 
       // Add 5 messages
@@ -678,7 +679,7 @@ describe("Operation Sequence Validation", () => {
       await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: "stats-user" },
+        participants: { userId: "stats-user", agentId: TEST_AGENT_ID },
       });
 
       const stats1 = await cortex.memorySpaces.getStats(spaceId);
@@ -928,7 +929,7 @@ describe("Operation Sequence Validation", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId },
+        participants: { userId, agentId: TEST_AGENT_ID },
       });
 
       expect(conv.conversationId).toBeDefined();
@@ -1008,6 +1009,7 @@ describe("Operation Sequence Validation", () => {
         agentResponse: "Test response",
         userId: "test-user",
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
       });
 
       expect(result.memories).toHaveLength(2);
@@ -1234,7 +1236,7 @@ describe("Operation Sequence Validation", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId },
+        participants: { userId, agentId: TEST_AGENT_ID },
       });
 
       // Step 3: Add messages
@@ -1255,6 +1257,7 @@ describe("Operation Sequence Validation", () => {
         agentResponse: "Noted!",
         userId,
         userName: "Journey User",
+        agentId: TEST_AGENT_ID,
       });
 
       // Step 5: Extract fact
@@ -1319,7 +1322,7 @@ describe("Operation Sequence Validation", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: "cascade-user" },
+        participants: { userId: "cascade-user", agentId: TEST_AGENT_ID },
       });
 
       const mem = await cortex.vector.store(spaceId, {
@@ -1366,7 +1369,7 @@ describe("Operation Sequence Validation", () => {
         conversationId: convId,
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: "test-user" },
+        participants: { userId: "test-user", agentId: TEST_AGENT_ID },
       });
 
       // Delete
@@ -1377,7 +1380,7 @@ describe("Operation Sequence Validation", () => {
         conversationId: convId,
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: "test-user" },
+        participants: { userId: "test-user", agentId: TEST_AGENT_ID },
       });
 
       expect(recreated.conversationId).toBe(convId);

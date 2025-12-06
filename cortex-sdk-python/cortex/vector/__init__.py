@@ -110,6 +110,7 @@ class VectorAPI:
             "sourceUserId": input.source.get("userId") if isinstance(input.source, dict) else getattr(input.source, "user_id", None),
             "sourceUserName": input.source.get("userName") if isinstance(input.source, dict) else getattr(input.source, "user_name", None),
                 "userId": input.user_id,
+                "agentId": getattr(input, "agent_id", None),  # Agent-owned memories support
                 "messageRole": getattr(input, "message_role", None),  # For semantic search weighting
                 # Enrichment fields (for bullet-proof retrieval)
                 "enrichedContent": getattr(input, "enriched_content", None),  # Concatenated searchable content

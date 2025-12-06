@@ -153,7 +153,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      id-token: write
+      id-token: write # Required for npm OIDC provenance publishing (no NODE_AUTH_TOKEN needed)
 
     steps:
       - name: Checkout code
@@ -188,8 +188,7 @@ jobs:
 
       - name: Publish to npm
         run: npm publish --access public --provenance --ignore-scripts
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # Publish profile is verified in npm settings
 
       - name: Create Git Tag
         run: |
@@ -222,10 +221,18 @@ jobs:
 
       - name: Verify npm publish
         run: |
-          echo "Waiting for npm registry to update..."
-          sleep 10
-          npm view @cortexmemory/sdk version
-          echo "✅ SDK published successfully!"
+          echo "Verifying npm registry update..."
+          # Retry up to 6 times with 10s delay between retries (check first, then wait)
+          for i in 1 2 3 4 5 6; do
+            if npm view @cortexmemory/sdk version 2>/dev/null; then
+              echo "✅ SDK published successfully!"
+              exit 0
+            fi
+            echo "Attempt $i: Package not yet visible, retrying in 10s..."
+            sleep 10
+          done
+          echo "❌ Package not found after 6 retries - publish verification failed"
+          exit 1
 
       - name: Post-publish summary
         run: |
@@ -245,7 +252,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      id-token: write
+      id-token: write # Required for npm OIDC provenance publishing (no NODE_AUTH_TOKEN needed)
 
     steps:
       - name: Checkout code
@@ -280,16 +287,22 @@ jobs:
       - name: Publish to npm
         run: |
           cd packages/create-cortex-memories
-          npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          npm publish --access public --provenance --ignore-scripts
 
       - name: Verify npm publish
         run: |
-          echo "Waiting for npm registry to update..."
-          sleep 10
-          npm view create-cortex-memories version
-          echo "✅ Wizard published successfully!"
+          echo "Verifying npm registry update..."
+          # Retry up to 6 times with 10s delay between retries (check first, then wait)
+          for i in 1 2 3 4 5 6; do
+            if npm view create-cortex-memories version 2>/dev/null; then
+              echo "✅ Wizard published successfully!"
+              exit 0
+            fi
+            echo "Attempt $i: Package not yet visible, retrying in 10s..."
+            sleep 10
+          done
+          echo "❌ Package not found after 6 retries - publish verification failed"
+          exit 1
 
       - name: Post-publish summary
         run: |
@@ -310,7 +323,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      id-token: write
+      id-token: write # Required for npm OIDC provenance publishing (no NODE_AUTH_TOKEN needed)
 
     steps:
       - name: Checkout code
@@ -363,9 +376,7 @@ jobs:
       - name: Publish to npm
         run: |
           cd packages/vercel-ai-provider
-          npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          npm publish --access public --provenance --ignore-scripts
 
       - name: Create Git Tag
         run: |
@@ -416,10 +427,18 @@ jobs:
 
       - name: Verify npm publish
         run: |
-          echo "Waiting for npm registry to update..."
-          sleep 10
-          npm view @cortexmemory/vercel-ai-provider version
-          echo "✅ Vercel AI Provider published successfully!"
+          echo "Verifying npm registry update..."
+          # Retry up to 6 times with 10s delay between retries (check first, then wait)
+          for i in 1 2 3 4 5 6; do
+            if npm view @cortexmemory/vercel-ai-provider version 2>/dev/null; then
+              echo "✅ Vercel AI Provider published successfully!"
+              exit 0
+            fi
+            echo "Attempt $i: Package not yet visible, retrying in 10s..."
+            sleep 10
+          done
+          echo "❌ Package not found after 6 retries - publish verification failed"
+          exit 1
 
       - name: Post-publish summary
         run: |
@@ -441,7 +460,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      id-token: write
+      id-token: write # Required for npm OIDC provenance publishing (no NODE_AUTH_TOKEN needed)
 
     steps:
       - name: Checkout code
@@ -504,9 +523,7 @@ jobs:
       - name: Publish to npm
         run: |
           cd packages/cortex-cli
-          npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          npm publish --access public --provenance --ignore-scripts
 
       - name: Create Git Tag
         run: |
@@ -553,10 +570,18 @@ jobs:
 
       - name: Verify npm publish
         run: |
-          echo "Waiting for npm registry to update..."
-          sleep 10
-          npm view @cortexmemory/cli version
-          echo "✅ CLI published successfully!"
+          echo "Verifying npm registry update..."
+          # Retry up to 6 times with 10s delay between retries (check first, then wait)
+          for i in 1 2 3 4 5 6; do
+            if npm view @cortexmemory/cli version 2>/dev/null; then
+              echo "✅ CLI published successfully!"
+              exit 0
+            fi
+            echo "Attempt $i: Package not yet visible, retrying in 10s..."
+            sleep 10
+          done
+          echo "❌ Package not found after 6 retries - publish verification failed"
+          exit 1
 
       - name: Post-publish summary
         run: |

@@ -57,6 +57,26 @@ export class MutableAPI {
   }
 
   /**
+   * Handle ConvexError from direct Convex calls
+   */
+  private handleConvexError(error: unknown): never {
+    if (
+      error &&
+      typeof error === "object" &&
+      "data" in error &&
+      (error as { data: unknown }).data !== undefined
+    ) {
+      const convexError = error as { data: unknown };
+      const errorData =
+        typeof convexError.data === "string"
+          ? convexError.data
+          : JSON.stringify(convexError.data);
+      throw new Error(errorData);
+    }
+    throw error;
+  }
+
+  /**
    * Set a key to a value (creates or overwrites)
    *
    * @example
@@ -184,14 +204,18 @@ export class MutableAPI {
     const newValue = updater(current as T);
 
     // Set new value using custom operation
-    const result = await this.client.mutation(api.mutable.update, {
-      namespace,
-      key,
-      operation: "custom",
-      operand: newValue,
-    });
+    try {
+      const result = await this.client.mutation(api.mutable.update, {
+        namespace,
+        key,
+        operation: "custom",
+        operand: newValue,
+      });
 
-    return result as MutableRecord;
+      return result as MutableRecord;
+    } catch (error) {
+      this.handleConvexError(error);
+    }
   }
 
   /**
@@ -342,10 +366,15 @@ export class MutableAPI {
     validateKey(key);
     validateKeyFormat(key);
 
-    const result = await this.client.mutation(api.mutable.deleteKey, {
-      namespace,
-      key,
-    });
+    let result;
+    try {
+      result = await this.client.mutation(api.mutable.deleteKey, {
+        namespace,
+        key,
+      });
+    } catch (error) {
+      this.handleConvexError(error);
+    }
 
     // Delete from graph
     if (options?.syncToGraph && this.graphAdapter) {
@@ -431,15 +460,19 @@ export class MutableAPI {
     validateOperationsArray(operations);
     validateTransactionOperations(operations);
 
-    const result = await this.client.mutation(api.mutable.transaction, {
-      operations,
-    });
+    try {
+      const result = await this.client.mutation(api.mutable.transaction, {
+        operations,
+      });
 
-    return result as {
-      success: boolean;
-      operationsExecuted: number;
-      results: unknown[];
-    };
+      return result as {
+        success: boolean;
+        operationsExecuted: number;
+        results: unknown[];
+      };
+    } catch (error) {
+      this.handleConvexError(error);
+    }
   }
 
   /**

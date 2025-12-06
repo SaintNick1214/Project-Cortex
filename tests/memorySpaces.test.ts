@@ -611,7 +611,9 @@ describe("Memory Spaces Registry API", () => {
 
     it("throws error for non-existent space", async () => {
       await expect(
-        cortex.memorySpaces.update(`nonexistent-${ctx.runId}`, { name: "Test" }),
+        cortex.memorySpaces.update(`nonexistent-${ctx.runId}`, {
+          name: "Test",
+        }),
       ).rejects.toThrow("MEMORYSPACE_NOT_FOUND");
     });
   });
@@ -678,9 +680,7 @@ describe("Memory Spaces Registry API", () => {
 
       expect(updated.participants).toHaveLength(1);
       expect(
-        updated.participants.some(
-          (p) => p.id === ctx.userId("remove-user-2"),
-        ),
+        updated.participants.some((p) => p.id === ctx.userId("remove-user-2")),
       ).toBe(false);
     });
   });
@@ -724,6 +724,7 @@ describe("Memory Spaces Registry API", () => {
         type: "user-agent",
         participants: {
           userId: ctx.userId("cascade-test"),
+          agentId: ctx.agentId("cascade-test"),
           participantId: ctx.agentId("cascade-test"),
         },
       });
@@ -768,7 +769,7 @@ describe("Memory Spaces Registry API", () => {
       await cortex.conversations.create({
         memorySpaceId: statsSpaceId,
         type: "user-agent",
-        participants: { userId: statsUser1, participantId: statsAgent },
+        participants: { userId: statsUser1, agentId: statsAgent, participantId: statsAgent },
       });
 
       await cortex.conversations.addMessage({
@@ -906,7 +907,7 @@ describe("Memory Spaces Registry API", () => {
       const conv = await cortex.conversations.create({
         memorySpaceId: hiveSpaceId,
         type: "user-agent",
-        participants: { userId: userOwner, participantId: toolCalendar },
+        participants: { userId: userOwner, agentId: toolCalendar, participantId: toolCalendar },
       });
 
       await cortex.memory.remember({
@@ -917,6 +918,7 @@ describe("Memory Spaces Registry API", () => {
         agentResponse: "Added to calendar",
         userId: userOwner,
         userName: "Owner",
+        agentId: agentCoordinator,
       });
 
       await cortex.facts.store({
@@ -1139,9 +1141,9 @@ describe("Memory Spaces Registry API", () => {
           status: "archived",
         });
 
-        expect(
-          activeResults.some((s) => s.memorySpaceId === designSpace),
-        ).toBe(false);
+        expect(activeResults.some((s) => s.memorySpaceId === designSpace)).toBe(
+          false,
+        );
         expect(
           archivedResults.some((s) => s.memorySpaceId === designSpace),
         ).toBe(true);

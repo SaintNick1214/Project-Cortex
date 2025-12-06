@@ -11,11 +11,14 @@ from typing import Any, Dict, List, Literal, Optional, Tuple, Union, cast
 from ..conversations import ConversationsAPI
 from ..errors import CortexError, ErrorCode
 from ..facts import FactsAPI
+from ..llm import ExtractedFact, LLMClient, create_llm_client
 from ..types import (
+    ConversationType,
     DeleteMemoryOptions,
     EnrichedMemory,
     ForgetOptions,
     ForgetResult,
+    LLMConfig,
     MemoryEntry,
     MemoryMetadata,
     MemorySource,
@@ -65,6 +68,7 @@ class MemoryAPI:
         client: Any,
         graph_adapter: Optional[Any] = None,
         resilience: Optional[Any] = None,
+        llm_config: Optional[LLMConfig] = None,
     ) -> None:
         """
         Initialize Memory API.
@@ -73,10 +77,13 @@ class MemoryAPI:
             client: Convex client instance
             graph_adapter: Optional graph database adapter
             resilience: Optional resilience layer for overload protection
+            llm_config: Optional LLM configuration for automatic fact extraction
         """
         self.client = client
         self.graph_adapter = graph_adapter
         self._resilience = resilience
+        self._llm_config = llm_config
+        self._llm_client: Optional[LLMClient] = None
         # Pass resilience layer to sub-APIs
         self.conversations = ConversationsAPI(client, graph_adapter, resilience)
         self.vector = VectorAPI(client, graph_adapter, resilience)
@@ -92,6 +99,155 @@ class MemoryAPI:
             return await self._resilience.execute(operation, operation_name)
         return await operation()
 
+    def _should_skip_layer(self, layer: str, skip_layers: Optional[List[str]]) -> bool:
+        """Check if a layer should be skipped during orchestration."""
+        return skip_layers is not None and layer in skip_layers
+
+    def _get_llm_client(self) -> Optional[LLMClient]:
+        """Get or create LLM client for fact extraction."""
+        # Return cached client if already created
+        if self._llm_client is not None:
+            return self._llm_client
+
+        # Create and cache client
+        if self._llm_config:
+            self._llm_client = create_llm_client(self._llm_config)
+
+        return self._llm_client
+
+    async def _create_llm_fact_extractor(
+        self, user_message: str, agent_response: str
+    ) -> Optional[List[ExtractedFact]]:
+        """
+        Create an LLM-based fact extractor function.
+
+        Uses the configured LLM provider (OpenAI or Anthropic) to automatically
+        extract structured facts from conversations. Falls back to None if
+        extraction fails or LLM is not properly configured.
+        """
+        client = self._get_llm_client()
+        if not client:
+            print(
+                "[Cortex] LLM fact extraction configured but client could not be created. "
+                "Ensure openai or anthropic is installed."
+            )
+            return None
+
+        try:
+            return await client.extract_facts(user_message, agent_response)
+        except Exception as e:
+            print(f"[Cortex] LLM fact extraction failed: {e}")
+            return None
+
+    def _get_fact_extractor(self, params: RememberParams) -> Optional[Any]:
+        """
+        Get fact extractor function with fallback chain.
+
+        Priority:
+        1. params.extract_facts (explicit callback)
+        2. LLM config's extract_facts (if configured)
+        3. LLM client's extract_facts (if api_key configured)
+        4. None (no fact extraction)
+        """
+        # Use provided extractor if available
+        if params.extract_facts:
+            return params.extract_facts
+
+        # Check LLM config for custom extractor
+        if self._llm_config and self._llm_config.extract_facts:
+            return self._llm_config.extract_facts
+
+        # Check LLM config for API key - use built-in extraction
+        if self._llm_config and self._llm_config.api_key:
+            return self._create_llm_fact_extractor
+
+        return None
+
+    async def _ensure_user_exists(self, user_id: str, user_name: Optional[str]) -> None:
+        """
+        Auto-create user profile if it doesn't exist.
+
+        This ensures that user profiles are automatically registered when
+        remember() is called, matching the TypeScript SDK behavior.
+
+        Uses immutable:store with type='user' (same as UsersAPI.update).
+        """
+        try:
+            # Check if user exists via immutable:get
+            existing = await self.client.query("immutable:get", {"type": "user", "id": user_id})
+            if not existing:
+                # Create user profile using immutable store pattern
+                # This matches TypeScript SDK's UsersAPI.update() which calls api.immutable.store
+                await self.client.mutation("immutable:store", {
+                    "type": "user",
+                    "id": user_id,
+                    "data": {
+                        "displayName": user_name or user_id,
+                        "createdAt": int(time.time() * 1000),
+                    },
+                })
+        except Exception as error:
+            # Log warning but don't fail - user registration is optional
+            print(f"Warning: Failed to auto-create user profile: {error}")
+
+    async def _ensure_agent_exists(self, agent_id: str) -> None:
+        """
+        Auto-register agent if it doesn't exist.
+
+        This ensures that agents are automatically registered when
+        remember() is called, matching the TypeScript SDK behavior.
+
+        Uses agents:exists query and agents:register mutation.
+        """
+        try:
+            # Check if agent exists using agents:exists query
+            existing = await self.client.query("agents:exists", {"agentId": agent_id})
+            if not existing:
+                # Register agent with minimal data (matching TS SDK's ensureAgentExists)
+                try:
+                    await self.client.mutation("agents:register", {
+                        "agentId": agent_id,
+                        "name": agent_id,
+                        "description": "Auto-registered by memory.remember()",
+                    })
+                except Exception as register_error:
+                    # Handle "AGENT_ALREADY_REGISTERED" - race condition is OK
+                    if "AGENT_ALREADY_REGISTERED" in str(register_error):
+                        pass  # Another call registered it first - that's fine
+                    else:
+                        raise register_error
+        except Exception as error:
+            # Log warning but don't fail - agent registration is optional
+            print(f"Warning: Failed to auto-register agent: {error}")
+
+    async def _ensure_memory_space_exists(self, memory_space_id: str, sync_to_graph: bool = False) -> None:
+        """
+        Auto-register memory space if it doesn't exist.
+
+        Memory spaces are always auto-created when used - they cannot be skipped.
+        Uses memorySpaces:get query and memorySpaces:register mutation.
+        """
+        try:
+            # Check if memory space exists
+            existing = await self.client.query("memorySpaces:get", {"memorySpaceId": memory_space_id})
+            if not existing:
+                # Register memory space with minimal data
+                try:
+                    await self.client.mutation("memorySpaces:register", {
+                        "memorySpaceId": memory_space_id,
+                        "name": memory_space_id,
+                        "type": "custom",
+                    })
+                except Exception as register_error:
+                    # Handle race condition - another call may have registered it first
+                    if "ALREADY_EXISTS" in str(register_error) or "already exists" in str(register_error).lower():
+                        pass  # That's fine
+                    else:
+                        raise register_error
+        except Exception as error:
+            # Log warning but don't fail
+            print(f"Warning: Failed to auto-register memory space: {error}")
+
     async def remember(
         self, params: RememberParams, options: Optional[RememberOptions] = None
     ) -> RememberResult:
@@ -99,7 +255,8 @@ class MemoryAPI:
         Remember a conversation exchange (stores in both ACID and Vector).
 
         This is the main method for storing conversation memories. It handles both
-        ACID storage and Vector indexing automatically.
+        ACID storage and Vector indexing automatically. All configured layers are
+        enabled by default - use skip_layers to explicitly opt-out.
 
         Args:
             params: Remember parameters including conversation details
@@ -109,6 +266,7 @@ class MemoryAPI:
             RememberResult with conversation details, memories, and extracted facts
 
         Example:
+            >>> # Full orchestration (default)
             >>> result = await cortex.memory.remember(
             ...     RememberParams(
             ...         memory_space_id='agent-1',
@@ -116,164 +274,167 @@ class MemoryAPI:
             ...         user_message='The password is Blue',
             ...         agent_response="I'll remember that!",
             ...         user_id='user-1',
-            ...         user_name='Alex'
+            ...         user_name='Alex',
+            ...         agent_id='assistant-v1',
             ...     )
             ... )
-            >>> print(len(result.memories))  # 2 (user + agent)
+            >>>
+            >>> # Skip specific layers
+            >>> result = await cortex.memory.remember(
+            ...     RememberParams(
+            ...         memory_space_id='agent-1',
+            ...         conversation_id='conv-456',
+            ...         user_message='Quick question',
+            ...         agent_response='Quick answer',
+            ...         agent_id='assistant-v1',
+            ...         skip_layers=['facts', 'graph'],
+            ...     )
+            ... )
         """
         # Client-side validation
         validate_remember_params(params)
 
         now = int(time.time() * 1000)
         opts = options or RememberOptions()
+        skip_layers = params.skip_layers or []
 
-        # Determine if we should sync to graph
+        # Determine if we should sync to graph (check skipLayers)
         should_sync_to_graph = (
-            opts.sync_to_graph is not False and self.graph_adapter is not None
+            opts.sync_to_graph is not False
+            and self.graph_adapter is not None
+            and not self._should_skip_layer("graph", skip_layers)
         )
 
-        # Step 1: Ensure conversation exists
-        from ..types import (
-            ConversationParticipants,
-            CreateConversationInput,
-            CreateConversationOptions,
-        )
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 1: MEMORYSPACE (Cannot be skipped)
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        await self._ensure_memory_space_exists(params.memory_space_id, should_sync_to_graph)
 
-        existing_conversation = await self.conversations.get(params.conversation_id)
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 2: OWNER PROFILES (skip: 'users'/'agents')
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        if params.user_id and not self._should_skip_layer("users", skip_layers):
+            await self._ensure_user_exists(params.user_id, params.user_name)
 
-        if not existing_conversation:
-            await self.conversations.create(
-                CreateConversationInput(
-                    memory_space_id=params.memory_space_id,
-                    conversation_id=params.conversation_id,
-                    type="user-agent",
-                    participants=ConversationParticipants(
-                        user_id=params.user_id,
-                        participant_id=params.participant_id or "agent",
-                    ),
-                ),
-                CreateConversationOptions(sync_to_graph=should_sync_to_graph),
+        if params.agent_id and not self._should_skip_layer("agents", skip_layers):
+            await self._ensure_agent_exists(params.agent_id)
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 3: CONVERSATION (skip: 'conversations')
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        user_message_id = None
+        agent_message_id = None
+
+        if not self._should_skip_layer("conversations", skip_layers):
+            from ..types import (
+                AddMessageInput,
+                AddMessageOptions,
+                ConversationParticipants,
+                CreateConversationInput,
+                CreateConversationOptions,
             )
 
-        # Step 2 & 3: Store user message and agent response in ACID
-        from ..types import AddMessageInput, AddMessageOptions
+            existing_conversation = await self.conversations.get(params.conversation_id)
 
-        user_msg = await self.conversations.add_message(
-            AddMessageInput(
-                conversation_id=params.conversation_id,
-                role="user",
-                content=params.user_message,
-            ),
-            AddMessageOptions(sync_to_graph=should_sync_to_graph),
-        )
-
-        agent_msg = await self.conversations.add_message(
-            AddMessageInput(
-                conversation_id=params.conversation_id,
-                role="agent",
-                content=params.agent_response,
-                participant_id=params.participant_id,
-            ),
-            AddMessageOptions(sync_to_graph=should_sync_to_graph),
-        )
-
-        # Extract message IDs from the conversation responses
-        # user_msg and agent_msg are Conversation objects with messages as dict list
-        user_message_id = user_msg.messages[-1]["id"] if isinstance(user_msg.messages[-1], dict) else user_msg.messages[-1].id
-        agent_message_id = agent_msg.messages[-1]["id"] if isinstance(agent_msg.messages[-1], dict) else agent_msg.messages[-1].id
-
-        # Step 4: Extract content if provided
-        user_content = params.user_message
-        agent_content = params.agent_response
-        content_type = "raw"
-
-        if params.extract_content:
-            extracted = await params.extract_content(
-                params.user_message, params.agent_response
-            )
-            if extracted:
-                user_content = extracted
-                content_type = "summarized"
-
-        # Step 5: Generate embeddings if provided
-        user_embedding = None
-        agent_embedding = None
-
-        if params.generate_embedding:
-            user_embedding = await params.generate_embedding(user_content)
-            agent_embedding = await params.generate_embedding(agent_content)
-
-        # Step 6 & 7: Store in Vector with conversationRef
-        from ..types import ConversationRef, StoreMemoryOptions
-
-        user_memory = await self.vector.store(
-            params.memory_space_id,
-            StoreMemoryInput(
-                content=user_content,
-                content_type=cast(Literal["raw", "summarized"], content_type),
-                participant_id=params.participant_id,
-                embedding=user_embedding,
-                user_id=params.user_id,
-                message_role="user",  # NEW: Mark as user message for semantic search weighting
-                source=MemorySource(
-                    type="conversation",
+            if not existing_conversation:
+                # Always use user-agent type for remember() function
+                # agent-agent conversations are for explicit multi-agent collaboration
+                # and require memorySpaceIds (hive-mode or collaboration-mode)
+                conversation_type: ConversationType = "user-agent"
+                participants = ConversationParticipants(
                     user_id=params.user_id,
-                    user_name=params.user_name,
-                    timestamp=now,
-                ),
-                conversation_ref=ConversationRef(
+                    agent_id=params.agent_id,
+                    participant_id=params.participant_id,
+                )
+
+                await self.conversations.create(
+                    CreateConversationInput(
+                        memory_space_id=params.memory_space_id,
+                        conversation_id=params.conversation_id,
+                        type=conversation_type,
+                        participants=participants,
+                    ),
+                    CreateConversationOptions(sync_to_graph=should_sync_to_graph),
+                )
+
+            # Store user message in ACID
+            user_msg = await self.conversations.add_message(
+                AddMessageInput(
                     conversation_id=params.conversation_id,
-                    message_ids=[user_message_id],
+                    role="user",
+                    content=params.user_message,
                 ),
-                metadata=MemoryMetadata(
-                    importance=params.importance or 50, tags=params.tags or []
+                AddMessageOptions(sync_to_graph=should_sync_to_graph),
+            )
+
+            # Store agent response in ACID
+            agent_msg = await self.conversations.add_message(
+                AddMessageInput(
+                    conversation_id=params.conversation_id,
+                    role="agent",
+                    content=params.agent_response,
+                    participant_id=params.participant_id or params.agent_id,
                 ),
-            ),
-            StoreMemoryOptions(sync_to_graph=should_sync_to_graph),
-        )
+                AddMessageOptions(sync_to_graph=should_sync_to_graph),
+            )
 
-        # Detect if agent response is just an acknowledgment (not a fact worth indexing)
-        # Acknowledgments pollute semantic search with "I've noted", "Got it", etc.
-        agent_content_lower = agent_content.lower()
-        is_acknowledgment = len(agent_content) < 80 and any(
-            phrase in agent_content_lower
-            for phrase in [
-                "got it",
-                "i've noted",
-                "i'll remember",
-                "noted",
-                "understood",
-                "i'll set",
-                "i'll call you",
-                "will do",
-                "sure thing",
-                "okay,",
-                "ok,",
-            ]
-        )
+            # Extract message IDs
+            user_message_id = user_msg.messages[-1]["id"] if isinstance(user_msg.messages[-1], dict) else user_msg.messages[-1].id
+            agent_message_id = agent_msg.messages[-1]["id"] if isinstance(agent_msg.messages[-1], dict) else agent_msg.messages[-1].id
 
-        # Only store agent response in vector if it contains meaningful information
-        # Pure acknowledgments are stored in ACID (for conversation history) but not vector
-        agent_memory = None
-        if not is_acknowledgment:
-            agent_memory = await self.vector.store(
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 4: VECTOR MEMORY (skip: 'vector')
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        stored_memories: List[MemoryEntry] = []
+
+        if not self._should_skip_layer("vector", skip_layers):
+            from ..types import ConversationRef, StoreMemoryOptions
+
+            # Extract content if provided
+            user_content = params.user_message
+            agent_content = params.agent_response
+            content_type = "raw"
+
+            if params.extract_content:
+                extracted = await params.extract_content(
+                    params.user_message, params.agent_response
+                )
+                if extracted:
+                    user_content = extracted
+                    content_type = "summarized"
+
+            # Generate embeddings if provided
+            user_embedding = None
+            agent_embedding = None
+
+            if params.generate_embedding:
+                user_embedding = await params.generate_embedding(user_content)
+                agent_embedding = await params.generate_embedding(agent_content)
+
+            # Store user message in Vector
+            user_memory = await self.vector.store(
                 params.memory_space_id,
                 StoreMemoryInput(
-                    content=agent_content,
-                    content_type="raw",  # Agent content is always raw, only user content gets summarized
+                    content=user_content,
+                    content_type=cast(Literal["raw", "summarized"], content_type),
                     participant_id=params.participant_id,
-                    embedding=agent_embedding,
+                    embedding=user_embedding,
                     user_id=params.user_id,
-                    message_role="agent",  # Mark as agent message for semantic search weighting
+                    agent_id=params.agent_id,
+                    message_role="user",
                     source=MemorySource(
                         type="conversation",
                         user_id=params.user_id,
                         user_name=params.user_name,
-                        timestamp=now + 1,
+                        timestamp=now,
                     ),
-                    conversation_ref=ConversationRef(
-                        conversation_id=params.conversation_id,
-                        message_ids=[agent_message_id],
+                    conversation_ref=(
+                        ConversationRef(
+                            conversation_id=params.conversation_id,
+                            message_ids=[user_message_id],
+                        )
+                        if user_message_id
+                        else None
                     ),
                     metadata=MemoryMetadata(
                         importance=params.importance or 50, tags=params.tags or []
@@ -281,57 +442,114 @@ class MemoryAPI:
                 ),
                 StoreMemoryOptions(sync_to_graph=should_sync_to_graph),
             )
+            stored_memories.append(user_memory)
 
-        # Step 8: Extract and store facts if provided
+            # Detect if agent response is just an acknowledgment
+            agent_content_lower = agent_content.lower()
+            is_acknowledgment = len(agent_content) < 80 and any(
+                phrase in agent_content_lower
+                for phrase in [
+                    "got it", "i've noted", "i'll remember", "noted", "understood",
+                    "i'll set", "i'll call you", "will do", "sure thing", "okay,", "ok,",
+                ]
+            )
+
+            # Only store agent response in vector if it contains meaningful information
+            if not is_acknowledgment:
+                agent_memory = await self.vector.store(
+                    params.memory_space_id,
+                    StoreMemoryInput(
+                        content=agent_content,
+                        content_type="raw",
+                        participant_id=params.participant_id,
+                        embedding=agent_embedding,
+                        user_id=params.user_id,
+                        agent_id=params.agent_id,
+                        message_role="agent",
+                        source=MemorySource(
+                            type="conversation",
+                            user_id=params.user_id,
+                            user_name=params.user_name,
+                            timestamp=now + 1,
+                        ),
+                        conversation_ref=(
+                            ConversationRef(
+                                conversation_id=params.conversation_id,
+                                message_ids=[agent_message_id],
+                            )
+                            if agent_message_id
+                            else None
+                        ),
+                        metadata=MemoryMetadata(
+                            importance=params.importance or 50, tags=params.tags or []
+                        ),
+                    ),
+                    StoreMemoryOptions(sync_to_graph=should_sync_to_graph),
+                )
+                stored_memories.append(agent_memory)
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 5: FACTS (skip: 'facts')
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         extracted_facts = []
 
-        if params.extract_facts:
-            try:
-                facts_to_store = await params.extract_facts(
-                    params.user_message, params.agent_response
-                )
+        if not self._should_skip_layer("facts", skip_layers):
+            fact_extractor = self._get_fact_extractor(params)
 
-                if facts_to_store:
-                    from ..types import FactSourceRef, StoreFactOptions, StoreFactParams
+            if fact_extractor:
+                try:
+                    facts_to_store = await fact_extractor(
+                        params.user_message, params.agent_response
+                    )
 
-                    for fact_data in facts_to_store:
-                        try:
-                            stored_fact = await self.facts.store(
-                                StoreFactParams(
-                                    memory_space_id=params.memory_space_id,
-                                    participant_id=params.participant_id,
-                                    user_id=params.user_id,  # BUG FIX: Add userId to facts!
-                                    fact=fact_data["fact"],
-                                    fact_type=fact_data["factType"],
-                                    subject=fact_data.get("subject", params.user_id),
-                                    predicate=fact_data.get("predicate"),
-                                    object=fact_data.get("object"),
-                                    confidence=fact_data["confidence"],
-                                    source_type="conversation",
-                                    source_ref=FactSourceRef(
-                                        conversation_id=params.conversation_id,
-                                        message_ids=[
-                                            user_message_id,
-                                            agent_message_id,
-                                        ],
-                                        memory_id=user_memory.memory_id,
+                    if facts_to_store:
+                        from ..types import (
+                            FactSourceRef,
+                            StoreFactOptions,
+                            StoreFactParams,
+                        )
+
+                        for fact_data in facts_to_store:
+                            try:
+                                stored_fact = await self.facts.store(
+                                    StoreFactParams(
+                                        memory_space_id=params.memory_space_id,
+                                        participant_id=params.participant_id,
+                                        user_id=params.user_id,
+                                        fact=fact_data["fact"],
+                                        fact_type=fact_data["factType"],
+                                        subject=fact_data.get("subject", params.user_id or params.agent_id),
+                                        predicate=fact_data.get("predicate"),
+                                        object=fact_data.get("object"),
+                                        confidence=fact_data["confidence"],
+                                        source_type="conversation",
+                                        source_ref=FactSourceRef(
+                                            conversation_id=params.conversation_id,
+                                            message_ids=(
+                                                [user_message_id, agent_message_id]
+                                                if user_message_id and agent_message_id
+                                                else None
+                                            ),
+                                            memory_id=stored_memories[0].memory_id if stored_memories else None,
+                                        ),
+                                        tags=fact_data.get("tags", params.tags or []),
                                     ),
-                                    tags=fact_data.get("tags", params.tags or []),
-                                ),
-                                StoreFactOptions(sync_to_graph=should_sync_to_graph),
-                            )
-                            extracted_facts.append(stored_fact)
-                        except Exception as error:
-                            print(f"Warning: Failed to store fact: {error}")
-            except Exception as error:
-                print(f"Warning: Failed to extract facts: {error}")
+                                    StoreFactOptions(sync_to_graph=should_sync_to_graph),
+                                )
+                                extracted_facts.append(stored_fact)
+                            except Exception as error:
+                                print(f"Warning: Failed to store fact: {error}")
+                except Exception as error:
+                    print(f"Warning: Failed to extract facts: {error}")
 
-        # Filter out None memories (agent_memory is None if it was an acknowledgment)
-        stored_memories = [m for m in [user_memory, agent_memory] if m is not None]
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 6: GRAPH (handled via syncToGraph in previous steps)
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # Graph sync is handled inline with each layer via the shouldSyncToGraph flag
 
         return RememberResult(
             conversation={
-                "messageIds": [user_message_id, agent_message_id],
+                "messageIds": [user_message_id, agent_message_id] if user_message_id and agent_message_id else [],
                 "conversationId": params.conversation_id,
             },
             memories=stored_memories,
@@ -398,22 +616,47 @@ class MemoryAPI:
         conversation_id = params.get("conversationId") if isinstance(params, dict) else params.conversation_id
         user_id = params.get("userId") if isinstance(params, dict) else params.user_id
         user_name = params.get("userName") if isinstance(params, dict) else params.user_name
+        agent_id = params.get("agentId") if isinstance(params, dict) else getattr(params, "agent_id", None)
         user_message = params.get("userMessage") if isinstance(params, dict) else params.user_message
         importance = params.get("importance") if isinstance(params, dict) else getattr(params, "importance", None)
         tags = params.get("tags") if isinstance(params, dict) else getattr(params, "tags", None)
         response_stream = params.get("responseStream") if isinstance(params, dict) else params.response_stream
+        skip_layers = params.get("skipLayers") if isinstance(params, dict) else getattr(params, "skip_layers", None)
 
         validate_memory_space_id(str(memory_space_id or ""))
         validate_conversation_id(str(conversation_id or ""))
         validate_content(str(user_message or ""), "user_message")
-        validate_user_id(str(user_id or ""))
 
-        if not user_name or not isinstance(user_name, str) or str(user_name).strip() == "":
+        # Owner validation
+        has_user_id = user_id and isinstance(user_id, str) and str(user_id).strip() != ""
+        has_agent_id = agent_id and isinstance(agent_id, str) and str(agent_id).strip() != ""
+
+        # Either user_id or agent_id must be provided
+        if not has_user_id and not has_agent_id:
             raise MemoryValidationError(
-                "user_name is required and must be a non-empty string",
-                "MISSING_REQUIRED_FIELD",
-                "user_name",
+                "Either user_id or agent_id must be provided for memory ownership. "
+                "Use user_id for user-owned memories, agent_id for agent-owned memories.",
+                "OWNER_REQUIRED",
+                "user_id/agent_id",
             )
+
+        # If user_id is provided, agent_id is required
+        if has_user_id and not has_agent_id:
+            raise MemoryValidationError(
+                "agent_id is required when user_id is provided. "
+                "User-agent conversations require both a user and an agent participant.",
+                "AGENT_REQUIRED_FOR_USER_CONVERSATION",
+                "agent_id",
+            )
+
+        # If user_id is provided, user_name is required
+        if has_user_id:
+            if not user_name or not isinstance(user_name, str) or str(user_name).strip() == "":
+                raise MemoryValidationError(
+                    "user_name is required when user_id is provided",
+                    "MISSING_REQUIRED_FIELD",
+                    "user_name",
+                )
 
         if importance is not None:
             validate_importance(importance)
@@ -594,31 +837,44 @@ class MemoryAPI:
         full_response = ""
 
         try:
-            # Step 1: Ensure conversation exists
-            existing_conversation = await self.conversations.get(
-                str(conversation_id or "")
+            # Determine if we should sync to graph (check skipLayers)
+            should_sync_to_graph = (
+                (opts.sync_to_graph if opts else True)
+                and self.graph_adapter is not None
+                and not self._should_skip_layer("graph", skip_layers)
             )
-            if not existing_conversation:
-                from ..types import (
-                    ConversationParticipants,
-                    CreateConversationInput,
-                    CreateConversationOptions,
-                )
 
-                await self.conversations.create(
-                    CreateConversationInput(
-                        memory_space_id=str(memory_space_id or ""),
-                        conversation_id=params.get("conversationId") if isinstance(params, dict) else params.conversation_id,
-                        type="user-agent",
-                        participants=ConversationParticipants(
-                            user_id=params.get("userId") if isinstance(params, dict) else params.user_id,
-                            participant_id=params.get("participantId", "agent") if isinstance(params, dict) else getattr(params, "participant_id", "agent"),
-                        ),
-                    ),
-                    CreateConversationOptions(
-                        sync_to_graph=(opts.sync_to_graph if opts else True) and self.graph_adapter is not None,
-                    ),
+            # Step 1: Ensure conversation exists (skip if 'conversations' in skipLayers)
+            if not self._should_skip_layer("conversations", skip_layers):
+                existing_conversation = await self.conversations.get(
+                    str(conversation_id or "")
                 )
+                if not existing_conversation:
+                    from ..types import (
+                        ConversationParticipants,
+                        CreateConversationInput,
+                        CreateConversationOptions,
+                    )
+
+                    # Always use user-agent type for remember_stream() function
+                    # agent-agent conversations are for explicit multi-agent collaboration
+                    # and require memorySpaceIds (hive-mode or collaboration-mode)
+                    conversation_type: ConversationType = "user-agent"
+                    participants = ConversationParticipants(
+                        user_id=user_id,
+                        agent_id=agent_id,
+                        participant_id=params.get("participantId") if isinstance(params, dict) else getattr(params, "participant_id", None),
+                    )
+
+                    await self.conversations.create(
+                        CreateConversationInput(
+                            memory_space_id=str(memory_space_id or ""),
+                            conversation_id=str(conversation_id or ""),
+                            type=conversation_type,
+                            participants=participants,
+                        ),
+                        CreateConversationOptions(sync_to_graph=should_sync_to_graph),
+                    )
 
             # Step 2: Initialize progressive storage
             if storage_handler:
@@ -665,12 +921,14 @@ class MemoryAPI:
             remember_result = await self.remember(
                 RememberParams(
                     memory_space_id=str(memory_space_id or ""),
-                    participant_id=params.get("participantId") if isinstance(params, dict) else getattr(params, "participant_id", None),
                     conversation_id=str(conversation_id or ""),
                     user_message=str(user_message_val or ""),
                     agent_response=full_response,
-                    user_id=str(user_id or ""),
-                    user_name=str(user_name or ""),
+                    user_id=str(user_id or "") if user_id else None,
+                    user_name=str(user_name or "") if user_name else None,
+                    agent_id=str(agent_id or "") if agent_id else None,
+                    participant_id=params.get("participantId") if isinstance(params, dict) else getattr(params, "participant_id", None),
+                    skip_layers=skip_layers,  # Pass through skip_layers
                     extract_content=params.get("extractContent") if isinstance(params, dict) else getattr(params, "extract_content", None),
                     generate_embedding=generate_embedding_fn,
                     extract_facts=extract_facts_fn,

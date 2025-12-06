@@ -31,7 +31,7 @@ async def param_test_setup(module_cortex_client, test_run_context):
         CreateConversationInput(
             type="user-agent",
             memory_space_id=memory_space_id,
-            participants=ConversationParticipants(user_id=user_id),
+            participants=ConversationParticipants(user_id=user_id, agent_id="test-agent"),
         )
     )
 
@@ -63,6 +63,7 @@ async def test_propagates_participant_id_to_vector_layer(cortex_client, param_te
             conversation_id=setup["conversation_id"],
             user_id=setup["user_id"],
             user_name="Test User",
+            agent_id=setup["ctx"].agent_id("test-agent"),
             participant_id="tool-calendar",
             user_message="Check my calendar for tomorrow",
             agent_response="You have 3 meetings tomorrow",
@@ -98,6 +99,7 @@ async def test_propagates_importance_to_vector_layer(cortex_client, param_test_s
             conversation_id=setup["conversation_id"],
             user_id=setup["user_id"],
             user_name="Test User",
+            agent_id=setup["ctx"].agent_id("test-agent"),
             importance=importance,
             user_message="My password is secret123",
             # Agent response with meaningful content (not just acknowledgment)
@@ -132,6 +134,7 @@ async def test_propagates_tags_to_vector_layer(cortex_client, param_test_setup):
             conversation_id=setup["conversation_id"],
             user_id=setup["user_id"],
             user_name="Test User",
+            agent_id=setup["ctx"].agent_id("test-agent"),
             tags=tags,
             user_message="Security concern here",
             # Agent response with meaningful content (not just acknowledgment)
@@ -164,6 +167,7 @@ async def test_propagates_user_id_to_vector_layer(cortex_client, param_test_setu
             conversation_id=setup["conversation_id"],
             user_id=setup["user_id"],
             user_name="Test User",
+            agent_id=setup["ctx"].agent_id("test-agent"),
             user_message="User-specific message",
             agent_response="Response to user",
         )
@@ -196,6 +200,7 @@ async def test_propagates_participant_id_to_conversation_messages(cortex_client,
             conversation_id=setup["conversation_id"],
             user_id=setup["user_id"],
             user_name="Test User",
+            agent_id=setup["ctx"].agent_id("test-agent"),
             participant_id="tool-email",
             user_message="Send email to boss",
             agent_response="Email sent successfully",
@@ -241,6 +246,7 @@ async def test_propagates_participant_id_to_extracted_facts(cortex_client, param
             conversation_id=setup["conversation_id"],
             user_id=setup["user_id"],
             user_name="Test User",
+            agent_id=setup["ctx"].agent_id("test-agent"),
             participant_id="tool-email",
             user_message="I want emails automated",
             agent_response="Will set up automation",
@@ -275,6 +281,7 @@ async def test_propagates_none_for_optional_participant_id(cortex_client, param_
             conversation_id=setup["conversation_id"],
             user_id=setup["user_id"],
             user_name="Test User",
+            agent_id=setup["ctx"].agent_id("test-agent"),
             # participantId omitted
             user_message="No participant specified",
             agent_response="Response without participant",
@@ -303,6 +310,7 @@ async def test_propagates_default_importance_when_omitted(cortex_client, param_t
             conversation_id=setup["conversation_id"],
             user_id=setup["user_id"],
             user_name="Test User",
+            agent_id=setup["ctx"].agent_id("test-agent"),
             # importance omitted - should use default
             user_message="Default importance",
             agent_response="Response",
@@ -337,6 +345,7 @@ async def test_user_id_propagates_through_all_layers(cortex_client, param_test_s
             conversation_id=setup["conversation_id"],
             user_id=setup["user_id"],
             user_name="Test User",
+            agent_id=setup["ctx"].agent_id("test-agent"),
             user_message="Multi-layer test",
             agent_response="Response",
         )
@@ -369,6 +378,7 @@ async def test_memory_space_id_consistent_across_layers(cortex_client, param_tes
             conversation_id=setup["conversation_id"],
             user_id=setup["user_id"],
             user_name="Test User",
+            agent_id=setup["ctx"].agent_id("test-agent"),
             user_message="Space consistency test",
             agent_response="Response",
         )
@@ -407,6 +417,7 @@ async def test_propagates_custom_metadata_fields(cortex_client, param_test_setup
             conversation_id=setup["conversation_id"],
             user_id=setup["user_id"],
             user_name="Test User",
+            agent_id=setup["ctx"].agent_id("test-agent"),
             user_message="Test message",
             agent_response="Test response",
             tags=["custom-metadata"],
@@ -441,6 +452,7 @@ async def test_propagates_source_user_name_to_memories(cortex_client, param_test
             conversation_id=setup["conversation_id"],
             user_id=setup["user_id"],
             user_name=user_name,
+            agent_id=setup["ctx"].agent_id("test-agent"),
             user_message="Test with user name",
             agent_response="Response",
         )
@@ -472,6 +484,7 @@ async def test_propagates_conversation_id_to_conversation_ref(cortex_client, par
             conversation_id=setup["conversation_id"],
             user_id=setup["user_id"],
             user_name="Test User",
+            agent_id=setup["ctx"].agent_id("test-agent"),
             user_message="ConversationRef test",
             agent_response="Response",
         )
@@ -505,6 +518,7 @@ async def test_auto_generates_timestamp_when_omitted(cortex_client, param_test_s
             conversation_id=setup["conversation_id"],
             user_id=setup["user_id"],
             user_name="Test User",
+            agent_id=setup["ctx"].agent_id("test-agent"),
             user_message="Auto timestamp",
             agent_response="Response",
         )
@@ -538,6 +552,7 @@ async def test_propagates_all_parameters_together(cortex_client, param_test_setu
             conversation_id=setup["conversation_id"],
             user_id=setup["user_id"],
             user_name="Alice",
+            agent_id=setup["ctx"].agent_id("test-agent"),
             participant_id="tool-calendar",
             importance=85,
             tags=["calendar", "meeting"],

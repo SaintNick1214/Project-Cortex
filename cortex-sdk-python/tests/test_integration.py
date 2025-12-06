@@ -43,6 +43,7 @@ async def test_remember_creates_conversation_and_memories(cortex_client, test_id
             agent_response="Hi there!",
             user_id=user_id,
             user_name="Tester",
+            agent_id=test_ids.get("agent_id", "test-agent"),
         )
     )
 
@@ -86,6 +87,7 @@ async def test_forget_deletes_both_layers(cortex_client, test_ids, cleanup_helpe
             agent_response="Okay",
             user_id=user_id,
             user_name="Tester",
+            agent_id=test_ids.get("agent_id", "test-agent"),
         )
     )
 
@@ -132,7 +134,7 @@ async def test_cross_layer_reference_integrity(cortex_client, test_ids, cleanup_
             conversation_id=conversation_id,
             memory_space_id=memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=user_id),
+            participants=ConversationParticipants(user_id=user_id, agent_id="test-agent"),
         )
     )
 
@@ -208,6 +210,7 @@ async def test_memory_facts_linkage(cortex_client, test_ids, cleanup_helper):
             agent_response="That's great! Pizza is a wonderful choice - I've added this food preference to your profile for personalized restaurant suggestions.",
             user_id=user_id,
             user_name="Tester",
+            agent_id="test-agent",
             extract_facts=extract_facts,
         )
     )
@@ -250,6 +253,7 @@ async def test_user_cascade_affects_all_layers(cortex_client, test_ids, cleanup_
             agent_response="Response",
             user_id=user_id,
             user_name="Tester",
+            agent_id="test-agent",
         )
     )
 

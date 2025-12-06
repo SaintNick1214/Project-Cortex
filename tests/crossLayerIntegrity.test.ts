@@ -21,6 +21,7 @@ describe("Cross-Layer Reference Integrity", () => {
   // Use ctx-scoped IDs for parallel execution isolation
   const TEST_MEMSPACE_ID = ctx.memorySpaceId("cross-layer");
   const TEST_USER_ID = ctx.userId("cross-layer");
+  const TEST_AGENT_ID = ctx.agentId("cross-layer");
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
@@ -39,7 +40,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const msgResult = await cortex.conversations.addMessage({
@@ -81,7 +82,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const convNew = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const result = await cortex.memory.remember({
@@ -89,6 +90,7 @@ describe("Cross-Layer Reference Integrity", () => {
         conversationId: convNew.conversationId,
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         userMessage: "Reference integrity test",
         agentResponse: "Testing references",
       });
@@ -136,7 +138,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const fact = await cortex.facts.store({
@@ -192,7 +194,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
@@ -238,7 +240,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const ctx = await cortex.contexts.create({
@@ -391,7 +393,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const convRef = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const result = await cortex.memory.remember({
@@ -399,6 +401,7 @@ describe("Cross-Layer Reference Integrity", () => {
         conversationId: convRef.conversationId,
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         userMessage: "Cross-layer consistency test",
         agentResponse: "Validating consistency",
       });
@@ -487,7 +490,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
@@ -528,7 +531,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       await cortex.conversations.addMessage({
@@ -677,7 +680,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
@@ -724,7 +727,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       await cortex.conversations.addMessage({
@@ -754,7 +757,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
@@ -910,7 +913,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       await cortex.conversations.addMessage({
@@ -1002,7 +1005,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const immutable = await cortex.immutable.store({
@@ -1195,7 +1198,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       // Create 3 memories referencing same conversation
@@ -1336,7 +1339,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       // Add 10 messages
@@ -1435,7 +1438,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const ctx = await cortex.contexts.create({
@@ -1495,7 +1498,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const memory = await cortex.vector.store(spaceId, {
@@ -1567,7 +1570,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const memory = await cortex.vector.store(spaceId, {
@@ -1611,7 +1614,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
@@ -1648,7 +1651,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const mem = await cortex.vector.store(TEST_MEMSPACE_ID, {
@@ -1716,7 +1719,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
@@ -1757,7 +1760,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const parent = await cortex.contexts.create({
@@ -1825,7 +1828,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       // Create 5 memories referencing same conversation
@@ -1888,7 +1891,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       // Create duplicate facts
@@ -1931,7 +1934,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       // Add 3 messages
@@ -1974,7 +1977,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
@@ -2012,7 +2015,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const immutable = await cortex.immutable.store({
@@ -2128,7 +2131,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceToDelete,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       // Create memory in surviving space referencing the conversation
@@ -2261,7 +2264,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceA,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       // Create context in space B referencing space A conversation
@@ -2291,7 +2294,7 @@ describe("Cross-Layer Reference Integrity", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {

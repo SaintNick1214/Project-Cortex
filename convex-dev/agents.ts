@@ -6,7 +6,7 @@
  */
 
 import { mutation, query } from "./_generated/server";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Query Operations
@@ -198,7 +198,7 @@ export const register = mutation({
       .first();
 
     if (existing) {
-      throw new Error("AGENT_ALREADY_REGISTERED");
+      throw new ConvexError("AGENT_ALREADY_REGISTERED");
     }
 
     const now = Date.now();
@@ -244,7 +244,7 @@ export const update = mutation({
       .first();
 
     if (!agent) {
-      throw new Error("AGENT_NOT_REGISTERED");
+      throw new ConvexError("AGENT_NOT_REGISTERED");
     }
 
     // Build update object
@@ -279,7 +279,7 @@ export const unregister = mutation({
       .first();
 
     if (!agent) {
-      throw new Error("AGENT_NOT_REGISTERED");
+      throw new ConvexError("AGENT_NOT_REGISTERED");
     }
 
     await ctx.db.delete(agent._id);

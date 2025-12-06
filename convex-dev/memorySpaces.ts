@@ -5,7 +5,7 @@
  * Memory space metadata and analytics
  */
 
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -46,7 +46,7 @@ export const register = mutation({
       .first();
 
     if (existing) {
-      throw new Error("MEMORYSPACE_ALREADY_EXISTS");
+      throw new ConvexError("MEMORYSPACE_ALREADY_EXISTS");
     }
 
     const now = Date.now();
@@ -85,7 +85,7 @@ export const update = mutation({
       .first();
 
     if (!space) {
-      throw new Error("MEMORYSPACE_NOT_FOUND");
+      throw new ConvexError("MEMORYSPACE_NOT_FOUND");
     }
 
     await ctx.db.patch(space._id, {
@@ -120,12 +120,12 @@ export const addParticipant = mutation({
       .first();
 
     if (!space) {
-      throw new Error("MEMORYSPACE_NOT_FOUND");
+      throw new ConvexError("MEMORYSPACE_NOT_FOUND");
     }
 
     // Check if already exists
     if (space.participants.some((p) => p.id === args.participant.id)) {
-      throw new Error("PARTICIPANT_ALREADY_EXISTS");
+      throw new ConvexError("PARTICIPANT_ALREADY_EXISTS");
     }
 
     await ctx.db.patch(space._id, {
@@ -154,7 +154,7 @@ export const removeParticipant = mutation({
       .first();
 
     if (!space) {
-      throw new Error("MEMORYSPACE_NOT_FOUND");
+      throw new ConvexError("MEMORYSPACE_NOT_FOUND");
     }
 
     const updatedParticipants = space.participants.filter(
@@ -188,7 +188,7 @@ export const archive = mutation({
       .first();
 
     if (!space) {
-      throw new Error("MEMORYSPACE_NOT_FOUND");
+      throw new ConvexError("MEMORYSPACE_NOT_FOUND");
     }
 
     await ctx.db.patch(space._id, {
@@ -222,7 +222,7 @@ export const reactivate = mutation({
       .first();
 
     if (!space) {
-      throw new Error("MEMORYSPACE_NOT_FOUND");
+      throw new ConvexError("MEMORYSPACE_NOT_FOUND");
     }
 
     await ctx.db.patch(space._id, {
@@ -251,7 +251,7 @@ export const deleteSpace = mutation({
       .first();
 
     if (!space) {
-      throw new Error("MEMORYSPACE_NOT_FOUND");
+      throw new ConvexError("MEMORYSPACE_NOT_FOUND");
     }
 
     if (args.cascade) {
@@ -407,7 +407,7 @@ export const getStats = query({
       .first();
 
     if (!space) {
-      throw new Error("MEMORYSPACE_NOT_FOUND");
+      throw new ConvexError("MEMORYSPACE_NOT_FOUND");
     }
 
     // Count conversations
@@ -573,7 +573,7 @@ export const updateParticipants = mutation({
       .first();
 
     if (!space) {
-      throw new Error("MEMORYSPACE_NOT_FOUND");
+      throw new ConvexError("MEMORYSPACE_NOT_FOUND");
     }
 
     let updatedParticipants = [...space.participants];

@@ -113,7 +113,7 @@ class TestConversationIsolation:
             CreateConversationInput(
                 type="user-agent",
                 memory_space_id=space_a,
-                participants={"userId": "test-user"},
+                participants={"userId": "test-user", "agentId": "test-agent"},
             )
         )
 
@@ -121,7 +121,7 @@ class TestConversationIsolation:
             CreateConversationInput(
                 type="user-agent",
                 memory_space_id=space_b,
-                participants={"userId": "test-user"},
+                participants={"userId": "test-user", "agentId": "test-agent"},
             )
         )
 

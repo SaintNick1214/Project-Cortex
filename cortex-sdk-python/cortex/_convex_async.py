@@ -6,7 +6,34 @@ an async API to match the TypeScript SDK.
 """
 
 import asyncio
+import json
 from typing import Any, Dict
+
+from cortex.errors import CortexError, ErrorCode
+
+
+def _extract_convex_error_data(error: Exception) -> str:
+    """
+    Extract error data from a ConvexError.
+
+    In managed Convex deployments, ConvexError has a `data` property containing
+    the actual error code/message, while the `message` is often sanitized to
+    "Server Error" for security reasons.
+
+    Args:
+        error: The caught exception
+
+    Returns:
+        The error data as a string
+    """
+    # Check if this is a ConvexError with a data attribute
+    if hasattr(error, "data") and error.data is not None:
+        if isinstance(error.data, str):
+            return error.data
+        else:
+            return json.dumps(error.data)
+    # Fall back to the original error message
+    return str(error)
 
 
 class AsyncConvexClient:
@@ -35,12 +62,27 @@ class AsyncConvexClient:
 
         Returns:
             Query result
+
+        Raises:
+            CortexError: All Convex exceptions are wrapped as CortexError for consistent error handling
         """
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(
-            None,
-            lambda: self._sync_client.query(name, args)
-        )
+        try:
+            return await loop.run_in_executor(
+                None,
+                lambda: self._sync_client.query(name, args)
+            )
+        except Exception as e:
+            # Extract error data from ConvexError for enhanced message
+            # ConvexError has a `data` field with the actual error code/message
+            error_data = _extract_convex_error_data(e)
+            # Always wrap as CortexError for consistent error handling
+            # This ensures callers can rely on catching CortexError type
+            raise CortexError(
+                code=ErrorCode.CONVEX_ERROR,
+                message=error_data,
+                details={"original_exception": type(e).__name__, "query": name}
+            ) from e
 
     async def mutation(self, name: str, args: Dict[str, Any]) -> Any:
         """
@@ -52,12 +94,27 @@ class AsyncConvexClient:
 
         Returns:
             Mutation result
+
+        Raises:
+            CortexError: All Convex exceptions are wrapped as CortexError for consistent error handling
         """
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(
-            None,
-            lambda: self._sync_client.mutation(name, args)
-        )
+        try:
+            return await loop.run_in_executor(
+                None,
+                lambda: self._sync_client.mutation(name, args)
+            )
+        except Exception as e:
+            # Extract error data from ConvexError for enhanced message
+            # ConvexError has a `data` field with the actual error code/message
+            error_data = _extract_convex_error_data(e)
+            # Always wrap as CortexError for consistent error handling
+            # This ensures callers can rely on catching CortexError type
+            raise CortexError(
+                code=ErrorCode.CONVEX_ERROR,
+                message=error_data,
+                details={"original_exception": type(e).__name__, "mutation": name}
+            ) from e
 
     async def close(self) -> None:
         """

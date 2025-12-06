@@ -15,7 +15,7 @@ async def test_create_conversation(cortex_client, test_memory_space_id, test_use
             memory_space_id=test_memory_space_id,
             type="user-agent",
             participants=ConversationParticipants(
-                user_id=test_user_id, participant_id="test-bot"
+                user_id=test_user_id, agent_id="test-bot"
             ),
         )
     )
@@ -34,7 +34,7 @@ async def test_add_message(cortex_client, test_memory_space_id, test_conversatio
             conversation_id=test_conversation_id,
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -62,7 +62,7 @@ async def test_get_conversation(cortex_client, test_memory_space_id, test_conver
             conversation_id=test_conversation_id,
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -85,7 +85,7 @@ async def test_list_conversations(cortex_client, test_memory_space_id, test_user
             CreateConversationInput(
                 memory_space_id=test_memory_space_id,
                 type="user-agent",
-                participants=ConversationParticipants(user_id=test_user_id),
+                participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
             )
         )
         created_ids.append(conv.conversation_id)
@@ -110,7 +110,7 @@ async def test_count_conversations(cortex_client, test_memory_space_id, test_use
             CreateConversationInput(
                 memory_space_id=test_memory_space_id,
                 type="user-agent",
-                participants=ConversationParticipants(user_id=test_user_id),
+                participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
             )
         )
 
@@ -129,7 +129,7 @@ async def test_get_or_create(cortex_client, test_memory_space_id, test_user_id):
             memory_space_id=test_memory_space_id,
             type="user-agent",
             participants=ConversationParticipants(
-                user_id=test_user_id, participant_id="bot-1"
+                user_id=test_user_id, agent_id="bot-1"
             ),
         )
     )
@@ -140,7 +140,7 @@ async def test_get_or_create(cortex_client, test_memory_space_id, test_user_id):
             memory_space_id=test_memory_space_id,
             type="user-agent",
             participants=ConversationParticipants(
-                user_id=test_user_id, participant_id="bot-1"
+                user_id=test_user_id, agent_id="bot-1"
             ),
         )
     )
@@ -191,7 +191,7 @@ async def test_get_history(cortex_client, test_memory_space_id, test_conversatio
             conversation_id=test_conversation_id,
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -232,7 +232,7 @@ async def test_get_message(cortex_client, test_memory_space_id, test_conversatio
             conversation_id=test_conversation_id,
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -279,7 +279,7 @@ async def test_find_conversation(cortex_client, test_memory_space_id, test_user_
             type="user-agent",
             participants=ConversationParticipants(
                 user_id=test_user_id,
-                participant_id=participant_id,
+                agent_id=participant_id,
             ),
         )
     )
@@ -310,7 +310,7 @@ async def test_search_conversations(cortex_client, test_memory_space_id, test_us
         CreateConversationInput(
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
             metadata={"topic": "refunds"},
         )
     )
@@ -348,7 +348,7 @@ async def test_delete_conversation(cortex_client, test_memory_space_id, test_use
         CreateConversationInput(
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -374,7 +374,7 @@ async def test_delete_many_conversations(cortex_client, test_memory_space_id, te
             CreateConversationInput(
                 memory_space_id=test_memory_space_id,
                 type="user-agent",
-                participants=ConversationParticipants(user_id=test_user_id),
+                participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
             )
         )
         conv_ids.append(conv.conversation_id)
@@ -401,7 +401,7 @@ async def test_export_conversations(cortex_client, test_memory_space_id, test_us
         CreateConversationInput(
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -432,16 +432,17 @@ async def test_export_conversations(cortex_client, test_memory_space_id, test_us
 
 
 @pytest.mark.asyncio
-async def test_accepts_custom_conversation_id(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
+async def test_accepts_custom_conversation_id(cortex_client, test_memory_space_id, test_user_id, ctx, cleanup_helper):
     """Test accepting custom conversationId. Port of: conversations.test.ts - line 112"""
-    custom_id = "conv-custom-python-123"
+    # Use ctx for idempotency in parallel testing
+    custom_id = ctx.conversation_id("custom")
 
     result = await cortex_client.conversations.create(
         CreateConversationInput(
             conversation_id=custom_id,
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id, participant_id="agent-1"),
+            participants=ConversationParticipants(user_id=test_user_id, participant_id="agent-1", agent_id="test-agent"),
         )
     )
 
@@ -460,7 +461,7 @@ async def test_throws_error_for_duplicate_conversation_id(cortex_client, test_me
             conversation_id=conversation_id,
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id="user-1", participant_id="agent-1"),
+            participants=ConversationParticipants(user_id="user-1", participant_id="agent-1", agent_id="test-agent"),
         )
     )
 
@@ -471,7 +472,7 @@ async def test_throws_error_for_duplicate_conversation_id(cortex_client, test_me
                 conversation_id=conversation_id,
                 memory_space_id=test_memory_space_id,
                 type="user-agent",
-                participants=ConversationParticipants(user_id="user-2", participant_id="agent-2"),
+                participants=ConversationParticipants(user_id="user-2", participant_id="agent-2", agent_id="test-agent"),
             )
         )
 
@@ -494,7 +495,7 @@ async def test_appends_multiple_messages_immutability(cortex_client, test_memory
             conversation_id=test_conversation_id,
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -524,7 +525,7 @@ async def test_respects_limit_parameter(cortex_client, test_memory_space_id, tes
             CreateConversationInput(
                 memory_space_id=test_memory_space_id,
                 type="user-agent",
-                participants=ConversationParticipants(user_id=test_user_id),
+                participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
             )
         )
 
@@ -542,7 +543,7 @@ async def test_validates_complete_acid_properties(cortex_client, test_memory_spa
         CreateConversationInput(
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -574,7 +575,7 @@ async def test_handles_conversation_with_100_plus_messages(cortex_client, test_m
             conversation_id=test_conversation_id,
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -622,7 +623,7 @@ async def test_rejects_empty_message_content(cortex_client, test_memory_space_id
             conversation_id=test_conversation_id,
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -648,7 +649,7 @@ async def test_handles_very_long_message_content(cortex_client, test_memory_spac
             conversation_id=test_conversation_id,
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -672,7 +673,7 @@ async def test_filters_by_user_id_in_list(cortex_client, test_memory_space_id, c
         CreateConversationInput(
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=user_id),
+            participants=ConversationParticipants(user_id=user_id, agent_id="test-agent"),
         )
     )
 
@@ -690,7 +691,7 @@ async def test_filters_by_type_in_list(cortex_client, test_memory_space_id, clea
         CreateConversationInput(
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id="user-type-test"),
+            participants=ConversationParticipants(user_id="user-type-test", agent_id="test-agent"),
         )
     )
 
@@ -710,7 +711,7 @@ async def test_combines_filters_user_id_and_memory_space(cortex_client, test_mem
         CreateConversationInput(
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=user_id),
+            participants=ConversationParticipants(user_id=user_id, agent_id="test-agent"),
         )
     )
 
@@ -731,7 +732,7 @@ async def test_counts_by_user_id(cortex_client, cleanup_helper):
         CreateConversationInput(
             memory_space_id="test-count-space",
             type="user-agent",
-            participants=ConversationParticipants(user_id=user_id),
+            participants=ConversationParticipants(user_id=user_id, agent_id="test-agent"),
         )
     )
 
@@ -747,7 +748,7 @@ async def test_counts_by_memory_space_id(cortex_client, test_memory_space_id, cl
         CreateConversationInput(
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id="user-count-space"),
+            participants=ConversationParticipants(user_id="user-count-space", agent_id="test-agent"),
         )
     )
 
@@ -781,7 +782,7 @@ async def test_get_history_with_pagination(cortex_client, test_memory_space_id, 
             conversation_id=test_conversation_id,
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -816,7 +817,7 @@ async def test_get_history_ascending_order(cortex_client, test_memory_space_id, 
             conversation_id=test_conversation_id,
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -847,7 +848,7 @@ async def test_get_history_descending_order(cortex_client, test_memory_space_id,
             conversation_id=test_conversation_id,
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -875,7 +876,7 @@ async def test_search_finds_conversations_containing_query(cortex_client, test_m
         CreateConversationInput(
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -902,7 +903,7 @@ async def test_search_filters_by_user_id(cortex_client, test_memory_space_id, cl
         CreateConversationInput(
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=user_id),
+            participants=ConversationParticipants(user_id=user_id, agent_id="test-agent"),
         )
     )
 
@@ -938,7 +939,7 @@ async def test_export_to_json_format(cortex_client, test_memory_space_id, test_u
         CreateConversationInput(
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -958,7 +959,7 @@ async def test_export_to_csv_format(cortex_client, test_memory_space_id, test_us
         CreateConversationInput(
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -978,7 +979,7 @@ async def test_accepts_custom_message_id(cortex_client, test_memory_space_id, te
             conversation_id=test_conversation_id,
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -1024,7 +1025,7 @@ async def test_message_additions_propagate_to_all_read_operations(cortex_client,
             conversation_id=test_conversation_id,
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -1053,7 +1054,7 @@ async def test_deletion_propagates_to_all_read_operations(cortex_client, test_me
         CreateConversationInput(
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -1095,7 +1096,7 @@ async def test_handles_special_characters_in_conversation_id(cortex_client, test
             conversation_id=special_id,
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -1115,7 +1116,7 @@ async def test_get_messages_by_ids(cortex_client, test_memory_space_id, test_con
             conversation_id=test_conversation_id,
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -1158,7 +1159,7 @@ async def test_get_messages_by_ids_filters_out_nonexistent_ids(cortex_client, te
             conversation_id=test_conversation_id,
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
         )
     )
 
@@ -1188,7 +1189,7 @@ async def test_find_conversation_user_agent(cortex_client, test_memory_space_id,
         CreateConversationInput(
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=user_id, participant_id="agent-find"),
+            participants=ConversationParticipants(user_id=user_id, participant_id="agent-find", agent_id="test-agent"),
         )
     )
 
@@ -1248,7 +1249,7 @@ async def test_get_or_create_creates_new_if_not_exists(cortex_client, test_memor
         CreateConversationInput(
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=user_id, participant_id="agent-new"),
+            participants=ConversationParticipants(user_id=user_id, participant_id="agent-new", agent_id="test-agent"),
         )
     )
 
@@ -1267,7 +1268,7 @@ async def test_get_or_create_returns_existing_if_found(cortex_client, test_memor
         CreateConversationInput(
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=user_id, participant_id="agent-existing"),
+            participants=ConversationParticipants(user_id=user_id, participant_id="agent-existing", agent_id="test-agent"),
         )
     )
 
@@ -1275,7 +1276,7 @@ async def test_get_or_create_returns_existing_if_found(cortex_client, test_memor
         CreateConversationInput(
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=user_id, participant_id="agent-existing"),
+            participants=ConversationParticipants(user_id=user_id, participant_id="agent-existing", agent_id="test-agent"),
         )
     )
 
@@ -1291,7 +1292,7 @@ async def test_create_to_search_to_export_consistency(cortex_client, test_memory
         CreateConversationInput(
             memory_space_id=test_memory_space_id,
             type="user-agent",
-            participants=ConversationParticipants(user_id=test_user_id),
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
             metadata={"testKeyword": "INTEGRATION_TEST_MARKER"},
         )
     )
@@ -1321,52 +1322,52 @@ async def test_create_to_search_to_export_consistency(cortex_client, test_memory
 async def test_conv_final_1(cortex_client): await cortex_client.conversations.list(); assert True
 
 @pytest.mark.asyncio
-async def test_conv_final_2(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id))); await cortex_client.conversations.delete(conv.conversation_id); assert True
+async def test_conv_final_2(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"))); await cortex_client.conversations.delete(conv.conversation_id); assert True
 
 @pytest.mark.asyncio
-async def test_conv_final_3(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id))); await cortex_client.conversations.delete(conv.conversation_id); assert True
+async def test_conv_final_3(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"))); await cortex_client.conversations.delete(conv.conversation_id); assert True
 
 @pytest.mark.asyncio
-async def test_conv_final_4(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id))); await cortex_client.conversations.delete(conv.conversation_id); assert True
+async def test_conv_final_4(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"))); await cortex_client.conversations.delete(conv.conversation_id); assert True
 
 @pytest.mark.asyncio
-async def test_conv_final_5(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id))); await cortex_client.conversations.delete(conv.conversation_id); assert True
+async def test_conv_final_5(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"))); await cortex_client.conversations.delete(conv.conversation_id); assert True
 
 @pytest.mark.asyncio
-async def test_conv_final_6(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id))); await cortex_client.conversations.delete(conv.conversation_id); assert True
+async def test_conv_final_6(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"))); await cortex_client.conversations.delete(conv.conversation_id); assert True
 
 @pytest.mark.asyncio
-async def test_conv_final_7(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id))); await cortex_client.conversations.delete(conv.conversation_id); assert True
+async def test_conv_final_7(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"))); await cortex_client.conversations.delete(conv.conversation_id); assert True
 
 @pytest.mark.asyncio
-async def test_conv_final_8(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id))); await cortex_client.conversations.delete(conv.conversation_id); assert True
+async def test_conv_final_8(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"))); await cortex_client.conversations.delete(conv.conversation_id); assert True
 
 @pytest.mark.asyncio
-async def test_conv_final_9(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id))); await cortex_client.conversations.delete(conv.conversation_id); assert True
+async def test_conv_final_9(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"))); await cortex_client.conversations.delete(conv.conversation_id); assert True
 
 @pytest.mark.asyncio
-async def test_conv_final_10(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id))); await cortex_client.conversations.delete(conv.conversation_id); assert True
+async def test_conv_final_10(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"))); await cortex_client.conversations.delete(conv.conversation_id); assert True
 
 @pytest.mark.asyncio
-async def test_conv_final_11(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id))); await cortex_client.conversations.delete(conv.conversation_id); assert True
+async def test_conv_final_11(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"))); await cortex_client.conversations.delete(conv.conversation_id); assert True
 
 @pytest.mark.asyncio
-async def test_conv_final_12(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id))); await cortex_client.conversations.delete(conv.conversation_id); assert True
+async def test_conv_final_12(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"))); await cortex_client.conversations.delete(conv.conversation_id); assert True
 
 @pytest.mark.asyncio
-async def test_conv_final_13(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id))); await cortex_client.conversations.delete(conv.conversation_id); assert True
+async def test_conv_final_13(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"))); await cortex_client.conversations.delete(conv.conversation_id); assert True
 
 @pytest.mark.asyncio
-async def test_conv_final_14(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id))); await cortex_client.conversations.delete(conv.conversation_id); assert True
+async def test_conv_final_14(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"))); await cortex_client.conversations.delete(conv.conversation_id); assert True
 
 @pytest.mark.asyncio
-async def test_conv_final_15(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id))); await cortex_client.conversations.delete(conv.conversation_id); assert True
+async def test_conv_final_15(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"))); await cortex_client.conversations.delete(conv.conversation_id); assert True
 
 @pytest.mark.asyncio
-async def test_conv_final_16(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id))); await cortex_client.conversations.delete(conv.conversation_id); assert True
+async def test_conv_final_16(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"))); await cortex_client.conversations.delete(conv.conversation_id); assert True
 
 @pytest.mark.asyncio
-async def test_conv_final_17(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id))); await cortex_client.conversations.delete(conv.conversation_id); assert True
+async def test_conv_final_17(cortex_client, test_memory_space_id, test_user_id, cleanup_helper): conv = await cortex_client.conversations.create(CreateConversationInput(memory_space_id=test_memory_space_id, type="user-agent", participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"))); await cortex_client.conversations.delete(conv.conversation_id); assert True
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1385,7 +1386,7 @@ class TestCreateValidation:
                 CreateConversationInput(
                     memory_space_id=None,  # type: ignore
                     type="user-agent",
-                    participants=ConversationParticipants(user_id="user-123"),
+                    participants=ConversationParticipants(user_id="user-123", agent_id="test-agent"),
                 )
             )
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
@@ -1400,7 +1401,7 @@ class TestCreateValidation:
                 CreateConversationInput(
                     memory_space_id="",
                     type="user-agent",
-                    participants=ConversationParticipants(user_id="user-123"),
+                    participants=ConversationParticipants(user_id="user-123", agent_id="test-agent"),
                 )
             )
         error = exc_info.value
@@ -1416,7 +1417,7 @@ class TestCreateValidation:
                 CreateConversationInput(
                     memory_space_id="   ",
                     type="user-agent",
-                    participants=ConversationParticipants(user_id="user-123"),
+                    participants=ConversationParticipants(user_id="user-123", agent_id="test-agent"),
                 )
             )
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
@@ -1430,7 +1431,7 @@ class TestCreateValidation:
                 CreateConversationInput(
                     memory_space_id="test-space",
                     type="invalid-type",  # type: ignore
-                    participants=ConversationParticipants(user_id="user-123"),
+                    participants=ConversationParticipants(user_id="user-123", agent_id="test-agent"),
                 )
             )
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
@@ -1445,7 +1446,7 @@ class TestCreateValidation:
                     conversation_id="conv-123\n456",
                     memory_space_id="test-space",
                     type="user-agent",
-                    participants=ConversationParticipants(user_id="user-123"),
+                    participants=ConversationParticipants(user_id="user-123", agent_id="test-agent"),
                 )
             )
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
@@ -1785,7 +1786,7 @@ class TestGetOrCreateValidation:
                 CreateConversationInput(
                     memory_space_id=None,  # type: ignore
                     type="user-agent",
-                    participants=ConversationParticipants(user_id="user-123"),
+                    participants=ConversationParticipants(user_id="user-123", agent_id="test-agent"),
                 )
             )
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
@@ -1799,7 +1800,7 @@ class TestGetOrCreateValidation:
                 CreateConversationInput(
                     memory_space_id="test-space",
                     type="invalid",  # type: ignore
-                    participants=ConversationParticipants(user_id="user-123"),
+                    participants=ConversationParticipants(user_id="user-123", agent_id="test-agent"),
                 )
             )
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"

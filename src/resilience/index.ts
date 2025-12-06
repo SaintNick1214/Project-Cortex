@@ -22,7 +22,7 @@
 
 import { CircuitBreaker } from "./CircuitBreaker";
 import { PriorityQueue } from "./PriorityQueue";
-import { getPriority, isCritical } from "./priorities";
+import { getPriority } from "./priorities";
 import { Semaphore } from "./Semaphore";
 import { TokenBucket } from "./TokenBucket";
 import {
@@ -275,19 +275,10 @@ export class ResilienceLayer {
 
     // Layer 4: Check circuit breaker
     if (this.circuitBreaker.isOpen()) {
-      // Critical operations always get queued, never rejected
-      if (isCritical(operationName)) {
-        return this.enqueueAndWait(operation, priority, operationName);
-      }
-
-      // For non-critical, check if circuit is open
-      const metrics = this.circuitBreaker.getMetrics();
-      const retryAfter = this.circuitBreaker.getTimeUntilClose();
-
-      throw new CircuitOpenError(
-        `Circuit breaker is open (${metrics.failures} failures). Retry after ${retryAfter}ms`,
-        retryAfter,
-      );
+      // Queue ALL operations when circuit is open - this is true resilience
+      // Critical operations get higher priority, but all operations wait for circuit reset
+      // Operations will be retried automatically when the circuit closes
+      return this.enqueueAndWait(operation, priority, operationName);
     }
 
     // Layer 1: Rate limiting - wait for token
@@ -309,6 +300,22 @@ export class ResilienceLayer {
       this.circuitBreaker.recordFailure(
         error instanceof Error ? error : new Error(String(error)),
       );
+
+      // Handle ConvexError - extract data and include in error message
+      // ConvexError has a `data` property containing the actual error code/message
+      if (
+        error &&
+        typeof error === "object" &&
+        "data" in error &&
+        (error as { data: unknown }).data !== undefined
+      ) {
+        const convexError = error as { data: unknown; message?: string };
+        const errorData =
+          typeof convexError.data === "string"
+            ? convexError.data
+            : JSON.stringify(convexError.data);
+        throw new Error(errorData);
+      }
 
       throw error;
     } finally {
@@ -452,9 +459,7 @@ export class ResilienceLayer {
       this.circuitBreaker.recordFailure(
         error instanceof Error ? error : new Error(String(error)),
       );
-      request.reject(
-        error instanceof Error ? error : new Error(String(error)),
-      );
+      request.reject(error instanceof Error ? error : new Error(String(error)));
     } finally {
       permit.release();
     }
@@ -539,10 +544,7 @@ export class ResilienceLayer {
 
     // Wait for queue to drain
     const startTime = Date.now();
-    while (
-      !this.queue.isEmpty() &&
-      Date.now() - startTime < timeoutMs
-    ) {
+    while (!this.queue.isEmpty() && Date.now() - startTime < timeoutMs) {
       await this.sleep(100);
     }
 

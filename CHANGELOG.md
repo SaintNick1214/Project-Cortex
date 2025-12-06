@@ -19,6 +19,342 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.19.1] - 2025-12-03
+
+#### 🛡️ Idempotent Graph Sync Operations
+
+**Graph sync operations now use MERGE instead of CREATE for resilient, idempotent operations. Re-running scripts or handling race conditions no longer causes constraint violation errors.**
+
+#### ✨ New Features
+
+**1. `mergeNode()` Method**
+
+New method on `GraphAdapter` interface that uses Cypher `MERGE` semantics:
+
+- Creates node if not exists
+- Matches existing node if it does
+- Updates properties on match
+- Safe for concurrent operations
+
+```typescript
+// Idempotent - safe to call multiple times
+const nodeId = await adapter.mergeNode(
+  {
+    label: "MemorySpace",
+    properties: { memorySpaceId: "space-123", name: "Main" },
+  },
+  { memorySpaceId: "space-123" }, // Match properties
+);
+```
+
+**2. All Sync Utilities Now Idempotent**
+
+Updated sync functions to use `mergeNode()`:
+
+- `syncMemorySpaceToGraph()`
+- `syncContextToGraph()`
+- `syncConversationToGraph()`
+- `syncMemoryToGraph()`
+- `syncFactToGraph()`
+- `ensureUserNode()`
+- `ensureAgentNode()`
+- `ensureParticipantNode()`
+- `ensureEntityNode()`
+- `ensureEnrichedEntityNode()`
+
+#### 🔧 Technical Details
+
+- Graph operations no longer fail with "Node already exists" errors
+- Scripts can be safely re-run without clearing Neo4j/Memgraph
+- Race conditions in parallel memory creation are handled gracefully
+- Existing data is updated rather than causing conflicts
+
+---
+
+### [0.19.0] - 2025-12-03
+
+#### 🔗 Automatic Graph Database Configuration
+
+**Zero-configuration graph database integration via environment variables. Just set `CORTEX_GRAPH_SYNC=true` and connection credentials for automatic graph sync during `remember()` calls.**
+
+#### ✨ New Features
+
+**1. Automatic Graph Configuration**
+
+Enable with two environment variables:
+
+```bash
+# Gate 1: Connection credentials (Neo4j OR Memgraph)
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=password
+
+# OR
+MEMGRAPH_URI=bolt://localhost:7688
+MEMGRAPH_USERNAME=memgraph
+MEMGRAPH_PASSWORD=password
+
+# Gate 2: Explicit opt-in
+CORTEX_GRAPH_SYNC=true
+```
+
+Graph is now automatically configured with `Cortex.create()`:
+
+```typescript
+// With env vars: CORTEX_GRAPH_SYNC=true, NEO4J_URI=bolt://localhost:7687
+const cortex = await Cortex.create({ convexUrl: process.env.CONVEX_URL! });
+// Graph is automatically connected and sync worker started
+```
+
+**2. Factory Pattern for Async Configuration**
+
+New `Cortex.create()` static factory method that enables async auto-configuration:
+
+```typescript
+// Factory method - enables graph auto-config
+const cortex = await Cortex.create({ convexUrl: "..." });
+
+// Constructor still works (backward compatible, no graph auto-config)
+const cortex = new Cortex({ convexUrl: "..." });
+```
+
+**3. Priority Handling**
+
+- Explicit `CortexConfig.graph` always takes priority over env vars
+- If both `NEO4J_URI` and `MEMGRAPH_URI` are set, Neo4j is used with a warning
+- Auto-sync worker is automatically started when auto-configured
+
+#### 🛡️ Safety Features
+
+- **Two-gate opt-in**: Requires both connection credentials AND `CORTEX_GRAPH_SYNC=true`
+- **Graceful error handling**: Connection failures log error and return undefined
+- **Backward compatible**: Existing `new Cortex()` usage unchanged
+
+---
+
+### [0.18.0] - 2025-12-03
+
+#### 🤖 Automatic LLM Fact Extraction
+
+**Zero-configuration fact extraction from conversations using OpenAI or Anthropic. Just set environment variables and facts are automatically extracted during `remember()` calls.**
+
+#### ✨ New Features
+
+**1. Automatic Fact Extraction**
+
+Enable with two environment variables:
+
+```bash
+# Gate 1: API key (OpenAI or Anthropic)
+OPENAI_API_KEY=sk-...
+# or
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Gate 2: Explicit opt-in
+CORTEX_FACT_EXTRACTION=true
+
+# Optional: Custom model
+CORTEX_FACT_EXTRACTION_MODEL=gpt-4o
+```
+
+Facts are now automatically extracted during `remember()`:
+
+```typescript
+await cortex.memory.remember({
+  memorySpaceId: "my-space",
+  conversationId: "conv-123",
+  userMessage: "I prefer TypeScript for backend development",
+  agentResponse: "Great choice!",
+  userId: "user-123",
+  agentId: "assistant-v1",
+});
+
+// Automatically extracts and stores:
+// { fact: "User prefers TypeScript for backend", factType: "preference", confidence: 0.95 }
+```
+
+**2. LLM Client Module**
+
+New `src/llm/index.ts` module with:
+
+- `LLMClient` interface for fact extraction
+- `OpenAIClient` - Uses OpenAI's JSON mode for reliable extraction
+- `AnthropicClient` - Uses Claude's structured output
+- `createLLMClient(config)` factory function
+- Graceful fallback if SDK not installed
+
+**3. Model Flexibility**
+
+Supports any model with graceful capability detection:
+
+- Standard models (gpt-4o-mini, claude-3-haiku): Full JSON mode, temperature, max_tokens
+- Reasoning models (o1, o1-mini): Automatically omits unsupported parameters
+
+**4. Optional Peer Dependencies**
+
+LLM SDKs are now optional peer dependencies:
+
+```bash
+# Install only what you need
+npm install openai           # For OpenAI
+npm install @anthropic-ai/sdk  # For Anthropic
+```
+
+#### 🔧 Configuration
+
+**Explicit Config (overrides env vars):**
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: "...",
+  llm: {
+    provider: "openai",
+    apiKey: "sk-...",
+    model: "gpt-4o",
+    temperature: 0.1,
+    maxTokens: 1000,
+  },
+});
+```
+
+**Custom Extractor:**
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: "...",
+  llm: {
+    provider: "custom",
+    apiKey: "unused",
+    extractFacts: async (userMsg, agentMsg) => {
+      // Your custom extraction logic
+      return [{ fact: "...", factType: "preference", confidence: 0.9 }];
+    },
+  },
+});
+```
+
+#### 🛡️ Safety Features
+
+- **Two-gate opt-in**: Requires both API key AND `CORTEX_FACT_EXTRACTION=true`
+- **Graceful degradation**: Missing SDK logs warning, doesn't break `remember()`
+- **Explicit override**: `CortexConfig.llm` always takes priority over env vars
+
+---
+
+### [0.17.0] - 2025-12-03
+
+#### 🔄 Memory Orchestration - Enhanced Owner Attribution
+
+**Complete overhaul of memory orchestration to enforce proper user-agent conversation modeling. User-agent conversations now require both `userId` and `agentId`, ensuring every conversation has both participants properly recorded.**
+
+#### ✨ New Features
+
+**1. Mandatory Agent Attribution for User Conversations**
+
+When a `userId` is provided, `agentId` is now required:
+
+```typescript
+// ✅ Correct - both user and agent specified
+await cortex.memory.remember({
+  memorySpaceId: "my-space",
+  conversationId: "conv-123",
+  userMessage: "Hello!",
+  agentResponse: "Hi there!",
+  userId: "user-123",
+  userName: "Alice",
+  agentId: "assistant-v1", // Now required for user-agent conversations
+});
+
+// ✅ Correct - agent-only (no user)
+await cortex.memory.remember({
+  memorySpaceId: "my-space",
+  conversationId: "conv-456",
+  userMessage: "System task",
+  agentResponse: "Completed",
+  agentId: "worker-agent",
+  skipLayers: ["conversations"],
+});
+
+// ❌ Error - user without agent
+await cortex.memory.remember({
+  userId: "user-123",
+  userName: "Alice",
+  // Missing agentId - will throw!
+});
+```
+
+**2. Agent ID Support Across All Layers**
+
+- **Conversations**: `participants.agentId` field added
+- **Memories**: `agentId` field for agent-owned memories
+- **Graph Sync**: Agent nodes and relationships
+- **Indexes**: Optimized queries by agentId
+
+**3. Graph Layer Agent Support**
+
+New graph elements for agent tracking:
+
+```cypher
+// New Agent node type
+(:Agent {agentId: "assistant-v1", createdAt: 1733234567890})
+
+// Conversation involves both user and agent
+(Conversation)-[:INVOLVES]->(User)
+(Conversation)-[:INVOLVES]->(Agent)
+
+// Memory relates to agent
+(Memory)-[:RELATES_TO]->(Agent)
+```
+
+#### 📊 Schema Updates
+
+| Table                        | Field Added | Purpose                        |
+| ---------------------------- | ----------- | ------------------------------ |
+| `memories`                   | `agentId`   | Agent-owned memory attribution |
+| `conversations.participants` | `agentId`   | Agent participant tracking     |
+
+New indexes:
+
+- `by_agentId` on memories table
+- `by_memorySpace_agentId` on memories table
+- `by_agent` on conversations table
+- `by_memorySpace_agent` on conversations table
+
+#### 🔧 Validation Rules
+
+| Scenario                 | Required Fields                   |
+| ------------------------ | --------------------------------- |
+| User-agent conversation  | `userId` + `userName` + `agentId` |
+| Agent-only (system/tool) | `agentId` only                    |
+
+#### ⚠️ Breaking Changes
+
+- `cortex.memory.remember()` now throws if `userId` is provided without `agentId`
+- Error: `"agentId is required when userId is provided. User-agent conversations require both a user and an agent participant."`
+
+#### Migration
+
+Update existing `remember()` calls to include `agentId`:
+
+```typescript
+// Before (v0.16.x)
+await cortex.memory.remember({
+  userId: "user-123",
+  userName: "Alice",
+  // ... other params
+});
+
+// After (v0.17.0)
+await cortex.memory.remember({
+  userId: "user-123",
+  userName: "Alice",
+  agentId: "your-agent-id", // Add this
+  // ... other params
+});
+```
+
+---
+
 ### [0.16.0] - 2025-12-01
 
 #### 🛡️ Resilience Layer - Production-Ready Overload Protection
@@ -37,10 +373,10 @@ const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL!,
   resilience: {
     rateLimiter: {
-      bucketSize: 200,     // Allow bursts up to 200
-      refillRate: 100,     // Sustain 100 ops/sec
-    }
-  }
+      bucketSize: 200, // Allow bursts up to 200
+      refillRate: 100, // Sustain 100 ops/sec
+    },
+  },
 });
 ```
 
@@ -62,13 +398,13 @@ resilience: {
 
 In-memory queue that prioritizes critical operations:
 
-| Priority | Examples | Behavior |
-|----------|----------|----------|
-| `critical` | `users:delete` | Bypass circuit breaker |
-| `high` | `memory:remember`, `facts:store` | Priority processing |
-| `normal` | Most operations | Standard queue |
-| `low` | `memory:search`, `vector:search` | Deferrable |
-| `background` | `governance:simulate` | Lowest priority |
+| Priority     | Examples                         | Behavior               |
+| ------------ | -------------------------------- | ---------------------- |
+| `critical`   | `users:delete`                   | Bypass circuit breaker |
+| `high`       | `memory:remember`, `facts:store` | Priority processing    |
+| `normal`     | Most operations                  | Standard queue         |
+| `low`        | `memory:search`, `vector:search` | Deferrable             |
+| `background` | `governance:simulate`            | Lowest priority        |
 
 Priorities are **automatically assigned** based on operation name patterns.
 
@@ -117,10 +453,16 @@ new Cortex({ convexUrl, resilience: ResiliencePresets.disabled });
 ```typescript
 const metrics = cortex.getResilienceMetrics();
 
-console.log(`Rate limiter: ${metrics.rateLimiter.available}/${metrics.rateLimiter.bucketSize} tokens`);
-console.log(`Concurrency: ${metrics.concurrency.active}/${metrics.concurrency.max} active`);
+console.log(
+  `Rate limiter: ${metrics.rateLimiter.available}/${metrics.rateLimiter.bucketSize} tokens`,
+);
+console.log(
+  `Concurrency: ${metrics.concurrency.active}/${metrics.concurrency.max} active`,
+);
 console.log(`Queue: ${metrics.queue.size} pending`);
-console.log(`Circuit: ${metrics.circuitBreaker.state} (${metrics.circuitBreaker.failures} failures)`);
+console.log(
+  `Circuit: ${metrics.circuitBreaker.state} (${metrics.circuitBreaker.failures} failures)`,
+);
 
 // Health check
 const isHealthy = cortex.isHealthy(); // false if circuit is open
@@ -139,6 +481,7 @@ await cortex.close();
 #### 📦 New Modules
 
 **TypeScript (`src/resilience/`):**
+
 - `types.ts` - Configuration interfaces and error classes
 - `TokenBucket.ts` - Token bucket rate limiter
 - `Semaphore.ts` - Async semaphore with queue
@@ -148,6 +491,7 @@ await cortex.close();
 - `index.ts` - ResilienceLayer orchestrator and presets
 
 **Python (`cortex/resilience/`):**
+
 - `types.py` - Configuration dataclasses and exceptions
 - `token_bucket.py` - Token bucket rate limiter
 - `semaphore.py` - Async semaphore with queue
@@ -166,6 +510,7 @@ await cortex.close();
 #### 📚 New Types
 
 **TypeScript:**
+
 ```typescript
 type Priority = "critical" | "high" | "normal" | "low" | "background";
 
@@ -195,6 +540,7 @@ class RateLimitExceededError extends Error { ... }
 ```
 
 **Python:**
+
 ```python
 Priority = Literal["critical", "high", "normal", "low", "background"]
 

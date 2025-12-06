@@ -21,6 +21,7 @@ describe("Parameter Propagation: memory.remember()", () => {
   // Use ctx-scoped IDs for parallel execution isolation
   const TEST_MEMSPACE_ID = ctx.memorySpaceId("param-prop");
   const TEST_USER_ID = ctx.userId("param-test");
+  const TEST_AGENT_ID = ctx.agentId("param-test");
   let testConversationId: string;
 
   beforeAll(async () => {
@@ -33,7 +34,7 @@ describe("Parameter Propagation: memory.remember()", () => {
     const conv = await cortex.conversations.create({
       type: "user-agent",
       memorySpaceId: TEST_MEMSPACE_ID,
-      participants: { userId: TEST_USER_ID },
+      participants: { userId: TEST_USER_ID, agentId: "test-agent" },
     });
     testConversationId = conv.conversationId;
   });
@@ -50,6 +51,7 @@ describe("Parameter Propagation: memory.remember()", () => {
         conversationId: testConversationId,
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         participantId: "tool-calendar",
         userMessage: "Check my calendar for tomorrow",
         agentResponse: "You have 3 meetings tomorrow",
@@ -82,6 +84,7 @@ describe("Parameter Propagation: memory.remember()", () => {
         conversationId: testConversationId,
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         importance: IMPORTANCE,
         userMessage: "My password is secret123",
         // Agent response with meaningful content (not just acknowledgment)
@@ -111,6 +114,7 @@ describe("Parameter Propagation: memory.remember()", () => {
         conversationId: testConversationId,
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         tags: TAGS,
         userMessage: "Security concern here",
         // Agent response with meaningful content (not just acknowledgment)
@@ -139,7 +143,7 @@ describe("Parameter Propagation: memory.remember()", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: USER_ID },
+        participants: { userId: USER_ID, agentId: "test-agent" },
       });
 
       const result = await cortex.memory.remember({
@@ -147,6 +151,7 @@ describe("Parameter Propagation: memory.remember()", () => {
         conversationId: conv.conversationId,
         userId: USER_ID,
         userName: "Specific User",
+        agentId: TEST_AGENT_ID,
         userMessage: "Test message",
         agentResponse: "Test response",
       });
@@ -170,6 +175,7 @@ describe("Parameter Propagation: memory.remember()", () => {
         conversationId: testConversationId,
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         userMessage: "Track this conversation",
         agentResponse: "Conversation tracked",
       });
@@ -199,6 +205,7 @@ describe("Parameter Propagation: memory.remember()", () => {
         conversationId: testConversationId,
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         participantId: undefined, // Explicitly undefined
         userMessage: "No participant",
         agentResponse: "Response without participant",
@@ -219,6 +226,7 @@ describe("Parameter Propagation: memory.remember()", () => {
         conversationId: testConversationId,
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         // participantId NOT provided at all
         userMessage: "No participant field",
         agentResponse: "Response without participant field",
@@ -238,6 +246,7 @@ describe("Parameter Propagation: memory.remember()", () => {
         conversationId: testConversationId,
         userId: "multi-param-user",
         userName: "Multi Param User",
+        agentId: TEST_AGENT_ID,
         participantId: "tool-multi",
         importance: 88,
         tags: ["tag1", "tag2", "tag3"],
@@ -269,6 +278,7 @@ describe("Parameter Propagation: memory.remember()", () => {
         conversationId: testConversationId,
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         importance: 75,
         tags: ["metadata-test"],
         userMessage: "Test metadata",
@@ -294,7 +304,7 @@ describe("Parameter Propagation: memory.remember()", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
       getTestConversationId = conv.conversationId;
 
@@ -303,6 +313,7 @@ describe("Parameter Propagation: memory.remember()", () => {
         conversationId: getTestConversationId,
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         userMessage: "Setup for get test",
         agentResponse: "Get test ready",
       });
@@ -361,7 +372,7 @@ describe("Parameter Propagation: memory.remember()", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
       searchConversationId = conv.conversationId;
 
@@ -371,6 +382,7 @@ describe("Parameter Propagation: memory.remember()", () => {
         conversationId: searchConversationId,
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         userMessage: "SEARCH_MARKER for testing search",
         agentResponse: "Found the SEARCH_MARKER",
       });
@@ -439,6 +451,7 @@ describe("Parameter Propagation: memory.remember()", () => {
         conversationId: testConversationId,
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         participantId: undefined,
         importance: undefined,
         tags: undefined,
@@ -463,6 +476,7 @@ describe("Parameter Propagation: memory.remember()", () => {
         conversationId: testConversationId,
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         participantId: "tool-defined",
         importance: undefined,
         tags: ["defined-tag"],
@@ -489,6 +503,7 @@ describe("Parameter Propagation: memory.forget()", () => {
   // Use ctx-scoped IDs for parallel execution isolation
   const TEST_MEMSPACE_ID = ctx.memorySpaceId("param-forget");
   const TEST_USER_ID = ctx.userId("forget-test");
+  const TEST_AGENT_ID = ctx.agentId("forget-test");
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
@@ -506,7 +521,7 @@ describe("Parameter Propagation: memory.forget()", () => {
     const conv = await cortex.conversations.create({
       type: "user-agent",
       memorySpaceId: TEST_MEMSPACE_ID,
-      participants: { userId: TEST_USER_ID },
+      participants: { userId: TEST_USER_ID, agentId: "test-agent" },
     });
 
     const result = await cortex.memory.remember({
@@ -514,6 +529,7 @@ describe("Parameter Propagation: memory.forget()", () => {
       conversationId: conv.conversationId,
       userId: TEST_USER_ID,
       userName: "Test User",
+      agentId: TEST_AGENT_ID,
       userMessage: "To be forgotten",
       agentResponse: "Will be forgotten",
     });
@@ -540,7 +556,7 @@ describe("Parameter Propagation: memory.forget()", () => {
     const conv = await cortex.conversations.create({
       type: "user-agent",
       memorySpaceId: TEST_MEMSPACE_ID,
-      participants: { userId: TEST_USER_ID },
+      participants: { userId: TEST_USER_ID, agentId: "test-agent" },
     });
 
     const result = await cortex.memory.remember({
@@ -548,6 +564,7 @@ describe("Parameter Propagation: memory.forget()", () => {
       conversationId: conv.conversationId,
       userId: TEST_USER_ID,
       userName: "Test User",
+      agentId: TEST_AGENT_ID,
       userMessage: "Memory to delete",
       agentResponse: "Conversation to keep",
     });

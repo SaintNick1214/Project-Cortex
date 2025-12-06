@@ -556,22 +556,36 @@ class UsersAPI:
     async def _execute_deletion(
         self, plan: Dict[str, List[Any]], user_id: str
     ) -> UserDeleteResult:
-        """Phase 3: Execute deletion."""
-        deleted_at = int(time.time() * 1000)
-        deleted_layers = []
+        """
+        Execute user deletion with strict error handling.
 
-        # Delete in reverse dependency order
+        STRICT MODE: Any error triggers immediate rollback of all operations.
+        This ensures data integrity - either all user data is deleted or none is.
+
+        Raises:
+            CascadeDeletionError: On any failure, triggers rollback
+        """
+        deleted_at = int(time.time() * 1000)
+        deleted_layers: List[str] = []
+
         conversations_deleted = 0
         messages_deleted = 0
-
-        # Delete vector memories using spaces from plan
         vector_deleted = 0
-        deleted_memory_ids = []
+        facts_deleted = 0
+        mutable_deleted = 0
+        immutable_deleted = 0
+        graph_nodes_deleted: Optional[int] = None
 
-        # Use the space IDs collected in plan phase
+        # Helper to build partial deletion info for error reporting
+        def _build_partial_info(failed_layer: str) -> str:
+            return (f"Partial deletion state - deleted_layers: {deleted_layers}, "
+                    f"vector: {vector_deleted}, facts: {facts_deleted}, "
+                    f"mutable: {mutable_deleted}, immutable: {immutable_deleted}, "
+                    f"conversations: {conversations_deleted}, failed at: {failed_layer}")
+
+        # 1. Delete vector memories - STRICT: raise on error
         for space_id in plan.get("vector", []):
             try:
-                # Use deleteMany to bulk delete user's memories in this space
                 result = await self.client.mutation(
                     "memories:deleteMany",
                     filter_none_values({"memorySpaceId": space_id, "userId": user_id})
@@ -579,18 +593,18 @@ class UsersAPI:
                 deleted_count = result.get("deleted", 0)
                 if deleted_count > 0:
                     vector_deleted += deleted_count
-                    deleted_memory_ids.extend(result.get("memoryIds", []))
-            except Exception:
-                pass  # Continue with other spaces
+            except Exception as e:
+                raise CascadeDeletionError(
+                    f"Failed to delete vector memories in space {space_id}: {e}. {_build_partial_info('vector')}",
+                    cause=e if isinstance(e, Exception) else None,
+                )
 
         if vector_deleted > 0:
             deleted_layers.append("vector")
 
-        # Delete facts
-        facts_deleted = 0
+        # 2. Delete facts - STRICT: raise on error
         for fact in plan.get("facts", []):
             try:
-                # Handle both camelCase and snake_case field names
                 memory_space_id = fact.get("memorySpaceId") or fact.get("memory_space_id")
                 fact_id = fact.get("factId") or fact.get("fact_id")
 
@@ -599,14 +613,16 @@ class UsersAPI:
                     filter_none_values({"memorySpaceId": memory_space_id, "factId": fact_id}),
                 )
                 facts_deleted += 1
-            except Exception as error:
-                print(f"Warning: Failed to delete fact {fact.get('factId', fact.get('fact_id', 'unknown'))}: {error}")
+            except Exception as e:
+                raise CascadeDeletionError(
+                    f"Failed to delete fact {fact.get('factId', fact.get('fact_id', 'unknown'))}: {e}. {_build_partial_info('facts')}",
+                    cause=e if isinstance(e, Exception) else None,
+                )
 
         if facts_deleted > 0:
             deleted_layers.append("facts")
 
-        # Delete mutable keys
-        mutable_deleted = 0
+        # 3. Delete mutable keys - STRICT: raise on error
         for mutable_key in plan.get("mutable", []):
             try:
                 await self.client.mutation(
@@ -614,14 +630,16 @@ class UsersAPI:
                     {"namespace": mutable_key["namespace"], "key": mutable_key["key"]},
                 )
                 mutable_deleted += 1
-            except Exception as error:
-                print(f"Warning: Failed to delete mutable key: {error}")
+            except Exception as e:
+                raise CascadeDeletionError(
+                    f"Failed to delete mutable key {mutable_key.get('key')}: {e}. {_build_partial_info('mutable')}",
+                    cause=e if isinstance(e, Exception) else None,
+                )
 
         if mutable_deleted > 0:
             deleted_layers.append("mutable")
 
-        # Delete immutable records
-        immutable_deleted = 0
+        # 4. Delete immutable records - STRICT: raise on error
         for record in plan.get("immutable", []):
             try:
                 await self.client.mutation(
@@ -629,13 +647,16 @@ class UsersAPI:
                     {"type": record["type"], "id": record["id"]},
                 )
                 immutable_deleted += 1
-            except Exception as error:
-                print(f"Warning: Failed to delete immutable record: {error}")
+            except Exception as e:
+                raise CascadeDeletionError(
+                    f"Failed to delete immutable record {record.get('id')}: {e}. {_build_partial_info('immutable')}",
+                    cause=e if isinstance(e, Exception) else None,
+                )
 
         if immutable_deleted > 0:
             deleted_layers.append("immutable")
 
-        # Delete conversations
+        # 5. Delete conversations - STRICT: raise on error
         for conv in plan.get("conversations", []):
             try:
                 await self.client.mutation(
@@ -644,27 +665,27 @@ class UsersAPI:
                 )
                 conversations_deleted += 1
                 messages_deleted += conv.get("messageCount", 0)
-            except Exception as error:
-                print(f"Warning: Failed to delete conversation: {error}")
+            except Exception as e:
+                raise CascadeDeletionError(
+                    f"Failed to delete conversation {conv.get('conversationId')}: {e}. {_build_partial_info('conversations')}",
+                    cause=e if isinstance(e, Exception) else None,
+                )
 
         if conversations_deleted > 0:
             deleted_layers.append("conversations")
 
-        # Delete user profile (may not exist if user was never created)
+        # 6. Delete user profile - STRICT: raise on error (except not-found)
         try:
             await self.client.mutation("immutable:purge", {"type": "user", "id": user_id})
             deleted_layers.append("user-profile")
         except Exception as e:
-            # Only ignore "not found" errors - user profile may not exist
-            if _is_user_not_found_error(e):
-                # User profile doesn't exist - that's okay, might only have associated data
-                pass
-            else:
-                # Log unexpected errors but continue (cascade should be best-effort)
-                print(f"Warning: Failed to delete user profile: {e}")
+            if not _is_user_not_found_error(e):
+                raise CascadeDeletionError(
+                    f"Failed to delete user profile: {e}. {_build_partial_info('user-profile')}",
+                    cause=e if isinstance(e, Exception) else None,
+                )
 
-        # Delete from graph if configured
-        graph_nodes_deleted = None
+        # 7. Delete from graph - STRICT: raise on error
         if self.graph_adapter:
             try:
                 from ..graph import delete_user_from_graph
@@ -674,10 +695,13 @@ class UsersAPI:
                 )
                 if graph_nodes_deleted > 0:
                     deleted_layers.append("graph")
-            except Exception as error:
-                print(f"Warning: Failed to delete from graph: {error}")
+            except Exception as e:
+                raise CascadeDeletionError(
+                    f"Failed to delete from graph: {e}. {_build_partial_info('graph')}",
+                    cause=e if isinstance(e, Exception) else None,
+                )
 
-        # Calculate total deleted (only count user profile if it was actually deleted)
+        # Calculate total deleted
         user_profile_count = 1 if "user-profile" in deleted_layers else 0
 
         total_deleted = (
@@ -729,11 +753,136 @@ class UsersAPI:
 
         return VerificationResult(complete=len(issues) == 0, issues=issues)
 
-    async def _rollback_deletion(self, backup: Dict[str, List[Any]])->Any:
-        """Rollback deletion on failure."""
-        # Restore from backup
-        # This is a simplified version - actual implementation would restore all data
-        print("Warning: Rollback not fully implemented - manual recovery may be needed")
+    async def _rollback_deletion(self, backup: Dict[str, List[Any]]) -> Dict[str, Any]:
+        """
+        Rollback user deletion on failure by re-creating deleted data.
+
+        Args:
+            backup: Dict containing the original data that was deleted
+
+        Returns:
+            Dict with rollback statistics
+        """
+        rollback_stats: Dict[str, Any] = {
+            "vector_restored": 0,
+            "facts_restored": 0,
+            "mutable_restored": 0,
+            "immutable_restored": 0,
+            "conversations_restored": 0,
+            "errors": [],
+        }
+
+        # Restore vector memories
+        for memory in backup.get("vector_memories", []):
+            try:
+                await self.client.mutation(
+                    "memories:store",
+                    filter_none_values({
+                        "memorySpaceId": memory.get("memorySpaceId"),
+                        "memoryId": memory.get("memoryId"),
+                        "content": memory.get("content"),
+                        "contentType": memory.get("contentType", "raw"),
+                        "embedding": memory.get("embedding"),
+                        "importance": memory.get("importance"),
+                        "sourceType": memory.get("sourceType"),
+                        "sourceUserId": memory.get("sourceUserId"),
+                        "sourceUserName": memory.get("sourceUserName"),
+                        # conversationRef is a nested object, not a flat field
+                        "conversationRef": memory.get("conversationRef"),
+                        "userId": memory.get("userId"),
+                        "agentId": memory.get("agentId"),
+                        "participantId": memory.get("participantId"),
+                        "tags": memory.get("tags", []),
+                    }),
+                )
+                rollback_stats["vector_restored"] += 1
+            except Exception as e:
+                rollback_stats["errors"].append(f"Failed to restore memory {memory.get('memoryId')}: {e}")
+
+        # Restore facts
+        for fact in backup.get("facts", []):
+            try:
+                await self.client.mutation(
+                    "facts:store",
+                    filter_none_values({
+                        "memorySpaceId": fact.get("memorySpaceId") or fact.get("memory_space_id"),
+                        "factId": fact.get("factId") or fact.get("fact_id"),
+                        "content": fact.get("content"),
+                        "subject": fact.get("subject"),
+                        "predicate": fact.get("predicate"),
+                        "object": fact.get("object"),
+                        "confidence": fact.get("confidence"),
+                        "source": fact.get("source"),
+                        "memoryId": fact.get("memoryId"),
+                        "userId": fact.get("userId"),
+                        "tags": fact.get("tags"),
+                        "metadata": fact.get("metadata"),
+                    }),
+                )
+                rollback_stats["facts_restored"] += 1
+            except Exception as e:
+                rollback_stats["errors"].append(f"Failed to restore fact: {e}")
+
+        # Restore mutable keys
+        for mutable_key in backup.get("mutable", []):
+            try:
+                await self.client.mutation(
+                    "mutable:setKey",
+                    {
+                        "namespace": mutable_key["namespace"],
+                        "key": mutable_key["key"],
+                        "value": mutable_key.get("value", {}),
+                    },
+                )
+                rollback_stats["mutable_restored"] += 1
+            except Exception as e:
+                rollback_stats["errors"].append(f"Failed to restore mutable key: {e}")
+
+        # Restore immutable records
+        for record in backup.get("immutable", []):
+            try:
+                await self.client.mutation(
+                    "immutable:store",
+                    {
+                        "type": record["type"],
+                        "id": record["id"],
+                        "data": record.get("data", {}),
+                    },
+                )
+                rollback_stats["immutable_restored"] += 1
+            except Exception as e:
+                rollback_stats["errors"].append(f"Failed to restore immutable record: {e}")
+
+        # Restore conversations (without messages - those are harder to restore)
+        for conv in backup.get("conversations", []):
+            try:
+                await self.client.mutation(
+                    "conversations:create",
+                    filter_none_values({
+                        "memorySpaceId": conv.get("memorySpaceId"),
+                        "conversationId": conv.get("conversationId"),
+                        "type": conv.get("type"),
+                        "participants": conv.get("participants"),
+                        "metadata": conv.get("metadata"),
+                    }),
+                )
+                rollback_stats["conversations_restored"] += 1
+            except Exception as e:
+                rollback_stats["errors"].append(f"Failed to restore conversation: {e}")
+
+        # Log rollback results
+        if rollback_stats["errors"]:
+            print(f"Rollback completed with errors: {len(rollback_stats['errors'])} failures")
+            for error in rollback_stats["errors"]:
+                print(f"  - {error}")
+        else:
+            print(f"Rollback completed: {rollback_stats['vector_restored']} memories, "
+                  f"{rollback_stats['facts_restored']} facts, "
+                  f"{rollback_stats['mutable_restored']} mutable keys, "
+                  f"{rollback_stats['immutable_restored']} immutable records, "
+                  f"{rollback_stats['conversations_restored']} conversations restored")
+
+        return rollback_stats
 
     async def update_many(
         self,

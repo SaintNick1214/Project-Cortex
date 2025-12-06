@@ -95,6 +95,7 @@ describe("Edge Runtime Compatibility", () => {
         agentResponse: "Working fine!",
         userId: "edge-user-1",
         userName: "EdgeUser",
+        agentId: "edge-agent-1",
       });
 
       expect(result).toBeDefined();
@@ -154,6 +155,7 @@ describe("Edge Runtime Compatibility", () => {
         responseStream: stream,
         userId: "edge-stream-user",
         userName: "EdgeStreamUser",
+        agentId: "edge-stream-agent",
       });
 
       expect(result.fullResponse).toBe("Edge compatible streaming");
@@ -175,6 +177,7 @@ describe("Edge Runtime Compatibility", () => {
         responseStream: edgeGenerator(),
         userId: "edge-async-user",
         userName: "EdgeAsyncUser",
+        agentId: "edge-async-agent",
       });
 
       expect(result.fullResponse).toBe("Async in edge");
@@ -227,6 +230,7 @@ describe("Edge Runtime Compatibility", () => {
           responseStream: failingStream,
           userId: "error-stream-user",
           userName: "ErrorUser",
+          agentId: "error-stream-agent",
         }),
       ).rejects.toThrow(/Edge stream error/);
     });
@@ -307,14 +311,15 @@ describe("Edge Runtime Compatibility", () => {
 
     it("should execute mutations without Node.js dependencies", async () => {
       // Test basic mutation operations
+      const spaceId = ctx.memorySpaceId("edge-mutation-test");
       const result = await cortex.memorySpaces.register({
-        memorySpaceId: "edge-mutation-test",
+        memorySpaceId: spaceId,
         name: "Edge Mutation Test",
         type: "custom",
       });
 
       expect(result).toBeDefined();
-      expect(result.memorySpaceId).toBe("edge-mutation-test");
+      expect(result.memorySpaceId).toBe(spaceId);
     });
   });
 });
@@ -332,7 +337,7 @@ describe("Edge Runtime: Real-world Scenarios", () => {
     // NOTE: Removed purgeAll() for parallel execution compatibility.
 
     await cortex.memorySpaces.register({
-      memorySpaceId: "edge-real-world",
+      memorySpaceId: ctx.memorySpaceId("edge-real-world"),
       name: "Edge Real World",
       type: "custom",
     });
@@ -345,16 +350,15 @@ describe("Edge Runtime: Real-world Scenarios", () => {
 
   it("should handle typical edge function workflow", async () => {
     // Simulate a typical Vercel Edge Function handling a chat request
+    const EDGE_SPACE = ctx.memorySpaceId("edge-real-world");
 
     // 1. Receive user message (simulated)
     const userMessage = "What is the capital of France?";
 
     // 2. Search for relevant memories
-    const memories = await cortex.memory.search(
-      "edge-real-world",
-      userMessage,
-      { limit: 5 },
-    );
+    const memories = await cortex.memory.search(EDGE_SPACE, userMessage, {
+      limit: 5,
+    });
     expect(Array.isArray(memories)).toBe(true);
 
     // 3. Simulate streaming LLM response
@@ -368,12 +372,13 @@ describe("Edge Runtime: Real-world Scenarios", () => {
 
     // 4. Store the conversation with streaming
     const result = await cortex.memory.rememberStream({
-      memorySpaceId: "edge-real-world",
+      memorySpaceId: EDGE_SPACE,
       conversationId: "edge-workflow-conv",
       userMessage: userMessage,
       responseStream: simulateLLMStream(),
       userId: "edge-user",
       userName: "EdgeUser",
+      agentId: "edge-agent",
     });
 
     // 5. Verify everything worked
@@ -382,7 +387,7 @@ describe("Edge Runtime: Real-world Scenarios", () => {
 
     // 6. Verify can retrieve the memory
     const retrievedMemories = await cortex.memory.search(
-      "edge-real-world",
+      EDGE_SPACE,
       "capital France",
     );
     expect(retrievedMemories.length).toBeGreaterThan(0);
@@ -391,6 +396,13 @@ describe("Edge Runtime: Real-world Scenarios", () => {
   it("should handle concurrent requests (edge function behavior)", async () => {
     // Edge functions often handle concurrent requests
     // Test that Cortex can handle parallel operations
+    const CONCURRENT_AGENT = ctx.agentId("concurrent");
+
+    // Pre-register agent to avoid race condition in concurrent requests
+    await cortex.agents.register({
+      id: CONCURRENT_AGENT,
+      name: "Concurrent Test Agent",
+    });
 
     const requests = Array.from({ length: 5 }, (_, i) => ({
       userMessage: `Question ${i + 1}`,
@@ -400,12 +412,13 @@ describe("Edge Runtime: Real-world Scenarios", () => {
     const results = await Promise.all(
       requests.map((req, i) =>
         cortex.memory.remember({
-          memorySpaceId: "edge-real-world",
+          memorySpaceId: ctx.memorySpaceId("edge-real-world"),
           conversationId: `concurrent-conv-${i}`,
           userMessage: req.userMessage,
           agentResponse: req.agentResponse,
           userId: "concurrent-user",
           userName: "ConcurrentUser",
+          agentId: CONCURRENT_AGENT,
         }),
       ),
     );

@@ -15,6 +15,7 @@ describe("Statistics Consistency Testing", () => {
   let cortex: Cortex;
   const BASE_ID = `stats-test-${Date.now()}`;
   const TEST_USER_ID = "stats-test-user";
+  const TEST_AGENT_ID = "stats-test-agent";
 
   beforeAll(() => {
     cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
@@ -47,17 +48,17 @@ describe("Statistics Consistency Testing", () => {
       await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
       await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: `${TEST_USER_ID}-2` },
+        participants: { userId: `${TEST_USER_ID}-2`, agentId: "test-agent" },
       });
       await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: `${TEST_USER_ID}-3` },
+        participants: { userId: `${TEST_USER_ID}-3`, agentId: "test-agent" },
       });
 
       const stats = await cortex.memorySpaces.getStats(spaceId);
@@ -133,7 +134,7 @@ describe("Statistics Consistency Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       // Add 7 messages
@@ -166,7 +167,7 @@ describe("Statistics Consistency Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       await cortex.conversations.addMessage({
@@ -238,7 +239,7 @@ describe("Statistics Consistency Testing", () => {
         await cortex.conversations.create({
           type: "user-agent",
           memorySpaceId: spaceId,
-          participants: { userId: `${TEST_USER_ID}-${i}` },
+          participants: { userId: `${TEST_USER_ID}-${i}`, agentId: "test-agent" },
         });
       }
 
@@ -401,12 +402,12 @@ describe("Statistics Consistency Testing", () => {
       await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
       await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: `${TEST_USER_ID}-2` },
+        participants: { userId: `${TEST_USER_ID}-2`, agentId: "test-agent" },
       });
       await cortex.conversations.create({
         type: "agent-agent",
@@ -488,7 +489,7 @@ describe("Statistics Consistency Testing", () => {
       await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const after = await cortex.memorySpaces.getStats(spaceId);
@@ -508,7 +509,7 @@ describe("Statistics Consistency Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const before = await cortex.memorySpaces.getStats(spaceId);
@@ -870,6 +871,7 @@ describe("Statistics Consistency Testing", () => {
         agentResponse: "Response",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
       });
 
       const after = await cortex.memorySpaces.getStats(spaceId);
@@ -890,6 +892,7 @@ describe("Statistics Consistency Testing", () => {
         agentResponse: "Response",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
       });
 
       const before = await cortex.vector.count({ memorySpaceId: spaceId });
@@ -914,7 +917,7 @@ describe("Statistics Consistency Testing", () => {
       await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       await cortex.vector.store(spaceId, {
@@ -1360,7 +1363,7 @@ describe("Statistics Consistency Testing", () => {
           cortex.conversations.create({
             type: "user-agent",
             memorySpaceId: spaceId,
-            participants: { userId: `${TEST_USER_ID}-${i}` },
+            participants: { userId: `${TEST_USER_ID}-${i}`, agentId: "test-agent" },
           }),
         ),
       );
@@ -1508,7 +1511,7 @@ describe("Statistics Consistency Testing", () => {
       await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       }); // 1 conv
 
       await cortex.vector.store(spaceId, {
@@ -1564,7 +1567,7 @@ describe("Statistics Consistency Testing", () => {
       await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       await cortex.vector.store(spaceId, {
@@ -1603,6 +1606,7 @@ describe("Statistics Consistency Testing", () => {
         agentResponse: "Response",
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
       });
 
       const during = await cortex.vector.count({ memorySpaceId: spaceId });
@@ -1655,7 +1659,7 @@ describe("Statistics Consistency Testing", () => {
       await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       await cortex.vector.store(spaceId, {
@@ -1704,17 +1708,17 @@ describe("Statistics Consistency Testing", () => {
         cortex.conversations.create({
           type: "user-agent",
           memorySpaceId: spaceId,
-          participants: { userId: TEST_USER_ID },
+          participants: { userId: TEST_USER_ID, agentId: "test-agent" },
         }),
         cortex.conversations.create({
           type: "user-agent",
           memorySpaceId: spaceId,
-          participants: { userId: `${TEST_USER_ID}-2` },
+          participants: { userId: `${TEST_USER_ID}-2`, agentId: "test-agent" },
         }),
         cortex.conversations.create({
           type: "user-agent",
           memorySpaceId: spaceId,
-          participants: { userId: `${TEST_USER_ID}-3` },
+          participants: { userId: `${TEST_USER_ID}-3`, agentId: "test-agent" },
         }),
       ]);
 
@@ -1902,13 +1906,13 @@ describe("Statistics Consistency Testing", () => {
       const conv1 = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
 
       const conv2 = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: `${TEST_USER_ID}-2` },
+        participants: { userId: `${TEST_USER_ID}-2`, agentId: "test-agent" },
       });
 
       // Add 3 to conv1

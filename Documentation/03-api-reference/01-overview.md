@@ -86,26 +86,23 @@ The API Reference is organized by architectural layers:
 ```typescript
 import { Cortex } from "@cortex-platform/sdk";
 
-// 1. Initialize Cortex
+// 1. Initialize Cortex with optional LLM for auto fact extraction
 const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL,
-});
-
-// 2. Create a conversation
-const conversation = await cortex.conversations.create({
-  type: "user-agent",
-  memorySpaceId: "support-bot-space", // Memory space
-  participants: {
-    userId: "user-123",
-    participantId: "support-agent", // Optional tracking
+  // Optional: Enable auto fact extraction
+  llm: {
+    provider: "openai",
+    apiKey: process.env.OPENAI_API_KEY,
   },
 });
 
-// 3. Store user-agent exchange (ACID + Vector automatically)
+// 2. Store user-agent exchange - Full orchestration in ONE call!
+// remember() now auto-registers: memory space, user profile, conversation
 const result = await cortex.memory.remember({
-  memorySpaceId: "support-bot-space",
-  participantId: "support-agent", // Hive Mode tracking (optional)
-  conversationId: conversation.conversationId,
+  memorySpaceId: "support-bot-space", // Auto-registered if not exists
+  userId: "user-123", // Auto-creates user profile
+  userName: "Alex", // Required with userId
+  conversationId: "conv-001", // Auto-created if not exists
   userMessage: "My password is Blue123",
   agentResponse: "I'll remember that securely!",
   userId: "user-123",
@@ -507,13 +504,31 @@ try {
 ```typescript
 const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL,
+
+  // Optional: LLM config for auto fact extraction
+  llm: {
+    provider: "openai",
+    apiKey: process.env.OPENAI_API_KEY,
+    model: "gpt-4o-mini",
+  },
+
+  // Optional: Graph database integration
+  graph: {
+    adapter: graphAdapter,
+    autoSync: true,
+  },
 });
 
-// Store with your embeddings
-await cortex.memory.store('agent-1', {
-  content: 'User prefers dark mode',
-  embedding: await openai.embeddings.create({ ... }),
-  ...
+// Full orchestration with remember() - auto-registers entities
+await cortex.memory.remember({
+  memorySpaceId: "user-123-space", // Auto-registered if not exists
+  userId: "user-123", // Auto-creates user profile
+  userName: "Alex",
+  conversationId: "conv-456",
+  userMessage: "User prefers dark mode",
+  agentResponse: "I'll remember that preference!",
+  // → Facts auto-extracted if LLM configured
+  // → Graph synced if adapter configured
 });
 ```
 

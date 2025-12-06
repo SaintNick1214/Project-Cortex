@@ -574,35 +574,108 @@ const result = await cortex.memory.remember({
 
 ### remember()
 
-**RECOMMENDED HELPER** - Handles both ACID storage and Vector indexing automatically.
+**RECOMMENDED HELPER** - Full orchestration across all memory layers.
+
+> **Enhanced in v0.17.0**: Full multi-layer orchestration with auto-registration of memory spaces, users, and agents. Use `skipLayers` for explicit opt-out.
 
 **Signature:**
 
 ```typescript
 cortex.memory.remember(
   params: RememberParams,
-  options?: { syncToGraph?: boolean }
+  options?: RememberOptions
 ): Promise<RememberResult>
 ```
 
-**What it does:**
+**Orchestration Flow:**
 
-1. Stores raw messages in **ACID** (Layer 1)
-2. Creates vector memories in **Vector Memory** (Layer 2)
-3. Automatically links them via `conversationRef`
-4. Handles embedding generation (optional)
-5. Auto-detects importance and tags
+When calling `remember()`, the following layers are orchestrated by default:
+
+```
+cortex.memory.remember({...})
+        │
+        ▼
+┌───────────────────────────────────────────┐
+│ 1. VALIDATION (Cannot be skipped)          │
+│    ├─ memorySpaceId: if missing → 'default'│
+│    │    + emit warning (non-breaking)      │
+│    └─ userId OR agentId: REQUIRED          │
+│       (ownership - at least one)           │
+└───────────────────────────────────────────┘
+        │
+        ▼
+┌───────────────────────────────────────────┐
+│ 2. MEMORYSPACE (Cannot be skipped)         │
+│    └─ Auto-register/upsert memorySpace    │
+└───────────────────────────────────────────┘
+        │
+        ▼
+┌───────────────────────────────────────────┐
+│ 3. OWNER PROFILES (skip: 'users'/'agents')│
+│    ├─ userId → auto-create user profile   │
+│    └─ agentId → auto-register agent       │
+└───────────────────────────────────────────┘
+        │
+        ▼
+┌───────────────────────────────────────────┐
+│ 4. CONVERSATION (skip: 'conversations')    │
+│    └─ Layer 1a: Add messages to ACID      │
+│    (default: ON)                           │
+└───────────────────────────────────────────┘
+        │
+        ▼
+┌───────────────────────────────────────────┐
+│ 5. VECTOR MEMORY (skip: 'vector')          │
+│    └─ Layer 2: Create searchable memory   │
+│    (default: ON)                           │
+└───────────────────────────────────────────┘
+        │
+        ▼
+┌───────────────────────────────────────────┐
+│ 6. FACTS (skip: 'facts')                   │
+│    └─ Layer 3: Auto-extract if LLM config │
+│    (default: ON if LLM configured)         │
+└───────────────────────────────────────────┘
+        │
+        ▼
+┌───────────────────────────────────────────┐
+│ 7. GRAPH (skip: 'graph')                   │
+│    └─ Sync all entities if adapter config │
+│    (default: ON if graph configured)       │
+└───────────────────────────────────────────┘
+```
 
 **Parameters:**
 
 ```typescript
+// Layers that can be explicitly skipped
+type SkippableLayer =
+  | "users" // Don't auto-create user profile
+  | "agents" // Don't auto-register agent
+  | "conversations" // Don't store in ACID conversation layer
+  | "vector" // Don't store in vector memory layer
+  | "facts" // Don't auto-extract facts
+  | "graph"; // Don't sync to graph database
+
 interface RememberParams {
-  memorySpaceId: string;
-  conversationId: string; // ACID conversation (create first if new)
+  // Memory Space (defaults to 'default' with warning if not provided)
+  memorySpaceId?: string;
+
+  // Conversation
+  conversationId: string; // ACID conversation (auto-created if needed)
   userMessage: string;
   agentResponse: string;
-  userId: string;
-  userName: string;
+
+  // Owner Attribution (at least one required)
+  userId?: string; // For user-owned memories
+  agentId?: string; // For agent-owned memories
+  userName?: string; // Required when userId is provided
+
+  // Hive Mode (optional)
+  participantId?: string; // Tracks WHO stored the memory (distinct from ownership)
+
+  // Explicit opt-out
+  skipLayers?: SkippableLayer[];
 
   // Optional extraction
   extractContent?: (
@@ -612,6 +685,27 @@ interface RememberParams {
 
   // Optional embedding
   generateEmbedding?: (content: string) => Promise<number[] | null>;
+
+  // Optional fact extraction (overrides LLM config)
+  extractFacts?: (
+    userMessage: string,
+    agentResponse: string,
+  ) => Promise<Array<{
+    fact: string;
+    factType:
+      | "preference"
+      | "identity"
+      | "knowledge"
+      | "relationship"
+      | "event"
+      | "observation"
+      | "custom";
+    subject?: string;
+    predicate?: string;
+    object?: string;
+    confidence: number;
+    tags?: string[];
+  }> | null>;
 
   // Cloud Mode options
   autoEmbed?: boolean; // Cloud Mode: auto-generate embeddings
@@ -623,7 +717,7 @@ interface RememberParams {
 }
 
 interface RememberOptions {
-  syncToGraph?: boolean; // Sync to graph database (default: true)
+  syncToGraph?: boolean; // Sync to graph database (default: true if configured)
 }
 ```
 
@@ -636,73 +730,103 @@ interface RememberResult {
     conversationId: string; // ACID conversation ID
   };
   memories: MemoryEntry[]; // Created in Vector Layer 2 (with conversationRef)
+  facts: FactRecord[]; // Extracted facts (Layer 3)
 }
 ```
 
-**Example:**
+**Examples:**
 
 ```typescript
-// This ONE call does everything:
+// Full orchestration (default) - user-owned memory
 const result = await cortex.memory.remember({
-  memorySpaceId: "agent-1",
-  conversationId: "conv-456", // ACID conversation (must exist or be created)
-  userMessage: "The password is Red",
-  agentResponse: "I'll remember that!",
+  memorySpaceId: "user-123-space",
   userId: "user-123",
-  userName: "Alex Johnson",
+  userName: "Alex",
+  conversationId: "conv-456",
+  userMessage: "Call me Alex",
+  agentResponse: "I'll remember that, Alex!",
+});
+// → memorySpace registered (if needed)
+// → user profile created (if needed)
+// → conversation + vector stored
+// → facts extracted (if LLM configured)
+// → graph synced (if adapter configured)
 
-  // Optional: Custom embedding
-  generateEmbedding: async (content) => {
-    return await embed(content); // Your embedder
-  },
-
-  // Or use Cloud Mode
-  autoEmbed: true, // Cortex Cloud handles embeddings
-
-  importance: 100,
-  tags: ["password", "security"],
+// Agent-owned memory (no user involved)
+await cortex.memory.remember({
+  memorySpaceId: "system-space",
+  agentId: "cleanup-agent",
+  conversationId: "conv-789",
+  userMessage: "System cleanup initiated",
+  agentResponse: "Cleanup complete",
+  skipLayers: ["users"], // No user to create
 });
 
-// What happened:
-// 1. Stored in ACID: 2 messages (user + agent)
-console.log(`ACID messages: ${result.conversation.messageIds.join(", ")}`);
-// ['msg-001', 'msg-002']
+// Lightweight mode - skip facts and graph
+await cortex.memory.remember({
+  memorySpaceId: "quick-space",
+  agentId: "quick-bot",
+  conversationId: "conv-101",
+  userMessage: "Quick question",
+  agentResponse: "Quick answer",
+  skipLayers: ["facts", "graph"], // Fast path
+});
 
-// 2. Created in Vector: 2 memories (both reference ACID)
-console.log(`Vector memories: ${result.memories.length}`); // 2
-console.log(result.memories[0].conversationRef.conversationId); // 'conv-456'
-console.log(result.memories[0].conversationRef.messageIds); // ['msg-001']
+// With custom fact extraction
+await cortex.memory.remember({
+  memorySpaceId: "user-123-space",
+  userId: "user-123",
+  userName: "Alex",
+  conversationId: "conv-456",
+  userMessage: "My favorite color is blue",
+  agentResponse: "I'll remember that blue is your favorite!",
+  extractFacts: async (user, agent) => [
+    {
+      fact: "User prefers blue color",
+      factType: "preference",
+      subject: "user-123",
+      predicate: "prefers_color",
+      object: "blue",
+      confidence: 95,
+    },
+  ],
+});
+```
+
+**Validation Errors:**
+
+```typescript
+// Missing owner attribution
+CortexError(
+  "OWNER_REQUIRED",
+  "Either userId or agentId must be provided for memory ownership",
+);
+
+// Missing userName when userId is provided
+CortexError(
+  "MISSING_REQUIRED_FIELD",
+  "userName is required when userId is provided",
+);
 ```
 
 **Why use `remember()`:**
 
-- ✅ Handles ACID + Vector in one call
+- ✅ Full multi-layer orchestration in one call
+- ✅ Auto-registers memory spaces, users, and agents
 - ✅ Automatic conversationRef linking
-- ✅ Auto-detects importance and tags
-- ✅ Ensures consistency between layers
-- ✅ Friendly, intuitive name
+- ✅ Auto-extracts facts if LLM configured
+- ✅ Auto-syncs to graph if configured
+- ✅ Explicit opt-out via `skipLayers`
+- ✅ Ensures consistency across all layers
 - ✅ **This is the main way to store conversation memories**
-
-**Typical usage:**
-
-```typescript
-// Natural and simple
-await cortex.memory.remember({
-  memorySpaceId: "support-agent",
-  conversationId: currentConversation,
-  userMessage: req.body.message,
-  agentResponse: response,
-  userId: req.user.id,
-  userName: req.user.name,
-});
-
-// That's it! Everything is stored and linked.
-```
 
 **See Also:**
 
 - [Helper Functions](../02-core-features/01-memory-spaces.md#helper-store-from-conversation-recommended)
 - [Conversation Operations](./03-conversation-operations.md) - Managing ACID conversations
+- [Memory Space Operations](./13-memory-space-operations.md) - Managing memory spaces
+- [User Operations](./04-user-operations.md) - User profile management
+- [Agent Management](./09-agent-management.md) - Agent registration
 
 ---
 
