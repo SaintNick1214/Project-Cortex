@@ -188,6 +188,7 @@ jobs:
 
       - name: Publish to npm
         run: npm publish --access public --provenance --ignore-scripts
+        # Publish profile is verified in npm settings
 
       - name: Create Git Tag
         run: |

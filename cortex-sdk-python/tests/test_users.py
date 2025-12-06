@@ -342,18 +342,21 @@ async def test_delete_user_simple(cortex_client, test_user_id):
 
 
 @pytest.mark.asyncio
-async def test_delete_user_cascade_dry_run(cortex_client, test_user_id):
+async def test_delete_user_cascade_dry_run(cortex_client, ctx):
     """Test GDPR cascade deletion dry run."""
+    # Use ctx for idempotency in parallel testing
+    user_id = ctx.user_id("dry-run")
+
     # Create user with some data
-    await cortex_client.users.update(test_user_id, {"displayName": "Test User"})
+    await cortex_client.users.update(user_id, {"displayName": "Test User"})
 
     # Dry run cascade deletion
     await cortex_client.users.delete(
-        test_user_id, DeleteUserOptions(cascade=True, dry_run=True)
+        user_id, DeleteUserOptions(cascade=True, dry_run=True)
     )
 
     # User should still exist after dry run
-    user = await cortex_client.users.get(test_user_id)
+    user = await cortex_client.users.get(user_id)
     assert user is not None
 
 

@@ -163,15 +163,16 @@ async def test_cascade_delete_memories_layer(cortex_client, test_ids, cleanup_he
 
 
 @pytest.mark.asyncio
-async def test_cascade_with_verification(cortex_client, test_ids, cleanup_helper):
+async def test_cascade_with_verification(cortex_client, ctx, cleanup_helper):
     """
     Test cascade deletion with verification enabled.
 
     Port of: gdprCascade.test.ts - verification tests
     """
-    memory_space_id = test_ids["memory_space_id"]
-    conversation_id = test_ids["conversation_id"]
-    user_id = test_ids["user_id"]
+    # Use ctx for idempotency in parallel testing
+    memory_space_id = ctx.memory_space_id("verify")
+    conversation_id = ctx.conversation_id("verify")
+    user_id = ctx.user_id("verify")
 
     # Create user with data
     await cortex_client.users.update(user_id, {"displayName": "Verify Test"})
