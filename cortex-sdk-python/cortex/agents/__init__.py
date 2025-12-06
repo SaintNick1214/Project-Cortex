@@ -620,7 +620,7 @@ class AgentsAPI:
         
         # Check if agent is registered
         try:
-            agent = await self.client.query("agents:getByAgentId", {"agentId": agent_id})
+            agent = await self.client.query("agents:get", {"agentId": agent_id})
             plan["agent_registered"] = agent is not None
         except Exception:
             plan["agent_registered"] = False
@@ -1026,24 +1026,34 @@ class AgentsAPI:
         }
 
         # Restore facts
+        # Note: factId cannot be preserved - facts:store auto-generates new IDs
+        # The restored fact will have a new ID but same content
         for fact in backup.get("facts", []):
             try:
                 await self.client.mutation(
                     "facts:store",
                     filter_none_values({
                         "memorySpaceId": fact.get("memorySpaceId"),
-                        "factId": fact.get("factId"),
-                        "content": fact.get("content"),
+                        "participantId": fact.get("participantId"),
+                        "userId": fact.get("userId"),
+                        "fact": fact.get("fact"),
+                        "factType": fact.get("factType"),
                         "subject": fact.get("subject"),
                         "predicate": fact.get("predicate"),
                         "object": fact.get("object"),
                         "confidence": fact.get("confidence"),
-                        "source": fact.get("source"),
-                        "memoryId": fact.get("memoryId"),
-                        "userId": fact.get("userId"),
-                        "agentId": fact.get("agentId"),
-                        "tags": fact.get("tags"),
+                        "sourceType": fact.get("sourceType"),
+                        "sourceRef": fact.get("sourceRef"),
+                        "tags": fact.get("tags", []),
                         "metadata": fact.get("metadata"),
+                        "validFrom": fact.get("validFrom"),
+                        "validUntil": fact.get("validUntil"),
+                        # Enrichment fields
+                        "category": fact.get("category"),
+                        "searchAliases": fact.get("searchAliases"),
+                        "semanticContext": fact.get("semanticContext"),
+                        "entities": fact.get("entities"),
+                        "relations": fact.get("relations"),
                     }),
                 )
                 rollback_stats["facts_restored"] += 1
