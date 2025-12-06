@@ -17,19 +17,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 All API modules now use `_execute_with_resilience()` for backend calls:
 
-| Module | Calls Wrapped |
-|--------|---------------|
-| `FactsAPI` | 12 operations |
-| `MemorySpacesAPI` | 11 operations |
-| `ImmutableAPI` | 11 operations |
-| `MutableAPI` | 10 operations |
-| `MemoryAPI` | 7 operations |
+| Module             | Calls Wrapped |
+| ------------------ | ------------- |
+| `FactsAPI`         | 12 operations |
+| `MemorySpacesAPI`  | 11 operations |
+| `ImmutableAPI`     | 11 operations |
+| `MutableAPI`       | 10 operations |
+| `MemoryAPI`        | 7 operations  |
 | `ConversationsAPI` | 12 operations |
-| `ContextsAPI` | 11 operations |
-| `VectorAPI` | 10 operations |
-| `UsersAPI` | 5 operations |
-| `AgentsAPI` | 5 operations |
-| `A2AAPI` | 4 operations |
+| `ContextsAPI`      | 11 operations |
+| `VectorAPI`        | 10 operations |
+| `UsersAPI`         | 5 operations  |
+| `AgentsAPI`        | 5 operations  |
+| `A2AAPI`           | 4 operations  |
 
 **2. Streaming Handler Support**
 

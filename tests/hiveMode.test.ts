@@ -61,7 +61,11 @@ describe("Hive Mode", () => {
       const conv = await cortex.conversations.create({
         memorySpaceId: HIVE_SPACE,
         type: "user-agent",
-        participants: { userId: USER_ALICE, agentId: "hive-agent", participantId: TOOL_CALENDAR },
+        participants: {
+          userId: USER_ALICE,
+          agentId: "hive-agent",
+          participantId: TOOL_CALENDAR,
+        },
       });
 
       await cortex.conversations.addMessage({
@@ -249,13 +253,21 @@ describe("Hive Mode", () => {
       const conv1 = await cortex.conversations.create({
         memorySpaceId: HIVE_SPACE,
         type: "user-agent",
-        participants: { userId: USER_ALICE, agentId: "hive-agent", participantId: TOOL_CALENDAR },
+        participants: {
+          userId: USER_ALICE,
+          agentId: "hive-agent",
+          participantId: TOOL_CALENDAR,
+        },
       });
 
       const conv2 = await cortex.conversations.create({
         memorySpaceId: HIVE_SPACE,
         type: "user-agent",
-        participants: { userId: USER_ALICE, agentId: "hive-agent", participantId: TOOL_EMAIL },
+        participants: {
+          userId: USER_ALICE,
+          agentId: "hive-agent",
+          participantId: TOOL_EMAIL,
+        },
       });
 
       // Can see who created what (participantId is in participants object)
@@ -518,7 +530,11 @@ describe("Hive Mode", () => {
       const conv = await cortex.conversations.create({
         memorySpaceId: HIVE_SPACE,
         type: "user-agent",
-        participants: { userId: USER_ALICE, agentId: "hive-agent", participantId: TOOL_CALENDAR },
+        participants: {
+          userId: USER_ALICE,
+          agentId: "hive-agent",
+          participantId: TOOL_CALENDAR,
+        },
       });
 
       await cortex.conversations.addMessage({
@@ -663,7 +679,11 @@ describe("Hive Mode", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: HIVE_SPACE,
-        participants: { userId: USER_ALICE, agentId: "hive-agent", participantId: PARTICIPANT },
+        participants: {
+          userId: USER_ALICE,
+          agentId: "hive-agent",
+          participantId: PARTICIPANT,
+        },
       });
 
       // 1. Remember with participantId

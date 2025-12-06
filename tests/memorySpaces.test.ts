@@ -769,7 +769,11 @@ describe("Memory Spaces Registry API", () => {
       await cortex.conversations.create({
         memorySpaceId: statsSpaceId,
         type: "user-agent",
-        participants: { userId: statsUser1, agentId: statsAgent, participantId: statsAgent },
+        participants: {
+          userId: statsUser1,
+          agentId: statsAgent,
+          participantId: statsAgent,
+        },
       });
 
       await cortex.conversations.addMessage({
@@ -907,7 +911,11 @@ describe("Memory Spaces Registry API", () => {
       const conv = await cortex.conversations.create({
         memorySpaceId: hiveSpaceId,
         type: "user-agent",
-        participants: { userId: userOwner, agentId: toolCalendar, participantId: toolCalendar },
+        participants: {
+          userId: userOwner,
+          agentId: toolCalendar,
+          participantId: toolCalendar,
+        },
       });
 
       await cortex.memory.remember({

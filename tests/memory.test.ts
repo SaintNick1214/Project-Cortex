@@ -102,7 +102,11 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
+        participants: {
+          userId: TEST_USER_ID,
+          agentId: TEST_AGENT_ID,
+          participantId: TEST_AGENT_ID,
+        },
       });
 
       testConversationId = conv.conversationId;
@@ -304,7 +308,11 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
+        participants: {
+          userId: TEST_USER_ID,
+          agentId: TEST_AGENT_ID,
+          participantId: TEST_AGENT_ID,
+        },
       });
 
       testConversationId = conv.conversationId;
@@ -381,7 +389,11 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
+        participants: {
+          userId: TEST_USER_ID,
+          agentId: TEST_AGENT_ID,
+          participantId: TEST_AGENT_ID,
+        },
       });
 
       testConversationId = conv.conversationId;
@@ -462,7 +474,11 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
+        participants: {
+          userId: TEST_USER_ID,
+          agentId: TEST_AGENT_ID,
+          participantId: TEST_AGENT_ID,
+        },
       });
 
       testConversationId = conv.conversationId;
@@ -556,7 +572,11 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
+        participants: {
+          userId: TEST_USER_ID,
+          agentId: TEST_AGENT_ID,
+          participantId: TEST_AGENT_ID,
+        },
       });
 
       _testConversationId = conv.conversationId;
@@ -837,7 +857,11 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
+        participants: {
+          userId: TEST_USER_ID,
+          agentId: TEST_AGENT_ID,
+          participantId: TEST_AGENT_ID,
+        },
       });
 
       // Remember
@@ -916,7 +940,11 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
+        participants: {
+          userId: TEST_USER_ID,
+          agentId: TEST_AGENT_ID,
+          participantId: TEST_AGENT_ID,
+        },
       });
 
       const remembered = await cortex.memory.remember({
@@ -961,7 +989,11 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
+        participants: {
+          userId: TEST_USER_ID,
+          agentId: TEST_AGENT_ID,
+          participantId: TEST_AGENT_ID,
+        },
       });
 
       const beforeACID = await client.query(api.conversations.get, {
@@ -1000,7 +1032,11 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
+        participants: {
+          userId: TEST_USER_ID,
+          agentId: TEST_AGENT_ID,
+          participantId: TEST_AGENT_ID,
+        },
       });
 
       const remembered = await cortex.memory.remember({
@@ -1042,7 +1078,11 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, agentId: PARTICIPANT, participantId: PARTICIPANT },
+        participants: {
+          userId: TEST_USER_ID,
+          agentId: PARTICIPANT,
+          participantId: PARTICIPANT,
+        },
       });
 
       const result = await cortex.memory.remember({
@@ -1116,7 +1156,7 @@ describe("Memory Convenience API (Layer 3)", () => {
           memorySpaceId: TEST_MEMSPACE_ID,
           participants: {
             userId: TEST_USER_ID,
-          agentId: TEST_AGENT_ID,
+            agentId: TEST_AGENT_ID,
             participantId: TEST_AGENT_ID,
           },
         });
@@ -1488,7 +1528,11 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
+        participants: {
+          userId: TEST_USER_ID,
+          agentId: TEST_AGENT_ID,
+          participantId: TEST_AGENT_ID,
+        },
       });
       testConversationId = conv.conversationId;
     });

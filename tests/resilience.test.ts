@@ -570,7 +570,10 @@ describe("ResilienceLayer", () => {
 
     // ALL operations (including non-critical) should be queued, not rejected
     // The operation will wait in queue and resolve when circuit closes
-    const result = await resilience.execute(createOperation("test"), "memory:search");
+    const result = await resilience.execute(
+      createOperation("test"),
+      "memory:search",
+    );
     expect(result).toBe("test");
   });
 });
@@ -647,7 +650,7 @@ describe("SDK Resilience Integration", () => {
 
     test("users API should work with resilience enabled", async () => {
       const userId = ctx.userId("resilience-test");
-      
+
       // This will auto-create the user via getOrCreate internally
       const user = await cortexWithResilience.users.update(userId, {
         displayName: "Resilience Test User",
@@ -660,7 +663,7 @@ describe("SDK Resilience Integration", () => {
 
     test("memorySpaces API should work with resilience enabled", async () => {
       const spaceId = ctx.memorySpaceId("resilience-test");
-      
+
       const space = await cortexWithResilience.memorySpaces.register({
         memorySpaceId: spaceId,
         name: "Resilience Test Space",
@@ -758,11 +761,9 @@ describe("SDK Resilience Integration", () => {
       const namespace = ctx.mutableNamespace("resilience");
       const key = ctx.mutableKey("test");
 
-      const record = await cortexWithResilience.mutable.set(
-        namespace,
-        key,
-        { value: "test" },
-      );
+      const record = await cortexWithResilience.mutable.set(namespace, key, {
+        value: "test",
+      });
 
       expect(record).toBeDefined();
       expect(record.key).toBe(key);
@@ -798,7 +799,11 @@ describe("SDK Resilience Integration", () => {
         enabled: true,
         rateLimiter: { bucketSize: 10, refillRate: 100 },
         concurrency: { maxConcurrent: 5, queueSize: 50, timeout: 5000 },
-        circuitBreaker: { failureThreshold: 10, successThreshold: 2, timeout: 30000 },
+        circuitBreaker: {
+          failureThreshold: 10,
+          successThreshold: 2,
+          timeout: 30000,
+        },
       });
 
       cortex = new Cortex({
@@ -807,7 +812,11 @@ describe("SDK Resilience Integration", () => {
           enabled: true,
           rateLimiter: { bucketSize: 10, refillRate: 100 },
           concurrency: { maxConcurrent: 5, queueSize: 50, timeout: 5000 },
-          circuitBreaker: { failureThreshold: 10, successThreshold: 2, timeout: 30000 },
+          circuitBreaker: {
+            failureThreshold: 10,
+            successThreshold: 2,
+            timeout: 30000,
+          },
         },
       });
     });

@@ -76,7 +76,7 @@ async function runSyncWorkflow(adapter: GraphAdapter, dbName: string) {
       type: "user-agent",
       participants: {
         userId: `user-${uniqueId}`,
-          agentId: `agent-${uniqueId}`,
+        agentId: `agent-${uniqueId}`,
         participantId: `agent-${uniqueId}`,
       },
     });

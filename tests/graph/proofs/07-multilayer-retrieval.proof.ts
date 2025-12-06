@@ -55,7 +55,7 @@ async function createMultiLayerDataset(cortex: Cortex, memorySpaceId: string) {
     type: "user-agent",
     participants: {
       userId: "alice",
-          agentId: "assistant",
+      agentId: "assistant",
       participantId: "assistant",
     },
   });
@@ -83,7 +83,7 @@ async function createMultiLayerDataset(cortex: Cortex, memorySpaceId: string) {
     type: "user-agent",
     participants: {
       userId: "bob",
-          agentId: "assistant",
+      agentId: "assistant",
       participantId: "assistant",
     },
   });
