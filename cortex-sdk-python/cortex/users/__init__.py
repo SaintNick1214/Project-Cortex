@@ -55,6 +55,29 @@ def _is_user_not_found_error(e: Exception) -> bool:
     )
 
 
+def _is_conversation_not_found_error(e: Exception) -> bool:
+    """Check if an exception indicates a conversation was not found.
+
+    This enables idempotent deletion - if a conversation is already deleted,
+    that's a success for cascade deletion (goal was to delete it anyway).
+
+    This is particularly important for parallel test execution where another
+    test or cleanup process may have already deleted the conversation.
+
+    Args:
+        e: The exception to check
+
+    Returns:
+        True if this is a "not found" error for a conversation
+    """
+    error_str = str(e)
+    # Check for error code patterns from Convex backend
+    return (
+        "CONVERSATION_NOT_FOUND" in error_str
+        or "conversation not found" in error_str.lower()
+    )
+
+
 class UsersAPI:
     """
     Users API
@@ -686,7 +709,7 @@ class UsersAPI:
         if immutable_deleted > 0:
             deleted_layers.append("immutable")
 
-        # 5. Delete conversations - STRICT: raise on error
+        # 5. Delete conversations - IDEMPOTENT: "not found" = already deleted = success
         for conv in plan.get("conversations", []):
             try:
                 await self.client.mutation(
@@ -696,10 +719,19 @@ class UsersAPI:
                 conversations_deleted += 1
                 messages_deleted += conv.get("messageCount", 0)
             except Exception as e:
-                raise CascadeDeletionError(
-                    f"Failed to delete conversation {conv.get('conversationId')}: {e}. {_build_partial_info('conversations')}",
-                    cause=e if isinstance(e, Exception) else None,
-                )
+                # Idempotent: if conversation is already deleted, that's a success
+                # (the goal was to delete it anyway). This handles race conditions
+                # in parallel test execution where another process may have already
+                # deleted the conversation between plan collection and execution.
+                if _is_conversation_not_found_error(e):
+                    # Already deleted - count as success
+                    conversations_deleted += 1
+                    messages_deleted += conv.get("messageCount", 0)
+                else:
+                    raise CascadeDeletionError(
+                        f"Failed to delete conversation {conv.get('conversationId')}: {e}. {_build_partial_info('conversations')}",
+                        cause=e if isinstance(e, Exception) else None,
+                    )
 
         if conversations_deleted > 0:
             deleted_layers.append("conversations")

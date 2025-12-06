@@ -94,6 +94,11 @@ __all__ = [
     "get_priority",
     "is_critical",
     "OPERATION_PRIORITIES",
+    # Plan-based preset selection
+    "get_preset_for_plan",
+    "get_detected_plan_tier",
+    "get_plan_limits",
+    "ConvexPlanTier",
 ]
 
 T = TypeVar("T")
@@ -268,6 +273,98 @@ class ResiliencePresets:
     def disabled() -> ResilienceConfig:
         """Disabled configuration. Bypasses all resilience mechanisms."""
         return ResilienceConfig(enabled=False)
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Plan-Based Preset Selection
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Type alias for plan tiers
+ConvexPlanTier = str  # "free" | "starter" | "professional"
+
+
+def get_preset_for_plan(plan: Optional[str] = None) -> ResilienceConfig:
+    """
+    Get the appropriate resilience preset based on Convex plan tier.
+
+    Reads from CONVEX_PLAN environment variable if not specified.
+    Defaults to 'free' plan limits for safety.
+
+    Args:
+        plan: Optional plan tier override. If not provided, reads from CONVEX_PLAN env var.
+
+    Returns:
+        The appropriate ResilienceConfig for the plan tier
+
+    Example:
+        # Auto-detect from CONVEX_PLAN env var
+        config = get_preset_for_plan()
+
+        # Explicit plan tier
+        pro_config = get_preset_for_plan('professional')
+
+        # Use with ResilienceLayer
+        resilience = ResilienceLayer(get_preset_for_plan())
+    """
+    import os
+
+    effective_plan = plan or os.environ.get("CONVEX_PLAN", "free")
+
+    if effective_plan.lower() == "professional":
+        # Professional plan: 256 concurrent queries/mutations
+        # Use batch_processing preset which allows higher throughput
+        return ResiliencePresets.batch_processing()
+
+    # Free/Starter plan: 16 concurrent queries/mutations
+    return ResiliencePresets.default()
+
+
+def get_detected_plan_tier() -> str:
+    """
+    Get the detected Convex plan tier from environment.
+
+    Returns:
+        The detected plan tier, defaulting to 'free'
+    """
+    import os
+
+    env_plan = os.environ.get("CONVEX_PLAN", "").lower()
+    if env_plan == "professional":
+        return "professional"
+    if env_plan == "starter":
+        return "starter"
+    return "free"
+
+
+def get_plan_limits(plan: Optional[str] = None) -> dict:
+    """
+    Get concurrency limits for a given Convex plan tier.
+
+    Based on https://docs.convex.dev/production/state/limits
+
+    Args:
+        plan: The Convex plan tier
+
+    Returns:
+        Dictionary with concurrency limits
+    """
+    effective_plan = plan or get_detected_plan_tier()
+
+    if effective_plan == "professional":
+        return {
+            "concurrent_queries": 256,
+            "concurrent_mutations": 256,
+            "concurrent_actions": 256,
+            "max_node_actions": 1000,
+        }
+
+    # Free/Starter plan limits
+    return {
+        "concurrent_queries": 16,
+        "concurrent_mutations": 16,
+        "concurrent_actions": 64,
+        "max_node_actions": 64,
+    }
 
 
 class ResilienceLayer:
