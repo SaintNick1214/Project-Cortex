@@ -158,13 +158,17 @@ export class AgentsAPI {
 
     let result;
     try {
-      result = await this.client.mutation(api.agents.register, {
-        agentId: agent.id,
-        name: agent.name,
-        description: agent.description,
-        metadata: agent.metadata,
-        config: agent.config,
-      });
+      result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.agents.register, {
+            agentId: agent.id,
+            name: agent.name,
+            description: agent.description,
+            metadata: agent.metadata,
+            config: agent.config,
+          }),
+        "agents:register",
+      );
     } catch (error) {
       this.handleConvexError(error);
     }
@@ -226,7 +230,10 @@ export class AgentsAPI {
     // Validate agentId
     validateAgentId(agentId, "agentId");
 
-    const result = await this.client.query(api.agents.get, { agentId });
+    const result = await this.executeWithResilience(
+      () => this.client.query(api.agents.get, { agentId }),
+      "agents:get",
+    );
 
     if (!result) {
       return null;
@@ -263,11 +270,15 @@ export class AgentsAPI {
       validateAgentFilters(filters);
     }
 
-    const results = await this.client.query(api.agents.list, {
-      status: filters?.status,
-      limit: filters?.limit,
-      offset: filters?.offset,
-    });
+    const results = await this.executeWithResilience(
+      () =>
+        this.client.query(api.agents.list, {
+          status: filters?.status,
+          limit: filters?.limit,
+          offset: filters?.offset,
+        }),
+      "agents:list",
+    );
 
     // Client-side filtering for metadata, name, capabilities
     let filtered = results;
@@ -338,9 +349,13 @@ export class AgentsAPI {
       validateAgentFilters(filters);
     }
 
-    return await this.client.query(api.agents.count, {
-      status: filters?.status,
-    });
+    return await this.executeWithResilience(
+      () =>
+        this.client.query(api.agents.count, {
+          status: filters?.status,
+        }),
+      "agents:count",
+    );
   }
 
   /**
@@ -360,15 +375,19 @@ export class AgentsAPI {
     // Validate update payload
     validateUpdatePayload(agentId, updates);
 
-    const result = await this.client.mutation(api.agents.update, {
-      agentId,
-      name: updates.name,
-      description: updates.description,
-      metadata: updates.metadata,
-      config: updates.config,
-      status: (updates as { status?: "active" | "inactive" | "archived" })
-        .status,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.agents.update, {
+          agentId,
+          name: updates.name,
+          description: updates.description,
+          metadata: updates.metadata,
+          config: updates.config,
+          status: (updates as { status?: "active" | "inactive" | "archived" })
+            .status,
+        }),
+      "agents:update",
+    );
 
     if (!result) {
       throw new Error(`Failed to update agent ${agentId}`);
@@ -416,10 +435,14 @@ export class AgentsAPI {
       );
     }
 
-    await this.client.mutation(api.agents.update, {
-      agentId,
-      config,
-    });
+    await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.agents.update, {
+          agentId,
+          config,
+        }),
+      "agents:configure",
+    );
   }
 
   /**
@@ -436,7 +459,10 @@ export class AgentsAPI {
     // Validate agentId
     validateAgentId(agentId, "agentId");
 
-    return await this.client.query(api.agents.exists, { agentId });
+    return await this.executeWithResilience(
+      () => this.client.query(api.agents.exists, { agentId }),
+      "agents:exists",
+    );
   }
 
   /**
@@ -477,7 +503,10 @@ export class AgentsAPI {
     if (!cascade) {
       // Simple unregister: just remove registration
       if (!dryRun) {
-        await this.client.mutation(api.agents.unregister, { agentId });
+        await this.executeWithResilience(
+          () => this.client.mutation(api.agents.unregister, { agentId }),
+          "agents:unregister",
+        );
       }
 
       return {
@@ -620,9 +649,13 @@ export class AgentsAPI {
     } else {
       // Just remove registrations (use backend unregisterMany)
       const agentIds = agents.map((a) => a.id);
-      const result = await this.client.mutation(api.agents.unregisterMany, {
-        agentIds,
-      });
+      const result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.agents.unregisterMany, {
+            agentIds,
+          }),
+        "agents:unregisterMany",
+      );
 
       return {
         deleted: result.deleted,
@@ -645,7 +678,10 @@ export class AgentsAPI {
    * Get agent statistics
    */
   private async getAgentStats(agentId: string): Promise<AgentStats> {
-    const stats = await this.client.query(api.agents.computeStats, { agentId });
+    const stats = await this.executeWithResilience(
+      () => this.client.query(api.agents.computeStats, { agentId }),
+      "agents:computeStats",
+    );
     return stats as AgentStats;
   }
 

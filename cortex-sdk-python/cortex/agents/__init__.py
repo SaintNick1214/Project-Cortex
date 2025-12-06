@@ -91,15 +91,18 @@ class AgentsAPI:
         if agent.config:
             validate_config(agent.config)
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "agents:register",
+                filter_none_values({
+                    "agentId": agent.id,
+                    "name": agent.name,
+                    "description": agent.description,
+                    "metadata": agent.metadata or {},
+                    "config": agent.config or {},
+                }),
+            ),
             "agents:register",
-            filter_none_values({
-                "agentId": agent.id,
-                "name": agent.name,
-                "description": agent.description,
-                "metadata": agent.metadata or {},
-                "config": agent.config or {},
-            }),
         )
 
         # Sync to graph if adapter is configured
@@ -152,7 +155,10 @@ class AgentsAPI:
         # Validate agent_id
         validate_agent_id(agent_id, "agent_id")
 
-        result = await self.client.query("agents:get", filter_none_values({"agentId": agent_id}))
+        result = await self._execute_with_resilience(
+            lambda: self.client.query("agents:get", filter_none_values({"agentId": agent_id})),
+            "agents:get",
+        )
 
         if not result:
             return None
@@ -191,8 +197,11 @@ class AgentsAPI:
         # Validate search parameters
         validate_search_parameters(filters, limit)
 
-        result = await self.client.query(
-            "agents:search", filter_none_values({"filters": filters, "limit": limit})
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "agents:search", filter_none_values({"filters": filters, "limit": limit})
+            ),
+            "agents:search",
         )
 
         # Manually construct to handle field name differences
@@ -236,8 +245,11 @@ class AgentsAPI:
         # Validate parameters
         validate_list_parameters(status, limit, offset, sort_by)
 
-        result = await self.client.query(
-            "agents:list", filter_none_values({"status": status, "limit": limit, "offset": offset})
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "agents:list", filter_none_values({"status": status, "limit": limit, "offset": offset})
+            ),
+            "agents:list",
         )
 
         # Convert list response if needed
@@ -273,7 +285,10 @@ class AgentsAPI:
         # Validate agent_id
         validate_agent_id(agent_id, "agent_id")
 
-        result = await self.client.query("agents:computeStats", filter_none_values({"agentId": agent_id}))
+        result = await self._execute_with_resilience(
+            lambda: self.client.query("agents:computeStats", filter_none_values({"agentId": agent_id})),
+            "agents:computeStats",
+        )
         return cast(Dict[str, Any], result)
 
     async def count(self, status: Optional[str] = None) -> int:
@@ -294,7 +309,10 @@ class AgentsAPI:
         if status is not None:
             validate_agent_status(status)
 
-        result = await self.client.query("agents:count", filter_none_values({"status": status}))
+        result = await self._execute_with_resilience(
+            lambda: self.client.query("agents:count", filter_none_values({"status": status})),
+            "agents:count",
+        )
 
         return int(result)
 
@@ -337,8 +355,11 @@ class AgentsAPI:
             validate_config(updates["config"], "config")
 
         # Flatten updates into top-level parameters
-        result = await self.client.mutation(
-            "agents:update", filter_none_values({"agentId": agent_id, **updates})
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "agents:update", filter_none_values({"agentId": agent_id, **updates})
+            ),
+            "agents:update",
         )
 
         # Manually construct to handle field name differences
@@ -380,8 +401,11 @@ class AgentsAPI:
                 "config cannot be empty", "EMPTY_CONFIG_OBJECT", "config"
             )
 
-        await self.client.mutation(
-            "agents:configure", filter_none_values({"agentId": agent_id, "config": config})
+        await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "agents:configure", filter_none_values({"agentId": agent_id, "config": config})
+            ),
+            "agents:configure",
         )
 
     async def unregister(
@@ -421,7 +445,10 @@ class AgentsAPI:
 
         if not opts.cascade:
             # Simple unregistration - just remove from registry
-            await self.client.mutation("agents:unregister", filter_none_values({"agentId": agent_id}))
+            await self._execute_with_resilience(
+                lambda: self.client.mutation("agents:unregister", filter_none_values({"agentId": agent_id})),
+                "agents:unregister",
+            )
 
             return UnregisterAgentResult(
                 agent_id=agent_id,
@@ -600,8 +627,11 @@ class AgentsAPI:
         else:
             # Just remove registrations (use backend unregisterMany)
             agent_ids = [a.id for a in agents]
-            result = await self.client.mutation(
-                "agents:unregisterMany", {"agentIds": agent_ids}
+            result = await self._execute_with_resilience(
+                lambda: self.client.mutation(
+                    "agents:unregisterMany", {"agentIds": agent_ids}
+                ),
+                "agents:unregisterMany",
             )
 
             return {
@@ -634,17 +664,35 @@ class AgentsAPI:
             "agent_registered": False,  # Track if agent is registered
         }
 
-        # Check if agent is registered
+        # Check if agent is registered - use resilience layer if available
         try:
-            agent = await self.client.query("agents:get", {"agentId": agent_id})
+            if self._resilience:
+                agent = await self._resilience.execute(
+                    lambda: self.client.query("agents:get", {"agentId": agent_id}),
+                    "agents:get"
+                )
+            else:
+                agent = await self.client.query("agents:get", {"agentId": agent_id})
             plan["agent_registered"] = agent is not None
         except Exception:
             plan["agent_registered"] = False
 
         affected_spaces: set = set()
 
-        # Get all memory spaces
-        memory_spaces = await self.client.query("memorySpaces:list", {})
+        # Get all memory spaces - with error handling for resilience
+        # If this fails, we can still return partial plan (agent registration + graph nodes)
+        try:
+            if self._resilience:
+                memory_spaces = await self._resilience.execute(
+                    lambda: self.client.query("memorySpaces:list", {}),
+                    "memorySpaces:list"
+                )
+            else:
+                memory_spaces = await self.client.query("memorySpaces:list", {})
+        except Exception as e:
+            # Log warning but continue - we can still collect agent registration and graph data
+            print(f"Warning: Failed to list memory spaces for deletion plan: {e}")
+            memory_spaces = []
 
         # Helper functions for parallel queries
         async def collect_conversations(space: Dict[str, Any]) -> Dict[str, Any]:
@@ -924,8 +972,20 @@ class AgentsAPI:
 
         issues: List[str] = []
 
-        # Get memory spaces once
-        memory_spaces = await self.client.query("memorySpaces:list", {})
+        # Get memory spaces once - with error handling for resilience
+        # If this fails, we can still verify graph nodes and report the issue
+        try:
+            if self._resilience:
+                memory_spaces = await self._resilience.execute(
+                    lambda: self.client.query("memorySpaces:list", {}),
+                    "memorySpaces:list"
+                )
+            else:
+                memory_spaces = await self.client.query("memorySpaces:list", {})
+        except Exception as e:
+            # Add to issues but continue with what we can verify
+            issues.append(f"Failed to list memory spaces for verification: {e}")
+            memory_spaces = []
 
         # Helper functions for parallel verification
         async def count_remaining_memories() -> int:

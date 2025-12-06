@@ -5,6 +5,81 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.20.0] - 2025-12-06
+
+### 🛡️ Complete Resilience Layer API Coverage
+
+**All Python SDK API modules now route through the resilience layer for overload protection. Rate limiting, circuit breaking, and priority queuing are automatically applied to every backend call. Full TypeScript SDK parity.**
+
+#### ✨ Enhanced Features
+
+**1. Comprehensive API Coverage**
+
+All API modules now use `_execute_with_resilience()` for backend calls:
+
+| Module | Calls Wrapped |
+|--------|---------------|
+| `FactsAPI` | 12 operations |
+| `MemorySpacesAPI` | 11 operations |
+| `ImmutableAPI` | 11 operations |
+| `MutableAPI` | 10 operations |
+| `MemoryAPI` | 7 operations |
+| `ConversationsAPI` | 12 operations |
+| `ContextsAPI` | 11 operations |
+| `VectorAPI` | 10 operations |
+| `UsersAPI` | 5 operations |
+| `AgentsAPI` | 5 operations |
+| `A2AAPI` | 4 operations |
+
+**2. Streaming Handler Support**
+
+Resilience layer now flows through to streaming components:
+
+```python
+from cortex.memory.streaming import ProgressiveStorageHandler, StreamErrorRecovery
+
+# Handlers now accept optional resilience parameter
+handler = ProgressiveStorageHandler(
+    client=client,
+    resilience=resilience_layer,  # NEW: optional resilience
+    ...
+)
+
+recovery = StreamErrorRecovery(
+    client=client,
+    resilience=resilience_layer,  # NEW: optional resilience
+)
+```
+
+**3. Consistent Lambda Pattern**
+
+All wrapped calls use a consistent pattern:
+
+```python
+result = await self._execute_with_resilience(
+    lambda: self.client.mutation("api:operation", {...}),
+    "api:operation",  # Operation name for priority/metrics
+)
+```
+
+#### 🧪 Test Coverage
+
+New `TestAPIResilienceIntegration` test class verifies:
+
+- API calls flow through resilience layer when configured
+- APIs work gracefully without resilience (fallback to direct calls)
+- Correct operation names are passed for priority classification
+- Errors propagate correctly through resilience layer
+- Streaming handlers support resilience parameter
+
+#### 🔧 Technical Details
+
+- **Cascade deletion excluded**: `_execute_deletion` and `_rollback_deletion` methods intentionally bypass resilience for strict transactional integrity
+- **Backward compatible**: APIs work identically when `resilience=None`
+- **Zero config change**: Existing `CortexConfig.resilience` enables protection across all APIs
+
+---
+
 ## [0.19.1] - 2025-12-03
 
 ### 🛡️ Idempotent Graph Sync Operations

@@ -213,16 +213,20 @@ export class ConversationsAPI {
 
     let result;
     try {
-      result = await this.client.mutation(api.conversations.addMessage, {
-        conversationId: input.conversationId,
-        message: {
-          id: messageId,
-          role: input.message.role,
-          content: input.message.content,
-          participantId: input.message.participantId, // Updated for Hive Mode
-          metadata: input.message.metadata,
-        },
-      });
+      result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.conversations.addMessage, {
+            conversationId: input.conversationId,
+            message: {
+              id: messageId,
+              role: input.message.role,
+              content: input.message.content,
+              participantId: input.message.participantId, // Updated for Hive Mode
+              metadata: input.message.metadata,
+            },
+          }),
+        "conversations:addMessage",
+      );
     } catch (error) {
       this.handleConvexError(error);
     }
@@ -269,12 +273,16 @@ export class ConversationsAPI {
       validateLimit(filter.limit);
     }
 
-    const result = await this.client.query(api.conversations.list, {
-      type: filter?.type,
-      userId: filter?.userId,
-      memorySpaceId: filter?.memorySpaceId, // Updated
-      limit: filter?.limit,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.conversations.list, {
+          type: filter?.type,
+          userId: filter?.userId,
+          memorySpaceId: filter?.memorySpaceId, // Updated
+          limit: filter?.limit,
+        }),
+      "conversations:list",
+    );
 
     return result as Conversation[];
   }
@@ -295,11 +303,15 @@ export class ConversationsAPI {
       validateConversationType(filter.type);
     }
 
-    const result = await this.client.query(api.conversations.count, {
-      type: filter?.type,
-      userId: filter?.userId,
-      memorySpaceId: filter?.memorySpaceId, // Updated
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.conversations.count, {
+          type: filter?.type,
+          userId: filter?.userId,
+          memorySpaceId: filter?.memorySpaceId, // Updated
+        }),
+      "conversations:count",
+    );
 
     return result;
   }
@@ -320,11 +332,12 @@ export class ConversationsAPI {
 
     let result;
     try {
-      result = await this.client.mutation(
-        api.conversations.deleteConversation,
-        {
-          conversationId,
-        },
+      result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.conversations.deleteConversation, {
+            conversationId,
+          }),
+        "conversations:delete",
       );
     } catch (error) {
       this.handleConvexError(error);
@@ -380,11 +393,15 @@ export class ConversationsAPI {
       );
     }
 
-    const result = await this.client.mutation(api.conversations.deleteMany, {
-      userId: filter.userId,
-      memorySpaceId: filter.memorySpaceId, // Updated
-      type: filter.type,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.conversations.deleteMany, {
+          userId: filter.userId,
+          memorySpaceId: filter.memorySpaceId, // Updated
+          type: filter.type,
+        }),
+      "conversations:deleteMany",
+    );
 
     return result as {
       deleted: number;
@@ -408,10 +425,14 @@ export class ConversationsAPI {
     validateRequiredString(conversationId, "conversationId");
     validateRequiredString(messageId, "messageId");
 
-    const result = await this.client.query(api.conversations.getMessage, {
-      conversationId,
-      messageId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.conversations.getMessage, {
+          conversationId,
+          messageId,
+        }),
+      "conversations:getMessage",
+    );
 
     return result as Message | null;
   }
@@ -434,10 +455,14 @@ export class ConversationsAPI {
     // Validate no duplicates
     validateNoDuplicates(messageIds, "messageIds");
 
-    const result = await this.client.query(api.conversations.getMessagesByIds, {
-      conversationId,
-      messageIds,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.conversations.getMessagesByIds, {
+          conversationId,
+          messageIds,
+        }),
+      "conversations:getMessagesByIds",
+    );
 
     return result as Message[];
   }
@@ -483,12 +508,16 @@ export class ConversationsAPI {
       validateNoDuplicates(params.memorySpaceIds, "memorySpaceIds");
     }
 
-    const result = await this.client.query(api.conversations.findConversation, {
-      memorySpaceId: params.memorySpaceId,
-      type: params.type,
-      userId: params.userId,
-      memorySpaceIds: params.memorySpaceIds,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.conversations.findConversation, {
+          memorySpaceId: params.memorySpaceId,
+          type: params.type,
+          userId: params.userId,
+          memorySpaceIds: params.memorySpaceIds,
+        }),
+      "conversations:findConversation",
+    );
 
     return result as Conversation | null;
   }
@@ -518,13 +547,17 @@ export class ConversationsAPI {
       );
     }
 
-    const result = await this.client.mutation(api.conversations.getOrCreate, {
-      memorySpaceId: input.memorySpaceId,
-      participantId: input.participantId,
-      type: input.type,
-      participants: input.participants,
-      metadata: input.metadata,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.conversations.getOrCreate, {
+          memorySpaceId: input.memorySpaceId,
+          participantId: input.participantId,
+          type: input.type,
+          participants: input.participants,
+          metadata: input.metadata,
+        }),
+      "conversations:getOrCreate",
+    );
 
     return result as Conversation;
   }
@@ -563,12 +596,16 @@ export class ConversationsAPI {
     }
 
     try {
-      const result = await this.client.query(api.conversations.getHistory, {
-        conversationId,
-        limit: options?.limit,
-        offset: options?.offset,
-        sortOrder: options?.sortOrder,
-      });
+      const result = await this.executeWithResilience(
+        () =>
+          this.client.query(api.conversations.getHistory, {
+            conversationId,
+            limit: options?.limit,
+            offset: options?.offset,
+            sortOrder: options?.sortOrder,
+          }),
+        "conversations:getHistory",
+      );
 
       return result as {
         messages: Message[];
@@ -613,15 +650,19 @@ export class ConversationsAPI {
       input.filters?.dateRange?.end,
     );
 
-    const result = await this.client.query(api.conversations.search, {
-      query: input.query,
-      type: input.filters?.type,
-      userId: input.filters?.userId,
-      memorySpaceId: input.filters?.memorySpaceId, // Updated
-      dateStart: input.filters?.dateRange?.start,
-      dateEnd: input.filters?.dateRange?.end,
-      limit: input.filters?.limit,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.conversations.search, {
+          query: input.query,
+          type: input.filters?.type,
+          userId: input.filters?.userId,
+          memorySpaceId: input.filters?.memorySpaceId, // Updated
+          dateStart: input.filters?.dateRange?.start,
+          dateEnd: input.filters?.dateRange?.end,
+          limit: input.filters?.limit,
+        }),
+      "conversations:search",
+    );
 
     return result as ConversationSearchResult[];
   }
@@ -657,18 +698,19 @@ export class ConversationsAPI {
       options.filters?.dateRange?.end,
     );
 
-    const result = await this.client.query(
-      api.conversations.exportConversations,
-      {
-        userId: options.filters?.userId,
-        memorySpaceId: options.filters?.memorySpaceId, // Updated
-        conversationIds: options.filters?.conversationIds,
-        type: options.filters?.type,
-        dateStart: options.filters?.dateRange?.start,
-        dateEnd: options.filters?.dateRange?.end,
-        format: options.format,
-        includeMetadata: options.includeMetadata,
-      },
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.conversations.exportConversations, {
+          userId: options.filters?.userId,
+          memorySpaceId: options.filters?.memorySpaceId, // Updated
+          conversationIds: options.filters?.conversationIds,
+          type: options.filters?.type,
+          dateStart: options.filters?.dateRange?.start,
+          dateEnd: options.filters?.dateRange?.end,
+          format: options.format,
+          includeMetadata: options.includeMetadata,
+        }),
+      "conversations:export",
     );
 
     return result as ExportResult;

@@ -119,13 +119,17 @@ export class MemorySpacesAPI {
 
     let result;
     try {
-      result = await this.client.mutation(api.memorySpaces.register, {
-        memorySpaceId: params.memorySpaceId,
-        name: params.name,
-        type: params.type,
-        participants,
-        metadata: params.metadata,
-      });
+      result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.memorySpaces.register, {
+            memorySpaceId: params.memorySpaceId,
+            name: params.name,
+            type: params.type,
+            participants,
+            metadata: params.metadata,
+          }),
+        "memorySpaces:register",
+      );
     } catch (error) {
       this.handleConvexError(error);
     }
@@ -153,9 +157,13 @@ export class MemorySpacesAPI {
   async get(memorySpaceId: string): Promise<MemorySpace | null> {
     validateMemorySpaceId(memorySpaceId);
 
-    const result = await this.client.query(api.memorySpaces.get, {
-      memorySpaceId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.memorySpaces.get, {
+          memorySpaceId,
+        }),
+      "memorySpaces:get",
+    );
 
     return result as MemorySpace | null;
   }
@@ -186,11 +194,15 @@ export class MemorySpacesAPI {
       validateLimit(filter.limit, 1000);
     }
 
-    const result = await this.client.query(api.memorySpaces.list, {
-      type: filter?.type,
-      status: filter?.status,
-      limit: filter?.limit,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.memorySpaces.list, {
+          type: filter?.type,
+          status: filter?.status,
+          limit: filter?.limit,
+        }),
+      "memorySpaces:list",
+    );
 
     return result as MemorySpace[];
   }
@@ -214,10 +226,14 @@ export class MemorySpacesAPI {
       validateMemorySpaceStatus(filter.status);
     }
 
-    const result = await this.client.query(api.memorySpaces.count, {
-      type: filter?.type,
-      status: filter?.status,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.memorySpaces.count, {
+          type: filter?.type,
+          status: filter?.status,
+        }),
+      "memorySpaces:count",
+    );
 
     return result;
   }
@@ -252,12 +268,16 @@ export class MemorySpacesAPI {
     }
 
     try {
-      const result = await this.client.mutation(api.memorySpaces.update, {
-        memorySpaceId,
-        name: updates.name,
-        metadata: updates.metadata as Record<string, unknown> | undefined,
-        status: updates.status,
-      });
+      const result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.memorySpaces.update, {
+            memorySpaceId,
+            name: updates.name,
+            metadata: updates.metadata as Record<string, unknown> | undefined,
+            status: updates.status,
+          }),
+        "memorySpaces:update",
+      );
 
       return result as MemorySpace;
     } catch (error) {
@@ -289,10 +309,14 @@ export class MemorySpacesAPI {
     validateParticipant(participant);
 
     try {
-      const result = await this.client.mutation(api.memorySpaces.addParticipant, {
-        memorySpaceId,
-        participant,
-      });
+      const result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.memorySpaces.addParticipant, {
+            memorySpaceId,
+            participant,
+          }),
+        "memorySpaces:addParticipant",
+      );
 
       return result as MemorySpace;
     } catch (error) {
@@ -321,12 +345,13 @@ export class MemorySpacesAPI {
       );
     }
 
-    const result = await this.client.mutation(
-      api.memorySpaces.removeParticipant,
-      {
-        memorySpaceId,
-        participantId,
-      },
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.memorySpaces.removeParticipant, {
+          memorySpaceId,
+          participantId,
+        }),
+      "memorySpaces:removeParticipant",
     );
 
     return result as MemorySpace;
@@ -351,11 +376,15 @@ export class MemorySpacesAPI {
   ): Promise<MemorySpace> {
     validateMemorySpaceId(memorySpaceId);
 
-    const result = await this.client.mutation(api.memorySpaces.archive, {
-      memorySpaceId,
-      reason: options?.reason,
-      metadata: options?.metadata as Record<string, unknown> | undefined,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.memorySpaces.archive, {
+          memorySpaceId,
+          reason: options?.reason,
+          metadata: options?.metadata as Record<string, unknown> | undefined,
+        }),
+      "memorySpaces:archive",
+    );
 
     return result as MemorySpace;
   }
@@ -371,9 +400,13 @@ export class MemorySpacesAPI {
   async reactivate(memorySpaceId: string): Promise<MemorySpace> {
     validateMemorySpaceId(memorySpaceId);
 
-    const result = await this.client.mutation(api.memorySpaces.reactivate, {
-      memorySpaceId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.memorySpaces.reactivate, {
+          memorySpaceId,
+        }),
+      "memorySpaces:reactivate",
+    );
 
     return result as MemorySpace;
   }
@@ -396,10 +429,14 @@ export class MemorySpacesAPI {
   }> {
     validateMemorySpaceId(memorySpaceId);
 
-    const result = await this.client.mutation(api.memorySpaces.deleteSpace, {
-      memorySpaceId,
-      cascade: options?.cascade || false,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.memorySpaces.deleteSpace, {
+          memorySpaceId,
+          cascade: options?.cascade || false,
+        }),
+      "memorySpaces:delete",
+    );
 
     return result as {
       deleted: boolean;
@@ -421,9 +458,13 @@ export class MemorySpacesAPI {
     validateMemorySpaceId(memorySpaceId);
 
     try {
-      const result = await this.client.query(api.memorySpaces.getStats, {
-        memorySpaceId,
-      });
+      const result = await this.executeWithResilience(
+        () =>
+          this.client.query(api.memorySpaces.getStats, {
+            memorySpaceId,
+          }),
+        "memorySpaces:getStats",
+      );
 
       return result as MemorySpaceStats;
     } catch (error) {
@@ -448,9 +489,13 @@ export class MemorySpacesAPI {
       );
     }
 
-    const result = await this.client.query(api.memorySpaces.findByParticipant, {
-      participantId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.memorySpaces.findByParticipant, {
+          participantId,
+        }),
+      "memorySpaces:findByParticipant",
+    );
 
     return result as MemorySpace[];
   }
@@ -487,12 +532,16 @@ export class MemorySpacesAPI {
       validateLimit(options.limit, 1000);
     }
 
-    const result = await this.client.query(api.memorySpaces.search, {
-      query,
-      type: options?.type,
-      status: options?.status,
-      limit: options?.limit,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.memorySpaces.search, {
+          query,
+          type: options?.type,
+          status: options?.status,
+          limit: options?.limit,
+        }),
+      "memorySpaces:search",
+    );
 
     return result as MemorySpace[];
   }
@@ -542,13 +591,14 @@ export class MemorySpacesAPI {
       }
     }
 
-    const result = await this.client.mutation(
-      api.memorySpaces.updateParticipants,
-      {
-        memorySpaceId,
-        add: updates.add,
-        remove: updates.remove,
-      },
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.memorySpaces.updateParticipants, {
+          memorySpaceId,
+          add: updates.add,
+          remove: updates.remove,
+        }),
+      "memorySpaces:updateParticipants",
     );
 
     return result as MemorySpace;

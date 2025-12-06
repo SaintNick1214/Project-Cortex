@@ -196,15 +196,19 @@ export class ContextsAPI {
 
     let result;
     try {
-      result = await this.client.mutation(api.contexts.create, {
-        purpose: params.purpose,
-        memorySpaceId: params.memorySpaceId,
-        userId: params.userId,
-        parentId: params.parentId,
-        conversationRef: params.conversationRef,
-        data: params.data,
-        status: params.status,
-      });
+      result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.contexts.create, {
+            purpose: params.purpose,
+            memorySpaceId: params.memorySpaceId,
+            userId: params.userId,
+            parentId: params.parentId,
+            conversationRef: params.conversationRef,
+            data: params.data,
+            status: params.status,
+          }),
+        "contexts:create",
+      );
     } catch (error) {
       this.handleConvexError(error);
     }
@@ -248,10 +252,14 @@ export class ContextsAPI {
     validateRequiredString(contextId, "contextId");
     validateContextIdFormat(contextId);
 
-    const result = await this.client.query(api.contexts.get, {
-      contextId,
-      includeChain: options?.includeChain,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.contexts.get, {
+          contextId,
+          includeChain: options?.includeChain,
+        }),
+      "contexts:get",
+    );
 
     return result as Context | ContextChain | null;
   }
@@ -288,12 +296,16 @@ export class ContextsAPI {
       validateTimestamp(updates.completedAt, "completedAt");
     }
 
-    const result = await this.client.mutation(api.contexts.update, {
-      contextId,
-      status: updates.status,
-      data: updates.data,
-      completedAt: updates.completedAt,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.contexts.update, {
+          contextId,
+          status: updates.status,
+          data: updates.data,
+          completedAt: updates.completedAt,
+        }),
+      "contexts:update",
+    );
 
     // Update in graph if requested
     if (options?.syncToGraph && this.graphAdapter) {
@@ -339,10 +351,14 @@ export class ContextsAPI {
 
     let result;
     try {
-      result = await this.client.mutation(api.contexts.deleteContext, {
-        contextId,
-        cascadeChildren: options?.cascadeChildren,
-      });
+      result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.contexts.deleteContext, {
+            contextId,
+            cascadeChildren: options?.cascadeChildren,
+          }),
+        "contexts:delete",
+      );
     } catch (error) {
       this.handleConvexError(error);
     }
@@ -400,15 +416,19 @@ export class ContextsAPI {
       }
     }
 
-    const result = await this.client.query(api.contexts.list, {
-      memorySpaceId: filter?.memorySpaceId,
-      userId: filter?.userId,
-      status: filter?.status,
-      parentId: filter?.parentId,
-      rootId: filter?.rootId,
-      depth: filter?.depth,
-      limit: filter?.limit,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.contexts.list, {
+          memorySpaceId: filter?.memorySpaceId,
+          userId: filter?.userId,
+          status: filter?.status,
+          parentId: filter?.parentId,
+          rootId: filter?.rootId,
+          depth: filter?.depth,
+          limit: filter?.limit,
+        }),
+      "contexts:list",
+    );
 
     return result as Context[];
   }
@@ -438,11 +458,15 @@ export class ContextsAPI {
       }
     }
 
-    const result = await this.client.query(api.contexts.count, {
-      memorySpaceId: filter?.memorySpaceId,
-      userId: filter?.userId,
-      status: filter?.status,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.contexts.count, {
+          memorySpaceId: filter?.memorySpaceId,
+          userId: filter?.userId,
+          status: filter?.status,
+        }),
+      "contexts:count",
+    );
 
     return result;
   }
@@ -477,9 +501,13 @@ export class ContextsAPI {
     validateRequiredString(contextId, "contextId");
     validateContextIdFormat(contextId);
 
-    const result = await this.client.query(api.contexts.getChain, {
-      contextId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.contexts.getChain, {
+          contextId,
+        }),
+      "contexts:getChain",
+    );
 
     return result as ContextChain;
   }
@@ -497,9 +525,13 @@ export class ContextsAPI {
     validateRequiredString(contextId, "contextId");
     validateContextIdFormat(contextId);
 
-    const result = await this.client.query(api.contexts.getRoot, {
-      contextId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.contexts.getRoot, {
+          contextId,
+        }),
+      "contexts:getRoot",
+    );
 
     return result as Context;
   }
@@ -530,11 +562,15 @@ export class ContextsAPI {
       validateStatus(options.status);
     }
 
-    const result = await this.client.query(api.contexts.getChildren, {
-      contextId,
-      status: options?.status,
-      recursive: options?.recursive,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.contexts.getChildren, {
+          contextId,
+          status: options?.status,
+          recursive: options?.recursive,
+        }),
+      "contexts:getChildren",
+    );
 
     return result as Context[];
   }
@@ -556,10 +592,14 @@ export class ContextsAPI {
     validateContextIdFormat(contextId);
     validateRequiredString(participantId, "participantId");
 
-    const result = await this.client.mutation(api.contexts.addParticipant, {
-      contextId,
-      participantId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.contexts.addParticipant, {
+          contextId,
+          participantId,
+        }),
+      "contexts:addParticipant",
+    );
 
     return result as Context;
   }
@@ -583,11 +623,15 @@ export class ContextsAPI {
     validateRequiredString(targetMemorySpaceId, "targetMemorySpaceId");
     validateRequiredString(scope, "scope");
 
-    const result = await this.client.mutation(api.contexts.grantAccess, {
-      contextId,
-      targetMemorySpaceId,
-      scope,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.contexts.grantAccess, {
+          contextId,
+          targetMemorySpaceId,
+          scope,
+        }),
+      "contexts:grantAccess",
+    );
 
     return result as Context;
   }
@@ -648,14 +692,18 @@ export class ContextsAPI {
       validateDataObject(updates.data);
     }
 
-    const result = await this.client.mutation(api.contexts.updateMany, {
-      memorySpaceId: filters.memorySpaceId,
-      userId: filters.userId,
-      status: filters.status,
-      parentId: filters.parentId,
-      rootId: filters.rootId,
-      updates,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.contexts.updateMany, {
+          memorySpaceId: filters.memorySpaceId,
+          userId: filters.userId,
+          status: filters.status,
+          parentId: filters.parentId,
+          rootId: filters.rootId,
+          updates,
+        }),
+      "contexts:updateMany",
+    );
 
     return result as { updated: number; contextIds: string[] };
   }
@@ -699,13 +747,17 @@ export class ContextsAPI {
       validateTimestamp(filters.completedBefore, "completedBefore");
     }
 
-    const result = await this.client.mutation(api.contexts.deleteMany, {
-      memorySpaceId: filters.memorySpaceId,
-      userId: filters.userId,
-      status: filters.status,
-      completedBefore: filters.completedBefore,
-      cascadeChildren: options?.cascadeChildren,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.contexts.deleteMany, {
+          memorySpaceId: filters.memorySpaceId,
+          userId: filters.userId,
+          status: filters.status,
+          completedBefore: filters.completedBefore,
+          cascadeChildren: options?.cascadeChildren,
+        }),
+      "contexts:deleteMany",
+    );
 
     return result as { deleted: number; contextIds: string[] };
   }
@@ -757,14 +809,18 @@ export class ContextsAPI {
       }
     }
 
-    const result = await this.client.query(api.contexts.exportContexts, {
-      memorySpaceId: filters?.memorySpaceId,
-      userId: filters?.userId,
-      status: filters?.status,
-      format: options?.format || "json",
-      includeChain: options?.includeChain,
-      includeVersionHistory: options?.includeVersionHistory,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.contexts.exportContexts, {
+          memorySpaceId: filters?.memorySpaceId,
+          userId: filters?.userId,
+          status: filters?.status,
+          format: options?.format || "json",
+          includeChain: options?.includeChain,
+          includeVersionHistory: options?.includeVersionHistory,
+        }),
+      "contexts:export",
+    );
 
     return result as {
       format: string;
@@ -791,10 +847,14 @@ export class ContextsAPI {
     validateContextIdFormat(contextId);
     validateRequiredString(participantId, "participantId");
 
-    const result = await this.client.mutation(api.contexts.removeParticipant, {
-      contextId,
-      participantId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.contexts.removeParticipant, {
+          contextId,
+          participantId,
+        }),
+      "contexts:removeParticipant",
+    );
 
     return result as Context;
   }
@@ -812,9 +872,13 @@ export class ContextsAPI {
     validateRequiredString(conversationId, "conversationId");
     validateConversationIdFormat(conversationId);
 
-    const result = await this.client.query(api.contexts.getByConversation, {
-      conversationId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.contexts.getByConversation, {
+          conversationId,
+        }),
+      "contexts:getByConversation",
+    );
 
     return result as Context[];
   }
@@ -829,7 +893,10 @@ export class ContextsAPI {
    * ```
    */
   async findOrphaned(): Promise<Context[]> {
-    const result = await this.client.query(api.contexts.findOrphaned, {});
+    const result = await this.executeWithResilience(
+      () => this.client.query(api.contexts.findOrphaned, {}),
+      "contexts:findOrphaned",
+    );
 
     return result as Context[];
   }
@@ -857,10 +924,14 @@ export class ContextsAPI {
     validateContextIdFormat(contextId);
     validateVersion(version);
 
-    return (await this.client.query(api.contexts.getVersion, {
-      contextId,
-      version,
-    })) as {
+    return (await this.executeWithResilience(
+      () =>
+        this.client.query(api.contexts.getVersion, {
+          contextId,
+          version,
+        }),
+      "contexts:getVersion",
+    )) as {
       version: number;
       status: string;
       data?: Record<string, unknown>;
@@ -891,9 +962,13 @@ export class ContextsAPI {
     validateRequiredString(contextId, "contextId");
     validateContextIdFormat(contextId);
 
-    const result = await this.client.query(api.contexts.getHistory, {
-      contextId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.contexts.getHistory, {
+          contextId,
+        }),
+      "contexts:getHistory",
+    );
 
     return result as Array<{
       version: number;
@@ -930,10 +1005,14 @@ export class ContextsAPI {
     validateContextIdFormat(contextId);
     validateDateObject(timestamp, "timestamp");
 
-    return (await this.client.query(api.contexts.getAtTimestamp, {
-      contextId,
-      timestamp: timestamp.getTime(),
-    })) as {
+    return (await this.executeWithResilience(
+      () =>
+        this.client.query(api.contexts.getAtTimestamp, {
+          contextId,
+          timestamp: timestamp.getTime(),
+        }),
+      "contexts:getAtTimestamp",
+    )) as {
       version: number;
       status: string;
       data?: Record<string, unknown>;

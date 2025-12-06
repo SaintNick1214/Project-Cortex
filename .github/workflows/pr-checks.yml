@@ -312,6 +312,16 @@ jobs:
           pip install python-dotenv
           pip install -e ".[dev]"
 
+      - name: Stagger test start
+        run: |
+          case "${{ matrix.python-version }}" in
+            "3.10") sleep 0 ;;
+            "3.11") sleep 10 ;;
+            "3.12") sleep 20 ;;
+            "3.13") sleep 30 ;;
+            "3.14") sleep 40 ;;
+          esac
+
       - name: Run tests
         run: |
           cd cortex-sdk-python

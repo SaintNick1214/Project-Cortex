@@ -483,6 +483,53 @@ await cortex.facts.delete("agent-1", "fact-123", {
 });
 ```
 
+### `facts.deleteMany()`
+
+Delete multiple facts matching filters in a single operation.
+
+**Signature:**
+
+```typescript
+async deleteMany(params: DeleteManyFactsParams): Promise<{ deleted: number; memorySpaceId: string }>
+```
+
+**Parameters:**
+
+```typescript
+interface DeleteManyFactsParams {
+  // Required
+  memorySpaceId: string;
+
+  // Optional filters
+  userId?: string;     // Filter by user (GDPR cleanup)
+  factType?: FactType; // Filter by fact type
+}
+```
+
+**Example:**
+
+```typescript
+// Delete all facts in a memory space
+const result = await cortex.facts.deleteMany({
+  memorySpaceId: "agent-1",
+});
+console.log(`Deleted ${result.deleted} facts`);
+
+// Delete all facts for a specific user (GDPR compliance)
+const gdprResult = await cortex.facts.deleteMany({
+  memorySpaceId: "agent-1",
+  userId: "user-to-delete",
+});
+
+// Delete all preference facts
+const prefResult = await cortex.facts.deleteMany({
+  memorySpaceId: "agent-1",
+  factType: "preference",
+});
+```
+
+> **Note:** This is a hard delete operation. For soft delete (marking as superseded), use `delete()` on individual facts.
+
 ### `facts.count()`
 
 Count facts matching filters.

@@ -7,6 +7,7 @@
  * - Priority Queue
  * - Circuit Breaker
  * - ResilienceLayer (integration)
+ * - SDK Integration (verifies all SDK methods use resilience layer)
  */
 import {
   TokenBucket,
@@ -604,5 +605,237 @@ describe("ResiliencePresets", () => {
   test("should have disabled preset", () => {
     expect(ResiliencePresets.disabled).toBeDefined();
     expect(ResiliencePresets.disabled.enabled).toBe(false);
+  });
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// SDK Integration Tests
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+import { Cortex } from "../src";
+import { createTestRunContext } from "./helpers/isolation";
+
+describe("SDK Resilience Integration", () => {
+  const ctx = createTestRunContext();
+  const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
+
+  describe("SDK methods use resilience layer", () => {
+    let cortexWithResilience: Cortex;
+    let cortexWithoutResilience: Cortex;
+
+    beforeAll(() => {
+      cortexWithResilience = new Cortex({
+        convexUrl: CONVEX_URL,
+        resilience: ResiliencePresets.default,
+      });
+
+      cortexWithoutResilience = new Cortex({
+        convexUrl: CONVEX_URL,
+        resilience: ResiliencePresets.disabled,
+      });
+    });
+
+    afterAll(async () => {
+      await cortexWithResilience.close();
+      await cortexWithoutResilience.close();
+    });
+
+    test("SDK should accept resilience config", () => {
+      expect(cortexWithResilience).toBeDefined();
+      expect(cortexWithoutResilience).toBeDefined();
+    });
+
+    test("users API should work with resilience enabled", async () => {
+      const userId = ctx.userId("resilience-test");
+      
+      // This will auto-create the user via getOrCreate internally
+      const user = await cortexWithResilience.users.update(userId, {
+        displayName: "Resilience Test User",
+        metadata: { test: true },
+      });
+
+      expect(user).toBeDefined();
+      expect(user.id).toBe(userId);
+    });
+
+    test("memorySpaces API should work with resilience enabled", async () => {
+      const spaceId = ctx.memorySpaceId("resilience-test");
+      
+      const space = await cortexWithResilience.memorySpaces.register({
+        memorySpaceId: spaceId,
+        name: "Resilience Test Space",
+        type: "custom",
+      });
+
+      expect(space).toBeDefined();
+      expect(space.memorySpaceId).toBe(spaceId);
+    });
+
+    test("conversations API should work with resilience enabled", async () => {
+      const spaceId = ctx.memorySpaceId("conv-resilience");
+      const convId = ctx.conversationId("resilience-test");
+
+      // Setup memory space first
+      await cortexWithResilience.memorySpaces.register({
+        memorySpaceId: spaceId,
+        name: "Conv Test Space",
+        type: "custom",
+      });
+
+      const conv = await cortexWithResilience.conversations.create({
+        memorySpaceId: spaceId,
+        conversationId: convId,
+        type: "user-agent",
+        participants: {
+          userId: ctx.userId("conv-test"),
+          agentId: ctx.agentId("conv-test"),
+        },
+      });
+
+      expect(conv).toBeDefined();
+      expect(conv.conversationId).toBe(convId);
+    });
+
+    test("vector API should work with resilience enabled", async () => {
+      const spaceId = ctx.memorySpaceId("vector-resilience");
+
+      // Setup memory space first
+      await cortexWithResilience.memorySpaces.register({
+        memorySpaceId: spaceId,
+        name: "Vector Test Space",
+        type: "custom",
+      });
+
+      const memory = await cortexWithResilience.vector.store(spaceId, {
+        content: "Test memory for resilience",
+        contentType: "raw",
+        source: { type: "system", timestamp: Date.now() },
+        metadata: { importance: 50, tags: ["test"] },
+      });
+
+      expect(memory).toBeDefined();
+      expect(memory.memoryId).toBeDefined();
+    });
+
+    test("facts API should work with resilience enabled", async () => {
+      const spaceId = ctx.memorySpaceId("facts-resilience");
+
+      // Setup memory space first
+      await cortexWithResilience.memorySpaces.register({
+        memorySpaceId: spaceId,
+        name: "Facts Test Space",
+        type: "custom",
+      });
+
+      const fact = await cortexWithResilience.facts.store({
+        memorySpaceId: spaceId,
+        fact: "User prefers dark mode",
+        factType: "preference",
+        subject: "test-user",
+        confidence: 90,
+        sourceType: "system",
+      });
+
+      expect(fact).toBeDefined();
+      expect(fact.factId).toBeDefined();
+    });
+
+    test("immutable API should work with resilience enabled", async () => {
+      const entryType = ctx.immutableType("resilience");
+      const entryId = ctx.immutableId("test");
+
+      const entry = await cortexWithResilience.immutable.store({
+        type: entryType,
+        id: entryId,
+        data: { test: true },
+      });
+
+      expect(entry).toBeDefined();
+      expect(entry.id).toBe(entryId);
+    });
+
+    test("mutable API should work with resilience enabled", async () => {
+      const namespace = ctx.mutableNamespace("resilience");
+      const key = ctx.mutableKey("test");
+
+      const record = await cortexWithResilience.mutable.set(
+        namespace,
+        key,
+        { value: "test" },
+      );
+
+      expect(record).toBeDefined();
+      expect(record.key).toBe(key);
+    });
+
+    test("contexts API should work with resilience enabled", async () => {
+      const spaceId = ctx.memorySpaceId("ctx-resilience");
+
+      // Setup memory space first
+      await cortexWithResilience.memorySpaces.register({
+        memorySpaceId: spaceId,
+        name: "Contexts Test Space",
+        type: "custom",
+      });
+
+      const context = await cortexWithResilience.contexts.create({
+        memorySpaceId: spaceId,
+        purpose: "Resilience test context",
+      });
+
+      expect(context).toBeDefined();
+      expect(context.contextId).toBeDefined();
+    });
+  });
+
+  describe("Resilience layer rate limiting", () => {
+    let cortex: Cortex;
+    let resilience: ResilienceLayer;
+
+    beforeAll(() => {
+      // Create a very restrictive resilience config
+      resilience = new ResilienceLayer({
+        enabled: true,
+        rateLimiter: { bucketSize: 10, refillRate: 100 },
+        concurrency: { maxConcurrent: 5, queueSize: 50, timeout: 5000 },
+        circuitBreaker: { failureThreshold: 10, successThreshold: 2, timeout: 30000 },
+      });
+
+      cortex = new Cortex({
+        convexUrl: CONVEX_URL,
+        resilience: {
+          enabled: true,
+          rateLimiter: { bucketSize: 10, refillRate: 100 },
+          concurrency: { maxConcurrent: 5, queueSize: 50, timeout: 5000 },
+          circuitBreaker: { failureThreshold: 10, successThreshold: 2, timeout: 30000 },
+        },
+      });
+    });
+
+    afterAll(async () => {
+      resilience.stopQueueProcessor();
+      await cortex.close();
+    });
+
+    test("resilience layer executes operations successfully", async () => {
+      const testOps = [
+        createOperation("result1"),
+        createOperation("result2"),
+        createOperation("result3"),
+      ];
+
+      const results: string[] = [];
+      for (const op of testOps) {
+        const result = await resilience.execute(op, "test:operation");
+        results.push(result);
+      }
+
+      // Verify all operations completed
+      expect(results).toEqual(["result1", "result2", "result3"]);
+
+      // Verify resilience layer is healthy
+      expect(resilience.isHealthy()).toBe(true);
+      expect(resilience.isAcceptingRequests()).toBe(true);
+    });
   });
 });

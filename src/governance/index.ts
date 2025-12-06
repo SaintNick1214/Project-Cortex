@@ -168,9 +168,13 @@ export class GovernanceAPI {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return await this.client.mutation(
-      api.governance.setPolicy as FunctionReference<"mutation">,
-      { policy },
+    return await this.executeWithResilience(
+      () =>
+        this.client.mutation(
+          api.governance.setPolicy as FunctionReference<"mutation">,
+          { policy },
+        ),
+      "governance:setPolicy",
     );
   }
 
@@ -203,9 +207,13 @@ export class GovernanceAPI {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return await this.client.query(
-      api.governance.getPolicy as FunctionReference<"query">,
-      { scope: scope || {} },
+    return await this.executeWithResilience(
+      () =>
+        this.client.query(
+          api.governance.getPolicy as FunctionReference<"query">,
+          { scope: scope || {} },
+        ),
+      "governance:getPolicy",
     );
   }
 
@@ -302,9 +310,13 @@ export class GovernanceAPI {
       validateImportanceRanges(overrides.vector.retention.byImportance);
     }
 
-    await this.client.mutation(
-      api.governance.setAgentOverride as FunctionReference<"mutation">,
-      { memorySpaceId, overrides },
+    await this.executeWithResilience(
+      () =>
+        this.client.mutation(
+          api.governance.setAgentOverride as FunctionReference<"mutation">,
+          { memorySpaceId, overrides },
+        ),
+      "governance:setAgentOverride",
     );
   }
 
@@ -328,9 +340,13 @@ export class GovernanceAPI {
     validateComplianceTemplate(template);
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return await this.client.query(
-      api.governance.getTemplate as FunctionReference<"query">,
-      { template },
+    return await this.executeWithResilience(
+      () =>
+        this.client.query(
+          api.governance.getTemplate as FunctionReference<"query">,
+          { template },
+        ),
+      "governance:getTemplate",
     );
   }
 
@@ -358,9 +374,13 @@ export class GovernanceAPI {
 
     try {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return await this.client.mutation(
-        api.governance.enforce as FunctionReference<"mutation">,
-        { options },
+      return await this.executeWithResilience(
+        () =>
+          this.client.mutation(
+            api.governance.enforce as FunctionReference<"mutation">,
+            { options },
+          ),
+        "governance:enforce",
       );
     } catch (error) {
       this.handleConvexError(error);
@@ -457,9 +477,13 @@ export class GovernanceAPI {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return await this.client.query(
-      api.governance.simulate as FunctionReference<"query">,
-      { options },
+    return await this.executeWithResilience(
+      () =>
+        this.client.query(
+          api.governance.simulate as FunctionReference<"query">,
+          { options },
+        ),
+      "governance:simulate",
     );
   }
 
@@ -509,9 +533,13 @@ export class GovernanceAPI {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return await this.client.query(
-      api.governance.getComplianceReport as FunctionReference<"query">,
-      { options: convexOptions },
+    return await this.executeWithResilience(
+      () =>
+        this.client.query(
+          api.governance.getComplianceReport as FunctionReference<"query">,
+          { options: convexOptions },
+        ),
+      "governance:getComplianceReport",
     );
   }
 
@@ -549,9 +577,13 @@ export class GovernanceAPI {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return await this.client.query(
-      api.governance.getEnforcementStats as FunctionReference<"query">,
-      { options },
+    return await this.executeWithResilience(
+      () =>
+        this.client.query(
+          api.governance.getEnforcementStats as FunctionReference<"query">,
+          { options },
+        ),
+      "governance:getEnforcementStats",
     );
   }
 }

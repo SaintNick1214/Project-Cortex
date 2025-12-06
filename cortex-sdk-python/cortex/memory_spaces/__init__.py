@@ -101,15 +101,18 @@ class MemorySpacesAPI:
         if params.participants is not None:
             validate_participants(params.participants)
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "memorySpaces:register",
+                filter_none_values({
+                    "memorySpaceId": params.memory_space_id,
+                    "name": params.name,
+                    "type": params.type,
+                    "participants": params.participants,
+                    "metadata": params.metadata or {},
+                }),
+            ),
             "memorySpaces:register",
-            filter_none_values({
-                "memorySpaceId": params.memory_space_id,
-                "name": params.name,
-                "type": params.type,
-                "participants": params.participants,
-                "metadata": params.metadata or {},
-            }),
         )
 
         # Sync to graph if requested
@@ -144,10 +147,13 @@ class MemorySpacesAPI:
         """
         validate_memory_space_id(memory_space_id)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "memorySpaces:get",
+                {"memorySpaceId": memory_space_id},
+                # Note: includeStats not supported by backend yet
+            ),
             "memorySpaces:get",
-            {"memorySpaceId": memory_space_id},
-            # Note: includeStats not supported by backend yet
         )
 
         if not result:
@@ -186,15 +192,18 @@ class MemorySpacesAPI:
         if limit is not None:
             validate_limit(limit, 1000)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "memorySpaces:list",
+                filter_none_values({
+                    "type": type,
+                    "status": status,
+                    "participant": participant,
+                    "limit": limit,
+                    # Note: offset not supported by backend yet
+                }),
+            ),
             "memorySpaces:list",
-            filter_none_values({
-                "type": type,
-                "status": status,
-                "participant": participant,
-                "limit": limit,
-                # Note: offset not supported by backend yet
-            }),
         )
 
         # Handle list or dict response
@@ -236,9 +245,12 @@ class MemorySpacesAPI:
         if limit is not None:
             validate_limit(limit, 1000)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "memorySpaces:search",
+                filter_none_values({"query": query, "type": type, "status": status, "limit": limit}),
+            ),
             "memorySpaces:search",
-            filter_none_values({"query": query, "type": type, "status": status, "limit": limit}),
         )
 
         return [MemorySpace(**convert_convex_response(space)) for space in result]
@@ -273,8 +285,11 @@ class MemorySpacesAPI:
         # Flatten updates - backend expects direct fields, not an updates dict
         mutation_args = {"memorySpaceId": memory_space_id}
         mutation_args.update(updates)
-        result = await self.client.mutation(
-            "memorySpaces:update", filter_none_values(mutation_args)
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "memorySpaces:update", filter_none_values(mutation_args)
+            ),
+            "memorySpaces:update",
         )
 
         return MemorySpace(**convert_convex_response(result))
@@ -322,9 +337,12 @@ class MemorySpacesAPI:
                         "Participant ID to remove cannot be empty", "MISSING_PARTICIPANT_ID"
                     )
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "memorySpaces:updateParticipants",
+                filter_none_values({"memorySpaceId": memory_space_id, "add": add, "remove": remove}),
+            ),
             "memorySpaces:updateParticipants",
-            filter_none_values({"memorySpaceId": memory_space_id, "add": add, "remove": remove}),
         )
 
         return MemorySpace(**convert_convex_response(result))
@@ -354,9 +372,12 @@ class MemorySpacesAPI:
         """
         validate_memory_space_id(memory_space_id)
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "memorySpaces:archive",
+                filter_none_values({"memorySpaceId": memory_space_id, "reason": reason, "metadata": metadata}),
+            ),
             "memorySpaces:archive",
-            filter_none_values({"memorySpaceId": memory_space_id, "reason": reason, "metadata": metadata}),
         )
 
         return MemorySpace(**convert_convex_response(result))
@@ -376,8 +397,11 @@ class MemorySpacesAPI:
         """
         validate_memory_space_id(memory_space_id)
 
-        result = await self.client.mutation(
-            "memorySpaces:reactivate", {"memorySpaceId": memory_space_id}
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "memorySpaces:reactivate", {"memorySpaceId": memory_space_id}
+            ),
+            "memorySpaces:reactivate",
         )
 
         return MemorySpace(**convert_convex_response(result))
@@ -421,14 +445,17 @@ class MemorySpacesAPI:
         if confirm_id and confirm_id != memory_space_id:
             raise CortexError(ErrorCode.INVALID_INPUT, "confirm_id must match memory_space_id")
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "memorySpaces:deleteSpace",
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "cascade": cascade,
+                    "reason": reason,
+                    "confirmId": confirm_id,
+                }),
+            ),
             "memorySpaces:deleteSpace",
-            filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "cascade": cascade,
-                "reason": reason,
-                "confirmId": confirm_id,
-            }),
         )
 
         return cast(Dict[str, Any], result)
@@ -459,12 +486,15 @@ class MemorySpacesAPI:
         """
         validate_memory_space_id(memory_space_id)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "memorySpaces:getStats",
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    # Note: timeWindow and includeParticipants not supported by backend yet
+                }),
+            ),
             "memorySpaces:getStats",
-            filter_none_values({
-                "memorySpaceId": memory_space_id,
-                # Note: timeWindow and includeParticipants not supported by backend yet
-            }),
         )
 
         return MemorySpaceStats(**convert_convex_response(result))
@@ -492,12 +522,15 @@ class MemorySpacesAPI:
         if status is not None:
             validate_memory_space_status(status)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "memorySpaces:count",
+                filter_none_values({
+                    "type": type,
+                    "status": status,
+                }),
+            ),
             "memorySpaces:count",
-            filter_none_values({
-                "type": type,
-                "status": status,
-            }),
         )
 
         return int(result)

@@ -33,7 +33,7 @@ from .assertions import (
     wait_for_condition,
     wait_for_count,
 )
-from .cleanup import ScopedCleanup, ScopedCleanupResult, TestCleanup
+from .cleanup import BatchDeleter, ScopedCleanup, ScopedCleanupResult, TestCleanup
 from .embeddings import (
     build_enriched_content,
     embeddings_available,
@@ -69,6 +69,7 @@ from .storage import (
 )
 
 __all__ = [
+    "BatchDeleter",
     "TestCleanup",
     "ScopedCleanup",
     "ScopedCleanupResult",

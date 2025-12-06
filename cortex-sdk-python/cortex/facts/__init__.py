@@ -120,33 +120,36 @@ class FactsAPI:
         if params.metadata is not None:
             validate_metadata(params.metadata)
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "facts:store",
+                filter_none_values({
+                    "memorySpaceId": params.memory_space_id,
+                    "participantId": params.participant_id,
+                    "userId": params.user_id,
+                    "fact": params.fact,
+                    "factType": params.fact_type,
+                    "subject": params.subject,
+                    "predicate": params.predicate,
+                    "object": params.object,
+                    "confidence": params.confidence,
+                    "sourceType": params.source_type,
+                    "sourceRef": (
+                        {
+                            "conversationId": params.source_ref.get("conversationId") if isinstance(params.source_ref, dict) else getattr(params.source_ref, "conversation_id", None),
+                            "messageIds": (params.source_ref.get("messageIds") if isinstance(params.source_ref, dict) else getattr(params.source_ref, "message_ids", None)) or [],
+                            "memoryId": params.source_ref.get("memoryId") if isinstance(params.source_ref, dict) else getattr(params.source_ref, "memory_id", None),
+                        }
+                        if params.source_ref
+                        else None
+                    ),
+                    "metadata": params.metadata,
+                    "tags": params.tags or [],
+                    "validFrom": params.valid_from,
+                    "validUntil": params.valid_until,
+                }),
+            ),
             "facts:store",
-            filter_none_values({
-                "memorySpaceId": params.memory_space_id,
-                "participantId": params.participant_id,
-                "userId": params.user_id,
-                "fact": params.fact,
-                "factType": params.fact_type,
-                "subject": params.subject,
-                "predicate": params.predicate,
-                "object": params.object,
-                "confidence": params.confidence,
-                "sourceType": params.source_type,
-                "sourceRef": (
-                    {
-                        "conversationId": params.source_ref.get("conversationId") if isinstance(params.source_ref, dict) else getattr(params.source_ref, "conversation_id", None),
-                        "messageIds": (params.source_ref.get("messageIds") if isinstance(params.source_ref, dict) else getattr(params.source_ref, "message_ids", None)) or [],
-                        "memoryId": params.source_ref.get("memoryId") if isinstance(params.source_ref, dict) else getattr(params.source_ref, "memory_id", None),
-                    }
-                    if params.source_ref
-                    else None
-                ),
-                "metadata": params.metadata,
-                "tags": params.tags or [],
-                "validFrom": params.valid_from,
-                "validUntil": params.valid_until,
-            }),
         )
 
         # Sync to graph if requested
@@ -181,8 +184,11 @@ class FactsAPI:
         validate_required_string(fact_id, "fact_id")
         validate_fact_id_format(fact_id)
 
-        result = await self.client.query(
-            "facts:get", {"memorySpaceId": memory_space_id, "factId": fact_id}
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "facts:get", {"memorySpaceId": memory_space_id, "factId": fact_id}
+            ),
+            "facts:get",
         )
 
         if not result:
@@ -256,34 +262,37 @@ class FactsAPI:
         if filter.metadata is not None:
             validate_metadata(filter.metadata)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "facts:list",
+                filter_none_values({
+                    "memorySpaceId": filter.memory_space_id,
+                    "factType": filter.fact_type,
+                    "subject": filter.subject,
+                    "predicate": filter.predicate,
+                    "object": filter.object,
+                    "minConfidence": filter.min_confidence,
+                    "confidence": filter.confidence,
+                    "userId": filter.user_id,
+                    "participantId": filter.participant_id,
+                    "tags": filter.tags,
+                    "tagMatch": filter.tag_match,
+                    "sourceType": filter.source_type,
+                    "createdBefore": int(filter.created_before.timestamp() * 1000) if filter.created_before else None,
+                    "createdAfter": int(filter.created_after.timestamp() * 1000) if filter.created_after else None,
+                    "updatedBefore": int(filter.updated_before.timestamp() * 1000) if filter.updated_before else None,
+                    "updatedAfter": int(filter.updated_after.timestamp() * 1000) if filter.updated_after else None,
+                    "version": filter.version,
+                    "includeSuperseded": filter.include_superseded,
+                    "validAt": int(filter.valid_at.timestamp() * 1000) if filter.valid_at else None,
+                    "metadata": filter.metadata,
+                    "limit": filter.limit,
+                    "offset": filter.offset,
+                    "sortBy": filter.sort_by,
+                    "sortOrder": filter.sort_order,
+                }),
+            ),
             "facts:list",
-            filter_none_values({
-                "memorySpaceId": filter.memory_space_id,
-                "factType": filter.fact_type,
-                "subject": filter.subject,
-                "predicate": filter.predicate,
-                "object": filter.object,
-                "minConfidence": filter.min_confidence,
-                "confidence": filter.confidence,
-                "userId": filter.user_id,
-                "participantId": filter.participant_id,
-                "tags": filter.tags,
-                "tagMatch": filter.tag_match,
-                "sourceType": filter.source_type,
-                "createdBefore": int(filter.created_before.timestamp() * 1000) if filter.created_before else None,
-                "createdAfter": int(filter.created_after.timestamp() * 1000) if filter.created_after else None,
-                "updatedBefore": int(filter.updated_before.timestamp() * 1000) if filter.updated_before else None,
-                "updatedAfter": int(filter.updated_after.timestamp() * 1000) if filter.updated_after else None,
-                "version": filter.version,
-                "includeSuperseded": filter.include_superseded,
-                "validAt": int(filter.valid_at.timestamp() * 1000) if filter.valid_at else None,
-                "metadata": filter.metadata,
-                "limit": filter.limit,
-                "offset": filter.offset,
-                "sortBy": filter.sort_by,
-                "sortOrder": filter.sort_order,
-            }),
         )
 
         return [FactRecord(**convert_convex_response(fact)) for fact in result]
@@ -358,35 +367,38 @@ class FactsAPI:
             if options.metadata is not None:
                 validate_metadata(options.metadata)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "facts:search",
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "query": query,
+                    "factType": options.fact_type if options else None,
+                    "subject": options.subject if options else None,
+                    "predicate": options.predicate if options else None,
+                    "object": options.object if options else None,
+                    "minConfidence": options.min_confidence if options else None,
+                    "confidence": options.confidence if options else None,
+                    "userId": options.user_id if options else None,
+                    "participantId": options.participant_id if options else None,
+                    "tags": options.tags if options else None,
+                    "tagMatch": options.tag_match if options else None,
+                    "sourceType": options.source_type if options else None,
+                    "createdBefore": int(options.created_before.timestamp() * 1000) if options and options.created_before else None,
+                    "createdAfter": int(options.created_after.timestamp() * 1000) if options and options.created_after else None,
+                    "updatedBefore": int(options.updated_before.timestamp() * 1000) if options and options.updated_before else None,
+                    "updatedAfter": int(options.updated_after.timestamp() * 1000) if options and options.updated_after else None,
+                    "version": options.version if options else None,
+                    "includeSuperseded": options.include_superseded if options else None,
+                    "validAt": int(options.valid_at.timestamp() * 1000) if options and options.valid_at else None,
+                    "metadata": options.metadata if options else None,
+                    "limit": options.limit if options else None,
+                    "offset": options.offset if options else None,
+                    "sortBy": options.sort_by if options else None,
+                    "sortOrder": options.sort_order if options else None,
+                }),
+            ),
             "facts:search",
-            filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "query": query,
-                "factType": options.fact_type if options else None,
-                "subject": options.subject if options else None,
-                "predicate": options.predicate if options else None,
-                "object": options.object if options else None,
-                "minConfidence": options.min_confidence if options else None,
-                "confidence": options.confidence if options else None,
-                "userId": options.user_id if options else None,
-                "participantId": options.participant_id if options else None,
-                "tags": options.tags if options else None,
-                "tagMatch": options.tag_match if options else None,
-                "sourceType": options.source_type if options else None,
-                "createdBefore": int(options.created_before.timestamp() * 1000) if options and options.created_before else None,
-                "createdAfter": int(options.created_after.timestamp() * 1000) if options and options.created_after else None,
-                "updatedBefore": int(options.updated_before.timestamp() * 1000) if options and options.updated_before else None,
-                "updatedAfter": int(options.updated_after.timestamp() * 1000) if options and options.updated_after else None,
-                "version": options.version if options else None,
-                "includeSuperseded": options.include_superseded if options else None,
-                "validAt": int(options.valid_at.timestamp() * 1000) if options and options.valid_at else None,
-                "metadata": options.metadata if options else None,
-                "limit": options.limit if options else None,
-                "offset": options.offset if options else None,
-                "sortBy": options.sort_by if options else None,
-                "sortOrder": options.sort_order if options else None,
-            }),
         )
 
         return [FactRecord(**convert_convex_response(fact)) for fact in result]
@@ -428,13 +440,16 @@ class FactsAPI:
         if "metadata" in updates:
             validate_metadata(updates["metadata"])
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "facts:update",
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "factId": fact_id,
+                    **updates,  # Flatten updates into top level
+                }),
+            ),
             "facts:update",
-            filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "factId": fact_id,
-                **updates,  # Flatten updates into top level
-            }),
         )
 
         # Sync to graph if requested
@@ -472,8 +487,11 @@ class FactsAPI:
         validate_required_string(fact_id, "fact_id")
         validate_fact_id_format(fact_id)
 
-        result = await self.client.mutation(
-            "facts:deleteFact", {"memorySpaceId": memory_space_id, "factId": fact_id}
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "facts:deleteFact", {"memorySpaceId": memory_space_id, "factId": fact_id}
+            ),
+            "facts:deleteFact",
         )
 
         # Delete from graph
@@ -542,30 +560,33 @@ class FactsAPI:
         if filter.metadata is not None:
             validate_metadata(filter.metadata)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "facts:count",
+                filter_none_values({
+                    "memorySpaceId": filter.memory_space_id,
+                    "factType": filter.fact_type,
+                    "subject": filter.subject,
+                    "predicate": filter.predicate,
+                    "object": filter.object,
+                    "minConfidence": filter.min_confidence,
+                    "confidence": filter.confidence,
+                    "userId": filter.user_id,
+                    "participantId": filter.participant_id,
+                    "tags": filter.tags,
+                    "tagMatch": filter.tag_match,
+                    "sourceType": filter.source_type,
+                    "createdBefore": int(filter.created_before.timestamp() * 1000) if filter.created_before else None,
+                    "createdAfter": int(filter.created_after.timestamp() * 1000) if filter.created_after else None,
+                    "updatedBefore": int(filter.updated_before.timestamp() * 1000) if filter.updated_before else None,
+                    "updatedAfter": int(filter.updated_after.timestamp() * 1000) if filter.updated_after else None,
+                    "version": filter.version,
+                    "includeSuperseded": filter.include_superseded,
+                    "validAt": int(filter.valid_at.timestamp() * 1000) if filter.valid_at else None,
+                    "metadata": filter.metadata,
+                }),
+            ),
             "facts:count",
-            filter_none_values({
-                "memorySpaceId": filter.memory_space_id,
-                "factType": filter.fact_type,
-                "subject": filter.subject,
-                "predicate": filter.predicate,
-                "object": filter.object,
-                "minConfidence": filter.min_confidence,
-                "confidence": filter.confidence,
-                "userId": filter.user_id,
-                "participantId": filter.participant_id,
-                "tags": filter.tags,
-                "tagMatch": filter.tag_match,
-                "sourceType": filter.source_type,
-                "createdBefore": int(filter.created_before.timestamp() * 1000) if filter.created_before else None,
-                "createdAfter": int(filter.created_after.timestamp() * 1000) if filter.created_after else None,
-                "updatedBefore": int(filter.updated_before.timestamp() * 1000) if filter.updated_before else None,
-                "updatedAfter": int(filter.updated_after.timestamp() * 1000) if filter.updated_after else None,
-                "version": filter.version,
-                "includeSuperseded": filter.include_superseded,
-                "validAt": int(filter.valid_at.timestamp() * 1000) if filter.valid_at else None,
-                "metadata": filter.metadata,
-            }),
         )
 
         return int(result)
@@ -635,34 +656,37 @@ class FactsAPI:
         if filter.metadata is not None:
             validate_metadata(filter.metadata)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "facts:queryBySubject",
+                filter_none_values({
+                    "memorySpaceId": filter.memory_space_id,
+                    "subject": filter.subject,
+                    "factType": filter.fact_type,
+                    "predicate": filter.predicate,
+                    "object": filter.object,
+                    "minConfidence": filter.min_confidence,
+                    "confidence": filter.confidence,
+                    "userId": filter.user_id,
+                    "participantId": filter.participant_id,
+                    "tags": filter.tags,
+                    "tagMatch": filter.tag_match,
+                    "sourceType": filter.source_type,
+                    "createdBefore": int(filter.created_before.timestamp() * 1000) if filter.created_before else None,
+                    "createdAfter": int(filter.created_after.timestamp() * 1000) if filter.created_after else None,
+                    "updatedBefore": int(filter.updated_before.timestamp() * 1000) if filter.updated_before else None,
+                    "updatedAfter": int(filter.updated_after.timestamp() * 1000) if filter.updated_after else None,
+                    "version": filter.version,
+                    "includeSuperseded": filter.include_superseded,
+                    "validAt": int(filter.valid_at.timestamp() * 1000) if filter.valid_at else None,
+                    "metadata": filter.metadata,
+                    "limit": filter.limit,
+                    "offset": filter.offset,
+                    "sortBy": filter.sort_by,
+                    "sortOrder": filter.sort_order,
+                }),
+            ),
             "facts:queryBySubject",
-            filter_none_values({
-                "memorySpaceId": filter.memory_space_id,
-                "subject": filter.subject,
-                "factType": filter.fact_type,
-                "predicate": filter.predicate,
-                "object": filter.object,
-                "minConfidence": filter.min_confidence,
-                "confidence": filter.confidence,
-                "userId": filter.user_id,
-                "participantId": filter.participant_id,
-                "tags": filter.tags,
-                "tagMatch": filter.tag_match,
-                "sourceType": filter.source_type,
-                "createdBefore": int(filter.created_before.timestamp() * 1000) if filter.created_before else None,
-                "createdAfter": int(filter.created_after.timestamp() * 1000) if filter.created_after else None,
-                "updatedBefore": int(filter.updated_before.timestamp() * 1000) if filter.updated_before else None,
-                "updatedAfter": int(filter.updated_after.timestamp() * 1000) if filter.updated_after else None,
-                "version": filter.version,
-                "includeSuperseded": filter.include_superseded,
-                "validAt": int(filter.valid_at.timestamp() * 1000) if filter.valid_at else None,
-                "metadata": filter.metadata,
-                "limit": filter.limit,
-                "offset": filter.offset,
-                "sortBy": filter.sort_by,
-                "sortOrder": filter.sort_order,
-            }),
         )
 
         return [FactRecord(**convert_convex_response(fact)) for fact in result]
@@ -733,34 +757,37 @@ class FactsAPI:
         if filter.metadata is not None:
             validate_metadata(filter.metadata)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "facts:queryByRelationship",
+                filter_none_values({
+                    "memorySpaceId": filter.memory_space_id,
+                    "subject": filter.subject,
+                    "predicate": filter.predicate,
+                    "object": filter.object,
+                    "factType": filter.fact_type,
+                    "minConfidence": filter.min_confidence,
+                    "confidence": filter.confidence,
+                    "userId": filter.user_id,
+                    "participantId": filter.participant_id,
+                    "tags": filter.tags,
+                    "tagMatch": filter.tag_match,
+                    "sourceType": filter.source_type,
+                    "createdBefore": int(filter.created_before.timestamp() * 1000) if filter.created_before else None,
+                    "createdAfter": int(filter.created_after.timestamp() * 1000) if filter.created_after else None,
+                    "updatedBefore": int(filter.updated_before.timestamp() * 1000) if filter.updated_before else None,
+                    "updatedAfter": int(filter.updated_after.timestamp() * 1000) if filter.updated_after else None,
+                    "version": filter.version,
+                    "includeSuperseded": filter.include_superseded,
+                    "validAt": int(filter.valid_at.timestamp() * 1000) if filter.valid_at else None,
+                    "metadata": filter.metadata,
+                    "limit": filter.limit,
+                    "offset": filter.offset,
+                    "sortBy": filter.sort_by,
+                    "sortOrder": filter.sort_order,
+                }),
+            ),
             "facts:queryByRelationship",
-            filter_none_values({
-                "memorySpaceId": filter.memory_space_id,
-                "subject": filter.subject,
-                "predicate": filter.predicate,
-                "object": filter.object,
-                "factType": filter.fact_type,
-                "minConfidence": filter.min_confidence,
-                "confidence": filter.confidence,
-                "userId": filter.user_id,
-                "participantId": filter.participant_id,
-                "tags": filter.tags,
-                "tagMatch": filter.tag_match,
-                "sourceType": filter.source_type,
-                "createdBefore": int(filter.created_before.timestamp() * 1000) if filter.created_before else None,
-                "createdAfter": int(filter.created_after.timestamp() * 1000) if filter.created_after else None,
-                "updatedBefore": int(filter.updated_before.timestamp() * 1000) if filter.updated_before else None,
-                "updatedAfter": int(filter.updated_after.timestamp() * 1000) if filter.updated_after else None,
-                "version": filter.version,
-                "includeSuperseded": filter.include_superseded,
-                "validAt": int(filter.valid_at.timestamp() * 1000) if filter.valid_at else None,
-                "metadata": filter.metadata,
-                "limit": filter.limit,
-                "offset": filter.offset,
-                "sortBy": filter.sort_by,
-                "sortOrder": filter.sort_order,
-            }),
         )
 
         return [FactRecord(**convert_convex_response(fact)) for fact in result]
@@ -785,8 +812,11 @@ class FactsAPI:
         validate_required_string(fact_id, "fact_id")
         validate_fact_id_format(fact_id)
 
-        result = await self.client.query(
-            "facts:getHistory", {"memorySpaceId": memory_space_id, "factId": fact_id}
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "facts:getHistory", {"memorySpaceId": memory_space_id, "factId": fact_id}
+            ),
+            "facts:getHistory",
         )
 
         return [FactRecord(**convert_convex_response(v)) for v in result]
@@ -821,13 +851,16 @@ class FactsAPI:
         if fact_type is not None:
             validate_fact_type(fact_type)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "facts:exportFacts",
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "format": format,
+                    "factType": fact_type,
+                }),
+            ),
             "facts:exportFacts",
-            filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "format": format,
-                "factType": fact_type,
-            }),
         )
 
         return cast(Dict[str, Any], result)
@@ -858,13 +891,16 @@ class FactsAPI:
         validate_required_string(keep_fact_id, "keep_fact_id")
         validate_consolidation(fact_ids, keep_fact_id)
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "facts:consolidate",
+                {
+                    "memorySpaceId": memory_space_id,
+                    "factIds": fact_ids,
+                    "keepFactId": keep_fact_id,
+                },
+            ),
             "facts:consolidate",
-            {
-                "memorySpaceId": memory_space_id,
-                "factIds": fact_ids,
-                "keepFactId": keep_fact_id,
-            },
         )
 
         return cast(Dict[str, Any], result)
