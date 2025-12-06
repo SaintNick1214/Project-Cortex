@@ -32,9 +32,18 @@ T = TypeVar("T")
 class StreamErrorRecovery:
     """Handles error recovery for streaming operations"""
 
-    def __init__(self, client: Any) -> None:
+    def __init__(self, client: Any, resilience: Optional[Any] = None) -> None:
         self.client = client
+        self._resilience = resilience
         self.resume_token_ttl = 3600000  # 1 hour in milliseconds
+
+    async def _execute_with_resilience(
+        self, operation: Any, operation_name: str
+    ) -> Any:
+        """Execute an operation through the resilience layer (if available)."""
+        if self._resilience:
+            return await self._resilience.execute(operation, operation_name)
+        return await operation()
 
     async def handle_stream_error(
         self,
@@ -103,12 +112,15 @@ class StreamErrorRecovery:
         try:
             # Delete partial memory if it exists
             if context.partial_memory_id:
-                await self.client.mutation(
+                await self._execute_with_resilience(
+                    lambda: self.client.mutation(
+                        "memories:deleteMemory",
+                        {
+                            "memorySpaceId": context.memory_space_id,
+                            "memoryId": context.partial_memory_id,
+                        },
+                    ),
                     "memories:deleteMemory",
-                    {
-                        "memorySpaceId": context.memory_space_id,
-                        "memoryId": context.partial_memory_id,
-                    },
                 )
 
             return RecoveryResult(success=True, strategy=FailureStrategy.ROLLBACK)
@@ -179,22 +191,25 @@ class StreamErrorRecovery:
 
         # Store resume context in mutable store with TTL
         try:
-            await self.client.mutation(
-                "mutable:set",
-                {
-                    "namespace": "resume-tokens",
-                    "key": token,
-                    "value": {
-                        "resumeToken": token,
-                        "lastProcessedChunk": context.last_processed_chunk,
-                        "accumulatedContent": context.accumulated_content,
-                        "partialMemoryId": context.partial_memory_id,
-                        "factsExtracted": context.facts_extracted,
-                        "timestamp": context.timestamp,
-                        "checksum": context.checksum,
-                        "expiresAt": int(time.time() * 1000) + self.resume_token_ttl,
+            await self._execute_with_resilience(
+                lambda: self.client.mutation(
+                    "mutable:set",
+                    {
+                        "namespace": "resume-tokens",
+                        "key": token,
+                        "value": {
+                            "resumeToken": token,
+                            "lastProcessedChunk": context.last_processed_chunk,
+                            "accumulatedContent": context.accumulated_content,
+                            "partialMemoryId": context.partial_memory_id,
+                            "factsExtracted": context.facts_extracted,
+                            "timestamp": context.timestamp,
+                            "checksum": context.checksum,
+                            "expiresAt": int(time.time() * 1000) + self.resume_token_ttl,
+                        },
                     },
-                },
+                ),
+                "mutable:set",
             )
 
             return token
@@ -207,8 +222,11 @@ class StreamErrorRecovery:
         import time
 
         try:
-            stored = await self.client.query(
-                "mutable:get", {"namespace": "resume-tokens", "key": token}
+            stored = await self._execute_with_resilience(
+                lambda: self.client.query(
+                    "mutable:get", {"namespace": "resume-tokens", "key": token}
+                ),
+                "mutable:get",
             )
 
             if not stored or not stored.get("value"):

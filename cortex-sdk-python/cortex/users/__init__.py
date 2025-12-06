@@ -111,7 +111,10 @@ class UsersAPI:
         # Client-side validation
         validate_user_id(user_id)
 
-        result = await self.client.query("immutable:get", filter_none_values({"type": "user", "id": user_id}))
+        result = await self._execute_with_resilience(
+            lambda: self.client.query("immutable:get", filter_none_values({"type": "user", "id": user_id})),
+            "immutable:get",
+        )
 
         if not result:
             return None
@@ -149,8 +152,11 @@ class UsersAPI:
         validate_user_id(user_id)
         validate_data(data, "data")
 
-        result = await self.client.mutation(
-            "immutable:store", {"type": "user", "id": user_id, "data": data}
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "immutable:store", {"type": "user", "id": user_id, "data": data}
+            ),
+            "immutable:store",
         )
 
         if not result:
@@ -207,7 +213,10 @@ class UsersAPI:
         if not opts.cascade:
             # Simple deletion - just the user profile
             try:
-                await self.client.mutation("immutable:purge", {"type": "user", "id": user_id})
+                await self._execute_with_resilience(
+                    lambda: self.client.mutation("immutable:purge", {"type": "user", "id": user_id}),
+                    "immutable:purge",
+                )
                 total_deleted = 1
             except Exception as e:
                 # Only ignore "not found" errors - user profile may not exist
@@ -299,8 +308,11 @@ class UsersAPI:
         validate_limit(limit, "limit")
 
         # Client-side implementation using immutable:list (like TypeScript SDK)
-        result = await self.client.query(
-            "immutable:list", filter_none_values({"type": "user", "limit": limit})
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "immutable:list", filter_none_values({"type": "user", "limit": limit})
+            ),
+            "immutable:list",
         )
 
         # Map immutable records to UserProfile objects
@@ -334,8 +346,11 @@ class UsersAPI:
         validate_offset(offset, "offset")
 
         # Note: offset is not supported by the Convex backend yet
-        result = await self.client.query(
-            "users:list", filter_none_values({"limit": limit})
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "users:list", filter_none_values({"limit": limit})
+            ),
+            "users:list",
         )
 
         # Handle if result is a list or dict
@@ -376,7 +391,10 @@ class UsersAPI:
         # Client-side validation
         # filters is optional dict - no specific validation needed
 
-        result = await self.client.query("users:count", filter_none_values({"filters": filters}))
+        result = await self._execute_with_resilience(
+            lambda: self.client.query("users:count", filter_none_values({"filters": filters})),
+            "users:count",
+        )
 
         return int(result)
 
@@ -487,14 +505,20 @@ class UsersAPI:
         }
 
         # Collect conversations
-        conversations = await self.client.query(
-            "conversations:list", filter_none_values({"userId": user_id, "limit": 10000})
+        conversations = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "conversations:list", filter_none_values({"userId": user_id, "limit": 10000})
+            ),
+            "conversations:list",
         )
         plan["conversations"] = conversations
 
         # Collect immutable records
-        immutable = await self.client.query(
-            "immutable:list", filter_none_values({"userId": user_id, "limit": 10000})
+        immutable = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "immutable:list", filter_none_values({"userId": user_id, "limit": 10000})
+            ),
+            "immutable:list",
         )
         plan["immutable"] = immutable
 
@@ -516,7 +540,10 @@ class UsersAPI:
         # Also add any registered spaces
         spaces_list: List[Any] = []
         try:
-            all_spaces = await self.client.query("memorySpaces:list", filter_none_values({"limit": 10000}))
+            all_spaces = await self._execute_with_resilience(
+                lambda: self.client.query("memorySpaces:list", filter_none_values({"limit": 10000})),
+                "memorySpaces:list",
+            )
             spaces_list = all_spaces if isinstance(all_spaces, list) else all_spaces.get("spaces", [])
             for space in spaces_list:
                 space_id = space.get("memorySpaceId")
@@ -534,9 +561,12 @@ class UsersAPI:
             space_id = space.get("memorySpaceId")
             if space_id:
                 try:
-                    facts = await self.client.query(
+                    facts = await self._execute_with_resilience(
+                        lambda sid=space_id: self.client.query(
+                            "facts:list",
+                            filter_none_values({"memorySpaceId": sid, "limit": 10000})
+                        ),
                         "facts:list",
-                        filter_none_values({"memorySpaceId": space_id, "limit": 10000})
                     )
                     fact_list = facts if isinstance(facts, list) else facts.get("facts", [])
                     # Filter for this user
@@ -733,15 +763,21 @@ class UsersAPI:
         issues = []
 
         # Check conversations
-        conv_count = await self.client.query(
-            "conversations:count", filter_none_values({"userId": user_id})
+        conv_count = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "conversations:count", filter_none_values({"userId": user_id})
+            ),
+            "conversations:count",
         )
         if conv_count > 0:
             issues.append(f"Found {conv_count} remaining conversations")
 
         # Check immutable
-        immutable_count = await self.client.query(
-            "immutable:count", filter_none_values({"userId": user_id})
+        immutable_count = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "immutable:count", filter_none_values({"userId": user_id})
+            ),
+            "immutable:count",
         )
         if immutable_count > 0:
             issues.append(f"Found {immutable_count} remaining immutable records")
@@ -1059,8 +1095,11 @@ class UsersAPI:
         validate_user_id(user_id)
         validate_version_number(version, "version")
 
-        result = await self.client.query(
-            "immutable:getVersion", filter_none_values({"type": "user", "id": user_id, "version": version})
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "immutable:getVersion", filter_none_values({"type": "user", "id": user_id, "version": version})
+            ),
+            "immutable:getVersion",
         )
 
         if not result:
@@ -1088,8 +1127,11 @@ class UsersAPI:
         # Client-side validation
         validate_user_id(user_id)
 
-        result = await self.client.query(
-            "immutable:getHistory", filter_none_values({"type": "user", "id": user_id})
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "immutable:getHistory", filter_none_values({"type": "user", "id": user_id})
+            ),
+            "immutable:getHistory",
         )
 
         return [
@@ -1119,9 +1161,12 @@ class UsersAPI:
         validate_user_id(user_id)
         validate_timestamp(timestamp, "timestamp")
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "immutable:getAtTimestamp",
+                filter_none_values({"type": "user", "id": user_id, "timestamp": timestamp}),
+            ),
             "immutable:getAtTimestamp",
-            filter_none_values({"type": "user", "id": user_id, "timestamp": timestamp}),
         )
 
         if not result:

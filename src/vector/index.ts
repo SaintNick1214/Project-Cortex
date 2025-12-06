@@ -165,10 +165,14 @@ export class VectorAPI {
     validateMemorySpaceId(memorySpaceId);
     validateMemoryId(memoryId);
 
-    const result = await this.client.query(api.memories.get, {
-      memorySpaceId,
-      memoryId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.memories.get, {
+          memorySpaceId,
+          memoryId,
+        }),
+      "vector:get",
+    );
 
     return result as MemoryEntry | null;
   }
@@ -193,17 +197,21 @@ export class VectorAPI {
     validateMemorySpaceId(memorySpaceId);
     validateSearchOptions(options);
 
-    const result = await this.client.query(api.memories.search, {
-      memorySpaceId,
-      query,
-      embedding: options?.embedding,
-      userId: options?.userId,
-      tags: options?.tags,
-      sourceType: options?.sourceType,
-      minImportance: options?.minImportance,
-      minScore: options?.minScore, // FIX: Forward minScore parameter
-      limit: options?.limit,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.memories.search, {
+          memorySpaceId,
+          query,
+          embedding: options?.embedding,
+          userId: options?.userId,
+          tags: options?.tags,
+          sourceType: options?.sourceType,
+          minImportance: options?.minImportance,
+          minScore: options?.minScore, // FIX: Forward minScore parameter
+          limit: options?.limit,
+        }),
+      "vector:search",
+    );
 
     return result as MemoryEntry[];
   }
@@ -232,10 +240,14 @@ export class VectorAPI {
 
     let result;
     try {
-      result = await this.client.mutation(api.memories.deleteMemory, {
-        memorySpaceId,
-        memoryId,
-      });
+      result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.memories.deleteMemory, {
+            memorySpaceId,
+            memoryId,
+          }),
+        "vector:delete",
+      );
     } catch (error) {
       this.handleConvexError(error);
     }
@@ -268,12 +280,16 @@ export class VectorAPI {
     // Client-side validation
     validateListFilter(filter);
 
-    const result = await this.client.query(api.memories.list, {
-      memorySpaceId: filter.memorySpaceId,
-      userId: filter.userId,
-      sourceType: filter.sourceType,
-      limit: filter.limit,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.memories.list, {
+          memorySpaceId: filter.memorySpaceId,
+          userId: filter.userId,
+          sourceType: filter.sourceType,
+          limit: filter.limit,
+        }),
+      "vector:list",
+    );
 
     return result as MemoryEntry[];
   }
@@ -293,11 +309,15 @@ export class VectorAPI {
     // Client-side validation
     validateCountFilter(filter);
 
-    const result = await this.client.query(api.memories.count, {
-      memorySpaceId: filter.memorySpaceId,
-      userId: filter.userId,
-      sourceType: filter.sourceType,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.memories.count, {
+          memorySpaceId: filter.memorySpaceId,
+          userId: filter.userId,
+          sourceType: filter.sourceType,
+        }),
+      "vector:count",
+    );
 
     return result;
   }
@@ -328,14 +348,18 @@ export class VectorAPI {
     validateMemoryId(memoryId);
     validateUpdateInput(updates);
 
-    const result = await this.client.mutation(api.memories.update, {
-      memorySpaceId,
-      memoryId,
-      content: updates.content,
-      embedding: updates.embedding,
-      importance: updates.importance,
-      tags: updates.tags,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.memories.update, {
+          memorySpaceId,
+          memoryId,
+          content: updates.content,
+          embedding: updates.embedding,
+          importance: updates.importance,
+          tags: updates.tags,
+        }),
+      "vector:update",
+    );
 
     return result as MemoryEntry;
   }
@@ -364,11 +388,15 @@ export class VectorAPI {
     validateMemoryId(memoryId);
     validateVersion(version);
 
-    const result = await this.client.query(api.memories.getVersion, {
-      memorySpaceId,
-      memoryId,
-      version,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.memories.getVersion, {
+          memorySpaceId,
+          memoryId,
+          version,
+        }),
+      "vector:getVersion",
+    );
 
     return result as {
       memoryId: string;
@@ -403,10 +431,14 @@ export class VectorAPI {
     validateMemorySpaceId(memorySpaceId);
     validateMemoryId(memoryId);
 
-    const result = await this.client.query(api.memories.getHistory, {
-      memorySpaceId,
-      memoryId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.memories.getHistory, {
+          memorySpaceId,
+          memoryId,
+        }),
+      "vector:getHistory",
+    );
 
     return result as Array<{
       memoryId: string;
@@ -436,11 +468,15 @@ export class VectorAPI {
     // Client-side validation
     validateDeleteManyFilter(filter);
 
-    const result = await this.client.mutation(api.memories.deleteMany, {
-      memorySpaceId: filter.memorySpaceId,
-      userId: filter.userId,
-      sourceType: filter.sourceType,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.memories.deleteMany, {
+          memorySpaceId: filter.memorySpaceId,
+          userId: filter.userId,
+          sourceType: filter.sourceType,
+        }),
+      "vector:deleteMany",
+    );
 
     return result as { deleted: number; memoryIds: string[] };
   }
@@ -470,12 +506,16 @@ export class VectorAPI {
     // Client-side validation
     validateExportOptions(options);
 
-    const result = await this.client.query(api.memories.exportMemories, {
-      memorySpaceId: options.memorySpaceId,
-      userId: options.userId,
-      format: options.format,
-      includeEmbeddings: options.includeEmbeddings,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.memories.exportMemories, {
+          memorySpaceId: options.memorySpaceId,
+          userId: options.userId,
+          format: options.format,
+          includeEmbeddings: options.includeEmbeddings,
+        }),
+      "vector:export",
+    );
 
     return result as {
       format: string;
@@ -512,13 +552,17 @@ export class VectorAPI {
     // Client-side validation
     validateUpdateManyInputs(filter, updates);
 
-    const result = await this.client.mutation(api.memories.updateMany, {
-      memorySpaceId: filter.memorySpaceId,
-      userId: filter.userId,
-      sourceType: filter.sourceType,
-      importance: updates.importance,
-      tags: updates.tags,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.memories.updateMany, {
+          memorySpaceId: filter.memorySpaceId,
+          userId: filter.userId,
+          sourceType: filter.sourceType,
+          importance: updates.importance,
+          tags: updates.tags,
+        }),
+      "vector:updateMany",
+    );
 
     return result as { updated: number; memoryIds: string[] };
   }
@@ -539,10 +583,14 @@ export class VectorAPI {
     validateMemorySpaceId(memorySpaceId);
     validateMemoryId(memoryId);
 
-    const result = await this.client.mutation(api.memories.archive, {
-      memorySpaceId,
-      memoryId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.memories.archive, {
+          memorySpaceId,
+          memoryId,
+        }),
+      "vector:archive",
+    );
 
     return result as {
       archived: boolean;
@@ -577,11 +625,15 @@ export class VectorAPI {
 
     const ts = typeof timestamp === "number" ? timestamp : timestamp.getTime();
 
-    const result = await this.client.query(api.memories.getAtTimestamp, {
-      memorySpaceId,
-      memoryId,
-      timestamp: ts,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.memories.getAtTimestamp, {
+          memorySpaceId,
+          memoryId,
+          timestamp: ts,
+        }),
+      "vector:getAtTimestamp",
+    );
 
     return result as {
       memoryId: string;

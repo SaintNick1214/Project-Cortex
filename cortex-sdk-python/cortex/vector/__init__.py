@@ -98,53 +98,56 @@ class VectorAPI:
         validate_memory_space_id(memory_space_id)
         validate_store_memory_input(input)
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "memories:store",
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "participantId": input.participant_id,
+                    "content": input.content,
+                    "contentType": input.content_type,
+                    "embedding": input.embedding,
+                    "sourceType": input.source.get("type") if isinstance(input.source, dict) else input.source.type,
+                    "sourceUserId": input.source.get("userId") if isinstance(input.source, dict) else getattr(input.source, "user_id", None),
+                    "sourceUserName": input.source.get("userName") if isinstance(input.source, dict) else getattr(input.source, "user_name", None),
+                    "userId": input.user_id,
+                    "agentId": getattr(input, "agent_id", None),  # Agent-owned memories support
+                    "messageRole": getattr(input, "message_role", None),  # For semantic search weighting
+                    # Enrichment fields (for bullet-proof retrieval)
+                    "enrichedContent": getattr(input, "enriched_content", None),  # Concatenated searchable content
+                    "factCategory": getattr(input, "fact_category", None),  # Category for filtering
+                    "conversationRef": (
+                        {
+                            "conversationId": input.conversation_ref.get("conversationId") if isinstance(input.conversation_ref, dict) else input.conversation_ref.conversation_id,
+                            "messageIds": (input.conversation_ref.get("messageIds") if isinstance(input.conversation_ref, dict) else input.conversation_ref.message_ids) or [],
+                        }
+                        if input.conversation_ref
+                        else None
+                    ),
+                    "immutableRef": (
+                        {
+                            "type": input.immutable_ref.get("type") if isinstance(input.immutable_ref, dict) else input.immutable_ref.type,
+                            "id": input.immutable_ref.get("id") if isinstance(input.immutable_ref, dict) else input.immutable_ref.id,
+                            "version": input.immutable_ref.get("version") if isinstance(input.immutable_ref, dict) else input.immutable_ref.version,
+                        }
+                        if input.immutable_ref
+                        else None
+                    ),
+                    "mutableRef": (
+                        {
+                            "namespace": input.mutable_ref.get("namespace") if isinstance(input.mutable_ref, dict) else input.mutable_ref.namespace,
+                            "key": input.mutable_ref.get("key") if isinstance(input.mutable_ref, dict) else input.mutable_ref.key,
+                            "snapshotValue": input.mutable_ref.get("snapshotValue") if isinstance(input.mutable_ref, dict) else input.mutable_ref.snapshot_value,
+                            "snapshotAt": input.mutable_ref.get("snapshotAt") if isinstance(input.mutable_ref, dict) else input.mutable_ref.snapshot_at,
+                        }
+                        if input.mutable_ref
+                        else None
+                    ),
+                    "importance": input.metadata.get("importance") if isinstance(input.metadata, dict) else input.metadata.importance,
+                    "tags": input.metadata.get("tags") if isinstance(input.metadata, dict) else input.metadata.tags,
+                }),
+            ),
             "memories:store",
-            filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "participantId": input.participant_id,
-                "content": input.content,
-                "contentType": input.content_type,
-                "embedding": input.embedding,
-            "sourceType": input.source.get("type") if isinstance(input.source, dict) else input.source.type,
-            "sourceUserId": input.source.get("userId") if isinstance(input.source, dict) else getattr(input.source, "user_id", None),
-            "sourceUserName": input.source.get("userName") if isinstance(input.source, dict) else getattr(input.source, "user_name", None),
-                "userId": input.user_id,
-                "agentId": getattr(input, "agent_id", None),  # Agent-owned memories support
-                "messageRole": getattr(input, "message_role", None),  # For semantic search weighting
-                # Enrichment fields (for bullet-proof retrieval)
-                "enrichedContent": getattr(input, "enriched_content", None),  # Concatenated searchable content
-                "factCategory": getattr(input, "fact_category", None),  # Category for filtering
-                "conversationRef": (
-                    {
-                        "conversationId": input.conversation_ref.get("conversationId") if isinstance(input.conversation_ref, dict) else input.conversation_ref.conversation_id,
-                        "messageIds": (input.conversation_ref.get("messageIds") if isinstance(input.conversation_ref, dict) else input.conversation_ref.message_ids) or [],
-                    }
-                    if input.conversation_ref
-                    else None
-                ),
-                "immutableRef": (
-                    {
-                        "type": input.immutable_ref.get("type") if isinstance(input.immutable_ref, dict) else input.immutable_ref.type,
-                        "id": input.immutable_ref.get("id") if isinstance(input.immutable_ref, dict) else input.immutable_ref.id,
-                        "version": input.immutable_ref.get("version") if isinstance(input.immutable_ref, dict) else input.immutable_ref.version,
-                    }
-                    if input.immutable_ref
-                    else None
-                ),
-                "mutableRef": (
-                    {
-                        "namespace": input.mutable_ref.get("namespace") if isinstance(input.mutable_ref, dict) else input.mutable_ref.namespace,
-                        "key": input.mutable_ref.get("key") if isinstance(input.mutable_ref, dict) else input.mutable_ref.key,
-                        "snapshotValue": input.mutable_ref.get("snapshotValue") if isinstance(input.mutable_ref, dict) else input.mutable_ref.snapshot_value,
-                        "snapshotAt": input.mutable_ref.get("snapshotAt") if isinstance(input.mutable_ref, dict) else input.mutable_ref.snapshot_at,
-                    }
-                    if input.mutable_ref
-                    else None
-                ),
-            "importance": input.metadata.get("importance") if isinstance(input.metadata, dict) else input.metadata.importance,
-            "tags": input.metadata.get("tags") if isinstance(input.metadata, dict) else input.metadata.tags,
-            }),
         )
 
         # Sync to graph if requested
@@ -179,8 +182,11 @@ class VectorAPI:
         validate_memory_space_id(memory_space_id)
         validate_memory_id(memory_id)
 
-        result = await self.client.query(
-            "memories:get", filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id})
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "memories:get", filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id})
+            ),
+            "memories:get",
         )
 
         if not result:
@@ -221,19 +227,22 @@ class VectorAPI:
         if options:
             validate_search_options(options)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "memories:search",
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "query": query,
+                    "embedding": opts.embedding,
+                    "userId": opts.user_id,
+                    "tags": opts.tags,
+                    "sourceType": opts.source_type,
+                    "minImportance": opts.min_importance,
+                    "minScore": opts.min_score,  # FIX: Forward min_score parameter
+                    "limit": opts.limit,
+                }),
+            ),
             "memories:search",
-            filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "query": query,
-                "embedding": opts.embedding,
-                "userId": opts.user_id,
-                "tags": opts.tags,
-                "sourceType": opts.source_type,
-                "minImportance": opts.min_importance,
-                "minScore": opts.min_score,  # FIX: Forward min_score parameter
-                "limit": opts.limit,
-            }),
         )
 
         return [MemoryEntry(**convert_convex_response(mem)) for mem in result]
@@ -283,9 +292,12 @@ class VectorAPI:
         if "tags" in updates:
             params["tags"] = updates["tags"]
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "memories:update",
+                filter_none_values(params),
+            ),
             "memories:update",
-            filter_none_values(params),
         )
 
         # Sync to graph if requested
@@ -323,9 +335,12 @@ class VectorAPI:
         validate_memory_space_id(memory_space_id)
         validate_memory_id(memory_id)
 
-        result = await self.client.mutation(
-            "memories:deleteMemory",  # Correct function name
-            filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "memories:deleteMemory",  # Correct function name
+                filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
+            ),
+            "memories:deleteMemory",
         )
 
         # Delete from graph with orphan cleanup
@@ -375,13 +390,16 @@ class VectorAPI:
         if filters.get("source_type") is not None:
             validate_source_type(filters["source_type"])
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "memories:updateMany",
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "filters": filters,
+                    "updates": updates,
+                }),
+            ),
             "memories:updateMany",
-            filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "filters": filters,
-                "updates": updates,
-            }),
         )
 
         return cast(Dict[str, Any], result)
@@ -414,9 +432,12 @@ class VectorAPI:
         if filters.get("source_type") is not None:
             validate_source_type(filters["source_type"])
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "memories:deleteMany",
+                filter_none_values({"memorySpaceId": memory_space_id, "filters": filters}),
+            ),
             "memories:deleteMany",
-            filter_none_values({"memorySpaceId": memory_space_id, "filters": filters}),
         )
 
         return cast(Dict[str, Any], result)
@@ -452,14 +473,17 @@ class VectorAPI:
         if source_type is not None:
             validate_source_type(source_type)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "memories:count",
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "userId": user_id,
+                    "participantId": participant_id,
+                    "sourceType": source_type,
+                }),
+            ),
             "memories:count",
-            filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "userId": user_id,
-                "participantId": participant_id,
-                "sourceType": source_type,
-            }),
         )
 
         return int(result)
@@ -507,16 +531,19 @@ class VectorAPI:
             validate_limit(limit)
 
         # Convex list doesn't support enrichFacts parameter
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "memories:list",
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "userId": user_id,
+                    "participantId": participant_id,
+                    "sourceType": source_type,
+                    "limit": limit,
+                    # enrichFacts not supported in Convex function
+                }),
+            ),
             "memories:list",
-            filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "userId": user_id,
-                "participantId": participant_id,
-                "sourceType": source_type,
-                "limit": limit,
-                # enrichFacts not supported in Convex function
-            }),
         )
 
         return [MemoryEntry(**convert_convex_response(mem)) for mem in result]
@@ -556,15 +583,18 @@ class VectorAPI:
         if user_id is not None:
             validate_user_id(user_id)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "memories:export",
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "userId": user_id,
+                    "format": format,
+                    "includeEmbeddings": include_embeddings,
+                    "includeFacts": include_facts,
+                }),
+            ),
             "memories:export",
-            filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "userId": user_id,
-                "format": format,
-                "includeEmbeddings": include_embeddings,
-                "includeFacts": include_facts,
-            }),
         )
 
         return cast(Dict[str, Any], result)
@@ -589,9 +619,12 @@ class VectorAPI:
         validate_memory_space_id(memory_space_id)
         validate_memory_id(memory_id)
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "memories:archive",
+                filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
+            ),
             "memories:archive",
-            filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
         )
 
         return cast(Dict[str, Any], result)
@@ -618,13 +651,16 @@ class VectorAPI:
         validate_memory_id(memory_id)
         validate_version(version)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "memories:getVersion",
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "memoryId": memory_id,
+                    "version": version,
+                }),
+            ),
             "memories:getVersion",
-            filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "memoryId": memory_id,
-                "version": version,
-            }),
         )
 
         return cast(Optional[Dict[str, Any]], result)
@@ -649,9 +685,12 @@ class VectorAPI:
         validate_memory_space_id(memory_space_id)
         validate_memory_id(memory_id)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "memories:getHistory",
+                filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
+            ),
             "memories:getHistory",
-            filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
         )
 
         return cast(List[Dict[str, Any]], result)
@@ -680,13 +719,16 @@ class VectorAPI:
         validate_memory_id(memory_id)
         validate_timestamp(timestamp)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "memories:getAtTimestamp",
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "memoryId": memory_id,
+                    "timestamp": timestamp,
+                }),
+            ),
             "memories:getAtTimestamp",
-            filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "memoryId": memory_id,
-                "timestamp": timestamp,
-            }),
         )
 
         return cast(Optional[Dict[str, Any]], result)

@@ -92,19 +92,22 @@ class A2AAPI:
         # Client-side validation
         validate_send_params(params)
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "a2a:send",
+                filter_none_values({
+                    "from": params.from_agent,
+                    "to": params.to_agent,
+                    "message": params.message,
+                    "userId": params.user_id,
+                    "contextId": params.context_id,
+                    "importance": params.importance,
+                    "trackConversation": params.track_conversation,
+                    "autoEmbed": params.auto_embed,
+                    "metadata": params.metadata,
+                }),
+            ),
             "a2a:send",
-            filter_none_values({
-                "from": params.from_agent,
-                "to": params.to_agent,
-                "message": params.message,
-                "userId": params.user_id,
-                "contextId": params.context_id,
-                "importance": params.importance,
-                "trackConversation": params.track_conversation,
-                "autoEmbed": params.auto_embed,
-                "metadata": params.metadata,
-            }),
         )
 
         return A2AMessage(**convert_convex_response(result))
@@ -145,18 +148,21 @@ class A2AAPI:
         # Client-side validation
         validate_request_params(params)
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "a2a:request",
+                filter_none_values({
+                    "from": params.from_agent,
+                    "to": params.to_agent,
+                    "message": params.message,
+                    "timeout": params.timeout,
+                    "retries": params.retries,
+                    "userId": params.user_id,
+                    "contextId": params.context_id,
+                    "importance": params.importance,
+                }),
+            ),
             "a2a:request",
-            filter_none_values({
-                "from": params.from_agent,
-                "to": params.to_agent,
-                "message": params.message,
-                "timeout": params.timeout,
-                "retries": params.retries,
-                "userId": params.user_id,
-                "contextId": params.context_id,
-                "importance": params.importance,
-            }),
         )
 
         if result.get("timeout"):
@@ -196,18 +202,21 @@ class A2AAPI:
         # Client-side validation
         validate_broadcast_params(params)
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "a2a:broadcast",
+                filter_none_values({
+                    "from": params.from_agent,
+                    "to": params.to_agents,
+                    "message": params.message,
+                    "userId": params.user_id,
+                    "contextId": params.context_id,
+                    "importance": params.importance,
+                    "trackConversation": params.track_conversation,
+                    "metadata": params.metadata,
+                }),
+            ),
             "a2a:broadcast",
-            filter_none_values({
-                "from": params.from_agent,
-                "to": params.to_agents,
-                "message": params.message,
-                "userId": params.user_id,
-                "contextId": params.context_id,
-                "importance": params.importance,
-                "trackConversation": params.track_conversation,
-                "metadata": params.metadata,
-            }),
         )
 
         return A2ABroadcastResult(**convert_convex_response(result))
@@ -263,19 +272,22 @@ class A2AAPI:
             offset=offset,
         )
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "a2a:getConversation",
+                filter_none_values({
+                    "agent1": agent1,
+                    "agent2": agent2,
+                    "since": since,
+                    "until": until,
+                    "minImportance": min_importance,
+                    "tags": tags,
+                    "userId": user_id,
+                    "limit": limit,
+                    "offset": offset,
+                }),
+            ),
             "a2a:getConversation",
-            filter_none_values({
-                "agent1": agent1,
-                "agent2": agent2,
-                "since": since,
-                "until": until,
-                "minImportance": min_importance,
-                "tags": tags,
-                "userId": user_id,
-                "limit": limit,
-                "offset": offset,
-            }),
         )
 
         return cast(Dict[str, Any], result)

@@ -593,3 +593,184 @@ class TestResiliencePresets:
         preset = ResiliencePresets.disabled()
         assert preset is not None
         assert preset.enabled is False
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# API Module Integration Tests
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+class TestAPIResilienceIntegration:
+    """Tests that API modules correctly use _execute_with_resilience."""
+
+    @pytest.mark.asyncio
+    async def test_api_calls_flow_through_resilience_layer(self):
+        """Verify that API calls are tracked by the resilience layer."""
+        from unittest.mock import AsyncMock, MagicMock
+
+        # Create a mock client
+        mock_client = MagicMock()
+        mock_client.query = AsyncMock(return_value={"id": "test-123", "name": "Test"})
+        mock_client.mutation = AsyncMock(return_value={"success": True})
+
+        # Create resilience layer that tracks calls
+        calls_tracked = []
+
+        class TrackingResilienceLayer:
+            async def execute(self, operation, operation_name):
+                calls_tracked.append(operation_name)
+                return await operation()
+
+        tracking_resilience = TrackingResilienceLayer()
+
+        # Test with FactsAPI
+        from cortex.facts import FactsAPI
+
+        facts_api = FactsAPI(mock_client, resilience=tracking_resilience)
+
+        # Call get - should flow through resilience
+        mock_client.query.return_value = None
+        await facts_api.get("space-1", "fact-123")
+
+        assert "facts:get" in calls_tracked
+
+    @pytest.mark.asyncio
+    async def test_api_works_without_resilience_layer(self):
+        """Verify that APIs work correctly without resilience (graceful fallback)."""
+        from unittest.mock import AsyncMock, MagicMock
+
+        mock_client = MagicMock()
+        mock_client.query = AsyncMock(
+            return_value={
+                "_id": "convex-id-123",
+                "factId": "fact-123",
+                "memorySpaceId": "space-1",
+                "fact": "Test fact",
+                "factType": "preference",
+                "subject": "test",
+                "confidence": 90,
+                "sourceType": "conversation",
+                "createdAt": 1234567890,
+                "updatedAt": 1234567890,
+                "version": 1,
+                "tags": ["test"],
+            }
+        )
+
+        # Create API without resilience
+        from cortex.facts import FactsAPI
+
+        facts_api = FactsAPI(mock_client, resilience=None)
+
+        # Should work without error
+        result = await facts_api.get("space-1", "fact-123")
+        assert result is not None
+        assert result.fact_id == "fact-123"
+
+    @pytest.mark.asyncio
+    async def test_resilience_layer_receives_correct_operation_names(self):
+        """Verify that operation names match the expected patterns."""
+        from unittest.mock import AsyncMock, MagicMock
+
+        mock_client = MagicMock()
+        mock_client.query = AsyncMock(return_value=[])
+        mock_client.mutation = AsyncMock(return_value={"success": True})
+
+        operation_names = []
+
+        class CapturingResilienceLayer:
+            async def execute(self, operation, operation_name):
+                operation_names.append(operation_name)
+                return await operation()
+
+        capturing_resilience = CapturingResilienceLayer()
+
+        # Test various API modules
+        from cortex.agents import AgentsAPI
+        from cortex.conversations import ConversationsAPI
+        from cortex.immutable import ImmutableAPI
+        from cortex.memory_spaces import MemorySpacesAPI
+        from cortex.mutable import MutableAPI
+        from cortex.vector import VectorAPI
+
+        # VectorAPI
+        vector_api = VectorAPI(mock_client, resilience=capturing_resilience)
+        await vector_api.list("space-1")
+        assert "memories:list" in operation_names
+
+        # ImmutableAPI
+        immutable_api = ImmutableAPI(mock_client, resilience=capturing_resilience)
+        mock_client.query.return_value = []
+        await immutable_api.list()
+        assert "immutable:list" in operation_names
+
+        # MutableAPI
+        mutable_api = MutableAPI(mock_client, resilience=capturing_resilience)
+        mock_client.query.return_value = None
+        await mutable_api.get("namespace", "key")
+        assert "mutable:get" in operation_names
+
+        # MemorySpacesAPI
+        spaces_api = MemorySpacesAPI(mock_client, resilience=capturing_resilience)
+        mock_client.query.return_value = []
+        await spaces_api.list()
+        assert "memorySpaces:list" in operation_names
+
+        # ConversationsAPI
+        conv_api = ConversationsAPI(mock_client, resilience=capturing_resilience)
+        mock_client.query.return_value = []
+        await conv_api.list(memory_space_id="space-1")
+        assert "conversations:list" in operation_names
+
+    @pytest.mark.asyncio
+    async def test_resilience_layer_handles_api_errors(self):
+        """Verify that errors from APIs propagate correctly through resilience."""
+        from unittest.mock import AsyncMock, MagicMock
+
+        mock_client = MagicMock()
+        mock_client.query = AsyncMock(side_effect=RuntimeError("API Error"))
+
+        # Create resilience that just passes through
+        class PassthroughResilienceLayer:
+            async def execute(self, operation, operation_name):
+                return await operation()
+
+        passthrough_resilience = PassthroughResilienceLayer()
+
+        from cortex.facts import FactsAPI
+
+        facts_api = FactsAPI(mock_client, resilience=passthrough_resilience)
+
+        # Error should propagate
+        with pytest.raises(RuntimeError, match="API Error"):
+            await facts_api.get("space-1", "fact-123")
+
+    @pytest.mark.asyncio
+    async def test_streaming_handlers_support_resilience(self):
+        """Verify that streaming handlers accept resilience parameter."""
+        from unittest.mock import AsyncMock, MagicMock
+
+        from cortex.memory.streaming.error_recovery import StreamErrorRecovery
+        from cortex.memory.streaming.progressive_storage_handler import (
+            ProgressiveStorageHandler,
+        )
+
+        mock_client = MagicMock()
+
+        # Should accept resilience parameter without error
+        handler = ProgressiveStorageHandler(
+            client=mock_client,
+            memory_space_id="space-1",
+            conversation_id="conv-1",
+            user_id="user-1",
+            resilience=None,  # Optional
+        )
+
+        recovery = StreamErrorRecovery(
+            client=mock_client,
+            resilience=None,  # Optional
+        )
+
+        # Verify they have the _execute_with_resilience method
+        assert hasattr(handler, "_execute_with_resilience")
+        assert hasattr(recovery, "_execute_with_resilience")

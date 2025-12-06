@@ -5,6 +5,8 @@ Shared fixtures and configuration for all Python SDK tests.
 
 PARALLEL-SAFE: Uses TestRunContext for isolated test data.
 Each test module gets its own run ID to prevent conflicts.
+
+PARALLEL EXECUTION: Tests run with pytest-xdist (-n auto) for 4-5x speedup.
 """
 
 import asyncio
@@ -15,6 +17,23 @@ from typing import AsyncGenerator
 
 import pytest
 from dotenv import load_dotenv
+
+
+def pytest_report_header(config):
+    """Print parallel execution info in pytest header."""
+    import multiprocessing
+    cpu_count = multiprocessing.cpu_count()
+    
+    # Check if xdist is being used
+    num_workers = getattr(config.option, "numprocesses", None)
+    if num_workers:
+        # Handle 'auto' mode
+        if num_workers == "auto":
+            return [f"🚀 parallel: -n auto → {cpu_count} workers ({cpu_count} CPU cores detected)"]
+        else:
+            return [f"🚀 parallel: {num_workers} workers ({cpu_count} CPU cores available)"]
+    else:
+        return ["⚠️  serial execution (use -n auto for ~4x speedup)"]
 
 # Load .env.local from project root to get graph database configuration
 # Note: override=False means command-line env vars take precedence over .env.local

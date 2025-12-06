@@ -19,6 +19,72 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.20.0] - 2025-12-06
+
+#### 🛡️ Complete Resilience Layer Coverage
+
+**All TypeScript SDK API calls now flow through the resilience layer for rate limiting, circuit breaking, concurrency control, and priority queuing. Coverage increased from ~9% to 100% of public API methods.**
+
+#### ✨ What's New
+
+**1. Full API Coverage**
+
+Every SDK API method now uses `executeWithResilience()` for consistent overload protection:
+
+| Module | Methods Wrapped | Notes |
+|--------|-----------------|-------|
+| `users` | 9 methods | Cascade deletion excluded (own error handling) |
+| `conversations` | 14 methods | All public methods |
+| `agents` | 10 methods | Cascade deletion excluded |
+| `memorySpaces` | 14 methods | All public methods |
+| `vector` | 14 methods | All public methods |
+| `facts` | 12 methods | All public methods |
+| `immutable` | 11 methods | All public methods |
+| `mutable` | 13 methods | All public methods |
+| `contexts` | 20 methods | All public methods |
+| `governance` | 8 methods | All public methods |
+| `a2a` | 4 methods | All public methods |
+| `memory` | 1 method | `restoreFromArchive` |
+
+**2. Consistent Operation Naming**
+
+All wrapped calls use the `module:operation` naming convention for metrics and logging:
+
+```typescript
+// Examples of operation names
+"users:get"
+"conversations:addMessage"
+"vector:search"
+"facts:store"
+"governance:enforce"
+```
+
+**3. Intentional Exclusions**
+
+The following remain unwrapped by design:
+
+- **Cascade deletion methods** (`users`, `agents`): Have their own error handling and rollback semantics
+- **Internal streaming modules** (`ProgressiveStorageHandler`, `ErrorRecovery`): Internal operations without direct resilience layer access
+- **Graph sync worker** (`GraphSyncWorker`): Uses reactive subscriptions, not direct API calls
+
+#### 🧪 Enhanced Test Coverage
+
+New SDK integration tests added to `tests/resilience.test.ts`:
+
+- Verifies all SDK APIs work correctly with resilience enabled
+- Tests resilience layer operation execution
+- Confirms health checks and request acceptance
+- Total: 50 tests (up from 41)
+
+#### 🔧 Technical Details
+
+- **130+ API calls** now wrapped with `executeWithResilience()`
+- **12 API modules** updated with consistent patterns
+- **Zero breaking changes** - all existing code continues to work
+- Resilience can still be disabled via `ResiliencePresets.disabled`
+
+---
+
 ### [0.19.1] - 2025-12-03
 
 #### 🛡️ Idempotent Graph Sync Operations
