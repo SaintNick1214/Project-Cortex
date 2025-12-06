@@ -220,15 +220,15 @@ jobs:
 
       - name: Verify npm publish
         run: |
-          echo "Waiting for npm registry to update..."
-          # Retry up to 6 times with 10s delay (60s total max wait)
+          echo "Verifying npm registry update..."
+          # Retry up to 6 times with 10s delay between retries (check first, then wait)
           for i in 1 2 3 4 5 6; do
-            sleep 10
             if npm view @cortexmemory/sdk version 2>/dev/null; then
               echo "✅ SDK published successfully!"
               exit 0
             fi
-            echo "Attempt $i: Package not yet visible, retrying..."
+            echo "Attempt $i: Package not yet visible, retrying in 10s..."
+            sleep 10
           done
           echo "❌ Package not found after 6 retries - publish verification failed"
           exit 1
@@ -290,15 +290,15 @@ jobs:
 
       - name: Verify npm publish
         run: |
-          echo "Waiting for npm registry to update..."
-          # Retry up to 6 times with 10s delay (60s total max wait)
+          echo "Verifying npm registry update..."
+          # Retry up to 6 times with 10s delay between retries (check first, then wait)
           for i in 1 2 3 4 5 6; do
-            sleep 10
             if npm view create-cortex-memories version 2>/dev/null; then
               echo "✅ Wizard published successfully!"
               exit 0
             fi
-            echo "Attempt $i: Package not yet visible, retrying..."
+            echo "Attempt $i: Package not yet visible, retrying in 10s..."
+            sleep 10
           done
           echo "❌ Package not found after 6 retries - publish verification failed"
           exit 1
@@ -426,15 +426,15 @@ jobs:
 
       - name: Verify npm publish
         run: |
-          echo "Waiting for npm registry to update..."
-          # Retry up to 6 times with 10s delay (60s total max wait)
+          echo "Verifying npm registry update..."
+          # Retry up to 6 times with 10s delay between retries (check first, then wait)
           for i in 1 2 3 4 5 6; do
-            sleep 10
             if npm view @cortexmemory/vercel-ai-provider version 2>/dev/null; then
               echo "✅ Vercel AI Provider published successfully!"
               exit 0
             fi
-            echo "Attempt $i: Package not yet visible, retrying..."
+            echo "Attempt $i: Package not yet visible, retrying in 10s..."
+            sleep 10
           done
           echo "❌ Package not found after 6 retries - publish verification failed"
           exit 1
@@ -569,15 +569,15 @@ jobs:
 
       - name: Verify npm publish
         run: |
-          echo "Waiting for npm registry to update..."
-          # Retry up to 6 times with 10s delay (60s total max wait)
+          echo "Verifying npm registry update..."
+          # Retry up to 6 times with 10s delay between retries (check first, then wait)
           for i in 1 2 3 4 5 6; do
-            sleep 10
             if npm view @cortexmemory/cli version 2>/dev/null; then
               echo "✅ CLI published successfully!"
               exit 0
             fi
-            echo "Attempt $i: Package not yet visible, retrying..."
+            echo "Attempt $i: Package not yet visible, retrying in 10s..."
+            sleep 10
           done
           echo "❌ Package not found after 6 retries - publish verification failed"
           exit 1
