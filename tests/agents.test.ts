@@ -492,9 +492,7 @@ describe("Agents API (Coordination Layer)", () => {
     });
 
     it("returns null for unregistered agent", async () => {
-      const result = await cortex.agents.get(
-        ctx.agentId("non-existent"),
-      );
+      const result = await cortex.agents.get(ctx.agentId("non-existent"));
       expect(result).toBeNull();
     });
 
@@ -607,7 +605,9 @@ describe("Agents API (Coordination Layer)", () => {
     });
 
     it("returns false for unregistered agent", async () => {
-      const exists = await cortex.agents.exists(ctx.agentId("non-existent-check"));
+      const exists = await cortex.agents.exists(
+        ctx.agentId("non-existent-check"),
+      );
       expect(exists).toBe(false);
     });
   });
@@ -667,6 +667,7 @@ describe("Agents API (Coordination Layer)", () => {
         type: "user-agent",
         participants: {
           userId: "user-1",
+          agentId: agentId,
           participantId: agentId,
         },
       });
@@ -1055,6 +1056,7 @@ describe("Agents API (Coordination Layer)", () => {
         type: "user-agent",
         participants: {
           userId: ctx.userId("bulk-test"),
+          agentId: bulkAgent1Id,
           participantId: bulkAgent1Id,
         },
       });
@@ -1067,6 +1069,7 @@ describe("Agents API (Coordination Layer)", () => {
         agentResponse: "OK",
         userId: ctx.userId("bulk-test"),
         userName: "Test User",
+        agentId: bulkAgent1Id,
       });
 
       // Verify memory was created

@@ -48,7 +48,7 @@ describe("GDPR: Cascade Deletion", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: SPACE,
-        participants: { userId: TEST_USER },
+        participants: { userId: TEST_USER, agentId: "test-agent" },
       });
 
       const mem = await cortex.vector.store(SPACE, {
@@ -103,8 +103,8 @@ describe("GDPR: Cascade Deletion", () => {
     });
 
     it("cascade respects memory space boundaries", async () => {
-      const SPACE_A = "cascade-space-a";
-      const SPACE_B = "cascade-space-b";
+      const SPACE_A = ctx.memorySpaceId("cascade-space-a");
+      const SPACE_B = ctx.memorySpaceId("cascade-space-b");
 
       // Register both spaces
       await cortex.memorySpaces.register({
@@ -148,7 +148,7 @@ describe("GDPR: Cascade Deletion", () => {
     });
 
     it("cascade handles empty memory space", async () => {
-      const EMPTY_SPACE = "empty-cascade-space";
+      const EMPTY_SPACE = ctx.memorySpaceId("empty-cascade-space");
 
       await cortex.memorySpaces.register({
         memorySpaceId: EMPTY_SPACE,
@@ -170,7 +170,7 @@ describe("GDPR: Cascade Deletion", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: "test-user" },
+        participants: { userId: "test-user", agentId: "test-agent" },
       });
 
       const remembered = await cortex.memory.remember({
@@ -178,6 +178,7 @@ describe("GDPR: Cascade Deletion", () => {
         conversationId: conv.conversationId,
         userId: "test-user",
         userName: "Test User",
+        agentId: "test-agent",
         userMessage: "To be forgotten",
         agentResponse: "Will be forgotten",
       });
@@ -211,7 +212,7 @@ describe("GDPR: Cascade Deletion", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: "test-user" },
+        participants: { userId: "test-user", agentId: "test-agent" },
       });
 
       const remembered = await cortex.memory.remember({
@@ -219,6 +220,7 @@ describe("GDPR: Cascade Deletion", () => {
         conversationId: conv.conversationId,
         userId: "test-user",
         userName: "Test User",
+        agentId: "test-agent",
         userMessage: "Memory to delete",
         agentResponse: "Conversation to keep",
       });
@@ -245,7 +247,7 @@ describe("GDPR: Cascade Deletion", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: "test-user" },
+        participants: { userId: "test-user", agentId: "test-agent" },
       });
 
       // Create unrelated memory (no conversationRef)
@@ -513,7 +515,7 @@ describe("GDPR: Cascade Deletion", () => {
 
   describe("Statistics After Deletion", () => {
     it("stats reflect deletions immediately", async () => {
-      const SPACE = "stats-after-delete";
+      const SPACE = ctx.memorySpaceId("stats-after-delete");
 
       await cortex.memorySpaces.register({
         memorySpaceId: SPACE,

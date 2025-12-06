@@ -1,5 +1,35 @@
 # @cortexmemory/cli Changelog
 
+## [0.1.1] - 2025-12-02
+
+### Added
+
+- Auto-load `.env.local` from current directory for seamless project configuration
+- `cortex config add-deployment` now writes to `.env.local` (use `--json-only` for ~/.cortexrc only)
+- `cortex config add-deployment` prompts interactively when arguments are missing
+- `cortex config remove-deployment` now removes from `.env.local` (use `--json-only` for ~/.cortexrc only)
+- `cortex config remove-deployment` prompts interactively when name is missing
+- `cortex config path` now shows both JSON config and `.env.local` paths
+- `cortex config path` now displays currently set environment variables
+- `cortex users list` now shows usage stats (memories, conversations, facts) instead of raw data
+- `cortex users list --no-stats` option for faster listing without gathering stats
+- `cortex db clear` now shows target database and allows selecting from multiple deployments
+- `cortex db clear` simplified confirmation (y/N instead of typing exact phrase)
+- `cortex db stats` now shows all 11 tables with comprehensive statistics
+- `cortex db clear` now clears ALL 11 tables: agents, contexts, conversations, facts, memories, memorySpaces, immutable, mutable, governancePolicies, governanceEnforcement, graphSyncQueue
+- All `cortex db` commands now prompt to select database when multiple deployments configured
+- Added usage examples in command descriptions (e.g., `cortex config add-deployment --help`)
+
+### Fixed
+
+- Fixed `cortex db clear` timing out on agents by using fast unregister (was 3.6s/agent with cascade, now 5ms/agent)
+- Fixed all commands hanging after completion by properly closing SDK client connections
+- Fixed `cortex config add-deployment` failing to parse `-u/--url` option due to conflict with global options
+- Fixed path truncation to show end of path (filename) instead of beginning
+- Fixed help screen not showing commands when run without arguments
+- Fixed `cortex db clear` and other commands failing with "limit must be at most 1000" error
+- Fixed `cortex db clear` not clearing all data (now clears agents, contexts, memory spaces, users)
+
 ## [0.1.0] - 2025-11-29
 
 ### Added

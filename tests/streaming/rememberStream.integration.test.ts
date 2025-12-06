@@ -17,6 +17,7 @@ const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
 const TIMESTAMP = Date.now();
 const TEST_MEMORY_SPACE = `test-streaming-space-${TIMESTAMP}`;
 const TEST_USER_ID = `test-user-streaming-${TIMESTAMP}`;
+const TEST_AGENT_ID = `test-agent-streaming-${TIMESTAMP}`;
 
 describe("rememberStream Integration Tests", () => {
   let cortex: Cortex;
@@ -56,6 +57,7 @@ describe("rememberStream Integration Tests", () => {
         responseStream: testStream(),
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
       });
 
       expect(result.fullResponse).toBe("Hello from stream");
@@ -83,6 +85,7 @@ describe("rememberStream Integration Tests", () => {
         responseStream: stream,
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
       });
 
       expect(result.fullResponse).toBe("Chunk One");
@@ -112,6 +115,7 @@ describe("rememberStream Integration Tests", () => {
           responseStream: testStream(),
           userId: TEST_USER_ID,
           userName: "Test User",
+          agentId: TEST_AGENT_ID,
         },
         {
           hooks: {
@@ -150,6 +154,7 @@ describe("rememberStream Integration Tests", () => {
         responseStream: testStream(),
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
       });
 
       expect(result.streamMetrics).toBeDefined();
@@ -178,6 +183,7 @@ describe("rememberStream Integration Tests", () => {
         responseStream: slowStream(),
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
       });
 
       expect(result.performance).toBeDefined();
@@ -202,6 +208,7 @@ describe("rememberStream Integration Tests", () => {
           responseStream: emptyStream(),
           userId: TEST_USER_ID,
           userName: "Test User",
+          agentId: TEST_AGENT_ID,
         }),
       ).rejects.toThrow(/no content/i);
     });
@@ -222,6 +229,7 @@ describe("rememberStream Integration Tests", () => {
           responseStream: errorStream(),
           userId: TEST_USER_ID,
           userName: "Test User",
+          agentId: TEST_AGENT_ID,
         }),
       ).rejects.toThrow();
     });
@@ -242,6 +250,7 @@ describe("rememberStream Integration Tests", () => {
         responseStream: simpleStream(),
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
       });
 
       // Old API fields still work
@@ -272,6 +281,7 @@ describe("rememberStream Integration Tests", () => {
         responseStream: contentStream(),
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
       });
 
       expect(result.fullResponse).toBe("The password is Blue123");
@@ -299,6 +309,7 @@ describe("rememberStream Integration Tests", () => {
         responseStream: stream(),
         userId: TEST_USER_ID,
         userName: "Test User",
+        agentId: TEST_AGENT_ID,
         importance: 90,
         tags: ["critical", "security"],
       });

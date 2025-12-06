@@ -40,6 +40,8 @@ describe("Complex Integration Tests", () => {
     it("handles complete workflow through all 4 layers", async () => {
       // Use ctx-scoped IDs for parallel execution isolation
       const SUPPORT_SPACE = ctx.memorySpaceId("support-agent");
+      const FINANCE_SPACE = ctx.memorySpaceId("finance-agent");
+      const CRM_SPACE = ctx.memorySpaceId("crm-agent");
       const AGENT_SUPPORT = ctx.agentId("support");
       const TOOL_TICKETING = `tool-ticketing-${ctx.runId}`;
 
@@ -57,14 +59,14 @@ describe("Complex Integration Tests", () => {
       });
 
       await cortex.memorySpaces.register({
-        memorySpaceId: "finance-agent-space",
+        memorySpaceId: FINANCE_SPACE,
         name: "Finance Agent",
         type: "team",
         participants: [{ id: "agent-finance", type: "agent" }],
       });
 
       await cortex.memorySpaces.register({
-        memorySpaceId: "crm-agent-space",
+        memorySpaceId: CRM_SPACE,
         name: "CRM Agent",
         type: "team",
         participants: [{ id: "agent-crm", type: "agent" }],
@@ -74,10 +76,11 @@ describe("Complex Integration Tests", () => {
       // LAYER 1: User initiates conversation
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       const conversation = await cortex.conversations.create({
-        memorySpaceId: "support-agent-space",
+        memorySpaceId: SUPPORT_SPACE,
         type: "user-agent",
         participants: {
           userId: "user-vip-123",
+          agentId: "agent-support",
           participantId: "agent-support",
         },
       });
@@ -104,7 +107,7 @@ describe("Complex Integration Tests", () => {
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       // LAYER 2: Agent stores searchable memories
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      await cortex.vector.store("support-agent-space", {
+      await cortex.vector.store(SUPPORT_SPACE, {
         content: "VIP customer requested refund due to product issues",
         contentType: "summarized",
         source: { type: "conversation", userId: "user-vip-123" },
@@ -126,7 +129,7 @@ describe("Complex Integration Tests", () => {
       // LAYER 3: Extract structured facts
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       await cortex.facts.store({
-        memorySpaceId: "support-agent-space",
+        memorySpaceId: SUPPORT_SPACE,
         participantId: "agent-support",
         fact: "User has been customer for 3 years",
         factType: "identity",
@@ -143,7 +146,7 @@ describe("Complex Integration Tests", () => {
       });
 
       await cortex.facts.store({
-        memorySpaceId: "support-agent-space",
+        memorySpaceId: SUPPORT_SPACE,
         participantId: "agent-support",
         fact: "User experiencing product quality issues",
         factType: "knowledge",
@@ -162,7 +165,7 @@ describe("Complex Integration Tests", () => {
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       const rootContext = await cortex.contexts.create({
         purpose: "Process VIP refund request",
-        memorySpaceId: "support-agent-space",
+        memorySpaceId: SUPPORT_SPACE,
         userId: "user-vip-123",
         conversationRef: {
           conversationId: conversation.conversationId,
@@ -181,7 +184,7 @@ describe("Complex Integration Tests", () => {
       // Delegate to finance agent (cross-space collaboration)
       const financeContext = await cortex.contexts.create({
         purpose: "Approve $299.99 refund for VIP customer",
-        memorySpaceId: "finance-agent-space",
+        memorySpaceId: FINANCE_SPACE,
         parentId: rootContext.contextId,
         userId: "user-vip-123",
         conversationRef: rootContext.conversationRef,
@@ -195,7 +198,7 @@ describe("Complex Integration Tests", () => {
       // Delegate to CRM agent
       const crmContext = await cortex.contexts.create({
         purpose: "Update customer record with refund issue",
-        memorySpaceId: "crm-agent-space",
+        memorySpaceId: CRM_SPACE,
         parentId: rootContext.contextId,
         userId: "user-vip-123",
         data: {
@@ -216,7 +219,7 @@ describe("Complex Integration Tests", () => {
 
       // 2. Memories reference conversation
       const memories = await cortex.vector.list({
-        memorySpaceId: "support-agent-space",
+        memorySpaceId: SUPPORT_SPACE,
       });
       const refundMemory = memories.find((m) => m.content.includes("refund"));
 
@@ -228,7 +231,7 @@ describe("Complex Integration Tests", () => {
 
       // 3. Facts reference conversation and have high confidence
       const facts = await cortex.facts.list({
-        memorySpaceId: "support-agent-space",
+        memorySpaceId: SUPPORT_SPACE,
       });
 
       expect(facts.length).toBeGreaterThanOrEqual(2);
@@ -253,8 +256,8 @@ describe("Complex Integration Tests", () => {
       );
 
       // 6. Cross-space collaboration works
-      expect(financeContext.memorySpaceId).toBe("finance-agent-space");
-      expect(crmContext.memorySpaceId).toBe("crm-agent-space");
+      expect(financeContext.memorySpaceId).toBe(FINANCE_SPACE);
+      expect(crmContext.memorySpaceId).toBe(CRM_SPACE);
       expect(financeContext.rootId).toBe(rootContext.contextId);
       expect(crmContext.rootId).toBe(rootContext.contextId);
 
@@ -267,8 +270,8 @@ describe("Complex Integration Tests", () => {
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       // SETUP: Two companies, each with Hive spaces
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      const companyA = "company-acme-hive";
-      const companyB = "company-beta-hive";
+      const companyA = ctx.memorySpaceId("company-acme-hive");
+      const companyB = ctx.memorySpaceId("company-beta-hive");
 
       // Company A Hive (multiple tools share one space)
       await cortex.memorySpaces.register({
@@ -475,7 +478,7 @@ describe("Complex Integration Tests", () => {
       // SCENARIO: Demonstrate infinite context capability
       // Create large conversation history, then retrieve specific information
 
-      const LARGE_HIVE = "infinite-context-demo";
+      const LARGE_HIVE = ctx.memorySpaceId("infinite-context-demo");
 
       await cortex.memorySpaces.register({
         memorySpaceId: LARGE_HIVE,
@@ -491,7 +494,7 @@ describe("Complex Integration Tests", () => {
       const conv = await cortex.conversations.create({
         memorySpaceId: LARGE_HIVE,
         type: "user-agent",
-        participants: { userId: "user-demo", participantId: "agent-assistant" },
+        participants: { userId: "user-demo", agentId: "agent-demo", participantId: "agent-assistant" },
       });
 
       // Simulate 50 message exchange (scaled down from thousands for test speed)
@@ -567,7 +570,7 @@ describe("Complex Integration Tests", () => {
 
   describe("Scenario 4: GDPR Cascade Deletion", () => {
     it("deletes user data across all layers", async () => {
-      const GDPR_SPACE = "gdpr-test-space";
+      const GDPR_SPACE = ctx.memorySpaceId("gdpr-test-space");
 
       await cortex.memorySpaces.register({
         memorySpaceId: GDPR_SPACE,
@@ -581,7 +584,7 @@ describe("Complex Integration Tests", () => {
       const conv = await cortex.conversations.create({
         memorySpaceId: GDPR_SPACE,
         type: "user-agent",
-        participants: { userId: TARGET_USER, participantId: "agent-test" },
+        participants: { userId: TARGET_USER, agentId: "agent-gdpr", participantId: "agent-test" },
       });
 
       await cortex.conversations.addMessage({
@@ -642,7 +645,7 @@ describe("Complex Integration Tests", () => {
 
   describe("Scenario 5: Versioning Across Layers", () => {
     it("tracks changes across conversations, memories, facts, contexts", async () => {
-      const VERSION_SPACE = "version-test-space";
+      const VERSION_SPACE = ctx.memorySpaceId("version-test-space");
 
       await cortex.memorySpaces.register({
         memorySpaceId: VERSION_SPACE,
@@ -703,7 +706,7 @@ describe("Complex Integration Tests", () => {
 
   describe("Scenario 6: Cross-Layer Search & Retrieval", () => {
     it("searches across all layers for comprehensive results", async () => {
-      const SEARCH_SPACE = "search-test-space";
+      const SEARCH_SPACE = ctx.memorySpaceId("search-test-space");
 
       await cortex.memorySpaces.register({
         memorySpaceId: SEARCH_SPACE,
@@ -717,7 +720,7 @@ describe("Complex Integration Tests", () => {
       const conv = await cortex.conversations.create({
         memorySpaceId: SEARCH_SPACE,
         type: "user-agent",
-        participants: { userId: "user-search", participantId: "agent-search" },
+        participants: { userId: "user-search", agentId: "agent-search-main", participantId: "agent-search" },
       });
 
       await cortex.conversations.addMessage({
@@ -787,7 +790,7 @@ describe("Complex Integration Tests", () => {
 
   describe("Scenario 7: Memory Space Statistics Dashboard", () => {
     it("aggregates stats from all layers", async () => {
-      const STATS_SPACE = "stats-dashboard-space";
+      const STATS_SPACE = ctx.memorySpaceId("stats-dashboard-space");
 
       await cortex.memorySpaces.register({
         memorySpaceId: STATS_SPACE,
@@ -803,7 +806,7 @@ describe("Complex Integration Tests", () => {
       const conv = await cortex.conversations.create({
         memorySpaceId: STATS_SPACE,
         type: "user-agent",
-        participants: { userId: "user-stats", participantId: "agent-stats" },
+        participants: { userId: "user-stats", agentId: "agent-stats-main", participantId: "agent-stats" },
       });
 
       for (let i = 0; i < 5; i++) {

@@ -512,25 +512,54 @@ def validate_remember_params(params: RememberParams) -> None:
 
     Raises:
         MemoryValidationError: If params are invalid
+
+    Ownership rules:
+        - Either user_id or agent_id must be provided
+        - If user_id is provided, agent_id is also required (user-agent conversations)
+        - If user_id is provided, user_name is required
     """
-    # Required fields
+    # Required fields (always)
     validate_memory_space_id(params.memory_space_id)
     validate_conversation_id(params.conversation_id)
     validate_content(params.user_message, "user_message")
     validate_content(params.agent_response, "agent_response")
-    validate_user_id(params.user_id)
 
-    if not params.user_name or not isinstance(params.user_name, str):
+    # Owner validation
+    has_user_id = params.user_id and isinstance(params.user_id, str) and params.user_id.strip() != ""
+    has_agent_id = params.agent_id and isinstance(params.agent_id, str) and params.agent_id.strip() != ""
+
+    # Either user_id or agent_id must be provided
+    if not has_user_id and not has_agent_id:
         raise MemoryValidationError(
-            "user_name is required and must be a string",
-            "MISSING_REQUIRED_FIELD",
-            "user_name",
+            "Either user_id or agent_id must be provided for memory ownership. "
+            "Use user_id for user-owned memories, agent_id for agent-owned memories.",
+            "OWNER_REQUIRED",
+            "user_id/agent_id",
         )
 
-    if params.user_name.strip() == "":
+    # If user_id is provided, agent_id is required (user-agent conversations)
+    if has_user_id and not has_agent_id:
         raise MemoryValidationError(
-            "user_name cannot be empty", "MISSING_REQUIRED_FIELD", "user_name"
+            "agent_id is required when user_id is provided. "
+            "User-agent conversations require both a user and an agent participant.",
+            "AGENT_REQUIRED_FOR_USER_CONVERSATION",
+            "agent_id",
         )
+
+    # If user_id is provided, user_name is required
+    if has_user_id:
+        if not params.user_name or not isinstance(params.user_name, str):
+            raise MemoryValidationError(
+                "user_name is required when user_id is provided",
+                "MISSING_REQUIRED_FIELD",
+                "user_name",
+            )
+        if params.user_name.strip() == "":
+            raise MemoryValidationError(
+                "user_name cannot be empty when user_id is provided",
+                "MISSING_REQUIRED_FIELD",
+                "user_name",
+            )
 
     # Optional fields validation
     if params.importance is not None:

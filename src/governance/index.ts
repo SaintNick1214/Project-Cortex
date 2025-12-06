@@ -57,6 +57,26 @@ export class GovernanceAPI {
   }
 
   /**
+   * Handle ConvexError from direct Convex calls
+   */
+  private handleConvexError(error: unknown): never {
+    if (
+      error &&
+      typeof error === "object" &&
+      "data" in error &&
+      (error as { data: unknown }).data !== undefined
+    ) {
+      const convexError = error as { data: unknown };
+      const errorData =
+        typeof convexError.data === "string"
+          ? convexError.data
+          : JSON.stringify(convexError.data);
+      throw new Error(errorData);
+    }
+    throw error;
+  }
+
+  /**
    * Set governance policy for organization or memory space
    *
    * @param policy - Complete governance policy
@@ -336,11 +356,15 @@ export class GovernanceAPI {
     // Validate enforcement options
     validateEnforcementOptions(options);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return await this.client.mutation(
-      api.governance.enforce as FunctionReference<"mutation">,
-      { options },
-    );
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return await this.client.mutation(
+        api.governance.enforce as FunctionReference<"mutation">,
+        { options },
+      );
+    } catch (error) {
+      this.handleConvexError(error);
+    }
   }
 
   /**

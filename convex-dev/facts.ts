@@ -5,7 +5,7 @@
  * Structured knowledge with relationships
  */
 
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -155,12 +155,12 @@ export const update = mutation({
       .first();
 
     if (!existing) {
-      throw new Error("FACT_NOT_FOUND");
+      throw new ConvexError("FACT_NOT_FOUND");
     }
 
     // Verify memorySpace owns this fact
     if (existing.memorySpaceId !== args.memorySpaceId) {
-      throw new Error("PERMISSION_DENIED");
+      throw new ConvexError("PERMISSION_DENIED");
     }
 
     const now = Date.now();
@@ -231,12 +231,12 @@ export const deleteFact = mutation({
       .first();
 
     if (!fact) {
-      throw new Error("FACT_NOT_FOUND");
+      throw new ConvexError("FACT_NOT_FOUND");
     }
 
     // Verify memorySpace owns this fact
     if (fact.memorySpaceId !== args.memorySpaceId) {
-      throw new Error("PERMISSION_DENIED");
+      throw new ConvexError("PERMISSION_DENIED");
     }
 
     await ctx.db.patch(fact._id, {
@@ -1316,6 +1316,44 @@ export const consolidate = mutation({
       consolidated: true,
       keptFactId: args.keepFactId,
       mergedCount: args.factIds.length - 1,
+    };
+  },
+});
+
+/**
+ * Delete multiple facts by their IDs (batch delete for cascade operations)
+ * Much faster than calling deleteFact multiple times
+ * Uses index lookups instead of full table scan to avoid memory issues with large tables
+ */
+export const deleteByIds = mutation({
+  args: {
+    factIds: v.array(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const deletedIds: string[] = [];
+    const now = Date.now();
+
+    // Look up each fact by index to avoid full table scan
+    // This is O(n) index lookups vs O(entire table) memory usage
+    for (const factId of args.factIds) {
+      const fact = await ctx.db
+        .query("facts")
+        .withIndex("by_factId", (q) => q.eq("factId", factId))
+        .first();
+
+      if (fact) {
+        // Soft delete by marking as invalidated
+        await ctx.db.patch(fact._id, {
+          validUntil: now,
+          updatedAt: now,
+        });
+        deletedIds.push(factId);
+      }
+    }
+
+    return {
+      deleted: deletedIds.length,
+      factIds: deletedIds,
     };
   },
 });

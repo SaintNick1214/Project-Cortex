@@ -96,6 +96,13 @@ async function createUniqueConstraints(adapter: GraphAdapter): Promise<void> {
       name: "user_id",
     },
 
+    // Agent
+    {
+      label: "Agent",
+      property: "agentId",
+      name: "agent_id",
+    },
+
     // Participant (Hive Mode)
     {
       label: "Participant",
@@ -159,12 +166,14 @@ async function createPerformanceIndexes(adapter: GraphAdapter): Promise<void> {
       name: "conversation_memory_space",
     },
     { label: "Conversation", property: "userId", name: "conversation_user" },
+    { label: "Conversation", property: "agentId", name: "conversation_agent" },
 
     // Memory indexes
     { label: "Memory", property: "importance", name: "memory_importance" },
     { label: "Memory", property: "sourceType", name: "memory_source_type" },
     { label: "Memory", property: "memorySpaceId", name: "memory_memory_space" },
     { label: "Memory", property: "userId", name: "memory_user" },
+    { label: "Memory", property: "agentId", name: "memory_agent" },
     { label: "Memory", property: "contentType", name: "memory_content_type" },
 
     // Fact indexes

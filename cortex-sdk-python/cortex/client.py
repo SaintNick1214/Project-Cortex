@@ -5,7 +5,9 @@ Main entry point for the Cortex SDK providing access to all memory operations.
 """
 
 import asyncio
-from typing import Any
+import os
+import warnings
+from typing import Any, Optional
 
 from convex import ConvexClient
 
@@ -25,7 +27,7 @@ from .resilience import (
     ResilienceMetrics,
     ResiliencePresets,
 )
-from .types import CortexConfig
+from .types import CortexConfig, GraphConfig, GraphConnectionConfig, LLMConfig
 from .users import UsersAPI
 from .vector import VectorAPI
 
@@ -57,6 +59,168 @@ class Cortex:
         >>> await cortex.close()
     """
 
+    @staticmethod
+    def _auto_configure_llm() -> Optional[LLMConfig]:
+        """
+        Auto-configure LLM from environment variables.
+
+        Uses a two-gate approach:
+        - Gate 1: An API key must be present (OPENAI_API_KEY or ANTHROPIC_API_KEY)
+        - Gate 2: CORTEX_FACT_EXTRACTION must be explicitly set to 'true'
+
+        This prevents accidental API costs - users must explicitly opt-in.
+
+        Returns:
+            LLMConfig if both gates pass, None otherwise
+        """
+        fact_extraction_enabled = os.environ.get("CORTEX_FACT_EXTRACTION") == "true"
+
+        if not fact_extraction_enabled:
+            return None
+
+        # Check providers in priority order
+        openai_key = os.environ.get("OPENAI_API_KEY")
+        if openai_key:
+            return LLMConfig(provider="openai", api_key=openai_key)
+
+        anthropic_key = os.environ.get("ANTHROPIC_API_KEY")
+        if anthropic_key:
+            return LLMConfig(provider="anthropic", api_key=anthropic_key)
+
+        # CORTEX_FACT_EXTRACTION=true but no API key found - warn user
+        warnings.warn(
+            "[Cortex] CORTEX_FACT_EXTRACTION=true but no API key found. "
+            "Set OPENAI_API_KEY or ANTHROPIC_API_KEY to enable automatic fact extraction.",
+            UserWarning,
+            stacklevel=2,
+        )
+
+        return None
+
+    @staticmethod
+    async def _auto_configure_graph() -> Optional[GraphConfig]:
+        """
+        Auto-configure graph database from environment variables.
+
+        Uses a two-gate approach:
+        - Gate 1: Connection credentials must be present (NEO4J_URI or MEMGRAPH_URI + auth)
+        - Gate 2: CORTEX_GRAPH_SYNC must be explicitly set to 'true'
+
+        This prevents accidental graph connections - users must explicitly opt-in.
+
+        Returns:
+            GraphConfig if both gates pass, None otherwise
+        """
+        graph_sync_enabled = os.environ.get("CORTEX_GRAPH_SYNC") == "true"
+
+        if not graph_sync_enabled:
+            return None
+
+        # Check providers in priority order
+        neo4j_uri = os.environ.get("NEO4J_URI")
+        memgraph_uri = os.environ.get("MEMGRAPH_URI")
+
+        if neo4j_uri and memgraph_uri:
+            warnings.warn(
+                "[Cortex] Both NEO4J_URI and MEMGRAPH_URI set. Using Neo4j.",
+                UserWarning,
+                stacklevel=2,
+            )
+
+        if neo4j_uri:
+            try:
+                from .graph.adapters import CypherGraphAdapter
+
+                adapter = CypherGraphAdapter()
+                await adapter.connect(GraphConnectionConfig(
+                    uri=neo4j_uri,
+                    username=os.environ.get("NEO4J_USERNAME", "neo4j"),
+                    password=os.environ.get("NEO4J_PASSWORD", ""),
+                ))
+                return GraphConfig(adapter=adapter, auto_sync=True)
+            except ImportError:
+                warnings.warn(
+                    "[Cortex] neo4j package not installed. "
+                    "Run: pip install cortex-memory[graph]",
+                    UserWarning,
+                    stacklevel=2,
+                )
+                return None
+            except Exception as e:
+                print(f"[Cortex] Failed to connect to Neo4j: {e}")
+                return None
+
+        if memgraph_uri:
+            try:
+                from .graph.adapters import CypherGraphAdapter
+
+                adapter = CypherGraphAdapter()
+                await adapter.connect(GraphConnectionConfig(
+                    uri=memgraph_uri,
+                    username=os.environ.get("MEMGRAPH_USERNAME", "memgraph"),
+                    password=os.environ.get("MEMGRAPH_PASSWORD", ""),
+                ))
+                return GraphConfig(adapter=adapter, auto_sync=True)
+            except ImportError:
+                warnings.warn(
+                    "[Cortex] neo4j package not installed. "
+                    "Run: pip install cortex-memory[graph]",
+                    UserWarning,
+                    stacklevel=2,
+                )
+                return None
+            except Exception as e:
+                print(f"[Cortex] Failed to connect to Memgraph: {e}")
+                return None
+
+        # CORTEX_GRAPH_SYNC=true but no URI found - warn user
+        warnings.warn(
+            "[Cortex] CORTEX_GRAPH_SYNC=true but no graph database URI found. "
+            "Set NEO4J_URI or MEMGRAPH_URI to enable graph sync.",
+            UserWarning,
+            stacklevel=2,
+        )
+
+        return None
+
+    @classmethod
+    async def create(cls, config: CortexConfig) -> "Cortex":
+        """
+        Create a Cortex instance with automatic configuration.
+
+        This factory method enables async auto-configuration of:
+        - Graph database (if CORTEX_GRAPH_SYNC=true and connection credentials set)
+        - LLM for fact extraction (if CORTEX_FACT_EXTRACTION=true and API key set)
+
+        Use this instead of `Cortex()` when you want environment-based auto-config.
+
+        Example:
+            >>> # With env vars: CORTEX_GRAPH_SYNC=true, NEO4J_URI=bolt://localhost:7687
+            >>> cortex = await Cortex.create(CortexConfig(convex_url=os.getenv("CONVEX_URL")))
+            >>> # Graph is automatically connected and sync worker started
+
+        Args:
+            config: Cortex configuration (explicit config takes priority over env vars)
+
+        Returns:
+            Fully configured Cortex instance
+        """
+        # Auto-configure graph if not explicitly provided
+        graph_config = config.graph or await cls._auto_configure_graph()
+
+        # Auto-configure LLM if not explicitly provided
+        llm_config = config.llm or cls._auto_configure_llm()
+
+        # Create a new config with the potentially auto-configured components
+        updated_config = CortexConfig(
+            convex_url=config.convex_url,
+            graph=graph_config,
+            resilience=config.resilience,
+            llm=llm_config,
+        )
+
+        return cls(updated_config)
+
     def __init__(self, config: CortexConfig) -> None:
         """
         Initialize Cortex SDK.
@@ -71,6 +235,10 @@ class Cortex:
 
         # Get graph adapter if configured
         self.graph_adapter = config.graph.adapter if config.graph else None
+
+        # Store LLM config for fact extraction
+        # Use explicit config if provided, otherwise auto-configure from environment
+        self._llm_config: Optional[LLMConfig] = config.llm or Cortex._auto_configure_llm()
 
         # Initialize resilience layer (default: enabled with balanced settings)
         resilience_config = (
@@ -88,7 +256,9 @@ class Cortex:
         self.mutable = MutableAPI(self.client, self.graph_adapter, self._resilience)
         self.vector = VectorAPI(self.client, self.graph_adapter, self._resilience)
         self.facts = FactsAPI(self.client, self.graph_adapter, self._resilience)
-        self.memory = MemoryAPI(self.client, self.graph_adapter, self._resilience)
+        self.memory = MemoryAPI(
+            self.client, self.graph_adapter, self._resilience, self._llm_config
+        )
         self.contexts = ContextsAPI(self.client, self.graph_adapter, self._resilience)
         self.users = UsersAPI(self.client, self.graph_adapter, self._resilience)
         self.agents = AgentsAPI(self.client, self.graph_adapter, self._resilience)

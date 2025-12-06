@@ -1,7 +1,8 @@
 /**
  * Graph Sync Utilities
  *
- * Functions for syncing Cortex entities to graph database
+ * Functions for syncing Cortex entities to graph database.
+ * All sync operations use MERGE semantics for idempotency.
  */
 
 import type { GraphAdapter } from "../types";
@@ -16,30 +17,33 @@ import type {
 /**
  * Sync a Context to graph database
  *
- * Creates a Context node with properties
+ * Creates or updates a Context node with properties.
+ * Uses MERGE for idempotent operations.
  */
 export async function syncContextToGraph(
   context: Context,
   adapter: GraphAdapter,
 ): Promise<string> {
-  // Create Context node
-  const nodeId = await adapter.createNode({
-    label: "Context",
-    properties: {
-      contextId: context.contextId,
-      memorySpaceId: context.memorySpaceId,
-      purpose: context.purpose,
-      status: context.status,
-      depth: context.depth,
-      userId: context.userId || null,
-      parentId: context.parentId || null,
-      rootId: context.rootId || null,
-      participants: context.participants,
-      createdAt: context.createdAt,
-      updatedAt: context.updatedAt,
-      completedAt: context.completedAt || null,
+  const nodeId = await adapter.mergeNode(
+    {
+      label: "Context",
+      properties: {
+        contextId: context.contextId,
+        memorySpaceId: context.memorySpaceId,
+        purpose: context.purpose,
+        status: context.status,
+        depth: context.depth,
+        userId: context.userId || null,
+        parentId: context.parentId || null,
+        rootId: context.rootId || null,
+        participants: context.participants,
+        createdAt: context.createdAt,
+        updatedAt: context.updatedAt,
+        completedAt: context.completedAt || null,
+      },
     },
-  });
+    { contextId: context.contextId },
+  );
 
   return nodeId;
 }
@@ -47,26 +51,30 @@ export async function syncContextToGraph(
 /**
  * Sync a Conversation to graph database
  *
- * Creates a Conversation node with properties
+ * Creates or updates a Conversation node with properties.
+ * Uses MERGE for idempotent operations.
  */
 export async function syncConversationToGraph(
   conversation: Conversation,
   adapter: GraphAdapter,
 ): Promise<string> {
-  // Create Conversation node
-  const nodeId = await adapter.createNode({
-    label: "Conversation",
-    properties: {
-      conversationId: conversation.conversationId,
-      memorySpaceId: conversation.memorySpaceId,
-      participantId: conversation.participantId || null,
-      type: conversation.type,
-      userId: conversation.participants.userId || null,
-      messageCount: conversation.messageCount,
-      createdAt: conversation.createdAt,
-      updatedAt: conversation.updatedAt,
+  const nodeId = await adapter.mergeNode(
+    {
+      label: "Conversation",
+      properties: {
+        conversationId: conversation.conversationId,
+        memorySpaceId: conversation.memorySpaceId,
+        participantId: conversation.participantId || null,
+        type: conversation.type,
+        userId: conversation.participants.userId || null,
+        agentId: conversation.participants.agentId || null,
+        messageCount: conversation.messageCount,
+        createdAt: conversation.createdAt,
+        updatedAt: conversation.updatedAt,
+      },
     },
-  });
+    { conversationId: conversation.conversationId },
+  );
 
   return nodeId;
 }
@@ -74,31 +82,35 @@ export async function syncConversationToGraph(
 /**
  * Sync a Memory to graph database
  *
- * Creates a Memory node with truncated content (graph DBs aren't for full-text storage)
+ * Creates or updates a Memory node with truncated content.
+ * Uses MERGE for idempotent operations.
  */
 export async function syncMemoryToGraph(
   memory: MemoryEntry,
   adapter: GraphAdapter,
 ): Promise<string> {
-  // Create Memory node (truncate content for graph)
-  const nodeId = await adapter.createNode({
-    label: "Memory",
-    properties: {
-      memoryId: memory.memoryId,
-      memorySpaceId: memory.memorySpaceId,
-      participantId: memory.participantId || null,
-      userId: memory.userId || null,
-      content: memory.content.substring(0, 200), // Truncate for graph
-      contentType: memory.contentType,
-      sourceType: memory.sourceType,
-      sourceUserId: memory.sourceUserId || null,
-      importance: memory.importance,
-      tags: memory.tags,
-      version: memory.version,
-      createdAt: memory.createdAt,
-      updatedAt: memory.updatedAt,
+  const nodeId = await adapter.mergeNode(
+    {
+      label: "Memory",
+      properties: {
+        memoryId: memory.memoryId,
+        memorySpaceId: memory.memorySpaceId,
+        participantId: memory.participantId || null,
+        userId: memory.userId || null,
+        agentId: memory.agentId || null,
+        content: memory.content.substring(0, 200), // Truncate for graph
+        contentType: memory.contentType,
+        sourceType: memory.sourceType,
+        sourceUserId: memory.sourceUserId || null,
+        importance: memory.importance,
+        tags: memory.tags,
+        version: memory.version,
+        createdAt: memory.createdAt,
+        updatedAt: memory.updatedAt,
+      },
     },
-  });
+    { memoryId: memory.memoryId },
+  );
 
   return nodeId;
 }
@@ -106,34 +118,37 @@ export async function syncMemoryToGraph(
 /**
  * Sync a Fact to graph database
  *
- * Creates a Fact node and optionally creates Entity nodes and relationships
+ * Creates or updates a Fact node.
+ * Uses MERGE for idempotent operations.
  */
 export async function syncFactToGraph(
   fact: FactRecord,
   adapter: GraphAdapter,
 ): Promise<string> {
-  // Create Fact node
-  const nodeId = await adapter.createNode({
-    label: "Fact",
-    properties: {
-      factId: fact.factId,
-      memorySpaceId: fact.memorySpaceId,
-      participantId: fact.participantId || null,
-      fact: fact.fact,
-      factType: fact.factType,
-      subject: fact.subject || null,
-      predicate: fact.predicate || null,
-      object: fact.object || null,
-      confidence: fact.confidence,
-      sourceType: fact.sourceType,
-      tags: fact.tags,
-      version: fact.version,
-      supersededBy: fact.supersededBy || null,
-      supersedes: fact.supersedes || null,
-      createdAt: fact.createdAt,
-      updatedAt: fact.updatedAt,
+  const nodeId = await adapter.mergeNode(
+    {
+      label: "Fact",
+      properties: {
+        factId: fact.factId,
+        memorySpaceId: fact.memorySpaceId,
+        participantId: fact.participantId || null,
+        fact: fact.fact,
+        factType: fact.factType,
+        subject: fact.subject || null,
+        predicate: fact.predicate || null,
+        object: fact.object || null,
+        confidence: fact.confidence,
+        sourceType: fact.sourceType,
+        tags: fact.tags,
+        version: fact.version,
+        supersededBy: fact.supersededBy || null,
+        supersedes: fact.supersedes || null,
+        createdAt: fact.createdAt,
+        updatedAt: fact.updatedAt,
+      },
     },
-  });
+    { factId: fact.factId },
+  );
 
   return nodeId;
 }
@@ -141,25 +156,28 @@ export async function syncFactToGraph(
 /**
  * Sync a MemorySpace to graph database
  *
- * Creates a MemorySpace node
+ * Creates or updates a MemorySpace node.
+ * Uses MERGE for idempotent operations.
  */
 export async function syncMemorySpaceToGraph(
   memorySpace: MemorySpace,
   adapter: GraphAdapter,
 ): Promise<string> {
-  // Create MemorySpace node
-  const nodeId = await adapter.createNode({
-    label: "MemorySpace",
-    properties: {
-      memorySpaceId: memorySpace.memorySpaceId,
-      name: memorySpace.name || null,
-      type: memorySpace.type,
-      status: memorySpace.status,
-      participantCount: memorySpace.participants.length,
-      createdAt: memorySpace.createdAt,
-      updatedAt: memorySpace.updatedAt,
+  const nodeId = await adapter.mergeNode(
+    {
+      label: "MemorySpace",
+      properties: {
+        memorySpaceId: memorySpace.memorySpaceId,
+        name: memorySpace.name || null,
+        type: memorySpace.type,
+        status: memorySpace.status,
+        participantCount: memorySpace.participants.length,
+        createdAt: memorySpace.createdAt,
+        updatedAt: memorySpace.updatedAt,
+      },
     },
-  });
+    { memorySpaceId: memorySpace.memorySpaceId },
+  );
 
   return nodeId;
 }
@@ -195,6 +213,9 @@ export async function findGraphNodeId(
     case "User":
       propertyName = "userId";
       break;
+    case "Agent":
+      propertyName = "agentId";
+      break;
     case "Participant":
       propertyName = "participantId";
       break;
@@ -209,109 +230,100 @@ export async function findGraphNodeId(
 }
 
 /**
- * Create or get a User node
+ * Ensure a User node exists in the graph
  *
- * Helper for ensuring User nodes exist before creating relationships
+ * Uses MERGE for idempotent creation.
  */
 export async function ensureUserNode(
   userId: string,
   adapter: GraphAdapter,
 ): Promise<string> {
-  // Try to find existing node
-  const existingId = await findGraphNodeId("User", userId, adapter);
-  if (existingId) {
-    return existingId;
-  }
-
-  // Create new User node
-  return await adapter.createNode({
-    label: "User",
-    properties: {
-      userId,
-      createdAt: Date.now(),
+  return await adapter.mergeNode(
+    {
+      label: "User",
+      properties: {
+        userId,
+        createdAt: Date.now(),
+      },
     },
-  });
+    { userId },
+  );
 }
 
 /**
- * Create or get a Participant node
+ * Ensure an Agent node exists in the graph
  *
- * Helper for ensuring Participant nodes exist for Hive Mode
+ * Uses MERGE for idempotent creation.
+ */
+export async function ensureAgentNode(
+  agentId: string,
+  adapter: GraphAdapter,
+): Promise<string> {
+  return await adapter.mergeNode(
+    {
+      label: "Agent",
+      properties: {
+        agentId,
+        createdAt: Date.now(),
+      },
+    },
+    { agentId },
+  );
+}
+
+/**
+ * Ensure a Participant node exists in the graph (Hive Mode)
+ *
+ * Uses MERGE for idempotent creation.
  */
 export async function ensureParticipantNode(
   participantId: string,
   adapter: GraphAdapter,
 ): Promise<string> {
-  // Try to find existing node
-  const existingId = await findGraphNodeId(
-    "Participant",
-    participantId,
-    adapter,
-  );
-  if (existingId) {
-    return existingId;
-  }
-
-  // Create new Participant node
-  return await adapter.createNode({
-    label: "Participant",
-    properties: {
-      participantId,
-      createdAt: Date.now(),
+  return await adapter.mergeNode(
+    {
+      label: "Participant",
+      properties: {
+        participantId,
+        createdAt: Date.now(),
+      },
     },
-  });
+    { participantId },
+  );
 }
 
 /**
- * Create or get an Entity node
+ * Ensure an Entity node exists in the graph
  *
- * Helper for fact entity relationships
- * Uses findNodes + createNode pattern with error handling
+ * Helper for fact entity relationships.
+ * Uses MERGE for idempotent creation.
  */
 export async function ensureEntityNode(
   entityName: string,
   entityType: string,
   adapter: GraphAdapter,
 ): Promise<string> {
-  // Try to find existing node by name
-  const nodes = await adapter.findNodes("Entity", { name: entityName }, 1);
-
-  if (nodes.length > 0) {
-    return nodes[0].id!;
-  }
-
-  // Create new Entity node if not found
-  try {
-    return await adapter.createNode({
+  return await adapter.mergeNode(
+    {
       label: "Entity",
       properties: {
         name: entityName,
         type: entityType,
         createdAt: Date.now(),
       },
-    });
-  } catch (error) {
-    // If creation failed due to constraint (race condition), try finding again
-    const retryNodes = await adapter.findNodes(
-      "Entity",
-      { name: entityName },
-      1,
-    );
-    if (retryNodes.length > 0) {
-      return retryNodes[0].id!;
-    }
-    throw error;
-  }
+    },
+    { name: entityName },
+  );
 }
 
 /**
- * Create or get an enriched Entity node (for bullet-proof fact retrieval)
+ * Ensure an enriched Entity node exists in the graph
  *
  * Creates Entity nodes with additional metadata from enriched extraction:
  * - entityType: Specific type (e.g., "preferred_name", "full_name", "company")
  * - fullValue: Full value if available (e.g., "Alexander Johnson" for "Alex")
  *
- * Uses findNodes + createNode pattern with update for existing nodes
+ * Uses MERGE for idempotent creation with property updates.
  */
 export async function ensureEnrichedEntityNode(
   entityName: string,
@@ -319,27 +331,8 @@ export async function ensureEnrichedEntityNode(
   fullValue: string | undefined,
   adapter: GraphAdapter,
 ): Promise<string> {
-  // Try to find existing node by name
-  const nodes = await adapter.findNodes("Entity", { name: entityName }, 1);
-
-  if (nodes.length > 0) {
-    const existingNode = nodes[0];
-
-    // Update node if we have enriched data that wasn't there before
-    if (fullValue && existingNode.properties.fullValue !== fullValue) {
-      await adapter.updateNode(existingNode.id!, {
-        fullValue,
-        entityType, // Update type if we have more specific info
-        updatedAt: Date.now(),
-      });
-    }
-
-    return existingNode.id!;
-  }
-
-  // Create new enriched Entity node if not found
-  try {
-    return await adapter.createNode({
+  return await adapter.mergeNode(
+    {
       label: "Entity",
       properties: {
         name: entityName,
@@ -347,18 +340,10 @@ export async function ensureEnrichedEntityNode(
         entityType, // Specific entity type (e.g., "preferred_name")
         fullValue: fullValue || null, // Full value if available
         createdAt: Date.now(),
+        updatedAt: Date.now(),
       },
-    });
-  } catch (error) {
-    // If creation failed due to constraint (race condition), try finding again
-    const retryNodes = await adapter.findNodes(
-      "Entity",
-      { name: entityName },
-      1,
-    );
-    if (retryNodes.length > 0) {
-      return retryNodes[0].id!;
-    }
-    throw error;
-  }
+    },
+    { name: entityName },
+  );
 }
+

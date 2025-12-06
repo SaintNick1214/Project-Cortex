@@ -73,6 +73,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
         type: "user-agent",
         participants: {
           userId: "user-123",
+          agentId: "agent-456",
           participantId: "agent-456",
         },
         metadata: {
@@ -150,6 +151,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
         type: "user-agent",
         participants: {
           userId: "user-1",
+          agentId: "agent-1",
           participantId: "agent-1",
         },
       });
@@ -165,6 +167,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
           type: "user-agent",
           participants: {
             userId: "user-2",
+          agentId: "agent-2",
             participantId: "agent-2",
           },
         }),
@@ -186,6 +189,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
         type: "user-agent",
         participants: {
           userId: "user-msg-debug",
+          agentId: "agent-msg-debug",
           participantId: "agent-msg-debug",
         },
       });
@@ -271,6 +275,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
         type: "user-agent",
         participants: {
           userId: "user-list-debug",
+          agentId: "agent-list-1",
           participantId: "agent-list-1",
         },
       });
@@ -281,6 +286,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
         type: "user-agent",
         participants: {
           userId: "user-list-debug",
+          agentId: "agent-list-2",
           participantId: "agent-list-2",
         },
       });
@@ -371,6 +377,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
         type: "user-agent",
         participants: {
           userId: "user-delete-debug",
+          agentId: "agent-delete-debug",
           participantId: "agent-delete-debug",
         },
       });

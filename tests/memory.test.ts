@@ -4,6 +4,7 @@
  * Tests dual-layer orchestration (ACID + Vector) and enrichment capabilities
  */
 
+import { jest } from "@jest/globals";
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
@@ -101,7 +102,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
       });
 
       testConversationId = conv.conversationId;
@@ -117,6 +118,7 @@ describe("Memory Convenience API (Layer 3)", () => {
           "The password Blue has been securely stored in your vault",
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
+        agentId: TEST_AGENT_ID,
       });
 
       // Verify structure
@@ -148,9 +150,11 @@ describe("Memory Convenience API (Layer 3)", () => {
         conversationId: testConversationId,
         userMessage: "Remember this important fact",
         // Agent response with meaningful content (not just acknowledgment)
-        agentResponse: "This important fact has been stored for future reference",
+        agentResponse:
+          "This important fact has been stored for future reference",
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
+        agentId: TEST_AGENT_ID,
       });
 
       // Verify both memories created (agent response has meaningful content)
@@ -183,6 +187,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         agentResponse: "Got it!", // Pure acknowledgment - no semantic value
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
+        agentId: TEST_AGENT_ID,
       });
 
       // Only user memory should be created (agent acknowledgment filtered)
@@ -209,6 +214,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         agentResponse: "Embedded!",
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
+        agentId: TEST_AGENT_ID,
         generateEmbedding: mockEmbed,
       });
 
@@ -235,6 +241,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         agentResponse: "Short response",
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
+        agentId: TEST_AGENT_ID,
         extractContent: mockExtract,
       });
 
@@ -256,6 +263,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         agentResponse: "Stored securely",
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
+        agentId: TEST_AGENT_ID,
         importance: 95,
         tags: ["password", "security", "critical"],
       });
@@ -279,6 +287,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         agentResponse: "OK",
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
+        agentId: TEST_AGENT_ID,
       });
 
       expect(result.memories[0].importance).toBe(50);
@@ -295,7 +304,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
       });
 
       testConversationId = conv.conversationId;
@@ -307,6 +316,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         agentResponse: "Noted",
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
+        agentId: TEST_AGENT_ID,
       });
 
       testMemoryId = result.memories[0].memoryId;
@@ -371,7 +381,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
       });
 
       testConversationId = conv.conversationId;
@@ -383,6 +393,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         agentResponse: "Understood",
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
+        agentId: TEST_AGENT_ID,
       });
 
       testMemoryId = result.memories[0].memoryId;
@@ -451,7 +462,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
       });
 
       testConversationId = conv.conversationId;
@@ -464,6 +475,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         agentResponse: "I've stored that password",
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
+        agentId: TEST_AGENT_ID,
         importance: 100,
         tags: ["password", "security"],
       });
@@ -475,6 +487,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         agentResponse: "Noted",
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
+        agentId: TEST_AGENT_ID,
         importance: 60,
         tags: ["preferences"],
       });
@@ -543,7 +556,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
       });
 
       _testConversationId = conv.conversationId;
@@ -824,7 +837,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
       });
 
       // Remember
@@ -835,6 +848,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         agentResponse: "Stored!",
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
+        agentId: TEST_AGENT_ID,
         importance: 95,
         tags: ["integration", "password"],
       });
@@ -902,7 +916,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
       });
 
       const remembered = await cortex.memory.remember({
@@ -912,6 +926,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         agentResponse: "OK",
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
+        agentId: TEST_AGENT_ID,
       });
 
       const forgot = await cortex.memory.forget(
@@ -946,7 +961,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
       });
 
       const beforeACID = await client.query(api.conversations.get, {
@@ -965,6 +980,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         agentResponse: "OK",
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
+        agentId: TEST_AGENT_ID,
       });
 
       const afterACID = await client.query(api.conversations.get, {
@@ -984,7 +1000,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
       });
 
       const remembered = await cortex.memory.remember({
@@ -994,6 +1010,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         agentResponse: "OK",
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
+        agentId: TEST_AGENT_ID,
       });
 
       await cortex.memory.delete(
@@ -1025,7 +1042,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: PARTICIPANT },
+        participants: { userId: TEST_USER_ID, agentId: PARTICIPANT, participantId: PARTICIPANT },
       });
 
       const result = await cortex.memory.remember({
@@ -1036,6 +1053,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         agentResponse: "Processed by tool",
         userId: TEST_USER_ID,
         userName: TEST_USER_NAME,
+        agentId: TEST_AGENT_ID,
         importance: 85,
         tags: ["hive-test"],
       });
@@ -1098,6 +1116,7 @@ describe("Memory Convenience API (Layer 3)", () => {
           memorySpaceId: TEST_MEMSPACE_ID,
           participants: {
             userId: TEST_USER_ID,
+          agentId: TEST_AGENT_ID,
             participantId: TEST_AGENT_ID,
           },
         });
@@ -1144,6 +1163,7 @@ describe("Memory Convenience API (Layer 3)", () => {
             agentResponse: conv.agent,
             userId: TEST_USER_ID,
             userName: "Alex Johnson",
+            agentId: TEST_AGENT_ID,
             generateEmbedding,
             extractContent: summarizeConversation,
             importance: conv.fact === "api-password" ? 100 : 70,
@@ -1382,6 +1402,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         type: "user-agent",
         participants: {
           userId: "test-user",
+          agentId: "test-agent",
           participantId: "test-agent",
         },
       });
@@ -1393,6 +1414,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         agentResponse: "Got it!",
         userId: "test-user",
         userName: "Test User",
+        agentId: "test-agent",
         importance: 80,
       });
 
@@ -1430,6 +1452,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         type: "user-agent",
         participants: {
           userId: "test-user",
+          agentId: "test-agent",
           participantId: "test-agent",
         },
       });
@@ -1441,6 +1464,7 @@ describe("Memory Convenience API (Layer 3)", () => {
         agentResponse: "OK",
         userId: "test-user",
         userName: "Test User",
+        agentId: "test-agent",
       });
 
       const memoryId = result.memories[0].memoryId;
@@ -1464,26 +1488,42 @@ describe("Memory Convenience API (Layer 3)", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID, participantId: TEST_AGENT_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID, participantId: TEST_AGENT_ID },
       });
       testConversationId = conv.conversationId;
     });
 
     describe("remember() validation", () => {
-      it("throws on missing memorySpaceId", async () => {
-        await expect(
-          cortex.memory.remember({
-            memorySpaceId: undefined as any,
-            conversationId: testConversationId,
-            userMessage: "Test",
-            agentResponse: "OK",
-            userId: TEST_USER_ID,
-            userName: TEST_USER_NAME,
-          }),
-        ).rejects.toThrow("memorySpaceId is required");
+      it("uses default memorySpaceId with warning when not provided", async () => {
+        // Capture console.warn calls
+        const warnSpy = jest
+          .spyOn(console, "warn")
+          .mockImplementation(() => {});
+
+        // Should succeed (not throw) when memorySpaceId is not provided
+        const result = await cortex.memory.remember({
+          memorySpaceId: undefined as any,
+          conversationId: testConversationId,
+          userMessage: "Test default memorySpace",
+          agentResponse: "OK",
+          userId: TEST_USER_ID,
+          userName: TEST_USER_NAME,
+          agentId: TEST_AGENT_ID,
+        });
+
+        // Should have succeeded
+        expect(result).toBeDefined();
+        expect(result.memories.length).toBeGreaterThan(0);
+
+        // Should have emitted a warning
+        expect(warnSpy).toHaveBeenCalledWith(
+          expect.stringContaining("No memorySpaceId provided"),
+        );
+
+        warnSpy.mockRestore();
       });
 
-      it("throws on empty memorySpaceId", async () => {
+      it("throws on empty memorySpaceId (whitespace)", async () => {
         await expect(
           cortex.memory.remember({
             memorySpaceId: "   ",
@@ -1492,6 +1532,7 @@ describe("Memory Convenience API (Layer 3)", () => {
             agentResponse: "OK",
             userId: TEST_USER_ID,
             userName: TEST_USER_NAME,
+            agentId: TEST_AGENT_ID,
           }),
         ).rejects.toThrow("memorySpaceId cannot be empty");
       });
@@ -1505,6 +1546,7 @@ describe("Memory Convenience API (Layer 3)", () => {
             agentResponse: "OK",
             userId: TEST_USER_ID,
             userName: TEST_USER_NAME,
+            agentId: TEST_AGENT_ID,
           }),
         ).rejects.toThrow("conversationId is required");
       });
@@ -1518,6 +1560,7 @@ describe("Memory Convenience API (Layer 3)", () => {
             agentResponse: "OK",
             userId: TEST_USER_ID,
             userName: TEST_USER_NAME,
+            agentId: TEST_AGENT_ID,
           }),
         ).rejects.toThrow("userMessage is required");
       });
@@ -1531,6 +1574,7 @@ describe("Memory Convenience API (Layer 3)", () => {
             agentResponse: "OK",
             userId: TEST_USER_ID,
             userName: TEST_USER_NAME,
+            agentId: TEST_AGENT_ID,
           }),
         ).rejects.toThrow("userMessage cannot be empty");
       });
@@ -1544,21 +1588,22 @@ describe("Memory Convenience API (Layer 3)", () => {
             agentResponse: undefined as any,
             userId: TEST_USER_ID,
             userName: TEST_USER_NAME,
+            agentId: TEST_AGENT_ID,
           }),
         ).rejects.toThrow("agentResponse is required");
       });
 
-      it("throws on missing userId", async () => {
+      it("throws on missing owner (neither userId nor agentId)", async () => {
         await expect(
           cortex.memory.remember({
             memorySpaceId: TEST_MEMSPACE_ID,
             conversationId: testConversationId,
             userMessage: "Test",
             agentResponse: "OK",
-            userId: undefined as any,
+            // Neither userId nor agentId provided
             userName: TEST_USER_NAME,
           }),
-        ).rejects.toThrow("userId is required");
+        ).rejects.toThrow("Either userId or agentId must be provided");
       });
 
       it("throws on invalid importance (< 0)", async () => {
@@ -1570,6 +1615,7 @@ describe("Memory Convenience API (Layer 3)", () => {
             agentResponse: "OK",
             userId: TEST_USER_ID,
             userName: TEST_USER_NAME,
+            agentId: TEST_AGENT_ID,
             importance: -1,
           }),
         ).rejects.toThrow("importance must be between 0 and 100");
@@ -1584,6 +1630,7 @@ describe("Memory Convenience API (Layer 3)", () => {
             agentResponse: "OK",
             userId: TEST_USER_ID,
             userName: TEST_USER_NAME,
+            agentId: TEST_AGENT_ID,
             importance: 150,
           }),
         ).rejects.toThrow("importance must be between 0 and 100");
@@ -1598,6 +1645,7 @@ describe("Memory Convenience API (Layer 3)", () => {
             agentResponse: "OK",
             userId: TEST_USER_ID,
             userName: TEST_USER_NAME,
+            agentId: TEST_AGENT_ID,
             tags: ["valid", "", "tag"],
           }),
         ).rejects.toThrow("must be a non-empty string");
@@ -1614,6 +1662,7 @@ describe("Memory Convenience API (Layer 3)", () => {
             responseStream: {} as any,
             userId: TEST_USER_ID,
             userName: TEST_USER_NAME,
+            agentId: TEST_AGENT_ID,
           }),
         ).rejects.toThrow("responseStream must be");
       });
@@ -1627,11 +1676,12 @@ describe("Memory Convenience API (Layer 3)", () => {
             responseStream: null as any,
             userId: TEST_USER_ID,
             userName: TEST_USER_NAME,
+            agentId: TEST_AGENT_ID,
           }),
         ).rejects.toThrow("responseStream must be");
       });
 
-      it("inherits remember() validations", async () => {
+      it("inherits remember() validations (empty memorySpaceId)", async () => {
         // Mock valid stream
         const mockStream = (async function* () {
           yield "test";
@@ -1645,8 +1695,26 @@ describe("Memory Convenience API (Layer 3)", () => {
             responseStream: mockStream,
             userId: TEST_USER_ID,
             userName: TEST_USER_NAME,
+            agentId: TEST_AGENT_ID,
           }),
         ).rejects.toThrow("memorySpaceId cannot be empty");
+      });
+
+      it("inherits remember() validations (missing owner)", async () => {
+        // Mock valid stream
+        const mockStream = (async function* () {
+          yield "test";
+        })();
+
+        await expect(
+          cortex.memory.rememberStream({
+            memorySpaceId: TEST_MEMSPACE_ID,
+            conversationId: testConversationId,
+            userMessage: "Test",
+            responseStream: mockStream,
+            // Neither userId nor agentId provided
+          }),
+        ).rejects.toThrow("Either userId or agentId");
       });
     });
 

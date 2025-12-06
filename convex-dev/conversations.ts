@@ -6,7 +6,7 @@
  * Two types: user-agent, agent-agent (Collaboration Mode)
  */
 
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -23,8 +23,9 @@ export const create = mutation({
     participantId: v.optional(v.string()), // NEW: Hive Mode participant tracking
     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
     participants: v.object({
-      userId: v.optional(v.string()),
-      participantId: v.optional(v.string()), // Hive Mode: which participant
+      userId: v.optional(v.string()), // The human user in the conversation
+      agentId: v.optional(v.string()), // The agent/assistant in the conversation
+      participantId: v.optional(v.string()), // Hive Mode: who created this
       memorySpaceIds: v.optional(v.array(v.string())), // Collaboration Mode: cross-space
     }),
     metadata: v.optional(v.any()),
@@ -33,14 +34,20 @@ export const create = mutation({
     // Validate participants based on type
     if (args.type === "user-agent") {
       if (!args.participants.userId) {
-        throw new Error("user-agent conversations require userId");
+        throw new ConvexError("user-agent conversations require userId");
+      }
+      // v0.17.0: User-agent conversations require both userId AND agentId
+      if (!args.participants.agentId) {
+        throw new ConvexError(
+          "agentId is required when userId is provided. User-agent conversations require both a user and an agent participant.",
+        );
       }
     } else if (args.type === "agent-agent") {
       if (
         !args.participants.memorySpaceIds ||
         args.participants.memorySpaceIds.length < 2
       ) {
-        throw new Error(
+        throw new ConvexError(
           "agent-agent conversations require at least 2 memorySpaceIds",
         );
       }
@@ -55,7 +62,7 @@ export const create = mutation({
       .first();
 
     if (existing) {
-      throw new Error("CONVERSATION_ALREADY_EXISTS");
+      throw new ConvexError("CONVERSATION_ALREADY_EXISTS");
     }
 
     const now = Date.now();
@@ -102,7 +109,7 @@ export const addMessage = mutation({
       .first();
 
     if (!conversation) {
-      throw new Error("CONVERSATION_NOT_FOUND");
+      throw new ConvexError("CONVERSATION_NOT_FOUND");
     }
 
     // Create message with timestamp
@@ -138,7 +145,7 @@ export const deleteConversation = mutation({
       .first();
 
     if (!conversation) {
-      throw new Error("CONVERSATION_NOT_FOUND");
+      throw new ConvexError("CONVERSATION_NOT_FOUND");
     }
 
     await ctx.db.delete(conversation._id);
@@ -197,6 +204,68 @@ export const deleteMany = mutation({
       deleted,
       totalMessagesDeleted,
       conversationIds: conversations.map((c) => c.conversationId),
+    };
+  },
+});
+
+/**
+ * Delete multiple conversations by their IDs (batch delete for cascade operations)
+ * Much faster than calling deleteConversation multiple times
+ * Uses index lookups instead of full table scan to avoid memory issues with large tables
+ */
+export const deleteByIds = mutation({
+  args: {
+    conversationIds: v.array(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const deletedIds: string[] = [];
+    let totalMessagesDeleted = 0;
+
+    // Look up each conversation by index to avoid full table scan
+    // This is O(n) index lookups vs O(entire table) memory usage
+    for (const conversationId of args.conversationIds) {
+      const conversation = await ctx.db
+        .query("conversations")
+        .withIndex("by_conversationId", (q) =>
+          q.eq("conversationId", conversationId),
+        )
+        .first();
+
+      if (conversation) {
+        totalMessagesDeleted += conversation.messageCount;
+        await ctx.db.delete(conversation._id);
+        deletedIds.push(conversationId);
+      }
+    }
+
+    return {
+      deleted: deletedIds.length,
+      conversationIds: deletedIds,
+      totalMessagesDeleted,
+    };
+  },
+});
+
+/**
+ * Purge ALL conversations (development/testing only)
+ */
+export const purgeAll = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const conversations = await ctx.db.query("conversations").collect();
+
+    let deleted = 0;
+    let totalMessagesDeleted = 0;
+
+    for (const conversation of conversations) {
+      totalMessagesDeleted += conversation.messageCount;
+      await ctx.db.delete(conversation._id);
+      deleted++;
+    }
+
+    return {
+      deleted,
+      totalMessagesDeleted,
     };
   },
 });
@@ -265,6 +334,7 @@ export const getOrCreate = mutation({
     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
     participants: v.object({
       userId: v.optional(v.string()),
+      agentId: v.optional(v.string()), // v0.17.0: Required for user-agent conversations
       participantId: v.optional(v.string()),
       memorySpaceIds: v.optional(v.array(v.string())),
     }),
@@ -276,10 +346,17 @@ export const getOrCreate = mutation({
 
     if (args.type === "user-agent") {
       if (!args.participants.userId) {
-        throw new Error("user-agent conversations require userId");
+        throw new ConvexError("user-agent conversations require userId");
+      }
+      // v0.17.0: User-agent conversations require both userId AND agentId
+      if (!args.participants.agentId) {
+        throw new ConvexError(
+          "agentId is required when userId is provided. User-agent conversations require both a user and an agent participant.",
+        );
       }
 
-      // Look for existing in this memory space with this user
+      // Look for existing in this memory space with this user AND agent
+      // v0.17.0: Must match agentId to support multiple agents per user/space
       existing = await ctx.db
         .query("conversations")
         .withIndex("by_memorySpace_user", (q) =>
@@ -287,7 +364,12 @@ export const getOrCreate = mutation({
             .eq("memorySpaceId", args.memorySpaceId!)
             .eq("participants.userId", args.participants.userId),
         )
-        .filter((q) => q.eq(q.field("type"), "user-agent"))
+        .filter((q) =>
+          q.and(
+            q.eq(q.field("type"), "user-agent"),
+            q.eq(q.field("participants.agentId"), args.participants.agentId),
+          ),
+        )
         .first();
     } else {
       // agent-agent (Collaboration Mode)
@@ -295,7 +377,7 @@ export const getOrCreate = mutation({
         !args.participants.memorySpaceIds ||
         args.participants.memorySpaceIds.length < 2
       ) {
-        throw new Error(
+        throw new ConvexError(
           "agent-agent conversations require at least 2 memorySpaceIds",
         );
       }
@@ -554,7 +636,7 @@ export const getHistory = query({
       .first();
 
     if (!conversation) {
-      throw new Error("CONVERSATION_NOT_FOUND");
+      throw new ConvexError("CONVERSATION_NOT_FOUND");
     }
 
     const limit = args.limit || 50;

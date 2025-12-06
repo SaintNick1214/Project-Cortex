@@ -49,6 +49,27 @@ export class MemorySpacesAPI {
   }
 
   /**
+   * Handle ConvexError from direct Convex calls (queries that don't go through resilience)
+   * Extracts error.data and includes it in the thrown error message
+   */
+  private handleConvexError(error: unknown): never {
+    if (
+      error &&
+      typeof error === "object" &&
+      "data" in error &&
+      (error as { data: unknown }).data !== undefined
+    ) {
+      const convexError = error as { data: unknown };
+      const errorData =
+        typeof convexError.data === "string"
+          ? convexError.data
+          : JSON.stringify(convexError.data);
+      throw new Error(errorData);
+    }
+    throw error;
+  }
+
+  /**
    * Register a new memory space
    *
    * @example
@@ -96,13 +117,18 @@ export class MemorySpacesAPI {
         joinedAt: now,
       })) || [];
 
-    const result = await this.client.mutation(api.memorySpaces.register, {
-      memorySpaceId: params.memorySpaceId,
-      name: params.name,
-      type: params.type,
-      participants,
-      metadata: params.metadata,
-    });
+    let result;
+    try {
+      result = await this.client.mutation(api.memorySpaces.register, {
+        memorySpaceId: params.memorySpaceId,
+        name: params.name,
+        type: params.type,
+        participants,
+        metadata: params.metadata,
+      });
+    } catch (error) {
+      this.handleConvexError(error);
+    }
 
     // Sync to graph if requested
     if (options?.syncToGraph && this.graphAdapter) {
@@ -225,14 +251,18 @@ export class MemorySpacesAPI {
       validateMemorySpaceStatus(updates.status);
     }
 
-    const result = await this.client.mutation(api.memorySpaces.update, {
-      memorySpaceId,
-      name: updates.name,
-      metadata: updates.metadata as Record<string, unknown> | undefined,
-      status: updates.status,
-    });
+    try {
+      const result = await this.client.mutation(api.memorySpaces.update, {
+        memorySpaceId,
+        name: updates.name,
+        metadata: updates.metadata as Record<string, unknown> | undefined,
+        status: updates.status,
+      });
 
-    return result as MemorySpace;
+      return result as MemorySpace;
+    } catch (error) {
+      this.handleConvexError(error);
+    }
   }
 
   /**
@@ -258,12 +288,16 @@ export class MemorySpacesAPI {
     validateMemorySpaceId(memorySpaceId);
     validateParticipant(participant);
 
-    const result = await this.client.mutation(api.memorySpaces.addParticipant, {
-      memorySpaceId,
-      participant,
-    });
+    try {
+      const result = await this.client.mutation(api.memorySpaces.addParticipant, {
+        memorySpaceId,
+        participant,
+      });
 
-    return result as MemorySpace;
+      return result as MemorySpace;
+    } catch (error) {
+      this.handleConvexError(error);
+    }
   }
 
   /**
@@ -386,11 +420,15 @@ export class MemorySpacesAPI {
   async getStats(memorySpaceId: string): Promise<MemorySpaceStats> {
     validateMemorySpaceId(memorySpaceId);
 
-    const result = await this.client.query(api.memorySpaces.getStats, {
-      memorySpaceId,
-    });
+    try {
+      const result = await this.client.query(api.memorySpaces.getStats, {
+        memorySpaceId,
+      });
 
-    return result as MemorySpaceStats;
+      return result as MemorySpaceStats;
+    } catch (error) {
+      this.handleConvexError(error);
+    }
   }
 
   /**

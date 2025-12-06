@@ -318,7 +318,7 @@ export function registerFactsCommands(
           const factsList = await client.facts.list({
             memorySpaceId: options.space,
             factType,
-            limit: 10000, // Get all facts
+            limit: 1000, // Get all facts
           });
 
           let content: string;
@@ -389,7 +389,7 @@ export function registerFactsCommands(
           const factsList = await client.facts.list({
             memorySpaceId: options.space,
             factType,
-            limit: 10000,
+            limit: 1000,
           });
 
           spinner.stop();
@@ -433,48 +433,46 @@ export function registerFactsCommands(
           ? validateFactType(options.type)
           : undefined;
 
-        // Count facts first
-        const client = (await import("../utils/client.js")).createClient(
-          config,
-          globalOpts,
-        );
-        const factsList = await client.facts.list({
-          memorySpaceId: options.space,
-          factType,
-          limit: 10000,
-        });
+        await withClient(config, globalOpts, async (client) => {
+          // List facts first
+          const factsList = await client.facts.list({
+            memorySpaceId: options.space,
+            factType,
+            limit: 1000,
+          });
 
-        if (factsList.length === 0) {
-          printWarning("No facts found to delete");
-          return;
-        }
-
-        if (!options.yes) {
-          const scope = factType ? ` of type "${factType}"` : "";
-          const confirmed = await requireConfirmation(
-            `Delete ${formatCount(factsList.length, "fact")}${scope} from ${options.space}? This cannot be undone.`,
-            config,
-          );
-          if (!confirmed) {
-            printWarning("Operation cancelled");
+          if (factsList.length === 0) {
+            printWarning("No facts found to delete");
             return;
           }
-        }
 
-        const spinner = ora(`Deleting ${factsList.length} facts...`).start();
-
-        let deleted = 0;
-        for (const fact of factsList) {
-          try {
-            await client.facts.delete(options.space, fact.factId);
-            deleted++;
-          } catch {
-            // Continue on error
+          if (!options.yes) {
+            const scope = factType ? ` of type "${factType}"` : "";
+            const confirmed = await requireConfirmation(
+              `Delete ${formatCount(factsList.length, "fact")}${scope} from ${options.space}? This cannot be undone.`,
+              config,
+            );
+            if (!confirmed) {
+              printWarning("Operation cancelled");
+              return;
+            }
           }
-        }
 
-        spinner.stop();
-        printSuccess(`Deleted ${formatCount(deleted, "fact")}`);
+          const spinner = ora(`Deleting ${factsList.length} facts...`).start();
+
+          let deleted = 0;
+          for (const fact of factsList) {
+            try {
+              await client.facts.delete(options.space, fact.factId);
+              deleted++;
+            } catch {
+              // Continue on error
+            }
+          }
+
+          spinner.stop();
+          printSuccess(`Deleted ${formatCount(deleted, "fact")}`);
+        });
       } catch (error) {
         printError(error instanceof Error ? error.message : "Clear failed");
         process.exit(1);

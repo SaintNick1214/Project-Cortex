@@ -17,6 +17,8 @@ async def sync_memory_to_graph(memory: Dict[str, Any], adapter: GraphAdapter) ->
     """
     Sync a memory to the graph database.
 
+    Uses MERGE for idempotent operations.
+
     Args:
         memory: Memory entry to sync
         adapter: Graph database adapter
@@ -40,7 +42,7 @@ async def sync_memory_to_graph(memory: Dict[str, Any], adapter: GraphAdapter) ->
         },
     )
 
-    return await adapter.create_node(node)
+    return await adapter.merge_node(node, {"memoryId": memory["memoryId"]})
 
 
 async def sync_memory_relationships(
@@ -127,7 +129,7 @@ async def delete_memory_from_graph(
 async def sync_conversation_to_graph(
     conversation: Dict[str, Any], adapter: GraphAdapter
 ) -> str:
-    """Sync conversation to graph."""
+    """Sync conversation to graph. Uses MERGE for idempotent operations."""
     node = GraphNode(
         label="Conversation",
         properties={
@@ -139,7 +141,9 @@ async def sync_conversation_to_graph(
         },
     )
 
-    return await adapter.create_node(node)
+    return await adapter.merge_node(
+        node, {"conversationId": conversation["conversationId"]}
+    )
 
 
 async def sync_conversation_relationships(
@@ -176,7 +180,7 @@ async def delete_conversation_from_graph(
 
 
 async def sync_fact_to_graph(fact: Dict[str, Any], adapter: GraphAdapter) -> str:
-    """Sync fact to graph."""
+    """Sync fact to graph. Uses MERGE for idempotent operations."""
     node = GraphNode(
         label="Fact",
         properties={
@@ -192,7 +196,7 @@ async def sync_fact_to_graph(fact: Dict[str, Any], adapter: GraphAdapter) -> str
         },
     )
 
-    return await adapter.create_node(node)
+    return await adapter.merge_node(node, {"factId": fact["factId"]})
 
 
 async def sync_fact_relationships(
@@ -230,7 +234,7 @@ async def delete_fact_from_graph(fact_id: str, adapter: GraphAdapter) -> None:
 
 
 async def sync_context_to_graph(context: Dict[str, Any], adapter: GraphAdapter) -> str:
-    """Sync context to graph."""
+    """Sync context to graph. Uses MERGE for idempotent operations."""
     node = GraphNode(
         label="Context",
         properties={
@@ -245,7 +249,7 @@ async def sync_context_to_graph(context: Dict[str, Any], adapter: GraphAdapter) 
         },
     )
 
-    return await adapter.create_node(node)
+    return await adapter.merge_node(node, {"contextId": context["id"]})
 
 
 async def sync_context_relationships(
@@ -306,6 +310,11 @@ async def delete_agent_from_graph(agent_id: str, adapter: GraphAdapter) -> int:
     """
     Delete all graph nodes for an agent.
 
+    Deletes:
+    - Agent node itself (agentId match)
+    - All nodes with participantId = agent_id
+    - All relationships connected to deleted nodes
+
     Args:
         agent_id: Agent ID (participantId)
         adapter: Graph database adapter
@@ -313,15 +322,58 @@ async def delete_agent_from_graph(agent_id: str, adapter: GraphAdapter) -> int:
     Returns:
         Number of nodes deleted
     """
-    # This would query for all nodes with participantId = agent_id
-    # Simplified for now
-    return 0
+    nodes_deleted = 0
+
+    # 1. Delete Agent node by agentId
+    agent_nodes = await adapter.find_nodes("Agent", {"agentId": agent_id}, 1)
+    if agent_nodes:
+        await adapter.delete_node(agent_nodes[0].id)  # type: ignore[arg-type]
+        nodes_deleted += 1
+
+    # 2. Delete all nodes where participantId matches (memories, conversations, etc.)
+    # Query for nodes with participantId = agent_id across all labels
+    try:
+        result = await adapter.query(
+            "MATCH (n {participantId: $participantId}) RETURN elementId(n) as id",
+            {"participantId": agent_id},
+        )
+        records = result.records if result else []
+        for record in records:
+            node_id = record.get("id")
+            if node_id:
+                try:
+                    await adapter.delete_node(node_id)
+                    nodes_deleted += 1
+                except Exception:
+                    pass  # Node may have already been deleted via cascade
+    except Exception:
+        pass  # Query not supported or no matches
+
+    # 3. Delete nodes where agentId matches (conversations, memories owned by agent)
+    try:
+        result = await adapter.query(
+            "MATCH (n {agentId: $agentId}) RETURN elementId(n) as id",
+            {"agentId": agent_id},
+        )
+        records = result.records if result else []
+        for record in records:
+            node_id = record.get("id")
+            if node_id:
+                try:
+                    await adapter.delete_node(node_id)
+                    nodes_deleted += 1
+                except Exception:
+                    pass  # Node may have already been deleted
+    except Exception:
+        pass  # Query not supported or no matches
+
+    return nodes_deleted
 
 
 async def sync_memory_space_to_graph(
     memory_space: Dict[str, Any], adapter: GraphAdapter
 ) -> str:
-    """Sync memory space to graph."""
+    """Sync memory space to graph. Uses MERGE for idempotent operations."""
     node = GraphNode(
         label="MemorySpace",
         properties={
@@ -333,7 +385,9 @@ async def sync_memory_space_to_graph(
         },
     )
 
-    return await adapter.create_node(node)
+    return await adapter.merge_node(
+        node, {"memorySpaceId": memory_space["memorySpaceId"]}
+    )
 
 
 # Re-export for convenience

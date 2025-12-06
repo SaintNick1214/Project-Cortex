@@ -45,9 +45,11 @@ describe("Memory API - Auto-Conversation Creation", () => {
       conversationId,
       userMessage: "I prefer dark mode",
       // Agent response with meaningful content (not just acknowledgment)
-      agentResponse: "Your dark mode preference has been saved to your profile settings",
+      agentResponse:
+        "Your dark mode preference has been saved to your profile settings",
       userId: "user-123",
       userName: "Alice",
+      agentId: "agent-123",
     });
 
     // Verify conversation was auto-created
@@ -74,6 +76,7 @@ describe("Memory API - Auto-Conversation Creation", () => {
       type: "user-agent",
       participants: {
         userId: "user-456",
+          agentId: "test-agent",
         participantId: "test-agent",
       },
     });
@@ -91,6 +94,7 @@ describe("Memory API - Auto-Conversation Creation", () => {
       agentResponse: "Second response",
       userId: "user-456",
       userName: "Bob",
+      agentId: "agent-456",
     });
 
     // Verify conversation was reused (not recreated)
@@ -103,10 +107,10 @@ describe("Memory API - Auto-Conversation Creation", () => {
     expect(result.memories.length).toBe(2);
   });
 
-  test("remember() sets default participantId if not provided", async () => {
+  test("remember() sets agentId in conversation participants", async () => {
     const convId = "no-participant-conv";
 
-    // Call remember() WITHOUT participantId
+    // Call remember() WITH agentId
     await cortex.memory.remember({
       memorySpaceId,
       conversationId: convId,
@@ -114,13 +118,14 @@ describe("Memory API - Auto-Conversation Creation", () => {
       agentResponse: "Test response",
       userId: "user-789",
       userName: "Charlie",
+      agentId: "agent-789",
       // No participantId provided
     });
 
-    // Verify conversation was created with default participantId
+    // Verify conversation was created with agentId
     const conv = await cortex.conversations.get(convId);
     expect(conv).not.toBeNull();
-    expect(conv?.participants.participantId).toBe("agent"); // Default value
+    expect(conv?.participants.agentId).toBe("agent-789");
   });
 
   test("remember() preserves explicit participantId", async () => {
@@ -134,6 +139,7 @@ describe("Memory API - Auto-Conversation Creation", () => {
       agentResponse: "Test response",
       userId: "user-999",
       userName: "Dave",
+      agentId: "agent-999",
       participantId: "custom-agent",
     });
 
@@ -154,6 +160,7 @@ describe("Memory API - Auto-Conversation Creation", () => {
       agentResponse: "First response",
       userId: "user-multi",
       userName: "Eve",
+      agentId: "agent-multi",
     });
 
     // Second remember() - reuses existing conversation
@@ -164,6 +171,7 @@ describe("Memory API - Auto-Conversation Creation", () => {
       agentResponse: "Second response",
       userId: "user-multi",
       userName: "Eve",
+      agentId: "agent-multi",
     });
 
     // Third remember() - still reuses
@@ -174,6 +182,7 @@ describe("Memory API - Auto-Conversation Creation", () => {
       agentResponse: "Third response",
       userId: "user-multi",
       userName: "Eve",
+      agentId: "agent-multi",
     });
 
     // Verify conversation has all messages

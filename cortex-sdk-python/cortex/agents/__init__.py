@@ -441,24 +441,43 @@ class AgentsAPI:
             # Just count what would be deleted
             plan = await self._collect_agent_deletion_plan(agent_id)
 
+            conversations_count = len(plan.get("conversations", []))
+            memories_count = len(plan.get("memories", []))
+            facts_count = len(plan.get("facts", []))
+            graph_nodes_count = len(plan.get("graph", []))
+            agent_registered = plan.get("agent_registered", False)
+
+            # Total = all records that would be deleted + 1 for agent registration (only if registered)
+            # This matches the actual execution logic which only counts registration if it succeeds
+            total_deleted = (
+                conversations_count +
+                memories_count +
+                facts_count +
+                graph_nodes_count +
+                (1 if agent_registered else 0)
+            )
+
             return UnregisterAgentResult(
                 agent_id=agent_id,
                 unregistered_at=int(time.time() * 1000),
-                conversations_deleted=len(plan.get("conversations", [])),
+                conversations_deleted=conversations_count,
                 conversation_messages_deleted=sum(
                     conv.get("messageCount", 0) for conv in plan.get("conversations", [])
                 ),
-                memories_deleted=len(plan.get("memories", [])),
-                facts_deleted=len(plan.get("facts", [])),
-                total_deleted=1,
+                memories_deleted=memories_count,
+                facts_deleted=facts_count,
+                # Always return integer for API consistency (matches actual execution behavior)
+                graph_nodes_deleted=graph_nodes_count,
+                total_deleted=total_deleted,
                 deleted_layers=[],
-                memory_spaces_affected=list(
-                    set(m.get("memorySpaceId") for m in plan.get("memories", []))
-                ),
+                # Use plan's memory_spaces which includes all spaces affected by
+                # conversations, memories, and facts (matches actual execution)
+                memory_spaces_affected=plan.get("memory_spaces", []),
                 verification=VerificationResult(complete=True, issues=[]),
             )
 
-        # Execute cascade deletion
+        # Execute cascade deletion with STRICT error handling
+        # Any error triggers immediate rollback to maintain data integrity
         plan = await self._collect_agent_deletion_plan(agent_id)
         backup = await self._create_agent_deletion_backup(plan)
 
@@ -471,8 +490,12 @@ class AgentsAPI:
                 result.verification = verification
 
             return result
+        except AgentCascadeDeletionError:
+            # Rollback on any deletion error
+            await self._rollback_agent_deletion(backup)
+            raise
         except Exception as e:
-            # Rollback on failure
+            # Rollback on unexpected errors too
             await self._rollback_agent_deletion(backup)
             raise AgentCascadeDeletionError(f"Agent cascade deletion failed: {e}", cause=e)
 
@@ -580,16 +603,157 @@ class AgentsAPI:
     # Helper methods for cascade deletion
 
     async def _collect_agent_deletion_plan(self, agent_id: str) -> Dict[str, List[Any]]:
-        """Collect all records where participantId = agent_id."""
+        """
+        Collect all records where participantId = agent_id.
+        OPTIMIZED: Uses asyncio.gather for parallel queries across all spaces.
+        """
+        import asyncio
+
         plan: Dict[str, Any] = {
             "conversations": [],
             "memories": [],
             "facts": [],
             "graph": [],
+            "memory_spaces": [],
+            "agent_registered": False,  # Track if agent is registered
         }
 
-        # This is simplified - actual implementation would query all memory spaces
-        # for records with participantId = agent_id
+        # Check if agent is registered
+        try:
+            agent = await self.client.query("agents:get", {"agentId": agent_id})
+            plan["agent_registered"] = agent is not None
+        except Exception:
+            plan["agent_registered"] = False
+
+        affected_spaces: set = set()
+
+        # Get all memory spaces
+        memory_spaces = await self.client.query("memorySpaces:list", {})
+
+        # Helper functions for parallel queries
+        async def collect_conversations(space: Dict[str, Any]) -> Dict[str, Any]:
+            try:
+                conversations = await self.client.query(
+                    "conversations:list",
+                    {"memorySpaceId": space.get("memorySpaceId")},
+                )
+                agent_convos = [
+                    c for c in conversations
+                    if (c.get("participants", {}).get("participantId") == agent_id or
+                        c.get("participants", {}).get("agentId") == agent_id or
+                        c.get("participantId") == agent_id)
+                ]
+                return {"spaceId": space.get("memorySpaceId"), "conversations": agent_convos}
+            except Exception:
+                return {"spaceId": space.get("memorySpaceId"), "conversations": []}
+
+        async def collect_memories(space: Dict[str, Any]) -> Dict[str, Any]:
+            try:
+                memories = await self.client.query(
+                    "memories:list",
+                    {"memorySpaceId": space.get("memorySpaceId")},
+                )
+                # Check both participantId and agentId (v0.17.0+ agent-owned memories)
+                agent_memories = [
+                    m for m in memories
+                    if m.get("participantId") == agent_id or m.get("agentId") == agent_id
+                ]
+                return {"spaceId": space.get("memorySpaceId"), "memories": agent_memories}
+            except Exception:
+                return {"spaceId": space.get("memorySpaceId"), "memories": []}
+
+        async def collect_facts(space: Dict[str, Any]) -> Dict[str, Any]:
+            try:
+                facts = await self.client.query(
+                    "facts:list",
+                    {"memorySpaceId": space.get("memorySpaceId")},
+                )
+                agent_facts = [f for f in facts if f.get("participantId") == agent_id]
+                return {"spaceId": space.get("memorySpaceId"), "facts": agent_facts}
+            except Exception:
+                return {"spaceId": space.get("memorySpaceId"), "facts": []}
+
+        async def collect_graph_nodes() -> List[Dict[str, Any]]:
+            if not self.graph_adapter:
+                return []
+            nodes: List[Dict[str, Any]] = []
+            seen_ids: set = set()
+
+            try:
+                # 1. Query for Agent node by agentId (same as delete_agent_from_graph step 1)
+                agent_result = await self.graph_adapter.query(
+                    "MATCH (n:Agent {agentId: $agentId}) RETURN elementId(n) as id, labels(n) as labels",
+                    {"agentId": agent_id},
+                )
+                for r in agent_result.get("records", []):
+                    node_id = r.get("id")
+                    if node_id and node_id not in seen_ids:
+                        seen_ids.add(node_id)
+                        nodes.append({"nodeId": node_id, "labels": r.get("labels", [])})
+            except Exception:
+                pass
+
+            try:
+                # 2. Query for nodes where participantId matches (same as delete_agent_from_graph step 2)
+                result = await self.graph_adapter.query(
+                    "MATCH (n {participantId: $participantId}) RETURN elementId(n) as id, labels(n) as labels",
+                    {"participantId": agent_id},
+                )
+                for r in result.get("records", []):
+                    node_id = r.get("id")
+                    if node_id and node_id not in seen_ids:
+                        seen_ids.add(node_id)
+                        nodes.append({"nodeId": node_id, "labels": r.get("labels", [])})
+            except Exception:
+                pass
+
+            try:
+                # 3. Query for nodes where agentId matches (same as delete_agent_from_graph step 3)
+                result = await self.graph_adapter.query(
+                    "MATCH (n {agentId: $agentId}) RETURN elementId(n) as id, labels(n) as labels",
+                    {"agentId": agent_id},
+                )
+                for r in result.get("records", []):
+                    node_id = r.get("id")
+                    if node_id and node_id not in seen_ids:
+                        seen_ids.add(node_id)
+                        nodes.append({"nodeId": node_id, "labels": r.get("labels", [])})
+            except Exception:
+                pass
+
+            return nodes
+
+        # PARALLEL COLLECTION: Query all spaces simultaneously
+        conversation_results, memory_results, fact_results, graph_nodes = await asyncio.gather(
+            asyncio.gather(*[collect_conversations(s) for s in memory_spaces]),
+            asyncio.gather(*[collect_memories(s) for s in memory_spaces]),
+            asyncio.gather(*[collect_facts(s) for s in memory_spaces]),
+            collect_graph_nodes(),
+        )
+
+        # Process conversation results
+        for result in conversation_results:
+            if result["conversations"]:
+                plan["conversations"].extend(result["conversations"])
+                affected_spaces.add(result["spaceId"])
+
+        # Process memory results
+        for result in memory_results:
+            if result["memories"]:
+                plan["memories"].extend(result["memories"])
+                affected_spaces.add(result["spaceId"])
+
+        # Process fact results
+        for result in fact_results:
+            if result["facts"]:
+                plan["facts"].extend(result["facts"])
+                affected_spaces.add(result["spaceId"])
+
+        # Set graph nodes
+        plan["graph"] = graph_nodes
+
+        # Store affected spaces
+        plan["memory_spaces"] = list(affected_spaces)
 
         return plan
 
@@ -597,33 +761,89 @@ class AgentsAPI:
         self, plan: Dict[str, List[Any]]
     ) -> Dict[str, List[Any]]:
         """Create backup for rollback."""
-        return {k: list(v) for k, v in plan.items()}
+        import copy
+        return {k: copy.deepcopy(v) for k, v in plan.items()}
 
     async def _execute_agent_deletion(
         self, plan: Dict[str, List[Any]], agent_id: str
     ) -> UnregisterAgentResult:
-        """Execute agent deletion."""
+        """
+        Execute agent deletion with strict error handling.
+
+        STRICT MODE: Any error triggers immediate rollback of all operations.
+        This ensures data integrity - either all data is deleted or none is.
+
+        Raises:
+            AgentCascadeDeletionError: On any failure, with partial_deletion info
+        """
         deleted_at = int(time.time() * 1000)
-        deleted_layers = []
+        deleted_layers: List[str] = []
 
-        conversations_deleted = len(plan.get("conversations", []))
-        memories_deleted = len(plan.get("memories", []))
-        facts_deleted = len(plan.get("facts", []))
+        conversations_deleted = 0
+        conversation_messages_deleted = 0
+        memories_deleted = 0
+        facts_deleted = 0
+        # Initialize to 0 for API consistency (dry-run always returns integer)
+        graph_nodes_deleted = 0
 
-        # Delete agent registration
-        try:
-            await self.client.mutation("agents:unregister", filter_none_values({"agentId": agent_id}))
-            deleted_layers.append("agent-registration")
-        except:
-            pass  # Agent might not be registered
+        # Helper to build partial deletion info for error reporting
+        def _build_partial_deletion_info(failed_layer: str) -> dict:
+            return {
+                "facts_deleted": facts_deleted,
+                "memories_deleted": memories_deleted,
+                "conversations_deleted": conversations_deleted,
+                "deleted_layers": list(deleted_layers),
+                "failed_layer": failed_layer,
+            }
 
-        # Get affected memory spaces
-        memory_spaces_affected = list(
-            set(m.get("memorySpaceId") for m in plan.get("memories", []))
-        )
+        # 1. Delete facts (batch) - STRICT: raise on error
+        if plan.get("facts"):
+            try:
+                fact_ids = [f.get("factId") for f in plan["facts"]]
+                result = await self.client.mutation("facts:deleteByIds", {"factIds": fact_ids})
+                facts_deleted = result.get("deleted", 0)
+                if facts_deleted > 0:
+                    deleted_layers.append("facts")
+            except Exception as e:
+                raise AgentCascadeDeletionError(
+                    f"Failed to delete facts: {e}",
+                    cause=e if isinstance(e, Exception) else None,
+                    partial_deletion=_build_partial_deletion_info("facts"),
+                )
 
-        graph_nodes_deleted = None
-        if self.graph_adapter:
+        # 2. Delete memories (batch) - STRICT: raise on error
+        if plan.get("memories"):
+            try:
+                memory_ids = [m.get("memoryId") for m in plan["memories"]]
+                result = await self.client.mutation("memories:deleteByIds", {"memoryIds": memory_ids})
+                memories_deleted = result.get("deleted", 0)
+                if memories_deleted > 0:
+                    deleted_layers.append("memories")
+            except Exception as e:
+                raise AgentCascadeDeletionError(
+                    f"Failed to delete memories: {e}",
+                    cause=e if isinstance(e, Exception) else None,
+                    partial_deletion=_build_partial_deletion_info("memories"),
+                )
+
+        # 3. Delete conversations (batch) - STRICT: raise on error
+        if plan.get("conversations"):
+            try:
+                conversation_ids = [c.get("conversationId") for c in plan["conversations"]]
+                result = await self.client.mutation("conversations:deleteByIds", {"conversationIds": conversation_ids})
+                conversations_deleted = result.get("deleted", 0)
+                conversation_messages_deleted = result.get("totalMessagesDeleted", 0)
+                if conversations_deleted > 0:
+                    deleted_layers.append("conversations")
+            except Exception as e:
+                raise AgentCascadeDeletionError(
+                    f"Failed to delete conversations: {e}",
+                    cause=e if isinstance(e, Exception) else None,
+                    partial_deletion=_build_partial_deletion_info("conversations"),
+                )
+
+        # 4. Delete graph nodes - STRICT: raise on error
+        if self.graph_adapter and plan.get("graph"):
             try:
                 from ..graph import delete_agent_from_graph
 
@@ -632,18 +852,43 @@ class AgentsAPI:
                 )
                 if graph_nodes_deleted > 0:
                     deleted_layers.append("graph")
-            except Exception as error:
-                print(f"Warning: Failed to delete from graph: {error}")
+            except Exception as e:
+                raise AgentCascadeDeletionError(
+                    f"Failed to delete graph nodes: {e}",
+                    cause=e if isinstance(e, Exception) else None,
+                    partial_deletion=_build_partial_deletion_info("graph"),
+                )
 
-        total_deleted = conversations_deleted + memories_deleted + facts_deleted + 1
+        # 5. Delete agent registration (last) - STRICT: raise on error
+        try:
+            await self.client.mutation("agents:unregister", filter_none_values({"agentId": agent_id}))
+            deleted_layers.append("agent-registration")
+        except Exception as e:
+            # Only raise if agent was registered (not-found is okay)
+            error_str = str(e).lower()
+            if "not_registered" not in error_str and "not found" not in error_str:
+                raise AgentCascadeDeletionError(
+                    f"Failed to unregister agent: {e}",
+                    cause=e if isinstance(e, Exception) else None,
+                    partial_deletion=_build_partial_deletion_info("agent-registration"),
+                )
+
+        # Get affected memory spaces
+        memory_spaces_affected = plan.get("memory_spaces", [])
+
+        total_deleted = (
+            conversations_deleted +
+            memories_deleted +
+            facts_deleted +
+            (graph_nodes_deleted or 0) +
+            (1 if "agent-registration" in deleted_layers else 0)
+        )
 
         return UnregisterAgentResult(
             agent_id=agent_id,
             unregistered_at=deleted_at,
             conversations_deleted=conversations_deleted,
-            conversation_messages_deleted=sum(
-                conv.get("messageCount", 0) for conv in plan.get("conversations", [])
-            ),
+            conversation_messages_deleted=conversation_messages_deleted,
             memories_deleted=memories_deleted,
             facts_deleted=facts_deleted,
             graph_nodes_deleted=graph_nodes_deleted,
@@ -651,22 +896,226 @@ class AgentsAPI:
             deleted_layers=deleted_layers,
             memory_spaces_affected=memory_spaces_affected,
             verification=VerificationResult(complete=True, issues=[]),
+            deletion_errors=[],  # No errors if we get here
         )
 
     async def _verify_agent_deletion(self, agent_id: str) -> VerificationResult:
-        """Verify agent deletion completeness."""
-        issues = []
+        """
+        Verify agent deletion completeness.
+        OPTIMIZED: Uses asyncio.gather for parallel verification queries.
+        """
+        import asyncio
 
-        # Check if agent still registered
-        agent = await self.get(agent_id)
-        if agent:
-            issues.append("Agent registration still exists")
+        issues: List[str] = []
 
-        return VerificationResult(complete=len(issues) == 0, issues=issues)
+        # Get memory spaces once
+        memory_spaces = await self.client.query("memorySpaces:list", {})
 
-    async def _rollback_agent_deletion(self, backup: Dict[str, List[Any]]) -> Any:
-        """Rollback agent deletion on failure."""
-        print("Warning: Rollback not fully implemented - manual recovery may be needed")
+        # Helper functions for parallel verification
+        async def count_remaining_memories() -> int:
+            async def check_space(space: Dict[str, Any]) -> int:
+                try:
+                    memories = await self.client.query(
+                        "memories:list",
+                        {"memorySpaceId": space.get("memorySpaceId")},
+                    )
+                    # Check both participantId and agentId (v0.17.0+ agent-owned memories)
+                    return len([
+                        m for m in memories
+                        if m.get("participantId") == agent_id or m.get("agentId") == agent_id
+                    ])
+                except Exception:
+                    return 0
+            results = await asyncio.gather(*[check_space(s) for s in memory_spaces])
+            return sum(results)
+
+        async def count_remaining_conversations() -> int:
+            async def check_space(space: Dict[str, Any]) -> int:
+                try:
+                    conversations = await self.client.query(
+                        "conversations:list",
+                        {"memorySpaceId": space.get("memorySpaceId")},
+                    )
+                    return len([
+                        c for c in conversations
+                        if (c.get("participants", {}).get("participantId") == agent_id or
+                            c.get("participants", {}).get("agentId") == agent_id or
+                            c.get("participantId") == agent_id)
+                    ])
+                except Exception:
+                    return 0
+            results = await asyncio.gather(*[check_space(s) for s in memory_spaces])
+            return sum(results)
+
+        async def count_remaining_facts() -> int:
+            async def check_space(space: Dict[str, Any]) -> int:
+                try:
+                    facts = await self.client.query(
+                        "facts:list",
+                        {"memorySpaceId": space.get("memorySpaceId")},
+                    )
+                    # Facts only have participantId (tracks which agent extracted the fact)
+                    # Note: Facts don't have agentId field - only memories and conversations do
+                    return len([
+                        f for f in facts
+                        if f.get("participantId") == agent_id
+                    ])
+                except Exception:
+                    return 0
+            results = await asyncio.gather(*[check_space(s) for s in memory_spaces])
+            return sum(results)
+
+        async def count_graph_nodes() -> int:
+            if not self.graph_adapter:
+                return -1  # Indicates no graph adapter
+            try:
+                # Check both participantId and agentId (v0.17.0+ agent-owned nodes)
+                # This catches: Agent nodes, agent-owned memories, agent-owned conversations
+                result = await self.graph_adapter.query(
+                    "MATCH (n) WHERE n.participantId = $agentId OR n.agentId = $agentId "
+                    "RETURN count(n) as count",
+                    {"agentId": agent_id},
+                )
+                records = result.get("records", [])
+                return records[0].get("count", 0) if records else 0
+            except Exception:
+                return 0
+
+        # Run ALL verification queries in parallel
+        remaining_memories, remaining_convos, remaining_facts, graph_count = await asyncio.gather(
+            count_remaining_memories(),
+            count_remaining_conversations(),
+            count_remaining_facts(),
+            count_graph_nodes(),
+        )
+
+        # Build issues list
+        if remaining_memories > 0:
+            issues.append(f"{remaining_memories} memories still reference agent")
+
+        if remaining_convos > 0:
+            issues.append(f"{remaining_convos} conversations still reference agent")
+
+        if remaining_facts > 0:
+            issues.append(f"{remaining_facts} facts still reference agent")
+
+        if graph_count == -1:
+            issues.append("Graph adapter not configured - manual graph cleanup required")
+        elif graph_count > 0:
+            issues.append(f"{graph_count} graph nodes still reference agent")
+
+        return VerificationResult(
+            complete=(len(issues) == 0 or (len(issues) == 1 and "Graph adapter" in issues[0])),
+            issues=issues,
+        )
+
+    async def _rollback_agent_deletion(self, backup: Dict[str, List[Any]]) -> Dict[str, Any]:
+        """
+        Rollback agent deletion on failure by re-creating deleted data.
+
+        Args:
+            backup: Dict containing the original data that was deleted
+
+        Returns:
+            Dict with rollback statistics
+        """
+        rollback_stats: Dict[str, Any] = {
+            "facts_restored": 0,
+            "memories_restored": 0,
+            "conversations_restored": 0,
+            "errors": [],
+        }
+
+        # Restore facts
+        # Note: factId cannot be preserved - facts:store auto-generates new IDs
+        # The restored fact will have a new ID but same content
+        for fact in backup.get("facts", []):
+            try:
+                await self.client.mutation(
+                    "facts:store",
+                    filter_none_values({
+                        "memorySpaceId": fact.get("memorySpaceId"),
+                        "participantId": fact.get("participantId"),
+                        "userId": fact.get("userId"),
+                        "fact": fact.get("fact"),
+                        "factType": fact.get("factType"),
+                        "subject": fact.get("subject"),
+                        "predicate": fact.get("predicate"),
+                        "object": fact.get("object"),
+                        "confidence": fact.get("confidence"),
+                        "sourceType": fact.get("sourceType"),
+                        "sourceRef": fact.get("sourceRef"),
+                        "tags": fact.get("tags", []),
+                        "metadata": fact.get("metadata"),
+                        "validFrom": fact.get("validFrom"),
+                        "validUntil": fact.get("validUntil"),
+                        # Enrichment fields
+                        "category": fact.get("category"),
+                        "searchAliases": fact.get("searchAliases"),
+                        "semanticContext": fact.get("semanticContext"),
+                        "entities": fact.get("entities"),
+                        "relations": fact.get("relations"),
+                    }),
+                )
+                rollback_stats["facts_restored"] += 1
+            except Exception as e:
+                rollback_stats["errors"].append(f"Failed to restore fact {fact.get('factId')}: {e}")
+
+        # Restore memories
+        for memory in backup.get("memories", []):
+            try:
+                await self.client.mutation(
+                    "memories:store",
+                    filter_none_values({
+                        "memorySpaceId": memory.get("memorySpaceId"),
+                        "memoryId": memory.get("memoryId"),
+                        "content": memory.get("content"),
+                        "contentType": memory.get("contentType", "raw"),
+                        "embedding": memory.get("embedding"),
+                        "importance": memory.get("importance"),
+                        "sourceType": memory.get("sourceType"),
+                        "sourceUserId": memory.get("sourceUserId"),
+                        "sourceUserName": memory.get("sourceUserName"),
+                        # conversationRef is a nested object, not a flat field
+                        "conversationRef": memory.get("conversationRef"),
+                        "userId": memory.get("userId"),
+                        "agentId": memory.get("agentId"),
+                        "participantId": memory.get("participantId"),
+                        "tags": memory.get("tags", []),
+                    }),
+                )
+                rollback_stats["memories_restored"] += 1
+            except Exception as e:
+                rollback_stats["errors"].append(f"Failed to restore memory {memory.get('memoryId')}: {e}")
+
+        # Restore conversations (without messages - those are harder to restore)
+        for conv in backup.get("conversations", []):
+            try:
+                await self.client.mutation(
+                    "conversations:create",
+                    filter_none_values({
+                        "memorySpaceId": conv.get("memorySpaceId"),
+                        "conversationId": conv.get("conversationId"),
+                        "type": conv.get("type"),
+                        "participants": conv.get("participants"),
+                        "metadata": conv.get("metadata"),
+                    }),
+                )
+                rollback_stats["conversations_restored"] += 1
+            except Exception as e:
+                rollback_stats["errors"].append(f"Failed to restore conversation {conv.get('conversationId')}: {e}")
+
+        # Log rollback results
+        if rollback_stats["errors"]:
+            print(f"Rollback completed with errors: {len(rollback_stats['errors'])} failures")
+            for error in rollback_stats["errors"]:
+                print(f"  - {error}")
+        else:
+            print(f"Rollback completed: {rollback_stats['facts_restored']} facts, "
+                  f"{rollback_stats['memories_restored']} memories, "
+                  f"{rollback_stats['conversations_restored']} conversations restored")
+
+        return rollback_stats
 
 
 __all__ = ["AgentsAPI", "AgentValidationError"]

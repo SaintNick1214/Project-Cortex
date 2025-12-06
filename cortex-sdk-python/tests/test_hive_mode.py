@@ -78,6 +78,7 @@ async def test_all_participants_see_same_conversations(cortex_client, hive_space
             type="user-agent",
             participants=ConversationParticipants(
                 user_id="user-alice",
+                agent_id="tool-calendar",
                 participant_id="tool-calendar",
             ),
         )
@@ -350,6 +351,7 @@ async def test_tracks_which_participant_created_what(cortex_client, hive_space_f
             type="user-agent",
             participants=ConversationParticipants(
                 user_id="user-alice",
+                agent_id="tool-calendar",
                 participant_id="tool-calendar",
             ),
         )
@@ -361,6 +363,7 @@ async def test_tracks_which_participant_created_what(cortex_client, hive_space_f
             type="user-agent",
             participants=ConversationParticipants(
                 user_id="user-alice",
+                agent_id="tool-email",
                 participant_id="tool-email",
             ),
         )
@@ -403,6 +406,7 @@ async def test_multi_tool_coordination_for_user_workflow(cortex_client, hive_spa
             type="user-agent",
             participants=ConversationParticipants(
                 user_id="user-alice",
+                agent_id="agent-assistant",
                 participant_id="agent-assistant",
             ),
         )
@@ -666,7 +670,7 @@ async def test_multiple_participants_use_remember_in_same_hive(cortex_client, hi
         CreateConversationInput(
             type="user-agent",
             memory_space_id=hive_space,
-            participants=ConversationParticipants(user_id="user-alice"),
+            participants=ConversationParticipants(user_id="user-alice", agent_id="test-agent"),
         )
     )
 
@@ -677,6 +681,7 @@ async def test_multiple_participants_use_remember_in_same_hive(cortex_client, hi
                 conversation_id=conv.conversation_id,
                 user_id="user-alice",
                 user_name="Alice",
+                agent_id="assistant",
                 participant_id=participant,
                 user_message=f"Test from {participant}",
                 agent_response=f"Response from {participant}",
@@ -720,6 +725,7 @@ async def test_message_participant_id_for_agent_messages(cortex_client, hive_spa
             type="user-agent",
             participants=ConversationParticipants(
                 user_id="user-alice",
+                agent_id="tool-calendar",
                 participant_id="tool-calendar",
             ),
         )
@@ -954,6 +960,7 @@ async def test_participant_id_in_all_layers_for_end_to_end_workflow(cortex_clien
             memory_space_id=hive_space,
             participants=ConversationParticipants(
                 user_id="user-alice",
+                agent_id=participant,
                 participant_id=participant,
             ),
         )
@@ -966,6 +973,7 @@ async def test_participant_id_in_all_layers_for_end_to_end_workflow(cortex_clien
             conversation_id=conv.conversation_id,
             user_id="user-alice",
             user_name="Alice",
+            agent_id="assistant",
             participant_id=participant,
             user_message="Workflow test message",
             agent_response="Workflow test response",

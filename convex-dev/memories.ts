@@ -5,7 +5,7 @@
  * References Layer 1 stores for full context
  */
 
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -35,7 +35,8 @@ export const store = mutation({
     ),
     sourceUserId: v.optional(v.string()),
     sourceUserName: v.optional(v.string()),
-    userId: v.optional(v.string()),
+    userId: v.optional(v.string()), // For user-owned memories
+    agentId: v.optional(v.string()), // For agent-owned memories
     messageRole: v.optional(
       v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
     ), // NEW: For semantic search weighting
@@ -92,6 +93,7 @@ export const store = mutation({
       enrichedContent: args.enrichedContent,
       factCategory: args.factCategory,
       userId: args.userId,
+      agentId: args.agentId, // NEW: Agent-owned memories support
       conversationRef: args.conversationRef,
       immutableRef: args.immutableRef,
       mutableRef: args.mutableRef,
@@ -175,7 +177,7 @@ export const updatePartialMemory = mutation({
       .first();
 
     if (!memory) {
-      throw new Error("MEMORY_NOT_FOUND");
+      throw new ConvexError("MEMORY_NOT_FOUND");
     }
 
     await ctx.db.patch(memory._id, {
@@ -206,7 +208,7 @@ export const finalizePartialMemory = mutation({
       .first();
 
     if (!memory) {
-      throw new Error("MEMORY_NOT_FOUND");
+      throw new ConvexError("MEMORY_NOT_FOUND");
     }
 
     // Remove streaming-related tags
@@ -242,12 +244,12 @@ export const deleteMemory = mutation({
       .first();
 
     if (!memory) {
-      throw new Error("MEMORY_NOT_FOUND");
+      throw new ConvexError("MEMORY_NOT_FOUND");
     }
 
     // Verify memorySpace owns this memory
     if (memory.memorySpaceId !== args.memorySpaceId) {
-      throw new Error("PERMISSION_DENIED");
+      throw new ConvexError("PERMISSION_DENIED");
     }
 
     await ctx.db.delete(memory._id);
@@ -584,11 +586,11 @@ export const update = mutation({
       .first();
 
     if (!memory) {
-      throw new Error("MEMORY_NOT_FOUND");
+      throw new ConvexError("MEMORY_NOT_FOUND");
     }
 
     if (memory.memorySpaceId !== args.memorySpaceId) {
-      throw new Error("PERMISSION_DENIED");
+      throw new ConvexError("PERMISSION_DENIED");
     }
 
     const now = Date.now();
@@ -749,6 +751,39 @@ export const deleteMany = mutation({
     return {
       deleted,
       memoryIds: memories.map((m) => m.memoryId),
+    };
+  },
+});
+
+/**
+ * Delete multiple memories by their IDs (batch delete for cascade operations)
+ * Much faster than calling deleteMemory multiple times
+ * Uses index lookups instead of full table scan to avoid memory issues with large tables
+ */
+export const deleteByIds = mutation({
+  args: {
+    memoryIds: v.array(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const deletedIds: string[] = [];
+
+    // Look up each memory by index to avoid full table scan
+    // This is O(n) index lookups vs O(entire table) memory usage
+    for (const memoryId of args.memoryIds) {
+      const memory = await ctx.db
+        .query("memories")
+        .withIndex("by_memoryId", (q) => q.eq("memoryId", memoryId))
+        .first();
+
+      if (memory) {
+        await ctx.db.delete(memory._id);
+        deletedIds.push(memoryId);
+      }
+    }
+
+    return {
+      deleted: deletedIds.length,
+      memoryIds: deletedIds,
     };
   },
 });
@@ -943,11 +978,11 @@ export const archive = mutation({
       .first();
 
     if (!memory) {
-      throw new Error("MEMORY_NOT_FOUND");
+      throw new ConvexError("MEMORY_NOT_FOUND");
     }
 
     if (memory.memorySpaceId !== args.memorySpaceId) {
-      throw new Error("PERMISSION_DENIED");
+      throw new ConvexError("PERMISSION_DENIED");
     }
 
     // Mark as archived by adding to tags
@@ -984,16 +1019,16 @@ export const restoreFromArchive = mutation({
       .first();
 
     if (!memory) {
-      throw new Error("MEMORY_NOT_FOUND");
+      throw new ConvexError("MEMORY_NOT_FOUND");
     }
 
     if (memory.memorySpaceId !== args.memorySpaceId) {
-      throw new Error("PERMISSION_DENIED");
+      throw new ConvexError("PERMISSION_DENIED");
     }
 
     // Check if memory is archived
     if (!memory.tags.includes("archived")) {
-      throw new Error("MEMORY_NOT_ARCHIVED");
+      throw new ConvexError("MEMORY_NOT_ARCHIVED");
     }
 
     // Remove archived tag

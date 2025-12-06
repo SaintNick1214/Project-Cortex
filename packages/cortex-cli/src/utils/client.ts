@@ -77,12 +77,18 @@ export async function testConnection(
 
     const latency = Date.now() - startTime;
 
+    // Close client to release WebSocket connection
+    closeClient();
+
     return {
       connected: true,
       url: resolved.url,
       latency,
     };
   } catch (error) {
+    // Close client even on error
+    closeClient();
+
     return {
       connected: false,
       url: resolved.url,
@@ -116,6 +122,7 @@ export function getDeploymentInfo(
 
 /**
  * Ensure client is connected before running an operation
+ * Automatically closes the connection after the operation completes
  */
 export async function withClient<T>(
   config: CLIConfig,
@@ -127,7 +134,8 @@ export async function withClient<T>(
   try {
     return await operation(client);
   } finally {
-    // Don't close the client here - allow reuse
+    // Close the client to release WebSocket connection and allow process to exit
+    closeClient();
   }
 }
 

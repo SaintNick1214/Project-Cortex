@@ -131,6 +131,26 @@ export class ContextsAPI {
   }
 
   /**
+   * Handle ConvexError from direct Convex calls
+   */
+  private handleConvexError(error: unknown): never {
+    if (
+      error &&
+      typeof error === "object" &&
+      "data" in error &&
+      (error as { data: unknown }).data !== undefined
+    ) {
+      const convexError = error as { data: unknown };
+      const errorData =
+        typeof convexError.data === "string"
+          ? convexError.data
+          : JSON.stringify(convexError.data);
+      throw new Error(errorData);
+    }
+    throw error;
+  }
+
+  /**
    * Create a new context
    *
    * @example
@@ -174,15 +194,20 @@ export class ContextsAPI {
       validateDataObject(params.data);
     }
 
-    const result = await this.client.mutation(api.contexts.create, {
-      purpose: params.purpose,
-      memorySpaceId: params.memorySpaceId,
-      userId: params.userId,
-      parentId: params.parentId,
-      conversationRef: params.conversationRef,
-      data: params.data,
-      status: params.status,
-    });
+    let result;
+    try {
+      result = await this.client.mutation(api.contexts.create, {
+        purpose: params.purpose,
+        memorySpaceId: params.memorySpaceId,
+        userId: params.userId,
+        parentId: params.parentId,
+        conversationRef: params.conversationRef,
+        data: params.data,
+        status: params.status,
+      });
+    } catch (error) {
+      this.handleConvexError(error);
+    }
 
     // Sync to graph if requested
     if (options?.syncToGraph && this.graphAdapter) {
@@ -312,10 +337,15 @@ export class ContextsAPI {
     validateRequiredString(contextId, "contextId");
     validateContextIdFormat(contextId);
 
-    const result = await this.client.mutation(api.contexts.deleteContext, {
-      contextId,
-      cascadeChildren: options?.cascadeChildren,
-    });
+    let result;
+    try {
+      result = await this.client.mutation(api.contexts.deleteContext, {
+        contextId,
+        cascadeChildren: options?.cascadeChildren,
+      });
+    } catch (error) {
+      this.handleConvexError(error);
+    }
 
     // Delete from graph with orphan cleanup
     if (options?.syncToGraph && this.graphAdapter) {

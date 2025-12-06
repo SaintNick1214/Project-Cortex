@@ -27,13 +27,87 @@ import {
   formatTimestamp,
   formatBytes,
 } from "../utils/formatting.js";
-import {
-  validateFilePath,
-  requireConfirmation,
-  requireExactConfirmation,
-} from "../utils/validation.js";
+import { validateFilePath, requireConfirmation } from "../utils/validation.js";
 import { writeFile, readFile } from "fs/promises";
 import pc from "picocolors";
+import prompts from "prompts";
+import { listDeployments } from "../utils/config.js";
+
+const MAX_LIMIT = 1000;
+
+/**
+ * Select a database deployment interactively or from options
+ * Returns updated globalOpts with the selected deployment
+ */
+async function selectDatabase(
+  config: CLIConfig,
+  globalOpts: Record<string, unknown>,
+  actionDescription: string,
+): Promise<{
+  globalOpts: Record<string, unknown>;
+  targetName: string;
+  targetUrl: string;
+} | null> {
+  const deployments = listDeployments(config);
+
+  if (deployments.length === 0) {
+    printError("No deployments configured. Run 'cortex setup' first.");
+    return null;
+  }
+
+  // Determine target deployment
+  let targetDeployment = deployments.find((d) => d.isDefault);
+  let targetUrl = targetDeployment?.url ?? "";
+  let targetName = targetDeployment?.name ?? config.default;
+
+  // If --deployment flag was passed, use that
+  if (globalOpts.deployment) {
+    const specified = deployments.find((d) => d.name === globalOpts.deployment);
+    if (specified) {
+      targetDeployment = specified;
+      targetUrl = specified.url;
+      targetName = specified.name;
+    } else {
+      printError(`Deployment "${globalOpts.deployment}" not found`);
+      return null;
+    }
+  }
+
+  // If multiple deployments and none specified, ask which one
+  if (deployments.length > 1 && !globalOpts.deployment) {
+    console.log();
+    console.log(
+      `Current target: ${pc.cyan(targetName)} (${pc.dim(targetUrl)})`,
+    );
+    console.log();
+
+    const selectResponse = await prompts({
+      type: "select",
+      name: "deployment",
+      message: `Select database to ${actionDescription}:`,
+      choices: deployments.map((d) => ({
+        title: d.isDefault ? `${d.name} (default)` : d.name,
+        description: d.url,
+        value: d.name,
+      })),
+      initial: deployments.findIndex((d) => d.name === targetName),
+    });
+
+    if (!selectResponse.deployment) {
+      printWarning("Operation cancelled");
+      return null;
+    }
+
+    targetName = selectResponse.deployment;
+    const selected = deployments.find((d) => d.name === targetName);
+    targetUrl = selected?.url ?? "";
+
+    // Update globalOpts to use selected deployment
+    globalOpts = { ...globalOpts, deployment: targetName };
+  }
+
+  return { globalOpts, targetName, targetUrl };
+}
 
 /**
  * Register database commands
@@ -46,78 +120,191 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
     .description("Show database statistics")
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (options) => {
-      const globalOpts = program.opts();
+      let globalOpts = program.opts();
       const resolved = resolveConfig(config, globalOpts);
       const format = (options.format ?? resolved.format) as OutputFormat;
 
-      const spinner = ora("Loading database statistics...").start();
-
       try {
+        // Select database
+        const selection = await selectDatabase(
+          config,
+          globalOpts,
+          "view stats for",
+        );
+        if (!selection) return;
+        globalOpts = selection.globalOpts;
+        const { targetName, targetUrl } = selection;
+
+        const spinner = ora(`Loading statistics for ${targetName}...`).start();
+
         await withClient(config, globalOpts, async (client) => {
-          // Get counts from all tables
-          const [spacesCount, usersCount] = await Promise.all([
-            client.memorySpaces.count(),
-            client.users.count(),
-          ]);
+          // Get deployment info
+          const info = {
+            url: targetUrl,
+            isLocal:
+              targetUrl.includes("127.0.0.1") ||
+              targetUrl.includes("localhost"),
+          };
+          const rawClient = client.getClient();
 
-          // Get space-level statistics
-          const spaces = await client.memorySpaces.list({ limit: 1000 });
+          // Get comprehensive counts from all tables using admin function
+          spinner.text = "Counting all tables...";
+          let tableCounts: Record<string, number> = {};
+          try {
+            tableCounts = await rawClient.query(
+              "admin:getAllCounts" as unknown as Parameters<
+                typeof rawClient.query
+              >[0],
+              {},
+            );
+          } catch {
+            // Fall back to individual counts if admin function not available
+            tableCounts = {
+              agents: 0,
+              contexts: 0,
+              conversations: 0,
+              facts: 0,
+              governanceEnforcement: 0,
+              governancePolicies: 0,
+              graphSyncQueue: 0,
+              immutable: 0,
+              memories: 0,
+              memorySpaces: 0,
+              mutable: 0,
+            };
+          }
 
-          let totalMemories = 0;
-          let totalConversations = 0;
-          let totalFacts = 0;
+          // Get user count from SDK (users may be managed separately)
+          let usersCount = 0;
+          try {
+            usersCount = await client.users.count();
+          } catch {
+            // Users API may not be available
+          }
 
-          for (const space of spaces) {
-            try {
-              const stats = await client.memorySpaces.getStats(
-                space.memorySpaceId,
-              );
-              totalMemories += stats.totalMemories;
-              totalConversations += stats.totalConversations;
-              totalFacts += stats.totalFacts;
-            } catch {
-              // Skip if stats not available
+          // Count messages in conversations
+          spinner.text = "Counting messages...";
+          let totalMessages = 0;
+          try {
+            const convos = await client.conversations.list({
+              limit: MAX_LIMIT,
+            });
+            for (const convo of convos) {
+              totalMessages += convo.messageCount ?? 0;
             }
+          } catch {
+            // Skip if not available
           }
 
           spinner.stop();
 
           const stats: DatabaseStats = {
-            memorySpaces: spacesCount,
-            conversations: totalConversations,
-            memories: totalMemories,
-            facts: totalFacts,
+            memorySpaces: tableCounts.memorySpaces ?? 0,
+            conversations: tableCounts.conversations ?? 0,
+            memories: tableCounts.memories ?? 0,
+            facts: tableCounts.facts ?? 0,
             users: usersCount,
-            immutableRecords: 0, // Would need separate query
-            mutableRecords: 0, // Would need separate query
-            contexts: 0, // Would need separate query
+            immutableRecords: tableCounts.immutable ?? 0,
+            mutableRecords: tableCounts.mutable ?? 0,
+            contexts: tableCounts.contexts ?? 0,
           };
 
           if (format === "json") {
-            console.log(formatOutput(stats, "json"));
+            console.log(
+              formatOutput(
+                {
+                  ...stats,
+                  agents: tableCounts.agents ?? 0,
+                  messages: totalMessages,
+                  governancePolicies: tableCounts.governancePolicies ?? 0,
+                  governanceEnforcement: tableCounts.governanceEnforcement ?? 0,
+                  graphSyncQueue: tableCounts.graphSyncQueue ?? 0,
+                  deployment: {
+                    name: globalOpts.deployment ?? config.default ?? "default",
+                    url: info.url,
+                    isLocal: info.isLocal,
+                  },
+                },
+                "json",
+              ),
+            );
           } else {
             console.log();
-            printSection("Database Statistics", {
-              "Memory Spaces": stats.memorySpaces,
-              "Total Memories": stats.memories,
-              "Total Conversations": stats.conversations,
-              "Total Facts": stats.facts,
-              "User Profiles": stats.users,
-            });
-
-            // Show deployment info
-            const info = (await import("../utils/client.js")).getDeploymentInfo(
-              config,
-              globalOpts,
-            );
-            console.log(`  ${pc.dim("Deployment:")} ${info.url}`);
             console.log(
-              `  ${pc.dim("Mode:")} ${info.isLocal ? "Local" : "Cloud"}`,
+              pc.bold(`📊 Database Statistics: ${pc.cyan(targetName)}`),
             );
+            console.log(pc.dim("─".repeat(45)));
+            console.log();
+
+            // Core entities
+            console.log(pc.bold("  Core Entities"));
+            console.log(
+              `    Memory Spaces:    ${pc.yellow(String(stats.memorySpaces))}`,
+            );
+            console.log(
+              `    Users:            ${pc.yellow(String(stats.users))}`,
+            );
+            console.log(
+              `    Agents:           ${pc.yellow(String(tableCounts.agents ?? 0))}`,
+            );
+            console.log();
+
+            // Memory data
+            console.log(pc.bold("  Memory Data"));
+            console.log(
+              `    Memories:         ${pc.yellow(String(stats.memories))}`,
+            );
+            console.log(
+              `    Facts:            ${pc.yellow(String(stats.facts))}`,
+            );
+            console.log(
+              `    Contexts:         ${pc.yellow(String(stats.contexts))}`,
+            );
+            console.log();
+
+            // Conversation data
+            console.log(pc.bold("  Conversations"));
+            console.log(
+              `    Conversations:    ${pc.yellow(String(stats.conversations))}`,
+            );
+            console.log(
+              `    Messages:         ${pc.yellow(String(totalMessages))}`,
+            );
+            console.log();
+
+            // Shared stores
+            console.log(pc.bold("  Shared Stores"));
+            console.log(
+              `    Immutable:        ${pc.yellow(String(stats.immutableRecords))}`,
+            );
+            console.log(
+              `    Mutable:          ${pc.yellow(String(stats.mutableRecords))}`,
+            );
+            console.log();
+
+            // System tables
+            console.log(pc.bold("  System Tables"));
+            console.log(
+              `    Gov. Policies:    ${pc.yellow(String(tableCounts.governancePolicies ?? 0))}`,
+            );
+            console.log(
+              `    Gov. Logs:        ${pc.yellow(String(tableCounts.governanceEnforcement ?? 0))}`,
+            );
+            console.log(
+              `    Graph Sync Queue: ${pc.yellow(String(tableCounts.graphSyncQueue ?? 0))}`,
+            );
+            console.log();
+
+            // Deployment info
+            console.log(pc.bold("  Deployment"));
+            console.log(`    URL:              ${pc.dim(info.url)}`);
+            console.log(
+              `    Mode:             ${info.isLocal ? pc.green("Local") : pc.blue("Cloud")}`,
+            );
+            console.log();
           }
         });
       } catch (error) {
-        spinner.stop();
         printError(
           error instanceof Error ? error.message : "Failed to load statistics",
         );
@@ -128,86 +315,425 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
   // db clear
   db.command("clear")
     .description("Clear entire database (DANGEROUS!)")
-    .option(
-      "--confirm <text>",
-      'Confirmation text: "I understand this is irreversible"',
-    )
+    .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (options) => {
-      const globalOpts = program.opts();
+      let globalOpts = program.opts();
 
       try {
-        // Require exact confirmation text
-        const expectedText = "I understand this is irreversible";
+        console.log();
+        console.log(pc.red(pc.bold("⚠️  DANGER: Clear Database")));
 
-        if (options.confirm !== expectedText) {
-          console.log();
+        // Select database
+        const selection = await selectDatabase(config, globalOpts, "clear");
+        if (!selection) return;
+        globalOpts = selection.globalOpts;
+        const { targetName, targetUrl } = selection;
+
+        console.log();
+        console.log("This will permanently delete:");
+        console.log("  • All memory spaces and memories");
+        console.log("  • All conversations and messages");
+        console.log("  • All facts and user profiles");
+
+        // Check if graph sync is enabled (same logic as Cortex.create())
+        const neo4jUri = process.env.NEO4J_URI;
+        const memgraphUri = process.env.MEMGRAPH_URI;
+        const graphSyncEnabled =
+          process.env.CORTEX_GRAPH_SYNC === "true" ||
+          !!(neo4jUri || memgraphUri);
+
+        // Debug: Show env var detection
+        if (process.env.DEBUG || program.opts().debug) {
           console.log(
-            pc.red(
-              pc.bold("⚠️  DANGER: This will DELETE ALL DATA in the database!"),
+            pc.dim(
+              `  [DEBUG] CORTEX_GRAPH_SYNC=${process.env.CORTEX_GRAPH_SYNC}`,
             ),
           );
-          console.log();
-          console.log("This operation will permanently delete:");
-          console.log("  • All memory spaces");
-          console.log("  • All memories");
-          console.log("  • All conversations");
-          console.log("  • All facts");
-          console.log("  • All user profiles");
-          console.log("  • All immutable and mutable records");
-          console.log("  • All contexts");
-          console.log();
-          console.log(pc.yellow("This cannot be undone!"));
-          console.log();
-
-          const confirmed = await requireExactConfirmation(
-            expectedText,
-            `To proceed, type exactly: "${expectedText}"`,
+          console.log(
+            pc.dim(`  [DEBUG] NEO4J_URI=${neo4jUri ? "set" : "unset"}`),
           );
+          console.log(
+            pc.dim(`  [DEBUG] MEMGRAPH_URI=${memgraphUri ? "set" : "unset"}`),
+          );
+          console.log(pc.dim(`  [DEBUG] graphSyncEnabled=${graphSyncEnabled}`));
+        }
 
-          if (!confirmed) {
+        if (graphSyncEnabled) {
+          const dbType = neo4jUri ? "Neo4j" : "Memgraph";
+          console.log(
+            `  • All graph database nodes and relationships (${dbType})`,
+          );
+        }
+        console.log();
+
+        // Simple y/N confirmation
+        if (!options.yes) {
+          const confirmResponse = await prompts({
+            type: "confirm",
+            name: "confirmed",
+            message: `Clear ALL data from ${pc.red(targetName)}?`,
+            initial: false,
+          });
+
+          if (!confirmResponse.confirmed) {
             printWarning("Operation cancelled");
             return;
           }
         }
 
-        const spinner = ora("Clearing database...").start();
+        const spinner = ora(`Clearing ${targetName}...`).start();
 
         await withClient(config, globalOpts, async (client) => {
-          // Delete all memory spaces (with cascade)
-          const spaces = await client.memorySpaces.list({ limit: 10000 });
-          let deletedSpaces = 0;
+          const deleted = {
+            agents: 0,
+            contexts: 0,
+            conversations: 0,
+            messages: 0,
+            facts: 0,
+            memories: 0,
+            memorySpaces: 0,
+            immutable: 0,
+            mutable: 0,
+            users: 0,
+            governancePolicies: 0,
+            governanceEnforcement: 0,
+            graphSyncQueue: 0,
+          };
 
-          for (const space of spaces) {
+          // Get raw Convex client for direct table access via admin functions
+          const rawClient = client.getClient();
+
+          // Helper to clear a table using the admin:clearTable mutation
+          const clearTableDirect = async (
+            tableName: string,
+            counter: keyof typeof deleted,
+          ) => {
+            let hasMore = true;
+            while (hasMore) {
+              spinner.text = `Clearing ${tableName}... (${deleted[counter]} deleted)`;
+              try {
+                const result = await rawClient.mutation(
+                  "admin:clearTable" as unknown as Parameters<
+                    typeof rawClient.mutation
+                  >[0],
+                  { table: tableName, limit: MAX_LIMIT },
+                );
+                deleted[counter] += result.deleted;
+                hasMore = result.hasMore;
+              } catch {
+                hasMore = false;
+              }
+            }
+          };
+
+          // 1. Clear agents (using SDK for proper unregister)
+          let hasMoreAgents = true;
+          while (hasMoreAgents) {
+            spinner.text = `Clearing agents... (${deleted.agents} deleted)`;
             try {
-              await client.memorySpaces.delete(space.memorySpaceId, {
-                cascade: true,
-              });
-              deletedSpaces++;
+              const agents = await client.agents.list({ limit: MAX_LIMIT });
+              if (agents.length === 0) {
+                hasMoreAgents = false;
+                break;
+              }
+              for (const agent of agents) {
+                try {
+                  await client.agents.unregister(agent.id, { cascade: false });
+                  deleted.agents++;
+                } catch {
+                  // Continue on error
+                }
+              }
+              if (agents.length < MAX_LIMIT) {
+                hasMoreAgents = false;
+              }
             } catch {
-              // Continue on error
+              // Fall back to direct table clear if SDK fails
+              await clearTableDirect("agents", "agents");
+              hasMoreAgents = false;
             }
           }
 
-          // Delete all users
-          const users = await client.users.list({ limit: 10000 });
-          let deletedUsers = 0;
-
-          for (const user of users) {
+          // 2. Clear contexts (using SDK for cascade)
+          let hasMoreContexts = true;
+          while (hasMoreContexts) {
+            spinner.text = `Clearing contexts... (${deleted.contexts} deleted)`;
             try {
-              await client.users.delete(user.id, { cascade: true });
-              deletedUsers++;
+              const contexts = await client.contexts.list({ limit: MAX_LIMIT });
+              if (contexts.length === 0) {
+                hasMoreContexts = false;
+                break;
+              }
+              for (const ctx of contexts) {
+                try {
+                  await client.contexts.delete(ctx.contextId, {
+                    cascadeChildren: true,
+                  });
+                  deleted.contexts++;
+                } catch {
+                  // Continue on error
+                }
+              }
+              if (contexts.length < MAX_LIMIT) {
+                hasMoreContexts = false;
+              }
             } catch {
-              // Continue on error
+              await clearTableDirect("contexts", "contexts");
+              hasMoreContexts = false;
+            }
+          }
+
+          // 3. Clear conversations (count messages)
+          let hasMoreConvos = true;
+          while (hasMoreConvos) {
+            spinner.text = `Clearing conversations... (${deleted.conversations} deleted, ${deleted.messages} messages)`;
+            try {
+              const convos = await client.conversations.list({
+                limit: MAX_LIMIT,
+              });
+              if (convos.length === 0) {
+                hasMoreConvos = false;
+                break;
+              }
+              for (const convo of convos) {
+                try {
+                  deleted.messages += convo.messageCount || 0;
+                  await client.conversations.delete(convo.conversationId);
+                  deleted.conversations++;
+                } catch {
+                  // Continue on error
+                }
+              }
+              if (convos.length < MAX_LIMIT) {
+                hasMoreConvos = false;
+              }
+            } catch {
+              await clearTableDirect("conversations", "conversations");
+              hasMoreConvos = false;
+            }
+          }
+
+          // 4. Clear facts (direct table clear)
+          await clearTableDirect("facts", "facts");
+
+          // 5. Clear memories (direct table clear)
+          await clearTableDirect("memories", "memories");
+
+          // 6. Clear memory spaces (using raw client for invalid IDs)
+          let hasMoreSpaces = true;
+          while (hasMoreSpaces) {
+            spinner.text = `Clearing memorySpaces... (${deleted.memorySpaces} deleted)`;
+            try {
+              const spaces = await client.memorySpaces.list({
+                limit: MAX_LIMIT,
+              });
+              if (spaces.length === 0) {
+                hasMoreSpaces = false;
+                break;
+              }
+              for (const space of spaces) {
+                try {
+                  await rawClient.mutation(
+                    "memorySpaces:deleteSpace" as unknown as Parameters<
+                      typeof rawClient.mutation
+                    >[0],
+                    { memorySpaceId: space.memorySpaceId, cascade: true },
+                  );
+                  deleted.memorySpaces++;
+                } catch {
+                  // Continue on error
+                }
+              }
+              if (spaces.length < MAX_LIMIT) {
+                hasMoreSpaces = false;
+              }
+            } catch {
+              await clearTableDirect("memorySpaces", "memorySpaces");
+              hasMoreSpaces = false;
+            }
+          }
+
+          // 7. Clear immutable (using SDK)
+          let hasMoreImmutable = true;
+          while (hasMoreImmutable) {
+            spinner.text = `Clearing immutable... (${deleted.immutable} deleted)`;
+            try {
+              const records = await client.immutable.list({ limit: MAX_LIMIT });
+              if (records.length === 0) {
+                hasMoreImmutable = false;
+                break;
+              }
+              for (const record of records) {
+                try {
+                  await client.immutable.purge(record.type, record.id);
+                  deleted.immutable++;
+                } catch {
+                  // Continue on error
+                }
+              }
+              if (records.length < MAX_LIMIT) {
+                hasMoreImmutable = false;
+              }
+            } catch {
+              await clearTableDirect("immutable", "immutable");
+              hasMoreImmutable = false;
+            }
+          }
+
+          // 8. Clear mutable (direct table clear)
+          await clearTableDirect("mutable", "mutable");
+
+          // 9. Clear users (using SDK for cascade - users table is virtual/SDK-managed)
+          let hasMoreUsers = true;
+          while (hasMoreUsers) {
+            spinner.text = `Clearing users... (${deleted.users} deleted)`;
+            try {
+              const users = await client.users.list({ limit: MAX_LIMIT });
+              if (users.length === 0) {
+                hasMoreUsers = false;
+                break;
+              }
+              for (const user of users) {
+                try {
+                  await client.users.delete(user.id, { cascade: true });
+                  deleted.users++;
+                } catch {
+                  // Continue on error
+                }
+              }
+              if (users.length < MAX_LIMIT) {
+                hasMoreUsers = false;
+              }
+            } catch {
+              hasMoreUsers = false;
+            }
+          }
+
+          // 10. Clear governance policies
+          await clearTableDirect("governancePolicies", "governancePolicies");
+
+          // 11. Clear governance enforcement logs
+          await clearTableDirect(
+            "governanceEnforcement",
+            "governanceEnforcement",
+          );
+
+          // 12. Clear graph sync queue
+          await clearTableDirect("graphSyncQueue", "graphSyncQueue");
+
+          // 13. Clear graph database if graph sync is enabled
+          // Check both explicit flag and auto-detection (same logic as Cortex.create())
+          const neo4jUri = process.env.NEO4J_URI;
+          const memgraphUri = process.env.MEMGRAPH_URI;
+          const graphSyncEnabled =
+            process.env.CORTEX_GRAPH_SYNC === "true" ||
+            !!(neo4jUri || memgraphUri);
+
+          if (graphSyncEnabled) {
+            spinner.text = "Clearing graph database...";
+            let graphCleared = false;
+
+            try {
+              if (neo4jUri || memgraphUri) {
+                // Dynamically import neo4j-driver only when needed
+                const neo4j = await import("neo4j-driver");
+
+                // Determine which database to connect to
+                const uri = neo4jUri || memgraphUri;
+                const username = neo4jUri
+                  ? process.env.NEO4J_USERNAME || "neo4j"
+                  : process.env.MEMGRAPH_USERNAME || "memgraph";
+                const password = neo4jUri
+                  ? process.env.NEO4J_PASSWORD || ""
+                  : process.env.MEMGRAPH_PASSWORD || "";
+
+                // Connect to graph database
+                const driver = neo4j.default.driver(
+                  uri!,
+                  neo4j.default.auth.basic(username, password),
+                );
+
+                // Verify connectivity
+                await driver.verifyConnectivity();
+
+                // Create session and clear all data
+                const session = driver.session();
+                try {
+                  // DETACH DELETE removes nodes and all their relationships
+                  // Works for both Neo4j and Memgraph
+                  await session.run("MATCH (n) DETACH DELETE n");
+                  graphCleared = true;
+                } finally {
+                  await session.close();
+                }
+
+                await driver.close();
+              }
+            } catch (error) {
+              // Log warning but don't fail the entire operation
+              const errorMsg =
+                error instanceof Error ? error.message : "Unknown error";
+              spinner.warn(
+                pc.yellow(`Graph database clear failed: ${errorMsg}`),
+              );
+            }
+
+            if (graphCleared) {
+              // Only show success if we actually cleared
+              deleted.graphSyncQueue = -1; // Use as flag to indicate graph was cleared
             }
           }
 
           spinner.stop();
 
-          printSuccess("Database cleared");
+          printSuccess(`Database "${targetName}" cleared`);
+          console.log();
           printSection("Deletion Summary", {
-            "Memory Spaces": deletedSpaces,
-            Users: deletedUsers,
+            Database: targetName,
+            URL: targetUrl,
           });
+          console.log();
+
+          // Show counts with categories
+          const coreEntities = {
+            Agents: deleted.agents,
+            Users: deleted.users,
+            "Memory Spaces": deleted.memorySpaces,
+          };
+          const memoryData = {
+            Memories: deleted.memories,
+            Facts: deleted.facts,
+            Contexts: deleted.contexts,
+          };
+          const conversationData = {
+            Conversations: deleted.conversations,
+            Messages: deleted.messages,
+          };
+          const sharedStores = {
+            Immutable: deleted.immutable,
+            Mutable: deleted.mutable,
+          };
+          const systemTables = {
+            "Governance Policies": deleted.governancePolicies,
+            "Governance Logs": deleted.governanceEnforcement,
+            "Graph Sync Queue":
+              deleted.graphSyncQueue >= 0 ? deleted.graphSyncQueue : 0,
+          };
+
+          printSection("Core Entities", coreEntities);
+          printSection("Memory Data", memoryData);
+          printSection("Conversations", conversationData);
+          printSection("Shared Stores", sharedStores);
+          printSection("System Tables", systemTables);
+
+          // Show graph database status if it was cleared
+          if (deleted.graphSyncQueue === -1) {
+            const dbType = process.env.NEO4J_URI ? "Neo4j" : "Memgraph";
+            console.log();
+            printSection("Graph Database", {
+              [dbType]: pc.green("Cleared ✓"),
+            });
+          }
         });
       } catch (error) {
         printError(error instanceof Error ? error.message : "Clear failed");
@@ -221,30 +747,36 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
     .option("-o, --output <file>", "Output file path", "cortex-backup.json")
     .option("--include-all", "Include all data (may be large)", false)
     .action(async (options) => {
-      const globalOpts = program.opts();
-
-      const spinner = ora("Creating backup...").start();
+      let globalOpts = program.opts();
 
       try {
         validateFilePath(options.output);
+
+        // Select database
+        const selection = await selectDatabase(config, globalOpts, "backup");
+        if (!selection) return;
+        globalOpts = selection.globalOpts;
+        const { targetName, targetUrl } = selection;
+
+        const spinner = ora(`Creating backup of ${targetName}...`).start();
 
         await withClient(config, globalOpts, async (client) => {
           const backup: BackupData = {
             version: "1.0",
             timestamp: Date.now(),
-            deployment: resolveConfig(config, globalOpts).url,
+            deployment: targetUrl,
             data: {},
           };
 
-          // Backup memory spaces
+          // Backup memory spaces (paginate if needed)
           spinner.text = "Backing up memory spaces...";
           backup.data.memorySpaces = await client.memorySpaces.list({
-            limit: 10000,
+            limit: MAX_LIMIT,
           });
 
-          // Backup users
+          // Backup users (paginate if needed)
           spinner.text = "Backing up users...";
-          backup.data.users = await client.users.list({ limit: 10000 });
+          backup.data.users = await client.users.list({ limit: MAX_LIMIT });
 
           if (options.includeAll) {
             // Backup conversations
@@ -256,7 +788,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
             for (const space of spaces) {
               const convs = await client.conversations.list({
                 memorySpaceId: space.memorySpaceId,
-                limit: 10000,
+                limit: MAX_LIMIT,
               });
               (backup.data.conversations as unknown[]).push(...convs);
             }
@@ -267,7 +799,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
             for (const space of spaces) {
               const memories = await client.memory.list({
                 memorySpaceId: space.memorySpaceId,
-                limit: 10000,
+                limit: MAX_LIMIT,
               });
               (backup.data.memories as unknown[]).push(...memories);
             }
@@ -278,7 +810,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
             for (const space of spaces) {
               const facts = await client.facts.list({
                 memorySpaceId: space.memorySpaceId,
-                limit: 10000,
+                limit: MAX_LIMIT,
               });
               (backup.data.facts as unknown[]).push(...facts);
             }
@@ -311,7 +843,6 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           });
         });
       } catch (error) {
-        spinner.stop();
         printError(error instanceof Error ? error.message : "Backup failed");
         process.exit(1);
       }
@@ -324,12 +855,12 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
     .option("--dry-run", "Preview what would be restored", false)
     .option("-y, --yes", "Skip confirmation", false)
     .action(async (options) => {
-      const globalOpts = program.opts();
+      let globalOpts = program.opts();
 
       try {
         validateFilePath(options.input);
 
-        // Read backup file
+        // Read backup file first to show info before selecting target
         const content = await readFile(options.input, "utf-8");
         const backup = JSON.parse(content) as BackupData;
 
@@ -357,9 +888,19 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           return;
         }
 
+        // Select target database
+        const selection = await selectDatabase(
+          config,
+          globalOpts,
+          "restore to",
+        );
+        if (!selection) return;
+        globalOpts = selection.globalOpts;
+        const { targetName } = selection;
+
         if (!options.yes) {
           const confirmed = await requireConfirmation(
-            "Restore this backup? Existing data may be overwritten.",
+            `Restore this backup to ${targetName}? Existing data may be overwritten.`,
             config,
           );
           if (!confirmed) {
@@ -368,7 +909,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           }
         }
 
-        const spinner = ora("Restoring backup...").start();
+        const spinner = ora(`Restoring backup to ${targetName}...`).start();
 
         await withClient(config, globalOpts, async (client) => {
           let restored = {
@@ -441,18 +982,25 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
     .description("Export all data to JSON")
     .option("-o, --output <file>", "Output file path", "cortex-export.json")
     .action(async (options) => {
-      const globalOpts = program.opts();
-
-      const spinner = ora("Exporting data...").start();
+      let globalOpts = program.opts();
 
       try {
         validateFilePath(options.output);
 
+        // Select database
+        const selection = await selectDatabase(config, globalOpts, "export");
+        if (!selection) return;
+        globalOpts = selection.globalOpts;
+        const { targetName, targetUrl } = selection;
+
+        const spinner = ora(`Exporting data from ${targetName}...`).start();
+
         await withClient(config, globalOpts, async (client) => {
           const exportData = {
             exportedAt: Date.now(),
-            memorySpaces: await client.memorySpaces.list({ limit: 10000 }),
-            users: await client.users.list({ limit: 10000 }),
+            deployment: { name: targetName, url: targetUrl },
+            memorySpaces: await client.memorySpaces.list({ limit: MAX_LIMIT }),
+            users: await client.users.list({ limit: MAX_LIMIT }),
           };
 
           const content = JSON.stringify(exportData, null, 2);
@@ -462,7 +1010,6 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           printSuccess(`Exported data to ${options.output}`);
         });
       } catch (error) {
-        spinner.stop();
         printError(error instanceof Error ? error.message : "Export failed");
         process.exit(1);
       }

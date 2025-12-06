@@ -58,6 +58,26 @@ export class VectorAPI {
   }
 
   /**
+   * Handle ConvexError from direct Convex calls
+   */
+  private handleConvexError(error: unknown): never {
+    if (
+      error &&
+      typeof error === "object" &&
+      "data" in error &&
+      (error as { data: unknown }).data !== undefined
+    ) {
+      const convexError = error as { data: unknown };
+      const errorData =
+        typeof convexError.data === "string"
+          ? convexError.data
+          : JSON.stringify(convexError.data);
+      throw new Error(errorData);
+    }
+    throw error;
+  }
+
+  /**
    * Store a vector memory
    *
    * @example
@@ -97,6 +117,7 @@ export class VectorAPI {
           sourceUserId: input.source.userId,
           sourceUserName: input.source.userName,
           userId: input.userId,
+          agentId: input.agentId, // NEW: Agent-owned memories support
           messageRole: input.messageRole, // NEW: For semantic search weighting
           conversationRef: input.conversationRef,
           immutableRef: input.immutableRef,
@@ -209,10 +230,15 @@ export class VectorAPI {
     validateMemorySpaceId(memorySpaceId);
     validateMemoryId(memoryId);
 
-    const result = await this.client.mutation(api.memories.deleteMemory, {
-      memorySpaceId,
-      memoryId,
-    });
+    let result;
+    try {
+      result = await this.client.mutation(api.memories.deleteMemory, {
+        memorySpaceId,
+        memoryId,
+      });
+    } catch (error) {
+      this.handleConvexError(error);
+    }
 
     // Delete from graph with orphan cleanup
     if (options?.syncToGraph && this.graphAdapter) {
