@@ -38,8 +38,13 @@ def generate_test_id(prefix=""):
     return f"{prefix}{int(time.time() * 1000)}-{random.randint(1000, 9999)}"
 
 
-# Note: Event loop is managed by pytest-asyncio with asyncio_default_fixture_loop_scope = session
-# See pytest.ini - do NOT define a custom event_loop fixture here (deprecated in pytest-asyncio 0.21+)
+# Configure asyncio for pytest
+@pytest.fixture(scope="session")
+def event_loop():
+    """Create event loop for async tests"""
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+    yield loop
+    loop.close()
 
 
 # Test environment variables
