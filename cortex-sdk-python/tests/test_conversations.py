@@ -432,9 +432,10 @@ async def test_export_conversations(cortex_client, test_memory_space_id, test_us
 
 
 @pytest.mark.asyncio
-async def test_accepts_custom_conversation_id(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
+async def test_accepts_custom_conversation_id(cortex_client, test_memory_space_id, test_user_id, ctx, cleanup_helper):
     """Test accepting custom conversationId. Port of: conversations.test.ts - line 112"""
-    custom_id = "conv-custom-python-123"
+    # Use ctx for idempotency in parallel testing
+    custom_id = ctx.conversation_id("custom")
 
     result = await cortex_client.conversations.create(
         CreateConversationInput(

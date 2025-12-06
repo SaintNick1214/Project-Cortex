@@ -114,3 +114,4 @@ if (current.length > 0) {
 console.log();
 log(`Total: ${results.length} | Updated: ${updated.length} | Current: ${current.length}`, c.bold);
 console.log();
+

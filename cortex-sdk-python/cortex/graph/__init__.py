@@ -337,7 +337,7 @@ async def delete_agent_from_graph(agent_id: str, adapter: GraphAdapter) -> int:
             "MATCH (n {participantId: $participantId}) RETURN elementId(n) as id",
             {"participantId": agent_id},
         )
-        records = result.get("records", [])
+        records = result.records if result else []
         for record in records:
             node_id = record.get("id")
             if node_id:
@@ -355,7 +355,7 @@ async def delete_agent_from_graph(agent_id: str, adapter: GraphAdapter) -> int:
             "MATCH (n {agentId: $agentId}) RETURN elementId(n) as id",
             {"agentId": agent_id},
         )
-        records = result.get("records", [])
+        records = result.records if result else []
         for record in records:
             node_id = record.get("id")
             if node_id:
