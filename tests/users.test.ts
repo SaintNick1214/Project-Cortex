@@ -406,6 +406,7 @@ describe("Users API (Coordination Layer)", () => {
         type: "user-agent",
         participants: {
           userId: CASCADE_USER_ID,
+          agentId: "cascade-test-agent",
         },
       });
 
@@ -1086,6 +1087,7 @@ describe("Users API (Coordination Layer)", () => {
         type: "user-agent",
         participants: {
           userId: INTEGRATION_USER_ID,
+          agentId: "integration-test-agent",
         },
       });
 

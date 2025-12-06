@@ -34,7 +34,7 @@ describe("Parameter Propagation: memory.remember()", () => {
     const conv = await cortex.conversations.create({
       type: "user-agent",
       memorySpaceId: TEST_MEMSPACE_ID,
-      participants: { userId: TEST_USER_ID },
+      participants: { userId: TEST_USER_ID, agentId: "test-agent" },
     });
     testConversationId = conv.conversationId;
   });
@@ -143,7 +143,7 @@ describe("Parameter Propagation: memory.remember()", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: USER_ID },
+        participants: { userId: USER_ID, agentId: "test-agent" },
       });
 
       const result = await cortex.memory.remember({
@@ -304,7 +304,7 @@ describe("Parameter Propagation: memory.remember()", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
       getTestConversationId = conv.conversationId;
 
@@ -372,7 +372,7 @@ describe("Parameter Propagation: memory.remember()", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_MEMSPACE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
       });
       searchConversationId = conv.conversationId;
 
@@ -521,7 +521,7 @@ describe("Parameter Propagation: memory.forget()", () => {
     const conv = await cortex.conversations.create({
       type: "user-agent",
       memorySpaceId: TEST_MEMSPACE_ID,
-      participants: { userId: TEST_USER_ID },
+      participants: { userId: TEST_USER_ID, agentId: "test-agent" },
     });
 
     const result = await cortex.memory.remember({
@@ -556,7 +556,7 @@ describe("Parameter Propagation: memory.forget()", () => {
     const conv = await cortex.conversations.create({
       type: "user-agent",
       memorySpaceId: TEST_MEMSPACE_ID,
-      participants: { userId: TEST_USER_ID },
+      participants: { userId: TEST_USER_ID, agentId: "test-agent" },
     });
 
     const result = await cortex.memory.remember({

@@ -896,7 +896,7 @@ describe("State Transition Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: spaceId,
-        participants: { userId: "test-user" },
+        participants: { userId: "test-user", agentId: "test-agent" },
       });
 
       const mem = await cortex.vector.store(spaceId, {
