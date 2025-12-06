@@ -20,8 +20,10 @@ omit =
 # Branch coverage for more accurate metrics
 branch = true
 
-# Context to track which test covered each line (useful for debugging)
-dynamic_context = test_function
+# Note: dynamic_context = test_function is incompatible with pytest-xdist
+# parallel execution. If you need per-test context tracking, run without -n flag
+# or use --cov-context=test on the command line (also incompatible with xdist).
+# See: https://github.com/pytest-dev/pytest-cov/issues/604
 
 [paths]
 # Map source paths for combining coverage from different workers
