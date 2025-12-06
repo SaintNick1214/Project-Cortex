@@ -783,7 +783,8 @@ class AgentsAPI:
         conversation_messages_deleted = 0
         memories_deleted = 0
         facts_deleted = 0
-        graph_nodes_deleted: Optional[int] = None
+        # Initialize to 0 for API consistency (dry-run always returns integer)
+        graph_nodes_deleted = 0
 
         # Helper to build partial deletion info for error reporting
         def _build_partial_deletion_info(failed_layer: str) -> dict:
