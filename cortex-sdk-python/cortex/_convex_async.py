@@ -9,6 +9,8 @@ import asyncio
 import json
 from typing import Any, Dict
 
+from cortex.errors import CortexError, ErrorCode
+
 
 def _extract_convex_error_data(error: Exception) -> str:
     """
@@ -62,7 +64,7 @@ class AsyncConvexClient:
             Query result
 
         Raises:
-            Original exception type with enhanced message containing ConvexError data
+            CortexError: With error code and message extracted from ConvexError data
         """
         loop = asyncio.get_event_loop()
         try:
@@ -74,9 +76,14 @@ class AsyncConvexClient:
             # Extract error data from ConvexError for enhanced message
             # ConvexError has a `data` field with the actual error code/message
             error_data = _extract_convex_error_data(e)
-            # If we extracted meaningful data, re-raise with that data as the message
+            # If we extracted meaningful data, re-raise as CortexError
+            # This preserves type-based error handling patterns
             if error_data != str(e):
-                raise Exception(error_data) from e
+                raise CortexError(
+                    code=ErrorCode.CONVEX_ERROR,
+                    message=error_data,
+                    details={"original_exception": type(e).__name__, "query": name}
+                ) from e
             raise
 
     async def mutation(self, name: str, args: Dict[str, Any]) -> Any:
@@ -91,7 +98,7 @@ class AsyncConvexClient:
             Mutation result
 
         Raises:
-            Original exception type with enhanced message containing ConvexError data
+            CortexError: With error code and message extracted from ConvexError data
         """
         loop = asyncio.get_event_loop()
         try:
@@ -103,9 +110,14 @@ class AsyncConvexClient:
             # Extract error data from ConvexError for enhanced message
             # ConvexError has a `data` field with the actual error code/message
             error_data = _extract_convex_error_data(e)
-            # If we extracted meaningful data, re-raise with that data as the message
+            # If we extracted meaningful data, re-raise as CortexError
+            # This preserves type-based error handling patterns
             if error_data != str(e):
-                raise Exception(error_data) from e
+                raise CortexError(
+                    code=ErrorCode.CONVEX_ERROR,
+                    message=error_data,
+                    details={"original_exception": type(e).__name__, "mutation": name}
+                ) from e
             raise
 
     async def close(self) -> None:
