@@ -1,0 +1,61 @@
+# Coverage configuration for pytest-cov with pytest-xdist parallel execution
+# 
+# When running tests with -n 4 (parallel workers), each worker writes to a
+# separate .coverage.{hostname}.{pid}.{random} file. After tests complete,
+# pytest-cov automatically combines these into the final .coverage report.
+
+[run]
+# Enable parallel mode - each worker writes to a unique data file
+parallel = true
+
+# Source packages to measure
+source = cortex
+
+# Omit test files from coverage
+omit = 
+    tests/*
+    */__pycache__/*
+    */site-packages/*
+
+# Branch coverage for more accurate metrics
+branch = true
+
+# Context to track which test covered each line (useful for debugging)
+dynamic_context = test_function
+
+[paths]
+# Map source paths for combining coverage from different workers
+source =
+    cortex/
+    */cortex/
+
+[report]
+# Exclude common patterns from reports
+exclude_lines =
+    # Standard pragma
+    pragma: no cover
+    
+    # Don't complain about defensive assertions
+    raise AssertionError
+    raise NotImplementedError
+    
+    # Don't complain about abstract methods
+    @abstractmethod
+    
+    # Don't complain about debug/logging code
+    if __debug__:
+    if self\.debug:
+    
+    # Don't complain about TYPE_CHECKING blocks
+    if TYPE_CHECKING:
+    if typing\.TYPE_CHECKING:
+
+# Show missing line numbers in report
+show_missing = true
+
+# Minimum coverage threshold (optional - uncomment to enforce)
+# fail_under = 80
+
+[html]
+# Output directory for HTML reports
+directory = htmlcov

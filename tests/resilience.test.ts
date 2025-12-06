@@ -638,9 +638,9 @@ describe("SDK Resilience Integration", () => {
       });
     });
 
-    afterAll(async () => {
-      await cortexWithResilience.close();
-      await cortexWithoutResilience.close();
+    afterAll(() => {
+      cortexWithResilience.close();
+      cortexWithoutResilience.close();
     });
 
     test("SDK should accept resilience config", () => {
@@ -821,9 +821,9 @@ describe("SDK Resilience Integration", () => {
       });
     });
 
-    afterAll(async () => {
+    afterAll(() => {
       resilience.stopQueueProcessor();
-      await cortex.close();
+      cortex.close();
     });
 
     test("resilience layer executes operations successfully", async () => {
