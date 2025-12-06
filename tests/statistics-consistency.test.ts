@@ -239,7 +239,10 @@ describe("Statistics Consistency Testing", () => {
         await cortex.conversations.create({
           type: "user-agent",
           memorySpaceId: spaceId,
-          participants: { userId: `${TEST_USER_ID}-${i}`, agentId: "test-agent" },
+          participants: {
+            userId: `${TEST_USER_ID}-${i}`,
+            agentId: "test-agent",
+          },
         });
       }
 
@@ -1363,7 +1366,10 @@ describe("Statistics Consistency Testing", () => {
           cortex.conversations.create({
             type: "user-agent",
             memorySpaceId: spaceId,
-            participants: { userId: `${TEST_USER_ID}-${i}`, agentId: "test-agent" },
+            participants: {
+              userId: `${TEST_USER_ID}-${i}`,
+              agentId: "test-agent",
+            },
           }),
         ),
       );

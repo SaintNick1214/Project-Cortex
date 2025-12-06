@@ -31,20 +31,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Every SDK API method now uses `executeWithResilience()` for consistent overload protection:
 
-| Module | Methods Wrapped | Notes |
-|--------|-----------------|-------|
-| `users` | 9 methods | Cascade deletion excluded (own error handling) |
-| `conversations` | 14 methods | All public methods |
-| `agents` | 10 methods | Cascade deletion excluded |
-| `memorySpaces` | 14 methods | All public methods |
-| `vector` | 14 methods | All public methods |
-| `facts` | 12 methods | All public methods |
-| `immutable` | 11 methods | All public methods |
-| `mutable` | 13 methods | All public methods |
-| `contexts` | 20 methods | All public methods |
-| `governance` | 8 methods | All public methods |
-| `a2a` | 4 methods | All public methods |
-| `memory` | 1 method | `restoreFromArchive` |
+| Module          | Methods Wrapped | Notes                                          |
+| --------------- | --------------- | ---------------------------------------------- |
+| `users`         | 9 methods       | Cascade deletion excluded (own error handling) |
+| `conversations` | 14 methods      | All public methods                             |
+| `agents`        | 10 methods      | Cascade deletion excluded                      |
+| `memorySpaces`  | 14 methods      | All public methods                             |
+| `vector`        | 14 methods      | All public methods                             |
+| `facts`         | 12 methods      | All public methods                             |
+| `immutable`     | 11 methods      | All public methods                             |
+| `mutable`       | 13 methods      | All public methods                             |
+| `contexts`      | 20 methods      | All public methods                             |
+| `governance`    | 8 methods       | All public methods                             |
+| `a2a`           | 4 methods       | All public methods                             |
+| `memory`        | 1 method        | `restoreFromArchive`                           |
 
 **2. Consistent Operation Naming**
 
@@ -52,11 +52,11 @@ All wrapped calls use the `module:operation` naming convention for metrics and l
 
 ```typescript
 // Examples of operation names
-"users:get"
-"conversations:addMessage"
-"vector:search"
-"facts:store"
-"governance:enforce"
+"users:get";
+"conversations:addMessage";
+"vector:search";
+"facts:store";
+"governance:enforce";
 ```
 
 **3. Intentional Exclusions**

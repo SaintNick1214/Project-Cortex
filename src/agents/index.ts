@@ -730,7 +730,10 @@ export class AgentsAPI {
                     c.participantId === agentId,
                 ),
               }))
-              .catch(() => ({ spaceId: space.memorySpaceId, conversations: [] })),
+              .catch(() => ({
+                spaceId: space.memorySpaceId,
+                conversations: [],
+              })),
           ),
         ),
 
@@ -920,9 +923,7 @@ export class AgentsAPI {
     // 3. Delete conversations (batch)
     if (plan.conversations.length > 0) {
       try {
-        const conversationIds = plan.conversations.map(
-          (c) => c.conversationId,
-        );
+        const conversationIds = plan.conversations.map((c) => c.conversationId);
         const deleteResult = await this.client.mutation(
           api.conversations.deleteByIds,
           { conversationIds },
@@ -961,7 +962,10 @@ export class AgentsAPI {
                 this.graphAdapter!,
               );
             } catch (error) {
-              console.warn(`Failed to delete graph node ${node.nodeId}:`, error);
+              console.warn(
+                `Failed to delete graph node ${node.nodeId}:`,
+                error,
+              );
               return { deletedNodes: [], orphanIslands: [] };
             }
           }),
@@ -1127,9 +1131,7 @@ export class AgentsAPI {
         "Graph adapter not configured - manual graph cleanup required",
       );
     } else if (graphCount > 0) {
-      issues.push(
-        `${graphCount} graph nodes still reference participantId`,
-      );
+      issues.push(`${graphCount} graph nodes still reference participantId`);
     }
 
     return {

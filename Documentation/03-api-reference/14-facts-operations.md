@@ -501,7 +501,7 @@ interface DeleteManyFactsParams {
   memorySpaceId: string;
 
   // Optional filters
-  userId?: string;     // Filter by user (GDPR cleanup)
+  userId?: string; // Filter by user (GDPR cleanup)
   factType?: FactType; // Filter by fact type
 }
 ```
