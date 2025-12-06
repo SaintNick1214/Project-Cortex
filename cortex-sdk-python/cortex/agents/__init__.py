@@ -470,9 +470,9 @@ class AgentsAPI:
                 graph_nodes_deleted=graph_nodes_count,
                 total_deleted=total_deleted,
                 deleted_layers=[],
-                memory_spaces_affected=list(
-                    set(m.get("memorySpaceId") for m in plan.get("memories", []))
-                ),
+                # Use plan's memory_spaces which includes all spaces affected by
+                # conversations, memories, and facts (matches actual execution)
+                memory_spaces_affected=plan.get("memory_spaces", []),
                 verification=VerificationResult(complete=True, issues=[]),
             )
 
