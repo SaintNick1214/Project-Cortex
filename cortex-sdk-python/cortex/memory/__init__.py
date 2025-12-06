@@ -728,6 +728,7 @@ class MemoryAPI:
                 str(conversation_id or ""),
                 str(user_id or ""),
                 opts.partial_response_interval or 3000,
+                resilience=self._resilience,
             )
 
         # Progressive fact extractor (if enabled)
@@ -850,7 +851,7 @@ class MemoryAPI:
         )
 
         processor = StreamProcessor(context, enhanced_hooks, metrics)
-        error_recovery = StreamErrorRecovery(self.client)
+        error_recovery = StreamErrorRecovery(self.client, resilience=self._resilience)
 
         full_response = ""
 
