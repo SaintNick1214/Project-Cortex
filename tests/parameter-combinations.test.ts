@@ -40,7 +40,7 @@ describe("Parameter Combination Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       const immutable = await cortex.immutable.store({
@@ -133,7 +133,7 @@ describe("Parameter Combination Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       const immutable = await cortex.immutable.store({
@@ -162,7 +162,7 @@ describe("Parameter Combination Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       await cortex.mutable.set("combo-ns", "combo-key", "combo-value");
@@ -219,7 +219,7 @@ describe("Parameter Combination Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       const result = await cortex.vector.store(BASE_ID, {
@@ -303,7 +303,7 @@ describe("Parameter Combination Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       const mem = await cortex.vector.store(BASE_ID, {
@@ -410,7 +410,7 @@ describe("Parameter Combination Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       const result = await cortex.facts.store({
@@ -508,7 +508,7 @@ describe("Parameter Combination Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       const mem = await cortex.vector.store(BASE_ID, {
@@ -763,7 +763,7 @@ describe("Parameter Combination Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       const result = await cortex.contexts.create({
@@ -831,7 +831,7 @@ describe("Parameter Combination Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       const result = await cortex.contexts.create({
@@ -900,7 +900,7 @@ describe("Parameter Combination Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       const mem = await cortex.vector.store(BASE_ID, {
@@ -944,7 +944,7 @@ describe("Parameter Combination Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       const fact1 = await cortex.facts.store({
@@ -992,7 +992,7 @@ describe("Parameter Combination Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       const ctx = await cortex.contexts.create({
@@ -1131,7 +1131,7 @@ describe("Parameter Combination Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       const result = await cortex.vector.store(BASE_ID, {
@@ -1152,7 +1152,7 @@ describe("Parameter Combination Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       const result = await cortex.vector.store(BASE_ID, {
@@ -1311,7 +1311,7 @@ describe("Parameter Combination Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       await cortex.conversations.addMessage({
@@ -1358,7 +1358,7 @@ describe("Parameter Combination Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       const child = await cortex.contexts.create({
@@ -1385,7 +1385,7 @@ describe("Parameter Combination Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       const embedding = Array.from({ length: 1536 }, () => Math.random());
@@ -1608,7 +1608,7 @@ describe("Parameter Combination Testing", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       const result = await cortex.vector.store(BASE_ID, {
@@ -1769,7 +1769,7 @@ describe("Parameter Combination Testing", () => {
       const result = await cortex.conversations.create({
         memorySpaceId: BASE_ID,
         type: "user-agent", // Required
-        participants: { userId: TEST_USER_ID },
+        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
       });
 
       expect(result.type).toBe("user-agent");

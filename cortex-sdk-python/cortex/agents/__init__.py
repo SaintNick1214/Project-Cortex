@@ -617,7 +617,7 @@ class AgentsAPI:
             "memory_spaces": [],
             "agent_registered": False,  # Track if agent is registered
         }
-        
+
         # Check if agent is registered
         try:
             agent = await self.client.query("agents:get", {"agentId": agent_id})
@@ -678,7 +678,7 @@ class AgentsAPI:
                 return []
             nodes: List[Dict[str, Any]] = []
             seen_ids: set = set()
-            
+
             try:
                 # 1. Query for Agent node by agentId (same as delete_agent_from_graph step 1)
                 agent_result = await self.graph_adapter.query(
@@ -692,7 +692,7 @@ class AgentsAPI:
                         nodes.append({"nodeId": node_id, "labels": r.get("labels", [])})
             except Exception:
                 pass
-            
+
             try:
                 # 2. Query for nodes where participantId matches (same as delete_agent_from_graph step 2)
                 result = await self.graph_adapter.query(
@@ -706,7 +706,7 @@ class AgentsAPI:
                         nodes.append({"nodeId": node_id, "labels": r.get("labels", [])})
             except Exception:
                 pass
-            
+
             try:
                 # 3. Query for nodes where agentId matches (same as delete_agent_from_graph step 3)
                 result = await self.graph_adapter.query(
@@ -720,7 +720,7 @@ class AgentsAPI:
                         nodes.append({"nodeId": node_id, "labels": r.get("labels", [])})
             except Exception:
                 pass
-            
+
             return nodes
 
         # PARALLEL COLLECTION: Query all spaces simultaneously
@@ -1019,7 +1019,7 @@ class AgentsAPI:
         Returns:
             Dict with rollback statistics
         """
-        rollback_stats = {
+        rollback_stats: Dict[str, Any] = {
             "facts_restored": 0,
             "memories_restored": 0,
             "conversations_restored": 0,

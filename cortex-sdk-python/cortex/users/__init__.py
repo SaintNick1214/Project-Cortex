@@ -763,7 +763,7 @@ class UsersAPI:
         Returns:
             Dict with rollback statistics
         """
-        rollback_stats = {
+        rollback_stats: Dict[str, Any] = {
             "vector_restored": 0,
             "facts_restored": 0,
             "mutable_restored": 0,
