@@ -1258,6 +1258,17 @@ class DeleteFactOptions(GraphSyncOption):
 
 
 @dataclass
+class DeleteManyFactsParams:
+    """Parameters for deleting multiple facts."""
+    # Required
+    memory_space_id: str
+
+    # Optional filters
+    user_id: Optional[str] = None  # Filter by user (GDPR cleanup)
+    fact_type: Optional[FactType] = None  # Filter by fact type
+
+
+@dataclass
 class CreateContextOptions(GraphSyncOption):
     """Options for creating a context."""
     pass

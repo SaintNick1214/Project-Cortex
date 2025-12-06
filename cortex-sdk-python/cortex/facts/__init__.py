@@ -11,6 +11,7 @@ from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import (
     CountFactsFilter,
     DeleteFactOptions,
+    DeleteManyFactsParams,
     FactRecord,
     FactType,
     ListFactsFilter,
@@ -504,6 +505,65 @@ class FactsAPI:
                 print(f"Warning: Failed to delete fact from graph: {error}")
 
         return cast(Dict[str, bool], result)
+
+    async def delete_many(
+        self,
+        params: DeleteManyFactsParams,
+    ) -> Dict[str, Any]:
+        """
+        Delete multiple facts matching filters in a single operation.
+
+        This is a hard delete operation. For soft delete (marking as superseded),
+        use delete() on individual facts.
+
+        Args:
+            params: Delete many parameters with optional filters
+
+        Returns:
+            Dict with 'deleted' count and 'memory_space_id'
+
+        Example:
+            >>> from cortex.types import DeleteManyFactsParams
+            >>> # Delete all facts in a memory space
+            >>> result = await cortex.facts.delete_many(
+            ...     DeleteManyFactsParams(memory_space_id='agent-1')
+            ... )
+            >>> print(f"Deleted {result['deleted']} facts")
+
+            >>> # Delete all facts for a specific user (GDPR compliance)
+            >>> gdpr_result = await cortex.facts.delete_many(
+            ...     DeleteManyFactsParams(
+            ...         memory_space_id='agent-1',
+            ...         user_id='user-to-delete'
+            ...     )
+            ... )
+
+            >>> # Delete all preference facts
+            >>> pref_result = await cortex.facts.delete_many(
+            ...     DeleteManyFactsParams(
+            ...         memory_space_id='agent-1',
+            ...         fact_type='preference'
+            ...     )
+            ... )
+        """
+        validate_memory_space_id(params.memory_space_id)
+
+        if params.fact_type is not None:
+            validate_fact_type(params.fact_type)
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "facts:deleteMany",
+                filter_none_values({
+                    "memorySpaceId": params.memory_space_id,
+                    "userId": params.user_id,
+                    "factType": params.fact_type,
+                }),
+            ),
+            "facts:deleteMany",
+        )
+
+        return cast(Dict[str, Any], result)
 
     async def count(
         self,
