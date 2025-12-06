@@ -214,6 +214,102 @@ export const ResiliencePresets = {
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Plan-Based Preset Selection
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Convex plan tier type
+ */
+export type ConvexPlanTier = "free" | "starter" | "professional";
+
+/**
+ * Get the appropriate resilience preset based on Convex plan tier.
+ *
+ * Reads from CONVEX_PLAN environment variable if not specified.
+ * Defaults to 'free' plan limits for safety.
+ *
+ * @param plan Optional plan tier override. If not provided, reads from CONVEX_PLAN env var.
+ * @returns The appropriate ResilienceConfig for the plan tier
+ *
+ * @example
+ * ```typescript
+ * // Auto-detect from CONVEX_PLAN env var
+ * const config = getPresetForPlan();
+ *
+ * // Explicit plan tier
+ * const proConfig = getPresetForPlan('professional');
+ *
+ * // Use with ResilienceLayer
+ * const resilience = new ResilienceLayer(getPresetForPlan());
+ * ```
+ */
+export function getPresetForPlan(plan?: ConvexPlanTier): ResilienceConfig {
+  const effectivePlan =
+    plan ||
+    (process.env.CONVEX_PLAN as ConvexPlanTier | undefined) ||
+    "free";
+
+  switch (effectivePlan.toLowerCase()) {
+    case "professional":
+      // Professional plan: 256 concurrent queries/mutations
+      // Use batchProcessing preset which allows higher throughput
+      return ResiliencePresets.batchProcessing;
+
+    case "free":
+    case "starter":
+    default:
+      // Free/Starter plan: 16 concurrent queries/mutations
+      return ResiliencePresets.default;
+  }
+}
+
+/**
+ * Get the detected Convex plan tier from environment.
+ *
+ * @returns The detected plan tier, defaulting to 'free'
+ */
+export function getDetectedPlanTier(): ConvexPlanTier {
+  const envPlan = process.env.CONVEX_PLAN?.toLowerCase();
+  if (envPlan === "professional") return "professional";
+  if (envPlan === "starter") return "starter";
+  return "free";
+}
+
+/**
+ * Get concurrency limits for a given Convex plan tier.
+ *
+ * Based on https://docs.convex.dev/production/state/limits
+ *
+ * @param plan The Convex plan tier
+ * @returns Object with concurrency limits
+ */
+export function getPlanLimits(plan?: ConvexPlanTier): {
+  concurrentQueries: number;
+  concurrentMutations: number;
+  concurrentActions: number;
+  maxNodeActions: number;
+} {
+  const effectivePlan = plan || getDetectedPlanTier();
+
+  if (effectivePlan === "professional") {
+    return {
+      concurrentQueries: 256,
+      concurrentMutations: 256,
+      concurrentActions: 256,
+      maxNodeActions: 1000,
+    };
+  }
+
+  // Free/Starter plan limits
+  return {
+    concurrentQueries: 16,
+    concurrentMutations: 16,
+    concurrentActions: 64,
+    maxNodeActions: 64,
+  };
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Main Resilience Layer
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
