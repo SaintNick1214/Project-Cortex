@@ -466,7 +466,8 @@ class AgentsAPI:
                 ),
                 memories_deleted=memories_count,
                 facts_deleted=facts_count,
-                graph_nodes_deleted=graph_nodes_count if graph_nodes_count > 0 else None,
+                # Always return integer for API consistency (matches actual execution behavior)
+                graph_nodes_deleted=graph_nodes_count,
                 total_deleted=total_deleted,
                 deleted_layers=[],
                 memory_spaces_affected=list(
