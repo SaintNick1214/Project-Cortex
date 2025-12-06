@@ -447,14 +447,30 @@ class AgentsAPI:
             graph_nodes_count = len(plan.get("graph", []))
             agent_registered = plan.get("agent_registered", False)
 
-            # Total = all records that would be deleted + 1 for agent registration (only if registered)
-            # This matches the actual execution logic which only counts registration if it succeeds
+            # Build predicted deleted_layers to match actual execution semantics
+            # In actual execution, "agent-registration" is only added to deleted_layers
+            # if the unregister mutation succeeds - which requires the agent to be registered
+            predicted_deleted_layers: List[str] = []
+            if conversations_count > 0:
+                predicted_deleted_layers.append("conversations")
+            if memories_count > 0:
+                predicted_deleted_layers.append("memories")
+            if facts_count > 0:
+                predicted_deleted_layers.append("facts")
+            if graph_nodes_count > 0:
+                predicted_deleted_layers.append("graph")
+            if agent_registered:
+                # Agent registration deletion will succeed if agent is currently registered
+                predicted_deleted_layers.append("agent-registration")
+
+            # Total calculation matches actual execution logic exactly:
+            # counts agent-registration only if it would be in deleted_layers
             total_deleted = (
                 conversations_count +
                 memories_count +
                 facts_count +
                 graph_nodes_count +
-                (1 if agent_registered else 0)
+                (1 if "agent-registration" in predicted_deleted_layers else 0)
             )
 
             return UnregisterAgentResult(
