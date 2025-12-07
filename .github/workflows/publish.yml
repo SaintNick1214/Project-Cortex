@@ -163,31 +163,13 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: "20"
-          registry-url: "https://registry.npmjs.org"
+          # Note: Do NOT set registry-url - it creates .npmrc with token auth
+          # that conflicts with OIDC trusted publishing
 
-      - name: Debug OIDC Claims
+      - name: Ensure npm 11.5.1+ for trusted publishing
         run: |
-          echo "═══════════════════════════════════════════════════════════════"
-          echo "  OIDC DEBUG INFO"
-          echo "═══════════════════════════════════════════════════════════════"
-          echo ""
-          echo "📋 GitHub Context:"
-          echo "  Repository: ${{ github.repository }}"
-          echo "  Repository Owner: ${{ github.repository_owner }}"
-          echo "  Workflow: ${{ github.workflow }}"
-          echo "  Job: ${{ github.job }}"
-          echo "  Ref: ${{ github.ref }}"
-          echo "  SHA: ${{ github.sha }}"
-          echo "  Run ID: ${{ github.run_id }}"
-          echo ""
-          echo "📦 Expected OIDC Subject Claim Format:"
-          echo "  repo:${{ github.repository }}:ref:${{ github.ref }}"
-          echo ""
-          echo "⚠️  Make sure npm Trusted Publisher is configured with:"
-          echo "  - Repository: ${{ github.repository }} (case-sensitive!)"
-          echo "  - Workflow: publish.yml"
-          echo "  - Environment: (leave blank)"
-          echo ""
+          npm install -g npm@latest
+          echo "npm version: $(npm --version)"
 
       - name: Install dependencies
         run: npm ci
@@ -210,35 +192,9 @@ jobs:
       - name: Verify package contents
         run: npm pack --dry-run
 
-      - name: Verify npm auth config
-        run: |
-          echo "═══════════════════════════════════════════════════════════════"
-          echo "  NPM AUTH DEBUG"
-          echo "═══════════════════════════════════════════════════════════════"
-          echo ""
-          echo "📋 Checking for conflicting auth tokens:"
-          if [ -n "$NODE_AUTH_TOKEN" ]; then
-            echo "  ⚠️  NODE_AUTH_TOKEN is SET - this may conflict with OIDC!"
-            echo "  Token preview: ${NODE_AUTH_TOKEN:0:10}..."
-          else
-            echo "  ✅ NODE_AUTH_TOKEN is not set (good for OIDC)"
-          fi
-          echo ""
-          echo "📋 npm config:"
-          npm config list
-          echo ""
-          echo "📋 .npmrc contents:"
-          cat ~/.npmrc 2>/dev/null || echo "(no .npmrc found)"
-          echo ""
-          echo "📋 Checking npm whoami (expected to fail with OIDC):"
-          npm whoami 2>&1 || echo "(This is expected to fail - OIDC auth happens during publish)"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-
       - name: Publish to npm
-        run: npm publish --access public --provenance --ignore-scripts
-        env:
-          NPM_CONFIG_PROVENANCE: true
+        run: npm publish --access public --ignore-scripts
+        # Provenance is automatic with trusted publishing (OIDC)
 
       - name: Create Git Tag
         run: |
@@ -312,7 +268,11 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: "20"
-          registry-url: "https://registry.npmjs.org"
+
+      - name: Ensure npm 11.5.1+ for trusted publishing
+        run: |
+          npm install -g npm@latest
+          echo "npm version: $(npm --version)"
 
       - name: Install dependencies
         run: |
@@ -337,7 +297,8 @@ jobs:
       - name: Publish to npm
         run: |
           cd packages/create-cortex-memories
-          npm publish --access public --provenance --ignore-scripts
+          npm publish --access public --ignore-scripts
+        # Provenance is automatic with trusted publishing (OIDC)
 
       - name: Verify npm publish
         run: |
@@ -383,7 +344,11 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: "20"
-          registry-url: "https://registry.npmjs.org"
+
+      - name: Ensure npm 11.5.1+ for trusted publishing
+        run: |
+          npm install -g npm@latest
+          echo "npm version: $(npm --version)"
 
       - name: Install root dependencies
         run: npm ci
@@ -426,7 +391,8 @@ jobs:
       - name: Publish to npm
         run: |
           cd packages/vercel-ai-provider
-          npm publish --access public --provenance --ignore-scripts
+          npm publish --access public --ignore-scripts
+        # Provenance is automatic with trusted publishing (OIDC)
 
       - name: Create Git Tag
         run: |
@@ -520,7 +486,11 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: "20"
-          registry-url: "https://registry.npmjs.org"
+
+      - name: Ensure npm 11.5.1+ for trusted publishing
+        run: |
+          npm install -g npm@latest
+          echo "npm version: $(npm --version)"
 
       - name: Install root dependencies
         run: npm ci
@@ -573,7 +543,8 @@ jobs:
       - name: Publish to npm
         run: |
           cd packages/cortex-cli
-          npm publish --access public --provenance --ignore-scripts
+          npm publish --access public --ignore-scripts
+        # Provenance is automatic with trusted publishing (OIDC)
 
       - name: Create Git Tag
         run: |
