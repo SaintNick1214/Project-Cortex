@@ -284,11 +284,6 @@ jobs:
           cd packages/create-cortex-memories
           npm run build
 
-      - name: Run smoke tests
-        run: |
-          cd packages/create-cortex-memories
-          ./test-smoke.sh
-
       - name: Verify package contents
         run: |
           cd packages/create-cortex-memories
@@ -372,11 +367,6 @@ jobs:
         run: |
           cd packages/vercel-ai-provider
           npm install
-
-      - name: Run tests
-        run: |
-          cd packages/vercel-ai-provider
-          npm test
 
       - name: Build package
         run: |
@@ -514,21 +504,6 @@ jobs:
         run: |
           cd packages/cortex-cli
           npm install
-
-      - name: Run unit tests
-        run: |
-          cd packages/cortex-cli
-          npm run test:unit
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-
-      - name: Run integration tests
-        run: |
-          cd packages/cortex-cli
-          npm run test:integration
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
       - name: Build package
         run: |

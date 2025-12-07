@@ -79,6 +79,47 @@ await cortex.memory.remember({
 });
 ```
 
+### Environment Variable Configuration
+
+Set the `CONVEX_PLAN` environment variable to automatically configure concurrency limits based on your Convex subscription:
+
+```bash
+# .env or .env.local
+CONVEX_PLAN=free          # 16 concurrent queries/mutations (default)
+CONVEX_PLAN=starter       # 16 concurrent queries/mutations
+CONVEX_PLAN=professional  # 256 concurrent queries/mutations
+```
+
+The SDK reads this variable and applies the appropriate preset automatically:
+
+```typescript
+import { Cortex, getPresetForPlan, getDetectedPlanTier } from "@cortexmemory/sdk";
+
+// Auto-detect from CONVEX_PLAN env var
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  resilience: getPresetForPlan(), // Reads CONVEX_PLAN automatically
+});
+
+// Check detected plan tier
+console.log(`Using ${getDetectedPlanTier()} plan limits`);
+```
+
+You can also get the specific limits for programmatic use:
+
+```typescript
+import { getPlanLimits } from "@cortexmemory/sdk";
+
+const limits = getPlanLimits(); // Uses CONVEX_PLAN env var
+console.log(limits);
+// {
+//   concurrentQueries: 16,    // or 256 for professional
+//   concurrentMutations: 16,  // or 256 for professional
+//   concurrentActions: 64,    // or 256 for professional
+//   maxNodeActions: 64        // or 1000 for professional
+// }
+```
+
 ### Using Presets
 
 Choose a preset that matches your use case:
