@@ -5,7 +5,6 @@
  * Split from memory.test.ts for parallel execution
  */
 
-import { jest } from "@jest/globals";
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";

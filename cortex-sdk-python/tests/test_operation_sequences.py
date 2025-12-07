@@ -9,6 +9,8 @@ Tests multi-step operation sequences to ensure state consistency at EACH step:
 """
 
 import asyncio
+import random
+import time
 
 from cortex.types import (
     AddMessageInput,
@@ -23,8 +25,8 @@ from cortex.types import (
 
 
 def generate_test_id(prefix=""):
-    import time
-    return f"{prefix}{int(time.time() * 1000)}"
+    """Generate unique test ID based on timestamp + random suffix for parallel safety."""
+    return f"{prefix}{int(time.time() * 1000)}-{random.randint(1000, 9999)}"
 
 
 class TestVectorMemorySequences:
@@ -311,10 +313,10 @@ class TestFactsSequences:
 class TestContextSequences:
     """Context full lifecycle sequence tests."""
 
-    async def test_context_full_lifecycle(self, cortex_client):
+    async def test_context_full_lifecycle(self, cortex_client, ctx):
         """Test create→get→update→get→complete→get→delete→get."""
-        space_id = generate_test_id("seq-ctx-")
-        user_id = "lifecycle-user"
+        space_id = ctx.memory_space_id("seq-ctx")
+        user_id = ctx.user_id("lifecycle")
 
         # STEP 1: Create
         created = await cortex_client.contexts.create(
