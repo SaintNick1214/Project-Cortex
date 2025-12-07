@@ -21,6 +21,20 @@ export default {
   },
   testTimeout: 60000, // 60 seconds for Convex operations with resilience layer retries
   forceExit: true, // Exit after tests complete (helps with Convex client cleanup)
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // PARALLELISM CONFIGURATION
+  // ══════════════════════════════════════════════════════════════════════════
+  // Tests use TestRunContext (tests/helpers/isolation.ts) for unique prefixed
+  // entity IDs, enabling safe parallel execution without data conflicts.
+  //
+  // maxWorkers: Controls parallel test file execution
+  //   - "50%" = half of available CPU cores (good balance for I/O-bound tests)
+  //   - CI environments: set via --maxWorkers flag for optimal resource usage
+  //   - Use --runInBand for debugging to run tests serially
+  // ══════════════════════════════════════════════════════════════════════════
+  maxWorkers: process.env.CI ? "50%" : "50%",
+
   extensionsToTreatAsEsm: [".ts"],
   transform: {
     "^.+\\.tsx?$": [

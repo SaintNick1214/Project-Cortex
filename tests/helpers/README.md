@@ -2,6 +2,64 @@
 
 Utilities for debugging, inspecting, and validating E2E tests with step-by-step execution support.
 
+## 🚀 Parallel Test Execution
+
+**Tests run in PARALLEL by default** using Jest's multi-worker architecture. Each test file runs in a separate worker process, enabling significant speedups on multi-core systems.
+
+### Test Isolation with TestRunContext
+
+To safely run tests in parallel, use `TestRunContext` from `isolation.ts` to generate unique prefixed entity IDs:
+
+```typescript
+import { createNamedTestRunContext } from "./helpers/isolation";
+
+describe("My Test Suite", () => {
+  // Create context at describe level - each test file gets unique run ID
+  const ctx = createNamedTestRunContext("my-suite");
+
+  it("creates isolated data", async () => {
+    // All entities get unique prefixes like: "my-suite-run-1234567890-abc123-user-test"
+    const userId = ctx.userId("test");
+    const spaceId = ctx.memorySpaceId("main");
+    const convId = ctx.conversationId("chat");
+
+    await cortex.users.update(userId, { name: "Test User" });
+    // This data won't conflict with other parallel test runs
+  });
+});
+```
+
+### Available Generators
+
+| Generator | Example Output |
+|-----------|----------------|
+| `ctx.userId("alice")` | `my-suite-run-1234567890-abc123-user-alice` |
+| `ctx.memorySpaceId("main")` | `my-suite-run-1234567890-abc123-space-main` |
+| `ctx.agentId("bot")` | `my-suite-run-1234567890-abc123-agent-bot` |
+| `ctx.conversationId("chat")` | `my-suite-run-1234567890-abc123-conv-chat` |
+| `ctx.contextId("session")` | `my-suite-run-1234567890-abc123-ctx-session` |
+| `ctx.factPrefix("info")` | `my-suite-run-1234567890-abc123-fact-info` |
+| `ctx.immutableType("config")` | `my-suite-run-1234567890-abc123-immtype-config` |
+| `ctx.mutableNamespace("cache")` | `my-suite-run-1234567890-abc123-mutns-cache` |
+
+### Running Tests
+
+```bash
+# Default: Parallel execution (fast)
+npm test
+
+# Serial execution (for debugging)
+npm run test:serial
+# Or pass --runInBand to any test command
+npm test -- --runInBand
+
+# Control worker count
+npm test -- --maxWorkers=4
+npm test -- --maxWorkers=75%
+```
+
+---
+
 ## 📦 Utilities
 
 ### 1. TestCleanup (`cleanup.ts`)

@@ -6,35 +6,40 @@
 
 import { Cortex } from "../src/index.js";
 import { ConvexClient } from "convex/browser";
-import { TestCleanup } from "./helpers/cleanup.js";
+import { createNamedTestRunContext } from "./helpers/isolation.js";
 
 describe("Memory API - Auto-Conversation Creation", () => {
   let cortex: Cortex;
   let client: ConvexClient;
-  let _cleanup: TestCleanup;
+
+  // Use TestRunContext for parallel-safe unique IDs
+  const ctx = createNamedTestRunContext("auto-conv");
 
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-  const memorySpaceId = "test-auto-conv-space";
-  const conversationId = "test-auto-conv-123";
+  const memorySpaceId = ctx.memorySpaceId("main");
+  const conversationId = ctx.conversationId("test");
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
-    _cleanup = new TestCleanup(client);
-
-    // Clean slate
-    await _cleanup.purgeConversations();
-    await _cleanup.purgeMemories();
+    // No global cleanup needed - we use isolated IDs
   });
 
   afterAll(async () => {
-    await _cleanup.purgeConversations();
-    await _cleanup.purgeMemories();
+    // Cleanup our isolated test data
+    try {
+      await cortex.memorySpaces.delete(memorySpaceId, { cascade: true });
+    } catch (_e) {
+      // Ignore cleanup errors
+    }
     cortex.close();
     await client.close();
   });
 
   test("remember() auto-creates conversation if it doesn't exist", async () => {
+    const userId = ctx.userId("alice");
+    const agentId = ctx.agentId("alice-agent");
+
     // Verify conversation doesn't exist
     const beforeConv = await cortex.conversations.get(conversationId);
     expect(beforeConv).toBeNull();
@@ -47,9 +52,9 @@ describe("Memory API - Auto-Conversation Creation", () => {
       // Agent response with meaningful content (not just acknowledgment)
       agentResponse:
         "Your dark mode preference has been saved to your profile settings",
-      userId: "user-123",
+      userId,
       userName: "Alice",
-      agentId: "agent-123",
+      agentId,
     });
 
     // Verify conversation was auto-created
@@ -57,7 +62,7 @@ describe("Memory API - Auto-Conversation Creation", () => {
     expect(afterConv).not.toBeNull();
     expect(afterConv?.conversationId).toBe(conversationId);
     expect(afterConv?.type).toBe("user-agent");
-    expect(afterConv?.participants.userId).toBe("user-123");
+    expect(afterConv?.participants.userId).toBe(userId);
     expect(afterConv?.messages.length).toBe(2); // User + agent messages
 
     // Verify memories were created
@@ -67,7 +72,9 @@ describe("Memory API - Auto-Conversation Creation", () => {
   });
 
   test("remember() reuses existing conversation if it exists", async () => {
-    const existingConvId = "existing-conv-456";
+    const existingConvId = ctx.conversationId("existing");
+    const userId = ctx.userId("bob");
+    const agentId = ctx.agentId("test");
 
     // Create conversation explicitly
     await cortex.conversations.create({
@@ -75,9 +82,9 @@ describe("Memory API - Auto-Conversation Creation", () => {
       conversationId: existingConvId,
       type: "user-agent",
       participants: {
-        userId: "user-456",
-        agentId: "test-agent",
-        participantId: "test-agent",
+        userId,
+        agentId,
+        participantId: agentId,
       },
     });
 
@@ -92,23 +99,25 @@ describe("Memory API - Auto-Conversation Creation", () => {
       conversationId: existingConvId,
       userMessage: "Second message",
       agentResponse: "Second response",
-      userId: "user-456",
+      userId,
       userName: "Bob",
-      agentId: "agent-456",
+      agentId,
     });
 
     // Verify conversation was reused (not recreated)
     const afterConv = await cortex.conversations.get(existingConvId);
     expect(afterConv?.conversationId).toBe(existingConvId);
     expect(afterConv?.messages.length).toBe(2); // Now has 2 messages
-    expect(afterConv?.participants.userId).toBe("user-456"); // Original participant
+    expect(afterConv?.participants.userId).toBe(userId); // Original participant
 
     // Verify memories were created
     expect(result.memories.length).toBe(2);
   });
 
   test("remember() sets agentId in conversation participants", async () => {
-    const convId = "no-participant-conv";
+    const convId = ctx.conversationId("no-participant");
+    const userId = ctx.userId("charlie");
+    const agentId = ctx.agentId("charlie-agent");
 
     // Call remember() WITH agentId
     await cortex.memory.remember({
@@ -116,20 +125,22 @@ describe("Memory API - Auto-Conversation Creation", () => {
       conversationId: convId,
       userMessage: "Test message",
       agentResponse: "Test response",
-      userId: "user-789",
+      userId,
       userName: "Charlie",
-      agentId: "agent-789",
+      agentId,
       // No participantId provided
     });
 
     // Verify conversation was created with agentId
     const conv = await cortex.conversations.get(convId);
     expect(conv).not.toBeNull();
-    expect(conv?.participants.agentId).toBe("agent-789");
+    expect(conv?.participants.agentId).toBe(agentId);
   });
 
   test("remember() preserves explicit participantId", async () => {
-    const convId = "with-participant-conv";
+    const convId = ctx.conversationId("with-participant");
+    const userId = ctx.userId("dave");
+    const agentId = ctx.agentId("dave-agent");
 
     // Call remember() WITH explicit participantId
     await cortex.memory.remember({
@@ -137,9 +148,9 @@ describe("Memory API - Auto-Conversation Creation", () => {
       conversationId: convId,
       userMessage: "Test message",
       agentResponse: "Test response",
-      userId: "user-999",
+      userId,
       userName: "Dave",
-      agentId: "agent-999",
+      agentId,
       participantId: "custom-agent",
     });
 
@@ -150,7 +161,9 @@ describe("Memory API - Auto-Conversation Creation", () => {
   });
 
   test("remember() can be called multiple times on auto-created conversation", async () => {
-    const convId = "multi-remember-conv";
+    const convId = ctx.conversationId("multi-remember");
+    const userId = ctx.userId("eve");
+    const agentId = ctx.agentId("eve-agent");
 
     // First remember() - auto-creates conversation
     await cortex.memory.remember({
@@ -158,9 +171,9 @@ describe("Memory API - Auto-Conversation Creation", () => {
       conversationId: convId,
       userMessage: "First message",
       agentResponse: "First response",
-      userId: "user-multi",
+      userId,
       userName: "Eve",
-      agentId: "agent-multi",
+      agentId,
     });
 
     // Second remember() - reuses existing conversation
@@ -169,9 +182,9 @@ describe("Memory API - Auto-Conversation Creation", () => {
       conversationId: convId,
       userMessage: "Second message",
       agentResponse: "Second response",
-      userId: "user-multi",
+      userId,
       userName: "Eve",
-      agentId: "agent-multi",
+      agentId,
     });
 
     // Third remember() - still reuses
@@ -180,9 +193,9 @@ describe("Memory API - Auto-Conversation Creation", () => {
       conversationId: convId,
       userMessage: "Third message",
       agentResponse: "Third response",
-      userId: "user-multi",
+      userId,
       userName: "Eve",
-      agentId: "agent-multi",
+      agentId,
     });
 
     // Verify conversation has all messages
