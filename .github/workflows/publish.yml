@@ -192,6 +192,12 @@ jobs:
       - name: Verify package contents
         run: npm pack --dry-run
 
+      - name: Debug OIDC environment
+        run: |
+          echo "npm version: $(npm --version)"
+          echo "ACTIONS_ID_TOKEN_REQUEST_URL: ${ACTIONS_ID_TOKEN_REQUEST_URL:-(not set)}"
+          echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${ACTIONS_ID_TOKEN_REQUEST_TOKEN:+[REDACTED]}"
+
       - name: Publish to npm
         run: npm publish --access public --ignore-scripts
         # Provenance is automatic with trusted publishing (OIDC)
@@ -289,6 +295,12 @@ jobs:
           cd packages/create-cortex-memories
           npm pack --dry-run
 
+      - name: Debug OIDC environment
+        run: |
+          echo "npm version: $(npm --version)"
+          echo "ACTIONS_ID_TOKEN_REQUEST_URL: ${ACTIONS_ID_TOKEN_REQUEST_URL:-(not set)}"
+          echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${ACTIONS_ID_TOKEN_REQUEST_TOKEN:+[REDACTED]}"
+
       - name: Publish to npm
         run: |
           cd packages/create-cortex-memories
@@ -377,6 +389,12 @@ jobs:
         run: |
           cd packages/vercel-ai-provider
           npm pack --dry-run
+
+      - name: Debug OIDC environment
+        run: |
+          echo "npm version: $(npm --version)"
+          echo "ACTIONS_ID_TOKEN_REQUEST_URL: ${ACTIONS_ID_TOKEN_REQUEST_URL:-(not set)}"
+          echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${ACTIONS_ID_TOKEN_REQUEST_TOKEN:+[REDACTED]}"
 
       - name: Publish to npm
         run: |
@@ -514,6 +532,19 @@ jobs:
         run: |
           cd packages/cortex-cli
           npm pack --dry-run
+
+      - name: Debug OIDC environment
+        run: |
+          echo "═══════════════════════════════════════════════════════════════"
+          echo "  OIDC DEBUG - CLI Package"
+          echo "═══════════════════════════════════════════════════════════════"
+          echo "npm version: $(npm --version)"
+          echo "ACTIONS_ID_TOKEN_REQUEST_URL: ${ACTIONS_ID_TOKEN_REQUEST_URL:-(not set)}"
+          echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${ACTIONS_ID_TOKEN_REQUEST_TOKEN:+[REDACTED]}"
+          echo "GITHUB_ACTIONS: $GITHUB_ACTIONS"
+          echo "Repository: ${{ github.repository }}"
+          echo "Workflow: ${{ github.workflow }}"
+          echo "Job: ${{ github.job }}"
 
       - name: Publish to npm
         run: |
