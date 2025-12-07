@@ -552,48 +552,49 @@ jobs:
           npm publish --access public --ignore-scripts
         # Provenance is automatic with trusted publishing (OIDC)
 
-      - name: Create Git Tag
-        run: |
-          VERSION=${{ needs.check-version.outputs.cli-new-version }}
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a "cli-v$VERSION" -m "Release CLI v$VERSION"
-          git push origin "cli-v$VERSION"
+      # TODO: Re-enable after workflow changes are stable on remote
+      # - name: Create Git Tag
+      #   run: |
+      #     VERSION=${{ needs.check-version.outputs.cli-new-version }}
+      #     git config user.name "github-actions[bot]"
+      #     git config user.email "github-actions[bot]@users.noreply.github.com"
+      #     git tag -a "cli-v$VERSION" -m "Release CLI v$VERSION"
+      #     git push origin "cli-v$VERSION"
 
-      - name: Create GitHub Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ needs.check-version.outputs.cli-new-version }}
-        run: |
-          gh release create "cli-v$VERSION" \
-            --title "Cortex CLI v$VERSION" \
-            --notes "## Cortex CLI v$VERSION
-
-          Administrative CLI for managing Cortex Memory deployments.
-
-          ### Installation
-          \`\`\`bash
-          npm install -g @cortexmemory/cli
-          \`\`\`
-
-          ### Quick Start
-          \`\`\`bash
-          # Setup
-          cortex setup
-
-          # List memory spaces
-          cortex spaces list
-
-          # View database statistics
-          cortex db stats
-
-          # Manage users
-          cortex users list
-          \`\`\`
-
-          ### Documentation
-          - [README](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/cortex-cli/README.md)
-          - [Changelog](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/cortex-cli/CHANGELOG.md)"
+      # - name: Create GitHub Release
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     VERSION: ${{ needs.check-version.outputs.cli-new-version }}
+      #   run: |
+      #     gh release create "cli-v$VERSION" \
+      #       --title "Cortex CLI v$VERSION" \
+      #       --notes "## Cortex CLI v$VERSION
+      #
+      #     Administrative CLI for managing Cortex Memory deployments.
+      #
+      #     ### Installation
+      #     \`\`\`bash
+      #     npm install -g @cortexmemory/cli
+      #     \`\`\`
+      #
+      #     ### Quick Start
+      #     \`\`\`bash
+      #     # Setup
+      #     cortex setup
+      #
+      #     # List memory spaces
+      #     cortex spaces list
+      #
+      #     # View database statistics
+      #     cortex db stats
+      #
+      #     # Manage users
+      #     cortex users list
+      #     \`\`\`
+      #
+      #     ### Documentation
+      #     - [README](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/cortex-cli/README.md)
+      #     - [Changelog](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/cortex-cli/CHANGELOG.md)"
 
       - name: Verify npm publish
         run: |
