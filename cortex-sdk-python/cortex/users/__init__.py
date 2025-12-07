@@ -268,6 +268,23 @@ class UsersAPI:
             # Phase 1: Collection (count what would be deleted)
             plan = await self._collect_deletion_plan(user_id)
 
+            # Build predicted deleted_layers to match actual execution semantics
+            predicted_deleted_layers: List[str] = []
+            if len(plan.get("vector", [])) > 0:
+                predicted_deleted_layers.append("vector")
+            if len(plan.get("facts", [])) > 0:
+                predicted_deleted_layers.append("facts")
+            if len(plan.get("mutable", [])) > 0:
+                predicted_deleted_layers.append("mutable")
+            if len(plan.get("immutable", [])) > 0:
+                predicted_deleted_layers.append("immutable")
+            if len(plan.get("conversations", [])) > 0:
+                predicted_deleted_layers.append("conversations")
+            # User profile deletion always happens in cascade mode
+            predicted_deleted_layers.append("user-profile")
+            if len(plan.get("graph", [])) > 0:
+                predicted_deleted_layers.append("graph")
+
             return UserDeleteResult(
                 user_id=user_id,
                 deleted_at=int(time.time() * 1000),
@@ -283,7 +300,7 @@ class UsersAPI:
                     len(v) if isinstance(v, list) else 0
                     for v in plan.values()
                 ),
-                deleted_layers=[],
+                deleted_layers=predicted_deleted_layers,
                 verification=VerificationResult(complete=True, issues=[]),
             )
 
