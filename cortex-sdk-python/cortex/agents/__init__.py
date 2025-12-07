@@ -512,7 +512,7 @@ class AgentsAPI:
                 # Always return integer for API consistency (matches actual execution behavior)
                 graph_nodes_deleted=graph_nodes_count,
                 total_deleted=total_deleted,
-                deleted_layers=[],
+                deleted_layers=predicted_deleted_layers,
                 # Use plan's memory_spaces which includes all spaces affected by
                 # conversations, memories, and facts (matches actual execution)
                 memory_spaces_affected=plan.get("memory_spaces", []),

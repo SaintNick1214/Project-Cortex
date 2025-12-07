@@ -40,6 +40,12 @@ const jestArgs = process.argv.slice(2);
 
 /**
  * Run Jest with specific test mode
+ *
+ * Tests run in PARALLEL by default using Jest's maxWorkers config.
+ * Each test file uses TestRunContext for unique prefixed entity IDs,
+ * ensuring tests don't interfere with each other's data.
+ *
+ * To run serially for debugging, pass --runInBand to this script.
  */
 function runTests(mode) {
   return new Promise((resolvePromise, rejectPromise) => {
@@ -54,16 +60,20 @@ function runTests(mode) {
     );
 
     // Build command string for shell execution on Windows
-    const jestArgsStr = [
-      "--testPathIgnorePatterns=debug",
-      "--runInBand",
-      ...jestArgs,
-    ].join(" ");
+    // Note: --runInBand removed for parallel execution. Tests use
+    // TestRunContext (tests/helpers/isolation.ts) for data isolation.
+    // Pass --runInBand explicitly when debugging is needed.
+    const jestArgsStr = ["--testPathIgnorePatterns=debug", ...jestArgs].join(
+      " ",
+    );
 
     const command = `node --experimental-vm-modules "${jestPath}" ${jestArgsStr}`;
 
+    const isParallel = !jestArgs.includes("--runInBand");
     console.log(`\n${"=".repeat(60)}`);
-    console.log(`🚀 Running ${mode.toUpperCase()} tests...`);
+    console.log(
+      `🚀 Running ${mode.toUpperCase()} tests ${isParallel ? "(parallel)" : "(serial)"}...`,
+    );
     console.log(`${"=".repeat(60)}\n`);
 
     const child = spawn(command, {
