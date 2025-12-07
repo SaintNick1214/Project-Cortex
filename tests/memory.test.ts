@@ -1434,16 +1434,18 @@ describe("Memory Convenience API (Layer 3)", () => {
 
   describe("Archive and Restore Operations", () => {
     it("restores memory from archive", async () => {
-      const memorySpaceId = "test-archive-space";
+      const memorySpaceId = ctx.memorySpaceId("archive");
+      const userId = ctx.userId("archive-test");
+      const agentId = ctx.agentId("archive-test");
 
       // Create and archive a memory
       const conv = await cortex.conversations.create({
         memorySpaceId,
         type: "user-agent",
         participants: {
-          userId: "test-user",
-          agentId: "test-agent",
-          participantId: "test-agent",
+          userId,
+          agentId,
+          participantId: agentId,
         },
       });
 
@@ -1452,9 +1454,9 @@ describe("Memory Convenience API (Layer 3)", () => {
         conversationId: conv.conversationId,
         userMessage: "Important information",
         agentResponse: "Got it!",
-        userId: "test-user",
+        userId,
         userName: "Test User",
-        agentId: "test-agent",
+        agentId,
         importance: 80,
       });
 
@@ -1485,15 +1487,17 @@ describe("Memory Convenience API (Layer 3)", () => {
     });
 
     it("throws error when restoring non-archived memory", async () => {
-      const memorySpaceId = "test-archive-space";
+      const memorySpaceId = ctx.memorySpaceId("restore-error");
+      const userId = ctx.userId("restore-error");
+      const agentId = ctx.agentId("restore-error");
 
       const conv = await cortex.conversations.create({
         memorySpaceId,
         type: "user-agent",
         participants: {
-          userId: "test-user",
-          agentId: "test-agent",
-          participantId: "test-agent",
+          userId,
+          agentId,
+          participantId: agentId,
         },
       });
 
@@ -1502,9 +1506,9 @@ describe("Memory Convenience API (Layer 3)", () => {
         conversationId: conv.conversationId,
         userMessage: "Not archived",
         agentResponse: "OK",
-        userId: "test-user",
+        userId,
         userName: "Test User",
-        agentId: "test-agent",
+        agentId,
       });
 
       const memoryId = result.memories[0].memoryId;
