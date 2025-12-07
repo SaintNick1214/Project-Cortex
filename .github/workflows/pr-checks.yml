@@ -312,14 +312,17 @@ jobs:
           pip install python-dotenv
           pip install -e ".[dev]"
 
+      # Stagger test starts to reduce concurrent load on shared Convex backend.
+      # 5-second increments allow each runner to spin up and begin its test suite
+      # before the next starts, avoiding thundering herd on database operations.
       - name: Stagger test start
         run: |
           case "${{ matrix.python-version }}" in
             "3.10") sleep 0 ;;
-            "3.11") sleep 10 ;;
-            "3.12") sleep 20 ;;
-            "3.13") sleep 30 ;;
-            "3.14") sleep 40 ;;
+            "3.11") sleep 5 ;;
+            "3.12") sleep 10 ;;
+            "3.13") sleep 15 ;;
+            "3.14") sleep 20 ;;
           esac
 
       - name: Run tests
