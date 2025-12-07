@@ -174,18 +174,24 @@ class MemoryAPI:
         """
         try:
             # Check if user exists via immutable:get
-            existing = await self.client.query("immutable:get", {"type": "user", "id": user_id})
+            existing = await self._execute_with_resilience(
+                lambda: self.client.query("immutable:get", {"type": "user", "id": user_id}),
+                "immutable:get",
+            )
             if not existing:
                 # Create user profile using immutable store pattern
                 # This matches TypeScript SDK's UsersAPI.update() which calls api.immutable.store
-                await self.client.mutation("immutable:store", {
-                    "type": "user",
-                    "id": user_id,
-                    "data": {
-                        "displayName": user_name or user_id,
-                        "createdAt": int(time.time() * 1000),
-                    },
-                })
+                await self._execute_with_resilience(
+                    lambda: self.client.mutation("immutable:store", {
+                        "type": "user",
+                        "id": user_id,
+                        "data": {
+                            "displayName": user_name or user_id,
+                            "createdAt": int(time.time() * 1000),
+                        },
+                    }),
+                    "immutable:store",
+                )
         except Exception as error:
             # Log warning but don't fail - user registration is optional
             print(f"Warning: Failed to auto-create user profile: {error}")
@@ -201,15 +207,21 @@ class MemoryAPI:
         """
         try:
             # Check if agent exists using agents:exists query
-            existing = await self.client.query("agents:exists", {"agentId": agent_id})
+            existing = await self._execute_with_resilience(
+                lambda: self.client.query("agents:exists", {"agentId": agent_id}),
+                "agents:exists",
+            )
             if not existing:
                 # Register agent with minimal data (matching TS SDK's ensureAgentExists)
                 try:
-                    await self.client.mutation("agents:register", {
-                        "agentId": agent_id,
-                        "name": agent_id,
-                        "description": "Auto-registered by memory.remember()",
-                    })
+                    await self._execute_with_resilience(
+                        lambda: self.client.mutation("agents:register", {
+                            "agentId": agent_id,
+                            "name": agent_id,
+                            "description": "Auto-registered by memory.remember()",
+                        }),
+                        "agents:register",
+                    )
                 except Exception as register_error:
                     # Handle "AGENT_ALREADY_REGISTERED" - race condition is OK
                     if "AGENT_ALREADY_REGISTERED" in str(register_error):
@@ -229,15 +241,21 @@ class MemoryAPI:
         """
         try:
             # Check if memory space exists
-            existing = await self.client.query("memorySpaces:get", {"memorySpaceId": memory_space_id})
+            existing = await self._execute_with_resilience(
+                lambda: self.client.query("memorySpaces:get", {"memorySpaceId": memory_space_id}),
+                "memorySpaces:get",
+            )
             if not existing:
                 # Register memory space with minimal data
                 try:
-                    await self.client.mutation("memorySpaces:register", {
-                        "memorySpaceId": memory_space_id,
-                        "name": memory_space_id,
-                        "type": "custom",
-                    })
+                    await self._execute_with_resilience(
+                        lambda: self.client.mutation("memorySpaces:register", {
+                            "memorySpaceId": memory_space_id,
+                            "name": memory_space_id,
+                            "type": "custom",
+                        }),
+                        "memorySpaces:register",
+                    )
                 except Exception as register_error:
                     # Handle race condition - another call may have registered it first
                     if "ALREADY_EXISTS" in str(register_error) or "already exists" in str(register_error).lower():
@@ -710,6 +728,7 @@ class MemoryAPI:
                 str(conversation_id or ""),
                 str(user_id or ""),
                 opts.partial_response_interval or 3000,
+                resilience=self._resilience,
             )
 
         # Progressive fact extractor (if enabled)
@@ -832,7 +851,7 @@ class MemoryAPI:
         )
 
         processor = StreamProcessor(context, enhanced_hooks, metrics)
-        error_recovery = StreamErrorRecovery(self.client)
+        error_recovery = StreamErrorRecovery(self.client, resilience=self._resilience)
 
         full_response = ""
 
@@ -1676,9 +1695,12 @@ class MemoryAPI:
         validate_memory_space_id(memory_space_id)
         validate_memory_id(memory_id)
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "memories:restoreFromArchive",
+                {"memorySpaceId": memory_space_id, "memoryId": memory_id},
+            ),
             "memories:restoreFromArchive",
-            {"memorySpaceId": memory_space_id, "memoryId": memory_id},
         )
 
         return cast(Dict[str, Any], result)

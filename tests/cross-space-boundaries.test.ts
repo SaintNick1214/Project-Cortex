@@ -265,7 +265,10 @@ describe("Cross-Space Boundary Testing", () => {
       await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: SPACE_A,
-        participants: { userId: `${TEST_USER_ID}-count`, agentId: "test-agent-count" },
+        participants: {
+          userId: `${TEST_USER_ID}-count`,
+          agentId: "test-agent-count",
+        },
       });
 
       const countA = await cortex.conversations.count({

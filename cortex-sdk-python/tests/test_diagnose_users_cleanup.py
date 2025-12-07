@@ -80,6 +80,11 @@ async def test_diagnose_users_list(cortex_client):
         import traceback
         traceback.print_exc()
 
+    # Reset resilience layer after cleanup - cleanup operations may have triggered
+    # the circuit breaker due to race conditions with parallel tests deleting the
+    # same entities. This is expected and shouldn't affect verification.
+    cortex_client.get_resilience().reset()
+
     # Final check
     print("\n5. Final verification...")
     user_check = await cortex_client.users.get(user_id)

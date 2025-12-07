@@ -2049,10 +2049,14 @@ export class MemoryAPI {
     validateMemorySpaceId(memorySpaceId);
     validateMemoryId(memoryId);
 
-    const result = await this.client.mutation(api.memories.restoreFromArchive, {
-      memorySpaceId,
-      memoryId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.memories.restoreFromArchive, {
+          memorySpaceId,
+          memoryId,
+        }),
+      "memory:restoreFromArchive",
+    );
 
     return result as {
       restored: boolean;

@@ -92,17 +92,21 @@ export class A2AAPI {
     validateSendParams(params);
 
     // Call backend
-    const result = await this.client.mutation(a2aApi.a2a.send, {
-      from: params.from,
-      to: params.to,
-      message: params.message,
-      userId: params.userId,
-      contextId: params.contextId,
-      importance: params.importance,
-      trackConversation: params.trackConversation,
-      autoEmbed: params.autoEmbed,
-      metadata: params.metadata,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(a2aApi.a2a.send, {
+          from: params.from,
+          to: params.to,
+          message: params.message,
+          userId: params.userId,
+          contextId: params.contextId,
+          importance: params.importance,
+          trackConversation: params.trackConversation,
+          autoEmbed: params.autoEmbed,
+          metadata: params.metadata,
+        }),
+      "a2a:send",
+    );
 
     return result as A2AMessage;
   }
@@ -141,16 +145,20 @@ export class A2AAPI {
 
     try {
       // Call backend
-      const result = await this.client.mutation(a2aApi.a2a.request, {
-        from: params.from,
-        to: params.to,
-        message: params.message,
-        timeout: params.timeout,
-        retries: params.retries,
-        userId: params.userId,
-        contextId: params.contextId,
-        importance: params.importance,
-      });
+      const result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(a2aApi.a2a.request, {
+            from: params.from,
+            to: params.to,
+            message: params.message,
+            timeout: params.timeout,
+            retries: params.retries,
+            userId: params.userId,
+            contextId: params.contextId,
+            importance: params.importance,
+          }),
+        "a2a:request",
+      );
 
       // Check for timeout indicator
       const typedResult = result as { timeout?: boolean; messageId?: string };
@@ -235,16 +243,20 @@ export class A2AAPI {
     validateBroadcastParams(params);
 
     // Call backend
-    const result = await this.client.mutation(a2aApi.a2a.broadcast, {
-      from: params.from,
-      to: params.to,
-      message: params.message,
-      userId: params.userId,
-      contextId: params.contextId,
-      importance: params.importance,
-      trackConversation: params.trackConversation,
-      metadata: params.metadata,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(a2aApi.a2a.broadcast, {
+          from: params.from,
+          to: params.to,
+          message: params.message,
+          userId: params.userId,
+          contextId: params.contextId,
+          importance: params.importance,
+          trackConversation: params.trackConversation,
+          metadata: params.metadata,
+        }),
+      "a2a:broadcast",
+    );
 
     return result as A2ABroadcastResult;
   }
@@ -287,17 +299,21 @@ export class A2AAPI {
     }
 
     // Call backend
-    const result = await this.client.query(a2aApi.a2a.getConversation, {
-      agent1,
-      agent2,
-      since: filters?.since ? filters.since.getTime() : undefined,
-      until: filters?.until ? filters.until.getTime() : undefined,
-      minImportance: filters?.minImportance,
-      tags: filters?.tags,
-      userId: filters?.userId,
-      limit: filters?.limit,
-      offset: filters?.offset,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(a2aApi.a2a.getConversation, {
+          agent1,
+          agent2,
+          since: filters?.since ? filters.since.getTime() : undefined,
+          until: filters?.until ? filters.until.getTime() : undefined,
+          minImportance: filters?.minImportance,
+          tags: filters?.tags,
+          userId: filters?.userId,
+          limit: filters?.limit,
+          offset: filters?.offset,
+        }),
+      "a2a:getConversation",
+    );
 
     return result as A2AConversation;
   }

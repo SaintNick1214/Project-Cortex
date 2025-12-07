@@ -42,7 +42,10 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
         targetConv = await cortex.conversations.create({
           memorySpaceId: spaceId,
           type: "user-agent",
-          participants: { userId: "filter-test-user", agentId: "filter-test-agent" },
+          participants: {
+            userId: "filter-test-user",
+            agentId: "filter-test-agent",
+          },
         });
       } else {
         targetConv = await cortex.conversations.create({
@@ -308,7 +311,10 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
         await cortex.conversations.create({
           memorySpaceId: spaceId,
           type: "user-agent",
-          participants: { userId: `count-all-user-${i}`, agentId: `count-all-agent-${i}` },
+          participants: {
+            userId: `count-all-user-${i}`,
+            agentId: `count-all-agent-${i}`,
+          },
         });
       }
 

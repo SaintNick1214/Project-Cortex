@@ -51,7 +51,11 @@ describe("CLI Memory Commands", () => {
       const conv = await cortex.conversations.create({
         type: "user-agent",
         memorySpaceId: TEST_SPACE_ID,
-        participants: { userId: TEST_USER_ID, agentId: "agent-cli-test", participantId: "agent-cli-test" },
+        participants: {
+          userId: TEST_USER_ID,
+          agentId: "agent-cli-test",
+          participantId: "agent-cli-test",
+        },
       });
 
       testConversationId = conv.conversationId;

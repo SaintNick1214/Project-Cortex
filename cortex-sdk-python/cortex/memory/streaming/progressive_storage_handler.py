@@ -25,18 +25,28 @@ class ProgressiveStorageHandler:
         conversation_id: str,
         user_id: str,
         update_interval: int = 3000,  # Default: update every 3 seconds
+        resilience: Optional[Any] = None,
     ) -> None:
         self.client = client
         self.memory_space_id = memory_space_id
         self.conversation_id = conversation_id
         self.user_id = user_id
         self.update_interval = update_interval
+        self._resilience = resilience
 
         self.partial_memory_id: Optional[str] = None
         self.last_update_time = 0
         self.update_history: List[PartialUpdate] = []
         self.is_initialized = False
         self.is_finalized = False
+
+    async def _execute_with_resilience(
+        self, operation: Any, operation_name: str
+    ) -> Any:
+        """Execute an operation through the resilience layer (if available)."""
+        if self._resilience:
+            return await self._resilience.execute(operation, operation_name)
+        return await operation()
 
     async def initialize_partial_memory(
         self,
@@ -56,22 +66,25 @@ class ProgressiveStorageHandler:
 
         try:
             # Create initial partial memory with placeholder content
-            result = await self.client.mutation(
-                "memories:storePartialMemory",
-                {
-                    "memorySpaceId": self.memory_space_id,
-                    "participantId": participant_id if participant_id is not None else "agent",  # Default to "agent"
-                    "conversationId": self.conversation_id,
-                    "userId": self.user_id,
-                    "content": "[Streaming in progress...]",
-                    "isPartial": True,
-                    "metadata": {
-                        "userMessage": user_message,
-                        "streamStartTime": int(time.time() * 1000),
+            result = await self._execute_with_resilience(
+                lambda: self.client.mutation(
+                    "memories:storePartialMemory",
+                    {
+                        "memorySpaceId": self.memory_space_id,
+                        "participantId": participant_id if participant_id is not None else "agent",  # Default to "agent"
+                        "conversationId": self.conversation_id,
+                        "userId": self.user_id,
+                        "content": "[Streaming in progress...]",
+                        "isPartial": True,
+                        "metadata": {
+                            "userMessage": user_message,
+                            "streamStartTime": int(time.time() * 1000),
+                        },
+                        "importance": importance if importance is not None else 50,  # Default to 50
+                        "tags": [*(tags or []), "streaming", "partial"],
                     },
-                    "importance": importance if importance is not None else 50,  # Default to 50
-                    "tags": [*(tags or []), "streaming", "partial"],
-                },
+                ),
+                "memories:storePartialMemory",
             )
 
             self.partial_memory_id = result["memoryId"]
@@ -106,17 +119,20 @@ class ProgressiveStorageHandler:
             return False
 
         try:
-            await self.client.mutation(
-                "memories:updatePartialMemory",
-                {
-                    "memoryId": self.partial_memory_id,
-                    "content": content,
-                    "metadata": {
-                        "lastUpdateTime": now,
-                        "currentChunk": chunk_number,
-                        "contentLength": len(content),
+            await self._execute_with_resilience(
+                lambda: self.client.mutation(
+                    "memories:updatePartialMemory",
+                    {
+                        "memoryId": self.partial_memory_id,
+                        "content": content,
+                        "metadata": {
+                            "lastUpdateTime": now,
+                            "currentChunk": chunk_number,
+                            "contentLength": len(content),
+                        },
                     },
-                },
+                ),
+                "memories:updatePartialMemory",
             )
 
             self.last_update_time = now
@@ -165,7 +181,10 @@ class ProgressiveStorageHandler:
             if embedding is not None:
                 mutation_params["embedding"] = embedding  # type: ignore[assignment]
 
-            await self.client.mutation("memories:finalizePartialMemory", mutation_params)
+            await self._execute_with_resilience(
+                lambda: self.client.mutation("memories:finalizePartialMemory", mutation_params),
+                "memories:finalizePartialMemory",
+            )
 
             self.is_finalized = True
 
@@ -181,12 +200,15 @@ class ProgressiveStorageHandler:
             return  # Nothing to rollback
 
         try:
-            await self.client.mutation(
+            await self._execute_with_resilience(
+                lambda: self.client.mutation(
+                    "memories:deleteMemory",
+                    {
+                        "memorySpaceId": self.memory_space_id,
+                        "memoryId": self.partial_memory_id,
+                    },
+                ),
                 "memories:deleteMemory",
-                {
-                    "memorySpaceId": self.memory_space_id,
-                    "memoryId": self.partial_memory_id,
-                },
             )
 
             self.partial_memory_id = None

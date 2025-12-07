@@ -134,21 +134,24 @@ class ConversationsAPI:
         # Auto-generate conversation ID if not provided
         conversation_id = input.conversation_id or self._generate_conversation_id()
 
-        result = await self.client.mutation(
-            "conversations:create",
-            filter_none_values({
-                "conversationId": conversation_id,
-                "memorySpaceId": input.memory_space_id,
-                "participantId": input.participant_id,
-                "type": input.type,
-                "participants": filter_none_values({
-                    "userId": input.participants.get("userId") if isinstance(input.participants, dict) else getattr(input.participants, "user_id", None),
-                    "agentId": input.participants.get("agentId") if isinstance(input.participants, dict) else getattr(input.participants, "agent_id", None),
-                    "participantId": input.participants.get("participantId") if isinstance(input.participants, dict) else getattr(input.participants, "participant_id", None),
-                    "memorySpaceIds": input.participants.get("memorySpaceIds") if isinstance(input.participants, dict) else getattr(input.participants, "memory_space_ids", None),
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "conversations:create",
+                filter_none_values({
+                    "conversationId": conversation_id,
+                    "memorySpaceId": input.memory_space_id,
+                    "participantId": input.participant_id,
+                    "type": input.type,
+                    "participants": filter_none_values({
+                        "userId": input.participants.get("userId") if isinstance(input.participants, dict) else getattr(input.participants, "user_id", None),
+                        "agentId": input.participants.get("agentId") if isinstance(input.participants, dict) else getattr(input.participants, "agent_id", None),
+                        "participantId": input.participants.get("participantId") if isinstance(input.participants, dict) else getattr(input.participants, "participant_id", None),
+                        "memorySpaceIds": input.participants.get("memorySpaceIds") if isinstance(input.participants, dict) else getattr(input.participants, "memory_space_ids", None),
+                    }),
+                    "metadata": input.metadata,
                 }),
-                "metadata": input.metadata,
-            }),
+            ),
+            "conversations:create",
         )
 
         # Sync to graph if requested
@@ -181,8 +184,11 @@ class ConversationsAPI:
         """
         validate_required_string(conversation_id, "conversation_id")
 
-        result = await self.client.query(
-            "conversations:get", {"conversationId": conversation_id}
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "conversations:get", {"conversationId": conversation_id}
+            ),
+            "conversations:get",
         )
 
         if not result:
@@ -219,18 +225,21 @@ class ConversationsAPI:
         # Auto-generate message ID
         message_id = self._generate_message_id()
 
-        result = await self.client.mutation(
-            "conversations:addMessage",
-            filter_none_values({
-                "conversationId": input.conversation_id,
-                "message": filter_none_values({
-                    "id": message_id,
-                    "role": input.role,
-                    "content": input.content,
-                    "participantId": input.participant_id,
-                    "metadata": input.metadata,
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "conversations:addMessage",
+                filter_none_values({
+                    "conversationId": input.conversation_id,
+                    "message": filter_none_values({
+                        "id": message_id,
+                        "role": input.role,
+                        "content": input.content,
+                        "participantId": input.participant_id,
+                        "metadata": input.metadata,
+                    }),
                 }),
-            }),
+            ),
+            "conversations:addMessage",
         )
 
         # Update in graph if requested
@@ -283,14 +292,17 @@ class ConversationsAPI:
         if limit is not None:
             validate_limit(limit)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "conversations:list",
+                filter_none_values({
+                    "type": type,
+                    "userId": user_id,
+                    "memorySpaceId": memory_space_id,
+                    "limit": limit,
+                }),
+            ),
             "conversations:list",
-            filter_none_values({
-                "type": type,
-                "userId": user_id,
-                "memorySpaceId": memory_space_id,
-                "limit": limit,
-            }),
         )
 
         return [Conversation(**convert_convex_response(conv)) for conv in result]
@@ -320,13 +332,16 @@ class ConversationsAPI:
         if type is not None:
             validate_conversation_type(type)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "conversations:count",
+                filter_none_values({
+                    "type": type,
+                    "userId": user_id,
+                    "memorySpaceId": memory_space_id,
+                }),
+            ),
             "conversations:count",
-            filter_none_values({
-                "type": type,
-                "userId": user_id,
-                "memorySpaceId": memory_space_id,
-            }),
         )
 
         return int(result)
@@ -349,8 +364,11 @@ class ConversationsAPI:
         """
         validate_required_string(conversation_id, "conversation_id")
 
-        result = await self.client.mutation(
-            "conversations:deleteConversation", filter_none_values({"conversationId": conversation_id})
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "conversations:deleteConversation", filter_none_values({"conversationId": conversation_id})
+            ),
+            "conversations:deleteConversation",
         )
 
         # Delete from graph
@@ -400,13 +418,16 @@ class ConversationsAPI:
                 "MISSING_REQUIRED_FIELD",
             )
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "conversations:deleteMany",
+                filter_none_values({
+                    "userId": user_id,
+                    "memorySpaceId": memory_space_id,
+                    "type": type,
+                }),
+            ),
             "conversations:deleteMany",
-            filter_none_values({
-                "userId": user_id,
-                "memorySpaceId": memory_space_id,
-                "type": type,
-            }),
         )
 
         return cast(Dict[str, Any], result)
@@ -430,9 +451,12 @@ class ConversationsAPI:
         validate_required_string(conversation_id, "conversation_id")
         validate_required_string(message_id, "message_id")
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "conversations:getMessage",
+                filter_none_values({"conversationId": conversation_id, "messageId": message_id}),
+            ),
             "conversations:getMessage",
-            filter_none_values({"conversationId": conversation_id, "messageId": message_id}),
         )
 
         if not result:
@@ -462,9 +486,12 @@ class ConversationsAPI:
         validate_non_empty_list(message_ids, "message_ids")
         validate_no_duplicates(message_ids, "message_ids")
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "conversations:getMessagesByIds",
+                filter_none_values({"conversationId": conversation_id, "messageIds": message_ids}),
+            ),
             "conversations:getMessagesByIds",
-            filter_none_values({"conversationId": conversation_id, "messageIds": message_ids}),
         )
 
         return [Message(**convert_convex_response(msg)) for msg in result]
@@ -515,14 +542,17 @@ class ConversationsAPI:
                 )
             validate_no_duplicates(memory_space_ids, "memory_space_ids")
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "conversations:findConversation",
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "type": type,
+                    "userId": user_id,
+                    "memorySpaceIds": memory_space_ids,
+                }),
+            ),
             "conversations:findConversation",
-            filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "type": type,
-                "userId": user_id,
-                "memorySpaceIds": memory_space_ids,
-            }),
         )
 
         if not result:
@@ -571,20 +601,23 @@ class ConversationsAPI:
                     memory_space_ids, "participants.memory_space_ids"
                 )
 
-        result = await self.client.mutation(
-            "conversations:getOrCreate",
-            filter_none_values({
-                "memorySpaceId": input.memory_space_id,
-                "participantId": input.participant_id,
-                "type": input.type,
-                "participants": filter_none_values({
-                    "userId": input.participants.get("userId") if isinstance(input.participants, dict) else getattr(input.participants, "user_id", None),
-                    "agentId": input.participants.get("agentId") if isinstance(input.participants, dict) else getattr(input.participants, "agent_id", None),
-                    "participantId": input.participants.get("participantId") if isinstance(input.participants, dict) else getattr(input.participants, "participant_id", None),
-                    "memorySpaceIds": input.participants.get("memorySpaceIds") if isinstance(input.participants, dict) else getattr(input.participants, "memory_space_ids", None),
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "conversations:getOrCreate",
+                filter_none_values({
+                    "memorySpaceId": input.memory_space_id,
+                    "participantId": input.participant_id,
+                    "type": input.type,
+                    "participants": filter_none_values({
+                        "userId": input.participants.get("userId") if isinstance(input.participants, dict) else getattr(input.participants, "user_id", None),
+                        "agentId": input.participants.get("agentId") if isinstance(input.participants, dict) else getattr(input.participants, "agent_id", None),
+                        "participantId": input.participants.get("participantId") if isinstance(input.participants, dict) else getattr(input.participants, "participant_id", None),
+                        "memorySpaceIds": input.participants.get("memorySpaceIds") if isinstance(input.participants, dict) else getattr(input.participants, "memory_space_ids", None),
+                    }),
+                    "metadata": input.metadata,
                 }),
-                "metadata": input.metadata,
-            }),
+            ),
+            "conversations:getOrCreate",
         )
 
         return Conversation(**convert_convex_response(result))
@@ -625,14 +658,17 @@ class ConversationsAPI:
         if sort_order is not None:
             validate_sort_order(sort_order)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "conversations:getHistory",
+                filter_none_values({
+                    "conversationId": conversation_id,
+                    "limit": limit,
+                    # Note: offset not supported by backend yet
+                    "sortOrder": sort_order,
+                }),
+            ),
             "conversations:getHistory",
-            filter_none_values({
-                "conversationId": conversation_id,
-                "limit": limit,
-                # Note: offset not supported by backend yet
-                "sortOrder": sort_order,
-            }),
         )
 
         # Convert messages to Message objects
@@ -681,17 +717,20 @@ class ConversationsAPI:
         # Validate date range
         validate_timestamp_range(date_start, date_end)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "conversations:search",
+                filter_none_values({
+                    "query": query,
+                    "type": type,
+                    "userId": user_id,
+                    "memorySpaceId": memory_space_id,
+                    "dateStart": date_start,
+                    "dateEnd": date_end,
+                    "limit": limit,
+                }),
+            ),
             "conversations:search",
-            filter_none_values({
-                "query": query,
-                "type": type,
-                "userId": user_id,
-                "memorySpaceId": memory_space_id,
-                "dateStart": date_start,
-                "dateEnd": date_end,
-                "limit": limit,
-            }),
         )
 
         return [ConversationSearchResult(**convert_convex_response(item)) for item in result]
@@ -741,18 +780,21 @@ class ConversationsAPI:
         # Validate date range
         validate_timestamp_range(date_start, date_end)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "conversations:exportConversations",
+                filter_none_values({
+                    "userId": user_id,
+                    "memorySpaceId": memory_space_id,
+                    "conversationIds": conversation_ids,
+                    "type": type,
+                    "dateStart": date_start,
+                    "dateEnd": date_end,
+                    "format": format,
+                    "includeMetadata": include_metadata,
+                }),
+            ),
             "conversations:exportConversations",
-            filter_none_values({
-                "userId": user_id,
-                "memorySpaceId": memory_space_id,
-                "conversationIds": conversation_ids,
-                "type": type,
-                "dateStart": date_start,
-                "dateEnd": date_end,
-                "format": format,
-                "includeMetadata": include_metadata,
-            }),
         )
 
         return ExportResult(**convert_convex_response(result))

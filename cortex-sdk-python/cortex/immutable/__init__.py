@@ -102,15 +102,18 @@ class ImmutableAPI:
         # CLIENT-SIDE VALIDATION
         validate_immutable_entry(entry)
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "immutable:store",
+                filter_none_values({
+                    "type": entry.type,
+                    "id": entry.id,
+                    "data": entry.data,
+                    "userId": entry.user_id,
+                    "metadata": entry.metadata,
+                }),
+            ),
             "immutable:store",
-            filter_none_values({
-                "type": entry.type,
-                "id": entry.id,
-                "data": entry.data,
-                "userId": entry.user_id,
-                "metadata": entry.metadata,
-            }),
         )
 
         return ImmutableRecord(**convert_convex_response(result))
@@ -133,7 +136,10 @@ class ImmutableAPI:
         validate_type(type, "type")
         validate_id(id, "id")
 
-        result = await self.client.query("immutable:get", filter_none_values({"type": type, "id": id}))
+        result = await self._execute_with_resilience(
+            lambda: self.client.query("immutable:get", filter_none_values({"type": type, "id": id})),
+            "immutable:get",
+        )
 
         if not result:
             return None
@@ -162,8 +168,11 @@ class ImmutableAPI:
         validate_id(id, "id")
         validate_version(version, "version")
 
-        result = await self.client.query(
-            "immutable:getVersion", filter_none_values({"type": type, "id": id, "version": version})
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "immutable:getVersion", filter_none_values({"type": type, "id": id, "version": version})
+            ),
+            "immutable:getVersion",
         )
 
         if not result:
@@ -195,8 +204,11 @@ class ImmutableAPI:
         validate_type(type, "type")
         validate_id(id, "id")
 
-        result = await self.client.query(
-            "immutable:getHistory", filter_none_values({"type": type, "id": id})
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "immutable:getHistory", filter_none_values({"type": type, "id": id})
+            ),
+            "immutable:getHistory",
         )
 
         # Manually construct to handle field name differences
@@ -234,9 +246,12 @@ class ImmutableAPI:
         validate_id(id, "id")
         validate_timestamp(timestamp, "timestamp")
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "immutable:getAtTimestamp",
+                filter_none_values({"type": type, "id": id, "timestamp": timestamp}),
+            ),
             "immutable:getAtTimestamp",
-            filter_none_values({"type": type, "id": id, "timestamp": timestamp}),
         )
 
         if not result:
@@ -272,8 +287,11 @@ class ImmutableAPI:
         if limit is not None:
             validate_limit(limit, "limit")
 
-        result = await self.client.query(
-            "immutable:list", filter_none_values({"type": type, "userId": user_id, "limit": limit})
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "immutable:list", filter_none_values({"type": type, "userId": user_id, "limit": limit})
+            ),
+            "immutable:list",
         )
 
         return [ImmutableRecord(**convert_convex_response(record)) for record in result]
@@ -312,9 +330,12 @@ class ImmutableAPI:
         if limit is not None:
             validate_limit(limit, "limit")
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "immutable:search",
+                filter_none_values({"query": query, "type": type, "userId": user_id, "limit": limit}),
+            ),
             "immutable:search",
-            filter_none_values({"query": query, "type": type, "userId": user_id, "limit": limit}),
         )
 
         return cast(List[Dict[str, Any]], result)
@@ -341,8 +362,11 @@ class ImmutableAPI:
         if user_id is not None:
             validate_user_id(user_id, "user_id")
 
-        result = await self.client.query(
-            "immutable:count", filter_none_values({"type": type, "userId": user_id})
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "immutable:count", filter_none_values({"type": type, "userId": user_id})
+            ),
+            "immutable:count",
         )
 
         return int(result)
@@ -369,8 +393,11 @@ class ImmutableAPI:
         validate_id(id, "id")
 
         try:
-            result = await self.client.mutation(
-                "immutable:purge", filter_none_values({"type": type, "id": id})
+            result = await self._execute_with_resilience(
+                lambda: self.client.mutation(
+                    "immutable:purge", filter_none_values({"type": type, "id": id})
+                ),
+                "immutable:purge",
             )
             return cast(Dict[str, Any], result)
         except Exception as e:
@@ -411,14 +438,17 @@ class ImmutableAPI:
         if created_before is not None:
             validate_timestamp(created_before, "created_before")
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "immutable:purgeMany",
+                filter_none_values({
+                    "type": type,
+                    "userId": user_id,
+                    "createdBefore": created_before,
+                    "dryRun": dry_run,
+                }),
+            ),
             "immutable:purgeMany",
-            filter_none_values({
-                "type": type,
-                "userId": user_id,
-                "createdBefore": created_before,
-                "dryRun": dry_run,
-            }),
         )
 
         return cast(Dict[str, Any], result)
@@ -464,9 +494,12 @@ class ImmutableAPI:
         if older_than is not None:
             validate_timestamp(older_than, "older_than")
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "immutable:purgeVersions",
+                filter_none_values({"type": type, "id": id, "keepLatest": keep_latest, "olderThan": older_than}),
+            ),
             "immutable:purgeVersions",
-            filter_none_values({"type": type, "id": id, "keepLatest": keep_latest, "olderThan": older_than}),
         )
 
         return cast(Dict[str, Any], result)

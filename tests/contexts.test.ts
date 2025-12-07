@@ -83,7 +83,11 @@ describe("Context Chains API", () => {
       const conv = await cortex.conversations.create({
         memorySpaceId: "test-space",
         type: "user-agent",
-        participants: { userId: "user-test", agentId: "agent-test", participantId: "agent-test" },
+        participants: {
+          userId: "user-test",
+          agentId: "agent-test",
+          participantId: "agent-test",
+        },
       });
 
       const msg = await cortex.conversations.addMessage({

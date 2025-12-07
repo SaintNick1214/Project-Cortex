@@ -410,7 +410,7 @@ async function testCreateUserAgent() {
     memorySpaceId: TEST_MEMSPACE_ID,
     participants: {
       userId: TEST_USER_ID,
-          agentId: TEST_PARTICIPANT_ID,
+      agentId: TEST_PARTICIPANT_ID,
       participantId: TEST_PARTICIPANT_ID,
     },
     metadata: {
@@ -1379,7 +1379,7 @@ async function testConvPropagation() {
     memorySpaceId: TEST_MEMSPACE_ID,
     participants: {
       userId: TEST_USER_ID,
-          agentId: TEST_PARTICIPANT_ID,
+      agentId: TEST_PARTICIPANT_ID,
       participantId: TEST_PARTICIPANT_ID,
     },
   });
@@ -1459,7 +1459,7 @@ async function testConvManyMessages() {
     memorySpaceId: TEST_MEMSPACE_ID,
     participants: {
       userId: TEST_USER_ID,
-          agentId: TEST_PARTICIPANT_ID,
+      agentId: TEST_PARTICIPANT_ID,
       participantId: TEST_PARTICIPANT_ID,
     },
   });
@@ -1533,7 +1533,7 @@ async function testConvDeleteMany() {
       memorySpaceId: TEST_MEMSPACE_ID,
       participants: {
         userId: `${TEST_USER_ID}-bulk`,
-          agentId: TEST_PARTICIPANT_ID,
+        agentId: TEST_PARTICIPANT_ID,
         participantId: TEST_PARTICIPANT_ID,
       },
     });
@@ -1676,7 +1676,7 @@ async function testConvGetOrCreate() {
     memorySpaceId: TEST_MEMSPACE_ID,
     participants: {
       userId: `${TEST_USER_ID}-getorcreate`,
-          agentId: TEST_PARTICIPANT_ID,
+      agentId: TEST_PARTICIPANT_ID,
       participantId: TEST_PARTICIPANT_ID,
     },
   });
@@ -1696,7 +1696,7 @@ async function testConvGetOrCreate() {
     memorySpaceId: TEST_MEMSPACE_ID,
     participants: {
       userId: `${TEST_USER_ID}-getorcreate`,
-          agentId: TEST_PARTICIPANT_ID,
+      agentId: TEST_PARTICIPANT_ID,
       participantId: TEST_PARTICIPANT_ID,
     },
   });
@@ -1717,7 +1717,7 @@ async function testConvIntegration() {
     memorySpaceId: TEST_MEMSPACE_ID,
     participants: {
       userId: TEST_USER_ID,
-          agentId: TEST_PARTICIPANT_ID,
+      agentId: TEST_PARTICIPANT_ID,
       participantId: TEST_PARTICIPANT_ID,
     },
     metadata: {
@@ -2917,7 +2917,7 @@ async function testMemoryGetEnriched() {
       memorySpaceId: TEST_MEMSPACE_ID,
       participants: {
         userId: TEST_USER_ID,
-          agentId: TEST_PARTICIPANT_ID,
+        agentId: TEST_PARTICIPANT_ID,
         participantId: TEST_PARTICIPANT_ID,
       },
     });

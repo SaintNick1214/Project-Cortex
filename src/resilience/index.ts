@@ -42,6 +42,147 @@ export { PriorityQueue } from "./PriorityQueue";
 export { CircuitBreaker } from "./CircuitBreaker";
 export { getPriority, isCritical, OPERATION_PRIORITIES } from "./priorities";
 
+/**
+ * Check if an error is NOT a system failure and should not trip the circuit breaker.
+ *
+ * The circuit breaker should only trip on actual infrastructure/system failures,
+ * not on expected application-level errors. This function identifies errors that
+ * indicate the system is working correctly but the operation couldn't complete
+ * for business/validation reasons.
+ *
+ * Categories of non-system failures:
+ * 1. Idempotent "not found" errors - Entity already deleted/doesn't exist
+ * 2. Validation errors - Invalid input from client
+ * 3. Duplicate/conflict errors - Idempotent create operations
+ * 4. Empty result errors - Query returned no results (expected)
+ * 5. Permission errors - Auth/authorization issues (not infrastructure)
+ * 6. Configuration errors - Feature not configured (not infrastructure)
+ * 7. Business logic errors - Constraints like HAS_CHILDREN
+ *
+ * @param error The error to check
+ * @returns True if this is NOT a system failure (should not trip circuit breaker)
+ */
+export function isNonSystemFailure(error: unknown): boolean {
+  const errorStr = String(error);
+  const errorLower = errorStr.toLowerCase();
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Category 1: Idempotent "not found" errors
+  // Deleting something already deleted = success, not failure
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  const notFoundPatterns = [
+    "IMMUTABLE_ENTRY_NOT_FOUND",
+    "USER_NOT_FOUND",
+    "CONVERSATION_NOT_FOUND",
+    "MEMORY_NOT_FOUND",
+    "FACT_NOT_FOUND",
+    "MUTABLE_KEY_NOT_FOUND",
+    "KEY_NOT_FOUND",
+    "CONTEXT_NOT_FOUND",
+    "MEMORY_SPACE_NOT_FOUND",
+    "MEMORYSPACE_NOT_FOUND",
+    "AGENT_NOT_FOUND",
+    "AGENT_NOT_REGISTERED",
+    "VERSION_NOT_FOUND",
+    "PARENT_NOT_FOUND",
+    "NOT_FOUND",
+    "not found",
+  ];
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Category 2: Validation errors (client bugs, not system failures)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  const validationPatterns = [
+    "INVALID_", // Catches all INVALID_* errors
+    "DATA_TOO_LARGE",
+    "VALUE_TOO_LARGE",
+    "invalid ",
+    "validation error",
+    "validation failed",
+  ];
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Category 3: Idempotent "already exists" errors
+  // Creating something that exists = idempotent success
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  const duplicatePatterns = [
+    "ALREADY_EXISTS",
+    "ALREADY_REGISTERED",
+    "MEMORYSPACE_ALREADY_EXISTS",
+    "AGENT_ALREADY_REGISTERED",
+    "DUPLICATE",
+    "CONFLICT",
+    "already exists",
+    "already registered",
+  ];
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Category 4: Empty result errors (expected, not failures)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  const emptyResultPatterns = [
+    "NO_MEMORIES_MATCHED",
+    "NO_USERS_MATCHED",
+    "no results",
+    "no matches",
+  ];
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Category 5: Permission/auth errors (not infrastructure failures)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  const permissionPatterns = [
+    "PERMISSION_DENIED",
+    "UNAUTHORIZED",
+    "FORBIDDEN",
+    "ACCESS_DENIED",
+    "permission denied",
+    "unauthorized",
+    "forbidden",
+  ];
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Category 6: Configuration errors (feature not enabled, not infra)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  const configPatterns = [
+    "CLOUD_MODE_REQUIRED",
+    "PUBSUB_NOT_CONFIGURED",
+    "not configured",
+    "not enabled",
+  ];
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Category 7: Business logic constraints (not system failures)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  const businessLogicPatterns = [
+    "HAS_CHILDREN",
+    "MEMORYSPACE_HAS_DATA",
+    "PURGE_CANCELLED",
+    "DELETION_CANCELLED",
+    "has children",
+    "has data",
+    "cancelled",
+  ];
+
+  // Combine all patterns
+  const allPatterns = [
+    ...notFoundPatterns,
+    ...validationPatterns,
+    ...duplicatePatterns,
+    ...emptyResultPatterns,
+    ...permissionPatterns,
+    ...configPatterns,
+    ...businessLogicPatterns,
+  ];
+
+  // Check if any pattern matches
+  return allPatterns.some(
+    (pattern) =>
+      errorStr.includes(pattern) || errorLower.includes(pattern.toLowerCase()),
+  );
+}
+
+// Backwards compatibility alias
+export const isIdempotentNotFoundError = isNonSystemFailure;
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Presets
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -214,6 +355,102 @@ export const ResiliencePresets = {
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Plan-Based Preset Selection
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Convex plan tier type
+ */
+export type ConvexPlanTier = "free" | "starter" | "professional";
+
+/**
+ * Get the appropriate resilience preset based on Convex plan tier.
+ *
+ * Reads from CONVEX_PLAN environment variable if not specified.
+ * Defaults to 'free' plan limits for safety.
+ *
+ * @param plan Optional plan tier override. If not provided, reads from CONVEX_PLAN env var.
+ * @returns The appropriate ResilienceConfig for the plan tier
+ *
+ * @example
+ * ```typescript
+ * // Auto-detect from CONVEX_PLAN env var
+ * const config = getPresetForPlan();
+ *
+ * // Explicit plan tier
+ * const proConfig = getPresetForPlan('professional');
+ *
+ * // Use with ResilienceLayer
+ * const resilience = new ResilienceLayer(getPresetForPlan());
+ * ```
+ */
+export function getPresetForPlan(plan?: ConvexPlanTier): ResilienceConfig {
+  const effectivePlan =
+    plan ||
+    (process.env.CONVEX_PLAN as ConvexPlanTier | undefined) ||
+    "free";
+
+  switch (effectivePlan.toLowerCase()) {
+    case "professional":
+      // Professional plan: 256 concurrent queries/mutations
+      // Use batchProcessing preset which allows higher throughput
+      return ResiliencePresets.batchProcessing;
+
+    case "free":
+    case "starter":
+    default:
+      // Free/Starter plan: 16 concurrent queries/mutations
+      return ResiliencePresets.default;
+  }
+}
+
+/**
+ * Get the detected Convex plan tier from environment.
+ *
+ * @returns The detected plan tier, defaulting to 'free'
+ */
+export function getDetectedPlanTier(): ConvexPlanTier {
+  const envPlan = process.env.CONVEX_PLAN?.toLowerCase();
+  if (envPlan === "professional") return "professional";
+  if (envPlan === "starter") return "starter";
+  return "free";
+}
+
+/**
+ * Get concurrency limits for a given Convex plan tier.
+ *
+ * Based on https://docs.convex.dev/production/state/limits
+ *
+ * @param plan The Convex plan tier
+ * @returns Object with concurrency limits
+ */
+export function getPlanLimits(plan?: ConvexPlanTier): {
+  concurrentQueries: number;
+  concurrentMutations: number;
+  concurrentActions: number;
+  maxNodeActions: number;
+} {
+  const effectivePlan = plan || getDetectedPlanTier();
+
+  if (effectivePlan === "professional") {
+    return {
+      concurrentQueries: 256,
+      concurrentMutations: 256,
+      concurrentActions: 256,
+      maxNodeActions: 1000,
+    };
+  }
+
+  // Free/Starter plan limits
+  return {
+    concurrentQueries: 16,
+    concurrentMutations: 16,
+    concurrentActions: 64,
+    maxNodeActions: 64,
+  };
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Main Resilience Layer
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -296,10 +533,15 @@ export class ResilienceLayer {
 
       return result;
     } catch (error) {
-      // Record failure
-      this.circuitBreaker.recordFailure(
-        error instanceof Error ? error : new Error(String(error)),
-      );
+      // Only record as failure if it's a true system failure.
+      // Non-system failures (validation errors, not found, duplicates, etc.)
+      // should not trip the circuit breaker as they indicate the system
+      // is working correctly, just rejecting invalid/expected operations.
+      if (!isNonSystemFailure(error)) {
+        this.circuitBreaker.recordFailure(
+          error instanceof Error ? error : new Error(String(error)),
+        );
+      }
 
       // Handle ConvexError - extract data and include in error message
       // ConvexError has a `data` property containing the actual error code/message
@@ -456,9 +698,12 @@ export class ResilienceLayer {
       this.circuitBreaker.recordSuccess();
       request.resolve(result);
     } catch (error) {
-      this.circuitBreaker.recordFailure(
-        error instanceof Error ? error : new Error(String(error)),
-      );
+      // Only record as failure if it's a true system failure
+      if (!isNonSystemFailure(error)) {
+        this.circuitBreaker.recordFailure(
+          error instanceof Error ? error : new Error(String(error)),
+        );
+      }
       request.reject(error instanceof Error ? error : new Error(String(error)));
     } finally {
       permit.release();

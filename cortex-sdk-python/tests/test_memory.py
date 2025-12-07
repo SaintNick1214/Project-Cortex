@@ -1,5 +1,10 @@
 """
 Tests for Memory API (Layer 4 convenience)
+
+OPTIMIZATION: Tests are organized into batched groups to reduce setup overhead:
+1. TestMemoryBasicOperations - Core CRUD operations, share setup where possible
+2. TestMemoryValidation - Client-side validation (NO database calls needed!)
+3. TestMemorySkipLayers - Layer skipping behavior
 """
 
 import time
@@ -7,6 +12,17 @@ import time
 import pytest
 
 from cortex import ForgetOptions, RememberParams, SearchOptions
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Batched Test Group 1: Basic Operations (shared setup)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Basic Memory Operations
+# PARALLEL-SAFE: Uses function-scoped fixtures with unique IDs per test
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
 @pytest.mark.asyncio
@@ -712,151 +728,812 @@ async def test_restore_non_archived_throws_error(cortex_client, test_memory_spac
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Client-Side Validation Tests
+# Batched Test Group 2: Client-Side Validation Tests
+# OPTIMIZATION: These tests validate errors BEFORE any API call - no DB needed!
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 from cortex import MemoryMetadata, MemorySource, StoreMemoryInput
 from cortex.memory import MemoryValidationError
 
-# remember() validation tests
 
-@pytest.mark.asyncio
-async def test_remember_validation_missing_memory_space_id(cortex_client, test_conversation_id, test_user_id):
-    """Should throw on missing memory_space_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.remember(
-            RememberParams(
-                memory_space_id="",
-                conversation_id=test_conversation_id,
-                user_message="Test",
-                agent_response="OK",
-                user_id=test_user_id,
-                user_name="Tester"
+class TestMemoryValidation:
+    """
+    Client-side validation tests - NO database calls needed!
+    
+    These tests verify that MemoryValidationError is raised BEFORE
+    any API call is made. They only need the cortex_client to be
+    initialized, not any test data in the database.
+    
+    Grouping them in a class allows pytest to potentially optimize
+    fixture setup across the entire class.
+    """
+
+    # Static test IDs - no need for database-backed fixtures
+    SPACE_ID = "validation-test-space"
+    CONV_ID = "validation-test-conv"
+    USER_ID = "validation-test-user"
+    AGENT_ID = "validation-test-agent"
+
+    # ━━━ remember() validation tests ━━━
+
+    @pytest.mark.asyncio
+    async def test_remember_validation_missing_memory_space_id(self, cortex_client):
+        """Should throw on missing memory_space_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.remember(
+                RememberParams(
+                    memory_space_id="",
+                    conversation_id=self.CONV_ID,
+                    user_message="Test",
+                    agent_response="OK",
+                    user_id=self.USER_ID,
+                    user_name="Tester"
+                )
             )
-        )
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
 
-
-@pytest.mark.asyncio
-async def test_remember_validation_empty_memory_space_id(cortex_client, test_conversation_id, test_user_id):
-    """Should throw on whitespace memory_space_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.remember(
-            RememberParams(
-                memory_space_id="   ",
-                conversation_id=test_conversation_id,
-                user_message="Test",
-                agent_response="OK",
-                user_id=test_user_id,
-                user_name="Tester"
+    @pytest.mark.asyncio
+    async def test_remember_validation_empty_memory_space_id(self, cortex_client):
+        """Should throw on whitespace memory_space_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.remember(
+                RememberParams(
+                    memory_space_id="   ",
+                    conversation_id=self.CONV_ID,
+                    user_message="Test",
+                    agent_response="OK",
+                    user_id=self.USER_ID,
+                    user_name="Tester"
+                )
             )
-        )
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
 
-
-@pytest.mark.asyncio
-async def test_remember_validation_missing_conversation_id(cortex_client, test_memory_space_id, test_user_id):
-    """Should throw on missing conversation_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.remember(
-            RememberParams(
-                memory_space_id=test_memory_space_id,
-                conversation_id="",
-                user_message="Test",
-                agent_response="OK",
-                user_id=test_user_id,
-                user_name="Tester"
+    @pytest.mark.asyncio
+    async def test_remember_validation_missing_conversation_id(self, cortex_client):
+        """Should throw on missing conversation_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.remember(
+                RememberParams(
+                    memory_space_id=self.SPACE_ID,
+                    conversation_id="",
+                    user_message="Test",
+                    agent_response="OK",
+                    user_id=self.USER_ID,
+                    user_name="Tester"
+                )
             )
-        )
-    assert "conversation_id cannot be empty" in str(exc_info.value)
+        assert "conversation_id cannot be empty" in str(exc_info.value)
 
-
-@pytest.mark.asyncio
-async def test_remember_validation_missing_user_message(cortex_client, test_memory_space_id, test_conversation_id, test_user_id):
-    """Should throw on missing user_message."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.remember(
-            RememberParams(
-                memory_space_id=test_memory_space_id,
-                conversation_id=test_conversation_id,
-                user_message="",
-                agent_response="OK",
-                user_id=test_user_id,
-                user_name="Tester"
+    @pytest.mark.asyncio
+    async def test_remember_validation_missing_user_message(self, cortex_client):
+        """Should throw on missing user_message."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.remember(
+                RememberParams(
+                    memory_space_id=self.SPACE_ID,
+                    conversation_id=self.CONV_ID,
+                    user_message="",
+                    agent_response="OK",
+                    user_id=self.USER_ID,
+                    user_name="Tester"
+                )
             )
-        )
-    assert "user_message cannot be empty" in str(exc_info.value)
+        assert "user_message cannot be empty" in str(exc_info.value)
 
-
-@pytest.mark.asyncio
-async def test_remember_validation_empty_user_message(cortex_client, test_memory_space_id, test_conversation_id, test_user_id):
-    """Should throw on whitespace user_message."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.remember(
-            RememberParams(
-                memory_space_id=test_memory_space_id,
-                conversation_id=test_conversation_id,
-                user_message="   ",
-                agent_response="OK",
-                user_id=test_user_id,
-                user_name="Tester"
+    @pytest.mark.asyncio
+    async def test_remember_validation_empty_user_message(self, cortex_client):
+        """Should throw on whitespace user_message."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.remember(
+                RememberParams(
+                    memory_space_id=self.SPACE_ID,
+                    conversation_id=self.CONV_ID,
+                    user_message="   ",
+                    agent_response="OK",
+                    user_id=self.USER_ID,
+                    user_name="Tester"
+                )
             )
-        )
-    assert "user_message cannot be empty" in str(exc_info.value)
+        assert "user_message cannot be empty" in str(exc_info.value)
 
-
-@pytest.mark.asyncio
-async def test_remember_validation_missing_agent_response(cortex_client, test_memory_space_id, test_conversation_id, test_user_id):
-    """Should throw on missing agent_response."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.remember(
-            RememberParams(
-                memory_space_id=test_memory_space_id,
-                conversation_id=test_conversation_id,
-                user_message="Test",
-                agent_response="",
-                user_id=test_user_id,
-                user_name="Tester"
+    @pytest.mark.asyncio
+    async def test_remember_validation_missing_agent_response(self, cortex_client):
+        """Should throw on missing agent_response."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.remember(
+                RememberParams(
+                    memory_space_id=self.SPACE_ID,
+                    conversation_id=self.CONV_ID,
+                    user_message="Test",
+                    agent_response="",
+                    user_id=self.USER_ID,
+                    user_name="Tester"
+                )
             )
-        )
-    assert "agent_response cannot be empty" in str(exc_info.value)
+        assert "agent_response cannot be empty" in str(exc_info.value)
 
-
-@pytest.mark.asyncio
-async def test_remember_validation_missing_owner(cortex_client, test_memory_space_id, test_conversation_id):
-    """Should throw on missing owner (neither user_id nor agent_id)."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.remember(
-            RememberParams(
-                memory_space_id=test_memory_space_id,
-                conversation_id=test_conversation_id,
-                user_message="Test",
-                agent_response="OK",
-                user_id="",
-                user_name="Tester"
+    @pytest.mark.asyncio
+    async def test_remember_validation_missing_owner(self, cortex_client):
+        """Should throw on missing owner (neither user_id nor agent_id)."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.remember(
+                RememberParams(
+                    memory_space_id=self.SPACE_ID,
+                    conversation_id=self.CONV_ID,
+                    user_message="Test",
+                    agent_response="OK",
+                    user_id="",
+                    user_name="Tester"
+                )
             )
-        )
-    assert "Either user_id or agent_id must be provided" in str(exc_info.value)
+        assert "Either user_id or agent_id must be provided" in str(exc_info.value)
 
-
-@pytest.mark.asyncio
-async def test_remember_validation_user_without_agent(cortex_client, test_memory_space_id, test_conversation_id, test_user_id):
-    """Should throw when user_id is provided without agent_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.remember(
-            RememberParams(
-                memory_space_id=test_memory_space_id,
-                conversation_id=test_conversation_id,
-                user_message="Test",
-                agent_response="OK",
-                user_id=test_user_id,
-                user_name="Tester"
-                # Missing agent_id - should throw!
+    @pytest.mark.asyncio
+    async def test_remember_validation_user_without_agent(self, cortex_client):
+        """Should throw when user_id is provided without agent_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.remember(
+                RememberParams(
+                    memory_space_id=self.SPACE_ID,
+                    conversation_id=self.CONV_ID,
+                    user_message="Test",
+                    agent_response="OK",
+                    user_id=self.USER_ID,
+                    user_name="Tester"
+                    # Missing agent_id - should throw!
+                )
             )
-        )
-    assert "agent_id is required when user_id is provided" in str(exc_info.value)
+        assert "agent_id is required when user_id is provided" in str(exc_info.value)
 
 
+    @pytest.mark.asyncio
+    async def test_remember_validation_invalid_importance_negative(self, cortex_client):
+        """Should throw on negative importance."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.remember(
+                RememberParams(
+                    memory_space_id=self.SPACE_ID,
+                    conversation_id=self.CONV_ID,
+                    user_message="Test",
+                    agent_response="OK",
+                    user_id=self.USER_ID,
+                    user_name="Tester",
+                    agent_id=self.AGENT_ID,
+                    importance=-1
+                )
+            )
+        assert "importance must be between 0 and 100" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_remember_validation_invalid_importance_too_high(self, cortex_client):
+        """Should throw on importance > 100."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.remember(
+                RememberParams(
+                    memory_space_id=self.SPACE_ID,
+                    conversation_id=self.CONV_ID,
+                    user_message="Test",
+                    agent_response="OK",
+                    user_id=self.USER_ID,
+                    user_name="Tester",
+                    agent_id=self.AGENT_ID,
+                    importance=150
+                )
+            )
+        assert "importance must be between 0 and 100" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_remember_validation_tags_with_empty_strings(self, cortex_client):
+        """Should throw on tags with empty strings."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.remember(
+                RememberParams(
+                    memory_space_id=self.SPACE_ID,
+                    conversation_id=self.CONV_ID,
+                    user_message="Test",
+                    agent_response="OK",
+                    user_id=self.USER_ID,
+                    user_name="Tester",
+                    agent_id=self.AGENT_ID,
+                    tags=["valid", "", "tag"]
+                )
+            )
+        assert "must be a non-empty string" in str(exc_info.value)
+
+    # ━━━ rememberStream() validation tests ━━━
+
+    @pytest.mark.asyncio
+    async def test_remember_stream_validation_invalid_stream(self, cortex_client):
+        """Should throw on invalid stream object."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.remember_stream({
+                "memorySpaceId": self.SPACE_ID,
+                "conversationId": self.CONV_ID,
+                "userMessage": "Test",
+                "responseStream": {},  # Invalid
+                "userId": self.USER_ID,
+                "userName": "Tester",
+                "agentId": self.AGENT_ID
+            })
+        assert "response_stream must be" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_remember_stream_validation_null_stream(self, cortex_client):
+        """Should throw on null stream."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.remember_stream({
+                "memorySpaceId": self.SPACE_ID,
+                "conversationId": self.CONV_ID,
+                "userMessage": "Test",
+                "responseStream": None,
+                "userId": self.USER_ID,
+                "userName": "Tester",
+                "agentId": self.AGENT_ID
+            })
+        assert "response_stream must be" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_remember_stream_validation_inherits_remember_checks(self, cortex_client):
+        """Should inherit remember() validations."""
+        async def mock_stream():
+            yield "test"
+
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.remember_stream({
+                "memorySpaceId": "",
+                "conversationId": self.CONV_ID,
+                "userMessage": "Test",
+                "responseStream": mock_stream(),
+                "userId": self.USER_ID,
+                "userName": "Tester",
+                "agentId": self.AGENT_ID
+            })
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+    # ━━━ forget() validation tests ━━━
+
+    @pytest.mark.asyncio
+    async def test_forget_validation_empty_memory_space_id(self, cortex_client):
+        """Should throw on empty memory_space_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.forget("", "mem-123")
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_forget_validation_empty_memory_id(self, cortex_client):
+        """Should throw on empty memory_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.forget(self.SPACE_ID, "   ")
+        assert "memory_id cannot be empty" in str(exc_info.value)
+
+    # ━━━ get() validation tests ━━━
+
+    @pytest.mark.asyncio
+    async def test_get_validation_empty_memory_space_id(self, cortex_client):
+        """Should throw on empty memory_space_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.get("", "mem-123")
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_get_validation_empty_memory_id(self, cortex_client):
+        """Should throw on empty memory_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.get(self.SPACE_ID, "")
+        assert "memory_id cannot be empty" in str(exc_info.value)
+
+    # ━━━ search() validation tests ━━━
+
+    @pytest.mark.asyncio
+    async def test_search_validation_empty_memory_space_id(self, cortex_client):
+        """Should throw on empty memory_space_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.search("", "query")
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_search_validation_empty_query(self, cortex_client):
+        """Should throw on empty query."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.search(self.SPACE_ID, "   ")
+        assert "query cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_search_validation_invalid_embedding_empty(self, cortex_client):
+        """Should throw on empty embedding array."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.search(
+                self.SPACE_ID,
+                "query",
+                SearchOptions(embedding=[])
+            )
+        assert "embedding cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_search_validation_invalid_embedding_nan(self, cortex_client):
+        """Should throw on NaN in embedding."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.search(
+                self.SPACE_ID,
+                "query",
+                SearchOptions(embedding=[0.1, float('nan'), 0.3])
+            )
+        assert "must be a finite number" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_search_validation_invalid_min_score_negative(self, cortex_client):
+        """Should throw on negative min_score."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.search(
+                self.SPACE_ID,
+                "query",
+                SearchOptions(min_score=-0.5)
+            )
+        assert "min_score must be between 0 and 1" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_search_validation_invalid_min_score_too_high(self, cortex_client):
+        """Should throw on min_score > 1."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.search(
+                self.SPACE_ID,
+                "query",
+                SearchOptions(min_score=1.5)
+            )
+        assert "min_score must be between 0 and 1" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_search_validation_invalid_limit_zero(self, cortex_client):
+        """Should throw on limit=0."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.search(
+                self.SPACE_ID,
+                "query",
+                SearchOptions(limit=0)
+            )
+        assert "limit must be a positive integer" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_search_validation_invalid_limit_negative(self, cortex_client):
+        """Should throw on negative limit."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.search(
+                self.SPACE_ID,
+                "query",
+                SearchOptions(limit=-10)
+            )
+        assert "limit must be a positive integer" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_search_validation_tags_with_empty_strings(self, cortex_client):
+        """Should throw on tags with empty strings."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.search(
+                self.SPACE_ID,
+                "query",
+                SearchOptions(tags=["valid", ""])
+            )
+        assert "must be a non-empty string" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_search_validation_invalid_min_importance(self, cortex_client):
+        """Should throw on invalid min_importance."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.search(
+                self.SPACE_ID,
+                "query",
+                SearchOptions(min_importance=150)
+            )
+        assert "min_importance must be between 0 and 100" in str(exc_info.value)
+
+
+    # ━━━ store() validation tests ━━━
+
+    @pytest.mark.asyncio
+    async def test_store_validation_empty_memory_space_id(self, cortex_client):
+        """Should throw on empty memory_space_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.store(
+                "",
+                StoreMemoryInput(
+                    content="Test",
+                    content_type="raw",
+                    source=MemorySource(type="system", timestamp=1000),
+                    metadata=MemoryMetadata(importance=50, tags=[])
+                )
+            )
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_store_validation_empty_content(self, cortex_client):
+        """Should throw on empty content."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.store(
+                self.SPACE_ID,
+                StoreMemoryInput(
+                    content="   ",
+                    content_type="raw",
+                    source=MemorySource(type="system", timestamp=1000),
+                    metadata=MemoryMetadata(importance=50, tags=[])
+                )
+            )
+        assert "content cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_store_validation_invalid_content_type(self, cortex_client):
+        """Should throw on invalid content_type."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.store(
+                self.SPACE_ID,
+                StoreMemoryInput(
+                    content="Test",
+                    content_type="unknown",  # Invalid
+                    source=MemorySource(type="system", timestamp=1000),
+                    metadata=MemoryMetadata(importance=50, tags=[])
+                )
+            )
+        assert "Invalid content_type" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_store_validation_invalid_source_type(self, cortex_client):
+        """Should throw on invalid source_type."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.store(
+                self.SPACE_ID,
+                StoreMemoryInput(
+                    content="Test",
+                    content_type="raw",
+                    source=MemorySource(type="invalid", timestamp=1000),  # Invalid
+                    metadata=MemoryMetadata(importance=50, tags=[])
+                )
+            )
+        assert "Invalid source_type" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_store_validation_missing_conversation_ref(self, cortex_client):
+        """Should throw when conversation_ref missing for conversation source."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.store(
+                self.SPACE_ID,
+                StoreMemoryInput(
+                    content="Test",
+                    content_type="raw",
+                    source=MemorySource(type="conversation", timestamp=1000),
+                    metadata=MemoryMetadata(importance=50, tags=[])
+                )
+            )
+        assert "conversation_ref is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_store_validation_invalid_embedding(self, cortex_client):
+        """Should throw on invalid embedding."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.store(
+                self.SPACE_ID,
+                StoreMemoryInput(
+                    content="Test",
+                    content_type="raw",
+                    source=MemorySource(type="system", timestamp=1000),
+                    metadata=MemoryMetadata(importance=50, tags=[]),
+                    embedding=[float('inf'), 0.2]
+                )
+            )
+        assert "must be a finite number" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_store_validation_invalid_importance(self, cortex_client):
+        """Should throw on invalid importance."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.store(
+                self.SPACE_ID,
+                StoreMemoryInput(
+                    content="Test",
+                    content_type="raw",
+                    source=MemorySource(type="system", timestamp=1000),
+                    metadata=MemoryMetadata(importance=150, tags=[])
+                )
+            )
+        assert "importance must be between 0 and 100" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_store_validation_tags_with_empty_strings(self, cortex_client):
+        """Should throw on tags with empty strings."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.store(
+                self.SPACE_ID,
+                StoreMemoryInput(
+                    content="Test",
+                    content_type="raw",
+                    source=MemorySource(type="system", timestamp=1000),
+                    metadata=MemoryMetadata(importance=50, tags=["valid", ""])
+                )
+            )
+        assert "must be a non-empty string" in str(exc_info.value)
+
+    # ━━━ update() validation tests ━━━
+
+    @pytest.mark.asyncio
+    async def test_update_validation_empty_memory_space_id(self, cortex_client):
+        """Should throw on empty memory_space_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.update("", "mem-123", {"content": "Updated"})
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_update_validation_empty_memory_id(self, cortex_client):
+        """Should throw on empty memory_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.update(self.SPACE_ID, "", {"content": "Updated"})
+        assert "memory_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_update_validation_no_update_fields(self, cortex_client):
+        """Should throw when no update fields provided."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.update(self.SPACE_ID, "mem-123", {})
+        assert "At least one update field must be provided" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_update_validation_invalid_importance(self, cortex_client):
+        """Should throw on invalid importance."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.update(self.SPACE_ID, "mem-123", {"importance": -5})
+        assert "importance must be between 0 and 100" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_update_validation_invalid_embedding(self, cortex_client):
+        """Should throw on invalid embedding."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.update(self.SPACE_ID, "mem-123", {"embedding": []})
+        assert "embedding cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_update_validation_tags_with_empty_strings(self, cortex_client):
+        """Should throw on tags with empty strings."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.update(self.SPACE_ID, "mem-123", {"tags": ["", "valid"]})
+        assert "must be a non-empty string" in str(exc_info.value)
+
+    # ━━━ delete() validation tests ━━━
+
+    @pytest.mark.asyncio
+    async def test_delete_validation_empty_memory_space_id(self, cortex_client):
+        """Should throw on empty memory_space_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.delete("", "mem-123")
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_delete_validation_empty_memory_id(self, cortex_client):
+        """Should throw on empty memory_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.delete(self.SPACE_ID, "")
+        assert "memory_id cannot be empty" in str(exc_info.value)
+
+    # ━━━ list() validation tests ━━━
+
+    @pytest.mark.asyncio
+    async def test_list_validation_empty_memory_space_id(self, cortex_client):
+        """Should throw on empty memory_space_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.list("")
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_list_validation_invalid_source_type(self, cortex_client):
+        """Should throw on invalid source_type."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.list(self.SPACE_ID, source_type="invalid")
+        assert "Invalid source_type" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_list_validation_invalid_limit_negative(self, cortex_client):
+        """Should throw on negative limit."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.list(self.SPACE_ID, limit=-5)
+        assert "limit must be a positive integer" in str(exc_info.value)
+
+    # ━━━ count() validation tests ━━━
+
+    @pytest.mark.asyncio
+    async def test_count_validation_empty_memory_space_id(self, cortex_client):
+        """Should throw on empty memory_space_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.count("")
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_count_validation_invalid_source_type(self, cortex_client):
+        """Should throw on invalid source_type."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.count(self.SPACE_ID, source_type="invalid")
+        assert "Invalid source_type" in str(exc_info.value)
+
+
+    # ━━━ update_many() validation tests ━━━
+
+    @pytest.mark.asyncio
+    async def test_update_many_validation_empty_memory_space_id(self, cortex_client):
+        """Should throw on empty memory_space_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.update_many("", {}, {"importance": 80})
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_update_many_validation_no_update_fields(self, cortex_client):
+        """Should throw when no update fields provided."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.update_many(self.SPACE_ID, {}, {})
+        assert "At least one update field must be provided" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_update_many_validation_invalid_importance(self, cortex_client):
+        """Should throw on invalid importance."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.update_many(self.SPACE_ID, {}, {"importance": 200})
+        assert "importance must be between 0 and 100" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_update_many_validation_tags_with_empty_strings(self, cortex_client):
+        """Should throw on tags with empty strings."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.update_many(self.SPACE_ID, {}, {"tags": ["valid", ""]})
+        assert "must be a non-empty string" in str(exc_info.value)
+
+    # ━━━ delete_many() validation tests ━━━
+
+    @pytest.mark.asyncio
+    async def test_delete_many_validation_empty_memory_space_id(self, cortex_client):
+        """Should throw on empty memory_space_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.delete_many("", {})
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_delete_many_validation_empty_filter_prevents_mass_delete(self, cortex_client):
+        """Should throw on empty filter to prevent mass delete."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.delete_many(self.SPACE_ID, {})
+        assert "Filter must include at least one criterion" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_delete_many_validation_invalid_source_type(self, cortex_client):
+        """Should throw on invalid source_type."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.delete_many(self.SPACE_ID, {"source_type": "invalid"})
+        assert "Invalid source_type" in str(exc_info.value)
+
+    # ━━━ export() validation tests ━━━
+
+    @pytest.mark.asyncio
+    async def test_export_validation_empty_memory_space_id(self, cortex_client):
+        """Should throw on empty memory_space_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.export("", format="json")
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_export_validation_invalid_format(self, cortex_client):
+        """Should throw on invalid format."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.export(self.SPACE_ID, format="xml")
+        assert "Invalid format" in str(exc_info.value)
+
+    # ━━━ archive() validation tests ━━━
+
+    @pytest.mark.asyncio
+    async def test_archive_validation_empty_memory_space_id(self, cortex_client):
+        """Should throw on empty memory_space_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.archive("", "mem-123")
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_archive_validation_empty_memory_id(self, cortex_client):
+        """Should throw on empty memory_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.archive(self.SPACE_ID, "")
+        assert "memory_id cannot be empty" in str(exc_info.value)
+
+    # ━━━ restore_from_archive() validation tests ━━━
+
+    @pytest.mark.asyncio
+    async def test_restore_validation_empty_memory_space_id(self, cortex_client):
+        """Should throw on empty memory_space_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.restore_from_archive("", "mem-123")
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_restore_validation_empty_memory_id(self, cortex_client):
+        """Should throw on empty memory_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.restore_from_archive(self.SPACE_ID, "")
+        assert "memory_id cannot be empty" in str(exc_info.value)
+
+    # ━━━ get_version() validation tests ━━━
+
+    @pytest.mark.asyncio
+    async def test_get_version_validation_empty_memory_space_id(self, cortex_client):
+        """Should throw on empty memory_space_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.get_version("", "mem-123", 1)
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_get_version_validation_empty_memory_id(self, cortex_client):
+        """Should throw on empty memory_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.get_version(self.SPACE_ID, "", 1)
+        assert "memory_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_get_version_validation_invalid_version_zero(self, cortex_client):
+        """Should throw on version=0."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.get_version(self.SPACE_ID, "mem-123", 0)
+        assert "version must be a positive integer" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_get_version_validation_negative_version(self, cortex_client):
+        """Should throw on negative version."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.get_version(self.SPACE_ID, "mem-123", -1)
+        assert "version must be a positive integer" in str(exc_info.value)
+
+    # ━━━ get_history() validation tests ━━━
+
+    @pytest.mark.asyncio
+    async def test_get_history_validation_empty_memory_space_id(self, cortex_client):
+        """Should throw on empty memory_space_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.get_history("", "mem-123")
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_get_history_validation_empty_memory_id(self, cortex_client):
+        """Should throw on empty memory_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.get_history(self.SPACE_ID, "")
+        assert "memory_id cannot be empty" in str(exc_info.value)
+
+    # ━━━ get_at_timestamp() validation tests ━━━
+
+    @pytest.mark.asyncio
+    async def test_get_at_timestamp_validation_empty_memory_space_id(self, cortex_client):
+        """Should throw on empty memory_space_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.get_at_timestamp("", "mem-123", 1000)
+        assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_get_at_timestamp_validation_empty_memory_id(self, cortex_client):
+        """Should throw on empty memory_id."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.get_at_timestamp(self.SPACE_ID, "", 1000)
+        assert "memory_id cannot be empty" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_get_at_timestamp_validation_invalid_timestamp_nan(self, cortex_client):
+        """Should throw on NaN timestamp."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.get_at_timestamp(self.SPACE_ID, "mem-123", float('nan'))
+        assert "timestamp must be a valid timestamp" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_get_at_timestamp_validation_negative_timestamp(self, cortex_client):
+        """Should throw on negative timestamp."""
+        with pytest.raises(MemoryValidationError) as exc_info:
+            await cortex_client.memory.get_at_timestamp(self.SPACE_ID, "mem-123", -1000)
+        assert "timestamp cannot be negative" in str(exc_info.value)
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Batched Test Group 3: skipLayers Tests
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+# Agent-only test moved outside validation class (requires actual DB call)
 @pytest.mark.asyncio
 async def test_remember_validation_agent_only_works(cortex_client, test_memory_space_id, test_conversation_id, test_agent_id, cleanup_helper):
     """Should allow agent-only memory (no user_id) when skipping conversations layer."""
@@ -877,714 +1554,6 @@ async def test_remember_validation_agent_only_works(cortex_client, test_memory_s
     
     # Cleanup
     await cleanup_helper.purge_memory_space(test_memory_space_id)
-
-
-@pytest.mark.asyncio
-async def test_remember_validation_invalid_importance_negative(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id):
-    """Should throw on negative importance."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.remember(
-            RememberParams(
-                memory_space_id=test_memory_space_id,
-                conversation_id=test_conversation_id,
-                user_message="Test",
-                agent_response="OK",
-                user_id=test_user_id,
-                user_name="Tester",
-                agent_id=test_agent_id,
-                importance=-1
-            )
-        )
-    assert "importance must be between 0 and 100" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_remember_validation_invalid_importance_too_high(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id):
-    """Should throw on importance > 100."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.remember(
-            RememberParams(
-                memory_space_id=test_memory_space_id,
-                conversation_id=test_conversation_id,
-                user_message="Test",
-                agent_response="OK",
-                user_id=test_user_id,
-                user_name="Tester",
-                agent_id=test_agent_id,
-                importance=150
-            )
-        )
-    assert "importance must be between 0 and 100" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_remember_validation_tags_with_empty_strings(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id):
-    """Should throw on tags with empty strings."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.remember(
-            RememberParams(
-                memory_space_id=test_memory_space_id,
-                conversation_id=test_conversation_id,
-                user_message="Test",
-                agent_response="OK",
-                user_id=test_user_id,
-                user_name="Tester",
-                agent_id=test_agent_id,
-                tags=["valid", "", "tag"]
-            )
-        )
-    assert "must be a non-empty string" in str(exc_info.value)
-
-
-# rememberStream() validation tests
-
-@pytest.mark.asyncio
-async def test_remember_stream_validation_invalid_stream(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id):
-    """Should throw on invalid stream object."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.remember_stream({
-            "memorySpaceId": test_memory_space_id,
-            "conversationId": test_conversation_id,
-            "userMessage": "Test",
-            "responseStream": {},  # Invalid
-            "userId": test_user_id,
-            "userName": "Tester",
-            "agentId": test_agent_id
-        })
-    assert "response_stream must be" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_remember_stream_validation_null_stream(cortex_client, test_memory_space_id, test_conversation_id, test_user_id, test_agent_id):
-    """Should throw on null stream."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.remember_stream({
-            "memorySpaceId": test_memory_space_id,
-            "conversationId": test_conversation_id,
-            "userMessage": "Test",
-            "responseStream": None,
-            "userId": test_user_id,
-            "userName": "Tester",
-            "agentId": test_agent_id
-        })
-    assert "response_stream must be" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_remember_stream_validation_inherits_remember_checks(cortex_client, test_conversation_id, test_user_id, test_agent_id):
-    """Should inherit remember() validations."""
-    async def mock_stream():
-        yield "test"
-
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.remember_stream({
-            "memorySpaceId": "",
-            "conversationId": test_conversation_id,
-            "userMessage": "Test",
-            "responseStream": mock_stream(),
-            "userId": test_user_id,
-            "userName": "Tester",
-            "agentId": test_agent_id
-        })
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
-
-
-# forget() validation tests
-
-@pytest.mark.asyncio
-async def test_forget_validation_empty_memory_space_id(cortex_client):
-    """Should throw on empty memory_space_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.forget("", "mem-123")
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_forget_validation_empty_memory_id(cortex_client, test_memory_space_id):
-    """Should throw on empty memory_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.forget(test_memory_space_id, "   ")
-    assert "memory_id cannot be empty" in str(exc_info.value)
-
-
-# get() validation tests
-
-@pytest.mark.asyncio
-async def test_get_validation_empty_memory_space_id(cortex_client):
-    """Should throw on empty memory_space_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.get("", "mem-123")
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_get_validation_empty_memory_id(cortex_client, test_memory_space_id):
-    """Should throw on empty memory_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.get(test_memory_space_id, "")
-    assert "memory_id cannot be empty" in str(exc_info.value)
-
-
-# search() validation tests
-
-@pytest.mark.asyncio
-async def test_search_validation_empty_memory_space_id(cortex_client):
-    """Should throw on empty memory_space_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.search("", "query")
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_search_validation_empty_query(cortex_client, test_memory_space_id):
-    """Should throw on empty query."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.search(test_memory_space_id, "   ")
-    assert "query cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_search_validation_invalid_embedding_empty(cortex_client, test_memory_space_id):
-    """Should throw on empty embedding array."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.search(
-            test_memory_space_id,
-            "query",
-            SearchOptions(embedding=[])
-        )
-    assert "embedding cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_search_validation_invalid_embedding_nan(cortex_client, test_memory_space_id):
-    """Should throw on NaN in embedding."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.search(
-            test_memory_space_id,
-            "query",
-            SearchOptions(embedding=[0.1, float('nan'), 0.3])
-        )
-    assert "must be a finite number" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_search_validation_invalid_min_score_negative(cortex_client, test_memory_space_id):
-    """Should throw on negative min_score."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.search(
-            test_memory_space_id,
-            "query",
-            SearchOptions(min_score=-0.5)
-        )
-    assert "min_score must be between 0 and 1" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_search_validation_invalid_min_score_too_high(cortex_client, test_memory_space_id):
-    """Should throw on min_score > 1."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.search(
-            test_memory_space_id,
-            "query",
-            SearchOptions(min_score=1.5)
-        )
-    assert "min_score must be between 0 and 1" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_search_validation_invalid_limit_zero(cortex_client, test_memory_space_id):
-    """Should throw on limit=0."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.search(
-            test_memory_space_id,
-            "query",
-            SearchOptions(limit=0)
-        )
-    assert "limit must be a positive integer" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_search_validation_invalid_limit_negative(cortex_client, test_memory_space_id):
-    """Should throw on negative limit."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.search(
-            test_memory_space_id,
-            "query",
-            SearchOptions(limit=-10)
-        )
-    assert "limit must be a positive integer" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_search_validation_tags_with_empty_strings(cortex_client, test_memory_space_id):
-    """Should throw on tags with empty strings."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.search(
-            test_memory_space_id,
-            "query",
-            SearchOptions(tags=["valid", ""])
-        )
-    assert "must be a non-empty string" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_search_validation_invalid_min_importance(cortex_client, test_memory_space_id):
-    """Should throw on invalid min_importance."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.search(
-            test_memory_space_id,
-            "query",
-            SearchOptions(min_importance=150)
-        )
-    assert "min_importance must be between 0 and 100" in str(exc_info.value)
-
-
-# store() validation tests
-
-@pytest.mark.asyncio
-async def test_store_validation_empty_memory_space_id(cortex_client):
-    """Should throw on empty memory_space_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.store(
-            "",
-            StoreMemoryInput(
-                content="Test",
-                content_type="raw",
-                source=MemorySource(type="system", timestamp=1000),
-                metadata=MemoryMetadata(importance=50, tags=[])
-            )
-        )
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_store_validation_empty_content(cortex_client, test_memory_space_id):
-    """Should throw on empty content."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.store(
-            test_memory_space_id,
-            StoreMemoryInput(
-                content="   ",
-                content_type="raw",
-                source=MemorySource(type="system", timestamp=1000),
-                metadata=MemoryMetadata(importance=50, tags=[])
-            )
-        )
-    assert "content cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_store_validation_invalid_content_type(cortex_client, test_memory_space_id):
-    """Should throw on invalid content_type."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.store(
-            test_memory_space_id,
-            StoreMemoryInput(
-                content="Test",
-                content_type="unknown",  # Invalid
-                source=MemorySource(type="system", timestamp=1000),
-                metadata=MemoryMetadata(importance=50, tags=[])
-            )
-        )
-    assert "Invalid content_type" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_store_validation_invalid_source_type(cortex_client, test_memory_space_id):
-    """Should throw on invalid source_type."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.store(
-            test_memory_space_id,
-            StoreMemoryInput(
-                content="Test",
-                content_type="raw",
-                source=MemorySource(type="invalid", timestamp=1000),  # Invalid
-                metadata=MemoryMetadata(importance=50, tags=[])
-            )
-        )
-    assert "Invalid source_type" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_store_validation_missing_conversation_ref(cortex_client, test_memory_space_id):
-    """Should throw when conversation_ref missing for conversation source."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.store(
-            test_memory_space_id,
-            StoreMemoryInput(
-                content="Test",
-                content_type="raw",
-                source=MemorySource(type="conversation", timestamp=1000),
-                metadata=MemoryMetadata(importance=50, tags=[])
-            )
-        )
-    assert "conversation_ref is required" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_store_validation_invalid_embedding(cortex_client, test_memory_space_id):
-    """Should throw on invalid embedding."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.store(
-            test_memory_space_id,
-            StoreMemoryInput(
-                content="Test",
-                content_type="raw",
-                source=MemorySource(type="system", timestamp=1000),
-                metadata=MemoryMetadata(importance=50, tags=[]),
-                embedding=[float('inf'), 0.2]
-            )
-        )
-    assert "must be a finite number" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_store_validation_invalid_importance(cortex_client, test_memory_space_id):
-    """Should throw on invalid importance."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.store(
-            test_memory_space_id,
-            StoreMemoryInput(
-                content="Test",
-                content_type="raw",
-                source=MemorySource(type="system", timestamp=1000),
-                metadata=MemoryMetadata(importance=150, tags=[])
-            )
-        )
-    assert "importance must be between 0 and 100" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_store_validation_tags_with_empty_strings(cortex_client, test_memory_space_id):
-    """Should throw on tags with empty strings."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.store(
-            test_memory_space_id,
-            StoreMemoryInput(
-                content="Test",
-                content_type="raw",
-                source=MemorySource(type="system", timestamp=1000),
-                metadata=MemoryMetadata(importance=50, tags=["valid", ""])
-            )
-        )
-    assert "must be a non-empty string" in str(exc_info.value)
-
-
-# update() validation tests
-
-@pytest.mark.asyncio
-async def test_update_validation_empty_memory_space_id(cortex_client):
-    """Should throw on empty memory_space_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.update("", "mem-123", {"content": "Updated"})
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_update_validation_empty_memory_id(cortex_client, test_memory_space_id):
-    """Should throw on empty memory_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.update(test_memory_space_id, "", {"content": "Updated"})
-    assert "memory_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_update_validation_no_update_fields(cortex_client, test_memory_space_id):
-    """Should throw when no update fields provided."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.update(test_memory_space_id, "mem-123", {})
-    assert "At least one update field must be provided" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_update_validation_invalid_importance(cortex_client, test_memory_space_id):
-    """Should throw on invalid importance."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.update(test_memory_space_id, "mem-123", {"importance": -5})
-    assert "importance must be between 0 and 100" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_update_validation_invalid_embedding(cortex_client, test_memory_space_id):
-    """Should throw on invalid embedding."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.update(test_memory_space_id, "mem-123", {"embedding": []})
-    assert "embedding cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_update_validation_tags_with_empty_strings(cortex_client, test_memory_space_id):
-    """Should throw on tags with empty strings."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.update(test_memory_space_id, "mem-123", {"tags": ["", "valid"]})
-    assert "must be a non-empty string" in str(exc_info.value)
-
-
-# delete() validation tests
-
-@pytest.mark.asyncio
-async def test_delete_validation_empty_memory_space_id(cortex_client):
-    """Should throw on empty memory_space_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.delete("", "mem-123")
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_delete_validation_empty_memory_id(cortex_client, test_memory_space_id):
-    """Should throw on empty memory_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.delete(test_memory_space_id, "")
-    assert "memory_id cannot be empty" in str(exc_info.value)
-
-
-# list() validation tests
-
-@pytest.mark.asyncio
-async def test_list_validation_empty_memory_space_id(cortex_client):
-    """Should throw on empty memory_space_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.list("")
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_list_validation_invalid_source_type(cortex_client, test_memory_space_id):
-    """Should throw on invalid source_type."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.list(test_memory_space_id, source_type="invalid")
-    assert "Invalid source_type" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_list_validation_invalid_limit_negative(cortex_client, test_memory_space_id):
-    """Should throw on negative limit."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.list(test_memory_space_id, limit=-5)
-    assert "limit must be a positive integer" in str(exc_info.value)
-
-
-# count() validation tests
-
-@pytest.mark.asyncio
-async def test_count_validation_empty_memory_space_id(cortex_client):
-    """Should throw on empty memory_space_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.count("")
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_count_validation_invalid_source_type(cortex_client, test_memory_space_id):
-    """Should throw on invalid source_type."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.count(test_memory_space_id, source_type="invalid")
-    assert "Invalid source_type" in str(exc_info.value)
-
-
-# update_many() validation tests
-
-@pytest.mark.asyncio
-async def test_update_many_validation_empty_memory_space_id(cortex_client):
-    """Should throw on empty memory_space_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.update_many("", {}, {"importance": 80})
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_update_many_validation_no_update_fields(cortex_client, test_memory_space_id):
-    """Should throw when no update fields provided."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.update_many(test_memory_space_id, {}, {})
-    assert "At least one update field must be provided" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_update_many_validation_invalid_importance(cortex_client, test_memory_space_id):
-    """Should throw on invalid importance."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.update_many(test_memory_space_id, {}, {"importance": 200})
-    assert "importance must be between 0 and 100" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_update_many_validation_tags_with_empty_strings(cortex_client, test_memory_space_id):
-    """Should throw on tags with empty strings."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.update_many(test_memory_space_id, {}, {"tags": ["valid", ""]})
-    assert "must be a non-empty string" in str(exc_info.value)
-
-
-# delete_many() validation tests
-
-@pytest.mark.asyncio
-async def test_delete_many_validation_empty_memory_space_id(cortex_client):
-    """Should throw on empty memory_space_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.delete_many("", {})
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_delete_many_validation_empty_filter_prevents_mass_delete(cortex_client, test_memory_space_id):
-    """Should throw on empty filter to prevent mass delete."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.delete_many(test_memory_space_id, {})
-    assert "Filter must include at least one criterion" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_delete_many_validation_invalid_source_type(cortex_client, test_memory_space_id):
-    """Should throw on invalid source_type."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.delete_many(test_memory_space_id, {"source_type": "invalid"})
-    assert "Invalid source_type" in str(exc_info.value)
-
-
-# export() validation tests
-
-@pytest.mark.asyncio
-async def test_export_validation_empty_memory_space_id(cortex_client):
-    """Should throw on empty memory_space_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.export("", format="json")
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_export_validation_invalid_format(cortex_client, test_memory_space_id):
-    """Should throw on invalid format."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.export(test_memory_space_id, format="xml")
-    assert "Invalid format" in str(exc_info.value)
-
-
-# archive() validation tests
-
-@pytest.mark.asyncio
-async def test_archive_validation_empty_memory_space_id(cortex_client):
-    """Should throw on empty memory_space_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.archive("", "mem-123")
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_archive_validation_empty_memory_id(cortex_client, test_memory_space_id):
-    """Should throw on empty memory_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.archive(test_memory_space_id, "")
-    assert "memory_id cannot be empty" in str(exc_info.value)
-
-
-# restore_from_archive() validation tests
-
-@pytest.mark.asyncio
-async def test_restore_validation_empty_memory_space_id(cortex_client):
-    """Should throw on empty memory_space_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.restore_from_archive("", "mem-123")
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_restore_validation_empty_memory_id(cortex_client, test_memory_space_id):
-    """Should throw on empty memory_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.restore_from_archive(test_memory_space_id, "")
-    assert "memory_id cannot be empty" in str(exc_info.value)
-
-
-# get_version() validation tests
-
-@pytest.mark.asyncio
-async def test_get_version_validation_empty_memory_space_id(cortex_client):
-    """Should throw on empty memory_space_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.get_version("", "mem-123", 1)
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_get_version_validation_empty_memory_id(cortex_client, test_memory_space_id):
-    """Should throw on empty memory_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.get_version(test_memory_space_id, "", 1)
-    assert "memory_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_get_version_validation_invalid_version_zero(cortex_client, test_memory_space_id):
-    """Should throw on version=0."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.get_version(test_memory_space_id, "mem-123", 0)
-    assert "version must be a positive integer" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_get_version_validation_negative_version(cortex_client, test_memory_space_id):
-    """Should throw on negative version."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.get_version(test_memory_space_id, "mem-123", -1)
-    assert "version must be a positive integer" in str(exc_info.value)
-
-
-# get_history() validation tests
-
-@pytest.mark.asyncio
-async def test_get_history_validation_empty_memory_space_id(cortex_client):
-    """Should throw on empty memory_space_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.get_history("", "mem-123")
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_get_history_validation_empty_memory_id(cortex_client, test_memory_space_id):
-    """Should throw on empty memory_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.get_history(test_memory_space_id, "")
-    assert "memory_id cannot be empty" in str(exc_info.value)
-
-
-# get_at_timestamp() validation tests
-
-@pytest.mark.asyncio
-async def test_get_at_timestamp_validation_empty_memory_space_id(cortex_client):
-    """Should throw on empty memory_space_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.get_at_timestamp("", "mem-123", 1000)
-    assert "memory_space_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_get_at_timestamp_validation_empty_memory_id(cortex_client, test_memory_space_id):
-    """Should throw on empty memory_id."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.get_at_timestamp(test_memory_space_id, "", 1000)
-    assert "memory_id cannot be empty" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_get_at_timestamp_validation_invalid_timestamp_nan(cortex_client, test_memory_space_id):
-    """Should throw on NaN timestamp."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.get_at_timestamp(test_memory_space_id, "mem-123", float('nan'))
-    assert "timestamp must be a valid timestamp" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_get_at_timestamp_validation_negative_timestamp(cortex_client, test_memory_space_id):
-    """Should throw on negative timestamp."""
-    with pytest.raises(MemoryValidationError) as exc_info:
-        await cortex_client.memory.get_at_timestamp(test_memory_space_id, "mem-123", -1000)
-    assert "timestamp cannot be negative" in str(exc_info.value)
-
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# skipLayers Tests
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
 @pytest.mark.asyncio
