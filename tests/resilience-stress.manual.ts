@@ -20,6 +20,9 @@ import {
   CircuitOpenError,
   QueueFullError as _QueueFullError,
   RateLimitExceededError,
+  getPresetForPlan,
+  getDetectedPlanTier,
+  getPlanLimits,
 } from "../src/resilience";
 
 // Suppress unused import warnings - these are available for manual testing
@@ -164,30 +167,42 @@ async function testBurstRateLimiting() {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 async function testConcurrencySaturation() {
+  // Get concurrency limit from CONVEX_PLAN env var (defaults to 'free' = 16)
+  const planTier = getDetectedPlanTier();
+  const planLimits = getPlanLimits();
+  const maxConcurrent = planLimits.concurrentQueries;
+
   console.log("\n" + "═".repeat(70));
-  console.log("🚦 TEST 2: CONCURRENCY SATURATION (Convex Free Plan Limit)");
+  console.log(
+    `🚦 TEST 2: CONCURRENCY SATURATION (${planTier.toUpperCase()} Plan Limit)`,
+  );
   console.log("═".repeat(70));
   console.log(
-    "Testing: Fire 50 operations with max 16 concurrent (Convex free plan limit)",
+    `Testing: Fire 50 operations with max ${maxConcurrent} concurrent (${planTier} plan limit)`,
   );
   console.log(
-    "Expected: 16 execute immediately, rest queue, never exceed 16\n",
+    `Expected: ${maxConcurrent} execute immediately, rest queue, never exceed ${maxConcurrent}\n`,
   );
   console.log(
     "📖 Convex Limits: https://docs.convex.dev/production/state/limits",
   );
-  console.log("   - Free plan: 16 concurrent queries/mutations\n");
+  console.log(
+    `   - ${planTier} plan: ${maxConcurrent} concurrent queries/mutations`,
+  );
+  console.log(`   - Set CONVEX_PLAN=professional for 256 concurrent\n`);
 
   const cortex = new Cortex({
     convexUrl: CONVEX_URL!,
     resilience: {
+      // Use env var based preset, then override specific settings
+      ...getPresetForPlan(),
       enabled: true,
       rateLimiter: {
         bucketSize: 200, // High limit
         refillRate: 100,
       },
       concurrency: {
-        maxConcurrent: 16, // Convex free plan limit!
+        maxConcurrent, // From CONVEX_PLAN env var!
         queueSize: 100,
         timeout: 60000, // Long timeout
       },
@@ -201,19 +216,19 @@ async function testConcurrencySaturation() {
   const testSpaceId = `stress-test-${Date.now()}`;
   const numCalls = 50; // Reduced for faster testing
   let maxQueueDepth = 0;
-  let maxConcurrent = 0;
+  let maxConcurrentObserved = 0;
 
   // Monitor metrics during execution
   const monitorInterval = setInterval(() => {
     const metrics = cortex.getResilienceMetrics();
-    if (metrics.concurrency.active > maxConcurrent) {
-      maxConcurrent = metrics.concurrency.active;
+    if (metrics.concurrency.active > maxConcurrentObserved) {
+      maxConcurrentObserved = metrics.concurrency.active;
     }
     if (metrics.concurrency.waiting > maxQueueDepth) {
       maxQueueDepth = metrics.concurrency.waiting;
     }
     process.stdout.write(
-      `\r   Active: ${metrics.concurrency.active}/16, Queued: ${metrics.concurrency.waiting}  `,
+      `\r   Active: ${metrics.concurrency.active}/${maxConcurrent}, Queued: ${metrics.concurrency.waiting}  `,
     );
   }, 50);
 
@@ -249,7 +264,9 @@ async function testConcurrencySaturation() {
   console.log(`   Total time: ${formatDuration(totalTime)}`);
   console.log(`   Succeeded: ${succeeded}/${numCalls}`);
   console.log(`   Failed: ${failed}/${numCalls}`);
-  console.log(`   Max concurrent observed: ${maxConcurrent}`);
+  console.log(
+    `   Max concurrent observed: ${maxConcurrentObserved} (limit: ${maxConcurrent})`,
+  );
   console.log(`   Max queue depth observed: ${maxQueueDepth}`);
   console.log(
     `   Effective throughput: ${(succeeded / (totalTime / 1000)).toFixed(1)} ops/sec`,
@@ -257,14 +274,14 @@ async function testConcurrencySaturation() {
 
   printMetrics(cortex);
 
-  // Verify concurrency limiting worked - respects Convex free plan limit of 16
-  if (maxConcurrent <= 16) {
+  // Verify concurrency limiting worked - respects CONVEX_PLAN limit
+  if (maxConcurrentObserved <= maxConcurrent) {
     console.log(
-      "\n✅ Concurrency limiter is working - never exceeded 16 concurrent (Convex free plan limit)",
+      `\n✅ Concurrency limiter is working - never exceeded ${maxConcurrent} concurrent (${planTier} plan limit)`,
     );
   } else {
     console.log(
-      `\n⚠️  Concurrency limiter may not be working - saw ${maxConcurrent} concurrent (exceeds Convex limit of 16!)`,
+      `\n⚠️  Concurrency limiter may not be working - saw ${maxConcurrentObserved} concurrent (exceeds ${planTier} plan limit of ${maxConcurrent}!)`,
     );
   }
 
@@ -729,7 +746,17 @@ async function main() {
   );
   console.log("╚" + "═".repeat(68) + "╝");
   console.log(`\n🎯 Target: ${CONVEX_URL}`);
-  console.log("⚠️  WARNING: These tests create significant database load!\n");
+
+  // Show detected plan tier and limits
+  const planTier = getDetectedPlanTier();
+  const planLimits = getPlanLimits();
+  console.log(`📋 Convex Plan: ${planTier.toUpperCase()}`);
+  console.log(
+    `   └─ Concurrent queries/mutations: ${planLimits.concurrentQueries}`,
+  );
+  console.log(`   └─ Set CONVEX_PLAN=professional for higher limits`);
+
+  console.log("\n⚠️  WARNING: These tests create significant database load!\n");
 
   const startTime = Date.now();
 
