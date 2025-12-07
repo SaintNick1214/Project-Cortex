@@ -99,9 +99,157 @@ __all__ = [
     "get_detected_plan_tier",
     "get_plan_limits",
     "ConvexPlanTier",
+    # Helper for non-system-failure error detection
+    "_is_non_system_failure",
+    "_is_idempotent_not_found_error",  # Backwards compatibility alias
 ]
 
 T = TypeVar("T")
+
+
+def _is_non_system_failure(e: Exception) -> bool:
+    """
+    Check if an exception is NOT a system failure and should not trip the circuit breaker.
+
+    The circuit breaker should only trip on actual infrastructure/system failures,
+    not on expected application-level errors. This function identifies errors that
+    indicate the system is working correctly but the operation couldn't complete
+    for business/validation reasons.
+
+    Categories of non-system failures:
+    1. Idempotent "not found" errors - Entity already deleted/doesn't exist
+    2. Validation errors - Invalid input from client
+    3. Duplicate/conflict errors - Idempotent create operations
+    4. Empty result errors - Query returned no results (expected)
+    5. Permission errors - Auth/authorization issues (not infrastructure)
+    6. Configuration errors - Feature not configured (not infrastructure)
+    7. Business logic errors - Constraints like HAS_CHILDREN
+
+    Args:
+        e: The exception to check
+
+    Returns:
+        True if this is NOT a system failure (should not trip circuit breaker)
+    """
+    error_str = str(e)
+    error_lower = error_str.lower()
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Category 1: Idempotent "not found" errors
+    # Deleting something already deleted = success, not failure
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    not_found_patterns = (
+        "IMMUTABLE_ENTRY_NOT_FOUND",
+        "USER_NOT_FOUND",
+        "CONVERSATION_NOT_FOUND",
+        "MEMORY_NOT_FOUND",
+        "FACT_NOT_FOUND",
+        "MUTABLE_KEY_NOT_FOUND",
+        "KEY_NOT_FOUND",
+        "CONTEXT_NOT_FOUND",
+        "MEMORY_SPACE_NOT_FOUND",
+        "MEMORYSPACE_NOT_FOUND",
+        "AGENT_NOT_FOUND",
+        "AGENT_NOT_REGISTERED",
+        "VERSION_NOT_FOUND",
+        "PARENT_NOT_FOUND",
+        "NOT_FOUND",
+        "not found",
+    )
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Category 2: Validation errors (client bugs, not system failures)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    validation_patterns = (
+        "INVALID_",  # Catches all INVALID_* errors
+        "DATA_TOO_LARGE",
+        "VALUE_TOO_LARGE",
+        "invalid ",  # Natural language validation errors
+        "validation error",
+        "validation failed",
+    )
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Category 3: Idempotent "already exists" errors
+    # Creating something that exists = idempotent success
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    duplicate_patterns = (
+        "ALREADY_EXISTS",
+        "ALREADY_REGISTERED",
+        "MEMORYSPACE_ALREADY_EXISTS",
+        "AGENT_ALREADY_REGISTERED",
+        "DUPLICATE",
+        "CONFLICT",
+        "already exists",
+        "already registered",
+    )
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Category 4: Empty result errors (expected, not failures)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    empty_result_patterns = (
+        "NO_MEMORIES_MATCHED",
+        "NO_USERS_MATCHED",
+        "no results",
+        "no matches",
+    )
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Category 5: Permission/auth errors (not infrastructure failures)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    permission_patterns = (
+        "PERMISSION_DENIED",
+        "UNAUTHORIZED",
+        "FORBIDDEN",
+        "ACCESS_DENIED",
+        "permission denied",
+        "unauthorized",
+        "forbidden",
+    )
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Category 6: Configuration errors (feature not enabled, not infra)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    config_patterns = (
+        "CLOUD_MODE_REQUIRED",
+        "PUBSUB_NOT_CONFIGURED",
+        "not configured",
+        "not enabled",
+    )
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Category 7: Business logic constraints (not system failures)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    business_logic_patterns = (
+        "HAS_CHILDREN",
+        "MEMORYSPACE_HAS_DATA",
+        "PURGE_CANCELLED",
+        "DELETION_CANCELLED",
+        "has children",
+        "has data",
+        "cancelled",
+    )
+
+    # Combine all patterns
+    all_patterns = (
+        not_found_patterns +
+        validation_patterns +
+        duplicate_patterns +
+        empty_result_patterns +
+        permission_patterns +
+        config_patterns +
+        business_logic_patterns
+    )
+
+    # Check if any pattern matches
+    return any(
+        pattern in error_str or pattern.lower() in error_lower
+        for pattern in all_patterns
+    )
+
+
+# Backwards compatibility alias
+_is_idempotent_not_found_error = _is_non_system_failure
 
 
 class ResiliencePresets:
@@ -487,8 +635,12 @@ class ResilienceLayer:
 
             return result
         except Exception as e:
-            # Record failure
-            self._circuit_breaker.record_failure(e)
+            # Only record as failure if it's a true system failure.
+            # Non-system failures (validation errors, not found, duplicates, etc.)
+            # should not trip the circuit breaker as they indicate the system
+            # is working correctly, just rejecting invalid/expected operations.
+            if not _is_non_system_failure(e):
+                self._circuit_breaker.record_failure(e)
             raise
         finally:
             # Release permit
@@ -610,7 +762,9 @@ class ResilienceLayer:
             self._circuit_breaker.record_success()
             request.resolve(result)
         except Exception as e:
-            self._circuit_breaker.record_failure(e)
+            # Only record as failure if it's a true system failure
+            if not _is_non_system_failure(e):
+                self._circuit_breaker.record_failure(e)
             request.reject(e)
         finally:
             permit.release()
