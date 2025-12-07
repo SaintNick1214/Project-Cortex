@@ -32,8 +32,13 @@ export default {
   //   - "50%" = half of available CPU cores (good balance for I/O-bound tests)
   //   - CI environments: set via --maxWorkers flag for optimal resource usage
   //   - Use --runInBand for debugging to run tests serially
+  //
+  // maxConcurrency: Controls test.concurrent() parallelism WITHIN files
+  //   - Default is 5, we increase to 10 for faster I/O-bound tests
+  //   - Only affects tests marked with it.concurrent() or test.concurrent()
   // ══════════════════════════════════════════════════════════════════════════
   maxWorkers: process.env.CI ? "50%" : "50%",
+  maxConcurrency: 10,
 
   extensionsToTreatAsEsm: [".ts"],
   transform: {

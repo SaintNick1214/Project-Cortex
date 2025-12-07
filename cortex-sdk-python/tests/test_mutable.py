@@ -337,30 +337,32 @@ async def test_exists_returns_false_for_nonexistent(cortex_client, test_ids):
 
 
 @pytest.mark.asyncio
-async def test_purge_namespace(cortex_client, test_ids, cleanup_helper):
+async def test_purge_namespace(cortex_client, test_ids, cleanup_helper, ctx):
     """
     Test purging entire namespace.
 
     Port of: mutable.test.ts - purgeNamespace tests
     """
     memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("purge")
 
     # Create multiple records in namespace
     for i in range(5):
         await cortex_client.mutable.set(
-            "purge-namespace-test",
+            unique_namespace,
             f"key-{i}",
             {"value": i},
         )
 
     # Purge namespace
     await cortex_client.mutable.purge_namespace(
-        "purge-namespace-test",
+        unique_namespace,
     )
 
     # Verify all deleted
     count = await cortex_client.mutable.count(
-        "purge-namespace-test",
+        unique_namespace,
     )
 
     assert count == 0
