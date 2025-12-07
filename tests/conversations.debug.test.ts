@@ -167,7 +167,7 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
           type: "user-agent",
           participants: {
             userId: "user-2",
-          agentId: "agent-2",
+            agentId: "agent-2",
             participantId: "agent-2",
           },
         }),

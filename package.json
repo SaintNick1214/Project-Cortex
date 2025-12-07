@@ -1,6 +1,6 @@
 {
   "name": "@cortexmemory/sdk",
-  "version": "0.19.1",
+  "version": "0.20.0",
   "description": "AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -49,6 +49,11 @@
     "url": "https://github.com/SaintNick1214/Project-Cortex/issues"
   },
   "homepage": "https://github.com/SaintNick1214/Project-Cortex#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "provenance": true
+  },
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts --clean",
     "build:watch": "tsup src/index.ts --format cjs,esm --dts --watch",

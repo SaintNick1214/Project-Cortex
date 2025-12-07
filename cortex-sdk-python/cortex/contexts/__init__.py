@@ -116,25 +116,28 @@ class ContextsAPI:
         if params.data is not None:
             validate_data_object(params.data)
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "contexts:create",
+                filter_none_values({
+                    "purpose": params.purpose,
+                    "memorySpaceId": params.memory_space_id,
+                    "parentId": params.parent_id,
+                    "userId": params.user_id,
+                    "conversationRef": (
+                        {
+                            "conversationId": params.conversation_ref.get("conversationId") if isinstance(params.conversation_ref, dict) else getattr(params.conversation_ref, "conversation_id", None),
+                            "messageIds": (params.conversation_ref.get("messageIds") if isinstance(params.conversation_ref, dict) else getattr(params.conversation_ref, "message_ids", None)) or [],
+                        }
+                        if params.conversation_ref
+                        else None
+                    ),
+                    "data": params.data,
+                    "status": params.status,
+                    # Note: description not supported by backend - put in data instead
+                }),
+            ),
             "contexts:create",
-            filter_none_values({
-                "purpose": params.purpose,
-                "memorySpaceId": params.memory_space_id,
-                "parentId": params.parent_id,
-                "userId": params.user_id,
-                "conversationRef": (
-                    {
-                        "conversationId": params.conversation_ref.get("conversationId") if isinstance(params.conversation_ref, dict) else getattr(params.conversation_ref, "conversation_id", None),
-                        "messageIds": (params.conversation_ref.get("messageIds") if isinstance(params.conversation_ref, dict) else getattr(params.conversation_ref, "message_ids", None)) or [],
-                    }
-                    if params.conversation_ref
-                    else None
-                ),
-                "data": params.data,
-                "status": params.status,
-                # Note: description not supported by backend - put in data instead
-            }),
         )
 
         # Sync to graph if requested
@@ -195,13 +198,16 @@ class ContextsAPI:
         validate_required_string(context_id, "context_id")
         validate_context_id_format(context_id)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "contexts:get",
+                filter_none_values({
+                    "contextId": context_id,
+                    "includeChain": include_chain,
+                    # Note: includeConversation not supported by backend yet
+                }),
+            ),
             "contexts:get",
-            filter_none_values({
-                "contextId": context_id,
-                "includeChain": include_chain,
-                # Note: includeConversation not supported by backend yet
-            }),
         )
 
         if not result:
@@ -268,8 +274,11 @@ class ContextsAPI:
             validate_timestamp(updates["completedAt"], "completedAt")
 
         # Flatten updates into top-level parameters
-        result = await self.client.mutation(
-            "contexts:update", filter_none_values({"contextId": context_id, **updates})
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "contexts:update", filter_none_values({"contextId": context_id, **updates})
+            ),
+            "contexts:update",
         )
 
         # Sync to graph if requested
@@ -327,13 +336,16 @@ class ContextsAPI:
 
         opts = options or DeleteContextOptions()
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "contexts:deleteContext",
+                filter_none_values({
+                    "contextId": context_id,
+                    "cascadeChildren": opts.cascade_children,
+                    # Note: orphanChildren not supported by backend
+                }),
+            ),
             "contexts:deleteContext",
-            filter_none_values({
-                "contextId": context_id,
-                "cascadeChildren": opts.cascade_children,
-                # Note: orphanChildren not supported by backend
-            }),
         )
 
         # Delete from graph
@@ -386,15 +398,18 @@ class ContextsAPI:
 
         validate_limit(limit)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "contexts:search",
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "userId": user_id,
+                    "status": status,
+                    "limit": limit,
+                    # Note: includeChain not supported by backend
+                }),
+            ),
             "contexts:search",
-            filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "userId": user_id,
-                "status": status,
-                "limit": limit,
-                # Note: includeChain not supported by backend
-            }),
         )
 
         if include_chain:
@@ -462,14 +477,17 @@ class ContextsAPI:
                 "offset",
             )
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "contexts:list",
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "status": status,
+                    "limit": limit,
+                    # Note: offset not supported by backend yet
+                }),
+            ),
             "contexts:list",
-            filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "status": status,
-                "limit": limit,
-                # Note: offset not supported by backend yet
-            }),
         )
 
         # Handle list or dict response
@@ -539,13 +557,16 @@ class ContextsAPI:
         if status is not None:
             validate_status(status)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "contexts:count",
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "userId": user_id,
+                    "status": status,
+                }),
+            ),
             "contexts:count",
-            filter_none_values({
-                "memorySpaceId": memory_space_id,
-                "userId": user_id,
-                "status": status,
-            }),
         )
 
         return int(result)
@@ -567,7 +588,10 @@ class ContextsAPI:
         validate_required_string(context_id, "context_id")
         validate_context_id_format(context_id)
 
-        result = await self.client.query("contexts:getChain", filter_none_values({"contextId": context_id}))
+        result = await self._execute_with_resilience(
+            lambda: self.client.query("contexts:getChain", filter_none_values({"contextId": context_id})),
+            "contexts:getChain",
+        )
 
         return cast(Dict[str, Any], result)
 
@@ -598,13 +622,16 @@ class ContextsAPI:
         validate_required_string(target_memory_space_id, "target_memory_space_id")
         validate_required_string(scope, "scope")
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "contexts:grantAccess",
+                filter_none_values({
+                    "contextId": context_id,
+                    "targetMemorySpaceId": target_memory_space_id,
+                    "scope": scope,
+                }),
+            ),
             "contexts:grantAccess",
-            filter_none_values({
-                "contextId": context_id,
-                "targetMemorySpaceId": target_memory_space_id,
-                "scope": scope,
-            }),
         )
 
         # Manually construct to handle field name differences
@@ -645,7 +672,10 @@ class ContextsAPI:
         validate_required_string(context_id, "context_id")
         validate_context_id_format(context_id)
 
-        result = await self.client.query("contexts:getRoot", filter_none_values({"contextId": context_id}))
+        result = await self._execute_with_resilience(
+            lambda: self.client.query("contexts:getRoot", filter_none_values({"contextId": context_id})),
+            "contexts:getRoot",
+        )
 
         # Manually construct to handle field name differences
         return Context(
@@ -695,9 +725,12 @@ class ContextsAPI:
         if status is not None:
             validate_status(status)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "contexts:getChildren",
+                filter_none_values({"contextId": context_id, "status": status, "recursive": recursive}),
+            ),
             "contexts:getChildren",
-            filter_none_values({"contextId": context_id, "status": status, "recursive": recursive}),
         )
 
         # Manually construct contexts
@@ -734,7 +767,10 @@ class ContextsAPI:
         Example:
             >>> orphaned = await cortex.contexts.find_orphaned()
         """
-        result = await self.client.query("contexts:findOrphaned", {})
+        result = await self._execute_with_resilience(
+            lambda: self.client.query("contexts:findOrphaned", {}),
+            "contexts:findOrphaned",
+        )
 
         # Manually construct contexts
         return [
@@ -779,9 +815,12 @@ class ContextsAPI:
         validate_context_id_format(context_id)
         validate_required_string(participant_id, "participant_id")
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "contexts:addParticipant",
+                {"contextId": context_id, "participantId": participant_id},
+            ),
             "contexts:addParticipant",
-            {"contextId": context_id, "participantId": participant_id},
         )
 
         # Manually construct to handle field name differences
@@ -824,9 +863,12 @@ class ContextsAPI:
         validate_context_id_format(context_id)
         validate_required_string(participant_id, "participant_id")
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "contexts:removeParticipant",
+                {"contextId": context_id, "participantId": participant_id},
+            ),
             "contexts:removeParticipant",
-            {"contextId": context_id, "participantId": participant_id},
         )
 
         # Manually construct to handle field name differences
@@ -867,8 +909,11 @@ class ContextsAPI:
         validate_required_string(conversation_id, "conversation_id")
         validate_conversation_id_format(conversation_id)
 
-        result = await self.client.query(
-            "contexts:getByConversation", filter_none_values({"conversationId": conversation_id})
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "contexts:getByConversation", filter_none_values({"conversationId": conversation_id})
+            ),
+            "contexts:getByConversation",
         )
 
         # Manually construct contexts
@@ -940,9 +985,12 @@ class ContextsAPI:
         if "data" in updates and updates["data"] is not None:
             validate_data_object(updates["data"])
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "contexts:updateMany",
+                filter_none_values({"filters": filters, "updates": updates, "dryRun": dry_run}),
+            ),
             "contexts:updateMany",
-            filter_none_values({"filters": filters, "updates": updates, "dryRun": dry_run}),
         )
 
         return cast(Dict[str, Any], result)
@@ -985,13 +1033,16 @@ class ContextsAPI:
         if "completedBefore" in filters and filters["completedBefore"] is not None:
             validate_timestamp(filters["completedBefore"], "completedBefore")
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "contexts:deleteMany",
+                filter_none_values({
+                    "filters": filters,
+                    "cascadeChildren": cascade_children,
+                    "dryRun": dry_run,
+                }),
+            ),
             "contexts:deleteMany",
-            filter_none_values({
-                "filters": filters,
-                "cascadeChildren": cascade_children,
-                "dryRun": dry_run,
-            }),
         )
 
         return cast(Dict[str, Any], result)
@@ -1037,15 +1088,18 @@ class ContextsAPI:
             if "status" in filters and filters["status"] is not None:
                 validate_status(filters["status"])
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "contexts:export",
+                {
+                    "filters": filters,
+                    "format": format,
+                    "includeChain": include_chain,
+                    "includeConversations": include_conversations,
+                    "includeVersionHistory": include_version_history,
+                },
+            ),
             "contexts:export",
-            {
-                "filters": filters,
-                "format": format,
-                "includeChain": include_chain,
-                "includeConversations": include_conversations,
-                "includeVersionHistory": include_version_history,
-            },
         )
 
         return cast(Dict[str, Any], result)
@@ -1071,8 +1125,11 @@ class ContextsAPI:
         validate_context_id_format(context_id)
         validate_version(version)
 
-        result = await self.client.query(
-            "contexts:getVersion", filter_none_values({"contextId": context_id, "version": version})
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "contexts:getVersion", filter_none_values({"contextId": context_id, "version": version})
+            ),
+            "contexts:getVersion",
         )
 
         return cast(Optional[Dict[str, Any]], result)
@@ -1094,8 +1151,11 @@ class ContextsAPI:
         validate_required_string(context_id, "context_id")
         validate_context_id_format(context_id)
 
-        result = await self.client.query(
-            "contexts:getHistory", filter_none_values({"contextId": context_id})
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "contexts:getHistory", filter_none_values({"contextId": context_id})
+            ),
+            "contexts:getHistory",
         )
 
         return cast(List[Dict[str, Any]], result)
@@ -1123,9 +1183,12 @@ class ContextsAPI:
         validate_context_id_format(context_id)
         validate_timestamp(timestamp, "timestamp")
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "contexts:getAtTimestamp",
+                filter_none_values({"contextId": context_id, "timestamp": timestamp}),
+            ),
             "contexts:getAtTimestamp",
-            filter_none_values({"contextId": context_id, "timestamp": timestamp}),
         )
 
         return cast(Optional[Dict[str, Any]], result)

@@ -104,13 +104,17 @@ export class MutableAPI {
       validateUserId(userId);
     }
 
-    const result = await this.client.mutation(api.mutable.set, {
-      namespace,
-      key,
-      value,
-      userId,
-      metadata,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.mutable.set, {
+          namespace,
+          key,
+          value,
+          userId,
+          metadata,
+        }),
+      "mutable:set",
+    );
 
     // Sync to graph if requested (mutable data in graph is rare, but supported)
     if (options?.syncToGraph && this.graphAdapter) {
@@ -142,10 +146,14 @@ export class MutableAPI {
     validateKey(key);
     validateKeyFormat(key);
 
-    const result = await this.client.query(api.mutable.get, {
-      namespace,
-      key,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.mutable.get, {
+          namespace,
+          key,
+        }),
+      "mutable:get",
+    );
 
     return result ? (result as MutableRecord).value : null;
   }
@@ -169,10 +177,14 @@ export class MutableAPI {
     validateKey(key);
     validateKeyFormat(key);
 
-    const result = await this.client.query(api.mutable.get, {
-      namespace,
-      key,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.mutable.get, {
+          namespace,
+          key,
+        }),
+      "mutable:getRecord",
+    );
 
     return result as MutableRecord | null;
   }
@@ -205,12 +217,16 @@ export class MutableAPI {
 
     // Set new value using custom operation
     try {
-      const result = await this.client.mutation(api.mutable.update, {
-        namespace,
-        key,
-        operation: "custom",
-        operand: newValue,
-      });
+      const result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.mutable.update, {
+            namespace,
+            key,
+            operation: "custom",
+            operand: newValue,
+          }),
+        "mutable:update",
+      );
 
       return result as MutableRecord;
     } catch (error) {
@@ -238,12 +254,16 @@ export class MutableAPI {
     validateKeyFormat(key);
     validateAmount(amount, "amount");
 
-    const result = await this.client.mutation(api.mutable.update, {
-      namespace,
-      key,
-      operation: "increment",
-      operand: amount,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.mutable.update, {
+          namespace,
+          key,
+          operation: "increment",
+          operand: amount,
+        }),
+      "mutable:increment",
+    );
 
     return result as MutableRecord;
   }
@@ -268,12 +288,16 @@ export class MutableAPI {
     validateKeyFormat(key);
     validateAmount(amount, "amount");
 
-    const result = await this.client.mutation(api.mutable.update, {
-      namespace,
-      key,
-      operation: "decrement",
-      operand: amount,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.mutable.update, {
+          namespace,
+          key,
+          operation: "decrement",
+          operand: amount,
+        }),
+      "mutable:decrement",
+    );
 
     return result as MutableRecord;
   }
@@ -293,10 +317,14 @@ export class MutableAPI {
     validateKey(key);
     validateKeyFormat(key);
 
-    const result = await this.client.query(api.mutable.exists, {
-      namespace,
-      key,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.mutable.exists, {
+          namespace,
+          key,
+        }),
+      "mutable:exists",
+    );
 
     return result;
   }
@@ -316,12 +344,16 @@ export class MutableAPI {
     // Client-side validation
     validateListFilter(filter);
 
-    const result = await this.client.query(api.mutable.list, {
-      namespace: filter.namespace,
-      keyPrefix: filter.keyPrefix,
-      userId: filter.userId,
-      limit: filter.limit,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.mutable.list, {
+          namespace: filter.namespace,
+          keyPrefix: filter.keyPrefix,
+          userId: filter.userId,
+          limit: filter.limit,
+        }),
+      "mutable:list",
+    );
 
     return result as MutableRecord[];
   }
@@ -338,11 +370,15 @@ export class MutableAPI {
     // Client-side validation
     validateCountFilter(filter);
 
-    const result = await this.client.query(api.mutable.count, {
-      namespace: filter.namespace,
-      userId: filter.userId,
-      keyPrefix: filter.keyPrefix,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.mutable.count, {
+          namespace: filter.namespace,
+          userId: filter.userId,
+          keyPrefix: filter.keyPrefix,
+        }),
+      "mutable:count",
+    );
 
     return result;
   }
@@ -368,10 +404,14 @@ export class MutableAPI {
 
     let result;
     try {
-      result = await this.client.mutation(api.mutable.deleteKey, {
-        namespace,
-        key,
-      });
+      result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.mutable.deleteKey, {
+            namespace,
+            key,
+          }),
+        "mutable:delete",
+      );
     } catch (error) {
       this.handleConvexError(error);
     }
@@ -424,9 +464,13 @@ export class MutableAPI {
     validateNamespace(namespace);
     validateNamespaceFormat(namespace);
 
-    const result = await this.client.mutation(api.mutable.purgeNamespace, {
-      namespace,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.mutable.purgeNamespace, {
+          namespace,
+        }),
+      "mutable:purgeNamespace",
+    );
 
     return result as { deleted: number; namespace: string };
   }
@@ -461,9 +505,13 @@ export class MutableAPI {
     validateTransactionOperations(operations);
 
     try {
-      const result = await this.client.mutation(api.mutable.transaction, {
-        operations,
-      });
+      const result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.mutable.transaction, {
+            operations,
+          }),
+        "mutable:transaction",
+      );
 
       return result as {
         success: boolean;
@@ -498,11 +546,15 @@ export class MutableAPI {
     // Client-side validation
     validatePurgeFilter(filter);
 
-    const result = await this.client.mutation(api.mutable.purgeMany, {
-      namespace: filter.namespace,
-      keyPrefix: filter.keyPrefix,
-      userId: filter.userId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.mutable.purgeMany, {
+          namespace: filter.namespace,
+          keyPrefix: filter.keyPrefix,
+          userId: filter.userId,
+        }),
+      "mutable:purgeMany",
+    );
 
     return result as {
       deleted: number;

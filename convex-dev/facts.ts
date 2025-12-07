@@ -248,6 +248,51 @@ export const deleteFact = mutation({
   },
 });
 
+/**
+ * Delete many facts matching filters
+ */
+export const deleteMany = mutation({
+  args: {
+    memorySpaceId: v.string(),
+    userId: v.optional(v.string()),
+    factType: v.optional(
+      v.union(
+        v.literal("preference"),
+        v.literal("identity"),
+        v.literal("knowledge"),
+        v.literal("relationship"),
+        v.literal("event"),
+        v.literal("observation"),
+        v.literal("custom"),
+      ),
+    ),
+  },
+  handler: async (ctx, args) => {
+    let facts = await ctx.db
+      .query("facts")
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
+      .collect();
+
+    // Apply optional filters
+    if (args.userId) {
+      facts = facts.filter((f) => f.userId === args.userId);
+    }
+    if (args.factType) {
+      facts = facts.filter((f) => f.factType === args.factType);
+    }
+
+    let deleted = 0;
+    for (const fact of facts) {
+      await ctx.db.delete(fact._id);
+      deleted++;
+    }
+
+    return { deleted, memorySpaceId: args.memorySpaceId };
+  },
+});
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Queries (Read Operations)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

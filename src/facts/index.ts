@@ -128,23 +128,27 @@ export class FactsAPI {
       validateMetadata(params.metadata);
     }
 
-    const result = await this.client.mutation(api.facts.store, {
-      memorySpaceId: params.memorySpaceId,
-      participantId: params.participantId,
-      userId: params.userId,
-      fact: params.fact,
-      factType: params.factType,
-      subject: params.subject,
-      predicate: params.predicate,
-      object: params.object,
-      confidence: params.confidence,
-      sourceType: params.sourceType,
-      sourceRef: params.sourceRef,
-      metadata: params.metadata,
-      tags: params.tags || [],
-      validFrom: params.validFrom,
-      validUntil: params.validUntil,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.facts.store, {
+          memorySpaceId: params.memorySpaceId,
+          participantId: params.participantId,
+          userId: params.userId,
+          fact: params.fact,
+          factType: params.factType,
+          subject: params.subject,
+          predicate: params.predicate,
+          object: params.object,
+          confidence: params.confidence,
+          sourceType: params.sourceType,
+          sourceRef: params.sourceRef,
+          metadata: params.metadata,
+          tags: params.tags || [],
+          validFrom: params.validFrom,
+          validUntil: params.validUntil,
+        }),
+      "facts:store",
+    );
 
     // Sync to graph if requested
     if (options?.syncToGraph && this.graphAdapter) {
@@ -179,10 +183,14 @@ export class FactsAPI {
     validateRequiredString(factId, "factId");
     validateFactIdFormat(factId);
 
-    const result = await this.client.query(api.facts.get, {
-      memorySpaceId,
-      factId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.facts.get, {
+          memorySpaceId,
+          factId,
+        }),
+      "facts:get",
+    );
 
     return result as FactRecord | null;
   }
@@ -252,32 +260,36 @@ export class FactsAPI {
       validateMetadata(filter.metadata);
     }
 
-    const result = await this.client.query(api.facts.list, {
-      memorySpaceId: filter.memorySpaceId,
-      factType: filter.factType,
-      subject: filter.subject,
-      predicate: filter.predicate,
-      object: filter.object,
-      minConfidence: filter.minConfidence,
-      confidence: filter.confidence,
-      userId: filter.userId,
-      participantId: filter.participantId,
-      tags: filter.tags,
-      tagMatch: filter.tagMatch,
-      sourceType: filter.sourceType,
-      createdBefore: filter.createdBefore?.getTime(),
-      createdAfter: filter.createdAfter?.getTime(),
-      updatedBefore: filter.updatedBefore?.getTime(),
-      updatedAfter: filter.updatedAfter?.getTime(),
-      version: filter.version,
-      includeSuperseded: filter.includeSuperseded,
-      validAt: filter.validAt?.getTime(),
-      metadata: filter.metadata,
-      limit: filter.limit,
-      offset: filter.offset,
-      sortBy: filter.sortBy,
-      sortOrder: filter.sortOrder,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.facts.list, {
+          memorySpaceId: filter.memorySpaceId,
+          factType: filter.factType,
+          subject: filter.subject,
+          predicate: filter.predicate,
+          object: filter.object,
+          minConfidence: filter.minConfidence,
+          confidence: filter.confidence,
+          userId: filter.userId,
+          participantId: filter.participantId,
+          tags: filter.tags,
+          tagMatch: filter.tagMatch,
+          sourceType: filter.sourceType,
+          createdBefore: filter.createdBefore?.getTime(),
+          createdAfter: filter.createdAfter?.getTime(),
+          updatedBefore: filter.updatedBefore?.getTime(),
+          updatedAfter: filter.updatedAfter?.getTime(),
+          version: filter.version,
+          includeSuperseded: filter.includeSuperseded,
+          validAt: filter.validAt?.getTime(),
+          metadata: filter.metadata,
+          limit: filter.limit,
+          offset: filter.offset,
+          sortBy: filter.sortBy,
+          sortOrder: filter.sortOrder,
+        }),
+      "facts:list",
+    );
 
     return result as FactRecord[];
   }
@@ -334,28 +346,32 @@ export class FactsAPI {
       validateMetadata(filter.metadata);
     }
 
-    const result = await this.client.query(api.facts.count, {
-      memorySpaceId: filter.memorySpaceId,
-      factType: filter.factType,
-      subject: filter.subject,
-      predicate: filter.predicate,
-      object: filter.object,
-      minConfidence: filter.minConfidence,
-      confidence: filter.confidence,
-      userId: filter.userId,
-      participantId: filter.participantId,
-      tags: filter.tags,
-      tagMatch: filter.tagMatch,
-      sourceType: filter.sourceType,
-      createdBefore: filter.createdBefore?.getTime(),
-      createdAfter: filter.createdAfter?.getTime(),
-      updatedBefore: filter.updatedBefore?.getTime(),
-      updatedAfter: filter.updatedAfter?.getTime(),
-      version: filter.version,
-      includeSuperseded: filter.includeSuperseded,
-      validAt: filter.validAt?.getTime(),
-      metadata: filter.metadata,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.facts.count, {
+          memorySpaceId: filter.memorySpaceId,
+          factType: filter.factType,
+          subject: filter.subject,
+          predicate: filter.predicate,
+          object: filter.object,
+          minConfidence: filter.minConfidence,
+          confidence: filter.confidence,
+          userId: filter.userId,
+          participantId: filter.participantId,
+          tags: filter.tags,
+          tagMatch: filter.tagMatch,
+          sourceType: filter.sourceType,
+          createdBefore: filter.createdBefore?.getTime(),
+          createdAfter: filter.createdAfter?.getTime(),
+          updatedBefore: filter.updatedBefore?.getTime(),
+          updatedAfter: filter.updatedAfter?.getTime(),
+          version: filter.version,
+          includeSuperseded: filter.includeSuperseded,
+          validAt: filter.validAt?.getTime(),
+          metadata: filter.metadata,
+        }),
+      "facts:count",
+    );
 
     return result;
   }
@@ -431,33 +447,37 @@ export class FactsAPI {
       }
     }
 
-    const result = await this.client.query(api.facts.search, {
-      memorySpaceId,
-      query,
-      factType: options?.factType,
-      subject: options?.subject,
-      predicate: options?.predicate,
-      object: options?.object,
-      minConfidence: options?.minConfidence,
-      confidence: options?.confidence,
-      userId: options?.userId,
-      participantId: options?.participantId,
-      tags: options?.tags,
-      tagMatch: options?.tagMatch,
-      sourceType: options?.sourceType,
-      createdBefore: options?.createdBefore?.getTime(),
-      createdAfter: options?.createdAfter?.getTime(),
-      updatedBefore: options?.updatedBefore?.getTime(),
-      updatedAfter: options?.updatedAfter?.getTime(),
-      version: options?.version,
-      includeSuperseded: options?.includeSuperseded,
-      validAt: options?.validAt?.getTime(),
-      metadata: options?.metadata,
-      limit: options?.limit,
-      offset: options?.offset,
-      sortBy: options?.sortBy,
-      sortOrder: options?.sortOrder,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.facts.search, {
+          memorySpaceId,
+          query,
+          factType: options?.factType,
+          subject: options?.subject,
+          predicate: options?.predicate,
+          object: options?.object,
+          minConfidence: options?.minConfidence,
+          confidence: options?.confidence,
+          userId: options?.userId,
+          participantId: options?.participantId,
+          tags: options?.tags,
+          tagMatch: options?.tagMatch,
+          sourceType: options?.sourceType,
+          createdBefore: options?.createdBefore?.getTime(),
+          createdAfter: options?.createdAfter?.getTime(),
+          updatedBefore: options?.updatedBefore?.getTime(),
+          updatedAfter: options?.updatedAfter?.getTime(),
+          version: options?.version,
+          includeSuperseded: options?.includeSuperseded,
+          validAt: options?.validAt?.getTime(),
+          metadata: options?.metadata,
+          limit: options?.limit,
+          offset: options?.offset,
+          sortBy: options?.sortBy,
+          sortOrder: options?.sortOrder,
+        }),
+      "facts:search",
+    );
 
     return result as FactRecord[];
   }
@@ -496,15 +516,19 @@ export class FactsAPI {
 
     let result;
     try {
-      result = await this.client.mutation(api.facts.update, {
-        memorySpaceId,
-        factId,
-        fact: updates.fact,
-        confidence: updates.confidence,
-        tags: updates.tags,
-        validUntil: updates.validUntil,
-        metadata: updates.metadata,
-      });
+      result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.facts.update, {
+            memorySpaceId,
+            factId,
+            fact: updates.fact,
+            confidence: updates.confidence,
+            tags: updates.tags,
+            validUntil: updates.validUntil,
+            metadata: updates.metadata,
+          }),
+        "facts:update",
+      );
     } catch (error) {
       this.handleConvexError(error);
     }
@@ -546,10 +570,14 @@ export class FactsAPI {
 
     let result;
     try {
-      result = await this.client.mutation(api.facts.deleteFact, {
-        memorySpaceId,
-        factId,
-      });
+      result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.facts.deleteFact, {
+            memorySpaceId,
+            factId,
+          }),
+        "facts:delete",
+      );
     } catch (error) {
       this.handleConvexError(error);
     }
@@ -582,10 +610,14 @@ export class FactsAPI {
     validateRequiredString(factId, "factId");
     validateFactIdFormat(factId);
 
-    const result = await this.client.query(api.facts.getHistory, {
-      memorySpaceId,
-      factId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.facts.getHistory, {
+          memorySpaceId,
+          factId,
+        }),
+      "facts:getHistory",
+    );
 
     return result as FactRecord[];
   }
@@ -656,32 +688,36 @@ export class FactsAPI {
       validateMetadata(filter.metadata);
     }
 
-    const result = await this.client.query(api.facts.queryBySubject, {
-      memorySpaceId: filter.memorySpaceId,
-      subject: filter.subject,
-      factType: filter.factType,
-      userId: filter.userId,
-      participantId: filter.participantId,
-      predicate: filter.predicate,
-      object: filter.object,
-      minConfidence: filter.minConfidence,
-      confidence: filter.confidence,
-      tags: filter.tags,
-      tagMatch: filter.tagMatch,
-      sourceType: filter.sourceType,
-      createdBefore: filter.createdBefore?.getTime(),
-      createdAfter: filter.createdAfter?.getTime(),
-      updatedBefore: filter.updatedBefore?.getTime(),
-      updatedAfter: filter.updatedAfter?.getTime(),
-      version: filter.version,
-      includeSuperseded: filter.includeSuperseded,
-      validAt: filter.validAt?.getTime(),
-      metadata: filter.metadata,
-      limit: filter.limit,
-      offset: filter.offset,
-      sortBy: filter.sortBy,
-      sortOrder: filter.sortOrder,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.facts.queryBySubject, {
+          memorySpaceId: filter.memorySpaceId,
+          subject: filter.subject,
+          factType: filter.factType,
+          userId: filter.userId,
+          participantId: filter.participantId,
+          predicate: filter.predicate,
+          object: filter.object,
+          minConfidence: filter.minConfidence,
+          confidence: filter.confidence,
+          tags: filter.tags,
+          tagMatch: filter.tagMatch,
+          sourceType: filter.sourceType,
+          createdBefore: filter.createdBefore?.getTime(),
+          createdAfter: filter.createdAfter?.getTime(),
+          updatedBefore: filter.updatedBefore?.getTime(),
+          updatedAfter: filter.updatedAfter?.getTime(),
+          version: filter.version,
+          includeSuperseded: filter.includeSuperseded,
+          validAt: filter.validAt?.getTime(),
+          metadata: filter.metadata,
+          limit: filter.limit,
+          offset: filter.offset,
+          sortBy: filter.sortBy,
+          sortOrder: filter.sortOrder,
+        }),
+      "facts:queryBySubject",
+    );
 
     return result as FactRecord[];
   }
@@ -755,32 +791,36 @@ export class FactsAPI {
       validateMetadata(filter.metadata);
     }
 
-    const result = await this.client.query(api.facts.queryByRelationship, {
-      memorySpaceId: filter.memorySpaceId,
-      subject: filter.subject,
-      predicate: filter.predicate,
-      object: filter.object,
-      factType: filter.factType,
-      userId: filter.userId,
-      participantId: filter.participantId,
-      minConfidence: filter.minConfidence,
-      confidence: filter.confidence,
-      tags: filter.tags,
-      tagMatch: filter.tagMatch,
-      sourceType: filter.sourceType,
-      createdBefore: filter.createdBefore?.getTime(),
-      createdAfter: filter.createdAfter?.getTime(),
-      updatedBefore: filter.updatedBefore?.getTime(),
-      updatedAfter: filter.updatedAfter?.getTime(),
-      version: filter.version,
-      includeSuperseded: filter.includeSuperseded,
-      validAt: filter.validAt?.getTime(),
-      metadata: filter.metadata,
-      limit: filter.limit,
-      offset: filter.offset,
-      sortBy: filter.sortBy,
-      sortOrder: filter.sortOrder,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.facts.queryByRelationship, {
+          memorySpaceId: filter.memorySpaceId,
+          subject: filter.subject,
+          predicate: filter.predicate,
+          object: filter.object,
+          factType: filter.factType,
+          userId: filter.userId,
+          participantId: filter.participantId,
+          minConfidence: filter.minConfidence,
+          confidence: filter.confidence,
+          tags: filter.tags,
+          tagMatch: filter.tagMatch,
+          sourceType: filter.sourceType,
+          createdBefore: filter.createdBefore?.getTime(),
+          createdAfter: filter.createdAfter?.getTime(),
+          updatedBefore: filter.updatedBefore?.getTime(),
+          updatedAfter: filter.updatedAfter?.getTime(),
+          version: filter.version,
+          includeSuperseded: filter.includeSuperseded,
+          validAt: filter.validAt?.getTime(),
+          metadata: filter.metadata,
+          limit: filter.limit,
+          offset: filter.offset,
+          sortBy: filter.sortBy,
+          sortOrder: filter.sortOrder,
+        }),
+      "facts:queryByRelationship",
+    );
 
     return result as FactRecord[];
   }
@@ -820,11 +860,15 @@ export class FactsAPI {
       validateFactType(options.factType);
     }
 
-    const result = await this.client.query(api.facts.exportFacts, {
-      memorySpaceId: options.memorySpaceId,
-      format: options.format,
-      factType: options.factType,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.facts.exportFacts, {
+          memorySpaceId: options.memorySpaceId,
+          format: options.format,
+          factType: options.factType,
+        }),
+      "facts:export",
+    );
 
     return result as {
       format: string;
@@ -860,11 +904,15 @@ export class FactsAPI {
     validateRequiredString(params.keepFactId, "keepFactId");
     validateConsolidation(params.factIds, params.keepFactId);
 
-    const result = await this.client.mutation(api.facts.consolidate, {
-      memorySpaceId: params.memorySpaceId,
-      factIds: params.factIds,
-      keepFactId: params.keepFactId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.facts.consolidate, {
+          memorySpaceId: params.memorySpaceId,
+          factIds: params.factIds,
+          keepFactId: params.keepFactId,
+        }),
+      "facts:consolidate",
+    );
 
     return result as {
       consolidated: boolean;

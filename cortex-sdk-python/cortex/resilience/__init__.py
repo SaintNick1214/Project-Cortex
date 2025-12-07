@@ -94,9 +94,162 @@ __all__ = [
     "get_priority",
     "is_critical",
     "OPERATION_PRIORITIES",
+    # Plan-based preset selection
+    "get_preset_for_plan",
+    "get_detected_plan_tier",
+    "get_plan_limits",
+    "ConvexPlanTier",
+    # Helper for non-system-failure error detection
+    "_is_non_system_failure",
+    "_is_idempotent_not_found_error",  # Backwards compatibility alias
 ]
 
 T = TypeVar("T")
+
+
+def _is_non_system_failure(e: Exception) -> bool:
+    """
+    Check if an exception is NOT a system failure and should not trip the circuit breaker.
+
+    The circuit breaker should only trip on actual infrastructure/system failures,
+    not on expected application-level errors. This function identifies errors that
+    indicate the system is working correctly but the operation couldn't complete
+    for business/validation reasons.
+
+    Categories of non-system failures:
+    1. Idempotent "not found" errors - Entity already deleted/doesn't exist
+    2. Validation errors - Invalid input from client
+    3. Duplicate/conflict errors - Idempotent create operations
+    4. Empty result errors - Query returned no results (expected)
+    5. Permission errors - Auth/authorization issues (not infrastructure)
+    6. Configuration errors - Feature not configured (not infrastructure)
+    7. Business logic errors - Constraints like HAS_CHILDREN
+
+    Args:
+        e: The exception to check
+
+    Returns:
+        True if this is NOT a system failure (should not trip circuit breaker)
+    """
+    error_str = str(e)
+    error_lower = error_str.lower()
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Category 1: Idempotent "not found" errors
+    # Deleting something already deleted = success, not failure
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    not_found_patterns = (
+        "IMMUTABLE_ENTRY_NOT_FOUND",
+        "USER_NOT_FOUND",
+        "CONVERSATION_NOT_FOUND",
+        "MEMORY_NOT_FOUND",
+        "FACT_NOT_FOUND",
+        "MUTABLE_KEY_NOT_FOUND",
+        "KEY_NOT_FOUND",
+        "CONTEXT_NOT_FOUND",
+        "MEMORY_SPACE_NOT_FOUND",
+        "MEMORYSPACE_NOT_FOUND",
+        "AGENT_NOT_FOUND",
+        "AGENT_NOT_REGISTERED",
+        "VERSION_NOT_FOUND",
+        "PARENT_NOT_FOUND",
+        "NOT_FOUND",
+        "not found",
+    )
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Category 2: Validation errors (client bugs, not system failures)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    validation_patterns = (
+        "INVALID_",  # Catches all INVALID_* errors
+        "DATA_TOO_LARGE",
+        "VALUE_TOO_LARGE",
+        "invalid ",  # Natural language validation errors
+        "validation error",
+        "validation failed",
+    )
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Category 3: Idempotent "already exists" errors
+    # Creating something that exists = idempotent success
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    duplicate_patterns = (
+        "ALREADY_EXISTS",
+        "ALREADY_REGISTERED",
+        "MEMORYSPACE_ALREADY_EXISTS",
+        "AGENT_ALREADY_REGISTERED",
+        "DUPLICATE",
+        "CONFLICT",
+        "already exists",
+        "already registered",
+    )
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Category 4: Empty result errors (expected, not failures)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    empty_result_patterns = (
+        "NO_MEMORIES_MATCHED",
+        "NO_USERS_MATCHED",
+        "no results",
+        "no matches",
+    )
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Category 5: Permission/auth errors (not infrastructure failures)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    permission_patterns = (
+        "PERMISSION_DENIED",
+        "UNAUTHORIZED",
+        "FORBIDDEN",
+        "ACCESS_DENIED",
+        "permission denied",
+        "unauthorized",
+        "forbidden",
+    )
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Category 6: Configuration errors (feature not enabled, not infra)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    config_patterns = (
+        "CLOUD_MODE_REQUIRED",
+        "PUBSUB_NOT_CONFIGURED",
+        "not configured",
+        "not enabled",
+    )
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Category 7: Business logic constraints (not system failures)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    business_logic_patterns = (
+        "HAS_CHILDREN",
+        "MEMORYSPACE_HAS_DATA",
+        "PURGE_CANCELLED",
+        "DELETION_CANCELLED",
+        "has children",
+        "has data",
+        "cancelled",
+    )
+
+    # Combine all patterns
+    all_patterns = (
+        not_found_patterns +
+        validation_patterns +
+        duplicate_patterns +
+        empty_result_patterns +
+        permission_patterns +
+        config_patterns +
+        business_logic_patterns
+    )
+
+    # Check if any pattern matches
+    return any(
+        pattern in error_str or pattern.lower() in error_lower
+        for pattern in all_patterns
+    )
+
+
+# Backwards compatibility alias
+_is_idempotent_not_found_error = _is_non_system_failure
 
 
 class ResiliencePresets:
@@ -270,6 +423,98 @@ class ResiliencePresets:
         return ResilienceConfig(enabled=False)
 
 
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Plan-Based Preset Selection
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Type alias for plan tiers
+ConvexPlanTier = str  # "free" | "starter" | "professional"
+
+
+def get_preset_for_plan(plan: Optional[str] = None) -> ResilienceConfig:
+    """
+    Get the appropriate resilience preset based on Convex plan tier.
+
+    Reads from CONVEX_PLAN environment variable if not specified.
+    Defaults to 'free' plan limits for safety.
+
+    Args:
+        plan: Optional plan tier override. If not provided, reads from CONVEX_PLAN env var.
+
+    Returns:
+        The appropriate ResilienceConfig for the plan tier
+
+    Example:
+        # Auto-detect from CONVEX_PLAN env var
+        config = get_preset_for_plan()
+
+        # Explicit plan tier
+        pro_config = get_preset_for_plan('professional')
+
+        # Use with ResilienceLayer
+        resilience = ResilienceLayer(get_preset_for_plan())
+    """
+    import os
+
+    effective_plan = plan or os.environ.get("CONVEX_PLAN", "free")
+
+    if effective_plan.lower() == "professional":
+        # Professional plan: 256 concurrent queries/mutations
+        # Use batch_processing preset which allows higher throughput
+        return ResiliencePresets.batch_processing()
+
+    # Free/Starter plan: 16 concurrent queries/mutations
+    return ResiliencePresets.default()
+
+
+def get_detected_plan_tier() -> str:
+    """
+    Get the detected Convex plan tier from environment.
+
+    Returns:
+        The detected plan tier, defaulting to 'free'
+    """
+    import os
+
+    env_plan = os.environ.get("CONVEX_PLAN", "").lower()
+    if env_plan == "professional":
+        return "professional"
+    if env_plan == "starter":
+        return "starter"
+    return "free"
+
+
+def get_plan_limits(plan: Optional[str] = None) -> dict:
+    """
+    Get concurrency limits for a given Convex plan tier.
+
+    Based on https://docs.convex.dev/production/state/limits
+
+    Args:
+        plan: The Convex plan tier
+
+    Returns:
+        Dictionary with concurrency limits
+    """
+    effective_plan = plan or get_detected_plan_tier()
+
+    if effective_plan == "professional":
+        return {
+            "concurrent_queries": 256,
+            "concurrent_mutations": 256,
+            "concurrent_actions": 256,
+            "max_node_actions": 1000,
+        }
+
+    # Free/Starter plan limits
+    return {
+        "concurrent_queries": 16,
+        "concurrent_mutations": 16,
+        "concurrent_actions": 64,
+        "max_node_actions": 64,
+    }
+
+
 class ResilienceLayer:
     """Main resilience layer that orchestrates all protection mechanisms."""
 
@@ -390,8 +635,12 @@ class ResilienceLayer:
 
             return result
         except Exception as e:
-            # Record failure
-            self._circuit_breaker.record_failure(e)
+            # Only record as failure if it's a true system failure.
+            # Non-system failures (validation errors, not found, duplicates, etc.)
+            # should not trip the circuit breaker as they indicate the system
+            # is working correctly, just rejecting invalid/expected operations.
+            if not _is_non_system_failure(e):
+                self._circuit_breaker.record_failure(e)
             raise
         finally:
             # Release permit
@@ -513,7 +762,9 @@ class ResilienceLayer:
             self._circuit_breaker.record_success()
             request.resolve(result)
         except Exception as e:
-            self._circuit_breaker.record_failure(e)
+            # Only record as failure if it's a true system failure
+            if not _is_non_system_failure(e):
+                self._circuit_breaker.record_failure(e)
             request.reject(e)
         finally:
             permit.release()

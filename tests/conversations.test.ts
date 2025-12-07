@@ -182,7 +182,7 @@ describe("Conversations API (Layer 1a)", () => {
           type: "user-agent",
           participants: {
             userId: dupUser2,
-          agentId: dupAgent2,
+            agentId: dupAgent2,
             participantId: dupAgent2,
           },
         }),
@@ -1472,7 +1472,7 @@ describe("Conversations API (Layer 1a)", () => {
             type: "user-agent",
             participants: {
               userId: bulkUser,
-          agentId: bulkAgent,
+              agentId: bulkAgent,
               participantId: bulkAgent,
             },
           });
@@ -1507,7 +1507,7 @@ describe("Conversations API (Layer 1a)", () => {
           type: "user-agent",
           participants: {
             userId: deleteMsgsUser,
-          agentId: deleteMsgsAgent,
+            agentId: deleteMsgsAgent,
             participantId: deleteMsgsAgent,
           },
         });
@@ -1542,7 +1542,7 @@ describe("Conversations API (Layer 1a)", () => {
           type: "user-agent",
           participants: {
             userId: getMsgUser,
-          agentId: getMsgAgent,
+            agentId: getMsgAgent,
             participantId: getMsgAgent,
           },
         });
@@ -1605,7 +1605,7 @@ describe("Conversations API (Layer 1a)", () => {
           type: "user-agent",
           participants: {
             userId: getMsgsUser,
-          agentId: getMsgsAgent,
+            agentId: getMsgsAgent,
             participantId: getMsgsAgent,
           },
         });
@@ -1675,7 +1675,7 @@ describe("Conversations API (Layer 1a)", () => {
           type: "user-agent",
           participants: {
             userId: findUser,
-          agentId: findAgent,
+            agentId: findAgent,
             participantId: findAgent,
           },
         });
@@ -1747,7 +1747,7 @@ describe("Conversations API (Layer 1a)", () => {
           type: "user-agent",
           participants: {
             userId: gocUser,
-          agentId: gocAgent,
+            agentId: gocAgent,
             participantId: gocAgent,
           },
         });
@@ -1768,7 +1768,7 @@ describe("Conversations API (Layer 1a)", () => {
           type: "user-agent",
           participants: {
             userId: gocExistUser,
-          agentId: gocExistAgent,
+            agentId: gocExistAgent,
             participantId: gocExistAgent,
           },
         });
@@ -1779,7 +1779,7 @@ describe("Conversations API (Layer 1a)", () => {
           type: "user-agent",
           participants: {
             userId: gocExistUser,
-          agentId: gocExistAgent,
+            agentId: gocExistAgent,
             participantId: gocExistAgent,
           },
         });

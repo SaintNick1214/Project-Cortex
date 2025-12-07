@@ -92,14 +92,17 @@ class MutableAPI:
         if user_id is not None:
             validate_user_id(user_id)
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "mutable:set",
+                filter_none_values({
+                    "namespace": namespace,
+                    "key": key,
+                    "value": value,
+                    "userId": user_id,
+                }),
+            ),
             "mutable:set",
-            filter_none_values({
-                "namespace": namespace,
-                "key": key,
-                "value": value,
-                "userId": user_id,
-            }),
         )
 
         return MutableRecord(**convert_convex_response(result))
@@ -124,8 +127,11 @@ class MutableAPI:
         validate_key(key)
         validate_key_format(key)
 
-        result = await self.client.query(
-            "mutable:get", filter_none_values({"namespace": namespace, "key": key})
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "mutable:get", filter_none_values({"namespace": namespace, "key": key})
+            ),
+            "mutable:get",
         )
 
         return result
@@ -164,13 +170,16 @@ class MutableAPI:
         current_value = current_record.get("value") if isinstance(current_record, dict) else current_record.value if current_record else None
         new_value = updater(current_value)
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "mutable:set",
+                filter_none_values({
+                    "namespace": namespace,
+                    "key": key,
+                    "value": new_value,
+                }),
+            ),
             "mutable:set",
-            filter_none_values({
-                "namespace": namespace,
-                "key": key,
-                "value": new_value,
-            }),
         )
 
         return MutableRecord(**convert_convex_response(result))
@@ -247,8 +256,11 @@ class MutableAPI:
         validate_key(key)
         validate_key_format(key)
 
-        result = await self.client.query(
-            "mutable:get", filter_none_values({"namespace": namespace, "key": key})
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "mutable:get", filter_none_values({"namespace": namespace, "key": key})
+            ),
+            "mutable:get",
         )
 
         if not result:
@@ -276,8 +288,11 @@ class MutableAPI:
         validate_key(key)
         validate_key_format(key)
 
-        result = await self.client.mutation(
-            "mutable:deleteKey", filter_none_values({"namespace": namespace, "key": key})
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "mutable:deleteKey", filter_none_values({"namespace": namespace, "key": key})
+            ),
+            "mutable:deleteKey",
         )
 
         return cast(Dict[str, Any], result)
@@ -317,14 +332,17 @@ class MutableAPI:
         if limit is not None:
             validate_limit(limit)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "mutable:list",
+                filter_none_values({
+                    "namespace": namespace,
+                    "keyPrefix": key_prefix,
+                    "userId": user_id,
+                    "limit": limit,
+                }),
+            ),
             "mutable:list",
-            filter_none_values({
-                "namespace": namespace,
-                "keyPrefix": key_prefix,
-                "userId": user_id,
-                "limit": limit,
-            }),
         )
 
         return [MutableRecord(**convert_convex_response(record)) for record in result]
@@ -359,13 +377,16 @@ class MutableAPI:
         if user_id is not None:
             validate_user_id(user_id)
 
-        result = await self.client.query(
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "mutable:count",
+                filter_none_values({
+                    "namespace": namespace,
+                    "keyPrefix": key_prefix,
+                    "userId": user_id,
+                }),
+            ),
             "mutable:count",
-            filter_none_values({
-                "namespace": namespace,
-                "keyPrefix": key_prefix,
-                "userId": user_id,
-            }),
         )
 
         return int(result)
@@ -391,8 +412,11 @@ class MutableAPI:
         validate_key(key)
         validate_key_format(key)
 
-        result = await self.client.query(
-            "mutable:exists", filter_none_values({"namespace": namespace, "key": key})
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "mutable:exists", filter_none_values({"namespace": namespace, "key": key})
+            ),
+            "mutable:exists",
         )
 
         return bool(result)
@@ -417,9 +441,12 @@ class MutableAPI:
         validate_namespace(namespace)
         validate_namespace_format(namespace)
 
-        result = await self.client.mutation(
-            "mutable:purgeNamespace", filter_none_values({"namespace": namespace})
-            # Note: dryRun not supported by backend yet
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "mutable:purgeNamespace", filter_none_values({"namespace": namespace})
+                # Note: dryRun not supported by backend yet
+            ),
+            "mutable:purgeNamespace",
         )
 
         return cast(Dict[str, Any], result)
@@ -459,14 +486,17 @@ class MutableAPI:
         if user_id is not None:
             validate_user_id(user_id)
 
-        result = await self.client.mutation(
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "mutable:purgeMany",
+                filter_none_values({
+                    "namespace": namespace,
+                    "keyPrefix": key_prefix,
+                    "userId": user_id,
+                    "updatedBefore": updated_before,
+                }),
+            ),
             "mutable:purgeMany",
-            filter_none_values({
-                "namespace": namespace,
-                "keyPrefix": key_prefix,
-                "userId": user_id,
-                "updatedBefore": updated_before,
-            }),
         )
 
         return cast(Dict[str, Any], result)

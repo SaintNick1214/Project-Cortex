@@ -93,13 +93,17 @@ export class ImmutableAPI {
     // CLIENT-SIDE VALIDATION
     validateImmutableEntry(entry);
 
-    const result = await this.client.mutation(api.immutable.store, {
-      type: entry.type,
-      id: entry.id,
-      data: entry.data,
-      userId: entry.userId,
-      metadata: entry.metadata,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.immutable.store, {
+          type: entry.type,
+          id: entry.id,
+          data: entry.data,
+          userId: entry.userId,
+          metadata: entry.metadata,
+        }),
+      "immutable:store",
+    );
 
     // Sync to graph if requested (facts are handled specially in FactsAPI)
     if (options?.syncToGraph && this.graphAdapter && entry.type !== "fact") {
@@ -133,10 +137,14 @@ export class ImmutableAPI {
     validateType(type, "type");
     validateId(id, "id");
 
-    const result = await this.client.query(api.immutable.get, {
-      type,
-      id,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.immutable.get, {
+          type,
+          id,
+        }),
+      "immutable:get",
+    );
 
     return result as ImmutableRecord | null;
   }
@@ -159,11 +167,15 @@ export class ImmutableAPI {
     validateId(id, "id");
     validateVersion(version, "version");
 
-    const result = await this.client.query(api.immutable.getVersion, {
-      type,
-      id,
-      version,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.immutable.getVersion, {
+          type,
+          id,
+          version,
+        }),
+      "immutable:getVersion",
+    );
 
     return result as ImmutableVersionExpanded | null;
   }
@@ -185,10 +197,14 @@ export class ImmutableAPI {
     validateType(type, "type");
     validateId(id, "id");
 
-    const result = await this.client.query(api.immutable.getHistory, {
-      type,
-      id,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.immutable.getHistory, {
+          type,
+          id,
+        }),
+      "immutable:getHistory",
+    );
 
     return result as ImmutableVersionExpanded[];
   }
@@ -210,11 +226,15 @@ export class ImmutableAPI {
       validateListFilter(filter);
     }
 
-    const result = await this.client.query(api.immutable.list, {
-      type: filter?.type,
-      userId: filter?.userId,
-      limit: filter?.limit,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.immutable.list, {
+          type: filter?.type,
+          userId: filter?.userId,
+          limit: filter?.limit,
+        }),
+      "immutable:list",
+    );
 
     return result as ImmutableRecord[];
   }
@@ -234,12 +254,16 @@ export class ImmutableAPI {
     // CLIENT-SIDE VALIDATION
     validateSearchInput(input);
 
-    const result = await this.client.query(api.immutable.search, {
-      query: input.query,
-      type: input.type,
-      userId: input.userId,
-      limit: input.limit,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.immutable.search, {
+          query: input.query,
+          type: input.type,
+          userId: input.userId,
+          limit: input.limit,
+        }),
+      "immutable:search",
+    );
 
     return result as ImmutableSearchResult[];
   }
@@ -260,10 +284,14 @@ export class ImmutableAPI {
       validateCountFilter(filter);
     }
 
-    const result = await this.client.query(api.immutable.count, {
-      type: filter?.type,
-      userId: filter?.userId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.immutable.count, {
+          type: filter?.type,
+          userId: filter?.userId,
+        }),
+      "immutable:count",
+    );
 
     return result;
   }
@@ -290,10 +318,14 @@ export class ImmutableAPI {
     validateId(id, "id");
 
     try {
-      const result = await this.client.mutation(api.immutable.purge, {
-        type,
-        id,
-      });
+      const result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.immutable.purge, {
+            type,
+            id,
+          }),
+        "immutable:purge",
+      );
 
       return result as {
         deleted: boolean;
@@ -330,11 +362,15 @@ export class ImmutableAPI {
 
     const ts = typeof timestamp === "number" ? timestamp : timestamp.getTime();
 
-    const result = await this.client.query(api.immutable.getAtTimestamp, {
-      type,
-      id,
-      timestamp: ts,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.immutable.getAtTimestamp, {
+          type,
+          id,
+          timestamp: ts,
+        }),
+      "immutable:getAtTimestamp",
+    );
 
     return result as ImmutableVersionExpanded | null;
   }
@@ -355,10 +391,14 @@ export class ImmutableAPI {
     // CLIENT-SIDE VALIDATION
     validatePurgeManyFilter(filter);
 
-    const result = await this.client.mutation(api.immutable.purgeMany, {
-      type: filter.type,
-      userId: filter.userId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.immutable.purgeMany, {
+          type: filter.type,
+          userId: filter.userId,
+        }),
+      "immutable:purgeMany",
+    );
 
     return result as {
       deleted: number;
@@ -389,11 +429,15 @@ export class ImmutableAPI {
     validateKeepLatest(keepLatest, "keepLatest");
 
     try {
-      const result = await this.client.mutation(api.immutable.purgeVersions, {
-        type,
-        id,
-        keepLatest,
-      });
+      const result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.immutable.purgeVersions, {
+            type,
+            id,
+            keepLatest,
+          }),
+        "immutable:purgeVersions",
+      );
 
       return result as {
         versionsPurged: number;

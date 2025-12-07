@@ -122,10 +122,14 @@ export class UsersAPI {
     // Client-side validation
     validateUserId(userId);
 
-    const result = await this.client.query(api.immutable.get, {
-      type: "user",
-      id: userId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.immutable.get, {
+          type: "user",
+          id: userId,
+        }),
+      "users:get",
+    );
 
     if (!result) {
       return null;
@@ -160,11 +164,15 @@ export class UsersAPI {
     validateUserId(userId);
     validateData(data, "data");
 
-    const result = await this.client.mutation(api.immutable.store, {
-      type: "user",
-      id: userId,
-      data,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.immutable.store, {
+          type: "user",
+          id: userId,
+          data,
+        }),
+      "users:update",
+    );
 
     if (!result) {
       throw new Error(`Failed to store user profile for ${userId}`);
@@ -215,10 +223,14 @@ export class UsersAPI {
     if (!cascade) {
       // Simple delete: just user profile from immutable
       if (!dryRun) {
-        await this.client.mutation(api.immutable.purge, {
-          type: "user",
-          id: userId,
-        });
+        await this.executeWithResilience(
+          () =>
+            this.client.mutation(api.immutable.purge, {
+              type: "user",
+              id: userId,
+            }),
+          "users:delete",
+        );
       }
 
       return {
@@ -305,10 +317,14 @@ export class UsersAPI {
     // Client-side validation
     validateListUsersFilter(filters);
 
-    const results = await this.client.query(api.immutable.list, {
-      type: "user",
-      limit: filters?.limit,
-    });
+    const results = await this.executeWithResilience(
+      () =>
+        this.client.query(api.immutable.list, {
+          type: "user",
+          limit: filters?.limit,
+        }),
+      "users:list",
+    );
 
     return results.map((r: ImmutableRecord) => ({
       id: r.id,
@@ -331,10 +347,14 @@ export class UsersAPI {
     // Client-side validation
     validateUserFilters(filters);
 
-    const results = await this.client.query(api.immutable.list, {
-      type: "user",
-      limit: filters.limit,
-    });
+    const results = await this.executeWithResilience(
+      () =>
+        this.client.query(api.immutable.list, {
+          type: "user",
+          limit: filters.limit,
+        }),
+      "users:search",
+    );
 
     return results.map((r: ImmutableRecord) => ({
       id: r.id,
@@ -358,9 +378,13 @@ export class UsersAPI {
     // Client-side validation
     validateUserFilters(_filters);
 
-    return await this.client.query(api.immutable.count, {
-      type: "user",
-    });
+    return await this.executeWithResilience(
+      () =>
+        this.client.query(api.immutable.count, {
+          type: "user",
+        }),
+      "users:count",
+    );
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -383,11 +407,15 @@ export class UsersAPI {
     validateUserId(userId);
     validateVersionNumber(version);
 
-    const result = await this.client.query(api.immutable.getVersion, {
-      type: "user",
-      id: userId,
-      version,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.immutable.getVersion, {
+          type: "user",
+          id: userId,
+          version,
+        }),
+      "users:getVersion",
+    );
 
     if (!result) {
       return null;
@@ -413,10 +441,14 @@ export class UsersAPI {
     // Client-side validation
     validateUserId(userId);
 
-    const result = await this.client.query(api.immutable.getHistory, {
-      type: "user",
-      id: userId,
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.immutable.getHistory, {
+          type: "user",
+          id: userId,
+        }),
+      "users:getHistory",
+    );
 
     return result.map(
       (v: { version: number; data: unknown; timestamp: number }) => ({
@@ -446,11 +478,15 @@ export class UsersAPI {
     validateUserId(userId);
     validateTimestamp(timestamp);
 
-    const result = await this.client.query(api.immutable.getAtTimestamp, {
-      type: "user",
-      id: userId,
-      timestamp: timestamp.getTime(),
-    });
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.immutable.getAtTimestamp, {
+          type: "user",
+          id: userId,
+          timestamp: timestamp.getTime(),
+        }),
+      "users:getAtTimestamp",
+    );
 
     if (!result) {
       return null;

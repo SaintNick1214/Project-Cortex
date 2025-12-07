@@ -346,4 +346,3 @@ export async function ensureEnrichedEntityNode(
     { name: entityName },
   );
 }
-

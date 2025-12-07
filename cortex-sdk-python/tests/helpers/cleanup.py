@@ -2,8 +2,9 @@
 Test cleanup utilities for Cortex Python SDK tests.
 
 Provides cleanup classes for test data management:
-1. TestCleanup - Legacy global cleanup (purges data by prefix patterns)
-2. ScopedCleanup - New parallel-safe cleanup (purges only data with matching run ID)
+1. BatchDeleter - Reusable batch delete using Convex deleteMany mutations
+2. TestCleanup - Legacy global cleanup (purges data by prefix patterns)
+3. ScopedCleanup - New parallel-safe cleanup (purges only data with matching run ID)
 """
 
 from dataclasses import dataclass
@@ -12,6 +13,97 @@ from typing import Dict, Optional
 from cortex import Cortex
 
 from .isolation import TestRunContext
+
+
+class BatchDeleter:
+    """
+    Reusable batch delete using Convex deleteMany mutations.
+
+    Provides efficient batch deletion for entities that support deleteMany
+    with memorySpaceId filter. This reduces N delete calls to a single
+    mutation call per entity type.
+
+    Supported entity types:
+    - conversations: conversations:deleteMany
+    - contexts: contexts:deleteMany
+    - memories: memories:deleteMany
+    - facts: facts:deleteMany
+    """
+
+    BATCH_MUTATIONS = {
+        "conversations": "conversations:deleteMany",
+        "contexts": "contexts:deleteMany",
+        "memories": "memories:deleteMany",
+        "facts": "facts:deleteMany",
+    }
+
+    def __init__(self, cortex_client: Cortex):
+        """
+        Initialize BatchDeleter.
+
+        Args:
+            cortex_client: Cortex SDK instance
+        """
+        self.cortex = cortex_client
+
+    async def delete_by_memory_space(
+        self,
+        entity_type: str,
+        memory_space_id: str,
+    ) -> int:
+        """
+        Delete all entities of a type in a memory space.
+
+        Args:
+            entity_type: Type of entity (conversations, contexts, memories, facts)
+            memory_space_id: Memory space to delete from
+
+        Returns:
+            Number of entities deleted
+
+        Raises:
+            ValueError: If entity_type doesn't support deleteMany
+        """
+        mutation = self.BATCH_MUTATIONS.get(entity_type)
+        if not mutation:
+            raise ValueError(
+                f"No deleteMany mutation for {entity_type}. "
+                f"Supported types: {list(self.BATCH_MUTATIONS.keys())}"
+            )
+
+        result = await self.cortex.client.mutation(
+            mutation,
+            {"memorySpaceId": memory_space_id}
+        )
+        return result.get("deleted", 0) if isinstance(result, dict) else 0
+
+    async def delete_all_in_space(self, memory_space_id: str) -> Dict[str, int]:
+        """
+        Batch delete all supported entities in a memory space.
+
+        Calls deleteMany for each supported entity type, reducing
+        potentially hundreds of individual delete calls to just 4 mutations.
+
+        Args:
+            memory_space_id: Memory space to delete from
+
+        Returns:
+            Dictionary mapping entity type to count deleted
+        """
+        totals: Dict[str, int] = {}
+        for entity_type in self.BATCH_MUTATIONS:
+            try:
+                totals[entity_type] = await self.delete_by_memory_space(
+                    entity_type, memory_space_id
+                )
+            except Exception:
+                totals[entity_type] = 0
+        return totals
+
+    @classmethod
+    def supported_types(cls) -> list:
+        """Return list of entity types that support batch deletion."""
+        return list(cls.BATCH_MUTATIONS.keys())
 
 
 class TestCleanup:
@@ -1024,10 +1116,35 @@ class ScopedCleanup:
         self._log(f"✅ Cleaned up {count} mutable records")
         return count
 
+    async def _get_run_memory_spaces(self) -> list:
+        """
+        Get all memory space IDs that belong to this test run.
+
+        Returns:
+            List of memory_space_id strings belonging to this run
+        """
+        memory_space_ids = []
+        try:
+            result = await self.cortex.memory_spaces.list(limit=1000)
+            spaces = result.get("spaces", []) if isinstance(result, dict) else result
+
+            for space in spaces:
+                space_id = space.memory_space_id if hasattr(space, "memory_space_id") else space.get("memory_space_id")
+                if self._belongs_to_run(space_id):
+                    memory_space_ids.append(space_id)
+        except Exception:
+            pass
+
+        return memory_space_ids
+
     async def cleanup_all(self) -> ScopedCleanupResult:
         """
         Cleanup all entities created by this test run.
         Order matters: delete dependent entities first.
+
+        Uses BatchDeleter for efficient bulk deletion of entities that support
+        deleteMany (conversations, contexts, memories, facts), then falls back
+        to individual cleanup for other entity types.
 
         Returns:
             Summary of deleted entities
@@ -1036,15 +1153,41 @@ class ScopedCleanup:
 
         result = ScopedCleanupResult()
 
-        # Delete in reverse dependency order
-        result.conversations = await self.cleanup_conversations()
-        result.contexts = await self.cleanup_contexts()
-        result.memories = await self.cleanup_memories()
-        result.facts = await self.cleanup_facts()
+        # Phase 1: Batch delete entities in memory spaces belonging to this run
+        # This is much more efficient than one-by-one deletion
+        memory_space_ids = await self._get_run_memory_spaces()
+
+        if memory_space_ids:
+            self._log(f"🚀 Batch deleting from {len(memory_space_ids)} memory spaces...")
+            batch_deleter = BatchDeleter(self.cortex)
+
+            for space_id in memory_space_ids:
+                try:
+                    totals = await batch_deleter.delete_all_in_space(space_id)
+                    result.conversations += totals.get("conversations", 0)
+                    result.contexts += totals.get("contexts", 0)
+                    result.memories += totals.get("memories", 0)
+                    result.facts += totals.get("facts", 0)
+                    self._log(f"  ✓ {space_id}: {sum(totals.values())} entities")
+                except Exception as e:
+                    self._log(f"  ⚠ {space_id}: batch delete failed ({e}), falling back...")
+                    # Fall back to individual cleanup for this space
+                    pass
+
+        # Phase 2: Cleanup any orphaned entities not in memory spaces
+        # (e.g., conversations with conversation_id matching run but different space)
+        orphan_convs = await self.cleanup_conversations()
+        orphan_contexts = await self.cleanup_contexts()
+        result.conversations += orphan_convs
+        result.contexts += orphan_contexts
+
+        # Phase 3: Individual cleanup for entities without batch support
         result.mutable = await self.cleanup_mutable()
         result.immutable = await self.cleanup_immutable()
         result.users = await self.cleanup_users()
         result.agents = await self.cleanup_agents()
+
+        # Phase 4: Delete memory spaces last (after their contents are cleared)
         result.memory_spaces = await self.cleanup_memory_spaces()
 
         self._log(f"\n✅ Scoped cleanup complete. Total deleted: {result.total}\n")

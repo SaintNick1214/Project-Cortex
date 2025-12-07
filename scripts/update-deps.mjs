@@ -33,7 +33,11 @@ const log = (msg, color = "") => console.log(`${color}${msg}${c.reset}`);
 
 function findPackageDirs(dir, results = []) {
   for (const entry of readdirSync(dir)) {
-    if (["node_modules", "dist", ".git", "coverage"].includes(entry) || entry.startsWith(".")) continue;
+    if (
+      ["node_modules", "dist", ".git", "coverage"].includes(entry) ||
+      entry.startsWith(".")
+    )
+      continue;
     const fullPath = join(dir, entry);
     if (statSync(fullPath).isDirectory()) {
       findPackageDirs(fullPath, results);
@@ -46,7 +50,12 @@ function findPackageDirs(dir, results = []) {
 
 function run(cmd, cwd) {
   try {
-    return execSync(cmd, { cwd, encoding: "utf-8", timeout: 60000, env: { ...process.env, CI: "1" } });
+    return execSync(cmd, {
+      cwd,
+      encoding: "utf-8",
+      timeout: 60000,
+      env: { ...process.env, CI: "1" },
+    });
   } catch (e) {
     return e.stdout || "";
   }
@@ -68,16 +77,18 @@ const results = [];
 for (const dir of packageDirs) {
   const name = relative(ROOT, dir) || "(root)";
   const ncuCmd = DRY_RUN ? "ncu" : "ncu -u";
-  
+
   log(`📦 ${name}`, c.cyan + c.bold);
-  
+
   const output = run(ncuCmd, dir);
-  const updates = output.split("\n").filter(l => l.includes("→") || l.includes("->"));
-  
+  const updates = output
+    .split("\n")
+    .filter((l) => l.includes("→") || l.includes("->"));
+
   if (updates.length > 0) {
-    updates.forEach(u => log(`   ${u.trim()}`, c.yellow));
+    updates.forEach((u) => log(`   ${u.trim()}`, c.yellow));
     results.push({ name, updates, updated: true });
-    
+
     if (!DRY_RUN && !NO_INSTALL) {
       log("   Installing...", c.dim);
       run("npm install", dir);
@@ -95,23 +106,25 @@ log("═════════════════════════
 log("                         SUMMARY", c.blue + c.bold);
 log("════════════════════════════════════════════════════════════", c.blue);
 
-const updated = results.filter(r => r.updated);
-const current = results.filter(r => !r.updated);
+const updated = results.filter((r) => r.updated);
+const current = results.filter((r) => !r.updated);
 
 if (updated.length > 0) {
   log(`\n📈 Packages updated (${updated.length}):`, c.cyan);
   for (const pkg of updated) {
     log(`\n   ${pkg.name}:`, c.yellow);
-    pkg.updates.forEach(u => log(`      ${u.trim()}`, c.dim));
+    pkg.updates.forEach((u) => log(`      ${u.trim()}`, c.dim));
   }
 }
 
 if (current.length > 0) {
   log(`\n✅ Already current (${current.length}):`, c.green);
-  current.forEach(p => log(`   ${p.name}`, c.dim));
+  current.forEach((p) => log(`   ${p.name}`, c.dim));
 }
 
 console.log();
-log(`Total: ${results.length} | Updated: ${updated.length} | Current: ${current.length}`, c.bold);
+log(
+  `Total: ${results.length} | Updated: ${updated.length} | Current: ${current.length}`,
+  c.bold,
+);
 console.log();
-
