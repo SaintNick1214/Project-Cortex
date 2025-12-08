@@ -712,10 +712,10 @@ POST /search_memory
 
 ```bash
 # Start with auth enabled
-cortex-mcp-server --convex-url=$CONVEX_URL --auth --api-key=secret-key
+cortex-mcp-server --convex-url=$CONVEX_URL --auth --api-key=your-api-key-here
 
 # Clients must provide API key
-curl -H "Authorization: Bearer secret-key" \
+curl -H "Authorization: Bearer your-api-key-here" \
   -X POST http://localhost:3000/search_memory \
   -d '{"query": "...", "user_id": "..."}'
 ```
@@ -731,7 +731,7 @@ curl -H "Authorization: Bearer secret-key" \
       "url": "https://mcp.cortex.cloud/v1",
       "auth": {
         "type": "bearer",
-        "token": "cortex_sk_abc123..."
+        "token": "<your-cortex-api-key>"
       }
     }
   }
