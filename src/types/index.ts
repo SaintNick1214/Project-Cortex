@@ -65,7 +65,28 @@ export interface ListConversationsFilter {
   type?: ConversationType;
   userId?: string;
   memorySpaceId?: string; // Updated
+  participantId?: string; // Hive Mode tracking
+  createdBefore?: number;
+  createdAfter?: number;
+  updatedBefore?: number;
+  updatedAfter?: number;
+  lastMessageBefore?: number;
+  lastMessageAfter?: number;
+  messageCount?: number | { min?: number; max?: number };
+  metadata?: Record<string, unknown>;
   limit?: number;
+  offset?: number;
+  sortBy?: "createdAt" | "updatedAt" | "lastMessageAt" | "messageCount";
+  sortOrder?: "asc" | "desc";
+  includeMessages?: boolean;
+}
+
+export interface ListConversationsResult {
+  conversations: Conversation[];
+  total: number;
+  limit: number;
+  offset: number;
+  hasMore: boolean;
 }
 
 export interface CountConversationsFilter {
@@ -78,6 +99,14 @@ export interface GetHistoryOptions {
   limit?: number;
   offset?: number;
   sortOrder?: "asc" | "desc";
+  since?: number; // Messages after timestamp
+  until?: number; // Messages before timestamp
+  roles?: ("user" | "agent" | "system")[]; // Filter by role
+}
+
+export interface GetConversationOptions {
+  includeMessages?: boolean; // Default: true
+  messageLimit?: number; // Limit messages returned
 }
 
 export interface SearchConversationsInput {
@@ -92,6 +121,12 @@ export interface SearchConversationsInput {
     };
     limit?: number;
   };
+  options?: SearchConversationsOptions;
+}
+
+export interface SearchConversationsOptions {
+  searchIn?: "content" | "metadata" | "both"; // Default: "content"
+  matchMode?: "contains" | "exact" | "fuzzy"; // Default: "contains"
 }
 
 export interface ConversationSearchResult {
@@ -122,6 +157,28 @@ export interface ExportResult {
   data: string;
   count: number;
   exportedAt: number;
+}
+
+export interface ConversationDeletionResult {
+  deleted: boolean;
+  conversationId: string;
+  messagesDeleted: number;
+  deletedAt: number;
+  restorable: boolean; // Always false for conversations
+}
+
+export interface DeleteManyConversationsOptions {
+  dryRun?: boolean; // Preview what would be deleted
+  requireConfirmation?: boolean; // Require explicit confirmation
+  confirmationThreshold?: number; // Threshold for auto-confirm (default: 10)
+}
+
+export interface DeleteManyConversationsResult {
+  deleted: number;
+  conversationIds: string[];
+  totalMessagesDeleted: number;
+  wouldDelete?: number; // For dryRun mode
+  dryRun?: boolean;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -237,12 +294,31 @@ export interface ListMutableFilter {
   keyPrefix?: string;
   userId?: string;
   limit?: number;
+  offset?: number;
+  updatedAfter?: number;
+  updatedBefore?: number;
+  sortBy?: "key" | "updatedAt" | "accessCount";
+  sortOrder?: "asc" | "desc";
 }
 
 export interface CountMutableFilter {
   namespace: string;
   userId?: string;
   keyPrefix?: string;
+  updatedAfter?: number;
+  updatedBefore?: number;
+}
+
+export interface PurgeNamespaceOptions {
+  dryRun?: boolean;
+}
+
+export interface PurgeManyFilter {
+  namespace: string;
+  keyPrefix?: string;
+  userId?: string;
+  updatedBefore?: number;
+  lastAccessedBefore?: number;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -372,6 +448,8 @@ export interface SearchMemoriesOptions {
   minImportance?: number;
   limit?: number;
   minScore?: number;
+  /** Category to boost for bullet-proof retrieval (e.g., "addressing_preference") */
+  queryCategory?: string;
 }
 
 export interface ListMemoriesFilter {
@@ -1045,6 +1123,34 @@ export interface UpdateFactInput {
   tags?: string[];
   validUntil?: number;
   metadata?: Record<string, unknown>;
+
+  // Enrichment fields (for bullet-proof retrieval)
+  category?: string; // Specific sub-category (e.g., "addressing_preference")
+  searchAliases?: string[]; // Alternative search terms
+  semanticContext?: string; // Usage context sentence
+  entities?: EnrichedEntity[]; // Extracted entities with types
+  relations?: EnrichedRelation[]; // Subject-predicate-object triples for graph
+}
+
+export interface DeleteManyFactsParams {
+  // Required
+  memorySpaceId: string;
+
+  // Optional filters
+  userId?: string; // Filter by user (GDPR cleanup)
+  factType?:
+    | "preference"
+    | "identity"
+    | "knowledge"
+    | "relationship"
+    | "event"
+    | "observation"
+    | "custom";
+}
+
+export interface DeleteManyFactsResult {
+  deleted: number;
+  memorySpaceId: string;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1109,6 +1215,55 @@ export interface MemorySpaceStats {
     avgImportance: number;
     topTags: string[];
   }>;
+  // Time window info (when timeWindow option is used)
+  memoriesThisWindow?: number;
+  conversationsThisWindow?: number;
+}
+
+export interface ListMemorySpacesFilter {
+  type?: "personal" | "team" | "project" | "custom";
+  status?: "active" | "archived";
+  participant?: string; // Filter by participant ID
+  limit?: number;
+  offset?: number;
+  sortBy?: "createdAt" | "updatedAt" | "name";
+  sortOrder?: "asc" | "desc";
+}
+
+export interface ListMemorySpacesResult {
+  spaces: MemorySpace[];
+  total: number;
+  hasMore: boolean;
+  offset: number;
+}
+
+export interface DeleteMemorySpaceOptions {
+  cascade: boolean; // Required: Must be true to proceed
+  reason: string; // Required: Why deleting (audit trail)
+  confirmId?: string; // Optional: Safety check (must match memorySpaceId)
+  syncToGraph?: boolean; // Delete from graph database
+}
+
+export interface DeleteMemorySpaceResult {
+  memorySpaceId: string;
+  deleted: true;
+  cascade: {
+    conversationsDeleted: number;
+    memoriesDeleted: number;
+    factsDeleted: number;
+    totalBytes: number;
+  };
+  reason: string;
+  deletedAt: number;
+}
+
+export interface GetMemorySpaceStatsOptions {
+  timeWindow?: "24h" | "7d" | "30d" | "90d" | "all";
+  includeParticipants?: boolean;
+}
+
+export interface UpdateMemorySpaceOptions {
+  syncToGraph?: boolean;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1148,13 +1303,33 @@ export interface AgentFilters {
   metadata?: Record<string, unknown>;
   name?: string;
   capabilities?: string[];
+  /** Match mode for capabilities: "any" (default) matches agents with at least one capability, "all" requires all capabilities */
+  capabilitiesMatch?: "any" | "all";
   status?: "active" | "inactive" | "archived";
   registeredAfter?: number;
   registeredBefore?: number;
+  /** Filter agents last active after this timestamp */
+  lastActiveAfter?: number;
+  /** Filter agents last active before this timestamp */
+  lastActiveBefore?: number;
   limit?: number;
   offset?: number;
   sortBy?: "name" | "registeredAt" | "lastActive";
   sortOrder?: "asc" | "desc";
+}
+
+export interface ExportAgentsOptions {
+  filters?: AgentFilters;
+  format: "json" | "csv";
+  includeMetadata?: boolean;
+  includeStats?: boolean;
+}
+
+export interface ExportAgentsResult {
+  format: "json" | "csv";
+  data: string;
+  count: number;
+  exportedAt: number;
 }
 
 export interface UnregisterAgentOptions {
@@ -1498,17 +1673,52 @@ export interface VerificationResult {
 }
 
 export interface ListUsersFilter {
+  /** Maximum results to return (default: 50, max: 1000) */
   limit?: number;
+  /** Skip first N results for pagination (default: 0) */
   offset?: number;
+  /** Filter by createdAt > timestamp */
+  createdAfter?: number;
+  /** Filter by createdAt < timestamp */
+  createdBefore?: number;
+  /** Filter by updatedAt > timestamp */
+  updatedAfter?: number;
+  /** Filter by updatedAt < timestamp */
+  updatedBefore?: number;
+  /** Sort by field (default: "createdAt") */
+  sortBy?: "createdAt" | "updatedAt";
+  /** Sort order (default: "desc") */
+  sortOrder?: "asc" | "desc";
+  /** Filter by displayName (client-side, contains match) */
+  displayName?: string;
+  /** Filter by email (client-side, contains match) */
+  email?: string;
 }
 
-export interface UserFilters {
-  limit?: number;
+export interface UserFilters extends ListUsersFilter {}
+
+export interface ListUsersResult {
+  /** Array of user profiles */
+  users: UserProfile[];
+  /** Total count before pagination */
+  total: number;
+  /** Limit used for this query */
+  limit: number;
+  /** Offset used for this query */
+  offset: number;
+  /** Whether there are more results beyond this page */
+  hasMore: boolean;
 }
 
 export interface ExportUsersOptions {
   filters?: UserFilters;
   format: "json" | "csv";
+  /** Include previousVersions array in export */
+  includeVersionHistory?: boolean;
+  /** Query and include user's conversations */
+  includeConversations?: boolean;
+  /** Query and include user's memories across all memory spaces */
+  includeMemories?: boolean;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -148,9 +148,17 @@ export const deleteConversation = mutation({
       throw new ConvexError("CONVERSATION_NOT_FOUND");
     }
 
+    const messagesDeleted = conversation.messageCount;
+
     await ctx.db.delete(conversation._id);
 
-    return { deleted: true };
+    return {
+      deleted: true,
+      conversationId: args.conversationId,
+      messagesDeleted,
+      deletedAt: Date.now(),
+      restorable: false, // Conversations are permanently deleted
+    };
   },
 });
 
@@ -160,10 +168,12 @@ export const deleteConversation = mutation({
 export const deleteMany = mutation({
   args: {
     userId: v.optional(v.string()),
-    memorySpaceId: v.optional(v.string()), // NEW: Filter by memory space
+    memorySpaceId: v.optional(v.string()), // Filter by memory space
     type: v.optional(
       v.union(v.literal("user-agent"), v.literal("agent-agent")),
     ),
+    dryRun: v.optional(v.boolean()), // Preview what would be deleted
+    confirmationThreshold: v.optional(v.number()), // Auto-confirm threshold (default: 10)
   },
   handler: async (ctx, args) => {
     let conversations;
@@ -191,6 +201,32 @@ export const deleteMany = mutation({
       conversations = conversations.filter((c) => c.type === args.type);
     }
 
+    // Calculate total messages that would be deleted
+    const totalMessagesWouldDelete = conversations.reduce(
+      (sum, c) => sum + c.messageCount,
+      0
+    );
+
+    // Dry run mode - just return what would be deleted
+    if (args.dryRun) {
+      return {
+        deleted: 0,
+        totalMessagesDeleted: 0,
+        conversationIds: [],
+        wouldDelete: conversations.length,
+        wouldDeleteMessages: totalMessagesWouldDelete,
+        dryRun: true,
+      };
+    }
+
+    // Check confirmation threshold
+    const threshold = args.confirmationThreshold ?? 10;
+    if (conversations.length > threshold) {
+      throw new ConvexError(
+        `DELETE_MANY_THRESHOLD_EXCEEDED: Would delete ${conversations.length} conversations (threshold: ${threshold}). Use dryRun first or increase confirmationThreshold.`
+      );
+    }
+
     let deleted = 0;
     let totalMessagesDeleted = 0;
 
@@ -204,6 +240,7 @@ export const deleteMany = mutation({
       deleted,
       totalMessagesDeleted,
       conversationIds: conversations.map((c) => c.conversationId),
+      dryRun: false,
     };
   },
 });
@@ -496,6 +533,8 @@ export const findConversation = query({
 export const get = query({
   args: {
     conversationId: v.string(),
+    includeMessages: v.optional(v.boolean()), // Default: true
+    messageLimit: v.optional(v.number()), // Limit messages returned
   },
   handler: async (ctx, args) => {
     const conversation = await ctx.db
@@ -509,12 +548,31 @@ export const get = query({
       return null;
     }
 
+    // Handle includeMessages option
+    const includeMessages = args.includeMessages !== false; // Default: true
+
+    if (!includeMessages) {
+      // Return conversation without messages
+      return {
+        ...conversation,
+        messages: [],
+      };
+    }
+
+    // Handle messageLimit option
+    if (args.messageLimit !== undefined && args.messageLimit > 0) {
+      return {
+        ...conversation,
+        messages: conversation.messages.slice(-args.messageLimit),
+      };
+    }
+
     return conversation;
   },
 });
 
 /**
- * List conversations with filters
+ * List conversations with filters and pagination metadata
  */
 export const list = query({
   args: {
@@ -522,10 +580,33 @@ export const list = query({
       v.union(v.literal("user-agent"), v.literal("agent-agent")),
     ),
     userId: v.optional(v.string()),
-    memorySpaceId: v.optional(v.string()), // NEW: Filter by memory space
+    memorySpaceId: v.optional(v.string()), // Filter by memory space
+    participantId: v.optional(v.string()), // Hive Mode tracking
+    createdBefore: v.optional(v.number()),
+    createdAfter: v.optional(v.number()),
+    updatedBefore: v.optional(v.number()),
+    updatedAfter: v.optional(v.number()),
+    lastMessageBefore: v.optional(v.number()),
+    lastMessageAfter: v.optional(v.number()),
+    messageCountMin: v.optional(v.number()),
+    messageCountMax: v.optional(v.number()),
     limit: v.optional(v.number()),
+    offset: v.optional(v.number()),
+    sortBy: v.optional(
+      v.union(
+        v.literal("createdAt"),
+        v.literal("updatedAt"),
+        v.literal("lastMessageAt"),
+        v.literal("messageCount")
+      )
+    ),
+    sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
+    includeMessages: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+    const limit = args.limit || 50;
+    const offset = args.offset || 0;
+
     // Apply filters using indexes
     let conversations;
 
@@ -538,8 +619,7 @@ export const list = query({
             .eq("memorySpaceId", args.memorySpaceId!)
             .eq("participants.userId", args.userId),
         )
-        .order("desc")
-        .take(args.limit || 100);
+        .collect();
     } else if (args.memorySpaceId) {
       // Memory space only (Hive Mode: all conversations in space)
       conversations = await ctx.db
@@ -547,33 +627,130 @@ export const list = query({
         .withIndex("by_memorySpace", (q) =>
           q.eq("memorySpaceId", args.memorySpaceId!),
         )
-        .order("desc")
-        .take(args.limit || 100);
+        .collect();
     } else if (args.userId) {
       conversations = await ctx.db
         .query("conversations")
         .withIndex("by_user", (q) => q.eq("participants.userId", args.userId))
-        .order("desc")
-        .take(args.limit || 100);
+        .collect();
     } else if (args.type) {
       conversations = await ctx.db
         .query("conversations")
         .withIndex("by_type", (q) => q.eq("type", args.type!))
-        .order("desc")
-        .take(args.limit || 100);
+        .collect();
     } else {
-      conversations = await ctx.db
-        .query("conversations")
-        .order("desc")
-        .take(args.limit || 100);
+      conversations = await ctx.db.query("conversations").collect();
     }
 
     // Post-filter by type if needed (when using other indexes)
     if (args.type && (args.memorySpaceId || args.userId)) {
-      return conversations.filter((c) => c.type === args.type);
+      conversations = conversations.filter((c) => c.type === args.type);
     }
 
-    return conversations;
+    // Apply additional filters
+    if (args.participantId) {
+      conversations = conversations.filter(
+        (c) => c.participantId === args.participantId
+      );
+    }
+    if (args.createdBefore !== undefined) {
+      conversations = conversations.filter(
+        (c) => c.createdAt < args.createdBefore!
+      );
+    }
+    if (args.createdAfter !== undefined) {
+      conversations = conversations.filter(
+        (c) => c.createdAt > args.createdAfter!
+      );
+    }
+    if (args.updatedBefore !== undefined) {
+      conversations = conversations.filter(
+        (c) => c.updatedAt < args.updatedBefore!
+      );
+    }
+    if (args.updatedAfter !== undefined) {
+      conversations = conversations.filter(
+        (c) => c.updatedAt > args.updatedAfter!
+      );
+    }
+    if (args.lastMessageBefore !== undefined) {
+      conversations = conversations.filter((c) => {
+        const lastMsgTime = c.messages.length > 0
+          ? c.messages[c.messages.length - 1].timestamp
+          : c.createdAt;
+        return lastMsgTime < args.lastMessageBefore!;
+      });
+    }
+    if (args.lastMessageAfter !== undefined) {
+      conversations = conversations.filter((c) => {
+        const lastMsgTime = c.messages.length > 0
+          ? c.messages[c.messages.length - 1].timestamp
+          : c.createdAt;
+        return lastMsgTime > args.lastMessageAfter!;
+      });
+    }
+    if (args.messageCountMin !== undefined) {
+      conversations = conversations.filter(
+        (c) => c.messageCount >= args.messageCountMin!
+      );
+    }
+    if (args.messageCountMax !== undefined) {
+      conversations = conversations.filter(
+        (c) => c.messageCount <= args.messageCountMax!
+      );
+    }
+
+    // Get total before pagination
+    const total = conversations.length;
+
+    // Sort
+    const sortBy = args.sortBy || "createdAt";
+    const sortOrder = args.sortOrder || "desc";
+
+    conversations.sort((a, b) => {
+      let aVal: number;
+      let bVal: number;
+
+      switch (sortBy) {
+        case "updatedAt":
+          aVal = a.updatedAt;
+          bVal = b.updatedAt;
+          break;
+        case "lastMessageAt":
+          aVal = a.messages.length > 0
+            ? a.messages[a.messages.length - 1].timestamp
+            : a.createdAt;
+          bVal = b.messages.length > 0
+            ? b.messages[b.messages.length - 1].timestamp
+            : b.createdAt;
+          break;
+        case "messageCount":
+          aVal = a.messageCount;
+          bVal = b.messageCount;
+          break;
+        default: // createdAt
+          aVal = a.createdAt;
+          bVal = b.createdAt;
+      }
+
+      return sortOrder === "asc" ? aVal - bVal : bVal - aVal;
+    });
+
+    // Paginate
+    const paginatedConversations = conversations.slice(offset, offset + limit);
+
+    // Optionally exclude messages
+    const result = args.includeMessages === false
+      ? paginatedConversations.map((c) => ({ ...c, messages: [] }))
+      : paginatedConversations;
+
+    return {
+      conversations: result,
+      total,
+      limit,
+      offset,
+      hasMore: offset + limit < total,
+    };
   },
 });
 
@@ -626,6 +803,11 @@ export const getHistory = query({
     limit: v.optional(v.number()),
     offset: v.optional(v.number()),
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
+    since: v.optional(v.number()), // Messages after timestamp
+    until: v.optional(v.number()), // Messages before timestamp
+    roles: v.optional(
+      v.array(v.union(v.literal("user"), v.literal("agent"), v.literal("system")))
+    ), // Filter by role
   },
   handler: async (ctx, args) => {
     const conversation = await ctx.db
@@ -644,11 +826,27 @@ export const getHistory = query({
     const sortOrder = args.sortOrder || "asc";
 
     // Get messages (already sorted in storage as append-only)
-    let { messages } = conversation;
+    let messages = [...conversation.messages];
+
+    // Apply date filters
+    if (args.since !== undefined) {
+      messages = messages.filter((m) => m.timestamp >= args.since!);
+    }
+    if (args.until !== undefined) {
+      messages = messages.filter((m) => m.timestamp <= args.until!);
+    }
+
+    // Apply role filter
+    if (args.roles && args.roles.length > 0) {
+      messages = messages.filter((m) => args.roles!.includes(m.role));
+    }
+
+    // Get total after filtering (for accurate pagination)
+    const filteredTotal = messages.length;
 
     // Reverse if descending (newest first)
     if (sortOrder === "desc") {
-      messages = [...messages].reverse();
+      messages = messages.reverse();
     }
 
     // Paginate
@@ -656,8 +854,8 @@ export const getHistory = query({
 
     return {
       messages: paginatedMessages,
-      total: conversation.messageCount,
-      hasMore: offset + limit < conversation.messageCount,
+      total: filteredTotal,
+      hasMore: offset + limit < filteredTotal,
       conversationId: conversation.conversationId,
     };
   },
@@ -673,10 +871,16 @@ export const search = query({
       v.union(v.literal("user-agent"), v.literal("agent-agent")),
     ),
     userId: v.optional(v.string()),
-    memorySpaceId: v.optional(v.string()), // NEW: Filter by memory space
+    memorySpaceId: v.optional(v.string()), // Filter by memory space
     dateStart: v.optional(v.number()),
     dateEnd: v.optional(v.number()),
     limit: v.optional(v.number()),
+    searchIn: v.optional(
+      v.union(v.literal("content"), v.literal("metadata"), v.literal("both"))
+    ), // Default: "content"
+    matchMode: v.optional(
+      v.union(v.literal("contains"), v.literal("exact"), v.literal("fuzzy"))
+    ), // Default: "contains"
   },
   handler: async (ctx, args) => {
     // Get conversations (use index if memorySpace provided)
@@ -694,6 +898,24 @@ export const search = query({
     }
 
     const searchQuery = args.query.toLowerCase();
+    const searchIn = args.searchIn || "content";
+    const matchMode = args.matchMode || "contains";
+
+    // Helper for matching based on mode
+    const matchText = (text: string, query: string): boolean => {
+      const lowerText = text.toLowerCase();
+      switch (matchMode) {
+        case "exact":
+          return lowerText === query;
+        case "fuzzy":
+          // Simple fuzzy: all words in query must appear in text
+          const words = query.split(/\s+/).filter((w) => w.length > 0);
+          return words.every((word) => lowerText.includes(word));
+        default: // contains
+          return lowerText.includes(query);
+      }
+    };
+
     const results: Array<{
       conversation: unknown;
       matchedMessages: unknown[];
@@ -716,22 +938,42 @@ export const search = query({
         continue;
       }
 
-      // Search in messages
-      const matchedMessages = conversation.messages.filter((msg: any) =>
-        msg.content.toLowerCase().includes(searchQuery),
-      );
+      let matchedMessages: any[] = [];
+      let metadataMatch = false;
 
-      if (matchedMessages.length > 0) {
+      // Search in message content
+      if (searchIn === "content" || searchIn === "both") {
+        matchedMessages = conversation.messages.filter((msg: any) =>
+          matchText(msg.content, searchQuery),
+        );
+      }
+
+      // Search in metadata
+      if (searchIn === "metadata" || searchIn === "both") {
+        const metadataStr = JSON.stringify(conversation.metadata || {});
+        metadataMatch = matchText(metadataStr, searchQuery);
+      }
+
+      if (matchedMessages.length > 0 || metadataMatch) {
         // Calculate score based on matches
-        const score = matchedMessages.length / conversation.messageCount;
+        let score = 0;
+        if (matchedMessages.length > 0 && conversation.messageCount > 0) {
+          score = matchedMessages.length / conversation.messageCount;
+        }
+        if (metadataMatch) {
+          score += 0.5; // Bonus for metadata match
+        }
 
-        // Extract highlights
+        // Extract highlights from matched messages
         const highlights = matchedMessages.slice(0, 3).map((msg: any) => {
           const { content } = msg;
           const index = content.toLowerCase().indexOf(searchQuery);
+          if (index === -1) {
+            // For fuzzy matches, return beginning of content
+            return content.substring(0, 60) + (content.length > 60 ? "..." : "");
+          }
           const start = Math.max(0, index - 30);
           const end = Math.min(content.length, index + searchQuery.length + 30);
-
           return content.substring(start, end);
         });
 

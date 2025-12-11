@@ -11,6 +11,12 @@ import type {
   MemorySpaceStats,
   RegisterMemorySpaceOptions,
   RegisterMemorySpaceParams,
+  ListMemorySpacesFilter,
+  ListMemorySpacesResult,
+  DeleteMemorySpaceOptions,
+  DeleteMemorySpaceResult,
+  GetMemorySpaceStatsOptions,
+  UpdateMemorySpaceOptions,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
 import { syncMemorySpaceToGraph } from "../graph";
@@ -25,6 +31,8 @@ import {
   validateSearchQuery,
   validateName,
   validateUpdateParams,
+  validateDeleteOptions,
+  validateTimeWindow,
 } from "./validators";
 import type { ResilienceLayer } from "../resilience";
 
@@ -169,21 +177,33 @@ export class MemorySpacesAPI {
   }
 
   /**
-   * List memory spaces
+   * List memory spaces with pagination and sorting
    *
    * @example
    * ```typescript
+   * // Basic listing
    * const teams = await cortex.memorySpaces.list({
    *   type: 'team',
    *   status: 'active',
    * });
+   *
+   * // With pagination and sorting
+   * const result = await cortex.memorySpaces.list({
+   *   type: 'personal',
+   *   limit: 20,
+   *   offset: 0,
+   *   sortBy: 'createdAt',
+   *   sortOrder: 'desc',
+   * });
+   * console.log(`Found ${result.total} spaces, showing ${result.spaces.length}`);
+   *
+   * // Filter by participant (Hive Mode)
+   * const cursorSpaces = await cortex.memorySpaces.list({
+   *   participant: 'cursor',
+   * });
    * ```
    */
-  async list(filter?: {
-    type?: "personal" | "team" | "project" | "custom";
-    status?: "active" | "archived";
-    limit?: number;
-  }): Promise<MemorySpace[]> {
+  async list(filter?: ListMemorySpacesFilter): Promise<ListMemorySpacesResult> {
     if (filter?.type) {
       validateMemorySpaceType(filter.type);
     }
@@ -193,18 +213,29 @@ export class MemorySpacesAPI {
     if (filter?.limit !== undefined) {
       validateLimit(filter.limit, 1000);
     }
+    if (filter?.participant !== undefined && filter.participant.trim().length === 0) {
+      throw new MemorySpaceValidationError(
+        "participant filter cannot be empty",
+        "INVALID_PARTICIPANT",
+        "participant",
+      );
+    }
 
     const result = await this.executeWithResilience(
       () =>
         this.client.query(api.memorySpaces.list, {
           type: filter?.type,
           status: filter?.status,
+          participant: filter?.participant,
           limit: filter?.limit,
+          offset: filter?.offset,
+          sortBy: filter?.sortBy,
+          sortOrder: filter?.sortOrder,
         }),
       "memorySpaces:list",
     );
 
-    return result as MemorySpace[];
+    return result as ListMemorySpacesResult;
   }
 
   /**
@@ -239,14 +270,20 @@ export class MemorySpacesAPI {
   }
 
   /**
-   * Update memory space
+   * Update memory space metadata
    *
    * @example
    * ```typescript
+   * // Update name and status
    * await cortex.memorySpaces.update('team-alpha', {
    *   name: 'Updated Name',
    *   status: 'archived',
    * });
+   *
+   * // Update with graph sync
+   * await cortex.memorySpaces.update('team-alpha', {
+   *   metadata: { lastReview: Date.now() },
+   * }, { syncToGraph: true });
    * ```
    */
   async update(
@@ -256,6 +293,7 @@ export class MemorySpacesAPI {
       metadata?: Record<string, unknown>;
       status?: "active" | "archived";
     },
+    options?: UpdateMemorySpaceOptions,
   ): Promise<MemorySpace> {
     validateMemorySpaceId(memorySpaceId);
     validateUpdateParams(updates);
@@ -267,8 +305,9 @@ export class MemorySpacesAPI {
       validateMemorySpaceStatus(updates.status);
     }
 
+    let result;
     try {
-      const result = await this.executeWithResilience(
+      result = await this.executeWithResilience(
         () =>
           this.client.mutation(api.memorySpaces.update, {
             memorySpaceId,
@@ -278,11 +317,20 @@ export class MemorySpacesAPI {
           }),
         "memorySpaces:update",
       );
-
-      return result as MemorySpace;
     } catch (error) {
       this.handleConvexError(error);
     }
+
+    // Sync to graph if requested
+    if (options?.syncToGraph && this.graphAdapter) {
+      try {
+        await syncMemorySpaceToGraph(result as MemorySpace, this.graphAdapter);
+      } catch (error) {
+        console.warn("Failed to sync memory space update to graph:", error);
+      }
+    }
+
+    return result as MemorySpace;
   }
 
   /**
@@ -412,56 +460,85 @@ export class MemorySpacesAPI {
   }
 
   /**
-   * Delete memory space
+   * Delete memory space and all associated data
    *
    * @example
    * ```typescript
-   * await cortex.memorySpaces.delete('team-alpha', { cascade: true });
+   * // GDPR deletion request
+   * const result = await cortex.memorySpaces.delete('user-123-personal', {
+   *   cascade: true,
+   *   reason: 'GDPR deletion request from user-123',
+   *   confirmId: 'user-123-personal', // Safety check
+   * });
+   *
+   * console.log(`Deleted ${result.cascade.memoriesDeleted} memories`);
+   * console.log(`Deleted ${result.cascade.conversationsDeleted} conversations`);
+   * console.log(`Deleted ${result.cascade.factsDeleted} facts`);
    * ```
    */
   async delete(
     memorySpaceId: string,
-    options?: { cascade?: boolean },
-  ): Promise<{
-    deleted: boolean;
-    memorySpaceId: string;
-    cascaded: boolean;
-  }> {
+    options: DeleteMemorySpaceOptions,
+  ): Promise<DeleteMemorySpaceResult> {
     validateMemorySpaceId(memorySpaceId);
+    validateDeleteOptions(memorySpaceId, options);
 
     const result = await this.executeWithResilience(
       () =>
         this.client.mutation(api.memorySpaces.deleteSpace, {
           memorySpaceId,
-          cascade: options?.cascade || false,
+          cascade: options.cascade,
+          reason: options.reason,
+          confirmId: options.confirmId,
         }),
       "memorySpaces:delete",
     );
 
-    return result as {
-      deleted: boolean;
-      memorySpaceId: string;
-      cascaded: boolean;
-    };
+    return result as DeleteMemorySpaceResult;
   }
 
   /**
-   * Get memory space statistics
+   * Get memory space statistics with optional time window and participant breakdown
    *
    * @example
    * ```typescript
+   * // Basic stats
    * const stats = await cortex.memorySpaces.getStats('team-alpha');
-   * console.log(`${stats.conversationCount} conversations, ${stats.memoryCount} memories`);
+   * console.log(`${stats.totalConversations} conversations, ${stats.totalMemories} memories`);
+   *
+   * // With time window
+   * const weekStats = await cortex.memorySpaces.getStats('team-alpha', {
+   *   timeWindow: '7d',
+   * });
+   * console.log(`Activity this week: ${weekStats.memoriesThisWindow} memories`);
+   *
+   * // With participant breakdown (Hive Mode)
+   * const hiveStats = await cortex.memorySpaces.getStats('team-engineering-workspace', {
+   *   timeWindow: '7d',
+   *   includeParticipants: true,
+   * });
+   * hiveStats.participants?.forEach((p) => {
+   *   console.log(`${p.participantId}: ${p.memoriesStored} memories`);
+   * });
    * ```
    */
-  async getStats(memorySpaceId: string): Promise<MemorySpaceStats> {
+  async getStats(
+    memorySpaceId: string,
+    options?: GetMemorySpaceStatsOptions,
+  ): Promise<MemorySpaceStats> {
     validateMemorySpaceId(memorySpaceId);
+
+    if (options?.timeWindow) {
+      validateTimeWindow(options.timeWindow);
+    }
 
     try {
       const result = await this.executeWithResilience(
         () =>
           this.client.query(api.memorySpaces.getStats, {
             memorySpaceId,
+            timeWindow: options?.timeWindow,
+            includeParticipants: options?.includeParticipants,
           }),
         "memorySpaces:getStats",
       );

@@ -316,6 +316,138 @@ export function validateValueSize(value: unknown): void {
   }
 }
 
+/**
+ * Validates offset is non-negative integer
+ */
+export function validateOffset(offset: unknown): void {
+  if (offset === null || offset === undefined) {
+    return; // Optional field
+  }
+
+  if (typeof offset !== "number") {
+    throw new MutableValidationError(
+      `offset must be a number, got ${typeof offset}`,
+      "INVALID_OFFSET_TYPE",
+      "offset",
+    );
+  }
+
+  if (!Number.isInteger(offset)) {
+    throw new MutableValidationError(
+      `offset must be an integer, got ${offset}`,
+      "INVALID_OFFSET_TYPE",
+      "offset",
+    );
+  }
+
+  if (offset < 0) {
+    throw new MutableValidationError(
+      `offset must be non-negative, got ${offset}`,
+      "INVALID_OFFSET_RANGE",
+      "offset",
+    );
+  }
+}
+
+/**
+ * Validates timestamp is a valid Unix timestamp (positive number)
+ */
+export function validateTimestamp(
+  timestamp: unknown,
+  fieldName: string,
+): void {
+  if (timestamp === null || timestamp === undefined) {
+    return; // Optional field
+  }
+
+  if (typeof timestamp !== "number") {
+    throw new MutableValidationError(
+      `${fieldName} must be a number, got ${typeof timestamp}`,
+      "INVALID_TIMESTAMP_TYPE",
+      fieldName,
+    );
+  }
+
+  if (!Number.isFinite(timestamp) || timestamp < 0) {
+    throw new MutableValidationError(
+      `${fieldName} must be a valid Unix timestamp (positive number), got ${timestamp}`,
+      "INVALID_TIMESTAMP_VALUE",
+      fieldName,
+    );
+  }
+}
+
+const VALID_SORT_BY = ["key", "updatedAt", "accessCount"];
+
+/**
+ * Validates sortBy is a valid sort field
+ */
+export function validateSortBy(sortBy: unknown): void {
+  if (sortBy === null || sortBy === undefined) {
+    return; // Optional field
+  }
+
+  if (typeof sortBy !== "string") {
+    throw new MutableValidationError(
+      `sortBy must be a string, got ${typeof sortBy}`,
+      "INVALID_SORT_BY_TYPE",
+      "sortBy",
+    );
+  }
+
+  if (!VALID_SORT_BY.includes(sortBy)) {
+    throw new MutableValidationError(
+      `sortBy must be one of: ${VALID_SORT_BY.join(", ")}. Got "${sortBy}"`,
+      "INVALID_SORT_BY_VALUE",
+      "sortBy",
+    );
+  }
+}
+
+const VALID_SORT_ORDER = ["asc", "desc"];
+
+/**
+ * Validates sortOrder is a valid sort direction
+ */
+export function validateSortOrder(sortOrder: unknown): void {
+  if (sortOrder === null || sortOrder === undefined) {
+    return; // Optional field
+  }
+
+  if (typeof sortOrder !== "string") {
+    throw new MutableValidationError(
+      `sortOrder must be a string, got ${typeof sortOrder}`,
+      "INVALID_SORT_ORDER_TYPE",
+      "sortOrder",
+    );
+  }
+
+  if (!VALID_SORT_ORDER.includes(sortOrder)) {
+    throw new MutableValidationError(
+      `sortOrder must be one of: ${VALID_SORT_ORDER.join(", ")}. Got "${sortOrder}"`,
+      "INVALID_SORT_ORDER_VALUE",
+      "sortOrder",
+    );
+  }
+}
+
+/**
+ * Validates dryRun is a boolean
+ */
+export function validateDryRun(dryRun: unknown): void {
+  if (dryRun === null || dryRun === undefined) {
+    return; // Optional field
+  }
+
+  if (typeof dryRun !== "boolean") {
+    throw new MutableValidationError(
+      `dryRun must be a boolean, got ${typeof dryRun}`,
+      "INVALID_DRY_RUN_TYPE",
+      "dryRun",
+    );
+  }
+}
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Type Validators
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -386,6 +518,26 @@ export function validateListFilter(filter: unknown): void {
   if (filterObj.limit !== undefined) {
     validateLimit(filterObj.limit);
   }
+
+  if (filterObj.offset !== undefined) {
+    validateOffset(filterObj.offset);
+  }
+
+  if (filterObj.updatedAfter !== undefined) {
+    validateTimestamp(filterObj.updatedAfter, "filter.updatedAfter");
+  }
+
+  if (filterObj.updatedBefore !== undefined) {
+    validateTimestamp(filterObj.updatedBefore, "filter.updatedBefore");
+  }
+
+  if (filterObj.sortBy !== undefined) {
+    validateSortBy(filterObj.sortBy);
+  }
+
+  if (filterObj.sortOrder !== undefined) {
+    validateSortOrder(filterObj.sortOrder);
+  }
 }
 
 /**
@@ -429,6 +581,14 @@ export function validateCountFilter(filter: unknown): void {
   if (filterObj.userId !== undefined) {
     validateUserId(filterObj.userId);
   }
+
+  if (filterObj.updatedAfter !== undefined) {
+    validateTimestamp(filterObj.updatedAfter, "filter.updatedAfter");
+  }
+
+  if (filterObj.updatedBefore !== undefined) {
+    validateTimestamp(filterObj.updatedBefore, "filter.updatedBefore");
+  }
 }
 
 /**
@@ -471,6 +631,40 @@ export function validatePurgeFilter(filter: unknown): void {
 
   if (filterObj.userId !== undefined) {
     validateUserId(filterObj.userId);
+  }
+
+  if (filterObj.updatedBefore !== undefined) {
+    validateTimestamp(filterObj.updatedBefore, "filter.updatedBefore");
+  }
+
+  if (filterObj.lastAccessedBefore !== undefined) {
+    validateTimestamp(
+      filterObj.lastAccessedBefore,
+      "filter.lastAccessedBefore",
+    );
+  }
+}
+
+/**
+ * Validates purgeNamespace options object structure
+ */
+export function validatePurgeNamespaceOptions(options: unknown): void {
+  if (options === null || options === undefined) {
+    return; // Optional parameter
+  }
+
+  if (typeof options !== "object" || Array.isArray(options)) {
+    throw new MutableValidationError(
+      `Options must be an object, got ${typeof options}`,
+      "INVALID_OPTIONS",
+      "options",
+    );
+  }
+
+  const optionsObj = options as Record<string, unknown>;
+
+  if (optionsObj.dryRun !== undefined) {
+    validateDryRun(optionsObj.dryRun);
   }
 }
 

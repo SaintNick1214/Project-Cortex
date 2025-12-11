@@ -102,7 +102,8 @@ interface CreateContextOptions {
 ```typescript
 interface Context {
   // Identity
-  id: string;
+  _id: string; // Internal Convex ID
+  contextId: string; // User-facing context ID (e.g., "ctx-1234567890-abc123")
   parentId?: string;
   rootId: string; // Auto-computed (self if root)
 
@@ -119,22 +120,30 @@ interface Context {
   childIds: string[]; // Direct children
   participants: string[]; // All agents in this context
 
+  // Cross-space access grants (Collaboration Mode)
+  grantedAccess?: Array<{
+    memorySpaceId: string;
+    scope: string;
+    grantedAt: number;
+  }>;
+
   // Conversation link
   conversationRef?: {
     conversationId: string;
-    messageIds: string[];
+    messageIds?: string[];
   };
 
   // Data
-  data: Record<string, any>;
+  data?: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
 
   // Status
   status: "active" | "completed" | "cancelled" | "blocked";
 
-  // Timestamps
-  createdAt: Date;
-  updatedAt: Date;
-  completedAt?: Date;
+  // Timestamps (epoch milliseconds)
+  createdAt: number;
+  updatedAt: number;
+  completedAt?: number;
 
   // Versioning (automatic)
   version: number;
@@ -144,9 +153,9 @@ interface Context {
 interface ContextVersion {
   version: number;
   status: string;
-  data: any;
-  timestamp: Date;
-  updatedBy: string; // Agent that made the change
+  data?: Record<string, unknown>;
+  timestamp: number; // epoch milliseconds
+  updatedBy?: string; // Agent/memory space that made the change
 }
 ```
 
@@ -279,16 +288,20 @@ interface GetOptions {
 Context | null;
 
 // With includeChain: true
-interface ContextWithChain {
+interface ContextChain {
   current: Context; // This context
   parent?: Context; // Parent context
   root: Context; // Root of the chain
   children: Context[]; // Direct children
   siblings: Context[]; // Other children of same parent
   ancestors: Context[]; // All ancestors up to root
+  descendants: Context[]; // All recursive descendants
   depth: number; // Current depth
+  totalNodes: number; // Total nodes in the chain
+}
 
-  // If includeConversation: true
+// With includeConversation: true (extends ContextChain)
+interface ContextWithConversation extends ContextChain {
   conversation?: Conversation; // ACID conversation
   triggerMessages?: Message[]; // Messages that started this context
 }
@@ -455,10 +468,10 @@ interface DeleteContextOptions {
 
 ```typescript
 interface DeleteResult {
-  deleted: number; // 1 + descendants if cascade
+  deleted: boolean; // true if deletion succeeded
   contextId: string;
-  descendantsDeleted?: number;
-  affectedAgents?: string[];
+  descendantsDeleted: number; // Number of descendants deleted (0 if no cascade)
+  orphanedChildren?: string[]; // IDs of children that were orphaned (if orphanChildren: true)
 }
 ```
 
@@ -492,67 +505,33 @@ await cortex.contexts.delete("ctx_parent", {
 
 ### search()
 
-Search contexts with filters.
+Search contexts with filters. This method is an alias for `list()` with filter support.
 
 **Signature:**
 
 ```typescript
 cortex.contexts.search(
-  filters?: ContextFilters,
-  options?: SearchOptions
+  filter?: ListContextsFilter
 ): Promise<Context[]>
 ```
 
 **Parameters:**
 
 ```typescript
-interface ContextFilters {
-  // Identity
+interface ListContextsFilter {
   memorySpaceId?: string; // Filter by memory space
-  userId?: string;
-
-  // Hierarchy
-  parentId?: string;
-  rootId?: string;
-  depth?: number | RangeQuery;
-
-  // Status
+  userId?: string; // Filter by user
   status?: "active" | "completed" | "cancelled" | "blocked";
-
-  // Purpose (text search)
-  purposeContains?: string;
-
-  // Data
-  data?: Record<string, any>;
-
-  // Conversation link
-  "conversationRef.conversationId"?: string;
-
-  // Dates
-  createdBefore?: Date;
-  createdAfter?: Date;
-  updatedBefore?: Date;
-  updatedAfter?: Date;
-  completedBefore?: Date;
-  completedAfter?: Date;
-
-  // Version
-  version?: number | RangeQuery;
-}
-
-interface SearchOptions {
-  limit?: number; // Default: 50
-  offset?: number; // Default: 0
-  sortBy?: "createdAt" | "updatedAt" | "completedAt" | "importance" | "depth";
-  sortOrder?: "asc" | "desc";
-  includeChain?: boolean; // Return ContextWithChain instead of Context
+  parentId?: string; // Filter by parent context
+  rootId?: string; // Filter by root context
+  depth?: number; // Filter by hierarchy depth
+  limit?: number; // Default: 100
 }
 ```
 
 **Returns:**
 
 - `Context[]` - Array of matching contexts
-- `ContextWithChain[]` - If `includeChain: true`
 
 **Example:**
 
@@ -566,26 +545,11 @@ const active = await cortex.contexts.search({
 // Find contexts for a user
 const userContexts = await cortex.contexts.search({
   userId: "user-123",
-  sortBy: "createdAt",
-  sortOrder: "desc",
-});
-
-// Find urgent contexts
-const urgent = await cortex.contexts.search({
-  data: { importance: { $gte: 90 } },
-  status: { $in: ["active", "blocked"] },
 });
 
 // Find all root contexts
 const roots = await cortex.contexts.search({
   depth: 0,
-  sortBy: "createdAt",
-  sortOrder: "desc",
-});
-
-// Find contexts from a specific conversation
-const convContexts = await cortex.contexts.search({
-  "conversationRef.conversationId": "conv-456",
 });
 ```
 
@@ -601,48 +565,48 @@ const convContexts = await cortex.contexts.search({
 
 ### list()
 
-List contexts with pagination.
+List contexts with filters.
 
 **Signature:**
 
 ```typescript
 cortex.contexts.list(
-  options?: ListOptions
-): Promise<ListResult>
+  filter?: ListContextsFilter
+): Promise<Context[]>
 ```
 
 **Parameters:**
 
 ```typescript
-interface ListOptions extends ContextFilters {
-  limit?: number; // Default: 50
-  offset?: number; // Default: 0
-  sortBy?: "createdAt" | "updatedAt" | "completedAt" | "depth";
-  sortOrder?: "asc" | "desc";
-}
-
-interface ListResult {
-  contexts: Context[];
-  total: number;
-  limit: number;
-  offset: number;
-  hasMore: boolean;
+interface ListContextsFilter {
+  memorySpaceId?: string; // Filter by memory space
+  userId?: string; // Filter by user
+  status?: "active" | "completed" | "cancelled" | "blocked";
+  parentId?: string; // Filter by parent context
+  rootId?: string; // Filter by root context
+  depth?: number; // Filter by hierarchy depth
+  limit?: number; // Default: 100
 }
 ```
+
+**Returns:**
+
+- `Context[]` - Array of matching contexts
 
 **Example:**
 
 ```typescript
-// List all contexts (paginated)
-const page1 = await cortex.contexts.list({
+// List all contexts
+const all = await cortex.contexts.list();
+
+// List contexts for a memory space
+const spaceContexts = await cortex.contexts.list({
+  memorySpaceId: "finance-agent-space",
   limit: 50,
-  offset: 0,
-  sortBy: "createdAt",
-  sortOrder: "desc",
 });
 
-// List active workflows
-const active = await cortex.contexts.list({
+// List active root workflows
+const activeRoots = await cortex.contexts.list({
   status: "active",
   depth: 0, // Root contexts only
 });
@@ -650,7 +614,7 @@ const active = await cortex.contexts.list({
 
 **Errors:**
 
-- `CortexError('INVALID_PAGINATION')` - Invalid limit/offset
+- `CortexError('INVALID_FILTERS')` - Invalid filter values
 
 ---
 
@@ -852,15 +816,15 @@ cortex.contexts.getChain(
 
 ```typescript
 interface ContextChain {
-  root: Context;
-  current: Context;
-  parent?: Context;
-  ancestors: Context[]; // From root to parent
-  children: Context[];
-  siblings: Context[];
-  descendants: Context[]; // All recursive children
-  depth: number;
-  totalNodes: number;
+  current: Context; // This context
+  parent?: Context; // Parent context (if not root)
+  root: Context; // Root of the chain
+  children: Context[]; // Direct children
+  siblings: Context[]; // Other children of same parent
+  ancestors: Context[]; // All ancestors from root to parent
+  descendants: Context[]; // All recursive descendants
+  depth: number; // Current depth in hierarchy
+  totalNodes: number; // Total nodes in the chain
 }
 ```
 
@@ -1005,6 +969,76 @@ console.log("Participants:", ctx.participants);
 
 ---
 
+### grantAccess()
+
+Grant cross-space access to a context (Collaboration Mode). Allows agents from other memory spaces to access this context with specified permissions.
+
+**Signature:**
+
+```typescript
+cortex.contexts.grantAccess(
+  contextId: string,
+  targetMemorySpaceId: string,
+  scope: string
+): Promise<Context>
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `contextId` | `string` | The context to grant access to |
+| `targetMemorySpaceId` | `string` | Memory space to grant access to |
+| `scope` | `string` | Access scope (e.g., 'read-only', 'context-only', 'full') |
+
+**Returns:**
+
+- `Context` - Updated context with new `grantedAccess` entry
+
+**Example:**
+
+```typescript
+// Grant read-only access to partner agent's memory space
+await cortex.contexts.grantAccess(
+  "ctx_abc123",
+  "partner-agent-space",
+  "read-only",
+);
+
+// Grant full context access for collaboration
+await cortex.contexts.grantAccess(
+  "ctx_abc123",
+  "collaborator-space",
+  "context-only",
+);
+
+// Check granted access
+const ctx = await cortex.contexts.get("ctx_abc123");
+console.log("Granted access:", ctx.grantedAccess);
+// [{ memorySpaceId: 'partner-agent-space', scope: 'read-only', grantedAt: 1699876543210 }]
+```
+
+**Access Scopes:**
+
+| Scope | Description |
+|-------|-------------|
+| `read-only` | Can read context data but not modify |
+| `context-only` | Can read/write context data but not child contexts |
+| `full` | Full access including creating child contexts |
+
+**Use Cases:**
+
+- Multi-team workflows where different agents need varying access levels
+- Partner integrations with limited permissions
+- Temporary access grants for specific tasks
+
+**Errors:**
+
+- `CortexError('CONTEXT_NOT_FOUND')` - Context doesn't exist
+- `CortexError('INVALID_SCOPE')` - Invalid scope value
+
+---
+
 ### removeParticipant()
 
 Remove an agent from a context's participant list.
@@ -1061,6 +1095,18 @@ cortex.contexts.getVersion(
 ): Promise<ContextVersion | null>
 ```
 
+**Returns:**
+
+```typescript
+interface ContextVersion {
+  version: number;
+  status: string;
+  data?: Record<string, unknown>;
+  timestamp: number; // epoch milliseconds
+  updatedBy?: string;
+}
+```
+
 **Example:**
 
 ```typescript
@@ -1112,6 +1158,25 @@ cortex.contexts.getAtTimestamp(
 ): Promise<ContextVersion | null>
 ```
 
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `contextId` | `string` | The context ID |
+| `timestamp` | `Date` | The point in time to query |
+
+**Returns:**
+
+```typescript
+interface ContextVersion {
+  version: number;
+  status: string;
+  data?: Record<string, unknown>;
+  timestamp: number; // epoch milliseconds
+  updatedBy?: string;
+}
+```
+
 **Example:**
 
 ```typescript
@@ -1121,7 +1186,10 @@ const historical = await cortex.contexts.getAtTimestamp(
   new Date("2025-10-20T10:00:00Z"),
 );
 
-console.log(`Status on Oct 20: ${historical.status}`);
+if (historical) {
+  console.log(`Status on Oct 20: ${historical.status}`);
+  console.log(`Version: ${historical.version}`);
+}
 ```
 
 ---
