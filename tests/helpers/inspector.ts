@@ -66,7 +66,8 @@ export class StorageInspector {
    * Print all conversations in the table
    */
   async inspectAllConversations(): Promise<void> {
-    const conversations = await this.client.query(api.conversations.list, {});
+    const result = await this.client.query(api.conversations.list, {});
+    const conversations = result.conversations;
 
     console.log(`\n${"=".repeat(80)}`);
     console.log(`📊 ALL CONVERSATIONS (${conversations.length})`);
@@ -75,7 +76,7 @@ export class StorageInspector {
     if (conversations.length === 0) {
       console.log("(empty)");
     } else {
-      conversations.forEach((conv, idx) => {
+      conversations.forEach((conv: { conversationId: string; type: string; messageCount: number; participants: unknown; createdAt: number }, idx: number) => {
         console.log(`\n[${idx + 1}] ${conv.conversationId}`);
         console.log(`    Type: ${conv.type}`);
         console.log(`    Messages: ${conv.messageCount}`);

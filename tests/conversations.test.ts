@@ -465,64 +465,64 @@ describe("Conversations API (Layer 1a)", () => {
     });
 
     it("lists all conversations (no filter)", async () => {
-      const conversations = await cortex.conversations.list();
+      const result = await cortex.conversations.list();
 
-      expect(conversations.length).toBeGreaterThan(0);
+      expect(result.conversations.length).toBeGreaterThan(0);
     });
 
     it("filters by userId", async () => {
-      const conversations = await cortex.conversations.list({
+      const result = await cortex.conversations.list({
         userId: listUser,
       });
 
-      expect(conversations.length).toBeGreaterThanOrEqual(2);
-      conversations.forEach((conv) => {
+      expect(result.conversations.length).toBeGreaterThanOrEqual(2);
+      result.conversations.forEach((conv) => {
         expect(conv.participants.userId).toBe(listUser);
       });
     });
 
     it("filters by memorySpaceId", async () => {
-      const conversations = await cortex.conversations.list({
+      const result = await cortex.conversations.list({
         memorySpaceId: listSpace1,
       });
 
       // Should find both user-agent conversations
-      expect(conversations.length).toBe(2);
-      conversations.forEach((conv) => {
+      expect(result.conversations.length).toBe(2);
+      result.conversations.forEach((conv) => {
         expect(conv.memorySpaceId).toBe(listSpace1);
       });
     });
 
     it("filters by type", async () => {
-      const conversations = await cortex.conversations.list({
+      const result = await cortex.conversations.list({
         type: "user-agent",
       });
 
-      expect(conversations.length).toBeGreaterThan(0);
-      conversations.forEach((conv) => {
+      expect(result.conversations.length).toBeGreaterThan(0);
+      result.conversations.forEach((conv) => {
         expect(conv.type).toBe("user-agent");
       });
     });
 
     it("combines filters (userId + memorySpaceId)", async () => {
-      const conversations = await cortex.conversations.list({
+      const result = await cortex.conversations.list({
         userId: listUser,
         memorySpaceId: listSpace1,
       });
 
-      expect(conversations.length).toBeGreaterThanOrEqual(1);
-      conversations.forEach((conv) => {
+      expect(result.conversations.length).toBeGreaterThanOrEqual(1);
+      result.conversations.forEach((conv) => {
         expect(conv.participants.userId).toBe(listUser);
         expect(conv.memorySpaceId).toBe(listSpace1);
       });
     });
 
     it("respects limit parameter", async () => {
-      const conversations = await cortex.conversations.list({
+      const result = await cortex.conversations.list({
         limit: 2,
       });
 
-      expect(conversations.length).toBeLessThanOrEqual(2);
+      expect(result.conversations.length).toBeLessThanOrEqual(2);
     });
   });
 
@@ -1140,11 +1140,11 @@ describe("Conversations API (Layer 1a)", () => {
 
       expect(retrieved!.messageCount).toBe(0);
 
-      let list = await cortex.conversations.list({
+      let listResult = await cortex.conversations.list({
         userId: propUser,
       });
 
-      expect(list[0].messageCount).toBe(0);
+      expect(listResult.conversations[0].messageCount).toBe(0);
 
       // Add message
       await cortex.conversations.addMessage({
@@ -1161,10 +1161,10 @@ describe("Conversations API (Layer 1a)", () => {
       expect(retrieved!.messages[0].content).toContain(propKeyword);
 
       // Verify change in list()
-      list = await cortex.conversations.list({
+      listResult = await cortex.conversations.list({
         userId: propUser,
       });
-      expect(list[0].messageCount).toBe(1);
+      expect(listResult.conversations[0].messageCount).toBe(1);
 
       // Verify in search()
       const searchResults = await cortex.conversations.search({
@@ -1205,11 +1205,11 @@ describe("Conversations API (Layer 1a)", () => {
 
       expect(finalHistory.messages).toHaveLength(5);
 
-      const finalList = await cortex.conversations.list({
+      const finalListResult = await cortex.conversations.list({
         userId: propUser,
       });
 
-      expect(finalList[0].messageCount).toBe(5);
+      expect(finalListResult.conversations[0].messageCount).toBe(5);
     });
 
     it("deletion propagates to all read operations", async () => {
@@ -1242,11 +1242,11 @@ describe("Conversations API (Layer 1a)", () => {
 
       expect(get).not.toBeNull();
 
-      let list = await cortex.conversations.list({
+      let listResult = await cortex.conversations.list({
         userId: deleteUser,
       });
 
-      expect(list.some((c) => c.conversationId === conv.conversationId)).toBe(
+      expect(listResult.conversations.some((c) => c.conversationId === conv.conversationId)).toBe(
         true,
       );
 
@@ -1263,8 +1263,8 @@ describe("Conversations API (Layer 1a)", () => {
       get = await cortex.conversations.get(conv.conversationId);
       expect(get).toBeNull();
 
-      list = await cortex.conversations.list({ userId: deleteUser });
-      expect(list.some((c) => c.conversationId === conv.conversationId)).toBe(
+      listResult = await cortex.conversations.list({ userId: deleteUser });
+      expect(listResult.conversations.some((c) => c.conversationId === conv.conversationId)).toBe(
         false,
       );
 
@@ -1492,7 +1492,7 @@ describe("Conversations API (Layer 1a)", () => {
           userId: bulkUser,
         });
 
-        expect(remaining.length).toBe(0);
+        expect(remaining.conversations.length).toBe(0);
       }, 60000); // Extended timeout for bulk delete with resilience layer
 
       it("returns count of messages deleted", async () => {
@@ -2531,10 +2531,10 @@ describe("Conversations API (Layer 1a)", () => {
       });
 
       expect(
-        listResults.some((c) => c.conversationId === conv.conversationId),
+        listResults.conversations.some((c) => c.conversationId === conv.conversationId),
       ).toBe(true);
       expect(
-        listResults.find((c) => c.conversationId === conv.conversationId)
+        listResults.conversations.find((c) => c.conversationId === conv.conversationId)
           ?.messageCount,
       ).toBe(1);
 
@@ -2583,7 +2583,7 @@ describe("Conversations API (Layer 1a)", () => {
       });
 
       expect(
-        updatedList.find((c) => c.conversationId === conv.conversationId)
+        updatedList.conversations.find((c) => c.conversationId === conv.conversationId)
           ?.messageCount,
       ).toBe(2);
     });

@@ -45,8 +45,8 @@ export async function countUsers(
   cortex: Cortex,
   ctx: TestRunContext,
 ): Promise<number> {
-  const users = await cortex.users.list({ limit: 1000 });
-  return filterByPrefix(users, ctx.runId, ["id"]).length;
+  const result = await cortex.users.list({ limit: 1000 });
+  return filterByPrefix(result.users, ctx.runId, ["id"]).length;
 }
 
 /**
@@ -60,8 +60,8 @@ export async function listUsers<T extends { id: string }>(
   cortex: Cortex,
   ctx: TestRunContext,
 ): Promise<T[]> {
-  const users = await cortex.users.list({ limit: 1000 });
-  return filterByPrefix(users, ctx.runId, ["id"]) as unknown as T[];
+  const result = await cortex.users.list({ limit: 1000 });
+  return filterByPrefix(result.users, ctx.runId, ["id"]) as unknown as T[];
 }
 
 /**
@@ -133,8 +133,8 @@ export async function countMemorySpaces(
   cortex: Cortex,
   ctx: TestRunContext,
 ): Promise<number> {
-  const spaces = await cortex.memorySpaces.list();
-  return filterByPrefix(spaces, ctx.runId, ["memorySpaceId"]).length;
+  const result = await cortex.memorySpaces.list();
+  return filterByPrefix(result.spaces, ctx.runId, ["memorySpaceId"]).length;
 }
 
 /**
@@ -148,8 +148,8 @@ export async function listMemorySpaces<T extends { memorySpaceId: string }>(
   cortex: Cortex,
   ctx: TestRunContext,
 ): Promise<T[]> {
-  const spaces = await cortex.memorySpaces.list();
-  return filterByPrefix(spaces, ctx.runId, ["memorySpaceId"]) as unknown as T[];
+  const result = await cortex.memorySpaces.list();
+  return filterByPrefix(result.spaces, ctx.runId, ["memorySpaceId"]) as unknown as T[];
 }
 
 // ============================================================================
@@ -170,8 +170,8 @@ export async function countConversations(
   memorySpaceId?: string,
 ): Promise<number> {
   const options = memorySpaceId ? { memorySpaceId } : {};
-  const conversations = await cortex.conversations.list(options);
-  return filterByPrefix(conversations, ctx.runId, [
+  const result = await cortex.conversations.list(options);
+  return filterByPrefix(result.conversations, ctx.runId, [
     "memorySpaceId",
     "conversationId",
   ]).length;
@@ -189,8 +189,8 @@ export async function listConversations<
   T extends { memorySpaceId: string; conversationId: string },
 >(cortex: Cortex, ctx: TestRunContext, memorySpaceId?: string): Promise<T[]> {
   const options = memorySpaceId ? { memorySpaceId } : {};
-  const conversations = await cortex.conversations.list(options);
-  return filterByPrefix(conversations, ctx.runId, [
+  const result = await cortex.conversations.list(options);
+  return filterByPrefix(result.conversations, ctx.runId, [
     "memorySpaceId",
     "conversationId",
   ]) as unknown as T[];

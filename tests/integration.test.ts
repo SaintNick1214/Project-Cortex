@@ -643,7 +643,7 @@ describe("Complex Integration Tests", () => {
       });
       const userContexts = await cortex.contexts.list({ userId: TARGET_USER });
 
-      expect(userConvs.length).toBeGreaterThanOrEqual(1);
+      expect(userConvs.conversations.length).toBeGreaterThanOrEqual(1);
       expect(userMemories.length).toBeGreaterThanOrEqual(1);
       expect(userContexts.length).toBeGreaterThanOrEqual(1);
 

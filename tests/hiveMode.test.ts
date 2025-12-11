@@ -83,7 +83,7 @@ describe("Hive Mode", () => {
       });
 
       expect(
-        allConvs.some((c) => c.conversationId === conv.conversationId),
+        allConvs.conversations.some((c: { conversationId: string }) => c.conversationId === conv.conversationId),
       ).toBe(true);
     });
   });

@@ -288,9 +288,9 @@ async function testConcurrencySaturation() {
   // Cleanup
   try {
     const spaces = await cortex.memorySpaces.list();
-    const testSpace = spaces.find((s) => s.memorySpaceId === testSpaceId);
+    const testSpace = spaces.spaces.find((s: { memorySpaceId: string }) => s.memorySpaceId === testSpaceId);
     if (testSpace) {
-      await cortex.memorySpaces.delete(testSpaceId);
+      await cortex.memorySpaces.delete(testSpaceId, { cascade: true, reason: "test cleanup" });
     }
   } catch {}
 
@@ -635,7 +635,7 @@ async function testPriorityQueueUnderLoad() {
 
   // Cleanup
   try {
-    await cortex.memorySpaces.delete(testSpaceId);
+    await cortex.memorySpaces.delete(testSpaceId, { cascade: true, reason: "test cleanup" });
   } catch {}
 
   cortex.close();

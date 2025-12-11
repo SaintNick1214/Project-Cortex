@@ -48,13 +48,13 @@ describe("Memory Spaces API - Comprehensive Filter Coverage", () => {
       const results = await cortex.memorySpaces.list({ type: spaceType });
 
       // Validate
-      expect(results.length).toBeGreaterThanOrEqual(1);
-      results.forEach((space: any) => {
+      expect(results.spaces.length).toBeGreaterThanOrEqual(1);
+      results.spaces.forEach((space: any) => {
         expect(space.type).toBe(spaceType);
       });
 
       // Verify target space is in results
-      const spaceIds = results.map((s: any) => s.memorySpaceId);
+      const spaceIds = results.spaces.map((s: any) => s.memorySpaceId);
       expect(spaceIds).toContain(spaceId);
     });
   });
@@ -78,8 +78,8 @@ describe("Memory Spaces API - Comprehensive Filter Coverage", () => {
       const results = await cortex.memorySpaces.list({ status });
 
       // Validate
-      expect(results.length).toBeGreaterThanOrEqual(1);
-      results.forEach((space: any) => {
+      expect(results.spaces.length).toBeGreaterThanOrEqual(1);
+      results.spaces.forEach((space: any) => {
         expect(space.status).toBe(status);
       });
     });
@@ -99,7 +99,7 @@ describe("Memory Spaces API - Comprehensive Filter Coverage", () => {
       // Query for team type - may not be empty in test environment
       // So we just verify no error is thrown
       const results = await cortex.memorySpaces.list({ type: "team" });
-      expect(Array.isArray(results)).toBe(true);
+      expect(Array.isArray(results.spaces)).toBe(true);
     });
 
     it("should combine type and status filters", async () => {
@@ -135,12 +135,12 @@ describe("Memory Spaces API - Comprehensive Filter Coverage", () => {
       });
 
       // Validate: Should only find active team space
-      expect(results.length).toBeGreaterThanOrEqual(1);
-      results.forEach((space: any) => {
+      expect(results.spaces.length).toBeGreaterThanOrEqual(1);
+      results.spaces.forEach((space: any) => {
         expect(space.type).toBe("team");
         expect(space.status).toBe("active");
       });
-      expect(results.some((s: any) => s.memorySpaceId === activeTeamId)).toBe(
+      expect(results.spaces.some((s: any) => s.memorySpaceId === activeTeamId)).toBe(
         true,
       );
     });
@@ -161,10 +161,10 @@ describe("Memory Spaces API - Comprehensive Filter Coverage", () => {
       // Verify each type filter returns correct spaces
       for (const spaceType of ALL_SPACE_TYPES) {
         const results = await cortex.memorySpaces.list({ type: spaceType });
-        expect(results.length).toBeGreaterThanOrEqual(1);
-        expect(results.every((s: any) => s.type === spaceType)).toBe(true);
+        expect(results.spaces.length).toBeGreaterThanOrEqual(1);
+        expect(results.spaces.every((s: any) => s.type === spaceType)).toBe(true);
         expect(
-          results.some(
+          results.spaces.some(
             (s: any) =>
               s.memorySpaceId === spacesByType[spaceType].memorySpaceId,
           ),
@@ -185,7 +185,7 @@ describe("Memory Spaces API - Comprehensive Filter Coverage", () => {
       const activeResults = await cortex.memorySpaces.list({
         status: "active",
       });
-      expect(activeResults.some((s: any) => s.memorySpaceId === spaceId)).toBe(
+      expect(activeResults.spaces.some((s: any) => s.memorySpaceId === spaceId)).toBe(
         true,
       );
 
@@ -197,7 +197,7 @@ describe("Memory Spaces API - Comprehensive Filter Coverage", () => {
         status: "archived",
       });
       expect(
-        archivedResults.some((s: any) => s.memorySpaceId === spaceId),
+        archivedResults.spaces.some((s: any) => s.memorySpaceId === spaceId),
       ).toBe(true);
 
       // Verify it's NOT in active list anymore
@@ -205,7 +205,7 @@ describe("Memory Spaces API - Comprehensive Filter Coverage", () => {
         status: "active",
       });
       expect(
-        activeResultsAfter.some((s: any) => s.memorySpaceId === spaceId),
+        activeResultsAfter.spaces.some((s: any) => s.memorySpaceId === spaceId),
       ).toBe(false);
     });
 
@@ -226,13 +226,13 @@ describe("Memory Spaces API - Comprehensive Filter Coverage", () => {
       const results = await cortex.memorySpaces.list({ type: "custom" });
 
       // Should return at least our 3 custom spaces
-      expect(results.length).toBeGreaterThanOrEqual(3);
-      results.forEach((space: any) => {
+      expect(results.spaces.length).toBeGreaterThanOrEqual(3);
+      results.spaces.forEach((space: any) => {
         expect(space.type).toBe("custom");
       });
 
       // Verify all our custom spaces are in results
-      const resultIds = results.map((s: any) => s.memorySpaceId);
+      const resultIds = results.spaces.map((s: any) => s.memorySpaceId);
       customIds.forEach((id) => {
         expect(resultIds).toContain(id);
       });
@@ -258,8 +258,8 @@ describe("Memory Spaces API - Comprehensive Filter Coverage", () => {
       const allResults = await cortex.memorySpaces.list({});
 
       // Should include both
-      expect(allResults.length).toBeGreaterThanOrEqual(2);
-      const resultIds = allResults.map((s: any) => s.memorySpaceId);
+      expect(allResults.spaces.length).toBeGreaterThanOrEqual(2);
+      const resultIds = allResults.spaces.map((s: any) => s.memorySpaceId);
       expect(resultIds).toContain(personalId);
       expect(resultIds).toContain(teamId);
     });
@@ -288,7 +288,7 @@ describe("Memory Spaces API - Comprehensive Filter Coverage", () => {
       });
 
       // Active space should NOT be in archived results
-      const archivedIds = archivedResults.map((s: any) => s.memorySpaceId);
+      const archivedIds = archivedResults.spaces.map((s: any) => s.memorySpaceId);
       expect(archivedIds).not.toContain(activeId);
     });
 
@@ -314,7 +314,7 @@ describe("Memory Spaces API - Comprehensive Filter Coverage", () => {
         type: "personal",
         status: "active",
       });
-      const personalIds = personalResults.map((s: any) => s.memorySpaceId);
+      const personalIds = personalResults.spaces.map((s: any) => s.memorySpaceId);
       expect(personalIds).toContain(personalId);
       expect(personalIds).not.toContain(teamId);
 
@@ -323,7 +323,7 @@ describe("Memory Spaces API - Comprehensive Filter Coverage", () => {
         type: "team",
         status: "active",
       });
-      const teamIds = teamResults.map((s: any) => s.memorySpaceId);
+      const teamIds = teamResults.spaces.map((s: any) => s.memorySpaceId);
       expect(teamIds).toContain(teamId);
       expect(teamIds).not.toContain(personalId);
     });

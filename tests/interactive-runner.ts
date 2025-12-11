@@ -302,10 +302,10 @@ async function purgeAllDatabases() {
 
   // Purge immutable
   console.log("  Purging immutable store...");
-  const entries = await client.query(api.immutable.list, {});
+  const entriesResult = await client.query(api.immutable.list, {});
   let immutableDeleted = 0;
 
-  for (const entry of entries) {
+  for (const entry of entriesResult.entries) {
     try {
       await client.mutation(api.immutable.purge, {
         type: entry.type,
@@ -522,18 +522,18 @@ async function testListByUser() {
     `\n📋 Testing: conversations.list({ userId: "${TEST_USER_ID}" })...`,
   );
 
-  const conversations = await cortex.conversations.list({
+  const result = await cortex.conversations.list({
     userId: TEST_USER_ID,
   });
 
-  console.log(`\n📥 Found ${conversations.length} conversation(s)`);
-  console.log("Result:", JSON.stringify(conversations, null, 2));
+  console.log(`\n📥 Found ${result.conversations.length} conversation(s)`);
+  console.log("Result:", JSON.stringify(result.conversations, null, 2));
 
   // Validate: all conversations should include this userId
   console.log("\n🔍 Validation:");
   let allValid = true;
 
-  conversations.forEach((conv, i) => {
+  result.conversations.forEach((conv, i) => {
     const hasUser = conv.participants.userId === TEST_USER_ID;
 
     if (hasUser) {
@@ -558,18 +558,18 @@ async function testListByMemorySpace() {
     `\n📋 Testing: conversations.list({ memorySpaceId: "${TEST_MEMSPACE_ID}" })...`,
   );
 
-  const conversations = await cortex.conversations.list({
+  const result = await cortex.conversations.list({
     memorySpaceId: TEST_MEMSPACE_ID,
   });
 
-  console.log(`\n📥 Found ${conversations.length} conversation(s)`);
-  console.log("Result:", JSON.stringify(conversations, null, 2));
+  console.log(`\n📥 Found ${result.conversations.length} conversation(s)`);
+  console.log("Result:", JSON.stringify(result.conversations, null, 2));
 
   // Validate: all conversations should be in this memorySpace
   console.log("\n🔍 Validation:");
   let allValid = true;
 
-  conversations.forEach((conv, i) => {
+  result.conversations.forEach((conv, i) => {
     const hasMemorySpace = conv.memorySpaceId === TEST_MEMSPACE_ID;
 
     if (hasMemorySpace) {
@@ -858,12 +858,12 @@ async function runConversationsTests() {
 
   console.log("📊 Results:");
   console.log(`  Total: ${totalCount}`);
-  console.log(`  By user: ${userConvs.length}`);
-  console.log(`  By agent: ${agentConvs.length}`);
+  console.log(`  By user: ${userConvs.conversations.length}`);
+  console.log(`  By agent: ${agentConvs.conversations.length}`);
 
   console.log("\n✅ Expected: Total=2, By user=1, By agent=2");
   console.log(
-    `📊 Actual: ${totalCount === 2 && userConvs.length === 1 && agentConvs.length === 2 ? "✅ PASS" : "❌ FAIL"}`,
+    `📊 Actual: ${totalCount === 2 && userConvs.conversations.length === 1 && agentConvs.conversations.length === 2 ? "✅ PASS" : "❌ FAIL"}`,
   );
   console.log("═".repeat(80));
   console.log("\n✅ Conversations tests complete!\n");
@@ -1073,8 +1073,8 @@ async function runAllTests() {
 
   console.log("📊 Layer 1a (Conversations):");
   console.log(`  Total: ${totalConvCount}`);
-  console.log(`  By user: ${userConvs.length}`);
-  console.log(`  By agent: ${agentConvs.length}`);
+  console.log(`  By user: ${userConvs.conversations.length}`);
+  console.log(`  By agent: ${agentConvs.conversations.length}`);
 
   // Layer 1b: Immutable
   const totalImmCount = await cortex.immutable.count();
@@ -1082,7 +1082,7 @@ async function runAllTests() {
 
   console.log("\n📊 Layer 1b (Immutable Store):");
   console.log(`  Total entries: ${totalImmCount}`);
-  console.log(`  KB articles: ${kbArticles.length}`);
+  console.log(`  KB articles: ${kbArticles.entries.length}`);
 
   // Layer 1c: Mutable
   const inventoryCount = await cortex.mutable.count({ namespace: "inventory" });
@@ -1408,7 +1408,7 @@ async function testConvPropagation() {
 
   // Verify in list()
   const list = await cortex.conversations.list({ userId: TEST_USER_ID });
-  const inList = list.find((c) => c.conversationId === conv.conversationId);
+  const inList = list.conversations.find((c) => c.conversationId === conv.conversationId);
 
   console.log(`✅ list() shows ${inList?.messageCount} messages`);
 
@@ -1744,7 +1744,7 @@ async function testConvIntegration() {
   console.log(`✅ Step 3: get() returned messageCount: ${get!.messageCount}`);
 
   const list = await cortex.conversations.list({ userId: TEST_USER_ID });
-  const inList = list.some((c) => c.conversationId === conv.conversationId);
+  const inList = list.conversations.some((c) => c.conversationId === conv.conversationId);
 
   console.log(
     `✅ Step 4: list() ${inList ? "found" : "did not find"} conversation`,
