@@ -325,14 +325,14 @@ const memory = await cortex.memory.store("user-123-personal", {
 | `get(memorySpaceId, memoryId)`                  | Get vector memory               | MemoryEntry \| null                                 |
 | `search(memorySpaceId, query, options?)`        | Search vector index             | MemoryEntry[]                                       |
 | `update(memorySpaceId, memoryId, updates)`      | Update memory (creates version) | MemoryEntry                                         |
-| `delete(memorySpaceId, memoryId, options?)`     | Delete from vector              | { deleted: boolean; memoryId: string }              |
-| `updateMany(filter, updates)`                   | Bulk update                     | { updated: number; memoryIds: string[] }            |
-| `deleteMany(filter)`                            | Bulk delete                     | { deleted: number; memoryIds: string[] }            |
+| `delete(memorySpaceId, memoryId, options?)`     | Delete from vector              | \{ deleted: boolean; memoryId: string \}              |
+| `updateMany(filter, updates)`                   | Bulk update                     | \{ updated: number; memoryIds: string[] \}            |
+| `deleteMany(filter)`                            | Bulk delete                     | \{ deleted: number; memoryIds: string[] \}            |
 | `count(filter)`                                 | Count memories                  | number                                              |
 | `list(filter)`                                  | List memories                   | MemoryEntry[]                                       |
-| `export(options)`                               | Export vector memories          | { format: string; data: string; count: number; ... }|
-| `archive(memorySpaceId, memoryId)`              | Soft delete (single memory)     | { archived: boolean; memoryId: string; restorable: boolean } |
-| `restoreFromArchive(memorySpaceId, memoryId)`   | Restore from archive            | { restored: boolean; memoryId: string; memory: MemoryEntry } |
+| `export(options)`                               | Export vector memories          | \{ format: string; data: string; count: number; ... \}|
+| `archive(memorySpaceId, memoryId)`              | Soft delete (single memory)     | \{ archived: boolean; memoryId: string; restorable: boolean \} |
+| `restoreFromArchive(memorySpaceId, memoryId)`   | Restore from archive            | \{ restored: boolean; memoryId: string; memory: MemoryEntry \} |
 | `getVersion(memorySpaceId, memoryId, version)`  | Get specific version            | MemoryVersion \| null                               |
 | `getHistory(memorySpaceId, memoryId)`           | Get version history             | MemoryVersion[]                                     |
 | `getAtTimestamp(memorySpaceId, memoryId, date)` | Temporal query                  | MemoryVersion \| null                               |

@@ -470,7 +470,7 @@ async function stopServices(state: DevState, force: boolean = false): Promise<vo
   // Stop graph database if running
   if (state.graphRunning && state.graphType) {
     console.log(pc.dim("  Stopping graph database..."));
-    const stopped = await toggleGraph(state.projectPath, state.graphType, false);
+    await toggleGraph(state.projectPath, state.graphType, false);
     state.graphRunning = false;
   }
 }
