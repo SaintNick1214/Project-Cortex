@@ -442,11 +442,17 @@ export function validateUpdateHasFields(updates: UpdateFactInput): void {
     updates.confidence !== undefined ||
     updates.tags !== undefined ||
     updates.validUntil !== undefined ||
-    updates.metadata !== undefined;
+    updates.metadata !== undefined ||
+    // Enrichment fields
+    updates.category !== undefined ||
+    updates.searchAliases !== undefined ||
+    updates.semanticContext !== undefined ||
+    updates.entities !== undefined ||
+    updates.relations !== undefined;
 
   if (!hasFields) {
     throw new FactsValidationError(
-      "Update must include at least one field (fact, confidence, tags, validUntil, or metadata)",
+      "Update must include at least one field (fact, confidence, tags, validUntil, metadata, or enrichment fields)",
       "INVALID_UPDATE",
     );
   }

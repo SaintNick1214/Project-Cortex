@@ -26,7 +26,7 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
   afterAll(async () => {
     // Cleanup test conversations (best-effort)
     try {
-      await cortex.memorySpaces.delete(TEST_MEMSPACE_ID, { cascade: true });
+      await cortex.memorySpaces.delete(TEST_MEMSPACE_ID, { cascade: true, reason: "test cleanup" });
     } catch (_e) {
       // Ignore cleanup errors
     }
@@ -83,13 +83,13 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
       });
 
       // Validate
-      expect(results.length).toBeGreaterThanOrEqual(1);
-      results.forEach((conv: any) => {
+      expect(results.conversations.length).toBeGreaterThanOrEqual(1);
+      results.conversations.forEach((conv: any) => {
         expect(conv.type).toBe(convType);
       });
 
       // Verify target conversation is in results
-      const convIds = results.map((c: any) => c.conversationId);
+      const convIds = results.conversations.map((c: any) => c.conversationId);
       expect(convIds).toContain(targetConv.conversationId);
     });
 
@@ -215,8 +215,8 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
         memorySpaceId: spaceId,
       });
 
-      // Should return empty array, not error
-      expect(results).toEqual([]);
+      // Should return empty conversations array, not error
+      expect(results.conversations).toEqual([]);
     });
 
     it("list() should find both types in same memory space", async () => {
@@ -241,10 +241,10 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
         type: "user-agent",
         memorySpaceId: spaceId,
       });
-      expect(uaResults.length).toBeGreaterThanOrEqual(1);
-      expect(uaResults.every((c: any) => c.type === "user-agent")).toBe(true);
+      expect(uaResults.conversations.length).toBeGreaterThanOrEqual(1);
+      expect(uaResults.conversations.every((c: any) => c.type === "user-agent")).toBe(true);
       expect(
-        uaResults.some((c: any) => c.conversationId === uaConv.conversationId),
+        uaResults.conversations.some((c: any) => c.conversationId === uaConv.conversationId),
       ).toBe(true);
 
       // List agent-agent
@@ -252,10 +252,10 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
         type: "agent-agent",
         memorySpaceId: spaceId,
       });
-      expect(aaResults.length).toBeGreaterThanOrEqual(1);
-      expect(aaResults.every((c: any) => c.type === "agent-agent")).toBe(true);
+      expect(aaResults.conversations.length).toBeGreaterThanOrEqual(1);
+      expect(aaResults.conversations.every((c: any) => c.type === "agent-agent")).toBe(true);
       expect(
-        aaResults.some((c: any) => c.conversationId === aaConv.conversationId),
+        aaResults.conversations.some((c: any) => c.conversationId === aaConv.conversationId),
       ).toBe(true);
     });
 
@@ -295,8 +295,8 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
       });
 
       // Validate: Should only find target conversation
-      expect(results.length).toBeGreaterThanOrEqual(1);
-      results.forEach((conv: any) => {
+      expect(results.conversations.length).toBeGreaterThanOrEqual(1);
+      results.conversations.forEach((conv: any) => {
         expect(conv.type).toBe("user-agent");
         // Check userId is in participants (participants is an object, not array)
         expect(conv.participants.userId).toBe(targetUser);

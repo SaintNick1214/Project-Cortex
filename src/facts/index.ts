@@ -9,6 +9,8 @@ import { api } from "../../convex-dev/_generated/api";
 import type {
   CountFactsFilter,
   DeleteFactOptions,
+  DeleteManyFactsParams,
+  DeleteManyFactsResult,
   FactRecord,
   ListFactsFilter,
   QueryByRelationshipFilter,
@@ -146,6 +148,12 @@ export class FactsAPI {
           tags: params.tags || [],
           validFrom: params.validFrom,
           validUntil: params.validUntil,
+          // Enrichment fields (for bullet-proof retrieval)
+          category: params.category,
+          searchAliases: params.searchAliases,
+          semanticContext: params.semanticContext,
+          entities: params.entities,
+          relations: params.relations,
         }),
       "facts:store",
     );
@@ -526,6 +534,12 @@ export class FactsAPI {
             tags: updates.tags,
             validUntil: updates.validUntil,
             metadata: updates.metadata,
+            // Enrichment fields (for bullet-proof retrieval)
+            category: updates.category,
+            searchAliases: updates.searchAliases,
+            semanticContext: updates.semanticContext,
+            entities: updates.entities,
+            relations: updates.relations,
           }),
         "facts:update",
       );
@@ -592,6 +606,54 @@ export class FactsAPI {
     }
 
     return result as { deleted: boolean; factId: string };
+  }
+
+  /**
+   * Delete multiple facts matching filters in a single operation
+   *
+   * @example
+   * ```typescript
+   * // Delete all facts in a memory space
+   * const result = await cortex.facts.deleteMany({
+   *   memorySpaceId: 'space-1',
+   * });
+   *
+   * // Delete all facts for a specific user (GDPR compliance)
+   * const gdprResult = await cortex.facts.deleteMany({
+   *   memorySpaceId: 'space-1',
+   *   userId: 'user-to-delete',
+   * });
+   *
+   * // Delete all preference facts
+   * const prefResult = await cortex.facts.deleteMany({
+   *   memorySpaceId: 'space-1',
+   *   factType: 'preference',
+   * });
+   * ```
+   */
+  async deleteMany(params: DeleteManyFactsParams): Promise<DeleteManyFactsResult> {
+    validateMemorySpaceId(params.memorySpaceId);
+
+    if (params.factType !== undefined) {
+      validateFactType(params.factType);
+    }
+
+    let result;
+    try {
+      result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.facts.deleteMany, {
+            memorySpaceId: params.memorySpaceId,
+            userId: params.userId,
+            factType: params.factType,
+          }),
+        "facts:deleteMany",
+      );
+    } catch (error) {
+      this.handleConvexError(error);
+    }
+
+    return result as DeleteManyFactsResult;
   }
 
   /**

@@ -35,11 +35,20 @@ import {
   validateHasFilters,
 } from "./validators";
 
+export interface ContextVersion {
+  version: number;
+  status: string;
+  data?: Record<string, unknown>;
+  timestamp: number;
+  updatedBy?: string;
+}
+
 export interface Context {
   _id: string;
   contextId: string;
   memorySpaceId: string;
   purpose: string;
+  description?: string;
   userId?: string;
   parentId?: string;
   rootId?: string;
@@ -58,6 +67,8 @@ export interface Context {
   }>;
   data?: Record<string, unknown>;
   metadata?: Record<string, unknown>;
+  version: number;
+  previousVersions?: ContextVersion[];
   createdAt: number;
   updatedAt: number;
   completedAt?: number;
@@ -70,12 +81,34 @@ export interface ContextChain {
   children: Context[];
   siblings: Context[];
   ancestors: Context[];
+  descendants: Context[];
   depth: number;
+  totalNodes: number;
+}
+
+export interface ContextWithConversation extends ContextChain {
+  conversation?: {
+    _id: string;
+    conversationId: string;
+    messages: Array<{
+      id: string;
+      role: string;
+      content: string;
+      timestamp: number;
+    }>;
+  };
+  triggerMessages?: Array<{
+    id: string;
+    role: string;
+    content: string;
+    timestamp: number;
+  }>;
 }
 
 export interface CreateContextParams {
   purpose: string;
   memorySpaceId: string;
+  description?: string;
   userId?: string;
   parentId?: string;
   conversationRef?: {
@@ -88,6 +121,7 @@ export interface CreateContextParams {
 
 export interface UpdateContextParams {
   status?: "active" | "completed" | "cancelled" | "blocked";
+  description?: string;
   data?: Record<string, unknown>;
   completedAt?: number;
 }
@@ -201,6 +235,7 @@ export class ContextsAPI {
           this.client.mutation(api.contexts.create, {
             purpose: params.purpose,
             memorySpaceId: params.memorySpaceId,
+            description: params.description,
             userId: params.userId,
             parentId: params.parentId,
             conversationRef: params.conversationRef,
@@ -242,12 +277,18 @@ export class ContextsAPI {
    *
    * // Get with full chain
    * const chain = await cortex.contexts.get('ctx-123', { includeChain: true });
+   *
+   * // Get with conversation context
+   * const enriched = await cortex.contexts.get('ctx-123', {
+   *   includeChain: true,
+   *   includeConversation: true
+   * });
    * ```
    */
   async get(
     contextId: string,
-    options?: { includeChain?: boolean },
-  ): Promise<Context | ContextChain | null> {
+    options?: { includeChain?: boolean; includeConversation?: boolean },
+  ): Promise<Context | ContextChain | ContextWithConversation | null> {
     // Client-side validation
     validateRequiredString(contextId, "contextId");
     validateContextIdFormat(contextId);
@@ -257,11 +298,12 @@ export class ContextsAPI {
         this.client.query(api.contexts.get, {
           contextId,
           includeChain: options?.includeChain,
+          includeConversation: options?.includeConversation,
         }),
       "contexts:get",
     );
 
-    return result as Context | ContextChain | null;
+    return result as Context | ContextChain | ContextWithConversation | null;
   }
 
   /**
@@ -301,6 +343,7 @@ export class ContextsAPI {
         this.client.mutation(api.contexts.update, {
           contextId,
           status: updates.status,
+          description: updates.description,
           data: updates.data,
           completedAt: updates.completedAt,
         }),
@@ -334,16 +377,27 @@ export class ContextsAPI {
    *
    * @example
    * ```typescript
+   * // Delete single context (must have no children)
+   * await cortex.contexts.delete('ctx-123');
+   *
+   * // Delete context and all descendants
    * await cortex.contexts.delete('ctx-123', { cascadeChildren: true });
+   *
+   * // Allow orphaning (remove parent, keep children as new roots)
+   * await cortex.contexts.delete('ctx-123', { orphanChildren: true });
    * ```
    */
   async delete(
     contextId: string,
-    options?: DeleteContextOptions & { cascadeChildren?: boolean },
+    options?: DeleteContextOptions & {
+      cascadeChildren?: boolean;
+      orphanChildren?: boolean;
+    },
   ): Promise<{
     deleted: boolean;
     contextId: string;
     descendantsDeleted: number;
+    orphanedChildren?: string[];
   }> {
     // Client-side validation
     validateRequiredString(contextId, "contextId");
@@ -356,6 +410,7 @@ export class ContextsAPI {
           this.client.mutation(api.contexts.deleteContext, {
             contextId,
             cascadeChildren: options?.cascadeChildren,
+            orphanChildren: options?.orphanChildren,
           }),
         "contexts:delete",
       );
@@ -376,6 +431,7 @@ export class ContextsAPI {
       deleted: boolean;
       contextId: string;
       descendantsDeleted: number;
+      orphanedChildren?: string[];
     };
   }
 

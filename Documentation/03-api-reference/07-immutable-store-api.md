@@ -1,6 +1,6 @@
 # Immutable Store API
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2025-12-10
 
 Complete API reference for shared immutable data storage with automatic versioning.
 
@@ -47,7 +47,8 @@ Store immutable data. Creates v1 or increments version if ID exists.
 
 ```typescript
 cortex.immutable.store(
-  entry: ImmutableEntry
+  entry: ImmutableEntry,
+  options?: StoreImmutableOptions
 ): Promise<ImmutableRecord>
 ```
 
@@ -65,6 +66,10 @@ interface ImmutableEntry {
     importance?: number; // 0-100
     [key: string]: any;
   };
+}
+
+interface StoreImmutableOptions {
+  syncToGraph?: boolean; // Sync to graph database (if configured)
 }
 ```
 
@@ -100,28 +105,47 @@ await cortex.immutable.store({
     content: "...",
   },
 });
+
+// With graph sync (if graph adapter configured)
+await cortex.immutable.store(
+  {
+    type: "kb-article",
+    id: "product-guide",
+    data: {
+      title: "Product Guide",
+      content: "...",
+    },
+  },
+  { syncToGraph: true },
+);
 ```
 
 **Returns:**
 
 ```typescript
 interface ImmutableRecord {
+  _id: string; // Convex document ID
   type: string;
   id: string; // Logical ID
   version: number; // Version number
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   userId?: string; // OPTIONAL: User link (GDPR-enabled)
-  metadata: any;
-  createdAt: Date; // When this version created
+  metadata?: {
+    publishedBy?: string;
+    tags?: string[];
+    importance?: number;
+    [key: string]: unknown;
+  };
   previousVersions: ImmutableVersion[]; // Subject to retention
+  createdAt: number; // Unix timestamp (ms)
+  updatedAt: number; // Unix timestamp (ms)
 }
 
 interface ImmutableVersion {
   version: number;
-  data: any;
-  userId?: string; // User link (preserved in history)
-  metadata: any;
-  timestamp: Date;
+  data: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
+  timestamp: number; // Unix timestamp (ms)
 }
 ```
 
@@ -240,18 +264,31 @@ cortex.immutable.getVersion(
   type: string,
   id: string,
   version: number
-): Promise<ImmutableVersion | null>
+): Promise<ImmutableVersionExpanded | null>
 ```
 
 **Parameters:**
 
 - `type` (string) - Entity type
 - `id` (string) - Logical ID
-- `version` (number) - Version number
+- `version` (number) - Version number (must be >= 1)
 
 **Returns:**
 
-- `ImmutableVersion` - Specific version
+```typescript
+interface ImmutableVersionExpanded {
+  type: string;
+  id: string;
+  version: number;
+  data: Record<string, unknown>;
+  userId?: string;
+  metadata?: Record<string, unknown>;
+  timestamp: number; // Unix timestamp (ms)
+  createdAt: number; // Unix timestamp (ms)
+}
+```
+
+- `ImmutableVersionExpanded` - Specific version with full context
 - `null` - If version doesn't exist or purged by retention
 
 **Example:**
@@ -280,12 +317,13 @@ Get all versions of immutable data.
 cortex.immutable.getHistory(
   type: string,
   id: string
-): Promise<ImmutableVersion[]>
+): Promise<ImmutableVersionExpanded[]>
 ```
 
 **Returns:**
 
-- `ImmutableVersion[]` - All versions (subject to retention)
+- `ImmutableVersionExpanded[]` - All versions sorted by version number (subject to retention)
+- Empty array if entry doesn't exist
 
 **Example:**
 
@@ -312,18 +350,31 @@ Get version that was current at specific time.
 cortex.immutable.getAtTimestamp(
   type: string,
   id: string,
-  timestamp: Date
-): Promise<ImmutableVersion | null>
+  timestamp: number | Date
+): Promise<ImmutableVersionExpanded | null>
 ```
+
+**Parameters:**
+
+- `type` (string) - Entity type
+- `id` (string) - Logical ID
+- `timestamp` (number | Date) - Unix timestamp in milliseconds, or Date object
 
 **Example:**
 
 ```typescript
-// What was the refund policy on January 1st?
+// What was the refund policy on January 1st? (using Date)
 const policy = await cortex.immutable.getAtTimestamp(
   "policy",
   "max-refund",
   new Date("2025-01-01"),
+);
+
+// Or using timestamp (ms)
+const policy2 = await cortex.immutable.getAtTimestamp(
+  "policy",
+  "max-refund",
+  Date.parse("2025-01-01"),
 );
 
 if (policy) {
@@ -343,39 +394,23 @@ List immutable records with filtering.
 
 ```typescript
 cortex.immutable.list(
-  filters?: ImmutableFilters
-): Promise<ImmutableListResult>
+  filter?: ListImmutableFilter
+): Promise<ImmutableRecord[]>
 ```
 
 **Parameters:**
 
 ```typescript
-interface ImmutableFilters {
-  type?: string; // Filter by type
-  types?: string[]; // Multiple types
-  metadata?: Record<string, any>; // Metadata filters
-  tags?: string[];
-  createdAfter?: Date;
-  createdBefore?: Date;
-  minVersion?: number; // Only records with N+ versions
-  limit?: number;
-  offset?: number;
-  sortBy?: "createdAt" | "version" | "type";
-  sortOrder?: "asc" | "desc";
+interface ListImmutableFilter {
+  type?: string; // Filter by entity type
+  userId?: string; // Filter by user ID
+  limit?: number; // Max records to return (default: 100)
 }
 ```
 
 **Returns:**
 
-```typescript
-interface ImmutableListResult {
-  records: ImmutableRecord[];
-  total: number;
-  limit: number;
-  offset: number;
-  hasMore: boolean;
-}
-```
+- `ImmutableRecord[]` - Array of immutable records sorted by creation time (newest first)
 
 **Example:**
 
@@ -383,23 +418,17 @@ interface ImmutableListResult {
 // List all KB articles
 const articles = await cortex.immutable.list({
   type: "kb-article",
-  sortBy: "createdAt",
-  sortOrder: "desc",
   limit: 50,
 });
 
-// List all policies
-const policies = await cortex.immutable.list({
-  type: "policy",
-  metadata: { category: "refunds" },
+// List all records for a specific user
+const userRecords = await cortex.immutable.list({
+  userId: "user-123",
+  limit: 20,
 });
 
-// List frequently updated items
-const volatile = await cortex.immutable.list({
-  minVersion: 5, // At least 5 versions
-  sortBy: "version",
-  sortOrder: "desc",
-});
+// List all records (up to default limit)
+const allRecords = await cortex.immutable.list();
 ```
 
 ---
@@ -412,16 +441,18 @@ Search immutable data by content.
 
 ```typescript
 cortex.immutable.search(
-  query: string,
-  filters?: ImmutableSearchFilters
+  input: SearchImmutableInput
 ): Promise<ImmutableSearchResult[]>
 ```
 
 **Parameters:**
 
 ```typescript
-interface ImmutableSearchFilters extends ImmutableFilters {
-  searchIn?: "data" | "metadata" | "both"; // Where to search
+interface SearchImmutableInput {
+  query: string; // Search query (required)
+  type?: string; // Filter by entity type
+  userId?: string; // Filter by user ID
+  limit?: number; // Max results (default: 10)
 }
 ```
 
@@ -429,9 +460,9 @@ interface ImmutableSearchFilters extends ImmutableFilters {
 
 ```typescript
 interface ImmutableSearchResult {
-  record: ImmutableRecord;
-  score: number;
-  matches: string[]; // Matched fields
+  entry: ImmutableRecord; // The matching record
+  score: number; // Relevance score
+  highlights: string[]; // Matched text snippets
 }
 ```
 
@@ -439,14 +470,20 @@ interface ImmutableSearchResult {
 
 ```typescript
 // Search across all KB articles
-const results = await cortex.immutable.search("refund process", {
+const results = await cortex.immutable.search({
+  query: "refund process",
   type: "kb-article",
-  searchIn: "both",
+  limit: 20,
 });
 
 results.forEach((r) => {
-  console.log(`${r.record.data.title} (score: ${r.score})`);
-  console.log(`Matches: ${r.matches.join(", ")}`);
+  console.log(`${r.entry.data.title} (score: ${r.score})`);
+  console.log(`Highlights: ${r.highlights.join(", ")}`);
+});
+
+// Search all immutable data
+const allResults = await cortex.immutable.search({
+  query: "customer policy",
 });
 ```
 
@@ -460,8 +497,17 @@ Count immutable records.
 
 ```typescript
 cortex.immutable.count(
-  filters?: ImmutableFilters
+  filter?: CountImmutableFilter
 ): Promise<number>
+```
+
+**Parameters:**
+
+```typescript
+interface CountImmutableFilter {
+  type?: string; // Filter by entity type
+  userId?: string; // Filter by user ID
+}
 ```
 
 **Example:**
@@ -470,11 +516,13 @@ cortex.immutable.count(
 // Total KB articles
 const total = await cortex.immutable.count({ type: "kb-article" });
 
-// Policies updated this month
-const recentPolicies = await cortex.immutable.count({
-  type: "policy",
-  createdAfter: new Date("2025-10-01"),
+// Count records for a specific user
+const userCount = await cortex.immutable.count({
+  userId: "user-123",
 });
+
+// Count all immutable records
+const allCount = await cortex.immutable.count();
 ```
 
 ---
@@ -496,10 +544,10 @@ cortex.immutable.purge(
 
 ```typescript
 interface PurgeResult {
+  deleted: boolean; // Whether deletion was successful
   type: string;
   id: string;
   versionsDeleted: number;
-  purgedAt: Date;
 }
 ```
 
@@ -509,8 +557,14 @@ interface PurgeResult {
 // Delete all versions of an article
 const result = await cortex.immutable.purge("kb-article", "old-article");
 
-console.log(`Purged ${result.versionsDeleted} versions`);
+if (result.deleted) {
+  console.log(`Purged ${result.versionsDeleted} versions`);
+}
 ```
+
+**Errors:**
+
+- Throws if the entry doesn't exist (`IMMUTABLE_ENTRY_NOT_FOUND`)
 
 **Warning:** This deletes ALL versions. Vector memories with `immutableRef` will have broken references.
 
@@ -518,45 +572,53 @@ console.log(`Purged ${result.versionsDeleted} versions`);
 
 ### purgeMany()
 
-Bulk delete immutable records.
+Bulk delete immutable records matching a filter.
 
 **Signature:**
 
 ```typescript
 cortex.immutable.purgeMany(
-  filters: ImmutableFilters,
-  options?: PurgeOptions
-): Promise<PurgeResult>
+  filter: PurgeManyFilter
+): Promise<PurgeManyResult>
 ```
 
 **Parameters:**
 
 ```typescript
-interface PurgeOptions {
-  dryRun?: boolean;
-  requireConfirmation?: boolean;
+interface PurgeManyFilter {
+  type?: string; // Filter by entity type
+  userId?: string; // Filter by user ID
+}
+```
+
+**Note:** At least one filter (type or userId) must be provided to prevent accidental deletion of all records.
+
+**Returns:**
+
+```typescript
+interface PurgeManyResult {
+  deleted: number; // Number of entries deleted
+  totalVersionsDeleted: number; // Total versions across all entries
+  entries: Array<{ type: string; id: string }>; // Deleted entry identifiers
 }
 ```
 
 **Example:**
 
 ```typescript
-// Preview purge
-const preview = await cortex.immutable.purgeMany(
-  {
-    type: "audit-log",
-    createdBefore: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
-  },
-  { dryRun: true },
-);
-
-console.log(`Would purge ${preview.recordsAffected} audit logs`);
-
-// Execute
+// Delete all audit logs
 const result = await cortex.immutable.purgeMany({
   type: "audit-log",
-  createdBefore: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
 });
+
+console.log(`Deleted ${result.deleted} entries (${result.totalVersionsDeleted} total versions)`);
+
+// Delete all records for a user (GDPR)
+const userPurge = await cortex.immutable.purgeMany({
+  userId: "user-123",
+});
+
+console.log(`Purged ${userPurge.deleted} user records`);
 ```
 
 ---
@@ -571,16 +633,22 @@ Delete old versions while keeping recent ones (retention enforcement).
 cortex.immutable.purgeVersions(
   type: string,
   id: string,
-  options: PurgeVersionOptions
-): Promise<PurgeResult>
+  keepLatest: number
+): Promise<PurgeVersionsResult>
 ```
 
 **Parameters:**
 
+- `type` (string) - Entity type
+- `id` (string) - Logical ID
+- `keepLatest` (number) - Number of most recent versions to keep (must be >= 1)
+
+**Returns:**
+
 ```typescript
-interface PurgeVersionOptions {
-  keepLatest?: number; // Keep N most recent versions
-  olderThan?: Date; // Purge versions before date
+interface PurgeVersionsResult {
+  versionsPurged: number; // Number of versions deleted
+  versionsRemaining: number; // Number of versions kept
 }
 ```
 
@@ -588,39 +656,26 @@ interface PurgeVersionOptions {
 
 ```typescript
 // Keep only last 20 versions
-const result = await cortex.immutable.purgeVersions("kb-article", "guide-123", {
-  keepLatest: 20,
-});
+const result = await cortex.immutable.purgeVersions(
+  "kb-article",
+  "guide-123",
+  20,
+);
 
-console.log(`Purged ${result.versionsDeleted} old versions`);
+console.log(`Purged ${result.versionsPurged} old versions`);
+console.log(`Kept ${result.versionsRemaining} versions`);
 
-// Delete versions older than 1 year
-await cortex.immutable.purgeVersions("policy", "refund-policy", {
-  olderThan: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
-});
+// Keep only latest 5 versions
+await cortex.immutable.purgeVersions("policy", "refund-policy", 5);
 ```
+
+**Errors:**
+
+- Throws if entry doesn't exist (`IMMUTABLE_ENTRY_NOT_FOUND`)
 
 ---
 
 ## Version Management
-
-### Configuration
-
-```typescript
-// Global retention configuration
-const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL,
-  immutableRetention: {
-    defaultVersions: 20, // Keep last 20 versions per entity
-    byType: {
-      "audit-log": -1, // Unlimited for audit logs
-      "kb-article": 50, // Keep 50 versions for KB
-      policy: -1, // Unlimited for policies
-      "agent-reasoning": 10, // Keep 10 for reasoning logs
-    },
-  },
-});
-```
 
 ### Automatic Version Creation
 
@@ -858,38 +913,32 @@ await cortex.vector.store("policy-agent", {
 
 ## Retention & Purging
 
-### Automatic Retention
-
-```typescript
-// Configured per type
-immutableRetention: {
-  byType: {
-    'kb-article': { versionsToKeep: 50 },
-    'policy': { versionsToKeep: -1 },  // Unlimited
-    'audit-log': { versionsToKeep: -1 },
-    'agent-reasoning': { versionsToKeep: 10 }
-  }
-}
-
-// Automatic cleanup runs periodically
-// Old versions beyond retention are purged
-```
-
 ### Manual Purging
 
+Use these methods to manage storage and enforce retention policies:
+
 ```typescript
-// Purge specific entity
+// Purge specific entity (all versions)
 await cortex.immutable.purge("kb-article", "outdated-guide");
 
-// Purge by filter
+// Purge by type or user
 await cortex.immutable.purgeMany({
   type: "agent-reasoning",
-  createdBefore: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
 });
 
 // Clean up old versions (keep latest 20)
-await cortex.immutable.purgeVersions("kb-article", "guide-123", {
-  keepLatest: 20,
+await cortex.immutable.purgeVersions("kb-article", "guide-123", 20);
+```
+
+### Governance Integration
+
+For automated retention enforcement, use the Governance API:
+
+```typescript
+// See Governance Policies API for multi-layer retention rules
+await cortex.governance.enforce({
+  layers: ["immutable"],
+  rules: ["retention"],
 });
 ```
 
@@ -976,7 +1025,7 @@ async function logAction(action: string, agentId: string, data: any) {
       action,
       agentId,
       ...data,
-      timestamp: new Date(),
+      timestamp: Date.now(),
     },
     metadata: {
       importance: 95,
@@ -985,12 +1034,17 @@ async function logAction(action: string, agentId: string, data: any) {
   });
 }
 
-// Query audit trail
+// Query audit trail by type
 const auditLogs = await cortex.immutable.list({
   type: "audit-log",
-  metadata: { agentId: "finance-agent" },
-  createdAfter: new Date("2025-10-01"),
   limit: 100,
+});
+
+// Search audit logs
+const searchResults = await cortex.immutable.search({
+  query: "finance-agent",
+  type: "audit-log",
+  limit: 50,
 });
 ```
 
@@ -1016,28 +1070,23 @@ Immutable records can be graph nodes (especially Facts and KB Articles):
 ```typescript
 // Fact → User (via userId)
 const userFacts = await cortex.immutable.list({
-  type: 'fact',
-  userId: 'user-123'
+  type: "fact",
+  userId: "user-123",
 });
 
-// Memory → Fact (via immutableRef)
-const factMemories = await cortex.memory.search('agent-1', '*', {
-  immutableRef: { type: 'fact', id: 'fact-abc123' }
-});
-
-// Fact → Conversation (via conversationRef)
-const fact = await cortex.immutable.get('fact', 'fact-abc123');
-if (fact.conversationRef) {
+// Fact → Conversation (via conversationRef in data)
+const fact = await cortex.immutable.get("fact", "fact-abc123");
+if (fact?.data.conversationRef) {
   const sourceConvo = await cortex.conversations.get(
-    fact.conversationRef.conversationId
+    fact.data.conversationRef.conversationId,
   );
 }
 
 // Complete graph:
-Fact-abc123
-  ├──[userId]──────────> User-123
-  ├──[conversationRef]──> Conversation-456
-  └──[referenced by]<──── Memory-xyz (via immutableRef)
+// Fact-abc123
+//   ├──[userId]──────────> User-123
+//   ├──[conversationRef]──> Conversation-456
+//   └──[referenced by]<──── Memory-xyz (via immutableRef)
 ```
 
 **Use Case:** Facts with entity relationships can be synced to graph databases for knowledge graph construction.

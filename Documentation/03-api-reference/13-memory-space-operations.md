@@ -1,6 +1,6 @@
 # Memory Space Operations API
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2025-12-10
 
 This document covers the `cortex.memorySpaces.*` namespace for managing memory spaces, participants, and access control.
 
@@ -28,10 +28,14 @@ This document covers the `cortex.memorySpaces.*` namespace for managing memory s
 
 - [register()](#register) - Register a memory space with metadata
 - [get()](#get) - Retrieve memory space details
-- [list()](#list) - List all memory spaces
+- [list()](#list) - List all memory spaces with pagination
+- [count()](#count) - Count memory spaces
 - [search()](#search) - Search memory spaces by metadata
 - [update()](#update) - Update memory space metadata
-- [updateParticipants()](#updateparticipants) - Add/remove participants (Hive Mode)
+- [addParticipant()](#addparticipant) - Add a single participant
+- [removeParticipant()](#removeparticipant) - Remove a single participant
+- [updateParticipants()](#updateparticipants) - Add/remove multiple participants (Hive Mode)
+- [findByParticipant()](#findbyparticipant) - Find spaces by participant
 - [archive()](#archive) - Mark memory space as inactive
 - [reactivate()](#reactivate) - Reactivate archived space
 - [delete()](#delete) - Delete memory space and all data
@@ -56,11 +60,15 @@ cortex.memorySpaces.register(
 
 ```typescript
 interface RegisterMemorySpaceParams {
-  id: string; // Memory space ID (e.g., "user-123-personal")
+  memorySpaceId: string; // Memory space ID (e.g., "user-123-personal")
   name?: string; // Human-readable name
   type: "personal" | "team" | "project" | "custom"; // Organization type
-  participants?: string[]; // For Hive Mode tracking
-  metadata?: Record<string, any>; // Custom metadata
+  participants?: Array<{
+    // For Hive Mode tracking
+    id: string; // Participant identifier
+    type: string; // "user", "agent", "tool", etc.
+  }>;
+  metadata?: Record<string, unknown>; // Custom metadata
 }
 ```
 
@@ -68,14 +76,19 @@ interface RegisterMemorySpaceParams {
 
 ```typescript
 interface MemorySpace {
-  id: string;
+  _id: string;
+  memorySpaceId: string;
   name?: string;
-  type: string;
-  participants: string[];
-  metadata: Record<string, any>;
+  type: "personal" | "team" | "project" | "custom";
+  participants: Array<{
+    id: string;
+    type: string;
+    joinedAt: number;
+  }>;
+  metadata: Record<string, unknown>;
   status: "active" | "archived";
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: number;
+  updatedAt: number;
 }
 ```
 
@@ -86,10 +99,14 @@ interface MemorySpace {
 ```typescript
 // Register user's personal memory space
 await cortex.memorySpaces.register({
-  id: "user-123-personal",
+  memorySpaceId: "user-123-personal",
   name: "Alice's Personal AI Memory",
   type: "personal",
-  participants: ["cursor", "claude", "notion-ai"], // Hive Mode
+  participants: [
+    { id: "cursor", type: "ai-tool" },
+    { id: "claude", type: "ai-tool" },
+    { id: "notion-ai", type: "ai-tool" },
+  ],
   metadata: {
     owner: "user-123",
     environment: "production",
@@ -102,39 +119,44 @@ await cortex.memorySpaces.register({
 ```typescript
 // Register team workspace
 await cortex.memorySpaces.register({
-  id: "team-engineering-workspace",
+  memorySpaceId: "team-engineering-workspace",
   name: "Engineering Team Workspace",
   type: "team",
-  participants: ["code-review-bot", "deployment-bot", "ticket-bot"],
+  participants: [
+    { id: "code-review-bot", type: "agent" },
+    { id: "deployment-bot", type: "agent" },
+    { id: "ticket-bot", type: "agent" },
+  ],
   metadata: {
     team: "engineering",
     project: "apollo",
-    created: new Date(),
   },
 });
 ```
 
-**Autonomous Agent:**
+**With Graph Sync:**
 
 ```typescript
-// Register agent's private space (Collaboration Mode)
-await cortex.memorySpaces.register({
-  id: "finance-agent-space",
-  name: "Finance Agent Memory",
-  type: "custom",
-  participants: ["finance-agent"], // Single participant
-  metadata: {
-    agentType: "autonomous",
-    capabilities: ["budget-approval", "reporting"],
+// Register and sync to graph database
+await cortex.memorySpaces.register(
+  {
+    memorySpaceId: "finance-agent-space",
+    name: "Finance Agent Memory",
+    type: "custom",
+    participants: [{ id: "finance-agent", type: "agent" }],
   },
-});
+  { syncToGraph: true },
+);
 ```
 
 ### Error Handling
 
 ```typescript
 try {
-  await cortex.memorySpaces.register({ id: "space-123", type: "personal" });
+  await cortex.memorySpaces.register({
+    memorySpaceId: "space-123",
+    type: "personal",
+  });
 } catch (error) {
   if (error.code === "MEMORYSPACE_ALREADY_EXISTS") {
     console.log("Space already registered");
@@ -152,39 +174,7 @@ Retrieve memory space details and metadata.
 ### Signature
 
 ```typescript
-cortex.memorySpaces.get(memorySpaceId: string, options?: GetOptions): Promise<MemorySpace | null>
-```
-
-### Parameters
-
-```typescript
-interface GetOptions {
-  includeStats?: boolean; // Include usage statistics
-}
-```
-
-### Returns
-
-```typescript
-interface MemorySpace {
-  id: string;
-  name?: string;
-  type: string;
-  participants: string[];
-  metadata: Record<string, any>;
-  status: "active" | "archived";
-  createdAt: Date;
-  updatedAt: Date;
-
-  // If includeStats: true
-  stats?: {
-    totalMemories: number;
-    totalConversations: number;
-    totalFacts: number;
-    storageBytes: number;
-    participants: ParticipantActivity[];
-  };
-}
+cortex.memorySpaces.get(memorySpaceId: string): Promise<MemorySpace | null>
 ```
 
 ### Examples
@@ -194,24 +184,11 @@ interface MemorySpace {
 ```typescript
 const space = await cortex.memorySpaces.get("user-123-personal");
 
-console.log(space.name); // "Alice's Personal AI Memory"
-console.log(space.participants); // ['cursor', 'claude', 'notion-ai']
-console.log(space.type); // 'personal'
-```
-
-**With Statistics:**
-
-```typescript
-const space = await cortex.memorySpaces.get("team-engineering-workspace", {
-  includeStats: true,
-});
-
-console.log(space.stats.totalMemories); // 1543
-console.log(space.stats.participants);
-// [
-//   { participantId: 'code-review-bot', memoriesStored: 456, lastActive: '2025-10-28' },
-//   { participantId: 'deployment-bot', memoriesStored: 892, lastActive: '2025-10-28' }
-// ]
+if (space) {
+  console.log(space.name); // "Alice's Personal AI Memory"
+  console.log(space.participants); // [{ id: 'cursor', type: 'ai-tool', joinedAt: 1234567890 }, ...]
+  console.log(space.type); // 'personal'
+}
 ```
 
 **Check if Exists:**
@@ -222,7 +199,10 @@ const space = await cortex.memorySpaces.get("unknown-space");
 if (space === null) {
   console.log("Memory space does not exist");
   // Create it
-  await cortex.memorySpaces.register({ id: "unknown-space", type: "personal" });
+  await cortex.memorySpaces.register({
+    memorySpaceId: "unknown-space",
+    type: "personal",
+  });
 }
 ```
 
@@ -230,35 +210,32 @@ if (space === null) {
 
 ## list()
 
-List memory spaces with filtering and pagination.
+List memory spaces with filtering, pagination, and sorting.
 
 ### Signature
 
 ```typescript
-cortex.memorySpaces.list(filters?: ListFilters): Promise<ListResult>
+cortex.memorySpaces.list(filters?: ListMemorySpacesFilter): Promise<ListMemorySpacesResult>
 ```
 
 ### Parameters
 
 ```typescript
-interface ListFilters {
+interface ListMemorySpacesFilter {
   type?: "personal" | "team" | "project" | "custom";
   status?: "active" | "archived";
-  participant?: string; // Filter by participant
-  metadata?: Record<string, any>; // Filter by metadata
-
-  // Pagination
-  limit?: number;
-  offset?: number;
+  participant?: string; // Filter by participant ID
+  limit?: number; // Default: 100
+  offset?: number; // Default: 0
   sortBy?: "createdAt" | "updatedAt" | "name";
-  sortOrder?: "asc" | "desc";
+  sortOrder?: "asc" | "desc"; // Default: "desc"
 }
 ```
 
 ### Returns
 
 ```typescript
-interface ListResult {
+interface ListMemorySpacesResult {
   spaces: MemorySpace[];
   total: number;
   hasMore: boolean;
@@ -294,10 +271,10 @@ const teams = await cortex.memorySpaces.list({
 });
 ```
 
-**Filter by Participant:**
+**Filter by Participant (Hive Mode):**
 
 ```typescript
-// Find all spaces where Cursor participates (Hive Mode)
+// Find all spaces where Cursor participates
 const cursorSpaces = await cortex.memorySpaces.list({
   participant: "cursor",
 });
@@ -312,7 +289,55 @@ console.log(`Cursor operates in ${cursorSpaces.total} memory spaces`);
 const page1 = await cortex.memorySpaces.list({ limit: 20, offset: 0 });
 
 // Get next 20
-const page2 = await cortex.memorySpaces.list({ limit: 20, offset: 20 });
+if (page1.hasMore) {
+  const page2 = await cortex.memorySpaces.list({ limit: 20, offset: 20 });
+}
+```
+
+**Sorting:**
+
+```typescript
+// Sort by name ascending
+const sorted = await cortex.memorySpaces.list({
+  sortBy: "name",
+  sortOrder: "asc",
+});
+
+// Most recently updated first
+const recent = await cortex.memorySpaces.list({
+  sortBy: "updatedAt",
+  sortOrder: "desc",
+});
+```
+
+---
+
+## count()
+
+Count memory spaces matching filter criteria.
+
+### Signature
+
+```typescript
+cortex.memorySpaces.count(filter?: {
+  type?: "personal" | "team" | "project" | "custom";
+  status?: "active" | "archived";
+}): Promise<number>
+```
+
+### Examples
+
+```typescript
+// Count all spaces
+const total = await cortex.memorySpaces.count();
+
+// Count active personal spaces
+const activePersonal = await cortex.memorySpaces.count({
+  type: "personal",
+  status: "active",
+});
+
+console.log(`${activePersonal} active personal spaces out of ${total} total`);
 ```
 
 ---
@@ -337,12 +362,6 @@ interface SearchOptions {
 }
 ```
 
-### Returns
-
-```typescript
-MemorySpace[] // Ranked by relevance
-```
-
 ### Examples
 
 **Search by Name:**
@@ -352,8 +371,8 @@ const results = await cortex.memorySpaces.search("engineering");
 
 // Returns spaces with "engineering" in name or metadata
 // [
-//   { id: 'team-engineering-workspace', name: 'Engineering Team', ... },
-//   { id: 'project-engineering-docs', name: 'Engineering Docs Project', ... }
+//   { memorySpaceId: 'team-engineering-workspace', name: 'Engineering Team', ... },
+//   { memorySpaceId: 'project-engineering-docs', name: 'Engineering Docs Project', ... }
 // ]
 ```
 
@@ -388,7 +407,8 @@ cortex.memorySpaces.update(
 ```typescript
 interface MemorySpaceUpdates {
   name?: string;
-  metadata?: Record<string, any>; // Merged with existing
+  metadata?: Record<string, unknown>; // Merged with existing
+  status?: "active" | "archived";
 }
 ```
 
@@ -407,17 +427,78 @@ await cortex.memorySpaces.update("user-123-personal", {
 ```typescript
 await cortex.memorySpaces.update("team-engineering-workspace", {
   metadata: {
-    lastReview: new Date(),
+    lastReview: Date.now(),
     status: "active-development",
   },
 });
+```
+
+**With Graph Sync:**
+
+```typescript
+await cortex.memorySpaces.update(
+  "team-engineering-workspace",
+  { name: "Updated Team Space" },
+  { syncToGraph: true },
+);
+```
+
+---
+
+## addParticipant()
+
+Add a single participant to a memory space.
+
+### Signature
+
+```typescript
+cortex.memorySpaces.addParticipant(
+  memorySpaceId: string,
+  participant: { id: string; type: string; joinedAt: number }
+): Promise<MemorySpace>
+```
+
+### Examples
+
+```typescript
+// User installs new AI tool
+await cortex.memorySpaces.addParticipant("user-123-personal", {
+  id: "github-copilot",
+  type: "ai-tool",
+  joinedAt: Date.now(),
+});
+```
+
+---
+
+## removeParticipant()
+
+Remove a single participant from a memory space.
+
+### Signature
+
+```typescript
+cortex.memorySpaces.removeParticipant(
+  memorySpaceId: string,
+  participantId: string
+): Promise<MemorySpace>
+```
+
+### Examples
+
+```typescript
+// User uninstalls tool
+await cortex.memorySpaces.removeParticipant("user-123-personal", "old-tool");
+
+// Note: Participant's existing memories remain (audit trail)
+// But space no longer lists it as active participant
 ```
 
 ---
 
 ## updateParticipants()
 
-Add or remove participants from a memory space (Hive Mode).
+Add or remove multiple participants from a memory space (Hive Mode).
 
 ### Signature
 
@@ -432,34 +513,32 @@ cortex.memorySpaces.updateParticipants(
 
 ```typescript
 interface ParticipantUpdates {
-  add?: string[]; // Add participants
-  remove?: string[]; // Remove participants
+  add?: Array<{ id: string; type: string; joinedAt: number }>; // Add participants
+  remove?: string[]; // Remove participant IDs
 }
 ```
 
 ### Examples
 
-**Add Participant:**
+**Add Participants:**
 
 ```typescript
-// User installs new AI tool
+// User installs new AI tools
 await cortex.memorySpaces.updateParticipants("user-123-personal", {
-  add: ["github-copilot"], // Add to hive
+  add: [
+    { id: "github-copilot", type: "ai-tool", joinedAt: Date.now() },
+    { id: "windsurf", type: "ai-tool", joinedAt: Date.now() },
+  ],
 });
-
-// Now GitHub Copilot can access all memories in the space
 ```
 
-**Remove Participant:**
+**Remove Participants:**
 
 ```typescript
-// User uninstalls tool
+// User uninstalls tools
 await cortex.memorySpaces.updateParticipants("user-123-personal", {
-  remove: ["old-tool"],
+  remove: ["old-tool-1", "old-tool-2"],
 });
-
-// Old tool's participantId still in memories (audit trail)
-// But space no longer lists it as active participant
 ```
 
 **Replace Participants:**
@@ -468,7 +547,34 @@ await cortex.memorySpaces.updateParticipants("user-123-personal", {
 // Set exact participant list
 await cortex.memorySpaces.updateParticipants("team-workspace", {
   remove: ["bot-1", "bot-2"], // Remove old
-  add: ["bot-3", "bot-4"], // Add new
+  add: [
+    { id: "bot-3", type: "agent", joinedAt: Date.now() },
+    { id: "bot-4", type: "agent", joinedAt: Date.now() },
+  ],
+});
+```
+
+---
+
+## findByParticipant()
+
+Find all memory spaces where a participant is active.
+
+### Signature
+
+```typescript
+cortex.memorySpaces.findByParticipant(participantId: string): Promise<MemorySpace[]>
+```
+
+### Examples
+
+```typescript
+// Find all spaces where a specific user participates
+const userSpaces = await cortex.memorySpaces.findByParticipant("user-123");
+
+console.log(`User is active in ${userSpaces.length} memory spaces`);
+userSpaces.forEach((space) => {
+  console.log(`- ${space.name} (${space.type})`);
 });
 ```
 
@@ -489,7 +595,7 @@ cortex.memorySpaces.archive(memorySpaceId: string, options?: ArchiveOptions): Pr
 ```typescript
 interface ArchiveOptions {
   reason?: string; // Why archived
-  metadata?: Record<string, any>; // Archive metadata
+  metadata?: Record<string, unknown>; // Archive metadata
 }
 ```
 
@@ -503,7 +609,7 @@ await cortex.memorySpaces.archive("project-apollo", {
   reason: "Project completed successfully",
   metadata: {
     archivedBy: "admin-456",
-    completedAt: new Date(),
+    completedAt: Date.now(),
   },
 });
 
@@ -557,14 +663,14 @@ console.log(space.status); // 'active'
 ```typescript
 cortex.memorySpaces.delete(
   memorySpaceId: string,
-  options: DeleteOptions
-): Promise<DeleteResult>
+  options: DeleteMemorySpaceOptions
+): Promise<DeleteMemorySpaceResult>
 ```
 
 ### Parameters
 
 ```typescript
-interface DeleteOptions {
+interface DeleteMemorySpaceOptions {
   cascade: boolean; // REQUIRED: Must be true to proceed
   reason: string; // REQUIRED: Why deleting (audit trail)
   confirmId?: string; // Optional: Safety check (must match memorySpaceId)
@@ -575,7 +681,7 @@ interface DeleteOptions {
 ### Returns
 
 ```typescript
-interface DeleteResult {
+interface DeleteMemorySpaceResult {
   memorySpaceId: string;
   deleted: true;
   cascade: {
@@ -585,7 +691,7 @@ interface DeleteResult {
     totalBytes: number; // Storage freed
   };
   reason: string;
-  deletedAt: Date;
+  deletedAt: number;
 }
 ```
 
@@ -604,7 +710,6 @@ const result = await cortex.memorySpaces.delete("user-123-personal", {
 console.log(`Deleted ${result.cascade.memoriesDeleted} memories`);
 console.log(`Deleted ${result.cascade.conversationsDeleted} conversations`);
 console.log(`Deleted ${result.cascade.factsDeleted} facts`);
-console.log(`Freed ${result.cascade.totalBytes} bytes`);
 ```
 
 **Project Cleanup:**
@@ -647,13 +752,16 @@ Get analytics and usage statistics for a memory space.
 ### Signature
 
 ```typescript
-cortex.memorySpaces.getStats(memorySpaceId: string, options?: StatsOptions): Promise<MemorySpaceStats>
+cortex.memorySpaces.getStats(
+  memorySpaceId: string,
+  options?: GetMemorySpaceStatsOptions
+): Promise<MemorySpaceStats>
 ```
 
 ### Parameters
 
 ```typescript
-interface StatsOptions {
+interface GetMemorySpaceStatsOptions {
   timeWindow?: "24h" | "7d" | "30d" | "90d" | "all"; // Default: "all"
   includeParticipants?: boolean; // Participant activity (Hive Mode)
 }
@@ -672,8 +780,8 @@ interface MemorySpaceStats {
   totalMessages: number;
 
   // Activity (based on timeWindow)
-  memoriesThisWindow: number;
-  conversationsThisWindow: number;
+  memoriesThisWindow?: number;
+  conversationsThisWindow?: number;
 
   // Storage
   storage: {
@@ -682,10 +790,6 @@ interface MemorySpaceStats {
     factsBytes: number;
     totalBytes: number;
   };
-
-  // Performance
-  avgSearchTime: string; // e.g., "12ms"
-  avgMemoryAccessTime: string;
 
   // Content Analysis
   topTags: string[];
@@ -698,18 +802,16 @@ interface MemorySpaceStats {
   };
 
   // Participant Activity (if includeParticipants: true)
-  participants?: ParticipantActivity[];
-}
-
-interface ParticipantActivity {
-  participantId: string;
-  memoriesStored: number;
-  conversationsStored: number;
-  factsExtracted: number;
-  firstActive: Date;
-  lastActive: Date;
-  avgImportance: number;
-  topTags: string[];
+  participants?: Array<{
+    participantId: string;
+    memoriesStored: number;
+    conversationsStored: number;
+    factsExtracted: number;
+    firstActive: number;
+    lastActive: number;
+    avgImportance: number;
+    topTags: string[];
+  }>;
 }
 ```
 
@@ -727,6 +829,18 @@ console.log(
 console.log(`Top tags: ${stats.topTags.join(", ")}`);
 ```
 
+**With Time Window:**
+
+```typescript
+// Last 7 days
+const weekStats = await cortex.memorySpaces.getStats("user-123-personal", {
+  timeWindow: "7d",
+});
+
+console.log(`Activity this week: ${weekStats.memoriesThisWindow} memories`);
+console.log(`Conversations this week: ${weekStats.conversationsThisWindow}`);
+```
+
 **With Participant Breakdown (Hive Mode):**
 
 ```typescript
@@ -738,28 +852,12 @@ const stats = await cortex.memorySpaces.getStats("team-engineering-workspace", {
 console.log(`Activity this week: ${stats.memoriesThisWindow} memories`);
 
 // Participant breakdown
-stats.participants.forEach((p) => {
+stats.participants?.forEach((p) => {
   console.log(`${p.participantId}:`);
   console.log(`  - Stored: ${p.memoriesStored} memories`);
-  console.log(`  - Last active: ${p.lastActive}`);
+  console.log(`  - Last active: ${new Date(p.lastActive).toISOString()}`);
   console.log(`  - Avg importance: ${p.avgImportance}`);
 });
-```
-
-**Time Window Analysis:**
-
-```typescript
-// Last 24 hours
-const day = await cortex.memorySpaces.getStats("user-123-personal", {
-  timeWindow: "24h",
-});
-console.log(`Last 24h: ${day.memoriesThisWindow} memories`);
-
-// Last 30 days
-const month = await cortex.memorySpaces.getStats("user-123-personal", {
-  timeWindow: "30d",
-});
-console.log(`Last 30d: ${month.memoriesThisWindow} memories`);
 ```
 
 ---
@@ -774,13 +872,13 @@ async function onUserSignup(userId: string) {
   const memorySpaceId = `customer-${userId}-space`;
 
   await cortex.memorySpaces.register({
-    id: memorySpaceId,
+    memorySpaceId,
     name: `Customer ${userId} Memory`,
     type: "personal",
     metadata: {
       customerId: userId,
       tier: "free",
-      signupDate: new Date(),
+      signupDate: Date.now(),
     },
   });
 
@@ -800,10 +898,13 @@ async function createTeamWorkspace(
   const memorySpaceId = `team-${teamId}-workspace`;
 
   await cortex.memorySpaces.register({
-    id: memorySpaceId,
+    memorySpaceId,
     name: `${teamName} Workspace`,
     type: "team",
-    participants: members.map((m) => `bot-${m}`), // Each member has a bot
+    participants: members.map((m) => ({
+      id: `bot-${m}`,
+      type: "agent",
+    })),
     metadata: {
       teamId,
       createdBy: "admin",
@@ -816,8 +917,10 @@ async function createTeamWorkspace(
 
 // Add new member
 async function addTeamMember(teamId: string, memberId: string) {
-  await cortex.memorySpaces.updateParticipants(`team-${teamId}-workspace`, {
-    add: [`bot-${memberId}`],
+  await cortex.memorySpaces.addParticipant(`team-${teamId}-workspace`, {
+    id: `bot-${memberId}`,
+    type: "agent",
+    joinedAt: Date.now(),
   });
 }
 ```
@@ -831,13 +934,13 @@ async function memorySpaceLifecycle(projectId: string) {
 
   // 1. Create
   await cortex.memorySpaces.register({
-    id: memorySpaceId,
+    memorySpaceId,
     type: "project",
     metadata: { status: "active" },
   });
 
   // 2. Use (implicit in app)
-  await cortex.memory.remember({ memorySpaceId, ... });
+  // await cortex.memory.remember({ memorySpaceId, ... });
 
   // 3. Complete project - archive
   await cortex.memorySpaces.archive(memorySpaceId, {
@@ -857,11 +960,11 @@ async function memorySpaceLifecycle(projectId: string) {
 ```typescript
 // Build memory space analytics dashboard
 async function getMemorySpaceDashboard() {
-  const spaces = await cortex.memorySpaces.list({ status: "active" });
+  const result = await cortex.memorySpaces.list({ status: "active" });
 
   const dashboard = await Promise.all(
-    spaces.spaces.map(async (space) => {
-      const stats = await cortex.memorySpaces.getStats(space.id, {
+    result.spaces.map(async (space) => {
+      const stats = await cortex.memorySpaces.getStats(space.memorySpaceId, {
         timeWindow: "7d",
         includeParticipants: true,
       });
@@ -883,34 +986,6 @@ async function getMemorySpaceDashboard() {
 // Usage
 const dashboard = await getMemorySpaceDashboard();
 console.table(dashboard);
-```
-
-### Pattern 5: Migration Between Spaces
-
-```typescript
-// Migrate data from one space to another
-async function migrateMemorySpace(fromSpaceId: string, toSpaceId: string) {
-  // Get all memories from source
-  const memories = await cortex.memory.list(fromSpaceId);
-
-  // Copy to destination
-  for (const memory of memories) {
-    await cortex.memory.remember({
-      memorySpaceId: toSpaceId,
-      participantId: memory.participantId, // Preserve participant
-      conversationId: memory.conversationRef?.conversationId,
-      userMessage: memory.content,
-      agentResponse: "",
-      userId: memory.userId,
-      userName: memory.userId,
-    });
-  }
-
-  // Archive source space
-  await cortex.memorySpaces.archive(fromSpaceId, {
-    reason: `Migrated to ${toSpaceId}`,
-  });
-}
 ```
 
 ---
@@ -939,7 +1014,7 @@ await cortex.memory.remember({ memorySpaceId: "test-space", ... });
 
 // Production: Explicit registration
 await cortex.memorySpaces.register({
-  id: "user-123-personal",
+  memorySpaceId: "user-123-personal",
   name: "Alice's Personal Space",
   type: "personal",
   metadata: { environment: "production" },
@@ -949,16 +1024,14 @@ await cortex.memorySpaces.register({
 ### 3. Track Participants in Hive Mode
 
 ```typescript
-// ✅ GOOD: Clear participant list
+// ✅ GOOD: Clear participant list with types
 await cortex.memorySpaces.register({
-  id: "user-123-personal",
-  participants: ["cursor", "claude", "notion-ai"],
-  // ...
-});
-
-// Then filter/analyze by participant
-const cursorMemories = await cortex.memory.list("user-123-personal", {
-  participantId: "cursor",
+  memorySpaceId: "user-123-personal",
+  participants: [
+    { id: "cursor", type: "ai-tool" },
+    { id: "claude", type: "ai-tool" },
+    { id: "notion-ai", type: "ai-tool" },
+  ],
 });
 ```
 
@@ -967,20 +1040,15 @@ const cursorMemories = await cortex.memory.list("user-123-personal", {
 ```typescript
 // Rich metadata for filtering and search
 await cortex.memorySpaces.register({
-  id: "user-123-personal",
+  memorySpaceId: "user-123-personal",
   metadata: {
     owner: "user-123",
     environment: "production",
     tier: "pro",
     region: "us-west-2",
-    created: new Date(),
+    created: Date.now(),
     tags: ["active", "premium"],
   },
-});
-
-// Later, filter by metadata
-const proSpaces = await cortex.memorySpaces.list({
-  metadata: { tier: "pro" },
 });
 ```
 
@@ -990,8 +1058,7 @@ const proSpaces = await cortex.memorySpaces.list({
 // ✅ GOOD: Archive first, delete later
 await cortex.memorySpaces.archive(memorySpaceId, { reason: "Inactive" });
 
-// Wait for retention period
-await sleep(90 * 24 * 60 * 60 * 1000); // 90 days
+// Wait for retention period...
 
 // Then delete
 await cortex.memorySpaces.delete(memorySpaceId, {
@@ -1012,9 +1079,9 @@ await cortex.memorySpaces.delete(memorySpaceId, {
 
 ```typescript
 try {
-  await cortex.memorySpaces.register({ id: "user-123-personal", ... });
+  await cortex.memorySpaces.register({ memorySpaceId: "user-123-personal", type: "personal" });
 } catch (error) {
-  if (error.code === "MEMORYSPACE_ALREADY_EXISTS") {
+  if (error.message?.includes("MEMORYSPACE_ALREADY_EXISTS")) {
     // Use update() instead
     await cortex.memorySpaces.update("user-123-personal", { ... });
   }
@@ -1024,63 +1091,44 @@ try {
 **MEMORYSPACE_NOT_FOUND:**
 
 ```typescript
-try {
-  await cortex.memorySpaces.get("nonexistent-space");
-} catch (error) {
-  if (error.code === "MEMORYSPACE_NOT_FOUND") {
-    // Create it
-    await cortex.memorySpaces.register({ id: "nonexistent-space", ... });
-  }
+const space = await cortex.memorySpaces.get("nonexistent-space");
+
+if (space === null) {
+  // Create it
+  await cortex.memorySpaces.register({ memorySpaceId: "nonexistent-space", type: "personal" });
 }
 ```
 
-**MEMORYSPACE_HAS_DATA (Delete Prevention):**
+**CASCADE_REQUIRED (Delete Prevention):**
 
 ```typescript
 try {
-  await cortex.memorySpaces.delete("active-space", { cascade: false, ... });
+  await cortex.memorySpaces.delete("active-space", {
+    cascade: false,
+    reason: "Test",
+  });
 } catch (error) {
-  if (error.code === "MEMORYSPACE_HAS_DATA") {
+  if (error.message?.includes("CASCADE_REQUIRED")) {
     console.error("Must set cascade: true to delete space with data");
   }
 }
 ```
 
----
-
-## Migration from Agent Registry
-
-### Before (Agent-Centric)
+**CONFIRM_ID_MISMATCH:**
 
 ```typescript
-// OLD: cortex.agents.* API
-await cortex.agents.register({
-  id: "my-agent",
-  name: "My Agent",
-  metadata: { capabilities: ["chat"] },
-});
-
-const agent = await cortex.agents.get("my-agent");
-const agents = await cortex.agents.list();
+try {
+  await cortex.memorySpaces.delete("space-123", {
+    cascade: true,
+    reason: "Test",
+    confirmId: "wrong-id", // Doesn't match
+  });
+} catch (error) {
+  if (error.message?.includes("CONFIRM_ID_MISMATCH")) {
+    console.error("confirmId must match memorySpaceId");
+  }
+}
 ```
-
-### After (Memory-Space-Centric)
-
-```typescript
-// NEW: cortex.memorySpaces.* API
-await cortex.memorySpaces.register({
-  id: "my-agent-space", // Or "user-123-personal" for Hive Mode
-  name: "My Agent's Memory Space",
-  type: "custom",
-  participants: ["my-agent"], // Single participant (Collaboration Mode)
-  metadata: { capabilities: ["chat"] },
-});
-
-const space = await cortex.memorySpaces.get("my-agent-space");
-const spaces = await cortex.memorySpaces.list();
-```
-
-**Note:** The old `cortex.agents.*` API may be deprecated in favor of `cortex.memorySpaces.*` to avoid confusion about the relationship between agents and memory spaces.
 
 ---
 

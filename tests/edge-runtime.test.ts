@@ -306,7 +306,7 @@ describe("Edge Runtime Compatibility", () => {
     it("should execute queries without Node.js dependencies", async () => {
       // Test basic query operations
       const spaces = await cortex.memorySpaces.list();
-      expect(Array.isArray(spaces)).toBe(true);
+      expect(Array.isArray(spaces.spaces)).toBe(true);
     });
 
     it("should execute mutations without Node.js dependencies", async () => {

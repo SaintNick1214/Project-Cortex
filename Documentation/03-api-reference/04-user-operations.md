@@ -1,6 +1,6 @@
 # User Operations API
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2025-12-10
 
 Complete API reference for user profile management.
 
@@ -296,59 +296,47 @@ if (user) {
 
 ### update()
 
-Create or update a user profile. This is an **upsert** operation.
+Create or update a user profile. This is an **upsert** operation with automatic versioning.
 
 **Signature:**
 
 ```typescript
 cortex.users.update(
   userId: string,
-  data: UserProfileUpdate,
-  options?: UpdateOptions
+  data: Record<string, unknown>
 ): Promise<UserProfile>
 ```
 
 **Parameters:**
 
-```typescript
-interface UserProfileUpdate {
-  data: Record<string, any>; // Flexible user data (any structure)
-}
+- `userId` (string) - Unique user identifier
+- `data` (Record<string, unknown>) - User profile data to merge with existing (any JSON-serializable structure)
 
-interface UpdateOptions {
-  skipVersioning?: boolean; // Don't create new version (default: false)
-  versionReason?: string; // Why this update happened
-  merge?: boolean; // Merge with existing data (default: true)
-}
-```
-
-**Note:** Unlike `immutable.*` which requires `type` and `id`, `users.update()` only needs `userId` (the `type='user'` is implicit).
+**Note:** Unlike `immutable.*` which requires `type` and `id`, `users.update()` only needs `userId` (the `type='user'` is implicit). Updates are always merged with existing data by default.
 
 **Returns:**
 
-- `UserProfile` - Updated profile with incremented version (if `skipVersioning: false`)
+- `UserProfile` - Updated profile with incremented version
 
 **Side Effects:**
 
-- Creates new version (unless `skipVersioning: true`)
+- Creates new version in immutable store
 - Updates `updatedAt` timestamp
-- Merges with existing profile (unless `merge: false`)
+- Merges with existing profile by default (unless `merge: false`)
 
-**Example 1: Create new profile (flexible structure)**
+**Example 1: Create new profile**
 
 ```typescript
 const user = await cortex.users.update("user-123", {
-  data: {
-    displayName: "Alex Johnson",
-    email: "alex@example.com",
-    preferences: {
-      theme: "dark",
-      language: "en",
-      timezone: "America/New_York",
-    },
-    tier: "free",
-    signupDate: new Date(),
+  displayName: "Alex Johnson",
+  email: "alex@example.com",
+  preferences: {
+    theme: "dark",
+    language: "en",
+    timezone: "America/New_York",
   },
+  tier: "free",
+  signupDate: new Date().toISOString(),
 });
 
 console.log(user.version); // 1 (first version)
@@ -364,56 +352,40 @@ const user = await cortex.users.get("user-123");
 
 // Update theme (merges with existing, creates v2)
 await cortex.users.update("user-123", {
-  data: {
-    preferences: {
-      theme: "light", // Only updates theme
-    },
+  preferences: {
+    theme: "light", // Only updates theme, keeps other preferences
   },
 });
 // Result: { displayName: 'Alex', email: 'alex@...', preferences: { theme: 'light' } }
 
-// Update last seen (skip versioning for routine stats)
-await cortex.users.update(
-  "user-123",
-  {
-    data: {
-      lastSeen: new Date(),
-      sessionCount: (user.data.sessionCount || 0) + 1,
-    },
-  },
-  {
-    skipVersioning: true, // Don't create version for stats
-  },
-);
+// Update last seen
+await cortex.users.update("user-123", {
+  lastSeen: new Date().toISOString(),
+});
 ```
 
-**Example 3: Replace entire data (merge: false)**
+**Example 3: Multiple field updates**
 
 ```typescript
-// Replace ALL data (not merge)
-await cortex.users.update(
-  "user-123",
-  {
-    data: {
-      displayName: "Alex",
-      preferences: {
-        theme: "dark",
-        language: "es",
-      },
-      // Old fields (email, tier, etc.) are GONE
-    },
+// Update multiple fields at once
+await cortex.users.update("user-123", {
+  displayName: "Alex Johnson",
+  preferences: {
+    theme: "dark",
+    language: "es",
   },
-  {
-    merge: false, // Complete replacement
+  metadata: {
+    lastActivity: new Date().toISOString(),
   },
-);
+});
 ```
 
 **Errors:**
 
-- `CortexError('INVALID_USER_ID')` - User ID is invalid
-- `CortexError('INVALID_PROFILE_DATA')` - Profile data is malformed
-- `CortexError('CONVEX_ERROR')` - Database error
+- `UserValidationError('MISSING_USER_ID')` - User ID is required
+- `UserValidationError('INVALID_USER_ID_FORMAT')` - User ID must be a non-empty string
+- `UserValidationError('MISSING_DATA')` - Data is required
+- `UserValidationError('INVALID_DATA_TYPE')` - Data must be an object
 
 **See Also:**
 
@@ -669,14 +641,13 @@ const result = await deleteUserGDPR("user-123");
 
 ### search()
 
-Search user profiles with filters.
+Search user profiles with filters, sorting, and pagination.
 
 **Signature:**
 
 ```typescript
 cortex.users.search(
-  filters?: UserFilters,
-  options?: SearchOptions
+  filters: UserFilters
 ): Promise<UserProfile[]>
 ```
 
@@ -684,31 +655,23 @@ cortex.users.search(
 
 ```typescript
 interface UserFilters {
-  // Identity
-  email?: string;
-  displayName?: string;
+  // Pagination
+  limit?: number; // Maximum results (default: 50, max: 1000)
+  offset?: number; // Skip first N results (default: 0)
 
-  // Preferences
-  preferences?: Record<string, any>;
+  // Date filters (timestamps in milliseconds)
+  createdAfter?: number; // Filter by createdAt > timestamp
+  createdBefore?: number; // Filter by createdAt < timestamp
+  updatedAfter?: number; // Filter by updatedAt > timestamp
+  updatedBefore?: number; // Filter by updatedAt < timestamp
 
-  // Metadata
-  metadata?: Record<string, any>;
+  // Sorting
+  sortBy?: "createdAt" | "updatedAt"; // Sort field (default: "createdAt")
+  sortOrder?: "asc" | "desc"; // Sort direction (default: "desc")
 
-  // Date filters
-  createdBefore?: Date;
-  createdAfter?: Date;
-  updatedBefore?: Date;
-  updatedAfter?: Date;
-
-  // Version filters
-  version?: number | RangeQuery;
-}
-
-interface SearchOptions {
-  limit?: number; // Default: 50
-  offset?: number; // Default: 0
-  sortBy?: "createdAt" | "updatedAt" | "displayName" | "email";
-  sortOrder?: "asc" | "desc";
+  // Client-side filters (filter on nested data properties)
+  displayName?: string; // Filter by data.displayName (contains match)
+  email?: string; // Filter by data.email (contains match)
 }
 ```
 
@@ -716,58 +679,43 @@ interface SearchOptions {
 
 - `UserProfile[]` - Array of matching user profiles
 
-**Example:**
+**Example 1: Basic search with limit**
 
 ```typescript
-// Find pro users
-const proUsers = await cortex.users.search({
-  metadata: { tier: "pro" },
-});
+const users = await cortex.users.search({ limit: 10 });
 
-// Find users by company
-const acmeUsers = await cortex.users.search({
-  metadata: { company: "Acme Corp" },
-});
+for (const user of users) {
+  console.log(`${user.id}: ${user.data.displayName || "No name"}`);
+}
+```
 
-// Find inactive users (last seen > 90 days ago)
-const inactive = await cortex.users.search({
-  metadata: {
-    lastSeen: {
-      $lte: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
-    },
-  },
-});
+**Example 2: Search with date filters**
 
-// Find users with dark mode
-const darkModeUsers = await cortex.users.search({
-  preferences: { theme: "dark" },
+```typescript
+// Find users created in the last 30 days
+const recentUsers = await cortex.users.search({
+  createdAfter: Date.now() - 30 * 24 * 60 * 60 * 1000,
+  sortBy: "createdAt",
+  sortOrder: "desc",
 });
+```
 
-// Complex query
-const targetUsers = await cortex.users.search(
-  {
-    metadata: {
-      tier: "free",
-      signupDate: {
-        $gte: new Date("2025-01-01"),
-        $lte: new Date("2025-10-31"),
-      },
-    },
-    preferences: {
-      notifications: true,
-    },
-  },
-  {
-    limit: 100,
-    sortBy: "createdAt",
-    sortOrder: "desc",
-  },
-);
+**Example 3: Search by displayName**
+
+```typescript
+// Find users with "alex" in their displayName
+const alexUsers = await cortex.users.search({
+  displayName: "alex",
+  limit: 50,
+});
 ```
 
 **Errors:**
 
-- `CortexError('INVALID_FILTERS')` - Filters are malformed
+- `UserValidationError('INVALID_FILTER_STRUCTURE')` - Filters must be an object
+- `UserValidationError('INVALID_SORT_BY')` - sortBy must be 'createdAt' or 'updatedAt'
+- `UserValidationError('INVALID_SORT_ORDER')` - sortOrder must be 'asc' or 'desc'
+- `UserValidationError('INVALID_DATE_RANGE')` - Date range is invalid
 
 **See Also:**
 
@@ -777,68 +725,86 @@ const targetUsers = await cortex.users.search(
 
 ### list()
 
-List user profiles with pagination.
+List user profiles with filtering, sorting, and pagination metadata.
 
 **Signature:**
 
 ```typescript
 cortex.users.list(
-  options?: ListOptions
-): Promise<ListResult>
+  filters?: ListUsersFilter
+): Promise<ListUsersResult>
 ```
 
 **Parameters:**
 
 ```typescript
-interface ListOptions extends UserFilters {
-  limit?: number; // Default: 50
-  offset?: number; // Default: 0
-  sortBy?: "createdAt" | "updatedAt" | "displayName" | "email";
-  sortOrder?: "asc" | "desc";
-}
+interface ListUsersFilter {
+  // Pagination
+  limit?: number; // Maximum results (default: 50, max: 1000)
+  offset?: number; // Skip first N results (default: 0)
 
-interface ListResult {
-  users: UserProfile[];
-  total: number;
-  limit: number;
-  offset: number;
-  hasMore: boolean;
+  // Date filters (timestamps in milliseconds)
+  createdAfter?: number; // Filter by createdAt > timestamp
+  createdBefore?: number; // Filter by createdAt < timestamp
+  updatedAfter?: number; // Filter by updatedAt > timestamp
+  updatedBefore?: number; // Filter by updatedAt < timestamp
+
+  // Sorting
+  sortBy?: "createdAt" | "updatedAt"; // Sort field (default: "createdAt")
+  sortOrder?: "asc" | "desc"; // Sort direction (default: "desc")
+
+  // Client-side filters (filter on nested data properties)
+  displayName?: string; // Filter by data.displayName (contains match)
+  email?: string; // Filter by data.email (contains match)
 }
 ```
 
 **Returns:**
 
-- `ListResult` - Paginated list of user profiles
+```typescript
+interface ListUsersResult {
+  users: UserProfile[]; // Array of user profiles
+  total: number; // Total count before pagination
+  limit: number; // Limit used for this query
+  offset: number; // Offset used for this query
+  hasMore: boolean; // Whether there are more results
+}
+```
 
-**Example:**
+**Example 1: Basic list with pagination**
 
 ```typescript
-// List all users (paginated)
-const page1 = await cortex.users.list({
-  limit: 50,
-  offset: 0,
-  sortBy: "createdAt",
+// List users with pagination metadata
+const result = await cortex.users.list({ limit: 50 });
+
+console.log(`Retrieved ${result.users.length} of ${result.total} users`);
+console.log(`Has more: ${result.hasMore}`);
+
+for (const user of result.users) {
+  console.log(`- ${user.id}: ${user.data.displayName || "Unknown"}`);
+}
+```
+
+**Example 2: Paginate through all users**
+
+```typescript
+const page1 = await cortex.users.list({ limit: 10, offset: 0 });
+const page2 = await cortex.users.list({ limit: 10, offset: 10 });
+
+console.log(`Page 1: ${page1.users.length} users`);
+console.log(`Page 2: ${page2.users.length} users`);
+console.log(`Total: ${page1.total}`);
+```
+
+**Example 3: List with date filters and sorting**
+
+```typescript
+// List recently updated users
+const recent = await cortex.users.list({
+  updatedAfter: Date.now() - 7 * 24 * 60 * 60 * 1000, // Last week
+  sortBy: "updatedAt",
   sortOrder: "desc",
-});
-
-console.log(`Showing ${page1.users.length} of ${page1.total} users`);
-console.log(`Has more: ${page1.hasMore}`);
-
-// List with filters
-const recentUsers = await cortex.users.list({
-  metadata: {
-    signupDate: {
-      $gte: new Date("2025-10-01"),
-    },
-  },
-  limit: 100,
-});
-
-// List by tier
-const proUsers = await cortex.users.list({
-  metadata: { tier: "pro" },
-  sortBy: "displayName",
-  sortOrder: "asc",
+  limit: 20,
 });
 ```
 
@@ -854,7 +820,7 @@ const proUsers = await cortex.users.list({
 
 ### count()
 
-Count users matching filters without retrieving them.
+Count user profiles with optional date filters.
 
 **Signature:**
 
@@ -866,49 +832,46 @@ cortex.users.count(
 
 **Parameters:**
 
-- `filters` (UserFilters, optional) - Same filters as search()
+```typescript
+interface UserFilters {
+  // Date filters (timestamps in milliseconds)
+  createdAfter?: number; // Count users created after timestamp
+  createdBefore?: number; // Count users created before timestamp
+  updatedAfter?: number; // Count users updated after timestamp
+  updatedBefore?: number; // Count users updated before timestamp
+}
+```
 
 **Returns:**
 
-- `number` - Count of matching users
+- `number` - Count of matching user profiles
 
-**Example:**
+**Example 1: Total count**
 
 ```typescript
-// Total users
 const total = await cortex.users.count();
 console.log(`Total users: ${total}`);
+```
 
-// Count by tier
-const proCount = await cortex.users.count({
-  metadata: { tier: "pro" },
-});
-console.log(`Pro users: ${proCount}`);
+**Example 2: Count with date filters**
 
-// Count active users (last 30 days)
-const activeCount = await cortex.users.count({
-  metadata: {
-    lastSeen: {
-      $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-    },
-  },
+```typescript
+// Count users created in the last 30 days
+const recentSignups = await cortex.users.count({
+  createdAfter: Date.now() - 30 * 24 * 60 * 60 * 1000,
 });
-console.log(`Active users (30d): ${activeCount}`);
+console.log(`New users (30 days): ${recentSignups}`);
 
-// Count by signup date range
-const q4Signups = await cortex.users.count({
-  metadata: {
-    signupDate: {
-      $gte: new Date("2025-10-01"),
-      $lte: new Date("2025-12-31"),
-    },
-  },
+// Count users active this week
+const activeThisWeek = await cortex.users.count({
+  updatedAfter: Date.now() - 7 * 24 * 60 * 60 * 1000,
 });
+console.log(`Active users (7 days): ${activeThisWeek}`);
 ```
 
 **Errors:**
 
-- `CortexError('INVALID_FILTERS')` - Filters are malformed
+- `UserValidationError('INVALID_DATE_RANGE')` - Date range is invalid
 
 **See Also:**
 
@@ -918,19 +881,34 @@ const q4Signups = await cortex.users.count({
 
 ### updateMany()
 
-Bulk update user profiles matching filters.
+Bulk update multiple user profiles by explicit IDs or filters.
 
 **Signature:**
 
 ```typescript
+// By explicit user IDs
+cortex.users.updateMany(
+  userIds: string[],
+  updates: { data: Record<string, unknown> },
+  options?: UpdateManyOptions
+): Promise<UpdateManyResult>
+
+// By filters (select users matching criteria)
 cortex.users.updateMany(
   filters: UserFilters,
-  updates: UserProfileUpdate,
+  updates: { data: Record<string, unknown> },
   options?: UpdateManyOptions
 ): Promise<UpdateManyResult>
 ```
 
 **Parameters:**
+
+- `userIdsOrFilters` (string[] | UserFilters) - Either:
+  - Array of user IDs to update (1-100 items), OR
+  - UserFilters object to select users dynamically
+- `updates` (object) - Updates to apply
+  - `data` (Record<string, unknown>) - Data to merge with existing profiles
+- `options` (UpdateManyOptions, optional) - Update options
 
 ```typescript
 interface UpdateManyOptions {
@@ -939,9 +917,8 @@ interface UpdateManyOptions {
 }
 
 interface UpdateManyResult {
-  updated: number;
-  userIds: string[];
-  wouldUpdate?: number; // For dryRun
+  updated: number; // Number of users successfully updated
+  userIds: string[]; // IDs of users that were updated
 }
 ```
 
@@ -949,65 +926,70 @@ interface UpdateManyResult {
 
 - `UpdateManyResult` - Details about bulk update
 
-**Example:**
+**Example 1: Update by explicit IDs**
 
 ```typescript
-// Enable new feature for all pro users
 const result = await cortex.users.updateMany(
-  {
-    metadata: { tier: "pro" },
-  },
-  {
-    preferences: {
-      newFeatureEnabled: true,
-    },
-  },
+  ["user-1", "user-2", "user-3"],
+  { data: { status: "active", lastUpdatedBy: "admin" } },
 );
 
-console.log(`Enabled feature for ${result.updated} pro users`);
+console.log(`Updated ${result.updated} users`);
+```
 
-// Update language for all users in a region
-await cortex.users.updateMany(
-  {
-    metadata: { region: "EMEA" },
-  },
-  {
-    preferences: {
-      timezone: "Europe/London",
-    },
-  },
+**Example 2: Update by filters**
+
+```typescript
+// Update all users created in the last 7 days
+const result = await cortex.users.updateMany(
+  { createdAfter: Date.now() - 7 * 24 * 60 * 60 * 1000 },
+  { data: { welcomeEmailSent: true } },
 );
 
-// Preview first
+console.log(`Sent welcome emails to ${result.updated} new users`);
+
+// Update users by displayName
+const alexResult = await cortex.users.updateMany(
+  { displayName: "alex" },
+  { data: { verified: true } },
+);
+```
+
+**Example 3: Dry run preview**
+
+```typescript
 const preview = await cortex.users.updateMany(
-  {
-    metadata: { tier: "free" },
-  },
-  {
-    metadata: { migrationReady: true },
-  },
-  {
-    dryRun: true,
-  },
+  { updatedBefore: Date.now() - 90 * 24 * 60 * 60 * 1000 },
+  { data: { inactive: true } },
+  { dryRun: true },
 );
 
-console.log(`Would update ${preview.wouldUpdate} free users`);
+console.log(`Would update ${preview.userIds.length} inactive users`);
 ```
 
 **Errors:**
 
-- `CortexError('INVALID_FILTERS')` - Filters are malformed
-- `CortexError('NO_USERS_MATCHED')` - No users match filters
+- `UserValidationError('EMPTY_USER_IDS_ARRAY')` - Empty userIds array
+- `UserValidationError('USER_ID_ARRAY_TOO_LARGE')` - More than 100 userIds
+- `UserValidationError('TOO_MANY_MATCHES')` - Filter matched >100 users
+- `UserValidationError('MISSING_DATA')` - updates.data is required
 
 ---
 
 ### deleteMany()
 
-Bulk delete user profiles matching filters.
+Bulk delete multiple user profiles by explicit IDs or filters.
 
 **Signature:**
 
 ```typescript
+// By explicit user IDs
+cortex.users.deleteMany(
+  userIds: string[],
+  options?: DeleteManyOptions
+): Promise<DeleteManyResult>
+
+// By filters (select users matching criteria)
 cortex.users.deleteMany(
   filters: UserFilters,
   options?: DeleteManyOptions
@@ -1016,20 +998,20 @@ cortex.users.deleteMany(
 
 **Parameters:**
 
+- `userIdsOrFilters` (string[] | UserFilters) - Either:
+  - Array of user IDs to delete (1-100 items), OR
+  - UserFilters object to select users dynamically
+- `options` (DeleteManyOptions, optional) - Delete options
+
 ```typescript
 interface DeleteManyOptions {
-  cascade?: boolean; // Delete user data from agents
+  cascade?: boolean; // Enable cascade deletion across all layers (default: false)
   dryRun?: boolean; // Preview without deleting
-  requireConfirmation?: boolean; // Prompt if > threshold
-  confirmationThreshold?: number; // Default: 10
 }
 
 interface DeleteManyResult {
-  deleted: number;
-  userIds: string[];
-  vectorMemoriesDeleted?: number; // If cascade: true
-  agentsAffected?: string[];
-  wouldDelete?: number; // For dryRun
+  deleted: number; // Number of users successfully deleted
+  userIds: string[]; // IDs of users that were deleted
 }
 ```
 
@@ -1037,123 +1019,131 @@ interface DeleteManyResult {
 
 - `DeleteManyResult` - Details about bulk deletion
 
-**Example:**
+**Example 1: Delete by explicit IDs**
 
 ```typescript
-// Delete inactive free users (preview first)
-const preview = await cortex.users.deleteMany(
-  {
-    metadata: {
-      tier: "free",
-      lastSeen: {
-        $lte: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
-      },
-    },
-  },
-  {
-    cascade: true,
-    dryRun: true,
-  },
+// Delete specific users
+const result = await cortex.users.deleteMany(["user-1", "user-2", "user-3"]);
+
+console.log(`Deleted ${result.deleted} users`);
+console.log(`Deleted IDs: ${result.userIds.join(", ")}`);
+```
+
+**Example 2: Delete by filters**
+
+```typescript
+// Delete inactive users (not updated in 1 year)
+const oldUsers = await cortex.users.deleteMany(
+  { updatedBefore: Date.now() - 365 * 24 * 60 * 60 * 1000 },
+  { cascade: true },
 );
 
-console.log(`Would delete ${preview.wouldDelete} inactive free users`);
+console.log(`Deleted ${oldUsers.deleted} inactive users`);
 
-// Execute after review
-if (preview.wouldDelete < 100) {
-  const result = await cortex.users.deleteMany(
-    {
-      metadata: {
-        tier: "free",
-        lastSeen: {
-          $lte: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
-        },
-      },
-    },
-    {
-      cascade: true,
-    },
-  );
+// Delete users by displayName pattern
+const testUsers = await cortex.users.deleteMany(
+  { displayName: "test-user" },
+  { cascade: true },
+);
+```
 
-  console.log(`Deleted ${result.deleted} users`);
-  console.log(`Deleted ${result.vectorMemoriesDeleted} memories`);
-}
+**Example 3: Dry run preview**
+
+```typescript
+const preview = await cortex.users.deleteMany(
+  { createdBefore: Date.now() - 180 * 24 * 60 * 60 * 1000 },
+  { dryRun: true },
+);
+
+console.log(`Would delete ${preview.userIds.length} users`);
 ```
 
 **Errors:**
 
-- `CortexError('INVALID_FILTERS')` - Filters are malformed
-- `CortexError('DELETION_CANCELLED')` - User cancelled confirmation
+- `UserValidationError('EMPTY_USER_IDS_ARRAY')` - Empty userIds array
+- `UserValidationError('USER_ID_ARRAY_TOO_LARGE')` - More than 100 userIds
+- `UserValidationError('TOO_MANY_MATCHES')` - Filter matched >100 users
 
 ---
 
 ### export()
 
-Export user profiles to JSON or CSV.
+Export user profiles to JSON or CSV format with optional related data.
 
 **Signature:**
 
 ```typescript
 cortex.users.export(
-  filters?: UserFilters,
-  options?: ExportOptions
-): Promise<string | ExportData>
+  options?: ExportUsersOptions
+): Promise<string>
 ```
 
 **Parameters:**
 
 ```typescript
-interface ExportOptions {
-  format: "json" | "csv";
-  outputPath?: string; // File path (returns string if provided)
-  includeMemories?: boolean; // Include memories from all agents
-  includeConversations?: boolean; // Include ACID conversations
-  includeVersionHistory?: boolean; // Include profile versions
+interface ExportUsersOptions {
+  filters?: UserFilters; // Filter users to export
+  format: "json" | "csv"; // Output format (required)
+  includeVersionHistory?: boolean; // Include previousVersions array
+  includeConversations?: boolean; // Include user's conversations
+  includeMemories?: boolean; // Include user's memories (from conversation memory spaces)
 }
 ```
 
 **Returns:**
 
-- `string` - File path if `outputPath` provided
-- `ExportData` - Structured data if no `outputPath`
+- `string` - Exported data as JSON or CSV string
 
-**Example:**
+**Example 1: Basic export**
 
 ```typescript
-// Export single user (GDPR data request)
-const userData = await cortex.users.export(
-  {
-    email: "alex@example.com",
-  },
-  {
-    format: "json",
-    includeMemories: true, // Include all agent memories
-    includeConversations: true, // Include ACID conversations
-    includeVersionHistory: true, // Include profile history
-  },
-);
+// Export all users as JSON
+const jsonExport = await cortex.users.export({ format: "json" });
+console.log(jsonExport);
 
-// Export all pro users
-const proExport = await cortex.users.export(
-  {
-    metadata: { tier: "pro" },
-  },
-  {
-    format: "csv",
-    outputPath: "exports/pro-users.csv",
-  },
-);
+// Export with limit as CSV
+const csvExport = await cortex.users.export({
+  format: "csv",
+  filters: { limit: 100 },
+});
+```
 
-console.log(`Exported to ${proExport}`);
+**Example 2: Full GDPR export with related data**
 
-// Export by date range
-await cortex.users.export(
-  {
-    metadata: {
-      signupDate: {
-        $gte: new Date("2025-01-01"),
-        $lte: new Date("2025-12-31"),
-      },
-    },
+```typescript
+// Export user data with all associated content
+const gdprExport = await cortex.users.export({
+  format: "json",
+  filters: { displayName: "alex" },
+  includeVersionHistory: true,
+  includeConversations: true,
+  includeMemories: true,
+});
+
+// Save to file
+import { writeFileSync } from "fs";
+writeFileSync("exports/user-gdpr-data.json", gdprExport);
+```
+
+**Example 3: Export with date filters**
+
+```typescript
+// Export recently created users
+const recentExport = await cortex.users.export({
+  format: "json",
+  filters: {
+    createdAfter: Date.now() - 30 * 24 * 60 * 60 * 1000,
+    sortBy: "createdAt",
+    sortOrder: "desc",
+  },
+});
+```
+
+**CSV Format:**
+
+```
+id,version,createdAt,updatedAt,data,versionHistoryCount,conversationsCount,memoriesCount
+user-123,1,2025-01-01T00:00:00.000Z,2025-01-01T00:00:00.000Z,"{""displayName"":""Alex""}",3,5,12
   },
   {
     format: "json",

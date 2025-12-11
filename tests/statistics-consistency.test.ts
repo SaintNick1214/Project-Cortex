@@ -24,7 +24,7 @@ describe("Statistics Consistency Testing", () => {
   afterAll(async () => {
     // Cleanup
     try {
-      await cortex.memorySpaces.delete(BASE_ID, { cascade: true });
+      await cortex.memorySpaces.delete(BASE_ID, { cascade: true, reason: "test cleanup" });
     } catch (_e) {
       // Ignore
     }
@@ -251,7 +251,7 @@ describe("Statistics Consistency Testing", () => {
       });
       const list = await cortex.conversations.list({ memorySpaceId: spaceId });
 
-      expect(count).toBe(list.length);
+      expect(count).toBe(list.conversations.length);
     });
 
     it("facts.count() matches facts.list().length", async () => {
@@ -431,7 +431,7 @@ describe("Statistics Consistency Testing", () => {
         type: "user-agent",
       });
 
-      expect(uaCount).toBe(uaList.length);
+      expect(uaCount).toBe(uaList.conversations.length);
       expect(uaCount).toBe(2);
     });
 
@@ -940,7 +940,7 @@ describe("Statistics Consistency Testing", () => {
       });
 
       // Delete space
-      await cortex.memorySpaces.delete(spaceId, { cascade: true });
+      await cortex.memorySpaces.delete(spaceId, { cascade: true, reason: "test cleanup" });
 
       // Space should be gone
       const check = await cortex.memorySpaces.get(spaceId);
@@ -1687,7 +1687,7 @@ describe("Statistics Consistency Testing", () => {
       const _before = await cortex.memorySpaces.getStats(spaceId);
 
       // Delete with cascade
-      await cortex.memorySpaces.delete(spaceId, { cascade: true });
+      await cortex.memorySpaces.delete(spaceId, { cascade: true, reason: "test cleanup" });
 
       // Space should be gone
       const check = await cortex.memorySpaces.get(spaceId);

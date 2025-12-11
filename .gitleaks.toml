@@ -1,0 +1,29 @@
+# Gitleaks configuration for Project-Cortex
+# https://github.com/gitleaks/gitleaks
+
+title = "Project-Cortex Gitleaks Configuration"
+
+[allowlist]
+  description = "Allowlist for false positives in documentation examples"
+  
+  # Paths to ignore (documentation files with example credentials)
+  paths = [
+    '''Documentation/.*\.md$''',
+    '''dev-docs/.*\.md$''',
+  ]
+  
+  # Specific commits/fingerprints to ignore (historical findings from deleted files)
+  commits = [
+    "8931e9c85f30e4863b91df62c069572e1358ae8c",  # Examples and Proofs - deleted
+    "20160bf43f34cc7107a02180ace5a53ef3d9913b",  # Documentation examples
+  ]
+  
+  # Regex patterns for example/placeholder values
+  regexes = [
+    '''secret-key''',
+    '''your[-_]api[-_]key''',
+    '''YOUR[-_]API[-_]KEY''',
+    '''cortex_sk_abc123''',
+    '''example[-_]token''',
+    '''<your[-_].*>''',
+  ]

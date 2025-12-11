@@ -337,7 +337,7 @@ describe("Memory Spaces Registry API", () => {
       });
 
       it("should throw on empty memorySpaceId for delete", async () => {
-        await expect(cortex.memorySpaces.delete("")).rejects.toThrow(
+        await expect(cortex.memorySpaces.delete("", { cascade: true, reason: "test" })).rejects.toThrow(
           "memorySpaceId",
         );
       });
@@ -523,32 +523,32 @@ describe("Memory Spaces Registry API", () => {
     });
 
     it("lists all memory spaces", async () => {
-      const spaces = await cortex.memorySpaces.list();
+      const result = await cortex.memorySpaces.list();
 
-      expect(spaces.length).toBeGreaterThanOrEqual(3);
+      expect(result.spaces.length).toBeGreaterThanOrEqual(3);
     });
 
     it("filters by type", async () => {
-      const teams = await cortex.memorySpaces.list({ type: "team" });
+      const result = await cortex.memorySpaces.list({ type: "team" });
 
-      expect(teams.length).toBeGreaterThanOrEqual(1);
-      teams.forEach((s) => {
+      expect(result.spaces.length).toBeGreaterThanOrEqual(1);
+      result.spaces.forEach((s) => {
         expect(s.type).toBe("team");
       });
     });
 
     it("filters by status", async () => {
-      const active = await cortex.memorySpaces.list({ status: "active" });
+      const result = await cortex.memorySpaces.list({ status: "active" });
 
-      active.forEach((s) => {
+      result.spaces.forEach((s) => {
         expect(s.status).toBe("active");
       });
     });
 
     it("respects limit parameter", async () => {
-      const limited = await cortex.memorySpaces.list({ limit: 2 });
+      const result = await cortex.memorySpaces.list({ limit: 2 });
 
-      expect(limited.length).toBeLessThanOrEqual(2);
+      expect(result.spaces.length).toBeLessThanOrEqual(2);
     });
   });
 
@@ -696,7 +696,7 @@ describe("Memory Spaces Registry API", () => {
         participants: [],
       });
 
-      const result = await cortex.memorySpaces.delete(deleteSpaceId);
+      const result = await cortex.memorySpaces.delete(deleteSpaceId, { cascade: true, reason: "test cleanup" });
 
       expect(result.deleted).toBe(true);
       expect(result.memorySpaceId).toBe(deleteSpaceId);
@@ -741,10 +741,11 @@ describe("Memory Spaces Registry API", () => {
       // Delete with cascade
       const result = await cortex.memorySpaces.delete(cascadeSpaceId, {
         cascade: true,
+        reason: "test cleanup",
       });
 
       expect(result.deleted).toBe(true);
-      expect(result.cascaded).toBe(true);
+      expect(result.cascade).toBeDefined();
     });
   });
 
@@ -781,7 +782,7 @@ describe("Memory Spaces Registry API", () => {
           await cortex.conversations.list({
             memorySpaceId: statsSpaceId,
           })
-        )[0].conversationId,
+        ).conversations[0].conversationId,
         message: { role: "user", content: "Test message" },
       });
 
@@ -1010,7 +1011,7 @@ describe("Memory Spaces Registry API", () => {
       expect(archived.status).toBe("archived");
 
       // Delete
-      const result = await cortex.memorySpaces.delete(lifecycleSpaceId);
+      const result = await cortex.memorySpaces.delete(lifecycleSpaceId, { cascade: true, reason: "test cleanup" });
 
       expect(result.deleted).toBe(true);
 
@@ -1034,17 +1035,17 @@ describe("Memory Spaces Registry API", () => {
       beforeEach(async () => {
         // Clean up any existing test memory spaces first
         try {
-          await cortex.memorySpaces.delete(engineeringSpace);
+          await cortex.memorySpaces.delete(engineeringSpace, { cascade: true, reason: "test cleanup" });
         } catch (_error) {
           // Ignore if doesn't exist
         }
         try {
-          await cortex.memorySpaces.delete(designSpace);
+          await cortex.memorySpaces.delete(designSpace, { cascade: true, reason: "test cleanup" });
         } catch (_error) {
           // Ignore if doesn't exist
         }
         try {
-          await cortex.memorySpaces.delete(aliceSpace);
+          await cortex.memorySpaces.delete(aliceSpace, { cascade: true, reason: "test cleanup" });
         } catch (_error) {
           // Ignore if doesn't exist
         }
@@ -1075,17 +1076,17 @@ describe("Memory Spaces Registry API", () => {
       afterEach(async () => {
         // Clean up test memory spaces
         try {
-          await cortex.memorySpaces.delete(engineeringSpace);
+          await cortex.memorySpaces.delete(engineeringSpace, { cascade: true, reason: "test cleanup" });
         } catch (_error) {
           // Ignore if doesn't exist
         }
         try {
-          await cortex.memorySpaces.delete(designSpace);
+          await cortex.memorySpaces.delete(designSpace, { cascade: true, reason: "test cleanup" });
         } catch (_error) {
           // Ignore if doesn't exist
         }
         try {
-          await cortex.memorySpaces.delete(aliceSpace);
+          await cortex.memorySpaces.delete(aliceSpace, { cascade: true, reason: "test cleanup" });
         } catch (_error) {
           // Ignore if doesn't exist
         }
@@ -1176,7 +1177,7 @@ describe("Memory Spaces Registry API", () => {
       beforeEach(async () => {
         // Cleanup any existing participant-test space
         try {
-          await cortex.memorySpaces.delete(participantTestSpace);
+          await cortex.memorySpaces.delete(participantTestSpace, { cascade: true, reason: "test cleanup" });
         } catch (_error) {
           // Doesn't exist, continue
         }

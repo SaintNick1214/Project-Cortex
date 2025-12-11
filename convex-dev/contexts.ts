@@ -37,6 +37,7 @@ export const create = mutation({
   args: {
     purpose: v.string(),
     memorySpaceId: v.string(), // Memory space creating this context
+    description: v.optional(v.string()),
     userId: v.optional(v.string()),
     parentId: v.optional(v.string()),
     conversationRef: v.optional(
@@ -89,6 +90,7 @@ export const create = mutation({
       contextId,
       memorySpaceId: args.memorySpaceId,
       purpose: args.purpose,
+      description: args.description,
       userId: args.userId,
       parentId: args.parentId,
       rootId,
@@ -132,6 +134,7 @@ export const update = mutation({
         v.literal("blocked"),
       ),
     ),
+    description: v.optional(v.string()),
     data: v.optional(v.any()),
     completedAt: v.optional(v.number()),
   },
@@ -169,6 +172,8 @@ export const update = mutation({
 
     await ctx.db.patch(context._id, {
       status: newStatus,
+      description:
+        args.description !== undefined ? args.description : context.description,
       data: newData,
       version: currentVersion + 1,
       previousVersions: [...previousVersions, newVersion],
@@ -192,6 +197,7 @@ export const deleteContext = mutation({
   args: {
     contextId: v.string(),
     cascadeChildren: v.optional(v.boolean()),
+    orphanChildren: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const context = await ctx.db
@@ -203,18 +209,86 @@ export const deleteContext = mutation({
       throw new ConvexError("CONTEXT_NOT_FOUND");
     }
 
-    // Check for children
-    if (context.childIds.length > 0 && !args.cascadeChildren) {
+    // Check for children - allow if cascadeChildren or orphanChildren is true
+    if (
+      context.childIds.length > 0 &&
+      !args.cascadeChildren &&
+      !args.orphanChildren
+    ) {
       throw new ConvexError("HAS_CHILDREN");
     }
 
     let deletedCount = 0;
+    const orphanedChildren: string[] = [];
 
     // Delete children if cascade
     if (args.cascadeChildren) {
       for (const childId of context.childIds) {
         const result = await deleteContextRecursive(ctx, childId);
         deletedCount += result;
+      }
+    }
+
+    // Orphan children - promote them to new roots or attach to grandparent
+    if (args.orphanChildren && context.childIds.length > 0) {
+      for (const childId of context.childIds) {
+        const child = await ctx.db
+          .query("contexts")
+          .withIndex("by_contextId", (q: any) => q.eq("contextId", childId))
+          .first();
+
+        if (child) {
+          // If context has a parent, attach children to grandparent
+          // Otherwise, make children new root contexts
+          const newParentId = context.parentId || undefined;
+          const newRootId = context.parentId ? context.rootId : child.contextId;
+          const newDepth = context.parentId ? context.depth : 0;
+
+          await ctx.db.patch(child._id, {
+            parentId: newParentId,
+            rootId: newRootId,
+            depth: newDepth,
+            updatedAt: Date.now(),
+          });
+
+          orphanedChildren.push(childId);
+
+          // If attaching to grandparent, update grandparent's childIds
+          if (context.parentId) {
+            const grandparent = await ctx.db
+              .query("contexts")
+              .withIndex("by_contextId", (q: any) =>
+                q.eq("contextId", context.parentId!),
+              )
+              .first();
+
+            if (grandparent) {
+              await ctx.db.patch(grandparent._id, {
+                childIds: [...grandparent.childIds, childId],
+                updatedAt: Date.now(),
+              });
+            }
+          }
+        }
+      }
+    }
+
+    // Remove this context from parent's childIds if it has a parent
+    if (context.parentId) {
+      const parent = await ctx.db
+        .query("contexts")
+        .withIndex("by_contextId", (q: any) =>
+          q.eq("contextId", context.parentId!),
+        )
+        .first();
+
+      if (parent) {
+        await ctx.db.patch(parent._id, {
+          childIds: parent.childIds.filter(
+            (id: string) => id !== context.contextId,
+          ),
+          updatedAt: Date.now(),
+        });
       }
     }
 
@@ -226,6 +300,7 @@ export const deleteContext = mutation({
       deleted: true,
       contextId: args.contextId,
       descendantsDeleted: deletedCount - 1,
+      orphanedChildren: orphanedChildren.length > 0 ? orphanedChildren : undefined,
     };
   },
 });
@@ -340,6 +415,7 @@ export const get = query({
   args: {
     contextId: v.string(),
     includeChain: v.optional(v.boolean()),
+    includeConversation: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const context = await ctx.db
@@ -357,6 +433,31 @@ export const get = query({
 
     // Build complete chain
     const chain = await buildContextChain(ctx, context);
+
+    // If includeConversation is requested, fetch the conversation
+    if (args.includeConversation && context.conversationRef?.conversationId) {
+      const conversation = await ctx.db
+        .query("conversations")
+        .withIndex("by_conversationId", (q: any) =>
+          q.eq("conversationId", context.conversationRef!.conversationId),
+        )
+        .first();
+
+      if (conversation) {
+        // Filter trigger messages if messageIds are specified
+        const triggerMessages = context.conversationRef.messageIds
+          ? conversation.messages.filter((m: any) =>
+              context.conversationRef!.messageIds!.includes(m.id),
+            )
+          : [];
+
+        return {
+          ...chain,
+          conversation,
+          triggerMessages,
+        };
+      }
+    }
 
     return chain;
   },
@@ -426,14 +527,26 @@ async function buildContextChain(ctx: any, context: any) {
       : null;
   }
 
+  // Get all descendants recursively
+  const descendants = await getAllDescendants(ctx, context.contextId);
+
+  // Calculate total nodes in the chain
+  // Total = 1 (current) + ancestors + children + siblings + descendants (excluding direct children to avoid double counting)
+  const validChildren = children.filter((c) => c !== null);
+  const validSiblings = siblings.filter((s) => s !== null);
+  const totalNodes =
+    1 + ancestors.length + validChildren.length + validSiblings.length + descendants.length;
+
   return {
     current: context,
     parent,
     root,
-    children: children.filter((c) => c !== null),
-    siblings: siblings.filter((s) => s !== null),
+    children: validChildren,
+    siblings: validSiblings,
     ancestors,
+    descendants,
     depth: context.depth,
+    totalNodes,
   };
 }
 

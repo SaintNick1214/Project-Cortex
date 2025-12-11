@@ -159,12 +159,23 @@ export const deleteKey = mutation({
 export const purgeNamespace = mutation({
   args: {
     namespace: v.string(),
+    dryRun: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const entries = await ctx.db
       .query("mutable")
       .withIndex("by_namespace", (q) => q.eq("namespace", args.namespace))
       .collect();
+
+    // If dryRun, return what would be deleted without actually deleting
+    if (args.dryRun) {
+      return {
+        deleted: entries.length,
+        namespace: args.namespace,
+        keys: entries.map((e) => e.key),
+        dryRun: true,
+      };
+    }
 
     let deleted = 0;
 
@@ -176,6 +187,7 @@ export const purgeNamespace = mutation({
     return {
       deleted,
       namespace: args.namespace,
+      dryRun: false,
     };
   },
 });
@@ -290,6 +302,8 @@ export const purgeMany = mutation({
     namespace: v.string(),
     keyPrefix: v.optional(v.string()),
     userId: v.optional(v.string()),
+    updatedBefore: v.optional(v.number()),
+    lastAccessedBefore: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     let entries = await ctx.db
@@ -304,6 +318,20 @@ export const purgeMany = mutation({
 
     if (args.userId) {
       entries = entries.filter((e) => e.userId === args.userId);
+    }
+
+    // Filter by updatedBefore if provided
+    if (args.updatedBefore !== undefined) {
+      entries = entries.filter((e) => e.updatedAt < args.updatedBefore!);
+    }
+
+    // Filter by lastAccessedBefore if provided
+    if (args.lastAccessedBefore !== undefined) {
+      entries = entries.filter(
+        (e) =>
+          e.lastAccessed !== undefined &&
+          e.lastAccessed < args.lastAccessedBefore!,
+      );
     }
 
     let deleted = 0;
@@ -374,12 +402,18 @@ export const list = query({
     keyPrefix: v.optional(v.string()),
     userId: v.optional(v.string()),
     limit: v.optional(v.number()),
+    offset: v.optional(v.number()),
+    updatedAfter: v.optional(v.number()),
+    updatedBefore: v.optional(v.number()),
+    sortBy: v.optional(v.string()),
+    sortOrder: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Collect all matching entries first for filtering and sorting
     let entries = await ctx.db
       .query("mutable")
       .withIndex("by_namespace", (q) => q.eq("namespace", args.namespace))
-      .take(args.limit || 100);
+      .collect();
 
     // Filter by key prefix if provided
     if (args.keyPrefix) {
@@ -390,6 +424,41 @@ export const list = query({
     if (args.userId) {
       entries = entries.filter((e) => e.userId === args.userId);
     }
+
+    // Filter by updatedAfter if provided
+    if (args.updatedAfter !== undefined) {
+      entries = entries.filter((e) => e.updatedAt > args.updatedAfter!);
+    }
+
+    // Filter by updatedBefore if provided
+    if (args.updatedBefore !== undefined) {
+      entries = entries.filter((e) => e.updatedAt < args.updatedBefore!);
+    }
+
+    // Sort entries
+    const sortBy = args.sortBy || "key";
+    const sortOrder = args.sortOrder || "asc";
+    const sortMultiplier = sortOrder === "desc" ? -1 : 1;
+
+    entries.sort((a, b) => {
+      let comparison = 0;
+      if (sortBy === "key") {
+        comparison = a.key.localeCompare(b.key);
+      } else if (sortBy === "updatedAt") {
+        comparison = a.updatedAt - b.updatedAt;
+      } else if (sortBy === "accessCount") {
+        comparison = a.accessCount - b.accessCount;
+      }
+      return comparison * sortMultiplier;
+    });
+
+    // Apply offset
+    const offset = args.offset || 0;
+    entries = entries.slice(offset);
+
+    // Apply limit
+    const limit = args.limit || 100;
+    entries = entries.slice(0, limit);
 
     return entries;
   },
@@ -403,6 +472,8 @@ export const count = query({
     namespace: v.string(),
     userId: v.optional(v.string()),
     keyPrefix: v.optional(v.string()),
+    updatedAfter: v.optional(v.number()),
+    updatedBefore: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     let entries = await ctx.db
@@ -418,6 +489,16 @@ export const count = query({
     // Filter by key prefix if provided
     if (args.keyPrefix) {
       entries = entries.filter((e) => e.key.startsWith(args.keyPrefix!));
+    }
+
+    // Filter by updatedAfter if provided
+    if (args.updatedAfter !== undefined) {
+      entries = entries.filter((e) => e.updatedAt > args.updatedAfter!);
+    }
+
+    // Filter by updatedBefore if provided
+    if (args.updatedBefore !== undefined) {
+      entries = entries.filter((e) => e.updatedAt < args.updatedBefore!);
     }
 
     return entries.length;

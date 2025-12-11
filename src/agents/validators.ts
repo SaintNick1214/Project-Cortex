@@ -9,6 +9,7 @@ import type {
   AgentRegistration,
   AgentFilters,
   UnregisterAgentOptions,
+  ExportAgentsOptions,
 } from "../types";
 
 /**
@@ -427,5 +428,47 @@ export function validateUpdatePayload(
 
   if ((updates as { status?: string }).status !== undefined) {
     validateAgentStatus((updates as { status: string }).status, "status");
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Export Options Validation
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const VALID_EXPORT_FORMATS = ["json", "csv"] as const;
+
+/**
+ * Validates export options
+ */
+export function validateExportOptions(options: ExportAgentsOptions): void {
+  // Runtime defensive check
+  if (!(options as unknown)) {
+    throw new AgentValidationError(
+      "Export options are required",
+      "MISSING_OPTIONS",
+    );
+  }
+
+  // Validate format is provided
+  if (!options.format) {
+    throw new AgentValidationError(
+      "format is required",
+      "MISSING_FORMAT",
+      "format",
+    );
+  }
+
+  // Validate format value
+  if (!(VALID_EXPORT_FORMATS as readonly string[]).includes(options.format)) {
+    throw new AgentValidationError(
+      `Invalid format "${options.format}". Valid values: ${VALID_EXPORT_FORMATS.join(", ")}`,
+      "INVALID_FORMAT",
+      "format",
+    );
+  }
+
+  // Validate filters if provided
+  if (options.filters) {
+    validateAgentFilters(options.filters);
   }
 }

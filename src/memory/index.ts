@@ -1311,17 +1311,40 @@ export class MemoryAPI {
    * });
    * ```
    */
+  /**
+   * Forget a memory (delete from Vector and optionally ACID)
+   *
+   * Auto-syncs to graph if configured (default: true)
+   *
+   * @param memorySpaceId - Memory space that contains the memory
+   * @param memoryId - Memory ID to forget
+   * @param options - Options for deletion behavior
+   * @returns ForgetResult with deletion details
+   *
+   * @example
+   * ```typescript
+   * await cortex.memory.forget('user-123-space', 'mem-123', {
+   *   deleteConversation: true,
+   * });
+   *
+   * // Disable graph sync
+   * await cortex.memory.forget('user-123-space', 'mem-123', {
+   *   deleteConversation: true,
+   *   syncToGraph: false,
+   * });
+   * ```
+   */
   async forget(
-    agentId: string,
+    memorySpaceId: string,
     memoryId: string,
     options?: ExtendedForgetOptions,
   ): Promise<ForgetResult> {
     // Client-side validation
-    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateMemorySpaceId(memorySpaceId, "memorySpaceId");
     validateMemoryId(memoryId);
 
     // Get the memory first
-    const memory = await this.vector.get(agentId, memoryId);
+    const memory = await this.vector.get(memorySpaceId, memoryId);
 
     if (!memory) {
       throw new Error("MEMORY_NOT_FOUND");
@@ -1332,13 +1355,13 @@ export class MemoryAPI {
       options?.syncToGraph !== false && this.graphAdapter !== undefined;
 
     // Delete from vector (with graph cascade)
-    await this.vector.delete(agentId, memoryId, {
+    await this.vector.delete(memorySpaceId, memoryId, {
       syncToGraph: shouldSyncToGraph,
     });
 
     // Cascade delete associated facts
     const { count: factsDeleted, factIds } = await this.cascadeDeleteFacts(
-      agentId,
+      memorySpaceId,
       memoryId,
       memory.conversationRef?.conversationId,
       shouldSyncToGraph,
@@ -1382,24 +1405,29 @@ export class MemoryAPI {
   /**
    * Get memory with optional ACID enrichment
    *
+   * @param memorySpaceId - Memory space that contains the memory
+   * @param memoryId - Memory ID to retrieve
+   * @param options - Options for retrieval (includeConversation)
+   * @returns MemoryEntry, EnrichedMemory (if includeConversation), or null
+   *
    * @example
    * ```typescript
-   * const enriched = await cortex.memory.get('agent-1', 'mem-123', {
+   * const enriched = await cortex.memory.get('user-123-space', 'mem-123', {
    *   includeConversation: true,
    * });
    * ```
    */
   async get(
-    agentId: string,
+    memorySpaceId: string,
     memoryId: string,
     options?: GetMemoryOptions,
   ): Promise<MemoryEntry | EnrichedMemory | null> {
     // Client-side validation
-    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateMemorySpaceId(memorySpaceId, "memorySpaceId");
     validateMemoryId(memoryId);
 
     // Get from vector
-    const memory = await this.vector.get(agentId, memoryId);
+    const memory = await this.vector.get(memorySpaceId, memoryId);
 
     if (!memory) {
       return null;
@@ -1430,7 +1458,7 @@ export class MemoryAPI {
 
     // Fetch associated facts
     const relatedFacts = await this.fetchFactsForMemory(
-      agentId,
+      memorySpaceId,
       memoryId,
       memory.conversationRef?.conversationId,
     );
@@ -1446,21 +1474,26 @@ export class MemoryAPI {
   /**
    * Search memories with optional ACID enrichment
    *
+   * @param memorySpaceId - Memory space to search in
+   * @param query - Search query string
+   * @param options - Search options (embedding, filters, enrichConversation)
+   * @returns Array of MemoryEntry or EnrichedMemory results
+   *
    * @example
    * ```typescript
-   * const results = await cortex.memory.search('agent-1', 'password', {
+   * const results = await cortex.memory.search('user-123-space', 'password', {
    *   embedding: await embed('password'),
    *   enrichConversation: true,
    * });
    * ```
    */
   async search(
-    agentId: string,
+    memorySpaceId: string,
     query: string,
     options?: SearchMemoryOptions,
   ): Promise<MemoryEntry[] | EnrichedMemory[]> {
     // Client-side validation
-    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateMemorySpaceId(memorySpaceId, "memorySpaceId");
     validateContent(query, "query");
 
     if (options) {
@@ -1468,7 +1501,7 @@ export class MemoryAPI {
     }
 
     // Search vector
-    const memories = await this.vector.search(agentId, query, {
+    const memories = await this.vector.search(memorySpaceId, query, {
       embedding: options?.embedding,
       userId: options?.userId,
       tags: options?.tags,
@@ -1502,7 +1535,7 @@ export class MemoryAPI {
 
     // Batch fetch all facts for this memory space
     const allFacts = await this.facts.list({
-      memorySpaceId: agentId,
+      memorySpaceId: memorySpaceId,
       limit: 10000,
     });
 
@@ -1570,9 +1603,13 @@ export class MemoryAPI {
   /**
    * Store memory with smart layer detection and optional fact extraction
    *
+   * @param memorySpaceId - Memory space to store the memory in
+   * @param input - Memory input data (content, source, metadata, etc.)
+   * @returns StoreMemoryResult with memory and extracted facts
+   *
    * @example
    * ```typescript
-   * await cortex.memory.store('agent-1', {
+   * await cortex.memory.store('user-123-space', {
    *   content: 'User prefers dark mode',
    *   contentType: 'raw',
    *   source: { type: 'system' },
@@ -1586,11 +1623,11 @@ export class MemoryAPI {
    * ```
    */
   async store(
-    agentId: string,
+    memorySpaceId: string,
     input: StoreMemoryInput,
   ): Promise<StoreMemoryResult> {
     // Client-side validation
-    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateMemorySpaceId(memorySpaceId, "memorySpaceId");
     validateStoreMemoryInput(input);
     validateConversationRefRequirement(
       input.source.type,
@@ -1598,7 +1635,7 @@ export class MemoryAPI {
     );
 
     // Store memory
-    const memory = await this.vector.store(agentId, input);
+    const memory = await this.vector.store(memorySpaceId, input);
 
     // Extract and store facts if callback provided
     const extractedFacts: FactRecord[] = [];
@@ -1611,7 +1648,7 @@ export class MemoryAPI {
           try {
             const storedFact = await this.facts.store(
               {
-                memorySpaceId: agentId,
+                memorySpaceId: memorySpaceId,
                 participantId: input.participantId,
                 userId: input.userId, // ← BUG FIX: Add userId to facts!
                 fact: factData.fact,
@@ -1654,9 +1691,23 @@ export class MemoryAPI {
 
   /**
    * Update a memory with optional fact re-extraction
+   *
+   * @param memorySpaceId - Memory space that contains the memory
+   * @param memoryId - Memory ID to update
+   * @param updates - Fields to update (content, embedding, importance, tags)
+   * @param options - Options for update behavior (reextractFacts, syncToGraph)
+   * @returns UpdateMemoryResult with updated memory and optionally re-extracted facts
+   *
+   * @example
+   * ```typescript
+   * const updated = await cortex.memory.update('user-123-space', 'mem-123', {
+   *   content: 'Updated content',
+   *   importance: 80,
+   * });
+   * ```
    */
   async update(
-    agentId: string,
+    memorySpaceId: string,
     memoryId: string,
     updates: {
       content?: string;
@@ -1667,11 +1718,11 @@ export class MemoryAPI {
     options?: UpdateMemoryOptions,
   ): Promise<UpdateMemoryResult> {
     // Client-side validation
-    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateMemorySpaceId(memorySpaceId, "memorySpaceId");
     validateMemoryId(memoryId);
     validateUpdateOptions(updates);
 
-    const updatedMemory = await this.vector.update(agentId, memoryId, updates);
+    const updatedMemory = await this.vector.update(memorySpaceId, memoryId, updates);
 
     const factsReextracted: FactRecord[] = [];
 
@@ -1679,7 +1730,7 @@ export class MemoryAPI {
     if (options?.reextractFacts && updates.content && options.extractFacts) {
       // Delete old facts first
       await this.cascadeDeleteFacts(
-        agentId,
+        memorySpaceId,
         memoryId,
         undefined,
         options.syncToGraph,
@@ -1693,7 +1744,7 @@ export class MemoryAPI {
           try {
             const storedFact = await this.facts.store(
               {
-                memorySpaceId: agentId,
+                memorySpaceId: memorySpaceId,
                 participantId: updatedMemory.participantId, // ← BUG FIX: Add participantId
                 userId: updatedMemory.userId, // ← BUG FIX: Add userId to facts!
                 fact: factData.fact,
@@ -1733,17 +1784,28 @@ export class MemoryAPI {
 
   /**
    * Delete a memory with cascade delete of facts
+   *
+   * @param memorySpaceId - Memory space that contains the memory
+   * @param memoryId - Memory ID to delete
+   * @param options - Options for deletion behavior (cascadeDeleteFacts, syncToGraph)
+   * @returns DeleteMemoryResult with deletion details
+   *
+   * @example
+   * ```typescript
+   * const result = await cortex.memory.delete('user-123-space', 'mem-123');
+   * console.log(`Deleted ${result.factsDeleted} associated facts`);
+   * ```
    */
   async delete(
-    agentId: string,
+    memorySpaceId: string,
     memoryId: string,
     options?: DeleteMemoryOptions,
   ): Promise<DeleteMemoryResult> {
     // Client-side validation
-    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateMemorySpaceId(memorySpaceId, "memorySpaceId");
     validateMemoryId(memoryId);
 
-    const memory = await this.vector.get(agentId, memoryId);
+    const memory = await this.vector.get(memorySpaceId, memoryId);
 
     if (!memory) {
       throw new Error("MEMORY_NOT_FOUND");
@@ -1759,7 +1821,7 @@ export class MemoryAPI {
 
     if (shouldCascade) {
       const result = await this.cascadeDeleteFacts(
-        agentId,
+        memorySpaceId,
         memoryId,
         memory.conversationRef?.conversationId,
         shouldSyncToGraph,
@@ -1769,7 +1831,7 @@ export class MemoryAPI {
     }
 
     // Delete from vector
-    await this.vector.delete(agentId, memoryId, {
+    await this.vector.delete(memorySpaceId, memoryId, {
       syncToGraph: shouldSyncToGraph,
     });
 
@@ -1999,13 +2061,23 @@ export class MemoryAPI {
 
   /**
    * Archive a memory and mark associated facts as expired
+   *
+   * @param memorySpaceId - Memory space that contains the memory
+   * @param memoryId - Memory ID to archive
+   * @returns ArchiveResult with archive details
+   *
+   * @example
+   * ```typescript
+   * const result = await cortex.memory.archive('user-123-space', 'mem-123');
+   * console.log(`Archived ${result.factsArchived} associated facts`);
+   * ```
    */
-  async archive(agentId: string, memoryId: string): Promise<ArchiveResult> {
+  async archive(memorySpaceId: string, memoryId: string): Promise<ArchiveResult> {
     // Client-side validation
-    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateMemorySpaceId(memorySpaceId, "memorySpaceId");
     validateMemoryId(memoryId);
 
-    const memory = await this.vector.get(agentId, memoryId);
+    const memory = await this.vector.get(memorySpaceId, memoryId);
 
     if (!memory) {
       throw new Error("MEMORY_NOT_FOUND");
@@ -2013,14 +2085,14 @@ export class MemoryAPI {
 
     // Archive facts (mark as expired, not deleted)
     const { count: factsArchived, factIds } = await this.archiveFacts(
-      agentId,
+      memorySpaceId,
       memoryId,
       memory.conversationRef?.conversationId,
       true,
     );
 
     // Archive memory
-    const result = await this.vector.archive(agentId, memoryId);
+    const result = await this.vector.archive(memorySpaceId, memoryId);
 
     return {
       ...result,
@@ -2066,10 +2138,23 @@ export class MemoryAPI {
   }
 
   /**
-   * Get specific version (delegates to vector.getVersion)
+   * Get specific version of a memory
+   *
+   * @param memorySpaceId - Memory space that contains the memory
+   * @param memoryId - Memory ID to get version for
+   * @param version - Version number to retrieve
+   * @returns MemoryVersion or null if not found
+   *
+   * @example
+   * ```typescript
+   * const v1 = await cortex.memory.getVersion('user-123-space', 'mem-123', 1);
+   * if (v1) {
+   *   console.log(`Version 1 content: ${v1.content}`);
+   * }
+   * ```
    */
   async getVersion(
-    agentId: string,
+    memorySpaceId: string,
     memoryId: string,
     version: number,
   ): Promise<{
@@ -2080,18 +2165,28 @@ export class MemoryAPI {
     timestamp: number;
   } | null> {
     // Client-side validation
-    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateMemorySpaceId(memorySpaceId, "memorySpaceId");
     validateMemoryId(memoryId);
     validateVersion(version);
 
-    return await this.vector.getVersion(agentId, memoryId, version);
+    return await this.vector.getVersion(memorySpaceId, memoryId, version);
   }
 
   /**
-   * Get version history (delegates to vector.getHistory)
+   * Get version history of a memory
+   *
+   * @param memorySpaceId - Memory space that contains the memory
+   * @param memoryId - Memory ID to get history for
+   * @returns Array of MemoryVersion sorted by version number
+   *
+   * @example
+   * ```typescript
+   * const history = await cortex.memory.getHistory('user-123-space', 'mem-123');
+   * history.forEach(v => console.log(`v${v.version}: ${v.content}`));
+   * ```
    */
   async getHistory(
-    agentId: string,
+    memorySpaceId: string,
     memoryId: string,
   ): Promise<
     Array<{
@@ -2103,17 +2198,34 @@ export class MemoryAPI {
     }>
   > {
     // Client-side validation
-    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateMemorySpaceId(memorySpaceId, "memorySpaceId");
     validateMemoryId(memoryId);
 
-    return await this.vector.getHistory(agentId, memoryId);
+    return await this.vector.getHistory(memorySpaceId, memoryId);
   }
 
   /**
-   * Get version at timestamp (delegates to vector.getAtTimestamp)
+   * Get memory version at specific point in time (temporal query)
+   *
+   * @param memorySpaceId - Memory space that contains the memory
+   * @param memoryId - Memory ID to query
+   * @param timestamp - Point in time to query (Date or Unix timestamp)
+   * @returns MemoryVersion that was current at that time, or null
+   *
+   * @example
+   * ```typescript
+   * const historicalMemory = await cortex.memory.getAtTimestamp(
+   *   'user-123-space',
+   *   'mem-password',
+   *   new Date('2025-08-01')
+   * );
+   * if (historicalMemory) {
+   *   console.log(`Value on Aug 1: ${historicalMemory.content}`);
+   * }
+   * ```
    */
   async getAtTimestamp(
-    agentId: string,
+    memorySpaceId: string,
     memoryId: string,
     timestamp: number | Date,
   ): Promise<{
@@ -2124,11 +2236,11 @@ export class MemoryAPI {
     timestamp: number;
   } | null> {
     // Client-side validation
-    validateMemorySpaceId(agentId, "memorySpaceId");
+    validateMemorySpaceId(memorySpaceId, "memorySpaceId");
     validateMemoryId(memoryId);
     validateTimestamp(timestamp);
 
-    return await this.vector.getAtTimestamp(agentId, memoryId, timestamp);
+    return await this.vector.getAtTimestamp(memorySpaceId, memoryId, timestamp);
   }
 }
 
