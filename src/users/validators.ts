@@ -135,11 +135,11 @@ export function validateVersionNumber(
 }
 
 /**
- * Validates timestamp is a valid Date object
+ * Validates timestamp is a valid number (Unix timestamp in milliseconds)
  * Runtime checks for potentially untrusted external input
  */
 export function validateTimestamp(
-  timestamp: Date,
+  timestamp: number,
   fieldName = "timestamp",
 ): void {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -151,17 +151,26 @@ export function validateTimestamp(
     );
   }
 
-  if (!(timestamp instanceof Date)) {
+  if (typeof timestamp !== "number") {
     throw new UserValidationError(
-      `${fieldName} must be a Date object`,
+      `${fieldName} must be a number (Unix timestamp)`,
       "INVALID_TIMESTAMP",
       fieldName,
     );
   }
 
-  if (isNaN(timestamp.getTime())) {
+  if (isNaN(timestamp) || !isFinite(timestamp)) {
     throw new UserValidationError(
-      `${fieldName} must be a valid Date`,
+      `${fieldName} must be a valid numeric timestamp`,
+      "INVALID_TIMESTAMP",
+      fieldName,
+    );
+  }
+
+  // Check for reasonable timestamp range (not negative, not absurdly in the future)
+  if (timestamp < 0) {
+    throw new UserValidationError(
+      `${fieldName} cannot be negative`,
       "INVALID_TIMESTAMP",
       fieldName,
     );
@@ -289,13 +298,113 @@ export function validateListUsersFilter(
     );
   }
 
-  // Validate individual filter fields
+  // Validate pagination fields
   if (filters.limit !== undefined) {
     validateLimit(filters.limit, "filters.limit");
   }
 
   if (filters.offset !== undefined) {
     validateOffset(filters.offset, "filters.offset");
+  }
+
+  // Validate date filters
+  if (filters.createdAfter !== undefined) {
+    validateTimestamp(filters.createdAfter, "filters.createdAfter");
+  }
+
+  if (filters.createdBefore !== undefined) {
+    validateTimestamp(filters.createdBefore, "filters.createdBefore");
+  }
+
+  if (filters.updatedAfter !== undefined) {
+    validateTimestamp(filters.updatedAfter, "filters.updatedAfter");
+  }
+
+  if (filters.updatedBefore !== undefined) {
+    validateTimestamp(filters.updatedBefore, "filters.updatedBefore");
+  }
+
+  // Validate date range consistency
+  if (
+    filters.createdAfter !== undefined &&
+    filters.createdBefore !== undefined &&
+    filters.createdAfter >= filters.createdBefore
+  ) {
+    throw new UserValidationError(
+      "createdAfter must be before createdBefore",
+      "INVALID_DATE_RANGE",
+      "filters.createdAfter",
+    );
+  }
+
+  if (
+    filters.updatedAfter !== undefined &&
+    filters.updatedBefore !== undefined &&
+    filters.updatedAfter >= filters.updatedBefore
+  ) {
+    throw new UserValidationError(
+      "updatedAfter must be before updatedBefore",
+      "INVALID_DATE_RANGE",
+      "filters.updatedAfter",
+    );
+  }
+
+  // Validate sortBy field
+  if (filters.sortBy !== undefined) {
+    if (filters.sortBy !== "createdAt" && filters.sortBy !== "updatedAt") {
+      throw new UserValidationError(
+        "sortBy must be 'createdAt' or 'updatedAt'",
+        "INVALID_SORT_BY",
+        "filters.sortBy",
+      );
+    }
+  }
+
+  // Validate sortOrder field
+  if (filters.sortOrder !== undefined) {
+    if (filters.sortOrder !== "asc" && filters.sortOrder !== "desc") {
+      throw new UserValidationError(
+        "sortOrder must be 'asc' or 'desc'",
+        "INVALID_SORT_ORDER",
+        "filters.sortOrder",
+      );
+    }
+  }
+
+  // Validate displayName filter
+  if (filters.displayName !== undefined) {
+    if (typeof filters.displayName !== "string") {
+      throw new UserValidationError(
+        "displayName must be a string",
+        "INVALID_DISPLAY_NAME_FILTER",
+        "filters.displayName",
+      );
+    }
+    if (filters.displayName.length > 200) {
+      throw new UserValidationError(
+        "displayName filter cannot exceed 200 characters",
+        "INVALID_DISPLAY_NAME_FILTER",
+        "filters.displayName",
+      );
+    }
+  }
+
+  // Validate email filter
+  if (filters.email !== undefined) {
+    if (typeof filters.email !== "string") {
+      throw new UserValidationError(
+        "email must be a string",
+        "INVALID_EMAIL_FILTER",
+        "filters.email",
+      );
+    }
+    if (filters.email.length > 254) {
+      throw new UserValidationError(
+        "email filter cannot exceed 254 characters",
+        "INVALID_EMAIL_FILTER",
+        "filters.email",
+      );
+    }
   }
 }
 
@@ -304,23 +413,8 @@ export function validateListUsersFilter(
  * Runtime checks for potentially untrusted external input
  */
 export function validateUserFilters(filters: UserFilters | undefined): void {
-  if (filters === undefined) {
-    return; // Optional parameter
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (typeof filters !== "object" || filters === null) {
-    throw new UserValidationError(
-      "Filters must be an object",
-      "INVALID_FILTER_STRUCTURE",
-      "filters",
-    );
-  }
-
-  // Validate limit if provided
-  if (filters.limit !== undefined) {
-    validateLimit(filters.limit, "filters.limit");
-  }
+  // UserFilters extends ListUsersFilter, so we can reuse the same validation
+  validateListUsersFilter(filters);
 }
 
 /**

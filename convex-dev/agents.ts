@@ -266,6 +266,56 @@ export const update = mutation({
 });
 
 /**
+ * Update multiple agents by IDs
+ *
+ * Note: Filtering is handled in the SDK layer - this mutation receives
+ * specific agent IDs to update.
+ */
+export const updateMany = mutation({
+  args: {
+    agentIds: v.array(v.string()),
+    name: v.optional(v.string()),
+    description: v.optional(v.string()),
+    metadata: v.optional(v.any()),
+    config: v.optional(v.any()),
+  },
+  handler: async (ctx, args) => {
+    if (!args.agentIds || args.agentIds.length === 0) {
+      return { updated: 0, agentIds: [] };
+    }
+
+    // Build update object (only include provided fields)
+    const updates: Record<string, unknown> = {
+      updatedAt: Date.now(),
+    };
+
+    if (args.name !== undefined) updates.name = args.name;
+    if (args.description !== undefined) updates.description = args.description;
+    if (args.metadata !== undefined) updates.metadata = args.metadata;
+    if (args.config !== undefined) updates.config = args.config;
+
+    const updatedAgentIds: string[] = [];
+
+    for (const agentId of args.agentIds) {
+      const agent = await ctx.db
+        .query("agents")
+        .withIndex("by_agentId", (q) => q.eq("agentId", agentId))
+        .first();
+
+      if (agent) {
+        await ctx.db.patch(agent._id, updates);
+        updatedAgentIds.push(agentId);
+      }
+    }
+
+    return {
+      updated: updatedAgentIds.length,
+      agentIds: updatedAgentIds,
+    };
+  },
+});
+
+/**
  * Unregister agent (just removes registration, cascade handled in SDK)
  */
 export const unregister = mutation({

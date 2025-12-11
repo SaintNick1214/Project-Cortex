@@ -1,693 +1,875 @@
 /**
- * Development Commands
+ * Interactive Dev Mode Command
  *
- * Commands for development and testing:
- * - seed: Seed test data
- * - clear-test-data: Clear test data
- * - generate-data: Generate sample data
- * - debug: Debugging utilities
+ * Expo-style interactive terminal with:
+ * - Live status dashboard
+ * - Streaming logs
+ * - Keyboard shortcuts for common actions
  */
 
 import { Command } from "commander";
-import ora from "ora";
-import type { CLIConfig } from "../types.js";
-import { withClient } from "../utils/client.js";
-import {
-  printSuccess,
-  printError,
-  printWarning,
-  printSection,
-  formatTimestamp,
-} from "../utils/formatting.js";
-import {
-  validateMemorySpaceId,
-  validateMemoryId,
-  validateSearchQuery,
-  requireConfirmation,
-} from "../utils/validation.js";
+import { spawn, ChildProcess } from "child_process";
 import pc from "picocolors";
+import fs from "fs-extra";
+import path from "path";
+import type { CLIConfig } from "../types.js";
+import { commandExists } from "../utils/shell.js";
+import { execCommand } from "../utils/shell.js";
+import { runInitWizard } from "./init.js";
 
-/**
- * Generate a random ID
- */
-function generateId(prefix: string): string {
-  return `${prefix}-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+interface DevState {
+  convexProcess: ChildProcess | null;
+  convexRunning: boolean;
+  graphRunning: boolean;
+  graphType: "neo4j" | "memgraph" | null;
+  logs: string[];
+  maxLogs: number;
+  lastStatus: Date;
+  projectPath: string;
+  isLocal: boolean;
+}
+
+interface ConvexInstance {
+  pid: string;
+  port: string;
+  name: string;
 }
 
 /**
- * Sample data templates
+ * Register dev commands
  */
-const DATA_TEMPLATES = {
-  chatbot: {
-    name: "AI Chatbot",
-    conversations: [
-      {
-        user: "What's the weather like today?",
-        agent:
-          "I don't have access to real-time weather data, but I can help you find a weather service!",
-      },
-      {
-        user: "Can you recommend a good restaurant?",
-        agent:
-          "I'd be happy to help! What cuisine are you in the mood for, and what's your location?",
-      },
-      {
-        user: "Tell me a joke",
-        agent:
-          "Why did the programmer quit his job? Because he didn't get arrays! 😄",
-      },
-    ],
-    facts: [
-      {
-        fact: "User prefers helpful and friendly responses",
-        type: "preference",
-      },
-      { fact: "User enjoys humor in conversations", type: "preference" },
-    ],
-  },
-  ecommerce: {
-    name: "E-commerce Assistant",
-    conversations: [
-      {
-        user: "I'm looking for running shoes",
-        agent:
-          "Great! I can help you find the perfect running shoes. What's your budget and preferred brand?",
-      },
-      {
-        user: "What's your return policy?",
-        agent:
-          "We offer a 30-day return policy for unworn items with original tags. Would you like more details?",
-      },
-    ],
-    facts: [
-      { fact: "User is interested in running shoes", type: "preference" },
-      { fact: "Customer values clear return policies", type: "observation" },
-    ],
-  },
-  "knowledge-base": {
-    name: "Knowledge Base Agent",
-    conversations: [
-      {
-        user: "How do I reset my password?",
-        agent:
-          "To reset your password, go to Settings > Security > Change Password. You'll need to verify your email.",
-      },
-      {
-        user: "What are the system requirements?",
-        agent:
-          "The minimum requirements are: 8GB RAM, 2GHz processor, and 10GB free disk space.",
-      },
-    ],
-    facts: [
-      {
-        fact: "Password reset is done through Settings > Security",
-        type: "knowledge",
-      },
-      {
-        fact: "Minimum RAM requirement is 8GB",
-        type: "knowledge",
-      },
-    ],
-  },
-};
+export function registerDevCommands(program: Command, _config: CLIConfig): void {
+  program
+    .command("dev")
+    .description("Start interactive development mode (Expo-style)")
+    .option("-l, --local", "Force local Convex instance", false)
+    .action(async (options) => {
+      const cwd = process.cwd();
+      const isLocal =
+        options.local ||
+        process.env.CONVEX_URL?.includes("localhost") ||
+        process.env.CONVEX_URL?.includes("127.0.0.1") ||
+        !process.env.CONVEX_URL;
+
+      await runInteractiveDevMode(cwd, isLocal);
+    });
+}
 
 /**
- * Register development commands
+ * Check if Cortex/Convex is configured in the current directory
  */
-export function registerDevCommands(program: Command, config: CLIConfig): void {
-  const dev = program
-    .command("dev")
-    .description("Development and testing utilities");
-
-  // dev seed
-  dev
-    .command("seed")
-    .description("Seed test data into the database")
-    .option("-u, --users <number>", "Number of test users to create", "5")
-    .option("-s, --spaces <number>", "Number of memory spaces to create", "3")
-    .option("-m, --memories <number>", "Number of memories per space", "10")
-    .option("-c, --conversations <number>", "Conversations per space", "5")
-    .option("--prefix <prefix>", "Prefix for test data IDs", "test")
-    .option("-y, --yes", "Skip confirmation", false)
-    .action(async (options) => {
-      const globalOpts = program.opts();
-
-      try {
-        const numUsers = parseInt(options.users, 10);
-        const numSpaces = parseInt(options.spaces, 10);
-        const numMemories = parseInt(options.memories, 10);
-        const numConversations = parseInt(options.conversations, 10);
-        const prefix = options.prefix;
-
-        if (!options.yes) {
-          console.log();
-          console.log(pc.bold("This will create:"));
-          console.log(`  • ${numUsers} test users`);
-          console.log(`  • ${numSpaces} memory spaces`);
-          console.log(`  • ${numMemories * numSpaces} memories`);
-          console.log(`  • ${numConversations * numSpaces} conversations`);
-          console.log();
-
-          const confirmed = await requireConfirmation(
-            "Proceed with seeding test data?",
-            config,
-          );
-          if (!confirmed) {
-            printWarning("Seeding cancelled");
-            return;
-          }
-        }
-
-        const spinner = ora("Seeding test data...").start();
-
-        await withClient(config, globalOpts, async (client) => {
-          const created = {
-            users: 0,
-            spaces: 0,
-            memories: 0,
-            conversations: 0,
-            facts: 0,
-          };
-
-          // Create test users
-          spinner.text = "Creating test users...";
-          for (let i = 0; i < numUsers; i++) {
-            const userId = `${prefix}-user-${i + 1}`;
-            try {
-              await client.users.update(userId, {
-                displayName: `Test User ${i + 1}`,
-                email: `user${i + 1}@test.example`,
-                createdBy: "cortex-cli-seed",
-              });
-              created.users++;
-            } catch {
-              // Skip if exists
-            }
-          }
-
-          // Create memory spaces
-          spinner.text = "Creating memory spaces...";
-          const spaceIds: string[] = [];
-          for (let i = 0; i < numSpaces; i++) {
-            const spaceId = `${prefix}-space-${i + 1}`;
-            try {
-              await client.memorySpaces.register({
-                memorySpaceId: spaceId,
-                name: `Test Space ${i + 1}`,
-                type: "project",
-                metadata: { createdBy: "cortex-cli-seed" },
-              });
-              spaceIds.push(spaceId);
-              created.spaces++;
-            } catch {
-              spaceIds.push(spaceId); // Still try to use it
-            }
-          }
-
-          // Create conversations and memories
-          for (const spaceId of spaceIds) {
-            spinner.text = `Seeding ${spaceId}...`;
-
-            // Create conversations
-            for (let i = 0; i < numConversations; i++) {
-              const conversationId = generateId(`${prefix}-conv`);
-              const userId = `${prefix}-user-${(i % numUsers) + 1}`;
-
-              try {
-                await client.memory.remember({
-                  memorySpaceId: spaceId,
-                  conversationId,
-                  userMessage: `Test message ${i + 1} from user`,
-                  agentResponse: `Test response ${i + 1} from agent`,
-                  userId,
-                  userName: `Test User ${(i % numUsers) + 1}`,
-                });
-                created.conversations++;
-                created.memories += 2; // User + agent message
-              } catch {
-                // Skip on error
-              }
-            }
-
-            // Create additional standalone memories
-            for (let i = 0; i < numMemories; i++) {
-              try {
-                await client.vector.store(spaceId, {
-                  content: `Test memory content ${i + 1} for space ${spaceId}`,
-                  contentType: "raw",
-                  source: {
-                    type: "system",
-                    timestamp: Date.now(),
-                  },
-                  metadata: {
-                    importance: Math.floor(Math.random() * 100),
-                    tags: ["test", "seed", `batch-${i + 1}`],
-                  },
-                });
-                created.memories++;
-              } catch {
-                // Skip on error
-              }
-            }
-          }
-
-          spinner.stop();
-
-          printSuccess("Test data seeded successfully!");
-          printSection("Created", {
-            Users: created.users,
-            "Memory Spaces": created.spaces,
-            Memories: created.memories,
-            Conversations: created.conversations,
-          });
-        });
-      } catch (error) {
-        printError(error instanceof Error ? error.message : "Seeding failed");
-        process.exit(1);
+function isCortexConfigured(projectPath: string): boolean {
+  // Check for convex directory (indicates Convex is set up)
+  const convexDir = path.join(projectPath, "convex");
+  if (fs.existsSync(convexDir)) {
+    return true;
+  }
+  
+  // Check for .env.local with CONVEX_URL
+  const envLocal = path.join(projectPath, ".env.local");
+  if (fs.existsSync(envLocal)) {
+    try {
+      const content = fs.readFileSync(envLocal, "utf-8");
+      if (content.includes("CONVEX_URL")) {
+        return true;
       }
-    });
+    } catch {
+      // Ignore read errors
+    }
+  }
+  
+  return false;
+}
 
-  // dev clear-test-data
-  dev
-    .command("clear-test-data")
-    .description("Clear test data from the database")
-    .option("--prefix <prefix>", "Prefix of test data to clear", "test")
-    .option("-y, --yes", "Skip confirmation", false)
-    .action(async (options) => {
-      const globalOpts = program.opts();
-
-      try {
-        const prefix = options.prefix;
-
-        if (!options.yes) {
-          const confirmed = await requireConfirmation(
-            `Delete all data with prefix "${prefix}"?`,
-            config,
-          );
-          if (!confirmed) {
-            printWarning("Operation cancelled");
-            return;
-          }
+/**
+ * Show prompt when Cortex is not configured
+ */
+async function showNotConfiguredPrompt(projectPath: string): Promise<boolean> {
+  console.clear();
+  console.log(pc.bold(pc.yellow("\n   ⚠ Cortex Not Configured\n")));
+  console.log(pc.dim("   No Cortex/Convex configuration found in this directory.\n"));
+  console.log(`   ${pc.cyan("Current directory:")} ${projectPath}\n`);
+  console.log(pc.dim("   This could mean:"));
+  console.log(pc.dim("   • You're in the wrong directory"));
+  console.log(pc.dim("   • Cortex hasn't been set up yet\n"));
+  console.log(`   Press ${pc.bold(pc.green("i"))} to run ${pc.cyan("cortex init")} and set up your project`);
+  console.log(`   Press ${pc.bold(pc.red("q"))} to quit\n`);
+  
+  return new Promise((resolve) => {
+    if (process.stdin.isTTY) {
+      process.stdin.setRawMode(true);
+      process.stdin.resume();
+      process.stdin.setEncoding("utf8");
+    }
+    
+    const handler = async (key: string) => {
+      if (key === "i" || key === "I") {
+        process.stdin.removeListener("data", handler);
+        if (process.stdin.isTTY) {
+          process.stdin.setRawMode(false);
         }
-
-        const spinner = ora("Clearing test data...").start();
-
-        await withClient(config, globalOpts, async (client) => {
-          const deleted = {
-            users: 0,
-            spaces: 0,
-          };
-
-          // Find and delete test spaces
-          spinner.text = "Finding test memory spaces...";
-          const spaces = await client.memorySpaces.list({ limit: 1000 });
-          const testSpaces = spaces.filter((s) =>
-            s.memorySpaceId.startsWith(prefix),
-          );
-
-          for (const space of testSpaces) {
-            try {
-              await client.memorySpaces.delete(space.memorySpaceId, {
-                cascade: true,
-              });
-              deleted.spaces++;
-            } catch {
-              // Continue on error
-            }
-          }
-
-          // Find and delete test users
-          spinner.text = "Finding test users...";
-          const users = await client.users.list({ limit: 1000 });
-          const testUsers = users.filter((u) => u.id.startsWith(prefix));
-
-          for (const user of testUsers) {
-            try {
-              await client.users.delete(user.id, { cascade: true });
-              deleted.users++;
-            } catch {
-              // Continue on error
-            }
-          }
-
-          spinner.stop();
-
-          printSuccess("Test data cleared");
-          printSection("Deleted", {
-            "Memory Spaces": deleted.spaces,
-            Users: deleted.users,
-          });
-        });
-      } catch (error) {
-        printError(error instanceof Error ? error.message : "Clear failed");
-        process.exit(1);
-      }
-    });
-
-  // dev generate-data
-  dev
-    .command("generate-data")
-    .description("Generate sample data from templates")
-    .requiredOption(
-      "-t, --template <template>",
-      "Template: chatbot, ecommerce, knowledge-base",
-    )
-    .option(
-      "-s, --space <id>",
-      "Memory space ID (creates new if not specified)",
-    )
-    .option("-u, --user <id>", "User ID", "demo-user")
-    .action(async (options) => {
-      const globalOpts = program.opts();
-
-      try {
-        const templateName = options.template as keyof typeof DATA_TEMPLATES;
-        const template = DATA_TEMPLATES[templateName];
-
-        if (!template) {
-          printError(
-            `Unknown template: ${templateName}. Available: ${Object.keys(DATA_TEMPLATES).join(", ")}`,
-          );
-          process.exit(1);
-        }
-
-        const spinner = ora(`Generating ${template.name} data...`).start();
-
-        await withClient(config, globalOpts, async (client) => {
-          // Create or use existing space
-          const spaceId = options.space ?? `demo-${templateName}`;
-
-          spinner.text = "Creating memory space...";
-          try {
-            await client.memorySpaces.register({
-              memorySpaceId: spaceId,
-              name: template.name,
-              type: "project",
-              metadata: { template: templateName },
-            });
-          } catch {
-            // Space may already exist
-          }
-
-          // Create user
-          spinner.text = "Creating demo user...";
-          const userId = options.user;
-          try {
-            await client.users.update(userId, {
-              displayName: "Demo User",
-              template: templateName,
-            });
-          } catch {
-            // User may already exist
-          }
-
-          // Create conversations
-          spinner.text = "Creating conversations...";
-          let conversationCount = 0;
-          for (const conv of template.conversations) {
-            const conversationId = generateId("demo-conv");
-            try {
-              await client.memory.remember({
-                memorySpaceId: spaceId,
-                conversationId,
-                userMessage: conv.user,
-                agentResponse: conv.agent,
-                userId,
-                userName: "Demo User",
-              });
-              conversationCount++;
-            } catch {
-              // Skip on error
-            }
-          }
-
-          // Create facts
-          spinner.text = "Creating facts...";
-          let factCount = 0;
-          for (const factData of template.facts) {
-            try {
-              await client.facts.store({
-                memorySpaceId: spaceId,
-                fact: factData.fact,
-                factType: factData.type as
-                  | "preference"
-                  | "identity"
-                  | "knowledge"
-                  | "observation"
-                  | "relationship"
-                  | "event"
-                  | "custom",
-                confidence: 80,
-                sourceType: "system",
-                tags: ["demo", templateName],
-              });
-              factCount++;
-            } catch {
-              // Skip on error
-            }
-          }
-
-          spinner.stop();
-
-          printSuccess(`Generated ${template.name} demo data`);
-          printSection("Created", {
-            "Memory Space": spaceId,
-            User: userId,
-            Conversations: conversationCount,
-            Facts: factCount,
-          });
-        });
-      } catch (error) {
-        printError(
-          error instanceof Error ? error.message : "Generation failed",
-        );
-        process.exit(1);
-      }
-    });
-
-  // dev debug
-  const debug = dev.command("debug").description("Debugging utilities");
-
-  // debug search
-  debug
-    .command("search <query>")
-    .description("Test vector search")
-    .requiredOption("-s, --space <id>", "Memory space ID")
-    .option("-l, --limit <number>", "Number of results", "5")
-    .option("--verbose", "Show detailed results", false)
-    .action(async (query, options) => {
-      const globalOpts = program.opts();
-
-      try {
-        validateSearchQuery(query);
-        validateMemorySpaceId(options.space);
-
-        const spinner = ora("Performing vector search...").start();
-        const startTime = Date.now();
-
-        await withClient(config, globalOpts, async (client) => {
-          const results = await client.memory.search(options.space, query, {
-            limit: parseInt(options.limit, 10),
-          });
-
-          const duration = Date.now() - startTime;
-          spinner.stop();
-
-          console.log();
-          printSection("Search Debug", {
-            Query: query,
-            Space: options.space,
-            Results: results.length,
-            Duration: `${duration}ms`,
-          });
-
-          if (results.length > 0) {
-            console.log("\n  Results:");
-            for (let i = 0; i < results.length; i++) {
-              const result = results[i];
-              // Type guard for EnrichedMemory vs MemoryEntry
-              const memory =
-                result && typeof result === "object" && "memory" in result
-                  ? (
-                      result as {
-                        memory: {
-                          memoryId: string;
-                          content: string;
-                          contentType: string;
-                          importance: number;
-                          createdAt: number;
-                          tags: string[];
-                        };
-                      }
-                    ).memory
-                  : (result as {
-                      memoryId: string;
-                      content: string;
-                      contentType: string;
-                      importance: number;
-                      createdAt: number;
-                      tags: string[];
-                    });
-              console.log(`\n  ${pc.cyan(`[${i + 1}]`)} ${memory.memoryId}`);
-              console.log(
-                `      ${pc.dim("Content:")} ${memory.content.substring(0, 100)}...`,
-              );
-              console.log(`      ${pc.dim("Type:")} ${memory.contentType}`);
-              console.log(
-                `      ${pc.dim("Importance:")} ${memory.importance}`,
-              );
-
-              if (options.verbose) {
-                console.log(
-                  `      ${pc.dim("Created:")} ${formatTimestamp(memory.createdAt)}`,
-                );
-                console.log(
-                  `      ${pc.dim("Tags:")} ${memory.tags.join(", ") || "-"}`,
-                );
-              }
-            }
+        console.clear();
+        try {
+          await runInitWizard(projectPath, { start: false });
+          resolve(true); // Init completed, continue to dev mode
+        } catch (error) {
+          if (error instanceof Error && error.message === "Setup cancelled") {
+            console.log(pc.yellow("\n   Setup cancelled.\n"));
           } else {
-            printWarning("No results found");
+            console.error(pc.red("\n   Setup failed:"), error);
           }
-        });
-      } catch (error) {
-        printError(error instanceof Error ? error.message : "Search failed");
-        process.exit(1);
+          resolve(false);
+        }
+      } else if (key === "q" || key === "Q" || key === "\u0003") {
+        process.stdin.removeListener("data", handler);
+        if (process.stdin.isTTY) {
+          process.stdin.setRawMode(false);
+        }
+        console.log(pc.dim("\n   Goodbye!\n"));
+        resolve(false);
       }
-    });
+    };
+    
+    process.stdin.on("data", handler);
+  });
+}
 
-  // debug inspect
-  debug
-    .command("inspect <memoryId>")
-    .description("Inspect a memory in detail")
-    .requiredOption("-s, --space <id>", "Memory space ID")
-    .action(async (memoryId, options) => {
-      const globalOpts = program.opts();
+/**
+ * Run the interactive dev mode
+ */
+async function runInteractiveDevMode(
+  projectPath: string,
+  isLocal: boolean,
+): Promise<void> {
+  // Check if Cortex is configured
+  if (!isCortexConfigured(projectPath)) {
+    const shouldContinue = await showNotConfiguredPrompt(projectPath);
+    if (!shouldContinue) {
+      process.exit(0);
+    }
+    // Re-check after init
+    if (!isCortexConfigured(projectPath)) {
+      console.log(pc.red("\n   Configuration still not found. Please run 'cortex init' manually.\n"));
+      process.exit(1);
+    }
+  }
 
-      try {
-        validateMemoryId(memoryId);
-        validateMemorySpaceId(options.space);
+  const state: DevState = {
+    convexProcess: null,
+    convexRunning: false,
+    graphRunning: false,
+    graphType: null,
+    logs: [],
+    maxLogs: 50,
+    lastStatus: new Date(),
+    projectPath,
+    isLocal,
+  };
 
-        const spinner = ora("Loading memory...").start();
+  // Check for graph config
+  const dockerComposePath = path.join(projectPath, "docker-compose.graph.yml");
+  if (fs.existsSync(dockerComposePath)) {
+    const content = await fs.readFile(dockerComposePath, "utf-8");
+    state.graphType = content.includes("memgraph") ? "memgraph" : "neo4j";
+    
+    // Check if graph is already running
+    try {
+      const checkResult = await execCommand(
+        "docker",
+        ["ps", "--filter", `name=cortex-${state.graphType}`, "--format", "{{.Status}}"],
+        { quiet: true },
+      );
+      state.graphRunning = checkResult.stdout.includes("Up");
+    } catch {
+      state.graphRunning = false;
+    }
+  }
 
-        await withClient(config, globalOpts, async (client) => {
-          const result = await client.memory.get(options.space, memoryId, {
-            includeConversation: true,
-          });
+  // Setup stdin for raw mode (keyboard input)
+  if (process.stdin.isTTY) {
+    process.stdin.setRawMode(true);
+    process.stdin.resume();
+    process.stdin.setEncoding("utf8");
+  }
 
-          spinner.stop();
+  // Clear screen and show initial status
+  console.clear();
+  await refreshStatus(state);
+  showHelp();
+  console.log(pc.dim("  Logs streaming below. Status updates automatically. Press 'c' to clear.\n"));
 
-          if (!result) {
-            printError("Memory not found");
-            process.exit(1);
-          }
+  // Start services (logs will stream as they come)
+  await startServices(state);
 
-          const memory = "memory" in result ? result.memory : result;
+  // Track shutdown state (prevents re-entry race conditions)
+  let shuttingDown = false;
+  let shutdownInProgress = false;
 
-          console.log();
-          console.log(pc.bold(pc.cyan("Memory Inspection")));
-          console.log(pc.dim("─".repeat(50)));
-          console.log();
+  // Handle keyboard input
+  process.stdin.on("data", async (key: string) => {
+    switch (key) {
+      case "c":
+        // Clear screen and show status
+        state.logs = [];
+        console.clear();
+        await refreshStatus(state);
+        showHelp();
+        console.log(pc.dim("  Logs cleared. Streaming below...\n"));
+        break;
 
-          // Basic info
-          console.log(pc.bold("Basic Info:"));
-          console.log(`  ID: ${memory.memoryId}`);
-          console.log(`  Space: ${memory.memorySpaceId}`);
-          console.log(`  Version: ${memory.version}`);
-          console.log();
+      case "r":
+        // Restart services
+        console.log(pc.yellow("\n  Restarting services...\n"));
+        await stopServices(state);
+        state.logs = [];
+        console.clear();
+        await refreshStatus(state);
+        showHelp();
+        console.log(pc.dim("  Restarting...\n"));
+        await startServices(state);
+        break;
 
-          // Content
-          console.log(pc.bold("Content:"));
-          console.log(`  Type: ${memory.contentType}`);
-          console.log(`  Length: ${memory.content.length} characters`);
-          console.log(`  Content:\n    ${memory.content}`);
-          console.log();
-
-          // Source
-          console.log(pc.bold("Source:"));
-          console.log(`  Type: ${memory.sourceType}`);
-          console.log(`  User: ${memory.userId ?? "-"}`);
-          console.log(
-            `  Timestamp: ${formatTimestamp(memory.sourceTimestamp)}`,
-          );
-          console.log();
-
-          // Metadata
-          console.log(pc.bold("Metadata:"));
-          console.log(`  Importance: ${memory.importance}`);
-          console.log(`  Tags: ${memory.tags.join(", ") || "-"}`);
-          console.log(`  Access Count: ${memory.accessCount}`);
-          console.log();
-
-          // Embedding
-          console.log(pc.bold("Embedding:"));
-          if (memory.embedding) {
-            console.log(`  Dimensions: ${memory.embedding.length}`);
-            console.log(
-              `  Sample: [${memory.embedding
-                .slice(0, 5)
-                .map((n) => n.toFixed(4))
-                .join(", ")}, ...]`,
-            );
+      case "g":
+        // Toggle graph
+        if (state.graphType) {
+          if (state.graphRunning) {
+            printLog("Stopping graph database...");
+            const stopped = await toggleGraph(state.projectPath, state.graphType, false);
+            state.graphRunning = !stopped;
+            printLog(stopped ? pc.green("Graph database stopped") : pc.red("Failed to stop graph"));
           } else {
-            console.log("  No embedding stored");
+            printLog("Starting graph database...");
+            const started = await toggleGraph(state.projectPath, state.graphType, true);
+            state.graphRunning = started;
+            printLog(started ? pc.green("Graph database started") : pc.red("Failed to start graph"));
           }
-          console.log();
+        } else {
+          printLog(pc.yellow("No graph database configured. Run 'cortex init' to set up."));
+        }
+        break;
 
-          // Timestamps
-          console.log(pc.bold("Timestamps:"));
-          console.log(`  Created: ${formatTimestamp(memory.createdAt)}`);
-          console.log(`  Updated: ${formatTimestamp(memory.updatedAt)}`);
-          if (memory.lastAccessed) {
-            console.log(
-              `  Last Accessed: ${formatTimestamp(memory.lastAccessed)}`,
-            );
-          }
+      case "q":
+        // Clean quit - guard against multiple calls
+        if (!shutdownInProgress) {
+          shuttingDown = true;
+          shutdownInProgress = true;
+          console.log(pc.yellow("\n\n   Shutting down...\n"));
+          await performShutdown(state, false);
+        }
+        break;
 
-          // Version history
-          if (memory.previousVersions && memory.previousVersions.length > 0) {
-            console.log();
-            console.log(
-              pc.bold(
-                `Version History: ${memory.previousVersions.length} previous versions`,
-              ),
-            );
-          }
-        });
-      } catch (error) {
-        printError(error instanceof Error ? error.message : "Inspect failed");
-        process.exit(1);
+      case "\u0003": // Ctrl+C
+        // First Ctrl+C = clean shutdown, tracked for force kill on second
+        if (shutdownInProgress) {
+          // Already shutting down - ignore (force kill handled by SIGINT)
+          break;
+        }
+        if (shuttingDown) {
+          // Second Ctrl+C = force kill
+          shutdownInProgress = true;
+          console.log(pc.red("\n\n   Force killing...\n"));
+          await performShutdown(state, true);
+        } else {
+          shuttingDown = true;
+          shutdownInProgress = true;
+          console.log(pc.yellow("\n\n   Shutting down... (Ctrl+C again to force)\n"));
+          await performShutdown(state, false);
+        }
+        break;
+
+      case "?":
+      case "h":
+        // Help
+        console.clear();
+        showDetailedHelp();
+        console.log(pc.dim("\nPress any key to return to logs"));
+        break;
+
+      case "k":
+        // Kill Convex instances
+        console.clear();
+        await showKillMenu(state);
+        break;
+    }
+  });
+
+  // Handle SIGINT from terminal (separate from raw mode Ctrl+C)
+  process.on("SIGINT", async () => {
+    if (shutdownInProgress) {
+      // Already shutting down - only allow force kill if clean shutdown is in progress
+      if (!shuttingDown) {
+        // This shouldn't happen, but handle it
+        return;
       }
-    });
+      // Force kill - but don't call performShutdown again, just exit
+      console.log(pc.red("\n\n   Force killing...\n"));
+      process.exit(1);
+    } else if (shuttingDown) {
+      // shuttingDown but not shutdownInProgress means we already started once
+      // This case shouldn't happen with the new logic, but handle gracefully
+      return;
+    } else {
+      shuttingDown = true;
+      shutdownInProgress = true;
+      console.log(pc.yellow("\n\n   Shutting down... (Ctrl+C again to force)\n"));
+      await performShutdown(state, false);
+    }
+  });
+}
 
-  // debug connection
-  debug
-    .command("connection")
-    .description("Test and debug connection")
-    .action(async () => {
-      const globalOpts = program.opts();
+/**
+ * Start all services
+ */
+async function startServices(state: DevState): Promise<void> {
+  // Start graph if configured
+  if (state.graphType) {
+    addLog(state, `Starting ${state.graphType}...`);
+    const graphStarted = await toggleGraph(state.projectPath, state.graphType, true);
+    state.graphRunning = graphStarted;
+    if (graphStarted) {
+      addLog(state, `${state.graphType} started`);
+    } else {
+      addLog(state, pc.yellow(`${state.graphType} failed to start`));
+    }
+  }
 
-      console.log();
-      printSection("Connection Debug", {});
+  // Start Convex
+  addLog(state, "Starting Convex...");
+  await startConvexProcess(state);
+}
 
-      const { testConnection, getDeploymentInfo } = await import(
-        "../utils/client.js"
+/**
+ * Toggle graph database (start/stop without spinners)
+ */
+async function toggleGraph(
+  projectPath: string,
+  graphType: "neo4j" | "memgraph",
+  start: boolean,
+): Promise<boolean> {
+  const dockerComposePath = path.join(projectPath, "docker-compose.graph.yml");
+  const containerName = `cortex-${graphType}`;
+
+  if (!fs.existsSync(dockerComposePath)) {
+    return false;
+  }
+
+  try {
+    if (start) {
+      // Check if already running
+      const checkResult = await execCommand(
+        "docker",
+        ["ps", "--filter", `name=${containerName}`, "--format", "{{.Status}}"],
+        { quiet: true },
       );
 
-      const info = getDeploymentInfo(config, globalOpts);
-      console.log(`  URL: ${info.url}`);
-      console.log(`  Mode: ${info.isLocal ? "Local" : "Cloud"}`);
-      console.log(`  Deploy Key: ${info.hasKey ? "Set" : "Not set"}`);
-      console.log();
-
-      const spinner = ora("Testing connection...").start();
-      const result = await testConnection(config, globalOpts);
-      spinner.stop();
-
-      if (result.connected) {
-        printSuccess(`Connected (${result.latency}ms latency)`);
-      } else {
-        printError(`Connection failed: ${result.error}`);
+      if (checkResult.stdout.includes("Up")) {
+        return true; // Already running
       }
-    });
+
+      // Check if container exists but stopped
+      const existsResult = await execCommand(
+        "docker",
+        ["ps", "-a", "--filter", `name=${containerName}`, "--format", "{{.Names}}"],
+        { quiet: true },
+      );
+
+      if (existsResult.stdout.includes(containerName)) {
+        // Try to start existing container
+        const startResult = await execCommand(
+          "docker",
+          ["start", containerName],
+          { quiet: true },
+        );
+
+        if (startResult.code === 0) {
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+          return true;
+        }
+
+        // Remove old container if start failed
+        await execCommand("docker", ["rm", "-f", containerName], { quiet: true });
+      }
+
+      // Start via docker-compose
+      const result = await execCommand(
+        "docker",
+        ["compose", "-f", "docker-compose.graph.yml", "up", "-d"],
+        { cwd: projectPath, quiet: true },
+      );
+
+      if (result.code === 0) {
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        return true;
+      }
+      return false;
+    } else {
+      // Stop - use docker stop directly (not docker-compose) because the container
+      // might have been started from a different compose project
+      try {
+        const result = await execCommand(
+          "docker",
+          ["stop", containerName],
+          { quiet: true },
+        );
+        return result.code === 0;
+      } catch {
+        return false;
+      }
+    }
+  } catch (err) {
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/eda9cb6f-7c20-49f6-b35d-71ab0bedc9df',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'dev.ts:toggleGraph:error',message:'toggleGraph caught exception',data:{error:String(err)},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H3-exception'})}).catch(()=>{});
+    // #endregion
+    return false;
+  }
+}
+
+/**
+ * Stop all services
+ */
+/**
+ * Perform full shutdown
+ */
+async function performShutdown(state: DevState, force: boolean): Promise<void> {
+  if (force) {
+    console.log(pc.dim("  Killing Convex..."));
+  } else {
+    console.log(pc.dim("  Stopping Convex..."));
+  }
+  
+  await stopServices(state, force);
+  
+  console.log(pc.green("  ✓ All services stopped"));
+  
+  if (process.stdin.isTTY) {
+    process.stdin.setRawMode(false);
+  }
+  process.exit(0);
+}
+
+async function stopServices(state: DevState, force: boolean = false): Promise<void> {
+  // Stop Convex process - kill entire process group to stop all child processes
+  if (state.convexProcess && state.convexProcess.pid) {
+    const pid = state.convexProcess.pid;
+    try {
+      // Kill the entire process group (negative PID) to kill all child processes
+      // This is crucial because convex dev spawns child processes
+      const signal = force ? "SIGKILL" : "SIGTERM";
+      process.kill(-pid, signal);
+      if (!force) {
+        // Wait a moment for clean shutdown
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+    } catch {
+      // Process may already be dead, that's fine
+    }
+    state.convexProcess = null;
+    state.convexRunning = false;
+  }
+
+  // Stop graph database if running
+  if (state.graphRunning && state.graphType) {
+    console.log(pc.dim("  Stopping graph database..."));
+    const stopped = await toggleGraph(state.projectPath, state.graphType, false);
+    state.graphRunning = false;
+  }
+}
+
+/**
+ * Start Convex dev process
+ */
+async function startConvexProcess(state: DevState): Promise<void> {
+  const hasConvex = await commandExists("convex");
+  const command = hasConvex ? "convex" : "npx";
+  const args = hasConvex ? ["dev"] : ["convex", "dev"];
+  if (state.isLocal) args.push("--local");
+
+  // Spawn in detached mode so we can kill the entire process group
+  const child = spawn(command, args, {
+    cwd: state.projectPath,
+    env: { ...process.env },
+    detached: true,
+  });
+
+  state.convexProcess = child;
+
+  child.stdout?.on("data", (data: Buffer) => {
+    const lines = data.toString().split("\n").filter(Boolean);
+    for (const line of lines) {
+      addLog(state, line);
+    }
+  });
+
+  // Convex outputs to stderr, not stdout - so we detect ready state here
+  child.stderr?.on("data", (data: Buffer) => {
+    const lines = data.toString().split("\n").filter(Boolean);
+    for (const line of lines) {
+      addLog(state, line);
+      
+      // Detect when Convex is ready and show status update
+      if (line.includes("Convex functions ready") && !state.convexRunning) {
+        state.convexRunning = true;
+        printStatusLine(state);
+      }
+    }
+  });
+
+  child.on("exit", (code) => {
+    const wasRunning = state.convexRunning;
+    state.convexRunning = false;
+    state.convexProcess = null;
+    if (code !== 0 && code !== null) {
+      addLog(state, pc.red(`Convex exited with code ${code}`));
+    }
+    // Show status update if state changed
+    if (wasRunning) {
+      printStatusLine(state);
+    }
+  });
+
+  // Don't assume running - wait for actual ready signal
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+}
+
+/**
+ * Print a compact inline status line
+ */
+function printStatusLine(state: DevState): void {
+  const convexStatus = state.convexRunning 
+    ? pc.green("● Convex") 
+    : pc.yellow("○ Convex");
+  
+  let graphStatus = "";
+  if (state.graphType) {
+    graphStatus = state.graphRunning 
+      ? pc.green(` ● ${state.graphType}`)
+      : pc.yellow(` ○ ${state.graphType}`);
+  }
+  
+  console.log(); // Empty line before status
+  console.log(pc.cyan("  ══════════════════════════════════════════════════════════"));
+  console.log(`  ${pc.bold("Status:")} ${convexStatus}${graphStatus}`);
+  console.log(pc.cyan("  ══════════════════════════════════════════════════════════"));
+  console.log(); // Empty line after status
+}
+
+/**
+ * Print a log entry immediately to stdout
+ */
+function printLog(message: string): void {
+  const timestamp = new Date().toLocaleTimeString();
+  console.log(`  ${pc.dim(timestamp)} ${message}`);
+}
+
+/**
+ * Add a log entry (stores for history, also prints)
+ */
+function addLog(state: DevState, message: string): void {
+  const timestamp = new Date().toLocaleTimeString();
+  const logLine = `${pc.dim(timestamp)} ${message}`;
+  state.logs.push(logLine);
+  
+  // Trim old logs (keep history for 'l' command)
+  if (state.logs.length > state.maxLogs) {
+    state.logs = state.logs.slice(-state.maxLogs);
+  }
+  
+  // Print immediately
+  console.log(`  ${logLine}`);
+}
+
+/**
+ * Refresh and display status
+ */
+async function refreshStatus(state: DevState): Promise<void> {
+  const width = 60;
+  const line = "═".repeat(width);
+  const thinLine = "─".repeat(width);
+
+  console.log();
+  console.log(pc.cyan("╔" + line + "╗"));
+  console.log(
+    pc.cyan("║") +
+      pc.bold("   Cortex Dev Mode").padEnd(width) +
+      pc.cyan("║"),
+  );
+  console.log(pc.cyan("╚" + line + "╝"));
+  console.log();
+
+  // Services
+  console.log(pc.bold(pc.white("  Services")));
+  console.log(pc.dim("  " + thinLine));
+
+  // Convex status
+  if (state.convexRunning) {
+    console.log(`   ${pc.green("●")} Convex      ${pc.green("Running")}`);
+    if (state.isLocal) {
+      console.log(pc.dim("                  Dashboard: http://127.0.0.1:3210"));
+    }
+  } else {
+    console.log(`   ${pc.yellow("○")} Convex      ${pc.yellow("Starting...")}`);
+  }
+
+  // Graph status
+  if (state.graphType) {
+    if (state.graphRunning) {
+      console.log(`   ${pc.green("●")} ${state.graphType.padEnd(10)} ${pc.green("Running")}`);
+      if (state.graphType === "neo4j") {
+        console.log(pc.dim("                  Browser: http://localhost:7474"));
+      } else {
+        console.log(pc.dim("                  Lab: http://localhost:3000"));
+      }
+    } else {
+      console.log(`   ${pc.yellow("○")} ${state.graphType.padEnd(10)} ${pc.yellow("Not running")}`);
+    }
+  }
+
+  console.log();
+}
+
+/**
+ * Show logs
+ */
+/**
+ * Show keyboard shortcut help
+ */
+function showHelp(): void {
+  console.log(pc.dim("  ────────────────────────────────────────────────────────────"));
+  console.log(
+    pc.dim("  ") +
+    pc.cyan("c") + pc.dim(" clear  ") +
+    pc.cyan("r") + pc.dim(" restart  ") +
+    pc.cyan("g") + pc.dim(" graph  ") +
+    pc.cyan("k") + pc.dim(" kill  ") +
+    pc.cyan("q") + pc.dim(" quit  ") +
+    pc.cyan("?") + pc.dim(" help")
+  );
+  console.log();
+}
+
+/**
+ * Show detailed help
+ */
+function showDetailedHelp(): void {
+  const width = 60;
+  const line = "═".repeat(width);
+
+  console.log();
+  console.log(pc.cyan("╔" + line + "╗"));
+  console.log(
+    pc.cyan("║") +
+      pc.bold("   Keyboard Shortcuts").padEnd(width) +
+      pc.cyan("║"),
+  );
+  console.log(pc.cyan("╚" + line + "╝"));
+  console.log();
+
+  console.log(`   ${pc.cyan("c")}  Clear screen & show status`);
+  console.log(`   ${pc.cyan("r")}  Restart all services`);
+  console.log(`   ${pc.cyan("g")}  Toggle graph database`);
+  console.log(`   ${pc.cyan("k")}  Kill Convex instances (port conflicts)`);
+  console.log(`   ${pc.cyan("q")}  Quit (Ctrl+C)`);
+  console.log(`   ${pc.cyan("?")}  Show this help`);
+  console.log();
+}
+
+/**
+ * Find running Convex instances
+ */
+async function findConvexInstances(): Promise<ConvexInstance[]> {
+  const instances: ConvexInstance[] = [];
+  const ports = ["3210", "3211", "3212", "3213", "3214", "3215"];
+  const seenPids = new Set<string>();
+
+  for (const port of ports) {
+    try {
+      // Use lsof to find processes listening on the port (TCP LISTEN only)
+      const result = await execCommand(
+        "lsof",
+        ["-i", `:${port}`, "-sTCP:LISTEN", "-t"],
+        { quiet: true },
+      );
+
+      if (result.code === 0 && result.stdout.trim()) {
+        const pids = result.stdout.trim().split("\n");
+        for (const pid of pids) {
+          if (pid && !seenPids.has(pid)) {
+            seenPids.add(pid);
+            
+            // Get process name and command line
+            const nameResult = await execCommand(
+              "ps",
+              ["-p", pid, "-o", "comm="],
+              { quiet: true },
+            );
+            let name = nameResult.stdout.trim() || "unknown";
+            
+            // Try to get more detail about what's running
+            const cmdResult = await execCommand(
+              "ps",
+              ["-p", pid, "-o", "args="],
+              { quiet: true },
+            );
+            const cmdLine = cmdResult.stdout.trim();
+            
+            // Identify if it's Convex-related
+            if (cmdLine.includes("convex")) {
+              name = "convex";
+            } else if (cmdLine.includes("local-backend") || cmdLine.includes("convex-local-backend")) {
+              name = "convex-local-backend";
+            }
+            
+            // Include all processes on these ports (they're likely Convex-related)
+            instances.push({ pid, port, name });
+          }
+        }
+      }
+    } catch {
+      // Port not in use or lsof not available
+    }
+  }
+
+  // Also try to find convex-local-backend processes directly
+  try {
+    const result = await execCommand(
+      "pgrep",
+      ["-f", "convex.*local"],
+      { quiet: true },
+    );
+    
+    if (result.code === 0 && result.stdout.trim()) {
+      const pids = result.stdout.trim().split("\n");
+      for (const pid of pids) {
+        if (pid && !seenPids.has(pid)) {
+          seenPids.add(pid);
+          
+          // Get what port it might be on
+          const lsofResult = await execCommand(
+            "lsof",
+            ["-p", pid, "-i", "-sTCP:LISTEN"],
+            { quiet: true },
+          );
+          
+          let port = "unknown";
+          const portMatch = lsofResult.stdout.match(/:(\d+)\s+\(LISTEN\)/);
+          if (portMatch) {
+            port = portMatch[1];
+          }
+          
+          instances.push({ pid, port, name: "convex-local-backend" });
+        }
+      }
+    }
+  } catch {
+    // pgrep not available or no matches
+  }
+
+  return instances;
+}
+
+/**
+ * Show kill menu for Convex instances
+ */
+async function showKillMenu(state: DevState): Promise<void> {
+  const width = 60;
+  const line = "═".repeat(width);
+  const thinLine = "─".repeat(width);
+
+  console.log();
+  console.log(pc.cyan("╔" + line + "╗"));
+  console.log(
+    pc.cyan("║") +
+      pc.bold("   Kill Convex Instances").padEnd(width) +
+      pc.cyan("║"),
+  );
+  console.log(pc.cyan("╚" + line + "╝"));
+  console.log();
+
+  console.log(pc.dim("   Scanning for running Convex instances..."));
+  
+  const instances = await findConvexInstances();
+
+  console.clear();
+  console.log();
+  console.log(pc.cyan("╔" + line + "╗"));
+  console.log(
+    pc.cyan("║") +
+      pc.bold("   Kill Convex Instances").padEnd(width) +
+      pc.cyan("║"),
+  );
+  console.log(pc.cyan("╚" + line + "╝"));
+  console.log();
+
+  if (instances.length === 0) {
+    console.log(pc.green("   No Convex instances found on common ports."));
+    console.log(pc.dim("\n   Press any key to return..."));
+    
+    await waitForKey();
+    console.clear();
+    await refreshStatus(state);
+    showHelp();
+    return;
+  }
+
+  console.log(pc.bold(pc.white("  Running Instances")));
+  console.log(pc.dim("  " + thinLine));
+
+  for (let i = 0; i < instances.length; i++) {
+    const inst = instances[i];
+    console.log(
+      `   ${pc.cyan(`${i + 1}`)}  Port ${pc.yellow(inst.port)}  PID ${inst.pid}  ${pc.dim(inst.name)}`,
+    );
+  }
+
+  console.log();
+  console.log(pc.dim("   Press 1-9 to kill, 'a' to kill all, or any other key to cancel"));
+  console.log();
+
+  // Wait for user input
+  const key = await waitForKey();
+
+  if (key === "a") {
+    // Kill all
+    console.log(pc.yellow("\n   Killing all instances..."));
+    for (const inst of instances) {
+      try {
+        process.kill(parseInt(inst.pid), "SIGTERM");
+        console.log(pc.green(`   ✓ Killed PID ${inst.pid} (port ${inst.port})`));
+      } catch {
+        console.log(pc.red(`   ✗ Failed to kill PID ${inst.pid}`));
+      }
+    }
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  } else {
+    const num = parseInt(key);
+    if (num >= 1 && num <= instances.length) {
+      const inst = instances[num - 1];
+      console.log(pc.yellow(`\n   Killing PID ${inst.pid} on port ${inst.port}...`));
+      try {
+        process.kill(parseInt(inst.pid), "SIGTERM");
+        console.log(pc.green(`   ✓ Killed successfully`));
+      } catch {
+        console.log(pc.red(`   ✗ Failed to kill`));
+      }
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+  }
+
+  console.clear();
+  await refreshStatus(state);
+  showHelp();
+  console.log(pc.dim("  Logs streaming below...\n"));
+}
+
+/**
+ * Wait for a single keypress
+ */
+function waitForKey(): Promise<string> {
+  return new Promise((resolve) => {
+    const handler = (data: string) => {
+      process.stdin.removeListener("data", handler);
+      resolve(data);
+    };
+    process.stdin.once("data", handler);
+  });
 }

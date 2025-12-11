@@ -240,9 +240,16 @@ export const reactivate = mutation({
 export const deleteSpace = mutation({
   args: {
     memorySpaceId: v.string(),
-    cascade: v.boolean(), // If true, delete all associated data
+    cascade: v.boolean(), // Must be true to proceed
+    reason: v.string(), // Required: Why deleting (audit trail)
+    confirmId: v.optional(v.string()), // Optional: Safety check
   },
   handler: async (ctx, args) => {
+    // Safety check: confirmId must match memorySpaceId if provided
+    if (args.confirmId !== undefined && args.confirmId !== args.memorySpaceId) {
+      throw new ConvexError("CONFIRM_ID_MISMATCH");
+    }
+
     const space = await ctx.db
       .query("memorySpaces")
       .withIndex("by_memorySpaceId", (q) =>
@@ -253,6 +260,10 @@ export const deleteSpace = mutation({
     if (!space) {
       throw new ConvexError("MEMORYSPACE_NOT_FOUND");
     }
+
+    let conversationsDeleted = 0;
+    let memoriesDeleted = 0;
+    let factsDeleted = 0;
 
     if (args.cascade) {
       // Delete all conversations
@@ -266,6 +277,7 @@ export const deleteSpace = mutation({
       for (const conv of conversations) {
         await ctx.db.delete(conv._id);
       }
+      conversationsDeleted = conversations.length;
 
       // Delete all memories
       const memories = await ctx.db
@@ -278,6 +290,7 @@ export const deleteSpace = mutation({
       for (const mem of memories) {
         await ctx.db.delete(mem._id);
       }
+      memoriesDeleted = memories.length;
 
       // Delete all facts
       const facts = await ctx.db
@@ -290,15 +303,23 @@ export const deleteSpace = mutation({
       for (const fact of facts) {
         await ctx.db.delete(fact._id);
       }
+      factsDeleted = facts.length;
     }
 
     // Delete space itself
     await ctx.db.delete(space._id);
 
     return {
-      deleted: true,
       memorySpaceId: args.memorySpaceId,
-      cascaded: args.cascade,
+      deleted: true as const,
+      cascade: {
+        conversationsDeleted,
+        memoriesDeleted,
+        factsDeleted,
+        totalBytes: 0, // TODO: Implement size calculation
+      },
+      reason: args.reason,
+      deletedAt: Date.now(),
     };
   },
 });
@@ -327,7 +348,7 @@ export const get = query({
 });
 
 /**
- * List memory spaces
+ * List memory spaces with pagination and sorting
  */
 export const list = query({
   args: {
@@ -340,13 +361,20 @@ export const list = query({
       ),
     ),
     status: v.optional(v.union(v.literal("active"), v.literal("archived"))),
+    participant: v.optional(v.string()),
     limit: v.optional(v.number()),
+    offset: v.optional(v.number()),
+    sortBy: v.optional(
+      v.union(
+        v.literal("createdAt"),
+        v.literal("updatedAt"),
+        v.literal("name"),
+      ),
+    ),
+    sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
   },
   handler: async (ctx, args) => {
-    let spaces = await ctx.db
-      .query("memorySpaces")
-      .order("desc")
-      .take(args.limit || 100);
+    let spaces = await ctx.db.query("memorySpaces").collect();
 
     // Apply filters
     if (args.type) {
@@ -357,7 +385,52 @@ export const list = query({
       spaces = spaces.filter((s) => s.status === args.status);
     }
 
-    return spaces;
+    if (args.participant) {
+      spaces = spaces.filter((s) =>
+        s.participants.some((p) => p.id === args.participant),
+      );
+    }
+
+    // Get total before pagination
+    const total = spaces.length;
+
+    // Sort
+    const sortBy = args.sortBy || "createdAt";
+    const sortOrder = args.sortOrder || "desc";
+
+    spaces.sort((a, b) => {
+      let aVal: string | number | undefined;
+      let bVal: string | number | undefined;
+
+      if (sortBy === "name") {
+        aVal = a.name || "";
+        bVal = b.name || "";
+      } else {
+        aVal = a[sortBy];
+        bVal = b[sortBy];
+      }
+
+      if (aVal === undefined) aVal = sortBy === "name" ? "" : 0;
+      if (bVal === undefined) bVal = sortBy === "name" ? "" : 0;
+
+      if (sortOrder === "asc") {
+        return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+      } else {
+        return aVal > bVal ? -1 : aVal < bVal ? 1 : 0;
+      }
+    });
+
+    // Apply pagination
+    const offset = args.offset || 0;
+    const limit = args.limit || 100;
+    const paginatedSpaces = spaces.slice(offset, offset + limit);
+
+    return {
+      spaces: paginatedSpaces,
+      total,
+      hasMore: offset + limit < total,
+      offset,
+    };
   },
 });
 
@@ -392,11 +465,21 @@ export const count = query({
 });
 
 /**
- * Get memory space statistics
+ * Get memory space statistics with optional time window and participant breakdown
  */
 export const getStats = query({
   args: {
     memorySpaceId: v.string(),
+    timeWindow: v.optional(
+      v.union(
+        v.literal("24h"),
+        v.literal("7d"),
+        v.literal("30d"),
+        v.literal("90d"),
+        v.literal("all"),
+      ),
+    ),
+    includeParticipants: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const space = await ctx.db
@@ -410,34 +493,20 @@ export const getStats = query({
       throw new ConvexError("MEMORYSPACE_NOT_FOUND");
     }
 
-    // Count conversations
-    const conversationCount = await ctx.db
-      .query("conversations")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .collect()
-      .then((c) => c.length);
+    // Calculate time window cutoff
+    const now = Date.now();
+    let windowCutoff = 0;
+    if (args.timeWindow && args.timeWindow !== "all") {
+      const windowMs: Record<string, number> = {
+        "24h": 24 * 60 * 60 * 1000,
+        "7d": 7 * 24 * 60 * 60 * 1000,
+        "30d": 30 * 24 * 60 * 60 * 1000,
+        "90d": 90 * 24 * 60 * 60 * 1000,
+      };
+      windowCutoff = now - windowMs[args.timeWindow];
+    }
 
-    // Count memories
-    const memoryCount = await ctx.db
-      .query("memories")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .collect()
-      .then((m) => m.length);
-
-    // Count facts
-    const factCount = await ctx.db
-      .query("facts")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .collect()
-      .then((f) => f.filter((fact) => fact.supersededBy === undefined).length); // Active facts only
-
-    // Calculate total messages
+    // Get all conversations
     const conversations = await ctx.db
       .query("conversations")
       .withIndex("by_memorySpace", (q) =>
@@ -445,31 +514,167 @@ export const getStats = query({
       )
       .collect();
 
-    const messageCount = conversations.reduce(
+    // Get all memories
+    const memories = await ctx.db
+      .query("memories")
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
+      .collect();
+
+    // Get all facts (active only)
+    const facts = await ctx.db
+      .query("facts")
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
+      .collect()
+      .then((f) => f.filter((fact) => fact.supersededBy === undefined));
+
+    // Total counts
+    const totalConversations = conversations.length;
+    const totalMemories = memories.length;
+    const totalFacts = facts.length;
+    const totalMessages = conversations.reduce(
       (sum, conv) => sum + conv.messageCount,
       0,
     );
 
+    // Time window counts
+    const memoriesThisWindow = windowCutoff > 0
+      ? memories.filter((m) => m.createdAt >= windowCutoff).length
+      : totalMemories;
+    const conversationsThisWindow = windowCutoff > 0
+      ? conversations.filter((c) => c.createdAt >= windowCutoff).length
+      : totalConversations;
+
+    // Calculate importance breakdown
+    const importanceBreakdown = {
+      critical: memories.filter((m) => m.importance >= 90).length,
+      high: memories.filter((m) => m.importance >= 70 && m.importance < 90).length,
+      medium: memories.filter((m) => m.importance >= 40 && m.importance < 70).length,
+      low: memories.filter((m) => m.importance >= 10 && m.importance < 40).length,
+      trivial: memories.filter((m) => m.importance < 10).length,
+    };
+
+    // Aggregate tags
+    const tagCounts: Record<string, number> = {};
+    for (const memory of memories) {
+      for (const tag of memory.tags || []) {
+        tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+      }
+    }
+    const topTags = Object.entries(tagCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([tag]) => tag);
+
+    // Participant activity breakdown (if requested)
+    let participants:
+      | Array<{
+          participantId: string;
+          memoriesStored: number;
+          conversationsStored: number;
+          factsExtracted: number;
+          firstActive: number;
+          lastActive: number;
+          avgImportance: number;
+          topTags: string[];
+        }>
+      | undefined;
+
+    if (args.includeParticipants) {
+      const participantMap = new Map<
+        string,
+        {
+          memoriesStored: number;
+          conversationsStored: number;
+          factsExtracted: number;
+          firstActive: number;
+          lastActive: number;
+          importanceSum: number;
+          tags: Record<string, number>;
+        }
+      >();
+
+      // Aggregate by participantId from memories
+      for (const memory of memories) {
+        const pid = memory.participantId || "unknown";
+        const existing = participantMap.get(pid) || {
+          memoriesStored: 0,
+          conversationsStored: 0,
+          factsExtracted: 0,
+          firstActive: memory.createdAt,
+          lastActive: memory.createdAt,
+          importanceSum: 0,
+          tags: {},
+        };
+
+        existing.memoriesStored++;
+        existing.importanceSum += memory.importance || 0;
+        existing.firstActive = Math.min(existing.firstActive, memory.createdAt);
+        existing.lastActive = Math.max(existing.lastActive, memory.updatedAt || memory.createdAt);
+
+        for (const tag of memory.tags || []) {
+          existing.tags[tag] = (existing.tags[tag] || 0) + 1;
+        }
+
+        participantMap.set(pid, existing);
+      }
+
+      // Count conversations by participant
+      for (const conv of conversations) {
+        const pid = conv.participantId || "unknown";
+        const existing = participantMap.get(pid);
+        if (existing) {
+          existing.conversationsStored++;
+        }
+      }
+
+      // Count facts by participant
+      for (const fact of facts) {
+        const pid = fact.participantId || "unknown";
+        const existing = participantMap.get(pid);
+        if (existing) {
+          existing.factsExtracted++;
+        }
+      }
+
+      participants = Array.from(participantMap.entries()).map(([participantId, data]) => ({
+        participantId,
+        memoriesStored: data.memoriesStored,
+        conversationsStored: data.conversationsStored,
+        factsExtracted: data.factsExtracted,
+        firstActive: data.firstActive,
+        lastActive: data.lastActive,
+        avgImportance:
+          data.memoriesStored > 0
+            ? Math.round(data.importanceSum / data.memoriesStored)
+            : 0,
+        topTags: Object.entries(data.tags)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 5)
+          .map(([tag]) => tag),
+      }));
+    }
+
     return {
       memorySpaceId: args.memorySpaceId,
-      totalMemories: memoryCount,
-      totalConversations: conversationCount,
-      totalFacts: factCount,
-      totalMessages: messageCount,
+      totalMemories,
+      totalConversations,
+      totalFacts,
+      totalMessages,
+      memoriesThisWindow,
+      conversationsThisWindow,
       storage: {
         conversationsBytes: 0, // TODO: Implement size calculation
         memoriesBytes: 0,
         factsBytes: 0,
         totalBytes: 0,
       },
-      topTags: [], // TODO: Implement tag aggregation
-      importanceBreakdown: {
-        critical: 0,
-        high: 0,
-        medium: 0,
-        low: 0,
-        trivial: 0,
-      },
+      topTags,
+      importanceBreakdown,
+      participants,
     };
   },
 });

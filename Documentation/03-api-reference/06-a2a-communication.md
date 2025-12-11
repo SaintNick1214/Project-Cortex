@@ -1,6 +1,6 @@
 # A2A Communication API
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2025-12-10
 
 Complete API reference for agent-to-agent communication helpers.
 
@@ -17,7 +17,7 @@ Some A2A operations require **real-time pub/sub infrastructure**:
 | `send()`            | ❌ No            | ✅ Yes        | Fire-and-forget (async)                                 |
 | `request()`         | ✅ Yes           | ❌ No         | Needs real-time response notification                   |
 | `broadcast()`       | ✅ Yes (optimal) | ⚠️ Degraded   | Can store without pub/sub, but no delivery confirmation |
-| `subscribe()`       | ✅ Yes           | ❌ No         | Real-time inbox notifications                           |
+| `subscribe()`       | ✅ Yes           | ❌ No         | Real-time inbox notifications *(Planned)*               |
 | `getConversation()` | ❌ No            | ✅ Yes        | Database query only                                     |
 
 **Pub/Sub Options:**
@@ -409,7 +409,7 @@ interface A2ASendParams {
 ```typescript
 interface A2AMessage {
   messageId: string; // Unique message ID
-  sentAt: Date;
+  sentAt: number; // Unix timestamp (milliseconds)
 
   // ACID tracking
   conversationId?: string; // ACID conversation (if trackConversation=true)
@@ -575,7 +575,7 @@ interface A2AResponse {
   response: string; // Response message
   messageId: string; // Original request message ID
   responseMessageId: string; // Response message ID
-  respondedAt: Date;
+  respondedAt: number; // Unix timestamp (milliseconds)
   responseTime: number; // ms
 }
 ```
@@ -734,7 +734,7 @@ interface A2ABroadcastParams {
 ```typescript
 interface A2ABroadcastResult {
   messageId: string; // Broadcast ID (same for all)
-  sentAt: Date;
+  sentAt: number; // Unix timestamp (milliseconds)
   recipients: string[];
 
   // Storage results
@@ -861,8 +861,8 @@ interface A2AConversation {
   messages: A2AConversationMessage[];
 
   period: {
-    start: Date;
-    end: Date;
+    start: number; // Unix timestamp (milliseconds)
+    end: number; // Unix timestamp (milliseconds)
   };
 
   tags?: string[]; // Filtered tags
@@ -874,11 +874,14 @@ interface A2AConversationMessage {
   to: string;
   message: string;
   importance: number;
-  timestamp: Date;
+  timestamp: number; // Unix timestamp (milliseconds)
   messageId: string;
   memoryId: string; // Vector memory ID
   acidMessageId?: string; // ACID message ID (if tracked)
   tags?: string[];
+  direction?: string; // 'outbound' or 'inbound'
+  broadcast?: boolean; // True if part of a broadcast
+  broadcastId?: string; // Broadcast ID (if broadcast)
 }
 ```
 

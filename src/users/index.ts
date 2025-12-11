@@ -15,6 +15,7 @@ import type {
   DeletionBackup,
   VerificationResult,
   ListUsersFilter,
+  ListUsersResult,
   UserFilters,
   ExportUsersOptions,
   Conversation,
@@ -145,15 +146,27 @@ export class UsersAPI {
   }
 
   /**
-   * Update user profile (creates new version)
+   * Update user profile (creates new version by default)
+   *
+   * @param userId - User ID to update
+   * @param data - Profile data to store
+   * @param options - Update options
+   * @param options.skipVersioning - Don't create new version (default: false)
+   * @param options.versionReason - Why this update happened (stored in metadata)
+   * @param options.merge - Merge with existing data (default: true)
    *
    * @example
    * ```typescript
+   * // Basic update (merges with existing, creates new version)
    * const updated = await cortex.users.update('user-123', {
    *   displayName: 'Alex Johnson',
    *   email: 'alex@example.com',
    *   preferences: { theme: 'dark' }
    * });
+   *
+   * // Skip versioning for routine updates
+   * await cortex.users.update('user-123', {
+   *   lastSeen: new Date().toISOString()
    * ```
    */
   async update(
@@ -164,12 +177,19 @@ export class UsersAPI {
     validateUserId(userId);
     validateData(data, "data");
 
+    // Default behavior: merge with existing data
+    let finalData = data;
+    const existing = await this.get(userId);
+    if (existing) {
+      finalData = this.deepMerge(existing.data, data);
+    }
+
     const result = await this.executeWithResilience(
       () =>
         this.client.mutation(api.immutable.store, {
           type: "user",
           id: userId,
-          data,
+          data: finalData,
         }),
       "users:update",
     );
@@ -303,85 +323,205 @@ export class UsersAPI {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /**
-   * List user profiles with pagination
+   * List user profiles with pagination, filtering, and sorting
+   *
+   * @param filters - Filter and pagination options
+   * @returns ListUsersResult with pagination metadata
    *
    * @example
    * ```typescript
-   * const users = await cortex.users.list({ limit: 50 });
-   * for (const user of users) {
-   *   console.log(user.data.displayName);
-   * }
+   * // Basic listing with limit
+   * const result = await cortex.users.list({ limit: 50 });
+   * console.log(`Found ${result.total} users, showing ${result.users.length}`);
+   *
+   * // With date filters and sorting
+   * const recent = await cortex.users.list({
+   *   createdAfter: Date.now() - 7 * 24 * 60 * 60 * 1000,
+   *   sortBy: 'createdAt',
+   *   sortOrder: 'desc',
+   *   limit: 20
+   * });
+   *
+   * // Pagination
+   * const page2 = await cortex.users.list({ limit: 10, offset: 10 });
    * ```
    */
-  async list(filters?: ListUsersFilter): Promise<UserProfile[]> {
+  async list(filters?: ListUsersFilter): Promise<ListUsersResult> {
     // Client-side validation
     validateListUsersFilter(filters);
 
-    const results = await this.executeWithResilience(
+    const result = await this.executeWithResilience(
       () =>
         this.client.query(api.immutable.list, {
           type: "user",
           limit: filters?.limit,
+          offset: filters?.offset,
+          createdAfter: filters?.createdAfter,
+          createdBefore: filters?.createdBefore,
+          updatedAfter: filters?.updatedAfter,
+          updatedBefore: filters?.updatedBefore,
+          sortBy: filters?.sortBy,
+          sortOrder: filters?.sortOrder,
         }),
       "users:list",
     );
 
-    return results.map((r: ImmutableRecord) => ({
+    // Extract entries from the new response format
+    const entries = (
+      result as { entries: ImmutableRecord[]; total: number; hasMore: boolean }
+    ).entries;
+    const total = (result as { total: number }).total;
+    const hasMore = (result as { hasMore: boolean }).hasMore;
+
+    // Map to UserProfile
+    let users = entries.map((r: ImmutableRecord) => ({
       id: r.id,
       data: r.data,
       version: r.version,
       createdAt: r.createdAt,
       updatedAt: r.updatedAt,
     }));
+
+    // Apply client-side filters for nested data properties
+    if (filters?.displayName) {
+      const searchName = filters.displayName.toLowerCase();
+      users = users.filter((u) => {
+        const name = u.data.displayName as string | undefined;
+        return name?.toLowerCase().includes(searchName);
+      });
+    }
+
+    if (filters?.email) {
+      const searchEmail = filters.email.toLowerCase();
+      users = users.filter((u) => {
+        const email = u.data.email as string | undefined;
+        return email?.toLowerCase().includes(searchEmail);
+      });
+    }
+
+    return {
+      users,
+      total,
+      limit: filters?.limit || 50,
+      offset: filters?.offset || 0,
+      hasMore,
+    };
   }
 
   /**
-   * Search user profiles by content
+   * Search user profiles with filters
+   *
+   * @param filters - Filter, sorting, and pagination options
+   * @returns Array of matching user profiles
    *
    * @example
    * ```typescript
-   * const results = await cortex.users.search({ limit: 10 });
+   * // Search with date filter
+   * const recentUsers = await cortex.users.search({
+   *   createdAfter: Date.now() - 30 * 24 * 60 * 60 * 1000,
+   *   limit: 100
+   * });
+   *
+   * // Search by displayName (client-side filter)
+   * const alexUsers = await cortex.users.search({
+   *   displayName: 'alex',
+   *   limit: 50
+   * });
+   *
+   * // Search with sorting
+   * const sorted = await cortex.users.search({
+   *   sortBy: 'updatedAt',
+   *   sortOrder: 'desc'
+   * });
    * ```
    */
   async search(filters: UserFilters): Promise<UserProfile[]> {
     // Client-side validation
     validateUserFilters(filters);
 
-    const results = await this.executeWithResilience(
+    const result = await this.executeWithResilience(
       () =>
         this.client.query(api.immutable.list, {
           type: "user",
           limit: filters.limit,
+          offset: filters.offset,
+          createdAfter: filters.createdAfter,
+          createdBefore: filters.createdBefore,
+          updatedAfter: filters.updatedAfter,
+          updatedBefore: filters.updatedBefore,
+          sortBy: filters.sortBy,
+          sortOrder: filters.sortOrder,
         }),
       "users:search",
     );
 
-    return results.map((r: ImmutableRecord) => ({
+    // Extract entries from the new response format
+    const entries = (result as { entries: ImmutableRecord[] }).entries;
+
+    // Map to UserProfile
+    let users = entries.map((r: ImmutableRecord) => ({
       id: r.id,
       data: r.data,
       version: r.version,
       createdAt: r.createdAt,
       updatedAt: r.updatedAt,
     }));
+
+    // Apply client-side filters for nested data properties
+    if (filters.displayName) {
+      const searchName = filters.displayName.toLowerCase();
+      users = users.filter((u) => {
+        const name = u.data.displayName as string | undefined;
+        return name?.toLowerCase().includes(searchName);
+      });
+    }
+
+    if (filters.email) {
+      const searchEmail = filters.email.toLowerCase();
+      users = users.filter((u) => {
+        const email = u.data.email as string | undefined;
+        return email?.toLowerCase().includes(searchEmail);
+      });
+    }
+
+    return users;
   }
 
   /**
-   * Count user profiles
+   * Count user profiles with optional filters
+   *
+   * @param filters - Optional filter parameters
+   * @returns Count of matching user profiles
    *
    * @example
    * ```typescript
+   * // Total users
    * const total = await cortex.users.count();
    * console.log(`Total users: ${total}`);
+   *
+   * // Count recent users (last 30 days)
+   * const recentCount = await cortex.users.count({
+   *   createdAfter: Date.now() - 30 * 24 * 60 * 60 * 1000
+   * });
+   *
+   * // Count users updated this week
+   * const activeCount = await cortex.users.count({
+   *   updatedAfter: Date.now() - 7 * 24 * 60 * 60 * 1000
+   * });
    * ```
    */
-  async count(_filters?: UserFilters): Promise<number> {
+  async count(filters?: UserFilters): Promise<number> {
     // Client-side validation
-    validateUserFilters(_filters);
+    validateUserFilters(filters);
 
     return await this.executeWithResilience(
       () =>
         this.client.query(api.immutable.count, {
           type: "user",
+          createdAfter: filters?.createdAfter,
+          createdBefore: filters?.createdBefore,
+          updatedAfter: filters?.updatedAfter,
+          updatedBefore: filters?.updatedBefore,
         }),
       "users:count",
     );
@@ -476,7 +616,7 @@ export class UsersAPI {
   ): Promise<UserVersion | null> {
     // Client-side validation
     validateUserId(userId);
-    validateTimestamp(timestamp);
+    validateTimestamp(timestamp.getTime());
 
     const result = await this.executeWithResilience(
       () =>
@@ -635,12 +775,29 @@ export class UsersAPI {
   }
 
   /**
-   * Export user profiles
+   * Export user profiles with optional related data
+   *
+   * @param options - Export options including format and what to include
+   * @returns Exported data as JSON or CSV string
    *
    * @example
    * ```typescript
-   * const json = await cortex.users.export({
-   *   format: 'json'
+   * // Basic JSON export
+   * const json = await cortex.users.export({ format: 'json' });
+   *
+   * // Export with version history
+   * const withHistory = await cortex.users.export({
+   *   format: 'json',
+   *   includeVersionHistory: true
+   * });
+   *
+   * // Full GDPR export with conversations and memories
+   * const gdprExport = await cortex.users.export({
+   *   format: 'json',
+   *   filters: { displayName: 'alex' },
+   *   includeVersionHistory: true,
+   *   includeConversations: true,
+   *   includeMemories: true
    * });
    * ```
    */
@@ -648,50 +805,174 @@ export class UsersAPI {
     // Client-side validation
     validateExportOptions(options);
 
-    const users = await this.list(options?.filters);
+    const result = await this.list(options?.filters);
+    const users = result.users;
+
+    // Build export data structure
+    const exportData: Array<{
+      id: string;
+      data: Record<string, unknown>;
+      version: number;
+      createdAt: number;
+      updatedAt: number;
+      versionHistory?: Array<{
+        version: number;
+        data: Record<string, unknown>;
+        timestamp: number;
+      }>;
+      conversations?: Conversation[];
+      memories?: MemoryEntry[];
+    }> = [];
+
+    for (const user of users) {
+      const userData: (typeof exportData)[number] = {
+        id: user.id,
+        data: user.data,
+        version: user.version,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      };
+
+      // Include version history if requested
+      if (options?.includeVersionHistory) {
+        try {
+          const history = await this.getHistory(user.id);
+          userData.versionHistory = history;
+        } catch (_e) {
+          // Skip if history unavailable
+        }
+      }
+
+      // Include conversations if requested
+      if (options?.includeConversations) {
+        try {
+          const convosResult = await this.client.query(api.conversations.list, {
+            userId: user.id,
+          });
+          // Handle both array and paginated result formats
+          const convos = Array.isArray(convosResult)
+            ? convosResult
+            : (convosResult as { conversations: Conversation[] }).conversations;
+          userData.conversations = convos as Conversation[];
+        } catch (_e) {
+          // Skip if conversations unavailable
+        }
+      }
+
+      // Include memories if requested
+      // Note: memories.list requires memorySpaceId, so we extract memory spaces
+      // from the user's conversations first
+      if (options?.includeMemories) {
+        try {
+          const allMemories: MemoryEntry[] = [];
+
+          // Get memory space IDs from conversations
+          if (userData.conversations && userData.conversations.length > 0) {
+            const memorySpaceIds = new Set<string>();
+            for (const convo of userData.conversations) {
+              if (convo.memorySpaceId) {
+                memorySpaceIds.add(convo.memorySpaceId);
+              }
+            }
+
+            // Query memories from each memory space
+            for (const memorySpaceId of memorySpaceIds) {
+              try {
+                const memories = await this.client.query(api.memories.list, {
+                  memorySpaceId,
+                  userId: user.id,
+                });
+                if (Array.isArray(memories)) {
+                  allMemories.push(...(memories as MemoryEntry[]));
+                }
+              } catch (_memErr) {
+                // Skip unavailable memory spaces
+              }
+            }
+          }
+
+          userData.memories = allMemories;
+        } catch (_e) {
+          // Skip if memories unavailable
+        }
+      }
+
+      exportData.push(userData);
+    }
 
     if (options?.format === "csv") {
-      // CSV export
-      const headers = ["id", "version", "createdAt", "updatedAt", "data"];
-      const rows = users.map((u) => [
+      // CSV export - flatten structure
+      const headers = [
+        "id",
+        "version",
+        "createdAt",
+        "updatedAt",
+        "data",
+        ...(options.includeVersionHistory ? ["versionHistoryCount"] : []),
+        ...(options.includeConversations ? ["conversationsCount"] : []),
+        ...(options.includeMemories ? ["memoriesCount"] : []),
+      ];
+
+      const rows = exportData.map((u) => [
         u.id,
         u.version.toString(),
         new Date(u.createdAt).toISOString(),
         new Date(u.updatedAt).toISOString(),
         JSON.stringify(u.data),
+        ...(options.includeVersionHistory
+          ? [(u.versionHistory?.length || 0).toString()]
+          : []),
+        ...(options.includeConversations
+          ? [(u.conversations?.length || 0).toString()]
+          : []),
+        ...(options.includeMemories
+          ? [(u.memories?.length || 0).toString()]
+          : []),
       ]);
 
       return [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
     }
 
     // JSON export (default)
-    return JSON.stringify(users as UserProfile[], null, 2);
+    return JSON.stringify(exportData, null, 2);
   }
 
   /**
-   * Bulk update multiple users
+   * Bulk update multiple users by explicit IDs or filters
    *
-   * @param userIds - Array of user IDs to update
-   * @param updates - Updates to apply to all users
+   * @param userIdsOrFilters - Array of user IDs OR UserFilters object
+   * @param updates - Updates to apply to matching users
    * @param options - Update options
-   * @returns Update result
+   * @returns Update result with count and affected userIds
    *
    * @example
    * ```typescript
+   * // Update by explicit IDs
    * const result = await cortex.users.updateMany(
    *   ['user-1', 'user-2', 'user-3'],
    *   { data: { status: 'active' } }
    * );
-   * console.log(`Updated ${result.updated} users`);
+   *
+   * // Update by filters (all users created in last 7 days)
+   * const filtered = await cortex.users.updateMany(
+   *   { createdAfter: Date.now() - 7 * 24 * 60 * 60 * 1000 },
+   *   { data: { welcomeEmailSent: true } }
+   * );
+   *
+   * // Dry run to preview
+   * const preview = await cortex.users.updateMany(
+   *   { displayName: 'alex' },
+   *   { data: { verified: true } },
+   *   { dryRun: true }
+   * );
+   * console.log(`Would update ${preview.userIds.length} users`);
    * ```
    */
   async updateMany(
-    userIds: string[],
+    userIdsOrFilters: string[] | UserFilters,
     updates: { data: Record<string, unknown> },
     options?: { skipVersioning?: boolean; dryRun?: boolean },
   ): Promise<{ updated: number; userIds: string[] }> {
-    // Client-side validation
-    validateUserIdsArray(userIds, 1, 100);
     // Runtime validation for potentially untrusted external input
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!updates || !updates.data) {
@@ -704,16 +985,39 @@ export class UsersAPI {
     validateData(updates.data, "updates.data");
     validateBulkUpdateOptions(options);
 
+    // Determine if we're using userIds array or filters
+    let targetUserIds: string[];
+
+    if (Array.isArray(userIdsOrFilters)) {
+      // Explicit userIds array
+      validateUserIdsArray(userIdsOrFilters, 1, 100);
+      targetUserIds = userIdsOrFilters;
+    } else {
+      // Filter-based selection - search for matching users
+      validateUserFilters(userIdsOrFilters);
+      const matchingUsers = await this.search(userIdsOrFilters);
+      targetUserIds = matchingUsers.map((u) => u.id);
+
+      // Limit to 100 users for safety
+      if (targetUserIds.length > 100) {
+        throw new UserValidationError(
+          `Filter matched ${targetUserIds.length} users, maximum is 100. Add more specific filters or use limit.`,
+          "TOO_MANY_MATCHES",
+          "filters",
+        );
+      }
+    }
+
     if (options?.dryRun) {
       return {
         updated: 0,
-        userIds: userIds,
+        userIds: targetUserIds,
       };
     }
 
     const results: string[] = [];
 
-    for (const userId of userIds) {
+    for (const userId of targetUserIds) {
       try {
         const user = await this.get(userId);
         if (user) {
@@ -733,39 +1037,73 @@ export class UsersAPI {
   }
 
   /**
-   * Bulk delete multiple users
+   * Bulk delete multiple users by explicit IDs or filters
    *
-   * @param userIds - Array of user IDs to delete
-   * @param options - Delete options
-   * @returns Delete result
+   * @param userIdsOrFilters - Array of user IDs OR UserFilters object
+   * @param options - Delete options (cascade, dryRun)
+   * @returns Delete result with count and affected userIds
    *
    * @example
    * ```typescript
+   * // Delete by explicit IDs
    * const result = await cortex.users.deleteMany(
    *   ['user-1', 'user-2', 'user-3'],
    *   { cascade: true }
    * );
-   * console.log(`Deleted ${result.deleted} users`);
+   *
+   * // Delete by filters (inactive users older than 1 year)
+   * const oldUsers = await cortex.users.deleteMany(
+   *   { createdBefore: Date.now() - 365 * 24 * 60 * 60 * 1000 },
+   *   { cascade: true }
+   * );
+   *
+   * // Dry run to preview what would be deleted
+   * const preview = await cortex.users.deleteMany(
+   *   { updatedBefore: Date.now() - 90 * 24 * 60 * 60 * 1000 },
+   *   { dryRun: true }
+   * );
+   * console.log(`Would delete ${preview.userIds.length} users`);
    * ```
    */
   async deleteMany(
-    userIds: string[],
+    userIdsOrFilters: string[] | UserFilters,
     options?: { cascade?: boolean; dryRun?: boolean },
   ): Promise<{ deleted: number; userIds: string[] }> {
-    // Client-side validation
-    validateUserIdsArray(userIds, 1, 100);
     validateBulkDeleteOptions(options);
+
+    // Determine if we're using userIds array or filters
+    let targetUserIds: string[];
+
+    if (Array.isArray(userIdsOrFilters)) {
+      // Explicit userIds array
+      validateUserIdsArray(userIdsOrFilters, 1, 100);
+      targetUserIds = userIdsOrFilters;
+    } else {
+      // Filter-based selection - search for matching users
+      validateUserFilters(userIdsOrFilters);
+      const matchingUsers = await this.search(userIdsOrFilters);
+      targetUserIds = matchingUsers.map((u) => u.id);
+
+      // Limit to 100 users for safety
+      if (targetUserIds.length > 100) {
+        throw new UserValidationError(
+          `Filter matched ${targetUserIds.length} users, maximum is 100. Add more specific filters or use limit.`,
+          "TOO_MANY_MATCHES",
+          "filters",
+        );
+      }
+    }
 
     if (options?.dryRun) {
       return {
         deleted: 0,
-        userIds: userIds,
+        userIds: targetUserIds,
       };
     }
 
     const results: string[] = [];
 
-    for (const userId of userIds) {
+    for (const userId of targetUserIds) {
       try {
         await this.delete(userId, options);
         results.push(userId);
@@ -813,9 +1151,13 @@ export class UsersAPI {
 
     // Collect conversations - single query with userId filter
     try {
-      const convos = await this.client.query(api.conversations.list, {
+      const convosResult = await this.client.query(api.conversations.list, {
         userId,
       });
+      // conversations.list returns { conversations, total, ... } or just array
+      const convos = Array.isArray(convosResult)
+        ? convosResult
+        : (convosResult as { conversations: Conversation[] }).conversations;
       plan.conversations = convos as Conversation[];
 
       // Add memory space IDs from conversations - these are the spaces that
@@ -843,10 +1185,14 @@ export class UsersAPI {
 
     // Collect immutable records (excluding user profile itself) - single query
     try {
-      const immutableRecords = await this.client.query(api.immutable.list, {
+      const result = await this.client.query(api.immutable.list, {
         userId,
       });
-      plan.immutable = (immutableRecords as ImmutableRecord[]).filter(
+      // Extract entries from the paginated response
+      const immutableRecords = (
+        result as { entries: ImmutableRecord[]; total: number }
+      ).entries;
+      plan.immutable = immutableRecords.filter(
         (r) => !(r.type === "user" && r.id === userId),
       );
     } catch (error) {

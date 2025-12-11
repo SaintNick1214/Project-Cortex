@@ -236,7 +236,15 @@ export class ImmutableAPI {
       "immutable:list",
     );
 
-    return result as ImmutableRecord[];
+    // Extract entries array from paginated result
+    const paginatedResult = result as {
+      entries: ImmutableRecord[];
+      total: number;
+      limit: number;
+      offset: number;
+      hasMore: boolean;
+    };
+    return paginatedResult.entries;
   }
 
   /**

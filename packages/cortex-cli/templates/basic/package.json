@@ -1,0 +1,22 @@
+{
+  "name": "{{PROJECT_NAME}}",
+  "version": "0.1.1",
+  "description": "AI agent with Cortex Memory SDK",
+  "type": "module",
+  "scripts": {
+    "dev": "node dev-runner.mjs",
+    "build": "tsc && npm run build:convex",
+    "build:convex": "convex deploy",
+    "start": "tsx --env-file=.env.local src/index.ts"
+  },
+  "dependencies": {
+    "@cortexmemory/sdk": "latest",
+    "convex": "^1.30.0",
+    "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "typescript": "^5.9.3",
+    "tsx": "^4.21.0"
+  }
+}

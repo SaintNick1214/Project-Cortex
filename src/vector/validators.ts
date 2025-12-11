@@ -458,6 +458,16 @@ export function validateSearchOptions(options?: SearchMemoriesOptions): void {
   if (options.limit !== undefined) {
     validateLimit(options.limit, "limit");
   }
+
+  if (options.queryCategory !== undefined) {
+    if (typeof options.queryCategory !== "string") {
+      throw new VectorValidationError(
+        "queryCategory must be a string",
+        "INVALID_QUERY_CATEGORY",
+        "queryCategory",
+      );
+    }
+  }
 }
 
 /**

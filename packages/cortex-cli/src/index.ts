@@ -20,6 +20,8 @@ import { registerConvexCommands } from "./commands/convex.js";
 import { registerSetupCommands } from "./commands/setup.js";
 import { registerDbCommands } from "./commands/db.js";
 import { registerDevCommands } from "./commands/dev.js";
+import { registerInitCommands } from "./commands/init.js";
+import { registerStatusCommands } from "./commands/status.js";
 import { loadConfig } from "./utils/config.js";
 
 // Auto-load .env.local if it exists in current directory
@@ -61,6 +63,8 @@ async function main() {
     const config = await loadConfig();
 
     // Register all command groups
+    registerInitCommands(program, config);
+    registerStatusCommands(program, config);
     registerMemoryCommands(program, config);
     registerUserCommands(program, config);
     registerSpaceCommands(program, config);

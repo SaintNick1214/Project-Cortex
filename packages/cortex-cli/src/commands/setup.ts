@@ -53,132 +53,18 @@ export function registerSetupCommands(
     .option("--local", "Set up local Convex development", false)
     .option("--cloud", "Set up cloud Convex deployment", false)
     .action(async (options) => {
-      console.log();
-      console.log(pc.bold(pc.cyan("🧠 Cortex CLI Setup")));
-      console.log(pc.dim("Configure your Cortex Memory deployment\n"));
-
       try {
-        let config = await loadConfig();
-
         if (options.auto) {
           // Auto mode: configure from environment variables
+          const config = await loadConfig();
           await autoSetup(config);
           return;
         }
 
         // Interactive setup
-        const setupMode = await prompts({
-          type: "select",
-          name: "mode",
-          message: "What would you like to set up?",
-          choices: [
-            {
-              title: "Local development",
-              description: "Configure local Convex instance",
-              value: "local",
-            },
-            {
-              title: "Cloud deployment",
-              description: "Configure Convex cloud deployment",
-              value: "cloud",
-            },
-            {
-              title: "Both",
-              description: "Configure local and cloud deployments",
-              value: "both",
-            },
-            {
-              title: "View current configuration",
-              description: "Show existing configuration",
-              value: "view",
-            },
-          ],
-          initial: options.local ? 0 : options.cloud ? 1 : 2,
+        await runInteractiveSetup({
+          initialMode: options.local ? "local" : options.cloud ? "cloud" : undefined,
         });
-
-        if (!setupMode.mode) {
-          printWarning("Setup cancelled");
-          return;
-        }
-
-        if (setupMode.mode === "view") {
-          await showConfiguration(config);
-          return;
-        }
-
-        // Set up local deployment
-        if (setupMode.mode === "local" || setupMode.mode === "both") {
-          config = await setupLocalDeployment(config);
-        }
-
-        // Set up cloud deployment
-        if (setupMode.mode === "cloud" || setupMode.mode === "both") {
-          config = await setupCloudDeployment(config);
-        }
-
-        // Set default deployment
-        if (setupMode.mode === "both") {
-          const defaultChoice = await prompts({
-            type: "select",
-            name: "default",
-            message: "Which deployment should be the default?",
-            choices: [
-              { title: "Local", value: "local" },
-              { title: "Cloud", value: "cloud" },
-            ],
-          });
-          if (defaultChoice.default) {
-            config.default = defaultChoice.default;
-          }
-        } else {
-          config.default = setupMode.mode;
-        }
-
-        // Set output format
-        const formatChoice = await prompts({
-          type: "select",
-          name: "format",
-          message: "Preferred output format?",
-          choices: [
-            { title: "Table (human-readable)", value: "table" },
-            { title: "JSON (machine-readable)", value: "json" },
-          ],
-          initial: 0,
-        });
-        if (formatChoice.format) {
-          config.format = formatChoice.format as OutputFormat;
-        }
-
-        // Confirm dangerous operations
-        const confirmChoice = await prompts({
-          type: "confirm",
-          name: "confirm",
-          message:
-            "Require confirmation for dangerous operations (delete, clear)?",
-          initial: true,
-        });
-        config.confirmDangerous = confirmChoice.confirm ?? true;
-
-        // Save configuration
-        await saveUserConfig(config);
-        console.log();
-        printSuccess(`Configuration saved to ${getUserConfigPath()}`);
-
-        // Test connection
-        const testChoice = await prompts({
-          type: "confirm",
-          name: "test",
-          message: "Would you like to test the connection?",
-          initial: true,
-        });
-
-        if (testChoice.test) {
-          await testAndShowConnection(config, config.default);
-        }
-
-        console.log();
-        printSuccess("Setup complete! 🎉");
-        printInfo("Run 'cortex --help' to see available commands");
       } catch (error) {
         printError(error instanceof Error ? error.message : "Setup failed");
         process.exit(1);
@@ -594,6 +480,132 @@ export function registerSetupCommands(
         process.exit(1);
       }
     });
+}
+
+/**
+ * Run interactive setup wizard
+ * Can be called from the setup command or from dev mode menu
+ */
+export async function runInteractiveSetup(options: {
+  initialMode?: "local" | "cloud";
+} = {}): Promise<void> {
+  console.log();
+  console.log(pc.bold(pc.cyan("🧠 Cortex CLI Setup")));
+  console.log(pc.dim("Configure your Cortex Memory deployment\n"));
+
+  let config = await loadConfig();
+
+  const setupMode = await prompts({
+    type: "select",
+    name: "mode",
+    message: "What would you like to set up?",
+    choices: [
+      {
+        title: "Local development",
+        description: "Configure local Convex instance",
+        value: "local",
+      },
+      {
+        title: "Cloud deployment",
+        description: "Configure Convex cloud deployment",
+        value: "cloud",
+      },
+      {
+        title: "Both",
+        description: "Configure local and cloud deployments",
+        value: "both",
+      },
+      {
+        title: "View current configuration",
+        description: "Show existing configuration",
+        value: "view",
+      },
+    ],
+    initial: options.initialMode === "local" ? 0 : options.initialMode === "cloud" ? 1 : 2,
+  });
+
+  if (!setupMode.mode) {
+    printWarning("Setup cancelled");
+    return;
+  }
+
+  if (setupMode.mode === "view") {
+    await showConfiguration(config);
+    return;
+  }
+
+  // Set up local deployment
+  if (setupMode.mode === "local" || setupMode.mode === "both") {
+    config = await setupLocalDeployment(config);
+  }
+
+  // Set up cloud deployment
+  if (setupMode.mode === "cloud" || setupMode.mode === "both") {
+    config = await setupCloudDeployment(config);
+  }
+
+  // Set default deployment
+  if (setupMode.mode === "both") {
+    const defaultChoice = await prompts({
+      type: "select",
+      name: "default",
+      message: "Which deployment should be the default?",
+      choices: [
+        { title: "Local", value: "local" },
+        { title: "Cloud", value: "cloud" },
+      ],
+    });
+    if (defaultChoice.default) {
+      config.default = defaultChoice.default;
+    }
+  } else {
+    config.default = setupMode.mode;
+  }
+
+  // Set output format
+  const formatChoice = await prompts({
+    type: "select",
+    name: "format",
+    message: "Preferred output format?",
+    choices: [
+      { title: "Table (human-readable)", value: "table" },
+      { title: "JSON (machine-readable)", value: "json" },
+    ],
+    initial: 0,
+  });
+  if (formatChoice.format) {
+    config.format = formatChoice.format as OutputFormat;
+  }
+
+  // Confirm dangerous operations
+  const confirmChoice = await prompts({
+    type: "confirm",
+    name: "confirm",
+    message: "Require confirmation for dangerous operations (delete, clear)?",
+    initial: true,
+  });
+  config.confirmDangerous = confirmChoice.confirm ?? true;
+
+  // Save configuration
+  await saveUserConfig(config);
+  console.log();
+  printSuccess(`Configuration saved to ${getUserConfigPath()}`);
+
+  // Test connection
+  const testChoice = await prompts({
+    type: "confirm",
+    name: "test",
+    message: "Would you like to test the connection?",
+    initial: true,
+  });
+
+  if (testChoice.test) {
+    await testAndShowConnection(config, config.default);
+  }
+
+  console.log();
+  printSuccess("Setup complete! 🎉");
+  printInfo("Run 'cortex --help' to see available commands");
 }
 
 /**

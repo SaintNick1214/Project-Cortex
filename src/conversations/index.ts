@@ -10,15 +10,20 @@ import type {
   AddMessageInput,
   AddMessageOptions,
   Conversation,
+  ConversationDeletionResult,
   ConversationSearchResult,
   CountConversationsFilter,
   CreateConversationInput,
   CreateConversationOptions,
   DeleteConversationOptions,
+  DeleteManyConversationsOptions,
+  DeleteManyConversationsResult,
   ExportConversationsOptions,
   ExportResult,
+  GetConversationOptions,
   GetHistoryOptions,
   ListConversationsFilter,
+  ListConversationsResult,
   Message,
   SearchConversationsInput,
 } from "../types";
@@ -167,15 +172,30 @@ export class ConversationsAPI {
    * @example
    * ```typescript
    * const conversation = await cortex.conversations.get('conv-abc123');
+   *
+   * // With options
+   * const convNoMessages = await cortex.conversations.get('conv-abc123', {
+   *   includeMessages: false,
+   * });
+   *
+   * // Limit messages returned
+   * const convLimited = await cortex.conversations.get('conv-abc123', {
+   *   messageLimit: 10,
+   * });
    * ```
    */
-  async get(conversationId: string): Promise<Conversation | null> {
+  async get(
+    conversationId: string,
+    options?: GetConversationOptions,
+  ): Promise<Conversation | null> {
     validateRequiredString(conversationId, "conversationId");
 
     const result = await this.executeWithResilience(
       () =>
         this.client.query(api.conversations.get, {
           conversationId,
+          includeMessages: options?.includeMessages,
+          messageLimit: options?.messageLimit,
         }),
       "conversations:get",
     );
@@ -254,17 +274,32 @@ export class ConversationsAPI {
   }
 
   /**
-   * List conversations with optional filters
+   * List conversations with optional filters and pagination
    *
    * @example
    * ```typescript
-   * const conversations = await cortex.conversations.list({
+   * const result = await cortex.conversations.list({
    *   userId: 'user-123',
    *   limit: 10,
    * });
+   * console.log(`Found ${result.total} conversations`);
+   *
+   * // With pagination and sorting
+   * const page2 = await cortex.conversations.list({
+   *   memorySpaceId: 'space-123',
+   *   offset: 10,
+   *   limit: 10,
+   *   sortBy: 'lastMessageAt',
+   *   sortOrder: 'desc',
+   * });
+   *
+   * // Filter by date range
+   * const recent = await cortex.conversations.list({
+   *   createdAfter: Date.now() - 7 * 24 * 60 * 60 * 1000, // Last week
+   * });
    * ```
    */
-  async list(filter?: ListConversationsFilter): Promise<Conversation[]> {
+  async list(filter?: ListConversationsFilter): Promise<ListConversationsResult> {
     // All fields optional, validate only if provided
     if (filter?.type) {
       validateConversationType(filter.type);
@@ -272,19 +307,51 @@ export class ConversationsAPI {
     if (filter?.limit !== undefined) {
       validateLimit(filter.limit);
     }
+    if (filter?.offset !== undefined) {
+      validateOffset(filter.offset);
+    }
+    if (filter?.sortOrder) {
+      validateSortOrder(filter.sortOrder);
+    }
+
+    // Handle messageCount filter
+    let messageCountMin: number | undefined;
+    let messageCountMax: number | undefined;
+    if (filter?.messageCount !== undefined) {
+      if (typeof filter.messageCount === "number") {
+        messageCountMin = filter.messageCount;
+        messageCountMax = filter.messageCount;
+      } else {
+        messageCountMin = filter.messageCount.min;
+        messageCountMax = filter.messageCount.max;
+      }
+    }
 
     const result = await this.executeWithResilience(
       () =>
         this.client.query(api.conversations.list, {
           type: filter?.type,
           userId: filter?.userId,
-          memorySpaceId: filter?.memorySpaceId, // Updated
+          memorySpaceId: filter?.memorySpaceId,
+          participantId: filter?.participantId,
+          createdBefore: filter?.createdBefore,
+          createdAfter: filter?.createdAfter,
+          updatedBefore: filter?.updatedBefore,
+          updatedAfter: filter?.updatedAfter,
+          lastMessageBefore: filter?.lastMessageBefore,
+          lastMessageAfter: filter?.lastMessageAfter,
+          messageCountMin,
+          messageCountMax,
           limit: filter?.limit,
+          offset: filter?.offset,
+          sortBy: filter?.sortBy,
+          sortOrder: filter?.sortOrder,
+          includeMessages: filter?.includeMessages,
         }),
       "conversations:list",
     );
 
-    return result as Conversation[];
+    return result as ListConversationsResult;
   }
 
   /**
@@ -321,13 +388,15 @@ export class ConversationsAPI {
    *
    * @example
    * ```typescript
-   * await cortex.conversations.delete('conv-abc123');
+   * const result = await cortex.conversations.delete('conv-abc123');
+   * console.log(`Deleted ${result.messagesDeleted} messages`);
+   * console.log(`Restorable: ${result.restorable}`); // false - permanent!
    * ```
    */
   async delete(
     conversationId: string,
     options?: DeleteConversationOptions,
-  ): Promise<{ deleted: boolean }> {
+  ): Promise<ConversationDeletionResult> {
     validateRequiredString(conversationId, "conversationId");
 
     let result;
@@ -356,7 +425,7 @@ export class ConversationsAPI {
       }
     }
 
-    return result as { deleted: boolean };
+    return result as ConversationDeletionResult;
   }
 
   /**
@@ -364,22 +433,30 @@ export class ConversationsAPI {
    *
    * @example
    * ```typescript
+   * // Preview what would be deleted (dryRun)
+   * const preview = await cortex.conversations.deleteMany(
+   *   { userId: 'user-123' },
+   *   { dryRun: true }
+   * );
+   * console.log(`Would delete ${preview.wouldDelete} conversations`);
+   *
+   * // Execute deletion
    * const result = await cortex.conversations.deleteMany({
    *   memorySpaceId: 'user-123-personal',
    *   userId: 'user-123',
    *   type: 'user-agent',
    * });
+   * console.log(`Deleted ${result.deleted} conversations`);
    * ```
    */
-  async deleteMany(filter: {
-    userId?: string;
-    memorySpaceId?: string; // Updated
-    type?: "user-agent" | "agent-agent";
-  }): Promise<{
-    deleted: number;
-    totalMessagesDeleted: number;
-    conversationIds: string[];
-  }> {
+  async deleteMany(
+    filter: {
+      userId?: string;
+      memorySpaceId?: string;
+      type?: "user-agent" | "agent-agent";
+    },
+    options?: DeleteManyConversationsOptions,
+  ): Promise<DeleteManyConversationsResult> {
     // Validate type if provided
     if (filter.type) {
       validateConversationType(filter.type);
@@ -397,17 +474,15 @@ export class ConversationsAPI {
       () =>
         this.client.mutation(api.conversations.deleteMany, {
           userId: filter.userId,
-          memorySpaceId: filter.memorySpaceId, // Updated
+          memorySpaceId: filter.memorySpaceId,
           type: filter.type,
+          dryRun: options?.dryRun,
+          confirmationThreshold: options?.confirmationThreshold,
         }),
       "conversations:deleteMany",
     );
 
-    return result as {
-      deleted: number;
-      totalMessagesDeleted: number;
-      conversationIds: string[];
-    };
+    return result as DeleteManyConversationsResult;
   }
 
   /**
@@ -572,6 +647,16 @@ export class ConversationsAPI {
    *   offset: 0,
    *   sortOrder: 'desc',
    * });
+   *
+   * // Filter by date range
+   * const recent = await cortex.conversations.getHistory('conv-abc123', {
+   *   since: Date.now() - 24 * 60 * 60 * 1000, // Last 24 hours
+   * });
+   *
+   * // Filter by roles
+   * const userMessages = await cortex.conversations.getHistory('conv-abc123', {
+   *   roles: ['user'],
+   * });
    * ```
    */
   async getHistory(
@@ -595,6 +680,11 @@ export class ConversationsAPI {
       validateSortOrder(options.sortOrder);
     }
 
+    // Validate date range if provided
+    if (options?.since !== undefined && options?.until !== undefined) {
+      validateDateRange(options.since, options.until);
+    }
+
     try {
       const result = await this.executeWithResilience(
         () =>
@@ -603,6 +693,9 @@ export class ConversationsAPI {
             limit: options?.limit,
             offset: options?.offset,
             sortOrder: options?.sortOrder,
+            since: options?.since,
+            until: options?.until,
+            roles: options?.roles,
           }),
         "conversations:getHistory",
       );
@@ -628,6 +721,15 @@ export class ConversationsAPI {
    *   filters: {
    *     userId: 'user-123',
    *     limit: 5,
+   *   },
+   * });
+   *
+   * // Search with options
+   * const fuzzyResults = await cortex.conversations.search({
+   *   query: 'account balance',
+   *   options: {
+   *     searchIn: 'both', // Search content and metadata
+   *     matchMode: 'fuzzy',
    *   },
    * });
    * ```
@@ -656,10 +758,12 @@ export class ConversationsAPI {
           query: input.query,
           type: input.filters?.type,
           userId: input.filters?.userId,
-          memorySpaceId: input.filters?.memorySpaceId, // Updated
+          memorySpaceId: input.filters?.memorySpaceId,
           dateStart: input.filters?.dateRange?.start,
           dateEnd: input.filters?.dateRange?.end,
           limit: input.filters?.limit,
+          searchIn: input.options?.searchIn,
+          matchMode: input.options?.matchMode,
         }),
       "conversations:search",
     );

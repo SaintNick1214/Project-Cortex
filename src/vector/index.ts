@@ -80,6 +80,11 @@ export class VectorAPI {
   /**
    * Store a vector memory
    *
+   * @param memorySpaceId - The memory space to store the memory in
+   * @param input - Memory input data including content, embedding, and metadata
+   * @param options - Optional storage options (e.g., syncToGraph)
+   * @returns The stored memory entry
+   *
    * @example
    * ```typescript
    * const memory = await cortex.vector.store('agent-1', {
@@ -88,6 +93,9 @@ export class VectorAPI {
    *   embedding: await embed('User prefers dark mode'),
    *   source: { type: 'conversation', userId: 'user-123' },
    *   metadata: { importance: 70, tags: ['preferences'] },
+   *   // For bullet-proof retrieval (v0.21.0+)
+   *   enrichedContent: 'User prefers dark mode for UI',
+   *   factCategory: 'ui_preference',
    * });
    *
    * // With graph sync
@@ -119,6 +127,8 @@ export class VectorAPI {
           userId: input.userId,
           agentId: input.agentId, // NEW: Agent-owned memories support
           messageRole: input.messageRole, // NEW: For semantic search weighting
+          enrichedContent: input.enrichedContent, // Enrichment for bullet-proof retrieval
+          factCategory: input.factCategory, // Category for filtering
           conversationRef: input.conversationRef,
           immutableRef: input.immutableRef,
           mutableRef: input.mutableRef,
@@ -180,11 +190,18 @@ export class VectorAPI {
   /**
    * Search memories (semantic with embeddings or keyword without)
    *
+   * @param memorySpaceId - The memory space to search in
+   * @param query - Text query for keyword search
+   * @param options - Search options including embedding for semantic search
+   * @returns Array of matching memory entries
+   *
    * @example
    * ```typescript
    * const results = await cortex.vector.search('agent-1', 'user preferences', {
    *   embedding: await embed('user preferences'),
    *   limit: 10,
+   *   // For bullet-proof retrieval (v0.21.0+)
+   *   queryCategory: 'ui_preference', // +30% score boost for matching category
    * });
    * ```
    */
@@ -207,7 +224,8 @@ export class VectorAPI {
           tags: options?.tags,
           sourceType: options?.sourceType,
           minImportance: options?.minImportance,
-          minScore: options?.minScore, // FIX: Forward minScore parameter
+          minScore: options?.minScore,
+          queryCategory: options?.queryCategory, // Category boost for bullet-proof retrieval
           limit: options?.limit,
         }),
       "vector:search",
@@ -597,6 +615,36 @@ export class VectorAPI {
       memoryId: string;
       restorable: boolean;
     };
+  }
+
+  /**
+   * Restore a memory from archive
+   *
+   * @example
+   * ```typescript
+   * const result = await cortex.vector.restoreFromArchive('agent-1', 'mem-123');
+   * console.log(result.restored); // true
+   * console.log(result.memory); // MemoryEntry
+   * ```
+   */
+  async restoreFromArchive(
+    memorySpaceId: string,
+    memoryId: string,
+  ): Promise<{ restored: boolean; memoryId: string; memory: MemoryEntry }> {
+    // Client-side validation
+    validateMemorySpaceId(memorySpaceId);
+    validateMemoryId(memoryId);
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.memories.restoreFromArchive, {
+          memorySpaceId,
+          memoryId,
+        }),
+      "vector:restoreFromArchive",
+    );
+
+    return result as { restored: boolean; memoryId: string; memory: MemoryEntry };
   }
 
   /**
