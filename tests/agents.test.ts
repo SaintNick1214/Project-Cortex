@@ -1096,4 +1096,881 @@ describe("Agents API (Coordination Layer)", () => {
       // indicating the cascade deletion logic works correctly
     }, 60000); // Increased timeout for cascade deletion which can be slow in managed mode
   });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // export() Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("export()", () => {
+    const exportAgent1Id = ctx.agentId("export-1");
+    const exportAgent2Id = ctx.agentId("export-2");
+    const exportAgent3Id = ctx.agentId("export-3");
+    const exportTeamTag = `export-team-${ctx.runId}`;
+
+    beforeEach(async () => {
+      // Cleanup any existing test agents
+      const agentIds = [exportAgent1Id, exportAgent2Id, exportAgent3Id];
+      for (const agentId of agentIds) {
+        try {
+          await cortex.agents.unregister(agentId);
+        } catch (_error) {
+          // Ignore if doesn't exist
+        }
+      }
+
+      // Wait for cleanup
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Register test agents with varied metadata
+      await cortex.agents.register({
+        id: exportAgent1Id,
+        name: "Export Agent One",
+        description: "First export test agent",
+        metadata: { team: exportTeamTag, role: "primary" },
+        config: { setting: "value1" },
+      });
+
+      await cortex.agents.register({
+        id: exportAgent2Id,
+        name: "Export Agent Two",
+        description: "Second export test agent with special, chars",
+        metadata: { team: exportTeamTag, role: "secondary" },
+        config: { setting: "value2" },
+      });
+
+      await cortex.agents.register({
+        id: exportAgent3Id,
+        name: 'Export Agent "Three"',
+        description: "Third agent with\nnewline",
+        metadata: { team: `other-${ctx.runId}`, role: "tertiary" },
+        config: { setting: "value3" },
+      });
+    });
+
+    describe("JSON format", () => {
+      it("should export agents as JSON", async () => {
+        const result = await cortex.agents.export({
+          format: "json",
+          filters: { metadata: { team: exportTeamTag } },
+        });
+
+        expect(result.format).toBe("json");
+        expect(result.count).toBe(2);
+        expect(result.exportedAt).toBeGreaterThan(0);
+
+        const parsed = JSON.parse(result.data);
+        expect(Array.isArray(parsed)).toBe(true);
+        expect(parsed).toHaveLength(2);
+
+        // Verify agent data
+        const agent1 = parsed.find((a: any) => a.id === exportAgent1Id);
+        expect(agent1).toBeDefined();
+        expect(agent1.name).toBe("Export Agent One");
+        expect(agent1.metadata.team).toBe(exportTeamTag);
+      });
+
+      it("should include metadata by default", async () => {
+        const result = await cortex.agents.export({
+          format: "json",
+          filters: { metadata: { team: exportTeamTag } },
+        });
+
+        const parsed = JSON.parse(result.data);
+        expect(parsed[0].metadata).toBeDefined();
+        expect(parsed[0].config).toBeDefined();
+      });
+
+      it("should include stats when includeStats=true", async () => {
+        const result = await cortex.agents.export({
+          format: "json",
+          filters: { metadata: { team: exportTeamTag } },
+          includeStats: true,
+        });
+
+        const parsed = JSON.parse(result.data);
+        expect(parsed[0].stats).toBeDefined();
+        expect(parsed[0].stats.totalMemories).toBeDefined();
+        expect(parsed[0].stats.totalConversations).toBeDefined();
+        expect(parsed[0].stats.totalFacts).toBeDefined();
+        expect(parsed[0].stats.memorySpacesActive).toBeDefined();
+      });
+
+      it("should handle empty result set", async () => {
+        const result = await cortex.agents.export({
+          format: "json",
+          filters: { metadata: { team: `nonexistent-${ctx.runId}` } },
+        });
+
+        expect(result.format).toBe("json");
+        expect(result.count).toBe(0);
+
+        const parsed = JSON.parse(result.data);
+        expect(parsed).toHaveLength(0);
+      });
+    });
+
+    describe("CSV format", () => {
+      it("should export agents as CSV", async () => {
+        const result = await cortex.agents.export({
+          format: "csv",
+          filters: { metadata: { team: exportTeamTag } },
+        });
+
+        expect(result.format).toBe("csv");
+        expect(result.count).toBe(2);
+        expect(result.exportedAt).toBeGreaterThan(0);
+
+        // Parse CSV
+        const lines = result.data.split("\n");
+        expect(lines.length).toBeGreaterThanOrEqual(3); // header + 2 data rows
+
+        // Verify header
+        const header = lines[0];
+        expect(header).toContain("id");
+        expect(header).toContain("name");
+        expect(header).toContain("description");
+        expect(header).toContain("status");
+      });
+
+      it("should escape CSV fields with special characters", async () => {
+        const result = await cortex.agents.export({
+          format: "csv",
+          filters: { metadata: { team: `other-${ctx.runId}` } },
+        });
+
+        // Agent 3 has special characters: quotes and newlines
+        expect(result.data).toContain('"'); // Should have escaped quotes
+
+        // The description with newline and name with quotes should be escaped
+        const lines = result.data.split("\n");
+        expect(lines.length).toBeGreaterThanOrEqual(2);
+      });
+
+      it("should include stats columns when includeStats=true", async () => {
+        const result = await cortex.agents.export({
+          format: "csv",
+          filters: { metadata: { team: exportTeamTag } },
+          includeStats: true,
+        });
+
+        const header = result.data.split("\n")[0];
+        expect(header).toContain("totalMemories");
+        expect(header).toContain("totalConversations");
+        expect(header).toContain("totalFacts");
+        expect(header).toContain("memorySpacesActive");
+      });
+
+      it("should handle empty result set", async () => {
+        const result = await cortex.agents.export({
+          format: "csv",
+          filters: { metadata: { team: `nonexistent-${ctx.runId}` } },
+        });
+
+        expect(result.format).toBe("csv");
+        expect(result.count).toBe(0);
+
+        // Should only have header row
+        const lines = result.data.split("\n").filter((l) => l.trim());
+        expect(lines).toHaveLength(1);
+      });
+    });
+
+    describe("validation", () => {
+      it("should throw on invalid format", async () => {
+        await expect(
+          cortex.agents.export({
+            format: "xml" as any,
+          }),
+        ).rejects.toMatchObject({
+          code: "INVALID_FORMAT",
+        });
+      });
+
+      it("should throw when format not provided", async () => {
+        await expect(
+          cortex.agents.export({} as any),
+        ).rejects.toMatchObject({
+          code: "MISSING_FORMAT",
+        });
+      });
+
+      it("should throw on invalid filter in export", async () => {
+        await expect(
+          cortex.agents.export({
+            format: "json",
+            filters: { limit: -1 },
+          }),
+        ).rejects.toMatchObject({
+          code: "INVALID_LIMIT_VALUE",
+        });
+      });
+    });
+
+    describe("filters", () => {
+      it("should apply status filter to export", async () => {
+        // Update one agent to inactive
+        await cortex.agents.update(exportAgent1Id, { status: "inactive" });
+
+        const result = await cortex.agents.export({
+          format: "json",
+          filters: { status: "active", metadata: { team: exportTeamTag } },
+        });
+
+        const parsed = JSON.parse(result.data);
+        expect(parsed).toHaveLength(1);
+        expect(parsed[0].id).toBe(exportAgent2Id);
+      });
+
+      it("should apply metadata filter to export", async () => {
+        const result = await cortex.agents.export({
+          format: "json",
+          filters: { metadata: { role: "primary" } },
+        });
+
+        const parsed = JSON.parse(result.data);
+        expect(parsed.length).toBeGreaterThanOrEqual(1);
+        expect(parsed.every((a: any) => a.metadata.role === "primary")).toBe(
+          true,
+        );
+      });
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // updateMany() Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("updateMany()", () => {
+    const updateManyAgent1Id = ctx.agentId("update-many-1");
+    const updateManyAgent2Id = ctx.agentId("update-many-2");
+    const updateManyAgent3Id = ctx.agentId("update-many-3");
+    const updateManyTeamTag = `update-many-team-${ctx.runId}`;
+    const updateManyVersionTag = `v1.0-${ctx.runId}`;
+
+    beforeEach(async () => {
+      // Cleanup any existing test agents
+      const agentIds = [updateManyAgent1Id, updateManyAgent2Id, updateManyAgent3Id];
+      for (const agentId of agentIds) {
+        try {
+          await cortex.agents.unregister(agentId);
+        } catch (_error) {
+          // Ignore if doesn't exist
+        }
+      }
+
+      // Wait for cleanup
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Register test agents
+      await cortex.agents.register({
+        id: updateManyAgent1Id,
+        name: "Update Many Agent 1",
+        description: "First agent for update many test",
+        metadata: { team: updateManyTeamTag, version: updateManyVersionTag },
+        config: { retentionDays: 30 },
+      });
+
+      await cortex.agents.register({
+        id: updateManyAgent2Id,
+        name: "Update Many Agent 2",
+        description: "Second agent for update many test",
+        metadata: { team: updateManyTeamTag, version: updateManyVersionTag },
+        config: { retentionDays: 30 },
+      });
+
+      await cortex.agents.register({
+        id: updateManyAgent3Id,
+        name: "Update Many Agent 3",
+        description: "Third agent - different team",
+        metadata: { team: `other-team-${ctx.runId}`, version: updateManyVersionTag },
+        config: { retentionDays: 60 },
+      });
+    });
+
+    it("should update multiple agents matching metadata filter", async () => {
+      const result = await cortex.agents.updateMany(
+        { metadata: { team: updateManyTeamTag } },
+        { description: "Updated description for team" },
+      );
+
+      expect(result.updated).toBe(2);
+      expect(result.agentIds).toContain(updateManyAgent1Id);
+      expect(result.agentIds).toContain(updateManyAgent2Id);
+      expect(result.agentIds).not.toContain(updateManyAgent3Id);
+
+      // Verify updates
+      const agent1 = await cortex.agents.get(updateManyAgent1Id);
+      const agent2 = await cortex.agents.get(updateManyAgent2Id);
+      const agent3 = await cortex.agents.get(updateManyAgent3Id);
+
+      expect(agent1!.description).toBe("Updated description for team");
+      expect(agent2!.description).toBe("Updated description for team");
+      expect(agent3!.description).toBe("Third agent - different team"); // Unchanged
+    });
+
+    it("should update multiple agents with metadata update", async () => {
+      const newVersion = `v2.0-${ctx.runId}`;
+
+      const result = await cortex.agents.updateMany(
+        { metadata: { version: updateManyVersionTag } },
+        { metadata: { version: newVersion, upgraded: true } },
+      );
+
+      expect(result.updated).toBe(3); // All 3 agents had the version tag
+
+      // Verify all agents have new metadata
+      const agent1 = await cortex.agents.get(updateManyAgent1Id);
+      const agent2 = await cortex.agents.get(updateManyAgent2Id);
+      const agent3 = await cortex.agents.get(updateManyAgent3Id);
+
+      expect(agent1!.metadata.version).toBe(newVersion);
+      expect(agent1!.metadata.upgraded).toBe(true);
+      expect(agent2!.metadata.version).toBe(newVersion);
+      expect(agent3!.metadata.version).toBe(newVersion);
+    });
+
+    it("should update multiple agents with config update", async () => {
+      const result = await cortex.agents.updateMany(
+        { metadata: { team: updateManyTeamTag } },
+        { config: { retentionDays: 90, newSetting: "enabled" } },
+      );
+
+      expect(result.updated).toBe(2);
+
+      const agent1 = await cortex.agents.get(updateManyAgent1Id);
+      expect(agent1!.config.retentionDays).toBe(90);
+      expect(agent1!.config.newSetting).toBe("enabled");
+    });
+
+    it("should return { updated: 0, agentIds: [] } for empty filter match", async () => {
+      const result = await cortex.agents.updateMany(
+        { metadata: { team: `nonexistent-${ctx.runId}` } },
+        { description: "This should not update anything" },
+      );
+
+      expect(result.updated).toBe(0);
+      expect(result.agentIds).toHaveLength(0);
+    });
+
+    it("should throw when no update fields provided", async () => {
+      await expect(
+        cortex.agents.updateMany({ metadata: { team: updateManyTeamTag } }, {}),
+      ).rejects.toMatchObject({
+        code: "MISSING_UPDATES",
+      });
+    });
+
+    it("should throw on invalid metadata format in updates", async () => {
+      await expect(
+        cortex.agents.updateMany(
+          { metadata: { team: updateManyTeamTag } },
+          { metadata: "invalid" as any },
+        ),
+      ).rejects.toMatchObject({
+        code: "INVALID_METADATA_FORMAT",
+      });
+    });
+
+    it("should throw on invalid config format in updates", async () => {
+      await expect(
+        cortex.agents.updateMany(
+          { metadata: { team: updateManyTeamTag } },
+          { config: ["invalid"] as any },
+        ),
+      ).rejects.toMatchObject({
+        code: "INVALID_CONFIG_FORMAT",
+      });
+    });
+
+    it("should preserve non-updated fields", async () => {
+      const originalAgent = await cortex.agents.get(updateManyAgent1Id);
+      const originalName = originalAgent!.name;
+      const originalMetadata = { ...originalAgent!.metadata };
+
+      // Only update description
+      await cortex.agents.updateMany(
+        { metadata: { team: updateManyTeamTag } },
+        { description: "Only description changed" },
+      );
+
+      const updatedAgent = await cortex.agents.get(updateManyAgent1Id);
+      expect(updatedAgent!.name).toBe(originalName);
+      expect(updatedAgent!.metadata.team).toBe(originalMetadata.team);
+      expect(updatedAgent!.description).toBe("Only description changed");
+    });
+
+    it("should update name for multiple agents", async () => {
+      const result = await cortex.agents.updateMany(
+        { metadata: { team: updateManyTeamTag } },
+        { name: "Renamed Team Agent" },
+      );
+
+      expect(result.updated).toBe(2);
+
+      const agent1 = await cortex.agents.get(updateManyAgent1Id);
+      const agent2 = await cortex.agents.get(updateManyAgent2Id);
+
+      expect(agent1!.name).toBe("Renamed Team Agent");
+      expect(agent2!.name).toBe("Renamed Team Agent");
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Advanced list() Filter Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("list() - advanced filters", () => {
+    const filterAgent1Id = ctx.agentId("filter-1");
+    const filterAgent2Id = ctx.agentId("filter-2");
+    const filterAgent3Id = ctx.agentId("filter-3");
+    const filterAgent4Id = ctx.agentId("filter-4");
+    const filterTeamTag = `filter-team-${ctx.runId}`;
+
+    beforeAll(async () => {
+      // Cleanup any existing test agents
+      const agentIds = [filterAgent1Id, filterAgent2Id, filterAgent3Id, filterAgent4Id];
+      for (const agentId of agentIds) {
+        try {
+          await cortex.agents.unregister(agentId);
+        } catch (_error) {
+          // Ignore if doesn't exist
+        }
+      }
+
+      // Wait for cleanup
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Register test agents with varied capabilities and timestamps
+      await cortex.agents.register({
+        id: filterAgent1Id,
+        name: "Search Filter Agent Alpha",
+        description: "First filter test agent",
+        metadata: {
+          team: filterTeamTag,
+          capabilities: ["code", "analysis", "testing"],
+        },
+      });
+
+      // Small delay to ensure different timestamps
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      await cortex.agents.register({
+        id: filterAgent2Id,
+        name: "Filter Agent Beta",
+        description: "Second filter test agent",
+        metadata: {
+          team: filterTeamTag,
+          capabilities: ["code", "documentation"],
+        },
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      await cortex.agents.register({
+        id: filterAgent3Id,
+        name: "Filter Agent Gamma",
+        description: "Third filter test agent",
+        metadata: {
+          team: filterTeamTag,
+          capabilities: ["testing", "documentation"],
+        },
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      await cortex.agents.register({
+        id: filterAgent4Id,
+        name: "Other Filter Agent",
+        description: "Fourth filter test agent",
+        metadata: {
+          team: `other-${ctx.runId}`,
+          capabilities: ["analysis"],
+        },
+      });
+    });
+
+    afterAll(async () => {
+      // Cleanup test agents
+      const agentIds = [filterAgent1Id, filterAgent2Id, filterAgent3Id, filterAgent4Id];
+      for (const agentId of agentIds) {
+        try {
+          await cortex.agents.unregister(agentId);
+        } catch (_error) {
+          // Ignore
+        }
+      }
+    });
+
+    it("should filter by capabilities with 'any' match mode (default)", async () => {
+      const results = await cortex.agents.list({
+        metadata: { team: filterTeamTag },
+        capabilities: ["code"],
+      });
+
+      // Agent 1 and 2 have "code" capability
+      expect(results.length).toBe(2);
+      expect(results.some((a) => a.id === filterAgent1Id)).toBe(true);
+      expect(results.some((a) => a.id === filterAgent2Id)).toBe(true);
+    });
+
+    it("should filter by capabilities with 'any' match mode - multiple capabilities", async () => {
+      const results = await cortex.agents.list({
+        metadata: { team: filterTeamTag },
+        capabilities: ["code", "testing"],
+        capabilitiesMatch: "any",
+      });
+
+      // Agent 1 has both, Agent 2 has code, Agent 3 has testing
+      expect(results.length).toBe(3);
+    });
+
+    it("should filter by capabilities with 'all' match mode", async () => {
+      const results = await cortex.agents.list({
+        metadata: { team: filterTeamTag },
+        capabilities: ["code", "analysis"],
+        capabilitiesMatch: "all",
+      });
+
+      // Only Agent 1 has both "code" AND "analysis"
+      expect(results.length).toBe(1);
+      expect(results[0].id).toBe(filterAgent1Id);
+    });
+
+    it("should filter by name (partial match, case insensitive)", async () => {
+      const results = await cortex.agents.list({
+        name: "search filter",
+      });
+
+      // Only filterAgent1 has "Search Filter" in name
+      const matchingAgents = results.filter((a) =>
+        a.name.toLowerCase().includes("search filter"),
+      );
+      expect(matchingAgents.length).toBeGreaterThanOrEqual(1);
+      expect(matchingAgents.some((a) => a.id === filterAgent1Id)).toBe(true);
+    });
+
+    it("should combine multiple filters", async () => {
+      const results = await cortex.agents.list({
+        metadata: { team: filterTeamTag },
+        capabilities: ["testing"],
+        name: "gamma",
+      });
+
+      // Only Agent 3 matches all: team, has testing, name contains gamma
+      expect(results.length).toBe(1);
+      expect(results[0].id).toBe(filterAgent3Id);
+    });
+
+    it("should handle offset pagination correctly", async () => {
+      // Note: The SDK applies offset at backend before client-side filtering (metadata, etc.)
+      // This means offset + client-side filters don't work as expected when there's lots of data.
+      // This test verifies offset works at the raw backend level without client-side filters.
+
+      // First, list without any filters to get baseline
+      const allAgents = await cortex.agents.list({ limit: 10 });
+
+      // Verify we have some agents
+      expect(allAgents.length).toBeGreaterThan(0);
+
+      // With offset, should return fewer or equal results (depending on how many agents exist)
+      const withOffset = await cortex.agents.list({
+        limit: 10,
+        offset: 1,
+      });
+
+      // Should be valid array
+      expect(Array.isArray(withOffset)).toBe(true);
+
+      // If allAgents had data, offset should result in one less or same
+      if (allAgents.length > 1) {
+        expect(withOffset.length).toBeLessThanOrEqual(allAgents.length);
+      }
+    });
+
+    it("should handle limit with offset correctly", async () => {
+      // Test limit with offset using backend filter (status) not client-side filter
+      const results = await cortex.agents.list({
+        status: "active",
+        offset: 1,
+        limit: 1,
+      });
+
+      expect(results.length).toBe(1);
+    });
+
+    it("should return empty array when offset exceeds results", async () => {
+      // Use backend filter to test offset behavior
+      const results = await cortex.agents.list({
+        status: "active",
+        offset: 1000,
+      });
+
+      expect(results).toHaveLength(0);
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Not-Found Error Tests for update() and configure()
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("not-found error handling", () => {
+    it("update() should throw AGENT_NOT_REGISTERED when agent doesn't exist", async () => {
+      const nonExistentAgentId = ctx.agentId("non-existent-update");
+
+      await expect(
+        cortex.agents.update(nonExistentAgentId, { name: "New Name" }),
+      ).rejects.toThrow("AGENT_NOT_REGISTERED");
+    });
+
+    it("configure() should throw AGENT_NOT_REGISTERED when agent doesn't exist", async () => {
+      const nonExistentAgentId = ctx.agentId("non-existent-configure");
+
+      await expect(
+        cortex.agents.configure(nonExistentAgentId, { setting: "value" }),
+      ).rejects.toThrow("AGENT_NOT_REGISTERED");
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Integration Workflow Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("integration workflows", () => {
+    it("complete lifecycle: register → configure → update status → unregister", async () => {
+      const lifecycleAgentId = ctx.agentId("lifecycle");
+
+      // Step 1: Register
+      const registered = await cortex.agents.register({
+        id: lifecycleAgentId,
+        name: "Lifecycle Test Agent",
+        description: "Testing full lifecycle",
+        metadata: { phase: "initial" },
+      });
+
+      expect(registered.id).toBe(lifecycleAgentId);
+      expect(registered.status).toBe("active");
+
+      // Step 2: Configure
+      await cortex.agents.configure(lifecycleAgentId, {
+        memoryRetention: 30,
+        maxConversations: 100,
+      });
+
+      const configured = await cortex.agents.get(lifecycleAgentId);
+      expect(configured!.config.memoryRetention).toBe(30);
+      expect(configured!.config.maxConversations).toBe(100);
+
+      // Step 3: Update status to inactive
+      const updated = await cortex.agents.update(lifecycleAgentId, {
+        status: "inactive",
+        metadata: { phase: "deactivated" },
+      });
+
+      expect(updated.status).toBe("inactive");
+      expect(updated.metadata.phase).toBe("deactivated");
+
+      // Step 4: Verify exists
+      const exists = await cortex.agents.exists(lifecycleAgentId);
+      expect(exists).toBe(true);
+
+      // Step 5: Unregister
+      const unregisterResult = await cortex.agents.unregister(lifecycleAgentId);
+      expect(unregisterResult.agentId).toBe(lifecycleAgentId);
+
+      // Step 6: Verify deleted
+      const deleted = await cortex.agents.get(lifecycleAgentId);
+      expect(deleted).toBeNull();
+
+      const existsAfter = await cortex.agents.exists(lifecycleAgentId);
+      expect(existsAfter).toBe(false);
+    });
+
+    it("stats reflect actual data across multiple memory spaces", async () => {
+      const statsAgentId = ctx.agentId("stats-integration");
+      const statsSpace1 = ctx.memorySpaceId("stats-space-1");
+      const statsSpace2 = ctx.memorySpaceId("stats-space-2");
+
+      // Register agent
+      await cortex.agents.register({
+        id: statsAgentId,
+        name: "Stats Integration Agent",
+      });
+
+      // Register memory spaces
+      await cortex.memorySpaces.register({
+        memorySpaceId: statsSpace1,
+        type: "personal",
+      });
+      await cortex.memorySpaces.register({
+        memorySpaceId: statsSpace2,
+        type: "personal",
+      });
+
+      // Create data in space 1
+      await cortex.vector.store(statsSpace1, {
+        content: "Memory in space 1",
+        contentType: "raw",
+        participantId: statsAgentId,
+        source: { type: "system" },
+        metadata: { importance: 50, tags: [] },
+      });
+
+      // Create data in space 2
+      await cortex.vector.store(statsSpace2, {
+        content: "Memory in space 2",
+        contentType: "raw",
+        participantId: statsAgentId,
+        source: { type: "system" },
+        metadata: { importance: 50, tags: [] },
+      });
+
+      // Create a fact
+      await cortex.facts.store({
+        memorySpaceId: statsSpace1,
+        participantId: statsAgentId,
+        fact: "Test fact for stats",
+        factType: "knowledge",
+        subject: "test",
+        confidence: 90,
+        sourceType: "system",
+      });
+
+      // Wait for data to persist
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
+      // Get agent with stats
+      const agent = await cortex.agents.get(statsAgentId);
+
+      expect(agent).not.toBeNull();
+      expect(agent!.stats).toBeDefined();
+      expect(agent!.stats!.totalMemories).toBeGreaterThanOrEqual(2);
+      expect(agent!.stats!.totalFacts).toBeGreaterThanOrEqual(1);
+      expect(agent!.stats!.memorySpacesActive).toBeGreaterThanOrEqual(2);
+
+      // Cleanup
+      await cortex.agents.unregister(statsAgentId, { cascade: true });
+    }, 30000);
+
+    it("cascade delete across 3+ memory spaces", async () => {
+      const cascadeAgentId = ctx.agentId("cascade-multi");
+      const cascadeSpaces = [
+        ctx.memorySpaceId("cascade-space-1"),
+        ctx.memorySpaceId("cascade-space-2"),
+        ctx.memorySpaceId("cascade-space-3"),
+      ];
+
+      // Register agent
+      await cortex.agents.register({
+        id: cascadeAgentId,
+        name: "Multi-Space Cascade Agent",
+      });
+
+      // Register spaces and create data in each
+      for (const spaceId of cascadeSpaces) {
+        await cortex.memorySpaces.register({
+          memorySpaceId: spaceId,
+          type: "personal",
+        });
+
+        await cortex.vector.store(spaceId, {
+          content: `Memory in ${spaceId}`,
+          contentType: "raw",
+          participantId: cascadeAgentId,
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
+        });
+      }
+
+      // Wait for data to persist
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
+      // Verify data exists
+      for (const spaceId of cascadeSpaces) {
+        const memories = await cortex.vector.list({ memorySpaceId: spaceId });
+        const agentMemories = memories.filter(
+          (m) => m.participantId === cascadeAgentId,
+        );
+        expect(agentMemories.length).toBeGreaterThanOrEqual(1);
+      }
+
+      // Cascade delete
+      const result = await cortex.agents.unregister(cascadeAgentId, {
+        cascade: true,
+      });
+
+      expect(result.agentId).toBe(cascadeAgentId);
+      expect(result.memoriesDeleted).toBeGreaterThanOrEqual(3);
+      expect(result.memorySpacesAffected.length).toBeGreaterThanOrEqual(3);
+
+      // Verify all data deleted
+      for (const spaceId of cascadeSpaces) {
+        const memories = await cortex.vector.list({ memorySpaceId: spaceId });
+        const agentMemories = memories.filter(
+          (m) => m.participantId === cascadeAgentId,
+        );
+        expect(agentMemories).toHaveLength(0);
+      }
+
+      // Verify agent is gone
+      const agent = await cortex.agents.get(cascadeAgentId);
+      expect(agent).toBeNull();
+    }, 60000);
+
+    it("bulk operations: register multiple → updateMany → export → unregisterMany", async () => {
+      const bulkPrefix = `bulk-workflow-${ctx.runId}`;
+      const bulkAgentIds = [
+        ctx.agentId(`${bulkPrefix}-1`),
+        ctx.agentId(`${bulkPrefix}-2`),
+        ctx.agentId(`${bulkPrefix}-3`),
+      ];
+
+      // Step 1: Register multiple agents
+      for (const agentId of bulkAgentIds) {
+        await cortex.agents.register({
+          id: agentId,
+          name: `Bulk Agent ${agentId}`,
+          metadata: { bulkGroup: bulkPrefix, status: "new" },
+        });
+      }
+
+      // Verify all registered
+      const listed = await cortex.agents.list({
+        metadata: { bulkGroup: bulkPrefix },
+      });
+      expect(listed).toHaveLength(3);
+
+      // Step 2: Update all with updateMany
+      const updateResult = await cortex.agents.updateMany(
+        { metadata: { bulkGroup: bulkPrefix } },
+        { metadata: { bulkGroup: bulkPrefix, status: "processed" } },
+      );
+      expect(updateResult.updated).toBe(3);
+
+      // Verify updates
+      for (const agentId of bulkAgentIds) {
+        const agent = await cortex.agents.get(agentId);
+        expect(agent!.metadata.status).toBe("processed");
+      }
+
+      // Step 3: Export
+      const exportResult = await cortex.agents.export({
+        format: "json",
+        filters: { metadata: { bulkGroup: bulkPrefix } },
+      });
+      expect(exportResult.count).toBe(3);
+
+      // Step 4: Unregister all
+      const unregisterResult = await cortex.agents.unregisterMany(
+        { metadata: { bulkGroup: bulkPrefix } },
+        { cascade: false },
+      );
+      expect(unregisterResult.deleted).toBe(3);
+
+      // Verify all deleted
+      for (const agentId of bulkAgentIds) {
+        const agent = await cortex.agents.get(agentId);
+        expect(agent).toBeNull();
+      }
+    });
+  });
 });

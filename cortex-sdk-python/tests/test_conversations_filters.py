@@ -14,7 +14,11 @@ import pytest
 from cortex.types import (
     AddMessageInput,
     ConversationParticipants,
+    CountConversationsFilter,
     CreateConversationInput,
+    ListConversationsFilter,
+    SearchConversationsFilters,
+    SearchConversationsInput,
 )
 from tests.helpers import generate_test_memory_space_id, generate_test_user_id
 
@@ -75,19 +79,19 @@ class TestConversationsFilterParametrized:
             )
 
         # Execute: List with type filter
-        results = await cortex_client.conversations.list(
-            type=conv_type, memory_space_id=space_id
+        result = await cortex_client.conversations.list(
+            ListConversationsFilter(type=conv_type, memory_space_id=space_id)
         )
 
         # Validate
-        assert len(results) >= 1, f"Should find at least 1 {conv_type} conversation"
-        for conv in results:
+        assert len(result.conversations) >= 1, f"Should find at least 1 {conv_type} conversation"
+        for conv in result.conversations:
             assert (
                 conv.type == conv_type
             ), f"All results should be {conv_type}, got {conv.type}"
 
         # Verify target conversation is in results
-        conv_ids = [c.conversation_id for c in results]
+        conv_ids = [c.conversation_id for c in result.conversations]
         assert (
             target_conv.conversation_id in conv_ids
         ), f"Target {conv_type} conversation should be in results"
@@ -156,7 +160,9 @@ class TestConversationsFilterParametrized:
             )
 
         # Execute: Count with type filter
-        count = await cortex_client.conversations.count(type=conv_type)
+        count = await cortex_client.conversations.count(
+            CountConversationsFilter(type=conv_type)
+        )
 
         # Validate
         assert (
@@ -228,7 +234,10 @@ class TestConversationsFilterParametrized:
 
         # Execute: Search with type filter
         results = await cortex_client.conversations.search(
-            query=search_term, type=conv_type, memory_space_id=space_id
+            SearchConversationsInput(
+                query=search_term,
+                filters=SearchConversationsFilters(type=conv_type, memory_space_id=space_id),
+            )
         )
 
         # Validate
@@ -258,13 +267,13 @@ class TestConversationsFilterEdgeCases:
         )
 
         # Query for agent-agent type
-        results = await cortex_client.conversations.list(
-            type="agent-agent", memory_space_id=space_id
+        result = await cortex_client.conversations.list(
+            ListConversationsFilter(type="agent-agent", memory_space_id=space_id)
         )
 
         # Should return empty list (or at least none from this test), not error
         # Relaxed assertion since there might be existing agent-agent conversations
-        assert isinstance(results, list), "Should return list"
+        assert isinstance(result.conversations, list), "Should return list"
 
     @pytest.mark.asyncio
     async def test_list_both_types_exist(self, cortex_client):
@@ -292,20 +301,20 @@ class TestConversationsFilterEdgeCases:
         )
 
         # List user-agent
-        ua_results = await cortex_client.conversations.list(
-            type="user-agent", memory_space_id=space_id
+        ua_result = await cortex_client.conversations.list(
+            ListConversationsFilter(type="user-agent", memory_space_id=space_id)
         )
-        assert len(ua_results) >= 1, "Should find user-agent conversations"
-        assert all(c.type == "user-agent" for c in ua_results)
-        assert any(c.conversation_id == ua_conv.conversation_id for c in ua_results)
+        assert len(ua_result.conversations) >= 1, "Should find user-agent conversations"
+        assert all(c.type == "user-agent" for c in ua_result.conversations)
+        assert any(c.conversation_id == ua_conv.conversation_id for c in ua_result.conversations)
 
         # List agent-agent
-        aa_results = await cortex_client.conversations.list(
-            type="agent-agent", memory_space_id=space_id
+        aa_result = await cortex_client.conversations.list(
+            ListConversationsFilter(type="agent-agent", memory_space_id=space_id)
         )
-        assert len(aa_results) >= 1, "Should find agent-agent conversations"
-        assert all(c.type == "agent-agent" for c in aa_results)
-        assert any(c.conversation_id == aa_conv.conversation_id for c in aa_results)
+        assert len(aa_result.conversations) >= 1, "Should find agent-agent conversations"
+        assert all(c.type == "agent-agent" for c in aa_result.conversations)
+        assert any(c.conversation_id == aa_conv.conversation_id for c in aa_result.conversations)
 
     @pytest.mark.asyncio
     async def test_combine_type_with_user_id_filter(self, cortex_client):
@@ -343,13 +352,13 @@ class TestConversationsFilterEdgeCases:
         )
 
         # Execute: Combine type + userId filters
-        results = await cortex_client.conversations.list(
-            type="user-agent", user_id=target_user, memory_space_id=space_id
+        result = await cortex_client.conversations.list(
+            ListConversationsFilter(type="user-agent", user_id=target_user, memory_space_id=space_id)
         )
 
         # Validate: Should only find target conversation
-        assert len(results) >= 1, "Should find conversations matching both filters"
-        for conv in results:
+        assert len(result.conversations) >= 1, "Should find conversations matching both filters"
+        for conv in result.conversations:
             assert conv.type == "user-agent", "All should be user-agent"
             # Check userId is in participants (skip detailed check, just verify structure)
             assert hasattr(conv, "participants"), "Should have participants"
@@ -390,13 +399,13 @@ class TestConversationsFilterEdgeCases:
         )
 
         # Execute: Filter by type AND memory space
-        results = await cortex_client.conversations.list(
-            type="user-agent", memory_space_id=space_1
+        result = await cortex_client.conversations.list(
+            ListConversationsFilter(type="user-agent", memory_space_id=space_1)
         )
 
         # Validate: Should only find user-agent in space 1
-        assert len(results) >= 1, "Should find conversations in space 1"
-        for conv in results:
+        assert len(result.conversations) >= 1, "Should find conversations in space 1"
+        for conv in result.conversations:
             assert conv.type == "user-agent"
             assert conv.memory_space_id == space_1
 
@@ -429,11 +438,15 @@ class TestConversationsFilterEdgeCases:
             )
 
         # Count user-agent only
-        ua_count = await cortex_client.conversations.count(type="user-agent")
+        ua_count = await cortex_client.conversations.count(
+            CountConversationsFilter(type="user-agent")
+        )
         assert ua_count >= 3, f"Should count at least 3 user-agent, got {ua_count}"
 
         # Count agent-agent only
-        aa_count = await cortex_client.conversations.count(type="agent-agent")
+        aa_count = await cortex_client.conversations.count(
+            CountConversationsFilter(type="agent-agent")
+        )
         assert aa_count >= 2, f"Should count at least 2 agent-agent, got {aa_count}"
 
         # Count all (no filter)
@@ -468,7 +481,10 @@ class TestConversationsFilterEdgeCases:
 
         # Search with type filter
         results = await cortex_client.conversations.search(
-            query=search_term, type="user-agent", memory_space_id=space_id
+            SearchConversationsInput(
+                query=search_term,
+                filters=SearchConversationsFilters(type="user-agent", memory_space_id=space_id),
+            )
         )
 
         # Should find the conversation
@@ -501,7 +517,10 @@ class TestConversationsFilterEdgeCases:
 
         # Search for agent-agent type (should be empty)
         results = await cortex_client.conversations.search(
-            query=search_term, type="agent-agent", memory_space_id=space_id
+            SearchConversationsInput(
+                query=search_term,
+                filters=SearchConversationsFilters(type="agent-agent", memory_space_id=space_id),
+            )
         )
 
         # Should return empty list

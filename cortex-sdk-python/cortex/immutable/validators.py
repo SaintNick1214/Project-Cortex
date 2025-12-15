@@ -307,3 +307,78 @@ def validate_purge_many_filter(
 
     if user_id is not None:
         validate_user_id(user_id, "user_id")
+
+
+def validate_list_filter(filter: Any) -> None:
+    """
+    Validates ListImmutableFilter structure.
+
+    Args:
+        filter: ListImmutableFilter to validate
+
+    Raises:
+        ImmutableValidationError: If filter is invalid
+    """
+    if filter is None:
+        return  # None is OK
+
+    if hasattr(filter, "type") and filter.type is not None:
+        validate_type(filter.type, "type")
+
+    if hasattr(filter, "user_id") and filter.user_id is not None:
+        validate_user_id(filter.user_id, "user_id")
+
+    if hasattr(filter, "limit") and filter.limit is not None:
+        validate_limit(filter.limit, "limit")
+
+
+def validate_search_input(input: Any) -> None:
+    """
+    Validates SearchImmutableInput structure.
+
+    Args:
+        input: SearchImmutableInput to validate
+
+    Raises:
+        ImmutableValidationError: If input is invalid
+    """
+    if not input:
+        raise ImmutableValidationError(
+            "Search input is required", "MISSING_REQUIRED_FIELD"
+        )
+
+    if not hasattr(input, "query"):
+        raise ImmutableValidationError(
+            "Search input must have a query field", "MISSING_REQUIRED_FIELD", "query"
+        )
+
+    validate_search_query(input.query, "query")
+
+    if hasattr(input, "type") and input.type is not None:
+        validate_type(input.type, "type")
+
+    if hasattr(input, "user_id") and input.user_id is not None:
+        validate_user_id(input.user_id, "user_id")
+
+    if hasattr(input, "limit") and input.limit is not None:
+        validate_limit(input.limit, "limit")
+
+
+def validate_count_filter(filter: Any) -> None:
+    """
+    Validates CountImmutableFilter structure.
+
+    Args:
+        filter: CountImmutableFilter to validate
+
+    Raises:
+        ImmutableValidationError: If filter is invalid
+    """
+    if filter is None:
+        return  # None is OK
+
+    if hasattr(filter, "type") and filter.type is not None:
+        validate_type(filter.type, "type")
+
+    if hasattr(filter, "user_id") and filter.user_id is not None:
+        validate_user_id(filter.user_id, "user_id")

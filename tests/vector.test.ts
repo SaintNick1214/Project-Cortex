@@ -375,6 +375,25 @@ describe("Vector Memory API (Layer 2)", () => {
 
       expect(count).toBeGreaterThanOrEqual(1);
     });
+
+    it("returns 0 for empty memorySpace", async () => {
+      const emptySpace = ctx.memorySpaceId("count-empty");
+
+      const count = await cortex.vector.count({
+        memorySpaceId: emptySpace,
+      });
+
+      expect(count).toBe(0);
+    });
+
+    it("returns 0 when filtering by non-existent userId", async () => {
+      const count = await cortex.vector.count({
+        memorySpaceId: countSpace,
+        userId: `user-nonexistent-${ctx.runId}`,
+      });
+
+      expect(count).toBe(0);
+    });
   });
 
   describe("delete()", () => {
@@ -553,6 +572,33 @@ describe("Vector Memory API (Layer 2)", () => {
         expect(history[0].content).toBe("Original content");
         expect(history[1].content).toBe("Updated content");
       });
+
+      it("should throw MEMORY_NOT_FOUND when memory doesn't exist", async () => {
+        await expect(
+          cortex.vector.update(updateSpace, `mem-nonexistent-${ctx.runId}`, {
+            content: "Should fail",
+          }),
+        ).rejects.toThrow("MEMORY_NOT_FOUND");
+      });
+
+      it("should throw PERMISSION_DENIED when memorySpaceId doesn't match", async () => {
+        const otherSpace = ctx.memorySpaceId("update-other");
+
+        // Create memory in updateSpace
+        const memory = await cortex.vector.store(updateSpace, {
+          content: "Permission test",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
+        });
+
+        // Try to update from different space
+        await expect(
+          cortex.vector.update(otherSpace, memory.memoryId, {
+            content: "Should fail",
+          }),
+        ).rejects.toThrow("PERMISSION_DENIED");
+      });
     });
 
     describe("getVersion()", () => {
@@ -590,6 +636,87 @@ describe("Vector Memory API (Layer 2)", () => {
         const v3 = await cortex.vector.getVersion(versionSpace, memoryId, 3);
 
         expect(v3!.content).toBe("Version 3");
+      });
+
+      it("returns null when version doesn't exist (version > current)", async () => {
+        const result = await cortex.vector.getVersion(
+          versionSpace,
+          memoryId,
+          999,
+        );
+
+        expect(result).toBeNull();
+      });
+
+      it("returns null for non-existent memory", async () => {
+        const result = await cortex.vector.getVersion(
+          versionSpace,
+          `mem-nonexistent-${ctx.runId}`,
+          1,
+        );
+
+        expect(result).toBeNull();
+      });
+
+      it("returns null for memorySpaceId mismatch", async () => {
+        const otherSpace = ctx.memorySpaceId("version-other");
+
+        const result = await cortex.vector.getVersion(
+          otherSpace,
+          memoryId,
+          1,
+        );
+
+        expect(result).toBeNull();
+      });
+    });
+
+    describe("getHistory()", () => {
+      const historySpace = ctx.memorySpaceId("history");
+
+      it("returns empty array for non-existent memory", async () => {
+        const history = await cortex.vector.getHistory(
+          historySpace,
+          `mem-nonexistent-${ctx.runId}`,
+        );
+
+        expect(history).toEqual([]);
+      });
+
+      it("returns single-item array for never-updated memory", async () => {
+        const memory = await cortex.vector.store(historySpace, {
+          content: "Never updated",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
+        });
+
+        const history = await cortex.vector.getHistory(
+          historySpace,
+          memory.memoryId,
+        );
+
+        expect(history).toHaveLength(1);
+        expect(history[0].content).toBe("Never updated");
+        expect(history[0].version).toBe(1);
+      });
+
+      it("returns empty array for memorySpaceId mismatch", async () => {
+        const otherSpace = ctx.memorySpaceId("history-other");
+
+        const memory = await cortex.vector.store(historySpace, {
+          content: "History permission test",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
+        });
+
+        const history = await cortex.vector.getHistory(
+          otherSpace,
+          memory.memoryId,
+        );
+
+        expect(history).toEqual([]);
       });
     });
 
@@ -658,6 +785,62 @@ describe("Vector Memory API (Layer 2)", () => {
         expect(result.data).toContain("memoryId");
         expect(result.data).toContain("content");
       });
+
+      it("handles empty memorySpace export (returns count: 0)", async () => {
+        const emptySpace = ctx.memorySpaceId("export-empty");
+
+        const result = await cortex.vector.export({
+          memorySpaceId: emptySpace,
+          format: "json",
+        });
+
+        expect(result.count).toBe(0);
+        expect(result.format).toBe("json");
+        const parsed = JSON.parse(result.data);
+        expect(parsed).toEqual([]);
+      });
+
+      it("exports with includeEmbeddings: true", async () => {
+        const embeddingSpace = ctx.memorySpaceId("export-embeddings");
+        const mockEmbedding = Array.from({ length: 1536 }, () => Math.random());
+
+        await cortex.vector.store(embeddingSpace, {
+          content: "Memory with embedding for export",
+          contentType: "raw",
+          embedding: mockEmbedding,
+          source: { type: "system" },
+          metadata: { importance: 50, tags: ["embedding-export"] },
+        });
+
+        const result = await cortex.vector.export({
+          memorySpaceId: embeddingSpace,
+          format: "json",
+          includeEmbeddings: true,
+        });
+
+        expect(result.count).toBeGreaterThan(0);
+        const parsed = JSON.parse(result.data);
+        const memoryWithEmbedding = parsed.find(
+          (m: any) => m.embedding !== undefined,
+        );
+        expect(memoryWithEmbedding).toBeDefined();
+        expect(memoryWithEmbedding.embedding).toHaveLength(1536);
+      });
+
+      it("CSV export includes all required headers", async () => {
+        const result = await cortex.vector.export({
+          memorySpaceId: exportSpace,
+          format: "csv",
+        });
+
+        const headers = result.data.split("\n")[0];
+        expect(headers).toContain("memoryId");
+        expect(headers).toContain("content");
+        expect(headers).toContain("sourceType");
+        expect(headers).toContain("importance");
+        expect(headers).toContain("tags");
+        expect(headers).toContain("createdAt");
+      });
     });
 
     describe("updateMany()", () => {
@@ -715,6 +898,234 @@ describe("Vector Memory API (Layer 2)", () => {
         expect(archived).not.toBeNull();
         expect(archived!.tags).toContain("archived");
         expect(archived!.importance).toBeLessThanOrEqual(10);
+      });
+
+      it("should throw MEMORY_NOT_FOUND for non-existent memory", async () => {
+        await expect(
+          cortex.vector.archive(archiveSpace, `mem-nonexistent-${ctx.runId}`),
+        ).rejects.toThrow("MEMORY_NOT_FOUND");
+      });
+
+      it("should throw PERMISSION_DENIED for wrong memorySpaceId", async () => {
+        const otherSpace = ctx.memorySpaceId("archive-other");
+
+        const memory = await cortex.vector.store(archiveSpace, {
+          content: "Archive permission test",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
+        });
+
+        await expect(
+          cortex.vector.archive(otherSpace, memory.memoryId),
+        ).rejects.toThrow("PERMISSION_DENIED");
+      });
+
+      it("should handle already-archived memory gracefully (idempotent)", async () => {
+        const memory = await cortex.vector.store(archiveSpace, {
+          content: "Archive idempotent test",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
+        });
+
+        // Archive first time
+        await cortex.vector.archive(archiveSpace, memory.memoryId);
+
+        // Archive again - should not throw
+        const result = await cortex.vector.archive(archiveSpace, memory.memoryId);
+
+        expect(result.archived).toBe(true);
+        expect(result.restorable).toBe(true);
+      });
+    });
+
+    describe("restoreFromArchive()", () => {
+      const restoreSpace = ctx.memorySpaceId("restore");
+
+      it("restores an archived memory successfully", async () => {
+        const memory = await cortex.vector.store(restoreSpace, {
+          content: "Restore test content",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 70, tags: ["test-tag"] },
+        });
+
+        // Archive the memory
+        await cortex.vector.archive(restoreSpace, memory.memoryId);
+
+        // Verify archived
+        const archived = await cortex.vector.get(restoreSpace, memory.memoryId);
+        expect(archived!.tags).toContain("archived");
+
+        // Restore the memory
+        const result = await cortex.vector.restoreFromArchive(
+          restoreSpace,
+          memory.memoryId,
+        );
+
+        expect(result.restored).toBe(true);
+        expect(result.memoryId).toBe(memory.memoryId);
+        expect(result.memory).toBeDefined();
+      });
+
+      it("restored memory should not have archived tag", async () => {
+        const memory = await cortex.vector.store(restoreSpace, {
+          content: "Restore tag test",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 60, tags: ["original"] },
+        });
+
+        await cortex.vector.archive(restoreSpace, memory.memoryId);
+        await cortex.vector.restoreFromArchive(restoreSpace, memory.memoryId);
+
+        const restored = await cortex.vector.get(restoreSpace, memory.memoryId);
+
+        expect(restored).not.toBeNull();
+        expect(restored!.tags).not.toContain("archived");
+        expect(restored!.tags).toContain("original");
+      });
+
+      it("restored memory should have importance restored", async () => {
+        const memory = await cortex.vector.store(restoreSpace, {
+          content: "Restore importance test",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 80, tags: [] },
+        });
+
+        // Archive (reduces importance)
+        await cortex.vector.archive(restoreSpace, memory.memoryId);
+
+        const archived = await cortex.vector.get(restoreSpace, memory.memoryId);
+        expect(archived!.importance).toBeLessThanOrEqual(10);
+
+        // Restore
+        await cortex.vector.restoreFromArchive(restoreSpace, memory.memoryId);
+
+        const restored = await cortex.vector.get(restoreSpace, memory.memoryId);
+        expect(restored!.importance).toBeGreaterThanOrEqual(50);
+      });
+
+      it("should throw MEMORY_NOT_FOUND for non-existent memory", async () => {
+        await expect(
+          cortex.vector.restoreFromArchive(
+            restoreSpace,
+            `mem-nonexistent-${ctx.runId}`,
+          ),
+        ).rejects.toThrow("MEMORY_NOT_FOUND");
+      });
+
+      it("should throw MEMORY_NOT_ARCHIVED for non-archived memory", async () => {
+        const memory = await cortex.vector.store(restoreSpace, {
+          content: "Not archived memory",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
+        });
+
+        await expect(
+          cortex.vector.restoreFromArchive(restoreSpace, memory.memoryId),
+        ).rejects.toThrow("MEMORY_NOT_ARCHIVED");
+      });
+
+      it("should throw PERMISSION_DENIED for wrong memorySpaceId", async () => {
+        const otherSpace = ctx.memorySpaceId("restore-other");
+
+        const memory = await cortex.vector.store(restoreSpace, {
+          content: "Restore permission test",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
+        });
+
+        await cortex.vector.archive(restoreSpace, memory.memoryId);
+
+        await expect(
+          cortex.vector.restoreFromArchive(otherSpace, memory.memoryId),
+        ).rejects.toThrow("PERMISSION_DENIED");
+      });
+
+      it("restored memory should preserve version", async () => {
+        const memory = await cortex.vector.store(restoreSpace, {
+          content: "Version preserve test",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
+        });
+
+        const originalVersion = memory.version;
+
+        await cortex.vector.archive(restoreSpace, memory.memoryId);
+        await cortex.vector.restoreFromArchive(restoreSpace, memory.memoryId);
+
+        const restored = await cortex.vector.get(restoreSpace, memory.memoryId);
+
+        // Version should not change through archive/restore
+        expect(restored!.version).toBe(originalVersion);
+      });
+
+      it("complete archive/restore workflow: store → archive → verify not searchable → restore → verify searchable", async () => {
+        const workflowSpace = ctx.memorySpaceId("archive-workflow");
+        const searchKeyword = `workflow-search-${ctx.runId}`;
+
+        // Step 1: Store a memory
+        const memory = await cortex.vector.store(workflowSpace, {
+          content: `${searchKeyword} important data`,
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 80, tags: ["workflow-test"] },
+        });
+
+        // Step 2: Verify it's searchable
+        const searchBefore = await cortex.vector.search(
+          workflowSpace,
+          searchKeyword,
+        );
+        expect(searchBefore.some((m) => m.memoryId === memory.memoryId)).toBe(
+          true,
+        );
+
+        // Step 3: Archive the memory
+        const archiveResult = await cortex.vector.archive(
+          workflowSpace,
+          memory.memoryId,
+        );
+        expect(archiveResult.archived).toBe(true);
+
+        // Step 4: Verify it's still retrievable but marked archived
+        const archivedMem = await cortex.vector.get(
+          workflowSpace,
+          memory.memoryId,
+        );
+        expect(archivedMem).not.toBeNull();
+        expect(archivedMem!.tags).toContain("archived");
+
+        // Step 5: Restore the memory
+        const restoreResult = await cortex.vector.restoreFromArchive(
+          workflowSpace,
+          memory.memoryId,
+        );
+        expect(restoreResult.restored).toBe(true);
+
+        // Step 6: Verify restored memory is searchable again
+        const searchAfter = await cortex.vector.search(
+          workflowSpace,
+          searchKeyword,
+        );
+        expect(searchAfter.some((m) => m.memoryId === memory.memoryId)).toBe(
+          true,
+        );
+
+        // Step 7: Verify restored memory fields
+        const restoredMem = await cortex.vector.get(
+          workflowSpace,
+          memory.memoryId,
+        );
+        expect(restoredMem!.tags).not.toContain("archived");
+        expect(restoredMem!.tags).toContain("workflow-test");
+        expect(restoredMem!.importance).toBeGreaterThanOrEqual(50);
       });
     });
 
@@ -1729,6 +2140,32 @@ describe("Vector Memory API (Layer 2)", () => {
       it("should throw on whitespace-only memoryId", async () => {
         await expect(
           cortex.vector.archive("memspace-test", "   "),
+        ).rejects.toThrow("memoryId is required");
+      });
+    });
+
+    describe("restoreFromArchive() validation", () => {
+      it("should throw on empty memorySpaceId", async () => {
+        await expect(
+          cortex.vector.restoreFromArchive("", "mem-123"),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on whitespace-only memorySpaceId", async () => {
+        await expect(
+          cortex.vector.restoreFromArchive("   ", "mem-123"),
+        ).rejects.toThrow("memorySpaceId is required");
+      });
+
+      it("should throw on empty memoryId", async () => {
+        await expect(
+          cortex.vector.restoreFromArchive("memspace-test", ""),
+        ).rejects.toThrow("memoryId is required");
+      });
+
+      it("should throw on whitespace-only memoryId", async () => {
+        await expect(
+          cortex.vector.restoreFromArchive("memspace-test", "   "),
         ).rejects.toThrow("memoryId is required");
       });
     });

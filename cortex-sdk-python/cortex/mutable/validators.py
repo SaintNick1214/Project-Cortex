@@ -304,6 +304,151 @@ def validate_value_size(value: Any) -> None:
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Additional Range Validators
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+def validate_offset(offset: Any) -> None:
+    """
+    Validates offset is non-negative integer.
+
+    Args:
+        offset: Offset value to validate (None is acceptable)
+
+    Raises:
+        MutableValidationError: If offset is invalid
+    """
+    if offset is None:
+        return  # Optional field
+
+    if not isinstance(offset, int):
+        raise MutableValidationError(
+            f"offset must be an integer, got {type(offset).__name__}",
+            "INVALID_OFFSET_TYPE",
+            "offset",
+        )
+
+    if offset < 0:
+        raise MutableValidationError(
+            f"offset must be non-negative, got {offset}",
+            "INVALID_OFFSET_RANGE",
+            "offset",
+        )
+
+
+def validate_timestamp(timestamp: Any, field_name: str) -> None:
+    """
+    Validates timestamp is a valid Unix timestamp (positive number).
+
+    Args:
+        timestamp: Timestamp to validate (None is acceptable)
+        field_name: Field name for error messages
+
+    Raises:
+        MutableValidationError: If timestamp is invalid
+    """
+    if timestamp is None:
+        return  # Optional field
+
+    if not isinstance(timestamp, (int, float)):
+        raise MutableValidationError(
+            f"{field_name} must be a number, got {type(timestamp).__name__}",
+            "INVALID_TIMESTAMP_TYPE",
+            field_name,
+        )
+
+    if timestamp < 0:
+        raise MutableValidationError(
+            f"{field_name} must be a valid Unix timestamp (positive number), got {timestamp}",
+            "INVALID_TIMESTAMP_VALUE",
+            field_name,
+        )
+
+
+VALID_SORT_BY = ["key", "updatedAt", "accessCount"]
+
+
+def validate_sort_by(sort_by: Any) -> None:
+    """
+    Validates sortBy is a valid sort field.
+
+    Args:
+        sort_by: Sort field to validate (None is acceptable)
+
+    Raises:
+        MutableValidationError: If sort_by is invalid
+    """
+    if sort_by is None:
+        return  # Optional field
+
+    if not isinstance(sort_by, str):
+        raise MutableValidationError(
+            f"sort_by must be a string, got {type(sort_by).__name__}",
+            "INVALID_SORT_BY_TYPE",
+            "sort_by",
+        )
+
+    if sort_by not in VALID_SORT_BY:
+        raise MutableValidationError(
+            f"sort_by must be one of: {', '.join(VALID_SORT_BY)}. Got \"{sort_by}\"",
+            "INVALID_SORT_BY_VALUE",
+            "sort_by",
+        )
+
+
+VALID_SORT_ORDER = ["asc", "desc"]
+
+
+def validate_sort_order(sort_order: Any) -> None:
+    """
+    Validates sortOrder is a valid sort direction.
+
+    Args:
+        sort_order: Sort order to validate (None is acceptable)
+
+    Raises:
+        MutableValidationError: If sort_order is invalid
+    """
+    if sort_order is None:
+        return  # Optional field
+
+    if not isinstance(sort_order, str):
+        raise MutableValidationError(
+            f"sort_order must be a string, got {type(sort_order).__name__}",
+            "INVALID_SORT_ORDER_TYPE",
+            "sort_order",
+        )
+
+    if sort_order not in VALID_SORT_ORDER:
+        raise MutableValidationError(
+            f"sort_order must be one of: {', '.join(VALID_SORT_ORDER)}. Got \"{sort_order}\"",
+            "INVALID_SORT_ORDER_VALUE",
+            "sort_order",
+        )
+
+
+def validate_dry_run(dry_run: Any) -> None:
+    """
+    Validates dryRun is a boolean.
+
+    Args:
+        dry_run: dry_run value to validate (None is acceptable)
+
+    Raises:
+        MutableValidationError: If dry_run is invalid
+    """
+    if dry_run is None:
+        return  # Optional field
+
+    if not isinstance(dry_run, bool):
+        raise MutableValidationError(
+            f"dry_run must be a boolean, got {type(dry_run).__name__}",
+            "INVALID_DRY_RUN_TYPE",
+            "dry_run",
+        )
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Type Validators
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -329,3 +474,322 @@ def validate_updater(updater: Any) -> None:
             "INVALID_UPDATER_TYPE",
             "updater",
         )
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Filter Object Validators
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+def validate_list_filter(filter_obj: Any) -> None:
+    """
+    Validates ListMutableFilter object structure.
+
+    Args:
+        filter_obj: Filter object to validate
+
+    Raises:
+        MutableValidationError: If filter is invalid
+    """
+    if filter_obj is None:
+        raise MutableValidationError(
+            "Filter is required",
+            "MISSING_FILTER",
+            "filter",
+        )
+
+    # Check for namespace (required)
+    namespace = getattr(filter_obj, "namespace", None)
+    if not namespace:
+        raise MutableValidationError(
+            "Filter must include namespace",
+            "MISSING_NAMESPACE",
+            "filter.namespace",
+        )
+
+    # Validate individual filter fields
+    validate_namespace(namespace, "filter.namespace")
+    validate_namespace_format(namespace)
+
+    key_prefix = getattr(filter_obj, "key_prefix", None)
+    if key_prefix is not None:
+        validate_key_prefix(key_prefix)
+
+    user_id = getattr(filter_obj, "user_id", None)
+    if user_id is not None:
+        validate_user_id(user_id)
+
+    limit = getattr(filter_obj, "limit", None)
+    if limit is not None:
+        validate_limit(limit)
+
+    offset = getattr(filter_obj, "offset", None)
+    if offset is not None:
+        validate_offset(offset)
+
+    updated_after = getattr(filter_obj, "updated_after", None)
+    if updated_after is not None:
+        validate_timestamp(updated_after, "filter.updated_after")
+
+    updated_before = getattr(filter_obj, "updated_before", None)
+    if updated_before is not None:
+        validate_timestamp(updated_before, "filter.updated_before")
+
+    sort_by = getattr(filter_obj, "sort_by", None)
+    if sort_by is not None:
+        validate_sort_by(sort_by)
+
+    sort_order = getattr(filter_obj, "sort_order", None)
+    if sort_order is not None:
+        validate_sort_order(sort_order)
+
+
+def validate_count_filter(filter_obj: Any) -> None:
+    """
+    Validates CountMutableFilter object structure.
+
+    Args:
+        filter_obj: Filter object to validate
+
+    Raises:
+        MutableValidationError: If filter is invalid
+    """
+    if filter_obj is None:
+        raise MutableValidationError(
+            "Filter is required",
+            "MISSING_FILTER",
+            "filter",
+        )
+
+    # Check for namespace (required)
+    namespace = getattr(filter_obj, "namespace", None)
+    if not namespace:
+        raise MutableValidationError(
+            "Filter must include namespace",
+            "MISSING_NAMESPACE",
+            "filter.namespace",
+        )
+
+    # Validate individual filter fields
+    validate_namespace(namespace, "filter.namespace")
+    validate_namespace_format(namespace)
+
+    key_prefix = getattr(filter_obj, "key_prefix", None)
+    if key_prefix is not None:
+        validate_key_prefix(key_prefix)
+
+    user_id = getattr(filter_obj, "user_id", None)
+    if user_id is not None:
+        validate_user_id(user_id)
+
+    updated_after = getattr(filter_obj, "updated_after", None)
+    if updated_after is not None:
+        validate_timestamp(updated_after, "filter.updated_after")
+
+    updated_before = getattr(filter_obj, "updated_before", None)
+    if updated_before is not None:
+        validate_timestamp(updated_before, "filter.updated_before")
+
+
+def validate_purge_filter(filter_obj: Any) -> None:
+    """
+    Validates PurgeManyFilter object structure.
+
+    Args:
+        filter_obj: Filter object to validate
+
+    Raises:
+        MutableValidationError: If filter is invalid
+    """
+    if filter_obj is None:
+        raise MutableValidationError(
+            "Filter is required",
+            "MISSING_FILTER",
+            "filter",
+        )
+
+    # Check for namespace (required)
+    namespace = getattr(filter_obj, "namespace", None)
+    if not namespace:
+        raise MutableValidationError(
+            "Filter must include namespace",
+            "MISSING_NAMESPACE",
+            "filter.namespace",
+        )
+
+    # Validate individual filter fields
+    validate_namespace(namespace, "filter.namespace")
+    validate_namespace_format(namespace)
+
+    key_prefix = getattr(filter_obj, "key_prefix", None)
+    if key_prefix is not None:
+        validate_key_prefix(key_prefix)
+
+    user_id = getattr(filter_obj, "user_id", None)
+    if user_id is not None:
+        validate_user_id(user_id)
+
+    updated_before = getattr(filter_obj, "updated_before", None)
+    if updated_before is not None:
+        validate_timestamp(updated_before, "filter.updated_before")
+
+    last_accessed_before = getattr(filter_obj, "last_accessed_before", None)
+    if last_accessed_before is not None:
+        validate_timestamp(last_accessed_before, "filter.last_accessed_before")
+
+
+def validate_purge_namespace_options(options: Any) -> None:
+    """
+    Validates PurgeNamespaceOptions object structure.
+
+    Args:
+        options: Options object to validate (None is acceptable)
+
+    Raises:
+        MutableValidationError: If options are invalid
+    """
+    if options is None:
+        return  # Optional parameter
+
+    dry_run = getattr(options, "dry_run", None)
+    if dry_run is not None:
+        validate_dry_run(dry_run)
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Transaction Validators
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+VALID_OPERATIONS = ["set", "update", "delete", "increment", "decrement"]
+
+
+def validate_operations_array(operations: Any) -> None:
+    """
+    Validates operations array is non-empty.
+
+    Args:
+        operations: Operations array to validate
+
+    Raises:
+        MutableValidationError: If operations array is invalid
+    """
+    if operations is None:
+        raise MutableValidationError(
+            "Operations array is required",
+            "MISSING_OPERATIONS",
+            "operations",
+        )
+
+    if not isinstance(operations, list):
+        raise MutableValidationError(
+            f"Operations must be a list, got {type(operations).__name__}",
+            "INVALID_OPERATIONS_ARRAY",
+            "operations",
+        )
+
+    if len(operations) == 0:
+        raise MutableValidationError(
+            "Operations array cannot be empty",
+            "EMPTY_OPERATIONS_ARRAY",
+            "operations",
+        )
+
+
+def validate_transaction_operation(operation: Any, index: int) -> None:
+    """
+    Validates individual transaction operation structure.
+
+    Args:
+        operation: Operation to validate
+        index: Index in the operations array
+
+    Raises:
+        MutableValidationError: If operation is invalid
+    """
+    if operation is None:
+        raise MutableValidationError(
+            f"Operation at index {index} must be an object",
+            "INVALID_TRANSACTION_OPERATION",
+            f"operations[{index}]",
+        )
+
+    # Get operation type
+    op = getattr(operation, "op", None)
+    if not op:
+        raise MutableValidationError(
+            f'Operation at index {index} is missing required field "op"',
+            "MISSING_OPERATION_FIELD",
+            f"operations[{index}].op",
+        )
+
+    if not isinstance(op, str) or op not in VALID_OPERATIONS:
+        raise MutableValidationError(
+            f'Operation at index {index} has invalid "op" value "{op}". Must be one of: {", ".join(VALID_OPERATIONS)}',
+            "INVALID_OPERATION_TYPE",
+            f"operations[{index}].op",
+        )
+
+    # Validate namespace
+    namespace = getattr(operation, "namespace", None)
+    if not namespace:
+        raise MutableValidationError(
+            f'Operation at index {index} is missing required field "namespace"',
+            "MISSING_OPERATION_FIELD",
+            f"operations[{index}].namespace",
+        )
+
+    # Validate key
+    key = getattr(operation, "key", None)
+    if not key:
+        raise MutableValidationError(
+            f'Operation at index {index} is missing required field "key"',
+            "MISSING_OPERATION_FIELD",
+            f"operations[{index}].key",
+        )
+
+    # Validate namespace and key format
+    validate_namespace(namespace, f"operations[{index}].namespace")
+    validate_namespace_format(namespace)
+    validate_key(key, f"operations[{index}].key")
+    validate_key_format(key)
+
+    # Validate operation-specific fields
+    if op == "set":
+        value = getattr(operation, "value", None)
+        if value is None:
+            raise MutableValidationError(
+                f'Operation at index {index} with op="set" is missing required field "value"',
+                "MISSING_OPERATION_FIELD",
+                f"operations[{index}].value",
+            )
+
+    elif op == "update":
+        value = getattr(operation, "value", None)
+        if value is None:
+            raise MutableValidationError(
+                f'Operation at index {index} with op="update" is missing required field "value"',
+                "MISSING_OPERATION_FIELD",
+                f"operations[{index}].value",
+            )
+
+    elif op in ("increment", "decrement"):
+        amount = getattr(operation, "amount", None)
+        if amount is not None:
+            validate_amount(amount, f"operations[{index}].amount")
+
+    # delete operation has no additional required fields
+
+
+def validate_transaction_operations(operations: list) -> None:
+    """
+    Validates complete transaction operations.
+
+    Args:
+        operations: List of operations to validate
+
+    Raises:
+        MutableValidationError: If any operation is invalid
+    """
+    for i, operation in enumerate(operations):
+        validate_transaction_operation(operation, i)

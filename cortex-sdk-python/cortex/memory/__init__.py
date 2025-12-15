@@ -13,8 +13,10 @@ from ..errors import CortexError, ErrorCode
 from ..facts import FactsAPI
 from ..llm import ExtractedFact, LLMClient, create_llm_client
 from ..types import (
+    ArchiveResult,
     ConversationType,
     DeleteMemoryOptions,
+    DeleteMemoryResult,
     EnrichedMemory,
     ForgetOptions,
     ForgetResult,
@@ -22,13 +24,16 @@ from ..types import (
     MemoryEntry,
     MemoryMetadata,
     MemorySource,
+    MemoryVersionInfo,
     RememberOptions,
     RememberParams,
     RememberResult,
     SearchOptions,
     SourceType,
     StoreMemoryInput,
+    StoreMemoryResult,
     UpdateMemoryOptions,
+    UpdateMemoryResult,
 )
 from ..vector import VectorAPI
 from .validators import (
@@ -1292,7 +1297,7 @@ class MemoryAPI:
 
     async def store(
         self, memory_space_id: str, input: StoreMemoryInput
-    ) -> Dict[str, Any]:
+    ) -> StoreMemoryResult:
         """
         Store memory with smart layer detection.
 
@@ -1301,7 +1306,7 @@ class MemoryAPI:
             input: Memory input data
 
         Returns:
-            Store result with memory and facts
+            StoreMemoryResult with memory and facts
 
         Example:
             >>> result = await cortex.memory.store(
@@ -1366,7 +1371,7 @@ class MemoryAPI:
                     except Exception as error:
                         print(f"Warning: Failed to store fact: {error}")
 
-        return {"memory": memory, "facts": extracted_facts}
+        return StoreMemoryResult(memory=memory, facts=extracted_facts)
 
     async def update(
         self,
@@ -1374,7 +1379,7 @@ class MemoryAPI:
         memory_id: str,
         updates: Dict[str, Any],
         options: Optional[UpdateMemoryOptions] = None,
-    ) -> Dict[str, Any]:
+    ) -> UpdateMemoryResult:
         """
         Update a memory with optional fact re-extraction.
 
@@ -1385,7 +1390,7 @@ class MemoryAPI:
             options: Optional update options
 
         Returns:
-            Update result with memory and facts
+            UpdateMemoryResult with memory and facts
 
         Example:
             >>> result = await cortex.memory.update(
@@ -1455,17 +1460,17 @@ class MemoryAPI:
                     except Exception as error:
                         print(f"Warning: Failed to re-extract fact: {error}")
 
-        return {
-            "memory": updated_memory,
-            "factsReextracted": facts_reextracted if facts_reextracted else None,
-        }
+        return UpdateMemoryResult(
+            memory=updated_memory,
+            facts_reextracted=facts_reextracted if facts_reextracted else None,
+        )
 
     async def delete(
         self,
         memory_space_id: str,
         memory_id: str,
         options: Optional[DeleteMemoryOptions] = None,
-    ) -> Dict[str, Any]:
+    ) -> DeleteMemoryResult:
         """
         Delete a memory with cascade delete of facts.
 
@@ -1475,7 +1480,7 @@ class MemoryAPI:
             options: Optional delete options
 
         Returns:
-            Deletion result
+            DeleteMemoryResult with deletion details
 
         Example:
             >>> result = await cortex.memory.delete('agent-1', 'mem-123')
@@ -1518,12 +1523,12 @@ class MemoryAPI:
             DeleteMemoryOptions(sync_to_graph=should_sync_to_graph),
         )
 
-        return {
-            "deleted": True,
-            "memoryId": memory_id,
-            "factsDeleted": facts_deleted,
-            "factIds": fact_ids,
-        }
+        return DeleteMemoryResult(
+            deleted=True,
+            memory_id=memory_id,
+            facts_deleted=facts_deleted,
+            fact_ids=fact_ids,
+        )
 
     # Delegation methods
 
@@ -1576,8 +1581,24 @@ class MemoryAPI:
 
     async def update_many(
         self, memory_space_id: str, filters: Dict[str, Any], updates: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        """Update many memories (delegates to vector.update_many)."""
+    ) -> UpdateManyResult:
+        """Update many memories (delegates to vector.update_many).
+
+        Args:
+            memory_space_id: Memory space ID
+            filters: Filters to select memories
+            updates: Updates to apply
+
+        Returns:
+            UpdateManyResult with update details
+
+        Example:
+            >>> result = await cortex.memory.update_many(
+            ...     'agent-1',
+            ...     {'user_id': 'user-123'},
+            ...     {'importance': 80}
+            ... )
+        """
         # Client-side validation
         validate_memory_space_id(memory_space_id)
         validate_update_options(updates)
@@ -1591,23 +1612,43 @@ class MemoryAPI:
         result = await self.vector.update_many(memory_space_id, filters, updates)
 
         # Count affected facts
-        from ..types import ListFactsFilter
+        from ..types import ListFactsFilter, UpdateManyResult
         all_facts = await self.facts.list(
             ListFactsFilter(memory_space_id=memory_space_id, limit=10000)
         )
+        memory_ids = result.get("memoryIds", [])
         affected_facts = [
             fact
             for fact in all_facts
             if fact.source_ref
-            and fact.source_ref.memory_id in result.get("memoryIds", [])
+            and fact.source_ref.memory_id in memory_ids
         ]
 
-        return {**result, "factsAffected": len(affected_facts)}
+        return UpdateManyResult(
+            updated=result.get("updated", 0),
+            memory_ids=memory_ids,
+            new_versions=result.get("newVersions", []),
+            facts_affected=len(affected_facts),
+        )
 
     async def delete_many(
         self, memory_space_id: str, filters: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        """Delete many memories (delegates to vector.delete_many)."""
+    ) -> DeleteManyResult:
+        """Delete many memories (delegates to vector.delete_many).
+
+        Args:
+            memory_space_id: Memory space ID
+            filters: Filters to select memories for deletion
+
+        Returns:
+            DeleteManyResult with deletion details
+
+        Example:
+            >>> result = await cortex.memory.delete_many(
+            ...     'agent-1',
+            ...     {'user_id': 'user-123'}
+            ... )
+        """
         # Client-side validation
         validate_memory_space_id(memory_space_id)
         validate_filter_combination({"memory_space_id": memory_space_id, **filters})
@@ -1638,11 +1679,13 @@ class MemoryAPI:
         # Delete memories
         result = await self.vector.delete_many(memory_space_id, filters)
 
-        return {
-            **result,
-            "factsDeleted": total_facts_deleted,
-            "factIds": all_fact_ids,
-        }
+        from ..types import DeleteManyResult
+        return DeleteManyResult(
+            deleted=result.get("deleted", 0),
+            memory_ids=result.get("memoryIds", []),
+            facts_deleted=total_facts_deleted,
+            fact_ids=all_fact_ids,
+        )
 
     async def export(
         self,
@@ -1666,13 +1709,33 @@ class MemoryAPI:
 
     async def archive(
         self, memory_space_id: str, memory_id: str
-    ) -> Dict[str, Any]:
-        """Archive a memory (delegates to vector.archive)."""
+    ) -> ArchiveResult:
+        """Archive a memory (delegates to vector.archive).
+
+        Args:
+            memory_space_id: Memory space ID
+            memory_id: Memory ID to archive
+
+        Returns:
+            ArchiveResult with archive details
+
+        Example:
+            >>> result = await cortex.memory.archive('agent-1', 'mem-123')
+        """
         # Client-side validation
         validate_memory_space_id(memory_space_id)
         validate_memory_id(memory_id)
 
-        return await self.vector.archive(memory_space_id, memory_id)
+        result = await self.vector.archive(memory_space_id, memory_id)
+
+        # Convert dict result to typed ArchiveResult
+        return ArchiveResult(
+            archived=result.get("archived", True),
+            memory_id=result.get("memoryId", memory_id),
+            restorable=result.get("restorable", True),
+            facts_archived=result.get("factsArchived", 0),
+            fact_ids=result.get("factIds", []),
+        )
 
     async def restore_from_archive(
         self, memory_space_id: str, memory_id: str
@@ -1707,35 +1770,103 @@ class MemoryAPI:
 
     async def get_version(
         self, memory_space_id: str, memory_id: str, version: int
-    ) -> Optional[Dict[str, Any]]:
-        """Get specific version (delegates to vector.get_version)."""
+    ) -> Optional[MemoryVersionInfo]:
+        """Get specific version (delegates to vector.get_version).
+
+        Args:
+            memory_space_id: Memory space ID
+            memory_id: Memory ID
+            version: Version number to retrieve
+
+        Returns:
+            MemoryVersionInfo if found, None otherwise
+
+        Example:
+            >>> version = await cortex.memory.get_version('agent-1', 'mem-123', 1)
+        """
         # Client-side validation
         validate_memory_space_id(memory_space_id)
         validate_memory_id(memory_id)
         validate_version(version)
 
-        return await self.vector.get_version(memory_space_id, memory_id, version)
+        result = await self.vector.get_version(memory_space_id, memory_id, version)
+
+        if not result:
+            return None
+
+        return MemoryVersionInfo(
+            memory_id=result.get("memoryId", memory_id),
+            version=result.get("version", version),
+            content=result.get("content", ""),
+            timestamp=result.get("timestamp", 0),
+            embedding=result.get("embedding"),
+        )
 
     async def get_history(
         self, memory_space_id: str, memory_id: str
-    ) -> List[Dict[str, Any]]:
-        """Get version history (delegates to vector.get_history)."""
+    ) -> List[MemoryVersionInfo]:
+        """Get version history (delegates to vector.get_history).
+
+        Args:
+            memory_space_id: Memory space ID
+            memory_id: Memory ID
+
+        Returns:
+            List of MemoryVersionInfo for all versions
+
+        Example:
+            >>> history = await cortex.memory.get_history('agent-1', 'mem-123')
+        """
         # Client-side validation
         validate_memory_space_id(memory_space_id)
         validate_memory_id(memory_id)
 
-        return await self.vector.get_history(memory_space_id, memory_id)
+        results = await self.vector.get_history(memory_space_id, memory_id)
+
+        return [
+            MemoryVersionInfo(
+                memory_id=v.get("memoryId", memory_id),
+                version=v.get("version", 0),
+                content=v.get("content", ""),
+                timestamp=v.get("timestamp", 0),
+                embedding=v.get("embedding"),
+            )
+            for v in results
+        ]
 
     async def get_at_timestamp(
         self, memory_space_id: str, memory_id: str, timestamp: int
-    ) -> Optional[Dict[str, Any]]:
-        """Get version at timestamp (delegates to vector.get_at_timestamp)."""
+    ) -> Optional[MemoryVersionInfo]:
+        """Get version at timestamp (delegates to vector.get_at_timestamp).
+
+        Args:
+            memory_space_id: Memory space ID
+            memory_id: Memory ID
+            timestamp: Unix timestamp in milliseconds
+
+        Returns:
+            MemoryVersionInfo at that timestamp if found, None otherwise
+
+        Example:
+            >>> version = await cortex.memory.get_at_timestamp('agent-1', 'mem-123', 1699886400000)
+        """
         # Client-side validation
         validate_memory_space_id(memory_space_id)
         validate_memory_id(memory_id)
         validate_timestamp(timestamp)
 
-        return await self.vector.get_at_timestamp(memory_space_id, memory_id, timestamp)
+        result = await self.vector.get_at_timestamp(memory_space_id, memory_id, timestamp)
+
+        if not result:
+            return None
+
+        return MemoryVersionInfo(
+            memory_id=result.get("memoryId", memory_id),
+            version=result.get("version", 0),
+            content=result.get("content", ""),
+            timestamp=result.get("timestamp", 0),
+            embedding=result.get("embedding"),
+        )
 
     # Helper methods
 

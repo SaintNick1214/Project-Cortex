@@ -11,6 +11,9 @@ import pytest
 
 from cortex import (
     A2ABroadcastParams,
+    A2AConversation,
+    A2AConversationFilters,
+    A2AConversationMessage,
     A2ARequestParams,
     A2ASendParams,
     A2AValidationError,
@@ -303,10 +306,51 @@ class TestA2ACoreGetConversation:
 
         convo = await cortex_client.a2a.get_conversation(agent1, agent2)
 
-        assert agent1 in convo["participants"]
-        assert agent2 in convo["participants"]
-        assert convo["messageCount"] > 0
-        assert len(convo["messages"]) > 0
+        # Verify typed A2AConversation is returned
+        assert isinstance(convo, A2AConversation)
+        assert agent1 in convo.participants
+        assert agent2 in convo.participants
+        assert convo.message_count > 0
+        assert len(convo.messages) > 0
+
+        # Verify messages are typed A2AConversationMessage
+        for msg in convo.messages:
+            assert isinstance(msg, A2AConversationMessage)
+            assert msg.from_agent is not None
+            assert msg.to_agent is not None
+            assert msg.message is not None
+
+    @pytest.mark.asyncio
+    async def test_get_conversation_with_filters_object(
+        self, cortex_client, test_ids, cleanup_helper
+    ):
+        """Should accept A2AConversationFilters object."""
+        prefix = f"a2a-filters-{int(time.time() * 1000)}"
+        agent1 = f"{prefix}-agent-1"
+        agent2 = f"{prefix}-agent-2"
+
+        # Send a message
+        await cortex_client.a2a.send(
+            A2ASendParams(
+                from_agent=agent1,
+                to_agent=agent2,
+                message="Filter test message",
+                importance=85,
+            )
+        )
+
+        # Use filters object
+        filters = A2AConversationFilters(
+            min_importance=70,
+            limit=50,
+        )
+        convo = await cortex_client.a2a.get_conversation(agent1, agent2, filters=filters)
+
+        assert isinstance(convo, A2AConversation)
+        assert convo.message_count > 0
+        # All messages should have importance >= 70
+        for msg in convo.messages:
+            assert msg.importance >= 70
 
     @pytest.mark.asyncio
     async def test_get_conversation_applies_importance_filters(
@@ -340,9 +384,13 @@ class TestA2ACoreGetConversation:
             agent1, agent2, min_importance=70
         )
 
+        # Verify typed return
+        assert isinstance(convo, A2AConversation)
+
         # All messages should have importance >= 70
-        for msg in convo["messages"]:
-            assert msg["importance"] >= 70
+        for msg in convo.messages:
+            assert isinstance(msg, A2AConversationMessage)
+            assert msg.importance >= 70
 
     @pytest.mark.asyncio
     async def test_get_conversation_handles_empty_conversations(
@@ -355,8 +403,36 @@ class TestA2ACoreGetConversation:
             f"{prefix}-nonexistent-1", f"{prefix}-nonexistent-2"
         )
 
-        assert convo["messageCount"] == 0
-        assert len(convo["messages"]) == 0
+        # Verify typed return even for empty conversation
+        assert isinstance(convo, A2AConversation)
+        assert convo.message_count == 0
+        assert len(convo.messages) == 0
+
+    @pytest.mark.asyncio
+    async def test_get_conversation_period_fields(
+        self, cortex_client, test_ids, cleanup_helper
+    ):
+        """Should populate period_start and period_end fields."""
+        prefix = f"a2a-period-{int(time.time() * 1000)}"
+        agent1 = f"{prefix}-agent-1"
+        agent2 = f"{prefix}-agent-2"
+
+        # Send a message
+        await cortex_client.a2a.send(
+            A2ASendParams(
+                from_agent=agent1,
+                to_agent=agent2,
+                message="Period test message",
+                importance=70,
+            )
+        )
+
+        convo = await cortex_client.a2a.get_conversation(agent1, agent2)
+
+        assert isinstance(convo, A2AConversation)
+        assert convo.period_start > 0
+        assert convo.period_end > 0
+        assert convo.period_end >= convo.period_start
 
 
 class TestA2ACoreRequest:
@@ -856,9 +932,11 @@ class TestA2AEdgeCases:
             f"{prefix}-1", f"{prefix}-2"
         )
 
-        assert convo["messageCount"] == 0
-        assert len(convo["messages"]) == 0
-        assert convo["canRetrieveFullHistory"] is False
+        # Verify typed return even for new agents
+        assert isinstance(convo, A2AConversation)
+        assert convo.message_count == 0
+        assert len(convo.messages) == 0
+        assert convo.can_retrieve_full_history is False
 
     @pytest.mark.asyncio
     async def test_handles_rapid_sequential_messages(

@@ -859,4 +859,281 @@ describe("Complex Integration Tests", () => {
       // ✅ Single query aggregates all layer statistics
     });
   });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Scenario 8: Governance-Aware Multi-Layer Operations
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Scenario 8: Governance-Aware Multi-Layer Operations", () => {
+    it("enforces governance policy across all layers in enterprise workflow", async () => {
+      const ts = Date.now();
+      const ENTERPRISE_ORG = `enterprise-org-${ts}`;
+      const ENTERPRISE_SPACE = ctx.memorySpaceId(`enterprise-${ts}`);
+      const USER_ID = `enterprise-user-${ts}`;
+      const AGENT_ID = `enterprise-agent-${ts}`;
+
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // SETUP: Apply SOC2 compliance policy
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      const soc2Policy = await cortex.governance.getTemplate("SOC2");
+      await cortex.governance.setPolicy({
+        ...soc2Policy,
+        organizationId: ENTERPRISE_ORG,
+      });
+
+      // Register enterprise memory space
+      await cortex.memorySpaces.register({
+        memorySpaceId: ENTERPRISE_SPACE,
+        name: "Enterprise Operations",
+        type: "team",
+        participants: [
+          { id: USER_ID, type: "user" },
+          { id: AGENT_ID, type: "agent" },
+        ],
+      });
+
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // LAYER 1: Create compliance-tracked conversation
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      const conversation = await cortex.conversations.create({
+        memorySpaceId: ENTERPRISE_SPACE,
+        type: "user-agent",
+        participants: {
+          userId: USER_ID,
+          agentId: AGENT_ID,
+        },
+        metadata: {
+          complianceLevel: "SOC2",
+          sensitivityLevel: "high",
+        },
+      });
+
+      await cortex.conversations.addMessage({
+        conversationId: conversation.conversationId,
+        message: {
+          role: "user",
+          content: "Process this sensitive customer data request",
+        },
+      });
+
+      await cortex.conversations.addMessage({
+        conversationId: conversation.conversationId,
+        message: {
+          role: "agent",
+          content:
+            "I will process this request following SOC2 compliance guidelines",
+          participantId: AGENT_ID,
+        },
+      });
+
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // LAYER 2: Store compliance-aware memory
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      await cortex.vector.store(ENTERPRISE_SPACE, {
+        content: "High-value customer data processing initiated",
+        contentType: "summarized",
+        userId: USER_ID,
+        source: { type: "conversation", userId: USER_ID },
+        conversationRef: {
+          conversationId: conversation.conversationId,
+          messageIds: [],
+        },
+        metadata: {
+          importance: 95, // High importance - retained longer per SOC2
+          tags: ["compliance", "soc2", "high-value"],
+        },
+      });
+
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // LAYER 3: Extract compliance facts
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      await cortex.facts.store({
+        memorySpaceId: ENTERPRISE_SPACE,
+        userId: USER_ID,
+        fact: "User initiated sensitive data request under SOC2 compliance",
+        factType: "event",
+        subject: USER_ID,
+        predicate: "initiated",
+        object: "sensitive_data_request",
+        confidence: 100,
+        sourceType: "conversation",
+        sourceRef: {
+          conversationId: conversation.conversationId,
+        },
+        tags: ["audit-trail", "soc2", "compliance"],
+      });
+
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // GOVERNANCE: Enforce policy across all layers
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      const enforceResult = await cortex.governance.enforce({
+        layers: ["conversations", "immutable", "mutable", "vector"],
+        rules: ["retention", "purging"],
+        scope: { organizationId: ENTERPRISE_ORG },
+      });
+
+      expect(enforceResult.enforcedAt).toBeGreaterThan(0);
+      expect(enforceResult.affectedLayers.length).toBe(4);
+
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // VERIFY: Compliance report reflects operations
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      const now = Date.now();
+      const report = await cortex.governance.getComplianceReport({
+        organizationId: ENTERPRISE_ORG,
+        period: {
+          start: new Date(now - 7 * 24 * 60 * 60 * 1000),
+          end: new Date(now),
+        },
+      });
+
+      expect(report.organizationId).toBe(ENTERPRISE_ORG);
+      expect(report.conversations.complianceStatus).toBeDefined();
+      expect(report.vector.complianceStatus).toBeDefined();
+      expect(report.immutable.complianceStatus).toBeDefined();
+
+      // ✅ Governance policy enforced across all 4 layers
+    });
+
+    it("policy simulation predicts impact before enforcement", async () => {
+      const ts = Date.now();
+      const SIM_ORG = `simulation-org-${ts}`;
+      const SIM_SPACE = ctx.memorySpaceId(`simulation-${ts}`);
+
+      // Setup: Create test data
+      await cortex.memorySpaces.register({
+        memorySpaceId: SIM_SPACE,
+        name: "Simulation Test",
+        type: "personal",
+      });
+
+      // Create multiple memories with varying importance
+      for (let i = 0; i < 5; i++) {
+        await cortex.vector.store(SIM_SPACE, {
+          content: `Test memory ${i} for simulation`,
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: {
+            importance: i * 20, // 0, 20, 40, 60, 80
+            tags: ["simulation-test"],
+          },
+        });
+      }
+
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // SIMULATE: Test aggressive retention policy
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      const simulation = await cortex.governance.simulate({
+        organizationId: SIM_ORG,
+        vector: {
+          retention: {
+            defaultVersions: 1,
+            byImportance: [
+              { range: [0, 40], versions: 1 }, // Low importance: minimal retention
+              { range: [41, 100], versions: 5 }, // High importance: more retention
+            ],
+          },
+          purging: {
+            autoCleanupVersions: true,
+            deleteOrphaned: true,
+          },
+        },
+      });
+
+      // Verify simulation results
+      expect(simulation.versionsAffected).toBeGreaterThanOrEqual(0);
+      expect(simulation.recordsAffected).toBeGreaterThanOrEqual(0);
+      expect(simulation.storageFreed).toBeGreaterThanOrEqual(0);
+      expect(simulation.costSavings).toBeGreaterThanOrEqual(0);
+      expect(simulation.breakdown).toBeDefined();
+
+      // ✅ Simulation provides impact analysis before committing
+    });
+
+    it("space-specific governance override takes precedence", async () => {
+      const ts = Date.now();
+      const OVERRIDE_ORG = `override-org-${ts}`;
+      const AUDIT_SPACE = ctx.memorySpaceId(`audit-space-${ts}`);
+      const TEMP_SPACE = ctx.memorySpaceId(`temp-space-${ts}`);
+
+      // Setup: Apply GDPR org-wide policy
+      const gdprPolicy = await cortex.governance.getTemplate("GDPR");
+      await cortex.governance.setPolicy({
+        ...gdprPolicy,
+        organizationId: OVERRIDE_ORG,
+      });
+
+      // Override for audit space: unlimited retention
+      await cortex.governance.setAgentOverride(AUDIT_SPACE, {
+        vector: {
+          retention: {
+            defaultVersions: -1, // Unlimited
+            byImportance: [{ range: [0, 100], versions: -1 }],
+          },
+          purging: {
+            autoCleanupVersions: false,
+            deleteOrphaned: false,
+          },
+        },
+        immutable: {
+          retention: {
+            defaultVersions: -1,
+            byType: {
+              "audit-log": { versionsToKeep: -1 },
+            },
+          },
+          purging: {
+            autoCleanupVersions: false,
+          },
+        },
+      });
+
+      // Override for temp space: aggressive cleanup
+      await cortex.governance.setAgentOverride(TEMP_SPACE, {
+        vector: {
+          retention: {
+            defaultVersions: 1,
+            byImportance: [{ range: [0, 100], versions: 1 }],
+          },
+          purging: {
+            autoCleanupVersions: true,
+            deleteOrphaned: true,
+          },
+        },
+        conversations: {
+          retention: {
+            deleteAfter: "7d",
+            purgeOnUserRequest: true,
+          },
+          purging: {
+            autoDelete: true,
+            deleteInactiveAfter: "1d",
+          },
+        },
+      });
+
+      // Verify: Audit space has unlimited retention
+      const auditPolicy = await cortex.governance.getPolicy({
+        memorySpaceId: AUDIT_SPACE,
+      });
+      expect(auditPolicy.vector.retention.defaultVersions).toBe(-1);
+      expect(auditPolicy.immutable.retention.defaultVersions).toBe(-1);
+
+      // Verify: Temp space has aggressive cleanup
+      const tempPolicy = await cortex.governance.getPolicy({
+        memorySpaceId: TEMP_SPACE,
+      });
+      expect(tempPolicy.vector.retention.defaultVersions).toBe(1);
+      expect(tempPolicy.conversations.retention.deleteAfter).toBe("7d");
+
+      // Verify: Org-level policy still returns GDPR defaults
+      const orgPolicy = await cortex.governance.getPolicy({
+        organizationId: OVERRIDE_ORG,
+      });
+      expect(orgPolicy.compliance.mode).toBe("GDPR");
+      expect(orgPolicy.vector.retention.defaultVersions).toBe(10);
+
+      // ✅ Space-specific overrides take precedence over org policy
+    });
+  });
 });

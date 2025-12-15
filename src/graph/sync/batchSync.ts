@@ -263,8 +263,10 @@ async function syncConversations(
   const errors: Array<{ entity: string; id: string; error: string }> = [];
 
   try {
-    // List all conversations
-    const conversationsResult = await cortex.conversations.list({ limit });
+    // List all conversations (API limit is 1000)
+    const conversationsResult = await cortex.conversations.list({
+      limit: Math.min(limit, 1000),
+    });
     const conversations = conversationsResult.conversations;
 
     for (let i = 0; i < conversations.length; i++) {

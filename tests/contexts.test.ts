@@ -210,6 +210,15 @@ describe("Context Chains API", () => {
       expect((updated.data as any).step).toBe(2);
       expect((updated.data as any).progress).toBe("50%");
     });
+
+    it("throws error when updating non-existent context", async () => {
+      // Note: This tests BACKEND validation (requires DB lookup)
+      await expect(
+        cortex.contexts.update("ctx-9999999999-nonexistent", {
+          status: "completed",
+        }),
+      ).rejects.toThrow("CONTEXT_NOT_FOUND");
+    });
   });
 
   describe("delete()", () => {
@@ -278,6 +287,88 @@ describe("Context Chains API", () => {
 
       expect(result.deleted).toBe(true);
       expect(result.descendantsDeleted).toBeGreaterThanOrEqual(3);
+    });
+
+    it("promotes children to roots with orphanChildren option", async () => {
+      const parent = await cortex.contexts.create({
+        purpose: "Parent for orphan test",
+        memorySpaceId: "orphan-test-space",
+      });
+
+      const child1 = await cortex.contexts.create({
+        purpose: "Child 1 for orphan test",
+        memorySpaceId: "orphan-test-space",
+        parentId: parent.contextId,
+      });
+
+      const child2 = await cortex.contexts.create({
+        purpose: "Child 2 for orphan test",
+        memorySpaceId: "orphan-test-space",
+        parentId: parent.contextId,
+      });
+
+      const result = await cortex.contexts.delete(parent.contextId, {
+        orphanChildren: true,
+      });
+
+      expect(result.deleted).toBe(true);
+      expect(result.orphanedChildren).toBeDefined();
+      expect(result.orphanedChildren).toContain(child1.contextId);
+      expect(result.orphanedChildren).toContain(child2.contextId);
+
+      // Verify children are promoted to roots
+      const orphanedChild1 = (await cortex.contexts.get(
+        child1.contextId,
+      )) as any;
+      expect(orphanedChild1).not.toBeNull();
+      expect(orphanedChild1.depth).toBe(0);
+      expect(orphanedChild1.parentId).toBeUndefined();
+      expect(orphanedChild1.rootId).toBe(child1.contextId);
+
+      const orphanedChild2 = (await cortex.contexts.get(
+        child2.contextId,
+      )) as any;
+      expect(orphanedChild2).not.toBeNull();
+      expect(orphanedChild2.depth).toBe(0);
+    });
+
+    it("orphanChildren promotes to grandparent when parent has parent", async () => {
+      const grandparent = await cortex.contexts.create({
+        purpose: "Grandparent for orphan test",
+        memorySpaceId: "orphan-test-space-2",
+      });
+
+      const parent = await cortex.contexts.create({
+        purpose: "Parent for orphan test",
+        memorySpaceId: "orphan-test-space-2",
+        parentId: grandparent.contextId,
+      });
+
+      const child = await cortex.contexts.create({
+        purpose: "Child for orphan test",
+        memorySpaceId: "orphan-test-space-2",
+        parentId: parent.contextId,
+      });
+
+      const result = await cortex.contexts.delete(parent.contextId, {
+        orphanChildren: true,
+      });
+
+      expect(result.deleted).toBe(true);
+      expect(result.orphanedChildren).toContain(child.contextId);
+
+      // Verify child is promoted to grandparent
+      const orphanedChild = (await cortex.contexts.get(child.contextId)) as any;
+      expect(orphanedChild).not.toBeNull();
+      expect(orphanedChild.parentId).toBe(grandparent.contextId);
+      expect(orphanedChild.depth).toBe(1); // Same depth as former parent
+    });
+
+    it("throws error when deleting non-existent context", async () => {
+      // Note: This tests BACKEND validation (requires DB lookup)
+      await expect(
+        cortex.contexts.delete("ctx-9999999999-nonexistent"),
+      ).rejects.toThrow("CONTEXT_NOT_FOUND");
     });
   });
 
@@ -358,6 +449,65 @@ describe("Context Chains API", () => {
     });
   });
 
+  describe("search()", () => {
+    it("works as alias for list()", async () => {
+      const searchSpace = `search-test-space-${Date.now()}`;
+      await cortex.contexts.create({
+        purpose: "Search test context",
+        memorySpaceId: searchSpace,
+      });
+
+      const searchResults = await cortex.contexts.search({
+        memorySpaceId: searchSpace,
+      });
+      const listResults = await cortex.contexts.list({
+        memorySpaceId: searchSpace,
+      });
+
+      expect(searchResults.length).toBe(listResults.length);
+      expect(searchResults.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it("applies filter parameters", async () => {
+      const searchSpace = `search-filter-space-${Date.now()}`;
+      const userId = "search-filter-user";
+
+      await cortex.contexts.create({
+        purpose: "Active search context",
+        memorySpaceId: searchSpace,
+        userId,
+        status: "active",
+      });
+
+      await cortex.contexts.create({
+        purpose: "Completed search context",
+        memorySpaceId: searchSpace,
+        userId,
+        status: "completed",
+      });
+
+      const results = await cortex.contexts.search({
+        memorySpaceId: searchSpace,
+        userId,
+        status: "active",
+      });
+
+      expect(results.length).toBeGreaterThanOrEqual(1);
+      results.forEach((c) => {
+        expect(c.status).toBe("active");
+        expect(c.userId).toBe(userId);
+      });
+    });
+
+    it("returns empty array when no matches", async () => {
+      const results = await cortex.contexts.search({
+        memorySpaceId: `nonexistent-space-${Date.now()}`,
+      });
+
+      expect(results).toEqual([]);
+    });
+  });
+
   describe("getChain()", () => {
     let rootId: string;
     let child1Id: string;
@@ -421,6 +571,13 @@ describe("Context Chains API", () => {
       expect(chain.ancestors).toHaveLength(2); // root + child1
       expect(chain.children).toHaveLength(0);
     });
+
+    it("throws error when getting chain for non-existent context", async () => {
+      // Note: This tests BACKEND validation (requires DB lookup)
+      await expect(
+        cortex.contexts.getChain("ctx-9999999999-nonexistent"),
+      ).rejects.toThrow("CONTEXT_NOT_FOUND");
+    });
   });
 
   describe("getRoot()", () => {
@@ -446,6 +603,13 @@ describe("Context Chains API", () => {
 
       expect(foundRoot.contextId).toBe(root.contextId);
       expect(foundRoot.depth).toBe(0);
+    });
+
+    it("throws error when getting root for non-existent context", async () => {
+      // Note: This tests BACKEND validation (requires DB lookup)
+      await expect(
+        cortex.contexts.getRoot("ctx-9999999999-nonexistent"),
+      ).rejects.toThrow("CONTEXT_NOT_FOUND");
     });
   });
 
@@ -532,6 +696,35 @@ describe("Context Chains API", () => {
       expect(updated.participants).toHaveLength(2);
       expect(updated.participants).toContain("legal-agent-space");
     });
+
+    it("throws error when adding participant to non-existent context", async () => {
+      // Note: This tests BACKEND validation (requires DB lookup)
+      await expect(
+        cortex.contexts.addParticipant("ctx-9999999999-nonexistent", "agent-1"),
+      ).rejects.toThrow("CONTEXT_NOT_FOUND");
+    });
+
+    it("returns unchanged context when adding duplicate participant", async () => {
+      const context = await cortex.contexts.create({
+        purpose: "Duplicate participant test",
+        memorySpaceId: "supervisor-space",
+      });
+
+      // Add participant first time
+      await cortex.contexts.addParticipant(
+        context.contextId,
+        "agent-participant",
+      );
+
+      // Add same participant again - should be idempotent
+      const updated = await cortex.contexts.addParticipant(
+        context.contextId,
+        "agent-participant",
+      );
+
+      // Should still only have 2 (creator + the added one, not duplicated)
+      expect(updated.participants).toHaveLength(2);
+    });
   });
 
   describe("grantAccess() - Collaboration Mode", () => {
@@ -555,6 +748,17 @@ describe("Context Chains API", () => {
           (g) => g.memorySpaceId === "company-b-space",
         ),
       ).toBe(true);
+    });
+
+    it("throws error when granting access to non-existent context", async () => {
+      // Note: This tests BACKEND validation (requires DB lookup)
+      await expect(
+        cortex.contexts.grantAccess(
+          "ctx-9999999999-nonexistent",
+          "space-1",
+          "read-only",
+        ),
+      ).rejects.toThrow("CONTEXT_NOT_FOUND");
     });
   });
 

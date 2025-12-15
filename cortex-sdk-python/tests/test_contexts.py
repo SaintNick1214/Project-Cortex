@@ -316,6 +316,327 @@ async def test_count_contexts(cortex_client, test_ids, cleanup_helper):
 
 
 # ============================================================================
+# export() Integration Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_export_contexts_json(cortex_client, test_ids, cleanup_helper):
+    """
+    Test exporting contexts to JSON format.
+
+    This tests the fixed export() method that now calls contexts:exportContexts.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create test contexts
+    created_ids = []
+    for i in range(2):
+        ctx = await cortex_client.contexts.create(
+            ContextInput(
+                memory_space_id=memory_space_id,
+                purpose=f"Export Test Context {i+1}",
+                data={"index": i},
+            )
+        )
+        created_ids.append(ctx.id)
+
+    # Export contexts
+    result = await cortex_client.contexts.export(
+        filters={"memorySpaceId": memory_space_id},
+        format="json",
+    )
+
+    # Validate result structure
+    assert result is not None
+    assert "format" in result
+    assert result["format"] == "json"
+    assert "data" in result
+    assert "count" in result
+    assert result["count"] >= 2
+
+    # Cleanup
+    for ctx_id in created_ids:
+        await cortex_client.contexts.delete(ctx_id)
+
+
+@pytest.mark.asyncio
+async def test_export_contexts_csv(cortex_client, test_ids, cleanup_helper):
+    """
+    Test exporting contexts to CSV format.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create test context
+    ctx = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="CSV Export Test",
+        )
+    )
+
+    # Export as CSV
+    result = await cortex_client.contexts.export(
+        filters={"memorySpaceId": memory_space_id},
+        format="csv",
+    )
+
+    # Validate
+    assert result is not None
+    assert result["format"] == "csv"
+    assert "data" in result
+
+    # Cleanup
+    await cortex_client.contexts.delete(ctx.id)
+
+
+# ============================================================================
+# update_many() Integration Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_update_many_contexts(cortex_client, test_ids, cleanup_helper):
+    """
+    Test bulk updating contexts.
+
+    This tests the fixed update_many() method with flattened filter parameters.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create multiple active contexts
+    created_ids = []
+    for i in range(3):
+        ctx = await cortex_client.contexts.create(
+            ContextInput(
+                memory_space_id=memory_space_id,
+                purpose=f"Bulk Update Test {i+1}",
+                status="active",
+            )
+        )
+        created_ids.append(ctx.id)
+
+    # Bulk update: change all active contexts to completed
+    result = await cortex_client.contexts.update_many(
+        filters={"memorySpaceId": memory_space_id, "status": "active"},
+        updates={"status": "completed"},
+    )
+
+    # Validate result
+    assert result is not None
+    assert "updated" in result
+    assert result["updated"] >= 3
+
+    # Verify contexts were actually updated
+    for ctx_id in created_ids:
+        updated_ctx = await cortex_client.contexts.get(ctx_id)
+        assert updated_ctx is not None
+        assert updated_ctx.status == "completed"
+
+    # Cleanup
+    for ctx_id in created_ids:
+        await cortex_client.contexts.delete(ctx_id)
+
+
+@pytest.mark.asyncio
+async def test_update_many_with_data(cortex_client, test_ids, cleanup_helper):
+    """
+    Test bulk updating context data.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create contexts
+    ctx = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Data Update Test",
+            status="active",
+            data={"original": True},
+        )
+    )
+
+    # Update data via update_many
+    result = await cortex_client.contexts.update_many(
+        filters={"memorySpaceId": memory_space_id},
+        updates={"data": {"updated": True, "batch": "yes"}},
+    )
+
+    assert result["updated"] >= 1
+
+    # Verify data was updated
+    updated_ctx = await cortex_client.contexts.get(ctx.id)
+    assert updated_ctx.data.get("updated") is True
+    assert updated_ctx.data.get("batch") == "yes"
+
+    # Cleanup
+    await cortex_client.contexts.delete(ctx.id)
+
+
+# ============================================================================
+# delete_many() Integration Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_delete_many_contexts(cortex_client, test_ids, cleanup_helper):
+    """
+    Test bulk deleting contexts.
+
+    This tests the fixed delete_many() method with flattened filter parameters.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create multiple completed contexts to delete
+    created_ids = []
+    for i in range(3):
+        ctx = await cortex_client.contexts.create(
+            ContextInput(
+                memory_space_id=memory_space_id,
+                purpose=f"Bulk Delete Test {i+1}",
+                status="completed",
+            )
+        )
+        created_ids.append(ctx.id)
+
+    # Count before deletion
+    count_before = await cortex_client.contexts.count(
+        memory_space_id=memory_space_id, status="completed"
+    )
+    assert count_before >= 3
+
+    # Bulk delete completed contexts
+    result = await cortex_client.contexts.delete_many(
+        filters={"memorySpaceId": memory_space_id, "status": "completed"},
+    )
+
+    # Validate result
+    assert result is not None
+
+    # Verify contexts were deleted
+    for ctx_id in created_ids:
+        deleted_ctx = await cortex_client.contexts.get(ctx_id)
+        assert deleted_ctx is None, f"Context {ctx_id} should have been deleted"
+
+
+@pytest.mark.asyncio
+async def test_delete_many_with_cascade(cortex_client, test_ids, cleanup_helper):
+    """
+    Test bulk delete with cascade option.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create parent context
+    parent = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Parent for cascade delete",
+            status="cancelled",
+        )
+    )
+
+    # Create child context
+    child = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Child for cascade delete",
+            parent_id=parent.id,
+            status="cancelled",
+        )
+    )
+
+    # Delete with cascade
+    await cortex_client.contexts.delete_many(
+        filters={"memorySpaceId": memory_space_id, "status": "cancelled"},
+        cascade_children=True,
+    )
+
+    # Verify both were deleted
+    assert await cortex_client.contexts.get(parent.id) is None
+    assert await cortex_client.contexts.get(child.id) is None
+
+
+# ============================================================================
+# get_chain() Integration Tests (ContextWithChain type)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_get_chain_returns_full_structure(cortex_client, test_ids, cleanup_helper):
+    """
+    Test get_chain returns ContextWithChain with all required fields.
+
+    This validates the updated ContextWithChain type with descendants and total_nodes.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create a chain: grandparent -> parent -> child
+    grandparent = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Grandparent context",
+        )
+    )
+
+    parent = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Parent context",
+            parent_id=grandparent.id,
+        )
+    )
+
+    child = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Child context",
+            parent_id=parent.id,
+        )
+    )
+
+    # Get chain for the parent (middle node)
+    chain = await cortex_client.contexts.get_chain(parent.id)
+
+    # Validate chain structure
+    assert chain is not None
+
+    # Check required fields exist (Dict response)
+    assert "current" in chain
+    assert "root" in chain
+    assert "children" in chain
+    assert "siblings" in chain
+    assert "ancestors" in chain
+    assert "depth" in chain
+
+    # Validate relationships
+    assert chain["current"]["id"] == parent.id
+    assert chain["root"]["id"] == grandparent.id
+    assert chain["depth"] >= 1
+
+    # Check ancestors include grandparent
+    ancestor_ids = [a["id"] for a in chain["ancestors"]]
+    assert grandparent.id in ancestor_ids
+
+    # Check children include child
+    child_ids = [c["id"] for c in chain["children"]]
+    assert child.id in child_ids
+
+    # Check for new fields if present (descendants and total_nodes)
+    if "descendants" in chain:
+        # descendants should include child (and any deeper nodes)
+        descendant_ids = [d["id"] for d in chain["descendants"]]
+        assert child.id in descendant_ids
+
+    if "total_nodes" in chain:
+        # total_nodes should be at least 3 (grandparent, parent, child)
+        assert chain["total_nodes"] >= 3
+
+    # Cleanup - delete from bottom up
+    await cortex_client.contexts.delete(child.id)
+    await cortex_client.contexts.delete(parent.id)
+    await cortex_client.contexts.delete(grandparent.id)
+
+
+# ============================================================================
 # Client-Side Validation Tests
 # ============================================================================
 

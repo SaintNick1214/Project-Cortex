@@ -5,6 +5,1170 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.21.0] - 2025-12-14
+
+### 🎯 Memory API TypeScript SDK Parity
+
+**Full type safety achieved for Memory API return types. All Memory API methods now return strongly-typed dataclasses instead of generic `Dict[str, Any]` for improved developer experience and type checking.**
+
+#### ✨ New Return Type Dataclasses
+
+**5 new dataclasses added to `cortex/types.py`:**
+
+| Type | Description |
+|------|-------------|
+| `StoreMemoryResult` | Result from `store()` with `memory` and `facts` fields |
+| `UpdateMemoryResult` | Result from `update()` with `memory` and optional `facts_reextracted` |
+| `DeleteMemoryResult` | Result from `delete()` with `deleted`, `memory_id`, `facts_deleted`, `fact_ids` |
+| `ArchiveResult` | Result from `archive()` with `archived`, `memory_id`, `restorable`, `facts_archived`, `fact_ids` |
+| `MemoryVersionInfo` | Version info for temporal queries with `memory_id`, `version`, `content`, `timestamp`, `embedding` |
+
+#### 🔄 Updated Method Return Types
+
+| Method | Before | After |
+|--------|--------|-------|
+| `store()` | `Dict[str, Any]` | `StoreMemoryResult` |
+| `update()` | `Dict[str, Any]` | `UpdateMemoryResult` |
+| `delete()` | `Dict[str, Any]` | `DeleteMemoryResult` |
+| `archive()` | `Dict[str, Any]` | `ArchiveResult` |
+| `get_version()` | `Optional[Dict[str, Any]]` | `Optional[MemoryVersionInfo]` |
+| `get_history()` | `List[Dict[str, Any]]` | `List[MemoryVersionInfo]` |
+| `get_at_timestamp()` | `Optional[Dict[str, Any]]` | `Optional[MemoryVersionInfo]` |
+| `update_many()` | `Dict[str, Any]` | `UpdateManyResult` |
+| `delete_many()` | `Dict[str, Any]` | `DeleteManyResult` |
+
+#### 🎓 Usage Examples
+
+```python
+from cortex import Cortex, CortexConfig, StoreMemoryInput, MemorySource, MemoryMetadata
+
+cortex = Cortex(CortexConfig(convex_url="..."))
+
+# store() now returns StoreMemoryResult
+result = await cortex.memory.store(
+    'agent-1',
+    StoreMemoryInput(
+        content='User prefers dark mode',
+        content_type='raw',
+        source=MemorySource(type='system', timestamp=now),
+        metadata=MemoryMetadata(importance=60, tags=['preferences'])
+    )
+)
+print(f"Stored memory: {result.memory.memory_id}")
+print(f"Extracted facts: {len(result.facts)}")
+
+# get_history() now returns List[MemoryVersionInfo]
+history = await cortex.memory.get_history('agent-1', 'mem-123')
+for version in history:
+    print(f"v{version.version}: {version.content[:50]}...")
+```
+
+#### 📦 New Package Exports
+
+All new types are exported from `cortex`:
+
+```python
+from cortex import (
+    StoreMemoryResult,
+    UpdateMemoryResult,
+    DeleteMemoryResult,
+    ArchiveResult,
+    MemoryVersionInfo,
+)
+```
+
+#### ⚠️ Migration Notes
+
+This is a **type-level change only**. The actual return data is the same - only the type annotations and return structure have changed from generic dicts to dataclasses. Existing code accessing dictionary keys will need to be updated to use attribute access:
+
+```python
+# Before (v0.20.0)
+result = await cortex.memory.store(...)
+memory_id = result["memory"].memory_id
+
+# After (v0.21.0)
+result = await cortex.memory.store(...)
+memory_id = result.memory.memory_id
+```
+
+---
+
+### 🤝 A2A API Enhancements
+
+**Full TypeScript SDK 0.21.0 parity achieved for A2A Communication API.**
+
+#### New Types
+
+Three new dataclasses for typed A2A conversation handling:
+
+- `A2AConversationFilters` - Filters for `get_conversation()` with since/until, min_importance, tags, user_id, and pagination
+- `A2AConversationMessage` - Individual message in A2A conversation with all metadata fields
+- `A2AConversation` - Complete A2A conversation result with typed messages and period data
+
+```python
+from cortex.types import A2AConversation, A2AConversationFilters, A2AConversationMessage
+
+# Using filters object
+filters = A2AConversationFilters(
+    min_importance=70,
+    tags=["budget"],
+    limit=50
+)
+convo = await cortex.a2a.get_conversation("finance-agent", "hr-agent", filters=filters)
+
+# Access typed response
+print(f"{convo.message_count} messages exchanged")
+print(f"Period: {convo.period_start} to {convo.period_end}")
+for msg in convo.messages:
+    print(f"{msg.from_agent} -> {msg.to_agent}: {msg.message}")
+```
+
+#### Enhanced Methods
+
+- `get_conversation()` - Now returns typed `A2AConversation` instead of `Dict[str, Any]`
+  - Accepts optional `A2AConversationFilters` object OR individual parameters (backward compatible)
+  - Messages are now typed `A2AConversationMessage` objects with all metadata
+  - Period data extracted into `period_start` and `period_end` fields
+
+- `request()` - Enhanced error handling for pub/sub configuration errors
+  - Now extracts `messageId` from PUBSUB_NOT_CONFIGURED error messages (matches TypeScript)
+  - Provides clearer error messages about pub/sub infrastructure requirements
+
+#### Type Updates
+
+| Type | Fields Added | Description |
+|------|-------------|-------------|
+| `A2AConversationFilters` | All fields new | Filter object for get_conversation |
+| `A2AConversationMessage` | All fields new | Typed message with from_agent, to_agent, direction, broadcast fields |
+| `A2AConversation` | All fields new | Typed conversation result with period_start, period_end |
+
+#### Backward Compatibility
+
+✅ **Zero Breaking Changes**
+
+- `get_conversation()` still accepts individual parameters (since, until, min_importance, etc.)
+- Existing code continues to work without modification
+- New `filters` parameter is optional
+
+---
+
+### 🗄️ Mutable API Enhancements
+
+**Full TypeScript SDK 0.21.0 parity achieved for Mutable Store API.**
+
+#### New Types
+
+Eight new dataclasses for typed Mutable operations:
+
+- `ListMutableFilter` - Filter object for `list()` with namespace, key_prefix, user_id, limit, offset, updated_after/before, sort_by, sort_order
+- `CountMutableFilter` - Filter object for `count()` with namespace, user_id, key_prefix, updated_after/before
+- `PurgeManyMutableFilter` - Filter object for `purge_many()` with namespace, key_prefix, user_id, updated_before, last_accessed_before
+- `PurgeNamespaceOptions` - Options for `purge_namespace()` with dry_run
+- `SetMutableOptions` - Options for `set()` with sync_to_graph
+- `DeleteMutableOptions` - Options for `delete()` with sync_to_graph
+- `MutableOperation` - Single operation in a transaction (op, namespace, key, value, amount)
+- `TransactionResult` - Result from `transaction()` with success, operations_executed, results
+
+```python
+from cortex.types import (
+    ListMutableFilter, CountMutableFilter, PurgeManyMutableFilter,
+    PurgeNamespaceOptions, MutableOperation, TransactionResult,
+)
+
+# List with filter object (supports all filter options)
+items = await cortex.mutable.list(ListMutableFilter(
+    namespace='inventory',
+    key_prefix='widget-',
+    sort_by='updatedAt',
+    sort_order='desc',
+    limit=50,
+))
+
+# Count with filter object
+count = await cortex.mutable.count(CountMutableFilter(
+    namespace='inventory',
+    updated_after=last_24_hours,
+))
+
+# Atomic transaction with multiple operations
+result = await cortex.mutable.transaction([
+    MutableOperation(op='increment', namespace='counters', key='sales', amount=1),
+    MutableOperation(op='decrement', namespace='inventory', key='widget-qty', amount=1),
+    MutableOperation(op='set', namespace='state', key='last-sale', value=timestamp),
+])
+```
+
+#### Enhanced Methods
+
+- `set()` - Added `metadata` and `options` parameters for graph sync support
+- `get()` - Now returns just the value (use `get_record()` for full record)
+- `update()` - Now uses backend `mutable:update` mutation (eliminates race condition)
+- `increment()` / `decrement()` - Now use direct backend calls (atomic operations)
+- `list()` - Now accepts `ListMutableFilter` with offset, updated_after/before, sort_by, sort_order
+- `count()` - Now accepts `CountMutableFilter` with updated_after/before
+- `delete()` - Added `options` parameter for graph sync support
+- `purge_namespace()` - Added `PurgeNamespaceOptions` with dry_run support
+- `purge_many()` - Now accepts `PurgeManyMutableFilter` with last_accessed_before
+- `transaction()` - Now uses array-based operations (matches TypeScript SDK)
+
+#### New Methods
+
+- `purge()` - Alias for `delete()` for API consistency
+
+#### Fixed Issues
+
+- **Race condition fixed**: `increment()` and `decrement()` now use atomic backend operations
+- **Race condition fixed**: `update()` now uses backend `mutable:update` instead of get-then-set
+- **dryRun support**: `purge_namespace()` now properly passes `dryRun` to backend
+
+#### Breaking Changes
+
+⚠️ **Method Signature Changes**
+
+These changes match the TypeScript SDK and improve type safety:
+
+```python
+# Before (v0.20.0) - positional arguments
+items = await cortex.mutable.list('inventory', key_prefix='widget-', limit=50)
+count = await cortex.mutable.count('inventory', key_prefix='widget-')
+await cortex.mutable.purge_many('cache', updated_before=timestamp)
+await cortex.mutable.purge_namespace('temp', dry_run=True)
+
+# After (v0.21.0) - filter objects
+items = await cortex.mutable.list(ListMutableFilter(
+    namespace='inventory', key_prefix='widget-', limit=50
+))
+count = await cortex.mutable.count(CountMutableFilter(
+    namespace='inventory', key_prefix='widget-'
+))
+await cortex.mutable.purge_many(PurgeManyMutableFilter(
+    namespace='cache', updated_before=timestamp
+))
+await cortex.mutable.purge_namespace('temp', PurgeNamespaceOptions(dry_run=True))
+```
+
+- `get()` now returns the value directly, not the full record
+- `transaction()` now takes a list of `MutableOperation` instead of a callback
+
+---
+
+### 📦 Immutable API Enhancements
+
+**Full TypeScript SDK 0.21.0 parity achieved for Immutable Store API.**
+
+#### New Types
+
+Nine new dataclasses for typed Immutable operations:
+
+- `ImmutableVersionExpanded` - Expanded version with type/id info (returned by get_version, get_history, get_at_timestamp)
+- `ListImmutableFilter` - Filter object for `list()` with type, user_id, limit
+- `SearchImmutableInput` - Input object for `search()` with query, type, user_id, limit
+- `ImmutableSearchResult` - Typed search result with entry, score, highlights
+- `CountImmutableFilter` - Filter object for `count()` with type, user_id
+- `StoreImmutableOptions` - Options for `store()` with sync_to_graph
+- `PurgeImmutableResult` - Typed result from `purge()` with deleted, type, id, versions_deleted
+- `PurgeManyFilter` - Filter object for `purge_many()` with type, user_id
+- `PurgeManyImmutableResult` - Typed result from `purge_many()` with deleted, total_versions_deleted, entries
+- `PurgeVersionsResult` - Typed result from `purge_versions()` with versions_purged, versions_remaining
+
+```python
+from cortex.types import (
+    ImmutableVersionExpanded, ListImmutableFilter, SearchImmutableInput,
+    ImmutableSearchResult, CountImmutableFilter, StoreImmutableOptions,
+    PurgeImmutableResult, PurgeManyFilter, PurgeManyImmutableResult,
+    PurgeVersionsResult,
+)
+
+# Store with graph sync option
+record = await cortex.immutable.store(
+    ImmutableEntry(type='kb-article', id='guide-1', data={'title': 'Guide'}),
+    StoreImmutableOptions(sync_to_graph=True)
+)
+
+# List with filter object
+articles = await cortex.immutable.list(ListImmutableFilter(
+    type='kb-article',
+    limit=50,
+))
+
+# Search with typed input and result
+results = await cortex.immutable.search(SearchImmutableInput(
+    query='refund process',
+    type='kb-article',
+    limit=10,
+))
+for result in results:
+    print(f"Score: {result.score}, Title: {result.entry.data.get('title')}")
+
+# Get version returns expanded type with full info
+version = await cortex.immutable.get_version('kb-article', 'guide-1', 1)
+if version:
+    print(f"Type: {version.type}, ID: {version.id}, Version: {version.version}")
+
+# Timestamp with datetime support
+from datetime import datetime
+version = await cortex.immutable.get_at_timestamp(
+    'policy', 'refund-policy',
+    datetime(2025, 1, 1)  # Now accepts datetime, not just int
+)
+```
+
+#### Enhanced Methods
+
+- `store()` - Added optional `options` parameter with `sync_to_graph` for graph database sync
+- `get_version()` - Now returns `ImmutableVersionExpanded` with type/id info
+- `get_history()` - Now returns `List[ImmutableVersionExpanded]` with full info per version
+- `get_at_timestamp()` - Now accepts `Union[int, datetime]` and returns `ImmutableVersionExpanded`
+- `list()` - Now accepts `ListImmutableFilter` object
+- `search()` - Now accepts `SearchImmutableInput` and returns `List[ImmutableSearchResult]`
+- `count()` - Now accepts `CountImmutableFilter` object
+- `purge()` - Now returns typed `PurgeImmutableResult`
+- `purge_many()` - Now accepts `PurgeManyFilter` and returns `PurgeManyImmutableResult`
+- `purge_versions()` - Now returns typed `PurgeVersionsResult`
+
+#### Breaking Changes
+
+⚠️ **Method Signature Changes**
+
+These changes match the TypeScript SDK and improve type safety:
+
+```python
+# Before (v0.20.0) - positional/keyword arguments
+articles = await cortex.immutable.list(type='kb-article', limit=50)
+results = await cortex.immutable.search('refund', type='kb-article')
+count = await cortex.immutable.count(type='kb-article')
+await cortex.immutable.purge_many(type='old-data', user_id='user-123', dry_run=True)
+await cortex.immutable.purge_versions('kb-article', 'guide-1', keep_latest=5, older_than=timestamp)
+
+# After (v0.21.0) - filter/input objects and typed returns
+articles = await cortex.immutable.list(ListImmutableFilter(type='kb-article', limit=50))
+results = await cortex.immutable.search(SearchImmutableInput(query='refund', type='kb-article'))
+count = await cortex.immutable.count(CountImmutableFilter(type='kb-article'))
+result = await cortex.immutable.purge_many(PurgeManyFilter(type='old-data', user_id='user-123'))
+result = await cortex.immutable.purge_versions('kb-article', 'guide-1', keep_latest=5)  # older_than removed
+```
+
+- `purge_many()`: Removed `created_before` and `dry_run` parameters (not in TypeScript SDK)
+- `purge_versions()`: `keep_latest` is now required, `older_than` parameter removed
+- `search()`: Returns `List[ImmutableSearchResult]` instead of `List[Dict[str, Any]]`
+- `get_version()`, `get_history()`, `get_at_timestamp()`: Return `ImmutableVersionExpanded` instead of `ImmutableVersion`
+
+---
+
+### 🛡️ Governance API Resilience Layer Fix
+
+**Fixed missing resilience layer wrapping for Governance API. All 8 methods now route through `_execute_with_resilience()` for overload protection.**
+
+In v0.20.0, the Governance API was accidentally omitted from the resilience layer update. This fix ensures all Governance operations receive the same protection as other APIs.
+
+#### Methods Updated
+
+| Method | Operation Name |
+|--------|---------------|
+| `set_policy()` | `governance:setPolicy` |
+| `get_policy()` | `governance:getPolicy` |
+| `set_agent_override()` | `governance:setAgentOverride` |
+| `get_template()` | `governance:getTemplate` |
+| `enforce()` | `governance:enforce` |
+| `simulate()` | `governance:simulate` |
+| `get_compliance_report()` | `governance:getComplianceReport` |
+| `get_enforcement_stats()` | `governance:getEnforcementStats` |
+
+#### Benefits
+
+- Rate limiting, circuit breaking, and priority queuing now apply to Governance operations
+- `governance:enforce` automatically classified as `high` priority
+- `governance:simulate` and `governance:getComplianceReport` classified as `background` priority
+- Consistent error handling and retry behavior with other APIs
+
+---
+
+### 🔧 Contexts API Bug Fixes
+
+**Full TypeScript SDK 0.21.0 parity achieved for Contexts API.**
+
+#### Bug Fixes
+
+- **`export()`** - Fixed endpoint name: was calling `contexts:export` instead of `contexts:exportContexts`
+- **`update_many()`** - Fixed parameter format: filters now flattened to top-level (was incorrectly nested in `filters` key)
+- **`delete_many()`** - Fixed parameter format: filters now flattened to top-level (was incorrectly nested in `filters` key)
+
+#### Type Updates
+
+| Type | Fields Added | Description |
+|------|-------------|-------------|
+| `ContextWithChain` | `descendants: List[Context]` | List of all descendant contexts in the chain |
+| `ContextWithChain` | `total_nodes: int` | Total number of nodes in the context chain |
+
+---
+
+### 🔍 Vector API Enhancements
+
+**Full TypeScript SDK 0.21.0 parity achieved for Vector API.**
+
+#### New Methods
+
+- **`restore_from_archive()`** - Restore a memory from archive
+  - Returns `{ restored: bool, memoryId: str, memory: MemoryEntry }`
+  - Validates memory_space_id and memory_id before execution
+  - Converts returned memory to `MemoryEntry` dataclass
+
+```python
+# Restore an archived memory
+result = await cortex.vector.restore_from_archive('agent-1', 'mem-123')
+print(f"Restored: {result['restored']}")
+print(f"Memory: {result['memory'].content}")
+```
+
+#### Enhanced Methods
+
+- **`search()`** - Now supports `query_category` parameter for bullet-proof retrieval
+  - Matching category gives +30% score boost
+  - Aligns with enriched fact extraction system
+
+```python
+# Search with category boosting
+results = await cortex.vector.search(
+    'agent-1',
+    'what should I call the user',
+    SearchOptions(
+        embedding=await embed(query),
+        query_category='addressing_preference',  # NEW: Category boost
+    )
+)
+```
+
+- **`delete_many()`** - Signature aligned with TypeScript SDK
+  - Now uses flat filter parameters instead of nested dict
+  - Returns `{ deleted: int, memoryIds: List[str] }`
+
+```python
+# Old signature (deprecated pattern)
+await cortex.vector.delete_many('agent-1', {'source_type': 'system'})
+
+# New signature (TypeScript parity)
+await cortex.vector.delete_many(
+    memory_space_id='agent-1',
+    source_type='system',
+)
+```
+
+- **`update_many()`** - Signature aligned with TypeScript SDK
+  - Now uses flat filter and update parameters
+  - Returns `{ updated: int, memoryIds: List[str] }`
+
+```python
+# Old signature (deprecated pattern)
+await cortex.vector.update_many('agent-1', {'user_id': 'user-123'}, {'importance': 75})
+
+# New signature (TypeScript parity)
+await cortex.vector.update_many(
+    memory_space_id='agent-1',
+    source_type='system',
+    importance=20,
+)
+```
+
+- **`export()`** - Fixed Convex function name
+  - Now calls `memories:exportMemories` (was incorrectly calling `memories:export`)
+
+#### Type Updates
+
+| Type | Field Added | Description |
+|------|-------------|-------------|
+| `SearchOptions` | `query_category: Optional[str]` | Category boost for bullet-proof retrieval |
+
+#### Validation Updates
+
+- Added `query_category` validation to `validate_search_options()`
+- `update_many()` now validates that at least one update field is provided
+
+---
+
+### 🏠 Memory Spaces API Enhancements
+
+**Full TypeScript SDK 0.21.0 parity achieved for Memory Spaces API.**
+
+#### New Methods
+
+Three new methods for participant management:
+
+- `add_participant()` - Add a single participant to a memory space
+- `remove_participant()` - Remove a single participant from a memory space
+- `find_by_participant()` - Find all memory spaces containing a specific participant
+
+```python
+# Add a participant
+await cortex.memory_spaces.add_participant(
+    'team-alpha',
+    {'id': 'tool-analyzer', 'type': 'tool', 'joinedAt': int(time.time() * 1000)}
+)
+
+# Remove a participant
+await cortex.memory_spaces.remove_participant('team-alpha', 'tool-analyzer')
+
+# Find spaces by participant
+spaces = await cortex.memory_spaces.find_by_participant('user-123')
+```
+
+#### Enhanced Methods
+
+- `list()` - Now accepts `ListMemorySpacesFilter` object and returns `ListMemorySpacesResult`
+  - Added `sort_by` and `sort_order` parameters
+  - Returns typed result with pagination metadata (total, has_more, offset)
+
+- `update()` - Added `options` parameter for graph sync support
+  - New `UpdateMemorySpaceOptions` with `sync_to_graph` field
+
+- `update_participants()` - Fixed signature to match TypeScript SDK
+  - Now accepts `ParticipantUpdates` object with typed `add` (list of participant dicts) instead of list of IDs
+  - `add` now expects `[{'id': str, 'type': str, 'joinedAt': int}]`
+
+- `get_stats()` - Now accepts `GetMemorySpaceStatsOptions` and forwards params to backend
+  - Added `time_window` support ('24h', '7d', '30d', '90d', 'all')
+  - Added `include_participants` for Hive Mode participant breakdown
+
+- `delete()` - Now accepts `DeleteMemorySpaceOptions` and returns typed `DeleteMemorySpaceResult`
+  - Required `cascade` and `reason` fields for audit trail
+  - Optional `confirm_id` safety check
+  - Returns structured cascade deletion counts
+
+- `get()` - Removed extra `include_stats` parameter not in TypeScript SDK
+
+#### New Types
+
+Eight new dataclasses for Memory Spaces operations:
+
+- `ListMemorySpacesFilter` - Filter object with type, status, participant, pagination, sorting
+- `ListMemorySpacesResult` - Typed result with spaces, total, has_more, offset
+- `DeleteMemorySpaceOptions` - Options with cascade, reason, confirm_id, sync_to_graph
+- `DeleteMemorySpaceCascade` - Cascade deletion counts
+- `DeleteMemorySpaceResult` - Deletion result with cascade details
+- `GetMemorySpaceStatsOptions` - Options with time_window, include_participants
+- `UpdateMemorySpaceOptions` - Options with sync_to_graph
+- `ParticipantUpdates` - Combined add/remove updates for update_participants
+
+```python
+from cortex.types import (
+    ListMemorySpacesFilter, ListMemorySpacesResult,
+    DeleteMemorySpaceOptions, DeleteMemorySpaceResult,
+    GetMemorySpaceStatsOptions, UpdateMemorySpaceOptions,
+    ParticipantUpdates,
+)
+
+# List with filter
+result = await cortex.memory_spaces.list(
+    ListMemorySpacesFilter(
+        type='team',
+        status='active',
+        sort_by='createdAt',
+        sort_order='desc'
+    )
+)
+print(f"Found {result.total} spaces")
+
+# Delete with typed options
+result = await cortex.memory_spaces.delete(
+    'old-space',
+    DeleteMemorySpaceOptions(
+        cascade=True,
+        reason='GDPR deletion request',
+        confirm_id='old-space'
+    )
+)
+print(f"Deleted {result.cascade.memories_deleted} memories")
+```
+
+#### Validation Updates
+
+- Added `validate_time_window()` for stats time window validation
+- Added `validate_delete_options()` for delete options validation
+
+#### Type Updates
+
+| Type | Fields Added | Description |
+|------|-------------|-------------|
+| `MemorySpaceStats` | `memories_this_window`, `conversations_this_window` | Time window activity counts |
+| `MemorySpaceParticipant` | - | Now exported for public use |
+
+---
+
+### 📋 Facts API Enhancements
+
+**Full TypeScript SDK 0.21.0 parity achieved for Facts API.**
+
+#### New Types
+
+Three new dataclasses for typed Facts operations:
+
+- `UpdateFactInput` - Input type for `update()` with all updatable fields including enrichment
+- `DeleteFactResult` - Typed result from `delete()` with `deleted` and `fact_id` fields
+- `DeleteManyFactsResult` - Typed result from `delete_many()` with `deleted` count and `memory_space_id`
+
+```python
+from cortex.types import UpdateFactInput, DeleteFactResult, DeleteManyFactsResult
+
+# Typed update input
+updated = await cortex.facts.update(
+    'agent-1',
+    'fact-123',
+    UpdateFactInput(
+        confidence=99,
+        tags=['verified', 'important'],
+        # Enrichment fields supported
+        category='addressing_preference',
+        search_aliases=['name', 'nickname', 'what to call'],
+        semantic_context='Use when greeting the user',
+    )
+)
+
+# Typed delete result
+result: DeleteFactResult = await cortex.facts.delete('agent-1', 'fact-123')
+print(f"Deleted: {result.deleted}, ID: {result.fact_id}")
+
+# Typed delete many result
+many_result: DeleteManyFactsResult = await cortex.facts.delete_many(
+    DeleteManyFactsParams(memory_space_id='agent-1', fact_type='preference')
+)
+print(f"Deleted {many_result.deleted} facts from {many_result.memory_space_id}")
+```
+
+#### Enhanced Methods
+
+- **`store()`** - Now passes all enrichment fields to Convex backend
+  - `category` - Specific sub-category for filtering
+  - `search_aliases` - Alternative search terms for bullet-proof retrieval
+  - `semantic_context` - Usage context sentence
+  - `entities` - Extracted entities with name, type, and full_value
+  - `relations` - Subject-predicate-object triples for graph sync
+
+- **`update()`** - Complete rewrite with full parity
+  - Now accepts `UpdateFactInput` dataclass OR legacy `Dict[str, Any]`
+  - Proper snake_case to camelCase field mapping for Convex
+  - Full enrichment field support (category, search_aliases, semantic_context, entities, relations)
+  - Backward compatible with existing dict-based usage
+
+- **`delete()`** - Returns typed `DeleteFactResult` instead of `Dict[str, bool]`
+
+- **`delete_many()`** - Returns typed `DeleteManyFactsResult` instead of `Dict[str, Any]`
+
+#### Type Updates
+
+| Type | Fields | Description |
+|------|--------|-------------|
+| `UpdateFactInput` | `fact`, `confidence`, `tags`, `valid_until`, `metadata`, `category`, `search_aliases`, `semantic_context`, `entities`, `relations` | Typed input for fact updates with enrichment |
+| `DeleteFactResult` | `deleted: bool`, `fact_id: str` | Typed result from delete operation |
+| `DeleteManyFactsResult` | `deleted: int`, `memory_space_id: str` | Typed result from bulk delete |
+
+#### Validation Updates
+
+- **`validate_update_has_fields()`** - Now checks for enrichment fields in addition to basic fields
+  - Supports both camelCase (Convex) and snake_case (Python) field names
+  - Validates category, searchAliases/search_aliases, semanticContext/semantic_context, entities, relations
+
+#### Backward Compatibility
+
+✅ **Zero Breaking Changes**
+
+- `update()` still accepts `Dict[str, Any]` for legacy code
+- `delete()` and `delete_many()` return typed dataclasses that support attribute access
+- Existing code continues to work without modification
+
+---
+
+### 👤 Users API Enhancements
+
+**Full TypeScript SDK 0.21.0 parity achieved for Users API.**
+
+#### New Types
+
+Three new dataclasses for comprehensive user management:
+
+- `ListUsersFilter` - Comprehensive filter dataclass with date/sort/pagination options
+- `ListUsersResult` - Typed paginated result for list operations
+- `ExportUsersOptions` - Typed export options with format and inclusion flags
+
+```python
+from cortex import ListUsersFilter, ListUsersResult, ExportUsersOptions
+
+# Using comprehensive filters
+filters = ListUsersFilter(
+    created_after=int((time.time() - 7 * 24 * 60 * 60) * 1000),  # Last 7 days
+    sort_by='createdAt',
+    sort_order='desc',
+    display_name='alex',  # Client-side filter
+    limit=20
+)
+
+# Typed result
+result = await cortex.users.list(filters)
+print(f"Found {result.total} users, showing {len(result.users)}")
+print(f"Has more: {result.has_more}")
+```
+
+#### Enhanced Methods
+
+| Method | Before | After |
+|--------|--------|-------|
+| `list()` | `list(limit=50, offset=0)` returns dict | `list(filters?)` returns `ListUsersResult` |
+| `search()` | `search(filters?, limit)` | `search(filters?)` with full `ListUsersFilter` |
+| `merge()` | Throws if user not found | Creates user if not found (matches TS) |
+| `export()` | Returns dict | Returns string (JSON/CSV) |
+| `update_many()` | Only accepts list of IDs | Accepts IDs or filters, supports `dry_run` |
+| `delete_many()` | Only accepts list of IDs | Accepts IDs or filters, supports `dry_run` |
+
+#### Usage Examples
+
+```python
+from cortex import ListUsersFilter, ExportUsersOptions
+
+# list() with full filtering
+result = await cortex.users.list(ListUsersFilter(
+    created_after=int((time.time() - 30 * 24 * 60 * 60) * 1000),
+    sort_by='updatedAt',
+    sort_order='desc',
+    limit=50
+))
+
+# search() with client-side filters
+users = await cortex.users.search(ListUsersFilter(
+    display_name='alex',
+    email='@company.com'
+))
+
+# merge() now creates if not found
+profile = await cortex.users.merge('new-user', {'displayName': 'New User'})
+
+# export() with typed options
+json_export = await cortex.users.export(ExportUsersOptions(
+    format='json',
+    include_version_history=True,
+    include_conversations=True
+))
+
+# Bulk operations with filters and dry run
+preview = await cortex.users.delete_many(
+    ListUsersFilter(updated_before=int((time.time() - 365 * 24 * 60 * 60) * 1000)),
+    {'dry_run': True}
+)
+print(f"Would delete {len(preview['user_ids'])} users")
+
+# Execute when ready
+result = await cortex.users.delete_many(
+    preview['user_ids'],
+    {'cascade': True}
+)
+```
+
+#### New Validators
+
+- `validate_list_users_filter()` - Full validation for filter fields, date ranges, sort options
+- `validate_export_options()` - Format and inclusion flags validation
+- `validate_bulk_update_options()` - Dry run and skip_versioning validation
+- `validate_bulk_delete_options()` - Cascade and dry_run validation
+
+---
+
+### 🔄 Conversations API Full Parity
+
+**Full TypeScript SDK 0.21.0 parity achieved for Conversations API.**
+
+All Conversations API methods now match the TypeScript SDK signatures, return types, and filtering capabilities.
+
+#### New Types
+
+| Type | Description |
+|------|-------------|
+| `GetConversationOptions` | Options for `get()` with `include_messages` and `message_limit` |
+| `ListConversationsFilter` | Comprehensive filter with dates, pagination, sorting |
+| `ListConversationsResult` | Result with pagination metadata (`total`, `has_more`, etc.) |
+| `CountConversationsFilter` | Filter object for `count()` |
+| `GetHistoryOptions` | Options with `since`, `until`, `roles`, `offset` filters |
+| `GetHistoryResult` | Result with messages and pagination info |
+| `ConversationDeletionResult` | Enriched deletion result with `messages_deleted`, `deleted_at` |
+| `DeleteManyConversationsOptions` | Options with `dry_run`, `confirmation_threshold` |
+| `DeleteManyConversationsResult` | Result with `would_delete` for dry run |
+| `SearchConversationsOptions` | Options with `search_in`, `match_mode` |
+| `SearchConversationsFilters` | Filters for search |
+| `SearchConversationsInput` | Input object for search |
+
+#### Enhanced Methods
+
+**1. `get()` - Now accepts options:**
+
+```python
+# Get without messages (faster for metadata-only queries)
+conv = await cortex.conversations.get('conv-123', GetConversationOptions(
+    include_messages=False
+))
+
+# Limit messages returned
+conv = await cortex.conversations.get('conv-123', GetConversationOptions(
+    message_limit=10
+))
+```
+
+**2. `list()` - Now uses filter object and returns `ListConversationsResult`:**
+
+```python
+result = await cortex.conversations.list(ListConversationsFilter(
+    memory_space_id='space-123',
+    sort_by='lastMessageAt',
+    sort_order='desc',
+    created_after=int(time.time() * 1000) - 7 * 24 * 60 * 60 * 1000,
+    limit=10,
+    offset=20,
+))
+print(f"Found {result.total} conversations, hasMore: {result.has_more}")
+```
+
+**3. `count()` - Now uses filter object:**
+
+```python
+count = await cortex.conversations.count(CountConversationsFilter(
+    memory_space_id='user-123-personal'
+))
+```
+
+**4. `delete()` - Now returns `ConversationDeletionResult`:**
+
+```python
+result = await cortex.conversations.delete('conv-123')
+print(f"Deleted {result.messages_deleted} messages")
+print(f"Restorable: {result.restorable}")  # Always false
+```
+
+**5. `delete_many()` - Now accepts options with dry run:**
+
+```python
+# Preview what would be deleted
+preview = await cortex.conversations.delete_many(
+    {'user_id': 'user-123'},
+    DeleteManyConversationsOptions(dry_run=True)
+)
+print(f"Would delete {preview.would_delete} conversations")
+
+# Execute with threshold
+result = await cortex.conversations.delete_many(
+    {'user_id': 'user-123'},
+    DeleteManyConversationsOptions(confirmation_threshold=100)
+)
+```
+
+**6. `get_history()` - Now accepts full options:**
+
+```python
+# Filter by date range
+recent = await cortex.conversations.get_history(
+    'conv-abc123',
+    GetHistoryOptions(
+        since=int(time.time() * 1000) - 24 * 60 * 60 * 1000,  # Last 24h
+    )
+)
+
+# Filter by roles
+user_messages = await cortex.conversations.get_history(
+    'conv-abc123',
+    GetHistoryOptions(roles=['user'])
+)
+```
+
+**7. `search()` - Now accepts input object with options:**
+
+```python
+results = await cortex.conversations.search(
+    SearchConversationsInput(
+        query='account balance',
+        options=SearchConversationsOptions(
+            search_in='both',  # Search content and metadata
+            match_mode='fuzzy',
+        )
+    )
+)
+```
+
+#### Breaking Changes
+
+| Method | Before | After |
+|--------|--------|-------|
+| `list()` | Positional params, returns `List[Conversation]` | `ListConversationsFilter` param, returns `ListConversationsResult` |
+| `count()` | Positional params | `CountConversationsFilter` param |
+| `delete()` | Returns `Dict[str, bool]` | Returns `ConversationDeletionResult` |
+| `delete_many()` | Positional params, returns `Dict` | Filter dict + options, returns `DeleteManyConversationsResult` |
+| `get_history()` | Positional params | `GetHistoryOptions` param |
+| `search()` | Positional params | `SearchConversationsInput` param |
+
+#### Migration Guide
+
+```python
+# Before (v0.20.x)
+conversations = await cortex.conversations.list(
+    type='user-agent',
+    user_id='user-123',
+    limit=10
+)
+
+# After (v0.21.0)
+result = await cortex.conversations.list(ListConversationsFilter(
+    type='user-agent',
+    user_id='user-123',
+    limit=10
+))
+conversations = result.conversations
+```
+
+---
+
+### 🔗 Graph API Enhancements
+
+**Full TypeScript SDK 0.21.0 parity achieved for Graph Database Integration.**
+
+#### New Modules
+
+| Module | Description |
+|--------|-------------|
+| `cortex.graph.errors` | Error classes for graph database operations |
+| `cortex.graph.orphan_detection` | Sophisticated orphan detection with circular reference protection |
+| `cortex.graph.batch_sync` | Batch sync functions for initial graph synchronization |
+| `cortex.graph.schema` | Schema initialization, verification, and management |
+| `cortex.graph.adapters.cypher` | CypherGraphAdapter for Neo4j and Memgraph |
+| `cortex.graph.worker` | Real-time reactive GraphSyncWorker |
+
+#### New Types
+
+**15 new dataclasses added to `cortex/types.py`:**
+
+| Type | Description |
+|------|-------------|
+| `GraphQuery` | Cypher query with parameters |
+| `QueryStatistics` | Query execution statistics (nodes/edges created, deleted, etc.) |
+| `GraphOperation` | Batch operation for graph write (CREATE_NODE, UPDATE_NODE, etc.) |
+| `OrphanRule` | Orphan detection rules for different node types |
+| `DeletionContext` | Context for tracking deletions (prevents circular reference issues) |
+| `OrphanCheckResult` | Result of orphan detection with circular island detection |
+| `GraphDeleteResult` | Result of cascading delete operation |
+| `BatchSyncLimits` | Limits for batch sync operations per entity type |
+| `BatchSyncOptions` | Options for batch graph sync with progress callback |
+| `BatchSyncStats` | Stats for a single entity type in batch sync |
+| `BatchSyncError` | Error from batch sync operation |
+| `BatchSyncResult` | Full result from batch graph sync |
+| `SchemaVerificationResult` | Result from schema verification |
+
+#### Updated Types
+
+| Type | Changes |
+|------|---------|
+| `GraphQueryResult` | Added `stats: Optional[QueryStatistics]` field |
+| `TraversalConfig` | Added `filter`, `filter_params` fields for filtered traversal |
+| `ShortestPathConfig` | Added `direction` field for directed path search |
+| `GraphAdapter` | Updated protocol with all 13+ methods matching TypeScript SDK |
+
+#### Error Classes
+
+New error hierarchy in `cortex.graph.errors`:
+
+```python
+from cortex.graph.errors import (
+    GraphDatabaseError,      # Base error for graph operations
+    GraphConnectionError,    # Connection failures
+    GraphQueryError,         # Query execution failures
+    GraphNotFoundError,      # Node/edge not found
+    GraphSchemaError,        # Schema operation failures
+    GraphSyncError,          # Sync operation failures
+)
+```
+
+#### Orphan Detection
+
+Sophisticated orphan detection with circular reference protection:
+
+```python
+from cortex.graph import (
+    ORPHAN_RULES,
+    create_deletion_context,
+    detect_orphan,
+    delete_with_orphan_cleanup,
+    can_run_orphan_cleanup,
+)
+
+# Create deletion context with orphan rules
+ctx = create_deletion_context("Delete Memory mem-123", ORPHAN_RULES)
+
+# Delete with automatic orphan cleanup
+result = await delete_with_orphan_cleanup(node_id, "Memory", ctx, adapter)
+print(f"Deleted {len(result.deleted_nodes)} nodes")
+print(f"Orphan islands cleaned: {len(result.orphan_islands)}")
+```
+
+**Default Orphan Rules:**
+
+| Node Type | Rule |
+|-----------|------|
+| `Conversation` | Keep if referenced by Memory, Fact, or Context |
+| `Entity` | Keep if referenced by any Fact |
+| `User` | Never auto-delete (shared across memory spaces) |
+| `Participant` | Never auto-delete (Hive Mode participants) |
+| `MemorySpace` | Never auto-delete (critical isolation boundary) |
+| `Memory`, `Fact`, `Context` | Only delete if explicitly requested |
+
+#### New Helper Functions
+
+**Node lookup and creation helpers:**
+
+```python
+from cortex.graph import (
+    find_graph_node_id,        # Find graph node by Cortex ID
+    ensure_user_node,          # Ensure User node exists
+    ensure_agent_node,         # Ensure Agent node exists
+    ensure_participant_node,   # Ensure Participant node exists (Hive Mode)
+    ensure_entity_node,        # Ensure Entity node exists
+    ensure_enriched_entity_node,  # Ensure enriched Entity node
+)
+
+# Find existing node
+node_id = await find_graph_node_id("Memory", "mem-123", adapter)
+
+# Ensure nodes exist (creates if not exists)
+user_id = await ensure_user_node("user-123", adapter)
+agent_id = await ensure_agent_node("agent-456", adapter)
+```
+
+#### Enhanced Delete Functions
+
+All delete functions now return `GraphDeleteResult`:
+
+```python
+from cortex.graph import (
+    delete_memory_from_graph,
+    delete_conversation_from_graph,
+    delete_fact_from_graph,
+    delete_context_from_graph,
+    delete_memory_space_from_graph,  # NEW
+    delete_immutable_from_graph,     # NEW
+    delete_mutable_from_graph,       # NEW
+)
+
+result = await delete_memory_from_graph("mem-123", adapter)
+print(f"Deleted nodes: {result.deleted_nodes}")
+print(f"Deleted edges: {result.deleted_edges}")
+```
+
+#### A2A Relationships
+
+Agent-to-Agent communication relationships:
+
+```python
+from cortex.graph import sync_a2a_relationships
+
+# Sync A2A relationships for a2a memories
+await sync_a2a_relationships(memory, adapter)
+```
+
+#### CypherGraphAdapter
+
+Full GraphAdapter implementation for Neo4j and Memgraph:
+
+```python
+from cortex.graph.adapters import CypherGraphAdapter
+from cortex.types import GraphConnectionConfig
+
+adapter = CypherGraphAdapter()
+await adapter.connect(GraphConnectionConfig(
+    uri='bolt://localhost:7687',
+    username='neo4j',
+    password='password'
+))
+
+# All GraphAdapter methods supported:
+# - connect(), disconnect(), is_connected()
+# - create_node(), merge_node(), get_node(), update_node(), delete_node(), find_nodes()
+# - create_edge(), delete_edge(), find_edges()
+# - query(), traverse(), find_path()
+# - batch_write()
+# - count_nodes(), count_edges(), clear_database()
+```
+
+#### Batch Sync
+
+Initial graph sync for existing data:
+
+```python
+from cortex.graph.batch_sync import initial_graph_sync
+from cortex.types import BatchSyncOptions, BatchSyncLimits
+
+result = await initial_graph_sync(cortex, adapter, BatchSyncOptions(
+    limits=BatchSyncLimits(memories=10000, facts=10000),
+    sync_relationships=True,
+    on_progress=lambda entity, current, total: print(f"{entity}: {current}/{total}")
+))
+
+print(f"Synced {result.memories.synced} memories")
+print(f"Synced {result.facts.synced} facts")
+print(f"Duration: {result.duration}ms")
+```
+
+#### Schema Management
+
+Initialize and verify graph database schema:
+
+```python
+from cortex.graph.schema import (
+    initialize_graph_schema,
+    verify_graph_schema,
+    drop_graph_schema,
+)
+
+# Initialize schema (creates constraints and indexes)
+await initialize_graph_schema(adapter)
+
+# Verify schema is correct
+result = await verify_graph_schema(adapter)
+if not result.valid:
+    print(f"Missing: {result.missing}")
+
+# Drop schema (for testing/reset)
+await drop_graph_schema(adapter)
+```
+
+#### GraphSyncWorker
+
+Real-time reactive worker for continuous sync:
+
+```python
+from cortex.graph.worker import GraphSyncWorker
+from cortex.types import GraphSyncWorkerOptions
+
+worker = GraphSyncWorker(cortex, adapter, GraphSyncWorkerOptions(
+    batch_size=100,
+    retry_attempts=3,
+    verbose=True
+))
+
+# Set callbacks
+worker.on_success(lambda entity_type, entity_id: print(f"Synced: {entity_type}/{entity_id}"))
+worker.on_error(lambda entity_id, error: print(f"Failed: {entity_id}: {error}"))
+
+# Start worker
+await worker.start()
+
+# Check health
+metrics = worker.get_health()
+print(f"Processed: {metrics.total_processed}, Queue: {metrics.queue_size}")
+
+# Stop worker
+await worker.stop()
+```
+
+#### Backward Compatibility
+
+✅ **Zero Breaking Changes**
+
+- Existing sync functions continue to work
+- Delete functions now return `GraphDeleteResult` (supports attribute access)
+- All new features are additive
+
+---
+
 ## [0.20.0] - 2025-12-06
 
 ### 🛡️ Complete Resilience Layer API Coverage
@@ -2066,6 +3230,59 @@ from cortex.types import (
 
 - ✅ All 140+ methods implemented
 - ✅ Same API structure and naming (with Python conventions)
+- ✅ Complete type safety with dataclasses
+- ✅ Full error handling with error codes
+- ✅ Graph database integration
+- ✅ GDPR cascade deletion across all layers
+- ✅ Agent cascade deletion by participantId
+- ✅ Facts extraction and storage
+- ✅ Context chains for workflows
+- ✅ Memory spaces for Hive and Collaboration modes
+- ✅ A2A communication helpers
+
+### Documentation
+
+- Complete README with quick start
+- Python developer guide
+- TypeScript to Python migration guide
+- Implementation summary
+- 4 working examples
+- Inline docstrings on all public methods
+
+### Testing
+
+- Pytest configuration
+- Async test support
+- Test fixtures for Cortex client
+- Example tests for core functionality
+
+## [Future] - Planned Features
+
+### Integrations
+
+- LangChain memory adapter
+- FastAPI middleware
+- Django integration
+- Flask extension
+
+### Enhancements
+
+- Connection pooling
+- Bulk operation optimizations
+- Async context managers
+- Sync wrapper utility class
+
+### Documentation
+
+- Sphinx-generated API docs
+- Video tutorials
+- Jupyter notebooks
+- More examples
+
+---
+
+For the complete history including TypeScript SDK changes, see: ../CHANGELOG.md
+ons)
 - ✅ Complete type safety with dataclasses
 - ✅ Full error handling with error codes
 - ✅ Graph database integration

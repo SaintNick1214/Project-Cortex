@@ -18,6 +18,8 @@ concurrency:
 jobs:
   check-version:
     runs-on: ubuntu-latest
+    # Extra guard: only run on main branch (workaround for GitHub Actions trigger bug)
+    if: github.ref == 'refs/heads/main'
     outputs:
       sdk-version-changed: ${{ steps.check-sdk.outputs.changed }}
       sdk-new-version: ${{ steps.check-sdk.outputs.version }}

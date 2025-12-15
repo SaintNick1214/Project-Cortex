@@ -167,7 +167,7 @@ export class MutableAPI {
    * @example
    * ```typescript
    * const record = await cortex.mutable.getRecord('inventory', 'widget-qty');
-   * console.log(record.updatedAt, record.accessCount);
+   * console.log(record.updatedAt);
    * ```
    */
   async getRecord(
@@ -591,7 +591,6 @@ export class MutableAPI {
    * @param filter.keyPrefix - Filter by key prefix
    * @param filter.userId - Filter by user
    * @param filter.updatedBefore - Delete keys updated before this timestamp
-   * @param filter.lastAccessedBefore - Delete keys last accessed before this timestamp
    * @returns Result with deleted count, namespace, and deleted keys
    *
    * @example
@@ -608,10 +607,10 @@ export class MutableAPI {
    *   updatedBefore: Date.now() - 30 * 24 * 60 * 60 * 1000, // 30 days ago
    * });
    *
-   * // Delete inactive keys
+   * // Delete by user (GDPR compliance)
    * await cortex.mutable.purgeMany({
    *   namespace: 'sessions',
-   *   lastAccessedBefore: Date.now() - 7 * 24 * 60 * 60 * 1000, // 7 days ago
+   *   userId: 'user-123',
    * });
    * ```
    */
@@ -630,7 +629,6 @@ export class MutableAPI {
           keyPrefix: filter.keyPrefix,
           userId: filter.userId,
           updatedBefore: filter.updatedBefore,
-          lastAccessedBefore: filter.lastAccessedBefore,
         }),
       "mutable:purgeMany",
     );

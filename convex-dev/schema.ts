@@ -151,10 +151,6 @@ export default defineSchema({
     // Timestamps
     createdAt: v.number(),
     updatedAt: v.number(),
-
-    // Access tracking
-    accessCount: v.number(),
-    lastAccessed: v.optional(v.number()),
   })
     .index("by_namespace_key", ["namespace", "key"]) // Unique lookup
     .index("by_namespace", ["namespace"]) // List by namespace
