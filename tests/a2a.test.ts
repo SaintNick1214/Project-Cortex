@@ -175,6 +175,38 @@ describe("A2A Communication API", () => {
       const memory = await cortex.vector.get(agent1, result.senderMemoryId);
       expect(memory?.importance).toBe(60);
     });
+
+    it("should store contextId correctly in metadata", async () => {
+      const agent1 = `${uniquePrefix}-ctx-agent-1`;
+      const agent2 = `${uniquePrefix}-ctx-agent-2`;
+      const testContextId = `ctx-send-${Date.now()}`;
+
+      const result = await cortex.a2a.send({
+        from: agent1,
+        to: agent2,
+        message: "Message with contextId",
+        contextId: testContextId,
+        importance: 70,
+      });
+
+      // Verify sender memory has contextId in metadata
+      const senderMemory = await cortex.vector.get(
+        agent1,
+        result.senderMemoryId,
+      );
+      expect(senderMemory).not.toBeNull();
+      expect((senderMemory as any).metadata).toBeDefined();
+      expect((senderMemory as any).metadata.contextId).toBe(testContextId);
+
+      // Verify receiver memory has contextId in metadata
+      const receiverMemory = await cortex.vector.get(
+        agent2,
+        result.receiverMemoryId,
+      );
+      expect(receiverMemory).not.toBeNull();
+      expect((receiverMemory as any).metadata).toBeDefined();
+      expect((receiverMemory as any).metadata.contextId).toBe(testContextId);
+    });
   });
 
   describe("broadcast()", () => {
@@ -255,6 +287,86 @@ describe("A2A Communication API", () => {
       expect(result.memoriesCreated).toBe(40); // 20 sender + 20 receiver
       // Should complete in reasonable time (< 30 seconds)
       expect(duration).toBeLessThan(30000);
+    });
+
+    it("should skip ACID when trackConversation=false", async () => {
+      const sender = `${uniquePrefix}-noacid-sender`;
+      const recipients = [
+        `${uniquePrefix}-noacid-r1`,
+        `${uniquePrefix}-noacid-r2`,
+      ];
+
+      const result = await cortex.a2a.broadcast({
+        from: sender,
+        to: recipients,
+        message: "No ACID tracking broadcast",
+        trackConversation: false,
+        importance: 50,
+      });
+
+      // conversationIds should be undefined when trackConversation=false
+      expect(result.conversationIds).toBeUndefined();
+      // But memories should still exist
+      expect(result.senderMemoryIds).toHaveLength(2);
+      expect(result.receiverMemoryIds).toHaveLength(2);
+      expect(result.memoriesCreated).toBe(4);
+    });
+
+    it("should return conversationIds array when trackConversation=true", async () => {
+      const sender = `${uniquePrefix}-acid-sender`;
+      const recipients = [
+        `${uniquePrefix}-acid-r1`,
+        `${uniquePrefix}-acid-r2`,
+        `${uniquePrefix}-acid-r3`,
+      ];
+
+      const result = await cortex.a2a.broadcast({
+        from: sender,
+        to: recipients,
+        message: "ACID tracking broadcast",
+        trackConversation: true, // explicit true
+        importance: 60,
+      });
+
+      // conversationIds should be defined and have one per recipient
+      expect(result.conversationIds).toBeDefined();
+      expect(result.conversationIds).toHaveLength(3);
+      // Each conversationId should follow the a2a-conv pattern
+      result.conversationIds!.forEach((convId) => {
+        expect(convId).toMatch(/^a2a-conv-/);
+      });
+    });
+
+    it("should store contextId correctly in metadata", async () => {
+      const sender = `${uniquePrefix}-ctx-sender`;
+      const recipients = [`${uniquePrefix}-ctx-r1`];
+      const testContextId = `ctx-broadcast-${Date.now()}`;
+
+      const result = await cortex.a2a.broadcast({
+        from: sender,
+        to: recipients,
+        message: "Broadcast with context",
+        contextId: testContextId,
+        importance: 65,
+      });
+
+      // Verify sender memory has contextId in metadata
+      const senderMemory = await cortex.vector.get(
+        sender,
+        result.senderMemoryIds[0],
+      );
+      expect(senderMemory).not.toBeNull();
+      expect((senderMemory as any).metadata).toBeDefined();
+      expect((senderMemory as any).metadata.contextId).toBe(testContextId);
+
+      // Verify receiver memory has contextId in metadata
+      const receiverMemory = await cortex.vector.get(
+        recipients[0],
+        result.receiverMemoryIds[0],
+      );
+      expect(receiverMemory).not.toBeNull();
+      expect((receiverMemory as any).metadata).toBeDefined();
+      expect((receiverMemory as any).metadata.contextId).toBe(testContextId);
     });
   });
 
@@ -350,6 +462,135 @@ describe("A2A Communication API", () => {
       });
 
       expect(convo.messages.length).toBeLessThanOrEqual(1);
+    });
+
+    it("should apply combined filters (since + until + minImportance)", async () => {
+      const agent1 = `${uniquePrefix}-agent-1`;
+      const agent2 = `${uniquePrefix}-agent-2`;
+
+      // Get all messages first to establish time bounds
+      const allConvo = await cortex.a2a.getConversation(agent1, agent2);
+      expect(allConvo.messages.length).toBeGreaterThan(0);
+
+      // Use the period from existing messages
+      const since = new Date(allConvo.period.start - 1000); // 1 second before
+      const until = new Date(allConvo.period.end + 1000); // 1 second after
+
+      const filteredConvo = await cortex.a2a.getConversation(agent1, agent2, {
+        since,
+        until,
+        minImportance: 70,
+      });
+
+      // Should only include high-importance messages within the time range
+      for (const msg of filteredConvo.messages) {
+        expect(msg.importance).toBeGreaterThanOrEqual(70);
+        expect(msg.timestamp).toBeGreaterThanOrEqual(since.getTime());
+        expect(msg.timestamp).toBeLessThanOrEqual(until.getTime());
+      }
+    });
+
+    it("should apply tags filter", async () => {
+      const agent1 = `${uniquePrefix}-agent-1`;
+      const agent2 = `${uniquePrefix}-agent-2`;
+
+      // Filter by "budget" tag which was set in beforeAll
+      const convo = await cortex.a2a.getConversation(agent1, agent2, {
+        tags: ["budget"],
+      });
+
+      // Should return messages with the budget tag
+      expect(convo.messageCount).toBeGreaterThan(0);
+      // Messages with budget tag have importance 75-80
+      for (const msg of convo.messages) {
+        expect(msg.importance).toBeGreaterThanOrEqual(75);
+      }
+    });
+
+    it("should apply userId filter", async () => {
+      // Create new agents with a specific userId
+      const agent1 = `${uniquePrefix}-userid-agent-1`;
+      const agent2 = `${uniquePrefix}-userid-agent-2`;
+      const testUserId = `user-filter-${Date.now()}`;
+
+      // Send messages with userId
+      await cortex.a2a.send({
+        from: agent1,
+        to: agent2,
+        message: "Message with userId",
+        userId: testUserId,
+        importance: 70,
+      });
+
+      // Send message without userId
+      await cortex.a2a.send({
+        from: agent1,
+        to: agent2,
+        message: "Message without userId",
+        importance: 65,
+      });
+
+      // Filter by userId
+      const convo = await cortex.a2a.getConversation(agent1, agent2, {
+        userId: testUserId,
+      });
+
+      // Should only return messages with the specific userId
+      expect(convo.messageCount).toBeGreaterThanOrEqual(1);
+      // All returned messages should have the userId
+      for (const msg of convo.messages) {
+        // Verify through memory lookup
+        const memory = await cortex.vector.get(agent1, msg.memoryId);
+        expect(memory?.userId).toBe(testUserId);
+      }
+    });
+
+    it("should verify period.start and period.end accuracy", async () => {
+      const agent1 = `${uniquePrefix}-agent-1`;
+      const agent2 = `${uniquePrefix}-agent-2`;
+
+      const convo = await cortex.a2a.getConversation(agent1, agent2);
+
+      expect(convo.messageCount).toBeGreaterThan(0);
+
+      // period.start should be <= earliest message timestamp
+      const earliestTimestamp = Math.min(
+        ...convo.messages.map((m) => m.timestamp),
+      );
+      expect(convo.period.start).toBeLessThanOrEqual(earliestTimestamp);
+
+      // period.end should be >= latest message timestamp
+      const latestTimestamp = Math.max(
+        ...convo.messages.map((m) => m.timestamp),
+      );
+      expect(convo.period.end).toBeGreaterThanOrEqual(latestTimestamp);
+    });
+
+    it("should apply offset pagination correctly", async () => {
+      const agent1 = `${uniquePrefix}-agent-1`;
+      const agent2 = `${uniquePrefix}-agent-2`;
+
+      // Get all messages first
+      const allConvo = await cortex.a2a.getConversation(agent1, agent2);
+
+      if (allConvo.messageCount >= 2) {
+        // Get first message with limit 1
+        const firstPage = await cortex.a2a.getConversation(agent1, agent2, {
+          limit: 1,
+          offset: 0,
+        });
+
+        // Get second message with offset 1
+        const secondPage = await cortex.a2a.getConversation(agent1, agent2, {
+          limit: 1,
+          offset: 1,
+        });
+
+        // Ensure different messages are returned
+        expect(firstPage.messages[0]?.messageId).not.toBe(
+          secondPage.messages[0]?.messageId,
+        );
+      }
     });
   });
 
@@ -798,6 +1039,28 @@ describe("A2A Communication API", () => {
           }),
         ).rejects.toThrow(A2AValidationError);
       });
+
+      it("should throw when from === to", async () => {
+        await expect(
+          cortex.a2a.request({
+            from: "same-agent",
+            to: "same-agent",
+            message: "test",
+          }),
+        ).rejects.toThrow(A2AValidationError);
+
+        try {
+          await cortex.a2a.request({
+            from: "same-agent",
+            to: "same-agent",
+            message: "test",
+          });
+        } catch (error) {
+          if (error instanceof A2AValidationError) {
+            expect(error.code).toBe("SAME_AGENT_COMMUNICATION");
+          }
+        }
+      });
     });
   });
 
@@ -875,6 +1138,171 @@ describe("A2A Communication API", () => {
       expect(memory?.tags).toContain("a2a");
       expect(memory?.tags).toContain("sent");
       expect(memory?.tags).toContain("custom-tag");
+    });
+
+    it("should cascade A2A memories when user data is deleted", async () => {
+      const agent1 = `${uniquePrefix}-gdpr-agent-1`;
+      const agent2 = `${uniquePrefix}-gdpr-agent-2`;
+      const testUserId = `user-gdpr-cascade-${Date.now()}`;
+
+      // Send A2A message with userId
+      const result = await cortex.a2a.send({
+        from: agent1,
+        to: agent2,
+        message: "GDPR cascade test message",
+        userId: testUserId,
+        importance: 75,
+      });
+
+      // Verify memories exist with userId
+      const senderMemory = await cortex.vector.get(
+        agent1,
+        result.senderMemoryId,
+      );
+      expect(senderMemory).not.toBeNull();
+      expect(senderMemory!.userId).toBe(testUserId);
+
+      const receiverMemory = await cortex.vector.get(
+        agent2,
+        result.receiverMemoryId,
+      );
+      expect(receiverMemory).not.toBeNull();
+      expect(receiverMemory!.userId).toBe(testUserId);
+
+      // Delete memories by userId (GDPR cascade)
+      const deleteResult = await cortex.vector.deleteMany({
+        memorySpaceId: agent1,
+        userId: testUserId,
+      });
+      expect(deleteResult.deleted).toBeGreaterThanOrEqual(1);
+
+      await cortex.vector.deleteMany({
+        memorySpaceId: agent2,
+        userId: testUserId,
+      });
+
+      // Verify memories are deleted
+      const senderCheck = await cortex.vector.get(agent1, result.senderMemoryId);
+      expect(senderCheck).toBeNull();
+
+      const receiverCheck = await cortex.vector.get(
+        agent2,
+        result.receiverMemoryId,
+      );
+      expect(receiverCheck).toBeNull();
+    });
+
+    it("should support multi-hop A2A workflow (agent1 → agent2 → agent3)", async () => {
+      const agent1 = `${uniquePrefix}-hop-agent-1`;
+      const agent2 = `${uniquePrefix}-hop-agent-2`;
+      const agent3 = `${uniquePrefix}-hop-agent-3`;
+
+      // Step 1: agent1 sends to agent2
+      const msg1 = await cortex.a2a.send({
+        from: agent1,
+        to: agent2,
+        message: "Request to forward to agent3",
+        importance: 80,
+        metadata: { tags: ["multi-hop", "step-1"] },
+      });
+
+      expect(msg1.messageId).toBeDefined();
+
+      // Step 2: agent2 forwards to agent3
+      const msg2 = await cortex.a2a.send({
+        from: agent2,
+        to: agent3,
+        message: "Forwarded request from agent1",
+        importance: 80,
+        metadata: {
+          tags: ["multi-hop", "step-2"],
+          originalMessageId: msg1.messageId,
+        },
+      });
+
+      expect(msg2.messageId).toBeDefined();
+
+      // Step 3: agent3 responds back to agent2
+      const msg3 = await cortex.a2a.send({
+        from: agent3,
+        to: agent2,
+        message: "Response for agent1",
+        importance: 85,
+        metadata: {
+          tags: ["multi-hop", "step-3"],
+          inResponseTo: msg2.messageId,
+        },
+      });
+
+      expect(msg3.messageId).toBeDefined();
+
+      // Verify conversation chain: agent1 ↔ agent2
+      const convo12 = await cortex.a2a.getConversation(agent1, agent2);
+      expect(convo12.messageCount).toBeGreaterThanOrEqual(1);
+
+      // Verify conversation chain: agent2 ↔ agent3
+      const convo23 = await cortex.a2a.getConversation(agent2, agent3);
+      expect(convo23.messageCount).toBeGreaterThanOrEqual(2);
+
+      // Verify agent2 has memories from both directions
+      const agent2Memories = await cortex.vector.list({
+        memorySpaceId: agent2,
+        sourceType: "a2a",
+      });
+
+      // agent2 should have received from agent1 and agent3, and sent to both
+      const agent2A2AMemories = agent2Memories.filter((m) =>
+        m.tags.includes("multi-hop"),
+      );
+      expect(agent2A2AMemories.length).toBeGreaterThanOrEqual(3);
+    });
+
+    it("should link A2A messages to workflow contexts via contextId", async () => {
+      const agent1 = `${uniquePrefix}-workflow-agent-1`;
+      const agent2 = `${uniquePrefix}-workflow-agent-2`;
+      const workflowContextId = `workflow-${Date.now()}`;
+
+      // Send multiple A2A messages for same workflow
+      const msg1 = await cortex.a2a.send({
+        from: agent1,
+        to: agent2,
+        message: "Start workflow task",
+        contextId: workflowContextId,
+        importance: 70,
+      });
+
+      const msg2 = await cortex.a2a.send({
+        from: agent2,
+        to: agent1,
+        message: "Acknowledge workflow task",
+        contextId: workflowContextId,
+        importance: 70,
+      });
+
+      const msg3 = await cortex.a2a.send({
+        from: agent1,
+        to: agent2,
+        message: "Complete workflow task",
+        contextId: workflowContextId,
+        importance: 80,
+      });
+
+      // Verify all messages are linked to the same contextId
+      const memories = [
+        await cortex.vector.get(agent1, msg1.senderMemoryId),
+        await cortex.vector.get(agent2, msg2.senderMemoryId),
+        await cortex.vector.get(agent1, msg3.senderMemoryId),
+      ];
+
+      for (const memory of memories) {
+        expect(memory).not.toBeNull();
+        expect((memory as any).metadata).toBeDefined();
+        expect((memory as any).metadata.contextId).toBe(workflowContextId);
+      }
+
+      // Conversation should have all messages
+      const convo = await cortex.a2a.getConversation(agent1, agent2);
+      expect(convo.messageCount).toBeGreaterThanOrEqual(3);
     });
   });
 

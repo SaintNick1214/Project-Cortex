@@ -1,6 +1,6 @@
 # Mutable Store API
 
-> **Last Updated**: 2025-12-11
+> **Last Updated**: 2025-12-14
 
 Complete API reference for shared mutable data with ACID transaction guarantees.
 
@@ -77,8 +77,6 @@ interface MutableRecord {
   metadata?: Record<string, unknown>;
   createdAt: number; // Unix timestamp
   updatedAt: number; // Unix timestamp
-  accessCount: number;
-  lastAccessed?: number; // Unix timestamp
 }
 ```
 
@@ -151,11 +149,6 @@ cortex.mutable.get(
 
 - Value - Current value
 - `null` - If key doesn't exist
-
-**Side Effects:**
-
-- Increments `accessCount`
-- Updates `lastAccessed`
 
 **Example:**
 
@@ -346,8 +339,6 @@ interface MutableRecord {
   metadata?: Record<string, unknown>;
   createdAt: number; // Unix timestamp
   updatedAt: number; // Unix timestamp
-  accessCount: number;
-  lastAccessed?: number; // Unix timestamp
 }
 ```
 
@@ -363,10 +354,9 @@ const record = await cortex.mutable.getRecord("config", "timeout");
 console.log(record.value); // 30
 console.log(record.createdAt); // 1729987200000
 console.log(record.updatedAt); // 1729987200000
-console.log(record.accessCount); // 15
 ```
 
-**Use when:** You need access to timestamps, accessCount, or metadata.
+**Use when:** You need access to timestamps or metadata.
 
 ---
 
@@ -509,7 +499,7 @@ interface ListMutableFilter {
   offset?: number; // Pagination offset
   updatedAfter?: number; // Filter by updatedAt > timestamp
   updatedBefore?: number; // Filter by updatedAt < timestamp
-  sortBy?: "key" | "updatedAt" | "accessCount"; // Sort field
+  sortBy?: "key" | "updatedAt"; // Sort field
   sortOrder?: "asc" | "desc"; // Sort direction (default: "asc")
 }
 ```
@@ -1647,7 +1637,6 @@ interface PurgeManyFilter {
   keyPrefix?: string; // Keys starting with prefix
   userId?: string; // Filter by user
   updatedBefore?: number; // Delete keys updated before this timestamp
-  lastAccessedBefore?: number; // Delete keys last accessed before this timestamp
 }
 ```
 
@@ -1683,17 +1672,11 @@ await cortex.mutable.purgeMany({
   updatedBefore: Date.now() - 30 * 24 * 60 * 60 * 1000,
 });
 
-// Delete inactive keys (not accessed in 7 days)
-await cortex.mutable.purgeMany({
-  namespace: "sessions",
-  lastAccessedBefore: Date.now() - 7 * 24 * 60 * 60 * 1000,
-});
-
-// Combine filters: delete old, inactive cache entries for a user
+// Combine filters: delete old cache entries for a user
 await cortex.mutable.purgeMany({
   namespace: "user-cache",
   userId: "user-123",
-  lastAccessedBefore: Date.now() - 14 * 24 * 60 * 60 * 1000,
+  updatedBefore: Date.now() - 14 * 24 * 60 * 60 * 1000,
 });
 ```
 

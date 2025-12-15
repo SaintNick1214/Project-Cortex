@@ -253,6 +253,277 @@ describe("Users API (Coordination Layer)", () => {
       // Should have users from this test run's previous tests
       expect(testRunUserCount).toBeGreaterThanOrEqual(1);
     });
+
+    it("should filter by createdAfter timestamp", async () => {
+      const userId = ctx.userId("filter-created-after");
+      const beforeCreate = Date.now();
+      await cortex.users.update(userId, { name: "CreatedAfter Test" });
+
+      const results = await cortex.users.list({
+        createdAfter: beforeCreate - 1000, // 1 second before
+      });
+
+      expect(results.users.length).toBeGreaterThanOrEqual(1);
+      const found = results.users.find((u) => u.id === userId);
+      expect(found).toBeDefined();
+    });
+
+    it("should filter by createdBefore timestamp", async () => {
+      const userId = ctx.userId("filter-created-before");
+      await cortex.users.update(userId, { name: "CreatedBefore Test" });
+      const afterCreate = Date.now() + 1000;
+
+      const results = await cortex.users.list({
+        createdBefore: afterCreate,
+      });
+
+      expect(results.users.length).toBeGreaterThanOrEqual(1);
+      const found = results.users.find((u) => u.id === userId);
+      expect(found).toBeDefined();
+    });
+
+    it("should filter by updatedAfter timestamp", async () => {
+      const userId = ctx.userId("filter-updated-after");
+      await cortex.users.update(userId, { name: "Initial" });
+      const beforeUpdate = Date.now();
+      await cortex.users.update(userId, { name: "Updated" });
+
+      const results = await cortex.users.list({
+        updatedAfter: beforeUpdate - 100,
+      });
+
+      expect(results.users.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it("should filter by updatedBefore timestamp", async () => {
+      const userId = ctx.userId("filter-updated-before");
+      await cortex.users.update(userId, { name: "Test" });
+      const afterUpdate = Date.now() + 1000;
+
+      const results = await cortex.users.list({
+        updatedBefore: afterUpdate,
+      });
+
+      expect(results.users.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it("should apply displayName filter (case-insensitive)", async () => {
+      const userId = ctx.userId("filter-displayname");
+      await cortex.users.update(userId, { displayName: "UniqueDisplayName123" });
+
+      const results = await cortex.users.list({
+        displayName: "uniquedisplayname", // lowercase
+      });
+
+      expect(results.users.length).toBeGreaterThanOrEqual(1);
+      const found = results.users.find((u) => u.id === userId);
+      expect(found).toBeDefined();
+    });
+
+    it("should apply email filter (case-insensitive)", async () => {
+      const userId = ctx.userId("filter-email");
+      await cortex.users.update(userId, { email: "UniqueEmail123@Test.Com" });
+
+      const results = await cortex.users.list({
+        email: "uniqueemail123@test", // lowercase, partial
+      });
+
+      expect(results.users.length).toBeGreaterThanOrEqual(1);
+      const found = results.users.find((u) => u.id === userId);
+      expect(found).toBeDefined();
+    });
+
+    it("should sort by createdAt (asc/desc)", async () => {
+      // Sort descending
+      const desc = await cortex.users.list({
+        sortBy: "createdAt",
+        sortOrder: "desc",
+        limit: 10,
+      });
+
+      for (let i = 0; i < desc.users.length - 1; i++) {
+        expect(desc.users[i].createdAt).toBeGreaterThanOrEqual(
+          desc.users[i + 1].createdAt,
+        );
+      }
+
+      // Sort ascending
+      const asc = await cortex.users.list({
+        sortBy: "createdAt",
+        sortOrder: "asc",
+        limit: 10,
+      });
+
+      for (let i = 0; i < asc.users.length - 1; i++) {
+        expect(asc.users[i].createdAt).toBeLessThanOrEqual(
+          asc.users[i + 1].createdAt,
+        );
+      }
+    });
+
+    it("should sort by updatedAt (asc/desc)", async () => {
+      // Sort descending
+      const desc = await cortex.users.list({
+        sortBy: "updatedAt",
+        sortOrder: "desc",
+        limit: 10,
+      });
+
+      for (let i = 0; i < desc.users.length - 1; i++) {
+        expect(desc.users[i].updatedAt).toBeGreaterThanOrEqual(
+          desc.users[i + 1].updatedAt,
+        );
+      }
+    });
+
+    it("should paginate with offset", async () => {
+      // Get first page
+      const page1 = await cortex.users.list({ limit: 2, offset: 0 });
+      // Get second page
+      const page2 = await cortex.users.list({ limit: 2, offset: 2 });
+
+      // Pages should have no overlap (unless total < 3)
+      if (page1.users.length === 2 && page2.users.length > 0) {
+        const page1Ids = page1.users.map((u) => u.id);
+        const page2Ids = page2.users.map((u) => u.id);
+        const overlap = page1Ids.filter((id) => page2Ids.includes(id));
+        expect(overlap.length).toBe(0);
+      }
+    });
+
+    it("should return hasMore correctly", async () => {
+      // Create enough users to test pagination
+      await cortex.users.update(ctx.userId("hasmore-1"), { name: "HasMore1" });
+      await cortex.users.update(ctx.userId("hasmore-2"), { name: "HasMore2" });
+      await cortex.users.update(ctx.userId("hasmore-3"), { name: "HasMore3" });
+
+      // Request with small limit
+      const results = await cortex.users.list({ limit: 1 });
+
+      // If there are more users than requested, hasMore should be true
+      if (results.total > results.limit) {
+        expect(results.hasMore).toBe(true);
+      }
+    });
+  });
+
+  describe("search()", () => {
+    beforeAll(async () => {
+      // Create test users for search tests
+      await cortex.users.update(ctx.userId("search-alice"), {
+        displayName: "Alice Smith",
+        email: "alice@example.com",
+        role: "admin",
+      });
+      await cortex.users.update(ctx.userId("search-bob"), {
+        displayName: "Bob Johnson",
+        email: "bob@example.com",
+        role: "user",
+      });
+      await cortex.users.update(ctx.userId("search-charlie"), {
+        displayName: "Charlie Brown",
+        email: "charlie@test.org",
+        role: "user",
+      });
+      // Wait for Convex to persist
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    });
+
+    it("should return users matching displayName filter", async () => {
+      const results = await cortex.users.search({
+        displayName: "alice",
+      });
+
+      expect(results.length).toBeGreaterThanOrEqual(1);
+      const alice = results.find((u) => u.id === ctx.userId("search-alice"));
+      expect(alice).toBeDefined();
+      expect(alice!.data.displayName).toBe("Alice Smith");
+    });
+
+    it("should return users matching email filter", async () => {
+      const results = await cortex.users.search({
+        email: "example.com",
+      });
+
+      expect(results.length).toBeGreaterThanOrEqual(2);
+      const hasAlice = results.some((u) => u.id === ctx.userId("search-alice"));
+      const hasBob = results.some((u) => u.id === ctx.userId("search-bob"));
+      expect(hasAlice).toBe(true);
+      expect(hasBob).toBe(true);
+    });
+
+    it("should apply date filters (createdAfter/Before)", async () => {
+      const now = Date.now();
+      const oneHourAgo = now - 60 * 60 * 1000;
+
+      // Search for users created in the last hour
+      const results = await cortex.users.search({
+        createdAfter: oneHourAgo,
+      });
+
+      expect(results.length).toBeGreaterThanOrEqual(1);
+      // All results should have been created after oneHourAgo
+      results.forEach((user) => {
+        expect(user.createdAt).toBeGreaterThan(oneHourAgo);
+      });
+    });
+
+    it("should support pagination (limit/offset)", async () => {
+      // Get first page
+      const page1 = await cortex.users.search({ limit: 2 });
+      expect(page1.length).toBeLessThanOrEqual(2);
+
+      // Get second page
+      const page2 = await cortex.users.search({ limit: 2, offset: 2 });
+
+      // Pages should be different (unless there are fewer than 3 users)
+      if (page1.length === 2 && page2.length > 0) {
+        const page1Ids = page1.map((u) => u.id);
+        const page2Ids = page2.map((u) => u.id);
+        const overlap = page1Ids.filter((id) => page2Ids.includes(id));
+        expect(overlap.length).toBe(0);
+      }
+    });
+
+    it("should support sorting (sortBy/sortOrder)", async () => {
+      // Sort by createdAt descending (newest first)
+      const desc = await cortex.users.search({
+        sortBy: "createdAt",
+        sortOrder: "desc",
+        limit: 10,
+      });
+
+      // Verify order
+      for (let i = 0; i < desc.length - 1; i++) {
+        expect(desc[i].createdAt).toBeGreaterThanOrEqual(desc[i + 1].createdAt);
+      }
+
+      // Sort by createdAt ascending (oldest first)
+      const asc = await cortex.users.search({
+        sortBy: "createdAt",
+        sortOrder: "asc",
+        limit: 10,
+      });
+
+      // Verify order
+      for (let i = 0; i < asc.length - 1; i++) {
+        expect(asc[i].createdAt).toBeLessThanOrEqual(asc[i + 1].createdAt);
+      }
+    });
+
+    it("should return empty array when no matches", async () => {
+      const results = await cortex.users.search({
+        displayName: "ZZZNONEXISTENT12345",
+      });
+
+      expect(results).toEqual([]);
+    });
+
+    it("should throw on invalid filter structure", async () => {
+      await expect(
+        cortex.users.search({ limit: -5 }),
+      ).rejects.toThrow("limit must be between 1 and 1000");
+    });
   });
 
   describe("exists()", () => {
@@ -1003,6 +1274,597 @@ describe("Users API (Coordination Layer)", () => {
           expect(error.field).toBe("userId");
         }
       });
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Bulk Operations - Execution Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("updateMany() - Execution", () => {
+    it("should update multiple users by explicit IDs", async () => {
+      // Create test users
+      const userId1 = ctx.userId("bulk-update-1");
+      const userId2 = ctx.userId("bulk-update-2");
+      const userId3 = ctx.userId("bulk-update-3");
+
+      await cortex.users.update(userId1, { name: "User 1", status: "active" });
+      await cortex.users.update(userId2, { name: "User 2", status: "active" });
+      await cortex.users.update(userId3, { name: "User 3", status: "active" });
+
+      // Bulk update
+      const result = await cortex.users.updateMany(
+        [userId1, userId2, userId3],
+        { data: { status: "premium", tier: "gold" } },
+      );
+
+      expect(result.updated).toBe(3);
+      expect(result.userIds).toHaveLength(3);
+      expect(result.userIds).toContain(userId1);
+      expect(result.userIds).toContain(userId2);
+      expect(result.userIds).toContain(userId3);
+
+      // Verify updates applied
+      const user1 = await cortex.users.get(userId1);
+      const user2 = await cortex.users.get(userId2);
+      expect(user1!.data.status).toBe("premium");
+      expect(user1!.data.tier).toBe("gold");
+      expect(user2!.data.status).toBe("premium");
+    });
+
+    it("should update users matching filter criteria", async () => {
+      const now = Date.now();
+      // Create users with specific timestamp for filtering
+      const userId1 = ctx.userId(`bulk-filter-update-${now}-1`);
+      const userId2 = ctx.userId(`bulk-filter-update-${now}-2`);
+
+      await cortex.users.update(userId1, { name: "Filter User 1" });
+      await cortex.users.update(userId2, { name: "Filter User 2" });
+
+      // Update using filter
+      const result = await cortex.users.updateMany(
+        { createdAfter: now - 1000 },
+        { data: { filtered: true } },
+      );
+
+      expect(result.updated).toBeGreaterThanOrEqual(2);
+    });
+
+    it("should return correct updated count", async () => {
+      const userId1 = ctx.userId("count-update-1");
+      const userId2 = ctx.userId("count-update-2");
+
+      await cortex.users.update(userId1, { name: "Count 1" });
+      await cortex.users.update(userId2, { name: "Count 2" });
+
+      const result = await cortex.users.updateMany(
+        [userId1, userId2],
+        { data: { counted: true } },
+      );
+
+      expect(result.updated).toBe(2);
+      expect(result.userIds.length).toBe(result.updated);
+    });
+
+    it("should skip non-existent users gracefully", async () => {
+      const existingUser = ctx.userId("bulk-existing");
+      await cortex.users.update(existingUser, { name: "Existing" });
+
+      const nonExistentUser = ctx.userId(
+        `nonexistent-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+      );
+
+      const result = await cortex.users.updateMany(
+        [existingUser, nonExistentUser],
+        { data: { partial: true } },
+      );
+
+      // Only the existing user should be updated
+      expect(result.updated).toBe(1);
+      expect(result.userIds).toContain(existingUser);
+    });
+
+    it("should throw when filter matches > 100 users", async () => {
+      // This is a validation test - filter that could match many users
+      // We can't easily create 101 users, but we test the limit validation
+      await expect(
+        cortex.users.updateMany(
+          Array.from({ length: 101 }, (_, i) => `user-${i}`),
+          { data: { test: true } },
+        ),
+      ).rejects.toThrow("userIds array cannot exceed 100 items");
+    });
+  });
+
+  describe("deleteMany() - Execution", () => {
+    it("should delete multiple users by explicit IDs", async () => {
+      const userId1 = ctx.userId("bulk-delete-exec-1");
+      const userId2 = ctx.userId("bulk-delete-exec-2");
+      const userId3 = ctx.userId("bulk-delete-exec-3");
+
+      await cortex.users.update(userId1, { name: "Delete 1" });
+      await cortex.users.update(userId2, { name: "Delete 2" });
+      await cortex.users.update(userId3, { name: "Delete 3" });
+
+      const result = await cortex.users.deleteMany([userId1, userId2, userId3]);
+
+      expect(result.deleted).toBe(3);
+      expect(result.userIds).toHaveLength(3);
+
+      // Verify deletion
+      const user1 = await cortex.users.get(userId1);
+      const user2 = await cortex.users.get(userId2);
+      const user3 = await cortex.users.get(userId3);
+      expect(user1).toBeNull();
+      expect(user2).toBeNull();
+      expect(user3).toBeNull();
+    });
+
+    it("should delete users matching filter criteria", async () => {
+      const now = Date.now();
+      const userId1 = ctx.userId(`bulk-filter-delete-${now}-1`);
+      const userId2 = ctx.userId(`bulk-filter-delete-${now}-2`);
+
+      await cortex.users.update(userId1, { name: "Filter Delete 1" });
+      await cortex.users.update(userId2, { name: "Filter Delete 2" });
+
+      // Delete using filter
+      const result = await cortex.users.deleteMany({
+        createdAfter: now - 1000,
+        limit: 10, // Limit to avoid deleting too many
+      });
+
+      expect(result.deleted).toBeGreaterThanOrEqual(2);
+    });
+
+    it("should cascade when option set", async () => {
+      const userId = ctx.userId("bulk-cascade-delete");
+      const spaceId = ctx.memorySpaceId("bulk-cascade");
+
+      // Create user with associated data
+      await cortex.users.update(userId, { name: "Cascade User" });
+
+      // Register memory space
+      try {
+        await cortex.memorySpaces.register({
+          memorySpaceId: spaceId,
+          type: "personal",
+        });
+      } catch (_e) {
+        // May exist
+      }
+
+      // Create conversation
+      const conv = await cortex.conversations.create({
+        memorySpaceId: spaceId,
+        type: "user-agent",
+        participants: { userId, agentId: "cascade-agent" },
+      });
+
+      // Delete with cascade
+      const result = await cortex.users.deleteMany([userId], { cascade: true });
+
+      expect(result.deleted).toBe(1);
+
+      // Verify user deleted
+      const user = await cortex.users.get(userId);
+      expect(user).toBeNull();
+
+      // Verify conversation deleted (cascade)
+      const convCheck = await cortex.conversations.get(conv.conversationId);
+      expect(convCheck).toBeNull();
+    });
+
+    it("should return correct deleted count", async () => {
+      const userId1 = ctx.userId("delete-count-1");
+      const userId2 = ctx.userId("delete-count-2");
+
+      await cortex.users.update(userId1, { name: "Count 1" });
+      await cortex.users.update(userId2, { name: "Count 2" });
+
+      const result = await cortex.users.deleteMany([userId1, userId2]);
+
+      expect(result.deleted).toBe(2);
+      expect(result.userIds.length).toBe(result.deleted);
+    });
+
+    it("should throw when filter matches > 100 users", async () => {
+      await expect(
+        cortex.users.deleteMany(
+          Array.from({ length: 101 }, (_, i) => `user-${i}`),
+        ),
+      ).rejects.toThrow("userIds array cannot exceed 100 items");
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Count with Filters
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("count() with filters", () => {
+    it("should count with createdAfter filter", async () => {
+      const beforeCreate = Date.now();
+      await cortex.users.update(ctx.userId("count-created-after"), {
+        name: "Count After",
+      });
+
+      const count = await cortex.users.count({
+        createdAfter: beforeCreate - 1000,
+      });
+
+      expect(count).toBeGreaterThanOrEqual(1);
+    });
+
+    it("should count with createdBefore filter", async () => {
+      await cortex.users.update(ctx.userId("count-created-before"), {
+        name: "Count Before",
+      });
+      const afterCreate = Date.now() + 1000;
+
+      const count = await cortex.users.count({
+        createdBefore: afterCreate,
+      });
+
+      expect(count).toBeGreaterThanOrEqual(1);
+    });
+
+    it("should count with updatedAfter/Before filters", async () => {
+      const beforeUpdate = Date.now();
+      await cortex.users.update(ctx.userId("count-updated"), {
+        name: "Count Updated",
+      });
+
+      const count = await cortex.users.count({
+        updatedAfter: beforeUpdate - 1000,
+        updatedBefore: Date.now() + 1000,
+      });
+
+      expect(count).toBeGreaterThanOrEqual(1);
+    });
+
+    it("should return 0 for empty filters match", async () => {
+      // Use a future timestamp that no users would match
+      const futureTime = Date.now() + 365 * 24 * 60 * 60 * 1000; // 1 year from now
+
+      const count = await cortex.users.count({
+        createdAfter: futureTime,
+      });
+
+      expect(count).toBe(0);
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Export Edge Cases
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("export() edge cases", () => {
+    it("should include versionHistory when requested", async () => {
+      const userId = ctx.userId("export-history");
+
+      // Create user with multiple versions
+      await cortex.users.update(userId, { name: "Version 1" });
+      await cortex.users.update(userId, { name: "Version 2" });
+      await cortex.users.update(userId, { name: "Version 3" });
+
+      const result = await cortex.users.export({
+        format: "json",
+        includeVersionHistory: true,
+      });
+
+      const parsed = JSON.parse(result);
+      const user = parsed.find((u: any) => u.id === userId);
+
+      expect(user).toBeDefined();
+      expect(user.versionHistory).toBeDefined();
+      expect(user.versionHistory.length).toBeGreaterThanOrEqual(3);
+    });
+
+    it("should include conversations when requested", async () => {
+      const userId = ctx.userId("export-convos");
+      const spaceId = ctx.memorySpaceId("export-convos");
+
+      await cortex.users.update(userId, { name: "Export Convo User" });
+
+      // Register space and create conversation
+      try {
+        await cortex.memorySpaces.register({
+          memorySpaceId: spaceId,
+          type: "personal",
+        });
+      } catch (_e) {
+        // May exist
+      }
+
+      await cortex.conversations.create({
+        memorySpaceId: spaceId,
+        type: "user-agent",
+        participants: { userId, agentId: "export-agent" },
+      });
+
+      const result = await cortex.users.export({
+        format: "json",
+        includeConversations: true,
+      });
+
+      const parsed = JSON.parse(result);
+      const user = parsed.find((u: any) => u.id === userId);
+
+      expect(user).toBeDefined();
+      expect(user.conversations).toBeDefined();
+      expect(user.conversations.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it("should include memories when requested", async () => {
+      const userId = ctx.userId("export-memories");
+      const spaceId = ctx.memorySpaceId("export-memories");
+
+      await cortex.users.update(userId, { name: "Export Memory User" });
+
+      // Register space
+      try {
+        await cortex.memorySpaces.register({
+          memorySpaceId: spaceId,
+          type: "personal",
+        });
+      } catch (_e) {
+        // May exist
+      }
+
+      // Create conversation with memory space
+      await cortex.conversations.create({
+        memorySpaceId: spaceId,
+        type: "user-agent",
+        participants: { userId, agentId: "export-mem-agent" },
+      });
+
+      // Store memory
+      await cortex.vector.store(spaceId, {
+        content: "Export test memory",
+        contentType: "raw",
+        userId,
+        source: { type: "system" },
+        metadata: { importance: 50, tags: [] },
+      });
+
+      const result = await cortex.users.export({
+        format: "json",
+        includeConversations: true,
+        includeMemories: true,
+      });
+
+      const parsed = JSON.parse(result);
+      const user = parsed.find((u: any) => u.id === userId);
+
+      expect(user).toBeDefined();
+      expect(user.memories).toBeDefined();
+      expect(user.memories.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it("should apply filter correctly", async () => {
+      const userId = ctx.userId("export-filter");
+      await cortex.users.update(userId, { displayName: "UniqueExportName999" });
+
+      const result = await cortex.users.export({
+        format: "json",
+        filters: { displayName: "UniqueExportName999" },
+      });
+
+      const parsed = JSON.parse(result);
+      expect(parsed.length).toBeGreaterThanOrEqual(1);
+      expect(parsed.every((u: any) =>
+        u.data.displayName?.toLowerCase().includes("uniqueexportname999"),
+      )).toBe(true);
+    });
+
+    it("should handle empty result set", async () => {
+      const result = await cortex.users.export({
+        format: "json",
+        filters: { displayName: "ZZZZNONEXISTENT99999" },
+      });
+
+      const parsed = JSON.parse(result);
+      expect(parsed).toEqual([]);
+    });
+
+    it("should include counts in CSV when extra fields requested", async () => {
+      const userId = ctx.userId("export-csv-counts");
+      await cortex.users.update(userId, { name: "CSV Test" });
+      await cortex.users.update(userId, { name: "CSV Test v2" });
+
+      const result = await cortex.users.export({
+        format: "csv",
+        includeVersionHistory: true,
+      });
+
+      expect(result).toContain("versionHistoryCount");
+      expect(result).toContain(userId);
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Missing Sad Path Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Sad Path - Not Found Scenarios", () => {
+    it("getVersion() should return null for non-existent version number", async () => {
+      const userId = ctx.userId("version-not-found");
+      await cortex.users.update(userId, { name: "Version Test" });
+
+      // Request version that doesn't exist
+      const result = await cortex.users.getVersion(userId, 999);
+      expect(result).toBeNull();
+    });
+
+    it("getVersion() should return null for non-existent userId", async () => {
+      const nonExistentId = ctx.userId(
+        `nonexistent-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+      );
+
+      const result = await cortex.users.getVersion(nonExistentId, 1);
+      expect(result).toBeNull();
+    });
+
+    it("getHistory() should return empty array for non-existent user", async () => {
+      const nonExistentId = ctx.userId(
+        `nonexistent-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+      );
+
+      const result = await cortex.users.getHistory(nonExistentId);
+      expect(result).toEqual([]);
+    });
+
+    it("getAtTimestamp() should return null when timestamp is before user creation", async () => {
+      const userId = ctx.userId("timestamp-before-creation");
+      const beforeCreate = new Date(Date.now() - 86400000); // 1 day ago
+
+      await cortex.users.update(userId, { name: "Timestamp Test" });
+
+      const result = await cortex.users.getAtTimestamp(userId, beforeCreate);
+      expect(result).toBeNull();
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Cascade Verification Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Cascade Deletion Verification", () => {
+    it("should verify cascade deletes conversations", async () => {
+      const userId = ctx.userId("cascade-verify-conv");
+      const spaceId = ctx.memorySpaceId("cascade-verify-conv");
+
+      await cortex.users.update(userId, { name: "Cascade Conv Test" });
+
+      try {
+        await cortex.memorySpaces.register({
+          memorySpaceId: spaceId,
+          type: "personal",
+        });
+      } catch (_e) {
+        // May exist
+      }
+
+      const conv = await cortex.conversations.create({
+        memorySpaceId: spaceId,
+        type: "user-agent",
+        participants: { userId, agentId: "verify-agent" },
+      });
+
+      await cortex.conversations.addMessage({
+        conversationId: conv.conversationId,
+        message: { role: "user", content: "Test message" },
+      });
+
+      // Cascade delete
+      const result = await cortex.users.delete(userId, { cascade: true });
+
+      expect(result.conversationsDeleted).toBeGreaterThanOrEqual(1);
+      expect(result.deletedLayers).toContain("conversations");
+
+      // Verify conversation is gone
+      const convCheck = await cortex.conversations.get(conv.conversationId);
+      expect(convCheck).toBeNull();
+    });
+
+    it("should verify cascade deletes vector memories", async () => {
+      const userId = ctx.userId("cascade-verify-vector");
+      const spaceId = ctx.memorySpaceId("cascade-verify-vector");
+
+      await cortex.users.update(userId, { name: "Cascade Vector Test" });
+
+      try {
+        await cortex.memorySpaces.register({
+          memorySpaceId: spaceId,
+          type: "personal",
+        });
+      } catch (_e) {
+        // May exist
+      }
+
+      // Create conversation for memory space
+      await cortex.conversations.create({
+        memorySpaceId: spaceId,
+        type: "user-agent",
+        participants: { userId, agentId: "verify-vector-agent" },
+      });
+
+      const mem = await cortex.vector.store(spaceId, {
+        content: "Cascade test memory",
+        contentType: "raw",
+        userId,
+        source: { type: "system" },
+        metadata: { importance: 50, tags: [] },
+      });
+
+      // Cascade delete
+      const result = await cortex.users.delete(userId, { cascade: true });
+
+      expect(result.vectorMemoriesDeleted).toBeGreaterThanOrEqual(1);
+      expect(result.deletedLayers).toContain("vector");
+
+      // Verify memory is gone
+      const memCheck = await cortex.vector.get(spaceId, mem.memoryId);
+      expect(memCheck).toBeNull();
+    });
+
+    it("should verify cascade deletes immutable records", async () => {
+      const userId = ctx.userId("cascade-verify-immutable");
+
+      await cortex.users.update(userId, { name: "Cascade Immutable Test" });
+
+      // Create immutable record with userId
+      await cortex.immutable.store({
+        type: ctx.immutableType("cascade-record"),
+        id: ctx.immutableId("cascade-verify"),
+        data: { test: true },
+        userId,
+      });
+
+      // Cascade delete
+      const result = await cortex.users.delete(userId, { cascade: true });
+
+      expect(result.immutableRecordsDeleted).toBeGreaterThanOrEqual(1);
+      expect(result.deletedLayers).toContain("immutable");
+    });
+
+    it("should verify cascade deletes mutable keys", async () => {
+      const userId = ctx.userId("cascade-verify-mutable");
+
+      await cortex.users.update(userId, { name: "Cascade Mutable Test" });
+
+      // Create mutable record with userId in a common namespace
+      await cortex.mutable.set(
+        "user-sessions",
+        ctx.mutableKey("cascade-verify-session"),
+        { active: true },
+        userId,
+      );
+
+      // Cascade delete
+      const result = await cortex.users.delete(userId, { cascade: true });
+
+      expect(result.mutableKeysDeleted).toBeGreaterThanOrEqual(1);
+      expect(result.deletedLayers).toContain("mutable");
+    });
+
+    it("should verify cascade verification reports issues", async () => {
+      const userId = ctx.userId("cascade-verify-report");
+      await cortex.users.update(userId, { name: "Verify Report Test" });
+
+      const result = await cortex.users.delete(userId, {
+        cascade: true,
+        verify: true,
+      });
+
+      expect(result.verification).toBeDefined();
+      expect(result.verification.complete).toBeDefined();
+      expect(Array.isArray(result.verification.issues)).toBe(true);
+
+      // For a clean deletion, should be complete with no issues
+      if (result.verification.complete) {
+        expect(result.verification.issues.length).toBe(0);
+      }
     });
   });
 

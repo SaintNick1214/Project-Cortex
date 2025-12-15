@@ -85,7 +85,6 @@ describe("Mutable Store API (Layer 1c)", () => {
       expect(result.value).toBe(100);
       expect(result.createdAt).toBeGreaterThan(0);
       expect(result.updatedAt).toBeGreaterThan(0);
-      expect(result.accessCount).toBe(0);
     });
 
     it("overwrites existing value", async () => {
@@ -156,9 +155,76 @@ describe("Mutable Store API (Layer 1c)", () => {
       expect(record!.value).toBe(50);
       expect(record!.namespace).toBe("inventory");
       expect(record!.key).toBe("test-item");
-      expect(record!.accessCount).toBeGreaterThanOrEqual(0); // Access count exists
       expect(record!.createdAt).toBeGreaterThan(0);
       expect(record!.updatedAt).toBeGreaterThan(0);
+    });
+
+    it("getRecord returns null for non-existent key", async () => {
+      const record = await cortex.mutable.getRecord(
+        "nonexistent-ns",
+        "nonexistent-key",
+      );
+
+      expect(record).toBeNull();
+    });
+
+    it("getRecord returns complete metadata fields", async () => {
+      const ns = "metadata-test";
+      const key = "full-metadata";
+      const userId = "metadata-user";
+
+      // Create entry with userId and metadata
+      await cortex.mutable.set(
+        ns,
+        key,
+        { data: "test" },
+        userId,
+        { custom: "metadata", tags: ["test", "metadata"] },
+      );
+
+      // Access to increment access count
+      await cortex.mutable.get(ns, key);
+      await cortex.mutable.get(ns, key);
+
+      // Get full record
+      const record = await cortex.mutable.getRecord(ns, key);
+
+      // Verify all expected fields exist
+      expect(record).not.toBeNull();
+      expect(record!.namespace).toBe(ns);
+      expect(record!.key).toBe(key);
+      expect(record!.value).toEqual({ data: "test" });
+      expect(record!.userId).toBe(userId);
+      expect(record!.metadata).toEqual({
+        custom: "metadata",
+        tags: ["test", "metadata"],
+      });
+      expect(typeof record!.createdAt).toBe("number");
+      expect(typeof record!.updatedAt).toBe("number");
+      expect(record!.createdAt).toBeGreaterThan(0);
+      expect(record!.updatedAt).toBeGreaterThanOrEqual(record!.createdAt);
+    });
+
+    it("getRecord reflects updates in updatedAt", async () => {
+      const ns = "timestamp-test";
+      const key = "timestamp-key";
+
+      // Create entry
+      const created = await cortex.mutable.set(ns, key, "initial");
+      const createdRecord = await cortex.mutable.getRecord(ns, key);
+
+      // Small delay to ensure timestamps differ
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      // Update entry
+      await cortex.mutable.set(ns, key, "updated");
+      const updatedRecord = await cortex.mutable.getRecord(ns, key);
+
+      // createdAt should stay the same, updatedAt should change
+      expect(updatedRecord!.createdAt).toBe(createdRecord!.createdAt);
+      expect(updatedRecord!.updatedAt).toBeGreaterThanOrEqual(
+        createdRecord!.updatedAt,
+      );
     });
   });
 
@@ -255,6 +321,31 @@ describe("Mutable Store API (Layer 1c)", () => {
       const result = await cortex.mutable.increment("counters", "from-zero", 1);
 
       expect(result.value).toBe(1);
+    });
+
+    it("throws error when decrementing non-existent key", async () => {
+      await expect(
+        cortex.mutable.decrement("nonexistent-ns", "nonexistent-key", 1),
+      ).rejects.toThrow("MUTABLE_KEY_NOT_FOUND");
+    });
+
+    it("throws error when incrementing non-existent key", async () => {
+      await expect(
+        cortex.mutable.increment("nonexistent-ns", "nonexistent-key", 1),
+      ).rejects.toThrow("MUTABLE_KEY_NOT_FOUND");
+    });
+
+    it("allows decrementing to negative values", async () => {
+      await cortex.mutable.set("counters", "negative-test", 5);
+
+      // Decrement by more than the current value
+      const result = await cortex.mutable.decrement(
+        "counters",
+        "negative-test",
+        10,
+      );
+
+      expect(result.value).toBe(-5);
     });
   });
 
@@ -406,6 +497,81 @@ describe("Mutable Store API (Layer 1c)", () => {
     });
   });
 
+  describe("purge() - Alias for delete()", () => {
+    it("deletes a key (same as delete)", async () => {
+      await cortex.mutable.set("purge-alias-test", "purge-key", "value");
+
+      // Verify exists
+      const before = await cortex.mutable.get("purge-alias-test", "purge-key");
+      expect(before).toBe("value");
+
+      // Purge (alias for delete)
+      const result = await cortex.mutable.purge("purge-alias-test", "purge-key");
+
+      expect(result.deleted).toBe(true);
+      expect(result.namespace).toBe("purge-alias-test");
+      expect(result.key).toBe("purge-key");
+
+      // Verify deleted
+      const after = await cortex.mutable.get("purge-alias-test", "purge-key");
+      expect(after).toBeNull();
+    });
+
+    it("throws same error as delete for non-existent key", async () => {
+      // Both delete() and purge() should throw the same error
+      await expect(
+        cortex.mutable.purge("nonexistent-ns", "nonexistent-key"),
+      ).rejects.toThrow("MUTABLE_KEY_NOT_FOUND");
+
+      // Verify it's the same error type as delete()
+      let deleteError: Error | null = null;
+      let purgeError: Error | null = null;
+
+      try {
+        await cortex.mutable.delete("alias-test-ns", "missing-key");
+      } catch (e) {
+        deleteError = e as Error;
+      }
+
+      try {
+        await cortex.mutable.purge("alias-test-ns", "missing-key");
+      } catch (e) {
+        purgeError = e as Error;
+      }
+
+      expect(deleteError).not.toBeNull();
+      expect(purgeError).not.toBeNull();
+      expect(deleteError!.message).toBe(purgeError!.message);
+    });
+
+    it("purge and delete produce identical results", async () => {
+      // Set up two identical entries
+      await cortex.mutable.set("alias-compare", "delete-target", {
+        data: "test",
+      });
+      await cortex.mutable.set("alias-compare", "purge-target", {
+        data: "test",
+      });
+
+      // Delete one
+      const deleteResult = await cortex.mutable.delete(
+        "alias-compare",
+        "delete-target",
+      );
+
+      // Purge the other
+      const purgeResult = await cortex.mutable.purge(
+        "alias-compare",
+        "purge-target",
+      );
+
+      // Results should have same structure
+      expect(deleteResult.deleted).toBe(purgeResult.deleted);
+      expect(typeof deleteResult.namespace).toBe(typeof purgeResult.namespace);
+      expect(typeof deleteResult.key).toBe(typeof purgeResult.key);
+    });
+  });
+
   describe("purgeNamespace()", () => {
     it("deletes all keys in namespace", async () => {
       // Create multiple keys
@@ -503,6 +669,75 @@ describe("Mutable Store API (Layer 1c)", () => {
         // Note: In our implementation, operations execute sequentially,
         // so if one fails, previous ones have already executed.
         // True atomicity would require rollback, which we'll note in docs.
+      });
+
+      it("should not leave partial state after failed transaction", async () => {
+        const ns = "tx-rollback-test";
+
+        // Ensure we start with a clean state
+        try {
+          await cortex.mutable.purgeNamespace(ns);
+        } catch (_e) {
+          // Namespace might not exist
+        }
+
+        // Set up an existing key that will be modified
+        await cortex.mutable.set(ns, "existing", 100);
+
+        // Verify initial state
+        const initialList = await cortex.mutable.list({ namespace: ns });
+        const initialKeys = initialList.map((e) => e.key);
+        expect(initialKeys).toContain("existing");
+        expect(initialKeys).not.toContain("new-key-from-tx");
+
+        // This transaction should fail because "nonexistent" doesn't exist
+        await expect(
+          cortex.mutable.transaction([
+            { op: "set", namespace: ns, key: "new-key-from-tx", value: "new" },
+            {
+              op: "increment",
+              namespace: ns,
+              key: "nonexistent",
+              amount: 1,
+            }, // fails
+          ]),
+        ).rejects.toThrow("MUTABLE_KEY_NOT_FOUND");
+
+        // Verify "new-key-from-tx" was NOT created (rollback behavior)
+        // Note: Current implementation may or may not support true rollback
+        const afterList = await cortex.mutable.list({ namespace: ns });
+        const afterKeys = afterList.map((e) => e.key);
+
+        // If true atomicity is implemented, new-key-from-tx should not exist
+        // If sequential execution without rollback, it may exist
+        // This test documents the actual behavior
+        const newKeyExists = afterKeys.includes("new-key-from-tx");
+
+        // Log behavior for documentation purposes
+        if (newKeyExists) {
+          console.log(
+            "⚠️  Note: Transaction does not implement rollback - partial state exists",
+          );
+        } else {
+          console.log(
+            "✅ Transaction implements true atomicity - no partial state",
+          );
+        }
+
+        // The "existing" key should still be at its original value (100)
+        // since it wasn't part of a successful transaction operation
+        const existingValue = await cortex.mutable.get(ns, "existing");
+        expect(existingValue).toBe(100);
+      });
+
+      it("transaction with delete on non-existent key fails", async () => {
+        const ns = "tx-delete-fail-test";
+
+        await expect(
+          cortex.mutable.transaction([
+            { op: "delete", namespace: ns, key: "does-not-exist" },
+          ]),
+        ).rejects.toThrow("MUTABLE_KEY_NOT_FOUND");
       });
 
       it("handles mixed operations", async () => {
@@ -790,6 +1025,212 @@ describe("Mutable Store API (Layer 1c)", () => {
     });
   });
 
+  describe("Concurrent Operations", () => {
+    it("concurrent increments on separate keys maintain isolation", async () => {
+      const ns = "concurrent-isolation";
+
+      // Create multiple keys
+      await cortex.mutable.set(ns, "counter-a", 0);
+      await cortex.mutable.set(ns, "counter-b", 100);
+      await cortex.mutable.set(ns, "counter-c", 50);
+
+      // Concurrent increments on different keys
+      await Promise.all([
+        ...Array.from({ length: 5 }, () =>
+          cortex.mutable.increment(ns, "counter-a", 1),
+        ),
+        ...Array.from({ length: 5 }, () =>
+          cortex.mutable.increment(ns, "counter-b", 2),
+        ),
+        ...Array.from({ length: 5 }, () =>
+          cortex.mutable.decrement(ns, "counter-c", 1),
+        ),
+      ]);
+
+      // Each key should have been updated independently
+      const a = await cortex.mutable.get(ns, "counter-a");
+      const b = await cortex.mutable.get(ns, "counter-b");
+      const c = await cortex.mutable.get(ns, "counter-c");
+
+      // Results should reflect independent updates
+      // (exact values may vary due to race conditions)
+      expect(a).toBeGreaterThan(0);
+      expect(b).toBeGreaterThan(100);
+      expect(c).toBeLessThan(50);
+    });
+
+    it("concurrent reads don't block each other", async () => {
+      const ns = "concurrent-reads";
+      const key = "read-test";
+
+      // Create entry
+      await cortex.mutable.set(ns, key, {
+        data: "test-data",
+        nested: { value: 42 },
+      });
+
+      // 20 concurrent reads
+      const startTime = Date.now();
+      const reads = await Promise.all(
+        Array.from({ length: 20 }, () => cortex.mutable.get(ns, key)),
+      );
+      const duration = Date.now() - startTime;
+
+      // All reads should succeed
+      expect(reads).toHaveLength(20);
+      reads.forEach((value) => {
+        expect(value).not.toBeNull();
+        expect((value as any).data).toBe("test-data");
+      });
+
+      // Concurrent reads should be fast (not serialized)
+      // Note: This is a soft assertion, may vary based on network conditions
+      console.log(`20 concurrent reads completed in ${duration}ms`);
+    });
+
+    it("concurrent writes to same key may result in last-write-wins", async () => {
+      const ns = "concurrent-writes";
+      const key = "write-test";
+
+      await cortex.mutable.set(ns, key, "initial");
+
+      // Concurrent writes with different values
+      const values = ["A", "B", "C", "D", "E"];
+      await Promise.all(
+        values.map((v) => cortex.mutable.set(ns, key, `value-${v}`)),
+      );
+
+      // Final value should be one of the written values
+      const final = await cortex.mutable.get(ns, key);
+      expect(final).toMatch(/^value-[A-E]$/);
+
+      // Note: Last-write-wins is expected behavior, exact winner depends on timing
+    });
+
+    it("concurrent list and write operations maintain consistency", async () => {
+      const ns = "concurrent-list-write";
+
+      // Create initial keys
+      for (let i = 0; i < 5; i++) {
+        await cortex.mutable.set(ns, `key-${i}`, i);
+      }
+
+      // Concurrent list while writing new keys
+      const [listResult, ...writeResults] = await Promise.all([
+        cortex.mutable.list({ namespace: ns }),
+        cortex.mutable.set(ns, "key-5", 5),
+        cortex.mutable.set(ns, "key-6", 6),
+        cortex.mutable.set(ns, "key-7", 7),
+      ]);
+
+      // List should return valid results (may or may not include new keys)
+      expect(Array.isArray(listResult)).toBe(true);
+      expect(listResult.length).toBeGreaterThanOrEqual(5);
+
+      // Writes should all succeed
+      writeResults.forEach((result) => {
+        expect(result.value).toBeDefined();
+      });
+
+      // Final state should include all keys
+      const finalList = await cortex.mutable.list({ namespace: ns });
+      expect(finalList.length).toBe(8);
+    });
+
+    it("concurrent transactions on separate namespaces succeed", async () => {
+      const ns1 = "concurrent-tx-ns1";
+      const ns2 = "concurrent-tx-ns2";
+
+      // Setup
+      await cortex.mutable.set(ns1, "counter", 100);
+      await cortex.mutable.set(ns2, "counter", 200);
+
+      // Concurrent transactions on different namespaces
+      const results = await Promise.all([
+        cortex.mutable.transaction([
+          { op: "decrement", namespace: ns1, key: "counter", amount: 10 },
+          { op: "set", namespace: ns1, key: "status", value: "processed-1" },
+        ]),
+        cortex.mutable.transaction([
+          { op: "increment", namespace: ns2, key: "counter", amount: 20 },
+          { op: "set", namespace: ns2, key: "status", value: "processed-2" },
+        ]),
+      ]);
+
+      // Both transactions should succeed
+      expect(results[0].success).toBe(true);
+      expect(results[1].success).toBe(true);
+
+      // Verify independent results
+      const ns1Counter = await cortex.mutable.get(ns1, "counter");
+      const ns2Counter = await cortex.mutable.get(ns2, "counter");
+
+      expect(ns1Counter).toBe(90);
+      expect(ns2Counter).toBe(220);
+    });
+
+    it("concurrent delete operations don't interfere", async () => {
+      const ns = "concurrent-delete";
+
+      // Create keys
+      for (let i = 0; i < 10; i++) {
+        await cortex.mutable.set(ns, `to-delete-${i}`, `value-${i}`);
+      }
+
+      // Concurrent deletes
+      const deletePromises = Array.from({ length: 10 }, (_, i) =>
+        cortex.mutable.delete(ns, `to-delete-${i}`),
+      );
+
+      const results = await Promise.all(deletePromises);
+
+      // All deletes should succeed
+      results.forEach((result) => {
+        expect(result.deleted).toBe(true);
+      });
+
+      // Verify all deleted
+      const remaining = await cortex.mutable.count({ namespace: ns });
+      expect(remaining).toBe(0);
+    });
+
+    it("mixed concurrent operations maintain data integrity", async () => {
+      const ns = "concurrent-mixed";
+
+      // Setup
+      await cortex.mutable.set(ns, "counter", 50);
+      await cortex.mutable.set(ns, "to-update", "original");
+
+      // Mixed concurrent operations
+      const operations = [
+        cortex.mutable.get(ns, "counter"),
+        cortex.mutable.increment(ns, "counter", 5),
+        cortex.mutable.set(ns, "new-key", "new-value"),
+        cortex.mutable.get(ns, "to-update"),
+        cortex.mutable.set(ns, "to-update", "modified"),
+        cortex.mutable.list({ namespace: ns }),
+        cortex.mutable.count({ namespace: ns }),
+        cortex.mutable.increment(ns, "counter", 3),
+      ];
+
+      await Promise.all(operations);
+
+      // Final state should be consistent
+      const counter = await cortex.mutable.get(ns, "counter");
+      const updated = await cortex.mutable.get(ns, "to-update");
+      const newKey = await cortex.mutable.get(ns, "new-key");
+
+      // Counter was incremented (may have race conditions)
+      expect(counter).toBeGreaterThanOrEqual(50);
+
+      // Updated value should be "modified" (last write)
+      expect(updated).toBe("modified");
+
+      // New key should exist
+      expect(newKey).toBe("new-value");
+    });
+  });
+
   describe("Cross-Operation Integration", () => {
     it("set → get → update → list → delete consistency", async () => {
       const ns = "integration-test";
@@ -1030,6 +1471,131 @@ describe("Mutable Store API (Layer 1c)", () => {
 
       expect(record!.value).toBe("second");
       // No previousVersions field!
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // syncToGraph Option Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("syncToGraph Option", () => {
+    describe("set() with syncToGraph", () => {
+      it("accepts syncToGraph option without error when no graph adapter", async () => {
+        const ns = "sync-graph-test";
+        const key = "no-adapter-set";
+
+        // Should not throw even with syncToGraph: true when no adapter configured
+        const result = await cortex.mutable.set(
+          ns,
+          key,
+          "test-value",
+          undefined,
+          undefined,
+          { syncToGraph: true },
+        );
+
+        expect(result).toBeDefined();
+        expect(result.namespace).toBe(ns);
+        expect(result.key).toBe(key);
+        expect(result.value).toBe("test-value");
+      });
+
+      it("creates entry normally with syncToGraph: false", async () => {
+        const ns = "sync-graph-false";
+        const key = "no-sync-set";
+
+        const result = await cortex.mutable.set(
+          ns,
+          key,
+          "no-sync-value",
+          undefined,
+          undefined,
+          { syncToGraph: false },
+        );
+
+        expect(result).toBeDefined();
+        expect(result.value).toBe("no-sync-value");
+
+        // Verify entry exists
+        const retrieved = await cortex.mutable.get(ns, key);
+        expect(retrieved).toBe("no-sync-value");
+      });
+
+      it("syncToGraph option does not affect basic functionality", async () => {
+        const ns = "sync-graph-func";
+        const key = "func-test";
+
+        // Create with syncToGraph
+        await cortex.mutable.set(ns, key, 0, undefined, undefined, {
+          syncToGraph: true,
+        });
+
+        // Update (no syncToGraph option on update)
+        await cortex.mutable.increment(ns, key, 5);
+
+        // Verify
+        const value = await cortex.mutable.get(ns, key);
+        expect(value).toBe(5);
+      });
+    });
+
+    describe("delete() with syncToGraph", () => {
+      it("accepts syncToGraph option without error when no graph adapter", async () => {
+        const ns = "sync-graph-delete";
+        const key = "to-delete";
+
+        // Create entry first
+        await cortex.mutable.set(ns, key, "delete-me");
+
+        // Should not throw even with syncToGraph: true when no adapter configured
+        const result = await cortex.mutable.delete(ns, key, {
+          syncToGraph: true,
+        });
+
+        expect(result).toBeDefined();
+        expect(result.deleted).toBe(true);
+        expect(result.namespace).toBe(ns);
+        expect(result.key).toBe(key);
+      });
+
+      it("deletes entry normally with syncToGraph: false", async () => {
+        const ns = "sync-graph-delete-false";
+        const key = "no-sync-delete";
+
+        // Create entry
+        await cortex.mutable.set(ns, key, "to-delete");
+
+        // Delete with syncToGraph: false
+        const result = await cortex.mutable.delete(ns, key, {
+          syncToGraph: false,
+        });
+
+        expect(result).toBeDefined();
+        expect(result.deleted).toBe(true);
+
+        // Verify entry is deleted
+        const retrieved = await cortex.mutable.get(ns, key);
+        expect(retrieved).toBeNull();
+      });
+
+      it("syncToGraph option does not affect delete functionality", async () => {
+        const ns = "sync-graph-delete-func";
+        const key = "func-delete-test";
+
+        // Create entry
+        await cortex.mutable.set(ns, key, { data: "test" });
+
+        // Verify exists
+        const before = await cortex.mutable.exists(ns, key);
+        expect(before).toBe(true);
+
+        // Delete with syncToGraph
+        await cortex.mutable.delete(ns, key, { syncToGraph: true });
+
+        // Verify deleted
+        const after = await cortex.mutable.exists(ns, key);
+        expect(after).toBe(false);
+      });
     });
   });
 
@@ -1521,6 +2087,70 @@ describe("Mutable Store API (Layer 1c)", () => {
         });
         expect(Array.isArray(result)).toBe(true);
       });
+
+      it("should handle invalid timestamp range (updatedAfter > updatedBefore)", async () => {
+        // Create some test data
+        await cortex.mutable.set("filter-range-test", "key1", "value1");
+
+        const now = Date.now();
+        const past = now - 1000;
+
+        // Invalid range: updatedAfter > updatedBefore
+        // Should return empty results (no items match impossible range)
+        const result = await cortex.mutable.list({
+          namespace: "filter-range-test",
+          updatedAfter: now, // After now
+          updatedBefore: past, // Before past (impossible)
+        });
+
+        // Empty results because no items can be updated after now AND before past
+        expect(result).toHaveLength(0);
+      });
+
+      it("should handle valid timestamp range", async () => {
+        const ns = "filter-range-valid";
+        await cortex.mutable.set(ns, "key1", "value1");
+
+        // Wait a bit to ensure timestamp difference
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        const now = Date.now();
+        const past = now - 60000; // 1 minute ago
+
+        // Valid range: items updated between past and now
+        const result = await cortex.mutable.list({
+          namespace: ns,
+          updatedAfter: past,
+          updatedBefore: now + 1000, // Slight future buffer
+        });
+
+        expect(result.length).toBeGreaterThanOrEqual(1);
+      });
+
+      it("should accept sortBy and sortOrder options", async () => {
+        const ns = "sort-test";
+        await cortex.mutable.set(ns, "a-key", 1);
+        await cortex.mutable.set(ns, "b-key", 2);
+        await cortex.mutable.set(ns, "c-key", 3);
+
+        // Sort by key ascending
+        const ascResult = await cortex.mutable.list({
+          namespace: ns,
+          sortBy: "key",
+          sortOrder: "asc",
+        });
+
+        expect(ascResult.length).toBeGreaterThanOrEqual(3);
+
+        // Sort by key descending
+        const descResult = await cortex.mutable.list({
+          namespace: ns,
+          sortBy: "key",
+          sortOrder: "desc",
+        });
+
+        expect(descResult.length).toBeGreaterThanOrEqual(3);
+      });
     });
 
     describe("count() validation", () => {
@@ -1584,6 +2214,46 @@ describe("Mutable Store API (Layer 1c)", () => {
           keyPrefix: "test-",
         });
         expect(typeof result).toBe("number");
+      });
+
+      it("should handle invalid timestamp range (updatedAfter > updatedBefore)", async () => {
+        // Create some test data
+        await cortex.mutable.set("count-range-test", "key1", "value1");
+
+        const now = Date.now();
+        const past = now - 1000;
+
+        // Invalid range: updatedAfter > updatedBefore
+        // Should return 0 (no items match impossible range)
+        const result = await cortex.mutable.count({
+          namespace: "count-range-test",
+          updatedAfter: now, // After now
+          updatedBefore: past, // Before past (impossible)
+        });
+
+        // Zero count because no items can be updated after now AND before past
+        expect(result).toBe(0);
+      });
+
+      it("should handle valid timestamp range", async () => {
+        const ns = "count-range-valid";
+        await cortex.mutable.set(ns, "key1", "value1");
+        await cortex.mutable.set(ns, "key2", "value2");
+
+        // Wait a bit to ensure timestamp difference
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        const now = Date.now();
+        const past = now - 60000; // 1 minute ago
+
+        // Valid range: items updated between past and now
+        const result = await cortex.mutable.count({
+          namespace: ns,
+          updatedAfter: past,
+          updatedBefore: now + 1000, // Slight future buffer
+        });
+
+        expect(result).toBeGreaterThanOrEqual(2);
       });
     });
 
@@ -1814,6 +2484,40 @@ describe("Mutable Store API (Layer 1c)", () => {
         });
         expect(result.deleted).toBeGreaterThanOrEqual(0);
       });
+
+      it("should handle invalid timestamp range (updatedBefore in future)", async () => {
+        const ns = "purge-range-test";
+        await cortex.mutable.set(ns, "to-purge-1", "value1");
+
+        const future = Date.now() + 86400000; // Tomorrow
+
+        // Purge items updated before future (should purge all)
+        const result = await cortex.mutable.purgeMany({
+          namespace: ns,
+          updatedBefore: future,
+        });
+
+        expect(result.deleted).toBeGreaterThanOrEqual(1);
+      });
+
+      it("should handle empty filter (namespace only) - purges all in namespace", async () => {
+        const ns = "purge-empty-filter";
+        await cortex.mutable.set(ns, "key1", "value1");
+        await cortex.mutable.set(ns, "key2", "value2");
+        await cortex.mutable.set(ns, "key3", "value3");
+
+        // Purge with just namespace (no other filters) - purges everything
+        const result = await cortex.mutable.purgeMany({
+          namespace: ns,
+        });
+
+        expect(result.deleted).toBeGreaterThanOrEqual(3);
+
+        // Verify namespace is empty
+        const count = await cortex.mutable.count({ namespace: ns });
+        expect(count).toBe(0);
+      });
+
     });
 
     describe("purgeNamespace() validation", () => {

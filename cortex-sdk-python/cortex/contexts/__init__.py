@@ -988,7 +988,14 @@ class ContextsAPI:
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
                 "contexts:updateMany",
-                filter_none_values({"filters": filters, "updates": updates, "dryRun": dry_run}),
+                filter_none_values({
+                    "memorySpaceId": filters.get("memorySpaceId"),
+                    "userId": filters.get("userId"),
+                    "status": filters.get("status"),
+                    "parentId": filters.get("parentId"),
+                    "rootId": filters.get("rootId"),
+                    "updates": updates,
+                }),
             ),
             "contexts:updateMany",
         )
@@ -1037,9 +1044,11 @@ class ContextsAPI:
             lambda: self.client.mutation(
                 "contexts:deleteMany",
                 filter_none_values({
-                    "filters": filters,
+                    "memorySpaceId": filters.get("memorySpaceId"),
+                    "userId": filters.get("userId"),
+                    "status": filters.get("status"),
+                    "completedBefore": filters.get("completedBefore"),
                     "cascadeChildren": cascade_children,
-                    "dryRun": dry_run,
                 }),
             ),
             "contexts:deleteMany",
@@ -1090,16 +1099,17 @@ class ContextsAPI:
 
         result = await self._execute_with_resilience(
             lambda: self.client.query(
-                "contexts:export",
-                {
-                    "filters": filters,
+                "contexts:exportContexts",
+                filter_none_values({
+                    "memorySpaceId": filters.get("memorySpaceId") if filters else None,
+                    "userId": filters.get("userId") if filters else None,
+                    "status": filters.get("status") if filters else None,
                     "format": format,
                     "includeChain": include_chain,
-                    "includeConversations": include_conversations,
                     "includeVersionHistory": include_version_history,
-                },
+                }),
             ),
-            "contexts:export",
+            "contexts:exportContexts",
         )
 
         return cast(Dict[str, Any], result)

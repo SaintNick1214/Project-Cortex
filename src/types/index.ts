@@ -271,8 +271,6 @@ export interface MutableRecord {
   metadata?: Record<string, unknown>;
   createdAt: number;
   updatedAt: number;
-  accessCount: number;
-  lastAccessed?: number;
 }
 
 export interface SetMutableInput {
@@ -313,12 +311,18 @@ export interface PurgeNamespaceOptions {
   dryRun?: boolean;
 }
 
+/**
+ * Filter options for purgeMany operation
+ */
 export interface PurgeManyFilter {
+  /** Required namespace to purge from */
   namespace: string;
+  /** Filter by key prefix */
   keyPrefix?: string;
+  /** Filter by user ID */
   userId?: string;
+  /** Delete keys updated before this timestamp (ms since epoch) */
   updatedBefore?: number;
-  lastAccessedBefore?: number;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1299,20 +1303,47 @@ export interface AgentStats {
   lastActive?: number;
 }
 
+/**
+ * Filters for listing and searching agents.
+ *
+ * @remarks
+ * **Pagination Limitation:** The `offset` and `limit` filters are applied at the database
+ * level BEFORE the following client-side filters are applied:
+ * - `metadata`
+ * - `name`
+ * - `capabilities`
+ * - `lastActiveAfter`
+ * - `lastActiveBefore`
+ *
+ * This means combining `offset` with any of the above filters may produce unexpected results.
+ * For reliable pagination with these filters, either:
+ * 1. Use `offset`/`limit` only with `status` (which is applied at the database level)
+ * 2. Fetch all results without `offset` and paginate client-side
+ */
 export interface AgentFilters {
+  /** Filter by metadata key-value pairs (client-side filter - see pagination limitation) */
   metadata?: Record<string, unknown>;
+  /** Filter by agent name, case-insensitive partial match (client-side filter - see pagination limitation) */
   name?: string;
+  /** Filter by capabilities (client-side filter - see pagination limitation) */
   capabilities?: string[];
   /** Match mode for capabilities: "any" (default) matches agents with at least one capability, "all" requires all capabilities */
   capabilitiesMatch?: "any" | "all";
+  /** Filter by agent status (database-level filter - safe to use with offset/limit) */
   status?: "active" | "inactive" | "archived";
   registeredAfter?: number;
   registeredBefore?: number;
-  /** Filter agents last active after this timestamp */
+  /** Filter agents last active after this timestamp (client-side filter - see pagination limitation) */
   lastActiveAfter?: number;
-  /** Filter agents last active before this timestamp */
+  /** Filter agents last active before this timestamp (client-side filter - see pagination limitation) */
   lastActiveBefore?: number;
+  /** Maximum number of results to return (applied at database level before client-side filters) */
   limit?: number;
+  /**
+   * Number of results to skip (applied at database level before client-side filters).
+   * WARNING: Using offset with metadata, name, capabilities, or timestamp filters may
+   * produce unexpected results. See AgentFilters documentation for details.
+   */
   offset?: number;
   sortBy?: "name" | "registeredAt" | "lastActive";
   sortOrder?: "asc" | "desc";

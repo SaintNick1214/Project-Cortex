@@ -196,8 +196,11 @@ class GovernanceAPI:
         # Remove None values to avoid Convex validation errors
         policy_dict = {k: v for k, v in policy_dict.items() if v is not None}
 
-        result = await self._client.mutation(
-            "governance:setPolicy", {"policy": policy_dict}
+        result = await self._execute_with_resilience(
+            lambda: self._client.mutation(
+                "governance:setPolicy", {"policy": policy_dict}
+            ),
+            "governance:setPolicy",
         )
         return PolicyResult.from_dict(result)
 
@@ -233,7 +236,10 @@ class GovernanceAPI:
         # Remove None values
         scope_dict = {k: v for k, v in scope_dict.items() if v is not None}
 
-        result = await self._client.query("governance:getPolicy", {"scope": scope_dict})
+        result = await self._execute_with_resilience(
+            lambda: self._client.query("governance:getPolicy", {"scope": scope_dict}),
+            "governance:getPolicy",
+        )
         return GovernancePolicy.from_dict(result)
 
     async def set_agent_override(
@@ -331,9 +337,12 @@ class GovernanceAPI:
         # Remove None values
         overrides_dict = {k: v for k, v in overrides_dict.items() if v is not None}
 
-        await self._client.mutation(
+        await self._execute_with_resilience(
+            lambda: self._client.mutation(
+                "governance:setAgentOverride",
+                {"memorySpaceId": memory_space_id, "overrides": overrides_dict},
+            ),
             "governance:setAgentOverride",
-            {"memorySpaceId": memory_space_id, "overrides": overrides_dict},
         )
 
     async def get_template(self, template: ComplianceTemplate) -> GovernancePolicy:
@@ -359,7 +368,10 @@ class GovernanceAPI:
         # Validate template name
         validate_compliance_template(template)
 
-        result = await self._client.query("governance:getTemplate", {"template": template})
+        result = await self._execute_with_resilience(
+            lambda: self._client.query("governance:getTemplate", {"template": template}),
+            "governance:getTemplate",
+        )
         return GovernancePolicy.from_dict(result)
 
     async def enforce(self, options: EnforcementOptions) -> EnforcementResult:
@@ -388,8 +400,11 @@ class GovernanceAPI:
         # Validate enforcement options
         validate_enforcement_options(options)
 
-        result = await self._client.mutation(
-            "governance:enforce", {"options": options.to_dict()}
+        result = await self._execute_with_resilience(
+            lambda: self._client.mutation(
+                "governance:enforce", {"options": options.to_dict()}
+            ),
+            "governance:enforce",
         )
         return EnforcementResult.from_dict(result)
 
@@ -485,8 +500,11 @@ class GovernanceAPI:
             if options.vector.retention.by_importance:
                 validate_importance_ranges(options.vector.retention.by_importance)
 
-        result = await self._client.query(
-            "governance:simulate", {"options": options.to_dict()}
+        result = await self._execute_with_resilience(
+            lambda: self._client.query(
+                "governance:simulate", {"options": options.to_dict()}
+            ),
+            "governance:simulate",
         )
         return SimulationResult.from_dict(result)
 
@@ -531,8 +549,11 @@ class GovernanceAPI:
                 )
             )
 
-        result = await self._client.query(
-            "governance:getComplianceReport", {"options": options.to_dict()}
+        result = await self._execute_with_resilience(
+            lambda: self._client.query(
+                "governance:getComplianceReport", {"options": options.to_dict()}
+            ),
+            "governance:getComplianceReport",
         )
         return ComplianceReport.from_dict(result)
 
@@ -572,8 +593,11 @@ class GovernanceAPI:
                 )
             )
 
-        result = await self._client.query(
-            "governance:getEnforcementStats", {"options": options.to_dict()}
+        result = await self._execute_with_resilience(
+            lambda: self._client.query(
+                "governance:getEnforcementStats", {"options": options.to_dict()}
+            ),
+            "governance:getEnforcementStats",
         )
         return EnforcementStats.from_dict(result)
 

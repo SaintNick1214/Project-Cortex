@@ -524,6 +524,464 @@ describe("Conversations API (Layer 1a)", () => {
 
       expect(result.conversations.length).toBeLessThanOrEqual(2);
     });
+
+    describe("sortBy options", () => {
+      const sortBySpace = ctx.memorySpaceId("sort-by-test");
+      const sortByUser = ctx.userId("sort-by-test");
+      const sortByAgent = ctx.agentId("sort-by-test");
+      let convOldest: string;
+      let convMiddle: string;
+      let convNewest: string;
+
+      beforeAll(async () => {
+        // Create conversations with different timestamps and message counts
+        const convOldestResult = await cortex.conversations.create({
+          conversationId: ctx.conversationId("sort-oldest"),
+          memorySpaceId: sortBySpace,
+          type: "user-agent",
+          participants: {
+            userId: sortByUser,
+            agentId: sortByAgent,
+            participantId: sortByAgent,
+          },
+        });
+        convOldest = convOldestResult.conversationId;
+
+        // Add several messages to make it have most messages
+        for (let i = 0; i < 5; i++) {
+          await cortex.conversations.addMessage({
+            conversationId: convOldest,
+            message: { role: "user", content: `Oldest conv message ${i}` },
+          });
+        }
+
+        // Small delay to ensure different timestamps
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        const convMiddleResult = await cortex.conversations.create({
+          conversationId: ctx.conversationId("sort-middle"),
+          memorySpaceId: sortBySpace,
+          type: "user-agent",
+          participants: {
+            userId: sortByUser,
+            agentId: sortByAgent,
+            participantId: sortByAgent,
+          },
+        });
+        convMiddle = convMiddleResult.conversationId;
+
+        // Add 2 messages
+        await cortex.conversations.addMessage({
+          conversationId: convMiddle,
+          message: { role: "user", content: "Middle conv message 1" },
+        });
+        await cortex.conversations.addMessage({
+          conversationId: convMiddle,
+          message: { role: "agent", content: "Middle conv message 2" },
+        });
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        const convNewestResult = await cortex.conversations.create({
+          conversationId: ctx.conversationId("sort-newest"),
+          memorySpaceId: sortBySpace,
+          type: "user-agent",
+          participants: {
+            userId: sortByUser,
+            agentId: sortByAgent,
+            participantId: sortByAgent,
+          },
+        });
+        convNewest = convNewestResult.conversationId;
+
+        // Add 1 message (fewest)
+        await cortex.conversations.addMessage({
+          conversationId: convNewest,
+          message: { role: "user", content: "Newest conv message" },
+        });
+      });
+
+      it("sorts by createdAt (default, descending)", async () => {
+        const result = await cortex.conversations.list({
+          memorySpaceId: sortBySpace,
+          sortBy: "createdAt",
+          sortOrder: "desc",
+        });
+
+        expect(result.conversations.length).toBe(3);
+        // Newest should be first
+        expect(result.conversations[0].conversationId).toBe(convNewest);
+        // Oldest should be last
+        expect(result.conversations[2].conversationId).toBe(convOldest);
+      });
+
+      it("sorts by createdAt ascending", async () => {
+        const result = await cortex.conversations.list({
+          memorySpaceId: sortBySpace,
+          sortBy: "createdAt",
+          sortOrder: "asc",
+        });
+
+        expect(result.conversations.length).toBe(3);
+        // Oldest should be first
+        expect(result.conversations[0].conversationId).toBe(convOldest);
+        // Newest should be last
+        expect(result.conversations[2].conversationId).toBe(convNewest);
+      });
+
+      it("sorts by updatedAt descending", async () => {
+        // Update the oldest conversation to make it most recently updated
+        await cortex.conversations.addMessage({
+          conversationId: convOldest,
+          message: { role: "user", content: "Updated message" },
+        });
+
+        const result = await cortex.conversations.list({
+          memorySpaceId: sortBySpace,
+          sortBy: "updatedAt",
+          sortOrder: "desc",
+        });
+
+        expect(result.conversations.length).toBe(3);
+        // Most recently updated should be first (convOldest just got a message)
+        expect(result.conversations[0].conversationId).toBe(convOldest);
+      });
+
+      it("sorts by lastMessageAt descending", async () => {
+        // Add a new message to convMiddle to make it most recent lastMessageAt
+        await cortex.conversations.addMessage({
+          conversationId: convMiddle,
+          message: { role: "agent", content: "Latest message" },
+        });
+
+        const result = await cortex.conversations.list({
+          memorySpaceId: sortBySpace,
+          sortBy: "lastMessageAt",
+          sortOrder: "desc",
+        });
+
+        expect(result.conversations.length).toBe(3);
+        // Most recently messaged should be first
+        expect(result.conversations[0].conversationId).toBe(convMiddle);
+      });
+
+      it("sorts by messageCount descending", async () => {
+        const result = await cortex.conversations.list({
+          memorySpaceId: sortBySpace,
+          sortBy: "messageCount",
+          sortOrder: "desc",
+        });
+
+        expect(result.conversations.length).toBe(3);
+        // Conversation with most messages should be first (convOldest has 6)
+        expect(result.conversations[0].messageCount).toBeGreaterThan(
+          result.conversations[1].messageCount,
+        );
+        expect(result.conversations[1].messageCount).toBeGreaterThan(
+          result.conversations[2].messageCount,
+        );
+      });
+
+      it("sorts by messageCount ascending", async () => {
+        const result = await cortex.conversations.list({
+          memorySpaceId: sortBySpace,
+          sortBy: "messageCount",
+          sortOrder: "asc",
+        });
+
+        expect(result.conversations.length).toBe(3);
+        // Conversation with fewest messages should be first (convNewest has 1)
+        expect(result.conversations[0].messageCount).toBeLessThan(
+          result.conversations[1].messageCount,
+        );
+        expect(result.conversations[1].messageCount).toBeLessThan(
+          result.conversations[2].messageCount,
+        );
+      });
+    });
+
+    describe("messageCount filter", () => {
+      const msgCountSpace = ctx.memorySpaceId("msg-count-filter");
+      const msgCountUser = ctx.userId("msg-count-filter");
+      const msgCountAgent = ctx.agentId("msg-count-filter");
+
+      beforeAll(async () => {
+        // Create conversations with varying message counts
+        // Conv with 2 messages
+        const conv2 = await cortex.conversations.create({
+          conversationId: ctx.conversationId("msg-count-2"),
+          memorySpaceId: msgCountSpace,
+          type: "user-agent",
+          participants: {
+            userId: msgCountUser,
+            agentId: msgCountAgent,
+            participantId: msgCountAgent,
+          },
+        });
+        for (let i = 0; i < 2; i++) {
+          await cortex.conversations.addMessage({
+            conversationId: conv2.conversationId,
+            message: { role: "user", content: `Message ${i}` },
+          });
+        }
+
+        // Conv with 5 messages
+        const conv5 = await cortex.conversations.create({
+          conversationId: ctx.conversationId("msg-count-5"),
+          memorySpaceId: msgCountSpace,
+          type: "user-agent",
+          participants: {
+            userId: msgCountUser,
+            agentId: msgCountAgent,
+            participantId: msgCountAgent,
+          },
+        });
+        for (let i = 0; i < 5; i++) {
+          await cortex.conversations.addMessage({
+            conversationId: conv5.conversationId,
+            message: { role: "user", content: `Message ${i}` },
+          });
+        }
+
+        // Conv with 10 messages
+        const conv10 = await cortex.conversations.create({
+          conversationId: ctx.conversationId("msg-count-10"),
+          memorySpaceId: msgCountSpace,
+          type: "user-agent",
+          participants: {
+            userId: msgCountUser,
+            agentId: msgCountAgent,
+            participantId: msgCountAgent,
+          },
+        });
+        for (let i = 0; i < 10; i++) {
+          await cortex.conversations.addMessage({
+            conversationId: conv10.conversationId,
+            message: { role: "user", content: `Message ${i}` },
+          });
+        }
+      });
+
+      it("filters by exact messageCount", async () => {
+        const result = await cortex.conversations.list({
+          memorySpaceId: msgCountSpace,
+          messageCount: 5,
+        });
+
+        expect(result.conversations.length).toBe(1);
+        expect(result.conversations[0].messageCount).toBe(5);
+      });
+
+      it("filters by messageCount range (min only)", async () => {
+        const result = await cortex.conversations.list({
+          memorySpaceId: msgCountSpace,
+          messageCount: { min: 5 },
+        });
+
+        expect(result.conversations.length).toBe(2);
+        result.conversations.forEach((conv) => {
+          expect(conv.messageCount).toBeGreaterThanOrEqual(5);
+        });
+      });
+
+      it("filters by messageCount range (max only)", async () => {
+        const result = await cortex.conversations.list({
+          memorySpaceId: msgCountSpace,
+          messageCount: { max: 5 },
+        });
+
+        expect(result.conversations.length).toBe(2);
+        result.conversations.forEach((conv) => {
+          expect(conv.messageCount).toBeLessThanOrEqual(5);
+        });
+      });
+
+      it("filters by messageCount range (min and max)", async () => {
+        const result = await cortex.conversations.list({
+          memorySpaceId: msgCountSpace,
+          messageCount: { min: 3, max: 8 },
+        });
+
+        expect(result.conversations.length).toBe(1);
+        expect(result.conversations[0].messageCount).toBe(5);
+      });
+    });
+
+    describe("participantId filter", () => {
+      const participantSpace = ctx.memorySpaceId("participant-filter");
+      const participantUser = ctx.userId("participant-filter");
+      const participantBot1 = ctx.agentId("bot1-filter");
+      const participantBot2 = ctx.agentId("bot2-filter");
+
+      beforeAll(async () => {
+        // Create conversation with bot1 as top-level participantId (Hive Mode tracking)
+        await cortex.conversations.create({
+          conversationId: ctx.conversationId("participant-bot1"),
+          memorySpaceId: participantSpace,
+          participantId: participantBot1, // Top-level participantId for Hive Mode
+          type: "user-agent",
+          participants: {
+            userId: participantUser,
+            agentId: participantBot1,
+            participantId: participantBot1,
+          },
+        });
+
+        // Create conversation with bot2 as top-level participantId
+        await cortex.conversations.create({
+          conversationId: ctx.conversationId("participant-bot2"),
+          memorySpaceId: participantSpace,
+          participantId: participantBot2, // Top-level participantId for Hive Mode
+          type: "user-agent",
+          participants: {
+            userId: participantUser,
+            agentId: participantBot2,
+            participantId: participantBot2,
+          },
+        });
+      });
+
+      it("filters by participantId", async () => {
+        const result = await cortex.conversations.list({
+          memorySpaceId: participantSpace,
+          participantId: participantBot1,
+        });
+
+        expect(result.conversations.length).toBe(1);
+        expect(result.conversations[0].participants.agentId).toBe(
+          participantBot1,
+        );
+      });
+
+      it("returns empty when participantId not found", async () => {
+        const result = await cortex.conversations.list({
+          memorySpaceId: participantSpace,
+          participantId: ctx.agentId("nonexistent-bot"),
+        });
+
+        expect(result.conversations.length).toBe(0);
+      });
+    });
+
+    describe("date filters", () => {
+      const dateSpace = ctx.memorySpaceId("date-filter");
+      const dateUser = ctx.userId("date-filter");
+      const dateAgent = ctx.agentId("date-filter");
+      let beforeMiddleTimestamp: number;
+      let afterMiddleTimestamp: number;
+
+      beforeAll(async () => {
+        // Create first conversation
+        await cortex.conversations.create({
+          conversationId: ctx.conversationId("date-early"),
+          memorySpaceId: dateSpace,
+          type: "user-agent",
+          participants: {
+            userId: dateUser,
+            agentId: dateAgent,
+            participantId: dateAgent,
+          },
+        });
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        beforeMiddleTimestamp = Date.now();
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        // Create middle conversation
+        await cortex.conversations.create({
+          conversationId: ctx.conversationId("date-middle"),
+          memorySpaceId: dateSpace,
+          type: "user-agent",
+          participants: {
+            userId: dateUser,
+            agentId: dateAgent,
+            participantId: dateAgent,
+          },
+        });
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        afterMiddleTimestamp = Date.now();
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        // Create late conversation
+        await cortex.conversations.create({
+          conversationId: ctx.conversationId("date-late"),
+          memorySpaceId: dateSpace,
+          type: "user-agent",
+          participants: {
+            userId: dateUser,
+            agentId: dateAgent,
+            participantId: dateAgent,
+          },
+        });
+      });
+
+      it("filters by createdAfter", async () => {
+        const result = await cortex.conversations.list({
+          memorySpaceId: dateSpace,
+          createdAfter: beforeMiddleTimestamp,
+        });
+
+        // Should include middle and late (2 conversations)
+        expect(result.conversations.length).toBe(2);
+        result.conversations.forEach((conv) => {
+          expect(conv.createdAt).toBeGreaterThan(beforeMiddleTimestamp);
+        });
+      });
+
+      it("filters by createdBefore", async () => {
+        const result = await cortex.conversations.list({
+          memorySpaceId: dateSpace,
+          createdBefore: afterMiddleTimestamp,
+        });
+
+        // Should include early and middle (2 conversations)
+        expect(result.conversations.length).toBe(2);
+        result.conversations.forEach((conv) => {
+          expect(conv.createdAt).toBeLessThan(afterMiddleTimestamp);
+        });
+      });
+
+      it("filters by combined createdAfter + createdBefore", async () => {
+        const result = await cortex.conversations.list({
+          memorySpaceId: dateSpace,
+          createdAfter: beforeMiddleTimestamp,
+          createdBefore: afterMiddleTimestamp,
+        });
+
+        // Should include only middle (1 conversation)
+        expect(result.conversations.length).toBe(1);
+        expect(result.conversations[0].createdAt).toBeGreaterThan(
+          beforeMiddleTimestamp,
+        );
+        expect(result.conversations[0].createdAt).toBeLessThan(
+          afterMiddleTimestamp,
+        );
+      });
+
+      it("filters by updatedAfter + updatedBefore", async () => {
+        // First update the middle conversation to set its updatedAt
+        await cortex.conversations.addMessage({
+          conversationId: ctx.conversationId("date-middle"),
+          message: { role: "user", content: "Update message" },
+        });
+
+        const afterUpdate = Date.now();
+
+        const result = await cortex.conversations.list({
+          memorySpaceId: dateSpace,
+          updatedAfter: beforeMiddleTimestamp,
+          updatedBefore: afterUpdate,
+        });
+
+        // Should include all conversations updated in this window
+        expect(result.conversations.length).toBeGreaterThanOrEqual(1);
+        result.conversations.forEach((conv) => {
+          expect(conv.updatedAt).toBeGreaterThan(beforeMiddleTimestamp);
+          expect(conv.updatedAt).toBeLessThanOrEqual(afterUpdate);
+        });
+      });
+    });
   });
 
   describe("count()", () => {
@@ -1114,6 +1572,96 @@ describe("Conversations API (Layer 1a)", () => {
         expect(conv.createdAt).toBeLessThanOrEqual(now);
       });
     });
+
+    it(
+      "handles large dataset export (100+ conversations)",
+      async () => {
+        // Use test-scoped IDs for isolation
+        const largeExportSpace = ctx.memorySpaceId("large-export");
+        const largeExportUser = ctx.userId("large-export");
+        const largeExportAgent = ctx.agentId("large-export");
+        const TOTAL_CONVERSATIONS = 105;
+
+        // Create 105 conversations in batches
+        const createPromises = [];
+        for (let i = 1; i <= TOTAL_CONVERSATIONS; i++) {
+          createPromises.push(
+            cortex.conversations.create({
+              conversationId: ctx.conversationId(`large-export-${i}`),
+              memorySpaceId: largeExportSpace,
+              type: "user-agent",
+              participants: {
+                userId: largeExportUser,
+                agentId: largeExportAgent,
+                participantId: largeExportAgent,
+              },
+              metadata: { batch: Math.floor(i / 25), index: i },
+            }),
+          );
+
+          // Process in batches of 25 to avoid overwhelming the backend
+          if (i % 25 === 0) {
+            await Promise.all(createPromises);
+            createPromises.length = 0;
+          }
+        }
+        // Process remaining
+        if (createPromises.length > 0) {
+          await Promise.all(createPromises);
+        }
+
+        // Export to JSON
+        const jsonExport = await cortex.conversations.export({
+          filters: { memorySpaceId: largeExportSpace },
+          format: "json",
+          includeMetadata: true,
+        });
+
+        expect(jsonExport.count).toBe(TOTAL_CONVERSATIONS);
+        expect(jsonExport.format).toBe("json");
+
+        // Validate JSON is parseable and complete
+        const parsed = JSON.parse(jsonExport.data);
+        expect(Array.isArray(parsed)).toBe(true);
+        expect(parsed.length).toBe(TOTAL_CONVERSATIONS);
+
+        // Verify all conversations are present
+        const exportedIds = new Set(parsed.map((c: any) => c.conversationId));
+        for (let i = 1; i <= TOTAL_CONVERSATIONS; i++) {
+          expect(exportedIds.has(ctx.conversationId(`large-export-${i}`))).toBe(
+            true,
+          );
+        }
+
+        // Export to CSV
+        const csvExport = await cortex.conversations.export({
+          filters: { memorySpaceId: largeExportSpace },
+          format: "csv",
+          includeMetadata: false,
+        });
+
+        expect(csvExport.count).toBe(TOTAL_CONVERSATIONS);
+        expect(csvExport.format).toBe("csv");
+
+        // Validate CSV structure
+        const lines = csvExport.data.split("\n");
+        // Header + 105 data rows
+        expect(lines.length).toBe(TOTAL_CONVERSATIONS + 1);
+
+        // Verify CSV header has expected columns
+        const header = lines[0];
+        expect(header).toContain("conversationId");
+        expect(header).toContain("type");
+
+        // Clean up all created conversations (with high threshold to allow bulk delete)
+        const deleteResult = await cortex.conversations.deleteMany(
+          { memorySpaceId: largeExportSpace },
+          { confirmationThreshold: 150 },
+        );
+        expect(deleteResult.deleted).toBe(TOTAL_CONVERSATIONS);
+      },
+      120000,
+    ); // Extended timeout for large dataset operations
   });
 
   describe("State Change Propagation", () => {
@@ -1524,6 +2072,145 @@ describe("Conversations API (Layer 1a)", () => {
         });
 
         expect(result.totalMessagesDeleted).toBeGreaterThanOrEqual(5);
+      });
+
+      it("dryRun returns preview without deleting", async () => {
+        // Use test-scoped IDs
+        const dryRunSpace = ctx.memorySpaceId("dry-run");
+        const dryRunUser = ctx.userId("dry-run-test");
+        const dryRunAgent = ctx.agentId("dry-run");
+
+        // Create test conversations
+        for (let i = 1; i <= 3; i++) {
+          const conv = await cortex.conversations.create({
+            conversationId: ctx.conversationId(`dry-run-${i}`),
+            memorySpaceId: dryRunSpace,
+            type: "user-agent",
+            participants: {
+              userId: dryRunUser,
+              agentId: dryRunAgent,
+              participantId: dryRunAgent,
+            },
+          });
+
+          // Add messages to each conversation
+          await cortex.conversations.addMessage({
+            conversationId: conv.conversationId,
+            message: { role: "user", content: `Message in conv ${i}` },
+          });
+        }
+
+        // Execute dryRun
+        const preview = await cortex.conversations.deleteMany(
+          { userId: dryRunUser },
+          { dryRun: true },
+        );
+
+        // Validate preview result
+        expect(preview.dryRun).toBe(true);
+        expect(preview.deleted).toBe(0); // Nothing actually deleted
+        expect(preview.wouldDelete).toBeGreaterThanOrEqual(3);
+        expect(preview.totalMessagesDeleted).toBe(0);
+        expect(preview.conversationIds).toHaveLength(0);
+
+        // Verify conversations still exist
+        const remaining = await cortex.conversations.list({
+          userId: dryRunUser,
+        });
+        expect(remaining.conversations.length).toBeGreaterThanOrEqual(3);
+
+        // Clean up by actually deleting
+        await cortex.conversations.deleteMany({ userId: dryRunUser });
+      });
+
+      it("confirmationThreshold blocks deletion above limit", async () => {
+        // Use test-scoped IDs
+        const thresholdSpace = ctx.memorySpaceId("threshold");
+        const thresholdUser = ctx.userId("threshold-test");
+        const thresholdAgent = ctx.agentId("threshold");
+
+        // Create 5 conversations (more than default threshold of 10, but we'll set low threshold)
+        for (let i = 1; i <= 5; i++) {
+          await cortex.conversations.create({
+            conversationId: ctx.conversationId(`threshold-${i}`),
+            memorySpaceId: thresholdSpace,
+            type: "user-agent",
+            participants: {
+              userId: thresholdUser,
+              agentId: thresholdAgent,
+              participantId: thresholdAgent,
+            },
+          });
+        }
+
+        // Attempt deletion with threshold of 3 (should fail since we have 5)
+        await expect(
+          cortex.conversations.deleteMany(
+            { userId: thresholdUser },
+            { confirmationThreshold: 3 },
+          ),
+        ).rejects.toThrow(/DELETE_MANY_THRESHOLD_EXCEEDED/);
+
+        // Verify conversations still exist
+        const remaining = await cortex.conversations.list({
+          userId: thresholdUser,
+        });
+        expect(remaining.conversations.length).toBeGreaterThanOrEqual(5);
+
+        // Now delete with higher threshold
+        const result = await cortex.conversations.deleteMany(
+          { userId: thresholdUser },
+          { confirmationThreshold: 10 },
+        );
+
+        expect(result.deleted).toBeGreaterThanOrEqual(5);
+      });
+
+      it("combines all filters (userId + memorySpaceId + type)", async () => {
+        // Use test-scoped IDs
+        const combinedSpace = ctx.memorySpaceId("combined-filter");
+        const combinedUser = ctx.userId("combined-filter");
+        const combinedAgent = ctx.agentId("combined-filter");
+
+        // Create user-agent conversations
+        for (let i = 1; i <= 2; i++) {
+          await cortex.conversations.create({
+            conversationId: ctx.conversationId(`combined-ua-${i}`),
+            memorySpaceId: combinedSpace,
+            type: "user-agent",
+            participants: {
+              userId: combinedUser,
+              agentId: combinedAgent,
+              participantId: combinedAgent,
+            },
+          });
+        }
+
+        // Create agent-agent conversation (different type)
+        await cortex.conversations.create({
+          conversationId: ctx.conversationId("combined-aa-1"),
+          memorySpaceId: combinedSpace,
+          type: "agent-agent",
+          participants: {
+            memorySpaceIds: [ctx.agentId("combined-a1"), ctx.agentId("combined-a2")],
+          },
+        });
+
+        // Delete only user-agent conversations with all filters
+        const result = await cortex.conversations.deleteMany({
+          userId: combinedUser,
+          memorySpaceId: combinedSpace,
+          type: "user-agent",
+        });
+
+        expect(result.deleted).toBe(2);
+
+        // Verify agent-agent conversation still exists
+        const remaining = await cortex.conversations.list({
+          memorySpaceId: combinedSpace,
+          type: "agent-agent",
+        });
+        expect(remaining.conversations.length).toBeGreaterThanOrEqual(1);
       });
     });
 

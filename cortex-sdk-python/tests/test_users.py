@@ -4,7 +4,7 @@ Tests for Users API with GDPR cascade deletion
 
 import pytest
 
-from cortex import DeleteUserOptions
+from cortex import DeleteUserOptions, ExportUsersOptions, ListUsersFilter
 from cortex.users.validators import UserValidationError
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -70,7 +70,7 @@ class TestUserValidation:
     async def test_list_invalid_limit_zero(self, cortex_client):
         """Should throw on limit = 0."""
         with pytest.raises(UserValidationError) as exc_info:
-            await cortex_client.users.list(limit=0)
+            await cortex_client.users.list(ListUsersFilter(limit=0))
 
         assert "limit must be between 1 and 1000" in str(exc_info.value)
 
@@ -78,7 +78,7 @@ class TestUserValidation:
     async def test_list_invalid_limit_negative(self, cortex_client):
         """Should throw on negative limit."""
         with pytest.raises(UserValidationError) as exc_info:
-            await cortex_client.users.list(limit=-5)
+            await cortex_client.users.list(ListUsersFilter(limit=-5))
 
         assert "limit must be between 1 and 1000" in str(exc_info.value)
 
@@ -86,7 +86,7 @@ class TestUserValidation:
     async def test_list_invalid_limit_too_large(self, cortex_client):
         """Should throw on limit > 1000."""
         with pytest.raises(UserValidationError) as exc_info:
-            await cortex_client.users.list(limit=1001)
+            await cortex_client.users.list(ListUsersFilter(limit=1001))
 
         assert "limit must be between 1 and 1000" in str(exc_info.value)
 
@@ -94,7 +94,7 @@ class TestUserValidation:
     async def test_list_negative_offset(self, cortex_client):
         """Should throw on negative offset."""
         with pytest.raises(UserValidationError) as exc_info:
-            await cortex_client.users.list(offset=-1)
+            await cortex_client.users.list(ListUsersFilter(offset=-1))
 
         assert "offset must be >= 0" in str(exc_info.value)
 
@@ -134,7 +134,7 @@ class TestUserValidation:
     async def test_export_invalid_format(self, cortex_client):
         """Should throw on invalid export format."""
         with pytest.raises(UserValidationError) as exc_info:
-            await cortex_client.users.export(format="xml")
+            await cortex_client.users.export(ExportUsersOptions(format="xml"))  # type: ignore[arg-type]
 
         error = exc_info.value
         assert 'Invalid export format "xml"' in str(error)
@@ -144,7 +144,7 @@ class TestUserValidation:
     async def test_update_many_empty_array(self, cortex_client):
         """Should throw on empty user_ids array."""
         with pytest.raises(UserValidationError) as exc_info:
-            await cortex_client.users.update_many([], {"name": "Test"})
+            await cortex_client.users.update_many([], {"data": {"name": "Test"}})
 
         assert "user_ids array cannot be empty" in str(exc_info.value)
 
@@ -154,7 +154,7 @@ class TestUserValidation:
         too_many = [f"user-{i}" for i in range(101)]
 
         with pytest.raises(UserValidationError) as exc_info:
-            await cortex_client.users.update_many(too_many, {"name": "Test"})
+            await cortex_client.users.update_many(too_many, {"data": {"name": "Test"}})
 
         assert "user_ids array cannot exceed 100" in str(exc_info.value)
 
@@ -163,7 +163,7 @@ class TestUserValidation:
         """Should throw on duplicate user_ids."""
         with pytest.raises(UserValidationError) as exc_info:
             await cortex_client.users.update_many(
-                ["user-1", "user-1"], {"name": "Test"}
+                ["user-1", "user-1"], {"data": {"name": "Test"}}
             )
 
         assert "Duplicate" in str(exc_info.value)
@@ -432,7 +432,7 @@ async def test_search_users(cortex_client, test_user_id, cleanup_helper):
     )
 
     # Search returns all users (client-side uses immutable.list)
-    results = await cortex_client.users.search(limit=100)
+    results = await cortex_client.users.search(ListUsersFilter(limit=100))
 
     # Should find the user in results
     assert len(results) > 0
@@ -451,11 +451,13 @@ async def test_list_users(cortex_client, cleanup_helper):
     Port of: users.test.ts - list tests
     """
     # List users
-    result = await cortex_client.users.list(limit=10)
+    result = await cortex_client.users.list(ListUsersFilter(limit=10))
 
-    # Should return users
-    users = result.get("users", [])
-    assert isinstance(users, list)
+    # Should return ListUsersResult with users array
+    assert hasattr(result, "users")
+    assert hasattr(result, "total")
+    assert hasattr(result, "has_more")
+    assert isinstance(result.users, list)
 
     # No cleanup needed - just listing
 
@@ -475,10 +477,10 @@ async def test_update_many_users(cortex_client, cleanup_helper):
     for uid in user_ids:
         await cortex_client.users.update(uid, {"status": "active"})
 
-    # Update many (client-side)
+    # Update many (client-side) - now requires {'data': ...} format
     result = await cortex_client.users.update_many(
         user_ids,
-        {"status": "inactive"},
+        {"data": {"status": "inactive"}},
     )
 
     # Verify updated
@@ -531,11 +533,12 @@ async def test_export_users(cortex_client, test_user_id, cleanup_helper):
         {"displayName": "Export Test", "email": "export@test.com"},
     )
 
-    # Export as JSON (client-side using list())
-    result = await cortex_client.users.export(format="json")
+    # Export as JSON (client-side using list()) - now uses ExportUsersOptions
+    result = await cortex_client.users.export(ExportUsersOptions(format="json"))
 
-    # Should return export data containing our user
+    # Should return export data as string containing our user
     assert result is not None
+    assert isinstance(result, str)
     assert test_user_id in result
 
     # Cleanup
@@ -589,4 +592,173 @@ async def test_get_at_timestamp(cortex_client, test_user_id, cleanup_helper):
 
     # Cleanup
     await cortex_client.users.delete(test_user_id)
+
+
+# ============================================================================
+# New Tests for 0.21.0 API Changes
+# ============================================================================
+
+
+class TestListUsersFilterValidation:
+    """Test client-side validation for ListUsersFilter."""
+
+    @pytest.mark.asyncio
+    async def test_invalid_sort_by(self, cortex_client):
+        """Should throw on invalid sort_by value."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.list(ListUsersFilter(sort_by="invalidField"))  # type: ignore[arg-type]
+
+        assert "Invalid sort_by value" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_sort_order(self, cortex_client):
+        """Should throw on invalid sort_order value."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.list(ListUsersFilter(sort_order="random"))  # type: ignore[arg-type]
+
+        assert "Invalid sort_order value" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_negative_timestamp(self, cortex_client):
+        """Should throw on negative timestamp in filters."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.list(ListUsersFilter(created_after=-1000))
+
+        assert "must be >= 0" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invalid_date_range(self, cortex_client):
+        """Should throw when created_after >= created_before."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.list(ListUsersFilter(
+                created_after=2000,
+                created_before=1000
+            ))
+
+        assert "created_after must be less than created_before" in str(exc_info.value)
+
+
+class TestBulkOperationsWithFilters:
+    """Test bulk operations with filter-based selection."""
+
+    @pytest.mark.asyncio
+    async def test_update_many_missing_data_key(self, cortex_client):
+        """Should throw when updates missing 'data' key."""
+        with pytest.raises(UserValidationError) as exc_info:
+            await cortex_client.users.update_many(
+                ["user-1", "user-2"],
+                {"status": "active"}  # Missing 'data' wrapper
+            )
+
+        assert "updates.data is required" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_delete_many_dry_run(self, cortex_client):
+        """Test dry run for delete_many returns user_ids without deleting."""
+        from tests.helpers import generate_test_user_id
+
+        user_ids = [generate_test_user_id() for _ in range(2)]
+
+        # Create test users
+        for uid in user_ids:
+            await cortex_client.users.update(uid, {"displayName": f"User {uid}"})
+
+        # Dry run should return user_ids but not delete
+        result = await cortex_client.users.delete_many(user_ids, {"dry_run": True})
+
+        # Should report 0 deleted but list the user_ids
+        assert result["deleted"] == 0
+        assert len(result["user_ids"]) == 2
+
+        # Users should still exist
+        for uid in user_ids:
+            user = await cortex_client.users.get(uid)
+            assert user is not None
+
+        # Cleanup
+        await cortex_client.users.delete_many(user_ids)
+
+    @pytest.mark.asyncio
+    async def test_update_many_dry_run(self, cortex_client):
+        """Test dry run for update_many returns user_ids without updating."""
+        from tests.helpers import generate_test_user_id
+
+        user_ids = [generate_test_user_id() for _ in range(2)]
+
+        # Create test users
+        for uid in user_ids:
+            await cortex_client.users.update(uid, {"status": "active"})
+
+        # Dry run should return user_ids but not update
+        result = await cortex_client.users.update_many(
+            user_ids,
+            {"data": {"status": "inactive"}},
+            {"dry_run": True}
+        )
+
+        # Should report 0 updated but list the user_ids
+        assert result["updated"] == 0
+        assert len(result["user_ids"]) == 2
+
+        # Users should still have original status
+        for uid in user_ids:
+            user = await cortex_client.users.get(uid)
+            assert user is not None
+            assert user.data.get("status") == "active"
+
+        # Cleanup
+        await cortex_client.users.delete_many(user_ids)
+
+
+class TestMergeCreatesUser:
+    """Test that merge() creates user if not found."""
+
+    @pytest.mark.asyncio
+    async def test_merge_creates_new_user(self, cortex_client):
+        """merge() should create user if they don't exist."""
+        from tests.helpers import generate_test_user_id
+
+        new_user_id = generate_test_user_id()
+
+        # User should not exist
+        existing = await cortex_client.users.get(new_user_id)
+        assert existing is None
+
+        # merge() should create the user
+        result = await cortex_client.users.merge(
+            new_user_id,
+            {"displayName": "New User", "tier": "free"}
+        )
+
+        assert result.id == new_user_id
+        assert result.data["displayName"] == "New User"
+        assert result.data["tier"] == "free"
+
+        # Cleanup
+        await cortex_client.users.delete(new_user_id)
+
+
+class TestExportUsersOptions:
+    """Test export with ExportUsersOptions."""
+
+    @pytest.mark.asyncio
+    async def test_export_csv_format(self, cortex_client, test_user_id, cleanup_helper):
+        """Test exporting users as CSV."""
+        # Create user
+        await cortex_client.users.update(
+            test_user_id,
+            {"displayName": "CSV Test", "email": "csv@test.com"},
+        )
+
+        # Export as CSV
+        result = await cortex_client.users.export(ExportUsersOptions(format="csv"))
+
+        # Should return CSV string
+        assert result is not None
+        assert isinstance(result, str)
+        assert "id" in result  # CSV header
+        assert test_user_id in result
+
+        # Cleanup
+        await cortex_client.users.delete(test_user_id)
 

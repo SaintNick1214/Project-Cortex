@@ -2069,4 +2069,580 @@ describe("Immutable Store API (Layer 1b)", () => {
       expect(countB).toBeGreaterThanOrEqual(1);
     });
   });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Additional Coverage Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("list() Combined Filters", () => {
+    const combinedType = ctx.immutableType("combined-filter");
+    const combinedUserId = ctx.userId("combined-filter");
+
+    beforeAll(async () => {
+      // Create entries with various combinations
+      await cortex.immutable.store({
+        type: combinedType,
+        id: ctx.immutableId("combo-1"),
+        userId: combinedUserId,
+        data: { index: 1 },
+      });
+
+      await cortex.immutable.store({
+        type: combinedType,
+        id: ctx.immutableId("combo-2"),
+        userId: combinedUserId,
+        data: { index: 2 },
+      });
+
+      await cortex.immutable.store({
+        type: combinedType,
+        id: ctx.immutableId("combo-3"),
+        userId: "other-user",
+        data: { index: 3 },
+      });
+
+      await cortex.immutable.store({
+        type: combinedType,
+        id: ctx.immutableId("combo-4"),
+        userId: combinedUserId,
+        data: { index: 4 },
+      });
+
+      await cortex.immutable.store({
+        type: combinedType,
+        id: ctx.immutableId("combo-5"),
+        userId: combinedUserId,
+        data: { index: 5 },
+      });
+    });
+
+    it("combines type and userId filters", async () => {
+      const results = await cortex.immutable.list({
+        type: combinedType,
+        userId: combinedUserId,
+      });
+
+      expect(results.length).toBe(4);
+      results.forEach((entry) => {
+        expect(entry.type).toBe(combinedType);
+        expect(entry.userId).toBe(combinedUserId);
+      });
+    });
+
+    it("combines type, userId, and limit filters", async () => {
+      const results = await cortex.immutable.list({
+        type: combinedType,
+        userId: combinedUserId,
+        limit: 2,
+      });
+
+      expect(results.length).toBe(2);
+      results.forEach((entry) => {
+        expect(entry.type).toBe(combinedType);
+        expect(entry.userId).toBe(combinedUserId);
+      });
+    });
+
+    it("limit of 1 returns exactly 1 entry", async () => {
+      const results = await cortex.immutable.list({
+        type: combinedType,
+        limit: 1,
+      });
+
+      expect(results.length).toBe(1);
+    });
+
+    it("returns consistent results across multiple calls", async () => {
+      const results1 = await cortex.immutable.list({
+        type: combinedType,
+        userId: combinedUserId,
+      });
+
+      const results2 = await cortex.immutable.list({
+        type: combinedType,
+        userId: combinedUserId,
+      });
+
+      // Same count
+      expect(results1.length).toBe(results2.length);
+
+      // Same IDs (order may vary based on backend implementation)
+      const ids1 = results1.map((e) => e.id).sort();
+      const ids2 = results2.map((e) => e.id).sort();
+      expect(ids1).toEqual(ids2);
+    });
+
+    it("limit larger than result set returns all entries", async () => {
+      const results = await cortex.immutable.list({
+        type: combinedType,
+        userId: combinedUserId,
+        limit: 1000,
+      });
+
+      expect(results.length).toBe(4);
+    });
+  });
+
+  describe("search() Edge Cases", () => {
+    const searchEdgeType = ctx.immutableType("search-edge");
+
+    beforeAll(async () => {
+      // Create entries with various data structures
+      await cortex.immutable.store({
+        type: searchEdgeType,
+        id: ctx.immutableId("nested-data"),
+        data: {
+          outer: {
+            inner: {
+              deepValue: "findable-nested-content",
+            },
+          },
+          flat: "surface-level",
+        },
+      });
+
+      await cortex.immutable.store({
+        type: searchEdgeType,
+        id: ctx.immutableId("multi-field"),
+        data: {
+          title: "Multi-field search test",
+          description: "This has multiple searchable fields",
+          content: "Content field with different text",
+        },
+      });
+
+      await cortex.immutable.store({
+        type: searchEdgeType,
+        id: ctx.immutableId("special-chars"),
+        data: {
+          content: "Special chars: email@example.com, $100, 50%",
+          code: "function() { return true; }",
+        },
+      });
+
+      await cortex.immutable.store({
+        type: searchEdgeType,
+        id: ctx.immutableId("unicode"),
+        data: {
+          content: "Unicode: café, naïve, 日本語",
+          emoji: "Emojis: 🚀 🔥 ✨",
+        },
+      });
+    });
+
+    it("finds content in nested objects", async () => {
+      const results = await cortex.immutable.search({
+        query: "findable-nested",
+        type: searchEdgeType,
+      });
+
+      expect(results.length).toBeGreaterThanOrEqual(1);
+      const found = results.some(
+        (r) => r.entry.id === ctx.immutableId("nested-data"),
+      );
+      expect(found).toBe(true);
+    });
+
+    it("searches across multiple fields in data object", async () => {
+      // Search in title
+      const titleResults = await cortex.immutable.search({
+        query: "Multi-field",
+        type: searchEdgeType,
+      });
+      expect(
+        titleResults.some(
+          (r) => r.entry.id === ctx.immutableId("multi-field"),
+        ),
+      ).toBe(true);
+
+      // Search in description
+      const descResults = await cortex.immutable.search({
+        query: "searchable fields",
+        type: searchEdgeType,
+      });
+      expect(
+        descResults.some((r) => r.entry.id === ctx.immutableId("multi-field")),
+      ).toBe(true);
+
+      // Search in content
+      const contentResults = await cortex.immutable.search({
+        query: "different text",
+        type: searchEdgeType,
+      });
+      expect(
+        contentResults.some(
+          (r) => r.entry.id === ctx.immutableId("multi-field"),
+        ),
+      ).toBe(true);
+    });
+
+    it("handles special characters in query", async () => {
+      // Email-like pattern
+      const emailResults = await cortex.immutable.search({
+        query: "email@example",
+        type: searchEdgeType,
+      });
+      expect(emailResults.length).toBeGreaterThanOrEqual(1);
+
+      // Dollar sign
+      const dollarResults = await cortex.immutable.search({
+        query: "$100",
+        type: searchEdgeType,
+      });
+      expect(dollarResults.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it("handles unicode characters in query", async () => {
+      const results = await cortex.immutable.search({
+        query: "café",
+        type: searchEdgeType,
+      });
+
+      expect(results.length).toBeGreaterThanOrEqual(1);
+      expect(
+        results.some((r) => r.entry.id === ctx.immutableId("unicode")),
+      ).toBe(true);
+    });
+
+    it("returns highlights for matched content", async () => {
+      const results = await cortex.immutable.search({
+        query: "surface-level",
+        type: searchEdgeType,
+      });
+
+      expect(results.length).toBeGreaterThanOrEqual(1);
+      const match = results.find(
+        (r) => r.entry.id === ctx.immutableId("nested-data"),
+      );
+      expect(match).toBeDefined();
+      expect(match!.highlights.length).toBeGreaterThan(0);
+      expect(match!.highlights[0].toLowerCase()).toContain("surface");
+    });
+  });
+
+  describe("getAtTimestamp After purgeVersions", () => {
+    it("returns earliest available version for purged historical timestamps", async () => {
+      const type = ctx.immutableType("timestamp-purge-test");
+      const id = ctx.immutableId("purge-timestamps");
+
+      // Create 10 versions with small delays to ensure distinct timestamps
+      const timestamps: number[] = [];
+      for (let i = 1; i <= 10; i++) {
+        const result = await cortex.immutable.store({
+          type,
+          id,
+          data: { version: i },
+        });
+        timestamps.push(result.updatedAt);
+        await new Promise((resolve) => setTimeout(resolve, 20));
+      }
+
+      // Verify we can get early versions by timestamp
+      const v2AtTime = await cortex.immutable.getAtTimestamp(
+        type,
+        id,
+        timestamps[1],
+      );
+      expect(v2AtTime).not.toBeNull();
+      expect(v2AtTime!.version).toBe(2);
+
+      // Purge old versions, keep only latest 3 (versions 8, 9, 10)
+      const purgeResult = await cortex.immutable.purgeVersions(type, id, 3);
+      expect(purgeResult.versionsPurged).toBe(7);
+
+      // After purge, early timestamps return earliest available version (best effort)
+      // Since versions 1-7 are purged, querying for v2's timestamp returns v8 (earliest available)
+      const v2AfterPurge = await cortex.immutable.getAtTimestamp(
+        type,
+        id,
+        timestamps[1],
+      );
+      expect(v2AfterPurge).not.toBeNull();
+      expect(v2AfterPurge!.version).toBe(8); // Earliest available after purge
+
+      // Recent timestamps should still work accurately
+      const v10AtTime = await cortex.immutable.getAtTimestamp(
+        type,
+        id,
+        timestamps[9],
+      );
+      expect(v10AtTime).not.toBeNull();
+      expect(v10AtTime!.version).toBe(10);
+
+      // Future timestamp should return latest version
+      const future = await cortex.immutable.getAtTimestamp(
+        type,
+        id,
+        Date.now() + 10000,
+      );
+      expect(future).not.toBeNull();
+      expect(future!.version).toBe(10);
+    });
+
+    it("handles getAtTimestamp for entry with only current version after full purge", async () => {
+      const type = ctx.immutableType("full-purge-timestamp");
+      const id = ctx.immutableId("only-current");
+
+      // Create 5 versions
+      for (let i = 1; i <= 5; i++) {
+        await cortex.immutable.store({
+          type,
+          id,
+          data: { version: i },
+        });
+        await new Promise((resolve) => setTimeout(resolve, 10));
+      }
+
+      // Purge all but current (keep 1)
+      await cortex.immutable.purgeVersions(type, id, 1);
+
+      // Get current
+      const current = await cortex.immutable.get(type, id);
+      expect(current!.version).toBe(5);
+      expect(current!.previousVersions).toHaveLength(0);
+
+      // Timestamp at current version should work
+      const atCurrent = await cortex.immutable.getAtTimestamp(
+        type,
+        id,
+        current!.updatedAt,
+      );
+      expect(atCurrent).not.toBeNull();
+      expect(atCurrent!.version).toBe(5);
+
+      // Old timestamp (before creation) should return null
+      const beforeCreation = await cortex.immutable.getAtTimestamp(
+        type,
+        id,
+        current!.createdAt - 1000,
+      );
+      expect(beforeCreation).toBeNull();
+    });
+  });
+
+  describe("Backend Error Propagation", () => {
+    it("propagates IMMUTABLE_ENTRY_NOT_FOUND error from purge", async () => {
+      const nonExistentType = ctx.immutableType("non-existent");
+      const nonExistentId = ctx.immutableId("does-not-exist");
+
+      await expect(
+        cortex.immutable.purge(nonExistentType, nonExistentId),
+      ).rejects.toThrow("IMMUTABLE_ENTRY_NOT_FOUND");
+    });
+
+    it("propagates IMMUTABLE_ENTRY_NOT_FOUND error from purgeVersions", async () => {
+      await expect(
+        cortex.immutable.purgeVersions("nonexistent-type", "nonexistent-id", 5),
+      ).rejects.toThrow("IMMUTABLE_ENTRY_NOT_FOUND");
+    });
+
+    it("handles errors gracefully without corrupting state", async () => {
+      const type = ctx.immutableType("error-recovery");
+      const id = ctx.immutableId("stable-entry");
+
+      // Create entry
+      const created = await cortex.immutable.store({
+        type,
+        id,
+        data: { value: "original" },
+      });
+
+      // Try to purge a non-existent entry (should fail)
+      try {
+        await cortex.immutable.purge(type, "wrong-id");
+      } catch {
+        // Expected to fail
+      }
+
+      // Original entry should still be intact
+      const retrieved = await cortex.immutable.get(type, id);
+      expect(retrieved).not.toBeNull();
+      expect(retrieved!.id).toBe(id);
+      expect(retrieved!.data.value).toBe("original");
+      expect(retrieved!.version).toBe(created.version);
+    });
+  });
+
+  describe("store() with syncToGraph Option", () => {
+    it("accepts syncToGraph option without error when no graph adapter", async () => {
+      const type = ctx.immutableType("graph-sync-test");
+      const id = ctx.immutableId("no-adapter");
+
+      // Should not throw even with syncToGraph: true when no adapter configured
+      const result = await cortex.immutable.store(
+        {
+          type,
+          id,
+          data: { value: "test" },
+        },
+        { syncToGraph: true },
+      );
+
+      expect(result).toBeDefined();
+      expect(result.type).toBe(type);
+      expect(result.id).toBe(id);
+    });
+
+    it("creates entry normally with syncToGraph: false", async () => {
+      const type = ctx.immutableType("graph-sync-false");
+      const id = ctx.immutableId("no-sync");
+
+      const result = await cortex.immutable.store(
+        {
+          type,
+          id,
+          data: { value: "no sync" },
+        },
+        { syncToGraph: false },
+      );
+
+      expect(result).toBeDefined();
+      expect(result.version).toBe(1);
+
+      // Verify entry exists
+      const retrieved = await cortex.immutable.get(type, id);
+      expect(retrieved).not.toBeNull();
+    });
+
+    it("syncToGraph option does not affect versioning", async () => {
+      const type = ctx.immutableType("graph-sync-version");
+      const id = ctx.immutableId("version-check");
+
+      // Create v1 with syncToGraph
+      const v1 = await cortex.immutable.store(
+        {
+          type,
+          id,
+          data: { version: 1 },
+        },
+        { syncToGraph: true },
+      );
+
+      expect(v1.version).toBe(1);
+
+      // Update to v2 without syncToGraph
+      const v2 = await cortex.immutable.store(
+        {
+          type,
+          id,
+          data: { version: 2 },
+        },
+        { syncToGraph: false },
+      );
+
+      expect(v2.version).toBe(2);
+      expect(v2.previousVersions).toHaveLength(1);
+
+      // Update to v3 with syncToGraph again
+      const v3 = await cortex.immutable.store(
+        {
+          type,
+          id,
+          data: { version: 3 },
+        },
+        { syncToGraph: true },
+      );
+
+      expect(v3.version).toBe(3);
+      expect(v3.previousVersions).toHaveLength(2);
+    });
+  });
+
+  describe("Large Scale List and Search", () => {
+    const scaleType = ctx.immutableType("scale-test");
+    const scaleUserId = ctx.userId("scale-test");
+
+    beforeAll(async () => {
+      // Create 50+ entries for pagination testing
+      const promises = [];
+      for (let i = 1; i <= 55; i++) {
+        promises.push(
+          cortex.immutable.store({
+            type: scaleType,
+            id: ctx.immutableId(`scale-${i}`),
+            userId: i <= 30 ? scaleUserId : "other-user",
+            data: {
+              index: i,
+              searchable: `Entry number ${i} with searchable content`,
+              category: i % 3 === 0 ? "categoryA" : "categoryB",
+            },
+          }),
+        );
+      }
+      await Promise.all(promises);
+    });
+
+    it("list respects default limit of 50", async () => {
+      // Backend has default limit of 50, so without explicit limit we get max 50
+      const results = await cortex.immutable.list({ type: scaleType });
+      expect(results.length).toBe(50);
+    });
+
+    it("list with explicit higher limit returns all entries", async () => {
+      const results = await cortex.immutable.list({
+        type: scaleType,
+        limit: 100,
+      });
+      expect(results.length).toBe(55);
+    });
+
+    it("list with userId filter returns correct subset", async () => {
+      const results = await cortex.immutable.list({
+        type: scaleType,
+        userId: scaleUserId,
+      });
+      expect(results.length).toBe(30);
+    });
+
+    it("list with limit pages through results", async () => {
+      // First page
+      const page1 = await cortex.immutable.list({
+        type: scaleType,
+        limit: 20,
+      });
+      expect(page1.length).toBe(20);
+
+      // All IDs in first page should be unique
+      const ids = new Set(page1.map((e) => e.id));
+      expect(ids.size).toBe(20);
+    });
+
+    it("search returns relevant results from large dataset", async () => {
+      const results = await cortex.immutable.search({
+        query: "Entry number",
+        type: scaleType,
+        limit: 10,
+      });
+
+      expect(results.length).toBe(10);
+      results.forEach((r) => {
+        expect(r.entry.type).toBe(scaleType);
+        expect(r.score).toBeGreaterThan(0);
+      });
+    });
+
+    it("count matches actual total for large datasets", async () => {
+      // count() returns the total regardless of default limit
+      const count = await cortex.immutable.count({
+        type: scaleType,
+      });
+
+      expect(count).toBe(55);
+    });
+
+    it("count matches list length for filtered queries", async () => {
+      const count = await cortex.immutable.count({
+        type: scaleType,
+        userId: scaleUserId,
+      });
+
+      const list = await cortex.immutable.list({
+        type: scaleType,
+        userId: scaleUserId,
+      });
+
+      expect(count).toBe(list.length);
+      expect(count).toBe(30);
+    });
+  });
 });

@@ -5,7 +5,7 @@ Coordination Layer: User profile management with GDPR cascade deletion
 """
 
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 __all__ = ["UsersAPI", "UserValidationError"]
 
@@ -13,6 +13,9 @@ from .._utils import convert_convex_response, filter_none_values  # noqa: F401
 from ..errors import CascadeDeletionError, CortexError, ErrorCode
 from ..types import (
     DeleteUserOptions,
+    ExportUsersOptions,
+    ListUsersFilter,
+    ListUsersResult,
     UserDeleteResult,
     UserProfile,
     UserVersion,
@@ -20,10 +23,14 @@ from ..types import (
 )
 from .validators import (
     UserValidationError,
+    validate_bulk_delete_options,
+    validate_bulk_update_options,
     validate_data,
     validate_delete_options,
+    validate_export_options,
     validate_export_format,
     validate_limit,
+    validate_list_users_filter,
     validate_offset,
     validate_timestamp,
     validate_user_id,
@@ -325,95 +332,192 @@ class UsersAPI:
             await self._rollback_deletion(backup)
             raise CascadeDeletionError(f"Cascade deletion failed: {e}", cause=e)
 
-    async def search(
-        self, filters: Optional[Dict[str, Any]] = None, limit: int = 50
-    ) -> List[UserProfile]:
+    async def search(self, filters: Optional[ListUsersFilter] = None) -> List[UserProfile]:
         """
         Search user profiles with filters.
 
         Args:
-            filters: Filter criteria
-            limit: Maximum results
+            filters: Filter, sorting, and pagination options
 
         Returns:
-            List of matching user profiles
+            Array of matching user profiles
 
         Example:
-            >>> pro_users = await cortex.users.search(
-            ...     {'data.tier': 'pro'},
+            >>> # Search with date filter
+            >>> recent_users = await cortex.users.search(ListUsersFilter(
+            ...     created_after=int((time.time() - 30 * 24 * 60 * 60) * 1000),
             ...     limit=100
-            ... )
+            ... ))
+            >>>
+            >>> # Search by displayName (client-side filter)
+            >>> alex_users = await cortex.users.search(ListUsersFilter(
+            ...     display_name='alex',
+            ...     limit=50
+            ... ))
+            >>>
+            >>> # Search with sorting
+            >>> sorted_users = await cortex.users.search(ListUsersFilter(
+            ...     sort_by='updatedAt',
+            ...     sort_order='desc'
+            ... ))
         """
         # Client-side validation
-        validate_limit(limit, "limit")
+        validate_list_users_filter(filters)
 
-        # Client-side implementation using immutable:list (like TypeScript SDK)
+        # Extract filter values with defaults
+        limit = filters.limit if filters and filters.limit else 50
+
+        # Query using immutable:list with type='user' (like TS SDK)
         result = await self._execute_with_resilience(
             lambda: self.client.query(
-                "immutable:list", filter_none_values({"type": "user", "limit": limit})
+                "immutable:list",
+                filter_none_values({
+                    "type": "user",
+                    "limit": limit,
+                    "offset": filters.offset if filters else None,
+                    "createdAfter": filters.created_after if filters else None,
+                    "createdBefore": filters.created_before if filters else None,
+                    "updatedAfter": filters.updated_after if filters else None,
+                    "updatedBefore": filters.updated_before if filters else None,
+                    "sortBy": filters.sort_by if filters else None,
+                    "sortOrder": filters.sort_order if filters else None,
+                }),
             ),
-            "immutable:list",
+            "users:search",
         )
 
-        # Map immutable records to UserProfile objects
-        return [
+        # Extract entries from the new response format
+        if isinstance(result, dict):
+            entries = result.get("entries", [])
+        else:
+            entries = result if isinstance(result, list) else []
+
+        # Map to UserProfile
+        users = [
             UserProfile(
                 id=u["id"],
-                data=u["data"],
-                version=u["version"],
-                created_at=u["createdAt"],
-                updated_at=u["updatedAt"],
+                data=u.get("data", {}),
+                version=u.get("version", 1),
+                created_at=u.get("createdAt", 0),
+                updated_at=u.get("updatedAt", 0),
             )
-            for u in result
+            for u in entries
         ]
 
-    async def list(self, limit: int = 50, offset: int = 0) -> Dict[str, Any]:
+        # Apply client-side filters for nested data properties
+        if filters and filters.display_name:
+            search_name = filters.display_name.lower()
+            users = [
+                u for u in users
+                if u.data.get("displayName", "").lower().find(search_name) >= 0
+            ]
+
+        if filters and filters.email:
+            search_email = filters.email.lower()
+            users = [
+                u for u in users
+                if u.data.get("email", "").lower().find(search_email) >= 0
+            ]
+
+        return users
+
+    async def list(self, filters: Optional[ListUsersFilter] = None) -> ListUsersResult:
         """
-        List user profiles with pagination.
+        List user profiles with pagination, filtering, and sorting.
 
         Args:
-            limit: Maximum results
-            offset: Number of results to skip (not currently supported by backend)
+            filters: Filter and pagination options
 
         Returns:
-            List result with pagination info
+            ListUsersResult with pagination metadata
 
         Example:
-            >>> page1 = await cortex.users.list(limit=50)
+            >>> # Basic listing with limit
+            >>> result = await cortex.users.list(ListUsersFilter(limit=50))
+            >>> print(f"Found {result.total} users, showing {len(result.users)}")
+            >>>
+            >>> # With date filters and sorting
+            >>> recent = await cortex.users.list(ListUsersFilter(
+            ...     created_after=int((time.time() - 7 * 24 * 60 * 60) * 1000),
+            ...     sort_by='createdAt',
+            ...     sort_order='desc',
+            ...     limit=20
+            ... ))
+            >>>
+            >>> # Pagination
+            >>> page2 = await cortex.users.list(ListUsersFilter(limit=10, offset=10))
         """
         # Client-side validation
-        validate_limit(limit, "limit")
-        validate_offset(offset, "offset")
+        validate_list_users_filter(filters)
 
-        # Note: offset is not supported by the Convex backend yet
+        # Extract filter values with defaults
+        limit = filters.limit if filters and filters.limit else 50
+        offset = filters.offset if filters and filters.offset else 0
+
+        # Query using immutable:list with type='user' (like TS SDK)
         result = await self._execute_with_resilience(
             lambda: self.client.query(
-                "users:list", filter_none_values({"limit": limit})
+                "immutable:list",
+                filter_none_values({
+                    "type": "user",
+                    "limit": limit,
+                    "offset": offset,
+                    "createdAfter": filters.created_after if filters else None,
+                    "createdBefore": filters.created_before if filters else None,
+                    "updatedAfter": filters.updated_after if filters else None,
+                    "updatedBefore": filters.updated_before if filters else None,
+                    "sortBy": filters.sort_by if filters else None,
+                    "sortOrder": filters.sort_order if filters else None,
+                }),
             ),
             "users:list",
         )
 
-        # Handle if result is a list or dict
-        if isinstance(result, list):
-            # Convex returned list directly
-            users = result
+        # Extract entries from the new response format
+        if isinstance(result, dict):
+            entries = result.get("entries", [])
+            total = result.get("total", len(entries))
+            has_more = result.get("hasMore", False)
         else:
-            # Convex returned dict with users key
-            users = result.get("users", [])
+            # Handle if result is a list directly
+            entries = result if isinstance(result, list) else []
+            total = len(entries)
+            has_more = False
 
-        user_profiles = [
+        # Map to UserProfile
+        users = [
             UserProfile(
                 id=u["id"],
-                data=u["data"],
-                version=u["version"],
-                created_at=u["createdAt"],
-                updated_at=u["updatedAt"],
+                data=u.get("data", {}),
+                version=u.get("version", 1),
+                created_at=u.get("createdAt", 0),
+                updated_at=u.get("updatedAt", 0),
             )
-            for u in users
+            for u in entries
         ]
 
-        # Return dict format for consistency
-        return {"users": user_profiles}
+        # Apply client-side filters for nested data properties
+        if filters and filters.display_name:
+            search_name = filters.display_name.lower()
+            users = [
+                u for u in users
+                if u.data.get("displayName", "").lower().find(search_name) >= 0
+            ]
+
+        if filters and filters.email:
+            search_email = filters.email.lower()
+            users = [
+                u for u in users
+                if u.data.get("email", "").lower().find(search_email) >= 0
+            ]
+
+        return ListUsersResult(
+            users=users,
+            total=total,
+            limit=limit,
+            offset=offset,
+            has_more=has_more,
+        )
 
     async def count(self, filters: Optional[Dict[str, Any]] = None) -> int:
         """
@@ -495,18 +599,22 @@ class UsersAPI:
         """
         Merge partial updates with existing profile.
 
+        This is an alias for update() with merge behavior. If the user doesn't
+        exist, just stores the updates (creates the user).
+
         Args:
             user_id: User ID
-            updates: Partial updates to merge
+            updates: Partial updates to merge with existing data
 
         Returns:
             Updated user profile
 
         Example:
-            >>> await cortex.users.merge(
-            ...     'user-123',
-            ...     {'preferences': {'notifications': True}}
-            ... )
+            >>> # Existing: { displayName: 'Alex', preferences: { theme: 'dark', language: 'en' } }
+            >>> await cortex.users.merge('user-123', {
+            ...     'preferences': {'notifications': True}  # Adds notifications, keeps theme and language
+            ... })
+            >>> # Result: { displayName: 'Alex', preferences: { theme: 'dark', language: 'en', notifications: True } }
         """
         # Client-side validation
         validate_user_id(user_id)
@@ -515,21 +623,33 @@ class UsersAPI:
         existing = await self.get(user_id)
 
         if not existing:
-            raise CortexError(ErrorCode.USER_NOT_FOUND, f"User {user_id} not found")
+            # Match TS behavior: if user doesn't exist, just store the updates
+            return await self.update(user_id, updates)
 
-        # Deep merge - recursively merge nested dicts
-        def deep_merge(base: Dict, override: Dict) -> Dict:
-            result = base.copy()
-            for key, value in override.items():
-                if key in result and isinstance(result[key], dict) and isinstance(value, dict):
-                    result[key] = deep_merge(result[key], value)
-                else:
-                    result[key] = value
-            return result
-
-        merged_data = deep_merge(existing.data, updates)
+        # Deep merge existing data with updates
+        merged_data = self._deep_merge(existing.data, updates)
 
         return await self.update(user_id, merged_data)
+
+    def _deep_merge(
+        self, target: Dict[str, Any], source: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Helper: Deep merge two dictionaries."""
+        result = target.copy()
+
+        for key, value in source.items():
+            if (
+                key in result
+                and isinstance(result[key], dict)
+                and isinstance(value, dict)
+            ):
+                # Recursively merge nested dicts
+                result[key] = self._deep_merge(result[key], value)
+            else:
+                # Overwrite with source value
+                result[key] = value
+
+        return result
 
     # Helper methods for cascade deletion
 
@@ -971,40 +1091,86 @@ class UsersAPI:
 
     async def update_many(
         self,
-        user_ids: List[str],
+        user_ids_or_filters: Union[List[str], ListUsersFilter],
         updates: Dict[str, Any],
-        skip_versioning: bool = False,
+        options: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
-        Bulk update multiple users.
+        Bulk update multiple users by explicit IDs or filters.
 
         Args:
-            user_ids: List of user IDs to update
-            updates: Updates to apply to all users
-            skip_versioning: Skip creating new versions
+            user_ids_or_filters: Array of user IDs OR ListUsersFilter object
+            updates: Updates to apply to matching users (must have 'data' key)
+            options: Update options (skip_versioning, dry_run)
 
         Returns:
-            Update result with count and user IDs
+            Update result with count and affected user_ids
 
         Example:
+            >>> # Update by explicit IDs
             >>> result = await cortex.users.update_many(
             ...     ['user-1', 'user-2', 'user-3'],
-            ...     {'status': 'active'}
+            ...     {'data': {'status': 'active'}}
             ... )
-            >>> print(f"Updated {result['updated']} users")
+            >>>
+            >>> # Update by filters (all users created in last 7 days)
+            >>> filtered = await cortex.users.update_many(
+            ...     ListUsersFilter(created_after=int((time.time() - 7 * 24 * 60 * 60) * 1000)),
+            ...     {'data': {'welcomeEmailSent': True}}
+            ... )
+            >>>
+            >>> # Dry run to preview
+            >>> preview = await cortex.users.update_many(
+            ...     ListUsersFilter(display_name='alex'),
+            ...     {'data': {'verified': True}},
+            ...     {'dry_run': True}
+            ... )
+            >>> print(f"Would update {len(preview['user_ids'])} users")
         """
-        # Client-side validation
-        validate_user_ids_array(user_ids, min_length=1, max_length=100)
-        validate_data(updates, "updates")
+        # Validate updates
+        if not updates or "data" not in updates:
+            raise UserValidationError(
+                "updates.data is required", "MISSING_DATA", "updates.data"
+            )
+        validate_data(updates["data"], "updates.data")
+        validate_bulk_update_options(options)
+
+        # Determine if we're using userIds array or filters
+        target_user_ids: List[str]
+
+        if isinstance(user_ids_or_filters, list):
+            # Explicit userIds array
+            validate_user_ids_array(user_ids_or_filters, min_length=1, max_length=100)
+            target_user_ids = user_ids_or_filters
+        else:
+            # Filter-based selection - search for matching users
+            validate_list_users_filter(user_ids_or_filters)
+            matching_users = await self.search(user_ids_or_filters)
+            target_user_ids = [u.id for u in matching_users]
+
+            # Limit to 100 users for safety
+            if len(target_user_ids) > 100:
+                raise UserValidationError(
+                    f"Filter matched {len(target_user_ids)} users, maximum is 100. Add more specific filters or use limit.",
+                    "TOO_MANY_MATCHES",
+                    "filters",
+                )
+
+        # Check for dry run
+        if options and options.get("dry_run"):
+            return {
+                "updated": 0,
+                "user_ids": target_user_ids,
+            }
 
         # Client-side implementation (like TypeScript SDK)
-        results = []
+        results: List[str] = []
 
-        for user_id in user_ids:
+        for user_id in target_user_ids:
             try:
                 user = await self.get(user_id)
                 if user:
-                    await self.update(user_id, updates)
+                    await self.update(user_id, updates["data"])
                     results.append(user_id)
             except Exception:
                 # Continue on error
@@ -1017,33 +1183,77 @@ class UsersAPI:
 
     async def delete_many(
         self,
-        user_ids: List[str],
-        cascade: bool = False,
+        user_ids_or_filters: Union[List[str], ListUsersFilter],
+        options: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
-        Bulk delete multiple users.
+        Bulk delete multiple users by explicit IDs or filters.
 
         Args:
-            user_ids: List of user IDs to delete
-            cascade: Enable cascade deletion
+            user_ids_or_filters: Array of user IDs OR ListUsersFilter object
+            options: Delete options (cascade, dry_run)
 
         Returns:
-            Deletion result with count and user IDs
+            Delete result with count and affected user_ids
 
         Example:
+            >>> # Delete by explicit IDs
             >>> result = await cortex.users.delete_many(
             ...     ['user-1', 'user-2', 'user-3'],
-            ...     cascade=True
+            ...     {'cascade': True}
             ... )
-            >>> print(f"Deleted {result['deleted']} users")
+            >>>
+            >>> # Delete by filters (inactive users older than 1 year)
+            >>> old_users = await cortex.users.delete_many(
+            ...     ListUsersFilter(created_before=int((time.time() - 365 * 24 * 60 * 60) * 1000)),
+            ...     {'cascade': True}
+            ... )
+            >>>
+            >>> # Dry run to preview what would be deleted
+            >>> preview = await cortex.users.delete_many(
+            ...     ListUsersFilter(updated_before=int((time.time() - 90 * 24 * 60 * 60) * 1000)),
+            ...     {'dry_run': True}
+            ... )
+            >>> print(f"Would delete {len(preview['user_ids'])} users")
         """
         # Client-side validation
-        validate_user_ids_array(user_ids, min_length=1, max_length=100)
+        validate_bulk_delete_options(options)
+
+        # Determine if we're using userIds array or filters
+        target_user_ids: List[str]
+
+        if isinstance(user_ids_or_filters, list):
+            # Explicit userIds array
+            validate_user_ids_array(user_ids_or_filters, min_length=1, max_length=100)
+            target_user_ids = user_ids_or_filters
+        else:
+            # Filter-based selection - search for matching users
+            validate_list_users_filter(user_ids_or_filters)
+            matching_users = await self.search(user_ids_or_filters)
+            target_user_ids = [u.id for u in matching_users]
+
+            # Limit to 100 users for safety
+            if len(target_user_ids) > 100:
+                raise UserValidationError(
+                    f"Filter matched {len(target_user_ids)} users, maximum is 100. Add more specific filters or use limit.",
+                    "TOO_MANY_MATCHES",
+                    "filters",
+                )
+
+        # Check for dry run
+        if options and options.get("dry_run"):
+            return {
+                "deleted": 0,
+                "user_ids": target_user_ids,
+            }
+
+        # Extract cascade option
+        cascade = options.get("cascade", False) if options else False
 
         # Client-side implementation (like TypeScript SDK)
-        results = []
+        results: List[str] = []
 
-        for user_id in user_ids:
+        for user_id in target_user_ids:
             try:
                 await self.delete(user_id, DeleteUserOptions(cascade=cascade))
                 results.append(user_id)
@@ -1056,73 +1266,175 @@ class UsersAPI:
             "user_ids": results,
         }
 
-    async def export(
-        self,
-        filters: Optional[Dict[str, Any]] = None,
-        format: str = "json",
-        include_memories: bool = False,
-        include_conversations: bool = False,
-        include_version_history: bool = False,
-    ) -> Dict[str, Any]:
+    async def export(self, options: Optional[ExportUsersOptions] = None) -> str:
         """
-        Export user profiles to JSON or CSV.
+        Export user profiles with optional related data.
 
         Args:
-            filters: Optional filter criteria
-            format: Export format ('json' or 'csv')
-            include_memories: Include memories from all agents
-            include_conversations: Include ACID conversations
-            include_version_history: Include profile versions
+            options: Export options including format and what to include
 
         Returns:
-            Export result
+            Exported data as JSON or CSV string
 
         Example:
-            >>> exported = await cortex.users.export(
-            ...     filters={'email': 'alex@example.com'},
+            >>> # Basic JSON export
+            >>> json_str = await cortex.users.export(ExportUsersOptions(format='json'))
+            >>>
+            >>> # Export with version history
+            >>> with_history = await cortex.users.export(ExportUsersOptions(
             ...     format='json',
+            ...     include_version_history=True
+            ... ))
+            >>>
+            >>> # Full GDPR export with conversations and memories
+            >>> gdpr_export = await cortex.users.export(ExportUsersOptions(
+            ...     format='json',
+            ...     filters=ListUsersFilter(display_name='alex'),
+            ...     include_version_history=True,
+            ...     include_conversations=True,
             ...     include_memories=True
-            ... )
+            ... ))
         """
-        # Client-side validation
-        validate_export_format(format)
-
-        # Client-side implementation (like TypeScript SDK)
         import json
 
-        # Get users using list()
-        users_result = await self.list(limit=1000)  # Get all users
-        users = users_result.get("users", [])
+        # Client-side validation
+        validate_export_options(options)
 
-        if format == "csv":
-            # CSV export
+        # Default to JSON format if no options provided
+        export_format = options.format if options else "json"
+        filters = options.filters if options else None
+        include_version_history = options.include_version_history if options else False
+        include_conversations = options.include_conversations if options else False
+        include_memories = options.include_memories if options else False
+
+        # Get users using list() with filters
+        result = await self.list(filters)
+        users = result.users
+
+        # Build export data structure
+        export_data: List[Dict[str, Any]] = []
+
+        for user in users:
+            user_data: Dict[str, Any] = {
+                "id": user.id,
+                "data": user.data,
+                "version": user.version,
+                "createdAt": user.created_at,
+                "updatedAt": user.updated_at,
+            }
+
+            # Include version history if requested
+            if include_version_history:
+                try:
+                    history = await self.get_history(user.id)
+                    user_data["versionHistory"] = [
+                        {
+                            "version": v.version,
+                            "data": v.data,
+                            "timestamp": v.timestamp,
+                        }
+                        for v in history
+                    ]
+                except Exception:
+                    # Skip if history unavailable
+                    pass
+
+            # Include conversations if requested
+            if include_conversations:
+                try:
+                    convos_result = await self.client.query(
+                        "conversations:list",
+                        filter_none_values({"userId": user.id}),
+                    )
+                    # Handle both array and paginated result formats
+                    convos = (
+                        convos_result
+                        if isinstance(convos_result, list)
+                        else convos_result.get("conversations", [])
+                    )
+                    user_data["conversations"] = convos
+                except Exception:
+                    # Skip if conversations unavailable
+                    pass
+
+            # Include memories if requested
+            if include_memories:
+                try:
+                    all_memories: List[Any] = []
+
+                    # Get memory space IDs from conversations
+                    if user_data.get("conversations"):
+                        memory_space_ids = set()
+                        for convo in user_data["conversations"]:
+                            if convo.get("memorySpaceId"):
+                                memory_space_ids.add(convo["memorySpaceId"])
+
+                        # Query memories from each memory space
+                        for memory_space_id in memory_space_ids:
+                            try:
+                                memories = await self.client.query(
+                                    "memories:list",
+                                    filter_none_values({
+                                        "memorySpaceId": memory_space_id,
+                                        "userId": user.id,
+                                    }),
+                                )
+                                if isinstance(memories, list):
+                                    all_memories.extend(memories)
+                            except Exception:
+                                # Skip unavailable memory spaces
+                                pass
+
+                    user_data["memories"] = all_memories
+                except Exception:
+                    # Skip if memories unavailable
+                    pass
+
+            export_data.append(user_data)
+
+        if export_format == "csv":
+            # CSV export - flatten structure
             import csv
             import io
+
+            headers = [
+                "id",
+                "version",
+                "createdAt",
+                "updatedAt",
+                "data",
+            ]
+            if include_version_history:
+                headers.append("versionHistoryCount")
+            if include_conversations:
+                headers.append("conversationsCount")
+            if include_memories:
+                headers.append("memoriesCount")
+
             output = io.StringIO()
-            writer = csv.DictWriter(output, fieldnames=["id", "version", "createdAt", "updatedAt", "data"])
-            writer.writeheader()
-            for u in users:
-                writer.writerow({
-                    "id": u.id,
-                    "version": u.version,
-                    "createdAt": u.created_at,
-                    "updatedAt": u.updated_at,
-                    "data": json.dumps(u.data),
-                })
-            return output.getvalue() # type: ignore[return-value] # type: ignore[return-value]
+            writer = csv.writer(output)
+            writer.writerow(headers)
+
+            for u in export_data:
+                row = [
+                    u["id"],
+                    str(u["version"]),
+                    str(u["createdAt"]),
+                    str(u["updatedAt"]),
+                    json.dumps(u["data"]),
+                ]
+                if include_version_history:
+                    row.append(str(len(u.get("versionHistory", []))))
+                if include_conversations:
+                    row.append(str(len(u.get("conversations", []))))
+                if include_memories:
+                    row.append(str(len(u.get("memories", []))))
+                writer.writerow(row)
+
+            return output.getvalue()
 
         # JSON export (default)
-        export_data = [
-            {
-                "id": u.id,
-                "data": u.data,
-                "version": u.version,
-                "created_at": u.created_at,
-                "updated_at": u.updated_at,
-            }
-            for u in users
-        ]
-        return json.dumps(export_data, indent=2, default=str) # type: ignore[return-value] # type: ignore[return-value]
+        return json.dumps(export_data, indent=2, default=str)
 
     async def get_version(
         self, user_id: str, version: int

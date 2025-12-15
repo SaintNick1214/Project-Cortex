@@ -101,6 +101,128 @@ class ConversationSearchResult:
     score: float
 
 
+@dataclass
+class GetConversationOptions:
+    """Options for getting a conversation."""
+    include_messages: Optional[bool] = None  # Default: true
+    message_limit: Optional[int] = None  # Limit messages returned
+
+
+@dataclass
+class ListConversationsFilter:
+    """Comprehensive filter for listing conversations (v0.21.0+)."""
+    type: Optional[ConversationType] = None
+    user_id: Optional[str] = None
+    memory_space_id: Optional[str] = None
+    participant_id: Optional[str] = None  # Hive Mode tracking
+    created_before: Optional[int] = None
+    created_after: Optional[int] = None
+    updated_before: Optional[int] = None
+    updated_after: Optional[int] = None
+    last_message_before: Optional[int] = None
+    last_message_after: Optional[int] = None
+    message_count: Optional[int] = None  # Exact match, or use message_count_min/max
+    message_count_min: Optional[int] = None
+    message_count_max: Optional[int] = None
+    limit: Optional[int] = None
+    offset: Optional[int] = None
+    sort_by: Optional[Literal["createdAt", "updatedAt", "lastMessageAt", "messageCount"]] = None
+    sort_order: Optional[Literal["asc", "desc"]] = None
+    include_messages: Optional[bool] = None
+
+
+@dataclass
+class ListConversationsResult:
+    """Result from listing conversations with pagination metadata."""
+    conversations: List[Conversation]
+    total: int
+    limit: int
+    offset: int
+    has_more: bool
+
+
+@dataclass
+class CountConversationsFilter:
+    """Filter for counting conversations."""
+    type: Optional[ConversationType] = None
+    user_id: Optional[str] = None
+    memory_space_id: Optional[str] = None
+
+
+@dataclass
+class GetHistoryOptions:
+    """Options for getting conversation history."""
+    limit: Optional[int] = None
+    offset: Optional[int] = None
+    sort_order: Optional[Literal["asc", "desc"]] = None
+    since: Optional[int] = None  # Messages after timestamp
+    until: Optional[int] = None  # Messages before timestamp
+    roles: Optional[List[MessageRole]] = None  # Filter by role
+
+
+@dataclass
+class GetHistoryResult:
+    """Result from getting conversation history."""
+    messages: List[Message]
+    total: int
+    has_more: bool
+    conversation_id: str
+
+
+@dataclass
+class ConversationDeletionResult:
+    """Result from deleting a conversation."""
+    deleted: bool
+    conversation_id: str
+    messages_deleted: int
+    deleted_at: int
+    restorable: bool  # Always false for conversations
+
+
+@dataclass
+class DeleteManyConversationsOptions:
+    """Options for bulk conversation deletion."""
+    dry_run: Optional[bool] = None  # Preview what would be deleted
+    require_confirmation: Optional[bool] = None  # Require explicit confirmation
+    confirmation_threshold: Optional[int] = None  # Threshold for auto-confirm (default: 10)
+
+
+@dataclass
+class DeleteManyConversationsResult:
+    """Result from bulk conversation deletion."""
+    deleted: int
+    conversation_ids: List[str]
+    total_messages_deleted: int
+    would_delete: Optional[int] = None  # For dryRun mode
+    dry_run: Optional[bool] = None
+
+
+@dataclass
+class SearchConversationsOptions:
+    """Search options for conversations."""
+    search_in: Optional[Literal["content", "metadata", "both"]] = None  # Default: "content"
+    match_mode: Optional[Literal["contains", "exact", "fuzzy"]] = None  # Default: "contains"
+
+
+@dataclass
+class SearchConversationsFilters:
+    """Filters for conversation search."""
+    type: Optional[ConversationType] = None
+    user_id: Optional[str] = None
+    memory_space_id: Optional[str] = None
+    date_start: Optional[int] = None
+    date_end: Optional[int] = None
+    limit: Optional[int] = None
+
+
+@dataclass
+class SearchConversationsInput:
+    """Input for searching conversations."""
+    query: str
+    filters: Optional[SearchConversationsFilters] = None
+    options: Optional[SearchConversationsOptions] = None
+
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Layer 1b: Immutable Store
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -139,6 +261,91 @@ class ImmutableEntry:
     metadata: Optional[Dict[str, Any]] = None
 
 
+@dataclass
+class ImmutableVersionExpanded:
+    """Expanded version with full type/id information.
+
+    Returned by get_version(), get_history(), and get_at_timestamp().
+    """
+    type: str
+    id: str
+    version: int
+    data: Dict[str, Any]
+    timestamp: int
+    created_at: int
+    user_id: Optional[str] = None
+    metadata: Optional[Dict[str, Any]] = None
+
+
+@dataclass
+class ListImmutableFilter:
+    """Filter for listing immutable entries."""
+    type: Optional[str] = None
+    user_id: Optional[str] = None
+    limit: Optional[int] = None
+
+
+@dataclass
+class SearchImmutableInput:
+    """Input for searching immutable entries."""
+    query: str
+    type: Optional[str] = None
+    user_id: Optional[str] = None
+    limit: Optional[int] = None
+
+
+@dataclass
+class ImmutableSearchResult:
+    """Result from immutable search operation."""
+    entry: "ImmutableRecord"
+    score: float
+    highlights: List[str] = field(default_factory=list)
+
+
+@dataclass
+class CountImmutableFilter:
+    """Filter for counting immutable entries."""
+    type: Optional[str] = None
+    user_id: Optional[str] = None
+
+
+@dataclass
+class StoreImmutableOptions:
+    """Options for storing immutable data."""
+    sync_to_graph: Optional[bool] = None
+
+
+@dataclass
+class PurgeImmutableResult:
+    """Result from purging an immutable entry."""
+    deleted: bool
+    type: str
+    id: str
+    versions_deleted: int
+
+
+@dataclass
+class PurgeManyFilter:
+    """Filter for bulk purging immutable entries."""
+    type: Optional[str] = None
+    user_id: Optional[str] = None
+
+
+@dataclass
+class PurgeManyImmutableResult:
+    """Result from bulk purging immutable entries."""
+    deleted: int
+    total_versions_deleted: int
+    entries: List[Dict[str, str]] = field(default_factory=list)
+
+
+@dataclass
+class PurgeVersionsResult:
+    """Result from purging old versions."""
+    versions_purged: int
+    versions_remaining: int
+
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Layer 1c: Mutable Store
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -156,6 +363,76 @@ class MutableRecord:
     user_id: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
     last_accessed: Optional[int] = None
+
+
+@dataclass
+class ListMutableFilter:
+    """Filter for listing mutable records."""
+    namespace: str
+    key_prefix: Optional[str] = None
+    user_id: Optional[str] = None
+    limit: Optional[int] = None
+    offset: Optional[int] = None
+    updated_after: Optional[int] = None
+    updated_before: Optional[int] = None
+    sort_by: Optional[Literal["key", "updatedAt", "accessCount"]] = None
+    sort_order: Optional[Literal["asc", "desc"]] = None
+
+
+@dataclass
+class CountMutableFilter:
+    """Filter for counting mutable records."""
+    namespace: str
+    user_id: Optional[str] = None
+    key_prefix: Optional[str] = None
+    updated_after: Optional[int] = None
+    updated_before: Optional[int] = None
+
+
+@dataclass
+class PurgeManyMutableFilter:
+    """Filter for purging multiple mutable records."""
+    namespace: str
+    key_prefix: Optional[str] = None
+    user_id: Optional[str] = None
+    updated_before: Optional[int] = None
+    last_accessed_before: Optional[int] = None
+
+
+@dataclass
+class PurgeNamespaceOptions:
+    """Options for purging a mutable namespace."""
+    dry_run: Optional[bool] = None
+
+
+@dataclass
+class SetMutableOptions:
+    """Options for mutable set operation."""
+    sync_to_graph: Optional[bool] = None
+
+
+@dataclass
+class DeleteMutableOptions:
+    """Options for mutable delete operation."""
+    sync_to_graph: Optional[bool] = None
+
+
+@dataclass
+class MutableOperation:
+    """Single operation in a mutable transaction."""
+    op: Literal["set", "update", "delete", "increment", "decrement"]
+    namespace: str
+    key: str
+    value: Optional[Any] = None
+    amount: Optional[int] = None
+
+
+@dataclass
+class TransactionResult:
+    """Result from a mutable transaction."""
+    success: bool
+    operations_executed: int
+    results: List[Any] = field(default_factory=list)
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -366,6 +643,22 @@ class StoreFactParams:
 
 
 @dataclass
+class UpdateFactInput:
+    """Input for updating a fact."""
+    fact: Optional[str] = None
+    confidence: Optional[int] = None
+    tags: Optional[List[str]] = None
+    valid_until: Optional[int] = None
+    metadata: Optional[Dict[str, Any]] = None
+    # Enrichment fields (for bullet-proof retrieval)
+    category: Optional[str] = None  # Specific sub-category
+    search_aliases: Optional[List[str]] = None  # Alternative search terms
+    semantic_context: Optional[str] = None  # Usage context sentence
+    entities: Optional[List[EnrichedEntity]] = None  # Extracted entities with types
+    relations: Optional[List[EnrichedRelation]] = None  # Subject-predicate-object triples
+
+
+@dataclass
 class ListFactsFilter:
     """Universal filters for listing facts (v0.9.1+)."""
     # Required
@@ -543,6 +836,49 @@ class QueryByRelationshipFilter:
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @dataclass
+class StoreMemoryResult:
+    """Result from store() operation."""
+    memory: MemoryEntry
+    facts: List[FactRecord] = field(default_factory=list)
+
+
+@dataclass
+class UpdateMemoryResult:
+    """Result from update() operation."""
+    memory: MemoryEntry
+    facts_reextracted: Optional[List[FactRecord]] = None
+
+
+@dataclass
+class DeleteMemoryResult:
+    """Result from delete() operation."""
+    deleted: bool
+    memory_id: str
+    facts_deleted: int
+    fact_ids: List[str] = field(default_factory=list)
+
+
+@dataclass
+class ArchiveResult:
+    """Result from archive() operation."""
+    archived: bool
+    memory_id: str
+    restorable: bool
+    facts_archived: int
+    fact_ids: List[str] = field(default_factory=list)
+
+
+@dataclass
+class MemoryVersionInfo:
+    """Version information for temporal queries."""
+    memory_id: str
+    version: int
+    content: str
+    timestamp: int
+    embedding: Optional[List[float]] = None
+
+
+@dataclass
 class RememberParams:
     """Parameters for remembering a conversation.
 
@@ -714,7 +1050,9 @@ class ContextWithChain:
     children: List[Context]
     siblings: List[Context]
     ancestors: List[Context]
+    descendants: List[Context]
     depth: int
+    total_nodes: int
     parent: Optional[Context] = None
     conversation: Optional[Conversation] = None
     trigger_messages: Optional[List[Message]] = None
@@ -772,6 +1110,73 @@ class UserDeleteResult:
     deleted_layers: List[str]
     verification: VerificationResult
     graph_nodes_deleted: Optional[int] = None
+
+
+@dataclass
+class ListUsersFilter:
+    """Filter options for listing users with pagination and sorting.
+
+    Supports comprehensive filtering including date ranges, sorting,
+    and client-side text filtering for displayName and email.
+
+    Attributes:
+        limit: Maximum results to return (default: 50, max: 1000)
+        offset: Skip first N results for pagination (default: 0)
+        created_after: Filter by createdAt > timestamp (Unix ms)
+        created_before: Filter by createdAt < timestamp (Unix ms)
+        updated_after: Filter by updatedAt > timestamp (Unix ms)
+        updated_before: Filter by updatedAt < timestamp (Unix ms)
+        sort_by: Sort by field (default: "createdAt")
+        sort_order: Sort order (default: "desc")
+        display_name: Filter by displayName (client-side, contains match)
+        email: Filter by email (client-side, contains match)
+    """
+    limit: Optional[int] = None
+    offset: Optional[int] = None
+    created_after: Optional[int] = None
+    created_before: Optional[int] = None
+    updated_after: Optional[int] = None
+    updated_before: Optional[int] = None
+    sort_by: Optional[Literal["createdAt", "updatedAt"]] = None
+    sort_order: Optional[Literal["asc", "desc"]] = None
+    display_name: Optional[str] = None
+    email: Optional[str] = None
+
+
+@dataclass
+class ListUsersResult:
+    """Paginated result from listing users.
+
+    Attributes:
+        users: Array of user profiles
+        total: Total count before pagination
+        limit: Limit used for this query
+        offset: Offset used for this query
+        has_more: Whether there are more results beyond this page
+    """
+    users: List[UserProfile]
+    total: int
+    limit: int
+    offset: int
+    has_more: bool
+
+
+@dataclass
+class ExportUsersOptions:
+    """Options for exporting user profiles.
+
+    Attributes:
+        format: Export format ('json' or 'csv')
+        filters: Optional filters to apply before export
+        include_version_history: Include previousVersions array in export
+        include_conversations: Query and include user's conversations
+        include_memories: Query and include user's memories across all memory spaces
+    """
+    format: Literal["json", "csv"]
+    filters: Optional["ListUsersFilter"] = None
+    include_version_history: Optional[bool] = None
+    include_conversations: Optional[bool] = None
+    include_memories: Optional[bool] = None
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -844,6 +1249,51 @@ class UnregisterAgentResult:
     deletion_errors: List[str] = field(default_factory=list)  # Errors from best-effort deletion
 
 
+@dataclass
+class AgentFilters:
+    """Filter options for listing/searching agents.
+
+    Matches TypeScript SDK AgentFilters interface for full parity.
+    """
+    metadata: Optional[Dict[str, Any]] = None
+    name: Optional[str] = None  # Search in agent name (case-insensitive contains)
+    capabilities: Optional[List[str]] = None  # Filter by capabilities in metadata.capabilities
+    capabilities_match: Optional[Literal["any", "all"]] = None  # "any" (default) or "all"
+    status: Optional[Literal["active", "inactive", "archived"]] = None
+    registered_after: Optional[int] = None  # Unix timestamp in milliseconds
+    registered_before: Optional[int] = None  # Unix timestamp in milliseconds
+    last_active_after: Optional[int] = None  # Filter agents last active after timestamp
+    last_active_before: Optional[int] = None  # Filter agents last active before timestamp
+    limit: Optional[int] = None  # Max results (1-1000, default 100)
+    offset: Optional[int] = None  # Pagination offset
+    sort_by: Optional[Literal["name", "registeredAt", "lastActive"]] = None
+    sort_order: Optional[Literal["asc", "desc"]] = None
+
+
+@dataclass
+class ExportAgentsOptions:
+    """Options for exporting agents.
+
+    Matches TypeScript SDK ExportAgentsOptions interface.
+    """
+    format: Literal["json", "csv"]
+    filters: Optional[AgentFilters] = None
+    include_metadata: bool = True
+    include_stats: bool = False
+
+
+@dataclass
+class ExportAgentsResult:
+    """Result from agent export.
+
+    Matches TypeScript SDK ExportAgentsResult interface.
+    """
+    format: str
+    data: str
+    count: int
+    exported_at: int
+
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Memory Spaces
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -893,6 +1343,75 @@ class MemorySpaceStats:
     importance_breakdown: Dict[str, int]
     avg_search_time: Optional[str] = None
     participants: Optional[List[Dict[str, Any]]] = None
+
+
+@dataclass
+class ListMemorySpacesFilter:
+    """Filter options for listing memory spaces."""
+    type: Optional[MemorySpaceType] = None
+    status: Optional[MemorySpaceStatus] = None
+    participant: Optional[str] = None
+    limit: Optional[int] = None
+    offset: Optional[int] = None
+    sort_by: Optional[Literal["createdAt", "updatedAt", "name"]] = None
+    sort_order: Optional[Literal["asc", "desc"]] = None
+
+
+@dataclass
+class ListMemorySpacesResult:
+    """Result from listing memory spaces with pagination."""
+    spaces: List[MemorySpace]
+    total: int
+    has_more: bool
+    offset: int
+
+
+@dataclass
+class DeleteMemorySpaceOptions:
+    """Options for deleting a memory space."""
+    cascade: bool
+    reason: str
+    confirm_id: Optional[str] = None
+    sync_to_graph: Optional[bool] = None
+
+
+@dataclass
+class DeleteMemorySpaceCascade:
+    """Cascade deletion counts for memory space deletion."""
+    conversations_deleted: int
+    memories_deleted: int
+    facts_deleted: int
+    total_bytes: int
+
+
+@dataclass
+class DeleteMemorySpaceResult:
+    """Result from deleting a memory space."""
+    memory_space_id: str
+    deleted: bool
+    cascade: DeleteMemorySpaceCascade
+    reason: str
+    deleted_at: int
+
+
+@dataclass
+class GetMemorySpaceStatsOptions:
+    """Options for getting memory space statistics."""
+    time_window: Optional[Literal["24h", "7d", "30d", "90d", "all"]] = None
+    include_participants: Optional[bool] = None
+
+
+@dataclass
+class UpdateMemorySpaceOptions:
+    """Options for updating a memory space."""
+    sync_to_graph: Optional[bool] = None
+
+
+@dataclass
+class ParticipantUpdates:
+    """Updates for memory space participants."""
+    add: Optional[List[Dict[str, Any]]] = None
+    remove: Optional[List[str]] = None
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -972,6 +1491,59 @@ class A2ABroadcastResult:
     conversation_ids: Optional[List[str]] = None
 
 
+@dataclass
+class A2AConversationFilters:
+    """Filters for getConversation.
+
+    All filter fields are optional. The since/until fields accept Unix timestamps
+    in milliseconds (matching TypeScript SDK's Date.getTime()).
+    """
+    since: Optional[int] = None  # Unix timestamp (ms) - filter by start date
+    until: Optional[int] = None  # Unix timestamp (ms) - filter by end date
+    min_importance: Optional[int] = None  # Minimum importance filter (0-100)
+    tags: Optional[List[str]] = None  # Filter by tags
+    user_id: Optional[str] = None  # Filter A2A about specific user
+    limit: int = 100  # Maximum messages to return
+    offset: int = 0  # Pagination offset
+
+
+@dataclass
+class A2AConversationMessage:
+    """Individual message in A2A conversation.
+
+    Represents a single message exchanged between two agents.
+    """
+    from_agent: str  # Sender agent ID
+    to_agent: str  # Receiver agent ID
+    message: str  # Message content
+    importance: int  # Importance level (0-100)
+    timestamp: int  # Unix timestamp (ms)
+    message_id: str  # Unique message ID
+    memory_id: str  # Vector memory ID
+    acid_message_id: Optional[str] = None  # ACID message ID (if tracked)
+    tags: Optional[List[str]] = None  # Tags
+    direction: Optional[str] = None  # "inbound" or "outbound"
+    broadcast: Optional[bool] = None  # True if part of broadcast
+    broadcast_id: Optional[str] = None  # Broadcast ID if applicable
+
+
+@dataclass
+class A2AConversation:
+    """A2A conversation result.
+
+    Represents a conversation between two agents with message history
+    and metadata about the conversation period.
+    """
+    participants: List[str]  # Tuple of 2 agent IDs
+    message_count: int  # Total message count (before pagination)
+    messages: List[A2AConversationMessage]  # Conversation messages
+    period_start: int  # Start of time period covered (Unix timestamp ms)
+    period_end: int  # End of time period covered (Unix timestamp ms)
+    can_retrieve_full_history: bool  # True if ACID conversation exists
+    conversation_id: Optional[str] = None  # ACID conversation ID (if exists)
+    tags: Optional[List[str]] = None  # Tags found in messages
+
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Filter Types
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1010,6 +1582,7 @@ class SearchOptions:
     limit: Optional[int] = None
     offset: Optional[int] = None
     min_score: Optional[float] = None
+    query_category: Optional[str] = None  # Category boost for bullet-proof retrieval
     sort_by: Optional[str] = None
     sort_order: Literal["asc", "desc"] = "desc"
     strategy: Optional[Literal["auto", "semantic", "keyword", "recent"]] = None
@@ -1109,11 +1682,127 @@ class GraphConnectionConfig:
 
 
 @dataclass
+class GraphQuery:
+    """A graph query with Cypher and optional parameters."""
+    cypher: str
+    params: Optional[Dict[str, Any]] = None
+
+
+@dataclass
 class GraphQueryResult:
     """Result from graph query."""
     records: List[Dict[str, Any]]
     count: int
     summary: Optional[Dict[str, Any]] = None
+    stats: Optional["QueryStatistics"] = None
+
+
+@dataclass
+class QueryStatistics:
+    """Query execution statistics."""
+    nodes_created: int = 0
+    nodes_deleted: int = 0
+    relationships_created: int = 0
+    relationships_deleted: int = 0
+    properties_set: int = 0
+    labels_added: int = 0
+
+
+@dataclass
+class GraphOperation:
+    """Batch operation for graph write."""
+    operation: Literal["CREATE_NODE", "UPDATE_NODE", "DELETE_NODE", "CREATE_EDGE", "DELETE_EDGE"]
+    node_type: Optional[str] = None
+    node_id: Optional[str] = None
+    properties: Optional[Dict[str, Any]] = None
+    edge_type: Optional[str] = None
+    source_id: Optional[str] = None
+    target_id: Optional[str] = None
+
+
+@dataclass
+class OrphanRule:
+    """Orphan detection rules for different node types."""
+    node_type: str
+    keep_if_referenced_by: List[str]
+    never_auto_delete: bool = False
+
+
+@dataclass
+class DeletionContext:
+    """Context for tracking deletions."""
+    reason: str
+    rules: List[OrphanRule]
+    deleted_ids: List[str] = field(default_factory=list)
+    visited_ids: List[str] = field(default_factory=list)
+
+
+@dataclass
+class OrphanCheckResult:
+    """Result of orphan detection."""
+    is_orphan: bool
+    referenced_by: List[str] = field(default_factory=list)
+    circular_island: bool = False
+
+
+@dataclass
+class GraphDeleteResult:
+    """Result of cascading delete operation."""
+    deleted_nodes: List[str] = field(default_factory=list)
+    deleted_edges: List[str] = field(default_factory=list)
+    orphan_islands: List[List[str]] = field(default_factory=list)
+
+
+@dataclass
+class BatchSyncLimits:
+    """Limits for batch sync operations per entity type."""
+    memories: int = 10000
+    facts: int = 10000
+    users: int = 1000
+    agents: int = 1000
+
+
+@dataclass
+class BatchSyncStats:
+    """Stats for a single entity type in batch sync."""
+    synced: int = 0
+    failed: int = 0
+    skipped: int = 0
+
+
+@dataclass
+class BatchSyncError:
+    """Error from batch sync operation."""
+    entity_type: str
+    entity_id: str
+    error: str
+
+
+@dataclass
+class BatchSyncResult:
+    """Full result from batch graph sync."""
+    memories: BatchSyncStats = field(default_factory=BatchSyncStats)
+    facts: BatchSyncStats = field(default_factory=BatchSyncStats)
+    users: BatchSyncStats = field(default_factory=BatchSyncStats)
+    agents: BatchSyncStats = field(default_factory=BatchSyncStats)
+    errors: List[BatchSyncError] = field(default_factory=list)
+    duration: int = 0
+
+
+@dataclass
+class BatchSyncOptions:
+    """Options for batch graph sync."""
+    limits: Optional[BatchSyncLimits] = None
+    sync_relationships: bool = True
+    on_progress: Optional[Any] = None  # Callback function
+
+
+@dataclass
+class SchemaVerificationResult:
+    """Result from schema verification."""
+    valid: bool
+    missing: List[str] = field(default_factory=list)
+    extra: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -1269,6 +1958,20 @@ class DeleteManyFactsParams:
 
 
 @dataclass
+class DeleteFactResult:
+    """Result from deleting a fact."""
+    deleted: bool
+    fact_id: str
+
+
+@dataclass
+class DeleteManyFactsResult:
+    """Result from deleting multiple facts."""
+    deleted: int
+    memory_space_id: str
+
+
+@dataclass
 class CreateContextOptions(GraphSyncOption):
     """Options for creating a context."""
     pass
@@ -1302,18 +2005,52 @@ class RememberOptions(GraphSyncOption):
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 class GraphAdapter(Protocol):
-    """Protocol defining the interface for graph database adapters."""
+    """
+    Protocol defining the interface for graph database adapters.
+
+    Supports Neo4j, Memgraph, and other Cypher-compatible graph databases.
+    """
+
+    # ============================================================================
+    # Connection Management
+    # ============================================================================
 
     async def connect(self, config: GraphConnectionConfig) -> None:
-        """Connect to the graph database."""
+        """
+        Connect to the graph database.
+
+        Args:
+            config: Connection configuration
+        """
         ...
 
     async def disconnect(self) -> None:
         """Disconnect from the graph database."""
         ...
 
+    async def is_connected(self) -> bool:
+        """
+        Test the database connection.
+
+        Returns:
+            True if connected, False otherwise
+        """
+        ...
+
+    # ============================================================================
+    # Node Operations
+    # ============================================================================
+
     async def create_node(self, node: GraphNode) -> str:
-        """Create a node and return its ID."""
+        """
+        Create a node in the graph.
+
+        Args:
+            node: Node to create
+
+        Returns:
+            The created node ID
+        """
         ...
 
     async def merge_node(
@@ -1334,36 +2071,193 @@ class GraphAdapter(Protocol):
         """
         ...
 
-    async def update_node(self, node_id: str, properties: Dict[str, Any]) -> None:
-        """Update node properties."""
+    async def get_node(self, node_id: str) -> Optional[GraphNode]:
+        """
+        Get a node by ID.
+
+        Args:
+            node_id: Node ID
+
+        Returns:
+            The node, or None if not found
+        """
         ...
 
-    async def delete_node(self, node_id: str) -> None:
-        """Delete a node."""
+    async def update_node(self, node_id: str, properties: Dict[str, Any]) -> None:
+        """
+        Update a node's properties.
+
+        Args:
+            node_id: Node ID
+            properties: Properties to update
+        """
         ...
+
+    async def delete_node(self, node_id: str, detach: bool = True) -> None:
+        """
+        Delete a node.
+
+        Args:
+            node_id: Node ID
+            detach: If True, also deletes connected relationships
+        """
+        ...
+
+    async def find_nodes(
+        self,
+        label: str,
+        properties: Optional[Dict[str, Any]] = None,
+        limit: int = 100,
+    ) -> List[GraphNode]:
+        """
+        Find nodes by label and properties.
+
+        Args:
+            label: Node label
+            properties: Properties to match
+            limit: Maximum number of results
+
+        Returns:
+            List of matching nodes
+        """
+        ...
+
+    # ============================================================================
+    # Edge Operations
+    # ============================================================================
 
     async def create_edge(self, edge: GraphEdge) -> str:
-        """Create an edge and return its ID."""
+        """
+        Create an edge (relationship) between two nodes.
+
+        Args:
+            edge: Edge to create
+
+        Returns:
+            The created edge ID
+        """
         ...
 
     async def delete_edge(self, edge_id: str) -> None:
-        """Delete an edge."""
+        """
+        Delete an edge.
+
+        Args:
+            edge_id: Edge ID
+        """
         ...
 
-    async def query(self, cypher: str, params: Optional[Dict[str, Any]] = None) -> GraphQueryResult:
-        """Execute a Cypher query."""
+    async def find_edges(
+        self,
+        edge_type: str,
+        properties: Optional[Dict[str, Any]] = None,
+        limit: int = 100,
+    ) -> List[GraphEdge]:
+        """
+        Find edges by type and properties.
+
+        Args:
+            edge_type: Edge type
+            properties: Properties to match
+            limit: Maximum number of results
+
+        Returns:
+            List of matching edges
+        """
         ...
 
-    async def find_nodes(self, label: str, properties: Dict[str, Any], limit: int = 1) -> List[GraphNode]:
-        """Find nodes by label and properties."""
+    # ============================================================================
+    # Query Operations
+    # ============================================================================
+
+    async def query(
+        self,
+        query: "GraphQuery | str",
+        params: Optional[Dict[str, Any]] = None,
+    ) -> GraphQueryResult:
+        """
+        Execute a raw Cypher query.
+
+        Args:
+            query: Query object or Cypher string
+            params: Optional query parameters
+
+        Returns:
+            Query results
+        """
         ...
 
     async def traverse(self, config: TraversalConfig) -> List[GraphNode]:
-        """Multi-hop graph traversal."""
+        """
+        Traverse the graph from a starting node.
+
+        Args:
+            config: Traversal configuration
+
+        Returns:
+            List of connected nodes
+        """
         ...
 
     async def find_path(self, config: ShortestPathConfig) -> Optional[GraphPath]:
-        """Find shortest path between nodes."""
+        """
+        Find the shortest path between two nodes.
+
+        Args:
+            config: Shortest path configuration
+
+        Returns:
+            The path, or None if no path exists
+        """
+        ...
+
+    # ============================================================================
+    # Batch Operations
+    # ============================================================================
+
+    async def batch_write(self, operations: List[GraphOperation]) -> None:
+        """
+        Execute multiple operations in a single transaction.
+
+        Args:
+            operations: Array of operations to execute
+        """
+        ...
+
+    # ============================================================================
+    # Utility Operations
+    # ============================================================================
+
+    async def count_nodes(self, label: Optional[str] = None) -> int:
+        """
+        Count nodes in the database.
+
+        Args:
+            label: Optional label to filter by
+
+        Returns:
+            The count
+        """
+        ...
+
+    async def count_edges(self, edge_type: Optional[str] = None) -> int:
+        """
+        Count edges in the database.
+
+        Args:
+            edge_type: Optional type to filter by
+
+        Returns:
+            The count
+        """
+        ...
+
+    async def clear_database(self) -> None:
+        """
+        Clear all data from the database.
+
+        WARNING: This deletes all nodes and relationships!
+        """
         ...
 
 

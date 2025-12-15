@@ -12,6 +12,13 @@ Tests validate:
 
 import pytest
 
+from cortex.types import (
+    CountMutableFilter,
+    ListMutableFilter,
+    PurgeManyMutableFilter,
+    PurgeNamespaceOptions,
+)
+
 # ============================================================================
 # set() Tests
 # ============================================================================
@@ -64,15 +71,15 @@ async def test_set_overwrites_existing_record(cortex_client, test_ids, cleanup_h
         {"count": 10},
     )
 
-    # Get the value
+    # Get the value - now returns just the value directly
     retrieved = await cortex_client.mutable.get(
         "test-namespace",
         "counter",
     )
 
     assert retrieved is not None
-    # mutable.get() returns full record, value is in 'value' field
-    assert retrieved["value"]["count"] == 10
+    # mutable.get() now returns just the value
+    assert retrieved["count"] == 10
 
     # Cleanup
     await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
@@ -99,15 +106,15 @@ async def test_get_existing_record(cortex_client, test_ids, cleanup_helper):
         {"data": "test value"},
     )
 
-    # Get value
+    # Get value - now returns just the value directly
     result = await cortex_client.mutable.get(
         "test-namespace",
         "test-key",
     )
 
     assert result is not None
-    # mutable.get() returns full record, value is in 'value' field
-    assert result["value"]["data"] == "test value"
+    # mutable.get() now returns just the value
+    assert result["data"] == "test value"
 
     # Cleanup
     await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
@@ -155,19 +162,19 @@ async def test_update_merges_values(cortex_client, test_ids, cleanup_helper):
     await cortex_client.mutable.update(
         "test-namespace",
         "user-prefs",
-        lambda current: {**current, "language": "en"},
+        lambda current: {**(current or {}), "language": "en"},
     )
 
-    # Get merged result
+    # Get merged result - now returns just the value
     retrieved = await cortex_client.mutable.get(
         "test-namespace",
         "user-prefs",
     )
 
-    # Should have all fields - value is in 'value' field
-    assert retrieved["value"]["theme"] == "dark"
-    assert retrieved["value"]["notifications"] is True
-    assert retrieved["value"]["language"] == "en"
+    # Should have all fields - get() now returns just the value
+    assert retrieved["theme"] == "dark"
+    assert retrieved["notifications"] is True
+    assert retrieved["language"] == "en"
 
     # Cleanup
     await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
@@ -234,10 +241,9 @@ async def test_list_records_in_namespace(cortex_client, test_ids, cleanup_helper
             {"value": i},
         )
 
-    # List records
+    # List records - now uses ListMutableFilter
     result = await cortex_client.mutable.list(
-        "test-namespace",
-        limit=10,
+        ListMutableFilter(namespace="test-namespace", limit=10)
     )
 
     # Should return at least 3 records
@@ -270,9 +276,9 @@ async def test_count_records(cortex_client, test_ids, cleanup_helper):
             {"value": i},
         )
 
-    # Count records
+    # Count records - now uses CountMutableFilter
     count = await cortex_client.mutable.count(
-        "count-test",
+        CountMutableFilter(namespace="count-test")
     )
 
     assert count >= 4
@@ -360,9 +366,9 @@ async def test_purge_namespace(cortex_client, test_ids, cleanup_helper, ctx):
         unique_namespace,
     )
 
-    # Verify all deleted
+    # Verify all deleted - now uses CountMutableFilter
     count = await cortex_client.mutable.count(
-        unique_namespace,
+        CountMutableFilter(namespace=unique_namespace)
     )
 
     assert count == 0
@@ -998,7 +1004,7 @@ async def test_list_validation_missing_namespace(cortex_client):
     from cortex.mutable import MutableValidationError
 
     with pytest.raises(MutableValidationError) as exc_info:
-        await cortex_client.mutable.list("")
+        await cortex_client.mutable.list(ListMutableFilter(namespace=""))
 
     assert exc_info.value.code == "MISSING_NAMESPACE"
 
@@ -1009,7 +1015,7 @@ async def test_list_validation_invalid_namespace_format(cortex_client):
     from cortex.mutable import MutableValidationError
 
     with pytest.raises(MutableValidationError) as exc_info:
-        await cortex_client.mutable.list("name with spaces")
+        await cortex_client.mutable.list(ListMutableFilter(namespace="name with spaces"))
 
     assert "Invalid namespace format" in str(exc_info.value)
 
@@ -1020,7 +1026,7 @@ async def test_list_validation_invalid_key_prefix_format(cortex_client):
     from cortex.mutable import MutableValidationError
 
     with pytest.raises(MutableValidationError) as exc_info:
-        await cortex_client.mutable.list("test", key_prefix="prefix with spaces")
+        await cortex_client.mutable.list(ListMutableFilter(namespace="test", key_prefix="prefix with spaces"))
 
     assert "Invalid key_prefix format" in str(exc_info.value)
 
@@ -1031,7 +1037,7 @@ async def test_list_validation_invalid_user_id_format(cortex_client):
     from cortex.mutable import MutableValidationError
 
     with pytest.raises(MutableValidationError) as exc_info:
-        await cortex_client.mutable.list("test", user_id="")
+        await cortex_client.mutable.list(ListMutableFilter(namespace="test", user_id=""))
 
     assert "user_id cannot be empty" in str(exc_info.value)
 
@@ -1042,7 +1048,7 @@ async def test_list_validation_non_integer_limit(cortex_client):
     from cortex.mutable import MutableValidationError
 
     with pytest.raises(MutableValidationError) as exc_info:
-        await cortex_client.mutable.list("test", limit="10")
+        await cortex_client.mutable.list(ListMutableFilter(namespace="test", limit="10"))  # type: ignore
 
     assert exc_info.value.code == "INVALID_LIMIT_TYPE"
     assert "limit must be an integer" in str(exc_info.value)
@@ -1054,7 +1060,7 @@ async def test_list_validation_negative_limit(cortex_client):
     from cortex.mutable import MutableValidationError
 
     with pytest.raises(MutableValidationError) as exc_info:
-        await cortex_client.mutable.list("test", limit=-1)
+        await cortex_client.mutable.list(ListMutableFilter(namespace="test", limit=-1))
 
     assert exc_info.value.code == "INVALID_LIMIT_RANGE"
     assert "limit must be non-negative" in str(exc_info.value)
@@ -1066,7 +1072,7 @@ async def test_list_validation_limit_exceeds_max(cortex_client):
     from cortex.mutable import MutableValidationError
 
     with pytest.raises(MutableValidationError) as exc_info:
-        await cortex_client.mutable.list("test", limit=1001)
+        await cortex_client.mutable.list(ListMutableFilter(namespace="test", limit=1001))
 
     assert exc_info.value.code == "INVALID_LIMIT_RANGE"
     assert "limit exceeds maximum" in str(exc_info.value)
@@ -1075,7 +1081,7 @@ async def test_list_validation_limit_exceeds_max(cortex_client):
 @pytest.mark.asyncio
 async def test_list_validation_accepts_valid_namespace_only(cortex_client):
     """Should accept valid namespace only."""
-    result = await cortex_client.mutable.list("validation-test")
+    result = await cortex_client.mutable.list(ListMutableFilter(namespace="validation-test"))
     assert isinstance(result, list)
 
 
@@ -1083,7 +1089,7 @@ async def test_list_validation_accepts_valid_namespace_only(cortex_client):
 async def test_list_validation_accepts_all_optional_params(cortex_client):
     """Should accept all optional parameters."""
     result = await cortex_client.mutable.list(
-        "validation-test", key_prefix="test-", limit=10
+        ListMutableFilter(namespace="validation-test", key_prefix="test-", limit=10)
     )
     assert isinstance(result, list)
 
@@ -1099,7 +1105,7 @@ async def test_count_validation_missing_namespace(cortex_client):
     from cortex.mutable import MutableValidationError
 
     with pytest.raises(MutableValidationError) as exc_info:
-        await cortex_client.mutable.count("")
+        await cortex_client.mutable.count(CountMutableFilter(namespace=""))
 
     assert exc_info.value.code == "MISSING_NAMESPACE"
 
@@ -1110,7 +1116,7 @@ async def test_count_validation_invalid_namespace_format(cortex_client):
     from cortex.mutable import MutableValidationError
 
     with pytest.raises(MutableValidationError) as exc_info:
-        await cortex_client.mutable.count("name with spaces")
+        await cortex_client.mutable.count(CountMutableFilter(namespace="name with spaces"))
 
     assert "Invalid namespace format" in str(exc_info.value)
 
@@ -1121,7 +1127,7 @@ async def test_count_validation_invalid_key_prefix_format(cortex_client):
     from cortex.mutable import MutableValidationError
 
     with pytest.raises(MutableValidationError) as exc_info:
-        await cortex_client.mutable.count("test", key_prefix="prefix with spaces")
+        await cortex_client.mutable.count(CountMutableFilter(namespace="test", key_prefix="prefix with spaces"))
 
     assert "Invalid key_prefix format" in str(exc_info.value)
 
@@ -1132,7 +1138,7 @@ async def test_count_validation_invalid_user_id_format(cortex_client):
     from cortex.mutable import MutableValidationError
 
     with pytest.raises(MutableValidationError) as exc_info:
-        await cortex_client.mutable.count("test", user_id="")
+        await cortex_client.mutable.count(CountMutableFilter(namespace="test", user_id=""))
 
     assert "user_id cannot be empty" in str(exc_info.value)
 
@@ -1140,21 +1146,21 @@ async def test_count_validation_invalid_user_id_format(cortex_client):
 @pytest.mark.asyncio
 async def test_count_validation_accepts_valid_namespace_only(cortex_client):
     """Should accept valid namespace only."""
-    result = await cortex_client.mutable.count("validation-test")
+    result = await cortex_client.mutable.count(CountMutableFilter(namespace="validation-test"))
     assert isinstance(result, int)
 
 
 @pytest.mark.asyncio
 async def test_count_validation_accepts_with_key_prefix(cortex_client):
     """Should accept with key_prefix."""
-    result = await cortex_client.mutable.count("validation-test", key_prefix="test-")
+    result = await cortex_client.mutable.count(CountMutableFilter(namespace="validation-test", key_prefix="test-"))
     assert isinstance(result, int)
 
 
 @pytest.mark.asyncio
 async def test_count_validation_accepts_with_user_id(cortex_client):
     """Should accept with user_id."""
-    result = await cortex_client.mutable.count("validation-test", user_id="user-123")
+    result = await cortex_client.mutable.count(CountMutableFilter(namespace="validation-test", user_id="user-123"))
     assert isinstance(result, int)
 
 
@@ -1162,7 +1168,7 @@ async def test_count_validation_accepts_with_user_id(cortex_client):
 async def test_count_validation_accepts_all_params(cortex_client):
     """Should accept all parameters."""
     result = await cortex_client.mutable.count(
-        "validation-test", key_prefix="test-", user_id="user-123"
+        CountMutableFilter(namespace="validation-test", key_prefix="test-", user_id="user-123")
     )
     assert isinstance(result, int)
 
@@ -1225,7 +1231,7 @@ async def test_purge_many_validation_missing_namespace(cortex_client):
     from cortex.mutable import MutableValidationError
 
     with pytest.raises(MutableValidationError) as exc_info:
-        await cortex_client.mutable.purge_many("")
+        await cortex_client.mutable.purge_many(PurgeManyMutableFilter(namespace=""))
 
     assert exc_info.value.code == "MISSING_NAMESPACE"
 
@@ -1236,7 +1242,7 @@ async def test_purge_many_validation_invalid_namespace_format(cortex_client):
     from cortex.mutable import MutableValidationError
 
     with pytest.raises(MutableValidationError) as exc_info:
-        await cortex_client.mutable.purge_many("name with spaces")
+        await cortex_client.mutable.purge_many(PurgeManyMutableFilter(namespace="name with spaces"))
 
     assert "Invalid namespace format" in str(exc_info.value)
 
@@ -1247,7 +1253,7 @@ async def test_purge_many_validation_invalid_key_prefix_format(cortex_client):
     from cortex.mutable import MutableValidationError
 
     with pytest.raises(MutableValidationError) as exc_info:
-        await cortex_client.mutable.purge_many("test", key_prefix="prefix with spaces")
+        await cortex_client.mutable.purge_many(PurgeManyMutableFilter(namespace="test", key_prefix="prefix with spaces"))
 
     assert "Invalid key_prefix format" in str(exc_info.value)
 
@@ -1258,7 +1264,7 @@ async def test_purge_many_validation_invalid_user_id_format(cortex_client):
     from cortex.mutable import MutableValidationError
 
     with pytest.raises(MutableValidationError) as exc_info:
-        await cortex_client.mutable.purge_many("test", user_id="")
+        await cortex_client.mutable.purge_many(PurgeManyMutableFilter(namespace="test", user_id=""))
 
     assert "user_id cannot be empty" in str(exc_info.value)
 
@@ -1267,7 +1273,7 @@ async def test_purge_many_validation_invalid_user_id_format(cortex_client):
 async def test_purge_many_validation_accepts_namespace_only(cortex_client, cleanup_helper, test_ids):
     """Should accept namespace only."""
     await cortex_client.mutable.set("purge-many-valid", "key", "value")
-    result = await cortex_client.mutable.purge_many("purge-many-valid")
+    result = await cortex_client.mutable.purge_many(PurgeManyMutableFilter(namespace="purge-many-valid"))
     assert result is not None
     await cleanup_helper.purge_mutable(test_ids["memory_space_id"])
 
@@ -1277,7 +1283,7 @@ async def test_purge_many_validation_accepts_with_key_prefix(cortex_client, clea
     """Should accept with key_prefix."""
     await cortex_client.mutable.set("purge-many-prefix", "prefix-1", "value")
     result = await cortex_client.mutable.purge_many(
-        "purge-many-prefix", key_prefix="prefix-"
+        PurgeManyMutableFilter(namespace="purge-many-prefix", key_prefix="prefix-")
     )
     assert result is not None
     await cleanup_helper.purge_mutable(test_ids["memory_space_id"])
@@ -1288,7 +1294,7 @@ async def test_purge_many_validation_accepts_all_params(cortex_client, cleanup_h
     """Should accept all parameters."""
     await cortex_client.mutable.set("purge-many-all", "key", "value")
     result = await cortex_client.mutable.purge_many(
-        "purge-many-all", key_prefix="key", user_id="user-123"
+        PurgeManyMutableFilter(namespace="purge-many-all", key_prefix="key", user_id="user-123")
     )
     assert result is not None
     await cleanup_helper.purge_mutable(test_ids["memory_space_id"])

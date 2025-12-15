@@ -55,8 +55,6 @@ export const set = mutation({
       metadata: args.metadata,
       createdAt: now,
       updatedAt: now,
-      accessCount: 0,
-      lastAccessed: undefined,
     });
 
     return await ctx.db.get(_id);
@@ -239,7 +237,6 @@ export const transaction = mutation({
             value: operation.value,
             createdAt: now,
             updatedAt: now,
-            accessCount: 0,
           });
 
           results.push(await ctx.db.get(_id));
@@ -303,7 +300,6 @@ export const purgeMany = mutation({
     keyPrefix: v.optional(v.string()),
     userId: v.optional(v.string()),
     updatedBefore: v.optional(v.number()),
-    lastAccessedBefore: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     let entries = await ctx.db
@@ -323,15 +319,6 @@ export const purgeMany = mutation({
     // Filter by updatedBefore if provided
     if (args.updatedBefore !== undefined) {
       entries = entries.filter((e) => e.updatedAt < args.updatedBefore!);
-    }
-
-    // Filter by lastAccessedBefore if provided
-    if (args.lastAccessedBefore !== undefined) {
-      entries = entries.filter(
-        (e) =>
-          e.lastAccessed !== undefined &&
-          e.lastAccessed < args.lastAccessedBefore!,
-      );
     }
 
     let deleted = 0;
@@ -446,8 +433,6 @@ export const list = query({
         comparison = a.key.localeCompare(b.key);
       } else if (sortBy === "updatedAt") {
         comparison = a.updatedAt - b.updatedAt;
-      } else if (sortBy === "accessCount") {
-        comparison = a.accessCount - b.accessCount;
       }
       return comparison * sortMultiplier;
     });

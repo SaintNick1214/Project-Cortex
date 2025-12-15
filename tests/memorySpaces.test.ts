@@ -550,6 +550,130 @@ describe("Memory Spaces Registry API", () => {
 
       expect(result.spaces.length).toBeLessThanOrEqual(2);
     });
+
+    it("filters by participant", async () => {
+      const participantUser = ctx.userId("list-participant");
+      const participantSpaceId = ctx.memorySpaceId("list-participant-space");
+
+      await cortex.memorySpaces.register({
+        memorySpaceId: participantSpaceId,
+        type: "team",
+        participants: [{ id: participantUser, type: "user" }],
+      });
+
+      const result = await cortex.memorySpaces.list({
+        participant: participantUser,
+      });
+
+      expect(result.spaces.length).toBeGreaterThanOrEqual(1);
+      result.spaces.forEach((s) => {
+        expect(s.participants.some((p) => p.id === participantUser)).toBe(true);
+      });
+    });
+
+    it("throws on empty participant filter", async () => {
+      await expect(
+        cortex.memorySpaces.list({ participant: "   " }),
+      ).rejects.toThrow("participant");
+    });
+
+    it("sorts by createdAt desc (default)", async () => {
+      const result = await cortex.memorySpaces.list({
+        sortBy: "createdAt",
+        sortOrder: "desc",
+        limit: 10,
+      });
+
+      // Verify result has expected structure
+      expect(result.spaces).toBeDefined();
+      expect(Array.isArray(result.spaces)).toBe(true);
+    });
+
+    it("sorts by createdAt asc", async () => {
+      const result = await cortex.memorySpaces.list({
+        sortBy: "createdAt",
+        sortOrder: "asc",
+        limit: 10,
+      });
+
+      expect(result.spaces).toBeDefined();
+      // If there are multiple spaces, verify ascending order
+      if (result.spaces.length >= 2) {
+        for (let i = 1; i < result.spaces.length; i++) {
+          expect(result.spaces[i].createdAt).toBeGreaterThanOrEqual(
+            result.spaces[i - 1].createdAt,
+          );
+        }
+      }
+    });
+
+    it("sorts by updatedAt", async () => {
+      const result = await cortex.memorySpaces.list({
+        sortBy: "updatedAt",
+        sortOrder: "desc",
+        limit: 10,
+      });
+
+      expect(result.spaces).toBeDefined();
+    });
+
+    it("sorts by name", async () => {
+      const result = await cortex.memorySpaces.list({
+        sortBy: "name",
+        sortOrder: "asc",
+        limit: 10,
+      });
+
+      expect(result.spaces).toBeDefined();
+    });
+
+    it("returns correct pagination metadata", async () => {
+      const result = await cortex.memorySpaces.list({
+        limit: 2,
+        offset: 0,
+      });
+
+      expect(result.total).toBeDefined();
+      expect(result.hasMore).toBeDefined();
+      expect(result.offset).toBe(0);
+    });
+
+    it("returns empty when offset exceeds total", async () => {
+      const result = await cortex.memorySpaces.list({
+        limit: 10,
+        offset: 999999,
+      });
+
+      expect(result.spaces).toHaveLength(0);
+      expect(result.hasMore).toBe(false);
+    });
+
+    it("hasMore is true when more results exist", async () => {
+      // First get total count
+      const allResult = await cortex.memorySpaces.list();
+      const total = allResult.total;
+
+      if (total > 1) {
+        const partialResult = await cortex.memorySpaces.list({
+          limit: 1,
+          offset: 0,
+        });
+
+        expect(partialResult.hasMore).toBe(true);
+      }
+    });
+
+    it("hasMore is false when at end", async () => {
+      const allResult = await cortex.memorySpaces.list();
+      const total = allResult.total;
+
+      const lastPageResult = await cortex.memorySpaces.list({
+        limit: total,
+        offset: 0,
+      });
+
+      expect(lastPageResult.hasMore).toBe(false);
+    });
   });
 
   describe("count()", () => {
@@ -655,6 +779,16 @@ describe("Memory Spaces Registry API", () => {
         }),
       ).rejects.toThrow("PARTICIPANT_ALREADY_EXISTS");
     });
+
+    it("throws error for non-existent space", async () => {
+      await expect(
+        cortex.memorySpaces.addParticipant(`nonexistent-${ctx.runId}`, {
+          id: "new-user",
+          type: "user",
+          joinedAt: Date.now(),
+        }),
+      ).rejects.toThrow("MEMORYSPACE_NOT_FOUND");
+    });
   });
 
   describe("removeParticipant()", () => {
@@ -682,6 +816,34 @@ describe("Memory Spaces Registry API", () => {
       expect(
         updated.participants.some((p) => p.id === ctx.userId("remove-user-2")),
       ).toBe(false);
+    });
+
+    it("throws error for non-existent space", async () => {
+      await expect(
+        cortex.memorySpaces.removeParticipant(
+          `nonexistent-${ctx.runId}`,
+          "some-user",
+        ),
+      ).rejects.toThrow("MEMORYSPACE_NOT_FOUND");
+    });
+
+    it("silently handles removing non-existent participant", async () => {
+      const removeNonExistentSpaceId = ctx.memorySpaceId("remove-nonexistent");
+
+      await cortex.memorySpaces.register({
+        memorySpaceId: removeNonExistentSpaceId,
+        type: "team",
+        participants: [{ id: ctx.userId("only-user"), type: "user" }],
+      });
+
+      // Removing non-existent participant should succeed silently
+      const updated = await cortex.memorySpaces.removeParticipant(
+        removeNonExistentSpaceId,
+        "non-existent-user",
+      );
+
+      // Original participant should still be there
+      expect(updated.participants).toHaveLength(1);
     });
   });
 
@@ -746,6 +908,205 @@ describe("Memory Spaces Registry API", () => {
 
       expect(result.deleted).toBe(true);
       expect(result.cascade).toBeDefined();
+    });
+
+    it("throws error for non-existent space", async () => {
+      await expect(
+        cortex.memorySpaces.delete(`nonexistent-${ctx.runId}`, {
+          cascade: true,
+          reason: "test cleanup",
+        }),
+      ).rejects.toThrow("MEMORYSPACE_NOT_FOUND");
+    });
+
+    it("throws when cascade is false", async () => {
+      const noCascadeSpaceId = ctx.memorySpaceId("no-cascade");
+
+      await cortex.memorySpaces.register({
+        memorySpaceId: noCascadeSpaceId,
+        type: "personal",
+        participants: [],
+      });
+
+      await expect(
+        cortex.memorySpaces.delete(noCascadeSpaceId, {
+          cascade: false,
+          reason: "test",
+        } as any),
+      ).rejects.toThrow("cascade must be true");
+    });
+
+    it("throws when reason is missing", async () => {
+      const missingReasonSpaceId = ctx.memorySpaceId("missing-reason");
+
+      await cortex.memorySpaces.register({
+        memorySpaceId: missingReasonSpaceId,
+        type: "personal",
+        participants: [],
+      });
+
+      await expect(
+        cortex.memorySpaces.delete(missingReasonSpaceId, {
+          cascade: true,
+          reason: "",
+        }),
+      ).rejects.toThrow("reason");
+    });
+
+    it("throws when confirmId does not match", async () => {
+      const confirmMismatchSpaceId = ctx.memorySpaceId("confirm-mismatch");
+
+      await cortex.memorySpaces.register({
+        memorySpaceId: confirmMismatchSpaceId,
+        type: "personal",
+        participants: [],
+      });
+
+      await expect(
+        cortex.memorySpaces.delete(confirmMismatchSpaceId, {
+          cascade: true,
+          reason: "test",
+          confirmId: "wrong-id",
+        }),
+      ).rejects.toThrow("confirmId");
+    });
+  });
+
+  describe("archive()", () => {
+    it("archives space with reason and metadata", async () => {
+      const archiveSpaceId = ctx.memorySpaceId("archive-full");
+
+      await cortex.memorySpaces.register({
+        memorySpaceId: archiveSpaceId,
+        type: "project",
+        name: "Archive Test",
+        participants: [],
+      });
+
+      const archived = await cortex.memorySpaces.archive(archiveSpaceId, {
+        reason: "Project completed",
+        metadata: { completionDate: "2025-01-01" },
+      });
+
+      expect(archived.status).toBe("archived");
+      expect(archived.metadata.archiveReason).toBe("Project completed");
+      expect(archived.metadata.archivedAt).toBeDefined();
+      expect(archived.metadata.completionDate).toBe("2025-01-01");
+    });
+
+    it("archives space without optional parameters", async () => {
+      const archiveBasicSpaceId = ctx.memorySpaceId("archive-basic");
+
+      await cortex.memorySpaces.register({
+        memorySpaceId: archiveBasicSpaceId,
+        type: "personal",
+        participants: [],
+      });
+
+      const archived = await cortex.memorySpaces.archive(archiveBasicSpaceId);
+
+      expect(archived.status).toBe("archived");
+      expect(archived.metadata.archivedAt).toBeDefined();
+    });
+
+    it("throws error for non-existent space", async () => {
+      await expect(
+        cortex.memorySpaces.archive(`nonexistent-${ctx.runId}`),
+      ).rejects.toThrow("MEMORYSPACE_NOT_FOUND");
+    });
+
+    it("can archive already archived space (idempotent)", async () => {
+      const doubleArchiveSpaceId = ctx.memorySpaceId("double-archive");
+
+      await cortex.memorySpaces.register({
+        memorySpaceId: doubleArchiveSpaceId,
+        type: "team",
+        participants: [],
+      });
+
+      await cortex.memorySpaces.archive(doubleArchiveSpaceId, {
+        reason: "First archive",
+      });
+
+      // Archive again - should succeed
+      const archived = await cortex.memorySpaces.archive(doubleArchiveSpaceId, {
+        reason: "Second archive",
+      });
+
+      expect(archived.status).toBe("archived");
+    });
+  });
+
+  describe("reactivate()", () => {
+    it("reactivates archived space", async () => {
+      const reactivateSpaceId = ctx.memorySpaceId("reactivate");
+
+      await cortex.memorySpaces.register({
+        memorySpaceId: reactivateSpaceId,
+        type: "project",
+        name: "Reactivate Test",
+        participants: [],
+      });
+
+      // Archive first
+      await cortex.memorySpaces.archive(reactivateSpaceId, {
+        reason: "Temporary pause",
+      });
+
+      // Verify archived
+      const archivedSpace = await cortex.memorySpaces.get(reactivateSpaceId);
+      expect(archivedSpace!.status).toBe("archived");
+
+      // Reactivate
+      const reactivated = await cortex.memorySpaces.reactivate(reactivateSpaceId);
+
+      expect(reactivated.status).toBe("active");
+    });
+
+    it("can reactivate already active space (idempotent)", async () => {
+      const activeSpaceId = ctx.memorySpaceId("reactivate-active");
+
+      await cortex.memorySpaces.register({
+        memorySpaceId: activeSpaceId,
+        type: "personal",
+        participants: [],
+      });
+
+      // Reactivate an already active space - should succeed
+      const reactivated = await cortex.memorySpaces.reactivate(activeSpaceId);
+
+      expect(reactivated.status).toBe("active");
+    });
+
+    it("throws error for non-existent space", async () => {
+      await expect(
+        cortex.memorySpaces.reactivate(`nonexistent-${ctx.runId}`),
+      ).rejects.toThrow("MEMORYSPACE_NOT_FOUND");
+    });
+
+    it("preserves space data through archive/reactivate cycle", async () => {
+      const cycleSpaceId = ctx.memorySpaceId("archive-cycle");
+      const testUser = ctx.userId("cycle-user");
+
+      await cortex.memorySpaces.register({
+        memorySpaceId: cycleSpaceId,
+        name: "Cycle Test Space",
+        type: "team",
+        participants: [{ id: testUser, type: "user" }],
+        metadata: { department: "engineering" },
+      });
+
+      // Archive
+      await cortex.memorySpaces.archive(cycleSpaceId);
+
+      // Reactivate
+      const reactivated = await cortex.memorySpaces.reactivate(cycleSpaceId);
+
+      // Verify data preserved
+      expect(reactivated.name).toBe("Cycle Test Space");
+      expect(reactivated.type).toBe("team");
+      expect(reactivated.participants).toHaveLength(1);
+      expect(reactivated.metadata.department).toBe("engineering");
     });
   });
 
@@ -817,6 +1178,84 @@ describe("Memory Spaces Registry API", () => {
       await expect(
         cortex.memorySpaces.getStats(`nonexistent-${ctx.runId}`),
       ).rejects.toThrow("MEMORYSPACE_NOT_FOUND");
+    });
+
+    it("throws on invalid timeWindow", async () => {
+      await expect(
+        cortex.memorySpaces.getStats(statsSpaceId, {
+          timeWindow: "invalid" as any,
+        }),
+      ).rejects.toThrow("Invalid timeWindow");
+    });
+
+    it("returns stats with timeWindow 24h", async () => {
+      const stats = await cortex.memorySpaces.getStats(statsSpaceId, {
+        timeWindow: "24h",
+      });
+
+      expect(stats.memorySpaceId).toBe(statsSpaceId);
+      expect(stats.memoriesThisWindow).toBeDefined();
+      expect(stats.conversationsThisWindow).toBeDefined();
+    });
+
+    it("returns stats with timeWindow 7d", async () => {
+      const stats = await cortex.memorySpaces.getStats(statsSpaceId, {
+        timeWindow: "7d",
+      });
+
+      expect(stats.memoriesThisWindow).toBeDefined();
+      expect(stats.conversationsThisWindow).toBeDefined();
+    });
+
+    it("returns stats with timeWindow 30d", async () => {
+      const stats = await cortex.memorySpaces.getStats(statsSpaceId, {
+        timeWindow: "30d",
+      });
+
+      expect(stats.memoriesThisWindow).toBeDefined();
+    });
+
+    it("returns stats with timeWindow 90d", async () => {
+      const stats = await cortex.memorySpaces.getStats(statsSpaceId, {
+        timeWindow: "90d",
+      });
+
+      expect(stats.memoriesThisWindow).toBeDefined();
+    });
+
+    it("returns stats with timeWindow all", async () => {
+      const stats = await cortex.memorySpaces.getStats(statsSpaceId, {
+        timeWindow: "all",
+      });
+
+      expect(stats.memoriesThisWindow).toBe(stats.totalMemories);
+    });
+
+    it("returns participant breakdown with includeParticipants", async () => {
+      const stats = await cortex.memorySpaces.getStats(statsSpaceId, {
+        includeParticipants: true,
+      });
+
+      expect(stats.participants).toBeDefined();
+      expect(Array.isArray(stats.participants)).toBe(true);
+    });
+
+    it("returns importance breakdown structure", async () => {
+      const stats = await cortex.memorySpaces.getStats(statsSpaceId);
+
+      expect(stats.importanceBreakdown).toBeDefined();
+      expect(stats.importanceBreakdown.critical).toBeDefined();
+      expect(stats.importanceBreakdown.high).toBeDefined();
+      expect(stats.importanceBreakdown.medium).toBeDefined();
+      expect(stats.importanceBreakdown.low).toBeDefined();
+      expect(stats.importanceBreakdown.trivial).toBeDefined();
+    });
+
+    it("returns topTags array", async () => {
+      const stats = await cortex.memorySpaces.getStats(statsSpaceId);
+
+      expect(stats.topTags).toBeDefined();
+      expect(Array.isArray(stats.topTags)).toBe(true);
     });
   });
 
@@ -1269,6 +1708,14 @@ describe("Memory Spaces Registry API", () => {
         const updated = await cortex.memorySpaces.get(participantTestSpace);
 
         expect(updated?.participants).toHaveLength(2);
+      });
+
+      it("throws error for non-existent space", async () => {
+        await expect(
+          cortex.memorySpaces.updateParticipants(`nonexistent-${ctx.runId}`, {
+            add: [{ id: "user-1", type: "user", joinedAt: Date.now() }],
+          }),
+        ).rejects.toThrow("MEMORYSPACE_NOT_FOUND");
       });
     });
   });

@@ -127,6 +127,51 @@ async def test_store_relationship_fact(cortex_client, test_ids, cleanup_helper):
     await cleanup_helper.purge_facts(memory_space_id)
 
 
+@pytest.mark.asyncio
+async def test_store_fact_with_enrichment_fields(cortex_client, test_ids, cleanup_helper):
+    """
+    Test storing a fact with enrichment fields.
+
+    Validates TypeScript SDK 0.21.0 parity for enrichment field support.
+    """
+    from cortex.types import EnrichedEntity, EnrichedRelation
+
+    memory_space_id = test_ids["memory_space_id"]
+
+    fact = await cortex_client.facts.store(
+        StoreFactParams(
+            memory_space_id=memory_space_id,
+            fact="User prefers to be called Alex",
+            fact_type="preference",
+            subject="user-123",
+            predicate="prefers_name",
+            object="Alex",
+            confidence=95,
+            source_type="conversation",
+            tags=["name", "addressing"],
+            # Enrichment fields
+            category="addressing_preference",
+            search_aliases=["name", "nickname", "what to call"],
+            semantic_context="Use when greeting or addressing the user",
+            entities=[
+                EnrichedEntity(name="Alex", type="name", full_value="Alex"),
+            ],
+            relations=[
+                EnrichedRelation(subject="user-123", predicate="prefers_name", object="Alex"),
+            ],
+        )
+    )
+
+    # Validate result
+    assert fact.fact_id.startswith("fact-")
+    assert fact.memory_space_id == memory_space_id
+    assert fact.fact == "User prefers to be called Alex"
+    assert fact.confidence == 95
+
+    # Cleanup
+    await cleanup_helper.purge_facts(memory_space_id)
+
+
 # ============================================================================
 # get() Tests
 # ============================================================================
@@ -363,6 +408,92 @@ async def test_update_fact_confidence(cortex_client, test_ids, cleanup_helper):
     await cleanup_helper.purge_facts(memory_space_id)
 
 
+@pytest.mark.asyncio
+async def test_update_fact_with_update_fact_input(cortex_client, test_ids, cleanup_helper):
+    """
+    Test updating fact using UpdateFactInput dataclass.
+
+    Validates TypeScript SDK 0.21.0 parity for typed update input.
+    """
+    from cortex.types import UpdateFactInput
+
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create fact
+    stored = await cortex_client.facts.store(
+        StoreFactParams(
+            memory_space_id=memory_space_id,
+            fact="User prefers dark mode",
+            fact_type="preference",
+            confidence=70,
+            source_type="system",
+        )
+    )
+
+    fact_id = stored.fact_id
+
+    # Update using UpdateFactInput dataclass with enrichment fields
+    updated = await cortex_client.facts.update(
+        memory_space_id,
+        fact_id,
+        UpdateFactInput(
+            confidence=99,
+            tags=["verified", "ui"],
+            category="ui_preference",
+            search_aliases=["theme", "display mode"],
+            semantic_context="Use when setting UI appearance",
+        ),
+    )
+
+    # Verify update was successful
+    assert updated.confidence == 99
+    assert "verified" in updated.tags
+    assert "ui" in updated.tags
+
+    # Cleanup
+    await cleanup_helper.purge_facts(memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_update_fact_with_enrichment_fields_dict(cortex_client, test_ids, cleanup_helper):
+    """
+    Test updating fact using dict with enrichment fields (backward compatible).
+
+    Validates that dict-based updates with enrichment fields still work.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create fact
+    stored = await cortex_client.facts.store(
+        StoreFactParams(
+            memory_space_id=memory_space_id,
+            fact="User's favorite color is blue",
+            fact_type="preference",
+            confidence=80,
+            source_type="conversation",
+        )
+    )
+
+    fact_id = stored.fact_id
+
+    # Update using dict with enrichment fields
+    updated = await cortex_client.facts.update(
+        memory_space_id,
+        fact_id,
+        {
+            "confidence": 95,
+            "category": "color_preference",
+            "searchAliases": ["favorite color", "colour"],
+        },
+    )
+
+    # Verify update was successful
+    assert updated.confidence == 95
+
+    # Cleanup
+    await cleanup_helper.purge_facts(memory_space_id)
+
+
 # ============================================================================
 # delete() Tests
 # ============================================================================
@@ -398,6 +529,79 @@ async def test_delete_fact(cortex_client, test_ids, cleanup_helper):
 
     # Cleanup
     await cleanup_helper.purge_facts(memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_delete_fact_returns_typed_result(cortex_client, test_ids, cleanup_helper):
+    """
+    Test that delete() returns typed DeleteFactResult.
+
+    Validates TypeScript SDK 0.21.0 parity for typed return types.
+    """
+    from cortex.types import DeleteFactResult
+
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create fact
+    stored = await cortex_client.facts.store(
+        StoreFactParams(
+            memory_space_id=memory_space_id,
+            fact="Fact to delete for typed test",
+            fact_type="observation",
+            confidence=80,
+            source_type="system",
+        )
+    )
+
+    fact_id = stored.fact_id
+
+    # Delete fact
+    result = await cortex_client.facts.delete(memory_space_id, fact_id)
+
+    # Verify result is DeleteFactResult dataclass
+    assert isinstance(result, DeleteFactResult)
+    assert hasattr(result, "deleted")
+    assert hasattr(result, "fact_id")
+    assert result.fact_id == fact_id
+
+    # Cleanup
+    await cleanup_helper.purge_facts(memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_delete_many_returns_typed_result(cortex_client, test_ids, cleanup_helper):
+    """
+    Test that delete_many() returns typed DeleteManyFactsResult.
+
+    Validates TypeScript SDK 0.21.0 parity for typed return types.
+    """
+    from cortex.types import DeleteManyFactsParams, DeleteManyFactsResult
+
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create multiple facts
+    for i in range(3):
+        await cortex_client.facts.store(
+            StoreFactParams(
+                memory_space_id=memory_space_id,
+                fact=f"Fact to delete {i}",
+                fact_type="observation",
+                confidence=80,
+                source_type="system",
+            )
+        )
+
+    # Delete all facts in memory space
+    result = await cortex_client.facts.delete_many(
+        DeleteManyFactsParams(memory_space_id=memory_space_id)
+    )
+
+    # Verify result is DeleteManyFactsResult dataclass
+    assert isinstance(result, DeleteManyFactsResult)
+    assert hasattr(result, "deleted")
+    assert hasattr(result, "memory_space_id")
+    assert result.memory_space_id == memory_space_id
+    assert result.deleted >= 3  # At least the 3 we created
 
 
 # ============================================================================
@@ -959,6 +1163,77 @@ class TestUpdateValidation:
                 {"metadata": ["array"]}
             )
         assert "metadata must be a dict" in str(exc_info.value)
+
+    def test_enrichment_field_category_accepted(self):
+        """
+        Test that validate_update_has_fields accepts category enrichment field.
+
+        Validates TypeScript SDK 0.21.0 parity for enrichment fields.
+        """
+        from cortex.facts.validators import validate_update_has_fields
+
+        # Should NOT raise - category is a valid enrichment field
+        validate_update_has_fields({"category": "test_category"})
+
+    def test_enrichment_field_search_aliases_accepted(self):
+        """
+        Test that validate_update_has_fields accepts searchAliases enrichment field.
+
+        Validates TypeScript SDK 0.21.0 parity for enrichment fields.
+        """
+        from cortex.facts.validators import validate_update_has_fields
+
+        validate_update_has_fields({"searchAliases": ["alias1", "alias2"]})
+        # Also test snake_case version
+        validate_update_has_fields({"search_aliases": ["alias1", "alias2"]})
+
+    def test_enrichment_field_semantic_context_accepted(self):
+        """
+        Test that validate_update_has_fields accepts semanticContext enrichment field.
+
+        Validates TypeScript SDK 0.21.0 parity for enrichment fields.
+        """
+        from cortex.facts.validators import validate_update_has_fields
+
+        validate_update_has_fields({"semanticContext": "use when greeting"})
+        # Also test snake_case version
+        validate_update_has_fields({"semantic_context": "use when greeting"})
+
+    def test_enrichment_field_entities_accepted(self):
+        """
+        Test that validate_update_has_fields accepts entities enrichment field.
+
+        Validates TypeScript SDK 0.21.0 parity for enrichment fields.
+        """
+        from cortex.facts.validators import validate_update_has_fields
+
+        validate_update_has_fields({"entities": [{"name": "Alex", "type": "name", "fullValue": "Alex"}]})
+
+    def test_enrichment_field_relations_accepted(self):
+        """
+        Test that validate_update_has_fields accepts relations enrichment field.
+
+        Validates TypeScript SDK 0.21.0 parity for enrichment fields.
+        """
+        from cortex.facts.validators import validate_update_has_fields
+
+        validate_update_has_fields({"relations": [{"subject": "user", "predicate": "likes", "object": "coffee"}]})
+
+    def test_update_fact_input_dataclass_validation(self):
+        """
+        Test that UpdateFactInput dataclass passes validation.
+
+        Validates TypeScript SDK 0.21.0 parity for typed input.
+        """
+        from cortex.facts.validators import validate_update_has_fields
+        from cortex.types import UpdateFactInput
+
+        # Convert UpdateFactInput to dict for validation (mimics what update() does)
+        updates = UpdateFactInput(category="test_category")
+        updates_dict = {
+            "category": updates.category,
+        }
+        validate_update_has_fields(updates_dict)
 
 
 class TestDeleteValidation:

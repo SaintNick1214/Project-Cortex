@@ -4,7 +4,16 @@ Tests for Conversations API (Layer 1a)
 
 import pytest
 
-from cortex import AddMessageInput, ConversationParticipants, CreateConversationInput
+from cortex import (
+    AddMessageInput,
+    ConversationParticipants,
+    CountConversationsFilter,
+    CreateConversationInput,
+    GetHistoryOptions,
+    ListConversationsFilter,
+    SearchConversationsFilters,
+    SearchConversationsInput,
+)
 
 
 @pytest.mark.asyncio
@@ -94,11 +103,11 @@ async def test_list_conversations(cortex_client, test_memory_space_id, test_user
     await asyncio.sleep(0.3)
 
     # List them
-    conversations = await cortex_client.conversations.list(
-        memory_space_id=test_memory_space_id, limit=10
+    result = await cortex_client.conversations.list(
+        ListConversationsFilter(memory_space_id=test_memory_space_id, limit=10)
     )
 
-    assert len(conversations) >= 3
+    assert len(result.conversations) >= 3
 
 
 @pytest.mark.asyncio
@@ -115,7 +124,9 @@ async def test_count_conversations(cortex_client, test_memory_space_id, test_use
         )
 
     # Count them
-    count = await cortex_client.conversations.count(memory_space_id=test_memory_space_id)
+    count = await cortex_client.conversations.count(
+        CountConversationsFilter(memory_space_id=test_memory_space_id)
+    )
 
     assert count >= 2
 
@@ -208,11 +219,11 @@ async def test_get_history(cortex_client, test_memory_space_id, test_conversatio
     # Get history
     history = await cortex_client.conversations.get_history(
         test_conversation_id,
-        limit=10,
+        GetHistoryOptions(limit=10),
     )
 
     # Should return messages
-    messages = history if isinstance(history, list) else history.get("messages", [])
+    messages = history.messages
     assert len(messages) >= 3
 
     # Cleanup
@@ -325,8 +336,10 @@ async def test_search_conversations(cortex_client, test_memory_space_id, test_us
 
     # Search for "refund"
     results = await cortex_client.conversations.search(
-        query="refund",
-        memory_space_id=test_memory_space_id,
+        SearchConversationsInput(
+            query="refund",
+            filters=SearchConversationsFilters(memory_space_id=test_memory_space_id),
+        )
     )
 
     # Should find the conversation
@@ -381,12 +394,11 @@ async def test_delete_many_conversations(cortex_client, test_memory_space_id, te
 
     # Delete many by filter
     result = await cortex_client.conversations.delete_many(
-        memory_space_id=test_memory_space_id,
-        user_id=test_user_id,
+        {"memory_space_id": test_memory_space_id, "user_id": test_user_id}
     )
 
     # Verify deleted (result should show count)
-    assert result.get("deleted", 0) >= 3
+    assert result.deleted >= 3
 
 
 @pytest.mark.asyncio
@@ -529,10 +541,11 @@ async def test_respects_limit_parameter(cortex_client, test_memory_space_id, tes
             )
         )
 
-    result = await cortex_client.conversations.list(memory_space_id=test_memory_space_id, limit=2)
-    conversations = result if isinstance(result, list) else result.get("conversations", [])
+    result = await cortex_client.conversations.list(
+        ListConversationsFilter(memory_space_id=test_memory_space_id, limit=2)
+    )
 
-    assert len(conversations) <= 2
+    assert len(result.conversations) <= 2
 
 
 @pytest.mark.asyncio
@@ -677,9 +690,11 @@ async def test_filters_by_user_id_in_list(cortex_client, test_memory_space_id, c
         )
     )
 
-    conversations = await cortex_client.conversations.list(user_id=user_id)
+    result = await cortex_client.conversations.list(
+        ListConversationsFilter(user_id=user_id)
+    )
 
-    assert len(conversations) >= 1
+    assert len(result.conversations) >= 1
     # Verify at least one conversation found
     assert True  # Just verify list worked
 
@@ -695,10 +710,12 @@ async def test_filters_by_type_in_list(cortex_client, test_memory_space_id, clea
         )
     )
 
-    conversations = await cortex_client.conversations.list(type="user-agent")
+    result = await cortex_client.conversations.list(
+        ListConversationsFilter(type="user-agent")
+    )
 
-    assert len(conversations) > 0
-    for conv in conversations:
+    assert len(result.conversations) > 0
+    for conv in result.conversations:
         assert conv.type == "user-agent"
 
 
@@ -715,12 +732,11 @@ async def test_combines_filters_user_id_and_memory_space(cortex_client, test_mem
         )
     )
 
-    conversations = await cortex_client.conversations.list(
-        user_id=user_id,
-        memory_space_id=test_memory_space_id,
+    result = await cortex_client.conversations.list(
+        ListConversationsFilter(user_id=user_id, memory_space_id=test_memory_space_id)
     )
 
-    assert len(conversations) >= 1
+    assert len(result.conversations) >= 1
 
 
 @pytest.mark.asyncio
@@ -736,7 +752,9 @@ async def test_counts_by_user_id(cortex_client, cleanup_helper):
         )
     )
 
-    count = await cortex_client.conversations.count(user_id=user_id)
+    count = await cortex_client.conversations.count(
+        CountConversationsFilter(user_id=user_id)
+    )
 
     assert count >= 1
 
@@ -752,7 +770,9 @@ async def test_counts_by_memory_space_id(cortex_client, test_memory_space_id, cl
         )
     )
 
-    count = await cortex_client.conversations.count(memory_space_id=test_memory_space_id)
+    count = await cortex_client.conversations.count(
+        CountConversationsFilter(memory_space_id=test_memory_space_id)
+    )
 
     assert count >= 1
 
@@ -760,7 +780,9 @@ async def test_counts_by_memory_space_id(cortex_client, test_memory_space_id, cl
 @pytest.mark.asyncio
 async def test_counts_by_type(cortex_client, cleanup_helper):
     """Test count by type. Port of: conversations.test.ts - line 481"""
-    count = await cortex_client.conversations.count(type="user-agent")
+    count = await cortex_client.conversations.count(
+        CountConversationsFilter(type="user-agent")
+    )
 
     assert count >= 0  # May have many from other tests
 
@@ -799,12 +821,10 @@ async def test_get_history_with_pagination(cortex_client, test_memory_space_id, 
     # Get first page
     history = await cortex_client.conversations.get_history(
         test_conversation_id,
-        limit=3,
-        offset=0,
+        GetHistoryOptions(limit=3, offset=0),
     )
 
-    messages = history if isinstance(history, list) else history.get("messages", [])
-    assert len(messages) <= 3
+    assert len(history.messages) <= 3
 
     await cortex_client.conversations.delete(test_conversation_id)
 
@@ -829,12 +849,12 @@ async def test_get_history_ascending_order(cortex_client, test_memory_space_id, 
 
     history = await cortex_client.conversations.get_history(
         test_conversation_id,
-        limit=3,
+        GetHistoryOptions(limit=3),
     )
 
-    messages = history if isinstance(history, list) else history.get("messages", [])
-    if messages:
-        first_content = messages[0].get("content") if isinstance(messages[0], dict) else messages[0].content
+    if history.messages:
+        msg = history.messages[0]
+        first_content = msg.get("content") if isinstance(msg, dict) else msg.content
         assert "Message 1" in first_content
 
     await cortex_client.conversations.delete(test_conversation_id)
@@ -859,12 +879,11 @@ async def test_get_history_descending_order(cortex_client, test_memory_space_id,
 
     history = await cortex_client.conversations.get_history(
         test_conversation_id,
-        limit=3,
+        GetHistoryOptions(limit=3),
     )
 
-    messages = history if isinstance(history, list) else history.get("messages", [])
     # Backend default order is ascending, just verify we got messages
-    assert len(messages) >= 1
+    assert len(history.messages) >= 1
 
     await cortex_client.conversations.delete(test_conversation_id)
 
@@ -888,7 +907,12 @@ async def test_search_finds_conversations_containing_query(cortex_client, test_m
         )
     )
 
-    results = await cortex_client.conversations.search(query="PASSWORD", memory_space_id=test_memory_space_id)
+    results = await cortex_client.conversations.search(
+        SearchConversationsInput(
+            query="PASSWORD",
+            filters=SearchConversationsFilters(memory_space_id=test_memory_space_id),
+        )
+    )
 
     assert len(results) > 0
     await cortex_client.conversations.delete(conv.conversation_id)
@@ -912,9 +936,10 @@ async def test_search_filters_by_user_id(cortex_client, test_memory_space_id, cl
     )
 
     results = await cortex_client.conversations.search(
-        query="test",
-        user_id=user_id,
-        memory_space_id=test_memory_space_id,
+        SearchConversationsInput(
+            query="test",
+            filters=SearchConversationsFilters(user_id=user_id, memory_space_id=test_memory_space_id),
+        )
     )
 
     assert len(results) >= 0  # May or may not find depending on search impl
@@ -925,8 +950,10 @@ async def test_search_filters_by_user_id(cortex_client, test_memory_space_id, cl
 async def test_search_returns_empty_when_no_matches(cortex_client, test_memory_space_id):
     """Test search empty results. Port of: conversations.test.ts - line 840"""
     results = await cortex_client.conversations.search(
-        query="NONEXISTENT_QUERY_STRING_12345",
-        memory_space_id=test_memory_space_id,
+        SearchConversationsInput(
+            query="NONEXISTENT_QUERY_STRING_12345",
+            filters=SearchConversationsFilters(memory_space_id=test_memory_space_id),
+        )
     )
 
     assert len(results) == 0
@@ -1039,8 +1066,10 @@ async def test_message_additions_propagate_to_all_read_operations(cortex_client,
     assert get_result.message_count == 1
 
     # Verify in list
-    list_result = await cortex_client.conversations.list(user_id=test_user_id)
-    found = next((c for c in list_result if c.conversation_id == test_conversation_id), None)
+    list_result = await cortex_client.conversations.list(
+        ListConversationsFilter(user_id=test_user_id)
+    )
+    found = next((c for c in list_result.conversations if c.conversation_id == test_conversation_id), None)
     assert found is not None
     assert found.message_count == 1
 
@@ -1066,7 +1095,9 @@ async def test_deletion_propagates_to_all_read_operations(cortex_client, test_me
     )
 
     # Count before
-    count_before = await cortex_client.conversations.count(user_id=test_user_id)
+    count_before = await cortex_client.conversations.count(
+        CountConversationsFilter(user_id=test_user_id)
+    )
 
     # Delete
     await cortex_client.conversations.delete(conv_id)
@@ -1076,12 +1107,16 @@ async def test_deletion_propagates_to_all_read_operations(cortex_client, test_me
     assert get_result is None
 
     # Verify deleted in list
-    list_result = await cortex_client.conversations.list(user_id=test_user_id)
-    found = next((c for c in list_result if c.conversation_id == conv_id), None)
+    list_result = await cortex_client.conversations.list(
+        ListConversationsFilter(user_id=test_user_id)
+    )
+    found = next((c for c in list_result.conversations if c.conversation_id == conv_id), None)
     assert found is None
 
     # Verify count decreased
-    count_after = await cortex_client.conversations.count(user_id=test_user_id)
+    count_after = await cortex_client.conversations.count(
+        CountConversationsFilter(user_id=test_user_id)
+    )
     assert count_after == count_before - 1
 
 
@@ -1306,11 +1341,15 @@ async def test_create_to_search_to_export_consistency(cortex_client, test_memory
     )
 
     # Verify in list
-    list_results = await cortex_client.conversations.list(user_id=test_user_id)
-    assert any(c.conversation_id == conv.conversation_id for c in list_results)
+    list_results = await cortex_client.conversations.list(
+        ListConversationsFilter(user_id=test_user_id)
+    )
+    assert any(c.conversation_id == conv.conversation_id for c in list_results.conversations)
 
     # Verify in count
-    count = await cortex_client.conversations.count(user_id=test_user_id)
+    count = await cortex_client.conversations.count(
+        CountConversationsFilter(user_id=test_user_id)
+    )
     assert count >= 1
 
     await cortex_client.conversations.delete(conv.conversation_id)
@@ -1572,7 +1611,9 @@ class TestListValidation:
     async def test_throws_on_invalid_type(self, cortex_client):
         """Should throw on invalid type"""
         with pytest.raises(Exception) as exc_info:
-            await cortex_client.conversations.list(type="invalid")  # type: ignore
+            await cortex_client.conversations.list(
+                ListConversationsFilter(type="invalid")  # type: ignore
+            )
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
         assert exc_info.value.code == "INVALID_TYPE"
 
@@ -1580,7 +1621,9 @@ class TestListValidation:
     async def test_throws_on_negative_limit(self, cortex_client):
         """Should throw on negative limit"""
         with pytest.raises(Exception) as exc_info:
-            await cortex_client.conversations.list(limit=-1)
+            await cortex_client.conversations.list(
+                ListConversationsFilter(limit=-1)
+            )
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
         assert exc_info.value.code == "INVALID_RANGE"
 
@@ -1588,7 +1631,9 @@ class TestListValidation:
     async def test_throws_on_zero_limit(self, cortex_client):
         """Should throw on zero limit"""
         with pytest.raises(Exception) as exc_info:
-            await cortex_client.conversations.list(limit=0)
+            await cortex_client.conversations.list(
+                ListConversationsFilter(limit=0)
+            )
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
         assert exc_info.value.code == "INVALID_RANGE"
 
@@ -1596,7 +1641,9 @@ class TestListValidation:
     async def test_throws_on_limit_too_large(self, cortex_client):
         """Should throw on limit > 1000"""
         with pytest.raises(Exception) as exc_info:
-            await cortex_client.conversations.list(limit=1001)
+            await cortex_client.conversations.list(
+                ListConversationsFilter(limit=1001)
+            )
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
         assert exc_info.value.code == "INVALID_RANGE"
 
@@ -1608,7 +1655,9 @@ class TestCountValidation:
     async def test_throws_on_invalid_type(self, cortex_client):
         """Should throw on invalid type"""
         with pytest.raises(Exception) as exc_info:
-            await cortex_client.conversations.count(type="wrong-type")  # type: ignore
+            await cortex_client.conversations.count(
+                CountConversationsFilter(type="wrong-type")  # type: ignore
+            )
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
         assert exc_info.value.code == "INVALID_TYPE"
 
@@ -1640,7 +1689,7 @@ class TestDeleteManyValidation:
     async def test_throws_on_invalid_type(self, cortex_client):
         """Should throw on invalid type"""
         with pytest.raises(Exception) as exc_info:
-            await cortex_client.conversations.delete_many(type="bad-type")  # type: ignore
+            await cortex_client.conversations.delete_many({"type": "bad-type"})  # type: ignore
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
         assert exc_info.value.code == "INVALID_TYPE"
 
@@ -1648,7 +1697,7 @@ class TestDeleteManyValidation:
     async def test_throws_when_no_filters_provided(self, cortex_client):
         """Should throw when no filters provided"""
         with pytest.raises(Exception) as exc_info:
-            await cortex_client.conversations.delete_many()
+            await cortex_client.conversations.delete_many({})
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
         assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
 
@@ -1850,7 +1899,9 @@ class TestGetHistoryValidation:
     async def test_throws_on_invalid_limit(self, cortex_client):
         """Should throw on invalid limit"""
         with pytest.raises(Exception) as exc_info:
-            await cortex_client.conversations.get_history("conv-123", limit=0)
+            await cortex_client.conversations.get_history(
+                "conv-123", GetHistoryOptions(limit=0)
+            )
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
         assert exc_info.value.code == "INVALID_RANGE"
 
@@ -1858,7 +1909,9 @@ class TestGetHistoryValidation:
     async def test_throws_on_negative_offset(self, cortex_client):
         """Should throw on negative offset"""
         with pytest.raises(Exception) as exc_info:
-            await cortex_client.conversations.get_history("conv-123", offset=-1)
+            await cortex_client.conversations.get_history(
+                "conv-123", GetHistoryOptions(offset=-1)
+            )
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
         assert exc_info.value.code == "INVALID_RANGE"
 
@@ -1867,7 +1920,7 @@ class TestGetHistoryValidation:
         """Should throw on invalid sort_order"""
         with pytest.raises(Exception) as exc_info:
             await cortex_client.conversations.get_history(
-                "conv-123", sort_order="invalid"  # type: ignore
+                "conv-123", GetHistoryOptions(sort_order="invalid")  # type: ignore
             )
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
         assert exc_info.value.code == "INVALID_SORT_ORDER"
@@ -1880,7 +1933,7 @@ class TestSearchValidation:
     async def test_throws_on_empty_query(self, cortex_client):
         """Should throw on empty query"""
         with pytest.raises(Exception) as exc_info:
-            await cortex_client.conversations.search("")
+            await cortex_client.conversations.search(SearchConversationsInput(query=""))
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
         assert exc_info.value.code == "EMPTY_STRING"
 
@@ -1888,7 +1941,7 @@ class TestSearchValidation:
     async def test_throws_on_whitespace_query(self, cortex_client):
         """Should throw on whitespace-only query"""
         with pytest.raises(Exception) as exc_info:
-            await cortex_client.conversations.search("   ")
+            await cortex_client.conversations.search(SearchConversationsInput(query="   "))
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
         assert exc_info.value.code == "EMPTY_STRING"
 
@@ -1896,7 +1949,12 @@ class TestSearchValidation:
     async def test_throws_on_invalid_type_filter(self, cortex_client):
         """Should throw on invalid type filter"""
         with pytest.raises(Exception) as exc_info:
-            await cortex_client.conversations.search("test", type="invalid")  # type: ignore
+            await cortex_client.conversations.search(
+                SearchConversationsInput(
+                    query="test",
+                    filters=SearchConversationsFilters(type="invalid"),  # type: ignore
+                )
+            )
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
         assert exc_info.value.code == "INVALID_TYPE"
 
@@ -1904,7 +1962,12 @@ class TestSearchValidation:
     async def test_throws_on_invalid_limit(self, cortex_client):
         """Should throw on invalid limit"""
         with pytest.raises(Exception) as exc_info:
-            await cortex_client.conversations.search("test", limit=-5)
+            await cortex_client.conversations.search(
+                SearchConversationsInput(
+                    query="test",
+                    filters=SearchConversationsFilters(limit=-5),
+                )
+            )
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
         assert exc_info.value.code == "INVALID_RANGE"
 
@@ -1914,7 +1977,10 @@ class TestSearchValidation:
         now = int(1000000000000)
         with pytest.raises(Exception) as exc_info:
             await cortex_client.conversations.search(
-                "test", date_start=now, date_end=now - 1000
+                SearchConversationsInput(
+                    query="test",
+                    filters=SearchConversationsFilters(date_start=now, date_end=now - 1000),
+                )
             )
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
         assert exc_info.value.code == "INVALID_DATE_RANGE"
@@ -1924,7 +1990,12 @@ class TestSearchValidation:
         """Should throw on invalid date range (start == end)"""
         now = int(1000000000000)
         with pytest.raises(Exception) as exc_info:
-            await cortex_client.conversations.search("test", date_start=now, date_end=now)
+            await cortex_client.conversations.search(
+                SearchConversationsInput(
+                    query="test",
+                    filters=SearchConversationsFilters(date_start=now, date_end=now),
+                )
+            )
         assert exc_info.value.__class__.__name__ == "ConversationValidationError"
         assert exc_info.value.code == "INVALID_DATE_RANGE"
 

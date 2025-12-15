@@ -262,15 +262,58 @@ export class AgentsAPI {
   /**
    * List agents with filters
    *
+   * @param filters - Optional filters to apply
+   * @returns Array of registered agents matching the filters
+   *
+   * @remarks
+   * **Pagination Limitation:** The `offset` and `limit` parameters are applied at the
+   * database level BEFORE client-side filtering. This means combining `offset` with
+   * client-side filters (`metadata`, `name`, `capabilities`, `lastActiveAfter`,
+   * `lastActiveBefore`) may produce unexpected results.
+   *
+   * For example, if you have 100 agents and request `{ metadata: { team: "alpha" }, offset: 10 }`,
+   * the database will skip the first 10 agents (regardless of team), then the SDK filters
+   * the remaining results for `team: "alpha"`. This may return fewer results than expected
+   * or empty results even when matching agents exist.
+   *
+   * **Safe pagination patterns:**
+   * - Use `offset`/`limit` with `status` filter only (backend-applied)
+   * - Use `offset`/`limit` without any client-side filters
+   * - For paginating with metadata/name/capabilities, fetch all results and paginate client-side
+   *
    * @example
    * ```typescript
-   * const agents = await cortex.agents.list({ limit: 50 });
+   * // Safe: offset with backend filter only
+   * const agents = await cortex.agents.list({ status: 'active', offset: 10, limit: 20 });
+   *
+   * // Safe: client-side filter without offset
+   * const teamAgents = await cortex.agents.list({ metadata: { team: 'alpha' } });
+   *
+   * // WARNING: offset + metadata may produce unexpected results
+   * const paginated = await cortex.agents.list({ metadata: { team: 'alpha' }, offset: 10 });
    * ```
    */
   async list(filters?: AgentFilters): Promise<RegisteredAgent[]> {
     // Validate filters
     if (filters) {
       validateAgentFilters(filters);
+    }
+
+    // Warn about pagination limitation when combining offset with client-side filters
+    const hasClientSideFilters =
+      filters?.metadata ||
+      filters?.name ||
+      filters?.capabilities ||
+      filters?.lastActiveAfter !== undefined ||
+      filters?.lastActiveBefore !== undefined;
+
+    if (filters?.offset !== undefined && hasClientSideFilters) {
+      console.warn(
+        "[Cortex SDK] Warning: Using 'offset' with client-side filters (metadata, name, " +
+          "capabilities, lastActiveAfter, lastActiveBefore) may produce unexpected results. " +
+          "The offset is applied at the database level before client-side filtering. " +
+          "See documentation for safe pagination patterns.",
+      );
     }
 
     const results = await this.executeWithResilience(

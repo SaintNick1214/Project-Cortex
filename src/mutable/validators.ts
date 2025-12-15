@@ -636,13 +636,6 @@ export function validatePurgeFilter(filter: unknown): void {
   if (filterObj.updatedBefore !== undefined) {
     validateTimestamp(filterObj.updatedBefore, "filter.updatedBefore");
   }
-
-  if (filterObj.lastAccessedBefore !== undefined) {
-    validateTimestamp(
-      filterObj.lastAccessedBefore,
-      "filter.lastAccessedBefore",
-    );
-  }
 }
 
 /**

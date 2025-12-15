@@ -229,6 +229,67 @@ async def test_delete_empty_memory_space_id(cortex_client):
 
 
 # ============================================================================
+# New Methods (0.21.0) Client-Side Validation Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_add_participant_empty_memory_space_id(cortex_client):
+    """Should raise on empty memory_space_id for add_participant."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.add_participant(
+            "", {"id": "test-user", "type": "user"}
+        )
+    assert "memory_space_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_add_participant_invalid_participant(cortex_client):
+    """Should raise on invalid participant structure."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.add_participant(
+            "valid-space", {"id": ""}  # Empty id
+        )
+    assert "participant" in str(exc_info.value).lower()
+
+
+@pytest.mark.asyncio
+async def test_remove_participant_empty_memory_space_id(cortex_client):
+    """Should raise on empty memory_space_id for remove_participant."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.remove_participant("", "user-123")
+    assert "memory_space_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_remove_participant_empty_participant_id(cortex_client):
+    """Should raise on empty participant_id."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.remove_participant("valid-space", "")
+    assert "participantId" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_find_by_participant_empty_participant_id(cortex_client):
+    """Should raise on empty participant_id for find_by_participant."""
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.find_by_participant("")
+    assert "participantId" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_stats_invalid_time_window(cortex_client):
+    """Should raise on invalid time window."""
+    from cortex.types import GetMemorySpaceStatsOptions
+
+    with pytest.raises(MemorySpaceValidationError) as exc_info:
+        await cortex_client.memory_spaces.get_stats(
+            "valid-space", GetMemorySpaceStatsOptions(time_window="invalid")
+        )
+    assert "timeWindow" in str(exc_info.value)
+
+
+# ============================================================================
 # Backend Validation Tests
 # ============================================================================
 # Note: Backend validation tests below

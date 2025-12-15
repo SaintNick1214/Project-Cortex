@@ -908,4 +908,223 @@ describe("Memory Validation", () => {
       });
     });
   });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Cross-Space Permission Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Cross-Space Permission Errors", () => {
+    const SPACE_A = ctx.memorySpaceId("perm-a");
+    const SPACE_B = ctx.memorySpaceId("perm-b");
+    let memoryInSpaceA: string;
+
+    beforeAll(async () => {
+      // Create a memory in Space A
+      const memory = await cortex.vector.store(SPACE_A, {
+        content: "Memory in Space A for permission tests",
+        contentType: "raw",
+        source: { type: "system", timestamp: Date.now() },
+        metadata: { importance: 50, tags: ["permission-test"] },
+      });
+      memoryInSpaceA = memory.memoryId;
+    });
+
+    describe("get() cross-space access", () => {
+      it("should return null when accessing memory from wrong space (silent permission denial)", async () => {
+        // Attempting to get a memory from Space A using Space B's ID
+        const result = await cortex.memory.get(SPACE_B, memoryInSpaceA);
+        expect(result).toBeNull();
+      });
+
+      it("should return memory when accessed from correct space", async () => {
+        const result = await cortex.memory.get(SPACE_A, memoryInSpaceA);
+        expect(result).not.toBeNull();
+        expect((result as any).memoryId || (result as any).memory?.memoryId).toBe(memoryInSpaceA);
+      });
+    });
+
+    describe("update() cross-space access", () => {
+      it("should throw PERMISSION_DENIED when memorySpaceId doesn't match", async () => {
+        await expect(
+          cortex.memory.update(SPACE_B, memoryInSpaceA, {
+            content: "Attempted update from wrong space",
+          }),
+        ).rejects.toThrow(/PERMISSION_DENIED|not found/i);
+      });
+    });
+
+    describe("delete() cross-space access", () => {
+      it("should throw PERMISSION_DENIED when memorySpaceId doesn't match", async () => {
+        await expect(
+          cortex.memory.delete(SPACE_B, memoryInSpaceA),
+        ).rejects.toThrow(/PERMISSION_DENIED|MEMORY_NOT_FOUND|not found/i);
+      });
+    });
+
+    describe("forget() cross-space access", () => {
+      it("should throw error when memorySpaceId doesn't own memory", async () => {
+        await expect(
+          cortex.memory.forget(SPACE_B, memoryInSpaceA),
+        ).rejects.toThrow(/PERMISSION_DENIED|MEMORY_NOT_FOUND|not found/i);
+      });
+    });
+
+    describe("archive() cross-space access", () => {
+      it("should throw PERMISSION_DENIED when memorySpaceId doesn't match", async () => {
+        await expect(
+          cortex.memory.archive(SPACE_B, memoryInSpaceA),
+        ).rejects.toThrow(/PERMISSION_DENIED|MEMORY_NOT_FOUND|not found/i);
+      });
+    });
+
+    describe("getVersion() cross-space access", () => {
+      it("should return null when accessing version from wrong space", async () => {
+        const result = await cortex.memory.getVersion(SPACE_B, memoryInSpaceA, 1);
+        expect(result).toBeNull();
+      });
+    });
+
+    describe("getHistory() cross-space access", () => {
+      it("should return empty array when accessing history from wrong space", async () => {
+        const result = await cortex.memory.getHistory(SPACE_B, memoryInSpaceA);
+        expect(result).toEqual([]);
+      });
+    });
+
+    describe("getAtTimestamp() cross-space access", () => {
+      it("should return null when accessing from wrong space", async () => {
+        const result = await cortex.memory.getAtTimestamp(
+          SPACE_B,
+          memoryInSpaceA,
+          Date.now(),
+        );
+        expect(result).toBeNull();
+      });
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // NOT_FOUND Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("NOT_FOUND Error Handling", () => {
+    const NONEXISTENT_MEMORY_ID = "mem-nonexistent-12345";
+
+    describe("update() not found", () => {
+      it("should throw MEMORY_NOT_FOUND when memory does not exist", async () => {
+        await expect(
+          cortex.memory.update(TEST_MEMSPACE_ID, NONEXISTENT_MEMORY_ID, {
+            content: "Updated content",
+          }),
+        ).rejects.toThrow(/MEMORY_NOT_FOUND|not found/i);
+      });
+    });
+
+    describe("delete() not found", () => {
+      it("should throw MEMORY_NOT_FOUND when memory does not exist", async () => {
+        await expect(
+          cortex.memory.delete(TEST_MEMSPACE_ID, NONEXISTENT_MEMORY_ID),
+        ).rejects.toThrow(/MEMORY_NOT_FOUND|not found/i);
+      });
+    });
+
+    describe("archive() not found", () => {
+      it("should throw MEMORY_NOT_FOUND when memory does not exist", async () => {
+        await expect(
+          cortex.memory.archive(TEST_MEMSPACE_ID, NONEXISTENT_MEMORY_ID),
+        ).rejects.toThrow(/MEMORY_NOT_FOUND|not found/i);
+      });
+    });
+
+    describe("restoreFromArchive() not found", () => {
+      it("should throw MEMORY_NOT_FOUND when memory does not exist", async () => {
+        await expect(
+          cortex.memory.restoreFromArchive(TEST_MEMSPACE_ID, NONEXISTENT_MEMORY_ID),
+        ).rejects.toThrow(/MEMORY_NOT_FOUND|not found/i);
+      });
+
+      it("should throw MEMORY_NOT_ARCHIVED when memory is not archived", async () => {
+        // Create a non-archived memory
+        const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
+          content: "Non-archived memory for restore test",
+          contentType: "raw",
+          source: { type: "system", timestamp: Date.now() },
+          metadata: { importance: 50, tags: ["restore-test"] },
+        });
+
+        await expect(
+          cortex.memory.restoreFromArchive(TEST_MEMSPACE_ID, memory.memoryId),
+        ).rejects.toThrow(/MEMORY_NOT_ARCHIVED|not archived/i);
+      });
+    });
+
+    describe("getVersion() not found", () => {
+      it("should return null when memory does not exist", async () => {
+        const result = await cortex.memory.getVersion(
+          TEST_MEMSPACE_ID,
+          NONEXISTENT_MEMORY_ID,
+          1,
+        );
+        expect(result).toBeNull();
+      });
+
+      it("should return null when version does not exist", async () => {
+        // Create a memory with only v1
+        const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
+          content: "Single version memory",
+          contentType: "raw",
+          source: { type: "system", timestamp: Date.now() },
+          metadata: { importance: 50, tags: ["version-test"] },
+        });
+
+        // Try to get non-existent version 99
+        const result = await cortex.memory.getVersion(
+          TEST_MEMSPACE_ID,
+          memory.memoryId,
+          99,
+        );
+        expect(result).toBeNull();
+      });
+    });
+
+    describe("getHistory() not found", () => {
+      it("should return empty array when memory does not exist", async () => {
+        const result = await cortex.memory.getHistory(
+          TEST_MEMSPACE_ID,
+          NONEXISTENT_MEMORY_ID,
+        );
+        expect(result).toEqual([]);
+      });
+    });
+
+    describe("getAtTimestamp() not found", () => {
+      it("should return null when memory does not exist", async () => {
+        const result = await cortex.memory.getAtTimestamp(
+          TEST_MEMSPACE_ID,
+          NONEXISTENT_MEMORY_ID,
+          Date.now(),
+        );
+        expect(result).toBeNull();
+      });
+
+      it("should return null when timestamp is before memory creation", async () => {
+        // Create memory now
+        const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
+          content: "Temporal test memory",
+          contentType: "raw",
+          source: { type: "system", timestamp: Date.now() },
+          metadata: { importance: 50, tags: ["temporal-test"] },
+        });
+
+        // Query for timestamp way before creation (1 year ago)
+        const pastTimestamp = Date.now() - 365 * 24 * 60 * 60 * 1000;
+        const result = await cortex.memory.getAtTimestamp(
+          TEST_MEMSPACE_ID,
+          memory.memoryId,
+          pastTimestamp,
+        );
+        expect(result).toBeNull();
+      });
+    });
+  });
 });
