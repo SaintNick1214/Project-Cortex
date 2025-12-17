@@ -44,9 +44,9 @@ import {
 import { createEnvFile, appendGraphEnvVars } from "../utils/init/env-generator.js";
 
 /**
- * Register init commands
+ * Register start and stop commands (lifecycle management)
  */
-export function registerInitCommands(
+export function registerLifecycleCommands(
   program: Command,
   _config: CLIConfig,
 ): void {
@@ -171,19 +171,58 @@ export function registerInitCommands(
 
         // Start Convex if not graph-only
         if (!options.graphOnly) {
+          const hasConvex = await commandExists("convex");
+          const env: Record<string, string | undefined> = { ...process.env };
+          env.CONVEX_URL = dep.url;
+          if (dep.key) env.CONVEX_DEPLOY_KEY = dep.key;
+
+          // For cloud deployments with a deploy key, run `convex deploy` first
+          // This ensures functions are deployed to production before starting dev mode
+          if (dep.key && !dep.isLocal) {
+            const deploySpinner = ora("Deploying functions to production...").start();
+            try {
+              const deployCmd = hasConvex ? "convex" : "npx";
+              const deployArgs = hasConvex 
+                ? ["deploy", "--cmd", "echo deployed"] 
+                : ["convex", "deploy", "--cmd", "echo deployed"];
+              
+              await new Promise<void>((resolve, reject) => {
+                const deployChild = spawn(deployCmd, deployArgs, {
+                  cwd: dep.projectPath,
+                  stdio: "pipe",
+                  env,
+                });
+                
+                let stderr = "";
+                deployChild.stderr?.on("data", (data: Buffer) => { stderr += data.toString(); });
+                
+                deployChild.on("close", (code: number | null) => {
+                  if (code === 0) {
+                    resolve();
+                  } else {
+                    reject(new Error(`Deploy failed with code ${code}: ${stderr}`));
+                  }
+                });
+                
+                deployChild.on("error", reject);
+              });
+              
+              deploySpinner.succeed("Functions deployed to production");
+            } catch (error) {
+              deploySpinner.fail("Failed to deploy functions");
+              console.error(pc.dim(`   ${error}`));
+              console.log(pc.yellow("   Continuing with dev mode anyway..."));
+            }
+          }
+
           if (options.foreground) {
             // Foreground mode - blocking (single deployment only)
             console.log(pc.cyan("   Starting Convex development server...\n"));
             console.log(pc.dim("   Press Ctrl+C to stop\n"));
 
-            const hasConvex = await commandExists("convex");
             const command = hasConvex ? "convex" : "npx";
             const args = hasConvex ? ["dev"] : ["convex", "dev"];
             if (dep.isLocal) args.push("--local");
-
-            const env: Record<string, string | undefined> = { ...process.env };
-            env.CONVEX_URL = dep.url;
-            if (dep.key) env.CONVEX_DEPLOY_KEY = dep.key;
 
             const child = spawn(command, args, {
               cwd: dep.projectPath,
@@ -340,7 +379,15 @@ export function registerInitCommands(
         console.log(pc.yellow("   No services were running\n"));
       }
     });
+}
 
+/**
+ * Register init command (project initialization)
+ */
+export function registerInitCommand(
+  program: Command,
+  _config: CLIConfig,
+): void {
   // Init command
   program
     .command("init [directory]")
@@ -934,6 +981,7 @@ function showSuccessMessage(config: WizardConfig): void {
 
 /**
  * Start Convex development server in background
+ * Note: Deploy to production is handled by the caller before this function
  */
 async function startConvexInBackground(
   projectPath: string,
@@ -941,12 +989,18 @@ async function startConvexInBackground(
   deploymentUrl?: string,
   deploymentKey?: string,
 ): Promise<void> {
-  const spinner = ora("Starting Convex development server...").start();
-
   const hasConvex = await commandExists("convex");
   const command = hasConvex ? "convex" : "npx";
-  const args = hasConvex ? ["dev"] : ["convex", "dev"];
 
+  // Set up environment with deployment-specific URL/key if provided
+  const env: Record<string, string | undefined> = { ...process.env };
+  if (deploymentUrl) env.CONVEX_URL = deploymentUrl;
+  if (deploymentKey) env.CONVEX_DEPLOY_KEY = deploymentKey;
+
+  // Start convex dev in background for watch mode
+  const devSpinner = ora("Starting Convex development server...").start();
+  
+  const args = hasConvex ? ["dev"] : ["convex", "dev"];
   if (isLocal) {
     args.push("--local");
   }
@@ -955,11 +1009,6 @@ async function startConvexInBackground(
   const logFile = path.join(projectPath, ".convex-dev.log");
   // Use fs.openSync to get a file descriptor (required for detached process stdio)
   const logFd = fs.openSync(logFile, "a");
-
-  // Set up environment with deployment-specific URL/key if provided
-  const env: Record<string, string | undefined> = { ...process.env };
-  if (deploymentUrl) env.CONVEX_URL = deploymentUrl;
-  if (deploymentKey) env.CONVEX_DEPLOY_KEY = deploymentKey;
 
   // Spawn detached process
   const child = spawn(command, args, {
@@ -982,7 +1031,7 @@ async function startConvexInBackground(
   // Wait a moment for startup
   await new Promise((resolve) => setTimeout(resolve, 2000));
 
-  spinner.succeed("Convex development server started in background");
+  devSpinner.succeed("Convex development server started in background");
   console.log(pc.dim(`   PID: ${child.pid}`));
   console.log(pc.dim(`   Log: ${path.basename(logFile)}`));
 }

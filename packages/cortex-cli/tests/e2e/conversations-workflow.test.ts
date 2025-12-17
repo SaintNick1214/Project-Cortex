@@ -77,6 +77,7 @@ describeE2E("Conversations Workflow E2E", () => {
         userMessage: "First test message",
         agentResponse: "First test response",
         userId: TEST_USER_ID,
+        agentId: "conv-test-agent",
         userName: "Test User",
       });
 
@@ -86,6 +87,7 @@ describeE2E("Conversations Workflow E2E", () => {
         userMessage: "Second test message",
         agentResponse: "Second test response",
         userId: TEST_USER_ID,
+        agentId: "conv-test-agent",
         userName: "Test User",
       });
 

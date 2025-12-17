@@ -14,9 +14,12 @@
 import dotenv from "dotenv";
 import { resolve } from "path";
 
-// CLI tests use CONVEX_URL_CLI for dedicated database isolation in CI
-// This ensures CLI E2E tests don't conflict with SDK tests running in parallel
-if (process.env.CONVEX_URL_CLI && !process.env.CONVEX_URL) {
+// Note: dotenv@17+ auto-injects env vars on import, so .env files may already be loaded
+// by the time this code runs. We need to handle this carefully.
+
+// CLI tests use CONVEX_URL_CLI for dedicated database isolation
+// This takes priority over any other CONVEX_URL that may have been set (including from auto-injected .env files)
+if (process.env.CONVEX_URL_CLI) {
   process.env.CONVEX_URL = process.env.CONVEX_URL_CLI;
 }
 
