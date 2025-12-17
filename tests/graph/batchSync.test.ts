@@ -8,7 +8,10 @@ import { Cortex } from "../../src";
 import { CypherGraphAdapter, initializeGraphSchema } from "../../src/graph";
 import type { GraphAdapter } from "../../src/graph";
 import { initialGraphSync } from "../../src/graph/sync/batchSync";
-import type { BatchSyncOptions, BatchSyncResult } from "../../src/graph/sync/batchSync";
+import type {
+  BatchSyncOptions as _BatchSyncOptions,
+  BatchSyncResult as _BatchSyncResult,
+} from "../../src/graph/sync/batchSync";
 
 // Check if graph testing is enabled
 const GRAPH_TESTING_ENABLED = process.env.GRAPH_TESTING_ENABLED === "true";
@@ -441,10 +444,10 @@ describeIfEnabled("Batch Sync Integration", () => {
 
     it("should be idempotent (can run multiple times)", async () => {
       // First sync
-      const result1 = await initialGraphSync(cortex, adapter);
+      const _result1 = await initialGraphSync(cortex, adapter);
 
       // Second sync - should update, not duplicate
-      const result2 = await initialGraphSync(cortex, adapter);
+      const _result2 = await initialGraphSync(cortex, adapter);
 
       // Count nodes after both syncs
       const totalNodes = await adapter.countNodes();

@@ -138,6 +138,20 @@ jobs:
         env:
           CONVEX_URL: ${{ secrets.CONVEX_URL }}
 
+      # CLI-dedicated Convex instance (isolated from main SDK tests)
+      - name: Deploy CLI Convex backend
+        run: npx convex deploy --yes
+        env:
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_URL_CLI }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_CLI }}
+
+      - name: Purge CLI test database
+        run: |
+          echo "🧹 Purging CLI test database..."
+          npx tsx scripts/cleanup-test-data.ts
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
+
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # STAGE 3: Code Quality (runs in parallel with tests after purge)
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -458,16 +472,15 @@ jobs:
         run: |
           cd packages/cortex-cli
           npm run test:unit
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
 
-      - name: Run CLI integration tests
+      - name: Run CLI E2E tests
         run: |
           cd packages/cortex-cli
-          npm run test:integration
+          npm run test:e2e
         env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+          CONVEX_URL_CLI: ${{ secrets.CONVEX_URL_CLI }}
+          CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_CLI }}
 
       - name: Lint CLI
         run: |

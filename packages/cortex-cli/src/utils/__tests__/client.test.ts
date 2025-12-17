@@ -2,7 +2,7 @@
  * Client Utilities Tests
  */
 
-import { describe, it, expect, jest, beforeEach, afterEach } from "@jest/globals";
+import { describe, it, expect } from "@jest/globals";
 import type { CLIConfig } from "../../types.js";
 import { getDeploymentInfo } from "../client.js";
 

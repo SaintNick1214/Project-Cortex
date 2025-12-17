@@ -2955,7 +2955,7 @@ describe("Facts API (Layer 3)", () => {
     describe("Happy Path", () => {
       it("should delete all facts in a memory space", async () => {
         // Create multiple facts
-        const facts = await Promise.all([
+        const _facts = await Promise.all([
           cortex.facts.store({
             memorySpaceId: DELETE_MANY_SPACE,
             fact: "Fact to delete 1",

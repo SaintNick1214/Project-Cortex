@@ -4,7 +4,7 @@ Cortex SDK - Memory Spaces API
 Memory space management for Hive and Collaboration modes
 """
 
-from typing import Any, Dict, List, Optional, cast
+from typing import Any, Dict, List, Optional
 
 from .._utils import convert_convex_response, filter_none_values
 from ..errors import CortexError, ErrorCode  # noqa: F401
@@ -32,7 +32,7 @@ from .validators import (
     validate_memory_space_type,
     validate_name,
     validate_participant,
-    validate_participant_ids,
+    validate_participant_ids,  # noqa: F401 - Re-exported for public API
     validate_participants,
     validate_search_query,
     validate_time_window,

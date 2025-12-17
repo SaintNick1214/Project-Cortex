@@ -5,7 +5,7 @@ Client-side validation for agent operations to catch errors before
 they reach the backend, providing faster feedback and better error messages.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 from ..types import (
     AgentFilters,

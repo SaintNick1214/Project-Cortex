@@ -5,9 +5,9 @@ Sophisticated orphan detection with circular reference protection.
 Prevents deletion of nodes that are still referenced, even in circular graphs.
 """
 
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Set, TYPE_CHECKING
 import time
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set
 
 if TYPE_CHECKING:
     from ..types import GraphAdapter
@@ -229,7 +229,7 @@ async def detect_orphan(
             """
             MATCH (referrer)-[r]->(target)
             WHERE id(target) = $nodeId
-            RETURN id(referrer) as referrerId, 
+            RETURN id(referrer) as referrerId,
                    labels(referrer)[0] as refererLabel,
                    type(r) as relationshipType
             """,
@@ -414,7 +414,7 @@ async def delete_with_orphan_cleanup(
             """
             MATCH (n)-[r]->(referenced)
             WHERE id(n) = $nodeId
-            RETURN id(referenced) as refId, 
+            RETURN id(referenced) as refId,
                    labels(referenced)[0] as refLabel,
                    id(r) as edgeId
             """,

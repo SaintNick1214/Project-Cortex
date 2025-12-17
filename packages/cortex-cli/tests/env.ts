@@ -2,16 +2,25 @@
  * Jest Environment Setup for CLI Tests
  * Loads environment variables BEFORE test modules are imported
  *
- * Uses the same environment as SDK tests (LOCAL_CONVEX_URL, CONVEX_URL, etc.)
+ * Priority for Convex URL:
+ *   1. CONVEX_URL_CLI (CLI-dedicated instance, used in CI)
+ *   2. CONVEX_URL (fallback for local development)
+ *   3. .env.local / .env.test files
  *
- * NOTE: Unit tests don't require CONVEX_URL - only integration tests do.
+ * NOTE: Unit tests don't require CONVEX_URL - only E2E tests do.
  * This file should NOT call process.exit() as it breaks unit tests in CI.
  */
 
 import dotenv from "dotenv";
 import { resolve } from "path";
 
-// Check if CONVEX_URL is already set (e.g., from CI environment)
+// CLI tests use CONVEX_URL_CLI for dedicated database isolation in CI
+// This ensures CLI E2E tests don't conflict with SDK tests running in parallel
+if (process.env.CONVEX_URL_CLI && !process.env.CONVEX_URL) {
+  process.env.CONVEX_URL = process.env.CONVEX_URL_CLI;
+}
+
+// Check if CONVEX_URL is already set (e.g., from CI environment or CONVEX_URL_CLI)
 const convexUrlAlreadySet = Boolean(process.env.CONVEX_URL);
 
 // Only try to load .env files if CONVEX_URL is not already set

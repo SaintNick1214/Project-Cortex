@@ -13,13 +13,8 @@ import {
   syncFactToGraph,
   syncMemorySpaceToGraph,
 } from "../../src/graph/sync/syncUtils";
-import {
-  syncContextRelationships,
-  syncConversationRelationships,
-  syncMemoryRelationships,
-  syncFactRelationships,
-  syncA2ARelationships,
-} from "../../src/graph/sync/syncRelationships";
+// Import only syncA2ARelationships which is tested directly
+import { syncA2ARelationships } from "../../src/graph/sync/syncRelationships";
 import type { Context } from "../../src/contexts";
 import type {
   Conversation,
@@ -73,7 +68,7 @@ describeIfEnabled("Sync Relationships", () => {
     return await syncMemorySpaceToGraph(space, adapter);
   }
 
-  async function createConversation(
+  async function _createConversation(
     id: string,
     memorySpaceId: string,
   ): Promise<string> {
@@ -124,7 +119,7 @@ describeIfEnabled("Sync Relationships", () => {
         userId: "user-involved",
       });
 
-      const nodeId = await syncContextToGraph(context, adapter);
+      const _nodeId = await syncContextToGraph(context, adapter);
 
       // Verify context node exists with userId
       const nodes = await adapter.findNodes(
@@ -157,7 +152,7 @@ describeIfEnabled("Sync Relationships", () => {
         updatedAt: Date.now(),
       };
 
-      const nodeId = await syncConversationToGraph(conversation, adapter);
+      const _nodeId = await syncConversationToGraph(conversation, adapter);
 
       // Verify conversation node exists with userId
       const convNodes = await adapter.findNodes(
@@ -186,7 +181,7 @@ describeIfEnabled("Sync Relationships", () => {
         updatedAt: Date.now(),
       };
 
-      const nodeId = await syncConversationToGraph(conversation, adapter);
+      const _nodeId = await syncConversationToGraph(conversation, adapter);
 
       // Verify conversation node has participantId
       const convNodes = await adapter.findNodes(
@@ -224,7 +219,7 @@ describeIfEnabled("Sync Relationships", () => {
         accessCount: 0,
       };
 
-      const nodeId = await syncMemoryToGraph(memory, adapter);
+      const _nodeId = await syncMemoryToGraph(memory, adapter);
 
       // Verify memory node exists
       const memNodes = await adapter.findNodes(
@@ -257,7 +252,7 @@ describeIfEnabled("Sync Relationships", () => {
         accessCount: 0,
       };
 
-      const nodeId = await syncMemoryToGraph(memory, adapter);
+      const _nodeId = await syncMemoryToGraph(memory, adapter);
 
       // Verify memory node has participantId
       const memNodes = await adapter.findNodes(
@@ -292,7 +287,7 @@ describeIfEnabled("Sync Relationships", () => {
         updatedAt: Date.now(),
       };
 
-      const nodeId = await syncFactToGraph(fact, adapter);
+      const _nodeId = await syncFactToGraph(fact, adapter);
 
       // Verify fact node exists
       const factNodes = await adapter.findNodes(
@@ -326,7 +321,7 @@ describeIfEnabled("Sync Relationships", () => {
         updatedAt: Date.now(),
       };
 
-      const nodeId = await syncFactToGraph(fact, adapter);
+      const _nodeId = await syncFactToGraph(fact, adapter);
 
       // Verify fact node has subject and object
       const factNodes = await adapter.findNodes(
@@ -358,7 +353,7 @@ describeIfEnabled("Sync Relationships", () => {
         updatedAt: Date.now(),
       };
 
-      const nodeId = await syncFactToGraph(fact, adapter);
+      const _nodeId = await syncFactToGraph(fact, adapter);
 
       // Verify fact node has participantId
       const factNodes = await adapter.findNodes(

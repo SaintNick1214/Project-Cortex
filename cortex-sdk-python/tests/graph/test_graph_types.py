@@ -516,3 +516,4 @@ class TestShortestPathConfig:
             relationship_types=["KNOWS"],
         )
         assert config.relationship_types == ["KNOWS"]
+

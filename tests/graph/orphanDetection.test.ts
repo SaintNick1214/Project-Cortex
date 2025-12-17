@@ -261,7 +261,7 @@ describeIfEnabled("Orphan Detection Integration", () => {
       expect(n1).toBeNull();
 
       // Node2 should still exist
-      const n2 = await adapter.getNode(node2);
+      const _n2 = await adapter.getNode(node2);
       // May or may not exist depending on implementation
     });
   });
@@ -269,7 +269,7 @@ describeIfEnabled("Orphan Detection Integration", () => {
   describe("Node reference counting", () => {
     it("should be able to query incoming relationships", async () => {
       // Create a test scenario
-      const factNode = await adapter.mergeNode(
+      const _factNode = await adapter.mergeNode(
         {
           label: "Fact",
           properties: { factId: `fact-ref-${timestamp}`, fact: "test" },
@@ -277,7 +277,7 @@ describeIfEnabled("Orphan Detection Integration", () => {
         { factId: `fact-ref-${timestamp}` },
       );
 
-      const entityNode = await adapter.mergeNode(
+      const _entityNode = await adapter.mergeNode(
         {
           label: "Entity",
           properties: { name: `entity-ref-${timestamp}` },

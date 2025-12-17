@@ -210,7 +210,7 @@ describe("Mutable Store API (Layer 1c)", () => {
       const key = "timestamp-key";
 
       // Create entry
-      const created = await cortex.mutable.set(ns, key, "initial");
+      const _created = await cortex.mutable.set(ns, key, "initial");
       const createdRecord = await cortex.mutable.getRecord(ns, key);
 
       // Small delay to ensure timestamps differ

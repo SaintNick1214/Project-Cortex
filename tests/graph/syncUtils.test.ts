@@ -577,8 +577,8 @@ describeIfEnabled("Sync Utilities", () => {
     it("should return existing user node (idempotent)", async () => {
       const userId = `user-idem-${timestamp}`;
 
-      const nodeId1 = await ensureUserNode(userId, adapter);
-      const nodeId2 = await ensureUserNode(userId, adapter);
+      const _nodeId1 = await ensureUserNode(userId, adapter);
+      const _nodeId2 = await ensureUserNode(userId, adapter);
 
       // Should find the same node
       const nodes = await adapter.findNodes("User", { userId }, 10);

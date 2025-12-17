@@ -4,7 +4,7 @@ Cortex SDK - Graph Schema Initialization
 Creates constraints and indexes for optimal graph database performance.
 """
 
-from typing import List, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from ..types import GraphAdapter, SchemaVerificationResult
 from .errors import GraphSchemaError
