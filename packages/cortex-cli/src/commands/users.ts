@@ -14,7 +14,8 @@ import { Command } from "commander";
 import ora from "ora";
 import type { CLIConfig, OutputFormat } from "../types.js";
 import { withClient } from "../utils/client.js";
-import { resolveConfig } from "../utils/config.js";
+import { resolveConfig, loadConfig } from "../utils/config.js";
+import { selectDeployment } from "../utils/deployment-selector.js";
 import {
   formatOutput,
   printSuccess,
@@ -39,7 +40,7 @@ import { writeFile } from "fs/promises";
  */
 export function registerUserCommands(
   program: Command,
-  config: CLIConfig,
+  _config: CLIConfig,
 ): void {
   const users = program
     .command("users")
@@ -49,12 +50,16 @@ export function registerUserCommands(
   users
     .command("list")
     .description("List all user profiles with usage stats")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-l, --limit <number>", "Maximum number of results", "50")
     .option("-f, --format <format>", "Output format: table, json, csv")
     .option("--no-stats", "Skip gathering usage stats (faster)")
     .action(async (options) => {
-      const globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "list users");
+      if (!selection) return;
+
+      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading users...").start();
@@ -62,7 +67,7 @@ export function registerUserCommands(
       try {
         const limit = validateLimit(parseInt(options.limit, 10));
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const usersList = await client.users.list({ limit });
 
           if (usersList.length === 0) {
@@ -182,11 +187,15 @@ export function registerUserCommands(
   users
     .command("get <userId>")
     .description("Get user profile details")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-f, --format <format>", "Output format: table, json")
     .option("--include-history", "Include version history", false)
     .action(async (userId, options) => {
-      const globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "get user");
+      if (!selection) return;
+
+      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading user...").start();
@@ -194,7 +203,7 @@ export function registerUserCommands(
       try {
         validateUserId(userId);
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const user = await client.users.get(userId);
 
           if (!user) {
@@ -257,6 +266,7 @@ export function registerUserCommands(
   users
     .command("delete <userId>")
     .description("Delete user profile with optional GDPR cascade deletion")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("--cascade", "Delete all user data across all layers (GDPR)", false)
     .option(
       "--dry-run",
@@ -270,7 +280,9 @@ export function registerUserCommands(
       false,
     )
     .action(async (userId, options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "delete user");
+      if (!selection) return;
 
       try {
         validateUserId(userId);
@@ -300,7 +312,7 @@ export function registerUserCommands(
         } else if (!options.yes && !options.dryRun) {
           const confirmed = await requireConfirmation(
             `Delete user profile ${userId}?`,
-            config,
+            currentConfig,
           );
           if (!confirmed) {
             printWarning("Operation cancelled");
@@ -316,7 +328,7 @@ export function registerUserCommands(
               : "Deleting user...",
         ).start();
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const result = await client.users.delete(userId, {
             cascade: options.cascade,
             dryRun: options.dryRun,
@@ -378,11 +390,14 @@ export function registerUserCommands(
   users
     .command("delete-many <userIds...>")
     .description("Delete multiple users with optional GDPR cascade")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("--cascade", "Delete all user data across all layers", false)
     .option("--dry-run", "Preview what would be deleted", false)
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (userIds, options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "delete users");
+      if (!selection) return;
 
       try {
         // Validate all user IDs
@@ -394,7 +409,7 @@ export function registerUserCommands(
           const cascade = options.cascade ? " (with cascade)" : "";
           const confirmed = await requireConfirmation(
             `Delete ${formatCount(userIds.length, "user")}${cascade}? This cannot be undone.`,
-            config,
+            currentConfig,
           );
           if (!confirmed) {
             printWarning("Operation cancelled");
@@ -404,7 +419,7 @@ export function registerUserCommands(
 
         const spinner = ora(`Deleting ${userIds.length} users...`).start();
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const result = await client.users.deleteMany(userIds, {
             cascade: options.cascade,
             dryRun: options.dryRun,
@@ -437,9 +452,12 @@ export function registerUserCommands(
   users
     .command("export <userId>")
     .description("Export all user data (GDPR data portability)")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-o, --output <file>", "Output file path", "user-export.json")
     .action(async (userId, options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "export user data");
+      if (!selection) return;
 
       const spinner = ora("Exporting user data...").start();
 
@@ -447,7 +465,7 @@ export function registerUserCommands(
         validateUserId(userId);
         validateFilePath(options.output);
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           // Get user profile
           const user = await client.users.get(userId);
           if (!user) {
@@ -487,10 +505,14 @@ export function registerUserCommands(
   users
     .command("stats <userId>")
     .description("Show statistics for a user")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (userId, options) => {
-      const globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "show user stats");
+      if (!selection) return;
+
+      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading user statistics...").start();
@@ -498,7 +520,7 @@ export function registerUserCommands(
       try {
         validateUserId(userId);
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           // Check if user exists
           const user = await client.users.get(userId);
           if (!user) {
@@ -589,10 +611,13 @@ export function registerUserCommands(
   users
     .command("update <userId>")
     .description("Update user profile data")
-    .option("-d, --data <json>", "JSON data to merge into profile")
+    .option("-d, --deployment <name>", "Target deployment")
+    .option("--data <json>", "JSON data to merge into profile")
     .option("-f, --file <path>", "JSON file with data to merge")
     .action(async (userId, options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "update user");
+      if (!selection) return;
 
       try {
         validateUserId(userId);
@@ -613,7 +638,7 @@ export function registerUserCommands(
 
         const spinner = ora("Updating user profile...").start();
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const updated = await client.users.merge(userId, data);
 
           spinner.stop();
@@ -631,9 +656,12 @@ export function registerUserCommands(
   users
     .command("create <userId>")
     .description("Create a new user profile")
-    .option("-d, --data <json>", "JSON data for the profile", "{}")
+    .option("-d, --deployment <name>", "Target deployment")
+    .option("--data <json>", "JSON data for the profile", "{}")
     .action(async (userId, options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "create user");
+      if (!selection) return;
 
       try {
         validateUserId(userId);
@@ -642,7 +670,7 @@ export function registerUserCommands(
 
         const spinner = ora("Creating user profile...").start();
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           // Check if user exists
           const existing = await client.users.get(userId);
           if (existing) {
@@ -668,13 +696,16 @@ export function registerUserCommands(
   users
     .command("exists <userId>")
     .description("Check if a user exists")
-    .action(async (userId) => {
-      const globalOpts = program.opts();
+    .option("-d, --deployment <name>", "Target deployment")
+    .action(async (userId, options) => {
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "check user exists");
+      if (!selection) return;
 
       try {
         validateUserId(userId);
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const exists = await client.users.exists(userId);
 
           if (exists) {

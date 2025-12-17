@@ -14,7 +14,8 @@ import { Command } from "commander";
 import ora from "ora";
 import type { CLIConfig, OutputFormat } from "../types.js";
 import { withClient } from "../utils/client.js";
-import { resolveConfig } from "../utils/config.js";
+import { resolveConfig, loadConfig } from "../utils/config.js";
+import { selectDeployment } from "../utils/deployment-selector.js";
 import {
   formatOutput,
   printSuccess,
@@ -41,7 +42,7 @@ import { writeFile } from "fs/promises";
  */
 export function registerMemoryCommands(
   program: Command,
-  config: CLIConfig,
+  _config: CLIConfig,
 ): void {
   const memory = program
     .command("memory")
@@ -51,13 +52,17 @@ export function registerMemoryCommands(
   memory
     .command("list")
     .description("List memories in a memory space")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-s, --space <id>", "Memory space ID")
     .option("-u, --user <id>", "Filter by user ID")
     .option("-l, --limit <number>", "Maximum number of results", "50")
     .option("-f, --format <format>", "Output format: table, json, csv")
     .action(async (options) => {
-      const globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "list memories");
+      if (!selection) return;
+
+      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading memories...").start();
@@ -69,7 +74,7 @@ export function registerMemoryCommands(
         }
         const limit = validateLimit(parseInt(options.limit, 10));
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const memories = await client.memory.list({
             memorySpaceId: options.space,
             userId: options.user,
@@ -133,13 +138,17 @@ export function registerMemoryCommands(
   memory
     .command("search <query>")
     .description("Search memories by content")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-s, --space <id>", "Memory space ID")
     .option("-u, --user <id>", "Filter by user ID")
     .option("-l, --limit <number>", "Maximum number of results", "20")
     .option("-f, --format <format>", "Output format: table, json, csv")
     .action(async (query, options) => {
-      const globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "search memories");
+      if (!selection) return;
+
+      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Searching memories...").start();
@@ -152,7 +161,7 @@ export function registerMemoryCommands(
         }
         const limit = validateLimit(parseInt(options.limit, 10));
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const memories = await client.memory.search(options.space, query, {
             userId: options.user,
             limit,
@@ -210,11 +219,14 @@ export function registerMemoryCommands(
   memory
     .command("delete <memoryId>")
     .description("Delete a specific memory")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-s, --space <id>", "Memory space ID")
     .option("--cascade", "Also delete associated facts", false)
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (memoryId, options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "delete memory");
+      if (!selection) return;
 
       try {
         validateMemoryId(memoryId);
@@ -223,7 +235,7 @@ export function registerMemoryCommands(
         if (!options.yes) {
           const confirmed = await requireConfirmation(
             `Delete memory ${memoryId} from space ${options.space}?`,
-            config,
+            currentConfig,
           );
           if (!confirmed) {
             printWarning("Operation cancelled");
@@ -233,7 +245,7 @@ export function registerMemoryCommands(
 
         const spinner = ora("Deleting memory...").start();
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const result = await client.memory.delete(options.space, memoryId, {
             cascadeDeleteFacts: options.cascade,
           });
@@ -261,12 +273,15 @@ export function registerMemoryCommands(
   memory
     .command("clear")
     .description("Clear multiple memories")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-s, --space <id>", "Memory space ID")
     .option("-u, --user <id>", "Only clear memories for this user")
     .option("--source <type>", "Only clear memories of this source type")
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "clear memories");
+      if (!selection) return;
 
       try {
         validateMemorySpaceId(options.space);
@@ -274,7 +289,7 @@ export function registerMemoryCommands(
           validateUserId(options.user);
         }
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           // Count memories first
           const count = await client.memory.count({
             memorySpaceId: options.space,
@@ -293,7 +308,7 @@ export function registerMemoryCommands(
               : `in space ${options.space}`;
             const confirmed = await requireConfirmation(
               `Delete ${formatCount(count, "memory", "memories")} ${scope}? This cannot be undone.`,
-              config,
+              currentConfig,
             );
             if (!confirmed) {
               printWarning("Operation cancelled");
@@ -330,13 +345,16 @@ export function registerMemoryCommands(
   memory
     .command("export")
     .description("Export memories to a file")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-s, --space <id>", "Memory space ID")
     .option("-u, --user <id>", "Only export memories for this user")
     .option("-o, --output <file>", "Output file path", "memories-export.json")
     .option("--include-facts", "Include associated facts", false)
     .option("-f, --format <format>", "Export format: json, csv", "json")
     .action(async (options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "export memories");
+      if (!selection) return;
 
       const spinner = ora("Exporting memories...").start();
 
@@ -347,7 +365,7 @@ export function registerMemoryCommands(
         }
         validateFilePath(options.output);
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const result = await client.memory.export({
             memorySpaceId: options.space,
             userId: options.user,
@@ -374,11 +392,15 @@ export function registerMemoryCommands(
   memory
     .command("stats")
     .description("Show memory statistics for a space")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-s, --space <id>", "Memory space ID")
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (options) => {
-      const globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "get statistics");
+      if (!selection) return;
+
+      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading statistics...").start();
@@ -386,7 +408,7 @@ export function registerMemoryCommands(
       try {
         validateMemorySpaceId(options.space);
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           // Get counts
           const [totalCount, conversationCount, systemCount, toolCount] =
             await Promise.all([
@@ -461,12 +483,16 @@ export function registerMemoryCommands(
   memory
     .command("get <memoryId>")
     .description("Get details of a specific memory")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-s, --space <id>", "Memory space ID")
     .option("--include-conversation", "Include source conversation", false)
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (memoryId, options) => {
-      const globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "get memory");
+      if (!selection) return;
+
+      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading memory...").start();
@@ -475,7 +501,7 @@ export function registerMemoryCommands(
         validateMemoryId(memoryId);
         validateMemorySpaceId(options.space);
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const result = await client.memory.get(options.space, memoryId, {
             includeConversation: options.includeConversation,
           });
@@ -533,10 +559,13 @@ export function registerMemoryCommands(
   memory
     .command("archive <memoryId>")
     .description("Archive a memory (soft delete)")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-s, --space <id>", "Memory space ID")
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (memoryId, options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "archive memory");
+      if (!selection) return;
 
       try {
         validateMemoryId(memoryId);
@@ -545,7 +574,7 @@ export function registerMemoryCommands(
         if (!options.yes) {
           const confirmed = await requireConfirmation(
             `Archive memory ${memoryId}? It can be restored later.`,
-            config,
+            currentConfig,
           );
           if (!confirmed) {
             printWarning("Operation cancelled");
@@ -555,7 +584,7 @@ export function registerMemoryCommands(
 
         const spinner = ora("Archiving memory...").start();
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const result = await client.memory.archive(options.space, memoryId);
 
           spinner.stop();
@@ -581,9 +610,12 @@ export function registerMemoryCommands(
   memory
     .command("restore <memoryId>")
     .description("Restore an archived memory")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-s, --space <id>", "Memory space ID")
     .action(async (memoryId, options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "restore memory");
+      if (!selection) return;
 
       const spinner = ora("Restoring memory...").start();
 
@@ -591,7 +623,7 @@ export function registerMemoryCommands(
         validateMemoryId(memoryId);
         validateMemorySpaceId(options.space);
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const result = await client.memory.restoreFromArchive(
             options.space,
             memoryId,
