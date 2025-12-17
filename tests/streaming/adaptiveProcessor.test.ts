@@ -205,7 +205,7 @@ describe("AdaptiveStreamProcessor", () => {
       const metricsCollector = new MetricsCollector();
 
       // First get default strategy
-      const initialStrategy = processor.getCurrentStrategy();
+      const _initialStrategy = processor.getCurrentStrategy();
 
       // Simulate a stream that would trigger strategy change
       for (let i = 0; i < 100; i++) {

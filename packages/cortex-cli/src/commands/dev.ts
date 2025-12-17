@@ -416,10 +416,7 @@ async function toggleGraph(
         return false;
       }
     }
-  } catch (err) {
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/eda9cb6f-7c20-49f6-b35d-71ab0bedc9df',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'dev.ts:toggleGraph:error',message:'toggleGraph caught exception',data:{error:String(err)},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H3-exception'})}).catch(()=>{});
-    // #endregion
+  } catch {
     return false;
   }
 }

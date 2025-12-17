@@ -381,7 +381,7 @@ describe("ProgressiveStorageHandler", () => {
 
     it("should skip update when interval not passed", async () => {
       // First update should pass (after initialization)
-      const result = await handler.updatePartialContent("Content 1", 1);
+      const _result = await handler.updatePartialContent("Content 1", 1);
 
       // Immediate second update should be skipped
       const result2 = await handler.updatePartialContent("Content 2", 2);

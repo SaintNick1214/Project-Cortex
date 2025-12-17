@@ -974,9 +974,9 @@ describe("ResilienceLayer.executeWithRetry", () => {
     } catch {}
 
     // Now circuit should be open - executeWithRetry should not retry
-    let attempts = 0;
-    const operation = async () => {
-      attempts++;
+    let _attempts = 0;
+    const _operation = async () => {
+      _attempts++;
       return "success";
     };
 

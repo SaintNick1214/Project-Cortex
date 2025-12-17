@@ -6,8 +6,8 @@ Real-time reactive worker for syncing Cortex entities to graph database.
 
 import asyncio
 import time
-from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional, TYPE_CHECKING
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
 
 from ..types import (
     GraphAdapter,
@@ -15,21 +15,21 @@ from ..types import (
     SyncHealthMetrics,
 )
 from . import (
-    sync_memory_space_to_graph,
-    sync_context_to_graph,
-    sync_context_relationships,
-    sync_conversation_to_graph,
-    sync_conversation_relationships,
-    sync_memory_to_graph,
-    sync_memory_relationships,
-    sync_fact_to_graph,
-    sync_fact_relationships,
-    delete_memory_from_graph,
+    delete_context_from_graph,
     delete_conversation_from_graph,
     delete_fact_from_graph,
-    delete_context_from_graph,
+    delete_memory_from_graph,
     delete_memory_space_from_graph,
     sync_a2a_relationships,
+    sync_context_relationships,
+    sync_context_to_graph,
+    sync_conversation_relationships,
+    sync_conversation_to_graph,
+    sync_fact_relationships,
+    sync_fact_to_graph,
+    sync_memory_relationships,
+    sync_memory_space_to_graph,
+    sync_memory_to_graph,
 )
 from .errors import GraphSyncError
 
@@ -59,17 +59,17 @@ class GraphSyncWorker:
     Example:
         >>> from cortex.graph.adapters import CypherGraphAdapter
         >>> from cortex.graph.worker import GraphSyncWorker
-        >>> 
+        >>>
         >>> adapter = CypherGraphAdapter()
         >>> await adapter.connect(config)
-        >>> 
+        >>>
         >>> worker = GraphSyncWorker(cortex, adapter)
         >>> await worker.start()
-        >>> 
+        >>>
         >>> # Check health
         >>> metrics = worker.get_health()
         >>> print(f"Processed: {metrics.total_processed}, Queue: {metrics.queue_size}")
-        >>> 
+        >>>
         >>> # Stop worker
         >>> await worker.stop()
     """
@@ -323,7 +323,7 @@ class GraphSyncWorker:
         """
         if not item.data:
             raise GraphSyncError(
-                f"No data provided for sync",
+                "No data provided for sync",
                 entity_type=item.entity_type,
                 entity_id=item.entity_id,
             )

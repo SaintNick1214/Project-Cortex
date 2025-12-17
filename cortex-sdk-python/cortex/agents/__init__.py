@@ -12,7 +12,7 @@ from ..errors import AgentCascadeDeletionError, CortexError, ErrorCode  # noqa: 
 from ..types import (
     AgentFilters,
     AgentRegistration,
-    AgentStats,
+    AgentStats,  # noqa: F401 - Re-exported for public API
     ExportAgentsOptions,
     ExportAgentsResult,
     RegisteredAgent,
@@ -29,7 +29,7 @@ from .validators import (
     validate_agent_status,
     validate_config,
     validate_export_options,
-    validate_list_parameters,
+    validate_list_parameters,  # noqa: F401 - Re-exported for public API
     validate_metadata,
     validate_search_parameters,
     validate_unregister_options,

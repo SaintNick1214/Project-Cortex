@@ -13,12 +13,9 @@ import {
   syncFactToGraph,
   syncMemorySpaceToGraph,
 } from "../../src/graph/sync/syncUtils";
-import {
-  syncContextRelationships,
-  syncConversationRelationships,
-  syncMemoryRelationships,
-  syncFactRelationships,
-} from "../../src/graph/sync/syncRelationships";
+// Note: syncContextRelationships, syncConversationRelationships,
+// syncMemoryRelationships, syncFactRelationships are available from syncRelationships
+// but not used in this test file (delete operations don't require relationship syncs)
 import {
   deleteMemoryFromGraph,
   deleteFactFromGraph,

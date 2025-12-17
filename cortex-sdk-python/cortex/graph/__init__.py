@@ -5,33 +5,32 @@ Graph database integration for advanced relationship queries and knowledge graph
 """
 
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
-from ..types import GraphAdapter, GraphEdge, GraphNode, GraphDeleteResult
+from ..types import GraphAdapter, GraphDeleteResult, GraphEdge, GraphNode
 
 # Re-export error classes
 from .errors import (
-    GraphDatabaseError,
     GraphConnectionError,
-    GraphQueryError,
+    GraphDatabaseError,
     GraphNotFoundError,
+    GraphQueryError,
     GraphSchemaError,
     GraphSyncError,
 )
 
 # Re-export orphan detection
 from .orphan_detection import (
-    OrphanRule,
+    ORPHAN_RULES,
+    DeleteResult,
     DeletionContext,
     OrphanCheckResult,
-    DeleteResult,
-    ORPHAN_RULES,
-    create_deletion_context,
+    OrphanRule,
     can_run_orphan_cleanup,
-    detect_orphan,
+    create_deletion_context,
     delete_with_orphan_cleanup,
+    detect_orphan,
 )
-
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Helper Functions - Find and Ensure Nodes

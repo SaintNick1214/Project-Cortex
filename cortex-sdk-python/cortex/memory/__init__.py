@@ -15,6 +15,7 @@ from ..llm import ExtractedFact, LLMClient, create_llm_client
 from ..types import (
     ArchiveResult,
     ConversationType,
+    DeleteManyResult,
     DeleteMemoryOptions,
     DeleteMemoryResult,
     EnrichedMemory,
@@ -32,6 +33,7 @@ from ..types import (
     SourceType,
     StoreMemoryInput,
     StoreMemoryResult,
+    UpdateManyResult,
     UpdateMemoryOptions,
     UpdateMemoryResult,
 )

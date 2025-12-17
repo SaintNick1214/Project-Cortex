@@ -412,7 +412,8 @@ describe("rememberStream Integration Tests", () => {
     }, 10000);
 
     it("should track progress during streaming", async () => {
-      let progressUpdates = 0;
+      // Track progress updates (count may vary depending on stream length)
+      let _progressUpdates = 0;
 
       async function* trackedStream() {
         yield "First ";
@@ -436,7 +437,7 @@ describe("rememberStream Integration Tests", () => {
           storePartialResponse: true,
           hooks: {
             onProgress: (_event) => {
-              progressUpdates++;
+              _progressUpdates++;
             },
           },
         },
@@ -445,8 +446,8 @@ describe("rememberStream Integration Tests", () => {
       // After completion, we should have a final memory
       expect(result.memories.length).toBeGreaterThan(0);
 
-      // Progress should have been tracked during streaming
-      // (May or may not be called depending on stream length)
+      // Progress callback was provided to verify it can be used without errors
+      // The actual count may vary depending on stream length
     });
   });
 

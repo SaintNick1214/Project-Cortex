@@ -10,29 +10,28 @@ import re
 from typing import Any, Dict, List, Optional, Union
 
 from ...types import (
-    GraphAdapter,
-    GraphNode,
-    GraphEdge,
-    GraphQuery,
-    GraphPath,
     GraphConnectionConfig,
+    GraphEdge,
+    GraphNode,
+    GraphOperation,
+    GraphPath,
+    GraphQuery,
     GraphQueryResult,
     QueryStatistics,
-    TraversalConfig,
     ShortestPathConfig,
-    GraphOperation,
+    TraversalConfig,
 )
 from ..errors import (
-    GraphDatabaseError,
     GraphConnectionError,
-    GraphQueryError,
+    GraphDatabaseError,
     GraphNotFoundError,
+    GraphQueryError,
 )
 
 # Try to import neo4j driver - it's optional
 try:
-    from neo4j import AsyncGraphDatabase, AsyncDriver, AsyncSession
-    from neo4j.graph import Node, Relationship, Path
+    from neo4j import AsyncDriver, AsyncGraphDatabase, AsyncSession
+    from neo4j.graph import Node, Path, Relationship  # noqa: F401 - Used for type hints
     HAS_NEO4J = True
 except ImportError:
     HAS_NEO4J = False
@@ -55,13 +54,13 @@ class CypherGraphAdapter:
         ...     username='neo4j',
         ...     password='password'
         ... ))
-        >>> 
+        >>>
         >>> # Create a node
         >>> node_id = await adapter.create_node(GraphNode(
         ...     label='Person',
         ...     properties={'name': 'Alice', 'age': 30}
         ... ))
-        >>> 
+        >>>
         >>> # Query the graph
         >>> result = await adapter.query("MATCH (n:Person) RETURN n")
     """
@@ -166,7 +165,7 @@ class CypherGraphAdapter:
     def _convert_id_for_query(self, node_id: str) -> Union[str, int]:
         """
         Convert ID to appropriate type for database queries.
-        
+
         Neo4j uses string IDs (elementId), Memgraph uses integer IDs (id).
         """
         if not self._use_element_id:

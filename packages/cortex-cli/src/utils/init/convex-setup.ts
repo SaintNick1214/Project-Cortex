@@ -22,6 +22,21 @@ export async function setupNewConvex(
 ): Promise<ConvexConfig> {
   console.log(pc.cyan("\n   Setting up new Convex database..."));
 
+  // Clean up any existing Convex state that might interfere
+  // This prevents "DeploymentNotFound" errors from old cached state
+  const convexStatePath = path.join(projectPath, ".convex");
+  if (await fs.pathExists(convexStatePath)) {
+    console.log(pc.dim("   Cleaning up old Convex state..."));
+    await fs.remove(convexStatePath);
+  }
+
+  // Also clean up .env.local which may have old CONVEX_DEPLOYMENT reference
+  const envLocalPath = path.join(projectPath, ".env.local");
+  if (await fs.pathExists(envLocalPath)) {
+    console.log(pc.dim("   Removing old .env.local (will be recreated)..."));
+    await fs.remove(envLocalPath);
+  }
+
   // Check if convex CLI is available
   const hasConvex = await commandExists("convex");
 
@@ -46,7 +61,19 @@ export async function setupNewConvex(
       ? ["dev", "--once", "--until-success"]
       : ["convex", "dev", "--once", "--until-success"];
 
-    const exitCode = await execCommandLive(command, args, { cwd: projectPath });
+    // Override any inherited Convex env vars that might interfere with fresh setup
+    // (e.g., from parent directory's .env.local being injected by dotenv)
+    // Setting to empty string effectively clears them for the child process
+    const cleanConvexEnv = {
+      CONVEX_URL: "",
+      CONVEX_DEPLOYMENT: "",
+      CONVEX_DEPLOY_KEY: "",
+    };
+
+    const exitCode = await execCommandLive(command, args, { 
+      cwd: projectPath,
+      env: cleanConvexEnv,
+    });
 
     if (exitCode !== 0) {
       throw new Error(`Convex setup failed with exit code ${exitCode}`);
@@ -160,39 +187,39 @@ export async function setupExistingConvex(): Promise<ConvexConfig> {
 
 /**
  * Setup local Convex for development
+ * 
+ * Note: Convex's --local flag requires a cloud project to be set up first.
+ * So we create the cloud project during init, then the user can run
+ * `cortex start --local` or `convex dev --local` for local development.
  */
 export async function setupLocalConvex(): Promise<ConvexConfig> {
-  console.log(pc.cyan("\n   Configuring local Convex..."));
+  console.log(pc.cyan("\n   Setting up Convex for local development..."));
   console.log(
-    pc.yellow("   Note: Local Convex does not support vector search"),
+    pc.yellow("   Note: A Convex cloud project will be created first"),
   );
   console.log(
-    pc.dim(
-      "   Use for rapid development, switch to cloud for production features\n",
-    ),
+    pc.dim("   After setup, run 'cortex start --local' for local development"),
   );
-
-  const localUrl = "http://127.0.0.1:3210";
-
-  console.log(pc.green("   Local Convex configured"));
-  console.log(pc.dim(`   URL: ${localUrl}`));
   console.log(
-    pc.dim("   Deployment will happen automatically in the next step"),
+    pc.dim("   Local mode: faster iteration, but no vector search\n"),
   );
 
+  // Return empty config - the actual URL will come from convex dev
   return {
-    convexUrl: localUrl,
-    deployment: "anonymous:anonymous-local",
+    convexUrl: "", // Will be filled in after convex dev runs
   };
 }
 
 /**
  * Deploy Cortex backend functions to Convex
+ * 
+ * Note: We don't use --local flag during init because Convex requires
+ * a cloud project to exist first. Users can run --local after setup.
  */
 export async function deployToConvex(
   projectPath: string,
   config: ConvexConfig,
-  isLocal: boolean = false,
+  _isLocal: boolean = false, // Ignored - always deploy to cloud first
 ): Promise<void> {
   console.log(pc.cyan("\n   Deploying Cortex backend to Convex..."));
   console.log(
@@ -215,16 +242,22 @@ export async function deployToConvex(
       args = ["convex", "dev", "--once", "--until-success"];
     }
 
-    if (isLocal) {
-      args.push("--local");
-    }
+    // Note: We don't add --local here because:
+    // 1. Convex requires a cloud project to exist first
+    // 2. --local on a fresh project causes "DeploymentNotFound" errors
+    // Users can run `cortex start --local` after setup completes
 
-    // Set environment for deployment
+    // Set environment for deployment (only if URL is provided)
     const env: Record<string, string | undefined> = {
       ...process.env,
-      CONVEX_URL: config.convexUrl,
-      ...(config.deployKey && { CONVEX_DEPLOY_KEY: config.deployKey }),
     };
+    
+    if (config.convexUrl) {
+      env.CONVEX_URL = config.convexUrl;
+    }
+    if (config.deployKey) {
+      env.CONVEX_DEPLOY_KEY = config.deployKey;
+    }
 
     // Run convex dev --once with live output (allows interactive prompts)
     const exitCode = await execCommandLive(command, args, {
@@ -237,13 +270,7 @@ export async function deployToConvex(
     }
 
     console.log(pc.green("\n   Backend deployed to Convex"));
-    if (isLocal) {
-      console.log(
-        pc.dim("   Local Convex is now running at " + config.convexUrl),
-      );
-    } else {
-      console.log(pc.dim("   All functions and schema are deployed"));
-    }
+    console.log(pc.dim("   All functions and schema are deployed"));
   } catch (error) {
     console.error(pc.red("\n   Deployment failed"));
     throw error;

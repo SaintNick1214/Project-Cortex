@@ -10,7 +10,7 @@
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
-import { api } from "../convex-dev/_generated/api";
+import { api as _api } from "../convex-dev/_generated/api";
 import { createTestRunContext } from "./helpers/isolation";
 
 // Create test run context for parallel execution isolation
@@ -440,3 +440,4 @@ describe("Memory Lifecycle Integration", () => {
     });
   });
 });
+

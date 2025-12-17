@@ -5,28 +5,22 @@ Functions for initial bulk sync of Cortex data to graph database.
 """
 
 import time
-from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
 
 from ..types import (
-    GraphAdapter,
+    BatchSyncError,
+    BatchSyncLimits,
     BatchSyncOptions,
     BatchSyncResult,
     BatchSyncStats,
-    BatchSyncError,
-    BatchSyncLimits,
+    GraphAdapter,
 )
 from . import (
-    sync_memory_space_to_graph,
-    sync_context_to_graph,
-    sync_context_relationships,
-    sync_conversation_to_graph,
-    sync_conversation_relationships,
-    sync_memory_to_graph,
-    sync_memory_relationships,
-    sync_fact_to_graph,
-    sync_fact_relationships,
     sync_a2a_relationships,
+    sync_fact_relationships,
+    sync_fact_to_graph,
+    sync_memory_relationships,
+    sync_memory_to_graph,
 )
 
 if TYPE_CHECKING:
@@ -54,18 +48,18 @@ async def initial_graph_sync(
 
     Example:
         >>> from cortex.graph.adapters import CypherGraphAdapter
-        >>> 
+        >>>
         >>> adapter = CypherGraphAdapter()
         >>> await adapter.connect(GraphConnectionConfig(
         ...     uri='bolt://localhost:7687',
         ...     username='neo4j',
         ...     password='password'
         ... ))
-        >>> 
+        >>>
         >>> result = await initial_graph_sync(cortex, adapter, BatchSyncOptions(
         ...     on_progress=lambda entity, current, total: print(f"Syncing {entity}: {current}/{total}")
         ... ))
-        >>> 
+        >>>
         >>> print(f"Sync complete: {result.memories.synced} memories synced")
     """
     start_time = int(time.time() * 1000)

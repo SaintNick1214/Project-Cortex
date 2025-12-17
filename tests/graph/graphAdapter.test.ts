@@ -403,7 +403,7 @@ describeIfEnabled("Graph Adapter (Neo4j)", () => {
 
     it("should update existing node when merging", async () => {
       // First create
-      const nodeId1 = await adapter.mergeNode(
+      const _nodeId1 = await adapter.mergeNode(
         {
           label: "MergeTest",
           properties: {
@@ -416,7 +416,7 @@ describeIfEnabled("Graph Adapter (Neo4j)", () => {
       );
 
       // Then merge again with same match property
-      const nodeId2 = await adapter.mergeNode(
+      const _nodeId2 = await adapter.mergeNode(
         {
           label: "MergeTest",
           properties: {

@@ -7,7 +7,7 @@ Layer 1a: ACID-compliant immutable conversation storage
 import random
 import string
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 from .._utils import convert_convex_response, filter_none_values
 from ..errors import CortexError, ErrorCode  # noqa: F401
@@ -31,9 +31,9 @@ from ..types import (
     ListConversationsFilter,
     ListConversationsResult,
     Message,
-    SearchConversationsFilters,
+    SearchConversationsFilters,  # noqa: F401 - Re-exported for public API
     SearchConversationsInput,
-    SearchConversationsOptions,
+    SearchConversationsOptions,  # noqa: F401 - Re-exported for public API
 )
 from .validators import (
     ConversationValidationError,
