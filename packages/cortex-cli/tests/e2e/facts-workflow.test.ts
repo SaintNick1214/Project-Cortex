@@ -60,6 +60,7 @@ describeE2E("Facts Workflow E2E", () => {
         userMessage: "I prefer dark mode and always want responses in bullet points",
         agentResponse: "Got it! I'll remember you prefer dark mode and bullet point format.",
         userId: TEST_USER_ID,
+        agentId: "facts-test-agent",
         userName: "Facts Test User",
       });
 

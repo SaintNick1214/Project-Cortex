@@ -2,8 +2,9 @@
  * Interactive Dev Mode Command
  *
  * Expo-style interactive terminal with:
+ * - Multi-deployment support (all enabled deployments)
  * - Live status dashboard
- * - Streaming logs
+ * - Aggregated streaming logs from all instances
  * - Keyboard shortcuts for common actions
  */
 
@@ -13,26 +14,33 @@ import pc from "picocolors";
 import fs from "fs-extra";
 import path from "path";
 import type { CLIConfig } from "../types.js";
-import { commandExists } from "../utils/shell.js";
-import { execCommand } from "../utils/shell.js";
+import { loadConfig } from "../utils/config.js";
+import { commandExists, execCommand } from "../utils/shell.js";
 import { runInitWizard } from "./init.js";
 
-interface DevState {
-  convexProcess: ChildProcess | null;
+/**
+ * State for a single deployment
+ */
+interface DeploymentState {
+  name: string;
+  url: string;
+  key?: string;
+  projectPath: string;
+  isLocal: boolean;
+  process: ChildProcess | null;
   convexRunning: boolean;
   graphRunning: boolean;
   graphType: "neo4j" | "memgraph" | null;
+}
+
+/**
+ * Global dev mode state
+ */
+interface DevState {
+  deployments: Map<string, DeploymentState>;
   logs: string[];
   maxLogs: number;
   lastStatus: Date;
-  projectPath: string;
-  isLocal: boolean;
-}
-
-interface ConvexInstance {
-  pid: string;
-  port: string;
-  name: string;
 }
 
 /**
@@ -42,57 +50,116 @@ export function registerDevCommands(program: Command, _config: CLIConfig): void 
   program
     .command("dev")
     .description("Start interactive development mode (Expo-style)")
-    .option("-l, --local", "Force local Convex instance", false)
+    .option("-d, --deployment <name>", "Run specific deployment only")
+    .option("-l, --local", "Force local Convex instance for all deployments", false)
     .action(async (options) => {
-      const cwd = process.cwd();
-      const isLocal =
-        options.local ||
-        process.env.CONVEX_URL?.includes("localhost") ||
-        process.env.CONVEX_URL?.includes("127.0.0.1") ||
-        !process.env.CONVEX_URL;
-
-      await runInteractiveDevMode(cwd, isLocal);
+      const config = await loadConfig();
+      await runInteractiveDevMode(config, options);
     });
 }
 
 /**
- * Check if Cortex/Convex is configured in the current directory
+ * Collect deployments to run (same logic as start command)
  */
-function isCortexConfigured(projectPath: string): boolean {
-  // Check for convex directory (indicates Convex is set up)
-  const convexDir = path.join(projectPath, "convex");
-  if (fs.existsSync(convexDir)) {
-    return true;
-  }
-  
-  // Check for .env.local with CONVEX_URL
-  const envLocal = path.join(projectPath, ".env.local");
-  if (fs.existsSync(envLocal)) {
-    try {
-      const content = fs.readFileSync(envLocal, "utf-8");
-      if (content.includes("CONVEX_URL")) {
-        return true;
+async function getDeploymentsToRun(
+  config: CLIConfig,
+  options: { deployment?: string; local?: boolean },
+): Promise<DeploymentState[]> {
+  const deployments: DeploymentState[] = [];
+
+  if (options.deployment) {
+    // Single deployment mode
+    const deployment = config.deployments[options.deployment];
+    
+    if (!deployment) {
+      console.error(pc.red(`\n   Deployment "${options.deployment}" not found`));
+      const names = Object.keys(config.deployments);
+      if (names.length > 0) {
+        console.log(pc.dim(`   Available: ${names.join(", ")}`));
       }
-    } catch {
-      // Ignore read errors
+      process.exit(1);
+    }
+
+    const projectPath = deployment.projectPath || process.cwd();
+    if (deployment.projectPath && !fs.existsSync(projectPath)) {
+      console.error(pc.red(`\n   Project path not found: ${projectPath}`));
+      process.exit(1);
+    }
+
+    // Check for graph config
+    let graphType: "neo4j" | "memgraph" | null = null;
+    const dockerComposePath = path.join(projectPath, "docker-compose.graph.yml");
+    if (fs.existsSync(dockerComposePath)) {
+      const content = await fs.readFile(dockerComposePath, "utf-8");
+      graphType = content.includes("memgraph") ? "memgraph" : "neo4j";
+    }
+
+    deployments.push({
+      name: options.deployment,
+      url: deployment.url,
+      key: deployment.key,
+      projectPath,
+      isLocal: options.local || false,
+      process: null,
+      convexRunning: false,
+      graphRunning: false,
+      graphType,
+    });
+  } else {
+    // All enabled deployments
+    for (const [name, deployment] of Object.entries(config.deployments)) {
+      const isDefault = name === config.default;
+      const isEnabled = deployment.enabled === true || (deployment.enabled === undefined && isDefault);
+      
+      if (!isEnabled) continue;
+      
+      if (!deployment.projectPath) {
+        console.log(pc.yellow(`   Skipping "${name}" - no projectPath configured`));
+        continue;
+      }
+      
+      if (!fs.existsSync(deployment.projectPath)) {
+        console.log(pc.yellow(`   Skipping "${name}" - projectPath not found`));
+        continue;
+      }
+
+      // Check for graph config
+      let graphType: "neo4j" | "memgraph" | null = null;
+      const dockerComposePath = path.join(deployment.projectPath, "docker-compose.graph.yml");
+      if (fs.existsSync(dockerComposePath)) {
+        const content = await fs.readFile(dockerComposePath, "utf-8");
+        graphType = content.includes("memgraph") ? "memgraph" : "neo4j";
+      }
+
+      deployments.push({
+        name,
+        url: deployment.url,
+        key: deployment.key,
+        projectPath: deployment.projectPath,
+        isLocal: options.local || false,
+        process: null,
+        convexRunning: false,
+        graphRunning: false,
+        graphType,
+      });
     }
   }
-  
-  return false;
+
+  return deployments;
 }
 
 /**
- * Show prompt when Cortex is not configured
+ * Show prompt when no deployments configured
  */
-async function showNotConfiguredPrompt(projectPath: string): Promise<boolean> {
+async function showNotConfiguredPrompt(): Promise<boolean> {
   console.clear();
-  console.log(pc.bold(pc.yellow("\n   ⚠ Cortex Not Configured\n")));
-  console.log(pc.dim("   No Cortex/Convex configuration found in this directory.\n"));
-  console.log(`   ${pc.cyan("Current directory:")} ${projectPath}\n`);
+  console.log(pc.bold(pc.yellow("\n   ⚠ No Deployments Configured\n")));
+  console.log(pc.dim("   No enabled deployments found with valid project paths.\n"));
   console.log(pc.dim("   This could mean:"));
-  console.log(pc.dim("   • You're in the wrong directory"));
-  console.log(pc.dim("   • Cortex hasn't been set up yet\n"));
-  console.log(`   Press ${pc.bold(pc.green("i"))} to run ${pc.cyan("cortex init")} and set up your project`);
+  console.log(pc.dim("   • No deployments are enabled"));
+  console.log(pc.dim("   • Deployments don't have projectPath set"));
+  console.log(pc.dim("   • Project paths don't exist\n"));
+  console.log(`   Press ${pc.bold(pc.green("i"))} to run ${pc.cyan("cortex init")} and set up a project`);
   console.log(`   Press ${pc.bold(pc.red("q"))} to quit\n`);
   
   return new Promise((resolve) => {
@@ -110,8 +177,8 @@ async function showNotConfiguredPrompt(projectPath: string): Promise<boolean> {
         }
         console.clear();
         try {
-          await runInitWizard(projectPath, { start: false });
-          resolve(true); // Init completed, continue to dev mode
+          await runInitWizard(process.cwd(), { start: false });
+          resolve(true);
         } catch (error) {
           if (error instanceof Error && error.message === "Setup cancelled") {
             console.log(pc.yellow("\n   Setup cancelled.\n"));
@@ -138,54 +205,34 @@ async function showNotConfiguredPrompt(projectPath: string): Promise<boolean> {
  * Run the interactive dev mode
  */
 async function runInteractiveDevMode(
-  projectPath: string,
-  isLocal: boolean,
+  config: CLIConfig,
+  options: { deployment?: string; local?: boolean },
 ): Promise<void> {
-  // Check if Cortex is configured
-  if (!isCortexConfigured(projectPath)) {
-    const shouldContinue = await showNotConfiguredPrompt(projectPath);
+  // Get deployments to run
+  let deploymentsList = await getDeploymentsToRun(config, options);
+
+  if (deploymentsList.length === 0) {
+    const shouldContinue = await showNotConfiguredPrompt();
     if (!shouldContinue) {
       process.exit(0);
     }
-    // Re-check after init
-    if (!isCortexConfigured(projectPath)) {
-      console.log(pc.red("\n   Configuration still not found. Please run 'cortex init' manually.\n"));
+    // Reload config and try again
+    const newConfig = await loadConfig();
+    deploymentsList = await getDeploymentsToRun(newConfig, options);
+    if (deploymentsList.length === 0) {
+      console.log(pc.red("\n   Still no deployments configured. Please run 'cortex init' manually.\n"));
       process.exit(1);
     }
   }
 
   const state: DevState = {
-    convexProcess: null,
-    convexRunning: false,
-    graphRunning: false,
-    graphType: null,
+    deployments: new Map(deploymentsList.map(d => [d.name, d])),
     logs: [],
-    maxLogs: 50,
+    maxLogs: 100,
     lastStatus: new Date(),
-    projectPath,
-    isLocal,
   };
 
-  // Check for graph config
-  const dockerComposePath = path.join(projectPath, "docker-compose.graph.yml");
-  if (fs.existsSync(dockerComposePath)) {
-    const content = await fs.readFile(dockerComposePath, "utf-8");
-    state.graphType = content.includes("memgraph") ? "memgraph" : "neo4j";
-    
-    // Check if graph is already running
-    try {
-      const checkResult = await execCommand(
-        "docker",
-        ["ps", "--filter", `name=cortex-${state.graphType}`, "--format", "{{.Status}}"],
-        { quiet: true },
-      );
-      state.graphRunning = checkResult.stdout.includes("Up");
-    } catch {
-      state.graphRunning = false;
-    }
-  }
-
-  // Setup stdin for raw mode (keyboard input)
+  // Setup stdin for raw mode
   if (process.stdin.isTTY) {
     process.stdin.setRawMode(true);
     process.stdin.resume();
@@ -196,12 +243,12 @@ async function runInteractiveDevMode(
   console.clear();
   await refreshStatus(state);
   showHelp();
-  console.log(pc.dim("  Logs streaming below. Status updates automatically. Press 'c' to clear.\n"));
+  console.log(pc.dim("  Logs streaming below. Press 'c' to clear, '?' for help.\n"));
 
-  // Start services (logs will stream as they come)
-  await startServices(state);
+  // Start all services
+  await startAllServices(state);
 
-  // Track shutdown state (prevents re-entry race conditions)
+  // Track shutdown state
   let shuttingDown = false;
   let shutdownInProgress = false;
 
@@ -209,47 +256,44 @@ async function runInteractiveDevMode(
   process.stdin.on("data", async (key: string) => {
     switch (key) {
       case "c":
-        // Clear screen and show status
+        // Clear screen
         state.logs = [];
         console.clear();
         await refreshStatus(state);
         showHelp();
-        console.log(pc.dim("  Logs cleared. Streaming below...\n"));
+        console.log(pc.dim("  Logs cleared.\n"));
         break;
 
       case "r":
-        // Restart services
-        console.log(pc.yellow("\n  Restarting services...\n"));
-        await stopServices(state);
+        // Restart all services
+        console.log(pc.yellow("\n  Restarting all services...\n"));
+        await stopAllServices(state, false);
         state.logs = [];
         console.clear();
         await refreshStatus(state);
         showHelp();
         console.log(pc.dim("  Restarting...\n"));
-        await startServices(state);
+        await startAllServices(state);
         break;
 
       case "g":
-        // Toggle graph
-        if (state.graphType) {
-          if (state.graphRunning) {
-            printLog("Stopping graph database...");
-            const stopped = await toggleGraph(state.projectPath, state.graphType, false);
-            state.graphRunning = !stopped;
-            printLog(stopped ? pc.green("Graph database stopped") : pc.red("Failed to stop graph"));
-          } else {
-            printLog("Starting graph database...");
-            const started = await toggleGraph(state.projectPath, state.graphType, true);
-            state.graphRunning = started;
-            printLog(started ? pc.green("Graph database started") : pc.red("Failed to start graph"));
-          }
-        } else {
-          printLog(pc.yellow("No graph database configured. Run 'cortex init' to set up."));
+        // Toggle graph - show menu if multiple deployments
+        await handleGraphToggle(state);
+        break;
+
+      case "s":
+        // Show status
+        console.clear();
+        await refreshStatus(state);
+        showHelp();
+        console.log(pc.dim("  Logs streaming below...\n"));
+        // Re-print recent logs
+        for (const log of state.logs.slice(-20)) {
+          console.log(`  ${log}`);
         }
         break;
 
       case "q":
-        // Clean quit - guard against multiple calls
         if (!shutdownInProgress) {
           shuttingDown = true;
           shutdownInProgress = true;
@@ -259,13 +303,10 @@ async function runInteractiveDevMode(
         break;
 
       case "\u0003": // Ctrl+C
-        // First Ctrl+C = clean shutdown, tracked for force kill on second
         if (shutdownInProgress) {
-          // Already shutting down - ignore (force kill handled by SIGINT)
           break;
         }
         if (shuttingDown) {
-          // Second Ctrl+C = force kill
           shutdownInProgress = true;
           console.log(pc.red("\n\n   Force killing...\n"));
           await performShutdown(state, true);
@@ -279,36 +320,25 @@ async function runInteractiveDevMode(
 
       case "?":
       case "h":
-        // Help
         console.clear();
         showDetailedHelp();
         console.log(pc.dim("\nPress any key to return to logs"));
         break;
 
       case "k":
-        // Kill Convex instances
+        // Kill menu
         console.clear();
         await showKillMenu(state);
         break;
     }
   });
 
-  // Handle SIGINT from terminal (separate from raw mode Ctrl+C)
+  // Handle SIGINT
   process.on("SIGINT", async () => {
     if (shutdownInProgress) {
-      // Already shutting down - only allow force kill if clean shutdown is in progress
-      if (!shuttingDown) {
-        // This shouldn't happen, but handle it
-        return;
-      }
-      // Force kill - but don't call performShutdown again, just exit
       console.log(pc.red("\n\n   Force killing...\n"));
       process.exit(1);
-    } else if (shuttingDown) {
-      // shuttingDown but not shutdownInProgress means we already started once
-      // This case shouldn't happen with the new logic, but handle gracefully
-      return;
-    } else {
+    } else if (!shuttingDown) {
       shuttingDown = true;
       shutdownInProgress = true;
       console.log(pc.yellow("\n\n   Shutting down... (Ctrl+C again to force)\n"));
@@ -318,28 +348,227 @@ async function runInteractiveDevMode(
 }
 
 /**
- * Start all services
+ * Start all services for all deployments
  */
-async function startServices(state: DevState): Promise<void> {
-  // Start graph if configured
-  if (state.graphType) {
-    addLog(state, `Starting ${state.graphType}...`);
-    const graphStarted = await toggleGraph(state.projectPath, state.graphType, true);
-    state.graphRunning = graphStarted;
-    if (graphStarted) {
-      addLog(state, `${state.graphType} started`);
-    } else {
-      addLog(state, pc.yellow(`${state.graphType} failed to start`));
-    }
-  }
+async function startAllServices(state: DevState): Promise<void> {
+  const hasConvex = await commandExists("convex");
 
-  // Start Convex
-  addLog(state, "Starting Convex...");
-  await startConvexProcess(state);
+  for (const [name, dep] of state.deployments) {
+    // Start graph if configured
+    if (dep.graphType) {
+      addLog(state, name, `Starting ${dep.graphType}...`);
+      const started = await toggleGraph(dep.projectPath, dep.graphType, true);
+      dep.graphRunning = started;
+      if (started) {
+        addLog(state, name, pc.green(`${dep.graphType} started`));
+      } else {
+        addLog(state, name, pc.yellow(`${dep.graphType} failed to start`));
+      }
+    }
+
+    // Deploy to production first for cloud deployments with key
+    if (dep.key && !dep.isLocal) {
+      addLog(state, name, "Deploying functions to production...");
+      try {
+        const deployCmd = hasConvex ? "convex" : "npx";
+        const deployArgs = hasConvex 
+          ? ["deploy", "--cmd", "echo deployed"] 
+          : ["convex", "deploy", "--cmd", "echo deployed"];
+        
+        const env: Record<string, string | undefined> = { ...process.env };
+        env.CONVEX_URL = dep.url;
+        env.CONVEX_DEPLOY_KEY = dep.key;
+        
+        await new Promise<void>((resolve, reject) => {
+          const child = spawn(deployCmd, deployArgs, {
+            cwd: dep.projectPath,
+            stdio: "pipe",
+            env,
+          });
+          
+          child.on("close", (code) => {
+            if (code === 0) resolve();
+            else reject(new Error(`Deploy failed with code ${code}`));
+          });
+          child.on("error", reject);
+        });
+        
+        addLog(state, name, pc.green("Functions deployed"));
+      } catch {
+        addLog(state, name, pc.yellow("Deploy failed, continuing..."));
+      }
+    }
+
+    // Start Convex dev
+    addLog(state, name, "Starting Convex...");
+    await startConvexProcess(state, name, dep, hasConvex);
+  }
 }
 
 /**
- * Toggle graph database (start/stop without spinners)
+ * Start Convex dev process for a deployment
+ */
+async function startConvexProcess(
+  state: DevState,
+  name: string,
+  dep: DeploymentState,
+  hasConvex: boolean,
+): Promise<void> {
+  const command = hasConvex ? "convex" : "npx";
+  const args = hasConvex ? ["dev"] : ["convex", "dev"];
+  if (dep.isLocal) args.push("--local");
+
+  const env: Record<string, string | undefined> = { ...process.env };
+  env.CONVEX_URL = dep.url;
+  if (dep.key) env.CONVEX_DEPLOY_KEY = dep.key;
+
+  const child = spawn(command, args, {
+    cwd: dep.projectPath,
+    env,
+    detached: true,
+  });
+
+  dep.process = child;
+
+  // Handle stdout
+  child.stdout?.on("data", (data: Buffer) => {
+    const lines = data.toString().split("\n").filter(Boolean);
+    for (const line of lines) {
+      addLog(state, name, line);
+    }
+  });
+
+  // Handle stderr (Convex outputs here)
+  child.stderr?.on("data", (data: Buffer) => {
+    const lines = data.toString().split("\n").filter(Boolean);
+    for (const line of lines) {
+      addLog(state, name, line);
+      
+      // Detect ready state
+      if (line.includes("Convex functions ready") && !dep.convexRunning) {
+        dep.convexRunning = true;
+        printStatusUpdate(state);
+      }
+    }
+  });
+
+  child.on("exit", (code) => {
+    const wasRunning = dep.convexRunning;
+    dep.convexRunning = false;
+    dep.process = null;
+    if (code !== 0 && code !== null) {
+      addLog(state, name, pc.red(`Convex exited with code ${code}`));
+    }
+    if (wasRunning) {
+      printStatusUpdate(state);
+    }
+  });
+
+  // Wait a moment for startup
+  await new Promise((resolve) => setTimeout(resolve, 500));
+}
+
+/**
+ * Stop all services
+ */
+async function stopAllServices(state: DevState, force: boolean): Promise<void> {
+  const signal = force ? "SIGKILL" : "SIGTERM";
+
+  for (const dep of state.deployments.values()) {
+    // Stop Convex
+    if (dep.process && dep.process.pid) {
+      try {
+        process.kill(-dep.process.pid, signal);
+      } catch {
+        // Already dead
+      }
+      dep.process = null;
+      dep.convexRunning = false;
+    }
+
+    // Stop graph
+    if (dep.graphRunning && dep.graphType) {
+      await toggleGraph(dep.projectPath, dep.graphType, false);
+      dep.graphRunning = false;
+    }
+  }
+
+  if (!force) {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+}
+
+/**
+ * Perform full shutdown
+ */
+async function performShutdown(state: DevState, force: boolean): Promise<void> {
+  console.log(pc.dim("  Stopping all services..."));
+  await stopAllServices(state, force);
+  console.log(pc.green("  ✓ All services stopped"));
+  
+  if (process.stdin.isTTY) {
+    process.stdin.setRawMode(false);
+  }
+  process.exit(0);
+}
+
+/**
+ * Handle graph toggle (with menu for multiple deployments)
+ */
+async function handleGraphToggle(state: DevState): Promise<void> {
+  // Find deployments with graph configured
+  const withGraph = Array.from(state.deployments.values()).filter(d => d.graphType);
+  
+  if (withGraph.length === 0) {
+    printLog("No graph databases configured");
+    return;
+  }
+
+  if (withGraph.length === 1) {
+    // Single deployment - toggle directly
+    const dep = withGraph[0];
+    if (dep.graphRunning) {
+      printLog(`Stopping ${dep.graphType} for ${dep.name}...`);
+      const stopped = await toggleGraph(dep.projectPath, dep.graphType!, false);
+      dep.graphRunning = !stopped;
+      printLog(stopped ? pc.green("Graph stopped") : pc.red("Failed to stop graph"));
+    } else {
+      printLog(`Starting ${dep.graphType} for ${dep.name}...`);
+      const started = await toggleGraph(dep.projectPath, dep.graphType!, true);
+      dep.graphRunning = started;
+      printLog(started ? pc.green("Graph started") : pc.red("Failed to start graph"));
+    }
+  } else {
+    // Multiple - show menu
+    console.log("\n" + pc.bold("  Select deployment to toggle graph:"));
+    withGraph.forEach((dep, i) => {
+      const status = dep.graphRunning ? pc.green("running") : pc.yellow("stopped");
+      console.log(`    ${pc.cyan(String(i + 1))} ${dep.name} (${dep.graphType}) - ${status}`);
+    });
+    console.log(`    ${pc.dim("Press 1-9 or any other key to cancel")}\n`);
+    
+    const key = await waitForKey();
+    const num = parseInt(key);
+    if (num >= 1 && num <= withGraph.length) {
+      const dep = withGraph[num - 1];
+      if (dep.graphRunning) {
+        printLog(`Stopping ${dep.graphType} for ${dep.name}...`);
+        const stopped = await toggleGraph(dep.projectPath, dep.graphType!, false);
+        dep.graphRunning = !stopped;
+        printLog(stopped ? pc.green("Graph stopped") : pc.red("Failed to stop graph"));
+      } else {
+        printLog(`Starting ${dep.graphType} for ${dep.name}...`);
+        const started = await toggleGraph(dep.projectPath, dep.graphType!, true);
+        dep.graphRunning = started;
+        printLog(started ? pc.green("Graph started") : pc.red("Failed to start graph"));
+      }
+    }
+  }
+  printStatusUpdate(state);
+}
+
+/**
+ * Toggle graph database
  */
 async function toggleGraph(
   projectPath: string,
@@ -363,7 +592,7 @@ async function toggleGraph(
       );
 
       if (checkResult.stdout.includes("Up")) {
-        return true; // Already running
+        return true;
       }
 
       // Check if container exists but stopped
@@ -374,19 +603,11 @@ async function toggleGraph(
       );
 
       if (existsResult.stdout.includes(containerName)) {
-        // Try to start existing container
-        const startResult = await execCommand(
-          "docker",
-          ["start", containerName],
-          { quiet: true },
-        );
-
+        const startResult = await execCommand("docker", ["start", containerName], { quiet: true });
         if (startResult.code === 0) {
           await new Promise((resolve) => setTimeout(resolve, 2000));
           return true;
         }
-
-        // Remove old container if start failed
         await execCommand("docker", ["rm", "-f", containerName], { quiet: true });
       }
 
@@ -403,18 +624,8 @@ async function toggleGraph(
       }
       return false;
     } else {
-      // Stop - use docker stop directly (not docker-compose) because the container
-      // might have been started from a different compose project
-      try {
-        const result = await execCommand(
-          "docker",
-          ["stop", containerName],
-          { quiet: true },
-        );
-        return result.code === 0;
-      } catch {
-        return false;
-      }
+      const result = await execCommand("docker", ["stop", containerName], { quiet: true });
+      return result.code === 0;
     }
   } catch {
     return false;
@@ -422,136 +633,26 @@ async function toggleGraph(
 }
 
 /**
- * Stop all services
+ * Add a log entry with deployment prefix
  */
-/**
- * Perform full shutdown
- */
-async function performShutdown(state: DevState, force: boolean): Promise<void> {
-  if (force) {
-    console.log(pc.dim("  Killing Convex..."));
-  } else {
-    console.log(pc.dim("  Stopping Convex..."));
+function addLog(state: DevState, deploymentName: string, message: string): void {
+  const timestamp = new Date().toLocaleTimeString();
+  const prefix = state.deployments.size > 1 
+    ? pc.cyan(`[${deploymentName}]`.padEnd(18))
+    : "";
+  const logLine = `${pc.dim(timestamp)} ${prefix}${message}`;
+  
+  state.logs.push(logLine);
+  
+  if (state.logs.length > state.maxLogs) {
+    state.logs = state.logs.slice(-state.maxLogs);
   }
   
-  await stopServices(state, force);
-  
-  console.log(pc.green("  ✓ All services stopped"));
-  
-  if (process.stdin.isTTY) {
-    process.stdin.setRawMode(false);
-  }
-  process.exit(0);
-}
-
-async function stopServices(state: DevState, force: boolean = false): Promise<void> {
-  // Stop Convex process - kill entire process group to stop all child processes
-  if (state.convexProcess && state.convexProcess.pid) {
-    const pid = state.convexProcess.pid;
-    try {
-      // Kill the entire process group (negative PID) to kill all child processes
-      // This is crucial because convex dev spawns child processes
-      const signal = force ? "SIGKILL" : "SIGTERM";
-      process.kill(-pid, signal);
-      if (!force) {
-        // Wait a moment for clean shutdown
-        await new Promise((resolve) => setTimeout(resolve, 500));
-      }
-    } catch {
-      // Process may already be dead, that's fine
-    }
-    state.convexProcess = null;
-    state.convexRunning = false;
-  }
-
-  // Stop graph database if running
-  if (state.graphRunning && state.graphType) {
-    console.log(pc.dim("  Stopping graph database..."));
-    await toggleGraph(state.projectPath, state.graphType, false);
-    state.graphRunning = false;
-  }
+  console.log(`  ${logLine}`);
 }
 
 /**
- * Start Convex dev process
- */
-async function startConvexProcess(state: DevState): Promise<void> {
-  const hasConvex = await commandExists("convex");
-  const command = hasConvex ? "convex" : "npx";
-  const args = hasConvex ? ["dev"] : ["convex", "dev"];
-  if (state.isLocal) args.push("--local");
-
-  // Spawn in detached mode so we can kill the entire process group
-  const child = spawn(command, args, {
-    cwd: state.projectPath,
-    env: { ...process.env },
-    detached: true,
-  });
-
-  state.convexProcess = child;
-
-  child.stdout?.on("data", (data: Buffer) => {
-    const lines = data.toString().split("\n").filter(Boolean);
-    for (const line of lines) {
-      addLog(state, line);
-    }
-  });
-
-  // Convex outputs to stderr, not stdout - so we detect ready state here
-  child.stderr?.on("data", (data: Buffer) => {
-    const lines = data.toString().split("\n").filter(Boolean);
-    for (const line of lines) {
-      addLog(state, line);
-      
-      // Detect when Convex is ready and show status update
-      if (line.includes("Convex functions ready") && !state.convexRunning) {
-        state.convexRunning = true;
-        printStatusLine(state);
-      }
-    }
-  });
-
-  child.on("exit", (code) => {
-    const wasRunning = state.convexRunning;
-    state.convexRunning = false;
-    state.convexProcess = null;
-    if (code !== 0 && code !== null) {
-      addLog(state, pc.red(`Convex exited with code ${code}`));
-    }
-    // Show status update if state changed
-    if (wasRunning) {
-      printStatusLine(state);
-    }
-  });
-
-  // Don't assume running - wait for actual ready signal
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-}
-
-/**
- * Print a compact inline status line
- */
-function printStatusLine(state: DevState): void {
-  const convexStatus = state.convexRunning 
-    ? pc.green("● Convex") 
-    : pc.yellow("○ Convex");
-  
-  let graphStatus = "";
-  if (state.graphType) {
-    graphStatus = state.graphRunning 
-      ? pc.green(` ● ${state.graphType}`)
-      : pc.yellow(` ○ ${state.graphType}`);
-  }
-  
-  console.log(); // Empty line before status
-  console.log(pc.cyan("  ══════════════════════════════════════════════════════════"));
-  console.log(`  ${pc.bold("Status:")} ${convexStatus}${graphStatus}`);
-  console.log(pc.cyan("  ══════════════════════════════════════════════════════════"));
-  console.log(); // Empty line after status
-}
-
-/**
- * Print a log entry immediately to stdout
+ * Print a log without deployment prefix
  */
 function printLog(message: string): void {
   const timestamp = new Date().toLocaleTimeString();
@@ -559,65 +660,81 @@ function printLog(message: string): void {
 }
 
 /**
- * Add a log entry (stores for history, also prints)
+ * Print inline status update
  */
-function addLog(state: DevState, message: string): void {
-  const timestamp = new Date().toLocaleTimeString();
-  const logLine = `${pc.dim(timestamp)} ${message}`;
-  state.logs.push(logLine);
+function printStatusUpdate(state: DevState): void {
+  const statuses: string[] = [];
   
-  // Trim old logs (keep history for 'l' command)
-  if (state.logs.length > state.maxLogs) {
-    state.logs = state.logs.slice(-state.maxLogs);
+  for (const [name, dep] of state.deployments) {
+    const convexIcon = dep.convexRunning ? pc.green("●") : pc.yellow("○");
+    let status = `${convexIcon} ${name}`;
+    
+    if (dep.graphType) {
+      const graphIcon = dep.graphRunning ? pc.green("●") : pc.yellow("○");
+      status += ` ${graphIcon}${dep.graphType}`;
+    }
+    
+    statuses.push(status);
   }
   
-  // Print immediately
-  console.log(`  ${logLine}`);
+  console.log();
+  console.log(pc.cyan("  ══════════════════════════════════════════════════════════════"));
+  console.log(`  ${pc.bold("Status:")} ${statuses.join("  │  ")}`);
+  console.log(pc.cyan("  ══════════════════════════════════════════════════════════════"));
+  console.log();
 }
 
 /**
- * Refresh and display status
+ * Refresh and display full status
  */
 async function refreshStatus(state: DevState): Promise<void> {
-  const width = 60;
+  const width = 66;
   const line = "═".repeat(width);
   const thinLine = "─".repeat(width);
+  const count = state.deployments.size;
 
   console.log();
   console.log(pc.cyan("╔" + line + "╗"));
   console.log(
     pc.cyan("║") +
-      pc.bold("   Cortex Dev Mode").padEnd(width) +
+      pc.bold(`   Cortex Dev Mode (${count} deployment${count !== 1 ? "s" : ""})`).padEnd(width) +
       pc.cyan("║"),
   );
   console.log(pc.cyan("╚" + line + "╝"));
   console.log();
 
-  // Services
   console.log(pc.bold(pc.white("  Services")));
   console.log(pc.dim("  " + thinLine));
 
-  // Convex status
-  if (state.convexRunning) {
-    console.log(`   ${pc.green("●")} Convex      ${pc.green("Running")}`);
-    if (state.isLocal) {
-      console.log(pc.dim("                  Dashboard: http://127.0.0.1:3210"));
+  for (const [name, dep] of state.deployments) {
+    // Convex status
+    const convexStatus = dep.convexRunning 
+      ? pc.green("Running") 
+      : pc.yellow("Starting...");
+    const convexIcon = dep.convexRunning ? pc.green("●") : pc.yellow("○");
+    
+    // Graph status
+    let graphStatus = pc.dim("N/A");
+    if (dep.graphType) {
+      graphStatus = dep.graphRunning 
+        ? pc.green(`Running (${dep.graphType})`)
+        : pc.yellow(`Stopped (${dep.graphType})`);
     }
-  } else {
-    console.log(`   ${pc.yellow("○")} Convex      ${pc.yellow("Starting...")}`);
-  }
 
-  // Graph status
-  if (state.graphType) {
-    if (state.graphRunning) {
-      console.log(`   ${pc.green("●")} ${state.graphType.padEnd(10)} ${pc.green("Running")}`);
-      if (state.graphType === "neo4j") {
-        console.log(pc.dim("                  Browser: http://localhost:7474"));
-      } else {
-        console.log(pc.dim("                  Lab: http://localhost:3000"));
+    console.log(`   ${convexIcon} ${pc.cyan(name.padEnd(16))} Convex: ${convexStatus.padEnd(20)} Graph: ${graphStatus}`);
+    
+    // Show URLs for running services
+    if (dep.convexRunning) {
+      const isLocal = dep.url.includes("localhost") || dep.url.includes("127.0.0.1");
+      if (isLocal) {
+        console.log(pc.dim(`     Dashboard: http://127.0.0.1:3210`));
       }
-    } else {
-      console.log(`   ${pc.yellow("○")} ${state.graphType.padEnd(10)} ${pc.yellow("Not running")}`);
+    }
+    if (dep.graphRunning && dep.graphType) {
+      const url = dep.graphType === "neo4j" 
+        ? "http://localhost:7474" 
+        : "http://localhost:3000";
+      console.log(pc.dim(`     ${dep.graphType}: ${url}`));
     }
   }
 
@@ -625,16 +742,14 @@ async function refreshStatus(state: DevState): Promise<void> {
 }
 
 /**
- * Show logs
- */
-/**
  * Show keyboard shortcut help
  */
 function showHelp(): void {
-  console.log(pc.dim("  ────────────────────────────────────────────────────────────"));
+  console.log(pc.dim("  ──────────────────────────────────────────────────────────────────"));
   console.log(
     pc.dim("  ") +
     pc.cyan("c") + pc.dim(" clear  ") +
+    pc.cyan("s") + pc.dim(" status  ") +
     pc.cyan("r") + pc.dim(" restart  ") +
     pc.cyan("g") + pc.dim(" graph  ") +
     pc.cyan("k") + pc.dim(" kill  ") +
@@ -648,7 +763,7 @@ function showHelp(): void {
  * Show detailed help
  */
 function showDetailedHelp(): void {
-  const width = 60;
+  const width = 66;
   const line = "═".repeat(width);
 
   console.log();
@@ -662,8 +777,9 @@ function showDetailedHelp(): void {
   console.log();
 
   console.log(`   ${pc.cyan("c")}  Clear screen & show status`);
+  console.log(`   ${pc.cyan("s")}  Show status dashboard`);
   console.log(`   ${pc.cyan("r")}  Restart all services`);
-  console.log(`   ${pc.cyan("g")}  Toggle graph database`);
+  console.log(`   ${pc.cyan("g")}  Toggle graph database (select deployment if multiple)`);
   console.log(`   ${pc.cyan("k")}  Kill Convex instances (port conflicts)`);
   console.log(`   ${pc.cyan("q")}  Quit (Ctrl+C)`);
   console.log(`   ${pc.cyan("?")}  Show this help`);
@@ -671,106 +787,11 @@ function showDetailedHelp(): void {
 }
 
 /**
- * Find running Convex instances
- */
-async function findConvexInstances(): Promise<ConvexInstance[]> {
-  const instances: ConvexInstance[] = [];
-  const ports = ["3210", "3211", "3212", "3213", "3214", "3215"];
-  const seenPids = new Set<string>();
-
-  for (const port of ports) {
-    try {
-      // Use lsof to find processes listening on the port (TCP LISTEN only)
-      const result = await execCommand(
-        "lsof",
-        ["-i", `:${port}`, "-sTCP:LISTEN", "-t"],
-        { quiet: true },
-      );
-
-      if (result.code === 0 && result.stdout.trim()) {
-        const pids = result.stdout.trim().split("\n");
-        for (const pid of pids) {
-          if (pid && !seenPids.has(pid)) {
-            seenPids.add(pid);
-            
-            // Get process name and command line
-            const nameResult = await execCommand(
-              "ps",
-              ["-p", pid, "-o", "comm="],
-              { quiet: true },
-            );
-            let name = nameResult.stdout.trim() || "unknown";
-            
-            // Try to get more detail about what's running
-            const cmdResult = await execCommand(
-              "ps",
-              ["-p", pid, "-o", "args="],
-              { quiet: true },
-            );
-            const cmdLine = cmdResult.stdout.trim();
-            
-            // Identify if it's Convex-related
-            if (cmdLine.includes("convex")) {
-              name = "convex";
-            } else if (cmdLine.includes("local-backend") || cmdLine.includes("convex-local-backend")) {
-              name = "convex-local-backend";
-            }
-            
-            // Include all processes on these ports (they're likely Convex-related)
-            instances.push({ pid, port, name });
-          }
-        }
-      }
-    } catch {
-      // Port not in use or lsof not available
-    }
-  }
-
-  // Also try to find convex-local-backend processes directly
-  try {
-    const result = await execCommand(
-      "pgrep",
-      ["-f", "convex.*local"],
-      { quiet: true },
-    );
-    
-    if (result.code === 0 && result.stdout.trim()) {
-      const pids = result.stdout.trim().split("\n");
-      for (const pid of pids) {
-        if (pid && !seenPids.has(pid)) {
-          seenPids.add(pid);
-          
-          // Get what port it might be on
-          const lsofResult = await execCommand(
-            "lsof",
-            ["-p", pid, "-i", "-sTCP:LISTEN"],
-            { quiet: true },
-          );
-          
-          let port = "unknown";
-          const portMatch = lsofResult.stdout.match(/:(\d+)\s+\(LISTEN\)/);
-          if (portMatch) {
-            port = portMatch[1];
-          }
-          
-          instances.push({ pid, port, name: "convex-local-backend" });
-        }
-      }
-    }
-  } catch {
-    // pgrep not available or no matches
-  }
-
-  return instances;
-}
-
-/**
- * Show kill menu for Convex instances
+ * Show kill menu
  */
 async function showKillMenu(state: DevState): Promise<void> {
-  const width = 60;
+  const width = 66;
   const line = "═".repeat(width);
-  const thinLine = "─".repeat(width);
 
   console.log();
   console.log(pc.cyan("╔" + line + "╗"));
@@ -809,7 +830,7 @@ async function showKillMenu(state: DevState): Promise<void> {
   }
 
   console.log(pc.bold(pc.white("  Running Instances")));
-  console.log(pc.dim("  " + thinLine));
+  console.log(pc.dim("  " + "─".repeat(60)));
 
   for (let i = 0; i < instances.length; i++) {
     const inst = instances[i];
@@ -822,11 +843,9 @@ async function showKillMenu(state: DevState): Promise<void> {
   console.log(pc.dim("   Press 1-9 to kill, 'a' to kill all, or any other key to cancel"));
   console.log();
 
-  // Wait for user input
   const key = await waitForKey();
 
   if (key === "a") {
-    // Kill all
     console.log(pc.yellow("\n   Killing all instances..."));
     for (const inst of instances) {
       try {
@@ -856,6 +875,52 @@ async function showKillMenu(state: DevState): Promise<void> {
   await refreshStatus(state);
   showHelp();
   console.log(pc.dim("  Logs streaming below...\n"));
+}
+
+/**
+ * Find running Convex instances
+ */
+async function findConvexInstances(): Promise<Array<{ pid: string; port: string; name: string }>> {
+  const instances: Array<{ pid: string; port: string; name: string }> = [];
+  const ports = ["3210", "3211", "3212", "3213", "3214", "3215"];
+  const seenPids = new Set<string>();
+
+  for (const port of ports) {
+    try {
+      const result = await execCommand(
+        "lsof",
+        ["-i", `:${port}`, "-sTCP:LISTEN", "-t"],
+        { quiet: true },
+      );
+
+      if (result.code === 0 && result.stdout.trim()) {
+        const pids = result.stdout.trim().split("\n");
+        for (const pid of pids) {
+          if (pid && !seenPids.has(pid)) {
+            seenPids.add(pid);
+            
+            const nameResult = await execCommand("ps", ["-p", pid, "-o", "comm="], { quiet: true });
+            let name = nameResult.stdout.trim() || "unknown";
+            
+            const cmdResult = await execCommand("ps", ["-p", pid, "-o", "args="], { quiet: true });
+            const cmdLine = cmdResult.stdout.trim();
+            
+            if (cmdLine.includes("convex")) {
+              name = "convex";
+            } else if (cmdLine.includes("local-backend")) {
+              name = "convex-local-backend";
+            }
+            
+            instances.push({ pid, port, name });
+          }
+        }
+      }
+    } catch {
+      // Port not in use
+    }
+  }
+
+  return instances;
 }
 
 /**

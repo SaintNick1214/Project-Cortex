@@ -1,8 +1,7 @@
 /**
- * Setup and Configuration Commands
+ * Configuration Commands
  *
- * Commands for setting up and configuring the CLI:
- * - setup: Interactive setup wizard
+ * Commands for managing CLI configuration:
  * - config: Configuration management
  */
 
@@ -10,7 +9,7 @@ import { Command } from "commander";
 import prompts from "prompts";
 import ora from "ora";
 import pc from "picocolors";
-import type { CLIConfig, OutputFormat, DeploymentConfig } from "../types.js";
+import type { CLIConfig, DeploymentConfig } from "../types.js";
 import {
   loadConfig,
   saveUserConfig,
@@ -39,38 +38,12 @@ import { existsSync } from "fs";
 import { join, resolve } from "path";
 
 /**
- * Register setup and config commands
+ * Register config commands
  */
-export function registerSetupCommands(
+export function registerConfigCommands(
   program: Command,
   _config: CLIConfig,
 ): void {
-  // setup command
-  program
-    .command("setup")
-    .description("Interactive setup wizard")
-    .option("--auto", "Auto-configure from environment variables", false)
-    .option("--local", "Set up local Convex development", false)
-    .option("--cloud", "Set up cloud Convex deployment", false)
-    .action(async (options) => {
-      try {
-        if (options.auto) {
-          // Auto mode: configure from environment variables
-          const config = await loadConfig();
-          await autoSetup(config);
-          return;
-        }
-
-        // Interactive setup
-        await runInteractiveSetup({
-          initialMode: options.local ? "local" : options.cloud ? "cloud" : undefined,
-        });
-      } catch (error) {
-        printError(error instanceof Error ? error.message : "Setup failed");
-        process.exit(1);
-      }
-    });
-
   // config command group
   const configCmd = program
     .command("config")
@@ -674,262 +647,6 @@ export function registerSetupCommands(
         process.exit(1);
       }
     });
-}
-
-/**
- * Run interactive setup wizard
- * Can be called from the setup command or from dev mode menu
- */
-export async function runInteractiveSetup(options: {
-  initialMode?: "local" | "cloud";
-} = {}): Promise<void> {
-  console.log();
-  console.log(pc.bold(pc.cyan("🧠 Cortex CLI Setup")));
-  console.log(pc.dim("Configure your Cortex Memory deployment\n"));
-
-  let config = await loadConfig();
-
-  const setupMode = await prompts({
-    type: "select",
-    name: "mode",
-    message: "What would you like to set up?",
-    choices: [
-      {
-        title: "Local development",
-        description: "Configure local Convex instance",
-        value: "local",
-      },
-      {
-        title: "Cloud deployment",
-        description: "Configure Convex cloud deployment",
-        value: "cloud",
-      },
-      {
-        title: "Both",
-        description: "Configure local and cloud deployments",
-        value: "both",
-      },
-      {
-        title: "View current configuration",
-        description: "Show existing configuration",
-        value: "view",
-      },
-    ],
-    initial: options.initialMode === "local" ? 0 : options.initialMode === "cloud" ? 1 : 2,
-  });
-
-  if (!setupMode.mode) {
-    printWarning("Setup cancelled");
-    return;
-  }
-
-  if (setupMode.mode === "view") {
-    await showConfiguration(config);
-    return;
-  }
-
-  // Set up local deployment
-  if (setupMode.mode === "local" || setupMode.mode === "both") {
-    config = await setupLocalDeployment(config);
-  }
-
-  // Set up cloud deployment
-  if (setupMode.mode === "cloud" || setupMode.mode === "both") {
-    config = await setupCloudDeployment(config);
-  }
-
-  // Set default deployment
-  if (setupMode.mode === "both") {
-    const defaultChoice = await prompts({
-      type: "select",
-      name: "default",
-      message: "Which deployment should be the default?",
-      choices: [
-        { title: "Local", value: "local" },
-        { title: "Cloud", value: "cloud" },
-      ],
-    });
-    if (defaultChoice.default) {
-      config.default = defaultChoice.default;
-    }
-  } else {
-    config.default = setupMode.mode;
-  }
-
-  // Set output format
-  const formatChoice = await prompts({
-    type: "select",
-    name: "format",
-    message: "Preferred output format?",
-    choices: [
-      { title: "Table (human-readable)", value: "table" },
-      { title: "JSON (machine-readable)", value: "json" },
-    ],
-    initial: 0,
-  });
-  if (formatChoice.format) {
-    config.format = formatChoice.format as OutputFormat;
-  }
-
-  // Confirm dangerous operations
-  const confirmChoice = await prompts({
-    type: "confirm",
-    name: "confirm",
-    message: "Require confirmation for dangerous operations (delete, clear)?",
-    initial: true,
-  });
-  config.confirmDangerous = confirmChoice.confirm ?? true;
-
-  // Save configuration
-  await saveUserConfig(config);
-  console.log();
-  printSuccess(`Configuration saved to ${getUserConfigPath()}`);
-
-  // Test connection
-  const testChoice = await prompts({
-    type: "confirm",
-    name: "test",
-    message: "Would you like to test the connection?",
-    initial: true,
-  });
-
-  if (testChoice.test) {
-    await testAndShowConnection(config, config.default);
-  }
-
-  console.log();
-  printSuccess("Setup complete! 🎉");
-  printInfo("Run 'cortex --help' to see available commands");
-}
-
-/**
- * Auto-configure from environment variables
- */
-async function autoSetup(config: CLIConfig): Promise<void> {
-  const spinner = ora("Auto-configuring from environment...").start();
-
-  let hasChanges = false;
-
-  // Check for local config
-  const localUrl = process.env.LOCAL_CONVEX_URL;
-  const localDeployment = process.env.LOCAL_CONVEX_DEPLOYMENT;
-  if (localUrl) {
-    config.deployments.local = {
-      url: localUrl,
-      deployment: localDeployment,
-    };
-    hasChanges = true;
-  }
-
-  // Check for cloud config
-  const cloudUrl = process.env.CLOUD_CONVEX_URL ?? process.env.CONVEX_URL;
-  const cloudKey =
-    process.env.CLOUD_CONVEX_DEPLOY_KEY ?? process.env.CONVEX_DEPLOY_KEY;
-  if (
-    cloudUrl &&
-    !cloudUrl.includes("localhost") &&
-    !cloudUrl.includes("127.0.0.1")
-  ) {
-    config.deployments.cloud = {
-      url: cloudUrl,
-      key: cloudKey,
-    };
-    hasChanges = true;
-  }
-
-  spinner.stop();
-
-  if (!hasChanges) {
-    printWarning("No environment variables found to configure");
-    printInfo("Set LOCAL_CONVEX_URL or CONVEX_URL environment variables");
-    return;
-  }
-
-  await saveUserConfig(config);
-  printSuccess("Auto-configured from environment variables");
-  await showConfiguration(config);
-}
-
-/**
- * Set up local deployment
- */
-async function setupLocalDeployment(config: CLIConfig): Promise<CLIConfig> {
-  console.log();
-  console.log(pc.bold("Local Development Setup"));
-  console.log(pc.dim("Configure connection to local Convex instance\n"));
-
-  const urlPrompt = await prompts({
-    type: "text",
-    name: "url",
-    message: "Local Convex URL:",
-    initial: config.deployments.local?.url ?? "http://127.0.0.1:3210",
-    validate: (value) => {
-      try {
-        new URL(value);
-        return true;
-      } catch {
-        return "Please enter a valid URL";
-      }
-    },
-  });
-
-  const deploymentPrompt = await prompts({
-    type: "text",
-    name: "deployment",
-    message: "Local deployment name (optional):",
-    initial:
-      config.deployments.local?.deployment ??
-      "anonymous:anonymous-cortex-sdk-local",
-  });
-
-  config.deployments.local = {
-    url: urlPrompt.url,
-    deployment: deploymentPrompt.deployment || undefined,
-  };
-
-  return config;
-}
-
-/**
- * Set up cloud deployment
- */
-async function setupCloudDeployment(config: CLIConfig): Promise<CLIConfig> {
-  console.log();
-  console.log(pc.bold("Cloud Deployment Setup"));
-  console.log(pc.dim("Configure connection to Convex cloud\n"));
-
-  const urlPrompt = await prompts({
-    type: "text",
-    name: "url",
-    message: "Convex cloud URL:",
-    initial:
-      config.deployments.cloud?.url ?? "https://your-deployment.convex.cloud",
-    validate: (value) => {
-      try {
-        const url = new URL(value);
-        if (!url.hostname.includes("convex")) {
-          return "URL should be a Convex cloud URL";
-        }
-        return true;
-      } catch {
-        return "Please enter a valid URL";
-      }
-    },
-  });
-
-  const keyPrompt = await prompts({
-    type: "password",
-    name: "key",
-    message: "Convex deploy key (optional):",
-    initial: config.deployments.cloud?.key ?? "",
-  });
-
-  config.deployments.cloud = {
-    url: urlPrompt.url,
-    key: keyPrompt.key || undefined,
-  };
-
-  return config;
 }
 
 /**

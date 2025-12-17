@@ -68,6 +68,7 @@ describeE2E("Memory Workflow E2E", () => {
         userMessage: "My favorite color is blue",
         agentResponse: "I'll remember that you like blue!",
         userId: TEST_USER_ID,
+        agentId: "e2e-test-agent",
         userName: "E2E Test User",
       });
 
