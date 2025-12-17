@@ -14,7 +14,8 @@ import { Command } from "commander";
 import ora from "ora";
 import type { CLIConfig, OutputFormat, MemorySpaceStatus } from "../types.js";
 import { withClient } from "../utils/client.js";
-import { resolveConfig } from "../utils/config.js";
+import { resolveConfig, loadConfig } from "../utils/config.js";
+import { selectDeployment } from "../utils/deployment-selector.js";
 import {
   formatOutput,
   printSuccess,
@@ -39,7 +40,7 @@ import {
  */
 export function registerSpaceCommands(
   program: Command,
-  config: CLIConfig,
+  _config: CLIConfig,
 ): void {
   const spaces = program.command("spaces").description("Manage memory spaces");
 
@@ -47,6 +48,7 @@ export function registerSpaceCommands(
   spaces
     .command("list")
     .description("List all memory spaces")
+    .option("-d, --deployment <name>", "Target deployment")
     .option(
       "-t, --type <type>",
       "Filter by type: personal, team, project, custom",
@@ -55,8 +57,11 @@ export function registerSpaceCommands(
     .option("-l, --limit <number>", "Maximum number of results", "100")
     .option("-f, --format <format>", "Output format: table, json, csv")
     .action(async (options) => {
-      const globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "list memory spaces");
+      if (!selection) return;
+
+      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading memory spaces...").start();
@@ -70,7 +75,7 @@ export function registerSpaceCommands(
           : undefined;
         const limit = validateLimit(parseInt(options.limit, 10));
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const spacesList = await client.memorySpaces.list({
             type: filterType,
             status: filterStatus,
@@ -125,6 +130,7 @@ export function registerSpaceCommands(
   spaces
     .command("create <spaceId>")
     .description("Create a new memory space")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption(
       "-t, --type <type>",
       "Space type: personal, team, project, custom",
@@ -132,7 +138,9 @@ export function registerSpaceCommands(
     .option("-n, --name <name>", "Human-readable name")
     .option("-m, --metadata <json>", "JSON metadata", "{}")
     .action(async (spaceId, options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "create memory space");
+      if (!selection) return;
 
       const spinner = ora("Creating memory space...").start();
 
@@ -141,7 +149,7 @@ export function registerSpaceCommands(
         const spaceType = validateMemorySpaceType(options.type);
         const metadata = JSON.parse(options.metadata);
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           // Check if space already exists
           const existing = await client.memorySpaces.get(spaceId);
           if (existing) {
@@ -174,10 +182,14 @@ export function registerSpaceCommands(
   spaces
     .command("get <spaceId>")
     .description("Get memory space details")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (spaceId, options) => {
-      const globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "get memory space");
+      if (!selection) return;
+
+      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading memory space...").start();
@@ -185,7 +197,7 @@ export function registerSpaceCommands(
       try {
         validateMemorySpaceId(spaceId);
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const space = await client.memorySpaces.get(spaceId);
 
           if (!space) {
@@ -239,6 +251,7 @@ export function registerSpaceCommands(
   spaces
     .command("delete <spaceId>")
     .description("Delete a memory space")
+    .option("-d, --deployment <name>", "Target deployment")
     .option(
       "--cascade",
       "Delete all data in the space (memories, facts, etc.)",
@@ -246,7 +259,9 @@ export function registerSpaceCommands(
     )
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (spaceId, options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "delete memory space");
+      if (!selection) return;
 
       try {
         validateMemorySpaceId(spaceId);
@@ -272,7 +287,7 @@ export function registerSpaceCommands(
         } else if (!options.yes) {
           const confirmed = await requireConfirmation(
             `Delete memory space ${spaceId}?`,
-            config,
+            currentConfig,
           );
           if (!confirmed) {
             printWarning("Operation cancelled");
@@ -286,7 +301,7 @@ export function registerSpaceCommands(
             : "Deleting memory space...",
         ).start();
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const result = await client.memorySpaces.delete(spaceId, {
             cascade: options.cascade,
           });
@@ -312,10 +327,13 @@ export function registerSpaceCommands(
   spaces
     .command("archive <spaceId>")
     .description("Archive a memory space (soft delete)")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-r, --reason <reason>", "Reason for archiving")
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (spaceId, options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "archive memory space");
+      if (!selection) return;
 
       try {
         validateMemorySpaceId(spaceId);
@@ -323,7 +341,7 @@ export function registerSpaceCommands(
         if (!options.yes) {
           const confirmed = await requireConfirmation(
             `Archive memory space ${spaceId}?`,
-            config,
+            currentConfig,
           );
           if (!confirmed) {
             printWarning("Operation cancelled");
@@ -333,7 +351,7 @@ export function registerSpaceCommands(
 
         const spinner = ora("Archiving memory space...").start();
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const space = await client.memorySpaces.archive(spaceId, {
             reason: options.reason,
           });
@@ -352,15 +370,18 @@ export function registerSpaceCommands(
   spaces
     .command("reactivate <spaceId>")
     .description("Reactivate an archived memory space")
-    .action(async (spaceId) => {
-      const globalOpts = program.opts();
+    .option("-d, --deployment <name>", "Target deployment")
+    .action(async (spaceId, options) => {
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "reactivate memory space");
+      if (!selection) return;
 
       const spinner = ora("Reactivating memory space...").start();
 
       try {
         validateMemorySpaceId(spaceId);
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const space = await client.memorySpaces.reactivate(spaceId);
 
           spinner.stop();
@@ -380,10 +401,14 @@ export function registerSpaceCommands(
   spaces
     .command("stats <spaceId>")
     .description("Get statistics for a memory space")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (spaceId, options) => {
-      const globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "get space statistics");
+      if (!selection) return;
+
+      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading statistics...").start();
@@ -391,7 +416,7 @@ export function registerSpaceCommands(
       try {
         validateMemorySpaceId(spaceId);
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const stats = await client.memorySpaces.getStats(spaceId);
 
           spinner.stop();
@@ -425,10 +450,14 @@ export function registerSpaceCommands(
   spaces
     .command("participants <spaceId>")
     .description("List participants in a memory space")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (spaceId, options) => {
-      const globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "list participants");
+      if (!selection) return;
+
+      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading participants...").start();
@@ -436,7 +465,7 @@ export function registerSpaceCommands(
       try {
         validateMemorySpaceId(spaceId);
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const space = await client.memorySpaces.get(spaceId);
 
           if (!space) {
@@ -484,20 +513,23 @@ export function registerSpaceCommands(
   spaces
     .command("add-participant <spaceId>")
     .description("Add a participant to a memory space")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-i, --id <participantId>", "Participant ID")
     .requiredOption(
       "-t, --type <type>",
       "Participant type (e.g., user, ai-tool, ai-agent)",
     )
     .action(async (spaceId, options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "add participant");
+      if (!selection) return;
 
       const spinner = ora("Adding participant...").start();
 
       try {
         validateMemorySpaceId(spaceId);
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const space = await client.memorySpaces.addParticipant(spaceId, {
             id: options.id,
             type: options.type,
@@ -523,10 +555,13 @@ export function registerSpaceCommands(
   spaces
     .command("remove-participant <spaceId>")
     .description("Remove a participant from a memory space")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-i, --id <participantId>", "Participant ID to remove")
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (spaceId, options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "remove participant");
+      if (!selection) return;
 
       try {
         validateMemorySpaceId(spaceId);
@@ -534,7 +569,7 @@ export function registerSpaceCommands(
         if (!options.yes) {
           const confirmed = await requireConfirmation(
             `Remove participant ${options.id} from ${spaceId}?`,
-            config,
+            currentConfig,
           );
           if (!confirmed) {
             printWarning("Operation cancelled");
@@ -544,7 +579,7 @@ export function registerSpaceCommands(
 
         const spinner = ora("Removing participant...").start();
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const space = await client.memorySpaces.removeParticipant(
             spaceId,
             options.id,
@@ -570,11 +605,14 @@ export function registerSpaceCommands(
   spaces
     .command("update <spaceId>")
     .description("Update a memory space")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-n, --name <name>", "New name")
     .option("-s, --status <status>", "New status: active, archived")
     .option("-m, --metadata <json>", "JSON metadata to merge")
     .action(async (spaceId, options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "update memory space");
+      if (!selection) return;
 
       try {
         validateMemorySpaceId(spaceId);
@@ -604,7 +642,7 @@ export function registerSpaceCommands(
 
         const spinner = ora("Updating memory space...").start();
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const space = await client.memorySpaces.update(spaceId, updates);
 
           spinner.stop();
@@ -622,10 +660,13 @@ export function registerSpaceCommands(
   spaces
     .command("count")
     .description("Count memory spaces")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-t, --type <type>", "Filter by type")
     .option("-s, --status <status>", "Filter by status")
     .action(async (options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "count memory spaces");
+      if (!selection) return;
 
       const spinner = ora("Counting memory spaces...").start();
 
@@ -637,7 +678,7 @@ export function registerSpaceCommands(
           ? validateMemorySpaceStatus(options.status)
           : undefined;
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const count = await client.memorySpaces.count({
             type: filterType,
             status: filterStatus,
@@ -657,13 +698,17 @@ export function registerSpaceCommands(
   spaces
     .command("search <query>")
     .description("Search memory spaces by name")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-t, --type <type>", "Filter by type")
     .option("-s, --status <status>", "Filter by status")
     .option("-l, --limit <number>", "Maximum results", "20")
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (query, options) => {
-      const globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "search memory spaces");
+      if (!selection) return;
+
+      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Searching memory spaces...").start();
@@ -677,7 +722,7 @@ export function registerSpaceCommands(
           : undefined;
         const limit = validateLimit(parseInt(options.limit, 10));
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const results = await client.memorySpaces.search(query, {
             type: filterType,
             status: filterStatus,

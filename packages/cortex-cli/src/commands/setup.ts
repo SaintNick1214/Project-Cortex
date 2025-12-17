@@ -34,6 +34,11 @@ import {
   removeDeploymentFromEnv,
   getDeploymentEnvKeys,
 } from "../utils/env-file.js";
+import {
+  getCurrentDeployment,
+  setCurrentDeployment,
+  clearCurrentDeployment,
+} from "../utils/deployment-selector.js";
 import { existsSync } from "fs";
 import { join, resolve } from "path";
 
@@ -644,6 +649,74 @@ export function registerConfigCommands(
         console.log(pc.dim("   • Run 'cortex config add-deployment' to add an existing deployment"));
       } catch (error) {
         printError(error instanceof Error ? error.message : "Reset failed");
+        process.exit(1);
+      }
+    });
+
+  // Top-level 'use' command for quick deployment switching
+  program
+    .command("use [deployment]")
+    .description("Set current deployment for all commands (session context)")
+    .option("--clear", "Clear the current deployment setting")
+    .action(async (deploymentName, options) => {
+      try {
+        const config = await loadConfig();
+        const deployments = Object.keys(config.deployments);
+
+        // Handle --clear flag
+        if (options.clear) {
+          await clearCurrentDeployment();
+          printSuccess("Cleared current deployment");
+          console.log(pc.dim("   Commands will now prompt for deployment selection\n"));
+          return;
+        }
+
+        // If no deployment specified, show current and list available
+        if (!deploymentName) {
+          const current = await getCurrentDeployment();
+          
+          console.log();
+          if (current && config.deployments[current]) {
+            console.log(pc.bold("  Current deployment: ") + pc.cyan(current));
+          } else if (current) {
+            console.log(pc.yellow(`  Current deployment "${current}" no longer exists`));
+          } else {
+            console.log(pc.dim("  No current deployment set"));
+          }
+          
+          console.log();
+          console.log(pc.bold("  Available deployments:"));
+          if (deployments.length === 0) {
+            console.log(pc.yellow("    No deployments configured"));
+          } else {
+            for (const name of deployments) {
+              const isCurrent = name === current;
+              const isDefault = name === config.default;
+              const prefix = isCurrent ? pc.green("→") : " ";
+              const suffix = isDefault ? pc.dim(" (default)") : "";
+              console.log(`    ${prefix} ${pc.cyan(name)}${suffix}`);
+            }
+          }
+          console.log();
+          console.log(pc.dim("  Usage: cortex use <deployment>"));
+          console.log(pc.dim("         cortex use --clear"));
+          console.log();
+          return;
+        }
+
+        // Validate deployment exists
+        if (!config.deployments[deploymentName]) {
+          printError(`Deployment "${deploymentName}" not found`);
+          console.log(pc.dim(`   Available: ${deployments.join(", ")}\n`));
+          process.exit(1);
+        }
+
+        // Set the current deployment
+        await setCurrentDeployment(deploymentName);
+        printSuccess(`Now using: ${deploymentName}`);
+        console.log(pc.dim(`   All commands will target this deployment until changed\n`));
+      } catch (error) {
+        printError(error instanceof Error ? error.message : "Failed to set deployment");
         process.exit(1);
       }
     });
