@@ -68,10 +68,11 @@ describeE2E("Facts Workflow E2E", () => {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Check if facts were extracted
-      const facts = await cortex.facts.list({
+      const result = await cortex.facts.list({
         memorySpaceId: TEST_SPACE_ID,
         limit: 50,
       });
+      const facts = result.facts || result;
 
       expect(Array.isArray(facts)).toBe(true);
     });
@@ -79,10 +80,11 @@ describeE2E("Facts Workflow E2E", () => {
 
   describe("Fact CRUD Operations", () => {
     it("should list facts in a space", async () => {
-      const facts = await cortex.facts.list({
+      const result = await cortex.facts.list({
         memorySpaceId: TEST_SPACE_ID,
         limit: 50,
       });
+      const facts = result.facts || result;
 
       expect(Array.isArray(facts)).toBe(true);
     });
@@ -110,13 +112,14 @@ describeE2E("Facts Workflow E2E", () => {
 
   describe("Fact Filtering", () => {
     it("should filter facts by type", async () => {
-      const preferenceFacts = await cortex.facts.list({
+      const preferenceResult = await cortex.facts.list({
         memorySpaceId: TEST_SPACE_ID,
         factType: "preference",
         limit: 50,
       });
+      const preferenceFacts = preferenceResult.facts || preferenceResult;
 
-      preferenceFacts.forEach((fact) => {
+      preferenceFacts.forEach((fact: { factType: string }) => {
         expect(fact.factType).toBe("preference");
       });
     });

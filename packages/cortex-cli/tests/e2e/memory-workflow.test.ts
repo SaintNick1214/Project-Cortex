@@ -92,23 +92,25 @@ describeE2E("Memory Workflow E2E", () => {
     });
 
     it("should list memories in space", async () => {
-      const memories = await cortex.memory.list({
+      const result = await cortex.memory.list({
         memorySpaceId: TEST_SPACE_ID,
         limit: 50,
       });
+      const memories = result.memories || result;
 
       expect(memories.length).toBeGreaterThan(0);
     });
 
     it("should filter memories by user", async () => {
-      const memories = await cortex.memory.list({
+      const result = await cortex.memory.list({
         memorySpaceId: TEST_SPACE_ID,
         userId: TEST_USER_ID,
         limit: 50,
       });
+      const memories = result.memories || result;
 
       expect(memories.length).toBeGreaterThan(0);
-      memories.forEach((m) => {
+      memories.forEach((m: any) => {
         const memory = "memory" in m ? m.memory : m;
         expect(memory.userId).toBe(TEST_USER_ID);
       });

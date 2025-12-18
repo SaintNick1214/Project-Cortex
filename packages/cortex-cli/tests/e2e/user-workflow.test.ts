@@ -116,13 +116,15 @@ describeE2E("User Workflow E2E", () => {
     });
 
     it("should list users", async () => {
-      const users = await cortex.users.list({ limit: 100 });
+      const result = await cortex.users.list({ limit: 100 });
+      const users = result.users || result;
 
       expect(users.length).toBeGreaterThanOrEqual(5);
     });
 
     it("should respect limit", async () => {
-      const users = await cortex.users.list({ limit: 3 });
+      const result = await cortex.users.list({ limit: 3 });
+      const users = result.users || result;
 
       expect(users.length).toBeLessThanOrEqual(3);
     });

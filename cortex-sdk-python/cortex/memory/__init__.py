@@ -1611,7 +1611,13 @@ class MemoryAPI:
         if filters.get("source_type") is not None:
             validate_source_type(filters["source_type"])
 
-        result = await self.vector.update_many(memory_space_id, filters, updates)
+        result = await self.vector.update_many(
+            memory_space_id,
+            user_id=filters.get("user_id"),
+            source_type=filters.get("source_type"),
+            importance=updates.get("importance"),
+            tags=updates.get("tags"),
+        )
 
         # Count affected facts
         from ..types import ListFactsFilter, UpdateManyResult
@@ -1679,7 +1685,11 @@ class MemoryAPI:
             all_fact_ids.extend(fact_ids)
 
         # Delete memories
-        result = await self.vector.delete_many(memory_space_id, filters)
+        result = await self.vector.delete_many(
+            memory_space_id,
+            user_id=filters.get("user_id"),
+            source_type=filters.get("source_type"),
+        )
 
         from ..types import DeleteManyResult
         return DeleteManyResult(

@@ -471,7 +471,9 @@ class FactsAPI:
         validate_update_has_fields(updates_dict)
 
         if updates_dict.get("confidence") is not None:
-            validate_confidence(updates_dict["confidence"], "confidence")
+            conf = updates_dict["confidence"]
+            if isinstance(conf, (int, float)):
+                validate_confidence(conf, "confidence")
         if updates_dict.get("tags") is not None:
             validate_string_array(updates_dict["tags"], "tags", True)
         if updates_dict.get("metadata") is not None:

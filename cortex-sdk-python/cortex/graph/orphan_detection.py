@@ -278,14 +278,14 @@ async def detect_orphan(
         return OrphanCheckResult(
             is_orphan=True,
             reason="No anchor references",
-            referenced_by=[r.get("referrerId") for r in external_refs],
+            referenced_by=[str(r.get("referrerId")) for r in external_refs if r.get("referrerId") is not None],
             part_of_circular_island=False,
         )
 
     return OrphanCheckResult(
         is_orphan=False,
         reason="Has anchor references",
-        referenced_by=[r.get("referrerId") for r in external_refs],
+        referenced_by=[str(r.get("referrerId")) for r in external_refs if r.get("referrerId") is not None],
         part_of_circular_island=False,
     )
 
@@ -362,9 +362,9 @@ async def _check_circular_island(
                     return {"is_island": False, "island_nodes": []}
 
                 # Add to island and continue BFS
-                if neighbor_id not in visited:
-                    island_nodes.add(neighbor_id)
-                    queue.append(neighbor_id)
+                if neighbor_id is not None and neighbor_id not in visited:
+                    island_nodes.add(str(neighbor_id))
+                    queue.append(str(neighbor_id))
 
         depth += 1
 
