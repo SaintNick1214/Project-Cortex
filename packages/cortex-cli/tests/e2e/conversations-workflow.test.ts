@@ -137,16 +137,18 @@ describeE2E("Conversations Workflow E2E", () => {
     });
 
     it("should list conversations", async () => {
-      const convs = await cortex.conversations.list({ limit: 100 });
+      const result = await cortex.conversations.list({ limit: 100 });
+      const convs = result.conversations || result;
 
       expect(convs.length).toBeGreaterThanOrEqual(3);
     });
 
     it("should filter by space", async () => {
-      const convs = await cortex.conversations.list({
+      const result = await cortex.conversations.list({
         memorySpaceId: TEST_SPACE_ID,
         limit: 100,
       });
+      const convs = result.conversations || result;
 
       convs.forEach((conv) => {
         expect(conv.memorySpaceId).toBe(TEST_SPACE_ID);
@@ -154,10 +156,11 @@ describeE2E("Conversations Workflow E2E", () => {
     });
 
     it("should filter by user", async () => {
-      const convs = await cortex.conversations.list({
+      const result = await cortex.conversations.list({
         userId: `${TEST_USER_ID}-list-0`,
         limit: 100,
       });
+      const convs = result.conversations || result;
 
       convs.forEach((conv) => {
         const participants = conv.participants as Record<string, unknown>;
@@ -166,7 +169,8 @@ describeE2E("Conversations Workflow E2E", () => {
     });
 
     it("should respect limit", async () => {
-      const convs = await cortex.conversations.list({ limit: 2 });
+      const result = await cortex.conversations.list({ limit: 2 });
+      const convs = result.conversations || result;
 
       expect(convs.length).toBeLessThanOrEqual(2);
     });

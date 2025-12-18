@@ -5,6 +5,7 @@ Functions for initial bulk sync of Cortex data to graph database.
 """
 
 import time
+from dataclasses import asdict
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
 
 from ..types import (
@@ -14,6 +15,8 @@ from ..types import (
     BatchSyncResult,
     BatchSyncStats,
     GraphAdapter,
+    ListMemorySpacesFilter,
+    ListUsersFilter,
 )
 from . import (
     sync_a2a_relationships,
@@ -126,8 +129,10 @@ async def _sync_memories(
 
     try:
         # Get all memory spaces to list memories
-        memory_spaces_result = await cortex.memory_spaces.list({"limit": 1000})
-        memory_spaces = memory_spaces_result.get("spaces", [])
+        memory_spaces_result = await cortex.memory_spaces.list(
+            ListMemorySpacesFilter(limit=1000)
+        )
+        memory_spaces = memory_spaces_result.spaces
 
         processed_count = 0
         limit_per_space = limit // max(len(memory_spaces), 1)
@@ -138,27 +143,29 @@ async def _sync_memories(
 
             try:
                 # List memories for this memory space
-                memories = await cortex.vector.list({
-                    "memorySpaceId": memory_space["memorySpaceId"],
-                    "limit": limit_per_space,
-                })
+                memories = await cortex.vector.list(
+                    memory_space.memory_space_id,
+                    limit=limit_per_space,
+                )
 
                 for memory in memories:
                     if processed_count >= limit:
                         break
 
                     try:
+                        # Convert dataclass to dict for sync function
+                        memory_dict = asdict(memory)
                         # Sync node
-                        node_id = await sync_memory_to_graph(memory, adapter)
+                        node_id = await sync_memory_to_graph(memory_dict, adapter)
                         stats.synced += 1
 
                         # Sync relationships
                         if sync_rels:
-                            await sync_memory_relationships(memory, node_id, adapter)
+                            await sync_memory_relationships(memory_dict, node_id, adapter)
 
                             # Check for A2A relationships
-                            if memory.get("sourceType") == "a2a":
-                                await sync_a2a_relationships(memory, adapter)
+                            if memory.source_type == "a2a":
+                                await sync_a2a_relationships(memory_dict, adapter)
 
                         processed_count += 1
 
@@ -168,12 +175,12 @@ async def _sync_memories(
                         stats.failed += 1
                         errors.append(BatchSyncError(
                             entity_type="Memory",
-                            entity_id=memory.get("memoryId"),
+                            entity_id=memory.memory_id,
                             error=str(e),
                         ))
 
             except Exception as e:
-                print(f"Failed to list memories for space {memory_space.get('memorySpaceId')}: {e}")
+                print(f"Failed to list memories for space {memory_space.memory_space_id}: {e}")
 
     except Exception as e:
         print(f"Failed to sync memories: {e}")
@@ -194,8 +201,10 @@ async def _sync_facts(
 
     try:
         # Get all memory spaces to list facts
-        memory_spaces_result = await cortex.memory_spaces.list({"limit": 1000})
-        memory_spaces = memory_spaces_result.get("spaces", [])
+        memory_spaces_result = await cortex.memory_spaces.list(
+            ListMemorySpacesFilter(limit=1000)
+        )
+        memory_spaces = memory_spaces_result.spaces
 
         processed_count = 0
         limit_per_space = limit // max(len(memory_spaces), 1)
@@ -208,7 +217,7 @@ async def _sync_facts(
                 # List facts for this memory space
                 from ..types import ListFactsFilter
                 facts = await cortex.facts.list(ListFactsFilter(
-                    memory_space_id=memory_space["memorySpaceId"],
+                    memory_space_id=memory_space.memory_space_id,
                     limit=limit_per_space,
                 ))
 
@@ -217,13 +226,15 @@ async def _sync_facts(
                         break
 
                     try:
+                        # Convert dataclass to dict for sync function
+                        fact_dict = asdict(fact)
                         # Sync node
-                        node_id = await sync_fact_to_graph(fact, adapter)
+                        node_id = await sync_fact_to_graph(fact_dict, adapter)
                         stats.synced += 1
 
                         # Sync relationships
                         if sync_rels:
-                            await sync_fact_relationships(fact, node_id, adapter)
+                            await sync_fact_relationships(fact_dict, node_id, adapter)
 
                         processed_count += 1
 
@@ -233,12 +244,12 @@ async def _sync_facts(
                         stats.failed += 1
                         errors.append(BatchSyncError(
                             entity_type="Fact",
-                            entity_id=fact.get("factId"),
+                            entity_id=fact.fact_id,
                             error=str(e),
                         ))
 
             except Exception as e:
-                print(f"Failed to list facts for space {memory_space.get('memorySpaceId')}: {e}")
+                print(f"Failed to list facts for space {memory_space.memory_space_id}: {e}")
 
     except Exception as e:
         print(f"Failed to sync facts: {e}")
@@ -258,7 +269,6 @@ async def _sync_users(
 
     try:
         # List all users
-        from ..types import ListUsersFilter
         users_result = await cortex.users.list(ListUsersFilter(limit=limit))
         users = users_result.users if hasattr(users_result, 'users') else []
 
@@ -266,14 +276,16 @@ async def _sync_users(
             try:
                 # Sync user node
                 from . import ensure_user_node
-                await ensure_user_node(user.get("userId") or user.user_id, adapter)
+                # Access user_id attribute from UserProfile dataclass
+                user_id = user.user_id if hasattr(user, 'user_id') else str(user)
+                await ensure_user_node(user_id, adapter)
                 stats.synced += 1
 
                 if on_progress:
                     on_progress("Users", i + 1, len(users))
             except Exception as e:
                 stats.failed += 1
-                user_id = user.get("userId") if isinstance(user, dict) else user.user_id
+                user_id = user.user_id if hasattr(user, 'user_id') else str(user)
                 errors.append(BatchSyncError(
                     entity_type="User",
                     entity_id=user_id,
@@ -297,15 +309,17 @@ async def _sync_agents(
     errors: List[BatchSyncError] = []
 
     try:
-        # List all agents
-        agents_result = await cortex.agents.list({"limit": limit})
-        agents = agents_result.get("agents", []) if isinstance(agents_result, dict) else []
+        # List all agents - returns List[RegisteredAgent]
+        agents = await cortex.agents.list()
+        # Apply limit client-side
+        agents = agents[:limit] if len(agents) > limit else agents
 
         for i, agent in enumerate(agents):
             try:
                 # Sync agent node
                 from . import ensure_agent_node
-                agent_id = agent.get("agentId") if isinstance(agent, dict) else agent.agent_id
+                # Access agent_id attribute from RegisteredAgent dataclass
+                agent_id = agent.agent_id if hasattr(agent, 'agent_id') else str(agent)
                 await ensure_agent_node(agent_id, adapter)
                 stats.synced += 1
 
@@ -313,7 +327,7 @@ async def _sync_agents(
                     on_progress("Agents", i + 1, len(agents))
             except Exception as e:
                 stats.failed += 1
-                agent_id = agent.get("agentId") if isinstance(agent, dict) else agent.agent_id
+                agent_id = agent.agent_id if hasattr(agent, 'agent_id') else str(agent)
                 errors.append(BatchSyncError(
                     entity_type="Agent",
                     entity_id=agent_id,

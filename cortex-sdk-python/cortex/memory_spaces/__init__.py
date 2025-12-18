@@ -635,8 +635,8 @@ class MemorySpacesAPI:
         d_reason = options.reason if options else reason
         d_confirm_id = options.confirm_id if options else confirm_id
 
-        # Only validate delete options if explicitly provided
-        if options is not None:
+        # Only validate delete options if explicitly provided and reason is set
+        if options is not None and d_reason is not None:
             validate_delete_options(memory_space_id, d_cascade, d_reason, d_confirm_id)
 
         result = await self._execute_with_resilience(

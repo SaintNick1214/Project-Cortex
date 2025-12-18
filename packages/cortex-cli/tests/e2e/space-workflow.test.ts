@@ -98,29 +98,32 @@ describeE2E("Space Workflow E2E", () => {
     });
 
     it("should list all spaces", async () => {
-      const spaces = await cortex.memorySpaces.list({ limit: 100 });
+      const result = await cortex.memorySpaces.list({ limit: 100 });
+      const spaces = result.spaces || result;
 
       expect(spaces.length).toBeGreaterThanOrEqual(3);
     });
 
     it("should filter by type", async () => {
-      const projectSpaces = await cortex.memorySpaces.list({
+      const result = await cortex.memorySpaces.list({
         type: "project",
         limit: 100,
       });
+      const projectSpaces = result.spaces || result;
 
-      projectSpaces.forEach((space) => {
+      projectSpaces.forEach((space: any) => {
         expect(space.type).toBe("project");
       });
     });
 
     it("should filter by status", async () => {
-      const activeSpaces = await cortex.memorySpaces.list({
+      const result = await cortex.memorySpaces.list({
         status: "active",
         limit: 100,
       });
+      const activeSpaces = result.spaces || result;
 
-      activeSpaces.forEach((space) => {
+      activeSpaces.forEach((space: any) => {
         expect(space.status).toBe("active");
       });
     });
@@ -293,7 +296,10 @@ describeE2E("Space Workflow E2E", () => {
         type: "project",
       });
 
-      const result = await cortex.memorySpaces.delete(deleteSpaceId);
+      const result = await cortex.memorySpaces.delete(deleteSpaceId, {
+        reason: "Test cleanup",
+        cascade: true,
+      });
 
       expect(result.deleted).toBe(true);
 
@@ -321,6 +327,7 @@ describeE2E("Space Workflow E2E", () => {
 
       // Cascade delete
       const result = await cortex.memorySpaces.delete(cascadeSpaceId, {
+        reason: "Test cleanup - cascade delete",
         cascade: true,
       });
 

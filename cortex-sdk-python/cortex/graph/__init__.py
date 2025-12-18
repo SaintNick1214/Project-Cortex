@@ -450,10 +450,15 @@ async def delete_memory_from_graph(
     deletion_context = create_deletion_context(f"Delete Memory {memory_id}", ORPHAN_RULES)
     result = await delete_with_orphan_cleanup(node_id, "Memory", deletion_context, adapter)
 
+    # Convert orphan_islands from List[Dict] to List[List[str]]
+    orphan_islands_list = [
+        island.get("nodes", []) for island in result.orphan_islands
+    ]
+
     return GraphDeleteResult(
         deleted_nodes=result.deleted_nodes,
         deleted_edges=result.deleted_edges,
-        orphan_islands=result.orphan_islands,
+        orphan_islands=orphan_islands_list,
     )
 
 
@@ -614,10 +619,15 @@ async def delete_conversation_from_graph(
         node_id, "Conversation", deletion_context, adapter
     )
 
+    # Convert orphan_islands from List[Dict] to List[List[str]]
+    orphan_islands_list = [
+        island.get("nodes", []) for island in result.orphan_islands
+    ]
+
     return GraphDeleteResult(
         deleted_nodes=result.deleted_nodes,
         deleted_edges=result.deleted_edges,
-        orphan_islands=result.orphan_islands,
+        orphan_islands=orphan_islands_list,
     )
 
 
@@ -934,10 +944,15 @@ async def delete_fact_from_graph(
     deletion_context = create_deletion_context(f"Delete Fact {fact_id}", ORPHAN_RULES)
     result = await delete_with_orphan_cleanup(node_id, "Fact", deletion_context, adapter)
 
+    # Convert orphan_islands from List[Dict] to List[List[str]]
+    orphan_islands_list = [
+        island.get("nodes", []) for island in result.orphan_islands
+    ]
+
     return GraphDeleteResult(
         deleted_nodes=result.deleted_nodes,
         deleted_edges=result.deleted_edges,
-        orphan_islands=result.orphan_islands,
+        orphan_islands=orphan_islands_list,
     )
 
 
@@ -1134,10 +1149,15 @@ async def delete_context_from_graph(
         node_id, "Context", deletion_context, adapter
     )
 
+    # Convert orphan_islands from List[Dict] to List[List[str]]
+    orphan_islands_list = [
+        island.get("nodes", []) for island in result.orphan_islands
+    ]
+
     return GraphDeleteResult(
         deleted_nodes=result.deleted_nodes,
         deleted_edges=result.deleted_edges,
-        orphan_islands=result.orphan_islands,
+        orphan_islands=orphan_islands_list,
     )
 
 

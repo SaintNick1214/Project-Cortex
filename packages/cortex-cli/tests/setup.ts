@@ -62,12 +62,14 @@ export async function cleanupTestData(prefix: string): Promise<void> {
 
   // Delete users first (cascade will delete their memories)
   try {
-    const users = await withTimeout(
+    const usersResult = await withTimeout(
       client.users.list({ limit: 1000 }),
       OPERATION_TIMEOUT,
-      [],
+      { users: [], total: 0 },
     );
 
+    // Handle both old array format and new { users: [...] } format
+    const users = Array.isArray(usersResult) ? usersResult : (usersResult.users || []);
     const testUsers = users.filter((u) => u.id.startsWith(prefix));
     console.log(`  Found ${testUsers.length} test users to clean up`);
 
@@ -93,12 +95,14 @@ export async function cleanupTestData(prefix: string): Promise<void> {
 
   // Then delete memory spaces (without cascade since memories already deleted)
   try {
-    const spaces = await withTimeout(
+    const spacesResult = await withTimeout(
       client.memorySpaces.list({ limit: 1000 }),
       OPERATION_TIMEOUT,
-      [],
+      { spaces: [], total: 0 },
     );
 
+    // Handle both old array format and new { spaces: [...] } format
+    const spaces = Array.isArray(spacesResult) ? spacesResult : (spacesResult.spaces || []);
     const testSpaces = spaces.filter((s) => s.memorySpaceId.startsWith(prefix));
     console.log(`  Found ${testSpaces.length} test spaces to clean up`);
 

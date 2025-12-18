@@ -578,7 +578,7 @@ class AgentsAPI:
         opts = options or UnregisterAgentOptions()
 
         # Get all matching agents
-        agents = await self.list(limit=1000)  # Get all agents
+        agents = await self.list()  # Get all agents
 
         # Apply filters (client-side filtering like TypeScript SDK)
         if filters:

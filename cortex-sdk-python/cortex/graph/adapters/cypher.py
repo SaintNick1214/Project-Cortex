@@ -35,9 +35,9 @@ try:
     HAS_NEO4J = True
 except ImportError:
     HAS_NEO4J = False
-    AsyncGraphDatabase = None
-    AsyncDriver = None
-    AsyncSession = None
+    AsyncGraphDatabase = None  # type: ignore[assignment, misc]
+    AsyncDriver = None  # type: ignore[assignment, misc]
+    AsyncSession = None  # type: ignore[assignment, misc]
 
 
 class CypherGraphAdapter:
@@ -920,6 +920,8 @@ class CypherGraphAdapter:
 
             result = await session.run(query)
             record = await result.single()
+            if record is None:
+                return 0
             return int(record["count"])
 
         except Exception as e:
@@ -948,6 +950,8 @@ class CypherGraphAdapter:
 
             result = await session.run(query)
             record = await result.single()
+            if record is None:
+                return 0
             return int(record["count"])
 
         except Exception as e:

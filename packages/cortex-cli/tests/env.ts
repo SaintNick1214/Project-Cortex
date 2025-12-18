@@ -17,14 +17,19 @@ import { resolve } from "path";
 // Note: dotenv@17+ auto-injects env vars on import, so .env files may already be loaded
 // by the time this code runs. We need to handle this carefully.
 
+// First, load CLI-specific env file to get CONVEX_URL_CLI
+// This must happen BEFORE we check CONVEX_URL_CLI
+dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+
 // CLI tests use CONVEX_URL_CLI for dedicated database isolation
-// This takes priority over any other CONVEX_URL that may have been set (including from auto-injected .env files)
+// This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
 if (process.env.CONVEX_URL_CLI) {
+  // Force override CONVEX_URL with CLI-specific value
   process.env.CONVEX_URL = process.env.CONVEX_URL_CLI;
 }
 
-// Check if CONVEX_URL is already set (e.g., from CI environment or CONVEX_URL_CLI)
-const convexUrlAlreadySet = Boolean(process.env.CONVEX_URL);
+// Check if CONVEX_URL is already set from CONVEX_URL_CLI
+const convexUrlAlreadySet = Boolean(process.env.CONVEX_URL_CLI);
 
 // Only try to load .env files if CONVEX_URL is not already set
 if (!convexUrlAlreadySet) {

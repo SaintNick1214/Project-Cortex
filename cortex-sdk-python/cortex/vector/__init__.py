@@ -350,7 +350,7 @@ class VectorAPI:
                 from ..graph import delete_memory_from_graph
 
                 await delete_memory_from_graph(
-                    memory_id, memory_space_id, self.graph_adapter, True
+                    memory_id, self.graph_adapter, True
                 )
             except Exception as error:
                 print(f"Warning: Failed to delete memory from graph: {error}")
