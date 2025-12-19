@@ -1371,6 +1371,65 @@ export const consolidate = mutation({
 });
 
 /**
+ * Find facts by structural match (subject + predicate + object)
+ * Used for cross-session deduplication
+ */
+export const findByStructure = query({
+  args: {
+    memorySpaceId: v.string(),
+    subject: v.optional(v.string()),
+    predicate: v.optional(v.string()),
+    object: v.optional(v.string()),
+    userId: v.optional(v.string()),
+    factType: v.optional(
+      v.union(
+        v.literal("preference"),
+        v.literal("identity"),
+        v.literal("knowledge"),
+        v.literal("relationship"),
+        v.literal("event"),
+        v.literal("observation"),
+        v.literal("custom"),
+      ),
+    ),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    // Start with memorySpace filter
+    let facts = await ctx.db
+      .query("facts")
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
+      .collect();
+
+    // Filter out superseded facts
+    facts = facts.filter((f) => f.supersededBy === undefined);
+
+    // Apply structural filters
+    if (args.subject !== undefined) {
+      facts = facts.filter((f) => f.subject === args.subject);
+    }
+    if (args.predicate !== undefined) {
+      facts = facts.filter((f) => f.predicate === args.predicate);
+    }
+    if (args.object !== undefined) {
+      facts = facts.filter((f) => f.object === args.object);
+    }
+    if (args.userId !== undefined) {
+      facts = facts.filter((f) => f.userId === args.userId);
+    }
+    if (args.factType !== undefined) {
+      facts = facts.filter((f) => f.factType === args.factType);
+    }
+
+    // Apply limit
+    const limit = args.limit ?? 10;
+    return facts.slice(0, limit);
+  },
+});
+
+/**
  * Delete multiple facts by their IDs (batch delete for cascade operations)
  * Much faster than calling deleteFact multiple times
  * Uses index lookups instead of full table scan to avoid memory issues with large tables

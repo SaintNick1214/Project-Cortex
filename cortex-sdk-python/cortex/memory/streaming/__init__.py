@@ -12,7 +12,7 @@ from .chunking_strategies import (
     should_chunk_content,
 )
 from .error_recovery import ResumableStreamError, StreamErrorRecovery
-from .fact_extractor import ProgressiveFactExtractor
+from .fact_extractor import ProgressiveFactExtractor, ProgressiveFactExtractorConfig
 from .progressive_graph_sync import (
     ProgressiveGraphSync,
     create_progressive_graph_sync,
@@ -36,6 +36,7 @@ __all__ = [
     "create_progressive_graph_sync",
     # Fact extraction
     "ProgressiveFactExtractor",
+    "ProgressiveFactExtractorConfig",
     # Chunking
     "ResponseChunker",
     "estimate_optimal_chunk_size",

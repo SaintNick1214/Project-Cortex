@@ -18,7 +18,26 @@ Add long-term memory to any Vercel AI SDK application with a single import. Buil
 - 🐝 **Hive Mode** - Share memory across multiple agents/applications
 - 📊 **ACID Guarantees** - Never lose data with Convex transactions
 - 🔍 **Semantic Search** - Find relevant memories with embeddings
-- 🧬 **Fact Extraction** - Optional LLM-powered fact extraction for 60-90% storage savings
+- 🧬 **Fact Extraction** - LLM-powered fact extraction for 60-90% storage savings
+- 🕸️ **Graph Memory** - Optional Neo4j/Memgraph integration for relationship queries
+
+## 🚀 Quickstart Demo
+
+The best way to get started is with our interactive quickstart demo:
+
+```bash
+cd packages/vercel-ai-provider/quickstart
+npm install
+npm run dev
+```
+
+See [`quickstart/README.md`](./quickstart/README.md) for full setup instructions.
+
+The quickstart demonstrates:
+- Real-time memory orchestration visualization
+- Data flowing through all Cortex layers (Memory Space → User → Agent → Conversation → Vector → Facts → Graph)
+- Multi-tenant memory space isolation
+- Streaming with progressive fact extraction
 
 ## Quick Start
 
@@ -28,18 +47,15 @@ Add long-term memory to any Vercel AI SDK application with a single import. Buil
 npm install @cortexmemory/vercel-ai-provider @cortexmemory/sdk ai convex
 ```
 
-## What's New in v0.2.0
+### What's New in SDK v0.21.0
 
-The provider now uses the enhanced `rememberStream()` API, unlocking powerful streaming capabilities:
+This provider now supports all SDK v0.21.0 capabilities:
 
-- **Progressive Storage** - Store partial responses during streaming for resumability
-- **Streaming Hooks** - Monitor progress with `onChunk`, `onProgress`, `onComplete` callbacks
-- **Comprehensive Metrics** - Track latency, throughput, token usage, and costs
-- **Progressive Fact Extraction** - Extract facts incrementally during streaming
-- **Error Recovery** - Resume interrupted streams with checkpoints
-- **Adaptive Processing** - Auto-optimize based on stream characteristics
-
-All features are opt-in and fully backward compatible.
+- **agentId Required** (v0.17.0+) - All user-agent conversations now require an `agentId`
+- **Automatic Graph Sync** (v0.19.0+) - Configure via `CORTEX_GRAPH_SYNC=true` env var
+- **Automatic Fact Extraction** (v0.18.0+) - Configure via `CORTEX_FACT_EXTRACTION=true` env var
+- **Enhanced Streaming** - Progressive storage, streaming hooks, and metrics
+- **Parameter Standardization** (v0.21.0) - Unified `memorySpaceId` across all methods
 
 ### Setup
 
@@ -62,13 +78,24 @@ const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: "my-chatbot",
   userId: "user-123", // Get from session/auth in production
+  userName: "User",
+  
+  // REQUIRED in SDK v0.17.0+
+  agentId: "my-assistant",
+  agentName: "My AI Assistant",
+  
+  // Optional: Enable graph memory (auto-configured via env vars)
+  enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === 'true',
+  
+  // Optional: Enable fact extraction (auto-configured via env vars)
+  enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === 'true',
 });
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
 
   const result = await streamText({
-    model: cortexMemory(openai("gpt-5-nano")),
+    model: cortexMemory(openai("gpt-4o-mini")),
     messages,
   });
 
@@ -100,9 +127,30 @@ export default function Chat() {
 
 That's it! Your AI now has **persistent memory** that works across sessions.
 
-## Enhanced Streaming Features (v0.2.0+)
+## ⚠️ Breaking Change: agentId Required
 
-The provider now includes powerful streaming enhancements powered by the `rememberStream()` API.
+Since SDK v0.17.0, all user-agent conversations require an `agentId`. If you're upgrading from an earlier version:
+
+```typescript
+// ❌ Old way (will throw error)
+const cortexMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "my-chatbot",
+  userId: "user-123",
+});
+
+// ✅ New way (v0.17.0+)
+const cortexMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "my-chatbot",
+  userId: "user-123",
+  agentId: "my-assistant", // Required!
+});
+```
+
+## Enhanced Streaming Features
+
+The provider includes powerful streaming enhancements powered by the `rememberStream()` API.
 
 ### Progressive Storage
 
@@ -113,10 +161,13 @@ const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: "demo-chat",
   userId: "user-123",
+  agentId: "my-assistant",
 
   streamingOptions: {
     storePartialResponse: true,
     partialResponseInterval: 3000, // Update every 3 seconds
+    progressiveFactExtraction: true,
+    enableAdaptiveProcessing: true,
   },
 });
 ```
@@ -130,6 +181,7 @@ const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: "demo-chat",
   userId: "user-123",
+  agentId: "my-assistant",
 
   streamingHooks: {
     onChunk: (event) => {
@@ -137,123 +189,35 @@ const cortexMemory = createCortexMemory({
     },
     onProgress: (event) => {
       console.log(`Progress: ${event.bytesProcessed} bytes`);
-      updateProgressBar(event.bytesProcessed);
     },
     onComplete: (event) => {
       console.log(`Completed in ${event.durationMs}ms`);
       console.log(`Facts extracted: ${event.factsExtracted}`);
     },
-    onError: (error) => {
-      console.error("Stream error:", error.message);
-    },
   },
 });
 ```
 
-### Comprehensive Metrics
+### Layer Observation (for Visualization)
 
-Automatic collection of streaming performance metrics:
+Observe memory orchestration for real-time UI visualization:
 
 ```typescript
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: "demo-chat",
   userId: "user-123",
+  agentId: "my-assistant",
 
-  enableStreamMetrics: true, // Default: true
-});
-```
-
-Metrics include:
-
-- First chunk latency
-- Total stream duration
-- Chunks per second
-- Estimated tokens and costs
-- Performance bottlenecks and recommendations
-
-### Progressive Fact Extraction
-
-Extract facts incrementally during streaming instead of waiting for completion:
-
-```typescript
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "demo-chat",
-  userId: "user-123",
-
-  enableFactExtraction: true,
-
-  streamingOptions: {
-    progressiveFactExtraction: true,
-    factExtractionThreshold: 500, // Extract every 500 characters
-  },
-});
-```
-
-### Error Recovery
-
-Handle interrupted streams with resume tokens:
-
-```typescript
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "demo-chat",
-  userId: "user-123",
-
-  streamingOptions: {
-    partialFailureHandling: "store-partial", // or 'rollback', 'retry', 'best-effort'
-    maxRetries: 3,
-    generateResumeToken: true,
-    streamTimeout: 30000, // 30 seconds
-  },
-});
-```
-
-### Complete Example with All Features
-
-```typescript
-import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
-import { openai } from "@ai-sdk/openai";
-import { streamText, embed } from "ai";
-
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "advanced-chat",
-  userId: "user-123",
-
-  // Progressive storage
-  streamingOptions: {
-    storePartialResponse: true,
-    partialResponseInterval: 3000,
-    progressiveFactExtraction: true,
-    progressiveGraphSync: true,
-    enableAdaptiveProcessing: true,
-  },
-
-  // Real-time hooks
-  streamingHooks: {
-    onProgress: (event) => {
-      websocket.send({ type: "progress", data: event });
+  layerObserver: {
+    onLayerUpdate: (event) => {
+      // Update your UI with layer status
+      console.log(`${event.layer}: ${event.status} (${event.latencyMs}ms)`);
     },
-    onComplete: (event) => {
-      console.log(`Stream metrics:`, event);
+    onOrchestrationComplete: (summary) => {
+      console.log(`Total orchestration: ${summary.totalLatencyMs}ms`);
     },
   },
-
-  // Semantic search
-  embeddingProvider: {
-    generate: async (text) => {
-      const { embedding } = await embed({
-        model: openai.embedding("text-embedding-3-small"),
-        value: text,
-      });
-      return embedding;
-    },
-  },
-
-  // Fact extraction
-  enableFactExtraction: true,
 });
 ```
 
@@ -266,46 +230,34 @@ Every time your AI generates a response:
 1. **🔍 Search** - Cortex searches past conversations for relevant context
 2. **💉 Inject** - Relevant memories are injected into the prompt
 3. **🤖 Generate** - LLM generates response with full context
-4. **💾 Store** - Conversation is automatically stored for future reference
+4. **💾 Store** - Conversation is automatically stored across multiple layers:
+   - **Conversation** - ACID-safe message storage
+   - **Vector** - Semantic embeddings for similarity search
+   - **Facts** - Extracted structured information
+   - **Graph** - Entity relationships (if configured)
 
 ```
-User: "Hi, my name is Alice"
+User: "Hi, my name is Alice and I work at Acme Corp"
 Agent: "Nice to meet you, Alice!"
                 ↓
-        [Stored in Cortex]
+        [Cortex Memory Orchestration]
                 ↓
-[Refresh page / New session]
+    ┌──────────────────────────────┐
+    │ Conversation: Messages saved │
+    │ Vector: Embeddings stored    │
+    │ Facts: Name=Alice, Job=Acme  │
+    │ Graph: Alice→WORKS_AT→Acme   │
+    └──────────────────────────────┘
+                ↓
+[Later: New session]
                 ↓
 User: "What's my name?"
                 ↓
     [Cortex searches memories]
                 ↓
-    [Finds: "my name is Alice"]
-                ↓
-    [Injects context into prompt]
+    [Finds: "name is Alice"]
                 ↓
 Agent: "Your name is Alice!"
-```
-
-### What's Happening Behind the Scenes
-
-```typescript
-// When you call streamText with cortexMemory:
-const result = await streamText({
-  model: cortexMemory(openai("gpt-5-nano")),
-  messages: [{ role: "user", content: "What did I tell you earlier?" }],
-});
-
-// Cortex automatically:
-// 1. Searches memories: "What did I tell you earlier?"
-// 2. Finds relevant memories from past conversations
-// 3. Injects them into the system prompt:
-//    "Relevant context from past conversations:
-//     1. User said their name is Alice
-//     2. User prefers dark mode
-//     ..."
-// 4. Calls OpenAI with augmented prompt
-// 5. Stores new conversation turn for future reference
 ```
 
 ## Configuration
@@ -318,38 +270,34 @@ const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: "my-agent",
   userId: "user-123",
+  agentId: "my-assistant", // Required in v0.17.0+
 
   // Optional
   userName: "Alice",
+  agentName: "My AI Assistant",
   conversationId: () => generateConversationId(),
 });
 ```
 
-### With Embeddings
+### With Graph Memory
 
 ```typescript
-import { embed } from "ai";
-import { openai } from "@ai-sdk/openai";
-
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "my-agent",
+  memorySpaceId: "smart-agent",
   userId: "user-123",
+  agentId: "my-assistant",
 
-  // Enable semantic search with embeddings
-  embeddingProvider: {
-    generate: async (text) => {
-      const { embedding } = await embed({
-        model: openai.embedding("text-embedding-3-small"),
-        value: text,
-      });
-      return embedding;
-    },
+  // Enable graph memory (uses env vars: NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD)
+  enableGraphMemory: true,
+
+  // Or with explicit configuration
+  graphConfig: {
+    uri: "bolt://localhost:7687",
+    username: "neo4j",
+    password: "your-password",
+    type: "neo4j", // or "memgraph"
   },
-
-  // Fine-tune memory retrieval
-  memorySearchLimit: 10,
-  minMemoryRelevance: 0.75,
 });
 ```
 
@@ -360,32 +308,17 @@ const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: "smart-agent",
   userId: "user-123",
+  agentId: "my-assistant",
 
   // Enable automatic fact extraction
   enableFactExtraction: true,
-  extractFacts: async (userMsg, agentResp) => {
-    // Use LLM to extract structured facts
-    const facts = await extractFactsWithLLM(userMsg + " " + agentResp);
-    return facts;
+
+  // Or with custom configuration
+  factExtractionConfig: {
+    model: "gpt-4o-mini",
+    provider: "openai",
   },
 });
-```
-
-### With Hive Mode (Cross-Application Memory)
-
-```typescript
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "shared-workspace", // Shared across apps
-  userId: "user-123",
-
-  hiveMode: {
-    participantId: "web-assistant", // Track which agent/tool
-  },
-});
-
-// Now this agent's memories are visible to other agents
-// in the same memory space (e.g., Cursor MCP, Claude Desktop)
 ```
 
 ## API Reference
@@ -396,39 +329,37 @@ Creates a memory-augmented model factory.
 
 **Parameters:**
 
-| Parameter                  | Type                   | Required | Description                                      |
-| -------------------------- | ---------------------- | -------- | ------------------------------------------------ |
-| `convexUrl`                | string                 | ✅       | Convex deployment URL                            |
-| `memorySpaceId`            | string                 | ✅       | Memory space for isolation                       |
-| `userId`                   | string \| () => string | ✅       | User ID (static or function)                     |
-| `userName`                 | string                 | ❌       | User name (default: 'User')                      |
-| `conversationId`           | string \| () => string | ❌       | Conversation ID (auto-generated if not provided) |
-| `embeddingProvider`        | object                 | ❌       | Custom embedding provider                        |
-| `memorySearchLimit`        | number                 | ❌       | Max memories to retrieve (default: 5)            |
-| `minMemoryRelevance`       | number                 | ❌       | Min score 0-1 (default: 0.7)                     |
-| `contextInjectionStrategy` | 'system' \| 'user'     | ❌       | Where to inject context (default: 'system')      |
-| `enableFactExtraction`     | boolean                | ❌       | Enable fact extraction (default: false)          |
-| `enableGraphMemory`        | boolean                | ❌       | Sync to graph DB (default: false)                |
-| `hiveMode`                 | object                 | ❌       | Enable cross-app memory                          |
-| `defaultImportance`        | number                 | ❌       | Default importance 0-100 (default: 50)           |
-| `debug`                    | boolean                | ❌       | Enable debug logging (default: false)            |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `convexUrl` | string | ✅ | Convex deployment URL |
+| `memorySpaceId` | string | ✅ | Memory space for isolation |
+| `userId` | string \| () => string | ✅ | User ID (static or function) |
+| `agentId` | string | ✅ | Agent ID (required in v0.17.0+) |
+| `userName` | string | ❌ | User name (default: 'User') |
+| `agentName` | string | ❌ | Agent name (default: agentId) |
+| `enableGraphMemory` | boolean | ❌ | Sync to graph DB (default: false) |
+| `enableFactExtraction` | boolean | ❌ | Enable fact extraction (default: false) |
+| `graphConfig` | object | ❌ | Graph database configuration |
+| `factExtractionConfig` | object | ❌ | Fact extraction configuration |
+| `streamingOptions` | object | ❌ | Streaming enhancement options |
+| `streamingHooks` | object | ❌ | Real-time streaming callbacks |
+| `layerObserver` | object | ❌ | Layer orchestration observer |
+| `debug` | boolean | ❌ | Enable debug logging (default: false) |
 
 **Returns:** `CortexMemoryModel` - Function to wrap models + manual memory methods
 
-### Model Wrapping
+### createCortexMemoryAsync(config)
+
+Async version for automatic graph configuration from environment variables.
 
 ```typescript
-const cortexMemory = createCortexMemory({
-  /* config */
+// Reads graph config from NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
+const cortexMemory = await createCortexMemoryAsync({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "smart-agent",
+  userId: "user-123",
+  agentId: "my-assistant",
 });
-
-// Wrap any Vercel AI SDK provider
-const model1 = cortexMemory(openai("gpt-5-nano"));
-const model2 = cortexMemory(anthropic("claude-3-opus"));
-const model3 = cortexMemory(google("gemini-pro"));
-
-// Use with streamText, generateText, generateObject, etc.
-const result = await streamText({ model: model1, messages });
 ```
 
 ### Manual Memory Control
@@ -457,163 +388,15 @@ await cortexMemory.clearMemories({ confirm: true });
 const config = cortexMemory.getConfig();
 ```
 
-## Examples
-
-### Basic Chat
-
-See [`examples/next-chat`](./examples/next-chat) - Simple chat with memory (5 files, ~200 lines)
-
-### RAG Pattern
-
-See [`examples/next-rag`](./examples/next-rag) - Document search + conversation memory
-
-### Multi-Modal
-
-See [`examples/next-multimodal`](./examples/next-multimodal) - Images + text with memory
-
-### Hive Mode
-
-See [`examples/hive-mode`](./examples/hive-mode) - Cross-application memory sharing
-
-### Multi-Tenant
-
-See [`examples/memory-spaces`](./examples/memory-spaces) - SaaS with tenant isolation
-
-## Comparison with mem0
-
-| Feature               | Cortex                  | mem0                             |
-| --------------------- | ----------------------- | -------------------------------- |
-| **Hosting**           | ✅ Self-hosted (Convex) | ❌ Cloud only (API key required) |
-| **TypeScript**        | ✅ Native               | ⚠️ Ported from Python            |
-| **Edge Runtime**      | ✅ Full support         | ❌ Limited                       |
-| **Memory Spaces**     | ✅ Built-in             | ❌ Not available                 |
-| **ACID Guarantees**   | ✅ Full (Convex)        | ❌ Eventual consistency          |
-| **Real-time Updates** | ✅ Reactive queries     | ❌ Polling/webhooks              |
-| **Hive Mode**         | ✅ Cross-app sharing    | ❌ Not available                 |
-| **Versioning**        | ✅ 10 versions auto     | ❌ No versioning                 |
-| **Cost**              | 💰 Convex pricing       | 💰 mem0 API + LLM                |
-| **Data Sovereignty**  | ✅ Your infrastructure  | ❌ mem0 cloud                    |
-
-### Migration from mem0
-
-**Before (mem0):**
-
-```typescript
-import { createMem0 } from "@mem0/vercel-ai-provider";
-
-const mem0 = createMem0({
-  provider: "openai",
-  mem0ApiKey: process.env.MEM0_API_KEY!,
-  config: { apiKey: process.env.OPENAI_API_KEY! },
-  mem0Config: { user_id: "user-123" },
-});
-
-const result = await streamText({
-  model: mem0("gpt-5-nano"),
-  messages,
-});
-```
-
-**After (Cortex):**
-
-```typescript
-import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
-import { openai } from "@ai-sdk/openai";
-
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!, // Self-hosted, no API key
-  memorySpaceId: "my-chatbot",
-  userId: "user-123",
-});
-
-const result = await streamText({
-  model: cortexMemory(openai("gpt-5-nano")),
-  messages,
-});
-```
-
-**Benefits of switching:**
-
-- ✅ No mem0 API key needed (one less dependency)
-- ✅ Self-hosted (full control over data)
-- ✅ Memory Spaces (better isolation)
-- ✅ Real-time updates (Convex reactive queries)
-- ✅ ACID guarantees (no data loss)
-- ✅ Versioning (track changes over time)
-
-## Advanced Usage
-
-### Custom Context Injection
-
-```typescript
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "custom-agent",
-  userId: "user-123",
-
-  // Custom context builder
-  customContextBuilder: (memories) => {
-    const important = memories.filter(
-      (m) =>
-        ("metadata" in m
-          ? m.metadata?.importance
-          : m.memory?.metadata?.importance) > 70,
-    );
-    return `Critical information:\n${important
-      .map((m) => ("content" in m ? m.content : m.memory?.content))
-      .join("\n")}`;
-  },
-});
-```
-
-### Dynamic User Resolution
-
-```typescript
-import { auth } from "@clerk/nextjs";
-
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "saas-app",
-
-  // Resolve from auth system
-  userId: async () => {
-    const { userId } = await auth();
-    if (!userId) throw new Error("Unauthorized");
-    return userId;
-  },
-});
-```
-
-### Per-Request Memory Spaces
-
-```typescript
-export async function POST(req: Request) {
-  const { teamId } = await req.json();
-
-  // Create memory provider per request
-  const teamMemory = createCortexMemory({
-    convexUrl: process.env.CONVEX_URL!,
-    memorySpaceId: `team-${teamId}`, // Isolated per team
-    userId: currentUser.id,
-  });
-
-  const result = await streamText({
-    model: teamMemory(openai("gpt-5-nano")),
-    messages,
-  });
-
-  return result.toDataStreamResponse();
-}
-```
-
 ## Documentation
 
+- [Quickstart Demo](./quickstart/README.md) - Interactive demo with visualization
 - [Getting Started](../../Documentation/08-integrations/vercel-ai-sdk/getting-started.md) - Step-by-step tutorial
 - [API Reference](../../Documentation/08-integrations/vercel-ai-sdk/api-reference.md) - Complete API documentation
 - [Advanced Usage](../../Documentation/08-integrations/vercel-ai-sdk/advanced-usage.md) - Custom configurations
 - [Memory Spaces](../../Documentation/08-integrations/vercel-ai-sdk/memory-spaces.md) - Multi-tenancy guide
 - [Hive Mode](../../Documentation/08-integrations/vercel-ai-sdk/hive-mode.md) - Cross-application memory
-- [Migration from mem0](../../Documentation/08-integrations/vercel-ai-sdk/migration-from-mem0.md) - Switching guide
+- [Troubleshooting](../../Documentation/08-integrations/vercel-ai-sdk/troubleshooting.md) - Common issues
 
 ## FAQ
 
@@ -637,7 +420,7 @@ export const runtime = "edge";
 
 export async function POST(req: Request) {
   const result = await streamText({
-    model: cortexMemory(openai("gpt-5-nano")),
+    model: cortexMemory(openai("gpt-4o-mini")),
     messages,
   });
 
@@ -645,78 +428,27 @@ export async function POST(req: Request) {
 }
 ```
 
-**Q: Do I need to manually buffer streams?**
-A: No! Cortex v0.9.0+ handles streaming automatically:
+**Q: Why do I need agentId now?**
+A: Since SDK v0.17.0, Cortex properly tracks conversation participants. Every conversation needs both a user and an agent to enable features like agent-to-agent memory sharing and proper attribution.
 
-```typescript
-// Cortex buffers the stream internally and stores after completion
-const result = await streamText({
-  model: cortexMemory(openai("gpt-5-nano")),
-  messages,
-});
+## Troubleshooting
 
-// No manual buffering needed
-```
+### "agentId is required"
 
-**Q: How much does it cost?**
-A: Cortex uses Convex for storage:
-
-- **Free tier**: 1GB storage, perfect for development
-- **Pro**: $25/month for production apps
-- **No per-request fees** - Unlike mem0, you only pay for storage
-
-**Q: Can I disable automatic memory for specific requests?**
-A: Yes! Configure per instance:
-
-```typescript
-const noMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "temp-space",
-  userId: "user-123",
-  enableMemorySearch: false,
-  enableMemoryStorage: false,
-});
-```
-
-**Q: How do I handle multiple users?**
-A: Use dynamic user resolution:
+Add `agentId` to your configuration:
 
 ```typescript
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "multi-user-chat",
-  userId: () => req.user.id, // Resolved per request
-});
-```
-
-**Q: Can I use this with LangChain?**
-A: Not directly (LangChain has different interfaces), but Cortex SDK works standalone:
-
-```typescript
-import { Cortex } from "@cortexmemory/sdk";
-
-const cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
-
-// Search memories
-const memories = await cortex.memory.search("user preferences");
-
-// Store LangChain conversations
-await cortex.memory.remember({
-  memorySpaceId: "langchain-agent",
-  conversationId: "conv-123",
-  userMessage: input,
-  agentResponse: output,
+  memorySpaceId: "my-chatbot",
   userId: "user-123",
-  userName: "User",
+  agentId: "my-assistant", // Add this!
 });
 ```
-
-## Troubleshooting
 
 ### "Failed to connect to Convex"
 
 Make sure:
-
 1. Convex is running: `npx convex dev`
 2. `CONVEX_URL` is set correctly
 3. Cortex backend is deployed to Convex
@@ -724,18 +456,9 @@ Make sure:
 ### "Memory search returns no results"
 
 This is expected if:
-
 - No prior conversations stored
 - Using keyword search without embeddings (set up `embeddingProvider`)
 - Running on local Convex (vector search not supported locally)
-
-### "Type errors with LanguageModelV1"
-
-Make sure you're using compatible versions:
-
-- `ai`: ^3.0.0
-- `@cortexmemory/sdk`: ^0.9.0
-- `@cortexmemory/vercel-ai-provider`: ^0.1.0
 
 For more troubleshooting help, see [Troubleshooting Guide](../../Documentation/08-integrations/vercel-ai-sdk/troubleshooting.md).
 
@@ -747,17 +470,12 @@ We welcome contributions! Please see [CONTRIBUTING.md](../../CONTRIBUTING.md).
 
 Apache 2.0 - See [LICENSE.md](./LICENSE.md)
 
-## Complete Documentation
-
-- [Cortex Documentation](../../Documentation/00-README.md) - Full Cortex documentation
-- [Vercel AI SDK Integration](../../Documentation/08-integrations/vercel-ai-sdk/) - All integration docs
-
 ## Links
 
 - [GitHub](https://github.com/SaintNick1214/Project-Cortex)
-- [Documentation](https://github.com/SaintNick1214/Project-Cortex/tree/main/Documentation)
+- [Documentation](https://cortexmemory.dev/docs)
 - [Cortex SDK](https://www.npmjs.com/package/@cortexmemory/sdk)
-- [Examples](./examples)
+- [Quickstart Demo](./quickstart)
 
 ---
 

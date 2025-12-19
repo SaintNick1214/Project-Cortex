@@ -3,11 +3,18 @@
  *
  * Extracts facts incrementally during streaming with deduplication
  * to avoid storing redundant information as content accumulates.
+ *
+ * Now supports cross-session deduplication via DeduplicationConfig.
  */
 
 import type { FactRecord } from "../../types";
 import type { ProgressiveFact } from "../../types/streaming";
 import type { FactsAPI } from "../../facts";
+import {
+  FactDeduplicationService,
+  type DeduplicationConfig,
+  type DeduplicationStrategy,
+} from "../../facts/deduplication";
 
 type FactType =
   | "preference"
@@ -19,6 +26,29 @@ type FactType =
   | "custom";
 
 /**
+ * Configuration for ProgressiveFactExtractor
+ */
+export interface ProgressiveFactExtractorConfig {
+  /**
+   * Deduplication configuration for cross-session fact deduplication.
+   *
+   * - 'semantic': Embedding-based similarity (most accurate, requires generateEmbedding)
+   * - 'structural': Subject + predicate + object match (fast, good accuracy)
+   * - 'exact': Normalized text match (fastest, lowest accuracy)
+   * - 'none' or false: In-memory only deduplication (previous behavior)
+   *
+   * @default 'structural' for streaming (balance of speed and accuracy)
+   */
+  deduplication?: DeduplicationConfig | DeduplicationStrategy | false;
+
+  /**
+   * Character threshold for triggering extraction during streaming.
+   * @default 500
+   */
+  extractionThreshold?: number;
+}
+
+/**
  * Extracts facts progressively during streaming
  */
 export class ProgressiveFactExtractor {
@@ -27,6 +57,7 @@ export class ProgressiveFactExtractor {
   private readonly memorySpaceId: string;
   private readonly userId: string;
   private readonly participantId?: string;
+  private readonly deduplicationConfig?: DeduplicationConfig;
 
   private extractedFacts: Map<string, FactRecord> = new Map();
   private lastExtractionPoint: number = 0;
@@ -37,13 +68,21 @@ export class ProgressiveFactExtractor {
     memorySpaceId: string,
     userId: string,
     participantId?: string,
-    extractionThreshold: number = 500, // Extract every 500 chars
+    config?: ProgressiveFactExtractorConfig,
   ) {
     this.factsAPI = factsAPI;
     this.memorySpaceId = memorySpaceId;
     this.userId = userId;
     this.participantId = participantId;
-    this.extractionThreshold = extractionThreshold;
+    this.extractionThreshold = config?.extractionThreshold ?? 500;
+
+    // Resolve deduplication config
+    // Default to 'structural' for streaming (faster than semantic, still effective)
+    if (config?.deduplication !== false) {
+      this.deduplicationConfig = FactDeduplicationService.resolveConfig(
+        config?.deduplication ?? "structural",
+      );
+    }
   }
 
   /**
@@ -111,32 +150,45 @@ export class ProgressiveFactExtractor {
           continue;
         }
 
-        // Store new fact
+        // Store new fact with cross-session deduplication
         try {
-          const storedFact = await this.factsAPI.store(
-            {
-              memorySpaceId: this.memorySpaceId,
-              participantId: this.participantId,
-              userId: this.userId,
-              fact: factData.fact,
-              factType: factData.factType as FactType,
-              subject: factData.subject || this.userId,
-              predicate: factData.predicate,
-              object: factData.object,
-              confidence: factData.confidence,
-              sourceType: "conversation",
-              sourceRef: {
-                conversationId,
-                messageIds: [],
-              },
-              tags: [
-                ...(factData.tags || []),
-                "progressive",
-                `chunk-${chunkNumber}`,
-              ],
+          const storeParams = {
+            memorySpaceId: this.memorySpaceId,
+            participantId: this.participantId,
+            userId: this.userId,
+            fact: factData.fact,
+            factType: factData.factType as FactType,
+            subject: factData.subject || this.userId,
+            predicate: factData.predicate,
+            object: factData.object,
+            confidence: factData.confidence,
+            sourceType: "conversation" as const,
+            sourceRef: {
+              conversationId,
+              messageIds: [],
             },
-            { syncToGraph },
-          );
+            tags: [
+              ...(factData.tags || []),
+              "progressive",
+              `chunk-${chunkNumber}`,
+            ],
+          };
+
+          let storedFact: FactRecord;
+          let wasDeduped = false;
+
+          // Use storeWithDedup if deduplication is configured
+          if (this.deduplicationConfig) {
+            const result = await this.factsAPI.storeWithDedup(storeParams, {
+              syncToGraph,
+              deduplication: this.deduplicationConfig,
+            });
+            storedFact = result.fact;
+            wasDeduped = result.deduplication?.matchedExisting ?? false;
+          } else {
+            // Fallback to regular store (in-memory only dedup)
+            storedFact = await this.factsAPI.store(storeParams, { syncToGraph });
+          }
 
           // Track this fact
           this.extractedFacts.set(factKey, storedFact);
@@ -147,7 +199,7 @@ export class ProgressiveFactExtractor {
             extractedAtChunk: chunkNumber,
             confidence: factData.confidence,
             fact: factData.fact,
-            deduped: false,
+            deduped: wasDeduped,
           });
         } catch (error) {
           console.warn("Failed to store progressive fact:", error);
@@ -202,30 +254,40 @@ export class ProgressiveFactExtractor {
       // Deduplicate against progressive facts
       const uniqueFinalFacts = await this.deduplicateFacts(finalFactsToStore);
 
-      // Store any new facts found in final extraction
+      // Store any new facts found in final extraction with cross-session deduplication
       for (const factData of uniqueFinalFacts) {
         try {
-          const storedFact = await this.factsAPI.store(
-            {
-              memorySpaceId: this.memorySpaceId,
-              participantId: this.participantId,
-              userId: this.userId,
-              fact: factData.fact,
-              factType: factData.factType as FactType,
-              subject: factData.subject || this.userId,
-              predicate: factData.predicate,
-              object: factData.object,
-              confidence: factData.confidence,
-              sourceType: "conversation",
-              sourceRef: {
-                conversationId,
-                messageIds,
-                memoryId,
-              },
-              tags: factData.tags || [],
+          const storeParams = {
+            memorySpaceId: this.memorySpaceId,
+            participantId: this.participantId,
+            userId: this.userId,
+            fact: factData.fact,
+            factType: factData.factType as FactType,
+            subject: factData.subject || this.userId,
+            predicate: factData.predicate,
+            object: factData.object,
+            confidence: factData.confidence,
+            sourceType: "conversation" as const,
+            sourceRef: {
+              conversationId,
+              messageIds,
+              memoryId,
             },
-            { syncToGraph },
-          );
+            tags: factData.tags || [],
+          };
+
+          let storedFact: FactRecord;
+
+          // Use storeWithDedup if deduplication is configured
+          if (this.deduplicationConfig) {
+            const result = await this.factsAPI.storeWithDedup(storeParams, {
+              syncToGraph,
+              deduplication: this.deduplicationConfig,
+            });
+            storedFact = result.fact;
+          } else {
+            storedFact = await this.factsAPI.store(storeParams, { syncToGraph });
+          }
 
           const factKey = this.generateFactKey(factData.fact, factData.subject);
           this.extractedFacts.set(factKey, storedFact);
