@@ -74,7 +74,7 @@ describe("ProgressiveFactExtractor", () => {
       "test-space",
       "test-user",
       "test-participant",
-      500, // extraction threshold
+      { extractionThreshold: 500 },
     );
   });
 
@@ -96,7 +96,7 @@ describe("ProgressiveFactExtractor", () => {
         "test-space",
         "test-user",
         undefined,
-        200, // custom threshold
+        { extractionThreshold: 200 },
       );
       expect(customExtractor.shouldExtract(200)).toBe(true);
       expect(customExtractor.shouldExtract(199)).toBe(false);

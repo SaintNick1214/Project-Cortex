@@ -9,6 +9,14 @@
   - Now clears inherited Convex environment variables before spawning child processes, ensuring the correct project's `.env.local` is used
   - Affected commands: `deploy`, `dev`, `logs`, `dashboard`, `init`, `env`
 
+### Changed
+
+- `cortex db clear` now uses batch operations instead of iterating one-by-one
+  - Agents: Uses `agents.unregisterMany()` (single backend mutation)
+  - Contexts, conversations, memorySpaces, immutable: Direct table clear (SDK batch methods require filters)
+  - Users: Removed redundant loop (users are virtual - data cleared via underlying tables)
+  - Significantly faster when clearing large datasets
+
 ## [0.22.0] - 2025-12-16
 
 ### Added

@@ -6,10 +6,12 @@
 
 import { Cortex } from "@cortexmemory/sdk";
 import type { MemoryEntry } from "@cortexmemory/sdk";
-import type { CortexMemoryConfig, Logger } from "./types";
+import type { CortexMemoryConfig, Logger, LayerEvent, MemoryLayer, OrchestrationSummary } from "./types";
 import {
   resolveUserId,
   resolveConversationId,
+  resolveAgentId,
+  resolveAgentName,
   injectMemoryContext,
   getLastUserMessage,
 } from "./middleware";
@@ -31,6 +33,8 @@ export class CortexMemoryProvider {
   private config: CortexMemoryConfig;
   private logger: Logger;
   private underlyingModel: any;
+  private agentId: string;
+  private agentName: string;
 
   constructor(underlyingModel: any, config: CortexMemoryConfig) {
     this.underlyingModel = underlyingModel;
@@ -42,11 +46,15 @@ export class CortexMemoryProvider {
     this.defaultObjectGenerationMode =
       underlyingModel.defaultObjectGenerationMode;
 
+    // Resolve agent identity (required for user-agent conversations)
+    this.agentId = resolveAgentId(config);
+    this.agentName = resolveAgentName(config);
+
     // Initialize Cortex SDK
     this.cortex = new Cortex({ convexUrl: config.convexUrl });
 
     this.logger.debug(
-      `Initialized CortexMemoryProvider for model: ${this.modelId}`,
+      `Initialized CortexMemoryProvider for model: ${this.modelId}, agent: ${this.agentId}`,
     );
   }
 
@@ -95,6 +103,10 @@ export class CortexMemoryProvider {
     if (this.config.enableMemoryStorage !== false) {
       const lastUserMessage = getLastUserMessage(options.prompt);
       if (lastUserMessage && result.text) {
+        // Notify layer observer of orchestration start
+        const orchestrationId = `orch-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+        this.notifyLayerObserver("memorySpace", "pending", orchestrationId);
+
         // Use remember() for non-streaming responses
         this.cortex.memory
           .remember(
@@ -105,6 +117,7 @@ export class CortexMemoryProvider {
               agentResponse: result.text,
               userId,
               userName: this.config.userName || "User",
+              agentId: this.agentId, // Required for user-agent conversations (SDK v0.17.0+)
               participantId: this.config.hiveMode?.participantId,
               generateEmbedding: this.config.embeddingProvider?.generate,
               extractFacts: this.config.enableFactExtraction
@@ -117,8 +130,20 @@ export class CortexMemoryProvider {
               syncToGraph: this.config.enableGraphMemory || false,
             },
           )
+          .then(() => {
+            // Notify layer observer of completion
+            this.notifyLayerObserver("conversation", "complete", orchestrationId);
+            this.notifyLayerObserver("vector", "complete", orchestrationId);
+            if (this.config.enableFactExtraction) {
+              this.notifyLayerObserver("facts", "complete", orchestrationId);
+            }
+            if (this.config.enableGraphMemory) {
+              this.notifyLayerObserver("graph", "complete", orchestrationId);
+            }
+          })
           .catch((error: Error) => {
             this.logger.error("Failed to store memory:", error);
+            this.notifyLayerObserver("conversation", "error", orchestrationId, undefined, error.message);
           });
       }
     }
@@ -285,6 +310,7 @@ export class CortexMemoryProvider {
               responseStream: textStream(),
               userId,
               userName: this.config.userName || "User",
+              agentId: this.config.agentId, // Required for user-agent conversations (SDK v0.17.0+)
               participantId: this.config.hiveMode?.participantId,
               generateEmbedding: this.config.embeddingProvider?.generate,
               extractFacts: this.config.enableFactExtraction
@@ -336,6 +362,38 @@ export class CortexMemoryProvider {
    */
   getConfig(): Readonly<CortexMemoryConfig> {
     return Object.freeze({ ...this.config });
+  }
+
+  /**
+   * Notify layer observer of status changes
+   *
+   * Used by the quickstart demo to visualize data flowing
+   * through the Cortex memory system in real-time.
+   */
+  private notifyLayerObserver(
+    layer: MemoryLayer,
+    status: "pending" | "in_progress" | "complete" | "error" | "skipped",
+    orchestrationId: string,
+    data?: { id?: string; preview?: string; metadata?: Record<string, unknown> },
+    errorMessage?: string,
+  ): void {
+    if (!this.config.layerObserver?.onLayerUpdate) {
+      return;
+    }
+
+    const event: LayerEvent = {
+      layer,
+      status,
+      timestamp: Date.now(),
+      data,
+      error: errorMessage ? { message: errorMessage } : undefined,
+    };
+
+    try {
+      this.config.layerObserver.onLayerUpdate(event);
+    } catch (e) {
+      this.logger.warn("Layer observer callback failed:", e);
+    }
   }
 
   /**
