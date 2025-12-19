@@ -706,49 +706,34 @@ class UsersAPI:
         # Solution: Collect memory space IDs from conversations (those ARE collected)
 
         # Get memory space IDs from user's conversations
+        # This is an optimization: only check spaces where user has data, not ALL spaces
         memory_space_ids_to_check = set()
         for conv in plan["conversations"]:
             space_id = conv.get("memorySpaceId")
             if space_id:
                 memory_space_ids_to_check.add(space_id)
 
-        # Also add any registered spaces
-        spaces_list: List[Any] = []
-        try:
-            all_spaces = await self._execute_with_resilience(
-                lambda: self.client.query("memorySpaces:list", filter_none_values({"limit": 10000})),
-                "memorySpaces:list",
-            )
-            spaces_list = all_spaces if isinstance(all_spaces, list) else all_spaces.get("spaces", [])
-            for space in spaces_list:
-                space_id = space.get("memorySpaceId")
-                if space_id:
-                    memory_space_ids_to_check.add(space_id)
-        except:
-            pass
-
         # Store space IDs for deletion phase
         plan["vector"] = list(memory_space_ids_to_check)
 
-        # Collect facts (query by userId across all memory spaces)
+        # Collect facts (query only user's memory spaces, not ALL spaces)
+        # This is an optimization to avoid O(n) queries where n = total spaces in DB
         all_facts = []
-        for space in spaces_list:
-            space_id = space.get("memorySpaceId")
-            if space_id:
-                try:
-                    facts = await self._execute_with_resilience(
-                        lambda sid=space_id: self.client.query(
-                            "facts:list",
-                            filter_none_values({"memorySpaceId": sid, "limit": 10000})
-                        ),
+        for space_id in memory_space_ids_to_check:
+            try:
+                facts = await self._execute_with_resilience(
+                    lambda sid=space_id: self.client.query(
                         "facts:list",
-                    )
-                    fact_list = facts if isinstance(facts, list) else facts.get("facts", [])
-                    # Filter for this user
-                    user_facts = [f for f in fact_list if f.get("userId") == user_id or f.get("sourceUserId") == user_id]
-                    all_facts.extend(user_facts)
-                except:
-                    pass  # Space might not have facts
+                        filter_none_values({"memorySpaceId": sid, "limit": 10000})
+                    ),
+                    "facts:list",
+                )
+                fact_list = facts if isinstance(facts, list) else facts.get("facts", [])
+                # Filter for this user
+                user_facts = [f for f in fact_list if f.get("userId") == user_id or f.get("sourceUserId") == user_id]
+                all_facts.extend(user_facts)
+            except:
+                pass  # Space might not have facts
         plan["facts"] = all_facts
 
         return plan
