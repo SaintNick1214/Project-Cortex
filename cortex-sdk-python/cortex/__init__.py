@@ -41,6 +41,15 @@ from .errors import (
     is_cascade_deletion_error,
     is_cortex_error,
 )
+from .facts import (
+    DeduplicationConfig,
+    DeduplicationStrategy,
+    DuplicateResult,
+    FactCandidate,
+    FactDeduplicationService,
+    StoreFactWithDedupOptions,
+    StoreWithDedupResult,
+)
 from .facts.validators import FactsValidationError
 from .governance.validators import GovernanceValidationError
 from .immutable.validators import ImmutableValidationError
@@ -273,7 +282,7 @@ except ImportError:
     GraphSyncWorker = None  # type: ignore
 
 
-__version__ = "0.21.0"
+__version__ = "0.22.0"
 
 __all__ = [
     # Main
@@ -348,6 +357,14 @@ __all__ = [
     "QueryByRelationshipFilter",
     "QueryBySubjectFilter",
     "SearchFactsOptions",
+    # Layer 3 - Deduplication
+    "DeduplicationConfig",
+    "DeduplicationStrategy",
+    "DuplicateResult",
+    "FactCandidate",
+    "FactDeduplicationService",
+    "StoreFactWithDedupOptions",
+    "StoreWithDedupResult",
     # Layer 4 Types
     "RememberParams",
     "RememberResult",

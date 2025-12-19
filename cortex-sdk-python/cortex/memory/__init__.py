@@ -10,7 +10,12 @@ from typing import Any, Dict, List, Literal, Optional, Tuple, Union, cast
 
 from ..conversations import ConversationsAPI
 from ..errors import CortexError, ErrorCode
-from ..facts import FactsAPI
+from ..facts import FactsAPI, StoreFactWithDedupOptions
+from ..facts.deduplication import (
+    DeduplicationConfig,
+    DeduplicationStrategy,
+    FactDeduplicationService,
+)
 from ..llm import ExtractedFact, LLMClient, create_llm_client
 from ..types import (
     ArchiveResult,
@@ -169,6 +174,56 @@ class MemoryAPI:
             return self._create_llm_fact_extractor
 
         return None
+
+    def _build_deduplication_config(
+        self, params: RememberParams
+    ) -> Optional[DeduplicationConfig]:
+        """
+        Build deduplication config from RememberParams.
+
+        Default behavior:
+        - Uses 'semantic' deduplication if generate_embedding is available
+        - Falls back to 'structural' if no embedding function
+        - Returns None if deduplication is explicitly disabled
+
+        Args:
+            params: Remember parameters
+
+        Returns:
+            Deduplication configuration or None if disabled
+        """
+        # Check if deduplication is explicitly disabled
+        fact_dedup = getattr(params, "fact_deduplication", None)
+        if fact_dedup is False:
+            return None
+
+        # Get embedding function from params or LLM config
+        generate_embedding = params.generate_embedding
+        if not generate_embedding and self._llm_config:
+            # Try to get embedding function from LLM config
+            generate_embedding = getattr(self._llm_config, "generate_embedding", None)
+
+        # Build config based on what's provided
+        if fact_dedup is not None and fact_dedup is not True:
+            # User provided explicit config or strategy
+            if isinstance(fact_dedup, str):
+                # Strategy shorthand
+                return FactDeduplicationService.resolve_config(
+                    fact_dedup,  # type: ignore
+                    generate_embedding,
+                )
+            elif isinstance(fact_dedup, DeduplicationConfig):
+                # Full config - add fallback embedding if needed
+                if fact_dedup.generate_embedding is None and generate_embedding:
+                    return DeduplicationConfig(
+                        strategy=fact_dedup.strategy,
+                        similarity_threshold=fact_dedup.similarity_threshold,
+                        generate_embedding=generate_embedding,
+                    )
+                return fact_dedup
+
+        # Default: semantic with fallback to structural
+        return FactDeduplicationService.resolve_config("semantic", generate_embedding)
 
     async def _ensure_user_exists(self, user_id: str, user_name: Optional[str]) -> None:
         """
@@ -514,7 +569,7 @@ class MemoryAPI:
                 stored_memories.append(agent_memory)
 
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        # STEP 5: FACTS (skip: 'facts')
+        # STEP 5: FACTS (skip: 'facts') - with cross-session deduplication
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         extracted_facts = []
 
@@ -530,38 +585,54 @@ class MemoryAPI:
                     if facts_to_store:
                         from ..types import (
                             FactSourceRef,
-                            StoreFactOptions,
                             StoreFactParams,
                         )
 
+                        # Build deduplication config (defaults to semantic with structural fallback)
+                        dedup_config = self._build_deduplication_config(params)
+
                         for fact_data in facts_to_store:
                             try:
-                                stored_fact = await self.facts.store(
-                                    StoreFactParams(
-                                        memory_space_id=params.memory_space_id,
-                                        participant_id=params.participant_id,
-                                        user_id=params.user_id,
-                                        fact=fact_data["fact"],
-                                        fact_type=fact_data["factType"],
-                                        subject=fact_data.get("subject", params.user_id or params.agent_id),
-                                        predicate=fact_data.get("predicate"),
-                                        object=fact_data.get("object"),
-                                        confidence=fact_data["confidence"],
-                                        source_type="conversation",
-                                        source_ref=FactSourceRef(
-                                            conversation_id=params.conversation_id,
-                                            message_ids=(
-                                                [user_message_id, agent_message_id]
-                                                if user_message_id and agent_message_id
-                                                else None
-                                            ),
-                                            memory_id=stored_memories[0].memory_id if stored_memories else None,
+                                store_params = StoreFactParams(
+                                    memory_space_id=params.memory_space_id,
+                                    participant_id=params.participant_id,
+                                    user_id=params.user_id,
+                                    fact=fact_data["fact"],
+                                    fact_type=fact_data["factType"],
+                                    subject=fact_data.get("subject", params.user_id or params.agent_id),
+                                    predicate=fact_data.get("predicate"),
+                                    object=fact_data.get("object"),
+                                    confidence=fact_data["confidence"],
+                                    source_type="conversation",
+                                    source_ref=FactSourceRef(
+                                        conversation_id=params.conversation_id,
+                                        message_ids=(
+                                            [user_message_id, agent_message_id]
+                                            if user_message_id and agent_message_id
+                                            else None
                                         ),
-                                        tags=fact_data.get("tags", params.tags or []),
+                                        memory_id=stored_memories[0].memory_id if stored_memories else None,
                                     ),
-                                    StoreFactOptions(sync_to_graph=should_sync_to_graph),
+                                    tags=fact_data.get("tags", params.tags or []),
                                 )
-                                extracted_facts.append(stored_fact)
+
+                                # Use store_with_dedup if deduplication is configured
+                                if dedup_config:
+                                    result = await self.facts.store_with_dedup(
+                                        store_params,
+                                        StoreFactWithDedupOptions(
+                                            deduplication=dedup_config,
+                                            sync_to_graph=should_sync_to_graph,
+                                        ),
+                                    )
+                                    extracted_facts.append(result.fact)
+                                else:
+                                    from ..types import StoreFactOptions
+                                    stored_fact = await self.facts.store(
+                                        store_params,
+                                        StoreFactOptions(sync_to_graph=should_sync_to_graph),
+                                    )
+                                    extracted_facts.append(stored_fact)
                             except Exception as error:
                                 print(f"Warning: Failed to store fact: {error}")
                 except Exception as error:
@@ -695,6 +766,7 @@ class MemoryAPI:
         from .streaming import (
             MetricsCollector,
             ProgressiveFactExtractor,
+            ProgressiveFactExtractorConfig,
             ProgressiveGraphSync,
             ProgressiveStorageHandler,
             StreamErrorRecovery,
@@ -742,12 +814,38 @@ class MemoryAPI:
         fact_extractor: Optional[ProgressiveFactExtractor] = None
         extract_facts_fn = params.get("extractFacts") if isinstance(params, dict) else getattr(params, "extract_facts", None)
         if opts and opts.progressive_fact_extraction and extract_facts_fn:
+            # Build deduplication config for streaming
+            # Get fact_deduplication from params if available
+            fact_dedup = params.get("factDeduplication") if isinstance(params, dict) else getattr(params, "fact_deduplication", None)
+            generate_embedding_fn = params.get("generateEmbedding") if isinstance(params, dict) else getattr(params, "generate_embedding", None)
+
+            # Build deduplication config
+            dedup_config = None
+            if fact_dedup is not False:
+                if fact_dedup is not None and fact_dedup is not True:
+                    # Explicit config or strategy provided
+                    dedup_config = FactDeduplicationService.resolve_config(
+                        fact_dedup,  # type: ignore
+                        generate_embedding_fn,
+                    )
+                else:
+                    # Default to semantic with structural fallback
+                    dedup_config = FactDeduplicationService.resolve_config(
+                        "semantic",
+                        generate_embedding_fn,
+                    )
+
+            extractor_config = ProgressiveFactExtractorConfig(
+                deduplication=dedup_config,
+                extraction_threshold=opts.fact_extraction_threshold or 500,
+            )
+
             fact_extractor = ProgressiveFactExtractor(
                 self.facts,
                 str(memory_space_id or ""),
                 str(user_id or ""),
                 params.get("participantId") if isinstance(params, dict) else getattr(params, "participant_id", None),
-                opts.fact_extraction_threshold or 500,
+                extractor_config,
             )
 
         # Adaptive processor (if enabled)

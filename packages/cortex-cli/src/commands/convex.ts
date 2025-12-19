@@ -74,7 +74,7 @@ async function execCommand(
  * Removes inherited CONVEX_* variables so the target project's .env.local is used,
  * then applies any explicit overrides.
  */
-function buildConvexEnv(overrides?: Record<string, string>): NodeJS.ProcessEnv {
+function buildConvexEnv(overrides?: Record<string, string>): typeof process.env {
   const env = { ...process.env };
   
   // Remove inherited CONVEX_* variables that could conflict with target project

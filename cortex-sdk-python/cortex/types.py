@@ -910,6 +910,7 @@ class RememberParams:
     extract_facts: Optional[Callable[[str, str], Any]] = None
     auto_embed: Optional[bool] = None
     auto_summarize: Optional[bool] = None
+    fact_deduplication: Optional[Any] = None  # DeduplicationStrategy | DeduplicationConfig | False
 
 
 @dataclass
@@ -952,6 +953,7 @@ class RememberStreamParams:
     extract_facts: Optional[Callable[[str, str], Any]] = None
     auto_embed: Optional[bool] = None
     auto_summarize: Optional[bool] = None
+    fact_deduplication: Optional[Any] = None  # DeduplicationStrategy | DeduplicationConfig | False
 
 
 @dataclass
