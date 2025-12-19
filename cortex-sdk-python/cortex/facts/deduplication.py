@@ -98,12 +98,12 @@ class StoreWithDedupResult:
 def normalize_fact_text(text: str) -> str:
     """Normalize fact text for exact matching."""
     result = text.lower().strip()
-    # Collapse whitespace
-    result = re.sub(r"\s+", " ", result)
     # Remove punctuation
     result = re.sub(r"[.,!?;:'\"]+", "", result)
     # Remove common words
     result = re.sub(r"\b(the|a|an|is|are|was|were|be|been|being)\b", "", result, flags=re.IGNORECASE)
+    # Collapse whitespace AFTER word removal to handle gaps left by removed words
+    result = re.sub(r"\s+", " ", result)
     return result.strip()
 
 
