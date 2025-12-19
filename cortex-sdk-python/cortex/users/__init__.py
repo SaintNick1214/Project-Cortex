@@ -689,7 +689,7 @@ class UsersAPI:
             raw_entries = immutable.get("entries", [])
         else:
             raw_entries = immutable if isinstance(immutable, list) else []
-        
+
         # Filter to only include valid dict entries with required fields (type, id)
         # Some API responses might include strings or malformed entries
         plan["immutable"] = [
