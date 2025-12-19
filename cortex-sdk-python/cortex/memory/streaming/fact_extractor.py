@@ -12,12 +12,12 @@ Python implementation matching TypeScript src/memory/streaming/FactExtractor.ts
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from ..streaming_types import ProgressiveFact
 from ...facts.deduplication import (
     DeduplicationConfig,
     DeduplicationStrategy,
     FactDeduplicationService,
 )
+from ..streaming_types import ProgressiveFact
 
 
 @dataclass
@@ -80,7 +80,14 @@ class ProgressiveFactExtractor:
         # Default to 'structural' for streaming (faster than semantic, still effective)
         self._deduplication_config: Optional[DeduplicationConfig] = None
         if config and config.deduplication is not False:
-            dedup_input = config.deduplication if config.deduplication else "structural"
+            # Handle True as default (structural), otherwise use provided config
+            if config.deduplication is True or config.deduplication is None:
+                dedup_input: DeduplicationStrategy = "structural"
+            elif isinstance(config.deduplication, str):
+                dedup_input = config.deduplication  # type: ignore[assignment]
+            else:
+                # It's a DeduplicationConfig
+                dedup_input = config.deduplication  # type: ignore[assignment]
             self._deduplication_config = FactDeduplicationService.resolve_config(dedup_input)
         elif config is None:
             # Default config - use structural deduplication
@@ -152,11 +159,11 @@ class ProgressiveFactExtractor:
 
                 # Store new fact (with or without cross-session deduplication)
                 try:
+                    from ...facts import StoreFactWithDedupOptions
                     from ...types import (
                         FactSourceRef,
                         StoreFactParams,
                     )
-                    from ...facts import StoreFactWithDedupOptions
 
                     store_params = StoreFactParams(
                         memory_space_id=self.memory_space_id,
@@ -264,11 +271,11 @@ class ProgressiveFactExtractor:
             # Store any new facts found in final extraction
             for fact_data in unique_final_facts:
                 try:
+                    from ...facts import StoreFactWithDedupOptions
                     from ...types import (
                         FactSourceRef,
                         StoreFactParams,
                     )
-                    from ...facts import StoreFactWithDedupOptions
 
                     store_params = StoreFactParams(
                         memory_space_id=self.memory_space_id,

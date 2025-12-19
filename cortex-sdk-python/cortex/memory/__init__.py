@@ -13,7 +13,6 @@ from ..errors import CortexError, ErrorCode
 from ..facts import FactsAPI, StoreFactWithDedupOptions
 from ..facts.deduplication import (
     DeduplicationConfig,
-    DeduplicationStrategy,
     FactDeduplicationService,
 )
 from ..llm import ExtractedFact, LLMClient, create_llm_client
