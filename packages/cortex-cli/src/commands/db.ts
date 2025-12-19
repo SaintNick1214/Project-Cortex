@@ -17,7 +17,8 @@ import type {
   BackupData,
 } from "../types.js";
 import { withClient } from "../utils/client.js";
-import { resolveConfig } from "../utils/config.js";
+import { resolveConfig, loadConfig } from "../utils/config.js";
+import { selectDeployment } from "../utils/deployment-selector.js";
 import {
   formatOutput,
   printSuccess,
@@ -31,113 +32,34 @@ import { validateFilePath, requireConfirmation } from "../utils/validation.js";
 import { writeFile, readFile } from "fs/promises";
 import pc from "picocolors";
 import prompts from "prompts";
-import { listDeployments } from "../utils/config.js";
 
 const MAX_LIMIT = 1000;
 
 /**
- * Select a database deployment interactively or from options
- * Returns updated globalOpts with the selected deployment
- */
-async function selectDatabase(
-  config: CLIConfig,
-  globalOpts: Record<string, unknown>,
-  actionDescription: string,
-): Promise<{
-  globalOpts: Record<string, unknown>;
-  targetName: string;
-  targetUrl: string;
-} | null> {
-  const deployments = listDeployments(config);
-
-  if (deployments.length === 0) {
-    printError("No deployments configured. Run 'cortex setup' first.");
-    return null;
-  }
-
-  // Determine target deployment
-  let targetDeployment = deployments.find((d) => d.isDefault);
-  let targetUrl = targetDeployment?.url ?? "";
-  let targetName = targetDeployment?.name ?? config.default;
-
-  // If --deployment flag was passed, use that
-  if (globalOpts.deployment) {
-    const specified = deployments.find((d) => d.name === globalOpts.deployment);
-    if (specified) {
-      targetDeployment = specified;
-      targetUrl = specified.url;
-      targetName = specified.name;
-    } else {
-      printError(`Deployment "${globalOpts.deployment}" not found`);
-      return null;
-    }
-  }
-
-  // If multiple deployments and none specified, ask which one
-  if (deployments.length > 1 && !globalOpts.deployment) {
-    console.log();
-    console.log(
-      `Current target: ${pc.cyan(targetName)} (${pc.dim(targetUrl)})`,
-    );
-    console.log();
-
-    const selectResponse = await prompts({
-      type: "select",
-      name: "deployment",
-      message: `Select database to ${actionDescription}:`,
-      choices: deployments.map((d) => ({
-        title: d.isDefault ? `${d.name} (default)` : d.name,
-        description: d.url,
-        value: d.name,
-      })),
-      initial: deployments.findIndex((d) => d.name === targetName),
-    });
-
-    if (!selectResponse.deployment) {
-      printWarning("Operation cancelled");
-      return null;
-    }
-
-    targetName = selectResponse.deployment;
-    const selected = deployments.find((d) => d.name === targetName);
-    targetUrl = selected?.url ?? "";
-
-    // Update globalOpts to use selected deployment
-    globalOpts = { ...globalOpts, deployment: targetName };
-  }
-
-  return { globalOpts, targetName, targetUrl };
-}
-
-/**
  * Register database commands
  */
-export function registerDbCommands(program: Command, config: CLIConfig): void {
+export function registerDbCommands(program: Command, _config: CLIConfig): void {
   const db = program.command("db").description("Database-wide operations");
 
   // db stats
   db.command("stats")
     .description("Show database statistics")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (options) => {
-      let globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "view stats");
+      if (!selection) return;
+      
+      const { name: targetName, deployment } = selection;
+      const targetUrl = deployment.url;
+      const resolved = resolveConfig(currentConfig, { deployment: targetName });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       try {
-        // Select database
-        const selection = await selectDatabase(
-          config,
-          globalOpts,
-          "view stats for",
-        );
-        if (!selection) return;
-        globalOpts = selection.globalOpts;
-        const { targetName, targetUrl } = selection;
-
         const spinner = ora(`Loading statistics for ${targetName}...`).start();
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: targetName }, async (client) => {
           // Get deployment info
           const info = {
             url: targetUrl,
@@ -186,10 +108,10 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           spinner.text = "Counting messages...";
           let totalMessages = 0;
           try {
-            const convos = await client.conversations.list({
+            const convosResult = await client.conversations.list({
               limit: MAX_LIMIT,
             });
-            for (const convo of convos) {
+            for (const convo of convosResult.conversations) {
               totalMessages += convo.messageCount ?? 0;
             }
           } catch {
@@ -220,7 +142,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
                   governanceEnforcement: tableCounts.governanceEnforcement ?? 0,
                   graphSyncQueue: tableCounts.graphSyncQueue ?? 0,
                   deployment: {
-                    name: globalOpts.deployment ?? config.default ?? "default",
+                    name: targetName,
                     url: info.url,
                     isLocal: info.isLocal,
                   },
@@ -315,19 +237,21 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
   // db clear
   db.command("clear")
     .description("Clear entire database (DANGEROUS!)")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (options) => {
-      let globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      
+      console.log();
+      console.log(pc.red(pc.bold("⚠️  DANGER: Clear Database")));
+
+      const selection = await selectDeployment(currentConfig, options, "clear");
+      if (!selection) return;
+      
+      const { name: targetName, deployment } = selection;
+      const targetUrl = deployment.url;
 
       try {
-        console.log();
-        console.log(pc.red(pc.bold("⚠️  DANGER: Clear Database")));
-
-        // Select database
-        const selection = await selectDatabase(config, globalOpts, "clear");
-        if (!selection) return;
-        globalOpts = selection.globalOpts;
-        const { targetName, targetUrl } = selection;
 
         console.log();
         console.log("This will permanently delete:");
@@ -383,7 +307,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
 
         const spinner = ora(`Clearing ${targetName}...`).start();
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: targetName }, async (client) => {
           const deleted = {
             agents: 0,
             contexts: 0,
@@ -488,9 +412,10 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           while (hasMoreConvos) {
             spinner.text = `Clearing conversations... (${deleted.conversations} deleted, ${deleted.messages} messages)`;
             try {
-              const convos = await client.conversations.list({
+              const convosResult = await client.conversations.list({
                 limit: MAX_LIMIT,
               });
+              const convos = convosResult.conversations;
               if (convos.length === 0) {
                 hasMoreConvos = false;
                 break;
@@ -524,9 +449,10 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           while (hasMoreSpaces) {
             spinner.text = `Clearing memorySpaces... (${deleted.memorySpaces} deleted)`;
             try {
-              const spaces = await client.memorySpaces.list({
+              const spacesResult = await client.memorySpaces.list({
                 limit: MAX_LIMIT,
               });
+              const spaces = spacesResult.spaces;
               if (spaces.length === 0) {
                 hasMoreSpaces = false;
                 break;
@@ -588,7 +514,8 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
           while (hasMoreUsers) {
             spinner.text = `Clearing users... (${deleted.users} deleted)`;
             try {
-              const users = await client.users.list({ limit: MAX_LIMIT });
+              const usersResult = await client.users.list({ limit: MAX_LIMIT });
+              const users = usersResult.users;
               if (users.length === 0) {
                 hasMoreUsers = false;
                 break;
@@ -744,23 +671,23 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
   // db backup
   db.command("backup")
     .description("Backup database to a file")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-o, --output <file>", "Output file path", "cortex-backup.json")
     .option("--include-all", "Include all data (may be large)", false)
     .action(async (options) => {
-      let globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "backup");
+      if (!selection) return;
+      
+      const { name: targetName, deployment } = selection;
+      const targetUrl = deployment.url;
 
       try {
         validateFilePath(options.output);
 
-        // Select database
-        const selection = await selectDatabase(config, globalOpts, "backup");
-        if (!selection) return;
-        globalOpts = selection.globalOpts;
-        const { targetName, targetUrl } = selection;
-
         const spinner = ora(`Creating backup of ${targetName}...`).start();
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: targetName }, async (client) => {
           const backup: BackupData = {
             version: "1.0",
             timestamp: Date.now(),
@@ -770,13 +697,15 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
 
           // Backup memory spaces (paginate if needed)
           spinner.text = "Backing up memory spaces...";
-          backup.data.memorySpaces = await client.memorySpaces.list({
+          const spacesResult = await client.memorySpaces.list({
             limit: MAX_LIMIT,
           });
+          backup.data.memorySpaces = spacesResult.spaces;
 
           // Backup users (paginate if needed)
           spinner.text = "Backing up users...";
-          backup.data.users = await client.users.list({ limit: MAX_LIMIT });
+          const usersResult = await client.users.list({ limit: MAX_LIMIT });
+          backup.data.users = usersResult.users;
 
           if (options.includeAll) {
             // Backup conversations
@@ -786,11 +715,11 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
             }>;
             backup.data.conversations = [];
             for (const space of spaces) {
-              const convs = await client.conversations.list({
+              const convsResult = await client.conversations.list({
                 memorySpaceId: space.memorySpaceId,
                 limit: MAX_LIMIT,
               });
-              (backup.data.conversations as unknown[]).push(...convs);
+              (backup.data.conversations as unknown[]).push(...convsResult.conversations);
             }
 
             // Backup memories
@@ -851,12 +780,11 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
   // db restore
   db.command("restore")
     .description("Restore database from a backup file")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-i, --input <file>", "Backup file path")
     .option("--dry-run", "Preview what would be restored", false)
     .option("-y, --yes", "Skip confirmation", false)
     .action(async (options) => {
-      let globalOpts = program.opts();
-
       try {
         validateFilePath(options.input);
 
@@ -889,19 +817,15 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
         }
 
         // Select target database
-        const selection = await selectDatabase(
-          config,
-          globalOpts,
-          "restore to",
-        );
+        const currentConfig = await loadConfig();
+        const selection = await selectDeployment(currentConfig, options, "restore to");
         if (!selection) return;
-        globalOpts = selection.globalOpts;
-        const { targetName } = selection;
+        const { name: targetName } = selection;
 
         if (!options.yes) {
           const confirmed = await requireConfirmation(
             `Restore this backup to ${targetName}? Existing data may be overwritten.`,
-            config,
+            currentConfig,
           );
           if (!confirmed) {
             printWarning("Restore cancelled");
@@ -911,7 +835,7 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
 
         const spinner = ora(`Restoring backup to ${targetName}...`).start();
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: targetName }, async (client) => {
           let restored = {
             spaces: 0,
             users: 0,
@@ -980,22 +904,22 @@ export function registerDbCommands(program: Command, config: CLIConfig): void {
   // db export
   db.command("export")
     .description("Export all data to JSON")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-o, --output <file>", "Output file path", "cortex-export.json")
     .action(async (options) => {
-      let globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "export");
+      if (!selection) return;
+      
+      const { name: targetName, deployment } = selection;
+      const targetUrl = deployment.url;
 
       try {
         validateFilePath(options.output);
 
-        // Select database
-        const selection = await selectDatabase(config, globalOpts, "export");
-        if (!selection) return;
-        globalOpts = selection.globalOpts;
-        const { targetName, targetUrl } = selection;
-
         const spinner = ora(`Exporting data from ${targetName}...`).start();
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: targetName }, async (client) => {
           const exportData = {
             exportedAt: Date.now(),
             deployment: { name: targetName, url: targetUrl },

@@ -174,8 +174,8 @@ async def test_update_memory(cortex_client, test_memory_space_id, test_conversat
         test_memory_space_id, memory_id, {"content": "Updated", "importance": 80}
     )
 
-    assert updated["memory"].content == "Updated"
-    assert updated["memory"].version == 2
+    assert updated.memory.content == "Updated"
+    assert updated.memory.version == 2
 
 
 @pytest.mark.asyncio
@@ -199,7 +199,7 @@ async def test_delete_memory(cortex_client, test_memory_space_id, test_conversat
     # Delete it
     delete_result = await cortex_client.memory.delete(test_memory_space_id, memory_id)
 
-    assert delete_result["deleted"] is True
+    assert delete_result.deleted is True
 
     # Verify it's gone
     retrieved = await cortex_client.memory.get(test_memory_space_id, memory_id)
@@ -675,6 +675,7 @@ async def test_restore_from_archive(cortex_client, test_memory_space_id, test_co
     # Archive it
     archived = await cortex_client.memory.archive(test_memory_space_id, memory_id)
     assert archived is not None
+    assert archived.archived is True
 
     # Verify archived
     memory = await cortex_client.vector.get(test_memory_space_id, memory_id)

@@ -18,6 +18,8 @@ concurrency:
 jobs:
   check-version:
     runs-on: ubuntu-latest
+    # Extra guard: only run on main branch (workaround for GitHub Actions trigger bug)
+    if: github.ref == 'refs/heads/main'
     outputs:
       sdk-version-changed: ${{ steps.check-sdk.outputs.changed }}
       sdk-new-version: ${{ steps.check-sdk.outputs.version }}
@@ -154,6 +156,7 @@ jobs:
     permissions:
       contents: write
       id-token: write # Required for npm OIDC provenance publishing (no NODE_AUTH_TOKEN needed)
+      workflows: write # Required when commits include workflow file changes
 
     steps:
       - name: Checkout code
@@ -265,6 +268,7 @@ jobs:
     permissions:
       contents: write
       id-token: write # Required for npm OIDC provenance publishing (no NODE_AUTH_TOKEN needed)
+      workflows: write # Required when commits include workflow file changes
 
     steps:
       - name: Checkout code
@@ -342,6 +346,7 @@ jobs:
     permissions:
       contents: write
       id-token: write # Required for npm OIDC provenance publishing (no NODE_AUTH_TOKEN needed)
+      workflows: write # Required when commits include workflow file changes
 
     steps:
       - name: Checkout code
@@ -485,6 +490,7 @@ jobs:
     permissions:
       contents: write
       id-token: write # Required for npm OIDC provenance publishing (no NODE_AUTH_TOKEN needed)
+      workflows: write # Required when commits include workflow file changes
 
     steps:
       - name: Checkout code

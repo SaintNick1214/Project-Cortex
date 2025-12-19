@@ -87,6 +87,7 @@ async def test_cortex_initialization():
 async def test_convex_connection():
     """Test basic connection to Convex backend."""
     from cortex import Cortex, CortexConfig
+    from cortex.types import ListConversationsFilter
 
     convex_url = os.getenv("CONVEX_URL")
     cortex = Cortex(CortexConfig(convex_url=convex_url))
@@ -94,12 +95,12 @@ async def test_convex_connection():
     try:
         # Try a simple query - list conversations
         # This should work even if no conversations exist (returns empty list)
-        result = await cortex.conversations.list(limit=1)
+        result = await cortex.conversations.list(ListConversationsFilter(limit=1))
 
         print("✅ Convex connection successful")
-        print(f"   Conversations found: {len(result)}")
+        print(f"   Conversations found: {len(result.conversations)}")
 
-        assert isinstance(result, list)
+        assert hasattr(result, 'conversations')
 
     except Exception as e:
         print(f"❌ Convex connection failed: {e}")

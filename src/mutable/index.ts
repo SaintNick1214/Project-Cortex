@@ -12,6 +12,8 @@ import type {
   ListMutableFilter,
   MutableRecord,
   SetMutableOptions,
+  PurgeNamespaceOptions,
+  PurgeManyFilter,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
 import { deleteMutableFromGraph } from "../graph";
@@ -28,6 +30,7 @@ import {
   validateListFilter,
   validateCountFilter,
   validatePurgeFilter,
+  validatePurgeNamespaceOptions,
   validateOperationsArray,
   validateTransactionOperations,
 } from "./validators";
@@ -164,7 +167,7 @@ export class MutableAPI {
    * @example
    * ```typescript
    * const record = await cortex.mutable.getRecord('inventory', 'widget-qty');
-   * console.log(record.updatedAt, record.accessCount);
+   * console.log(record.updatedAt);
    * ```
    */
   async getRecord(
@@ -332,11 +335,26 @@ export class MutableAPI {
   /**
    * List keys in namespace
    *
+   * @param filter - Filter options for listing keys
+   * @param filter.namespace - Required namespace to list
+   * @param filter.keyPrefix - Filter by key prefix
+   * @param filter.userId - Filter by user
+   * @param filter.limit - Max results (default: 100)
+   * @param filter.offset - Pagination offset
+   * @param filter.updatedAfter - Filter by updatedAt > timestamp
+   * @param filter.updatedBefore - Filter by updatedAt < timestamp
+   * @param filter.sortBy - Sort by "key" | "updatedAt" | "accessCount"
+   * @param filter.sortOrder - Sort order "asc" | "desc"
+   * @returns Array of matching MutableRecord objects
+   *
    * @example
    * ```typescript
    * const items = await cortex.mutable.list({
    *   namespace: 'inventory',
    *   keyPrefix: 'widget-',
+   *   sortBy: 'updatedAt',
+   *   sortOrder: 'desc',
+   *   limit: 50,
    * });
    * ```
    */
@@ -351,6 +369,11 @@ export class MutableAPI {
           keyPrefix: filter.keyPrefix,
           userId: filter.userId,
           limit: filter.limit,
+          offset: filter.offset,
+          updatedAfter: filter.updatedAfter,
+          updatedBefore: filter.updatedBefore,
+          sortBy: filter.sortBy,
+          sortOrder: filter.sortOrder,
         }),
       "mutable:list",
     );
@@ -361,9 +384,20 @@ export class MutableAPI {
   /**
    * Count keys in namespace
    *
+   * @param filter - Filter options for counting keys
+   * @param filter.namespace - Required namespace to count
+   * @param filter.userId - Filter by user
+   * @param filter.keyPrefix - Filter by key prefix
+   * @param filter.updatedAfter - Filter by updatedAt > timestamp
+   * @param filter.updatedBefore - Filter by updatedAt < timestamp
+   * @returns Count of matching keys
+   *
    * @example
    * ```typescript
-   * const count = await cortex.mutable.count({ namespace: 'inventory' });
+   * const count = await cortex.mutable.count({
+   *   namespace: 'inventory',
+   *   updatedAfter: Date.now() - 24 * 60 * 60 * 1000, // Last 24 hours
+   * });
    * ```
    */
   async count(filter: CountMutableFilter): Promise<number> {
@@ -376,6 +410,8 @@ export class MutableAPI {
           namespace: filter.namespace,
           userId: filter.userId,
           keyPrefix: filter.keyPrefix,
+          updatedAfter: filter.updatedAfter,
+          updatedBefore: filter.updatedBefore,
         }),
       "mutable:count",
     );
@@ -452,27 +488,51 @@ export class MutableAPI {
   /**
    * Purge all keys in a namespace
    *
+   * @param namespace - Namespace to purge
+   * @param options - Optional settings
+   * @param options.dryRun - If true, returns what would be deleted without deleting
+   * @returns Result with deleted count, namespace, and optionally keys (in dryRun mode)
+   *
    * @example
    * ```typescript
-   * await cortex.mutable.purgeNamespace('temp-cache');
+   * // Preview what would be deleted
+   * const preview = await cortex.mutable.purgeNamespace('temp-cache', { dryRun: true });
+   * console.log(`Would delete ${preview.deleted} keys`);
+   *
+   * // Actually delete
+   * const result = await cortex.mutable.purgeNamespace('temp-cache');
+   * console.log(`Deleted ${result.deleted} keys`);
    * ```
    */
   async purgeNamespace(
     namespace: string,
-  ): Promise<{ deleted: number; namespace: string }> {
+    options?: PurgeNamespaceOptions,
+  ): Promise<{
+    deleted: number;
+    namespace: string;
+    keys?: string[];
+    dryRun: boolean;
+  }> {
     // Client-side validation
     validateNamespace(namespace);
     validateNamespaceFormat(namespace);
+    validatePurgeNamespaceOptions(options);
 
     const result = await this.executeWithResilience(
       () =>
         this.client.mutation(api.mutable.purgeNamespace, {
           namespace,
+          dryRun: options?.dryRun,
         }),
       "mutable:purgeNamespace",
     );
 
-    return result as { deleted: number; namespace: string };
+    return result as {
+      deleted: number;
+      namespace: string;
+      keys?: string[];
+      dryRun: boolean;
+    };
   }
 
   /**
@@ -526,19 +586,35 @@ export class MutableAPI {
   /**
    * Bulk delete keys matching filters
    *
+   * @param filter - Filter options for deleting keys
+   * @param filter.namespace - Required namespace to purge from
+   * @param filter.keyPrefix - Filter by key prefix
+   * @param filter.userId - Filter by user
+   * @param filter.updatedBefore - Delete keys updated before this timestamp
+   * @returns Result with deleted count, namespace, and deleted keys
+   *
    * @example
    * ```typescript
+   * // Delete keys with prefix
    * await cortex.mutable.purgeMany({
    *   namespace: 'cache',
    *   keyPrefix: 'temp-',
    * });
+   *
+   * // Delete old keys
+   * await cortex.mutable.purgeMany({
+   *   namespace: 'cache',
+   *   updatedBefore: Date.now() - 30 * 24 * 60 * 60 * 1000, // 30 days ago
+   * });
+   *
+   * // Delete by user (GDPR compliance)
+   * await cortex.mutable.purgeMany({
+   *   namespace: 'sessions',
+   *   userId: 'user-123',
+   * });
    * ```
    */
-  async purgeMany(filter: {
-    namespace: string;
-    keyPrefix?: string;
-    userId?: string;
-  }): Promise<{
+  async purgeMany(filter: PurgeManyFilter): Promise<{
     deleted: number;
     namespace: string;
     keys: string[];
@@ -552,6 +628,7 @@ export class MutableAPI {
           namespace: filter.namespace,
           keyPrefix: filter.keyPrefix,
           userId: filter.userId,
+          updatedBefore: filter.updatedBefore,
         }),
       "mutable:purgeMany",
     );

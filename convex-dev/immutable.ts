@@ -232,44 +232,93 @@ export const getHistory = query({
 });
 
 /**
- * List immutable entries with filters
+ * List immutable entries with filters, sorting, and pagination
  */
 export const list = query({
   args: {
     type: v.optional(v.string()),
     userId: v.optional(v.string()),
     limit: v.optional(v.number()),
+    offset: v.optional(v.number()),
+    createdAfter: v.optional(v.number()),
+    createdBefore: v.optional(v.number()),
+    updatedAfter: v.optional(v.number()),
+    updatedBefore: v.optional(v.number()),
+    sortBy: v.optional(v.string()),
+    sortOrder: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Collect all entries matching the primary filter first
     let entries;
 
     if (args.type) {
       entries = await ctx.db
         .query("immutable")
         .withIndex("by_type", (q) => q.eq("type", args.type!))
-        .order("desc")
-        .take(args.limit || 100);
+        .collect();
     } else if (args.userId) {
       entries = await ctx.db
         .query("immutable")
         .withIndex("by_userId", (q) => q.eq("userId", args.userId))
-        .order("desc")
-        .take(args.limit || 100);
+        .collect();
     } else {
-      entries = await ctx.db
-        .query("immutable")
-        .order("desc")
-        .take(args.limit || 100);
+      entries = await ctx.db.query("immutable").collect();
     }
 
-    // Post-filter if needed
+    // Post-filter by userId if both type and userId specified
     if (args.userId && args.type) {
-      return entries.filter(
-        (e) => e.userId === args.userId && e.type === args.type,
-      );
+      entries = entries.filter((e) => e.userId === args.userId);
     }
 
-    return entries;
+    // Apply date filters
+    if (args.createdAfter !== undefined) {
+      entries = entries.filter((e) => e.createdAt > args.createdAfter!);
+    }
+    if (args.createdBefore !== undefined) {
+      entries = entries.filter((e) => e.createdAt < args.createdBefore!);
+    }
+    if (args.updatedAfter !== undefined) {
+      entries = entries.filter((e) => e.updatedAt > args.updatedAfter!);
+    }
+    if (args.updatedBefore !== undefined) {
+      entries = entries.filter((e) => e.updatedAt < args.updatedBefore!);
+    }
+
+    // Sort entries
+    const sortBy = args.sortBy || "createdAt";
+    const sortOrder = args.sortOrder || "desc";
+    const sortMultiplier = sortOrder === "desc" ? -1 : 1;
+
+    entries.sort((a, b) => {
+      let comparison = 0;
+      if (sortBy === "updatedAt") {
+        comparison = a.updatedAt - b.updatedAt;
+      } else {
+        // Default to createdAt
+        comparison = a.createdAt - b.createdAt;
+      }
+      return comparison * sortMultiplier;
+    });
+
+    // Calculate total before pagination
+    const total = entries.length;
+
+    // Apply offset
+    const offset = args.offset || 0;
+    entries = entries.slice(offset);
+
+    // Apply limit
+    const limit = args.limit || 50;
+    entries = entries.slice(0, limit);
+
+    // Return with pagination metadata
+    return {
+      entries,
+      total,
+      limit,
+      offset,
+      hasMore: offset + entries.length < total,
+    };
   },
 });
 
@@ -351,27 +400,50 @@ export const search = query({
 });
 
 /**
- * Count immutable entries
+ * Count immutable entries with filters
  */
 export const count = query({
   args: {
     type: v.optional(v.string()),
     userId: v.optional(v.string()),
+    createdAfter: v.optional(v.number()),
+    createdBefore: v.optional(v.number()),
+    updatedAfter: v.optional(v.number()),
+    updatedBefore: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    const entries = await ctx.db.query("immutable").collect();
+    let entries;
 
-    let filtered = entries;
-
+    // Use index if type is provided
     if (args.type) {
-      filtered = filtered.filter((e) => e.type === args.type);
+      entries = await ctx.db
+        .query("immutable")
+        .withIndex("by_type", (q) => q.eq("type", args.type!))
+        .collect();
+    } else {
+      entries = await ctx.db.query("immutable").collect();
     }
 
+    // Apply userId filter
     if (args.userId) {
-      filtered = filtered.filter((e) => e.userId === args.userId);
+      entries = entries.filter((e) => e.userId === args.userId);
     }
 
-    return filtered.length;
+    // Apply date filters
+    if (args.createdAfter !== undefined) {
+      entries = entries.filter((e) => e.createdAt > args.createdAfter!);
+    }
+    if (args.createdBefore !== undefined) {
+      entries = entries.filter((e) => e.createdAt < args.createdBefore!);
+    }
+    if (args.updatedAfter !== undefined) {
+      entries = entries.filter((e) => e.updatedAt > args.updatedAfter!);
+    }
+    if (args.updatedBefore !== undefined) {
+      entries = entries.filter((e) => e.updatedAt < args.updatedBefore!);
+    }
+
+    return entries.length;
   },
 });
 

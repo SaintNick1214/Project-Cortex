@@ -238,7 +238,8 @@ class VectorAPI:
                     "tags": opts.tags,
                     "sourceType": opts.source_type,
                     "minImportance": opts.min_importance,
-                    "minScore": opts.min_score,  # FIX: Forward min_score parameter
+                    "minScore": opts.min_score,
+                    "queryCategory": opts.query_category,  # Category boost for bullet-proof retrieval
                     "limit": opts.limit,
                 }),
             ),
@@ -349,7 +350,7 @@ class VectorAPI:
                 from ..graph import delete_memory_from_graph
 
                 await delete_memory_from_graph(
-                    memory_id, memory_space_id, self.graph_adapter, True
+                    memory_id, self.graph_adapter, True
                 )
             except Exception as error:
                 print(f"Warning: Failed to delete memory from graph: {error}")
@@ -359,44 +360,56 @@ class VectorAPI:
     async def update_many(
         self,
         memory_space_id: str,
-        filters: Dict[str, Any],
-        updates: Dict[str, Any],
+        user_id: Optional[str] = None,
+        source_type: Optional[SourceType] = None,
+        importance: Optional[int] = None,
+        tags: Optional[List[str]] = None,
     ) -> Dict[str, Any]:
         """
         Bulk update memories matching filters.
 
         Args:
             memory_space_id: Memory space ID
-            filters: Filter criteria
-            updates: Updates to apply
+            user_id: Optional filter by user ID
+            source_type: Optional filter by source type
+            importance: New importance value to set
+            tags: New tags to set
 
         Returns:
-            Update result with counts
+            Update result with updated count and memory IDs
 
         Example:
             >>> result = await cortex.vector.update_many(
             ...     'agent-1',
-            ...     {'user_id': 'user-123'},
-            ...     {'importance': 75}
+            ...     source_type='system',
+            ...     importance=20
             ... )
         """
         # Client-side validation
         validate_memory_space_id(memory_space_id)
-        validate_update_options(updates)
 
-        if filters.get("user_id") is not None:
-            validate_user_id(filters["user_id"])
+        if user_id is not None:
+            validate_user_id(user_id)
 
-        if filters.get("source_type") is not None:
-            validate_source_type(filters["source_type"])
+        if source_type is not None:
+            validate_source_type(source_type)
+
+        # Validate updates if provided
+        if importance is None and tags is None:
+            raise VectorValidationError(
+                "At least one update field must be provided (importance or tags)",
+                "INVALID_FORMAT",
+            )
 
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
                 "memories:updateMany",
                 filter_none_values({
                     "memorySpaceId": memory_space_id,
-                    "filters": filters,
-                    "updates": updates,
+                    "userId": user_id,
+                    "sourceType": source_type,
+                    "importance": importance,
+                    "tags": tags,
                 }),
             ),
             "memories:updateMany",
@@ -405,37 +418,45 @@ class VectorAPI:
         return cast(Dict[str, Any], result)
 
     async def delete_many(
-        self, memory_space_id: str, filters: Dict[str, Any]
+        self,
+        memory_space_id: str,
+        user_id: Optional[str] = None,
+        source_type: Optional[SourceType] = None,
     ) -> Dict[str, Any]:
         """
         Bulk delete memories matching filters.
 
         Args:
             memory_space_id: Memory space ID
-            filters: Filter criteria
+            user_id: Optional filter by user ID
+            source_type: Optional filter by source type
 
         Returns:
-            Deletion result with counts
+            Deletion result with deleted count and memory IDs
 
         Example:
             >>> result = await cortex.vector.delete_many(
             ...     'agent-1',
-            ...     {'importance': {'$lte': 30}}
+            ...     source_type='system'
             ... )
         """
         # Client-side validation
         validate_memory_space_id(memory_space_id)
 
-        if filters.get("user_id") is not None:
-            validate_user_id(filters["user_id"])
+        if user_id is not None:
+            validate_user_id(user_id)
 
-        if filters.get("source_type") is not None:
-            validate_source_type(filters["source_type"])
+        if source_type is not None:
+            validate_source_type(source_type)
 
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
                 "memories:deleteMany",
-                filter_none_values({"memorySpaceId": memory_space_id, "filters": filters}),
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "userId": user_id,
+                    "sourceType": source_type,
+                }),
             ),
             "memories:deleteMany",
         )
@@ -585,7 +606,7 @@ class VectorAPI:
 
         result = await self._execute_with_resilience(
             lambda: self.client.query(
-                "memories:export",
+                "memories:exportMemories",
                 filter_none_values({
                     "memorySpaceId": memory_space_id,
                     "userId": user_id,
@@ -594,7 +615,7 @@ class VectorAPI:
                     "includeFacts": include_facts,
                 }),
             ),
-            "memories:export",
+            "memories:exportMemories",
         )
 
         return cast(Dict[str, Any], result)
@@ -626,6 +647,42 @@ class VectorAPI:
             ),
             "memories:archive",
         )
+
+        return cast(Dict[str, Any], result)
+
+    async def restore_from_archive(
+        self, memory_space_id: str, memory_id: str
+    ) -> Dict[str, Any]:
+        """
+        Restore a memory from archive.
+
+        Args:
+            memory_space_id: Memory space ID
+            memory_id: Memory ID
+
+        Returns:
+            Restore result with restored flag, memoryId, and memory entry
+
+        Example:
+            >>> result = await cortex.vector.restore_from_archive('agent-1', 'mem-123')
+            >>> print(result['restored'])  # True
+            >>> print(result['memory'])  # MemoryEntry
+        """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "memories:restoreFromArchive",
+                filter_none_values({"memorySpaceId": memory_space_id, "memoryId": memory_id}),
+            ),
+            "memories:restoreFromArchive",
+        )
+
+        # Convert memory in result to MemoryEntry
+        if result and "memory" in result:
+            result["memory"] = MemoryEntry(**convert_convex_response(result["memory"]))
 
         return cast(Dict[str, Any], result)
 

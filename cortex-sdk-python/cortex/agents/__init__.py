@@ -10,7 +10,11 @@ from typing import Any, Dict, List, Optional, cast
 from .._utils import convert_convex_response, filter_none_values  # noqa: F401
 from ..errors import AgentCascadeDeletionError, CortexError, ErrorCode  # noqa: F401
 from ..types import (
+    AgentFilters,
     AgentRegistration,
+    AgentStats,  # noqa: F401 - Re-exported for public API
+    ExportAgentsOptions,
+    ExportAgentsResult,
     RegisteredAgent,
     UnregisterAgentOptions,
     UnregisterAgentResult,
@@ -18,15 +22,18 @@ from ..types import (
 )
 from .validators import (
     AgentValidationError,
+    validate_agent_filters,
     validate_agent_id,
     validate_agent_name,
     validate_agent_registration,
     validate_agent_status,
     validate_config,
-    validate_list_parameters,
+    validate_export_options,
+    validate_list_parameters,  # noqa: F401 - Re-exported for public API
     validate_metadata,
     validate_search_parameters,
     validate_unregister_options,
+    validate_update_payload,
 )
 
 
@@ -176,98 +183,60 @@ class AgentsAPI:
             last_active=result.get("lastActive"),
         )
 
-    async def search(
-        self, filters: Optional[Dict[str, Any]] = None, limit: int = 50
-    ) -> List[RegisteredAgent]:
+    async def search(self, filters: AgentFilters) -> List[RegisteredAgent]:
         """
-        Find registered agents by metadata.
+        Search agents (alias for list with filters).
+
+        Matches TypeScript SDK search() method - functionally equivalent to list()
+        but requires filters parameter.
 
         Args:
-            filters: Filter criteria
-            limit: Maximum results
+            filters: Filter criteria for searching agents
 
         Returns:
             List of matching agents
 
         Example:
             >>> support_agents = await cortex.agents.search(
-            ...     {'metadata.team': 'support'}
+            ...     AgentFilters(metadata={'team': 'support'})
             ... )
         """
-        # Validate search parameters
-        validate_search_parameters(filters, limit)
-
-        result = await self._execute_with_resilience(
-            lambda: self.client.query(
-                "agents:search", filter_none_values({"filters": filters, "limit": limit})
-            ),
-            "agents:search",
-        )
-
-        # Manually construct to handle field name differences
-        return [
-            RegisteredAgent(
-                id=a.get("agentId"),
-                name=a.get("name"),
-                status=a.get("status"),
-                registered_at=a.get("registeredAt"),
-                updated_at=a.get("updatedAt"),
-                metadata=a.get("metadata", {}),
-                config=a.get("config", {}),
-                description=a.get("description"),
-                last_active=a.get("lastActive"),
-            )
-            for a in result
-        ]
+        return await self.list(filters)
 
     async def list(
         self,
-        status: Optional[str] = None,
-        limit: int = 50,
-        offset: int = 0,
-        sort_by: str = "name"
+        filters: Optional[AgentFilters] = None,
     ) -> List[RegisteredAgent]:
         """
-        List all registered agents with pagination.
+        List agents with filters.
+
+        Matches TypeScript SDK list() method signature with full AgentFilters support.
+        Client-side filtering is applied for metadata, name, capabilities, and
+        lastActive timestamp ranges.
 
         Args:
-            status: Filter by status (active, inactive, archived)
-            limit: Maximum results
-            offset: Number of results to skip
-            sort_by: Sort field
+            filters: Optional filter criteria
 
         Returns:
             List of registered agents
 
         Example:
-            >>> page1 = await cortex.agents.list(status="active", limit=50)
+            >>> # List all agents
+            >>> agents = await cortex.agents.list()
+            >>>
+            >>> # List with filters
+            >>> agents = await cortex.agents.list(AgentFilters(
+            ...     status="active",
+            ...     limit=50,
+            ...     metadata={'team': 'support'}
+            ... ))
         """
-        # Validate parameters
-        validate_list_parameters(status, limit, offset, sort_by)
+        # Validate filters
+        if filters:
+            validate_agent_filters(filters)
 
-        result = await self._execute_with_resilience(
-            lambda: self.client.query(
-                "agents:list", filter_none_values({"status": status, "limit": limit, "offset": offset})
-            ),
-            "agents:list",
-        )
-
-        # Convert list response if needed
-        agents_list = result if isinstance(result, list) else result.get("agents", result)
-        return [
-            RegisteredAgent(
-                id=a.get("agentId"),
-                name=a.get("name"),
-                status=a.get("status"),
-                registered_at=a.get("registeredAt"),
-                updated_at=a.get("updatedAt"),
-                metadata=a.get("metadata", {}),
-                config=a.get("config", {}),
-                description=a.get("description"),
-                last_active=a.get("lastActive"),
-            )
-            for a in agents_list
-        ]
+        # Use helper method for full filter support
+        return await self._list_with_filters(filters)
 
     async def get_stats(self, agent_id: str) -> Dict[str, Any]:
         """
@@ -291,30 +260,57 @@ class AgentsAPI:
         )
         return cast(Dict[str, Any], result)
 
-    async def count(self, status: Optional[str] = None) -> int:
+    async def count(self, filters: Optional[AgentFilters] = None) -> int:
         """
         Count registered agents.
 
         Args:
-            status: Optional filter by agent status
+            filters: Optional filter criteria
 
         Returns:
             Count of matching agents
 
         Example:
             >>> total = await cortex.agents.count()
-            >>> active = await cortex.agents.count(status='active')
+            >>> active = await cortex.agents.count(AgentFilters(status='active'))
         """
-        # Validate status if provided
-        if status is not None:
-            validate_agent_status(status)
+        # Validate filters if provided
+        if filters:
+            validate_agent_filters(filters)
 
         result = await self._execute_with_resilience(
-            lambda: self.client.query("agents:count", filter_none_values({"status": status})),
+            lambda: self.client.query(
+                "agents:count",
+                filter_none_values({"status": filters.status if filters else None}),
+            ),
             "agents:count",
         )
 
         return int(result)
+
+    async def exists(self, agent_id: str) -> bool:
+        """
+        Check if agent is registered.
+
+        Args:
+            agent_id: Agent ID to check
+
+        Returns:
+            True if agent is registered, False otherwise
+
+        Example:
+            >>> if await cortex.agents.exists('my-agent'):
+            ...     print('Agent is registered')
+        """
+        # Validate agent_id
+        validate_agent_id(agent_id, "agent_id")
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.query("agents:exists", filter_none_values({"agentId": agent_id})),
+            "agents:exists",
+        )
+
+        return bool(result)
 
     async def update(
         self, agent_id: str, updates: Dict[str, Any]
@@ -582,7 +578,7 @@ class AgentsAPI:
         opts = options or UnregisterAgentOptions()
 
         # Get all matching agents
-        agents = await self.list(limit=1000)  # Get all agents
+        agents = await self.list()  # Get all agents
 
         # Apply filters (client-side filtering like TypeScript SDK)
         if filters:
@@ -646,6 +642,299 @@ class AgentsAPI:
             "total_data_deleted": total_data_deleted,
         }
 
+    async def update_many(
+        self,
+        filters: AgentFilters,
+        updates: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """
+        Update multiple agents matching filters.
+
+        Args:
+            filters: Filter criteria for agents to update
+            updates: Fields to update on matching agents
+
+        Returns:
+            Update result with count and agent IDs
+
+        Example:
+            >>> # Update all agents in a team
+            >>> result = await cortex.agents.update_many(
+            ...     AgentFilters(metadata={'team': 'support'}),
+            ...     {'metadata': {'training_completed': True}}
+            ... )
+            >>> print(f"Updated {result['updated']} agents")
+            >>>
+            >>> # Upgrade all agents to new version
+            >>> await cortex.agents.update_many(
+            ...     AgentFilters(metadata={'version': '2.0.0'}),
+            ...     {'metadata': {'version': '2.1.0'}}
+            ... )
+        """
+        # Validate filters and updates
+        validate_agent_filters(filters)
+        validate_update_payload("placeholder", updates)  # Uses existing validation
+
+        # Get all matching agents using list() with client-side filtering
+        matching_agents = await self._list_with_filters(filters)
+
+        if len(matching_agents) == 0:
+            return {
+                "updated": 0,
+                "agent_ids": [],
+            }
+
+        # Extract agent IDs and call backend
+        agent_ids = [a.id for a in matching_agents]
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "agents:updateMany",
+                filter_none_values({
+                    "agentIds": agent_ids,
+                    "name": updates.get("name"),
+                    "description": updates.get("description"),
+                    "metadata": updates.get("metadata"),
+                    "config": updates.get("config"),
+                }),
+            ),
+            "agents:updateMany",
+        )
+
+        return {
+            "updated": result.get("updated", 0),
+            "agent_ids": result.get("agentIds", []),
+        }
+
+    async def export(self, options: ExportAgentsOptions) -> ExportAgentsResult:
+        """
+        Export registered agents matching filters.
+
+        Args:
+            options: Export options including format and filters
+
+        Returns:
+            Export result with data string
+
+        Example:
+            >>> # Export all agents as JSON
+            >>> result = await cortex.agents.export(
+            ...     ExportAgentsOptions(format="json", include_stats=True)
+            ... )
+            >>> with open("agents.json", "w") as f:
+            ...     f.write(result.data)
+            >>>
+            >>> # Export support team as CSV
+            >>> csv = await cortex.agents.export(
+            ...     ExportAgentsOptions(
+            ...         filters=AgentFilters(metadata={'team': 'support'}),
+            ...         format="csv",
+            ...     )
+            ... )
+        """
+        # Validate options
+        validate_export_options(options)
+
+        # Get matching agents using list() with client-side filtering
+        agents = await self._list_with_filters(options.filters) if options.filters else await self.list()
+
+        include_metadata = options.include_metadata if options.include_metadata is not None else True
+        include_stats = options.include_stats if options.include_stats is not None else False
+
+        # Optionally include stats for each agent
+        export_data: List[Dict[str, Any]] = []
+        for agent in agents:
+            agent_dict: Dict[str, Any] = {
+                "id": agent.id,
+                "name": agent.name,
+                "description": agent.description,
+                "status": agent.status,
+                "registered_at": agent.registered_at,
+                "updated_at": agent.updated_at,
+                "last_active": agent.last_active,
+            }
+            if include_metadata:
+                agent_dict["metadata"] = agent.metadata
+                agent_dict["config"] = agent.config
+            if include_stats:
+                stats = await self.get_stats(agent.id)
+                agent_dict["stats"] = stats
+            export_data.append(agent_dict)
+
+        if options.format == "csv":
+            # Build CSV
+            data = self._build_csv_export(export_data, include_metadata, include_stats)
+        else:
+            # JSON export
+            import json
+            data = json.dumps(export_data, indent=2)
+
+        return ExportAgentsResult(
+            format=options.format,
+            data=data,
+            count=len(agents),
+            exported_at=int(time.time() * 1000),
+        )
+
+    def _build_csv_export(
+        self,
+        export_data: List[Dict[str, Any]],
+        include_metadata: bool,
+        include_stats: bool,
+    ) -> str:
+        """Build CSV export string from export data."""
+        import json
+
+        # Build CSV headers
+        headers = [
+            "id",
+            "name",
+            "description",
+            "status",
+            "registered_at",
+            "updated_at",
+            "last_active",
+        ]
+        if include_metadata:
+            headers.extend(["metadata", "config"])
+        if include_stats:
+            headers.extend([
+                "total_memories",
+                "total_conversations",
+                "total_facts",
+                "memory_spaces_active",
+            ])
+
+        # Build CSV rows
+        rows = []
+        for agent in export_data:
+            row = [
+                self._escape_csv_field(str(agent.get("id", ""))),
+                self._escape_csv_field(str(agent.get("name", ""))),
+                self._escape_csv_field(str(agent.get("description") or "")),
+                self._escape_csv_field(str(agent.get("status", ""))),
+                self._format_timestamp(agent.get("registered_at")),
+                self._format_timestamp(agent.get("updated_at")),
+                self._format_timestamp(agent.get("last_active")) if agent.get("last_active") else "",
+            ]
+
+            if include_metadata:
+                row.append(self._escape_csv_field(json.dumps(agent.get("metadata", {}))))
+                row.append(self._escape_csv_field(json.dumps(agent.get("config", {}))))
+
+            if include_stats and agent.get("stats"):
+                stats = agent["stats"]
+                row.extend([
+                    str(stats.get("totalMemories", 0)),
+                    str(stats.get("totalConversations", 0)),
+                    str(stats.get("totalFacts", 0)),
+                    str(stats.get("memorySpacesActive", 0)),
+                ])
+            elif include_stats:
+                row.extend(["0", "0", "0", "0"])
+
+            rows.append(",".join(row))
+
+        return ",".join(headers) + "\n" + "\n".join(rows)
+
+    def _escape_csv_field(self, field: str) -> str:
+        """Escape a field for CSV output."""
+        if "," in field or '"' in field or "\n" in field:
+            escaped = field.replace('"', '""')
+            return f'"{escaped}"'
+        return field
+
+    def _format_timestamp(self, ts: Optional[int]) -> str:
+        """Format timestamp as ISO string."""
+        if ts is None:
+            return ""
+        from datetime import datetime, timezone
+        return datetime.fromtimestamp(ts / 1000, tz=timezone.utc).isoformat()
+
+    async def _list_with_filters(self, filters: Optional[AgentFilters]) -> List[RegisteredAgent]:
+        """
+        List agents with full client-side filtering support.
+
+        This helper method applies all AgentFilters criteria including
+        metadata, name, capabilities matching (like TypeScript SDK).
+        """
+        # Get agents from backend with basic filters (status, limit, offset)
+        results = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "agents:list",
+                filter_none_values({
+                    "status": filters.status if filters else None,
+                    "limit": filters.limit if filters else 100,
+                    "offset": filters.offset if filters else 0,
+                }) if filters else {},
+            ),
+            "agents:list",
+        )
+
+        # Convert to list if needed
+        agents_list = results if isinstance(results, list) else results.get("agents", results)
+
+        # Apply client-side filtering (metadata, name, capabilities)
+        filtered = agents_list
+
+        if filters and filters.metadata:
+            filtered = [
+                agent for agent in filtered
+                if all(
+                    agent.get("metadata", {}).get(key) == value
+                    for key, value in filters.metadata.items()
+                )
+            ]
+
+        if filters and filters.name:
+            filtered = [
+                agent for agent in filtered
+                if filters.name.lower() in agent.get("name", "").lower()
+            ]
+
+        if filters and filters.capabilities and len(filters.capabilities) > 0:
+            def has_capabilities(agent: Dict[str, Any]) -> bool:
+                agent_caps = agent.get("metadata", {}).get("capabilities", [])
+                if not isinstance(agent_caps, list):
+                    return False
+                match_mode = filters.capabilities_match or "any"
+                if match_mode == "all":
+                    return all(cap in agent_caps for cap in filters.capabilities)  # type: ignore
+                return any(cap in agent_caps for cap in filters.capabilities)  # type: ignore
+
+            filtered = [agent for agent in filtered if has_capabilities(agent)]
+
+        # Filter by lastActive timestamp range
+        if filters and filters.last_active_after is not None:
+            filtered = [
+                agent for agent in filtered
+                if agent.get("lastActive") is not None
+                and agent["lastActive"] >= filters.last_active_after
+            ]
+
+        if filters and filters.last_active_before is not None:
+            filtered = [
+                agent for agent in filtered
+                if agent.get("lastActive") is not None
+                and agent["lastActive"] <= filters.last_active_before
+            ]
+
+        # Map to RegisteredAgent format
+        return [
+            RegisteredAgent(
+                id=r.get("agentId", ""),
+                name=r.get("name", ""),
+                status=r.get("status", "active"),
+                registered_at=r.get("registeredAt", 0),
+                updated_at=r.get("updatedAt", 0),
+                metadata=r.get("metadata", {}),
+                config=r.get("config", {}),
+                description=r.get("description"),
+                last_active=r.get("lastActive"),
+            )
+            for r in filtered
+        ]
+
     # Helper methods for cascade deletion
 
     async def _collect_agent_deletion_plan(self, agent_id: str) -> Dict[str, List[Any]]:
@@ -683,12 +972,17 @@ class AgentsAPI:
         # If this fails, we can still return partial plan (agent registration + graph nodes)
         try:
             if self._resilience:
-                memory_spaces = await self._resilience.execute(
+                memory_spaces_result = await self._resilience.execute(
                     lambda: self.client.query("memorySpaces:list", {}),
                     "memorySpaces:list"
                 )
             else:
-                memory_spaces = await self.client.query("memorySpaces:list", {})
+                memory_spaces_result = await self.client.query("memorySpaces:list", {})
+            # Handle both list format (legacy) and dict format (new API)
+            if isinstance(memory_spaces_result, dict):
+                memory_spaces = memory_spaces_result.get("spaces", [])
+            else:
+                memory_spaces = memory_spaces_result if isinstance(memory_spaces_result, list) else []
         except Exception as e:
             # Log warning but continue - we can still collect agent registration and graph data
             print(f"Warning: Failed to list memory spaces for deletion plan: {e}")
@@ -697,9 +991,15 @@ class AgentsAPI:
         # Helper functions for parallel queries
         async def collect_conversations(space: Dict[str, Any]) -> Dict[str, Any]:
             try:
-                conversations = await self.client.query(
+                conversations_result = await self.client.query(
                     "conversations:list",
                     {"memorySpaceId": space.get("memorySpaceId")},
+                )
+                # Handle both list format (legacy) and dict format (new API)
+                conversations = (
+                    conversations_result.get("conversations", [])
+                    if isinstance(conversations_result, dict)
+                    else conversations_result if isinstance(conversations_result, list) else []
                 )
                 agent_convos = [
                     c for c in conversations
@@ -976,12 +1276,17 @@ class AgentsAPI:
         # If this fails, we can still verify graph nodes and report the issue
         try:
             if self._resilience:
-                memory_spaces = await self._resilience.execute(
+                memory_spaces_result = await self._resilience.execute(
                     lambda: self.client.query("memorySpaces:list", {}),
                     "memorySpaces:list"
                 )
             else:
-                memory_spaces = await self.client.query("memorySpaces:list", {})
+                memory_spaces_result = await self.client.query("memorySpaces:list", {})
+            # Handle both list format (legacy) and dict format (new API)
+            if isinstance(memory_spaces_result, dict):
+                memory_spaces = memory_spaces_result.get("spaces", [])
+            else:
+                memory_spaces = memory_spaces_result if isinstance(memory_spaces_result, list) else []
         except Exception as e:
             # Add to issues but continue with what we can verify
             issues.append(f"Failed to list memory spaces for verification: {e}")
@@ -1008,9 +1313,15 @@ class AgentsAPI:
         async def count_remaining_conversations() -> int:
             async def check_space(space: Dict[str, Any]) -> int:
                 try:
-                    conversations = await self.client.query(
+                    conversations_result = await self.client.query(
                         "conversations:list",
                         {"memorySpaceId": space.get("memorySpaceId")},
+                    )
+                    # Handle both list format (legacy) and dict format (new API)
+                    conversations = (
+                        conversations_result.get("conversations", [])
+                        if isinstance(conversations_result, dict)
+                        else conversations_result if isinstance(conversations_result, list) else []
                     )
                     return len([
                         c for c in conversations

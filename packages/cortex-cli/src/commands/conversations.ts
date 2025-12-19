@@ -12,7 +12,8 @@ import { Command } from "commander";
 import ora from "ora";
 import type { CLIConfig, OutputFormat } from "../types.js";
 import { withClient } from "../utils/client.js";
-import { resolveConfig } from "../utils/config.js";
+import { resolveConfig, loadConfig } from "../utils/config.js";
+import { selectDeployment } from "../utils/deployment-selector.js";
 import {
   formatOutput,
   printSuccess,
@@ -39,7 +40,7 @@ import pc from "picocolors";
  */
 export function registerConversationsCommands(
   program: Command,
-  config: CLIConfig,
+  _config: CLIConfig,
 ): void {
   const conversations = program
     .command("conversations")
@@ -50,14 +51,18 @@ export function registerConversationsCommands(
   conversations
     .command("list")
     .description("List conversations")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-s, --space <id>", "Filter by memory space ID")
     .option("-u, --user <id>", "Filter by user ID")
     .option("-t, --type <type>", "Filter by type: user-agent, agent-agent")
     .option("-l, --limit <number>", "Maximum number of results", "50")
     .option("-f, --format <format>", "Output format: table, json, csv")
     .action(async (options) => {
-      const globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "list conversations");
+      if (!selection) return;
+
+      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading conversations...").start();
@@ -71,8 +76,8 @@ export function registerConversationsCommands(
         }
         const limit = validateLimit(parseInt(options.limit, 10));
 
-        await withClient(config, globalOpts, async (client) => {
-          const convList = await client.conversations.list({
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
+          const convResult = await client.conversations.list({
             memorySpaceId: options.space,
             userId: options.user,
             type: options.type,
@@ -81,13 +86,14 @@ export function registerConversationsCommands(
 
           spinner.stop();
 
-          if (convList.length === 0) {
+          const conversations = convResult.conversations;
+          if (conversations.length === 0) {
             printWarning("No conversations found");
             return;
           }
 
           // Format conversations for display
-          const displayData = convList.map((c) => ({
+          const displayData = conversations.map((c) => ({
             id: c.conversationId,
             space: c.memorySpaceId,
             type: c.type,
@@ -112,7 +118,7 @@ export function registerConversationsCommands(
             }),
           );
 
-          printSuccess(`Found ${formatCount(convList.length, "conversation")}`);
+          printSuccess(`Found ${formatCount(conversations.length, "conversation")}`);
         });
       } catch (error) {
         spinner.stop();
@@ -129,11 +135,15 @@ export function registerConversationsCommands(
   conversations
     .command("get <conversationId>")
     .description("Get conversation details with messages")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-m, --messages <number>", "Number of messages to show", "20")
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (conversationId, options) => {
-      const globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "get conversation");
+      if (!selection) return;
+
+      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading conversation...").start();
@@ -145,7 +155,7 @@ export function registerConversationsCommands(
           1000,
         );
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const conversation = await client.conversations.get(conversationId);
 
           if (!conversation) {
@@ -231,15 +241,18 @@ export function registerConversationsCommands(
   conversations
     .command("delete <conversationId>")
     .description("Delete a conversation")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (conversationId, options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "delete conversation");
+      if (!selection) return;
 
       try {
         validateConversationId(conversationId);
 
         // Get conversation first to show info
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const conversation = await client.conversations.get(conversationId);
 
           if (!conversation) {
@@ -250,7 +263,7 @@ export function registerConversationsCommands(
           if (!options.yes) {
             const confirmed = await requireConfirmation(
               `Delete conversation ${conversationId} with ${conversation.messageCount} messages?`,
-              config,
+              currentConfig,
             );
             if (!confirmed) {
               printWarning("Operation cancelled");
@@ -278,6 +291,7 @@ export function registerConversationsCommands(
   conversations
     .command("export <conversationId>")
     .description("Export a conversation to a file")
+    .option("-d, --deployment <name>", "Target deployment")
     .option(
       "-o, --output <file>",
       "Output file path",
@@ -285,7 +299,9 @@ export function registerConversationsCommands(
     )
     .option("-f, --format <format>", "Export format: json, txt", "json")
     .action(async (conversationId, options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "export conversation");
+      if (!selection) return;
 
       const spinner = ora("Exporting conversation...").start();
 
@@ -293,7 +309,7 @@ export function registerConversationsCommands(
         validateConversationId(conversationId);
         validateFilePath(options.output);
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const conversation = await client.conversations.get(conversationId);
 
           if (!conversation) {
@@ -346,11 +362,14 @@ export function registerConversationsCommands(
   conversations
     .command("count")
     .description("Count conversations")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-s, --space <id>", "Filter by memory space ID")
     .option("-u, --user <id>", "Filter by user ID")
     .option("-t, --type <type>", "Filter by type")
     .action(async (options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "count conversations");
+      if (!selection) return;
 
       const spinner = ora("Counting conversations...").start();
 
@@ -362,7 +381,7 @@ export function registerConversationsCommands(
           validateUserId(options.user);
         }
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const count = await client.conversations.count({
             memorySpaceId: options.space,
             userId: options.user,
@@ -389,11 +408,14 @@ export function registerConversationsCommands(
   conversations
     .command("clear")
     .description("Clear conversations")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-s, --space <id>", "Memory space ID (required)")
     .option("-u, --user <id>", "Only clear for this user")
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "clear conversations");
+      if (!selection) return;
 
       try {
         if (!options.space && !options.user) {
@@ -409,7 +431,7 @@ export function registerConversationsCommands(
         }
 
         // Count first
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const count = await client.conversations.count({
             memorySpaceId: options.space,
             userId: options.user,
@@ -426,7 +448,7 @@ export function registerConversationsCommands(
               : `in space ${options.space}`;
             const confirmed = await requireConfirmation(
               `Delete ${formatCount(count, "conversation")} ${scope}? This cannot be undone.`,
-              config,
+              currentConfig,
             );
             if (!confirmed) {
               printWarning("Operation cancelled");
@@ -437,14 +459,14 @@ export function registerConversationsCommands(
           const spinner = ora(`Deleting ${count} conversations...`).start();
 
           // Get all conversations
-          const convList = await client.conversations.list({
+          const convResult = await client.conversations.list({
             memorySpaceId: options.space,
             userId: options.user,
             limit: 1000,
           });
 
           let deleted = 0;
-          for (const conv of convList) {
+          for (const conv of convResult.conversations) {
             try {
               await client.conversations.delete(conv.conversationId);
               deleted++;
@@ -466,11 +488,15 @@ export function registerConversationsCommands(
   conversations
     .command("messages <conversationId>")
     .description("List messages in a conversation")
+    .option("-d, --deployment <name>", "Target deployment")
     .option("-l, --limit <number>", "Maximum number of messages", "50")
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (conversationId, options) => {
-      const globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "list messages");
+      if (!selection) return;
+
+      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading messages...").start();
@@ -479,7 +505,7 @@ export function registerConversationsCommands(
         validateConversationId(conversationId);
         const limit = validateLimit(parseInt(options.limit, 10), 1000);
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const conversation = await client.conversations.get(conversationId);
 
           if (!conversation) {

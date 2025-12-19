@@ -305,6 +305,143 @@ export function validateName(name: string | undefined): void {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Offset Validation
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Validates offset parameter
+ */
+export function validateOffset(offset: number): void {
+  if (typeof offset !== "number" || isNaN(offset)) {
+    throw new MemorySpaceValidationError(
+      "offset must be a number",
+      "INVALID_OFFSET",
+      "offset",
+    );
+  }
+
+  if (offset < 0) {
+    throw new MemorySpaceValidationError(
+      `offset must be at least 0, got ${offset}`,
+      "INVALID_OFFSET",
+      "offset",
+    );
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Sort Validation
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const VALID_SORT_BY = ["createdAt", "updatedAt", "name"] as const;
+const VALID_SORT_ORDER = ["asc", "desc"] as const;
+
+/**
+ * Validates sortBy parameter
+ */
+export function validateSortBy(sortBy: string): void {
+  if (!sortBy || typeof sortBy !== "string") {
+    throw new MemorySpaceValidationError(
+      "sortBy is required and must be a string",
+      "INVALID_SORT_BY",
+      "sortBy",
+    );
+  }
+
+  if (!(VALID_SORT_BY as readonly string[]).includes(sortBy)) {
+    throw new MemorySpaceValidationError(
+      `Invalid sortBy "${sortBy}". Valid values: ${VALID_SORT_BY.join(", ")}`,
+      "INVALID_SORT_BY",
+      "sortBy",
+    );
+  }
+}
+
+/**
+ * Validates sortOrder parameter
+ */
+export function validateSortOrder(sortOrder: string): void {
+  if (!sortOrder || typeof sortOrder !== "string") {
+    throw new MemorySpaceValidationError(
+      "sortOrder is required and must be a string",
+      "INVALID_SORT_ORDER",
+      "sortOrder",
+    );
+  }
+
+  if (!(VALID_SORT_ORDER as readonly string[]).includes(sortOrder)) {
+    throw new MemorySpaceValidationError(
+      `Invalid sortOrder "${sortOrder}". Valid values: ${VALID_SORT_ORDER.join(", ")}`,
+      "INVALID_SORT_ORDER",
+      "sortOrder",
+    );
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Time Window Validation
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const VALID_TIME_WINDOWS = ["24h", "7d", "30d", "90d", "all"] as const;
+
+/**
+ * Validates timeWindow parameter
+ */
+export function validateTimeWindow(timeWindow: string): void {
+  if (!timeWindow || typeof timeWindow !== "string") {
+    throw new MemorySpaceValidationError(
+      "timeWindow is required and must be a string",
+      "INVALID_TIME_WINDOW",
+      "timeWindow",
+    );
+  }
+
+  if (!(VALID_TIME_WINDOWS as readonly string[]).includes(timeWindow)) {
+    throw new MemorySpaceValidationError(
+      `Invalid timeWindow "${timeWindow}". Valid values: ${VALID_TIME_WINDOWS.join(", ")}`,
+      "INVALID_TIME_WINDOW",
+      "timeWindow",
+    );
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Delete Options Validation
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Validates delete options
+ */
+export function validateDeleteOptions(
+  memorySpaceId: string,
+  options: { cascade: boolean; reason: string; confirmId?: string },
+): void {
+  if (options.cascade !== true) {
+    throw new MemorySpaceValidationError(
+      "cascade must be true to delete a memory space",
+      "CASCADE_REQUIRED",
+      "cascade",
+    );
+  }
+
+  if (!options.reason || typeof options.reason !== "string" || options.reason.trim().length === 0) {
+    throw new MemorySpaceValidationError(
+      "reason is required and cannot be empty",
+      "MISSING_REASON",
+      "reason",
+    );
+  }
+
+  if (options.confirmId !== undefined && options.confirmId !== memorySpaceId) {
+    throw new MemorySpaceValidationError(
+      `confirmId "${options.confirmId}" does not match memorySpaceId "${memorySpaceId}"`,
+      "CONFIRM_ID_MISMATCH",
+      "confirmId",
+    );
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Update Validation
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

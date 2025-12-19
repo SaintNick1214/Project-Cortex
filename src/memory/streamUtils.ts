@@ -206,17 +206,6 @@ export function createPassthroughStream(
         }
       }
     },
-
-    cancel(reason) {
-      // Stream was cancelled
-      if (onError) {
-        onError(
-          reason instanceof Error
-            ? reason
-            : new Error(`Stream cancelled: ${String(reason)}`),
-        );
-      }
-    },
   });
 }
 

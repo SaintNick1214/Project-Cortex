@@ -53,6 +53,8 @@ from .types import (
     ResilienceConfig,
     # Metric types
     ResilienceMetrics,
+    # Retry config
+    RetryConfig,
     SemaphorePermit,
 )
 
@@ -72,6 +74,7 @@ __all__ = [
     "ConcurrencyConfig",
     "CircuitBreakerConfig",
     "QueueConfig",
+    "RetryConfig",
     # Metric types
     "ResilienceMetrics",
     "RateLimiterMetrics",
@@ -252,6 +255,109 @@ def _is_non_system_failure(e: Exception) -> bool:
 _is_idempotent_not_found_error = _is_non_system_failure
 
 
+def _is_retryable_error(e: Exception) -> bool:
+    """
+    Check if an exception is retryable (transient error that may succeed on retry).
+
+    Retryable errors include:
+    - Generic "Server Error" from Convex (transient backend issues)
+    - Rate limiting errors
+    - Timeout errors
+    - Network/connection errors
+
+    Non-retryable errors (won't succeed on retry):
+    - Validation errors (client bugs)
+    - Not found errors (data doesn't exist)
+    - Permission errors (auth issues)
+    - Business logic errors (constraints)
+
+    Args:
+        e: The exception to check
+
+    Returns:
+        True if the error is retryable
+    """
+    # Non-system failures should NOT be retried - they indicate
+    # the request is invalid and will fail every time
+    if _is_non_system_failure(e):
+        return False
+
+    error_str = str(e)
+    error_lower = error_str.lower()
+
+    # Patterns that indicate transient/retryable errors
+    retryable_patterns = (
+        # Generic server errors (often transient)
+        "Server Error",
+        "server error",
+        "Internal Server Error",
+        "internal server error",
+        # Rate limiting
+        "rate limit",
+        "too many requests",
+        "429",
+        "throttl",
+        # Timeouts
+        "timeout",
+        "timed out",
+        "deadline exceeded",
+        # Network issues
+        "connection",
+        "network",
+        "ECONNRESET",
+        "ECONNREFUSED",
+        "ETIMEDOUT",
+        # Temporary unavailability
+        "temporarily unavailable",
+        "service unavailable",
+        "503",
+        "502",
+        "504",
+        # Convex-specific transient errors
+        "overloaded",
+        "try again",
+        "retry",
+    )
+
+    return any(pattern in error_str or pattern in error_lower for pattern in retryable_patterns)
+
+
+def _calculate_retry_delay(
+    attempt: int,
+    base_delay: float,
+    max_delay: float,
+    exponential_base: float,
+    jitter: bool,
+) -> float:
+    """
+    Calculate delay before next retry using exponential backoff with optional jitter.
+
+    Args:
+        attempt: Current attempt number (0-based)
+        base_delay: Base delay in seconds
+        max_delay: Maximum delay in seconds
+        exponential_base: Exponential backoff multiplier
+        jitter: Whether to add random jitter
+
+    Returns:
+        Delay in seconds before next retry
+    """
+    import random
+
+    # Exponential backoff: base_delay * (exponential_base ^ attempt)
+    delay = base_delay * (exponential_base ** attempt)
+
+    # Cap at max delay
+    delay = min(delay, max_delay)
+
+    # Add jitter (±25%) to prevent thundering herd
+    if jitter:
+        jitter_range = delay * 0.25
+        delay = delay + random.uniform(-jitter_range, jitter_range)
+
+    return max(0.0, delay)
+
+
 class ResiliencePresets:
     """
     Pre-configured resilience settings for common use cases.
@@ -270,6 +376,9 @@ class ResiliencePresets:
       - Concurrent mutations: 256
       - Concurrent actions: 256-1000
       - Function calls: 25M/month
+
+    All presets include automatic retry with exponential backoff for
+    transient failures (e.g., "Server Error", rate limiting, timeouts).
     """
 
     @staticmethod
@@ -279,6 +388,7 @@ class ResiliencePresets:
 
         Respects Convex's 16 concurrent query/mutation limit.
         Good for most single-agent use cases.
+        Includes automatic retry (3 attempts) for transient failures.
         """
         return ResilienceConfig(
             enabled=True,
@@ -306,6 +416,13 @@ class ResiliencePresets:
                     "background": 5000,
                 }
             ),
+            retry=RetryConfig(
+                max_retries=3,  # Retry up to 3 times
+                base_delay_s=0.5,  # Start with 0.5s delay
+                max_delay_s=10.0,  # Cap at 10s
+                exponential_base=2.0,  # Double delay each attempt
+                jitter=True,  # Prevent thundering herd
+            ),
         )
 
     @staticmethod
@@ -315,6 +432,7 @@ class ResiliencePresets:
 
         Optimized for low latency conversation storage.
         Uses conservative limits to ensure fast response times.
+        Includes fast retry (2 attempts) with shorter delays.
         """
         return ResilienceConfig(
             enabled=True,
@@ -342,6 +460,13 @@ class ResiliencePresets:
                     "background": 50,
                 }
             ),
+            retry=RetryConfig(
+                max_retries=2,  # Fewer retries for faster failure
+                base_delay_s=0.25,  # Shorter initial delay
+                max_delay_s=2.0,  # Lower cap for responsiveness
+                exponential_base=2.0,
+                jitter=True,
+            ),
         )
 
     @staticmethod
@@ -351,6 +476,7 @@ class ResiliencePresets:
 
         High throughput for bulk operations.
         ⚠️ Requires Professional plan (256 concurrent limit).
+        Includes patient retry (5 attempts) with longer delays.
         """
         return ResilienceConfig(
             enabled=True,
@@ -378,6 +504,13 @@ class ResiliencePresets:
                     "background": 20000,
                 }
             ),
+            retry=RetryConfig(
+                max_retries=5,  # More retries for batch reliability
+                base_delay_s=1.0,  # Longer initial delay
+                max_delay_s=30.0,  # Higher cap for batch operations
+                exponential_base=2.0,
+                jitter=True,
+            ),
         )
 
     @staticmethod
@@ -388,6 +521,7 @@ class ResiliencePresets:
         Extreme concurrency for multi-agent swarms sharing one database.
         ⚠️ Requires Professional plan with increased limits.
         Contact Convex support for limits beyond default Professional tier.
+        Includes aggressive retry (5 attempts) for swarm coordination.
         """
         return ResilienceConfig(
             enabled=True,
@@ -415,11 +549,18 @@ class ResiliencePresets:
                     "background": 50000,
                 }
             ),
+            retry=RetryConfig(
+                max_retries=5,  # Aggressive retry for swarm resilience
+                base_delay_s=0.5,  # Moderate initial delay
+                max_delay_s=15.0,  # Higher cap but balanced
+                exponential_base=1.5,  # Slower backoff for swarms
+                jitter=True,  # Critical for swarms to prevent thundering herd
+            ),
         )
 
     @staticmethod
     def disabled() -> ResilienceConfig:
-        """Disabled configuration. Bypasses all resilience mechanisms."""
+        """Disabled configuration. Bypasses all resilience mechanisms including retry."""
         return ResilienceConfig(enabled=False)
 
 
@@ -539,6 +680,9 @@ class ResilienceLayer:
             on_half_open=self._config.on_circuit_half_open,
         )
 
+        # Retry configuration (default: enabled with 3 retries)
+        self._retry_config = self._config.retry or RetryConfig()
+
         # Queue processing state
         self._is_processing_queue = False
         self._queue_processor_task: Optional[asyncio.Task] = None
@@ -584,7 +728,13 @@ class ResilienceLayer:
         operation_name: str,
     ) -> T:
         """
-        Execute an operation through all resilience layers.
+        Execute an operation through all resilience layers with automatic retry.
+
+        This method provides comprehensive resilience:
+        - Rate limiting (token bucket)
+        - Concurrency limiting (semaphore)
+        - Circuit breaker protection
+        - Automatic retry with exponential backoff for transient failures
 
         Args:
             operation: The async operation to execute
@@ -602,7 +752,66 @@ class ResilienceLayer:
             return await operation()
 
         priority = get_priority(operation_name)
+        last_error: Optional[Exception] = None
+        max_attempts = self._retry_config.max_retries + 1
 
+        for attempt in range(max_attempts):
+            try:
+                return await self._execute_single_attempt(
+                    operation, operation_name, priority
+                )
+            except CircuitOpenError:
+                # Don't retry on circuit open - it's a protective mechanism
+                raise
+            except QueueFullError:
+                # Don't retry on queue full - system is overloaded
+                raise
+            except Exception as e:
+                last_error = e
+
+                # Check if this error is retryable
+                if not _is_retryable_error(e):
+                    # Non-retryable errors (validation, not found, etc.) - fail immediately
+                    raise
+
+                # Check if we have retries left
+                if attempt < max_attempts - 1:
+                    delay = _calculate_retry_delay(
+                        attempt=attempt,
+                        base_delay=self._retry_config.base_delay_s,
+                        max_delay=self._retry_config.max_delay_s,
+                        exponential_base=self._retry_config.exponential_base,
+                        jitter=self._retry_config.jitter,
+                    )
+
+                    # Call retry hook if configured
+                    if self._config.on_retry:
+                        try:
+                            self._config.on_retry(attempt + 1, e, delay)
+                        except Exception:
+                            pass  # Don't let hook errors affect retry logic
+
+                    await asyncio.sleep(delay)
+                else:
+                    # No retries left - raise the last error
+                    raise
+
+        # Should not reach here, but just in case
+        if last_error:
+            raise last_error
+        raise RuntimeError("Unexpected state in execute()")
+
+    async def _execute_single_attempt(
+        self,
+        operation: Callable[[], Awaitable[T]],
+        operation_name: str,
+        priority: Priority,
+    ) -> T:
+        """
+        Execute a single attempt of an operation through resilience layers.
+
+        This is the core execution logic without retry.
+        """
         # Layer 4: Check circuit breaker
         if self._circuit_breaker.is_open():
             # Critical operations always get queued, never rejected
@@ -653,26 +862,39 @@ class ResilienceLayer:
         self,
         operation: Callable[[], Awaitable[T]],
         operation_name: str,
-        max_retries: int = 3,
-        retry_delay_s: float = 1.0,
+        max_retries: Optional[int] = None,
+        base_delay_s: Optional[float] = None,
+        max_delay_s: Optional[float] = None,
     ) -> T:
         """
-        Execute with automatic retry on transient failures.
+        Execute with custom retry settings (overrides default config).
+
+        Note: The standard execute() method now includes automatic retry by default.
+        Use this method only if you need to override the default retry settings.
 
         Args:
             operation: The operation to execute
             operation_name: Operation identifier
-            max_retries: Maximum retry attempts
-            retry_delay_s: Delay between retries (seconds)
+            max_retries: Maximum retry attempts (default: uses config)
+            base_delay_s: Base delay between retries in seconds (default: uses config)
+            max_delay_s: Maximum delay between retries in seconds (default: uses config)
 
         Returns:
             The result of the operation
         """
+        # Use custom values or fall back to config defaults
+        effective_max_retries = max_retries if max_retries is not None else self._retry_config.max_retries
+        effective_base_delay = base_delay_s if base_delay_s is not None else self._retry_config.base_delay_s
+        effective_max_delay = max_delay_s if max_delay_s is not None else self._retry_config.max_delay_s
+
+        priority = get_priority(operation_name)
         last_error: Optional[Exception] = None
 
-        for attempt in range(max_retries + 1):
+        for attempt in range(effective_max_retries + 1):
             try:
-                return await self.execute(operation, operation_name)
+                return await self._execute_single_attempt(
+                    operation, operation_name, priority
+                )
             except CircuitOpenError:
                 # Don't retry on circuit open
                 raise
@@ -682,9 +904,27 @@ class ResilienceLayer:
             except Exception as e:
                 last_error = e
 
-                # Wait before retry (exponential backoff)
-                if attempt < max_retries:
-                    delay = retry_delay_s * (2**attempt)
+                # Check if this error is retryable
+                if not _is_retryable_error(e):
+                    raise
+
+                # Wait before retry with exponential backoff
+                if attempt < effective_max_retries:
+                    delay = _calculate_retry_delay(
+                        attempt=attempt,
+                        base_delay=effective_base_delay,
+                        max_delay=effective_max_delay,
+                        exponential_base=self._retry_config.exponential_base,
+                        jitter=self._retry_config.jitter,
+                    )
+
+                    # Call retry hook if configured
+                    if self._config.on_retry:
+                        try:
+                            self._config.on_retry(attempt + 1, e, delay)
+                        except Exception:
+                            pass
+
                     await asyncio.sleep(delay)
 
         raise last_error or RuntimeError("Max retries exceeded")

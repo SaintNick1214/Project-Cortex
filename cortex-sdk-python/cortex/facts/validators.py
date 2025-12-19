@@ -544,16 +544,25 @@ def validate_update_has_fields(updates: Dict[str, Any]) -> None:
         FactsValidationError: If no fields are provided
     """
     has_fields = (
-        "fact" in updates
-        or "confidence" in updates
-        or "tags" in updates
-        or "validUntil" in updates
-        or "metadata" in updates
+        updates.get("fact") is not None
+        or updates.get("confidence") is not None
+        or updates.get("tags") is not None
+        or updates.get("validUntil") is not None
+        or updates.get("valid_until") is not None
+        or updates.get("metadata") is not None
+        # Enrichment fields
+        or updates.get("category") is not None
+        or updates.get("searchAliases") is not None
+        or updates.get("search_aliases") is not None
+        or updates.get("semanticContext") is not None
+        or updates.get("semantic_context") is not None
+        or updates.get("entities") is not None
+        or updates.get("relations") is not None
     )
 
     if not has_fields:
         raise FactsValidationError(
-            "Update must include at least one field (fact, confidence, tags, validUntil, or metadata)",
+            "Update must include at least one field (fact, confidence, tags, validUntil, metadata, or enrichment fields)",
             "INVALID_UPDATE",
         )
 

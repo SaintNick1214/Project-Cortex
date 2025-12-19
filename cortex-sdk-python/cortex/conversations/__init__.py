@@ -7,7 +7,7 @@ Layer 1a: ACID-compliant immutable conversation storage
 import random
 import string
 import time
-from typing import Any, Dict, List, Literal, Optional, cast
+from typing import Any, Dict, List, Literal, Optional
 
 from .._utils import convert_convex_response, filter_none_values
 from ..errors import CortexError, ErrorCode  # noqa: F401
@@ -15,13 +15,25 @@ from ..types import (
     AddMessageInput,
     AddMessageOptions,
     Conversation,
+    ConversationDeletionResult,
     ConversationSearchResult,
     ConversationType,
+    CountConversationsFilter,
     CreateConversationInput,
     CreateConversationOptions,
     DeleteConversationOptions,
+    DeleteManyConversationsOptions,
+    DeleteManyConversationsResult,
     ExportResult,
+    GetConversationOptions,
+    GetHistoryOptions,
+    GetHistoryResult,
+    ListConversationsFilter,
+    ListConversationsResult,
     Message,
+    SearchConversationsFilters,  # noqa: F401 - Re-exported for public API
+    SearchConversationsInput,
+    SearchConversationsOptions,  # noqa: F401 - Re-exported for public API
 )
 from .validators import (
     ConversationValidationError,
@@ -169,24 +181,44 @@ class ConversationsAPI:
 
         return Conversation(**convert_convex_response(result))
 
-    async def get(self, conversation_id: str) -> Optional[Conversation]:
+    async def get(
+        self,
+        conversation_id: str,
+        options: Optional[GetConversationOptions] = None,
+    ) -> Optional[Conversation]:
         """
         Get a conversation by ID.
 
         Args:
             conversation_id: The conversation ID to retrieve
+            options: Optional options for controlling message loading
 
         Returns:
             Conversation if found, None otherwise
 
         Example:
             >>> conversation = await cortex.conversations.get('conv-abc123')
+
+            >>> # Get without messages (faster for metadata-only queries)
+            >>> conv = await cortex.conversations.get('conv-abc123', GetConversationOptions(
+            ...     include_messages=False
+            ... ))
+
+            >>> # Limit messages returned
+            >>> conv = await cortex.conversations.get('conv-abc123', GetConversationOptions(
+            ...     message_limit=10
+            ... ))
         """
         validate_required_string(conversation_id, "conversation_id")
 
         result = await self._execute_with_resilience(
             lambda: self.client.query(
-                "conversations:get", {"conversationId": conversation_id}
+                "conversations:get",
+                filter_none_values({
+                    "conversationId": conversation_id,
+                    "includeMessages": options.include_messages if options else None,
+                    "messageLimit": options.message_limit if options else None,
+                }),
             ),
             "conversations:get",
         )
@@ -263,82 +295,171 @@ class ConversationsAPI:
 
     async def list(
         self,
-        type: Optional[ConversationType] = None,
-        user_id: Optional[str] = None,
+        filter: Optional[ListConversationsFilter] = None,
+        *,
         memory_space_id: Optional[str] = None,
+        user_id: Optional[str] = None,
+        type: Optional[ConversationType] = None,
         limit: Optional[int] = None,
-    ) -> List[Conversation]:
+        offset: Optional[int] = None,
+    ) -> ListConversationsResult:
         """
-        List conversations with optional filters.
+        List conversations with optional filters and pagination.
 
         Args:
-            type: Filter by conversation type
-            user_id: Filter by user ID
-            memory_space_id: Filter by memory space
-            limit: Maximum number of results
+            filter: Optional filter with type, user_id, memory_space_id, dates,
+                   pagination, and sorting options
+            memory_space_id: Memory space ID to filter by (convenience kwarg)
+            user_id: User ID to filter by (convenience kwarg)
+            type: Conversation type to filter by (convenience kwarg)
+            limit: Max results to return (convenience kwarg)
+            offset: Pagination offset (convenience kwarg)
 
         Returns:
-            List of conversations
+            ListConversationsResult with conversations and pagination metadata
 
         Example:
-            >>> conversations = await cortex.conversations.list(
+            >>> result = await cortex.conversations.list(ListConversationsFilter(
             ...     user_id='user-123',
             ...     limit=10
-            ... )
+            ... ))
+            >>> print(f"Found {result.total} conversations")
+
+            >>> # Using convenience kwargs
+            >>> result = await cortex.conversations.list(memory_space_id='space-123')
+
+            >>> # With pagination and sorting
+            >>> page2 = await cortex.conversations.list(ListConversationsFilter(
+            ...     memory_space_id='space-123',
+            ...     offset=10,
+            ...     limit=10,
+            ...     sort_by='lastMessageAt',
+            ...     sort_order='desc',
+            ... ))
+
+            >>> # Filter by date range
+            >>> recent = await cortex.conversations.list(ListConversationsFilter(
+            ...     created_after=int(time.time() * 1000) - 7 * 24 * 60 * 60 * 1000,
+            ... ))
         """
+        # Build filter from kwargs if no filter object provided
+        if filter is None and any([memory_space_id, user_id, type, limit, offset]):
+            filter = ListConversationsFilter(
+                memory_space_id=memory_space_id,
+                user_id=user_id,
+                type=type,
+                limit=limit,
+                offset=offset,
+            )
+
         # All fields optional, validate only if provided
-        if type is not None:
-            validate_conversation_type(type)
-        if limit is not None:
-            validate_limit(limit)
+        if filter and filter.type is not None:
+            validate_conversation_type(filter.type)
+        if filter and filter.limit is not None:
+            validate_limit(filter.limit)
+        if filter and filter.offset is not None:
+            validate_offset(filter.offset)
+        if filter and filter.sort_order is not None:
+            validate_sort_order(filter.sort_order)
+
+        # Handle message_count filter
+        message_count_min: Optional[int] = None
+        message_count_max: Optional[int] = None
+        if filter:
+            if filter.message_count is not None:
+                message_count_min = filter.message_count
+                message_count_max = filter.message_count
+            else:
+                message_count_min = filter.message_count_min
+                message_count_max = filter.message_count_max
 
         result = await self._execute_with_resilience(
             lambda: self.client.query(
                 "conversations:list",
                 filter_none_values({
-                    "type": type,
-                    "userId": user_id,
-                    "memorySpaceId": memory_space_id,
-                    "limit": limit,
+                    "type": filter.type if filter else None,
+                    "userId": filter.user_id if filter else None,
+                    "memorySpaceId": filter.memory_space_id if filter else None,
+                    "participantId": filter.participant_id if filter else None,
+                    "createdBefore": filter.created_before if filter else None,
+                    "createdAfter": filter.created_after if filter else None,
+                    "updatedBefore": filter.updated_before if filter else None,
+                    "updatedAfter": filter.updated_after if filter else None,
+                    "lastMessageBefore": filter.last_message_before if filter else None,
+                    "lastMessageAfter": filter.last_message_after if filter else None,
+                    "messageCountMin": message_count_min,
+                    "messageCountMax": message_count_max,
+                    "limit": filter.limit if filter else None,
+                    "offset": filter.offset if filter else None,
+                    "sortBy": filter.sort_by if filter else None,
+                    "sortOrder": filter.sort_order if filter else None,
+                    "includeMessages": filter.include_messages if filter else None,
                 }),
             ),
             "conversations:list",
         )
 
-        return [Conversation(**convert_convex_response(conv)) for conv in result]
+        # Convert response to ListConversationsResult
+        # Handle both dict response (with conversations key) and direct list response
+        raw_conversations = result if isinstance(result, list) else result.get("conversations", [])
+        conversations = [
+            Conversation(**convert_convex_response(conv))
+            for conv in raw_conversations
+        ]
+        return ListConversationsResult(
+            conversations=conversations,
+            total=result.get("total", len(conversations)) if isinstance(result, dict) else len(conversations),
+            limit=result.get("limit", filter.limit if filter and filter.limit else 50) if isinstance(result, dict) else (filter.limit if filter and filter.limit else 50),
+            offset=result.get("offset", filter.offset if filter and filter.offset else 0) if isinstance(result, dict) else (filter.offset if filter and filter.offset else 0),
+            has_more=result.get("hasMore", False) if isinstance(result, dict) else False,
+        )
 
     async def count(
         self,
-        type: Optional[ConversationType] = None,
-        user_id: Optional[str] = None,
+        filter: Optional[CountConversationsFilter] = None,
+        *,
         memory_space_id: Optional[str] = None,
+        user_id: Optional[str] = None,
+        type: Optional[ConversationType] = None,
     ) -> int:
         """
         Count conversations.
 
         Args:
-            type: Filter by conversation type
-            user_id: Filter by user ID
-            memory_space_id: Filter by memory space
+            filter: Optional filter with type, user_id, memory_space_id
+            memory_space_id: Memory space ID to filter by (convenience kwarg)
+            user_id: User ID to filter by (convenience kwarg)
+            type: Conversation type to filter by (convenience kwarg)
 
         Returns:
             Count of matching conversations
 
         Example:
-            >>> count = await cortex.conversations.count(
+            >>> count = await cortex.conversations.count(CountConversationsFilter(
             ...     memory_space_id='user-123-personal'
-            ... )
+            ... ))
+
+            >>> # Using convenience kwargs
+            >>> count = await cortex.conversations.count(memory_space_id='space-123')
         """
-        if type is not None:
-            validate_conversation_type(type)
+        # Build filter from kwargs if no filter object provided
+        if filter is None and any([memory_space_id, user_id, type]):
+            filter = CountConversationsFilter(
+                memory_space_id=memory_space_id,
+                user_id=user_id,
+                type=type,
+            )
+
+        if filter and filter.type is not None:
+            validate_conversation_type(filter.type)
 
         result = await self._execute_with_resilience(
             lambda: self.client.query(
                 "conversations:count",
                 filter_none_values({
-                    "type": type,
-                    "userId": user_id,
-                    "memorySpaceId": memory_space_id,
+                    "type": filter.type if filter else None,
+                    "userId": filter.user_id if filter else None,
+                    "memorySpaceId": filter.memory_space_id if filter else None,
                 }),
             ),
             "conversations:count",
@@ -348,7 +469,7 @@ class ConversationsAPI:
 
     async def delete(
         self, conversation_id: str, options: Optional[DeleteConversationOptions] = None
-    ) -> Dict[str, bool]:
+    ) -> ConversationDeletionResult:
         """
         Delete a conversation (for GDPR/cleanup).
 
@@ -357,10 +478,12 @@ class ConversationsAPI:
             options: Optional deletion options (e.g., syncToGraph)
 
         Returns:
-            Deletion result
+            ConversationDeletionResult with deletion details
 
         Example:
-            >>> await cortex.conversations.delete('conv-abc123')
+            >>> result = await cortex.conversations.delete('conv-abc123')
+            >>> print(f"Deleted {result.messages_deleted} messages")
+            >>> print(f"Restorable: {result.restorable}")  # false - permanent!
         """
         validate_required_string(conversation_id, "conversation_id")
 
@@ -382,37 +505,50 @@ class ConversationsAPI:
             except Exception as error:
                 print(f"Warning: Failed to delete conversation from graph: {error}")
 
-        return cast(Dict[str, bool], result)
+        return ConversationDeletionResult(**convert_convex_response(result))
 
     async def delete_many(
         self,
-        user_id: Optional[str] = None,
-        memory_space_id: Optional[str] = None,
-        type: Optional[ConversationType] = None,
-    ) -> Dict[str, Any]:
+        filter: Dict[str, Any],
+        options: Optional[DeleteManyConversationsOptions] = None,
+    ) -> DeleteManyConversationsResult:
         """
         Delete many conversations matching filters.
 
         Args:
-            user_id: Filter by user ID
-            memory_space_id: Filter by memory space
-            type: Filter by conversation type
+            filter: Filter with user_id, memory_space_id, and/or type
+            options: Optional options including dryRun and confirmationThreshold
 
         Returns:
-            Deletion result with counts
+            DeleteManyConversationsResult with deletion counts
 
         Example:
-            >>> result = await cortex.conversations.delete_many(
-            ...     memory_space_id='user-123-personal',
-            ...     user_id='user-123'
+            >>> # Preview what would be deleted (dryRun)
+            >>> preview = await cortex.conversations.delete_many(
+            ...     {'user_id': 'user-123'},
+            ...     DeleteManyConversationsOptions(dry_run=True)
             ... )
+            >>> print(f"Would delete {preview.would_delete} conversations")
+
+            >>> # Execute deletion
+            >>> result = await cortex.conversations.delete_many({
+            ...     'memory_space_id': 'user-123-personal',
+            ...     'user_id': 'user-123',
+            ...     'type': 'user-agent',
+            ... })
+            >>> print(f"Deleted {result.deleted} conversations")
         """
+        # Extract filter values
+        user_id = filter.get("user_id") or filter.get("userId")
+        memory_space_id = filter.get("memory_space_id") or filter.get("memorySpaceId")
+        conv_type = filter.get("type")
+
         # Validate type if provided
-        if type is not None:
-            validate_conversation_type(type)
+        if conv_type is not None:
+            validate_conversation_type(conv_type)
 
         # Ensure at least one filter is provided
-        if user_id is None and memory_space_id is None and type is None:
+        if user_id is None and memory_space_id is None and conv_type is None:
             raise ConversationValidationError(
                 "delete_many requires at least one filter (user_id, memory_space_id, or type)",
                 "MISSING_REQUIRED_FIELD",
@@ -424,13 +560,15 @@ class ConversationsAPI:
                 filter_none_values({
                     "userId": user_id,
                     "memorySpaceId": memory_space_id,
-                    "type": type,
+                    "type": conv_type,
+                    "dryRun": options.dry_run if options else None,
+                    "confirmationThreshold": options.confirmation_threshold if options else None,
                 }),
             ),
             "conversations:deleteMany",
         )
 
-        return cast(Dict[str, Any], result)
+        return DeleteManyConversationsResult(**convert_convex_response(result))
 
     async def get_message(
         self, conversation_id: str, message_id: str
@@ -625,109 +763,132 @@ class ConversationsAPI:
     async def get_history(
         self,
         conversation_id: str,
-        limit: Optional[int] = None,
-        offset: Optional[int] = None,
-        sort_order: Optional[Literal["asc", "desc"]] = None,
-    ) -> Dict[str, Any]:
+        options: Optional[GetHistoryOptions] = None,
+    ) -> GetHistoryResult:
         """
         Get paginated message history from a conversation.
 
         Args:
             conversation_id: The conversation ID
-            limit: Maximum messages to return
-            offset: Number of messages to skip
-            sort_order: Sort order (asc or desc)
+            options: Optional history options with limit, offset, sort_order,
+                    since, until, and roles filters
 
         Returns:
-            History with messages and pagination info
+            GetHistoryResult with messages and pagination info
 
         Example:
             >>> history = await cortex.conversations.get_history(
             ...     'conv-abc123',
-            ...     limit=20,
-            ...     offset=0,
-            ...     sort_order='desc'
+            ...     GetHistoryOptions(limit=20, offset=0, sort_order='desc')
+            ... )
+
+            >>> # Filter by date range
+            >>> recent = await cortex.conversations.get_history(
+            ...     'conv-abc123',
+            ...     GetHistoryOptions(
+            ...         since=int(time.time() * 1000) - 24 * 60 * 60 * 1000,  # Last 24h
+            ...     )
+            ... )
+
+            >>> # Filter by roles
+            >>> user_messages = await cortex.conversations.get_history(
+            ...     'conv-abc123',
+            ...     GetHistoryOptions(roles=['user'])
             ... )
         """
         validate_required_string(conversation_id, "conversation_id")
 
-        if limit is not None:
-            validate_limit(limit)
-        if offset is not None:
-            validate_offset(offset)
-        if sort_order is not None:
-            validate_sort_order(sort_order)
+        if options:
+            if options.limit is not None:
+                validate_limit(options.limit)
+            if options.offset is not None:
+                validate_offset(options.offset)
+            if options.sort_order is not None:
+                validate_sort_order(options.sort_order)
+            # Validate date range if both provided
+            if options.since is not None and options.until is not None:
+                validate_timestamp_range(options.since, options.until)
 
         result = await self._execute_with_resilience(
             lambda: self.client.query(
                 "conversations:getHistory",
                 filter_none_values({
                     "conversationId": conversation_id,
-                    "limit": limit,
-                    # Note: offset not supported by backend yet
-                    "sortOrder": sort_order,
+                    "limit": options.limit if options else None,
+                    "offset": options.offset if options else None,
+                    "sortOrder": options.sort_order if options else None,
+                    "since": options.since if options else None,
+                    "until": options.until if options else None,
+                    "roles": options.roles if options else None,
                 }),
             ),
             "conversations:getHistory",
         )
 
         # Convert messages to Message objects
-        result["messages"] = [Message(**convert_convex_response(msg)) for msg in result.get("messages", [])]
-        return cast(Dict[str, Any], result)
+        messages = [Message(**convert_convex_response(msg)) for msg in result.get("messages", [])]
+        return GetHistoryResult(
+            messages=messages,
+            total=result.get("total", len(messages)),
+            has_more=result.get("hasMore", False),
+            conversation_id=result.get("conversationId", conversation_id),
+        )
 
     async def search(
         self,
-        query: str,
-        type: Optional[ConversationType] = None,
-        user_id: Optional[str] = None,
-        memory_space_id: Optional[str] = None,
-        date_start: Optional[int] = None,
-        date_end: Optional[int] = None,
-        limit: Optional[int] = None,
+        input: SearchConversationsInput,
     ) -> List[ConversationSearchResult]:
         """
         Search conversations by text query.
 
         Args:
-            query: Search query string
-            type: Filter by conversation type
-            user_id: Filter by user ID
-            memory_space_id: Filter by memory space
-            date_start: Filter by start date (timestamp)
-            date_end: Filter by end date (timestamp)
-            limit: Maximum results
+            input: Search input with query, filters, and options
 
         Returns:
-            List of search results
+            List of search results with score and highlights
 
         Example:
             >>> results = await cortex.conversations.search(
-            ...     'password',
-            ...     user_id='user-123',
-            ...     limit=5
+            ...     SearchConversationsInput(
+            ...         query='password',
+            ...         filters=SearchConversationsFilters(user_id='user-123', limit=5)
+            ...     )
+            ... )
+
+            >>> # Search with options
+            >>> fuzzy_results = await cortex.conversations.search(
+            ...     SearchConversationsInput(
+            ...         query='account balance',
+            ...         options=SearchConversationsOptions(
+            ...             search_in='both',  # Search content and metadata
+            ...             match_mode='fuzzy',
+            ...         )
+            ...     )
             ... )
         """
-        validate_search_query(query)
+        validate_search_query(input.query)
 
-        if type is not None:
-            validate_conversation_type(type)
-        if limit is not None:
-            validate_limit(limit)
-
-        # Validate date range
-        validate_timestamp_range(date_start, date_end)
+        if input.filters:
+            if input.filters.type is not None:
+                validate_conversation_type(input.filters.type)
+            if input.filters.limit is not None:
+                validate_limit(input.filters.limit)
+            # Validate date range
+            validate_timestamp_range(input.filters.date_start, input.filters.date_end)
 
         result = await self._execute_with_resilience(
             lambda: self.client.query(
                 "conversations:search",
                 filter_none_values({
-                    "query": query,
-                    "type": type,
-                    "userId": user_id,
-                    "memorySpaceId": memory_space_id,
-                    "dateStart": date_start,
-                    "dateEnd": date_end,
-                    "limit": limit,
+                    "query": input.query,
+                    "type": input.filters.type if input.filters else None,
+                    "userId": input.filters.user_id if input.filters else None,
+                    "memorySpaceId": input.filters.memory_space_id if input.filters else None,
+                    "dateStart": input.filters.date_start if input.filters else None,
+                    "dateEnd": input.filters.date_end if input.filters else None,
+                    "limit": input.filters.limit if input.filters else None,
+                    "searchIn": input.options.search_in if input.options else None,
+                    "matchMode": input.options.match_mode if input.options else None,
                 }),
             ),
             "conversations:search",

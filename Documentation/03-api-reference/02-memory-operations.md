@@ -319,22 +319,23 @@ const memory = await cortex.memory.store("user-123-personal", {
 
 ### Layer 2: cortex.vector.\* Operations
 
-| Operation                                       | Purpose                         | Returns         |
-| ----------------------------------------------- | ------------------------------- | --------------- |
-| `store(memorySpaceId, input)`                   | Store vector memory             | MemoryEntry     |
-| `get(memorySpaceId, memoryId)`                  | Get vector memory               | MemoryEntry     |
-| `search(memorySpaceId, query, options)`         | Search vector index             | MemoryEntry[]   |
-| `update(memorySpaceId, memoryId, updates)`      | Update memory (creates version) | MemoryEntry     |
-| `delete(memorySpaceId, memoryId)`               | Delete from vector              | DeletionResult  |
-| `updateMany(memorySpaceId, filters, updates)`   | Bulk update                     | UpdateResult    |
-| `deleteMany(memorySpaceId, filters, options)`   | Bulk delete                     | DeletionResult  |
-| `count(memorySpaceId, filters)`                 | Count memories                  | number          |
-| `list(memorySpaceId, options)`                  | List memories                   | ListResult      |
-| `export(memorySpaceId, options)`                | Export vector memories          | JSON/CSV        |
-| `archive(memorySpaceId, filters)`               | Soft delete                     | ArchiveResult   |
-| `getVersion(memorySpaceId, memoryId, version)`  | Get specific version            | MemoryVersion   |
-| `getHistory(memorySpaceId, memoryId)`           | Get version history             | MemoryVersion[] |
-| `getAtTimestamp(memorySpaceId, memoryId, date)` | Temporal query                  | MemoryVersion   |
+| Operation                                       | Purpose                         | Returns                                             |
+| ----------------------------------------------- | ------------------------------- | --------------------------------------------------- |
+| `store(memorySpaceId, input, options?)`         | Store vector memory             | MemoryEntry                                         |
+| `get(memorySpaceId, memoryId)`                  | Get vector memory               | MemoryEntry \| null                                 |
+| `search(memorySpaceId, query, options?)`        | Search vector index             | MemoryEntry[]                                       |
+| `update(memorySpaceId, memoryId, updates)`      | Update memory (creates version) | MemoryEntry                                         |
+| `delete(memorySpaceId, memoryId, options?)`     | Delete from vector              | \{ deleted: boolean; memoryId: string \}              |
+| `updateMany(filter, updates)`                   | Bulk update                     | \{ updated: number; memoryIds: string[] \}            |
+| `deleteMany(filter)`                            | Bulk delete                     | \{ deleted: number; memoryIds: string[] \}            |
+| `count(filter)`                                 | Count memories                  | number                                              |
+| `list(filter)`                                  | List memories                   | MemoryEntry[]                                       |
+| `export(options)`                               | Export vector memories          | \{ format: string; data: string; count: number; ... \}|
+| `archive(memorySpaceId, memoryId)`              | Soft delete (single memory)     | \{ archived: boolean; memoryId: string; restorable: boolean \} |
+| `restoreFromArchive(memorySpaceId, memoryId)`   | Restore from archive            | \{ restored: boolean; memoryId: string; memory: MemoryEntry \} |
+| `getVersion(memorySpaceId, memoryId, version)`  | Get specific version            | MemoryVersion \| null                               |
+| `getHistory(memorySpaceId, memoryId)`           | Get version history             | MemoryVersion[]                                     |
+| `getAtTimestamp(memorySpaceId, memoryId, date)` | Temporal query                  | MemoryVersion \| null                               |
 
 ### Layer 3: cortex.memory.\* Operations (Dual-Layer)
 
@@ -351,20 +352,22 @@ const memory = await cortex.memory.store("user-123-personal", {
 
 **Key Differences:**
 
-| Operation      | Layer 2 (cortex.vector.\*) | Layer 3 (cortex.memory.\*)                  |
-| -------------- | -------------------------- | ------------------------------------------- |
-| `remember()`   | N/A                        | ✨ Unique - stores in both layers           |
-| `get()`        | Vector only                | Can include ACID (`includeConversation`)    |
-| `search()`     | Vector only                | Can enrich with ACID (`enrichConversation`) |
-| `delete()`     | Vector only                | Same (preserves ACID)                       |
-| `forget()`     | N/A                        | ✨ Unique - deletes from both layers        |
-| `store()`      | Manual conversationRef     | Smart - detects layer from source.type      |
-| `update()`     | Direct                     | Delegates to Layer 2                        |
-| `updateMany()` | Direct                     | Delegates to Layer 2                        |
-| `deleteMany()` | Direct                     | Delegates to Layer 2                        |
-| `count()`      | Direct                     | Delegates to Layer 2                        |
-| `list()`       | Direct                     | Delegates to Layer 2                        |
-| `export()`     | Direct                     | Delegates to Layer 2                        |
+| Operation              | Layer 2 (cortex.vector.\*)     | Layer 3 (cortex.memory.\*)                  |
+| ---------------------- | ------------------------------ | ------------------------------------------- |
+| `remember()`           | N/A                            | ✨ Unique - stores in both layers           |
+| `get()`                | Vector only                    | Can include ACID (`includeConversation`)    |
+| `search()`             | Vector only                    | Can enrich with ACID (`enrichConversation`) |
+| `delete()`             | Vector only                    | Same (preserves ACID)                       |
+| `forget()`             | N/A                            | ✨ Unique - deletes from both layers        |
+| `store()`              | Manual conversationRef         | Smart - detects layer from source.type      |
+| `update()`             | Direct                         | Delegates to Layer 2                        |
+| `updateMany()`         | Direct (filter, updates)       | Delegates to Layer 2                        |
+| `deleteMany()`         | Direct (filter)                | Delegates to Layer 2                        |
+| `count()`              | Direct (filter)                | Delegates to Layer 2                        |
+| `list()`               | Direct (filter)                | Delegates to Layer 2                        |
+| `export()`             | Direct (options)               | Delegates to Layer 2                        |
+| `archive()`            | Single memory                  | Delegates to Layer 2                        |
+| `restoreFromArchive()` | Restore archived memory        | Delegates to Layer 2                        |
 | `archive()`    | Direct                     | Delegates to Layer 2                        |
 | Version ops    | Direct                     | Delegates to Layer 2                        |
 
@@ -387,11 +390,11 @@ const memory = await cortex.memory.store("user-123-personal", {
 
 > Note: Layer 3 operations are convenience wrappers. For direct control, use Layer 1 (`cortex.conversations.*`) and Layer 2 (`cortex.vector.*`) separately.
 
-### remember()
+### store()
 
-**Layer 3 Operation** - Stores in both ACID and Vector automatically.
+**Layer 3 Operation** - Stores in Vector with optional fact extraction.
 
-Store a new memory for an agent.
+Store a new memory for an agent. Use this for non-conversation memories (system, tool). For conversation memories, prefer `remember()`.
 
 **Signature:**
 
@@ -400,7 +403,7 @@ cortex.memory.store(
   memorySpaceId: string,
   entry: MemoryInput,
   options?: { syncToGraph?: boolean }
-): Promise<MemoryEntry>
+): Promise<StoreMemoryResult>
 ```
 
 **Parameters:**
@@ -2069,49 +2072,48 @@ console.log(`Exported to ${criticalBackup}`);
 
 ### archive()
 
-Soft delete (move to archive storage, recoverable).
+Soft delete a single memory (move to archive storage, recoverable).
 
 **Signature:**
 
 ```typescript
 cortex.memory.archive(
   memorySpaceId: string,
-  filters: UniversalFilters
+  memoryId: string
 ): Promise<ArchiveResult>
 ```
 
 **Parameters:**
 
-- `memorySpaceId` (string) - Memory space that contains the memories
-- `filters` (UniversalFilters) - Same filters as search()
+- `memorySpaceId` (string) - Memory space that contains the memory
+- `memoryId` (string) - Memory ID to archive
 
 **Returns:**
 
 ```typescript
 interface ArchiveResult {
-  archived: number;
-  memoryIds: string[];
-  restorable: boolean; // True
-  archiveId: string; // Archive batch ID
+  archived: boolean; // True if successfully archived
+  memoryId: string; // ID of archived memory
+  restorable: boolean; // True (can be restored)
+  factsArchived: number; // Number of associated facts archived
+  factIds: string[]; // IDs of archived facts
 }
 ```
 
 **Example:**
 
 ```typescript
-// Archive old low-importance memories
-const result = await cortex.memory.archive("user-123-personal", {
-  importance: { $lte: 20 },
-  createdBefore: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
-});
+// Archive a specific memory
+const result = await cortex.memory.archive("user-123-personal", "mem_abc123");
 
-console.log(`Archived ${result.archived} memories`);
-console.log(`Archive ID: ${result.archiveId}`);
+console.log(`Archived: ${result.archived}`);
+console.log(`Memory ID: ${result.memoryId}`);
+console.log(`Restorable: ${result.restorable}`);
 
 // Restore from archive if needed
 const restored = await cortex.memory.restoreFromArchive(
-  "agent-1",
-  result.archiveId,
+  "user-123-personal",
+  "mem_abc123",
 );
 ```
 
@@ -2122,6 +2124,62 @@ const restored = await cortex.memory.restoreFromArchive(
 
 **See Also:**
 
+- [Soft Delete](../02-core-features/01-memory-spaces.md#soft-delete-archive)
+
+---
+
+### restoreFromArchive()
+
+Restore a previously archived memory back to active status.
+
+**Signature:**
+
+```typescript
+cortex.memory.restoreFromArchive(
+  memorySpaceId: string,
+  memoryId: string
+): Promise<RestoreResult>
+```
+
+**Parameters:**
+
+- `memorySpaceId` (string) - Memory space that contains the archived memory
+- `memoryId` (string) - ID of the archived memory to restore
+
+**Returns:**
+
+```typescript
+interface RestoreResult {
+  restored: boolean; // True if successfully restored
+  memoryId: string; // ID of restored memory
+  memory: MemoryEntry; // The restored memory entry
+}
+```
+
+**Example:**
+
+```typescript
+// Restore a specific archived memory
+const result = await cortex.memory.restoreFromArchive(
+  "user-123-personal",
+  "mem_abc123",
+);
+
+if (result.restored) {
+  console.log(`Restored memory: ${result.memoryId}`);
+  console.log(`Content: ${result.memory.content}`);
+}
+```
+
+**Errors:**
+
+- `CortexError('MEMORY_NOT_FOUND')` - Memory doesn't exist
+- `CortexError('MEMORY_NOT_ARCHIVED')` - Memory is not in archived state
+- `CortexError('PERMISSION_DENIED')` - Memory space doesn't own this memory
+
+**See Also:**
+
+- [archive()](#archive) - Archive memories (soft delete)
 - [Soft Delete](../02-core-features/01-memory-spaces.md#soft-delete-archive)
 
 ---
@@ -2297,81 +2355,6 @@ if (historicalMemory) {
 
 - [Temporal Queries](../02-core-features/01-memory-spaces.md#temporal-queries)
 - [Conflict Resolution](../02-core-features/01-memory-spaces.md#conflict-resolution-example)
-
----
-
-## Advanced Operations
-
-### smartStore()
-
-Intelligent store with automatic update detection (Cloud Mode helper).
-
-**Signature:**
-
-```typescript
-cortex.memory.smartStore(
-  memorySpaceId: string,
-  entry: SmartStoreInput
-): Promise<SmartStoreResult>
-```
-
-**Parameters:**
-
-```typescript
-interface SmartStoreInput extends MemoryInput {
-  updateStrategy: "semantic" | "topic" | "key";
-  similarityThreshold?: number; // Default: 0.85
-  memoryKey?: string; // For 'key' strategy
-  autoEmbed?: boolean; // Cloud Mode: auto-generate embedding
-  autoSummarize?: boolean; // Cloud Mode: auto-summarize content
-}
-```
-
-**Returns:**
-
-```typescript
-interface SmartStoreResult {
-  action: "created" | "updated";
-  id: string;
-  version: number;
-  oldContent?: string; // If updated
-}
-```
-
-**Example:**
-
-```typescript
-const result = await cortex.memory.smartStore("user-123-personal", {
-  content: "Actually I prefer to be called Alex",
-  contentType: "raw",
-  userId: "user-123",
-  source: { type: "conversation", userId: "user-123", timestamp: new Date() },
-  conversationRef: { conversationId: "conv-456", messageIds: ["msg-999"] },
-  metadata: {
-    importance: 70,
-    tags: ["name", "preferences"],
-  },
-  updateStrategy: "semantic",
-  similarityThreshold: 0.85,
-  autoEmbed: true, // Cloud Mode
-});
-
-if (result.action === "updated") {
-  console.log(`Updated existing memory (was: "${result.oldContent}")`);
-} else {
-  console.log(`Created new memory ${result.id}`);
-}
-```
-
-**Errors:**
-
-- `CortexError('STRATEGY_FAILED')` - Update detection failed
-- `CortexError('CLOUD_MODE_REQUIRED')` - autoEmbed/autoSummarize requires Cloud Mode
-
-**See Also:**
-
-- [Smart Store Helper](../02-core-features/01-memory-spaces.md#strategy-4-cortex-smart-store-helper)
-- [Store vs Update](../02-core-features/01-memory-spaces.md#store-vs-update-decision)
 
 ---
 

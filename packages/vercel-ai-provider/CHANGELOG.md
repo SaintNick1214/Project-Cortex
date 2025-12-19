@@ -2,6 +2,14 @@
 
 All notable changes to @cortexmemory/vercel-ai-provider will be documented in this file.
 
+## [0.2.1] - 2025-12-18
+
+### Changed
+
+**Dependencies:**
+
+- Updated `@cortexmemory/sdk` from `^0.20.0` to `^0.21.0`
+
 ## [0.2.0] - 2025-11-24
 
 ### 🚀 MAJOR ENHANCEMENT: Enhanced Streaming with rememberStream()

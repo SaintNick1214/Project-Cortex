@@ -24,13 +24,8 @@ import type {
  * Default configuration
  */
 const DEFAULT_CONFIG: CLIConfig = {
-  deployments: {
-    local: {
-      url: "http://127.0.0.1:3210",
-      deployment: "anonymous:anonymous-cortex-sdk-local",
-    },
-  },
-  default: "local",
+  deployments: {},
+  default: "",
   format: "table",
   confirmDangerous: true,
 };
@@ -112,44 +107,18 @@ function mergeConfig(target: CLIConfig, source: Partial<CLIConfig>): CLIConfig {
 }
 
 /**
- * Apply environment variable overrides
+ * Apply environment variable overrides.
+ * 
+ * The CLI config (~/.cortexrc) is the source of truth.
+ * Environment variables from .env.local are NOT used to override config
+ * because they are project-specific and would cause confusion when
+ * managing multiple deployments from different directories.
+ * 
+ * To override a deployment's URL/key at runtime, use CLI flags:
+ *   cortex --url <url> --key <key> <command>
  */
 function applyEnvOverrides(config: CLIConfig): CLIConfig {
-  // If CONVEX_URL is set, create/update a deployment called "env"
-  const convexUrl = process.env.CONVEX_URL;
-  const convexKey = process.env.CONVEX_DEPLOY_KEY;
-
-  if (convexUrl) {
-    config.deployments.env = {
-      url: convexUrl,
-      key: convexKey,
-    };
-    // If no default is set, use env
-    if (!config.default || config.default === "local") {
-      config.default = "env";
-    }
-  }
-
-  // Check for local-specific env vars
-  const localUrl = process.env.LOCAL_CONVEX_URL;
-  const localDeployment = process.env.LOCAL_CONVEX_DEPLOYMENT;
-  if (localUrl) {
-    config.deployments.local = {
-      url: localUrl,
-      deployment: localDeployment,
-    };
-  }
-
-  // Check for cloud-specific env vars
-  const cloudUrl = process.env.CLOUD_CONVEX_URL;
-  const cloudKey = process.env.CLOUD_CONVEX_DEPLOY_KEY;
-  if (cloudUrl) {
-    config.deployments.cloud = {
-      url: cloudUrl,
-      key: cloudKey,
-    };
-  }
-
+  // No automatic overrides - config file is source of truth
   return config;
 }
 

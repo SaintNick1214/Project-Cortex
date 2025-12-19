@@ -329,3 +329,219 @@ def validate_delete_options(options: Any) -> None:
                 "INVALID_OPTIONS",
                 "options.dry_run",
             )
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Filter and Options Validators (0.21.0)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+def validate_list_users_filter(filters: Any) -> None:
+    """
+    Validates ListUsersFilter structure for list/search operations.
+
+    Args:
+        filters: ListUsersFilter to validate (None is OK)
+
+    Raises:
+        UserValidationError: If filter structure is invalid
+    """
+    if filters is None:
+        return  # Optional parameter
+
+    # Validate limit if provided
+    if hasattr(filters, "limit") and filters.limit is not None:
+        validate_limit(filters.limit, "filters.limit")
+
+    # Validate offset if provided
+    if hasattr(filters, "offset") and filters.offset is not None:
+        validate_offset(filters.offset, "filters.offset")
+
+    # Validate timestamp fields
+    timestamp_fields = [
+        ("created_after", "filters.created_after"),
+        ("created_before", "filters.created_before"),
+        ("updated_after", "filters.updated_after"),
+        ("updated_before", "filters.updated_before"),
+    ]
+
+    for attr, field_name in timestamp_fields:
+        value = getattr(filters, attr, None)
+        if value is not None:
+            validate_timestamp(value, field_name)
+
+    # Validate sort_by if provided
+    if hasattr(filters, "sort_by") and filters.sort_by is not None:
+        if filters.sort_by not in ("createdAt", "updatedAt"):
+            raise UserValidationError(
+                f'Invalid sort_by value "{filters.sort_by}". Valid values: createdAt, updatedAt',
+                "INVALID_SORT_BY",
+                "filters.sort_by",
+            )
+
+    # Validate sort_order if provided
+    if hasattr(filters, "sort_order") and filters.sort_order is not None:
+        if filters.sort_order not in ("asc", "desc"):
+            raise UserValidationError(
+                f'Invalid sort_order value "{filters.sort_order}". Valid values: asc, desc',
+                "INVALID_SORT_ORDER",
+                "filters.sort_order",
+            )
+
+    # Validate displayName/email are strings if provided
+    if hasattr(filters, "display_name") and filters.display_name is not None:
+        if not isinstance(filters.display_name, str):
+            raise UserValidationError(
+                "filters.display_name must be a string",
+                "INVALID_FILTER_TYPE",
+                "filters.display_name",
+            )
+
+    if hasattr(filters, "email") and filters.email is not None:
+        if not isinstance(filters.email, str):
+            raise UserValidationError(
+                "filters.email must be a string",
+                "INVALID_FILTER_TYPE",
+                "filters.email",
+            )
+
+    # Validate date range consistency
+    created_after = getattr(filters, "created_after", None)
+    created_before = getattr(filters, "created_before", None)
+    if created_after and created_before and created_after >= created_before:
+        raise UserValidationError(
+            "created_after must be less than created_before",
+            "INVALID_DATE_RANGE",
+            "filters",
+        )
+
+    updated_after = getattr(filters, "updated_after", None)
+    updated_before = getattr(filters, "updated_before", None)
+    if updated_after and updated_before and updated_after >= updated_before:
+        raise UserValidationError(
+            "updated_after must be less than updated_before",
+            "INVALID_DATE_RANGE",
+            "filters",
+        )
+
+
+def validate_export_options(options: Any) -> None:
+    """
+    Validates ExportUsersOptions structure.
+
+    Args:
+        options: Export options to validate (None is OK)
+
+    Raises:
+        UserValidationError: If options structure is invalid
+    """
+    if options is None:
+        return  # Optional parameter
+
+    # Validate format is required
+    if hasattr(options, "format"):
+        validate_export_format(options.format)
+    else:
+        raise UserValidationError(
+            "options.format is required",
+            "MISSING_EXPORT_FORMAT",
+            "options.format",
+        )
+
+    # Validate filters if provided
+    if hasattr(options, "filters") and options.filters is not None:
+        validate_list_users_filter(options.filters)
+
+    # Validate boolean fields
+    bool_fields = [
+        ("include_version_history", "options.include_version_history"),
+        ("include_conversations", "options.include_conversations"),
+        ("include_memories", "options.include_memories"),
+    ]
+
+    for attr, field_name in bool_fields:
+        value = getattr(options, attr, None)
+        if value is not None and not isinstance(value, bool):
+            raise UserValidationError(
+                f"{field_name} must be a boolean",
+                "INVALID_OPTIONS",
+                field_name,
+            )
+
+
+def validate_bulk_update_options(options: Any) -> None:
+    """
+    Validates bulk update options.
+
+    Args:
+        options: Update options dict to validate (None is OK)
+
+    Raises:
+        UserValidationError: If options structure is invalid
+    """
+    if options is None:
+        return  # Optional parameter
+
+    if not isinstance(options, dict):
+        raise UserValidationError(
+            "options must be a dict",
+            "INVALID_OPTIONS",
+            "options",
+        )
+
+    # Validate dry_run if provided
+    if "dry_run" in options and options["dry_run"] is not None:
+        if not isinstance(options["dry_run"], bool):
+            raise UserValidationError(
+                "options.dry_run must be a boolean",
+                "INVALID_OPTIONS",
+                "options.dry_run",
+            )
+
+    # Validate skip_versioning if provided
+    if "skip_versioning" in options and options["skip_versioning"] is not None:
+        if not isinstance(options["skip_versioning"], bool):
+            raise UserValidationError(
+                "options.skip_versioning must be a boolean",
+                "INVALID_OPTIONS",
+                "options.skip_versioning",
+            )
+
+
+def validate_bulk_delete_options(options: Any) -> None:
+    """
+    Validates bulk delete options.
+
+    Args:
+        options: Delete options dict to validate (None is OK)
+
+    Raises:
+        UserValidationError: If options structure is invalid
+    """
+    if options is None:
+        return  # Optional parameter
+
+    if not isinstance(options, dict):
+        raise UserValidationError(
+            "options must be a dict",
+            "INVALID_OPTIONS",
+            "options",
+        )
+
+    # Validate cascade if provided
+    if "cascade" in options and options["cascade"] is not None:
+        if not isinstance(options["cascade"], bool):
+            raise UserValidationError(
+                "options.cascade must be a boolean",
+                "INVALID_OPTIONS",
+                "options.cascade",
+            )
+
+    # Validate dry_run if provided
+    if "dry_run" in options and options["dry_run"] is not None:
+        if not isinstance(options["dry_run"], bool):
+            raise UserValidationError(
+                "options.dry_run must be a boolean",
+                "INVALID_OPTIONS",
+                "options.dry_run",
+            )

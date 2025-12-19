@@ -24,6 +24,17 @@ export interface DeploymentConfig {
   url: string;
   key?: string;
   deployment?: string;
+  /** 
+   * Path to the project directory for this deployment.
+   * Allows running `cortex start -d <name>` from anywhere.
+   * Not needed for remote-only deployments (e.g., Vercel).
+   */
+  projectPath?: string;
+  /**
+   * Whether this deployment should be started with `cortex start`.
+   * Defaults to true for the default deployment, false for others.
+   */
+  enabled?: boolean;
 }
 
 /**

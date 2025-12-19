@@ -1,7 +1,7 @@
 # Graph Operations API
 
-> **Last Updated**: 2025-10-30
-> **Version**: v0.7.0+  
+> **Last Updated**: 2025-12-10
+> **Version**: v0.21.0
 > **Status**: Production Ready
 
 Complete API reference for graph database integration, multi-hop queries, and knowledge graph operations.
@@ -187,6 +187,209 @@ if (path) {
 }
 ```
 
+#### disconnect()
+
+Close connection to graph database.
+
+```typescript
+await adapter.disconnect();
+// Connection closed, resources freed
+```
+
+#### isConnected()
+
+Test if adapter is connected to the database.
+
+```typescript
+const connected = await adapter.isConnected();
+if (!connected) {
+  console.log("Reconnecting to graph database...");
+  await adapter.connect(config);
+}
+```
+
+#### mergeNode()
+
+Create or update a node using MERGE semantics (idempotent).
+
+Added in v0.19.1 for resilient, idempotent operations. Safe for concurrent operations and re-running scripts.
+
+```typescript
+// Idempotent - safe to call multiple times
+const nodeId = await adapter.mergeNode(
+  {
+    label: "MemorySpace",
+    properties: {
+      memorySpaceId: "space-123",
+      name: "Main Space",
+      type: "personal",
+      createdAt: Date.now(),
+    },
+  },
+  { memorySpaceId: "space-123" }, // Match properties
+);
+// Creates if not exists, updates if exists
+```
+
+#### getNode()
+
+Get a node by its internal graph ID.
+
+```typescript
+const node = await adapter.getNode(nodeId);
+if (node) {
+  console.log("Label:", node.label);
+  console.log("Properties:", node.properties);
+}
+```
+
+#### updateNode()
+
+Update a node's properties.
+
+```typescript
+await adapter.updateNode(nodeId, {
+  importance: 95,
+  updatedAt: Date.now(),
+});
+```
+
+#### deleteNode()
+
+Delete a node from the graph.
+
+```typescript
+// Delete node and all connected relationships
+await adapter.deleteNode(nodeId, true); // detach = true
+
+// Delete node only (fails if has relationships)
+await adapter.deleteNode(nodeId, false);
+```
+
+#### findNodes()
+
+Find nodes by label and optional properties.
+
+```typescript
+// Find all Memory nodes
+const allMemories = await adapter.findNodes("Memory");
+
+// Find Memory nodes with specific properties
+const importantMemories = await adapter.findNodes(
+  "Memory",
+  { importance: 100 },
+  50, // limit
+);
+
+// Find specific entity by ID property
+const entity = await adapter.findNodes("Entity", { name: "Alice" }, 1);
+```
+
+#### deleteEdge()
+
+Delete an edge (relationship) by its ID.
+
+```typescript
+await adapter.deleteEdge(edgeId);
+```
+
+#### findEdges()
+
+Find edges by type and optional properties.
+
+```typescript
+// Find all REFERENCES relationships
+const references = await adapter.findEdges("REFERENCES");
+
+// Find edges with specific properties
+const recentEdges = await adapter.findEdges(
+  "MENTIONS",
+  { role: "subject" },
+  100, // limit
+);
+```
+
+#### batchWrite()
+
+Execute multiple operations in a single transaction.
+
+```typescript
+await adapter.batchWrite([
+  {
+    type: "CREATE_NODE",
+    data: {
+      label: "Entity",
+      properties: { name: "Alice", type: "person" },
+    },
+  },
+  {
+    type: "CREATE_NODE",
+    data: {
+      label: "Entity",
+      properties: { name: "Acme Corp", type: "company" },
+    },
+  },
+  {
+    type: "CREATE_EDGE",
+    data: {
+      type: "WORKS_AT",
+      from: aliceNodeId,
+      to: acmeNodeId,
+      properties: { since: 2020 },
+    },
+  },
+]);
+// All operations succeed or fail together
+```
+
+**Supported operation types:**
+
+- `CREATE_NODE` - Create a new node
+- `UPDATE_NODE` - Update node properties
+- `DELETE_NODE` - Delete a node
+- `CREATE_EDGE` - Create a relationship
+- `DELETE_EDGE` - Delete a relationship
+
+#### countNodes()
+
+Count nodes in the database.
+
+```typescript
+// Count all nodes
+const total = await adapter.countNodes();
+console.log(`Total nodes: ${total}`);
+
+// Count nodes by label
+const memoryCount = await adapter.countNodes("Memory");
+const factCount = await adapter.countNodes("Fact");
+console.log(`Memories: ${memoryCount}, Facts: ${factCount}`);
+```
+
+#### countEdges()
+
+Count edges (relationships) in the database.
+
+```typescript
+// Count all edges
+const total = await adapter.countEdges();
+console.log(`Total relationships: ${total}`);
+
+// Count edges by type
+const references = await adapter.countEdges("REFERENCES");
+const mentions = await adapter.countEdges("MENTIONS");
+console.log(`References: ${references}, Mentions: ${mentions}`);
+```
+
+#### clearDatabase()
+
+Clear all data from the database.
+
+```typescript
+// ⚠️ WARNING: Deletes ALL nodes and relationships!
+await adapter.clearDatabase();
+// Use only for testing or complete reset
+```
+
 ---
 
 ## Sync Operations
@@ -360,6 +563,84 @@ await cortex.memory.forget("agent-1", "mem-123", {
 // 7. Detects and removes orphan islands
 ```
 
+### Delete Functions
+
+Direct delete functions for programmatic graph cleanup.
+
+```typescript
+import {
+  deleteMemoryFromGraph,
+  deleteFactFromGraph,
+  deleteContextFromGraph,
+  deleteConversationFromGraph,
+  deleteMemorySpaceFromGraph,
+} from "@cortexmemory/sdk/graph";
+```
+
+#### deleteMemoryFromGraph()
+
+Delete a memory node with optional orphan cleanup.
+
+```typescript
+const result = await deleteMemoryFromGraph(
+  "mem-123", // memoryId
+  adapter,
+  true, // enableOrphanCleanup (default: true)
+);
+
+console.log("Deleted nodes:", result.deletedNodes.length);
+console.log("Orphan islands:", result.orphanIslands.length);
+```
+
+#### deleteFactFromGraph()
+
+Delete a fact node and cascade to orphaned entities.
+
+```typescript
+const result = await deleteFactFromGraph(
+  "fact-456", // factId
+  adapter,
+  true, // enableOrphanCleanup
+);
+// Entities mentioned only by this fact are also deleted
+```
+
+#### deleteContextFromGraph()
+
+Delete a context node with relationship cleanup.
+
+```typescript
+const result = await deleteContextFromGraph(
+  "ctx-789", // contextId
+  adapter,
+  true, // enableOrphanCleanup
+);
+```
+
+#### deleteConversationFromGraph()
+
+Delete a conversation node.
+
+```typescript
+const result = await deleteConversationFromGraph(
+  "conv-abc", // conversationId
+  adapter,
+  true, // enableOrphanCleanup
+);
+```
+
+#### deleteMemorySpaceFromGraph()
+
+Delete a memory space node (use with caution).
+
+```typescript
+// ⚠️ WARNING: Does NOT cascade to memories/contexts in that space
+const result = await deleteMemorySpaceFromGraph(
+  "space-123", // memorySpaceId
+  adapter,
+);
+```
+
 ### Orphan Detection
 
 **Handles complex scenarios**:
@@ -391,6 +672,106 @@ Memory M2 → Conversation C1
 - User: Never auto-deleted
 - MemorySpace: Never auto-deleted
 - Memory/Fact/Context: Only deleted if explicitly requested
+
+### Programmatic Orphan Detection
+
+For advanced use cases, access the orphan detection system directly.
+
+```typescript
+import {
+  ORPHAN_RULES,
+  createDeletionContext,
+  deleteWithOrphanCleanup,
+  detectOrphan,
+  canRunOrphanCleanup,
+} from "@cortexmemory/sdk/graph";
+```
+
+#### ORPHAN_RULES
+
+Default orphan rules for each node type.
+
+```typescript
+const rules = ORPHAN_RULES;
+/*
+{
+  Conversation: { keepIfReferencedBy: ['Memory', 'Fact', 'Context'] },
+  Entity: { keepIfReferencedBy: ['Fact'] },
+  User: { neverDelete: true },
+  Participant: { neverDelete: true },
+  MemorySpace: { neverDelete: true },
+  Memory: { explicitOnly: true },
+  Fact: { explicitOnly: true },
+  Context: { explicitOnly: true },
+}
+*/
+```
+
+#### createDeletionContext()
+
+Create a context for tracking cascading deletes.
+
+```typescript
+const deletionContext = createDeletionContext(
+  "Delete Memory mem-123", // reason (for logging)
+  ORPHAN_RULES, // optional custom rules
+);
+
+// Use with deleteWithOrphanCleanup
+const result = await deleteWithOrphanCleanup(
+  nodeId,
+  "Memory",
+  deletionContext,
+  adapter,
+);
+```
+
+#### deleteWithOrphanCleanup()
+
+Low-level delete with orphan cascade.
+
+```typescript
+const result = await deleteWithOrphanCleanup(
+  nodeId, // Graph node ID
+  "Memory", // Node label
+  deletionContext,
+  adapter,
+);
+
+// Result type: DeleteResult
+console.log("Deleted nodes:", result.deletedNodes);
+console.log("Deleted edges:", result.deletedEdges);
+console.log("Orphan islands:", result.orphanIslands);
+```
+
+#### detectOrphan()
+
+Check if a node would be orphaned.
+
+```typescript
+const check = await detectOrphan(
+  nodeId,
+  "Conversation",
+  deletionContext,
+  adapter,
+);
+
+console.log("Is orphan:", check.isOrphan);
+console.log("Reason:", check.reason);
+console.log("Referenced by:", check.referencedBy);
+console.log("Part of circular island:", check.partOfCircularIsland);
+```
+
+#### canRunOrphanCleanup()
+
+Check if cleanup is safe to run.
+
+```typescript
+const canRun = await canRunOrphanCleanup(adapter);
+if (canRun) {
+  // Safe to proceed with cleanup
+}
+```
 
 ---
 
@@ -901,6 +1282,8 @@ for (const record of related.records) {
 
 ## TypeScript Types
 
+### Core Types
+
 ```typescript
 import type {
   GraphAdapter,
@@ -908,13 +1291,328 @@ import type {
   GraphEdge,
   GraphPath,
   GraphQuery,
+  GraphQueryResult,
+  QueryStatistics,
   GraphConnectionConfig,
+  GraphOperation,
   TraversalConfig,
   ShortestPathConfig,
   SyncHealthMetrics,
   GraphSyncWorkerOptions,
-} from "@cortexmemory/sdk";
+  BatchSyncOptions,
+  BatchSyncResult,
+} from "@cortexmemory/sdk/graph";
 ```
+
+### GraphNode
+
+Represents a node in the graph database.
+
+```typescript
+interface GraphNode {
+  /** Node label (e.g., 'Context', 'Memory', 'Fact') */
+  label: string;
+
+  /** Node properties (key-value pairs) */
+  properties: Record<string, unknown>;
+
+  /** Optional node ID (set by graph database after creation) */
+  id?: string;
+}
+```
+
+### GraphEdge
+
+Represents a relationship between nodes.
+
+```typescript
+interface GraphEdge {
+  /** Relationship type (e.g., 'CHILD_OF', 'MENTIONS', 'SENT_TO') */
+  type: string;
+
+  /** Source node ID */
+  from: string;
+
+  /** Target node ID */
+  to: string;
+
+  /** Optional relationship properties */
+  properties?: Record<string, unknown>;
+
+  /** Optional edge ID (set by graph database after creation) */
+  id?: string;
+}
+```
+
+### GraphPath
+
+Path between nodes in the graph.
+
+```typescript
+interface GraphPath {
+  /** Nodes in the path */
+  nodes: GraphNode[];
+
+  /** Relationships in the path */
+  relationships: GraphEdge[];
+
+  /** Path length (number of hops) */
+  length: number;
+}
+```
+
+### GraphQuery
+
+Cypher query with parameters.
+
+```typescript
+interface GraphQuery {
+  /** Cypher query string */
+  cypher: string;
+
+  /** Query parameters (for parameterized queries) */
+  params?: Record<string, unknown>;
+}
+```
+
+### GraphQueryResult
+
+Result from a graph query.
+
+```typescript
+interface GraphQueryResult {
+  /** Records returned by the query */
+  records: Record<string, unknown>[];
+
+  /** Number of records returned */
+  count: number;
+
+  /** Optional query statistics */
+  stats?: QueryStatistics;
+}
+```
+
+### QueryStatistics
+
+Query execution statistics.
+
+```typescript
+interface QueryStatistics {
+  nodesCreated?: number;
+  nodesDeleted?: number;
+  relationshipsCreated?: number;
+  relationshipsDeleted?: number;
+  propertiesSet?: number;
+  labelsAdded?: number;
+  labelsRemoved?: number;
+  indexesAdded?: number;
+  constraintsAdded?: number;
+}
+```
+
+### GraphConnectionConfig
+
+Connection configuration for graph database.
+
+```typescript
+interface GraphConnectionConfig {
+  /** Bolt URI (e.g., 'bolt://localhost:7687') */
+  uri: string;
+
+  /** Username for authentication */
+  username: string;
+
+  /** Password for authentication */
+  password: string;
+
+  /** Optional database name (Neo4j 4.0+) */
+  database?: string;
+
+  /** Optional connection pool configuration */
+  maxConnectionPoolSize?: number;
+
+  /** Optional connection timeout (ms) */
+  connectionTimeout?: number;
+}
+```
+
+### GraphOperation
+
+Batch operation for graph write.
+
+```typescript
+interface GraphOperation {
+  /** Operation type */
+  type:
+    | "CREATE_NODE"
+    | "UPDATE_NODE"
+    | "DELETE_NODE"
+    | "CREATE_EDGE"
+    | "DELETE_EDGE";
+
+  /** Operation data */
+  data:
+    | GraphNode
+    | GraphEdge
+    | { id: string; properties?: Record<string, unknown> };
+}
+```
+
+### TraversalConfig
+
+Configuration for graph traversal.
+
+```typescript
+interface TraversalConfig {
+  /** Starting node ID */
+  startId: string;
+
+  /** Relationship types to follow (empty = all types) */
+  relationshipTypes?: string[];
+
+  /** Maximum depth to traverse */
+  maxDepth: number;
+
+  /** Optional direction: 'OUTGOING', 'INCOMING', or 'BOTH' */
+  direction?: "OUTGOING" | "INCOMING" | "BOTH";
+
+  /** Optional filter predicate (Cypher WHERE clause) */
+  filter?: string;
+
+  /** Optional filter parameters */
+  filterParams?: Record<string, unknown>;
+}
+```
+
+### ShortestPathConfig
+
+Configuration for shortest path queries.
+
+```typescript
+interface ShortestPathConfig {
+  /** Source node ID */
+  fromId: string;
+
+  /** Target node ID */
+  toId: string;
+
+  /** Maximum number of hops to search */
+  maxHops: number;
+
+  /** Optional relationship types to follow */
+  relationshipTypes?: string[];
+
+  /** Optional direction */
+  direction?: "OUTGOING" | "INCOMING" | "BOTH";
+}
+```
+
+### Orphan Detection Types
+
+```typescript
+import type {
+  OrphanRule,
+  DeletionContext,
+  DeleteResult,
+  OrphanCheckResult,
+} from "@cortexmemory/sdk/graph";
+```
+
+### OrphanRule
+
+Orphan detection rules for node types.
+
+```typescript
+interface OrphanRule {
+  /** Node types that must reference this node to keep it alive */
+  keepIfReferencedBy?: string[];
+
+  /** Never auto-delete this node type */
+  neverDelete?: boolean;
+
+  /** Only delete if explicitly requested (not cascaded) */
+  explicitOnly?: boolean;
+}
+```
+
+### DeletionContext
+
+Context for tracking cascading deletes.
+
+```typescript
+interface DeletionContext {
+  /** Set of node IDs being deleted in this operation */
+  deletedNodeIds: Set<string>;
+
+  /** Reason for deletion (for logging/debugging) */
+  reason: string;
+
+  /** Timestamp of deletion */
+  timestamp: number;
+
+  /** Orphan rules to use (can be customized) */
+  orphanRules?: Record<string, OrphanRule>;
+}
+```
+
+### DeleteResult
+
+Result of a delete operation with orphan cleanup.
+
+```typescript
+interface DeleteResult {
+  /** IDs of all nodes deleted (including cascaded orphans) */
+  deletedNodes: string[];
+
+  /** IDs of all edges deleted */
+  deletedEdges: string[];
+
+  /** Orphan islands that were removed */
+  orphanIslands: Array<{
+    nodes: string[];
+    reason: string;
+  }>;
+}
+```
+
+### OrphanCheckResult
+
+Result of orphan detection check.
+
+```typescript
+interface OrphanCheckResult {
+  /** Is this node an orphan? */
+  isOrphan: boolean;
+
+  /** Reason for orphan status */
+  reason: string;
+
+  /** IDs of nodes that reference this node */
+  referencedBy: string[];
+
+  /** Is this part of a circular orphan island? */
+  partOfCircularIsland: boolean;
+
+  /** If part of island, the full island node IDs */
+  islandNodes?: string[];
+}
+```
+
+### Error Classes
+
+```typescript
+import {
+  GraphDatabaseError,
+  GraphConnectionError,
+  GraphQueryError,
+  GraphNotFoundError,
+} from "@cortexmemory/sdk/graph";
+```
+
+- **GraphDatabaseError** - Base error for graph operations
+- **GraphConnectionError** - Connection failures (code: `CONNECTION_ERROR`)
+- **GraphQueryError** - Query execution failures (includes query string)
+- **GraphNotFoundError** - Node or edge not found (code: `NOT_FOUND`)
 
 ---
 

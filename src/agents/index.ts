@@ -22,6 +22,8 @@ import type {
   Conversation,
   MemoryEntry,
   FactRecord,
+  ExportAgentsOptions,
+  ExportAgentsResult,
 } from "../types";
 import {
   AgentValidationError,
@@ -32,6 +34,7 @@ import {
   validateMetadata,
   validateConfig,
   validateUpdatePayload,
+  validateExportOptions,
 } from "./validators";
 
 // Type for Convex agent query results
@@ -259,15 +262,58 @@ export class AgentsAPI {
   /**
    * List agents with filters
    *
+   * @param filters - Optional filters to apply
+   * @returns Array of registered agents matching the filters
+   *
+   * @remarks
+   * **Pagination Limitation:** The `offset` and `limit` parameters are applied at the
+   * database level BEFORE client-side filtering. This means combining `offset` with
+   * client-side filters (`metadata`, `name`, `capabilities`, `lastActiveAfter`,
+   * `lastActiveBefore`) may produce unexpected results.
+   *
+   * For example, if you have 100 agents and request `{ metadata: { team: "alpha" }, offset: 10 }`,
+   * the database will skip the first 10 agents (regardless of team), then the SDK filters
+   * the remaining results for `team: "alpha"`. This may return fewer results than expected
+   * or empty results even when matching agents exist.
+   *
+   * **Safe pagination patterns:**
+   * - Use `offset`/`limit` with `status` filter only (backend-applied)
+   * - Use `offset`/`limit` without any client-side filters
+   * - For paginating with metadata/name/capabilities, fetch all results and paginate client-side
+   *
    * @example
    * ```typescript
-   * const agents = await cortex.agents.list({ limit: 50 });
+   * // Safe: offset with backend filter only
+   * const agents = await cortex.agents.list({ status: 'active', offset: 10, limit: 20 });
+   *
+   * // Safe: client-side filter without offset
+   * const teamAgents = await cortex.agents.list({ metadata: { team: 'alpha' } });
+   *
+   * // WARNING: offset + metadata may produce unexpected results
+   * const paginated = await cortex.agents.list({ metadata: { team: 'alpha' }, offset: 10 });
    * ```
    */
   async list(filters?: AgentFilters): Promise<RegisteredAgent[]> {
     // Validate filters
     if (filters) {
       validateAgentFilters(filters);
+    }
+
+    // Warn about pagination limitation when combining offset with client-side filters
+    const hasClientSideFilters =
+      filters?.metadata ||
+      filters?.name ||
+      filters?.capabilities ||
+      filters?.lastActiveAfter !== undefined ||
+      filters?.lastActiveBefore !== undefined;
+
+    if (filters?.offset !== undefined && hasClientSideFilters) {
+      console.warn(
+        "[Cortex SDK] Warning: Using 'offset' with client-side filters (metadata, name, " +
+          "capabilities, lastActiveAfter, lastActiveBefore) may produce unexpected results. " +
+          "The offset is applied at the database level before client-side filtering. " +
+          "See documentation for safe pagination patterns.",
+      );
     }
 
     const results = await this.executeWithResilience(
@@ -302,8 +348,30 @@ export class AgentsAPI {
         const agentCaps = Array.isArray(agent.metadata?.capabilities)
           ? (agent.metadata.capabilities as string[])
           : [];
+        // Support capabilitiesMatch: "any" (default) or "all"
+        const matchMode = filters.capabilitiesMatch ?? "any";
+        if (matchMode === "all") {
+          return filters.capabilities!.every((cap) => agentCaps.includes(cap));
+        }
         return filters.capabilities!.some((cap) => agentCaps.includes(cap));
       });
+    }
+
+    // Filter by lastActive timestamp range
+    if (filters?.lastActiveAfter !== undefined) {
+      filtered = filtered.filter(
+        (agent: ConvexAgentRecord) =>
+          agent.lastActive !== undefined &&
+          agent.lastActive >= filters.lastActiveAfter!,
+      );
+    }
+
+    if (filters?.lastActiveBefore !== undefined) {
+      filtered = filtered.filter(
+        (agent: ConvexAgentRecord) =>
+          agent.lastActive !== undefined &&
+          agent.lastActive <= filters.lastActiveBefore!,
+      );
     }
 
     // Map to RegisteredAgent format (stats computed on-demand in get())
@@ -670,6 +738,214 @@ export class AgentsAPI {
     };
   }
 
+  /**
+   * Update multiple agents matching filters
+   *
+   * @param filters - Filter criteria for agents to update
+   * @param updates - Fields to update on matching agents
+   * @returns Update result with count and agent IDs
+   *
+   * @example
+   * ```typescript
+   * // Update all agents in a team
+   * const result = await cortex.agents.updateMany(
+   *   { metadata: { team: 'support' } },
+   *   { metadata: { trainingCompleted: true } }
+   * );
+   * console.log(`Updated ${result.updated} agents`);
+   *
+   * // Upgrade all agents to new version
+   * await cortex.agents.updateMany(
+   *   { metadata: { version: '2.0.0' } },
+   *   { metadata: { version: '2.1.0' } }
+   * );
+   * ```
+   */
+  async updateMany(
+    filters: AgentFilters,
+    updates: Partial<AgentRegistration>,
+  ): Promise<{ updated: number; agentIds: string[] }> {
+    // Validate filters and updates
+    validateAgentFilters(filters);
+    if (updates.metadata) validateMetadata(updates.metadata);
+    if (updates.config) validateConfig(updates.config);
+
+    // Check that at least one update field is provided
+    const hasUpdates =
+      updates.name !== undefined ||
+      updates.description !== undefined ||
+      updates.metadata !== undefined ||
+      updates.config !== undefined;
+
+    if (!hasUpdates) {
+      throw new AgentValidationError(
+        "At least one field must be provided for update (name, description, metadata, or config)",
+        "MISSING_UPDATES",
+      );
+    }
+
+    // Get all matching agents
+    const agents = await this.list(filters);
+
+    if (agents.length === 0) {
+      return {
+        updated: 0,
+        agentIds: [],
+      };
+    }
+
+    // Extract agent IDs and call backend
+    const agentIds = agents.map((a) => a.id);
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.agents.updateMany, {
+          agentIds,
+          name: updates.name,
+          description: updates.description,
+          metadata: updates.metadata,
+          config: updates.config,
+        }),
+      "agents:updateMany",
+    );
+
+    return {
+      updated: result.updated,
+      agentIds: result.agentIds,
+    };
+  }
+
+  /**
+   * Export registered agents matching filters
+   *
+   * @param options - Export options including format and filters
+   * @returns Export result with data string
+   *
+   * @example
+   * ```typescript
+   * // Export all agents as JSON
+   * const result = await cortex.agents.export({
+   *   format: "json",
+   *   includeStats: true,
+   * });
+   * fs.writeFileSync("agents.json", result.data);
+   *
+   * // Export support team as CSV
+   * const csv = await cortex.agents.export({
+   *   filters: { metadata: { team: "support" } },
+   *   format: "csv",
+   * });
+   * ```
+   */
+  async export(options: ExportAgentsOptions): Promise<ExportAgentsResult> {
+    // Validate options
+    validateExportOptions(options);
+
+    // Use list() for client-side filtering (metadata, capabilities, name)
+    // then format the results
+    const agents = await this.list(options.filters);
+
+    const includeMetadata = options.includeMetadata !== false;
+    const includeStats = options.includeStats ?? false;
+
+    // Optionally include stats for each agent
+    let exportData: Array<Record<string, unknown>> = agents as unknown as Array<
+      Record<string, unknown>
+    >;
+    if (includeStats) {
+      exportData = await Promise.all(
+        agents.map(async (agent) => {
+          const stats = await this.getAgentStats(agent.id);
+          return { ...agent, stats } as Record<string, unknown>;
+        }),
+      );
+    }
+
+    if (options.format === "csv") {
+      // Build CSV headers
+      const headers = [
+        "id",
+        "name",
+        "description",
+        "status",
+        "registeredAt",
+        "updatedAt",
+        "lastActive",
+      ];
+      if (includeMetadata) {
+        headers.push("metadata", "config");
+      }
+      if (includeStats) {
+        headers.push(
+          "totalMemories",
+          "totalConversations",
+          "totalFacts",
+          "memorySpacesActive",
+        );
+      }
+
+      // Build CSV rows
+      const rows = exportData.map((a) => {
+        const row = [
+          this.escapeCsvField(String(a.id)),
+          this.escapeCsvField(String(a.name)),
+          this.escapeCsvField(String(a.description || "")),
+          this.escapeCsvField(String(a.status)),
+          new Date(a.registeredAt as number).toISOString(),
+          new Date(a.updatedAt as number).toISOString(),
+          a.lastActive
+            ? new Date(a.lastActive as number).toISOString()
+            : "",
+        ];
+
+        if (includeMetadata) {
+          row.push(
+            this.escapeCsvField(JSON.stringify(a.metadata)),
+            this.escapeCsvField(JSON.stringify(a.config)),
+          );
+        }
+
+        if (includeStats && a.stats) {
+          const stats = a.stats as AgentStats;
+          row.push(
+            String(stats.totalMemories),
+            String(stats.totalConversations),
+            String(stats.totalFacts),
+            String(stats.memorySpacesActive),
+          );
+        }
+
+        return row.join(",");
+      });
+
+      return {
+        format: "csv",
+        data: [headers.join(","), ...rows].join("\n"),
+        count: agents.length,
+        exportedAt: Date.now(),
+      };
+    }
+
+    // JSON export (default)
+    return {
+      format: "json",
+      data: JSON.stringify(exportData, null, 2),
+      count: agents.length,
+      exportedAt: Date.now(),
+    };
+  }
+
+  /**
+   * Escape a field for CSV output
+   */
+  private escapeCsvField(field: string): string {
+    // If field contains comma, quote, or newline, wrap in quotes and escape quotes
+    if (field.includes(",") || field.includes('"') || field.includes("\n")) {
+      return `"${field.replace(/"/g, '""')}"`;
+    }
+    return field;
+  }
+
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Private Helper Methods - Statistics
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -708,7 +984,8 @@ export class AgentsAPI {
     const affectedSpaces = new Set<string>();
 
     // Get all memory spaces
-    const memorySpaces = await this.client.query(api.memorySpaces.list, {});
+    const memorySpacesResult = await this.client.query(api.memorySpaces.list, {});
+    const memorySpacesList = memorySpacesResult.spaces;
 
     // PARALLEL COLLECTION: Query all spaces for all data types simultaneously
     // This reduces N*3 sequential calls to 3 parallel batches
@@ -716,30 +993,35 @@ export class AgentsAPI {
       await Promise.all([
         // Collect all conversations in parallel across spaces
         Promise.all(
-          memorySpaces.map((space) =>
+          memorySpacesList.map((space: { memorySpaceId: string }) =>
             this.client
               .query(api.conversations.list, {
                 memorySpaceId: space.memorySpaceId,
               })
-              .then((conversations) => ({
-                spaceId: space.memorySpaceId,
-                conversations: (conversations as Conversation[]).filter(
-                  (c) =>
-                    c.participants.participantId === agentId ||
-                    c.participants.agentId === agentId ||
-                    c.participantId === agentId,
-                ),
-              }))
+              .then((result) => {
+                const conversations = (
+                  result as { conversations: Conversation[] }
+                ).conversations;
+                return {
+                  spaceId: space.memorySpaceId,
+                  conversations: conversations.filter(
+                    (c) =>
+                      c.participants.participantId === agentId ||
+                      c.participants.agentId === agentId ||
+                      c.participantId === agentId,
+                  ),
+                };
+              })
               .catch(() => ({
                 spaceId: space.memorySpaceId,
-                conversations: [],
+                conversations: [] as Conversation[],
               })),
           ),
         ),
 
         // Collect all memories in parallel across spaces
         Promise.all(
-          memorySpaces.map((space) =>
+          memorySpacesList.map((space: { memorySpaceId: string }) =>
             this.client
               .query(api.memories.list, {
                 memorySpaceId: space.memorySpaceId,
@@ -750,13 +1032,13 @@ export class AgentsAPI {
                   (m) => m.participantId === agentId,
                 ),
               }))
-              .catch(() => ({ spaceId: space.memorySpaceId, memories: [] })),
+              .catch(() => ({ spaceId: space.memorySpaceId, memories: [] as MemoryEntry[] })),
           ),
         ),
 
         // Collect all facts in parallel across spaces
         Promise.all(
-          memorySpaces.map((space) =>
+          memorySpacesList.map((space: { memorySpaceId: string }) =>
             this.client
               .query(api.facts.list, {
                 memorySpaceId: space.memorySpaceId,
@@ -767,7 +1049,7 @@ export class AgentsAPI {
                   (f) => f.participantId === agentId,
                 ),
               }))
-              .catch(() => ({ spaceId: space.memorySpaceId, facts: [] })),
+              .catch(() => ({ spaceId: space.memorySpaceId, facts: [] as FactRecord[] })),
           ),
         ),
 
@@ -1043,14 +1325,15 @@ export class AgentsAPI {
     const issues: string[] = [];
 
     // Get memory spaces once
-    const memorySpaces = await this.client.query(api.memorySpaces.list, {});
+    const memorySpacesResult = await this.client.query(api.memorySpaces.list, {});
+    const memorySpacesList = memorySpacesResult.spaces;
 
     // Run ALL verification queries in parallel for maximum performance
     const [memoryCounts, conversationCounts, factCounts, graphCount] =
       await Promise.all([
         // Check for remaining memories (parallel across all spaces)
         Promise.all(
-          memorySpaces.map((space) =>
+          memorySpacesList.map((space: { memorySpaceId: string }) =>
             this.client
               .query(api.memories.list, { memorySpaceId: space.memorySpaceId })
               .then(
@@ -1065,27 +1348,29 @@ export class AgentsAPI {
 
         // Check for remaining conversations (parallel across all spaces)
         Promise.all(
-          memorySpaces.map((space) =>
+          memorySpacesList.map((space: { memorySpaceId: string }) =>
             this.client
               .query(api.conversations.list, {
                 memorySpaceId: space.memorySpaceId,
               })
-              .then(
-                (conversations) =>
-                  (conversations as Conversation[]).filter(
-                    (c) =>
-                      c.participants.participantId === agentId ||
-                      c.participants.agentId === agentId ||
-                      c.participantId === agentId,
-                  ).length,
-              )
+              .then((result) => {
+                const conversations = (
+                  result as { conversations: Conversation[] }
+                ).conversations;
+                return conversations.filter(
+                  (c) =>
+                    c.participants.participantId === agentId ||
+                    c.participants.agentId === agentId ||
+                    c.participantId === agentId,
+                ).length;
+              })
               .catch(() => 0),
           ),
         ),
 
         // Check for remaining facts (parallel across all spaces)
         Promise.all(
-          memorySpaces.map((space) =>
+          memorySpacesList.map((space: { memorySpaceId: string }) =>
             this.client
               .query(api.facts.list, { memorySpaceId: space.memorySpaceId })
               .then(

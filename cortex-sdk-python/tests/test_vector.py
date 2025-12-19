@@ -1245,7 +1245,7 @@ async def test_delete_validation_empty_memory_id(cortex_client, test_ids):
 async def test_update_many_validation_empty_memory_space_id(cortex_client):
     """Should throw on empty memory_space_id."""
     with pytest.raises(VectorValidationError) as exc_info:
-        await cortex_client.vector.update_many("", {}, {"importance": 80})
+        await cortex_client.vector.update_many("", importance=80)
     assert "memory_space_id cannot be empty" in str(exc_info.value)
 
 
@@ -1253,24 +1253,20 @@ async def test_update_many_validation_empty_memory_space_id(cortex_client):
 async def test_update_many_validation_no_update_fields(cortex_client, test_ids):
     """Should throw when no update fields provided."""
     with pytest.raises(VectorValidationError) as exc_info:
-        await cortex_client.vector.update_many(test_ids["memory_space_id"], {}, {})
+        await cortex_client.vector.update_many(test_ids["memory_space_id"])
     assert "At least one update field must be provided" in str(exc_info.value)
 
 
 @pytest.mark.asyncio
-async def test_update_many_validation_invalid_importance(cortex_client, test_ids):
-    """Should throw on invalid importance."""
+async def test_update_many_validation_invalid_source_type(cortex_client, test_ids):
+    """Should throw on invalid source_type."""
     with pytest.raises(VectorValidationError) as exc_info:
-        await cortex_client.vector.update_many(test_ids["memory_space_id"], {}, {"importance": 200})
-    assert "importance must be between 0 and 100" in str(exc_info.value)
-
-
-@pytest.mark.asyncio
-async def test_update_many_validation_tags_with_empty_strings(cortex_client, test_ids):
-    """Should throw on tags with empty strings."""
-    with pytest.raises(VectorValidationError) as exc_info:
-        await cortex_client.vector.update_many(test_ids["memory_space_id"], {}, {"tags": ["valid", ""]})
-    assert "must be a non-empty string" in str(exc_info.value)
+        await cortex_client.vector.update_many(
+            test_ids["memory_space_id"],
+            source_type="invalid",
+            importance=80
+        )
+    assert "Invalid source_type" in str(exc_info.value)
 
 
 # delete_many() validation tests
@@ -1279,7 +1275,7 @@ async def test_update_many_validation_tags_with_empty_strings(cortex_client, tes
 async def test_delete_many_validation_empty_memory_space_id(cortex_client):
     """Should throw on empty memory_space_id."""
     with pytest.raises(VectorValidationError) as exc_info:
-        await cortex_client.vector.delete_many("", {})
+        await cortex_client.vector.delete_many("")
     assert "memory_space_id cannot be empty" in str(exc_info.value)
 
 
@@ -1287,7 +1283,7 @@ async def test_delete_many_validation_empty_memory_space_id(cortex_client):
 async def test_delete_many_validation_invalid_source_type(cortex_client, test_ids):
     """Should throw on invalid source_type."""
     with pytest.raises(VectorValidationError) as exc_info:
-        await cortex_client.vector.delete_many(test_ids["memory_space_id"], {"source_type": "invalid"})
+        await cortex_client.vector.delete_many(test_ids["memory_space_id"], source_type="invalid")
     assert "Invalid source_type" in str(exc_info.value)
 
 
@@ -1471,3 +1467,202 @@ async def test_get_at_timestamp_validation_negative_timestamp(cortex_client, tes
     with pytest.raises(VectorValidationError) as exc_info:
         await cortex_client.vector.get_at_timestamp(test_ids["memory_space_id"], "mem-123", -1000)
     assert "timestamp cannot be negative" in str(exc_info.value)
+
+
+# restore_from_archive() validation tests
+
+@pytest.mark.asyncio
+async def test_restore_from_archive_validation_empty_memory_space_id(cortex_client):
+    """Should throw on empty memory_space_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.restore_from_archive("", "mem-123")
+    assert "memory_space_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_restore_from_archive_validation_empty_memory_id(cortex_client, test_ids):
+    """Should throw on empty memory_id."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.restore_from_archive(test_ids["memory_space_id"], "")
+    assert "memory_id cannot be empty" in str(exc_info.value)
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# New Feature Tests (v0.21.0)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+@pytest.mark.asyncio
+async def test_search_with_query_category(cortex_client, test_ids, cleanup_helper):
+    """
+    Test search with query_category for bullet-proof retrieval.
+
+    Port of: TypeScript SDK 0.21.0 search with queryCategory
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create memory
+    await cortex_client.vector.store(
+        memory_space_id,
+        StoreMemoryInput(
+            content="User prefers to be called Alex",
+            content_type="raw",
+            source=MemorySource(type="system", timestamp=int(time.time() * 1000)),
+            metadata=MemoryMetadata(importance=80, tags=["preferences", "addressing"]),
+        ),
+    )
+
+    # Search with query_category
+    results = await cortex_client.vector.search(
+        memory_space_id,
+        "what should I call the user",
+        SearchOptions(query_category="addressing_preference"),
+    )
+
+    # Should return results (category boosting is backend feature)
+    assert isinstance(results, list)
+
+    # Cleanup
+    await cleanup_helper.purge_memory_space(memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_search_validation_invalid_query_category_type(cortex_client, test_ids):
+    """Should throw when query_category is not a string."""
+    with pytest.raises(VectorValidationError) as exc_info:
+        await cortex_client.vector.search(
+            test_ids["memory_space_id"],
+            "query",
+            SearchOptions(query_category=123)  # type: ignore
+        )
+    assert "query_category must be a string" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_restore_from_archive(cortex_client, test_ids, cleanup_helper):
+    """
+    Test restoring a memory from archive.
+
+    Port of: TypeScript SDK restoreFromArchive
+
+    NOTE: Archive is a "soft delete" - the memory is still accessible via get(),
+    but is tagged as "archived" and has reduced importance. This differs from
+    a hard delete where get() would return None.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create and archive a memory
+    memory_input = create_test_memory_input(content="Memory to archive and restore")
+    stored = await cortex_client.vector.store(memory_space_id, memory_input)
+    memory_id = stored.memory_id
+    original_importance = stored.importance
+
+    # Archive it
+    archive_result = await cortex_client.vector.archive(memory_space_id, memory_id)
+    assert archive_result.get("archived") is True or archive_result.get("success") is True
+
+    # Verify memory is soft-deleted (still accessible but marked as archived)
+    after_archive = await cortex_client.vector.get(memory_space_id, memory_id)
+    assert after_archive is not None  # Memory still exists (soft delete)
+    assert "archived" in after_archive.tags  # Tagged as archived
+    assert after_archive.importance <= 10  # Importance reduced
+
+    # Restore from archive
+    restore_result = await cortex_client.vector.restore_from_archive(memory_space_id, memory_id)
+
+    # Validate restore result
+    assert restore_result.get("restored") is True
+    assert restore_result.get("memoryId") == memory_id or restore_result.get("memory_id") == memory_id
+
+    # Verify memory is restored (archived tag removed, importance restored)
+    restored_memory = await cortex_client.vector.get(memory_space_id, memory_id)
+    assert restored_memory is not None
+    assert restored_memory.content == "Memory to archive and restore"
+    assert "archived" not in restored_memory.tags  # No longer archived
+    assert restored_memory.importance >= 50  # Importance restored to reasonable level
+
+    # Cleanup
+    await cleanup_helper.purge_memory_space(memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_delete_many_with_flat_filter(cortex_client, test_ids, cleanup_helper):
+    """
+    Test delete_many with flat filter parameters (v0.21.0 TypeScript parity).
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create memories with different source types
+    await cortex_client.vector.store(
+        memory_space_id,
+        StoreMemoryInput(
+            content="System memory 1",
+            content_type="raw",
+            source=MemorySource(type="system", timestamp=int(time.time() * 1000)),
+            metadata=MemoryMetadata(importance=30, tags=["test"]),
+        ),
+    )
+
+    await cortex_client.vector.store(
+        memory_space_id,
+        StoreMemoryInput(
+            content="System memory 2",
+            content_type="raw",
+            source=MemorySource(type="system", timestamp=int(time.time() * 1000)),
+            metadata=MemoryMetadata(importance=40, tags=["test"]),
+        ),
+    )
+
+    await cortex_client.vector.store(
+        memory_space_id,
+        StoreMemoryInput(
+            content="Conversation memory",
+            content_type="raw",
+            source=MemorySource(type="conversation", user_id="user-1", timestamp=int(time.time() * 1000)),
+            metadata=MemoryMetadata(importance=50, tags=["test"]),
+        ),
+    )
+
+    # Delete only system memories using flat filter
+    result = await cortex_client.vector.delete_many(
+        memory_space_id,
+        source_type="system",
+    )
+
+    # Should have deleted at least 2 memories
+    assert result.get("deleted") >= 2 or result.get("deleted", 0) >= 2
+
+    # Cleanup
+    await cleanup_helper.purge_memory_space(memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_update_many_with_flat_filter(cortex_client, test_ids, cleanup_helper):
+    """
+    Test update_many with flat filter parameters (v0.21.0 TypeScript parity).
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create memories
+    await cortex_client.vector.store(
+        memory_space_id,
+        StoreMemoryInput(
+            content="System memory to update",
+            content_type="raw",
+            source=MemorySource(type="system", timestamp=int(time.time() * 1000)),
+            metadata=MemoryMetadata(importance=30, tags=["test"]),
+        ),
+    )
+
+    # Update system memories using flat filter
+    result = await cortex_client.vector.update_many(
+        memory_space_id,
+        source_type="system",
+        importance=80,
+    )
+
+    # Should have updated at least 1 memory
+    assert result.get("updated") >= 1 or result.get("updated", 0) >= 1
+
+    # Cleanup
+    await cleanup_helper.purge_memory_space(memory_space_id)

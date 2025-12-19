@@ -310,10 +310,10 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
     it("Step 1: List all conversations", async () => {
       logSection("TEST: List All Conversations");
 
-      const conversations = await cortex.conversations.list();
+      const result = await cortex.conversations.list();
 
-      debugLog("Result", `Found ${conversations.length} conversations`);
-      expect(conversations.length).toBeGreaterThan(0);
+      debugLog("Result", `Found ${result.conversations.length} conversations`);
+      expect(result.conversations.length).toBeGreaterThan(0);
 
       await inspector.inspectAllConversations();
       await pause();
@@ -322,17 +322,17 @@ describe("Conversations API (Layer 1a) - DEBUG MODE", () => {
     it("Step 2: List by userId", async () => {
       logSection("TEST: List by userId");
 
-      const conversations = await cortex.conversations.list({
+      const result = await cortex.conversations.list({
         userId: "user-list-debug",
       });
 
       debugLog(
         "Result",
-        `Found ${conversations.length} conversations for user-list-debug`,
+        `Found ${result.conversations.length} conversations for user-list-debug`,
       );
-      expect(conversations.length).toBeGreaterThanOrEqual(2);
+      expect(result.conversations.length).toBeGreaterThanOrEqual(2);
 
-      conversations.forEach((conv, idx) => {
+      result.conversations.forEach((conv, idx) => {
         console.log(`  [${idx + 1}] ${conv.conversationId}`);
         expect(conv.participants.userId).toBe("user-list-debug");
       });

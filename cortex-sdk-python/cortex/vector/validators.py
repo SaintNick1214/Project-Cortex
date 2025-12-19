@@ -496,6 +496,14 @@ def validate_search_options(options: SearchOptions) -> None:
     if options.source_type is not None:
         validate_source_type(options.source_type)
 
+    if options.query_category is not None:
+        if not isinstance(options.query_category, str):
+            raise VectorValidationError(
+                "query_category must be a string",
+                "INVALID_QUERY_CATEGORY",
+                "query_category",
+            )
+
 
 def validate_update_options(updates: Dict[str, Any]) -> None:
     """

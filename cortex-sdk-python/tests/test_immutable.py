@@ -11,8 +11,21 @@ Tests validate:
 """
 
 import pytest
+from datetime import datetime
 
-from cortex import ImmutableEntry
+from cortex import (
+    ImmutableEntry,
+    ListImmutableFilter,
+    SearchImmutableInput,
+    CountImmutableFilter,
+    PurgeManyFilter,
+    ImmutableVersionExpanded,
+    ImmutableSearchResult,
+    PurgeImmutableResult,
+    PurgeManyImmutableResult,
+    PurgeVersionsResult,
+    StoreImmutableOptions,
+)
 from cortex.immutable import ImmutableValidationError
 
 # ============================================================================
@@ -265,12 +278,13 @@ async def test_list_entries(cortex_client, ctx):
             )
         )
 
-    # List entries filtered by our test type
-    result = await cortex_client.immutable.list(type=test_type, limit=100)
+    # List entries filtered by our test type using filter object
+    result = await cortex_client.immutable.list(
+        ListImmutableFilter(type=test_type, limit=100)
+    )
 
     # Should return at least 3 entries of our type
-    entries = result if isinstance(result, list) else result.get("records", [])
-    assert len(entries) >= 3
+    assert len(result) >= 3
 
     # Cleanup
     for entry_id in created_ids:
@@ -378,14 +392,17 @@ async def test_search_immutable(cortex_client, ctx):
         )
     )
 
-    # Search for "Python"
-    results = await cortex_client.immutable.search("Python")
+    # Search for "Python" using SearchImmutableInput
+    results = await cortex_client.immutable.search(
+        SearchImmutableInput(query="Python")
+    )
 
     # Should find the Python article
-    # Backend returns {entry, score, highlights} format
+    # Returns List[ImmutableSearchResult] with entry, score, highlights
     assert len(results) > 0
+    assert all(isinstance(r, ImmutableSearchResult) for r in results)
     found_python = any(
-        "Python" in str(r.get("entry", {}).get("data", {}))
+        "Python" in str(r.entry.data)
         for r in results
     )
     assert found_python
@@ -536,7 +553,7 @@ async def test_get_at_timestamp_validation_negative(cortex_client):
 async def test_search_validation_empty_query(cortex_client):
     """Should throw on empty query."""
     with pytest.raises(ImmutableValidationError) as exc_info:
-        await cortex_client.immutable.search("")
+        await cortex_client.immutable.search(SearchImmutableInput(query=""))
     assert "Search query is required" in str(exc_info.value)
 
 
@@ -544,7 +561,7 @@ async def test_search_validation_empty_query(cortex_client):
 async def test_search_validation_invalid_type_filter(cortex_client):
     """Should throw on invalid type filter."""
     with pytest.raises(ImmutableValidationError) as exc_info:
-        await cortex_client.immutable.search("query", type="")
+        await cortex_client.immutable.search(SearchImmutableInput(query="test", type=""))
     assert "Type must be a non-empty string" in str(exc_info.value)
 
 
@@ -553,7 +570,7 @@ async def test_search_validation_invalid_type_filter(cortex_client):
 async def test_list_validation_invalid_limit_zero(cortex_client):
     """Should throw on limit = 0."""
     with pytest.raises(ImmutableValidationError) as exc_info:
-        await cortex_client.immutable.list(limit=0)
+        await cortex_client.immutable.list(ListImmutableFilter(limit=0))
     assert "Limit must be a positive integer" in str(exc_info.value)
 
 
@@ -561,7 +578,7 @@ async def test_list_validation_invalid_limit_zero(cortex_client):
 async def test_list_validation_invalid_limit_negative(cortex_client):
     """Should throw on negative limit."""
     with pytest.raises(ImmutableValidationError) as exc_info:
-        await cortex_client.immutable.list(limit=-5)
+        await cortex_client.immutable.list(ListImmutableFilter(limit=-5))
     assert "Limit must be a positive integer" in str(exc_info.value)
 
 
@@ -570,7 +587,7 @@ async def test_list_validation_invalid_limit_negative(cortex_client):
 async def test_count_validation_empty_type(cortex_client):
     """Should throw on empty type."""
     with pytest.raises(ImmutableValidationError) as exc_info:
-        await cortex_client.immutable.count(type="")
+        await cortex_client.immutable.count(CountImmutableFilter(type=""))
     assert "Type must be a non-empty string" in str(exc_info.value)
 
 
@@ -596,27 +613,19 @@ async def test_purge_validation_empty_id(cortex_client):
 async def test_purge_many_validation_no_filters(cortex_client):
     """Should throw when no filters provided."""
     with pytest.raises(ImmutableValidationError) as exc_info:
-        await cortex_client.immutable.purge_many()
+        await cortex_client.immutable.purge_many(PurgeManyFilter())
     assert "requires at least one filter" in str(exc_info.value)
 
 
 @pytest.mark.asyncio
-async def test_purge_many_validation_invalid_timestamp(cortex_client):
-    """Should throw on negative created_before."""
+async def test_purge_many_validation_empty_type(cortex_client):
+    """Should throw on empty type in filter."""
     with pytest.raises(ImmutableValidationError) as exc_info:
-        await cortex_client.immutable.purge_many(type="test", created_before=-1000)
-    assert "Timestamp must be a positive integer" in str(exc_info.value)
+        await cortex_client.immutable.purge_many(PurgeManyFilter(type=""))
+    assert "Type must be a non-empty string" in str(exc_info.value)
 
 
 # purgeVersions() validation tests
-@pytest.mark.asyncio
-async def test_purge_versions_validation_no_params(cortex_client):
-    """Should throw when neither keep_latest nor older_than provided."""
-    with pytest.raises(ImmutableValidationError) as exc_info:
-        await cortex_client.immutable.purge_versions("test", "id")
-    assert "requires either keep_latest or older_than" in str(exc_info.value)
-
-
 @pytest.mark.asyncio
 async def test_purge_versions_validation_keep_latest_zero(cortex_client):
     """Should throw on keep_latest = 0."""
@@ -626,11 +635,11 @@ async def test_purge_versions_validation_keep_latest_zero(cortex_client):
 
 
 @pytest.mark.asyncio
-async def test_purge_versions_validation_older_than_negative(cortex_client):
-    """Should throw on negative older_than."""
+async def test_purge_versions_validation_keep_latest_negative(cortex_client):
+    """Should throw on negative keep_latest."""
     with pytest.raises(ImmutableValidationError) as exc_info:
-        await cortex_client.immutable.purge_versions("test", "id", older_than=-1000)
-    assert "Timestamp must be a positive integer" in str(exc_info.value)
+        await cortex_client.immutable.purge_versions("test", "id", keep_latest=-5)
+    assert "keep_latest must be a positive integer >= 1" in str(exc_info.value)
 
 
 # Validation error properties tests
@@ -669,3 +678,267 @@ async def test_validation_error_is_exception(cortex_client):
     except ImmutableValidationError as e:
         assert isinstance(e, ImmutableValidationError)
         assert isinstance(e, Exception)
+
+
+# ============================================================================
+# New 0.21.0 Type Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_get_version_returns_expanded_type(cortex_client, ctx):
+    """
+    Test that get_version() returns ImmutableVersionExpanded with type/id info.
+    """
+    test_type = ctx.immutable_type("expanded-ver-test")
+    test_id = ctx.immutable_id("ver-expanded")
+
+    # Create entry
+    await cortex_client.immutable.store(
+        ImmutableEntry(
+            type=test_type,
+            id=test_id,
+            data={"content": "test"},
+            user_id="test-user",
+        )
+    )
+
+    # Get version - should return ImmutableVersionExpanded
+    version = await cortex_client.immutable.get_version(test_type, test_id, 1)
+
+    assert version is not None
+    assert isinstance(version, ImmutableVersionExpanded)
+    assert version.type == test_type
+    assert version.id == test_id
+    assert version.version == 1
+    assert version.data["content"] == "test"
+    assert version.timestamp is not None
+    assert version.created_at is not None
+
+    # Cleanup
+    await cortex_client.immutable.purge(test_type, test_id)
+
+
+@pytest.mark.asyncio
+async def test_get_history_returns_expanded_types(cortex_client, ctx):
+    """
+    Test that get_history() returns List[ImmutableVersionExpanded].
+    """
+    test_type = ctx.immutable_type("expanded-history-test")
+    test_id = ctx.immutable_id("history-expanded")
+
+    # Create multiple versions
+    await cortex_client.immutable.store(
+        ImmutableEntry(type=test_type, id=test_id, data={"v": 1})
+    )
+    await cortex_client.immutable.store(
+        ImmutableEntry(type=test_type, id=test_id, data={"v": 2})
+    )
+
+    # Get history - should return List[ImmutableVersionExpanded]
+    history = await cortex_client.immutable.get_history(test_type, test_id)
+
+    assert len(history) >= 2
+    for version in history:
+        assert isinstance(version, ImmutableVersionExpanded)
+        assert version.type == test_type
+        assert version.id == test_id
+        assert version.version >= 1
+
+    # Cleanup
+    await cortex_client.immutable.purge(test_type, test_id)
+
+
+@pytest.mark.asyncio
+async def test_get_at_timestamp_with_datetime(cortex_client, ctx):
+    """
+    Test that get_at_timestamp() accepts datetime objects.
+    """
+    test_type = ctx.immutable_type("datetime-test")
+    test_id = ctx.immutable_id("timestamp-datetime")
+
+    # Create entry
+    await cortex_client.immutable.store(
+        ImmutableEntry(type=test_type, id=test_id, data={"content": "original"})
+    )
+
+    # Get with datetime (now) - should find the entry
+    version = await cortex_client.immutable.get_at_timestamp(
+        test_type, test_id, datetime.now()
+    )
+
+    assert version is not None
+    assert isinstance(version, ImmutableVersionExpanded)
+    assert version.type == test_type
+    assert version.id == test_id
+
+    # Cleanup
+    await cortex_client.immutable.purge(test_type, test_id)
+
+
+@pytest.mark.asyncio
+async def test_purge_returns_typed_result(cortex_client, ctx):
+    """
+    Test that purge() returns PurgeImmutableResult.
+    """
+    test_type = ctx.immutable_type("purge-typed-test")
+    test_id = ctx.immutable_id("purge-typed")
+
+    # Create entry with multiple versions
+    await cortex_client.immutable.store(
+        ImmutableEntry(type=test_type, id=test_id, data={"v": 1})
+    )
+    await cortex_client.immutable.store(
+        ImmutableEntry(type=test_type, id=test_id, data={"v": 2})
+    )
+
+    # Purge - should return typed result
+    result = await cortex_client.immutable.purge(test_type, test_id)
+
+    assert isinstance(result, PurgeImmutableResult)
+    assert result.deleted is True
+    assert result.type == test_type
+    assert result.id == test_id
+    assert result.versions_deleted >= 2
+
+
+@pytest.mark.asyncio
+async def test_purge_versions_returns_typed_result(cortex_client, ctx):
+    """
+    Test that purge_versions() returns PurgeVersionsResult.
+    """
+    test_type = ctx.immutable_type("purge-ver-typed-test")
+    test_id = ctx.immutable_id("purge-ver-typed")
+
+    # Create entry with 5 versions
+    for i in range(5):
+        await cortex_client.immutable.store(
+            ImmutableEntry(type=test_type, id=test_id, data={"v": i + 1})
+        )
+
+    # Purge versions, keeping 2 - should return typed result
+    result = await cortex_client.immutable.purge_versions(test_type, test_id, keep_latest=2)
+
+    assert isinstance(result, PurgeVersionsResult)
+    assert result.versions_purged >= 0
+    assert result.versions_remaining >= 2
+
+    # Cleanup
+    await cortex_client.immutable.purge(test_type, test_id)
+
+
+@pytest.mark.asyncio
+async def test_search_returns_typed_results(cortex_client, ctx):
+    """
+    Test that search() returns List[ImmutableSearchResult].
+    """
+    test_type = ctx.immutable_type("search-typed-test")
+
+    # Create searchable entry
+    await cortex_client.immutable.store(
+        ImmutableEntry(
+            type=test_type,
+            id=ctx.immutable_id("search-typed-doc"),
+            data={
+                "title": "Unique Searchable Document ABC123",
+                "content": "This is unique content for search test",
+            },
+        )
+    )
+
+    # Search
+    results = await cortex_client.immutable.search(
+        SearchImmutableInput(query="Unique Searchable Document", type=test_type)
+    )
+
+    # Results should be typed
+    for result in results:
+        assert isinstance(result, ImmutableSearchResult)
+        assert hasattr(result, "entry")
+        assert hasattr(result, "score")
+        assert hasattr(result, "highlights")
+        assert isinstance(result.score, (int, float))
+
+
+@pytest.mark.asyncio
+async def test_list_with_filter_object(cortex_client, ctx):
+    """
+    Test list() with ListImmutableFilter object.
+    """
+    test_type = ctx.immutable_type("list-filter-test")
+
+    # Create entries
+    ids = []
+    for i in range(3):
+        entry_id = ctx.immutable_id(f"list-filter-{i}")
+        ids.append(entry_id)
+        await cortex_client.immutable.store(
+            ImmutableEntry(type=test_type, id=entry_id, data={"n": i})
+        )
+
+    # List with filter object
+    results = await cortex_client.immutable.list(
+        ListImmutableFilter(type=test_type, limit=10)
+    )
+
+    assert len(results) >= 3
+
+    # Cleanup
+    for entry_id in ids:
+        await cortex_client.immutable.purge(test_type, entry_id)
+
+
+@pytest.mark.asyncio
+async def test_count_with_filter_object(cortex_client, ctx):
+    """
+    Test count() with CountImmutableFilter object.
+    """
+    test_type = ctx.immutable_type("count-filter-test")
+
+    # Create entries
+    ids = []
+    for i in range(2):
+        entry_id = ctx.immutable_id(f"count-filter-{i}")
+        ids.append(entry_id)
+        await cortex_client.immutable.store(
+            ImmutableEntry(type=test_type, id=entry_id, data={"n": i})
+        )
+
+    # Count with filter object
+    count = await cortex_client.immutable.count(
+        CountImmutableFilter(type=test_type)
+    )
+
+    assert count >= 2
+
+    # Cleanup
+    for entry_id in ids:
+        await cortex_client.immutable.purge(test_type, entry_id)
+
+
+@pytest.mark.asyncio
+async def test_purge_many_with_filter_object(cortex_client, ctx):
+    """
+    Test purge_many() with PurgeManyFilter object.
+    """
+    test_type = ctx.immutable_type("purge-many-filter-test")
+
+    # Create entries
+    for i in range(2):
+        await cortex_client.immutable.store(
+            ImmutableEntry(
+                type=test_type,
+                id=ctx.immutable_id(f"purge-many-{i}"),
+                data={"n": i}
+            )
+        )
+
+    # Purge many with filter object
+    result = await cortex_client.immutable.purge_many(
+        PurgeManyFilter(type=test_type)
+    )
+
+    assert isinstance(result, PurgeManyImmutableResult)
+    assert result.deleted >= 0
+    assert hasattr(result, "total_versions_deleted")
+    assert hasattr(result, "entries")

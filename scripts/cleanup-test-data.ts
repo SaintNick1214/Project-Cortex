@@ -58,24 +58,12 @@ async function cleanup() {
     };
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Table 1: Conversations
+    // Table 1: Conversations (use purgeAll for efficiency)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     console.log("📋 Purging conversations...");
     try {
-      const conversations = await client.query(api.conversations.list, {
-        limit: 10000, // Fetch all conversations (default is 100)
-      });
-      stats.conversations = conversations.length;
-
-      for (const conv of conversations) {
-        try {
-          await client.mutation(api.conversations.deleteConversation, {
-            conversationId: conv.conversationId,
-          });
-        } catch (e) {
-          // Ignore if already deleted
-        }
-      }
+      const result = await client.mutation(api.conversations.purgeAll, {});
+      stats.conversations = result.deleted;
       console.log(`   ✅ Deleted ${stats.conversations} conversations`);
     } catch (e: any) {
       console.error(`   ⚠️  Conversations cleanup failed: ${e.message}`);

@@ -63,7 +63,7 @@ interface StoreFactParams {
   predicate?: string; // Relationship type
   object?: string; // Secondary entity
   confidence: number; // 0-100 extraction confidence
-  sourceType: "conversation" | "system" | "tool" | "manual";
+  sourceType: "conversation" | "system" | "tool" | "manual" | "a2a";
   sourceRef?: {
     conversationId?: string;
     messageIds?: string[];
@@ -236,7 +236,7 @@ interface ListFactsFilter {
   participantId?: string; // Filter by participant (Hive Mode)
   tags?: string[]; // Filter by tags
   tagMatch?: "any" | "all"; // Tag match strategy (default: 'any')
-  sourceType?: "conversation" | "system" | "tool" | "manual"; // Filter by source
+  sourceType?: "conversation" | "system" | "tool" | "manual" | "a2a"; // Filter by source
 
   // Date filters
   createdBefore?: Date;
@@ -340,7 +340,7 @@ interface SearchFactsOptions {
   participantId?: string; // Hive Mode filtering
   tags?: string[];
   tagMatch?: "any" | "all"; // Tag match strategy (default: 'any')
-  sourceType?: "conversation" | "system" | "tool" | "manual";
+  sourceType?: "conversation" | "system" | "tool" | "manual" | "a2a";
 
   // Date filters
   createdBefore?: Date;
@@ -560,7 +560,7 @@ interface CountFactsFilter {
   participantId?: string; // Hive Mode filtering
   tags?: string[];
   tagMatch?: "any" | "all";
-  sourceType?: "conversation" | "system" | "tool" | "manual";
+  sourceType?: "conversation" | "system" | "tool" | "manual" | "a2a";
 
   // Date filters
   createdBefore?: Date;
@@ -645,7 +645,7 @@ interface UniversalFactFilters {
   confidence?: number; // Exact match
 
   // Source filters
-  sourceType?: "conversation" | "system" | "tool" | "manual";
+  sourceType?: "conversation" | "system" | "tool" | "manual" | "a2a";
 
   // Tag filters
   tags?: string[];
@@ -840,7 +840,7 @@ interface QueryBySubjectFilter {
   participantId?: string;
   tags?: string[];
   tagMatch?: "any" | "all";
-  sourceType?: "conversation" | "system" | "tool" | "manual";
+  sourceType?: "conversation" | "system" | "tool" | "manual" | "a2a";
   createdBefore?: Date;
   createdAfter?: Date;
   updatedBefore?: Date;
@@ -921,7 +921,7 @@ interface QueryByRelationshipFilter {
   participantId?: string;
   tags?: string[];
   tagMatch?: "any" | "all";
-  sourceType?: "conversation" | "system" | "tool" | "manual";
+  sourceType?: "conversation" | "system" | "tool" | "manual" | "a2a";
   createdBefore?: Date;
   createdAfter?: Date;
   updatedBefore?: Date;
@@ -1149,7 +1149,7 @@ interface FactRecord {
   predicate?: string;
   object?: string;
   confidence: number;
-  sourceType: "conversation" | "system" | "tool" | "manual";
+  sourceType: "conversation" | "system" | "tool" | "manual" | "a2a";
   sourceRef?: {
     conversationId?: string;
     messageIds?: string[];

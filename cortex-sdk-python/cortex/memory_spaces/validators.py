@@ -375,3 +375,75 @@ def validate_update_params(updates: Dict[str, Any]) -> None:
         raise MemorySpaceValidationError(
             "At least one field must be provided for update", "EMPTY_UPDATES"
         )
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Time Window Validation
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+VALID_TIME_WINDOWS = ["24h", "7d", "30d", "90d", "all"]
+
+
+def validate_time_window(time_window: str) -> None:
+    """
+    Validates time window parameter.
+
+    Args:
+        time_window: Time window to validate
+
+    Raises:
+        MemorySpaceValidationError: If validation fails
+    """
+    if not time_window or not isinstance(time_window, str):
+        raise MemorySpaceValidationError(
+            "timeWindow is required and must be a string",
+            "INVALID_TIME_WINDOW",
+            "timeWindow",
+        )
+
+    if time_window not in VALID_TIME_WINDOWS:
+        raise MemorySpaceValidationError(
+            f'Invalid timeWindow "{time_window}". Valid values: {", ".join(VALID_TIME_WINDOWS)}',
+            "INVALID_TIME_WINDOW",
+            "timeWindow",
+        )
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Delete Options Validation
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+def validate_delete_options(memory_space_id: str, cascade: bool, reason: str, confirm_id: Optional[str] = None) -> None:
+    """
+    Validates delete options for memory space deletion.
+
+    Args:
+        memory_space_id: The memory space ID being deleted
+        cascade: Whether cascade deletion is enabled (must be True)
+        reason: Reason for deletion (required)
+        confirm_id: Optional confirmation ID that must match memory_space_id
+
+    Raises:
+        MemorySpaceValidationError: If validation fails
+    """
+    if cascade is not True:
+        raise MemorySpaceValidationError(
+            "cascade must be true to delete a memory space",
+            "CASCADE_REQUIRED",
+            "cascade",
+        )
+
+    if not reason or not isinstance(reason, str) or not reason.strip():
+        raise MemorySpaceValidationError(
+            "reason is required and cannot be empty",
+            "MISSING_REASON",
+            "reason",
+        )
+
+    if confirm_id is not None and confirm_id != memory_space_id:
+        raise MemorySpaceValidationError(
+            f'confirmId "{confirm_id}" does not match memorySpaceId "{memory_space_id}"',
+            "CONFIRM_ID_MISMATCH",
+            "confirmId",
+        )

@@ -718,8 +718,8 @@ class TestAPIResilienceIntegration:
 
         # ConversationsAPI
         conv_api = ConversationsAPI(mock_client, resilience=capturing_resilience)
-        mock_client.query.return_value = []
-        await conv_api.list(memory_space_id="space-1")
+        mock_client.query.return_value = {"conversations": [], "total": 0}
+        await conv_api.list()  # list() takes optional filter param, not direct memory_space_id
         assert "conversations:list" in operation_names
 
     @pytest.mark.asyncio
