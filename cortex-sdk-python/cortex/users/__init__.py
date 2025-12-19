@@ -665,13 +665,17 @@ class UsersAPI:
         }
 
         # Collect conversations
-        conversations = await self._execute_with_resilience(
+        conversations_result = await self._execute_with_resilience(
             lambda: self.client.query(
                 "conversations:list", filter_none_values({"userId": user_id, "limit": 10000})
             ),
             "conversations:list",
         )
-        plan["conversations"] = conversations
+        # Handle both list format (legacy) and dict format (new API)
+        if isinstance(conversations_result, dict):
+            plan["conversations"] = conversations_result.get("conversations", [])
+        else:
+            plan["conversations"] = conversations_result if isinstance(conversations_result, list) else []
 
         # Collect immutable records
         immutable = await self._execute_with_resilience(
@@ -680,7 +684,18 @@ class UsersAPI:
             ),
             "immutable:list",
         )
-        plan["immutable"] = immutable
+        # Handle both list format (legacy) and dict format (new API with entries)
+        if isinstance(immutable, dict):
+            raw_entries = immutable.get("entries", [])
+        else:
+            raw_entries = immutable if isinstance(immutable, list) else []
+        
+        # Filter to only include valid dict entries with required fields (type, id)
+        # Some API responses might include strings or malformed entries
+        plan["immutable"] = [
+            entry for entry in raw_entries
+            if isinstance(entry, dict) and entry.get("type") and entry.get("id")
+        ]
 
         # Skip mutable collection for now - backend requires namespace parameter
         # Would need to know all namespaces upfront to query

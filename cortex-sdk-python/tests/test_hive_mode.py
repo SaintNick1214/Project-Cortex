@@ -94,10 +94,11 @@ async def test_all_participants_see_same_conversations(cortex_client, hive_space
     )
 
     # Tool-email can see same conversation
-    all_convs = await cortex_client.conversations.list(memory_space_id=hive_space)
+    from cortex.types import ListConversationsFilter
+    all_convs = await cortex_client.conversations.list(ListConversationsFilter(memory_space_id=hive_space))
 
-    # Handle list or dict response
-    conv_list = all_convs if isinstance(all_convs, list) else all_convs.get("conversations", [])
+    # Handle ListConversationsResult response
+    conv_list = all_convs.conversations if hasattr(all_convs, 'conversations') else (all_convs if isinstance(all_convs, list) else [])
 
     conv_ids = [c.conversation_id if hasattr(c, 'conversation_id') else c.get("conversationId") for c in conv_list]
     assert conv.conversation_id in conv_ids

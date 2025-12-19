@@ -1544,6 +1544,10 @@ async def test_restore_from_archive(cortex_client, test_ids, cleanup_helper):
     Test restoring a memory from archive.
 
     Port of: TypeScript SDK restoreFromArchive
+
+    NOTE: Archive is a "soft delete" - the memory is still accessible via get(),
+    but is tagged as "archived" and has reduced importance. This differs from
+    a hard delete where get() would return None.
     """
     memory_space_id = test_ids["memory_space_id"]
 
@@ -1551,14 +1555,17 @@ async def test_restore_from_archive(cortex_client, test_ids, cleanup_helper):
     memory_input = create_test_memory_input(content="Memory to archive and restore")
     stored = await cortex_client.vector.store(memory_space_id, memory_input)
     memory_id = stored.memory_id
+    original_importance = stored.importance
 
     # Archive it
     archive_result = await cortex_client.vector.archive(memory_space_id, memory_id)
     assert archive_result.get("archived") is True or archive_result.get("success") is True
 
-    # Verify it's gone from regular get
+    # Verify memory is soft-deleted (still accessible but marked as archived)
     after_archive = await cortex_client.vector.get(memory_space_id, memory_id)
-    assert after_archive is None
+    assert after_archive is not None  # Memory still exists (soft delete)
+    assert "archived" in after_archive.tags  # Tagged as archived
+    assert after_archive.importance <= 10  # Importance reduced
 
     # Restore from archive
     restore_result = await cortex_client.vector.restore_from_archive(memory_space_id, memory_id)
@@ -1567,10 +1574,12 @@ async def test_restore_from_archive(cortex_client, test_ids, cleanup_helper):
     assert restore_result.get("restored") is True
     assert restore_result.get("memoryId") == memory_id or restore_result.get("memory_id") == memory_id
 
-    # Verify memory is back
+    # Verify memory is restored (archived tag removed, importance restored)
     restored_memory = await cortex_client.vector.get(memory_space_id, memory_id)
     assert restored_memory is not None
     assert restored_memory.content == "Memory to archive and restore"
+    assert "archived" not in restored_memory.tags  # No longer archived
+    assert restored_memory.importance >= 50  # Importance restored to reasonable level
 
     # Cleanup
     await cleanup_helper.purge_memory_space(memory_space_id)

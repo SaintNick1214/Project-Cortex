@@ -440,7 +440,7 @@ async def test_list_memory_spaces(cortex_client, test_ids):
     result = await cortex_client.memory_spaces.list(limit=100)
 
     # Should return at least our 3 spaces
-    spaces = result if isinstance(result, list) else result.get("spaces", [])
+    spaces = result.spaces if hasattr(result, 'spaces') else result
     assert len(spaces) >= 3
 
     # Cleanup
@@ -478,11 +478,11 @@ async def test_list_filter_by_type(cortex_client, test_ids):
     # List only personal spaces
     result = await cortex_client.memory_spaces.list(type="personal", limit=100)
 
-    spaces = result if isinstance(result, list) else result.get("spaces", [])
+    spaces = result.spaces if hasattr(result, 'spaces') else result
 
     # All should be personal type
     for space in spaces:
-        space_type = space.get("type") if isinstance(space, dict) else space.type
+        space_type = space.type if hasattr(space, 'type') else space.get("type")
         assert space_type == "personal"
 
     # Cleanup

@@ -680,8 +680,9 @@ class CypherGraphAdapter:
 
         try:
             # Build relationship pattern
+            # Neo4j uses | to separate multiple relationship types in variable-length paths
             rel_types = (
-                f":{':'.join(config.relationship_types)}"
+                f":{'|'.join(config.relationship_types)}"
                 if config.relationship_types
                 else ""
             )
@@ -739,8 +740,9 @@ class CypherGraphAdapter:
 
         try:
             # Build relationship pattern (undirected for shortest path)
+            # Neo4j uses | to separate multiple relationship types in variable-length paths
             rel_types = (
-                f":{':'.join(config.relationship_types)}"
+                f":{'|'.join(config.relationship_types)}"
                 if config.relationship_types
                 else ""
             )

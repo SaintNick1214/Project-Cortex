@@ -7,6 +7,7 @@ with mocked LLM responses.
 """
 
 import json
+import sys
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -20,6 +21,13 @@ from cortex.llm import (
     _normalize_fact_type,
 )
 from cortex.types import LLMConfig
+
+# Check if anthropic is available for conditional skipping
+try:
+    import anthropic  # noqa: F401
+    HAS_ANTHROPIC = True
+except ImportError:
+    HAS_ANTHROPIC = False
 
 
 class TestCreateLLMClient:
@@ -168,6 +176,7 @@ class TestOpenAIClient:
             assert call_args.kwargs["model"] == "gpt-4o"
 
 
+@pytest.mark.skipif(not HAS_ANTHROPIC, reason="anthropic package not installed")
 class TestAnthropicClient:
     """Tests for Anthropic client implementation."""
 
