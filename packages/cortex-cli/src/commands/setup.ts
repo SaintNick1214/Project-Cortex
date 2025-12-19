@@ -1,8 +1,7 @@
 /**
- * Setup and Configuration Commands
+ * Configuration Commands
  *
- * Commands for setting up and configuring the CLI:
- * - setup: Interactive setup wizard
+ * Commands for managing CLI configuration:
  * - config: Configuration management
  */
 
@@ -10,7 +9,7 @@ import { Command } from "commander";
 import prompts from "prompts";
 import ora from "ora";
 import pc from "picocolors";
-import type { CLIConfig, OutputFormat, DeploymentConfig } from "../types.js";
+import type { CLIConfig, DeploymentConfig } from "../types.js";
 import {
   loadConfig,
   saveUserConfig,
@@ -35,156 +34,21 @@ import {
   removeDeploymentFromEnv,
   getDeploymentEnvKeys,
 } from "../utils/env-file.js";
+import {
+  getCurrentDeployment,
+  setCurrentDeployment,
+  clearCurrentDeployment,
+} from "../utils/deployment-selector.js";
 import { existsSync } from "fs";
-import { join } from "path";
+import { join, resolve } from "path";
 
 /**
- * Register setup and config commands
+ * Register config commands
  */
-export function registerSetupCommands(
+export function registerConfigCommands(
   program: Command,
   _config: CLIConfig,
 ): void {
-  // setup command
-  program
-    .command("setup")
-    .description("Interactive setup wizard")
-    .option("--auto", "Auto-configure from environment variables", false)
-    .option("--local", "Set up local Convex development", false)
-    .option("--cloud", "Set up cloud Convex deployment", false)
-    .action(async (options) => {
-      console.log();
-      console.log(pc.bold(pc.cyan("🧠 Cortex CLI Setup")));
-      console.log(pc.dim("Configure your Cortex Memory deployment\n"));
-
-      try {
-        let config = await loadConfig();
-
-        if (options.auto) {
-          // Auto mode: configure from environment variables
-          await autoSetup(config);
-          return;
-        }
-
-        // Interactive setup
-        const setupMode = await prompts({
-          type: "select",
-          name: "mode",
-          message: "What would you like to set up?",
-          choices: [
-            {
-              title: "Local development",
-              description: "Configure local Convex instance",
-              value: "local",
-            },
-            {
-              title: "Cloud deployment",
-              description: "Configure Convex cloud deployment",
-              value: "cloud",
-            },
-            {
-              title: "Both",
-              description: "Configure local and cloud deployments",
-              value: "both",
-            },
-            {
-              title: "View current configuration",
-              description: "Show existing configuration",
-              value: "view",
-            },
-          ],
-          initial: options.local ? 0 : options.cloud ? 1 : 2,
-        });
-
-        if (!setupMode.mode) {
-          printWarning("Setup cancelled");
-          return;
-        }
-
-        if (setupMode.mode === "view") {
-          await showConfiguration(config);
-          return;
-        }
-
-        // Set up local deployment
-        if (setupMode.mode === "local" || setupMode.mode === "both") {
-          config = await setupLocalDeployment(config);
-        }
-
-        // Set up cloud deployment
-        if (setupMode.mode === "cloud" || setupMode.mode === "both") {
-          config = await setupCloudDeployment(config);
-        }
-
-        // Set default deployment
-        if (setupMode.mode === "both") {
-          const defaultChoice = await prompts({
-            type: "select",
-            name: "default",
-            message: "Which deployment should be the default?",
-            choices: [
-              { title: "Local", value: "local" },
-              { title: "Cloud", value: "cloud" },
-            ],
-          });
-          if (defaultChoice.default) {
-            config.default = defaultChoice.default;
-          }
-        } else {
-          config.default = setupMode.mode;
-        }
-
-        // Set output format
-        const formatChoice = await prompts({
-          type: "select",
-          name: "format",
-          message: "Preferred output format?",
-          choices: [
-            { title: "Table (human-readable)", value: "table" },
-            { title: "JSON (machine-readable)", value: "json" },
-          ],
-          initial: 0,
-        });
-        if (formatChoice.format) {
-          config.format = formatChoice.format as OutputFormat;
-        }
-
-        // Confirm dangerous operations
-        const confirmChoice = await prompts({
-          type: "confirm",
-          name: "confirm",
-          message:
-            "Require confirmation for dangerous operations (delete, clear)?",
-          initial: true,
-        });
-        config.confirmDangerous = confirmChoice.confirm ?? true;
-
-        // Save configuration
-        await saveUserConfig(config);
-        console.log();
-        printSuccess(`Configuration saved to ${getUserConfigPath()}`);
-
-        // Test connection
-        const testChoice = await prompts({
-          type: "confirm",
-          name: "test",
-          message: "Would you like to test the connection?",
-          initial: true,
-        });
-
-        if (testChoice.test) {
-          await testAndShowConnection(config, config.default);
-        }
-
-        console.log();
-        printSuccess("Setup complete! 🎉");
-        printInfo("Run 'cortex --help' to see available commands");
-      } catch (error) {
-        printError(error instanceof Error ? error.message : "Setup failed");
-        process.exit(1);
-      }
-    });
-
   // config command group
   const configCmd = program
     .command("config")
@@ -201,6 +65,89 @@ export function registerSetupCommands(
       try {
         const config = await loadConfig();
         await showConfiguration(config, options.format);
+      } catch (error) {
+        printError(
+          error instanceof Error ? error.message : "Failed to load config",
+        );
+        process.exit(1);
+      }
+    });
+
+  // config list - Table view of deployments
+  configCmd
+    .command("list")
+    .description("List all deployments in table format")
+    .action(async () => {
+      try {
+        const config = await loadConfig();
+        const deployments = Object.entries(config.deployments);
+
+        if (deployments.length === 0) {
+          console.log(pc.yellow("\n  No deployments configured\n"));
+          printInfo("To get started:");
+          console.log(pc.dim("   • Run 'cortex init' to create a new project"));
+          console.log(pc.dim("   • Run 'cortex config add-deployment' to add an existing deployment"));
+          return;
+        }
+
+        console.log();
+        
+        // Table header
+        const nameWidth = 20;
+        const statusWidth = 10;
+        const urlWidth = 40;
+        const keyWidth = 6;
+        const pathWidth = 35;
+        
+        console.log(
+          pc.bold("  " + 
+            "NAME".padEnd(nameWidth) + 
+            "STATUS".padEnd(statusWidth) +
+            "URL".padEnd(urlWidth) + 
+            "KEY".padEnd(keyWidth) + 
+            "PROJECT PATH"
+          )
+        );
+        console.log(pc.dim("  " + "─".repeat(nameWidth + statusWidth + urlWidth + keyWidth + pathWidth)));
+
+        for (const [name, deployment] of deployments) {
+          const isDefault = name === config.default;
+          // Default deployment is implicitly enabled; others check enabled field
+          const isEnabled = deployment.enabled === true || (deployment.enabled === undefined && isDefault);
+          const prefix = isDefault ? pc.green("→ ") : "  ";
+          // Pad BEFORE applying color to avoid ANSI escape code length issues
+          const namePadded = name.padEnd(nameWidth - 2);
+          const nameDisplay = isDefault ? pc.cyan(namePadded) : namePadded;
+          const statusText = isEnabled ? "enabled" : "disabled";
+          const statusPadded = statusText.padEnd(statusWidth);
+          const statusDisplay = isEnabled ? pc.green(statusPadded) : pc.dim(statusPadded);
+          const keyText = deployment.key ? "yes" : "no";
+          const keyPadded = keyText.padEnd(keyWidth);
+          const keyStatus = deployment.key ? pc.green(keyPadded) : pc.dim(keyPadded);
+          const urlDisplay = (deployment.url.length > urlWidth - 2 
+            ? deployment.url.substring(0, urlWidth - 5) + "..." 
+            : deployment.url).padEnd(urlWidth);
+          const pathDisplay = deployment.projectPath 
+            ? (deployment.projectPath.length > pathWidth - 2 
+                ? "..." + deployment.projectPath.slice(-(pathWidth - 5))
+                : deployment.projectPath)
+            : pc.dim("--");
+
+          console.log(
+            prefix +
+            nameDisplay +
+            statusDisplay +
+            urlDisplay +
+            keyStatus +
+            pathDisplay
+          );
+        }
+
+        console.log();
+        if (config.default) {
+          console.log(pc.dim(`  Default: ${config.default} (→) • Enabled deployments started with 'cortex start'`));
+        }
+        console.log();
       } catch (error) {
         printError(
           error instanceof Error ? error.message : "Failed to load config",
@@ -238,6 +185,118 @@ export function registerSetupCommands(
       } catch (error) {
         printError(
           error instanceof Error ? error.message : "Connection test failed",
+        );
+        process.exit(1);
+      }
+    });
+
+  // config set-path - Set project path for a deployment
+  configCmd
+    .command("set-path <deployment> [path]")
+    .description("Set project path for a deployment (enables 'cortex start -d <name>' from anywhere)")
+    .action(async (deploymentName, pathArg) => {
+      try {
+        const config = await loadConfig();
+        
+        if (!config.deployments[deploymentName]) {
+          printError(`Deployment "${deploymentName}" not found`);
+          const names = Object.keys(config.deployments);
+          if (names.length > 0) {
+            printInfo(`Available deployments: ${names.join(", ")}`);
+          }
+          process.exit(1);
+        }
+
+        // If no path provided, use current directory
+        const projectPath = pathArg ? resolve(pathArg) : process.cwd();
+
+        // Verify path exists
+        if (!existsSync(projectPath)) {
+          printError(`Path does not exist: ${projectPath}`);
+          process.exit(1);
+        }
+
+        // Update deployment with projectPath
+        config.deployments[deploymentName] = {
+          ...config.deployments[deploymentName],
+          projectPath,
+        };
+
+        await saveUserConfig(config);
+        printSuccess(`Set project path for "${deploymentName}"`);
+        console.log(pc.dim(`   Path: ${projectPath}`));
+        console.log();
+        printInfo(`You can now run: cortex start -d ${deploymentName}`);
+        console.log(pc.dim("   This will work from any directory"));
+      } catch (error) {
+        printError(
+          error instanceof Error ? error.message : "Failed to set project path",
+        );
+        process.exit(1);
+      }
+    });
+
+  // config enable - Enable a deployment for `cortex start`
+  configCmd
+    .command("enable <deployment>")
+    .description("Enable a deployment (will be started with 'cortex start')")
+    .action(async (deploymentName) => {
+      try {
+        const config = await loadConfig();
+        
+        if (!config.deployments[deploymentName]) {
+          printError(`Deployment "${deploymentName}" not found`);
+          const names = Object.keys(config.deployments);
+          if (names.length > 0) {
+            printInfo(`Available deployments: ${names.join(", ")}`);
+          }
+          process.exit(1);
+        }
+
+        config.deployments[deploymentName] = {
+          ...config.deployments[deploymentName],
+          enabled: true,
+        };
+
+        await saveUserConfig(config);
+        printSuccess(`Enabled deployment "${deploymentName}"`);
+        console.log(pc.dim("   Will be started with 'cortex start'"));
+      } catch (error) {
+        printError(
+          error instanceof Error ? error.message : "Failed to enable deployment",
+        );
+        process.exit(1);
+      }
+    });
+
+  // config disable - Disable a deployment
+  configCmd
+    .command("disable <deployment>")
+    .description("Disable a deployment (will not be started with 'cortex start')")
+    .action(async (deploymentName) => {
+      try {
+        const config = await loadConfig();
+        
+        if (!config.deployments[deploymentName]) {
+          printError(`Deployment "${deploymentName}" not found`);
+          const names = Object.keys(config.deployments);
+          if (names.length > 0) {
+            printInfo(`Available deployments: ${names.join(", ")}`);
+          }
+          process.exit(1);
+        }
+
+        config.deployments[deploymentName] = {
+          ...config.deployments[deploymentName],
+          enabled: false,
+        };
+
+        await saveUserConfig(config);
+        printSuccess(`Disabled deployment "${deploymentName}"`);
+        console.log(pc.dim("   Will NOT be started with 'cortex start'"));
+      } catch (error) {
+        printError(
+          error instanceof Error ? error.message : "Failed to disable deployment",
         );
         process.exit(1);
       }
@@ -518,6 +577,212 @@ export function registerSetupCommands(
       }
     });
 
+  // config set-key
+  configCmd
+    .command("set-key [deployment]")
+    .description("Set or update the deploy key for a deployment")
+    .option("-k, --key <key>", "Deploy key (will prompt if not provided)")
+    .option(
+      "--json-only",
+      "Only update ~/.cortexrc (skip .env.local)",
+      false,
+    )
+    .action(async (deploymentArg, options) => {
+      try {
+        const config = await loadConfig();
+        let name = deploymentArg;
+
+        // If no name provided, show interactive selection
+        if (!name) {
+          const deploymentNames = Object.keys(config.deployments);
+
+          if (deploymentNames.length === 0) {
+            printWarning("No deployments configured");
+            console.log(
+              pc.dim("   Run 'cortex config add-deployment' to add one\n"),
+            );
+            return;
+          }
+
+          const response = await prompts({
+            type: "select",
+            name: "name",
+            message: "Select deployment to set key for:",
+            choices: deploymentNames.map((n) => {
+              const dep = config.deployments[n];
+              const keyStatus = dep.key ? pc.green("(key set)") : pc.dim("(no key)");
+              return {
+                title: `${n} ${keyStatus}`,
+                description: dep.url,
+                value: n,
+              };
+            }),
+          });
+
+          if (!response.name) {
+            printWarning("Cancelled");
+            return;
+          }
+          name = response.name;
+        }
+
+        if (!config.deployments[name]) {
+          printError(`Deployment "${name}" not found`);
+          console.log(
+            pc.dim("   Run 'cortex config list' to see available deployments\n"),
+          );
+          process.exit(1);
+        }
+
+        // Get key from option or prompt
+        let key = options.key;
+        if (!key) {
+          const response = await prompts({
+            type: "password",
+            name: "key",
+            message: `Enter deploy key for "${name}":`,
+            validate: (v) => v.length > 0 || "Key cannot be empty",
+          });
+
+          if (!response.key) {
+            printWarning("Cancelled");
+            return;
+          }
+          key = response.key;
+        }
+
+        // Update the deployment with the new key
+        const deployment = config.deployments[name];
+        deployment.key = key;
+        await updateDeployment(name, deployment);
+
+        // Also update .env.local (unless --json-only)
+        if (!options.jsonOnly) {
+          await addDeploymentToEnv(name, deployment.url, key);
+          const envKeys = getDeploymentEnvKeys(name);
+          printSuccess(`Set deploy key for "${name}"`);
+          printInfo(`Updated .env.local: ${envKeys.keyKey}=***`);
+        } else {
+          printSuccess(`Set deploy key for "${name}" in ~/.cortexrc`);
+        }
+      } catch (error) {
+        printError(
+          error instanceof Error ? error.message : "Failed to set key",
+        );
+        process.exit(1);
+      }
+    });
+
+  // config set-url
+  configCmd
+    .command("set-url [deployment]")
+    .description("Set or update the URL for a deployment")
+    .option("-u, --url <url>", "Deployment URL (will prompt if not provided)")
+    .option(
+      "--json-only",
+      "Only update ~/.cortexrc (skip .env.local)",
+      false,
+    )
+    .action(async (deploymentArg, options) => {
+      try {
+        const config = await loadConfig();
+        let name = deploymentArg;
+
+        // If no name provided, show interactive selection
+        if (!name) {
+          const deploymentNames = Object.keys(config.deployments);
+
+          if (deploymentNames.length === 0) {
+            printWarning("No deployments configured");
+            console.log(
+              pc.dim("   Run 'cortex config add-deployment' to add one\n"),
+            );
+            return;
+          }
+
+          const response = await prompts({
+            type: "select",
+            name: "name",
+            message: "Select deployment to set URL for:",
+            choices: deploymentNames.map((n) => {
+              const dep = config.deployments[n];
+              return {
+                title: n,
+                description: dep.url,
+                value: n,
+              };
+            }),
+          });
+
+          if (!response.name) {
+            printWarning("Cancelled");
+            return;
+          }
+          name = response.name;
+        }
+
+        if (!config.deployments[name]) {
+          printError(`Deployment "${name}" not found`);
+          console.log(
+            pc.dim("   Run 'cortex config list' to see available deployments\n"),
+          );
+          process.exit(1);
+        }
+
+        // Get URL from option or prompt
+        let url = options.url;
+        if (!url) {
+          const currentUrl = config.deployments[name].url;
+          const response = await prompts({
+            type: "text",
+            name: "url",
+            message: `Enter URL for "${name}":`,
+            initial: currentUrl,
+            validate: (v) => {
+              try {
+                new URL(v);
+                return true;
+              } catch {
+                return "Please enter a valid URL";
+              }
+            },
+          });
+
+          if (!response.url) {
+            printWarning("Cancelled");
+            return;
+          }
+          url = response.url;
+        }
+
+        // Validate URL
+        validateUrl(url);
+
+        // Update the deployment with the new URL
+        const deployment = config.deployments[name];
+        const oldUrl = deployment.url;
+        deployment.url = url;
+        await updateDeployment(name, deployment);
+
+        // Also update .env.local (unless --json-only)
+        if (!options.jsonOnly) {
+          await addDeploymentToEnv(name, url, deployment.key);
+          const envKeys = getDeploymentEnvKeys(name);
+          printSuccess(`Updated URL for "${name}"`);
+          printInfo(`${oldUrl} → ${url}`);
+          printInfo(`Updated .env.local: ${envKeys.urlKey}=${url}`);
+        } else {
+          printSuccess(`Updated URL for "${name}" in ~/.cortexrc`);
+          printInfo(`${oldUrl} → ${url}`);
+        }
+      } catch (error) {
+        printError(
+          error instanceof Error ? error.message : "Failed to set URL",
+        );
+        process.exit(1);
+      }
+    });
+
   // config path
   configCmd
     .command("path")
@@ -576,154 +841,91 @@ export function registerSetupCommands(
         }
 
         const defaultConfig: CLIConfig = {
-          deployments: {
-            local: {
-              url: "http://127.0.0.1:3210",
-              deployment: "anonymous:anonymous-cortex-sdk-local",
-            },
-          },
-          default: "local",
+          deployments: {},
+          default: "",
           format: "table",
           confirmDangerous: true,
         };
 
         await saveUserConfig(defaultConfig);
         printSuccess("Configuration reset to defaults");
+        console.log();
+        printInfo("No deployments configured. To get started:");
+        console.log(pc.dim("   • Run 'cortex init' to create a new project"));
+        console.log(pc.dim("   • Run 'cortex config add-deployment' to add an existing deployment"));
       } catch (error) {
         printError(error instanceof Error ? error.message : "Reset failed");
         process.exit(1);
       }
     });
-}
 
-/**
- * Auto-configure from environment variables
- */
-async function autoSetup(config: CLIConfig): Promise<void> {
-  const spinner = ora("Auto-configuring from environment...").start();
-
-  let hasChanges = false;
-
-  // Check for local config
-  const localUrl = process.env.LOCAL_CONVEX_URL;
-  const localDeployment = process.env.LOCAL_CONVEX_DEPLOYMENT;
-  if (localUrl) {
-    config.deployments.local = {
-      url: localUrl,
-      deployment: localDeployment,
-    };
-    hasChanges = true;
-  }
-
-  // Check for cloud config
-  const cloudUrl = process.env.CLOUD_CONVEX_URL ?? process.env.CONVEX_URL;
-  const cloudKey =
-    process.env.CLOUD_CONVEX_DEPLOY_KEY ?? process.env.CONVEX_DEPLOY_KEY;
-  if (
-    cloudUrl &&
-    !cloudUrl.includes("localhost") &&
-    !cloudUrl.includes("127.0.0.1")
-  ) {
-    config.deployments.cloud = {
-      url: cloudUrl,
-      key: cloudKey,
-    };
-    hasChanges = true;
-  }
-
-  spinner.stop();
-
-  if (!hasChanges) {
-    printWarning("No environment variables found to configure");
-    printInfo("Set LOCAL_CONVEX_URL or CONVEX_URL environment variables");
-    return;
-  }
-
-  await saveUserConfig(config);
-  printSuccess("Auto-configured from environment variables");
-  await showConfiguration(config);
-}
-
-/**
- * Set up local deployment
- */
-async function setupLocalDeployment(config: CLIConfig): Promise<CLIConfig> {
-  console.log();
-  console.log(pc.bold("Local Development Setup"));
-  console.log(pc.dim("Configure connection to local Convex instance\n"));
-
-  const urlPrompt = await prompts({
-    type: "text",
-    name: "url",
-    message: "Local Convex URL:",
-    initial: config.deployments.local?.url ?? "http://127.0.0.1:3210",
-    validate: (value) => {
+  // Top-level 'use' command for quick deployment switching
+  program
+    .command("use [deployment]")
+    .description("Set current deployment for all commands (session context)")
+    .option("--clear", "Clear the current deployment setting")
+    .action(async (deploymentName, options) => {
       try {
-        new URL(value);
-        return true;
-      } catch {
-        return "Please enter a valid URL";
-      }
-    },
-  });
+        const config = await loadConfig();
+        const deployments = Object.keys(config.deployments);
 
-  const deploymentPrompt = await prompts({
-    type: "text",
-    name: "deployment",
-    message: "Local deployment name (optional):",
-    initial:
-      config.deployments.local?.deployment ??
-      "anonymous:anonymous-cortex-sdk-local",
-  });
-
-  config.deployments.local = {
-    url: urlPrompt.url,
-    deployment: deploymentPrompt.deployment || undefined,
-  };
-
-  return config;
-}
-
-/**
- * Set up cloud deployment
- */
-async function setupCloudDeployment(config: CLIConfig): Promise<CLIConfig> {
-  console.log();
-  console.log(pc.bold("Cloud Deployment Setup"));
-  console.log(pc.dim("Configure connection to Convex cloud\n"));
-
-  const urlPrompt = await prompts({
-    type: "text",
-    name: "url",
-    message: "Convex cloud URL:",
-    initial:
-      config.deployments.cloud?.url ?? "https://your-deployment.convex.cloud",
-    validate: (value) => {
-      try {
-        const url = new URL(value);
-        if (!url.hostname.includes("convex")) {
-          return "URL should be a Convex cloud URL";
+        // Handle --clear flag
+        if (options.clear) {
+          await clearCurrentDeployment();
+          printSuccess("Cleared current deployment");
+          console.log(pc.dim("   Commands will now prompt for deployment selection\n"));
+          return;
         }
-        return true;
-      } catch {
-        return "Please enter a valid URL";
+
+        // If no deployment specified, show current and list available
+        if (!deploymentName) {
+          const current = await getCurrentDeployment();
+          
+          console.log();
+          if (current && config.deployments[current]) {
+            console.log(pc.bold("  Current deployment: ") + pc.cyan(current));
+          } else if (current) {
+            console.log(pc.yellow(`  Current deployment "${current}" no longer exists`));
+          } else {
+            console.log(pc.dim("  No current deployment set"));
+          }
+          
+          console.log();
+          console.log(pc.bold("  Available deployments:"));
+          if (deployments.length === 0) {
+            console.log(pc.yellow("    No deployments configured"));
+          } else {
+            for (const name of deployments) {
+              const isCurrent = name === current;
+              const isDefault = name === config.default;
+              const prefix = isCurrent ? pc.green("→") : " ";
+              const suffix = isDefault ? pc.dim(" (default)") : "";
+              console.log(`    ${prefix} ${pc.cyan(name)}${suffix}`);
+            }
+          }
+          console.log();
+          console.log(pc.dim("  Usage: cortex use <deployment>"));
+          console.log(pc.dim("         cortex use --clear"));
+          console.log();
+          return;
+        }
+
+        // Validate deployment exists
+        if (!config.deployments[deploymentName]) {
+          printError(`Deployment "${deploymentName}" not found`);
+          console.log(pc.dim(`   Available: ${deployments.join(", ")}\n`));
+          process.exit(1);
+        }
+
+        // Set the current deployment
+        await setCurrentDeployment(deploymentName);
+        printSuccess(`Now using: ${deploymentName}`);
+        console.log(pc.dim(`   All commands will target this deployment until changed\n`));
+      } catch (error) {
+        printError(error instanceof Error ? error.message : "Failed to set deployment");
+        process.exit(1);
       }
-    },
-  });
-
-  const keyPrompt = await prompts({
-    type: "password",
-    name: "key",
-    message: "Convex deploy key (optional):",
-    initial: config.deployments.cloud?.key ?? "",
-  });
-
-  config.deployments.cloud = {
-    url: urlPrompt.url,
-    key: keyPrompt.key || undefined,
-  };
-
-  return config;
+    });
 }
 
 /**
@@ -757,11 +959,26 @@ async function showConfiguration(
   });
 
   console.log("  Deployments:");
-  for (const [name, deployment] of Object.entries(config.deployments)) {
-    const isDefault = name === config.default;
-    const prefix = isDefault ? pc.green("→") : " ";
-    const keyStatus = deployment.key ? pc.green("(key set)") : "";
-    console.log(`  ${prefix} ${pc.cyan(name)}: ${deployment.url} ${keyStatus}`);
+  const deploymentEntries = Object.entries(config.deployments);
+  if (deploymentEntries.length === 0) {
+    console.log(pc.yellow("    No deployments configured"));
+    console.log();
+    printInfo("To get started:");
+    console.log(pc.dim("   • Run 'cortex init' to create a new project"));
+    console.log(pc.dim("   • Run 'cortex config add-deployment' to add an existing deployment"));
+  } else {
+    for (const [name, deployment] of deploymentEntries) {
+      const isDefault = name === config.default;
+      // Default deployment is implicitly enabled; others check enabled field
+      const isEnabled = deployment.enabled === true || (deployment.enabled === undefined && isDefault);
+      const prefix = isDefault ? pc.green("→") : " ";
+      const statusBadge = isEnabled ? pc.green("[enabled]") : pc.dim("[disabled]");
+      const keyStatus = deployment.key ? pc.green("(key set)") : "";
+      console.log(`  ${prefix} ${pc.cyan(name)}: ${deployment.url} ${statusBadge} ${keyStatus}`);
+      if (deployment.projectPath) {
+        console.log(pc.dim(`      Project: ${deployment.projectPath}`));
+      }
+    }
   }
   console.log();
 }

@@ -172,7 +172,8 @@ async function syncMemorySpaces(
 
   try {
     // List all memory spaces
-    const memorySpaces = await cortex.memorySpaces.list({ limit });
+    const memorySpacesResult = await cortex.memorySpaces.list({ limit });
+    const memorySpaces = memorySpacesResult.spaces;
 
     for (let i = 0; i < memorySpaces.length; i++) {
       const memorySpace = memorySpaces[i];
@@ -262,8 +263,11 @@ async function syncConversations(
   const errors: Array<{ entity: string; id: string; error: string }> = [];
 
   try {
-    // List all conversations
-    const conversations = await cortex.conversations.list({ limit });
+    // List all conversations (API limit is 1000)
+    const conversationsResult = await cortex.conversations.list({
+      limit: Math.min(limit, 1000),
+    });
+    const conversations = conversationsResult.conversations;
 
     for (let i = 0; i < conversations.length; i++) {
       const conversation = conversations[i];
@@ -313,7 +317,8 @@ async function syncMemories(
   try {
     // We need to get memories from each memory space
     // First, get all memory spaces
-    const memorySpaces = await cortex.memorySpaces.list({ limit: 1000 });
+    const memorySpacesResult = await cortex.memorySpaces.list({ limit: 1000 });
+    const memorySpaces = memorySpacesResult.spaces;
 
     let processedCount = 0;
 
@@ -388,7 +393,8 @@ async function syncFacts(
 
   try {
     // Get all memory spaces to list facts
-    const memorySpaces = await cortex.memorySpaces.list({ limit: 1000 });
+    const memorySpacesResult = await cortex.memorySpaces.list({ limit: 1000 });
+    const memorySpaces = memorySpacesResult.spaces;
 
     let processedCount = 0;
 

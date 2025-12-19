@@ -1598,7 +1598,7 @@ describe("Cross-Layer Reference Integrity", () => {
       });
 
       // Delete with cascade
-      await cortex.memorySpaces.delete(spaceId, { cascade: true });
+      await cortex.memorySpaces.delete(spaceId, { cascade: true, reason: "test cleanup" });
 
       // All should be deleted
       const convCheck = await cortex.conversations.get(conv.conversationId);
@@ -2147,7 +2147,7 @@ describe("Cross-Layer Reference Integrity", () => {
       });
 
       // Delete space (cascades conversation)
-      await cortex.memorySpaces.delete(spaceToDelete, { cascade: true });
+      await cortex.memorySpaces.delete(spaceToDelete, { cascade: true, reason: "test cleanup" });
 
       // Memory in surviving space still exists
       const memCheck = await cortex.vector.get(

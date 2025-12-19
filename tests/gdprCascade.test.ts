@@ -74,7 +74,7 @@ describe("GDPR: Cascade Deletion", () => {
       });
 
       // Delete space with cascade
-      await cortex.memorySpaces.delete(SPACE, { cascade: true });
+      await cortex.memorySpaces.delete(SPACE, { cascade: true, reason: "test cleanup" });
 
       // Validate: Conversations, memories, and facts deleted
       const convCheck = await cortex.conversations.get(conv.conversationId);
@@ -135,7 +135,7 @@ describe("GDPR: Cascade Deletion", () => {
       });
 
       // Delete space A with cascade
-      await cortex.memorySpaces.delete(SPACE_A, { cascade: true });
+      await cortex.memorySpaces.delete(SPACE_A, { cascade: true, reason: "test cleanup" });
 
       // Validate: Space A data deleted
       const memACheck = await cortex.vector.get(SPACE_A, memA.memoryId);
@@ -157,7 +157,7 @@ describe("GDPR: Cascade Deletion", () => {
       });
 
       // Delete without any data
-      await cortex.memorySpaces.delete(EMPTY_SPACE, { cascade: true });
+      await cortex.memorySpaces.delete(EMPTY_SPACE, { cascade: true, reason: "test cleanup" });
 
       // Should succeed without errors
       const spaceCheck = await cortex.memorySpaces.get(EMPTY_SPACE);
@@ -513,6 +513,196 @@ describe("GDPR: Cascade Deletion", () => {
       expect(fact3Check).not.toBeNull();
       expect(fact3Check!.validUntil).toBeDefined();
     });
+
+    it("GDPR: deleteMany removes all facts for a user (hard delete)", async () => {
+      const GDPR_USER = `gdpr-user-${Date.now()}`;
+      const GDPR_SPACE = ctx.memorySpaceId("gdpr-facts");
+      const OTHER_USER = `other-user-${Date.now()}`;
+
+      // Create multiple facts for GDPR user across different types
+      await cortex.facts.store({
+        memorySpaceId: GDPR_SPACE,
+        userId: GDPR_USER,
+        fact: "User preference fact for GDPR deletion",
+        factType: "preference",
+        subject: GDPR_USER,
+        confidence: 85,
+        sourceType: "conversation",
+        tags: ["gdpr-test"],
+      });
+
+      await cortex.facts.store({
+        memorySpaceId: GDPR_SPACE,
+        userId: GDPR_USER,
+        fact: "User identity fact for GDPR deletion",
+        factType: "identity",
+        subject: GDPR_USER,
+        confidence: 90,
+        sourceType: "system",
+        tags: ["gdpr-test"],
+      });
+
+      await cortex.facts.store({
+        memorySpaceId: GDPR_SPACE,
+        userId: GDPR_USER,
+        fact: "User knowledge fact for GDPR deletion",
+        factType: "knowledge",
+        subject: GDPR_USER,
+        confidence: 80,
+        sourceType: "conversation",
+        tags: ["gdpr-test"],
+      });
+
+      // Create fact for other user (should NOT be deleted)
+      await cortex.facts.store({
+        memorySpaceId: GDPR_SPACE,
+        userId: OTHER_USER,
+        fact: "Other user fact should remain",
+        factType: "knowledge",
+        subject: OTHER_USER,
+        confidence: 75,
+        sourceType: "system",
+        tags: ["gdpr-test"],
+      });
+
+      // Verify facts exist before deletion
+      const userFactsBefore = await cortex.facts.list({
+        memorySpaceId: GDPR_SPACE,
+        userId: GDPR_USER,
+      });
+      expect(userFactsBefore.length).toBe(3);
+
+      // Execute GDPR deletion: Delete ALL facts for the user
+      const deleteResult = await cortex.facts.deleteMany({
+        memorySpaceId: GDPR_SPACE,
+        userId: GDPR_USER,
+      });
+
+      // Verify deletion result
+      expect(deleteResult.deleted).toBe(3);
+      expect(deleteResult.memorySpaceId).toBe(GDPR_SPACE);
+
+      // Verify GDPR user's facts are completely deleted (hard delete)
+      const userFactsAfter = await cortex.facts.list({
+        memorySpaceId: GDPR_SPACE,
+        userId: GDPR_USER,
+      });
+      expect(userFactsAfter.length).toBe(0);
+
+      // Verify other user's fact still exists
+      const otherUserFacts = await cortex.facts.list({
+        memorySpaceId: GDPR_SPACE,
+        userId: OTHER_USER,
+      });
+      expect(otherUserFacts.length).toBe(1);
+      expect(otherUserFacts[0].fact).toBe("Other user fact should remain");
+    });
+
+    it("GDPR: deleteMany by factType for user-specific data cleanup", async () => {
+      const GDPR_USER = `gdpr-type-user-${Date.now()}`;
+      const GDPR_SPACE = ctx.memorySpaceId("gdpr-facts-type");
+
+      // Create different types of facts
+      await cortex.facts.store({
+        memorySpaceId: GDPR_SPACE,
+        userId: GDPR_USER,
+        fact: "User preference to delete",
+        factType: "preference",
+        subject: GDPR_USER,
+        confidence: 85,
+        sourceType: "conversation",
+      });
+
+      await cortex.facts.store({
+        memorySpaceId: GDPR_SPACE,
+        userId: GDPR_USER,
+        fact: "User knowledge to keep",
+        factType: "knowledge",
+        subject: GDPR_USER,
+        confidence: 90,
+        sourceType: "system",
+      });
+
+      // Delete only preference facts (partial GDPR - user requested deletion of preferences only)
+      const deleteResult = await cortex.facts.deleteMany({
+        memorySpaceId: GDPR_SPACE,
+        factType: "preference",
+      });
+
+      expect(deleteResult.deleted).toBe(1);
+
+      // Verify preference deleted
+      const preferenceFacts = await cortex.facts.list({
+        memorySpaceId: GDPR_SPACE,
+        factType: "preference",
+      });
+      expect(preferenceFacts.length).toBe(0);
+
+      // Verify knowledge fact still exists
+      const knowledgeFacts = await cortex.facts.list({
+        memorySpaceId: GDPR_SPACE,
+        factType: "knowledge",
+      });
+      expect(knowledgeFacts.length).toBe(1);
+    });
+
+    it("GDPR: complete user data deletion across all fact types", async () => {
+      const GDPR_USER = `gdpr-complete-${Date.now()}`;
+      const GDPR_SPACE = ctx.memorySpaceId("gdpr-complete");
+
+      // Create facts of ALL types for the user
+      const factTypes = [
+        "preference",
+        "identity",
+        "knowledge",
+        "relationship",
+        "event",
+        "observation",
+        "custom",
+      ] as const;
+
+      for (const factType of factTypes) {
+        await cortex.facts.store({
+          memorySpaceId: GDPR_SPACE,
+          userId: GDPR_USER,
+          fact: `${factType} fact for complete GDPR test`,
+          factType,
+          subject: GDPR_USER,
+          confidence: 80,
+          sourceType: "system",
+          tags: ["gdpr-complete"],
+        });
+      }
+
+      // Verify all 7 facts created
+      const factsBefore = await cortex.facts.list({
+        memorySpaceId: GDPR_SPACE,
+        userId: GDPR_USER,
+      });
+      expect(factsBefore.length).toBe(7);
+
+      // Execute complete GDPR deletion
+      const deleteResult = await cortex.facts.deleteMany({
+        memorySpaceId: GDPR_SPACE,
+        userId: GDPR_USER,
+      });
+
+      expect(deleteResult.deleted).toBe(7);
+
+      // Verify complete deletion
+      const factsAfter = await cortex.facts.list({
+        memorySpaceId: GDPR_SPACE,
+        userId: GDPR_USER,
+      });
+      expect(factsAfter.length).toBe(0);
+
+      // Verify count matches
+      const count = await cortex.facts.count({
+        memorySpaceId: GDPR_SPACE,
+        userId: GDPR_USER,
+      });
+      expect(count).toBe(0);
+    });
   });
 
   describe("Statistics After Deletion", () => {
@@ -566,6 +756,191 @@ describe("GDPR: Cascade Deletion", () => {
       // Get final stats
       const statsFinal = await cortex.memorySpaces.getStats(SPACE);
       expect(statsFinal.totalMemories).toBe(0);
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Governance-Aware GDPR Operations
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Governance + GDPR Integration", () => {
+    it("GDPR policy enforces purgeOnUserRequest=true allows deletion", async () => {
+      const ts = Date.now();
+      const orgId = `gdpr-org-purge-${ts}`;
+      const SPACE = ctx.memorySpaceId(`gdpr-purge-${ts}`);
+      const USER_ID = `gdpr-user-${ts}`;
+
+      // 1. Apply GDPR policy (purgeOnUserRequest: true)
+      const gdprPolicy = await cortex.governance.getTemplate("GDPR");
+      await cortex.governance.setPolicy({
+        ...gdprPolicy,
+        organizationId: orgId,
+      });
+
+      // 2. Verify policy allows purge on user request
+      const policy = await cortex.governance.getPolicy({
+        organizationId: orgId,
+      });
+      expect(policy.conversations.retention.purgeOnUserRequest).toBe(true);
+
+      // 3. Register space and create user data
+      await cortex.memorySpaces.register({
+        memorySpaceId: SPACE,
+        name: "GDPR Test Space",
+        type: "personal",
+      });
+
+      await cortex.vector.store(SPACE, {
+        content: "User personal data for GDPR test",
+        contentType: "raw",
+        userId: USER_ID,
+        source: { type: "conversation", userId: USER_ID },
+        metadata: { importance: 70, tags: ["personal-data"] },
+      });
+
+      await cortex.facts.store({
+        memorySpaceId: SPACE,
+        userId: USER_ID,
+        fact: "User preference that should be deletable",
+        factType: "preference",
+        subject: USER_ID,
+        confidence: 85,
+        sourceType: "conversation",
+      });
+
+      // 4. User requests deletion - GDPR policy allows it
+      const deleteResult = await cortex.vector.deleteMany({
+        memorySpaceId: SPACE,
+        userId: USER_ID,
+      });
+
+      const factsDeleteResult = await cortex.facts.deleteMany({
+        memorySpaceId: SPACE,
+        userId: USER_ID,
+      });
+
+      // 5. Verify deletions succeeded (GDPR allows)
+      expect(deleteResult.deleted).toBeGreaterThanOrEqual(0);
+      expect(factsDeleteResult.deleted).toBeGreaterThanOrEqual(0);
+
+      // 6. Verify no data remains
+      const remainingMemories = await cortex.vector.list({
+        memorySpaceId: SPACE,
+        userId: USER_ID,
+      });
+      expect(remainingMemories.length).toBe(0);
+    });
+
+    it("compliance report reflects GDPR deletion requests", async () => {
+      const ts = Date.now();
+      const orgId = `gdpr-report-${ts}`;
+
+      // 1. Apply GDPR policy
+      const gdprPolicy = await cortex.governance.getTemplate("GDPR");
+      await cortex.governance.setPolicy({
+        ...gdprPolicy,
+        organizationId: orgId,
+      });
+
+      // 2. Generate compliance report
+      const now = Date.now();
+      const report = await cortex.governance.getComplianceReport({
+        organizationId: orgId,
+        period: {
+          start: new Date(now - 30 * 24 * 60 * 60 * 1000), // 30 days ago
+          end: new Date(now),
+        },
+      });
+
+      // 3. Verify report tracks user deletion requests
+      expect(report.userRequests).toBeDefined();
+      expect(report.userRequests.deletionRequests).toBeGreaterThanOrEqual(0);
+      expect(report.userRequests.fulfilled).toBeGreaterThanOrEqual(0);
+      expect(report.userRequests.avgFulfillmentTime).toBeDefined();
+    });
+
+    it("enforcement stats track GDPR-related deletions", async () => {
+      const ts = Date.now();
+      const orgId = `gdpr-stats-${ts}`;
+
+      // 1. Apply GDPR policy and run enforcement
+      const gdprPolicy = await cortex.governance.getTemplate("GDPR");
+      await cortex.governance.setPolicy({
+        ...gdprPolicy,
+        organizationId: orgId,
+      });
+
+      await cortex.governance.enforce({
+        layers: ["conversations", "vector"],
+        rules: ["retention", "purging"],
+        scope: { organizationId: orgId },
+      });
+
+      // 2. Get enforcement stats
+      const stats = await cortex.governance.getEnforcementStats({
+        period: "30d",
+        organizationId: orgId,
+      });
+
+      // 3. Stats should reflect enforcement activity
+      expect(stats.period.start).toBeGreaterThan(0);
+      expect(stats.conversations).toBeDefined();
+      expect(stats.vector).toBeDefined();
+      expect(stats.storageFreed).toBeGreaterThanOrEqual(0);
+    });
+
+    it("memory space cascade deletion respects governance logging", async () => {
+      const ts = Date.now();
+      const orgId = `gdpr-cascade-governance-${ts}`;
+      const SPACE = ctx.memorySpaceId(`cascade-gov-${ts}`);
+
+      // 1. Apply policy with audit logging enabled
+      const hipaaPolicy = await cortex.governance.getTemplate("HIPAA");
+      await cortex.governance.setPolicy({
+        ...hipaaPolicy,
+        organizationId: orgId,
+      });
+
+      // 2. Verify audit logging is enabled
+      const policy = await cortex.governance.getPolicy({
+        organizationId: orgId,
+      });
+      expect(policy.compliance.auditLogging).toBe(true);
+
+      // 3. Register space and create data
+      await cortex.memorySpaces.register({
+        memorySpaceId: SPACE,
+        name: "Cascade Governance Test",
+        type: "personal",
+      });
+
+      await cortex.vector.store(SPACE, {
+        content: "Test data for cascade",
+        contentType: "raw",
+        source: { type: "system", userId: "test-user" },
+        metadata: { importance: 50, tags: [] },
+      });
+
+      // 4. Cascade delete the space
+      await cortex.memorySpaces.delete(SPACE, {
+        cascade: true,
+        reason: "GDPR governance test cleanup",
+      });
+
+      // 5. Verify space is deleted
+      const spaceCheck = await cortex.memorySpaces.get(SPACE);
+      expect(spaceCheck).toBeNull();
+
+      // 6. Verify compliance report can still be generated (audit trail exists)
+      const now = Date.now();
+      const report = await cortex.governance.getComplianceReport({
+        organizationId: orgId,
+        period: {
+          start: new Date(now - 7 * 24 * 60 * 60 * 1000),
+          end: new Date(now),
+        },
+      });
+      expect(report).toBeDefined();
     });
   });
 });

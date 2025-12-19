@@ -1,6 +1,6 @@
 # Agent Management API
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2025-12-10
 
 > ⚠️ **IMPORTANT:** The Agent Management API is being superseded by [Memory Space Operations](./13-memory-space-operations.md). While agent-based terminology remains supported for backwards compatibility, new applications should use memory spaces.
 >
@@ -270,8 +270,12 @@ interface AgentFilters {
   metadata?: Record<string, any>; // Filter by metadata fields
   name?: string; // Search by name (partial match)
   capabilities?: string[]; // Has these capabilities
-  registeredAfter?: Date;
-  registeredBefore?: Date;
+  capabilitiesMatch?: "any" | "all"; // Match mode (default: "any")
+  status?: "active" | "inactive" | "archived";
+  registeredAfter?: number; // Timestamp filter
+  registeredBefore?: number; // Timestamp filter
+  lastActiveAfter?: number; // Activity filter
+  lastActiveBefore?: number; // Activity filter
   limit?: number;
   offset?: number;
   sortBy?: "name" | "registeredAt" | "lastActive";
@@ -319,52 +323,52 @@ const found = await cortex.agents.search({
 
 ### list()
 
-List all registered agents with pagination.
+List all registered agents with optional filters.
 
 **Signature:**
 
 ```typescript
 cortex.agents.list(
-  options?: ListOptions
-): Promise<ListResult>
+  filters?: AgentFilters
+): Promise<RegisteredAgent[]>
 ```
 
 **Parameters:**
 
 ```typescript
-interface ListOptions {
-  limit?: number; // Default: 50
+interface AgentFilters {
+  metadata?: Record<string, any>; // Filter by metadata fields
+  name?: string; // Search by name (partial match)
+  capabilities?: string[]; // Has these capabilities
+  capabilitiesMatch?: "any" | "all"; // Match mode (default: "any")
+  status?: "active" | "inactive" | "archived";
+  registeredAfter?: number; // Timestamp filter
+  registeredBefore?: number; // Timestamp filter
+  lastActiveAfter?: number; // Activity filter
+  lastActiveBefore?: number; // Activity filter
+  limit?: number; // Default: 100
   offset?: number; // Default: 0
-  sortBy?: "name" | "registeredAt" | "lastActive" | "totalMemories";
+  sortBy?: "name" | "registeredAt" | "lastActive";
   sortOrder?: "asc" | "desc";
 }
 ```
 
 **Returns:**
 
-```typescript
-interface ListResult {
-  agents: RegisteredAgent[];
-  total: number;
-  limit: number;
-  offset: number;
-  hasMore: boolean;
-}
-```
+- `RegisteredAgent[]` - Array of matching agents
 
 **Example:**
 
 ```typescript
 // List all registered agents
-const page1 = await cortex.agents.list({
+const agents = await cortex.agents.list({
   limit: 50,
-  sortBy: "lastActive",
-  sortOrder: "desc",
+  status: "active",
 });
 
-console.log(`${page1.agents.length} of ${page1.total} registered agents`);
+console.log(`Found ${agents.length} registered agents`);
 
-page1.agents.forEach((agent) => {
+agents.forEach((agent) => {
   console.log(`${agent.name} (${agent.id})`);
   console.log(`  Team: ${agent.metadata.team}`);
   console.log(`  Memories: ${agent.stats?.totalMemories}`);
@@ -373,7 +377,8 @@ page1.agents.forEach((agent) => {
 
 **Errors:**
 
-- `CortexError('INVALID_PAGINATION')` - Invalid limit/offset
+- `AgentValidationError('INVALID_LIMIT_VALUE')` - Invalid limit value
+- `AgentValidationError('INVALID_OFFSET_VALUE')` - Invalid offset value
 
 ---
 
@@ -410,6 +415,54 @@ const supportCount = await cortex.agents.count({
 
 console.log(`${supportCount} agents on support team`);
 ```
+
+---
+
+### exists()
+
+Check if an agent is registered.
+
+**Signature:**
+
+```typescript
+cortex.agents.exists(
+  agentId: string
+): Promise<boolean>
+```
+
+**Parameters:**
+
+- `agentId` (string) - Agent ID to check
+
+**Returns:**
+
+- `boolean` - `true` if agent is registered, `false` otherwise
+
+**Example:**
+
+```typescript
+// Check if agent is registered
+if (await cortex.agents.exists("my-agent")) {
+  console.log("Agent is registered");
+} else {
+  console.log("Agent not registered (but may still work with simple ID)");
+}
+
+// Conditional registration
+if (!(await cortex.agents.exists("support-agent"))) {
+  await cortex.agents.register({
+    id: "support-agent",
+    name: "Support Bot",
+  });
+}
+```
+
+**Errors:**
+
+- `AgentValidationError('MISSING_AGENT_ID')` - Agent ID not provided
+- `AgentValidationError('EMPTY_AGENT_ID')` - Agent ID is empty
+
+**Note:** An agent doesn't need to be registered to function. This just checks the registry.
 
 ---
 
@@ -942,8 +995,14 @@ await cortex.agents.count(filters);
 // List
 await cortex.agents.list({ ...filters, limit: 50 });
 
+// Update many
+await cortex.agents.updateMany(filters, { metadata: { updated: true } });
+
+// Unregister many
+await cortex.agents.unregisterMany(filters);
+
 // Export
-await cortex.agents.export(filters);
+await cortex.agents.export({ filters, format: "json" });
 ```
 
 **Supported Filters:**
@@ -986,33 +1045,142 @@ await cortex.agents.updateMany(
 );
 ```
 
-### Delete Many (Unregister)
+### unregisterMany()
+
+Unregister multiple agents matching filters.
+
+**Signature:**
 
 ```typescript
-// Unregister experimental agents
-const result = await cortex.agents.unregisterMany(
-  {
-    metadata: { environment: "experimental" },
-  },
-  {
-    preserveData: true, // Keep Layer 1 (ACID) + Layer 2 (Vector)
-  },
-);
-
-console.log(`Unregistered ${result.count} experimental agents`);
-console.log(`Data preserved in both layers`);
-
-// Or clean up Vector but preserve ACID
-const cleaned = await cortex.agents.unregisterMany(
-  {
-    metadata: { environment: "test" },
-  },
-  {
-    deleteVectorMemories: true, // Clean Layer 2
-    deleteConversations: false, // Preserve Layer 1 audit trail
-  },
-);
+cortex.agents.unregisterMany(
+  filters: AgentFilters,
+  options?: UnregisterAgentOptions
+): Promise<{ deleted: number; agentIds: string[]; totalDataDeleted?: number }>
 ```
+
+**Parameters:**
+
+- `filters` (AgentFilters) - Filter criteria for agents to unregister
+- `options` (UnregisterAgentOptions, optional):
+  - `cascade?: boolean` - Delete all data where participantId = agentId (default: false)
+  - `verify?: boolean` - Verify deletion completeness (default: true)
+  - `dryRun?: boolean` - Preview what would be deleted (default: false)
+
+**Returns:**
+
+```typescript
+{
+  deleted: number;        // Number of agents unregistered
+  agentIds: string[];     // IDs of unregistered agents
+  totalDataDeleted?: number; // Total records deleted (if cascade=true)
+}
+```
+
+**Example:**
+
+```typescript
+// Unregister experimental agents (keep data)
+const result = await cortex.agents.unregisterMany(
+  { metadata: { environment: "experimental" } },
+  { cascade: false },
+);
+
+console.log(`Unregistered ${result.deleted} experimental agents`);
+console.log(`Agent IDs: ${result.agentIds.join(", ")}`);
+
+// Unregister and cascade delete all agent data
+const cascaded = await cortex.agents.unregisterMany(
+  { status: "archived" },
+  { cascade: true, verify: true },
+);
+
+console.log(`Deleted ${cascaded.totalDataDeleted} records across all layers`);
+
+// Preview what would be deleted (dry run)
+const preview = await cortex.agents.unregisterMany(
+  { metadata: { team: "deprecated" } },
+  { cascade: true, dryRun: true },
+);
+
+console.log(`Would unregister ${preview.agentIds.length} agents`);
+```
+
+### export()
+
+Export registered agents matching filters.
+
+**Signature:**
+
+```typescript
+cortex.agents.export(
+  options: ExportAgentsOptions
+): Promise<ExportAgentsResult>
+```
+
+**Parameters:**
+
+```typescript
+interface ExportAgentsOptions {
+  filters?: AgentFilters; // Filter agents to export
+  format: "json" | "csv"; // Output format
+  includeStats?: boolean; // Include agent statistics (default: false)
+  includeMetadata?: boolean; // Include full metadata (default: true)
+}
+```
+
+**Returns:**
+
+```typescript
+interface ExportAgentsResult {
+  format: "json" | "csv";
+  data: string; // The exported data as a string
+  count: number; // Number of agents exported
+  exportedAt: number; // Timestamp when export was generated
+}
+```
+
+**Example:**
+
+```typescript
+// Export all agents as JSON
+const result = await cortex.agents.export({
+  format: "json",
+});
+
+console.log(`Exported ${result.count} agents`);
+fs.writeFileSync("all-agents.json", result.data);
+
+// Export support team agents with statistics
+const withStats = await cortex.agents.export({
+  filters: { metadata: { team: "support" } },
+  format: "json",
+  includeStats: true,
+});
+
+// Export as CSV for spreadsheet analysis
+const csv = await cortex.agents.export({
+  filters: { status: "active" },
+  format: "csv",
+  includeMetadata: false, // Smaller CSV without metadata/config columns
+});
+
+// Write to file
+fs.writeFileSync("active-agents.csv", csv.data);
+```
+
+**CSV Format:**
+
+When `format: "csv"` is specified, the output includes these columns:
+
+- `id`, `name`, `description`, `status`, `registeredAt`, `updatedAt`, `lastActive`
+- `metadata`, `config` (if `includeMetadata !== false`, as JSON strings)
+- `totalMemories`, `totalConversations`, `totalFacts`, `memorySpacesActive` (if `includeStats: true`)
+
+**Errors:**
+
+- `AgentValidationError('MISSING_OPTIONS')` - Options not provided
+- `AgentValidationError('MISSING_FORMAT')` - Format not specified
+- `AgentValidationError('INVALID_FORMAT')` - Invalid format value
 
 ---
 

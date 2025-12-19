@@ -1,6 +1,6 @@
 # Mutable Store API
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2025-12-14
 
 Complete API reference for shared mutable data with ACID transaction guarantees.
 
@@ -49,7 +49,9 @@ cortex.mutable.set(
   namespace: string,
   key: string,
   value: any,
-  userId?: string
+  userId?: string,
+  metadata?: Record<string, unknown>,
+  options?: SetMutableOptions
 ): Promise<MutableRecord>
 ```
 
@@ -59,19 +61,22 @@ cortex.mutable.set(
 - `key` (string) - Unique key within namespace
 - `value` (any) - JSON-serializable value
 - `userId` (string, optional) - Link to user (enables GDPR cascade). Must reference existing user.
+- `metadata` (object, optional) - Additional metadata to store with the record
+- `options` (object, optional) - Additional options:
+  - `syncToGraph` (boolean) - Sync this operation to graph database (if configured)
 
 **Returns:**
 
 ```typescript
 interface MutableRecord {
+  _id: string;
   namespace: string;
   key: string;
   value: any;
   userId?: string; // OPTIONAL: User link (GDPR-enabled)
-  updatedAt: Date;
-  createdAt: Date;
-  accessCount: number;
-  lastAccessed?: Date;
+  metadata?: Record<string, unknown>;
+  createdAt: number; // Unix timestamp
+  updatedAt: number; // Unix timestamp
 }
 ```
 
@@ -144,11 +149,6 @@ cortex.mutable.get(
 
 - Value - Current value
 - `null` - If key doesn't exist
-
-**Side Effects:**
-
-- Increments `accessCount`
-- Updates `lastAccessed`
 
 **Example:**
 
@@ -331,15 +331,14 @@ cortex.mutable.getRecord(
 
 ```typescript
 interface MutableRecord {
+  _id: string;
   namespace: string;
   key: string;
   value: any;
   userId?: string;
-  metadata?: any;
-  createdAt: Date;
-  updatedAt: Date;
-  accessCount: number;
-  lastAccessed?: Date;
+  metadata?: Record<string, unknown>;
+  createdAt: number; // Unix timestamp
+  updatedAt: number; // Unix timestamp
 }
 ```
 
@@ -353,12 +352,11 @@ console.log(value); // 30
 // getRecord() returns full record with metadata
 const record = await cortex.mutable.getRecord("config", "timeout");
 console.log(record.value); // 30
-console.log(record.createdAt); // 2025-10-26T...
-console.log(record.updatedAt); // 2025-10-26T...
-console.log(record.accessCount); // 15
+console.log(record.createdAt); // 1729987200000
+console.log(record.updatedAt); // 1729987200000
 ```
 
-**Use when:** You need access to timestamps, accessCount, or metadata.
+**Use when:** You need access to timestamps or metadata.
 
 ---
 
@@ -371,9 +369,17 @@ Delete a key.
 ```typescript
 cortex.mutable.delete(
   namespace: string,
-  key: string
+  key: string,
+  options?: DeleteMutableOptions
 ): Promise<DeleteResult>
 ```
+
+**Parameters:**
+
+- `namespace` (string) - Namespace
+- `key` (string) - Key
+- `options` (object, optional) - Additional options:
+  - `syncToGraph` (boolean) - Sync deletion to graph database (if configured)
 
 **Returns:**
 
@@ -382,7 +388,6 @@ interface DeleteResult {
   deleted: boolean;
   namespace: string;
   key: string;
-  deletedAt: Date;
 }
 ```
 
@@ -393,6 +398,9 @@ interface DeleteResult {
 const result = await cortex.mutable.delete("inventory", "discontinued-widget");
 
 console.log(`Deleted: ${result.deleted}`);
+
+// With graph sync
+await cortex.mutable.delete("inventory", "old-item", { syncToGraph: true });
 ```
 
 ---
@@ -405,52 +413,64 @@ Execute multiple operations atomically.
 
 ```typescript
 cortex.mutable.transaction(
-  callback: (tx: Transaction) => void | Promise<void>
+  operations: TransactionOperation[]
 ): Promise<TransactionResult>
 ```
 
-**Transaction Methods:**
+**Parameters:**
 
 ```typescript
-interface Transaction {
-  set(namespace: string, key: string, value: any): void;
-  get(namespace: string, key: string): any;
-  update(namespace: string, key: string, updater: Function): void;
-  delete(namespace: string, key: string): void;
+interface TransactionOperation {
+  op: "set" | "update" | "delete" | "increment" | "decrement";
+  namespace: string;
+  key: string;
+  value?: any; // Required for "set" and "update" ops
+  amount?: number; // For "increment"/"decrement" (default: 1)
+}
+```
+
+**Returns:**
+
+```typescript
+interface TransactionResult {
+  success: boolean;
+  operationsExecuted: number;
+  results: unknown[];
 }
 ```
 
 **Example:**
 
 ```typescript
-// Transfer inventory between products (atomic)
-await cortex.mutable.transaction(async (tx) => {
-  const qtyA = tx.get("inventory", "product-a");
-  const qtyB = tx.get("inventory", "product-b");
-
-  if (qtyA < 10) {
-    throw new Error("Insufficient inventory for product-a");
-  }
-
-  tx.update("inventory", "product-a", (qty) => qty - 10);
-  tx.update("inventory", "product-b", (qty) => qty + 10);
-
-  // Both updates or neither (ACID)
-});
-
 // Record sale and update inventory (atomic)
-await cortex.mutable.transaction(async (tx) => {
-  tx.update("inventory", "widget-qty", (qty) => qty - 1);
-  tx.update("counters", "total-sales", (count) => (count || 0) + 1);
-  tx.update("counters", "revenue", (rev) => (rev || 0) + 49.99);
-  // All or nothing
-});
+await cortex.mutable.transaction([
+  { op: "decrement", namespace: "inventory", key: "widget-qty", amount: 1 },
+  { op: "increment", namespace: "counters", key: "total-sales", amount: 1 },
+  { op: "set", namespace: "state", key: "last-sale", value: Date.now() },
+]);
+// All operations succeed together or fail together (ACID)
+
+// Multi-item inventory transfer
+await cortex.mutable.transaction([
+  { op: "decrement", namespace: "inventory", key: "product-a", amount: 10 },
+  { op: "increment", namespace: "inventory", key: "product-b", amount: 10 },
+]);
+
+// Complex state update
+const result = await cortex.mutable.transaction([
+  { op: "set", namespace: "config", key: "api-version", value: "v2" },
+  { op: "delete", namespace: "cache", key: "old-api-data" },
+  { op: "increment", namespace: "counters", key: "config-changes" },
+]);
+
+console.log(result.success); // true
+console.log(result.operationsExecuted); // 3
 ```
 
 **Errors:**
 
 - `CortexError('TRANSACTION_FAILED')` - Transaction rolled back
-- `CortexError('TRANSACTION_TIMEOUT')` - Exceeded time limit
+- Key must exist for `update`, `increment`, `decrement`, and `delete` operations
 
 ---
 
@@ -458,28 +478,29 @@ await cortex.mutable.transaction(async (tx) => {
 
 ### list()
 
-List keys in a namespace.
+List keys in a namespace with filtering, sorting, and pagination.
 
 **Signature:**
 
 ```typescript
 cortex.mutable.list(
-  namespace: string,
-  filters?: MutableFilters
-): Promise<MutableListResult>
+  filter: ListMutableFilter
+): Promise<MutableRecord[]>
 ```
 
 **Parameters:**
 
 ```typescript
-interface MutableFilters {
+interface ListMutableFilter {
+  namespace: string; // Required: namespace to list
   keyPrefix?: string; // Keys starting with prefix
-  updatedAfter?: Date;
-  updatedBefore?: Date;
-  limit?: number;
-  offset?: number;
-  sortBy?: "key" | "updatedAt" | "accessCount";
-  sortOrder?: "asc" | "desc";
+  userId?: string; // Filter by user
+  limit?: number; // Max results (default: 100)
+  offset?: number; // Pagination offset
+  updatedAfter?: number; // Filter by updatedAt > timestamp
+  updatedBefore?: number; // Filter by updatedAt < timestamp
+  sortBy?: "key" | "updatedAt"; // Sort field
+  sortOrder?: "asc" | "desc"; // Sort direction (default: "asc")
 }
 ```
 
@@ -487,18 +508,36 @@ interface MutableFilters {
 
 ```typescript
 // List all inventory items
-const items = await cortex.mutable.list("inventory", {
-  sortBy: "key",
+const items = await cortex.mutable.list({
+  namespace: "inventory",
   limit: 100,
 });
 
-items.records.forEach((item) => {
+items.forEach((item) => {
   console.log(`${item.key}: ${item.value}`);
 });
 
-// List specific prefix
-const widgets = await cortex.mutable.list("inventory", {
+// List specific prefix with sorting
+const widgets = await cortex.mutable.list({
+  namespace: "inventory",
   keyPrefix: "widget-",
+  sortBy: "updatedAt",
+  sortOrder: "desc",
+});
+
+// List items updated in the last 24 hours
+const recentItems = await cortex.mutable.list({
+  namespace: "inventory",
+  updatedAfter: Date.now() - 24 * 60 * 60 * 1000,
+  sortBy: "updatedAt",
+  sortOrder: "desc",
+});
+
+// Pagination example
+const page2 = await cortex.mutable.list({
+  namespace: "inventory",
+  limit: 20,
+  offset: 20, // Skip first 20 items
 });
 ```
 
@@ -506,26 +545,56 @@ const widgets = await cortex.mutable.list("inventory", {
 
 ### count()
 
-Count keys in namespace.
+Count keys in namespace with optional filters.
 
 **Signature:**
 
 ```typescript
 cortex.mutable.count(
-  namespace: string,
-  filters?: MutableFilters
+  filter: CountMutableFilter
 ): Promise<number>
+```
+
+**Parameters:**
+
+```typescript
+interface CountMutableFilter {
+  namespace: string; // Required: namespace to count
+  userId?: string; // Filter by user
+  keyPrefix?: string; // Keys starting with prefix
+  updatedAfter?: number; // Filter by updatedAt > timestamp
+  updatedBefore?: number; // Filter by updatedAt < timestamp
+}
 ```
 
 **Example:**
 
 ```typescript
 // Total inventory items
-const total = await cortex.mutable.count("inventory");
+const total = await cortex.mutable.count({ namespace: "inventory" });
 
-// Items updated today
-const updated = await cortex.mutable.count("inventory", {
-  updatedAfter: new Date(Date.now() - 24 * 60 * 60 * 1000),
+// Count items with prefix
+const widgetCount = await cortex.mutable.count({
+  namespace: "inventory",
+  keyPrefix: "widget-",
+});
+
+// Count user-specific items
+const userCount = await cortex.mutable.count({
+  namespace: "user-sessions",
+  userId: "user-123",
+});
+
+// Count items updated in the last 24 hours
+const recentCount = await cortex.mutable.count({
+  namespace: "inventory",
+  updatedAfter: Date.now() - 24 * 60 * 60 * 1000,
+});
+
+// Count items not updated in the last week (stale items)
+const staleCount = await cortex.mutable.count({
+  namespace: "cache",
+  updatedBefore: Date.now() - 7 * 24 * 60 * 60 * 1000,
 });
 ```
 
@@ -1470,7 +1539,7 @@ await cortex.mutable.set(
 
 ### purge()
 
-Delete a single key.
+Delete a single key. Alias for `delete()` for API consistency.
 
 **Signature:**
 
@@ -1479,6 +1548,16 @@ cortex.mutable.purge(
   namespace: string,
   key: string
 ): Promise<PurgeResult>
+```
+
+**Returns:**
+
+```typescript
+interface PurgeResult {
+  deleted: boolean;
+  namespace: string;
+  key: string;
+}
 ```
 
 **Example:**
@@ -1492,57 +1571,112 @@ console.log(`Deleted: ${result.deleted}`);
 
 ### purgeNamespace()
 
-Delete entire namespace.
+Delete entire namespace with optional dry-run mode.
 
 **Signature:**
 
 ```typescript
 cortex.mutable.purgeNamespace(
   namespace: string,
-  options?: PurgeOptions
-): Promise<PurgeResult>
+  options?: PurgeNamespaceOptions
+): Promise<PurgeNamespaceResult>
+```
+
+**Parameters:**
+
+```typescript
+interface PurgeNamespaceOptions {
+  dryRun?: boolean; // Preview what would be deleted without deleting
+}
+```
+
+**Returns:**
+
+```typescript
+interface PurgeNamespaceResult {
+  deleted: number; // Count of keys deleted (or would be deleted in dryRun mode)
+  namespace: string;
+  keys?: string[]; // List of keys (only in dryRun mode)
+  dryRun: boolean;
+}
 ```
 
 **Example:**
 
 ```typescript
-// Delete all test data
-const result = await cortex.mutable.purgeNamespace("test-data");
-console.log(`Deleted ${result.keysDeleted} keys`);
-
-// Preview first
-const preview = await cortex.mutable.purgeNamespace("old-config", {
+// Preview what would be deleted (dryRun mode)
+const preview = await cortex.mutable.purgeNamespace("test-data", {
   dryRun: true,
 });
-console.log(`Would delete ${preview.keysDeleted} keys`);
+console.log(`Would delete ${preview.deleted} keys: ${preview.keys?.join(", ")}`);
+
+// Actually delete
+const result = await cortex.mutable.purgeNamespace("test-data");
+console.log(`Deleted ${result.deleted} keys from ${result.namespace}`);
 ```
 
 ---
 
 ### purgeMany()
 
-Delete keys matching filters.
+Delete keys matching filters with date-based cleanup support.
 
 **Signature:**
 
 ```typescript
 cortex.mutable.purgeMany(
-  namespace: string,
-  filters: MutableFilters
-): Promise<PurgeResult>
+  filter: PurgeManyFilter
+): Promise<PurgeManyResult>
+```
+
+**Parameters:**
+
+```typescript
+interface PurgeManyFilter {
+  namespace: string; // Required: namespace to purge from
+  keyPrefix?: string; // Keys starting with prefix
+  userId?: string; // Filter by user
+  updatedBefore?: number; // Delete keys updated before this timestamp
+}
+```
+
+**Returns:**
+
+```typescript
+interface PurgeManyResult {
+  deleted: number; // Count of keys deleted
+  namespace: string;
+  keys: string[]; // List of deleted keys
+}
 ```
 
 **Example:**
 
 ```typescript
-// Delete old keys
-await cortex.mutable.purgeMany("cache", {
-  updatedBefore: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+// Delete keys with prefix
+const result = await cortex.mutable.purgeMany({
+  namespace: "cache",
+  keyPrefix: "temp-",
+});
+console.log(`Deleted ${result.deleted} keys: ${result.keys.join(", ")}`);
+
+// Delete all keys for a specific user
+await cortex.mutable.purgeMany({
+  namespace: "user-sessions",
+  userId: "user-123",
 });
 
-// Delete inactive keys
-await cortex.mutable.purgeMany("state", {
-  lastAccessedBefore: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
+// Delete old keys (not updated in 30 days)
+await cortex.mutable.purgeMany({
+  namespace: "cache",
+  updatedBefore: Date.now() - 30 * 24 * 60 * 60 * 1000,
+});
+
+// Combine filters: delete old cache entries for a user
+await cortex.mutable.purgeMany({
+  namespace: "user-cache",
+  userId: "user-123",
+  updatedBefore: Date.now() - 14 * 24 * 60 * 60 * 1000,
 });
 ```
 

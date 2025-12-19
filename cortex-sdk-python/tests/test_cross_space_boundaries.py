@@ -15,6 +15,7 @@ import pytest
 
 from cortex.types import (
     CreateConversationInput,
+    ListConversationsFilter,
     RegisterMemorySpaceParams,
     StoreFactParams,
     StoreMemoryInput,
@@ -125,13 +126,13 @@ class TestConversationIsolation:
             )
         )
 
-        list_a = await cortex_client.conversations.list(memory_space_id=space_a)
-        list_b = await cortex_client.conversations.list(memory_space_id=space_b)
+        list_a = await cortex_client.conversations.list(ListConversationsFilter(memory_space_id=space_a))
+        list_b = await cortex_client.conversations.list(ListConversationsFilter(memory_space_id=space_b))
 
-        for conv in list_a:
+        for conv in list_a.conversations:
             assert conv.memory_space_id == space_a
 
-        for conv in list_b:
+        for conv in list_b.conversations:
             assert conv.memory_space_id == space_b
 
 

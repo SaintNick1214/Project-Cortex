@@ -25,7 +25,7 @@ describe("Parameter Combination Testing", () => {
   afterAll(async () => {
     // Cleanup
     try {
-      await cortex.memorySpaces.delete(BASE_ID, { cascade: true });
+      await cortex.memorySpaces.delete(BASE_ID, { cascade: true, reason: "test cleanup" });
     } catch (_e) {
       // Ignore
     }

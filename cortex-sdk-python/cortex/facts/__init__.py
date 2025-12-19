@@ -4,14 +4,16 @@ Cortex SDK - Facts API
 Layer 3: Structured knowledge extraction and storage
 """
 
-from typing import Any, Dict, List, Optional, cast
+from typing import Any, Dict, List, Optional, Union, cast
 
 from .._utils import convert_convex_response, filter_none_values
 from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import (
     CountFactsFilter,
     DeleteFactOptions,
+    DeleteFactResult,
     DeleteManyFactsParams,
+    DeleteManyFactsResult,
     FactRecord,
     FactType,
     ListFactsFilter,
@@ -20,6 +22,7 @@ from ..types import (
     SearchFactsOptions,
     StoreFactOptions,
     StoreFactParams,
+    UpdateFactInput,
     UpdateFactOptions,
 )
 from .validators import (
@@ -148,6 +151,20 @@ class FactsAPI:
                     "tags": params.tags or [],
                     "validFrom": params.valid_from,
                     "validUntil": params.valid_until,
+                    # Enrichment fields (for bullet-proof retrieval)
+                    "category": params.category,
+                    "searchAliases": params.search_aliases,
+                    "semanticContext": params.semantic_context,
+                    "entities": (
+                        [{"name": e.name, "type": e.type, "fullValue": e.full_value} for e in params.entities]
+                        if params.entities
+                        else None
+                    ),
+                    "relations": (
+                        [{"subject": r.subject, "predicate": r.predicate, "object": r.object} for r in params.relations]
+                        if params.relations
+                        else None
+                    ),
                 }),
             ),
             "facts:store",
@@ -408,7 +425,7 @@ class FactsAPI:
         self,
         memory_space_id: str,
         fact_id: str,
-        updates: Dict[str, Any],
+        updates: Union[UpdateFactInput, Dict[str, Any]],
         options: Optional[UpdateFactOptions] = None,
     ) -> FactRecord:
         """
@@ -417,38 +434,98 @@ class FactsAPI:
         Args:
             memory_space_id: Memory space ID
             fact_id: Fact ID
-            updates: Updates to apply
+            updates: Updates to apply (UpdateFactInput dataclass or dict)
             options: Optional update options (e.g., syncToGraph)
 
         Returns:
             Updated fact record
 
         Example:
+            >>> from cortex.types import UpdateFactInput
             >>> updated = await cortex.facts.update(
             ...     'agent-1', 'fact-123',
-            ...     {'confidence': 99, 'tags': ['verified', 'ui']}
+            ...     UpdateFactInput(confidence=99, tags=['verified', 'ui'])
             ... )
         """
         validate_memory_space_id(memory_space_id)
         validate_required_string(fact_id, "fact_id")
         validate_fact_id_format(fact_id)
-        validate_update_has_fields(updates)
 
-        if "confidence" in updates:
-            validate_confidence(updates["confidence"], "confidence")
-        if "tags" in updates:
-            validate_string_array(updates["tags"], "tags", True)
-        if "metadata" in updates:
-            validate_metadata(updates["metadata"])
+        # Convert UpdateFactInput to dict for validation if needed
+        if isinstance(updates, UpdateFactInput):
+            updates_dict = {
+                "fact": updates.fact,
+                "confidence": updates.confidence,
+                "tags": updates.tags,
+                "validUntil": updates.valid_until,
+                "metadata": updates.metadata,
+                "category": updates.category,
+                "searchAliases": updates.search_aliases,
+                "semanticContext": updates.semantic_context,
+                "entities": updates.entities,
+                "relations": updates.relations,
+            }
+        else:
+            updates_dict = updates
+
+        validate_update_has_fields(updates_dict)
+
+        if updates_dict.get("confidence") is not None:
+            conf = updates_dict["confidence"]
+            if isinstance(conf, (int, float)):
+                validate_confidence(conf, "confidence")
+        if updates_dict.get("tags") is not None:
+            validate_string_array(updates_dict["tags"], "tags", True)
+        if updates_dict.get("metadata") is not None:
+            validate_metadata(updates_dict["metadata"])
+
+        # Build the mutation payload with proper field mapping
+        if isinstance(updates, UpdateFactInput):
+            mutation_payload = filter_none_values({
+                "memorySpaceId": memory_space_id,
+                "factId": fact_id,
+                "fact": updates.fact,
+                "confidence": updates.confidence,
+                "tags": updates.tags,
+                "validUntil": updates.valid_until,
+                "metadata": updates.metadata,
+                # Enrichment fields
+                "category": updates.category,
+                "searchAliases": updates.search_aliases,
+                "semanticContext": updates.semantic_context,
+                "entities": (
+                    [{"name": e.name, "type": e.type, "fullValue": e.full_value} for e in updates.entities]
+                    if updates.entities
+                    else None
+                ),
+                "relations": (
+                    [{"subject": r.subject, "predicate": r.predicate, "object": r.object} for r in updates.relations]
+                    if updates.relations
+                    else None
+                ),
+            })
+        else:
+            # Legacy dict support - assume keys are already in camelCase or snake_case
+            mutation_payload = filter_none_values({
+                "memorySpaceId": memory_space_id,
+                "factId": fact_id,
+                "fact": updates.get("fact"),
+                "confidence": updates.get("confidence"),
+                "tags": updates.get("tags"),
+                "validUntil": updates.get("validUntil") or updates.get("valid_until"),
+                "metadata": updates.get("metadata"),
+                # Enrichment fields
+                "category": updates.get("category"),
+                "searchAliases": updates.get("searchAliases") or updates.get("search_aliases"),
+                "semanticContext": updates.get("semanticContext") or updates.get("semantic_context"),
+                "entities": updates.get("entities"),
+                "relations": updates.get("relations"),
+            })
 
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
                 "facts:update",
-                filter_none_values({
-                    "memorySpaceId": memory_space_id,
-                    "factId": fact_id,
-                    **updates,  # Flatten updates into top level
-                }),
+                mutation_payload,
             ),
             "facts:update",
         )
@@ -469,7 +546,7 @@ class FactsAPI:
         memory_space_id: str,
         fact_id: str,
         options: Optional[DeleteFactOptions] = None,
-    ) -> Dict[str, bool]:
+    ) -> DeleteFactResult:
         """
         Delete a fact (soft delete - marks as superseded).
 
@@ -479,10 +556,11 @@ class FactsAPI:
             options: Optional delete options (e.g., syncToGraph)
 
         Returns:
-            Deletion result
+            DeleteFactResult with deleted status and fact_id
 
         Example:
-            >>> await cortex.facts.delete('agent-1', 'fact-123')
+            >>> result = await cortex.facts.delete('agent-1', 'fact-123')
+            >>> print(f"Deleted: {result.deleted}, ID: {result.fact_id}")
         """
         validate_memory_space_id(memory_space_id)
         validate_required_string(fact_id, "fact_id")
@@ -504,12 +582,15 @@ class FactsAPI:
             except Exception as error:
                 print(f"Warning: Failed to delete fact from graph: {error}")
 
-        return cast(Dict[str, bool], result)
+        return DeleteFactResult(
+            deleted=result.get("deleted", False),
+            fact_id=result.get("factId", fact_id),
+        )
 
     async def delete_many(
         self,
         params: DeleteManyFactsParams,
-    ) -> Dict[str, Any]:
+    ) -> DeleteManyFactsResult:
         """
         Delete multiple facts matching filters in a single operation.
 
@@ -520,7 +601,7 @@ class FactsAPI:
             params: Delete many parameters with optional filters
 
         Returns:
-            Dict with 'deleted' count and 'memory_space_id'
+            DeleteManyFactsResult with deleted count and memory_space_id
 
         Example:
             >>> from cortex.types import DeleteManyFactsParams
@@ -528,7 +609,7 @@ class FactsAPI:
             >>> result = await cortex.facts.delete_many(
             ...     DeleteManyFactsParams(memory_space_id='agent-1')
             ... )
-            >>> print(f"Deleted {result['deleted']} facts")
+            >>> print(f"Deleted {result.deleted} facts")
 
             >>> # Delete all facts for a specific user (GDPR compliance)
             >>> gdpr_result = await cortex.facts.delete_many(
@@ -563,7 +644,10 @@ class FactsAPI:
             "facts:deleteMany",
         )
 
-        return cast(Dict[str, Any], result)
+        return DeleteManyFactsResult(
+            deleted=result.get("deleted", 0),
+            memory_space_id=result.get("memorySpaceId", params.memory_space_id),
+        )
 
     async def count(
         self,

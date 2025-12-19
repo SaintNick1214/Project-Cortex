@@ -72,7 +72,7 @@ interface GovernancePolicy {
     };
     purging: {
       autoDelete: boolean;
-      deleteUnaccessed After?: string;
+      deleteUnaccessedAfter?: string;
     };
   };
 
@@ -355,15 +355,38 @@ await cortex.vector.update('agent-1', memoryId, {...});
 
 ### Manual Enforcement
 
+**Signature:**
+
+```typescript
+cortex.governance.enforce(
+  options: {
+    scope: { organizationId?: string; memorySpaceId?: string }; // Required
+    layers?: ("conversations" | "immutable" | "mutable" | "vector")[];
+    rules?: ("retention" | "purging")[];
+  }
+): Promise<EnforcementResult>
+```
+
+**Example:**
+
 ```typescript
 // Trigger immediate policy enforcement
 const result = await cortex.governance.enforce({
-  layers: ["vector", "immutable"], // Which layers
-  rules: ["retention", "purging"], // Which rules
+  scope: { organizationId: "org-123" }, // Required: org or memory space
+  layers: ["vector", "immutable"],       // Which layers
+  rules: ["retention", "purging"],       // Which rules
 });
 
 console.log(`Enforced retention: ${result.versionsDeleted} versions deleted`);
 console.log(`Purged records: ${result.recordsPurged}`);
+console.log(`Storage freed: ${result.storageFreed} MB`);
+
+// Enforce for specific memory space
+const spaceResult = await cortex.governance.enforce({
+  scope: { memorySpaceId: "audit-agent-space" },
+  layers: ["vector"],
+  rules: ["retention"],
+});
 ```
 
 ---

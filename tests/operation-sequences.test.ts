@@ -23,7 +23,7 @@ describe("Operation Sequence Validation", () => {
   afterAll(async () => {
     // Cleanup
     try {
-      await cortex.memorySpaces.delete(BASE_ID, { cascade: true });
+      await cortex.memorySpaces.delete(BASE_ID, { cascade: true, reason: "test cleanup" });
     } catch (_e) {
       // Ignore
     }
@@ -594,6 +594,112 @@ describe("Operation Sequence Validation", () => {
       }
     });
 
+    it("extended increment chain (20+ operations) maintains exact consistency", async () => {
+      const ns = `${BASE_ID}-mutable-extended-inc`;
+      const key = "extended-counter";
+
+      // Set initial value
+      await cortex.mutable.set(ns, key, 100);
+
+      // Track expected value
+      let expectedValue = 100;
+
+      // Perform 25 increments with varying amounts
+      for (let i = 1; i <= 25; i++) {
+        const amount = i % 3 === 0 ? 5 : i % 2 === 0 ? 2 : 1;
+        await cortex.mutable.increment(ns, key, amount);
+        expectedValue += amount;
+
+        // Verify at each step
+        const current = await cortex.mutable.get(ns, key);
+        expect(current).toBe(expectedValue);
+      }
+
+      // Final verification
+      const finalValue = await cortex.mutable.get(ns, key);
+      expect(finalValue).toBe(expectedValue);
+
+      // Also verify via getRecord
+      const record = await cortex.mutable.getRecord(ns, key);
+      expect(record!.value).toBe(expectedValue);
+    });
+
+    it("mixed increment/decrement chain maintains consistency", async () => {
+      const ns = `${BASE_ID}-mutable-mixed`;
+      const key = "mixed-counter";
+
+      await cortex.mutable.set(ns, key, 50);
+      let expected = 50;
+
+      // 15 operations: increment/decrement alternating
+      const operations = [
+        { op: "inc", amount: 10 },
+        { op: "dec", amount: 3 },
+        { op: "inc", amount: 5 },
+        { op: "dec", amount: 2 },
+        { op: "inc", amount: 8 },
+        { op: "dec", amount: 4 },
+        { op: "inc", amount: 12 },
+        { op: "dec", amount: 7 },
+        { op: "inc", amount: 3 },
+        { op: "dec", amount: 1 },
+        { op: "inc", amount: 6 },
+        { op: "dec", amount: 5 },
+        { op: "inc", amount: 2 },
+        { op: "dec", amount: 8 },
+        { op: "inc", amount: 4 },
+      ];
+
+      for (const { op, amount } of operations) {
+        if (op === "inc") {
+          await cortex.mutable.increment(ns, key, amount);
+          expected += amount;
+        } else {
+          await cortex.mutable.decrement(ns, key, amount);
+          expected -= amount;
+        }
+
+        const current = await cortex.mutable.get(ns, key);
+        expect(current).toBe(expected);
+      }
+
+      // Final check
+      const final = await cortex.mutable.get(ns, key);
+      expect(final).toBe(expected);
+      // Expected: 50 + 10 - 3 + 5 - 2 + 8 - 4 + 12 - 7 + 3 - 1 + 6 - 5 + 2 - 8 + 4 = 70
+      expect(final).toBe(70);
+    });
+
+    it("transaction with multiple increment operations", async () => {
+      const ns = `${BASE_ID}-mutable-tx-inc`;
+
+      // Setup keys
+      await cortex.mutable.set(ns, "counter-a", 0);
+      await cortex.mutable.set(ns, "counter-b", 100);
+      await cortex.mutable.set(ns, "counter-c", 50);
+
+      // Execute transaction with multiple increments
+      const result = await cortex.mutable.transaction([
+        { op: "increment", namespace: ns, key: "counter-a", amount: 10 },
+        { op: "increment", namespace: ns, key: "counter-b", amount: 5 },
+        { op: "decrement", namespace: ns, key: "counter-c", amount: 15 },
+        { op: "increment", namespace: ns, key: "counter-a", amount: 20 },
+        { op: "increment", namespace: ns, key: "counter-b", amount: 3 },
+      ]);
+
+      expect(result.success).toBe(true);
+      expect(result.operationsExecuted).toBe(5);
+
+      // Verify final values
+      const a = await cortex.mutable.get(ns, "counter-a");
+      const b = await cortex.mutable.get(ns, "counter-b");
+      const c = await cortex.mutable.get(ns, "counter-c");
+
+      expect(a).toBe(30); // 0 + 10 + 20
+      expect(b).toBe(108); // 100 + 5 + 3
+      expect(c).toBe(35); // 50 - 15
+    });
+
     it("list reflects mutable operations", async () => {
       const ns = `${BASE_ID}-mutable-list`;
 
@@ -655,7 +761,7 @@ describe("Operation Sequence Validation", () => {
       ).toBe(false);
 
       // STEP 4: Delete
-      await cortex.memorySpaces.delete(spaceId, { cascade: true });
+      await cortex.memorySpaces.delete(spaceId, { cascade: true, reason: "test cleanup" });
 
       const afterDelete = await cortex.memorySpaces.get(spaceId);
       expect(afterDelete).toBeNull();
@@ -1342,7 +1448,7 @@ describe("Operation Sequence Validation", () => {
       });
 
       // Delete space with cascade
-      await cortex.memorySpaces.delete(spaceId, { cascade: true });
+      await cortex.memorySpaces.delete(spaceId, { cascade: true, reason: "test cleanup" });
 
       // Verify all deleted
       const convCheck = await cortex.conversations.get(conv.conversationId);

@@ -139,7 +139,13 @@ class TestCleanup:
                 result = await self.cortex.conversations.list(
                     memory_space_id=memory_space_id, limit=1000
                 )
-                conversations = result if isinstance(result, list) else result.get("conversations", [])
+                # Handle ListConversationsResult object or raw list/dict
+                if hasattr(result, 'conversations'):
+                    conversations = result.conversations
+                elif isinstance(result, list):
+                    conversations = result
+                else:
+                    conversations = result.get("conversations", [])
 
                 for conv in conversations:
                     conv_id = conv.get("conversation_id") if isinstance(conv, dict) else conv.conversation_id
@@ -152,7 +158,13 @@ class TestCleanup:
             else:
                 # List all conversations and filter by memory space prefix
                 result = await self.cortex.conversations.list(limit=1000)
-                conversations = result if isinstance(result, list) else result.get("conversations", [])
+                # Handle ListConversationsResult object or raw list/dict
+                if hasattr(result, 'conversations'):
+                    conversations = result.conversations
+                elif isinstance(result, list):
+                    conversations = result
+                else:
+                    conversations = result.get("conversations", [])
 
                 for conv in conversations:
                     space_id = conv.get("memory_space_id") if isinstance(conv, dict) else conv.memory_space_id
@@ -350,12 +362,20 @@ class TestCleanup:
         Returns:
             Number of users deleted
         """
+        from cortex.types import ListUsersFilter
+
         count = 0
         try:
             # List users
-            result = await self.cortex.users.list(limit=1000)
+            result = await self.cortex.users.list(ListUsersFilter(limit=1000))
 
-            users = result if isinstance(result, list) else result.get("users", [])
+            # Handle ListUsersResult object or raw list/dict
+            if hasattr(result, 'users'):
+                users = result.users
+            elif isinstance(result, list):
+                users = result
+            else:
+                users = result.get("users", [])
 
             # Delete users with test prefix
             for user in users:
@@ -714,7 +734,13 @@ class TestCleanup:
             convs = await self.cortex.conversations.list(
                 memory_space_id=memory_space_id, limit=10
             )
-            conversations = convs if isinstance(convs, list) else convs.get("conversations", [])
+            # Handle ListConversationsResult object or raw list/dict
+            if hasattr(convs, 'conversations'):
+                conversations = convs.conversations
+            elif isinstance(convs, list):
+                conversations = convs
+            else:
+                conversations = convs.get("conversations", [])
             result["conversations_count"] = len(conversations)
             result["conversations_empty"] = len(conversations) == 0
 
@@ -840,7 +866,13 @@ class ScopedCleanup:
 
         try:
             result = await self.cortex.conversations.list(limit=1000)
-            conversations = result if isinstance(result, list) else result.get("conversations", [])
+            # Handle ListConversationsResult object or raw list/dict
+            if hasattr(result, 'conversations'):
+                conversations = result.conversations
+            elif isinstance(result, list):
+                conversations = result
+            else:
+                conversations = result.get("conversations", [])
 
             for conv in conversations:
                 space_id = conv.get("memory_space_id") if isinstance(conv, dict) else getattr(conv, "memory_space_id", None)
@@ -1001,12 +1033,20 @@ class ScopedCleanup:
         Returns:
             Number of users deleted
         """
+        from cortex.types import ListUsersFilter
+
         self._log(f"🧹 Cleaning up users for run {self.run_id}...")
         count = 0
 
         try:
-            result = await self.cortex.users.list(limit=1000)
-            users = result if isinstance(result, list) else result.get("users", [])
+            result = await self.cortex.users.list(ListUsersFilter(limit=1000))
+            # Handle ListUsersResult object or raw list/dict
+            if hasattr(result, 'users'):
+                users = result.users
+            elif isinstance(result, list):
+                users = result
+            else:
+                users = result.get("users", [])
 
             for user in users:
                 user_id = user.get("id") if isinstance(user, dict) else getattr(user, "id", None)
@@ -1231,7 +1271,13 @@ class ScopedCleanup:
         try:
             # Count conversations
             convs = await self.cortex.conversations.list(limit=1000)
-            convs_list = convs if isinstance(convs, list) else convs.get("conversations", [])
+            # Handle ListConversationsResult object or raw list/dict
+            if hasattr(convs, 'conversations'):
+                convs_list = convs.conversations
+            elif isinstance(convs, list):
+                convs_list = convs
+            else:
+                convs_list = convs.get("conversations", [])
             result["conversations"] = sum(1 for c in convs_list if
                 self._belongs_to_run(c.get("memory_space_id") if isinstance(c, dict) else getattr(c, "memory_space_id", None)) or
                 self._belongs_to_run(c.get("conversation_id") if isinstance(c, dict) else getattr(c, "conversation_id", None))
@@ -1253,8 +1299,15 @@ class ScopedCleanup:
             )
 
             # Count users
-            users = await self.cortex.users.list(limit=1000)
-            users_list = users if isinstance(users, list) else users.get("users", [])
+            from cortex.types import ListUsersFilter
+            users = await self.cortex.users.list(ListUsersFilter(limit=1000))
+            # Handle ListUsersResult object or raw list/dict
+            if hasattr(users, 'users'):
+                users_list = users.users
+            elif isinstance(users, list):
+                users_list = users
+            else:
+                users_list = users.get("users", [])
             result["users"] = sum(1 for u in users_list if
                 self._belongs_to_run(u.get("id") if isinstance(u, dict) else getattr(u, "id", None))
             )

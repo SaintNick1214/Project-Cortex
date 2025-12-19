@@ -19,6 +19,692 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.21.0] - 2025-12-10
+
+#### 🚀 Users API Planned Features Implemented
+
+**All previously planned features for the Users API are now fully implemented. Date filters, sorting, pagination metadata, filter-based bulk operations, and enhanced export options are now available.**
+
+**1. Enhanced `list()` with Filtering, Sorting, and Pagination Metadata**
+
+```typescript
+// List with date filters and sorting
+const result = await cortex.users.list({
+  createdAfter: Date.now() - 30 * 24 * 60 * 60 * 1000,
+  sortBy: "createdAt",
+  sortOrder: "desc",
+  limit: 50,
+  offset: 0,
+});
+
+console.log(`Found ${result.total} users`);
+console.log(`Showing ${result.users.length}, hasMore: ${result.hasMore}`);
+
+// Filter by displayName (client-side)
+const alexUsers = await cortex.users.list({ displayName: "alex" });
+```
+
+New return type `ListUsersResult`:
+
+```typescript
+interface ListUsersResult {
+  users: UserProfile[];
+  total: number;
+  limit: number;
+  offset: number;
+  hasMore: boolean;
+}
+```
+
+**2. Enhanced `search()` with Full Filtering**
+
+```typescript
+// Search with date filters
+const recentUsers = await cortex.users.search({
+  createdAfter: Date.now() - 7 * 24 * 60 * 60 * 1000,
+  sortBy: "updatedAt",
+  sortOrder: "desc",
+});
+
+// Search by email pattern
+const users = await cortex.users.search({ email: "@acme.com" });
+```
+
+**3. Enhanced `count()` with Date Filters**
+
+```typescript
+// Count recent signups
+const newUsers = await cortex.users.count({
+  createdAfter: Date.now() - 30 * 24 * 60 * 60 * 1000,
+});
+
+// Count active users
+const active = await cortex.users.count({
+  updatedAfter: Date.now() - 7 * 24 * 60 * 60 * 1000,
+});
+```
+
+**4. Filter-Based `updateMany()` and `deleteMany()`**
+
+Both methods now accept either explicit userIds OR a UserFilters object:
+
+```typescript
+// Update by filters (new!)
+await cortex.users.updateMany(
+  { createdAfter: Date.now() - 7 * 24 * 60 * 60 * 1000 },
+  { data: { welcomeEmailSent: true } },
+);
+
+// Delete by filters (new!)
+await cortex.users.deleteMany(
+  { updatedBefore: Date.now() - 365 * 24 * 60 * 60 * 1000 },
+  { cascade: true, dryRun: true }, // Preview first
+);
+
+// Original userIds[] syntax still works
+await cortex.users.updateMany(["user-1", "user-2"], { data: { active: true } });
+```
+
+**5. Enhanced `export()` with Related Data**
+
+```typescript
+// Full GDPR export with version history, conversations, and memories
+const gdprExport = await cortex.users.export({
+  format: "json",
+  filters: { displayName: "alex" },
+  includeVersionHistory: true,
+  includeConversations: true,
+  includeMemories: true,
+});
+```
+
+New export options:
+
+| Option                  | Description                                  |
+| ----------------------- | -------------------------------------------- |
+| `includeVersionHistory` | Include `previousVersions` array             |
+| `includeConversations`  | Query and include user's conversations       |
+| `includeMemories`       | Include memories from conversation spaces    |
+
+**6. Type Updates**
+
+| Type              | Change                                                          |
+| ----------------- | --------------------------------------------------------------- |
+| `ListUsersFilter` | Added `createdAfter/Before`, `updatedAfter/Before`, `sortBy`, `sortOrder`, `displayName`, `email` |
+| `UserFilters`     | Now extends `ListUsersFilter` with all filter options           |
+| `ListUsersResult` | New interface with pagination metadata                          |
+| `ExportUsersOptions` | Added `includeVersionHistory`, `includeConversations`, `includeMemories` |
+
+**7. Backend Updates**
+
+| Function            | Change                                                |
+| ------------------- | ----------------------------------------------------- |
+| `immutable.list()`  | Added date filters, sorting, pagination, returns metadata |
+| `immutable.count()` | Added date filter support                             |
+
+#### 🔄 Conversations API Full Parity
+
+**SDK now has full feature parity with documentation for the Conversations API. All documented features are now implemented.**
+
+**1. Enhanced `get()` with Options**
+
+New options for controlling message loading:
+
+```typescript
+// Get conversation without messages (faster for metadata-only queries)
+const conv = await cortex.conversations.get("conv-123", {
+  includeMessages: false,
+});
+
+// Limit messages returned
+const recent = await cortex.conversations.get("conv-123", {
+  messageLimit: 10,
+});
+```
+
+**2. Enhanced `getHistory()` Filters**
+
+New date and role filtering for message history:
+
+```typescript
+const history = await cortex.conversations.getHistory("conv-123", {
+  since: Date.now() - 24 * 60 * 60 * 1000, // Last 24 hours
+  until: Date.now(),
+  roles: ["user"], // Only user messages
+  sortOrder: "desc",
+});
+```
+
+**3. Enhanced `list()` with Pagination**
+
+Now returns `ListConversationsResult` with full pagination metadata:
+
+```typescript
+const result = await cortex.conversations.list({
+  memorySpaceId: "space-123",
+  sortBy: "lastMessageAt",
+  sortOrder: "desc",
+  limit: 10,
+  offset: 20,
+  createdAfter: Date.now() - 7 * 24 * 60 * 60 * 1000, // Last week
+});
+
+console.log(`Page of ${result.conversations.length} / ${result.total}`);
+console.log(`Has more: ${result.hasMore}`);
+```
+
+**4. Enhanced `search()` Capabilities**
+
+New search options for flexible querying:
+
+```typescript
+const results = await cortex.conversations.search({
+  query: "account balance",
+  options: {
+    searchIn: "both", // Search content AND metadata
+    matchMode: "fuzzy", // Fuzzy matching
+  },
+});
+
+// Results include score and highlights
+results.forEach((r) => {
+  console.log(`Score: ${r.score}, Highlights: ${r.highlights}`);
+});
+```
+
+**5. Enhanced `delete()` Return**
+
+Now returns enriched `ConversationDeletionResult`:
+
+```typescript
+const result = await cortex.conversations.delete("conv-123");
+console.log(`Deleted ${result.messagesDeleted} messages`);
+console.log(`At: ${new Date(result.deletedAt)}`);
+console.log(`Restorable: ${result.restorable}`); // Always false
+```
+
+**6. `deleteMany()` dryRun Mode**
+
+New safety features for bulk deletion:
+
+```typescript
+// Preview what would be deleted
+const preview = await cortex.conversations.deleteMany(
+  { userId: "user-123" },
+  { dryRun: true }
+);
+console.log(`Would delete ${preview.wouldDelete} conversations`);
+
+// Execute with threshold (throws if exceeds 10)
+const result = await cortex.conversations.deleteMany(
+  { userId: "user-123" },
+  { confirmationThreshold: 100 }
+);
+```
+
+#### 📚 Documentation Updates
+
+- Updated `create()` signature to show `memorySpaceId` at top level
+- Updated `addMessage()` to show input object structure and `Conversation` return type
+- Removed A2A fields from `addMessage()` docs (use `cortex.a2a.*` API instead)
+- Updated `findConversation()` to show actual parameter structure
+- All examples updated to match SDK usage patterns
+
+---
+
+#### 📚 Governance API Documentation Parity
+
+**SDK/docs parity audit completed for the Governance Policies API. Documentation fixes applied to match SDK implementation.**
+
+**1. Fixed GovernancePolicy Type Definition**
+
+Fixed typo in `mutable.purging.deleteUnaccessedAfter` field name (was incorrectly documented with space).
+
+**2. Updated `enforce()` Documentation**
+
+Added required `scope` parameter to method signature and examples:
+
+```typescript
+// Before (incorrect - would throw validation error)
+await cortex.governance.enforce({
+  layers: ["vector"],
+  rules: ["retention"],
+});
+
+// After (correct)
+await cortex.governance.enforce({
+  scope: { organizationId: "org-123" }, // Required
+  layers: ["vector"],
+  rules: ["retention"],
+});
+```
+
+**3. Audit Summary**
+
+| Method | Status |
+|--------|--------|
+| `setPolicy()` | ✅ Consistent |
+| `getPolicy()` | ✅ Consistent |
+| `setAgentOverride()` | ✅ Consistent |
+| `getTemplate()` | ✅ Consistent |
+| `enforce()` | ✅ Fixed (scope now documented) |
+| `simulate()` | ✅ Consistent |
+| `getComplianceReport()` | ✅ Consistent |
+| `getEnforcementStats()` | ✅ Consistent |
+
+---
+
+#### 📚 Graph API Documentation Parity
+
+**Complete documentation update for Graph Operations API to achieve full SDK/docs parity. All 13 previously undocumented GraphAdapter methods and orphan detection types are now documented.**
+
+#### ✨ Documentation Enhancements
+
+**1. Complete GraphAdapter Reference**
+
+All GraphAdapter interface methods now documented with examples:
+
+| Method | Description |
+|--------|-------------|
+| `disconnect()` | Close connection to graph database |
+| `isConnected()` | Test connection status |
+| `mergeNode()` | MERGE semantics for idempotent operations (v0.19.1) |
+| `getNode()` | Get node by ID |
+| `updateNode()` | Update node properties |
+| `deleteNode()` | Delete node with optional detach |
+| `findNodes()` | Find nodes by label/properties |
+| `deleteEdge()` | Delete edge by ID |
+| `findEdges()` | Find edges by type/properties |
+| `batchWrite()` | Execute operations in transaction |
+| `countNodes()` | Count nodes |
+| `countEdges()` | Count relationships |
+| `clearDatabase()` | Clear all data |
+
+**2. Delete Operations Section**
+
+New documentation for programmatic graph delete functions:
+
+- `deleteMemoryFromGraph()` - Delete memory with orphan cleanup
+- `deleteFactFromGraph()` - Delete fact and cascade to orphaned entities
+- `deleteContextFromGraph()` - Delete context with relationship cleanup
+- `deleteConversationFromGraph()` - Delete conversation
+- `deleteMemorySpaceFromGraph()` - Delete memory space (use with caution)
+
+**3. Programmatic Orphan Detection**
+
+New section documenting the orphan detection system:
+
+- `ORPHAN_RULES` constant with full rule definitions
+- `createDeletionContext()` for tracking cascading deletes
+- `deleteWithOrphanCleanup()` for low-level delete with cascade
+- `detectOrphan()` for checking orphan status
+- `canRunOrphanCleanup()` for safety checks
+
+**4. Complete TypeScript Types Reference**
+
+All graph-related types now fully documented:
+
+- `GraphNode`, `GraphEdge`, `GraphPath`, `GraphQuery`
+- `GraphQueryResult`, `QueryStatistics`
+- `GraphConnectionConfig`, `GraphOperation`
+- `TraversalConfig`, `ShortestPathConfig`
+- `OrphanRule`, `DeletionContext`, `DeleteResult`, `OrphanCheckResult`
+- Error classes: `GraphDatabaseError`, `GraphConnectionError`, `GraphQueryError`, `GraphNotFoundError`
+
+#### 📚 A2A API Documentation Parity
+
+**Documentation corrected to match SDK implementation for the A2A Communication API.**
+
+**1. Timestamp Type Corrections**
+
+All timestamp fields updated from `Date` to `number` (Unix milliseconds) to match SDK:
+
+| Interface | Field | Change |
+|-----------|-------|--------|
+| `A2AMessage` | `sentAt` | `Date` → `number` |
+| `A2AResponse` | `respondedAt` | `Date` → `number` |
+| `A2ABroadcastResult` | `sentAt` | `Date` → `number` |
+| `A2AConversation` | `period.start/end` | `Date` → `number` |
+| `A2AConversationMessage` | `timestamp` | `Date` → `number` |
+
+**2. Added Missing Fields to `A2AConversationMessage`**
+
+Backend returns additional fields now documented:
+
+```typescript
+interface A2AConversationMessage {
+  // ... existing fields ...
+  direction?: string;    // 'outbound' or 'inbound'
+  broadcast?: boolean;   // True if part of a broadcast
+  broadcastId?: string;  // Broadcast ID (if broadcast)
+}
+```
+
+**3. `subscribe()` Marked as Planned**
+
+Overview table updated to indicate `subscribe()` is not yet implemented:
+
+| Operation | Status |
+|-----------|--------|
+| `subscribe()` | *(Planned)* - Real-time inbox notifications |
+
+#### 📚 Mutable API Documentation Parity
+
+**Complete documentation update for Mutable Store API to achieve full SDK/docs parity. All method signatures now accurately reflect the SDK implementation.**
+
+**1. Method Signature Updates**
+
+| Method | Change |
+|--------|--------|
+| `set()` | Added `metadata` and `options` parameters |
+| `list()` | Changed from positional params to filter object `ListMutableFilter` |
+| `count()` | Changed from positional params to filter object `CountMutableFilter` |
+| `delete()` | Added `options` parameter with `syncToGraph` |
+| `transaction()` | Changed from callback-based to array-based operations |
+| `purgeNamespace()` | Removed aspirational `options` param (not implemented) |
+| `purgeMany()` | Changed from positional params to filter object `PurgeManyFilter` |
+
+**2. Return Type Corrections**
+
+- `MutableRecord` now includes `_id` field and uses Unix timestamps (`number`) instead of `Date`
+- `DeleteResult` simplified to match SDK (removed `deletedAt`)
+- `PurgeNamespaceResult` and `PurgeManyResult` return types documented
+
+**3. Planned Features Marked**
+
+Aspirational features not yet implemented are now clearly marked:
+- `sortBy`, `sortOrder`, `offset` for list operations
+- `updatedAfter`, `updatedBefore` date filters
+- `lastAccessedBefore` for purgeMany
+- `dryRun` option for purgeNamespace
+
+#### 📚 Immutable API Documentation Parity
+
+**Complete documentation update for Immutable Store API to achieve full SDK/docs parity. All method signatures, return types, and parameter types now accurately reflect the SDK implementation.**
+
+**1. Method Signature Updates**
+
+| Method | Change |
+|--------|--------|
+| `store()` | Added `options?: StoreImmutableOptions` parameter with `syncToGraph` for graph database sync |
+| `list()` | Simplified filter to `{ type?, userId?, limit? }`. Returns `ImmutableRecord[]` directly |
+| `search()` | Changed to object parameter `{ query, type?, userId?, limit? }`. Return uses `entry` and `highlights` fields |
+| `count()` | Simplified filter to `{ type?, userId? }` |
+| `purge()` | Return includes `deleted: boolean`, removed `purgedAt` |
+| `purgeMany()` | Simplified to `{ type?, userId? }` filter. Removed `dryRun` option |
+| `purgeVersions()` | Changed from options object to direct `keepLatest` parameter |
+| `getAtTimestamp()` | Now accepts `number \| Date` for timestamp parameter |
+| `getVersion()` | Return type documented as `ImmutableVersionExpanded` |
+| `getHistory()` | Return type documented as `ImmutableVersionExpanded[]` |
+
+**2. Type Corrections**
+
+- `ImmutableRecord`: Added `_id`, `updatedAt`. Changed `createdAt` to `number` (Unix ms)
+- `ImmutableVersion`: Changed `timestamp` to `number` (Unix ms)
+- `ImmutableVersionExpanded`: Now documented for `getVersion()` and `getHistory()` returns
+- `ImmutableSearchResult`: Uses `entry` (not `record`) and `highlights` (not `matches`)
+
+**3. Removed Aspirational Features**
+
+Documentation removed for features not yet implemented:
+- `immutableRetention` configuration in Cortex constructor
+- Advanced list filters: `types`, `metadata`, `tags`, `createdAfter/Before`, `minVersion`, `offset`, `sortBy/Order`
+- Pagination metadata in list results (`total`, `hasMore`)
+- `searchIn` option for search
+- `dryRun` and `requireConfirmation` options for purgeMany
+- `olderThan` option for purgeVersions
+
+#### 📚 Agents API Parity
+
+**SDK/docs parity audit completed for the Agents API. New features added and documentation updated.**
+
+**1. New SDK Features**
+
+| Feature | Description |
+|---------|-------------|
+| `updateMany()` | Bulk update agents matching filters |
+| `exists()` | Check if agent is registered (now documented) |
+| `capabilitiesMatch` | Filter mode: "any" (default) or "all" capabilities |
+| `lastActiveAfter/Before` | Filter by last activity timestamp |
+
+**2. `updateMany()` Method**
+
+```typescript
+// Update all agents in a team
+const result = await cortex.agents.updateMany(
+  { metadata: { team: "support" } },
+  { metadata: { trainingCompleted: true } },
+);
+console.log(`Updated ${result.updated} agents`);
+```
+
+**3. Enhanced Filter Options**
+
+```typescript
+// Find agents with ALL specified capabilities
+const specialists = await cortex.agents.search({
+  capabilities: ["troubleshooting", "billing"],
+  capabilitiesMatch: "all",
+});
+
+// Filter by last activity
+const inactive = await cortex.agents.list({
+  lastActiveBefore: Date.now() - 30 * 24 * 60 * 60 * 1000,
+});
+```
+
+**4. Documentation Updates**
+
+- Fixed `list()` return type (returns `RegisteredAgent[]`, not `ListResult`)
+- Added `exists()` method documentation
+- Fixed `unregisterMany()` options to match SDK (`cascade`, `verify`, `dryRun`)
+- Updated `AgentFilters` to use `number` timestamps (consistent with SDK)
+- Added `capabilitiesMatch` and `lastActive` filter documentation
+- Added planned `export()` method with full signature and implementation notes
+
+**5. Backend Updates**
+
+- Added `updateMany` mutation to `convex-dev/agents.ts`
+
+#### 📚 Memory API SDK/Documentation Parity
+
+**Complete SDK and documentation parity for the Memory API (Layer 4). Parameter naming standardized to `memorySpaceId` across all methods, aspirational features removed, and missing method documented.**
+
+**1. SDK Parameter Naming Standardization**
+
+Renamed `agentId` parameter to `memorySpaceId` in 10 methods for consistency with docs and other APIs:
+
+| Method | Change |
+|--------|--------|
+| `forget()` | `agentId` → `memorySpaceId` |
+| `get()` | `agentId` → `memorySpaceId` |
+| `search()` | `agentId` → `memorySpaceId` |
+| `store()` | `agentId` → `memorySpaceId` |
+| `update()` | `agentId` → `memorySpaceId` |
+| `delete()` | `agentId` → `memorySpaceId` |
+| `archive()` | `agentId` → `memorySpaceId` |
+| `getVersion()` | `agentId` → `memorySpaceId` |
+| `getHistory()` | `agentId` → `memorySpaceId` |
+| `getAtTimestamp()` | `agentId` → `memorySpaceId` |
+
+**2. Documentation Corrections**
+
+- Fixed mislabeled section: "remember()" → "store()" (was showing `cortex.memory.store()` signature)
+- Removed aspirational `smartStore()` method (not implemented in SDK)
+- Fixed `archive()` signature to match SDK (takes single memoryId, not filters)
+- Updated `ArchiveResult` return type to match SDK implementation
+
+**3. New Documentation**
+
+Added complete documentation for `restoreFromArchive()` method:
+
+```typescript
+cortex.memory.restoreFromArchive(
+  memorySpaceId: string,
+  memoryId: string
+): Promise<RestoreResult>
+```
+
+**4. Enhanced JSDoc Comments**
+
+All 10 renamed methods now have improved JSDoc comments with `@param` descriptions, `@returns` type descriptions, and `@example` code blocks.
+
+#### 🔧 Technical Details
+
+- Version header updated from v0.7.0+ to v0.21.0
+- 13 GraphAdapter methods documented (was 6)
+- 5 delete functions documented (was 0)
+- 5 orphan detection functions documented (was conceptual only)
+- 12 additional TypeScript types fully documented
+- 7 Mutable API method signatures corrected
+- 9 Immutable API method signatures corrected
+- 2 new Agents API methods (`updateMany`, `exists` documented)
+- 3 new Agents API filter options implemented
+- 1 Agents API aspirational feature documented (`export()` - planned)
+- 10 Memory API method parameters standardized
+- 1 aspirational feature removed from docs (`smartStore()`)
+- 1 missing method documented (`restoreFromArchive()`)
+- Zero breaking changes
+
+#### 📚 Vector API SDK/Documentation Parity
+
+**Complete SDK and documentation parity for the Vector API (Layer 2). New methods added to SDK, existing methods enhanced, and documentation updated to reflect actual implementation.**
+
+**1. New SDK Method**
+
+| Method | Description |
+|--------|-------------|
+| `restoreFromArchive()` | Restore a previously archived memory back to active status |
+
+```typescript
+// Restore an archived memory
+const result = await cortex.vector.restoreFromArchive(
+  "user-123-personal",
+  "mem_abc123",
+);
+console.log(`Restored: ${result.restored}`);
+console.log(`Memory: ${result.memory.content}`);
+```
+
+**2. SDK Enhancements**
+
+| Enhancement | Description |
+|-------------|-------------|
+| `store()` now forwards `enrichedContent` | Concatenated searchable content for embedding |
+| `store()` now forwards `factCategory` | Category for filtering (e.g., "addressing_preference") |
+| `search()` now supports `queryCategory` | Category boost for bullet-proof retrieval (+30% score) |
+
+**3. Documentation Updates**
+
+Updated Layer 2 operations table to match SDK signatures:
+
+| Method | Signature Change |
+|--------|------------------|
+| `list()` | `list(filter)` - filter contains memorySpaceId |
+| `count()` | `count(filter)` - filter contains memorySpaceId |
+| `deleteMany()` | `deleteMany(filter)` - not separate params |
+| `updateMany()` | `updateMany(filter, updates)` - not separate params |
+| `export()` | `export(options)` - options contains memorySpaceId |
+| `archive()` | Single memory operation, not bulk |
+| Return types | Updated to match actual SDK returns |
+
+**4. Types Update**
+
+- Added `queryCategory` to `SearchMemoriesOptions` type
+
+---
+
+#### 📚 Facts API Documentation Parity
+
+**SDK/docs parity audit completed for the Facts API (Layer 3). New SDK features implemented and documentation updated.**
+
+**1. New SDK Method: `deleteMany()`**
+
+Bulk delete facts matching filters in a single operation:
+
+```typescript
+// Delete all facts in a memory space
+const result = await cortex.facts.deleteMany({
+  memorySpaceId: "space-1",
+});
+console.log(`Deleted ${result.deleted} facts`);
+
+// Delete all facts for a specific user (GDPR compliance)
+const gdprResult = await cortex.facts.deleteMany({
+  memorySpaceId: "space-1",
+  userId: "user-to-delete",
+});
+
+// Delete all preference facts
+const prefResult = await cortex.facts.deleteMany({
+  memorySpaceId: "space-1",
+  factType: "preference",
+});
+```
+
+**2. Enrichment Fields Now Passed Through SDK**
+
+`store()` and `update()` methods now properly pass enrichment fields to backend:
+
+- `category` - Specific sub-category for filtering
+- `searchAliases` - Alternative search terms for retrieval
+- `semanticContext` - Usage context sentence
+- `entities` - Extracted entities with types
+- `relations` - Subject-predicate-object triples for graph
+
+```typescript
+// Store enriched fact
+const fact = await cortex.facts.store({
+  memorySpaceId: "agent-1",
+  fact: "User prefers to be called Alex",
+  factType: "identity",
+  confidence: 95,
+  sourceType: "conversation",
+  // Enrichment fields now work!
+  category: "addressing_preference",
+  searchAliases: ["name", "nickname", "what to call"],
+  semanticContext: "Use 'Alex' when addressing this user",
+  entities: [{ name: "Alex", type: "preferred_name" }],
+  relations: [{ subject: "user", predicate: "prefers_to_be_called", object: "Alex" }],
+});
+
+// Update with enrichment fields
+const updated = await cortex.facts.update("space-1", "fact-123", {
+  category: "updated_category",
+  searchAliases: ["new", "aliases"],
+});
+```
+
+**3. Types Update**
+
+- Added `DeleteManyFactsParams` interface
+- Added `DeleteManyFactsResult` interface
+- Added enrichment fields to `UpdateFactInput` type
+
+**4. Documentation Update**
+
+- Added `"a2a"` to `sourceType` enum in all interfaces
+
+**5. Audit Summary**
+
+| Method | Status |
+|--------|--------|
+| `store()` | ✅ Fixed (enrichment fields now passed) |
+| `get()` | ✅ Consistent |
+| `list()` | ✅ Consistent |
+| `count()` | ✅ Consistent |
+| `search()` | ✅ Consistent |
+| `update()` | ✅ Fixed (enrichment fields now passed) |
+| `delete()` | ✅ Consistent |
+| `deleteMany()` | ✅ Added (was documented but missing) |
+| `getHistory()` | ✅ Consistent |
+| `queryBySubject()` | ✅ Consistent |
+| `queryByRelationship()` | ✅ Consistent |
+| `export()` | ✅ Consistent |
+| `consolidate()` | ✅ Consistent |
+
+---
+
 ### [0.20.0] - 2025-12-06
 
 #### 🛡️ Complete Resilience Layer Coverage

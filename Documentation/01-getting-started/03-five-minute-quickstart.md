@@ -1,15 +1,30 @@
 # Five-Minute Quickstart
 
-> **Last Updated**: 2025-11-02
+> **Last Updated**: 2025-12-18
 
 Get your first AI agent with persistent memory running in 5 minutes.
 
 ---
 
-## Step 1: Create Your Project (1 minute)
+## Step 1: Install the CLI (30 seconds)
 
 ```bash
-npm create cortex-memories
+npm install -g @cortexmemory/cli
+```
+
+Verify installation:
+
+```bash
+cortex --version
+# Should show: 0.21.0 or higher
+```
+
+---
+
+## Step 2: Create Your Project (1 minute)
+
+```bash
+cortex init my-first-agent
 ```
 
 The interactive wizard will ask:
@@ -21,15 +36,20 @@ The interactive wizard will ask:
 
 **Question 2:** Convex setup
 
-- Choose: **"Local development (fast, no account needed)"**
-- This lets you start immediately
+- Choose: **"Create new Convex project"** for full features
+- Or: **"Local development"** for quick start without account
 
 **Question 3:** Graph database
 
-- Choose: **No** (not needed for quickstart)
+- Choose: **Skip** (not needed for quickstart)
 - You can add this later
 
-**Question 4:** Confirm setup
+**Question 4:** CLI scripts
+
+- Choose: **Yes** to add helpful npm scripts
+- These are optional but useful
+
+**Question 5:** Confirm setup
 
 - Review the summary
 - Press Enter to proceed
@@ -39,29 +59,49 @@ The wizard will:
 - ✅ Create project structure
 - ✅ Install dependencies
 - ✅ Deploy Convex backend
-- ✅ Configure environment
+- ✅ Configure environment (.env.local)
+- ✅ Save deployment to `~/.cortexrc`
 
 ---
 
-## Step 2: Start Convex (30 seconds)
+## Step 3: Start Services (30 seconds)
 
 ```bash
 cd my-first-agent
-npm run dev
+cortex start
 ```
 
 You should see:
 
 ```
-✔ Started running a deployment locally at http://127.0.0.1:3210
-✔ Convex functions ready!
+   Starting 1 deployment(s)...
+
+   my-first-agent
+   Project: /path/to/my-first-agent
+   URL: http://127.0.0.1:3210
+
+   ✓ Convex development server started in background
+
+   ✓ All deployments started
+
+   Use 'cortex stop' to stop all services
+   Use 'cortex config list' to see deployment status
 ```
 
-**Leave this terminal running.** Open a new terminal for the next step.
+**Alternative:** Use interactive dev mode for a live dashboard:
+
+```bash
+cortex dev
+```
+
+This gives you:
+- Live status dashboard
+- Streaming logs from all services
+- Keyboard shortcuts (press `?` for help)
 
 ---
 
-## Step 3: Run Your First Agent (30 seconds)
+## Step 4: Run Your First Agent (30 seconds)
 
 In a **new terminal**:
 
@@ -267,29 +307,53 @@ When you're ready for production features (vector search, scaling):
 
 Sign up at [convex.dev](https://convex.dev) (free tier available)
 
-### 2. Create a Project
+### 2. Add Cloud Deployment via CLI
 
-In the Convex dashboard:
+```bash
+# Add a new cloud deployment
+cortex config add-deployment cloud
 
-- Click "New Project"
-- Follow the setup wizard
-- Copy your deployment URL
+# The CLI will prompt for:
+# - Convex deployment URL
+# - Deploy key (for production deployments)
+```
 
-### 3. Update Your Project
+### 3. Switch to Cloud
+
+```bash
+# Set cloud as your current deployment
+cortex use cloud
+
+# Start with cloud deployment
+cortex start
+```
+
+### 4. Or Update Manually
 
 ```bash
 # Update .env.local with your cloud URL
 CONVEX_URL=https://your-deployment.convex.cloud
 CONVEX_DEPLOY_KEY=your-deploy-key-here
-```
 
-### 4. Redeploy
-
-```bash
+# Redeploy
 npx convex deploy
 ```
 
-Your data will be migrated to the cloud deployment automatically!
+### Managing Multiple Deployments
+
+The CLI makes it easy to manage local and cloud deployments:
+
+```bash
+# List all deployments
+cortex config list
+
+# Switch between them
+cortex use local    # For development
+cortex use cloud    # For production
+
+# Or target specific deployment
+cortex db stats -d cloud
+```
 
 ---
 
@@ -323,18 +387,42 @@ my-first-agent/
 
 ## Common Commands
 
-```bash
-# Start Convex in watch mode
-npm run dev
+### CLI Commands (Recommended)
 
+```bash
+# Start all services (Convex + graph DB)
+cortex start
+
+# Interactive dev mode with live dashboard
+cortex dev
+
+# Stop all services
+cortex stop
+
+# View deployment status
+cortex status
+
+# Database statistics
+cortex db stats
+
+# Switch deployments
+cortex use <name>
+
+# View all deployments
+cortex config list
+```
+
+### npm Scripts (Also Available)
+
+```bash
 # Run your agent
 npm start
 
 # Build TypeScript
 npm run build
 
-# Deploy to cloud Convex
-npm run build:convex
+# Start Convex manually (if not using CLI)
+npm run dev
 ```
 
 ---

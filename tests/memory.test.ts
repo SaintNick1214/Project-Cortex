@@ -141,6 +141,82 @@ describe("Memory Convenience API (Layer 3)", () => {
         expect(result.memory.content).toBe("Updated");
         expect(result.memory.importance).toBe(80);
       });
+
+      it("re-extracts facts when reextractFacts is true and content changes", async () => {
+        // Create memory with initial fact extraction
+        const extractFacts = async (content: string) => [
+          {
+            fact: `Fact extracted from: ${content.substring(0, 20)}`,
+            factType: "knowledge" as const,
+            confidence: 90,
+            tags: ["reextract-test"],
+          },
+        ];
+
+        const storeResult = await cortex.memory.store(TEST_MEMSPACE_ID, {
+          content: "Original content for reextraction test",
+          contentType: "raw",
+          source: { type: "system", timestamp: Date.now() },
+          metadata: { importance: 50, tags: ["reextract-test"] },
+          extractFacts,
+        });
+
+        expect(storeResult.facts.length).toBe(1);
+        const originalFactId = storeResult.facts[0].factId;
+
+        // Update with reextractFacts option
+        const updateResult = await cortex.memory.update(
+          TEST_MEMSPACE_ID,
+          storeResult.memory.memoryId,
+          { content: "New updated content for reextraction" },
+          {
+            reextractFacts: true,
+            extractFacts,
+          },
+        );
+
+        expect(updateResult.memory.content).toBe("New updated content for reextraction");
+
+        // Verify new facts were extracted
+        expect(updateResult.factsReextracted).toBeDefined();
+        expect(updateResult.factsReextracted!.length).toBeGreaterThanOrEqual(1);
+
+        // Verify old fact was deleted (should be soft deleted/marked invalid)
+        const oldFact = await cortex.facts.get(TEST_MEMSPACE_ID, originalFactId);
+        // Old fact should either be null or marked as invalid
+        if (oldFact) {
+          expect(oldFact.validUntil).toBeDefined();
+        }
+      });
+
+      it("does not re-extract facts when reextractFacts is false", async () => {
+        const extractFacts = async () => [
+          {
+            fact: "Should not be extracted",
+            factType: "knowledge" as const,
+            confidence: 90,
+          },
+        ];
+
+        const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
+          content: "Content without fact extraction",
+          contentType: "raw",
+          source: { type: "system", timestamp: Date.now() },
+          metadata: { importance: 50, tags: [] },
+        });
+
+        const result = await cortex.memory.update(
+          TEST_MEMSPACE_ID,
+          memory.memoryId,
+          { content: "Updated content" },
+          {
+            reextractFacts: false,
+            extractFacts,
+          },
+        );
+
+        expect(result.factsReextracted).toBeUndefined();
+      });
     });
 
     describe("delete()", () => {
@@ -241,6 +317,122 @@ describe("Memory Convenience API (Layer 3)", () => {
         expect(result.format).toBe("json");
         expect(typeof result.data).toBe("string");
       });
+
+      it("exports in CSV format with proper structure", async () => {
+        // Create a test memory with known fields
+        await cortex.vector.store(TEST_MEMSPACE_ID, {
+          content: "CSV export test memory",
+          contentType: "raw",
+          source: { type: "system", timestamp: Date.now() },
+          metadata: { importance: 75, tags: ["csv-test"] },
+        });
+
+        const result = await cortex.memory.export({
+          memorySpaceId: TEST_MEMSPACE_ID,
+          format: "csv",
+        });
+
+        expect(result.format).toBe("csv");
+        expect(typeof result.data).toBe("string");
+        // CSV should have header row
+        expect(result.data).toContain(",");
+        // Should contain our test content
+        expect(result.data).toContain("CSV export test memory");
+      });
+
+      it("includes embeddings when includeEmbeddings is true", async () => {
+        // Create memory with embedding
+        const embeddingVector = new Array(1536).fill(0.1);
+        await cortex.vector.store(TEST_MEMSPACE_ID, {
+          content: "Memory with embedding for export",
+          contentType: "raw",
+          source: { type: "system", timestamp: Date.now() },
+          metadata: { importance: 50, tags: ["embedding-export"] },
+          embedding: embeddingVector,
+        });
+
+        const resultWithEmbed = await cortex.memory.export({
+          memorySpaceId: TEST_MEMSPACE_ID,
+          format: "json",
+          includeEmbeddings: true,
+        });
+
+        expect(resultWithEmbed.format).toBe("json");
+        const parsed = JSON.parse(resultWithEmbed.data);
+        const memoryWithEmbedding = parsed.find(
+          (m: any) => m.content === "Memory with embedding for export",
+        );
+        // Embeddings should be present when includeEmbeddings is true
+        if (memoryWithEmbedding) {
+          expect(memoryWithEmbedding.embedding).toBeDefined();
+          expect(memoryWithEmbedding.embedding.length).toBe(1536);
+        }
+      });
+
+      it("excludes embeddings when includeEmbeddings is false or undefined", async () => {
+        const result = await cortex.memory.export({
+          memorySpaceId: TEST_MEMSPACE_ID,
+          format: "json",
+          includeEmbeddings: false,
+        });
+
+        expect(result.format).toBe("json");
+        const parsed = JSON.parse(result.data);
+        // Embeddings should be excluded or empty
+        for (const memory of parsed) {
+          expect(memory.embedding).toBeUndefined();
+        }
+      });
+
+      it("includes facts when includeFacts is true", async () => {
+        // Create memory with associated facts
+        const extractFacts = async () => [
+          {
+            fact: "Exported fact for enrichment test",
+            factType: "knowledge" as const,
+            confidence: 95,
+            tags: ["export-fact-test"],
+          },
+        ];
+
+        await cortex.memory.store(TEST_MEMSPACE_ID, {
+          content: "Memory for export facts test",
+          contentType: "raw",
+          source: { type: "system", timestamp: Date.now() },
+          metadata: { importance: 60, tags: ["export-fact-test"] },
+          extractFacts,
+        });
+
+        const result = await cortex.memory.export({
+          memorySpaceId: TEST_MEMSPACE_ID,
+          format: "json",
+          includeFacts: true,
+        });
+
+        expect(result.format).toBe("json");
+        const parsed = JSON.parse(result.data);
+        const memoryWithFacts = parsed.find(
+          (m: any) => m.content === "Memory for export facts test",
+        );
+        // Facts should be enriched when includeFacts is true
+        if (memoryWithFacts && memoryWithFacts.facts) {
+          expect(memoryWithFacts.facts.length).toBeGreaterThan(0);
+          expect(memoryWithFacts.facts[0].fact).toContain("Exported fact");
+        }
+      });
+
+      it("exports empty result when no memories in space", async () => {
+        const emptySpaceId = ctx.memorySpaceId("empty-export");
+
+        const result = await cortex.memory.export({
+          memorySpaceId: emptySpaceId,
+          format: "json",
+        });
+
+        expect(result.format).toBe("json");
+        const parsed = JSON.parse(result.data);
+        expect(parsed).toEqual([]);
+      });
     });
 
     describe("archive()", () => {
@@ -327,6 +519,120 @@ describe("Memory Convenience API (Layer 3)", () => {
 
         expect(atCreation).not.toBeNull();
         expect(atCreation!.content).toBe("Temporal");
+      });
+
+      it("returns null when timestamp is before memory creation", async () => {
+        const beforeCreation = Date.now();
+        // Small delay to ensure memory is created after beforeCreation
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
+          content: "Created after timestamp",
+          contentType: "raw",
+          source: { type: "system", timestamp: Date.now() },
+          metadata: { importance: 50, tags: ["timestamp-before-test"] },
+        });
+
+        // Query with timestamp before memory was created
+        const result = await cortex.memory.getAtTimestamp(
+          TEST_MEMSPACE_ID,
+          memory.memoryId,
+          beforeCreation - 1000, // 1 second before beforeCreation
+        );
+
+        expect(result).toBeNull();
+      });
+
+      it("returns correct version when timestamp is between updates", async () => {
+        const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
+          content: "Version 1 content",
+          contentType: "raw",
+          source: { type: "system", timestamp: Date.now() },
+          metadata: { importance: 50, tags: ["timestamp-between-test"] },
+        });
+
+        const afterV1 = Date.now();
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        // Update to V2
+        await cortex.vector.update(TEST_MEMSPACE_ID, memory.memoryId, {
+          content: "Version 2 content",
+        });
+
+        const afterV2 = Date.now();
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        // Update to V3
+        await cortex.vector.update(TEST_MEMSPACE_ID, memory.memoryId, {
+          content: "Version 3 content",
+        });
+
+        // Query at time between V1 and V2 - should return V1
+        const atV1 = await cortex.memory.getAtTimestamp(
+          TEST_MEMSPACE_ID,
+          memory.memoryId,
+          afterV1,
+        );
+        expect(atV1).not.toBeNull();
+        expect(atV1!.content).toBe("Version 1 content");
+
+        // Query at time after V2 but before V3 - should return V2
+        const atV2 = await cortex.memory.getAtTimestamp(
+          TEST_MEMSPACE_ID,
+          memory.memoryId,
+          afterV2,
+        );
+        expect(atV2).not.toBeNull();
+        expect(atV2!.content).toBe("Version 2 content");
+
+        // Query at current time - should return V3 (latest)
+        const atNow = await cortex.memory.getAtTimestamp(
+          TEST_MEMSPACE_ID,
+          memory.memoryId,
+          Date.now(),
+        );
+        expect(atNow).not.toBeNull();
+        expect(atNow!.content).toBe("Version 3 content");
+      });
+
+      it("works with Date object input (converted to Unix timestamp)", async () => {
+        const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
+          content: "Date object test",
+          contentType: "raw",
+          source: { type: "system", timestamp: Date.now() },
+          metadata: { importance: 50, tags: ["date-object-test"] },
+        });
+
+        // Test with Date object's timestamp
+        const dateObj = new Date();
+        const result = await cortex.memory.getAtTimestamp(
+          TEST_MEMSPACE_ID,
+          memory.memoryId,
+          dateObj.getTime(),
+        );
+
+        expect(result).not.toBeNull();
+        expect(result!.content).toBe("Date object test");
+      });
+
+      it("returns exact version at version creation timestamp", async () => {
+        const memory = await cortex.vector.store(TEST_MEMSPACE_ID, {
+          content: "Exact timestamp V1",
+          contentType: "raw",
+          source: { type: "system", timestamp: Date.now() },
+          metadata: { importance: 50, tags: ["exact-timestamp-test"] },
+        });
+
+        // Query at the exact creation timestamp
+        const result = await cortex.memory.getAtTimestamp(
+          TEST_MEMSPACE_ID,
+          memory.memoryId,
+          memory.createdAt,
+        );
+
+        expect(result).not.toBeNull();
+        expect(result!.content).toBe("Exact timestamp V1");
+        expect(result!.version).toBe(1);
       });
     });
   });

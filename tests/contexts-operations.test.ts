@@ -108,6 +108,107 @@ describe("Context Operations API", () => {
       expect(current).toBeDefined();
       expect(current?.version).toBe(3);
     });
+
+    it("returns null for non-existent version number", async () => {
+      const context = await cortex.contexts.create({
+        purpose: "Test non-existent version",
+        memorySpaceId: TEST_MEMORY_SPACE,
+        data: { value: "initial" },
+      });
+
+      // Context starts at version 1, version 999 should not exist
+      const version = await cortex.contexts.getVersion(context.contextId, 999);
+      expect(version).toBeNull();
+    });
+
+    it("returns single version for context with no updates", async () => {
+      const context = await cortex.contexts.create({
+        purpose: "Test single version history",
+        memorySpaceId: TEST_MEMORY_SPACE,
+        data: { value: "only version" },
+      });
+
+      const history = await cortex.contexts.getHistory(context.contextId);
+
+      expect(history).toHaveLength(1);
+      expect(history[0].version).toBe(1);
+      expect(history[0].data?.value).toBe("only version");
+    });
+
+    it("returns empty array for getHistory on non-existent context", async () => {
+      const history = await cortex.contexts.getHistory(
+        "ctx-9999999999-nonexistent",
+      );
+
+      expect(history).toEqual([]);
+    });
+
+    it("returns null for getVersion on non-existent context", async () => {
+      const version = await cortex.contexts.getVersion(
+        "ctx-9999999999-nonexistent",
+        1,
+      );
+
+      expect(version).toBeNull();
+    });
+
+    it("returns null for getAtTimestamp before context creation", async () => {
+      // Record timestamp BEFORE creating context
+      const beforeCreate = new Date(Date.now() - 10000);
+
+      // Small delay to ensure timestamp difference
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      const context = await cortex.contexts.create({
+        purpose: "Test timestamp before creation",
+        memorySpaceId: TEST_MEMORY_SPACE,
+        data: { value: "created" },
+      });
+
+      // Query with timestamp before context existed
+      const result = await cortex.contexts.getAtTimestamp(
+        context.contextId,
+        beforeCreate,
+      );
+
+      expect(result).toBeNull();
+    });
+
+    it("returns null for getAtTimestamp on non-existent context", async () => {
+      const result = await cortex.contexts.getAtTimestamp(
+        "ctx-9999999999-nonexistent",
+        new Date(),
+      );
+
+      expect(result).toBeNull();
+    });
+
+    it("returns correct version for getAtTimestamp at exact update time", async () => {
+      const context = await cortex.contexts.create({
+        purpose: "Test exact timestamp",
+        memorySpaceId: TEST_MEMORY_SPACE,
+        data: { value: "v1" },
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      await cortex.contexts.update(context.contextId, {
+        data: { value: "v2" },
+      });
+
+      // Get the current context to check its updatedAt
+      const updated = (await cortex.contexts.get(context.contextId)) as any;
+      const updateTimestamp = new Date(updated.updatedAt);
+
+      // Query at exactly the update time
+      const result = await cortex.contexts.getAtTimestamp(
+        context.contextId,
+        updateTimestamp,
+      );
+
+      expect(result).toBeDefined();
+      expect(result?.version).toBe(2);
+    });
   });
 
   describe("Bulk Operations", () => {
@@ -207,6 +308,29 @@ describe("Context Operations API", () => {
       });
       expect(remaining).toHaveLength(0);
     });
+
+    it("returns 0 updated when no contexts match updateMany filters", async () => {
+      const result = await cortex.contexts.updateMany(
+        {
+          memorySpaceId: `nonexistent-space-${Date.now()}`,
+        },
+        {
+          status: "completed",
+        },
+      );
+
+      expect(result.updated).toBe(0);
+      expect(result.contextIds).toHaveLength(0);
+    });
+
+    it("returns 0 deleted when no contexts match deleteMany filters", async () => {
+      const result = await cortex.contexts.deleteMany({
+        memorySpaceId: `nonexistent-space-${Date.now()}`,
+      });
+
+      expect(result.deleted).toBe(0);
+      expect(result.contextIds).toHaveLength(0);
+    });
   });
 
   describe("Participant Management", () => {
@@ -230,6 +354,16 @@ describe("Context Operations API", () => {
       updated = (await cortex.contexts.get(context.contextId)) as any;
       expect(updated?.participants).not.toContain("agent-1");
       expect(updated?.participants).toContain("agent-2");
+    });
+
+    it("throws error when removing participant from non-existent context", async () => {
+      // Note: This tests BACKEND validation (requires DB lookup)
+      await expect(
+        cortex.contexts.removeParticipant(
+          "ctx-9999999999-nonexistent",
+          "agent-1",
+        ),
+      ).rejects.toThrow("CONTEXT_NOT_FOUND");
     });
   });
 

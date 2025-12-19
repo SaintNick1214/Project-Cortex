@@ -7,7 +7,12 @@ they reach the backend, providing faster feedback and better error messages.
 
 from typing import Any, Dict, Optional
 
-from ..types import AgentRegistration, UnregisterAgentOptions
+from ..types import (
+    AgentFilters,
+    AgentRegistration,
+    ExportAgentsOptions,
+    UnregisterAgentOptions,
+)
 
 
 class AgentValidationError(Exception):
@@ -368,3 +373,214 @@ def validate_config(config: Dict[str, Any], field_name: str = "config") -> None:
             "INVALID_CONFIG_FORMAT",
             field_name,
         )
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Agent Filters Validation
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+VALID_SORT_BY_FILTERS = ["name", "registeredAt", "lastActive"]
+VALID_SORT_ORDER = ["asc", "desc"]
+VALID_CAPABILITIES_MATCH = ["any", "all"]
+
+
+def validate_agent_filters(filters: AgentFilters) -> None:
+    """
+    Validates agent filter options.
+
+    Matches TypeScript SDK validateAgentFilters() behavior.
+
+    Args:
+        filters: Agent filters to validate
+
+    Raises:
+        AgentValidationError: If filters are invalid
+    """
+    if not filters:
+        return  # Filters are optional
+
+    # Validate limit
+    if filters.limit is not None:
+        if not isinstance(filters.limit, int):
+            raise AgentValidationError(
+                "limit must be an integer", "INVALID_LIMIT_VALUE", "limit"
+            )
+        if filters.limit < 1 or filters.limit > 1000:
+            raise AgentValidationError(
+                f"limit must be between 1 and 1000, got {filters.limit}",
+                "INVALID_LIMIT_VALUE",
+                "limit",
+            )
+
+    # Validate offset
+    if filters.offset is not None:
+        if not isinstance(filters.offset, int):
+            raise AgentValidationError(
+                "offset must be an integer", "INVALID_OFFSET_VALUE", "offset"
+            )
+        if filters.offset < 0:
+            raise AgentValidationError(
+                f"offset must be >= 0, got {filters.offset}",
+                "INVALID_OFFSET_VALUE",
+                "offset",
+            )
+
+    # Validate status
+    if filters.status is not None:
+        validate_agent_status(filters.status, "status")
+
+    # Validate metadata
+    if filters.metadata is not None:
+        validate_metadata(filters.metadata, "metadata")
+
+    # Validate timestamp range
+    if filters.registered_after is not None and filters.registered_before is not None:
+        if filters.registered_after >= filters.registered_before:
+            raise AgentValidationError(
+                "registered_after must be before registered_before",
+                "INVALID_TIMESTAMP_RANGE",
+            )
+
+    # Validate last_active timestamp range
+    if filters.last_active_after is not None and filters.last_active_before is not None:
+        if filters.last_active_after >= filters.last_active_before:
+            raise AgentValidationError(
+                "last_active_after must be before last_active_before",
+                "INVALID_TIMESTAMP_RANGE",
+            )
+
+    # Validate sortBy
+    if filters.sort_by is not None:
+        if filters.sort_by not in VALID_SORT_BY_FILTERS:
+            raise AgentValidationError(
+                f"Invalid sort_by '{filters.sort_by}'. Valid values: {', '.join(VALID_SORT_BY_FILTERS)}",
+                "INVALID_SORT_BY",
+                "sort_by",
+            )
+
+    # Validate sortOrder
+    if filters.sort_order is not None:
+        if filters.sort_order not in VALID_SORT_ORDER:
+            raise AgentValidationError(
+                f"Invalid sort_order '{filters.sort_order}'. Valid values: {', '.join(VALID_SORT_ORDER)}",
+                "INVALID_SORT_ORDER",
+                "sort_order",
+            )
+
+    # Validate capabilities_match
+    if filters.capabilities_match is not None:
+        if filters.capabilities_match not in VALID_CAPABILITIES_MATCH:
+            raise AgentValidationError(
+                f"Invalid capabilities_match '{filters.capabilities_match}'. Valid values: {', '.join(VALID_CAPABILITIES_MATCH)}",
+                "INVALID_CAPABILITIES_MATCH",
+                "capabilities_match",
+            )
+
+    # Validate capabilities is a list of strings
+    if filters.capabilities is not None:
+        if not isinstance(filters.capabilities, list):
+            raise AgentValidationError(
+                "capabilities must be a list", "INVALID_CAPABILITIES", "capabilities"
+            )
+        for cap in filters.capabilities:
+            if not isinstance(cap, str):
+                raise AgentValidationError(
+                    "capabilities must be a list of strings",
+                    "INVALID_CAPABILITIES",
+                    "capabilities",
+                )
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Export Options Validation
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+VALID_EXPORT_FORMATS = ["json", "csv"]
+
+
+def validate_export_options(options: ExportAgentsOptions) -> None:
+    """
+    Validates export options.
+
+    Matches TypeScript SDK validateExportOptions() behavior.
+
+    Args:
+        options: Export options to validate
+
+    Raises:
+        AgentValidationError: If options are invalid
+    """
+    if not options:
+        raise AgentValidationError(
+            "Export options are required", "MISSING_OPTIONS"
+        )
+
+    # Validate format is provided
+    if not options.format:
+        raise AgentValidationError(
+            "format is required", "MISSING_FORMAT", "format"
+        )
+
+    # Validate format value
+    if options.format not in VALID_EXPORT_FORMATS:
+        raise AgentValidationError(
+            f"Invalid format '{options.format}'. Valid values: {', '.join(VALID_EXPORT_FORMATS)}",
+            "INVALID_FORMAT",
+            "format",
+        )
+
+    # Validate filters if provided
+    if options.filters:
+        validate_agent_filters(options.filters)
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Update Payload Validation
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+def validate_update_payload(
+    agent_id: str, updates: Dict[str, Any]
+) -> None:
+    """
+    Validates update operation has valid fields.
+
+    Matches TypeScript SDK validateUpdatePayload() behavior.
+
+    Args:
+        agent_id: Agent ID to update
+        updates: Updates dict to validate
+
+    Raises:
+        AgentValidationError: If payload is invalid
+    """
+    # Validate agentId
+    validate_agent_id(agent_id, "agent_id")
+
+    # Check that at least one field is provided
+    has_updates = (
+        updates.get("name") is not None
+        or updates.get("description") is not None
+        or updates.get("metadata") is not None
+        or updates.get("config") is not None
+        or updates.get("status") is not None
+    )
+
+    if not has_updates:
+        raise AgentValidationError(
+            "At least one field must be provided for update (name, description, metadata, config, or status)",
+            "MISSING_UPDATES",
+        )
+
+    # Validate individual fields if provided
+    if updates.get("name") is not None:
+        validate_agent_name(updates["name"], "name")
+
+    if updates.get("metadata") is not None:
+        validate_metadata(updates["metadata"], "metadata")
+
+    if updates.get("config") is not None:
+        validate_config(updates["config"], "config")
+
+    if updates.get("status") is not None:
+        validate_agent_status(updates["status"], "status")

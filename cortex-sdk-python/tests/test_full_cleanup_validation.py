@@ -12,6 +12,7 @@ from tests.helpers import (
     create_test_conversation_input,
     create_test_memory_input,
 )
+from cortex.types import ListUsersFilter
 
 
 @pytest.mark.asyncio
@@ -92,7 +93,8 @@ async def test_full_cleanup_validation(cortex_client, ctx):
     print(f"\n📊 Conversations in {memory_space_id}: {conv_count}")
 
     # List conversations
-    convs = await cortex_client.conversations.list(memory_space_id=memory_space_id, limit=100)
+    convs_result = await cortex_client.conversations.list(memory_space_id=memory_space_id, limit=100)
+    convs = convs_result.conversations if hasattr(convs_result, 'conversations') else convs_result
     for i, conv in enumerate(convs[:5], 1):
         cid = conv.get("conversation_id") if isinstance(conv, dict) else conv.conversation_id
         print(f"   {i}. {cid}")
@@ -107,8 +109,8 @@ async def test_full_cleanup_validation(cortex_client, ctx):
         print(f"   {i}. {mid}: {content[:40]}...")
 
     # Count users (only count THIS test run's users)
-    user_list = await cortex_client.users.list(limit=1000)
-    users = user_list.get("users", [])
+    user_list = await cortex_client.users.list(ListUsersFilter(limit=1000))
+    users = user_list.users if hasattr(user_list, 'users') else user_list.get("users", [])
     test_users = [u for u in users if (u.id if hasattr(u, 'id') else u.get("id")).startswith(ctx.run_id)]
     print(f"\n📊 Total users: {len(users)}, This run's users: {len(test_users)}")
     for i, u in enumerate(test_users[:5], 1):
@@ -166,8 +168,8 @@ async def test_full_cleanup_validation(cortex_client, ctx):
             print(f"      {i}. {mid}")
 
     # Check users (only this run's users)
-    user_list_after = await cortex_client.users.list(limit=1000)
-    users_after = user_list_after.get("users", [])
+    user_list_after = await cortex_client.users.list(ListUsersFilter(limit=1000))
+    users_after = user_list_after.users if hasattr(user_list_after, 'users') else user_list_after.get("users", [])
     test_users_after = [u for u in users_after if (u.id if hasattr(u, 'id') else u.get("id")).startswith(ctx.run_id)]
     print(f"\n📊 Total users: {len(users_after)}, This run's users: {len(test_users_after)}")
     if len(test_users_after) == 0:

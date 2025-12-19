@@ -13,9 +13,11 @@ Tests validate:
 import pytest
 
 from cortex import (
+    AgentFilters,
     AgentRegistration,
     ConversationParticipants,
     CreateConversationInput,
+    ExportAgentsOptions,
     MemoryMetadata,
     MemorySource,
     RegisterMemorySpaceParams,
@@ -162,14 +164,14 @@ async def test_get_whitespace_agent_id(cortex_client):
     assert error.code == "EMPTY_AGENT_ID"
 
 
-# list() validation tests
+# list() validation tests (uses AgentFilters)
 
 
 @pytest.mark.asyncio
 async def test_list_invalid_limit_zero(cortex_client):
     """Should throw on zero limit."""
     with pytest.raises(Exception) as exc_info:
-        await cortex_client.agents.list(limit=0)
+        await cortex_client.agents.list(AgentFilters(limit=0))
 
     error = exc_info.value
     assert error.code == "INVALID_LIMIT_VALUE"
@@ -179,7 +181,7 @@ async def test_list_invalid_limit_zero(cortex_client):
 async def test_list_invalid_limit_too_large(cortex_client):
     """Should throw on limit too large."""
     with pytest.raises(Exception) as exc_info:
-        await cortex_client.agents.list(limit=2000)
+        await cortex_client.agents.list(AgentFilters(limit=2000))
 
     error = exc_info.value
     assert error.code == "INVALID_LIMIT_VALUE"
@@ -189,7 +191,7 @@ async def test_list_invalid_limit_too_large(cortex_client):
 async def test_list_negative_offset(cortex_client):
     """Should throw on negative offset."""
     with pytest.raises(Exception) as exc_info:
-        await cortex_client.agents.list(offset=-5)
+        await cortex_client.agents.list(AgentFilters(offset=-5))
 
     error = exc_info.value
     assert error.code == "INVALID_OFFSET_VALUE"
@@ -199,7 +201,7 @@ async def test_list_negative_offset(cortex_client):
 async def test_list_invalid_status(cortex_client):
     """Should throw on invalid status."""
     with pytest.raises(Exception) as exc_info:
-        await cortex_client.agents.list(status="deleted")
+        await cortex_client.agents.list(AgentFilters(status="deleted"))
 
     error = exc_info.value
     assert error.code == "INVALID_STATUS"
@@ -209,36 +211,36 @@ async def test_list_invalid_status(cortex_client):
 async def test_list_invalid_sort_by(cortex_client):
     """Should throw on invalid sortBy."""
     with pytest.raises(Exception) as exc_info:
-        await cortex_client.agents.list(sort_by="invalid")
+        await cortex_client.agents.list(AgentFilters(sort_by="invalid"))
 
     error = exc_info.value
     assert error.code == "INVALID_SORT_BY"
 
 
-# search() validation tests
-
-
-@pytest.mark.asyncio
-async def test_search_invalid_filters_format(cortex_client):
-    """Should throw on invalid filters format."""
-    with pytest.raises(Exception) as exc_info:
-        await cortex_client.agents.search(filters="invalid")
-
-    error = exc_info.value
-    assert error.code == "INVALID_METADATA_FORMAT"
+# search() validation tests (uses AgentFilters)
 
 
 @pytest.mark.asyncio
 async def test_search_invalid_limit(cortex_client):
     """Should throw on invalid limit."""
     with pytest.raises(Exception) as exc_info:
-        await cortex_client.agents.search(limit=-1)
+        await cortex_client.agents.search(AgentFilters(limit=-1))
 
     error = exc_info.value
     assert error.code == "INVALID_LIMIT_VALUE"
 
 
-# count() validation tests
+@pytest.mark.asyncio
+async def test_search_invalid_status(cortex_client):
+    """Should throw on invalid status in search filters."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.search(AgentFilters(status="invalid"))
+
+    error = exc_info.value
+    assert error.code == "INVALID_STATUS"
+
+
+# count() validation tests (uses AgentFilters)
 
 
 @pytest.mark.asyncio
@@ -247,7 +249,7 @@ async def test_count_invalid_status(cortex_client):
     from cortex.agents.validators import AgentValidationError
 
     with pytest.raises(AgentValidationError) as exc_info:
-        await cortex_client.agents.count(status="invalid-status")
+        await cortex_client.agents.count(AgentFilters(status="invalid-status"))
 
     error = exc_info.value
     assert error.code == "INVALID_STATUS"
@@ -542,8 +544,8 @@ async def test_list_agents(cortex_client, test_ids):
         )
         agent_ids.append(agent_id)
 
-    # List agents
-    result = await cortex_client.agents.list(limit=100)
+    # List agents with AgentFilters
+    result = await cortex_client.agents.list(AgentFilters(limit=100))
 
     # Should return at least our 3 agents
     agents = result if isinstance(result, list) else result.get("agents", [])
@@ -1145,6 +1147,310 @@ async def test_agent_statistics_from_actual_data(cortex_client, ctx):
     # Cleanup
     await cortex_client.agents.unregister(agent_id)
     await cortex_client.memory_spaces.delete(space_id)
+
+
+# ============================================================================
+# exists() Tests (NEW - TypeScript SDK 0.21.0 parity)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_exists_registered_agent(cortex_client, test_ids):
+    """
+    Test exists() returns True for registered agent.
+    """
+    agent_id = test_ids["agent_id"]
+
+    # Register agent
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent_id,
+            name="Exists Test Agent",
+        )
+    )
+
+    # Check exists
+    result = await cortex_client.agents.exists(agent_id)
+    assert result is True
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent_id)
+
+
+@pytest.mark.asyncio
+async def test_exists_nonexistent_agent(cortex_client):
+    """
+    Test exists() returns False for non-existent agent.
+    """
+    result = await cortex_client.agents.exists("agent-does-not-exist-123")
+    assert result is False
+
+
+@pytest.mark.asyncio
+async def test_exists_empty_agent_id(cortex_client):
+    """Should throw on empty agent ID."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.exists("")
+
+    error = exc_info.value
+    assert error.code == "EMPTY_AGENT_ID"
+
+
+# ============================================================================
+# update_many() Tests (NEW - TypeScript SDK 0.21.0 parity)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_update_many_agents(cortex_client, ctx):
+    """
+    Test bulk updating agents matching filters.
+    """
+    # Register agents with test-scoped metadata
+    agent1_id = ctx.agent_id("update-many-1")
+    agent2_id = ctx.agent_id("update-many-2")
+    team_tag = f"update-test-team-{ctx.run_id}"
+
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent1_id,
+            name="Update Many Test 1",
+            metadata={"team": team_tag, "version": "1.0"},
+        )
+    )
+
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent2_id,
+            name="Update Many Test 2",
+            metadata={"team": team_tag, "version": "1.0"},
+        )
+    )
+
+    # Update all agents with the test team tag
+    result = await cortex_client.agents.update_many(
+        AgentFilters(metadata={"team": team_tag}),
+        {"metadata": {"team": team_tag, "version": "2.0", "updated": True}},
+    )
+
+    assert result["updated"] == 2
+    assert agent1_id in result["agent_ids"]
+    assert agent2_id in result["agent_ids"]
+
+    # Verify updates
+    agent1 = await cortex_client.agents.get(agent1_id)
+    agent2 = await cortex_client.agents.get(agent2_id)
+
+    assert agent1.metadata.get("version") == "2.0"
+    assert agent2.metadata.get("version") == "2.0"
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent1_id)
+    await cortex_client.agents.unregister(agent2_id)
+
+
+@pytest.mark.asyncio
+async def test_update_many_no_matches(cortex_client, ctx):
+    """
+    Test update_many with no matching agents returns empty result.
+    """
+    result = await cortex_client.agents.update_many(
+        AgentFilters(metadata={"nonexistent-tag": f"test-{ctx.run_id}"}),
+        {"name": "Updated Name"},
+    )
+
+    assert result["updated"] == 0
+    assert result["agent_ids"] == []
+
+
+# ============================================================================
+# export() Tests (NEW - TypeScript SDK 0.21.0 parity)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_export_agents_json(cortex_client, ctx):
+    """
+    Test exporting agents as JSON.
+    """
+    import json
+
+    # Register test agents
+    agent1_id = ctx.agent_id("export-json-1")
+    agent2_id = ctx.agent_id("export-json-2")
+
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent1_id,
+            name="Export JSON Test 1",
+            metadata={"team": "export-test"},
+        )
+    )
+
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent2_id,
+            name="Export JSON Test 2",
+            metadata={"team": "export-test"},
+        )
+    )
+
+    # Export as JSON
+    result = await cortex_client.agents.export(
+        ExportAgentsOptions(format="json", include_metadata=True)
+    )
+
+    assert result.format == "json"
+    assert result.count >= 2
+    assert result.exported_at > 0
+
+    # Parse and verify JSON data
+    data = json.loads(result.data)
+    assert isinstance(data, list)
+    assert len(data) >= 2
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent1_id)
+    await cortex_client.agents.unregister(agent2_id)
+
+
+@pytest.mark.asyncio
+async def test_export_agents_csv(cortex_client, ctx):
+    """
+    Test exporting agents as CSV.
+    """
+    # Register test agent
+    agent_id = ctx.agent_id("export-csv")
+
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent_id,
+            name="Export CSV Test",
+            metadata={"team": "csv-test"},
+        )
+    )
+
+    # Export as CSV
+    result = await cortex_client.agents.export(
+        ExportAgentsOptions(format="csv", include_metadata=True)
+    )
+
+    assert result.format == "csv"
+    assert result.count >= 1
+    assert result.exported_at > 0
+    assert "id" in result.data  # Header should contain 'id'
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent_id)
+
+
+@pytest.mark.asyncio
+async def test_export_with_filters(cortex_client, ctx):
+    """
+    Test exporting agents with filters.
+    """
+    import json
+
+    # Register test agents with different metadata
+    agent1_id = ctx.agent_id("export-filter-1")
+    agent2_id = ctx.agent_id("export-filter-2")
+    export_tag = f"export-filter-{ctx.run_id}"
+
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent1_id,
+            name="Export Filter Test 1",
+            metadata={"export_tag": export_tag},
+        )
+    )
+
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent2_id,
+            name="Export Filter Test 2",
+            metadata={"export_tag": "different"},
+        )
+    )
+
+    # Export with filter
+    result = await cortex_client.agents.export(
+        ExportAgentsOptions(
+            format="json",
+            filters=AgentFilters(metadata={"export_tag": export_tag}),
+        )
+    )
+
+    assert result.format == "json"
+    # Should only include agents matching the filter
+    data = json.loads(result.data)
+    matching_ids = [a["id"] for a in data]
+    assert agent1_id in matching_ids
+    # agent2_id should not be in the export (different tag)
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent1_id)
+    await cortex_client.agents.unregister(agent2_id)
+
+
+@pytest.mark.asyncio
+async def test_export_invalid_format(cortex_client):
+    """Should throw on invalid export format."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.export(
+            ExportAgentsOptions(format="xml")  # type: ignore - intentionally wrong
+        )
+
+    error = exc_info.value
+    assert error.code == "INVALID_FORMAT"
+
+
+# ============================================================================
+# AgentFilters Validation Tests (NEW)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_filters_invalid_sort_order(cortex_client):
+    """Should throw on invalid sort order."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.list(AgentFilters(sort_order="random"))
+
+    error = exc_info.value
+    assert error.code == "INVALID_SORT_ORDER"
+
+
+@pytest.mark.asyncio
+async def test_filters_invalid_capabilities_match(cortex_client):
+    """Should throw on invalid capabilities_match."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.list(AgentFilters(capabilities_match="some"))
+
+    error = exc_info.value
+    assert error.code == "INVALID_CAPABILITIES_MATCH"
+
+
+@pytest.mark.asyncio
+async def test_filters_timestamp_range_validation(cortex_client):
+    """Should throw when registered_after >= registered_before."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.list(
+            AgentFilters(registered_after=2000, registered_before=1000)
+        )
+
+    error = exc_info.value
+    assert error.code == "INVALID_TIMESTAMP_RANGE"
+
+
+@pytest.mark.asyncio
+async def test_filters_last_active_range_validation(cortex_client):
+    """Should throw when last_active_after >= last_active_before."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.list(
+            AgentFilters(last_active_after=2000, last_active_before=1000)
+        )
+
+    error = exc_info.value
+    assert error.code == "INVALID_TIMESTAMP_RANGE"
 
 
 # ============================================================================

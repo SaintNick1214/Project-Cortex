@@ -13,7 +13,8 @@ import { Command } from "commander";
 import ora from "ora";
 import type { CLIConfig, OutputFormat } from "../types.js";
 import { withClient } from "../utils/client.js";
-import { resolveConfig } from "../utils/config.js";
+import { resolveConfig, loadConfig } from "../utils/config.js";
+import { selectDeployment } from "../utils/deployment-selector.js";
 import {
   formatOutput,
   printSuccess,
@@ -40,7 +41,7 @@ import { writeFile } from "fs/promises";
  */
 export function registerFactsCommands(
   program: Command,
-  config: CLIConfig,
+  _config: CLIConfig,
 ): void {
   const facts = program.command("facts").description("Manage extracted facts");
 
@@ -48,14 +49,18 @@ export function registerFactsCommands(
   facts
     .command("list")
     .description("List facts in a memory space")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-s, --space <id>", "Memory space ID")
     .option("-t, --type <type>", "Filter by fact type")
     .option("-u, --user <id>", "Filter by user ID")
     .option("-l, --limit <number>", "Maximum number of results", "50")
     .option("-f, --format <format>", "Output format: table, json, csv")
     .action(async (options) => {
-      const globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "list facts");
+      if (!selection) return;
+
+      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading facts...").start();
@@ -67,7 +72,7 @@ export function registerFactsCommands(
           : undefined;
         const limit = validateLimit(parseInt(options.limit, 10));
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const factsList = await client.facts.list({
             memorySpaceId: options.space,
             factType,
@@ -120,13 +125,17 @@ export function registerFactsCommands(
   facts
     .command("search <query>")
     .description("Search facts by content")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-s, --space <id>", "Memory space ID")
     .option("-t, --type <type>", "Filter by fact type")
     .option("-l, --limit <number>", "Maximum number of results", "20")
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (query, options) => {
-      const globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "search facts");
+      if (!selection) return;
+
+      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Searching facts...").start();
@@ -139,7 +148,7 @@ export function registerFactsCommands(
           : undefined;
         const limit = validateLimit(parseInt(options.limit, 10));
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const results = await client.facts.search(options.space, query, {
             factType,
             limit,
@@ -179,11 +188,15 @@ export function registerFactsCommands(
   facts
     .command("get <factId>")
     .description("Get fact details")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-s, --space <id>", "Memory space ID")
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (factId, options) => {
-      const globalOpts = program.opts();
-      const resolved = resolveConfig(config, globalOpts);
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "get fact");
+      if (!selection) return;
+
+      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading fact...").start();
@@ -192,7 +205,7 @@ export function registerFactsCommands(
         validateFactId(factId);
         validateMemorySpaceId(options.space);
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const fact = await client.facts.get(options.space, factId);
 
           if (!fact) {
@@ -260,10 +273,13 @@ export function registerFactsCommands(
   facts
     .command("delete <factId>")
     .description("Delete a fact")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-s, --space <id>", "Memory space ID")
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (factId, options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "delete fact");
+      if (!selection) return;
 
       try {
         validateFactId(factId);
@@ -272,7 +288,7 @@ export function registerFactsCommands(
         if (!options.yes) {
           const confirmed = await requireConfirmation(
             `Delete fact ${factId} from space ${options.space}?`,
-            config,
+            currentConfig,
           );
           if (!confirmed) {
             printWarning("Operation cancelled");
@@ -282,7 +298,7 @@ export function registerFactsCommands(
 
         const spinner = ora("Deleting fact...").start();
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           await client.facts.delete(options.space, factId);
 
           spinner.stop();
@@ -298,12 +314,15 @@ export function registerFactsCommands(
   facts
     .command("export")
     .description("Export facts to a file")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-s, --space <id>", "Memory space ID")
     .option("-t, --type <type>", "Filter by fact type")
     .option("-o, --output <file>", "Output file path", "facts-export.json")
     .option("-f, --format <format>", "Export format: json, csv", "json")
     .action(async (options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "export facts");
+      if (!selection) return;
 
       const spinner = ora("Exporting facts...").start();
 
@@ -314,7 +333,7 @@ export function registerFactsCommands(
           ? validateFactType(options.type)
           : undefined;
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const factsList = await client.facts.list({
             memorySpaceId: options.space,
             factType,
@@ -372,10 +391,13 @@ export function registerFactsCommands(
   facts
     .command("count")
     .description("Count facts in a memory space")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-s, --space <id>", "Memory space ID")
     .option("-t, --type <type>", "Filter by fact type")
     .action(async (options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "count facts");
+      if (!selection) return;
 
       const spinner = ora("Counting facts...").start();
 
@@ -385,7 +407,7 @@ export function registerFactsCommands(
           ? validateFactType(options.type)
           : undefined;
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const factsList = await client.facts.list({
             memorySpaceId: options.space,
             factType,
@@ -421,11 +443,14 @@ export function registerFactsCommands(
   facts
     .command("clear")
     .description("Clear all facts in a memory space")
+    .option("-d, --deployment <name>", "Target deployment")
     .requiredOption("-s, --space <id>", "Memory space ID")
     .option("-t, --type <type>", "Only clear facts of this type")
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (options) => {
-      const globalOpts = program.opts();
+      const currentConfig = await loadConfig();
+      const selection = await selectDeployment(currentConfig, options, "clear facts");
+      if (!selection) return;
 
       try {
         validateMemorySpaceId(options.space);
@@ -433,7 +458,7 @@ export function registerFactsCommands(
           ? validateFactType(options.type)
           : undefined;
 
-        await withClient(config, globalOpts, async (client) => {
+        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           // List facts first
           const factsList = await client.facts.list({
             memorySpaceId: options.space,
@@ -450,7 +475,7 @@ export function registerFactsCommands(
             const scope = factType ? ` of type "${factType}"` : "";
             const confirmed = await requireConfirmation(
               `Delete ${formatCount(factsList.length, "fact")}${scope} from ${options.space}? This cannot be undone.`,
-              config,
+              currentConfig,
             );
             if (!confirmed) {
               printWarning("Operation cancelled");

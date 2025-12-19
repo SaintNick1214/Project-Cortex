@@ -1,693 +1,937 @@
 /**
- * Development Commands
+ * Interactive Dev Mode Command
  *
- * Commands for development and testing:
- * - seed: Seed test data
- * - clear-test-data: Clear test data
- * - generate-data: Generate sample data
- * - debug: Debugging utilities
+ * Expo-style interactive terminal with:
+ * - Multi-deployment support (all enabled deployments)
+ * - Live status dashboard
+ * - Aggregated streaming logs from all instances
+ * - Keyboard shortcuts for common actions
  */
 
 import { Command } from "commander";
-import ora from "ora";
-import type { CLIConfig } from "../types.js";
-import { withClient } from "../utils/client.js";
-import {
-  printSuccess,
-  printError,
-  printWarning,
-  printSection,
-  formatTimestamp,
-} from "../utils/formatting.js";
-import {
-  validateMemorySpaceId,
-  validateMemoryId,
-  validateSearchQuery,
-  requireConfirmation,
-} from "../utils/validation.js";
+import { spawn, ChildProcess } from "child_process";
 import pc from "picocolors";
+import fs from "fs-extra";
+import path from "path";
+import type { CLIConfig } from "../types.js";
+import { loadConfig } from "../utils/config.js";
+import { commandExists, execCommand } from "../utils/shell.js";
+import { runInitWizard } from "./init.js";
 
 /**
- * Generate a random ID
+ * State for a single deployment
  */
-function generateId(prefix: string): string {
-  return `${prefix}-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+interface DeploymentState {
+  name: string;
+  url: string;
+  key?: string;
+  projectPath: string;
+  isLocal: boolean;
+  process: ChildProcess | null;
+  convexRunning: boolean;
+  graphRunning: boolean;
+  graphType: "neo4j" | "memgraph" | null;
 }
 
 /**
- * Sample data templates
+ * Global dev mode state
  */
-const DATA_TEMPLATES = {
-  chatbot: {
-    name: "AI Chatbot",
-    conversations: [
-      {
-        user: "What's the weather like today?",
-        agent:
-          "I don't have access to real-time weather data, but I can help you find a weather service!",
-      },
-      {
-        user: "Can you recommend a good restaurant?",
-        agent:
-          "I'd be happy to help! What cuisine are you in the mood for, and what's your location?",
-      },
-      {
-        user: "Tell me a joke",
-        agent:
-          "Why did the programmer quit his job? Because he didn't get arrays! 😄",
-      },
-    ],
-    facts: [
-      {
-        fact: "User prefers helpful and friendly responses",
-        type: "preference",
-      },
-      { fact: "User enjoys humor in conversations", type: "preference" },
-    ],
-  },
-  ecommerce: {
-    name: "E-commerce Assistant",
-    conversations: [
-      {
-        user: "I'm looking for running shoes",
-        agent:
-          "Great! I can help you find the perfect running shoes. What's your budget and preferred brand?",
-      },
-      {
-        user: "What's your return policy?",
-        agent:
-          "We offer a 30-day return policy for unworn items with original tags. Would you like more details?",
-      },
-    ],
-    facts: [
-      { fact: "User is interested in running shoes", type: "preference" },
-      { fact: "Customer values clear return policies", type: "observation" },
-    ],
-  },
-  "knowledge-base": {
-    name: "Knowledge Base Agent",
-    conversations: [
-      {
-        user: "How do I reset my password?",
-        agent:
-          "To reset your password, go to Settings > Security > Change Password. You'll need to verify your email.",
-      },
-      {
-        user: "What are the system requirements?",
-        agent:
-          "The minimum requirements are: 8GB RAM, 2GHz processor, and 10GB free disk space.",
-      },
-    ],
-    facts: [
-      {
-        fact: "Password reset is done through Settings > Security",
-        type: "knowledge",
-      },
-      {
-        fact: "Minimum RAM requirement is 8GB",
-        type: "knowledge",
-      },
-    ],
-  },
-};
+interface DevState {
+  deployments: Map<string, DeploymentState>;
+  logs: string[];
+  maxLogs: number;
+  lastStatus: Date;
+}
 
 /**
- * Register development commands
+ * Register dev commands
  */
-export function registerDevCommands(program: Command, config: CLIConfig): void {
-  const dev = program
+export function registerDevCommands(program: Command, _config: CLIConfig): void {
+  program
     .command("dev")
-    .description("Development and testing utilities");
-
-  // dev seed
-  dev
-    .command("seed")
-    .description("Seed test data into the database")
-    .option("-u, --users <number>", "Number of test users to create", "5")
-    .option("-s, --spaces <number>", "Number of memory spaces to create", "3")
-    .option("-m, --memories <number>", "Number of memories per space", "10")
-    .option("-c, --conversations <number>", "Conversations per space", "5")
-    .option("--prefix <prefix>", "Prefix for test data IDs", "test")
-    .option("-y, --yes", "Skip confirmation", false)
+    .description("Start interactive development mode (Expo-style)")
+    .option("-d, --deployment <name>", "Run specific deployment only")
+    .option("-l, --local", "Force local Convex instance for all deployments", false)
     .action(async (options) => {
-      const globalOpts = program.opts();
-
-      try {
-        const numUsers = parseInt(options.users, 10);
-        const numSpaces = parseInt(options.spaces, 10);
-        const numMemories = parseInt(options.memories, 10);
-        const numConversations = parseInt(options.conversations, 10);
-        const prefix = options.prefix;
-
-        if (!options.yes) {
-          console.log();
-          console.log(pc.bold("This will create:"));
-          console.log(`  • ${numUsers} test users`);
-          console.log(`  • ${numSpaces} memory spaces`);
-          console.log(`  • ${numMemories * numSpaces} memories`);
-          console.log(`  • ${numConversations * numSpaces} conversations`);
-          console.log();
-
-          const confirmed = await requireConfirmation(
-            "Proceed with seeding test data?",
-            config,
-          );
-          if (!confirmed) {
-            printWarning("Seeding cancelled");
-            return;
-          }
-        }
-
-        const spinner = ora("Seeding test data...").start();
-
-        await withClient(config, globalOpts, async (client) => {
-          const created = {
-            users: 0,
-            spaces: 0,
-            memories: 0,
-            conversations: 0,
-            facts: 0,
-          };
-
-          // Create test users
-          spinner.text = "Creating test users...";
-          for (let i = 0; i < numUsers; i++) {
-            const userId = `${prefix}-user-${i + 1}`;
-            try {
-              await client.users.update(userId, {
-                displayName: `Test User ${i + 1}`,
-                email: `user${i + 1}@test.example`,
-                createdBy: "cortex-cli-seed",
-              });
-              created.users++;
-            } catch {
-              // Skip if exists
-            }
-          }
-
-          // Create memory spaces
-          spinner.text = "Creating memory spaces...";
-          const spaceIds: string[] = [];
-          for (let i = 0; i < numSpaces; i++) {
-            const spaceId = `${prefix}-space-${i + 1}`;
-            try {
-              await client.memorySpaces.register({
-                memorySpaceId: spaceId,
-                name: `Test Space ${i + 1}`,
-                type: "project",
-                metadata: { createdBy: "cortex-cli-seed" },
-              });
-              spaceIds.push(spaceId);
-              created.spaces++;
-            } catch {
-              spaceIds.push(spaceId); // Still try to use it
-            }
-          }
-
-          // Create conversations and memories
-          for (const spaceId of spaceIds) {
-            spinner.text = `Seeding ${spaceId}...`;
-
-            // Create conversations
-            for (let i = 0; i < numConversations; i++) {
-              const conversationId = generateId(`${prefix}-conv`);
-              const userId = `${prefix}-user-${(i % numUsers) + 1}`;
-
-              try {
-                await client.memory.remember({
-                  memorySpaceId: spaceId,
-                  conversationId,
-                  userMessage: `Test message ${i + 1} from user`,
-                  agentResponse: `Test response ${i + 1} from agent`,
-                  userId,
-                  userName: `Test User ${(i % numUsers) + 1}`,
-                });
-                created.conversations++;
-                created.memories += 2; // User + agent message
-              } catch {
-                // Skip on error
-              }
-            }
-
-            // Create additional standalone memories
-            for (let i = 0; i < numMemories; i++) {
-              try {
-                await client.vector.store(spaceId, {
-                  content: `Test memory content ${i + 1} for space ${spaceId}`,
-                  contentType: "raw",
-                  source: {
-                    type: "system",
-                    timestamp: Date.now(),
-                  },
-                  metadata: {
-                    importance: Math.floor(Math.random() * 100),
-                    tags: ["test", "seed", `batch-${i + 1}`],
-                  },
-                });
-                created.memories++;
-              } catch {
-                // Skip on error
-              }
-            }
-          }
-
-          spinner.stop();
-
-          printSuccess("Test data seeded successfully!");
-          printSection("Created", {
-            Users: created.users,
-            "Memory Spaces": created.spaces,
-            Memories: created.memories,
-            Conversations: created.conversations,
-          });
-        });
-      } catch (error) {
-        printError(error instanceof Error ? error.message : "Seeding failed");
-        process.exit(1);
-      }
+      const config = await loadConfig();
+      await runInteractiveDevMode(config, options);
     });
+}
 
-  // dev clear-test-data
-  dev
-    .command("clear-test-data")
-    .description("Clear test data from the database")
-    .option("--prefix <prefix>", "Prefix of test data to clear", "test")
-    .option("-y, --yes", "Skip confirmation", false)
-    .action(async (options) => {
-      const globalOpts = program.opts();
+/**
+ * Collect deployments to run (same logic as start command)
+ */
+async function getDeploymentsToRun(
+  config: CLIConfig,
+  options: { deployment?: string; local?: boolean },
+): Promise<DeploymentState[]> {
+  const deployments: DeploymentState[] = [];
 
-      try {
-        const prefix = options.prefix;
-
-        if (!options.yes) {
-          const confirmed = await requireConfirmation(
-            `Delete all data with prefix "${prefix}"?`,
-            config,
-          );
-          if (!confirmed) {
-            printWarning("Operation cancelled");
-            return;
-          }
-        }
-
-        const spinner = ora("Clearing test data...").start();
-
-        await withClient(config, globalOpts, async (client) => {
-          const deleted = {
-            users: 0,
-            spaces: 0,
-          };
-
-          // Find and delete test spaces
-          spinner.text = "Finding test memory spaces...";
-          const spaces = await client.memorySpaces.list({ limit: 1000 });
-          const testSpaces = spaces.filter((s) =>
-            s.memorySpaceId.startsWith(prefix),
-          );
-
-          for (const space of testSpaces) {
-            try {
-              await client.memorySpaces.delete(space.memorySpaceId, {
-                cascade: true,
-              });
-              deleted.spaces++;
-            } catch {
-              // Continue on error
-            }
-          }
-
-          // Find and delete test users
-          spinner.text = "Finding test users...";
-          const users = await client.users.list({ limit: 1000 });
-          const testUsers = users.filter((u) => u.id.startsWith(prefix));
-
-          for (const user of testUsers) {
-            try {
-              await client.users.delete(user.id, { cascade: true });
-              deleted.users++;
-            } catch {
-              // Continue on error
-            }
-          }
-
-          spinner.stop();
-
-          printSuccess("Test data cleared");
-          printSection("Deleted", {
-            "Memory Spaces": deleted.spaces,
-            Users: deleted.users,
-          });
-        });
-      } catch (error) {
-        printError(error instanceof Error ? error.message : "Clear failed");
-        process.exit(1);
+  if (options.deployment) {
+    // Single deployment mode
+    const deployment = config.deployments[options.deployment];
+    
+    if (!deployment) {
+      console.error(pc.red(`\n   Deployment "${options.deployment}" not found`));
+      const names = Object.keys(config.deployments);
+      if (names.length > 0) {
+        console.log(pc.dim(`   Available: ${names.join(", ")}`));
       }
+      process.exit(1);
+    }
+
+    const projectPath = deployment.projectPath || process.cwd();
+    if (deployment.projectPath && !fs.existsSync(projectPath)) {
+      console.error(pc.red(`\n   Project path not found: ${projectPath}`));
+      process.exit(1);
+    }
+
+    // Check for graph config
+    let graphType: "neo4j" | "memgraph" | null = null;
+    const dockerComposePath = path.join(projectPath, "docker-compose.graph.yml");
+    if (fs.existsSync(dockerComposePath)) {
+      const content = await fs.readFile(dockerComposePath, "utf-8");
+      graphType = content.includes("memgraph") ? "memgraph" : "neo4j";
+    }
+
+    deployments.push({
+      name: options.deployment,
+      url: deployment.url,
+      key: deployment.key,
+      projectPath,
+      isLocal: options.local || false,
+      process: null,
+      convexRunning: false,
+      graphRunning: false,
+      graphType,
     });
-
-  // dev generate-data
-  dev
-    .command("generate-data")
-    .description("Generate sample data from templates")
-    .requiredOption(
-      "-t, --template <template>",
-      "Template: chatbot, ecommerce, knowledge-base",
-    )
-    .option(
-      "-s, --space <id>",
-      "Memory space ID (creates new if not specified)",
-    )
-    .option("-u, --user <id>", "User ID", "demo-user")
-    .action(async (options) => {
-      const globalOpts = program.opts();
-
-      try {
-        const templateName = options.template as keyof typeof DATA_TEMPLATES;
-        const template = DATA_TEMPLATES[templateName];
-
-        if (!template) {
-          printError(
-            `Unknown template: ${templateName}. Available: ${Object.keys(DATA_TEMPLATES).join(", ")}`,
-          );
-          process.exit(1);
-        }
-
-        const spinner = ora(`Generating ${template.name} data...`).start();
-
-        await withClient(config, globalOpts, async (client) => {
-          // Create or use existing space
-          const spaceId = options.space ?? `demo-${templateName}`;
-
-          spinner.text = "Creating memory space...";
-          try {
-            await client.memorySpaces.register({
-              memorySpaceId: spaceId,
-              name: template.name,
-              type: "project",
-              metadata: { template: templateName },
-            });
-          } catch {
-            // Space may already exist
-          }
-
-          // Create user
-          spinner.text = "Creating demo user...";
-          const userId = options.user;
-          try {
-            await client.users.update(userId, {
-              displayName: "Demo User",
-              template: templateName,
-            });
-          } catch {
-            // User may already exist
-          }
-
-          // Create conversations
-          spinner.text = "Creating conversations...";
-          let conversationCount = 0;
-          for (const conv of template.conversations) {
-            const conversationId = generateId("demo-conv");
-            try {
-              await client.memory.remember({
-                memorySpaceId: spaceId,
-                conversationId,
-                userMessage: conv.user,
-                agentResponse: conv.agent,
-                userId,
-                userName: "Demo User",
-              });
-              conversationCount++;
-            } catch {
-              // Skip on error
-            }
-          }
-
-          // Create facts
-          spinner.text = "Creating facts...";
-          let factCount = 0;
-          for (const factData of template.facts) {
-            try {
-              await client.facts.store({
-                memorySpaceId: spaceId,
-                fact: factData.fact,
-                factType: factData.type as
-                  | "preference"
-                  | "identity"
-                  | "knowledge"
-                  | "observation"
-                  | "relationship"
-                  | "event"
-                  | "custom",
-                confidence: 80,
-                sourceType: "system",
-                tags: ["demo", templateName],
-              });
-              factCount++;
-            } catch {
-              // Skip on error
-            }
-          }
-
-          spinner.stop();
-
-          printSuccess(`Generated ${template.name} demo data`);
-          printSection("Created", {
-            "Memory Space": spaceId,
-            User: userId,
-            Conversations: conversationCount,
-            Facts: factCount,
-          });
-        });
-      } catch (error) {
-        printError(
-          error instanceof Error ? error.message : "Generation failed",
-        );
-        process.exit(1);
+  } else {
+    // All enabled deployments
+    for (const [name, deployment] of Object.entries(config.deployments)) {
+      const isDefault = name === config.default;
+      const isEnabled = deployment.enabled === true || (deployment.enabled === undefined && isDefault);
+      
+      if (!isEnabled) continue;
+      
+      if (!deployment.projectPath) {
+        console.log(pc.yellow(`   Skipping "${name}" - no projectPath configured`));
+        continue;
       }
-    });
+      
+      if (!fs.existsSync(deployment.projectPath)) {
+        console.log(pc.yellow(`   Skipping "${name}" - projectPath not found`));
+        continue;
+      }
 
-  // dev debug
-  const debug = dev.command("debug").description("Debugging utilities");
+      // Check for graph config
+      let graphType: "neo4j" | "memgraph" | null = null;
+      const dockerComposePath = path.join(deployment.projectPath, "docker-compose.graph.yml");
+      if (fs.existsSync(dockerComposePath)) {
+        const content = await fs.readFile(dockerComposePath, "utf-8");
+        graphType = content.includes("memgraph") ? "memgraph" : "neo4j";
+      }
 
-  // debug search
-  debug
-    .command("search <query>")
-    .description("Test vector search")
-    .requiredOption("-s, --space <id>", "Memory space ID")
-    .option("-l, --limit <number>", "Number of results", "5")
-    .option("--verbose", "Show detailed results", false)
-    .action(async (query, options) => {
-      const globalOpts = program.opts();
+      deployments.push({
+        name,
+        url: deployment.url,
+        key: deployment.key,
+        projectPath: deployment.projectPath,
+        isLocal: options.local || false,
+        process: null,
+        convexRunning: false,
+        graphRunning: false,
+        graphType,
+      });
+    }
+  }
 
-      try {
-        validateSearchQuery(query);
-        validateMemorySpaceId(options.space);
+  return deployments;
+}
 
-        const spinner = ora("Performing vector search...").start();
-        const startTime = Date.now();
-
-        await withClient(config, globalOpts, async (client) => {
-          const results = await client.memory.search(options.space, query, {
-            limit: parseInt(options.limit, 10),
-          });
-
-          const duration = Date.now() - startTime;
-          spinner.stop();
-
-          console.log();
-          printSection("Search Debug", {
-            Query: query,
-            Space: options.space,
-            Results: results.length,
-            Duration: `${duration}ms`,
-          });
-
-          if (results.length > 0) {
-            console.log("\n  Results:");
-            for (let i = 0; i < results.length; i++) {
-              const result = results[i];
-              // Type guard for EnrichedMemory vs MemoryEntry
-              const memory =
-                result && typeof result === "object" && "memory" in result
-                  ? (
-                      result as {
-                        memory: {
-                          memoryId: string;
-                          content: string;
-                          contentType: string;
-                          importance: number;
-                          createdAt: number;
-                          tags: string[];
-                        };
-                      }
-                    ).memory
-                  : (result as {
-                      memoryId: string;
-                      content: string;
-                      contentType: string;
-                      importance: number;
-                      createdAt: number;
-                      tags: string[];
-                    });
-              console.log(`\n  ${pc.cyan(`[${i + 1}]`)} ${memory.memoryId}`);
-              console.log(
-                `      ${pc.dim("Content:")} ${memory.content.substring(0, 100)}...`,
-              );
-              console.log(`      ${pc.dim("Type:")} ${memory.contentType}`);
-              console.log(
-                `      ${pc.dim("Importance:")} ${memory.importance}`,
-              );
-
-              if (options.verbose) {
-                console.log(
-                  `      ${pc.dim("Created:")} ${formatTimestamp(memory.createdAt)}`,
-                );
-                console.log(
-                  `      ${pc.dim("Tags:")} ${memory.tags.join(", ") || "-"}`,
-                );
-              }
-            }
+/**
+ * Show prompt when no deployments configured
+ */
+async function showNotConfiguredPrompt(): Promise<boolean> {
+  console.clear();
+  console.log(pc.bold(pc.yellow("\n   ⚠ No Deployments Configured\n")));
+  console.log(pc.dim("   No enabled deployments found with valid project paths.\n"));
+  console.log(pc.dim("   This could mean:"));
+  console.log(pc.dim("   • No deployments are enabled"));
+  console.log(pc.dim("   • Deployments don't have projectPath set"));
+  console.log(pc.dim("   • Project paths don't exist\n"));
+  console.log(`   Press ${pc.bold(pc.green("i"))} to run ${pc.cyan("cortex init")} and set up a project`);
+  console.log(`   Press ${pc.bold(pc.red("q"))} to quit\n`);
+  
+  return new Promise((resolve) => {
+    if (process.stdin.isTTY) {
+      process.stdin.setRawMode(true);
+      process.stdin.resume();
+      process.stdin.setEncoding("utf8");
+    }
+    
+    const handler = async (key: string) => {
+      if (key === "i" || key === "I") {
+        process.stdin.removeListener("data", handler);
+        if (process.stdin.isTTY) {
+          process.stdin.setRawMode(false);
+        }
+        console.clear();
+        try {
+          await runInitWizard(process.cwd(), { start: false });
+          resolve(true);
+        } catch (error) {
+          if (error instanceof Error && error.message === "Setup cancelled") {
+            console.log(pc.yellow("\n   Setup cancelled.\n"));
           } else {
-            printWarning("No results found");
+            console.error(pc.red("\n   Setup failed:"), error);
           }
-        });
-      } catch (error) {
-        printError(error instanceof Error ? error.message : "Search failed");
-        process.exit(1);
+          resolve(false);
+        }
+      } else if (key === "q" || key === "Q" || key === "\u0003") {
+        process.stdin.removeListener("data", handler);
+        if (process.stdin.isTTY) {
+          process.stdin.setRawMode(false);
+        }
+        console.log(pc.dim("\n   Goodbye!\n"));
+        resolve(false);
       }
-    });
+    };
+    
+    process.stdin.on("data", handler);
+  });
+}
 
-  // debug inspect
-  debug
-    .command("inspect <memoryId>")
-    .description("Inspect a memory in detail")
-    .requiredOption("-s, --space <id>", "Memory space ID")
-    .action(async (memoryId, options) => {
-      const globalOpts = program.opts();
+/**
+ * Run the interactive dev mode
+ */
+async function runInteractiveDevMode(
+  config: CLIConfig,
+  options: { deployment?: string; local?: boolean },
+): Promise<void> {
+  // Get deployments to run
+  let deploymentsList = await getDeploymentsToRun(config, options);
 
+  if (deploymentsList.length === 0) {
+    const shouldContinue = await showNotConfiguredPrompt();
+    if (!shouldContinue) {
+      process.exit(0);
+    }
+    // Reload config and try again
+    const newConfig = await loadConfig();
+    deploymentsList = await getDeploymentsToRun(newConfig, options);
+    if (deploymentsList.length === 0) {
+      console.log(pc.red("\n   Still no deployments configured. Please run 'cortex init' manually.\n"));
+      process.exit(1);
+    }
+  }
+
+  const state: DevState = {
+    deployments: new Map(deploymentsList.map(d => [d.name, d])),
+    logs: [],
+    maxLogs: 100,
+    lastStatus: new Date(),
+  };
+
+  // Setup stdin for raw mode
+  if (process.stdin.isTTY) {
+    process.stdin.setRawMode(true);
+    process.stdin.resume();
+    process.stdin.setEncoding("utf8");
+  }
+
+  // Clear screen and show initial status
+  console.clear();
+  await refreshStatus(state);
+  showHelp();
+  console.log(pc.dim("  Logs streaming below. Press 'c' to clear, '?' for help.\n"));
+
+  // Start all services
+  await startAllServices(state);
+
+  // Track shutdown state
+  let shuttingDown = false;
+  let shutdownInProgress = false;
+
+  // Handle keyboard input
+  process.stdin.on("data", async (key: string) => {
+    switch (key) {
+      case "c":
+        // Clear screen
+        state.logs = [];
+        console.clear();
+        await refreshStatus(state);
+        showHelp();
+        console.log(pc.dim("  Logs cleared.\n"));
+        break;
+
+      case "r":
+        // Restart all services
+        console.log(pc.yellow("\n  Restarting all services...\n"));
+        await stopAllServices(state, false);
+        state.logs = [];
+        console.clear();
+        await refreshStatus(state);
+        showHelp();
+        console.log(pc.dim("  Restarting...\n"));
+        await startAllServices(state);
+        break;
+
+      case "g":
+        // Toggle graph - show menu if multiple deployments
+        await handleGraphToggle(state);
+        break;
+
+      case "s":
+        // Show status
+        console.clear();
+        await refreshStatus(state);
+        showHelp();
+        console.log(pc.dim("  Logs streaming below...\n"));
+        // Re-print recent logs
+        for (const log of state.logs.slice(-20)) {
+          console.log(`  ${log}`);
+        }
+        break;
+
+      case "q":
+        if (!shutdownInProgress) {
+          shuttingDown = true;
+          shutdownInProgress = true;
+          console.log(pc.yellow("\n\n   Shutting down...\n"));
+          await performShutdown(state, false);
+        }
+        break;
+
+      case "\u0003": // Ctrl+C
+        if (shutdownInProgress) {
+          break;
+        }
+        if (shuttingDown) {
+          shutdownInProgress = true;
+          console.log(pc.red("\n\n   Force killing...\n"));
+          await performShutdown(state, true);
+        } else {
+          shuttingDown = true;
+          shutdownInProgress = true;
+          console.log(pc.yellow("\n\n   Shutting down... (Ctrl+C again to force)\n"));
+          await performShutdown(state, false);
+        }
+        break;
+
+      case "?":
+      case "h":
+        console.clear();
+        showDetailedHelp();
+        console.log(pc.dim("\nPress any key to return to logs"));
+        break;
+
+      case "k":
+        // Kill menu
+        console.clear();
+        await showKillMenu(state);
+        break;
+    }
+  });
+
+  // Handle SIGINT
+  process.on("SIGINT", async () => {
+    if (shutdownInProgress) {
+      console.log(pc.red("\n\n   Force killing...\n"));
+      process.exit(1);
+    } else if (!shuttingDown) {
+      shuttingDown = true;
+      shutdownInProgress = true;
+      console.log(pc.yellow("\n\n   Shutting down... (Ctrl+C again to force)\n"));
+      await performShutdown(state, false);
+    }
+  });
+}
+
+/**
+ * Start all services for all deployments
+ */
+async function startAllServices(state: DevState): Promise<void> {
+  const hasConvex = await commandExists("convex");
+
+  for (const [name, dep] of state.deployments) {
+    // Start graph if configured
+    if (dep.graphType) {
+      addLog(state, name, `Starting ${dep.graphType}...`);
+      const started = await toggleGraph(dep.projectPath, dep.graphType, true);
+      dep.graphRunning = started;
+      if (started) {
+        addLog(state, name, pc.green(`${dep.graphType} started`));
+      } else {
+        addLog(state, name, pc.yellow(`${dep.graphType} failed to start`));
+      }
+    }
+
+    // Deploy to production first for cloud deployments with key
+    if (dep.key && !dep.isLocal) {
+      addLog(state, name, "Deploying functions to production...");
       try {
-        validateMemoryId(memoryId);
-        validateMemorySpaceId(options.space);
-
-        const spinner = ora("Loading memory...").start();
-
-        await withClient(config, globalOpts, async (client) => {
-          const result = await client.memory.get(options.space, memoryId, {
-            includeConversation: true,
+        const deployCmd = hasConvex ? "convex" : "npx";
+        const deployArgs = hasConvex 
+          ? ["deploy", "--cmd", "echo deployed"] 
+          : ["convex", "deploy", "--cmd", "echo deployed"];
+        
+        const env: Record<string, string | undefined> = { ...process.env };
+        env.CONVEX_URL = dep.url;
+        env.CONVEX_DEPLOY_KEY = dep.key;
+        
+        await new Promise<void>((resolve, reject) => {
+          const child = spawn(deployCmd, deployArgs, {
+            cwd: dep.projectPath,
+            stdio: "pipe",
+            env,
           });
-
-          spinner.stop();
-
-          if (!result) {
-            printError("Memory not found");
-            process.exit(1);
-          }
-
-          const memory = "memory" in result ? result.memory : result;
-
-          console.log();
-          console.log(pc.bold(pc.cyan("Memory Inspection")));
-          console.log(pc.dim("─".repeat(50)));
-          console.log();
-
-          // Basic info
-          console.log(pc.bold("Basic Info:"));
-          console.log(`  ID: ${memory.memoryId}`);
-          console.log(`  Space: ${memory.memorySpaceId}`);
-          console.log(`  Version: ${memory.version}`);
-          console.log();
-
-          // Content
-          console.log(pc.bold("Content:"));
-          console.log(`  Type: ${memory.contentType}`);
-          console.log(`  Length: ${memory.content.length} characters`);
-          console.log(`  Content:\n    ${memory.content}`);
-          console.log();
-
-          // Source
-          console.log(pc.bold("Source:"));
-          console.log(`  Type: ${memory.sourceType}`);
-          console.log(`  User: ${memory.userId ?? "-"}`);
-          console.log(
-            `  Timestamp: ${formatTimestamp(memory.sourceTimestamp)}`,
-          );
-          console.log();
-
-          // Metadata
-          console.log(pc.bold("Metadata:"));
-          console.log(`  Importance: ${memory.importance}`);
-          console.log(`  Tags: ${memory.tags.join(", ") || "-"}`);
-          console.log(`  Access Count: ${memory.accessCount}`);
-          console.log();
-
-          // Embedding
-          console.log(pc.bold("Embedding:"));
-          if (memory.embedding) {
-            console.log(`  Dimensions: ${memory.embedding.length}`);
-            console.log(
-              `  Sample: [${memory.embedding
-                .slice(0, 5)
-                .map((n) => n.toFixed(4))
-                .join(", ")}, ...]`,
-            );
-          } else {
-            console.log("  No embedding stored");
-          }
-          console.log();
-
-          // Timestamps
-          console.log(pc.bold("Timestamps:"));
-          console.log(`  Created: ${formatTimestamp(memory.createdAt)}`);
-          console.log(`  Updated: ${formatTimestamp(memory.updatedAt)}`);
-          if (memory.lastAccessed) {
-            console.log(
-              `  Last Accessed: ${formatTimestamp(memory.lastAccessed)}`,
-            );
-          }
-
-          // Version history
-          if (memory.previousVersions && memory.previousVersions.length > 0) {
-            console.log();
-            console.log(
-              pc.bold(
-                `Version History: ${memory.previousVersions.length} previous versions`,
-              ),
-            );
-          }
+          
+          child.on("close", (code) => {
+            if (code === 0) resolve();
+            else reject(new Error(`Deploy failed with code ${code}`));
+          });
+          child.on("error", reject);
         });
-      } catch (error) {
-        printError(error instanceof Error ? error.message : "Inspect failed");
-        process.exit(1);
+        
+        addLog(state, name, pc.green("Functions deployed"));
+      } catch {
+        addLog(state, name, pc.yellow("Deploy failed, continuing..."));
       }
+    }
+
+    // Start Convex dev
+    addLog(state, name, "Starting Convex...");
+    await startConvexProcess(state, name, dep, hasConvex);
+  }
+}
+
+/**
+ * Start Convex dev process for a deployment
+ */
+async function startConvexProcess(
+  state: DevState,
+  name: string,
+  dep: DeploymentState,
+  hasConvex: boolean,
+): Promise<void> {
+  const command = hasConvex ? "convex" : "npx";
+  const args = hasConvex ? ["dev"] : ["convex", "dev"];
+  if (dep.isLocal) args.push("--local");
+
+  const env: Record<string, string | undefined> = { ...process.env };
+  env.CONVEX_URL = dep.url;
+  if (dep.key) env.CONVEX_DEPLOY_KEY = dep.key;
+
+  const child = spawn(command, args, {
+    cwd: dep.projectPath,
+    env,
+    detached: true,
+  });
+
+  dep.process = child;
+
+  // Handle stdout
+  child.stdout?.on("data", (data: Buffer) => {
+    const lines = data.toString().split("\n").filter(Boolean);
+    for (const line of lines) {
+      addLog(state, name, line);
+    }
+  });
+
+  // Handle stderr (Convex outputs here)
+  child.stderr?.on("data", (data: Buffer) => {
+    const lines = data.toString().split("\n").filter(Boolean);
+    for (const line of lines) {
+      addLog(state, name, line);
+      
+      // Detect ready state
+      if (line.includes("Convex functions ready") && !dep.convexRunning) {
+        dep.convexRunning = true;
+        printStatusUpdate(state);
+      }
+    }
+  });
+
+  child.on("exit", (code) => {
+    const wasRunning = dep.convexRunning;
+    dep.convexRunning = false;
+    dep.process = null;
+    if (code !== 0 && code !== null) {
+      addLog(state, name, pc.red(`Convex exited with code ${code}`));
+    }
+    if (wasRunning) {
+      printStatusUpdate(state);
+    }
+  });
+
+  // Wait a moment for startup
+  await new Promise((resolve) => setTimeout(resolve, 500));
+}
+
+/**
+ * Stop all services
+ */
+async function stopAllServices(state: DevState, force: boolean): Promise<void> {
+  const signal = force ? "SIGKILL" : "SIGTERM";
+
+  for (const dep of state.deployments.values()) {
+    // Stop Convex
+    if (dep.process && dep.process.pid) {
+      try {
+        process.kill(-dep.process.pid, signal);
+      } catch {
+        // Already dead
+      }
+      dep.process = null;
+      dep.convexRunning = false;
+    }
+
+    // Stop graph
+    if (dep.graphRunning && dep.graphType) {
+      await toggleGraph(dep.projectPath, dep.graphType, false);
+      dep.graphRunning = false;
+    }
+  }
+
+  if (!force) {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+}
+
+/**
+ * Perform full shutdown
+ */
+async function performShutdown(state: DevState, force: boolean): Promise<void> {
+  console.log(pc.dim("  Stopping all services..."));
+  await stopAllServices(state, force);
+  console.log(pc.green("  ✓ All services stopped"));
+  
+  if (process.stdin.isTTY) {
+    process.stdin.setRawMode(false);
+  }
+  process.exit(0);
+}
+
+/**
+ * Handle graph toggle (with menu for multiple deployments)
+ */
+async function handleGraphToggle(state: DevState): Promise<void> {
+  // Find deployments with graph configured
+  const withGraph = Array.from(state.deployments.values()).filter(d => d.graphType);
+  
+  if (withGraph.length === 0) {
+    printLog("No graph databases configured");
+    return;
+  }
+
+  if (withGraph.length === 1) {
+    // Single deployment - toggle directly
+    const dep = withGraph[0];
+    if (dep.graphRunning) {
+      printLog(`Stopping ${dep.graphType} for ${dep.name}...`);
+      const stopped = await toggleGraph(dep.projectPath, dep.graphType!, false);
+      dep.graphRunning = !stopped;
+      printLog(stopped ? pc.green("Graph stopped") : pc.red("Failed to stop graph"));
+    } else {
+      printLog(`Starting ${dep.graphType} for ${dep.name}...`);
+      const started = await toggleGraph(dep.projectPath, dep.graphType!, true);
+      dep.graphRunning = started;
+      printLog(started ? pc.green("Graph started") : pc.red("Failed to start graph"));
+    }
+  } else {
+    // Multiple - show menu
+    console.log("\n" + pc.bold("  Select deployment to toggle graph:"));
+    withGraph.forEach((dep, i) => {
+      const status = dep.graphRunning ? pc.green("running") : pc.yellow("stopped");
+      console.log(`    ${pc.cyan(String(i + 1))} ${dep.name} (${dep.graphType}) - ${status}`);
     });
+    console.log(`    ${pc.dim("Press 1-9 or any other key to cancel")}\n`);
+    
+    const key = await waitForKey();
+    const num = parseInt(key);
+    if (num >= 1 && num <= withGraph.length) {
+      const dep = withGraph[num - 1];
+      if (dep.graphRunning) {
+        printLog(`Stopping ${dep.graphType} for ${dep.name}...`);
+        const stopped = await toggleGraph(dep.projectPath, dep.graphType!, false);
+        dep.graphRunning = !stopped;
+        printLog(stopped ? pc.green("Graph stopped") : pc.red("Failed to stop graph"));
+      } else {
+        printLog(`Starting ${dep.graphType} for ${dep.name}...`);
+        const started = await toggleGraph(dep.projectPath, dep.graphType!, true);
+        dep.graphRunning = started;
+        printLog(started ? pc.green("Graph started") : pc.red("Failed to start graph"));
+      }
+    }
+  }
+  printStatusUpdate(state);
+}
 
-  // debug connection
-  debug
-    .command("connection")
-    .description("Test and debug connection")
-    .action(async () => {
-      const globalOpts = program.opts();
+/**
+ * Toggle graph database
+ */
+async function toggleGraph(
+  projectPath: string,
+  graphType: "neo4j" | "memgraph",
+  start: boolean,
+): Promise<boolean> {
+  const dockerComposePath = path.join(projectPath, "docker-compose.graph.yml");
+  const containerName = `cortex-${graphType}`;
 
-      console.log();
-      printSection("Connection Debug", {});
+  if (!fs.existsSync(dockerComposePath)) {
+    return false;
+  }
 
-      const { testConnection, getDeploymentInfo } = await import(
-        "../utils/client.js"
+  try {
+    if (start) {
+      // Check if already running
+      const checkResult = await execCommand(
+        "docker",
+        ["ps", "--filter", `name=${containerName}`, "--format", "{{.Status}}"],
+        { quiet: true },
       );
 
-      const info = getDeploymentInfo(config, globalOpts);
-      console.log(`  URL: ${info.url}`);
-      console.log(`  Mode: ${info.isLocal ? "Local" : "Cloud"}`);
-      console.log(`  Deploy Key: ${info.hasKey ? "Set" : "Not set"}`);
-      console.log();
-
-      const spinner = ora("Testing connection...").start();
-      const result = await testConnection(config, globalOpts);
-      spinner.stop();
-
-      if (result.connected) {
-        printSuccess(`Connected (${result.latency}ms latency)`);
-      } else {
-        printError(`Connection failed: ${result.error}`);
+      if (checkResult.stdout.includes("Up")) {
+        return true;
       }
-    });
+
+      // Check if container exists but stopped
+      const existsResult = await execCommand(
+        "docker",
+        ["ps", "-a", "--filter", `name=${containerName}`, "--format", "{{.Names}}"],
+        { quiet: true },
+      );
+
+      if (existsResult.stdout.includes(containerName)) {
+        const startResult = await execCommand("docker", ["start", containerName], { quiet: true });
+        if (startResult.code === 0) {
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+          return true;
+        }
+        await execCommand("docker", ["rm", "-f", containerName], { quiet: true });
+      }
+
+      // Start via docker-compose
+      const result = await execCommand(
+        "docker",
+        ["compose", "-f", "docker-compose.graph.yml", "up", "-d"],
+        { cwd: projectPath, quiet: true },
+      );
+
+      if (result.code === 0) {
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        return true;
+      }
+      return false;
+    } else {
+      const result = await execCommand("docker", ["stop", containerName], { quiet: true });
+      return result.code === 0;
+    }
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Add a log entry with deployment prefix
+ */
+function addLog(state: DevState, deploymentName: string, message: string): void {
+  const timestamp = new Date().toLocaleTimeString();
+  const prefix = state.deployments.size > 1 
+    ? pc.cyan(`[${deploymentName}]`.padEnd(18))
+    : "";
+  const logLine = `${pc.dim(timestamp)} ${prefix}${message}`;
+  
+  state.logs.push(logLine);
+  
+  if (state.logs.length > state.maxLogs) {
+    state.logs = state.logs.slice(-state.maxLogs);
+  }
+  
+  console.log(`  ${logLine}`);
+}
+
+/**
+ * Print a log without deployment prefix
+ */
+function printLog(message: string): void {
+  const timestamp = new Date().toLocaleTimeString();
+  console.log(`  ${pc.dim(timestamp)} ${message}`);
+}
+
+/**
+ * Print inline status update
+ */
+function printStatusUpdate(state: DevState): void {
+  const statuses: string[] = [];
+  
+  for (const [name, dep] of state.deployments) {
+    const convexIcon = dep.convexRunning ? pc.green("●") : pc.yellow("○");
+    let status = `${convexIcon} ${name}`;
+    
+    if (dep.graphType) {
+      const graphIcon = dep.graphRunning ? pc.green("●") : pc.yellow("○");
+      status += ` ${graphIcon}${dep.graphType}`;
+    }
+    
+    statuses.push(status);
+  }
+  
+  console.log();
+  console.log(pc.cyan("  ══════════════════════════════════════════════════════════════"));
+  console.log(`  ${pc.bold("Status:")} ${statuses.join("  │  ")}`);
+  console.log(pc.cyan("  ══════════════════════════════════════════════════════════════"));
+  console.log();
+}
+
+/**
+ * Refresh and display full status
+ */
+async function refreshStatus(state: DevState): Promise<void> {
+  const width = 66;
+  const line = "═".repeat(width);
+  const thinLine = "─".repeat(width);
+  const count = state.deployments.size;
+
+  console.log();
+  console.log(pc.cyan("╔" + line + "╗"));
+  console.log(
+    pc.cyan("║") +
+      pc.bold(`   Cortex Dev Mode (${count} deployment${count !== 1 ? "s" : ""})`).padEnd(width) +
+      pc.cyan("║"),
+  );
+  console.log(pc.cyan("╚" + line + "╝"));
+  console.log();
+
+  console.log(pc.bold(pc.white("  Services")));
+  console.log(pc.dim("  " + thinLine));
+
+  for (const [name, dep] of state.deployments) {
+    // Convex status
+    const convexStatus = dep.convexRunning 
+      ? pc.green("Running") 
+      : pc.yellow("Starting...");
+    const convexIcon = dep.convexRunning ? pc.green("●") : pc.yellow("○");
+    
+    // Graph status
+    let graphStatus = pc.dim("N/A");
+    if (dep.graphType) {
+      graphStatus = dep.graphRunning 
+        ? pc.green(`Running (${dep.graphType})`)
+        : pc.yellow(`Stopped (${dep.graphType})`);
+    }
+
+    console.log(`   ${convexIcon} ${pc.cyan(name.padEnd(16))} Convex: ${convexStatus.padEnd(20)} Graph: ${graphStatus}`);
+    
+    // Show URLs for running services
+    if (dep.convexRunning) {
+      const isLocal = dep.url.includes("localhost") || dep.url.includes("127.0.0.1");
+      if (isLocal) {
+        console.log(pc.dim(`     Dashboard: http://127.0.0.1:3210`));
+      }
+    }
+    if (dep.graphRunning && dep.graphType) {
+      const url = dep.graphType === "neo4j" 
+        ? "http://localhost:7474" 
+        : "http://localhost:3000";
+      console.log(pc.dim(`     ${dep.graphType}: ${url}`));
+    }
+  }
+
+  console.log();
+}
+
+/**
+ * Show keyboard shortcut help
+ */
+function showHelp(): void {
+  console.log(pc.dim("  ──────────────────────────────────────────────────────────────────"));
+  console.log(
+    pc.dim("  ") +
+    pc.cyan("c") + pc.dim(" clear  ") +
+    pc.cyan("s") + pc.dim(" status  ") +
+    pc.cyan("r") + pc.dim(" restart  ") +
+    pc.cyan("g") + pc.dim(" graph  ") +
+    pc.cyan("k") + pc.dim(" kill  ") +
+    pc.cyan("q") + pc.dim(" quit  ") +
+    pc.cyan("?") + pc.dim(" help")
+  );
+  console.log();
+}
+
+/**
+ * Show detailed help
+ */
+function showDetailedHelp(): void {
+  const width = 66;
+  const line = "═".repeat(width);
+
+  console.log();
+  console.log(pc.cyan("╔" + line + "╗"));
+  console.log(
+    pc.cyan("║") +
+      pc.bold("   Keyboard Shortcuts").padEnd(width) +
+      pc.cyan("║"),
+  );
+  console.log(pc.cyan("╚" + line + "╝"));
+  console.log();
+
+  console.log(`   ${pc.cyan("c")}  Clear screen & show status`);
+  console.log(`   ${pc.cyan("s")}  Show status dashboard`);
+  console.log(`   ${pc.cyan("r")}  Restart all services`);
+  console.log(`   ${pc.cyan("g")}  Toggle graph database (select deployment if multiple)`);
+  console.log(`   ${pc.cyan("k")}  Kill Convex instances (port conflicts)`);
+  console.log(`   ${pc.cyan("q")}  Quit (Ctrl+C)`);
+  console.log(`   ${pc.cyan("?")}  Show this help`);
+  console.log();
+}
+
+/**
+ * Show kill menu
+ */
+async function showKillMenu(state: DevState): Promise<void> {
+  const width = 66;
+  const line = "═".repeat(width);
+
+  console.log();
+  console.log(pc.cyan("╔" + line + "╗"));
+  console.log(
+    pc.cyan("║") +
+      pc.bold("   Kill Convex Instances").padEnd(width) +
+      pc.cyan("║"),
+  );
+  console.log(pc.cyan("╚" + line + "╝"));
+  console.log();
+
+  console.log(pc.dim("   Scanning for running Convex instances..."));
+  
+  const instances = await findConvexInstances();
+
+  console.clear();
+  console.log();
+  console.log(pc.cyan("╔" + line + "╗"));
+  console.log(
+    pc.cyan("║") +
+      pc.bold("   Kill Convex Instances").padEnd(width) +
+      pc.cyan("║"),
+  );
+  console.log(pc.cyan("╚" + line + "╝"));
+  console.log();
+
+  if (instances.length === 0) {
+    console.log(pc.green("   No Convex instances found on common ports."));
+    console.log(pc.dim("\n   Press any key to return..."));
+    
+    await waitForKey();
+    console.clear();
+    await refreshStatus(state);
+    showHelp();
+    return;
+  }
+
+  console.log(pc.bold(pc.white("  Running Instances")));
+  console.log(pc.dim("  " + "─".repeat(60)));
+
+  for (let i = 0; i < instances.length; i++) {
+    const inst = instances[i];
+    console.log(
+      `   ${pc.cyan(`${i + 1}`)}  Port ${pc.yellow(inst.port)}  PID ${inst.pid}  ${pc.dim(inst.name)}`,
+    );
+  }
+
+  console.log();
+  console.log(pc.dim("   Press 1-9 to kill, 'a' to kill all, or any other key to cancel"));
+  console.log();
+
+  const key = await waitForKey();
+
+  if (key === "a") {
+    console.log(pc.yellow("\n   Killing all instances..."));
+    for (const inst of instances) {
+      try {
+        process.kill(parseInt(inst.pid), "SIGTERM");
+        console.log(pc.green(`   ✓ Killed PID ${inst.pid} (port ${inst.port})`));
+      } catch {
+        console.log(pc.red(`   ✗ Failed to kill PID ${inst.pid}`));
+      }
+    }
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  } else {
+    const num = parseInt(key);
+    if (num >= 1 && num <= instances.length) {
+      const inst = instances[num - 1];
+      console.log(pc.yellow(`\n   Killing PID ${inst.pid} on port ${inst.port}...`));
+      try {
+        process.kill(parseInt(inst.pid), "SIGTERM");
+        console.log(pc.green(`   ✓ Killed successfully`));
+      } catch {
+        console.log(pc.red(`   ✗ Failed to kill`));
+      }
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+  }
+
+  console.clear();
+  await refreshStatus(state);
+  showHelp();
+  console.log(pc.dim("  Logs streaming below...\n"));
+}
+
+/**
+ * Find running Convex instances
+ */
+async function findConvexInstances(): Promise<Array<{ pid: string; port: string; name: string }>> {
+  const instances: Array<{ pid: string; port: string; name: string }> = [];
+  const ports = ["3210", "3211", "3212", "3213", "3214", "3215"];
+  const seenPids = new Set<string>();
+
+  for (const port of ports) {
+    try {
+      const result = await execCommand(
+        "lsof",
+        ["-i", `:${port}`, "-sTCP:LISTEN", "-t"],
+        { quiet: true },
+      );
+
+      if (result.code === 0 && result.stdout.trim()) {
+        const pids = result.stdout.trim().split("\n");
+        for (const pid of pids) {
+          if (pid && !seenPids.has(pid)) {
+            seenPids.add(pid);
+            
+            const nameResult = await execCommand("ps", ["-p", pid, "-o", "comm="], { quiet: true });
+            let name = nameResult.stdout.trim() || "unknown";
+            
+            const cmdResult = await execCommand("ps", ["-p", pid, "-o", "args="], { quiet: true });
+            const cmdLine = cmdResult.stdout.trim();
+            
+            if (cmdLine.includes("convex")) {
+              name = "convex";
+            } else if (cmdLine.includes("local-backend")) {
+              name = "convex-local-backend";
+            }
+            
+            instances.push({ pid, port, name });
+          }
+        }
+      }
+    } catch {
+      // Port not in use
+    }
+  }
+
+  return instances;
+}
+
+/**
+ * Wait for a single keypress
+ */
+function waitForKey(): Promise<string> {
+  return new Promise((resolve) => {
+    const handler = (data: string) => {
+      process.stdin.removeListener("data", handler);
+      resolve(data);
+    };
+    process.stdin.once("data", handler);
+  });
 }

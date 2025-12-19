@@ -22,7 +22,8 @@ export class TestCleanup {
     console.log("🧹 Purging conversations table...");
 
     // Get all conversations
-    const conversations = await this.client.query(api.conversations.list, {});
+    const result = await this.client.query(api.conversations.list, {});
+    const conversations = result.conversations;
 
     // Delete each one (ignore errors if already deleted)
     let deleted = 0;
@@ -172,11 +173,11 @@ export class TestCleanup {
     count: number;
     conversations: unknown[];
   }> {
-    const conversations = await this.client.query(api.conversations.list, {});
+    const result = await this.client.query(api.conversations.list, {});
 
     return {
-      count: conversations.length,
-      conversations,
+      count: result.conversations.length,
+      conversations: result.conversations,
     };
   }
 }
@@ -265,10 +266,10 @@ export class ScopedCleanup {
     this.log(`🧹 Cleaning up conversations for run ${this.runId}...`);
 
     try {
-      const conversations = await this.client.query(api.conversations.list, {});
+      const result = await this.client.query(api.conversations.list, {});
       let deleted = 0;
 
-      for (const conv of conversations) {
+      for (const conv of result.conversations) {
         // Check if conversation belongs to this run (by memorySpaceId or conversationId)
         if (
           this.belongsToRun(conv.memorySpaceId) ||
@@ -299,16 +300,17 @@ export class ScopedCleanup {
     this.log(`🧹 Cleaning up memory spaces for run ${this.runId}...`);
 
     try {
-      const spaces = await this.client.query(api.memorySpaces.list, {});
+      const result = await this.client.query(api.memorySpaces.list, {});
       let deleted = 0;
 
-      for (const space of spaces) {
+      for (const space of result.spaces) {
         if (this.belongsToRun(space.memorySpaceId)) {
           try {
             // Delete the memory space (this should cascade to memories, facts, etc.)
             await this.client.mutation(api.memorySpaces.deleteSpace, {
               memorySpaceId: space.memorySpaceId,
               cascade: true,
+              reason: "test cleanup",
             });
             deleted++;
           } catch {
@@ -332,10 +334,10 @@ export class ScopedCleanup {
 
     try {
       // We need to find memories in our memory spaces
-      const spaces = await this.client.query(api.memorySpaces.list, {});
+      const spacesResult = await this.client.query(api.memorySpaces.list, {});
       let deleted = 0;
 
-      for (const space of spaces) {
+      for (const space of spacesResult.spaces) {
         if (this.belongsToRun(space.memorySpaceId)) {
           try {
             // List memories in this space
@@ -374,10 +376,10 @@ export class ScopedCleanup {
     this.log(`🧹 Cleaning up facts for run ${this.runId}...`);
 
     try {
-      const spaces = await this.client.query(api.memorySpaces.list, {});
+      const spacesResult = await this.client.query(api.memorySpaces.list, {});
       let deleted = 0;
 
-      for (const space of spaces) {
+      for (const space of spacesResult.spaces) {
         if (this.belongsToRun(space.memorySpaceId)) {
           try {
             const facts = await this.client.query(api.facts.list, {
@@ -449,12 +451,12 @@ export class ScopedCleanup {
     this.log(`🧹 Cleaning up users for run ${this.runId}...`);
 
     try {
-      const users = await this.client.query(api.immutable.list, {
+      const result = await this.client.query(api.immutable.list, {
         type: "user",
       });
       let deleted = 0;
 
-      for (const user of users) {
+      for (const user of result.entries) {
         if (this.belongsToRun(user.id)) {
           try {
             await this.client.mutation(api.immutable.purge, {
@@ -514,10 +516,10 @@ export class ScopedCleanup {
 
     try {
       // Get all immutable records
-      const records = await this.client.query(api.immutable.list, {});
+      const result = await this.client.query(api.immutable.list, {});
       let deleted = 0;
 
-      for (const record of records) {
+      for (const record of result.entries) {
         // Skip users (handled separately)
         if (record.type === "user") continue;
 
@@ -670,7 +672,7 @@ export class ScopedCleanup {
    * Count remaining entities that belong to this test run.
    */
   async countRemaining(): Promise<Record<string, number>> {
-    const result: Record<string, number> = {
+    const counts: Record<string, number> = {
       conversations: 0,
       memorySpaces: 0,
       contexts: 0,
@@ -682,51 +684,51 @@ export class ScopedCleanup {
 
     try {
       // Count conversations
-      const conversations = await this.client.query(api.conversations.list, {});
-      result.conversations = conversations.filter(
-        (c) =>
+      const conversationsResult = await this.client.query(api.conversations.list, {});
+      counts.conversations = conversationsResult.conversations.filter(
+        (c: { memorySpaceId: string; conversationId: string }) =>
           this.belongsToRun(c.memorySpaceId) ||
           this.belongsToRun(c.conversationId),
       ).length;
 
       // Count memory spaces
-      const spaces = await this.client.query(api.memorySpaces.list, {});
-      result.memorySpaces = spaces.filter((s) =>
+      const spacesResult = await this.client.query(api.memorySpaces.list, {});
+      counts.memorySpaces = spacesResult.spaces.filter((s: { memorySpaceId: string }) =>
         this.belongsToRun(s.memorySpaceId),
       ).length;
 
       // Count contexts
       const contexts = await this.client.query(api.contexts.list, {});
-      result.contexts = contexts.filter(
-        (c) =>
+      counts.contexts = contexts.filter(
+        (c: { memorySpaceId: string; contextId: string }) =>
           this.belongsToRun(c.memorySpaceId) || this.belongsToRun(c.contextId),
       ).length;
 
       // Count users
-      const users = await this.client.query(api.immutable.list, {
+      const usersResult = await this.client.query(api.immutable.list, {
         type: "user",
       });
-      result.users = users.filter((u) => this.belongsToRun(u.id)).length;
+      counts.users = usersResult.entries.filter((u: { id: string }) => this.belongsToRun(u.id)).length;
 
       // Count agents
       const agents = await this.client.query(api.agents.list, {});
-      result.agents = agents.filter((a) => this.belongsToRun(a.agentId)).length;
+      counts.agents = agents.filter((a: { agentId: string }) => this.belongsToRun(a.agentId)).length;
 
       // Count immutable (excluding users)
-      const immutable = await this.client.query(api.immutable.list, {});
-      result.immutable = immutable.filter(
-        (r) =>
+      const immutableResult = await this.client.query(api.immutable.list, {});
+      counts.immutable = immutableResult.entries.filter(
+        (r: { type: string; id: string }) =>
           r.type !== "user" &&
           (this.belongsToRun(r.type) || this.belongsToRun(r.id)),
       ).length;
 
       // Count mutable - requires namespace, so we skip this count
       // (mutable cleanup uses purgeNamespace which doesn't need listing)
-      result.mutable = 0;
+      counts.mutable = 0;
     } catch (error) {
       console.error("Error counting remaining entities:", error);
     }
 
-    return result;
+    return counts;
   }
 }
