@@ -34,17 +34,6 @@ from .deduplication import (
     FactDeduplicationService,
     StoreWithDedupResult,
 )
-
-
-@dataclass
-class StoreFactWithDedupOptions:
-    """Options for storing a fact with deduplication."""
-
-    deduplication: Optional[Union[DeduplicationConfig, DeduplicationStrategy]] = None
-    """Deduplication configuration or strategy shorthand."""
-
-    sync_to_graph: bool = False
-    """Whether to sync the fact to the graph database."""
 from .validators import (
     FactsValidationError,
     validate_confidence,
@@ -66,6 +55,17 @@ from .validators import (
     validate_update_has_fields,
     validate_validity_period,
 )
+
+
+@dataclass
+class StoreFactWithDedupOptions:
+    """Options for storing a fact with deduplication."""
+
+    deduplication: Optional[Union[DeduplicationConfig, DeduplicationStrategy]] = None
+    """Deduplication configuration or strategy shorthand."""
+
+    sync_to_graph: bool = False
+    """Whether to sync the fact to the graph database."""
 
 
 class FactsAPI:
