@@ -741,7 +741,17 @@ class UsersAPI:
     async def _create_deletion_backup(self, plan: Dict[str, List[Any]]) -> Dict[str, List[Any]]:
         """Phase 2: Create backup for rollback."""
         # Return a copy of the plan as backup
-        return {k: list(v) for k, v in plan.items()}
+        # Handle both list values and dict values (paginated responses that weren't extracted)
+        backup: Dict[str, List[Any]] = {}
+        for k, v in plan.items():
+            if isinstance(v, list):
+                backup[k] = list(v)
+            elif isinstance(v, dict):
+                # Extract entries from paginated response
+                backup[k] = list(v.get("entries", []))
+            else:
+                backup[k] = []
+        return backup
 
     async def _execute_deletion(
         self, plan: Dict[str, List[Any]], user_id: str
@@ -830,7 +840,14 @@ class UsersAPI:
             deleted_layers.append("mutable")
 
         # 4. Delete immutable records - STRICT: raise on error
-        for record in plan.get("immutable", []):
+        # Handle both list format and dict format (paginated response)
+        immutable_records = plan.get("immutable", [])
+        if isinstance(immutable_records, dict):
+            immutable_records = immutable_records.get("entries", [])
+        for record in immutable_records:
+            # Skip non-dict records (defensive: handle malformed data)
+            if not isinstance(record, dict):
+                continue
             try:
                 await self.client.mutation(
                     "immutable:purge",
@@ -1044,7 +1061,14 @@ class UsersAPI:
                 rollback_stats["errors"].append(f"Failed to restore mutable key: {e}")
 
         # Restore immutable records
-        for record in backup.get("immutable", []):
+        # Handle both list format and dict format (paginated response)
+        immutable_records = backup.get("immutable", [])
+        if isinstance(immutable_records, dict):
+            immutable_records = immutable_records.get("entries", [])
+        for record in immutable_records:
+            # Skip non-dict records (defensive: handle malformed data)
+            if not isinstance(record, dict):
+                continue
             try:
                 await self.client.mutation(
                     "immutable:store",
