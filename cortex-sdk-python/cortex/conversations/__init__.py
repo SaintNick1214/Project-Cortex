@@ -400,9 +400,11 @@ class ConversationsAPI:
         )
 
         # Convert response to ListConversationsResult
+        # Handle both dict response (with conversations key) and direct list response
+        raw_conversations = result if isinstance(result, list) else result.get("conversations", [])
         conversations = [
             Conversation(**convert_convex_response(conv))
-            for conv in result.get("conversations", result if isinstance(result, list) else [])
+            for conv in raw_conversations
         ]
         return ListConversationsResult(
             conversations=conversations,
