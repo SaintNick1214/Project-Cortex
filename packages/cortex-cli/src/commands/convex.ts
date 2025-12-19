@@ -70,18 +70,51 @@ async function execCommand(
 }
 
 /**
+ * Build a clean environment for Convex commands.
+ * Removes inherited CONVEX_* variables so the target project's .env.local is used,
+ * then applies any explicit overrides.
+ */
+function buildConvexEnv(overrides?: Record<string, string>): typeof process.env {
+  const env = { ...process.env };
+  
+  // Remove inherited CONVEX_* variables that could conflict with target project
+  const convexVars = Object.keys(env).filter(key => 
+    key.startsWith('CONVEX_') || 
+    key.startsWith('LOCAL_CONVEX_') || 
+    key.startsWith('CLOUD_CONVEX_') ||
+    key.startsWith('ENV_CONVEX_')
+  );
+  for (const key of convexVars) {
+    delete env[key];
+  }
+  
+  // Apply explicit overrides
+  if (overrides) {
+    Object.assign(env, overrides);
+  }
+  
+  return env;
+}
+
+/**
  * Execute a command with live output
  */
 async function execCommandLive(
   command: string,
   args: string[],
-  options?: { cwd?: string },
+  options?: { cwd?: string; env?: Record<string, string>; cleanConvexEnv?: boolean },
 ): Promise<number> {
   return new Promise((resolve) => {
+    // Build environment: if cleanConvexEnv is true, remove inherited CONVEX_* vars
+    const env = options?.cleanConvexEnv 
+      ? buildConvexEnv(options.env) 
+      : (options?.env ? { ...process.env, ...options.env } : process.env);
+
     const child = spawn(command, args, {
       cwd: options?.cwd,
       stdio: "inherit",
       shell: true,
+      env,
     });
 
     child.on("close", (code) => {
@@ -192,9 +225,23 @@ export function registerConvexCommands(
 
         const args = ["convex", "deploy"];
 
+        // Build environment variables for the Convex command
+        // This ensures we use the config values, not inherited env vars from parent process
+        const convexEnv: Record<string, string> = {};
+
         if (options.local || info.isLocal) {
           const resolved = resolveConfig(currentConfig, { deployment: targetName });
           args.push("--url", resolved.url);
+          convexEnv.CONVEX_URL = resolved.url;
+        } else {
+          // For cloud deployments, explicitly set the URL and deploy key from config
+          convexEnv.CONVEX_URL = deployment.url;
+          if (deployment.key) {
+            convexEnv.CONVEX_DEPLOY_KEY = deployment.key;
+          }
+          if (deployment.deployment) {
+            convexEnv.CONVEX_DEPLOYMENT = deployment.deployment;
+          }
         }
 
         if (options.prod) {
@@ -205,7 +252,11 @@ export function registerConvexCommands(
           args.push("--yes");
         }
 
-        const exitCode = await execCommandLive("npx", args, { cwd: projectPath });
+        const exitCode = await execCommandLive("npx", args, { 
+          cwd: projectPath,
+          env: convexEnv,
+          cleanConvexEnv: true, // Remove inherited CONVEX_* vars from parent process
+        });
 
         if (exitCode === 0) {
           console.log();
@@ -257,7 +308,10 @@ export function registerConvexCommands(
           args.push("--once", "--until-success");
         }
 
-        await execCommandLive("npx", args, { cwd: projectPath });
+        await execCommandLive("npx", args, { 
+          cwd: projectPath, 
+          cleanConvexEnv: true,
+        });
       } catch (error) {
         printError(
           error instanceof Error ? error.message : "Dev server failed",
@@ -301,7 +355,10 @@ export function registerConvexCommands(
           args.push("--prod");
         }
 
-        await execCommandLive("npx", args, { cwd: projectPath });
+        await execCommandLive("npx", args, { 
+          cwd: projectPath, 
+          cleanConvexEnv: true,
+        });
       } catch (error) {
         printError(error instanceof Error ? error.message : "Logs failed");
         process.exit(1);
@@ -339,7 +396,10 @@ export function registerConvexCommands(
           args.push("--prod");
         }
 
-        await execCommandLive("npx", args, { cwd: projectPath });
+        await execCommandLive("npx", args, { 
+          cwd: projectPath, 
+          cleanConvexEnv: true,
+        });
       } catch (error) {
         printError(error instanceof Error ? error.message : "Dashboard failed");
         process.exit(1);
@@ -687,7 +747,10 @@ export function registerConvexCommands(
         "convex",
         "dev",
         "--once",
-      ], { cwd: projectPath });
+      ], { 
+        cwd: projectPath, 
+        cleanConvexEnv: true,
+      });
 
       if (exitCode === 0) {
         console.log();
@@ -731,7 +794,10 @@ export function registerConvexCommands(
           args.push("--prod");
         }
 
-        await execCommandLive("npx", args, { cwd: projectPath });
+        await execCommandLive("npx", args, { 
+          cwd: projectPath, 
+          cleanConvexEnv: true,
+        });
       } catch (error) {
         printError(
           error instanceof Error ? error.message : "Env command failed",

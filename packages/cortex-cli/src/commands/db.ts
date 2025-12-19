@@ -350,93 +350,26 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
             }
           };
 
-          // 1. Clear agents (using SDK for proper unregister)
-          let hasMoreAgents = true;
-          while (hasMoreAgents) {
+          // 1. Clear agents (using SDK batch unregisterMany for speed)
+          spinner.text = `Clearing agents...`;
+          try {
+            // Use unregisterMany with empty filters to match all agents
+            // This uses a single backend mutation instead of N individual calls
+            const result = await client.agents.unregisterMany({}, { cascade: false });
+            deleted.agents = result.deleted;
             spinner.text = `Clearing agents... (${deleted.agents} deleted)`;
-            try {
-              const agents = await client.agents.list({ limit: MAX_LIMIT });
-              if (agents.length === 0) {
-                hasMoreAgents = false;
-                break;
-              }
-              for (const agent of agents) {
-                try {
-                  await client.agents.unregister(agent.id, { cascade: false });
-                  deleted.agents++;
-                } catch {
-                  // Continue on error
-                }
-              }
-              if (agents.length < MAX_LIMIT) {
-                hasMoreAgents = false;
-              }
-            } catch {
-              // Fall back to direct table clear if SDK fails
-              await clearTableDirect("agents", "agents");
-              hasMoreAgents = false;
-            }
+          } catch {
+            // Fall back to direct table clear if SDK fails
+            await clearTableDirect("agents", "agents");
           }
 
-          // 2. Clear contexts (using SDK for cascade)
-          let hasMoreContexts = true;
-          while (hasMoreContexts) {
-            spinner.text = `Clearing contexts... (${deleted.contexts} deleted)`;
-            try {
-              const contexts = await client.contexts.list({ limit: MAX_LIMIT });
-              if (contexts.length === 0) {
-                hasMoreContexts = false;
-                break;
-              }
-              for (const ctx of contexts) {
-                try {
-                  await client.contexts.delete(ctx.contextId, {
-                    cascadeChildren: true,
-                  });
-                  deleted.contexts++;
-                } catch {
-                  // Continue on error
-                }
-              }
-              if (contexts.length < MAX_LIMIT) {
-                hasMoreContexts = false;
-              }
-            } catch {
-              await clearTableDirect("contexts", "contexts");
-              hasMoreContexts = false;
-            }
-          }
+          // 2. Clear contexts (direct table clear - SDK deleteMany requires filters)
+          spinner.text = `Clearing contexts...`;
+          await clearTableDirect("contexts", "contexts");
 
-          // 3. Clear conversations (count messages)
-          let hasMoreConvos = true;
-          while (hasMoreConvos) {
-            spinner.text = `Clearing conversations... (${deleted.conversations} deleted, ${deleted.messages} messages)`;
-            try {
-              const convosResult = await client.conversations.list({
-                limit: MAX_LIMIT,
-              });
-              const convos = convosResult.conversations;
-              if (convos.length === 0) {
-                hasMoreConvos = false;
-                break;
-              }
-              for (const convo of convos) {
-                try {
-                  deleted.messages += convo.messageCount || 0;
-                  await client.conversations.delete(convo.conversationId);
-                  deleted.conversations++;
-                } catch {
-                  // Continue on error
-                }
-              }
-              if (convos.length < MAX_LIMIT) {
-                hasMoreConvos = false;
-              }
-            } catch {
-              await clearTableDirect("conversations", "conversations");
-              hasMoreConvos = false;
-            }
-          }
+          // 3. Clear conversations (direct table clear - SDK deleteMany requires filters)
+          spinner.text = `Clearing conversations...`;
+          await clearTableDirect("conversations", "conversations");
 
           // 4. Clear facts (direct table clear)
           await clearTableDirect("facts", "facts");
@@ -444,97 +377,19 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
           // 5. Clear memories (direct table clear)
           await clearTableDirect("memories", "memories");
 
-          // 6. Clear memory spaces (using raw client for invalid IDs)
-          let hasMoreSpaces = true;
-          while (hasMoreSpaces) {
-            spinner.text = `Clearing memorySpaces... (${deleted.memorySpaces} deleted)`;
-            try {
-              const spacesResult = await client.memorySpaces.list({
-                limit: MAX_LIMIT,
-              });
-              const spaces = spacesResult.spaces;
-              if (spaces.length === 0) {
-                hasMoreSpaces = false;
-                break;
-              }
-              for (const space of spaces) {
-                try {
-                  await rawClient.mutation(
-                    "memorySpaces:deleteSpace" as unknown as Parameters<
-                      typeof rawClient.mutation
-                    >[0],
-                    { memorySpaceId: space.memorySpaceId, cascade: true },
-                  );
-                  deleted.memorySpaces++;
-                } catch {
-                  // Continue on error
-                }
-              }
-              if (spaces.length < MAX_LIMIT) {
-                hasMoreSpaces = false;
-              }
-            } catch {
-              await clearTableDirect("memorySpaces", "memorySpaces");
-              hasMoreSpaces = false;
-            }
-          }
+          // 6. Clear memory spaces (direct table clear - no SDK batch delete)
+          spinner.text = `Clearing memorySpaces...`;
+          await clearTableDirect("memorySpaces", "memorySpaces");
 
-          // 7. Clear immutable (using SDK)
-          let hasMoreImmutable = true;
-          while (hasMoreImmutable) {
-            spinner.text = `Clearing immutable... (${deleted.immutable} deleted)`;
-            try {
-              const records = await client.immutable.list({ limit: MAX_LIMIT });
-              if (records.length === 0) {
-                hasMoreImmutable = false;
-                break;
-              }
-              for (const record of records) {
-                try {
-                  await client.immutable.purge(record.type, record.id);
-                  deleted.immutable++;
-                } catch {
-                  // Continue on error
-                }
-              }
-              if (records.length < MAX_LIMIT) {
-                hasMoreImmutable = false;
-              }
-            } catch {
-              await clearTableDirect("immutable", "immutable");
-              hasMoreImmutable = false;
-            }
-          }
+          // 7. Clear immutable (direct table clear - SDK purgeMany requires filters)
+          spinner.text = `Clearing immutable...`;
+          await clearTableDirect("immutable", "immutable");
 
           // 8. Clear mutable (direct table clear)
           await clearTableDirect("mutable", "mutable");
 
-          // 9. Clear users (using SDK for cascade - users table is virtual/SDK-managed)
-          let hasMoreUsers = true;
-          while (hasMoreUsers) {
-            spinner.text = `Clearing users... (${deleted.users} deleted)`;
-            try {
-              const usersResult = await client.users.list({ limit: MAX_LIMIT });
-              const users = usersResult.users;
-              if (users.length === 0) {
-                hasMoreUsers = false;
-                break;
-              }
-              for (const user of users) {
-                try {
-                  await client.users.delete(user.id, { cascade: true });
-                  deleted.users++;
-                } catch {
-                  // Continue on error
-                }
-              }
-              if (users.length < MAX_LIMIT) {
-                hasMoreUsers = false;
-              }
-            } catch {
-              hasMoreUsers = false;
-            }
-          }
+          // 9. Users - no table to clear (virtual layer derived from participantId in other tables)
+          // All user data is already cleared by clearing conversations, memories, facts, immutable, mutable
 
           // 10. Clear governance policies
           await clearTableDirect("governancePolicies", "governancePolicies");

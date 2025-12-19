@@ -181,6 +181,110 @@ const enrichedFact = await cortex.facts.store({
 });
 ```
 
+### `facts.storeWithDedup()`
+
+> **New in v0.22.0**: Store a fact with automatic cross-session deduplication.
+
+Store a fact, automatically checking for and handling duplicates. If a duplicate is found, either returns the existing fact or updates it if the new confidence is higher.
+
+**Signature:**
+
+```typescript
+cortex.facts.storeWithDedup(
+  params: StoreFactParams,
+  options?: StoreFactWithDedupOptions
+): Promise<StoreWithDedupResult>
+```
+
+**Parameters:**
+
+```typescript
+interface StoreFactWithDedupOptions extends StoreFactOptions {
+  /**
+   * Deduplication configuration.
+   *
+   * - 'semantic': Embedding-based similarity (most accurate, requires generateEmbedding)
+   * - 'structural': Subject + predicate + object match (fast, good accuracy)
+   * - 'exact': Normalized text match (fastest, lowest accuracy)
+   * - false: Disable deduplication
+   *
+   * @default undefined (no deduplication at facts.store level)
+   */
+  deduplication?: DeduplicationConfig | DeduplicationStrategy | false;
+}
+
+interface DeduplicationConfig {
+  strategy: 'none' | 'exact' | 'structural' | 'semantic';
+  similarityThreshold?: number;  // 0-1, default 0.85
+  generateEmbedding?: (text: string) => Promise<number[]>;
+}
+```
+
+**Return Type:**
+
+```typescript
+interface StoreWithDedupResult {
+  fact: FactRecord;
+  wasUpdated: boolean;  // true if existing fact was updated
+  deduplication?: {
+    strategy: DeduplicationStrategy;
+    matchedExisting: boolean;
+    similarityScore?: number;  // For semantic matches
+  };
+}
+```
+
+**Example:**
+
+```typescript
+// Store with structural deduplication
+const result = await cortex.facts.storeWithDedup(
+  {
+    memorySpaceId: "agent-1",
+    fact: "User prefers dark mode",
+    factType: "preference",
+    subject: "user-123",
+    predicate: "prefers",
+    object: "dark-mode",
+    confidence: 90,
+    sourceType: "conversation",
+  },
+  {
+    deduplication: { strategy: "structural" },
+  }
+);
+
+if (result.deduplication?.matchedExisting) {
+  console.log("Found duplicate:", result.fact.factId);
+  console.log("Was updated:", result.wasUpdated);
+} else {
+  console.log("Created new fact:", result.fact.factId);
+}
+
+// Store with semantic deduplication
+const semanticResult = await cortex.facts.storeWithDedup(
+  {
+    memorySpaceId: "agent-1",
+    fact: "User likes dark themes",  // Different wording
+    factType: "preference",
+    subject: "user-123",
+    confidence: 85,
+    sourceType: "conversation",
+  },
+  {
+    deduplication: {
+      strategy: "semantic",
+      similarityThreshold: 0.8,
+      generateEmbedding: async (text) => embed(text),
+    },
+  }
+);
+
+// Will match "User prefers dark mode" semantically
+console.log(semanticResult.deduplication?.matchedExisting); // true
+console.log(semanticResult.deduplication?.similarityScore); // ~0.92
+```
+
 ### `facts.get()`
 
 Retrieve a fact by ID.

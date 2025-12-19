@@ -233,6 +233,28 @@ export function generateId(prefix: string = "id"): string {
 }
 
 /**
+ * Resolve agent ID from config
+ *
+ * Agent ID is required for user-agent conversations (SDK v0.17.0+).
+ */
+export function resolveAgentId(config: CortexMemoryConfig): string {
+  if (!config.agentId) {
+    throw new Error(
+      "agentId is required. User-agent conversations require both a user and an agent participant. " +
+        "Provide agentId in your configuration, e.g., agentId: 'my-assistant'"
+    );
+  }
+  return config.agentId;
+}
+
+/**
+ * Resolve agent name from config (defaults to agentId)
+ */
+export function resolveAgentName(config: CortexMemoryConfig): string {
+  return config.agentName || config.agentId;
+}
+
+/**
  * Validate configuration
  */
 export function validateConfig(config: CortexMemoryConfig): void {
@@ -246,6 +268,26 @@ export function validateConfig(config: CortexMemoryConfig): void {
 
   if (!config.userId) {
     throw new Error("userId is required");
+  }
+
+  // agentId is REQUIRED for user-agent conversations (SDK v0.17.0+)
+  if (!config.agentId) {
+    throw new Error(
+      "agentId is required. Since SDK v0.17.0, user-agent conversations require both " +
+        "a user and an agent participant. Provide agentId in your configuration:\n\n" +
+        "  createCortexMemory({\n" +
+        "    convexUrl: process.env.CONVEX_URL!,\n" +
+        "    memorySpaceId: 'my-space',\n" +
+        "    userId: 'user-123',\n" +
+        "    userName: 'User',\n" +
+        "    agentId: 'my-assistant',  // <-- Required\n" +
+        "  })"
+    );
+  }
+
+  // Validate agentId format (basic validation)
+  if (typeof config.agentId !== "string" || config.agentId.trim() === "") {
+    throw new Error("agentId must be a non-empty string");
   }
 
   if (config.memorySearchLimit !== undefined && config.memorySearchLimit < 0) {

@@ -25,23 +25,26 @@ from cortex.types import (
 
 
 @pytest.mark.asyncio
-async def test_set_creates_new_record(cortex_client, test_ids, cleanup_helper):
+async def test_set_creates_new_record(cortex_client, test_ids, cleanup_helper, ctx):
     """
     Test creating a new mutable record.
 
     Port of: mutable.test.ts - set tests
     """
     memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("set-create")
+    unique_key = ctx.mutable_key("user-status")
 
     result = await cortex_client.mutable.set(
-        "test-namespace",
-        "user-status",
+        unique_namespace,
+        unique_key,
         {"status": "online", "lastSeen": 1234567890},
     )
 
     # Validate result - it's a MutableRecord object
-    assert result.namespace == "test-namespace"
-    assert result.key == "user-status"
+    assert result.namespace == unique_namespace
+    assert result.key == unique_key
     assert result.value is not None
 
     # Cleanup
@@ -49,32 +52,35 @@ async def test_set_creates_new_record(cortex_client, test_ids, cleanup_helper):
 
 
 @pytest.mark.asyncio
-async def test_set_overwrites_existing_record(cortex_client, test_ids, cleanup_helper):
+async def test_set_overwrites_existing_record(cortex_client, test_ids, cleanup_helper, ctx):
     """
     Test overwriting existing mutable record.
 
     Port of: mutable.test.ts - set tests
     """
     memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("set-overwrite")
+    unique_key = ctx.mutable_key("counter")
 
     # Set initial value
     await cortex_client.mutable.set(
-        "test-namespace",
-        "counter",
+        unique_namespace,
+        unique_key,
         {"count": 0},
     )
 
     # Overwrite with new value
     await cortex_client.mutable.set(
-        "test-namespace",
-        "counter",
+        unique_namespace,
+        unique_key,
         {"count": 10},
     )
 
     # Get the value - now returns just the value directly
     retrieved = await cortex_client.mutable.get(
-        "test-namespace",
-        "counter",
+        unique_namespace,
+        unique_key,
     )
 
     assert retrieved is not None
@@ -91,25 +97,28 @@ async def test_set_overwrites_existing_record(cortex_client, test_ids, cleanup_h
 
 
 @pytest.mark.asyncio
-async def test_get_existing_record(cortex_client, test_ids, cleanup_helper):
+async def test_get_existing_record(cortex_client, test_ids, cleanup_helper, ctx):
     """
     Test getting existing mutable record.
 
     Port of: mutable.test.ts - get tests
     """
     memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("get-existing")
+    unique_key = ctx.mutable_key("test-key")
 
     # Set value
     await cortex_client.mutable.set(
-        "test-namespace",
-        "test-key",
+        unique_namespace,
+        unique_key,
         {"data": "test value"},
     )
 
     # Get value - now returns just the value directly
     result = await cortex_client.mutable.get(
-        "test-namespace",
-        "test-key",
+        unique_namespace,
+        unique_key,
     )
 
     assert result is not None
@@ -121,17 +130,20 @@ async def test_get_existing_record(cortex_client, test_ids, cleanup_helper):
 
 
 @pytest.mark.asyncio
-async def test_get_nonexistent_returns_none(cortex_client, test_ids):
+async def test_get_nonexistent_returns_none(cortex_client, test_ids, ctx):
     """
     Test that getting non-existent record returns None.
 
     Port of: mutable.test.ts - get tests
     """
     test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("get-nonexistent")
+    unique_key = ctx.mutable_key("does-not-exist")
 
     result = await cortex_client.mutable.get(
-        "test-namespace",
-        "does-not-exist",
+        unique_namespace,
+        unique_key,
     )
 
     assert result is None
@@ -143,32 +155,35 @@ async def test_get_nonexistent_returns_none(cortex_client, test_ids):
 
 
 @pytest.mark.asyncio
-async def test_update_merges_values(cortex_client, test_ids, cleanup_helper):
+async def test_update_merges_values(cortex_client, test_ids, cleanup_helper, ctx):
     """
     Test update merges with existing value.
 
     Port of: mutable.test.ts - update tests
     """
     memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("update-merge")
+    unique_key = ctx.mutable_key("user-prefs")
 
     # Set initial value
     await cortex_client.mutable.set(
-        "test-namespace",
-        "user-prefs",
+        unique_namespace,
+        unique_key,
         {"theme": "dark", "notifications": True},
     )
 
     # Update (requires a callable updater function)
     await cortex_client.mutable.update(
-        "test-namespace",
-        "user-prefs",
+        unique_namespace,
+        unique_key,
         lambda current: {**(current or {}), "language": "en"},
     )
 
     # Get merged result - now returns just the value
     retrieved = await cortex_client.mutable.get(
-        "test-namespace",
-        "user-prefs",
+        unique_namespace,
+        unique_key,
     )
 
     # Should have all fields - get() now returns just the value
@@ -186,31 +201,34 @@ async def test_update_merges_values(cortex_client, test_ids, cleanup_helper):
 
 
 @pytest.mark.asyncio
-async def test_delete_record(cortex_client, test_ids, cleanup_helper):
+async def test_delete_record(cortex_client, test_ids, cleanup_helper, ctx):
     """
     Test deleting a mutable record.
 
     Port of: mutable.test.ts - delete tests
     """
     memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("delete")
+    unique_key = ctx.mutable_key("delete-test")
 
     # Create record
     await cortex_client.mutable.set(
-        "test-namespace",
-        "delete-test",
+        unique_namespace,
+        unique_key,
         {"value": "to delete"},
     )
 
     # Delete it
     await cortex_client.mutable.delete(
-        "test-namespace",
-        "delete-test",
+        unique_namespace,
+        unique_key,
     )
 
     # Verify deleted
     retrieved = await cortex_client.mutable.get(
-        "test-namespace",
-        "delete-test",
+        unique_namespace,
+        unique_key,
     )
 
     assert retrieved is None
@@ -225,25 +243,27 @@ async def test_delete_record(cortex_client, test_ids, cleanup_helper):
 
 
 @pytest.mark.asyncio
-async def test_list_records_in_namespace(cortex_client, test_ids, cleanup_helper):
+async def test_list_records_in_namespace(cortex_client, test_ids, cleanup_helper, ctx):
     """
     Test listing records in a namespace.
 
     Port of: mutable.test.ts - list tests
     """
     memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("list")
 
     # Create multiple records
     for i in range(3):
         await cortex_client.mutable.set(
-            "test-namespace",
+            unique_namespace,
             f"key-{i}",
             {"value": i},
         )
 
     # List records - now uses ListMutableFilter
     result = await cortex_client.mutable.list(
-        ListMutableFilter(namespace="test-namespace", limit=10)
+        ListMutableFilter(namespace=unique_namespace, limit=10)
     )
 
     # Should return at least 3 records
@@ -260,25 +280,27 @@ async def test_list_records_in_namespace(cortex_client, test_ids, cleanup_helper
 
 
 @pytest.mark.asyncio
-async def test_count_records(cortex_client, test_ids, cleanup_helper):
+async def test_count_records(cortex_client, test_ids, cleanup_helper, ctx):
     """
     Test counting records in a namespace.
 
     Port of: mutable.test.ts - count tests
     """
     memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("count")
 
     # Create records
     for i in range(4):
         await cortex_client.mutable.set(
-            "count-test",
+            unique_namespace,
             f"key-{i}",
             {"value": i},
         )
 
     # Count records - now uses CountMutableFilter
     count = await cortex_client.mutable.count(
-        CountMutableFilter(namespace="count-test")
+        CountMutableFilter(namespace=unique_namespace)
     )
 
     assert count >= 4
@@ -293,25 +315,28 @@ async def test_count_records(cortex_client, test_ids, cleanup_helper):
 
 
 @pytest.mark.asyncio
-async def test_exists_returns_true_for_existing(cortex_client, test_ids, cleanup_helper):
+async def test_exists_returns_true_for_existing(cortex_client, test_ids, cleanup_helper, ctx):
     """
     Test exists() returns True for existing record.
 
     Port of: mutable.test.ts - exists tests
     """
     memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("exists-true")
+    unique_key = ctx.mutable_key("exists-test")
 
     # Create record
     await cortex_client.mutable.set(
-        "test-namespace",
-        "exists-test",
+        unique_namespace,
+        unique_key,
         {"value": "exists"},
     )
 
     # Check exists
     exists = await cortex_client.mutable.exists(
-        "test-namespace",
-        "exists-test",
+        unique_namespace,
+        unique_key,
     )
 
     assert exists is True
@@ -321,17 +346,20 @@ async def test_exists_returns_true_for_existing(cortex_client, test_ids, cleanup
 
 
 @pytest.mark.asyncio
-async def test_exists_returns_false_for_nonexistent(cortex_client, test_ids):
+async def test_exists_returns_false_for_nonexistent(cortex_client, test_ids, ctx):
     """
     Test exists() returns False for non-existent record.
 
     Port of: mutable.test.ts - exists tests
     """
     test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("exists-false")
+    unique_key = ctx.mutable_key("does-not-exist")
 
     exists = await cortex_client.mutable.exists(
-        "test-namespace",
-        "does-not-exist",
+        unique_namespace,
+        unique_key,
     )
 
     assert exists is False

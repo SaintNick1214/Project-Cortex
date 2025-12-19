@@ -4,6 +4,7 @@ Cortex SDK - Facts API
 Layer 3: Structured knowledge extraction and storage
 """
 
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Union, cast
 
 from .._utils import convert_convex_response, filter_none_values
@@ -24,6 +25,14 @@ from ..types import (
     StoreFactParams,
     UpdateFactInput,
     UpdateFactOptions,
+)
+from .deduplication import (
+    DeduplicationConfig,
+    DeduplicationStrategy,
+    DuplicateResult,
+    FactCandidate,
+    FactDeduplicationService,
+    StoreWithDedupResult,
 )
 from .validators import (
     FactsValidationError,
@@ -46,6 +55,17 @@ from .validators import (
     validate_update_has_fields,
     validate_validity_period,
 )
+
+
+@dataclass
+class StoreFactWithDedupOptions:
+    """Options for storing a fact with deduplication."""
+
+    deduplication: Optional[Union[DeduplicationConfig, DeduplicationStrategy]] = None
+    """Deduplication configuration or strategy shorthand."""
+
+    sync_to_graph: bool = False
+    """Whether to sync the fact to the graph database."""
 
 
 class FactsAPI:
@@ -72,6 +92,7 @@ class FactsAPI:
         self.client = client
         self.graph_adapter = graph_adapter
         self._resilience = resilience
+        self._dedup_service = FactDeduplicationService(client)
 
     async def _execute_with_resilience(
         self, operation: Any, operation_name: str
@@ -181,6 +202,139 @@ class FactsAPI:
                 print(f"Warning: Failed to sync fact to graph: {error}")
 
         return FactRecord(**convert_convex_response(result))
+
+    async def store_with_dedup(
+        self,
+        params: StoreFactParams,
+        options: Optional[StoreFactWithDedupOptions] = None,
+    ) -> StoreWithDedupResult:
+        """
+        Store a fact with cross-session deduplication.
+
+        Checks for existing duplicate facts before storing. If a duplicate is found:
+        - If new fact has higher confidence: updates the existing fact
+        - Otherwise: returns the existing fact without modification
+
+        Args:
+            params: Fact storage parameters
+            options: Optional options including deduplication config
+
+        Returns:
+            StoreWithDedupResult with fact and deduplication details
+
+        Example:
+            >>> result = await cortex.facts.store_with_dedup(
+            ...     StoreFactParams(
+            ...         memory_space_id='agent-1',
+            ...         fact='User prefers dark mode',
+            ...         fact_type='preference',
+            ...         subject='user-123',
+            ...         confidence=95,
+            ...         source_type='conversation',
+            ...     ),
+            ...     StoreFactWithDedupOptions(
+            ...         deduplication=DeduplicationConfig(strategy='structural')
+            ...     )
+            ... )
+            >>> if result.was_updated:
+            ...     print(f"Updated existing fact: {result.fact.fact_id}")
+        """
+        # Validate required fields (same as store)
+        validate_memory_space_id(params.memory_space_id)
+        validate_required_string(params.fact, "fact")
+        validate_fact_type(params.fact_type)
+        validate_confidence(params.confidence, "confidence")
+        validate_source_type(params.source_type)
+
+        # Validate optional fields if provided
+        if params.tags is not None:
+            validate_string_array(params.tags, "tags", True)
+        if params.valid_from is not None and params.valid_until is not None:
+            validate_validity_period(params.valid_from, params.valid_until)
+        if params.source_ref is not None:
+            validate_source_ref(params.source_ref)
+        if params.metadata is not None:
+            validate_metadata(params.metadata)
+
+        opts = options or StoreFactWithDedupOptions()
+
+        # Resolve deduplication config
+        dedup_config = FactDeduplicationService.resolve_config(opts.deduplication)
+
+        # Check for duplicates
+        candidate = FactCandidate(
+            fact=params.fact,
+            fact_type=params.fact_type,
+            confidence=params.confidence,
+            subject=params.subject,
+            predicate=params.predicate,
+            object=params.object,
+            tags=params.tags,
+        )
+
+        duplicate_result = await self._dedup_service.find_duplicate(
+            candidate,
+            params.memory_space_id,
+            dedup_config,
+            params.user_id,
+        )
+
+        # Handle duplicate found
+        if duplicate_result.is_duplicate and duplicate_result.existing_fact:
+            existing = duplicate_result.existing_fact
+
+            # If new confidence is higher, update the existing fact
+            if duplicate_result.should_update:
+                # Build update payload
+                update_data: Dict[str, Any] = {"confidence": params.confidence}
+                if params.tags:
+                    # Merge tags
+                    existing_tags = existing.tags or []
+                    merged_tags = list(set(existing_tags + params.tags))
+                    update_data["tags"] = merged_tags
+
+                updated_fact = await self.update(
+                    params.memory_space_id,
+                    existing.fact_id,
+                    update_data,
+                    UpdateFactOptions(sync_to_graph=opts.sync_to_graph),
+                )
+
+                return StoreWithDedupResult(
+                    fact=updated_fact,
+                    was_updated=True,
+                    deduplication={
+                        "strategy": dedup_config.strategy,
+                        "matched_existing": True,
+                        "similarity_score": duplicate_result.similarity_score,
+                    },
+                )
+
+            # Return existing fact without modification
+            return StoreWithDedupResult(
+                fact=existing,
+                was_updated=False,
+                deduplication={
+                    "strategy": dedup_config.strategy,
+                    "matched_existing": True,
+                    "similarity_score": duplicate_result.similarity_score,
+                },
+            )
+
+        # No duplicate found - store new fact
+        stored_fact = await self.store(
+            params,
+            StoreFactOptions(sync_to_graph=opts.sync_to_graph),
+        )
+
+        return StoreWithDedupResult(
+            fact=stored_fact,
+            was_updated=False,
+            deduplication={
+                "strategy": dedup_config.strategy,
+                "matched_existing": False,
+            },
+        )
 
     async def get(
         self, memory_space_id: str, fact_id: str
@@ -1050,5 +1204,16 @@ class FactsAPI:
         return cast(Dict[str, Any], result)
 
 
-__all__ = ["FactsAPI", "FactsValidationError"]
+__all__ = [
+    "FactsAPI",
+    "FactsValidationError",
+    # Deduplication exports
+    "DeduplicationConfig",
+    "DeduplicationStrategy",
+    "DuplicateResult",
+    "FactCandidate",
+    "FactDeduplicationService",
+    "StoreWithDedupResult",
+    "StoreFactWithDedupOptions",
+]
 

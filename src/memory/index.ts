@@ -37,6 +37,10 @@ import { api } from "../../convex-dev/_generated/api";
 import { ConversationsAPI } from "../conversations";
 import { VectorAPI } from "../vector";
 import { FactsAPI } from "../facts";
+import {
+  FactDeduplicationService,
+  type DeduplicationConfig,
+} from "../facts/deduplication";
 import type { MemorySpacesAPI } from "../memorySpaces";
 import type { UsersAPI } from "../users";
 import type { AgentsAPI } from "../agents";
@@ -282,6 +286,43 @@ export class MemoryAPI {
     skipLayers?: SkippableLayer[],
   ): boolean {
     return skipLayers?.includes(layer) ?? false;
+  }
+
+  /**
+   * Build deduplication config from remember params
+   *
+   * Defaults to 'semantic' strategy for maximum effectiveness (convenience layer).
+   * Falls back to 'structural' if no generateEmbedding function is available.
+   * Returns undefined if deduplication is explicitly disabled.
+   */
+  private buildDeduplicationConfig(
+    params: RememberParams | RememberStreamParams,
+  ): DeduplicationConfig | undefined {
+    // If explicitly disabled, return undefined
+    if (params.factDeduplication === false) {
+      return undefined;
+    }
+
+    // Determine the strategy - default to 'semantic'
+    const strategy = params.factDeduplication ?? "semantic";
+
+    // Build the config
+    const config: DeduplicationConfig = {
+      strategy,
+      similarityThreshold: 0.85,
+      generateEmbedding: params.generateEmbedding
+        ? async (text: string) => {
+            const result = await params.generateEmbedding!(text);
+            if (!result) {
+              throw new Error("generateEmbedding returned null");
+            }
+            return result;
+          }
+        : undefined,
+    };
+
+    // Use the resolve function to handle fallback logic
+    return FactDeduplicationService.resolveConfig(config);
   }
 
   /**
@@ -823,35 +864,50 @@ export class MemoryAPI {
           );
 
           if (factsToStore && factsToStore.length > 0) {
+            // Build deduplication config
+            // Default to 'semantic' for convenience layer (memory API)
+            // Falls back to 'structural' if no generateEmbedding function
+            const dedupConfig = this.buildDeduplicationConfig(params);
+
             for (const factData of factsToStore) {
               try {
-                const storedFact = await this.facts.store(
-                  {
-                    memorySpaceId,
-                    participantId: params.participantId,
-                    userId: params.userId,
-                    fact: factData.fact,
-                    factType: factData.factType,
-                    subject:
-                      factData.subject || params.userId || params.agentId,
-                    predicate: factData.predicate,
-                    object: factData.object,
-                    confidence: factData.confidence,
-                    sourceType: "conversation",
-                    sourceRef: {
-                      conversationId: params.conversationId,
-                      messageIds:
-                        userMsgId && agentMsgId
-                          ? [userMsgId, agentMsgId]
-                          : undefined,
-                      memoryId: storedMemories[0]?.memoryId,
-                    },
-                    tags: factData.tags || params.tags || [],
+                const storeParams = {
+                  memorySpaceId,
+                  participantId: params.participantId,
+                  userId: params.userId,
+                  fact: factData.fact,
+                  factType: factData.factType,
+                  subject:
+                    factData.subject || params.userId || params.agentId,
+                  predicate: factData.predicate,
+                  object: factData.object,
+                  confidence: factData.confidence,
+                  sourceType: "conversation" as const,
+                  sourceRef: {
+                    conversationId: params.conversationId,
+                    messageIds:
+                      userMsgId && agentMsgId
+                        ? [userMsgId, agentMsgId]
+                        : undefined,
+                    memoryId: storedMemories[0]?.memoryId,
                   },
-                  { syncToGraph: shouldSyncToGraph },
-                );
+                  tags: factData.tags || params.tags || [],
+                };
 
-                extractedFacts.push(storedFact);
+                // Use storeWithDedup if deduplication is enabled
+                if (dedupConfig) {
+                  const result = await this.facts.storeWithDedup(storeParams, {
+                    syncToGraph: shouldSyncToGraph,
+                    deduplication: dedupConfig,
+                  });
+                  extractedFacts.push(result.fact);
+                } else {
+                  // Deduplication disabled - use regular store
+                  const storedFact = await this.facts.store(storeParams, {
+                    syncToGraph: shouldSyncToGraph,
+                  });
+                  extractedFacts.push(storedFact);
+                }
               } catch (error) {
                 console.warn("Failed to store fact:", error);
               }
@@ -1097,12 +1153,19 @@ export class MemoryAPI {
     let _factExtractor: InstanceType<typeof ProgressiveFactExtractor> | null =
       null;
     if (options?.progressiveFactExtraction && params.extractFacts) {
+      // Build deduplication config from params
+      // Default to 'semantic' for convenience layer, falls back to 'structural'
+      const dedupConfig = this.buildDeduplicationConfig(params);
+
       _factExtractor = new ProgressiveFactExtractor(
         this.facts,
         memorySpaceId,
         ownerId, // Use validated owner (userId or agentId)
         params.participantId,
-        options.factExtractionThreshold || 500,
+        {
+          extractionThreshold: options.factExtractionThreshold || 500,
+          deduplication: dedupConfig,
+        },
       );
     }
 
