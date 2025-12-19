@@ -76,7 +76,7 @@ export function registerSpaceCommands(
         const limit = validateLimit(parseInt(options.limit, 10));
 
         await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const spacesList = await client.memorySpaces.list({
+          const spacesResult = await client.memorySpaces.list({
             type: filterType,
             status: filterStatus,
             limit,
@@ -84,13 +84,14 @@ export function registerSpaceCommands(
 
           spinner.stop();
 
-          if (spacesList.length === 0) {
+          const spaces = spacesResult.spaces;
+          if (spaces.length === 0) {
             printWarning("No memory spaces found");
             return;
           }
 
           // Format spaces for display
-          const displayData = spacesList.map((s) => ({
+          const displayData = spaces.map((s) => ({
             id: s.memorySpaceId,
             name: s.name ?? "-",
             type: s.type,
@@ -114,7 +115,7 @@ export function registerSpaceCommands(
           );
 
           printSuccess(
-            `Found ${formatCount(spacesList.length, "memory space")}`,
+            `Found ${formatCount(spaces.length, "memory space")}`,
           );
         });
       } catch (error) {
@@ -257,6 +258,7 @@ export function registerSpaceCommands(
       "Delete all data in the space (memories, facts, etc.)",
       false,
     )
+    .option("-r, --reason <reason>", "Reason for deletion (for audit trail)")
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (spaceId, options) => {
       const currentConfig = await loadConfig();
@@ -304,14 +306,18 @@ export function registerSpaceCommands(
         await withClient(currentConfig, { deployment: selection.name }, async (client) => {
           const result = await client.memorySpaces.delete(spaceId, {
             cascade: options.cascade,
+            reason: options.reason || "Deleted via CLI",
           });
 
           spinner.stop();
 
           if (result.deleted) {
             printSuccess(`Deleted memory space ${spaceId}`);
-            if (result.cascaded) {
-              printSuccess("All associated data was also deleted");
+            if (result.cascade) {
+              printSuccess(
+                `Cascaded: ${result.cascade.conversationsDeleted} conversations, ` +
+                `${result.cascade.memoriesDeleted} memories, ${result.cascade.factsDeleted} facts deleted`
+              );
             }
           } else {
             printError("Memory space not found or could not be deleted");

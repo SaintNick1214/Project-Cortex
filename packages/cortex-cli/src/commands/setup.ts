@@ -577,6 +577,212 @@ export function registerConfigCommands(
       }
     });
 
+  // config set-key
+  configCmd
+    .command("set-key [deployment]")
+    .description("Set or update the deploy key for a deployment")
+    .option("-k, --key <key>", "Deploy key (will prompt if not provided)")
+    .option(
+      "--json-only",
+      "Only update ~/.cortexrc (skip .env.local)",
+      false,
+    )
+    .action(async (deploymentArg, options) => {
+      try {
+        const config = await loadConfig();
+        let name = deploymentArg;
+
+        // If no name provided, show interactive selection
+        if (!name) {
+          const deploymentNames = Object.keys(config.deployments);
+
+          if (deploymentNames.length === 0) {
+            printWarning("No deployments configured");
+            console.log(
+              pc.dim("   Run 'cortex config add-deployment' to add one\n"),
+            );
+            return;
+          }
+
+          const response = await prompts({
+            type: "select",
+            name: "name",
+            message: "Select deployment to set key for:",
+            choices: deploymentNames.map((n) => {
+              const dep = config.deployments[n];
+              const keyStatus = dep.key ? pc.green("(key set)") : pc.dim("(no key)");
+              return {
+                title: `${n} ${keyStatus}`,
+                description: dep.url,
+                value: n,
+              };
+            }),
+          });
+
+          if (!response.name) {
+            printWarning("Cancelled");
+            return;
+          }
+          name = response.name;
+        }
+
+        if (!config.deployments[name]) {
+          printError(`Deployment "${name}" not found`);
+          console.log(
+            pc.dim("   Run 'cortex config list' to see available deployments\n"),
+          );
+          process.exit(1);
+        }
+
+        // Get key from option or prompt
+        let key = options.key;
+        if (!key) {
+          const response = await prompts({
+            type: "password",
+            name: "key",
+            message: `Enter deploy key for "${name}":`,
+            validate: (v) => v.length > 0 || "Key cannot be empty",
+          });
+
+          if (!response.key) {
+            printWarning("Cancelled");
+            return;
+          }
+          key = response.key;
+        }
+
+        // Update the deployment with the new key
+        const deployment = config.deployments[name];
+        deployment.key = key;
+        await updateDeployment(name, deployment);
+
+        // Also update .env.local (unless --json-only)
+        if (!options.jsonOnly) {
+          await addDeploymentToEnv(name, deployment.url, key);
+          const envKeys = getDeploymentEnvKeys(name);
+          printSuccess(`Set deploy key for "${name}"`);
+          printInfo(`Updated .env.local: ${envKeys.keyKey}=***`);
+        } else {
+          printSuccess(`Set deploy key for "${name}" in ~/.cortexrc`);
+        }
+      } catch (error) {
+        printError(
+          error instanceof Error ? error.message : "Failed to set key",
+        );
+        process.exit(1);
+      }
+    });
+
+  // config set-url
+  configCmd
+    .command("set-url [deployment]")
+    .description("Set or update the URL for a deployment")
+    .option("-u, --url <url>", "Deployment URL (will prompt if not provided)")
+    .option(
+      "--json-only",
+      "Only update ~/.cortexrc (skip .env.local)",
+      false,
+    )
+    .action(async (deploymentArg, options) => {
+      try {
+        const config = await loadConfig();
+        let name = deploymentArg;
+
+        // If no name provided, show interactive selection
+        if (!name) {
+          const deploymentNames = Object.keys(config.deployments);
+
+          if (deploymentNames.length === 0) {
+            printWarning("No deployments configured");
+            console.log(
+              pc.dim("   Run 'cortex config add-deployment' to add one\n"),
+            );
+            return;
+          }
+
+          const response = await prompts({
+            type: "select",
+            name: "name",
+            message: "Select deployment to set URL for:",
+            choices: deploymentNames.map((n) => {
+              const dep = config.deployments[n];
+              return {
+                title: n,
+                description: dep.url,
+                value: n,
+              };
+            }),
+          });
+
+          if (!response.name) {
+            printWarning("Cancelled");
+            return;
+          }
+          name = response.name;
+        }
+
+        if (!config.deployments[name]) {
+          printError(`Deployment "${name}" not found`);
+          console.log(
+            pc.dim("   Run 'cortex config list' to see available deployments\n"),
+          );
+          process.exit(1);
+        }
+
+        // Get URL from option or prompt
+        let url = options.url;
+        if (!url) {
+          const currentUrl = config.deployments[name].url;
+          const response = await prompts({
+            type: "text",
+            name: "url",
+            message: `Enter URL for "${name}":`,
+            initial: currentUrl,
+            validate: (v) => {
+              try {
+                new URL(v);
+                return true;
+              } catch {
+                return "Please enter a valid URL";
+              }
+            },
+          });
+
+          if (!response.url) {
+            printWarning("Cancelled");
+            return;
+          }
+          url = response.url;
+        }
+
+        // Validate URL
+        validateUrl(url);
+
+        // Update the deployment with the new URL
+        const deployment = config.deployments[name];
+        const oldUrl = deployment.url;
+        deployment.url = url;
+        await updateDeployment(name, deployment);
+
+        // Also update .env.local (unless --json-only)
+        if (!options.jsonOnly) {
+          await addDeploymentToEnv(name, url, deployment.key);
+          const envKeys = getDeploymentEnvKeys(name);
+          printSuccess(`Updated URL for "${name}"`);
+          printInfo(`${oldUrl} → ${url}`);
+          printInfo(`Updated .env.local: ${envKeys.urlKey}=${url}`);
+        } else {
+          printSuccess(`Updated URL for "${name}" in ~/.cortexrc`);
+          printInfo(`${oldUrl} → ${url}`);
+        }
+      } catch (error) {
+        printError(
+          error instanceof Error ? error.message : "Failed to set URL",
+        );
+        process.exit(1);
+      }
+    });
+
   // config path
   configCmd
     .command("path")

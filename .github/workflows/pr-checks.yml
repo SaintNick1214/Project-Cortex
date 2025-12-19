@@ -152,6 +152,20 @@ jobs:
         env:
           CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
 
+      # Python-dedicated Convex instance (isolated from main SDK and CLI tests)
+      - name: Deploy Python Convex backend
+        run: npx convex deploy --yes
+        env:
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_URL_PY }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_PY }}
+
+      - name: Purge Python test database
+        run: |
+          echo "🧹 Purging Python test database..."
+          npx tsx scripts/cleanup-test-data.ts
+        env:
+          CONVEX_URL: ${{ secrets.CONVEX_URL_PY }}
+
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # STAGE 3: Code Quality (runs in parallel with tests after purge)
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -344,7 +358,9 @@ jobs:
           cd cortex-sdk-python
           pytest tests/ -v --cov=cortex --cov-report=term-missing
         env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_URL_PY: ${{ secrets.CONVEX_URL_PY }}
+          CONVEX_URL: ${{ secrets.CONVEX_URL_PY }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_PY }}
           CONVEX_TEST_MODE: managed
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
