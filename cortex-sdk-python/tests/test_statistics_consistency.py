@@ -11,6 +11,7 @@ Note: Python port of comprehensive TypeScript statistics consistency tests.
 """
 
 from cortex.types import (
+    CountConversationsFilter,
     CreateConversationInput,
     RegisterMemorySpaceParams,
     StoreFactParams,
@@ -47,7 +48,7 @@ class TestMemorySpaceStatsConsistency:
             )
 
         stats = await cortex_client.memory_spaces.get_stats(space_id)
-        direct_count = await cortex_client.conversations.count(memory_space_id=space_id)
+        direct_count = await cortex_client.conversations.count(CountConversationsFilter(memory_space_id=space_id))
 
         assert stats.total_conversations == direct_count
 

@@ -296,6 +296,12 @@ class ConversationsAPI:
     async def list(
         self,
         filter: Optional[ListConversationsFilter] = None,
+        *,
+        memory_space_id: Optional[str] = None,
+        user_id: Optional[str] = None,
+        type: Optional[ConversationType] = None,
+        limit: Optional[int] = None,
+        offset: Optional[int] = None,
     ) -> ListConversationsResult:
         """
         List conversations with optional filters and pagination.
@@ -303,6 +309,11 @@ class ConversationsAPI:
         Args:
             filter: Optional filter with type, user_id, memory_space_id, dates,
                    pagination, and sorting options
+            memory_space_id: Memory space ID to filter by (convenience kwarg)
+            user_id: User ID to filter by (convenience kwarg)
+            type: Conversation type to filter by (convenience kwarg)
+            limit: Max results to return (convenience kwarg)
+            offset: Pagination offset (convenience kwarg)
 
         Returns:
             ListConversationsResult with conversations and pagination metadata
@@ -313,6 +324,9 @@ class ConversationsAPI:
             ...     limit=10
             ... ))
             >>> print(f"Found {result.total} conversations")
+
+            >>> # Using convenience kwargs
+            >>> result = await cortex.conversations.list(memory_space_id='space-123')
 
             >>> # With pagination and sorting
             >>> page2 = await cortex.conversations.list(ListConversationsFilter(
@@ -328,6 +342,16 @@ class ConversationsAPI:
             ...     created_after=int(time.time() * 1000) - 7 * 24 * 60 * 60 * 1000,
             ... ))
         """
+        # Build filter from kwargs if no filter object provided
+        if filter is None and any([memory_space_id, user_id, type, limit, offset]):
+            filter = ListConversationsFilter(
+                memory_space_id=memory_space_id,
+                user_id=user_id,
+                type=type,
+                limit=limit,
+                offset=offset,
+            )
+
         # All fields optional, validate only if provided
         if filter and filter.type is not None:
             validate_conversation_type(filter.type)
@@ -391,12 +415,19 @@ class ConversationsAPI:
     async def count(
         self,
         filter: Optional[CountConversationsFilter] = None,
+        *,
+        memory_space_id: Optional[str] = None,
+        user_id: Optional[str] = None,
+        type: Optional[ConversationType] = None,
     ) -> int:
         """
         Count conversations.
 
         Args:
             filter: Optional filter with type, user_id, memory_space_id
+            memory_space_id: Memory space ID to filter by (convenience kwarg)
+            user_id: User ID to filter by (convenience kwarg)
+            type: Conversation type to filter by (convenience kwarg)
 
         Returns:
             Count of matching conversations
@@ -405,7 +436,18 @@ class ConversationsAPI:
             >>> count = await cortex.conversations.count(CountConversationsFilter(
             ...     memory_space_id='user-123-personal'
             ... ))
+
+            >>> # Using convenience kwargs
+            >>> count = await cortex.conversations.count(memory_space_id='space-123')
         """
+        # Build filter from kwargs if no filter object provided
+        if filter is None and any([memory_space_id, user_id, type]):
+            filter = CountConversationsFilter(
+                memory_space_id=memory_space_id,
+                user_id=user_id,
+                type=type,
+            )
+
         if filter and filter.type is not None:
             validate_conversation_type(filter.type)
 

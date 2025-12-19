@@ -137,6 +137,7 @@ jobs:
           npx tsx scripts/cleanup-test-data.ts
         env:
           CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
       # CLI-dedicated Convex instance (isolated from main SDK tests)
       - name: Deploy CLI Convex backend
@@ -151,6 +152,7 @@ jobs:
           npx tsx scripts/cleanup-test-data.ts
         env:
           CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_CLI }}
 
       # Python-dedicated Convex instance (isolated from main SDK and CLI tests)
       - name: Deploy Python Convex backend
@@ -165,6 +167,7 @@ jobs:
           npx tsx scripts/cleanup-test-data.ts
         env:
           CONVEX_URL: ${{ secrets.CONVEX_URL_PY }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_PY }}
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # STAGE 3: Code Quality (runs in parallel with tests after purge)
