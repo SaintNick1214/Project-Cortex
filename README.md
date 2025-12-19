@@ -293,17 +293,23 @@ await cortex.agents.unregister("agent-xyz", {
 
 Get started with Cortex in under 5 minutes:
 
+### Install the Cortex CLI
+
+```bash
+npm install -g @cortexmemory/cli
+```
+
 ### Create Your First Cortex Project
 
 ```bash
-npm create cortex-memories
+cortex init my-cortex-agent
 ```
 
 The interactive wizard will guide you through:
 
 - **Project Setup** - Choose new project or add to existing
 - **Convex Configuration** - Local development, new cloud database, or existing database
-- **Graph Database** - Optional Neo4j/Memgraph integration
+- **Graph Database** - Optional Neo4j/Memgraph integration with Docker
 - **Automatic Setup** - Installs dependencies and deploys backend functions
 
 ### What Gets Set Up
@@ -312,14 +318,16 @@ The interactive wizard will guide you through:
 ✅ Convex backend functions (deployed automatically)  
 ✅ Environment configuration (.env.local)  
 ✅ Example code to get you started  
-✅ Optional graph database integration
+✅ Optional graph database integration  
+✅ Deployment saved to `~/.cortexrc` for CLI management
 
 ### Start Building
 
 ```bash
-cd my-cortex-agent  # Or whatever name you chose
-npm run dev         # Terminal 1: Start Convex
-npm start           # Terminal 2: Run your agent
+cd my-cortex-agent
+cortex start           # Starts Convex + graph DB (if configured)
+# Or use interactive dev mode:
+cortex dev             # Live dashboard with keyboard shortcuts
 ```
 
 ### Your First Memory
@@ -354,9 +362,23 @@ const results = await cortex.memory.search(
 
 ```bash
 cd your-existing-project
-npm create cortex-memories
-# Select current directory when prompted
+cortex init .
 ```
+
+### CLI Commands
+
+Once installed, manage your Cortex projects with:
+
+```bash
+cortex status          # View all deployments and their status
+cortex start           # Start all enabled deployments
+cortex stop            # Stop all running services
+cortex dev             # Interactive dev mode with live dashboard
+cortex config list     # View configured deployments
+cortex use <name>      # Switch between deployments
+```
+
+> **Note:** `npm create cortex-memories` is still available as an alternative, but `cortex init` is recommended as it provides additional features like multi-deployment management and interactive dev mode.
 
 ---
 

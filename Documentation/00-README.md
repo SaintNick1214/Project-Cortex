@@ -163,6 +163,15 @@ Documentation problems? Please help us improve:
 
 Recent documentation additions:
 
+- **2025-12-18**: 🎉 **v0.21.0 - CLI-First Installation**
+  - New primary installation method: `cortex init` replaces `npm create cortex-memories`
+  - Interactive dev mode with live dashboard (`cortex dev`)
+  - Multi-deployment management (`cortex use`, `cortex config list`)
+  - Graph database setup integrated into init wizard
+  - Updated: [Installation Guide](./01-getting-started/02-installation.md)
+  - Updated: [Five-Minute Quickstart](./01-getting-started/03-five-minute-quickstart.md)
+  - Updated: [Configuration Guide](./01-getting-started/05-configuration.md)
+
 - **2025-12-01**: 🎉 **v0.16.0 - Resilience Layer**
   - Built-in protection against server overload
   - Token bucket rate limiting, concurrency control, priority queues
@@ -195,7 +204,7 @@ The Cortex code is licensed under [Apache License 2.0](/project/license).
 
 ---
 
-**Last Updated**: 2025-12-01
+**Last Updated**: 2025-12-18
 
 ---
 
