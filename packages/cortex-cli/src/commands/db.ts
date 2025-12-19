@@ -108,10 +108,10 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
           spinner.text = "Counting messages...";
           let totalMessages = 0;
           try {
-            const convos = await client.conversations.list({
+            const convosResult = await client.conversations.list({
               limit: MAX_LIMIT,
             });
-            for (const convo of convos) {
+            for (const convo of convosResult.conversations) {
               totalMessages += convo.messageCount ?? 0;
             }
           } catch {
@@ -412,9 +412,10 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
           while (hasMoreConvos) {
             spinner.text = `Clearing conversations... (${deleted.conversations} deleted, ${deleted.messages} messages)`;
             try {
-              const convos = await client.conversations.list({
+              const convosResult = await client.conversations.list({
                 limit: MAX_LIMIT,
               });
+              const convos = convosResult.conversations;
               if (convos.length === 0) {
                 hasMoreConvos = false;
                 break;
@@ -448,9 +449,10 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
           while (hasMoreSpaces) {
             spinner.text = `Clearing memorySpaces... (${deleted.memorySpaces} deleted)`;
             try {
-              const spaces = await client.memorySpaces.list({
+              const spacesResult = await client.memorySpaces.list({
                 limit: MAX_LIMIT,
               });
+              const spaces = spacesResult.spaces;
               if (spaces.length === 0) {
                 hasMoreSpaces = false;
                 break;
@@ -512,7 +514,8 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
           while (hasMoreUsers) {
             spinner.text = `Clearing users... (${deleted.users} deleted)`;
             try {
-              const users = await client.users.list({ limit: MAX_LIMIT });
+              const usersResult = await client.users.list({ limit: MAX_LIMIT });
+              const users = usersResult.users;
               if (users.length === 0) {
                 hasMoreUsers = false;
                 break;
@@ -694,13 +697,15 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
 
           // Backup memory spaces (paginate if needed)
           spinner.text = "Backing up memory spaces...";
-          backup.data.memorySpaces = await client.memorySpaces.list({
+          const spacesResult = await client.memorySpaces.list({
             limit: MAX_LIMIT,
           });
+          backup.data.memorySpaces = spacesResult.spaces;
 
           // Backup users (paginate if needed)
           spinner.text = "Backing up users...";
-          backup.data.users = await client.users.list({ limit: MAX_LIMIT });
+          const usersResult = await client.users.list({ limit: MAX_LIMIT });
+          backup.data.users = usersResult.users;
 
           if (options.includeAll) {
             // Backup conversations
@@ -710,11 +715,11 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
             }>;
             backup.data.conversations = [];
             for (const space of spaces) {
-              const convs = await client.conversations.list({
+              const convsResult = await client.conversations.list({
                 memorySpaceId: space.memorySpaceId,
                 limit: MAX_LIMIT,
               });
-              (backup.data.conversations as unknown[]).push(...convs);
+              (backup.data.conversations as unknown[]).push(...convsResult.conversations);
             }
 
             // Backup memories

@@ -77,7 +77,7 @@ export function registerConversationsCommands(
         const limit = validateLimit(parseInt(options.limit, 10));
 
         await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const convList = await client.conversations.list({
+          const convResult = await client.conversations.list({
             memorySpaceId: options.space,
             userId: options.user,
             type: options.type,
@@ -86,13 +86,14 @@ export function registerConversationsCommands(
 
           spinner.stop();
 
-          if (convList.length === 0) {
+          const conversations = convResult.conversations;
+          if (conversations.length === 0) {
             printWarning("No conversations found");
             return;
           }
 
           // Format conversations for display
-          const displayData = convList.map((c) => ({
+          const displayData = conversations.map((c) => ({
             id: c.conversationId,
             space: c.memorySpaceId,
             type: c.type,
@@ -117,7 +118,7 @@ export function registerConversationsCommands(
             }),
           );
 
-          printSuccess(`Found ${formatCount(convList.length, "conversation")}`);
+          printSuccess(`Found ${formatCount(conversations.length, "conversation")}`);
         });
       } catch (error) {
         spinner.stop();
@@ -458,14 +459,14 @@ export function registerConversationsCommands(
           const spinner = ora(`Deleting ${count} conversations...`).start();
 
           // Get all conversations
-          const convList = await client.conversations.list({
+          const convResult = await client.conversations.list({
             memorySpaceId: options.space,
             userId: options.user,
             limit: 1000,
           });
 
           let deleted = 0;
-          for (const conv of convList) {
+          for (const conv of convResult.conversations) {
             try {
               await client.conversations.delete(conv.conversationId);
               deleted++;

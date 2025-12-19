@@ -469,12 +469,21 @@ describe("Users API (Coordination Layer)", () => {
     });
 
     it("should support pagination (limit/offset)", async () => {
-      // Get first page
-      const page1 = await cortex.users.search({ limit: 2 });
+      // Get first page - must specify sortBy for deterministic pagination
+      const page1 = await cortex.users.search({
+        limit: 2,
+        sortBy: "createdAt",
+        sortOrder: "asc",
+      });
       expect(page1.length).toBeLessThanOrEqual(2);
 
-      // Get second page
-      const page2 = await cortex.users.search({ limit: 2, offset: 2 });
+      // Get second page with same sort order
+      const page2 = await cortex.users.search({
+        limit: 2,
+        offset: 2,
+        sortBy: "createdAt",
+        sortOrder: "asc",
+      });
 
       // Pages should be different (unless there are fewer than 3 users)
       if (page1.length === 2 && page2.length > 0) {

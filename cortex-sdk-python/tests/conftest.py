@@ -7,6 +7,11 @@ PARALLEL-SAFE: Uses TestRunContext for isolated test data.
 Each test module gets its own run ID to prevent conflicts.
 
 PARALLEL EXECUTION: Tests run with pytest-xdist (-n auto) for 4-5x speedup.
+
+Priority for Convex URL:
+  1. CONVEX_URL_PY (Python-dedicated instance, used in CI)
+  2. CONVEX_URL (fallback for local development)
+  3. .env.local files
 """
 
 import asyncio
@@ -35,12 +40,22 @@ def pytest_report_header(config):
     else:
         return ["⚠️  serial execution (use -n auto for ~4x speedup)"]
 
-# Load .env.local from project root to get graph database configuration
+# Python tests use CONVEX_URL_PY for dedicated database isolation
+# This ALWAYS takes priority over any other CONVEX_URL (including from .env files)
+if os.environ.get("CONVEX_URL_PY"):
+    # Force override CONVEX_URL with Python-specific value
+    os.environ["CONVEX_URL"] = os.environ["CONVEX_URL_PY"]
+
+# Check if CONVEX_URL is already set from CONVEX_URL_PY
+convex_url_already_set = bool(os.environ.get("CONVEX_URL_PY"))
+
+# Load .env.local from project root only if CONVEX_URL is not already set from CI
 # Note: override=False means command-line env vars take precedence over .env.local
-project_root = Path(__file__).parent.parent.parent
-env_file = project_root / ".env.local"
-if env_file.exists():
-    load_dotenv(env_file, override=False)
+if not convex_url_already_set:
+    project_root = Path(__file__).parent.parent.parent
+    env_file = project_root / ".env.local"
+    if env_file.exists():
+        load_dotenv(env_file, override=False)
 
 from cortex import Cortex, CortexConfig  # noqa: E402
 from tests.helpers import (  # noqa: E402

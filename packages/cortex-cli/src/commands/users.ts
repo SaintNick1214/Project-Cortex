@@ -68,9 +68,10 @@ export function registerUserCommands(
         const limit = validateLimit(parseInt(options.limit, 10));
 
         await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const usersList = await client.users.list({ limit });
+          const usersResult = await client.users.list({ limit });
+          const users = usersResult.users;
 
-          if (usersList.length === 0) {
+          if (users.length === 0) {
             spinner.stop();
             printWarning("No users found");
             return;
@@ -83,17 +84,17 @@ export function registerUserCommands(
           > = new Map();
 
           if (options.stats !== false) {
-            spinner.text = `Loading stats for ${usersList.length} users...`;
+            spinner.text = `Loading stats for ${users.length} users...`;
 
             // Get all memory spaces once
-            const spaces = await client.memorySpaces.list();
+            const spacesResult = await client.memorySpaces.list();
 
-            for (const user of usersList) {
+            for (const user of users) {
               let memories = 0;
               let conversations = 0;
               let facts = 0;
 
-              for (const space of spaces) {
+              for (const space of spacesResult.spaces) {
                 try {
                   // Count memories for this user in this space
                   const memCount = await client.memory.count({
@@ -103,12 +104,12 @@ export function registerUserCommands(
                   memories += memCount;
 
                   // Count conversations
-                  const convos = await client.conversations.list({
+                  const convosResult = await client.conversations.list({
                     memorySpaceId: space.memorySpaceId,
                     userId: user.id,
                     limit: 1000,
                   });
-                  conversations += convos.length;
+                  conversations += convosResult.conversations.length;
 
                   // Count facts
                   const factsList = await client.facts.list({
@@ -129,7 +130,7 @@ export function registerUserCommands(
           spinner.stop();
 
           // Format users for display
-          const displayData = usersList.map((u) => {
+          const displayData = users.map((u) => {
             const stats = userStats.get(u.id);
             if (stats) {
               return {
@@ -172,7 +173,7 @@ export function registerUserCommands(
             }),
           );
 
-          printSuccess(`Found ${formatCount(usersList.length, "user")}`);
+          printSuccess(`Found ${formatCount(users.length, "user")}`);
         });
       } catch (error) {
         spinner.stop();
@@ -533,13 +534,13 @@ export function registerUserCommands(
           const history = await client.users.getHistory(userId);
 
           // Get all memory spaces to count user's data
-          const spaces = await client.memorySpaces.list();
+          const spacesResult = await client.memorySpaces.list();
 
           let totalMemories = 0;
           let totalConversations = 0;
           const spacesWithData: string[] = [];
 
-          for (const space of spaces) {
+          for (const space of spacesResult.spaces) {
             const memoryCount = await client.memory.count({
               memorySpaceId: space.memorySpaceId,
               userId,
@@ -551,12 +552,12 @@ export function registerUserCommands(
 
             // Try to count conversations (may not have userId filter)
             try {
-              const conversations = await client.conversations.list({
+              const convosResult = await client.conversations.list({
                 memorySpaceId: space.memorySpaceId,
                 userId,
                 limit: 1000,
               });
-              totalConversations += conversations.length;
+              totalConversations += convosResult.conversations.length;
             } catch {
               // Skip if conversations don't support userId filter
             }

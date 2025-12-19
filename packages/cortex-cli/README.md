@@ -194,6 +194,14 @@ cortex setup
 cortex config set convex-url https://my-deployment.convex.cloud
 cortex config set convex-key "..."
 
+# Set deploy key for a specific deployment
+cortex config set-key production --key "prod|abc123..."
+cortex config set-key  # Interactive mode - select deployment and enter key
+
+# Set URL for a specific deployment
+cortex config set-url production --url "https://new-app.convex.cloud"
+cortex config set-url  # Interactive mode - select deployment and enter URL
+
 # Show current configuration
 cortex config show
 
