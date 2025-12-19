@@ -92,7 +92,8 @@ async def test_full_cleanup_validation(cortex_client, ctx):
     print(f"\n📊 Conversations in {memory_space_id}: {conv_count}")
 
     # List conversations
-    convs = await cortex_client.conversations.list(memory_space_id=memory_space_id, limit=100)
+    convs_result = await cortex_client.conversations.list(memory_space_id=memory_space_id, limit=100)
+    convs = convs_result.conversations if hasattr(convs_result, 'conversations') else convs_result
     for i, conv in enumerate(convs[:5], 1):
         cid = conv.get("conversation_id") if isinstance(conv, dict) else conv.conversation_id
         print(f"   {i}. {cid}")
