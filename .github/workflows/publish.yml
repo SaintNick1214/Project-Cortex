@@ -156,7 +156,6 @@ jobs:
     permissions:
       contents: write
       id-token: write # Required for npm OIDC provenance publishing (no NODE_AUTH_TOKEN needed)
-      workflows: write # Required when commits include workflow file changes
 
     steps:
       - name: Checkout code
@@ -268,7 +267,6 @@ jobs:
     permissions:
       contents: write
       id-token: write # Required for npm OIDC provenance publishing (no NODE_AUTH_TOKEN needed)
-      workflows: write # Required when commits include workflow file changes
 
     steps:
       - name: Checkout code
@@ -346,7 +344,6 @@ jobs:
     permissions:
       contents: write
       id-token: write # Required for npm OIDC provenance publishing (no NODE_AUTH_TOKEN needed)
-      workflows: write # Required when commits include workflow file changes
 
     steps:
       - name: Checkout code
@@ -490,7 +487,6 @@ jobs:
     permissions:
       contents: write
       id-token: write # Required for npm OIDC provenance publishing (no NODE_AUTH_TOKEN needed)
-      workflows: write # Required when commits include workflow file changes
 
     steps:
       - name: Checkout code
