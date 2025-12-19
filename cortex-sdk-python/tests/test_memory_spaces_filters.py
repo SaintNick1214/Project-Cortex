@@ -51,7 +51,7 @@ class TestMemorySpacesTypeFilterParametrized:
         results = await cortex_client.memory_spaces.list(type=space_type)
 
         # Extract spaces from response
-        spaces = results if isinstance(results, list) else results.get("spaces", [])
+        spaces = results.spaces if hasattr(results, 'spaces') else results
 
         # Validate
         assert len(spaces) >= 1, f"Should find at least 1 {space_type} space"
@@ -90,7 +90,7 @@ class TestMemorySpacesStatusFilterParametrized:
         results = await cortex_client.memory_spaces.list(status=status)
 
         # Extract spaces from response
-        spaces = results if isinstance(results, list) else results.get("spaces", [])
+        spaces = results.spaces if hasattr(results, 'spaces') else results
 
         # Validate
         assert len(spaces) >= 1, f"Should find at least 1 {status} space"
@@ -120,7 +120,7 @@ class TestMemorySpacesFilterEdgeCases:
         results = await cortex_client.memory_spaces.list(type="team")
 
         # Extract spaces
-        spaces = results if isinstance(results, list) else results.get("spaces", [])
+        spaces = results.spaces if hasattr(results, 'spaces') else results
 
         # Should return empty list, not error
         # Note: May return results if team spaces already exist in test environment
@@ -165,7 +165,7 @@ class TestMemorySpacesFilterEdgeCases:
         results = await cortex_client.memory_spaces.list(type="team", status="active")
 
         # Extract spaces
-        spaces = results if isinstance(results, list) else results.get("spaces", [])
+        spaces = results.spaces if hasattr(results, 'spaces') else results
 
         # Validate: Should only find active team space
         assert len(spaces) >= 1, "Should find active team spaces"
@@ -193,10 +193,8 @@ class TestMemorySpacesFilterEdgeCases:
         # Verify each type filter returns correct spaces
         for space_type in ALL_SPACE_TYPES:
             results = await cortex_client.memory_spaces.list(type=space_type)
-            assert len(results) >= 1, f"Should find {space_type} spaces"
-            spaces = (
-                results if isinstance(results, list) else results.get("spaces", [])
-            )
+            spaces = results.spaces if hasattr(results, 'spaces') else results
+            assert len(spaces) >= 1, f"Should find {space_type} spaces"
             assert all(s.type == space_type for s in spaces)
             assert any(
                 s.memory_space_id == spaces_by_type[space_type].memory_space_id
@@ -218,11 +216,7 @@ class TestMemorySpacesFilterEdgeCases:
 
         # Verify it's in active list
         active_results = await cortex_client.memory_spaces.list(status="active")
-        active_spaces = (
-            active_results
-            if isinstance(active_results, list)
-            else active_results.get("spaces", [])
-        )
+        active_spaces = active_results.spaces if hasattr(active_results, 'spaces') else active_results
         assert any(s.memory_space_id == space_id for s in active_spaces)
 
         # Archive it
@@ -230,20 +224,12 @@ class TestMemorySpacesFilterEdgeCases:
 
         # Verify it's now in archived list
         archived_results = await cortex_client.memory_spaces.list(status="archived")
-        archived_spaces = (
-            archived_results
-            if isinstance(archived_results, list)
-            else archived_results.get("spaces", [])
-        )
+        archived_spaces = archived_results.spaces if hasattr(archived_results, 'spaces') else archived_results
         assert any(s.memory_space_id == space_id for s in archived_spaces)
 
         # Verify it's NOT in active list anymore
         active_results_after = await cortex_client.memory_spaces.list(status="active")
-        active_spaces_after = (
-            active_results_after
-            if isinstance(active_results_after, list)
-            else active_results_after.get("spaces", [])
-        )
+        active_spaces_after = active_results_after.spaces if hasattr(active_results_after, 'spaces') else active_results_after
         assert not any(s.memory_space_id == space_id for s in active_spaces_after)
 
     @pytest.mark.asyncio
@@ -276,7 +262,7 @@ class TestMemorySpacesFilterEdgeCases:
         results = await cortex_client.memory_spaces.list(type="custom")
 
         # Extract spaces
-        spaces = results if isinstance(results, list) else results.get("spaces", [])
+        spaces = results.spaces if hasattr(results, 'spaces') else results
 
         # Should return at least our 3 custom spaces
         assert len(spaces) >= 3, "Should return at least 3 custom spaces"
@@ -316,11 +302,7 @@ class TestMemorySpacesFilterEdgeCases:
         all_results = await cortex_client.memory_spaces.list()
 
         # Extract spaces
-        all_spaces = (
-            all_results
-            if isinstance(all_results, list)
-            else all_results.get("spaces", [])
-        )
+        all_spaces = all_results.spaces if hasattr(all_results, 'spaces') else all_results
 
         # Should include both
         assert len(all_spaces) >= 2, "Should return multiple spaces"
@@ -356,11 +338,7 @@ class TestMemorySpacesFilterEdgeCases:
         archived_results = await cortex_client.memory_spaces.list(status="archived")
 
         # Extract spaces
-        archived_spaces = (
-            archived_results
-            if isinstance(archived_results, list)
-            else archived_results.get("spaces", [])
-        )
+        archived_spaces = archived_results.spaces if hasattr(archived_results, 'spaces') else archived_results
 
         # Active space should NOT be in archived results
         archived_ids = [s.memory_space_id for s in archived_spaces]
@@ -395,11 +373,7 @@ class TestMemorySpacesFilterEdgeCases:
         personal_results = await cortex_client.memory_spaces.list(
             type="personal", status="active"
         )
-        personal_spaces = (
-            personal_results
-            if isinstance(personal_results, list)
-            else personal_results.get("spaces", [])
-        )
+        personal_spaces = personal_results.spaces if hasattr(personal_results, 'spaces') else personal_results
         personal_ids = [s.memory_space_id for s in personal_spaces]
         assert personal_id in personal_ids
         # Team should not be in personal results
@@ -409,11 +383,7 @@ class TestMemorySpacesFilterEdgeCases:
         team_results = await cortex_client.memory_spaces.list(
             type="team", status="active"
         )
-        team_spaces = (
-            team_results
-            if isinstance(team_results, list)
-            else team_results.get("spaces", [])
-        )
+        team_spaces = team_results.spaces if hasattr(team_results, 'spaces') else team_results
         team_ids = [s.memory_space_id for s in team_spaces]
         assert team_id in team_ids
         # Personal should not be in team results

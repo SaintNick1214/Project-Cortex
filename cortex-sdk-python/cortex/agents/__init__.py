@@ -858,18 +858,15 @@ class AgentsAPI:
         This helper method applies all AgentFilters criteria including
         metadata, name, capabilities matching (like TypeScript SDK).
         """
-        if not filters:
-            return await self.list()
-
         # Get agents from backend with basic filters (status, limit, offset)
         results = await self._execute_with_resilience(
             lambda: self.client.query(
                 "agents:list",
                 filter_none_values({
-                    "status": filters.status,
-                    "limit": filters.limit or 100,
-                    "offset": filters.offset or 0,
-                }),
+                    "status": filters.status if filters else None,
+                    "limit": filters.limit if filters else 100,
+                    "offset": filters.offset if filters else 0,
+                }) if filters else {},
             ),
             "agents:list",
         )
@@ -880,7 +877,7 @@ class AgentsAPI:
         # Apply client-side filtering (metadata, name, capabilities)
         filtered = agents_list
 
-        if filters.metadata:
+        if filters and filters.metadata:
             filtered = [
                 agent for agent in filtered
                 if all(
@@ -889,13 +886,13 @@ class AgentsAPI:
                 )
             ]
 
-        if filters.name:
+        if filters and filters.name:
             filtered = [
                 agent for agent in filtered
                 if filters.name.lower() in agent.get("name", "").lower()
             ]
 
-        if filters.capabilities and len(filters.capabilities) > 0:
+        if filters and filters.capabilities and len(filters.capabilities) > 0:
             def has_capabilities(agent: Dict[str, Any]) -> bool:
                 agent_caps = agent.get("metadata", {}).get("capabilities", [])
                 if not isinstance(agent_caps, list):
@@ -908,14 +905,14 @@ class AgentsAPI:
             filtered = [agent for agent in filtered if has_capabilities(agent)]
 
         # Filter by lastActive timestamp range
-        if filters.last_active_after is not None:
+        if filters and filters.last_active_after is not None:
             filtered = [
                 agent for agent in filtered
                 if agent.get("lastActive") is not None
                 and agent["lastActive"] >= filters.last_active_after
             ]
 
-        if filters.last_active_before is not None:
+        if filters and filters.last_active_before is not None:
             filtered = [
                 agent for agent in filtered
                 if agent.get("lastActive") is not None
@@ -975,12 +972,17 @@ class AgentsAPI:
         # If this fails, we can still return partial plan (agent registration + graph nodes)
         try:
             if self._resilience:
-                memory_spaces = await self._resilience.execute(
+                memory_spaces_result = await self._resilience.execute(
                     lambda: self.client.query("memorySpaces:list", {}),
                     "memorySpaces:list"
                 )
             else:
-                memory_spaces = await self.client.query("memorySpaces:list", {})
+                memory_spaces_result = await self.client.query("memorySpaces:list", {})
+            # Handle both list format (legacy) and dict format (new API)
+            if isinstance(memory_spaces_result, dict):
+                memory_spaces = memory_spaces_result.get("spaces", [])
+            else:
+                memory_spaces = memory_spaces_result if isinstance(memory_spaces_result, list) else []
         except Exception as e:
             # Log warning but continue - we can still collect agent registration and graph data
             print(f"Warning: Failed to list memory spaces for deletion plan: {e}")
@@ -989,9 +991,15 @@ class AgentsAPI:
         # Helper functions for parallel queries
         async def collect_conversations(space: Dict[str, Any]) -> Dict[str, Any]:
             try:
-                conversations = await self.client.query(
+                conversations_result = await self.client.query(
                     "conversations:list",
                     {"memorySpaceId": space.get("memorySpaceId")},
+                )
+                # Handle both list format (legacy) and dict format (new API)
+                conversations = (
+                    conversations_result.get("conversations", [])
+                    if isinstance(conversations_result, dict)
+                    else conversations_result if isinstance(conversations_result, list) else []
                 )
                 agent_convos = [
                     c for c in conversations
@@ -1268,12 +1276,17 @@ class AgentsAPI:
         # If this fails, we can still verify graph nodes and report the issue
         try:
             if self._resilience:
-                memory_spaces = await self._resilience.execute(
+                memory_spaces_result = await self._resilience.execute(
                     lambda: self.client.query("memorySpaces:list", {}),
                     "memorySpaces:list"
                 )
             else:
-                memory_spaces = await self.client.query("memorySpaces:list", {})
+                memory_spaces_result = await self.client.query("memorySpaces:list", {})
+            # Handle both list format (legacy) and dict format (new API)
+            if isinstance(memory_spaces_result, dict):
+                memory_spaces = memory_spaces_result.get("spaces", [])
+            else:
+                memory_spaces = memory_spaces_result if isinstance(memory_spaces_result, list) else []
         except Exception as e:
             # Add to issues but continue with what we can verify
             issues.append(f"Failed to list memory spaces for verification: {e}")
@@ -1300,9 +1313,15 @@ class AgentsAPI:
         async def count_remaining_conversations() -> int:
             async def check_space(space: Dict[str, Any]) -> int:
                 try:
-                    conversations = await self.client.query(
+                    conversations_result = await self.client.query(
                         "conversations:list",
                         {"memorySpaceId": space.get("memorySpaceId")},
+                    )
+                    # Handle both list format (legacy) and dict format (new API)
+                    conversations = (
+                        conversations_result.get("conversations", [])
+                        if isinstance(conversations_result, dict)
+                        else conversations_result if isinstance(conversations_result, list) else []
                     )
                     return len([
                         c for c in conversations

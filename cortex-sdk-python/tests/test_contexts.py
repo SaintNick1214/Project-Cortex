@@ -608,27 +608,28 @@ async def test_get_chain_returns_full_structure(cortex_client, test_ids, cleanup
     assert "depth" in chain
 
     # Validate relationships
-    assert chain["current"]["id"] == parent.id
-    assert chain["root"]["id"] == grandparent.id
+    # Note: Raw chain response uses contextId (Convex format), not id
+    assert chain["current"]["contextId"] == parent.id
+    assert chain["root"]["contextId"] == grandparent.id
     assert chain["depth"] >= 1
 
     # Check ancestors include grandparent
-    ancestor_ids = [a["id"] for a in chain["ancestors"]]
+    ancestor_ids = [a["contextId"] for a in chain["ancestors"]]
     assert grandparent.id in ancestor_ids
 
     # Check children include child
-    child_ids = [c["id"] for c in chain["children"]]
+    child_ids = [c["contextId"] for c in chain["children"]]
     assert child.id in child_ids
 
     # Check for new fields if present (descendants and total_nodes)
     if "descendants" in chain:
         # descendants should include child (and any deeper nodes)
-        descendant_ids = [d["id"] for d in chain["descendants"]]
+        descendant_ids = [d["contextId"] for d in chain["descendants"]]
         assert child.id in descendant_ids
 
-    if "total_nodes" in chain:
-        # total_nodes should be at least 3 (grandparent, parent, child)
-        assert chain["total_nodes"] >= 3
+    if "totalNodes" in chain:
+        # totalNodes should be at least 3 (grandparent, parent, child)
+        assert chain["totalNodes"] >= 3
 
     # Cleanup - delete from bottom up
     await cortex_client.contexts.delete(child.id)

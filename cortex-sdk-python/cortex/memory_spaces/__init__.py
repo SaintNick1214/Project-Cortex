@@ -635,6 +635,10 @@ class MemorySpacesAPI:
         d_reason = options.reason if options else reason
         d_confirm_id = options.confirm_id if options else confirm_id
 
+        # Backend requires reason - provide default if not specified
+        if d_reason is None:
+            d_reason = "SDK deletion request"
+
         # Only validate delete options if explicitly provided and reason is set
         if options is not None and d_reason is not None:
             validate_delete_options(memory_space_id, d_cascade, d_reason, d_confirm_id)

@@ -11,7 +11,7 @@ Tests all valid state transitions across stateful entities to ensure:
 
 import pytest
 
-from cortex.types import AgentRegistration, ContextInput, RegisterMemorySpaceParams
+from cortex.types import AgentFilters, AgentRegistration, ContextInput, RegisterMemorySpaceParams
 
 # State definitions from schema
 CONTEXT_STATUSES = ["active", "completed", "cancelled", "blocked"]
@@ -323,7 +323,7 @@ class TestMemorySpaceStateTransitions:
 
         # Verify in active list
         active_list = await cortex_client.memory_spaces.list(status="active")
-        assert any(s.memory_space_id == space_id for s in active_list.get("spaces", []))
+        assert any(s.memory_space_id == space_id for s in active_list.spaces)
 
         # Archive
         archived = await cortex_client.memory_spaces.archive(space_id)
@@ -331,12 +331,12 @@ class TestMemorySpaceStateTransitions:
 
         # Verify in archived list
         archived_list = await cortex_client.memory_spaces.list(status="archived")
-        assert any(s.memory_space_id == space_id for s in archived_list.get("spaces", []))
+        assert any(s.memory_space_id == space_id for s in archived_list.spaces)
 
         # Verify NOT in active list
         active_list_after = await cortex_client.memory_spaces.list(status="active")
         assert not any(
-            s.memory_space_id == space_id for s in active_list_after.get("spaces", [])
+            s.memory_space_id == space_id for s in active_list_after.spaces
         )
 
     async def test_archived_to_active_via_reactivate(self, cortex_client, base_id):
@@ -354,7 +354,7 @@ class TestMemorySpaceStateTransitions:
 
         # Verify archived
         archived_list = await cortex_client.memory_spaces.list(status="archived")
-        assert any(s.memory_space_id == space_id for s in archived_list.get("spaces", []))
+        assert any(s.memory_space_id == space_id for s in archived_list.spaces)
 
         # Reactivate
         reactivated = await cortex_client.memory_spaces.reactivate(space_id)
@@ -362,7 +362,7 @@ class TestMemorySpaceStateTransitions:
 
         # Verify in active list
         active_list = await cortex_client.memory_spaces.list(status="active")
-        assert any(s.memory_space_id == space_id for s in active_list.get("spaces", []))
+        assert any(s.memory_space_id == space_id for s in active_list.spaces)
 
     async def test_count_reflects_archive_transition(self, cortex_client, base_id):
         """Test count reflects archive transition."""
@@ -389,13 +389,11 @@ class TestMemorySpaceStateTransitions:
 
         # Verify it appears in archived list
         archived_list = await cortex_client.memory_spaces.list(status="archived")
-        archived_spaces = archived_list if isinstance(archived_list, list) else archived_list.get("spaces", [])
-        assert any(s.memory_space_id == space_id for s in archived_spaces)
+        assert any(s.memory_space_id == space_id for s in archived_list.spaces)
 
         # Verify it does NOT appear in active list
         active_list = await cortex_client.memory_spaces.list(status="active")
-        active_spaces = active_list if isinstance(active_list, list) else active_list.get("spaces", [])
-        assert not any(s.memory_space_id == space_id for s in active_spaces)
+        assert not any(s.memory_space_id == space_id for s in active_list.spaces)
 
     async def test_metadata_preserved_through_archive_cycle(
         self, cortex_client, base_id
@@ -482,7 +480,7 @@ class TestMemorySpaceStateTransitions:
 
         # Can list
         archived_list = await cortex_client.memory_spaces.list(status="archived")
-        assert any(s.memory_space_id == space_id for s in archived_list.get("spaces", []))
+        assert any(s.memory_space_id == space_id for s in archived_list.spaces)
 
         # Update metadata works
         await cortex_client.memory_spaces.update(
@@ -543,11 +541,11 @@ class TestAgentStateTransitions:
         assert updated.status == to_status
 
         # Verify in list
-        agent_list = await cortex_client.agents.list(status=to_status)
+        agent_list = await cortex_client.agents.list(AgentFilters(status=to_status))
         assert any(a.id == agent_id for a in agent_list)
 
         # Verify NOT in from_status list
-        old_list = await cortex_client.agents.list(status=from_status)
+        old_list = await cortex_client.agents.list(AgentFilters(status=from_status))
         assert not any(a.id == agent_id for a in old_list)
 
     async def test_inactive_agent_preserves_capabilities(self, cortex_client):

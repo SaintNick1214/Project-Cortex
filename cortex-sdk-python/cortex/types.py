@@ -359,9 +359,9 @@ class MutableRecord:
     value: Any
     created_at: int
     updated_at: int
-    access_count: int
     user_id: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
+    access_count: Optional[int] = None
     last_accessed: Optional[int] = None
 
 
@@ -1341,6 +1341,8 @@ class MemorySpaceStats:
     storage: Dict[str, int]
     top_tags: List[str]
     importance_breakdown: Dict[str, int]
+    memories_this_window: Optional[int] = None  # Count within time window
+    conversations_this_window: Optional[int] = None  # Count within time window
     avg_search_time: Optional[str] = None
     participants: Optional[List[Dict[str, Any]]] = None
 
