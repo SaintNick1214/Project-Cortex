@@ -99,6 +99,31 @@ class CircuitBreakerConfig:
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Retry Configuration Types
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+@dataclass
+class RetryConfig:
+    """Retry configuration for transient failure recovery"""
+
+    max_retries: int = 3
+    """Maximum number of retry attempts - default: 3"""
+
+    base_delay_s: float = 0.5
+    """Base delay between retries in seconds - default: 0.5"""
+
+    max_delay_s: float = 10.0
+    """Maximum delay between retries in seconds - default: 10.0"""
+
+    exponential_base: float = 2.0
+    """Exponential backoff base multiplier - default: 2.0"""
+
+    jitter: bool = True
+    """Add random jitter to delays to prevent thundering herd - default: True"""
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Priority Queue Types
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -174,6 +199,9 @@ class ResilienceConfig:
     queue: Optional[QueueConfig] = None
     """Priority queue settings"""
 
+    retry: Optional[RetryConfig] = None
+    """Retry configuration for transient failures - default: enabled with 3 retries"""
+
     # Monitoring hooks
     on_circuit_open: Optional[Callable[[int], None]] = None
     """Called when circuit breaker opens"""
@@ -189,6 +217,9 @@ class ResilienceConfig:
 
     on_throttle: Optional[Callable[[float], None]] = None
     """Called when request is throttled (waiting for rate limit)"""
+
+    on_retry: Optional[Callable[[int, Exception, float], None]] = None
+    """Called when a retry is attempted (attempt_number, exception, delay_seconds)"""
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

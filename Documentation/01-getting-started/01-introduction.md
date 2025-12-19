@@ -1,6 +1,6 @@
 # Introduction to Cortex
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2025-12-18
 
 ## Welcome to Cortex
 
@@ -466,9 +466,20 @@ To set clear expectations:
 
 Ready to add persistent memory to your AI agents?
 
-1. **[Install Cortex](./02-installation.md)** - Get set up in 5 minutes
+**Quick start:**
+
+```bash
+npm install -g @cortexmemory/cli
+cortex init my-agent
+cd my-agent && cortex start
+```
+
+**Learn more:**
+
+1. **[Install Cortex](./02-installation.md)** - CLI installation and setup options
 2. **[Quick Start](./03-five-minute-quickstart.md)** - Build your first memory-enabled agent
 3. **[Core Concepts](./04-core-concepts.md)** - Understand how Cortex works
+4. **[Configuration](./05-configuration.md)** - Multi-deployment and CLI configuration
 
 > **Note**: Cortex is in early development. The open source SDK (direct mode) is being built first, with cloud mode features coming later based on community feedback.
 

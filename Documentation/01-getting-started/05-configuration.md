@@ -1,10 +1,10 @@
 # Configuration
 
-> **Last Updated**: 2025-11-02
+> **Last Updated**: 2025-12-18
 
 ## Overview
 
-Cortex is designed to work with minimal configuration, but offers extensive customization options when needed.
+Cortex is designed to work with minimal configuration, but offers extensive customization options when needed. The Cortex CLI provides powerful configuration management for multi-deployment setups.
 
 ---
 
@@ -35,6 +35,139 @@ CONVEX_URL=http://127.0.0.1:3210
 # Optional
 CONVEX_DEPLOY_KEY=your-deploy-key-here
 OPENAI_API_KEY=sk-your-key-here
+```
+
+---
+
+## CLI Configuration
+
+The Cortex CLI provides powerful multi-deployment management. Configuration is stored in two places:
+
+- **`~/.cortexrc`** - Global deployments configuration (JSON)
+- **`.env.local`** - Project-specific environment variables
+
+### View Configuration
+
+```bash
+# View all deployments
+cortex config list
+
+# View current configuration
+cortex config show
+
+# View config file paths
+cortex config path
+```
+
+### Managing Deployments
+
+```bash
+# Add a new deployment
+cortex config add-deployment cloud -u https://your-app.convex.cloud
+
+# Add with deploy key
+cortex config add-deployment production \
+  -u https://prod-app.convex.cloud \
+  -k your-deploy-key
+
+# Remove a deployment
+cortex config remove-deployment staging
+
+# Set deployment URL
+cortex config set-url cloud
+
+# Set deployment key
+cortex config set-key cloud
+```
+
+### Switching Deployments
+
+```bash
+# Set current deployment (persists in ~/.cortex-current)
+cortex use cloud
+
+# Clear current deployment
+cortex use --clear
+
+# Target specific deployment for a command
+cortex db stats -d production
+```
+
+### Enabling/Disabling Deployments
+
+Control which deployments start with `cortex start`:
+
+```bash
+# Enable a deployment (will auto-start)
+cortex config enable staging
+
+# Disable a deployment (won't auto-start)
+cortex config disable local
+
+# View status
+cortex config list
+# Shows: NAME     STATUS    URL
+#        local    disabled  http://127.0.0.1:3210
+#        cloud    enabled   https://your-app.convex.cloud
+```
+
+### Setting Project Paths
+
+Allow running CLI commands from any directory:
+
+```bash
+# Set project path for a deployment
+cortex config set-path cloud /path/to/your/project
+
+# Now you can run from anywhere:
+cortex start -d cloud  # Works from any directory
+```
+
+### Example: Multi-Environment Setup
+
+```bash
+# Add local development
+cortex config add-deployment local -u http://127.0.0.1:3210
+cortex config set-path local ~/projects/my-agent
+
+# Add staging
+cortex config add-deployment staging -u https://staging.convex.cloud
+cortex config set-key staging
+
+# Add production
+cortex config add-deployment production -u https://prod.convex.cloud
+cortex config set-key production
+
+# Enable only local and staging for auto-start
+cortex config enable local
+cortex config enable staging
+cortex config disable production
+
+# Now 'cortex start' starts local + staging
+# Use 'cortex start -d production' for production
+```
+
+### Configuration File Format
+
+The `~/.cortexrc` file is JSON:
+
+```json
+{
+  "deployments": {
+    "local": {
+      "url": "http://127.0.0.1:3210",
+      "projectPath": "/Users/you/projects/my-agent",
+      "enabled": true
+    },
+    "cloud": {
+      "url": "https://your-app.convex.cloud",
+      "key": "prod:your-deployment|key",
+      "projectPath": "/Users/you/projects/my-agent",
+      "enabled": true
+    }
+  },
+  "default": "local"
+}
 ```
 
 ---
