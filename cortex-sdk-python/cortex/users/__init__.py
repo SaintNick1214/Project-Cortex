@@ -452,22 +452,15 @@ class UsersAPI:
 
         # Extract filter values with defaults
         limit = filters.limit if filters and filters.limit else 50
-        offset = filters.offset if filters and filters.offset else 0
 
         # Query using immutable:list with type='user' (like TS SDK)
+        # Note: immutable:list only supports limit, type, and userId - not offset or date filters
         result = await self._execute_with_resilience(
             lambda: self.client.query(
                 "immutable:list",
                 filter_none_values({
                     "type": "user",
                     "limit": limit,
-                    "offset": offset,
-                    "createdAfter": filters.created_after if filters else None,
-                    "createdBefore": filters.created_before if filters else None,
-                    "updatedAfter": filters.updated_after if filters else None,
-                    "updatedBefore": filters.updated_before if filters else None,
-                    "sortBy": filters.sort_by if filters else None,
-                    "sortOrder": filters.sort_order if filters else None,
                 }),
             ),
             "users:list",
@@ -515,7 +508,7 @@ class UsersAPI:
             users=users,
             total=total,
             limit=limit,
-            offset=offset,
+            offset=filters.offset if filters and filters.offset else 0,
             has_more=has_more,
         )
 
