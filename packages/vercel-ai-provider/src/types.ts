@@ -58,6 +58,24 @@ export interface CortexMemoryConfig {
   /** Memory Space ID for isolation */
   memorySpaceId: string;
 
+  /**
+   * Agent ID - REQUIRED for user-agent conversations (SDK v0.17.0+)
+   *
+   * Every conversation requires an agent participant. This ID identifies
+   * which agent is participating in the conversation.
+   *
+   * @example 'quickstart-assistant', 'support-bot', 'my-agent-v1'
+   */
+  agentId: string;
+
+  /**
+   * Agent display name (optional)
+   *
+   * Human-readable name for the agent, used in logging and debugging.
+   * Defaults to agentId if not provided.
+   */
+  agentName?: string;
+
   /** User ID (or function returning user ID) */
   userId: string | (() => string | Promise<string>);
 
@@ -106,8 +124,28 @@ export interface CortexMemoryConfig {
   // Advanced Cortex Features
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  /** Enable fact extraction (default: false) */
+  /**
+   * Enable fact extraction (default: false)
+   *
+   * When enabled, facts are automatically extracted from conversations.
+   * Can also be auto-enabled via CORTEX_FACT_EXTRACTION=true env var.
+   */
   enableFactExtraction?: boolean;
+
+  /**
+   * Fact extraction configuration
+   *
+   * Provides fine-grained control over automatic fact extraction.
+   * Uses environment variables by default:
+   * - CORTEX_FACT_EXTRACTION=true to enable
+   * - CORTEX_FACT_EXTRACTION_MODEL=gpt-4o to override model
+   */
+  factExtractionConfig?: {
+    /** Override the fact extraction model (default: uses CORTEX_FACT_EXTRACTION_MODEL or 'gpt-4o-mini') */
+    model?: string;
+    /** Provider to use ('openai' | 'anthropic', default: auto-detected from API key) */
+    provider?: "openai" | "anthropic";
+  };
 
   /** Fact extraction function (if custom) */
   extractFacts?: (
@@ -122,6 +160,7 @@ export interface CortexMemoryConfig {
         | "knowledge"
         | "relationship"
         | "event"
+        | "observation"
         | "custom";
       subject?: string;
       predicate?: string;
@@ -131,8 +170,33 @@ export interface CortexMemoryConfig {
     }>
   >;
 
-  /** Enable graph memory sync (default: false, requires graph adapter in Cortex) */
+  /**
+   * Enable graph memory sync (default: false)
+   *
+   * When enabled, memories are synced to a graph database (Neo4j/Memgraph).
+   * Can also be auto-enabled via CORTEX_GRAPH_SYNC=true env var.
+   * Requires graph database connection configured via env vars:
+   * - NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
+   * - or MEMGRAPH_URI, MEMGRAPH_USERNAME, MEMGRAPH_PASSWORD
+   */
   enableGraphMemory?: boolean;
+
+  /**
+   * Graph database configuration
+   *
+   * Override the default graph database connection settings.
+   * If not provided, uses environment variables for auto-configuration.
+   */
+  graphConfig?: {
+    /** Override the graph database URI */
+    uri?: string;
+    /** Override the graph database username */
+    username?: string;
+    /** Override the graph database password */
+    password?: string;
+    /** Graph database type ('neo4j' | 'memgraph', default: auto-detected) */
+    type?: "neo4j" | "memgraph";
+  };
 
   /** Hive Mode configuration */
   hiveMode?: {
@@ -227,6 +291,18 @@ export interface CortexMemoryConfig {
 
   /** Enable automatic metrics collection (default: true) */
   enableStreamMetrics?: boolean;
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Layer Observation (for visualization/debugging)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * Layer observation hooks for real-time visualization
+   *
+   * These callbacks are invoked as data flows through the Cortex
+   * memory orchestration layers, enabling real-time UI updates.
+   */
+  layerObserver?: LayerObserver;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Debug and Logging
@@ -436,4 +512,102 @@ export function createLogger(debug: boolean = false): Logger {
     warn: (...args) => console.warn(prefix, ...args),
     error: (...args) => console.error(prefix, ...args),
   };
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Layer Observation Types (for visualization)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Memory orchestration layer types
+ */
+export type MemoryLayer =
+  | "memorySpace"
+  | "user"
+  | "agent"
+  | "conversation"
+  | "vector"
+  | "facts"
+  | "graph";
+
+/**
+ * Layer status during orchestration
+ */
+export type LayerStatus = "pending" | "in_progress" | "complete" | "error" | "skipped";
+
+/**
+ * Event emitted when a layer's status changes
+ */
+export interface LayerEvent {
+  /** Which layer this event is for */
+  layer: MemoryLayer;
+
+  /** Current status of the layer */
+  status: LayerStatus;
+
+  /** Timestamp when this status was set */
+  timestamp: number;
+
+  /** Time elapsed since orchestration started (ms) */
+  latencyMs?: number;
+
+  /** Data stored in this layer (if complete) */
+  data?: {
+    /** ID of the stored record */
+    id?: string;
+    /** Summary or preview of the data */
+    preview?: string;
+    /** Additional metadata */
+    metadata?: Record<string, unknown>;
+  };
+
+  /** Error details (if error status) */
+  error?: {
+    message: string;
+    code?: string;
+  };
+}
+
+/**
+ * Summary of the full orchestration flow
+ */
+export interface OrchestrationSummary {
+  /** Unique ID for this orchestration run */
+  orchestrationId: string;
+
+  /** Total time for all layers (ms) */
+  totalLatencyMs: number;
+
+  /** Status of each layer */
+  layers: Record<MemoryLayer, LayerEvent>;
+
+  /** IDs of records created */
+  createdIds: {
+    conversationId?: string;
+    memoryIds?: string[];
+    factIds?: string[];
+  };
+}
+
+/**
+ * Observer for memory layer orchestration
+ *
+ * Used by the quickstart demo to visualize data flowing
+ * through the Cortex memory system in real-time.
+ */
+export interface LayerObserver {
+  /**
+   * Called when a layer's status changes
+   */
+  onLayerUpdate?: (event: LayerEvent) => void | Promise<void>;
+
+  /**
+   * Called when orchestration starts
+   */
+  onOrchestrationStart?: (orchestrationId: string) => void | Promise<void>;
+
+  /**
+   * Called when orchestration completes (all layers done)
+   */
+  onOrchestrationComplete?: (summary: OrchestrationSummary) => void | Promise<void>;
 }

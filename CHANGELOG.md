@@ -19,6 +19,161 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.22.0] - 2025-12-19
+
+#### 🔄 Cross-Session Fact Deduplication
+
+**Facts are no longer duplicated across conversations!** The SDK now automatically deduplicates facts using semantic matching, preventing the accumulation of redundant knowledge.
+
+**Problem Solved:**
+
+Previously, facts were only deduplicated within a single streaming session. Across multiple conversations, the same fact could be stored multiple times:
+
+```
+Session 1: "My name is Alice" → Fact: "User's name is Alice" ✅
+Session 2: "I'm Alice" → Fact: "User is Alice" ❌ (duplicate!)
+Session 3: "Call me Alice" → Fact: "User is called Alice" ❌ (duplicate!)
+```
+
+**Now with v0.22.0:**
+
+```
+Session 1: "My name is Alice" → Fact created ✅
+Session 2: "I'm Alice" → Duplicate detected, skipped ✅
+Session 3: "Call me Alice" → Duplicate detected, skipped ✅
+Result: 1 fact instead of 3!
+```
+
+**1. Automatic Deduplication in `memory.remember()`**
+
+```typescript
+// Deduplication is automatic - no code changes needed!
+await cortex.memory.remember({
+  memorySpaceId: "user-123-space",
+  conversationId: "conv-1",
+  userMessage: "My name is Alice",
+  agentResponse: "Nice to meet you!",
+  userId: "user-123",
+  agentId: "agent-1",
+  userName: "Alice",
+  extractFacts: async () => [{ fact: "User's name is Alice", ... }],
+  // factDeduplication defaults to 'semantic' (falls back to 'structural')
+});
+```
+
+**2. Deduplication Strategies**
+
+| Strategy | How it Works | Speed | Accuracy |
+|----------|--------------|-------|----------|
+| `semantic` | Embedding similarity | Slower | Highest |
+| `structural` | Subject + predicate + object match | Fast | Medium |
+| `exact` | Normalized text match | Fastest | Low |
+
+**3. Configuring Deduplication**
+
+```typescript
+// Use structural for faster deduplication
+await cortex.memory.remember({
+  ...params,
+  factDeduplication: "structural",
+});
+
+// Disable deduplication (previous behavior)
+await cortex.memory.remember({
+  ...params,
+  factDeduplication: false,
+});
+```
+
+**4. Low-Level API: `facts.storeWithDedup()`**
+
+```typescript
+const result = await cortex.facts.storeWithDedup(
+  {
+    memorySpaceId: "space-1",
+    fact: "User prefers dark mode",
+    factType: "preference",
+    subject: "user-123",
+    predicate: "prefers",
+    object: "dark-mode",
+    confidence: 90,
+    sourceType: "conversation",
+  },
+  {
+    deduplication: {
+      strategy: "semantic",
+      similarityThreshold: 0.85,
+      generateEmbedding: async (text) => embed(text),
+    },
+  }
+);
+
+if (result.deduplication?.matchedExisting) {
+  console.log("Found duplicate:", result.fact.factId);
+  console.log("Was updated:", result.wasUpdated);
+}
+```
+
+**5. Confidence-Based Updates**
+
+When a duplicate is found, if the new fact has higher confidence, the existing fact is updated:
+
+```typescript
+// Session 1: confidence 70
+await cortex.memory.remember({ extractFacts: () => [{ confidence: 70, ... }] });
+
+// Session 2: confidence 95 - updates existing fact!
+await cortex.memory.remember({ extractFacts: () => [{ confidence: 95, ... }] });
+
+// Result: 1 fact with confidence 95
+```
+
+**6. New Types**
+
+```typescript
+type DeduplicationStrategy = 'none' | 'exact' | 'structural' | 'semantic';
+
+interface DeduplicationConfig {
+  strategy: DeduplicationStrategy;
+  similarityThreshold?: number;  // 0-1, default 0.85
+  generateEmbedding?: (text: string) => Promise<number[]>;
+}
+
+interface StoreWithDedupResult {
+  fact: FactRecord;
+  wasUpdated: boolean;
+  deduplication?: {
+    strategy: DeduplicationStrategy;
+    matchedExisting: boolean;
+    similarityScore?: number;
+  };
+}
+```
+
+**7. Streaming Support**
+
+`memory.rememberStream()` also supports deduplication with the same options:
+
+```typescript
+await cortex.memory.rememberStream({
+  ...params,
+  factDeduplication: "structural", // Works during progressive extraction
+});
+```
+
+**Default Behavior by API:**
+
+| API | Default |
+|-----|---------|
+| `memory.remember()` | `semantic` (falls back to `structural`) |
+| `memory.rememberStream()` | `semantic` (falls back to `structural`) |
+| `facts.store()` | No deduplication (unchanged) |
+| `facts.storeWithDedup()` | Configurable |
+
+**Migration:** No action required. The new default behavior prevents duplicates automatically. To restore previous behavior, pass `factDeduplication: false`.
+
+---
+
 ### [0.21.0] - 2025-12-10
 
 #### 🚀 Users API Planned Features Implemented

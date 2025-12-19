@@ -48,13 +48,40 @@ import {
   validateExportFormat,
 } from "./validators";
 import type { ResilienceLayer } from "../resilience";
+import {
+  FactDeduplicationService,
+  type DeduplicationConfig,
+  type DeduplicationStrategy,
+  type StoreWithDedupResult,
+} from "./deduplication";
+
+/**
+ * Extended options for storing facts with deduplication
+ */
+export interface StoreFactWithDedupOptions extends StoreFactOptions {
+  /**
+   * Deduplication configuration. Set to false to disable deduplication.
+   *
+   * - 'semantic': Embedding-based similarity (most accurate, requires generateEmbedding)
+   * - 'structural': Subject + predicate + object match (fast, good accuracy)
+   * - 'exact': Normalized text match (fastest, lowest accuracy)
+   * - false: Disable deduplication
+   *
+   * @default undefined (no deduplication at facts.store level)
+   */
+  deduplication?: DeduplicationConfig | DeduplicationStrategy | false;
+}
 
 export class FactsAPI {
+  private deduplicationService: FactDeduplicationService;
+
   constructor(
     private client: ConvexClient,
     private graphAdapter?: GraphAdapter,
     private resilience?: ResilienceLayer,
-  ) {}
+  ) {
+    this.deduplicationService = new FactDeduplicationService(client);
+  }
 
   /**
    * Handle ConvexError from direct Convex calls
@@ -176,6 +203,135 @@ export class FactsAPI {
     }
 
     return result as FactRecord;
+  }
+
+  /**
+   * Store a fact with cross-session deduplication
+   *
+   * This method checks for existing similar facts before storing.
+   * If a duplicate is found:
+   * - If the new fact has higher confidence, the existing fact is updated
+   * - Otherwise, the existing fact is returned without creating a duplicate
+   *
+   * @example
+   * ```typescript
+   * const result = await cortex.facts.storeWithDedup(
+   *   {
+   *     memorySpaceId: 'space-1',
+   *     fact: 'User prefers dark mode',
+   *     factType: 'preference',
+   *     subject: 'user-123',
+   *     confidence: 95,
+   *     sourceType: 'conversation',
+   *   },
+   *   {
+   *     deduplication: {
+   *       strategy: 'semantic',
+   *       generateEmbedding: embedFn,
+   *     },
+   *   }
+   * );
+   *
+   * if (result.wasUpdated) {
+   *   console.log('Updated existing fact:', result.fact.factId);
+   * } else {
+   *   console.log('Created new fact:', result.fact.factId);
+   * }
+   * ```
+   */
+  async storeWithDedup(
+    params: StoreFactParams,
+    options?: StoreFactWithDedupOptions,
+  ): Promise<StoreWithDedupResult> {
+    // If deduplication is disabled, just store normally
+    if (options?.deduplication === false) {
+      const fact = await this.store(params, options);
+      return {
+        fact,
+        wasUpdated: false,
+      };
+    }
+
+    // Resolve deduplication config
+    const dedupConfig = FactDeduplicationService.resolveConfig(
+      options?.deduplication,
+    );
+
+    // Skip dedup if strategy is 'none'
+    if (dedupConfig.strategy === "none") {
+      const fact = await this.store(params, options);
+      return {
+        fact,
+        wasUpdated: false,
+      };
+    }
+
+    // Check for duplicates
+    const duplicateResult = await this.deduplicationService.findDuplicate(
+      {
+        fact: params.fact,
+        factType: params.factType,
+        subject: params.subject,
+        predicate: params.predicate,
+        object: params.object,
+        confidence: params.confidence,
+        tags: params.tags,
+      },
+      params.memorySpaceId,
+      dedupConfig,
+      params.userId,
+    );
+
+    // If duplicate found
+    if (duplicateResult.isDuplicate && duplicateResult.existingFact) {
+      const existing = duplicateResult.existingFact;
+
+      // If new confidence is higher, update the existing fact
+      if (duplicateResult.shouldUpdate) {
+        const updatedFact = await this.update(
+          params.memorySpaceId,
+          existing.factId,
+          {
+            confidence: params.confidence,
+            // Optionally update tags if new ones are provided
+            tags: params.tags ? [...new Set([...existing.tags, ...params.tags])] : undefined,
+          },
+          { syncToGraph: options?.syncToGraph },
+        );
+
+        return {
+          fact: updatedFact,
+          wasUpdated: true,
+          deduplication: {
+            strategy: dedupConfig.strategy,
+            matchedExisting: true,
+            similarityScore: duplicateResult.similarityScore,
+          },
+        };
+      }
+
+      // Return existing fact without modification
+      return {
+        fact: existing,
+        wasUpdated: false,
+        deduplication: {
+          strategy: dedupConfig.strategy,
+          matchedExisting: true,
+          similarityScore: duplicateResult.similarityScore,
+        },
+      };
+    }
+
+    // No duplicate found, store new fact
+    const fact = await this.store(params, options);
+    return {
+      fact,
+      wasUpdated: false,
+      deduplication: {
+        strategy: dedupConfig.strategy,
+        matchedExisting: false,
+      },
+    };
   }
 
   /**
@@ -986,3 +1142,13 @@ export class FactsAPI {
 
 // Export validation error for users who want to catch it specifically
 export { FactsValidationError } from "./validators";
+
+// Export deduplication types and service
+export {
+  FactDeduplicationService,
+  type DeduplicationConfig,
+  type DeduplicationStrategy,
+  type FactCandidate,
+  type DuplicateResult,
+  type StoreWithDedupResult,
+} from "./deduplication";

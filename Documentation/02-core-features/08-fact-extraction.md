@@ -319,7 +319,129 @@ async function rememberWithFactExtraction(params: {
 
 ## Deduplication and Conflict Resolution
 
-### Finding Similar Facts
+> **New in v0.22.0**: Cross-session fact deduplication is now built-in! The `memory.remember()` API automatically deduplicates facts using semantic matching by default.
+
+### Automatic Cross-Session Deduplication
+
+When using `memory.remember()` or `memory.rememberStream()`, facts are automatically deduplicated across sessions:
+
+```typescript
+// Session 1: User states their name
+await cortex.memory.remember({
+  memorySpaceId: "user-123-space",
+  conversationId: "conv-1",
+  userMessage: "My name is Alice",
+  agentResponse: "Nice to meet you, Alice!",
+  userId: "user-123",
+  agentId: "agent-1",
+  userName: "Alice",
+  extractFacts: async (user, agent) => [{
+    fact: "User's name is Alice",
+    factType: "identity",
+    subject: "user-123",
+    predicate: "name",
+    object: "Alice",
+    confidence: 95,
+  }],
+});
+
+// Session 2: User mentions name again (different wording)
+await cortex.memory.remember({
+  memorySpaceId: "user-123-space",
+  conversationId: "conv-2",
+  userMessage: "Remember, I'm Alice",
+  agentResponse: "Of course, Alice!",
+  userId: "user-123",
+  agentId: "agent-1",
+  userName: "Alice",
+  extractFacts: async (user, agent) => [{
+    fact: "User is called Alice",
+    factType: "identity",
+    subject: "user-123",
+    predicate: "name",
+    object: "Alice",
+    confidence: 90,
+  }],
+});
+
+// Result: Only 1 fact stored (not 2!)
+const facts = await cortex.facts.list({ memorySpaceId: "user-123-space" });
+console.log(facts.length); // 1
+```
+
+### Deduplication Strategies
+
+The SDK supports three deduplication strategies:
+
+| Strategy | How it Works | Speed | Accuracy |
+|----------|--------------|-------|----------|
+| `semantic` | Embedding similarity search | Slower | Highest |
+| `structural` | Subject + predicate + object match | Fast | Medium |
+| `exact` | Normalized text match | Fastest | Low |
+
+**Default behavior:**
+- `memory.remember()` and `memory.rememberStream()` default to `semantic` (falls back to `structural` if no `generateEmbedding` function)
+- `facts.store()` performs no deduplication by default (for performance-critical use cases)
+
+### Configuring Deduplication
+
+```typescript
+// Use structural deduplication (faster)
+await cortex.memory.remember({
+  // ... other params
+  factDeduplication: "structural",
+});
+
+// Disable deduplication entirely (previous behavior)
+await cortex.memory.remember({
+  // ... other params
+  factDeduplication: false,
+});
+
+// Semantic deduplication with custom embedding
+await cortex.memory.remember({
+  // ... other params
+  generateEmbedding: async (text) => embed(text), // Your embedding function
+  // factDeduplication defaults to 'semantic' when generateEmbedding is provided
+});
+```
+
+### Low-Level Deduplication (facts.storeWithDedup)
+
+For direct control over fact storage with deduplication:
+
+```typescript
+const result = await cortex.facts.storeWithDedup(
+  {
+    memorySpaceId: "user-123-space",
+    fact: "User prefers dark mode",
+    factType: "preference",
+    subject: "user-123",
+    predicate: "prefers",
+    object: "dark-mode",
+    confidence: 90,
+    sourceType: "conversation",
+  },
+  {
+    deduplication: {
+      strategy: "semantic",
+      similarityThreshold: 0.85,
+      generateEmbedding: async (text) => embed(text),
+    },
+  }
+);
+
+if (result.deduplication?.matchedExisting) {
+  console.log("Found existing fact:", result.fact.factId);
+  console.log("Was updated:", result.wasUpdated);
+} else {
+  console.log("Created new fact:", result.fact.factId);
+}
+```
+
+### Finding Similar Facts (Manual)
+
+For custom deduplication logic, you can still search for similar facts manually:
 
 ```typescript
 async function findSimilarFacts(
@@ -1222,42 +1344,76 @@ Avoid:
 
 **Solutions:**
 
-1. Lower similarity threshold:
+1. **Use built-in deduplication (Recommended):**
 
 ```typescript
-const similar = await findSimilarFacts(fact, memorySpaceId, userId);
-if (similar.length > 0 && similar[0].score > 0.8) {
-  // Was 0.85
-  return "IGNORE";
-}
+// memory.remember() defaults to semantic deduplication
+await cortex.memory.remember({
+  // ... params
+  // factDeduplication: 'semantic' is the default!
+});
+
+// Or use structural for faster deduplication
+await cortex.memory.remember({
+  // ... params
+  factDeduplication: 'structural',
+});
 ```
 
-2. Use LLM for semantic deduplication:
+2. **Check deduplication is enabled:**
 
 ```typescript
-const isDuplicate = await llm.complete(`
-Are these facts essentially the same?
-1. "${newFact.fact}"
-2. "${existingFact.content}"
-
-Answer: YES or NO
-`);
+// Make sure you haven't disabled deduplication
+await cortex.memory.remember({
+  // ... params
+  factDeduplication: false, // ← This disables dedup!
+});
 ```
 
-3. Periodic consolidation:
+3. **Lower similarity threshold for semantic matching:**
 
 ```typescript
-// Run nightly to merge similar facts
-async function consolidateFacts(memorySpaceId: string, userId: string) {
-  const allFacts = await cortex.memory.search(memorySpaceId, "*", {
-    userId,
-    contentType: "fact",
-    limit: 1000,
-  });
+// Provide generateEmbedding and adjust threshold
+await cortex.memory.remember({
+  // ... params
+  generateEmbedding: async (text) => embed(text),
+  // Default threshold is 0.85, but SDK handles this internally
+});
+```
 
-  // Find and merge duplicates
-  // (implementation left as exercise)
-}
+4. **Manual post-hoc consolidation:**
+
+```typescript
+// If duplicates already exist, consolidate them
+await cortex.facts.consolidate({
+  memorySpaceId: "user-123-space",
+  factIds: ["fact-1", "fact-2", "fact-3"], // Duplicate facts
+  keepFactId: "fact-1", // Which one to keep
+});
+```
+
+5. **Check your fact structure:**
+
+For `structural` deduplication to work, ensure facts have consistent `subject`, `predicate`, and `object`:
+
+```typescript
+// Good: Consistent structure enables dedup
+extractFacts: async () => [{
+  fact: "User prefers dark mode",
+  factType: "preference",
+  subject: "user-123",      // ← Consistent
+  predicate: "prefers",     // ← Consistent
+  object: "dark-mode",      // ← Consistent
+  confidence: 90,
+}]
+
+// Bad: Missing structure prevents structural dedup
+extractFacts: async () => [{
+  fact: "User prefers dark mode",
+  factType: "preference",
+  // No subject/predicate/object!
+  confidence: 90,
+}]
 ```
 
 ## Next Steps

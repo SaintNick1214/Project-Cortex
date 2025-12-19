@@ -584,6 +584,20 @@ export interface RememberParams {
   // Metadata
   importance?: number;
   tags?: string[];
+
+  /**
+   * Fact deduplication strategy. Defaults to 'semantic' for maximum effectiveness.
+   *
+   * - 'semantic': Embedding-based similarity (most accurate, requires generateEmbedding)
+   * - 'structural': Subject + predicate + object match (fast, good accuracy)
+   * - 'exact': Normalized text match (fastest, lowest accuracy)
+   * - false: Disable deduplication (previous behavior)
+   *
+   * The generateEmbedding function (if provided) is automatically reused for semantic matching.
+   *
+   * @default 'semantic' (with fallback to 'structural' if no generateEmbedding)
+   */
+  factDeduplication?: "semantic" | "structural" | "exact" | false;
 }
 
 export interface RememberResult {
@@ -690,6 +704,20 @@ export interface RememberStreamParams {
   // Metadata
   importance?: number;
   tags?: string[];
+
+  /**
+   * Fact deduplication strategy. Defaults to 'semantic' for maximum effectiveness.
+   *
+   * - 'semantic': Embedding-based similarity (most accurate, requires generateEmbedding)
+   * - 'structural': Subject + predicate + object match (fast, good accuracy)
+   * - 'exact': Normalized text match (fastest, lowest accuracy)
+   * - false: Disable deduplication (previous behavior)
+   *
+   * The generateEmbedding function (if provided) is automatically reused for semantic matching.
+   *
+   * @default 'semantic' (with fallback to 'structural' if no generateEmbedding)
+   */
+  factDeduplication?: "semantic" | "structural" | "exact" | false;
 }
 
 /**
@@ -2149,3 +2177,15 @@ export type {
   ProgressiveProcessing,
   EnhancedRememberStreamResult,
 } from "./streaming";
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Fact Deduplication Types
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export type {
+  DeduplicationStrategy,
+  DeduplicationConfig,
+  FactCandidate,
+  DuplicateResult,
+  StoreWithDedupResult,
+} from "../facts/deduplication";
