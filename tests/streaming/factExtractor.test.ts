@@ -15,29 +15,40 @@ function createMockFactsAPI(): FactsAPI {
   const storedFacts: FactRecord[] = [];
   let factIdCounter = 1;
 
+  const storeFn = jest.fn(async (input: any) => {
+    const fact: FactRecord = {
+      _id: `doc-${factIdCounter}` as any,
+      factId: `fact-${factIdCounter++}`,
+      memorySpaceId: input.memorySpaceId,
+      userId: input.userId,
+      participantId: input.participantId,
+      fact: input.fact,
+      factType: input.factType,
+      subject: input.subject,
+      predicate: input.predicate,
+      object: input.object,
+      confidence: input.confidence,
+      sourceType: input.sourceType,
+      sourceRef: input.sourceRef,
+      tags: input.tags || [],
+      version: 1,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
+    storedFacts.push(fact);
+    return fact;
+  });
+
   return {
-    store: jest.fn(async (input: any) => {
-      const fact: FactRecord = {
-        _id: `doc-${factIdCounter}` as any,
-        factId: `fact-${factIdCounter++}`,
-        memorySpaceId: input.memorySpaceId,
-        userId: input.userId,
-        participantId: input.participantId,
-        fact: input.fact,
-        factType: input.factType,
-        subject: input.subject,
-        predicate: input.predicate,
-        object: input.object,
-        confidence: input.confidence,
-        sourceType: input.sourceType,
-        sourceRef: input.sourceRef,
-        tags: input.tags || [],
-        version: 1,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
+    store: storeFn,
+    // storeWithDedup delegates to store for testing (returns StoreWithDedupResult)
+    storeWithDedup: jest.fn(async (input: any, _options?: any) => {
+      const fact = await storeFn(input);
+      return {
+        fact,
+        wasUpdated: false,
+        deduplication: { strategy: "structural", matchedExisting: false },
       };
-      storedFacts.push(fact);
-      return fact;
     }),
     update: jest.fn(async (_memorySpaceId: string, factId: string, updates: any) => {
       const fact = storedFacts.find((f) => f.factId === factId);
@@ -175,7 +186,7 @@ describe("ProgressiveFactExtractor", () => {
       expect(result[0].extractedAtChunk).toBe(1);
       expect(result[0].deduped).toBe(false);
 
-      expect(mockFactsAPI.store).toHaveBeenCalledWith(
+      expect(mockFactsAPI.storeWithDedup).toHaveBeenCalledWith(
         expect.objectContaining({
           memorySpaceId: "test-space",
           userId: "test-user",
@@ -203,7 +214,7 @@ describe("ProgressiveFactExtractor", () => {
       );
 
       expect(result).toHaveLength(3);
-      expect(mockFactsAPI.store).toHaveBeenCalledTimes(3);
+      expect(mockFactsAPI.storeWithDedup).toHaveBeenCalledTimes(3);
     });
 
     it("should deduplicate facts with same key", async () => {
@@ -231,7 +242,7 @@ describe("ProgressiveFactExtractor", () => {
 
       // Should not store duplicate
       expect(result2).toHaveLength(0);
-      expect(mockFactsAPI.store).toHaveBeenCalledTimes(1);
+      expect(mockFactsAPI.storeWithDedup).toHaveBeenCalledTimes(1);
     });
 
     it("should update confidence if higher", async () => {
@@ -280,7 +291,7 @@ describe("ProgressiveFactExtractor", () => {
       );
 
       expect(result).toHaveLength(0);
-      expect(mockFactsAPI.store).not.toHaveBeenCalled();
+      expect(mockFactsAPI.storeWithDedup).not.toHaveBeenCalled();
     });
 
     it("should handle empty array from extractFacts function", async () => {
@@ -295,7 +306,7 @@ describe("ProgressiveFactExtractor", () => {
       );
 
       expect(result).toHaveLength(0);
-      expect(mockFactsAPI.store).not.toHaveBeenCalled();
+      expect(mockFactsAPI.storeWithDedup).not.toHaveBeenCalled();
     });
 
     it("should update lastExtractionPoint after extraction", async () => {
@@ -327,7 +338,7 @@ describe("ProgressiveFactExtractor", () => {
         "conv-1",
       );
 
-      expect(mockFactsAPI.store).toHaveBeenCalledWith(
+      expect(mockFactsAPI.storeWithDedup).toHaveBeenCalledWith(
         expect.objectContaining({
           tags: expect.arrayContaining(["progressive", "chunk-5"]),
         }),
@@ -349,18 +360,18 @@ describe("ProgressiveFactExtractor", () => {
         true, // syncToGraph
       );
 
-      expect(mockFactsAPI.store).toHaveBeenCalledWith(
+      expect(mockFactsAPI.storeWithDedup).toHaveBeenCalledWith(
         expect.any(Object),
         expect.objectContaining({ syncToGraph: true }),
       );
     });
 
     it("should handle fact storage errors gracefully", async () => {
-      const failingStore = jest.fn<() => Promise<any>>();
-      failingStore.mockRejectedValue(new Error("Storage error"));
+      const failingStoreWithDedup = jest.fn<() => Promise<any>>();
+      failingStoreWithDedup.mockRejectedValue(new Error("Storage error"));
       const failingFactsAPI = {
         ...createMockFactsAPI(),
-        store: failingStore,
+        storeWithDedup: failingStoreWithDedup,
       } as unknown as FactsAPI;
 
       const extractor2 = new ProgressiveFactExtractor(
@@ -414,7 +425,7 @@ describe("ProgressiveFactExtractor", () => {
         "conv-1",
       );
 
-      expect(mockFactsAPI.store).toHaveBeenCalledWith(
+      expect(mockFactsAPI.storeWithDedup).toHaveBeenCalledWith(
         expect.objectContaining({
           subject: "test-user",
         }),
@@ -471,8 +482,8 @@ describe("ProgressiveFactExtractor", () => {
 
       // Should return the already extracted fact, not store a new one
       expect(result).toHaveLength(1);
-      // Store should only be called once (from progressive)
-      expect(mockFactsAPI.store).toHaveBeenCalledTimes(1);
+      // storeWithDedup should only be called once (from progressive)
+      expect(mockFactsAPI.storeWithDedup).toHaveBeenCalledTimes(1);
     });
 
     it("should store new facts found in final extraction", async () => {
@@ -505,8 +516,8 @@ describe("ProgressiveFactExtractor", () => {
       );
 
       expect(result).toHaveLength(2);
-      // Store should be called twice (once progressive, once final)
-      expect(mockFactsAPI.store).toHaveBeenCalledTimes(2);
+      // storeWithDedup should be called twice (once progressive, once final)
+      expect(mockFactsAPI.storeWithDedup).toHaveBeenCalledTimes(2);
     });
 
     it("should return progressively extracted facts when no new final facts", async () => {
@@ -584,7 +595,7 @@ describe("ProgressiveFactExtractor", () => {
         ["msg-1", "msg-2"],
       );
 
-      expect(mockFactsAPI.store).toHaveBeenCalledWith(
+      expect(mockFactsAPI.storeWithDedup).toHaveBeenCalledWith(
         expect.objectContaining({
           sourceRef: expect.objectContaining({
             conversationId: "conv-1",
@@ -611,7 +622,7 @@ describe("ProgressiveFactExtractor", () => {
         true, // syncToGraph
       );
 
-      expect(mockFactsAPI.store).toHaveBeenCalledWith(
+      expect(mockFactsAPI.storeWithDedup).toHaveBeenCalledWith(
         expect.any(Object),
         expect.objectContaining({ syncToGraph: true }),
       );
