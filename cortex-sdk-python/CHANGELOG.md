@@ -5,6 +5,171 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.22.0] - 2025-12-19
+
+### 🎯 Cross-Session Fact Deduplication
+
+**Automatic duplicate fact prevention across conversations.** No more storing "User's name is Alex" 50 times!
+
+Port of TypeScript SDK 0.22.0 feature to Python SDK.
+
+#### The Problem
+
+Previously, each `remember()` call stored facts independently:
+```python
+# Conversation 1
+await cortex.memory.remember(...)  # Stores: "User's name is Alex"
+
+# Conversation 2  
+await cortex.memory.remember(...)  # Stores: "User's name is Alex" (duplicate!)
+
+# After 10 conversations: 10 identical facts! 😱
+```
+
+#### The Solution
+
+Now `memory.remember()` automatically deduplicates facts across sessions:
+
+```python
+# Conversation 1
+await cortex.memory.remember(...)  # Stores: "User's name is Alex"
+
+# Conversation 2
+await cortex.memory.remember(...)  # Detects duplicate, skips storage ✨
+
+# After 10 conversations: Still just 1 fact! 🎉
+```
+
+#### ✨ New Features
+
+| Feature | Description |
+|---------|-------------|
+| **Automatic Deduplication** | `memory.remember()` defaults to semantic deduplication (falls back to structural) |
+| **Configurable Strategies** | `exact`, `structural`, `semantic`, or `none` |
+| **`facts.store_with_dedup()`** | New method for manual fact storage with deduplication |
+| **Confidence-Based Updates** | Higher confidence facts update existing lower-confidence duplicates |
+
+#### 🔄 Deduplication Strategies
+
+| Strategy | Speed | Accuracy | Description |
+|----------|-------|----------|-------------|
+| `none` | ⚡ Fastest | None | Skip deduplication entirely |
+| `exact` | ⚡ Fast | Low | Normalized text match |
+| `structural` | ⚡ Fast | Medium | Subject + predicate + object match |
+| `semantic` | 🐢 Slower | High | Embedding similarity (requires `generate_embedding`) |
+
+#### 🎓 Usage Examples
+
+**Default behavior (recommended):**
+```python
+# Deduplication is ON by default (semantic → structural fallback)
+await cortex.memory.remember(
+    RememberParams(
+        memory_space_id="agent-1",
+        conversation_id="conv-123",
+        user_message="I'm Alex",
+        agent_response="Nice to meet you!",
+        user_id="user-123",
+        user_name="Alex",
+        agent_id="assistant",
+        extract_facts=my_fact_extractor,
+    )
+)
+```
+
+**Disable deduplication:**
+```python
+await cortex.memory.remember(
+    RememberParams(
+        memory_space_id="agent-1",
+        conversation_id="conv-123",
+        user_message="I'm Alex",
+        agent_response="Nice to meet you!",
+        user_id="user-123",
+        user_name="Alex",
+        agent_id="assistant",
+        extract_facts=my_fact_extractor,
+        fact_deduplication=False,  # Disable deduplication
+    )
+)
+```
+
+**Manual deduplication with `store_with_dedup()`:**
+```python
+from cortex import StoreFactParams, DeduplicationConfig
+from cortex.facts import StoreFactWithDedupOptions
+
+result = await cortex.facts.store_with_dedup(
+    StoreFactParams(
+        memory_space_id="agent-1",
+        fact="User prefers dark mode",
+        fact_type="preference",
+        subject="user-123",
+        predicate="prefers",
+        object="dark mode",
+        confidence=95,
+        source_type="conversation",
+    ),
+    StoreFactWithDedupOptions(
+        deduplication=DeduplicationConfig(strategy="structural"),
+    )
+)
+
+if result.deduplication and result.deduplication.get("matched_existing"):
+    print(f"Duplicate found! Using existing fact: {result.fact.fact_id}")
+else:
+    print(f"New fact stored: {result.fact.fact_id}")
+```
+
+#### 📦 New Package Exports
+
+```python
+from cortex import (
+    # Deduplication types
+    DeduplicationConfig,
+    DeduplicationStrategy,
+    DuplicateResult,
+    FactCandidate,
+    FactDeduplicationService,
+    StoreFactWithDedupOptions,
+    StoreWithDedupResult,
+)
+```
+
+#### 🆕 New Types
+
+| Type | Description |
+|------|-------------|
+| `DeduplicationStrategy` | Literal type: `"none" \| "exact" \| "structural" \| "semantic"` |
+| `DeduplicationConfig` | Configuration with `strategy`, `similarity_threshold`, `generate_embedding` |
+| `FactCandidate` | Candidate fact for deduplication check |
+| `DuplicateResult` | Result of duplicate detection with `is_duplicate`, `existing_fact`, etc. |
+| `StoreWithDedupResult` | Result from `store_with_dedup()` with `fact`, `was_updated`, `deduplication` |
+| `StoreFactWithDedupOptions` | Options for `store_with_dedup()` |
+
+#### 🆕 New Methods
+
+| Method | Description |
+|--------|-------------|
+| `facts.store_with_dedup()` | Store fact with cross-session deduplication |
+| `FactDeduplicationService.find_duplicate()` | Find duplicate fact in database |
+| `FactDeduplicationService.resolve_config()` | Resolve deduplication config with fallbacks |
+
+#### 🆕 New Parameters
+
+| Type | Parameter | Description |
+|------|-----------|-------------|
+| `RememberParams` | `fact_deduplication` | Deduplication strategy, config, or `False` to disable |
+| `RememberStreamParams` | `fact_deduplication` | Same as above for streaming |
+
+#### ⚠️ Migration Notes
+
+- **No breaking changes** - existing code works unchanged
+- **Default behavior changed** - `remember()` now deduplicates by default (semantic → structural fallback)
+- To restore previous behavior: `fact_deduplication=False`
+
+---
+
 ## [0.21.0] - 2025-12-14
 
 ### 🎯 Memory API TypeScript SDK Parity
