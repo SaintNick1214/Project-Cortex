@@ -54,6 +54,21 @@ import {
   type DeduplicationStrategy,
   type StoreWithDedupResult,
 } from "./deduplication";
+import {
+  BeliefRevisionService,
+  type BeliefRevisionConfig,
+  type ReviseParams,
+  type ReviseResult,
+  type ConflictCheckResult,
+  type BeliefRevisionLLMClient,
+} from "./belief-revision";
+import {
+  FactHistoryService,
+  type FactChangeEvent,
+  type ChangeFilter,
+  type ActivitySummary,
+  type SupersessionChainEntry,
+} from "./history";
 
 /**
  * Extended options for storing facts with deduplication
@@ -72,15 +87,57 @@ export interface StoreFactWithDedupOptions extends StoreFactOptions {
   deduplication?: DeduplicationConfig | DeduplicationStrategy | false;
 }
 
+/**
+ * Extended options for belief revision
+ */
+export interface BeliefRevisionOptions extends StoreFactOptions {
+  /**
+   * Belief revision configuration
+   */
+  beliefRevision?: BeliefRevisionConfig | false;
+}
+
 export class FactsAPI {
   private deduplicationService: FactDeduplicationService;
+  private beliefRevisionService?: BeliefRevisionService;
+  private historyService: FactHistoryService;
+  private llmClient?: BeliefRevisionLLMClient;
 
   constructor(
     private client: ConvexClient,
     private graphAdapter?: GraphAdapter,
     private resilience?: ResilienceLayer,
+    llmClient?: BeliefRevisionLLMClient,
+    beliefRevisionConfig?: BeliefRevisionConfig,
   ) {
+    this.llmClient = llmClient;
     this.deduplicationService = new FactDeduplicationService(client);
+    this.historyService = new FactHistoryService(client, resilience);
+
+    // Initialize belief revision if LLM client is provided or explicitly configured
+    if (llmClient || beliefRevisionConfig) {
+      this.beliefRevisionService = new BeliefRevisionService(
+        client,
+        llmClient,
+        graphAdapter,
+        beliefRevisionConfig,
+      );
+    }
+  }
+
+  /**
+   * Configure or update the belief revision service
+   */
+  configureBeliefRevision(
+    llmClient?: BeliefRevisionLLMClient,
+    config?: BeliefRevisionConfig,
+  ): void {
+    this.beliefRevisionService = new BeliefRevisionService(
+      this.client,
+      llmClient || this.llmClient,
+      this.graphAdapter,
+      config,
+    );
   }
 
   /**
@@ -1142,6 +1199,261 @@ export class FactsAPI {
       mergedCount: number;
     };
   }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Belief Revision Methods
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * Revise a fact using the belief revision pipeline
+   *
+   * This method intelligently determines whether a new fact should:
+   * - CREATE: Add as new fact (no conflicts)
+   * - UPDATE: Merge with existing fact (refinement)
+   * - SUPERSEDE: Replace existing fact (contradiction)
+   * - NONE: Skip (duplicate)
+   *
+   * @example
+   * ```typescript
+   * const result = await cortex.facts.revise({
+   *   memorySpaceId: 'space-1',
+   *   fact: {
+   *     fact: 'User prefers purple',
+   *     subject: 'user-123',
+   *     predicate: 'favorite color',
+   *     object: 'purple',
+   *     confidence: 90,
+   *   },
+   * });
+   *
+   * console.log(`Action: ${result.action}, Reason: ${result.reason}`);
+   * ```
+   */
+  async revise(params: ReviseParams): Promise<ReviseResult> {
+    validateMemorySpaceId(params.memorySpaceId);
+    validateRequiredString(params.fact.fact, "fact.fact");
+    validateConfidence(params.fact.confidence, "fact.confidence");
+
+    if (!this.beliefRevisionService) {
+      throw new Error(
+        "Belief revision service not configured. Call configureBeliefRevision() first or provide LLM client in constructor.",
+      );
+    }
+
+    const result = await this.beliefRevisionService.revise(params);
+
+    // Log to history - map belief revision actions to history actions
+    const historyAction =
+      result.action === "NONE"
+        ? "UPDATE"
+        : result.action === "ADD"
+          ? "CREATE"
+          : result.action;
+
+    await this.historyService.log({
+      factId: result.fact.factId,
+      memorySpaceId: params.memorySpaceId,
+      action: historyAction,
+      oldValue: result.superseded[0]?.fact,
+      newValue: result.fact.fact,
+      supersededBy: result.action === "SUPERSEDE" ? result.fact.factId : undefined,
+      supersedes: result.superseded[0]?.factId,
+      reason: result.reason,
+      confidence: result.confidence,
+      pipeline: {
+        slotMatching: result.pipeline.slotMatching?.executed,
+        semanticMatching: result.pipeline.semanticMatching?.executed,
+        llmResolution: result.pipeline.llmResolution?.executed,
+      },
+      userId: params.userId,
+      participantId: params.participantId,
+    });
+
+    return result;
+  }
+
+  /**
+   * Check for conflicts without executing (preview mode)
+   *
+   * Useful for showing users what would happen before committing.
+   *
+   * @example
+   * ```typescript
+   * const conflicts = await cortex.facts.checkConflicts({
+   *   memorySpaceId: 'space-1',
+   *   fact: {
+   *     fact: 'User prefers purple',
+   *     subject: 'user-123',
+   *     predicate: 'favorite color',
+   *     object: 'purple',
+   *     confidence: 90,
+   *   },
+   * });
+   *
+   * if (conflicts.hasConflicts) {
+   *   console.log(`Found ${conflicts.slotConflicts.length} slot conflicts`);
+   *   console.log(`Recommended action: ${conflicts.recommendedAction}`);
+   * }
+   * ```
+   */
+  async checkConflicts(params: ReviseParams): Promise<ConflictCheckResult> {
+    validateMemorySpaceId(params.memorySpaceId);
+    validateRequiredString(params.fact.fact, "fact.fact");
+    validateConfidence(params.fact.confidence, "fact.confidence");
+
+    if (!this.beliefRevisionService) {
+      throw new Error(
+        "Belief revision service not configured. Call configureBeliefRevision() first or provide LLM client in constructor.",
+      );
+    }
+
+    return this.beliefRevisionService.checkConflicts(params);
+  }
+
+  /**
+   * Manually supersede a fact
+   *
+   * Marks an existing fact as superseded by a new fact.
+   * This creates an audit trail and maintains history.
+   *
+   * @example
+   * ```typescript
+   * await cortex.facts.supersede({
+   *   memorySpaceId: 'space-1',
+   *   oldFactId: 'fact-old',
+   *   newFactId: 'fact-new',
+   *   reason: 'User explicitly corrected this information',
+   * });
+   * ```
+   */
+  async supersede(params: {
+    memorySpaceId: string;
+    oldFactId: string;
+    newFactId: string;
+    reason?: string;
+  }): Promise<{ superseded: boolean; oldFactId: string; newFactId: string }> {
+    validateMemorySpaceId(params.memorySpaceId);
+    validateRequiredString(params.oldFactId, "oldFactId");
+    validateFactIdFormat(params.oldFactId);
+    validateRequiredString(params.newFactId, "newFactId");
+    validateFactIdFormat(params.newFactId);
+
+    // Get both facts to verify they exist
+    const [oldFact, newFact] = await Promise.all([
+      this.get(params.memorySpaceId, params.oldFactId),
+      this.get(params.memorySpaceId, params.newFactId),
+    ]);
+
+    if (!oldFact) {
+      throw new Error(`Old fact not found: ${params.oldFactId}`);
+    }
+    if (!newFact) {
+      throw new Error(`New fact not found: ${params.newFactId}`);
+    }
+
+    // Mark old fact as superseded
+    await this.update(
+      params.memorySpaceId,
+      params.oldFactId,
+      { validUntil: Date.now() },
+    );
+
+    // Log to history
+    await this.historyService.log({
+      factId: params.oldFactId,
+      memorySpaceId: params.memorySpaceId,
+      action: "SUPERSEDE",
+      oldValue: oldFact.fact,
+      newValue: newFact.fact,
+      supersededBy: params.newFactId,
+      reason: params.reason || "Manual supersession",
+    });
+
+    return {
+      superseded: true,
+      oldFactId: params.oldFactId,
+      newFactId: params.newFactId,
+    };
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // History Methods
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * Get change history for a fact
+   *
+   * Returns the audit trail of all changes to a fact.
+   *
+   * @example
+   * ```typescript
+   * const history = await cortex.facts.history('fact-123');
+   * for (const event of history) {
+   *   console.log(`${event.action} at ${new Date(event.timestamp)}: ${event.reason}`);
+   * }
+   * ```
+   */
+  async history(factId: string, limit?: number): Promise<FactChangeEvent[]> {
+    validateRequiredString(factId, "factId");
+    validateFactIdFormat(factId);
+
+    return this.historyService.getHistory(factId, limit);
+  }
+
+  /**
+   * Get change events for a memory space in a time range
+   *
+   * @example
+   * ```typescript
+   * const changes = await cortex.facts.getChanges({
+   *   memorySpaceId: 'space-1',
+   *   after: new Date(Date.now() - 24 * 60 * 60 * 1000), // Last 24 hours
+   *   action: 'SUPERSEDE',
+   * });
+   * ```
+   */
+  async getChanges(filter: ChangeFilter): Promise<FactChangeEvent[]> {
+    validateMemorySpaceId(filter.memorySpaceId);
+
+    return this.historyService.getChanges(filter);
+  }
+
+  /**
+   * Get the supersession chain for a fact
+   *
+   * Shows the evolution of knowledge over time.
+   *
+   * @example
+   * ```typescript
+   * const chain = await cortex.facts.getSupersessionChain('fact-latest');
+   * // Returns: [oldest] -> [older] -> [old] -> [current]
+   * ```
+   */
+  async getSupersessionChain(factId: string): Promise<SupersessionChainEntry[]> {
+    validateRequiredString(factId, "factId");
+    validateFactIdFormat(factId);
+
+    return this.historyService.getSupersessionChain(factId);
+  }
+
+  /**
+   * Get activity summary for a memory space
+   *
+   * @example
+   * ```typescript
+   * const summary = await cortex.facts.getActivitySummary('space-1', 24); // Last 24 hours
+   * console.log(`Total events: ${summary.totalEvents}`);
+   * console.log(`Creates: ${summary.actionCounts.CREATE}`);
+   * ```
+   */
+  async getActivitySummary(
+    memorySpaceId: string,
+    hours?: number,
+  ): Promise<ActivitySummary> {
+    validateMemorySpaceId(memorySpaceId);
+
+    return this.historyService.getActivitySummary(memorySpaceId, hours);
+  }
 }
 
 // Export validation error for users who want to catch it specifically
@@ -1156,3 +1468,46 @@ export {
   type DuplicateResult,
   type StoreWithDedupResult,
 } from "./deduplication";
+
+// Export belief revision types and service
+export {
+  BeliefRevisionService,
+  type BeliefRevisionConfig,
+  type ReviseParams,
+  type ReviseResult,
+  type ConflictCheckResult,
+} from "./belief-revision";
+
+// Export slot matching utilities
+export {
+  SlotMatchingService,
+  type SlotMatch,
+  type SlotMatchingConfig,
+  type SlotConflictResult,
+  classifyPredicate,
+  normalizeSubject,
+  normalizePredicate,
+  extractSlot,
+  DEFAULT_PREDICATE_CLASSES,
+} from "./slot-matching";
+
+// Export conflict resolution types
+export {
+  type ConflictAction,
+  type ConflictDecision,
+  type ConflictCandidate,
+  buildConflictResolutionPrompt,
+  parseConflictDecision,
+  getDefaultDecision,
+} from "./conflict-prompts";
+
+// Export history types and service
+export {
+  FactHistoryService,
+  type FactChangeEvent,
+  type FactChangeAction,
+  type FactChangePipeline,
+  type ChangeFilter,
+  type ActivitySummary,
+  type SupersessionChainEntry,
+} from "./history";

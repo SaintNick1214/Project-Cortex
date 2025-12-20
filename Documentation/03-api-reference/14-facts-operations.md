@@ -285,6 +285,403 @@ console.log(semanticResult.deduplication?.matchedExisting); // true
 console.log(semanticResult.deduplication?.similarityScore); // ~0.92
 ```
 
+## Belief Revision System (v0.23.0+)
+
+> **New in v0.23.0**: Intelligent fact management that prevents duplicates and maintains knowledge consistency.
+
+The Belief Revision System determines whether a new fact should:
+- **CREATE**: Add as new fact (no conflicts)
+- **UPDATE**: Merge with existing fact (refinement)
+- **SUPERSEDE**: Replace existing fact (contradiction)
+- **NONE**: Skip (duplicate)
+
+### Pipeline Flow
+
+```
+NEW FACT → [Slot Match?] → YES → [LLM Decision]
+               │                      │
+               NO                 ┌───┴───┐
+               ↓                  ↓   ↓   ↓
+        [Semantic Match?]     UPDATE SUPERSEDE NONE
+               │                      │
+               NO                     ↓
+               ↓                   Execute
+            CREATE
+```
+
+### Configuration
+
+```typescript
+// Configure belief revision when creating Cortex instance
+const cortex = new Cortex({
+  url: process.env.CONVEX_URL!,
+  beliefRevision: {
+    slotMatching: {
+      enabled: true,
+      predicateClasses: {
+        // Add custom slot types
+        custom_slot: ["my predicate", "another pattern"],
+      },
+    },
+    semanticMatching: {
+      enabled: true,
+      threshold: 0.7, // Lower than dedup (0.85)
+      generateEmbedding: async (text) => embed(text),
+    },
+    llmResolution: {
+      enabled: true,
+      model: "gpt-4o",
+    },
+    history: {
+      enabled: true,
+      retentionDays: 90,
+    },
+  },
+});
+
+// Or configure later
+cortex.facts.configureBeliefRevision(llmClient, {
+  slotMatching: { enabled: true },
+  llmResolution: { enabled: true },
+});
+```
+
+### `facts.revise()`
+
+> **New in v0.23.0**: Intelligently store a fact using the belief revision pipeline.
+
+**Signature:**
+
+```typescript
+cortex.facts.revise(params: ReviseParams): Promise<ReviseResult>
+```
+
+**Parameters:**
+
+```typescript
+interface ReviseParams {
+  memorySpaceId: string;
+  fact: {
+    fact: string;
+    factType?: FactType;
+    subject?: string;
+    predicate?: string;
+    object?: string;
+    confidence: number;
+    tags?: string[];
+  };
+  userId?: string;
+  participantId?: string;
+}
+```
+
+**Return Type:**
+
+```typescript
+interface ReviseResult {
+  action: "CREATE" | "UPDATE" | "SUPERSEDE" | "NONE";
+  fact: FactRecord;
+  superseded: FactRecord[];
+  reason: string;
+  confidence: number;
+  pipeline: {
+    slotMatching?: { executed: boolean; matched: boolean; factIds?: string[] };
+    semanticMatching?: { executed: boolean; matched: boolean; factIds?: string[] };
+    llmResolution?: { executed: boolean; decision?: string };
+  };
+}
+```
+
+**Example:**
+
+```typescript
+// Intelligent fact storage with automatic conflict resolution
+const result = await cortex.facts.revise({
+  memorySpaceId: "agent-1",
+  fact: {
+    fact: "User prefers purple",
+    factType: "preference",
+    subject: "user-123",
+    predicate: "favorite color",
+    object: "purple",
+    confidence: 90,
+  },
+  userId: "user-123",
+});
+
+console.log(`Action: ${result.action}`); // "SUPERSEDE"
+console.log(`Reason: ${result.reason}`); // "Color preference has changed"
+console.log(`Superseded: ${result.superseded.length} facts`);
+
+// Check which pipeline stages ran
+if (result.pipeline.slotMatching?.matched) {
+  console.log("Found slot conflict");
+}
+if (result.pipeline.llmResolution?.executed) {
+  console.log(`LLM decided: ${result.pipeline.llmResolution.decision}`);
+}
+```
+
+### `facts.checkConflicts()`
+
+> **New in v0.23.0**: Preview conflicts without executing - useful for user confirmation flows.
+
+**Signature:**
+
+```typescript
+cortex.facts.checkConflicts(params: ReviseParams): Promise<ConflictCheckResult>
+```
+
+**Return Type:**
+
+```typescript
+interface ConflictCheckResult {
+  hasConflicts: boolean;
+  slotConflicts: FactRecord[];
+  semanticConflicts: Array<{ fact: FactRecord; score: number }>;
+  recommendedAction: "CREATE" | "UPDATE" | "SUPERSEDE" | "NONE";
+  reason: string;
+}
+```
+
+**Example:**
+
+```typescript
+// Check for conflicts before storing
+const conflicts = await cortex.facts.checkConflicts({
+  memorySpaceId: "agent-1",
+  fact: {
+    fact: "User prefers purple",
+    subject: "user-123",
+    predicate: "favorite color",
+    object: "purple",
+    confidence: 90,
+  },
+});
+
+if (conflicts.hasConflicts) {
+  console.log(`Found ${conflicts.slotConflicts.length} slot conflicts`);
+  console.log(`Recommended action: ${conflicts.recommendedAction}`);
+  console.log(`Reason: ${conflicts.reason}`);
+
+  // Show user the conflicts
+  conflicts.slotConflicts.forEach((f) => {
+    console.log(`  - ${f.fact} (${f.confidence}%)`);
+  });
+
+  // Let user confirm before proceeding
+  if (await userConfirms()) {
+    await cortex.facts.revise(params);
+  }
+}
+```
+
+### `facts.supersede()`
+
+> **New in v0.23.0**: Manually supersede a fact with another.
+
+**Signature:**
+
+```typescript
+cortex.facts.supersede(params: {
+  memorySpaceId: string;
+  oldFactId: string;
+  newFactId: string;
+  reason?: string;
+}): Promise<{ superseded: boolean; oldFactId: string; newFactId: string }>
+```
+
+**Example:**
+
+```typescript
+// Manually supersede a fact
+await cortex.facts.supersede({
+  memorySpaceId: "agent-1",
+  oldFactId: "fact-old-color",
+  newFactId: "fact-new-color",
+  reason: "User explicitly corrected this information",
+});
+
+// Old fact is now marked with validUntil
+const oldFact = await cortex.facts.get("agent-1", "fact-old-color");
+console.log(oldFact.validUntil); // Set to supersession time
+```
+
+### `facts.history()`
+
+> **New in v0.23.0**: Get the change history for a fact.
+
+**Signature:**
+
+```typescript
+cortex.facts.history(factId: string, limit?: number): Promise<FactChangeEvent[]>
+```
+
+**Return Type:**
+
+```typescript
+interface FactChangeEvent {
+  eventId: string;
+  factId: string;
+  memorySpaceId: string;
+  action: "CREATE" | "UPDATE" | "SUPERSEDE" | "DELETE";
+  oldValue?: string;
+  newValue?: string;
+  supersededBy?: string;
+  supersedes?: string;
+  reason?: string;
+  confidence?: number;
+  pipeline?: {
+    slotMatching?: boolean;
+    semanticMatching?: boolean;
+    llmResolution?: boolean;
+  };
+  userId?: string;
+  participantId?: string;
+  conversationId?: string;
+  timestamp: number;
+}
+```
+
+**Example:**
+
+```typescript
+// Get history for a fact
+const history = await cortex.facts.history("fact-123");
+
+history.forEach((event) => {
+  console.log(`${event.action} at ${new Date(event.timestamp).toISOString()}`);
+  console.log(`  Reason: ${event.reason}`);
+  if (event.oldValue) {
+    console.log(`  Old: ${event.oldValue}`);
+  }
+  if (event.newValue) {
+    console.log(`  New: ${event.newValue}`);
+  }
+});
+```
+
+### `facts.getSupersessionChain()`
+
+> **New in v0.23.0**: Get the evolution of a fact over time.
+
+**Signature:**
+
+```typescript
+cortex.facts.getSupersessionChain(factId: string): Promise<SupersessionChainEntry[]>
+```
+
+**Example:**
+
+```typescript
+// Trace the evolution of knowledge
+const chain = await cortex.facts.getSupersessionChain("fact-latest");
+
+// Returns: [oldest] -> [older] -> [old] -> [current]
+chain.forEach((entry, i) => {
+  console.log(`${i + 1}. ${entry.factId}`);
+  if (entry.supersededBy) {
+    console.log(`   Superseded by: ${entry.supersededBy}`);
+    console.log(`   Reason: ${entry.reason}`);
+  }
+});
+```
+
+### `facts.getActivitySummary()`
+
+> **New in v0.23.0**: Get activity summary for a memory space.
+
+**Signature:**
+
+```typescript
+cortex.facts.getActivitySummary(
+  memorySpaceId: string,
+  hours?: number
+): Promise<ActivitySummary>
+```
+
+**Return Type:**
+
+```typescript
+interface ActivitySummary {
+  timeRange: {
+    hours: number;
+    since: string;
+    until: string;
+  };
+  totalEvents: number;
+  actionCounts: {
+    CREATE: number;
+    UPDATE: number;
+    SUPERSEDE: number;
+    DELETE: number;
+  };
+  uniqueFactsModified: number;
+  activeParticipants: number;
+}
+```
+
+**Example:**
+
+```typescript
+// Get activity summary for last 24 hours
+const summary = await cortex.facts.getActivitySummary("agent-1", 24);
+
+console.log(`Total events: ${summary.totalEvents}`);
+console.log(`Creates: ${summary.actionCounts.CREATE}`);
+console.log(`Updates: ${summary.actionCounts.UPDATE}`);
+console.log(`Supersessions: ${summary.actionCounts.SUPERSEDE}`);
+console.log(`Unique facts modified: ${summary.uniqueFactsModified}`);
+```
+
+### Slot Matching
+
+Slot matching is the fast-path conflict detection that classifies predicates into semantic slots. Facts in the same slot (same subject + predicate class) represent the same knowledge and should be updated rather than duplicated.
+
+**Predicate Classes:**
+
+```typescript
+// Default predicate classes
+const PREDICATE_CLASSES = {
+  favorite_color: ["favorite color", "preferred color", "likes color", ...],
+  location: ["lives in", "resides in", "based in", "moved to", ...],
+  employment: ["works at", "employed by", "job at", ...],
+  age: ["age is", "years old", "born in", ...],
+  name: ["name is", "called", "named", "goes by", ...],
+  relationship_status: ["married to", "engaged to", "dating", ...],
+  education: ["studied at", "graduated from", "degree is", ...],
+  food_preference: ["favorite food", "dietary restriction", ...],
+  // ... and more
+};
+```
+
+**Custom Predicate Classes:**
+
+```typescript
+// Add custom predicate classes
+cortex.facts.configureBeliefRevision(llmClient, {
+  slotMatching: {
+    enabled: true,
+    predicateClasses: {
+      // Add your domain-specific slots
+      programming_language: ["codes in", "writes in", "develops with"],
+      communication_style: ["prefers to communicate", "responds best to"],
+    },
+  },
+});
+```
+
+### LLM Conflict Resolution
+
+When slot or semantic matching finds potential conflicts, the LLM makes nuanced decisions:
+
+| Decision  | Meaning                                       | Example                                      |
+| --------- | --------------------------------------------- | -------------------------------------------- |
+| UPDATE    | Merge/refine existing fact                    | "User likes pizza" → "User's favorite pizza is pepperoni" |
+| SUPERSEDE | Replace contradictory fact                    | "Lives in NYC" → "Moved to SF"               |
+| NONE      | Skip - already captured                       | Duplicate or less specific                   |
+| ADD       | Genuinely new information                     | Different aspect of same topic               |
+
 ### `facts.get()`
 
 Retrieve a fact by ID.

@@ -540,6 +540,116 @@ interface RememberParams {
 
 interface RememberOptions {
   syncToGraph?: boolean; // Sync to graph database (default: true if configured)
+
+  // NEW in v0.23.0: Belief Revision options
+  beliefRevision?: {
+    enabled?: boolean; // Enable belief revision (default: true if configured)
+    slotMatching?: boolean; // Enable slot matching (default: true)
+    llmResolution?: boolean; // Enable LLM resolution (default: true)
+  } | false; // Set to false to disable belief revision entirely
+}
+```
+
+### Automatic Fact Revision in `remember()` (v0.23.0+)
+
+> **New in v0.23.0**: When belief revision is configured, extracted facts automatically go through the revision pipeline.
+
+When you call `remember()` with fact extraction enabled and belief revision configured, the SDK automatically:
+
+1. **Extracts facts** from the conversation using your `extractFacts` callback
+2. **Runs each fact through the belief revision pipeline** to check for conflicts
+3. **Takes appropriate action** (CREATE, UPDATE, SUPERSEDE, or skip) for each fact
+4. **Logs all changes** to the fact history for audit trails
+
+**How it works:**
+
+```
+remember() → extractFacts() → [Fact 1] → Belief Revision → CREATE
+                            → [Fact 2] → Belief Revision → SUPERSEDE (old fact)
+                            → [Fact 3] → Belief Revision → NONE (duplicate skipped)
+```
+
+**Example with belief revision:**
+
+```typescript
+// Configure Cortex with belief revision
+const cortex = new Cortex({
+  url: process.env.CONVEX_URL!,
+  llm: openaiClient, // Required for LLM resolution
+  beliefRevision: {
+    slotMatching: { enabled: true },
+    llmResolution: { enabled: true },
+  },
+});
+
+// Now remember() automatically uses belief revision for facts
+const result = await cortex.memory.remember({
+  memorySpaceId: "user-123-space",
+  userId: "user-123",
+  userName: "Alex",
+  conversationId: "conv-456",
+  userMessage: "Actually, my favorite color is now purple",
+  agentResponse: "I'll update that - you now prefer purple!",
+  extractFacts: async (user, agent) => [
+    {
+      fact: "User prefers purple",
+      factType: "preference",
+      subject: "user-123",
+      predicate: "favorite color",
+      object: "purple",
+      confidence: 95,
+    },
+  ],
+});
+
+// result.facts includes the revision outcome
+// Old "User likes blue" fact is automatically superseded
+```
+
+**Disabling belief revision:**
+
+```typescript
+// Disable for a single remember() call
+await cortex.memory.remember(
+  {
+    memorySpaceId: "user-123-space",
+    // ...other params
+  },
+  {
+    beliefRevision: false, // Disable for this call
+  }
+);
+
+// Or disable specific stages
+await cortex.memory.remember(
+  {
+    // ...params
+  },
+  {
+    beliefRevision: {
+      enabled: true,
+      slotMatching: false, // Skip slot matching
+      llmResolution: false, // Skip LLM (use heuristics only)
+    },
+  }
+);
+```
+
+**Return value changes with belief revision:**
+
+```typescript
+interface RememberResult {
+  conversation: { /* ... */ };
+  memories: MemoryEntry[];
+  facts: FactRecord[];  // The facts that were actually stored
+
+  // NEW in v0.23.0: Revision details (when belief revision is enabled)
+  factRevisions?: Array<{
+    action: "CREATE" | "UPDATE" | "SUPERSEDE" | "NONE";
+    fact: FactRecord;
+    superseded?: FactRecord;
+    reason: string;
+  }>;
 }
 ```
 

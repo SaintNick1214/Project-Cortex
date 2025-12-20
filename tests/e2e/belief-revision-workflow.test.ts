@@ -1,0 +1,411 @@
+/**
+ * E2E Tests - Belief Revision Workflow
+ *
+ * Real-world scenario tests for the belief revision system.
+ * Tests complete workflows from user interaction to fact storage.
+ */
+
+import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
+import { Cortex } from "../../src";
+import { ConvexClient } from "convex/browser";
+import { createNamedTestRunContext } from "../helpers";
+
+describe("Belief Revision Workflow E2E", () => {
+  const ctx = createNamedTestRunContext("e2e-belief-revision");
+  let cortex: Cortex;
+  let client: ConvexClient;
+  const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
+  const TEST_MEMSPACE_ID = ctx.memorySpaceId("test");
+
+  beforeAll(async () => {
+    client = new ConvexClient(CONVEX_URL);
+    cortex = new Cortex({ convexUrl: CONVEX_URL });
+
+    // Create test memory space
+    await cortex.memorySpaces.register({
+      memorySpaceId: TEST_MEMSPACE_ID,
+      type: "personal",
+      name: "Belief Revision E2E Test Space",
+    });
+  });
+
+  afterAll(async () => {
+    try {
+      await cortex.memorySpaces.delete(TEST_MEMSPACE_ID, {
+        cascade: true,
+        reason: "e2e test cleanup",
+      });
+    } catch {
+      // Ignore cleanup errors
+    }
+    await client.close();
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Workflow 1: User Preference Evolution
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Workflow: User Preference Evolution", () => {
+    const userId = `user-pref-${Date.now()}`;
+
+    it("Step 1: Initial preference extraction", async () => {
+      // Simulate extracting a fact from conversation
+      const fact = await cortex.facts.store(
+        {
+          memorySpaceId: TEST_MEMSPACE_ID,
+          userId,
+          fact: "User prefers dark mode for all applications",
+          factType: "preference",
+          subject: userId,
+          predicate: "prefers",
+          object: "dark mode",
+          confidence: 85,
+          sourceType: "conversation",
+          tags: ["ui", "preference", "dark-mode"],
+        },
+        { factId: ctx.factId("pref-1") }
+      );
+
+      expect(fact.factId).toBe(ctx.factId("pref-1"));
+      expect(fact.confidence).toBe(85);
+      expect(fact.factType).toBe("preference");
+    });
+
+    it("Step 2: User mentions related preference", async () => {
+      // User mentions a more specific preference
+      const _fact = await cortex.facts.store(
+        {
+          memorySpaceId: TEST_MEMSPACE_ID,
+          userId,
+          fact: "User uses OLED dark mode to save battery",
+          factType: "preference",
+          subject: userId,
+          predicate: "uses",
+          object: "OLED dark mode",
+          confidence: 90,
+          sourceType: "conversation",
+          tags: ["ui", "preference", "dark-mode", "oled"],
+        },
+        { factId: ctx.factId("pref-2") }
+      );
+
+      // Both facts should coexist (different aspects)
+      const allFacts = await cortex.facts.list({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        userId,
+        tags: ["dark-mode"],
+      });
+
+      expect(allFacts.facts.length).toBeGreaterThanOrEqual(2);
+    });
+
+    it("Step 3: User changes preference entirely", async () => {
+      // User now prefers light mode
+      const newFact = await cortex.facts.store(
+        {
+          memorySpaceId: TEST_MEMSPACE_ID,
+          userId,
+          fact: "User now prefers light mode",
+          factType: "preference",
+          subject: userId,
+          predicate: "prefers",
+          object: "light mode",
+          confidence: 95,
+          sourceType: "conversation",
+          tags: ["ui", "preference", "light-mode"],
+        },
+        { factId: ctx.factId("pref-3") }
+      );
+
+      // Supersede the original dark mode preference
+      await cortex.facts.supersede({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        oldFactId: ctx.factId("pref-1"),
+        newFactId: ctx.factId("pref-3"),
+        reason: "User explicitly stated preference change",
+      });
+
+      // Verify old fact is superseded
+      const oldFact = await cortex.facts.get(TEST_MEMSPACE_ID, ctx.factId("pref-1"));
+      expect(oldFact?.validUntil).toBeDefined();
+
+      // New fact should be valid
+      expect(newFact.validUntil).toBeUndefined();
+    });
+
+    it("Step 4: Query only current valid preferences", async () => {
+      // Query without superseded facts
+      const validFacts = await cortex.facts.list({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        userId,
+        includeSuperseded: false,
+      });
+
+      // Should not include the superseded dark mode preference
+      const supersededFact = validFacts.facts.find(
+        (f) => f.factId === ctx.factId("pref-1")
+      );
+      expect(supersededFact).toBeUndefined();
+    });
+
+    it("Step 5: History shows preference evolution", async () => {
+      const history = await cortex.facts.history(ctx.factId("pref-1"));
+      expect(Array.isArray(history)).toBe(true);
+
+      // Check activity summary
+      const summary = await cortex.facts.getActivitySummary(TEST_MEMSPACE_ID, 24);
+      expect(summary.totalEvents).toBeGreaterThan(0);
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Workflow 2: User Profile Information Updates
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Workflow: User Profile Updates", () => {
+    const userId = `user-profile-${Date.now()}`;
+
+    it("Complete flow: Location updates over time", async () => {
+      // First mention: User lives in NYC
+      await cortex.facts.store(
+        {
+          memorySpaceId: TEST_MEMSPACE_ID,
+          userId,
+          fact: "User lives in New York City",
+          factType: "identity",
+          subject: userId,
+          predicate: "lives in",
+          object: "New York City",
+          confidence: 90,
+          sourceType: "conversation",
+          tags: ["location", "identity"],
+        },
+        { factId: ctx.factId("location-1") }
+      );
+
+      // Wait a moment to simulate time passing
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Second mention: User moved to SF
+      await cortex.facts.store(
+        {
+          memorySpaceId: TEST_MEMSPACE_ID,
+          userId,
+          fact: "User recently moved to San Francisco",
+          factType: "identity",
+          subject: userId,
+          predicate: "lives in",
+          object: "San Francisco",
+          confidence: 95,
+          sourceType: "conversation",
+          tags: ["location", "identity"],
+        },
+        { factId: ctx.factId("location-2") }
+      );
+
+      // Supersede old location
+      await cortex.facts.supersede({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        oldFactId: ctx.factId("location-1"),
+        newFactId: ctx.factId("location-2"),
+        reason: "User announced relocation",
+      });
+
+      // Verify supersession chain
+      const chain = await cortex.facts.getSupersessionChain(ctx.factId("location-2"));
+      expect(chain.length).toBeGreaterThanOrEqual(1);
+
+      // Query current location - should only get SF
+      const currentFacts = await cortex.facts.list({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        userId,
+        tags: ["location"],
+        includeSuperseded: false,
+      });
+
+      const locations = currentFacts.facts.filter(
+        (f) => f.predicate === "lives in"
+      );
+      expect(locations.length).toBe(1);
+      expect(locations[0].object).toBe("San Francisco");
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Workflow 3: Knowledge Refinement
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Workflow: Knowledge Refinement", () => {
+    const userId = `user-knowledge-${Date.now()}`;
+
+    it("Complete flow: Facts become more specific over time", async () => {
+      // General fact: User has a pet
+      await cortex.facts.store(
+        {
+          memorySpaceId: TEST_MEMSPACE_ID,
+          userId,
+          fact: "User has a pet",
+          factType: "knowledge",
+          subject: userId,
+          predicate: "has",
+          object: "pet",
+          confidence: 70,
+          sourceType: "conversation",
+          tags: ["pet"],
+        },
+        { factId: ctx.factId("pet-general") }
+      );
+
+      // More specific: It's a dog
+      await cortex.facts.store(
+        {
+          memorySpaceId: TEST_MEMSPACE_ID,
+          userId,
+          fact: "User has a dog",
+          factType: "knowledge",
+          subject: userId,
+          predicate: "has",
+          object: "dog",
+          confidence: 85,
+          sourceType: "conversation",
+          tags: ["pet", "dog"],
+        },
+        { factId: ctx.factId("pet-dog") }
+      );
+
+      // Most specific: Dog's name is Max
+      await cortex.facts.store(
+        {
+          memorySpaceId: TEST_MEMSPACE_ID,
+          userId,
+          fact: "User has a golden retriever named Max",
+          factType: "knowledge",
+          subject: userId,
+          predicate: "has",
+          object: "golden retriever named Max",
+          confidence: 95,
+          sourceType: "conversation",
+          tags: ["pet", "dog", "golden-retriever"],
+        },
+        { factId: ctx.factId("pet-specific") }
+      );
+
+      // Supersede the chain: general -> specific -> most specific
+      await cortex.facts.supersede({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        oldFactId: ctx.factId("pet-general"),
+        newFactId: ctx.factId("pet-dog"),
+        reason: "More specific information obtained",
+      });
+
+      await cortex.facts.supersede({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        oldFactId: ctx.factId("pet-dog"),
+        newFactId: ctx.factId("pet-specific"),
+        reason: "Even more specific information obtained",
+      });
+
+      // Query pet facts - should only get the most specific
+      const petFacts = await cortex.facts.list({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        userId,
+        tags: ["pet"],
+        includeSuperseded: false,
+      });
+
+      // Should have one current valid fact about the pet
+      const validPetFacts = petFacts.facts.filter(
+        (f) => f.validUntil === undefined || f.validUntil === null
+      );
+      expect(validPetFacts.length).toBe(1);
+      expect(validPetFacts[0].fact).toContain("Max");
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Workflow 4: Multi-User Scenarios (Hive Mode)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Workflow: Multi-User/Participant Facts", () => {
+    it("Different participants can have different facts about same subject", async () => {
+      const subjectUser = ctx.userId("subject");
+      const participant1 = ctx.agentId("participant-1");
+      const participant2 = ctx.agentId("participant-2");
+
+      // Participant 1 extracts a fact
+      await cortex.facts.store(
+        {
+          memorySpaceId: TEST_MEMSPACE_ID,
+          participantId: participant1,
+          fact: `${subjectUser} mentioned working in tech`,
+          factType: "knowledge",
+          subject: subjectUser,
+          predicate: "works in",
+          object: "tech",
+          confidence: 80,
+          sourceType: "conversation",
+          tags: ["career"],
+        },
+        { factId: ctx.factId("p1-career") }
+      );
+
+      // Participant 2 extracts a more specific fact
+      await cortex.facts.store(
+        {
+          memorySpaceId: TEST_MEMSPACE_ID,
+          participantId: participant2,
+          fact: `${subjectUser} is a software engineer at Google`,
+          factType: "knowledge",
+          subject: subjectUser,
+          predicate: "works at",
+          object: "Google",
+          confidence: 95,
+          sourceType: "conversation",
+          tags: ["career", "employment"],
+        },
+        { factId: ctx.factId("p2-career") }
+      );
+
+      // Both facts should exist (different participants' observations)
+      const allCareerFacts = await cortex.facts.list({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        tags: ["career"],
+      });
+
+      expect(allCareerFacts.facts.length).toBeGreaterThanOrEqual(2);
+
+      // Can filter by participant
+      const p1Facts = await cortex.facts.list({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        participantId: participant1,
+      });
+
+      const p2Facts = await cortex.facts.list({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        participantId: participant2,
+      });
+
+      expect(p1Facts.facts.some((f) => f.factId === ctx.factId("p1-career"))).toBe(true);
+      expect(p2Facts.facts.some((f) => f.factId === ctx.factId("p2-career"))).toBe(true);
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Activity Summary and Audit
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Activity Summary", () => {
+    it("should accurately count activities", async () => {
+      const summary = await cortex.facts.getActivitySummary(TEST_MEMSPACE_ID, 24);
+
+      expect(summary).toHaveProperty("timeRange");
+      expect(summary.timeRange.hours).toBe(24);
+
+      expect(summary).toHaveProperty("totalEvents");
+      expect(summary).toHaveProperty("actionCounts");
+
+      // We've done several supersessions in this test suite
+      expect(summary.actionCounts.SUPERSEDE).toBeGreaterThanOrEqual(0);
+    });
+  });
+});

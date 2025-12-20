@@ -13,6 +13,7 @@ Cortex is a **persistent memory system for AI agents** built on Convex. It provi
 - **Hive Mode** - Multiple tools share one memory space (zero duplication)
 - **Infinite Context** - Never run out of context via retrieval
 - **Automatic versioning** - Track how information changes over time
+- **Belief Revision System** - Intelligent fact management with conflict resolution (v0.23.0+)
 - **GDPR compliance** - Built-in cascade deletion (Cloud Mode)
 - **Universal filters** - Same filters work across all operations
 - **Embedding-agnostic** - Bring your own embeddings or use Cloud Mode
@@ -160,6 +161,7 @@ await cortex.users.update("user-123", {
 ┌─────────────────────────────────────────────────────────────┐
 │   Layer 3: Facts Store (memorySpace-scoped, versioned) ✨   │
 │   LLM-extracted facts, 60-90% token savings                 │
+│   Belief Revision System - automatic conflict resolution    │
 │   cortex.facts.*                                            │
 └──────────────┬──────────────────────────────────────────────┘
                │
@@ -244,6 +246,56 @@ await cortex.users.delete("user-123", { cascade: true });
 ```
 
 **Direct Mode:** Manual deletion from each store (see User Operations API).
+
+### Belief Revision System (v0.23.0+)
+
+> **New in v0.23.0**: Intelligent fact management that prevents duplicates and maintains knowledge consistency.
+
+When facts are extracted from conversations, the Belief Revision System automatically:
+
+1. **Detects conflicts** using slot matching (fast) and semantic matching (accurate)
+2. **Resolves conflicts** using LLM-based decision making
+3. **Takes appropriate action**: CREATE, UPDATE, SUPERSEDE, or skip
+4. **Logs all changes** for audit trails
+
+```
+NEW FACT → [Slot Match?] → [Semantic Match?] → [LLM Decision]
+                                                    │
+                                         ┌──────────┼──────────┐
+                                         ↓          ↓          ↓
+                                      UPDATE   SUPERSEDE     NONE
+```
+
+**Example:**
+
+```typescript
+// Day 1: "User likes blue"
+// Day 2: "User prefers purple"
+// → Automatically supersedes the old fact, maintains history
+
+// Check conflicts before storing
+const conflicts = await cortex.facts.checkConflicts({
+  memorySpaceId: "user-123-space",
+  fact: {
+    fact: "User prefers purple",
+    subject: "user-123",
+    predicate: "favorite color",
+    object: "purple",
+    confidence: 90,
+  },
+});
+
+if (conflicts.hasConflicts) {
+  console.log(`Recommended: ${conflicts.recommendedAction}`);
+  // SUPERSEDE - Color preference has changed
+}
+
+// Get history for any fact
+const history = await cortex.facts.history("fact-123");
+// Shows CREATE → UPDATE → SUPERSEDE chain
+```
+
+**See**: [Facts Operations API - Belief Revision](./14-facts-operations.md#belief-revision-system-v0230)
 
 ---
 
