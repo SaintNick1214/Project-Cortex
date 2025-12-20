@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
-import { DataPreview } from './DataPreview';
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import { DataPreview } from "./DataPreview";
 
-type LayerStatus = 'pending' | 'in_progress' | 'complete' | 'error' | 'skipped';
+type LayerStatus = "pending" | "in_progress" | "complete" | "error" | "skipped";
 
 interface LayerCardProps {
   name: string;
@@ -25,29 +25,29 @@ const statusConfig: Record<
   { color: string; bgColor: string; text: string }
 > = {
   pending: {
-    color: 'text-gray-400',
-    bgColor: 'bg-gray-500/20',
-    text: '○',
+    color: "text-gray-400",
+    bgColor: "bg-gray-500/20",
+    text: "○",
   },
   in_progress: {
-    color: 'text-yellow-400',
-    bgColor: 'bg-yellow-500/20',
-    text: '◐',
+    color: "text-yellow-400",
+    bgColor: "bg-yellow-500/20",
+    text: "◐",
   },
   complete: {
-    color: 'text-green-400',
-    bgColor: 'bg-green-500/20',
-    text: '●',
+    color: "text-green-400",
+    bgColor: "bg-green-500/20",
+    text: "●",
   },
   error: {
-    color: 'text-red-400',
-    bgColor: 'bg-red-500/20',
-    text: '✕',
+    color: "text-red-400",
+    bgColor: "bg-red-500/20",
+    text: "✕",
   },
   skipped: {
-    color: 'text-gray-600',
-    bgColor: 'bg-gray-800/50',
-    text: '○',
+    color: "text-gray-600",
+    bgColor: "bg-gray-800/50",
+    text: "○",
   },
 };
 
@@ -68,18 +68,18 @@ export function LayerCard({
       <motion.div
         className={`px-3 py-2 rounded-lg border border-white/10 ${config.bgColor} min-w-[100px]`}
         animate={{
-          scale: status === 'in_progress' ? [1, 1.02, 1] : 1,
+          scale: status === "in_progress" ? [1, 1.02, 1] : 1,
           boxShadow:
-            status === 'complete'
+            status === "complete"
               ? [
-                  '0 0 0 0 rgba(34, 197, 94, 0.4)',
-                  '0 0 0 4px rgba(34, 197, 94, 0)',
+                  "0 0 0 0 rgba(34, 197, 94, 0.4)",
+                  "0 0 0 4px rgba(34, 197, 94, 0)",
                 ]
-              : 'none',
+              : "none",
         }}
         transition={{
-          duration: status === 'in_progress' ? 1 : 0.5,
-          repeat: status === 'in_progress' ? Infinity : 0,
+          duration: status === "in_progress" ? 1 : 0.5,
+          repeat: status === "in_progress" ? Infinity : 0,
         }}
       >
         <div className="flex items-center gap-2">
@@ -99,41 +99,41 @@ export function LayerCard({
   return (
     <motion.div
       className={`rounded-xl border border-white/10 ${config.bgColor} overflow-hidden ${
-        optional && status === 'skipped' ? 'opacity-50' : ''
+        optional && status === "skipped" ? "opacity-50" : ""
       }`}
       animate={{
-        scale: status === 'in_progress' ? [1, 1.01, 1] : 1,
+        scale: status === "in_progress" ? [1, 1.01, 1] : 1,
       }}
       transition={{
         duration: 1,
-        repeat: status === 'in_progress' ? Infinity : 0,
+        repeat: status === "in_progress" ? Infinity : 0,
       }}
       layout
     >
       <button
         onClick={() => data && setIsExpanded(!isExpanded)}
         className={`w-full px-4 py-3 flex items-center gap-3 ${
-          data ? 'cursor-pointer hover:bg-white/5' : 'cursor-default'
+          data ? "cursor-pointer hover:bg-white/5" : "cursor-default"
         } transition-colors`}
       >
         {/* Status indicator */}
         <motion.div
           className={`w-3 h-3 rounded-full flex-shrink-0 ${
-            status === 'complete'
-              ? 'bg-green-500'
-              : status === 'in_progress'
-              ? 'bg-yellow-500'
-              : status === 'error'
-              ? 'bg-red-500'
-              : 'bg-gray-500'
+            status === "complete"
+              ? "bg-green-500"
+              : status === "in_progress"
+                ? "bg-yellow-500"
+                : status === "error"
+                  ? "bg-red-500"
+                  : "bg-gray-500"
           }`}
           animate={{
-            opacity: status === 'in_progress' ? [0.5, 1, 0.5] : 1,
-            scale: status === 'complete' ? [1, 1.2, 1] : 1,
+            opacity: status === "in_progress" ? [0.5, 1, 0.5] : 1,
+            scale: status === "complete" ? [1, 1.2, 1] : 1,
           }}
           transition={{
-            duration: status === 'in_progress' ? 1 : 0.3,
-            repeat: status === 'in_progress' ? Infinity : 0,
+            duration: status === "in_progress" ? 1 : 0.3,
+            repeat: status === "in_progress" ? Infinity : 0,
           }}
         />
 
@@ -169,7 +169,7 @@ export function LayerCard({
         {isExpanded && data && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
+            animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="overflow-hidden"

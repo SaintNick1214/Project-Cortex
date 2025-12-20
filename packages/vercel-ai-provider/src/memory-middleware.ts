@@ -241,7 +241,7 @@ export function resolveAgentId(config: CortexMemoryConfig): string {
   if (!config.agentId) {
     throw new Error(
       "agentId is required. User-agent conversations require both a user and an agent participant. " +
-        "Provide agentId in your configuration, e.g., agentId: 'my-assistant'"
+        "Provide agentId in your configuration, e.g., agentId: 'my-assistant'",
     );
   }
   return config.agentId;
@@ -281,7 +281,7 @@ export function validateConfig(config: CortexMemoryConfig): void {
         "    userId: 'user-123',\n" +
         "    userName: 'User',\n" +
         "    agentId: 'my-assistant',  // <-- Required\n" +
-        "  })"
+        "  })",
     );
   }
 

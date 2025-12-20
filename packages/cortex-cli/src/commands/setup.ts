@@ -86,66 +86,90 @@ export function registerConfigCommands(
           console.log(pc.yellow("\n  No deployments configured\n"));
           printInfo("To get started:");
           console.log(pc.dim("   • Run 'cortex init' to create a new project"));
-          console.log(pc.dim("   • Run 'cortex config add-deployment' to add an existing deployment"));
+          console.log(
+            pc.dim(
+              "   • Run 'cortex config add-deployment' to add an existing deployment",
+            ),
+          );
           return;
         }
 
         console.log();
-        
+
         // Table header
         const nameWidth = 20;
         const statusWidth = 10;
         const urlWidth = 40;
         const keyWidth = 6;
         const pathWidth = 35;
-        
+
         console.log(
-          pc.bold("  " + 
-            "NAME".padEnd(nameWidth) + 
-            "STATUS".padEnd(statusWidth) +
-            "URL".padEnd(urlWidth) + 
-            "KEY".padEnd(keyWidth) + 
-            "PROJECT PATH"
-          )
+          pc.bold(
+            "  " +
+              "NAME".padEnd(nameWidth) +
+              "STATUS".padEnd(statusWidth) +
+              "URL".padEnd(urlWidth) +
+              "KEY".padEnd(keyWidth) +
+              "PROJECT PATH",
+          ),
         );
-        console.log(pc.dim("  " + "─".repeat(nameWidth + statusWidth + urlWidth + keyWidth + pathWidth)));
+        console.log(
+          pc.dim(
+            "  " +
+              "─".repeat(
+                nameWidth + statusWidth + urlWidth + keyWidth + pathWidth,
+              ),
+          ),
+        );
 
         for (const [name, deployment] of deployments) {
           const isDefault = name === config.default;
           // Default deployment is implicitly enabled; others check enabled field
-          const isEnabled = deployment.enabled === true || (deployment.enabled === undefined && isDefault);
+          const isEnabled =
+            deployment.enabled === true ||
+            (deployment.enabled === undefined && isDefault);
           const prefix = isDefault ? pc.green("→ ") : "  ";
           // Pad BEFORE applying color to avoid ANSI escape code length issues
           const namePadded = name.padEnd(nameWidth - 2);
           const nameDisplay = isDefault ? pc.cyan(namePadded) : namePadded;
           const statusText = isEnabled ? "enabled" : "disabled";
           const statusPadded = statusText.padEnd(statusWidth);
-          const statusDisplay = isEnabled ? pc.green(statusPadded) : pc.dim(statusPadded);
+          const statusDisplay = isEnabled
+            ? pc.green(statusPadded)
+            : pc.dim(statusPadded);
           const keyText = deployment.key ? "yes" : "no";
           const keyPadded = keyText.padEnd(keyWidth);
-          const keyStatus = deployment.key ? pc.green(keyPadded) : pc.dim(keyPadded);
-          const urlDisplay = (deployment.url.length > urlWidth - 2 
-            ? deployment.url.substring(0, urlWidth - 5) + "..." 
-            : deployment.url).padEnd(urlWidth);
-          const pathDisplay = deployment.projectPath 
-            ? (deployment.projectPath.length > pathWidth - 2 
-                ? "..." + deployment.projectPath.slice(-(pathWidth - 5))
-                : deployment.projectPath)
+          const keyStatus = deployment.key
+            ? pc.green(keyPadded)
+            : pc.dim(keyPadded);
+          const urlDisplay = (
+            deployment.url.length > urlWidth - 2
+              ? deployment.url.substring(0, urlWidth - 5) + "..."
+              : deployment.url
+          ).padEnd(urlWidth);
+          const pathDisplay = deployment.projectPath
+            ? deployment.projectPath.length > pathWidth - 2
+              ? "..." + deployment.projectPath.slice(-(pathWidth - 5))
+              : deployment.projectPath
             : pc.dim("--");
 
           console.log(
             prefix +
-            nameDisplay +
-            statusDisplay +
-            urlDisplay +
-            keyStatus +
-            pathDisplay
+              nameDisplay +
+              statusDisplay +
+              urlDisplay +
+              keyStatus +
+              pathDisplay,
           );
         }
 
         console.log();
         if (config.default) {
-          console.log(pc.dim(`  Default: ${config.default} (→) • Enabled deployments started with 'cortex start'`));
+          console.log(
+            pc.dim(
+              `  Default: ${config.default} (→) • Enabled deployments started with 'cortex start'`,
+            ),
+          );
         }
         console.log();
       } catch (error) {
@@ -193,11 +217,13 @@ export function registerConfigCommands(
   // config set-path - Set project path for a deployment
   configCmd
     .command("set-path <deployment> [path]")
-    .description("Set project path for a deployment (enables 'cortex start -d <name>' from anywhere)")
+    .description(
+      "Set project path for a deployment (enables 'cortex start -d <name>' from anywhere)",
+    )
     .action(async (deploymentName, pathArg) => {
       try {
         const config = await loadConfig();
-        
+
         if (!config.deployments[deploymentName]) {
           printError(`Deployment "${deploymentName}" not found`);
           const names = Object.keys(config.deployments);
@@ -243,7 +269,7 @@ export function registerConfigCommands(
     .action(async (deploymentName) => {
       try {
         const config = await loadConfig();
-        
+
         if (!config.deployments[deploymentName]) {
           printError(`Deployment "${deploymentName}" not found`);
           const names = Object.keys(config.deployments);
@@ -263,7 +289,9 @@ export function registerConfigCommands(
         console.log(pc.dim("   Will be started with 'cortex start'"));
       } catch (error) {
         printError(
-          error instanceof Error ? error.message : "Failed to enable deployment",
+          error instanceof Error
+            ? error.message
+            : "Failed to enable deployment",
         );
         process.exit(1);
       }
@@ -272,11 +300,13 @@ export function registerConfigCommands(
   // config disable - Disable a deployment
   configCmd
     .command("disable <deployment>")
-    .description("Disable a deployment (will not be started with 'cortex start')")
+    .description(
+      "Disable a deployment (will not be started with 'cortex start')",
+    )
     .action(async (deploymentName) => {
       try {
         const config = await loadConfig();
-        
+
         if (!config.deployments[deploymentName]) {
           printError(`Deployment "${deploymentName}" not found`);
           const names = Object.keys(config.deployments);
@@ -296,7 +326,9 @@ export function registerConfigCommands(
         console.log(pc.dim("   Will NOT be started with 'cortex start'"));
       } catch (error) {
         printError(
-          error instanceof Error ? error.message : "Failed to disable deployment",
+          error instanceof Error
+            ? error.message
+            : "Failed to disable deployment",
         );
         process.exit(1);
       }
@@ -582,11 +614,7 @@ export function registerConfigCommands(
     .command("set-key [deployment]")
     .description("Set or update the deploy key for a deployment")
     .option("-k, --key <key>", "Deploy key (will prompt if not provided)")
-    .option(
-      "--json-only",
-      "Only update ~/.cortexrc (skip .env.local)",
-      false,
-    )
+    .option("--json-only", "Only update ~/.cortexrc (skip .env.local)", false)
     .action(async (deploymentArg, options) => {
       try {
         const config = await loadConfig();
@@ -610,7 +638,9 @@ export function registerConfigCommands(
             message: "Select deployment to set key for:",
             choices: deploymentNames.map((n) => {
               const dep = config.deployments[n];
-              const keyStatus = dep.key ? pc.green("(key set)") : pc.dim("(no key)");
+              const keyStatus = dep.key
+                ? pc.green("(key set)")
+                : pc.dim("(no key)");
               return {
                 title: `${n} ${keyStatus}`,
                 description: dep.url,
@@ -629,7 +659,9 @@ export function registerConfigCommands(
         if (!config.deployments[name]) {
           printError(`Deployment "${name}" not found`);
           console.log(
-            pc.dim("   Run 'cortex config list' to see available deployments\n"),
+            pc.dim(
+              "   Run 'cortex config list' to see available deployments\n",
+            ),
           );
           process.exit(1);
         }
@@ -678,11 +710,7 @@ export function registerConfigCommands(
     .command("set-url [deployment]")
     .description("Set or update the URL for a deployment")
     .option("-u, --url <url>", "Deployment URL (will prompt if not provided)")
-    .option(
-      "--json-only",
-      "Only update ~/.cortexrc (skip .env.local)",
-      false,
-    )
+    .option("--json-only", "Only update ~/.cortexrc (skip .env.local)", false)
     .action(async (deploymentArg, options) => {
       try {
         const config = await loadConfig();
@@ -724,7 +752,9 @@ export function registerConfigCommands(
         if (!config.deployments[name]) {
           printError(`Deployment "${name}" not found`);
           console.log(
-            pc.dim("   Run 'cortex config list' to see available deployments\n"),
+            pc.dim(
+              "   Run 'cortex config list' to see available deployments\n",
+            ),
           );
           process.exit(1);
         }
@@ -852,7 +882,11 @@ export function registerConfigCommands(
         console.log();
         printInfo("No deployments configured. To get started:");
         console.log(pc.dim("   • Run 'cortex init' to create a new project"));
-        console.log(pc.dim("   • Run 'cortex config add-deployment' to add an existing deployment"));
+        console.log(
+          pc.dim(
+            "   • Run 'cortex config add-deployment' to add an existing deployment",
+          ),
+        );
       } catch (error) {
         printError(error instanceof Error ? error.message : "Reset failed");
         process.exit(1);
@@ -873,23 +907,27 @@ export function registerConfigCommands(
         if (options.clear) {
           await clearCurrentDeployment();
           printSuccess("Cleared current deployment");
-          console.log(pc.dim("   Commands will now prompt for deployment selection\n"));
+          console.log(
+            pc.dim("   Commands will now prompt for deployment selection\n"),
+          );
           return;
         }
 
         // If no deployment specified, show current and list available
         if (!deploymentName) {
           const current = await getCurrentDeployment();
-          
+
           console.log();
           if (current && config.deployments[current]) {
             console.log(pc.bold("  Current deployment: ") + pc.cyan(current));
           } else if (current) {
-            console.log(pc.yellow(`  Current deployment "${current}" no longer exists`));
+            console.log(
+              pc.yellow(`  Current deployment "${current}" no longer exists`),
+            );
           } else {
             console.log(pc.dim("  No current deployment set"));
           }
-          
+
           console.log();
           console.log(pc.bold("  Available deployments:"));
           if (deployments.length === 0) {
@@ -920,9 +958,13 @@ export function registerConfigCommands(
         // Set the current deployment
         await setCurrentDeployment(deploymentName);
         printSuccess(`Now using: ${deploymentName}`);
-        console.log(pc.dim(`   All commands will target this deployment until changed\n`));
+        console.log(
+          pc.dim(`   All commands will target this deployment until changed\n`),
+        );
       } catch (error) {
-        printError(error instanceof Error ? error.message : "Failed to set deployment");
+        printError(
+          error instanceof Error ? error.message : "Failed to set deployment",
+        );
         process.exit(1);
       }
     });
@@ -965,16 +1007,26 @@ async function showConfiguration(
     console.log();
     printInfo("To get started:");
     console.log(pc.dim("   • Run 'cortex init' to create a new project"));
-    console.log(pc.dim("   • Run 'cortex config add-deployment' to add an existing deployment"));
+    console.log(
+      pc.dim(
+        "   • Run 'cortex config add-deployment' to add an existing deployment",
+      ),
+    );
   } else {
     for (const [name, deployment] of deploymentEntries) {
       const isDefault = name === config.default;
       // Default deployment is implicitly enabled; others check enabled field
-      const isEnabled = deployment.enabled === true || (deployment.enabled === undefined && isDefault);
+      const isEnabled =
+        deployment.enabled === true ||
+        (deployment.enabled === undefined && isDefault);
       const prefix = isDefault ? pc.green("→") : " ";
-      const statusBadge = isEnabled ? pc.green("[enabled]") : pc.dim("[disabled]");
+      const statusBadge = isEnabled
+        ? pc.green("[enabled]")
+        : pc.dim("[disabled]");
       const keyStatus = deployment.key ? pc.green("(key set)") : "";
-      console.log(`  ${prefix} ${pc.cyan(name)}: ${deployment.url} ${statusBadge} ${keyStatus}`);
+      console.log(
+        `  ${prefix} ${pc.cyan(name)}: ${deployment.url} ${statusBadge} ${keyStatus}`,
+      );
       if (deployment.projectPath) {
         console.log(pc.dim(`      Project: ${deployment.projectPath}`));
       }

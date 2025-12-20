@@ -91,17 +91,17 @@ const cortexMemory = createCortexMemory({
   memorySpaceId: "my-chatbot",
   userId: "user-123",
   userName: "User",
-  
+
   // REQUIRED in SDK v0.17.0+
   agentId: "my-assistant",
   agentName: "My AI Assistant",
-  
+
   // Optional: Enable graph memory (auto-configured via env vars)
-  enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === 'true',
-  
+  enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === "true",
+
   // Optional: Enable fact extraction (auto-configured via env vars)
-  enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === 'true',
-  
+  enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === "true",
+
   // Optional: Enhanced streaming features
   streamingOptions: {
     storePartialResponse: true,
@@ -143,7 +143,7 @@ Sync memories to Neo4j or Memgraph for relationship queries:
 const cortexMemory = createCortexMemory({
   // ... base config
   enableGraphMemory: true,
-  
+
   // Auto-configured from env vars:
   // NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
   // or MEMGRAPH_URI, MEMGRAPH_USERNAME, MEMGRAPH_PASSWORD
@@ -158,7 +158,7 @@ LLM-powered extraction of structured facts:
 const cortexMemory = createCortexMemory({
   // ... base config
   enableFactExtraction: true,
-  
+
   // Auto-configured from env vars:
   // CORTEX_FACT_EXTRACTION=true
   // CORTEX_FACT_EXTRACTION_MODEL=gpt-4o-mini
@@ -200,11 +200,11 @@ const cortexMemory = createCortexMemory({
     progressiveGraphSync: true,
     enableAdaptiveProcessing: true,
   },
-  
+
   streamingHooks: {
-    onChunk: (event) => console.log('Chunk:', event.chunk),
-    onProgress: (event) => console.log('Progress:', event.bytesProcessed),
-    onComplete: (event) => console.log('Done:', event.durationMs),
+    onChunk: (event) => console.log("Chunk:", event.chunk),
+    onProgress: (event) => console.log("Progress:", event.bytesProcessed),
+    onComplete: (event) => console.log("Done:", event.durationMs),
   },
 });
 ```

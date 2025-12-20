@@ -491,6 +491,33 @@ export interface Logger {
 }
 
 /**
+ * Sanitize a log argument to prevent log injection attacks.
+ * Removes control characters and escapes newlines.
+ */
+function sanitizeLogArg(arg: unknown): unknown {
+  if (typeof arg === "string") {
+    // Remove control characters (except tab, newline which we escape)
+    // and escape newlines to prevent log forging
+    return arg
+      .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "") // Remove control chars
+      .replace(/\r?\n/g, "\\n"); // Escape newlines
+  }
+  if (arg instanceof Error) {
+    // Preserve Error objects but sanitize their message
+    const sanitizedMessage =
+      typeof arg.message === "string"
+        ? arg.message
+            .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "")
+            .replace(/\r?\n/g, "\\n")
+        : arg.message;
+    // Return a new error-like object with sanitized message for logging
+    return `${arg.name}: ${sanitizedMessage}`;
+  }
+  // For objects/arrays, let console handle them (they're stringified safely)
+  return arg;
+}
+
+/**
  * Create a default logger
  */
 export function createLogger(debug: boolean = false): Logger {
@@ -498,10 +525,14 @@ export function createLogger(debug: boolean = false): Logger {
 
   if (debug) {
     return {
-      debug: (...args) => console.debug(prefix, ...args),
-      info: (...args) => console.info(prefix, ...args),
-      warn: (...args) => console.warn(prefix, ...args),
-      error: (...args) => console.error(prefix, ...args),
+      debug: (...args) =>
+        console.debug(prefix, ...args.map((a) => sanitizeLogArg(a))),
+      info: (...args) =>
+        console.info(prefix, ...args.map((a) => sanitizeLogArg(a))),
+      warn: (...args) =>
+        console.warn(prefix, ...args.map((a) => sanitizeLogArg(a))),
+      error: (...args) =>
+        console.error(prefix, ...args.map((a) => sanitizeLogArg(a))),
     };
   }
 
@@ -509,8 +540,10 @@ export function createLogger(debug: boolean = false): Logger {
   return {
     debug: () => {},
     info: () => {},
-    warn: (...args) => console.warn(prefix, ...args),
-    error: (...args) => console.error(prefix, ...args),
+    warn: (...args) =>
+      console.warn(prefix, ...args.map((a) => sanitizeLogArg(a))),
+    error: (...args) =>
+      console.error(prefix, ...args.map((a) => sanitizeLogArg(a))),
   };
 }
 
@@ -533,7 +566,12 @@ export type MemoryLayer =
 /**
  * Layer status during orchestration
  */
-export type LayerStatus = "pending" | "in_progress" | "complete" | "error" | "skipped";
+export type LayerStatus =
+  | "pending"
+  | "in_progress"
+  | "complete"
+  | "error"
+  | "skipped";
 
 /**
  * Event emitted when a layer's status changes
@@ -609,5 +647,7 @@ export interface LayerObserver {
   /**
    * Called when orchestration completes (all layers done)
    */
-  onOrchestrationComplete?: (summary: OrchestrationSummary) => void | Promise<void>;
+  onOrchestrationComplete?: (
+    summary: OrchestrationSummary,
+  ) => void | Promise<void>;
 }

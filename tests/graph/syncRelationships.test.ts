@@ -362,7 +362,9 @@ describeIfEnabled("Sync Relationships", () => {
         10,
       );
       expect(factNodes.length).toBe(1);
-      expect(factNodes[0].properties.participantId).toBe("hive-fact-participant");
+      expect(factNodes[0].properties.participantId).toBe(
+        "hive-fact-participant",
+      );
     });
   });
 

@@ -140,9 +140,9 @@ describe("Memory Spaces API - Comprehensive Filter Coverage", () => {
         expect(space.type).toBe("team");
         expect(space.status).toBe("active");
       });
-      expect(results.spaces.some((s: any) => s.memorySpaceId === activeTeamId)).toBe(
-        true,
-      );
+      expect(
+        results.spaces.some((s: any) => s.memorySpaceId === activeTeamId),
+      ).toBe(true);
     });
 
     it("should find all space types independently", async () => {
@@ -162,7 +162,9 @@ describe("Memory Spaces API - Comprehensive Filter Coverage", () => {
       for (const spaceType of ALL_SPACE_TYPES) {
         const results = await cortex.memorySpaces.list({ type: spaceType });
         expect(results.spaces.length).toBeGreaterThanOrEqual(1);
-        expect(results.spaces.every((s: any) => s.type === spaceType)).toBe(true);
+        expect(results.spaces.every((s: any) => s.type === spaceType)).toBe(
+          true,
+        );
         expect(
           results.spaces.some(
             (s: any) =>
@@ -185,9 +187,9 @@ describe("Memory Spaces API - Comprehensive Filter Coverage", () => {
       const activeResults = await cortex.memorySpaces.list({
         status: "active",
       });
-      expect(activeResults.spaces.some((s: any) => s.memorySpaceId === spaceId)).toBe(
-        true,
-      );
+      expect(
+        activeResults.spaces.some((s: any) => s.memorySpaceId === spaceId),
+      ).toBe(true);
 
       // Archive it
       await cortex.memorySpaces.archive(spaceId);
@@ -288,7 +290,9 @@ describe("Memory Spaces API - Comprehensive Filter Coverage", () => {
       });
 
       // Active space should NOT be in archived results
-      const archivedIds = archivedResults.spaces.map((s: any) => s.memorySpaceId);
+      const archivedIds = archivedResults.spaces.map(
+        (s: any) => s.memorySpaceId,
+      );
       expect(archivedIds).not.toContain(activeId);
     });
 
@@ -314,7 +318,9 @@ describe("Memory Spaces API - Comprehensive Filter Coverage", () => {
         type: "personal",
         status: "active",
       });
-      const personalIds = personalResults.spaces.map((s: any) => s.memorySpaceId);
+      const personalIds = personalResults.spaces.map(
+        (s: any) => s.memorySpaceId,
+      );
       expect(personalIds).toContain(personalId);
       expect(personalIds).not.toContain(teamId);
 

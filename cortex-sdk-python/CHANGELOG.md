@@ -57,34 +57,36 @@ response = await llm.chat(
 
 Designed for AI chatbot and multi-agent use cases - all sources enabled by default:
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `sources.vector` | `True` | Search vector memories |
-| `sources.facts` | `True` | Search facts directly |
-| `sources.graph` | `True` (if configured) | Query graph relationships |
-| `format_for_llm` | `True` | Generate LLM-ready context |
-| `include_conversation` | `True` | Enrich with ACID conversation data |
-| `limit` | `20` | Maximum results to return |
+| Option                 | Default                | Description                        |
+| ---------------------- | ---------------------- | ---------------------------------- |
+| `sources.vector`       | `True`                 | Search vector memories             |
+| `sources.facts`        | `True`                 | Search facts directly              |
+| `sources.graph`        | `True` (if configured) | Query graph relationships          |
+| `format_for_llm`       | `True`                 | Generate LLM-ready context         |
+| `include_conversation` | `True`                 | Enrich with ACID conversation data |
+| `limit`                | `20`                   | Maximum results to return          |
 
 #### 📊 Ranking Algorithm
 
 Multi-signal scoring with configurable weights:
 
-| Signal | Weight | Description |
-|--------|--------|-------------|
-| Semantic | 35% | Vector similarity score |
-| Confidence | 20% | Fact confidence (0-100) |
-| Importance | 15% | Memory importance (0-100) |
-| Recency | 15% | Time decay (30-day half-life) |
-| Graph Connectivity | 15% | Connected entity count |
+| Signal             | Weight | Description                   |
+| ------------------ | ------ | ----------------------------- |
+| Semantic           | 35%    | Vector similarity score       |
+| Confidence         | 20%    | Fact confidence (0-100)       |
+| Importance         | 15%    | Memory importance (0-100)     |
+| Recency            | 15%    | Time decay (30-day half-life) |
+| Graph Connectivity | 15%    | Connected entity count        |
 
 Plus boosts for:
+
 - **Highly connected items** (>3 entities): 1.2x boost
 - **User messages**: 1.1x boost (more likely to contain preferences)
 
 #### 🎓 Usage Examples
 
 **Minimal usage (full orchestration):**
+
 ```python
 from cortex import RecallParams
 
@@ -100,6 +102,7 @@ print(result.context)  # Formatted markdown for LLM
 ```
 
 **With filters:**
+
 ```python
 from cortex import RecallParams, RecallSourceConfig
 
@@ -116,6 +119,7 @@ result = await cortex.memory.recall(
 ```
 
 **Disable specific sources:**
+
 ```python
 result = await cortex.memory.recall(
     RecallParams(
@@ -132,15 +136,15 @@ result = await cortex.memory.recall(
 
 #### 📦 New Types
 
-| Type | Description |
-|------|-------------|
-| `RecallParams` | Input parameters for recall() |
-| `RecallResult` | Output with items, sources, context |
-| `RecallItem` | Individual memory or fact item |
-| `RecallSourceBreakdown` | Per-source result counts |
-| `RecallSourceConfig` | Source selection options |
-| `RecallGraphExpansionConfig` | Graph traversal options |
-| `RecallGraphContext` | Graph context per item |
+| Type                         | Description                         |
+| ---------------------------- | ----------------------------------- |
+| `RecallParams`               | Input parameters for recall()       |
+| `RecallResult`               | Output with items, sources, context |
+| `RecallItem`                 | Individual memory or fact item      |
+| `RecallSourceBreakdown`      | Per-source result counts            |
+| `RecallSourceConfig`         | Source selection options            |
+| `RecallGraphExpansionConfig` | Graph traversal options             |
+| `RecallGraphContext`         | Graph context per item              |
 
 #### 🧪 Remember/Recall Symmetry
 
@@ -169,11 +173,12 @@ Port of TypeScript SDK 0.22.0 feature to Python SDK.
 #### The Problem
 
 Previously, each `remember()` call stored facts independently:
+
 ```python
 # Conversation 1
 await cortex.memory.remember(...)  # Stores: "User's name is Alex"
 
-# Conversation 2  
+# Conversation 2
 await cortex.memory.remember(...)  # Stores: "User's name is Alex" (duplicate!)
 
 # After 10 conversations: 10 identical facts! 😱
@@ -195,25 +200,26 @@ await cortex.memory.remember(...)  # Detects duplicate, skips storage ✨
 
 #### ✨ New Features
 
-| Feature | Description |
-|---------|-------------|
-| **Automatic Deduplication** | `memory.remember()` defaults to semantic deduplication (falls back to structural) |
-| **Configurable Strategies** | `exact`, `structural`, `semantic`, or `none` |
-| **`facts.store_with_dedup()`** | New method for manual fact storage with deduplication |
-| **Confidence-Based Updates** | Higher confidence facts update existing lower-confidence duplicates |
+| Feature                        | Description                                                                       |
+| ------------------------------ | --------------------------------------------------------------------------------- |
+| **Automatic Deduplication**    | `memory.remember()` defaults to semantic deduplication (falls back to structural) |
+| **Configurable Strategies**    | `exact`, `structural`, `semantic`, or `none`                                      |
+| **`facts.store_with_dedup()`** | New method for manual fact storage with deduplication                             |
+| **Confidence-Based Updates**   | Higher confidence facts update existing lower-confidence duplicates               |
 
 #### 🔄 Deduplication Strategies
 
-| Strategy | Speed | Accuracy | Description |
-|----------|-------|----------|-------------|
-| `none` | ⚡ Fastest | None | Skip deduplication entirely |
-| `exact` | ⚡ Fast | Low | Normalized text match |
-| `structural` | ⚡ Fast | Medium | Subject + predicate + object match |
-| `semantic` | 🐢 Slower | High | Embedding similarity (requires `generate_embedding`) |
+| Strategy     | Speed      | Accuracy | Description                                          |
+| ------------ | ---------- | -------- | ---------------------------------------------------- |
+| `none`       | ⚡ Fastest | None     | Skip deduplication entirely                          |
+| `exact`      | ⚡ Fast    | Low      | Normalized text match                                |
+| `structural` | ⚡ Fast    | Medium   | Subject + predicate + object match                   |
+| `semantic`   | 🐢 Slower  | High     | Embedding similarity (requires `generate_embedding`) |
 
 #### 🎓 Usage Examples
 
 **Default behavior (recommended):**
+
 ```python
 # Deduplication is ON by default (semantic → structural fallback)
 await cortex.memory.remember(
@@ -231,6 +237,7 @@ await cortex.memory.remember(
 ```
 
 **Disable deduplication:**
+
 ```python
 await cortex.memory.remember(
     RememberParams(
@@ -248,6 +255,7 @@ await cortex.memory.remember(
 ```
 
 **Manual deduplication with `store_with_dedup()`:**
+
 ```python
 from cortex import StoreFactParams, DeduplicationConfig
 from cortex.facts import StoreFactWithDedupOptions
@@ -291,29 +299,29 @@ from cortex import (
 
 #### 🆕 New Types
 
-| Type | Description |
-|------|-------------|
-| `DeduplicationStrategy` | Literal type: `"none" \| "exact" \| "structural" \| "semantic"` |
-| `DeduplicationConfig` | Configuration with `strategy`, `similarity_threshold`, `generate_embedding` |
-| `FactCandidate` | Candidate fact for deduplication check |
-| `DuplicateResult` | Result of duplicate detection with `is_duplicate`, `existing_fact`, etc. |
-| `StoreWithDedupResult` | Result from `store_with_dedup()` with `fact`, `was_updated`, `deduplication` |
-| `StoreFactWithDedupOptions` | Options for `store_with_dedup()` |
+| Type                        | Description                                                                  |
+| --------------------------- | ---------------------------------------------------------------------------- |
+| `DeduplicationStrategy`     | Literal type: `"none" \| "exact" \| "structural" \| "semantic"`              |
+| `DeduplicationConfig`       | Configuration with `strategy`, `similarity_threshold`, `generate_embedding`  |
+| `FactCandidate`             | Candidate fact for deduplication check                                       |
+| `DuplicateResult`           | Result of duplicate detection with `is_duplicate`, `existing_fact`, etc.     |
+| `StoreWithDedupResult`      | Result from `store_with_dedup()` with `fact`, `was_updated`, `deduplication` |
+| `StoreFactWithDedupOptions` | Options for `store_with_dedup()`                                             |
 
 #### 🆕 New Methods
 
-| Method | Description |
-|--------|-------------|
-| `facts.store_with_dedup()` | Store fact with cross-session deduplication |
-| `FactDeduplicationService.find_duplicate()` | Find duplicate fact in database |
+| Method                                      | Description                                 |
+| ------------------------------------------- | ------------------------------------------- |
+| `facts.store_with_dedup()`                  | Store fact with cross-session deduplication |
+| `FactDeduplicationService.find_duplicate()` | Find duplicate fact in database             |
 | `FactDeduplicationService.resolve_config()` | Resolve deduplication config with fallbacks |
 
 #### 🆕 New Parameters
 
-| Type | Parameter | Description |
-|------|-----------|-------------|
-| `RememberParams` | `fact_deduplication` | Deduplication strategy, config, or `False` to disable |
-| `RememberStreamParams` | `fact_deduplication` | Same as above for streaming |
+| Type                   | Parameter            | Description                                           |
+| ---------------------- | -------------------- | ----------------------------------------------------- |
+| `RememberParams`       | `fact_deduplication` | Deduplication strategy, config, or `False` to disable |
+| `RememberStreamParams` | `fact_deduplication` | Same as above for streaming                           |
 
 #### ⚠️ Migration Notes
 
@@ -333,27 +341,27 @@ from cortex import (
 
 **5 new dataclasses added to `cortex/types.py`:**
 
-| Type | Description |
-|------|-------------|
-| `StoreMemoryResult` | Result from `store()` with `memory` and `facts` fields |
-| `UpdateMemoryResult` | Result from `update()` with `memory` and optional `facts_reextracted` |
-| `DeleteMemoryResult` | Result from `delete()` with `deleted`, `memory_id`, `facts_deleted`, `fact_ids` |
-| `ArchiveResult` | Result from `archive()` with `archived`, `memory_id`, `restorable`, `facts_archived`, `fact_ids` |
-| `MemoryVersionInfo` | Version info for temporal queries with `memory_id`, `version`, `content`, `timestamp`, `embedding` |
+| Type                 | Description                                                                                        |
+| -------------------- | -------------------------------------------------------------------------------------------------- |
+| `StoreMemoryResult`  | Result from `store()` with `memory` and `facts` fields                                             |
+| `UpdateMemoryResult` | Result from `update()` with `memory` and optional `facts_reextracted`                              |
+| `DeleteMemoryResult` | Result from `delete()` with `deleted`, `memory_id`, `facts_deleted`, `fact_ids`                    |
+| `ArchiveResult`      | Result from `archive()` with `archived`, `memory_id`, `restorable`, `facts_archived`, `fact_ids`   |
+| `MemoryVersionInfo`  | Version info for temporal queries with `memory_id`, `version`, `content`, `timestamp`, `embedding` |
 
 #### 🔄 Updated Method Return Types
 
-| Method | Before | After |
-|--------|--------|-------|
-| `store()` | `Dict[str, Any]` | `StoreMemoryResult` |
-| `update()` | `Dict[str, Any]` | `UpdateMemoryResult` |
-| `delete()` | `Dict[str, Any]` | `DeleteMemoryResult` |
-| `archive()` | `Dict[str, Any]` | `ArchiveResult` |
-| `get_version()` | `Optional[Dict[str, Any]]` | `Optional[MemoryVersionInfo]` |
-| `get_history()` | `List[Dict[str, Any]]` | `List[MemoryVersionInfo]` |
+| Method               | Before                     | After                         |
+| -------------------- | -------------------------- | ----------------------------- |
+| `store()`            | `Dict[str, Any]`           | `StoreMemoryResult`           |
+| `update()`           | `Dict[str, Any]`           | `UpdateMemoryResult`          |
+| `delete()`           | `Dict[str, Any]`           | `DeleteMemoryResult`          |
+| `archive()`          | `Dict[str, Any]`           | `ArchiveResult`               |
+| `get_version()`      | `Optional[Dict[str, Any]]` | `Optional[MemoryVersionInfo]` |
+| `get_history()`      | `List[Dict[str, Any]]`     | `List[MemoryVersionInfo]`     |
 | `get_at_timestamp()` | `Optional[Dict[str, Any]]` | `Optional[MemoryVersionInfo]` |
-| `update_many()` | `Dict[str, Any]` | `UpdateManyResult` |
-| `delete_many()` | `Dict[str, Any]` | `DeleteManyResult` |
+| `update_many()`      | `Dict[str, Any]`           | `UpdateManyResult`            |
+| `delete_many()`      | `Dict[str, Any]`           | `DeleteManyResult`            |
 
 #### 🎓 Usage Examples
 
@@ -454,11 +462,11 @@ for msg in convo.messages:
 
 #### Type Updates
 
-| Type | Fields Added | Description |
-|------|-------------|-------------|
-| `A2AConversationFilters` | All fields new | Filter object for get_conversation |
+| Type                     | Fields Added   | Description                                                          |
+| ------------------------ | -------------- | -------------------------------------------------------------------- |
+| `A2AConversationFilters` | All fields new | Filter object for get_conversation                                   |
 | `A2AConversationMessage` | All fields new | Typed message with from_agent, to_agent, direction, broadcast fields |
-| `A2AConversation` | All fields new | Typed conversation result with period_start, period_end |
+| `A2AConversation`        | All fields new | Typed conversation result with period_start, period_end              |
 
 #### Backward Compatibility
 
@@ -681,14 +689,14 @@ In v0.20.0, the Governance API was accidentally omitted from the resilience laye
 
 #### Methods Updated
 
-| Method | Operation Name |
-|--------|---------------|
-| `set_policy()` | `governance:setPolicy` |
-| `get_policy()` | `governance:getPolicy` |
-| `set_agent_override()` | `governance:setAgentOverride` |
-| `get_template()` | `governance:getTemplate` |
-| `enforce()` | `governance:enforce` |
-| `simulate()` | `governance:simulate` |
+| Method                    | Operation Name                   |
+| ------------------------- | -------------------------------- |
+| `set_policy()`            | `governance:setPolicy`           |
+| `get_policy()`            | `governance:getPolicy`           |
+| `set_agent_override()`    | `governance:setAgentOverride`    |
+| `get_template()`          | `governance:getTemplate`         |
+| `enforce()`               | `governance:enforce`             |
+| `simulate()`              | `governance:simulate`            |
 | `get_compliance_report()` | `governance:getComplianceReport` |
 | `get_enforcement_stats()` | `governance:getEnforcementStats` |
 
@@ -713,10 +721,10 @@ In v0.20.0, the Governance API was accidentally omitted from the resilience laye
 
 #### Type Updates
 
-| Type | Fields Added | Description |
-|------|-------------|-------------|
+| Type               | Fields Added                 | Description                                  |
+| ------------------ | ---------------------------- | -------------------------------------------- |
 | `ContextWithChain` | `descendants: List[Context]` | List of all descendant contexts in the chain |
-| `ContextWithChain` | `total_nodes: int` | Total number of nodes in the context chain |
+| `ContextWithChain` | `total_nodes: int`           | Total number of nodes in the context chain   |
 
 ---
 
@@ -792,8 +800,8 @@ await cortex.vector.update_many(
 
 #### Type Updates
 
-| Type | Field Added | Description |
-|------|-------------|-------------|
+| Type            | Field Added                     | Description                               |
+| --------------- | ------------------------------- | ----------------------------------------- |
 | `SearchOptions` | `query_category: Optional[str]` | Category boost for bullet-proof retrieval |
 
 #### Validation Updates
@@ -904,10 +912,10 @@ print(f"Deleted {result.cascade.memories_deleted} memories")
 
 #### Type Updates
 
-| Type | Fields Added | Description |
-|------|-------------|-------------|
-| `MemorySpaceStats` | `memories_this_window`, `conversations_this_window` | Time window activity counts |
-| `MemorySpaceParticipant` | - | Now exported for public use |
+| Type                     | Fields Added                                        | Description                 |
+| ------------------------ | --------------------------------------------------- | --------------------------- |
+| `MemorySpaceStats`       | `memories_this_window`, `conversations_this_window` | Time window activity counts |
+| `MemorySpaceParticipant` | -                                                   | Now exported for public use |
 
 ---
 
@@ -972,11 +980,11 @@ print(f"Deleted {many_result.deleted} facts from {many_result.memory_space_id}")
 
 #### Type Updates
 
-| Type | Fields | Description |
-|------|--------|-------------|
-| `UpdateFactInput` | `fact`, `confidence`, `tags`, `valid_until`, `metadata`, `category`, `search_aliases`, `semantic_context`, `entities`, `relations` | Typed input for fact updates with enrichment |
-| `DeleteFactResult` | `deleted: bool`, `fact_id: str` | Typed result from delete operation |
-| `DeleteManyFactsResult` | `deleted: int`, `memory_space_id: str` | Typed result from bulk delete |
+| Type                    | Fields                                                                                                                             | Description                                  |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| `UpdateFactInput`       | `fact`, `confidence`, `tags`, `valid_until`, `metadata`, `category`, `search_aliases`, `semantic_context`, `entities`, `relations` | Typed input for fact updates with enrichment |
+| `DeleteFactResult`      | `deleted: bool`, `fact_id: str`                                                                                                    | Typed result from delete operation           |
+| `DeleteManyFactsResult` | `deleted: int`, `memory_space_id: str`                                                                                             | Typed result from bulk delete                |
 
 #### Validation Updates
 
@@ -1026,14 +1034,14 @@ print(f"Has more: {result.has_more}")
 
 #### Enhanced Methods
 
-| Method | Before | After |
-|--------|--------|-------|
-| `list()` | `list(limit=50, offset=0)` returns dict | `list(filters?)` returns `ListUsersResult` |
-| `search()` | `search(filters?, limit)` | `search(filters?)` with full `ListUsersFilter` |
-| `merge()` | Throws if user not found | Creates user if not found (matches TS) |
-| `export()` | Returns dict | Returns string (JSON/CSV) |
-| `update_many()` | Only accepts list of IDs | Accepts IDs or filters, supports `dry_run` |
-| `delete_many()` | Only accepts list of IDs | Accepts IDs or filters, supports `dry_run` |
+| Method          | Before                                  | After                                          |
+| --------------- | --------------------------------------- | ---------------------------------------------- |
+| `list()`        | `list(limit=50, offset=0)` returns dict | `list(filters?)` returns `ListUsersResult`     |
+| `search()`      | `search(filters?, limit)`               | `search(filters?)` with full `ListUsersFilter` |
+| `merge()`       | Throws if user not found                | Creates user if not found (matches TS)         |
+| `export()`      | Returns dict                            | Returns string (JSON/CSV)                      |
+| `update_many()` | Only accepts list of IDs                | Accepts IDs or filters, supports `dry_run`     |
+| `delete_many()` | Only accepts list of IDs                | Accepts IDs or filters, supports `dry_run`     |
 
 #### Usage Examples
 
@@ -1095,20 +1103,20 @@ All Conversations API methods now match the TypeScript SDK signatures, return ty
 
 #### New Types
 
-| Type | Description |
-|------|-------------|
-| `GetConversationOptions` | Options for `get()` with `include_messages` and `message_limit` |
-| `ListConversationsFilter` | Comprehensive filter with dates, pagination, sorting |
-| `ListConversationsResult` | Result with pagination metadata (`total`, `has_more`, etc.) |
-| `CountConversationsFilter` | Filter object for `count()` |
-| `GetHistoryOptions` | Options with `since`, `until`, `roles`, `offset` filters |
-| `GetHistoryResult` | Result with messages and pagination info |
-| `ConversationDeletionResult` | Enriched deletion result with `messages_deleted`, `deleted_at` |
-| `DeleteManyConversationsOptions` | Options with `dry_run`, `confirmation_threshold` |
-| `DeleteManyConversationsResult` | Result with `would_delete` for dry run |
-| `SearchConversationsOptions` | Options with `search_in`, `match_mode` |
-| `SearchConversationsFilters` | Filters for search |
-| `SearchConversationsInput` | Input object for search |
+| Type                             | Description                                                     |
+| -------------------------------- | --------------------------------------------------------------- |
+| `GetConversationOptions`         | Options for `get()` with `include_messages` and `message_limit` |
+| `ListConversationsFilter`        | Comprehensive filter with dates, pagination, sorting            |
+| `ListConversationsResult`        | Result with pagination metadata (`total`, `has_more`, etc.)     |
+| `CountConversationsFilter`       | Filter object for `count()`                                     |
+| `GetHistoryOptions`              | Options with `since`, `until`, `roles`, `offset` filters        |
+| `GetHistoryResult`               | Result with messages and pagination info                        |
+| `ConversationDeletionResult`     | Enriched deletion result with `messages_deleted`, `deleted_at`  |
+| `DeleteManyConversationsOptions` | Options with `dry_run`, `confirmation_threshold`                |
+| `DeleteManyConversationsResult`  | Result with `would_delete` for dry run                          |
+| `SearchConversationsOptions`     | Options with `search_in`, `match_mode`                          |
+| `SearchConversationsFilters`     | Filters for search                                              |
+| `SearchConversationsInput`       | Input object for search                                         |
 
 #### Enhanced Methods
 
@@ -1207,14 +1215,14 @@ results = await cortex.conversations.search(
 
 #### Breaking Changes
 
-| Method | Before | After |
-|--------|--------|-------|
-| `list()` | Positional params, returns `List[Conversation]` | `ListConversationsFilter` param, returns `ListConversationsResult` |
-| `count()` | Positional params | `CountConversationsFilter` param |
-| `delete()` | Returns `Dict[str, bool]` | Returns `ConversationDeletionResult` |
-| `delete_many()` | Positional params, returns `Dict` | Filter dict + options, returns `DeleteManyConversationsResult` |
-| `get_history()` | Positional params | `GetHistoryOptions` param |
-| `search()` | Positional params | `SearchConversationsInput` param |
+| Method          | Before                                          | After                                                              |
+| --------------- | ----------------------------------------------- | ------------------------------------------------------------------ |
+| `list()`        | Positional params, returns `List[Conversation]` | `ListConversationsFilter` param, returns `ListConversationsResult` |
+| `count()`       | Positional params                               | `CountConversationsFilter` param                                   |
+| `delete()`      | Returns `Dict[str, bool]`                       | Returns `ConversationDeletionResult`                               |
+| `delete_many()` | Positional params, returns `Dict`               | Filter dict + options, returns `DeleteManyConversationsResult`     |
+| `get_history()` | Positional params                               | `GetHistoryOptions` param                                          |
+| `search()`      | Positional params                               | `SearchConversationsInput` param                                   |
 
 #### Migration Guide
 
@@ -1243,43 +1251,43 @@ conversations = result.conversations
 
 #### New Modules
 
-| Module | Description |
-|--------|-------------|
-| `cortex.graph.errors` | Error classes for graph database operations |
+| Module                          | Description                                                       |
+| ------------------------------- | ----------------------------------------------------------------- |
+| `cortex.graph.errors`           | Error classes for graph database operations                       |
 | `cortex.graph.orphan_detection` | Sophisticated orphan detection with circular reference protection |
-| `cortex.graph.batch_sync` | Batch sync functions for initial graph synchronization |
-| `cortex.graph.schema` | Schema initialization, verification, and management |
-| `cortex.graph.adapters.cypher` | CypherGraphAdapter for Neo4j and Memgraph |
-| `cortex.graph.worker` | Real-time reactive GraphSyncWorker |
+| `cortex.graph.batch_sync`       | Batch sync functions for initial graph synchronization            |
+| `cortex.graph.schema`           | Schema initialization, verification, and management               |
+| `cortex.graph.adapters.cypher`  | CypherGraphAdapter for Neo4j and Memgraph                         |
+| `cortex.graph.worker`           | Real-time reactive GraphSyncWorker                                |
 
 #### New Types
 
 **15 new dataclasses added to `cortex/types.py`:**
 
-| Type | Description |
-|------|-------------|
-| `GraphQuery` | Cypher query with parameters |
-| `QueryStatistics` | Query execution statistics (nodes/edges created, deleted, etc.) |
-| `GraphOperation` | Batch operation for graph write (CREATE_NODE, UPDATE_NODE, etc.) |
-| `OrphanRule` | Orphan detection rules for different node types |
-| `DeletionContext` | Context for tracking deletions (prevents circular reference issues) |
-| `OrphanCheckResult` | Result of orphan detection with circular island detection |
-| `GraphDeleteResult` | Result of cascading delete operation |
-| `BatchSyncLimits` | Limits for batch sync operations per entity type |
-| `BatchSyncOptions` | Options for batch graph sync with progress callback |
-| `BatchSyncStats` | Stats for a single entity type in batch sync |
-| `BatchSyncError` | Error from batch sync operation |
-| `BatchSyncResult` | Full result from batch graph sync |
-| `SchemaVerificationResult` | Result from schema verification |
+| Type                       | Description                                                         |
+| -------------------------- | ------------------------------------------------------------------- |
+| `GraphQuery`               | Cypher query with parameters                                        |
+| `QueryStatistics`          | Query execution statistics (nodes/edges created, deleted, etc.)     |
+| `GraphOperation`           | Batch operation for graph write (CREATE_NODE, UPDATE_NODE, etc.)    |
+| `OrphanRule`               | Orphan detection rules for different node types                     |
+| `DeletionContext`          | Context for tracking deletions (prevents circular reference issues) |
+| `OrphanCheckResult`        | Result of orphan detection with circular island detection           |
+| `GraphDeleteResult`        | Result of cascading delete operation                                |
+| `BatchSyncLimits`          | Limits for batch sync operations per entity type                    |
+| `BatchSyncOptions`         | Options for batch graph sync with progress callback                 |
+| `BatchSyncStats`           | Stats for a single entity type in batch sync                        |
+| `BatchSyncError`           | Error from batch sync operation                                     |
+| `BatchSyncResult`          | Full result from batch graph sync                                   |
+| `SchemaVerificationResult` | Result from schema verification                                     |
 
 #### Updated Types
 
-| Type | Changes |
-|------|---------|
-| `GraphQueryResult` | Added `stats: Optional[QueryStatistics]` field |
-| `TraversalConfig` | Added `filter`, `filter_params` fields for filtered traversal |
-| `ShortestPathConfig` | Added `direction` field for directed path search |
-| `GraphAdapter` | Updated protocol with all 13+ methods matching TypeScript SDK |
+| Type                 | Changes                                                       |
+| -------------------- | ------------------------------------------------------------- |
+| `GraphQueryResult`   | Added `stats: Optional[QueryStatistics]` field                |
+| `TraversalConfig`    | Added `filter`, `filter_params` fields for filtered traversal |
+| `ShortestPathConfig` | Added `direction` field for directed path search              |
+| `GraphAdapter`       | Updated protocol with all 13+ methods matching TypeScript SDK |
 
 #### Error Classes
 
@@ -1320,14 +1328,14 @@ print(f"Orphan islands cleaned: {len(result.orphan_islands)}")
 
 **Default Orphan Rules:**
 
-| Node Type | Rule |
-|-----------|------|
-| `Conversation` | Keep if referenced by Memory, Fact, or Context |
-| `Entity` | Keep if referenced by any Fact |
-| `User` | Never auto-delete (shared across memory spaces) |
-| `Participant` | Never auto-delete (Hive Mode participants) |
-| `MemorySpace` | Never auto-delete (critical isolation boundary) |
-| `Memory`, `Fact`, `Context` | Only delete if explicitly requested |
+| Node Type                   | Rule                                            |
+| --------------------------- | ----------------------------------------------- |
+| `Conversation`              | Keep if referenced by Memory, Fact, or Context  |
+| `Entity`                    | Keep if referenced by any Fact                  |
+| `User`                      | Never auto-delete (shared across memory spaces) |
+| `Participant`               | Never auto-delete (Hive Mode participants)      |
+| `MemorySpace`               | Never auto-delete (critical isolation boundary) |
+| `Memory`, `Fact`, `Context` | Only delete if explicitly requested             |
 
 #### New Helper Functions
 
@@ -3601,6 +3609,7 @@ from cortex.types import (
 
 For the complete history including TypeScript SDK changes, see: ../CHANGELOG.md
 ons)
+
 - ✅ Complete type safety with dataclasses
 - ✅ Full error handling with error codes
 - ✅ Graph database integration

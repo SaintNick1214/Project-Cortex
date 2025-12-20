@@ -24,7 +24,9 @@ describe("ProgressiveFactExtractor - Deduplication", () => {
   const TEST_USER_ID = ctx.userId("user");
 
   beforeAll(async () => {
-    console.log(`\n🧪 Streaming Fact Deduplication Tests - Run ID: ${ctx.runId}\n`);
+    console.log(
+      `\n🧪 Streaming Fact Deduplication Tests - Run ID: ${ctx.runId}\n`,
+    );
 
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
@@ -181,9 +183,27 @@ describe("ProgressiveFactExtractor - Deduplication", () => {
       const content2 = content1 + " The mountains are beautiful for hiking.";
       const content3 = content2 + " Hiking keeps me fit and healthy.";
 
-      await extractor.extractFromChunk(content1, 1, extractFacts, "What are your hobbies?", convId);
-      await extractor.extractFromChunk(content2, 2, extractFacts, "What are your hobbies?", convId);
-      await extractor.extractFromChunk(content3, 3, extractFacts, "What are your hobbies?", convId);
+      await extractor.extractFromChunk(
+        content1,
+        1,
+        extractFacts,
+        "What are your hobbies?",
+        convId,
+      );
+      await extractor.extractFromChunk(
+        content2,
+        2,
+        extractFacts,
+        "What are your hobbies?",
+        convId,
+      );
+      await extractor.extractFromChunk(
+        content3,
+        3,
+        extractFacts,
+        "What are your hobbies?",
+        convId,
+      );
 
       // Get all facts from this extractor
       const facts = extractor.getExtractedFacts();

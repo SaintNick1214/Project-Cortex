@@ -108,12 +108,12 @@ function mergeConfig(target: CLIConfig, source: Partial<CLIConfig>): CLIConfig {
 
 /**
  * Apply environment variable overrides.
- * 
+ *
  * The CLI config (~/.cortexrc) is the source of truth.
  * Environment variables from .env.local are NOT used to override config
  * because they are project-specific and would cause confusion when
  * managing multiple deployments from different directories.
- * 
+ *
  * To override a deployment's URL/key at runtime, use CLI flags:
  *   cortex --url <url> --key <key> <command>
  */

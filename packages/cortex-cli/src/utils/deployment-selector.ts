@@ -82,7 +82,11 @@ export async function selectDeployment(
 
   if (deployments.length === 0) {
     console.log(pc.red("\n   No deployments configured"));
-    console.log(pc.dim("   Run 'cortex init' or 'cortex config add-deployment' to add one\n"));
+    console.log(
+      pc.dim(
+        "   Run 'cortex init' or 'cortex config add-deployment' to add one\n",
+      ),
+    );
     return null;
   }
 

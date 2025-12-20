@@ -5,8 +5,8 @@
  * The actual memory tables (conversations, memories, facts) come from @cortexmemory/sdk.
  */
 
-import { defineSchema, defineTable } from 'convex/server';
-import { v } from 'convex/values';
+import { defineSchema, defineTable } from "convex/server";
+import { v } from "convex/values";
 
 export default defineSchema({
   // Demo session tracking (optional, for demo purposes)
@@ -16,5 +16,5 @@ export default defineSchema({
     memorySpaceId: v.string(),
     startedAt: v.number(),
     messageCount: v.number(),
-  }).index('by_session', ['sessionId']),
+  }).index("by_session", ["sessionId"]),
 });

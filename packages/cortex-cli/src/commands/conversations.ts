@@ -59,10 +59,16 @@ export function registerConversationsCommands(
     .option("-f, --format <format>", "Output format: table, json, csv")
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "list conversations");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "list conversations",
+      );
       if (!selection) return;
 
-      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
+      const resolved = resolveConfig(currentConfig, {
+        deployment: selection.name,
+      });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading conversations...").start();
@@ -76,50 +82,56 @@ export function registerConversationsCommands(
         }
         const limit = validateLimit(parseInt(options.limit, 10));
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const convResult = await client.conversations.list({
-            memorySpaceId: options.space,
-            userId: options.user,
-            type: options.type,
-            limit,
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const convResult = await client.conversations.list({
+              memorySpaceId: options.space,
+              userId: options.user,
+              type: options.type,
+              limit,
+            });
 
-          spinner.stop();
+            spinner.stop();
 
-          const conversations = convResult.conversations;
-          if (conversations.length === 0) {
-            printWarning("No conversations found");
-            return;
-          }
+            const conversations = convResult.conversations;
+            if (conversations.length === 0) {
+              printWarning("No conversations found");
+              return;
+            }
 
-          // Format conversations for display
-          const displayData = conversations.map((c) => ({
-            id: c.conversationId,
-            space: c.memorySpaceId,
-            type: c.type,
-            messages: c.messageCount,
-            user: c.participants?.userId ?? "-",
-            created: formatRelativeTime(c.createdAt),
-            updated: formatRelativeTime(c.updatedAt),
-          }));
+            // Format conversations for display
+            const displayData = conversations.map((c) => ({
+              id: c.conversationId,
+              space: c.memorySpaceId,
+              type: c.type,
+              messages: c.messageCount,
+              user: c.participants?.userId ?? "-",
+              created: formatRelativeTime(c.createdAt),
+              updated: formatRelativeTime(c.updatedAt),
+            }));
 
-          console.log(
-            formatOutput(displayData, format, {
-              title: "Conversations",
-              headers: [
-                "id",
-                "space",
-                "type",
-                "messages",
-                "user",
-                "created",
-                "updated",
-              ],
-            }),
-          );
+            console.log(
+              formatOutput(displayData, format, {
+                title: "Conversations",
+                headers: [
+                  "id",
+                  "space",
+                  "type",
+                  "messages",
+                  "user",
+                  "created",
+                  "updated",
+                ],
+              }),
+            );
 
-          printSuccess(`Found ${formatCount(conversations.length, "conversation")}`);
-        });
+            printSuccess(
+              `Found ${formatCount(conversations.length, "conversation")}`,
+            );
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(
@@ -140,10 +152,16 @@ export function registerConversationsCommands(
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (conversationId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "get conversation");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "get conversation",
+      );
       if (!selection) return;
 
-      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
+      const resolved = resolveConfig(currentConfig, {
+        deployment: selection.name,
+      });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading conversation...").start();
@@ -155,79 +173,84 @@ export function registerConversationsCommands(
           1000,
         );
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const conversation = await client.conversations.get(conversationId);
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const conversation = await client.conversations.get(conversationId);
 
-          if (!conversation) {
+            if (!conversation) {
+              spinner.stop();
+              printError(`Conversation ${conversationId} not found`);
+              process.exit(1);
+            }
+
             spinner.stop();
-            printError(`Conversation ${conversationId} not found`);
-            process.exit(1);
-          }
 
-          spinner.stop();
+            if (format === "json") {
+              console.log(formatOutput(conversation, "json"));
+            } else {
+              printSection(`Conversation: ${conversationId}`, {
+                ID: conversation.conversationId,
+                "Memory Space": conversation.memorySpaceId,
+                Type: conversation.type,
+                "Message Count": conversation.messageCount,
+                "User ID": conversation.participants?.userId ?? "-",
+                "Participant ID":
+                  conversation.participants?.participantId ?? "-",
+                Created: formatTimestamp(conversation.createdAt),
+                Updated: formatTimestamp(conversation.updatedAt),
+              });
 
-          if (format === "json") {
-            console.log(formatOutput(conversation, "json"));
-          } else {
-            printSection(`Conversation: ${conversationId}`, {
-              ID: conversation.conversationId,
-              "Memory Space": conversation.memorySpaceId,
-              Type: conversation.type,
-              "Message Count": conversation.messageCount,
-              "User ID": conversation.participants?.userId ?? "-",
-              "Participant ID": conversation.participants?.participantId ?? "-",
-              Created: formatTimestamp(conversation.createdAt),
-              Updated: formatTimestamp(conversation.updatedAt),
-            });
+              // Show messages
+              const messages =
+                conversation.messages?.slice(0, messageLimit) ?? [];
+              if (messages.length > 0) {
+                console.log("\n  Messages:");
+                console.log("  " + "─".repeat(60));
 
-            // Show messages
-            const messages =
-              conversation.messages?.slice(0, messageLimit) ?? [];
-            if (messages.length > 0) {
-              console.log("\n  Messages:");
-              console.log("  " + "─".repeat(60));
+                for (const msg of messages) {
+                  const roleColor =
+                    msg.role === "user"
+                      ? pc.cyan
+                      : msg.role === "agent"
+                        ? pc.green
+                        : pc.yellow;
+                  const timestamp = formatTimestamp(msg.timestamp);
 
-              for (const msg of messages) {
-                const roleColor =
-                  msg.role === "user"
-                    ? pc.cyan
-                    : msg.role === "agent"
-                      ? pc.green
-                      : pc.yellow;
-                const timestamp = formatTimestamp(msg.timestamp);
+                  console.log(
+                    `\n  ${roleColor(`[${msg.role.toUpperCase()}]`)} ${pc.dim(timestamp)}`,
+                  );
 
-                console.log(
-                  `\n  ${roleColor(`[${msg.role.toUpperCase()}]`)} ${pc.dim(timestamp)}`,
-                );
-
-                // Word wrap content
-                const maxWidth = 58;
-                const words = msg.content.split(" ");
-                let line = "    ";
-                for (const word of words) {
-                  if (line.length + word.length > maxWidth) {
-                    console.log(line);
-                    line = "    ";
+                  // Word wrap content
+                  const maxWidth = 58;
+                  const words = msg.content.split(" ");
+                  let line = "    ";
+                  for (const word of words) {
+                    if (line.length + word.length > maxWidth) {
+                      console.log(line);
+                      line = "    ";
+                    }
+                    line += word + " ";
                   }
-                  line += word + " ";
+                  if (line.trim()) {
+                    console.log(line);
+                  }
                 }
-                if (line.trim()) {
-                  console.log(line);
+
+                console.log("\n  " + "─".repeat(60));
+
+                if (conversation.messageCount > messageLimit) {
+                  console.log(
+                    pc.dim(
+                      `  ... and ${conversation.messageCount - messageLimit} more messages`,
+                    ),
+                  );
                 }
-              }
-
-              console.log("\n  " + "─".repeat(60));
-
-              if (conversation.messageCount > messageLimit) {
-                console.log(
-                  pc.dim(
-                    `  ... and ${conversation.messageCount - messageLimit} more messages`,
-                  ),
-                );
               }
             }
-          }
-        });
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(
@@ -245,42 +268,50 @@ export function registerConversationsCommands(
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (conversationId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "delete conversation");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "delete conversation",
+      );
       if (!selection) return;
 
       try {
         validateConversationId(conversationId);
 
         // Get conversation first to show info
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const conversation = await client.conversations.get(conversationId);
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const conversation = await client.conversations.get(conversationId);
 
-          if (!conversation) {
-            printError(`Conversation ${conversationId} not found`);
-            process.exit(1);
-          }
-
-          if (!options.yes) {
-            const confirmed = await requireConfirmation(
-              `Delete conversation ${conversationId} with ${conversation.messageCount} messages?`,
-              currentConfig,
-            );
-            if (!confirmed) {
-              printWarning("Operation cancelled");
-              return;
+            if (!conversation) {
+              printError(`Conversation ${conversationId} not found`);
+              process.exit(1);
             }
-          }
 
-          const spinner = ora("Deleting conversation...").start();
+            if (!options.yes) {
+              const confirmed = await requireConfirmation(
+                `Delete conversation ${conversationId} with ${conversation.messageCount} messages?`,
+                currentConfig,
+              );
+              if (!confirmed) {
+                printWarning("Operation cancelled");
+                return;
+              }
+            }
 
-          await client.conversations.delete(conversationId);
+            const spinner = ora("Deleting conversation...").start();
 
-          spinner.stop();
-          printSuccess(`Deleted conversation ${conversationId}`);
-          console.log(
-            `  ${formatCount(conversation.messageCount, "message")} removed`,
-          );
-        });
+            await client.conversations.delete(conversationId);
+
+            spinner.stop();
+            printSuccess(`Deleted conversation ${conversationId}`);
+            console.log(
+              `  ${formatCount(conversation.messageCount, "message")} removed`,
+            );
+          },
+        );
       } catch (error) {
         printError(error instanceof Error ? error.message : "Delete failed");
         process.exit(1);
@@ -300,7 +331,11 @@ export function registerConversationsCommands(
     .option("-f, --format <format>", "Export format: json, txt", "json")
     .action(async (conversationId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "export conversation");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "export conversation",
+      );
       if (!selection) return;
 
       const spinner = ora("Exporting conversation...").start();
@@ -309,48 +344,52 @@ export function registerConversationsCommands(
         validateConversationId(conversationId);
         validateFilePath(options.output);
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const conversation = await client.conversations.get(conversationId);
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const conversation = await client.conversations.get(conversationId);
 
-          if (!conversation) {
-            spinner.stop();
-            printError(`Conversation ${conversationId} not found`);
-            process.exit(1);
-          }
-
-          let content: string;
-          if (options.format === "txt") {
-            // Human-readable text format
-            const lines = [
-              `Conversation: ${conversation.conversationId}`,
-              `Space: ${conversation.memorySpaceId}`,
-              `Type: ${conversation.type}`,
-              `Messages: ${conversation.messageCount}`,
-              `Created: ${new Date(conversation.createdAt).toISOString()}`,
-              "",
-              "---",
-              "",
-            ];
-
-            for (const msg of conversation.messages ?? []) {
-              lines.push(
-                `[${msg.role.toUpperCase()}] ${new Date(msg.timestamp).toISOString()}`,
-              );
-              lines.push(msg.content);
-              lines.push("");
+            if (!conversation) {
+              spinner.stop();
+              printError(`Conversation ${conversationId} not found`);
+              process.exit(1);
             }
 
-            content = lines.join("\n");
-          } else {
-            // JSON format
-            content = JSON.stringify(conversation, null, 2);
-          }
+            let content: string;
+            if (options.format === "txt") {
+              // Human-readable text format
+              const lines = [
+                `Conversation: ${conversation.conversationId}`,
+                `Space: ${conversation.memorySpaceId}`,
+                `Type: ${conversation.type}`,
+                `Messages: ${conversation.messageCount}`,
+                `Created: ${new Date(conversation.createdAt).toISOString()}`,
+                "",
+                "---",
+                "",
+              ];
 
-          await writeFile(options.output, content, "utf-8");
+              for (const msg of conversation.messages ?? []) {
+                lines.push(
+                  `[${msg.role.toUpperCase()}] ${new Date(msg.timestamp).toISOString()}`,
+                );
+                lines.push(msg.content);
+                lines.push("");
+              }
 
-          spinner.stop();
-          printSuccess(`Exported conversation to ${options.output}`);
-        });
+              content = lines.join("\n");
+            } else {
+              // JSON format
+              content = JSON.stringify(conversation, null, 2);
+            }
+
+            await writeFile(options.output, content, "utf-8");
+
+            spinner.stop();
+            printSuccess(`Exported conversation to ${options.output}`);
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(error instanceof Error ? error.message : "Export failed");
@@ -368,7 +407,11 @@ export function registerConversationsCommands(
     .option("-t, --type <type>", "Filter by type")
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "count conversations");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "count conversations",
+      );
       if (!selection) return;
 
       const spinner = ora("Counting conversations...").start();
@@ -381,22 +424,26 @@ export function registerConversationsCommands(
           validateUserId(options.user);
         }
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const count = await client.conversations.count({
-            memorySpaceId: options.space,
-            userId: options.user,
-            type: options.type,
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const count = await client.conversations.count({
+              memorySpaceId: options.space,
+              userId: options.user,
+              type: options.type,
+            });
 
-          spinner.stop();
+            spinner.stop();
 
-          let scope = "";
-          if (options.space) scope += ` in space ${options.space}`;
-          if (options.user) scope += ` for user ${options.user}`;
-          if (options.type) scope += ` of type ${options.type}`;
+            let scope = "";
+            if (options.space) scope += ` in space ${options.space}`;
+            if (options.user) scope += ` for user ${options.user}`;
+            if (options.type) scope += ` of type ${options.type}`;
 
-          printSuccess(`${formatCount(count, "conversation")}${scope}`);
-        });
+            printSuccess(`${formatCount(count, "conversation")}${scope}`);
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(error instanceof Error ? error.message : "Count failed");
@@ -414,7 +461,11 @@ export function registerConversationsCommands(
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "clear conversations");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "clear conversations",
+      );
       if (!selection) return;
 
       try {
@@ -431,53 +482,57 @@ export function registerConversationsCommands(
         }
 
         // Count first
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const count = await client.conversations.count({
-            memorySpaceId: options.space,
-            userId: options.user,
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const count = await client.conversations.count({
+              memorySpaceId: options.space,
+              userId: options.user,
+            });
 
-          if (count === 0) {
-            printWarning("No conversations found to delete");
-            return;
-          }
-
-          if (!options.yes) {
-            const scope = options.user
-              ? `for user ${options.user}`
-              : `in space ${options.space}`;
-            const confirmed = await requireConfirmation(
-              `Delete ${formatCount(count, "conversation")} ${scope}? This cannot be undone.`,
-              currentConfig,
-            );
-            if (!confirmed) {
-              printWarning("Operation cancelled");
+            if (count === 0) {
+              printWarning("No conversations found to delete");
               return;
             }
-          }
 
-          const spinner = ora(`Deleting ${count} conversations...`).start();
-
-          // Get all conversations
-          const convResult = await client.conversations.list({
-            memorySpaceId: options.space,
-            userId: options.user,
-            limit: 1000,
-          });
-
-          let deleted = 0;
-          for (const conv of convResult.conversations) {
-            try {
-              await client.conversations.delete(conv.conversationId);
-              deleted++;
-            } catch {
-              // Continue on error
+            if (!options.yes) {
+              const scope = options.user
+                ? `for user ${options.user}`
+                : `in space ${options.space}`;
+              const confirmed = await requireConfirmation(
+                `Delete ${formatCount(count, "conversation")} ${scope}? This cannot be undone.`,
+                currentConfig,
+              );
+              if (!confirmed) {
+                printWarning("Operation cancelled");
+                return;
+              }
             }
-          }
 
-          spinner.stop();
-          printSuccess(`Deleted ${formatCount(deleted, "conversation")}`);
-        });
+            const spinner = ora(`Deleting ${count} conversations...`).start();
+
+            // Get all conversations
+            const convResult = await client.conversations.list({
+              memorySpaceId: options.space,
+              userId: options.user,
+              limit: 1000,
+            });
+
+            let deleted = 0;
+            for (const conv of convResult.conversations) {
+              try {
+                await client.conversations.delete(conv.conversationId);
+                deleted++;
+              } catch {
+                // Continue on error
+              }
+            }
+
+            spinner.stop();
+            printSuccess(`Deleted ${formatCount(deleted, "conversation")}`);
+          },
+        );
       } catch (error) {
         printError(error instanceof Error ? error.message : "Clear failed");
         process.exit(1);
@@ -493,10 +548,16 @@ export function registerConversationsCommands(
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (conversationId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "list messages");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "list messages",
+      );
       if (!selection) return;
 
-      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
+      const resolved = resolveConfig(currentConfig, {
+        deployment: selection.name,
+      });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading messages...").start();
@@ -505,53 +566,57 @@ export function registerConversationsCommands(
         validateConversationId(conversationId);
         const limit = validateLimit(parseInt(options.limit, 10), 1000);
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const conversation = await client.conversations.get(conversationId);
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const conversation = await client.conversations.get(conversationId);
 
-          if (!conversation) {
-            spinner.stop();
-            printError(`Conversation ${conversationId} not found`);
-            process.exit(1);
-          }
-
-          spinner.stop();
-
-          const messages = conversation.messages?.slice(0, limit) ?? [];
-
-          if (messages.length === 0) {
-            printWarning("No messages in this conversation");
-            return;
-          }
-
-          if (format === "json") {
-            console.log(formatOutput(messages, "json"));
-          } else {
-            const displayData = messages.map((m) => ({
-              id: m.id,
-              role: m.role,
-              content:
-                m.content.length > 60
-                  ? m.content.substring(0, 57) + "..."
-                  : m.content,
-              time: formatTimestamp(m.timestamp),
-            }));
-
-            console.log(
-              formatOutput(displayData, "table", {
-                title: `Messages in ${conversationId}`,
-                headers: ["id", "role", "content", "time"],
-              }),
-            );
-
-            if (conversation.messageCount > limit) {
-              console.log(
-                pc.dim(
-                  `\nShowing ${limit} of ${conversation.messageCount} messages`,
-                ),
-              );
+            if (!conversation) {
+              spinner.stop();
+              printError(`Conversation ${conversationId} not found`);
+              process.exit(1);
             }
-          }
-        });
+
+            spinner.stop();
+
+            const messages = conversation.messages?.slice(0, limit) ?? [];
+
+            if (messages.length === 0) {
+              printWarning("No messages in this conversation");
+              return;
+            }
+
+            if (format === "json") {
+              console.log(formatOutput(messages, "json"));
+            } else {
+              const displayData = messages.map((m) => ({
+                id: m.id,
+                role: m.role,
+                content:
+                  m.content.length > 60
+                    ? m.content.substring(0, 57) + "..."
+                    : m.content,
+                time: formatTimestamp(m.timestamp),
+              }));
+
+              console.log(
+                formatOutput(displayData, "table", {
+                  title: `Messages in ${conversationId}`,
+                  headers: ["id", "role", "content", "time"],
+                }),
+              );
+
+              if (conversation.messageCount > limit) {
+                console.log(
+                  pc.dim(
+                    `\nShowing ${limit} of ${conversation.messageCount} messages`,
+                  ),
+                );
+              }
+            }
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(

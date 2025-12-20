@@ -70,7 +70,7 @@ export async function setupNewConvex(
       CONVEX_DEPLOY_KEY: "",
     };
 
-    const exitCode = await execCommandLive(command, args, { 
+    const exitCode = await execCommandLive(command, args, {
       cwd: projectPath,
       env: cleanConvexEnv,
     });
@@ -187,7 +187,7 @@ export async function setupExistingConvex(): Promise<ConvexConfig> {
 
 /**
  * Setup local Convex for development
- * 
+ *
  * Note: Convex's --local flag requires a cloud project to be set up first.
  * So we create the cloud project during init, then the user can run
  * `cortex start --local` or `convex dev --local` for local development.
@@ -212,7 +212,7 @@ export async function setupLocalConvex(): Promise<ConvexConfig> {
 
 /**
  * Deploy Cortex backend functions to Convex
- * 
+ *
  * Note: We don't use --local flag during init because Convex requires
  * a cloud project to exist first. Users can run --local after setup.
  */
@@ -222,9 +222,7 @@ export async function deployToConvex(
   _isLocal: boolean = false, // Ignored - always deploy to cloud first
 ): Promise<void> {
   console.log(pc.cyan("\n   Deploying Cortex backend to Convex..."));
-  console.log(
-    pc.dim("   This may prompt for configuration on first run\n"),
-  );
+  console.log(pc.dim("   This may prompt for configuration on first run\n"));
 
   try {
     // Check if convex CLI is available
@@ -251,7 +249,7 @@ export async function deployToConvex(
     const env: Record<string, string | undefined> = {
       ...process.env,
     };
-    
+
     if (config.convexUrl) {
       env.CONVEX_URL = config.convexUrl;
     }

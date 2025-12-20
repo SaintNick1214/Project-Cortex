@@ -73,7 +73,12 @@ describe("Mutable Store E2E Scenarios", () => {
 
       // Add first item
       const cart = (await cortex.mutable.get(cartNs, cartKey)) as {
-        items: Array<{ productId: string; name: string; quantity: number; price: number }>;
+        items: Array<{
+          productId: string;
+          name: string;
+          quantity: number;
+          price: number;
+        }>;
         totalItems: number;
         totalPrice: number;
       };
@@ -102,7 +107,12 @@ describe("Mutable Store E2E Scenarios", () => {
 
       // Get current cart
       const cart = (await cortex.mutable.get(cartNs, cartKey)) as {
-        items: Array<{ productId: string; name: string; quantity: number; price: number }>;
+        items: Array<{
+          productId: string;
+          name: string;
+          quantity: number;
+          price: number;
+        }>;
         totalItems: number;
         totalPrice: number;
       };
@@ -131,7 +141,12 @@ describe("Mutable Store E2E Scenarios", () => {
 
       // Get current cart
       const cart = (await cortex.mutable.get(cartNs, cartKey)) as {
-        items: Array<{ productId: string; name: string; quantity: number; price: number }>;
+        items: Array<{
+          productId: string;
+          name: string;
+          quantity: number;
+          price: number;
+        }>;
         totalItems: number;
         totalPrice: number;
       };
@@ -588,10 +603,7 @@ describe("Mutable Store E2E Scenarios", () => {
 
     it("check feature flag state", async () => {
       // Check if feature is enabled
-      const flag = (await cortex.mutable.get(
-        flagsNs,
-        "flag:dark-mode",
-      )) as any;
+      const flag = (await cortex.mutable.get(flagsNs, "flag:dark-mode")) as any;
 
       expect(flag.enabled).toBe(true);
       expect(flag.rolloutPercentage).toBe(100);
@@ -611,7 +623,9 @@ describe("Mutable Store E2E Scenarios", () => {
 
       // Simulate checking if user gets feature
       const userId = "random-user";
-      const userHash = userId.split("").reduce((a, b) => a + b.charCodeAt(0), 0);
+      const userHash = userId
+        .split("")
+        .reduce((a, b) => a + b.charCodeAt(0), 0);
       const userPercentile = userHash % 100;
 
       const isInRollout =

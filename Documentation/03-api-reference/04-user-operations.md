@@ -929,10 +929,9 @@ interface UpdateManyResult {
 **Example 1: Update by explicit IDs**
 
 ```typescript
-const result = await cortex.users.updateMany(
-  ["user-1", "user-2", "user-3"],
-  { data: { status: "active", lastUpdatedBy: "admin" } },
-);
+const result = await cortex.users.updateMany(["user-1", "user-2", "user-3"], {
+  data: { status: "active", lastUpdatedBy: "admin" },
+});
 
 console.log(`Updated ${result.updated} users`);
 ```

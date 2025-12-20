@@ -1,17 +1,35 @@
-'use client';
+"use client";
 
-import dynamic from 'next/dynamic';
-import { useState } from 'react';
-import { useLayerTracking } from '@/lib/layer-tracking';
+import dynamic from "next/dynamic";
+import { useState } from "react";
+import { useLayerTracking } from "@/lib/layer-tracking";
 
 // Dynamic imports to avoid SSR issues with framer-motion
-const ChatInterface = dynamic(() => import('@/components/ChatInterface').then(m => ({ default: m.ChatInterface })), { ssr: false });
-const LayerFlowDiagram = dynamic(() => import('@/components/LayerFlowDiagram').then(m => ({ default: m.LayerFlowDiagram })), { ssr: false });
-const MemorySpaceSwitcher = dynamic(() => import('@/components/MemorySpaceSwitcher').then(m => ({ default: m.MemorySpaceSwitcher })), { ssr: false });
+const ChatInterface = dynamic(
+  () =>
+    import("@/components/ChatInterface").then((m) => ({
+      default: m.ChatInterface,
+    })),
+  { ssr: false },
+);
+const LayerFlowDiagram = dynamic(
+  () =>
+    import("@/components/LayerFlowDiagram").then((m) => ({
+      default: m.LayerFlowDiagram,
+    })),
+  { ssr: false },
+);
+const MemorySpaceSwitcher = dynamic(
+  () =>
+    import("@/components/MemorySpaceSwitcher").then((m) => ({
+      default: m.MemorySpaceSwitcher,
+    })),
+  { ssr: false },
+);
 
 export default function Home() {
-  const [memorySpaceId, setMemorySpaceId] = useState('quickstart-demo');
-  const [userId] = useState('demo-user');
+  const [memorySpaceId, setMemorySpaceId] = useState("quickstart-demo");
+  const [userId] = useState("demo-user");
   const {
     layers,
     isOrchestrating,
@@ -84,9 +102,9 @@ export default function Home() {
       <footer className="border-t border-white/10 px-6 py-3">
         <div className="max-w-7xl mx-auto flex items-center justify-between text-sm text-gray-500">
           <div className="flex items-center gap-4">
-            <span>Cortex SDK v0.21.0</span>
+            <span>Cortex SDK v0.22.0</span>
             <span>•</span>
-            <span>Vercel AI SDK v4</span>
+            <span>Vercel AI SDK v5</span>
           </div>
           <a
             href="https://cortexmemory.dev/docs"

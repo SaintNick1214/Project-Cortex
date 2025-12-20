@@ -1650,7 +1650,11 @@ describe("Facts API (Layer 3)", () => {
       });
 
       it("should store fact with searchAliases", async () => {
-        const searchAliases = ["title preference", "name preference", "how to address"];
+        const searchAliases = [
+          "title preference",
+          "name preference",
+          "how to address",
+        ];
 
         const fact = await cortex.facts.store({
           memorySpaceId: TEST_MEMSPACE_ID,
@@ -1670,7 +1674,8 @@ describe("Facts API (Layer 3)", () => {
       });
 
       it("should store fact with semanticContext", async () => {
-        const semanticContext = "This fact should be retrieved when the user asks about meeting preferences or scheduling";
+        const semanticContext =
+          "This fact should be retrieved when the user asks about meeting preferences or scheduling";
 
         const fact = await cortex.facts.store({
           memorySpaceId: TEST_MEMSPACE_ID,
@@ -1692,7 +1697,11 @@ describe("Facts API (Layer 3)", () => {
       it("should store fact with entities array", async () => {
         const entities = [
           { name: "Dr. Smith", type: "person", fullValue: "Dr. John Smith" },
-          { name: "Acme Corp", type: "organization", fullValue: "Acme Corporation Inc." },
+          {
+            name: "Acme Corp",
+            type: "organization",
+            fullValue: "Acme Corporation Inc.",
+          },
         ];
 
         const fact = await cortex.facts.store({
@@ -1749,13 +1758,22 @@ describe("Facts API (Layer 3)", () => {
           sourceType: "conversation" as const,
           category: "complete_enrichment",
           searchAliases: ["full test", "all fields", "enrichment"],
-          semanticContext: "Use this fact for enrichment field validation tests",
+          semanticContext:
+            "Use this fact for enrichment field validation tests",
           entities: [
             { name: "TestUser", type: "person" },
-            { name: "TestCompany", type: "organization", fullValue: "Test Company LLC" },
+            {
+              name: "TestCompany",
+              type: "organization",
+              fullValue: "Test Company LLC",
+            },
           ],
           relations: [
-            { subject: "TestUser", predicate: "belongs_to", object: "TestCompany" },
+            {
+              subject: "TestUser",
+              predicate: "belongs_to",
+              object: "TestCompany",
+            },
           ],
           tags: ["enrichment-test", "complete"],
         };
@@ -1806,7 +1824,9 @@ describe("Facts API (Layer 3)", () => {
         expect(v2.searchAliases).toEqual(["original", "aliases"]);
         expect(v2.semanticContext).toBe("Original context");
         expect(v2.entities).toEqual([{ name: "Entity1", type: "test" }]);
-        expect(v2.relations).toEqual([{ subject: "a", predicate: "b", object: "c" }]);
+        expect(v2.relations).toEqual([
+          { subject: "a", predicate: "b", object: "c" },
+        ]);
       });
 
       it("should update category field", async () => {
@@ -1863,7 +1883,8 @@ describe("Facts API (Layer 3)", () => {
           tags: ["context-update-test"],
         });
 
-        const newContext = "New and improved semantic context for better retrieval";
+        const newContext =
+          "New and improved semantic context for better retrieval";
         const v2 = await cortex.facts.update(TEST_MEMSPACE_ID, v1.factId, {
           semanticContext: newContext,
         });
@@ -2638,7 +2659,9 @@ describe("Facts API (Layer 3)", () => {
           tags: ["expired-test"],
         });
 
-        expect(results.some((f) => f.factId === expiredFact.factId)).toBe(false);
+        expect(results.some((f) => f.factId === expiredFact.factId)).toBe(
+          false,
+        );
       });
 
       it("should exclude future facts from validAt query", async () => {
@@ -2769,7 +2792,9 @@ describe("Facts API (Layer 3)", () => {
 
         // Should only find the valid fact
         expect(results.length).toBeGreaterThanOrEqual(1);
-        expect(results.every((f) => f.fact.includes("currently valid"))).toBe(true);
+        expect(results.every((f) => f.fact.includes("currently valid"))).toBe(
+          true,
+        );
       });
 
       it("should use validAt filter in queryBySubject()", async () => {
@@ -2940,7 +2965,9 @@ describe("Facts API (Layer 3)", () => {
         });
 
         // Should still find the fact (no expiry)
-        expect(results.some((f) => f.factId === openEndedFact.factId)).toBe(true);
+        expect(results.some((f) => f.factId === openEndedFact.factId)).toBe(
+          true,
+        );
       });
     });
   });

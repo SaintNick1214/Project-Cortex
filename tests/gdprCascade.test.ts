@@ -74,7 +74,10 @@ describe("GDPR: Cascade Deletion", () => {
       });
 
       // Delete space with cascade
-      await cortex.memorySpaces.delete(SPACE, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(SPACE, {
+        cascade: true,
+        reason: "test cleanup",
+      });
 
       // Validate: Conversations, memories, and facts deleted
       const convCheck = await cortex.conversations.get(conv.conversationId);
@@ -135,7 +138,10 @@ describe("GDPR: Cascade Deletion", () => {
       });
 
       // Delete space A with cascade
-      await cortex.memorySpaces.delete(SPACE_A, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(SPACE_A, {
+        cascade: true,
+        reason: "test cleanup",
+      });
 
       // Validate: Space A data deleted
       const memACheck = await cortex.vector.get(SPACE_A, memA.memoryId);
@@ -157,7 +163,10 @@ describe("GDPR: Cascade Deletion", () => {
       });
 
       // Delete without any data
-      await cortex.memorySpaces.delete(EMPTY_SPACE, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(EMPTY_SPACE, {
+        cascade: true,
+        reason: "test cleanup",
+      });
 
       // Should succeed without errors
       const spaceCheck = await cortex.memorySpaces.get(EMPTY_SPACE);

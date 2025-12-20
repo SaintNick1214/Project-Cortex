@@ -9,7 +9,13 @@
  */
 
 import { describe, it, expect, beforeEach, jest } from "@jest/globals";
-import type { StreamContext, ResumeContext, RecoveryOptions, RecoveryResult, StreamError } from "../../src/types/streaming";
+import type {
+  StreamContext,
+  ResumeContext,
+  RecoveryOptions,
+  RecoveryResult,
+  StreamError,
+} from "../../src/types/streaming";
 
 // Mock implementation of StreamErrorRecovery for testing
 class StreamErrorRecovery {
@@ -19,7 +25,11 @@ class StreamErrorRecovery {
     this.client = client;
   }
 
-  async handleStreamError(error: Error, context: StreamContext, options: RecoveryOptions): Promise<RecoveryResult> {
+  async handleStreamError(
+    error: Error,
+    context: StreamContext,
+    options: RecoveryOptions,
+  ): Promise<RecoveryResult> {
     try {
       switch (options.strategy) {
         case "store-partial":
@@ -35,14 +45,25 @@ class StreamErrorRecovery {
           }
           return { success: false, strategy: "best-effort" };
         default:
-          return { success: false, strategy: options.strategy, error: new Error("Unknown strategy") };
+          return {
+            success: false,
+            strategy: options.strategy,
+            error: new Error("Unknown strategy"),
+          };
       }
     } catch (err) {
-      return { success: false, strategy: options.strategy, error: err as Error };
+      return {
+        success: false,
+        strategy: options.strategy,
+        error: err as Error,
+      };
     }
   }
 
-  async storePartialOnFailure(context: StreamContext, options: RecoveryOptions): Promise<RecoveryResult> {
+  async storePartialOnFailure(
+    context: StreamContext,
+    options: RecoveryOptions,
+  ): Promise<RecoveryResult> {
     try {
       let resumeToken: string | undefined;
       if (options.preservePartialData) {
@@ -69,14 +90,21 @@ class StreamErrorRecovery {
 
   private async rollback(context: StreamContext): Promise<void> {
     if (context.partialMemoryId) {
-      await this.client.mutation({}, {
-        memorySpaceId: context.memorySpaceId,
-        memoryId: context.partialMemoryId,
-      });
+      await this.client.mutation(
+        {},
+        {
+          memorySpaceId: context.memorySpaceId,
+          memoryId: context.partialMemoryId,
+        },
+      );
     }
   }
 
-  async retryWithBackoff<T>(operation: () => Promise<T>, maxRetries: number = 3, baseDelay: number = 100): Promise<T> {
+  async retryWithBackoff<T>(
+    operation: () => Promise<T>,
+    maxRetries: number = 3,
+    baseDelay: number = 100,
+  ): Promise<T> {
     let lastError: Error | unknown;
     for (let i = 0; i < maxRetries; i++) {
       try {
@@ -84,7 +112,9 @@ class StreamErrorRecovery {
       } catch (err) {
         lastError = err;
         if (i < maxRetries - 1) {
-          await new Promise(resolve => setTimeout(resolve, baseDelay * Math.pow(2, i)));
+          await new Promise((resolve) =>
+            setTimeout(resolve, baseDelay * Math.pow(2, i)),
+          );
         }
       }
     }
@@ -94,14 +124,17 @@ class StreamErrorRecovery {
   async generateResumeToken(context: ResumeContext): Promise<string> {
     const token = `resume_${Date.now()}_${Math.random().toString(16).slice(2, 10)}`;
     try {
-      await this.client.mutation({}, {
-        namespace: "resume-tokens",
-        key: token,
-        value: {
-          ...context,
-          expiresAt: Date.now() + 3600000, // 1 hour
+      await this.client.mutation(
+        {},
+        {
+          namespace: "resume-tokens",
+          key: token,
+          value: {
+            ...context,
+            expiresAt: Date.now() + 3600000, // 1 hour
+          },
         },
-      });
+      );
       return token;
     } catch (err) {
       throw new Error(`Failed to generate resume token: ${err}`);
@@ -131,7 +164,11 @@ class StreamErrorRecovery {
     // No-op for now - would delete from storage
   }
 
-  createStreamError(error: Error, context: StreamContext, phase: string): StreamError {
+  createStreamError(
+    error: Error,
+    context: StreamContext,
+    phase: string,
+  ): StreamError {
     const isRecoverable = this.isRecoverableError(error);
     return {
       code: (error as any).code || "UNKNOWN_ERROR",
@@ -150,10 +187,12 @@ class StreamErrorRecovery {
 
   private isRecoverableError(error: Error): boolean {
     const message = error.message.toLowerCase();
-    return message.includes("timeout") ||
-           message.includes("econnreset") ||
-           message.includes("connection") ||
-           message.includes("network");
+    return (
+      message.includes("timeout") ||
+      message.includes("econnreset") ||
+      message.includes("connection") ||
+      message.includes("network")
+    );
   }
 }
 
@@ -197,7 +236,9 @@ function createMockConvexClient() {
 }
 
 // Helper to create stream context
-function createTestStreamContext(overrides: Partial<StreamContext> = {}): StreamContext {
+function createTestStreamContext(
+  overrides: Partial<StreamContext> = {},
+): StreamContext {
   return {
     memorySpaceId: "test-space",
     conversationId: "test-conv",
@@ -428,7 +469,9 @@ describe("StreamErrorRecovery", () => {
       const operation = jest.fn<() => Promise<string>>();
       operation.mockRejectedValue(new Error("Always fails"));
 
-      await expect(recovery.retryWithBackoff(operation, 5, 1)).rejects.toThrow();
+      await expect(
+        recovery.retryWithBackoff(operation, 5, 1),
+      ).rejects.toThrow();
 
       expect(operation).toHaveBeenCalledTimes(5);
     });
@@ -438,7 +481,9 @@ describe("StreamErrorRecovery", () => {
       operation.mockRejectedValue("string error");
 
       // Should reject after max retries, even with non-Error rejection
-      await expect(recovery.retryWithBackoff(operation, 1, 1)).rejects.toBe("string error");
+      await expect(recovery.retryWithBackoff(operation, 1, 1)).rejects.toBe(
+        "string error",
+      );
     });
 
     it("should use default parameters", async () => {
@@ -532,9 +577,9 @@ describe("StreamErrorRecovery", () => {
         checksum: "checksum123",
       };
 
-      await expect(failingRecovery.generateResumeToken(context)).rejects.toThrow(
-        /Failed to generate resume token/,
-      );
+      await expect(
+        failingRecovery.generateResumeToken(context),
+      ).rejects.toThrow(/Failed to generate resume token/);
     });
   });
 
@@ -611,7 +656,9 @@ describe("StreamErrorRecovery", () => {
         return { value: mockClient._storage.get(args.key) };
       });
 
-      const result = await recovery.validateResumeToken("invalid-checksum-token");
+      const result = await recovery.validateResumeToken(
+        "invalid-checksum-token",
+      );
 
       expect(result).toBeNull();
     });
@@ -647,14 +694,20 @@ describe("StreamErrorRecovery", () => {
       const error = new Error("Test error message");
       const context = createTestStreamContext();
 
-      const streamError = recovery.createStreamError(error, context, "streaming");
+      const streamError = recovery.createStreamError(
+        error,
+        context,
+        "streaming",
+      );
 
       expect(streamError.message).toBe("Test error message");
       expect(streamError.recoverable).toBeDefined();
       expect(streamError.partialDataSaved).toBe(true);
       expect(streamError.context.phase).toBe("streaming");
       expect(streamError.context.chunkNumber).toBe(5);
-      expect(streamError.context.bytesProcessed).toBe("Some accumulated text".length);
+      expect(streamError.context.bytesProcessed).toBe(
+        "Some accumulated text".length,
+      );
       expect(streamError.originalError).toBe(error);
     });
 
@@ -698,7 +751,9 @@ describe("StreamErrorRecovery", () => {
     });
 
     it("should include error code from error object", () => {
-      const errorWithCode = new Error("Error with code") as Error & { code: string };
+      const errorWithCode = new Error("Error with code") as Error & {
+        code: string;
+      };
       errorWithCode.code = "CUSTOM_ERROR_CODE";
       const context = createTestStreamContext();
 
@@ -754,7 +809,11 @@ describe("StreamErrorRecovery", () => {
         partialMemoryId: "partial-memory-id",
       });
 
-      const streamError = recovery.createStreamError(error, context, "streaming");
+      const streamError = recovery.createStreamError(
+        error,
+        context,
+        "streaming",
+      );
 
       expect(streamError.context.partialMemoryId).toBe("partial-memory-id");
     });

@@ -7,6 +7,7 @@ Common issues and solutions for Cortex Memory Provider with SDK v0.21.0+.
 ### ❌ "agentId is required"
 
 **Error:**
+
 ```
 Error: agentId is required. User-agent conversations require both a user and an agent participant.
 ```
@@ -66,6 +67,7 @@ npm install ai@^4.0.0 convex@^1.17.0
 ### "Failed to connect to Convex"
 
 1. Check `CONVEX_URL` is set correctly in `.env.local`:
+
    ```env
    CONVEX_URL=https://your-project.convex.cloud
    ```
@@ -128,10 +130,10 @@ const cortexMemory = createCortexMemory({
 // Ensure consistent configuration
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!, // Same URL
-  memorySpaceId: "my-agent",          // Same space ID
-  userId: currentUser.id,             // Same user ID
+  memorySpaceId: "my-agent", // Same space ID
+  userId: currentUser.id, // Same user ID
   agentId: "my-assistant",
-  enableMemoryStorage: true,          // Default is true
+  enableMemoryStorage: true, // Default is true
 });
 ```
 
@@ -170,6 +172,7 @@ const cortexMemory = createCortexMemory({
 **Cause:** Graph database not running or unreachable.
 
 **Solution:**
+
 1. Start your Neo4j/Memgraph instance
 2. Check the URI is correct and accessible
 3. Verify firewall allows connections
@@ -256,6 +259,7 @@ Most Next.js edge runtimes support `process.env` for build-time variables.
 ### "Slow responses"
 
 **Causes:**
+
 - Too many memories searched
 - Slow embedding generation
 - Network latency to Convex
@@ -265,8 +269,8 @@ Most Next.js edge runtimes support `process.env` for build-time variables.
 ```typescript
 const cortexMemory = createCortexMemory({
   // ...
-  memorySearchLimit: 3,     // Reduce from default 5
-  minMemoryRelevance: 0.8,  // Higher = fewer, more relevant results
+  memorySearchLimit: 3, // Reduce from default 5
+  minMemoryRelevance: 0.8, // Higher = fewer, more relevant results
 });
 ```
 
@@ -315,6 +319,7 @@ const cortexMemory = createCortexMemory({
 ```
 
 This will log:
+
 - Memory search queries and results
 - Context injection details
 - Storage operations
@@ -326,10 +331,10 @@ This will log:
 const cortexMemory = createCortexMemory({
   // ...
   logger: {
-    debug: (...args) => console.log('[DEBUG]', ...args),
-    info: (...args) => console.log('[INFO]', ...args),
-    warn: (...args) => console.warn('[WARN]', ...args),
-    error: (...args) => console.error('[ERROR]', ...args),
+    debug: (...args) => console.log("[DEBUG]", ...args),
+    info: (...args) => console.log("[INFO]", ...args),
+    warn: (...args) => console.warn("[WARN]", ...args),
+    error: (...args) => console.error("[ERROR]", ...args),
   },
 });
 ```

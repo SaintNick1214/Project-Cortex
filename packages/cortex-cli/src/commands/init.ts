@@ -41,7 +41,10 @@ import {
   createConvexJson,
   ensureGitignore,
 } from "../utils/init/file-operations.js";
-import { createEnvFile, appendGraphEnvVars } from "../utils/init/env-generator.js";
+import {
+  createEnvFile,
+  appendGraphEnvVars,
+} from "../utils/init/env-generator.js";
 
 /**
  * Register start and stop commands (lifecycle management)
@@ -55,8 +58,16 @@ export function registerLifecycleCommands(
     .command("start")
     .description("Start development services (all enabled deployments)")
     .option("-d, --deployment <name>", "Start a specific deployment only")
-    .option("-l, --local", "Use Convex local beta mode (starts a new local backend)", false)
-    .option("-f, --foreground", "Run in foreground (only works with single deployment)", false)
+    .option(
+      "-l, --local",
+      "Use Convex local beta mode (starts a new local backend)",
+      false,
+    )
+    .option(
+      "-f, --foreground",
+      "Run in foreground (only works with single deployment)",
+      false,
+    )
     .option("--convex-only", "Only start Convex servers", false)
     .option("--graph-only", "Only start graph databases", false)
     .action(async (options) => {
@@ -70,27 +81,35 @@ export function registerLifecycleCommands(
         projectPath: string;
         isLocal: boolean;
       }
-      
+
       const deploymentsToStart: DeploymentToStart[] = [];
 
       if (options.deployment) {
         // Start specific deployment
         const deployment = config.deployments[options.deployment];
-        
+
         if (!deployment) {
-          console.error(pc.red(`\n   Deployment "${options.deployment}" not found`));
+          console.error(
+            pc.red(`\n   Deployment "${options.deployment}" not found`),
+          );
           const names = Object.keys(config.deployments);
           if (names.length > 0) {
             console.log(pc.dim(`   Available: ${names.join(", ")}`));
           }
-          console.log(pc.dim("   Run 'cortex config list' to see all deployments"));
+          console.log(
+            pc.dim("   Run 'cortex config list' to see all deployments"),
+          );
           process.exit(1);
         }
 
         const projectPath = deployment.projectPath || process.cwd();
         if (deployment.projectPath && !fs.existsSync(projectPath)) {
           console.error(pc.red(`\n   Project path not found: ${projectPath}`));
-          console.log(pc.dim("   Run 'cortex config set-path <deployment> <path>' to update"));
+          console.log(
+            pc.dim(
+              "   Run 'cortex config set-path <deployment> <path>' to update",
+            ),
+          );
           process.exit(1);
         }
 
@@ -108,18 +127,30 @@ export function registerLifecycleCommands(
         // Start all enabled deployments
         for (const [name, deployment] of Object.entries(config.deployments)) {
           const isDefault = name === config.default;
-          const isEnabled = deployment.enabled === true || (deployment.enabled === undefined && isDefault);
-          
+          const isEnabled =
+            deployment.enabled === true ||
+            (deployment.enabled === undefined && isDefault);
+
           if (!isEnabled) continue;
-          
+
           if (!deployment.projectPath) {
-            console.log(pc.yellow(`   Skipping "${name}" - no projectPath configured`));
-            console.log(pc.dim(`   Run 'cortex config set-path ${name} <path>' to configure\n`));
+            console.log(
+              pc.yellow(`   Skipping "${name}" - no projectPath configured`),
+            );
+            console.log(
+              pc.dim(
+                `   Run 'cortex config set-path ${name} <path>' to configure\n`,
+              ),
+            );
             continue;
           }
-          
+
           if (!fs.existsSync(deployment.projectPath)) {
-            console.log(pc.yellow(`   Skipping "${name}" - projectPath not found: ${deployment.projectPath}`));
+            console.log(
+              pc.yellow(
+                `   Skipping "${name}" - projectPath not found: ${deployment.projectPath}`,
+              ),
+            );
             continue;
           }
 
@@ -137,19 +168,31 @@ export function registerLifecycleCommands(
 
       if (deploymentsToStart.length === 0) {
         console.log(pc.yellow("\n   No deployments to start"));
-        console.log(pc.dim("   Run 'cortex config enable <name>' to enable a deployment"));
-        console.log(pc.dim("   Or use 'cortex start -d <name>' to start a specific one"));
+        console.log(
+          pc.dim("   Run 'cortex config enable <name>' to enable a deployment"),
+        );
+        console.log(
+          pc.dim("   Or use 'cortex start -d <name>' to start a specific one"),
+        );
         process.exit(0);
       }
 
       // Foreground mode only works with single deployment
       if (options.foreground && deploymentsToStart.length > 1) {
-        console.error(pc.red("\n   Foreground mode only works with a single deployment"));
-        console.log(pc.dim("   Use 'cortex start -d <name> -f' for foreground mode"));
+        console.error(
+          pc.red("\n   Foreground mode only works with a single deployment"),
+        );
+        console.log(
+          pc.dim("   Use 'cortex start -d <name> -f' for foreground mode"),
+        );
         process.exit(1);
       }
 
-      console.log(pc.cyan(`\n   Starting ${deploymentsToStart.length} deployment(s)...\n`));
+      console.log(
+        pc.cyan(
+          `\n   Starting ${deploymentsToStart.length} deployment(s)...\n`,
+        ),
+      );
 
       // Start each deployment
       for (const dep of deploymentsToStart) {
@@ -159,10 +202,18 @@ export function registerLifecycleCommands(
 
         // Start graph database if configured and not convex-only
         if (!options.convexOnly) {
-          const dockerComposePath = path.join(dep.projectPath, "docker-compose.graph.yml");
+          const dockerComposePath = path.join(
+            dep.projectPath,
+            "docker-compose.graph.yml",
+          );
           if (fs.existsSync(dockerComposePath)) {
-            const composeContent = await fs.readFile(dockerComposePath, "utf-8");
-            const graphType: "neo4j" | "memgraph" = composeContent.includes("memgraph")
+            const composeContent = await fs.readFile(
+              dockerComposePath,
+              "utf-8",
+            );
+            const graphType: "neo4j" | "memgraph" = composeContent.includes(
+              "memgraph",
+            )
               ? "memgraph"
               : "neo4j";
             await startGraphContainers(dep.projectPath, graphType);
@@ -179,34 +230,40 @@ export function registerLifecycleCommands(
           // For cloud deployments with a deploy key, run `convex deploy` first
           // This ensures functions are deployed to production before starting dev mode
           if (dep.key && !dep.isLocal) {
-            const deploySpinner = ora("Deploying functions to production...").start();
+            const deploySpinner = ora(
+              "Deploying functions to production...",
+            ).start();
             try {
               const deployCmd = hasConvex ? "convex" : "npx";
-              const deployArgs = hasConvex 
-                ? ["deploy", "--cmd", "echo deployed"] 
+              const deployArgs = hasConvex
+                ? ["deploy", "--cmd", "echo deployed"]
                 : ["convex", "deploy", "--cmd", "echo deployed"];
-              
+
               await new Promise<void>((resolve, reject) => {
                 const deployChild = spawn(deployCmd, deployArgs, {
                   cwd: dep.projectPath,
                   stdio: "pipe",
                   env,
                 });
-                
+
                 let stderr = "";
-                deployChild.stderr?.on("data", (data: Buffer) => { stderr += data.toString(); });
-                
+                deployChild.stderr?.on("data", (data: Buffer) => {
+                  stderr += data.toString();
+                });
+
                 deployChild.on("close", (code: number | null) => {
                   if (code === 0) {
                     resolve();
                   } else {
-                    reject(new Error(`Deploy failed with code ${code}: ${stderr}`));
+                    reject(
+                      new Error(`Deploy failed with code ${code}: ${stderr}`),
+                    );
                   }
                 });
-                
+
                 deployChild.on("error", reject);
               });
-              
+
               deploySpinner.succeed("Functions deployed to production");
             } catch (error) {
               deploySpinner.fail("Failed to deploy functions");
@@ -235,7 +292,12 @@ export function registerLifecycleCommands(
             });
           } else {
             // Background mode
-            await startConvexInBackground(dep.projectPath, dep.isLocal, dep.url, dep.key);
+            await startConvexInBackground(
+              dep.projectPath,
+              dep.isLocal,
+              dep.url,
+              dep.key,
+            );
           }
         }
       }
@@ -244,7 +306,9 @@ export function registerLifecycleCommands(
       if (!options.foreground) {
         console.log(pc.green("\n   ✓ All deployments started\n"));
         console.log(pc.dim("   Use 'cortex stop' to stop all services"));
-        console.log(pc.dim("   Use 'cortex config list' to see deployment status"));
+        console.log(
+          pc.dim("   Use 'cortex config list' to see deployment status"),
+        );
       }
     });
 
@@ -260,42 +324,73 @@ export function registerLifecycleCommands(
       let stoppedCount = 0;
 
       // Determine which deployments to stop
-      const deploymentsToStop: Array<{ name: string; projectPath: string }> = [];
+      const deploymentsToStop: Array<{ name: string; projectPath: string }> =
+        [];
 
       if (options.deployment) {
         // Stop specific deployment
         const deployment = _config.deployments?.[options.deployment];
         if (!deployment) {
-          console.error(pc.red(`\n   Error: Deployment "${options.deployment}" not found`));
-          console.log(pc.dim("   Run 'cortex config list' to see available deployments\n"));
+          console.error(
+            pc.red(`\n   Error: Deployment "${options.deployment}" not found`),
+          );
+          console.log(
+            pc.dim(
+              "   Run 'cortex config list' to see available deployments\n",
+            ),
+          );
           process.exit(1);
         }
         if (!deployment.projectPath) {
-          console.error(pc.red(`\n   Error: Deployment "${options.deployment}" has no project path`));
+          console.error(
+            pc.red(
+              `\n   Error: Deployment "${options.deployment}" has no project path`,
+            ),
+          );
           console.log(pc.dim("   This deployment may be remote-only\n"));
           process.exit(1);
         }
-        deploymentsToStop.push({ name: options.deployment, projectPath: deployment.projectPath });
+        deploymentsToStop.push({
+          name: options.deployment,
+          projectPath: deployment.projectPath,
+        });
       } else {
         // Stop all deployments that have running processes
-        const deploymentEntries = Object.entries(_config.deployments || {}) as Array<[string, DeploymentConfig]>;
-        
+        const deploymentEntries = Object.entries(
+          _config.deployments || {},
+        ) as Array<[string, DeploymentConfig]>;
+
         if (deploymentEntries.length === 0) {
           // Fallback to current directory
           const cwd = process.cwd();
-          deploymentsToStop.push({ name: "current directory", projectPath: cwd });
+          deploymentsToStop.push({
+            name: "current directory",
+            projectPath: cwd,
+          });
         } else {
           for (const [name, deployment] of deploymentEntries) {
-            if (deployment.projectPath && fs.existsSync(deployment.projectPath)) {
+            if (
+              deployment.projectPath &&
+              fs.existsSync(deployment.projectPath)
+            ) {
               // Check if anything is running for this deployment
-              const pidFile = path.join(deployment.projectPath, ".convex-dev.pid");
-              const dockerCompose = path.join(deployment.projectPath, "docker-compose.graph.yml");
-              
+              const pidFile = path.join(
+                deployment.projectPath,
+                ".convex-dev.pid",
+              );
+              const dockerCompose = path.join(
+                deployment.projectPath,
+                "docker-compose.graph.yml",
+              );
+
               const hasPidFile = fs.existsSync(pidFile);
               const hasDockerCompose = fs.existsSync(dockerCompose);
-              
+
               if (hasPidFile || hasDockerCompose) {
-                deploymentsToStop.push({ name, projectPath: deployment.projectPath });
+                deploymentsToStop.push({
+                  name,
+                  projectPath: deployment.projectPath,
+                });
               }
             }
           }
@@ -303,16 +398,20 @@ export function registerLifecycleCommands(
       }
 
       if (deploymentsToStop.length === 0) {
-        console.log(pc.yellow("\n   No deployments with running services found\n"));
+        console.log(
+          pc.yellow("\n   No deployments with running services found\n"),
+        );
         return;
       }
 
-      console.log(pc.cyan(`\n   Stopping ${deploymentsToStop.length} deployment(s)...\n`));
+      console.log(
+        pc.cyan(`\n   Stopping ${deploymentsToStop.length} deployment(s)...\n`),
+      );
 
       for (const { name, projectPath } of deploymentsToStop) {
         console.log(pc.bold(`   ${name}`));
         console.log(pc.dim(`   ${projectPath}`));
-        
+
         let deploymentStopped = false;
 
         // Stop Convex if not graph-only
@@ -351,7 +450,10 @@ export function registerLifecycleCommands(
 
         // Stop graph containers if not convex-only
         if (!options.convexOnly) {
-          const dockerComposePath = path.join(projectPath, "docker-compose.graph.yml");
+          const dockerComposePath = path.join(
+            projectPath,
+            "docker-compose.graph.yml",
+          );
 
           if (fs.existsSync(dockerComposePath)) {
             const stopped = await stopGraphContainers(projectPath);
@@ -494,7 +596,7 @@ export async function runInitWizard(
   if (shouldStart) {
     const isLocal = config.convexSetupType === "local";
     await startConvexInBackground(config.projectPath, isLocal);
-    
+
     // Show running status dashboard
     console.log();
     await showRunningStatus(config.projectPath, isLocal);
@@ -661,16 +763,15 @@ async function showConfirmation(config: WizardConfig): Promise<void> {
   );
   console.log(
     pc.bold("   Convex:"),
-    config.convexSetupType === "new" ? "New Convex project" : "Existing deployment",
+    config.convexSetupType === "new"
+      ? "New Convex project"
+      : "Existing deployment",
   );
   console.log(
     pc.bold("   Graph DB:"),
     config.graphEnabled ? config.graphType : "Disabled",
   );
-  console.log(
-    pc.bold("   CLI Scripts:"),
-    config.installCLI ? "Yes" : "No",
-  );
+  console.log(pc.bold("   CLI Scripts:"), config.installCLI ? "Yes" : "No");
   console.log(pc.dim("   " + "─".repeat(46)));
 
   const response = await prompts({
@@ -750,7 +851,9 @@ async function executeSetup(config: WizardConfig): Promise<void> {
 
     // Copy Cortex backend functions FIRST (before convex dev)
     // This way we deploy everything in ONE step
-    const backendSpinner = ora("Setting up Cortex backend functions...").start();
+    const backendSpinner = ora(
+      "Setting up Cortex backend functions...",
+    ).start();
     await deployCortexBackend(config.projectPath);
     await createConvexJson(config.projectPath);
     backendSpinner.succeed("Cortex backend files ready");
@@ -780,7 +883,7 @@ async function executeSetup(config: WizardConfig): Promise<void> {
         const envContent = await fs.readFile(envLocalPath, "utf-8");
         const urlMatch = envContent.match(/CONVEX_URL=(.+)/);
         const keyMatch = envContent.match(/CONVEX_DEPLOY_KEY=(.+)/);
-        
+
         if (urlMatch) {
           config.convexUrl = urlMatch[1].trim();
         }
@@ -855,29 +958,33 @@ async function saveDeploymentToConfig(config: WizardConfig): Promise<void> {
 
   try {
     const userConfig = await loadConfig();
-    
+
     // Always use project name as deployment name (sanitized)
     // This keeps deployment names consistent regardless of URL type
-    const deploymentName = config.projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-");
-    
+    const deploymentName = config.projectName
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, "-");
+
     // Add the deployment
     userConfig.deployments[deploymentName] = {
       url: config.convexUrl,
       key: config.deployKey,
       projectPath: config.projectPath,
     };
-    
+
     // Set as default if no default exists
     if (!userConfig.default) {
       userConfig.default = deploymentName;
     }
-    
+
     await saveUserConfig(userConfig);
     console.log(pc.dim(`   Saved deployment "${deploymentName}" to config`));
   } catch {
     // Non-critical error - warn but don't fail
     console.warn(pc.yellow("   Warning: Could not save deployment to config"));
-    console.log(pc.dim("   Run 'cortex config add-deployment' to add manually"));
+    console.log(
+      pc.dim("   Run 'cortex config add-deployment' to add manually"),
+    );
   }
 }
 
@@ -954,8 +1061,7 @@ function showSuccessMessage(config: WizardConfig): void {
       pc.dim("        # View setup status dashboard"),
   );
   console.log(
-    pc.cyan("   cortex db stats") +
-      pc.dim("      # View database statistics"),
+    pc.cyan("   cortex db stats") + pc.dim("      # View database statistics"),
   );
   console.log(
     pc.cyan("   cortex spaces list") + pc.dim("   # List memory spaces"),
@@ -999,7 +1105,7 @@ async function startConvexInBackground(
 
   // Start convex dev in background for watch mode
   const devSpinner = ora("Starting Convex development server...").start();
-  
+
   const args = hasConvex ? ["dev"] : ["convex", "dev"];
   if (isLocal) {
     args.push("--local");
@@ -1082,7 +1188,9 @@ async function showRunningStatus(
     if (isLocal) {
       console.log(pc.dim("     Dashboard: http://127.0.0.1:3210"));
     } else {
-      console.log(pc.dim(`     URL: ${process.env.CONVEX_URL || "configured"}`));
+      console.log(
+        pc.dim(`     URL: ${process.env.CONVEX_URL || "configured"}`),
+      );
     }
   } else {
     console.log(`   ${pc.yellow("○")} Not running`);
@@ -1095,7 +1203,8 @@ async function showRunningStatus(
   console.log(pc.dim("  " + thinLine));
 
   const hasGraphConfig =
-    process.env.NEO4J_URI || fs.existsSync(path.join(projectPath, "docker-compose.graph.yml"));
+    process.env.NEO4J_URI ||
+    fs.existsSync(path.join(projectPath, "docker-compose.graph.yml"));
 
   if (hasGraphConfig) {
     // Check if Docker container is running
@@ -1111,10 +1220,16 @@ async function showRunningStatus(
         console.log(pc.dim("     Bolt: bolt://localhost:7687"));
       } else {
         console.log(`   ${pc.yellow("○")} Neo4j configured but not running`);
-        console.log(pc.dim("     Start: docker-compose -f docker-compose.graph.yml up -d"));
+        console.log(
+          pc.dim(
+            "     Start: docker-compose -f docker-compose.graph.yml up -d",
+          ),
+        );
       }
     } catch {
-      console.log(`   ${pc.yellow("○")} Neo4j configured but Docker not available`);
+      console.log(
+        `   ${pc.yellow("○")} Neo4j configured but Docker not available`,
+      );
       console.log(pc.dim("     Start Docker Desktop first"));
     }
   } else {
@@ -1125,10 +1240,20 @@ async function showRunningStatus(
   // Quick Actions
   console.log(pc.bold(pc.white("  Quick Actions")));
   console.log(pc.dim("  " + thinLine));
-  console.log(pc.dim("   cortex status") + pc.dim("           # Full status dashboard"));
-  console.log(pc.dim("   cortex start -f") + pc.dim("         # Foreground mode (see logs)"));
-  console.log(pc.dim("   cortex stop") + pc.dim("             # Stop background services"));
-  console.log(pc.dim("   npm start") + pc.dim("               # Run your AI agent"));
+  console.log(
+    pc.dim("   cortex status") + pc.dim("           # Full status dashboard"),
+  );
+  console.log(
+    pc.dim("   cortex start -f") +
+      pc.dim("         # Foreground mode (see logs)"),
+  );
+  console.log(
+    pc.dim("   cortex stop") +
+      pc.dim("             # Stop background services"),
+  );
+  console.log(
+    pc.dim("   npm start") + pc.dim("               # Run your AI agent"),
+  );
   console.log();
 
   // Log file hint

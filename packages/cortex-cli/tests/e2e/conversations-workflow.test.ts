@@ -110,7 +110,9 @@ describeE2E("Conversations Workflow E2E", () => {
         },
       });
 
-      const result = await cortex.conversations.delete(deleteConv.conversationId);
+      const result = await cortex.conversations.delete(
+        deleteConv.conversationId,
+      );
 
       expect(result.deleted).toBe(true);
 

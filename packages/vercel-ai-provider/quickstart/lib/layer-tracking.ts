@@ -1,18 +1,23 @@
-'use client';
+"use client";
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
 // Layer types (defined locally to avoid import issues before npm install)
 export type MemoryLayer =
-  | 'memorySpace'
-  | 'user'
-  | 'agent'
-  | 'conversation'
-  | 'vector'
-  | 'facts'
-  | 'graph';
+  | "memorySpace"
+  | "user"
+  | "agent"
+  | "conversation"
+  | "vector"
+  | "facts"
+  | "graph";
 
-export type LayerStatus = 'pending' | 'in_progress' | 'complete' | 'error' | 'skipped';
+export type LayerStatus =
+  | "pending"
+  | "in_progress"
+  | "complete"
+  | "error"
+  | "skipped";
 
 export interface LayerState {
   status: LayerStatus;
@@ -33,23 +38,23 @@ export interface LayerTrackingState {
 }
 
 const initialLayerState: LayerState = {
-  status: 'pending',
+  status: "pending",
 };
 
 const allLayers: MemoryLayer[] = [
-  'memorySpace',
-  'user',
-  'agent',
-  'conversation',
-  'vector',
-  'facts',
-  'graph',
+  "memorySpace",
+  "user",
+  "agent",
+  "conversation",
+  "vector",
+  "facts",
+  "graph",
 ];
 
 export function useLayerTracking() {
   const [state, setState] = useState<LayerTrackingState>({
     layers: Object.fromEntries(
-      allLayers.map((layer) => [layer, { ...initialLayerState }])
+      allLayers.map((layer) => [layer, { ...initialLayerState }]),
     ),
     isOrchestrating: false,
   });
@@ -60,8 +65,8 @@ export function useLayerTracking() {
       layers: Object.fromEntries(
         allLayers.map((layer) => [
           layer,
-          { status: 'pending' as LayerStatus, startedAt: now },
-        ])
+          { status: "pending" as LayerStatus, startedAt: now },
+        ]),
       ),
       isOrchestrating: true,
       orchestrationStartTime: now,
@@ -69,19 +74,15 @@ export function useLayerTracking() {
   }, []);
 
   const updateLayer = useCallback(
-    (
-      layer: MemoryLayer,
-      status: LayerStatus,
-      data?: LayerState['data']
-    ) => {
+    (layer: MemoryLayer, status: LayerStatus, data?: LayerState["data"]) => {
       setState((prev: LayerTrackingState) => {
         const now = Date.now();
         const layerState = prev.layers[layer];
         const latencyMs = layerState?.startedAt
           ? now - layerState.startedAt
           : prev.orchestrationStartTime
-          ? now - prev.orchestrationStartTime
-          : undefined;
+            ? now - prev.orchestrationStartTime
+            : undefined;
 
         // Check if all layers are complete
         const updatedLayers: Record<string, LayerState> = {
@@ -91,12 +92,13 @@ export function useLayerTracking() {
             status,
             latencyMs,
             data,
-            completedAt: status === 'complete' ? now : layerState?.completedAt,
+            completedAt: status === "complete" ? now : layerState?.completedAt,
           },
         };
 
         const isStillOrchestrating = Object.values(updatedLayers).some(
-          (l: LayerState) => l.status === 'pending' || l.status === 'in_progress'
+          (l: LayerState) =>
+            l.status === "pending" || l.status === "in_progress",
         );
 
         return {
@@ -106,13 +108,13 @@ export function useLayerTracking() {
         };
       });
     },
-    []
+    [],
   );
 
   const resetLayers = useCallback(() => {
     setState({
       layers: Object.fromEntries(
-        allLayers.map((layer) => [layer, { ...initialLayerState }])
+        allLayers.map((layer) => [layer, { ...initialLayerState }]),
       ),
       isOrchestrating: false,
     });
@@ -132,48 +134,48 @@ export function useLayerTracking() {
  */
 export function generateSampleLayerData(
   layer: MemoryLayer,
-  userMessage?: string
-): LayerState['data'] {
+  userMessage?: string,
+): LayerState["data"] {
   switch (layer) {
-    case 'memorySpace':
+    case "memorySpace":
       return {
-        id: 'quickstart-demo',
-        preview: 'Memory space for demo',
-        metadata: { isolation: 'full' },
+        id: "quickstart-demo",
+        preview: "Memory space for demo",
+        metadata: { isolation: "full" },
       };
-    case 'user':
+    case "user":
       return {
-        id: 'demo-user',
-        preview: 'Demo User',
+        id: "demo-user",
+        preview: "Demo User",
         metadata: { memories: 5 },
       };
-    case 'agent':
+    case "agent":
       return {
-        id: 'quickstart-assistant',
-        preview: 'Cortex Demo Assistant',
+        id: "quickstart-assistant",
+        preview: "Cortex Demo Assistant",
       };
-    case 'conversation':
+    case "conversation":
       return {
         id: `conv-${Date.now()}`,
-        preview: userMessage?.slice(0, 50) || 'New conversation',
+        preview: userMessage?.slice(0, 50) || "New conversation",
         metadata: { messages: 2 },
       };
-    case 'vector':
+    case "vector":
       return {
         id: `mem-${Date.now()}`,
-        preview: 'Embedded content...',
+        preview: "Embedded content...",
         metadata: { dimensions: 1536, importance: 75 },
       };
-    case 'facts':
+    case "facts":
       return {
         id: `fact-${Date.now()}`,
-        preview: 'Extracted facts from conversation',
-        metadata: { count: 3, types: ['identity', 'preference'] },
+        preview: "Extracted facts from conversation",
+        metadata: { count: 3, types: ["identity", "preference"] },
       };
-    case 'graph':
+    case "graph":
       return {
         id: `graph-sync-${Date.now()}`,
-        preview: 'Entity relationships',
+        preview: "Entity relationships",
         metadata: { nodes: 4, edges: 3 },
       };
     default:

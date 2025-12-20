@@ -16,35 +16,35 @@ function createCortexMemory(config: CortexMemoryConfig): CortexMemoryModel;
 
 #### CortexMemoryConfig
 
-| Property | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| `convexUrl` | string | ✅ | - | Convex deployment URL |
-| `memorySpaceId` | string | ✅ | - | Memory space for isolation |
-| `userId` | string \| () => string\|Promise<string> | ✅ | - | User ID (static or function) |
-| `agentId` | string | ✅ | - | Agent ID (required v0.17.0+) |
-| `userName` | string | ❌ | 'User' | Display name for user |
-| `agentName` | string | ❌ | agentId | Display name for agent |
-| `conversationId` | string \| () => string | ❌ | auto-generated | Conversation ID |
-| `embeddingProvider` | object | ❌ | undefined | Custom embedding provider |
-| `memorySearchLimit` | number | ❌ | 5 | Max memories to retrieve |
-| `minMemoryRelevance` | number | ❌ | 0.7 | Min relevance score (0-1) |
-| `enableMemorySearch` | boolean | ❌ | true | Auto-search before generation |
-| `enableMemoryStorage` | boolean | ❌ | true | Auto-store after generation |
-| `contextInjectionStrategy` | 'system'\|'user' | ❌ | 'system' | Where to inject context |
-| `customContextBuilder` | function | ❌ | undefined | Custom context formatter |
-| `enableFactExtraction` | boolean | ❌ | false | Extract facts from conversations |
-| `factExtractionConfig` | object | ❌ | undefined | Fact extraction configuration |
-| `extractFacts` | function | ❌ | undefined | Custom fact extraction |
-| `enableGraphMemory` | boolean | ❌ | false | Sync to graph database |
-| `graphConfig` | object | ❌ | undefined | Graph database configuration |
-| `hiveMode` | object | ❌ | undefined | Cross-app memory config |
-| `defaultImportance` | number | ❌ | 50 | Default importance (0-100) |
-| `defaultTags` | string[] | ❌ | [] | Default tags |
-| `streamingOptions` | object | ❌ | undefined | Streaming enhancement options |
-| `streamingHooks` | object | ❌ | undefined | Real-time streaming callbacks |
-| `layerObserver` | object | ❌ | undefined | Layer orchestration observer |
-| `debug` | boolean | ❌ | false | Enable debug logging |
-| `logger` | object | ❌ | console | Custom logger |
+| Property                   | Type                                    | Required | Default        | Description                      |
+| -------------------------- | --------------------------------------- | -------- | -------------- | -------------------------------- |
+| `convexUrl`                | string                                  | ✅       | -              | Convex deployment URL            |
+| `memorySpaceId`            | string                                  | ✅       | -              | Memory space for isolation       |
+| `userId`                   | string \| () => string\|Promise<string> | ✅       | -              | User ID (static or function)     |
+| `agentId`                  | string                                  | ✅       | -              | Agent ID (required v0.17.0+)     |
+| `userName`                 | string                                  | ❌       | 'User'         | Display name for user            |
+| `agentName`                | string                                  | ❌       | agentId        | Display name for agent           |
+| `conversationId`           | string \| () => string                  | ❌       | auto-generated | Conversation ID                  |
+| `embeddingProvider`        | object                                  | ❌       | undefined      | Custom embedding provider        |
+| `memorySearchLimit`        | number                                  | ❌       | 5              | Max memories to retrieve         |
+| `minMemoryRelevance`       | number                                  | ❌       | 0.7            | Min relevance score (0-1)        |
+| `enableMemorySearch`       | boolean                                 | ❌       | true           | Auto-search before generation    |
+| `enableMemoryStorage`      | boolean                                 | ❌       | true           | Auto-store after generation      |
+| `contextInjectionStrategy` | 'system'\|'user'                        | ❌       | 'system'       | Where to inject context          |
+| `customContextBuilder`     | function                                | ❌       | undefined      | Custom context formatter         |
+| `enableFactExtraction`     | boolean                                 | ❌       | false          | Extract facts from conversations |
+| `factExtractionConfig`     | object                                  | ❌       | undefined      | Fact extraction configuration    |
+| `extractFacts`             | function                                | ❌       | undefined      | Custom fact extraction           |
+| `enableGraphMemory`        | boolean                                 | ❌       | false          | Sync to graph database           |
+| `graphConfig`              | object                                  | ❌       | undefined      | Graph database configuration     |
+| `hiveMode`                 | object                                  | ❌       | undefined      | Cross-app memory config          |
+| `defaultImportance`        | number                                  | ❌       | 50             | Default importance (0-100)       |
+| `defaultTags`              | string[]                                | ❌       | []             | Default tags                     |
+| `streamingOptions`         | object                                  | ❌       | undefined      | Streaming enhancement options    |
+| `streamingHooks`           | object                                  | ❌       | undefined      | Real-time streaming callbacks    |
+| `layerObserver`            | object                                  | ❌       | undefined      | Layer orchestration observer     |
+| `debug`                    | boolean                                 | ❌       | false          | Enable debug logging             |
+| `logger`                   | object                                  | ❌       | console        | Custom logger                    |
 
 #### factExtractionConfig
 
@@ -138,7 +138,7 @@ Async version for automatic graph database configuration from environment variab
 
 ```typescript
 async function createCortexMemoryAsync(
-  config: CortexMemoryConfig
+  config: CortexMemoryConfig,
 ): Promise<CortexMemoryModel>;
 ```
 
@@ -340,8 +340,15 @@ interface MemoryEntry {
 
 ```typescript
 interface LayerEvent {
-  layer: 'memorySpace' | 'user' | 'agent' | 'conversation' | 'vector' | 'facts' | 'graph';
-  status: 'pending' | 'in_progress' | 'complete' | 'error' | 'skipped';
+  layer:
+    | "memorySpace"
+    | "user"
+    | "agent"
+    | "conversation"
+    | "vector"
+    | "facts"
+    | "graph";
+  status: "pending" | "in_progress" | "complete" | "error" | "skipped";
   timestamp: number;
   latencyMs?: number;
   data?: {

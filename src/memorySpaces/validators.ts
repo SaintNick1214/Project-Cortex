@@ -424,7 +424,11 @@ export function validateDeleteOptions(
     );
   }
 
-  if (!options.reason || typeof options.reason !== "string" || options.reason.trim().length === 0) {
+  if (
+    !options.reason ||
+    typeof options.reason !== "string" ||
+    options.reason.trim().length === 0
+  ) {
     throw new MemorySpaceValidationError(
       "reason is required and cannot be empty",
       "MISSING_REASON",

@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import { useChat } from 'ai/react';
-import { useState, useRef, useEffect } from 'react';
-import type { LayerStatus, MemoryLayer } from '@/lib/layer-tracking';
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
+import { useState, useRef, useEffect, useMemo } from "react";
+import type { LayerStatus, MemoryLayer } from "@/lib/layer-tracking";
 
 interface ChatInterfaceProps {
   memorySpaceId: string;
@@ -20,6 +21,8 @@ export function ChatInterface({
   onReset,
 }: ChatInterfaceProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [suggestedMessages] = useState([
     "Hi! My name is Alex and I work at Acme Corp as a senior engineer.",
     "My favorite color is blue and I love hiking on weekends.",
@@ -27,53 +30,109 @@ export function ChatInterface({
     "What do you remember about me?",
   ]);
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading, setInput } = useChat({
-    api: '/api/chat',
-    body: { memorySpaceId, userId },
-    onResponse: () => {
-      // Trigger orchestration visualization when response starts
-      onOrchestrationStart?.();
-      
-      // Simulate layer updates (in real app, these would come from Convex subscriptions)
-      simulateLayerUpdates();
+  // Create transport with body parameters - memoized to prevent recreation
+  const transport = useMemo(
+    () =>
+      new DefaultChatTransport({
+        api: "/api/chat",
+        body: { memorySpaceId, userId },
+      }),
+    [memorySpaceId, userId],
+  );
+
+  // Use ref instead of state to avoid stale closure in onData callback
+  // Refs are mutable and reflect changes immediately without re-render
+  const hasStartedStreamingRef = useRef(false);
+
+  const { messages, sendMessage, status } = useChat({
+    transport,
+    onData: () => {
+      // Trigger orchestration visualization when we start receiving data
+      // Using ref to prevent multiple invocations during rapid successive onData calls
+      if (!hasStartedStreamingRef.current) {
+        hasStartedStreamingRef.current = true;
+        onOrchestrationStart?.();
+        simulateLayerUpdates();
+      }
     },
     onFinish: () => {
+      setIsLoading(false);
+      hasStartedStreamingRef.current = false;
       // Mark all layers complete
-      onLayerUpdate?.('conversation', 'complete');
-      onLayerUpdate?.('vector', 'complete');
-      onLayerUpdate?.('facts', 'complete');
+      onLayerUpdate?.("memorySpace", "complete");
+      onLayerUpdate?.("user", "complete");
+      onLayerUpdate?.("agent", "complete");
+      onLayerUpdate?.("conversation", "complete");
+      onLayerUpdate?.("vector", "complete");
+      onLayerUpdate?.("facts", "complete");
+      onLayerUpdate?.("graph", "complete");
+    },
+    onError: () => {
+      setIsLoading(false);
+      hasStartedStreamingRef.current = false;
     },
   });
 
   // Simulate layer updates for demo (replace with real Convex subscriptions)
   const simulateLayerUpdates = () => {
     const layers: { layer: MemoryLayer; delay: number }[] = [
-      { layer: 'memorySpace', delay: 50 },
-      { layer: 'user', delay: 80 },
-      { layer: 'agent', delay: 100 },
-      { layer: 'conversation', delay: 300 },
-      { layer: 'vector', delay: 500 },
-      { layer: 'facts', delay: 800 },
-      { layer: 'graph', delay: 1000 }, // Added graph layer
+      { layer: "memorySpace", delay: 50 },
+      { layer: "user", delay: 80 },
+      { layer: "agent", delay: 100 },
+      { layer: "conversation", delay: 300 },
+      { layer: "vector", delay: 500 },
+      { layer: "facts", delay: 800 },
+      { layer: "graph", delay: 1000 },
     ];
 
     layers.forEach(({ layer, delay }) => {
       setTimeout(() => {
-        onLayerUpdate?.(layer, 'in_progress');
+        onLayerUpdate?.(layer, "in_progress");
       }, delay);
       setTimeout(() => {
-        onLayerUpdate?.(layer, 'complete');
+        onLayerUpdate?.(layer, "complete");
       }, delay + 200);
     });
   };
 
   // Auto-scroll to latest message
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+
+    const message = input.trim();
+    setInput("");
+    setIsLoading(true);
+
+    try {
+      await sendMessage({ text: message });
+    } catch (error) {
+      console.error("Failed to send message:", error);
+      setIsLoading(false);
+    }
+  };
 
   const handleSuggestedMessage = (message: string) => {
     setInput(message);
+  };
+
+  // Extract text content from message parts (AI SDK v5 format)
+  const getMessageContent = (message: any): string => {
+    if (typeof message.content === "string") {
+      return message.content;
+    }
+    if (message.parts) {
+      return message.parts
+        .filter((part: any) => part.type === "text")
+        .map((part: any) => part.text)
+        .join("");
+    }
+    return "";
   };
 
   return (
@@ -89,8 +148,8 @@ export function ChatInterface({
               Welcome to Cortex Memory Demo
             </h2>
             <p className="text-gray-400 max-w-md mx-auto mb-6">
-              This demo shows how Cortex orchestrates memory across multiple layers in real-time.
-              Try telling me about yourself!
+              This demo shows how Cortex orchestrates memory across multiple
+              layers in real-time. Try telling me about yourself!
             </p>
 
             {/* Suggested messages */}
@@ -101,7 +160,7 @@ export function ChatInterface({
                   onClick={() => handleSuggestedMessage(msg)}
                   className="px-3 py-2 text-sm bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-colors text-left"
                 >
-                  {msg.length > 40 ? msg.slice(0, 40) + '...' : msg}
+                  {msg.length > 40 ? msg.slice(0, 40) + "..." : msg}
                 </button>
               ))}
             </div>
@@ -110,24 +169,26 @@ export function ChatInterface({
 
         {messages.map((message, i) => (
           <div
-            key={i}
+            key={message.id || i}
             className={`message-animate flex ${
-              message.role === 'user' ? 'justify-end' : 'justify-start'
+              message.role === "user" ? "justify-end" : "justify-start"
             }`}
           >
             <div
               className={`max-w-[80%] px-4 py-3 rounded-2xl ${
-                message.role === 'user'
-                  ? 'bg-cortex-600 text-white'
-                  : 'bg-white/10 text-white'
+                message.role === "user"
+                  ? "bg-cortex-600 text-white"
+                  : "bg-white/10 text-white"
               }`}
             >
-              <p className="whitespace-pre-wrap">{message.content}</p>
+              <p className="whitespace-pre-wrap">
+                {getMessageContent(message)}
+              </p>
             </div>
           </div>
         ))}
 
-        {isLoading && (
+        {(isLoading || status === "streaming") && (
           <div className="flex justify-start">
             <div className="bg-white/10 px-4 py-3 rounded-2xl">
               <div className="flex gap-1">
@@ -148,7 +209,7 @@ export function ChatInterface({
           <input
             type="text"
             value={input}
-            onChange={handleInputChange}
+            onChange={(e) => setInput(e.target.value)}
             placeholder="Tell me about yourself..."
             className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-cortex-500 transition-colors"
             disabled={isLoading}
