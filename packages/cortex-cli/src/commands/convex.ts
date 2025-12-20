@@ -84,6 +84,7 @@ function buildConvexEnv(overrides?: Record<string, string>): typeof process.env 
     key.startsWith('CLOUD_CONVEX_') ||
     key.startsWith('ENV_CONVEX_')
   );
+
   for (const key of convexVars) {
     delete env[key];
   }
@@ -207,6 +208,7 @@ export function registerConvexCommands(
     .option("-l, --local", "Deploy to local Convex instance")
     .option("-p, --prod", "Deploy to production")
     .option("--push", "Push without prompts", false)
+    .option("--skip-sync", "Skip automatic schema sync from SDK")
     .action(async (options) => {
       const currentConfig = await loadConfig();
       const selection = await selectDeployment(currentConfig, options, "deploy");
@@ -221,6 +223,17 @@ export function registerConvexCommands(
         console.log();
         printInfo(`Deploying to ${info.isLocal ? "local" : "cloud"} Convex...`);
         printInfo(`Project: ${projectPath}`);
+
+        // Sync schema files from SDK before deploying
+        if (!options.skipSync) {
+          const { syncConvexSchema, printSyncResult } = await import("../utils/schema-sync.js");
+          const syncResult = await syncConvexSchema(projectPath);
+          printSyncResult(syncResult);
+          if (syncResult.error) {
+            printWarning("Continuing with existing schema files...");
+          }
+        }
+
         console.log();
 
         const args = ["convex", "deploy"];
@@ -279,6 +292,7 @@ export function registerConvexCommands(
     .option("-d, --deployment <name>", "Target deployment")
     .option("-l, --local", "Use local Convex instance")
     .option("--once", "Run once and exit", false)
+    .option("--skip-sync", "Skip automatic schema sync from SDK")
     .action(async (options) => {
       const currentConfig = await loadConfig();
       const selection = await selectDeployment(currentConfig, options, "start dev");
@@ -295,6 +309,17 @@ export function registerConvexCommands(
           `Starting Convex dev server (${info.isLocal ? "local" : "cloud"})...`,
         );
         printInfo(`Project: ${projectPath}`);
+
+        // Sync schema files from SDK before starting dev server
+        if (!options.skipSync) {
+          const { syncConvexSchema, printSyncResult } = await import("../utils/schema-sync.js");
+          const syncResult = await syncConvexSchema(projectPath);
+          printSyncResult(syncResult);
+          if (syncResult.error) {
+            printWarning("Continuing with existing schema files...");
+          }
+        }
+
         console.log();
 
         const args = ["convex", "dev"];
@@ -730,6 +755,7 @@ export function registerConvexCommands(
     .command("init")
     .description("Initialize Convex in current project")
     .option("-d, --deployment <name>", "Target deployment")
+    .option("--skip-sync", "Skip automatic schema sync from SDK")
     .action(async (options) => {
       const currentConfig = await loadConfig();
       const selection = await selectDeployment(currentConfig, options, "initialize Convex");
@@ -741,6 +767,17 @@ export function registerConvexCommands(
       console.log();
       printInfo("Initializing Convex...");
       printInfo(`Project: ${projectPath}`);
+
+      // Sync schema files from SDK before initializing
+      if (!options.skipSync) {
+        const { syncConvexSchema, printSyncResult } = await import("../utils/schema-sync.js");
+        const syncResult = await syncConvexSchema(projectPath);
+        printSyncResult(syncResult);
+        if (syncResult.error) {
+          printWarning("Continuing with existing schema files...");
+        }
+      }
+
       console.log();
 
       const exitCode = await execCommandLive("npx", [
