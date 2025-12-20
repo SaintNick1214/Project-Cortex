@@ -93,9 +93,10 @@ cortex.graph.*           // Graph database integration
 ┌─────────────────────────────────────────────────────────────┐
 │       Layer 4: Convenience API (Recommended Interface)      │
 ├─────────────────────────────────────────────────────────────┤
-│  cortex.memory.remember() → L1a + L2 + optional L3          │
-│  cortex.memory.search() → L2 + L3 + optional enrichment     │
-│  Single API for conversation workflows + infinite context   │
+│  cortex.memory.remember() → L1a + L2 + L3 + graph (store)   │
+│  cortex.memory.recall() → L2 + L3 + graph + merge/rank      │
+│  cortex.memory.search() → L2 + optional enrichment          │
+│  Full orchestration for conversation workflows              │
 └─────────────────────────────────────────────────────────────┘
                             │
                             ↓ (Sync)
@@ -109,13 +110,16 @@ cortex.graph.*           // Graph database integration
 
 **Which layer/API to use:**
 
-- 🎯 **Conversations**: Use `cortex.memory.remember()` (Layer 4) or manual `cortex.conversations.*` + `cortex.vector.*`
-- 📚 **Shared Knowledge**: Use `cortex.immutable.*` (Layer 1b - TRULY shared, NO memorySpace)
-- 📊 **Live Data**: Use `cortex.mutable.*` (Layer 1c - TRULY shared, NO memorySpace)
-- 🧠 **Facts**: Use `cortex.facts.*` (Layer 3 - memorySpace-scoped) or auto-extract via `remember()`
-- 🔍 **Search**: Use `cortex.memory.search()` (Layer 4) or `cortex.vector.search()` (Layer 2)
-- 👤 **User Profiles**: Use `cortex.users.*` (shared across ALL memory spaces + GDPR cascade)
-- 🏛️ **Governance**: Use `cortex.governance.*` for all layers
+- 🚀 **`cortex.memory.*` (Layer 4 - START HERE)** - Recommended for most use cases
+  - `remember()` / `recall()` - Full orchestration for storing and retrieving conversations
+  - `search()` / `get()` - Quick retrieval with optional enrichment
+- 💬 **`cortex.conversations.*`** (Layer 1a) - Direct ACID conversation access
+- 🔢 **`cortex.vector.*`** (Layer 2) - Direct vector index control
+- 🧠 **`cortex.facts.*`** (Layer 3) - Direct fact operations
+- 📚 **`cortex.immutable.*`** (Layer 1b) - Shared knowledge (NO memorySpace - TRULY shared)
+- 📊 **`cortex.mutable.*`** (Layer 1c) - Live mutable data (NO memorySpace - TRULY shared)
+- 👤 **`cortex.users.*`** - User profiles (shared across ALL memory spaces + GDPR cascade)
+- 🏛️ **`cortex.governance.*`** - Retention policies for all layers
 
 **GDPR Compliance:**
 
@@ -156,7 +160,7 @@ await cortex.vector.update(memorySpaceId, memoryId, updates);
 // Direct Vector operations, you manage conversationRef
 ```
 
-### Layer 3: cortex.memory.\* (Dual-Layer Convenience)
+### Layer 4: cortex.memory.\* (Convenience API)
 
 ```typescript
 // High-level operations that manage both layers
@@ -183,11 +187,11 @@ await cortex.memory.search(memorySpaceId, query, { enrichConversation: true });
 └─────────────────────────────────────────────┘
 ```
 
-**Automatic (Layer 3):**
+**Automatic (Layer 4):**
 
 ```
 ┌─────────────────────────────────────────────┐
-│ Layer 3: cortex.memory.remember()           │
+│ Layer 4: cortex.memory.remember()           │
 │ Handles both layers + linking automatically  │
 └─────────────────────────────────────────────┘
 ```
@@ -230,7 +234,7 @@ const memory = await cortex.vector.store("user-123-personal", {
 });
 ```
 
-### Convenience Flow (Layer 3 - recommended)
+### Convenience Flow (Layer 4 - recommended)
 
 **Use `cortex.memory.*` to handle both layers automatically:**
 
@@ -245,7 +249,7 @@ const result = await cortex.memory.remember({
   userName: "Alex",
 });
 
-// Behind the scenes (Layer 3 does this):
+// Behind the scenes (Layer 4 does this):
 // 1. cortex.conversations.addMessage() × 2  (ACID Layer 1)
 // 2. cortex.vector.store() × 2              (Vector Layer 2)
 // 3. Links them via conversationRef
@@ -265,13 +269,13 @@ const memory = await cortex.vector.store("user-123-personal", {
   metadata: { importance: 30, tags: ["system", "startup"] },
 });
 
-// Option 2: Use Layer 3 (also works for non-conversations)
+// Option 2: Use Layer 4 (also works for non-conversations)
 const memory = await cortex.memory.store("user-123-personal", {
   content: "Agent initialized successfully",
   source: { type: "system" },
   metadata: { importance: 30 },
 });
-// Layer 3 detects source.type='system' and skips ACID storage
+// Layer 4 detects source.type='system' and skips ACID storage
 ```
 
 ### Layer 1 Reference Rules
@@ -337,7 +341,7 @@ const memory = await cortex.memory.store("user-123-personal", {
 | `getHistory(memorySpaceId, memoryId)`           | Get version history             | MemoryVersion[]                                     |
 | `getAtTimestamp(memorySpaceId, memoryId, date)` | Temporal query                  | MemoryVersion \| null                               |
 
-### Layer 3: cortex.memory.\* Operations (Dual-Layer)
+### Layer 4: cortex.memory.\* Operations (Convenience API)
 
 | Operation                                  | Purpose                   | Returns          | Does                         |
 | ------------------------------------------ | ------------------------- | ---------------- | ---------------------------- |
@@ -352,7 +356,7 @@ const memory = await cortex.memory.store("user-123-personal", {
 
 **Key Differences:**
 
-| Operation              | Layer 2 (cortex.vector.\*)     | Layer 3 (cortex.memory.\*)                  |
+| Operation              | Layer 2 (cortex.vector.\*)     | Layer 4 (cortex.memory.\*)                  |
 | ---------------------- | ------------------------------ | ------------------------------------------- |
 | `remember()`           | N/A                            | ✨ Unique - stores in both layers           |
 | `get()`                | Vector only                    | Can include ACID (`includeConversation`)    |
@@ -371,14 +375,14 @@ const memory = await cortex.memory.store("user-123-personal", {
 | `archive()`    | Direct                     | Delegates to Layer 2                        |
 | Version ops    | Direct                     | Delegates to Layer 2                        |
 
-**Layer 3 Unique Operations:**
+**Layer 4 Unique Operations:**
 
 - `remember()` - Dual-layer storage
 - `forget()` - Dual-layer deletion
 - `get()` with `includeConversation` - Cross-layer retrieval
 - `search()` with `enrichConversation` - Cross-layer search
 
-**Layer 3 Delegations:**
+**Layer 4 Delegations:**
 
 - Most operations are thin wrappers around `cortex.vector.*`
 - Convenience for not having to remember namespaces
@@ -386,194 +390,9 @@ const memory = await cortex.memory.store("user-123-personal", {
 
 ---
 
-## Core Operations (Layer 3: cortex.memory.\*)
+## Core Operations (Layer 4: cortex.memory.\*)
 
-> Note: Layer 3 operations are convenience wrappers. For direct control, use Layer 1 (`cortex.conversations.*`) and Layer 2 (`cortex.vector.*`) separately.
-
-### store()
-
-**Layer 3 Operation** - Stores in Vector with optional fact extraction.
-
-Store a new memory for an agent. Use this for non-conversation memories (system, tool). For conversation memories, prefer `remember()`.
-
-**Signature:**
-
-```typescript
-cortex.memory.store(
-  memorySpaceId: string,
-  entry: MemoryInput,
-  options?: { syncToGraph?: boolean }
-): Promise<StoreMemoryResult>
-```
-
-**Parameters:**
-
-```typescript
-interface MemoryInput {
-  // Content (required)
-  content: string; // The information to remember
-  contentType: "raw" | "summarized"; // Type of content
-
-  // Embedding (optional but preferred)
-  embedding?: number[]; // Vector for semantic search
-
-  // Context
-  userId?: string; // User this relates to
-
-  // Source (required)
-  source: {
-    type: "conversation" | "system" | "tool" | "a2a";
-    userId?: string;
-    userName?: string;
-    timestamp: Date;
-  };
-
-  // Layer 1 References (optional - link to ACID stores)
-  // ONE of these may be present (mutually exclusive)
-
-  conversationRef?: {
-    // Layer 1a: Private conversations
-    conversationId: string; // Which conversation
-    messageIds: string[]; // Specific message(s)
-  };
-
-  immutableRef?: {
-    // Layer 1b: Shared immutable data
-    type: string; // Entity type
-    id: string; // Logical ID
-    version?: number; // Specific version (optional)
-  };
-
-  mutableRef?: {
-    // Layer 1c: Shared mutable data (snapshot)
-    namespace: string;
-    key: string;
-    snapshotValue: any; // Value at indexing time
-    snapshotAt: Date;
-  };
-
-  // Metadata (required)
-  metadata: {
-    importance: number; // 0-100
-    tags: string[]; // Categorization
-    [key: string]: any; // Custom fields
-  };
-}
-```
-
-**Returns:**
-
-```typescript
-interface MemoryEntry {
-  id: string; // Auto-generated ID
-  memorySpaceId: string;
-  userId?: string;
-  content: string;
-  contentType: "raw" | "summarized";
-  embedding?: number[];
-  source: MemorySource;
-  conversationRef?: ConversationRef;
-  metadata: MemoryMetadata;
-  version: number; // Always 1 for new
-  previousVersions: []; // Empty for new
-  createdAt: Date;
-  updatedAt: Date;
-  lastAccessed?: Date;
-  accessCount: number; // Always 0 for new
-
-  // Enrichment fields (v0.15.0+) - for bullet-proof retrieval
-  enrichedContent?: string; // Concatenated searchable content for embedding
-  factCategory?: string; // Category for filtering (e.g., "addressing_preference")
-}
-```
-
-**Example 1: Conversation Memory (conversationRef required)**
-
-```typescript
-// FIRST: Store in ACID (you must do this first for conversations)
-const msg = await cortex.conversations.addMessage("conv-456", {
-  role: "user",
-  text: "The password is Blue",
-  userId: "user-123",
-});
-
-// THEN: Store in Vector (with conversationRef linking to ACID)
-const memory = await cortex.memory.store("user-123-personal", {
-  content: "The password is Blue",
-  contentType: "raw",
-  embedding: await embed("The password is Blue"),
-  userId: "user-123",
-  source: {
-    type: "conversation", // ← Conversation type
-    userId: "user-123",
-    userName: "Alex Johnson",
-    timestamp: new Date(),
-  },
-  conversationRef: {
-    // ← REQUIRED for conversations
-    conversationId: "conv-456",
-    messageIds: [msg.id], // From ACID message
-  },
-  metadata: {
-    importance: 100,
-    tags: ["password", "security"],
-  },
-});
-
-console.log(memory.id); // "mem_abc123xyz"
-console.log(memory.conversationRef.conversationId); // "conv-456"
-```
-
-**Example 2: System Memory (no conversationRef)**
-
-```typescript
-// No ACID storage needed - this isn't from a conversation
-const memory = await cortex.memory.store("user-123-personal", {
-  content: "Agent started successfully at 10:00 AM",
-  contentType: "raw",
-  source: {
-    type: "system", // ← System type
-    timestamp: new Date(),
-  },
-  // No conversationRef - not from a conversation
-  metadata: {
-    importance: 20,
-    tags: ["system", "status"],
-  },
-});
-```
-
-**Example 3: Use remember() - recommended for conversations**
-
-```typescript
-// Helper does both steps automatically
-const result = await cortex.memory.remember({
-  memorySpaceId: "agent-1",
-  conversationId: "conv-456",
-  userMessage: "The password is Blue",
-  agentResponse: "I'll remember that!",
-  userId: "user-123",
-  userName: "Alex",
-});
-
-// Automatically:
-// 1. Stored 2 messages in ACID
-// 2. Created 2 vector memories with conversationRef
-```
-
-**Errors:**
-
-- `CortexError('INVALID_AGENT_ID')` - Agent ID is invalid
-- `CortexError('INVALID_CONTENT')` - Content is empty or too large
-- `CortexError('INVALID_IMPORTANCE')` - Importance not in 0-100 range
-- `CortexError('CONVEX_ERROR')` - Database error
-
-**See Also:**
-
-- [Agent Memory Guide](../02-core-features/01-memory-spaces.md#storing-memories)
-- [Store vs Update Decision](../02-core-features/01-memory-spaces.md#store-vs-update-decision)
-
----
+> Note: Layer 4 operations are convenience wrappers that orchestrate across all layers. For direct control, use Layer 1 (`cortex.conversations.*`), Layer 2 (`cortex.vector.*`), and Layer 3 (`cortex.facts.*`) separately.
 
 ### remember()
 
@@ -830,6 +649,324 @@ CortexError(
 - [Memory Space Operations](./13-memory-space-operations.md) - Managing memory spaces
 - [User Operations](./04-user-operations.md) - User profile management
 - [Agent Management](./09-agent-management.md) - Agent registration
+
+---
+
+### recall()
+
+**NEW in v0.23.0** - Unified orchestrated retrieval across all memory layers.
+
+> **Design Philosophy**: `recall()` is the retrieval counterpart to `remember()`. It provides **total and complete orchestrated context retrieval** by default - batteries included.
+
+**Signature:**
+
+```typescript
+cortex.memory.recall(
+  params: RecallParams
+): Promise<RecallResult>
+```
+
+**What it does:**
+
+1. **Searches vector memories** (Layer 2) - Semantic search with optional embedding
+2. **Searches facts directly** (Layer 3) - Facts as a primary source, not just enrichment
+3. **Queries graph relationships** (Layer 4) - Discover related context via entity connections
+4. **Merges, deduplicates, and ranks** results from all sources
+5. **Returns unified context** ready for LLM injection
+
+**Batteries Included Defaults:**
+
+| Feature | Default | Description |
+|---------|---------|-------------|
+| Vector Search | Enabled | Searches Layer 2 vector memories |
+| Facts Search | Enabled | Searches Layer 3 facts directly |
+| Graph Expansion | Enabled (if configured) | Discovers related context via graph |
+| LLM Context Formatting | Enabled | Generates ready-to-inject context string |
+| Conversation Enrichment | Enabled | Includes ACID conversation data |
+| Deduplication | Enabled | Removes duplicates across sources |
+| Ranking | Enabled | Multi-signal scoring algorithm |
+
+**Parameters:**
+
+```typescript
+interface RecallParams {
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // REQUIRED - Just these two for basic usage
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  memorySpaceId: string;  // Memory space to search
+  query: string;          // Natural language query
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // OPTIONAL - All have sensible defaults
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  // Search enhancement
+  embedding?: number[];   // Pre-computed embedding (recommended)
+  userId?: string;        // Filter by user (common in H2A)
+
+  // Source selection - ALL ENABLED BY DEFAULT
+  // Only specify to DISABLE sources
+  sources?: {
+    vector?: boolean;     // Default: true
+    facts?: boolean;      // Default: true
+    graph?: boolean;      // Default: true (if graph configured)
+  };
+
+  // Graph expansion - ENABLED BY DEFAULT
+  graphExpansion?: {
+    enabled?: boolean;            // Default: true (if graph configured)
+    maxDepth?: number;            // Default: 2
+    relationshipTypes?: string[]; // Default: all types
+    expandFromFacts?: boolean;    // Default: true
+    expandFromMemories?: boolean; // Default: true
+  };
+
+  // Filtering
+  minImportance?: number;   // Minimum importance (0-100)
+  minConfidence?: number;   // Minimum fact confidence (0-100)
+  tags?: string[];          // Filter by tags
+  createdAfter?: Date;      // Only include after this date
+  createdBefore?: Date;     // Only include before this date
+
+  // Result options
+  limit?: number;               // Default: 20
+  includeConversation?: boolean; // Default: true
+  formatForLLM?: boolean;       // Default: true
+}
+```
+
+**Returns:**
+
+```typescript
+interface RecallResult {
+  // Unified results (merged, deduped, ranked)
+  items: RecallItem[];
+
+  // Source breakdown
+  sources: {
+    vector: { count: number; items: MemoryEntry[] };
+    facts: { count: number; items: FactRecord[] };
+    graph: { count: number; expandedEntities: string[] };
+  };
+
+  // LLM-ready context (if formatForLLM: true)
+  context?: string;
+
+  // Metadata
+  totalResults: number;
+  queryTimeMs: number;
+  graphExpansionApplied: boolean;
+}
+
+interface RecallItem {
+  type: 'memory' | 'fact';
+  id: string;
+  content: string;
+  score: number;  // Combined ranking score (0-1)
+  source: 'vector' | 'facts' | 'graph-expanded';
+  memory?: MemoryEntry;
+  fact?: FactRecord;
+  graphContext?: {
+    connectedEntities: string[];
+    relationshipPath?: string;
+  };
+  conversation?: Conversation;
+  sourceMessages?: Message[];
+}
+```
+
+**Example 1: Minimal Usage (Full Orchestration)**
+
+```typescript
+// Just two parameters - full orchestration by default
+const result = await cortex.memory.recall({
+  memorySpaceId: 'user-123-space',
+  query: 'user preferences',
+});
+
+// Inject context directly into LLM prompt
+const response = await llm.chat({
+  messages: [
+    { role: 'system', content: `You are a helpful assistant.\n\n${result.context}` },
+    { role: 'user', content: userMessage },
+  ],
+});
+```
+
+**Example 2: With Semantic Search (Recommended)**
+
+```typescript
+const result = await cortex.memory.recall({
+  memorySpaceId: 'user-123-space',
+  query: 'user preferences',
+  embedding: await embed('user preferences'), // Better relevance
+  userId: 'user-123',                          // Scope to user
+});
+
+// result.context is LLM-ready
+// result.items has full details if needed
+// result.sources shows what came from where
+```
+
+**Example 3: Multi-Agent Context Sharing (A2A)**
+
+```typescript
+// Agent retrieving shared context from Hive space
+const sharedContext = await cortex.memory.recall({
+  memorySpaceId: 'team-hive-space',
+  query: 'project requirements and deadlines',
+  embedding: await embed('project requirements and deadlines'),
+});
+
+// Send context to collaborating agent
+await cortex.a2a.send({
+  from: 'planning-agent',
+  to: 'execution-agent',
+  message: `Here's the context: ${sharedContext.context}`,
+});
+```
+
+**Example 4: Deep Graph Exploration**
+
+```typescript
+// When you need to discover relational connections
+const result = await cortex.memory.recall({
+  memorySpaceId: 'knowledge-base',
+  query: 'who does Alice work with',
+  embedding: await embed('who does Alice work with'),
+  graphExpansion: {
+    maxDepth: 3,  // Go deeper than default
+    relationshipTypes: ['WORKS_AT', 'KNOWS', 'COLLABORATES_WITH'],
+  },
+  limit: 50,  // More results for comprehensive context
+});
+
+// See what the graph discovered
+console.log('Discovered entities:', result.sources.graph.expandedEntities);
+// ['Acme Corp', 'Bob', 'Engineering Team', 'Project Alpha']
+```
+
+**Example 5: Lightweight Mode (Opt-Out)**
+
+```typescript
+// When you need speed over completeness
+const result = await cortex.memory.recall({
+  memorySpaceId: 'user-space',
+  query: 'quick lookup',
+  sources: {
+    vector: true,
+    facts: false,      // Skip facts
+    graph: false,      // Skip graph
+  },
+  formatForLLM: false, // Just get raw items
+});
+```
+
+**Symmetric API Design:**
+
+`remember()` and `recall()` form a symmetric pair - the two primary orchestration APIs:
+
+| Aspect | remember() | recall() |
+|--------|-----------|----------|
+| Purpose | Store with full orchestration | Retrieve with full orchestration |
+| Default | All layers enabled | All sources enabled |
+| Opt-out | `skipLayers: ['facts', 'graph']` | `sources: { facts: false }` |
+| Graph | Auto-syncs entities | Auto-expands via relationships |
+| Output | `RememberResult` | `RecallResult` with LLM context |
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    Cortex Memory Lifecycle                          │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   STORE (remember)                  RETRIEVE (recall)               │
+│   ─────                              ────────                       │
+│       │                                  │                          │
+│       ▼                                  ▼                          │
+│   ┌─────────┐                       ┌─────────┐                     │
+│   │ Vector  │ ◄─────────────────────│ Vector  │                     │
+│   │ (L2)    │                       │ Search  │                     │
+│   └─────────┘                       └─────────┘                     │
+│       │                                  │                          │
+│       ▼                                  ▼                          │
+│   ┌─────────┐                       ┌─────────┐                     │
+│   │ Facts   │ ◄─────────────────────│ Facts   │                     │
+│   │ (L3)    │                       │ Search  │                     │
+│   └─────────┘                       └─────────┘                     │
+│       │                                  │                          │
+│       ▼                                  ▼                          │
+│   ┌─────────┐                       ┌─────────┐                     │
+│   │ Graph   │ ◄─────────────────────│ Graph   │                     │
+│   │ Sync    │                       │ Expand  │                     │
+│   └─────────┘                       └─────────┘                     │
+│                                          │                          │
+│                                          ▼                          │
+│                                     ┌─────────┐                     │
+│                                     │ Format  │                     │
+│                                     │ for LLM │                     │
+│                                     └─────────┘                     │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**Ranking Algorithm:**
+
+Results are ranked using a multi-signal scoring algorithm:
+
+```typescript
+score = (
+  semanticScore * 0.35 +          // Vector similarity
+  confidenceScore * 0.20 +        // Fact confidence (0-100 → 0-1)
+  importanceScore * 0.15 +        // Importance (0-100 → 0-1)
+  recencyScore * 0.15 +           // Time decay
+  graphConnectivityScore * 0.15   // Graph centrality
+);
+
+// Boosts
+if (connectedEntities.length > 3) score *= 1.2;  // 20% boost
+if (memory.messageRole === 'user') score *= 1.1; // 10% boost
+```
+
+**LLM Context Format:**
+
+When `formatForLLM: true` (default), the context string is structured as:
+
+```markdown
+## Relevant Context
+
+### Known Facts
+- User prefers dark mode (confidence: 95%)
+- User works at Acme Corp (confidence: 88%)
+
+### Conversation History
+[user]: I prefer dark mode
+[agent]: I'll remember that!
+```
+
+**When to Use `recall()` vs `search()`:**
+
+| Use Case | Use `recall()` | Use `search()` |
+|----------|---------------|----------------|
+| AI Chatbot context | Yes | No |
+| Multi-agent coordination | Yes | No |
+| LLM prompt injection | Yes | No |
+| Simple vector lookup | No | Yes |
+| Direct Layer 2 access | No | Yes |
+| Custom result processing | No | Yes |
+
+**Errors:**
+
+- `MemoryValidationError('MISSING_REQUIRED_FIELD')` - Missing memorySpaceId or query
+- `MemoryValidationError('INVALID_EMBEDDING')` - Invalid embedding array
+- `MemoryValidationError('INVALID_DATE_RANGE')` - createdAfter > createdBefore
+- `MemoryValidationError('INVALID_GRAPH_DEPTH')` - maxDepth not in 1-5 range
+
+**See Also:**
+
+- [remember()](#remember) - The storage counterpart
+- [Semantic Search Guide](../02-core-features/02-semantic-search.md)
+- [Graph Operations](./15-graph-operations.md)
+- [Facts Operations](./14-facts-operations.md)
 
 ---
 
@@ -1244,110 +1381,9 @@ export async function POST(req: Request) {
 
 ---
 
-### get()
-
-**Layer 3 Operation** - Get Vector memory with optional ACID conversation retrieval.
-
-**Signature:**
-
-```typescript
-cortex.memory.get(
-  memorySpaceId: string,
-  memoryId: string,
-  options?: GetOptions
-): Promise<MemoryEntry | EnrichedMemory | null>
-```
-
-**Parameters:**
-
-```typescript
-interface GetOptions {
-  includeConversation?: boolean; // Fetch ACID conversation too (default: false)
-}
-```
-
-**Returns:**
-
-```typescript
-// Default (includeConversation: false)
-MemoryEntry | null;
-
-// With includeConversation: true
-interface EnrichedMemory {
-  memory: MemoryEntry; // Vector Layer 2 data
-  conversation?: Conversation; // ACID Layer 1 data (if conversationRef exists)
-  sourceMessages?: Message[]; // Specific messages that informed this memory
-}
-```
-
-**Side Effects:**
-
-- Increments `accessCount`
-- Updates `lastAccessed` timestamp
-
-**Example 1: Default (Vector only)**
-
-```typescript
-const memory = await cortex.memory.get("user-123-personal", "mem_abc123");
-
-if (memory) {
-  console.log(memory.content); // Vector content
-  console.log(`Version: ${memory.version}`);
-  console.log(`conversationRef:`, memory.conversationRef); // Reference only
-}
-```
-
-**Example 2: With ACID conversation**
-
-```typescript
-const enriched = await cortex.memory.get("user-123-personal", "mem_abc123", {
-  includeConversation: true,
-});
-
-if (enriched) {
-  // Layer 2 (Vector)
-  console.log("Vector content:", enriched.memory.content);
-  console.log("Version:", enriched.memory.version);
-
-  // Layer 1 (ACID) - automatically fetched
-  if (enriched.conversation) {
-    console.log("Conversation ID:", enriched.conversation.conversationId);
-    console.log("Total messages:", enriched.conversation.messages.length);
-    console.log("Source message:", enriched.sourceMessages[0].text);
-  }
-}
-```
-
-**Comparison:**
-
-```typescript
-// Layer 2 directly (fast, Vector only)
-const vectorMem = await cortex.vector.get("user-123-personal", "mem_abc123");
-
-// Layer 3 default (same as Layer 2)
-const mem = await cortex.memory.get("user-123-personal", "mem_abc123");
-
-// Layer 3 enriched (Vector + ACID)
-const enriched = await cortex.memory.get("user-123-personal", "mem_abc123", {
-  includeConversation: true,
-});
-```
-
-**Errors:**
-
-- `CortexError('INVALID_AGENT_ID')` - Agent ID is invalid
-- `CortexError('MEMORY_NOT_FOUND')` - Memory doesn't exist
-- `CortexError('PERMISSION_DENIED')` - Agent doesn't own this memory
-
-**See Also:**
-
-- [Retrieving Memories](../02-core-features/01-memory-spaces.md#retrieving-specific-memories)
-
----
-
 ### search()
 
-**Layer 3 Operation** - Search Vector index with optional ACID enrichment.
+**Layer 4 Operation** - Search Vector index with optional ACID enrichment.
 
 **Signature:**
 
@@ -1494,10 +1530,10 @@ const vectorResults = await cortex.vector.search(
   options,
 );
 
-// Layer 3 default (same as Layer 2, but can enrich)
+// Layer 4 default (same as Layer 2, but can enrich)
 const results = await cortex.memory.search("user-123-personal", query, options);
 
-// Layer 3 enriched (Vector + ACID)
+// Layer 4 enriched (Vector + ACID)
 const enriched = await cortex.memory.search("user-123-personal", query, {
   ...options,
   enrichConversation: true,
@@ -1514,6 +1550,292 @@ const enriched = await cortex.memory.search("user-123-personal", query, {
 
 - [Semantic Search Guide](../02-core-features/02-semantic-search.md)
 - [Universal Filters](../02-core-features/01-memory-spaces.md#core-api-principle-universal-filters)
+
+---
+
+### get()
+
+**Layer 4 Operation** - Get Vector memory with optional ACID conversation retrieval.
+
+**Signature:**
+
+```typescript
+cortex.memory.get(
+  memorySpaceId: string,
+  memoryId: string,
+  options?: GetOptions
+): Promise<MemoryEntry | EnrichedMemory | null>
+```
+
+**Parameters:**
+
+```typescript
+interface GetOptions {
+  includeConversation?: boolean; // Fetch ACID conversation too (default: false)
+}
+```
+
+**Returns:**
+
+```typescript
+// Default (includeConversation: false)
+MemoryEntry | null;
+
+// With includeConversation: true
+interface EnrichedMemory {
+  memory: MemoryEntry; // Vector Layer 2 data
+  conversation?: Conversation; // ACID Layer 1 data (if conversationRef exists)
+  sourceMessages?: Message[]; // Specific messages that informed this memory
+}
+```
+
+**Side Effects:**
+
+- Increments `accessCount`
+- Updates `lastAccessed` timestamp
+
+**Example 1: Default (Vector only)**
+
+```typescript
+const memory = await cortex.memory.get("user-123-personal", "mem_abc123");
+
+if (memory) {
+  console.log(memory.content); // Vector content
+  console.log(`Version: ${memory.version}`);
+  console.log(`conversationRef:`, memory.conversationRef); // Reference only
+}
+```
+
+**Example 2: With ACID conversation**
+
+```typescript
+const enriched = await cortex.memory.get("user-123-personal", "mem_abc123", {
+  includeConversation: true,
+});
+
+if (enriched) {
+  // Layer 2 (Vector)
+  console.log("Vector content:", enriched.memory.content);
+  console.log("Version:", enriched.memory.version);
+
+  // Layer 1 (ACID) - automatically fetched
+  if (enriched.conversation) {
+    console.log("Conversation ID:", enriched.conversation.conversationId);
+    console.log("Total messages:", enriched.conversation.messages.length);
+    console.log("Source message:", enriched.sourceMessages[0].text);
+  }
+}
+```
+
+**Comparison:**
+
+```typescript
+// Layer 2 directly (fast, Vector only)
+const vectorMem = await cortex.vector.get("user-123-personal", "mem_abc123");
+
+// Layer 4 default (same as Layer 2)
+const mem = await cortex.memory.get("user-123-personal", "mem_abc123");
+
+// Layer 4 enriched (Vector + ACID)
+const enriched = await cortex.memory.get("user-123-personal", "mem_abc123", {
+  includeConversation: true,
+});
+```
+
+**Errors:**
+
+- `CortexError('INVALID_AGENT_ID')` - Agent ID is invalid
+- `CortexError('MEMORY_NOT_FOUND')` - Memory doesn't exist
+- `CortexError('PERMISSION_DENIED')` - Agent doesn't own this memory
+
+**See Also:**
+
+- [Retrieving Memories](../02-core-features/01-memory-spaces.md#retrieving-specific-memories)
+
+---
+
+### store()
+
+**Layer 4 Operation** - Stores in Vector with optional fact extraction.
+
+Store a new memory for an agent. Use this for non-conversation memories (system, tool). For conversation memories, prefer `remember()`.
+
+**Signature:**
+
+```typescript
+cortex.memory.store(
+  memorySpaceId: string,
+  entry: MemoryInput,
+  options?: { syncToGraph?: boolean }
+): Promise<StoreMemoryResult>
+```
+
+**Parameters:**
+
+```typescript
+interface MemoryInput {
+  // Content (required)
+  content: string; // The information to remember
+  contentType: "raw" | "summarized"; // Type of content
+
+  // Embedding (optional but preferred)
+  embedding?: number[]; // Vector for semantic search
+
+  // Context
+  userId?: string; // User this relates to
+
+  // Source (required)
+  source: {
+    type: "conversation" | "system" | "tool" | "a2a";
+    userId?: string;
+    userName?: string;
+    timestamp: Date;
+  };
+
+  // Layer 1 References (optional - link to ACID stores)
+  // ONE of these may be present (mutually exclusive)
+
+  conversationRef?: {
+    // Layer 1a: Private conversations
+    conversationId: string; // Which conversation
+    messageIds: string[]; // Specific message(s)
+  };
+
+  immutableRef?: {
+    // Layer 1b: Shared immutable data
+    type: string; // Entity type
+    id: string; // Logical ID
+    version?: number; // Specific version (optional)
+  };
+
+  mutableRef?: {
+    // Layer 1c: Shared mutable data (snapshot)
+    namespace: string;
+    key: string;
+    snapshotValue: any; // Value at indexing time
+    snapshotAt: Date;
+  };
+
+  // Metadata (required)
+  metadata: {
+    importance: number; // 0-100
+    tags: string[]; // Categorization
+    [key: string]: any; // Custom fields
+  };
+}
+```
+
+**Returns:**
+
+```typescript
+interface MemoryEntry {
+  id: string; // Auto-generated ID
+  memorySpaceId: string;
+  userId?: string;
+  content: string;
+  contentType: "raw" | "summarized";
+  embedding?: number[];
+  source: MemorySource;
+  conversationRef?: ConversationRef;
+  metadata: MemoryMetadata;
+  version: number; // Always 1 for new
+  previousVersions: []; // Empty for new
+  createdAt: Date;
+  updatedAt: Date;
+  lastAccessed?: Date;
+  accessCount: number; // Always 0 for new
+
+  // Enrichment fields (v0.15.0+) - for bullet-proof retrieval
+  enrichedContent?: string; // Concatenated searchable content for embedding
+  factCategory?: string; // Category for filtering (e.g., "addressing_preference")
+}
+```
+
+**Example 1: Conversation Memory (conversationRef required)**
+
+```typescript
+// FIRST: Store in ACID (you must do this first for conversations)
+const msg = await cortex.conversations.addMessage("conv-456", {
+  role: "user",
+  text: "The password is Blue",
+  userId: "user-123",
+});
+
+// THEN: Store in Vector (with conversationRef linking to ACID)
+const memory = await cortex.memory.store("user-123-personal", {
+  content: "The password is Blue",
+  contentType: "raw",
+  embedding: await embed("The password is Blue"),
+  userId: "user-123",
+  source: {
+    type: "conversation", // ← Conversation type
+    userId: "user-123",
+    userName: "Alex Johnson",
+    timestamp: new Date(),
+  },
+  conversationRef: {
+    // ← REQUIRED for conversations
+    conversationId: "conv-456",
+    messageIds: [msg.id], // From ACID message
+  },
+  metadata: {
+    importance: 100,
+    tags: ["password", "security"],
+  },
+});
+
+console.log(memory.id); // "mem_abc123xyz"
+console.log(memory.conversationRef.conversationId); // "conv-456"
+```
+
+**Example 2: System Memory (no conversationRef)**
+
+```typescript
+// No ACID storage needed - this isn't from a conversation
+const memory = await cortex.memory.store("user-123-personal", {
+  content: "Agent started successfully at 10:00 AM",
+  contentType: "raw",
+  source: {
+    type: "system", // ← System type
+    timestamp: new Date(),
+  },
+  // No conversationRef - not from a conversation
+  metadata: {
+    importance: 20,
+    tags: ["system", "status"],
+  },
+});
+```
+
+**Example 3: Use remember() - recommended for conversations**
+
+```typescript
+// Helper does both steps automatically
+const result = await cortex.memory.remember({
+  memorySpaceId: "agent-1",
+  conversationId: "conv-456",
+  userMessage: "The password is Blue",
+  agentResponse: "I'll remember that!",
+  userId: "user-123",
+  userName: "Alex",
+});
+
+// Automatically:
+// 1. Stored 2 messages in ACID
+// 2. Created 2 vector memories with conversationRef
+```
+
+**Errors:**
+
+- `CortexError('INVALID_AGENT_ID')` - Agent ID is invalid
+- `CortexError('INVALID_CONTENT')` - Content is empty or too large
+- `CortexError('INVALID_IMPORTANCE')` - Importance not in 0-100 range
+- `CortexError('CONVEX_ERROR')` - Database error
+
+**See Also:**
+
+- [Agent Memory Guide](../02-core-features/01-memory-spaces.md#storing-memories)
+- [Store vs Update Decision](../02-core-features/01-memory-spaces.md#store-vs-update-decision)
 
 ---
 
@@ -1663,7 +1985,7 @@ await cortex.memory.updateMany(
 
 ### delete()
 
-**Layer 3 Operation** - Deletes from Vector only (preserves ACID).
+**Layer 4 Operation** - Deletes from Vector only (preserves ACID).
 
 **Signature:**
 
@@ -1718,11 +2040,11 @@ if (result.restorable) {
 // Layer 2 directly (Vector only, explicit)
 await cortex.vector.delete("user-123-personal", "mem_abc123");
 
-// Layer 3 (same as Layer 2, but preserves ACID)
+// Layer 4 (same as Layer 2, but preserves ACID)
 await cortex.memory.delete("user-123-personal", "mem_abc123");
 // Vector deleted, ACID preserved
 
-// Layer 3 forget() (delete from both - see below)
+// Layer 4 forget() (delete from both - see below)
 await cortex.memory.forget("user-123-personal", "mem_abc123", {
   deleteConversation: true,
 });
@@ -1742,7 +2064,7 @@ await cortex.memory.forget("user-123-personal", "mem_abc123", {
 
 ### forget()
 
-**Layer 3 Operation** - Delete from both Vector and ACID (complete removal).
+**Layer 4 Operation** - Delete from both Vector and ACID (complete removal).
 
 **Signature:**
 

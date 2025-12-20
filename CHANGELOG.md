@@ -19,6 +19,85 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.23.0] - 2025-12-19
+
+#### 🔍 Unified Context Retrieval with `recall()`
+
+**New `memory.recall()` orchestration API** - the retrieval counterpart to `remember()`. Get complete, LLM-ready context from all memory layers with a single call.
+
+**The Gap Solved:**
+
+Previously, `remember()` provided full orchestration for storage, but retrieval was fragmented:
+- `memory.search()` only searched vector (Layer 2)
+- Facts required separate `facts.search()` calls
+- Graph connections weren't leveraged for context discovery
+
+**Now with `recall()`:**
+
+```typescript
+// Minimal usage - full orchestration by default
+const result = await cortex.memory.recall({
+  memorySpaceId: 'user-123-space',
+  query: 'user preferences',
+});
+
+// Inject directly into LLM prompt
+const response = await llm.chat({
+  messages: [
+    { role: 'system', content: `Context:\n${result.context}` },
+    { role: 'user', content: userMessage },
+  ],
+});
+```
+
+**Features:**
+
+- ✅ **Batteries Included** - All sources enabled by default (vector, facts, graph)
+- ✅ **Graph Expansion** - Discovers related context via entity relationships
+- ✅ **Unified Deduplication** - Removes duplicates across sources
+- ✅ **Multi-Signal Ranking** - Semantic similarity, confidence, importance, recency, connectivity
+- ✅ **LLM-Ready Formatting** - Structured markdown context generation
+- ✅ **Conversation Enrichment** - Includes ACID conversation data
+
+**Symmetric API Design:**
+
+| Aspect | remember() | recall() |
+|--------|-----------|----------|
+| Purpose | Store with full orchestration | Retrieve with full orchestration |
+| Default | All layers enabled | All sources enabled |
+| Opt-out | `skipLayers: ['facts', 'graph']` | `sources: { facts: false }` |
+| Graph | Auto-syncs entities | Auto-expands via relationships |
+
+**New Types:**
+
+```typescript
+interface RecallParams {
+  memorySpaceId: string;  // Required
+  query: string;          // Required
+  embedding?: number[];   // Optional: Better relevance
+  userId?: string;        // Optional: Filter by user
+  sources?: { vector?: boolean; facts?: boolean; graph?: boolean };
+  graphExpansion?: { maxDepth?: number; relationshipTypes?: string[] };
+  limit?: number;         // Default: 20
+  formatForLLM?: boolean; // Default: true
+}
+
+interface RecallResult {
+  items: RecallItem[];           // Unified, ranked results
+  sources: RecallSourceBreakdown; // What came from where
+  context?: string;              // LLM-ready context
+  queryTimeMs: number;
+  graphExpansionApplied: boolean;
+}
+```
+
+**Documentation:**
+
+- Updated [Memory Operations API](Documentation/03-api-reference/02-memory-operations.md) with full `recall()` reference
+- Added comprehensive unit and integration tests
+
+---
+
 ### [0.22.0] - 2025-12-19
 
 #### 🔄 Cross-Session Fact Deduplication
