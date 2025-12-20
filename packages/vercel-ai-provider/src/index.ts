@@ -360,8 +360,10 @@ export async function createCortexMemoryAsync(
               agentId: config.agentId,
               participantId: config.hiveMode?.participantId,
               generateEmbedding:
-                options?.generateEmbedding || config.embeddingProvider?.generate,
-              extractFacts: (options?.extractFacts || config.extractFacts) as any,
+                options?.generateEmbedding ||
+                config.embeddingProvider?.generate,
+              extractFacts: (options?.extractFacts ||
+                config.extractFacts) as any,
               importance: config.defaultImportance || 50,
               tags: config.defaultTags || [],
             },
@@ -378,7 +380,9 @@ export async function createCortexMemoryAsync(
         }
       },
 
-      getMemories: async (options?: { limit?: number }): Promise<MemoryEntry[]> => {
+      getMemories: async (options?: {
+        limit?: number;
+      }): Promise<MemoryEntry[]> => {
         logger.debug("Getting all memories");
 
         try {

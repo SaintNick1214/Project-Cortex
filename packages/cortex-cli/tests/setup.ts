@@ -69,7 +69,9 @@ export async function cleanupTestData(prefix: string): Promise<void> {
     );
 
     // Handle both old array format and new { users: [...] } format
-    const users = Array.isArray(usersResult) ? usersResult : (usersResult.users || []);
+    const users = Array.isArray(usersResult)
+      ? usersResult
+      : usersResult.users || [];
     const testUsers = users.filter((u) => u.id.startsWith(prefix));
     console.log(`  Found ${testUsers.length} test users to clean up`);
 
@@ -102,7 +104,9 @@ export async function cleanupTestData(prefix: string): Promise<void> {
     );
 
     // Handle both old array format and new { spaces: [...] } format
-    const spaces = Array.isArray(spacesResult) ? spacesResult : (spacesResult.spaces || []);
+    const spaces = Array.isArray(spacesResult)
+      ? spacesResult
+      : spacesResult.spaces || [];
     const testSpaces = spaces.filter((s) => s.memorySpaceId.startsWith(prefix));
     console.log(`  Found ${testSpaces.length} test spaces to clean up`);
 

@@ -175,14 +175,19 @@ describe("Memory Convenience API (Layer 3)", () => {
           },
         );
 
-        expect(updateResult.memory.content).toBe("New updated content for reextraction");
+        expect(updateResult.memory.content).toBe(
+          "New updated content for reextraction",
+        );
 
         // Verify new facts were extracted
         expect(updateResult.factsReextracted).toBeDefined();
         expect(updateResult.factsReextracted!.length).toBeGreaterThanOrEqual(1);
 
         // Verify old fact was deleted (should be soft deleted/marked invalid)
-        const oldFact = await cortex.facts.get(TEST_MEMSPACE_ID, originalFactId);
+        const oldFact = await cortex.facts.get(
+          TEST_MEMSPACE_ID,
+          originalFactId,
+        );
         // Old fact should either be null or marked as invalid
         if (oldFact) {
           expect(oldFact.validUntil).toBeDefined();

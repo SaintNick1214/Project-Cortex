@@ -6,7 +6,13 @@
 
 import { Cortex } from "@cortexmemory/sdk";
 import type { RecallResult } from "@cortexmemory/sdk";
-import type { CortexMemoryConfig, Logger, LayerEvent, MemoryLayer, OrchestrationSummary } from "./types";
+import type {
+  CortexMemoryConfig,
+  Logger,
+  LayerEvent,
+  MemoryLayer,
+  OrchestrationSummary,
+} from "./types";
 import {
   resolveUserId,
   resolveConversationId,
@@ -78,7 +84,9 @@ export class CortexMemoryProvider {
 
     if (this.config.enableMemorySearch !== false && lastUserMessage) {
       recallResult = await this.recallContext(lastUserMessage, userId);
-      this.logger.info(`Recalled ${recallResult?.totalResults || 0} items from memory`);
+      this.logger.info(
+        `Recalled ${recallResult?.totalResults || 0} items from memory`,
+      );
     }
 
     // Step 3: Inject memory context using recall()'s pre-formatted context
@@ -125,7 +133,11 @@ export class CortexMemoryProvider {
           )
           .then(() => {
             // Notify layer observer of completion
-            this.notifyLayerObserver("conversation", "complete", orchestrationId);
+            this.notifyLayerObserver(
+              "conversation",
+              "complete",
+              orchestrationId,
+            );
             this.notifyLayerObserver("vector", "complete", orchestrationId);
             if (this.config.enableFactExtraction) {
               this.notifyLayerObserver("facts", "complete", orchestrationId);
@@ -136,7 +148,13 @@ export class CortexMemoryProvider {
           })
           .catch((error: Error) => {
             this.logger.error("Failed to store memory:", error);
-            this.notifyLayerObserver("conversation", "error", orchestrationId, undefined, error.message);
+            this.notifyLayerObserver(
+              "conversation",
+              "error",
+              orchestrationId,
+              undefined,
+              error.message,
+            );
           });
       }
     }
@@ -165,7 +183,9 @@ export class CortexMemoryProvider {
 
     if (this.config.enableMemorySearch !== false && lastUserMessage) {
       recallResult = await this.recallContext(lastUserMessage, userId);
-      this.logger.info(`Recalled ${recallResult?.totalResults || 0} items from memory`);
+      this.logger.info(
+        `Recalled ${recallResult?.totalResults || 0} items from memory`,
+      );
     }
 
     // Step 3: Inject memory context using recall()'s pre-formatted context
@@ -199,12 +219,12 @@ export class CortexMemoryProvider {
 
   /**
    * Recall context using the unified recall() API
-   * 
+   *
    * This uses cortex.memory.recall() which orchestrates retrieval across all layers:
    * - Vector memories (Layer 2)
    * - Facts (Layer 3) - searched directly, not just as enrichment
    * - Graph relationships (Layer 4) - if configured
-   * 
+   *
    * Returns a RecallResult with pre-formatted LLM context.
    */
   private async recallContext(
@@ -243,8 +263,8 @@ export class CortexMemoryProvider {
 
       this.logger.debug(
         `Recall complete: ${result.totalResults} items in ${result.queryTimeMs}ms ` +
-        `(vector: ${result.sources.vector.count}, facts: ${result.sources.facts.count}, ` +
-        `graph: ${result.sources.graph.count})`
+          `(vector: ${result.sources.vector.count}, facts: ${result.sources.facts.count}, ` +
+          `graph: ${result.sources.graph.count})`,
       );
 
       return result;
@@ -257,7 +277,7 @@ export class CortexMemoryProvider {
 
   /**
    * Inject recall context into the prompt
-   * 
+   *
    * Uses the pre-formatted context string from recall() result.
    */
   private injectRecallContext(messages: any[], contextString: string): any[] {
@@ -274,7 +294,9 @@ export class CortexMemoryProvider {
 
       if (hasSystemMessage) {
         // Append to existing system message
-        this.logger.debug("Injecting recall context into existing system message");
+        this.logger.debug(
+          "Injecting recall context into existing system message",
+        );
         return [
           {
             ...messages[0],
@@ -442,7 +464,11 @@ export class CortexMemoryProvider {
     layer: MemoryLayer,
     status: "pending" | "in_progress" | "complete" | "error" | "skipped",
     orchestrationId: string,
-    data?: { id?: string; preview?: string; metadata?: Record<string, unknown> },
+    data?: {
+      id?: string;
+      preview?: string;
+      metadata?: Record<string, unknown>;
+    },
     errorMessage?: string,
   ): void {
     if (!this.config.layerObserver?.onLayerUpdate) {

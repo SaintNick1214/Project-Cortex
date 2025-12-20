@@ -294,7 +294,9 @@ export class FactsAPI {
           {
             confidence: params.confidence,
             // Optionally update tags if new ones are provided
-            tags: params.tags ? [...new Set([...existing.tags, ...params.tags])] : undefined,
+            tags: params.tags
+              ? [...new Set([...existing.tags, ...params.tags])]
+              : undefined,
           },
           { syncToGraph: options?.syncToGraph },
         );
@@ -787,7 +789,9 @@ export class FactsAPI {
    * });
    * ```
    */
-  async deleteMany(params: DeleteManyFactsParams): Promise<DeleteManyFactsResult> {
+  async deleteMany(
+    params: DeleteManyFactsParams,
+  ): Promise<DeleteManyFactsResult> {
     validateMemorySpaceId(params.memorySpaceId);
 
     if (params.factType !== undefined) {

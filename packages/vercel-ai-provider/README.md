@@ -34,6 +34,7 @@ npm run dev
 See [`quickstart/README.md`](./quickstart/README.md) for full setup instructions.
 
 The quickstart demonstrates:
+
 - Real-time memory orchestration visualization
 - Data flowing through all Cortex layers (Memory Space → User → Agent → Conversation → Vector → Facts → Graph)
 - Multi-tenant memory space isolation
@@ -79,16 +80,16 @@ const cortexMemory = createCortexMemory({
   memorySpaceId: "my-chatbot",
   userId: "user-123", // Get from session/auth in production
   userName: "User",
-  
+
   // REQUIRED in SDK v0.17.0+
   agentId: "my-assistant",
   agentName: "My AI Assistant",
-  
+
   // Optional: Enable graph memory (auto-configured via env vars)
-  enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === 'true',
-  
+  enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === "true",
+
   // Optional: Enable fact extraction (auto-configured via env vars)
-  enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === 'true',
+  enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === "true",
 });
 
 export async function POST(req: Request) {
@@ -329,22 +330,22 @@ Creates a memory-augmented model factory.
 
 **Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `convexUrl` | string | ✅ | Convex deployment URL |
-| `memorySpaceId` | string | ✅ | Memory space for isolation |
-| `userId` | string \| () => string | ✅ | User ID (static or function) |
-| `agentId` | string | ✅ | Agent ID (required in v0.17.0+) |
-| `userName` | string | ❌ | User name (default: 'User') |
-| `agentName` | string | ❌ | Agent name (default: agentId) |
-| `enableGraphMemory` | boolean | ❌ | Sync to graph DB (default: false) |
-| `enableFactExtraction` | boolean | ❌ | Enable fact extraction (default: false) |
-| `graphConfig` | object | ❌ | Graph database configuration |
-| `factExtractionConfig` | object | ❌ | Fact extraction configuration |
-| `streamingOptions` | object | ❌ | Streaming enhancement options |
-| `streamingHooks` | object | ❌ | Real-time streaming callbacks |
-| `layerObserver` | object | ❌ | Layer orchestration observer |
-| `debug` | boolean | ❌ | Enable debug logging (default: false) |
+| Parameter              | Type                   | Required | Description                             |
+| ---------------------- | ---------------------- | -------- | --------------------------------------- |
+| `convexUrl`            | string                 | ✅       | Convex deployment URL                   |
+| `memorySpaceId`        | string                 | ✅       | Memory space for isolation              |
+| `userId`               | string \| () => string | ✅       | User ID (static or function)            |
+| `agentId`              | string                 | ✅       | Agent ID (required in v0.17.0+)         |
+| `userName`             | string                 | ❌       | User name (default: 'User')             |
+| `agentName`            | string                 | ❌       | Agent name (default: agentId)           |
+| `enableGraphMemory`    | boolean                | ❌       | Sync to graph DB (default: false)       |
+| `enableFactExtraction` | boolean                | ❌       | Enable fact extraction (default: false) |
+| `graphConfig`          | object                 | ❌       | Graph database configuration            |
+| `factExtractionConfig` | object                 | ❌       | Fact extraction configuration           |
+| `streamingOptions`     | object                 | ❌       | Streaming enhancement options           |
+| `streamingHooks`       | object                 | ❌       | Real-time streaming callbacks           |
+| `layerObserver`        | object                 | ❌       | Layer orchestration observer            |
+| `debug`                | boolean                | ❌       | Enable debug logging (default: false)   |
 
 **Returns:** `CortexMemoryModel` - Function to wrap models + manual memory methods
 
@@ -449,6 +450,7 @@ const cortexMemory = createCortexMemory({
 ### "Failed to connect to Convex"
 
 Make sure:
+
 1. Convex is running: `npx convex dev`
 2. `CONVEX_URL` is set correctly
 3. Cortex backend is deployed to Convex
@@ -456,6 +458,7 @@ Make sure:
 ### "Memory search returns no results"
 
 This is expected if:
+
 - No prior conversations stored
 - Using keyword search without embeddings (set up `embeddingProvider`)
 - Running on local Convex (vector search not supported locally)

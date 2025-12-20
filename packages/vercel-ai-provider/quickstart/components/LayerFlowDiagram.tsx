@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { LayerCard } from './LayerCard';
-import type { LayerState } from '@/lib/layer-tracking';
+import { motion } from "framer-motion";
+import { LayerCard } from "./LayerCard";
+import type { LayerState } from "@/lib/layer-tracking";
 
 interface LayerFlowDiagramProps {
   layers: Record<string, LayerState>;
@@ -19,16 +19,16 @@ export function LayerFlowDiagram({
 }: LayerFlowDiagramProps) {
   // Define the layer flow order
   const topLayers = [
-    { key: 'memorySpace', name: 'Memory Space', icon: '📦' },
-    { key: 'user', name: 'User', icon: '👤' },
-    { key: 'agent', name: 'Agent', icon: '🤖' },
+    { key: "memorySpace", name: "Memory Space", icon: "📦" },
+    { key: "user", name: "User", icon: "👤" },
+    { key: "agent", name: "Agent", icon: "🤖" },
   ];
 
   const flowLayers = [
-    { key: 'conversation', name: 'Conversation', icon: '💬' },
-    { key: 'vector', name: 'Vector Store', icon: '🎯' },
-    { key: 'facts', name: 'Facts', icon: '💡' },
-    { key: 'graph', name: 'Graph', icon: '🕸️', optional: true },
+    { key: "conversation", name: "Conversation", icon: "💬" },
+    { key: "vector", name: "Vector Store", icon: "🎯" },
+    { key: "facts", name: "Facts", icon: "💡" },
+    { key: "graph", name: "Graph", icon: "🕸️", optional: true },
   ];
 
   return (
@@ -38,8 +38,8 @@ export function LayerFlowDiagram({
         <h3 className="text-lg font-semibold">Memory Orchestration Flow</h3>
         <p className="text-sm text-gray-400 mt-1">
           {isOrchestrating
-            ? 'Processing your message through Cortex layers...'
-            : 'Send a message to see data flow through the system'}
+            ? "Processing your message through Cortex layers..."
+            : "Send a message to see data flow through the system"}
         </p>
       </div>
 
@@ -55,7 +55,7 @@ export function LayerFlowDiagram({
             <LayerCard
               name={layer.name}
               icon={layer.icon}
-              status={layers[layer.key]?.status || 'pending'}
+              status={layers[layer.key]?.status || "pending"}
               latencyMs={layers[layer.key]?.latencyMs}
               data={layers[layer.key]?.data}
               compact
@@ -74,7 +74,7 @@ export function LayerFlowDiagram({
           transition={{
             duration: 1.5,
             repeat: Infinity,
-            ease: 'easeInOut',
+            ease: "easeInOut",
           }}
         />
       </div>
@@ -91,7 +91,10 @@ export function LayerFlowDiagram({
             <LayerCard
               name={layer.name}
               icon={layer.icon}
-              status={layers[layer.key]?.status || (layer.optional ? 'skipped' : 'pending')}
+              status={
+                layers[layer.key]?.status ||
+                (layer.optional ? "skipped" : "pending")
+              }
               latencyMs={layers[layer.key]?.latencyMs}
               data={layers[layer.key]?.data}
               optional={layer.optional}
@@ -104,20 +107,21 @@ export function LayerFlowDiagram({
                   className="w-0.5 h-6"
                   style={{
                     background:
-                      layers[layer.key]?.status === 'complete'
-                        ? 'linear-gradient(to bottom, rgb(34, 197, 94), rgba(255, 255, 255, 0.1))'
-                        : 'linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05))',
+                      layers[layer.key]?.status === "complete"
+                        ? "linear-gradient(to bottom, rgb(34, 197, 94), rgba(255, 255, 255, 0.1))"
+                        : "linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05))",
                   }}
                   animate={{
                     opacity:
-                      isOrchestrating && layers[layer.key]?.status === 'in_progress'
+                      isOrchestrating &&
+                      layers[layer.key]?.status === "in_progress"
                         ? [0.3, 1, 0.3]
                         : 1,
                   }}
                   transition={{
                     duration: 0.8,
                     repeat: Infinity,
-                    ease: 'easeInOut',
+                    ease: "easeInOut",
                   }}
                 />
               </div>
@@ -151,7 +155,7 @@ export function LayerFlowDiagram({
       {/* Context info */}
       <div className="text-center text-xs text-gray-600">
         <p>
-          Space: <code className="text-gray-400">{memorySpaceId}</code> • User:{' '}
+          Space: <code className="text-gray-400">{memorySpaceId}</code> • User:{" "}
           <code className="text-gray-400">{userId}</code>
         </p>
       </div>

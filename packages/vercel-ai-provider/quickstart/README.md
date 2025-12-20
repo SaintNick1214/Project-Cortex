@@ -40,7 +40,7 @@ If you want to use the published npm packages instead, update `package.json`:
 {
   "dependencies": {
     "@cortexmemory/sdk": "^0.23.0",
-    "@cortexmemory/vercel-ai-provider": "^1.0.0",
+    "@cortexmemory/vercel-ai-provider": "^1.0.0"
     // ... other deps
   }
 }
@@ -82,15 +82,15 @@ Visit [http://localhost:3000](http://localhost:3000) to see the demo in action.
 
 When you send a message, you'll see it flow through these layers:
 
-| Layer | Description |
-|-------|-------------|
-| **Memory Space** | Isolated namespace for multi-tenancy |
-| **User** | User profile and identity |
-| **Agent** | AI agent participant (required in SDK v0.17.0+) |
-| **Conversation** | Message storage with threading |
-| **Vector** | Semantic embeddings for similarity search |
-| **Facts** | Extracted structured information |
-| **Graph** | Entity relationships (optional) |
+| Layer            | Description                                     |
+| ---------------- | ----------------------------------------------- |
+| **Memory Space** | Isolated namespace for multi-tenancy            |
+| **User**         | User profile and identity                       |
+| **Agent**        | AI agent participant (required in SDK v0.17.0+) |
+| **Conversation** | Message storage with threading                  |
+| **Vector**       | Semantic embeddings for similarity search       |
+| **Facts**        | Extracted structured information                |
+| **Graph**        | Entity relationships (optional)                 |
 
 ### Key Features Demonstrated
 
@@ -106,33 +106,33 @@ When you send a message, you'll see it flow through these layers:
 The chat API route at `/app/api/chat/route.ts` shows how to configure the Cortex Memory provider:
 
 ```typescript
-import { createCortexMemory } from '@cortexmemory/vercel-ai-provider';
-import { openai, createOpenAI } from '@ai-sdk/openai';
-import { streamText, embed } from 'ai';
+import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
+import { openai, createOpenAI } from "@ai-sdk/openai";
+import { streamText, embed } from "ai";
 
 const openaiClient = createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: 'quickstart-demo',
-  
+  memorySpaceId: "quickstart-demo",
+
   // User identification
-  userId: 'demo-user',
-  userName: 'Demo User',
-  
+  userId: "demo-user",
+  userName: "Demo User",
+
   // Agent identification (REQUIRED in SDK v0.17.0+)
-  agentId: 'quickstart-assistant',
-  agentName: 'Cortex Demo Assistant',
-  
+  agentId: "quickstart-assistant",
+  agentName: "Cortex Demo Assistant",
+
   // Optional features
-  enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === 'true',
-  enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === 'true',
-  
+  enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === "true",
+  enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === "true",
+
   // Embedding provider for semantic fact deduplication (v0.22.0)
   embeddingProvider: {
     generate: async (text) => {
       const result = await embed({
-        model: openaiClient.embedding('text-embedding-3-small'),
+        model: openaiClient.embedding("text-embedding-3-small"),
         value: text,
       });
       return result.embedding;
@@ -141,7 +141,7 @@ const cortexMemory = createCortexMemory({
 });
 
 const result = await streamText({
-  model: cortexMemory(openai('gpt-4o-mini')),
+  model: cortexMemory(openai("gpt-4o-mini")),
   messages,
 });
 ```
@@ -190,7 +190,7 @@ Since SDK v0.17.0, all user-agent conversations require an `agentId`. Add it to 
 ```typescript
 const cortexMemory = createCortexMemory({
   // ... other config
-  agentId: 'my-assistant', // Required!
+  agentId: "my-assistant", // Required!
 });
 ```
 
@@ -218,7 +218,7 @@ const cortexMemory = createCortexMemory({
   embeddingProvider: {
     generate: async (text) => {
       const result = await embed({
-        model: openaiClient.embedding('text-embedding-3-small'),
+        model: openaiClient.embedding("text-embedding-3-small"),
         value: text,
       });
       return result.embedding;

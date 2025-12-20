@@ -23,7 +23,10 @@ describe("Operation Sequence Validation", () => {
   afterAll(async () => {
     // Cleanup
     try {
-      await cortex.memorySpaces.delete(BASE_ID, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(BASE_ID, {
+        cascade: true,
+        reason: "test cleanup",
+      });
     } catch (_e) {
       // Ignore
     }
@@ -761,7 +764,10 @@ describe("Operation Sequence Validation", () => {
       ).toBe(false);
 
       // STEP 4: Delete
-      await cortex.memorySpaces.delete(spaceId, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(spaceId, {
+        cascade: true,
+        reason: "test cleanup",
+      });
 
       const afterDelete = await cortex.memorySpaces.get(spaceId);
       expect(afterDelete).toBeNull();
@@ -1448,7 +1454,10 @@ describe("Operation Sequence Validation", () => {
       });
 
       // Delete space with cascade
-      await cortex.memorySpaces.delete(spaceId, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(spaceId, {
+        cascade: true,
+        reason: "test cleanup",
+      });
 
       // Verify all deleted
       const convCheck = await cortex.conversations.get(conv.conversationId);

@@ -109,7 +109,12 @@ describe("setup and status commands", () => {
 
     it("should parse config show with JSON format", async () => {
       await program.parseAsync([
-        "node", "test", "config", "show", "-f", "json",
+        "node",
+        "test",
+        "config",
+        "show",
+        "-f",
+        "json",
       ]);
 
       const cmd = program.commands[0].commands[0];
@@ -118,7 +123,12 @@ describe("setup and status commands", () => {
 
     it("should parse config set", async () => {
       await program.parseAsync([
-        "node", "test", "config", "set", "format", "json",
+        "node",
+        "test",
+        "config",
+        "set",
+        "format",
+        "json",
       ]);
 
       const cmd = program.commands[0].commands[1];
@@ -127,8 +137,12 @@ describe("setup and status commands", () => {
 
     it("should parse config test", async () => {
       await program.parseAsync([
-        "node", "test", "config", "test",
-        "-d", "local",
+        "node",
+        "test",
+        "config",
+        "test",
+        "-d",
+        "local",
       ]);
 
       const cmd = program.commands[0].commands[2];
@@ -178,27 +192,21 @@ describe("setup and status commands", () => {
     });
 
     it("should parse status with JSON format", async () => {
-      await program.parseAsync([
-        "node", "test", "status", "-f", "json",
-      ]);
+      await program.parseAsync(["node", "test", "status", "-f", "json"]);
 
       const cmd = program.commands[0];
       expect(cmd.opts().format).toBe("json");
     });
 
     it("should parse status --check", async () => {
-      await program.parseAsync([
-        "node", "test", "status", "--check",
-      ]);
+      await program.parseAsync(["node", "test", "status", "--check"]);
 
       const cmd = program.commands[0];
       expect(cmd.opts().check).toBe(true);
     });
 
     it("should parse status --verbose", async () => {
-      await program.parseAsync([
-        "node", "test", "status", "--verbose",
-      ]);
+      await program.parseAsync(["node", "test", "status", "--verbose"]);
 
       const cmd = program.commands[0];
       expect(cmd.opts().verbose).toBe(true);

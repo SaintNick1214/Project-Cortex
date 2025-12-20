@@ -19,9 +19,7 @@ describe("users commands", () => {
         writeOut: () => {},
       });
 
-      const usersCmd = program
-        .command("users")
-        .description("User operations");
+      const usersCmd = program.command("users").description("User operations");
 
       usersCmd
         .command("list")
@@ -59,27 +57,21 @@ describe("users commands", () => {
     });
 
     it("should parse users list with custom limit", async () => {
-      await program.parseAsync([
-        "node", "test", "users", "list", "-l", "100",
-      ]);
+      await program.parseAsync(["node", "test", "users", "list", "-l", "100"]);
 
       const cmd = program.commands[0].commands[0];
       expect(cmd.opts().limit).toBe("100");
     });
 
     it("should parse users list with --no-stats", async () => {
-      await program.parseAsync([
-        "node", "test", "users", "list", "--no-stats",
-      ]);
+      await program.parseAsync(["node", "test", "users", "list", "--no-stats"]);
 
       const cmd = program.commands[0].commands[0];
       expect(cmd.opts().stats).toBe(false);
     });
 
     it("should parse users get with user ID", async () => {
-      await program.parseAsync([
-        "node", "test", "users", "get", "user-123",
-      ]);
+      await program.parseAsync(["node", "test", "users", "get", "user-123"]);
 
       const cmd = program.commands[0].commands[1];
       expect(cmd.args[0]).toBe("user-123");
@@ -87,7 +79,11 @@ describe("users commands", () => {
 
     it("should parse users get with --include-history", async () => {
       await program.parseAsync([
-        "node", "test", "users", "get", "user-123",
+        "node",
+        "test",
+        "users",
+        "get",
+        "user-123",
         "--include-history",
       ]);
 
@@ -97,8 +93,13 @@ describe("users commands", () => {
 
     it("should parse users delete with cascade option", async () => {
       await program.parseAsync([
-        "node", "test", "users", "delete", "user-123",
-        "--cascade", "-y",
+        "node",
+        "test",
+        "users",
+        "delete",
+        "user-123",
+        "--cascade",
+        "-y",
       ]);
 
       const cmd = program.commands[0].commands[2];
@@ -109,7 +110,11 @@ describe("users commands", () => {
 
     it("should parse users delete with dry-run", async () => {
       await program.parseAsync([
-        "node", "test", "users", "delete", "user-123",
+        "node",
+        "test",
+        "users",
+        "delete",
+        "user-123",
         "--dry-run",
       ]);
 
@@ -119,8 +124,13 @@ describe("users commands", () => {
 
     it("should parse users delete-many with multiple IDs", async () => {
       await program.parseAsync([
-        "node", "test", "users", "delete-many",
-        "user-1", "user-2", "user-3",
+        "node",
+        "test",
+        "users",
+        "delete-many",
+        "user-1",
+        "user-2",
+        "user-3",
         "-y",
       ]);
 

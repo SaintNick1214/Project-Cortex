@@ -93,7 +93,11 @@ CONVEX_PLAN=professional  # 256 concurrent queries/mutations
 The SDK reads this variable and applies the appropriate preset automatically:
 
 ```typescript
-import { Cortex, getPresetForPlan, getDetectedPlanTier } from "@cortexmemory/sdk";
+import {
+  Cortex,
+  getPresetForPlan,
+  getDetectedPlanTier,
+} from "@cortexmemory/sdk";
 
 // Auto-detect from CONVEX_PLAN env var
 const cortex = new Cortex({

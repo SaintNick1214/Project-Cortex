@@ -5,8 +5,8 @@
  * as data flows through the Cortex memory system.
  */
 
-import { query } from './_generated/server';
-import { v } from 'convex/values';
+import { query } from "./_generated/server";
+import { v } from "convex/values";
 
 /**
  * Get recent conversations for a memory space
@@ -23,9 +23,9 @@ export const getRecent = query({
 
     // Query conversations table (from Cortex SDK schema)
     const conversations = await ctx.db
-      .query('conversations')
-      .filter((q) => q.eq(q.field('memorySpaceId'), args.memorySpaceId))
-      .order('desc')
+      .query("conversations")
+      .filter((q) => q.eq(q.field("memorySpaceId"), args.memorySpaceId))
+      .order("desc")
       .take(limit);
 
     return conversations;
@@ -41,8 +41,8 @@ export const get = query({
   },
   handler: async (ctx, args) => {
     const conversation = await ctx.db
-      .query('conversations')
-      .filter((q) => q.eq(q.field('conversationId'), args.conversationId))
+      .query("conversations")
+      .filter((q) => q.eq(q.field("conversationId"), args.conversationId))
       .first();
 
     return conversation;
@@ -58,8 +58,8 @@ export const count = query({
   },
   handler: async (ctx, args) => {
     const conversations = await ctx.db
-      .query('conversations')
-      .filter((q) => q.eq(q.field('memorySpaceId'), args.memorySpaceId))
+      .query("conversations")
+      .filter((q) => q.eq(q.field("memorySpaceId"), args.memorySpaceId))
       .collect();
 
     return conversations.length;

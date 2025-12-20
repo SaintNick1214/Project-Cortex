@@ -460,7 +460,9 @@ describe("MetricsCollector", () => {
         const snapshot2 = metrics.getSnapshot();
 
         // Cost should roughly double
-        expect(snapshot2.estimatedCost).toBeGreaterThan(snapshot1.estimatedCost!);
+        expect(snapshot2.estimatedCost).toBeGreaterThan(
+          snapshot1.estimatedCost!,
+        );
       });
     });
 
@@ -508,7 +510,9 @@ describe("MetricsCollector", () => {
         const insights = metrics.generateInsights();
 
         const hasLatencyWarning = insights.bottlenecks.some(
-          (b) => b.toLowerCase().includes("first chunk") || b.toLowerCase().includes("latency"),
+          (b) =>
+            b.toLowerCase().includes("first chunk") ||
+            b.toLowerCase().includes("latency"),
         );
         expect(hasLatencyWarning).toBe(true);
         done();

@@ -5,8 +5,8 @@
  * during memory orchestration.
  */
 
-import { query } from './_generated/server';
-import { v } from 'convex/values';
+import { query } from "./_generated/server";
+import { v } from "convex/values";
 
 /**
  * Get user profile by ID
@@ -21,12 +21,12 @@ export const get = query({
   handler: async (ctx, args) => {
     // Query users table (from Cortex SDK schema)
     const user = await ctx.db
-      .query('users')
+      .query("users")
       .filter((q) =>
         q.and(
-          q.eq(q.field('userId'), args.userId),
-          q.eq(q.field('memorySpaceId'), args.memorySpaceId)
-        )
+          q.eq(q.field("userId"), args.userId),
+          q.eq(q.field("memorySpaceId"), args.memorySpaceId),
+        ),
       )
       .first();
 
@@ -46,8 +46,8 @@ export const list = query({
     const limit = args.limit ?? 20;
 
     const users = await ctx.db
-      .query('users')
-      .filter((q) => q.eq(q.field('memorySpaceId'), args.memorySpaceId))
+      .query("users")
+      .filter((q) => q.eq(q.field("memorySpaceId"), args.memorySpaceId))
       .take(limit);
 
     return users;
@@ -65,34 +65,34 @@ export const stats = query({
   handler: async (ctx, args) => {
     // Count memories
     const memories = await ctx.db
-      .query('memories')
+      .query("memories")
       .filter((q) =>
         q.and(
-          q.eq(q.field('userId'), args.userId),
-          q.eq(q.field('memorySpaceId'), args.memorySpaceId)
-        )
+          q.eq(q.field("userId"), args.userId),
+          q.eq(q.field("memorySpaceId"), args.memorySpaceId),
+        ),
       )
       .collect();
 
     // Count facts
     const facts = await ctx.db
-      .query('facts')
+      .query("facts")
       .filter((q) =>
         q.and(
-          q.eq(q.field('userId'), args.userId),
-          q.eq(q.field('memorySpaceId'), args.memorySpaceId)
-        )
+          q.eq(q.field("userId"), args.userId),
+          q.eq(q.field("memorySpaceId"), args.memorySpaceId),
+        ),
       )
       .collect();
 
     // Count conversations
     const conversations = await ctx.db
-      .query('conversations')
+      .query("conversations")
       .filter((q) =>
         q.and(
-          q.eq(q.field('userId'), args.userId),
-          q.eq(q.field('memorySpaceId'), args.memorySpaceId)
-        )
+          q.eq(q.field("userId"), args.userId),
+          q.eq(q.field("memorySpaceId"), args.memorySpaceId),
+        ),
       )
       .collect();
 

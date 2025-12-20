@@ -214,8 +214,8 @@ interface StoreFactWithDedupOptions extends StoreFactOptions {
 }
 
 interface DeduplicationConfig {
-  strategy: 'none' | 'exact' | 'structural' | 'semantic';
-  similarityThreshold?: number;  // 0-1, default 0.85
+  strategy: "none" | "exact" | "structural" | "semantic";
+  similarityThreshold?: number; // 0-1, default 0.85
   generateEmbedding?: (text: string) => Promise<number[]>;
 }
 ```
@@ -225,11 +225,11 @@ interface DeduplicationConfig {
 ```typescript
 interface StoreWithDedupResult {
   fact: FactRecord;
-  wasUpdated: boolean;  // true if existing fact was updated
+  wasUpdated: boolean; // true if existing fact was updated
   deduplication?: {
     strategy: DeduplicationStrategy;
     matchedExisting: boolean;
-    similarityScore?: number;  // For semantic matches
+    similarityScore?: number; // For semantic matches
   };
 }
 ```
@@ -251,7 +251,7 @@ const result = await cortex.facts.storeWithDedup(
   },
   {
     deduplication: { strategy: "structural" },
-  }
+  },
 );
 
 if (result.deduplication?.matchedExisting) {
@@ -265,7 +265,7 @@ if (result.deduplication?.matchedExisting) {
 const semanticResult = await cortex.facts.storeWithDedup(
   {
     memorySpaceId: "agent-1",
-    fact: "User likes dark themes",  // Different wording
+    fact: "User likes dark themes", // Different wording
     factType: "preference",
     subject: "user-123",
     confidence: 85,
@@ -277,7 +277,7 @@ const semanticResult = await cortex.facts.storeWithDedup(
       similarityThreshold: 0.8,
       generateEmbedding: async (text) => embed(text),
     },
-  }
+  },
 );
 
 // Will match "User prefers dark mode" semantically

@@ -20,12 +20,23 @@ class ProgressiveStorageHandler {
   private updateInterval: number;
   private partialMemoryId: string | null = null;
   private lastUpdateTime: number = 0;
-  private updateHistory: Array<{ memoryId: string; chunkNumber: number; contentLength: number; timestamp: number }> = [];
+  private updateHistory: Array<{
+    memoryId: string;
+    chunkNumber: number;
+    contentLength: number;
+    timestamp: number;
+  }> = [];
   private ready = false;
   private complete = false;
   private initTime: number = 0;
 
-  constructor(client: any, memorySpaceId: string, conversationId: string, userId: string, updateInterval: number = 3000) {
+  constructor(
+    client: any,
+    memorySpaceId: string,
+    conversationId: string,
+    userId: string,
+    updateInterval: number = 3000,
+  ) {
     this.client = client;
     this.memorySpaceId = memorySpaceId;
     this.conversationId = conversationId;
@@ -33,7 +44,12 @@ class ProgressiveStorageHandler {
     this.updateInterval = updateInterval;
   }
 
-  async initializePartialMemory(params: { participantId?: string; userMessage: string; importance?: number; tags?: string[] }): Promise<string> {
+  async initializePartialMemory(params: {
+    participantId?: string;
+    userMessage: string;
+    importance?: number;
+    tags?: string[];
+  }): Promise<string> {
     if (this.ready) {
       throw new Error("Partial memory already initialized");
     }
@@ -64,7 +80,11 @@ class ProgressiveStorageHandler {
     }
   }
 
-  async updatePartialContent(content: string, chunkNumber: number, force?: boolean): Promise<boolean> {
+  async updatePartialContent(
+    content: string,
+    chunkNumber: number,
+    force?: boolean,
+  ): Promise<boolean> {
     // Check complete first - after finalization, ready is false but we should return false, not throw
     if (this.complete) {
       return false;
@@ -98,7 +118,10 @@ class ProgressiveStorageHandler {
     }
   }
 
-  async finalizeMemory(fullContent: string, embedding?: number[]): Promise<void> {
+  async finalizeMemory(
+    fullContent: string,
+    embedding?: number[],
+  ): Promise<void> {
     // Check complete first for idempotency - already finalized should no-op
     if (this.complete) {
       return;
@@ -153,7 +176,12 @@ class ProgressiveStorageHandler {
     return this.partialMemoryId;
   }
 
-  getUpdateHistory(): Array<{ memoryId: string; chunkNumber: number; contentLength: number; timestamp: number }> {
+  getUpdateHistory(): Array<{
+    memoryId: string;
+    chunkNumber: number;
+    contentLength: number;
+    timestamp: number;
+  }> {
     return [...this.updateHistory];
   }
 
@@ -167,7 +195,10 @@ class ProgressiveStorageHandler {
 }
 
 // Helper function for optimal update interval
-function calculateOptimalUpdateInterval(chunkSize: number, chunksPerSecond: number): number {
+function calculateOptimalUpdateInterval(
+  chunkSize: number,
+  chunksPerSecond: number,
+): number {
   if (chunksPerSecond > 10) {
     return 5000; // Fast stream - longer intervals
   } else if (chunksPerSecond < 2) {
@@ -429,7 +460,11 @@ describe("ProgressiveStorageHandler", () => {
     it("should return false when finalized", async () => {
       await handler.finalizeMemory("Final content");
 
-      const result = await handler.updatePartialContent("After finalize", 10, true);
+      const result = await handler.updatePartialContent(
+        "After finalize",
+        10,
+        true,
+      );
 
       expect(result).toBe(false);
     });
@@ -454,7 +489,11 @@ describe("ProgressiveStorageHandler", () => {
       await failingHandler.initializePartialMemory({ userMessage: "Test" });
 
       // Should return false, not throw
-      const result = await failingHandler.updatePartialContent("Content", 1, true);
+      const result = await failingHandler.updatePartialContent(
+        "Content",
+        1,
+        true,
+      );
 
       expect(result).toBe(false);
     });
@@ -482,9 +521,9 @@ describe("ProgressiveStorageHandler", () => {
         "user",
       );
 
-      await expect(
-        uninitHandler.finalizeMemory("Content"),
-      ).rejects.toThrow("Partial memory not initialized");
+      await expect(uninitHandler.finalizeMemory("Content")).rejects.toThrow(
+        "Partial memory not initialized",
+      );
     });
 
     it("should call Convex mutation with correct parameters", async () => {
@@ -533,9 +572,10 @@ describe("ProgressiveStorageHandler", () => {
       await handler.updatePartialContent("Update 2", 2, true);
       await handler.finalizeMemory("Final");
 
-      const lastCall = mockClient.mutation.mock.calls[
-        mockClient.mutation.mock.calls.length - 1
-      ];
+      const lastCall =
+        mockClient.mutation.mock.calls[
+          mockClient.mutation.mock.calls.length - 1
+        ];
       expect(lastCall[1].metadata.totalUpdates).toBe(2);
     });
 
@@ -558,9 +598,9 @@ describe("ProgressiveStorageHandler", () => {
 
       await failingHandler.initializePartialMemory({ userMessage: "Test" });
 
-      await expect(
-        failingHandler.finalizeMemory("Content"),
-      ).rejects.toThrow(/Failed to finalize partial memory/);
+      await expect(failingHandler.finalizeMemory("Content")).rejects.toThrow(
+        /Failed to finalize partial memory/,
+      );
     });
   });
 
@@ -647,7 +687,9 @@ describe("ProgressiveStorageHandler", () => {
         100, // 100ms interval
       );
 
-      await shortIntervalHandler.initializePartialMemory({ userMessage: "Test" });
+      await shortIntervalHandler.initializePartialMemory({
+        userMessage: "Test",
+      });
 
       // Wait for interval to pass
       await new Promise((resolve) => setTimeout(resolve, 150));
@@ -664,7 +706,9 @@ describe("ProgressiveStorageHandler", () => {
         10000, // 10 second interval
       );
 
-      await longIntervalHandler.initializePartialMemory({ userMessage: "Test" });
+      await longIntervalHandler.initializePartialMemory({
+        userMessage: "Test",
+      });
 
       expect(longIntervalHandler.shouldUpdate()).toBe(false);
     });
@@ -806,7 +850,11 @@ describe("ProgressiveStorageHandler", () => {
       await handler.initializePartialMemory({ userMessage: "Test" });
 
       const unicodeContent = "Hello 世界 🌍 مرحبا";
-      const result = await handler.updatePartialContent(unicodeContent, 1, true);
+      const result = await handler.updatePartialContent(
+        unicodeContent,
+        1,
+        true,
+      );
 
       expect(result).toBe(true);
     });
@@ -814,7 +862,11 @@ describe("ProgressiveStorageHandler", () => {
     it("should handle high chunk numbers", async () => {
       await handler.initializePartialMemory({ userMessage: "Test" });
 
-      const result = await handler.updatePartialContent("Content", 999999, true);
+      const result = await handler.updatePartialContent(
+        "Content",
+        999999,
+        true,
+      );
 
       expect(result).toBe(true);
 

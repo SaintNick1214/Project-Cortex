@@ -120,7 +120,10 @@ describeE2E("Memory Workflow E2E", () => {
       // Wait a moment for vector indexing
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const results = await cortex.memory.search(TEST_SPACE_ID, "test searchable");
+      const results = await cortex.memory.search(
+        TEST_SPACE_ID,
+        "test searchable",
+      );
 
       expect(results.length).toBeGreaterThan(0);
     });
@@ -129,11 +132,16 @@ describeE2E("Memory Workflow E2E", () => {
       const memory = await cortex.memory.get(TEST_SPACE_ID, testMemoryId);
 
       expect(memory).not.toBeNull();
-      expect((memory as any)?.memoryId || (memory as any)?.memory?.memoryId).toBe(testMemoryId);
+      expect(
+        (memory as any)?.memoryId || (memory as any)?.memory?.memoryId,
+      ).toBe(testMemoryId);
     });
 
     it("should return null for non-existent memory", async () => {
-      const memory = await cortex.memory.get(TEST_SPACE_ID, "nonexistent-memory-id");
+      const memory = await cortex.memory.get(
+        TEST_SPACE_ID,
+        "nonexistent-memory-id",
+      );
 
       expect(memory).toBeNull();
     });
@@ -180,7 +188,10 @@ describeE2E("Memory Workflow E2E", () => {
     });
 
     it("should restore an archived memory", async () => {
-      const result = await cortex.memory.restoreFromArchive(TEST_SPACE_ID, testMemoryId);
+      const result = await cortex.memory.restoreFromArchive(
+        TEST_SPACE_ID,
+        testMemoryId,
+      );
 
       expect(result.restored).toBe(true);
 
@@ -233,7 +244,7 @@ describeE2E("Memory Workflow E2E", () => {
     it("should handle empty search results", async () => {
       const results = await cortex.memory.search(
         TEST_SPACE_ID,
-        "xyznonexistentquery12345"
+        "xyznonexistentquery12345",
       );
 
       expect(results).toEqual([]);
@@ -242,7 +253,7 @@ describeE2E("Memory Workflow E2E", () => {
     it("should handle search with special characters", async () => {
       const results = await cortex.memory.search(
         TEST_SPACE_ID,
-        "query with special chars: @#$%"
+        "query with special chars: @#$%",
       );
 
       // Should not throw

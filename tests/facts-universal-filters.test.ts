@@ -31,7 +31,10 @@ describe("Facts API - Universal Filters", () => {
   afterAll(async () => {
     // Cleanup test facts (best-effort - ignore errors)
     try {
-      await cortex.memorySpaces.delete(TEST_MEMSPACE_ID, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(TEST_MEMSPACE_ID, {
+        cascade: true,
+        reason: "test cleanup",
+      });
     } catch (_e) {
       // Ignore cleanup errors
     }

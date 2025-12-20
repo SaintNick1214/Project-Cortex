@@ -28,7 +28,10 @@ describe("Memory API - Auto-Conversation Creation", () => {
   afterAll(async () => {
     // Cleanup our isolated test data
     try {
-      await cortex.memorySpaces.delete(memorySpaceId, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(memorySpaceId, {
+        cascade: true,
+        reason: "test cleanup",
+      });
     } catch (_e) {
       // Ignore cleanup errors
     }

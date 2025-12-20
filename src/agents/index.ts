@@ -893,9 +893,7 @@ export class AgentsAPI {
           this.escapeCsvField(String(a.status)),
           new Date(a.registeredAt as number).toISOString(),
           new Date(a.updatedAt as number).toISOString(),
-          a.lastActive
-            ? new Date(a.lastActive as number).toISOString()
-            : "",
+          a.lastActive ? new Date(a.lastActive as number).toISOString() : "",
         ];
 
         if (includeMetadata) {
@@ -984,7 +982,10 @@ export class AgentsAPI {
     const affectedSpaces = new Set<string>();
 
     // Get all memory spaces
-    const memorySpacesResult = await this.client.query(api.memorySpaces.list, {});
+    const memorySpacesResult = await this.client.query(
+      api.memorySpaces.list,
+      {},
+    );
     const memorySpacesList = memorySpacesResult.spaces;
 
     // PARALLEL COLLECTION: Query all spaces for all data types simultaneously
@@ -1032,7 +1033,10 @@ export class AgentsAPI {
                   (m) => m.participantId === agentId,
                 ),
               }))
-              .catch(() => ({ spaceId: space.memorySpaceId, memories: [] as MemoryEntry[] })),
+              .catch(() => ({
+                spaceId: space.memorySpaceId,
+                memories: [] as MemoryEntry[],
+              })),
           ),
         ),
 
@@ -1049,7 +1053,10 @@ export class AgentsAPI {
                   (f) => f.participantId === agentId,
                 ),
               }))
-              .catch(() => ({ spaceId: space.memorySpaceId, facts: [] as FactRecord[] })),
+              .catch(() => ({
+                spaceId: space.memorySpaceId,
+                facts: [] as FactRecord[],
+              })),
           ),
         ),
 
@@ -1325,7 +1332,10 @@ export class AgentsAPI {
     const issues: string[] = [];
 
     // Get memory spaces once
-    const memorySpacesResult = await this.client.query(api.memorySpaces.list, {});
+    const memorySpacesResult = await this.client.query(
+      api.memorySpaces.list,
+      {},
+    );
     const memorySpacesList = memorySpacesResult.spaces;
 
     // Run ALL verification queries in parallel for maximum performance

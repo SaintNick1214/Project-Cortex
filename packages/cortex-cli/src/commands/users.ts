@@ -56,10 +56,16 @@ export function registerUserCommands(
     .option("--no-stats", "Skip gathering usage stats (faster)")
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "list users");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "list users",
+      );
       if (!selection) return;
 
-      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
+      const resolved = resolveConfig(currentConfig, {
+        deployment: selection.name,
+      });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading users...").start();
@@ -67,114 +73,118 @@ export function registerUserCommands(
       try {
         const limit = validateLimit(parseInt(options.limit, 10));
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const usersResult = await client.users.list({ limit });
-          const users = usersResult.users;
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const usersResult = await client.users.list({ limit });
+            const users = usersResult.users;
 
-          if (users.length === 0) {
-            spinner.stop();
-            printWarning("No users found");
-            return;
-          }
+            if (users.length === 0) {
+              spinner.stop();
+              printWarning("No users found");
+              return;
+            }
 
-          // Gather stats if not disabled
-          let userStats: Map<
-            string,
-            { memories: number; conversations: number; facts: number }
-          > = new Map();
+            // Gather stats if not disabled
+            let userStats: Map<
+              string,
+              { memories: number; conversations: number; facts: number }
+            > = new Map();
 
-          if (options.stats !== false) {
-            spinner.text = `Loading stats for ${users.length} users...`;
+            if (options.stats !== false) {
+              spinner.text = `Loading stats for ${users.length} users...`;
 
-            // Get all memory spaces once
-            const spacesResult = await client.memorySpaces.list();
+              // Get all memory spaces once
+              const spacesResult = await client.memorySpaces.list();
 
-            for (const user of users) {
-              let memories = 0;
-              let conversations = 0;
-              let facts = 0;
+              for (const user of users) {
+                let memories = 0;
+                let conversations = 0;
+                let facts = 0;
 
-              for (const space of spacesResult.spaces) {
-                try {
-                  // Count memories for this user in this space
-                  const memCount = await client.memory.count({
-                    memorySpaceId: space.memorySpaceId,
-                    userId: user.id,
-                  });
-                  memories += memCount;
+                for (const space of spacesResult.spaces) {
+                  try {
+                    // Count memories for this user in this space
+                    const memCount = await client.memory.count({
+                      memorySpaceId: space.memorySpaceId,
+                      userId: user.id,
+                    });
+                    memories += memCount;
 
-                  // Count conversations
-                  const convosResult = await client.conversations.list({
-                    memorySpaceId: space.memorySpaceId,
-                    userId: user.id,
-                    limit: 1000,
-                  });
-                  conversations += convosResult.conversations.length;
+                    // Count conversations
+                    const convosResult = await client.conversations.list({
+                      memorySpaceId: space.memorySpaceId,
+                      userId: user.id,
+                      limit: 1000,
+                    });
+                    conversations += convosResult.conversations.length;
 
-                  // Count facts
-                  const factsList = await client.facts.list({
-                    memorySpaceId: space.memorySpaceId,
-                    userId: user.id,
-                    limit: 1000,
-                  });
-                  facts += factsList.length;
-                } catch {
-                  // Skip spaces that don't support userId filter
+                    // Count facts
+                    const factsList = await client.facts.list({
+                      memorySpaceId: space.memorySpaceId,
+                      userId: user.id,
+                      limit: 1000,
+                    });
+                    facts += factsList.length;
+                  } catch {
+                    // Skip spaces that don't support userId filter
+                  }
                 }
+
+                userStats.set(user.id, { memories, conversations, facts });
               }
-
-              userStats.set(user.id, { memories, conversations, facts });
             }
-          }
 
-          spinner.stop();
+            spinner.stop();
 
-          // Format users for display
-          const displayData = users.map((u) => {
-            const stats = userStats.get(u.id);
-            if (stats) {
-              return {
-                id: u.id,
-                memories: stats.memories,
-                conversations: stats.conversations,
-                facts: stats.facts,
-                version: u.version,
-                updated: formatRelativeTime(u.updatedAt),
-              };
-            } else {
-              // No stats mode - show basic info with a preview of data keys
-              const dataKeys = Object.keys(u.data).slice(0, 3).join(", ");
-              return {
-                id: u.id,
-                version: u.version,
-                created: formatRelativeTime(u.createdAt),
-                updated: formatRelativeTime(u.updatedAt),
-                fields: dataKeys || "(empty)",
-              };
-            }
-          });
+            // Format users for display
+            const displayData = users.map((u) => {
+              const stats = userStats.get(u.id);
+              if (stats) {
+                return {
+                  id: u.id,
+                  memories: stats.memories,
+                  conversations: stats.conversations,
+                  facts: stats.facts,
+                  version: u.version,
+                  updated: formatRelativeTime(u.updatedAt),
+                };
+              } else {
+                // No stats mode - show basic info with a preview of data keys
+                const dataKeys = Object.keys(u.data).slice(0, 3).join(", ");
+                return {
+                  id: u.id,
+                  version: u.version,
+                  created: formatRelativeTime(u.createdAt),
+                  updated: formatRelativeTime(u.updatedAt),
+                  fields: dataKeys || "(empty)",
+                };
+              }
+            });
 
-          const headers =
-            options.stats !== false
-              ? [
-                  "id",
-                  "memories",
-                  "conversations",
-                  "facts",
-                  "version",
-                  "updated",
-                ]
-              : ["id", "version", "created", "updated", "fields"];
+            const headers =
+              options.stats !== false
+                ? [
+                    "id",
+                    "memories",
+                    "conversations",
+                    "facts",
+                    "version",
+                    "updated",
+                  ]
+                : ["id", "version", "created", "updated", "fields"];
 
-          console.log(
-            formatOutput(displayData, format, {
-              title: "User Profiles",
-              headers,
-            }),
-          );
+            console.log(
+              formatOutput(displayData, format, {
+                title: "User Profiles",
+                headers,
+              }),
+            );
 
-          printSuccess(`Found ${formatCount(users.length, "user")}`);
-        });
+            printSuccess(`Found ${formatCount(users.length, "user")}`);
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(
@@ -193,10 +203,16 @@ export function registerUserCommands(
     .option("--include-history", "Include version history", false)
     .action(async (userId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "get user");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "get user",
+      );
       if (!selection) return;
 
-      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
+      const resolved = resolveConfig(currentConfig, {
+        deployment: selection.name,
+      });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading user...").start();
@@ -204,56 +220,60 @@ export function registerUserCommands(
       try {
         validateUserId(userId);
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const user = await client.users.get(userId);
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const user = await client.users.get(userId);
 
-          if (!user) {
+            if (!user) {
+              spinner.stop();
+              printError(`User ${userId} not found`);
+              process.exit(1);
+            }
+
+            // Get version history if requested
+            let history = null;
+            if (options.includeHistory) {
+              history = await client.users.getHistory(userId);
+            }
+
             spinner.stop();
-            printError(`User ${userId} not found`);
-            process.exit(1);
-          }
 
-          // Get version history if requested
-          let history = null;
-          if (options.includeHistory) {
-            history = await client.users.getHistory(userId);
-          }
+            if (format === "json") {
+              console.log(
+                formatOutput(
+                  options.includeHistory ? { user, history } : user,
+                  "json",
+                ),
+              );
+            } else {
+              printSection(`User Profile: ${userId}`, {
+                ID: user.id,
+                Version: user.version,
+                Created: formatTimestamp(user.createdAt),
+                Updated: formatTimestamp(user.updatedAt),
+              });
 
-          spinner.stop();
-
-          if (format === "json") {
-            console.log(
-              formatOutput(
-                options.includeHistory ? { user, history } : user,
-                "json",
-              ),
-            );
-          } else {
-            printSection(`User Profile: ${userId}`, {
-              ID: user.id,
-              Version: user.version,
-              Created: formatTimestamp(user.createdAt),
-              Updated: formatTimestamp(user.updatedAt),
-            });
-
-            console.log("\n  Profile Data:");
-            for (const [key, value] of Object.entries(user.data)) {
-              console.log(`    ${key}: ${JSON.stringify(value)}`);
-            }
-
-            if (history && history.length > 0) {
-              console.log(`\n  Version History: ${history.length} versions`);
-              for (const v of history.slice(0, 5)) {
-                console.log(
-                  `    v${v.version}: ${formatTimestamp(v.timestamp)}`,
-                );
+              console.log("\n  Profile Data:");
+              for (const [key, value] of Object.entries(user.data)) {
+                console.log(`    ${key}: ${JSON.stringify(value)}`);
               }
-              if (history.length > 5) {
-                console.log(`    ... and ${history.length - 5} more`);
+
+              if (history && history.length > 0) {
+                console.log(`\n  Version History: ${history.length} versions`);
+                for (const v of history.slice(0, 5)) {
+                  console.log(
+                    `    v${v.version}: ${formatTimestamp(v.timestamp)}`,
+                  );
+                }
+                if (history.length > 5) {
+                  console.log(`    ... and ${history.length - 5} more`);
+                }
               }
             }
-          }
-        });
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(
@@ -282,7 +302,11 @@ export function registerUserCommands(
     )
     .action(async (userId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "delete user");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "delete user",
+      );
       if (!selection) return;
 
       try {
@@ -329,58 +353,64 @@ export function registerUserCommands(
               : "Deleting user...",
         ).start();
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const result = await client.users.delete(userId, {
-            cascade: options.cascade,
-            dryRun: options.dryRun,
-            verify: options.verify,
-          });
-
-          spinner.stop();
-
-          if (options.dryRun) {
-            console.log("\n📋 DRY RUN - No data was deleted\n");
-            printSection(`Would delete for user ${userId}`, {
-              "User Profile": "Yes",
-              Conversations: result.conversationsDeleted,
-              "Conversation Messages": result.conversationMessagesDeleted,
-              "Immutable Records": result.immutableRecordsDeleted,
-              "Mutable Keys": result.mutableKeysDeleted,
-              "Vector Memories": result.vectorMemoriesDeleted,
-              Facts: result.factsDeleted,
-              "Graph Nodes": result.graphNodesDeleted ?? "N/A",
-              "Total Records": result.totalDeleted,
-              "Affected Layers": result.deletedLayers.join(", "),
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const result = await client.users.delete(userId, {
+              cascade: options.cascade,
+              dryRun: options.dryRun,
+              verify: options.verify,
             });
-          } else {
-            printSuccess(`Deleted user ${userId}`);
 
-            if (options.cascade) {
-              printSection("Cascade Deletion Summary", {
+            spinner.stop();
+
+            if (options.dryRun) {
+              console.log("\n📋 DRY RUN - No data was deleted\n");
+              printSection(`Would delete for user ${userId}`, {
+                "User Profile": "Yes",
                 Conversations: result.conversationsDeleted,
-                Messages: result.conversationMessagesDeleted,
-                Memories: result.vectorMemoriesDeleted,
-                Facts: result.factsDeleted,
+                "Conversation Messages": result.conversationMessagesDeleted,
                 "Immutable Records": result.immutableRecordsDeleted,
                 "Mutable Keys": result.mutableKeysDeleted,
+                "Vector Memories": result.vectorMemoriesDeleted,
+                Facts: result.factsDeleted,
                 "Graph Nodes": result.graphNodesDeleted ?? "N/A",
-                "Total Deleted": result.totalDeleted,
+                "Total Records": result.totalDeleted,
+                "Affected Layers": result.deletedLayers.join(", "),
               });
+            } else {
+              printSuccess(`Deleted user ${userId}`);
 
-              // Show verification results
-              if (options.verify && result.verification) {
-                if (result.verification.complete) {
-                  printSuccess("✓ Verification passed - all user data deleted");
-                } else {
-                  printWarning("Verification found potential issues:");
-                  for (const issue of result.verification.issues) {
-                    console.log(`  • ${issue}`);
+              if (options.cascade) {
+                printSection("Cascade Deletion Summary", {
+                  Conversations: result.conversationsDeleted,
+                  Messages: result.conversationMessagesDeleted,
+                  Memories: result.vectorMemoriesDeleted,
+                  Facts: result.factsDeleted,
+                  "Immutable Records": result.immutableRecordsDeleted,
+                  "Mutable Keys": result.mutableKeysDeleted,
+                  "Graph Nodes": result.graphNodesDeleted ?? "N/A",
+                  "Total Deleted": result.totalDeleted,
+                });
+
+                // Show verification results
+                if (options.verify && result.verification) {
+                  if (result.verification.complete) {
+                    printSuccess(
+                      "✓ Verification passed - all user data deleted",
+                    );
+                  } else {
+                    printWarning("Verification found potential issues:");
+                    for (const issue of result.verification.issues) {
+                      console.log(`  • ${issue}`);
+                    }
                   }
                 }
               }
             }
-          }
-        });
+          },
+        );
       } catch (error) {
         printError(error instanceof Error ? error.message : "Delete failed");
         process.exit(1);
@@ -397,7 +427,11 @@ export function registerUserCommands(
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (userIds, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "delete users");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "delete users",
+      );
       if (!selection) return;
 
       try {
@@ -420,29 +454,33 @@ export function registerUserCommands(
 
         const spinner = ora(`Deleting ${userIds.length} users...`).start();
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const result = await client.users.deleteMany(userIds, {
-            cascade: options.cascade,
-            dryRun: options.dryRun,
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const result = await client.users.deleteMany(userIds, {
+              cascade: options.cascade,
+              dryRun: options.dryRun,
+            });
 
-          spinner.stop();
+            spinner.stop();
 
-          if (options.dryRun) {
-            printWarning(
-              `DRY RUN: Would delete ${formatCount(userIds.length, "user")}`,
-            );
-          } else {
-            printSuccess(
-              `Deleted ${formatCount(result.deleted, "user")} of ${userIds.length}`,
-            );
-            if (result.deleted < userIds.length) {
+            if (options.dryRun) {
               printWarning(
-                `${userIds.length - result.deleted} users not found or could not be deleted`,
+                `DRY RUN: Would delete ${formatCount(userIds.length, "user")}`,
               );
+            } else {
+              printSuccess(
+                `Deleted ${formatCount(result.deleted, "user")} of ${userIds.length}`,
+              );
+              if (result.deleted < userIds.length) {
+                printWarning(
+                  `${userIds.length - result.deleted} users not found or could not be deleted`,
+                );
+              }
             }
-          }
-        });
+          },
+        );
       } catch (error) {
         printError(error instanceof Error ? error.message : "Delete failed");
         process.exit(1);
@@ -457,7 +495,11 @@ export function registerUserCommands(
     .option("-o, --output <file>", "Output file path", "user-export.json")
     .action(async (userId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "export user data");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "export user data",
+      );
       if (!selection) return;
 
       const spinner = ora("Exporting user data...").start();
@@ -466,35 +508,39 @@ export function registerUserCommands(
         validateUserId(userId);
         validateFilePath(options.output);
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          // Get user profile
-          const user = await client.users.get(userId);
-          if (!user) {
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            // Get user profile
+            const user = await client.users.get(userId);
+            if (!user) {
+              spinner.stop();
+              printError(`User ${userId} not found`);
+              process.exit(1);
+            }
+
+            // Get user history
+            const history = await client.users.getHistory(userId);
+
+            // Export the data
+            const exportData = {
+              userId,
+              exportedAt: Date.now(),
+              profile: user,
+              versionHistory: history,
+            };
+
+            await writeFile(
+              options.output,
+              JSON.stringify(exportData, null, 2),
+              "utf-8",
+            );
+
             spinner.stop();
-            printError(`User ${userId} not found`);
-            process.exit(1);
-          }
-
-          // Get user history
-          const history = await client.users.getHistory(userId);
-
-          // Export the data
-          const exportData = {
-            userId,
-            exportedAt: Date.now(),
-            profile: user,
-            versionHistory: history,
-          };
-
-          await writeFile(
-            options.output,
-            JSON.stringify(exportData, null, 2),
-            "utf-8",
-          );
-
-          spinner.stop();
-          printSuccess(`Exported user data to ${options.output}`);
-        });
+            printSuccess(`Exported user data to ${options.output}`);
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(error instanceof Error ? error.message : "Export failed");
@@ -510,10 +556,16 @@ export function registerUserCommands(
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (userId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "show user stats");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "show user stats",
+      );
       if (!selection) return;
 
-      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
+      const resolved = resolveConfig(currentConfig, {
+        deployment: selection.name,
+      });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading user statistics...").start();
@@ -521,84 +573,88 @@ export function registerUserCommands(
       try {
         validateUserId(userId);
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          // Check if user exists
-          const user = await client.users.get(userId);
-          if (!user) {
-            spinner.stop();
-            printError(`User ${userId} not found`);
-            process.exit(1);
-          }
-
-          // Get version count
-          const history = await client.users.getHistory(userId);
-
-          // Get all memory spaces to count user's data
-          const spacesResult = await client.memorySpaces.list();
-
-          let totalMemories = 0;
-          let totalConversations = 0;
-          const spacesWithData: string[] = [];
-
-          for (const space of spacesResult.spaces) {
-            const memoryCount = await client.memory.count({
-              memorySpaceId: space.memorySpaceId,
-              userId,
-            });
-            if (memoryCount > 0) {
-              totalMemories += memoryCount;
-              spacesWithData.push(space.memorySpaceId);
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            // Check if user exists
+            const user = await client.users.get(userId);
+            if (!user) {
+              spinner.stop();
+              printError(`User ${userId} not found`);
+              process.exit(1);
             }
 
-            // Try to count conversations (may not have userId filter)
-            try {
-              const convosResult = await client.conversations.list({
+            // Get version count
+            const history = await client.users.getHistory(userId);
+
+            // Get all memory spaces to count user's data
+            const spacesResult = await client.memorySpaces.list();
+
+            let totalMemories = 0;
+            let totalConversations = 0;
+            const spacesWithData: string[] = [];
+
+            for (const space of spacesResult.spaces) {
+              const memoryCount = await client.memory.count({
                 memorySpaceId: space.memorySpaceId,
                 userId,
-                limit: 1000,
               });
-              totalConversations += convosResult.conversations.length;
-            } catch {
-              // Skip if conversations don't support userId filter
-            }
-          }
-
-          spinner.stop();
-
-          const stats = {
-            userId,
-            profileVersions: history.length,
-            totalMemories,
-            totalConversations,
-            memorySpaces: spacesWithData.length,
-            spacesWithData,
-            profileCreated: formatTimestamp(user.createdAt),
-            lastUpdated: formatTimestamp(user.updatedAt),
-          };
-
-          if (format === "json") {
-            console.log(formatOutput(stats, "json"));
-          } else {
-            printSection(`User Statistics: ${userId}`, {
-              "Profile Versions": history.length,
-              "Total Memories": totalMemories,
-              "Total Conversations": totalConversations,
-              "Memory Spaces with Data": spacesWithData.length,
-              "Profile Created": formatTimestamp(user.createdAt),
-              "Last Updated": formatTimestamp(user.updatedAt),
-            });
-
-            if (spacesWithData.length > 0) {
-              console.log("\n  Spaces with user data:");
-              for (const space of spacesWithData.slice(0, 5)) {
-                console.log(`    • ${space}`);
+              if (memoryCount > 0) {
+                totalMemories += memoryCount;
+                spacesWithData.push(space.memorySpaceId);
               }
-              if (spacesWithData.length > 5) {
-                console.log(`    ... and ${spacesWithData.length - 5} more`);
+
+              // Try to count conversations (may not have userId filter)
+              try {
+                const convosResult = await client.conversations.list({
+                  memorySpaceId: space.memorySpaceId,
+                  userId,
+                  limit: 1000,
+                });
+                totalConversations += convosResult.conversations.length;
+              } catch {
+                // Skip if conversations don't support userId filter
               }
             }
-          }
-        });
+
+            spinner.stop();
+
+            const stats = {
+              userId,
+              profileVersions: history.length,
+              totalMemories,
+              totalConversations,
+              memorySpaces: spacesWithData.length,
+              spacesWithData,
+              profileCreated: formatTimestamp(user.createdAt),
+              lastUpdated: formatTimestamp(user.updatedAt),
+            };
+
+            if (format === "json") {
+              console.log(formatOutput(stats, "json"));
+            } else {
+              printSection(`User Statistics: ${userId}`, {
+                "Profile Versions": history.length,
+                "Total Memories": totalMemories,
+                "Total Conversations": totalConversations,
+                "Memory Spaces with Data": spacesWithData.length,
+                "Profile Created": formatTimestamp(user.createdAt),
+                "Last Updated": formatTimestamp(user.updatedAt),
+              });
+
+              if (spacesWithData.length > 0) {
+                console.log("\n  Spaces with user data:");
+                for (const space of spacesWithData.slice(0, 5)) {
+                  console.log(`    • ${space}`);
+                }
+                if (spacesWithData.length > 5) {
+                  console.log(`    ... and ${spacesWithData.length - 5} more`);
+                }
+              }
+            }
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(
@@ -617,7 +673,11 @@ export function registerUserCommands(
     .option("-f, --file <path>", "JSON file with data to merge")
     .action(async (userId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "update user");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "update user",
+      );
       if (!selection) return;
 
       try {
@@ -639,14 +699,18 @@ export function registerUserCommands(
 
         const spinner = ora("Updating user profile...").start();
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const updated = await client.users.merge(userId, data);
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const updated = await client.users.merge(userId, data);
 
-          spinner.stop();
-          printSuccess(
-            `Updated user ${userId} (now version ${updated.version})`,
-          );
-        });
+            spinner.stop();
+            printSuccess(
+              `Updated user ${userId} (now version ${updated.version})`,
+            );
+          },
+        );
       } catch (error) {
         printError(error instanceof Error ? error.message : "Update failed");
         process.exit(1);
@@ -661,7 +725,11 @@ export function registerUserCommands(
     .option("--data <json>", "JSON data for the profile", "{}")
     .action(async (userId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "create user");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "create user",
+      );
       if (!selection) return;
 
       try {
@@ -671,22 +739,26 @@ export function registerUserCommands(
 
         const spinner = ora("Creating user profile...").start();
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          // Check if user exists
-          const existing = await client.users.get(userId);
-          if (existing) {
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            // Check if user exists
+            const existing = await client.users.get(userId);
+            if (existing) {
+              spinner.stop();
+              printError(`User ${userId} already exists`);
+              process.exit(1);
+            }
+
+            const user = await client.users.update(userId, data);
+
             spinner.stop();
-            printError(`User ${userId} already exists`);
-            process.exit(1);
-          }
-
-          const user = await client.users.update(userId, data);
-
-          spinner.stop();
-          printSuccess(`Created user ${userId}`);
-          console.log(`  Version: ${user.version}`);
-          console.log(`  Created: ${formatTimestamp(user.createdAt)}`);
-        });
+            printSuccess(`Created user ${userId}`);
+            console.log(`  Version: ${user.version}`);
+            console.log(`  Created: ${formatTimestamp(user.createdAt)}`);
+          },
+        );
       } catch (error) {
         printError(error instanceof Error ? error.message : "Create failed");
         process.exit(1);
@@ -700,22 +772,30 @@ export function registerUserCommands(
     .option("-d, --deployment <name>", "Target deployment")
     .action(async (userId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "check user exists");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "check user exists",
+      );
       if (!selection) return;
 
       try {
         validateUserId(userId);
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const exists = await client.users.exists(userId);
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const exists = await client.users.exists(userId);
 
-          if (exists) {
-            printSuccess(`User ${userId} exists`);
-          } else {
-            printWarning(`User ${userId} does not exist`);
-            process.exit(1);
-          }
-        });
+            if (exists) {
+              printSuccess(`User ${userId} exists`);
+            } else {
+              printWarning(`User ${userId} does not exist`);
+              process.exit(1);
+            }
+          },
+        );
       } catch (error) {
         printError(error instanceof Error ? error.message : "Check failed");
         process.exit(1);

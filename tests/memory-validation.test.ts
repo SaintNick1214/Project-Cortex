@@ -939,7 +939,9 @@ describe("Memory Validation", () => {
       it("should return memory when accessed from correct space", async () => {
         const result = await cortex.memory.get(SPACE_A, memoryInSpaceA);
         expect(result).not.toBeNull();
-        expect((result as any).memoryId || (result as any).memory?.memoryId).toBe(memoryInSpaceA);
+        expect(
+          (result as any).memoryId || (result as any).memory?.memoryId,
+        ).toBe(memoryInSpaceA);
       });
     });
 
@@ -979,7 +981,11 @@ describe("Memory Validation", () => {
 
     describe("getVersion() cross-space access", () => {
       it("should return null when accessing version from wrong space", async () => {
-        const result = await cortex.memory.getVersion(SPACE_B, memoryInSpaceA, 1);
+        const result = await cortex.memory.getVersion(
+          SPACE_B,
+          memoryInSpaceA,
+          1,
+        );
         expect(result).toBeNull();
       });
     });
@@ -1039,7 +1045,10 @@ describe("Memory Validation", () => {
     describe("restoreFromArchive() not found", () => {
       it("should throw MEMORY_NOT_FOUND when memory does not exist", async () => {
         await expect(
-          cortex.memory.restoreFromArchive(TEST_MEMSPACE_ID, NONEXISTENT_MEMORY_ID),
+          cortex.memory.restoreFromArchive(
+            TEST_MEMSPACE_ID,
+            NONEXISTENT_MEMORY_ID,
+          ),
         ).rejects.toThrow(/MEMORY_NOT_FOUND|not found/i);
       });
 

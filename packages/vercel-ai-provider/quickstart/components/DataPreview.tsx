@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 interface DataPreviewProps {
   data: {
@@ -41,9 +41,9 @@ export function DataPreview({ data }: DataPreviewProps) {
                 key={key}
                 className="px-1.5 py-0.5 bg-white/5 rounded text-xs"
               >
-                <span className="text-gray-500">{key}:</span>{' '}
+                <span className="text-gray-500">{key}:</span>{" "}
                 <span className="text-gray-300">
-                  {typeof value === 'object'
+                  {typeof value === "object"
                     ? JSON.stringify(value)
                     : String(value)}
                 </span>

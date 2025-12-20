@@ -323,23 +323,23 @@ const memory = await cortex.memory.store("user-123-personal", {
 
 ### Layer 2: cortex.vector.\* Operations
 
-| Operation                                       | Purpose                         | Returns                                             |
-| ----------------------------------------------- | ------------------------------- | --------------------------------------------------- |
-| `store(memorySpaceId, input, options?)`         | Store vector memory             | MemoryEntry                                         |
-| `get(memorySpaceId, memoryId)`                  | Get vector memory               | MemoryEntry \| null                                 |
-| `search(memorySpaceId, query, options?)`        | Search vector index             | MemoryEntry[]                                       |
-| `update(memorySpaceId, memoryId, updates)`      | Update memory (creates version) | MemoryEntry                                         |
-| `delete(memorySpaceId, memoryId, options?)`     | Delete from vector              | \{ deleted: boolean; memoryId: string \}              |
-| `updateMany(filter, updates)`                   | Bulk update                     | \{ updated: number; memoryIds: string[] \}            |
-| `deleteMany(filter)`                            | Bulk delete                     | \{ deleted: number; memoryIds: string[] \}            |
-| `count(filter)`                                 | Count memories                  | number                                              |
-| `list(filter)`                                  | List memories                   | MemoryEntry[]                                       |
-| `export(options)`                               | Export vector memories          | \{ format: string; data: string; count: number; ... \}|
+| Operation                                       | Purpose                         | Returns                                                        |
+| ----------------------------------------------- | ------------------------------- | -------------------------------------------------------------- |
+| `store(memorySpaceId, input, options?)`         | Store vector memory             | MemoryEntry                                                    |
+| `get(memorySpaceId, memoryId)`                  | Get vector memory               | MemoryEntry \| null                                            |
+| `search(memorySpaceId, query, options?)`        | Search vector index             | MemoryEntry[]                                                  |
+| `update(memorySpaceId, memoryId, updates)`      | Update memory (creates version) | MemoryEntry                                                    |
+| `delete(memorySpaceId, memoryId, options?)`     | Delete from vector              | \{ deleted: boolean; memoryId: string \}                       |
+| `updateMany(filter, updates)`                   | Bulk update                     | \{ updated: number; memoryIds: string[] \}                     |
+| `deleteMany(filter)`                            | Bulk delete                     | \{ deleted: number; memoryIds: string[] \}                     |
+| `count(filter)`                                 | Count memories                  | number                                                         |
+| `list(filter)`                                  | List memories                   | MemoryEntry[]                                                  |
+| `export(options)`                               | Export vector memories          | \{ format: string; data: string; count: number; ... \}         |
 | `archive(memorySpaceId, memoryId)`              | Soft delete (single memory)     | \{ archived: boolean; memoryId: string; restorable: boolean \} |
 | `restoreFromArchive(memorySpaceId, memoryId)`   | Restore from archive            | \{ restored: boolean; memoryId: string; memory: MemoryEntry \} |
-| `getVersion(memorySpaceId, memoryId, version)`  | Get specific version            | MemoryVersion \| null                               |
-| `getHistory(memorySpaceId, memoryId)`           | Get version history             | MemoryVersion[]                                     |
-| `getAtTimestamp(memorySpaceId, memoryId, date)` | Temporal query                  | MemoryVersion \| null                               |
+| `getVersion(memorySpaceId, memoryId, version)`  | Get specific version            | MemoryVersion \| null                                          |
+| `getHistory(memorySpaceId, memoryId)`           | Get version history             | MemoryVersion[]                                                |
+| `getAtTimestamp(memorySpaceId, memoryId, date)` | Temporal query                  | MemoryVersion \| null                                          |
 
 ### Layer 4: cortex.memory.\* Operations (Convenience API)
 
@@ -356,24 +356,24 @@ const memory = await cortex.memory.store("user-123-personal", {
 
 **Key Differences:**
 
-| Operation              | Layer 2 (cortex.vector.\*)     | Layer 4 (cortex.memory.\*)                  |
-| ---------------------- | ------------------------------ | ------------------------------------------- |
-| `remember()`           | N/A                            | ✨ Unique - stores in both layers           |
-| `get()`                | Vector only                    | Can include ACID (`includeConversation`)    |
-| `search()`             | Vector only                    | Can enrich with ACID (`enrichConversation`) |
-| `delete()`             | Vector only                    | Same (preserves ACID)                       |
-| `forget()`             | N/A                            | ✨ Unique - deletes from both layers        |
-| `store()`              | Manual conversationRef         | Smart - detects layer from source.type      |
-| `update()`             | Direct                         | Delegates to Layer 2                        |
-| `updateMany()`         | Direct (filter, updates)       | Delegates to Layer 2                        |
-| `deleteMany()`         | Direct (filter)                | Delegates to Layer 2                        |
-| `count()`              | Direct (filter)                | Delegates to Layer 2                        |
-| `list()`               | Direct (filter)                | Delegates to Layer 2                        |
-| `export()`             | Direct (options)               | Delegates to Layer 2                        |
-| `archive()`            | Single memory                  | Delegates to Layer 2                        |
-| `restoreFromArchive()` | Restore archived memory        | Delegates to Layer 2                        |
-| `archive()`    | Direct                     | Delegates to Layer 2                        |
-| Version ops    | Direct                     | Delegates to Layer 2                        |
+| Operation              | Layer 2 (cortex.vector.\*) | Layer 4 (cortex.memory.\*)                  |
+| ---------------------- | -------------------------- | ------------------------------------------- |
+| `remember()`           | N/A                        | ✨ Unique - stores in both layers           |
+| `get()`                | Vector only                | Can include ACID (`includeConversation`)    |
+| `search()`             | Vector only                | Can enrich with ACID (`enrichConversation`) |
+| `delete()`             | Vector only                | Same (preserves ACID)                       |
+| `forget()`             | N/A                        | ✨ Unique - deletes from both layers        |
+| `store()`              | Manual conversationRef     | Smart - detects layer from source.type      |
+| `update()`             | Direct                     | Delegates to Layer 2                        |
+| `updateMany()`         | Direct (filter, updates)   | Delegates to Layer 2                        |
+| `deleteMany()`         | Direct (filter)            | Delegates to Layer 2                        |
+| `count()`              | Direct (filter)            | Delegates to Layer 2                        |
+| `list()`               | Direct (filter)            | Delegates to Layer 2                        |
+| `export()`             | Direct (options)           | Delegates to Layer 2                        |
+| `archive()`            | Single memory              | Delegates to Layer 2                        |
+| `restoreFromArchive()` | Restore archived memory    | Delegates to Layer 2                        |
+| `archive()`            | Direct                     | Delegates to Layer 2                        |
+| Version ops            | Direct                     | Delegates to Layer 2                        |
 
 **Layer 4 Unique Operations:**
 
@@ -676,15 +676,15 @@ cortex.memory.recall(
 
 **Batteries Included Defaults:**
 
-| Feature | Default | Description |
-|---------|---------|-------------|
-| Vector Search | Enabled | Searches Layer 2 vector memories |
-| Facts Search | Enabled | Searches Layer 3 facts directly |
-| Graph Expansion | Enabled (if configured) | Discovers related context via graph |
-| LLM Context Formatting | Enabled | Generates ready-to-inject context string |
-| Conversation Enrichment | Enabled | Includes ACID conversation data |
-| Deduplication | Enabled | Removes duplicates across sources |
-| Ranking | Enabled | Multi-signal scoring algorithm |
+| Feature                 | Default                 | Description                              |
+| ----------------------- | ----------------------- | ---------------------------------------- |
+| Vector Search           | Enabled                 | Searches Layer 2 vector memories         |
+| Facts Search            | Enabled                 | Searches Layer 3 facts directly          |
+| Graph Expansion         | Enabled (if configured) | Discovers related context via graph      |
+| LLM Context Formatting  | Enabled                 | Generates ready-to-inject context string |
+| Conversation Enrichment | Enabled                 | Includes ACID conversation data          |
+| Deduplication           | Enabled                 | Removes duplicates across sources        |
+| Ranking                 | Enabled                 | Multi-signal scoring algorithm           |
 
 **Parameters:**
 
@@ -693,45 +693,45 @@ interface RecallParams {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // REQUIRED - Just these two for basic usage
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  memorySpaceId: string;  // Memory space to search
-  query: string;          // Natural language query
+  memorySpaceId: string; // Memory space to search
+  query: string; // Natural language query
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // OPTIONAL - All have sensible defaults
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  
+
   // Search enhancement
-  embedding?: number[];   // Pre-computed embedding (recommended)
-  userId?: string;        // Filter by user (common in H2A)
+  embedding?: number[]; // Pre-computed embedding (recommended)
+  userId?: string; // Filter by user (common in H2A)
 
   // Source selection - ALL ENABLED BY DEFAULT
   // Only specify to DISABLE sources
   sources?: {
-    vector?: boolean;     // Default: true
-    facts?: boolean;      // Default: true
-    graph?: boolean;      // Default: true (if graph configured)
+    vector?: boolean; // Default: true
+    facts?: boolean; // Default: true
+    graph?: boolean; // Default: true (if graph configured)
   };
 
   // Graph expansion - ENABLED BY DEFAULT
   graphExpansion?: {
-    enabled?: boolean;            // Default: true (if graph configured)
-    maxDepth?: number;            // Default: 2
+    enabled?: boolean; // Default: true (if graph configured)
+    maxDepth?: number; // Default: 2
     relationshipTypes?: string[]; // Default: all types
-    expandFromFacts?: boolean;    // Default: true
+    expandFromFacts?: boolean; // Default: true
     expandFromMemories?: boolean; // Default: true
   };
 
   // Filtering
-  minImportance?: number;   // Minimum importance (0-100)
-  minConfidence?: number;   // Minimum fact confidence (0-100)
-  tags?: string[];          // Filter by tags
-  createdAfter?: Date;      // Only include after this date
-  createdBefore?: Date;     // Only include before this date
+  minImportance?: number; // Minimum importance (0-100)
+  minConfidence?: number; // Minimum fact confidence (0-100)
+  tags?: string[]; // Filter by tags
+  createdAfter?: Date; // Only include after this date
+  createdBefore?: Date; // Only include before this date
 
   // Result options
-  limit?: number;               // Default: 20
+  limit?: number; // Default: 20
   includeConversation?: boolean; // Default: true
-  formatForLLM?: boolean;       // Default: true
+  formatForLLM?: boolean; // Default: true
 }
 ```
 
@@ -759,11 +759,11 @@ interface RecallResult {
 }
 
 interface RecallItem {
-  type: 'memory' | 'fact';
+  type: "memory" | "fact";
   id: string;
   content: string;
-  score: number;  // Combined ranking score (0-1)
-  source: 'vector' | 'facts' | 'graph-expanded';
+  score: number; // Combined ranking score (0-1)
+  source: "vector" | "facts" | "graph-expanded";
   memory?: MemoryEntry;
   fact?: FactRecord;
   graphContext?: {
@@ -780,15 +780,18 @@ interface RecallItem {
 ```typescript
 // Just two parameters - full orchestration by default
 const result = await cortex.memory.recall({
-  memorySpaceId: 'user-123-space',
-  query: 'user preferences',
+  memorySpaceId: "user-123-space",
+  query: "user preferences",
 });
 
 // Inject context directly into LLM prompt
 const response = await llm.chat({
   messages: [
-    { role: 'system', content: `You are a helpful assistant.\n\n${result.context}` },
-    { role: 'user', content: userMessage },
+    {
+      role: "system",
+      content: `You are a helpful assistant.\n\n${result.context}`,
+    },
+    { role: "user", content: userMessage },
   ],
 });
 ```
@@ -797,10 +800,10 @@ const response = await llm.chat({
 
 ```typescript
 const result = await cortex.memory.recall({
-  memorySpaceId: 'user-123-space',
-  query: 'user preferences',
-  embedding: await embed('user preferences'), // Better relevance
-  userId: 'user-123',                          // Scope to user
+  memorySpaceId: "user-123-space",
+  query: "user preferences",
+  embedding: await embed("user preferences"), // Better relevance
+  userId: "user-123", // Scope to user
 });
 
 // result.context is LLM-ready
@@ -813,15 +816,15 @@ const result = await cortex.memory.recall({
 ```typescript
 // Agent retrieving shared context from Hive space
 const sharedContext = await cortex.memory.recall({
-  memorySpaceId: 'team-hive-space',
-  query: 'project requirements and deadlines',
-  embedding: await embed('project requirements and deadlines'),
+  memorySpaceId: "team-hive-space",
+  query: "project requirements and deadlines",
+  embedding: await embed("project requirements and deadlines"),
 });
 
 // Send context to collaborating agent
 await cortex.a2a.send({
-  from: 'planning-agent',
-  to: 'execution-agent',
+  from: "planning-agent",
+  to: "execution-agent",
   message: `Here's the context: ${sharedContext.context}`,
 });
 ```
@@ -831,18 +834,18 @@ await cortex.a2a.send({
 ```typescript
 // When you need to discover relational connections
 const result = await cortex.memory.recall({
-  memorySpaceId: 'knowledge-base',
-  query: 'who does Alice work with',
-  embedding: await embed('who does Alice work with'),
+  memorySpaceId: "knowledge-base",
+  query: "who does Alice work with",
+  embedding: await embed("who does Alice work with"),
   graphExpansion: {
-    maxDepth: 3,  // Go deeper than default
-    relationshipTypes: ['WORKS_AT', 'KNOWS', 'COLLABORATES_WITH'],
+    maxDepth: 3, // Go deeper than default
+    relationshipTypes: ["WORKS_AT", "KNOWS", "COLLABORATES_WITH"],
   },
-  limit: 50,  // More results for comprehensive context
+  limit: 50, // More results for comprehensive context
 });
 
 // See what the graph discovered
-console.log('Discovered entities:', result.sources.graph.expandedEntities);
+console.log("Discovered entities:", result.sources.graph.expandedEntities);
 // ['Acme Corp', 'Bob', 'Engineering Team', 'Project Alpha']
 ```
 
@@ -851,12 +854,12 @@ console.log('Discovered entities:', result.sources.graph.expandedEntities);
 ```typescript
 // When you need speed over completeness
 const result = await cortex.memory.recall({
-  memorySpaceId: 'user-space',
-  query: 'quick lookup',
+  memorySpaceId: "user-space",
+  query: "quick lookup",
   sources: {
     vector: true,
-    facts: false,      // Skip facts
-    graph: false,      // Skip graph
+    facts: false, // Skip facts
+    graph: false, // Skip graph
   },
   formatForLLM: false, // Just get raw items
 });
@@ -866,13 +869,13 @@ const result = await cortex.memory.recall({
 
 `remember()` and `recall()` form a symmetric pair - the two primary orchestration APIs:
 
-| Aspect | remember() | recall() |
-|--------|-----------|----------|
-| Purpose | Store with full orchestration | Retrieve with full orchestration |
-| Default | All layers enabled | All sources enabled |
-| Opt-out | `skipLayers: ['facts', 'graph']` | `sources: { facts: false }` |
-| Graph | Auto-syncs entities | Auto-expands via relationships |
-| Output | `RememberResult` | `RecallResult` with LLM context |
+| Aspect  | remember()                       | recall()                         |
+| ------- | -------------------------------- | -------------------------------- |
+| Purpose | Store with full orchestration    | Retrieve with full orchestration |
+| Default | All layers enabled               | All sources enabled              |
+| Opt-out | `skipLayers: ['facts', 'graph']` | `sources: { facts: false }`      |
+| Graph   | Auto-syncs entities              | Auto-expands via relationships   |
+| Output  | `RememberResult`                 | `RecallResult` with LLM context  |
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -914,17 +917,16 @@ const result = await cortex.memory.recall({
 Results are ranked using a multi-signal scoring algorithm:
 
 ```typescript
-score = (
-  semanticScore * 0.35 +          // Vector similarity
-  confidenceScore * 0.20 +        // Fact confidence (0-100 → 0-1)
-  importanceScore * 0.15 +        // Importance (0-100 → 0-1)
-  recencyScore * 0.15 +           // Time decay
-  graphConnectivityScore * 0.15   // Graph centrality
-);
+score =
+  semanticScore * 0.35 + // Vector similarity
+  confidenceScore * 0.2 + // Fact confidence (0-100 → 0-1)
+  importanceScore * 0.15 + // Importance (0-100 → 0-1)
+  recencyScore * 0.15 + // Time decay
+  graphConnectivityScore * 0.15; // Graph centrality
 
 // Boosts
-if (connectedEntities.length > 3) score *= 1.2;  // 20% boost
-if (memory.messageRole === 'user') score *= 1.1; // 10% boost
+if (connectedEntities.length > 3) score *= 1.2; // 20% boost
+if (memory.messageRole === "user") score *= 1.1; // 10% boost
 ```
 
 **LLM Context Format:**
@@ -935,24 +937,26 @@ When `formatForLLM: true` (default), the context string is structured as:
 ## Relevant Context
 
 ### Known Facts
+
 - User prefers dark mode (confidence: 95%)
 - User works at Acme Corp (confidence: 88%)
 
 ### Conversation History
+
 [user]: I prefer dark mode
 [agent]: I'll remember that!
 ```
 
 **When to Use `recall()` vs `search()`:**
 
-| Use Case | Use `recall()` | Use `search()` |
-|----------|---------------|----------------|
-| AI Chatbot context | Yes | No |
-| Multi-agent coordination | Yes | No |
-| LLM prompt injection | Yes | No |
-| Simple vector lookup | No | Yes |
-| Direct Layer 2 access | No | Yes |
-| Custom result processing | No | Yes |
+| Use Case                 | Use `recall()` | Use `search()` |
+| ------------------------ | -------------- | -------------- |
+| AI Chatbot context       | Yes            | No             |
+| Multi-agent coordination | Yes            | No             |
+| LLM prompt injection     | Yes            | No             |
+| Simple vector lookup     | No             | Yes            |
+| Direct Layer 2 access    | No             | Yes            |
+| Custom result processing | No             | Yes            |
 
 **Errors:**
 

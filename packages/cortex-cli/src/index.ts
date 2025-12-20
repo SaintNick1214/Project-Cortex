@@ -12,7 +12,10 @@ import { config as loadEnv } from "dotenv";
 import { Command } from "commander";
 import pc from "picocolors";
 // Core commands
-import { registerLifecycleCommands, registerInitCommand } from "./commands/init.js";
+import {
+  registerLifecycleCommands,
+  registerInitCommand,
+} from "./commands/init.js";
 import { registerStatusCommands } from "./commands/status.js";
 import { registerConfigCommands } from "./commands/setup.js";
 import { registerDbCommands } from "./commands/db.js";
@@ -76,19 +79,25 @@ async function main() {
     registerInitCommand(program, config); // init
     registerDbCommands(program, config); // db
     registerDevCommands(program, config); // dev
-    
+
     // Register memory operations (hidden from main list, shown in custom section)
     registerMemoryCommands(program, config);
     registerUserCommands(program, config);
     registerSpaceCommands(program, config);
     registerFactsCommands(program, config);
     registerConversationsCommands(program, config);
-    
+
     // Register Convex operations
     registerConvexCommands(program, config);
 
     // Hide memory operation commands from main list (will show in custom section)
-    const memoryOpsCommands = ["memory", "users", "spaces", "facts", "conversations"];
+    const memoryOpsCommands = [
+      "memory",
+      "users",
+      "spaces",
+      "facts",
+      "conversations",
+    ];
     for (const cmd of program.commands) {
       if (memoryOpsCommands.includes(cmd.name())) {
         // Commander.js uses _hidden property internally
@@ -97,14 +106,17 @@ async function main() {
     }
 
     // Add custom help section for memory operations
-    program.addHelpText("after", `
+    program.addHelpText(
+      "after",
+      `
 ${pc.bold("Memory Operations:")}
   memory                      Manage memories (vector store)
   users                       Manage user profiles and data
   spaces                      Manage memory spaces
   facts                       Manage extracted facts
   conversations|convs         Manage conversations
-`);
+`,
+    );
 
     // Show help if no command provided (after commands are registered)
     if (process.argv.length === 2) {

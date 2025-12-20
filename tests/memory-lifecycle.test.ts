@@ -78,7 +78,10 @@ describe("Memory Lifecycle Integration", () => {
       const originalFactId = remembered.facts[0].factId;
 
       // Verify memory is accessible
-      const afterRemember = await cortex.memory.get(TEST_MEMSPACE_ID, userMemoryId);
+      const afterRemember = await cortex.memory.get(
+        TEST_MEMSPACE_ID,
+        userMemoryId,
+      );
       expect(afterRemember).not.toBeNull();
 
       // Step 3: Update memory content
@@ -92,23 +95,36 @@ describe("Memory Lifecycle Integration", () => {
       expect(updated.memory.version).toBeGreaterThanOrEqual(2);
 
       // Verify version chain
-      const history = await cortex.memory.getHistory(TEST_MEMSPACE_ID, userMemoryId);
+      const history = await cortex.memory.getHistory(
+        TEST_MEMSPACE_ID,
+        userMemoryId,
+      );
       expect(history.length).toBeGreaterThanOrEqual(2);
 
       // Step 4: Delete memory (should cascade to facts)
-      const deleted = await cortex.memory.delete(TEST_MEMSPACE_ID, userMemoryId, {
-        cascadeDeleteFacts: true,
-      });
+      const deleted = await cortex.memory.delete(
+        TEST_MEMSPACE_ID,
+        userMemoryId,
+        {
+          cascadeDeleteFacts: true,
+        },
+      );
 
       expect(deleted.deleted).toBe(true);
       expect(deleted.memoryId).toBe(userMemoryId);
 
       // Verify memory is gone
-      const afterDelete = await cortex.memory.get(TEST_MEMSPACE_ID, userMemoryId);
+      const afterDelete = await cortex.memory.get(
+        TEST_MEMSPACE_ID,
+        userMemoryId,
+      );
       expect(afterDelete).toBeNull();
 
       // Verify fact was cascade deleted (should be null or marked invalid)
-      const factAfterDelete = await cortex.facts.get(TEST_MEMSPACE_ID, originalFactId);
+      const factAfterDelete = await cortex.facts.get(
+        TEST_MEMSPACE_ID,
+        originalFactId,
+      );
       if (factAfterDelete) {
         expect(factAfterDelete.validUntil).toBeDefined();
       }
@@ -144,27 +160,42 @@ describe("Memory Lifecycle Integration", () => {
       });
 
       const memoryId = remembered.memories[0].memoryId;
-      const originalMemory = await cortex.memory.get(TEST_MEMSPACE_ID, memoryId) as any;
+      const originalMemory = (await cortex.memory.get(
+        TEST_MEMSPACE_ID,
+        memoryId,
+      )) as any;
       expect(originalMemory).not.toBeNull();
       const originalImportance = originalMemory!.importance;
 
       // Step 3: Archive memory
-      const archiveResult = await cortex.memory.archive(TEST_MEMSPACE_ID, memoryId);
+      const archiveResult = await cortex.memory.archive(
+        TEST_MEMSPACE_ID,
+        memoryId,
+      );
       expect(archiveResult.archived).toBe(true);
       expect(archiveResult.restorable).toBe(true);
 
       // Verify archived state
-      const archivedMemory = await cortex.memory.get(TEST_MEMSPACE_ID, memoryId) as any;
+      const archivedMemory = (await cortex.memory.get(
+        TEST_MEMSPACE_ID,
+        memoryId,
+      )) as any;
       expect(archivedMemory).not.toBeNull();
       expect(archivedMemory!.tags).toContain("archived");
       expect(archivedMemory!.importance).toBeLessThan(originalImportance);
 
       // Step 4: Restore from archive
-      const restoreResult = await cortex.memory.restoreFromArchive(TEST_MEMSPACE_ID, memoryId);
+      const restoreResult = await cortex.memory.restoreFromArchive(
+        TEST_MEMSPACE_ID,
+        memoryId,
+      );
       expect(restoreResult.restored).toBe(true);
 
       // Verify restored state
-      const restoredMemory = await cortex.memory.get(TEST_MEMSPACE_ID, memoryId) as any;
+      const restoredMemory = (await cortex.memory.get(
+        TEST_MEMSPACE_ID,
+        memoryId,
+      )) as any;
       expect(restoredMemory).not.toBeNull();
       expect(restoredMemory!.tags).not.toContain("archived");
       // Importance should be restored to a reasonable value (50+)
@@ -229,7 +260,10 @@ describe("Memory Lifecycle Integration", () => {
       }
 
       // Step 3: Verify history
-      const history = await cortex.memory.getHistory(TEST_MEMSPACE_ID, memoryId);
+      const history = await cortex.memory.getHistory(
+        TEST_MEMSPACE_ID,
+        memoryId,
+      );
       expect(history.length).toBe(5);
 
       // Verify version order and content
@@ -273,23 +307,22 @@ describe("Memory Lifecycle Integration", () => {
       });
 
       // Verify initial metadata
-      const initialMem = await cortex.memory.get(TEST_MEMSPACE_ID, memory.memory.memoryId) as any;
+      const initialMem = (await cortex.memory.get(
+        TEST_MEMSPACE_ID,
+        memory.memory.memoryId,
+      )) as any;
       expect(initialMem.importance).toBe(70);
       expect(initialMem.tags).toContain("preserve-meta-test");
 
       // Update content but not metadata
-      await cortex.memory.update(
-        TEST_MEMSPACE_ID,
-        memory.memory.memoryId,
-        { content: "Metadata preservation test V2" },
-      );
+      await cortex.memory.update(TEST_MEMSPACE_ID, memory.memory.memoryId, {
+        content: "Metadata preservation test V2",
+      });
 
       // Update importance
-      await cortex.memory.update(
-        TEST_MEMSPACE_ID,
-        memory.memory.memoryId,
-        { importance: 90 },
-      );
+      await cortex.memory.update(TEST_MEMSPACE_ID, memory.memory.memoryId, {
+        importance: 90,
+      });
 
       // Verify history has correct version count
       const history = await cortex.memory.getHistory(
@@ -303,7 +336,10 @@ describe("Memory Lifecycle Integration", () => {
       expect(history[2].content).toBe("Metadata preservation test V2");
 
       // Verify latest memory has updated importance via get()
-      const latestMem = await cortex.memory.get(TEST_MEMSPACE_ID, memory.memory.memoryId) as any;
+      const latestMem = (await cortex.memory.get(
+        TEST_MEMSPACE_ID,
+        memory.memory.memoryId,
+      )) as any;
       expect(latestMem.importance).toBe(90);
       expect(latestMem.tags).toContain("preserve-meta-test"); // Tags preserved
 
@@ -406,29 +442,33 @@ describe("Memory Lifecycle Integration", () => {
 
       // Update multiple times
       for (let i = 0; i < 3; i++) {
-        await cortex.memory.update(
-          TEST_MEMSPACE_ID,
-          memoryId,
-          { content: `Updated cross-layer ${i}` },
-        );
+        await cortex.memory.update(TEST_MEMSPACE_ID, memoryId, {
+          content: `Updated cross-layer ${i}`,
+        });
       }
 
       // Verify history contains all versions
-      const history = await cortex.memory.getHistory(TEST_MEMSPACE_ID, memoryId);
+      const history = await cortex.memory.getHistory(
+        TEST_MEMSPACE_ID,
+        memoryId,
+      );
       expect(history.length).toBeGreaterThanOrEqual(4); // Original + 3 updates
 
       // Verify conversation reference is maintained on current memory
-      const currentMem = await cortex.memory.get(TEST_MEMSPACE_ID, memoryId) as any;
-      expect(currentMem).not.toBeNull();
-      expect(currentMem.conversationRef).toBeDefined();
-      expect(currentMem.conversationRef.conversationId).toBe(conv.conversationId);
-
-      // Verify get with includeConversation works after updates
-      const enriched = await cortex.memory.get(
+      const currentMem = (await cortex.memory.get(
         TEST_MEMSPACE_ID,
         memoryId,
-        { includeConversation: true },
+      )) as any;
+      expect(currentMem).not.toBeNull();
+      expect(currentMem.conversationRef).toBeDefined();
+      expect(currentMem.conversationRef.conversationId).toBe(
+        conv.conversationId,
       );
+
+      // Verify get with includeConversation works after updates
+      const enriched = await cortex.memory.get(TEST_MEMSPACE_ID, memoryId, {
+        includeConversation: true,
+      });
       expect(enriched).not.toBeNull();
       // When includeConversation is true, result is EnrichedMemory with conversation property
       expect((enriched as any).memory).toBeDefined();
@@ -440,4 +480,3 @@ describe("Memory Lifecycle Integration", () => {
     });
   });
 });
-

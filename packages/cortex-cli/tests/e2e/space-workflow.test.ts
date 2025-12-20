@@ -208,7 +208,7 @@ describeE2E("Space Workflow E2E", () => {
           id: "test-user-1",
           type: "user",
           role: "member",
-        }
+        },
       );
 
       expect(result.participants.length).toBe(1);
@@ -221,7 +221,7 @@ describeE2E("Space Workflow E2E", () => {
           id: "test-agent-1",
           type: "agent",
           role: "viewer",
-        }
+        },
       );
 
       expect(result.participants.length).toBe(2);
@@ -236,12 +236,12 @@ describeE2E("Space Workflow E2E", () => {
     it("should remove a participant", async () => {
       const result = await cortex.memorySpaces.removeParticipant(
         participantSpaceId,
-        "test-user-1"
+        "test-user-1",
       );
 
       expect(result.participants.length).toBe(1);
       expect(
-        result.participants.find((p: any) => p.id === "test-user-1")
+        result.participants.find((p: any) => p.id === "test-user-1"),
       ).toBeUndefined();
     });
   });

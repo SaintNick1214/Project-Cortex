@@ -95,6 +95,7 @@ cortex dev
 ```
 
 This gives you:
+
 - Live status dashboard
 - Streaming logs from all services
 - Keyboard shortcuts (press `?` for help)

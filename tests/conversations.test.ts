@@ -1573,95 +1573,91 @@ describe("Conversations API (Layer 1a)", () => {
       });
     });
 
-    it(
-      "handles large dataset export (100+ conversations)",
-      async () => {
-        // Use test-scoped IDs for isolation
-        const largeExportSpace = ctx.memorySpaceId("large-export");
-        const largeExportUser = ctx.userId("large-export");
-        const largeExportAgent = ctx.agentId("large-export");
-        const TOTAL_CONVERSATIONS = 105;
+    it("handles large dataset export (100+ conversations)", async () => {
+      // Use test-scoped IDs for isolation
+      const largeExportSpace = ctx.memorySpaceId("large-export");
+      const largeExportUser = ctx.userId("large-export");
+      const largeExportAgent = ctx.agentId("large-export");
+      const TOTAL_CONVERSATIONS = 105;
 
-        // Create 105 conversations in batches
-        const createPromises = [];
-        for (let i = 1; i <= TOTAL_CONVERSATIONS; i++) {
-          createPromises.push(
-            cortex.conversations.create({
-              conversationId: ctx.conversationId(`large-export-${i}`),
-              memorySpaceId: largeExportSpace,
-              type: "user-agent",
-              participants: {
-                userId: largeExportUser,
-                agentId: largeExportAgent,
-                participantId: largeExportAgent,
-              },
-              metadata: { batch: Math.floor(i / 25), index: i },
-            }),
-          );
-
-          // Process in batches of 25 to avoid overwhelming the backend
-          if (i % 25 === 0) {
-            await Promise.all(createPromises);
-            createPromises.length = 0;
-          }
-        }
-        // Process remaining
-        if (createPromises.length > 0) {
-          await Promise.all(createPromises);
-        }
-
-        // Export to JSON
-        const jsonExport = await cortex.conversations.export({
-          filters: { memorySpaceId: largeExportSpace },
-          format: "json",
-          includeMetadata: true,
-        });
-
-        expect(jsonExport.count).toBe(TOTAL_CONVERSATIONS);
-        expect(jsonExport.format).toBe("json");
-
-        // Validate JSON is parseable and complete
-        const parsed = JSON.parse(jsonExport.data);
-        expect(Array.isArray(parsed)).toBe(true);
-        expect(parsed.length).toBe(TOTAL_CONVERSATIONS);
-
-        // Verify all conversations are present
-        const exportedIds = new Set(parsed.map((c: any) => c.conversationId));
-        for (let i = 1; i <= TOTAL_CONVERSATIONS; i++) {
-          expect(exportedIds.has(ctx.conversationId(`large-export-${i}`))).toBe(
-            true,
-          );
-        }
-
-        // Export to CSV
-        const csvExport = await cortex.conversations.export({
-          filters: { memorySpaceId: largeExportSpace },
-          format: "csv",
-          includeMetadata: false,
-        });
-
-        expect(csvExport.count).toBe(TOTAL_CONVERSATIONS);
-        expect(csvExport.format).toBe("csv");
-
-        // Validate CSV structure
-        const lines = csvExport.data.split("\n");
-        // Header + 105 data rows
-        expect(lines.length).toBe(TOTAL_CONVERSATIONS + 1);
-
-        // Verify CSV header has expected columns
-        const header = lines[0];
-        expect(header).toContain("conversationId");
-        expect(header).toContain("type");
-
-        // Clean up all created conversations (with high threshold to allow bulk delete)
-        const deleteResult = await cortex.conversations.deleteMany(
-          { memorySpaceId: largeExportSpace },
-          { confirmationThreshold: 150 },
+      // Create 105 conversations in batches
+      const createPromises = [];
+      for (let i = 1; i <= TOTAL_CONVERSATIONS; i++) {
+        createPromises.push(
+          cortex.conversations.create({
+            conversationId: ctx.conversationId(`large-export-${i}`),
+            memorySpaceId: largeExportSpace,
+            type: "user-agent",
+            participants: {
+              userId: largeExportUser,
+              agentId: largeExportAgent,
+              participantId: largeExportAgent,
+            },
+            metadata: { batch: Math.floor(i / 25), index: i },
+          }),
         );
-        expect(deleteResult.deleted).toBe(TOTAL_CONVERSATIONS);
-      },
-      120000,
-    ); // Extended timeout for large dataset operations
+
+        // Process in batches of 25 to avoid overwhelming the backend
+        if (i % 25 === 0) {
+          await Promise.all(createPromises);
+          createPromises.length = 0;
+        }
+      }
+      // Process remaining
+      if (createPromises.length > 0) {
+        await Promise.all(createPromises);
+      }
+
+      // Export to JSON
+      const jsonExport = await cortex.conversations.export({
+        filters: { memorySpaceId: largeExportSpace },
+        format: "json",
+        includeMetadata: true,
+      });
+
+      expect(jsonExport.count).toBe(TOTAL_CONVERSATIONS);
+      expect(jsonExport.format).toBe("json");
+
+      // Validate JSON is parseable and complete
+      const parsed = JSON.parse(jsonExport.data);
+      expect(Array.isArray(parsed)).toBe(true);
+      expect(parsed.length).toBe(TOTAL_CONVERSATIONS);
+
+      // Verify all conversations are present
+      const exportedIds = new Set(parsed.map((c: any) => c.conversationId));
+      for (let i = 1; i <= TOTAL_CONVERSATIONS; i++) {
+        expect(exportedIds.has(ctx.conversationId(`large-export-${i}`))).toBe(
+          true,
+        );
+      }
+
+      // Export to CSV
+      const csvExport = await cortex.conversations.export({
+        filters: { memorySpaceId: largeExportSpace },
+        format: "csv",
+        includeMetadata: false,
+      });
+
+      expect(csvExport.count).toBe(TOTAL_CONVERSATIONS);
+      expect(csvExport.format).toBe("csv");
+
+      // Validate CSV structure
+      const lines = csvExport.data.split("\n");
+      // Header + 105 data rows
+      expect(lines.length).toBe(TOTAL_CONVERSATIONS + 1);
+
+      // Verify CSV header has expected columns
+      const header = lines[0];
+      expect(header).toContain("conversationId");
+      expect(header).toContain("type");
+
+      // Clean up all created conversations (with high threshold to allow bulk delete)
+      const deleteResult = await cortex.conversations.deleteMany(
+        { memorySpaceId: largeExportSpace },
+        { confirmationThreshold: 150 },
+      );
+      expect(deleteResult.deleted).toBe(TOTAL_CONVERSATIONS);
+    }, 120000); // Extended timeout for large dataset operations
   });
 
   describe("State Change Propagation", () => {
@@ -1794,9 +1790,11 @@ describe("Conversations API (Layer 1a)", () => {
         userId: deleteUser,
       });
 
-      expect(listResult.conversations.some((c) => c.conversationId === conv.conversationId)).toBe(
-        true,
-      );
+      expect(
+        listResult.conversations.some(
+          (c) => c.conversationId === conv.conversationId,
+        ),
+      ).toBe(true);
 
       const count = await cortex.conversations.count({
         userId: deleteUser,
@@ -1812,9 +1810,11 @@ describe("Conversations API (Layer 1a)", () => {
       expect(get).toBeNull();
 
       listResult = await cortex.conversations.list({ userId: deleteUser });
-      expect(listResult.conversations.some((c) => c.conversationId === conv.conversationId)).toBe(
-        false,
-      );
+      expect(
+        listResult.conversations.some(
+          (c) => c.conversationId === conv.conversationId,
+        ),
+      ).toBe(false);
 
       const countAfter = await cortex.conversations.count({
         userId: deleteUser,
@@ -2192,7 +2192,10 @@ describe("Conversations API (Layer 1a)", () => {
           memorySpaceId: combinedSpace,
           type: "agent-agent",
           participants: {
-            memorySpaceIds: [ctx.agentId("combined-a1"), ctx.agentId("combined-a2")],
+            memorySpaceIds: [
+              ctx.agentId("combined-a1"),
+              ctx.agentId("combined-a2"),
+            ],
           },
         });
 
@@ -3218,11 +3221,14 @@ describe("Conversations API (Layer 1a)", () => {
       });
 
       expect(
-        listResults.conversations.some((c) => c.conversationId === conv.conversationId),
+        listResults.conversations.some(
+          (c) => c.conversationId === conv.conversationId,
+        ),
       ).toBe(true);
       expect(
-        listResults.conversations.find((c) => c.conversationId === conv.conversationId)
-          ?.messageCount,
+        listResults.conversations.find(
+          (c) => c.conversationId === conv.conversationId,
+        )?.messageCount,
       ).toBe(1);
 
       // Verify in search
@@ -3270,8 +3276,9 @@ describe("Conversations API (Layer 1a)", () => {
       });
 
       expect(
-        updatedList.conversations.find((c) => c.conversationId === conv.conversationId)
-          ?.messageCount,
+        updatedList.conversations.find(
+          (c) => c.conversationId === conv.conversationId,
+        )?.messageCount,
       ).toBe(2);
     });
 

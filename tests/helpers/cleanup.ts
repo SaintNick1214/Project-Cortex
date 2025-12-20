@@ -684,7 +684,10 @@ export class ScopedCleanup {
 
     try {
       // Count conversations
-      const conversationsResult = await this.client.query(api.conversations.list, {});
+      const conversationsResult = await this.client.query(
+        api.conversations.list,
+        {},
+      );
       counts.conversations = conversationsResult.conversations.filter(
         (c: { memorySpaceId: string; conversationId: string }) =>
           this.belongsToRun(c.memorySpaceId) ||
@@ -693,8 +696,8 @@ export class ScopedCleanup {
 
       // Count memory spaces
       const spacesResult = await this.client.query(api.memorySpaces.list, {});
-      counts.memorySpaces = spacesResult.spaces.filter((s: { memorySpaceId: string }) =>
-        this.belongsToRun(s.memorySpaceId),
+      counts.memorySpaces = spacesResult.spaces.filter(
+        (s: { memorySpaceId: string }) => this.belongsToRun(s.memorySpaceId),
       ).length;
 
       // Count contexts
@@ -708,11 +711,15 @@ export class ScopedCleanup {
       const usersResult = await this.client.query(api.immutable.list, {
         type: "user",
       });
-      counts.users = usersResult.entries.filter((u: { id: string }) => this.belongsToRun(u.id)).length;
+      counts.users = usersResult.entries.filter((u: { id: string }) =>
+        this.belongsToRun(u.id),
+      ).length;
 
       // Count agents
       const agents = await this.client.query(api.agents.list, {});
-      counts.agents = agents.filter((a: { agentId: string }) => this.belongsToRun(a.agentId)).length;
+      counts.agents = agents.filter((a: { agentId: string }) =>
+        this.belongsToRun(a.agentId),
+      ).length;
 
       // Count immutable (excluding users)
       const immutableResult = await this.client.query(api.immutable.list, {});

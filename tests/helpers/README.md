@@ -31,16 +31,16 @@ describe("My Test Suite", () => {
 
 ### Available Generators
 
-| Generator | Example Output |
-|-----------|----------------|
-| `ctx.userId("alice")` | `my-suite-run-1234567890-abc123-user-alice` |
-| `ctx.memorySpaceId("main")` | `my-suite-run-1234567890-abc123-space-main` |
-| `ctx.agentId("bot")` | `my-suite-run-1234567890-abc123-agent-bot` |
-| `ctx.conversationId("chat")` | `my-suite-run-1234567890-abc123-conv-chat` |
-| `ctx.contextId("session")` | `my-suite-run-1234567890-abc123-ctx-session` |
-| `ctx.factPrefix("info")` | `my-suite-run-1234567890-abc123-fact-info` |
-| `ctx.immutableType("config")` | `my-suite-run-1234567890-abc123-immtype-config` |
-| `ctx.mutableNamespace("cache")` | `my-suite-run-1234567890-abc123-mutns-cache` |
+| Generator                       | Example Output                                  |
+| ------------------------------- | ----------------------------------------------- |
+| `ctx.userId("alice")`           | `my-suite-run-1234567890-abc123-user-alice`     |
+| `ctx.memorySpaceId("main")`     | `my-suite-run-1234567890-abc123-space-main`     |
+| `ctx.agentId("bot")`            | `my-suite-run-1234567890-abc123-agent-bot`      |
+| `ctx.conversationId("chat")`    | `my-suite-run-1234567890-abc123-conv-chat`      |
+| `ctx.contextId("session")`      | `my-suite-run-1234567890-abc123-ctx-session`    |
+| `ctx.factPrefix("info")`        | `my-suite-run-1234567890-abc123-fact-info`      |
+| `ctx.immutableType("config")`   | `my-suite-run-1234567890-abc123-immtype-config` |
+| `ctx.mutableNamespace("cache")` | `my-suite-run-1234567890-abc123-mutns-cache`    |
 
 ### Running Tests
 

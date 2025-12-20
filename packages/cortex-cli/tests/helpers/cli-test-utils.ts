@@ -188,7 +188,9 @@ export function createMockFileSystem(
   const readFileSync = jest.fn((path: string) => {
     const file = normalizedFiles.get(path);
     if (!file?.exists) {
-      const error = new Error(`ENOENT: no such file or directory, open '${path}'`);
+      const error = new Error(
+        `ENOENT: no such file or directory, open '${path}'`,
+      );
       (error as NodeJS.ErrnoException).code = "ENOENT";
       throw error;
     }
@@ -202,7 +204,9 @@ export function createMockFileSystem(
   const readFile = jest.fn(async (path: string) => {
     const file = normalizedFiles.get(path);
     if (!file?.exists) {
-      const error = new Error(`ENOENT: no such file or directory, open '${path}'`);
+      const error = new Error(
+        `ENOENT: no such file or directory, open '${path}'`,
+      );
       (error as NodeJS.ErrnoException).code = "ENOENT";
       throw error;
     }

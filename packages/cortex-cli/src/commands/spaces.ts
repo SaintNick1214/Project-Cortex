@@ -58,10 +58,16 @@ export function registerSpaceCommands(
     .option("-f, --format <format>", "Output format: table, json, csv")
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "list memory spaces");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "list memory spaces",
+      );
       if (!selection) return;
 
-      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
+      const resolved = resolveConfig(currentConfig, {
+        deployment: selection.name,
+      });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading memory spaces...").start();
@@ -75,49 +81,51 @@ export function registerSpaceCommands(
           : undefined;
         const limit = validateLimit(parseInt(options.limit, 10));
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const spacesResult = await client.memorySpaces.list({
-            type: filterType,
-            status: filterStatus,
-            limit,
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const spacesResult = await client.memorySpaces.list({
+              type: filterType,
+              status: filterStatus,
+              limit,
+            });
 
-          spinner.stop();
+            spinner.stop();
 
-          const spaces = spacesResult.spaces;
-          if (spaces.length === 0) {
-            printWarning("No memory spaces found");
-            return;
-          }
+            const spaces = spacesResult.spaces;
+            if (spaces.length === 0) {
+              printWarning("No memory spaces found");
+              return;
+            }
 
-          // Format spaces for display
-          const displayData = spaces.map((s) => ({
-            id: s.memorySpaceId,
-            name: s.name ?? "-",
-            type: s.type,
-            status: s.status,
-            participants: s.participants?.length ?? 0,
-            created: formatRelativeTime(s.createdAt),
-          }));
+            // Format spaces for display
+            const displayData = spaces.map((s) => ({
+              id: s.memorySpaceId,
+              name: s.name ?? "-",
+              type: s.type,
+              status: s.status,
+              participants: s.participants?.length ?? 0,
+              created: formatRelativeTime(s.createdAt),
+            }));
 
-          console.log(
-            formatOutput(displayData, format, {
-              title: "Memory Spaces",
-              headers: [
-                "id",
-                "name",
-                "type",
-                "status",
-                "participants",
-                "created",
-              ],
-            }),
-          );
+            console.log(
+              formatOutput(displayData, format, {
+                title: "Memory Spaces",
+                headers: [
+                  "id",
+                  "name",
+                  "type",
+                  "status",
+                  "participants",
+                  "created",
+                ],
+              }),
+            );
 
-          printSuccess(
-            `Found ${formatCount(spaces.length, "memory space")}`,
-          );
-        });
+            printSuccess(`Found ${formatCount(spaces.length, "memory space")}`);
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(
@@ -140,7 +148,11 @@ export function registerSpaceCommands(
     .option("-m, --metadata <json>", "JSON metadata", "{}")
     .action(async (spaceId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "create memory space");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "create memory space",
+      );
       if (!selection) return;
 
       const spinner = ora("Creating memory space...").start();
@@ -150,28 +162,32 @@ export function registerSpaceCommands(
         const spaceType = validateMemorySpaceType(options.type);
         const metadata = JSON.parse(options.metadata);
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          // Check if space already exists
-          const existing = await client.memorySpaces.get(spaceId);
-          if (existing) {
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            // Check if space already exists
+            const existing = await client.memorySpaces.get(spaceId);
+            if (existing) {
+              spinner.stop();
+              printError(`Memory space ${spaceId} already exists`);
+              process.exit(1);
+            }
+
+            const space = await client.memorySpaces.register({
+              memorySpaceId: spaceId,
+              name: options.name,
+              type: spaceType,
+              metadata,
+            });
+
             spinner.stop();
-            printError(`Memory space ${spaceId} already exists`);
-            process.exit(1);
-          }
-
-          const space = await client.memorySpaces.register({
-            memorySpaceId: spaceId,
-            name: options.name,
-            type: spaceType,
-            metadata,
-          });
-
-          spinner.stop();
-          printSuccess(`Created memory space ${spaceId}`);
-          console.log(`  Type: ${space.type}`);
-          console.log(`  Name: ${space.name ?? "-"}`);
-          console.log(`  Created: ${formatTimestamp(space.createdAt)}`);
-        });
+            printSuccess(`Created memory space ${spaceId}`);
+            console.log(`  Type: ${space.type}`);
+            console.log(`  Name: ${space.name ?? "-"}`);
+            console.log(`  Created: ${formatTimestamp(space.createdAt)}`);
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(error instanceof Error ? error.message : "Create failed");
@@ -187,10 +203,16 @@ export function registerSpaceCommands(
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (spaceId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "get memory space");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "get memory space",
+      );
       if (!selection) return;
 
-      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
+      const resolved = resolveConfig(currentConfig, {
+        deployment: selection.name,
+      });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading memory space...").start();
@@ -198,47 +220,51 @@ export function registerSpaceCommands(
       try {
         validateMemorySpaceId(spaceId);
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const space = await client.memorySpaces.get(spaceId);
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const space = await client.memorySpaces.get(spaceId);
 
-          if (!space) {
+            if (!space) {
+              spinner.stop();
+              printError(`Memory space ${spaceId} not found`);
+              process.exit(1);
+            }
+
             spinner.stop();
-            printError(`Memory space ${spaceId} not found`);
-            process.exit(1);
-          }
 
-          spinner.stop();
+            if (format === "json") {
+              console.log(formatOutput(space, "json"));
+            } else {
+              printSection(`Memory Space: ${spaceId}`, {
+                ID: space.memorySpaceId,
+                Name: space.name ?? "-",
+                Type: space.type,
+                Status: space.status,
+                Participants: space.participants?.length ?? 0,
+                Created: formatTimestamp(space.createdAt),
+                Updated: formatTimestamp(space.updatedAt),
+              });
 
-          if (format === "json") {
-            console.log(formatOutput(space, "json"));
-          } else {
-            printSection(`Memory Space: ${spaceId}`, {
-              ID: space.memorySpaceId,
-              Name: space.name ?? "-",
-              Type: space.type,
-              Status: space.status,
-              Participants: space.participants?.length ?? 0,
-              Created: formatTimestamp(space.createdAt),
-              Updated: formatTimestamp(space.updatedAt),
-            });
+              if (space.participants && space.participants.length > 0) {
+                console.log("\n  Participants:");
+                for (const p of space.participants) {
+                  console.log(
+                    `    • ${p.id} (${p.type}) - joined ${formatRelativeTime(p.joinedAt)}`,
+                  );
+                }
+              }
 
-            if (space.participants && space.participants.length > 0) {
-              console.log("\n  Participants:");
-              for (const p of space.participants) {
-                console.log(
-                  `    • ${p.id} (${p.type}) - joined ${formatRelativeTime(p.joinedAt)}`,
-                );
+              if (space.metadata && Object.keys(space.metadata).length > 0) {
+                console.log("\n  Metadata:");
+                for (const [key, value] of Object.entries(space.metadata)) {
+                  console.log(`    ${key}: ${JSON.stringify(value)}`);
+                }
               }
             }
-
-            if (space.metadata && Object.keys(space.metadata).length > 0) {
-              console.log("\n  Metadata:");
-              for (const [key, value] of Object.entries(space.metadata)) {
-                console.log(`    ${key}: ${JSON.stringify(value)}`);
-              }
-            }
-          }
-        });
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(
@@ -262,7 +288,11 @@ export function registerSpaceCommands(
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (spaceId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "delete memory space");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "delete memory space",
+      );
       if (!selection) return;
 
       try {
@@ -303,26 +333,30 @@ export function registerSpaceCommands(
             : "Deleting memory space...",
         ).start();
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const result = await client.memorySpaces.delete(spaceId, {
-            cascade: options.cascade,
-            reason: options.reason || "Deleted via CLI",
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const result = await client.memorySpaces.delete(spaceId, {
+              cascade: options.cascade,
+              reason: options.reason || "Deleted via CLI",
+            });
 
-          spinner.stop();
+            spinner.stop();
 
-          if (result.deleted) {
-            printSuccess(`Deleted memory space ${spaceId}`);
-            if (result.cascade) {
-              printSuccess(
-                `Cascaded: ${result.cascade.conversationsDeleted} conversations, ` +
-                `${result.cascade.memoriesDeleted} memories, ${result.cascade.factsDeleted} facts deleted`
-              );
+            if (result.deleted) {
+              printSuccess(`Deleted memory space ${spaceId}`);
+              if (result.cascade) {
+                printSuccess(
+                  `Cascaded: ${result.cascade.conversationsDeleted} conversations, ` +
+                    `${result.cascade.memoriesDeleted} memories, ${result.cascade.factsDeleted} facts deleted`,
+                );
+              }
+            } else {
+              printError("Memory space not found or could not be deleted");
             }
-          } else {
-            printError("Memory space not found or could not be deleted");
-          }
-        });
+          },
+        );
       } catch (error) {
         printError(error instanceof Error ? error.message : "Delete failed");
         process.exit(1);
@@ -338,7 +372,11 @@ export function registerSpaceCommands(
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (spaceId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "archive memory space");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "archive memory space",
+      );
       if (!selection) return;
 
       try {
@@ -357,15 +395,19 @@ export function registerSpaceCommands(
 
         const spinner = ora("Archiving memory space...").start();
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const space = await client.memorySpaces.archive(spaceId, {
-            reason: options.reason,
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const space = await client.memorySpaces.archive(spaceId, {
+              reason: options.reason,
+            });
 
-          spinner.stop();
-          printSuccess(`Archived memory space ${spaceId}`);
-          console.log(`  Status: ${space.status}`);
-        });
+            spinner.stop();
+            printSuccess(`Archived memory space ${spaceId}`);
+            console.log(`  Status: ${space.status}`);
+          },
+        );
       } catch (error) {
         printError(error instanceof Error ? error.message : "Archive failed");
         process.exit(1);
@@ -379,7 +421,11 @@ export function registerSpaceCommands(
     .option("-d, --deployment <name>", "Target deployment")
     .action(async (spaceId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "reactivate memory space");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "reactivate memory space",
+      );
       if (!selection) return;
 
       const spinner = ora("Reactivating memory space...").start();
@@ -387,13 +433,17 @@ export function registerSpaceCommands(
       try {
         validateMemorySpaceId(spaceId);
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const space = await client.memorySpaces.reactivate(spaceId);
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const space = await client.memorySpaces.reactivate(spaceId);
 
-          spinner.stop();
-          printSuccess(`Reactivated memory space ${spaceId}`);
-          console.log(`  Status: ${space.status}`);
-        });
+            spinner.stop();
+            printSuccess(`Reactivated memory space ${spaceId}`);
+            console.log(`  Status: ${space.status}`);
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(
@@ -411,10 +461,16 @@ export function registerSpaceCommands(
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (spaceId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "get space statistics");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "get space statistics",
+      );
       if (!selection) return;
 
-      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
+      const resolved = resolveConfig(currentConfig, {
+        deployment: selection.name,
+      });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading statistics...").start();
@@ -422,27 +478,31 @@ export function registerSpaceCommands(
       try {
         validateMemorySpaceId(spaceId);
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const stats = await client.memorySpaces.getStats(spaceId);
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const stats = await client.memorySpaces.getStats(spaceId);
 
-          spinner.stop();
+            spinner.stop();
 
-          if (format === "json") {
-            console.log(formatOutput(stats, "json"));
-          } else {
-            printSection(`Statistics for ${spaceId}`, {
-              Conversations: stats.totalConversations,
-              Memories: stats.totalMemories,
-              Facts: stats.totalFacts,
-              "Total Messages": stats.totalMessages,
-              Participants: stats.participants?.length ?? 0,
-              "Top Tags":
-                stats.topTags.length > 0
-                  ? stats.topTags.slice(0, 5).join(", ")
-                  : "-",
-            });
-          }
-        });
+            if (format === "json") {
+              console.log(formatOutput(stats, "json"));
+            } else {
+              printSection(`Statistics for ${spaceId}`, {
+                Conversations: stats.totalConversations,
+                Memories: stats.totalMemories,
+                Facts: stats.totalFacts,
+                "Total Messages": stats.totalMessages,
+                Participants: stats.participants?.length ?? 0,
+                "Top Tags":
+                  stats.topTags.length > 0
+                    ? stats.topTags.slice(0, 5).join(", ")
+                    : "-",
+              });
+            }
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(
@@ -460,10 +520,16 @@ export function registerSpaceCommands(
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (spaceId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "list participants");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "list participants",
+      );
       if (!selection) return;
 
-      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
+      const resolved = resolveConfig(currentConfig, {
+        deployment: selection.name,
+      });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading participants...").start();
@@ -471,39 +537,43 @@ export function registerSpaceCommands(
       try {
         validateMemorySpaceId(spaceId);
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const space = await client.memorySpaces.get(spaceId);
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const space = await client.memorySpaces.get(spaceId);
 
-          if (!space) {
+            if (!space) {
+              spinner.stop();
+              printError(`Memory space ${spaceId} not found`);
+              process.exit(1);
+            }
+
             spinner.stop();
-            printError(`Memory space ${spaceId} not found`);
-            process.exit(1);
-          }
 
-          spinner.stop();
+            const participants = space.participants ?? [];
 
-          const participants = space.participants ?? [];
+            if (participants.length === 0) {
+              printWarning("No participants in this space");
+              return;
+            }
 
-          if (participants.length === 0) {
-            printWarning("No participants in this space");
-            return;
-          }
+            const displayData = participants.map((p) => ({
+              id: p.id,
+              type: p.type,
+              joined: formatRelativeTime(p.joinedAt),
+            }));
 
-          const displayData = participants.map((p) => ({
-            id: p.id,
-            type: p.type,
-            joined: formatRelativeTime(p.joinedAt),
-          }));
+            console.log(
+              formatOutput(displayData, format, {
+                title: `Participants in ${spaceId}`,
+                headers: ["id", "type", "joined"],
+              }),
+            );
 
-          console.log(
-            formatOutput(displayData, format, {
-              title: `Participants in ${spaceId}`,
-              headers: ["id", "type", "joined"],
-            }),
-          );
-
-          printSuccess(`${formatCount(participants.length, "participant")}`);
-        });
+            printSuccess(`${formatCount(participants.length, "participant")}`);
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(
@@ -527,7 +597,11 @@ export function registerSpaceCommands(
     )
     .action(async (spaceId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "add participant");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "add participant",
+      );
       if (!selection) return;
 
       const spinner = ora("Adding participant...").start();
@@ -535,19 +609,23 @@ export function registerSpaceCommands(
       try {
         validateMemorySpaceId(spaceId);
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const space = await client.memorySpaces.addParticipant(spaceId, {
-            id: options.id,
-            type: options.type,
-            joinedAt: Date.now(),
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const space = await client.memorySpaces.addParticipant(spaceId, {
+              id: options.id,
+              type: options.type,
+              joinedAt: Date.now(),
+            });
 
-          spinner.stop();
-          printSuccess(`Added participant ${options.id} to ${spaceId}`);
-          console.log(
-            `  Total participants: ${space.participants?.length ?? 0}`,
-          );
-        });
+            spinner.stop();
+            printSuccess(`Added participant ${options.id} to ${spaceId}`);
+            console.log(
+              `  Total participants: ${space.participants?.length ?? 0}`,
+            );
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(
@@ -566,7 +644,11 @@ export function registerSpaceCommands(
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (spaceId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "remove participant");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "remove participant",
+      );
       if (!selection) return;
 
       try {
@@ -585,18 +667,22 @@ export function registerSpaceCommands(
 
         const spinner = ora("Removing participant...").start();
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const space = await client.memorySpaces.removeParticipant(
-            spaceId,
-            options.id,
-          );
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const space = await client.memorySpaces.removeParticipant(
+              spaceId,
+              options.id,
+            );
 
-          spinner.stop();
-          printSuccess(`Removed participant ${options.id} from ${spaceId}`);
-          console.log(
-            `  Remaining participants: ${space.participants?.length ?? 0}`,
-          );
-        });
+            spinner.stop();
+            printSuccess(`Removed participant ${options.id} from ${spaceId}`);
+            console.log(
+              `  Remaining participants: ${space.participants?.length ?? 0}`,
+            );
+          },
+        );
       } catch (error) {
         printError(
           error instanceof Error
@@ -617,7 +703,11 @@ export function registerSpaceCommands(
     .option("-m, --metadata <json>", "JSON metadata to merge")
     .action(async (spaceId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "update memory space");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "update memory space",
+      );
       if (!selection) return;
 
       try {
@@ -648,14 +738,18 @@ export function registerSpaceCommands(
 
         const spinner = ora("Updating memory space...").start();
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const space = await client.memorySpaces.update(spaceId, updates);
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const space = await client.memorySpaces.update(spaceId, updates);
 
-          spinner.stop();
-          printSuccess(`Updated memory space ${spaceId}`);
-          if (updates.name) console.log(`  Name: ${space.name}`);
-          if (updates.status) console.log(`  Status: ${space.status}`);
-        });
+            spinner.stop();
+            printSuccess(`Updated memory space ${spaceId}`);
+            if (updates.name) console.log(`  Name: ${space.name}`);
+            if (updates.status) console.log(`  Status: ${space.status}`);
+          },
+        );
       } catch (error) {
         printError(error instanceof Error ? error.message : "Update failed");
         process.exit(1);
@@ -671,7 +765,11 @@ export function registerSpaceCommands(
     .option("-s, --status <status>", "Filter by status")
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "count memory spaces");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "count memory spaces",
+      );
       if (!selection) return;
 
       const spinner = ora("Counting memory spaces...").start();
@@ -684,15 +782,19 @@ export function registerSpaceCommands(
           ? validateMemorySpaceStatus(options.status)
           : undefined;
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const count = await client.memorySpaces.count({
-            type: filterType,
-            status: filterStatus,
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const count = await client.memorySpaces.count({
+              type: filterType,
+              status: filterStatus,
+            });
 
-          spinner.stop();
-          printSuccess(`${formatCount(count, "memory space")}`);
-        });
+            spinner.stop();
+            printSuccess(`${formatCount(count, "memory space")}`);
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(error instanceof Error ? error.message : "Count failed");
@@ -711,10 +813,16 @@ export function registerSpaceCommands(
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (query, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "search memory spaces");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "search memory spaces",
+      );
       if (!selection) return;
 
-      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
+      const resolved = resolveConfig(currentConfig, {
+        deployment: selection.name,
+      });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Searching memory spaces...").start();
@@ -728,36 +836,40 @@ export function registerSpaceCommands(
           : undefined;
         const limit = validateLimit(parseInt(options.limit, 10));
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const results = await client.memorySpaces.search(query, {
-            type: filterType,
-            status: filterStatus,
-            limit,
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const results = await client.memorySpaces.search(query, {
+              type: filterType,
+              status: filterStatus,
+              limit,
+            });
 
-          spinner.stop();
+            spinner.stop();
 
-          if (results.length === 0) {
-            printWarning("No memory spaces found matching your query");
-            return;
-          }
+            if (results.length === 0) {
+              printWarning("No memory spaces found matching your query");
+              return;
+            }
 
-          const displayData = results.map((s) => ({
-            id: s.memorySpaceId,
-            name: s.name ?? "-",
-            type: s.type,
-            status: s.status,
-          }));
+            const displayData = results.map((s) => ({
+              id: s.memorySpaceId,
+              name: s.name ?? "-",
+              type: s.type,
+              status: s.status,
+            }));
 
-          console.log(
-            formatOutput(displayData, format, {
-              title: `Search results for "${query}"`,
-              headers: ["id", "name", "type", "status"],
-            }),
-          );
+            console.log(
+              formatOutput(displayData, format, {
+                title: `Search results for "${query}"`,
+                headers: ["id", "name", "type", "status"],
+              }),
+            );
 
-          printSuccess(`Found ${formatCount(results.length, "space")}`);
-        });
+            printSuccess(`Found ${formatCount(results.length, "space")}`);
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(error instanceof Error ? error.message : "Search failed");
