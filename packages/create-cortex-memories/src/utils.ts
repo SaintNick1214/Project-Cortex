@@ -13,11 +13,33 @@ const require = createRequire(import.meta.url);
 
 /**
  * Check if a command exists in the system
+ *
+ * SECURITY: Only checks for known package manager/tool commands.
+ * The command is passed as an argument to `which`/`where`, not executed directly.
  */
 export async function commandExists(command: string): Promise<boolean> {
+  // Allowlist of commands we check for existence
+  const ALLOWED_COMMANDS = [
+    "npx",
+    "convex",
+    "npm",
+    "pnpm",
+    "yarn",
+    "bun",
+    "git",
+    "node",
+    "docker",
+  ];
+
+  // Validate command is from allowlist (defense in depth)
+  if (!ALLOWED_COMMANDS.includes(command)) {
+    return false;
+  }
+
   return new Promise((resolve) => {
     // Use platform-specific command (which for Unix, where for Windows)
     const cmd = process.platform === "win32" ? "where" : "which";
+    // nosemgrep: javascript.lang.security.detect-child-process.detect-child-process
     const child = spawn(cmd, [command]);
     child.on("close", (code) => resolve(code === 0));
   });
@@ -56,8 +78,7 @@ export async function execCommand(
   }
 
   return new Promise((resolve, reject) => {
-    // semgrep ignore: javascript.lang.security.detect-child-process.detect-child-process
-    // Justification: command is validated against allowlist above, not user-controllable
+    // nosemgrep: javascript.lang.security.detect-child-process.detect-child-process
     const child = spawn(command, args, {
       ...options,
       env: { ...process.env, ...options.env },
@@ -116,8 +137,7 @@ export async function execCommandLive(
   }
 
   return new Promise((resolve, reject) => {
-    // semgrep ignore: javascript.lang.security.detect-child-process.detect-child-process
-    // Justification: command is validated against allowlist above, not user-controllable
+    // nosemgrep: javascript.lang.security.detect-child-process.detect-child-process
     const child = spawn(command, args, {
       ...options,
       stdio: "inherit",
