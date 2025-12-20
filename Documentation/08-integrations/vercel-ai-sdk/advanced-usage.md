@@ -217,7 +217,7 @@ const cortexMemory = createCortexMemory({
 });
 ```
 
-See the [quickstart demo](../../../packages/vercel-ai-provider/quickstart) for a full implementation of the LayerFlowDiagram component.
+See the [quickstart demo](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart) for a full implementation of the LayerFlowDiagram component.
 
 ## Enhanced Streaming
 
