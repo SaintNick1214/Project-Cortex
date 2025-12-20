@@ -1284,6 +1284,23 @@ class FactsAPI:
             config,
         )
 
+    def has_belief_revision(self) -> bool:
+        """
+        Check if belief revision is configured and available.
+
+        Returns:
+            True if belief revision service is initialized
+
+        Example:
+            >>> if cortex.facts.has_belief_revision():
+            ...     # Use revise() for intelligent fact management
+            ...     await cortex.facts.revise(...)
+            ... else:
+            ...     # Fall back to store_with_dedup()
+            ...     await cortex.facts.store_with_dedup(...)
+        """
+        return self._belief_revision_service is not None
+
     async def revise(self, params: ReviseParams) -> ReviseResult:
         """
         Evaluate a new fact and determine the appropriate action using belief revision.
