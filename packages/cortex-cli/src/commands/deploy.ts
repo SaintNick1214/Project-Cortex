@@ -25,15 +25,18 @@ import pc from "picocolors";
 /**
  * Build environment for Convex commands, removing inherited CONVEX_* vars
  */
-function buildConvexEnv(overrides?: Record<string, string>): typeof process.env {
+function buildConvexEnv(
+  overrides?: Record<string, string>,
+): typeof process.env {
   const cleanEnv = { ...process.env };
-  
+
   // Find and remove all Convex-related env vars that might be inherited
-  const convexVars = Object.keys(cleanEnv).filter(key => 
-    key.startsWith('CONVEX_') || 
-    key.startsWith('LOCAL_CONVEX_') || 
-    key.startsWith('CLOUD_CONVEX_') ||
-    key.startsWith('ENV_CONVEX_')
+  const convexVars = Object.keys(cleanEnv).filter(
+    (key) =>
+      key.startsWith("CONVEX_") ||
+      key.startsWith("LOCAL_CONVEX_") ||
+      key.startsWith("CLOUD_CONVEX_") ||
+      key.startsWith("ENV_CONVEX_"),
   );
 
   for (const key of convexVars) {
@@ -59,7 +62,7 @@ async function execConvexCommandLive(
   options: { cwd?: string; env?: Record<string, string> } = {},
 ): Promise<number> {
   const { spawn } = await import("child_process");
-  
+
   return new Promise((resolve) => {
     const env = buildConvexEnv(options.env);
 
@@ -94,14 +97,20 @@ export function registerDeployCommands(
     .option("--skip-sync", "Skip automatic schema sync from SDK")
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "deploy");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "deploy",
+      );
       if (!selection) return;
 
       const { name: targetName, deployment } = selection;
       const projectPath = deployment.projectPath || process.cwd();
 
       try {
-        const info = getDeploymentInfo(currentConfig, { deployment: targetName });
+        const info = getDeploymentInfo(currentConfig, {
+          deployment: targetName,
+        });
 
         console.log();
         printInfo(`Deploying to ${info.isLocal ? "local" : "cloud"} Convex...`);
@@ -109,7 +118,9 @@ export function registerDeployCommands(
 
         // Sync schema files from SDK before deploying
         if (!options.skipSync) {
-          const { syncConvexSchema, printSyncResult } = await import("../utils/schema-sync.js");
+          const { syncConvexSchema, printSyncResult } = await import(
+            "../utils/schema-sync.js"
+          );
           const syncResult = await syncConvexSchema(projectPath);
           printSyncResult(syncResult);
           if (syncResult.error) {
@@ -125,7 +136,9 @@ export function registerDeployCommands(
         const convexEnv: Record<string, string> = {};
 
         if (options.local || info.isLocal) {
-          const resolved = resolveConfig(currentConfig, { deployment: targetName });
+          const resolved = resolveConfig(currentConfig, {
+            deployment: targetName,
+          });
           args.push("--url", resolved.url);
           convexEnv.CONVEX_URL = resolved.url;
         } else {
@@ -147,7 +160,7 @@ export function registerDeployCommands(
           args.push("--yes");
         }
 
-        const exitCode = await execConvexCommandLive("npx", args, { 
+        const exitCode = await execConvexCommandLive("npx", args, {
           cwd: projectPath,
           env: convexEnv,
         });
@@ -176,7 +189,11 @@ export function registerDeployCommands(
     .option("-y, --yes", "Auto-accept all updates", false)
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "update packages");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "update packages",
+      );
       if (!selection) return;
 
       const { deployment } = selection;
@@ -195,7 +212,8 @@ export function registerDeployCommands(
           );
           const data = JSON.parse(result.stdout);
           currentSdkVersion =
-            data.dependencies?.["@cortexmemory/sdk"]?.version ?? "not installed";
+            data.dependencies?.["@cortexmemory/sdk"]?.version ??
+            "not installed";
         } catch {
           // Ignore errors
         }
@@ -262,15 +280,19 @@ export function registerDeployCommands(
         printSection("Package Status", {
           "Project Path": projectPath,
         });
-        
+
         console.log();
         console.log(pc.bold("  @cortexmemory/sdk"));
-        console.log(`    Current: ${currentSdkVersion === latestSdkVersion ? pc.green(currentSdkVersion) : pc.yellow(currentSdkVersion)}`);
+        console.log(
+          `    Current: ${currentSdkVersion === latestSdkVersion ? pc.green(currentSdkVersion) : pc.yellow(currentSdkVersion)}`,
+        );
         console.log(`    Latest:  ${latestSdkVersion}`);
-        
+
         console.log();
         console.log(pc.bold("  convex"));
-        console.log(`    Current: ${currentConvexVersion === latestConvexVersion ? pc.green(currentConvexVersion) : pc.yellow(currentConvexVersion)}`);
+        console.log(
+          `    Current: ${currentConvexVersion === latestConvexVersion ? pc.green(currentConvexVersion) : pc.yellow(currentConvexVersion)}`,
+        );
         console.log(`    Latest:  ${latestConvexVersion}`);
         if (sdkConvexPeerDep !== "unknown") {
           console.log(`    SDK requires: ${pc.dim(sdkConvexPeerDep)}`);
@@ -279,33 +301,47 @@ export function registerDeployCommands(
 
         // Determine what needs updating
         const targetSdkVersion = options.sdkVersion ?? latestSdkVersion;
-        const sdkNeedsUpdate = currentSdkVersion !== targetSdkVersion && currentSdkVersion !== "not installed";
+        const sdkNeedsUpdate =
+          currentSdkVersion !== targetSdkVersion &&
+          currentSdkVersion !== "not installed";
         const sdkNeedsInstall = currentSdkVersion === "not installed";
 
         // Check if Convex has a patch update available beyond what SDK requires
         const parseVersion = (v: string) => {
           const match = v.match(/^(\d+)\.(\d+)\.(\d+)/);
           if (!match) return null;
-          return { major: parseInt(match[1]), minor: parseInt(match[2]), patch: parseInt(match[3]) };
+          return {
+            major: parseInt(match[1]),
+            minor: parseInt(match[2]),
+            patch: parseInt(match[3]),
+          };
         };
 
         const currentConvex = parseVersion(currentConvexVersion);
         const latestConvex = parseVersion(latestConvexVersion);
-        
+
         let convexPatchAvailable = false;
         if (currentConvex && latestConvex) {
           // Patch update = same major.minor, higher patch
-          convexPatchAvailable = 
+          convexPatchAvailable =
             currentConvex.major === latestConvex.major &&
             currentConvex.minor === latestConvex.minor &&
             currentConvex.patch < latestConvex.patch;
         }
 
-        const targetConvexVersion = options.convexVersion ?? (convexPatchAvailable ? latestConvexVersion : null);
-        const convexNeedsUpdate = targetConvexVersion && currentConvexVersion !== targetConvexVersion;
+        const targetConvexVersion =
+          options.convexVersion ??
+          (convexPatchAvailable ? latestConvexVersion : null);
+        const convexNeedsUpdate =
+          targetConvexVersion && currentConvexVersion !== targetConvexVersion;
 
         // Nothing to update
-        if (!sdkNeedsUpdate && !sdkNeedsInstall && !convexNeedsUpdate && !convexPatchAvailable) {
+        if (
+          !sdkNeedsUpdate &&
+          !sdkNeedsInstall &&
+          !convexNeedsUpdate &&
+          !convexPatchAvailable
+        ) {
           printSuccess("All packages are up to date!");
           return;
         }
@@ -313,16 +349,21 @@ export function registerDeployCommands(
         // Update Cortex SDK if needed
         if (sdkNeedsUpdate || sdkNeedsInstall) {
           console.log();
-          printInfo(`${sdkNeedsInstall ? "Installing" : "Updating"} @cortexmemory/sdk@${targetSdkVersion}...`);
+          printInfo(
+            `${sdkNeedsInstall ? "Installing" : "Updating"} @cortexmemory/sdk@${targetSdkVersion}...`,
+          );
           console.log();
 
-          const exitCode = await execCommandLive("npm", [
-            "install",
-            `@cortexmemory/sdk@${targetSdkVersion}`,
-          ], { cwd: projectPath });
+          const exitCode = await execCommandLive(
+            "npm",
+            ["install", `@cortexmemory/sdk@${targetSdkVersion}`],
+            { cwd: projectPath },
+          );
 
           if (exitCode === 0) {
-            printSuccess(`${sdkNeedsInstall ? "Installed" : "Updated"} @cortexmemory/sdk to ${targetSdkVersion}`);
+            printSuccess(
+              `${sdkNeedsInstall ? "Installed" : "Updated"} @cortexmemory/sdk to ${targetSdkVersion}`,
+            );
           } else {
             printError("SDK update failed");
             process.exit(1);
@@ -334,8 +375,12 @@ export function registerDeployCommands(
         // Check for Convex patch update
         if (convexPatchAvailable && !options.convexVersion) {
           console.log();
-          console.log(pc.cyan(`  Convex patch update available: ${currentConvexVersion} → ${latestConvexVersion}`));
-          
+          console.log(
+            pc.cyan(
+              `  Convex patch update available: ${currentConvexVersion} → ${latestConvexVersion}`,
+            ),
+          );
+
           let shouldUpdate = options.yes;
           if (!shouldUpdate) {
             const { default: prompts } = await import("prompts");
@@ -353,15 +398,18 @@ export function registerDeployCommands(
             printInfo(`Updating convex@${latestConvexVersion}...`);
             console.log();
 
-            const exitCode = await execCommandLive("npm", [
-              "install",
-              `convex@${latestConvexVersion}`,
-            ], { cwd: projectPath });
+            const exitCode = await execCommandLive(
+              "npm",
+              ["install", `convex@${latestConvexVersion}`],
+              { cwd: projectPath },
+            );
 
             if (exitCode === 0) {
               printSuccess(`Updated convex to ${latestConvexVersion}`);
             } else {
-              printWarning("Convex update failed, but SDK update was successful");
+              printWarning(
+                "Convex update failed, but SDK update was successful",
+              );
             }
           } else {
             console.log(pc.dim("  Skipping Convex update"));
@@ -372,10 +420,11 @@ export function registerDeployCommands(
           printInfo(`Updating convex@${options.convexVersion}...`);
           console.log();
 
-          const exitCode = await execCommandLive("npm", [
-            "install",
-            `convex@${options.convexVersion}`,
-          ], { cwd: projectPath });
+          const exitCode = await execCommandLive(
+            "npm",
+            ["install", `convex@${options.convexVersion}`],
+            { cwd: projectPath },
+          );
 
           if (exitCode === 0) {
             printSuccess(`Updated convex to ${options.convexVersion}`);

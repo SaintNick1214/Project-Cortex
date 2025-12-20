@@ -40,7 +40,12 @@ export { TokenBucket } from "./TokenBucket";
 export { Semaphore } from "./Semaphore";
 export { PriorityQueue } from "./PriorityQueue";
 export { CircuitBreaker } from "./CircuitBreaker";
-export { getPriority, isCritical, OPERATION_PRIORITIES, getOperationsByPriority } from "./priorities";
+export {
+  getPriority,
+  isCritical,
+  OPERATION_PRIORITIES,
+  getOperationsByPriority,
+} from "./priorities";
 
 /**
  * Check if an error is NOT a system failure and should not trip the circuit breaker.
@@ -386,9 +391,7 @@ export type ConvexPlanTier = "free" | "starter" | "professional";
  */
 export function getPresetForPlan(plan?: ConvexPlanTier): ResilienceConfig {
   const effectivePlan =
-    plan ||
-    (process.env.CONVEX_PLAN as ConvexPlanTier | undefined) ||
-    "free";
+    plan || (process.env.CONVEX_PLAN as ConvexPlanTier | undefined) || "free";
 
   switch (effectivePlan.toLowerCase()) {
     case "professional":

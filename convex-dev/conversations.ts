@@ -204,7 +204,7 @@ export const deleteMany = mutation({
     // Calculate total messages that would be deleted
     const totalMessagesWouldDelete = conversations.reduce(
       (sum, c) => sum + c.messageCount,
-      0
+      0,
     );
 
     // Dry run mode - just return what would be deleted
@@ -223,7 +223,7 @@ export const deleteMany = mutation({
     const threshold = args.confirmationThreshold ?? 10;
     if (conversations.length > threshold) {
       throw new ConvexError(
-        `DELETE_MANY_THRESHOLD_EXCEEDED: Would delete ${conversations.length} conversations (threshold: ${threshold}). Use dryRun first or increase confirmationThreshold.`
+        `DELETE_MANY_THRESHOLD_EXCEEDED: Would delete ${conversations.length} conversations (threshold: ${threshold}). Use dryRun first or increase confirmationThreshold.`,
       );
     }
 
@@ -597,8 +597,8 @@ export const list = query({
         v.literal("createdAt"),
         v.literal("updatedAt"),
         v.literal("lastMessageAt"),
-        v.literal("messageCount")
-      )
+        v.literal("messageCount"),
+      ),
     ),
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
     includeMessages: v.optional(v.boolean()),
@@ -650,53 +650,55 @@ export const list = query({
     // Apply additional filters
     if (args.participantId) {
       conversations = conversations.filter(
-        (c) => c.participantId === args.participantId
+        (c) => c.participantId === args.participantId,
       );
     }
     if (args.createdBefore !== undefined) {
       conversations = conversations.filter(
-        (c) => c.createdAt < args.createdBefore!
+        (c) => c.createdAt < args.createdBefore!,
       );
     }
     if (args.createdAfter !== undefined) {
       conversations = conversations.filter(
-        (c) => c.createdAt > args.createdAfter!
+        (c) => c.createdAt > args.createdAfter!,
       );
     }
     if (args.updatedBefore !== undefined) {
       conversations = conversations.filter(
-        (c) => c.updatedAt < args.updatedBefore!
+        (c) => c.updatedAt < args.updatedBefore!,
       );
     }
     if (args.updatedAfter !== undefined) {
       conversations = conversations.filter(
-        (c) => c.updatedAt > args.updatedAfter!
+        (c) => c.updatedAt > args.updatedAfter!,
       );
     }
     if (args.lastMessageBefore !== undefined) {
       conversations = conversations.filter((c) => {
-        const lastMsgTime = c.messages.length > 0
-          ? c.messages[c.messages.length - 1].timestamp
-          : c.createdAt;
+        const lastMsgTime =
+          c.messages.length > 0
+            ? c.messages[c.messages.length - 1].timestamp
+            : c.createdAt;
         return lastMsgTime < args.lastMessageBefore!;
       });
     }
     if (args.lastMessageAfter !== undefined) {
       conversations = conversations.filter((c) => {
-        const lastMsgTime = c.messages.length > 0
-          ? c.messages[c.messages.length - 1].timestamp
-          : c.createdAt;
+        const lastMsgTime =
+          c.messages.length > 0
+            ? c.messages[c.messages.length - 1].timestamp
+            : c.createdAt;
         return lastMsgTime > args.lastMessageAfter!;
       });
     }
     if (args.messageCountMin !== undefined) {
       conversations = conversations.filter(
-        (c) => c.messageCount >= args.messageCountMin!
+        (c) => c.messageCount >= args.messageCountMin!,
       );
     }
     if (args.messageCountMax !== undefined) {
       conversations = conversations.filter(
-        (c) => c.messageCount <= args.messageCountMax!
+        (c) => c.messageCount <= args.messageCountMax!,
       );
     }
 
@@ -717,12 +719,14 @@ export const list = query({
           bVal = b.updatedAt;
           break;
         case "lastMessageAt":
-          aVal = a.messages.length > 0
-            ? a.messages[a.messages.length - 1].timestamp
-            : a.createdAt;
-          bVal = b.messages.length > 0
-            ? b.messages[b.messages.length - 1].timestamp
-            : b.createdAt;
+          aVal =
+            a.messages.length > 0
+              ? a.messages[a.messages.length - 1].timestamp
+              : a.createdAt;
+          bVal =
+            b.messages.length > 0
+              ? b.messages[b.messages.length - 1].timestamp
+              : b.createdAt;
           break;
         case "messageCount":
           aVal = a.messageCount;
@@ -740,9 +744,10 @@ export const list = query({
     const paginatedConversations = conversations.slice(offset, offset + limit);
 
     // Optionally exclude messages
-    const result = args.includeMessages === false
-      ? paginatedConversations.map((c) => ({ ...c, messages: [] }))
-      : paginatedConversations;
+    const result =
+      args.includeMessages === false
+        ? paginatedConversations.map((c) => ({ ...c, messages: [] }))
+        : paginatedConversations;
 
     return {
       conversations: result,
@@ -806,7 +811,9 @@ export const getHistory = query({
     since: v.optional(v.number()), // Messages after timestamp
     until: v.optional(v.number()), // Messages before timestamp
     roles: v.optional(
-      v.array(v.union(v.literal("user"), v.literal("agent"), v.literal("system")))
+      v.array(
+        v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
+      ),
     ), // Filter by role
   },
   handler: async (ctx, args) => {
@@ -876,10 +883,10 @@ export const search = query({
     dateEnd: v.optional(v.number()),
     limit: v.optional(v.number()),
     searchIn: v.optional(
-      v.union(v.literal("content"), v.literal("metadata"), v.literal("both"))
+      v.union(v.literal("content"), v.literal("metadata"), v.literal("both")),
     ), // Default: "content"
     matchMode: v.optional(
-      v.union(v.literal("contains"), v.literal("exact"), v.literal("fuzzy"))
+      v.union(v.literal("contains"), v.literal("exact"), v.literal("fuzzy")),
     ), // Default: "contains"
   },
   handler: async (ctx, args) => {
@@ -970,7 +977,9 @@ export const search = query({
           const index = content.toLowerCase().indexOf(searchQuery);
           if (index === -1) {
             // For fuzzy matches, return beginning of content
-            return content.substring(0, 60) + (content.length > 60 ? "..." : "");
+            return (
+              content.substring(0, 60) + (content.length > 60 ? "..." : "")
+            );
           }
           const start = Math.max(0, index - 30);
           const end = Math.min(content.length, index + searchQuery.length + 30);

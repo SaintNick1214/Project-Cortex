@@ -309,7 +309,9 @@ describe("Users API (Coordination Layer)", () => {
 
     it("should apply displayName filter (case-insensitive)", async () => {
       const userId = ctx.userId("filter-displayname");
-      await cortex.users.update(userId, { displayName: "UniqueDisplayName123" });
+      await cortex.users.update(userId, {
+        displayName: "UniqueDisplayName123",
+      });
 
       const results = await cortex.users.list({
         displayName: "uniquedisplayname", // lowercase
@@ -529,9 +531,9 @@ describe("Users API (Coordination Layer)", () => {
     });
 
     it("should throw on invalid filter structure", async () => {
-      await expect(
-        cortex.users.search({ limit: -5 }),
-      ).rejects.toThrow("limit must be between 1 and 1000");
+      await expect(cortex.users.search({ limit: -5 })).rejects.toThrow(
+        "limit must be between 1 and 1000",
+      );
     });
   });
 
@@ -1346,10 +1348,9 @@ describe("Users API (Coordination Layer)", () => {
       await cortex.users.update(userId1, { name: "Count 1" });
       await cortex.users.update(userId2, { name: "Count 2" });
 
-      const result = await cortex.users.updateMany(
-        [userId1, userId2],
-        { data: { counted: true } },
-      );
+      const result = await cortex.users.updateMany([userId1, userId2], {
+        data: { counted: true },
+      });
 
       expect(result.updated).toBe(2);
       expect(result.userIds.length).toBe(result.updated);
@@ -1661,9 +1662,11 @@ describe("Users API (Coordination Layer)", () => {
 
       const parsed = JSON.parse(result);
       expect(parsed.length).toBeGreaterThanOrEqual(1);
-      expect(parsed.every((u: any) =>
-        u.data.displayName?.toLowerCase().includes("uniqueexportname999"),
-      )).toBe(true);
+      expect(
+        parsed.every((u: any) =>
+          u.data.displayName?.toLowerCase().includes("uniqueexportname999"),
+        ),
+      ).toBe(true);
     });
 
     it("should handle empty result set", async () => {

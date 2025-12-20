@@ -352,10 +352,7 @@ export function validateOffset(offset: unknown): void {
 /**
  * Validates timestamp is a valid Unix timestamp (positive number)
  */
-export function validateTimestamp(
-  timestamp: unknown,
-  fieldName: string,
-): void {
+export function validateTimestamp(timestamp: unknown, fieldName: string): void {
   if (timestamp === null || timestamp === undefined) {
     return; // Optional field
   }

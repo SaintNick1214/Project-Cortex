@@ -644,7 +644,11 @@ export class VectorAPI {
       "vector:restoreFromArchive",
     );
 
-    return result as { restored: boolean; memoryId: string; memory: MemoryEntry };
+    return result as {
+      restored: boolean;
+      memoryId: string;
+      memory: MemoryEntry;
+    };
   }
 
   /**

@@ -661,11 +661,7 @@ describe("Vector Memory API (Layer 2)", () => {
       it("returns null for memorySpaceId mismatch", async () => {
         const otherSpace = ctx.memorySpaceId("version-other");
 
-        const result = await cortex.vector.getVersion(
-          otherSpace,
-          memoryId,
-          1,
-        );
+        const result = await cortex.vector.getVersion(otherSpace, memoryId, 1);
 
         expect(result).toBeNull();
       });
@@ -933,7 +929,10 @@ describe("Vector Memory API (Layer 2)", () => {
         await cortex.vector.archive(archiveSpace, memory.memoryId);
 
         // Archive again - should not throw
-        const result = await cortex.vector.archive(archiveSpace, memory.memoryId);
+        const result = await cortex.vector.archive(
+          archiveSpace,
+          memory.memoryId,
+        );
 
         expect(result.archived).toBe(true);
         expect(result.restorable).toBe(true);

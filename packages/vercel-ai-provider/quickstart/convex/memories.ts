@@ -5,8 +5,8 @@
  * as vector memories are created in the Cortex system.
  */
 
-import { query } from './_generated/server';
-import { v } from 'convex/values';
+import { query } from "./_generated/server";
+import { v } from "convex/values";
 
 /**
  * Get recent memories for a memory space
@@ -23,9 +23,9 @@ export const getRecent = query({
 
     // Query memories table (from Cortex SDK schema)
     const memories = await ctx.db
-      .query('memories')
-      .filter((q) => q.eq(q.field('memorySpaceId'), args.memorySpaceId))
-      .order('desc')
+      .query("memories")
+      .filter((q) => q.eq(q.field("memorySpaceId"), args.memorySpaceId))
+      .order("desc")
       .take(limit);
 
     return memories;
@@ -45,14 +45,14 @@ export const getByUser = query({
     const limit = args.limit ?? 20;
 
     const memories = await ctx.db
-      .query('memories')
+      .query("memories")
       .filter((q) =>
         q.and(
-          q.eq(q.field('memorySpaceId'), args.memorySpaceId),
-          q.eq(q.field('userId'), args.userId)
-        )
+          q.eq(q.field("memorySpaceId"), args.memorySpaceId),
+          q.eq(q.field("userId"), args.userId),
+        ),
       )
-      .order('desc')
+      .order("desc")
       .take(limit);
 
     return memories;
@@ -68,8 +68,8 @@ export const count = query({
   },
   handler: async (ctx, args) => {
     const memories = await ctx.db
-      .query('memories')
-      .filter((q) => q.eq(q.field('memorySpaceId'), args.memorySpaceId))
+      .query("memories")
+      .filter((q) => q.eq(q.field("memorySpaceId"), args.memorySpaceId))
       .collect();
 
     return memories.length;
@@ -91,8 +91,8 @@ export const search = query({
 
     // Simple text search (in production, use vector search)
     const allMemories = await ctx.db
-      .query('memories')
-      .filter((q) => q.eq(q.field('memorySpaceId'), args.memorySpaceId))
+      .query("memories")
+      .filter((q) => q.eq(q.field("memorySpaceId"), args.memorySpaceId))
       .collect();
 
     const matching = allMemories

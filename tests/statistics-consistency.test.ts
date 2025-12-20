@@ -24,7 +24,10 @@ describe("Statistics Consistency Testing", () => {
   afterAll(async () => {
     // Cleanup
     try {
-      await cortex.memorySpaces.delete(BASE_ID, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(BASE_ID, {
+        cascade: true,
+        reason: "test cleanup",
+      });
     } catch (_e) {
       // Ignore
     }
@@ -940,7 +943,10 @@ describe("Statistics Consistency Testing", () => {
       });
 
       // Delete space
-      await cortex.memorySpaces.delete(spaceId, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(spaceId, {
+        cascade: true,
+        reason: "test cleanup",
+      });
 
       // Space should be gone
       const check = await cortex.memorySpaces.get(spaceId);
@@ -1687,7 +1693,10 @@ describe("Statistics Consistency Testing", () => {
       const _before = await cortex.memorySpaces.getStats(spaceId);
 
       // Delete with cascade
-      await cortex.memorySpaces.delete(spaceId, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(spaceId, {
+        cascade: true,
+        reason: "test cleanup",
+      });
 
       // Space should be gone
       const check = await cortex.memorySpaces.get(spaceId);

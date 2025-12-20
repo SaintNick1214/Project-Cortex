@@ -335,14 +335,16 @@ await cortex.memory.remember({
   userId: "user-123",
   agentId: "agent-1",
   userName: "Alice",
-  extractFacts: async (user, agent) => [{
-    fact: "User's name is Alice",
-    factType: "identity",
-    subject: "user-123",
-    predicate: "name",
-    object: "Alice",
-    confidence: 95,
-  }],
+  extractFacts: async (user, agent) => [
+    {
+      fact: "User's name is Alice",
+      factType: "identity",
+      subject: "user-123",
+      predicate: "name",
+      object: "Alice",
+      confidence: 95,
+    },
+  ],
 });
 
 // Session 2: User mentions name again (different wording)
@@ -354,14 +356,16 @@ await cortex.memory.remember({
   userId: "user-123",
   agentId: "agent-1",
   userName: "Alice",
-  extractFacts: async (user, agent) => [{
-    fact: "User is called Alice",
-    factType: "identity",
-    subject: "user-123",
-    predicate: "name",
-    object: "Alice",
-    confidence: 90,
-  }],
+  extractFacts: async (user, agent) => [
+    {
+      fact: "User is called Alice",
+      factType: "identity",
+      subject: "user-123",
+      predicate: "name",
+      object: "Alice",
+      confidence: 90,
+    },
+  ],
 });
 
 // Result: Only 1 fact stored (not 2!)
@@ -373,13 +377,14 @@ console.log(facts.length); // 1
 
 The SDK supports three deduplication strategies:
 
-| Strategy | How it Works | Speed | Accuracy |
-|----------|--------------|-------|----------|
-| `semantic` | Embedding similarity search | Slower | Highest |
-| `structural` | Subject + predicate + object match | Fast | Medium |
-| `exact` | Normalized text match | Fastest | Low |
+| Strategy     | How it Works                       | Speed   | Accuracy |
+| ------------ | ---------------------------------- | ------- | -------- |
+| `semantic`   | Embedding similarity search        | Slower  | Highest  |
+| `structural` | Subject + predicate + object match | Fast    | Medium   |
+| `exact`      | Normalized text match              | Fastest | Low      |
 
 **Default behavior:**
+
 - `memory.remember()` and `memory.rememberStream()` default to `semantic` (falls back to `structural` if no `generateEmbedding` function)
 - `facts.store()` performs no deduplication by default (for performance-critical use cases)
 
@@ -428,7 +433,7 @@ const result = await cortex.facts.storeWithDedup(
       similarityThreshold: 0.85,
       generateEmbedding: async (text) => embed(text),
     },
-  }
+  },
 );
 
 if (result.deduplication?.matchedExisting) {
@@ -1356,7 +1361,7 @@ await cortex.memory.remember({
 // Or use structural for faster deduplication
 await cortex.memory.remember({
   // ... params
-  factDeduplication: 'structural',
+  factDeduplication: "structural",
 });
 ```
 
@@ -1398,22 +1403,26 @@ For `structural` deduplication to work, ensure facts have consistent `subject`, 
 
 ```typescript
 // Good: Consistent structure enables dedup
-extractFacts: async () => [{
-  fact: "User prefers dark mode",
-  factType: "preference",
-  subject: "user-123",      // ← Consistent
-  predicate: "prefers",     // ← Consistent
-  object: "dark-mode",      // ← Consistent
-  confidence: 90,
-}]
+extractFacts: async () => [
+  {
+    fact: "User prefers dark mode",
+    factType: "preference",
+    subject: "user-123", // ← Consistent
+    predicate: "prefers", // ← Consistent
+    object: "dark-mode", // ← Consistent
+    confidence: 90,
+  },
+];
 
 // Bad: Missing structure prevents structural dedup
-extractFacts: async () => [{
-  fact: "User prefers dark mode",
-  factType: "preference",
-  // No subject/predicate/object!
-  confidence: 90,
-}]
+extractFacts: async () => [
+  {
+    fact: "User prefers dark mode",
+    factType: "preference",
+    // No subject/predicate/object!
+    confidence: 90,
+  },
+];
 ```
 
 ## Next Steps

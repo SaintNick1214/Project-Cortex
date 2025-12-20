@@ -226,7 +226,12 @@ describe("Memory Large-Scale Operations", () => {
 
     beforeAll(async () => {
       // Create memories with similar content for search tests
-      const topics = ["machine learning", "artificial intelligence", "neural networks", "deep learning"];
+      const topics = [
+        "machine learning",
+        "artificial intelligence",
+        "neural networks",
+        "deep learning",
+      ];
       const createPromises = [];
 
       for (let i = 0; i < BATCH_SIZE; i++) {
@@ -453,4 +458,3 @@ describe("Memory Large-Scale Operations", () => {
     });
   });
 });
-

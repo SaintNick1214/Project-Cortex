@@ -346,3 +346,204 @@ export async function ensureEnrichedEntityNode(
     { name: entityName },
   );
 }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Belief Revision - Fact Supersession
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Sync fact supersession to graph database
+ *
+ * Creates a SUPERSEDES relationship from new fact to old fact.
+ * Also marks the old fact as superseded.
+ *
+ * @param oldFact - The fact being superseded
+ * @param newFact - The fact that supersedes
+ * @param adapter - Graph adapter
+ * @param reason - Optional reason for supersession
+ */
+export async function syncFactSupersession(
+  oldFact: FactRecord,
+  newFact: FactRecord,
+  adapter: GraphAdapter,
+  reason?: string,
+): Promise<{ oldNodeId: string; newNodeId: string; relationshipId: string }> {
+  // Ensure both facts exist in graph
+  const oldNodeId = await syncFactToGraph(
+    { ...oldFact, supersededBy: newFact.factId },
+    adapter,
+  );
+  const newNodeId = await syncFactToGraph(
+    { ...newFact, supersedes: oldFact.factId },
+    adapter,
+  );
+
+  // Create SUPERSEDES relationship
+  const relationshipId = await adapter.createEdge({
+    from: newNodeId,
+    to: oldNodeId,
+    type: "SUPERSEDES",
+    properties: {
+      reason: reason || null,
+      timestamp: Date.now(),
+    },
+  });
+
+  // Mark old fact as inactive/superseded in graph
+  await updateFactGraphStatus(oldFact.factId, "superseded", adapter);
+
+  return { oldNodeId, newNodeId, relationshipId };
+}
+
+/**
+ * Update fact status in graph database
+ *
+ * Updates the status property of a Fact node to reflect
+ * its current state (active, superseded, deleted).
+ */
+export async function updateFactGraphStatus(
+  factId: string,
+  status: "active" | "superseded" | "deleted",
+  adapter: GraphAdapter,
+): Promise<void> {
+  // Find the fact node
+  const nodeId = await findGraphNodeId("Fact", factId, adapter);
+
+  if (nodeId) {
+    // Update the node properties
+    await adapter.mergeNode(
+      {
+        label: "Fact",
+        properties: {
+          factId,
+          status,
+          statusUpdatedAt: Date.now(),
+        },
+      },
+      { factId },
+    );
+  }
+}
+
+/**
+ * Sync fact update in place to graph database
+ *
+ * Updates an existing Fact node with new content.
+ * Used for UPDATE action in belief revision.
+ */
+export async function syncFactUpdateInPlace(
+  fact: FactRecord,
+  adapter: GraphAdapter,
+): Promise<string> {
+  return await adapter.mergeNode(
+    {
+      label: "Fact",
+      properties: {
+        factId: fact.factId,
+        memorySpaceId: fact.memorySpaceId,
+        participantId: fact.participantId || null,
+        fact: fact.fact,
+        factType: fact.factType,
+        subject: fact.subject || null,
+        predicate: fact.predicate || null,
+        object: fact.object || null,
+        confidence: fact.confidence,
+        sourceType: fact.sourceType,
+        tags: fact.tags,
+        version: fact.version,
+        supersededBy: fact.supersededBy || null,
+        supersedes: fact.supersedes || null,
+        status: "active",
+        updatedAt: fact.updatedAt,
+      },
+    },
+    { factId: fact.factId },
+  );
+}
+
+/**
+ * Create a REVISED_FROM relationship between facts
+ *
+ * Used when a fact is updated (refined) rather than superseded.
+ * The relationship shows evolution without invalidation.
+ */
+export async function syncFactRevision(
+  originalFact: FactRecord,
+  revisedFact: FactRecord,
+  adapter: GraphAdapter,
+  reason?: string,
+): Promise<{ originalNodeId: string; revisedNodeId: string; relationshipId: string }> {
+  // Ensure both facts exist in graph
+  const originalNodeId = await syncFactToGraph(originalFact, adapter);
+  const revisedNodeId = await syncFactToGraph(revisedFact, adapter);
+
+  // Create REVISED_FROM relationship
+  const relationshipId = await adapter.createEdge({
+    from: revisedNodeId,
+    to: originalNodeId,
+    type: "REVISED_FROM",
+    properties: {
+      reason: reason || "Content refinement",
+      timestamp: Date.now(),
+    },
+  });
+
+  return { originalNodeId, revisedNodeId, relationshipId };
+}
+
+/**
+ * Get the supersession chain for a fact in the graph
+ *
+ * Returns all facts in the chain, from oldest to newest.
+ */
+export async function getFactSupersessionChainFromGraph(
+  factId: string,
+  adapter: GraphAdapter,
+): Promise<Array<{ factId: string; fact: string; supersededAt?: number }>> {
+  // Find all facts connected by SUPERSEDES relationships
+  const cypherQuery = `
+    MATCH path = (start:Fact)-[:SUPERSEDES*]->(end:Fact)
+    WHERE start.factId = $factId OR end.factId = $factId
+    WITH DISTINCT nodes(path) as chain
+    UNWIND chain as node
+    RETURN DISTINCT node.factId as factId, node.fact as fact, node.statusUpdatedAt as supersededAt
+    ORDER BY node.createdAt ASC
+  `;
+
+  try {
+    const result = await adapter.query(cypherQuery, { factId });
+    return result.records as Array<{ factId: string; fact: string; supersededAt?: number }>;
+  } catch {
+    // Fallback if query fails - return just the current fact
+    const node = await findGraphNodeId("Fact", factId, adapter);
+    if (node) {
+      return [{ factId, fact: "(unable to retrieve fact content)" }];
+    }
+    return [];
+  }
+}
+
+/**
+ * Remove supersession relationships for a fact
+ *
+ * Used when "undoing" a supersession or during fact deletion.
+ */
+export async function removeFactSupersessionRelationships(
+  factId: string,
+  adapter: GraphAdapter,
+): Promise<number> {
+  // Find and delete relationships
+  const cypherQuery = `
+    MATCH (f:Fact {factId: $factId})-[r:SUPERSEDES]-()
+    DELETE r
+    RETURN count(r) as deleted
+  `;
+
+  try {
+    const result = await adapter.query(cypherQuery, { factId });
+    return (result.records as Array<{ deleted: number }>)[0]?.deleted ?? 0;
+  } catch {
+    // If adapter doesn't support query, return 0
+    return 0;
+  }
+}

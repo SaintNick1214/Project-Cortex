@@ -1416,11 +1416,7 @@ describe("PriorityQueue Extended Tests", () => {
       const queue = new PriorityQueue();
       const rejections: string[] = [];
 
-      for (const priority of [
-        "critical",
-        "high",
-        "normal",
-      ] as Priority[]) {
+      for (const priority of ["critical", "high", "normal"] as Priority[]) {
         const request: QueuedRequest = {
           id: `${priority}-req`,
           operation: async () => "result",
@@ -1516,7 +1512,11 @@ describe("CircuitBreaker Extended Tests", () => {
       let callbackCalled = false;
       const cb = new CircuitBreaker(
         { failureThreshold: 5 },
-        { onOpen: () => { callbackCalled = true; } },
+        {
+          onOpen: () => {
+            callbackCalled = true;
+          },
+        },
       );
 
       cb.forceOpen();
@@ -1542,7 +1542,11 @@ describe("CircuitBreaker Extended Tests", () => {
       let callbackCalled = false;
       const cb = new CircuitBreaker(
         { failureThreshold: 1, timeout: 60000 },
-        { onClose: () => { callbackCalled = true; } },
+        {
+          onClose: () => {
+            callbackCalled = true;
+          },
+        },
       );
 
       // Trip then force close
@@ -1701,7 +1705,11 @@ describe("CircuitBreaker Extended Tests", () => {
       let callbackCalled = false;
       const cb = new CircuitBreaker(
         { failureThreshold: 1, timeout: 10 },
-        { onHalfOpen: () => { callbackCalled = true; } },
+        {
+          onHalfOpen: () => {
+            callbackCalled = true;
+          },
+        },
       );
 
       // Trip the circuit

@@ -2250,9 +2250,7 @@ describe("Immutable Store API (Layer 1b)", () => {
         type: searchEdgeType,
       });
       expect(
-        titleResults.some(
-          (r) => r.entry.id === ctx.immutableId("multi-field"),
-        ),
+        titleResults.some((r) => r.entry.id === ctx.immutableId("multi-field")),
       ).toBe(true);
 
       // Search in description

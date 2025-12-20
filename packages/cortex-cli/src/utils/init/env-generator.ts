@@ -63,7 +63,7 @@ NEO4J_PASSWORD=${config.graphPassword || "cortex-password"}
 
 /**
  * Write .env.local file to project
- * 
+ *
  * IMPORTANT: If Convex CLI has already created .env.local (with CONVEX_URL,
  * CONVEX_DEPLOYMENT, etc.), we preserve those lines and only add our
  * additional configuration (graph DB, OpenAI, etc.)
@@ -77,12 +77,13 @@ export async function createEnvFile(
   // Check if .env.local already exists (likely created by convex dev)
   let existingContent = "";
   let hasExistingConvexConfig = false;
-  
+
   try {
     existingContent = await fs.readFile(envPath, "utf-8");
     // Check if Convex has already configured this file
-    hasExistingConvexConfig = existingContent.includes("CONVEX_URL=") || 
-                               existingContent.includes("CONVEX_DEPLOYMENT=");
+    hasExistingConvexConfig =
+      existingContent.includes("CONVEX_URL=") ||
+      existingContent.includes("CONVEX_DEPLOYMENT=");
   } catch {
     // File doesn't exist, will create new
   }
@@ -90,7 +91,7 @@ export async function createEnvFile(
   if (hasExistingConvexConfig) {
     // Preserve the Convex-generated content, just add our header and optional extras
     console.log(pc.dim("   Preserving Convex configuration in .env.local"));
-    
+
     // Add header if not present
     let finalContent = existingContent;
     if (!existingContent.includes("# Cortex Memory SDK Configuration")) {
@@ -99,7 +100,7 @@ export async function createEnvFile(
 
 ${existingContent}`;
     }
-    
+
     // Add OpenAI placeholder if not present
     if (!existingContent.includes("OPENAI_API_KEY")) {
       finalContent += `
@@ -109,13 +110,13 @@ ${existingContent}`;
 # OPENAI_API_KEY=sk-...
 `;
     }
-    
+
     await fs.writeFile(envPath, finalContent);
     console.log(pc.green("   Updated .env.local"));
   } else {
     // No existing Convex config, create fresh file
     const envContent = generateEnvFile(config);
-    
+
     // Backup any existing file first
     try {
       const backupPath = path.join(
@@ -179,7 +180,9 @@ NEO4J_PASSWORD=${config.graphPassword}
     await fs.writeFile(envPath, existingContent + graphEnvVars);
     console.log(pc.green("   Added graph database env vars to .env.local"));
   } catch {
-    console.warn(pc.yellow("   Warning: Could not update .env.local with graph config"));
+    console.warn(
+      pc.yellow("   Warning: Could not update .env.local with graph config"),
+    );
     console.log(pc.dim(`   Please add manually:\n${graphEnvVars}`));
   }
 }

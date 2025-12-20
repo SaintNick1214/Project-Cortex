@@ -886,8 +886,7 @@ export class MemoryAPI {
                   userId: params.userId,
                   fact: factData.fact,
                   factType: factData.factType,
-                  subject:
-                    factData.subject || params.userId || params.agentId,
+                  subject: factData.subject || params.userId || params.agentId,
                   predicate: factData.predicate,
                   object: factData.object,
                   confidence: factData.confidence,
@@ -1796,7 +1795,10 @@ export class MemoryAPI {
         discoveredEntities = expansion.discoveredEntities;
       } catch (error) {
         // Graph expansion failed - continue with direct results
-        console.warn("[Cortex] Graph expansion failed, continuing without:", error);
+        console.warn(
+          "[Cortex] Graph expansion failed, continuing without:",
+          error,
+        );
       }
     }
 
@@ -1864,7 +1866,8 @@ export class MemoryAPI {
         graphExpandedMemories.length +
         graphExpandedFacts.length,
       queryTimeMs,
-      graphExpansionApplied: graphExpansionEnabled && discoveredEntities.length > 0,
+      graphExpansionApplied:
+        graphExpansionEnabled && discoveredEntities.length > 0,
     };
   }
 
@@ -1990,7 +1993,11 @@ export class MemoryAPI {
     validateMemoryId(memoryId);
     validateUpdateOptions(updates);
 
-    const updatedMemory = await this.vector.update(memorySpaceId, memoryId, updates);
+    const updatedMemory = await this.vector.update(
+      memorySpaceId,
+      memoryId,
+      updates,
+    );
 
     const factsReextracted: FactRecord[] = [];
 
@@ -2340,7 +2347,10 @@ export class MemoryAPI {
    * console.log(`Archived ${result.factsArchived} associated facts`);
    * ```
    */
-  async archive(memorySpaceId: string, memoryId: string): Promise<ArchiveResult> {
+  async archive(
+    memorySpaceId: string,
+    memoryId: string,
+  ): Promise<ArchiveResult> {
     // Client-side validation
     validateMemorySpaceId(memorySpaceId, "memorySpaceId");
     validateMemoryId(memoryId);

@@ -31,9 +31,9 @@ const cortexMemory = createCortexMemory({
   memorySpaceId: "my-agent",
   userId: "user-123",
   agentId: "my-assistant",
-  
+
   // Auto-configured from env vars
-  enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === 'true',
+  enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === "true",
 });
 ```
 
@@ -47,7 +47,7 @@ const cortexMemory = createCortexMemory({
   memorySpaceId: "my-agent",
   userId: "user-123",
   agentId: "my-assistant",
-  
+
   enableGraphMemory: true,
   graphConfig: {
     uri: "bolt://localhost:7687",
@@ -92,9 +92,9 @@ const cortexMemory = createCortexMemory({
   memorySpaceId: "my-agent",
   userId: "user-123",
   agentId: "my-assistant",
-  
+
   // Auto-configured from env vars
-  enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === 'true',
+  enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === "true",
 });
 ```
 
@@ -106,7 +106,7 @@ const cortexMemory = createCortexMemory({
   memorySpaceId: "my-agent",
   userId: "user-123",
   agentId: "my-assistant",
-  
+
   enableFactExtraction: true,
   factExtractionConfig: {
     model: "gpt-4o-mini",
@@ -129,7 +129,7 @@ const factSchema = z.object({
       fact: z.string(),
       factType: z.enum([
         "preference",
-        "identity", 
+        "identity",
         "knowledge",
         "relationship",
         "event",
@@ -197,17 +197,17 @@ const cortexMemory = createCortexMemory({
       console.log(`Starting orchestration: ${orchestrationId}`);
       setIsOrchestrating(true);
     },
-    
+
     onLayerUpdate: (event) => {
       // event.layer: 'memorySpace' | 'user' | 'agent' | 'conversation' | 'vector' | 'facts' | 'graph'
       // event.status: 'pending' | 'in_progress' | 'complete' | 'error' | 'skipped'
       // event.latencyMs: number
       // event.data: { id?, preview?, metadata? }
-      
+
       console.log(`${event.layer}: ${event.status} (${event.latencyMs}ms)`);
       updateLayerVisualization(event.layer, event);
     },
-    
+
     onOrchestrationComplete: (summary) => {
       console.log(`Total orchestration: ${summary.totalLatencyMs}ms`);
       console.log(`Created IDs:`, summary.createdIds);
@@ -256,26 +256,26 @@ const cortexMemory = createCortexMemory({
       console.log(`Accumulated: ${event.accumulated.length} chars`);
       console.log(`Estimated tokens: ${event.estimatedTokens}`);
     },
-    
+
     onProgress: (event) => {
       console.log(`Bytes processed: ${event.bytesProcessed}`);
       console.log(`Chunks: ${event.chunks}`);
       console.log(`Elapsed: ${event.elapsedMs}ms`);
       console.log(`Phase: ${event.currentPhase}`);
-      
+
       updateProgressBar(event.bytesProcessed);
     },
-    
+
     onError: (error) => {
       console.error("Stream error:", error.message);
       console.log(`Phase: ${error.phase}`);
       console.log(`Recoverable: ${error.recoverable}`);
-      
+
       if (error.resumeToken) {
         saveResumeToken(error.resumeToken);
       }
     },
-    
+
     onComplete: (event) => {
       console.log(`Response: ${event.fullResponse.length} chars`);
       console.log(`Duration: ${event.durationMs}ms`);
@@ -317,7 +317,7 @@ const cortexMemory = createCortexMemory({
   agentId: "my-assistant",
 
   streamingOptions: {
-    partialFailureHandling: 'store-partial', // or 'rollback', 'retry', 'best-effort'
+    partialFailureHandling: "store-partial", // or 'rollback', 'retry', 'best-effort'
     maxRetries: 3,
     generateResumeToken: true,
     streamTimeout: 30000, // 30 seconds
@@ -412,16 +412,16 @@ const cortexMemory = createCortexMemory({
   customContextBuilder: (memories) => {
     const highImportance = memories.filter((m) => m.importance > 70);
     const recent = memories.slice(0, 3);
-    
+
     return `## Critical Information
-${highImportance.map((m) => `- ${m.content}`).join('\n')}
+${highImportance.map((m) => `- ${m.content}`).join("\n")}
 
 ## Recent Context
-${recent.map((m) => `- ${m.content}`).join('\n')}`;
+${recent.map((m) => `- ${m.content}`).join("\n")}`;
   },
-  
+
   // Or use injection strategy
-  contextInjectionStrategy: 'system', // or 'user', 'custom'
+  contextInjectionStrategy: "system", // or 'user', 'custom'
 });
 ```
 
@@ -438,10 +438,10 @@ const cortexMemory = createCortexMemory({
 
   // Limit search results for faster responses
   memorySearchLimit: 3,
-  
+
   // Higher threshold = more relevant results only
   minMemoryRelevance: 0.8,
-  
+
   // Filter by importance
   defaultImportance: 50,
 });
@@ -458,10 +458,10 @@ const cortexMemory = createCortexMemory({
 
   // Disable search for write-only scenarios
   enableMemorySearch: false,
-  
+
   // Or disable storage for read-only scenarios
   enableMemoryStorage: false,
-  
+
   // Disable metrics collection
   enableStreamMetrics: false,
 });

@@ -66,7 +66,12 @@ function findSdkPath(projectPath: string): string | null {
   // Walk up the directory tree looking for node_modules
   let currentPath = projectPath;
   while (currentPath !== dirname(currentPath)) {
-    const parentModules = join(currentPath, "node_modules", "@cortexmemory", "sdk");
+    const parentModules = join(
+      currentPath,
+      "node_modules",
+      "@cortexmemory",
+      "sdk",
+    );
     if (existsSync(parentModules)) {
       return parentModules;
     }
@@ -117,7 +122,7 @@ export async function syncConvexSchema(
     force?: boolean;
     /** Quiet mode - don't print progress */
     quiet?: boolean;
-  }
+  },
 ): Promise<SchemaSyncResult> {
   const result: SchemaSyncResult = {
     synced: false,
@@ -131,7 +136,8 @@ export async function syncConvexSchema(
   // Find SDK package
   const sdkPath = findSdkPath(projectPath);
   if (!sdkPath) {
-    result.error = "@cortexmemory/sdk not found in node_modules. Please install it first.";
+    result.error =
+      "@cortexmemory/sdk not found in node_modules. Please install it first.";
     return result;
   }
 
@@ -189,7 +195,10 @@ export async function syncConvexSchema(
 /**
  * Print schema sync result to console
  */
-export function printSyncResult(result: SchemaSyncResult, quiet?: boolean): void {
+export function printSyncResult(
+  result: SchemaSyncResult,
+  quiet?: boolean,
+): void {
   if (quiet) return;
 
   if (result.error) {
@@ -198,11 +207,15 @@ export function printSyncResult(result: SchemaSyncResult, quiet?: boolean): void
   }
 
   if (!result.synced) {
-    console.log(pc.dim(`   Schema files are up to date (SDK v${result.sdkVersion})`));
+    console.log(
+      pc.dim(`   Schema files are up to date (SDK v${result.sdkVersion})`),
+    );
     return;
   }
 
-  console.log(pc.cyan(`   ↓ Synced schema from @cortexmemory/sdk v${result.sdkVersion}`));
+  console.log(
+    pc.cyan(`   ↓ Synced schema from @cortexmemory/sdk v${result.sdkVersion}`),
+  );
 
   if (result.filesUpdated.length > 0) {
     console.log(pc.dim(`     Updated: ${result.filesUpdated.join(", ")}`));

@@ -220,10 +220,10 @@ describe("recall() Integration", () => {
       // Python-related result should rank higher
       if (result.items.length >= 2) {
         const pythonItem = result.items.find((i) =>
-          i.content.toLowerCase().includes("python")
+          i.content.toLowerCase().includes("python"),
         );
         const weatherItem = result.items.find((i) =>
-          i.content.toLowerCase().includes("weather")
+          i.content.toLowerCase().includes("weather"),
         );
 
         if (pythonItem && weatherItem) {
@@ -408,7 +408,7 @@ describe("recall() Integration", () => {
     it("handles special characters in query", async () => {
       const result = await cortex.memory.recall({
         memorySpaceId: TEST_MEMSPACE_ID,
-        query: "user's preference (test) & \"quoted\"",
+        query: 'user\'s preference (test) & "quoted"',
       });
 
       // Should not throw, should return results

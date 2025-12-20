@@ -1,6 +1,6 @@
-import { Cortex } from '@cortexmemory/sdk';
+import { Cortex } from "@cortexmemory/sdk";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 function getCortex() {
   return new Cortex({ convexUrl: process.env.CONVEX_URL! });
@@ -9,9 +9,10 @@ function getCortex() {
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const memorySpaceId = searchParams.get('memorySpaceId') || 'quickstart-demo';
-    const userId = searchParams.get('userId');
-    const limit = parseInt(searchParams.get('limit') || '50');
+    const memorySpaceId =
+      searchParams.get("memorySpaceId") || "quickstart-demo";
+    const userId = searchParams.get("userId");
+    const limit = parseInt(searchParams.get("limit") || "50");
 
     const cortex = getCortex();
 
@@ -28,11 +29,11 @@ export async function GET(req: Request) {
       memorySpaceId,
     });
   } catch (error) {
-    console.error('[Facts API Error]', error);
+    console.error("[Facts API Error]", error);
 
     return Response.json(
-      { error: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
+      { error: error instanceof Error ? error.message : "Unknown error" },
+      { status: 500 },
     );
   }
 }

@@ -19,6 +19,116 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.24.0] - 2025-12-20
+
+#### 🧠 Belief Revision System
+
+**Intelligent fact management that prevents duplicates and maintains knowledge consistency.** When facts are extracted or stored, the Belief Revision System automatically detects conflicts, resolves them using LLM-based reasoning, and maintains a complete audit trail.
+
+**The Problem Solved:**
+
+Previously, fact storage was append-only with basic deduplication:
+- Conflicting facts accumulated ("User likes blue" → later "User prefers purple")
+- No semantic understanding of when facts should update vs. add
+- No history of how knowledge evolved over time
+
+**Now with Belief Revision:**
+
+```typescript
+// Automatic conflict detection and resolution
+const result = await cortex.facts.revise({
+  memorySpaceId: "user-123-space",
+  fact: {
+    fact: "User prefers purple",
+    subject: "user-123",
+    predicate: "favorite color",
+    object: "purple",
+    confidence: 90,
+  },
+});
+
+console.log(result.action); // "SUPERSEDE" - old blue fact marked as superseded
+console.log(result.reason); // "Color preference has changed"
+
+// Preview conflicts before committing
+const conflicts = await cortex.facts.checkConflicts({
+  memorySpaceId: "user-123-space",
+  fact: { ... },
+});
+
+if (conflicts.hasConflicts) {
+  console.log(`Recommended: ${conflicts.recommendedAction}`);
+}
+
+// Complete audit trail
+const history = await cortex.facts.history("fact-123");
+// Shows CREATE → UPDATE → SUPERSEDE chain
+
+// Activity analytics
+const summary = await cortex.facts.getActivitySummary("user-123-space", 24);
+// { CREATE: 15, UPDATE: 3, SUPERSEDE: 2, DELETE: 0 }
+```
+
+**Pipeline Architecture:**
+
+```
+NEW FACT → [Slot Match] → [Semantic Match] → [LLM Decision] → Execute
+               │                │                  │
+           Fast O(1)     Embedding-based      Nuanced reasoning
+           matching       similarity          UPDATE/SUPERSEDE/NONE/ADD
+```
+
+**Key Features:**
+
+- ✅ **Slot-Based Matching** - Fast O(1) conflict detection using predicate classification
+- ✅ **Semantic Similarity** - Embedding-based matching for related facts
+- ✅ **LLM Conflict Resolution** - Nuanced decisions with configurable models
+- ✅ **History Logging** - Complete audit trail of all fact changes
+- ✅ **Supersession Chains** - Track how facts evolved over time
+- ✅ **Activity Summaries** - Analytics on fact changes per memory space
+- ✅ **Graph Synchronization** - Supersession relationships synced to graph database
+
+**New API Methods:**
+
+| Method | Purpose |
+|--------|---------|
+| `facts.revise()` | Full belief revision pipeline |
+| `facts.checkConflicts()` | Preview conflicts without executing |
+| `facts.supersede()` | Manually supersede one fact with another |
+| `facts.history()` | Get change history for a fact |
+| `facts.getSupersessionChain()` | Get lineage of fact versions |
+| `facts.getActivitySummary()` | Analytics on fact changes |
+
+**Configuration:**
+
+```typescript
+// Configure belief revision behavior
+cortex.facts.configureBeliefRevision(llmClient, {
+  slotMatching: {
+    enabled: true,
+    predicateClasses: { /* custom patterns */ },
+  },
+  semanticMatching: {
+    enabled: true,
+    threshold: 0.7,
+  },
+  llmResolution: {
+    enabled: true,
+    model: "gpt-4o-mini",
+  },
+  history: {
+    enabled: true,
+    retentionDays: 90,
+  },
+});
+```
+
+**New Convex Table:**
+
+Added `factHistory` table for audit trail with indexes for efficient querying by factId, memorySpace, action type, userId, and timestamp.
+
+---
+
 ### [0.23.0] - 2025-12-19
 
 #### 🔍 Unified Context Retrieval with `recall()`
@@ -28,6 +138,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 **The Gap Solved:**
 
 Previously, `remember()` provided full orchestration for storage, but retrieval was fragmented:
+
 - `memory.search()` only searched vector (Layer 2)
 - Facts required separate `facts.search()` calls
 - Graph connections weren't leveraged for context discovery
@@ -37,15 +148,15 @@ Previously, `remember()` provided full orchestration for storage, but retrieval 
 ```typescript
 // Minimal usage - full orchestration by default
 const result = await cortex.memory.recall({
-  memorySpaceId: 'user-123-space',
-  query: 'user preferences',
+  memorySpaceId: "user-123-space",
+  query: "user preferences",
 });
 
 // Inject directly into LLM prompt
 const response = await llm.chat({
   messages: [
-    { role: 'system', content: `Context:\n${result.context}` },
-    { role: 'user', content: userMessage },
+    { role: "system", content: `Context:\n${result.context}` },
+    { role: "user", content: userMessage },
   ],
 });
 ```
@@ -61,31 +172,31 @@ const response = await llm.chat({
 
 **Symmetric API Design:**
 
-| Aspect | remember() | recall() |
-|--------|-----------|----------|
-| Purpose | Store with full orchestration | Retrieve with full orchestration |
-| Default | All layers enabled | All sources enabled |
-| Opt-out | `skipLayers: ['facts', 'graph']` | `sources: { facts: false }` |
-| Graph | Auto-syncs entities | Auto-expands via relationships |
+| Aspect  | remember()                       | recall()                         |
+| ------- | -------------------------------- | -------------------------------- |
+| Purpose | Store with full orchestration    | Retrieve with full orchestration |
+| Default | All layers enabled               | All sources enabled              |
+| Opt-out | `skipLayers: ['facts', 'graph']` | `sources: { facts: false }`      |
+| Graph   | Auto-syncs entities              | Auto-expands via relationships   |
 
 **New Types:**
 
 ```typescript
 interface RecallParams {
-  memorySpaceId: string;  // Required
-  query: string;          // Required
-  embedding?: number[];   // Optional: Better relevance
-  userId?: string;        // Optional: Filter by user
+  memorySpaceId: string; // Required
+  query: string; // Required
+  embedding?: number[]; // Optional: Better relevance
+  userId?: string; // Optional: Filter by user
   sources?: { vector?: boolean; facts?: boolean; graph?: boolean };
   graphExpansion?: { maxDepth?: number; relationshipTypes?: string[] };
-  limit?: number;         // Default: 20
+  limit?: number; // Default: 20
   formatForLLM?: boolean; // Default: true
 }
 
 interface RecallResult {
-  items: RecallItem[];           // Unified, ranked results
+  items: RecallItem[]; // Unified, ranked results
   sources: RecallSourceBreakdown; // What came from where
-  context?: string;              // LLM-ready context
+  context?: string; // LLM-ready context
   queryTimeMs: number;
   graphExpansionApplied: boolean;
 }
@@ -142,11 +253,11 @@ await cortex.memory.remember({
 
 **2. Deduplication Strategies**
 
-| Strategy | How it Works | Speed | Accuracy |
-|----------|--------------|-------|----------|
-| `semantic` | Embedding similarity | Slower | Highest |
-| `structural` | Subject + predicate + object match | Fast | Medium |
-| `exact` | Normalized text match | Fastest | Low |
+| Strategy     | How it Works                       | Speed   | Accuracy |
+| ------------ | ---------------------------------- | ------- | -------- |
+| `semantic`   | Embedding similarity               | Slower  | Highest  |
+| `structural` | Subject + predicate + object match | Fast    | Medium   |
+| `exact`      | Normalized text match              | Fastest | Low      |
 
 **3. Configuring Deduplication**
 
@@ -184,7 +295,7 @@ const result = await cortex.facts.storeWithDedup(
       similarityThreshold: 0.85,
       generateEmbedding: async (text) => embed(text),
     },
-  }
+  },
 );
 
 if (result.deduplication?.matchedExisting) {
@@ -210,11 +321,11 @@ await cortex.memory.remember({ extractFacts: () => [{ confidence: 95, ... }] });
 **6. New Types**
 
 ```typescript
-type DeduplicationStrategy = 'none' | 'exact' | 'structural' | 'semantic';
+type DeduplicationStrategy = "none" | "exact" | "structural" | "semantic";
 
 interface DeduplicationConfig {
   strategy: DeduplicationStrategy;
-  similarityThreshold?: number;  // 0-1, default 0.85
+  similarityThreshold?: number; // 0-1, default 0.85
   generateEmbedding?: (text: string) => Promise<number[]>;
 }
 
@@ -242,12 +353,12 @@ await cortex.memory.rememberStream({
 
 **Default Behavior by API:**
 
-| API | Default |
-|-----|---------|
-| `memory.remember()` | `semantic` (falls back to `structural`) |
+| API                       | Default                                 |
+| ------------------------- | --------------------------------------- |
+| `memory.remember()`       | `semantic` (falls back to `structural`) |
 | `memory.rememberStream()` | `semantic` (falls back to `structural`) |
-| `facts.store()` | No deduplication (unchanged) |
-| `facts.storeWithDedup()` | Configurable |
+| `facts.store()`           | No deduplication (unchanged)            |
+| `facts.storeWithDedup()`  | Configurable                            |
 
 **Migration:** No action required. The new default behavior prevents duplicates automatically. To restore previous behavior, pass `factDeduplication: false`.
 
@@ -354,27 +465,27 @@ const gdprExport = await cortex.users.export({
 
 New export options:
 
-| Option                  | Description                                  |
-| ----------------------- | -------------------------------------------- |
-| `includeVersionHistory` | Include `previousVersions` array             |
-| `includeConversations`  | Query and include user's conversations       |
-| `includeMemories`       | Include memories from conversation spaces    |
+| Option                  | Description                               |
+| ----------------------- | ----------------------------------------- |
+| `includeVersionHistory` | Include `previousVersions` array          |
+| `includeConversations`  | Query and include user's conversations    |
+| `includeMemories`       | Include memories from conversation spaces |
 
 **6. Type Updates**
 
-| Type              | Change                                                          |
-| ----------------- | --------------------------------------------------------------- |
-| `ListUsersFilter` | Added `createdAfter/Before`, `updatedAfter/Before`, `sortBy`, `sortOrder`, `displayName`, `email` |
-| `UserFilters`     | Now extends `ListUsersFilter` with all filter options           |
-| `ListUsersResult` | New interface with pagination metadata                          |
-| `ExportUsersOptions` | Added `includeVersionHistory`, `includeConversations`, `includeMemories` |
+| Type                 | Change                                                                                            |
+| -------------------- | ------------------------------------------------------------------------------------------------- |
+| `ListUsersFilter`    | Added `createdAfter/Before`, `updatedAfter/Before`, `sortBy`, `sortOrder`, `displayName`, `email` |
+| `UserFilters`        | Now extends `ListUsersFilter` with all filter options                                             |
+| `ListUsersResult`    | New interface with pagination metadata                                                            |
+| `ExportUsersOptions` | Added `includeVersionHistory`, `includeConversations`, `includeMemories`                          |
 
 **7. Backend Updates**
 
-| Function            | Change                                                |
-| ------------------- | ----------------------------------------------------- |
+| Function            | Change                                                    |
+| ------------------- | --------------------------------------------------------- |
 | `immutable.list()`  | Added date filters, sorting, pagination, returns metadata |
-| `immutable.count()` | Added date filter support                             |
+| `immutable.count()` | Added date filter support                                 |
 
 #### 🔄 Conversations API Full Parity
 
@@ -465,14 +576,14 @@ New safety features for bulk deletion:
 // Preview what would be deleted
 const preview = await cortex.conversations.deleteMany(
   { userId: "user-123" },
-  { dryRun: true }
+  { dryRun: true },
 );
 console.log(`Would delete ${preview.wouldDelete} conversations`);
 
 // Execute with threshold (throws if exceeds 10)
 const result = await cortex.conversations.deleteMany(
   { userId: "user-123" },
-  { confirmationThreshold: 100 }
+  { confirmationThreshold: 100 },
 );
 ```
 
@@ -515,16 +626,16 @@ await cortex.governance.enforce({
 
 **3. Audit Summary**
 
-| Method | Status |
-|--------|--------|
-| `setPolicy()` | ✅ Consistent |
-| `getPolicy()` | ✅ Consistent |
-| `setAgentOverride()` | ✅ Consistent |
-| `getTemplate()` | ✅ Consistent |
-| `enforce()` | ✅ Fixed (scope now documented) |
-| `simulate()` | ✅ Consistent |
-| `getComplianceReport()` | ✅ Consistent |
-| `getEnforcementStats()` | ✅ Consistent |
+| Method                  | Status                          |
+| ----------------------- | ------------------------------- |
+| `setPolicy()`           | ✅ Consistent                   |
+| `getPolicy()`           | ✅ Consistent                   |
+| `setAgentOverride()`    | ✅ Consistent                   |
+| `getTemplate()`         | ✅ Consistent                   |
+| `enforce()`             | ✅ Fixed (scope now documented) |
+| `simulate()`            | ✅ Consistent                   |
+| `getComplianceReport()` | ✅ Consistent                   |
+| `getEnforcementStats()` | ✅ Consistent                   |
 
 ---
 
@@ -538,21 +649,21 @@ await cortex.governance.enforce({
 
 All GraphAdapter interface methods now documented with examples:
 
-| Method | Description |
-|--------|-------------|
-| `disconnect()` | Close connection to graph database |
-| `isConnected()` | Test connection status |
-| `mergeNode()` | MERGE semantics for idempotent operations (v0.19.1) |
-| `getNode()` | Get node by ID |
-| `updateNode()` | Update node properties |
-| `deleteNode()` | Delete node with optional detach |
-| `findNodes()` | Find nodes by label/properties |
-| `deleteEdge()` | Delete edge by ID |
-| `findEdges()` | Find edges by type/properties |
-| `batchWrite()` | Execute operations in transaction |
-| `countNodes()` | Count nodes |
-| `countEdges()` | Count relationships |
-| `clearDatabase()` | Clear all data |
+| Method            | Description                                         |
+| ----------------- | --------------------------------------------------- |
+| `disconnect()`    | Close connection to graph database                  |
+| `isConnected()`   | Test connection status                              |
+| `mergeNode()`     | MERGE semantics for idempotent operations (v0.19.1) |
+| `getNode()`       | Get node by ID                                      |
+| `updateNode()`    | Update node properties                              |
+| `deleteNode()`    | Delete node with optional detach                    |
+| `findNodes()`     | Find nodes by label/properties                      |
+| `deleteEdge()`    | Delete edge by ID                                   |
+| `findEdges()`     | Find edges by type/properties                       |
+| `batchWrite()`    | Execute operations in transaction                   |
+| `countNodes()`    | Count nodes                                         |
+| `countEdges()`    | Count relationships                                 |
+| `clearDatabase()` | Clear all data                                      |
 
 **2. Delete Operations Section**
 
@@ -593,13 +704,13 @@ All graph-related types now fully documented:
 
 All timestamp fields updated from `Date` to `number` (Unix milliseconds) to match SDK:
 
-| Interface | Field | Change |
-|-----------|-------|--------|
-| `A2AMessage` | `sentAt` | `Date` → `number` |
-| `A2AResponse` | `respondedAt` | `Date` → `number` |
-| `A2ABroadcastResult` | `sentAt` | `Date` → `number` |
-| `A2AConversation` | `period.start/end` | `Date` → `number` |
-| `A2AConversationMessage` | `timestamp` | `Date` → `number` |
+| Interface                | Field              | Change            |
+| ------------------------ | ------------------ | ----------------- |
+| `A2AMessage`             | `sentAt`           | `Date` → `number` |
+| `A2AResponse`            | `respondedAt`      | `Date` → `number` |
+| `A2ABroadcastResult`     | `sentAt`           | `Date` → `number` |
+| `A2AConversation`        | `period.start/end` | `Date` → `number` |
+| `A2AConversationMessage` | `timestamp`        | `Date` → `number` |
 
 **2. Added Missing Fields to `A2AConversationMessage`**
 
@@ -608,9 +719,9 @@ Backend returns additional fields now documented:
 ```typescript
 interface A2AConversationMessage {
   // ... existing fields ...
-  direction?: string;    // 'outbound' or 'inbound'
-  broadcast?: boolean;   // True if part of a broadcast
-  broadcastId?: string;  // Broadcast ID (if broadcast)
+  direction?: string; // 'outbound' or 'inbound'
+  broadcast?: boolean; // True if part of a broadcast
+  broadcastId?: string; // Broadcast ID (if broadcast)
 }
 ```
 
@@ -618,9 +729,9 @@ interface A2AConversationMessage {
 
 Overview table updated to indicate `subscribe()` is not yet implemented:
 
-| Operation | Status |
-|-----------|--------|
-| `subscribe()` | *(Planned)* - Real-time inbox notifications |
+| Operation     | Status                                      |
+| ------------- | ------------------------------------------- |
+| `subscribe()` | _(Planned)_ - Real-time inbox notifications |
 
 #### 📚 Mutable API Documentation Parity
 
@@ -628,15 +739,15 @@ Overview table updated to indicate `subscribe()` is not yet implemented:
 
 **1. Method Signature Updates**
 
-| Method | Change |
-|--------|--------|
-| `set()` | Added `metadata` and `options` parameters |
-| `list()` | Changed from positional params to filter object `ListMutableFilter` |
-| `count()` | Changed from positional params to filter object `CountMutableFilter` |
-| `delete()` | Added `options` parameter with `syncToGraph` |
-| `transaction()` | Changed from callback-based to array-based operations |
-| `purgeNamespace()` | Removed aspirational `options` param (not implemented) |
-| `purgeMany()` | Changed from positional params to filter object `PurgeManyFilter` |
+| Method             | Change                                                               |
+| ------------------ | -------------------------------------------------------------------- |
+| `set()`            | Added `metadata` and `options` parameters                            |
+| `list()`           | Changed from positional params to filter object `ListMutableFilter`  |
+| `count()`          | Changed from positional params to filter object `CountMutableFilter` |
+| `delete()`         | Added `options` parameter with `syncToGraph`                         |
+| `transaction()`    | Changed from callback-based to array-based operations                |
+| `purgeNamespace()` | Removed aspirational `options` param (not implemented)               |
+| `purgeMany()`      | Changed from positional params to filter object `PurgeManyFilter`    |
 
 **2. Return Type Corrections**
 
@@ -647,6 +758,7 @@ Overview table updated to indicate `subscribe()` is not yet implemented:
 **3. Planned Features Marked**
 
 Aspirational features not yet implemented are now clearly marked:
+
 - `sortBy`, `sortOrder`, `offset` for list operations
 - `updatedAfter`, `updatedBefore` date filters
 - `lastAccessedBefore` for purgeMany
@@ -658,18 +770,18 @@ Aspirational features not yet implemented are now clearly marked:
 
 **1. Method Signature Updates**
 
-| Method | Change |
-|--------|--------|
-| `store()` | Added `options?: StoreImmutableOptions` parameter with `syncToGraph` for graph database sync |
-| `list()` | Simplified filter to `{ type?, userId?, limit? }`. Returns `ImmutableRecord[]` directly |
-| `search()` | Changed to object parameter `{ query, type?, userId?, limit? }`. Return uses `entry` and `highlights` fields |
-| `count()` | Simplified filter to `{ type?, userId? }` |
-| `purge()` | Return includes `deleted: boolean`, removed `purgedAt` |
-| `purgeMany()` | Simplified to `{ type?, userId? }` filter. Removed `dryRun` option |
-| `purgeVersions()` | Changed from options object to direct `keepLatest` parameter |
-| `getAtTimestamp()` | Now accepts `number \| Date` for timestamp parameter |
-| `getVersion()` | Return type documented as `ImmutableVersionExpanded` |
-| `getHistory()` | Return type documented as `ImmutableVersionExpanded[]` |
+| Method             | Change                                                                                                       |
+| ------------------ | ------------------------------------------------------------------------------------------------------------ |
+| `store()`          | Added `options?: StoreImmutableOptions` parameter with `syncToGraph` for graph database sync                 |
+| `list()`           | Simplified filter to `{ type?, userId?, limit? }`. Returns `ImmutableRecord[]` directly                      |
+| `search()`         | Changed to object parameter `{ query, type?, userId?, limit? }`. Return uses `entry` and `highlights` fields |
+| `count()`          | Simplified filter to `{ type?, userId? }`                                                                    |
+| `purge()`          | Return includes `deleted: boolean`, removed `purgedAt`                                                       |
+| `purgeMany()`      | Simplified to `{ type?, userId? }` filter. Removed `dryRun` option                                           |
+| `purgeVersions()`  | Changed from options object to direct `keepLatest` parameter                                                 |
+| `getAtTimestamp()` | Now accepts `number \| Date` for timestamp parameter                                                         |
+| `getVersion()`     | Return type documented as `ImmutableVersionExpanded`                                                         |
+| `getHistory()`     | Return type documented as `ImmutableVersionExpanded[]`                                                       |
 
 **2. Type Corrections**
 
@@ -681,6 +793,7 @@ Aspirational features not yet implemented are now clearly marked:
 **3. Removed Aspirational Features**
 
 Documentation removed for features not yet implemented:
+
 - `immutableRetention` configuration in Cortex constructor
 - Advanced list filters: `types`, `metadata`, `tags`, `createdAfter/Before`, `minVersion`, `offset`, `sortBy/Order`
 - Pagination metadata in list results (`total`, `hasMore`)
@@ -694,12 +807,12 @@ Documentation removed for features not yet implemented:
 
 **1. New SDK Features**
 
-| Feature | Description |
-|---------|-------------|
-| `updateMany()` | Bulk update agents matching filters |
-| `exists()` | Check if agent is registered (now documented) |
-| `capabilitiesMatch` | Filter mode: "any" (default) or "all" capabilities |
-| `lastActiveAfter/Before` | Filter by last activity timestamp |
+| Feature                  | Description                                        |
+| ------------------------ | -------------------------------------------------- |
+| `updateMany()`           | Bulk update agents matching filters                |
+| `exists()`               | Check if agent is registered (now documented)      |
+| `capabilitiesMatch`      | Filter mode: "any" (default) or "all" capabilities |
+| `lastActiveAfter/Before` | Filter by last activity timestamp                  |
 
 **2. `updateMany()` Method**
 
@@ -748,17 +861,17 @@ const inactive = await cortex.agents.list({
 
 Renamed `agentId` parameter to `memorySpaceId` in 10 methods for consistency with docs and other APIs:
 
-| Method | Change |
-|--------|--------|
-| `forget()` | `agentId` → `memorySpaceId` |
-| `get()` | `agentId` → `memorySpaceId` |
-| `search()` | `agentId` → `memorySpaceId` |
-| `store()` | `agentId` → `memorySpaceId` |
-| `update()` | `agentId` → `memorySpaceId` |
-| `delete()` | `agentId` → `memorySpaceId` |
-| `archive()` | `agentId` → `memorySpaceId` |
-| `getVersion()` | `agentId` → `memorySpaceId` |
-| `getHistory()` | `agentId` → `memorySpaceId` |
+| Method             | Change                      |
+| ------------------ | --------------------------- |
+| `forget()`         | `agentId` → `memorySpaceId` |
+| `get()`            | `agentId` → `memorySpaceId` |
+| `search()`         | `agentId` → `memorySpaceId` |
+| `store()`          | `agentId` → `memorySpaceId` |
+| `update()`         | `agentId` → `memorySpaceId` |
+| `delete()`         | `agentId` → `memorySpaceId` |
+| `archive()`        | `agentId` → `memorySpaceId` |
+| `getVersion()`     | `agentId` → `memorySpaceId` |
+| `getHistory()`     | `agentId` → `memorySpaceId` |
 | `getAtTimestamp()` | `agentId` → `memorySpaceId` |
 
 **2. Documentation Corrections**
@@ -806,8 +919,8 @@ All 10 renamed methods now have improved JSDoc comments with `@param` descriptio
 
 **1. New SDK Method**
 
-| Method | Description |
-|--------|-------------|
+| Method                 | Description                                                |
+| ---------------------- | ---------------------------------------------------------- |
 | `restoreFromArchive()` | Restore a previously archived memory back to active status |
 
 ```typescript
@@ -822,25 +935,25 @@ console.log(`Memory: ${result.memory.content}`);
 
 **2. SDK Enhancements**
 
-| Enhancement | Description |
-|-------------|-------------|
-| `store()` now forwards `enrichedContent` | Concatenated searchable content for embedding |
-| `store()` now forwards `factCategory` | Category for filtering (e.g., "addressing_preference") |
-| `search()` now supports `queryCategory` | Category boost for bullet-proof retrieval (+30% score) |
+| Enhancement                              | Description                                            |
+| ---------------------------------------- | ------------------------------------------------------ |
+| `store()` now forwards `enrichedContent` | Concatenated searchable content for embedding          |
+| `store()` now forwards `factCategory`    | Category for filtering (e.g., "addressing_preference") |
+| `search()` now supports `queryCategory`  | Category boost for bullet-proof retrieval (+30% score) |
 
 **3. Documentation Updates**
 
 Updated Layer 2 operations table to match SDK signatures:
 
-| Method | Signature Change |
-|--------|------------------|
-| `list()` | `list(filter)` - filter contains memorySpaceId |
-| `count()` | `count(filter)` - filter contains memorySpaceId |
-| `deleteMany()` | `deleteMany(filter)` - not separate params |
+| Method         | Signature Change                                    |
+| -------------- | --------------------------------------------------- |
+| `list()`       | `list(filter)` - filter contains memorySpaceId      |
+| `count()`      | `count(filter)` - filter contains memorySpaceId     |
+| `deleteMany()` | `deleteMany(filter)` - not separate params          |
 | `updateMany()` | `updateMany(filter, updates)` - not separate params |
-| `export()` | `export(options)` - options contains memorySpaceId |
-| `archive()` | Single memory operation, not bulk |
-| Return types | Updated to match actual SDK returns |
+| `export()`     | `export(options)` - options contains memorySpaceId  |
+| `archive()`    | Single memory operation, not bulk                   |
+| Return types   | Updated to match actual SDK returns                 |
 
 **4. Types Update**
 
@@ -899,7 +1012,9 @@ const fact = await cortex.facts.store({
   searchAliases: ["name", "nickname", "what to call"],
   semanticContext: "Use 'Alex' when addressing this user",
   entities: [{ name: "Alex", type: "preferred_name" }],
-  relations: [{ subject: "user", predicate: "prefers_to_be_called", object: "Alex" }],
+  relations: [
+    { subject: "user", predicate: "prefers_to_be_called", object: "Alex" },
+  ],
 });
 
 // Update with enrichment fields
@@ -921,21 +1036,21 @@ const updated = await cortex.facts.update("space-1", "fact-123", {
 
 **5. Audit Summary**
 
-| Method | Status |
-|--------|--------|
-| `store()` | ✅ Fixed (enrichment fields now passed) |
-| `get()` | ✅ Consistent |
-| `list()` | ✅ Consistent |
-| `count()` | ✅ Consistent |
-| `search()` | ✅ Consistent |
-| `update()` | ✅ Fixed (enrichment fields now passed) |
-| `delete()` | ✅ Consistent |
-| `deleteMany()` | ✅ Added (was documented but missing) |
-| `getHistory()` | ✅ Consistent |
-| `queryBySubject()` | ✅ Consistent |
-| `queryByRelationship()` | ✅ Consistent |
-| `export()` | ✅ Consistent |
-| `consolidate()` | ✅ Consistent |
+| Method                  | Status                                  |
+| ----------------------- | --------------------------------------- |
+| `store()`               | ✅ Fixed (enrichment fields now passed) |
+| `get()`                 | ✅ Consistent                           |
+| `list()`                | ✅ Consistent                           |
+| `count()`               | ✅ Consistent                           |
+| `search()`              | ✅ Consistent                           |
+| `update()`              | ✅ Fixed (enrichment fields now passed) |
+| `delete()`              | ✅ Consistent                           |
+| `deleteMany()`          | ✅ Added (was documented but missing)   |
+| `getHistory()`          | ✅ Consistent                           |
+| `queryBySubject()`      | ✅ Consistent                           |
+| `queryByRelationship()` | ✅ Consistent                           |
+| `export()`              | ✅ Consistent                           |
+| `consolidate()`         | ✅ Consistent                           |
 
 ---
 

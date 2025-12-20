@@ -15,7 +15,11 @@ import {
   processRecallResults,
   RANKING_WEIGHTS,
 } from "../../../../src/memory/recall/resultProcessor";
-import type { FactRecord, MemoryEntry, RecallItem } from "../../../../src/types";
+import type {
+  FactRecord,
+  MemoryEntry,
+  RecallItem,
+} from "../../../../src/types";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Test Fixtures
@@ -135,7 +139,7 @@ describe("Result Processor", () => {
         directFacts,
         graphMemories,
         graphFacts,
-        ["discovered-entity"]
+        ["discovered-entity"],
       );
 
       expect(merged.length).toBe(4);
@@ -171,11 +175,17 @@ describe("Result Processor", () => {
       const graphMemories = [createMockMemory({ memoryId: "g-mem-1" })];
       const discoveredEntities = ["Alice", "Bob", "Acme Corp"];
 
-      const merged = mergeResults([], [], graphMemories, [], discoveredEntities);
+      const merged = mergeResults(
+        [],
+        [],
+        graphMemories,
+        [],
+        discoveredEntities,
+      );
 
       const graphItem = merged.find((i) => i.id === "g-mem-1");
       expect(graphItem?.graphContext?.connectedEntities).toEqual(
-        expect.arrayContaining(discoveredEntities)
+        expect.arrayContaining(discoveredEntities),
       );
     });
   });
@@ -188,7 +198,10 @@ describe("Result Processor", () => {
     it("removes duplicate items by ID", () => {
       const items: RecallItem[] = [
         memoryToRecallItem(createMockMemory({ memoryId: "mem-1" }), "vector"),
-        memoryToRecallItem(createMockMemory({ memoryId: "mem-1" }), "graph-expanded"),
+        memoryToRecallItem(
+          createMockMemory({ memoryId: "mem-1" }),
+          "graph-expanded",
+        ),
         memoryToRecallItem(createMockMemory({ memoryId: "mem-2" }), "vector"),
       ];
 
@@ -201,7 +214,10 @@ describe("Result Processor", () => {
     it("keeps primary source over graph-expanded when merging duplicates", () => {
       const items: RecallItem[] = [
         memoryToRecallItem(createMockMemory({ memoryId: "mem-1" }), "vector"),
-        memoryToRecallItem(createMockMemory({ memoryId: "mem-1" }), "graph-expanded"),
+        memoryToRecallItem(
+          createMockMemory({ memoryId: "mem-1" }),
+          "graph-expanded",
+        ),
       ];
 
       const deduped = deduplicateResults(items);
@@ -213,13 +229,13 @@ describe("Result Processor", () => {
     it("merges graph context when deduplicating", () => {
       const vectorItem = memoryToRecallItem(
         createMockMemory({ memoryId: "mem-1" }),
-        "vector"
+        "vector",
       );
       vectorItem.graphContext = { connectedEntities: ["Alice"] };
 
       const graphItem = memoryToRecallItem(
         createMockMemory({ memoryId: "mem-1" }),
-        "graph-expanded"
+        "graph-expanded",
       );
       graphItem.graphContext = {
         connectedEntities: ["Bob", "Carol"],
@@ -230,20 +246,20 @@ describe("Result Processor", () => {
 
       expect(deduped.length).toBe(1);
       expect(deduped[0].graphContext?.connectedEntities).toEqual(
-        expect.arrayContaining(["Alice", "Bob", "Carol"])
+        expect.arrayContaining(["Alice", "Bob", "Carol"]),
       );
     });
 
     it("boosts score when item found in multiple sources", () => {
       const vectorItem = memoryToRecallItem(
         createMockMemory({ memoryId: "mem-1" }),
-        "vector"
+        "vector",
       );
       vectorItem.score = 0.7;
 
       const graphItem = memoryToRecallItem(
         createMockMemory({ memoryId: "mem-1" }),
-        "graph-expanded"
+        "graph-expanded",
       );
 
       const deduped = deduplicateResults([vectorItem, graphItem]);
@@ -260,8 +276,20 @@ describe("Result Processor", () => {
     it("sorts items by score descending", () => {
       const items: RecallItem[] = [
         { ...memoryToRecallItem(createMockMemory(), "vector"), score: 0.3 },
-        { ...memoryToRecallItem(createMockMemory({ memoryId: "mem-2" }), "vector"), score: 0.9 },
-        { ...memoryToRecallItem(createMockMemory({ memoryId: "mem-3" }), "vector"), score: 0.6 },
+        {
+          ...memoryToRecallItem(
+            createMockMemory({ memoryId: "mem-2" }),
+            "vector",
+          ),
+          score: 0.9,
+        },
+        {
+          ...memoryToRecallItem(
+            createMockMemory({ memoryId: "mem-3" }),
+            "vector",
+          ),
+          score: 0.6,
+        },
       ];
 
       const ranked = rankResults(items);
@@ -273,11 +301,11 @@ describe("Result Processor", () => {
     it("weighs high confidence facts higher", () => {
       const lowConfidence = factToRecallItem(
         createMockFact({ factId: "fact-low", confidence: 30 }),
-        "facts"
+        "facts",
       );
       const highConfidence = factToRecallItem(
         createMockFact({ factId: "fact-high", confidence: 95 }),
-        "facts"
+        "facts",
       );
 
       const ranked = rankResults([lowConfidence, highConfidence]);
@@ -288,11 +316,11 @@ describe("Result Processor", () => {
     it("weighs high importance memories higher", () => {
       const lowImportance = memoryToRecallItem(
         createMockMemory({ memoryId: "mem-low", importance: 10 }),
-        "vector"
+        "vector",
       );
       const highImportance = memoryToRecallItem(
         createMockMemory({ memoryId: "mem-high", importance: 95 }),
-        "vector"
+        "vector",
       );
 
       const ranked = rankResults([lowImportance, highImportance]);
@@ -302,12 +330,20 @@ describe("Result Processor", () => {
 
     it("boosts user messages", () => {
       const agentMemory = memoryToRecallItem(
-        createMockMemory({ memoryId: "mem-agent", messageRole: "agent", importance: 80 }),
-        "vector"
+        createMockMemory({
+          memoryId: "mem-agent",
+          messageRole: "agent",
+          importance: 80,
+        }),
+        "vector",
       );
       const userMemory = memoryToRecallItem(
-        createMockMemory({ memoryId: "mem-user", messageRole: "user", importance: 80 }),
-        "vector"
+        createMockMemory({
+          memoryId: "mem-user",
+          messageRole: "user",
+          importance: 80,
+        }),
+        "vector",
       );
 
       const ranked = rankResults([agentMemory, userMemory]);
@@ -317,12 +353,15 @@ describe("Result Processor", () => {
     });
 
     it("boosts highly connected items", () => {
-      const lowConnected = memoryToRecallItem(createMockMemory({ memoryId: "mem-low" }), "vector");
+      const lowConnected = memoryToRecallItem(
+        createMockMemory({ memoryId: "mem-low" }),
+        "vector",
+      );
       lowConnected.graphContext = { connectedEntities: ["Alice"] };
 
       const highConnected = memoryToRecallItem(
         createMockMemory({ memoryId: "mem-high" }),
-        "vector"
+        "vector",
       );
       highConnected.graphContext = {
         connectedEntities: ["Alice", "Bob", "Carol", "Dave", "Eve"],
@@ -353,7 +392,7 @@ describe("Result Processor", () => {
       const items: RecallItem[] = [
         factToRecallItem(
           createMockFact({ fact: "User prefers dark mode", confidence: 95 }),
-          "facts"
+          "facts",
         ),
       ];
 
@@ -369,7 +408,7 @@ describe("Result Processor", () => {
       const items: RecallItem[] = [
         memoryToRecallItem(
           createMockMemory({ content: "Call me Alex", messageRole: "user" }),
-          "vector"
+          "vector",
         ),
       ];
 
@@ -384,7 +423,7 @@ describe("Result Processor", () => {
         factToRecallItem(createMockFact({ fact: "Known fact" }), "facts"),
         memoryToRecallItem(
           createMockMemory({ content: "User said this", messageRole: "user" }),
-          "vector"
+          "vector",
         ),
       ];
 
@@ -417,7 +456,7 @@ describe("Result Processor", () => {
 
     it("applies limit correctly", () => {
       const vectorMemories = Array.from({ length: 10 }, (_, i) =>
-        createMockMemory({ memoryId: `mem-${i}` })
+        createMockMemory({ memoryId: `mem-${i}` }),
       );
 
       const result = processRecallResults(vectorMemories, [], [], [], [], {
@@ -448,7 +487,10 @@ describe("Result Processor", () => {
 
     it("builds correct source breakdown", () => {
       const vectorMemories = [createMockMemory({ memoryId: "v-1" })];
-      const directFacts = [createMockFact({ factId: "f-1" }), createMockFact({ factId: "f-2" })];
+      const directFacts = [
+        createMockFact({ factId: "f-1" }),
+        createMockFact({ factId: "f-2" }),
+      ];
       const graphMemories = [createMockMemory({ memoryId: "g-1" })];
       const graphFacts = [createMockFact({ factId: "gf-1" })];
       const discoveredEntities = ["Alice", "Bob"];
@@ -458,7 +500,7 @@ describe("Result Processor", () => {
         directFacts,
         graphMemories,
         graphFacts,
-        discoveredEntities
+        discoveredEntities,
       );
 
       expect(result.sources.vector.count).toBe(1);
@@ -472,9 +514,16 @@ describe("Result Processor", () => {
       const vectorMemories = [createMockMemory({ memoryId: "duplicate-id" })];
       const graphMemories = [createMockMemory({ memoryId: "duplicate-id" })];
 
-      const result = processRecallResults(vectorMemories, [], graphMemories, [], [], {
-        limit: 10,
-      });
+      const result = processRecallResults(
+        vectorMemories,
+        [],
+        graphMemories,
+        [],
+        [],
+        {
+          limit: 10,
+        },
+      );
 
       // Should only have 1 item after deduplication
       expect(result.items.length).toBe(1);

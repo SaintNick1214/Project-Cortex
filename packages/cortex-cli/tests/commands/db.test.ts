@@ -24,9 +24,7 @@ describe("db commands", () => {
         .option("-d, --deployment <name>", "Deployment name")
         .option("--debug", "Debug mode");
 
-      const dbCmd = program
-        .command("db")
-        .description("Database operations");
+      const dbCmd = program.command("db").description("Database operations");
 
       dbCmd
         .command("stats")
@@ -64,30 +62,21 @@ describe("db commands", () => {
     });
 
     it("should parse db stats command", async () => {
-      await program.parseAsync([
-        "node", "test", "db", "stats",
-        "-d", "local",
-      ]);
+      await program.parseAsync(["node", "test", "db", "stats", "-d", "local"]);
 
       const cmd = program.commands[0].commands[0];
       expect(cmd.opts().format).toBe("table");
     });
 
     it("should parse db stats with JSON format", async () => {
-      await program.parseAsync([
-        "node", "test", "db", "stats",
-        "-f", "json",
-      ]);
+      await program.parseAsync(["node", "test", "db", "stats", "-f", "json"]);
 
       const cmd = program.commands[0].commands[0];
       expect(cmd.opts().format).toBe("json");
     });
 
     it("should parse db clear with confirmation skip", async () => {
-      await program.parseAsync([
-        "node", "test", "db", "clear",
-        "-y",
-      ]);
+      await program.parseAsync(["node", "test", "db", "clear", "-y"]);
 
       const cmd = program.commands[0].commands[1];
       expect(cmd.opts().yes).toBe(true);
@@ -95,8 +84,12 @@ describe("db commands", () => {
 
     it("should parse db backup with options", async () => {
       await program.parseAsync([
-        "node", "test", "db", "backup",
-        "-o", "backup.json",
+        "node",
+        "test",
+        "db",
+        "backup",
+        "-o",
+        "backup.json",
         "--include-all",
       ]);
 
@@ -107,8 +100,12 @@ describe("db commands", () => {
 
     it("should parse db restore with required input", async () => {
       await program.parseAsync([
-        "node", "test", "db", "restore",
-        "-i", "backup.json",
+        "node",
+        "test",
+        "db",
+        "restore",
+        "-i",
+        "backup.json",
         "-y",
       ]);
 
@@ -119,8 +116,12 @@ describe("db commands", () => {
 
     it("should parse db restore with dry-run", async () => {
       await program.parseAsync([
-        "node", "test", "db", "restore",
-        "-i", "backup.json",
+        "node",
+        "test",
+        "db",
+        "restore",
+        "-i",
+        "backup.json",
         "--dry-run",
       ]);
 
@@ -130,15 +131,20 @@ describe("db commands", () => {
 
     it("should require input for restore", async () => {
       await expect(
-        program.parseAsync(["node", "test", "db", "restore"])
+        program.parseAsync(["node", "test", "db", "restore"]),
       ).rejects.toThrow();
     });
 
     it("should parse db export with options", async () => {
       await program.parseAsync([
-        "node", "test", "db", "export",
-        "-o", "export.csv",
-        "-f", "csv",
+        "node",
+        "test",
+        "db",
+        "export",
+        "-o",
+        "export.csv",
+        "-f",
+        "csv",
       ]);
 
       const cmd = program.commands[0].commands[4];
@@ -147,11 +153,7 @@ describe("db commands", () => {
     });
 
     it("should parse global deployment option", async () => {
-      await program.parseAsync([
-        "node", "test",
-        "-d", "cloud",
-        "db", "stats",
-      ]);
+      await program.parseAsync(["node", "test", "-d", "cloud", "db", "stats"]);
 
       expect(program.opts().deployment).toBe("cloud");
     });

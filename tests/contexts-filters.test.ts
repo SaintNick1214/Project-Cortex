@@ -31,7 +31,10 @@ describe("Contexts API - Comprehensive Filter Coverage", () => {
   afterAll(async () => {
     // Cleanup test contexts (best-effort)
     try {
-      await cortex.memorySpaces.delete(TEST_MEMSPACE_ID, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(TEST_MEMSPACE_ID, {
+        cascade: true,
+        reason: "test cleanup",
+      });
     } catch (_e) {
       // Ignore cleanup errors
     }

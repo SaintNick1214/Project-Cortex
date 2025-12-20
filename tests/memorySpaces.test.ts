@@ -337,9 +337,9 @@ describe("Memory Spaces Registry API", () => {
       });
 
       it("should throw on empty memorySpaceId for delete", async () => {
-        await expect(cortex.memorySpaces.delete("", { cascade: true, reason: "test" })).rejects.toThrow(
-          "memorySpaceId",
-        );
+        await expect(
+          cortex.memorySpaces.delete("", { cascade: true, reason: "test" }),
+        ).rejects.toThrow("memorySpaceId");
       });
 
       it("should throw on empty memorySpaceId for getStats", async () => {
@@ -858,7 +858,10 @@ describe("Memory Spaces Registry API", () => {
         participants: [],
       });
 
-      const result = await cortex.memorySpaces.delete(deleteSpaceId, { cascade: true, reason: "test cleanup" });
+      const result = await cortex.memorySpaces.delete(deleteSpaceId, {
+        cascade: true,
+        reason: "test cleanup",
+      });
 
       expect(result.deleted).toBe(true);
       expect(result.memorySpaceId).toBe(deleteSpaceId);
@@ -1058,7 +1061,8 @@ describe("Memory Spaces Registry API", () => {
       expect(archivedSpace!.status).toBe("archived");
 
       // Reactivate
-      const reactivated = await cortex.memorySpaces.reactivate(reactivateSpaceId);
+      const reactivated =
+        await cortex.memorySpaces.reactivate(reactivateSpaceId);
 
       expect(reactivated.status).toBe("active");
     });
@@ -1450,7 +1454,10 @@ describe("Memory Spaces Registry API", () => {
       expect(archived.status).toBe("archived");
 
       // Delete
-      const result = await cortex.memorySpaces.delete(lifecycleSpaceId, { cascade: true, reason: "test cleanup" });
+      const result = await cortex.memorySpaces.delete(lifecycleSpaceId, {
+        cascade: true,
+        reason: "test cleanup",
+      });
 
       expect(result.deleted).toBe(true);
 
@@ -1474,17 +1481,26 @@ describe("Memory Spaces Registry API", () => {
       beforeEach(async () => {
         // Clean up any existing test memory spaces first
         try {
-          await cortex.memorySpaces.delete(engineeringSpace, { cascade: true, reason: "test cleanup" });
+          await cortex.memorySpaces.delete(engineeringSpace, {
+            cascade: true,
+            reason: "test cleanup",
+          });
         } catch (_error) {
           // Ignore if doesn't exist
         }
         try {
-          await cortex.memorySpaces.delete(designSpace, { cascade: true, reason: "test cleanup" });
+          await cortex.memorySpaces.delete(designSpace, {
+            cascade: true,
+            reason: "test cleanup",
+          });
         } catch (_error) {
           // Ignore if doesn't exist
         }
         try {
-          await cortex.memorySpaces.delete(aliceSpace, { cascade: true, reason: "test cleanup" });
+          await cortex.memorySpaces.delete(aliceSpace, {
+            cascade: true,
+            reason: "test cleanup",
+          });
         } catch (_error) {
           // Ignore if doesn't exist
         }
@@ -1515,17 +1531,26 @@ describe("Memory Spaces Registry API", () => {
       afterEach(async () => {
         // Clean up test memory spaces
         try {
-          await cortex.memorySpaces.delete(engineeringSpace, { cascade: true, reason: "test cleanup" });
+          await cortex.memorySpaces.delete(engineeringSpace, {
+            cascade: true,
+            reason: "test cleanup",
+          });
         } catch (_error) {
           // Ignore if doesn't exist
         }
         try {
-          await cortex.memorySpaces.delete(designSpace, { cascade: true, reason: "test cleanup" });
+          await cortex.memorySpaces.delete(designSpace, {
+            cascade: true,
+            reason: "test cleanup",
+          });
         } catch (_error) {
           // Ignore if doesn't exist
         }
         try {
-          await cortex.memorySpaces.delete(aliceSpace, { cascade: true, reason: "test cleanup" });
+          await cortex.memorySpaces.delete(aliceSpace, {
+            cascade: true,
+            reason: "test cleanup",
+          });
         } catch (_error) {
           // Ignore if doesn't exist
         }
@@ -1616,7 +1641,10 @@ describe("Memory Spaces Registry API", () => {
       beforeEach(async () => {
         // Cleanup any existing participant-test space
         try {
-          await cortex.memorySpaces.delete(participantTestSpace, { cascade: true, reason: "test cleanup" });
+          await cortex.memorySpaces.delete(participantTestSpace, {
+            cascade: true,
+            reason: "test cleanup",
+          });
         } catch (_error) {
           // Doesn't exist, continue
         }

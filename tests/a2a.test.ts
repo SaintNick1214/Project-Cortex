@@ -1182,7 +1182,10 @@ describe("A2A Communication API", () => {
       });
 
       // Verify memories are deleted
-      const senderCheck = await cortex.vector.get(agent1, result.senderMemoryId);
+      const senderCheck = await cortex.vector.get(
+        agent1,
+        result.senderMemoryId,
+      );
       expect(senderCheck).toBeNull();
 
       const receiverCheck = await cortex.vector.get(

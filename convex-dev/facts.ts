@@ -249,6 +249,145 @@ export const deleteFact = mutation({
 });
 
 /**
+ * Supersede a fact with a new one (belief revision)
+ * Marks the old fact as superseded and creates a relationship to the new fact
+ */
+export const supersede = mutation({
+  args: {
+    memorySpaceId: v.string(),
+    oldFactId: v.string(),
+    newFactId: v.string(),
+    reason: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const oldFact = await ctx.db
+      .query("facts")
+      .withIndex("by_factId", (q) => q.eq("factId", args.oldFactId))
+      .first();
+
+    if (!oldFact) {
+      throw new ConvexError("OLD_FACT_NOT_FOUND");
+    }
+
+    // Verify memorySpace owns this fact
+    if (oldFact.memorySpaceId !== args.memorySpaceId) {
+      throw new ConvexError("PERMISSION_DENIED");
+    }
+
+    const newFact = await ctx.db
+      .query("facts")
+      .withIndex("by_factId", (q) => q.eq("factId", args.newFactId))
+      .first();
+
+    if (!newFact) {
+      throw new ConvexError("NEW_FACT_NOT_FOUND");
+    }
+
+    // Verify new fact is in the same memory space
+    if (newFact.memorySpaceId !== args.memorySpaceId) {
+      throw new ConvexError("FACTS_MUST_BE_IN_SAME_SPACE");
+    }
+
+    const now = Date.now();
+
+    // Mark old fact as superseded
+    await ctx.db.patch(oldFact._id, {
+      supersededBy: args.newFactId,
+      validUntil: now,
+      updatedAt: now,
+    });
+
+    // Update new fact to reference old
+    await ctx.db.patch(newFact._id, {
+      supersedes: args.oldFactId,
+      updatedAt: now,
+    });
+
+    return {
+      superseded: true,
+      oldFactId: args.oldFactId,
+      newFactId: args.newFactId,
+      reason: args.reason,
+    };
+  },
+});
+
+/**
+ * Update a fact in place (without creating new version)
+ * Used by belief revision for UPDATE action
+ */
+export const updateInPlace = mutation({
+  args: {
+    memorySpaceId: v.string(),
+    factId: v.string(),
+    fact: v.optional(v.string()),
+    confidence: v.optional(v.number()),
+    tags: v.optional(v.array(v.string())),
+    validUntil: v.optional(v.number()),
+    metadata: v.optional(v.any()),
+    // Enrichment fields
+    category: v.optional(v.string()),
+    searchAliases: v.optional(v.array(v.string())),
+    semanticContext: v.optional(v.string()),
+    entities: v.optional(
+      v.array(
+        v.object({
+          name: v.string(),
+          type: v.string(),
+          fullValue: v.optional(v.string()),
+        }),
+      ),
+    ),
+    relations: v.optional(
+      v.array(
+        v.object({
+          subject: v.string(),
+          predicate: v.string(),
+          object: v.string(),
+        }),
+      ),
+    ),
+  },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db
+      .query("facts")
+      .withIndex("by_factId", (q) => q.eq("factId", args.factId))
+      .first();
+
+    if (!existing) {
+      throw new ConvexError("FACT_NOT_FOUND");
+    }
+
+    // Verify memorySpace owns this fact
+    if (existing.memorySpaceId !== args.memorySpaceId) {
+      throw new ConvexError("PERMISSION_DENIED");
+    }
+
+    const now = Date.now();
+
+    // Build update object with only provided fields
+    const updates: Record<string, any> = {
+      updatedAt: now,
+    };
+
+    if (args.fact !== undefined) updates.fact = args.fact;
+    if (args.confidence !== undefined) updates.confidence = args.confidence;
+    if (args.tags !== undefined) updates.tags = args.tags;
+    if (args.validUntil !== undefined) updates.validUntil = args.validUntil;
+    if (args.metadata !== undefined) updates.metadata = args.metadata;
+    if (args.category !== undefined) updates.category = args.category;
+    if (args.searchAliases !== undefined) updates.searchAliases = args.searchAliases;
+    if (args.semanticContext !== undefined) updates.semanticContext = args.semanticContext;
+    if (args.entities !== undefined) updates.entities = args.entities;
+    if (args.relations !== undefined) updates.relations = args.relations;
+
+    await ctx.db.patch(existing._id, updates);
+
+    return await ctx.db.get(existing._id);
+  },
+});
+
+/**
  * Delete many facts matching filters
  */
 export const deleteMany = mutation({

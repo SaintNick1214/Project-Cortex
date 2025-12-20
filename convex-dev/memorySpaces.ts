@@ -541,19 +541,24 @@ export const getStats = query({
     );
 
     // Time window counts
-    const memoriesThisWindow = windowCutoff > 0
-      ? memories.filter((m) => m.createdAt >= windowCutoff).length
-      : totalMemories;
-    const conversationsThisWindow = windowCutoff > 0
-      ? conversations.filter((c) => c.createdAt >= windowCutoff).length
-      : totalConversations;
+    const memoriesThisWindow =
+      windowCutoff > 0
+        ? memories.filter((m) => m.createdAt >= windowCutoff).length
+        : totalMemories;
+    const conversationsThisWindow =
+      windowCutoff > 0
+        ? conversations.filter((c) => c.createdAt >= windowCutoff).length
+        : totalConversations;
 
     // Calculate importance breakdown
     const importanceBreakdown = {
       critical: memories.filter((m) => m.importance >= 90).length,
-      high: memories.filter((m) => m.importance >= 70 && m.importance < 90).length,
-      medium: memories.filter((m) => m.importance >= 40 && m.importance < 70).length,
-      low: memories.filter((m) => m.importance >= 10 && m.importance < 40).length,
+      high: memories.filter((m) => m.importance >= 70 && m.importance < 90)
+        .length,
+      medium: memories.filter((m) => m.importance >= 40 && m.importance < 70)
+        .length,
+      low: memories.filter((m) => m.importance >= 10 && m.importance < 40)
+        .length,
       trivial: memories.filter((m) => m.importance < 10).length,
     };
 
@@ -613,7 +618,10 @@ export const getStats = query({
         existing.memoriesStored++;
         existing.importanceSum += memory.importance || 0;
         existing.firstActive = Math.min(existing.firstActive, memory.createdAt);
-        existing.lastActive = Math.max(existing.lastActive, memory.updatedAt || memory.createdAt);
+        existing.lastActive = Math.max(
+          existing.lastActive,
+          memory.updatedAt || memory.createdAt,
+        );
 
         for (const tag of memory.tags || []) {
           existing.tags[tag] = (existing.tags[tag] || 0) + 1;
@@ -640,22 +648,24 @@ export const getStats = query({
         }
       }
 
-      participants = Array.from(participantMap.entries()).map(([participantId, data]) => ({
-        participantId,
-        memoriesStored: data.memoriesStored,
-        conversationsStored: data.conversationsStored,
-        factsExtracted: data.factsExtracted,
-        firstActive: data.firstActive,
-        lastActive: data.lastActive,
-        avgImportance:
-          data.memoriesStored > 0
-            ? Math.round(data.importanceSum / data.memoriesStored)
-            : 0,
-        topTags: Object.entries(data.tags)
-          .sort((a, b) => b[1] - a[1])
-          .slice(0, 5)
-          .map(([tag]) => tag),
-      }));
+      participants = Array.from(participantMap.entries()).map(
+        ([participantId, data]) => ({
+          participantId,
+          memoriesStored: data.memoriesStored,
+          conversationsStored: data.conversationsStored,
+          factsExtracted: data.factsExtracted,
+          firstActive: data.firstActive,
+          lastActive: data.lastActive,
+          avgImportance:
+            data.memoriesStored > 0
+              ? Math.round(data.importanceSum / data.memoriesStored)
+              : 0,
+          topTags: Object.entries(data.tags)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5)
+            .map(([tag]) => tag),
+        }),
+      );
     }
 
     return {

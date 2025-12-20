@@ -11,10 +11,15 @@ import {
   createAdaptiveProcessor,
 } from "../../src/memory/streaming/AdaptiveProcessor";
 import { MetricsCollector } from "../../src/memory/streaming/StreamMetrics";
-import type { StreamMetrics, ProcessingStrategy } from "../../src/types/streaming";
+import type {
+  StreamMetrics,
+  ProcessingStrategy,
+} from "../../src/types/streaming";
 
 // Helper to create metrics with specific characteristics
-function createTestMetrics(overrides: Partial<StreamMetrics> = {}): StreamMetrics {
+function createTestMetrics(
+  overrides: Partial<StreamMetrics> = {},
+): StreamMetrics {
   return {
     startTime: Date.now() - 5000,
     firstChunkLatency: 100,
@@ -517,7 +522,9 @@ describe("AdaptiveStreamProcessor", () => {
       const recommendations = processor.getRecommendations(metrics);
 
       // Should recommend chunking for large content
-      expect(recommendations.some((r) => r.toLowerCase().includes("chunk"))).toBe(true);
+      expect(
+        recommendations.some((r) => r.toLowerCase().includes("chunk")),
+      ).toBe(true);
     });
 
     it("should recommend disabling progressive facts for fast streams", () => {
@@ -529,7 +536,9 @@ describe("AdaptiveStreamProcessor", () => {
       const recommendations = processor.getRecommendations(metrics);
 
       expect(
-        recommendations.some((r) => r.toLowerCase().includes("fact extraction")),
+        recommendations.some((r) =>
+          r.toLowerCase().includes("fact extraction"),
+        ),
       ).toBe(true);
     });
 

@@ -116,7 +116,7 @@ Once the CLI is installed, you have access to powerful management commands:
 # Project Setup
 cortex init [dir]              # Create new project or add to existing
 
-# Lifecycle Management  
+# Lifecycle Management
 cortex start                   # Start all enabled deployments
 cortex stop                    # Stop all running services
 cortex status                  # View status dashboard

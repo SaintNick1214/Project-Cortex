@@ -5,8 +5,8 @@
  * as facts are extracted from conversations.
  */
 
-import { query } from './_generated/server';
-import { v } from 'convex/values';
+import { query } from "./_generated/server";
+import { v } from "convex/values";
 
 /**
  * Get recent facts for a memory space
@@ -23,9 +23,9 @@ export const getRecent = query({
 
     // Query facts table (from Cortex SDK schema)
     const facts = await ctx.db
-      .query('facts')
-      .filter((q) => q.eq(q.field('memorySpaceId'), args.memorySpaceId))
-      .order('desc')
+      .query("facts")
+      .filter((q) => q.eq(q.field("memorySpaceId"), args.memorySpaceId))
+      .order("desc")
       .take(limit);
 
     return facts;
@@ -45,14 +45,14 @@ export const getByUser = query({
     const limit = args.limit ?? 50;
 
     const facts = await ctx.db
-      .query('facts')
+      .query("facts")
       .filter((q) =>
         q.and(
-          q.eq(q.field('memorySpaceId'), args.memorySpaceId),
-          q.eq(q.field('userId'), args.userId)
-        )
+          q.eq(q.field("memorySpaceId"), args.memorySpaceId),
+          q.eq(q.field("userId"), args.userId),
+        ),
       )
-      .order('desc')
+      .order("desc")
       .take(limit);
 
     return facts;
@@ -72,14 +72,14 @@ export const getByType = query({
     const limit = args.limit ?? 20;
 
     const facts = await ctx.db
-      .query('facts')
+      .query("facts")
       .filter((q) =>
         q.and(
-          q.eq(q.field('memorySpaceId'), args.memorySpaceId),
-          q.eq(q.field('factType'), args.factType)
-        )
+          q.eq(q.field("memorySpaceId"), args.memorySpaceId),
+          q.eq(q.field("factType"), args.factType),
+        ),
       )
-      .order('desc')
+      .order("desc")
       .take(limit);
 
     return facts;
@@ -95,8 +95,8 @@ export const count = query({
   },
   handler: async (ctx, args) => {
     const facts = await ctx.db
-      .query('facts')
-      .filter((q) => q.eq(q.field('memorySpaceId'), args.memorySpaceId))
+      .query("facts")
+      .filter((q) => q.eq(q.field("memorySpaceId"), args.memorySpaceId))
       .collect();
 
     return facts.length;
@@ -113,8 +113,8 @@ export const typeSummary = query({
   },
   handler: async (ctx, args) => {
     let factsQuery = ctx.db
-      .query('facts')
-      .filter((q) => q.eq(q.field('memorySpaceId'), args.memorySpaceId));
+      .query("facts")
+      .filter((q) => q.eq(q.field("memorySpaceId"), args.memorySpaceId));
 
     const facts = await factsQuery.collect();
 
@@ -122,7 +122,7 @@ export const typeSummary = query({
     const summary: Record<string, number> = {};
     for (const fact of facts) {
       if (args.userId && fact.userId !== args.userId) continue;
-      const type = fact.factType || 'unknown';
+      const type = fact.factType || "unknown";
       summary[type] = (summary[type] || 0) + 1;
     }
 

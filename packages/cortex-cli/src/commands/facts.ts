@@ -57,10 +57,16 @@ export function registerFactsCommands(
     .option("-f, --format <format>", "Output format: table, json, csv")
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "list facts");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "list facts",
+      );
       if (!selection) return;
 
-      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
+      const resolved = resolveConfig(currentConfig, {
+        deployment: selection.name,
+      });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading facts...").start();
@@ -72,46 +78,51 @@ export function registerFactsCommands(
           : undefined;
         const limit = validateLimit(parseInt(options.limit, 10));
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const factsList = await client.facts.list({
-            memorySpaceId: options.space,
-            factType,
-            limit,
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const factsList = await client.facts.list({
+              memorySpaceId: options.space,
+              factType,
+              limit,
+            });
 
-          spinner.stop();
+            spinner.stop();
 
-          if (factsList.length === 0) {
-            printWarning("No facts found");
-            return;
-          }
+            if (factsList.length === 0) {
+              printWarning("No facts found");
+              return;
+            }
 
-          // Format facts for display
-          const displayData = factsList.map((f) => ({
-            id: f.factId,
-            fact: f.fact.length > 50 ? f.fact.substring(0, 47) + "..." : f.fact,
-            type: f.factType,
-            confidence: f.confidence + "%",
-            subject: f.subject ?? "-",
-            created: formatRelativeTime(f.createdAt),
-          }));
+            // Format facts for display
+            const displayData = factsList.map((f) => ({
+              id: f.factId,
+              fact:
+                f.fact.length > 50 ? f.fact.substring(0, 47) + "..." : f.fact,
+              type: f.factType,
+              confidence: f.confidence + "%",
+              subject: f.subject ?? "-",
+              created: formatRelativeTime(f.createdAt),
+            }));
 
-          console.log(
-            formatOutput(displayData, format, {
-              title: `Facts in ${options.space}`,
-              headers: [
-                "id",
-                "fact",
-                "type",
-                "confidence",
-                "subject",
-                "created",
-              ],
-            }),
-          );
+            console.log(
+              formatOutput(displayData, format, {
+                title: `Facts in ${options.space}`,
+                headers: [
+                  "id",
+                  "fact",
+                  "type",
+                  "confidence",
+                  "subject",
+                  "created",
+                ],
+              }),
+            );
 
-          printSuccess(`Found ${formatCount(factsList.length, "fact")}`);
-        });
+            printSuccess(`Found ${formatCount(factsList.length, "fact")}`);
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(
@@ -132,10 +143,16 @@ export function registerFactsCommands(
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (query, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "search facts");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "search facts",
+      );
       if (!selection) return;
 
-      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
+      const resolved = resolveConfig(currentConfig, {
+        deployment: selection.name,
+      });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Searching facts...").start();
@@ -148,35 +165,40 @@ export function registerFactsCommands(
           : undefined;
         const limit = validateLimit(parseInt(options.limit, 10));
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const results = await client.facts.search(options.space, query, {
-            factType,
-            limit,
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const results = await client.facts.search(options.space, query, {
+              factType,
+              limit,
+            });
 
-          spinner.stop();
+            spinner.stop();
 
-          if (results.length === 0) {
-            printWarning("No facts found matching your query");
-            return;
-          }
+            if (results.length === 0) {
+              printWarning("No facts found matching your query");
+              return;
+            }
 
-          const displayData = results.map((f) => ({
-            id: f.factId,
-            fact: f.fact.length > 60 ? f.fact.substring(0, 57) + "..." : f.fact,
-            type: f.factType,
-            confidence: f.confidence + "%",
-          }));
+            const displayData = results.map((f) => ({
+              id: f.factId,
+              fact:
+                f.fact.length > 60 ? f.fact.substring(0, 57) + "..." : f.fact,
+              type: f.factType,
+              confidence: f.confidence + "%",
+            }));
 
-          console.log(
-            formatOutput(displayData, format, {
-              title: `Search results for "${query}"`,
-              headers: ["id", "fact", "type", "confidence"],
-            }),
-          );
+            console.log(
+              formatOutput(displayData, format, {
+                title: `Search results for "${query}"`,
+                headers: ["id", "fact", "type", "confidence"],
+              }),
+            );
 
-          printSuccess(`Found ${formatCount(results.length, "fact")}`);
-        });
+            printSuccess(`Found ${formatCount(results.length, "fact")}`);
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(error instanceof Error ? error.message : "Search failed");
@@ -193,10 +215,16 @@ export function registerFactsCommands(
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (factId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "get fact");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "get fact",
+      );
       if (!selection) return;
 
-      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
+      const resolved = resolveConfig(currentConfig, {
+        deployment: selection.name,
+      });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading fact...").start();
@@ -205,61 +233,65 @@ export function registerFactsCommands(
         validateFactId(factId);
         validateMemorySpaceId(options.space);
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const fact = await client.facts.get(options.space, factId);
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const fact = await client.facts.get(options.space, factId);
 
-          if (!fact) {
+            if (!fact) {
+              spinner.stop();
+              printError(`Fact ${factId} not found`);
+              process.exit(1);
+            }
+
             spinner.stop();
-            printError(`Fact ${factId} not found`);
-            process.exit(1);
-          }
 
-          spinner.stop();
+            if (format === "json") {
+              console.log(formatOutput(fact, "json"));
+            } else {
+              printSection(`Fact: ${factId}`, {
+                Fact: fact.fact,
+                Type: fact.factType,
+                Confidence: `${fact.confidence}%`,
+                Subject: fact.subject ?? "-",
+                Predicate: fact.predicate ?? "-",
+                Object: fact.object ?? "-",
+                "Source Type": fact.sourceType,
+                Version: fact.version,
+                Created: formatTimestamp(fact.createdAt),
+                Updated: formatTimestamp(fact.updatedAt),
+                Tags: fact.tags.length > 0 ? fact.tags.join(", ") : "-",
+              });
 
-          if (format === "json") {
-            console.log(formatOutput(fact, "json"));
-          } else {
-            printSection(`Fact: ${factId}`, {
-              Fact: fact.fact,
-              Type: fact.factType,
-              Confidence: `${fact.confidence}%`,
-              Subject: fact.subject ?? "-",
-              Predicate: fact.predicate ?? "-",
-              Object: fact.object ?? "-",
-              "Source Type": fact.sourceType,
-              Version: fact.version,
-              Created: formatTimestamp(fact.createdAt),
-              Updated: formatTimestamp(fact.updatedAt),
-              Tags: fact.tags.length > 0 ? fact.tags.join(", ") : "-",
-            });
-
-            if (fact.validFrom || fact.validUntil) {
-              console.log("\n  Temporal Validity:");
-              if (fact.validFrom) {
-                console.log(
-                  `    Valid From: ${formatTimestamp(fact.validFrom)}`,
-                );
+              if (fact.validFrom || fact.validUntil) {
+                console.log("\n  Temporal Validity:");
+                if (fact.validFrom) {
+                  console.log(
+                    `    Valid From: ${formatTimestamp(fact.validFrom)}`,
+                  );
+                }
+                if (fact.validUntil) {
+                  console.log(
+                    `    Valid Until: ${formatTimestamp(fact.validUntil)}`,
+                  );
+                }
               }
-              if (fact.validUntil) {
-                console.log(
-                  `    Valid Until: ${formatTimestamp(fact.validUntil)}`,
-                );
-              }
-            }
 
-            if (fact.sourceRef) {
-              console.log("\n  Source Reference:");
-              if (fact.sourceRef.conversationId) {
-                console.log(
-                  `    Conversation: ${fact.sourceRef.conversationId}`,
-                );
-              }
-              if (fact.sourceRef.memoryId) {
-                console.log(`    Memory: ${fact.sourceRef.memoryId}`);
+              if (fact.sourceRef) {
+                console.log("\n  Source Reference:");
+                if (fact.sourceRef.conversationId) {
+                  console.log(
+                    `    Conversation: ${fact.sourceRef.conversationId}`,
+                  );
+                }
+                if (fact.sourceRef.memoryId) {
+                  console.log(`    Memory: ${fact.sourceRef.memoryId}`);
+                }
               }
             }
-          }
-        });
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(
@@ -278,7 +310,11 @@ export function registerFactsCommands(
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (factId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "delete fact");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "delete fact",
+      );
       if (!selection) return;
 
       try {
@@ -298,12 +334,16 @@ export function registerFactsCommands(
 
         const spinner = ora("Deleting fact...").start();
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          await client.facts.delete(options.space, factId);
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            await client.facts.delete(options.space, factId);
 
-          spinner.stop();
-          printSuccess(`Deleted fact ${factId}`);
-        });
+            spinner.stop();
+            printSuccess(`Deleted fact ${factId}`);
+          },
+        );
       } catch (error) {
         printError(error instanceof Error ? error.message : "Delete failed");
         process.exit(1);
@@ -321,7 +361,11 @@ export function registerFactsCommands(
     .option("-f, --format <format>", "Export format: json, csv", "json")
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "export facts");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "export facts",
+      );
       if (!selection) return;
 
       const spinner = ora("Exporting facts...").start();
@@ -333,53 +377,58 @@ export function registerFactsCommands(
           ? validateFactType(options.type)
           : undefined;
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const factsList = await client.facts.list({
-            memorySpaceId: options.space,
-            factType,
-            limit: 1000, // Get all facts
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const factsList = await client.facts.list({
+              memorySpaceId: options.space,
+              factType,
+              limit: 1000, // Get all facts
+            });
 
-          let content: string;
-          if (options.format === "csv") {
-            // CSV format
-            const headers = [
-              "factId",
-              "fact",
-              "factType",
-              "confidence",
-              "subject",
-              "predicate",
-              "object",
-              "tags",
-              "createdAt",
-            ];
-            const rows = factsList.map((f) => [
-              f.factId,
-              `"${f.fact.replace(/"/g, '""')}"`,
-              f.factType,
-              f.confidence.toString(),
-              f.subject ?? "",
-              f.predicate ?? "",
-              f.object ?? "",
-              f.tags.join(";"),
-              new Date(f.createdAt).toISOString(),
-            ]);
-            content = [headers.join(","), ...rows.map((r) => r.join(","))].join(
-              "\n",
+            let content: string;
+            if (options.format === "csv") {
+              // CSV format
+              const headers = [
+                "factId",
+                "fact",
+                "factType",
+                "confidence",
+                "subject",
+                "predicate",
+                "object",
+                "tags",
+                "createdAt",
+              ];
+              const rows = factsList.map((f) => [
+                f.factId,
+                `"${f.fact.replace(/"/g, '""')}"`,
+                f.factType,
+                f.confidence.toString(),
+                f.subject ?? "",
+                f.predicate ?? "",
+                f.object ?? "",
+                f.tags.join(";"),
+                new Date(f.createdAt).toISOString(),
+              ]);
+              content = [
+                headers.join(","),
+                ...rows.map((r) => r.join(",")),
+              ].join("\n");
+            } else {
+              // JSON format
+              content = JSON.stringify(factsList, null, 2);
+            }
+
+            await writeFile(options.output, content, "utf-8");
+
+            spinner.stop();
+            printSuccess(
+              `Exported ${formatCount(factsList.length, "fact")} to ${options.output}`,
             );
-          } else {
-            // JSON format
-            content = JSON.stringify(factsList, null, 2);
-          }
-
-          await writeFile(options.output, content, "utf-8");
-
-          spinner.stop();
-          printSuccess(
-            `Exported ${formatCount(factsList.length, "fact")} to ${options.output}`,
-          );
-        });
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(error instanceof Error ? error.message : "Export failed");
@@ -396,7 +445,11 @@ export function registerFactsCommands(
     .option("-t, --type <type>", "Filter by fact type")
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "count facts");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "count facts",
+      );
       if (!selection) return;
 
       const spinner = ora("Counting facts...").start();
@@ -407,31 +460,35 @@ export function registerFactsCommands(
           ? validateFactType(options.type)
           : undefined;
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const factsList = await client.facts.list({
-            memorySpaceId: options.space,
-            factType,
-            limit: 1000,
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const factsList = await client.facts.list({
+              memorySpaceId: options.space,
+              factType,
+              limit: 1000,
+            });
 
-          spinner.stop();
-          printSuccess(
-            `${formatCount(factsList.length, "fact")} in ${options.space}`,
-          );
+            spinner.stop();
+            printSuccess(
+              `${formatCount(factsList.length, "fact")} in ${options.space}`,
+            );
 
-          // Show breakdown by type
-          const byType = new Map<string, number>();
-          for (const fact of factsList) {
-            byType.set(fact.factType, (byType.get(fact.factType) ?? 0) + 1);
-          }
-
-          if (byType.size > 1) {
-            console.log("\n  By Type:");
-            for (const [type, count] of byType) {
-              console.log(`    ${type}: ${count}`);
+            // Show breakdown by type
+            const byType = new Map<string, number>();
+            for (const fact of factsList) {
+              byType.set(fact.factType, (byType.get(fact.factType) ?? 0) + 1);
             }
-          }
-        });
+
+            if (byType.size > 1) {
+              console.log("\n  By Type:");
+              for (const [type, count] of byType) {
+                console.log(`    ${type}: ${count}`);
+              }
+            }
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(error instanceof Error ? error.message : "Count failed");
@@ -449,7 +506,11 @@ export function registerFactsCommands(
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "clear facts");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "clear facts",
+      );
       if (!selection) return;
 
       try {
@@ -458,46 +519,52 @@ export function registerFactsCommands(
           ? validateFactType(options.type)
           : undefined;
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          // List facts first
-          const factsList = await client.facts.list({
-            memorySpaceId: options.space,
-            factType,
-            limit: 1000,
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            // List facts first
+            const factsList = await client.facts.list({
+              memorySpaceId: options.space,
+              factType,
+              limit: 1000,
+            });
 
-          if (factsList.length === 0) {
-            printWarning("No facts found to delete");
-            return;
-          }
-
-          if (!options.yes) {
-            const scope = factType ? ` of type "${factType}"` : "";
-            const confirmed = await requireConfirmation(
-              `Delete ${formatCount(factsList.length, "fact")}${scope} from ${options.space}? This cannot be undone.`,
-              currentConfig,
-            );
-            if (!confirmed) {
-              printWarning("Operation cancelled");
+            if (factsList.length === 0) {
+              printWarning("No facts found to delete");
               return;
             }
-          }
 
-          const spinner = ora(`Deleting ${factsList.length} facts...`).start();
-
-          let deleted = 0;
-          for (const fact of factsList) {
-            try {
-              await client.facts.delete(options.space, fact.factId);
-              deleted++;
-            } catch {
-              // Continue on error
+            if (!options.yes) {
+              const scope = factType ? ` of type "${factType}"` : "";
+              const confirmed = await requireConfirmation(
+                `Delete ${formatCount(factsList.length, "fact")}${scope} from ${options.space}? This cannot be undone.`,
+                currentConfig,
+              );
+              if (!confirmed) {
+                printWarning("Operation cancelled");
+                return;
+              }
             }
-          }
 
-          spinner.stop();
-          printSuccess(`Deleted ${formatCount(deleted, "fact")}`);
-        });
+            const spinner = ora(
+              `Deleting ${factsList.length} facts...`,
+            ).start();
+
+            let deleted = 0;
+            for (const fact of factsList) {
+              try {
+                await client.facts.delete(options.space, fact.factId);
+                deleted++;
+              } catch {
+                // Continue on error
+              }
+            }
+
+            spinner.stop();
+            printSuccess(`Deleted ${formatCount(deleted, "fact")}`);
+          },
+        );
       } catch (error) {
         printError(error instanceof Error ? error.message : "Clear failed");
         process.exit(1);

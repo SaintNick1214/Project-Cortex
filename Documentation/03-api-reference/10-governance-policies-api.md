@@ -33,30 +33,33 @@ The Governance Policies API provides centralized control over data retention, pu
 
 ```typescript
 interface GovernancePolicy {
-  organizationId?: string;            // Optional: org-wide policy
-  memorySpaceId?: string;             // Optional: memory-space-specific override
+  organizationId?: string; // Optional: org-wide policy
+  memorySpaceId?: string; // Optional: memory-space-specific override
 
   // Layer 1a: Conversations
   conversations: {
     retention: {
-      deleteAfter: string;            // '7y', '30d', etc.
-      archiveAfter?: string;          // Move to cold storage
-      purgeOnUserRequest: boolean;    // GDPR compliance
+      deleteAfter: string; // '7y', '30d', etc.
+      archiveAfter?: string; // Move to cold storage
+      purgeOnUserRequest: boolean; // GDPR compliance
     };
     purging: {
       autoDelete: boolean;
-      deleteInactiveAfter?: string;   // '1y', '90d'
+      deleteInactiveAfter?: string; // '1y', '90d'
     };
   };
 
   // Layer 1b: Immutable
   immutable: {
     retention: {
-      defaultVersions: number;        // Default versions to keep
-      byType: Record<string, {
-        versionsToKeep: number;       // -1 = unlimited
-        deleteAfter?: string;
-      }>;
+      defaultVersions: number; // Default versions to keep
+      byType: Record<
+        string,
+        {
+          versionsToKeep: number; // -1 = unlimited
+          deleteAfter?: string;
+        }
+      >;
     };
     purging: {
       autoCleanupVersions: boolean;
@@ -67,7 +70,7 @@ interface GovernancePolicy {
   // Layer 1c: Mutable
   mutable: {
     retention: {
-      defaultTTL?: string;            // null = no expiration
+      defaultTTL?: string; // null = no expiration
       purgeInactiveAfter?: string;
     };
     purging: {
@@ -79,24 +82,24 @@ interface GovernancePolicy {
   // Layer 2: Vector
   vector: {
     retention: {
-      defaultVersions: number;        // Per memory
+      defaultVersions: number; // Per memory
       byImportance: Array<{
-        range: [number, number];      // [min, max] importance
+        range: [number, number]; // [min, max] importance
         versions: number;
       }>;
       bySourceType?: Record<string, number>;
     };
     purging: {
       autoCleanupVersions: boolean;
-      deleteOrphaned: boolean;        // No conversationRef/immutableRef
+      deleteOrphaned: boolean; // No conversationRef/immutableRef
     };
   };
 
   // Cross-layer rules
   compliance: {
-    mode: 'GDPR' | 'HIPAA' | 'SOC2' | 'FINRA' | 'Custom';
+    mode: "GDPR" | "HIPAA" | "SOC2" | "FINRA" | "Custom";
     dataRetentionYears: number;
-    requireJustification: number[];   // Importance levels needing justification
+    requireJustification: number[]; // Importance levels needing justification
     auditLogging: boolean;
   };
 }
@@ -373,8 +376,8 @@ cortex.governance.enforce(
 // Trigger immediate policy enforcement
 const result = await cortex.governance.enforce({
   scope: { organizationId: "org-123" }, // Required: org or memory space
-  layers: ["vector", "immutable"],       // Which layers
-  rules: ["retention", "purging"],       // Which rules
+  layers: ["vector", "immutable"], // Which layers
+  rules: ["retention", "purging"], // Which rules
 });
 
 console.log(`Enforced retention: ${result.versionsDeleted} versions deleted`);

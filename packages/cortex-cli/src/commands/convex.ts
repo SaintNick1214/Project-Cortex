@@ -74,26 +74,29 @@ async function execCommand(
  * Removes inherited CONVEX_* variables so the target project's .env.local is used,
  * then applies any explicit overrides.
  */
-function buildConvexEnv(overrides?: Record<string, string>): typeof process.env {
+function buildConvexEnv(
+  overrides?: Record<string, string>,
+): typeof process.env {
   const env = { ...process.env };
-  
+
   // Remove inherited CONVEX_* variables that could conflict with target project
-  const convexVars = Object.keys(env).filter(key => 
-    key.startsWith('CONVEX_') || 
-    key.startsWith('LOCAL_CONVEX_') || 
-    key.startsWith('CLOUD_CONVEX_') ||
-    key.startsWith('ENV_CONVEX_')
+  const convexVars = Object.keys(env).filter(
+    (key) =>
+      key.startsWith("CONVEX_") ||
+      key.startsWith("LOCAL_CONVEX_") ||
+      key.startsWith("CLOUD_CONVEX_") ||
+      key.startsWith("ENV_CONVEX_"),
   );
 
   for (const key of convexVars) {
     delete env[key];
   }
-  
+
   // Apply explicit overrides
   if (overrides) {
     Object.assign(env, overrides);
   }
-  
+
   return env;
 }
 
@@ -103,13 +106,19 @@ function buildConvexEnv(overrides?: Record<string, string>): typeof process.env 
 async function execCommandLive(
   command: string,
   args: string[],
-  options?: { cwd?: string; env?: Record<string, string>; cleanConvexEnv?: boolean },
+  options?: {
+    cwd?: string;
+    env?: Record<string, string>;
+    cleanConvexEnv?: boolean;
+  },
 ): Promise<number> {
   return new Promise((resolve) => {
     // Build environment: if cleanConvexEnv is true, remove inherited CONVEX_* vars
-    const env = options?.cleanConvexEnv 
-      ? buildConvexEnv(options.env) 
-      : (options?.env ? { ...process.env, ...options.env } : process.env);
+    const env = options?.cleanConvexEnv
+      ? buildConvexEnv(options.env)
+      : options?.env
+        ? { ...process.env, ...options.env }
+        : process.env;
 
     const child = spawn(command, args, {
       cwd: options?.cwd,
@@ -146,7 +155,11 @@ export function registerConvexCommands(
     .option("-d, --deployment <name>", "Target deployment")
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "check status");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "check status",
+      );
       if (!selection) return;
 
       const { name: targetName, deployment } = selection;
@@ -155,7 +168,9 @@ export function registerConvexCommands(
       const spinner = ora("Checking deployment status...").start();
 
       try {
-        const info = getDeploymentInfo(currentConfig, { deployment: targetName });
+        const info = getDeploymentInfo(currentConfig, {
+          deployment: targetName,
+        });
 
         spinner.stop();
 
@@ -183,7 +198,9 @@ export function registerConvexCommands(
 
         // Test connection
         const { testConnection } = await import("../utils/client.js");
-        const connectionResult = await testConnection(currentConfig, { deployment: targetName });
+        const connectionResult = await testConnection(currentConfig, {
+          deployment: targetName,
+        });
 
         console.log();
         if (connectionResult.connected) {
@@ -210,11 +227,22 @@ export function registerConvexCommands(
     .option("--push", "Push without prompts", false)
     .option("--skip-sync", "Skip automatic schema sync from SDK")
     .action(async (options, command) => {
-      console.log(pc.yellow("Note: 'cortex convex deploy' is deprecated. Use 'cortex deploy' instead.\n"));
+      console.log(
+        pc.yellow(
+          "Note: 'cortex convex deploy' is deprecated. Use 'cortex deploy' instead.\n",
+        ),
+      );
       // Execute the top-level deploy command
-      const deployCommand = command.parent?.parent?.commands.find((c: Command) => c.name() === "deploy");
+      const deployCommand = command.parent?.parent?.commands.find(
+        (c: Command) => c.name() === "deploy",
+      );
       if (deployCommand) {
-        await deployCommand.parseAsync(["node", "cortex", "deploy", ...process.argv.slice(4)]);
+        await deployCommand.parseAsync([
+          "node",
+          "cortex",
+          "deploy",
+          ...process.argv.slice(4),
+        ]);
       }
     });
 
@@ -228,14 +256,20 @@ export function registerConvexCommands(
     .option("--skip-sync", "Skip automatic schema sync from SDK")
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "start dev");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "start dev",
+      );
       if (!selection) return;
 
       const { name: targetName, deployment } = selection;
       const projectPath = deployment.projectPath || process.cwd();
 
       try {
-        const info = getDeploymentInfo(currentConfig, { deployment: targetName });
+        const info = getDeploymentInfo(currentConfig, {
+          deployment: targetName,
+        });
 
         console.log();
         printInfo(
@@ -245,7 +279,9 @@ export function registerConvexCommands(
 
         // Sync schema files from SDK before starting dev server
         if (!options.skipSync) {
-          const { syncConvexSchema, printSyncResult } = await import("../utils/schema-sync.js");
+          const { syncConvexSchema, printSyncResult } = await import(
+            "../utils/schema-sync.js"
+          );
           const syncResult = await syncConvexSchema(projectPath);
           printSyncResult(syncResult);
           if (syncResult.error) {
@@ -258,7 +294,9 @@ export function registerConvexCommands(
         const args = ["convex", "dev"];
 
         if (options.local || info.isLocal) {
-          const resolved = resolveConfig(currentConfig, { deployment: targetName });
+          const resolved = resolveConfig(currentConfig, {
+            deployment: targetName,
+          });
           args.push("--url", resolved.url);
         }
 
@@ -266,8 +304,8 @@ export function registerConvexCommands(
           args.push("--once", "--until-success");
         }
 
-        await execCommandLive("npx", args, { 
-          cwd: projectPath, 
+        await execCommandLive("npx", args, {
+          cwd: projectPath,
           cleanConvexEnv: true,
         });
       } catch (error) {
@@ -289,14 +327,20 @@ export function registerConvexCommands(
     .option("-n, --lines <number>", "Number of lines to show", "50")
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "view logs");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "view logs",
+      );
       if (!selection) return;
 
       const { name: targetName, deployment } = selection;
       const projectPath = deployment.projectPath || process.cwd();
 
       try {
-        const info = getDeploymentInfo(currentConfig, { deployment: targetName });
+        const info = getDeploymentInfo(currentConfig, {
+          deployment: targetName,
+        });
 
         console.log();
         printInfo(`Viewing ${info.isLocal ? "local" : "cloud"} logs...`);
@@ -305,7 +349,9 @@ export function registerConvexCommands(
         const args = ["convex", "logs"];
 
         if (options.local || info.isLocal) {
-          const resolved = resolveConfig(currentConfig, { deployment: targetName });
+          const resolved = resolveConfig(currentConfig, {
+            deployment: targetName,
+          });
           args.push("--url", resolved.url);
         }
 
@@ -313,8 +359,8 @@ export function registerConvexCommands(
           args.push("--prod");
         }
 
-        await execCommandLive("npx", args, { 
-          cwd: projectPath, 
+        await execCommandLive("npx", args, {
+          cwd: projectPath,
           cleanConvexEnv: true,
         });
       } catch (error) {
@@ -332,21 +378,29 @@ export function registerConvexCommands(
     .option("-p, --prod", "Open production dashboard")
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "open dashboard");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "open dashboard",
+      );
       if (!selection) return;
 
       const { name: targetName, deployment } = selection;
       const projectPath = deployment.projectPath || process.cwd();
 
       try {
-        const info = getDeploymentInfo(currentConfig, { deployment: targetName });
+        const info = getDeploymentInfo(currentConfig, {
+          deployment: targetName,
+        });
 
         printInfo("Opening Convex dashboard...");
 
         const args = ["convex", "dashboard"];
 
         if (options.local || info.isLocal) {
-          const resolved = resolveConfig(currentConfig, { deployment: targetName });
+          const resolved = resolveConfig(currentConfig, {
+            deployment: targetName,
+          });
           args.push("--url", resolved.url);
         }
 
@@ -354,8 +408,8 @@ export function registerConvexCommands(
           args.push("--prod");
         }
 
-        await execCommandLive("npx", args, { 
-          cwd: projectPath, 
+        await execCommandLive("npx", args, {
+          cwd: projectPath,
           cleanConvexEnv: true,
         });
       } catch (error) {
@@ -373,11 +427,22 @@ export function registerConvexCommands(
     .option("--convex-version <version>", "Specific Convex version to install")
     .option("-y, --yes", "Auto-accept all updates", false)
     .action(async (options, command) => {
-      console.log(pc.yellow("Note: 'cortex convex update' is deprecated. Use 'cortex update' instead.\n"));
+      console.log(
+        pc.yellow(
+          "Note: 'cortex convex update' is deprecated. Use 'cortex update' instead.\n",
+        ),
+      );
       // Execute the top-level update command
-      const updateCommand = command.parent?.parent?.commands.find((c: Command) => c.name() === "update");
+      const updateCommand = command.parent?.parent?.commands.find(
+        (c: Command) => c.name() === "update",
+      );
       if (updateCommand) {
-        await updateCommand.parseAsync(["node", "cortex", "update", ...process.argv.slice(4)]);
+        await updateCommand.parseAsync([
+          "node",
+          "cortex",
+          "update",
+          ...process.argv.slice(4),
+        ]);
       }
     });
 
@@ -481,7 +546,11 @@ export function registerConvexCommands(
     .option("--skip-sync", "Skip automatic schema sync from SDK")
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "initialize Convex");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "initialize Convex",
+      );
       if (!selection) return;
 
       const { deployment } = selection;
@@ -493,7 +562,9 @@ export function registerConvexCommands(
 
       // Sync schema files from SDK before initializing
       if (!options.skipSync) {
-        const { syncConvexSchema, printSyncResult } = await import("../utils/schema-sync.js");
+        const { syncConvexSchema, printSyncResult } = await import(
+          "../utils/schema-sync.js"
+        );
         const syncResult = await syncConvexSchema(projectPath);
         printSyncResult(syncResult);
         if (syncResult.error) {
@@ -503,14 +574,14 @@ export function registerConvexCommands(
 
       console.log();
 
-      const exitCode = await execCommandLive("npx", [
-        "convex",
-        "dev",
-        "--once",
-      ], { 
-        cwd: projectPath, 
-        cleanConvexEnv: true,
-      });
+      const exitCode = await execCommandLive(
+        "npx",
+        ["convex", "dev", "--once"],
+        {
+          cwd: projectPath,
+          cleanConvexEnv: true,
+        },
+      );
 
       if (exitCode === 0) {
         console.log();
@@ -534,7 +605,11 @@ export function registerConvexCommands(
     .option("-p, --prod", "Use production environment")
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "manage env");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "manage env",
+      );
       if (!selection) return;
 
       const { deployment } = selection;
@@ -554,8 +629,8 @@ export function registerConvexCommands(
           args.push("--prod");
         }
 
-        await execCommandLive("npx", args, { 
-          cwd: projectPath, 
+        await execCommandLive("npx", args, {
+          cwd: projectPath,
           cleanConvexEnv: true,
         });
       } catch (error) {

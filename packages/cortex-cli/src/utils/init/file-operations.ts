@@ -95,9 +95,7 @@ export async function deployCortexBackend(projectPath: string): Promise<void> {
     );
   }
 
-  console.log(
-    pc.green(`   Copied ${criticalFiles.length} backend functions`),
-  );
+  console.log(pc.green(`   Copied ${criticalFiles.length} backend functions`));
 }
 
 /**

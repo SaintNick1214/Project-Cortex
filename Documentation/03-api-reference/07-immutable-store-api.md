@@ -611,7 +611,9 @@ const result = await cortex.immutable.purgeMany({
   type: "audit-log",
 });
 
-console.log(`Deleted ${result.deleted} entries (${result.totalVersionsDeleted} total versions)`);
+console.log(
+  `Deleted ${result.deleted} entries (${result.totalVersionsDeleted} total versions)`,
+);
 
 // Delete all records for a user (GDPR)
 const userPurge = await cortex.immutable.purgeMany({

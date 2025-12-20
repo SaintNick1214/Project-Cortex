@@ -1095,7 +1095,10 @@ const space = await cortex.memorySpaces.get("nonexistent-space");
 
 if (space === null) {
   // Create it
-  await cortex.memorySpaces.register({ memorySpaceId: "nonexistent-space", type: "personal" });
+  await cortex.memorySpaces.register({
+    memorySpaceId: "nonexistent-space",
+    type: "personal",
+  });
 }
 ```
 

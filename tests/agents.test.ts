@@ -1287,9 +1287,7 @@ describe("Agents API (Coordination Layer)", () => {
       });
 
       it("should throw when format not provided", async () => {
-        await expect(
-          cortex.agents.export({} as any),
-        ).rejects.toMatchObject({
+        await expect(cortex.agents.export({} as any)).rejects.toMatchObject({
           code: "MISSING_FORMAT",
         });
       });
@@ -1349,7 +1347,11 @@ describe("Agents API (Coordination Layer)", () => {
 
     beforeEach(async () => {
       // Cleanup any existing test agents
-      const agentIds = [updateManyAgent1Id, updateManyAgent2Id, updateManyAgent3Id];
+      const agentIds = [
+        updateManyAgent1Id,
+        updateManyAgent2Id,
+        updateManyAgent3Id,
+      ];
       for (const agentId of agentIds) {
         try {
           await cortex.agents.unregister(agentId);
@@ -1382,7 +1384,10 @@ describe("Agents API (Coordination Layer)", () => {
         id: updateManyAgent3Id,
         name: "Update Many Agent 3",
         description: "Third agent - different team",
-        metadata: { team: `other-team-${ctx.runId}`, version: updateManyVersionTag },
+        metadata: {
+          team: `other-team-${ctx.runId}`,
+          version: updateManyVersionTag,
+        },
         config: { retentionDays: 60 },
       });
     });
@@ -1528,7 +1533,12 @@ describe("Agents API (Coordination Layer)", () => {
 
     beforeAll(async () => {
       // Cleanup any existing test agents
-      const agentIds = [filterAgent1Id, filterAgent2Id, filterAgent3Id, filterAgent4Id];
+      const agentIds = [
+        filterAgent1Id,
+        filterAgent2Id,
+        filterAgent3Id,
+        filterAgent4Id,
+      ];
       for (const agentId of agentIds) {
         try {
           await cortex.agents.unregister(agentId);
@@ -1591,7 +1601,12 @@ describe("Agents API (Coordination Layer)", () => {
 
     afterAll(async () => {
       // Cleanup test agents
-      const agentIds = [filterAgent1Id, filterAgent2Id, filterAgent3Id, filterAgent4Id];
+      const agentIds = [
+        filterAgent1Id,
+        filterAgent2Id,
+        filterAgent3Id,
+        filterAgent4Id,
+      ];
       for (const agentId of agentIds) {
         try {
           await cortex.agents.unregister(agentId);

@@ -1374,10 +1374,13 @@ export class UsersAPI {
     // 1. Delete vector memories using batch deleteMany (one call per space)
     for (const spaceId of memorySpaceIds) {
       try {
-        const deleteResult = await this.client.mutation(api.memories.deleteMany, {
-          memorySpaceId: spaceId,
-          userId,
-        });
+        const deleteResult = await this.client.mutation(
+          api.memories.deleteMany,
+          {
+            memorySpaceId: spaceId,
+            userId,
+          },
+        );
         const deleted = (deleteResult as { deleted: number }).deleted || 0;
         result.vectorMemoriesDeleted += deleted;
       } catch (error) {

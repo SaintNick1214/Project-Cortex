@@ -3,8 +3,8 @@ services:
     image: neo4j:5-community
     container_name: cortex-neo4j
     ports:
-      - "7474:7474"  # HTTP
-      - "7687:7687"  # Bolt
+      - "7474:7474" # HTTP
+      - "7687:7687" # Bolt
     environment:
       - NEO4J_AUTH=neo4j/cortex-password
       - NEO4J_PLUGINS=["apoc"]

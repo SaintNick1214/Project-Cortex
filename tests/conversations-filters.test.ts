@@ -26,7 +26,10 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
   afterAll(async () => {
     // Cleanup test conversations (best-effort)
     try {
-      await cortex.memorySpaces.delete(TEST_MEMSPACE_ID, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(TEST_MEMSPACE_ID, {
+        cascade: true,
+        reason: "test cleanup",
+      });
     } catch (_e) {
       // Ignore cleanup errors
     }
@@ -242,9 +245,13 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
         memorySpaceId: spaceId,
       });
       expect(uaResults.conversations.length).toBeGreaterThanOrEqual(1);
-      expect(uaResults.conversations.every((c: any) => c.type === "user-agent")).toBe(true);
       expect(
-        uaResults.conversations.some((c: any) => c.conversationId === uaConv.conversationId),
+        uaResults.conversations.every((c: any) => c.type === "user-agent"),
+      ).toBe(true);
+      expect(
+        uaResults.conversations.some(
+          (c: any) => c.conversationId === uaConv.conversationId,
+        ),
       ).toBe(true);
 
       // List agent-agent
@@ -253,9 +260,13 @@ describe("Conversations API - Comprehensive Filter Coverage", () => {
         memorySpaceId: spaceId,
       });
       expect(aaResults.conversations.length).toBeGreaterThanOrEqual(1);
-      expect(aaResults.conversations.every((c: any) => c.type === "agent-agent")).toBe(true);
       expect(
-        aaResults.conversations.some((c: any) => c.conversationId === aaConv.conversationId),
+        aaResults.conversations.every((c: any) => c.type === "agent-agent"),
+      ).toBe(true);
+      expect(
+        aaResults.conversations.some(
+          (c: any) => c.conversationId === aaConv.conversationId,
+        ),
       ).toBe(true);
     });
 

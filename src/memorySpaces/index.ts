@@ -213,7 +213,10 @@ export class MemorySpacesAPI {
     if (filter?.limit !== undefined) {
       validateLimit(filter.limit, 1000);
     }
-    if (filter?.participant !== undefined && filter.participant.trim().length === 0) {
+    if (
+      filter?.participant !== undefined &&
+      filter.participant.trim().length === 0
+    ) {
       throw new MemorySpaceValidationError(
         "participant filter cannot be empty",
         "INVALID_PARTICIPANT",

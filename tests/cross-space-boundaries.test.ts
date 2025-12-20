@@ -26,12 +26,18 @@ describe("Cross-Space Boundary Testing", () => {
   afterAll(async () => {
     // Cleanup
     try {
-      await cortex.memorySpaces.delete(SPACE_A, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(SPACE_A, {
+        cascade: true,
+        reason: "test cleanup",
+      });
     } catch (_e) {
       // Ignore
     }
     try {
-      await cortex.memorySpaces.delete(SPACE_B, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(SPACE_B, {
+        cascade: true,
+        reason: "test cleanup",
+      });
     } catch (_e) {
       // Ignore
     }
@@ -673,7 +679,10 @@ describe("Cross-Space Boundary Testing", () => {
       });
 
       // Delete space A with cascade
-      await cortex.memorySpaces.delete(tempSpaceA, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(tempSpaceA, {
+        cascade: true,
+        reason: "test cleanup",
+      });
 
       // Space B data should be intact
       const checkB = await cortex.vector.get(tempSpaceB, memB.memoryId);
@@ -1007,7 +1016,10 @@ describe("Cross-Space Boundary Testing", () => {
       });
 
       // Delete space A
-      await cortex.memorySpaces.delete(tempA, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(tempA, {
+        cascade: true,
+        reason: "test cleanup",
+      });
 
       // Memory in space B still exists (with orphaned ref)
       const memCheck = await cortex.vector.get(tempB, memB.memoryId);
@@ -1064,7 +1076,10 @@ describe("Cross-Space Boundary Testing", () => {
       const factListB = await cortex.facts.list({ memorySpaceId: workflowB });
 
       expect(
-        convListB.conversations.some((c: { conversationId: string }) => c.conversationId === convA.conversationId),
+        convListB.conversations.some(
+          (c: { conversationId: string }) =>
+            c.conversationId === convA.conversationId,
+        ),
       ).toBe(false);
       expect(memListB.some((m) => m.memoryId === memA.memoryId)).toBe(false);
       expect(factListB.some((f) => f.factId === factA.factId)).toBe(false);
@@ -1143,7 +1158,10 @@ describe("Cross-Space Boundary Testing", () => {
 
       // Start query, delete space
       const listPromise = cortex.vector.list({ memorySpaceId: tempSpace });
-      await cortex.memorySpaces.delete(tempSpace, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(tempSpace, {
+        cascade: true,
+        reason: "test cleanup",
+      });
 
       // Query should complete (may return empty or stale data)
       const list = await listPromise;
@@ -1174,7 +1192,10 @@ describe("Cross-Space Boundary Testing", () => {
 
       // Delete all
       for (const spaceId of spaces) {
-        await cortex.memorySpaces.delete(spaceId, { cascade: true, reason: "test cleanup" });
+        await cortex.memorySpaces.delete(spaceId, {
+          cascade: true,
+          reason: "test cleanup",
+        });
       }
 
       // Verify all gone
@@ -1798,7 +1819,10 @@ describe("Cross-Space Boundary Testing", () => {
       const ctxListB = await cortex.contexts.list({ memorySpaceId: SPACE_B });
 
       expect(
-        convListB.conversations.some((c: { conversationId: string }) => c.conversationId === conv.conversationId),
+        convListB.conversations.some(
+          (c: { conversationId: string }) =>
+            c.conversationId === conv.conversationId,
+        ),
       ).toBe(false);
       expect(memListB.some((m) => m.memoryId === mem.memoryId)).toBe(false);
       expect(factListB.some((f) => f.factId === fact.factId)).toBe(false);

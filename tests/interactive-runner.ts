@@ -1408,7 +1408,9 @@ async function testConvPropagation() {
 
   // Verify in list()
   const list = await cortex.conversations.list({ userId: TEST_USER_ID });
-  const inList = list.conversations.find((c) => c.conversationId === conv.conversationId);
+  const inList = list.conversations.find(
+    (c) => c.conversationId === conv.conversationId,
+  );
 
   console.log(`✅ list() shows ${inList?.messageCount} messages`);
 
@@ -1744,7 +1746,9 @@ async function testConvIntegration() {
   console.log(`✅ Step 3: get() returned messageCount: ${get!.messageCount}`);
 
   const list = await cortex.conversations.list({ userId: TEST_USER_ID });
-  const inList = list.conversations.some((c) => c.conversationId === conv.conversationId);
+  const inList = list.conversations.some(
+    (c) => c.conversationId === conv.conversationId,
+  );
 
   console.log(
     `✅ Step 4: list() ${inList ? "found" : "did not find"} conversation`,

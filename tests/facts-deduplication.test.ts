@@ -65,7 +65,9 @@ describe("Facts Deduplication", () => {
       });
 
       it("falls back to structural when semantic without embedding", () => {
-        const config = FactDeduplicationService.resolveConfig({ strategy: "semantic" });
+        const config = FactDeduplicationService.resolveConfig({
+          strategy: "semantic",
+        });
         expect(config.strategy).toBe("structural");
       });
 

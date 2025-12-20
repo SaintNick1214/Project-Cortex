@@ -384,6 +384,60 @@ export default defineSchema({
     }),
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Fact History (Belief Revision Audit Trail)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  factHistory: defineTable({
+    // Identity
+    eventId: v.string(), // Unique event ID
+    factId: v.string(), // The fact this event relates to
+    memorySpaceId: v.string(), // Memory space for scoping
+
+    // Action that was taken
+    action: v.union(
+      v.literal("CREATE"),
+      v.literal("UPDATE"),
+      v.literal("SUPERSEDE"),
+      v.literal("DELETE"),
+    ),
+
+    // Values (for tracking changes)
+    oldValue: v.optional(v.string()), // Previous fact text
+    newValue: v.optional(v.string()), // New fact text
+
+    // Relationships
+    supersededBy: v.optional(v.string()), // factId that replaced this
+    supersedes: v.optional(v.string()), // factId this replaced
+
+    // Decision context
+    reason: v.optional(v.string()), // Why this action was taken
+    confidence: v.optional(v.number()), // Confidence in the decision
+
+    // Pipeline info
+    pipeline: v.optional(
+      v.object({
+        slotMatching: v.optional(v.boolean()),
+        semanticMatching: v.optional(v.boolean()),
+        llmResolution: v.optional(v.boolean()),
+      }),
+    ),
+
+    // Source context
+    userId: v.optional(v.string()), // User who triggered the change
+    participantId: v.optional(v.string()), // Participant who triggered
+    conversationId: v.optional(v.string()), // Conversation context
+
+    // Timestamps
+    timestamp: v.number(),
+  })
+    .index("by_eventId", ["eventId"]) // Unique lookup
+    .index("by_factId", ["factId"]) // Get history for a fact
+    .index("by_memorySpace", ["memorySpaceId"]) // Get all changes in a space
+    .index("by_memorySpace_timestamp", ["memorySpaceId", "timestamp"]) // Time-range queries
+    .index("by_action", ["action"]) // Filter by action type
+    .index("by_userId", ["userId"]) // GDPR cascade
+    .index("by_timestamp", ["timestamp"]), // Chronological
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Memory Spaces Registry (Hive/Collaboration Mode Management)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   memorySpaces: defineTable({
