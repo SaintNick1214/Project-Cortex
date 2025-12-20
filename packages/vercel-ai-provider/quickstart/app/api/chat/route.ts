@@ -1,8 +1,12 @@
 import { createCortexMemory } from '@cortexmemory/vercel-ai-provider';
-import { openai } from '@ai-sdk/openai';
-import { streamText } from 'ai';
+import { openai, createOpenAI } from '@ai-sdk/openai';
+import { streamText, embed, convertToModelMessages } from 'ai';
 
-// Create Cortex Memory provider with all SDK v0.21.0 capabilities
+// Create OpenAI client for embeddings
+const openaiClient = createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// Create Cortex Memory provider with SDK v0.23.0 capabilities
+// Now using recall() for unified multi-layer retrieval (vector + facts + graph)
 function getCortexMemory(memorySpaceId: string, userId: string) {
   return createCortexMemory({
     convexUrl: process.env.CONVEX_URL!,
@@ -22,12 +26,27 @@ function getCortexMemory(memorySpaceId: string, userId: string) {
     // Enable fact extraction (auto-configured via env vars)
     enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === 'true',
 
+    // Embedding provider for semantic fact deduplication (v0.22.0)
+    // This enables semantic matching to prevent duplicate facts across sessions
+    embeddingProvider: {
+      generate: async (text: string) => {
+        const result = await embed({
+          model: openaiClient.embedding('text-embedding-3-small'),
+          value: text,
+        });
+        return result.embedding;
+      },
+    },
+
     // Streaming enhancements
     streamingOptions: {
       storePartialResponse: true,
       progressiveFactExtraction: true,
       enableAdaptiveProcessing: true,
     },
+
+    // Memory recall configuration (v0.23.0 - unified retrieval across all layers)
+    memorySearchLimit: 20, // Results from combined vector + facts + graph search
 
     // Debug in development
     debug: process.env.NODE_ENV === 'development',
@@ -44,10 +63,13 @@ export async function POST(req: Request) {
       userId || 'demo-user'
     );
 
+    // Convert UIMessage[] from useChat to ModelMessage[] for streamText
+    const modelMessages = convertToModelMessages(messages);
+
     // Stream response with automatic memory integration
     const result = await streamText({
       model: cortexMemory(openai('gpt-4o-mini')),
-      messages,
+      messages: modelMessages,
       system: `You are a helpful AI assistant with long-term memory powered by Cortex.
 
 Your capabilities:
@@ -68,7 +90,8 @@ Example interactions:
 - User: "What do you know about me?" → List everything you remember`,
     });
 
-    return result.toDataStreamResponse();
+    // AI SDK v5 - use toUIMessageStreamResponse for useChat compatibility
+    return result.toUIMessageStreamResponse();
   } catch (error) {
     console.error('[Chat API Error]', error);
 

@@ -2,6 +2,8 @@
 
 This is the official quickstart demo for **Cortex Memory** with the **Vercel AI SDK**. It provides an interactive visualization of how data flows through the Cortex memory orchestration system in real-time.
 
+> **SDK v0.23.0**: Now with unified `recall()` API for multi-layer retrieval! Retrieves context from vector memories, facts, and graph relationships in a single orchestrated call - mirroring how `remember()` handles storage.
+
 ## Features
 
 - 🧠 **Real-time Memory Visualization** - Watch data flow through all Cortex layers (Memory Space → User → Agent → Conversation → Vector → Facts → Graph)
@@ -9,6 +11,7 @@ This is the official quickstart demo for **Cortex Memory** with the **Vercel AI 
 - 📊 **Layer Flow Diagram** - Animated visualization showing latency and data at each layer
 - 🔀 **Memory Space Switching** - Demonstrate multi-tenant isolation by switching between memory spaces
 - ⚡ **Streaming Support** - Full streaming with progressive fact extraction
+- 🔄 **Smart Fact Deduplication** - Semantic matching prevents duplicate facts across sessions (v0.22.0)
 
 ## Prerequisites
 
@@ -36,7 +39,7 @@ If you want to use the published npm packages instead, update `package.json`:
 ```json
 {
   "dependencies": {
-    "@cortexmemory/sdk": "^0.21.0",
+    "@cortexmemory/sdk": "^0.23.0",
     "@cortexmemory/vercel-ai-provider": "^1.0.0",
     // ... other deps
   }
@@ -91,10 +94,12 @@ When you send a message, you'll see it flow through these layers:
 
 ### Key Features Demonstrated
 
-1. **agentId Requirement** - SDK v0.17.0+ requires `agentId` for all user-agent conversations
-2. **Automatic Fact Extraction** - LLM-powered extraction of preferences, identity, relationships
-3. **Multi-tenant Isolation** - Switch memory spaces to see complete isolation
-4. **Streaming with Memory** - Full streaming support with progressive storage
+1. **Unified Retrieval (recall)** - SDK v0.23.0 retrieves from vector + facts + graph in one call
+2. **agentId Requirement** - SDK v0.17.0+ requires `agentId` for all user-agent conversations
+3. **Automatic Fact Extraction** - LLM-powered extraction of preferences, identity, relationships
+4. **Semantic Fact Deduplication** - SDK v0.22.0 automatically prevents duplicate facts using embedding similarity
+5. **Multi-tenant Isolation** - Switch memory spaces to see complete isolation
+6. **Streaming with Memory** - Full streaming support with progressive storage
 
 ## Configuration
 
@@ -102,8 +107,10 @@ The chat API route at `/app/api/chat/route.ts` shows how to configure the Cortex
 
 ```typescript
 import { createCortexMemory } from '@cortexmemory/vercel-ai-provider';
-import { openai } from '@ai-sdk/openai';
-import { streamText } from 'ai';
+import { openai, createOpenAI } from '@ai-sdk/openai';
+import { streamText, embed } from 'ai';
+
+const openaiClient = createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
@@ -120,6 +127,17 @@ const cortexMemory = createCortexMemory({
   // Optional features
   enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === 'true',
   enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === 'true',
+  
+  // Embedding provider for semantic fact deduplication (v0.22.0)
+  embeddingProvider: {
+    generate: async (text) => {
+      const result = await embed({
+        model: openaiClient.embedding('text-embedding-3-small'),
+        value: text,
+      });
+      return result.embedding;
+    },
+  },
 });
 
 const result = await streamText({
@@ -188,6 +206,36 @@ Enable fact extraction via environment variable:
 
 ```env
 CORTEX_FACT_EXTRACTION=true
+```
+
+### Duplicate facts being created
+
+Ensure you have `embeddingProvider` configured for optimal semantic deduplication:
+
+```typescript
+const cortexMemory = createCortexMemory({
+  // ... other config
+  embeddingProvider: {
+    generate: async (text) => {
+      const result = await embed({
+        model: openaiClient.embedding('text-embedding-3-small'),
+        value: text,
+      });
+      return result.embedding;
+    },
+  },
+});
+```
+
+Without `embeddingProvider`, deduplication falls back to `structural` matching (subject + predicate + object), which is less accurate for semantically similar facts.
+
+To disable deduplication entirely (not recommended):
+
+```typescript
+const cortexMemory = createCortexMemory({
+  // ... other config
+  factDeduplication: false, // Uses pre-v0.22.0 behavior
+});
 ```
 
 ## License

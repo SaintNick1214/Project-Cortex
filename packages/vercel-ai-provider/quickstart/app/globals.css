@@ -1,6 +1,23 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Source paths for v4 */
+@source "../components/**/*.{js,ts,jsx,tsx}";
+@source "./**/*.{js,ts,jsx,tsx}";
+
+/* Custom theme for v4 */
+@theme {
+  --color-cortex-50: #f0f7ff;
+  --color-cortex-100: #e0effe;
+  --color-cortex-200: #b9dffc;
+  --color-cortex-300: #7cc5fa;
+  --color-cortex-400: #36a8f5;
+  --color-cortex-500: #0c8ce6;
+  --color-cortex-600: #006fc4;
+  --color-cortex-700: #0159a0;
+  --color-cortex-800: #064b84;
+  --color-cortex-900: #0b3f6d;
+  --color-cortex-950: #072848;
+}
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {

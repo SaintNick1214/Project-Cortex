@@ -5,16 +5,15 @@
  */
 
 import { Cortex } from "@cortexmemory/sdk";
-import type { MemoryEntry } from "@cortexmemory/sdk";
+import type { RecallResult } from "@cortexmemory/sdk";
 import type { CortexMemoryConfig, Logger, LayerEvent, MemoryLayer, OrchestrationSummary } from "./types";
 import {
   resolveUserId,
   resolveConversationId,
   resolveAgentId,
   resolveAgentName,
-  injectMemoryContext,
   getLastUserMessage,
-} from "./middleware";
+} from "./memory-middleware";
 import { createLogger } from "./types";
 import { createCompletionStream } from "./streaming";
 
@@ -73,25 +72,19 @@ export class CortexMemoryProvider {
 
     this.logger.debug(`User: ${userId}, Conversation: ${conversationId}`);
 
-    // Step 2: Search for relevant memories (if enabled)
-    let memories: MemoryEntry[] = [];
+    // Step 2: Recall relevant context (if enabled)
+    let recallResult: RecallResult | null = null;
     const lastUserMessage = getLastUserMessage(options.prompt);
 
     if (this.config.enableMemorySearch !== false && lastUserMessage) {
-      memories = await this.searchRelevantMemories(lastUserMessage, userId);
-      this.logger.info(`Found ${memories.length} relevant memories`);
+      recallResult = await this.recallContext(lastUserMessage, userId);
+      this.logger.info(`Recalled ${recallResult?.totalResults || 0} items from memory`);
     }
 
-    // Step 3: Inject memory context (cast to work around type complexity)
-    const augmentedPrompt =
-      memories.length > 0
-        ? (injectMemoryContext(
-            options.prompt,
-            memories,
-            this.config,
-            this.logger,
-          ) as typeof options.prompt)
-        : options.prompt;
+    // Step 3: Inject memory context using recall()'s pre-formatted context
+    const augmentedPrompt = recallResult?.context
+      ? this.injectRecallContext(options.prompt, recallResult.context)
+      : options.prompt;
 
     // Step 4: Call underlying LLM
     const result = await this.underlyingModel.doGenerate({
@@ -166,25 +159,19 @@ export class CortexMemoryProvider {
 
     this.logger.debug(`User: ${userId}, Conversation: ${conversationId}`);
 
-    // Step 2: Search for relevant memories (if enabled)
-    let memories: MemoryEntry[] = [];
+    // Step 2: Recall relevant context (if enabled)
+    let recallResult: RecallResult | null = null;
     const lastUserMessage = getLastUserMessage(options.prompt);
 
     if (this.config.enableMemorySearch !== false && lastUserMessage) {
-      memories = await this.searchRelevantMemories(lastUserMessage, userId);
-      this.logger.info(`Found ${memories.length} relevant memories`);
+      recallResult = await this.recallContext(lastUserMessage, userId);
+      this.logger.info(`Recalled ${recallResult?.totalResults || 0} items from memory`);
     }
 
-    // Step 3: Inject memory context (cast to work around type complexity)
-    const augmentedPrompt =
-      memories.length > 0
-        ? (injectMemoryContext(
-            options.prompt,
-            memories,
-            this.config,
-            this.logger,
-          ) as typeof options.prompt)
-        : options.prompt;
+    // Step 3: Inject memory context using recall()'s pre-formatted context
+    const augmentedPrompt = recallResult?.context
+      ? this.injectRecallContext(options.prompt, recallResult.context)
+      : options.prompt;
 
     // Step 4: Call underlying LLM stream
     const streamResult = await this.underlyingModel.doStream({
@@ -211,47 +198,128 @@ export class CortexMemoryProvider {
   }
 
   /**
-   * Search for relevant memories
+   * Recall context using the unified recall() API
+   * 
+   * This uses cortex.memory.recall() which orchestrates retrieval across all layers:
+   * - Vector memories (Layer 2)
+   * - Facts (Layer 3) - searched directly, not just as enrichment
+   * - Graph relationships (Layer 4) - if configured
+   * 
+   * Returns a RecallResult with pre-formatted LLM context.
    */
-  private async searchRelevantMemories(
+  private async recallContext(
     query: string,
     userId: string,
-  ): Promise<MemoryEntry[]> {
+  ): Promise<RecallResult | null> {
     try {
-      // Generate embedding if configured
+      // Generate embedding if configured (recommended for better relevance)
       let embedding: number[] | undefined;
       if (this.config.embeddingProvider) {
         try {
           embedding = await this.config.embeddingProvider.generate(query);
           this.logger.debug(
-            `Generated embedding for search: ${embedding.length} dimensions`,
+            `Generated embedding for recall: ${embedding.length} dimensions`,
           );
         } catch (error) {
           this.logger.warn(
-            "Failed to generate embedding, using keyword search:",
+            "Failed to generate embedding, recall will use keyword search:",
             error,
           );
         }
       }
 
-      // Search Cortex
-      const memories = await this.cortex.memory.search(
-        this.config.memorySpaceId,
+      // Use recall() for full orchestrated retrieval across all layers
+      const result = await this.cortex.memory.recall({
+        memorySpaceId: this.config.memorySpaceId,
         query,
-        {
-          embedding,
-          limit: this.config.memorySearchLimit || 5,
-          minScore: this.config.minMemoryRelevance || 0.7,
-          userId,
-        },
+        embedding,
+        userId,
+        limit: this.config.memorySearchLimit || 20,
+        // recall() uses sensible defaults: vector + facts + graph (if configured)
+        // No need to explicitly enable sources - batteries included
+        formatForLLM: true, // Get pre-formatted context string
+        includeConversation: true, // Include ACID conversation data
+      });
+
+      this.logger.debug(
+        `Recall complete: ${result.totalResults} items in ${result.queryTimeMs}ms ` +
+        `(vector: ${result.sources.vector.count}, facts: ${result.sources.facts.count}, ` +
+        `graph: ${result.sources.graph.count})`
       );
 
-      return memories as MemoryEntry[];
+      return result;
     } catch (error) {
-      this.logger.error("Memory search failed:", error);
-      // Return empty array to allow LLM call to continue
-      return [];
+      this.logger.error("Memory recall failed:", error);
+      // Return null to allow LLM call to continue without context
+      return null;
     }
+  }
+
+  /**
+   * Inject recall context into the prompt
+   * 
+   * Uses the pre-formatted context string from recall() result.
+   */
+  private injectRecallContext(messages: any[], contextString: string): any[] {
+    if (!contextString) {
+      return messages;
+    }
+
+    const strategy = this.config.contextInjectionStrategy || "system";
+
+    if (strategy === "system") {
+      // Check if first message is system message
+      const hasSystemMessage =
+        messages.length > 0 && messages[0].role === "system";
+
+      if (hasSystemMessage) {
+        // Append to existing system message
+        this.logger.debug("Injecting recall context into existing system message");
+        return [
+          {
+            ...messages[0],
+            content: `${messages[0].content}\n\n${contextString}`,
+          },
+          ...messages.slice(1),
+        ];
+      } else {
+        // Create new system message at start
+        this.logger.debug("Creating new system message with recall context");
+        return [
+          {
+            role: "system" as const,
+            content: contextString,
+          },
+          ...messages,
+        ];
+      }
+    } else if (strategy === "user") {
+      // Append to last user message
+      const lastUserIndex = messages.findLastIndex(
+        (m: any) => m.role === "user",
+      );
+
+      if (lastUserIndex === -1) {
+        this.logger.warn("No user message found, cannot inject context");
+        return messages;
+      }
+
+      this.logger.debug(
+        `Injecting recall context into user message at index ${lastUserIndex}`,
+      );
+
+      return [
+        ...messages.slice(0, lastUserIndex),
+        {
+          ...messages[lastUserIndex],
+          content: `${messages[lastUserIndex].content}\n\nRelevant context:\n${contextString}`,
+        },
+        ...messages.slice(lastUserIndex + 1),
+      ];
+    }
+
+    // Default: return original messages
+    return messages;
   }
 
   /**

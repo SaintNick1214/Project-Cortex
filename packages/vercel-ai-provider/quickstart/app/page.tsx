@@ -84,9 +84,9 @@ export default function Home() {
       <footer className="border-t border-white/10 px-6 py-3">
         <div className="max-w-7xl mx-auto flex items-center justify-between text-sm text-gray-500">
           <div className="flex items-center gap-4">
-            <span>Cortex SDK v0.21.0</span>
+            <span>Cortex SDK v0.22.0</span>
             <span>•</span>
-            <span>Vercel AI SDK v4</span>
+            <span>Vercel AI SDK v5</span>
           </div>
           <a
             href="https://cortexmemory.dev/docs"
