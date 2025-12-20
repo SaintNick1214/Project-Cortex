@@ -19,6 +19,116 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.24.0] - 2025-12-20
+
+#### 🧠 Belief Revision System
+
+**Intelligent fact management that prevents duplicates and maintains knowledge consistency.** When facts are extracted or stored, the Belief Revision System automatically detects conflicts, resolves them using LLM-based reasoning, and maintains a complete audit trail.
+
+**The Problem Solved:**
+
+Previously, fact storage was append-only with basic deduplication:
+- Conflicting facts accumulated ("User likes blue" → later "User prefers purple")
+- No semantic understanding of when facts should update vs. add
+- No history of how knowledge evolved over time
+
+**Now with Belief Revision:**
+
+```typescript
+// Automatic conflict detection and resolution
+const result = await cortex.facts.revise({
+  memorySpaceId: "user-123-space",
+  fact: {
+    fact: "User prefers purple",
+    subject: "user-123",
+    predicate: "favorite color",
+    object: "purple",
+    confidence: 90,
+  },
+});
+
+console.log(result.action); // "SUPERSEDE" - old blue fact marked as superseded
+console.log(result.reason); // "Color preference has changed"
+
+// Preview conflicts before committing
+const conflicts = await cortex.facts.checkConflicts({
+  memorySpaceId: "user-123-space",
+  fact: { ... },
+});
+
+if (conflicts.hasConflicts) {
+  console.log(`Recommended: ${conflicts.recommendedAction}`);
+}
+
+// Complete audit trail
+const history = await cortex.facts.history("fact-123");
+// Shows CREATE → UPDATE → SUPERSEDE chain
+
+// Activity analytics
+const summary = await cortex.facts.getActivitySummary("user-123-space", 24);
+// { CREATE: 15, UPDATE: 3, SUPERSEDE: 2, DELETE: 0 }
+```
+
+**Pipeline Architecture:**
+
+```
+NEW FACT → [Slot Match] → [Semantic Match] → [LLM Decision] → Execute
+               │                │                  │
+           Fast O(1)     Embedding-based      Nuanced reasoning
+           matching       similarity          UPDATE/SUPERSEDE/NONE/ADD
+```
+
+**Key Features:**
+
+- ✅ **Slot-Based Matching** - Fast O(1) conflict detection using predicate classification
+- ✅ **Semantic Similarity** - Embedding-based matching for related facts
+- ✅ **LLM Conflict Resolution** - Nuanced decisions with configurable models
+- ✅ **History Logging** - Complete audit trail of all fact changes
+- ✅ **Supersession Chains** - Track how facts evolved over time
+- ✅ **Activity Summaries** - Analytics on fact changes per memory space
+- ✅ **Graph Synchronization** - Supersession relationships synced to graph database
+
+**New API Methods:**
+
+| Method | Purpose |
+|--------|---------|
+| `facts.revise()` | Full belief revision pipeline |
+| `facts.checkConflicts()` | Preview conflicts without executing |
+| `facts.supersede()` | Manually supersede one fact with another |
+| `facts.history()` | Get change history for a fact |
+| `facts.getSupersessionChain()` | Get lineage of fact versions |
+| `facts.getActivitySummary()` | Analytics on fact changes |
+
+**Configuration:**
+
+```typescript
+// Configure belief revision behavior
+cortex.facts.configureBeliefRevision(llmClient, {
+  slotMatching: {
+    enabled: true,
+    predicateClasses: { /* custom patterns */ },
+  },
+  semanticMatching: {
+    enabled: true,
+    threshold: 0.7,
+  },
+  llmResolution: {
+    enabled: true,
+    model: "gpt-4o-mini",
+  },
+  history: {
+    enabled: true,
+    retentionDays: 90,
+  },
+});
+```
+
+**New Convex Table:**
+
+Added `factHistory` table for audit trail with indexes for efficient querying by factId, memorySpace, action type, userId, and timestamp.
+
+---
+
 ### [0.23.0] - 2025-12-19
 
 #### 🔍 Unified Context Retrieval with `recall()`

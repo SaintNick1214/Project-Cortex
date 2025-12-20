@@ -541,7 +541,7 @@ interface RememberParams {
 interface RememberOptions {
   syncToGraph?: boolean; // Sync to graph database (default: true if configured)
 
-  // NEW in v0.23.0: Belief Revision options
+  // NEW in v0.24.0: Belief Revision options
   beliefRevision?: {
     enabled?: boolean; // Enable belief revision (default: true if configured)
     slotMatching?: boolean; // Enable slot matching (default: true)
@@ -550,9 +550,9 @@ interface RememberOptions {
 }
 ```
 
-### Automatic Fact Revision in `remember()` (v0.23.0+)
+### Automatic Fact Revision in `remember()` (v0.24.0+)
 
-> **New in v0.23.0**: When belief revision is configured, extracted facts automatically go through the revision pipeline.
+> **New in v0.24.0**: When belief revision is configured, extracted facts automatically go through the revision pipeline.
 
 When you call `remember()` with fact extraction enabled and belief revision configured, the SDK automatically:
 
@@ -643,7 +643,7 @@ interface RememberResult {
   memories: MemoryEntry[];
   facts: FactRecord[];  // The facts that were actually stored
 
-  // NEW in v0.23.0: Revision details (when belief revision is enabled)
+  // NEW in v0.24.0: Revision details (when belief revision is enabled)
   factRevisions?: Array<{
     action: "CREATE" | "UPDATE" | "SUPERSEDE" | "NONE";
     fact: FactRecord;
@@ -764,7 +764,7 @@ CortexError(
 
 ### recall()
 
-**NEW in v0.23.0** - Unified orchestrated retrieval across all memory layers.
+**NEW in v0.24.0** - Unified orchestrated retrieval across all memory layers.
 
 > **Design Philosophy**: `recall()` is the retrieval counterpart to `remember()`. It provides **total and complete orchestrated context retrieval** by default - batteries included.
 
