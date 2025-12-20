@@ -26,6 +26,18 @@ from ..types import (
     UpdateFactInput,
     UpdateFactOptions,
 )
+from .belief_revision import (
+    BeliefRevisionConfig,
+    BeliefRevisionLLMClient,
+    BeliefRevisionService,
+    ConflictCandidate,
+    ConflictCheckResult,
+    LLMResolutionConfigOptions,
+    ReviseParams,
+    ReviseResult,
+    SemanticMatchingConfigOptions,
+    SlotMatchingConfigOptions,
+)
 from .deduplication import (
     DeduplicationConfig,
     DeduplicationStrategy,
@@ -33,6 +45,27 @@ from .deduplication import (
     FactCandidate,
     FactDeduplicationService,
     StoreWithDedupResult,
+)
+from .history import (
+    ActionCounts,
+    ActivitySummary,
+    ChangeFilter,
+    FactChangeEvent,
+    FactChangePipeline,
+    FactHistoryService,
+    LogEventParams,
+    SupersessionChainEntry,
+)
+from .slot_matching import (
+    DEFAULT_PREDICATE_CLASSES,
+    SlotConflictResult,
+    SlotMatch,
+    SlotMatchingConfig,
+    SlotMatchingService,
+    classify_predicate,
+    extract_slot,
+    normalize_predicate,
+    normalize_subject,
 )
 from .validators import (
     FactsValidationError,
@@ -80,6 +113,8 @@ class FactsAPI:
         client: Any,
         graph_adapter: Optional[Any] = None,
         resilience: Optional[Any] = None,
+        llm_client: Optional[BeliefRevisionLLMClient] = None,
+        belief_revision_config: Optional[BeliefRevisionConfig] = None,
     ) -> None:
         """
         Initialize Facts API.
@@ -88,11 +123,25 @@ class FactsAPI:
             client: Convex client instance
             graph_adapter: Optional graph database adapter for sync
             resilience: Optional resilience layer for overload protection
+            llm_client: Optional LLM client for belief revision
+            belief_revision_config: Optional belief revision configuration
         """
         self.client = client
         self.graph_adapter = graph_adapter
         self._resilience = resilience
         self._dedup_service = FactDeduplicationService(client)
+        self._llm_client = llm_client
+        self._history_service = FactHistoryService(client, resilience)
+
+        # Initialize belief revision if LLM client is provided or explicitly configured
+        self._belief_revision_service: Optional[BeliefRevisionService] = None
+        if llm_client or belief_revision_config:
+            self._belief_revision_service = BeliefRevisionService(
+                client,
+                llm_client,
+                graph_adapter,
+                belief_revision_config,
+            )
 
     async def _execute_with_resilience(
         self, operation: Any, operation_name: str
@@ -1203,6 +1252,289 @@ class FactsAPI:
 
         return cast(Dict[str, Any], result)
 
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Belief Revision Methods
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    def configure_belief_revision(
+        self,
+        llm_client: Optional[BeliefRevisionLLMClient] = None,
+        config: Optional[BeliefRevisionConfig] = None,
+    ) -> None:
+        """
+        Configure or update the belief revision service.
+
+        Args:
+            llm_client: Optional LLM client for conflict resolution
+            config: Optional belief revision configuration
+
+        Example:
+            >>> cortex.facts.configure_belief_revision(
+            ...     llm_client=my_llm_client,
+            ...     config=BeliefRevisionConfig(
+            ...         slot_matching=SlotMatchingConfigOptions(enabled=True),
+            ...         semantic_matching=SemanticMatchingConfigOptions(threshold=0.7),
+            ...     )
+            ... )
+        """
+        self._belief_revision_service = BeliefRevisionService(
+            self.client,
+            llm_client or self._llm_client,
+            self.graph_adapter,
+            config,
+        )
+
+    async def revise(self, params: ReviseParams) -> ReviseResult:
+        """
+        Evaluate a new fact and determine the appropriate action using belief revision.
+
+        This is the intelligent entry point for fact storage that:
+        1. Checks for slot-based conflicts (fast path)
+        2. Checks for semantic conflicts (catch-all)
+        3. Uses LLM to determine the best action
+        4. Executes the decision (ADD, UPDATE, SUPERSEDE, or NONE)
+
+        Args:
+            params: Revise parameters including the fact to evaluate
+
+        Returns:
+            ReviseResult with action taken and resulting fact
+
+        Raises:
+            ValueError: If belief revision is not configured
+
+        Example:
+            >>> result = await cortex.facts.revise(ReviseParams(
+            ...     memory_space_id="space-1",
+            ...     fact=ConflictCandidate(
+            ...         fact="User prefers purple",
+            ...         subject="user-123",
+            ...         predicate="favorite color",
+            ...         object="purple",
+            ...         confidence=90,
+            ...     ),
+            ... ))
+            >>> print(f"Action: {result.action}, Reason: {result.reason}")
+        """
+        if not self._belief_revision_service:
+            raise ValueError(
+                "Belief revision is not configured. Call configure_belief_revision() first "
+                "or provide an llm_client when initializing FactsAPI."
+            )
+
+        validate_memory_space_id(params.memory_space_id)
+        validate_required_string(params.fact.fact, "fact")
+        validate_confidence(params.fact.confidence, "confidence")
+
+        return await self._belief_revision_service.revise(params)
+
+    async def check_conflicts(self, params: ReviseParams) -> ConflictCheckResult:
+        """
+        Check for conflicts without executing (preview mode).
+
+        This is useful for understanding what would happen if you stored a fact,
+        without actually making any changes to the database.
+
+        Args:
+            params: Revise parameters including the fact to check
+
+        Returns:
+            ConflictCheckResult with conflict details and recommended action
+
+        Raises:
+            ValueError: If belief revision is not configured
+
+        Example:
+            >>> result = await cortex.facts.check_conflicts(ReviseParams(
+            ...     memory_space_id="space-1",
+            ...     fact=ConflictCandidate(
+            ...         fact="User now lives in SF",
+            ...         subject="user-123",
+            ...         predicate="lives in",
+            ...         object="San Francisco",
+            ...         confidence=90,
+            ...     ),
+            ... ))
+            >>> if result.has_conflicts:
+            ...     print(f"Found {len(result.slot_conflicts)} slot conflicts")
+            ...     print(f"Recommended action: {result.recommended_action}")
+        """
+        if not self._belief_revision_service:
+            raise ValueError(
+                "Belief revision is not configured. Call configure_belief_revision() first "
+                "or provide an llm_client when initializing FactsAPI."
+            )
+
+        validate_memory_space_id(params.memory_space_id)
+        validate_required_string(params.fact.fact, "fact")
+        validate_confidence(params.fact.confidence, "confidence")
+
+        return await self._belief_revision_service.check_conflicts(params)
+
+    async def supersede(
+        self,
+        *,
+        memory_space_id: str,
+        old_fact_id: str,
+        new_fact_id: str,
+        reason: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """
+        Manually supersede one fact with another.
+
+        This marks the old fact as superseded (sets validUntil) and establishes
+        the relationship between the two facts.
+
+        Args:
+            memory_space_id: Memory space ID
+            old_fact_id: ID of the fact to supersede
+            new_fact_id: ID of the superseding fact
+            reason: Optional reason for the supersession
+
+        Returns:
+            Dict with supersession result
+
+        Example:
+            >>> result = await cortex.facts.supersede(
+            ...     memory_space_id="space-1",
+            ...     old_fact_id="fact-123",
+            ...     new_fact_id="fact-456",
+            ...     reason="User stated updated preference",
+            ... )
+            >>> if result["superseded"]:
+            ...     print("Fact superseded successfully")
+        """
+        import time
+
+        validate_memory_space_id(memory_space_id)
+        validate_required_string(old_fact_id, "old_fact_id")
+        validate_fact_id_format(old_fact_id)
+        validate_required_string(new_fact_id, "new_fact_id")
+        validate_fact_id_format(new_fact_id)
+
+        # Verify old fact exists
+        old_fact = await self.get(memory_space_id, old_fact_id)
+        if not old_fact:
+            raise ValueError(f"Old fact not found: {old_fact_id}")
+
+        # Verify new fact exists
+        new_fact = await self.get(memory_space_id, new_fact_id)
+        if not new_fact:
+            raise ValueError(f"New fact not found: {new_fact_id}")
+
+        # Mark old fact as superseded
+        await self.update(
+            memory_space_id,
+            old_fact_id,
+            {"validUntil": int(time.time() * 1000)},
+        )
+
+        # Log the supersession event
+        await self._history_service.log(LogEventParams(
+            fact_id=old_fact_id,
+            memory_space_id=memory_space_id,
+            action="SUPERSEDE",
+            old_value=old_fact.fact,
+            new_value=new_fact.fact,
+            superseded_by=new_fact_id,
+            reason=reason,
+        ))
+
+        return {
+            "superseded": True,
+            "oldFactId": old_fact_id,
+            "newFactId": new_fact_id,
+            "reason": reason,
+        }
+
+    async def history(self, fact_id: str, limit: Optional[int] = None) -> List[FactChangeEvent]:
+        """
+        Get change history for a specific fact.
+
+        Args:
+            fact_id: The fact ID to get history for
+            limit: Max events to return (default: 100)
+
+        Returns:
+            List of change events
+
+        Example:
+            >>> events = await cortex.facts.history("fact-123")
+            >>> for event in events:
+            ...     print(f"{event.action}: {event.reason}")
+        """
+        validate_required_string(fact_id, "fact_id")
+        validate_fact_id_format(fact_id)
+
+        return await self._history_service.get_history(fact_id, limit)
+
+    async def get_changes(self, filter: ChangeFilter) -> List[FactChangeEvent]:
+        """
+        Get changes in a time range with filters.
+
+        Args:
+            filter: Filter parameters
+
+        Returns:
+            List of change events
+
+        Example:
+            >>> from datetime import datetime, timedelta
+            >>> changes = await cortex.facts.get_changes(ChangeFilter(
+            ...     memory_space_id="space-1",
+            ...     after=datetime.now() - timedelta(hours=24),
+            ...     action="SUPERSEDE",
+            ... ))
+        """
+        validate_memory_space_id(filter.memory_space_id)
+
+        return await self._history_service.get_changes(filter)
+
+    async def get_supersession_chain(self, fact_id: str) -> List[SupersessionChainEntry]:
+        """
+        Get the supersession chain for a fact.
+
+        Returns the chain of facts that led to the current state,
+        showing how the knowledge evolved over time.
+
+        Args:
+            fact_id: The fact ID to trace
+
+        Returns:
+            List of chain entries from oldest to newest
+
+        Example:
+            >>> chain = await cortex.facts.get_supersession_chain("fact-456")
+            >>> for entry in chain:
+            ...     print(f"{entry.fact_id} -> {entry.superseded_by}")
+        """
+        validate_required_string(fact_id, "fact_id")
+        validate_fact_id_format(fact_id)
+
+        return await self._history_service.get_supersession_chain(fact_id)
+
+    async def get_activity_summary(
+        self, memory_space_id: str, hours: int = 24
+    ) -> ActivitySummary:
+        """
+        Get activity summary for a time period.
+
+        Args:
+            memory_space_id: Memory space to query
+            hours: Number of hours to look back (default: 24)
+
+        Returns:
+            Activity summary with counts and statistics
+
+        Example:
+            >>> summary = await cortex.facts.get_activity_summary("space-1", 24)
+            >>> print(f"Total events: {summary.total_events}")
+            >>> print(f"Supersessions: {summary.action_counts.SUPERSEDE}")
+        """
+        validate_memory_space_id(memory_space_id)
+
+        return await self._history_service.get_activity_summary(memory_space_id, hours)
+
 
 __all__ = [
     "FactsAPI",
@@ -1215,5 +1547,35 @@ __all__ = [
     "FactDeduplicationService",
     "StoreWithDedupResult",
     "StoreFactWithDedupOptions",
+    # Belief revision exports
+    "BeliefRevisionConfig",
+    "BeliefRevisionLLMClient",
+    "BeliefRevisionService",
+    "ConflictCandidate",
+    "ConflictCheckResult",
+    "LLMResolutionConfigOptions",
+    "ReviseParams",
+    "ReviseResult",
+    "SemanticMatchingConfigOptions",
+    "SlotMatchingConfigOptions",
+    # History exports
+    "ActionCounts",
+    "ActivitySummary",
+    "ChangeFilter",
+    "FactChangeEvent",
+    "FactChangePipeline",
+    "FactHistoryService",
+    "LogEventParams",
+    "SupersessionChainEntry",
+    # Slot matching exports
+    "DEFAULT_PREDICATE_CLASSES",
+    "SlotConflictResult",
+    "SlotMatch",
+    "SlotMatchingConfig",
+    "SlotMatchingService",
+    "classify_predicate",
+    "extract_slot",
+    "normalize_predicate",
+    "normalize_subject",
 ]
 
