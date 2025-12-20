@@ -4,11 +4,16 @@
 
 ### Added
 
+- **Top-level `cortex deploy` and `cortex update` commands** - Most commonly used commands are now available at the root level for quick access
+  - `cortex deploy` - Deploy schema and functions to Convex
+  - `cortex update` - Update @cortexmemory/sdk and convex packages
+  - The old `cortex convex deploy` and `cortex convex update` still work but show a deprecation notice
+
 - **Automatic schema sync from SDK** - Convex schema files are now automatically synced from `@cortexmemory/sdk` before deploy/dev/init
   - Detects outdated schema files by comparing file hashes
   - Copies latest schema from SDK's bundled `convex-dev/` folder
   - Shows user-friendly output: `↓ Synced schema from @cortexmemory/sdk v0.22.0`
-  - Affected commands: `cortex convex deploy`, `cortex convex dev`, `cortex convex init`
+  - Affected commands: `cortex deploy`, `cortex convex dev`, `cortex convex init`
   - Use `--skip-sync` flag to skip automatic sync if needed
 
 ## [0.22.2] - 2025-12-19

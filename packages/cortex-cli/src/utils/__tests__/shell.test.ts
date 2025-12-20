@@ -8,7 +8,7 @@ import { describe, it, expect } from "@jest/globals";
 import {
   isValidProjectName,
   isLocalConvexUrl,
-} from "../shell.js";
+} from "../shell-utils.js";
 
 describe("shell utilities", () => {
   describe("isValidProjectName", () => {
