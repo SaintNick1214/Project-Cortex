@@ -285,9 +285,9 @@ console.log(semanticResult.deduplication?.matchedExisting); // true
 console.log(semanticResult.deduplication?.similarityScore); // ~0.92
 ```
 
-## Belief Revision System (v0.23.0+)
+## Belief Revision System (v0.24.0+)
 
-> **New in v0.23.0**: Intelligent fact management that prevents duplicates and maintains knowledge consistency.
+> **New in v0.24.0**: Intelligent fact management that prevents duplicates and maintains knowledge consistency.
 
 The Belief Revision System determines whether a new fact should:
 - **CREATE**: Add as new fact (no conflicts)
@@ -348,7 +348,7 @@ cortex.facts.configureBeliefRevision(llmClient, {
 
 ### `facts.revise()`
 
-> **New in v0.23.0**: Intelligently store a fact using the belief revision pipeline.
+> **New in v0.24.0**: Intelligently store a fact using the belief revision pipeline.
 
 **Signature:**
 
@@ -424,7 +424,7 @@ if (result.pipeline.llmResolution?.executed) {
 
 ### `facts.checkConflicts()`
 
-> **New in v0.23.0**: Preview conflicts without executing - useful for user confirmation flows.
+> **New in v0.24.0**: Preview conflicts without executing - useful for user confirmation flows.
 
 **Signature:**
 
@@ -478,7 +478,7 @@ if (conflicts.hasConflicts) {
 
 ### `facts.supersede()`
 
-> **New in v0.23.0**: Manually supersede a fact with another.
+> **New in v0.24.0**: Manually supersede a fact with another.
 
 **Signature:**
 
@@ -509,7 +509,7 @@ console.log(oldFact.validUntil); // Set to supersession time
 
 ### `facts.history()`
 
-> **New in v0.23.0**: Get the change history for a fact.
+> **New in v0.24.0**: Get the change history for a fact.
 
 **Signature:**
 
@@ -563,7 +563,7 @@ history.forEach((event) => {
 
 ### `facts.getSupersessionChain()`
 
-> **New in v0.23.0**: Get the evolution of a fact over time.
+> **New in v0.24.0**: Get the evolution of a fact over time.
 
 **Signature:**
 
@@ -589,7 +589,7 @@ chain.forEach((entry, i) => {
 
 ### `facts.getActivitySummary()`
 
-> **New in v0.23.0**: Get activity summary for a memory space.
+> **New in v0.24.0**: Get activity summary for a memory space.
 
 **Signature:**
 
