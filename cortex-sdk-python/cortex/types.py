@@ -994,6 +994,139 @@ class ForgetResult:
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Recall() Orchestration API - Unified Context Retrieval
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+@dataclass
+class RecallSourceConfig:
+    """Configuration for which sources to search in recall()."""
+    vector: bool = True  # Search vector memories (Layer 2)
+    facts: bool = True   # Search facts directly (Layer 3)
+    graph: bool = True   # Query graph for relationships (if configured)
+
+
+@dataclass
+class RecallGraphExpansionConfig:
+    """Configuration for graph expansion in recall()."""
+    enabled: bool = True           # Enable graph expansion (default: True if graph configured)
+    max_depth: int = 2             # Maximum traversal depth
+    relationship_types: Optional[List[str]] = None  # Types to follow (None = all)
+    expand_from_facts: bool = True     # Expand from discovered facts
+    expand_from_memories: bool = True  # Expand from discovered memories
+
+
+@dataclass
+class RecallParams:
+    """
+    Parameters for the recall() orchestration API.
+
+    Batteries included by default - just provide memory_space_id and query
+    to get full orchestrated retrieval across all layers.
+
+    Example:
+        >>> # Minimal usage - full orchestration
+        >>> result = await cortex.memory.recall(
+        ...     RecallParams(
+        ...         memory_space_id='user-123-space',
+        ...         query='user preferences',
+        ...     )
+        ... )
+        >>>
+        >>> # Inject context into LLM
+        >>> response = await llm.chat(
+        ...     messages=[
+        ...         {'role': 'system', 'content': f'You are helpful.\\n\\n{result.context}'},
+        ...         {'role': 'user', 'content': user_message},
+        ...     ],
+        ... )
+    """
+    # Required - Just these two for basic usage
+    memory_space_id: str
+    query: str
+
+    # Optional - All have sensible defaults for AI chatbot use cases
+    embedding: Optional[List[float]] = None  # Pre-computed embedding for semantic search
+    user_id: Optional[str] = None            # Filter by user ID (common in H2A chatbots)
+
+    # Source selection - ALL ENABLED BY DEFAULT
+    sources: Optional[RecallSourceConfig] = None
+
+    # Graph expansion configuration - ENABLED BY DEFAULT if graph configured
+    graph_expansion: Optional[RecallGraphExpansionConfig] = None
+
+    # Filtering (optional refinement)
+    min_importance: Optional[int] = None    # Minimum importance score (0-100)
+    min_confidence: Optional[int] = None    # Minimum confidence for facts (0-100)
+    tags: Optional[List[str]] = None        # Filter by tags
+    created_after: Optional[datetime] = None   # Only items created after this date
+    created_before: Optional[datetime] = None  # Only items created before this date
+
+    # Result options - OPTIMIZED FOR LLM INJECTION BY DEFAULT
+    limit: Optional[int] = None              # Maximum results (default: 20)
+    include_conversation: Optional[bool] = None  # Enrich with ACID conversation (default: True)
+    format_for_llm: Optional[bool] = None    # Generate LLM-ready context (default: True)
+
+
+@dataclass
+class RecallGraphContext:
+    """Graph context for a recall item."""
+    connected_entities: List[str] = field(default_factory=list)
+    relationship_path: Optional[str] = None
+
+
+@dataclass
+class RecallItem:
+    """
+    Individual item in recall results - either a memory or a fact.
+    """
+    type: Literal["memory", "fact"]  # Item type
+    id: str                          # Unique identifier
+    content: str                     # Content string for display/LLM injection
+    score: float                     # Combined ranking score (0-1)
+    source: Literal["vector", "facts", "graph-expanded"]  # Source of this item
+    memory: Optional[MemoryEntry] = None    # Original memory data (if type === 'memory')
+    fact: Optional[FactRecord] = None       # Original fact data (if type === 'fact')
+    graph_context: Optional[RecallGraphContext] = None  # Graph context for this item
+    conversation: Optional[Conversation] = None  # Enriched conversation data
+    source_messages: Optional[List[Message]] = None  # Source messages from conversation
+
+
+@dataclass
+class RecallSourceBreakdown:
+    """Source breakdown in recall results."""
+    vector: Dict[str, Any]  # {count: int, items: List[MemoryEntry]}
+    facts: Dict[str, Any]   # {count: int, items: List[FactRecord]}
+    graph: Dict[str, Any]   # {count: int, expanded_entities: List[str]}
+
+
+@dataclass
+class RecallResult:
+    """
+    Result from the recall() orchestration API.
+
+    Provides unified, deduplicated, ranked results from all sources
+    with LLM-ready context formatting.
+
+    Example:
+        >>> result = await cortex.memory.recall(params)
+        >>> # Use formatted context directly in LLM prompts
+        >>> response = await llm.chat(
+        ...     messages=[
+        ...         {'role': 'system', 'content': f'Context:\\n{result.context}'},
+        ...         {'role': 'user', 'content': user_message},
+        ...     ],
+        ... )
+    """
+    items: List[RecallItem]              # Unified results (merged, deduped, ranked)
+    sources: RecallSourceBreakdown       # Breakdown by source
+    context: Optional[str]               # Formatted context for LLM injection
+    total_results: int                   # Total number of results before limit
+    query_time_ms: int                   # Query execution time in milliseconds
+    graph_expansion_applied: bool        # Whether graph expansion was applied
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Coordination: Contexts
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

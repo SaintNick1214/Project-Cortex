@@ -30,6 +30,10 @@ from ..types import (
     MemoryMetadata,
     MemorySource,
     MemoryVersionInfo,
+    RecallGraphExpansionConfig,
+    RecallParams,
+    RecallResult,
+    RecallSourceConfig,
     RememberOptions,
     RememberParams,
     RememberResult,
@@ -53,6 +57,7 @@ from .validators import (
     validate_limit,
     validate_memory_id,
     validate_memory_space_id,
+    validate_recall_params,
     validate_remember_params,
     validate_search_options,
     validate_source_type,
@@ -1393,6 +1398,239 @@ class MemoryAPI:
             enriched.append(result)
 
         return enriched  # type: ignore[return-value]
+
+    async def recall(
+        self,
+        params: "RecallParams",
+    ) -> "RecallResult":
+        """
+        Recall context with full orchestration.
+
+        Mirrors remember() for retrieval - searches all layers in parallel,
+        leverages graph for relational discovery, and returns unified,
+        ranked context ready for LLM injection.
+
+        This is the main method for retrieving conversation context. It handles:
+        - Vector memory search (Layer 2)
+        - Facts search (Layer 3)
+        - Graph expansion for relational context discovery
+        - Result merging, deduplication, and ranking
+        - LLM-ready context formatting
+
+        Args:
+            params: RecallParams with search configuration
+
+        Returns:
+            RecallResult with unified results, source breakdown, and LLM context
+
+        Example:
+            >>> # Minimal usage - full orchestration
+            >>> result = await cortex.memory.recall(
+            ...     RecallParams(
+            ...         memory_space_id='user-123-space',
+            ...         query='user preferences',
+            ...     )
+            ... )
+            >>>
+            >>> # Inject context into LLM
+            >>> response = await llm.chat(
+            ...     messages=[
+            ...         {'role': 'system', 'content': f'You are helpful.\\n\\n{result.context}'},
+            ...         {'role': 'user', 'content': user_message},
+            ...     ],
+            ... )
+            >>>
+            >>> # With filters and source control
+            >>> result = await cortex.memory.recall(
+            ...     RecallParams(
+            ...         memory_space_id='agent-1',
+            ...         query='dark mode preferences',
+            ...         user_id='user-123',
+            ...         sources=RecallSourceConfig(vector=True, facts=True, graph=False),
+            ...         min_importance=50,
+            ...         limit=10,
+            ...     )
+            ... )
+        """
+        from ..types import SearchFactsOptions
+        from .recall import (
+            GraphExpansionConfig,
+            enrich_with_conversations,
+            perform_graph_expansion,
+            process_recall_results,
+        )
+
+        start_time = int(time.time() * 1000)
+
+        # Client-side validation
+        validate_recall_params(params)
+
+        # Extract params with defaults
+        memory_space_id = params.memory_space_id
+        query = params.query
+        embedding = params.embedding
+        user_id = params.user_id
+
+        # Source configuration (all enabled by default)
+        sources = params.sources or RecallSourceConfig()
+        search_vector = sources.vector if sources.vector is not None else True
+        search_facts = sources.facts if sources.facts is not None else True
+        search_graph = sources.graph if sources.graph is not None else (self.graph_adapter is not None)
+
+        # Graph expansion configuration
+        graph_exp = params.graph_expansion or RecallGraphExpansionConfig()
+        graph_enabled = (
+            graph_exp.enabled if graph_exp.enabled is not None
+            else (self.graph_adapter is not None)
+        )
+
+        # Result options
+        limit = params.limit or 20
+        include_conversation = params.include_conversation if params.include_conversation is not None else True
+        format_for_llm_flag = params.format_for_llm if params.format_for_llm is not None else True
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 1: PARALLEL SEARCH (vector, facts)
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        vector_memories: List[MemoryEntry] = []
+        direct_facts: List[Any] = []
+
+        # Build vector search options (using proper typed SearchOptions)
+        vector_search_opts = SearchOptions(
+            limit=limit,
+            embedding=embedding,
+            user_id=user_id,
+            min_importance=params.min_importance,
+            tags=params.tags,
+        )
+
+        # Vector search
+        if search_vector:
+            try:
+                vector_memories = await self.vector.search(
+                    memory_space_id, query, vector_search_opts
+                )
+            except Exception as e:
+                print(f"[Cortex] Vector search failed: {e}")
+
+        # Facts search
+        if search_facts:
+            try:
+                facts_search_opts = SearchFactsOptions(
+                    limit=limit,
+                    min_confidence=params.min_confidence,
+                    user_id=user_id,
+                )
+
+                direct_facts = await self.facts.search(
+                    memory_space_id, query, facts_search_opts
+                )
+            except Exception as e:
+                print(f"[Cortex] Facts search failed: {e}")
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 2: GRAPH EXPANSION (if enabled)
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        graph_expanded_memories: List[MemoryEntry] = []
+        graph_expanded_facts: List[Any] = []
+        discovered_entities: List[str] = []
+        graph_expansion_applied = False
+
+        if graph_enabled and search_graph and self.graph_adapter:
+            try:
+                expansion_config = GraphExpansionConfig(
+                    max_depth=graph_exp.max_depth or 2,
+                    relationship_types=graph_exp.relationship_types or [],
+                    expand_from_facts=graph_exp.expand_from_facts if graph_exp.expand_from_facts is not None else True,
+                    expand_from_memories=graph_exp.expand_from_memories if graph_exp.expand_from_memories is not None else True,
+                )
+
+                expansion_result = await perform_graph_expansion(
+                    vector_memories,
+                    direct_facts,
+                    memory_space_id,
+                    self.graph_adapter,
+                    self.vector,
+                    self.facts,
+                    expansion_config,
+                )
+
+                discovered_entities = expansion_result.discovered_entities
+                graph_expanded_memories = expansion_result.related_memories
+                graph_expanded_facts = expansion_result.related_facts
+                graph_expansion_applied = len(discovered_entities) > 0
+
+            except Exception as e:
+                print(f"[Cortex] Graph expansion failed: {e}")
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 3: MERGE, DEDUPE, RANK, FORMAT
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        processed = process_recall_results(
+            vector_memories,
+            direct_facts,
+            graph_expanded_memories,
+            graph_expanded_facts,
+            discovered_entities,
+            {
+                "limit": limit,
+                "format_for_llm": format_for_llm_flag,
+            },
+        )
+
+        items = processed["items"]
+        source_breakdown = processed["sources"]
+        context = processed["context"]
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 4: CONVERSATION ENRICHMENT (if enabled)
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        if include_conversation:
+            # Collect conversation IDs from memory items
+            conversation_ids: set = set()
+            for item in items:
+                if item.type == "memory" and item.memory and item.memory.conversation_ref:
+                    conv_ref = item.memory.conversation_ref
+                    conv_id = (
+                        conv_ref.get("conversation_id")
+                        if isinstance(conv_ref, dict)
+                        else conv_ref.conversation_id
+                    )
+                    if conv_id:
+                        conversation_ids.add(conv_id)
+
+            # Fetch conversations
+            conversations_map: Dict[str, Any] = {}
+            for conv_id in conversation_ids:
+                try:
+                    conv = await self.conversations.get(conv_id)
+                    if conv:
+                        conversations_map[conv_id] = conv
+                except Exception:
+                    # Individual conversation fetch failure - continue
+                    pass
+
+            # Enrich items
+            items = enrich_with_conversations(items, conversations_map)
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 5: BUILD RESULT
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        query_time_ms = int(time.time() * 1000) - start_time
+
+        return RecallResult(
+            items=items,
+            sources=source_breakdown,
+            context=context,
+            total_results=(
+                len(vector_memories)
+                + len(direct_facts)
+                + len(graph_expanded_memories)
+                + len(graph_expanded_facts)
+            ),
+            query_time_ms=query_time_ms,
+            graph_expansion_applied=graph_expansion_applied,
+        )
 
     async def store(
         self, memory_space_id: str, input: StoreMemoryInput
