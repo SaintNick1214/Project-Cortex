@@ -285,7 +285,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd packages/create-cortex-memories
-          npm install
+          npm ci
 
       - name: Build package
         run: |
@@ -380,7 +380,7 @@ jobs:
       - name: Install Vercel AI Provider dependencies
         run: |
           cd packages/vercel-ai-provider
-          npm install
+          npm ci
 
       - name: Build package
         run: |
@@ -523,7 +523,7 @@ jobs:
       - name: Install CLI dependencies
         run: |
           cd packages/cortex-cli
-          npm install
+          npm ci
 
       - name: Build package
         run: |
