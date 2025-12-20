@@ -1412,6 +1412,14 @@ class FactsAPI:
         validate_required_string(new_fact_id, "new_fact_id")
         validate_fact_id_format(new_fact_id)
 
+        # Prevent self-supersession which would create an inconsistent state
+        # where a fact is marked as expired (validUntil set) but no replacement exists
+        if old_fact_id == new_fact_id:
+            raise ValueError(
+                f"Cannot supersede a fact with itself: {old_fact_id}. "
+                "old_fact_id and new_fact_id must be different."
+            )
+
         # Verify old fact exists
         old_fact = await self.get(memory_space_id, old_fact_id)
         if not old_fact:

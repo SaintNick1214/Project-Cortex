@@ -215,6 +215,41 @@ class TestReviseOperation:
         assert result.fact["factId"] == "fact-existing"
         assert len(client.mutations) == 0  # No mutations
 
+    async def test_none_action_without_target_does_not_create_fact(self) -> None:
+        """Bug fix: NONE without targetFactId should NOT create a new fact."""
+        existing_fact = {
+            "factId": "fact-existing",
+            "fact": "User likes outdoor activities",
+            "subject": "user-123",
+            "predicate": "enjoys",
+            "object": "outdoors",
+            "confidence": 90,
+            "supersededBy": None,
+        }
+        client = MockConvexClient(facts=[existing_fact])
+        # LLM returns NONE but with an invalid/missing targetFactId
+        llm_client = MockLLMClient(
+            response='{"action": "NONE", "targetFactId": "nonexistent-fact", "reason": "Already captured", "mergedFact": null, "confidence": 95}'
+        )
+        service = BeliefRevisionService(client, llm_client)
+
+        result = await service.revise(ReviseParams(
+            memory_space_id="space-1",
+            fact=ConflictCandidate(
+                fact="User enjoys outdoor activities",
+                confidence=85,
+                subject="user-123",
+                predicate="enjoys",
+                object="outdoors",
+            ),
+        ))
+
+        assert result.action == "NONE"
+        # Should NOT have created a new fact (Bug 1 fix)
+        assert len(client.mutations) == 0
+        # The result should indicate the fact was skipped
+        assert result.fact.get("skipped") is True or result.fact.get("fact_id") is None
+
     async def test_update_action_updates_existing(self) -> None:
         """Should update existing fact for UPDATE action."""
         existing_fact = {

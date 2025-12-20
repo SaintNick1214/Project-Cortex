@@ -549,12 +549,25 @@ class BeliefRevisionService:
         superseded: List[Any] = []
 
         if action == "NONE":
-            # Return existing fact without changes
+            # Return existing fact without changes - NEVER create a new fact for NONE
+            # The fact is already captured in the knowledge base
             if target_fact:
                 return {"fact": target_fact, "superseded": []}
-            # Fallback: create new fact anyway
+            # No target_fact means the LLM determined this fact is already captured
+            # but didn't specify which existing fact. Return a placeholder result.
+            # This can happen when the LLM detects a duplicate concept without
+            # identifying the exact existing fact ID.
+            return {
+                "fact": {
+                    "fact_id": None,
+                    "fact": params.fact.fact,
+                    "skipped": True,
+                    "reason": "Fact already captured in knowledge base (NONE action)",
+                },
+                "superseded": [],
+            }
 
-        elif action == "UPDATE":
+        if action == "UPDATE":
             if target_fact:
                 # Update the existing fact in place
                 fact_id = self._get_fact_id(target_fact)
