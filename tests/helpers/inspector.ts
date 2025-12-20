@@ -76,13 +76,24 @@ export class StorageInspector {
     if (conversations.length === 0) {
       console.log("(empty)");
     } else {
-      conversations.forEach((conv: { conversationId: string; type: string; messageCount: number; participants: unknown; createdAt: number }, idx: number) => {
-        console.log(`\n[${idx + 1}] ${conv.conversationId}`);
-        console.log(`    Type: ${conv.type}`);
-        console.log(`    Messages: ${conv.messageCount}`);
-        console.log(`    Participants: ${JSON.stringify(conv.participants)}`);
-        console.log(`    Created: ${new Date(conv.createdAt).toISOString()}`);
-      });
+      conversations.forEach(
+        (
+          conv: {
+            conversationId: string;
+            type: string;
+            messageCount: number;
+            participants: unknown;
+            createdAt: number;
+          },
+          idx: number,
+        ) => {
+          console.log(`\n[${idx + 1}] ${conv.conversationId}`);
+          console.log(`    Type: ${conv.type}`);
+          console.log(`    Messages: ${conv.messageCount}`);
+          console.log(`    Participants: ${JSON.stringify(conv.participants)}`);
+          console.log(`    Created: ${new Date(conv.createdAt).toISOString()}`);
+        },
+      );
     }
     console.log(`\n${"=".repeat(80)}\n`);
   }

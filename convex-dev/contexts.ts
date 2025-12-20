@@ -300,7 +300,8 @@ export const deleteContext = mutation({
       deleted: true,
       contextId: args.contextId,
       descendantsDeleted: deletedCount - 1,
-      orphanedChildren: orphanedChildren.length > 0 ? orphanedChildren : undefined,
+      orphanedChildren:
+        orphanedChildren.length > 0 ? orphanedChildren : undefined,
     };
   },
 });
@@ -535,7 +536,11 @@ async function buildContextChain(ctx: any, context: any) {
   const validChildren = children.filter((c) => c !== null);
   const validSiblings = siblings.filter((s) => s !== null);
   const totalNodes =
-    1 + ancestors.length + validChildren.length + validSiblings.length + descendants.length;
+    1 +
+    ancestors.length +
+    validChildren.length +
+    validSiblings.length +
+    descendants.length;
 
   return {
     current: context,

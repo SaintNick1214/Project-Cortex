@@ -985,11 +985,11 @@ cortex.contexts.grantAccess(
 
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `contextId` | `string` | The context to grant access to |
-| `targetMemorySpaceId` | `string` | Memory space to grant access to |
-| `scope` | `string` | Access scope (e.g., 'read-only', 'context-only', 'full') |
+| Parameter             | Type     | Description                                              |
+| --------------------- | -------- | -------------------------------------------------------- |
+| `contextId`           | `string` | The context to grant access to                           |
+| `targetMemorySpaceId` | `string` | Memory space to grant access to                          |
+| `scope`               | `string` | Access scope (e.g., 'read-only', 'context-only', 'full') |
 
 **Returns:**
 
@@ -1020,11 +1020,11 @@ console.log("Granted access:", ctx.grantedAccess);
 
 **Access Scopes:**
 
-| Scope | Description |
-|-------|-------------|
-| `read-only` | Can read context data but not modify |
+| Scope          | Description                                        |
+| -------------- | -------------------------------------------------- |
+| `read-only`    | Can read context data but not modify               |
 | `context-only` | Can read/write context data but not child contexts |
-| `full` | Full access including creating child contexts |
+| `full`         | Full access including creating child contexts      |
 
 **Use Cases:**
 
@@ -1160,10 +1160,10 @@ cortex.contexts.getAtTimestamp(
 
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `contextId` | `string` | The context ID |
-| `timestamp` | `Date` | The point in time to query |
+| Parameter   | Type     | Description                |
+| ----------- | -------- | -------------------------- |
+| `contextId` | `string` | The context ID             |
+| `timestamp` | `Date`   | The point in time to query |
 
 **Returns:**
 

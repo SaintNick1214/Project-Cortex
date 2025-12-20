@@ -19,9 +19,7 @@ describe("facts commands", () => {
         writeOut: () => {},
       });
 
-      const factsCmd = program
-        .command("facts")
-        .description("Fact operations");
+      const factsCmd = program.command("facts").description("Fact operations");
 
       factsCmd
         .command("list")
@@ -64,7 +62,12 @@ describe("facts commands", () => {
 
     it("should parse facts list with required space", async () => {
       await program.parseAsync([
-        "node", "test", "facts", "list", "-s", "test-space",
+        "node",
+        "test",
+        "facts",
+        "list",
+        "-s",
+        "test-space",
       ]);
 
       const cmd = program.commands[0].commands[0];
@@ -74,10 +77,16 @@ describe("facts commands", () => {
 
     it("should parse facts list with type filter", async () => {
       await program.parseAsync([
-        "node", "test", "facts", "list",
-        "-s", "test-space",
-        "-t", "preference",
-        "-l", "100",
+        "node",
+        "test",
+        "facts",
+        "list",
+        "-s",
+        "test-space",
+        "-t",
+        "preference",
+        "-l",
+        "100",
       ]);
 
       const cmd = program.commands[0].commands[0];
@@ -87,14 +96,19 @@ describe("facts commands", () => {
 
     it("should require space for list", async () => {
       await expect(
-        program.parseAsync(["node", "test", "facts", "list"])
+        program.parseAsync(["node", "test", "facts", "list"]),
       ).rejects.toThrow();
     });
 
     it("should parse facts search with query", async () => {
       await program.parseAsync([
-        "node", "test", "facts", "search", "user preferences",
-        "-s", "test-space",
+        "node",
+        "test",
+        "facts",
+        "search",
+        "user preferences",
+        "-s",
+        "test-space",
       ]);
 
       const cmd = program.commands[0].commands[1];
@@ -105,8 +119,13 @@ describe("facts commands", () => {
 
     it("should parse facts get with fact ID", async () => {
       await program.parseAsync([
-        "node", "test", "facts", "get", "fact-123",
-        "-s", "test-space",
+        "node",
+        "test",
+        "facts",
+        "get",
+        "fact-123",
+        "-s",
+        "test-space",
       ]);
 
       const cmd = program.commands[0].commands[2];
@@ -115,8 +134,13 @@ describe("facts commands", () => {
 
     it("should parse facts delete with confirmation skip", async () => {
       await program.parseAsync([
-        "node", "test", "facts", "delete", "fact-123",
-        "-s", "test-space",
+        "node",
+        "test",
+        "facts",
+        "delete",
+        "fact-123",
+        "-s",
+        "test-space",
         "-y",
       ]);
 
@@ -127,11 +151,18 @@ describe("facts commands", () => {
 
     it("should parse facts export with all options", async () => {
       await program.parseAsync([
-        "node", "test", "facts", "export",
-        "-s", "test-space",
-        "-o", "facts.json",
-        "-f", "csv",
-        "-t", "knowledge",
+        "node",
+        "test",
+        "facts",
+        "export",
+        "-s",
+        "test-space",
+        "-o",
+        "facts.json",
+        "-f",
+        "csv",
+        "-t",
+        "knowledge",
       ]);
 
       const cmd = program.commands[0].commands[4];

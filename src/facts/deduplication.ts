@@ -23,7 +23,11 @@ import type { FactRecord } from "../types";
  * - 'structural': Subject + predicate + object match (fast, medium accuracy)
  * - 'semantic': Embedding similarity search (slower, highest accuracy)
  */
-export type DeduplicationStrategy = "none" | "exact" | "structural" | "semantic";
+export type DeduplicationStrategy =
+  | "none"
+  | "exact"
+  | "structural"
+  | "semantic";
 
 /**
  * Configuration for fact deduplication
@@ -119,9 +123,7 @@ function normalizeFactText(text: string): string {
  */
 function cosineSimilarity(a: number[], b: number[]): number {
   if (a.length !== b.length) {
-    throw new Error(
-      `Embedding dimension mismatch: ${a.length} vs ${b.length}`,
-    );
+    throw new Error(`Embedding dimension mismatch: ${a.length} vs ${b.length}`);
   }
 
   let dotProduct = 0;
@@ -190,10 +192,7 @@ export class FactDeduplicationService {
     // Structural is most specific, then exact, then semantic
 
     // 1. Structural match (most reliable)
-    if (
-      config.strategy === "structural" ||
-      config.strategy === "semantic"
-    ) {
+    if (config.strategy === "structural" || config.strategy === "semantic") {
       const structuralMatch = await this.findStructuralMatch(
         candidate,
         memorySpaceId,

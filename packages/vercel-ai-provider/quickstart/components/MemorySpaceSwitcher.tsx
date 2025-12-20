@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface MemorySpaceSwitcherProps {
   value: string;
@@ -9,9 +9,9 @@ interface MemorySpaceSwitcherProps {
 }
 
 const spaces = [
-  { id: 'quickstart-demo', name: 'Demo', icon: '🧪' },
-  { id: 'personal', name: 'Personal', icon: '👤' },
-  { id: 'work', name: 'Work', icon: '💼' },
+  { id: "quickstart-demo", name: "Demo", icon: "🧪" },
+  { id: "personal", name: "Personal", icon: "👤" },
+  { id: "work", name: "Work", icon: "💼" },
 ];
 
 export function MemorySpaceSwitcher({
@@ -67,8 +67,8 @@ export function MemorySpaceSwitcher({
                     }}
                     className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-colors ${
                       value === space.id
-                        ? 'bg-cortex-600/20 text-cortex-400'
-                        : 'hover:bg-white/5'
+                        ? "bg-cortex-600/20 text-cortex-400"
+                        : "hover:bg-white/5"
                     }`}
                   >
                     <span>{space.icon}</span>

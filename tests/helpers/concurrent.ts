@@ -54,7 +54,10 @@ export const concurrentTest: ItConcurrent = it.concurrent;
  */
 export function describeConcurrent(
   name: string,
-  fn: (concurrent: { it: typeof it.concurrent; test: typeof it.concurrent }) => void,
+  fn: (concurrent: {
+    it: typeof it.concurrent;
+    test: typeof it.concurrent;
+  }) => void,
 ): void {
   describe(name, () => {
     fn({ it: it.concurrent, test: it.concurrent });

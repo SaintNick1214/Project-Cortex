@@ -58,7 +58,7 @@ function createMockFact(overrides: Partial<FactRecord> = {}): FactRecord {
 }
 
 function createMockGraphAdapter(
-  overrides: Partial<GraphAdapter> = {}
+  overrides: Partial<GraphAdapter> = {},
 ): GraphAdapter {
   return {
     connect: jest.fn<GraphAdapter["connect"]>(),
@@ -103,9 +103,7 @@ describe("Graph Enhancement", () => {
     });
 
     it("extracts entities from fact objects", () => {
-      const facts = [
-        createMockFact({ subject: "Alice", object: "Acme Corp" }),
-      ];
+      const facts = [createMockFact({ subject: "Alice", object: "Acme Corp" })];
 
       const entities = extractEntitiesFromResults([], facts);
 
@@ -144,7 +142,11 @@ describe("Graph Enhancement", () => {
     it("deduplicates entities", () => {
       const facts = [
         createMockFact({ subject: "Alice", object: "Acme Corp" }),
-        createMockFact({ subject: "Alice", object: "Project X", factId: "fact-2" }),
+        createMockFact({
+          subject: "Alice",
+          object: "Project X",
+          factId: "fact-2",
+        }),
       ];
 
       const entities = extractEntitiesFromResults([], facts);
@@ -203,7 +205,7 @@ describe("Graph Enhancement", () => {
       const entities = await expandViaGraph(
         ["Alice", "Bob"],
         undefined as unknown as GraphAdapter,
-        defaultConfig
+        defaultConfig,
       );
 
       expect(entities).toHaveLength(0);
@@ -220,31 +222,43 @@ describe("Graph Enhancement", () => {
 
     it("returns empty when graph is not connected", async () => {
       const mockAdapter = createMockGraphAdapter({
-        isConnected: jest.fn<GraphAdapter["isConnected"]>().mockResolvedValue(false),
+        isConnected: jest
+          .fn<GraphAdapter["isConnected"]>()
+          .mockResolvedValue(false),
       });
 
-      const entities = await expandViaGraph(["Alice"], mockAdapter, defaultConfig);
+      const entities = await expandViaGraph(
+        ["Alice"],
+        mockAdapter,
+        defaultConfig,
+      );
 
       expect(entities).toHaveLength(0);
     });
 
     it("finds entity nodes and traverses graph", async () => {
       const mockAdapter = createMockGraphAdapter({
-        findNodes: jest.fn<GraphAdapter["findNodes"]>().mockResolvedValue([
-          { label: "Entity", id: "node-1", properties: { name: "Alice" } },
-        ]),
+        findNodes: jest
+          .fn<GraphAdapter["findNodes"]>()
+          .mockResolvedValue([
+            { label: "Entity", id: "node-1", properties: { name: "Alice" } },
+          ]),
         traverse: jest.fn<GraphAdapter["traverse"]>().mockResolvedValue([
           { label: "Entity", id: "node-2", properties: { name: "Bob" } },
           { label: "Entity", id: "node-3", properties: { name: "Carol" } },
         ]),
       });
 
-      const entities = await expandViaGraph(["Alice"], mockAdapter, defaultConfig);
+      const entities = await expandViaGraph(
+        ["Alice"],
+        mockAdapter,
+        defaultConfig,
+      );
 
       expect(mockAdapter.findNodes).toHaveBeenCalledWith(
         "Entity",
         { name: "Alice" },
-        1
+        1,
       );
       expect(mockAdapter.traverse).toHaveBeenCalled();
       expect(entities).toContain("Bob");
@@ -253,16 +267,22 @@ describe("Graph Enhancement", () => {
 
     it("removes initial entities from discovered entities", async () => {
       const mockAdapter = createMockGraphAdapter({
-        findNodes: jest.fn<GraphAdapter["findNodes"]>().mockResolvedValue([
-          { label: "Entity", id: "node-1", properties: { name: "Alice" } },
-        ]),
+        findNodes: jest
+          .fn<GraphAdapter["findNodes"]>()
+          .mockResolvedValue([
+            { label: "Entity", id: "node-1", properties: { name: "Alice" } },
+          ]),
         traverse: jest.fn<GraphAdapter["traverse"]>().mockResolvedValue([
           { label: "Entity", id: "node-1", properties: { name: "Alice" } }, // Same as initial
           { label: "Entity", id: "node-2", properties: { name: "Bob" } },
         ]),
       });
 
-      const entities = await expandViaGraph(["Alice"], mockAdapter, defaultConfig);
+      const entities = await expandViaGraph(
+        ["Alice"],
+        mockAdapter,
+        defaultConfig,
+      );
 
       // Alice should be removed since it was in initial entities
       expect(entities).not.toContain("Alice");
@@ -271,9 +291,11 @@ describe("Graph Enhancement", () => {
 
     it("respects maxDepth configuration", async () => {
       const mockAdapter = createMockGraphAdapter({
-        findNodes: jest.fn<GraphAdapter["findNodes"]>().mockResolvedValue([
-          { label: "Entity", id: "node-1", properties: { name: "Alice" } },
-        ]),
+        findNodes: jest
+          .fn<GraphAdapter["findNodes"]>()
+          .mockResolvedValue([
+            { label: "Entity", id: "node-1", properties: { name: "Alice" } },
+          ]),
         traverse: jest.fn<GraphAdapter["traverse"]>().mockResolvedValue([]),
       });
 
@@ -285,15 +307,17 @@ describe("Graph Enhancement", () => {
       await expandViaGraph(["Alice"], mockAdapter, config);
 
       expect(mockAdapter.traverse).toHaveBeenCalledWith(
-        expect.objectContaining({ maxDepth: 3 })
+        expect.objectContaining({ maxDepth: 3 }),
       );
     });
 
     it("respects relationshipTypes filter", async () => {
       const mockAdapter = createMockGraphAdapter({
-        findNodes: jest.fn<GraphAdapter["findNodes"]>().mockResolvedValue([
-          { label: "Entity", id: "node-1", properties: { name: "Alice" } },
-        ]),
+        findNodes: jest
+          .fn<GraphAdapter["findNodes"]>()
+          .mockResolvedValue([
+            { label: "Entity", id: "node-1", properties: { name: "Alice" } },
+          ]),
         traverse: jest.fn<GraphAdapter["traverse"]>().mockResolvedValue([]),
       });
 
@@ -307,15 +331,17 @@ describe("Graph Enhancement", () => {
       expect(mockAdapter.traverse).toHaveBeenCalledWith(
         expect.objectContaining({
           relationshipTypes: ["WORKS_AT", "KNOWS"],
-        })
+        }),
       );
     });
 
     it("limits initial entities to prevent performance issues", async () => {
       const mockAdapter = createMockGraphAdapter({
-        findNodes: jest.fn<GraphAdapter["findNodes"]>().mockResolvedValue([
-          { label: "Entity", id: "node-1", properties: { name: "Entity1" } },
-        ]),
+        findNodes: jest
+          .fn<GraphAdapter["findNodes"]>()
+          .mockResolvedValue([
+            { label: "Entity", id: "node-1", properties: { name: "Entity1" } },
+          ]),
         traverse: jest.fn<GraphAdapter["traverse"]>().mockResolvedValue([]),
       });
 
@@ -330,13 +356,17 @@ describe("Graph Enhancement", () => {
 
     it("handles graph errors gracefully", async () => {
       const mockAdapter = createMockGraphAdapter({
-        isConnected: jest.fn<GraphAdapter["isConnected"]>().mockRejectedValue(
-          new Error("Connection failed")
-        ),
+        isConnected: jest
+          .fn<GraphAdapter["isConnected"]>()
+          .mockRejectedValue(new Error("Connection failed")),
       });
 
       // Should not throw, just return empty
-      const entities = await expandViaGraph(["Alice"], mockAdapter, defaultConfig);
+      const entities = await expandViaGraph(
+        ["Alice"],
+        mockAdapter,
+        defaultConfig,
+      );
 
       expect(entities).toHaveLength(0);
     });
@@ -344,19 +374,29 @@ describe("Graph Enhancement", () => {
     it("continues when individual entity lookup fails", async () => {
       let callCount = 0;
       const mockAdapter = createMockGraphAdapter({
-        findNodes: jest.fn<GraphAdapter["findNodes"]>().mockImplementation(async () => {
-          callCount++;
-          if (callCount === 1) {
-            throw new Error("First entity failed");
-          }
-          return [{ label: "Entity", id: "node-2", properties: { name: "Bob" } }];
-        }),
-        traverse: jest.fn<GraphAdapter["traverse"]>().mockResolvedValue([
-          { label: "Entity", id: "node-3", properties: { name: "Carol" } },
-        ]),
+        findNodes: jest
+          .fn<GraphAdapter["findNodes"]>()
+          .mockImplementation(async () => {
+            callCount++;
+            if (callCount === 1) {
+              throw new Error("First entity failed");
+            }
+            return [
+              { label: "Entity", id: "node-2", properties: { name: "Bob" } },
+            ];
+          }),
+        traverse: jest
+          .fn<GraphAdapter["traverse"]>()
+          .mockResolvedValue([
+            { label: "Entity", id: "node-3", properties: { name: "Carol" } },
+          ]),
       });
 
-      const entities = await expandViaGraph(["Alice", "Bob"], mockAdapter, defaultConfig);
+      const entities = await expandViaGraph(
+        ["Alice", "Bob"],
+        mockAdapter,
+        defaultConfig,
+      );
 
       // Should still find Carol via Bob even though Alice lookup failed
       expect(entities).toContain("Carol");
@@ -364,9 +404,11 @@ describe("Graph Enhancement", () => {
 
     it("only extracts entities from Entity-labeled nodes", async () => {
       const mockAdapter = createMockGraphAdapter({
-        findNodes: jest.fn<GraphAdapter["findNodes"]>().mockResolvedValue([
-          { label: "Entity", id: "node-1", properties: { name: "Alice" } },
-        ]),
+        findNodes: jest
+          .fn<GraphAdapter["findNodes"]>()
+          .mockResolvedValue([
+            { label: "Entity", id: "node-1", properties: { name: "Alice" } },
+          ]),
         traverse: jest.fn<GraphAdapter["traverse"]>().mockResolvedValue([
           { label: "Entity", id: "node-2", properties: { name: "Bob" } },
           { label: "Memory", id: "node-3", properties: { name: "SomeMemory" } }, // Not an Entity
@@ -374,7 +416,11 @@ describe("Graph Enhancement", () => {
         ]),
       });
 
-      const entities = await expandViaGraph(["Alice"], mockAdapter, defaultConfig);
+      const entities = await expandViaGraph(
+        ["Alice"],
+        mockAdapter,
+        defaultConfig,
+      );
 
       expect(entities).toContain("Bob");
       expect(entities).not.toContain("SomeMemory");

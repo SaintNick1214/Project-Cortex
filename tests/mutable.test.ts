@@ -174,13 +174,10 @@ describe("Mutable Store API (Layer 1c)", () => {
       const userId = "metadata-user";
 
       // Create entry with userId and metadata
-      await cortex.mutable.set(
-        ns,
-        key,
-        { data: "test" },
-        userId,
-        { custom: "metadata", tags: ["test", "metadata"] },
-      );
+      await cortex.mutable.set(ns, key, { data: "test" }, userId, {
+        custom: "metadata",
+        tags: ["test", "metadata"],
+      });
 
       // Access to increment access count
       await cortex.mutable.get(ns, key);
@@ -506,7 +503,10 @@ describe("Mutable Store API (Layer 1c)", () => {
       expect(before).toBe("value");
 
       // Purge (alias for delete)
-      const result = await cortex.mutable.purge("purge-alias-test", "purge-key");
+      const result = await cortex.mutable.purge(
+        "purge-alias-test",
+        "purge-key",
+      );
 
       expect(result.deleted).toBe(true);
       expect(result.namespace).toBe("purge-alias-test");
@@ -2517,7 +2517,6 @@ describe("Mutable Store API (Layer 1c)", () => {
         const count = await cortex.mutable.count({ namespace: ns });
         expect(count).toBe(0);
       });
-
     });
 
     describe("purgeNamespace() validation", () => {

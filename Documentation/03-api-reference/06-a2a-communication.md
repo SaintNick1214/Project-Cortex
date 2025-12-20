@@ -17,7 +17,7 @@ Some A2A operations require **real-time pub/sub infrastructure**:
 | `send()`            | ❌ No            | ✅ Yes        | Fire-and-forget (async)                                 |
 | `request()`         | ✅ Yes           | ❌ No         | Needs real-time response notification                   |
 | `broadcast()`       | ✅ Yes (optimal) | ⚠️ Degraded   | Can store without pub/sub, but no delivery confirmation |
-| `subscribe()`       | ✅ Yes           | ❌ No         | Real-time inbox notifications *(Planned)*               |
+| `subscribe()`       | ✅ Yes           | ❌ No         | Real-time inbox notifications _(Planned)_               |
 | `getConversation()` | ❌ No            | ✅ Yes        | Database query only                                     |
 
 **Pub/Sub Options:**

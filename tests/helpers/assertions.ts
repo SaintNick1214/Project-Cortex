@@ -149,7 +149,9 @@ export async function listMemorySpaces<T extends { memorySpaceId: string }>(
   ctx: TestRunContext,
 ): Promise<T[]> {
   const result = await cortex.memorySpaces.list();
-  return filterByPrefix(result.spaces, ctx.runId, ["memorySpaceId"]) as unknown as T[];
+  return filterByPrefix(result.spaces, ctx.runId, [
+    "memorySpaceId",
+  ]) as unknown as T[];
 }
 
 // ============================================================================

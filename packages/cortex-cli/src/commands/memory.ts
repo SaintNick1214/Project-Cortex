@@ -59,10 +59,16 @@ export function registerMemoryCommands(
     .option("-f, --format <format>", "Output format: table, json, csv")
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "list memories");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "list memories",
+      );
       if (!selection) return;
 
-      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
+      const resolved = resolveConfig(currentConfig, {
+        deployment: selection.name,
+      });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading memories...").start();
@@ -74,57 +80,61 @@ export function registerMemoryCommands(
         }
         const limit = validateLimit(parseInt(options.limit, 10));
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const memories = await client.memory.list({
-            memorySpaceId: options.space,
-            userId: options.user,
-            limit,
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const memories = await client.memory.list({
+              memorySpaceId: options.space,
+              userId: options.user,
+              limit,
+            });
 
-          spinner.stop();
+            spinner.stop();
 
-          if (memories.length === 0) {
-            printWarning("No memories found");
-            return;
-          }
+            if (memories.length === 0) {
+              printWarning("No memories found");
+              return;
+            }
 
-          // Format memories for display
-          const displayData = memories.map((m) => {
-            // Handle both MemoryEntry and EnrichedMemory types
-            const memory = "memory" in m ? m.memory : m;
-            return {
-              id: memory.memoryId,
-              content:
-                memory.content.length > 50
-                  ? memory.content.substring(0, 47) + "..."
-                  : memory.content,
-              type: memory.contentType,
-              source: memory.sourceType,
-              user: memory.userId ?? "-",
-              importance: memory.importance,
-              created: formatRelativeTime(memory.createdAt),
-            };
-          });
+            // Format memories for display
+            const displayData = memories.map((m) => {
+              // Handle both MemoryEntry and EnrichedMemory types
+              const memory = "memory" in m ? m.memory : m;
+              return {
+                id: memory.memoryId,
+                content:
+                  memory.content.length > 50
+                    ? memory.content.substring(0, 47) + "..."
+                    : memory.content,
+                type: memory.contentType,
+                source: memory.sourceType,
+                user: memory.userId ?? "-",
+                importance: memory.importance,
+                created: formatRelativeTime(memory.createdAt),
+              };
+            });
 
-          console.log(
-            formatOutput(displayData, format, {
-              title: `Memories in ${options.space}`,
-              headers: [
-                "id",
-                "content",
-                "type",
-                "source",
-                "user",
-                "importance",
-                "created",
-              ],
-            }),
-          );
+            console.log(
+              formatOutput(displayData, format, {
+                title: `Memories in ${options.space}`,
+                headers: [
+                  "id",
+                  "content",
+                  "type",
+                  "source",
+                  "user",
+                  "importance",
+                  "created",
+                ],
+              }),
+            );
 
-          printSuccess(
-            `Found ${formatCount(memories.length, "memory", "memories")}`,
-          );
-        });
+            printSuccess(
+              `Found ${formatCount(memories.length, "memory", "memories")}`,
+            );
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(
@@ -145,10 +155,16 @@ export function registerMemoryCommands(
     .option("-f, --format <format>", "Output format: table, json, csv")
     .action(async (query, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "search memories");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "search memories",
+      );
       if (!selection) return;
 
-      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
+      const resolved = resolveConfig(currentConfig, {
+        deployment: selection.name,
+      });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Searching memories...").start();
@@ -161,53 +177,57 @@ export function registerMemoryCommands(
         }
         const limit = validateLimit(parseInt(options.limit, 10));
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const memories = await client.memory.search(options.space, query, {
-            userId: options.user,
-            limit,
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const memories = await client.memory.search(options.space, query, {
+              userId: options.user,
+              limit,
+            });
 
-          spinner.stop();
+            spinner.stop();
 
-          if (memories.length === 0) {
-            printWarning("No memories found matching your query");
-            return;
-          }
+            if (memories.length === 0) {
+              printWarning("No memories found matching your query");
+              return;
+            }
 
-          // Format memories for display
-          const displayData = memories.map((m) => {
-            const memory = "memory" in m ? m.memory : m;
-            return {
-              id: memory.memoryId,
-              content:
-                memory.content.length > 60
-                  ? memory.content.substring(0, 57) + "..."
-                  : memory.content,
-              type: memory.contentType,
-              source: memory.sourceType,
-              user: memory.userId ?? "-",
-              importance: memory.importance,
-            };
-          });
+            // Format memories for display
+            const displayData = memories.map((m) => {
+              const memory = "memory" in m ? m.memory : m;
+              return {
+                id: memory.memoryId,
+                content:
+                  memory.content.length > 60
+                    ? memory.content.substring(0, 57) + "..."
+                    : memory.content,
+                type: memory.contentType,
+                source: memory.sourceType,
+                user: memory.userId ?? "-",
+                importance: memory.importance,
+              };
+            });
 
-          console.log(
-            formatOutput(displayData, format, {
-              title: `Search results for "${query}"`,
-              headers: [
-                "id",
-                "content",
-                "type",
-                "source",
-                "user",
-                "importance",
-              ],
-            }),
-          );
+            console.log(
+              formatOutput(displayData, format, {
+                title: `Search results for "${query}"`,
+                headers: [
+                  "id",
+                  "content",
+                  "type",
+                  "source",
+                  "user",
+                  "importance",
+                ],
+              }),
+            );
 
-          printSuccess(
-            `Found ${formatCount(memories.length, "memory", "memories")}`,
-          );
-        });
+            printSuccess(
+              `Found ${formatCount(memories.length, "memory", "memories")}`,
+            );
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(error instanceof Error ? error.message : "Search failed");
@@ -225,7 +245,11 @@ export function registerMemoryCommands(
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (memoryId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "delete memory");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "delete memory",
+      );
       if (!selection) return;
 
       try {
@@ -245,24 +269,28 @@ export function registerMemoryCommands(
 
         const spinner = ora("Deleting memory...").start();
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const result = await client.memory.delete(options.space, memoryId, {
-            cascadeDeleteFacts: options.cascade,
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const result = await client.memory.delete(options.space, memoryId, {
+              cascadeDeleteFacts: options.cascade,
+            });
 
-          spinner.stop();
+            spinner.stop();
 
-          if (result.deleted) {
-            printSuccess(`Deleted memory ${memoryId}`);
-            if (result.factsDeleted && result.factsDeleted > 0) {
-              printSuccess(
-                `Also deleted ${formatCount(result.factsDeleted, "associated fact")}`,
-              );
+            if (result.deleted) {
+              printSuccess(`Deleted memory ${memoryId}`);
+              if (result.factsDeleted && result.factsDeleted > 0) {
+                printSuccess(
+                  `Also deleted ${formatCount(result.factsDeleted, "associated fact")}`,
+                );
+              }
+            } else {
+              printError("Memory not found or could not be deleted");
             }
-          } else {
-            printError("Memory not found or could not be deleted");
-          }
-        });
+          },
+        );
       } catch (error) {
         printError(error instanceof Error ? error.message : "Delete failed");
         process.exit(1);
@@ -280,7 +308,11 @@ export function registerMemoryCommands(
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "clear memories");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "clear memories",
+      );
       if (!selection) return;
 
       try {
@@ -289,52 +321,56 @@ export function registerMemoryCommands(
           validateUserId(options.user);
         }
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          // Count memories first
-          const count = await client.memory.count({
-            memorySpaceId: options.space,
-            userId: options.user,
-            sourceType: options.source,
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            // Count memories first
+            const count = await client.memory.count({
+              memorySpaceId: options.space,
+              userId: options.user,
+              sourceType: options.source,
+            });
 
-          if (count === 0) {
-            printWarning("No memories found to delete");
-            return;
-          }
-
-          if (!options.yes) {
-            const scope = options.user
-              ? `for user ${options.user} in space ${options.space}`
-              : `in space ${options.space}`;
-            const confirmed = await requireConfirmation(
-              `Delete ${formatCount(count, "memory", "memories")} ${scope}? This cannot be undone.`,
-              currentConfig,
-            );
-            if (!confirmed) {
-              printWarning("Operation cancelled");
+            if (count === 0) {
+              printWarning("No memories found to delete");
               return;
             }
-          }
 
-          const spinner = ora(`Deleting ${count} memories...`).start();
+            if (!options.yes) {
+              const scope = options.user
+                ? `for user ${options.user} in space ${options.space}`
+                : `in space ${options.space}`;
+              const confirmed = await requireConfirmation(
+                `Delete ${formatCount(count, "memory", "memories")} ${scope}? This cannot be undone.`,
+                currentConfig,
+              );
+              if (!confirmed) {
+                printWarning("Operation cancelled");
+                return;
+              }
+            }
 
-          const result = await client.memory.deleteMany({
-            memorySpaceId: options.space,
-            userId: options.user,
-            sourceType: options.source,
-          });
+            const spinner = ora(`Deleting ${count} memories...`).start();
 
-          spinner.stop();
+            const result = await client.memory.deleteMany({
+              memorySpaceId: options.space,
+              userId: options.user,
+              sourceType: options.source,
+            });
 
-          printSuccess(
-            `Deleted ${formatCount(result.deleted, "memory", "memories")}`,
-          );
-          if (result.factsDeleted && result.factsDeleted > 0) {
+            spinner.stop();
+
             printSuccess(
-              `Also deleted ${formatCount(result.factsDeleted, "associated fact")}`,
+              `Deleted ${formatCount(result.deleted, "memory", "memories")}`,
             );
-          }
-        });
+            if (result.factsDeleted && result.factsDeleted > 0) {
+              printSuccess(
+                `Also deleted ${formatCount(result.factsDeleted, "associated fact")}`,
+              );
+            }
+          },
+        );
       } catch (error) {
         printError(error instanceof Error ? error.message : "Clear failed");
         process.exit(1);
@@ -353,7 +389,11 @@ export function registerMemoryCommands(
     .option("-f, --format <format>", "Export format: json, csv", "json")
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "export memories");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "export memories",
+      );
       if (!selection) return;
 
       const spinner = ora("Exporting memories...").start();
@@ -365,22 +405,26 @@ export function registerMemoryCommands(
         }
         validateFilePath(options.output);
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const result = await client.memory.export({
-            memorySpaceId: options.space,
-            userId: options.user,
-            format: options.format,
-            includeFacts: options.includeFacts,
-          });
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const result = await client.memory.export({
+              memorySpaceId: options.space,
+              userId: options.user,
+              format: options.format,
+              includeFacts: options.includeFacts,
+            });
 
-          await writeFile(options.output, result.data, "utf-8");
+            await writeFile(options.output, result.data, "utf-8");
 
-          spinner.stop();
+            spinner.stop();
 
-          printSuccess(
-            `Exported ${formatCount(result.count, "memory", "memories")} to ${options.output}`,
-          );
-        });
+            printSuccess(
+              `Exported ${formatCount(result.count, "memory", "memories")} to ${options.output}`,
+            );
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(error instanceof Error ? error.message : "Export failed");
@@ -397,10 +441,16 @@ export function registerMemoryCommands(
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "get statistics");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "get statistics",
+      );
       if (!selection) return;
 
-      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
+      const resolved = resolveConfig(currentConfig, {
+        deployment: selection.name,
+      });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading statistics...").start();
@@ -408,68 +458,72 @@ export function registerMemoryCommands(
       try {
         validateMemorySpaceId(options.space);
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          // Get counts
-          const [totalCount, conversationCount, systemCount, toolCount] =
-            await Promise.all([
-              client.memory.count({ memorySpaceId: options.space }),
-              client.memory.count({
-                memorySpaceId: options.space,
-                sourceType: "conversation",
-              }),
-              client.memory.count({
-                memorySpaceId: options.space,
-                sourceType: "system",
-              }),
-              client.memory.count({
-                memorySpaceId: options.space,
-                sourceType: "tool",
-              }),
-            ]);
-
-          // Get recent memories
-          const recentMemories = await client.memory.list({
-            memorySpaceId: options.space,
-            limit: 5,
-          });
-
-          spinner.stop();
-
-          if (format === "json") {
-            console.log(
-              formatOutput(
-                {
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            // Get counts
+            const [totalCount, conversationCount, systemCount, toolCount] =
+              await Promise.all([
+                client.memory.count({ memorySpaceId: options.space }),
+                client.memory.count({
                   memorySpaceId: options.space,
-                  total: totalCount,
-                  bySource: {
-                    conversation: conversationCount,
-                    system: systemCount,
-                    tool: toolCount,
-                  },
-                  recentCount: recentMemories.length,
-                },
-                "json",
-              ),
-            );
-          } else {
-            printSection(`Memory Statistics for ${options.space}`, {
-              "Total Memories": totalCount,
-              "From Conversations": conversationCount,
-              "From System": systemCount,
-              "From Tools": toolCount,
+                  sourceType: "conversation",
+                }),
+                client.memory.count({
+                  memorySpaceId: options.space,
+                  sourceType: "system",
+                }),
+                client.memory.count({
+                  memorySpaceId: options.space,
+                  sourceType: "tool",
+                }),
+              ]);
+
+            // Get recent memories
+            const recentMemories = await client.memory.list({
+              memorySpaceId: options.space,
+              limit: 5,
             });
 
-            if (recentMemories.length > 0) {
-              const lastMemory =
-                "memory" in recentMemories[0]
-                  ? recentMemories[0].memory
-                  : recentMemories[0];
+            spinner.stop();
+
+            if (format === "json") {
               console.log(
-                `  Last Activity: ${formatTimestamp(lastMemory.createdAt)}`,
+                formatOutput(
+                  {
+                    memorySpaceId: options.space,
+                    total: totalCount,
+                    bySource: {
+                      conversation: conversationCount,
+                      system: systemCount,
+                      tool: toolCount,
+                    },
+                    recentCount: recentMemories.length,
+                  },
+                  "json",
+                ),
               );
+            } else {
+              printSection(`Memory Statistics for ${options.space}`, {
+                "Total Memories": totalCount,
+                "From Conversations": conversationCount,
+                "From System": systemCount,
+                "From Tools": toolCount,
+              });
+
+              if (recentMemories.length > 0) {
+                const lastMemory =
+                  "memory" in recentMemories[0]
+                    ? recentMemories[0].memory
+                    : recentMemories[0];
+                console.log(
+                  `  Last Activity: ${formatTimestamp(lastMemory.createdAt)}`,
+                );
+              }
             }
-          }
-        });
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(
@@ -489,10 +543,16 @@ export function registerMemoryCommands(
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (memoryId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "get memory");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "get memory",
+      );
       if (!selection) return;
 
-      const resolved = resolveConfig(currentConfig, { deployment: selection.name });
+      const resolved = resolveConfig(currentConfig, {
+        deployment: selection.name,
+      });
       const format = (options.format ?? resolved.format) as OutputFormat;
 
       const spinner = ora("Loading memory...").start();
@@ -501,51 +561,59 @@ export function registerMemoryCommands(
         validateMemoryId(memoryId);
         validateMemorySpaceId(options.space);
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const result = await client.memory.get(options.space, memoryId, {
-            includeConversation: options.includeConversation,
-          });
-
-          spinner.stop();
-
-          if (!result) {
-            printError("Memory not found");
-            process.exit(1);
-          }
-
-          if (format === "json") {
-            console.log(formatOutput(result, "json"));
-          } else {
-            // Handle both MemoryEntry and EnrichedMemory types
-            const memory = "memory" in result ? result.memory : result;
-            printSection(`Memory: ${memory.memoryId}`, {
-              Content: memory.content,
-              "Content Type": memory.contentType,
-              "Source Type": memory.sourceType,
-              "User ID": memory.userId ?? "-",
-              Importance: memory.importance,
-              Version: memory.version,
-              Created: formatTimestamp(memory.createdAt),
-              Updated: formatTimestamp(memory.updatedAt),
-              "Access Count": memory.accessCount,
-              Tags: memory.tags.length > 0 ? memory.tags.join(", ") : "-",
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const result = await client.memory.get(options.space, memoryId, {
+              includeConversation: options.includeConversation,
             });
 
-            // Show enriched data if available
-            if ("memory" in result && result.sourceMessages) {
-              console.log("\n  Source Messages:");
-              for (const msg of result.sourceMessages) {
-                console.log(
-                  `    [${msg.role}]: ${msg.content.substring(0, 100)}...`,
-                );
-              }
+            spinner.stop();
+
+            if (!result) {
+              printError("Memory not found");
+              process.exit(1);
             }
 
-            if ("memory" in result && result.facts && result.facts.length > 0) {
-              console.log(`\n  Related Facts: ${result.facts.length}`);
+            if (format === "json") {
+              console.log(formatOutput(result, "json"));
+            } else {
+              // Handle both MemoryEntry and EnrichedMemory types
+              const memory = "memory" in result ? result.memory : result;
+              printSection(`Memory: ${memory.memoryId}`, {
+                Content: memory.content,
+                "Content Type": memory.contentType,
+                "Source Type": memory.sourceType,
+                "User ID": memory.userId ?? "-",
+                Importance: memory.importance,
+                Version: memory.version,
+                Created: formatTimestamp(memory.createdAt),
+                Updated: formatTimestamp(memory.updatedAt),
+                "Access Count": memory.accessCount,
+                Tags: memory.tags.length > 0 ? memory.tags.join(", ") : "-",
+              });
+
+              // Show enriched data if available
+              if ("memory" in result && result.sourceMessages) {
+                console.log("\n  Source Messages:");
+                for (const msg of result.sourceMessages) {
+                  console.log(
+                    `    [${msg.role}]: ${msg.content.substring(0, 100)}...`,
+                  );
+                }
+              }
+
+              if (
+                "memory" in result &&
+                result.facts &&
+                result.facts.length > 0
+              ) {
+                console.log(`\n  Related Facts: ${result.facts.length}`);
+              }
             }
-          }
-        });
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(
@@ -564,7 +632,11 @@ export function registerMemoryCommands(
     .option("-y, --yes", "Skip confirmation prompt", false)
     .action(async (memoryId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "archive memory");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "archive memory",
+      );
       if (!selection) return;
 
       try {
@@ -584,22 +656,26 @@ export function registerMemoryCommands(
 
         const spinner = ora("Archiving memory...").start();
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const result = await client.memory.archive(options.space, memoryId);
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const result = await client.memory.archive(options.space, memoryId);
 
-          spinner.stop();
+            spinner.stop();
 
-          if (result.archived) {
-            printSuccess(`Archived memory ${memoryId}`);
-            if (result.factsArchived && result.factsArchived > 0) {
-              printSuccess(
-                `Also archived ${formatCount(result.factsArchived, "associated fact")}`,
-              );
+            if (result.archived) {
+              printSuccess(`Archived memory ${memoryId}`);
+              if (result.factsArchived && result.factsArchived > 0) {
+                printSuccess(
+                  `Also archived ${formatCount(result.factsArchived, "associated fact")}`,
+                );
+              }
+            } else {
+              printError("Memory not found or could not be archived");
             }
-          } else {
-            printError("Memory not found or could not be archived");
-          }
-        });
+          },
+        );
       } catch (error) {
         printError(error instanceof Error ? error.message : "Archive failed");
         process.exit(1);
@@ -614,7 +690,11 @@ export function registerMemoryCommands(
     .requiredOption("-s, --space <id>", "Memory space ID")
     .action(async (memoryId, options) => {
       const currentConfig = await loadConfig();
-      const selection = await selectDeployment(currentConfig, options, "restore memory");
+      const selection = await selectDeployment(
+        currentConfig,
+        options,
+        "restore memory",
+      );
       if (!selection) return;
 
       const spinner = ora("Restoring memory...").start();
@@ -623,20 +703,24 @@ export function registerMemoryCommands(
         validateMemoryId(memoryId);
         validateMemorySpaceId(options.space);
 
-        await withClient(currentConfig, { deployment: selection.name }, async (client) => {
-          const result = await client.memory.restoreFromArchive(
-            options.space,
-            memoryId,
-          );
+        await withClient(
+          currentConfig,
+          { deployment: selection.name },
+          async (client) => {
+            const result = await client.memory.restoreFromArchive(
+              options.space,
+              memoryId,
+            );
 
-          spinner.stop();
+            spinner.stop();
 
-          if (result.restored) {
-            printSuccess(`Restored memory ${memoryId}`);
-          } else {
-            printError("Memory not found or could not be restored");
-          }
-        });
+            if (result.restored) {
+              printSuccess(`Restored memory ${memoryId}`);
+            } else {
+              printError("Memory not found or could not be restored");
+            }
+          },
+        );
       } catch (error) {
         spinner.stop();
         printError(error instanceof Error ? error.message : "Restore failed");

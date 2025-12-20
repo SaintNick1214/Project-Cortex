@@ -187,7 +187,9 @@ export class ProgressiveFactExtractor {
             wasDeduped = result.deduplication?.matchedExisting ?? false;
           } else {
             // Fallback to regular store (in-memory only dedup)
-            storedFact = await this.factsAPI.store(storeParams, { syncToGraph });
+            storedFact = await this.factsAPI.store(storeParams, {
+              syncToGraph,
+            });
           }
 
           // Track this fact
@@ -286,7 +288,9 @@ export class ProgressiveFactExtractor {
             });
             storedFact = result.fact;
           } else {
-            storedFact = await this.factsAPI.store(storeParams, { syncToGraph });
+            storedFact = await this.factsAPI.store(storeParams, {
+              syncToGraph,
+            });
           }
 
           const factKey = this.generateFactKey(factData.fact, factData.subject);

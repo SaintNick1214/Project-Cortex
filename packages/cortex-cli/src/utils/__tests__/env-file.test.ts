@@ -35,7 +35,12 @@ describe("env-file utilities", () => {
 
     it("should preserve original formatting", () => {
       const lines: EnvLine[] = [
-        { type: "variable", raw: "KEY=value with spaces", key: "KEY", value: "value with spaces" },
+        {
+          type: "variable",
+          raw: "KEY=value with spaces",
+          key: "KEY",
+          value: "value with spaces",
+        },
         { type: "variable", raw: "EMPTY=", key: "EMPTY", value: "" },
       ];
 
@@ -48,7 +53,12 @@ describe("env-file utilities", () => {
   describe("setEnvVar", () => {
     it("should add new variable", () => {
       const lines: EnvLine[] = [
-        { type: "variable", raw: "EXISTING=value", key: "EXISTING", value: "value" },
+        {
+          type: "variable",
+          raw: "EXISTING=value",
+          key: "EXISTING",
+          value: "value",
+        },
       ];
 
       const result = setEnvVar(lines, "NEW_VAR", "new_value");
@@ -110,7 +120,11 @@ describe("env-file utilities", () => {
     it("should handle URL values with special characters", () => {
       const lines: EnvLine[] = [];
 
-      const result = setEnvVar(lines, "URL", "http://example.com?foo=bar&baz=qux");
+      const result = setEnvVar(
+        lines,
+        "URL",
+        "http://example.com?foo=bar&baz=qux",
+      );
 
       expect(result[0].value).toBe("http://example.com?foo=bar&baz=qux");
     });
@@ -120,7 +134,12 @@ describe("env-file utilities", () => {
     it("should remove existing variable", () => {
       const lines: EnvLine[] = [
         { type: "variable", raw: "KEEP=value", key: "KEEP", value: "value" },
-        { type: "variable", raw: "REMOVE=value", key: "REMOVE", value: "value" },
+        {
+          type: "variable",
+          raw: "REMOVE=value",
+          key: "REMOVE",
+          value: "value",
+        },
       ];
 
       const result = removeEnvVar(lines, "REMOVE");
@@ -143,7 +162,12 @@ describe("env-file utilities", () => {
     it("should preserve comments and empty lines", () => {
       const lines: EnvLine[] = [
         { type: "comment", raw: "# Comment" },
-        { type: "variable", raw: "REMOVE=value", key: "REMOVE", value: "value" },
+        {
+          type: "variable",
+          raw: "REMOVE=value",
+          key: "REMOVE",
+          value: "value",
+        },
         { type: "empty", raw: "" },
       ];
 

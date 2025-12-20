@@ -60,7 +60,12 @@ describe("memory commands", () => {
 
     it("should parse memory list command with required space", async () => {
       await program.parseAsync([
-        "node", "test", "memory", "list", "-s", "test-space",
+        "node",
+        "test",
+        "memory",
+        "list",
+        "-s",
+        "test-space",
       ]);
 
       const cmd = program.commands[0].commands[0];
@@ -69,11 +74,18 @@ describe("memory commands", () => {
 
     it("should parse memory list with all options", async () => {
       await program.parseAsync([
-        "node", "test", "memory", "list",
-        "-s", "test-space",
-        "-u", "user-123",
-        "-l", "100",
-        "-t", "conversation",
+        "node",
+        "test",
+        "memory",
+        "list",
+        "-s",
+        "test-space",
+        "-u",
+        "user-123",
+        "-l",
+        "100",
+        "-t",
+        "conversation",
       ]);
 
       const cmd = program.commands[0].commands[0];
@@ -86,14 +98,19 @@ describe("memory commands", () => {
 
     it("should require space option for list", async () => {
       await expect(
-        program.parseAsync(["node", "test", "memory", "list"])
+        program.parseAsync(["node", "test", "memory", "list"]),
       ).rejects.toThrow();
     });
 
     it("should parse search command with query", async () => {
       await program.parseAsync([
-        "node", "test", "memory", "search", "test query",
-        "-s", "test-space",
+        "node",
+        "test",
+        "memory",
+        "search",
+        "test query",
+        "-s",
+        "test-space",
       ]);
 
       const cmd = program.commands[0].commands[1];
@@ -103,8 +120,13 @@ describe("memory commands", () => {
 
     it("should parse get command with memory ID", async () => {
       await program.parseAsync([
-        "node", "test", "memory", "get", "mem-123",
-        "-s", "test-space",
+        "node",
+        "test",
+        "memory",
+        "get",
+        "mem-123",
+        "-s",
+        "test-space",
       ]);
 
       const cmd = program.commands[0].commands[2];
@@ -113,8 +135,13 @@ describe("memory commands", () => {
 
     it("should parse delete command with cascade option", async () => {
       await program.parseAsync([
-        "node", "test", "memory", "delete", "mem-123",
-        "-s", "test-space",
+        "node",
+        "test",
+        "memory",
+        "delete",
+        "mem-123",
+        "-s",
+        "test-space",
         "--cascade",
         "-y",
       ]);
@@ -157,10 +184,15 @@ describe("memory commands", () => {
 
     it("should override defaults with explicit values", async () => {
       await program.parseAsync([
-        "node", "test", "memory-list",
-        "-s", "space",
-        "-l", "100",
-        "-f", "json",
+        "node",
+        "test",
+        "memory-list",
+        "-s",
+        "space",
+        "-l",
+        "100",
+        "-f",
+        "json",
       ]);
 
       const cmd = program.commands[0];

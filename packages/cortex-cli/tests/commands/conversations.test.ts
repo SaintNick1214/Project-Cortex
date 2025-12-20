@@ -76,11 +76,18 @@ describe("conversations commands", () => {
 
     it("should parse conversations list with filters", async () => {
       await program.parseAsync([
-        "node", "test", "conversations", "list",
-        "-s", "test-space",
-        "-u", "user-123",
-        "-t", "user-agent",
-        "-l", "100",
+        "node",
+        "test",
+        "conversations",
+        "list",
+        "-s",
+        "test-space",
+        "-u",
+        "user-123",
+        "-t",
+        "user-agent",
+        "-l",
+        "100",
       ]);
 
       const cmd = program.commands[0].commands[0];
@@ -92,7 +99,11 @@ describe("conversations commands", () => {
 
     it("should parse conversations get", async () => {
       await program.parseAsync([
-        "node", "test", "conversations", "get", "conv-123",
+        "node",
+        "test",
+        "conversations",
+        "get",
+        "conv-123",
       ]);
 
       const cmd = program.commands[0].commands[1];
@@ -102,8 +113,13 @@ describe("conversations commands", () => {
 
     it("should parse conversations get with message limit", async () => {
       await program.parseAsync([
-        "node", "test", "conversations", "get", "conv-123",
-        "-m", "10",
+        "node",
+        "test",
+        "conversations",
+        "get",
+        "conv-123",
+        "-m",
+        "10",
       ]);
 
       const cmd = program.commands[0].commands[1];
@@ -112,7 +128,11 @@ describe("conversations commands", () => {
 
     it("should parse conversations delete", async () => {
       await program.parseAsync([
-        "node", "test", "conversations", "delete", "conv-123",
+        "node",
+        "test",
+        "conversations",
+        "delete",
+        "conv-123",
         "-y",
       ]);
 
@@ -123,9 +143,15 @@ describe("conversations commands", () => {
 
     it("should parse conversations export", async () => {
       await program.parseAsync([
-        "node", "test", "conversations", "export", "conv-123",
-        "-o", "conversation.json",
-        "-f", "txt",
+        "node",
+        "test",
+        "conversations",
+        "export",
+        "conv-123",
+        "-o",
+        "conversation.json",
+        "-f",
+        "txt",
       ]);
 
       const cmd = program.commands[0].commands[3];
@@ -136,9 +162,14 @@ describe("conversations commands", () => {
 
     it("should parse conversations count", async () => {
       await program.parseAsync([
-        "node", "test", "conversations", "count",
-        "-s", "test-space",
-        "-u", "user-123",
+        "node",
+        "test",
+        "conversations",
+        "count",
+        "-s",
+        "test-space",
+        "-u",
+        "user-123",
       ]);
 
       const cmd = program.commands[0].commands[4];

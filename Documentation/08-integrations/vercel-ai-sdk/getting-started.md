@@ -89,15 +89,15 @@ import { streamText } from "ai";
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: process.env.MEMORY_SPACE_ID || "default-chat",
-  
+
   // User identification
   userId: "demo-user", // Replace with real user ID
   userName: "User",
-  
+
   // REQUIRED in SDK v0.17.0+
   agentId: "my-assistant",
   agentName: "My AI Assistant",
-  
+
   // Optional: Enable enhanced features
   enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === "true",
   enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === "true",
@@ -133,8 +133,8 @@ export default function ChatPage() {
 
       <div className="space-y-4 mb-4">
         {messages.map(m => (
-          <div 
-            key={m.id} 
+          <div
+            key={m.id}
             className={`p-3 rounded ${
               m.role === 'user' ? 'bg-blue-100' : 'bg-gray-100'
             }`}
@@ -142,7 +142,7 @@ export default function ChatPage() {
             <strong>{m.role === 'user' ? 'You' : 'Assistant'}:</strong> {m.content}
           </div>
         ))}
-        
+
         {isLoading && (
           <div className="p-3 rounded bg-gray-100 animate-pulse">
             Thinking...
@@ -158,8 +158,8 @@ export default function ChatPage() {
           className="flex-1 p-2 border rounded"
           disabled={isLoading}
         />
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
           disabled={isLoading}
         >
@@ -192,24 +192,24 @@ npm run dev
 
 ### Required Options
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `convexUrl` | string | Your Convex deployment URL |
-| `memorySpaceId` | string | Namespace for memory isolation |
-| `userId` | string | User identifier |
-| `agentId` | string | Agent identifier (required in v0.17.0+) |
+| Option          | Type   | Description                             |
+| --------------- | ------ | --------------------------------------- |
+| `convexUrl`     | string | Your Convex deployment URL              |
+| `memorySpaceId` | string | Namespace for memory isolation          |
+| `userId`        | string | User identifier                         |
+| `agentId`       | string | Agent identifier (required in v0.17.0+) |
 
 ### Optional Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `userName` | string | "User" | User display name |
-| `agentName` | string | agentId | Agent display name |
-| `enableFactExtraction` | boolean | false | Enable LLM fact extraction |
-| `enableGraphMemory` | boolean | false | Sync to graph database |
-| `memorySearchLimit` | number | 5 | Max memories to retrieve |
-| `minMemoryRelevance` | number | 0.7 | Min similarity score (0-1) |
-| `debug` | boolean | false | Enable debug logging |
+| Option                 | Type    | Default | Description                |
+| ---------------------- | ------- | ------- | -------------------------- |
+| `userName`             | string  | "User"  | User display name          |
+| `agentName`            | string  | agentId | Agent display name         |
+| `enableFactExtraction` | boolean | false   | Enable LLM fact extraction |
+| `enableGraphMemory`    | boolean | false   | Sync to graph database     |
+| `memorySearchLimit`    | number  | 5       | Max memories to retrieve   |
+| `minMemoryRelevance`   | number  | 0.7     | Min similarity score (0-1) |
+| `debug`                | boolean | false   | Enable debug logging       |
 
 ## Dynamic User Resolution
 
@@ -220,7 +220,7 @@ import { auth } from "@clerk/nextjs";
 
 export async function POST(req: Request) {
   const { userId } = await auth();
-  
+
   if (!userId) {
     return new Response("Unauthorized", { status: 401 });
   }
@@ -244,7 +244,7 @@ Different memory space per team/tenant:
 ```typescript
 export async function POST(req: Request) {
   const { teamId, messages } = await req.json();
-  
+
   const cortexMemory = createCortexMemory({
     convexUrl: process.env.CONVEX_URL!,
     memorySpaceId: `team-${teamId}`, // Isolated per team

@@ -30,7 +30,9 @@ export const mockUsers = {
   list: jest.fn().mockResolvedValue([]),
   get: jest.fn().mockResolvedValue(null),
   exists: jest.fn().mockResolvedValue(false),
-  update: jest.fn().mockResolvedValue({ id: "test-user", version: 1, data: {} }),
+  update: jest
+    .fn()
+    .mockResolvedValue({ id: "test-user", version: 1, data: {} }),
   merge: jest.fn().mockResolvedValue({ id: "test-user", version: 2, data: {} }),
   delete: jest.fn().mockResolvedValue({ deleted: true, totalDeleted: 1 }),
   deleteMany: jest.fn().mockResolvedValue({ deleted: 0 }),
@@ -168,9 +170,13 @@ export const mockCortex = {
 export function resetAllMocks(): void {
   Object.values(mockMemory).forEach((fn) => (fn as jest.Mock).mockClear());
   Object.values(mockUsers).forEach((fn) => (fn as jest.Mock).mockClear());
-  Object.values(mockMemorySpaces).forEach((fn) => (fn as jest.Mock).mockClear());
+  Object.values(mockMemorySpaces).forEach((fn) =>
+    (fn as jest.Mock).mockClear(),
+  );
   Object.values(mockFacts).forEach((fn) => (fn as jest.Mock).mockClear());
-  Object.values(mockConversations).forEach((fn) => (fn as jest.Mock).mockClear());
+  Object.values(mockConversations).forEach((fn) =>
+    (fn as jest.Mock).mockClear(),
+  );
   Object.values(mockVector).forEach((fn) => (fn as jest.Mock).mockClear());
   Object.values(mockAgents).forEach((fn) => (fn as jest.Mock).mockClear());
   Object.values(mockContexts).forEach((fn) => (fn as jest.Mock).mockClear());

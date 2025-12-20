@@ -76,10 +76,16 @@ describe("spaces commands", () => {
 
     it("should parse spaces list with filters", async () => {
       await program.parseAsync([
-        "node", "test", "spaces", "list",
-        "-t", "project",
-        "-s", "active",
-        "-l", "50",
+        "node",
+        "test",
+        "spaces",
+        "list",
+        "-t",
+        "project",
+        "-s",
+        "active",
+        "-l",
+        "50",
       ]);
 
       const cmd = program.commands[0].commands[0];
@@ -90,8 +96,13 @@ describe("spaces commands", () => {
 
     it("should parse spaces create with required type", async () => {
       await program.parseAsync([
-        "node", "test", "spaces", "create", "new-space",
-        "-t", "project",
+        "node",
+        "test",
+        "spaces",
+        "create",
+        "new-space",
+        "-t",
+        "project",
       ]);
 
       const cmd = program.commands[0].commands[1];
@@ -101,10 +112,17 @@ describe("spaces commands", () => {
 
     it("should parse spaces create with all options", async () => {
       await program.parseAsync([
-        "node", "test", "spaces", "create", "new-space",
-        "-t", "project",
-        "-n", "My Project",
-        "-m", '{"category":"test"}',
+        "node",
+        "test",
+        "spaces",
+        "create",
+        "new-space",
+        "-t",
+        "project",
+        "-n",
+        "My Project",
+        "-m",
+        '{"category":"test"}',
       ]);
 
       const cmd = program.commands[0].commands[1];
@@ -114,16 +132,12 @@ describe("spaces commands", () => {
 
     it("should require type for create", async () => {
       await expect(
-        program.parseAsync([
-          "node", "test", "spaces", "create", "new-space",
-        ])
+        program.parseAsync(["node", "test", "spaces", "create", "new-space"]),
       ).rejects.toThrow();
     });
 
     it("should parse spaces get with space ID", async () => {
-      await program.parseAsync([
-        "node", "test", "spaces", "get", "space-123",
-      ]);
+      await program.parseAsync(["node", "test", "spaces", "get", "space-123"]);
 
       const cmd = program.commands[0].commands[2];
       expect(cmd.args[0]).toBe("space-123");
@@ -131,8 +145,13 @@ describe("spaces commands", () => {
 
     it("should parse spaces delete with cascade", async () => {
       await program.parseAsync([
-        "node", "test", "spaces", "delete", "space-123",
-        "--cascade", "-y",
+        "node",
+        "test",
+        "spaces",
+        "delete",
+        "space-123",
+        "--cascade",
+        "-y",
       ]);
 
       const cmd = program.commands[0].commands[3];
@@ -142,8 +161,13 @@ describe("spaces commands", () => {
 
     it("should parse spaces archive with reason", async () => {
       await program.parseAsync([
-        "node", "test", "spaces", "archive", "space-123",
-        "-r", "Project completed",
+        "node",
+        "test",
+        "spaces",
+        "archive",
+        "space-123",
+        "-r",
+        "Project completed",
         "-y",
       ]);
 
@@ -153,9 +177,15 @@ describe("spaces commands", () => {
 
     it("should parse add-participant with required options", async () => {
       await program.parseAsync([
-        "node", "test", "spaces", "add-participant", "space-123",
-        "-i", "user-456",
-        "-t", "user",
+        "node",
+        "test",
+        "spaces",
+        "add-participant",
+        "space-123",
+        "-i",
+        "user-456",
+        "-t",
+        "user",
       ]);
 
       const cmd = program.commands[0].commands[5];

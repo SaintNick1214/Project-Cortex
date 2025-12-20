@@ -1,17 +1,35 @@
-'use client';
+"use client";
 
-import dynamic from 'next/dynamic';
-import { useState } from 'react';
-import { useLayerTracking } from '@/lib/layer-tracking';
+import dynamic from "next/dynamic";
+import { useState } from "react";
+import { useLayerTracking } from "@/lib/layer-tracking";
 
 // Dynamic imports to avoid SSR issues with framer-motion
-const ChatInterface = dynamic(() => import('@/components/ChatInterface').then(m => ({ default: m.ChatInterface })), { ssr: false });
-const LayerFlowDiagram = dynamic(() => import('@/components/LayerFlowDiagram').then(m => ({ default: m.LayerFlowDiagram })), { ssr: false });
-const MemorySpaceSwitcher = dynamic(() => import('@/components/MemorySpaceSwitcher').then(m => ({ default: m.MemorySpaceSwitcher })), { ssr: false });
+const ChatInterface = dynamic(
+  () =>
+    import("@/components/ChatInterface").then((m) => ({
+      default: m.ChatInterface,
+    })),
+  { ssr: false },
+);
+const LayerFlowDiagram = dynamic(
+  () =>
+    import("@/components/LayerFlowDiagram").then((m) => ({
+      default: m.LayerFlowDiagram,
+    })),
+  { ssr: false },
+);
+const MemorySpaceSwitcher = dynamic(
+  () =>
+    import("@/components/MemorySpaceSwitcher").then((m) => ({
+      default: m.MemorySpaceSwitcher,
+    })),
+  { ssr: false },
+);
 
 export default function Home() {
-  const [memorySpaceId, setMemorySpaceId] = useState('quickstart-demo');
-  const [userId] = useState('demo-user');
+  const [memorySpaceId, setMemorySpaceId] = useState("quickstart-demo");
+  const [userId] = useState("demo-user");
   const {
     layers,
     isOrchestrating,

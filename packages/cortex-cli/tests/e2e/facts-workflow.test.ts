@@ -57,8 +57,10 @@ describeE2E("Facts Workflow E2E", () => {
       await cortex.memory.remember({
         memorySpaceId: TEST_SPACE_ID,
         conversationId: conv.conversationId,
-        userMessage: "I prefer dark mode and always want responses in bullet points",
-        agentResponse: "Got it! I'll remember you prefer dark mode and bullet point format.",
+        userMessage:
+          "I prefer dark mode and always want responses in bullet points",
+        agentResponse:
+          "Got it! I'll remember you prefer dark mode and bullet point format.",
         userId: TEST_USER_ID,
         agentId: "facts-test-agent",
         userName: "Facts Test User",
@@ -93,7 +95,7 @@ describeE2E("Facts Workflow E2E", () => {
       const results = await cortex.facts.search(
         TEST_SPACE_ID,
         "preference dark",
-        { limit: 20 }
+        { limit: 20 },
       );
 
       expect(Array.isArray(results)).toBe(true);
@@ -103,7 +105,7 @@ describeE2E("Facts Workflow E2E", () => {
       const results = await cortex.facts.search(
         TEST_SPACE_ID,
         "xyznonexistent12345",
-        { limit: 20 }
+        { limit: 20 },
       );
 
       expect(results).toEqual([]);

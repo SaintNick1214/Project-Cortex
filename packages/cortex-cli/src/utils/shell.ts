@@ -44,7 +44,11 @@ export async function commandExists(command: string): Promise<boolean> {
 export async function execCommand(
   command: string,
   args: string[],
-  options: { cwd?: string; env?: Record<string, string | undefined>; quiet?: boolean } = {},
+  options: {
+    cwd?: string;
+    env?: Record<string, string | undefined>;
+    quiet?: boolean;
+  } = {},
 ): Promise<{ stdout: string; stderr: string; code: number }> {
   // Validate command is from allowlist (defense in depth)
   if (!ALLOWED_COMMANDS.includes(command)) {
@@ -123,7 +127,6 @@ export async function execCommandLive(
   });
 }
 
-
 /**
  * Get the path to the installed SDK package
  * @param projectPath - Optional project path to look in (defaults to current directory)
@@ -150,7 +153,6 @@ export function getSDKPath(projectPath?: string): string | null {
     return null;
   }
 }
-
 
 /**
  * Fetch the latest SDK package.json from npm registry

@@ -1608,7 +1608,9 @@ interface PurgeNamespaceResult {
 const preview = await cortex.mutable.purgeNamespace("test-data", {
   dryRun: true,
 });
-console.log(`Would delete ${preview.deleted} keys: ${preview.keys?.join(", ")}`);
+console.log(
+  `Would delete ${preview.deleted} keys: ${preview.keys?.join(", ")}`,
+);
 
 // Actually delete
 const result = await cortex.mutable.purgeNamespace("test-data");

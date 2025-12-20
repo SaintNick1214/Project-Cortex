@@ -299,7 +299,9 @@ export class ConversationsAPI {
    * });
    * ```
    */
-  async list(filter?: ListConversationsFilter): Promise<ListConversationsResult> {
+  async list(
+    filter?: ListConversationsFilter,
+  ): Promise<ListConversationsResult> {
     // All fields optional, validate only if provided
     if (filter?.type) {
       validateConversationType(filter.type);

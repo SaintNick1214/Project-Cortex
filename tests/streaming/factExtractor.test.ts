@@ -50,13 +50,15 @@ function createMockFactsAPI(): FactsAPI {
         deduplication: { strategy: "structural", matchedExisting: false },
       };
     }),
-    update: jest.fn(async (_memorySpaceId: string, factId: string, updates: any) => {
-      const fact = storedFacts.find((f) => f.factId === factId);
-      if (fact) {
-        Object.assign(fact, updates);
-      }
-      return fact;
-    }),
+    update: jest.fn(
+      async (_memorySpaceId: string, factId: string, updates: any) => {
+        const fact = storedFacts.find((f) => f.factId === factId);
+        if (fact) {
+          Object.assign(fact, updates);
+        }
+        return fact;
+      },
+    ),
     get: jest.fn(async (_memorySpaceId: string, factId: string) => {
       return storedFacts.find((f) => f.factId === factId) || null;
     }),
@@ -837,7 +839,11 @@ describe("ProgressiveFactExtractor", () => {
 
     it("should handle unicode in facts", async () => {
       const extractFacts = createMockExtractFacts([
-        { fact: "User's name is 田中太郎 🎉", factType: "identity", confidence: 95 },
+        {
+          fact: "User's name is 田中太郎 🎉",
+          factType: "identity",
+          confidence: 95,
+        },
       ]);
 
       const result = await extractor.extractFromChunk(
@@ -904,7 +910,11 @@ describe("ProgressiveFactExtractor", () => {
 
     it("should handle 100 confidence", async () => {
       const extractFacts = createMockExtractFacts([
-        { fact: "High confidence fact", factType: "knowledge", confidence: 100 },
+        {
+          fact: "High confidence fact",
+          factType: "knowledge",
+          confidence: 100,
+        },
       ]);
 
       const result = await extractor.extractFromChunk(

@@ -533,7 +533,12 @@ export type MemoryLayer =
 /**
  * Layer status during orchestration
  */
-export type LayerStatus = "pending" | "in_progress" | "complete" | "error" | "skipped";
+export type LayerStatus =
+  | "pending"
+  | "in_progress"
+  | "complete"
+  | "error"
+  | "skipped";
 
 /**
  * Event emitted when a layer's status changes
@@ -609,5 +614,7 @@ export interface LayerObserver {
   /**
    * Called when orchestration completes (all layers done)
    */
-  onOrchestrationComplete?: (summary: OrchestrationSummary) => void | Promise<void>;
+  onOrchestrationComplete?: (
+    summary: OrchestrationSummary,
+  ) => void | Promise<void>;
 }

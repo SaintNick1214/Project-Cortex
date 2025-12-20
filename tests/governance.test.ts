@@ -868,9 +868,9 @@ describe("Governance API", () => {
       });
 
       it("should throw when policy is null", async () => {
-        await expect(
-          cortex.governance.setPolicy(null as any),
-        ).rejects.toThrow(/Policy is required|Cannot read/);
+        await expect(cortex.governance.setPolicy(null as any)).rejects.toThrow(
+          /Policy is required|Cannot read/,
+        );
       });
 
       it("should throw when policy is undefined", async () => {

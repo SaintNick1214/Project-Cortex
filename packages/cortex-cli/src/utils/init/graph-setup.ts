@@ -239,7 +239,14 @@ export async function startGraphContainers(
     // Check if container exists but is stopped (from a previous run)
     const existsResult = await execCommand(
       "docker",
-      ["ps", "-a", "--filter", `name=${containerName}`, "--format", "{{.Names}}"],
+      [
+        "ps",
+        "-a",
+        "--filter",
+        `name=${containerName}`,
+        "--format",
+        "{{.Names}}",
+      ],
       { cwd: projectPath, quiet: true },
     );
 
@@ -261,11 +268,10 @@ export async function startGraphContainers(
 
       // If start failed, remove the old container and recreate
       spinner.text = `Removing old ${graphType} container...`;
-      await execCommand(
-        "docker",
-        ["rm", "-f", containerName],
-        { cwd: projectPath, quiet: true },
-      );
+      await execCommand("docker", ["rm", "-f", containerName], {
+        cwd: projectPath,
+        quiet: true,
+      });
     }
 
     // Pull images first (may take time on first run)

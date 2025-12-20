@@ -367,7 +367,9 @@ describe("rememberStream Integration Tests", () => {
 
       // Check progressive processing info
       if (result.progressiveProcessing) {
-        expect(result.progressiveProcessing.partialStorageHistory.length).toBeGreaterThanOrEqual(0);
+        expect(
+          result.progressiveProcessing.partialStorageHistory.length,
+        ).toBeGreaterThanOrEqual(0);
       }
     }, 15000);
 
@@ -482,7 +484,11 @@ describe("rememberStream Integration Tests", () => {
 
       // Facts should be extracted (if fact extraction is implemented)
       if (result.progressiveProcessing?.factsExtractedDuringStream) {
-        expect(Array.isArray(result.progressiveProcessing.factsExtractedDuringStream)).toBe(true);
+        expect(
+          Array.isArray(
+            result.progressiveProcessing.factsExtractedDuringStream,
+          ),
+        ).toBe(true);
       }
     });
 
@@ -520,7 +526,11 @@ describe("rememberStream Integration Tests", () => {
 
       // Check for progressive fact extraction results
       if (result.progressiveProcessing?.factsExtractedDuringStream) {
-        expect(Array.isArray(result.progressiveProcessing.factsExtractedDuringStream)).toBe(true);
+        expect(
+          Array.isArray(
+            result.progressiveProcessing.factsExtractedDuringStream,
+          ),
+        ).toBe(true);
       }
     }, 10000);
   });
@@ -715,7 +725,9 @@ describe("rememberStream Integration Tests", () => {
       });
 
       // Verify isolation - search in space A shouldn't find space B content
-      const searchA = await cortex.memory.search(spaceA, "space B", { limit: 10 });
+      const searchA = await cortex.memory.search(spaceA, "space B", {
+        limit: 10,
+      });
 
       // Should not find space B content in space A
       const foundSpaceBContent = searchA.some((r) => {

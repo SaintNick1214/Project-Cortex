@@ -89,9 +89,17 @@ describeIfEnabled("Schema Initialization", () => {
 
       // Test by creating nodes with unique IDs - constraints should be enforced
       const nodeTypes = [
-        { label: "MemorySpace", prop: "memorySpaceId", value: "unique-space-1" },
+        {
+          label: "MemorySpace",
+          prop: "memorySpaceId",
+          value: "unique-space-1",
+        },
         { label: "Context", prop: "contextId", value: "unique-ctx-1" },
-        { label: "Conversation", prop: "conversationId", value: "unique-conv-1" },
+        {
+          label: "Conversation",
+          prop: "conversationId",
+          value: "unique-conv-1",
+        },
         { label: "Memory", prop: "memoryId", value: "unique-mem-1" },
         { label: "Fact", prop: "factId", value: "unique-fact-1" },
         { label: "User", prop: "userId", value: "unique-user-1" },
@@ -211,7 +219,10 @@ describeIfEnabled("Schema Initialization", () => {
       // Verify constraints removed
       const afterDrop = await verifyGraphSchema(adapter);
 
-      if (hadConstraints && !afterDrop.missing.includes("verification not supported")) {
+      if (
+        hadConstraints &&
+        !afterDrop.missing.includes("verification not supported")
+      ) {
         // Should have fewer constraints now
         expect(afterDrop.constraints.length).toBeLessThanOrEqual(
           beforeDrop.constraints.length,

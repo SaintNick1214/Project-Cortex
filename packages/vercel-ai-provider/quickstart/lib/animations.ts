@@ -1,4 +1,4 @@
-import type { Variants } from 'framer-motion';
+import type { Variants } from "framer-motion";
 
 /**
  * Framer Motion animation variants for the layer flow visualization
@@ -18,7 +18,7 @@ export const layerCardVariants: Variants = {
     transition: {
       delay: i * 0.1,
       duration: 0.3,
-      ease: 'easeOut',
+      ease: "easeOut",
     },
   }),
   exit: {
@@ -42,7 +42,7 @@ export const statusPulseVariants: Variants = {
     transition: {
       duration: 1,
       repeat: Infinity,
-      ease: 'easeInOut',
+      ease: "easeInOut",
     },
   },
   complete: {
@@ -50,7 +50,7 @@ export const statusPulseVariants: Variants = {
     opacity: 1,
     transition: {
       duration: 0.3,
-      ease: 'easeOut',
+      ease: "easeOut",
     },
   },
 };
@@ -67,7 +67,7 @@ export const flowLineVariants: Variants = {
     transition: {
       duration: 1.5,
       repeat: Infinity,
-      ease: 'easeInOut',
+      ease: "easeInOut",
     },
   },
   complete: {
@@ -83,12 +83,12 @@ export const dataPreviewVariants: Variants = {
     opacity: 0,
   },
   expanded: {
-    height: 'auto',
+    height: "auto",
     opacity: 1,
     transition: {
       height: {
         duration: 0.3,
-        ease: 'easeOut',
+        ease: "easeOut",
       },
       opacity: {
         duration: 0.2,
@@ -111,7 +111,7 @@ export const messageVariants: Variants = {
     scale: 1,
     transition: {
       duration: 0.2,
-      ease: 'easeOut',
+      ease: "easeOut",
     },
   },
 };
@@ -131,16 +131,16 @@ export const staggerContainerVariants: Variants = {
 // Glow effect animation (for completed layers)
 export const glowVariants: Variants = {
   idle: {
-    boxShadow: '0 0 0 0 rgba(34, 197, 94, 0)',
+    boxShadow: "0 0 0 0 rgba(34, 197, 94, 0)",
   },
   glow: {
     boxShadow: [
-      '0 0 0 0 rgba(34, 197, 94, 0.4)',
-      '0 0 0 10px rgba(34, 197, 94, 0)',
+      "0 0 0 0 rgba(34, 197, 94, 0.4)",
+      "0 0 0 10px rgba(34, 197, 94, 0)",
     ],
     transition: {
       duration: 0.6,
-      ease: 'easeOut',
+      ease: "easeOut",
     },
   },
 };
