@@ -1,5 +1,16 @@
 # @cortexmemory/cli Changelog
 
+## [0.23.0] - 2025-12-19
+
+### Added
+
+- **Automatic schema sync from SDK** - Convex schema files are now automatically synced from `@cortexmemory/sdk` before deploy/dev/init
+  - Detects outdated schema files by comparing file hashes
+  - Copies latest schema from SDK's bundled `convex-dev/` folder
+  - Shows user-friendly output: `↓ Synced schema from @cortexmemory/sdk v0.22.0`
+  - Affected commands: `cortex convex deploy`, `cortex convex dev`, `cortex convex init`
+  - Use `--skip-sync` flag to skip automatic sync if needed
+
 ## [0.22.2] - 2025-12-19
 
 ### Fixed
