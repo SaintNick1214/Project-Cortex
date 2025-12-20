@@ -19,6 +19,15 @@ export type LayerStatus =
   | "error"
   | "skipped";
 
+/**
+ * Revision action taken by the belief revision system (v0.24.0+)
+ * - CREATE: New fact was created (no conflicts)
+ * - UPDATE: Existing fact was updated with new information
+ * - SUPERSEDE: Old fact was superseded by contradicting information
+ * - NONE: No action taken (duplicate or irrelevant)
+ */
+export type RevisionAction = "CREATE" | "UPDATE" | "SUPERSEDE" | "NONE";
+
 export interface LayerState {
   status: LayerStatus;
   latencyMs?: number;
@@ -29,6 +38,16 @@ export interface LayerState {
   };
   startedAt?: number;
   completedAt?: number;
+  /**
+   * Revision action taken (v0.24.0+)
+   * Only present for facts layer when belief revision is enabled
+   */
+  revisionAction?: RevisionAction;
+  /**
+   * Facts that were superseded by this action (v0.24.0+)
+   * Only present when revisionAction is "SUPERSEDE"
+   */
+  supersededFacts?: string[];
 }
 
 export interface LayerTrackingState {
@@ -74,7 +93,15 @@ export function useLayerTracking() {
   }, []);
 
   const updateLayer = useCallback(
-    (layer: MemoryLayer, status: LayerStatus, data?: LayerState["data"]) => {
+    (
+      layer: MemoryLayer,
+      status: LayerStatus,
+      data?: LayerState["data"],
+      revisionInfo?: {
+        action?: RevisionAction;
+        supersededFacts?: string[];
+      },
+    ) => {
       setState((prev: LayerTrackingState) => {
         const now = Date.now();
         const layerState = prev.layers[layer];
@@ -93,6 +120,9 @@ export function useLayerTracking() {
             latencyMs,
             data,
             completedAt: status === "complete" ? now : layerState?.completedAt,
+            // Belief revision info (v0.24.0+)
+            revisionAction: revisionInfo?.action,
+            supersededFacts: revisionInfo?.supersededFacts,
           },
         };
 

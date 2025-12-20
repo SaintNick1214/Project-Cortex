@@ -98,6 +98,17 @@ export function LayerFlowDiagram({
               latencyMs={layers[layer.key]?.latencyMs}
               data={layers[layer.key]?.data}
               optional={layer.optional}
+              // Belief revision info (v0.24.0+) - only for facts layer
+              revisionAction={
+                layer.key === "facts"
+                  ? layers[layer.key]?.revisionAction
+                  : undefined
+              }
+              supersededFacts={
+                layer.key === "facts"
+                  ? layers[layer.key]?.supersededFacts
+                  : undefined
+              }
             />
 
             {/* Flow connector between layers */}
@@ -131,7 +142,8 @@ export function LayerFlowDiagram({
       </div>
 
       {/* Legend */}
-      <div className="pt-4 border-t border-white/10">
+      <div className="pt-4 border-t border-white/10 space-y-2">
+        {/* Status legend */}
         <div className="flex justify-center gap-4 text-xs text-gray-500">
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-gray-500" />
@@ -148,6 +160,25 @@ export function LayerFlowDiagram({
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-gray-700" />
             <span>Skipped</span>
+          </div>
+        </div>
+        {/* Belief revision legend (v0.24.0+) */}
+        <div className="flex justify-center gap-3 text-xs text-gray-600">
+          <span className="text-gray-700">Belief Revision:</span>
+          <div className="flex items-center gap-1">
+            <span className="px-1 py-0.5 bg-green-500/20 text-green-400 rounded text-[9px]">
+              NEW
+            </span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="px-1 py-0.5 bg-blue-500/20 text-blue-400 rounded text-[9px]">
+              UPDATED
+            </span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="px-1 py-0.5 bg-orange-500/20 text-orange-400 rounded text-[9px]">
+              SUPERSEDED
+            </span>
           </div>
         </div>
       </div>

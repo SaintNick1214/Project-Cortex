@@ -5,6 +5,7 @@ import { useState } from "react";
 import { DataPreview } from "./DataPreview";
 
 type LayerStatus = "pending" | "in_progress" | "complete" | "error" | "skipped";
+type RevisionAction = "CREATE" | "UPDATE" | "SUPERSEDE" | "NONE";
 
 interface LayerCardProps {
   name: string;
@@ -18,7 +19,40 @@ interface LayerCardProps {
   };
   compact?: boolean;
   optional?: boolean;
+  /** Revision action taken by belief revision system (v0.24.0+) */
+  revisionAction?: RevisionAction;
+  /** Facts that were superseded (when revisionAction is "SUPERSEDE") */
+  supersededFacts?: string[];
 }
+
+/**
+ * Get badge styling for revision action
+ */
+const revisionBadgeConfig: Record<
+  RevisionAction,
+  { color: string; bgColor: string; label: string }
+> = {
+  CREATE: {
+    color: "text-green-400",
+    bgColor: "bg-green-500/20",
+    label: "NEW",
+  },
+  UPDATE: {
+    color: "text-blue-400",
+    bgColor: "bg-blue-500/20",
+    label: "UPDATED",
+  },
+  SUPERSEDE: {
+    color: "text-orange-400",
+    bgColor: "bg-orange-500/20",
+    label: "SUPERSEDED",
+  },
+  NONE: {
+    color: "text-gray-400",
+    bgColor: "bg-gray-500/20",
+    label: "UNCHANGED",
+  },
+};
 
 const statusConfig: Record<
   LayerStatus,
@@ -59,9 +93,14 @@ export function LayerCard({
   data,
   compact = false,
   optional = false,
+  revisionAction,
+  supersededFacts,
 }: LayerCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const config = statusConfig[status];
+  const revisionConfig = revisionAction
+    ? revisionBadgeConfig[revisionAction]
+    : null;
 
   if (compact) {
     return (
@@ -87,11 +126,21 @@ export function LayerCard({
           <span>{icon}</span>
           <span className="text-xs font-medium truncate">{name}</span>
         </div>
-        {latencyMs !== undefined && (
-          <div className="text-[10px] text-gray-500 mt-0.5 text-center">
-            {latencyMs}ms
-          </div>
-        )}
+        <div className="flex items-center justify-center gap-2 mt-0.5">
+          {latencyMs !== undefined && (
+            <span className="text-[10px] text-gray-500">{latencyMs}ms</span>
+          )}
+          {/* Revision action badge (v0.24.0+) */}
+          {revisionConfig && revisionAction !== "NONE" && (
+            <motion.span
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className={`text-[9px] px-1.5 py-0.5 rounded ${revisionConfig.bgColor} ${revisionConfig.color} font-medium`}
+            >
+              {revisionConfig.label}
+            </motion.span>
+          )}
+        </div>
       </motion.div>
     );
   }
@@ -146,6 +195,17 @@ export function LayerCard({
           <span className="text-sm text-gray-400">{latencyMs}ms</span>
         )}
 
+        {/* Revision action badge (v0.24.0+) */}
+        {revisionConfig && revisionAction !== "NONE" && (
+          <motion.span
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className={`text-[10px] px-1.5 py-0.5 rounded ${revisionConfig.bgColor} ${revisionConfig.color} font-medium`}
+          >
+            {revisionConfig.label}
+          </motion.span>
+        )}
+
         {/* Optional badge */}
         {optional && (
           <span className="text-[10px] px-1.5 py-0.5 bg-white/10 rounded text-gray-400">
@@ -176,6 +236,24 @@ export function LayerCard({
           >
             <div className="px-4 pb-3 pt-1 border-t border-white/10">
               <DataPreview data={data} />
+              {/* Show superseded facts when revisionAction is SUPERSEDE */}
+              {revisionAction === "SUPERSEDE" &&
+                supersededFacts &&
+                supersededFacts.length > 0 && (
+                  <div className="mt-2 pt-2 border-t border-white/5">
+                    <div className="text-[10px] text-orange-400 font-medium mb-1">
+                      Superseded Facts:
+                    </div>
+                    {supersededFacts.map((fact, i) => (
+                      <div
+                        key={i}
+                        className="text-[10px] text-gray-500 line-through"
+                      >
+                        {fact}
+                      </div>
+                    ))}
+                  </div>
+                )}
             </div>
           </motion.div>
         )}
