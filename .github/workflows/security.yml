@@ -151,6 +151,11 @@ jobs:
         with:
           fail-on-severity: high
           comment-summary-in-pr: true
+          # Allow internal packages - license is in repo root (Apache-2.0)
+          allow-dependencies-licenses: |
+            pkg:npm/@cortexmemory/sdk
+            pkg:npm/@cortexmemory/cli
+            pkg:npm/@cortexmemory/vercel-ai-provider
 
   # License compliance check
   license-check:
