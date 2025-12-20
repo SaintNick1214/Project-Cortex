@@ -41,25 +41,20 @@ describe("Fact History Service", () => {
 
   describe("Basic Operations", () => {
     it("should store a fact and track CREATE in history", async () => {
-      const factId = ctx.factPrefix("basic-create");
-
       // Store a fact
-      const fact = await cortex.facts.store(
-        {
-          memorySpaceId: TEST_MEMSPACE_ID,
-          fact: "User likes blue",
-          factType: "preference",
-          subject: "user",
-          predicate: "favorite color",
-          object: "blue",
-          confidence: 90,
-          sourceType: "conversation",
-        },
-        { factId }
-      );
+      const fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "User likes blue",
+        factType: "preference",
+        subject: "user",
+        predicate: "favorite color",
+        object: "blue",
+        confidence: 90,
+        sourceType: "conversation",
+      });
 
       expect(fact).toBeDefined();
-      expect(fact.factId).toBe(factId);
+      expect(fact.factId).toBeDefined();
 
       // History should be available (may not have events until belief revision is used)
       // This test verifies the history method works without errors
@@ -68,22 +63,17 @@ describe("Fact History Service", () => {
     });
 
     it("should track multiple changes to a fact", async () => {
-      const factId = ctx.factPrefix("multi-change");
-
       // Create fact
-      const fact = await cortex.facts.store(
-        {
-          memorySpaceId: TEST_MEMSPACE_ID,
-          fact: "User lives in NYC",
-          factType: "knowledge",
-          subject: "user",
-          predicate: "lives in",
-          object: "NYC",
-          confidence: 80,
-          sourceType: "conversation",
-        },
-        { factId }
-      );
+      const fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "User lives in NYC",
+        factType: "knowledge",
+        subject: "user",
+        predicate: "lives in",
+        object: "NYC",
+        confidence: 80,
+        sourceType: "conversation",
+      });
 
       // Update fact
       await cortex.facts.update(TEST_MEMSPACE_ID, fact.factId, {
@@ -98,20 +88,16 @@ describe("Fact History Service", () => {
 
   describe("Filter Operations", () => {
     it("should filter changes by time range", async () => {
-      const factId = ctx.factPrefix("time-filter");
       const beforeTime = new Date();
 
       // Create fact
-      await cortex.facts.store(
-        {
-          memorySpaceId: TEST_MEMSPACE_ID,
-          fact: "Test time filter fact",
-          factType: "custom",
-          confidence: 80,
-          sourceType: "conversation",
-        },
-        { factId }
-      );
+      await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Test time filter fact",
+        factType: "custom",
+        confidence: 80,
+        sourceType: "conversation",
+      });
 
       const afterTime = new Date();
 
@@ -128,16 +114,13 @@ describe("Fact History Service", () => {
     it("should limit results", async () => {
       // Create multiple facts
       for (let i = 0; i < 5; i++) {
-        await cortex.facts.store(
-          {
-            memorySpaceId: TEST_MEMSPACE_ID,
-            fact: `Limit test fact ${i}`,
-            factType: "custom",
-            confidence: 80,
-            sourceType: "conversation",
-          },
-          { factId: ctx.factPrefix(`limit-${i}`) }
-        );
+        await cortex.facts.store({
+          memorySpaceId: TEST_MEMSPACE_ID,
+          fact: `Limit test fact ${i}`,
+          factType: "custom",
+          confidence: 80,
+          sourceType: "conversation",
+        });
       }
 
       // Query with limit
@@ -175,22 +158,17 @@ describe("Fact History Service", () => {
 
   describe("Supersession Chain", () => {
     it("should return supersession chain for a fact", async () => {
-      const factId = ctx.factPrefix("chain-test");
-      
       // Create a fact
-      await cortex.facts.store(
-        {
-          memorySpaceId: TEST_MEMSPACE_ID,
-          fact: "Chain test fact",
-          factType: "custom",
-          confidence: 80,
-          sourceType: "conversation",
-        },
-        { factId }
-      );
+      const fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Chain test fact",
+        factType: "custom",
+        confidence: 80,
+        sourceType: "conversation",
+      });
 
       // Get chain
-      const chain = await cortex.facts.getSupersessionChain(factId);
+      const chain = await cortex.facts.getSupersessionChain(fact.factId);
 
       expect(Array.isArray(chain)).toBe(true);
     });
@@ -198,62 +176,62 @@ describe("Fact History Service", () => {
 
   describe("Manual Supersession", () => {
     it("should supersede a fact manually", async () => {
-      const oldFactId = ctx.factPrefix("supersede-old");
-      const newFactId = ctx.factPrefix("supersede-new");
-
       // Create old fact
-      await cortex.facts.store(
-        {
-          memorySpaceId: TEST_MEMSPACE_ID,
-          fact: "User likes blue",
-          factType: "preference",
-          subject: "user",
-          predicate: "favorite color",
-          object: "blue",
-          confidence: 80,
-          sourceType: "conversation",
-        },
-        { factId: oldFactId }
-      );
+      const oldFact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "User likes blue",
+        factType: "preference",
+        subject: "user",
+        predicate: "favorite color",
+        object: "blue",
+        confidence: 80,
+        sourceType: "conversation",
+      });
 
       // Create new fact
-      await cortex.facts.store(
-        {
-          memorySpaceId: TEST_MEMSPACE_ID,
-          fact: "User likes purple",
-          factType: "preference",
-          subject: "user",
-          predicate: "favorite color",
-          object: "purple",
-          confidence: 90,
-          sourceType: "conversation",
-        },
-        { factId: newFactId }
-      );
+      const newFact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "User likes purple",
+        factType: "preference",
+        subject: "user",
+        predicate: "favorite color",
+        object: "purple",
+        confidence: 90,
+        sourceType: "conversation",
+      });
 
       // Supersede
       const result = await cortex.facts.supersede({
         memorySpaceId: TEST_MEMSPACE_ID,
-        oldFactId,
-        newFactId,
+        oldFactId: oldFact.factId,
+        newFactId: newFact.factId,
         reason: "User changed preference",
       });
 
       expect(result.superseded).toBe(true);
-      expect(result.oldFactId).toBe(oldFactId);
-      expect(result.newFactId).toBe(newFactId);
+      expect(result.oldFactId).toBe(oldFact.factId);
+      expect(result.newFactId).toBe(newFact.factId);
 
       // Verify old fact is marked as superseded
-      const oldFact = await cortex.facts.get(TEST_MEMSPACE_ID, oldFactId);
-      expect(oldFact?.validUntil).toBeDefined();
+      const retrievedOldFact = await cortex.facts.get(TEST_MEMSPACE_ID, oldFact.factId);
+      expect(retrievedOldFact?.validUntil).toBeDefined();
     });
 
     it("should throw when superseding non-existent fact", async () => {
+      // Create a new fact to supersede with
+      const newFact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "New supersede test fact",
+        factType: "custom",
+        confidence: 90,
+        sourceType: "conversation",
+      });
+
       await expect(
         cortex.facts.supersede({
           memorySpaceId: TEST_MEMSPACE_ID,
           oldFactId: "non-existent-old",
-          newFactId: ctx.factPrefix("supersede-new-2"),
+          newFactId: newFact.factId,
           reason: "Test",
         })
       ).rejects.toThrow();

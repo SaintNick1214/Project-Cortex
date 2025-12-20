@@ -10,14 +10,14 @@
  * - History logging
  */
 
-import { describe, it, expect, beforeAll, afterAll, jest } from "@jest/globals";
+import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { createNamedTestRunContext } from "./helpers";
 
 // Mock LLM client for testing
-const createMockLLMClient = () => ({
-  complete: jest.fn().mockImplementation(async ({ prompt }) => {
+const createMockLLMClient = () => {
+  const mockImpl = async ({ prompt }: { prompt: string }): Promise<string> => {
     // Parse the prompt to determine the appropriate response
     if (prompt.includes("same slot") || prompt.includes("favorite color")) {
       return JSON.stringify({
@@ -35,8 +35,14 @@ const createMockLLMClient = () => ({
       mergedFact: null,
       confidence: 100,
     });
-  }),
-});
+  };
+
+  return {
+    complete: async (options: { system: string; prompt: string; model?: string; responseFormat?: "json" | "text" }) => {
+      return mockImpl(options);
+    },
+  };
+};
 
 describe("Belief Revision Pipeline", () => {
   const ctx = createNamedTestRunContext("belief-revision");
@@ -75,7 +81,7 @@ describe("Belief Revision Pipeline", () => {
   describe("Conflict Detection", () => {
     it("should detect no conflicts for new fact", async () => {
       // Configure belief revision (required for checkConflicts)
-      cortex.facts.configureBeliefRevision(createMockLLMClient() as any);
+      cortex.facts.configureBeliefRevision(createMockLLMClient());
 
       const result = await cortex.facts.checkConflicts({
         memorySpaceId: TEST_MEMSPACE_ID,
@@ -98,18 +104,16 @@ describe("Belief Revision Pipeline", () => {
       const userId = ctx.userId("slot-conflict");
       
       // Create existing fact
-      await cortex.facts.store(
-        {
-          memorySpaceId: TEST_MEMSPACE_ID,
-          fact: "User likes blue",
-          factType: "preference",
-          subject: userId,
-          predicate: "favorite color",
-          object: "blue",
-          confidence: 80,
-        },
-        { factId: ctx.factId("existing-color") }
-      );
+      const existingFact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "User likes blue",
+        factType: "preference",
+        subject: userId,
+        predicate: "favorite color",
+        object: "blue",
+        confidence: 80,
+        sourceType: "conversation",
+      });
 
       // Check for conflicts with new fact in same slot
       const result = await cortex.facts.checkConflicts({
@@ -128,6 +132,9 @@ describe("Belief Revision Pipeline", () => {
       expect(result).toBeDefined();
       expect(result).toHaveProperty("hasConflicts");
       expect(result).toHaveProperty("recommendedAction");
+      
+      // Cleanup reference
+      void existingFact;
     });
   });
 
@@ -145,9 +152,9 @@ describe("Belief Revision Pipeline", () => {
         return;
       }
       
-      const { ConvexClient } = await import("convex/browser");
-      const client = new ConvexClient(convexUrl);
-      const factsApi = new FactsAPI(client);
+      const { ConvexClient: LocalConvexClient } = await import("convex/browser");
+      const localClient = new LocalConvexClient(convexUrl);
+      const factsApi = new FactsAPI(localClient);
 
       await expect(
         factsApi.revise({
@@ -159,11 +166,11 @@ describe("Belief Revision Pipeline", () => {
         })
       ).rejects.toThrow(/not configured/);
 
-      await client.close();
+      await localClient.close();
     });
 
     it("should allow reconfiguration", async () => {
-      cortex.facts.configureBeliefRevision(createMockLLMClient() as any, {
+      cortex.facts.configureBeliefRevision(createMockLLMClient(), {
         slotMatching: { enabled: true },
         semanticMatching: { enabled: false },
       });
@@ -187,86 +194,72 @@ describe("Belief Revision Pipeline", () => {
 
   describe("Manual Supersession", () => {
     it("should supersede one fact with another", async () => {
-      const oldFactId = ctx.factId("manual-old");
-      const newFactId = ctx.factId("manual-new");
+      // Create both facts and capture their IDs
+      const oldFact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "Old fact to supersede",
+        factType: "custom",
+        confidence: 80,
+        sourceType: "conversation",
+      });
 
-      // Create both facts
-      await cortex.facts.store(
-        {
-          memorySpaceId: TEST_MEMSPACE_ID,
-          fact: "Old fact to supersede",
-          factType: "custom",
-          confidence: 80,
-        },
-        { factId: oldFactId }
-      );
-
-      await cortex.facts.store(
-        {
-          memorySpaceId: TEST_MEMSPACE_ID,
-          fact: "New superseding fact",
-          factType: "custom",
-          confidence: 90,
-        },
-        { factId: newFactId }
-      );
+      const newFact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "New superseding fact",
+        factType: "custom",
+        confidence: 90,
+        sourceType: "conversation",
+      });
 
       // Supersede
       const result = await cortex.facts.supersede({
         memorySpaceId: TEST_MEMSPACE_ID,
-        oldFactId,
-        newFactId,
+        oldFactId: oldFact.factId,
+        newFactId: newFact.factId,
         reason: "Manual supersession test",
       });
 
       expect(result.superseded).toBe(true);
 
       // Verify old fact is invalidated
-      const oldFact = await cortex.facts.get(TEST_MEMSPACE_ID, oldFactId);
-      expect(oldFact).toBeDefined();
-      expect(oldFact?.validUntil).toBeDefined();
+      const retrievedOldFact = await cortex.facts.get(TEST_MEMSPACE_ID, oldFact.factId);
+      expect(retrievedOldFact).toBeDefined();
+      expect(retrievedOldFact?.validUntil).toBeDefined();
     });
 
     it("should record supersession in history", async () => {
-      const oldFactId = ctx.factId("history-old");
-      const newFactId = ctx.factId("history-new");
-
       // Create and supersede
-      await cortex.facts.store(
-        {
-          memorySpaceId: TEST_MEMSPACE_ID,
-          fact: "History test old",
-          factType: "custom",
-          confidence: 80,
-        },
-        { factId: oldFactId }
-      );
+      const oldFact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "History test old",
+        factType: "custom",
+        confidence: 80,
+        sourceType: "conversation",
+      });
 
-      await cortex.facts.store(
-        {
-          memorySpaceId: TEST_MEMSPACE_ID,
-          fact: "History test new",
-          factType: "custom",
-          confidence: 90,
-        },
-        { factId: newFactId }
-      );
+      const newFact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: "History test new",
+        factType: "custom",
+        confidence: 90,
+        sourceType: "conversation",
+      });
 
       await cortex.facts.supersede({
         memorySpaceId: TEST_MEMSPACE_ID,
-        oldFactId,
-        newFactId,
+        oldFactId: oldFact.factId,
+        newFactId: newFact.factId,
         reason: "History test",
       });
 
       // Check history
-      const history = await cortex.facts.history(oldFactId);
+      const history = await cortex.facts.history(oldFact.factId);
       expect(Array.isArray(history)).toBe(true);
       
       // History should include SUPERSEDE event
       const supersessionEvent = history.find((e) => e.action === "SUPERSEDE");
       if (supersessionEvent) {
-        expect(supersessionEvent.supersededBy).toBe(newFactId);
+        expect(supersessionEvent.supersededBy).toBe(newFact.factId);
         expect(supersessionEvent.reason).toBe("History test");
       }
     });
@@ -278,7 +271,7 @@ describe("Belief Revision Pipeline", () => {
 
   describe("Error Handling", () => {
     it("should validate memorySpaceId in revise", async () => {
-      cortex.facts.configureBeliefRevision(createMockLLMClient() as any);
+      cortex.facts.configureBeliefRevision(createMockLLMClient());
 
       await expect(
         cortex.facts.revise({
@@ -319,8 +312,8 @@ describe("Belief Revision Pipeline", () => {
       await expect(
         cortex.facts.supersede({
           memorySpaceId: TEST_MEMSPACE_ID,
-          oldFactId: ctx.factId("non-existent"),
-          newFactId: ctx.factId("also-non-existent"),
+          oldFactId: ctx.factPrefix("non-existent"),
+          newFactId: ctx.factPrefix("also-non-existent"),
         })
       ).rejects.toThrow();
     });
@@ -335,44 +328,40 @@ describe("Belief Revision Pipeline", () => {
       const userId = ctx.userId("color-scenario");
       
       // Day 1: User says they like blue
-      await cortex.facts.store(
-        {
-          memorySpaceId: TEST_MEMSPACE_ID,
-          fact: `${userId} likes blue`,
-          factType: "preference",
-          subject: userId,
-          predicate: "favorite color",
-          object: "blue",
-          confidence: 90,
-        },
-        { factId: ctx.factId("color-day1") }
-      );
+      const day1Fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: `${userId} likes blue`,
+        factType: "preference",
+        subject: userId,
+        predicate: "favorite color",
+        object: "blue",
+        confidence: 90,
+        sourceType: "conversation",
+      });
 
       // Day 2: User says they now prefer purple
-      const _day2Fact = await cortex.facts.store(
-        {
-          memorySpaceId: TEST_MEMSPACE_ID,
-          fact: `${userId} prefers purple`,
-          factType: "preference",
-          subject: userId,
-          predicate: "favorite color",
-          object: "purple",
-          confidence: 95,
-        },
-        { factId: ctx.factId("color-day2") }
-      );
+      const day2Fact = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: `${userId} prefers purple`,
+        factType: "preference",
+        subject: userId,
+        predicate: "favorite color",
+        object: "purple",
+        confidence: 95,
+        sourceType: "conversation",
+      });
 
       // Manually supersede (in real usage, revise() would do this)
       await cortex.facts.supersede({
         memorySpaceId: TEST_MEMSPACE_ID,
-        oldFactId: ctx.factId("color-day1"),
-        newFactId: ctx.factId("color-day2"),
+        oldFactId: day1Fact.factId,
+        newFactId: day2Fact.factId,
         reason: "User stated new preference",
       });
 
       // Verify current state
-      const oldFact = await cortex.facts.get(TEST_MEMSPACE_ID, ctx.factId("color-day1"));
-      const newFact = await cortex.facts.get(TEST_MEMSPACE_ID, ctx.factId("color-day2"));
+      const oldFact = await cortex.facts.get(TEST_MEMSPACE_ID, day1Fact.factId);
+      const newFact = await cortex.facts.get(TEST_MEMSPACE_ID, day2Fact.factId);
 
       expect(oldFact?.validUntil).toBeDefined();
       expect(newFact?.validUntil).toBeUndefined();
@@ -382,57 +371,40 @@ describe("Belief Revision Pipeline", () => {
       const userId = ctx.userId("employment-scenario");
       
       // Original: User works at Company A
-      await cortex.facts.store(
-        {
-          memorySpaceId: TEST_MEMSPACE_ID,
-          fact: `${userId} works at Company A`,
-          factType: "knowledge",
-          subject: userId,
-          predicate: "works at",
-          object: "Company A",
-          confidence: 85,
-        },
-        { factId: ctx.factId("job-old") }
-      );
+      const jobOld = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: `${userId} works at Company A`,
+        factType: "knowledge",
+        subject: userId,
+        predicate: "works at",
+        object: "Company A",
+        confidence: 85,
+        sourceType: "conversation",
+      });
 
       // New: User moved to Company B
-      await cortex.facts.store(
-        {
-          memorySpaceId: TEST_MEMSPACE_ID,
-          fact: `${userId} works at Company B`,
-          factType: "knowledge",
-          subject: userId,
-          predicate: "works at",
-          object: "Company B",
-          confidence: 95,
-        },
-        { factId: ctx.factId("job-new") }
-      );
+      const jobNew = await cortex.facts.store({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: `${userId} works at Company B`,
+        factType: "knowledge",
+        subject: userId,
+        predicate: "works at",
+        object: "Company B",
+        confidence: 95,
+        sourceType: "conversation",
+      });
 
       // Supersede
       await cortex.facts.supersede({
         memorySpaceId: TEST_MEMSPACE_ID,
-        oldFactId: ctx.factId("job-old"),
-        newFactId: ctx.factId("job-new"),
+        oldFactId: jobOld.factId,
+        newFactId: jobNew.factId,
         reason: "User changed jobs",
       });
 
       // Check chain
-      const chain = await cortex.facts.getSupersessionChain(ctx.factId("job-new"));
+      const chain = await cortex.facts.getSupersessionChain(jobNew.factId);
       expect(Array.isArray(chain)).toBe(true);
     });
   });
 });
-
-// Jest mock for LLM client
-const jest = {
-  fn: () => {
-    let mockImpl: any = () => {};
-    const fn = (...args: any[]) => mockImpl(...args);
-    fn.mockImplementation = (impl: any) => {
-      mockImpl = impl;
-      return fn;
-    };
-    return fn;
-  },
-};
