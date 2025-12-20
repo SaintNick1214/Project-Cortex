@@ -29,13 +29,27 @@ export interface ExtractedFact {
 }
 
 /**
- * LLM Client interface for fact extraction
+ * LLM Client interface for fact extraction and general completion
  */
 export interface LLMClient {
+  /**
+   * Extract facts from a conversation exchange
+   */
   extractFacts(
     userMessage: string,
     agentResponse: string,
   ): Promise<ExtractedFact[] | null>;
+
+  /**
+   * General completion for belief revision conflict resolution
+   * Optional - required for belief revision feature
+   */
+  complete?(options: {
+    system: string;
+    prompt: string;
+    model?: string;
+    responseFormat?: "json" | "text";
+  }): Promise<string>;
 }
 
 /**
@@ -254,6 +268,71 @@ class OpenAIClient implements LLMClient {
       return null;
     }
   }
+
+  /**
+   * General completion for belief revision conflict resolution
+   */
+  async complete(options: {
+    system: string;
+    prompt: string;
+    model?: string;
+    responseFormat?: "json" | "text";
+  }): Promise<string> {
+    // Dynamic import to avoid requiring openai as hard dependency
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
+    const OpenAI = (await import("openai")).default as any;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+    const client = new OpenAI({ apiKey: this.config.apiKey });
+
+    const model =
+      options.model ||
+      this.config.model ||
+      process.env.CORTEX_FACT_EXTRACTION_MODEL ||
+      DEFAULT_MODELS.openai;
+
+    // Build request options - some models don't support all parameters
+    const isO1Model = model.startsWith("o1");
+
+    const messages = [
+      { role: "system", content: options.system },
+      { role: "user", content: options.prompt },
+    ];
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let response: any;
+
+    if (isO1Model) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      response = await client.chat.completions.create({
+        model,
+        messages,
+      });
+    } else {
+      const requestOptions: Record<string, unknown> = {
+        model,
+        messages,
+        temperature: this.config.temperature ?? 0.1,
+        max_tokens: this.config.maxTokens ?? 2000,
+      };
+
+      if (options.responseFormat === "json") {
+        requestOptions.response_format = { type: "json_object" };
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      response = await client.chat.completions.create(requestOptions);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    const content = response.choices?.[0]?.message?.content;
+    if (!content) {
+      throw new Error("[Cortex LLM] OpenAI returned empty response");
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return content;
+  }
 }
 
 /**
@@ -322,6 +401,60 @@ class AnthropicClient implements LLMClient {
       }
       return null;
     }
+  }
+
+  /**
+   * General completion for belief revision conflict resolution
+   */
+  async complete(options: {
+    system: string;
+    prompt: string;
+    model?: string;
+    responseFormat?: "json" | "text";
+  }): Promise<string> {
+    // Dynamic import to avoid requiring anthropic as hard dependency
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
+    const Anthropic = (await import("@anthropic-ai/sdk")).default as any;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+    const client = new Anthropic({ apiKey: this.config.apiKey });
+
+    const model =
+      options.model ||
+      this.config.model ||
+      process.env.CORTEX_FACT_EXTRACTION_MODEL ||
+      DEFAULT_MODELS.anthropic;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const response = await client.messages.create({
+      model,
+      max_tokens: this.config.maxTokens ?? 2000,
+      system: options.system,
+      messages: [
+        {
+          role: "user",
+          content:
+            options.responseFormat === "json"
+              ? options.prompt + "\n\nRespond with ONLY a JSON object, no other text."
+              : options.prompt,
+        },
+      ],
+      temperature: this.config.temperature ?? 0.1,
+    });
+
+    // Extract text content from response
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const textBlock = response.content.find(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+      (block: any) => block.type === "text",
+    );
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (!textBlock || textBlock.type !== "text") {
+      throw new Error("[Cortex LLM] Anthropic returned no text content");
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+    return textBlock.text;
   }
 }
 

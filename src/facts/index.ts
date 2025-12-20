@@ -141,6 +141,26 @@ export class FactsAPI {
   }
 
   /**
+   * Check if belief revision is configured and available
+   *
+   * @returns true if belief revision service is initialized
+   *
+   * @example
+   * ```typescript
+   * if (facts.hasBeliefRevision()) {
+   *   // Use revise() for intelligent fact management
+   *   await facts.revise({ ... });
+   * } else {
+   *   // Fall back to storeWithDedup()
+   *   await facts.storeWithDedup({ ... });
+   * }
+   * ```
+   */
+  hasBeliefRevision(): boolean {
+    return this.beliefRevisionService !== undefined;
+  }
+
+  /**
    * Handle ConvexError from direct Convex calls
    */
   private handleConvexError(error: unknown): never {
