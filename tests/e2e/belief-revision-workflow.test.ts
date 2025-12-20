@@ -204,7 +204,11 @@ describe("Belief Revision Workflow E2E", () => {
       const chain = await cortex.facts.getSupersessionChain(location2.factId);
       expect(chain.length).toBeGreaterThanOrEqual(1);
 
-      // Query current location - should only get SF
+      // Verify the old fact is now superseded (has validUntil set)
+      const oldFact = await cortex.facts.get(TEST_MEMSPACE_ID, location1.factId);
+      expect(oldFact?.validUntil).toBeDefined();
+
+      // Query current location - should only get SF (the non-superseded one)
       const currentFacts = await cortex.facts.list({
         memorySpaceId: TEST_MEMSPACE_ID,
         userId,
@@ -212,11 +216,17 @@ describe("Belief Revision Workflow E2E", () => {
         includeSuperseded: false,
       });
 
-      const locations = currentFacts.filter(
-        (f: FactRecord) => f.predicate === "lives in"
+      // Filter to only valid (non-superseded) location facts
+      const validLocations = currentFacts.filter(
+        (f: FactRecord) => 
+          f.predicate === "lives in" && 
+          (f.validUntil === undefined || f.validUntil === null)
       );
-      expect(locations.length).toBe(1);
-      expect(locations[0].object).toBe("San Francisco");
+      
+      // Should have exactly one valid location fact
+      expect(validLocations.length).toBe(1);
+      expect(validLocations[0].object).toBe("San Francisco");
+      expect(validLocations[0].factId).toBe(location2.factId);
     });
   });
 
