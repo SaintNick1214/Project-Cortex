@@ -216,6 +216,14 @@ from .types import (
     QueryByRelationshipFilter,
     QueryBySubjectFilter,
     QueryStatistics,
+    # Recall API
+    RecallGraphContext,
+    RecallGraphExpansionConfig,
+    RecallItem,
+    RecallParams,
+    RecallResult,
+    RecallSourceBreakdown,
+    RecallSourceConfig,
     # Agents
     RegisteredAgent,
     RegisterMemorySpaceParams,
@@ -282,7 +290,7 @@ except ImportError:
     GraphSyncWorker = None  # type: ignore
 
 
-__version__ = "0.22.0"
+__version__ = "0.23.0"
 
 __all__ = [
     # Main
@@ -365,7 +373,7 @@ __all__ = [
     "FactDeduplicationService",
     "StoreFactWithDedupOptions",
     "StoreWithDedupResult",
-    # Layer 4 Types
+    # Layer 4 Types - Remember
     "RememberParams",
     "RememberResult",
     "RememberStreamParams",
@@ -374,6 +382,14 @@ __all__ = [
     "EnrichedMemory",
     "ForgetOptions",
     "ForgetResult",
+    # Layer 4 Types - Recall
+    "RecallParams",
+    "RecallResult",
+    "RecallItem",
+    "RecallSourceBreakdown",
+    "RecallSourceConfig",
+    "RecallGraphExpansionConfig",
+    "RecallGraphContext",
     # Coordination
     "Context",
     "ContextInput",
