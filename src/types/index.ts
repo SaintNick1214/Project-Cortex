@@ -607,6 +607,34 @@ export interface RememberResult {
   };
   memories: MemoryEntry[];
   facts: FactRecord[];
+
+  /**
+   * Belief revision actions taken for each extracted fact (v0.24.0+)
+   *
+   * Only populated when belief revision is enabled (default when LLM configured).
+   * Each entry describes what action was taken for a fact and why.
+   *
+   * @example
+   * ```typescript
+   * const result = await cortex.memory.remember({...});
+   * for (const revision of result.factRevisions ?? []) {
+   *   console.log(`${revision.action}: ${revision.fact.fact}`);
+   *   if (revision.superseded?.length) {
+   *     console.log(`  Superseded: ${revision.superseded.map(f => f.fact).join(', ')}`);
+   *   }
+   * }
+   * ```
+   */
+  factRevisions?: Array<{
+    /** Action taken: ADD (new), UPDATE (merged), SUPERSEDE (replaced), NONE (skipped) */
+    action: "ADD" | "UPDATE" | "SUPERSEDE" | "NONE";
+    /** The resulting fact (or existing fact for NONE) */
+    fact: FactRecord;
+    /** Facts that were superseded by this action */
+    superseded?: FactRecord[];
+    /** Reason for the action from LLM or heuristics */
+    reason?: string;
+  }>;
 }
 
 /**
@@ -2100,6 +2128,25 @@ export interface RememberOptions extends GraphSyncOption {
   /** Cloud Mode options */
   autoEmbed?: boolean;
   autoSummarize?: boolean;
+
+  /**
+   * Belief Revision configuration (v0.24.0+)
+   *
+   * When enabled, extracted facts are checked against existing facts
+   * to determine if they should CREATE, UPDATE, SUPERSEDE, or be skipped.
+   *
+   * Set to `false` to disable belief revision entirely for this call.
+   */
+  beliefRevision?:
+    | {
+        /** Enable belief revision (default: true if Cortex configured) */
+        enabled?: boolean;
+        /** Enable slot-based matching for fast conflict detection (default: true) */
+        slotMatching?: boolean;
+        /** Enable LLM-based conflict resolution for nuanced decisions (default: true) */
+        llmResolution?: boolean;
+      }
+    | false;
 }
 
 /**
