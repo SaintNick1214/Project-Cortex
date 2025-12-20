@@ -343,5 +343,5 @@ const cortexMemory = createCortexMemory({
 
 - [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues) - Bug reports
 - [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions) - Questions
-- [Quickstart Demo](../../../packages/vercel-ai-provider/quickstart) - Working example
+- [Quickstart Demo](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart) - Working example
 - [Getting Started Guide](./getting-started.md) - Setup tutorial
