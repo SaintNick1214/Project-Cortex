@@ -6,6 +6,7 @@
  */
 
 import type {
+  RecallParams,
   RememberParams,
   StoreMemoryInput,
   SearchMemoryOptions,
@@ -729,5 +730,114 @@ export function validateFilterCombination(filter: {
       "Filter must include at least one criterion (userId or sourceType) in addition to memorySpaceId to prevent accidental mass deletion",
       "INVALID_FILTER",
     );
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Recall API Validators
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Validates RecallParams structure.
+ *
+ * Only memorySpaceId and query are required - everything else has sensible defaults.
+ */
+export function validateRecallParams(params: RecallParams): void {
+  // Required fields
+  validateMemorySpaceId(params.memorySpaceId);
+  validateContent(params.query, "query");
+
+  // Optional fields validation
+  if (params.embedding !== undefined) {
+    validateEmbedding(params.embedding);
+  }
+
+  if (params.userId !== undefined) {
+    validateUserId(params.userId, "userId");
+  }
+
+  if (params.minImportance !== undefined) {
+    validateImportance(params.minImportance, "minImportance");
+  }
+
+  if (params.minConfidence !== undefined) {
+    if (
+      typeof params.minConfidence !== "number" ||
+      params.minConfidence < 0 ||
+      params.minConfidence > 100
+    ) {
+      throw new MemoryValidationError(
+        "minConfidence must be a number between 0 and 100",
+        "INVALID_CONFIDENCE",
+        "minConfidence",
+      );
+    }
+  }
+
+  if (params.tags !== undefined) {
+    validateTags(params.tags);
+  }
+
+  if (params.limit !== undefined) {
+    validateLimit(params.limit);
+  }
+
+  // Validate date range if both provided
+  if (params.createdAfter && params.createdBefore) {
+    const after =
+      params.createdAfter instanceof Date
+        ? params.createdAfter.getTime()
+        : params.createdAfter;
+    const before =
+      params.createdBefore instanceof Date
+        ? params.createdBefore.getTime()
+        : params.createdBefore;
+
+    if (after > before) {
+      throw new MemoryValidationError(
+        "createdAfter must be before createdBefore",
+        "INVALID_DATE_RANGE",
+        "createdAfter/createdBefore",
+      );
+    }
+  }
+
+  // Validate graph expansion config
+  if (params.graphExpansion !== undefined) {
+    const ge = params.graphExpansion;
+
+    if (ge.maxDepth !== undefined) {
+      if (
+        typeof ge.maxDepth !== "number" ||
+        ge.maxDepth < 1 ||
+        ge.maxDepth > 5
+      ) {
+        throw new MemoryValidationError(
+          "graphExpansion.maxDepth must be a number between 1 and 5",
+          "INVALID_GRAPH_DEPTH",
+          "graphExpansion.maxDepth",
+        );
+      }
+    }
+
+    if (ge.relationshipTypes !== undefined) {
+      if (!Array.isArray(ge.relationshipTypes)) {
+        throw new MemoryValidationError(
+          "graphExpansion.relationshipTypes must be an array of strings",
+          "INVALID_FORMAT",
+          "graphExpansion.relationshipTypes",
+        );
+      }
+
+      for (const type of ge.relationshipTypes) {
+        if (typeof type !== "string" || type.trim().length === 0) {
+          throw new MemoryValidationError(
+            "graphExpansion.relationshipTypes must contain non-empty strings",
+            "INVALID_FORMAT",
+            "graphExpansion.relationshipTypes",
+          );
+        }
+      }
+    }
   }
 }

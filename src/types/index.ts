@@ -2109,7 +2109,7 @@ export interface RememberOptions extends GraphSyncOption {
 export interface ExtendedForgetOptions extends ForgetOptions, GraphSyncOption {}
 
 /**
- * Options for memory recall with graph enrichment
+ * Options for memory recall with graph enrichment (legacy - use RecallParams instead)
  */
 export interface RecallOptions extends GraphSyncOption {
   /** Use graph for enrichment (default: true if graph configured) */
@@ -2120,6 +2120,217 @@ export interface RecallOptions extends GraphSyncOption {
 
   /** Include full conversation history */
   includeConversation?: boolean;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Recall() Orchestration API - Unified Context Retrieval
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Parameters for the recall() orchestration API.
+ *
+ * Batteries included by default - just provide memorySpaceId and query
+ * to get full orchestrated retrieval across all layers.
+ *
+ * @example
+ * ```typescript
+ * // Minimal usage - full orchestration
+ * const result = await cortex.memory.recall({
+ *   memorySpaceId: 'user-123-space',
+ *   query: 'user preferences',
+ * });
+ *
+ * // Inject context into LLM
+ * const response = await llm.chat({
+ *   messages: [
+ *     { role: 'system', content: `You are helpful.\n\n${result.context}` },
+ *     { role: 'user', content: userMessage },
+ *   ],
+ * });
+ * ```
+ */
+export interface RecallParams {
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // REQUIRED - Just these two for basic usage
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /** Memory space to search in */
+  memorySpaceId: string;
+
+  /** Natural language query */
+  query: string;
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // OPTIONAL - All have sensible defaults for AI chatbot use cases
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /** Pre-computed embedding for semantic search (recommended for best results) */
+  embedding?: number[];
+
+  /** Filter by user ID (common in H2A chatbots) */
+  userId?: string;
+
+  /**
+   * Source selection - ALL ENABLED BY DEFAULT.
+   * Only specify to DISABLE sources.
+   */
+  sources?: {
+    /** Search vector memories (Layer 2). Default: true */
+    vector?: boolean;
+    /** Search facts directly (Layer 3). Default: true */
+    facts?: boolean;
+    /** Query graph for relationships. Default: true if graph configured */
+    graph?: boolean;
+  };
+
+  /**
+   * Graph expansion configuration - ENABLED BY DEFAULT if graph configured.
+   * Graph is the key to relational context discovery.
+   */
+  graphExpansion?: {
+    /** Enable graph expansion. Default: true if graph configured */
+    enabled?: boolean;
+    /** Maximum traversal depth. Default: 2 */
+    maxDepth?: number;
+    /** Relationship types to follow. Default: all types */
+    relationshipTypes?: string[];
+    /** Expand from discovered facts. Default: true */
+    expandFromFacts?: boolean;
+    /** Expand from discovered memories. Default: true */
+    expandFromMemories?: boolean;
+  };
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // FILTERING (optional refinement)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /** Minimum importance score (0-100) */
+  minImportance?: number;
+
+  /** Minimum confidence for facts (0-100) */
+  minConfidence?: number;
+
+  /** Filter by tags */
+  tags?: string[];
+
+  /** Only include items created after this date */
+  createdAfter?: Date;
+
+  /** Only include items created before this date */
+  createdBefore?: Date;
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // RESULT OPTIONS - OPTIMIZED FOR LLM INJECTION BY DEFAULT
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /** Maximum number of results. Default: 20 */
+  limit?: number;
+
+  /** Enrich with ACID conversation data. Default: true */
+  includeConversation?: boolean;
+
+  /** Generate LLM-ready context string. Default: true */
+  formatForLLM?: boolean;
+}
+
+/**
+ * Individual item in recall results - either a memory or a fact.
+ */
+export interface RecallItem {
+  /** Item type */
+  type: "memory" | "fact";
+
+  /** Unique identifier */
+  id: string;
+
+  /** Content string for display/LLM injection */
+  content: string;
+
+  /** Combined ranking score (0-1) */
+  score: number;
+
+  /** Source of this item */
+  source: "vector" | "facts" | "graph-expanded";
+
+  /** Original memory data (if type === 'memory') */
+  memory?: MemoryEntry;
+
+  /** Original fact data (if type === 'fact') */
+  fact?: FactRecord;
+
+  /** Graph context for this item */
+  graphContext?: {
+    /** Entities connected to this item */
+    connectedEntities: string[];
+    /** Relationship path that led to discovery */
+    relationshipPath?: string;
+  };
+
+  /** Enriched conversation data (if includeConversation: true) */
+  conversation?: Conversation;
+
+  /** Source messages from conversation */
+  sourceMessages?: Message[];
+}
+
+/**
+ * Source breakdown in recall results.
+ */
+export interface RecallSourceBreakdown {
+  /** Vector search results */
+  vector: {
+    count: number;
+    items: MemoryEntry[];
+  };
+  /** Facts search results */
+  facts: {
+    count: number;
+    items: FactRecord[];
+  };
+  /** Graph expansion results */
+  graph: {
+    count: number;
+    expandedEntities: string[];
+  };
+}
+
+/**
+ * Result from the recall() orchestration API.
+ *
+ * Provides unified, deduplicated, ranked results from all sources
+ * with LLM-ready context formatting.
+ */
+export interface RecallResult {
+  /** Unified results (merged, deduped, ranked) */
+  items: RecallItem[];
+
+  /** Breakdown by source */
+  sources: RecallSourceBreakdown;
+
+  /**
+   * Formatted context for LLM injection.
+   * Present when formatForLLM: true (default).
+   *
+   * @example
+   * ```typescript
+   * const response = await llm.chat({
+   *   messages: [
+   *     { role: 'system', content: `Context:\n${result.context}` },
+   *     { role: 'user', content: userMessage },
+   *   ],
+   * });
+   * ```
+   */
+  context?: string;
+
+  /** Total number of results before limit */
+  totalResults: number;
+
+  /** Query execution time in milliseconds */
+  queryTimeMs: number;
+
+  /** Whether graph expansion was applied */
+  graphExpansionApplied: boolean;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
