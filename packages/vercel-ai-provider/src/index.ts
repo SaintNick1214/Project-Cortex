@@ -41,7 +41,7 @@ import {
   validateConfig,
   resolveUserId,
   resolveConversationId,
-} from "./middleware";
+} from "./memory-middleware";
 import { createLogger } from "./types";
 
 /**
