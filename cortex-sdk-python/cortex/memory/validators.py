@@ -9,7 +9,13 @@ import math
 import re
 from typing import Any, Dict, List, Optional, Union
 
-from ..types import RememberParams, SearchOptions, SourceType, StoreMemoryInput
+from ..types import (
+    RecallParams,
+    RememberParams,
+    SearchOptions,
+    SourceType,
+    StoreMemoryInput,
+)
 
 
 class MemoryValidationError(Exception):
@@ -754,3 +760,81 @@ def validate_filter_combination(filter_dict: Dict[str, Any]) -> None:
             "Filter must include at least one criterion (user_id or source_type) in addition to memory_space_id to prevent accidental mass deletion",
             "INVALID_FILTER",
         )
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Recall Validation
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+def validate_recall_params(params: RecallParams) -> None:
+    """
+    Validates RecallParams for recall() operation.
+
+    Args:
+        params: RecallParams to validate
+
+    Raises:
+        MemoryValidationError: If params are invalid
+    """
+    # Required fields
+    validate_memory_space_id(params.memory_space_id)
+    validate_content(params.query, "query")
+
+    # Optional field validation
+    if params.user_id is not None:
+        validate_user_id(params.user_id)
+
+    if params.min_importance is not None:
+        validate_importance(params.min_importance)
+
+    if params.min_confidence is not None:
+        if not isinstance(params.min_confidence, (int, float)):
+            raise MemoryValidationError(
+                "min_confidence must be a number",
+                "INVALID_TYPE",
+                "min_confidence",
+            )
+        if params.min_confidence < 0 or params.min_confidence > 100:
+            raise MemoryValidationError(
+                "min_confidence must be between 0 and 100",
+                "INVALID_RANGE",
+                "min_confidence",
+            )
+
+    if params.tags is not None:
+        validate_tags(params.tags)
+
+    if params.limit is not None:
+        validate_limit(params.limit)
+
+    if params.embedding is not None:
+        if not isinstance(params.embedding, list):
+            raise MemoryValidationError(
+                "embedding must be a list of numbers",
+                "INVALID_TYPE",
+                "embedding",
+            )
+        if len(params.embedding) == 0:
+            raise MemoryValidationError(
+                "embedding cannot be empty",
+                "INVALID_EMBEDDING",
+                "embedding",
+            )
+
+    # Graph expansion validation
+    if params.graph_expansion is not None:
+        ge = params.graph_expansion
+        if hasattr(ge, 'max_depth') and ge.max_depth is not None:
+            if not isinstance(ge.max_depth, int) or ge.max_depth < 1:
+                raise MemoryValidationError(
+                    "graph_expansion.max_depth must be a positive integer",
+                    "INVALID_RANGE",
+                    "graph_expansion.max_depth",
+                )
+            if ge.max_depth > 10:
+                raise MemoryValidationError(
+                    "graph_expansion.max_depth cannot exceed 10 for performance reasons",
+                    "INVALID_RANGE",
+                    "graph_expansion.max_depth",
+                )

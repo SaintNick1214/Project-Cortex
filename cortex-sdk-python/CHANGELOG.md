@@ -5,6 +5,159 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.23.0] - 2025-12-19
+
+### 🔮 recall() Orchestration API - Unified Context Retrieval
+
+**Complete counterpart to `remember()`.** Just as `remember()` orchestrates storing memories across all layers (conversations, vector, facts, graph), `recall()` now orchestrates retrieving them - giving you unified, ranked, LLM-ready context in a single call.
+
+#### The Problem
+
+Previously, retrieving full context required multiple API calls and manual merging:
+
+```python
+# Old way - manual orchestration 😤
+vector_results = await cortex.vector.search(space_id, query)
+facts_results = await cortex.facts.search(space_id, query)
+# Then manually merge, deduplicate, rank, and format...
+```
+
+#### The Solution
+
+Now `memory.recall()` handles everything automatically:
+
+```python
+# New way - full orchestration ✨
+result = await cortex.memory.recall(
+    RecallParams(
+        memory_space_id="agent-1",
+        query="user preferences",
+    )
+)
+
+# Use directly in LLM prompts
+response = await llm.chat(
+    messages=[
+        {"role": "system", "content": f"Context:\n{result.context}"},
+        {"role": "user", "content": user_message},
+    ]
+)
+```
+
+#### ✨ What recall() Does
+
+1. **Parallel Search** - Searches vector memories (Layer 2) and facts (Layer 3) simultaneously
+2. **Graph Expansion** - Leverages graph relationships to discover related context (Layer 4)
+3. **Smart Merging** - Combines results from all sources with source tracking
+4. **Deduplication** - Removes duplicates that appear in multiple sources
+5. **Multi-Signal Ranking** - Scores by relevance, confidence, importance, recency, and graph connectivity
+6. **LLM Formatting** - Generates ready-to-inject markdown context string
+
+#### 🎯 Batteries Included Defaults
+
+Designed for AI chatbot and multi-agent use cases - all sources enabled by default:
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `sources.vector` | `True` | Search vector memories |
+| `sources.facts` | `True` | Search facts directly |
+| `sources.graph` | `True` (if configured) | Query graph relationships |
+| `format_for_llm` | `True` | Generate LLM-ready context |
+| `include_conversation` | `True` | Enrich with ACID conversation data |
+| `limit` | `20` | Maximum results to return |
+
+#### 📊 Ranking Algorithm
+
+Multi-signal scoring with configurable weights:
+
+| Signal | Weight | Description |
+|--------|--------|-------------|
+| Semantic | 35% | Vector similarity score |
+| Confidence | 20% | Fact confidence (0-100) |
+| Importance | 15% | Memory importance (0-100) |
+| Recency | 15% | Time decay (30-day half-life) |
+| Graph Connectivity | 15% | Connected entity count |
+
+Plus boosts for:
+- **Highly connected items** (>3 entities): 1.2x boost
+- **User messages**: 1.1x boost (more likely to contain preferences)
+
+#### 🎓 Usage Examples
+
+**Minimal usage (full orchestration):**
+```python
+from cortex import RecallParams
+
+result = await cortex.memory.recall(
+    RecallParams(
+        memory_space_id="agent-1",
+        query="user preferences",
+    )
+)
+
+# Inject context directly
+print(result.context)  # Formatted markdown for LLM
+```
+
+**With filters:**
+```python
+from cortex import RecallParams, RecallSourceConfig
+
+result = await cortex.memory.recall(
+    RecallParams(
+        memory_space_id="agent-1",
+        query="dark mode preferences",
+        user_id="user-123",
+        min_importance=50,
+        min_confidence=80,
+        limit=10,
+    )
+)
+```
+
+**Disable specific sources:**
+```python
+result = await cortex.memory.recall(
+    RecallParams(
+        memory_space_id="agent-1",
+        query="test",
+        sources=RecallSourceConfig(
+            vector=True,
+            facts=False,  # Skip facts
+            graph=False,  # Skip graph expansion
+        ),
+    )
+)
+```
+
+#### 📦 New Types
+
+| Type | Description |
+|------|-------------|
+| `RecallParams` | Input parameters for recall() |
+| `RecallResult` | Output with items, sources, context |
+| `RecallItem` | Individual memory or fact item |
+| `RecallSourceBreakdown` | Per-source result counts |
+| `RecallSourceConfig` | Source selection options |
+| `RecallGraphExpansionConfig` | Graph traversal options |
+| `RecallGraphContext` | Graph context per item |
+
+#### 🧪 Remember/Recall Symmetry
+
+The API is designed for symmetric usage:
+
+```python
+# Store with full orchestration
+await cortex.memory.remember(RememberParams(...))
+
+# Retrieve with full orchestration
+result = await cortex.memory.recall(RecallParams(...))
+```
+
+Everything stored via `remember()` is retrievable via `recall()`, with proper deduplication and ranking applied.
+
+---
+
 ## [0.22.0] - 2025-12-19
 
 ### 🎯 Cross-Session Fact Deduplication
