@@ -60,6 +60,8 @@ import {
   type ListMemoriesFilter,
   type MemoryEntry,
   type Message,
+  type RecallParams,
+  type RecallResult,
   type RememberOptions,
   type RememberParams,
   type RememberResult,
@@ -96,7 +98,14 @@ import {
   validateConversationRefRequirement,
   validateStreamObject,
   validateFilterCombination,
+  validateRecallParams,
 } from "./validators";
+import {
+  performGraphExpansion,
+  processRecallResults,
+  enrichWithConversations,
+  type GraphExpansionConfig,
+} from "./recall";
 import type { ResilienceLayer } from "../resilience";
 
 /** Default memory space ID used when none is provided */
@@ -1661,6 +1670,202 @@ export class MemoryAPI {
     });
 
     return enriched;
+  }
+
+  /**
+   * Recall context from all memory layers with unified orchestration.
+   *
+   * This is the retrieval counterpart to `remember()`. It orchestrates across:
+   * - Vector memories (Layer 2) via semantic search
+   * - Facts store (Layer 3) as a primary search source
+   * - Graph database for relational context discovery
+   *
+   * Results are merged, deduplicated, ranked, and formatted for LLM injection.
+   *
+   * **Batteries Included Defaults:**
+   * - All sources enabled (vector, facts, graph)
+   * - Graph expansion enabled (if graph configured)
+   * - LLM-ready context formatting enabled
+   * - Conversation enrichment enabled
+   *
+   * @example
+   * ```typescript
+   * // Minimal usage - full orchestration
+   * const result = await cortex.memory.recall({
+   *   memorySpaceId: 'user-123-space',
+   *   query: 'user preferences',
+   * });
+   *
+   * // Inject context into LLM prompt
+   * const response = await llm.chat({
+   *   messages: [
+   *     { role: 'system', content: `Context:\n${result.context}` },
+   *     { role: 'user', content: userMessage },
+   *   ],
+   * });
+   *
+   * // With semantic search (recommended)
+   * const result = await cortex.memory.recall({
+   *   memorySpaceId: 'user-123-space',
+   *   query: 'user preferences',
+   *   embedding: await embed('user preferences'),
+   *   userId: 'user-123',
+   * });
+   * ```
+   */
+  async recall(params: RecallParams): Promise<RecallResult> {
+    const startTime = Date.now();
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // STEP 1: VALIDATION
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    validateRecallParams(params);
+
+    // Apply defaults (batteries included)
+    const sources = {
+      vector: params.sources?.vector !== false,
+      facts: params.sources?.facts !== false,
+      graph: params.sources?.graph !== false && this.graphAdapter !== undefined,
+    };
+
+    const graphExpansionEnabled =
+      params.graphExpansion?.enabled !== false &&
+      this.graphAdapter !== undefined;
+
+    const graphExpansionConfig: GraphExpansionConfig = {
+      maxDepth: params.graphExpansion?.maxDepth ?? 2,
+      relationshipTypes: params.graphExpansion?.relationshipTypes ?? [],
+      expandFromFacts: params.graphExpansion?.expandFromFacts !== false,
+      expandFromMemories: params.graphExpansion?.expandFromMemories !== false,
+    };
+
+    const limit = params.limit ?? 20;
+    const includeConversation = params.includeConversation !== false;
+    const formatForLLMFlag = params.formatForLLM !== false;
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // STEP 2: PARALLEL SEARCH - Vector + Facts
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    const [vectorMemories, directFacts] = await Promise.all([
+      // Vector search
+      sources.vector
+        ? this.vector.search(params.memorySpaceId, params.query, {
+            embedding: params.embedding,
+            userId: params.userId,
+            tags: params.tags,
+            minImportance: params.minImportance,
+            limit: limit * 2, // Fetch extra for dedup
+            minScore: 0.3, // Reasonable threshold
+          })
+        : Promise.resolve([]),
+
+      // Facts search
+      sources.facts
+        ? this.facts.search(params.memorySpaceId, params.query, {
+            userId: params.userId,
+            minConfidence: params.minConfidence,
+            tags: params.tags,
+            createdAfter: params.createdAfter,
+            createdBefore: params.createdBefore,
+            limit: limit * 2, // Fetch extra for dedup
+          })
+        : Promise.resolve([]),
+    ]);
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // STEP 3: GRAPH EXPANSION (if enabled)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    let graphExpandedMemories: MemoryEntry[] = [];
+    let graphExpandedFacts: FactRecord[] = [];
+    let discoveredEntities: string[] = [];
+
+    if (graphExpansionEnabled && this.graphAdapter) {
+      try {
+        const expansion = await performGraphExpansion(
+          vectorMemories,
+          directFacts,
+          params.memorySpaceId,
+          this.graphAdapter,
+          this.vector,
+          this.facts,
+          graphExpansionConfig,
+        );
+
+        graphExpandedMemories = expansion.relatedMemories;
+        graphExpandedFacts = expansion.relatedFacts;
+        discoveredEntities = expansion.discoveredEntities;
+      } catch (error) {
+        // Graph expansion failed - continue with direct results
+        console.warn("[Cortex] Graph expansion failed, continuing without:", error);
+      }
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // STEP 4: MERGE, DEDUPE, RANK, FORMAT
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    const processedResults = processRecallResults(
+      vectorMemories,
+      directFacts,
+      graphExpandedMemories,
+      graphExpandedFacts,
+      discoveredEntities,
+      {
+        limit,
+        formatForLLM: formatForLLMFlag,
+      },
+    );
+    let items = processedResults.items;
+    const sourceBreakdown = processedResults.sources;
+    const context = processedResults.context;
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // STEP 5: CONVERSATION ENRICHMENT (if enabled)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    if (includeConversation) {
+      // Collect unique conversation IDs
+      const conversationIds = new Set<string>();
+      for (const item of items) {
+        if (item.type === "memory" && item.memory?.conversationRef) {
+          conversationIds.add(item.memory.conversationRef.conversationId);
+        }
+      }
+
+      // Batch fetch conversations
+      if (conversationIds.size > 0) {
+        const conversationsMap = new Map<string, Conversation>();
+        for (const convId of conversationIds) {
+          try {
+            const conv = await this.conversations.get(convId);
+            if (conv) {
+              conversationsMap.set(convId, conv);
+            }
+          } catch {
+            // Individual conversation fetch failure - continue
+          }
+        }
+
+        // Enrich items
+        items = enrichWithConversations(items, conversationsMap);
+      }
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // STEP 6: BUILD RESULT
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    const queryTimeMs = Date.now() - startTime;
+
+    return {
+      items,
+      sources: sourceBreakdown,
+      context,
+      totalResults:
+        vectorMemories.length +
+        directFacts.length +
+        graphExpandedMemories.length +
+        graphExpandedFacts.length,
+      queryTimeMs,
+      graphExpansionApplied: graphExpansionEnabled && discoveredEntities.length > 0,
+    };
   }
 
   /**
