@@ -6,31 +6,22 @@
  */
 
 import { spawn } from "child_process";
-import { existsSync, readdirSync } from "fs";
+import { existsSync } from "fs";
 import path from "path";
 import { createRequire } from "module";
 
-// Create require function for ES modules
-const require = createRequire(import.meta.url);
+// Re-export pure functions from shell-utils (for backwards compatibility)
+export {
+  isValidProjectName,
+  isLocalConvexUrl,
+  isDirectoryEmpty,
+  ALLOWED_COMMANDS,
+} from "./shell-utils.js";
 
-/**
- * Allowlist of safe commands that can be executed
- */
-const ALLOWED_COMMANDS = [
-  "npx",
-  "convex",
-  "npm",
-  "pnpm",
-  "yarn",
-  "bun",
-  "git",
-  "node",
-  "docker",
-  // Process inspection commands (for kill menu)
-  "lsof",
-  "pgrep",
-  "ps",
-];
+import { ALLOWED_COMMANDS } from "./shell-utils.js";
+
+// Create require function for ES modules (named to avoid conflict with Jest's require)
+const esmRequire = createRequire(import.meta.url);
 
 /**
  * Check if a command exists in the system
@@ -132,23 +123,6 @@ export async function execCommandLive(
   });
 }
 
-/**
- * Validate project name
- */
-export function isValidProjectName(name: string): boolean {
-  return /^[a-z0-9-_]+$/.test(name);
-}
-
-/**
- * Check if directory is empty
- */
-export function isDirectoryEmpty(dirPath: string): boolean {
-  if (!existsSync(dirPath)) {
-    return true;
-  }
-  const files = readdirSync(dirPath);
-  return files.length === 0 || (files.length === 1 && files[0] === ".git");
-}
 
 /**
  * Get the path to the installed SDK package
@@ -170,19 +144,13 @@ export function getSDKPath(projectPath?: string): string | null {
     }
 
     // Fallback: use require.resolve from current location
-    const sdkPackageJson = require.resolve("@cortexmemory/sdk/package.json");
+    const sdkPackageJson = esmRequire.resolve("@cortexmemory/sdk/package.json");
     return path.dirname(sdkPackageJson);
   } catch {
     return null;
   }
 }
 
-/**
- * Parse Convex URL to determine if it's local or cloud
- */
-export function isLocalConvexUrl(url: string): boolean {
-  return url.includes("localhost") || url.includes("127.0.0.1");
-}
 
 /**
  * Fetch the latest SDK package.json from npm registry

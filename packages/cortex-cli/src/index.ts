@@ -25,6 +25,8 @@ import { registerFactsCommands } from "./commands/facts.js";
 import { registerConversationsCommands } from "./commands/conversations.js";
 // Convex operations
 import { registerConvexCommands } from "./commands/convex.js";
+// Deploy/update commands (top-level)
+import { registerDeployCommands } from "./commands/deploy.js";
 import { loadConfig } from "./utils/config.js";
 
 // Auto-load .env.local if it exists in current directory
@@ -68,6 +70,7 @@ async function main() {
 
     // Register core commands (in display order)
     registerLifecycleCommands(program, config); // start, stop
+    registerDeployCommands(program, config); // deploy, update (top-level for easy access)
     registerStatusCommands(program, config); // status
     registerConfigCommands(program, config); // config
     registerInitCommand(program, config); // init
