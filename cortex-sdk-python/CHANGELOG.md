@@ -5,6 +5,142 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.24.0] - 2025-12-19
+
+### 🧠 Belief Revision System - Intelligent Fact Management
+
+A complete belief revision pipeline that determines whether a new fact should CREATE, UPDATE, SUPERSEDE, or IGNORE based on slot-based matching, semantic similarity, and LLM conflict resolution.
+
+#### The Problem
+
+Previously, storing facts could lead to duplicates or contradictory information:
+
+```python
+# Old way - manual conflict handling 😤
+await cortex.facts.store(fact1)  # "User likes blue"
+await cortex.facts.store(fact2)  # "User prefers purple" - Now you have two color preferences!
+```
+
+#### The Solution
+
+Now `facts.revise()` handles intelligent fact management automatically:
+
+```python
+# New way - belief revision ✨
+from cortex.facts import ReviseParams, ConflictCandidate
+
+result = await cortex.facts.revise(ReviseParams(
+    memory_space_id="agent-1",
+    fact=ConflictCandidate(
+        fact="User prefers purple",
+        subject="user-123",
+        predicate="favorite color",
+        object="purple",
+        confidence=90,
+    ),
+))
+
+print(f"Action: {result.action}")  # SUPERSEDE - old color preference replaced
+print(f"Reason: {result.reason}")  # "Color preference has changed"
+```
+
+#### 🚀 Pipeline Stages
+
+1. **Slot Matching (Fast Path)** - O(1) detection of facts in same semantic slot (e.g., `favorite_color`, `location`, `employment`)
+2. **Semantic Matching (Catch-All)** - Vector similarity for facts without clear slot classification
+3. **LLM Conflict Resolution** - Nuanced decisions using few-shot prompted LLM
+4. **Execute & Log** - Apply decision and record to fact history audit trail
+
+#### 🎯 Available Actions
+
+| Action | When Used | Example |
+|--------|-----------|---------|
+| **ADD** | Genuinely new information | First fact about a topic |
+| **UPDATE** | Refines existing fact | "User has a dog" → "User has a dog named Rex" |
+| **SUPERSEDE** | Replaces contradictory fact | "Lives in NYC" → "Lives in SF" |
+| **NONE** | Already captured | Less specific duplicate |
+
+#### 📦 New Modules
+
+- `cortex/facts/slot_matching.py` - Predicate classification and slot-based matching
+- `cortex/facts/conflict_prompts.py` - LLM prompt templates for conflict resolution
+- `cortex/facts/belief_revision.py` - Main orchestration service
+- `cortex/facts/history.py` - Fact change history and audit trail
+
+#### 🔧 New API Methods
+
+```python
+# Configure belief revision with LLM client
+cortex.facts.configure_belief_revision(
+    llm_client=my_llm,
+    config=BeliefRevisionConfig(
+        slot_matching=SlotMatchingConfigOptions(enabled=True),
+        semantic_matching=SemanticMatchingConfigOptions(threshold=0.7),
+        llm_resolution=LLMResolutionConfigOptions(enabled=True),
+    )
+)
+
+# Intelligent fact storage with belief revision
+result = await cortex.facts.revise(params)
+
+# Preview conflicts without storing
+conflicts = await cortex.facts.check_conflicts(params)
+
+# Manually supersede facts
+await cortex.facts.supersede(
+    memory_space_id="space-1",
+    old_fact_id="fact-old",
+    new_fact_id="fact-new",
+    reason="User stated updated preference",
+)
+
+# Query fact change history
+events = await cortex.facts.history("fact-123")
+changes = await cortex.facts.get_changes(ChangeFilter(
+    memory_space_id="space-1",
+    action="SUPERSEDE",
+))
+
+# Get supersession chain (knowledge evolution)
+chain = await cortex.facts.get_supersession_chain("fact-456")
+
+# Activity summary
+summary = await cortex.facts.get_activity_summary("space-1", hours=24)
+```
+
+#### 🔗 Graph Integration
+
+New graph sync functions for supersession relationships:
+
+```python
+from cortex.graph import (
+    sync_fact_supersession,
+    sync_fact_revision,
+    get_fact_supersession_chain_from_graph,
+    remove_fact_supersession_relationships,
+)
+
+# Sync supersession to graph
+await sync_fact_supersession("fact-old", "fact-new", adapter, "User moved")
+```
+
+#### 🎓 Default Predicate Classes
+
+Built-in slot classification for common fact types:
+
+- `favorite_color` - Color preferences
+- `location` - Where user lives/is based
+- `employment` - Job and company info
+- `age` - Age and birthday
+- `name` - Name and nickname
+- `relationship_status` - Marital/dating status
+- `education` - Schools and degrees
+- `language` - Languages spoken
+- `food_preference` - Dietary info
+- `hobby` - Interests and hobbies
+- `pet` - Pet information
+- And more...
+
 ## [0.23.0] - 2025-12-19
 
 ### 🔮 recall() Orchestration API - Unified Context Retrieval
