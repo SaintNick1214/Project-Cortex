@@ -40,21 +40,24 @@ export function ChatInterface({
     [memorySpaceId, userId],
   );
 
-  const [hasStartedStreaming, setHasStartedStreaming] = useState(false);
+  // Use ref instead of state to avoid stale closure in onData callback
+  // Refs are mutable and reflect changes immediately without re-render
+  const hasStartedStreamingRef = useRef(false);
 
   const { messages, sendMessage, status } = useChat({
     transport,
     onData: () => {
       // Trigger orchestration visualization when we start receiving data
-      if (!hasStartedStreaming) {
-        setHasStartedStreaming(true);
+      // Using ref to prevent multiple invocations during rapid successive onData calls
+      if (!hasStartedStreamingRef.current) {
+        hasStartedStreamingRef.current = true;
         onOrchestrationStart?.();
         simulateLayerUpdates();
       }
     },
     onFinish: () => {
       setIsLoading(false);
-      setHasStartedStreaming(false);
+      hasStartedStreamingRef.current = false;
       // Mark all layers complete
       onLayerUpdate?.("memorySpace", "complete");
       onLayerUpdate?.("user", "complete");
@@ -66,7 +69,7 @@ export function ChatInterface({
     },
     onError: () => {
       setIsLoading(false);
-      setHasStartedStreaming(false);
+      hasStartedStreamingRef.current = false;
     },
   });
 

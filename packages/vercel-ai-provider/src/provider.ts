@@ -255,6 +255,7 @@ export class CortexMemoryProvider {
         embedding,
         userId,
         limit: this.config.memorySearchLimit || 20,
+        minScore: this.config.minMemoryRelevance, // Filter by minimum relevance score
         // recall() uses sensible defaults: vector + facts + graph (if configured)
         // No need to explicitly enable sources - batteries included
         formatForLLM: true, // Get pre-formatted context string
