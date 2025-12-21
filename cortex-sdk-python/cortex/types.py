@@ -914,11 +914,46 @@ class RememberParams:
 
 
 @dataclass
+class FactRevisionAction:
+    """Details of a belief revision action taken during remember().
+
+    Populated when belief revision is enabled (default when LLM configured).
+    Each entry describes what action was taken for a fact and why.
+
+    Example:
+        >>> result = await cortex.memory.remember({...})
+        >>> for revision in (result.fact_revisions or []):
+        ...     print(f"{revision.action}: {revision.fact.fact}")
+        ...     if revision.superseded:
+        ...         print(f"  Superseded: {[f.fact for f in revision.superseded]}")
+    """
+
+    action: Literal["ADD", "UPDATE", "SUPERSEDE", "NONE"]
+    """Action taken: ADD (new), UPDATE (merged), SUPERSEDE (replaced), NONE (skipped)"""
+
+    fact: "FactRecord"
+    """The resulting fact (or existing fact for NONE)"""
+
+    superseded: Optional[List["FactRecord"]] = None
+    """Facts that were superseded by this action"""
+
+    reason: Optional[str] = None
+    """Reason for the action from LLM or heuristics"""
+
+
+@dataclass
 class RememberResult:
     """Result from remember operation."""
     conversation: Dict[str, Any]  # messageIds and conversationId
     memories: List[MemoryEntry]
     facts: List[FactRecord]
+    fact_revisions: Optional[List[FactRevisionAction]] = None
+    """
+    Belief revision actions taken for each extracted fact (v0.24.0+).
+
+    Only populated when belief revision is enabled (default when LLM configured).
+    Each entry describes what action was taken for a fact and why.
+    """
 
 
 @dataclass
@@ -2130,6 +2165,12 @@ class DeleteContextOptions(GraphSyncOption):
 @dataclass
 class RememberOptions(GraphSyncOption):
     """Options for remember operation."""
+    belief_revision: Optional[bool] = None
+    """
+    Enable/disable belief revision for intelligent fact management.
+    Default: True when LLM is configured (batteries-included).
+    Set to False to force deduplication-only mode.
+    """
     extract_facts: bool = False
     extract_content: Optional[Callable] = None
     generate_embedding: Optional[Callable] = None

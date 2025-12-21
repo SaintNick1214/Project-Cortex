@@ -447,6 +447,8 @@ export type {
   LayerStatus,
   MemoryLayer,
   OrchestrationSummary,
+  // Belief revision types (v0.24.0+)
+  RevisionAction,
 } from "./types";
 
 export { CortexMemoryProvider } from "./provider";

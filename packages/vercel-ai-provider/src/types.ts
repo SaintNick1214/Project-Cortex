@@ -198,6 +198,35 @@ export interface CortexMemoryConfig {
     type?: "neo4j" | "memgraph";
   };
 
+  /**
+   * Belief Revision configuration (v0.24.0+)
+   *
+   * Automatically handles fact updates, supersessions, and deduplication.
+   * When enabled, new facts are checked against existing facts to determine
+   * if they should CREATE, UPDATE, SUPERSEDE, or be skipped as duplicates.
+   *
+   * Set to `false` to disable belief revision entirely.
+   *
+   * @example
+   * ```typescript
+   * beliefRevision: {
+   *   enabled: true,      // Enable belief revision (default: true)
+   *   slotMatching: true, // Enable slot-based matching (default: true)
+   *   llmResolution: true // Enable LLM conflict resolution (default: true)
+   * }
+   * ```
+   */
+  beliefRevision?:
+    | {
+        /** Enable belief revision (default: true when configured) */
+        enabled?: boolean;
+        /** Enable slot-based matching for fast conflict detection (default: true) */
+        slotMatching?: boolean;
+        /** Enable LLM-based conflict resolution for nuanced decisions (default: true) */
+        llmResolution?: boolean;
+      }
+    | false;
+
   /** Hive Mode configuration */
   hiveMode?: {
     /** Participant ID (which agent/tool is this) */
@@ -574,6 +603,11 @@ export type LayerStatus =
   | "skipped";
 
 /**
+ * Revision action taken by the belief revision system (v0.24.0+)
+ */
+export type RevisionAction = "CREATE" | "UPDATE" | "SUPERSEDE" | "NONE";
+
+/**
  * Event emitted when a layer's status changes
  */
 export interface LayerEvent {
@@ -604,6 +638,18 @@ export interface LayerEvent {
     message: string;
     code?: string;
   };
+
+  /**
+   * Revision action taken (v0.24.0+)
+   * Only present for facts layer when belief revision is enabled
+   */
+  revisionAction?: RevisionAction;
+
+  /**
+   * Facts that were superseded by this action (v0.24.0+)
+   * Only present when revisionAction is "SUPERSEDE"
+   */
+  supersededFacts?: string[];
 }
 
 /**

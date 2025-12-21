@@ -268,6 +268,75 @@ class OpenAIClient(LLMClient):
             print(f"[Cortex LLM] OpenAI extraction failed: {e}")
             return None
 
+    async def complete(
+        self,
+        *,
+        system: str,
+        prompt: str,
+        model: Optional[str] = None,
+        response_format: Optional[Literal["json", "text"]] = None,
+    ) -> str:
+        """
+        General completion for belief revision conflict resolution.
+
+        Args:
+            system: System prompt
+            prompt: User prompt
+            model: Optional model override
+            response_format: Optional response format hint ('json' or 'text')
+
+        Returns:
+            The model's response as a string
+
+        Raises:
+            ImportError: If OpenAI SDK is not installed
+            Exception: If completion fails
+        """
+        # Dynamic import to avoid requiring openai as hard dependency
+        from openai import AsyncOpenAI
+
+        client = AsyncOpenAI(api_key=self.config.api_key)
+
+        use_model = (
+            model
+            or self.config.model
+            or os.environ.get("CORTEX_FACT_EXTRACTION_MODEL")
+            or DEFAULT_MODELS["openai"]
+        )
+
+        # Build request options - some models don't support all parameters
+        messages: Any = [
+            {"role": "system", "content": system},
+            {"role": "user", "content": prompt},
+        ]
+
+        # o1 and o1-mini don't support temperature, max_tokens, or response_format
+        is_o1_model = use_model.startswith("o1")
+
+        if is_o1_model:
+            response = await client.chat.completions.create(
+                model=use_model,
+                messages=messages,
+            )
+        else:
+            request_kwargs: Any = {
+                "model": use_model,
+                "messages": messages,
+                "temperature": self.config.temperature or 0.1,
+                "max_tokens": self.config.max_tokens or 2000,
+            }
+
+            if response_format == "json":
+                request_kwargs["response_format"] = {"type": "json_object"}
+
+            response = await client.chat.completions.create(**request_kwargs)
+
+        content = response.choices[0].message.content
+        if not content:
+            raise Exception("[Cortex LLM] OpenAI returned empty response")
+
+        return content
+
 
 class AnthropicClient(LLMClient):
     """Anthropic LLM Client implementation."""
@@ -323,6 +392,64 @@ class AnthropicClient(LLMClient):
         except Exception as e:
             print(f"[Cortex LLM] Anthropic extraction failed: {e}")
             return None
+
+    async def complete(
+        self,
+        *,
+        system: str,
+        prompt: str,
+        model: Optional[str] = None,
+        response_format: Optional[Literal["json", "text"]] = None,
+    ) -> str:
+        """
+        General completion for belief revision conflict resolution.
+
+        Args:
+            system: System prompt
+            prompt: User prompt
+            model: Optional model override
+            response_format: Optional response format hint ('json' or 'text')
+
+        Returns:
+            The model's response as a string
+
+        Raises:
+            ImportError: If Anthropic SDK is not installed
+            Exception: If completion fails
+        """
+        # Dynamic import to avoid requiring anthropic as hard dependency
+        from anthropic import AsyncAnthropic
+
+        client = AsyncAnthropic(api_key=self.config.api_key)
+
+        use_model = (
+            model
+            or self.config.model
+            or os.environ.get("CORTEX_FACT_EXTRACTION_MODEL")
+            or DEFAULT_MODELS["anthropic"]
+        )
+
+        # Add JSON instruction if response_format is json
+        user_prompt = prompt
+        if response_format == "json":
+            user_prompt = prompt + "\n\nRespond with ONLY a JSON object, no other text."
+
+        response = await client.messages.create(
+            model=use_model,
+            max_tokens=self.config.max_tokens or 2000,
+            system=system,
+            messages=[{"role": "user", "content": user_prompt}],
+            temperature=self.config.temperature or 0.1,
+        )
+
+        # Extract text content from response
+        text_block = next(
+            (block for block in response.content if block.type == "text"), None
+        )
+        if not text_block:
+            raise Exception("[Cortex LLM] Anthropic returned no text content")
+
+        return str(text_block.text)
 
 
 def create_llm_client(config: "LLMConfig") -> Optional[LLMClient]:

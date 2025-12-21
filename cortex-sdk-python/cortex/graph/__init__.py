@@ -957,6 +957,205 @@ async def delete_fact_from_graph(
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Sync Functions - Fact Supersession (Belief Revision)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+async def sync_fact_supersession(
+    old_fact_id: str,
+    new_fact_id: str,
+    adapter: GraphAdapter,
+    reason: Optional[str] = None,
+) -> bool:
+    """
+    Create SUPERSEDES relationship between facts in the graph.
+
+    This is used when a new fact supersedes an old fact during
+    belief revision. Creates a SUPERSEDES edge from new fact to old fact.
+
+    Args:
+        old_fact_id: ID of the superseded fact
+        new_fact_id: ID of the superseding fact
+        adapter: Graph database adapter
+        reason: Optional reason for the supersession
+
+    Returns:
+        True if relationship was created, False otherwise
+
+    Example:
+        >>> await sync_fact_supersession("fact-old", "fact-new", adapter, "User changed preference")
+    """
+    # Find both fact nodes
+    old_node_id = await find_graph_node_id("Fact", old_fact_id, adapter)
+    new_node_id = await find_graph_node_id("Fact", new_fact_id, adapter)
+
+    if not old_node_id or not new_node_id:
+        return False
+
+    try:
+        now = int(time.time() * 1000)
+        await adapter.create_edge(
+            GraphEdge(
+                type="SUPERSEDES",
+                from_node=new_node_id,
+                to_node=old_node_id,
+                properties={
+                    "createdAt": now,
+                    "reason": reason,
+                },
+            )
+        )
+        return True
+    except Exception:
+        return False
+
+
+async def sync_fact_revision(
+    fact_id: str,
+    adapter: GraphAdapter,
+    reason: Optional[str] = None,
+) -> bool:
+    """
+    Handle UPDATE action in graph for belief revision.
+
+    When a fact is updated (not superseded), we update the graph node
+    properties to reflect the revision.
+
+    Args:
+        fact_id: ID of the updated fact
+        adapter: Graph database adapter
+        reason: Optional reason for the update
+
+    Returns:
+        True if update was recorded, False otherwise
+
+    Example:
+        >>> await sync_fact_revision("fact-123", adapter, "Added more detail")
+    """
+    node_id = await find_graph_node_id("Fact", fact_id, adapter)
+    if not node_id:
+        return False
+
+    try:
+        now = int(time.time() * 1000)
+        # Update the fact node with revision metadata
+        await adapter.query(
+            """
+            MATCH (n) WHERE elementId(n) = $nodeId
+            SET n.updatedAt = $updatedAt,
+                n.lastRevisionReason = $reason
+            """,
+            {
+                "nodeId": node_id,
+                "updatedAt": now,
+                "reason": reason,
+            },
+        )
+        return True
+    except Exception:
+        return False
+
+
+async def get_fact_supersession_chain_from_graph(
+    fact_id: str,
+    adapter: GraphAdapter,
+) -> list:
+    """
+    Query the supersession chain from the graph database.
+
+    Traverses SUPERSEDES relationships to build the chain of facts
+    showing how knowledge evolved over time.
+
+    Args:
+        fact_id: The fact ID to trace
+        adapter: Graph database adapter
+
+    Returns:
+        List of dicts with factId, supersededBy, timestamp
+
+    Example:
+        >>> chain = await get_fact_supersession_chain_from_graph("fact-456", adapter)
+        >>> for entry in chain:
+        ...     print(f"{entry['factId']} -> {entry['supersededBy']}")
+    """
+    node_id = await find_graph_node_id("Fact", fact_id, adapter)
+    if not node_id:
+        return []
+
+    try:
+        # Query both directions: what superseded this fact, and what this fact supersedes
+        result = await adapter.query(
+            """
+            MATCH path = (start:Fact {factId: $factId})-[:SUPERSEDES*0..10]-(other:Fact)
+            RETURN other.factId AS factId,
+                   other.supersededBy AS supersededBy,
+                   other.createdAt AS timestamp
+            ORDER BY other.createdAt ASC
+            """,
+            {"factId": fact_id},
+        )
+
+        chain = []
+        seen = set()
+        for record in result.records:
+            fid = record.get("factId")
+            if fid and fid not in seen:
+                seen.add(fid)
+                chain.append({
+                    "factId": fid,
+                    "supersededBy": record.get("supersededBy"),
+                    "timestamp": record.get("timestamp"),
+                })
+
+        return chain
+    except Exception:
+        return []
+
+
+async def remove_fact_supersession_relationships(
+    fact_id: str,
+    adapter: GraphAdapter,
+) -> int:
+    """
+    Remove all SUPERSEDES relationships for a fact.
+
+    Used for cleanup when a fact is deleted or when
+    supersession needs to be undone.
+
+    Args:
+        fact_id: The fact ID
+        adapter: Graph database adapter
+
+    Returns:
+        Number of relationships removed
+
+    Example:
+        >>> removed = await remove_fact_supersession_relationships("fact-123", adapter)
+        >>> print(f"Removed {removed} supersession relationships")
+    """
+    node_id = await find_graph_node_id("Fact", fact_id, adapter)
+    if not node_id:
+        return 0
+
+    try:
+        # Delete all SUPERSEDES relationships connected to this fact
+        result = await adapter.query(
+            """
+            MATCH (n:Fact {factId: $factId})-[r:SUPERSEDES]-()
+            DELETE r
+            RETURN count(r) AS deleted
+            """,
+            {"factId": fact_id},
+        )
+
+        if result.records:
+            return int(result.records[0].get("deleted", 0))
+        return 0
+    except Exception:
+        return 0
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Sync Functions - Context to Graph
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -1481,6 +1680,11 @@ __all__ = [
     "sync_fact_to_graph",
     "sync_fact_relationships",
     "delete_fact_from_graph",
+    # Sync functions - Fact Supersession (Belief Revision)
+    "sync_fact_supersession",
+    "sync_fact_revision",
+    "get_fact_supersession_chain_from_graph",
+    "remove_fact_supersession_relationships",
     # Sync functions - Context
     "sync_context_to_graph",
     "sync_context_relationships",

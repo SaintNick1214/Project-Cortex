@@ -5,8 +5,9 @@ import { streamText, embed, convertToModelMessages } from "ai";
 // Create OpenAI client for embeddings
 const openaiClient = createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Create Cortex Memory provider with SDK v0.23.0 capabilities
-// Now using recall() for unified multi-layer retrieval (vector + facts + graph)
+// Create Cortex Memory provider with SDK v0.24.0 capabilities
+// - recall() for unified multi-layer retrieval (vector + facts + graph)
+// - beliefRevision for intelligent fact updates/supersessions
 function getCortexMemory(memorySpaceId: string, userId: string) {
   return createCortexMemory({
     convexUrl: process.env.CONVEX_URL!,
@@ -26,8 +27,17 @@ function getCortexMemory(memorySpaceId: string, userId: string) {
     // Enable fact extraction (auto-configured via env vars)
     enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === "true",
 
-    // Embedding provider for semantic fact deduplication (v0.22.0)
-    // This enables semantic matching to prevent duplicate facts across sessions
+    // Belief Revision (v0.24.0+)
+    // Automatically handles fact updates, supersessions, and deduplication
+    // When a user changes their preference (e.g., "I now prefer purple"),
+    // the system intelligently updates or supersedes the old fact.
+    beliefRevision: {
+      enabled: true, // Enable the belief revision pipeline
+      slotMatching: true, // Fast slot-based conflict detection (subject-predicate matching)
+      llmResolution: true, // LLM-based resolution for nuanced conflicts
+    },
+
+    // Embedding provider for semantic matching (required for semantic dedup & belief revision)
     embeddingProvider: {
       generate: async (text: string) => {
         const result = await embed({
