@@ -1512,3 +1512,44 @@ class TestConsolidateValidation:
             )
         assert "must not contain duplicates" in str(exc_info.value)
 
+
+class TestSupersedeValidation:
+    """Tests for supersede() client-side validation"""
+
+    @pytest.mark.asyncio
+    async def test_self_supersession_raises_error(self, cortex_client, test_ids, cleanup_helper):
+        """
+        Bug fix: supersede() should reject self-supersession.
+
+        If old_fact_id == new_fact_id, the fact would be marked as superseded by itself,
+        creating an inconsistent state where validUntil is set but no replacement exists.
+        """
+        memory_space_id = test_ids["memory_space_id"]
+
+        # Create a fact
+        stored = await cortex_client.facts.store(
+            StoreFactParams(
+                memory_space_id=memory_space_id,
+                fact="Test fact for self-supersession test",
+                fact_type="observation",
+                confidence=80,
+                source_type="system",
+            )
+        )
+        fact_id = stored.fact_id
+
+        # Attempt self-supersession should raise ValueError
+        with pytest.raises(ValueError) as exc_info:
+            await cortex_client.facts.supersede(
+                memory_space_id=memory_space_id,
+                old_fact_id=fact_id,
+                new_fact_id=fact_id,  # Same as old_fact_id
+                reason="This should fail",
+            )
+
+        assert "Cannot supersede a fact with itself" in str(exc_info.value)
+        assert fact_id in str(exc_info.value)
+
+        # Cleanup
+        await cleanup_helper.purge_facts(memory_space_id)
+

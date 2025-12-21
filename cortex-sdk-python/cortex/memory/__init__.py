@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Literal, Optional, Tuple, Union, cast
 from ..conversations import ConversationsAPI
 from ..errors import CortexError, ErrorCode
 from ..facts import FactsAPI, StoreFactWithDedupOptions
+from ..facts.belief_revision import ConflictCandidate, ReviseParams
 from ..facts.deduplication import (
     DeduplicationConfig,
     FactDeduplicationService,
@@ -23,6 +24,7 @@ from ..types import (
     DeleteMemoryOptions,
     DeleteMemoryResult,
     EnrichedMemory,
+    FactRevisionAction,
     ForgetOptions,
     ForgetResult,
     LLMConfig,
@@ -103,7 +105,16 @@ class MemoryAPI:
         # Pass resilience layer to sub-APIs
         self.conversations = ConversationsAPI(client, graph_adapter, resilience)
         self.vector = VectorAPI(client, graph_adapter, resilience)
-        self.facts = FactsAPI(client, graph_adapter, resilience)
+
+        # Create belief revision LLM client adapter if LLM is configured
+        # The LLM client needs a complete() method for belief revision
+        belief_revision_llm_client = None
+        if llm_config:
+            llm_client = create_llm_client(llm_config)
+            if llm_client and hasattr(llm_client, "complete"):
+                belief_revision_llm_client = llm_client
+
+        self.facts = FactsAPI(client, graph_adapter, resilience, belief_revision_llm_client)
 
     async def _execute_with_resilience(
         self,
@@ -573,9 +584,11 @@ class MemoryAPI:
                 stored_memories.append(agent_memory)
 
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        # STEP 5: FACTS (skip: 'facts') - with cross-session deduplication
+        # STEP 5: FACTS (skip: 'facts') - with belief revision or deduplication
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        extracted_facts = []
+        from ..types import FactRecord as FactRecordModel
+        extracted_facts: List[FactRecordModel] = []
+        revision_actions: List[FactRevisionAction] = []
 
         if not self._should_skip_layer("facts", skip_layers):
             fact_extractor = self._get_fact_extractor(params)
@@ -592,51 +605,165 @@ class MemoryAPI:
                             StoreFactParams,
                         )
 
-                        # Build deduplication config (defaults to semantic with structural fallback)
+                        # Determine if we should use belief revision
+                        # Batteries included: ON by default when LLM is configured
+                        use_belief_revision = (
+                            opts.belief_revision is not False
+                            and self.facts.has_belief_revision()
+                        )
+
+                        # Build deduplication config for fallback path
                         dedup_config = self._build_deduplication_config(params)
 
                         for fact_data in facts_to_store:
                             try:
-                                store_params = StoreFactParams(
-                                    memory_space_id=params.memory_space_id,
-                                    participant_id=params.participant_id,
-                                    user_id=params.user_id,
-                                    fact=fact_data["fact"],
-                                    fact_type=fact_data["factType"],
-                                    subject=fact_data.get("subject", params.user_id or params.agent_id),
-                                    predicate=fact_data.get("predicate"),
-                                    object=fact_data.get("object"),
-                                    confidence=fact_data["confidence"],
-                                    source_type="conversation",
-                                    source_ref=FactSourceRef(
-                                        conversation_id=params.conversation_id,
-                                        message_ids=(
-                                            [user_message_id, agent_message_id]
-                                            if user_message_id and agent_message_id
-                                            else None
-                                        ),
-                                        memory_id=stored_memories[0].memory_id if stored_memories else None,
-                                    ),
-                                    tags=fact_data.get("tags", params.tags or []),
-                                )
+                                if use_belief_revision:
+                                    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                                    # BELIEF REVISION PATH (intelligent fact management)
+                                    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                                    revise_result = await self.facts.revise(
+                                        ReviseParams(
+                                            memory_space_id=params.memory_space_id,
+                                            user_id=params.user_id,
+                                            participant_id=params.participant_id,
+                                            fact=ConflictCandidate(
+                                                fact=fact_data["fact"],
+                                                fact_type=fact_data.get("factType"),
+                                                subject=fact_data.get("subject", params.user_id or params.agent_id),
+                                                predicate=fact_data.get("predicate"),
+                                                object=fact_data.get("object"),
+                                                confidence=int(fact_data.get("confidence", 80) * 100) if isinstance(fact_data.get("confidence"), float) and fact_data.get("confidence", 1) <= 1 else int(fact_data.get("confidence", 80)),
+                                                tags=fact_data.get("tags", params.tags or []),
+                                            ),
+                                        )
+                                    )
 
-                                # Use store_with_dedup if deduplication is configured
-                                if dedup_config:
-                                    result = await self.facts.store_with_dedup(
-                                        store_params,
-                                        StoreFactWithDedupOptions(
-                                            deduplication=dedup_config,
-                                            sync_to_graph=should_sync_to_graph,
-                                        ),
+                                    # Track revision action
+                                    # Handle both dict and object results from revise()
+                                    from ..types import FactRecord as FactRecordType
+                                    action: str
+                                    final_fact: FactRecordType
+                                    superseded: List[Any]
+                                    reason: Optional[str]
+
+                                    if isinstance(revise_result, dict):
+                                        action = str(revise_result.get("action", "ADD"))
+                                        raw_fact = revise_result.get("fact")
+                                        superseded = list(revise_result.get("superseded") or [])
+                                        reason = revise_result.get("reason")
+                                    else:
+                                        action = revise_result.action
+                                        raw_fact = revise_result.fact
+                                        superseded = list(revise_result.superseded or [])
+                                        reason = revise_result.reason
+
+                                    # Convert fact to FactRecord if it's a dict
+                                    if isinstance(raw_fact, dict):
+                                        # Handle case where fact is a dict (from belief revision)
+                                        # Skip if fact was skipped (NONE action without real fact)
+                                        if raw_fact.get("skipped"):
+                                            revision_actions.append(
+                                                FactRevisionAction(
+                                                    action=cast(Any, action),
+                                                    fact=FactRecordType(
+                                                        _id="",
+                                                        fact_id=str(raw_fact.get("fact_id") or ""),
+                                                        memory_space_id=params.memory_space_id,
+                                                        fact=str(raw_fact.get("fact", "")),
+                                                        fact_type="custom",
+                                                        confidence=0,
+                                                        source_type="conversation",
+                                                        tags=[],
+                                                        created_at=0,
+                                                        updated_at=0,
+                                                        version=1,
+                                                    ),
+                                                    superseded=None,
+                                                    reason=reason or str(raw_fact.get("reason") or ""),
+                                                )
+                                            )
+                                            continue
+
+                                        final_fact = FactRecordType(
+                                            _id=str(raw_fact.get("_id", "")),
+                                            fact_id=str(raw_fact.get("factId") or raw_fact.get("fact_id") or ""),
+                                            memory_space_id=str(raw_fact.get("memorySpaceId") or params.memory_space_id),
+                                            fact=str(raw_fact.get("fact", "")),
+                                            fact_type=cast(Any, raw_fact.get("factType") or raw_fact.get("fact_type") or "custom"),
+                                            confidence=int(raw_fact.get("confidence") or 0),
+                                            source_type=cast(Any, raw_fact.get("sourceType") or raw_fact.get("source_type") or "conversation"),
+                                            tags=list(raw_fact.get("tags") or []),
+                                            created_at=int(raw_fact.get("createdAt") or raw_fact.get("created_at") or 0),
+                                            updated_at=int(raw_fact.get("updatedAt") or raw_fact.get("updated_at") or 0),
+                                            version=int(raw_fact.get("version") or 1),
+                                            subject=raw_fact.get("subject"),
+                                            predicate=raw_fact.get("predicate"),
+                                            object=raw_fact.get("object"),
+                                        )
+                                    elif raw_fact is not None:
+                                        # It's already a FactRecord
+                                        final_fact = raw_fact
+                                    else:
+                                        # Skip if no fact
+                                        continue
+
+                                    revision_actions.append(
+                                        FactRevisionAction(
+                                            action=cast(Any, action),
+                                            fact=final_fact,
+                                            superseded=superseded if superseded else None,
+                                            reason=reason,
+                                        )
                                     )
-                                    extracted_facts.append(result.fact)
+
+                                    # Only add to extracted_facts if action wasn't NONE (duplicate/skip)
+                                    if action != "NONE":
+                                        extracted_facts.append(final_fact)
+
                                 else:
-                                    from ..types import StoreFactOptions
-                                    stored_fact = await self.facts.store(
-                                        store_params,
-                                        StoreFactOptions(sync_to_graph=should_sync_to_graph),
+                                    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                                    # DEDUPLICATION PATH (fallback when no LLM)
+                                    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                                    store_params = StoreFactParams(
+                                        memory_space_id=params.memory_space_id,
+                                        participant_id=params.participant_id,
+                                        user_id=params.user_id,
+                                        fact=fact_data["fact"],
+                                        fact_type=fact_data["factType"],
+                                        subject=fact_data.get("subject", params.user_id or params.agent_id),
+                                        predicate=fact_data.get("predicate"),
+                                        object=fact_data.get("object"),
+                                        confidence=int(fact_data.get("confidence", 80) * 100) if isinstance(fact_data.get("confidence"), float) and fact_data.get("confidence", 1) <= 1 else int(fact_data.get("confidence", 80)),
+                                        source_type="conversation",
+                                        source_ref=FactSourceRef(
+                                            conversation_id=params.conversation_id,
+                                            message_ids=(
+                                                [user_message_id, agent_message_id]
+                                                if user_message_id and agent_message_id
+                                                else None
+                                            ),
+                                            memory_id=stored_memories[0].memory_id if stored_memories else None,
+                                        ),
+                                        tags=fact_data.get("tags", params.tags or []),
                                     )
-                                    extracted_facts.append(stored_fact)
+
+                                    # Use store_with_dedup if deduplication is configured
+                                    if dedup_config:
+                                        result = await self.facts.store_with_dedup(
+                                            store_params,
+                                            StoreFactWithDedupOptions(
+                                                deduplication=dedup_config,
+                                                sync_to_graph=should_sync_to_graph,
+                                            ),
+                                        )
+                                        extracted_facts.append(result.fact)
+                                    else:
+                                        from ..types import StoreFactOptions
+                                        stored_fact = await self.facts.store(
+                                            store_params,
+                                            StoreFactOptions(sync_to_graph=should_sync_to_graph),
+                                        )
+                                        extracted_facts.append(stored_fact)
                             except Exception as error:
                                 print(f"Warning: Failed to store fact: {error}")
                 except Exception as error:
@@ -654,6 +781,8 @@ class MemoryAPI:
             },
             memories=stored_memories,
             facts=extracted_facts,
+            # Include belief revision actions if any were taken
+            fact_revisions=revision_actions if revision_actions else None,
         )
 
     async def remember_stream(
@@ -1093,6 +1222,8 @@ class MemoryAPI:
                     recommendations=insights["recommendations"],
                     cost_estimate=metrics_snapshot.estimated_cost,
                 ),
+                # Include belief revision actions from remember() result
+                fact_revisions=remember_result.fact_revisions,
             )
 
         except Exception as error:

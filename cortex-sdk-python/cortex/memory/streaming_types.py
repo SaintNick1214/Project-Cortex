@@ -362,6 +362,13 @@ class EnhancedRememberStreamResult:
     # Performance insights
     performance: Optional[PerformanceInsights] = None
 
+    # Belief revision actions (v0.24.0+)
+    fact_revisions: Optional[List[Any]] = None  # List[FactRevisionAction]
+    """
+    Belief revision actions taken for each extracted fact.
+    Only populated when belief revision is enabled (default when LLM configured).
+    """
+
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Stream Context

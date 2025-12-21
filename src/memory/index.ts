@@ -36,11 +36,26 @@ import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import { ConversationsAPI } from "../conversations";
 import { VectorAPI } from "../vector";
-import { FactsAPI } from "../facts";
+import { FactsAPI, type ConflictAction } from "../facts";
 import {
   FactDeduplicationService,
   type DeduplicationConfig,
 } from "../facts/deduplication";
+import type { BeliefRevisionLLMClient } from "../facts/belief-revision";
+
+/**
+ * Internal type for tracking belief revision actions in remember()
+ */
+interface FactRevisionAction {
+  /** Action taken: ADD (new), UPDATE (merged), SUPERSEDE (replaced), NONE (skipped) */
+  action: ConflictAction;
+  /** The resulting fact (or existing fact for NONE) */
+  fact: FactRecord;
+  /** Facts that were superseded by this action */
+  superseded?: FactRecord[];
+  /** Reason for the action */
+  reason?: string;
+}
 import type { MemorySpacesAPI } from "../memorySpaces";
 import type { UsersAPI } from "../users";
 import type { AgentsAPI } from "../agents";
@@ -165,7 +180,24 @@ export class MemoryAPI {
     // Pass resilience layer to sub-APIs
     this.conversations = new ConversationsAPI(client, graphAdapter, resilience);
     this.vector = new VectorAPI(client, graphAdapter, resilience);
-    this.facts = new FactsAPI(client, graphAdapter, resilience);
+
+    // Create belief revision LLM client adapter if LLM is configured
+    let beliefRevisionLLMClient: BeliefRevisionLLMClient | undefined;
+    if (this.llmConfig) {
+      const llmClient = createLLMClient(this.llmConfig);
+      if (llmClient?.complete) {
+        beliefRevisionLLMClient = {
+          complete: (opts) => llmClient.complete!(opts),
+        };
+      }
+    }
+
+    this.facts = new FactsAPI(
+      client,
+      graphAdapter,
+      resilience,
+      beliefRevisionLLMClient,
+    );
   }
 
   /**
@@ -861,6 +893,7 @@ export class MemoryAPI {
     // STEP 6: FACTS (skip: 'facts')
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     const extractedFacts: FactRecord[] = [];
+    const revisionActions: FactRevisionAction[] = [];
 
     if (!this.shouldSkipLayer("facts", skipLayers)) {
       const factExtractor = this.getFactExtractor(params);
@@ -873,48 +906,88 @@ export class MemoryAPI {
           );
 
           if (factsToStore && factsToStore.length > 0) {
-            // Build deduplication config
-            // Default to 'semantic' for convenience layer (memory API)
-            // Falls back to 'structural' if no generateEmbedding function
+            // Determine if we should use belief revision
+            // Batteries included: ON by default when LLM is configured
+            const useBeliefRevision =
+              options?.beliefRevision !== false &&
+              this.facts.hasBeliefRevision();
+
+            // Build deduplication config for fallback path
             const dedupConfig = this.buildDeduplicationConfig(params);
 
             for (const factData of factsToStore) {
               try {
-                const storeParams = {
-                  memorySpaceId,
-                  participantId: params.participantId,
-                  userId: params.userId,
-                  fact: factData.fact,
-                  factType: factData.factType,
-                  subject: factData.subject || params.userId || params.agentId,
-                  predicate: factData.predicate,
-                  object: factData.object,
-                  confidence: factData.confidence,
-                  sourceType: "conversation" as const,
-                  sourceRef: {
-                    conversationId: params.conversationId,
-                    messageIds:
-                      userMsgId && agentMsgId
-                        ? [userMsgId, agentMsgId]
-                        : undefined,
-                    memoryId: storedMemories[0]?.memoryId,
-                  },
-                  tags: factData.tags || params.tags || [],
-                };
+                if (useBeliefRevision) {
+                  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                  // BELIEF REVISION PATH (intelligent fact management)
+                  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                  const reviseResult = await this.facts.revise({
+                    memorySpaceId,
+                    userId: params.userId,
+                    participantId: params.participantId,
+                    fact: {
+                      fact: factData.fact,
+                      factType: factData.factType,
+                      subject: factData.subject || params.userId || params.agentId,
+                      predicate: factData.predicate,
+                      object: factData.object,
+                      confidence: factData.confidence,
+                      tags: factData.tags || params.tags || [],
+                    },
+                  });
 
-                // Use storeWithDedup if deduplication is enabled
-                if (dedupConfig) {
-                  const result = await this.facts.storeWithDedup(storeParams, {
-                    syncToGraph: shouldSyncToGraph,
-                    deduplication: dedupConfig,
+                  // Track revision action
+                  revisionActions.push({
+                    action: reviseResult.action,
+                    fact: reviseResult.fact,
+                    superseded: reviseResult.superseded.length > 0 ? reviseResult.superseded : undefined,
+                    reason: reviseResult.reason,
                   });
-                  extractedFacts.push(result.fact);
+
+                  // Only add to extractedFacts if action wasn't NONE (duplicate/skip)
+                  if (reviseResult.action !== "NONE") {
+                    extractedFacts.push(reviseResult.fact);
+                  }
                 } else {
-                  // Deduplication disabled - use regular store
-                  const storedFact = await this.facts.store(storeParams, {
-                    syncToGraph: shouldSyncToGraph,
-                  });
-                  extractedFacts.push(storedFact);
+                  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                  // DEDUPLICATION PATH (fallback when no LLM)
+                  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                  const storeParams = {
+                    memorySpaceId,
+                    participantId: params.participantId,
+                    userId: params.userId,
+                    fact: factData.fact,
+                    factType: factData.factType,
+                    subject: factData.subject || params.userId || params.agentId,
+                    predicate: factData.predicate,
+                    object: factData.object,
+                    confidence: factData.confidence,
+                    sourceType: "conversation" as const,
+                    sourceRef: {
+                      conversationId: params.conversationId,
+                      messageIds:
+                        userMsgId && agentMsgId
+                          ? [userMsgId, agentMsgId]
+                          : undefined,
+                      memoryId: storedMemories[0]?.memoryId,
+                    },
+                    tags: factData.tags || params.tags || [],
+                  };
+
+                  // Use storeWithDedup if deduplication is enabled
+                  if (dedupConfig) {
+                    const result = await this.facts.storeWithDedup(storeParams, {
+                      syncToGraph: shouldSyncToGraph,
+                      deduplication: dedupConfig,
+                    });
+                    extractedFacts.push(result.fact);
+                  } else {
+                    // Deduplication disabled - use regular store
+                    const storedFact = await this.facts.store(storeParams, {
+                      syncToGraph: shouldSyncToGraph,
+                    });
+                    extractedFacts.push(storedFact);
+                  }
                 }
               } catch (error) {
                 console.warn("Failed to store fact:", error);
@@ -939,6 +1012,8 @@ export class MemoryAPI {
       },
       memories: storedMemories,
       facts: extractedFacts,
+      // Include belief revision actions if any were taken
+      factRevisions: revisionActions.length > 0 ? revisionActions : undefined,
     };
   }
 

@@ -2,7 +2,7 @@
 
 This is the official quickstart demo for **Cortex Memory** with the **Vercel AI SDK**. It provides an interactive visualization of how data flows through the Cortex memory orchestration system in real-time.
 
-> **SDK v0.23.0**: Now with unified `recall()` API for multi-layer retrieval! Retrieves context from vector memories, facts, and graph relationships in a single orchestrated call - mirroring how `remember()` handles storage.
+> **SDK v0.24.0**: Now with **Belief Revision**! When users change their preferences (e.g., "I now prefer purple" after saying "I like blue"), Cortex intelligently updates or supersedes existing facts instead of creating duplicates.
 
 ## Features
 
@@ -11,6 +11,7 @@ This is the official quickstart demo for **Cortex Memory** with the **Vercel AI 
 - 📊 **Layer Flow Diagram** - Animated visualization showing latency and data at each layer
 - 🔀 **Memory Space Switching** - Demonstrate multi-tenant isolation by switching between memory spaces
 - ⚡ **Streaming Support** - Full streaming with progressive fact extraction
+- 🧹 **Belief Revision** - Intelligent fact updates when information changes (v0.24.0)
 - 🔄 **Smart Fact Deduplication** - Semantic matching prevents duplicate facts across sessions (v0.22.0)
 
 ## Prerequisites
@@ -39,7 +40,7 @@ If you want to use the published npm packages instead, update `package.json`:
 ```json
 {
   "dependencies": {
-    "@cortexmemory/sdk": "^0.23.0",
+    "@cortexmemory/sdk": "^0.24.0",
     "@cortexmemory/vercel-ai-provider": "^1.0.0"
     // ... other deps
   }
@@ -94,12 +95,13 @@ When you send a message, you'll see it flow through these layers:
 
 ### Key Features Demonstrated
 
-1. **Unified Retrieval (recall)** - SDK v0.23.0 retrieves from vector + facts + graph in one call
-2. **agentId Requirement** - SDK v0.17.0+ requires `agentId` for all user-agent conversations
-3. **Automatic Fact Extraction** - LLM-powered extraction of preferences, identity, relationships
-4. **Semantic Fact Deduplication** - SDK v0.22.0 automatically prevents duplicate facts using embedding similarity
-5. **Multi-tenant Isolation** - Switch memory spaces to see complete isolation
-6. **Streaming with Memory** - Full streaming support with progressive storage
+1. **Belief Revision** - SDK v0.24.0 intelligently updates/supersedes facts when information changes
+2. **Unified Retrieval (recall)** - SDK v0.23.0 retrieves from vector + facts + graph in one call
+3. **agentId Requirement** - SDK v0.17.0+ requires `agentId` for all user-agent conversations
+4. **Automatic Fact Extraction** - LLM-powered extraction of preferences, identity, relationships
+5. **Semantic Fact Deduplication** - SDK v0.22.0 automatically prevents duplicate facts using embedding similarity
+6. **Multi-tenant Isolation** - Switch memory spaces to see complete isolation
+7. **Streaming with Memory** - Full streaming support with progressive storage
 
 ## Configuration
 
@@ -128,7 +130,16 @@ const cortexMemory = createCortexMemory({
   enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === "true",
   enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === "true",
 
-  // Embedding provider for semantic fact deduplication (v0.22.0)
+  // Belief Revision (v0.24.0+)
+  // Automatically handles fact updates when user changes their mind
+  // e.g., "I like blue" → "I prefer purple" will UPDATE/SUPERSEDE the old fact
+  beliefRevision: {
+    enabled: true,
+    slotMatching: true, // Fast slot-based conflict detection
+    llmResolution: true, // LLM-based resolution for nuanced conflicts
+  },
+
+  // Embedding provider (required for semantic matching)
   embeddingProvider: {
     generate: async (text) => {
       const result = await embed({
@@ -237,6 +248,32 @@ const cortexMemory = createCortexMemory({
   factDeduplication: false, // Uses pre-v0.22.0 behavior
 });
 ```
+
+### Facts not being updated when user changes preferences
+
+If you say "I like blue" then later say "I prefer purple" and both facts remain, enable **Belief Revision** (v0.24.0+):
+
+```typescript
+const cortexMemory = createCortexMemory({
+  // ... other config
+  beliefRevision: {
+    enabled: true,
+    slotMatching: true, // Fast detection via subject-predicate matching
+    llmResolution: true, // LLM resolves nuanced conflicts
+  },
+});
+```
+
+**Revision actions explained:**
+
+| Action     | Description                                        | Example                                    |
+| ---------- | -------------------------------------------------- | ------------------------------------------ |
+| `CREATE`   | New fact with no conflicts                         | First time mentioning favorite color       |
+| `UPDATE`   | Existing fact refined with new details             | "I like blue" → "I love dark blue"         |
+| `SUPERSEDE`| Old fact replaced by contradicting new information | "I like blue" → "I prefer purple now"      |
+| `NONE`     | Duplicate or irrelevant, no storage needed         | Saying "I like blue" twice                 |
+
+The demo visualization shows these actions with colored badges on the Facts layer.
 
 ## License
 

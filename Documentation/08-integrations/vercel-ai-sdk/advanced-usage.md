@@ -1,6 +1,6 @@
 # Advanced Usage
 
-Advanced patterns and configurations for Cortex Memory Provider with SDK v0.21.0+.
+Advanced patterns and configurations for Cortex Memory Provider with SDK v0.24.0+.
 
 ## Graph Memory Integration (SDK v0.19.0+)
 
@@ -181,6 +181,99 @@ Focus on:
 });
 ```
 
+## Belief Revision (SDK v0.24.0+)
+
+Intelligently update or supersede existing facts when information changes, instead of creating duplicates.
+
+### How It Works
+
+When a user says "I like blue" and later says "I prefer purple now", without belief revision you'd have two conflicting facts. With belief revision enabled, Cortex:
+
+1. **Slot Matching**: Checks if the new fact matches an existing fact's subject-predicate structure
+2. **Semantic Matching**: Uses embeddings to find semantically similar facts
+3. **LLM Resolution**: For nuanced conflicts, uses an LLM to decide the appropriate action
+
+### Revision Actions
+
+| Action     | Description                                        | Example                                    |
+| ---------- | -------------------------------------------------- | ------------------------------------------ |
+| `CREATE`   | New fact with no conflicts                         | First time mentioning favorite color       |
+| `UPDATE`   | Existing fact refined with new details             | "I like blue" → "I love dark blue"         |
+| `SUPERSEDE`| Old fact replaced by contradicting new information | "I like blue" → "I prefer purple now"      |
+| `NONE`     | Duplicate or irrelevant, no storage needed         | Saying "I like blue" twice                 |
+
+### Basic Configuration
+
+```typescript
+const cortexMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "my-agent",
+  userId: "user-123",
+  agentId: "my-assistant",
+
+  enableFactExtraction: true,
+
+  // Enable belief revision
+  beliefRevision: {
+    enabled: true,
+    slotMatching: true,   // Fast detection via subject-predicate matching
+    llmResolution: true,  // LLM resolves nuanced conflicts
+  },
+
+  // Required for semantic matching
+  embeddingProvider: {
+    generate: async (text) => {
+      const { embedding } = await embed({
+        model: openai.embedding("text-embedding-3-small"),
+        value: text,
+      });
+      return embedding;
+    },
+  },
+});
+```
+
+### Disable Specific Features
+
+You can selectively disable parts of the belief revision pipeline:
+
+```typescript
+// Slot matching only (fastest, no embeddings or LLM calls)
+beliefRevision: {
+  enabled: true,
+  slotMatching: true,
+  llmResolution: false,
+},
+
+// Disable belief revision entirely
+beliefRevision: false,
+```
+
+### Layer Observer Events
+
+When using the layer observer, facts layer events now include revision information:
+
+```typescript
+layerObserver: {
+  onLayerUpdate: (event) => {
+    if (event.layer === 'facts' && event.revisionAction) {
+      console.log(`Fact ${event.revisionAction}: ${event.data?.preview}`);
+
+      if (event.revisionAction === 'SUPERSEDE' && event.supersededFacts) {
+        console.log(`Superseded facts:`, event.supersededFacts);
+      }
+    }
+  },
+},
+```
+
+### Best Practices
+
+1. **Always provide embeddings** - Semantic matching is crucial for detecting non-obvious conflicts
+2. **Enable LLM resolution** - Catches edge cases that slot/semantic matching might miss
+3. **Use structured facts** - Facts with clear subject-predicate-object structure work best with slot matching
+4. **Monitor revision actions** - Track how often facts are updated vs superseded to understand user behavior
+
 ## Layer Observation (for Visualization)
 
 Watch memory orchestration in real-time for UI visualization.
@@ -217,7 +310,7 @@ const cortexMemory = createCortexMemory({
 });
 ```
 
-See the [quickstart demo](../../../packages/vercel-ai-provider/quickstart) for a full implementation of the LayerFlowDiagram component.
+See the [quickstart demo](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart) for a full implementation of the LayerFlowDiagram component.
 
 ## Enhanced Streaming
 

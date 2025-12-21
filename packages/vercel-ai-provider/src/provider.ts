@@ -12,6 +12,7 @@ import type {
   LayerEvent,
   MemoryLayer,
   OrchestrationSummary,
+  RevisionAction,
 } from "./types";
 import {
   resolveUserId,
@@ -129,7 +130,13 @@ export class CortexMemoryProvider {
             },
             {
               syncToGraph: this.config.enableGraphMemory || false,
-            },
+              // Belief revision (v0.24.0+) - automatically handle fact updates/supersessions
+              // Note: Type assertion needed until SDK v0.24.0 is published to npm
+              beliefRevision:
+                this.config.beliefRevision !== false
+                  ? this.config.beliefRevision
+                  : undefined,
+            } as any,
           )
           .then(() => {
             // Notify layer observer of completion
@@ -255,7 +262,7 @@ export class CortexMemoryProvider {
         embedding,
         userId,
         limit: this.config.memorySearchLimit || 20,
-        minScore: this.config.minMemoryRelevance, // Filter by minimum relevance score
+        // Note: minMemoryRelevance is applied internally by the vector search
         // recall() uses sensible defaults: vector + facts + graph (if configured)
         // No need to explicitly enable sources - batteries included
         formatForLLM: true, // Get pre-formatted context string
@@ -385,11 +392,17 @@ export class CortexMemoryProvider {
         }
 
         // Prepare streaming options
-        const streamingOptions: any = {
+        // Note: Type assertion needed until SDK v0.24.0 is published to npm
+        const streamingOptions = {
           syncToGraph: this.config.enableGraphMemory || false,
+          // Belief revision (v0.24.0+) - automatically handle fact updates/supersessions
+          beliefRevision:
+            this.config.beliefRevision !== false
+              ? this.config.beliefRevision
+              : undefined,
           ...this.config.streamingOptions,
           hooks: this.config.streamingHooks,
-        };
+        } as any;
 
         // Call rememberStream and await it to ensure it completes before stream ends
         try {
@@ -471,6 +484,10 @@ export class CortexMemoryProvider {
       metadata?: Record<string, unknown>;
     },
     errorMessage?: string,
+    revisionInfo?: {
+      action?: RevisionAction;
+      supersededFacts?: string[];
+    },
   ): void {
     if (!this.config.layerObserver?.onLayerUpdate) {
       return;
@@ -482,6 +499,8 @@ export class CortexMemoryProvider {
       timestamp: Date.now(),
       data,
       error: errorMessage ? { message: errorMessage } : undefined,
+      revisionAction: revisionInfo?.action,
+      supersededFacts: revisionInfo?.supersededFacts,
     };
 
     try {
