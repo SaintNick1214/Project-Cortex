@@ -433,8 +433,10 @@ def validate_conflict_decision(
             error=f"{decision.action} action requires a targetFactId",
         )
 
-    # Verify targetFactId exists in existing facts
-    if decision.target_fact_id:
+    # Verify targetFactId exists in existing facts (but only for UPDATE/SUPERSEDE)
+    # NONE and ADD actions don't require a valid targetFactId - the LLM may have
+    # determined the fact is already captured without identifying the exact existing fact
+    if decision.target_fact_id and decision.action in ("UPDATE", "SUPERSEDE"):
         target_exists = any(
             _get_attr(f, "fact_id", "factId", None) == decision.target_fact_id
             for f in existing_facts
