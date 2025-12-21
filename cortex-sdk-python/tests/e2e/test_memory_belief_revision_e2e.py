@@ -186,16 +186,12 @@ class TestMemoryRememberBeliefRevisionE2E:
 
         This verifies the explicit opt-out path.
         """
-        from convex import ConvexClient
         from cortex import Cortex
-        from cortex.types import RememberOptions, RememberParams
+        from cortex.types import CortexConfig, RememberOptions, RememberParams
 
-        # Initialize client
+        # Initialize Cortex with config
         convex_url = os.environ.get("CONVEX_URL")
-        client = ConvexClient(convex_url)
-
-        # Create Cortex without LLM to ensure dedup path
-        cortex = Cortex(client)
+        cortex = Cortex(CortexConfig(convex_url=convex_url))
 
         # Custom fact extractor
         async def extract_facts(user_msg, agent_resp):
@@ -232,7 +228,7 @@ class TestMemoryRememberBeliefRevisionE2E:
 
         finally:
             # Cleanup
-            await client.close()
+            await cortex.close()
 
     @pytest.mark.asyncio
     async def test_remember_graceful_fallback_without_llm(
@@ -243,15 +239,13 @@ class TestMemoryRememberBeliefRevisionE2E:
 
         Batteries-included means we don't fail - we just skip belief revision.
         """
-        from convex import ConvexClient
         from cortex import Cortex
-        from cortex.types import RememberParams
+        from cortex.types import CortexConfig, RememberParams
 
         convex_url = os.environ.get("CONVEX_URL")
-        client = ConvexClient(convex_url)
 
         # Create Cortex without LLM
-        cortex = Cortex(client)
+        cortex = Cortex(CortexConfig(convex_url=convex_url))
 
         # Verify no belief revision available
         assert cortex.facts.has_belief_revision() is False
@@ -285,7 +279,7 @@ class TestMemoryRememberBeliefRevisionE2E:
             assert result.fact_revisions is None
 
         finally:
-            await client.close()
+            await cortex.close()
 
     @pytest.mark.asyncio
     @pytest.mark.skipif(
@@ -300,17 +294,21 @@ class TestMemoryRememberBeliefRevisionE2E:
 
         Requires actual LLM API keys to test the full flow.
         """
-        from convex import ConvexClient
         from cortex import Cortex
-        from cortex.types import RememberParams
+        from cortex.types import CortexConfig, LLMConfig, RememberParams
 
         convex_url = os.environ.get("CONVEX_URL")
-        client = ConvexClient(convex_url)
+
+        # Auto-configure LLM from environment
+        llm_config = None
+        if os.environ.get("OPENAI_API_KEY"):
+            llm_config = LLMConfig(provider="openai", api_key=os.environ["OPENAI_API_KEY"])
+        elif os.environ.get("ANTHROPIC_API_KEY"):
+            llm_config = LLMConfig(provider="anthropic", api_key=os.environ["ANTHROPIC_API_KEY"])
+
+        cortex = Cortex(CortexConfig(convex_url=convex_url, llm=llm_config))
 
         try:
-            # Create Cortex with auto-configured LLM
-            cortex = Cortex.autoConfigureLLM(client)
-
             # Verify belief revision is available
             if cortex.facts.has_belief_revision():
                 result = await cortex.memory.remember(
@@ -336,7 +334,7 @@ class TestMemoryRememberBeliefRevisionE2E:
                 pytest.skip("LLM auto-configuration did not enable belief revision")
 
         finally:
-            await client.close()
+            await cortex.close()
 
 
 class TestRememberResultFactRevisions:
