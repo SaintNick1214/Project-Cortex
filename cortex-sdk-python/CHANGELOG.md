@@ -5,6 +5,69 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.25.0] - 2025-12-22
+
+### 🧠 Belief Revision Enhancements - Subject+FactType Matching & Fixes
+
+This release significantly improves the belief revision pipeline with better conflict detection and proper supersession handling.
+
+#### 🎯 New: Subject + FactType Matching (Stage 2.5)
+
+Added a new pipeline stage that catches conflicts missed by slot and semantic matching:
+
+```python
+# Example: These facts share subject="User" and factType="preference"
+# Even with different predicates ("likes" vs "prefers"), they're now candidates
+# for LLM conflict resolution
+fact1 = "User likes blue"      # subject=User, factType=preference
+fact2 = "User prefers purple"  # subject=User, factType=preference
+# → Stage 2.5 identifies these as potential conflicts → LLM decides: SUPERSEDE
+```
+
+**Pipeline Flow:**
+1. Slot Matching (exact predicate classes)
+2. Semantic Matching (embedding similarity)
+3. **Subject+FactType Matching (NEW)** - catches same-category facts
+4. LLM Resolution (nuanced decision)
+
+#### 🔧 Fixed: SUPERSEDE Action Now Uses `facts:supersede`
+
+Previously, SUPERSEDE used `facts:update` which only set `validUntil`, leaving the old fact still appearing as "active" in queries. Now uses the dedicated `facts:supersede` mutation that:
+- Sets `supersededBy` to link old → new fact
+- Sets `validUntil` timestamp on old fact
+- Properly excludes superseded facts from `facts.list(includeSuperseded=False)`
+
+#### 🔧 Fixed: UPDATE Action Uses `facts:updateInPlace`
+
+Changed UPDATE action from `facts:update` to `facts:updateInPlace` to perform true in-place modifications without creating new fact versions.
+
+#### 🔋 "Batteries Included" Mode
+
+BeliefRevisionService now initializes automatically without requiring explicit configuration:
+
+```python
+# Before: Required explicit LLM client or config
+cortex = Cortex(convex_url="...")  # No belief revision!
+
+# After: Always available, uses heuristics when no LLM configured
+cortex = Cortex(convex_url="...")  # Belief revision works via get_default_decision()
+```
+
+#### 📊 Enhanced Pipeline Result
+
+`ReviseResult.pipeline` now includes the new stage:
+
+```python
+result = await cortex.facts.revise(params)
+print(result.pipeline)
+# {
+#   "slot_matching": {"executed": True, "matched": False},
+#   "semantic_matching": {"executed": True, "matched": False},
+#   "subject_type_matching": {"executed": True, "matched": True, "fact_ids": ["fact-123"]},  # NEW
+#   "llm_resolution": {"executed": True, "decision": "SUPERSEDE"}
+# }
+```
+
 ## [0.24.0] - 2025-12-19
 
 ### 🧠 Belief Revision System - Intelligent Fact Management
