@@ -1362,15 +1362,36 @@ export class MemoryAPI {
           importance: params.importance,
           tags: params.tags,
           // Skip orchestration layers we already handled in rememberStream
+          // Also pass through any user-requested skip layers (facts, vector, graph, etc.)
           skipLayers: [
             "users", // Already handled above
             "agents", // Already handled above
+            // Pass through other user-requested skip layers
             ...(this.shouldSkipLayer("conversations", skipLayers)
               ? ["conversations" as const]
-              : []), // Pass through if user skipped
+              : []),
+            ...(this.shouldSkipLayer("facts", skipLayers)
+              ? ["facts" as const]
+              : []),
+            ...(this.shouldSkipLayer("vector", skipLayers)
+              ? ["vector" as const]
+              : []),
+            ...(this.shouldSkipLayer("graph", skipLayers)
+              ? ["graph" as const]
+              : []),
           ],
         },
-        { syncToGraph: options?.syncToGraph },
+        {
+          syncToGraph: options?.syncToGraph,
+          // Translate streaming beliefRevision (boolean) to remember() format
+          // true → { enabled: true }, false → false, undefined → undefined
+          beliefRevision:
+            options?.beliefRevision === true
+              ? { enabled: true }
+              : options?.beliefRevision === false
+                ? false
+                : undefined,
+        },
       );
 
       // Step 8: Finalize graph sync

@@ -138,7 +138,7 @@ export class CortexMemoryProvider {
                   : undefined,
             } as any,
           )
-          .then(() => {
+          .then((result: any) => {
             // Notify layer observer of completion
             this.notifyLayerObserver(
               "conversation",

@@ -313,6 +313,11 @@ export interface StreamingOptions {
   progressiveGraphSync?: boolean;
   graphSyncInterval?: number;
 
+  // Belief revision (v0.24.0+)
+  // Controls whether extracted facts go through the belief revision pipeline
+  // Default: true if LLM is configured (batteries-included)
+  beliefRevision?: boolean;
+
   // Progressive storage
   storePartialResponse?: boolean;
   partialResponseInterval?: number;

@@ -1175,6 +1175,9 @@ class MemoryAPI:
             should_sync = (opts.sync_to_graph if opts and hasattr(opts, 'sync_to_graph') else True) and self.graph_adapter is not None
 
             user_message_val = params.get("userMessage") if isinstance(params, dict) else params.user_message
+            # Determine belief_revision setting from options
+            belief_revision_setting = opts.belief_revision if opts and hasattr(opts, 'belief_revision') else None
+
             remember_result = await self.remember(
                 RememberParams(
                     memory_space_id=str(memory_space_id or ""),
@@ -1194,7 +1197,7 @@ class MemoryAPI:
                     importance=params.get("importance") if isinstance(params, dict) else getattr(params, "importance", None),
                     tags=params.get("tags") if isinstance(params, dict) else getattr(params, "tags", None),
                 ),
-                RememberOptions(sync_to_graph=should_sync),
+                RememberOptions(sync_to_graph=should_sync, belief_revision=belief_revision_setting),
             )
 
             # Step 7: Finalize graph sync

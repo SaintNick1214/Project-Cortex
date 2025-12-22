@@ -281,6 +281,11 @@ class StreamingOptions:
     progressive_graph_sync: bool = False
     graph_sync_interval: int = 5000
 
+    # Belief revision (v0.24.0+)
+    # Controls whether extracted facts go through the belief revision pipeline
+    # Default: None (use default behavior - enabled if LLM is configured)
+    belief_revision: Optional[bool] = None
+
     # Progressive storage
     store_partial_response: bool = False
     partial_response_interval: int = 3000
