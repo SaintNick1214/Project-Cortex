@@ -64,7 +64,7 @@
     "test": "jest",
     "test:unit": "jest --selectProjects unit",
     "test:integration": "jest --selectProjects integration",
-    "test:e2e": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects e2e",
+    "test:e2e": "node --experimental-vm-modules $(npm root)/.bin/jest --selectProjects e2e",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage --selectProjects unit integration",
     "lint": "tsc --noEmit",
