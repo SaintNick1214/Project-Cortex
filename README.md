@@ -2,7 +2,7 @@
 
 > **Plug'n'play persistent memory for AI agents, powered by Convex**
 
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![License: FSL-1.1-Apache-2.0](https://img.shields.io/badge/License-FSL--1.1--Apache--2.0-blue.svg)](https://fsl.software/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![Convex](https://img.shields.io/badge/Powered%20by-Convex-purple.svg)](https://convex.dev)
 [![Status](https://img.shields.io/badge/Status-Working-green.svg)](https://github.com/SaintNick1214/cortex/discussions)
@@ -722,25 +722,29 @@ Socket.dev may flag "network access" in this package. This is **expected and saf
 
 ## 📄 License
 
-**Open Source Core**: Apache License 2.0
+**Functional Source License (FSL-1.1-Apache-2.0)**
 
-- The Cortex SDK is and will remain open source
-- Free for commercial use
-- Includes explicit patent grant and protection
-- See [LICENSE.md](./LICENSE.md) for details
+Cortex uses the same license as Convex - the Functional Source License with Apache 2.0 future license.
+
+**Permitted Uses:**
+- Internal use and access within your organization
+- Non-commercial education and research  
+- Professional services provided to licensees
+- Building applications that use Cortex as a dependency
+
+**Restrictions:**
+You may NOT use Cortex to create a competing commercial product or service that offers the same or substantially similar functionality.
+
+**Future Apache 2.0:**
+Each version automatically becomes Apache 2.0 licensed two years after release.
+
+See [LICENSE.md](./LICENSE.md) for full details.
 
 **Cortex Cloud**: Commercial service (future)
 
 - Optional managed features and analytics
 - Free tier planned
 - Pay only for advanced features and support
-
-**Why Apache 2.0?**
-
-- Aligns with Convex (also Apache 2.0)
-- Explicit patent protection for users and contributors
-- Enterprise-friendly and legally clear
-- Same permissiveness as MIT with better legal protections
 
 ## 🙏 Acknowledgments
 

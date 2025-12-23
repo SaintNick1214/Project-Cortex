@@ -2,7 +2,7 @@
 
 > **Persistent memory for your AI applications powered by Cortex and Convex**
 
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![License: FSL-1.1-Apache-2.0](https://img.shields.io/badge/License-FSL--1.1--Apache--2.0-blue.svg)](https://fsl.software/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 
 Add long-term memory to any Vercel AI SDK application with a single import. Built on Cortex for TypeScript-native memory management with zero vendor lock-in.
@@ -471,7 +471,7 @@ We welcome contributions! Please see [CONTRIBUTING.md](../../CONTRIBUTING.md).
 
 ## License
 
-Apache 2.0 - See [LICENSE.md](./LICENSE.md)
+FSL-1.1-Apache-2.0 - See [LICENSE.md](../../LICENSE.md)
 
 ## Links
 

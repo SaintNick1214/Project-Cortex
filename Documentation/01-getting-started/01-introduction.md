@@ -266,14 +266,14 @@ Works with any AI framework:
 
 ### Open Source
 
-Cortex is licensed under Apache License 2.0:
+Cortex is licensed under FSL-1.1-Apache-2.0 (Functional Source License):
 
-- ✅ Free for commercial use
-- ✅ Modify and distribute freely
+- ✅ Free for internal use and applications that use Cortex
+- ✅ Modify and distribute freely (non-competing uses)
 - ✅ Explicit patent grant protection
 - ✅ No vendor lock-in
 - ✅ Community-driven development
-- ✅ Transparent roadmap
+- ✅ Each version becomes Apache 2.0 after 2 years
 
 ## Design Principles
 

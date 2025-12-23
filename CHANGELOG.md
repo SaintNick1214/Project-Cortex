@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
-### [0.25.0] - 2025-12-22
+### [0.26.0] - 2025-12-23
 
 #### 🧠 Enhanced Belief Revision - Subject+FactType Matching
 
@@ -4653,7 +4653,7 @@ First public release of Cortex SDK with complete **Conversations API** (Layer 1a
 - Comprehensive documentation structure
 - Code of Conduct and Contributing guidelines
 - Security policy and reporting procedures
-- Apache License 2.0
+- FSL-1.1-Apache-2.0 License
 
 ### Architecture Decisions
 
