@@ -264,4 +264,4 @@ See implementation plan in `graph-database-integration.plan.md`.
 
 ## License
 
-Apache 2.0 (SDK) - Graph databases have their own licenses (Neo4j: GPL, Memgraph: BSL)
+FSL-1.1-Apache-2.0 (SDK) - Graph databases have their own licenses (Neo4j: GPL, Memgraph: BSL)

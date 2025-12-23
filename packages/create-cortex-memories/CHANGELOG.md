@@ -2,7 +2,7 @@
 
 All notable changes to the create-cortex-memories wizard will be documented in this file.
 
-## [0.3.0] - 2025-11-29
+## [0.26.0] - 2025-12-23
 
 ### Added
 
