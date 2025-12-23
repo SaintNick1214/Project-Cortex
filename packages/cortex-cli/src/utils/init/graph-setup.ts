@@ -17,14 +17,28 @@ import { execCommand } from "../shell.js";
 /**
  * Generate a cryptographically secure random password
  * Neo4j has no restrictions on password characters, min 8 chars by default
+ *
+ * Uses rejection sampling to avoid modulo bias when mapping random bytes
+ * to charset indices. This ensures uniform distribution across all characters.
  */
 function generateSecurePassword(length: number = 20): string {
   // Use a charset that works well with shell/env files (avoid problematic chars like $, `, \)
-  const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#%^&*()-_=+[]{}|;:,.<>?";
-  const bytes = crypto.randomBytes(length);
+  const charset =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#%^&*()-_=+[]{}|;:,.<>?";
+  const charsetLength = charset.length;
+
+  // Calculate the largest multiple of charsetLength <= 256 to avoid modulo bias
+  // Any byte value >= maxUnbiased would create bias when using modulo
+  const maxUnbiased = Math.floor(256 / charsetLength) * charsetLength;
+
   let password = "";
-  for (let i = 0; i < length; i++) {
-    password += charset[bytes[i] % charset.length];
+  while (password.length < length) {
+    const byte = crypto.randomBytes(1)[0];
+    // Reject values that would introduce bias
+    if (byte >= maxUnbiased) {
+      continue;
+    }
+    password += charset[byte % charsetLength];
   }
   return password;
 }
