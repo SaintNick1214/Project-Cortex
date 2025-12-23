@@ -17,7 +17,6 @@ async function loadOpenAI(): Promise<any> {
   // Try require() first - works in CJS and Jest without --experimental-vm-modules
   if (typeof require !== "undefined") {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const mod = require("openai");
       return mod.default || mod;
     } catch {
@@ -38,7 +37,6 @@ async function loadAnthropic(): Promise<any> {
   // Try require() first - works in CJS and Jest without --experimental-vm-modules
   if (typeof require !== "undefined") {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const mod = require("@anthropic-ai/sdk");
       return mod.default || mod;
     } catch {

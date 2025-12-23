@@ -33,7 +33,6 @@ import {
   type QueuedRequest,
   type ResilienceConfig,
   type ResilienceMetrics,
-  type RetryConfig,
 } from "./types";
 
 // Re-export all types and classes
