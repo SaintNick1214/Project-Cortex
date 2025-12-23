@@ -171,12 +171,13 @@ class MockLLMClient:
 class TestHasBeliefRevision:
     """Tests for FactsAPI.has_belief_revision() method."""
 
-    def test_has_belief_revision_false_without_llm(self) -> None:
-        """Should return False when no LLM client is provided."""
+    def test_has_belief_revision_true_without_llm(self) -> None:
+        """Should return True even without LLM (batteries-included mode uses heuristics)."""
         client = MockConvexClient()
         facts_api = FactsAPI(client)
 
-        assert facts_api.has_belief_revision() is False
+        # Batteries-included: belief revision always available, uses heuristics without LLM
+        assert facts_api.has_belief_revision() is True
 
     def test_has_belief_revision_true_with_llm(self) -> None:
         """Should return True when LLM client is provided."""
@@ -416,13 +417,13 @@ class TestFactRevisionAction:
 class TestMemoryAPIBeliefRevisionPath:
     """Tests for belief revision path in MemoryAPI.remember()."""
 
-    def test_memory_api_has_belief_revision_false_without_llm(self) -> None:
-        """MemoryAPI.facts.has_belief_revision() should be False without LLM."""
+    def test_memory_api_has_belief_revision_true_without_llm(self) -> None:
+        """MemoryAPI.facts.has_belief_revision() should be True (batteries-included)."""
         client = MockConvexClient()
         memory_api = MemoryAPI(client)
 
-        # No LLM configured
-        assert memory_api.facts.has_belief_revision() is False
+        # Batteries-included: belief revision always available, uses heuristics without LLM
+        assert memory_api.facts.has_belief_revision() is True
 
     def test_memory_api_has_belief_revision_true_with_llm(self) -> None:
         """MemoryAPI.facts.has_belief_revision() should be True with LLM."""
@@ -480,20 +481,20 @@ class TestMemoryAPIBeliefRevisionPath:
 
 
 class TestMemoryAPIDeduplicationFallback:
-    """Tests for deduplication fallback when belief revision unavailable."""
+    """Tests for deduplication fallback when belief revision explicitly disabled."""
 
     def test_graceful_fallback_detection(self) -> None:
-        """Should detect when to fall back to deduplication."""
+        """Should detect when to fall back to deduplication via explicit opt-out."""
         client = MockConvexClient()
         memory_api = MemoryAPI(client)
 
-        # No LLM configured
-        assert memory_api.facts.has_belief_revision() is False
+        # Batteries-included: belief revision always available
+        assert memory_api.facts.has_belief_revision() is True
 
-        # With explicit belief_revision=False
+        # With explicit belief_revision=False (user opt-out)
         opts_disabled = RememberOptions(belief_revision=False)
 
-        # Even with default options, no revision without LLM
+        # Default options use belief revision (batteries-included)
         opts_default = RememberOptions()
 
         # Logic from remember():
@@ -507,9 +508,9 @@ class TestMemoryAPIDeduplicationFallback:
             and memory_api.facts.has_belief_revision()
         )
 
-        # Both should be False because has_belief_revision() is False
-        assert use_with_disabled is False
-        assert use_with_default is False
+        # Disabled: False (explicit opt-out), Default: True (batteries-included)
+        assert use_with_disabled is False  # User explicitly disabled
+        assert use_with_default is True  # Batteries-included: default to revision
 
     def test_explicit_disable_overrides_llm(self) -> None:
         """
