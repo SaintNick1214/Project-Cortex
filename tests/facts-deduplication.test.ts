@@ -535,6 +535,9 @@ describe("Memory API Deduplication Integration", () => {
 
   describe("remember() with factDeduplication", () => {
     it("defaults to semantic deduplication (falling back to structural)", async () => {
+      // Note: Since belief revision is now "batteries included" (always enabled by default),
+      // we must explicitly disable it to test the deduplication fallback path.
+      
       // First remember call - extracts facts
       await cortex.memory.remember({
         memorySpaceId: TEST_MEMSPACE_ID,
@@ -554,7 +557,7 @@ describe("Memory API Deduplication Integration", () => {
             confidence: 95,
           },
         ],
-      });
+      }, { beliefRevision: false }); // Disable to test deduplication path
 
       // Second remember call - same fact should be deduplicated
       await cortex.memory.remember({
@@ -575,7 +578,7 @@ describe("Memory API Deduplication Integration", () => {
             confidence: 90,
           },
         ],
-      });
+      }, { beliefRevision: false }); // Disable to test deduplication path
 
       // Count facts for this user - should be 1 due to structural dedup
       const facts = await cortex.facts.list({
