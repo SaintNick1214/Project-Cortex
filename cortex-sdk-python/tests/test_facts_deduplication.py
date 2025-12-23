@@ -18,6 +18,7 @@ from cortex import (
     Cortex,
     DeduplicationConfig,
     FactDeduplicationService,
+    RememberOptions,
     RememberParams,
     StoreFactParams,
 )
@@ -462,7 +463,7 @@ async def test_remember_with_deduplication_disabled(ctx, cortex_client, scoped_c
             }
         ]
 
-    # First remember call
+    # First remember call - disable both deduplication AND belief revision to allow duplicates
     await cortex_client.memory.remember(
         RememberParams(
             memory_space_id=memory_space_id,
@@ -474,7 +475,8 @@ async def test_remember_with_deduplication_disabled(ctx, cortex_client, scoped_c
             agent_id=agent_id,
             fact_deduplication=False,  # Disable deduplication
             extract_facts=extract_pizza_fact,
-        )
+        ),
+        RememberOptions(belief_revision=False),  # Also disable belief revision
     )
 
     # Second remember call - same fact
@@ -489,7 +491,8 @@ async def test_remember_with_deduplication_disabled(ctx, cortex_client, scoped_c
             agent_id=agent_id,
             fact_deduplication=False,  # Disable deduplication
             extract_facts=extract_pizza_fact,
-        )
+        ),
+        RememberOptions(belief_revision=False),  # Also disable belief revision
     )
 
     # Count facts - should be 2 since dedup is disabled

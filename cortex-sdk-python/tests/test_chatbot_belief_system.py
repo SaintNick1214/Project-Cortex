@@ -18,6 +18,8 @@ from typing import Any, AsyncGenerator, Dict
 
 import pytest
 
+from cortex.types import ListFactsFilter, RecallParams, RememberOptions, RememberParams
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Test Fixtures
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -243,9 +245,11 @@ class TestChatbotBeliefSystemE2E:
 
         # Verify facts stored in database
         stored_facts = await cortex.facts.list(
-            memory_space_id=memory_space_id,
-            user_id=user_id,
-            include_superseded=False,
+            ListFactsFilter(
+                memory_space_id=memory_space_id,
+                user_id=user_id,
+                include_superseded=False,
+            )
         )
 
         print(f"[Turn 1] Active facts in DB: {len(stored_facts)}")
@@ -281,18 +285,22 @@ class TestChatbotBeliefSystemE2E:
 
         # Get initial fact count
         facts_before = await cortex.facts.list(
-            memory_space_id=memory_space_id,
-            user_id=user_id,
-            include_superseded=False,
+            ListFactsFilter(
+                memory_space_id=memory_space_id,
+                user_id=user_id,
+                include_superseded=False,
+            )
         )
         initial_count = len(facts_before)
         print(f"[Turn 2] Facts before question: {initial_count}")
 
         # Recall context for question (no facts to extract from Q&A)
         recall_result = await cortex.memory.recall(
-            memory_space_id=memory_space_id,
-            query="What is my favorite color?",
-            user_id=user_id,
+            RecallParams(
+                memory_space_id=memory_space_id,
+                query="What is my favorite color?",
+                user_id=user_id,
+            )
         )
 
         context_preview = recall_result.context[:200] if recall_result.context else "None"
@@ -314,9 +322,11 @@ class TestChatbotBeliefSystemE2E:
 
         # Verify no duplicate facts were created
         facts_after = await cortex.facts.list(
-            memory_space_id=memory_space_id,
-            user_id=user_id,
-            include_superseded=False,
+            ListFactsFilter(
+                memory_space_id=memory_space_id,
+                user_id=user_id,
+                include_superseded=False,
+            )
         )
 
         print(f"[Turn 2] Facts after question: {len(facts_after)}")
@@ -348,9 +358,11 @@ class TestChatbotBeliefSystemE2E:
 
         # Get initial state
         facts_before = await cortex.facts.list(
-            memory_space_id=memory_space_id,
-            user_id=user_id,
-            include_superseded=False,
+            ListFactsFilter(
+                memory_space_id=memory_space_id,
+                user_id=user_id,
+                include_superseded=False,
+            )
         )
         print(f"[Turn 3] Active facts before change: {len(facts_before)}")
         for fact in facts_before:
@@ -378,16 +390,20 @@ class TestChatbotBeliefSystemE2E:
 
         # Check final state: should have active facts including purple
         active_facts = await cortex.facts.list(
-            memory_space_id=memory_space_id,
-            user_id=user_id,
-            include_superseded=False,
+            ListFactsFilter(
+                memory_space_id=memory_space_id,
+                user_id=user_id,
+                include_superseded=False,
+            )
         )
 
         # Also check superseded facts
         all_facts = await cortex.facts.list(
-            memory_space_id=memory_space_id,
-            user_id=user_id,
-            include_superseded=True,
+            ListFactsFilter(
+                memory_space_id=memory_space_id,
+                user_id=user_id,
+                include_superseded=True,
+            )
         )
 
         print(f"[Turn 3] Active facts after change: {len(active_facts)}")
@@ -446,9 +462,11 @@ class TestChatbotBeliefSystemE2E:
         )
 
         facts_after_turn1 = await cortex.facts.list(
-            memory_space_id=memory_space_id,
-            user_id=user_id,
-            include_superseded=False,
+            ListFactsFilter(
+                memory_space_id=memory_space_id,
+                user_id=user_id,
+                include_superseded=False,
+            )
         )
 
         print(f"[TURN 1] Extracted {len(turn1_result.facts or [])} facts")
@@ -462,9 +480,11 @@ class TestChatbotBeliefSystemE2E:
         print("\n[TURN 2] User: What is my favorite color?")
 
         recall = await cortex.memory.recall(
-            memory_space_id=memory_space_id,
-            query="What is my favorite color?",
-            user_id=user_id,
+            RecallParams(
+                memory_space_id=memory_space_id,
+                query="What is my favorite color?",
+                user_id=user_id,
+            )
         )
 
         # Simulate LLM response using recalled context
@@ -486,9 +506,11 @@ class TestChatbotBeliefSystemE2E:
         )
 
         facts_after_turn2 = await cortex.facts.list(
-            memory_space_id=memory_space_id,
-            user_id=user_id,
-            include_superseded=False,
+            ListFactsFilter(
+                memory_space_id=memory_space_id,
+                user_id=user_id,
+                include_superseded=False,
+            )
         )
         print(f"[TURN 2] Active facts unchanged: {len(facts_after_turn2)}")
 
@@ -522,15 +544,19 @@ class TestChatbotBeliefSystemE2E:
         print("\n[FINAL] Verifying belief state...")
 
         active_facts = await cortex.facts.list(
-            memory_space_id=memory_space_id,
-            user_id=user_id,
-            include_superseded=False,
+            ListFactsFilter(
+                memory_space_id=memory_space_id,
+                user_id=user_id,
+                include_superseded=False,
+            )
         )
 
         all_facts = await cortex.facts.list(
-            memory_space_id=memory_space_id,
-            user_id=user_id,
-            include_superseded=True,
+            ListFactsFilter(
+                memory_space_id=memory_space_id,
+                user_id=user_id,
+                include_superseded=True,
+            )
         )
 
         print(f"[FINAL] Active facts: {len(active_facts)}")
