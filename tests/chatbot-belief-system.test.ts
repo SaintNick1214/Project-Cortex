@@ -39,7 +39,7 @@ describe("Chatbot Belief System E2E", () => {
 
   // Track state across turns
   let turn1FactCount = 0;
-  let turn1Facts: FactRecord[] = [];
+  let _turn1Facts: FactRecord[] = [];
 
   beforeAll(async () => {
     if (skipIfNoLLM) {
@@ -174,7 +174,7 @@ Use this context to personalize your response. Answer naturally and helpfully.`;
 
       // Store for later verification
       turn1FactCount = result.facts.length;
-      turn1Facts = result.facts;
+      _turn1Facts = result.facts;
 
       // Verify belief revision tracked the additions
       if (result.factRevisions) {
