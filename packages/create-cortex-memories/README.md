@@ -63,4 +63,4 @@ Your AI agent now has persistent memory powered by Cortex!
 
 ## License
 
-Apache-2.0
+FSL-1.1-Apache-2.0

@@ -102,4 +102,4 @@ For advanced relationship queries, set up a graph database:
 
 ## License
 
-Apache-2.0
+FSL-1.1-Apache-2.0

@@ -527,13 +527,14 @@ Contributors are recognized in:
 
 ## 📄 License
 
-By contributing, you agree that your contributions will be licensed under the Apache License 2.0.
+By contributing, you agree that your contributions will be licensed under the Functional Source License (FSL-1.1-Apache-2.0).
 
 This includes:
 
 - **Copyright License**: You grant the project a license to use your code
 - **Patent License**: You grant a license to any patents covering your contribution
 - **Patent Retaliation**: If you sue over patents, your license terminates
+- **Future Apache 2.0**: Each version becomes Apache 2.0 licensed two years after release
 
 This protects both contributors and users. See [LICENSE.md](./LICENSE.md) for full details.
 
