@@ -37,7 +37,7 @@ export const register = mutation({
     metadata: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
-    // Check if already exists
+    // Check if already exists - use UPSERT behavior to handle race conditions
     const existing = await ctx.db
       .query("memorySpaces")
       .withIndex("by_memorySpaceId", (q) =>
@@ -46,7 +46,9 @@ export const register = mutation({
       .first();
 
     if (existing) {
-      throw new ConvexError("MEMORYSPACE_ALREADY_EXISTS");
+      // Race-safe: Return existing memory space instead of throwing
+      // This handles parallel remember() calls gracefully
+      return await ctx.db.get(existing._id);
     }
 
     const now = Date.now();
