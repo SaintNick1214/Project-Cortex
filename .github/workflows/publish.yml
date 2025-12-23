@@ -46,8 +46,35 @@ jobs:
           echo "  Verifying Required Status Checks"
           echo "════════════════════════════════════════════════════════════"
           echo ""
-          echo "📋 Commit: ${{ github.sha }}"
+          echo "📋 Merge commit: ${{ github.sha }}"
           echo ""
+          
+          # Find the PR that was merged to create this commit
+          # This handles squash merges, regular merges, and rebase merges
+          PR_INFO=$(gh api repos/${{ github.repository }}/commits/${{ github.sha }}/pulls --jq '.[0]')
+          
+          if [ -z "$PR_INFO" ] || [ "$PR_INFO" = "null" ]; then
+            echo "⚠️  No associated PR found for this commit"
+            echo "   This might be a direct push to main"
+            echo ""
+            echo "   Checking commit directly..."
+            CHECK_SHA="${{ github.sha }}"
+            PR_NUMBER=""
+          else
+            PR_NUMBER=$(echo "$PR_INFO" | jq -r '.number')
+            PR_HEAD_SHA=$(echo "$PR_INFO" | jq -r '.head.sha')
+            PR_TITLE=$(echo "$PR_INFO" | jq -r '.title')
+            PR_MERGED=$(echo "$PR_INFO" | jq -r '.merged_at')
+            
+            echo "📎 Found PR #$PR_NUMBER: $PR_TITLE"
+            echo "   PR head commit: $PR_HEAD_SHA"
+            echo "   Merged at: $PR_MERGED"
+            echo ""
+            
+            # Use the PR head commit for check verification
+            # This is where the checks actually ran
+            CHECK_SHA="$PR_HEAD_SHA"
+          fi
           
           # List of required check names (must match branch protection rules)
           # These are the job `name:` values from the workflow files
@@ -56,8 +83,11 @@ jobs:
             "All Checks Passed"
           )
           
-          # Get all check runs for this commit
-          CHECK_RUNS=$(gh api repos/${{ github.repository }}/commits/${{ github.sha }}/check-runs --paginate)
+          echo "🔍 Checking status on commit: $CHECK_SHA"
+          echo ""
+          
+          # Get all check runs for the PR head commit (where checks ran)
+          CHECK_RUNS=$(gh api repos/${{ github.repository }}/commits/$CHECK_SHA/check-runs --paginate)
           
           # Track failures
           FAILED=false
@@ -86,14 +116,17 @@ jobs:
             echo ""
             echo "One or more required CI checks did not pass."
             echo ""
-            echo "This typically happens when:"
-            echo "  - PR checks workflow hasn't completed yet"
-            echo "  - Security workflow hasn't completed yet"
-            echo "  - Tests, lint, or security scans failed"
+            if [ -n "$PR_NUMBER" ]; then
+              echo "PR #$PR_NUMBER checks did not all pass before merge."
+              echo "View PR: https://github.com/${{ github.repository }}/pull/$PR_NUMBER"
+            else
+              echo "This commit was pushed directly to main without a PR."
+            fi
             echo ""
-            echo "To publish:"
-            echo "  1. Ensure all CI checks pass on your PR before merging"
-            echo "  2. If checks are still running, wait for them to complete"
+            echo "To publish properly:"
+            echo "  1. Create a PR from dev to main"
+            echo "  2. Wait for all CI checks to pass"
+            echo "  3. Then merge the PR"
             echo ""
             exit 1
           fi
