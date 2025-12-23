@@ -5,7 +5,85 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.25.0] - 2025-12-22
+## [0.25.0] - 2025-12-23
+
+### 🎯 OrchestrationObserver API - Real-time Memory Pipeline Monitoring
+
+Added `OrchestrationObserver` API for real-time monitoring of the `remember()` and `remember_stream()` orchestration pipeline. This mirrors the TypeScript SDK implementation and enables building responsive UIs and debugging tools.
+
+#### New Types
+
+```python
+from cortex import (
+    MemoryLayer,          # "memorySpace" | "user" | "agent" | "conversation" | "vector" | "facts" | "graph"
+    LayerStatus,          # "pending" | "in_progress" | "complete" | "error" | "skipped"
+    RevisionAction,       # "CREATE" | "UPDATE" | "SUPERSEDE" | "NONE"
+    LayerEvent,           # Event emitted when a layer's status changes
+    LayerEventData,       # Data payload for completed layers
+    LayerEventError,      # Error details for failed layers
+    OrchestrationSummary, # Summary of completed orchestration
+    OrchestrationObserver # Protocol for observer implementations
+)
+```
+
+#### Usage Example
+
+```python
+class MyObserver:
+    def on_orchestration_start(self, orchestration_id: str) -> None:
+        print(f"Starting: {orchestration_id}")
+    
+    def on_layer_update(self, event: LayerEvent) -> None:
+        print(f"Layer {event.layer}: {event.status} ({event.latency_ms}ms)")
+    
+    def on_orchestration_complete(self, summary: OrchestrationSummary) -> None:
+        print(f"Done in {summary.total_latency_ms}ms")
+
+result = await cortex.memory.remember(
+    RememberParams(
+        memory_space_id="user-space",
+        conversation_id="conv-123",
+        user_message="Hello",
+        agent_response="Hi there!",
+        user_id="user-1",
+        user_name="Alex",
+        agent_id="assistant",
+        observer=MyObserver(),  # NEW: Pass observer for real-time monitoring
+    )
+)
+```
+
+---
+
+### 🐛 Bug Fix: `user_id` and `source_ref` Propagation in Fact Extraction
+
+Fixed a regression where `user_id`, `participant_id`, and `source_ref` were not being propagated to facts extracted via the belief revision pipeline during `remember()`. This caused:
+
+- `facts.list(userId=...)` filter not working for extracted facts
+- GDPR cascade delete failing to remove facts associated with users
+- `source_ref` (conversation link) being lost for extracted facts
+
+```python
+# Before: user_id was None for facts created via belief revision
+result = await cortex.memory.remember(
+    RememberParams(
+        memory_space_id="test-space",
+        conversation_id="conv-123",
+        user_message="I prefer dark mode",
+        agent_response="Got it!",
+        user_id="user-123",  # This was NOT propagated
+        # ...
+    )
+)
+assert result.facts[0].user_id == "user-123"  # FAILED!
+
+# After: All parameters properly propagated
+assert result.facts[0].user_id == "user-123"  # ✓ PASSES
+assert result.facts[0].participant_id == "agent-1"  # ✓ PASSES  
+assert result.facts[0].source_ref is not None  # ✓ PASSES
+```
+
+---
 
 ### 🧠 Belief Revision Enhancements - Subject+FactType Matching & Fixes
 
