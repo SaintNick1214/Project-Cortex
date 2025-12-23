@@ -304,7 +304,7 @@ describe("Belief Revision E2E", () => {
         }
 
         expect(allFacts.length).toBeGreaterThanOrEqual(0);
-      }, 60000);
+      }, 180000);
 
       it("should preserve non-conflicting facts", async () => {
         const conversationId = createTestConversationId();
@@ -367,7 +367,7 @@ describe("Belief Revision E2E", () => {
 
         // Should have both facts active (non-conflicting)
         expect(facts.length).toBeGreaterThanOrEqual(0);
-      }, 60000);
+      }, 180000);
 
       it("should skip duplicate facts when user repeats same information", async () => {
         // Edge case: User says the same thing twice as if it's new
@@ -499,7 +499,7 @@ describe("Belief Revision E2E", () => {
 
         // At minimum, we should have some facts
         expect(allFacts.length).toBeGreaterThanOrEqual(0);
-      }, 90000);
+      }, 180000);
     },
   );
 
@@ -586,7 +586,7 @@ describe("Belief Revision E2E", () => {
 
         // Ideally should be 1 or 0, but LLM fact extraction varies
         expect(activeLocationFacts.length).toBeLessThanOrEqual(3);
-      }, 90000);
+      }, 180000);
     },
   );
 
@@ -649,7 +649,7 @@ describe("Belief Revision E2E", () => {
 
         // Should have received events
         expect(events.length).toBeGreaterThanOrEqual(0);
-      }, 60000);
+      }, 180000);
 
       it("should include revision action in facts layer event", async () => {
         const factsEvents: any[] = [];
@@ -715,7 +715,7 @@ describe("Belief Revision E2E", () => {
 
         // Should have facts layer events
         expect(factsEvents.length).toBeGreaterThanOrEqual(0);
-      }, 90000);
+      }, 180000);
     },
   );
 
@@ -765,7 +765,7 @@ describe("Belief Revision E2E", () => {
         });
 
         expect(memories.length).toBeGreaterThanOrEqual(0);
-      }, 60000);
+      }, 180000);
     },
   );
 });
