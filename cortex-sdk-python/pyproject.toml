@@ -63,6 +63,7 @@ dev = [
     "pytest-asyncio>=0.23",
     "pytest-xdist>=3.0",  # Parallel test execution within suites
     "pytest-cov>=4.0",
+    "pytest-timeout>=2.0",  # Per-test timeout to prevent hangs
     "black>=24.3.0",  # CVE-2024-21503: Require 24.3.0+ to avoid ReDoS vulnerability
     "mypy>=1.0",
     "ruff>=0.1",
