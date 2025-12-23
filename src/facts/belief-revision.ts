@@ -111,6 +111,14 @@ export interface ReviseParams {
   userId?: string;
   /** Optional participant ID */
   participantId?: string;
+  /** Source type for provenance tracking */
+  sourceType?: "conversation" | "system" | "tool" | "manual" | "a2a";
+  /** Source reference for provenance tracking */
+  sourceRef?: {
+    conversationId?: string;
+    messageIds?: string[];
+    memoryId?: string;
+  };
 }
 
 /**
@@ -449,6 +457,7 @@ export class BeliefRevisionService {
       memorySpaceId: params.memorySpaceId,
       userId: params.userId,
       subject: params.fact.subject,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
       factType: params.fact.factType as any,
       includeSuperseded: false,
       limit: 20, // Reasonable limit for LLM processing
@@ -554,12 +563,14 @@ export class BeliefRevisionService {
             participantId: params.participantId,
             userId: params.userId,
             fact: params.fact.fact,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
             factType: (params.fact.factType as any) || "custom",
             subject: params.fact.subject,
             predicate: params.fact.predicate,
             object: params.fact.object,
             confidence: params.fact.confidence,
-            sourceType: "conversation",
+            sourceType: params.sourceType || "conversation",
+            sourceRef: params.sourceRef,
             tags: params.fact.tags || [],
           });
 
@@ -588,12 +599,14 @@ export class BeliefRevisionService {
           participantId: params.participantId,
           userId: params.userId,
           fact: params.fact.fact,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
           factType: (params.fact.factType as any) || "custom",
           subject: params.fact.subject,
           predicate: params.fact.predicate,
           object: params.fact.object,
           confidence: params.fact.confidence,
-          sourceType: "conversation",
+          sourceType: params.sourceType || "conversation",
+          sourceRef: params.sourceRef,
           tags: params.fact.tags || [],
         });
         return { fact: newFact as FactRecord, superseded: [] };
@@ -606,12 +619,14 @@ export class BeliefRevisionService {
       participantId: params.participantId,
       userId: params.userId,
       fact: params.fact.fact,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
       factType: (params.fact.factType as any) || "custom",
       subject: params.fact.subject,
       predicate: params.fact.predicate,
       object: params.fact.object,
       confidence: params.fact.confidence,
-      sourceType: "conversation",
+      sourceType: params.sourceType || "conversation",
+      sourceRef: params.sourceRef,
       tags: params.fact.tags || [],
     });
     return { fact: newFact as FactRecord, superseded: [] };

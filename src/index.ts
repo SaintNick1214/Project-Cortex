@@ -570,3 +570,21 @@ export type {
   CircuitBreakerConfig,
   QueueConfig,
 } from "./resilience";
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Orchestration Observer Types (Integration-Agnostic Monitoring)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+export type {
+  /** Memory layer identifiers for orchestration monitoring */
+  MemoryLayer,
+  /** Layer status during orchestration */
+  LayerStatus,
+  /** Revision action from belief revision system */
+  RevisionAction,
+  /** Event emitted when a layer's status changes */
+  LayerEvent,
+  /** Summary of completed orchestration */
+  OrchestrationSummary,
+  /** Observer interface for real-time orchestration monitoring */
+  OrchestrationObserver,
+} from "./types";

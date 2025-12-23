@@ -89,6 +89,13 @@ import {
   type UpdateManyResult,
   type UpdateMemoryOptions,
   type UpdateMemoryResult,
+  // Orchestration observer types
+  type OrchestrationObserver,
+  type LayerEvent,
+  type MemoryLayer,
+  type LayerStatus,
+  type OrchestrationSummary,
+  type RevisionAction,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
 import type { LLMConfig } from "../index";
@@ -314,6 +321,102 @@ export class MemoryAPI {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Core Dual-Layer Operations
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Orchestration Observer Helpers
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * Generate a unique orchestration ID
+   */
+  private generateOrchestrationId(): string {
+    return `orch-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  }
+
+  /**
+   * Notify the observer of a layer update (safely handles async observers)
+   */
+  private notifyLayerUpdate(
+    observer: OrchestrationObserver | undefined,
+    event: LayerEvent,
+  ): void {
+    if (!observer?.onLayerUpdate) return;
+    try {
+      const result = observer.onLayerUpdate(event);
+      // Handle async observers - fire and forget to avoid blocking
+      if (result instanceof Promise) {
+        result.catch((e) =>
+          console.warn("[Cortex] Observer onLayerUpdate failed:", e),
+        );
+      }
+    } catch (e) {
+      console.warn("[Cortex] Observer onLayerUpdate threw:", e);
+    }
+  }
+
+  /**
+   * Notify the observer of orchestration start
+   */
+  private notifyOrchestrationStart(
+    observer: OrchestrationObserver | undefined,
+    orchestrationId: string,
+  ): void {
+    if (!observer?.onOrchestrationStart) return;
+    try {
+      const result = observer.onOrchestrationStart(orchestrationId);
+      if (result instanceof Promise) {
+        result.catch((e) =>
+          console.warn("[Cortex] Observer onOrchestrationStart failed:", e),
+        );
+      }
+    } catch (e) {
+      console.warn("[Cortex] Observer onOrchestrationStart threw:", e);
+    }
+  }
+
+  /**
+   * Notify the observer of orchestration completion
+   */
+  private notifyOrchestrationComplete(
+    observer: OrchestrationObserver | undefined,
+    summary: OrchestrationSummary,
+  ): void {
+    if (!observer?.onOrchestrationComplete) return;
+    try {
+      const result = observer.onOrchestrationComplete(summary);
+      if (result instanceof Promise) {
+        result.catch((e) =>
+          console.warn("[Cortex] Observer onOrchestrationComplete failed:", e),
+        );
+      }
+    } catch (e) {
+      console.warn("[Cortex] Observer onOrchestrationComplete threw:", e);
+    }
+  }
+
+  /**
+   * Create a layer event with current timing info
+   */
+  private createLayerEvent(
+    layer: MemoryLayer,
+    status: LayerStatus,
+    orchestrationStartTime: number,
+    data?: LayerEvent["data"],
+    error?: LayerEvent["error"],
+    revisionInfo?: { action?: RevisionAction; supersededFacts?: string[] },
+  ): LayerEvent {
+    const now = Date.now();
+    return {
+      layer,
+      status,
+      timestamp: now,
+      latencyMs: now - orchestrationStartTime,
+      data,
+      error,
+      revisionAction: revisionInfo?.action,
+      supersededFacts: revisionInfo?.supersededFacts,
+    };
+  }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Orchestration Helper Methods
@@ -661,6 +764,19 @@ export class MemoryAPI {
     options?: RememberOptions,
   ): Promise<RememberResult> {
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // ORCHESTRATION OBSERVER SETUP
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    const observer = params.observer;
+    const orchestrationId = observer ? this.generateOrchestrationId() : "";
+    const orchestrationStartTime = Date.now();
+    const layerEvents: Partial<Record<MemoryLayer, LayerEvent>> = {};
+
+    // Notify orchestration start
+    if (observer) {
+      this.notifyOrchestrationStart(observer, orchestrationId);
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // STEP 1: VALIDATION (Cannot be skipped)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     const { memorySpaceId, ownerId, ownerType, warnings } =
@@ -683,26 +799,131 @@ export class MemoryAPI {
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // STEP 2: MEMORYSPACE (Cannot be skipped)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    await this.ensureMemorySpaceExists(memorySpaceId, shouldSyncToGraph);
+    if (observer) {
+      const event = this.createLayerEvent("memorySpace", "in_progress", orchestrationStartTime);
+      layerEvents.memorySpace = event;
+      this.notifyLayerUpdate(observer, event);
+    }
+
+    try {
+      await this.ensureMemorySpaceExists(memorySpaceId, shouldSyncToGraph);
+      if (observer) {
+        const event = this.createLayerEvent("memorySpace", "complete", orchestrationStartTime, {
+          id: memorySpaceId,
+          preview: `Memory space: ${memorySpaceId}`,
+        });
+        layerEvents.memorySpace = event;
+        this.notifyLayerUpdate(observer, event);
+      }
+    } catch (error) {
+      if (observer) {
+        const event = this.createLayerEvent("memorySpace", "error", orchestrationStartTime, undefined, {
+          message: error instanceof Error ? error.message : String(error),
+        });
+        layerEvents.memorySpace = event;
+        this.notifyLayerUpdate(observer, event);
+      }
+      throw error;
+    }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // STEP 3: OWNER PROFILES (skip: 'users'/'agents')
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    if (ownerType === "user" && !this.shouldSkipLayer("users", skipLayers)) {
-      await this.ensureUserExists(ownerId, params.userName);
+    const shouldProcessUser = ownerType === "user" && !this.shouldSkipLayer("users", skipLayers);
+    const shouldProcessAgent = ownerType === "agent" && !this.shouldSkipLayer("agents", skipLayers);
+    const shouldProcessSecondaryAgent = params.agentId && params.userId && !this.shouldSkipLayer("agents", skipLayers);
+
+    // User layer
+    if (shouldProcessUser) {
+      if (observer) {
+        const event = this.createLayerEvent("user", "in_progress", orchestrationStartTime);
+        layerEvents.user = event;
+        this.notifyLayerUpdate(observer, event);
+      }
+      try {
+        await this.ensureUserExists(ownerId, params.userName);
+        if (observer) {
+          const event = this.createLayerEvent("user", "complete", orchestrationStartTime, {
+            id: ownerId,
+            preview: `User: ${params.userName || ownerId}`,
+          });
+          layerEvents.user = event;
+          this.notifyLayerUpdate(observer, event);
+        }
+      } catch (error) {
+        if (observer) {
+          const event = this.createLayerEvent("user", "error", orchestrationStartTime, undefined, {
+            message: error instanceof Error ? error.message : String(error),
+          });
+          layerEvents.user = event;
+          this.notifyLayerUpdate(observer, event);
+        }
+        throw error;
+      }
+    } else if (observer) {
+      const event = this.createLayerEvent("user", "skipped", orchestrationStartTime);
+      layerEvents.user = event;
+      this.notifyLayerUpdate(observer, event);
     }
 
-    if (ownerType === "agent" && !this.shouldSkipLayer("agents", skipLayers)) {
-      await this.ensureAgentExists(ownerId);
-    }
-
-    // Also ensure agentId is registered if both userId and agentId are provided
-    if (
-      params.agentId &&
-      params.userId &&
-      !this.shouldSkipLayer("agents", skipLayers)
-    ) {
-      await this.ensureAgentExists(params.agentId);
+    // Agent layer
+    if (shouldProcessAgent) {
+      if (observer) {
+        const event = this.createLayerEvent("agent", "in_progress", orchestrationStartTime);
+        layerEvents.agent = event;
+        this.notifyLayerUpdate(observer, event);
+      }
+      try {
+        await this.ensureAgentExists(ownerId);
+        if (observer) {
+          const event = this.createLayerEvent("agent", "complete", orchestrationStartTime, {
+            id: ownerId,
+            preview: `Agent: ${ownerId}`,
+          });
+          layerEvents.agent = event;
+          this.notifyLayerUpdate(observer, event);
+        }
+      } catch (error) {
+        if (observer) {
+          const event = this.createLayerEvent("agent", "error", orchestrationStartTime, undefined, {
+            message: error instanceof Error ? error.message : String(error),
+          });
+          layerEvents.agent = event;
+          this.notifyLayerUpdate(observer, event);
+        }
+        throw error;
+      }
+    } else if (shouldProcessSecondaryAgent) {
+      // Handle case where userId is primary but agentId also needs registration
+      if (observer) {
+        const event = this.createLayerEvent("agent", "in_progress", orchestrationStartTime);
+        layerEvents.agent = event;
+        this.notifyLayerUpdate(observer, event);
+      }
+      try {
+        await this.ensureAgentExists(params.agentId!);
+        if (observer) {
+          const event = this.createLayerEvent("agent", "complete", orchestrationStartTime, {
+            id: params.agentId!,
+            preview: `Agent: ${params.agentId}`,
+          });
+          layerEvents.agent = event;
+          this.notifyLayerUpdate(observer, event);
+        }
+      } catch (error) {
+        if (observer) {
+          const event = this.createLayerEvent("agent", "error", orchestrationStartTime, undefined, {
+            message: error instanceof Error ? error.message : String(error),
+          });
+          layerEvents.agent = event;
+          this.notifyLayerUpdate(observer, event);
+        }
+        throw error;
+      }
+    } else if (observer) {
+      const event = this.createLayerEvent("agent", "skipped", orchestrationStartTime);
+      layerEvents.agent = event;
+      this.notifyLayerUpdate(observer, event);
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -712,61 +933,92 @@ export class MemoryAPI {
     let agentMsgId: string | undefined;
 
     if (!this.shouldSkipLayer("conversations", skipLayers)) {
-      // Ensure conversation exists (auto-create if needed)
-      const existingConversation = await this.conversations.get(
-        params.conversationId,
-      );
-
-      if (!existingConversation) {
-        // Determine conversation type based on owner:
-        // - user-agent: when userId is provided (user↔agent interaction)
-        // - agent-agent: when only agentId is provided (agent-only or system interaction)
-        const conversationType = params.userId ? "user-agent" : "agent-agent";
-        const participants = params.userId
-          ? {
-              userId: params.userId,
-              agentId: params.agentId, // The agent in this user↔agent conversation
-              participantId: params.participantId, // Hive Mode: who created this
-            }
-          : {
-              // For agent-agent, store the agentId as the owner
-              agentId: params.agentId,
-              participantId: params.participantId, // Hive Mode: who created this
-            };
-
-        await this.conversations.create(
-          {
-            memorySpaceId,
-            conversationId: params.conversationId,
-            type: conversationType,
-            participants,
-          },
-          { syncToGraph: shouldSyncToGraph },
-        );
+      if (observer) {
+        const event = this.createLayerEvent("conversation", "in_progress", orchestrationStartTime);
+        layerEvents.conversation = event;
+        this.notifyLayerUpdate(observer, event);
       }
 
-      // Store user message in ACID
-      const userMsg = await this.conversations.addMessage({
-        conversationId: params.conversationId,
-        message: {
-          role: "user",
-          content: params.userMessage,
-          metadata: { userId: params.userId },
-        },
-      });
-      userMsgId = userMsg.messages[userMsg.messages.length - 1].id;
+      try {
+        // Ensure conversation exists (auto-create if needed)
+        const existingConversation = await this.conversations.get(
+          params.conversationId,
+        );
 
-      // Store agent response in ACID
-      const agentMsg = await this.conversations.addMessage({
-        conversationId: params.conversationId,
-        message: {
-          role: "agent",
-          content: params.agentResponse,
-          participantId: params.participantId || params.agentId,
-          metadata: {},
-        },
-      });
-      agentMsgId = agentMsg.messages[agentMsg.messages.length - 1].id;
+        if (!existingConversation) {
+          // Determine conversation type based on owner:
+          // - user-agent: when userId is provided (user↔agent interaction)
+          // - agent-agent: when only agentId is provided (agent-only or system interaction)
+          const conversationType = params.userId ? "user-agent" : "agent-agent";
+          const participants = params.userId
+            ? {
+                userId: params.userId,
+                agentId: params.agentId, // The agent in this user↔agent conversation
+                participantId: params.participantId, // Hive Mode: who created this
+              }
+            : {
+                // For agent-agent, store the agentId as the owner
+                agentId: params.agentId,
+                participantId: params.participantId, // Hive Mode: who created this
+              };
+
+          await this.conversations.create(
+            {
+              memorySpaceId,
+              conversationId: params.conversationId,
+              type: conversationType,
+              participants,
+            },
+            { syncToGraph: shouldSyncToGraph },
+          );
+        }
+
+        // Store user message in ACID
+        const userMsg = await this.conversations.addMessage({
+          conversationId: params.conversationId,
+          message: {
+            role: "user",
+            content: params.userMessage,
+            metadata: { userId: params.userId },
+          },
+        });
+        userMsgId = userMsg.messages[userMsg.messages.length - 1].id;
+
+        // Store agent response in ACID
+        const agentMsg = await this.conversations.addMessage({
+          conversationId: params.conversationId,
+          message: {
+            role: "agent",
+            content: params.agentResponse,
+            participantId: params.participantId || params.agentId,
+            metadata: {},
+          },
+        });
+        agentMsgId = agentMsg.messages[agentMsg.messages.length - 1].id;
+
+        if (observer) {
+          const event = this.createLayerEvent("conversation", "complete", orchestrationStartTime, {
+            id: params.conversationId,
+            preview: `Conversation: ${params.conversationId} (2 messages)`,
+            metadata: { userMsgId, agentMsgId },
+          });
+          layerEvents.conversation = event;
+          this.notifyLayerUpdate(observer, event);
+        }
+      } catch (error) {
+        if (observer) {
+          const event = this.createLayerEvent("conversation", "error", orchestrationStartTime, undefined, {
+            message: error instanceof Error ? error.message : String(error),
+          });
+          layerEvents.conversation = event;
+          this.notifyLayerUpdate(observer, event);
+        }
+        throw error;
+      }
+    } else if (observer) {
+      const event = this.createLayerEvent("conversation", "skipped", orchestrationStartTime);
+      layerEvents.conversation = event;
+      this.notifyLayerUpdate(observer, event);
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -775,107 +1027,61 @@ export class MemoryAPI {
     const storedMemories: MemoryEntry[] = [];
 
     if (!this.shouldSkipLayer("vector", skipLayers)) {
-      // Extract content (if provided)
-      let userContent = params.userMessage;
-      const agentContent = params.agentResponse;
-      let contentType: "raw" | "summarized" = "raw";
+      if (observer) {
+        const event = this.createLayerEvent("vector", "in_progress", orchestrationStartTime);
+        layerEvents.vector = event;
+        this.notifyLayerUpdate(observer, event);
+      }
 
-      if (params.extractContent) {
-        const extracted = await params.extractContent(
-          params.userMessage,
-          params.agentResponse,
-        );
-        if (extracted) {
-          userContent = extracted;
-          contentType = "summarized";
+      try {
+        // Extract content (if provided)
+        let userContent = params.userMessage;
+        const agentContent = params.agentResponse;
+        let contentType: "raw" | "summarized" = "raw";
+
+        if (params.extractContent) {
+          const extracted = await params.extractContent(
+            params.userMessage,
+            params.agentResponse,
+          );
+          if (extracted) {
+            userContent = extracted;
+            contentType = "summarized";
+          }
         }
-      }
 
-      // Generate embeddings (if provided)
-      let userEmbedding: number[] | undefined;
-      let agentEmbedding: number[] | undefined;
+        // Generate embeddings (if provided)
+        let userEmbedding: number[] | undefined;
+        let agentEmbedding: number[] | undefined;
 
-      if (params.generateEmbedding) {
-        userEmbedding =
-          (await params.generateEmbedding(userContent)) || undefined;
-        agentEmbedding =
-          (await params.generateEmbedding(agentContent)) || undefined;
-      }
+        if (params.generateEmbedding) {
+          userEmbedding =
+            (await params.generateEmbedding(userContent)) || undefined;
+          agentEmbedding =
+            (await params.generateEmbedding(agentContent)) || undefined;
+        }
 
-      // Store user message in Vector with conversationRef
-      const userMemory = await this.vector.store(
-        memorySpaceId,
-        {
-          content: userContent,
-          contentType,
-          participantId: params.participantId,
-          embedding: userEmbedding,
-          userId: params.userId,
-          agentId: params.agentId, // NEW: Support agent-owned memories
-          messageRole: "user",
-          source: {
-            type: "conversation",
-            userId: params.userId,
-            userName: params.userName,
-            timestamp: now,
-          },
-          conversationRef: userMsgId
-            ? {
-                conversationId: params.conversationId,
-                messageIds: [userMsgId],
-              }
-            : undefined,
-          metadata: {
-            importance: params.importance || 50,
-            tags: params.tags || [],
-          },
-        },
-        { syncToGraph: shouldSyncToGraph },
-      );
-      storedMemories.push(userMemory);
-
-      // Store agent response in Vector (only if it contains meaningful info)
-      const agentContentLower = agentContent.toLowerCase();
-      const acknowledgmentPhrases = [
-        "got it",
-        "i've noted",
-        "i'll remember",
-        "noted",
-        "understood",
-        "i'll set",
-        "i'll call you",
-        "will do",
-        "sure thing",
-        "okay,",
-        "ok,",
-      ];
-      const isAcknowledgment =
-        agentContent.length < 80 &&
-        acknowledgmentPhrases.some((phrase) =>
-          agentContentLower.includes(phrase),
-        );
-
-      if (!isAcknowledgment) {
-        const agentMemory = await this.vector.store(
+        // Store user message in Vector with conversationRef
+        const userMemory = await this.vector.store(
           memorySpaceId,
           {
-            content: agentContent,
-            contentType: "raw",
+            content: userContent,
+            contentType,
             participantId: params.participantId,
-            embedding: agentEmbedding,
+            embedding: userEmbedding,
             userId: params.userId,
             agentId: params.agentId, // NEW: Support agent-owned memories
-            messageRole: "agent",
+            messageRole: "user",
             source: {
               type: "conversation",
               userId: params.userId,
               userName: params.userName,
-              timestamp: now + 1,
+              timestamp: now,
             },
-            conversationRef: agentMsgId
+            conversationRef: userMsgId
               ? {
                   conversationId: params.conversationId,
-                  messageIds: [agentMsgId],
+                  messageIds: [userMsgId],
                 }
               : undefined,
             metadata: {
@@ -885,8 +1091,85 @@ export class MemoryAPI {
           },
           { syncToGraph: shouldSyncToGraph },
         );
-        storedMemories.push(agentMemory);
+        storedMemories.push(userMemory);
+
+        // Store agent response in Vector (only if it contains meaningful info)
+        const agentContentLower = agentContent.toLowerCase();
+        const acknowledgmentPhrases = [
+          "got it",
+          "i've noted",
+          "i'll remember",
+          "noted",
+          "understood",
+          "i'll set",
+          "i'll call you",
+          "will do",
+          "sure thing",
+          "okay,",
+          "ok,",
+        ];
+        const isAcknowledgment =
+          agentContent.length < 80 &&
+          acknowledgmentPhrases.some((phrase) =>
+            agentContentLower.includes(phrase),
+          );
+
+        if (!isAcknowledgment) {
+          const agentMemory = await this.vector.store(
+            memorySpaceId,
+            {
+              content: agentContent,
+              contentType: "raw",
+              participantId: params.participantId,
+              embedding: agentEmbedding,
+              userId: params.userId,
+              agentId: params.agentId, // NEW: Support agent-owned memories
+              messageRole: "agent",
+              source: {
+                type: "conversation",
+                userId: params.userId,
+                userName: params.userName,
+                timestamp: now + 1,
+              },
+              conversationRef: agentMsgId
+                ? {
+                    conversationId: params.conversationId,
+                    messageIds: [agentMsgId],
+                  }
+                : undefined,
+              metadata: {
+                importance: params.importance || 50,
+                tags: params.tags || [],
+              },
+            },
+            { syncToGraph: shouldSyncToGraph },
+          );
+          storedMemories.push(agentMemory);
+        }
+
+        if (observer) {
+          const event = this.createLayerEvent("vector", "complete", orchestrationStartTime, {
+            id: storedMemories[0]?.memoryId,
+            preview: `${storedMemories.length} memories stored`,
+            metadata: { memoryIds: storedMemories.map((m) => m.memoryId) },
+          });
+          layerEvents.vector = event;
+          this.notifyLayerUpdate(observer, event);
+        }
+      } catch (error) {
+        if (observer) {
+          const event = this.createLayerEvent("vector", "error", orchestrationStartTime, undefined, {
+            message: error instanceof Error ? error.message : String(error),
+          });
+          layerEvents.vector = event;
+          this.notifyLayerUpdate(observer, event);
+        }
+        throw error;
       }
+    } else if (observer) {
+      const event = this.createLayerEvent("vector", "skipped", orchestrationStartTime);
+      layerEvents.vector = event;
+      this.notifyLayerUpdate(observer, event);
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -899,6 +1182,12 @@ export class MemoryAPI {
       const factExtractor = this.getFactExtractor(params);
 
       if (factExtractor) {
+        if (observer) {
+          const event = this.createLayerEvent("facts", "in_progress", orchestrationStartTime);
+          layerEvents.facts = event;
+          this.notifyLayerUpdate(observer, event);
+        }
+
         try {
           const factsToStore = await factExtractor(
             params.userMessage,
@@ -908,8 +1197,11 @@ export class MemoryAPI {
           if (factsToStore && factsToStore.length > 0) {
             // Determine if we should use belief revision
             // Batteries included: ON by default when LLM is configured
+            // Also skip belief revision when factDeduplication is explicitly false
+            // (belief revision's slot matching would prevent duplicate storage)
             const useBeliefRevision =
               options?.beliefRevision !== false &&
+              params.factDeduplication !== false &&
               this.facts.hasBeliefRevision();
 
             // Build deduplication config for fallback path
@@ -925,6 +1217,16 @@ export class MemoryAPI {
                     memorySpaceId,
                     userId: params.userId,
                     participantId: params.participantId,
+                    // Include source provenance for traceability
+                    sourceType: "conversation",
+                    sourceRef: {
+                      conversationId: params.conversationId,
+                      messageIds:
+                        userMsgId && agentMsgId
+                          ? [userMsgId, agentMsgId]
+                          : undefined,
+                      memoryId: storedMemories[0]?.memoryId,
+                    },
                     fact: {
                       fact: factData.fact,
                       factType: factData.factType,
@@ -994,16 +1296,91 @@ export class MemoryAPI {
               }
             }
           }
+
+          // Notify facts layer complete
+          if (observer) {
+            // Build revision info from the accumulated actions
+            const lastRevisionAction = revisionActions[revisionActions.length - 1];
+            const event = this.createLayerEvent(
+              "facts",
+              "complete",
+              orchestrationStartTime,
+              {
+                id: extractedFacts[0]?.factId,
+                preview: `${extractedFacts.length} facts extracted`,
+                metadata: { factIds: extractedFacts.map((f) => f.factId) },
+              },
+              undefined,
+              lastRevisionAction
+                ? {
+                    action: lastRevisionAction.action as RevisionAction,
+                    supersededFacts: lastRevisionAction.superseded?.map((f) => f.factId),
+                  }
+                : undefined,
+            );
+            layerEvents.facts = event;
+            this.notifyLayerUpdate(observer, event);
+          }
         } catch (error) {
           console.warn("Failed to extract facts:", error);
+          if (observer) {
+            const event = this.createLayerEvent("facts", "error", orchestrationStartTime, undefined, {
+              message: error instanceof Error ? error.message : String(error),
+            });
+            layerEvents.facts = event;
+            this.notifyLayerUpdate(observer, event);
+          }
+          // Don't throw - fact extraction failures are non-fatal
         }
+      } else if (observer) {
+        // No fact extractor available - mark as skipped
+        const event = this.createLayerEvent("facts", "skipped", orchestrationStartTime);
+        layerEvents.facts = event;
+        this.notifyLayerUpdate(observer, event);
       }
+    } else if (observer) {
+      const event = this.createLayerEvent("facts", "skipped", orchestrationStartTime);
+      layerEvents.facts = event;
+      this.notifyLayerUpdate(observer, event);
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // STEP 7: GRAPH (handled via syncToGraph in previous steps)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // Graph sync is handled inline with each layer via the syncToGraph option
+    // We just need to notify the observer of the status
+    if (observer) {
+      if (shouldSyncToGraph) {
+        // Graph sync was handled inline - mark as complete
+        const event = this.createLayerEvent("graph", "complete", orchestrationStartTime, {
+          preview: "Graph sync completed with layer operations",
+        });
+        layerEvents.graph = event;
+        this.notifyLayerUpdate(observer, event);
+      } else {
+        // Graph sync was disabled or not configured
+        const event = this.createLayerEvent("graph", "skipped", orchestrationStartTime);
+        layerEvents.graph = event;
+        this.notifyLayerUpdate(observer, event);
+      }
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // ORCHESTRATION COMPLETE
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    if (observer) {
+      const summary: OrchestrationSummary = {
+        orchestrationId,
+        totalLatencyMs: Date.now() - orchestrationStartTime,
+        layers: layerEvents as Record<MemoryLayer, LayerEvent>,
+        createdIds: {
+          conversationId: params.conversationId,
+          memoryIds: storedMemories.map((m) => m.memoryId),
+          factIds: extractedFacts.map((f) => f.factId),
+        },
+      };
+      this.notifyOrchestrationComplete(observer, summary);
+    }
 
     return {
       conversation: {
@@ -1361,6 +1738,8 @@ export class MemoryAPI {
           autoSummarize: params.autoSummarize,
           importance: params.importance,
           tags: params.tags,
+          // Pass through the observer for real-time layer tracking
+          observer: params.observer,
           // Skip orchestration layers we already handled in rememberStream
           // Also pass through any user-requested skip layers (facts, vector, graph, etc.)
           skipLayers: [

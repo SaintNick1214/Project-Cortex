@@ -28,10 +28,12 @@ import { TokenBucket } from "./TokenBucket";
 import {
   CircuitOpenError,
   QueueFullError,
+  DEFAULT_RETRY_CONFIG,
   type Priority,
   type QueuedRequest,
   type ResilienceConfig,
   type ResilienceMetrics,
+  type RetryConfig,
 } from "./types";
 
 // Re-export all types and classes
@@ -188,6 +190,107 @@ export function isNonSystemFailure(error: unknown): boolean {
 // Backwards compatibility alias
 export const isIdempotentNotFoundError = isNonSystemFailure;
 
+/**
+ * Check if an error is retryable (transient error that may succeed on retry).
+ *
+ * Retryable errors include:
+ * - Generic "Server Error" from Convex (transient backend issues)
+ * - Rate limiting errors
+ * - Timeout errors
+ * - Network/connection errors
+ *
+ * Non-retryable errors (won't succeed on retry):
+ * - Validation errors (client bugs)
+ * - Not found errors (data doesn't exist)
+ * - Permission errors (auth issues)
+ * - Business logic errors (constraints)
+ *
+ * @param error The error to check
+ * @returns True if the error is retryable
+ */
+export function isRetryableError(error: unknown): boolean {
+  // Non-system failures should NOT be retried - they indicate
+  // the request is invalid and will fail every time
+  if (isNonSystemFailure(error)) {
+    return false;
+  }
+
+  const errorStr = String(error);
+  const errorLower = errorStr.toLowerCase();
+
+  // Patterns that indicate transient/retryable errors
+  const retryablePatterns = [
+    // Generic server errors (often transient)
+    "Server Error",
+    "server error",
+    "Internal Server Error",
+    "internal server error",
+    // Rate limiting
+    "rate limit",
+    "too many requests",
+    "429",
+    "throttl",
+    // Timeouts
+    "timeout",
+    "timed out",
+    "request timed out",
+    "deadline exceeded",
+    // Network issues
+    "connection",
+    "network",
+    "ECONNRESET",
+    "ECONNREFUSED",
+    "ETIMEDOUT",
+    // Temporary unavailability
+    "temporarily unavailable",
+    "service unavailable",
+    "503",
+    "502",
+    "504",
+    // Convex-specific transient errors
+    "overloaded",
+    "try again",
+    "retry",
+  ];
+
+  return retryablePatterns.some(
+    (pattern) =>
+      errorStr.includes(pattern) || errorLower.includes(pattern.toLowerCase()),
+  );
+}
+
+/**
+ * Calculate retry delay with exponential backoff and optional jitter
+ *
+ * @param attempt Current attempt number (0-indexed)
+ * @param baseDelayMs Base delay in milliseconds
+ * @param maxDelayMs Maximum delay cap
+ * @param exponentialBase Base for exponential calculation
+ * @param jitter Whether to add random jitter
+ * @returns Delay in milliseconds
+ */
+function calculateRetryDelay(
+  attempt: number,
+  baseDelayMs: number,
+  maxDelayMs: number,
+  exponentialBase: number,
+  jitter: boolean,
+): number {
+  // Calculate exponential delay
+  const delay = baseDelayMs * Math.pow(exponentialBase, attempt);
+
+  // Cap at maximum
+  const cappedDelay = Math.min(delay, maxDelayMs);
+
+  // Add jitter if enabled (random factor between 0.5 and 1.5)
+  if (jitter) {
+    const jitterFactor = 0.5 + Math.random();
+    return Math.floor(cappedDelay * jitterFactor);
+  }
+
+  return Math.floor(cappedDelay);
+}
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Presets
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -216,6 +319,7 @@ export const ResiliencePresets = {
    *
    * Respects Convex's 16 concurrent query/mutation limit.
    * Good for most single-agent use cases.
+   * Includes automatic retry (3 attempts) for transient failures.
    */
   default: {
     enabled: true,
@@ -242,6 +346,13 @@ export const ResiliencePresets = {
         low: 2000,
         background: 5000,
       },
+    },
+    retry: {
+      maxRetries: 3, // Retry up to 3 times
+      baseDelayMs: 500, // Start with 0.5s delay
+      maxDelayMs: 10000, // Cap at 10s
+      exponentialBase: 2.0, // Double delay each attempt
+      jitter: true, // Prevent thundering herd
     },
   } as ResilienceConfig,
 
@@ -277,6 +388,13 @@ export const ResiliencePresets = {
         background: 50,
       },
     },
+    retry: {
+      maxRetries: 2, // Fewer retries for real-time UX
+      baseDelayMs: 200, // Shorter delays for responsiveness
+      maxDelayMs: 2000, // Cap at 2s for real-time
+      exponentialBase: 2.0,
+      jitter: true,
+    },
   } as ResilienceConfig,
 
   /**
@@ -310,6 +428,13 @@ export const ResiliencePresets = {
         low: 10000,
         background: 20000,
       },
+    },
+    retry: {
+      maxRetries: 5, // More retries for batch resilience
+      baseDelayMs: 1000, // Longer base delay for batch
+      maxDelayMs: 30000, // Higher cap for batch operations
+      exponentialBase: 2.0,
+      jitter: true,
     },
   } as ResilienceConfig,
 
@@ -345,6 +470,13 @@ export const ResiliencePresets = {
         low: 30000,
         background: 50000,
       },
+    },
+    retry: {
+      maxRetries: 4, // Good retry coverage for swarm coordination
+      baseDelayMs: 500,
+      maxDelayMs: 15000,
+      exponentialBase: 2.0,
+      jitter: true, // Critical for swarms to avoid thundering herd
     },
   } as ResilienceConfig,
 
@@ -496,7 +628,8 @@ export class ResilienceLayer {
   }
 
   /**
-   * Execute an operation through all resilience layers
+   * Execute an operation through all resilience layers with automatic retry
+   * for transient failures (timeouts, rate limits, server errors).
    *
    * @param operation The async operation to execute
    * @param operationName Operation identifier for priority mapping
@@ -521,6 +654,67 @@ export class ResilienceLayer {
       return this.enqueueAndWait(operation, priority, operationName);
     }
 
+    // Get retry configuration (defaults if not specified)
+    const retryConfig = { ...DEFAULT_RETRY_CONFIG, ...this.config.retry };
+    const maxAttempts = retryConfig.maxRetries + 1;
+    let lastError: Error | undefined;
+
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      try {
+        return await this._executeSingleAttempt(operation);
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+
+        // Don't retry on circuit open - it's a protective mechanism
+        if (error instanceof CircuitOpenError) {
+          throw error;
+        }
+
+        // Don't retry on queue full - system is overloaded
+        if (error instanceof QueueFullError) {
+          throw error;
+        }
+
+        // Check if this error is retryable
+        if (!isRetryableError(error)) {
+          // Non-retryable errors (validation, not found, etc.) - fail immediately
+          throw lastError;
+        }
+
+        // Check if we have retries left
+        if (attempt < maxAttempts - 1) {
+          const delay = calculateRetryDelay(
+            attempt,
+            retryConfig.baseDelayMs,
+            retryConfig.maxDelayMs,
+            retryConfig.exponentialBase,
+            retryConfig.jitter,
+          );
+
+          // Call retry hook if configured (allow monitoring)
+          if (this.config.onRetry) {
+            try {
+              this.config.onRetry(attempt + 1, lastError, delay);
+            } catch {
+              // Don't let hook errors affect retry logic
+            }
+          }
+
+          await this.sleep(delay);
+        }
+      }
+    }
+
+    // All retries exhausted - throw the last error
+    throw lastError || new Error("Max retries exceeded");
+  }
+
+  /**
+   * Execute a single attempt through rate limiting, concurrency, and circuit breaker
+   */
+  private async _executeSingleAttempt<T>(
+    operation: () => Promise<T>,
+  ): Promise<T> {
     // Layer 1: Rate limiting - wait for token
     await this.tokenBucket.acquire(this.config.concurrency?.timeout);
 
