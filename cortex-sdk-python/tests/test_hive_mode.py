@@ -261,6 +261,47 @@ async def test_facts_about_same_subject_from_different_tools(cortex_client, hive
     """
     hive_space = hive_space_fixture["hive_space"]
 
+    # Store facts from different tools about the same subject
+    # This ensures test is self-contained and doesn't depend on test execution order
+    await cortex_client.facts.store(
+        StoreFactParams(
+            memory_space_id=hive_space,
+            participant_id="tool-calendar",
+            fact="User prefers morning meetings before 10 AM",
+            fact_type="preference",
+            subject="user-alice",
+            confidence=95,
+            source_type="tool",
+            tags=["subject-query-test", "meeting"],
+        )
+    )
+
+    await cortex_client.facts.store(
+        StoreFactParams(
+            memory_space_id=hive_space,
+            participant_id="tool-email",
+            fact="User checks email twice daily",
+            fact_type="preference",
+            subject="user-alice",
+            confidence=90,
+            source_type="tool",
+            tags=["subject-query-test", "email"],
+        )
+    )
+
+    await cortex_client.facts.store(
+        StoreFactParams(
+            memory_space_id=hive_space,
+            participant_id="agent-assistant",
+            fact="User is preparing Q4 presentation",
+            fact_type="knowledge",
+            subject="user-alice",
+            confidence=100,
+            source_type="conversation",
+            tags=["subject-query-test", "work"],
+        )
+    )
+
     from cortex.types import QueryBySubjectFilter
     user_facts_result = await cortex_client.facts.query_by_subject(
         QueryBySubjectFilter(
@@ -270,12 +311,18 @@ async def test_facts_about_same_subject_from_different_tools(cortex_client, hive
     )
     user_facts = user_facts_result if isinstance(user_facts_result, list) else user_facts_result.get("facts", [])
 
-    assert len(user_facts) >= 3
+    # Filter to only facts from this test to avoid interference from other tests
+    test_facts = [
+        f for f in user_facts
+        if "subject-query-test" in ((f.tags if hasattr(f, 'tags') else f.get("tags", [])) or [])
+    ]
+
+    assert len(test_facts) >= 3
 
     # Multiple participants contributed facts about same user
     contributors = set(
         f.participant_id if hasattr(f, 'participant_id') else f.get("participantId")
-        for f in user_facts
+        for f in test_facts
         if (hasattr(f, 'participant_id') and f.participant_id) or f.get("participantId")
     )
 
