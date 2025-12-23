@@ -431,6 +431,36 @@ export class GraphConnectionError extends GraphDatabaseError {
 }
 
 /**
+ * Error thrown when graph database authentication fails
+ * 
+ * This is a specific subclass of GraphConnectionError for auth failures,
+ * allowing consumers to catch and handle authentication issues specifically.
+ * 
+ * @example
+ * ```typescript
+ * try {
+ *   await adapter.connect(config);
+ * } catch (error) {
+ *   if (error instanceof GraphAuthenticationError) {
+ *     console.error("Check your NEO4J_PASSWORD in .env");
+ *   }
+ * }
+ * ```
+ */
+export class GraphAuthenticationError extends GraphConnectionError {
+  constructor(
+    message: string,
+    public readonly uri: string,
+    public readonly username: string,
+    cause?: Error,
+  ) {
+    super(message, cause);
+    this.name = "GraphAuthenticationError";
+    Object.setPrototypeOf(this, GraphAuthenticationError.prototype);
+  }
+}
+
+/**
  * Error thrown when a graph query fails
  */
 export class GraphQueryError extends GraphDatabaseError {

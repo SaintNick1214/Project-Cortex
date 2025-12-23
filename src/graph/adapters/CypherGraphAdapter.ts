@@ -24,6 +24,7 @@ import type {
 import {
   GraphDatabaseError,
   GraphConnectionError,
+  GraphAuthenticationError,
   GraphQueryError,
   GraphNotFoundError,
 } from "../types";
@@ -58,17 +59,94 @@ export class CypherGraphAdapter implements GraphAdapter {
         },
       );
 
-      // Verify connection
+      // Verify connection (just checks server reachability)
       await this.driver.verifyConnectivity();
+
+      // Verify authentication with an actual query
+      // verifyConnectivity() only checks reachability, not auth
+      await this.verifyAuthentication();
 
       // Detect database type (Neo4j uses elementId(), Memgraph uses id())
       await this.detectDatabaseType();
     } catch (error) {
-      throw new GraphConnectionError(
-        `Failed to connect to graph database: ${error instanceof Error ? error.message : String(error)}`,
-        error instanceof Error ? error : undefined,
-      );
+      // Parse error for better diagnostics
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorCode = (error as any)?.code;
+      const cause = error instanceof Error ? error : undefined;
+      
+      // Throw specific error type based on diagnosis
+      throw this.createConnectionError(errorMessage, errorCode, config, cause);
     }
+  }
+
+  /**
+   * Create appropriate error type based on connection failure diagnosis
+   */
+  private createConnectionError(
+    errorMessage: string,
+    errorCode: string | undefined,
+    config: GraphConnectionConfig,
+    cause?: Error,
+  ): GraphConnectionError {
+    const lowerMessage = errorMessage.toLowerCase();
+    
+    // Authentication failure detection - throw specific GraphAuthenticationError
+    if (
+      lowerMessage.includes("authentication") ||
+      lowerMessage.includes("unauthorized") ||
+      lowerMessage.includes("credentials") ||
+      errorCode?.includes("Security.Unauthorized") ||
+      errorCode?.includes("Security.Authentication")
+    ) {
+      const message = `Graph database authentication failed at ${config.uri}. ` +
+        `Check that NEO4J_USERNAME and NEO4J_PASSWORD environment variables are correct. ` +
+        `Current username: '${config.username}'. ` +
+        `Original error: ${errorMessage}`;
+      return new GraphAuthenticationError(message, config.uri, config.username, cause);
+    }
+    
+    // Connection refused detection
+    if (
+      lowerMessage.includes("econnrefused") ||
+      lowerMessage.includes("connection refused") ||
+      lowerMessage.includes("failed to connect")
+    ) {
+      const message = `Cannot connect to graph database at ${config.uri}. ` +
+        `Ensure Neo4j/Memgraph is running and accessible. ` +
+        `For Docker: 'docker compose -f docker-compose.graph.yml up -d'. ` +
+        `Original error: ${errorMessage}`;
+      return new GraphConnectionError(message, cause);
+    }
+    
+    // DNS/host resolution failure
+    if (
+      lowerMessage.includes("enotfound") ||
+      lowerMessage.includes("getaddrinfo") ||
+      lowerMessage.includes("name or service not known")
+    ) {
+      const message = `Cannot resolve graph database host in ${config.uri}. ` +
+        `Check that NEO4J_URI is correctly configured. ` +
+        `Original error: ${errorMessage}`;
+      return new GraphConnectionError(message, cause);
+    }
+    
+    // Timeout detection
+    if (
+      lowerMessage.includes("timeout") ||
+      lowerMessage.includes("timed out") ||
+      lowerMessage.includes("timedout")
+    ) {
+      const message = `Connection to graph database timed out at ${config.uri}. ` +
+        `The database may be starting up, overloaded, or unreachable. ` +
+        `Original error: ${errorMessage}`;
+      return new GraphConnectionError(message, cause);
+    }
+    
+    // Generic fallback with context
+    return new GraphConnectionError(
+      `Failed to connect to graph database at ${config.uri}: ${errorMessage}`,
+      cause,
+    );
   }
 
   async disconnect(): Promise<void> {
@@ -89,6 +167,24 @@ export class CypherGraphAdapter implements GraphAdapter {
       return true;
     } catch {
       return false;
+    }
+  }
+
+  /**
+   * Verify authentication by running a simple query
+   * 
+   * verifyConnectivity() only checks if the server is reachable, not
+   * if credentials are valid. This method runs a simple query to
+   * verify authentication works, failing fast with a clear error
+   * if credentials are invalid.
+   */
+  private async verifyAuthentication(): Promise<void> {
+    const session = this.getSession();
+    try {
+      // Run a minimal query that requires authentication
+      await session.run("RETURN 1 as test");
+    } finally {
+      await session.close();
     }
   }
 

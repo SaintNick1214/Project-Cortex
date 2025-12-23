@@ -14,6 +14,7 @@ export type * from "./types";
 export {
   GraphDatabaseError,
   GraphConnectionError,
+  GraphAuthenticationError,
   GraphQueryError,
   GraphNotFoundError,
 } from "./types";
