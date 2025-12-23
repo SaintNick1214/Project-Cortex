@@ -149,11 +149,6 @@ from .types import (
     FactType,
     ForgetOptions,
     ForgetResult,
-    # Orchestration Observer Types (v0.25.0+)
-    LayerEvent,
-    LayerEventData,
-    LayerEventError,
-    LayerStatus,
     GetConversationOptions,
     GetHistoryOptions,
     GetHistoryResult,
@@ -180,6 +175,11 @@ from .types import (
     ImmutableVersion,
     ImmutableVersionExpanded,
     ImportanceRange,
+    # Orchestration Observer Types (v0.25.0+)
+    LayerEvent,
+    LayerEventData,
+    LayerEventError,
+    LayerStatus,
     ListConversationsFilter,
     ListConversationsResult,
     ListFactsFilter,
