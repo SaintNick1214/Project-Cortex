@@ -386,7 +386,35 @@ async function runInteractiveDevMode(
 async function startAllServices(state: DevState): Promise<void> {
   const hasConvex = await commandExists("convex");
 
+  // Import schema sync utility
+  const { syncConvexSchema, printSyncResult } = await import(
+    "../utils/schema-sync.js"
+  );
+
   for (const [name, dep] of state.deployments) {
+    // Sync schema files from SDK before anything else
+    addLog(state, name, "Syncing schema from SDK...");
+    const syncResult = await syncConvexSchema(dep.projectPath);
+    if (syncResult.error) {
+      addLog(state, name, pc.yellow(`Schema sync warning: ${syncResult.error}`));
+    } else if (syncResult.synced) {
+      const source = syncResult.isDevOverride
+        ? pc.magenta("[DEV]") + " local SDK"
+        : `SDK v${syncResult.sdkVersion}`;
+      const files = [...syncResult.filesUpdated, ...syncResult.filesAdded];
+      addLog(state, name, pc.cyan(`Schema synced from ${source}`));
+      if (files.length > 0 && files.length <= 3) {
+        addLog(state, name, pc.dim(`  Files: ${files.join(", ")}`));
+      } else if (files.length > 3) {
+        addLog(state, name, pc.dim(`  Updated ${files.length} files`));
+      }
+    } else {
+      const source = syncResult.isDevOverride
+        ? pc.magenta("[DEV]") + " local SDK"
+        : `SDK v${syncResult.sdkVersion}`;
+      addLog(state, name, pc.dim(`Schema up to date (${source})`));
+    }
+
     // Start graph if configured
     if (dep.graphType) {
       addLog(state, name, `Starting ${dep.graphType}...`);

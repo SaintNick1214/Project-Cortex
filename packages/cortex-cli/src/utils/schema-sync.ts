@@ -3,6 +3,14 @@
  *
  * Syncs Convex schema files from @cortexmemory/sdk to the project's convex folder.
  * This ensures the project always has the latest schema that matches the SDK version.
+ *
+ * For CLI development, you can override the SDK path using the CORTEX_SDK_DEV_PATH
+ * environment variable to point to a local SDK development directory:
+ *
+ *   export CORTEX_SDK_DEV_PATH=/path/to/Project-Cortex
+ *
+ * This will use the schema files from that directory's convex-dev folder instead
+ * of the installed @cortexmemory/sdk package.
  */
 
 import { existsSync, readFileSync } from "fs";
@@ -29,6 +37,8 @@ export interface SchemaSyncResult {
   projectConvexPath: string;
   /** Error message if sync failed */
   error?: string;
+  /** Whether using development override path */
+  isDevOverride?: boolean;
 }
 
 /**
@@ -54,9 +64,28 @@ const SCHEMA_FILES = [
 ];
 
 /**
- * Find the @cortexmemory/sdk package in the project's node_modules
+ * Find the @cortexmemory/sdk package
+ *
+ * Order of precedence:
+ * 1. CORTEX_SDK_DEV_PATH environment variable (for CLI development)
+ * 2. Project's node_modules/@cortexmemory/sdk
+ * 3. Walk up directory tree looking for node_modules
  */
 function findSdkPath(projectPath: string): string | null {
+  // Check for development override first
+  const devPath = process.env.CORTEX_SDK_DEV_PATH;
+  if (devPath) {
+    if (existsSync(devPath)) {
+      return devPath;
+    }
+    // Dev path was set but doesn't exist - warn but continue with normal lookup
+    console.warn(
+      pc.yellow(
+        `   ⚠ CORTEX_SDK_DEV_PATH set but path not found: ${devPath}`,
+      ),
+    );
+  }
+
   // Check in project's node_modules
   const directPath = join(projectPath, "node_modules", "@cortexmemory", "sdk");
   if (existsSync(directPath)) {
@@ -131,7 +160,12 @@ export async function syncConvexSchema(
     sdkVersion: "unknown",
     sdkConvexPath: "",
     projectConvexPath: join(projectPath, "convex"),
+    isDevOverride: false,
   };
+
+  // Check if using development override
+  const devPath = process.env.CORTEX_SDK_DEV_PATH;
+  result.isDevOverride = !!devPath && existsSync(devPath);
 
   // Find SDK package
   const sdkPath = findSdkPath(projectPath);
@@ -206,16 +240,30 @@ export function printSyncResult(
     return;
   }
 
+  // Show dev mode indicator
+  const devIndicator = result.isDevOverride
+    ? pc.magenta(" [DEV OVERRIDE]")
+    : "";
+
   if (!result.synced) {
-    console.log(
-      pc.dim(`   Schema files are up to date (SDK v${result.sdkVersion})`),
-    );
+    const source = result.isDevOverride
+      ? `local SDK${devIndicator}`
+      : `SDK v${result.sdkVersion}`;
+    console.log(pc.dim(`   Schema files are up to date (${source})`));
+    if (result.isDevOverride) {
+      console.log(pc.dim(`     Source: ${result.sdkConvexPath}`));
+    }
     return;
   }
 
-  console.log(
-    pc.cyan(`   ↓ Synced schema from @cortexmemory/sdk v${result.sdkVersion}`),
-  );
+  const source = result.isDevOverride
+    ? `local SDK${devIndicator}`
+    : `@cortexmemory/sdk v${result.sdkVersion}`;
+  console.log(pc.cyan(`   ↓ Synced schema from ${source}`));
+
+  if (result.isDevOverride) {
+    console.log(pc.dim(`     Source: ${result.sdkConvexPath}`));
+  }
 
   if (result.filesUpdated.length > 0) {
     console.log(pc.dim(`     Updated: ${result.filesUpdated.join(", ")}`));
