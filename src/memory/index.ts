@@ -771,11 +771,6 @@ export class MemoryAPI {
     const orchestrationStartTime = Date.now();
     const layerEvents: Partial<Record<MemoryLayer, LayerEvent>> = {};
 
-    // Notify orchestration start
-    if (observer) {
-      this.notifyOrchestrationStart(observer, orchestrationId);
-    }
-
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // STEP 1: VALIDATION (Cannot be skipped)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -790,6 +785,15 @@ export class MemoryAPI {
     const now = Date.now();
     const skipLayers = params.skipLayers || [];
 
+    // Determine if this is a partial orchestration (called from rememberStream)
+    // When called from rememberStream, skipLayers includes "users" and "agents"
+    const isPartialOrchestration = this.shouldSkipLayer("users", skipLayers) || this.shouldSkipLayer("agents", skipLayers);
+    
+    // Notify orchestration start (skip if called from rememberStream which already notified)
+    if (observer && !isPartialOrchestration) {
+      this.notifyOrchestrationStart(observer, orchestrationId);
+    }
+
     // Determine if we should sync to graph (default: true if configured)
     const shouldSyncToGraph =
       options?.syncToGraph !== false &&
@@ -798,8 +802,9 @@ export class MemoryAPI {
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // STEP 2: MEMORYSPACE (Cannot be skipped)
+    // Skip notifications if this is a partial orchestration (called from rememberStream)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    if (observer) {
+    if (observer && !isPartialOrchestration) {
       const event = this.createLayerEvent("memorySpace", "in_progress", orchestrationStartTime);
       layerEvents.memorySpace = event;
       this.notifyLayerUpdate(observer, event);
@@ -807,7 +812,7 @@ export class MemoryAPI {
 
     try {
       await this.ensureMemorySpaceExists(memorySpaceId, shouldSyncToGraph);
-      if (observer) {
+      if (observer && !isPartialOrchestration) {
         const event = this.createLayerEvent("memorySpace", "complete", orchestrationStartTime, {
           id: memorySpaceId,
           preview: `Memory space: ${memorySpaceId}`,
@@ -816,7 +821,7 @@ export class MemoryAPI {
         this.notifyLayerUpdate(observer, event);
       }
     } catch (error) {
-      if (observer) {
+      if (observer && !isPartialOrchestration) {
         const event = this.createLayerEvent("memorySpace", "error", orchestrationStartTime, undefined, {
           message: error instanceof Error ? error.message : String(error),
         });
@@ -860,7 +865,10 @@ export class MemoryAPI {
         }
         throw error;
       }
-    } else if (observer) {
+    } else if (observer && !this.shouldSkipLayer("users", skipLayers)) {
+      // Only emit "skipped" if the layer wasn't explicitly skipped by caller
+      // (e.g., when ownerType is "agent", user layer is naturally skipped)
+      // If caller passed "users" in skipLayers, they've already emitted the event
       const event = this.createLayerEvent("user", "skipped", orchestrationStartTime);
       layerEvents.user = event;
       this.notifyLayerUpdate(observer, event);
@@ -920,7 +928,9 @@ export class MemoryAPI {
         }
         throw error;
       }
-    } else if (observer) {
+    } else if (observer && !this.shouldSkipLayer("agents", skipLayers)) {
+      // Only emit "skipped" if the layer wasn't explicitly skipped by caller
+      // If caller passed "agents" in skipLayers, they've already emitted the event
       const event = this.createLayerEvent("agent", "skipped", orchestrationStartTime);
       layerEvents.agent = event;
       this.notifyLayerUpdate(observer, event);
@@ -1556,27 +1566,141 @@ export class MemoryAPI {
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // ORCHESTRATION: Same as remember() - auto-register entities
+    // With observer notifications for real-time layer tracking
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    const observer = params.observer;
+    const orchestrationId = observer ? this.generateOrchestrationId() : "";
+    const orchestrationStartTime = Date.now();
+    const layerEvents: Partial<Record<MemoryLayer, LayerEvent>> = {};
 
-    // Auto-register memory space
-    await this.ensureMemorySpaceExists(memorySpaceId, shouldSyncToGraph);
-
-    // Auto-create user/agent profiles
-    if (ownerType === "user" && !this.shouldSkipLayer("users", skipLayers)) {
-      await this.ensureUserExists(ownerId, params.userName);
+    // Notify orchestration start
+    if (observer) {
+      this.notifyOrchestrationStart(observer, orchestrationId);
     }
 
-    if (ownerType === "agent" && !this.shouldSkipLayer("agents", skipLayers)) {
-      await this.ensureAgentExists(ownerId);
+    // STEP 1: MEMORYSPACE (Cannot be skipped)
+    if (observer) {
+      const event = this.createLayerEvent("memorySpace", "in_progress", orchestrationStartTime);
+      layerEvents.memorySpace = event;
+      this.notifyLayerUpdate(observer, event);
     }
 
-    // Also ensure agentId is registered if both userId and agentId are provided
-    if (
-      params.agentId &&
-      params.userId &&
-      !this.shouldSkipLayer("agents", skipLayers)
-    ) {
-      await this.ensureAgentExists(params.agentId);
+    try {
+      await this.ensureMemorySpaceExists(memorySpaceId, shouldSyncToGraph);
+      if (observer) {
+        const event = this.createLayerEvent("memorySpace", "complete", orchestrationStartTime, {
+          id: memorySpaceId,
+          preview: `Memory space: ${memorySpaceId}`,
+        });
+        layerEvents.memorySpace = event;
+        this.notifyLayerUpdate(observer, event);
+      }
+    } catch (error) {
+      if (observer) {
+        const event = this.createLayerEvent("memorySpace", "error", orchestrationStartTime, undefined, {
+          message: error instanceof Error ? error.message : String(error),
+        });
+        layerEvents.memorySpace = event;
+        this.notifyLayerUpdate(observer, event);
+      }
+      throw error;
+    }
+
+    // STEP 2: USER LAYER
+    const shouldProcessUser = ownerType === "user" && !this.shouldSkipLayer("users", skipLayers);
+    if (shouldProcessUser) {
+      if (observer) {
+        const event = this.createLayerEvent("user", "in_progress", orchestrationStartTime);
+        layerEvents.user = event;
+        this.notifyLayerUpdate(observer, event);
+      }
+      try {
+        await this.ensureUserExists(ownerId, params.userName);
+        if (observer) {
+          const event = this.createLayerEvent("user", "complete", orchestrationStartTime, {
+            id: ownerId,
+            preview: `User: ${params.userName || ownerId}`,
+          });
+          layerEvents.user = event;
+          this.notifyLayerUpdate(observer, event);
+        }
+      } catch (error) {
+        if (observer) {
+          const event = this.createLayerEvent("user", "error", orchestrationStartTime, undefined, {
+            message: error instanceof Error ? error.message : String(error),
+          });
+          layerEvents.user = event;
+          this.notifyLayerUpdate(observer, event);
+        }
+        throw error;
+      }
+    } else if (observer) {
+      const event = this.createLayerEvent("user", "skipped", orchestrationStartTime);
+      layerEvents.user = event;
+      this.notifyLayerUpdate(observer, event);
+    }
+
+    // STEP 3: AGENT LAYER
+    const shouldProcessAgent = ownerType === "agent" && !this.shouldSkipLayer("agents", skipLayers);
+    const shouldProcessSecondaryAgent = params.agentId && params.userId && !this.shouldSkipLayer("agents", skipLayers);
+
+    if (shouldProcessAgent) {
+      if (observer) {
+        const event = this.createLayerEvent("agent", "in_progress", orchestrationStartTime);
+        layerEvents.agent = event;
+        this.notifyLayerUpdate(observer, event);
+      }
+      try {
+        await this.ensureAgentExists(ownerId);
+        if (observer) {
+          const event = this.createLayerEvent("agent", "complete", orchestrationStartTime, {
+            id: ownerId,
+            preview: `Agent: ${ownerId}`,
+          });
+          layerEvents.agent = event;
+          this.notifyLayerUpdate(observer, event);
+        }
+      } catch (error) {
+        if (observer) {
+          const event = this.createLayerEvent("agent", "error", orchestrationStartTime, undefined, {
+            message: error instanceof Error ? error.message : String(error),
+          });
+          layerEvents.agent = event;
+          this.notifyLayerUpdate(observer, event);
+        }
+        throw error;
+      }
+    } else if (shouldProcessSecondaryAgent) {
+      // Handle case where userId is primary but agentId also needs registration
+      if (observer) {
+        const event = this.createLayerEvent("agent", "in_progress", orchestrationStartTime);
+        layerEvents.agent = event;
+        this.notifyLayerUpdate(observer, event);
+      }
+      try {
+        await this.ensureAgentExists(params.agentId!);
+        if (observer) {
+          const event = this.createLayerEvent("agent", "complete", orchestrationStartTime, {
+            id: params.agentId!,
+            preview: `Agent: ${params.agentId}`,
+          });
+          layerEvents.agent = event;
+          this.notifyLayerUpdate(observer, event);
+        }
+      } catch (error) {
+        if (observer) {
+          const event = this.createLayerEvent("agent", "error", orchestrationStartTime, undefined, {
+            message: error instanceof Error ? error.message : String(error),
+          });
+          layerEvents.agent = event;
+          this.notifyLayerUpdate(observer, event);
+        }
+        throw error;
+      }
+    } else if (observer) {
+      const event = this.createLayerEvent("agent", "skipped", orchestrationStartTime);
+      layerEvents.agent = event;
+      this.notifyLayerUpdate(observer, event);
     }
 
     // Initialize components
@@ -1719,8 +1843,9 @@ export class MemoryAPI {
       }
 
       // Step 7: Use remember() for final storage
-      // Note: remember() will handle all orchestration (memorySpace, user, agent, etc.)
-      // We pass skipLayers to avoid double-orchestration since we already did it above
+      // Note: remember() will handle remaining orchestration (conversation, vector, facts, graph)
+      // We pass skipLayers to avoid double-orchestration since we already did memorySpace, user, agent above
+      // We pass the observer so remember() can emit events for conversation, vector, facts, graph layers
       const rememberResult = await this.remember(
         {
           memorySpaceId, // Use normalized memorySpaceId
@@ -1738,7 +1863,11 @@ export class MemoryAPI {
           autoSummarize: params.autoSummarize,
           importance: params.importance,
           tags: params.tags,
-          // Pass through the observer for real-time layer tracking
+          // Pass through the observer for real-time layer tracking of remaining layers
+          // Note: rememberStream() already emitted events for memorySpace, user, agent
+          // remember() will emit events for conversation, vector, facts, graph
+          // The "skipped" events for users/agents from remember() are harmless since
+          // rememberStream() already emitted "complete" events first
           observer: params.observer,
           // Skip orchestration layers we already handled in rememberStream
           // Also pass through any user-requested skip layers (facts, vector, graph, etc.)

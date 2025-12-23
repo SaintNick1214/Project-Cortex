@@ -2519,8 +2519,14 @@ export type LayerStatus =
 
 /**
  * Revision action taken by the belief revision system
+ *
+ * Matches ConflictAction from the belief revision pipeline:
+ * - ADD: New fact created (no conflicts)
+ * - UPDATE: Existing fact updated in place
+ * - SUPERSEDE: Old fact replaced by new one
+ * - NONE: Duplicate skipped
  */
-export type RevisionAction = "CREATE" | "UPDATE" | "SUPERSEDE" | "NONE";
+export type RevisionAction = "ADD" | "UPDATE" | "SUPERSEDE" | "NONE";
 
 /**
  * Event emitted when a layer's status changes during orchestration
