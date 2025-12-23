@@ -236,10 +236,14 @@ async def scoped_cleanup(module_cortex_client, test_run_context) -> AsyncGenerat
     cleanup = ScopedCleanup(module_cortex_client, test_run_context)
     yield cleanup
 
-    # Auto-cleanup at end of module
+    # Auto-cleanup at end of module with timeout to prevent hanging
     print(f"\n🧹 Cleaning up test run {test_run_context.run_id}...")
-    result = await cleanup.cleanup_all()
-    print(f"✅ Cleaned up {result.total} entities\n")
+    try:
+        # 2-minute timeout for module cleanup to prevent CI hangs
+        result = await cleanup.cleanup_all(overall_timeout=120.0)
+        print(f"✅ Cleaned up {result.total} entities\n")
+    except Exception as e:
+        print(f"⚠️ Cleanup error (non-fatal): {e}\n")
 
 
 @pytest.fixture(scope="function")
