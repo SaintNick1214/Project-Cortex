@@ -365,10 +365,13 @@ async def test_remember_defaults_to_semantic_fallback_structural(
     ctx, cortex_client, scoped_cleanup
 ):
     """
-    Test that memory.remember() defaults to semantic deduplication,
-    falling back to structural when no embedding function is provided.
+    Test that memory.remember() uses structural deduplication when
+    belief revision is explicitly disabled and no embedding function is provided.
 
     Port of: facts-deduplication.test.ts - remember() with factDeduplication
+
+    Note: Since belief revision is now "batteries included" (always enabled by default),
+    we must explicitly disable it to test the deduplication fallback path.
     """
     memory_space_id = ctx.memory_space_id("remember-default")
     user_id = ctx.user_id("remember-user")
@@ -399,7 +402,7 @@ async def test_remember_defaults_to_semantic_fallback_structural(
             }
         ]
 
-    # First remember call
+    # First remember call - explicitly disable belief revision to use deduplication path
     await cortex_client.memory.remember(
         RememberParams(
             memory_space_id=memory_space_id,
@@ -410,7 +413,8 @@ async def test_remember_defaults_to_semantic_fallback_structural(
             user_name="Alice",
             agent_id=agent_id,
             extract_facts=extract_facts_1,
-        )
+        ),
+        RememberOptions(belief_revision=False),  # Disable to test deduplication path
     )
 
     # Second remember call - same fact should be deduplicated
@@ -424,7 +428,8 @@ async def test_remember_defaults_to_semantic_fallback_structural(
             user_name="Alice",
             agent_id=agent_id,
             extract_facts=extract_facts_2,
-        )
+        ),
+        RememberOptions(belief_revision=False),  # Disable to test deduplication path
     )
 
     # Count facts for this user - should be 1 due to structural dedup
