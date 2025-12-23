@@ -1,6 +1,6 @@
 # @cortexmemory/cli Changelog
 
-## [0.24.0] - 2025-12-19
+## [0.26.0] - 2025-12-23
 
 ### Added
 
