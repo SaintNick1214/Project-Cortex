@@ -862,25 +862,51 @@ class MemoryAPI:
                         # Build deduplication config for fallback path
                         dedup_config = self._build_deduplication_config(params)
 
+                        # Helper to get value from dict or dataclass
+                        def _get_fact_value(fact_data: Any, key: str, default: Any = None) -> Any:
+                            """Get value from fact_data whether it's a dict or dataclass."""
+                            if isinstance(fact_data, dict):
+                                # Handle both camelCase and snake_case for dicts
+                                return fact_data.get(key) or fact_data.get(
+                                    # Convert camelCase to snake_case
+                                    ''.join(['_' + c.lower() if c.isupper() else c for c in key]).lstrip('_'),
+                                    default
+                                )
+                            else:
+                                # For dataclass/object, convert key from camelCase to snake_case
+                                snake_key = ''.join(['_' + c.lower() if c.isupper() else c for c in key]).lstrip('_')
+                                return getattr(fact_data, snake_key, default)
+
                         for fact_data in facts_to_store:
                             try:
                                 if use_belief_revision:
                                     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                                     # BELIEF REVISION PATH (intelligent fact management)
                                     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                                    fact_text = _get_fact_value(fact_data, "fact")
+                                    fact_type_val = _get_fact_value(fact_data, "factType")
+                                    subject_val = _get_fact_value(fact_data, "subject", params.user_id or params.agent_id)
+                                    predicate_val = _get_fact_value(fact_data, "predicate")
+                                    object_val = _get_fact_value(fact_data, "object")
+                                    confidence_raw = _get_fact_value(fact_data, "confidence", 80)
+                                    tags_val = _get_fact_value(fact_data, "tags", params.tags or [])
+
+                                    # Normalize confidence: if float <= 1, treat as percentage and multiply
+                                    confidence_val = int(confidence_raw * 100) if isinstance(confidence_raw, float) and confidence_raw <= 1 else int(confidence_raw)
+
                                     revise_result = await self.facts.revise(
                                         ReviseParams(
                                             memory_space_id=params.memory_space_id,
                                             user_id=params.user_id,
                                             participant_id=params.participant_id,
                                             fact=ConflictCandidate(
-                                                fact=fact_data["fact"],
-                                                fact_type=fact_data.get("factType"),
-                                                subject=fact_data.get("subject", params.user_id or params.agent_id),
-                                                predicate=fact_data.get("predicate"),
-                                                object=fact_data.get("object"),
-                                                confidence=int(fact_data.get("confidence", 80) * 100) if isinstance(fact_data.get("confidence"), float) and fact_data.get("confidence", 1) <= 1 else int(fact_data.get("confidence", 80)),
-                                                tags=fact_data.get("tags", params.tags or []),
+                                                fact=fact_text,
+                                                fact_type=fact_type_val,
+                                                subject=subject_val,
+                                                predicate=predicate_val,
+                                                object=object_val,
+                                                confidence=confidence_val,
+                                                tags=tags_val,
                                             ),
                                         )
                                     )
@@ -997,16 +1023,27 @@ class MemoryAPI:
                                     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                                     # DEDUPLICATION PATH (fallback when no LLM)
                                     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                                    fact_text = _get_fact_value(fact_data, "fact")
+                                    fact_type_val = _get_fact_value(fact_data, "factType")
+                                    subject_val = _get_fact_value(fact_data, "subject", params.user_id or params.agent_id)
+                                    predicate_val = _get_fact_value(fact_data, "predicate")
+                                    object_val = _get_fact_value(fact_data, "object")
+                                    confidence_raw = _get_fact_value(fact_data, "confidence", 80)
+                                    tags_val = _get_fact_value(fact_data, "tags", params.tags or [])
+
+                                    # Normalize confidence: if float <= 1, treat as percentage and multiply
+                                    confidence_val = int(confidence_raw * 100) if isinstance(confidence_raw, float) and confidence_raw <= 1 else int(confidence_raw)
+
                                     store_params = StoreFactParams(
                                         memory_space_id=params.memory_space_id,
                                         participant_id=params.participant_id,
                                         user_id=params.user_id,
-                                        fact=fact_data["fact"],
-                                        fact_type=fact_data["factType"],
-                                        subject=fact_data.get("subject", params.user_id or params.agent_id),
-                                        predicate=fact_data.get("predicate"),
-                                        object=fact_data.get("object"),
-                                        confidence=int(fact_data.get("confidence", 80) * 100) if isinstance(fact_data.get("confidence"), float) and fact_data.get("confidence", 1) <= 1 else int(fact_data.get("confidence", 80)),
+                                        fact=fact_text,
+                                        fact_type=fact_type_val,
+                                        subject=subject_val,
+                                        predicate=predicate_val,
+                                        object=object_val,
+                                        confidence=confidence_val,
                                         source_type="conversation",
                                         source_ref=FactSourceRef(
                                             conversation_id=params.conversation_id,
@@ -1017,7 +1054,7 @@ class MemoryAPI:
                                             ),
                                             memory_id=stored_memories[0].memory_id if stored_memories else None,
                                         ),
-                                        tags=fact_data.get("tags", params.tags or []),
+                                        tags=tags_val,
                                     )
 
                                     # Use store_with_dedup if deduplication is configured
