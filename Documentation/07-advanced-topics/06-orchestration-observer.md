@@ -101,7 +101,7 @@ interface LayerEvent {
   };
 
   /** For facts layer: what action was taken */
-  revisionAction?: "CREATE" | "UPDATE" | "SUPERSEDE" | "NONE";
+  revisionAction?: "ADD" | "UPDATE" | "SUPERSEDE" | "NONE";
 
   /** For facts layer: IDs of facts that were superseded */
   supersededFacts?: string[];
@@ -332,7 +332,7 @@ const observer: OrchestrationObserver = {
   onLayerUpdate: (event) => {
     if (event.layer === "facts" && event.status === "complete") {
       switch (event.revisionAction) {
-        case "CREATE":
+        case "ADD":
           console.log("New fact created");
           break;
         case "UPDATE":

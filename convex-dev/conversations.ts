@@ -53,7 +53,7 @@ export const create = mutation({
       }
     }
 
-    // Check if conversation already exists - use UPSERT behavior to handle race conditions
+    // Check if conversation already exists
     const existing = await ctx.db
       .query("conversations")
       .withIndex("by_conversationId", (q) =>
@@ -62,9 +62,9 @@ export const create = mutation({
       .first();
 
     if (existing) {
-      // Race-safe: Return existing conversation instead of throwing
-      // This handles parallel remember() calls gracefully
-      return await ctx.db.get(existing._id);
+      // Throw error for explicit duplicate creation attempts
+      // Use getOrCreate() for UPSERT behavior if race-safety is needed
+      throw new ConvexError("CONVERSATION_ALREADY_EXISTS");
     }
 
     const now = Date.now();

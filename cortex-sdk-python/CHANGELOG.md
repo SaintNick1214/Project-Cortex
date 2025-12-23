@@ -17,7 +17,7 @@ Added `OrchestrationObserver` API for real-time monitoring of the `remember()` a
 from cortex import (
     MemoryLayer,          # "memorySpace" | "user" | "agent" | "conversation" | "vector" | "facts" | "graph"
     LayerStatus,          # "pending" | "in_progress" | "complete" | "error" | "skipped"
-    RevisionAction,       # "CREATE" | "UPDATE" | "SUPERSEDE" | "NONE"
+    RevisionAction,       # "ADD" | "UPDATE" | "SUPERSEDE" | "NONE"
     LayerEvent,           # Event emitted when a layer's status changes
     LayerEventData,       # Data payload for completed layers
     LayerEventError,      # Error details for failed layers
