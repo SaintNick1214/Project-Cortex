@@ -429,7 +429,7 @@ describeIfEnabled("Batch Sync Integration", () => {
       expect(result.facts.synced + result.facts.failed).toBeGreaterThanOrEqual(
         0,
       );
-    }, 30000); // 30 second timeout for larger sync
+    }, 60000); // 60 second timeout for larger sync with network latency
 
     it("should continue sync after individual failures", async () => {
       // Even if one entity fails, others should sync
@@ -455,7 +455,7 @@ describeIfEnabled("Batch Sync Integration", () => {
       // Should not have duplicated (merge semantics)
       // Note: Exact count depends on data, but shouldn't be doubled
       expect(typeof totalNodes).toBe("number");
-    });
+    }, 120000); // 120 second timeout for two full syncs
 
     it("should handle disconnected graph adapter gracefully", async () => {
       const disconnectedAdapter = new CypherGraphAdapter();

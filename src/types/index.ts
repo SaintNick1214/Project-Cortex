@@ -598,6 +598,32 @@ export interface RememberParams {
    * @default 'semantic' (with fallback to 'structural' if no generateEmbedding)
    */
   factDeduplication?: "semantic" | "structural" | "exact" | false;
+
+  /**
+   * Observer for real-time orchestration monitoring.
+   *
+   * Provides callbacks for tracking layer-by-layer progress during
+   * the remember() orchestration flow. Integration-agnostic.
+   *
+   * @example
+   * ```typescript
+   * await cortex.memory.remember({
+   *   memorySpaceId: 'user-123-space',
+   *   conversationId: 'conv-123',
+   *   userMessage: 'My name is Alex',
+   *   agentResponse: "Nice to meet you, Alex!",
+   *   userId: 'user-123',
+   *   userName: 'Alex',
+   *   agentId: 'assistant',
+   *   observer: {
+   *     onLayerUpdate: (event) => {
+   *       console.log(`${event.layer}: ${event.status}`);
+   *     },
+   *   },
+   * });
+   * ```
+   */
+  observer?: OrchestrationObserver;
 }
 
 export interface RememberResult {
@@ -746,6 +772,14 @@ export interface RememberStreamParams {
    * @default 'semantic' (with fallback to 'structural' if no generateEmbedding)
    */
   factDeduplication?: "semantic" | "structural" | "exact" | false;
+
+  /**
+   * Observer for real-time orchestration monitoring.
+   *
+   * Provides callbacks for tracking layer-by-layer progress during
+   * the rememberStream() orchestration flow. Integration-agnostic.
+   */
+  observer?: OrchestrationObserver;
 }
 
 /**
@@ -2447,3 +2481,173 @@ export type {
   DuplicateResult,
   StoreWithDedupResult,
 } from "../facts/deduplication";
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Orchestration Observer Types (Integration-Agnostic Monitoring)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Memory orchestration layer identifiers
+ *
+ * These represent the layers that are orchestrated during remember() calls:
+ * - memorySpace: Auto-registers memory space if it doesn't exist
+ * - user: Auto-creates user profile if userId is provided
+ * - agent: Auto-registers agent if agentId is provided
+ * - conversation: Stores messages in ACID conversation layer
+ * - vector: Creates searchable vector memories
+ * - facts: Auto-extracts facts if LLM is configured
+ * - graph: Syncs entities to graph database if configured
+ */
+export type MemoryLayer =
+  | "memorySpace"
+  | "user"
+  | "agent"
+  | "conversation"
+  | "vector"
+  | "facts"
+  | "graph";
+
+/**
+ * Layer status during orchestration
+ */
+export type LayerStatus =
+  | "pending"
+  | "in_progress"
+  | "complete"
+  | "error"
+  | "skipped";
+
+/**
+ * Revision action taken by the belief revision system
+ *
+ * Matches ConflictAction from the belief revision pipeline:
+ * - ADD: New fact created (no conflicts)
+ * - UPDATE: Existing fact updated in place
+ * - SUPERSEDE: Old fact replaced by new one
+ * - NONE: Duplicate skipped
+ */
+export type RevisionAction = "ADD" | "UPDATE" | "SUPERSEDE" | "NONE";
+
+/**
+ * Event emitted when a layer's status changes during orchestration
+ *
+ * @example
+ * ```typescript
+ * const observer: OrchestrationObserver = {
+ *   onLayerUpdate: (event) => {
+ *     console.log(`Layer ${event.layer}: ${event.status}`);
+ *     if (event.latencyMs) {
+ *       console.log(`  Took ${event.latencyMs}ms`);
+ *     }
+ *   },
+ * };
+ * ```
+ */
+export interface LayerEvent {
+  /** Which layer this event is for */
+  layer: MemoryLayer;
+
+  /** Current status of the layer */
+  status: LayerStatus;
+
+  /** Timestamp when this status was set */
+  timestamp: number;
+
+  /** Time elapsed since orchestration started (ms) */
+  latencyMs?: number;
+
+  /** Data stored in this layer (if complete) */
+  data?: {
+    /** ID of the stored record */
+    id?: string;
+    /** Summary or preview of the data */
+    preview?: string;
+    /** Additional metadata */
+    metadata?: Record<string, unknown>;
+  };
+
+  /** Error details (if error status) */
+  error?: {
+    message: string;
+    code?: string;
+  };
+
+  /**
+   * Revision action taken (for facts layer with belief revision enabled)
+   */
+  revisionAction?: RevisionAction;
+
+  /**
+   * Facts that were superseded by this action
+   * Only present when revisionAction is "SUPERSEDE"
+   */
+  supersededFacts?: string[];
+}
+
+/**
+ * Summary of the full orchestration flow
+ *
+ * Returned when orchestration completes (all layers processed).
+ */
+export interface OrchestrationSummary {
+  /** Unique ID for this orchestration run */
+  orchestrationId: string;
+
+  /** Total time for all layers (ms) */
+  totalLatencyMs: number;
+
+  /** Status of each layer */
+  layers: Record<MemoryLayer, LayerEvent>;
+
+  /** IDs of records created */
+  createdIds: {
+    conversationId?: string;
+    memoryIds?: string[];
+    factIds?: string[];
+  };
+}
+
+/**
+ * Observer for memory layer orchestration
+ *
+ * Provides real-time monitoring of the remember() and rememberStream()
+ * orchestration flow. This is integration-agnostic - any integration
+ * (Vercel AI SDK, LangChain, custom) can use this interface.
+ *
+ * @example
+ * ```typescript
+ * // Basic usage with remember()
+ * await cortex.memory.remember({
+ *   memorySpaceId: 'user-123-space',
+ *   conversationId: 'conv-123',
+ *   userMessage: 'My name is Alex',
+ *   agentResponse: "Nice to meet you, Alex!",
+ *   userId: 'user-123',
+ *   userName: 'Alex',
+ *   agentId: 'assistant',
+ *   observer: {
+ *     onOrchestrationStart: (id) => console.log(`Started: ${id}`),
+ *     onLayerUpdate: (event) => console.log(`${event.layer}: ${event.status}`),
+ *     onOrchestrationComplete: (summary) => console.log(`Done in ${summary.totalLatencyMs}ms`),
+ *   },
+ * });
+ * ```
+ */
+export interface OrchestrationObserver {
+  /**
+   * Called when orchestration starts
+   */
+  onOrchestrationStart?: (orchestrationId: string) => void | Promise<void>;
+
+  /**
+   * Called when a layer's status changes
+   */
+  onLayerUpdate?: (event: LayerEvent) => void | Promise<void>;
+
+  /**
+   * Called when orchestration completes (all layers done)
+   */
+  onOrchestrationComplete?: (
+    summary: OrchestrationSummary,
+  ) => void | Promise<void>;
+}

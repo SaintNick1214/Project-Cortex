@@ -181,6 +181,41 @@ export interface QueuedRequest<T = unknown> {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Retry Configuration
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Retry configuration for transient failure handling
+ */
+export interface RetryConfig {
+  /** Maximum number of retry attempts - default: 3 */
+  maxRetries?: number;
+
+  /** Base delay between retries in ms - default: 500 */
+  baseDelayMs?: number;
+
+  /** Maximum delay between retries in ms - default: 10000 */
+  maxDelayMs?: number;
+
+  /** Exponential backoff base - default: 2.0 */
+  exponentialBase?: number;
+
+  /** Add jitter to prevent thundering herd - default: true */
+  jitter?: boolean;
+}
+
+/**
+ * Default retry configuration
+ */
+export const DEFAULT_RETRY_CONFIG: Required<RetryConfig> = {
+  maxRetries: 3,
+  baseDelayMs: 500,
+  maxDelayMs: 10000,
+  exponentialBase: 2.0,
+  jitter: true,
+};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Main Resilience Configuration
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -203,6 +238,9 @@ export interface ResilienceConfig {
   /** Priority queue settings */
   queue?: QueueConfig;
 
+  /** Retry settings for transient failures */
+  retry?: RetryConfig;
+
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Monitoring Hooks
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -224,6 +262,9 @@ export interface ResilienceConfig {
 
   /** Called periodically with current metrics */
   onMetrics?: (metrics: ResilienceMetrics) => void;
+
+  /** Called when a retry is about to be attempted */
+  onRetry?: (attempt: number, error: Error, delayMs: number) => void;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

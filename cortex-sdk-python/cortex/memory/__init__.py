@@ -27,11 +27,18 @@ from ..types import (
     FactRevisionAction,
     ForgetOptions,
     ForgetResult,
+    LayerEvent,
+    LayerEventData,
+    LayerEventError,
+    LayerStatus,
     LLMConfig,
     MemoryEntry,
+    MemoryLayer,
     MemoryMetadata,
     MemorySource,
     MemoryVersionInfo,
+    OrchestrationObserver,
+    OrchestrationSummary,
     RecallGraphExpansionConfig,
     RecallParams,
     RecallResult,
@@ -46,6 +53,9 @@ from ..types import (
     UpdateManyResult,
     UpdateMemoryOptions,
     UpdateMemoryResult,
+)
+from ..types import (
+    RevisionAction as RevisionAction,
 )
 from ..vector import VectorAPI
 from .validators import (
@@ -129,6 +139,74 @@ class MemoryAPI:
     def _should_skip_layer(self, layer: str, skip_layers: Optional[List[str]]) -> bool:
         """Check if a layer should be skipped during orchestration."""
         return skip_layers is not None and layer in skip_layers
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Orchestration Observer Helpers
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    def _create_layer_event(
+        self,
+        layer: MemoryLayer,
+        status: LayerStatus,
+        start_time: int,
+        data: Optional[LayerEventData] = None,
+        error: Optional[LayerEventError] = None,
+        revision_info: Optional[Dict[str, Any]] = None,
+    ) -> LayerEvent:
+        """Create a layer event with current timing info."""
+        now = int(time.time() * 1000)
+        return LayerEvent(
+            layer=layer,
+            status=status,
+            timestamp=now,
+            latency_ms=now - start_time,
+            data=data,
+            error=error,
+            revision_action=revision_info.get("action") if revision_info else None,
+            superseded_facts=revision_info.get("superseded_facts") if revision_info else None,
+        )
+
+    def _notify_orchestration_start(
+        self,
+        observer: Optional[OrchestrationObserver],
+        orchestration_id: str,
+    ) -> None:
+        """Notify the observer of orchestration start."""
+        if not observer:
+            return
+        try:
+            if hasattr(observer, "on_orchestration_start"):
+                observer.on_orchestration_start(orchestration_id)
+        except Exception as e:
+            print(f"[Cortex] Observer on_orchestration_start failed: {e}")
+
+    def _notify_layer_update(
+        self,
+        observer: Optional[OrchestrationObserver],
+        event: LayerEvent,
+    ) -> None:
+        """Notify the observer of a layer update."""
+        if not observer:
+            return
+        try:
+            if hasattr(observer, "on_layer_update"):
+                observer.on_layer_update(event)
+        except Exception as e:
+            print(f"[Cortex] Observer on_layer_update failed: {e}")
+
+    def _notify_orchestration_complete(
+        self,
+        observer: Optional[OrchestrationObserver],
+        summary: OrchestrationSummary,
+    ) -> None:
+        """Notify the observer of orchestration completion."""
+        if not observer:
+            return
+        try:
+            if hasattr(observer, "on_orchestration_complete"):
+                observer.on_orchestration_complete(summary)
+        except Exception as e:
+            print(f"[Cortex] Observer on_orchestration_complete failed: {e}")
 
     def _get_llm_client(self) -> Optional[LLMClient]:
         """Get or create LLM client for fact extraction."""
@@ -385,13 +463,35 @@ class MemoryAPI:
             ...         skip_layers=['facts', 'graph'],
             ...     )
             ... )
+            >>>
+            >>> # With orchestration observer
+            >>> class MyObserver:
+            ...     def on_layer_update(self, event):
+            ...         print(f"{event.layer}: {event.status}")
+            >>> result = await cortex.memory.remember(
+            ...     RememberParams(..., observer=MyObserver())
+            ... )
         """
+        import uuid
+
         # Client-side validation
         validate_remember_params(params)
 
         now = int(time.time() * 1000)
+        orchestration_start_time = now
         opts = options or RememberOptions()
         skip_layers = params.skip_layers or []
+        observer = params.observer
+
+        # Generate orchestration ID for tracking
+        orchestration_id = f"orch_{uuid.uuid4().hex[:12]}"
+
+        # Initialize layer events tracking
+        layer_events: Dict[str, LayerEvent] = {}
+        created_ids: Dict[str, Any] = {}
+
+        # Notify orchestration start
+        self._notify_orchestration_start(observer, orchestration_id)
 
         # Determine if we should sync to graph (check skipLayers)
         should_sync_to_graph = (
@@ -403,16 +503,90 @@ class MemoryAPI:
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         # STEP 1: MEMORYSPACE (Cannot be skipped)
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        await self._ensure_memory_space_exists(params.memory_space_id, should_sync_to_graph)
+        if observer:
+            event = self._create_layer_event("memorySpace", "in_progress", orchestration_start_time)
+            layer_events["memorySpace"] = event
+            self._notify_layer_update(observer, event)
+
+        try:
+            await self._ensure_memory_space_exists(params.memory_space_id, should_sync_to_graph)
+            if observer:
+                event = self._create_layer_event(
+                    "memorySpace", "complete", orchestration_start_time,
+                    data=LayerEventData(id=params.memory_space_id, preview=f"Memory space: {params.memory_space_id}")
+                )
+                layer_events["memorySpace"] = event
+                self._notify_layer_update(observer, event)
+        except Exception as e:
+            if observer:
+                event = self._create_layer_event(
+                    "memorySpace", "error", orchestration_start_time,
+                    error=LayerEventError(message=str(e))
+                )
+                layer_events["memorySpace"] = event
+                self._notify_layer_update(observer, event)
+            raise
 
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         # STEP 2: OWNER PROFILES (skip: 'users'/'agents')
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # User layer
         if params.user_id and not self._should_skip_layer("users", skip_layers):
-            await self._ensure_user_exists(params.user_id, params.user_name)
+            if observer:
+                event = self._create_layer_event("user", "in_progress", orchestration_start_time)
+                layer_events["user"] = event
+                self._notify_layer_update(observer, event)
+            try:
+                await self._ensure_user_exists(params.user_id, params.user_name)
+                if observer:
+                    event = self._create_layer_event(
+                        "user", "complete", orchestration_start_time,
+                        data=LayerEventData(id=params.user_id, preview=f"User: {params.user_name or params.user_id}")
+                    )
+                    layer_events["user"] = event
+                    self._notify_layer_update(observer, event)
+            except Exception as e:
+                if observer:
+                    event = self._create_layer_event(
+                        "user", "error", orchestration_start_time,
+                        error=LayerEventError(message=str(e))
+                    )
+                    layer_events["user"] = event
+                    self._notify_layer_update(observer, event)
+                raise
+        elif observer:
+            event = self._create_layer_event("user", "skipped", orchestration_start_time)
+            layer_events["user"] = event
+            self._notify_layer_update(observer, event)
 
+        # Agent layer
         if params.agent_id and not self._should_skip_layer("agents", skip_layers):
-            await self._ensure_agent_exists(params.agent_id)
+            if observer:
+                event = self._create_layer_event("agent", "in_progress", orchestration_start_time)
+                layer_events["agent"] = event
+                self._notify_layer_update(observer, event)
+            try:
+                await self._ensure_agent_exists(params.agent_id)
+                if observer:
+                    event = self._create_layer_event(
+                        "agent", "complete", orchestration_start_time,
+                        data=LayerEventData(id=params.agent_id, preview=f"Agent: {params.agent_id}")
+                    )
+                    layer_events["agent"] = event
+                    self._notify_layer_update(observer, event)
+            except Exception as e:
+                if observer:
+                    event = self._create_layer_event(
+                        "agent", "error", orchestration_start_time,
+                        error=LayerEventError(message=str(e))
+                    )
+                    layer_events["agent"] = event
+                    self._notify_layer_update(observer, event)
+                raise
+        elif observer:
+            event = self._create_layer_event("agent", "skipped", orchestration_start_time)
+            layer_events["agent"] = event
+            self._notify_layer_update(observer, event)
 
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         # STEP 3: CONVERSATION (skip: 'conversations')
@@ -421,61 +595,95 @@ class MemoryAPI:
         agent_message_id = None
 
         if not self._should_skip_layer("conversations", skip_layers):
-            from ..types import (
-                AddMessageInput,
-                AddMessageOptions,
-                ConversationParticipants,
-                CreateConversationInput,
-                CreateConversationOptions,
-            )
+            if observer:
+                event = self._create_layer_event("conversation", "in_progress", orchestration_start_time)
+                layer_events["conversation"] = event
+                self._notify_layer_update(observer, event)
 
-            existing_conversation = await self.conversations.get(params.conversation_id)
-
-            if not existing_conversation:
-                # Always use user-agent type for remember() function
-                # agent-agent conversations are for explicit multi-agent collaboration
-                # and require memorySpaceIds (hive-mode or collaboration-mode)
-                conversation_type: ConversationType = "user-agent"
-                participants = ConversationParticipants(
-                    user_id=params.user_id,
-                    agent_id=params.agent_id,
-                    participant_id=params.participant_id,
+            try:
+                from ..types import (
+                    AddMessageInput,
+                    AddMessageOptions,
+                    ConversationParticipants,
+                    CreateConversationInput,
+                    CreateConversationOptions,
                 )
 
-                await self.conversations.create(
-                    CreateConversationInput(
-                        memory_space_id=params.memory_space_id,
+                existing_conversation = await self.conversations.get(params.conversation_id)
+
+                if not existing_conversation:
+                    # Always use user-agent type for remember() function
+                    # agent-agent conversations are for explicit multi-agent collaboration
+                    # and require memorySpaceIds (hive-mode or collaboration-mode)
+                    conversation_type: ConversationType = "user-agent"
+                    participants = ConversationParticipants(
+                        user_id=params.user_id,
+                        agent_id=params.agent_id,
+                        participant_id=params.participant_id,
+                    )
+
+                    await self.conversations.create(
+                        CreateConversationInput(
+                            memory_space_id=params.memory_space_id,
+                            conversation_id=params.conversation_id,
+                            type=conversation_type,
+                            participants=participants,
+                        ),
+                        CreateConversationOptions(sync_to_graph=should_sync_to_graph),
+                    )
+
+                # Store user message in ACID
+                user_msg = await self.conversations.add_message(
+                    AddMessageInput(
                         conversation_id=params.conversation_id,
-                        type=conversation_type,
-                        participants=participants,
+                        role="user",
+                        content=params.user_message,
                     ),
-                    CreateConversationOptions(sync_to_graph=should_sync_to_graph),
+                    AddMessageOptions(sync_to_graph=should_sync_to_graph),
                 )
 
-            # Store user message in ACID
-            user_msg = await self.conversations.add_message(
-                AddMessageInput(
-                    conversation_id=params.conversation_id,
-                    role="user",
-                    content=params.user_message,
-                ),
-                AddMessageOptions(sync_to_graph=should_sync_to_graph),
-            )
+                # Store agent response in ACID
+                agent_msg = await self.conversations.add_message(
+                    AddMessageInput(
+                        conversation_id=params.conversation_id,
+                        role="agent",
+                        content=params.agent_response,
+                        participant_id=params.participant_id or params.agent_id,
+                    ),
+                    AddMessageOptions(sync_to_graph=should_sync_to_graph),
+                )
 
-            # Store agent response in ACID
-            agent_msg = await self.conversations.add_message(
-                AddMessageInput(
-                    conversation_id=params.conversation_id,
-                    role="agent",
-                    content=params.agent_response,
-                    participant_id=params.participant_id or params.agent_id,
-                ),
-                AddMessageOptions(sync_to_graph=should_sync_to_graph),
-            )
+                # Extract message IDs
+                user_message_id = user_msg.messages[-1]["id"] if isinstance(user_msg.messages[-1], dict) else user_msg.messages[-1].id
+                agent_message_id = agent_msg.messages[-1]["id"] if isinstance(agent_msg.messages[-1], dict) else agent_msg.messages[-1].id
 
-            # Extract message IDs
-            user_message_id = user_msg.messages[-1]["id"] if isinstance(user_msg.messages[-1], dict) else user_msg.messages[-1].id
-            agent_message_id = agent_msg.messages[-1]["id"] if isinstance(agent_msg.messages[-1], dict) else agent_msg.messages[-1].id
+                # Track created IDs
+                created_ids["conversationId"] = params.conversation_id
+
+                if observer:
+                    event = self._create_layer_event(
+                        "conversation", "complete", orchestration_start_time,
+                        data=LayerEventData(
+                            id=params.conversation_id,
+                            preview=f"Conversation: {params.conversation_id} (2 messages)",
+                            metadata={"userMsgId": user_message_id, "agentMsgId": agent_message_id}
+                        )
+                    )
+                    layer_events["conversation"] = event
+                    self._notify_layer_update(observer, event)
+            except Exception as e:
+                if observer:
+                    event = self._create_layer_event(
+                        "conversation", "error", orchestration_start_time,
+                        error=LayerEventError(message=str(e))
+                    )
+                    layer_events["conversation"] = event
+                    self._notify_layer_update(observer, event)
+                raise
+        elif observer:
+            event = self._create_layer_event("conversation", "skipped", orchestration_start_time)
+            layer_events["conversation"] = event
+            self._notify_layer_update(observer, event)
 
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         # STEP 4: VECTOR MEMORY (skip: 'vector')
@@ -483,96 +691,58 @@ class MemoryAPI:
         stored_memories: List[MemoryEntry] = []
 
         if not self._should_skip_layer("vector", skip_layers):
-            from ..types import ConversationRef, StoreMemoryOptions
+            if observer:
+                event = self._create_layer_event("vector", "in_progress", orchestration_start_time)
+                layer_events["vector"] = event
+                self._notify_layer_update(observer, event)
 
-            # Extract content if provided
-            user_content = params.user_message
-            agent_content = params.agent_response
-            content_type = "raw"
+            try:
+                from ..types import ConversationRef, StoreMemoryOptions
 
-            if params.extract_content:
-                extracted = await params.extract_content(
-                    params.user_message, params.agent_response
-                )
-                if extracted:
-                    user_content = extracted
-                    content_type = "summarized"
+                # Extract content if provided
+                user_content = params.user_message
+                agent_content = params.agent_response
+                content_type = "raw"
 
-            # Generate embeddings if provided
-            user_embedding = None
-            agent_embedding = None
+                if params.extract_content:
+                    extracted = await params.extract_content(
+                        params.user_message, params.agent_response
+                    )
+                    if extracted:
+                        user_content = extracted
+                        content_type = "summarized"
 
-            if params.generate_embedding:
-                user_embedding = await params.generate_embedding(user_content)
-                agent_embedding = await params.generate_embedding(agent_content)
+                # Generate embeddings if provided
+                user_embedding = None
+                agent_embedding = None
 
-            # Store user message in Vector
-            user_memory = await self.vector.store(
-                params.memory_space_id,
-                StoreMemoryInput(
-                    content=user_content,
-                    content_type=cast(Literal["raw", "summarized"], content_type),
-                    participant_id=params.participant_id,
-                    embedding=user_embedding,
-                    user_id=params.user_id,
-                    agent_id=params.agent_id,
-                    message_role="user",
-                    source=MemorySource(
-                        type="conversation",
-                        user_id=params.user_id,
-                        user_name=params.user_name,
-                        timestamp=now,
-                    ),
-                    conversation_ref=(
-                        ConversationRef(
-                            conversation_id=params.conversation_id,
-                            message_ids=[user_message_id],
-                        )
-                        if user_message_id
-                        else None
-                    ),
-                    metadata=MemoryMetadata(
-                        importance=params.importance or 50, tags=params.tags or []
-                    ),
-                ),
-                StoreMemoryOptions(sync_to_graph=should_sync_to_graph),
-            )
-            stored_memories.append(user_memory)
+                if params.generate_embedding:
+                    user_embedding = await params.generate_embedding(user_content)
+                    agent_embedding = await params.generate_embedding(agent_content)
 
-            # Detect if agent response is just an acknowledgment
-            agent_content_lower = agent_content.lower()
-            is_acknowledgment = len(agent_content) < 80 and any(
-                phrase in agent_content_lower
-                for phrase in [
-                    "got it", "i've noted", "i'll remember", "noted", "understood",
-                    "i'll set", "i'll call you", "will do", "sure thing", "okay,", "ok,",
-                ]
-            )
-
-            # Only store agent response in vector if it contains meaningful information
-            if not is_acknowledgment:
-                agent_memory = await self.vector.store(
+                # Store user message in Vector
+                user_memory = await self.vector.store(
                     params.memory_space_id,
                     StoreMemoryInput(
-                        content=agent_content,
-                        content_type="raw",
+                        content=user_content,
+                        content_type=cast(Literal["raw", "summarized"], content_type),
                         participant_id=params.participant_id,
-                        embedding=agent_embedding,
+                        embedding=user_embedding,
                         user_id=params.user_id,
                         agent_id=params.agent_id,
-                        message_role="agent",
+                        message_role="user",
                         source=MemorySource(
                             type="conversation",
                             user_id=params.user_id,
                             user_name=params.user_name,
-                            timestamp=now + 1,
+                            timestamp=now,
                         ),
                         conversation_ref=(
                             ConversationRef(
                                 conversation_id=params.conversation_id,
-                                message_ids=[agent_message_id],
+                                message_ids=[user_message_id],
                             )
-                            if agent_message_id
+                            if user_message_id
                             else None
                         ),
                         metadata=MemoryMetadata(
@@ -581,7 +751,79 @@ class MemoryAPI:
                     ),
                     StoreMemoryOptions(sync_to_graph=should_sync_to_graph),
                 )
-                stored_memories.append(agent_memory)
+                stored_memories.append(user_memory)
+
+                # Detect if agent response is just an acknowledgment
+                agent_content_lower = agent_content.lower()
+                is_acknowledgment = len(agent_content) < 80 and any(
+                    phrase in agent_content_lower
+                    for phrase in [
+                        "got it", "i've noted", "i'll remember", "noted", "understood",
+                        "i'll set", "i'll call you", "will do", "sure thing", "okay,", "ok,",
+                    ]
+                )
+
+                # Only store agent response in vector if it contains meaningful information
+                if not is_acknowledgment:
+                    agent_memory = await self.vector.store(
+                        params.memory_space_id,
+                        StoreMemoryInput(
+                            content=agent_content,
+                            content_type="raw",
+                            participant_id=params.participant_id,
+                            embedding=agent_embedding,
+                            user_id=params.user_id,
+                            agent_id=params.agent_id,
+                            message_role="agent",
+                            source=MemorySource(
+                                type="conversation",
+                                user_id=params.user_id,
+                                user_name=params.user_name,
+                                timestamp=now + 1,
+                            ),
+                            conversation_ref=(
+                                ConversationRef(
+                                    conversation_id=params.conversation_id,
+                                    message_ids=[agent_message_id],
+                                )
+                                if agent_message_id
+                                else None
+                            ),
+                            metadata=MemoryMetadata(
+                                importance=params.importance or 50, tags=params.tags or []
+                            ),
+                        ),
+                        StoreMemoryOptions(sync_to_graph=should_sync_to_graph),
+                    )
+                    stored_memories.append(agent_memory)
+
+                # Track created memory IDs
+                created_ids["memoryIds"] = [m.memory_id for m in stored_memories]
+
+                if observer:
+                    event = self._create_layer_event(
+                        "vector", "complete", orchestration_start_time,
+                        data=LayerEventData(
+                            id=stored_memories[0].memory_id if stored_memories else None,
+                            preview=f"Stored {len(stored_memories)} memories",
+                            metadata={"memoryCount": len(stored_memories)}
+                        )
+                    )
+                    layer_events["vector"] = event
+                    self._notify_layer_update(observer, event)
+            except Exception as e:
+                if observer:
+                    event = self._create_layer_event(
+                        "vector", "error", orchestration_start_time,
+                        error=LayerEventError(message=str(e))
+                    )
+                    layer_events["vector"] = event
+                    self._notify_layer_update(observer, event)
+                raise
+        elif observer:
+            event = self._create_layer_event("vector", "skipped", orchestration_start_time)
+            layer_events["vector"] = event
+            self._notify_layer_update(observer, event)
 
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         # STEP 5: FACTS (skip: 'facts') - with belief revision or deduplication
@@ -591,6 +833,11 @@ class MemoryAPI:
         revision_actions: List[FactRevisionAction] = []
 
         if not self._should_skip_layer("facts", skip_layers):
+            if observer:
+                event = self._create_layer_event("facts", "in_progress", orchestration_start_time)
+                layer_events["facts"] = event
+                self._notify_layer_update(observer, event)
+
             fact_extractor = self._get_fact_extractor(params)
 
             if fact_extractor:
@@ -615,25 +862,51 @@ class MemoryAPI:
                         # Build deduplication config for fallback path
                         dedup_config = self._build_deduplication_config(params)
 
+                        # Helper to get value from dict or dataclass
+                        def _get_fact_value(fact_data: Any, key: str, default: Any = None) -> Any:
+                            """Get value from fact_data whether it's a dict or dataclass."""
+                            if isinstance(fact_data, dict):
+                                # Handle both camelCase and snake_case for dicts
+                                return fact_data.get(key) or fact_data.get(
+                                    # Convert camelCase to snake_case
+                                    ''.join(['_' + c.lower() if c.isupper() else c for c in key]).lstrip('_'),
+                                    default
+                                )
+                            else:
+                                # For dataclass/object, convert key from camelCase to snake_case
+                                snake_key = ''.join(['_' + c.lower() if c.isupper() else c for c in key]).lstrip('_')
+                                return getattr(fact_data, snake_key, default)
+
                         for fact_data in facts_to_store:
                             try:
                                 if use_belief_revision:
                                     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                                     # BELIEF REVISION PATH (intelligent fact management)
                                     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                                    fact_text = _get_fact_value(fact_data, "fact")
+                                    fact_type_val = _get_fact_value(fact_data, "factType")
+                                    subject_val = _get_fact_value(fact_data, "subject", params.user_id or params.agent_id)
+                                    predicate_val = _get_fact_value(fact_data, "predicate")
+                                    object_val = _get_fact_value(fact_data, "object")
+                                    confidence_raw = _get_fact_value(fact_data, "confidence", 80)
+                                    tags_val = _get_fact_value(fact_data, "tags", params.tags or [])
+
+                                    # Normalize confidence: if float <= 1, treat as percentage and multiply
+                                    confidence_val = int(confidence_raw * 100) if isinstance(confidence_raw, float) and confidence_raw <= 1 else int(confidence_raw)
+
                                     revise_result = await self.facts.revise(
                                         ReviseParams(
                                             memory_space_id=params.memory_space_id,
                                             user_id=params.user_id,
                                             participant_id=params.participant_id,
                                             fact=ConflictCandidate(
-                                                fact=fact_data["fact"],
-                                                fact_type=fact_data.get("factType"),
-                                                subject=fact_data.get("subject", params.user_id or params.agent_id),
-                                                predicate=fact_data.get("predicate"),
-                                                object=fact_data.get("object"),
-                                                confidence=int(fact_data.get("confidence", 80) * 100) if isinstance(fact_data.get("confidence"), float) and fact_data.get("confidence", 1) <= 1 else int(fact_data.get("confidence", 80)),
-                                                tags=fact_data.get("tags", params.tags or []),
+                                                fact=fact_text,
+                                                fact_type=fact_type_val,
+                                                subject=subject_val,
+                                                predicate=predicate_val,
+                                                object=object_val,
+                                                confidence=confidence_val,
+                                                tags=tags_val,
                                             ),
                                         )
                                     )
@@ -684,6 +957,28 @@ class MemoryAPI:
                                             )
                                             continue
 
+                                        # Build source_ref from raw fact or construct from params
+                                        source_ref_data = raw_fact.get("sourceRef") or raw_fact.get("source_ref")
+                                        fact_source_ref = None
+                                        if source_ref_data:
+                                            if isinstance(source_ref_data, dict):
+                                                from ..types import FactSourceRef
+                                                fact_source_ref = FactSourceRef(
+                                                    conversation_id=source_ref_data.get("conversationId") or source_ref_data.get("conversation_id"),
+                                                    message_ids=source_ref_data.get("messageIds") or source_ref_data.get("message_ids"),
+                                                    memory_id=source_ref_data.get("memoryId") or source_ref_data.get("memory_id"),
+                                                )
+                                            else:
+                                                fact_source_ref = source_ref_data
+                                        elif params.conversation_id:
+                                            # Construct source_ref from params if not in raw fact
+                                            from ..types import FactSourceRef
+                                            fact_source_ref = FactSourceRef(
+                                                conversation_id=params.conversation_id,
+                                                message_ids=[user_message_id, agent_message_id] if user_message_id and agent_message_id else None,
+                                                memory_id=stored_memories[0].memory_id if stored_memories else None,
+                                            )
+
                                         final_fact = FactRecordType(
                                             _id=str(raw_fact.get("_id", "")),
                                             fact_id=str(raw_fact.get("factId") or raw_fact.get("fact_id") or ""),
@@ -699,6 +994,10 @@ class MemoryAPI:
                                             subject=raw_fact.get("subject"),
                                             predicate=raw_fact.get("predicate"),
                                             object=raw_fact.get("object"),
+                                            # Propagate user_id and participant_id from the raw fact or params
+                                            user_id=raw_fact.get("userId") or raw_fact.get("user_id") or params.user_id,
+                                            participant_id=raw_fact.get("participantId") or raw_fact.get("participant_id") or params.participant_id,
+                                            source_ref=fact_source_ref,
                                         )
                                     elif raw_fact is not None:
                                         # It's already a FactRecord
@@ -724,16 +1023,27 @@ class MemoryAPI:
                                     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                                     # DEDUPLICATION PATH (fallback when no LLM)
                                     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                                    fact_text = _get_fact_value(fact_data, "fact")
+                                    fact_type_val = _get_fact_value(fact_data, "factType")
+                                    subject_val = _get_fact_value(fact_data, "subject", params.user_id or params.agent_id)
+                                    predicate_val = _get_fact_value(fact_data, "predicate")
+                                    object_val = _get_fact_value(fact_data, "object")
+                                    confidence_raw = _get_fact_value(fact_data, "confidence", 80)
+                                    tags_val = _get_fact_value(fact_data, "tags", params.tags or [])
+
+                                    # Normalize confidence: if float <= 1, treat as percentage and multiply
+                                    confidence_val = int(confidence_raw * 100) if isinstance(confidence_raw, float) and confidence_raw <= 1 else int(confidence_raw)
+
                                     store_params = StoreFactParams(
                                         memory_space_id=params.memory_space_id,
                                         participant_id=params.participant_id,
                                         user_id=params.user_id,
-                                        fact=fact_data["fact"],
-                                        fact_type=fact_data["factType"],
-                                        subject=fact_data.get("subject", params.user_id or params.agent_id),
-                                        predicate=fact_data.get("predicate"),
-                                        object=fact_data.get("object"),
-                                        confidence=int(fact_data.get("confidence", 80) * 100) if isinstance(fact_data.get("confidence"), float) and fact_data.get("confidence", 1) <= 1 else int(fact_data.get("confidence", 80)),
+                                        fact=fact_text,
+                                        fact_type=fact_type_val,
+                                        subject=subject_val,
+                                        predicate=predicate_val,
+                                        object=object_val,
+                                        confidence=confidence_val,
                                         source_type="conversation",
                                         source_ref=FactSourceRef(
                                             conversation_id=params.conversation_id,
@@ -744,7 +1054,7 @@ class MemoryAPI:
                                             ),
                                             memory_id=stored_memories[0].memory_id if stored_memories else None,
                                         ),
-                                        tags=fact_data.get("tags", params.tags or []),
+                                        tags=tags_val,
                                     )
 
                                     # Use store_with_dedup if deduplication is configured
@@ -769,10 +1079,67 @@ class MemoryAPI:
                 except Exception as error:
                     print(f"Warning: Failed to extract facts: {error}")
 
+            # Track created fact IDs
+            created_ids["factIds"] = [f.fact_id for f in extracted_facts]
+
+            if observer:
+                # Build revision info for the facts layer event
+                revision_info = None
+                if revision_actions:
+                    supersede_actions = [ra for ra in revision_actions if ra.action == "SUPERSEDE"]
+                    if supersede_actions:
+                        revision_info = {
+                            "action": "SUPERSEDE",
+                            "superseded_facts": [
+                                f.fact_id for ra in supersede_actions
+                                for f in (ra.superseded or [])
+                                if hasattr(f, 'fact_id')
+                            ]
+                        }
+
+                event = self._create_layer_event(
+                    "facts", "complete", orchestration_start_time,
+                    data=LayerEventData(
+                        id=extracted_facts[0].fact_id if extracted_facts else None,
+                        preview=f"Extracted {len(extracted_facts)} facts",
+                        metadata={"factCount": len(extracted_facts), "revisionCount": len(revision_actions)}
+                    ),
+                    revision_info=revision_info
+                )
+                layer_events["facts"] = event
+                self._notify_layer_update(observer, event)
+        elif observer:
+            event = self._create_layer_event("facts", "skipped", orchestration_start_time)
+            layer_events["facts"] = event
+            self._notify_layer_update(observer, event)
+
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         # STEP 6: GRAPH (handled via syncToGraph in previous steps)
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         # Graph sync is handled inline with each layer via the shouldSyncToGraph flag
+        if observer:
+            if should_sync_to_graph:
+                event = self._create_layer_event(
+                    "graph", "complete", orchestration_start_time,
+                    data=LayerEventData(preview="Graph sync performed inline with layers")
+                )
+            else:
+                event = self._create_layer_event("graph", "skipped", orchestration_start_time)
+            layer_events["graph"] = event
+            self._notify_layer_update(observer, event)
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # Notify orchestration complete
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        if observer:
+            total_latency = int(time.time() * 1000) - orchestration_start_time
+            summary = OrchestrationSummary(
+                orchestration_id=orchestration_id,
+                total_latency_ms=total_latency,
+                layers=layer_events,
+                created_ids=created_ids,
+            )
+            self._notify_orchestration_complete(observer, summary)
 
         return RememberResult(
             conversation={
@@ -1175,6 +1542,11 @@ class MemoryAPI:
             should_sync = (opts.sync_to_graph if opts and hasattr(opts, 'sync_to_graph') else True) and self.graph_adapter is not None
 
             user_message_val = params.get("userMessage") if isinstance(params, dict) else params.user_message
+            # Determine belief_revision setting from options
+            belief_revision_setting = opts.belief_revision if opts and hasattr(opts, 'belief_revision') else None
+            # Extract observer from params (v0.25.0+)
+            stream_observer = params.get("observer") if isinstance(params, dict) else getattr(params, "observer", None)
+
             remember_result = await self.remember(
                 RememberParams(
                     memory_space_id=str(memory_space_id or ""),
@@ -1193,8 +1565,9 @@ class MemoryAPI:
                     auto_summarize=params.get("autoSummarize") if isinstance(params, dict) else getattr(params, "auto_summarize", None),
                     importance=params.get("importance") if isinstance(params, dict) else getattr(params, "importance", None),
                     tags=params.get("tags") if isinstance(params, dict) else getattr(params, "tags", None),
+                    observer=stream_observer,  # Pass observer for real-time monitoring (v0.25.0+)
                 ),
-                RememberOptions(sync_to_graph=should_sync),
+                RememberOptions(sync_to_graph=should_sync, belief_revision=belief_revision_setting),
             )
 
             # Step 7: Finalize graph sync

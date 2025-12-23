@@ -5,7 +5,7 @@ import { useState } from "react";
 import { DataPreview } from "./DataPreview";
 
 type LayerStatus = "pending" | "in_progress" | "complete" | "error" | "skipped";
-type RevisionAction = "CREATE" | "UPDATE" | "SUPERSEDE" | "NONE";
+type RevisionAction = "ADD" | "UPDATE" | "SUPERSEDE" | "NONE";
 
 interface LayerCardProps {
   name: string;
@@ -32,7 +32,7 @@ const revisionBadgeConfig: Record<
   RevisionAction,
   { color: string; bgColor: string; label: string }
 > = {
-  CREATE: {
+  ADD: {
     color: "text-green-400",
     bgColor: "bg-green-500/20",
     label: "NEW",

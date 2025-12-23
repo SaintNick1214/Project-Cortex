@@ -2,11 +2,51 @@
  * LLM Client Module for Automatic Fact Extraction
  *
  * Provides a unified interface for calling OpenAI and Anthropic LLMs
- * to extract facts from conversations. Uses dynamic imports to avoid
- * requiring LLM SDKs as hard dependencies.
+ * to extract facts from conversations. Uses require() with import() fallback
+ * to support both CJS (including Jest) and ESM environments.
  */
 
 import type { LLMConfig } from "../index.js";
+
+/**
+ * Helper to load OpenAI SDK in both CJS and ESM environments.
+ * Uses require() first for CJS/Jest compatibility, falls back to dynamic import for ESM.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function loadOpenAI(): Promise<any> {
+  // Try require() first - works in CJS and Jest without --experimental-vm-modules
+  if (typeof require !== "undefined") {
+    try {
+      const mod = require("openai");
+      return mod.default || mod;
+    } catch {
+      // require() failed, fall through to dynamic import
+    }
+  }
+
+  // Fall back to dynamic import for pure ESM environments
+  return (await import("openai")).default;
+}
+
+/**
+ * Helper to load Anthropic SDK in both CJS and ESM environments.
+ * Uses require() first for CJS/Jest compatibility, falls back to dynamic import for ESM.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function loadAnthropic(): Promise<any> {
+  // Try require() first - works in CJS and Jest without --experimental-vm-modules
+  if (typeof require !== "undefined") {
+    try {
+      const mod = require("@anthropic-ai/sdk");
+      return mod.default || mod;
+    } catch {
+      // require() failed, fall through to dynamic import
+    }
+  }
+
+  // Fall back to dynamic import for pure ESM environments
+  return (await import("@anthropic-ai/sdk")).default;
+}
 
 /**
  * Extracted fact structure from LLM response
@@ -206,9 +246,8 @@ class OpenAIClient implements LLMClient {
     agentResponse: string,
   ): Promise<ExtractedFact[] | null> {
     try {
-      // Dynamic import to avoid requiring openai as hard dependency
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const OpenAI = (await import("openai")).default as any;
+      // Use helper that prefers require() for CJS/Jest compatibility
+      const OpenAI = await loadOpenAI();
 
       const client = new OpenAI({ apiKey: this.config.apiKey });
 
@@ -278,9 +317,9 @@ class OpenAIClient implements LLMClient {
     model?: string;
     responseFormat?: "json" | "text";
   }): Promise<string> {
-    // Dynamic import to avoid requiring openai as hard dependency
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
-    const OpenAI = (await import("openai")).default as any;
+    // Use helper that prefers require() for CJS/Jest compatibility
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const OpenAI = await loadOpenAI();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const client = new OpenAI({ apiKey: this.config.apiKey });
@@ -350,9 +389,8 @@ class AnthropicClient implements LLMClient {
     agentResponse: string,
   ): Promise<ExtractedFact[] | null> {
     try {
-      // Dynamic import to avoid requiring anthropic as hard dependency
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const Anthropic = (await import("@anthropic-ai/sdk")).default as any;
+      // Use helper that prefers require() for CJS/Jest compatibility
+      const Anthropic = await loadAnthropic();
 
       const client = new Anthropic({ apiKey: this.config.apiKey });
 
@@ -412,9 +450,9 @@ class AnthropicClient implements LLMClient {
     model?: string;
     responseFormat?: "json" | "text";
   }): Promise<string> {
-    // Dynamic import to avoid requiring anthropic as hard dependency
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
-    const Anthropic = (await import("@anthropic-ai/sdk")).default as any;
+    // Use helper that prefers require() for CJS/Jest compatibility
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const Anthropic = await loadAnthropic();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const client = new Anthropic({ apiKey: this.config.apiKey });
@@ -492,10 +530,10 @@ export async function isLLMAvailable(
 ): Promise<boolean> {
   try {
     if (provider === "openai") {
-      await import("openai");
+      await loadOpenAI();
       return true;
     } else if (provider === "anthropic") {
-      await import("@anthropic-ai/sdk");
+      await loadAnthropic();
       return true;
     }
     return false;

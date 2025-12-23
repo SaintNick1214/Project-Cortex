@@ -62,6 +62,8 @@ export const create = mutation({
       .first();
 
     if (existing) {
+      // Throw error for explicit duplicate creation attempts
+      // Use getOrCreate() for UPSERT behavior if race-safety is needed
       throw new ConvexError("CONVERSATION_ALREADY_EXISTS");
     }
 

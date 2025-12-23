@@ -274,6 +274,7 @@ export function createCortexMemory(
  *   userId: 'user-123',
  *   userName: 'User',
  *   agentId: 'my-assistant',
+ *   enableGraphMemory: true, // This will now work!
  * });
  *
  * // Graph is automatically configured from env vars!
@@ -289,15 +290,20 @@ export async function createCortexMemoryAsync(
   logger.debug("Creating Cortex Memory provider (async)");
 
   // Use Cortex.create() for async initialization with auto-graph config
+  // This handles graph adapter creation/connection from env vars
   const cortex = await Cortex.create({ convexUrl: config.convexUrl });
 
-  logger.debug("Cortex SDK initialized with async factory");
+  logger.debug(
+    "Cortex SDK initialized" +
+      (config.enableGraphMemory ? " (graph support requested)" : ""),
+  );
 
-  // Return the same model factory, but using the async-initialized cortex instance
+  // Return the model factory that creates providers with the shared Cortex instance
   const cortexMemory: CortexMemoryModel = Object.assign(
     (underlyingModel: any, settings?: Record<string, unknown>): any => {
       logger.debug(`Wrapping model: ${underlyingModel.modelId}`);
-      return new CortexMemoryProvider(underlyingModel, config);
+      // Create provider with the pre-initialized Cortex instance (includes graph adapter)
+      return new CortexMemoryProvider(underlyingModel, config, cortex);
     },
     {
       search: async (

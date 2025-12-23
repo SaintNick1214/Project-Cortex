@@ -111,6 +111,14 @@ export interface ReviseParams {
   userId?: string;
   /** Optional participant ID */
   participantId?: string;
+  /** Source type for provenance tracking */
+  sourceType?: "conversation" | "system" | "tool" | "manual" | "a2a";
+  /** Source reference for provenance tracking */
+  sourceRef?: {
+    conversationId?: string;
+    messageIds?: string[];
+    memoryId?: string;
+  };
 }
 
 /**
@@ -131,6 +139,7 @@ export interface ReviseResult {
   pipeline: {
     slotMatching?: { executed: boolean; matched: boolean; factIds?: string[] };
     semanticMatching?: { executed: boolean; matched: boolean; factIds?: string[] };
+    subjectTypeMatching?: { executed: boolean; matched: boolean; factIds?: string[] };
     llmResolution?: { executed: boolean; decision?: ConflictAction };
   };
 }
@@ -252,6 +261,22 @@ export class BeliefRevisionService {
 
       if (semanticResult.length > 0) {
         candidates = semanticResult.map((r) => r.fact);
+      }
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Stage 2.5: Subject + FactType Matching (if no candidates yet)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    if (candidates.length === 0) {
+      const subjectTypeCandidates = await this.findSubjectTypeConflicts(params);
+      pipelineResult.subjectTypeMatching = {
+        executed: true,
+        matched: subjectTypeCandidates.length > 0,
+        factIds: subjectTypeCandidates.map((f) => f.factId),
+      };
+
+      if (subjectTypeCandidates.length > 0) {
+        candidates = subjectTypeCandidates;
       }
     }
 
@@ -411,6 +436,37 @@ export class BeliefRevisionService {
   }
 
   /**
+   * Stage 2.5: Find conflicts by subject + factType
+   * 
+   * This stage catches conflicts that slip through slot and semantic matching
+   * by querying for facts with the same subject AND factType. For example,
+   * "User likes blue" and "User prefers purple" both have subject="user" and
+   * factType="preference", making them candidates for LLM review even if their
+   * predicates differ.
+   */
+  private async findSubjectTypeConflicts(
+    params: ReviseParams,
+  ): Promise<FactRecord[]> {
+    // Skip if no subject or factType - can't match without these
+    if (!params.fact.subject || !params.fact.factType) {
+      return [];
+    }
+
+    const { api } = await import("../../convex-dev/_generated/api");
+    const facts = await this.client.query(api.facts.list, {
+      memorySpaceId: params.memorySpaceId,
+      userId: params.userId,
+      subject: params.fact.subject,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+      factType: params.fact.factType as any,
+      includeSuperseded: false,
+      limit: 20, // Reasonable limit for LLM processing
+    });
+
+    return facts as FactRecord[];
+  }
+
+  /**
    * Stage 3: Resolve conflict with LLM
    */
   private async resolveWithLLM(
@@ -486,8 +542,8 @@ export class BeliefRevisionService {
 
       case "UPDATE": {
         if (targetFact) {
-          // Update the existing fact in place
-          const updated = await this.client.mutation(api.facts.update, {
+          // Update the existing fact in place (no new version created)
+          const updated = await this.client.mutation(api.facts.updateInPlace, {
             memorySpaceId: params.memorySpaceId,
             factId: targetFact.factId,
             fact: params.fact.fact,
@@ -501,26 +557,30 @@ export class BeliefRevisionService {
 
       case "SUPERSEDE": {
         if (targetFact) {
-          // Create new fact and mark old as superseded
+          // Create new fact
           const newFact = await this.client.mutation(api.facts.store, {
             memorySpaceId: params.memorySpaceId,
             participantId: params.participantId,
             userId: params.userId,
             fact: params.fact.fact,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
             factType: (params.fact.factType as any) || "custom",
             subject: params.fact.subject,
             predicate: params.fact.predicate,
             object: params.fact.object,
             confidence: params.fact.confidence,
-            sourceType: "conversation",
+            sourceType: params.sourceType || "conversation",
+            sourceRef: params.sourceRef,
             tags: params.fact.tags || [],
           });
 
-          // Mark old fact as superseded
-          await this.client.mutation(api.facts.update, {
+          // Mark old fact as superseded by the new fact
+          // This sets both supersededBy and validUntil, and links the facts together
+          await this.client.mutation(api.facts.supersede, {
             memorySpaceId: params.memorySpaceId,
-            factId: targetFact.factId,
-            validUntil: Date.now(),
+            oldFactId: targetFact.factId,
+            newFactId: (newFact as FactRecord).factId,
+            reason: _reason,
           });
 
           // Update supersededBy relationship (done via update mutation)
@@ -539,12 +599,14 @@ export class BeliefRevisionService {
           participantId: params.participantId,
           userId: params.userId,
           fact: params.fact.fact,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
           factType: (params.fact.factType as any) || "custom",
           subject: params.fact.subject,
           predicate: params.fact.predicate,
           object: params.fact.object,
           confidence: params.fact.confidence,
-          sourceType: "conversation",
+          sourceType: params.sourceType || "conversation",
+          sourceRef: params.sourceRef,
           tags: params.fact.tags || [],
         });
         return { fact: newFact as FactRecord, superseded: [] };
@@ -557,12 +619,14 @@ export class BeliefRevisionService {
       participantId: params.participantId,
       userId: params.userId,
       fact: params.fact.fact,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
       factType: (params.fact.factType as any) || "custom",
       subject: params.fact.subject,
       predicate: params.fact.predicate,
       object: params.fact.object,
       confidence: params.fact.confidence,
-      sourceType: "conversation",
+      sourceType: params.sourceType || "conversation",
+      sourceRef: params.sourceRef,
       tags: params.fact.tags || [],
     });
     return { fact: newFact as FactRecord, superseded: [] };

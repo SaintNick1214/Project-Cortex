@@ -46,6 +46,8 @@ export const register = mutation({
       .first();
 
     if (existing) {
+      // Throw error for explicit duplicate registration attempts
+      // Use getOrCreate() for UPSERT behavior if race-safety is needed
       throw new ConvexError("MEMORYSPACE_ALREADY_EXISTS");
     }
 

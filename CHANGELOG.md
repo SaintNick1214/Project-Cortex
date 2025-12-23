@@ -19,6 +19,79 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.25.0] - 2025-12-22
+
+#### 🧠 Enhanced Belief Revision - Subject+FactType Matching
+
+**Major improvements to the Belief Revision pipeline** that ensure fact conflicts are properly detected and resolved, even without LLM configuration.
+
+**The Problem Solved:**
+
+The 0.24.0 belief revision pipeline had gaps where conflicts slipped through:
+- Slot matching only caught exact predicate pattern matches (e.g., "favorite color")
+- Semantic matching required embeddings to be configured
+- Facts like "User likes blue" and "User prefers purple" weren't recognized as conflicting
+- Belief revision required LLM to be configured in Cortex constructor
+
+**Now with Enhanced Belief Revision:**
+
+```typescript
+// Works WITHOUT LLM configuration - "batteries included"
+const cortex = new Cortex({ convexUrl: "..." });
+
+// Subject+FactType matching catches conflicts automatically
+// "User prefers purple" (preference) conflicts with "User likes blue" (preference)
+// because they share the same subject AND factType
+await cortex.memory.remember({
+  memorySpaceId: "user-space",
+  userMessage: "Actually, I prefer purple now",
+  agentResponse: "Got it! I'll remember you prefer purple.",
+  userId: "user-123",
+});
+
+// Result: Old "blue" fact is properly SUPERSEDED
+// Only 2 active facts remain (name + purple), not 3+
+```
+
+**New Pipeline Stage:**
+
+```
+NEW FACT → [Slot Match] → [Semantic Match] → [Subject+Type Match] → [LLM/Heuristic] → Execute
+                                                    │
+                                            Same subject AND factType?
+                                            → Candidate for review
+```
+
+**Key Improvements:**
+
+- ✅ **Subject+FactType Matching (Stage 2.5)** - New matching stage queries for facts with the same `subject` AND `factType`, catching conflicts that slip through pattern and semantic matching
+- ✅ **Batteries-Included Mode** - Belief revision now works WITHOUT LLM configuration using intelligent heuristics via `getDefaultDecision()`
+- ✅ **Fixed SUPERSEDE Action** - Now uses `facts.supersede` mutation which properly sets both `supersededBy` AND `validUntil` fields
+- ✅ **Fixed UPDATE Action** - Uses `updateInPlace` instead of `update` to avoid creating unwanted fact versions
+- ✅ **Vercel AI Provider Compatibility** - Belief revision works in the Vercel AI Provider without needing to pass LLM config to Cortex
+
+**Pipeline Result Enhancement:**
+
+```typescript
+const result = await cortex.facts.revise({ ... });
+
+// New field in pipeline tracking
+console.log(result.pipeline);
+// {
+//   slotMatching: { executed: true, matched: false, factIds: [] },
+//   semanticMatching: { executed: true, matched: false, factIds: [] },
+//   subjectTypeMatching: { executed: true, matched: true, factIds: ["fact-123"] },  // NEW!
+//   llmResolution: { executed: true, decision: "SUPERSEDE" }
+// }
+```
+
+**Breaking Changes:** None - fully backward compatible.
+
+**Dependencies:**
+- Updated `@cortexmemory/vercel-ai-provider` to use local SDK reference for development
+
+---
+
 ### [0.24.0] - 2025-12-20
 
 #### 🧠 Belief Revision System

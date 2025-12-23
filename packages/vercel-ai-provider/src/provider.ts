@@ -4,16 +4,9 @@
  * Wraps language models with automatic memory retrieval and storage
  */
 
-import { Cortex } from "@cortexmemory/sdk";
-import type { RecallResult } from "@cortexmemory/sdk";
-import type {
-  CortexMemoryConfig,
-  Logger,
-  LayerEvent,
-  MemoryLayer,
-  OrchestrationSummary,
-  RevisionAction,
-} from "./types";
+import { Cortex, CypherGraphAdapter } from "@cortexmemory/sdk";
+import type { RecallResult, GraphAdapter } from "@cortexmemory/sdk";
+import type { CortexMemoryConfig, Logger } from "./types";
 import {
   resolveUserId,
   resolveConversationId,
@@ -41,8 +34,72 @@ export class CortexMemoryProvider {
   private underlyingModel: any;
   private agentId: string;
   private agentName: string;
+  private graphAdapter?: GraphAdapter;
 
-  constructor(underlyingModel: any, config: CortexMemoryConfig) {
+  /**
+   * Create a CortexMemoryProvider with async initialization (graph support)
+   *
+   * Use this factory method when enabling graph memory to ensure the graph
+   * adapter is properly connected before use.
+   *
+   * @param underlyingModel - Language model to wrap
+   * @param config - Cortex memory configuration
+   * @returns Promise resolving to initialized CortexMemoryProvider
+   */
+  static async create(
+    underlyingModel: any,
+    config: CortexMemoryConfig,
+  ): Promise<CortexMemoryProvider> {
+    const logger = config.logger || createLogger(config.debug || false);
+
+    // Initialize graph adapter if enabled
+    let graphAdapter: CypherGraphAdapter | undefined;
+    if (config.enableGraphMemory) {
+      const uri =
+        config.graphConfig?.uri ||
+        process.env.NEO4J_URI ||
+        process.env.MEMGRAPH_URI ||
+        "";
+      const username =
+        config.graphConfig?.username ||
+        process.env.NEO4J_USERNAME ||
+        process.env.MEMGRAPH_USERNAME ||
+        "";
+      const password =
+        config.graphConfig?.password ||
+        process.env.NEO4J_PASSWORD ||
+        process.env.MEMGRAPH_PASSWORD ||
+        "";
+
+      if (uri) {
+        logger.debug(`Initializing graph adapter for URI: ${uri}`);
+        graphAdapter = new CypherGraphAdapter();
+        await graphAdapter.connect({ uri, username, password });
+        logger.info("Graph adapter connected successfully");
+      } else {
+        logger.warn(
+          "enableGraphMemory is true but no graph URI configured. " +
+            "Set NEO4J_URI/MEMGRAPH_URI or graphConfig.uri",
+        );
+      }
+    }
+
+    // Initialize Cortex with graph adapter
+    const cortex = new Cortex({
+      convexUrl: config.convexUrl,
+      graph: graphAdapter ? { adapter: graphAdapter } : undefined,
+    });
+
+    // Create provider with pre-initialized Cortex
+    return new CortexMemoryProvider(underlyingModel, config, cortex, graphAdapter);
+  }
+
+  constructor(
+    underlyingModel: any,
+    config: CortexMemoryConfig,
+    cortexInstance?: Cortex,
+    graphAdapter?: GraphAdapter,
+  ) {
     this.underlyingModel = underlyingModel;
     this.config = config;
     this.logger = config.logger || createLogger(config.debug || false);
@@ -51,16 +108,18 @@ export class CortexMemoryProvider {
     this.specificationVersion = underlyingModel.specificationVersion;
     this.defaultObjectGenerationMode =
       underlyingModel.defaultObjectGenerationMode;
+    this.graphAdapter = graphAdapter;
 
     // Resolve agent identity (required for user-agent conversations)
     this.agentId = resolveAgentId(config);
     this.agentName = resolveAgentName(config);
 
-    // Initialize Cortex SDK
-    this.cortex = new Cortex({ convexUrl: config.convexUrl });
+    // Use provided Cortex instance or create new one (without graph support)
+    this.cortex = cortexInstance || new Cortex({ convexUrl: config.convexUrl });
 
     this.logger.debug(
-      `Initialized CortexMemoryProvider for model: ${this.modelId}, agent: ${this.agentId}`,
+      `Initialized CortexMemoryProvider for model: ${this.modelId}, agent: ${this.agentId}` +
+        (this.graphAdapter ? " (with graph support)" : ""),
     );
   }
 
@@ -105,11 +164,8 @@ export class CortexMemoryProvider {
     if (this.config.enableMemoryStorage !== false) {
       const lastUserMessage = getLastUserMessage(options.prompt);
       if (lastUserMessage && result.text) {
-        // Notify layer observer of orchestration start
-        const orchestrationId = `orch-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-        this.notifyLayerObserver("memorySpace", "pending", orchestrationId);
-
         // Use remember() for non-streaming responses
+        // The core SDK now handles orchestration events via the observer parameter
         this.cortex.memory
           .remember(
             {
@@ -127,41 +183,24 @@ export class CortexMemoryProvider {
                 : undefined,
               importance: this.config.defaultImportance,
               tags: this.config.defaultTags,
+              // Pass layer observer to core SDK for real-time orchestration events
+              // The core SDK emits events at each layer, replacing manual notifications
+              observer: this.config.layerObserver,
             },
             {
               syncToGraph: this.config.enableGraphMemory || false,
               // Belief revision (v0.24.0+) - automatically handle fact updates/supersessions
-              // Note: Type assertion needed until SDK v0.24.0 is published to npm
               beliefRevision:
                 this.config.beliefRevision !== false
                   ? this.config.beliefRevision
                   : undefined,
-            } as any,
+            },
           )
           .then(() => {
-            // Notify layer observer of completion
-            this.notifyLayerObserver(
-              "conversation",
-              "complete",
-              orchestrationId,
-            );
-            this.notifyLayerObserver("vector", "complete", orchestrationId);
-            if (this.config.enableFactExtraction) {
-              this.notifyLayerObserver("facts", "complete", orchestrationId);
-            }
-            if (this.config.enableGraphMemory) {
-              this.notifyLayerObserver("graph", "complete", orchestrationId);
-            }
+            this.logger.debug("Memory stored successfully via remember()");
           })
           .catch((error: Error) => {
             this.logger.error("Failed to store memory:", error);
-            this.notifyLayerObserver(
-              "conversation",
-              "error",
-              orchestrationId,
-              undefined,
-              error.message,
-            );
           });
       }
     }
@@ -392,19 +431,31 @@ export class CortexMemoryProvider {
         }
 
         // Prepare streaming options
-        // Note: Type assertion needed until SDK v0.24.0 is published to npm
+        // Note: StreamingOptions.beliefRevision is a boolean, while config may be object
+        // Convert config object to boolean for streaming options
+        let beliefRevisionEnabled: boolean | undefined;
+        if (this.config.beliefRevision === false) {
+          beliefRevisionEnabled = false;
+        } else if (this.config.beliefRevision === undefined) {
+          beliefRevisionEnabled = undefined;
+        } else if (
+          typeof this.config.beliefRevision === "object" &&
+          this.config.beliefRevision.enabled === false
+        ) {
+          beliefRevisionEnabled = false;
+        } else {
+          beliefRevisionEnabled = true;
+        }
+
         const streamingOptions = {
           syncToGraph: this.config.enableGraphMemory || false,
-          // Belief revision (v0.24.0+) - automatically handle fact updates/supersessions
-          beliefRevision:
-            this.config.beliefRevision !== false
-              ? this.config.beliefRevision
-              : undefined,
+          beliefRevision: beliefRevisionEnabled,
           ...this.config.streamingOptions,
           hooks: this.config.streamingHooks,
-        } as any;
+        };
 
         // Call rememberStream and await it to ensure it completes before stream ends
+        // The core SDK now handles orchestration events via the observer parameter
         try {
           const result = await this.cortex.memory.rememberStream(
             {
@@ -422,6 +473,8 @@ export class CortexMemoryProvider {
                 : undefined,
               importance: this.config.defaultImportance,
               tags: this.config.defaultTags,
+              // Pass layer observer to core SDK for real-time orchestration events
+              observer: this.config.layerObserver,
             },
             streamingOptions,
           );
@@ -469,51 +522,18 @@ export class CortexMemoryProvider {
   }
 
   /**
-   * Notify layer observer of status changes
-   *
-   * Used by the quickstart demo to visualize data flowing
-   * through the Cortex memory system in real-time.
+   * Close Cortex connection and graph adapter
    */
-  private notifyLayerObserver(
-    layer: MemoryLayer,
-    status: "pending" | "in_progress" | "complete" | "error" | "skipped",
-    orchestrationId: string,
-    data?: {
-      id?: string;
-      preview?: string;
-      metadata?: Record<string, unknown>;
-    },
-    errorMessage?: string,
-    revisionInfo?: {
-      action?: RevisionAction;
-      supersededFacts?: string[];
-    },
-  ): void {
-    if (!this.config.layerObserver?.onLayerUpdate) {
-      return;
+  async close(): Promise<void> {
+    // Disconnect graph adapter if connected
+    if (this.graphAdapter) {
+      try {
+        await this.graphAdapter.disconnect();
+        this.logger.debug("Graph adapter disconnected");
+      } catch (error) {
+        this.logger.warn("Failed to disconnect graph adapter:", error);
+      }
     }
-
-    const event: LayerEvent = {
-      layer,
-      status,
-      timestamp: Date.now(),
-      data,
-      error: errorMessage ? { message: errorMessage } : undefined,
-      revisionAction: revisionInfo?.action,
-      supersededFacts: revisionInfo?.supersededFacts,
-    };
-
-    try {
-      this.config.layerObserver.onLayerUpdate(event);
-    } catch (e) {
-      this.logger.warn("Layer observer callback failed:", e);
-    }
-  }
-
-  /**
-   * Close Cortex connection
-   */
-  close(): void {
     this.cortex.close();
   }
 }

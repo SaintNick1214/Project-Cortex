@@ -1,6 +1,6 @@
 {
   "name": "@cortexmemory/vercel-ai-provider",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Cortex Memory Provider for Vercel AI SDK - Add persistent memory with enhanced streaming capabilities to any AI application",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -62,8 +62,11 @@
     "build:watch": "tsup src/index.ts --format cjs,esm --dts --watch",
     "clean": "rimraf dist",
     "test": "jest",
+    "test:unit": "jest --selectProjects unit",
+    "test:integration": "jest --selectProjects integration",
+    "test:e2e": "node --experimental-vm-modules $(npm root)/.bin/jest --selectProjects e2e",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
+    "test:coverage": "jest --coverage --selectProjects unit integration",
     "lint": "tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
@@ -72,15 +75,16 @@
     "convex": "^1.28.2"
   },
   "dependencies": {
-    "@cortexmemory/sdk": "^0.23.0"
+    "@cortexmemory/sdk": "*"
   },
   "devDependencies": {
-    "@ai-sdk/openai": "^2.0.88",
-    "@ai-sdk/anthropic": "^2.0.56",
+    "@ai-sdk/openai": "^3.0.0",
+    "@ai-sdk/anthropic": "^3.0.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.3",
-    "@typescript-eslint/eslint-plugin": "^8.50.0",
-    "@typescript-eslint/parser": "^8.50.0",
+    "@typescript-eslint/eslint-plugin": "^8.50.1",
+    "@typescript-eslint/parser": "^8.50.1",
+    "dotenv": "^17.2.3",
     "eslint": "^9.39.2",
     "jest": "^30.2.0",
     "rimraf": "^6.1.2",

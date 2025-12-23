@@ -105,11 +105,21 @@ process.env.CONVEX_DEPLOYMENT_TYPE =
 // Graph Database Configuration (Optional)
 // ============================================================================
 // Load graph database connection settings for graph integration tests
+// Graph tests only run in LOCAL mode since graph DBs are local
 
 // Check if graph database testing is enabled
-const graphTestingEnabled = Boolean(
+// Graph databases are local, so only enable when testing against local Convex
+const hasGraphConfig = Boolean(
   process.env.NEO4J_URI || process.env.MEMGRAPH_URI,
 );
+const isLocalTestMode = testMode === "local" || 
+  (testMode === "auto" && !hasManagedConfig) ||
+  process.env.CONVEX_DEPLOYMENT_TYPE === "local";
+
+// Only enable graph testing in local mode (graph DBs are local)
+// Can be explicitly overridden with GRAPH_TESTING_ENABLED=true
+const graphTestingEnabled = process.env.GRAPH_TESTING_ENABLED === "true" ||
+  (hasGraphConfig && isLocalTestMode);
 
 if (graphTestingEnabled) {
   console.log("\n📊 Graph database testing ENABLED");
@@ -123,6 +133,12 @@ if (graphTestingEnabled) {
   }
 
   console.log();
+} else if (hasGraphConfig && !isLocalTestMode) {
+  console.log(
+    "\n📊 Graph database testing DISABLED (only runs in local mode)",
+  );
+  console.log("   Graph DBs are local - can't mix with managed Convex tests");
+  console.log("   To force enable: Set GRAPH_TESTING_ENABLED=true explicitly\n");
 } else {
   console.log(
     "\n📊 Graph database testing DISABLED (no graph DB URIs configured)",
