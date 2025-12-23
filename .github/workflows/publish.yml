@@ -282,20 +282,14 @@ jobs:
           npm install -g npm@latest
           echo "npm version: $(npm --version)"
 
-      - name: Install dependencies
-        run: |
-          cd packages/create-cortex-memories
-          npm ci
+      - name: Install all workspace dependencies
+        run: npm ci
 
       - name: Build package
-        run: |
-          cd packages/create-cortex-memories
-          npm run build
+        run: npm run build --workspace=create-cortex-memories
 
       - name: Verify package contents
-        run: |
-          cd packages/create-cortex-memories
-          npm pack --dry-run
+        run: npm pack --dry-run --workspace=create-cortex-memories
 
       - name: Debug OIDC environment
         run: |
@@ -359,7 +353,7 @@ jobs:
           npm install -g npm@latest
           echo "npm version: $(npm --version)"
 
-      - name: Install root dependencies
+      - name: Install all workspace dependencies
         run: npm ci
 
       - name: Deploy Convex backend
@@ -377,20 +371,11 @@ jobs:
       - name: Build main SDK first
         run: npm run build
 
-      - name: Install Vercel AI Provider dependencies
-        run: |
-          cd packages/vercel-ai-provider
-          npm ci
-
       - name: Build package
-        run: |
-          cd packages/vercel-ai-provider
-          npm run build
+        run: npm run build --workspace=@cortexmemory/vercel-ai-provider
 
       - name: Verify package contents
-        run: |
-          cd packages/vercel-ai-provider
-          npm pack --dry-run
+        run: npm pack --dry-run --workspace=@cortexmemory/vercel-ai-provider
 
       - name: Debug OIDC environment
         run: |
@@ -502,7 +487,7 @@ jobs:
           npm install -g npm@latest
           echo "npm version: $(npm --version)"
 
-      - name: Install root dependencies
+      - name: Install all workspace dependencies
         run: npm ci
 
       - name: Deploy Convex backend
@@ -520,20 +505,11 @@ jobs:
       - name: Build main SDK first
         run: npm run build
 
-      - name: Install CLI dependencies
-        run: |
-          cd packages/cortex-cli
-          npm ci
-
       - name: Build package
-        run: |
-          cd packages/cortex-cli
-          npm run build
+        run: npm run build --workspace=@cortexmemory/cli
 
       - name: Verify package contents
-        run: |
-          cd packages/cortex-cli
-          npm pack --dry-run
+        run: npm pack --dry-run --workspace=@cortexmemory/cli
 
       - name: Debug OIDC environment
         run: |
