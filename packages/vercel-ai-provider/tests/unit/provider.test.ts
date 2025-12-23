@@ -16,6 +16,14 @@ import {
   type MockLanguageModel,
 } from "../helpers/test-utils";
 
+// Helper type for stream chunks
+type StreamChunk = {
+  type?: string;
+  textDelta?: string;
+  delta?: string;
+  text?: string;
+};
+
 // Mock Cortex SDK
 const mockCortex = {
   memory: {
@@ -333,7 +341,7 @@ describe("CortexMemoryProvider", () => {
         mode: { type: "regular" },
       });
 
-      const chunks = await consumeStream(result.stream);
+      const chunks = await consumeStream(result.stream) as StreamChunk[];
       expect(chunks.length).toBe(2);
       expect(chunks[0].type).toBe("text-delta");
     });
@@ -351,7 +359,7 @@ describe("CortexMemoryProvider", () => {
         mode: { type: "regular" },
       });
 
-      const chunks = await consumeStream(result.stream);
+      const chunks = await consumeStream(result.stream) as StreamChunk[];
       expect(chunks[0].textDelta).toBe("Hello ");
       expect(chunks[1].textDelta).toBe("World");
     });
@@ -369,7 +377,7 @@ describe("CortexMemoryProvider", () => {
         mode: { type: "regular" },
       });
 
-      const chunks = await consumeStream(result.stream);
+      const chunks = await consumeStream(result.stream) as StreamChunk[];
       expect(chunks[0].delta).toBe("Hello ");
     });
 
@@ -386,7 +394,7 @@ describe("CortexMemoryProvider", () => {
         mode: { type: "regular" },
       });
 
-      const chunks = await consumeStream(result.stream);
+      const chunks = await consumeStream(result.stream) as StreamChunk[];
       expect(chunks[0].text).toBe("Hello ");
     });
 

@@ -1,17 +1,33 @@
 /**
  * Jest setup file for Vercel AI Provider tests
+ *
+ * Works in both CJS (unit/integration tests) and ESM (E2E tests with --experimental-vm-modules)
  */
 
 import * as dotenv from "dotenv";
 import * as path from "path";
 
+// Get __dirname in a way that works for both CJS and ESM
+// In CJS, __dirname is defined globally
+// In ESM, we need to derive it from import.meta.url
+let currentDir: string;
+try {
+  // Try CJS first (most common case for unit tests)
+  currentDir = __dirname;
+} catch {
+  // Fall back to process.cwd() - env files are relative to package root anyway
+  currentDir = process.cwd();
+}
+
 // Load environment variables from .env files
 // Try multiple locations for flexibility
 const envPaths = [
-  path.resolve(__dirname, "../../.env.local"),
-  path.resolve(__dirname, "../../.env"),
-  path.resolve(__dirname, "../../../../.env.local"),
-  path.resolve(__dirname, "../../../../.env"),
+  path.resolve(currentDir, ".env.local"),
+  path.resolve(currentDir, ".env"),
+  path.resolve(currentDir, "../../.env.local"),
+  path.resolve(currentDir, "../../.env"),
+  path.resolve(currentDir, "../../../../.env.local"),
+  path.resolve(currentDir, "../../../../.env"),
 ];
 
 for (const envPath of envPaths) {
@@ -19,15 +35,18 @@ for (const envPath of envPaths) {
 }
 
 // Extend Jest timeout for E2E tests (individual tests can override)
-jest.setTimeout(30000);
+// Note: jest is a global in Jest environment
+if (typeof jest !== "undefined") {
+  jest.setTimeout(30000);
+}
 
 // Suppress console output during tests unless DEBUG is set
-if (!process.env.DEBUG) {
+if (!process.env.DEBUG && typeof jest !== "undefined") {
   global.console = {
     ...console,
-    log: jest.fn(),
-    debug: jest.fn(),
-    info: jest.fn(),
+    log: jest.fn() as unknown as typeof console.log,
+    debug: jest.fn() as unknown as typeof console.debug,
+    info: jest.fn() as unknown as typeof console.info,
     // Keep warn and error for visibility
     warn: console.warn,
     error: console.error,
@@ -35,24 +54,28 @@ if (!process.env.DEBUG) {
 }
 
 // Global test utilities
-beforeAll(() => {
-  // Verify required env vars for E2E tests
-  if (process.env.JEST_PROJECT === "e2e") {
-    if (!process.env.CONVEX_URL) {
-      console.warn(
-        "⚠️  CONVEX_URL not set - E2E tests will fail. Set it in .env.local",
-      );
+if (typeof beforeAll !== "undefined") {
+  beforeAll(() => {
+    // Verify required env vars for E2E tests
+    if (process.env.JEST_PROJECT === "e2e") {
+      if (!process.env.CONVEX_URL) {
+        console.warn(
+          "⚠️  CONVEX_URL not set - E2E tests will fail. Set it in .env.local",
+        );
+      }
+      if (!process.env.OPENAI_API_KEY) {
+        console.warn(
+          "⚠️  OPENAI_API_KEY not set - E2E tests with LLM calls will fail",
+        );
+      }
     }
-    if (!process.env.OPENAI_API_KEY) {
-      console.warn(
-        "⚠️  OPENAI_API_KEY not set - E2E tests with LLM calls will fail",
-      );
-    }
-  }
-});
+  });
+}
 
 // Clean up after all tests
-afterAll(async () => {
-  // Give any pending async operations time to complete
-  await new Promise((resolve) => setTimeout(resolve, 100));
-});
+if (typeof afterAll !== "undefined") {
+  afterAll(async () => {
+    // Give any pending async operations time to complete
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  });
+}

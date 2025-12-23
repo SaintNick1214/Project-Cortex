@@ -207,16 +207,18 @@ export function createMockCortex() {
 
 /**
  * Create mock memories for testing
+ * Cast as any to avoid strict type checking on mock data
  */
-export function createMockMemories(count: number = 2) {
+export function createMockMemories(count: number = 2): any[] {
   return Array.from({ length: count }, (_, i) => ({
+    _id: `id-${i + 1}`,
     memoryId: `mem-${i + 1}`,
     memorySpaceId: "test-space",
     userId: "test-user",
     content: `Test memory ${i + 1}`,
     importance: 80 - i * 10,
-    contentType: "text" as const,
-    sourceType: "conversation" as const,
+    contentType: "text",
+    sourceType: "conversation",
     sourceTimestamp: Date.now() - i * 1000,
     tags: [],
     version: 1,
