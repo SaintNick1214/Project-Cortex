@@ -755,11 +755,14 @@ async def test_update_validation_non_callable_updater(cortex_client):
 
 
 @pytest.mark.asyncio
-async def test_update_validation_accepts_valid_updater(cortex_client, cleanup_helper, test_ids):
+async def test_update_validation_accepts_valid_updater(cortex_client, cleanup_helper, test_ids, ctx):
     """Should accept valid callable updater."""
-    await cortex_client.mutable.set("validation-test", "update-test", 100)
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("update-validation")
+    unique_key = ctx.mutable_key("update-test")
+    await cortex_client.mutable.set(unique_namespace, unique_key, 100)
     result = await cortex_client.mutable.update(
-        "validation-test", "update-test", lambda v: v + 1
+        unique_namespace, unique_key, lambda v: v + 1
     )
     assert result.value == 101
     await cleanup_helper.purge_mutable(test_ids["memory_space_id"])
@@ -836,10 +839,13 @@ async def test_increment_validation_accepts_valid_amount(cortex_client, cleanup_
 
 
 @pytest.mark.asyncio
-async def test_increment_validation_accepts_default_amount(cortex_client, cleanup_helper, test_ids):
+async def test_increment_validation_accepts_default_amount(cortex_client, cleanup_helper, test_ids, ctx):
     """Should accept default amount."""
-    await cortex_client.mutable.set("validation-test", "inc-default", 0)
-    result = await cortex_client.mutable.increment("validation-test", "inc-default")
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("inc-default-validation")
+    unique_key = ctx.mutable_key("inc-default")
+    await cortex_client.mutable.set(unique_namespace, unique_key, 0)
+    result = await cortex_client.mutable.increment(unique_namespace, unique_key)
     assert result.value == 1
     await cleanup_helper.purge_mutable(test_ids["memory_space_id"])
 
@@ -915,10 +921,13 @@ async def test_decrement_validation_accepts_valid_amount(cortex_client, cleanup_
 
 
 @pytest.mark.asyncio
-async def test_decrement_validation_accepts_default_amount(cortex_client, cleanup_helper, test_ids):
+async def test_decrement_validation_accepts_default_amount(cortex_client, cleanup_helper, test_ids, ctx):
     """Should accept default amount."""
-    await cortex_client.mutable.set("validation-test", "dec-default", 10)
-    result = await cortex_client.mutable.decrement("validation-test", "dec-default")
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("dec-default-validation")
+    unique_key = ctx.mutable_key("dec-default")
+    await cortex_client.mutable.set(unique_namespace, unique_key, 10)
+    result = await cortex_client.mutable.decrement(unique_namespace, unique_key)
     assert result.value == 9
     await cleanup_helper.purge_mutable(test_ids["memory_space_id"])
 

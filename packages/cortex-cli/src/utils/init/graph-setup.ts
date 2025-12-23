@@ -8,10 +8,40 @@ import fs from "fs-extra";
 import path from "path";
 import prompts from "prompts";
 import ora from "ora";
+import crypto from "crypto";
 import type { GraphConfig } from "./types.js";
 import pc from "picocolors";
 import { createGraphDockerCompose } from "./env-generator.js";
 import { execCommand } from "../shell.js";
+
+/**
+ * Generate a cryptographically secure random password
+ * Neo4j has no restrictions on password characters, min 8 chars by default
+ *
+ * Uses rejection sampling to avoid modulo bias when mapping random bytes
+ * to charset indices. This ensures uniform distribution across all characters.
+ */
+function generateSecurePassword(length: number = 20): string {
+  // Use a charset that works well with shell/env files (avoid problematic chars like $, `, \)
+  const charset =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#%^&*()-_=+[]{}|;:,.<>?";
+  const charsetLength = charset.length;
+
+  // Calculate the largest multiple of charsetLength <= 256 to avoid modulo bias
+  // Any byte value >= maxUnbiased would create bias when using modulo
+  const maxUnbiased = Math.floor(256 / charsetLength) * charsetLength;
+
+  let password = "";
+  while (password.length < length) {
+    const byte = crypto.randomBytes(1)[0];
+    // Reject values that would introduce bias
+    if (byte >= maxUnbiased) {
+      continue;
+    }
+    password += charset[byte % charsetLength];
+  }
+  return password;
+}
 
 /**
  * Check if Docker is installed
@@ -172,7 +202,7 @@ export async function setupGraphFiles(
 ): Promise<void> {
   // Only create docker-compose for local deployments
   if (config.uri.includes("localhost") || config.uri.includes("127.0.0.1")) {
-    await createGraphDockerCompose(projectPath, config.type);
+    await createGraphDockerCompose(projectPath, config.type, config.password);
   }
 }
 
@@ -183,7 +213,7 @@ async function getLocalGraphConfig(
   graphType: "neo4j" | "memgraph",
 ): Promise<GraphConfig> {
   const defaultPort = 7687;
-  const defaultPassword = "cortex-password";
+  const username = graphType === "neo4j" ? "neo4j" : "memgraph";
 
   console.log(
     pc.cyan(`\n   Local ${graphType} will be configured with Docker Compose`),
@@ -197,11 +227,44 @@ async function getLocalGraphConfig(
     console.log(pc.dim("   Bolt: bolt://localhost:7687\n"));
   }
 
+  // Prompt for password configuration
+  const { passwordChoice } = await prompts({
+    type: "select",
+    name: "passwordChoice",
+    message: `${graphType === "neo4j" ? "Neo4j" : "Memgraph"} password:`,
+    choices: [
+      { title: "Generate secure password (recommended)", value: "generate" },
+      { title: "Enter custom password", value: "custom" },
+    ],
+    initial: 0,
+  });
+
+  let password: string;
+
+  if (passwordChoice === "custom") {
+    const { customPassword } = await prompts({
+      type: "password",
+      name: "customPassword",
+      message: "Enter password (min 8 characters):",
+      validate: (value) => {
+        if (!value || value.length < 8) {
+          return "Password must be at least 8 characters";
+        }
+        return true;
+      },
+    });
+    password = customPassword;
+  } else {
+    password = generateSecurePassword(20);
+    console.log(pc.green("   ✓ Generated secure 20-character password"));
+    console.log(pc.dim(`   Password will be saved to .env.local`));
+  }
+
   return {
     type: graphType,
     uri: `bolt://localhost:${defaultPort}`,
-    username: graphType === "neo4j" ? "neo4j" : "memgraph",
-    password: defaultPassword,
+    username,
+    password,
   };
 }
 
@@ -343,10 +406,11 @@ function showGraphConnectionInfo(graphType: "neo4j" | "memgraph"): void {
   if (graphType === "neo4j") {
     console.log(pc.dim("     Browser: http://localhost:7474"));
     console.log(pc.dim("     Bolt: bolt://localhost:7687"));
-    console.log(pc.dim("     Default login: neo4j / cortex-password"));
+    console.log(pc.dim("     Credentials: See .env.local (NEO4J_USERNAME, NEO4J_PASSWORD)"));
   } else {
     console.log(pc.dim("     Memgraph Lab: http://localhost:3000"));
     console.log(pc.dim("     Bolt: bolt://localhost:7687"));
+    console.log(pc.dim("     Credentials: See .env.local (NEO4J_USERNAME, NEO4J_PASSWORD)"));
   }
 }
 

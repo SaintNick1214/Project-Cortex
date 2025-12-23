@@ -339,6 +339,20 @@ class BeliefRevisionService:
                 candidates = [r["fact"] for r in semantic_result]
 
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # Stage 2.5: Subject + FactType Matching (if no candidates yet)
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        if len(candidates) == 0:
+            subject_type_candidates = await self._find_subject_type_conflicts(params)
+            pipeline_result["subject_type_matching"] = PipelineStageResult(
+                executed=True,
+                matched=len(subject_type_candidates) > 0,
+                fact_ids=[self._get_fact_id(f) for f in subject_type_candidates],
+            )
+
+            if subject_type_candidates:
+                candidates = subject_type_candidates
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         # Stage 3: LLM Resolution (if candidates found)
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         if candidates:
@@ -491,6 +505,37 @@ class BeliefRevisionService:
 
         return []
 
+    async def _find_subject_type_conflicts(self, params: ReviseParams) -> List[Any]:
+        """
+        Stage 2.5: Find conflicts by subject + factType.
+
+        This stage catches conflicts that slip through slot and semantic matching
+        by querying for facts with the same subject AND factType. For example,
+        "User likes blue" and "User prefers purple" both have subject="user" and
+        factType="preference", making them candidates for LLM review even if their
+        predicates differ.
+        """
+        from .._utils import filter_none_values
+
+        # Skip if no subject or fact_type - can't match without these
+        if not params.fact.subject or not params.fact.fact_type:
+            return []
+
+        # Query facts with same subject AND factType
+        facts = await self._client.query(
+            "facts:list",
+            filter_none_values({
+                "memorySpaceId": params.memory_space_id,
+                "userId": params.user_id,
+                "subject": params.fact.subject,
+                "factType": params.fact.fact_type,
+                "includeSuperseded": False,
+                "limit": 20,  # Reasonable limit for LLM processing
+            }),
+        )
+
+        return facts or []
+
     async def _resolve_with_llm(
         self,
         new_fact: ConflictCandidate,
@@ -569,10 +614,10 @@ class BeliefRevisionService:
 
         if action == "UPDATE":
             if target_fact:
-                # Update the existing fact in place
+                # Update the existing fact in place (no new version created)
                 fact_id = self._get_fact_id(target_fact)
                 updated = await self._client.mutation(
-                    "facts:update",
+                    "facts:updateInPlace",
                     filter_none_values({
                         "memorySpaceId": params.memory_space_id,
                         "factId": fact_id,
@@ -603,16 +648,18 @@ class BeliefRevisionService:
                     }),
                 )
 
-                # Mark old fact as superseded
-                import time
-                fact_id = self._get_fact_id(target_fact)
+                # Mark old fact as superseded by the new fact
+                # This sets both supersededBy and validUntil, and links the facts together
+                old_fact_id = self._get_fact_id(target_fact)
+                new_fact_id = self._get_fact_id(new_fact)
                 await self._client.mutation(
-                    "facts:update",
-                    filter_none_values({
+                    "facts:supersede",
+                    {
                         "memorySpaceId": params.memory_space_id,
-                        "factId": fact_id,
-                        "validUntil": int(time.time() * 1000),
-                    }),
+                        "oldFactId": old_fact_id,
+                        "newFactId": new_fact_id,
+                        "reason": reason,
+                    },
                 )
 
                 superseded.append(target_fact)

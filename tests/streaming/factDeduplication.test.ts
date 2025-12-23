@@ -248,6 +248,8 @@ describe("ProgressiveFactExtractor - Deduplication", () => {
       });
 
       // Call rememberStream with fact extraction
+      // Note: Since belief revision is now "batteries included" (always enabled by default),
+      // we must explicitly disable it to test the deduplication fallback path.
       await cortex.memory.rememberStream(
         {
           memorySpaceId: memSpaceId,
@@ -271,6 +273,7 @@ describe("ProgressiveFactExtractor - Deduplication", () => {
         {
           progressiveFactExtraction: true,
           factExtractionThreshold: 10,
+          beliefRevision: false, // Disable to test deduplication path
         },
       );
 
@@ -305,6 +308,7 @@ describe("ProgressiveFactExtractor - Deduplication", () => {
         {
           progressiveFactExtraction: true,
           factExtractionThreshold: 10,
+          beliefRevision: false, // Disable to test deduplication path
         },
       );
 

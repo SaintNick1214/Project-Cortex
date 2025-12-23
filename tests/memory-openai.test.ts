@@ -116,7 +116,7 @@ describe("Memory OpenAI Integration", () => {
         });
 
         conversationId = conv.conversationId;
-      });
+      }, 120000); // 120 second timeout for OpenAI API setup
 
       it("stores multiple facts with real embeddings and summarization", async () => {
         // Scenario: Customer support conversation with 5 key facts

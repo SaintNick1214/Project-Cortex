@@ -114,15 +114,15 @@ export class FactsAPI {
     this.deduplicationService = new FactDeduplicationService(client);
     this.historyService = new FactHistoryService(client, resilience);
 
-    // Initialize belief revision if LLM client is provided or explicitly configured
-    if (llmClient || beliefRevisionConfig) {
-      this.beliefRevisionService = new BeliefRevisionService(
-        client,
-        llmClient,
-        graphAdapter,
-        beliefRevisionConfig,
-      );
-    }
+    // Always initialize belief revision service - "batteries included"
+    // When no LLM is configured, the service uses heuristics via getDefaultDecision()
+    // This enables intelligent fact supersession even without an LLM for conflict resolution
+    this.beliefRevisionService = new BeliefRevisionService(
+      client,
+      llmClient,
+      graphAdapter,
+      beliefRevisionConfig,
+    );
   }
 
   /**

@@ -143,8 +143,9 @@ describe("Belief Revision Pipeline", () => {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   describe("Service Configuration", () => {
-    it("should throw error when revise called without configuration", async () => {
-      // Create a new FactsAPI instance without belief revision
+    it("should work without LLM using heuristics fallback", async () => {
+      // Create a new FactsAPI instance without LLM client
+      // The SDK now supports heuristic-based belief revision without LLM
       const { FactsAPI } = await import("../src/facts");
       const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL || process.env.CONVEX_URL;
       if (!convexUrl) {
@@ -156,15 +157,19 @@ describe("Belief Revision Pipeline", () => {
       const localClient = new LocalConvexClient(convexUrl);
       const factsApi = new FactsAPI(localClient);
 
-      await expect(
-        factsApi.revise({
-          memorySpaceId: TEST_MEMSPACE_ID,
-          fact: {
-            fact: "Test",
-            confidence: 80,
-          },
-        })
-      ).rejects.toThrow(/not configured/);
+      // Should succeed using heuristics (no LLM needed for basic operations)
+      const result = await factsApi.revise({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        fact: {
+          fact: "Test fact without LLM",
+          confidence: 80,
+        },
+      });
+
+      // Should add the fact since there are no conflicts
+      expect(result.action).toBe("ADD");
+      expect(result.fact).toBeDefined();
+      expect(result.reason).toContain("No conflicts found");
 
       await localClient.close();
     });

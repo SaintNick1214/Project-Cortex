@@ -165,14 +165,15 @@ export async function initialGraphSync(
 async function syncMemorySpaces(
   cortex: Cortex,
   adapter: GraphAdapter,
-  limit: number = 10000,
+  limit: number = 1000,
   onProgress?: (entity: string, current: number, total: number) => void,
 ): Promise<{ synced: number; failed: number }> {
   const stats = { synced: 0, failed: 0 };
 
   try {
-    // List all memory spaces
-    const memorySpacesResult = await cortex.memorySpaces.list({ limit });
+    // List all memory spaces (API max limit is 1000)
+    const effectiveLimit = Math.min(limit, 1000);
+    const memorySpacesResult = await cortex.memorySpaces.list({ limit: effectiveLimit });
     const memorySpaces = memorySpacesResult.spaces;
 
     for (let i = 0; i < memorySpaces.length; i++) {
@@ -204,7 +205,7 @@ async function syncContexts(
   cortex: Cortex,
   adapter: GraphAdapter,
   syncRels: boolean,
-  limit: number = 10000,
+  limit: number = 1000,
   onProgress?: (entity: string, current: number, total: number) => void,
 ): Promise<{
   stats: { synced: number; failed: number };
@@ -214,8 +215,9 @@ async function syncContexts(
   const errors: Array<{ entity: string; id: string; error: string }> = [];
 
   try {
-    // List all contexts
-    const contexts = await cortex.contexts.list({ limit });
+    // List all contexts (API max limit is 1000)
+    const effectiveLimit = Math.min(limit, 1000);
+    const contexts = await cortex.contexts.list({ limit: effectiveLimit });
 
     for (let i = 0; i < contexts.length; i++) {
       const context = contexts[i];

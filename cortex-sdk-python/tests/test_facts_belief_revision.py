@@ -314,11 +314,11 @@ class TestReviseOperation:
         assert result.action == "SUPERSEDE"
         assert len(result.superseded) == 1
         assert result.superseded[0]["factId"] == "fact-old"
-        # Should call both store and update mutations
+        # Should call both store and supersede mutations
         store_calls = [m for m in client.mutations if "store" in m[0]]
-        update_calls = [m for m in client.mutations if "update" in m[0]]
+        supersede_calls = [m for m in client.mutations if "supersede" in m[0]]
         assert len(store_calls) == 1
-        assert len(update_calls) == 1
+        assert len(supersede_calls) == 1
 
     async def test_fallback_to_heuristics_when_no_llm(self) -> None:
         """Should use default heuristics when LLM not available."""

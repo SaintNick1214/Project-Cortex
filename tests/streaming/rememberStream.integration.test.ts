@@ -532,7 +532,7 @@ describe("rememberStream Integration Tests", () => {
           ),
         ).toBe(true);
       }
-    }, 10000);
+    }, 30000); // Extended timeout for streaming with remote calls
   });
 
   describe("Error Recovery Integration", () => {

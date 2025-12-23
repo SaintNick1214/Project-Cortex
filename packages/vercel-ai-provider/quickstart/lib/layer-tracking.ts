@@ -21,12 +21,12 @@ export type LayerStatus =
 
 /**
  * Revision action taken by the belief revision system (v0.24.0+)
- * - CREATE: New fact was created (no conflicts)
+ * - ADD: New fact was created (no conflicts)
  * - UPDATE: Existing fact was updated with new information
  * - SUPERSEDE: Old fact was superseded by contradicting information
  * - NONE: No action taken (duplicate or irrelevant)
  */
-export type RevisionAction = "CREATE" | "UPDATE" | "SUPERSEDE" | "NONE";
+export type RevisionAction = "ADD" | "UPDATE" | "SUPERSEDE" | "NONE";
 
 export interface LayerState {
   status: LayerStatus;

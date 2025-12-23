@@ -1,6 +1,6 @@
 # Memory Operations API
 
-> **Last Updated**: 2025-11-30
+> **Last Updated**: 2025-12-19
 
 Complete API reference for memory operations across memory spaces.
 
@@ -541,12 +541,10 @@ interface RememberParams {
 interface RememberOptions {
   syncToGraph?: boolean; // Sync to graph database (default: true if configured)
 
-  // NEW in v0.24.0: Belief Revision options
-  beliefRevision?: {
-    enabled?: boolean; // Enable belief revision (default: true if configured)
-    slotMatching?: boolean; // Enable slot matching (default: true)
-    llmResolution?: boolean; // Enable LLM resolution (default: true)
-  } | false; // Set to false to disable belief revision entirely
+  // NEW in v0.24.0: Belief Revision control
+  beliefRevision?: boolean; // Enable/disable belief revision
+  // - undefined/true: Use belief revision if LLM is configured (batteries-included default)
+  // - false: Force deduplication-only mode (skip belief revision)
 }
 ```
 
@@ -564,8 +562,8 @@ When you call `remember()` with fact extraction enabled and belief revision conf
 **How it works:**
 
 ```
-remember() → extractFacts() → [Fact 1] → Belief Revision → CREATE
-                            → [Fact 2] → Belief Revision → SUPERSEDE (old fact)
+remember() → extractFacts() → [Fact 1] → Belief Revision → ADD (new fact)
+                            → [Fact 2] → Belief Revision → SUPERSEDE (replaces old fact)
                             → [Fact 3] → Belief Revision → NONE (duplicate skipped)
 ```
 
@@ -609,31 +607,25 @@ const result = await cortex.memory.remember({
 **Disabling belief revision:**
 
 ```typescript
-// Disable for a single remember() call
+// Disable for a single remember() call (use deduplication-only mode)
 await cortex.memory.remember(
   {
     memorySpaceId: "user-123-space",
     // ...other params
   },
   {
-    beliefRevision: false, // Disable for this call
+    beliefRevision: false, // Disable for this call, use deduplication only
   }
 );
 
-// Or disable specific stages
-await cortex.memory.remember(
-  {
-    // ...params
-  },
-  {
-    beliefRevision: {
-      enabled: true,
-      slotMatching: false, // Skip slot matching
-      llmResolution: false, // Skip LLM (use heuristics only)
-    },
-  }
-);
+// Python SDK equivalent:
+# await cortex.memory.remember(
+#     RememberParams(...),
+#     RememberOptions(belief_revision=False)
+# )
 ```
+
+> **Note:** Fine-grained control over individual pipeline stages (slot matching, LLM resolution) is available through the `cortex.facts.revise()` API directly. The `remember()` integration uses a batteries-included approach - full pipeline when enabled, deduplication-only when disabled.
 
 **Return value changes with belief revision:**
 
@@ -645,12 +637,20 @@ interface RememberResult {
 
   // NEW in v0.24.0: Revision details (when belief revision is enabled)
   factRevisions?: Array<{
-    action: "CREATE" | "UPDATE" | "SUPERSEDE" | "NONE";
+    action: "ADD" | "UPDATE" | "SUPERSEDE" | "NONE";
     fact: FactRecord;
-    superseded?: FactRecord;
-    reason: string;
+    superseded?: FactRecord[];  // Facts that were superseded (for SUPERSEDE action)
+    reason?: string;            // LLM's reasoning for the decision
   }>;
 }
+
+// Python SDK equivalent:
+# @dataclass
+# class FactRevisionAction:
+#     action: Literal["ADD", "UPDATE", "SUPERSEDE", "NONE"]
+#     fact: FactRecord
+#     superseded: Optional[List[FactRecord]] = None
+#     reason: Optional[str] = None
 ```
 
 **Returns:**

@@ -133,15 +133,15 @@ class FactsAPI:
         self._llm_client = llm_client
         self._history_service = FactHistoryService(client, resilience)
 
-        # Initialize belief revision if LLM client is provided or explicitly configured
-        self._belief_revision_service: Optional[BeliefRevisionService] = None
-        if llm_client or belief_revision_config:
-            self._belief_revision_service = BeliefRevisionService(
-                client,
-                llm_client,
-                graph_adapter,
-                belief_revision_config,
-            )
+        # Always initialize belief revision service - "batteries included"
+        # When no LLM is configured, the service uses heuristics via get_default_decision()
+        # This enables intelligent fact supersession even without an LLM for conflict resolution
+        self._belief_revision_service = BeliefRevisionService(
+            client,
+            llm_client,
+            graph_adapter,
+            belief_revision_config,
+        )
 
     async def _execute_with_resilience(
         self, operation: Any, operation_name: str

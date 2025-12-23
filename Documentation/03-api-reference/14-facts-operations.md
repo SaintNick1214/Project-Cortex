@@ -1,7 +1,7 @@
 # Facts Operations API
 
-> **Last Updated**: 2025-11-30
-> **Version**: v0.7.0+
+> **Last Updated**: 2025-12-19
+> **Version**: v0.7.0+ (Belief Revision: v0.24.0+)
 
 Complete API reference for the Facts layer (Layer 3) - structured knowledge extraction and storage.
 
@@ -22,6 +22,8 @@ The Facts API (`cortex.facts.*`) provides structured knowledge storage with vers
 - ✅ **userId support (v0.9.1+)** - GDPR cascade deletion
 - ✅ **participantId support** - Hive Mode tracking
 - ✅ **Enriched fact extraction (v0.15.0+)** - Search aliases, semantic context, entities, relations
+- ✅ **Belief Revision System (v0.24.0+)** - Intelligent fact management with `revise()`, conflict detection, and history tracking
+- ✅ **Integration with `remember()` (v0.24.0+)** - Automatic fact revision when storing conversations
 
 **Relationship to Layers:**
 
@@ -290,7 +292,7 @@ console.log(semanticResult.deduplication?.similarityScore); // ~0.92
 > **New in v0.24.0**: Intelligent fact management that prevents duplicates and maintains knowledge consistency.
 
 The Belief Revision System determines whether a new fact should:
-- **CREATE**: Add as new fact (no conflicts)
+- **ADD**: Add as new fact (no conflicts)
 - **UPDATE**: Merge with existing fact (refinement)
 - **SUPERSEDE**: Replace existing fact (contradiction)
 - **NONE**: Skip (duplicate)
@@ -312,39 +314,71 @@ NEW FACT → [Slot Match?] → YES → [LLM Decision]
 ### Configuration
 
 ```typescript
-// Configure belief revision when creating Cortex instance
+// Configure belief revision when creating Cortex instance with LLM
 const cortex = new Cortex({
   url: process.env.CONVEX_URL!,
-  beliefRevision: {
-    slotMatching: {
-      enabled: true,
-      predicateClasses: {
-        // Add custom slot types
-        custom_slot: ["my predicate", "another pattern"],
-      },
-    },
-    semanticMatching: {
-      enabled: true,
-      threshold: 0.7, // Lower than dedup (0.85)
-      generateEmbedding: async (text) => embed(text),
-    },
-    llmResolution: {
-      enabled: true,
-      model: "gpt-4o",
-    },
-    history: {
-      enabled: true,
-      retentionDays: 90,
-    },
-  },
+  llm: openaiClient, // LLM client required for belief revision
 });
 
-// Or configure later
-cortex.facts.configureBeliefRevision(llmClient, {
-  slotMatching: { enabled: true },
-  llmResolution: { enabled: true },
-});
+// Check if belief revision is available
+if (cortex.facts.hasBeliefRevision()) {
+  console.log("Belief revision is configured and ready");
+}
+
+// Python SDK equivalent:
+# cortex = Cortex(CortexConfig(
+#     convex_url=os.environ["CONVEX_URL"],
+#     llm=LLMConfig(provider="openai", api_key=os.environ["OPENAI_API_KEY"])
+# ))
+# if cortex.facts.has_belief_revision():
+#     print("Belief revision is available")
 ```
+
+### `facts.hasBeliefRevision()`
+
+> **New in v0.24.0**: Check if belief revision is configured and available.
+
+**Signature:**
+
+```typescript
+// TypeScript
+cortex.facts.hasBeliefRevision(): boolean
+
+// Python
+cortex.facts.has_belief_revision() -> bool
+```
+
+**Returns:**
+
+- `true/True` if belief revision service is initialized (LLM is configured)
+- `false/False` if no LLM is configured (will fall back to deduplication)
+
+**Example:**
+
+```typescript
+// TypeScript
+if (cortex.facts.hasBeliefRevision()) {
+  // Use full belief revision pipeline
+  const result = await cortex.facts.revise(params);
+} else {
+  // Fall back to deduplication only
+  const result = await cortex.facts.storeWithDedup(params, {
+    deduplication: { strategy: "structural" }
+  });
+}
+
+// Python
+if cortex.facts.has_belief_revision():
+    result = await cortex.facts.revise(params)
+else:
+    result = await cortex.facts.store_with_dedup(params, deduplication="structural")
+```
+
+**Use cases:**
+
+- Conditional logic based on LLM availability
+- Graceful degradation when LLM is not configured
+- Testing and debugging belief revision setup
 
 ### `facts.revise()`
 
@@ -379,7 +413,7 @@ interface ReviseParams {
 
 ```typescript
 interface ReviseResult {
-  action: "CREATE" | "UPDATE" | "SUPERSEDE" | "NONE";
+  action: "ADD" | "UPDATE" | "SUPERSEDE" | "NONE";
   fact: FactRecord;
   superseded: FactRecord[];
   reason: string;
@@ -439,7 +473,7 @@ interface ConflictCheckResult {
   hasConflicts: boolean;
   slotConflicts: FactRecord[];
   semanticConflicts: Array<{ fact: FactRecord; score: number }>;
-  recommendedAction: "CREATE" | "UPDATE" | "SUPERSEDE" | "NONE";
+  recommendedAction: "ADD" | "UPDATE" | "SUPERSEDE" | "NONE";
   reason: string;
 }
 ```
@@ -1606,6 +1640,66 @@ const result = await cortex.memory.remember({
 
 console.log(result.facts); // Extracted facts returned
 ```
+
+### Automatic Belief Revision (v0.24.0+)
+
+When belief revision is enabled (LLM configured), extracted facts automatically go through the revision pipeline:
+
+```typescript
+// With belief revision enabled (default when LLM is configured)
+const result = await cortex.memory.remember({
+  memorySpaceId: "agent-1",
+  conversationId: "conv-123",
+  userMessage: "Actually, my favorite color is purple now",
+  agentResponse: "I'll update that preference!",
+  userId: "user-123",
+  userName: "Alex",
+  extractFacts: async (user, agent) => [{
+    fact: "User prefers purple",
+    factType: "preference",
+    subject: "user-123",
+    predicate: "favorite color",
+    object: "purple",
+    confidence: 95,
+  }],
+});
+
+// Revision details included in result
+result.factRevisions?.forEach(rev => {
+  console.log(`Action: ${rev.action}`); // "ADD", "UPDATE", "SUPERSEDE", or "NONE"
+  console.log(`Fact: ${rev.fact.fact}`);
+  console.log(`Reason: ${rev.reason}`);
+  if (rev.superseded?.length) {
+    console.log(`Superseded ${rev.superseded.length} old facts`);
+  }
+});
+
+// Disable belief revision for a specific call
+const result2 = await cortex.memory.remember(
+  { /* ... */ },
+  { beliefRevision: false } // Force deduplication-only mode
+);
+```
+
+**Python SDK:**
+
+```python
+# With belief revision enabled
+result = await cortex.memory.remember(RememberParams(...))
+
+# Check revision actions
+if result.fact_revisions:
+    for rev in result.fact_revisions:
+        print(f"Action: {rev.action}, Reason: {rev.reason}")
+
+# Disable belief revision
+result = await cortex.memory.remember(
+    params,
+    RememberOptions(belief_revision=False)
+)
+```
+
+**See also:** [Memory Operations - Automatic Fact Revision](./02-memory-operations.md#automatic-fact-revision-in-remember-v0240)
 
 ### Automatic Enrichment
 

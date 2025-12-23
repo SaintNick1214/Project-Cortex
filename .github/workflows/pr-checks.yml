@@ -400,7 +400,7 @@ jobs:
           node-version: "20"
           cache: "npm"
 
-      - name: Install root dependencies
+      - name: Install all workspace dependencies
         run: npm ci
 
       - name: Generate Convex types
@@ -412,30 +412,17 @@ jobs:
       - name: Build main SDK first
         run: npm run build
 
-      - name: Install Vercel AI Provider dependencies
-        run: |
-          cd packages/vercel-ai-provider
-          npm ci
-
       - name: Run Vercel AI Provider tests
-        run: |
-          cd packages/vercel-ai-provider
-          npm test
+        run: npm test --workspace=@cortexmemory/vercel-ai-provider
 
       - name: Lint Vercel AI Provider
-        run: |
-          cd packages/vercel-ai-provider
-          npm run lint
+        run: npm run lint --workspace=@cortexmemory/vercel-ai-provider
 
       - name: Build Vercel AI Provider
-        run: |
-          cd packages/vercel-ai-provider
-          npm run build
+        run: npm run build --workspace=@cortexmemory/vercel-ai-provider
 
       - name: Verify package contents
-        run: |
-          cd packages/vercel-ai-provider
-          npm pack --dry-run
+        run: npm pack --dry-run --workspace=@cortexmemory/vercel-ai-provider
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # STAGE 3: CLI Tests (parallel with other test jobs)
@@ -470,7 +457,7 @@ jobs:
           node-version: "20"
           cache: "npm"
 
-      - name: Install root dependencies
+      - name: Install all workspace dependencies
         run: npm ci
 
       - name: Generate Convex types
@@ -482,39 +469,24 @@ jobs:
       - name: Build main SDK first
         run: npm run build
 
-      - name: Install CLI dependencies
-        run: |
-          cd packages/cortex-cli
-          npm ci
-
       - name: Run CLI unit tests
-        run: |
-          cd packages/cortex-cli
-          npm run test:unit
+        run: npm run test:unit --workspace=@cortexmemory/cli
 
       - name: Run CLI E2E tests
-        run: |
-          cd packages/cortex-cli
-          npm run test:e2e
+        run: npm run test:e2e --workspace=@cortexmemory/cli
         env:
           CONVEX_URL_CLI: ${{ secrets.CONVEX_URL_CLI }}
           CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_CLI }}
 
       - name: Lint CLI
-        run: |
-          cd packages/cortex-cli
-          npm run lint
+        run: npm run lint --workspace=@cortexmemory/cli
 
       - name: Build CLI
-        run: |
-          cd packages/cortex-cli
-          npm run build
+        run: npm run build --workspace=@cortexmemory/cli
 
       - name: Verify package contents
-        run: |
-          cd packages/cortex-cli
-          npm pack --dry-run
+        run: npm pack --dry-run --workspace=@cortexmemory/cli
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # STAGE 4: All Checks Passed (final gate)

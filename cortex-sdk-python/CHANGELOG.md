@@ -5,6 +5,147 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.25.0] - 2025-12-23
+
+### 🎯 OrchestrationObserver API - Real-time Memory Pipeline Monitoring
+
+Added `OrchestrationObserver` API for real-time monitoring of the `remember()` and `remember_stream()` orchestration pipeline. This mirrors the TypeScript SDK implementation and enables building responsive UIs and debugging tools.
+
+#### New Types
+
+```python
+from cortex import (
+    MemoryLayer,          # "memorySpace" | "user" | "agent" | "conversation" | "vector" | "facts" | "graph"
+    LayerStatus,          # "pending" | "in_progress" | "complete" | "error" | "skipped"
+    RevisionAction,       # "ADD" | "UPDATE" | "SUPERSEDE" | "NONE"
+    LayerEvent,           # Event emitted when a layer's status changes
+    LayerEventData,       # Data payload for completed layers
+    LayerEventError,      # Error details for failed layers
+    OrchestrationSummary, # Summary of completed orchestration
+    OrchestrationObserver # Protocol for observer implementations
+)
+```
+
+#### Usage Example
+
+```python
+class MyObserver:
+    def on_orchestration_start(self, orchestration_id: str) -> None:
+        print(f"Starting: {orchestration_id}")
+    
+    def on_layer_update(self, event: LayerEvent) -> None:
+        print(f"Layer {event.layer}: {event.status} ({event.latency_ms}ms)")
+    
+    def on_orchestration_complete(self, summary: OrchestrationSummary) -> None:
+        print(f"Done in {summary.total_latency_ms}ms")
+
+result = await cortex.memory.remember(
+    RememberParams(
+        memory_space_id="user-space",
+        conversation_id="conv-123",
+        user_message="Hello",
+        agent_response="Hi there!",
+        user_id="user-1",
+        user_name="Alex",
+        agent_id="assistant",
+        observer=MyObserver(),  # NEW: Pass observer for real-time monitoring
+    )
+)
+```
+
+---
+
+### 🐛 Bug Fix: `user_id` and `source_ref` Propagation in Fact Extraction
+
+Fixed a regression where `user_id`, `participant_id`, and `source_ref` were not being propagated to facts extracted via the belief revision pipeline during `remember()`. This caused:
+
+- `facts.list(userId=...)` filter not working for extracted facts
+- GDPR cascade delete failing to remove facts associated with users
+- `source_ref` (conversation link) being lost for extracted facts
+
+```python
+# Before: user_id was None for facts created via belief revision
+result = await cortex.memory.remember(
+    RememberParams(
+        memory_space_id="test-space",
+        conversation_id="conv-123",
+        user_message="I prefer dark mode",
+        agent_response="Got it!",
+        user_id="user-123",  # This was NOT propagated
+        # ...
+    )
+)
+assert result.facts[0].user_id == "user-123"  # FAILED!
+
+# After: All parameters properly propagated
+assert result.facts[0].user_id == "user-123"  # ✓ PASSES
+assert result.facts[0].participant_id == "agent-1"  # ✓ PASSES  
+assert result.facts[0].source_ref is not None  # ✓ PASSES
+```
+
+---
+
+### 🧠 Belief Revision Enhancements - Subject+FactType Matching & Fixes
+
+This release significantly improves the belief revision pipeline with better conflict detection and proper supersession handling.
+
+#### 🎯 New: Subject + FactType Matching (Stage 2.5)
+
+Added a new pipeline stage that catches conflicts missed by slot and semantic matching:
+
+```python
+# Example: These facts share subject="User" and factType="preference"
+# Even with different predicates ("likes" vs "prefers"), they're now candidates
+# for LLM conflict resolution
+fact1 = "User likes blue"      # subject=User, factType=preference
+fact2 = "User prefers purple"  # subject=User, factType=preference
+# → Stage 2.5 identifies these as potential conflicts → LLM decides: SUPERSEDE
+```
+
+**Pipeline Flow:**
+1. Slot Matching (exact predicate classes)
+2. Semantic Matching (embedding similarity)
+3. **Subject+FactType Matching (NEW)** - catches same-category facts
+4. LLM Resolution (nuanced decision)
+
+#### 🔧 Fixed: SUPERSEDE Action Now Uses `facts:supersede`
+
+Previously, SUPERSEDE used `facts:update` which only set `validUntil`, leaving the old fact still appearing as "active" in queries. Now uses the dedicated `facts:supersede` mutation that:
+- Sets `supersededBy` to link old → new fact
+- Sets `validUntil` timestamp on old fact
+- Properly excludes superseded facts from `facts.list(includeSuperseded=False)`
+
+#### 🔧 Fixed: UPDATE Action Uses `facts:updateInPlace`
+
+Changed UPDATE action from `facts:update` to `facts:updateInPlace` to perform true in-place modifications without creating new fact versions.
+
+#### 🔋 "Batteries Included" Mode
+
+BeliefRevisionService now initializes automatically without requiring explicit configuration:
+
+```python
+# Before: Required explicit LLM client or config
+cortex = Cortex(convex_url="...")  # No belief revision!
+
+# After: Always available, uses heuristics when no LLM configured
+cortex = Cortex(convex_url="...")  # Belief revision works via get_default_decision()
+```
+
+#### 📊 Enhanced Pipeline Result
+
+`ReviseResult.pipeline` now includes the new stage:
+
+```python
+result = await cortex.facts.revise(params)
+print(result.pipeline)
+# {
+#   "slot_matching": {"executed": True, "matched": False},
+#   "semantic_matching": {"executed": True, "matched": False},
+#   "subject_type_matching": {"executed": True, "matched": True, "fact_ids": ["fact-123"]},  # NEW
+#   "llm_resolution": {"executed": True, "decision": "SUPERSEDE"}
+# }
+```
+
 ## [0.24.0] - 2025-12-19
 
 ### 🧠 Belief Revision System - Intelligent Fact Management

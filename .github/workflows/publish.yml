@@ -282,20 +282,14 @@ jobs:
           npm install -g npm@latest
           echo "npm version: $(npm --version)"
 
-      - name: Install dependencies
-        run: |
-          cd packages/create-cortex-memories
-          npm ci
+      - name: Install all workspace dependencies
+        run: npm ci
 
       - name: Build package
-        run: |
-          cd packages/create-cortex-memories
-          npm run build
+        run: npm run build --workspace=create-cortex-memories
 
       - name: Verify package contents
-        run: |
-          cd packages/create-cortex-memories
-          npm pack --dry-run
+        run: npm pack --dry-run --workspace=create-cortex-memories
 
       - name: Debug OIDC environment
         run: |
@@ -359,7 +353,7 @@ jobs:
           npm install -g npm@latest
           echo "npm version: $(npm --version)"
 
-      - name: Install root dependencies
+      - name: Install all workspace dependencies
         run: npm ci
 
       - name: Deploy Convex backend
@@ -377,20 +371,11 @@ jobs:
       - name: Build main SDK first
         run: npm run build
 
-      - name: Install Vercel AI Provider dependencies
-        run: |
-          cd packages/vercel-ai-provider
-          npm ci
-
       - name: Build package
-        run: |
-          cd packages/vercel-ai-provider
-          npm run build
+        run: npm run build --workspace=@cortexmemory/vercel-ai-provider
 
       - name: Verify package contents
-        run: |
-          cd packages/vercel-ai-provider
-          npm pack --dry-run
+        run: npm pack --dry-run --workspace=@cortexmemory/vercel-ai-provider
 
       - name: Debug OIDC environment
         run: |
@@ -502,7 +487,7 @@ jobs:
           npm install -g npm@latest
           echo "npm version: $(npm --version)"
 
-      - name: Install root dependencies
+      - name: Install all workspace dependencies
         run: npm ci
 
       - name: Deploy Convex backend
@@ -520,20 +505,11 @@ jobs:
       - name: Build main SDK first
         run: npm run build
 
-      - name: Install CLI dependencies
-        run: |
-          cd packages/cortex-cli
-          npm ci
-
       - name: Build package
-        run: |
-          cd packages/cortex-cli
-          npm run build
+        run: npm run build --workspace=@cortexmemory/cli
 
       - name: Verify package contents
-        run: |
-          cd packages/cortex-cli
-          npm pack --dry-run
+        run: npm pack --dry-run --workspace=@cortexmemory/cli
 
       - name: Debug OIDC environment
         run: |
@@ -554,49 +530,55 @@ jobs:
           npm publish --access public --ignore-scripts
         # Provenance is automatic with trusted publishing (OIDC)
 
-      # TODO: Re-enable after workflow changes are stable on remote
-      # - name: Create Git Tag
-      #   run: |
-      #     VERSION=${{ needs.check-version.outputs.cli-new-version }}
-      #     git config user.name "github-actions[bot]"
-      #     git config user.email "github-actions[bot]@users.noreply.github.com"
-      #     git tag -a "cli-v$VERSION" -m "Release CLI v$VERSION"
-      #     git push origin "cli-v$VERSION"
+      - name: Create Git Tag
+        run: |
+          VERSION=${{ needs.check-version.outputs.cli-new-version }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "cli-v$VERSION" -m "Release CLI v$VERSION"
+          git push origin "cli-v$VERSION"
 
-      # - name: Create GitHub Release
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     VERSION: ${{ needs.check-version.outputs.cli-new-version }}
-      #   run: |
-      #     gh release create "cli-v$VERSION" \
-      #       --title "Cortex CLI v$VERSION" \
-      #       --notes "## Cortex CLI v$VERSION
-      #
-      #     Administrative CLI for managing Cortex Memory deployments.
-      #
-      #     ### Installation
-      #     \`\`\`bash
-      #     npm install -g @cortexmemory/cli
-      #     \`\`\`
-      #
-      #     ### Quick Start
-      #     \`\`\`bash
-      #     # Setup
-      #     cortex setup
-      #
-      #     # List memory spaces
-      #     cortex spaces list
-      #
-      #     # View database statistics
-      #     cortex db stats
-      #
-      #     # Manage users
-      #     cortex users list
-      #     \`\`\`
-      #
-      #     ### Documentation
-      #     - [README](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/cortex-cli/README.md)
-      #     - [Changelog](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/cortex-cli/CHANGELOG.md)"
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.check-version.outputs.cli-new-version }}
+        run: |
+          gh release create "cli-v$VERSION" \
+            --title "Cortex CLI v$VERSION" \
+            --notes "## Cortex CLI v$VERSION
+
+          Administrative CLI for managing Cortex Memory deployments.
+
+          ### Installation
+
+          **Via Homebrew (macOS/Linux):**
+          \`\`\`bash
+          brew install saintnick1214/project-cortex/cli
+          \`\`\`
+
+          **Via npm:**
+          \`\`\`bash
+          npm install -g @cortexmemory/cli
+          \`\`\`
+
+          ### Quick Start
+          \`\`\`bash
+          # Setup
+          cortex setup
+
+          # List memory spaces
+          cortex spaces list
+
+          # View database statistics
+          cortex db stats
+
+          # Manage users
+          cortex users list
+          \`\`\`
+
+          ### Documentation
+          - [README](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/cortex-cli/README.md)
+          - [Changelog](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/cortex-cli/CHANGELOG.md)"
 
       - name: Verify npm publish
         run: |
@@ -624,8 +606,97 @@ jobs:
           echo "📚 npm: https://www.npmjs.com/package/@cortexmemory/cli"
           echo "🐙 GitHub: https://github.com/SaintNick1214/Project-Cortex/releases/tag/cli-v$VERSION"
           echo ""
-          echo "🚀 Install: npm install -g @cortexmemory/cli"
+          echo "🚀 Install via npm:      npm install -g @cortexmemory/cli"
+          echo "🍺 Install via Homebrew: brew install saintnick1214/project-cortex/cli"
           echo ""
+
+      - name: Update Homebrew formula
+        run: |
+          VERSION=${{ needs.check-version.outputs.cli-new-version }}
+          echo "════════════════════════════════════════════════════════════"
+          echo "  Updating Homebrew Formula"
+          echo "════════════════════════════════════════════════════════════"
+          
+          FORMULA_PATH="homebrew/Formula/cli.rb"
+          TARBALL_URL="https://registry.npmjs.org/@cortexmemory/cli/-/cli-${VERSION}.tgz"
+          TARBALL_FILE=$(mktemp)
+          
+          echo "📦 Version: ${VERSION}"
+          echo "🔗 Tarball: ${TARBALL_URL}"
+          
+          # Download tarball with retry logic for CDN propagation delay
+          MAX_RETRIES=6
+          RETRY_DELAY=10
+          
+          for i in $(seq 1 $MAX_RETRIES); do
+            echo "⬇️  Downloading tarball (attempt $i/$MAX_RETRIES)..."
+            
+            # Download with HTTP status code check
+            HTTP_STATUS=$(curl -sL -w "%{http_code}" -o "$TARBALL_FILE" "${TARBALL_URL}")
+            
+            if [ "$HTTP_STATUS" = "200" ]; then
+              # Verify it's actually a gzip tarball (magic bytes: 1f 8b)
+              MAGIC=$(xxd -l 2 -p "$TARBALL_FILE" 2>/dev/null || echo "")
+              if [ "$MAGIC" = "1f8b" ]; then
+                echo "✅ Valid tarball downloaded (HTTP $HTTP_STATUS)"
+                break
+              else
+                echo "⚠️  Downloaded file is not a valid gzip tarball"
+              fi
+            else
+              echo "⚠️  HTTP $HTTP_STATUS - tarball not yet available"
+            fi
+            
+            if [ $i -lt $MAX_RETRIES ]; then
+              echo "   Retrying in ${RETRY_DELAY}s..."
+              sleep $RETRY_DELAY
+            fi
+          done
+          
+          # Final validation
+          if [ ! -f "$TARBALL_FILE" ] || [ ! -s "$TARBALL_FILE" ]; then
+            echo "❌ Error: Failed to download tarball after $MAX_RETRIES attempts"
+            rm -f "$TARBALL_FILE"
+            exit 1
+          fi
+          
+          MAGIC=$(xxd -l 2 -p "$TARBALL_FILE" 2>/dev/null || echo "")
+          if [ "$MAGIC" != "1f8b" ]; then
+            echo "❌ Error: Downloaded file is not a valid gzip tarball"
+            echo "   First 100 bytes:"
+            head -c 100 "$TARBALL_FILE" | cat -v
+            rm -f "$TARBALL_FILE"
+            exit 1
+          fi
+          
+          # Compute SHA256 from validated tarball
+          SHA256=$(shasum -a 256 "$TARBALL_FILE" | cut -d ' ' -f 1)
+          rm -f "$TARBALL_FILE"
+          
+          if [ -z "$SHA256" ] || [ ${#SHA256} -ne 64 ]; then
+            echo "❌ Error: Invalid SHA256 hash computed"
+            exit 1
+          fi
+          
+          echo "🔐 SHA256: ${SHA256}"
+          
+          # Update the URL line with new version
+          sed -i "s|url \"https://registry.npmjs.org/@cortexmemory/cli/-/cli-[0-9.]*\.tgz\"|url \"https://registry.npmjs.org/@cortexmemory/cli/-/cli-${VERSION}.tgz\"|" "${FORMULA_PATH}"
+          
+          # Update the SHA256 line
+          sed -i "s|sha256 \"[a-f0-9]*\"|sha256 \"${SHA256}\"|" "${FORMULA_PATH}"
+          
+          echo "✅ Formula updated"
+          cat "${FORMULA_PATH}"
+
+      - name: Commit Homebrew formula update
+        run: |
+          VERSION=${{ needs.check-version.outputs.cli-new-version }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add homebrew/Formula/cli.rb
+          git commit -m "chore(homebrew): update formula to v${VERSION}" || echo "No changes to commit"
+          git push origin main
 
   publish-python:
     needs: check-version
