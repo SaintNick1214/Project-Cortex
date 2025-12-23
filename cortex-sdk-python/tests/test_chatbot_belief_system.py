@@ -20,6 +20,8 @@ import pytest
 
 from cortex.types import ListFactsFilter, RecallParams, RememberOptions, RememberParams
 
+from tests.helpers.isolation import create_named_test_run_context
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Test Fixtures
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -174,8 +176,8 @@ class TestChatbotBeliefSystemE2E:
         if not convex_url or not openai_key:
             pytest.skip("CONVEX_URL or OPENAI_API_KEY not set")
 
-        test_id = f"chatbot-{int(time.time() * 1000)}"
-        conversation_id = f"conv-{test_id}"
+        # Use TestRunContext for proper parallel test isolation
+        test_ctx = create_named_test_run_context("chatbot_belief")
 
         cortex = Cortex(
             CortexConfig(
@@ -184,9 +186,10 @@ class TestChatbotBeliefSystemE2E:
             )
         )
 
-        memory_space_id = f"test-{test_id}"
-        user_id = f"user-{test_id}"
-        agent_id = f"agent-{test_id}"
+        memory_space_id = test_ctx.memory_space_id("e2e")
+        user_id = test_ctx.user_id("e2e")
+        agent_id = test_ctx.agent_id("e2e")
+        conversation_id = test_ctx.conversation_id("e2e")
 
         ctx: Dict[str, Any] = {
             "cortex": cortex,
