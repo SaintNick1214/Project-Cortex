@@ -538,6 +538,7 @@ export type {
   SyncHealthMetrics,
 } from "./graph/worker/GraphSyncWorker";
 export { GraphSyncWorker } from "./graph/worker/GraphSyncWorker";
+export { CypherGraphAdapter } from "./graph";
 
 // Re-export validation errors for user catch blocks
 export { UserValidationError } from "./users";
