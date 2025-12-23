@@ -30,6 +30,107 @@ MemorySpaceStatus = Literal["active", "archived"]
 # - 'graph': Don't sync to graph database
 SkippableLayer = Literal["users", "agents", "conversations", "vector", "facts", "graph"]
 
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Orchestration Observer Types (v0.25.0+)
+# Integration-agnostic real-time monitoring of memory orchestration
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Memory orchestration layer types
+MemoryLayer = Literal[
+    "memorySpace", "user", "agent", "conversation", "vector", "facts", "graph"
+]
+
+# Layer status during orchestration
+LayerStatus = Literal["pending", "in_progress", "complete", "error", "skipped"]
+
+# Revision action from belief revision system
+# Matches ConflictAction: ADD (new), UPDATE (merge), SUPERSEDE (replace), NONE (skip)
+RevisionAction = Literal["ADD", "UPDATE", "SUPERSEDE", "NONE"]
+
+
+@dataclass
+class LayerEventData:
+    """Data stored in a layer (if complete)."""
+    id: Optional[str] = None
+    preview: Optional[str] = None
+    metadata: Optional[Dict[str, Any]] = None
+
+
+@dataclass
+class LayerEventError:
+    """Error details for failed layers."""
+    message: str
+    code: Optional[str] = None
+
+
+@dataclass
+class LayerEvent:
+    """Event emitted when a layer's status changes during orchestration.
+    
+    Example:
+        >>> observer = MyObserver()
+        >>> # observer.on_layer_update receives LayerEvent instances
+        >>> # event.layer = "conversation"
+        >>> # event.status = "complete"
+        >>> # event.latency_ms = 45
+    """
+    layer: MemoryLayer
+    status: LayerStatus
+    timestamp: int
+    latency_ms: Optional[int] = None
+    data: Optional[LayerEventData] = None
+    error: Optional[LayerEventError] = None
+    revision_action: Optional[RevisionAction] = None
+    superseded_facts: Optional[List[str]] = None
+
+
+@dataclass
+class OrchestrationSummary:
+    """Summary of the full orchestration flow.
+    
+    Returned when orchestration completes (all layers processed).
+    """
+    orchestration_id: str
+    total_latency_ms: int
+    layers: Dict[str, "LayerEvent"]  # MemoryLayer -> LayerEvent
+    created_ids: Dict[str, Any]  # conversationId, memoryIds, factIds
+
+
+class OrchestrationObserver(Protocol):
+    """Observer for memory layer orchestration.
+    
+    Provides real-time monitoring of the remember() and remember_stream()
+    orchestration flow. This is integration-agnostic - any integration
+    can use this interface.
+    
+    Example:
+        >>> class MyObserver:
+        ...     def on_orchestration_start(self, orchestration_id: str) -> None:
+        ...         print(f"Starting: {orchestration_id}")
+        ...     
+        ...     def on_layer_update(self, event: LayerEvent) -> None:
+        ...         print(f"Layer {event.layer}: {event.status}")
+        ...     
+        ...     def on_orchestration_complete(self, summary: OrchestrationSummary) -> None:
+        ...         print(f"Done in {summary.total_latency_ms}ms")
+        >>> 
+        >>> await cortex.memory.remember(
+        ...     RememberParams(..., observer=MyObserver())
+        ... )
+    """
+    
+    def on_orchestration_start(self, orchestration_id: str) -> None:
+        """Called when orchestration starts."""
+        ...
+    
+    def on_layer_update(self, event: LayerEvent) -> None:
+        """Called when a layer's status changes."""
+        ...
+    
+    def on_orchestration_complete(self, summary: OrchestrationSummary) -> None:
+        """Called when orchestration completes (all layers done)."""
+        ...
+
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Layer 1a: Conversations
@@ -911,6 +1012,7 @@ class RememberParams:
     auto_embed: Optional[bool] = None
     auto_summarize: Optional[bool] = None
     fact_deduplication: Optional[Any] = None  # DeduplicationStrategy | DeduplicationConfig | False
+    observer: Optional["OrchestrationObserver"] = None  # Real-time orchestration monitoring (v0.25.0+)
 
 
 @dataclass
@@ -989,6 +1091,7 @@ class RememberStreamParams:
     auto_embed: Optional[bool] = None
     auto_summarize: Optional[bool] = None
     fact_deduplication: Optional[Any] = None  # DeduplicationStrategy | DeduplicationConfig | False
+    observer: Optional["OrchestrationObserver"] = None  # Real-time orchestration monitoring (v0.25.0+)
 
 
 @dataclass
