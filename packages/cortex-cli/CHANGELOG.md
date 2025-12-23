@@ -1,5 +1,17 @@
 # @cortexmemory/cli Changelog
 
+## [0.24.0] - 2025-12-19
+
+### Added
+
+- **Secure password generation for graph databases** - `cortex init` now generates cryptographically secure 20-character passwords for Neo4j/Memgraph instead of using a hardcoded default
+  - Option to generate a secure password (recommended) or enter a custom password
+  - Passwords are saved to `.env.local` and `docker-compose.graph.yml`
+
+- **OpenAI API key setup during init** - New optional step in `cortex init` to configure OpenAI API key
+  - Prompts for API key with validation (checks for `sk-` prefix)
+  - Saves to `.env.local` for immediate use with embeddings and fact extraction
+
 ## [0.23.0] - 2025-12-19
 
 ### Added

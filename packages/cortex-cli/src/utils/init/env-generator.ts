@@ -54,8 +54,17 @@ NEO4J_PASSWORD=${config.graphPassword || "cortex-password"}
 # =============================================================================
 # OpenAI API Key (Optional - for embeddings)
 # =============================================================================
-# OPENAI_API_KEY=sk-...
+`;
 
+  if (config.openaiApiKey) {
+    env += `OPENAI_API_KEY=${config.openaiApiKey}
+`;
+  } else {
+    env += `# OPENAI_API_KEY=sk-...
+`;
+  }
+
+  env += `
 `;
 
   return env;
@@ -193,12 +202,16 @@ NEO4J_PASSWORD=${config.graphPassword}
 export async function createGraphDockerCompose(
   projectPath: string,
   graphType: "neo4j" | "memgraph",
+  password?: string,
 ): Promise<void> {
   const dockerComposePath = path.join(projectPath, "docker-compose.graph.yml");
+  const graphPassword = password || "cortex-password";
 
   let dockerCompose = "";
 
   if (graphType === "neo4j") {
+    // Escape any special characters in password for YAML
+    const escapedPassword = graphPassword.replace(/'/g, "''");
     dockerCompose = `services:
   neo4j:
     image: neo4j:5-community
@@ -207,7 +220,7 @@ export async function createGraphDockerCompose(
       - "7474:7474"  # HTTP
       - "7687:7687"  # Bolt
     environment:
-      - NEO4J_AUTH=neo4j/cortex-password
+      - NEO4J_AUTH=neo4j/${escapedPassword}
       - NEO4J_PLUGINS=["apoc"]
       - NEO4J_dbms_security_procedures_unrestricted=apoc.*
     volumes:

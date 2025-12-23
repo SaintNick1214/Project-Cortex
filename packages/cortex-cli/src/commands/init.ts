@@ -553,7 +553,10 @@ export async function runInitWizard(
     graphConfig = await getGraphConfig();
   }
 
-  // Step 5: CLI scripts option
+  // Step 5: OpenAI API key (optional)
+  const openaiApiKey = await getOpenAIApiKey();
+
+  // Step 6: CLI scripts option
   const installCLI = await getCliInstallOption();
 
   // Build wizard configuration
@@ -570,6 +573,7 @@ export async function runInitWizard(
     graphUsername: graphConfig?.username,
     graphPassword: graphConfig?.password,
     installCLI,
+    openaiApiKey,
   };
 
   // Show confirmation
@@ -733,6 +737,46 @@ async function getConvexSetup(options: {
 }
 
 /**
+ * Get OpenAI API key (optional)
+ */
+async function getOpenAIApiKey(): Promise<string | undefined> {
+  console.log(pc.cyan("\n   OpenAI API Key (Optional)"));
+  console.log(pc.dim("   Required for AI-powered embeddings and fact extraction"));
+  console.log(pc.dim("   Get your key at: https://platform.openai.com/api-keys\n"));
+
+  const { setupOpenAI } = await prompts({
+    type: "confirm",
+    name: "setupOpenAI",
+    message: "Configure OpenAI API key now?",
+    initial: false,
+  });
+
+  if (!setupOpenAI) {
+    console.log(pc.dim("   You can add OPENAI_API_KEY to .env.local later"));
+    return undefined;
+  }
+
+  const { apiKey } = await prompts({
+    type: "password",
+    name: "apiKey",
+    message: "Enter your OpenAI API key:",
+    validate: (value) => {
+      if (!value) return "API key is required";
+      if (!value.startsWith("sk-")) {
+        return "OpenAI API keys typically start with 'sk-'";
+      }
+      return true;
+    },
+  });
+
+  if (apiKey) {
+    console.log(pc.green("   ✓ OpenAI API key configured"));
+  }
+
+  return apiKey;
+}
+
+/**
  * Get CLI installation option
  */
 async function getCliInstallOption(): Promise<boolean> {
@@ -770,6 +814,10 @@ async function showConfirmation(config: WizardConfig): Promise<void> {
   console.log(
     pc.bold("   Graph DB:"),
     config.graphEnabled ? config.graphType : "Disabled",
+  );
+  console.log(
+    pc.bold("   OpenAI:"),
+    config.openaiApiKey ? "Configured" : "Not configured",
   );
   console.log(pc.bold("   CLI Scripts:"), config.installCLI ? "Yes" : "No");
   console.log(pc.dim("   " + "─".repeat(46)));

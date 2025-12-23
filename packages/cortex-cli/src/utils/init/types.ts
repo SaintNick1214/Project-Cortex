@@ -18,6 +18,7 @@ export interface WizardConfig {
   graphUsername?: string;
   graphPassword?: string;
   installCLI?: boolean;
+  openaiApiKey?: string;
 }
 
 /**
