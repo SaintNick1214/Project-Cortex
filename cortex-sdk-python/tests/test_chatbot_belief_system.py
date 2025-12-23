@@ -39,7 +39,7 @@ def test_context() -> Dict[str, str]:
 async def cortex_client(test_context: Dict[str, str]) -> AsyncGenerator[Any, None]:
     """Create a Cortex client for testing."""
     from cortex import Cortex
-    from cortex.types import CortexConfig, LLMConfig, RegisterMemorySpaceParams
+    from cortex.types import CortexConfig, LLMConfig, RegisterMemorySpaceParams, RememberParams, RememberOptions
 
     convex_url = os.environ.get("CONVEX_URL")
     openai_key = os.environ.get("OPENAI_API_KEY")
@@ -164,7 +164,7 @@ class TestChatbotBeliefSystemE2E:
     async def e2e_cortex(self) -> AsyncGenerator[Dict[str, Any], None]:
         """Create Cortex client with LLM for E2E tests."""
         from cortex import Cortex
-        from cortex.types import CortexConfig, LLMConfig, RegisterMemorySpaceParams
+        from cortex.types import CortexConfig, LLMConfig, RegisterMemorySpaceParams, RememberParams, RememberOptions
 
         convex_url = os.environ.get("CONVEX_URL")
         openai_key = os.environ.get("OPENAI_API_KEY")
@@ -173,6 +173,7 @@ class TestChatbotBeliefSystemE2E:
             pytest.skip("CONVEX_URL or OPENAI_API_KEY not set")
 
         test_id = f"chatbot-{int(time.time() * 1000)}"
+        conversation_id = f"conv-{test_id}"
 
         cortex = Cortex(
             CortexConfig(
@@ -190,6 +191,7 @@ class TestChatbotBeliefSystemE2E:
             "memory_space_id": memory_space_id,
             "user_id": user_id,
             "agent_id": agent_id,
+            "conversation_id": conversation_id,
         }
 
         # Register memory space
@@ -216,16 +218,20 @@ class TestChatbotBeliefSystemE2E:
 
         # Simulate user message
         user_message = "My name is Nicholas and my favorite color is blue"
+        conversation_id = e2e_cortex["conversation_id"]
 
         # Create conversation and store memory
         result = await cortex.memory.remember(
-            memory_space_id=memory_space_id,
-            user_message=user_message,
-            agent_response="Nice to meet you, Nicholas! Blue is a lovely color.",
-            user_id=user_id,
-            agent_id=agent_id,
-            user_name="Test User",
-            extract_facts=True,
+            RememberParams(
+                memory_space_id=memory_space_id,
+                conversation_id=f"{conversation_id}-turn1",
+                user_message=user_message,
+                agent_response="Nice to meet you, Nicholas! Blue is a lovely color.",
+                user_id=user_id,
+                agent_id=agent_id,
+                user_name="Test User",
+            ),
+            RememberOptions(extract_facts=True),
         )
 
         # Should have extracted facts
@@ -259,14 +265,18 @@ class TestChatbotBeliefSystemE2E:
         agent_id = e2e_cortex["agent_id"]
 
         # First, store initial facts
+        conversation_id = e2e_cortex["conversation_id"]
         await cortex.memory.remember(
-            memory_space_id=memory_space_id,
-            user_message="My name is Nicholas and my favorite color is blue",
-            agent_response="Nice to meet you!",
-            user_id=user_id,
-            agent_id=agent_id,
-            user_name="Test User",
-            extract_facts=True,
+            RememberParams(
+                memory_space_id=memory_space_id,
+                conversation_id=f"{conversation_id}-turn2-init",
+                user_message="My name is Nicholas and my favorite color is blue",
+                agent_response="Nice to meet you!",
+                user_id=user_id,
+                agent_id=agent_id,
+                user_name="Test User",
+            ),
+            RememberOptions(extract_facts=True),
         )
 
         # Get initial fact count
@@ -290,13 +300,16 @@ class TestChatbotBeliefSystemE2E:
 
         # Store the Q&A exchange without fact extraction
         await cortex.memory.remember(
-            memory_space_id=memory_space_id,
-            user_message="What is my favorite color?",
-            agent_response="Based on what you told me, your favorite color is blue!",
-            user_id=user_id,
-            agent_id=agent_id,
-            user_name="Test User",
-            extract_facts=False,  # Q&A doesn't add new facts
+            RememberParams(
+                memory_space_id=memory_space_id,
+                conversation_id=f"{conversation_id}-turn2-qa",
+                user_message="What is my favorite color?",
+                agent_response="Based on what you told me, your favorite color is blue!",
+                user_id=user_id,
+                agent_id=agent_id,
+                user_name="Test User",
+            ),
+            RememberOptions(extract_facts=False),  # Q&A doesn't add new facts
         )
 
         # Verify no duplicate facts were created
@@ -319,14 +332,18 @@ class TestChatbotBeliefSystemE2E:
         agent_id = e2e_cortex["agent_id"]
 
         # First, store initial color fact
+        conversation_id = e2e_cortex["conversation_id"]
         await cortex.memory.remember(
-            memory_space_id=memory_space_id,
-            user_message="My name is Nicholas and my favorite color is blue",
-            agent_response="Nice to meet you!",
-            user_id=user_id,
-            agent_id=agent_id,
-            user_name="Test User",
-            extract_facts=True,
+            RememberParams(
+                memory_space_id=memory_space_id,
+                conversation_id=f"{conversation_id}-turn3-init",
+                user_message="My name is Nicholas and my favorite color is blue",
+                agent_response="Nice to meet you!",
+                user_id=user_id,
+                agent_id=agent_id,
+                user_name="Test User",
+            ),
+            RememberOptions(extract_facts=True),
         )
 
         # Get initial state
@@ -341,13 +358,16 @@ class TestChatbotBeliefSystemE2E:
 
         # Now user changes color preference
         result = await cortex.memory.remember(
-            memory_space_id=memory_space_id,
-            user_message="Actually, I've decided I prefer purple now",
-            agent_response="Purple is a great choice! I'll remember that.",
-            user_id=user_id,
-            agent_id=agent_id,
-            user_name="Test User",
-            extract_facts=True,
+            RememberParams(
+                memory_space_id=memory_space_id,
+                conversation_id=f"{conversation_id}-turn3-change",
+                user_message="Actually, I've decided I prefer purple now",
+                agent_response="Purple is a great choice! I'll remember that.",
+                user_id=user_id,
+                agent_id=agent_id,
+                user_name="Test User",
+            ),
+            RememberOptions(extract_facts=True),
         )
 
         print("[Turn 3] Belief revision result:")
@@ -405,19 +425,24 @@ class TestChatbotBeliefSystemE2E:
         print("CHATBOT BELIEF SYSTEM E2E TEST")
         print("=" * 60)
 
+        conversation_id = e2e_cortex["conversation_id"]
+
         # ─────────────────────────────────────────────────────────────
         # Turn 1: User introduces themselves
         # ─────────────────────────────────────────────────────────────
         print("\n[TURN 1] User: My name is Nicholas and I like blue")
 
         turn1_result = await cortex.memory.remember(
-            memory_space_id=memory_space_id,
-            user_message="My name is Nicholas and I like blue",
-            agent_response="Nice to meet you, Nicholas! Blue is a wonderful color choice.",
-            user_id=user_id,
-            agent_id=agent_id,
-            user_name="Nicholas",
-            extract_facts=True,
+            RememberParams(
+                memory_space_id=memory_space_id,
+                conversation_id=f"{conversation_id}-full-turn1",
+                user_message="My name is Nicholas and I like blue",
+                agent_response="Nice to meet you, Nicholas! Blue is a wonderful color choice.",
+                user_id=user_id,
+                agent_id=agent_id,
+                user_name="Nicholas",
+            ),
+            RememberOptions(extract_facts=True),
         )
 
         facts_after_turn1 = await cortex.facts.list(
@@ -448,13 +473,16 @@ class TestChatbotBeliefSystemE2E:
 
         # Store the exchange (no fact extraction for Q&A)
         await cortex.memory.remember(
-            memory_space_id=memory_space_id,
-            user_message="What is my favorite color?",
-            agent_response="Based on what you told me earlier, your favorite color is blue!",
-            user_id=user_id,
-            agent_id=agent_id,
-            user_name="Nicholas",
-            extract_facts=False,
+            RememberParams(
+                memory_space_id=memory_space_id,
+                conversation_id=f"{conversation_id}-full-turn2",
+                user_message="What is my favorite color?",
+                agent_response="Based on what you told me earlier, your favorite color is blue!",
+                user_id=user_id,
+                agent_id=agent_id,
+                user_name="Nicholas",
+            ),
+            RememberOptions(extract_facts=False),
         )
 
         facts_after_turn2 = await cortex.facts.list(
@@ -470,13 +498,16 @@ class TestChatbotBeliefSystemE2E:
         print("\n[TURN 3] User: Actually I prefer purple now")
 
         turn3_result = await cortex.memory.remember(
-            memory_space_id=memory_space_id,
-            user_message="Actually I've decided I prefer purple now",
-            agent_response="I'll update my notes - purple is now your favorite color!",
-            user_id=user_id,
-            agent_id=agent_id,
-            user_name="Nicholas",
-            extract_facts=True,
+            RememberParams(
+                memory_space_id=memory_space_id,
+                conversation_id=f"{conversation_id}-full-turn3",
+                user_message="Actually I've decided I prefer purple now",
+                agent_response="I'll update my notes - purple is now your favorite color!",
+                user_id=user_id,
+                agent_id=agent_id,
+                user_name="Nicholas",
+            ),
+            RememberOptions(extract_facts=True),
         )
 
         print("[TURN 3] Belief revision results:")

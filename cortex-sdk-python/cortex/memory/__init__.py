@@ -46,7 +46,6 @@ from ..types import (
     RememberOptions,
     RememberParams,
     RememberResult,
-    RevisionAction,
     SearchOptions,
     SourceType,
     StoreMemoryInput,
@@ -54,6 +53,9 @@ from ..types import (
     UpdateManyResult,
     UpdateMemoryOptions,
     UpdateMemoryResult,
+)
+from ..types import (
+    RevisionAction as RevisionAction,
 )
 from ..vector import VectorAPI
 from .validators import (
@@ -471,7 +473,7 @@ class MemoryAPI:
             ... )
         """
         import uuid
-        
+
         # Client-side validation
         validate_remember_params(params)
 
@@ -480,10 +482,10 @@ class MemoryAPI:
         opts = options or RememberOptions()
         skip_layers = params.skip_layers or []
         observer = params.observer
-        
+
         # Generate orchestration ID for tracking
         orchestration_id = f"orch_{uuid.uuid4().hex[:12]}"
-        
+
         # Initialize layer events tracking
         layer_events: Dict[str, LayerEvent] = {}
         created_ids: Dict[str, Any] = {}
@@ -505,7 +507,7 @@ class MemoryAPI:
             event = self._create_layer_event("memorySpace", "in_progress", orchestration_start_time)
             layer_events["memorySpace"] = event
             self._notify_layer_update(observer, event)
-        
+
         try:
             await self._ensure_memory_space_exists(params.memory_space_id, should_sync_to_graph)
             if observer:
@@ -597,7 +599,7 @@ class MemoryAPI:
                 event = self._create_layer_event("conversation", "in_progress", orchestration_start_time)
                 layer_events["conversation"] = event
                 self._notify_layer_update(observer, event)
-            
+
             try:
                 from ..types import (
                     AddMessageInput,
@@ -654,10 +656,10 @@ class MemoryAPI:
                 # Extract message IDs
                 user_message_id = user_msg.messages[-1]["id"] if isinstance(user_msg.messages[-1], dict) else user_msg.messages[-1].id
                 agent_message_id = agent_msg.messages[-1]["id"] if isinstance(agent_msg.messages[-1], dict) else agent_msg.messages[-1].id
-                
+
                 # Track created IDs
                 created_ids["conversationId"] = params.conversation_id
-                
+
                 if observer:
                     event = self._create_layer_event(
                         "conversation", "complete", orchestration_start_time,
@@ -693,7 +695,7 @@ class MemoryAPI:
                 event = self._create_layer_event("vector", "in_progress", orchestration_start_time)
                 layer_events["vector"] = event
                 self._notify_layer_update(observer, event)
-            
+
             try:
                 from ..types import ConversationRef, StoreMemoryOptions
 
@@ -794,10 +796,10 @@ class MemoryAPI:
                         StoreMemoryOptions(sync_to_graph=should_sync_to_graph),
                     )
                     stored_memories.append(agent_memory)
-                
+
                 # Track created memory IDs
                 created_ids["memoryIds"] = [m.memory_id for m in stored_memories]
-                
+
                 if observer:
                     event = self._create_layer_event(
                         "vector", "complete", orchestration_start_time,
@@ -835,7 +837,7 @@ class MemoryAPI:
                 event = self._create_layer_event("facts", "in_progress", orchestration_start_time)
                 layer_events["facts"] = event
                 self._notify_layer_update(observer, event)
-            
+
             fact_extractor = self._get_fact_extractor(params)
 
             if fact_extractor:
@@ -1039,10 +1041,10 @@ class MemoryAPI:
                                 print(f"Warning: Failed to store fact: {error}")
                 except Exception as error:
                     print(f"Warning: Failed to extract facts: {error}")
-            
+
             # Track created fact IDs
             created_ids["factIds"] = [f.fact_id for f in extracted_facts]
-            
+
             if observer:
                 # Build revision info for the facts layer event
                 revision_info = None
@@ -1052,12 +1054,12 @@ class MemoryAPI:
                         revision_info = {
                             "action": "SUPERSEDE",
                             "superseded_facts": [
-                                f.fact_id for ra in supersede_actions 
-                                for f in (ra.superseded or []) 
+                                f.fact_id for ra in supersede_actions
+                                for f in (ra.superseded or [])
                                 if hasattr(f, 'fact_id')
                             ]
                         }
-                
+
                 event = self._create_layer_event(
                     "facts", "complete", orchestration_start_time,
                     data=LayerEventData(

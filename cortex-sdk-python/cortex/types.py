@@ -66,7 +66,7 @@ class LayerEventError:
 @dataclass
 class LayerEvent:
     """Event emitted when a layer's status changes during orchestration.
-    
+
     Example:
         >>> observer = MyObserver()
         >>> # observer.on_layer_update receives LayerEvent instances
@@ -87,7 +87,7 @@ class LayerEvent:
 @dataclass
 class OrchestrationSummary:
     """Summary of the full orchestration flow.
-    
+
     Returned when orchestration completes (all layers processed).
     """
     orchestration_id: str
@@ -98,35 +98,35 @@ class OrchestrationSummary:
 
 class OrchestrationObserver(Protocol):
     """Observer for memory layer orchestration.
-    
+
     Provides real-time monitoring of the remember() and remember_stream()
     orchestration flow. This is integration-agnostic - any integration
     can use this interface.
-    
+
     Example:
         >>> class MyObserver:
         ...     def on_orchestration_start(self, orchestration_id: str) -> None:
         ...         print(f"Starting: {orchestration_id}")
-        ...     
+        ...
         ...     def on_layer_update(self, event: LayerEvent) -> None:
         ...         print(f"Layer {event.layer}: {event.status}")
-        ...     
+        ...
         ...     def on_orchestration_complete(self, summary: OrchestrationSummary) -> None:
         ...         print(f"Done in {summary.total_latency_ms}ms")
-        >>> 
+        >>>
         >>> await cortex.memory.remember(
         ...     RememberParams(..., observer=MyObserver())
         ... )
     """
-    
+
     def on_orchestration_start(self, orchestration_id: str) -> None:
         """Called when orchestration starts."""
         ...
-    
+
     def on_layer_update(self, event: LayerEvent) -> None:
         """Called when a layer's status changes."""
         ...
-    
+
     def on_orchestration_complete(self, summary: OrchestrationSummary) -> None:
         """Called when orchestration completes (all layers done)."""
         ...
